@@ -29,6 +29,18 @@ const PROJECT_ROOT = path.join(__dirname, '..', '..'); // Root del progetto per 
 const AUTO_PUSH_TO_GITHUB = true; // Abilita/disabilita push automatico
 const AUTO_REGENERATE_MANIFEST = true; // Abilita/disabilita rigenerazione automatica manifest
 
+// Mappatura moduli
+const MODULE_FILES = {
+  'F1B': 'f1b.json',
+  'F2': 'f2.json',
+  'F3': 'f3.json',
+  'F3O': 'f3o.json',
+  'F4': 'f4.json',
+  'F5': 'f5.json',
+  'F5B': 'f5b.json',
+  'F5-LT+': 'f5-lt+.json'
+};
+
 // MIME types
 const MIME_TYPES = {
   '.html': 'text/html',
@@ -63,24 +75,70 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    // Endpoint API: lista file report
+    if (pathname === '/report/admin/api/report-files' && req.method === 'GET') {
+      await handleListReportFiles(req, res);
+      return;
+    }
+
     // Endpoint API: rigenera manifest
     if (pathname === '/report/admin/api/regenerate-manifest' && req.method === 'POST') {
       await handleRegenerateManifest(req, res);
       return;
     }
 
-    // Endpoint upload
+    // Endpoint API: crea nuovo report
+    if (pathname === '/report/admin/api/create-report' && req.method === 'POST') {
+      await handleCreateReport(req, res);
+      return;
+    }
+
+    // Endpoint API: upload JSON modulo
+    if (pathname === '/report/admin/api/upload-module-json' && req.method === 'POST') {
+      await handleUploadModuleJson(req, res);
+      return;
+    }
+
+    // Endpoint API: upload screenshot modulo
+    if (pathname === '/report/admin/api/upload-module-screenshot' && req.method === 'POST') {
+      await handleUploadModuleScreenshot(req, res);
+      return;
+    }
+
+    // Endpoint upload (legacy - chart snapshot)
     if (pathname === '/report/admin/upload-chart' && req.method === 'POST') {
       await handleUpload(req, res);
       return;
     }
 
-    // Serve screenshot images
+    // Serve screenshot images (chart snapshot)
     if (pathname.startsWith('/report/reports/') && pathname.endsWith('/chart-snapshot.png')) {
       const reportPath = pathname.replace('/report/reports/', '').replace('/chart-snapshot.png', '');
       const filePath = path.join(REPORTS_DIR, reportPath, 'chart-snapshot.png');
       await serveFile(res, filePath, 'image/png');
       return;
+    }
+
+    // Serve module screenshot images
+    if (pathname.startsWith('/report/reports/') && pathname.includes('-screenshot.png')) {
+      const parts = pathname.replace('/report/reports/', '').split('/');
+      if (parts.length === 2) {
+        const [reportId, screenshotFile] = parts;
+        const filePath = path.join(REPORTS_DIR, reportId, screenshotFile);
+        await serveFile(res, filePath, 'image/png');
+        return;
+      }
+    }
+
+    // Serve module JSON files
+    if (pathname.startsWith('/report/reports/') && pathname.endsWith('.json')) {
+      const parts = pathname.replace('/report/reports/', '').split('/');
+      if (parts.length === 2) {
+        const [reportId, jsonFile] = parts;
+        const filePath = path.join(REPORTS_DIR, reportId, jsonFile);
+        await serveFile(res, filePath, 'application/json');
+        return;
+      }
     }
 
     // Serve file statici
@@ -293,6 +351,40 @@ async function handleRegenerateManifest(req, res) {
   }
 }
 
+// Lista file in un report
+async function handleListReportFiles(req, res) {
+  try {
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const reportId = url.searchParams.get('reportId');
+    
+    if (!reportId) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Report ID mancante' }));
+      return;
+    }
+    
+    const reportDir = path.join(REPORTS_DIR, reportId);
+    
+    try {
+      const entries = await fs.readdir(reportDir, { withFileTypes: true });
+      const files = entries
+        .filter(entry => entry.isFile() && entry.name.endsWith('.json'))
+        .map(entry => entry.name);
+      
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ files: files }));
+    } catch (error) {
+      // Directory non esiste o errore lettura
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ files: [] }));
+    }
+  } catch (error) {
+    console.error('Error listing report files:', error);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: error.message }));
+  }
+}
+
 // Lista report con info screenshot
 async function handleListReports(req, res) {
   try {
@@ -465,6 +557,213 @@ async function pushToGitHub(reportId, filePath) {
       error: error.message || 'Errore push GitHub'
     };
   }
+}
+
+// Crea nuovo report
+async function handleCreateReport(req, res) {
+  const chunks = [];
+  for await (const chunk of req) {
+    chunks.push(chunk);
+  }
+  
+  try {
+    const body = JSON.parse(Buffer.concat(chunks).toString());
+    const { reportId, reportType } = body;
+    
+    if (!reportId || !reportType) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Report ID e Tipo Report sono obbligatori' }));
+      return;
+    }
+    
+    // Valida reportId
+    if (!/^[a-zA-Z0-9_-]+$/.test(reportId)) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Report ID non valido' }));
+      return;
+    }
+    
+    const reportDir = path.join(REPORTS_DIR, reportId);
+    
+    // Verifica se esiste già
+    try {
+      await fs.access(reportDir);
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Report già esistente' }));
+      return;
+    } catch {
+      // OK, non esiste
+    }
+    
+    // Crea directory (i file JSON verranno caricati direttamente dall'output)
+    await fs.mkdir(reportDir, { recursive: true });
+    
+    console.log(`✅ Directory report creata: ${reportId}`);
+    console.log(`   I file JSON (header.json, f1b.json, ecc.) verranno caricati direttamente dall'output`);
+    
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      success: true,
+      reportId: reportId,
+      path: `report/reports/${reportId}/`
+    }));
+  } catch (error) {
+    console.error('Error creating report:', error);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: error.message }));
+  }
+}
+
+// Upload JSON modulo
+async function handleUploadModuleJson(req, res) {
+  const chunks = [];
+  let totalSize = 0;
+  const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+
+  for await (const chunk of req) {
+    chunks.push(chunk);
+    totalSize += chunk.length;
+    if (totalSize > MAX_SIZE) {
+      res.writeHead(413, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'File troppo grande (max 10MB)' }));
+      return;
+    }
+  }
+
+  const buffer = Buffer.concat(chunks);
+  const boundary = req.headers['content-type']?.split('boundary=')[1];
+
+  if (!boundary) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Content-Type non valido' }));
+    return;
+  }
+
+  const parts = parseMultipart(buffer, boundary);
+  const reportId = parts.reportId?.toString().trim();
+  const file = parts.file;
+  const fileName = parts.fileName?.toString().trim() || file.filename;
+
+  if (!reportId || !file) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Parametri mancanti' }));
+    return;
+  }
+
+  // Valida reportId
+  if (!/^[a-zA-Z0-9_-]+$/.test(reportId)) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Report ID non valido' }));
+    return;
+  }
+
+  // Valida fileName (solo caratteri sicuri)
+  const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '');
+  if (!safeFileName || !safeFileName.endsWith('.json')) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Nome file non valido (deve essere .json)' }));
+    return;
+  }
+
+  const reportDir = path.join(REPORTS_DIR, reportId);
+  const targetPath = path.join(reportDir, safeFileName);
+
+  // Crea directory se non esiste
+  try {
+    await fs.mkdir(reportDir, { recursive: true });
+  } catch (error) {
+    console.error('Error creating directory:', error);
+  }
+
+  // Valida JSON
+  try {
+    JSON.parse(file.data.toString());
+  } catch (error) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'File JSON non valido' }));
+    return;
+  }
+
+  // Salva file
+  await fs.writeFile(targetPath, file.data, 'utf-8');
+
+  console.log(`✅ JSON salvato: ${targetPath}`);
+
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({
+    success: true,
+    path: `report/reports/${reportId}/${safeFileName}`,
+    reportId: reportId,
+    fileName: safeFileName
+  }));
+}
+
+// Upload screenshot modulo
+async function handleUploadModuleScreenshot(req, res) {
+  const chunks = [];
+  let totalSize = 0;
+  const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+
+  for await (const chunk of req) {
+    chunks.push(chunk);
+    totalSize += chunk.length;
+    if (totalSize > MAX_SIZE) {
+      res.writeHead(413, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'File troppo grande (max 10MB)' }));
+      return;
+    }
+  }
+
+  const buffer = Buffer.concat(chunks);
+  const boundary = req.headers['content-type']?.split('boundary=')[1];
+
+  if (!boundary) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Content-Type non valido' }));
+    return;
+  }
+
+  const parts = parseMultipart(buffer, boundary);
+  const reportId = parts.reportId?.toString().trim();
+  const moduleId = parts.moduleId?.toString().trim();
+  const file = parts.file;
+
+  if (!reportId || !moduleId || !file) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Parametri mancanti' }));
+    return;
+  }
+
+  // Valida reportId e moduleId
+  if (!/^[a-zA-Z0-9_-]+$/.test(reportId) || !/^[a-zA-Z0-9_-]+$/.test(moduleId)) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'ID non validi' }));
+    return;
+  }
+
+  const reportDir = path.join(REPORTS_DIR, reportId);
+  const screenshotFile = `${moduleId.toLowerCase()}-screenshot.png`;
+  const targetPath = path.join(reportDir, screenshotFile);
+
+  // Crea directory se non esiste
+  try {
+    await fs.mkdir(reportDir, { recursive: true });
+  } catch (error) {
+    console.error('Error creating directory:', error);
+  }
+
+  // Salva file
+  await fs.writeFile(targetPath, file.data);
+
+  console.log(`✅ Screenshot modulo salvato: ${targetPath}`);
+
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({
+    success: true,
+    path: `report/reports/${reportId}/${screenshotFile}`,
+    reportId: reportId,
+    moduleId: moduleId
+  }));
 }
 
 // Serve file statico

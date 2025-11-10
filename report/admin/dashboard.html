@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Report Screenshot - Tradelia Admin</title>
+  <title>Dashboard Report Admin - Tradelia</title>
   <style>
     * {
       margin: 0;
@@ -20,7 +20,7 @@
     }
 
     .container {
-      max-width: 1400px;
+      max-width: 1600px;
       margin: 0 auto;
       background: rgba(30, 30, 46, 0.8);
       border-radius: 16px;
@@ -101,6 +101,21 @@
       background: rgba(39, 39, 42, 1);
     }
 
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    /* Views */
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    /* Reports List View */
     .reports-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -115,18 +130,12 @@
       padding: 1.5rem;
       transition: all 0.3s;
       cursor: pointer;
-      position: relative;
     }
 
     .report-card:hover {
       border-color: #60a5fa;
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(96, 165, 250, 0.2);
-    }
-
-    .report-card.selected {
-      border-color: #60a5fa;
-      background: rgba(96, 165, 250, 0.1);
     }
 
     .report-header {
@@ -143,44 +152,10 @@
       word-break: break-word;
     }
 
-    .screenshot-badge {
-      padding: 0.25rem 0.75rem;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      white-space: nowrap;
-    }
-
-    .screenshot-badge.has {
-      background: rgba(34, 197, 94, 0.2);
-      color: #86efac;
-      border: 1px solid rgba(34, 197, 94, 0.3);
-    }
-
-    .screenshot-badge.missing {
-      background: rgba(239, 68, 68, 0.2);
-      color: #fca5a5;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-
     .report-info {
       font-size: 0.85rem;
       color: #a1a1aa;
       margin-bottom: 1rem;
-    }
-
-    .report-preview {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      margin-bottom: 1rem;
-      display: none;
-    }
-
-    .report-preview.show {
-      display: block;
     }
 
     .report-actions {
@@ -189,12 +164,98 @@
       margin-top: 1rem;
     }
 
-    .btn-small {
-      padding: 0.5rem 1rem;
-      font-size: 0.85rem;
+    /* Report Detail View */
+    .report-detail {
+      margin-top: 2rem;
     }
 
-    .upload-modal {
+    .report-detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .back-btn {
+      background: rgba(39, 39, 42, 0.8);
+      color: #e4e4e7;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .back-btn:hover {
+      background: rgba(39, 39, 42, 1);
+    }
+
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .module-card {
+      background: rgba(39, 39, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .module-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .module-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #f4f4f5;
+    }
+
+    .module-status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .module-status.has-json {
+      background: rgba(34, 197, 94, 0.2);
+      color: #86efac;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .module-status.has-screenshot {
+      background: rgba(34, 197, 94, 0.2);
+      color: #86efac;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .module-status.missing {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .module-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Modals */
+    .modal {
       display: none;
       position: fixed;
       top: 0;
@@ -208,7 +269,7 @@
       padding: 2rem;
     }
 
-    .upload-modal.show {
+    .modal.show {
       display: flex;
     }
 
@@ -216,7 +277,7 @@
       background: rgba(30, 30, 46, 0.95);
       border-radius: 16px;
       padding: 2rem;
-      max-width: 600px;
+      max-width: 700px;
       width: 100%;
       max-height: 90vh;
       overflow-y: auto;
@@ -247,6 +308,33 @@
 
     .close-btn:hover {
       color: #f4f4f5;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #a1a1aa;
+      font-size: 0.9rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: rgba(39, 39, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #f4f4f5;
+      font-size: 1rem;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
     }
 
     .upload-area {
@@ -354,14 +442,27 @@
       margin-bottom: 1rem;
       opacity: 0.5;
     }
+
+    .json-preview {
+      background: rgba(39, 39, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: #a1a1aa;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>📊 Dashboard Report Screenshot</h1>
-    <p class="subtitle">Gestisci gli screenshot chart per tutti i report</p>
+    <h1>📊 Dashboard Report Admin</h1>
+    <p class="subtitle">Gestisci report, moduli, JSON e screenshot</p>
 
-      <div class="controls">
+    <div class="controls">
       <input 
         type="text" 
         id="searchBox" 
@@ -369,81 +470,238 @@
         placeholder="🔍 Cerca report..."
         autocomplete="off"
       />
+      <button class="btn btn-primary" id="createReportBtn">➕ Crea Nuovo Report</button>
       <button class="btn btn-secondary" id="refreshBtn">🔄 Aggiorna</button>
       <button class="btn btn-secondary" id="regenerateManifestBtn">📋 Rigenera Manifest</button>
     </div>
 
-    <div id="reportsContainer">
-      <div class="loading">Caricamento report...</div>
+    <!-- Reports List View -->
+    <div class="view active" id="reportsListView">
+      <div id="reportsContainer">
+        <div class="loading">Caricamento report...</div>
+      </div>
+    </div>
+
+    <!-- Report Detail View -->
+    <div class="view" id="reportDetailView">
+      <div class="report-detail">
+        <div class="report-detail-header">
+          <a href="#" class="back-btn" id="backBtn">← Torna alla lista</a>
+          <h2 id="reportDetailTitle">Report Detail</h2>
+        </div>
+        
+        <!-- Chart Screenshot Section -->
+        <div class="module-card" style="margin-bottom: 2rem;">
+          <div class="module-header">
+            <div class="module-title">📊 Chart Screenshot</div>
+            <div id="chartScreenshotStatus">
+              <span class="module-status missing">❌ Nessuno screenshot</span>
+            </div>
+          </div>
+          <div class="module-actions">
+            <button class="btn btn-primary btn-small" id="uploadChartScreenshotBtn">
+              📤 Carica Screenshot Chart
+            </button>
+            <button class="btn btn-secondary btn-small" id="viewChartScreenshotBtn" style="display: none;">
+              👁️ Visualizza
+            </button>
+          </div>
+        </div>
+
+        <!-- Modules Section -->
+        <h3 style="margin-bottom: 1rem; color: #f4f4f5;">Moduli</h3>
+        <div id="modulesContainer">
+          <div class="loading">Caricamento moduli...</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Modal Upload -->
-  <div class="upload-modal" id="uploadModal">
+  <!-- Modal: Create Report -->
+  <div class="modal" id="createReportModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title" id="modalTitle">Carica Screenshot</h2>
-        <button class="close-btn" id="closeModal">×</button>
+        <h2 class="modal-title">Crea Nuovo Report</h2>
+        <button class="close-btn" id="closeCreateModal">×</button>
       </div>
+      <form id="createReportForm">
+        <div class="form-group">
+          <label class="form-label" for="reportId">Report ID *</label>
+          <input type="text" id="reportId" class="form-input" required pattern="[a-zA-Z0-9_-]+" placeholder="es: 20251110-1630" />
+          <small style="color: #71717a; font-size: 0.85rem;">Solo lettere, numeri, trattini e underscore</small>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reportType">Tipo Report *</label>
+          <select id="reportType" class="form-input" required>
+            <option value="swing">Swing Master</option>
+          </select>
+        </div>
+        <div style="padding: 1rem; background: rgba(96, 165, 250, 0.1); border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid rgba(96, 165, 250, 0.3);">
+          <strong style="color: #93c5fd;">💡 Nota:</strong>
+          <p style="color: #a1a1aa; font-size: 0.9rem; margin-top: 0.5rem;">
+            Viene creata solo la directory del report. I file JSON (header.json, f1b.json, f2.json, ecc.) devono essere caricati direttamente dall'output del sistema di generazione report, così come sono generati, senza modifiche manuali.
+          </p>
+        </div>
+        <div class="status" id="createStatus"></div>
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+          <button type="submit" class="btn btn-primary" style="flex: 1;">Crea Report</button>
+          <button type="button" class="btn btn-secondary" id="cancelCreateBtn">Annulla</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-      <div id="selectedReportInfo" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(39, 39, 42, 0.6); border-radius: 8px; color: #a1a1aa; font-size: 0.9rem;"></div>
+  <!-- Modal: Upload JSON -->
+  <div class="modal" id="uploadJsonModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="jsonModalTitle">Carica JSON</h2>
+        <button class="close-btn" id="closeJsonModal">×</button>
+      </div>
+      <div id="jsonReportInfo" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(39, 39, 42, 0.6); border-radius: 8px; color: #a1a1aa; font-size: 0.9rem;"></div>
+      <div class="upload-area" id="jsonUploadArea">
+        <div class="upload-icon">📄</div>
+        <div class="upload-text">Trascina il file JSON qui o clicca per selezionare</div>
+        <div class="upload-hint">File JSON per il modulo</div>
+        <input type="file" id="jsonFileInput" accept=".json,application/json" />
+      </div>
+      <div class="json-preview" id="jsonPreview" style="display: none;"></div>
+      <div class="status" id="jsonStatus"></div>
+      <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+        <button class="btn btn-primary" id="uploadJsonBtn" style="flex: 1;">💾 Salva JSON</button>
+        <button class="btn btn-secondary" id="cancelJsonBtn">Annulla</button>
+      </div>
+    </div>
+  </div>
 
-      <div class="upload-area" id="uploadArea">
+  <!-- Modal: Upload Chart Screenshot -->
+  <div class="modal" id="uploadChartScreenshotModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="chartScreenshotModalTitle">Carica Screenshot Chart</h2>
+        <button class="close-btn" id="closeChartScreenshotModal">×</button>
+      </div>
+      <div id="chartScreenshotReportInfo" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(39, 39, 42, 0.6); border-radius: 8px; color: #a1a1aa; font-size: 0.9rem;"></div>
+      <div class="upload-area" id="chartScreenshotUploadArea">
         <div class="upload-icon">📁</div>
         <div class="upload-text">Trascina l'immagine qui o clicca per selezionare</div>
         <div class="upload-hint">PNG, JPG, formato consigliato: chart-snapshot.png</div>
         <div class="upload-hint" style="margin-top: 0.5rem; color: #60a5fa;">
           💡 Oppure premi <strong>Ctrl+V</strong> per incollare dall'appunti
         </div>
-        <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg" />
+        <input type="file" id="chartScreenshotFileInput" accept="image/png,image/jpeg,image/jpg" />
       </div>
-
-      <div class="preview-container" id="previewContainer">
-        <img id="previewImage" class="preview-image" alt="Preview" />
+      <div class="preview-container" id="chartScreenshotPreviewContainer">
+        <img id="chartScreenshotPreviewImage" class="preview-image" alt="Preview" />
       </div>
-
-      <div class="status" id="status"></div>
-
+      <div class="status" id="chartScreenshotStatus"></div>
       <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-        <button class="btn btn-primary" id="uploadBtn" style="flex: 1;">
-          💾 Salva Screenshot
-        </button>
-        <button class="btn btn-secondary" id="cancelBtn">
-          Annulla
-        </button>
+        <button class="btn btn-primary" id="uploadChartScreenshotBtnModal" style="flex: 1;">💾 Salva Screenshot</button>
+        <button class="btn btn-secondary" id="cancelChartScreenshotBtn">Annulla</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Upload Screenshot Modulo -->
+  <div class="modal" id="uploadScreenshotModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="screenshotModalTitle">Carica Screenshot</h2>
+        <button class="close-btn" id="closeScreenshotModal">×</button>
+      </div>
+      <div id="screenshotReportInfo" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(39, 39, 42, 0.6); border-radius: 8px; color: #a1a1aa; font-size: 0.9rem;"></div>
+      <div class="upload-area" id="screenshotUploadArea">
+        <div class="upload-icon">📁</div>
+        <div class="upload-text">Trascina l'immagine qui o clicca per selezionare</div>
+        <div class="upload-hint">PNG, JPG, formato consigliato: screenshot.png</div>
+        <div class="upload-hint" style="margin-top: 0.5rem; color: #60a5fa;">
+          💡 Oppure premi <strong>Ctrl+V</strong> per incollare dall'appunti
+        </div>
+        <input type="file" id="screenshotFileInput" accept="image/png,image/jpeg,image/jpg" />
+      </div>
+      <div class="preview-container" id="screenshotPreviewContainer">
+        <img id="screenshotPreviewImage" class="preview-image" alt="Preview" />
+      </div>
+      <div class="status" id="screenshotStatus"></div>
+      <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+        <button class="btn btn-primary" id="uploadScreenshotBtn" style="flex: 1;">💾 Salva Screenshot</button>
+        <button class="btn btn-secondary" id="cancelScreenshotBtn">Annulla</button>
       </div>
     </div>
   </div>
 
   <script>
-    let reports = [];
-    let selectedReport = null;
-    let selectedFile = null;
+    // Constants
+    const SWING_MODULES = ['F1B', 'F2', 'F3', 'F3O', 'F4', 'F5', 'F5B', 'F5-LT+'];
+    const MODULE_FILES = {
+      'F1B': 'f1b.json',
+      'F2': 'f2.json',
+      'F3': 'f3.json',
+      'F3O': 'f3o.json',
+      'F4': 'f4.json',
+      'F5': 'f5.json',
+      'F5B': 'f5b.json',
+      'F5-LT+': 'f5-lt+.json'
+    };
 
+    // State
+    let reports = [];
+    let currentReport = null;
+    let currentModule = null;
+    let selectedJsonFile = null;
+    let selectedScreenshotFile = null;
+    let pasteHandler = null;
+
+    // DOM Elements
     const searchBox = document.getElementById('searchBox');
+    const createReportBtn = document.getElementById('createReportBtn');
     const refreshBtn = document.getElementById('refreshBtn');
     const regenerateManifestBtn = document.getElementById('regenerateManifestBtn');
+    const reportsListView = document.getElementById('reportsListView');
+    const reportDetailView = document.getElementById('reportDetailView');
     const reportsContainer = document.getElementById('reportsContainer');
-    const uploadModal = document.getElementById('uploadModal');
-    const closeModal = document.getElementById('closeModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const selectedReportInfo = document.getElementById('selectedReportInfo');
-    const uploadArea = document.getElementById('uploadArea');
-    const fileInput = document.getElementById('fileInput');
-    const previewContainer = document.getElementById('previewContainer');
-    const previewImage = document.getElementById('previewImage');
-    const uploadBtn = document.getElementById('uploadBtn');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const status = document.getElementById('status');
+    const modulesContainer = document.getElementById('modulesContainer');
+    const backBtn = document.getElementById('backBtn');
+    const reportDetailTitle = document.getElementById('reportDetailTitle');
 
-    // Carica report
+    // Modals
+    const createReportModal = document.getElementById('createReportModal');
+    const createReportForm = document.getElementById('createReportForm');
+    const closeCreateModal = document.getElementById('closeCreateModal');
+    const cancelCreateBtn = document.getElementById('cancelCreateBtn');
+    const createStatus = document.getElementById('createStatus');
+
+    const uploadJsonModal = document.getElementById('uploadJsonModal');
+    const jsonModalTitle = document.getElementById('jsonModalTitle');
+    const jsonReportInfo = document.getElementById('jsonReportInfo');
+    const jsonUploadArea = document.getElementById('jsonUploadArea');
+    const jsonFileInput = document.getElementById('jsonFileInput');
+    const jsonPreview = document.getElementById('jsonPreview');
+    const uploadJsonBtn = document.getElementById('uploadJsonBtn');
+    const closeJsonModal = document.getElementById('closeJsonModal');
+    const cancelJsonBtn = document.getElementById('cancelJsonBtn');
+    const jsonStatus = document.getElementById('jsonStatus');
+
+    const uploadScreenshotModal = document.getElementById('uploadScreenshotModal');
+    const screenshotModalTitle = document.getElementById('screenshotModalTitle');
+    const screenshotReportInfo = document.getElementById('screenshotReportInfo');
+    const screenshotUploadArea = document.getElementById('screenshotUploadArea');
+    const screenshotFileInput = document.getElementById('screenshotFileInput');
+    const screenshotPreviewContainer = document.getElementById('screenshotPreviewContainer');
+    const screenshotPreviewImage = document.getElementById('screenshotPreviewImage');
+    const uploadScreenshotBtn = document.getElementById('uploadScreenshotBtn');
+    const closeScreenshotModal = document.getElementById('closeScreenshotModal');
+    const cancelScreenshotBtn = document.getElementById('cancelScreenshotBtn');
+    const screenshotStatus = document.getElementById('screenshotStatus');
+
+    // Load reports
     async function loadReports() {
       try {
         reportsContainer.innerHTML = '<div class="loading">Caricamento report...</div>';
         const response = await fetch('/report/admin/api/reports');
         const data = await response.json();
         reports = data.reports || [];
-        console.log(`[Dashboard] Caricati ${reports.length} report:`, reports.map(r => r.id).join(', '));
+        console.log(`[Dashboard] Caricati ${reports.length} report`);
         renderReports();
       } catch (error) {
         console.error('[Dashboard] Errore caricamento report:', error);
@@ -451,15 +709,13 @@
       }
     }
 
-    // Renderizza report
+    // Render reports list
     function renderReports() {
       const searchTerm = searchBox.value.toLowerCase();
       const filteredReports = reports.filter(r => 
         r.id.toLowerCase().includes(searchTerm) ||
         (r.ticker && r.ticker.toLowerCase().includes(searchTerm))
       );
-
-      console.log(`[Dashboard] Renderizzati ${filteredReports.length} report (filtro: "${searchTerm}")`);
 
       if (filteredReports.length === 0) {
         reportsContainer.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><div>Nessun report trovato</div></div>';
@@ -472,199 +728,535 @@
       filteredReports.forEach(report => {
         const card = document.createElement('div');
         card.className = 'report-card';
-        card.dataset.reportId = report.id;
-
-        const hasScreenshot = report.hasScreenshot;
-        const screenshotUrl = hasScreenshot ? `/report/reports/${report.id}/chart-snapshot.png?t=${Date.now()}` : null;
-
         card.innerHTML = `
           <div class="report-header">
             <div class="report-id">${escapeHtml(report.id)}</div>
-            <div class="screenshot-badge ${hasScreenshot ? 'has' : 'missing'}">
-              ${hasScreenshot ? '✅ Screenshot' : '❌ Nessuno'}
-            </div>
           </div>
           ${report.ticker ? `<div class="report-info">Ticker: <strong>${escapeHtml(report.ticker)}</strong></div>` : ''}
-          ${screenshotUrl ? `<img src="${screenshotUrl}" class="report-preview show" alt="Preview" onerror="this.style.display='none'" />` : ''}
           <div class="report-actions">
-            <button class="btn btn-primary btn-small upload-btn" data-report-id="${report.id}">
-              ${hasScreenshot ? '🔄 Sostituisci' : '📤 Carica'}
+            <button class="btn btn-primary btn-small" data-action="view" data-report-id="${report.id}">
+              👁️ Visualizza
             </button>
-            ${hasScreenshot ? `<button class="btn btn-secondary btn-small view-btn" data-report-id="${report.id}">👁️ Visualizza</button>` : ''}
           </div>
         `;
 
-        grid.appendChild(card);
-
-        // Click su card
-        card.querySelector('.upload-btn').addEventListener('click', (e) => {
-          e.stopPropagation();
-          openUploadModal(report);
+        card.querySelector('[data-action="view"]').addEventListener('click', () => {
+          viewReport(report.id);
         });
 
-        if (hasScreenshot) {
-          card.querySelector('.view-btn')?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            window.open(`/report/#/${report.id}`, '_blank');
-          });
-        }
+        grid.appendChild(card);
       });
     }
 
-
-    // Click su area upload
-    uploadArea.addEventListener('click', () => fileInput.click());
-
-    // Drag and drop
-    uploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadArea.classList.add('dragover');
-    });
-
-    uploadArea.addEventListener('dragleave', () => {
-      uploadArea.classList.remove('dragover');
-    });
-
-    uploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      uploadArea.classList.remove('dragover');
-      const files = e.dataTransfer.files;
-      if (files.length > 0) {
-        handleFile(files[0]);
+    // View report detail
+    async function viewReport(reportId) {
+      currentReport = reports.find(r => r.id === reportId);
+      if (!currentReport) {
+        showStatus('error', 'Report non trovato');
+        return;
       }
-    });
 
-    // Selezione file
-    fileInput.addEventListener('change', (e) => {
-      if (e.target.files.length > 0) {
-        handleFile(e.target.files[0]);
-      }
-    });
+      reportDetailTitle.textContent = `Report: ${currentReport.id}`;
+      reportsListView.classList.remove('active');
+      reportDetailView.classList.add('active');
 
-    // Paste da clipboard (Ctrl+V)
-    let pasteHandler = null;
-    
-    function enablePaste() {
-      if (pasteHandler) return; // Già abilitato
+      await loadReportChartScreenshot(reportId);
+      await loadReportModules(reportId);
+    }
+
+    // Load chart screenshot status
+    async function loadReportChartScreenshot(reportId) {
+      const hasScreenshot = await checkFileExists(`/report/reports/${reportId}/chart-snapshot.png`);
+      const statusEl = document.getElementById('chartScreenshotStatus');
+      const uploadBtn = document.getElementById('uploadChartScreenshotBtn');
+      const viewBtn = document.getElementById('viewChartScreenshotBtn');
       
-      pasteHandler = async (e) => {
-        if (!uploadModal.classList.contains('show')) return;
+      if (hasScreenshot) {
+        statusEl.innerHTML = '<span class="module-status has-screenshot">✅ Screenshot presente</span>';
+        uploadBtn.textContent = '🔄 Sostituisci Screenshot';
+        viewBtn.style.display = 'inline-block';
+        viewBtn.onclick = () => {
+          window.open(`/report/reports/${reportId}/chart-snapshot.png?t=${Date.now()}`, '_blank');
+        };
+      } else {
+        statusEl.innerHTML = '<span class="module-status missing">❌ Nessuno screenshot</span>';
+        uploadBtn.textContent = '📤 Carica Screenshot Chart';
+        viewBtn.style.display = 'none';
+      }
+      
+      uploadBtn.onclick = async () => {
+        await openUploadChartScreenshotModal();
+      };
+    }
+
+    // Load report modules
+    async function loadReportModules(reportId) {
+      try {
+        modulesContainer.innerHTML = '<div class="loading">Caricamento moduli...</div>';
+        
+        // Lista tutti i file JSON nella directory del report
+        const response = await fetch(`/report/admin/api/report-files?reportId=${reportId}`);
+        const data = await response.json();
+        const jsonFiles = data.files || [];
+        
+        // Check which modules exist
+        const modules = [];
+        for (const moduleId of SWING_MODULES) {
+          const fileName = MODULE_FILES[moduleId];
+          // Cerca il file JSON (può essere f1b.json, f1b-generated.json, ecc.)
+          const hasJson = jsonFiles.some(f => {
+            const baseName = f.replace('.json', '').toLowerCase();
+            const moduleBase = fileName.replace('.json', '').toLowerCase();
+            return baseName === moduleBase || baseName.includes(moduleBase) || moduleBase.includes(baseName);
+          });
+          const hasScreenshot = await checkFileExists(`/report/reports/${reportId}/${moduleId.toLowerCase()}-screenshot.png`);
+          
+          modules.push({
+            id: moduleId,
+            fileName: fileName,
+            hasJson: hasJson,
+            hasScreenshot: hasScreenshot
+          });
+        }
+
+        renderModules(modules, jsonFiles);
+      } catch (error) {
+        console.error('[Dashboard] Errore caricamento moduli:', error);
+        modulesContainer.innerHTML = `<div class="empty-state"><div class="empty-state-icon">❌</div><div>Errore: ${error.message}</div></div>`;
+      }
+    }
+
+    // Check if file exists
+    async function checkFileExists(url) {
+      try {
+        const response = await fetch(url, { method: 'HEAD' });
+        return response.ok;
+      } catch {
+        return false;
+      }
+    }
+
+    // Render modules
+    function renderModules(modules, jsonFiles = []) {
+      modulesContainer.innerHTML = '<div class="modules-grid"></div>';
+      const grid = modulesContainer.querySelector('.modules-grid');
+
+      modules.forEach(module => {
+        // Trova il file JSON corrispondente (se esiste)
+        const actualFile = jsonFiles.find(f => {
+          const baseName = f.replace('.json', '').toLowerCase();
+          const moduleBase = module.fileName.replace('.json', '').toLowerCase();
+          return baseName === moduleBase || baseName.includes(moduleBase) || moduleBase.includes(baseName);
+        });
+
+        const card = document.createElement('div');
+        card.className = 'module-card';
+        card.innerHTML = `
+          <div class="module-header">
+            <div class="module-title">${module.id}</div>
+            <div>
+              ${module.hasJson ? `<span class="module-status has-json">✅ JSON${actualFile ? ` (${actualFile})` : ''}</span>` : '<span class="module-status missing">❌ JSON</span>'}
+              ${module.hasScreenshot ? '<span class="module-status has-screenshot" style="margin-left: 0.5rem;">✅ Screenshot</span>' : '<span class="module-status missing" style="margin-left: 0.5rem;">❌ Screenshot</span>'}
+            </div>
+          </div>
+          <div class="module-actions">
+            <button class="btn btn-primary btn-small" data-action="upload-json" data-module="${module.id}">
+              📄 ${module.hasJson ? 'Sostituisci' : 'Carica'} JSON
+            </button>
+            <button class="btn btn-primary btn-small" data-action="upload-screenshot" data-module="${module.id}">
+              📷 ${module.hasScreenshot ? 'Sostituisci' : 'Carica'} Screenshot
+            </button>
+          </div>
+        `;
+
+        card.querySelector('[data-action="upload-json"]').addEventListener('click', () => {
+          openUploadJsonModal(module.id);
+        });
+
+        card.querySelector('[data-action="upload-screenshot"]').addEventListener('click', () => {
+          openUploadScreenshotModal(module.id);
+        });
+
+        grid.appendChild(card);
+      });
+
+      // Aggiungi pulsante per caricare JSON generico (non associato a un modulo specifico)
+      const genericCard = document.createElement('div');
+      genericCard.className = 'module-card';
+      genericCard.style.border = '2px dashed rgba(96, 165, 250, 0.3)';
+      genericCard.innerHTML = `
+        <div class="module-header">
+          <div class="module-title">➕ Altri File JSON</div>
+        </div>
+        <div style="color: #a1a1aa; font-size: 0.9rem; margin-bottom: 1rem;">
+          Carica file JSON generati dall'output (header.json, manifest.json, ecc.)
+        </div>
+        <div class="module-actions">
+          <button class="btn btn-secondary btn-small" id="uploadGenericJsonBtn">
+            📄 Carica JSON Generico
+          </button>
+        </div>
+      `;
+      genericCard.querySelector('#uploadGenericJsonBtn').addEventListener('click', () => {
+        openUploadJsonModal(null);
+      });
+      grid.appendChild(genericCard);
+    }
+
+    // Create new report
+    createReportForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const reportId = document.getElementById('reportId').value.trim();
+      const reportType = document.getElementById('reportType').value;
+
+      if (!reportId || !reportType) {
+        showStatus('error', 'Compila tutti i campi obbligatori', createStatus);
+        return;
+      }
+
+      const submitBtn = createReportForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      showStatus('info', '⏳ Creazione report in corso...', createStatus);
+
+      try {
+        const response = await fetch('/report/admin/api/create-report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            reportId,
+            reportType
+          })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          showStatus('success', `✅ Report creato con successo!<br>ID: ${result.reportId}`, createStatus);
+          setTimeout(() => {
+            closeCreateReportModal();
+            loadReports();
+            viewReport(reportId);
+          }, 2000);
+        } else {
+          showStatus('error', `❌ Errore: ${result.error || 'Creazione fallita'}`, createStatus);
+        }
+      } catch (error) {
+        showStatus('error', `❌ Errore di connessione: ${error.message}`, createStatus);
+      } finally {
+        const submitBtn = createReportForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = false;
+      }
+    });
+
+    // Open upload JSON modal
+    function openUploadJsonModal(moduleId = null) {
+      currentModule = moduleId;
+      selectedJsonFile = null;
+      if (moduleId) {
+        jsonModalTitle.textContent = `Carica JSON - ${currentReport.id} - ${moduleId}`;
+        jsonReportInfo.innerHTML = `
+          <strong>Report ID:</strong> ${escapeHtml(currentReport.id)}<br>
+          <strong>Modulo:</strong> ${moduleId}<br>
+          <strong>File suggerito:</strong> ${MODULE_FILES[moduleId] || 'Nome file dall\'output'}
+        `;
+      } else {
+        jsonModalTitle.textContent = `Carica JSON - ${currentReport.id}`;
+        jsonReportInfo.innerHTML = `
+          <strong>Report ID:</strong> ${escapeHtml(currentReport.id)}<br>
+          <strong>Nota:</strong> Il file verrà salvato con il nome originale dall'output (es: header.json, f1b.json, f2.json, ecc.)
+        `;
+      }
+      jsonPreview.style.display = 'none';
+      jsonPreview.textContent = '';
+      hideStatus(jsonStatus);
+      uploadJsonModal.classList.add('show');
+    }
+
+    // Open upload chart screenshot modal
+    async function openUploadChartScreenshotModal() {
+      selectedChartScreenshotFile = null;
+      chartScreenshotModalTitle.textContent = `Carica Screenshot Chart - ${currentReport.id}`;
+      const hasScreenshot = await checkFileExists(`/report/reports/${currentReport.id}/chart-snapshot.png`);
+      chartScreenshotReportInfo.innerHTML = `
+        <strong>Report ID:</strong> ${escapeHtml(currentReport.id)}<br>
+        ${currentReport.ticker ? `<strong>Ticker:</strong> ${escapeHtml(currentReport.ticker)}<br>` : ''}
+        <strong>Stato:</strong> ${hasScreenshot ? '✅ Screenshot presente' : '❌ Nessuno screenshot'}
+      `;
+      chartScreenshotPreviewContainer.classList.remove('show');
+      chartScreenshotPreviewImage.src = '';
+      hideStatus(chartScreenshotStatusEl);
+      uploadChartScreenshotModal.classList.add('show');
+      enableChartPaste();
+    }
+
+    // Open upload screenshot modal
+    function openUploadScreenshotModal(moduleId) {
+      currentModule = moduleId;
+      selectedScreenshotFile = null;
+      screenshotModalTitle.textContent = `Carica Screenshot - ${currentReport.id} - ${moduleId}`;
+      screenshotReportInfo.innerHTML = `
+        <strong>Report ID:</strong> ${escapeHtml(currentReport.id)}<br>
+        <strong>Modulo:</strong> ${moduleId}
+      `;
+      screenshotPreviewContainer.classList.remove('show');
+      screenshotPreviewImage.src = '';
+      hideStatus(screenshotStatus);
+      uploadScreenshotModal.classList.add('show');
+      enablePaste();
+    }
+
+    // JSON file handling
+    jsonUploadArea.addEventListener('click', () => jsonFileInput.click());
+    jsonFileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleJsonFile(e.target.files[0]);
+      }
+    });
+
+    jsonUploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      jsonUploadArea.classList.add('dragover');
+    });
+
+    jsonUploadArea.addEventListener('dragleave', () => {
+      jsonUploadArea.classList.remove('dragover');
+    });
+
+    jsonUploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      jsonUploadArea.classList.remove('dragover');
+      if (e.dataTransfer.files.length > 0) {
+        handleJsonFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    function handleJsonFile(file) {
+      if (!file.name.endsWith('.json')) {
+        showStatus('error', '❌ Seleziona un file JSON', jsonStatus);
+        return;
+      }
+
+      selectedJsonFile = file;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const json = JSON.parse(e.target.result);
+          jsonPreview.textContent = JSON.stringify(json, null, 2);
+          jsonPreview.style.display = 'block';
+        } catch (error) {
+          showStatus('error', '❌ File JSON non valido', jsonStatus);
+          return;
+        }
+      };
+      reader.readAsText(file);
+
+      hideStatus(jsonStatus);
+    }
+
+    // Screenshot file handling
+    screenshotUploadArea.addEventListener('click', () => screenshotFileInput.click());
+    screenshotFileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleScreenshotFile(e.target.files[0]);
+      }
+    });
+
+    screenshotUploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      screenshotUploadArea.classList.add('dragover');
+    });
+
+    screenshotUploadArea.addEventListener('dragleave', () => {
+      screenshotUploadArea.classList.remove('dragover');
+    });
+
+    screenshotUploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      screenshotUploadArea.classList.remove('dragover');
+      if (e.dataTransfer.files.length > 0) {
+        handleScreenshotFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    function handleScreenshotFile(file) {
+      if (!file.type.startsWith('image/')) {
+        showStatus('error', '❌ Seleziona un file immagine (PNG, JPG)', screenshotStatus);
+        return;
+      }
+
+      selectedScreenshotFile = file;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        screenshotPreviewImage.src = e.target.result;
+        screenshotPreviewContainer.classList.add('show');
+      };
+      reader.readAsDataURL(file);
+
+      hideStatus(screenshotStatus);
+    }
+
+    // Chart screenshot file handling
+    chartScreenshotUploadArea.addEventListener('click', () => chartScreenshotFileInput.click());
+    chartScreenshotFileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleChartScreenshotFile(e.target.files[0]);
+      }
+    });
+
+    chartScreenshotUploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      chartScreenshotUploadArea.classList.add('dragover');
+    });
+
+    chartScreenshotUploadArea.addEventListener('dragleave', () => {
+      chartScreenshotUploadArea.classList.remove('dragover');
+    });
+
+    chartScreenshotUploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      chartScreenshotUploadArea.classList.remove('dragover');
+      if (e.dataTransfer.files.length > 0) {
+        handleChartScreenshotFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    function handleChartScreenshotFile(file) {
+      if (!file.type.startsWith('image/')) {
+        showStatus('error', '❌ Seleziona un file immagine (PNG, JPG)', chartScreenshotStatusEl);
+        return;
+      }
+
+      selectedChartScreenshotFile = file;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        chartScreenshotPreviewImage.src = e.target.result;
+        chartScreenshotPreviewContainer.classList.add('show');
+      };
+      reader.readAsDataURL(file);
+
+      hideStatus(chartScreenshotStatusEl);
+    }
+
+    // Paste handler for chart screenshot
+    function enableChartPaste() {
+      if (chartPasteHandler) return;
+      
+      chartPasteHandler = async (e) => {
+        if (!uploadChartScreenshotModal.classList.contains('show')) return;
         
         e.preventDefault();
         
-        // Prova prima con Clipboard API (più moderno)
         try {
           const items = await navigator.clipboard.read();
           
           for (const item of items) {
-            // Cerca immagini
             const imageTypes = item.types.filter(t => t.startsWith('image/'));
             if (imageTypes.length > 0) {
               const blob = await item.getType(imageTypes[0]);
               const file = new File([blob], 'chart-snapshot.png', { type: blob.type });
               
-              handleFile(file);
-              showStatus('info', '✅ Immagine incollata dagli appunti!');
+              handleChartScreenshotFile(file);
+              showStatus('info', '✅ Immagine incollata dagli appunti!', chartScreenshotStatusEl);
               return;
             }
           }
         } catch (error) {
-          // Fallback: usa l'evento paste standard
           if (e.clipboardData && e.clipboardData.files.length > 0) {
             const file = e.clipboardData.files[0];
             if (file.type.startsWith('image/')) {
-              handleFile(file);
-              showStatus('info', '✅ Immagine incollata dagli appunti!');
+              handleChartScreenshotFile(file);
+              showStatus('info', '✅ Immagine incollata dagli appunti!', chartScreenshotStatusEl);
               return;
             }
           }
           
-          // Se non c'è immagine nella clipboard
-          showStatus('error', '❌ Nessuna immagine negli appunti. Copia prima uno screenshot!');
+          showStatus('error', '❌ Nessuna immagine negli appunti. Copia prima uno screenshot!', chartScreenshotStatusEl);
         }
       };
       
-      // Usa l'evento 'paste' invece di 'keydown'
-      document.addEventListener('paste', pasteHandler);
-      
-      // Aggiungi anche listener sull'area upload per maggiore visibilità
-      uploadArea.addEventListener('paste', pasteHandler);
+      document.addEventListener('paste', chartPasteHandler);
+      chartScreenshotUploadArea.addEventListener('paste', chartPasteHandler);
     }
-    
+
+    function disableChartPaste() {
+      if (chartPasteHandler) {
+        document.removeEventListener('paste', chartPasteHandler);
+        chartScreenshotUploadArea.removeEventListener('paste', chartPasteHandler);
+        chartPasteHandler = null;
+      }
+    }
+
+    // Paste handler for module screenshots
+    function enablePaste() {
+      if (pasteHandler) return;
+      
+      pasteHandler = async (e) => {
+        if (!uploadScreenshotModal.classList.contains('show')) return;
+        
+        e.preventDefault();
+        
+        try {
+          const items = await navigator.clipboard.read();
+          
+          for (const item of items) {
+            const imageTypes = item.types.filter(t => t.startsWith('image/'));
+            if (imageTypes.length > 0) {
+              const blob = await item.getType(imageTypes[0]);
+              const file = new File([blob], 'screenshot.png', { type: blob.type });
+              
+              handleScreenshotFile(file);
+              showStatus('info', '✅ Immagine incollata dagli appunti!', screenshotStatus);
+              return;
+            }
+          }
+        } catch (error) {
+          if (e.clipboardData && e.clipboardData.files.length > 0) {
+            const file = e.clipboardData.files[0];
+            if (file.type.startsWith('image/')) {
+              handleScreenshotFile(file);
+              showStatus('info', '✅ Immagine incollata dagli appunti!', screenshotStatus);
+              return;
+            }
+          }
+          
+          showStatus('error', '❌ Nessuna immagine negli appunti. Copia prima uno screenshot!', screenshotStatus);
+        }
+      };
+      
+      document.addEventListener('paste', pasteHandler);
+      screenshotUploadArea.addEventListener('paste', pasteHandler);
+    }
+
     function disablePaste() {
       if (pasteHandler) {
         document.removeEventListener('paste', pasteHandler);
-        uploadArea.removeEventListener('paste', pasteHandler);
+        screenshotUploadArea.removeEventListener('paste', pasteHandler);
         pasteHandler = null;
       }
     }
-    
-    // Abilita paste quando si apre il modal
-    function openUploadModal(report) {
-      selectedReport = report;
-      selectedFile = null;
-      modalTitle.textContent = `Carica Screenshot - ${report.id}`;
-      selectedReportInfo.innerHTML = `
-        <strong>Report ID:</strong> ${escapeHtml(report.id)}<br>
-        ${report.ticker ? `<strong>Ticker:</strong> ${escapeHtml(report.ticker)}<br>` : ''}
-        <strong>Stato:</strong> ${report.hasScreenshot ? '✅ Screenshot presente' : '❌ Nessuno screenshot'}
-      `;
-      previewContainer.classList.remove('show');
-      previewImage.src = '';
-      hideStatus();
-      uploadModal.classList.add('show');
-      enablePaste(); // Abilita paste
-    }
-    
-    // Disabilita paste quando si chiude il modal
-    function closeUploadModal() {
-      uploadModal.classList.remove('show');
-      selectedReport = null;
-      selectedFile = null;
-      disablePaste(); // Disabilita paste
-    }
 
-    // Gestione file
-    function handleFile(file) {
-      if (!file.type.startsWith('image/')) {
-        showStatus('error', '❌ Seleziona un file immagine (PNG, JPG)');
+    // Upload JSON - salva con il nome originale del file
+    uploadJsonBtn.addEventListener('click', async () => {
+      if (!currentReport || !selectedJsonFile) {
+        showStatus('error', '❌ Seleziona un file JSON', jsonStatus);
         return;
       }
 
-      selectedFile = file;
-
-      // Preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        previewImage.src = e.target.result;
-        previewContainer.classList.add('show');
-      };
-      reader.readAsDataURL(file);
-
-      hideStatus();
-    }
-
-    // Upload
-    uploadBtn.addEventListener('click', async () => {
-      if (!selectedReport) {
-        showStatus('error', '❌ Nessun report selezionato');
-        return;
-      }
-
-      if (!selectedFile) {
-        showStatus('error', '❌ Seleziona un file immagine');
-        return;
-      }
-
-      uploadBtn.disabled = true;
-      showStatus('info', '⏳ Upload in corso...');
+      uploadJsonBtn.disabled = true;
+      showStatus('info', '⏳ Upload in corso...', jsonStatus);
 
       try {
         const formData = new FormData();
-        formData.append('reportId', selectedReport.id);
-        formData.append('file', selectedFile);
+        formData.append('reportId', currentReport.id);
+        formData.append('file', selectedJsonFile);
+        // Usa il nome originale del file
+        formData.append('fileName', selectedJsonFile.name);
 
-        const response = await fetch('/report/admin/upload-chart', {
+        const response = await fetch('/report/admin/api/upload-module-json', {
           method: 'POST',
           body: formData
         });
@@ -672,44 +1264,111 @@
         const result = await response.json();
 
         if (response.ok) {
-          let message = `✅ Screenshot salvato con successo!<br><strong>Percorso:</strong> ${result.path}`;
-          
-          // Mostra risultato push GitHub se presente
-          if (result.git) {
-            if (result.git.success) {
-              message += `<br><br>✅ <strong>Push GitHub completato!</strong><br>`;
-              message += `<strong>Branch:</strong> ${result.git.branch || 'N/A'}<br>`;
-              message += `<strong>Commit:</strong> ${result.git.commit || 'N/A'}`;
-            } else {
-              message += `<br><br>⚠️ <strong>Push GitHub fallito:</strong> ${result.git.error || 'Errore sconosciuto'}`;
-            }
-          }
-          
-          // Mostra risultato rigenerazione manifest se presente
-          if (result.manifest) {
-            if (result.manifest.success) {
-              message += `<br><br>✅ <strong>Manifest rigenerato!</strong><br>La dashboard principale del sito è stata aggiornata.`;
-            } else {
-              message += `<br><br>⚠️ <strong>Rigenerazione manifest fallita:</strong> ${result.manifest.error || 'Errore sconosciuto'}`;
-            }
-          }
-          
-          showStatus('success', message);
+          showStatus('success', `✅ JSON salvato con successo!<br><strong>File:</strong> ${result.path}`, jsonStatus);
           setTimeout(() => {
-            closeUploadModal();
-            loadReports();
-          }, 3000);
+            closeUploadJsonModal();
+            loadReportModules(currentReport.id);
+            loadReportChartScreenshot(currentReport.id);
+          }, 2000);
         } else {
-          showStatus('error', `❌ Errore: ${result.error || 'Upload fallito'}`);
+          showStatus('error', `❌ Errore: ${result.error || 'Upload fallito'}`, jsonStatus);
         }
       } catch (error) {
-        showStatus('error', `❌ Errore di connessione: ${error.message}`);
+        showStatus('error', `❌ Errore di connessione: ${error.message}`, jsonStatus);
       } finally {
-        uploadBtn.disabled = false;
+        uploadJsonBtn.disabled = false;
       }
     });
 
-    // Rigenera manifest
+    // Upload Screenshot
+    uploadScreenshotBtn.addEventListener('click', async () => {
+      if (!currentReport || !currentModule || !selectedScreenshotFile) {
+        showStatus('error', '❌ Seleziona un file immagine', screenshotStatus);
+        return;
+      }
+
+      uploadScreenshotBtn.disabled = true;
+      showStatus('info', '⏳ Upload in corso...', screenshotStatus);
+
+      try {
+        const formData = new FormData();
+        formData.append('reportId', currentReport.id);
+        formData.append('moduleId', currentModule);
+        formData.append('file', selectedScreenshotFile);
+
+        const response = await fetch('/report/admin/api/upload-module-screenshot', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          showStatus('success', `✅ Screenshot salvato con successo!<br><strong>File:</strong> ${result.path}`, screenshotStatus);
+          setTimeout(() => {
+            closeUploadScreenshotModal();
+            loadReportModules(currentReport.id);
+          }, 2000);
+        } else {
+          showStatus('error', `❌ Errore: ${result.error || 'Upload fallito'}`, screenshotStatus);
+        }
+      } catch (error) {
+        showStatus('error', `❌ Errore di connessione: ${error.message}`, screenshotStatus);
+      } finally {
+        uploadScreenshotBtn.disabled = false;
+      }
+    });
+
+    // Close modals
+    function closeCreateReportModal() {
+      createReportModal.classList.remove('show');
+      createReportForm.reset();
+      hideStatus(createStatus);
+    }
+
+    function closeUploadJsonModal() {
+      uploadJsonModal.classList.remove('show');
+      currentModule = null;
+      selectedJsonFile = null;
+    }
+
+    function closeUploadChartScreenshotModal() {
+      uploadChartScreenshotModal.classList.remove('show');
+      selectedChartScreenshotFile = null;
+      disableChartPaste();
+    }
+
+    function closeUploadScreenshotModal() {
+      uploadScreenshotModal.classList.remove('show');
+      currentModule = null;
+      selectedScreenshotFile = null;
+      disablePaste();
+    }
+
+    // Event listeners
+    createReportBtn.addEventListener('click', () => {
+      createReportModal.classList.add('show');
+    });
+
+    closeCreateModal.addEventListener('click', closeCreateReportModal);
+    cancelCreateBtn.addEventListener('click', closeCreateReportModal);
+    closeJsonModal.addEventListener('click', closeUploadJsonModal);
+    cancelJsonBtn.addEventListener('click', closeUploadJsonModal);
+    closeChartScreenshotModal.addEventListener('click', closeUploadChartScreenshotModal);
+    cancelChartScreenshotBtn.addEventListener('click', closeUploadChartScreenshotModal);
+    closeScreenshotModal.addEventListener('click', closeUploadScreenshotModal);
+    cancelScreenshotBtn.addEventListener('click', closeUploadScreenshotModal);
+
+    backBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      reportDetailView.classList.remove('active');
+      reportsListView.classList.add('active');
+      currentReport = null;
+    });
+
+    refreshBtn.addEventListener('click', loadReports);
+    searchBox.addEventListener('input', renderReports);
+
     regenerateManifestBtn.addEventListener('click', async () => {
       regenerateManifestBtn.disabled = true;
       regenerateManifestBtn.textContent = '⏳ Rigenerazione...';
@@ -721,54 +1380,56 @@
         const result = await response.json();
         
         if (result.success) {
-          showStatus('success', `✅ Manifest rigenerato con successo!<br>La dashboard principale del sito è stata aggiornata.`);
-          setTimeout(() => {
-            hideStatus();
-            loadReports(); // Ricarica i report
-          }, 2000);
+          alert('✅ Manifest rigenerato con successo!');
         } else {
-          showStatus('error', `❌ Errore: ${result.error || 'Rigenerazione fallita'}`);
+          alert(`❌ Errore: ${result.error || 'Rigenerazione fallita'}`);
         }
       } catch (error) {
-        showStatus('error', `❌ Errore di connessione: ${error.message}`);
+        alert(`❌ Errore di connessione: ${error.message}`);
       } finally {
         regenerateManifestBtn.disabled = false;
         regenerateManifestBtn.textContent = '📋 Rigenera Manifest';
       }
     });
 
-    // Event listeners
-    closeModal.addEventListener('click', closeUploadModal);
-    cancelBtn.addEventListener('click', closeUploadModal);
-    refreshBtn.addEventListener('click', loadReports);
-    searchBox.addEventListener('input', renderReports);
-
-    // Click fuori modal
-    uploadModal.addEventListener('click', (e) => {
-      if (e.target === uploadModal) {
-        closeUploadModal();
-      }
+    // Click outside modals
+    createReportModal.addEventListener('click', (e) => {
+      if (e.target === createReportModal) closeCreateReportModal();
     });
 
-    // Utility
+    uploadJsonModal.addEventListener('click', (e) => {
+      if (e.target === uploadJsonModal) closeUploadJsonModal();
+    });
+
+    uploadChartScreenshotModal.addEventListener('click', (e) => {
+      if (e.target === uploadChartScreenshotModal) closeUploadChartScreenshotModal();
+    });
+
+    uploadScreenshotModal.addEventListener('click', (e) => {
+      if (e.target === uploadScreenshotModal) closeUploadScreenshotModal();
+    });
+
+    // Utility functions
     function escapeHtml(str) {
       const div = document.createElement('div');
       div.textContent = String(str);
       return div.innerHTML;
     }
 
-    function showStatus(type, message) {
-      status.className = `status ${type} show`;
-      status.innerHTML = message;
+    function showStatus(type, message, element = null) {
+      const statusEl = element || document.getElementById('status');
+      if (!statusEl) return;
+      statusEl.className = `status ${type} show`;
+      statusEl.innerHTML = message;
     }
 
-    function hideStatus() {
-      status.classList.remove('show');
+    function hideStatus(element = null) {
+      const statusEl = element || document.getElementById('status');
+      if (statusEl) statusEl.classList.remove('show');
     }
 
-    // Carica report all'avvio
+    // Initialize
     loadReports();
   </script>
 </body>
 </html>
-
