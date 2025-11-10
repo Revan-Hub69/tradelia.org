@@ -28,111 +28,106 @@ function parseRegimeScore(score) {
   return 0;
 }
 
-// ===== HELPER: Generate Historical Data (Mock) =====
-function generateHistoricalData(currentValue, days = 30, volatility = 0.1) {
-  const data = [];
-  const now = new Date();
-  
-  for (let i = days - 1; i >= 0; i--) {
-    const date = new Date(now);
-    date.setDate(date.getDate() - i);
-    
-    // Simula variazione random con tendenza verso valore corrente
-    const progress = (days - i) / days;
-    const randomChange = (Math.random() - 0.5) * volatility * 2;
-    const trend = (currentValue - currentValue * 0.8) * progress;
-    const value = currentValue * 0.8 + trend + randomChange;
-    
-    data.push({
-      date: date.toISOString().split('T')[0],
-      value: Math.max(-1, Math.min(1, value))
-    });
-  }
-  
-  return data;
-}
+// Funzione generateHistoricalData rimossa - non più necessaria (chart usano solo dati correnti)
 
-// ===== CHART 1: RegimeScore Timeline =====
-async function renderRegimeScoreTimeline(container, f1bData) {
+// ===== CHART 1: RegimeScore Gauge =====
+async function renderRegimeScoreGauge(container, f1bData) {
   try {
     const regimeScore = parseRegimeScore(f1bData?.regime_and_risk?.RegimeScore || f1bData?.f1bSnapshot?.regime_state?.RegimeScore || 0);
-    const historical = generateHistoricalData(regimeScore, 30, 0.15);
+    const strategyMode = f1bData?.regime_and_risk?.StrategyMode_macro?.raw || f1bData?.regime_and_risk?.StrategyMode_macro || '—';
+    
+    // Interpretazione
+    let interpretation = 'Neutro';
+    let color = CHART_COLORS.warn;
+    if (regimeScore > 0.3) {
+      interpretation = 'Risk-on';
+      color = CHART_COLORS.ok;
+    } else if (regimeScore < -0.3) {
+      interpretation = 'Risk-off';
+      color = CHART_COLORS.err;
+    }
     
     const chartHTML = `
-      <div class="chart-container" data-chart-id="regime-score-timeline">
-        <div class="chart-title">RegimeScore Timeline</div>
+      <div class="chart-container" data-chart-id="regime-score-gauge">
+        <div class="chart-title">RegimeScore</div>
         <div class="chart-description">
-          Evoluzione del RegimeScore negli ultimi 30 giorni. Valori positivi (>0) indicano risk-on (appetito al rischio), 
-          valori negativi (<0) indicano risk-off (avversione al rischio). Il valore corrente è ${regimeScore.toFixed(2)}.
+          RegimeScore corrente: ${regimeScore.toFixed(2)} (${interpretation}). 
+          Valori positivi (>0) indicano risk-on (appetito al rischio), 
+          valori negativi (<0) indicano risk-off (avversione al rischio). 
+          StrategyMode: ${strategyMode}
         </div>
         <div class="chart-wrapper">
-          <canvas id="regime-score-timeline"></canvas>
+          <canvas id="regime-score-gauge"></canvas>
         </div>
       </div>
     `;
     
     container.innerHTML += chartHTML;
     
-    const canvas = document.getElementById('regime-score-timeline');
+    const canvas = document.getElementById('regime-score-gauge');
     if (!canvas) {
-      Logger.error('F1B Charts', 'Canvas non trovato per RegimeScore Timeline');
+      Logger.error('F1B Charts', 'Canvas non trovato per RegimeScore Gauge');
       return;
     }
     
-    const chart = await charts.createLineChart(canvas, {
-      labels: historical.map(d => {
-        const date = new Date(d.date);
-        return date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' });
-      }),
+    // Gauge chart: barra orizzontale che mostra il RegimeScore
+    const chart = await charts.createBarChart(canvas, {
+      labels: ['RegimeScore'],
       datasets: [{
         label: 'RegimeScore',
-        data: historical.map(d => d.value),
-        borderColor: CHART_COLORS.primary,
-        backgroundColor: 'rgba(37, 99, 235, 0.1)',
-        fill: true,
-        tension: 0.4,
-        pointRadius: 2,
-        pointHoverRadius: 4
-      }, {
-        label: 'Zero Line',
-        data: new Array(30).fill(0),
-        borderColor: CHART_COLORS.neutral,
-        borderWidth: 1,
-        borderDash: [5, 5],
-        pointRadius: 0,
-        fill: false
+        data: [regimeScore],
+        backgroundColor: color,
+        borderColor: color,
+        borderWidth: 2
       }]
     }, {
+      indexAxis: 'y',
       scales: {
-        y: {
+        x: {
           min: -1,
           max: 1,
           ticks: {
             callback: function(value) {
-              return value.toFixed(1);
+              if (value === -1) return 'Risk-off (-1)';
+              if (value === 0) return 'Neutro (0)';
+              if (value === 1) return 'Risk-on (+1)';
+              return value.toFixed(2);
             }
+          },
+          grid: {
+            color: function(context) {
+              // Linea centrale a 0
+              if (context.tick.value === 0) return CHART_COLORS.neutral;
+              return CHART_COLORS.grid;
+            }
+          }
+        },
+        y: {
+          ticks: {
+            display: false
+          },
+          grid: {
+            display: false
           }
         }
       },
       plugins: {
+        legend: {
+          display: false
+        },
         tooltip: {
           callbacks: {
             label: function(context) {
-              if (context.datasetIndex === 0) {
-                const value = context.parsed.y;
-                const interpretation = value > 0.3 ? 'Risk-on' : value < -0.3 ? 'Risk-off' : 'Neutro';
-                return `RegimeScore: ${value.toFixed(2)} (${interpretation})`;
-              }
-              return '';
+              return `RegimeScore: ${regimeScore.toFixed(2)} (${interpretation})`;
             }
           }
         }
       }
     });
     
-    Logger.debug('F1B Charts', 'RegimeScore Timeline renderizzato');
+    Logger.debug('F1B Charts', 'RegimeScore Gauge renderizzato');
   } catch (err) {
-    Logger.error('F1B Charts', 'Errore rendering RegimeScore Timeline', err);
+    Logger.error('F1B Charts', 'Errore rendering RegimeScore Gauge', err);
   }
 }
 
@@ -238,9 +233,28 @@ async function renderLeadershipSettoriale(container, f1bData) {
                     f1bData?.f1bSnapshot?.breadth_and_rotation?.LaggingSectors || 
                     [];
     
-    // Crea dati per il chart (performance simulata basata su posizione)
-    const leaderData = leaders.map((_, i) => 0.8 - (i * 0.1));
-    const laggingData = lagging.map((_, i) => -0.3 - (i * 0.1));
+    // Se non ci sono dati, mostra messaggio informativo
+    if (leaders.length === 0 && lagging.length === 0) {
+      const chartHTML = `
+        <div class="chart-container" data-chart-id="leadership-settoriale">
+          <div class="chart-title">Leadership Settoriale</div>
+          <div class="chart-description">
+            Dati settoriali non disponibili in questo report. I dati di leadership settoriale mostrano 
+            quali settori guidano il mercato (leaders) e quali sono in ritardo (lagging).
+          </div>
+          <div style="padding: 2rem; text-align: center; color: var(--muted);">
+            Dati non disponibili per questo report
+          </div>
+        </div>
+      `;
+      container.innerHTML += chartHTML;
+      return;
+    }
+    
+    // Crea dati per il chart (performance relativa basata su posizione)
+    // Usa valori semplici per indicare leadership vs lagging
+    const leaderData = leaders.map((_, i) => 1.0 - (i * 0.15));
+    const laggingData = lagging.map((_, i) => -0.5 - (i * 0.1));
     
     const chartHTML = `
       <div class="chart-container" data-chart-id="leadership-settoriale">
@@ -284,7 +298,9 @@ async function renderLeadershipSettoriale(container, f1bData) {
         x: {
           ticks: {
             callback: function(value) {
-              return value.toFixed(2);
+              if (value > 0) return 'Leader';
+              if (value < 0) return 'Lagging';
+              return 'Neutro';
             }
           }
         }
@@ -297,7 +313,8 @@ async function renderLeadershipSettoriale(container, f1bData) {
           callbacks: {
             label: function(context) {
               const isLeader = context.dataIndex < leaders.length;
-              return `${isLeader ? 'Leader' : 'Lagging'}: ${context.parsed.x.toFixed(2)}`;
+              const sector = context.label;
+              return `${isLeader ? 'Leader' : 'Lagging'}: ${sector}`;
             }
           }
         }
@@ -310,7 +327,7 @@ async function renderLeadershipSettoriale(container, f1bData) {
   }
 }
 
-// ===== CHART 4: Volatilità & VIX overlay 10Y yield =====
+// ===== CHART 4: Volatilità (VIX) & Yield 10Y =====
 async function renderVolatilityVIXYield(container, f1bData) {
   try {
     // Estrai VIX e yield dai dati
@@ -318,32 +335,29 @@ async function renderVolatilityVIXYield(container, f1bData) {
     const vixMatch = vixRaw.match(/VIX[^\d]*(\d+\.?\d*)/);
     const vix = vixMatch ? parseFloat(vixMatch[1]) : 17;
     
-    const yieldRaw = f1bData?.internals_raw?.Curve_UST?.items?.[0] || '2s10s ≈ +0.52%';
-    const yieldMatch = yieldRaw.match(/(\d+\.?\d*)/);
-    const yield10Y = yieldMatch ? parseFloat(yieldMatch[1]) : 4.5;
+    // Estrai yield 10Y (se disponibile)
+    const yieldRaw = f1bData?.internals_raw?.Curve_UST?.items?.[0] || null;
+    let yield10Y = null;
+    if (yieldRaw) {
+      // Prova a estrarre yield da "2s10s ≈ +0.48%" o simile
+      const yieldMatch = yieldRaw.match(/(\d+\.?\d*)/);
+      if (yieldMatch) {
+        // Il valore estratto potrebbe essere lo spread 2s10s, non il yield 10Y
+        // Per ora usiamo un valore di default o lo spread come proxy
+        yield10Y = parseFloat(yieldMatch[1]);
+      }
+    }
     
-    // Genera dati storici
-    const historical = generateHistoricalData(1, 30, 0.1);
-    const labels = historical.map(d => {
-      const date = new Date(d.date);
-      return date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' });
-    });
-    
-    const vixHistorical = historical.map((d, i) => {
-      const progress = i / (historical.length - 1);
-      return vix * (0.8 + progress * 0.2) + (Math.random() - 0.5) * 3;
-    });
-    const yieldHistorical = historical.map((d, i) => {
-      const progress = i / (historical.length - 1);
-      return yield10Y * (0.95 + progress * 0.05) + (Math.random() - 0.5) * 0.2;
-    });
+    // Se non abbiamo yield, usa valore di default o mostra solo VIX
+    const hasYield = yield10Y !== null;
     
     const chartHTML = `
       <div class="chart-container" data-chart-id="volatility-vix-yield">
-        <div class="chart-title">Volatilità (VIX) & Yield 10Y</div>
+        <div class="chart-title">Volatilità (VIX)${hasYield ? ' & Yield 10Y' : ''}</div>
         <div class="chart-description">
-          VIX (indice di volatilità) e yield del Treasury 10Y. VIX alto (>30) indica stress, VIX basso (<20) indica calma. 
-          Yield in aumento può indicare aspettative di crescita/inflazione.
+          VIX (indice di volatilità): ${vix.toFixed(1)}. VIX alto (>30) indica stress, VIX basso (<20) indica calma. 
+          ${hasYield ? `Spread 2s10s: ${yield10Y.toFixed(2)}%. ` : 'Dati yield non disponibili in questo report. '}
+          Valori correnti (snapshot).
         </div>
         <div class="chart-wrapper">
           <canvas id="volatility-vix-yield"></canvas>
@@ -359,173 +373,33 @@ async function renderVolatilityVIXYield(container, f1bData) {
       return;
     }
     
-    // Usa la funzione createLineChart con opzioni personalizzate per doppio asse Y
-    // Per ora usiamo un approccio più semplice con due chart separati o un workaround
-    // Chart.js richiede configurazione manuale per doppio asse Y
-    const Chart = window.Chart;
-    if (!Chart) {
-      Logger.error('F1B Charts', 'Chart.js non disponibile');
-      return;
-    }
+    // Bar chart con valori correnti
+    const labels = ['VIX'];
+    const data = [vix];
+    const colors = [vix < 20 ? CHART_COLORS.ok : vix > 30 ? CHART_COLORS.err : CHART_COLORS.warn];
     
-    const chart = new Chart(canvas, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'VIX',
-          data: vixHistorical,
-          borderColor: CHART_COLORS.warn,
-          backgroundColor: 'rgba(234, 88, 12, 0.1)',
-          yAxisID: 'y',
-          fill: true,
-          tension: 0.4
-        }, {
-          label: 'Yield 10Y (%)',
-          data: yieldHistorical,
-          borderColor: CHART_COLORS.primary,
-          backgroundColor: 'rgba(37, 99, 235, 0.1)',
-          yAxisID: 'y1',
-          fill: true,
-          tension: 0.4
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: {
-          mode: 'index',
-          intersect: false
-        },
-        scales: {
-          y: {
-            type: 'linear',
-            display: true,
-            position: 'left',
-            title: {
-              display: true,
-              text: 'VIX',
-              color: CHART_COLORS.text
-            },
-            grid: {
-              color: CHART_COLORS.grid
-            },
-            ticks: {
-              color: CHART_COLORS.textMuted
-            }
-          },
-          y1: {
-            type: 'linear',
-            display: true,
-            position: 'right',
-            title: {
-              display: true,
-              text: 'Yield 10Y (%)',
-              color: CHART_COLORS.text
-            },
-            grid: {
-              drawOnChartArea: false
-            },
-            ticks: {
-              color: CHART_COLORS.textMuted
-            }
-          },
-          x: {
-            grid: {
-              color: CHART_COLORS.grid
-            },
-            ticks: {
-              color: CHART_COLORS.textMuted
-            }
-          }
-        },
-        plugins: {
-          legend: {
-            display: true,
-            position: 'top',
-            labels: {
-              color: CHART_COLORS.text
-            }
-          },
-          tooltip: {
-            backgroundColor: 'rgba(15, 15, 15, 0.95)',
-            titleColor: '#ffffff',
-            bodyColor: CHART_COLORS.text,
-            borderColor: 'rgba(255, 255, 255, 0.1)',
-            borderWidth: 1
-          }
-        }
-      }
-    });
-    
-    Logger.debug('F1B Charts', 'Volatility VIX Yield renderizzato');
-  } catch (err) {
-    Logger.error('F1B Charts', 'Errore rendering Volatility VIX Yield', err);
-  }
-}
-
-// ===== CHART 5: Breadth Depth Matrix =====
-async function renderBreadthDepthMatrix(container, f1bData) {
-  try {
-    const breadth1M = parseFloat(f1bData?.breadth_rotation?.Breadth_1M?.raw || f1bData?.breadth_rotation?.Breadth_1M || 0.5);
-    
-    // Simula breadth per diversi timeframes (5d, 10d, 20d, 30d, 60d)
-    const breadth5d = Math.max(0, Math.min(1, breadth1M + (Math.random() - 0.5) * 0.2));
-    const breadth10d = Math.max(0, Math.min(1, breadth1M + (Math.random() - 0.5) * 0.15));
-    const breadth20d = Math.max(0, Math.min(1, breadth1M + (Math.random() - 0.5) * 0.1));
-    const breadth30d = breadth1M;
-    const breadth60d = Math.max(0, Math.min(1, breadth1M - (Math.random() - 0.5) * 0.1));
-    
-    const chartHTML = `
-      <div class="chart-container" data-chart-id="breadth-depth-matrix">
-        <div class="chart-title">Breadth Depth Matrix</div>
-        <div class="chart-description">
-          Breadth (ampiezza) del mercato su diversi timeframes. Valori >0.6 indicano partecipazione ampia, 
-          valori <0.4 indicano concentrazione. Confrontare i timeframes aiuta a capire la sostenibilità del trend.
-        </div>
-        <div class="chart-wrapper">
-          <canvas id="breadth-depth-matrix"></canvas>
-        </div>
-      </div>
-    `;
-    
-    container.innerHTML += chartHTML;
-    
-    const canvas = document.getElementById('breadth-depth-matrix');
-    if (!canvas) {
-      Logger.error('F1B Charts', 'Canvas non trovato per Breadth Depth Matrix');
-      return;
+    if (hasYield) {
+      labels.push('Spread 2s10s (%)');
+      data.push(yield10Y);
+      colors.push(CHART_COLORS.primary);
     }
     
     const chart = await charts.createBarChart(canvas, {
-      labels: ['5 giorni', '10 giorni', '20 giorni', '30 giorni', '60 giorni'],
+      labels: labels,
       datasets: [{
-        label: 'Breadth',
-        data: [breadth5d, breadth10d, breadth20d, breadth30d, breadth60d],
-        backgroundColor: [
-          breadth5d > 0.6 ? CHART_COLORS.ok : breadth5d > 0.4 ? CHART_COLORS.warn : CHART_COLORS.err,
-          breadth10d > 0.6 ? CHART_COLORS.ok : breadth10d > 0.4 ? CHART_COLORS.warn : CHART_COLORS.err,
-          breadth20d > 0.6 ? CHART_COLORS.ok : breadth20d > 0.4 ? CHART_COLORS.warn : CHART_COLORS.err,
-          breadth30d > 0.6 ? CHART_COLORS.ok : breadth30d > 0.4 ? CHART_COLORS.warn : CHART_COLORS.err,
-          breadth60d > 0.6 ? CHART_COLORS.ok : breadth60d > 0.4 ? CHART_COLORS.warn : CHART_COLORS.err
-        ],
-        borderColor: [
-          breadth5d > 0.6 ? CHART_COLORS.ok : breadth5d > 0.4 ? CHART_COLORS.warn : CHART_COLORS.err,
-          breadth10d > 0.6 ? CHART_COLORS.ok : breadth10d > 0.4 ? CHART_COLORS.warn : CHART_COLORS.err,
-          breadth20d > 0.6 ? CHART_COLORS.ok : breadth20d > 0.4 ? CHART_COLORS.warn : CHART_COLORS.err,
-          breadth30d > 0.6 ? CHART_COLORS.ok : breadth30d > 0.4 ? CHART_COLORS.warn : CHART_COLORS.err,
-          breadth60d > 0.6 ? CHART_COLORS.ok : breadth60d > 0.4 ? CHART_COLORS.warn : CHART_COLORS.err
-        ],
+        label: 'Valore',
+        data: data,
+        backgroundColor: colors,
+        borderColor: colors,
         borderWidth: 2
       }]
     }, {
       scales: {
         y: {
-          min: 0,
-          max: 1,
+          beginAtZero: true,
           ticks: {
             callback: function(value) {
-              return value.toFixed(2);
+              return value.toFixed(1);
             }
           }
         }
@@ -537,22 +411,27 @@ async function renderBreadthDepthMatrix(container, f1bData) {
         tooltip: {
           callbacks: {
             label: function(context) {
+              const label = context.label;
               const value = context.parsed.y;
-              const interpretation = value > 0.6 ? 'Ampia partecipazione' : value > 0.4 ? 'Partecipazione moderata' : 'Concentrazione';
-              return `Breadth: ${value.toFixed(2)} (${interpretation})`;
+              if (label === 'VIX') {
+                const interpretation = value < 20 ? 'Calma' : value > 30 ? 'Stress' : 'Moderato';
+                return `VIX: ${value.toFixed(1)} (${interpretation})`;
+              } else {
+                return `Spread 2s10s: ${value.toFixed(2)}%`;
+              }
             }
           }
         }
       }
     });
     
-    Logger.debug('F1B Charts', 'Breadth Depth Matrix renderizzato');
+    Logger.debug('F1B Charts', 'Volatility VIX Yield renderizzato');
   } catch (err) {
-    Logger.error('F1B Charts', 'Errore rendering Breadth Depth Matrix', err);
+    Logger.error('F1B Charts', 'Errore rendering Volatility VIX Yield', err);
   }
 }
 
-// ===== CHART 6: RiskTilt vs VolRegime =====
+// ===== CHART 5: RiskTilt vs VolRegime =====
 async function renderRiskTiltVsVolRegime(container, f1bData) {
   try {
     const riskTilt = f1bData?.breadth_rotation?.RiskTilt_1M?.raw || f1bData?.breadth_rotation?.RiskTilt_1M || 'Neutro';
@@ -689,79 +568,7 @@ async function renderRiskTiltVsVolRegime(container, f1bData) {
   }
 }
 
-// ===== CHART 7: Sector Rotation Ribbon =====
-async function renderSectorRotationRibbon(container, f1bData) {
-  try {
-    const leaders = f1bData?.breadth_rotation?.Leadership?.LeadersMultiTF?.items || 
-                    f1bData?.f1bSnapshot?.breadth_and_rotation?.LeadersMultiTF || 
-                    ['Technology', 'Communication Services', 'Consumer Cyclical', 'Industrials'];
-    
-    // Genera dati storici per ogni settore (performance simulata)
-    const historical = generateHistoricalData(1, 10, 0.2);
-    const labels = historical.map(d => {
-      const date = new Date(d.date);
-      return date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' });
-    });
-    
-    const sectorsData = leaders.map((sector, i) => {
-      const baseValue = 0.8 - (i * 0.15);
-      return {
-        label: sector,
-        data: historical.map(d => baseValue + (Math.random() - 0.5) * 0.3),
-        borderColor: [CHART_COLORS.ok, CHART_COLORS.primary, CHART_COLORS.warn, CHART_COLORS.neutral][i] || CHART_COLORS.ok,
-        backgroundColor: ['rgba(22, 163, 74, 0.1)', 'rgba(37, 99, 235, 0.1)', 'rgba(234, 88, 12, 0.1)', 'rgba(100, 116, 139, 0.1)'][i] || 'rgba(22, 163, 74, 0.1)',
-        fill: true,
-        tension: 0.4
-      };
-    });
-    
-    const chartHTML = `
-      <div class="chart-container" data-chart-id="sector-rotation-ribbon">
-        <div class="chart-title">Sector Rotation Ribbon</div>
-        <div class="chart-description">
-          Evoluzione della performance relativa dei settori leader negli ultimi 10 giorni. 
-          La rotazione settoriale indica cambiamenti nelle preferenze del mercato.
-        </div>
-        <div class="chart-wrapper">
-          <canvas id="sector-rotation-ribbon"></canvas>
-        </div>
-      </div>
-    `;
-    
-    container.innerHTML += chartHTML;
-    
-    const canvas = document.getElementById('sector-rotation-ribbon');
-    if (!canvas) {
-      Logger.error('F1B Charts', 'Canvas non trovato per Sector Rotation Ribbon');
-      return;
-    }
-    
-    const chart = await charts.createLineChart(canvas, {
-      labels: labels,
-      datasets: sectorsData
-    }, {
-      scales: {
-        y: {
-          ticks: {
-            callback: function(value) {
-              return value.toFixed(2);
-            }
-          }
-        }
-      },
-      plugins: {
-        tooltip: {
-          mode: 'index',
-          intersect: false
-        }
-      }
-    });
-    
-    Logger.debug('F1B Charts', 'Sector Rotation Ribbon renderizzato');
-  } catch (err) {
-    Logger.error('F1B Charts', 'Errore rendering Sector Rotation Ribbon', err);
-  }
-}
+// Chart Settori Leader rimosso - già incluso in renderLeadershipSettoriale
 
 // ===== MAIN RENDER FUNCTION =====
 export async function renderF1BCharts(container, f1bData) {
@@ -775,19 +582,30 @@ export async function renderF1BCharts(container, f1bData) {
   // Pulisci container
   container.innerHTML = '';
   
-  // Assicurati che Chart.js sia caricato
+  // Carica Chart.js se non è già disponibile
   if (!window.Chart) {
     try {
-      // Carica Chart.js usando la funzione loadChartJS dal componente charts
-      // Questo carica Chart.js da CDN se non è già disponibile
+      // Usa il metodo interno loadChartJS da charts.js
+      // Creiamo uno script per caricare Chart.js da CDN
       const script = document.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
-      script.async = true;
+      script.async = false;
       
       await new Promise((resolve, reject) => {
-        script.onload = () => {
-          Logger.debug('F1B Charts', 'Chart.js caricato');
+        const existingScript = document.querySelector(`script[src="${script.src}"]`);
+        if (existingScript && window.Chart) {
+          Logger.debug('F1B Charts', 'Chart.js già caricato');
           resolve();
+          return;
+        }
+        
+        script.onload = () => {
+          if (window.Chart) {
+            Logger.debug('F1B Charts', 'Chart.js caricato');
+            resolve();
+          } else {
+            reject(new Error('Chart.js non disponibile dopo il caricamento'));
+          }
         };
         script.onerror = () => {
           Logger.error('F1B Charts', 'Errore caricamento Chart.js');
@@ -809,15 +627,22 @@ export async function renderF1BCharts(container, f1bData) {
   
   Logger.debug('F1B Charts', 'Chart.js disponibile, inizio rendering');
   
-  // Renderizza tutti i chart in sequenza
+  // Renderizza tutti i chart in sequenza (solo dati correnti, no timeline storiche)
   try {
-    await renderRegimeScoreTimeline(container, f1bData);
+    // Chart 1: RegimeScore Gauge (dati correnti)
+    await renderRegimeScoreGauge(container, f1bData);
+    
+    // Chart 2: Breadth 1M & RiskTilt (dati correnti)
     await renderBreadthRiskTilt(container, f1bData);
+    
+    // Chart 3: Leadership Settoriale (dati correnti, se disponibili)
     await renderLeadershipSettoriale(container, f1bData);
+    
+    // Chart 4: Volatilità VIX & Yield (dati correnti)
     await renderVolatilityVIXYield(container, f1bData);
-    await renderBreadthDepthMatrix(container, f1bData);
+    
+    // Chart 5: RiskTilt vs VolRegime (dati correnti)
     await renderRiskTiltVsVolRegime(container, f1bData);
-    await renderSectorRotationRibbon(container, f1bData);
     
     Logger.debug('F1B Charts', 'Tutti i chart F1B renderizzati');
   } catch (err) {
