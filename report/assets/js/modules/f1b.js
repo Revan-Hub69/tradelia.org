@@ -788,8 +788,18 @@ export function bindCard(node, rawData, ctx = {}) {
       
       // Tab Chart: renderizza chart
       if (tabId === 'charts') {
+        Logger.debug('F1B', 'Tab Chart aperta, container:', container);
+        if (!container) {
+          Logger.error('F1B', 'Container non trovato per tab Chart');
+          return;
+        }
+        
+        // Importa e renderizza chart
         import('../components/f1b-charts.js').then(({ renderF1BCharts }) => {
-          renderF1BCharts(container, rawData).catch(err => {
+          Logger.debug('F1B', 'Componente chart caricato, inizio rendering');
+          renderF1BCharts(container, rawData).then(() => {
+            Logger.debug('F1B', 'Chart renderizzati con successo');
+          }).catch(err => {
             Logger.error('F1B', 'Errore rendering chart', err);
             container.innerHTML = `
               <div class="error-state">
@@ -800,6 +810,14 @@ export function bindCard(node, rawData, ctx = {}) {
           });
         }).catch(err => {
           Logger.error('F1B', 'Errore caricamento componente chart', err);
+          if (container) {
+            container.innerHTML = `
+              <div class="error-state">
+                <div class="error-state-title">Errore caricamento componente chart</div>
+                <div class="error-state-message">${escapeHtml(err.message)}</div>
+              </div>
+            `;
+          }
         });
         return;
       }

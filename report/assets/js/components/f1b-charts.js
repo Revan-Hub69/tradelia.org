@@ -778,19 +778,36 @@ export async function renderF1BCharts(container, f1bData) {
   // Assicurati che Chart.js sia caricato
   if (!window.Chart) {
     try {
-      // Carica Chart.js se non è già caricato
-      await charts.createLineChart(document.createElement('canvas'), { labels: [], datasets: [] });
+      // Carica Chart.js usando la funzione loadChartJS dal componente charts
+      // Questo carica Chart.js da CDN se non è già disponibile
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+      script.async = true;
+      
+      await new Promise((resolve, reject) => {
+        script.onload = () => {
+          Logger.debug('F1B Charts', 'Chart.js caricato');
+          resolve();
+        };
+        script.onerror = () => {
+          Logger.error('F1B Charts', 'Errore caricamento Chart.js');
+          reject(new Error('Errore caricamento Chart.js'));
+        };
+        document.head.appendChild(script);
+      });
     } catch (err) {
       Logger.error('F1B Charts', 'Errore caricamento Chart.js', err);
       container.innerHTML = `
         <div class="error-state">
           <div class="error-state-title">Errore caricamento Chart.js</div>
-          <div class="error-state-message">Impossibile caricare la libreria per i grafici.</div>
+          <div class="error-state-message">Impossibile caricare la libreria per i grafici. Ricarica la pagina.</div>
         </div>
       `;
       return;
     }
   }
+  
+  Logger.debug('F1B Charts', 'Chart.js disponibile, inizio rendering');
   
   // Renderizza tutti i chart in sequenza
   try {

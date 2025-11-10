@@ -232,26 +232,33 @@ export function bindModuleTabs(container) {
       content: content
     });
 
-    // Se c'è un container per header-ticker, montalo dopo che il drawer è aperto
-    // Usa doppio requestAnimationFrame per assicurarsi che il drawer sia completamente renderizzato
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        // Cerca il drawer content (può essere dentro unified-drawer)
-        const drawerContent = document.querySelector('.glossary-drawer-content.module-tabs-content-wrapper');
-        if (drawerContent) {
-          const tickerContainer = drawerContent.querySelector('[data-tab-ticker]');
-          if (tickerContainer && !tickerContainer.querySelector('.header-ticker')) {
-            // Trigger evento custom per montare header-ticker (gestito da f1b.js)
-            const event = new CustomEvent('drawer-tab-opened', {
-              detail: { tabId, container: tickerContainer },
-              bubbles: true
-            });
-            wrapper.dispatchEvent(event);
-          }
+    // Se c'è un container per header-ticker o chart, montalo dopo che il drawer è aperto
+    // Usa un piccolo delay per assicurarsi che il drawer sia completamente renderizzato
+    setTimeout(() => {
+      // Cerca il drawer content (può essere dentro unified-drawer)
+      const drawerContent = document.querySelector('.glossary-drawer-content.module-tabs-content-wrapper');
+      if (drawerContent) {
+        // Cerca container per ticker (altre tab) o chart (tab Chart)
+        const tickerContainer = drawerContent.querySelector('[data-tab-ticker]');
+        const chartContainer = drawerContent.querySelector('[data-tab-charts]');
+        const container = tickerContainer || chartContainer;
+        
+        if (container) {
+          // Trigger evento custom per montare contenuto (gestito da f1b.js)
+          const event = new CustomEvent('drawer-tab-opened', {
+            detail: { tabId, container: container },
+            bubbles: true
+          });
+          wrapper.dispatchEvent(event);
+        } else {
+          // Debug: se non troviamo il container, proviamo a cercarlo nel contenuto appena caricato
+          console.warn('Container non trovato nel drawer, tabId:', tabId, 'drawerContent:', drawerContent);
         }
-        isOpening = false;
-      });
-    });
+      } else {
+        console.warn('Drawer content non trovato');
+      }
+      isOpening = false;
+    }, 100); // Delay di 100ms per assicurare che il drawer sia renderizzato
   }
 
   // Gestione click su tab button (apre drawer)
