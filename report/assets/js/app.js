@@ -490,19 +490,37 @@ import { i18n } from './utils/i18n.js';
   }
   
   // ===== INIZIALIZZAZIONE =====
+  let _isInitializing = false;
+  let _isInitialized = false;
+  
   async function init() {
+    // Evita inizializzazioni multiple
+    if (_isInitializing) {
+      Logger.warn('App', 'Inizializzazione già in corso, ignoro chiamata duplicata');
+      return;
+    }
+    
+    if (_isInitialized) {
+      Logger.warn('App', 'App già inizializzata, ignoro chiamata duplicata');
+      return;
+    }
+    
+    _isInitializing = true;
     const reportId = getReportId();
     Logger.debug('App', `Inizializzazione: ${reportId}`);
     
-    // Monta header (statico, non dipende da reportId)
-    await mountSiteHeader();
-    
-    // Pulisci container
+    // Pulisci TUTTI i container prima di iniziare (evita duplicati)
+    if (TICKER_SLOT) TICKER_SLOT.innerHTML = '';
+    if (MARKET_CONTEXT_SNAPSHOT_SLOT) MARKET_CONTEXT_SNAPSHOT_SLOT.innerHTML = '';
+    if (CHART_SLOT) CHART_SLOT.innerHTML = '';
     if (MODULES_CONTAINER) {
       MODULES_CONTAINER.innerHTML = '';
-    } else {
+    } else if (ROOT) {
       ROOT.innerHTML = '';
     }
+    
+    // Monta header (statico, non dipende da reportId)
+    await mountSiteHeader();
     
     // Error boundary globale per inizializzazione
     let headerData = null;
@@ -532,15 +550,11 @@ import { i18n } from './utils/i18n.js';
       }
     }
     
-    // Monta market context snapshot (subito dopo header ticker, prima dei moduli)
-    await mountMarketContextSnapshot(reportId);
-    
-    // Monta chart widget (dopo market context snapshot)
-    await mountChartWidget(reportId, headerData);
-    
     // Monta footer DOPO il contenuto (con dati dinamici)
     await mountSiteFooter(headerData);
     
+    _isInitializing = false;
+    _isInitialized = true;
     Logger.debug('App', 'Inizializzazione completata');
   }
   
@@ -550,6 +564,9 @@ import { i18n } from './utils/i18n.js';
       Logger.warn('App', 'Chart slot non trovato');
       return;
     }
+
+    // Pulisci container prima di montare (evita duplicati)
+    CHART_SLOT.innerHTML = '';
 
     try {
       const { chartWidget } = await safeImport('/report/assets/js/components/chart-widget.js');
@@ -561,15 +578,30 @@ import { i18n } from './utils/i18n.js';
       // Estrai simbolo da headerData
       let symbol = null;
       if (headerData && headerData.rows) {
+        Logger.debug('App', 'HeaderData rows:', headerData.rows.length);
         for (const row of headerData.rows) {
           for (const part of row.parts || []) {
             if (part.kind === 'metric' && part.key === 'Ticker') {
               symbol = part.value;
+              Logger.debug('App', `Ticker estratto: ${symbol}`);
               break;
             }
           }
           if (symbol) break;
         }
+      } else {
+        Logger.warn('App', 'headerData o headerData.rows non disponibile');
+      }
+
+      if (!symbol) {
+        Logger.warn('App', 'Ticker non trovato in headerData. Chart widget non sarà mostrato.');
+        // Mostra messaggio informativo invece di nascondere
+        CHART_SLOT.innerHTML = `
+          <div style="padding: var(--sp-4); text-align: center; color: var(--muted); font-size: var(--fs-12);">
+            Chart non disponibile: Ticker non trovato nel report header
+          </div>
+        `;
+        return;
       }
 
       // Estrai timestamp
@@ -577,6 +609,8 @@ import { i18n } from './utils/i18n.js';
         || headerData?.meta?.created_at 
         || headerData?.meta?.UpdatedAt
         || null;
+
+      Logger.debug('App', `Montaggio chart widget: reportId=${reportId}, symbol=${symbol}, timestamp=${timestamp}`);
 
       const node = chartWidget.mount(CHART_SLOT, {
         reportId: reportId,
@@ -594,7 +628,7 @@ import { i18n } from './utils/i18n.js';
         update: chartWidget.update.bind(chartWidget)
       };
 
-      Logger.debug('App', `Chart widget montato per ${symbol || 'nessun simbolo'}`);
+      Logger.debug('App', `Chart widget montato con successo per ${symbol}`);
     } catch (err) {
       Logger.error('App', 'Errore montaggio chart widget', err);
       if (CHART_SLOT) {
@@ -614,6 +648,9 @@ import { i18n } from './utils/i18n.js';
       Logger.warn('App', 'Market context snapshot slot non trovato');
       return;
     }
+
+    // Pulisci container prima di montare (evita duplicati)
+    MARKET_CONTEXT_SNAPSHOT_SLOT.innerHTML = '';
 
     try {
       const { marketContextSnapshot } = await safeImport('/report/assets/js/components/market-context-snapshot.js');

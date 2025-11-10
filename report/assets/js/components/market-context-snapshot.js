@@ -28,6 +28,14 @@ const MARKET_CONTEXT_SNAPSHOT = {
       return null;
     }
 
+    // Verifica se è già stato montato (evita duplicati)
+    const existing = containerEl.querySelector('.market-context-snapshot');
+    if (existing) {
+      Logger.warn('MarketContextSnapshot', 'Widget già montato, aggiorno invece di duplicare');
+      this._render(existing, options);
+      return existing;
+    }
+
     const root = document.createElement('div');
     root.className = 'market-context-snapshot';
     
@@ -46,6 +54,9 @@ const MARKET_CONTEXT_SNAPSHOT = {
       strategyMode = null,
       timestamp = null
     } = options;
+
+    // Pulisci root prima di renderizzare (evita duplicati)
+    root.innerHTML = '';
 
     // Se non ci sono dati, mostra placeholder minimale
     if (regimeScore === null && strategyMode === null) {

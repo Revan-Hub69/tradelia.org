@@ -12,6 +12,14 @@ const CHART_WIDGET = {
       return null;
     }
 
+    // Verifica se è già stato montato (evita duplicati)
+    const existing = containerEl.querySelector('.chart-widget');
+    if (existing) {
+      Logger.warn('ChartWidget', 'Widget già montato, aggiorno invece di duplicare');
+      this._loadChart(existing, options);
+      return existing;
+    }
+
     const root = document.createElement('div');
     root.className = 'chart-widget';
     root.innerHTML = `
@@ -91,9 +99,18 @@ const CHART_WIDGET = {
       return;
     }
 
-    // Fallback: nascondi completamente il widget se non ci sono dati
-    root.style.display = 'none';
-    Logger.debug('ChartWidget', 'Nessun dato disponibile, widget nascosto');
+    // Fallback: mostra messaggio invece di nascondere
+    if (subtitle) {
+      subtitle.textContent = 'Chart non disponibile';
+    }
+    body.innerHTML = `
+      <div class="chart-widget-empty">
+        <div class="chart-widget-empty-icon">📊</div>
+        <div class="chart-widget-empty-text">Chart non disponibile</div>
+        <div class="chart-widget-empty-subtext">Nessun screenshot o simbolo ticker disponibile</div>
+      </div>
+    `;
+    Logger.debug('ChartWidget', 'Nessun dato disponibile, mostra stato vuoto');
   },
 
   // ===== STATIC CHART =====

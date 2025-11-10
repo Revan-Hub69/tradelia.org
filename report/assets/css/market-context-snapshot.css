@@ -114,11 +114,12 @@
   }
 }
 
-.market-context-snapshot {
+/* Animazioni disabilitate per evitare problemi di rendering */
+/* .market-context-snapshot {
   animation: fadeInSlide 0.4s ease-out;
 }
 
 .market-context-snapshot-marker {
   animation: fadeInSlide 0.6s ease-out 0.2s backwards;
-}
+} */
 
