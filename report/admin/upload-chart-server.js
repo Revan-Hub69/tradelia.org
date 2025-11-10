@@ -598,11 +598,43 @@ async function handleCreateReport(req, res) {
       // OK, non esiste
     }
     
-    // Crea directory (i file JSON verranno caricati direttamente dall'output)
+    // Crea directory
     await fs.mkdir(reportDir, { recursive: true });
     
+    // Crea header.json minimo
+    const header = {
+      meta: {
+        module: 'HEADER',
+        version: 'v1.0.0',
+        auditPathId: `RPT-${reportId}-HEAD`,
+        state: 'ACTIVE',
+        generatedAt: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
+        reportID: reportId
+      },
+      rows: [
+        {
+          id: 'company-line',
+          parts: [
+            { kind: 'text', text: 'Report Framework Accademico AI, Tradelia Swing Master 5.0' }
+          ]
+        }
+      ],
+      footer: {
+        links: []
+      },
+      metricsPanel: []
+    };
+    
+    await fs.writeFile(
+      path.join(reportDir, 'header.json'),
+      JSON.stringify(header, null, 2),
+      'utf-8'
+    );
+    
     console.log(`✅ Directory report creata: ${reportId}`);
-    console.log(`   I file JSON (header.json, f1b.json, ecc.) verranno caricati direttamente dall'output`);
+    console.log(`✅ Header.json creato`);
+    console.log(`   I file JSON (f1b.json, f2.json, ecc.) verranno caricati direttamente dall'output`);
     
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({

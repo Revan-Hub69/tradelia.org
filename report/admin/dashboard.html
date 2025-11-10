@@ -826,6 +826,9 @@
           jsonFiles = [];
         }
         
+        // Verifica header.json
+        const hasHeader = jsonFiles.includes('header.json') || await checkFileExists(`/report/reports/${reportId}/header.json`);
+        
         // Check which modules exist
         const modules = [];
         for (const moduleId of SWING_MODULES) {
@@ -852,7 +855,7 @@
           });
         }
 
-        renderModules(modules, jsonFiles);
+        renderModules(modules, jsonFiles, hasHeader);
       } catch (error) {
         console.error('[Dashboard] Errore caricamento moduli:', error);
         modulesContainer.innerHTML = `<div class="empty-state"><div class="empty-state-icon">❌</div><div>Errore: ${error.message}</div></div>`;
@@ -870,10 +873,36 @@
     }
 
     // Render modules
-    function renderModules(modules, jsonFiles = []) {
+    function renderModules(modules, jsonFiles = [], hasHeader = false) {
       modulesContainer.innerHTML = '<div class="modules-grid"></div>';
       const grid = modulesContainer.querySelector('.modules-grid');
 
+      // Header card (sempre visibile)
+      const headerCard = document.createElement('div');
+      headerCard.className = 'module-card';
+      headerCard.style.border = hasHeader ? '1px solid rgba(255, 255, 255, 0.1)' : '2px dashed rgba(239, 68, 68, 0.3)';
+      headerCard.innerHTML = `
+        <div class="module-header">
+          <div class="module-title">📋 Header</div>
+          <div>
+            ${hasHeader ? '<span class="module-status has-json">✅ header.json</span>' : '<span class="module-status missing">❌ header.json</span>'}
+          </div>
+        </div>
+        <div style="color: #a1a1aa; font-size: 0.9rem; margin-bottom: 1rem;">
+          File header.json del report (viene creato automaticamente alla creazione del report)
+        </div>
+        <div class="module-actions">
+          <button class="btn btn-primary btn-small" data-action="upload-header-json">
+            📄 ${hasHeader ? 'Sostituisci' : 'Carica'} header.json
+          </button>
+        </div>
+      `;
+      headerCard.querySelector('[data-action="upload-header-json"]').addEventListener('click', () => {
+        openUploadJsonModal('HEADER');
+      });
+      grid.appendChild(headerCard);
+
+      // Module cards
       modules.forEach(module => {
         // Trova il file JSON corrispondente (se esiste)
         const actualFile = jsonFiles.find(f => {
@@ -922,7 +951,7 @@
           <div class="module-title">➕ Altri File JSON</div>
         </div>
         <div style="color: #a1a1aa; font-size: 0.9rem; margin-bottom: 1rem;">
-          Carica file JSON generati dall'output (header.json, manifest.json, ecc.)
+          Carica file JSON generati dall'output (manifest.json, ecc.)
         </div>
         <div class="module-actions">
           <button class="btn btn-secondary btn-small" id="uploadGenericJsonBtn">
@@ -986,7 +1015,14 @@
     function openUploadJsonModal(moduleId = null) {
       currentModule = moduleId;
       selectedJsonFile = null;
-      if (moduleId) {
+      if (moduleId === 'HEADER') {
+        jsonModalTitle.textContent = `Carica Header JSON - ${currentReport.id}`;
+        jsonReportInfo.innerHTML = `
+          <strong>Report ID:</strong> ${escapeHtml(currentReport.id)}<br>
+          <strong>File:</strong> header.json<br>
+          <strong>Nota:</strong> Il file header.json viene creato automaticamente alla creazione del report. Puoi sostituirlo caricando un nuovo file.
+        `;
+      } else if (moduleId) {
         jsonModalTitle.textContent = `Carica JSON - ${currentReport.id} - ${moduleId}`;
         jsonReportInfo.innerHTML = `
           <strong>Report ID:</strong> ${escapeHtml(currentReport.id)}<br>
@@ -997,7 +1033,7 @@
         jsonModalTitle.textContent = `Carica JSON - ${currentReport.id}`;
         jsonReportInfo.innerHTML = `
           <strong>Report ID:</strong> ${escapeHtml(currentReport.id)}<br>
-          <strong>Nota:</strong> Il file verrà salvato con il nome originale dall'output (es: header.json, f1b.json, f2.json, ecc.)
+          <strong>Nota:</strong> Il file verrà salvato con il nome originale dall'output (es: manifest.json, ecc.)
         `;
       }
       jsonPreview.style.display = 'none';
@@ -1286,8 +1322,13 @@
         const formData = new FormData();
         formData.append('reportId', currentReport.id);
         formData.append('file', selectedJsonFile);
-        // Usa il nome originale del file
-        formData.append('fileName', selectedJsonFile.name);
+        
+        // Se è HEADER, forza il nome a header.json
+        let fileName = selectedJsonFile.name;
+        if (currentModule === 'HEADER') {
+          fileName = 'header.json';
+        }
+        formData.append('fileName', fileName);
 
         const response = await fetch('/report/admin/api/upload-module-json', {
           method: 'POST',
@@ -1297,7 +1338,7 @@
         const result = await response.json();
 
         if (response.ok) {
-          showStatus('success', `✅ JSON salvato con successo!<br><strong>File:</strong> ${result.path}`, jsonStatus);
+          showStatus('success', `✅ JSON salvato con successo!<br><strong>File:</strong> ${result.fileName || result.path}`, jsonStatus);
           setTimeout(() => {
             closeUploadJsonModal();
             loadReportModules(currentReport.id);
