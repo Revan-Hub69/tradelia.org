@@ -1,0 +1,36 @@
+{
+  "meta": {
+    "timestampET": "2025-11-10 16:30 ET",
+    "module": "F1B · Market Regime",
+    "moduleVersion": "v19-Dynamic",
+    "moduleStatus": "ACTIVE",
+    "freshness": "≤ T-1"
+  },
+  "regime_and_risk": {
+    "StrategyMode_macro": {
+      "raw": "Momentum",
+      "tone": "green",
+      "ai_note": "Contesto favorevole al rischio con rotazione pro-growth e volatilità contenuta."
+    },
+    "RegimeScore": {
+      "raw": "+0.65",
+      "tone": "green",
+      "ai_note": "Score sintetico positivo: equity beta sostenuto da breadth mensile e condizioni finanziarie non restrittive."
+    },
+    "VolRegime": {
+      "raw": "VIX ~18 (<20), 1W stabile; possibili spike intraday",
+      "tone": "green"
+    }
+  },
+  "breadth_rotation": {
+    "Breadth_1M": {
+      "raw": "0.68",
+      "tone": "green"
+    },
+    "RiskTilt_1M": {
+      "raw": "Growth/Ciclici",
+      "tone": "green"
+    }
+  }
+}
+

@@ -1,0 +1,32 @@
+CHART WIDGET - INFORMAZIONI (SENZA SCREENSHOT)
+==============================================
+
+Questo file contiene informazioni sul comportamento del chart widget quando NON c'è screenshot.
+
+FILE: chart-snapshot.png
+
+STATO: ❌ NON PRESENTE
+
+TICKER: MSFT.NASDAQ (Microsoft Corporation)
+TIMEFRAME: 1D (1 giorno) - configurabile nel widget
+DATI: In tempo reale da TradingView
+TIMESTAMP: Report generato il [data/ora] | Dati in tempo reale
+
+COMPORTAMENTO:
+- Il sistema rileva automaticamente che chart-snapshot.png NON esiste
+- Fallback automatico a TradingView LIVE widget
+- Dati aggiornati in tempo reale
+- Sottotitolo: "Chart live - Report generato il [data/ora] | Dati in tempo reale"
+
+NOTA: 
+- Se questo file (chart-snapshot.png) NON è presente, il sistema userà TradingView LIVE widget
+- Se aggiungi chart-snapshot.png, il sistema passerà automaticamente a screenshot statico
+- Il chart widget mostra dati live, non è bloccato al timestamp del report
+- Il timestamp viene mostrato per indicare quando è stato generato il report
+
+FLUSSO IN PRODUZIONE:
+1. Il sistema verifica se chart-snapshot.png esiste
+2. Se NON esiste, carica TradingView LIVE widget
+3. Il widget mostra dati in tempo reale
+4. Se aggiungi screenshot in seguito, il sistema userà quello al prossimo caricamento
+

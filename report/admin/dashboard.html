@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Report Screenshot - Tradelia Admin</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+      color: #e4e4e7;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: rgba(30, 30, 46, 0.8);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #f4f4f5;
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      color: #a1a1aa;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+      padding: 0.75rem 1rem;
+      background: rgba(39, 39, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #f4f4f5;
+      font-size: 1rem;
+    }
+
+    .search-box:focus {
+      outline: none;
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(96, 165, 250, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(39, 39, 42, 0.8);
+      color: #e4e4e7;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(39, 39, 42, 1);
+    }
+
+    .reports-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .report-card {
+      background: rgba(39, 39, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .report-card:hover {
+      border-color: #60a5fa;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(96, 165, 250, 0.2);
+    }
+
+    .report-card.selected {
+      border-color: #60a5fa;
+      background: rgba(96, 165, 250, 0.1);
+    }
+
+    .report-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 1rem;
+    }
+
+    .report-id {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #f4f4f5;
+      word-break: break-word;
+    }
+
+    .screenshot-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .screenshot-badge.has {
+      background: rgba(34, 197, 94, 0.2);
+      color: #86efac;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .screenshot-badge.missing {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .report-info {
+      font-size: 0.85rem;
+      color: #a1a1aa;
+      margin-bottom: 1rem;
+    }
+
+    .report-preview {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .report-preview.show {
+      display: block;
+    }
+
+    .report-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .upload-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .upload-modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: rgba(30, 30, 46, 0.95);
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      color: #f4f4f5;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: #a1a1aa;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      line-height: 1;
+    }
+
+    .close-btn:hover {
+      color: #f4f4f5;
+    }
+
+    .upload-area {
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 3rem 2rem;
+      text-align: center;
+      background: rgba(39, 39, 42, 0.4);
+      transition: all 0.3s;
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+    }
+
+    .upload-area:hover {
+      border-color: #60a5fa;
+      background: rgba(39, 39, 42, 0.6);
+    }
+
+    .upload-area.dragover {
+      border-color: #60a5fa;
+      background: rgba(96, 165, 250, 0.1);
+      transform: scale(1.02);
+    }
+
+    .upload-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.6;
+    }
+
+    .upload-text {
+      color: #a1a1aa;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .upload-hint {
+      color: #71717a;
+      font-size: 0.85rem;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .preview-container {
+      margin-top: 1.5rem;
+      display: none;
+    }
+
+    .preview-container.show {
+      display: block;
+    }
+
+    .preview-image {
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .status {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .status.show {
+      display: block;
+    }
+
+    .status.success {
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #86efac;
+    }
+
+    .status.error {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    .status.info {
+      background: rgba(96, 165, 250, 0.2);
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      color: #93c5fd;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #a1a1aa;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #a1a1aa;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 Dashboard Report Screenshot</h1>
+    <p class="subtitle">Gestisci gli screenshot chart per tutti i report</p>
+
+    <div class="controls">
+      <input 
+        type="text" 
+        id="searchBox" 
+        class="search-box" 
+        placeholder="🔍 Cerca report..."
+        autocomplete="off"
+      />
+      <button class="btn btn-secondary" id="refreshBtn">🔄 Aggiorna</button>
+    </div>
+
+    <div id="reportsContainer">
+      <div class="loading">Caricamento report...</div>
+    </div>
+  </div>
+
+  <!-- Modal Upload -->
+  <div class="upload-modal" id="uploadModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Carica Screenshot</h2>
+        <button class="close-btn" id="closeModal">×</button>
+      </div>
+
+      <div id="selectedReportInfo" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(39, 39, 42, 0.6); border-radius: 8px; color: #a1a1aa; font-size: 0.9rem;"></div>
+
+      <div class="upload-area" id="uploadArea">
+        <div class="upload-icon">📁</div>
+        <div class="upload-text">Trascina l'immagine qui o clicca per selezionare</div>
+        <div class="upload-hint">PNG, JPG, formato consigliato: chart-snapshot.png</div>
+        <div class="upload-hint" style="margin-top: 0.5rem; color: #60a5fa;">
+          💡 Oppure premi <strong>Ctrl+V</strong> per incollare dall'appunti
+        </div>
+        <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg" />
+      </div>
+
+      <div class="preview-container" id="previewContainer">
+        <img id="previewImage" class="preview-image" alt="Preview" />
+      </div>
+
+      <div class="status" id="status"></div>
+
+      <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+        <button class="btn btn-primary" id="uploadBtn" style="flex: 1;">
+          💾 Salva Screenshot
+        </button>
+        <button class="btn btn-secondary" id="cancelBtn">
+          Annulla
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let reports = [];
+    let selectedReport = null;
+    let selectedFile = null;
+
+    const searchBox = document.getElementById('searchBox');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const reportsContainer = document.getElementById('reportsContainer');
+    const uploadModal = document.getElementById('uploadModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const selectedReportInfo = document.getElementById('selectedReportInfo');
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const previewContainer = document.getElementById('previewContainer');
+    const previewImage = document.getElementById('previewImage');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const status = document.getElementById('status');
+
+    // Carica report
+    async function loadReports() {
+      try {
+        reportsContainer.innerHTML = '<div class="loading">Caricamento report...</div>';
+        const response = await fetch('/report/admin/api/reports');
+        const data = await response.json();
+        reports = data.reports || [];
+        renderReports();
+      } catch (error) {
+        reportsContainer.innerHTML = `<div class="empty-state"><div class="empty-state-icon">❌</div><div>Errore nel caricamento: ${error.message}</div></div>`;
+      }
+    }
+
+    // Renderizza report
+    function renderReports() {
+      const searchTerm = searchBox.value.toLowerCase();
+      const filteredReports = reports.filter(r => 
+        r.id.toLowerCase().includes(searchTerm) ||
+        (r.ticker && r.ticker.toLowerCase().includes(searchTerm))
+      );
+
+      if (filteredReports.length === 0) {
+        reportsContainer.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><div>Nessun report trovato</div></div>';
+        return;
+      }
+
+      reportsContainer.innerHTML = '<div class="reports-grid"></div>';
+      const grid = reportsContainer.querySelector('.reports-grid');
+
+      filteredReports.forEach(report => {
+        const card = document.createElement('div');
+        card.className = 'report-card';
+        card.dataset.reportId = report.id;
+
+        const hasScreenshot = report.hasScreenshot;
+        const screenshotUrl = hasScreenshot ? `/report/reports/${report.id}/chart-snapshot.png?t=${Date.now()}` : null;
+
+        card.innerHTML = `
+          <div class="report-header">
+            <div class="report-id">${escapeHtml(report.id)}</div>
+            <div class="screenshot-badge ${hasScreenshot ? 'has' : 'missing'}">
+              ${hasScreenshot ? '✅ Screenshot' : '❌ Nessuno'}
+            </div>
+          </div>
+          ${report.ticker ? `<div class="report-info">Ticker: <strong>${escapeHtml(report.ticker)}</strong></div>` : ''}
+          ${screenshotUrl ? `<img src="${screenshotUrl}" class="report-preview show" alt="Preview" onerror="this.style.display='none'" />` : ''}
+          <div class="report-actions">
+            <button class="btn btn-primary btn-small upload-btn" data-report-id="${report.id}">
+              ${hasScreenshot ? '🔄 Sostituisci' : '📤 Carica'}
+            </button>
+            ${hasScreenshot ? `<button class="btn btn-secondary btn-small view-btn" data-report-id="${report.id}">👁️ Visualizza</button>` : ''}
+          </div>
+        `;
+
+        grid.appendChild(card);
+
+        // Click su card
+        card.querySelector('.upload-btn').addEventListener('click', (e) => {
+          e.stopPropagation();
+          openUploadModal(report);
+        });
+
+        if (hasScreenshot) {
+          card.querySelector('.view-btn')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            window.open(`/report/#/${report.id}`, '_blank');
+          });
+        }
+      });
+    }
+
+
+    // Click su area upload
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    // Drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        handleFile(files[0]);
+      }
+    });
+
+    // Selezione file
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleFile(e.target.files[0]);
+      }
+    });
+
+    // Paste da clipboard (Ctrl+V)
+    let pasteHandler = null;
+    
+    function enablePaste() {
+      if (pasteHandler) return; // Già abilitato
+      
+      pasteHandler = async (e) => {
+        if (!uploadModal.classList.contains('show')) return;
+        
+        e.preventDefault();
+        
+        // Prova prima con Clipboard API (più moderno)
+        try {
+          const items = await navigator.clipboard.read();
+          
+          for (const item of items) {
+            // Cerca immagini
+            const imageTypes = item.types.filter(t => t.startsWith('image/'));
+            if (imageTypes.length > 0) {
+              const blob = await item.getType(imageTypes[0]);
+              const file = new File([blob], 'chart-snapshot.png', { type: blob.type });
+              
+              handleFile(file);
+              showStatus('info', '✅ Immagine incollata dagli appunti!');
+              return;
+            }
+          }
+        } catch (error) {
+          // Fallback: usa l'evento paste standard
+          if (e.clipboardData && e.clipboardData.files.length > 0) {
+            const file = e.clipboardData.files[0];
+            if (file.type.startsWith('image/')) {
+              handleFile(file);
+              showStatus('info', '✅ Immagine incollata dagli appunti!');
+              return;
+            }
+          }
+          
+          // Se non c'è immagine nella clipboard
+          showStatus('error', '❌ Nessuna immagine negli appunti. Copia prima uno screenshot!');
+        }
+      };
+      
+      // Usa l'evento 'paste' invece di 'keydown'
+      document.addEventListener('paste', pasteHandler);
+      
+      // Aggiungi anche listener sull'area upload per maggiore visibilità
+      uploadArea.addEventListener('paste', pasteHandler);
+    }
+    
+    function disablePaste() {
+      if (pasteHandler) {
+        document.removeEventListener('paste', pasteHandler);
+        uploadArea.removeEventListener('paste', pasteHandler);
+        pasteHandler = null;
+      }
+    }
+    
+    // Abilita paste quando si apre il modal
+    function openUploadModal(report) {
+      selectedReport = report;
+      selectedFile = null;
+      modalTitle.textContent = `Carica Screenshot - ${report.id}`;
+      selectedReportInfo.innerHTML = `
+        <strong>Report ID:</strong> ${escapeHtml(report.id)}<br>
+        ${report.ticker ? `<strong>Ticker:</strong> ${escapeHtml(report.ticker)}<br>` : ''}
+        <strong>Stato:</strong> ${report.hasScreenshot ? '✅ Screenshot presente' : '❌ Nessuno screenshot'}
+      `;
+      previewContainer.classList.remove('show');
+      previewImage.src = '';
+      hideStatus();
+      uploadModal.classList.add('show');
+      enablePaste(); // Abilita paste
+    }
+    
+    // Disabilita paste quando si chiude il modal
+    function closeUploadModal() {
+      uploadModal.classList.remove('show');
+      selectedReport = null;
+      selectedFile = null;
+      disablePaste(); // Disabilita paste
+    }
+
+    // Gestione file
+    function handleFile(file) {
+      if (!file.type.startsWith('image/')) {
+        showStatus('error', '❌ Seleziona un file immagine (PNG, JPG)');
+        return;
+      }
+
+      selectedFile = file;
+
+      // Preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImage.src = e.target.result;
+        previewContainer.classList.add('show');
+      };
+      reader.readAsDataURL(file);
+
+      hideStatus();
+    }
+
+    // Upload
+    uploadBtn.addEventListener('click', async () => {
+      if (!selectedReport) {
+        showStatus('error', '❌ Nessun report selezionato');
+        return;
+      }
+
+      if (!selectedFile) {
+        showStatus('error', '❌ Seleziona un file immagine');
+        return;
+      }
+
+      uploadBtn.disabled = true;
+      showStatus('info', '⏳ Upload in corso...');
+
+      try {
+        const formData = new FormData();
+        formData.append('reportId', selectedReport.id);
+        formData.append('file', selectedFile);
+
+        const response = await fetch('/report/admin/upload-chart', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          let message = `✅ Screenshot salvato con successo!<br><strong>Percorso:</strong> ${result.path}`;
+          
+          // Mostra risultato push GitHub se presente
+          if (result.git) {
+            if (result.git.success) {
+              message += `<br><br>✅ <strong>Push GitHub completato!</strong><br>`;
+              message += `<strong>Branch:</strong> ${result.git.branch || 'N/A'}<br>`;
+              message += `<strong>Commit:</strong> ${result.git.commit || 'N/A'}`;
+            } else {
+              message += `<br><br>⚠️ <strong>Push GitHub fallito:</strong> ${result.git.error || 'Errore sconosciuto'}`;
+            }
+          }
+          
+          showStatus('success', message);
+          setTimeout(() => {
+            closeUploadModal();
+            loadReports();
+          }, 3000);
+        } else {
+          showStatus('error', `❌ Errore: ${result.error || 'Upload fallito'}`);
+        }
+      } catch (error) {
+        showStatus('error', `❌ Errore di connessione: ${error.message}`);
+      } finally {
+        uploadBtn.disabled = false;
+      }
+    });
+
+    // Event listeners
+    closeModal.addEventListener('click', closeUploadModal);
+    cancelBtn.addEventListener('click', closeUploadModal);
+    refreshBtn.addEventListener('click', loadReports);
+    searchBox.addEventListener('input', renderReports);
+
+    // Click fuori modal
+    uploadModal.addEventListener('click', (e) => {
+      if (e.target === uploadModal) {
+        closeUploadModal();
+      }
+    });
+
+    // Utility
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = String(str);
+      return div.innerHTML;
+    }
+
+    function showStatus(type, message) {
+      status.className = `status ${type} show`;
+      status.innerHTML = message;
+    }
+
+    function hideStatus() {
+      status.classList.remove('show');
+    }
+
+    // Carica report all'avvio
+    loadReports();
+  </script>
+</body>
+</html>
+

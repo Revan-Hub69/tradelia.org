@@ -9,13 +9,23 @@
  * Poi apri: http://localhost:3001/report/admin/upload-chart.html
  */
 
-const http = require('http');
-const fs = require('fs').promises;
-const path = require('path');
-const { URL } = require('url');
+import http from 'http';
+import fs from 'fs/promises';
+import path from 'path';
+import { URL } from 'url';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const execAsync = promisify(exec);
 
 const PORT = 3001;
 const REPORTS_DIR = path.join(__dirname, '..', 'reports');
+const PROJECT_ROOT = path.join(__dirname, '..', '..'); // Root del progetto per Git
+const AUTO_PUSH_TO_GITHUB = true; // Abilita/disabilita push automatico
 
 // MIME types
 const MIME_TYPES = {
@@ -45,15 +55,35 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    // Endpoint API: lista report
+    if (pathname === '/report/admin/api/reports' && req.method === 'GET') {
+      await handleListReports(req, res);
+      return;
+    }
+
     // Endpoint upload
     if (pathname === '/report/admin/upload-chart' && req.method === 'POST') {
       await handleUpload(req, res);
       return;
     }
 
+    // Serve screenshot images
+    if (pathname.startsWith('/report/reports/') && pathname.endsWith('/chart-snapshot.png')) {
+      const reportPath = pathname.replace('/report/reports/', '').replace('/chart-snapshot.png', '');
+      const filePath = path.join(REPORTS_DIR, reportPath, 'chart-snapshot.png');
+      await serveFile(res, filePath, 'image/png');
+      return;
+    }
+
     // Serve file statici
     if (pathname === '/report/admin/upload-chart.html') {
       const filePath = path.join(__dirname, 'upload-chart.html');
+      await serveFile(res, filePath, 'text/html');
+      return;
+    }
+
+    if (pathname === '/report/admin/dashboard.html') {
+      const filePath = path.join(__dirname, 'dashboard.html');
       await serveFile(res, filePath, 'text/html');
       return;
     }
@@ -130,14 +160,27 @@ async function handleUpload(req, res) {
   const targetPath = path.join(reportDir, 'chart-snapshot.png');
   await fs.writeFile(targetPath, file.data);
 
+  console.log(`✅ Screenshot salvato: ${targetPath}`);
+
+  // Push automatico su GitHub se abilitato
+  let gitResult = null;
+  if (AUTO_PUSH_TO_GITHUB) {
+    try {
+      gitResult = await pushToGitHub(reportId, targetPath);
+      console.log(`✅ Push GitHub: ${gitResult.success ? 'OK' : 'Errore'}`);
+    } catch (error) {
+      console.error('❌ Errore push GitHub:', error.message);
+      gitResult = { success: false, error: error.message };
+    }
+  }
+
   res.writeHead(200, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify({
     success: true,
     path: `report/reports/${reportId}/chart-snapshot.png`,
-    reportId: reportId
+    reportId: reportId,
+    git: gitResult
   }));
-
-  console.log(`✅ Screenshot salvato: ${targetPath}`);
 }
 
 // Parse multipart form data
@@ -179,6 +222,162 @@ function parseMultipart(buffer, boundary) {
   return parts;
 }
 
+// Lista report con info screenshot
+async function handleListReports(req, res) {
+  try {
+    const reports = [];
+    
+    if (!await fs.access(REPORTS_DIR).then(() => true).catch(() => false)) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ reports: [] }));
+      return;
+    }
+
+    const entries = await fs.readdir(REPORTS_DIR, { withFileTypes: true });
+    
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      
+      const reportId = entry.name;
+      const reportDir = path.join(REPORTS_DIR, reportId);
+      const screenshotPath = path.join(reportDir, 'chart-snapshot.png');
+      const headerPath = path.join(reportDir, 'header.json');
+      
+      let ticker = null;
+      let hasScreenshot = false;
+      
+      // Verifica screenshot
+      try {
+        await fs.access(screenshotPath);
+        hasScreenshot = true;
+      } catch {
+        hasScreenshot = false;
+      }
+      
+      // Leggi ticker da header.json
+      try {
+        const headerContent = await fs.readFile(headerPath, 'utf-8');
+        const header = JSON.parse(headerContent);
+        
+        // Cerca ticker nei rows
+        if (header.rows && Array.isArray(header.rows)) {
+          for (const row of header.rows) {
+            if (row.parts && Array.isArray(row.parts)) {
+              for (const part of row.parts) {
+                if (part.key === 'Ticker' && part.value) {
+                  ticker = part.value;
+                  break;
+                }
+              }
+            }
+            if (ticker) break;
+          }
+        }
+      } catch {
+        // Ignora errori di lettura header
+      }
+      
+      reports.push({
+        id: reportId,
+        ticker: ticker,
+        hasScreenshot: hasScreenshot
+      });
+    }
+    
+    // Ordina per ID
+    reports.sort((a, b) => a.id.localeCompare(b.id));
+    
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ reports: reports }));
+  } catch (error) {
+    console.error('Error listing reports:', error);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: error.message }));
+  }
+}
+
+// Push automatico su GitHub
+async function pushToGitHub(reportId, filePath) {
+  try {
+    // Verifica se siamo in un repository Git
+    try {
+      await execAsync('git rev-parse --git-dir', { cwd: PROJECT_ROOT });
+    } catch {
+      return { success: false, error: 'Non è un repository Git' };
+    }
+
+    // Aggiungi solo il file screenshot (usa path relativo)
+    const relativePath = path.relative(PROJECT_ROOT, filePath).replace(/\\/g, '/');
+    
+    // Escape path per Windows
+    const escapedPath = relativePath.replace(/"/g, '\\"');
+    
+    try {
+      await execAsync(`git add "${escapedPath}"`, { 
+        cwd: PROJECT_ROOT,
+        maxBuffer: 10 * 1024 * 1024 // 10MB buffer
+      });
+    } catch (error) {
+      return { success: false, error: `Errore git add: ${error.message}` };
+    }
+
+    // Commit
+    const commitMessage = `chore: aggiorna screenshot chart per report ${reportId}`;
+    const escapedMessage = commitMessage.replace(/"/g, '\\"');
+    
+    try {
+      await execAsync(`git commit -m "${escapedMessage}"`, { 
+        cwd: PROJECT_ROOT,
+        maxBuffer: 10 * 1024 * 1024
+      });
+    } catch (error) {
+      // Se non ci sono modifiche, il commit fallisce - è ok
+      if (error.message.includes('nothing to commit') || error.message.includes('no changes')) {
+        return { success: true, message: 'Nessuna modifica da committare' };
+      }
+      return { success: false, error: `Errore commit: ${error.message}` };
+    }
+
+    // Ottieni branch corrente
+    let currentBranch = 'main';
+    try {
+      const { stdout: branch } = await execAsync('git branch --show-current', { 
+        cwd: PROJECT_ROOT,
+        maxBuffer: 1024 * 1024
+      });
+      currentBranch = branch.trim() || 'main';
+    } catch {
+      // Usa default 'main' se non riesce a ottenere il branch
+    }
+
+    // Push
+    try {
+      await execAsync(`git push origin ${currentBranch}`, { 
+        cwd: PROJECT_ROOT,
+        maxBuffer: 10 * 1024 * 1024
+      });
+    } catch (error) {
+      return { 
+        success: false, 
+        error: `Errore push: ${error.message}`,
+        branch: currentBranch
+      };
+    }
+
+    return {
+      success: true,
+      branch: currentBranch,
+      commit: commitMessage,
+      path: relativePath
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message || 'Errore push GitHub'
+    };
+  }
+}
+
 // Serve file statico
 async function serveFile(res, filePath, contentType) {
   try {
@@ -194,7 +393,12 @@ async function serveFile(res, filePath, contentType) {
 // Avvia server
 server.listen(PORT, () => {
   console.log(`🚀 Server upload chart avviato su http://localhost:${PORT}`);
-  console.log(`📊 Dashboard: http://localhost:${PORT}/report/admin/upload-chart.html`);
+  console.log(`📊 Dashboard: http://localhost:${PORT}/report/admin/dashboard.html`);
+  console.log(`📊 Upload semplice: http://localhost:${PORT}/report/admin/upload-chart.html`);
   console.log(`📁 Reports directory: ${REPORTS_DIR}`);
+  console.log(`🌐 Push GitHub: ${AUTO_PUSH_TO_GITHUB ? '✅ Abilitato' : '❌ Disabilitato'}`);
+  if (AUTO_PUSH_TO_GITHUB) {
+    console.log(`   Branch: ${process.env.GIT_BRANCH || 'auto-detect'}`);
+  }
 });
 
