@@ -1,0 +1,196 @@
+/* /report/assets/css/chart-widget.css
+   Widget Chart - Screenshot statico o TradingView Ticker
+   Design Istituzionale 2025
+   ----------------------------------------------------------- */
+
+/* ===== CHART WIDGET CONTAINER ===== */
+.chart-widget {
+  width: 100%;
+  background: var(--surface-card);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-5);
+  margin-bottom: var(--sp-4);
+  box-shadow: var(--shadow-md);
+}
+
+.chart-widget-header {
+  margin-bottom: var(--sp-4);
+}
+
+.chart-widget-title {
+  font-size: var(--fs-15);
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: var(--sp-1);
+  line-height: var(--lh-16);
+}
+
+.chart-widget-subtitle {
+  font-size: var(--fs-12);
+  color: var(--muted);
+  line-height: var(--lh-16);
+}
+
+/* ===== CHART WIDGET BODY ===== */
+.chart-widget-body {
+  width: 100%;
+  min-height: 200px;
+  position: relative;
+}
+
+/* ===== LOADING STATE ===== */
+.chart-widget-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: var(--muted);
+  font-size: var(--fs-13);
+}
+
+.chart-widget-loading::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--br-card);
+  border-top-color: var(--brand-600);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-right: var(--sp-2);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== STATIC CHART ===== */
+.chart-widget-static {
+  width: 100%;
+}
+
+.chart-widget-static-image-container {
+  width: 100%;
+  background: var(--surface-elev);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+}
+
+.chart-widget-static-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 400px;
+  object-fit: contain;
+}
+
+.chart-widget-static-timestamp {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-11);
+  color: var(--muted);
+  text-align: center;
+  line-height: var(--lh-16);
+}
+
+/* ===== TRADINGVIEW TICKER ===== */
+.chart-widget-ticker {
+  width: 100%;
+  min-height: 200px;
+}
+
+.tradingview-widget-container {
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+
+.tradingview-widget-container__widget {
+  width: 100%;
+  min-height: 200px;
+}
+
+.tradingview-widget-copyright {
+  margin-top: var(--sp-2);
+  text-align: center;
+  font-size: var(--fs-10);
+  color: var(--muted);
+  line-height: var(--lh-16);
+}
+
+.tradingview-widget-copyright a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.tradingview-widget-copyright a:hover {
+  color: var(--ink-soft);
+}
+
+.tradingview-widget-copyright .blue-text {
+  color: var(--brand-600);
+}
+
+/* ===== EMPTY STATE ===== */
+.chart-widget-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: var(--sp-6);
+  text-align: center;
+}
+
+.chart-widget-empty-icon {
+  font-size: 48px;
+  margin-bottom: var(--sp-3);
+  opacity: 0.5;
+}
+
+.chart-widget-empty-text {
+  font-size: var(--fs-14);
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: var(--sp-1);
+  line-height: var(--lh-16);
+}
+
+.chart-widget-empty-subtext {
+  font-size: var(--fs-12);
+  color: var(--muted);
+  line-height: var(--lh-16);
+}
+
+/* ===== ERROR STATE ===== */
+.chart-widget-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: var(--sp-4);
+  color: var(--err);
+  font-size: var(--fs-13);
+  text-align: center;
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  border-radius: var(--radius-md);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .chart-widget {
+    padding: var(--sp-4);
+  }
+
+  .chart-widget-static-image {
+    max-height: 250px;
+  }
+
+  .chart-widget-empty-icon {
+    font-size: 36px;
+  }
+}
+

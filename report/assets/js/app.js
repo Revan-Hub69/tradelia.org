@@ -16,7 +16,10 @@ import { i18n } from './utils/i18n.js';
   
   const ROOT = document.getElementById('app-root');
   const MODULES_CONTAINER = document.getElementById('report-modules-container') || ROOT;
+  const ASSET_SELECTOR_SLOT = document.getElementById('asset-selector-slot');
   const TICKER_SLOT = document.getElementById('header-ticker-slot');
+  const CHART_SLOT = document.getElementById('chart-slot');
+  const MARKET_CONTEXT_SNAPSHOT_SLOT = document.getElementById('market-context-snapshot-slot');
   const HEADER_SLOT = document.getElementById('site-header-slot');
   const FOOTER_SLOT = document.getElementById('site-footer-slot');
   const INDEX_SLOT = document.getElementById('report-index-slot');
@@ -488,9 +491,58 @@ import { i18n } from './utils/i18n.js';
   }
   
   // ===== INIZIALIZZAZIONE =====
+  // ===== MOUNT ASSET SELECTOR =====
+  async function mountAssetSelector() {
+    if (!ASSET_SELECTOR_SLOT) {
+      Logger.warn('App', 'Asset selector slot non trovato');
+      return;
+    }
+
+    try {
+      const { assetSelector } = await safeImport('/report/assets/js/components/asset-selector.js');
+      
+      if (!assetSelector || typeof assetSelector.mount !== 'function') {
+        throw new Error('assetSelector.mount non disponibile');
+      }
+      
+      const node = assetSelector.mount(ASSET_SELECTOR_SLOT);
+      if (!node) {
+        throw new Error('assetSelector.mount ha restituito null');
+      }
+
+      // Listener per cambio asset
+      document.addEventListener('asset-changed', (e) => {
+        const { symbol } = e.detail;
+        Logger.debug('App', `Asset cambiato: ${symbol}`);
+        
+        // Aggiorna chart widget con nuovo simbolo
+        if (symbol && window.chartWidgetInstance) {
+          window.chartWidgetInstance.update(window.chartWidgetInstance.node, {
+            symbol: symbol
+          });
+        }
+      });
+
+      Logger.debug('App', 'Asset selector montato');
+    } catch (err) {
+      Logger.error('App', 'Errore montaggio asset selector', err);
+      if (ASSET_SELECTOR_SLOT) {
+        ASSET_SELECTOR_SLOT.innerHTML = `
+          <div class="error-state">
+            <div class="error-state-title">Errore caricamento widget asset</div>
+            <div class="error-state-message">${escapeHtml(err.message)}</div>
+          </div>
+        `;
+      }
+    }
+  }
+
   async function init() {
     const reportId = getReportId();
     Logger.debug('App', `Inizializzazione: ${reportId}`);
+    
+    // Monta asset selector (prima di tutto)
+    await mountAssetSelector();
     
     // Monta header (statico, non dipende da reportId)
     await mountSiteHeader();
@@ -523,10 +575,152 @@ import { i18n } from './utils/i18n.js';
       }
     }
     
+    // Monta market context snapshot (subito dopo header ticker, prima dei moduli)
+    await mountMarketContextSnapshot(reportId);
+    
+    // Monta chart widget (dopo market context snapshot)
+    await mountChartWidget(reportId, headerData);
+    
     // Monta footer DOPO il contenuto (con dati dinamici)
     await mountSiteFooter(headerData);
     
     Logger.debug('App', 'Inizializzazione completata');
+  }
+  
+  // ===== MOUNT CHART WIDGET =====
+  async function mountChartWidget(reportId, headerData) {
+    if (!CHART_SLOT) {
+      Logger.warn('App', 'Chart slot non trovato');
+      return;
+    }
+
+    try {
+      const { chartWidget } = await safeImport('/report/assets/js/components/chart-widget.js');
+      
+      if (!chartWidget || typeof chartWidget.mount !== 'function') {
+        throw new Error('chartWidget.mount non disponibile');
+      }
+
+      // Estrai simbolo da headerData
+      let symbol = null;
+      if (headerData && headerData.rows) {
+        for (const row of headerData.rows) {
+          for (const part of row.parts || []) {
+            if (part.kind === 'metric' && part.key === 'Ticker') {
+              symbol = part.value;
+              break;
+            }
+          }
+          if (symbol) break;
+        }
+      }
+
+      // Estrai timestamp
+      const timestamp = headerData?.meta?.timestamp 
+        || headerData?.meta?.created_at 
+        || headerData?.meta?.UpdatedAt
+        || null;
+
+      const node = chartWidget.mount(CHART_SLOT, {
+        reportId: reportId,
+        symbol: symbol,
+        timestamp: timestamp
+      });
+
+      if (!node) {
+        throw new Error('chartWidget.mount ha restituito null');
+      }
+
+      // Salva istanza globalmente per aggiornamenti
+      window.chartWidgetInstance = {
+        node: node,
+        update: chartWidget.update.bind(chartWidget)
+      };
+
+      Logger.debug('App', `Chart widget montato per ${symbol || 'nessun simbolo'}`);
+    } catch (err) {
+      Logger.error('App', 'Errore montaggio chart widget', err);
+      if (CHART_SLOT) {
+        CHART_SLOT.innerHTML = `
+          <div class="error-state">
+            <div class="error-state-title">Errore caricamento chart</div>
+            <div class="error-state-message">${escapeHtml(err.message)}</div>
+          </div>
+        `;
+      }
+    }
+  }
+
+  // ===== MOUNT MARKET CONTEXT SNAPSHOT =====
+  async function mountMarketContextSnapshot(reportId) {
+    if (!MARKET_CONTEXT_SNAPSHOT_SLOT) {
+      Logger.warn('App', 'Market context snapshot slot non trovato');
+      return;
+    }
+
+    try {
+      const { marketContextSnapshot } = await safeImport('/report/assets/js/components/market-context-snapshot.js');
+      
+      if (!marketContextSnapshot || typeof marketContextSnapshot.mount !== 'function') {
+        throw new Error('marketContextSnapshot.mount non disponibile');
+      }
+
+      // Carica dati F1B per estrarre RegimeScore
+      let regimeScore = null;
+      let strategyMode = null;
+      let timestamp = null;
+
+      if (reportId) {
+        try {
+          const f1bData = await fetchJSON(`/report/reports/${reportId}/f1b.json`);
+          
+          // Estrai RegimeScore
+          if (f1bData?.regime_and_risk?.RegimeScore) {
+            const scoreStr = f1bData.regime_and_risk.RegimeScore.raw || f1bData.regime_and_risk.RegimeScore;
+            // Parse "+0.60" o "0.60" o 0.60
+            if (typeof scoreStr === 'string') {
+              regimeScore = parseFloat(scoreStr.replace(/[+\s]/g, '')) || null;
+            } else if (typeof scoreStr === 'number') {
+              regimeScore = scoreStr;
+            }
+          }
+
+          // Estrai StrategyMode
+          if (f1bData?.regime_and_risk?.StrategyMode_macro) {
+            strategyMode = f1bData.regime_and_risk.StrategyMode_macro.raw || f1bData.regime_and_risk.StrategyMode_macro;
+          }
+
+          // Estrai timestamp
+          timestamp = f1bData?.meta?.timestampET 
+            || f1bData?.meta?.timestamp 
+            || f1bData?.meta?.created_at
+            || null;
+
+          Logger.debug('App', `F1B dati caricati: RegimeScore=${regimeScore}, StrategyMode=${strategyMode}`);
+        } catch (err) {
+          Logger.warn('App', 'Errore caricamento F1B per market context snapshot', err);
+          // Continua comunque, mostrerà placeholder
+        }
+      }
+
+      const node = marketContextSnapshot.mount(MARKET_CONTEXT_SNAPSHOT_SLOT, {
+        regimeScore: regimeScore,
+        strategyMode: strategyMode,
+        timestamp: timestamp
+      });
+
+      if (!node) {
+        throw new Error('marketContextSnapshot.mount ha restituito null');
+      }
+
+      Logger.debug('App', `Market context snapshot montato: RegimeScore=${regimeScore}`);
+    } catch (err) {
+      Logger.error('App', 'Errore montaggio market context snapshot', err);
+      // Non mostrare errore, semplicemente non mostrare il widget
+      if (MARKET_CONTEXT_SNAPSHOT_SLOT) {
+        MARKET_CONTEXT_SNAPSHOT_SLOT.innerHTML = '';
+      }
+    }
   }
   
   // ===== AVVIO =====

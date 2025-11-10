@@ -46,6 +46,9 @@
   <link rel="stylesheet" href="/assets/css/global-header.css" />
   <link rel="stylesheet" href="/report/assets/css/report-layout.css" />
   <link rel="stylesheet" href="/report/assets/css/module-card.css" />
+  <link rel="stylesheet" href="/report/assets/css/asset-selector.css" />
+  <link rel="stylesheet" href="/report/assets/css/chart-widget.css" />
+  <link rel="stylesheet" href="/report/assets/css/market-context-snapshot.css" />
   <link rel="stylesheet" href="/report/assets/css/glossary-drawer.css" />
   <link rel="stylesheet" href="/report/assets/css/glossary-popup.css" />
   <link rel="stylesheet" href="/report/assets/css/report-navigation.css" />
@@ -111,14 +114,45 @@
       z-index: 1000;
     }
     
-    /* Header ticker slot non si espande */
-    #header-ticker-slot {
+    /* Asset selector slot */
+    #asset-selector-slot {
       flex-shrink: 0;
       order: 1;
       display: block;
       width: 100%;
       margin-top: 64px;
-      padding: var(--sp-6) 0;
+      padding: var(--sp-6) var(--sp-6) var(--sp-4);
+      box-sizing: border-box;
+    }
+
+    /* Header ticker slot */
+    #header-ticker-slot {
+      flex-shrink: 0;
+      order: 2;
+      display: block;
+      width: 100%;
+      padding: var(--sp-4) var(--sp-6);
+      box-sizing: border-box;
+    }
+
+    /* Market context snapshot slot (subito dopo header ticker, prima dei moduli) */
+    #market-context-snapshot-slot {
+      flex-shrink: 0;
+      order: 3;
+      display: block;
+      width: 100%;
+      padding: 0 var(--sp-6);
+      box-sizing: border-box;
+    }
+
+    /* Chart slot */
+    #chart-slot {
+      flex-shrink: 0;
+      order: 4;
+      display: block;
+      width: 100%;
+      padding: var(--sp-4) var(--sp-6) var(--sp-4);
+      box-sizing: border-box;
     }
     
     /* Header gestito completamente da global-header.css - nessuno stile aggiuntivo necessario */
@@ -126,7 +160,7 @@
     /* ===== MAIN CONTENT ===== */
     main#app-root {
       flex: 1 1 0%;
-      order: 3;
+      order: 5;
       padding-top: var(--sp-2);
       padding-bottom: var(--sp-8);
       width: 100%;
@@ -726,8 +760,17 @@
   <!-- HEADER SLOT -->
   <div id="site-header-slot"></div>
 
+  <!-- ASSET SELECTOR SLOT -->
+  <div id="asset-selector-slot" class="container"></div>
+
   <!-- HEADER TICKER SLOT -->
   <div id="header-ticker-slot" class="container"></div>
+
+  <!-- MARKET CONTEXT SNAPSHOT SLOT -->
+  <div id="market-context-snapshot-slot" class="container"></div>
+
+  <!-- CHART SLOT -->
+  <div id="chart-slot" class="container"></div>
 
   <!-- REPORT NAVIGATION CONTAINER -->
   <div id="report-navigation-container" class="container" style="display: none;">
