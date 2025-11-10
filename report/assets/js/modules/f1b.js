@@ -41,6 +41,7 @@ function normalizeDataPublicF1B(src = {}) {
     tab_regime: 'Regime & Rischio',
     tab_breadth: 'Breadth & Rotazione',
     tab_street: 'Street View',
+    tab_charts: 'Chart',
     // Metric labels (per rows)
     label_strategy_mode: 'StrategyMode',
     label_regime_score: 'RegimeScore',
@@ -746,6 +747,15 @@ export function renderCard(rawData, ctx = {}) {
     });
   }
   
+  // Tab 4: Chart (Verifica Tecnica)
+  tabs.push({
+    id: 'charts',
+    title: labels.tab_charts || 'Chart',
+    content: '<div data-tab-charts="true"></div>',
+    active: false,
+    rows: []
+  });
+  
   // Genera menu tabs + drawer + content
   const { drawerHTML, contentHTML, menuHTML } = renderModuleTabsSidebar(tabs);
   
@@ -776,7 +786,25 @@ export function bindCard(node, rawData, ctx = {}) {
       const { tabId, container } = e.detail;
       if (!container) return;
       
-      // Monta header-ticker nel drawer
+      // Tab Chart: renderizza chart
+      if (tabId === 'charts') {
+        import('../components/f1b-charts.js').then(({ renderF1BCharts }) => {
+          renderF1BCharts(container, rawData).catch(err => {
+            Logger.error('F1B', 'Errore rendering chart', err);
+            container.innerHTML = `
+              <div class="error-state">
+                <div class="error-state-title">Errore caricamento chart</div>
+                <div class="error-state-message">${escapeHtml(err.message)}</div>
+              </div>
+            `;
+          });
+        }).catch(err => {
+          Logger.error('F1B', 'Errore caricamento componente chart', err);
+        });
+        return;
+      }
+      
+      // Monta header-ticker nel drawer per altre tab
       import('../components/header-ticker.js').then(({ headerTicker }) => {
         let rows = [];
         if (tabId === 'regime') {
