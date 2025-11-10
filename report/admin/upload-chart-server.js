@@ -17,6 +17,7 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { generateManifest } from '../../archivio/generate-manifest.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -26,6 +27,7 @@ const PORT = 3001;
 const REPORTS_DIR = path.join(__dirname, '..', 'reports');
 const PROJECT_ROOT = path.join(__dirname, '..', '..'); // Root del progetto per Git
 const AUTO_PUSH_TO_GITHUB = true; // Abilita/disabilita push automatico
+const AUTO_REGENERATE_MANIFEST = true; // Abilita/disabilita rigenerazione automatica manifest
 
 // MIME types
 const MIME_TYPES = {
@@ -58,6 +60,12 @@ const server = http.createServer(async (req, res) => {
     // Endpoint API: lista report
     if (pathname === '/report/admin/api/reports' && req.method === 'GET') {
       await handleListReports(req, res);
+      return;
+    }
+
+    // Endpoint API: rigenera manifest
+    if (pathname === '/report/admin/api/regenerate-manifest' && req.method === 'POST') {
+      await handleRegenerateManifest(req, res);
       return;
     }
 
@@ -162,6 +170,19 @@ async function handleUpload(req, res) {
 
   console.log(`✅ Screenshot salvato: ${targetPath}`);
 
+  // Rigenera manifest automaticamente se abilitato
+  let manifestResult = null;
+  if (AUTO_REGENERATE_MANIFEST) {
+    try {
+      generateManifest();
+      manifestResult = { success: true, message: 'Manifest rigenerato' };
+      console.log(`✅ Manifest rigenerato`);
+    } catch (error) {
+      console.error('❌ Errore rigenerazione manifest:', error.message);
+      manifestResult = { success: false, error: error.message };
+    }
+  }
+
   // Push automatico su GitHub se abilitato
   let gitResult = null;
   if (AUTO_PUSH_TO_GITHUB) {
@@ -179,7 +200,8 @@ async function handleUpload(req, res) {
     success: true,
     path: `report/reports/${reportId}/chart-snapshot.png`,
     reportId: reportId,
-    git: gitResult
+    git: gitResult,
+    manifest: manifestResult
   }));
 }
 
@@ -187,12 +209,29 @@ async function handleUpload(req, res) {
 function parseMultipart(buffer, boundary) {
   const parts = {};
   const boundaryBuffer = Buffer.from(`--${boundary}`);
-  const sections = buffer.split(boundaryBuffer);
+  const sections = [];
+  
+  // Dividi il buffer usando indexOf invece di split (che non esiste per Buffer)
+  let start = 0;
+  while (true) {
+    const index = buffer.indexOf(boundaryBuffer, start);
+    if (index === -1) break;
+    
+    if (start < index) {
+      sections.push(buffer.slice(start, index));
+    }
+    start = index + boundaryBuffer.length;
+  }
+  
+  // Aggiungi l'ultima sezione se c'è
+  if (start < buffer.length) {
+    sections.push(buffer.slice(start));
+  }
 
   for (const section of sections) {
     if (section.length < 10) continue;
 
-    const headerEnd = section.indexOf('\r\n\r\n');
+    const headerEnd = section.indexOf(Buffer.from('\r\n\r\n'));
     if (headerEnd === -1) continue;
 
     const headers = section.slice(0, headerEnd).toString();
@@ -208,18 +247,50 @@ function parseMultipart(buffer, boundary) {
     const filenameMatch = headers.match(/filename="([^"]+)"/);
     if (filenameMatch) {
       const contentTypeMatch = headers.match(/Content-Type:\s*([^\r\n]+)/);
+      // Rimuovi \r\n finale se presente
+      let data = body;
+      if (data.length >= 2 && data[data.length - 2] === 0x0D && data[data.length - 1] === 0x0A) {
+        data = data.slice(0, -2);
+      }
+      
       parts[name] = {
         filename: filenameMatch[1],
         contentType: contentTypeMatch ? contentTypeMatch[1].trim() : 'application/octet-stream',
-        data: body.slice(0, -2) // Rimuovi \r\n finale
+        data: data
       };
     } else {
       // Field
-      parts[name] = body.slice(0, -2).toString(); // Rimuovi \r\n finale
+      let fieldData = body;
+      // Rimuovi \r\n finale se presente
+      if (fieldData.length >= 2 && fieldData[fieldData.length - 2] === 0x0D && fieldData[fieldData.length - 1] === 0x0A) {
+        fieldData = fieldData.slice(0, -2);
+      }
+      parts[name] = fieldData.toString();
     }
   }
 
   return parts;
+}
+
+// Rigenera manifest
+async function handleRegenerateManifest(req, res) {
+  try {
+    generateManifest();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ 
+      success: true, 
+      message: 'Manifest rigenerato con successo',
+      timestamp: new Date().toISOString()
+    }));
+    console.log('[API] Manifest rigenerato manualmente');
+  } catch (error) {
+    console.error('[API] Errore rigenerazione manifest:', error);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ 
+      success: false, 
+      error: error.message 
+    }));
+  }
 }
 
 // Lista report con info screenshot
@@ -242,6 +313,7 @@ async function handleListReports(req, res) {
       const reportDir = path.join(REPORTS_DIR, reportId);
       const screenshotPath = path.join(reportDir, 'chart-snapshot.png');
       const headerPath = path.join(reportDir, 'header.json');
+      const manifestPath = path.join(reportDir, 'manifest.json');
       
       let ticker = null;
       let hasScreenshot = false;
@@ -254,7 +326,7 @@ async function handleListReports(req, res) {
         hasScreenshot = false;
       }
       
-      // Leggi ticker da header.json
+      // Leggi ticker da header.json (priorità 1)
       try {
         const headerContent = await fs.readFile(headerPath, 'utf-8');
         const header = JSON.parse(headerContent);
@@ -277,12 +349,29 @@ async function handleListReports(req, res) {
         // Ignora errori di lettura header
       }
       
+      // Fallback: leggi ticker da manifest.json se non trovato in header
+      if (!ticker) {
+        try {
+          const manifestContent = await fs.readFile(manifestPath, 'utf-8');
+          const manifest = JSON.parse(manifestContent);
+          if (manifest.metadata && manifest.metadata.ticker) {
+            ticker = manifest.metadata.ticker;
+          } else if (manifest.ticker) {
+            ticker = manifest.ticker;
+          }
+        } catch {
+          // Ignora errori di lettura manifest
+        }
+      }
+      
       reports.push({
         id: reportId,
         ticker: ticker,
         hasScreenshot: hasScreenshot
       });
     }
+    
+    console.log(`[API Reports] Trovati ${reports.length} report:`, reports.map(r => r.id).join(', '));
     
     // Ordina per ID
     reports.sort((a, b) => a.id.localeCompare(b.id));
@@ -397,6 +486,7 @@ server.listen(PORT, () => {
   console.log(`📊 Upload semplice: http://localhost:${PORT}/report/admin/upload-chart.html`);
   console.log(`📁 Reports directory: ${REPORTS_DIR}`);
   console.log(`🌐 Push GitHub: ${AUTO_PUSH_TO_GITHUB ? '✅ Abilitato' : '❌ Disabilitato'}`);
+  console.log(`📋 Rigenerazione Manifest: ${AUTO_REGENERATE_MANIFEST ? '✅ Abilitato' : '❌ Disabilitato'}`);
   if (AUTO_PUSH_TO_GITHUB) {
     console.log(`   Branch: ${process.env.GIT_BRANCH || 'auto-detect'}`);
   }

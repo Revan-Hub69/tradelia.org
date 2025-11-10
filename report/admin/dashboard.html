@@ -361,7 +361,7 @@
     <h1>📊 Dashboard Report Screenshot</h1>
     <p class="subtitle">Gestisci gli screenshot chart per tutti i report</p>
 
-    <div class="controls">
+      <div class="controls">
       <input 
         type="text" 
         id="searchBox" 
@@ -370,6 +370,7 @@
         autocomplete="off"
       />
       <button class="btn btn-secondary" id="refreshBtn">🔄 Aggiorna</button>
+      <button class="btn btn-secondary" id="regenerateManifestBtn">📋 Rigenera Manifest</button>
     </div>
 
     <div id="reportsContainer">
@@ -421,6 +422,7 @@
 
     const searchBox = document.getElementById('searchBox');
     const refreshBtn = document.getElementById('refreshBtn');
+    const regenerateManifestBtn = document.getElementById('regenerateManifestBtn');
     const reportsContainer = document.getElementById('reportsContainer');
     const uploadModal = document.getElementById('uploadModal');
     const closeModal = document.getElementById('closeModal');
@@ -441,8 +443,10 @@
         const response = await fetch('/report/admin/api/reports');
         const data = await response.json();
         reports = data.reports || [];
+        console.log(`[Dashboard] Caricati ${reports.length} report:`, reports.map(r => r.id).join(', '));
         renderReports();
       } catch (error) {
+        console.error('[Dashboard] Errore caricamento report:', error);
         reportsContainer.innerHTML = `<div class="empty-state"><div class="empty-state-icon">❌</div><div>Errore nel caricamento: ${error.message}</div></div>`;
       }
     }
@@ -454,6 +458,8 @@
         r.id.toLowerCase().includes(searchTerm) ||
         (r.ticker && r.ticker.toLowerCase().includes(searchTerm))
       );
+
+      console.log(`[Dashboard] Renderizzati ${filteredReports.length} report (filtro: "${searchTerm}")`);
 
       if (filteredReports.length === 0) {
         reportsContainer.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><div>Nessun report trovato</div></div>';
@@ -679,6 +685,15 @@
             }
           }
           
+          // Mostra risultato rigenerazione manifest se presente
+          if (result.manifest) {
+            if (result.manifest.success) {
+              message += `<br><br>✅ <strong>Manifest rigenerato!</strong><br>La dashboard principale del sito è stata aggiornata.`;
+            } else {
+              message += `<br><br>⚠️ <strong>Rigenerazione manifest fallita:</strong> ${result.manifest.error || 'Errore sconosciuto'}`;
+            }
+          }
+          
           showStatus('success', message);
           setTimeout(() => {
             closeUploadModal();
@@ -691,6 +706,34 @@
         showStatus('error', `❌ Errore di connessione: ${error.message}`);
       } finally {
         uploadBtn.disabled = false;
+      }
+    });
+
+    // Rigenera manifest
+    regenerateManifestBtn.addEventListener('click', async () => {
+      regenerateManifestBtn.disabled = true;
+      regenerateManifestBtn.textContent = '⏳ Rigenerazione...';
+      
+      try {
+        const response = await fetch('/report/admin/api/regenerate-manifest', {
+          method: 'POST'
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+          showStatus('success', `✅ Manifest rigenerato con successo!<br>La dashboard principale del sito è stata aggiornata.`);
+          setTimeout(() => {
+            hideStatus();
+            loadReports(); // Ricarica i report
+          }, 2000);
+        } else {
+          showStatus('error', `❌ Errore: ${result.error || 'Rigenerazione fallita'}`);
+        }
+      } catch (error) {
+        showStatus('error', `❌ Errore di connessione: ${error.message}`);
+      } finally {
+        regenerateManifestBtn.disabled = false;
+        regenerateManifestBtn.textContent = '📋 Rigenera Manifest';
       }
     });
 
