@@ -840,6 +840,8 @@ async function loadDashboardData() {
       if (manifestResponse.ok) {
         const manifest = await manifestResponse.json();
         STATE.reports = manifest.reports || [];
+        console.log('[Dashboard] Manifest caricato:', manifest);
+        console.log('[Dashboard] Report caricati:', STATE.reports.length);
         Logger.debug('Dashboard', `Caricati ${STATE.reports.length} report`);
         
         if (STATE.reports.length === 0) {
