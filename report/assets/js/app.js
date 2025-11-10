@@ -16,7 +16,6 @@ import { i18n } from './utils/i18n.js';
   
   const ROOT = document.getElementById('app-root');
   const MODULES_CONTAINER = document.getElementById('report-modules-container') || ROOT;
-  const ASSET_SELECTOR_SLOT = document.getElementById('asset-selector-slot');
   const TICKER_SLOT = document.getElementById('header-ticker-slot');
   const CHART_SLOT = document.getElementById('chart-slot');
   const MARKET_CONTEXT_SNAPSHOT_SLOT = document.getElementById('market-context-snapshot-slot');
@@ -491,58 +490,9 @@ import { i18n } from './utils/i18n.js';
   }
   
   // ===== INIZIALIZZAZIONE =====
-  // ===== MOUNT ASSET SELECTOR =====
-  async function mountAssetSelector() {
-    if (!ASSET_SELECTOR_SLOT) {
-      Logger.warn('App', 'Asset selector slot non trovato');
-      return;
-    }
-
-    try {
-      const { assetSelector } = await safeImport('/report/assets/js/components/asset-selector.js');
-      
-      if (!assetSelector || typeof assetSelector.mount !== 'function') {
-        throw new Error('assetSelector.mount non disponibile');
-      }
-      
-      const node = assetSelector.mount(ASSET_SELECTOR_SLOT);
-      if (!node) {
-        throw new Error('assetSelector.mount ha restituito null');
-      }
-
-      // Listener per cambio asset
-      document.addEventListener('asset-changed', (e) => {
-        const { symbol } = e.detail;
-        Logger.debug('App', `Asset cambiato: ${symbol}`);
-        
-        // Aggiorna chart widget con nuovo simbolo
-        if (symbol && window.chartWidgetInstance) {
-          window.chartWidgetInstance.update(window.chartWidgetInstance.node, {
-            symbol: symbol
-          });
-        }
-      });
-
-      Logger.debug('App', 'Asset selector montato');
-    } catch (err) {
-      Logger.error('App', 'Errore montaggio asset selector', err);
-      if (ASSET_SELECTOR_SLOT) {
-        ASSET_SELECTOR_SLOT.innerHTML = `
-          <div class="error-state">
-            <div class="error-state-title">Errore caricamento widget asset</div>
-            <div class="error-state-message">${escapeHtml(err.message)}</div>
-          </div>
-        `;
-      }
-    }
-  }
-
   async function init() {
     const reportId = getReportId();
     Logger.debug('App', `Inizializzazione: ${reportId}`);
-    
-    // Monta asset selector (prima di tutto)
-    await mountAssetSelector();
     
     // Monta header (statico, non dipende da reportId)
     await mountSiteHeader();
@@ -672,22 +622,46 @@ import { i18n } from './utils/i18n.js';
 
       if (reportId) {
         try {
-          const f1bData = await fetchJSON(`/report/reports/${reportId}/f1b.json`);
+          const f1bUrl = `/report/reports/${reportId}/f1b.json`;
+          Logger.debug('App', `Caricamento F1B da: ${f1bUrl}`);
           
-          // Estrai RegimeScore
+          const f1bData = await fetchJSON(f1bUrl);
+          
+          Logger.debug('App', 'F1B dati ricevuti, chiavi:', Object.keys(f1bData || {}));
+          
+          // Prova diversi percorsi per RegimeScore (supporta strutture diverse)
           if (f1bData?.regime_and_risk?.RegimeScore) {
-            const scoreStr = f1bData.regime_and_risk.RegimeScore.raw || f1bData.regime_and_risk.RegimeScore;
+            const scoreData = f1bData.regime_and_risk.RegimeScore;
+            const scoreStr = scoreData?.raw || scoreData;
+            
             // Parse "+0.60" o "0.60" o 0.60
             if (typeof scoreStr === 'string') {
               regimeScore = parseFloat(scoreStr.replace(/[+\s]/g, '')) || null;
             } else if (typeof scoreStr === 'number') {
               regimeScore = scoreStr;
             }
+            Logger.debug('App', `RegimeScore estratto da regime_and_risk: ${scoreStr} -> ${regimeScore}`);
+          } else if (f1bData?.f1bSnapshot?.regime_state?.RegimeScore) {
+            // Prova struttura alternativa (f1bSnapshot)
+            const scoreData = f1bData.f1bSnapshot.regime_state.RegimeScore;
+            regimeScore = typeof scoreData === 'number' ? scoreData : parseFloat(scoreData) || null;
+            Logger.debug('App', `RegimeScore estratto da f1bSnapshot: ${regimeScore}`);
+          } else {
+            Logger.warn('App', 'RegimeScore non trovato in F1B. Struttura disponibile:', {
+              hasRegimeAndRisk: !!f1bData?.regime_and_risk,
+              hasF1bSnapshot: !!f1bData?.f1bSnapshot,
+              keys: Object.keys(f1bData || {})
+            });
           }
 
-          // Estrai StrategyMode
+          // Estrai StrategyMode (prova diversi percorsi)
           if (f1bData?.regime_and_risk?.StrategyMode_macro) {
-            strategyMode = f1bData.regime_and_risk.StrategyMode_macro.raw || f1bData.regime_and_risk.StrategyMode_macro;
+            const modeData = f1bData.regime_and_risk.StrategyMode_macro;
+            strategyMode = modeData?.raw || modeData;
+            Logger.debug('App', `StrategyMode estratto da regime_and_risk: ${strategyMode}`);
+          } else if (f1bData?.f1bSnapshot?.regime_state?.StrategyMode_macro) {
+            strategyMode = f1bData.f1bSnapshot.regime_state.StrategyMode_macro;
+            Logger.debug('App', `StrategyMode estratto da f1bSnapshot: ${strategyMode}`);
           }
 
           // Estrai timestamp
@@ -696,11 +670,13 @@ import { i18n } from './utils/i18n.js';
             || f1bData?.meta?.created_at
             || null;
 
-          Logger.debug('App', `F1B dati caricati: RegimeScore=${regimeScore}, StrategyMode=${strategyMode}`);
+          Logger.debug('App', `F1B dati finali: RegimeScore=${regimeScore}, StrategyMode=${strategyMode}, timestamp=${timestamp}`);
         } catch (err) {
-          Logger.warn('App', 'Errore caricamento F1B per market context snapshot', err);
-          // Continua comunque, mostrerà placeholder
+          Logger.warn('App', `Errore caricamento F1B per market context snapshot: ${err.message}`, err);
+          // Continua comunque, mostrerà placeholder senza marker
         }
+      } else {
+        Logger.warn('App', 'reportId non disponibile per market context snapshot');
       }
 
       const node = marketContextSnapshot.mount(MARKET_CONTEXT_SNAPSHOT_SLOT, {

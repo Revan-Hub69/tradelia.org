@@ -136,30 +136,31 @@ const CHART_WIDGET = {
       if (root) {
         root.style.display = 'none';
       }
+      Logger.warn('ChartWidget', `Simbolo non valido: ${symbol}`);
       return;
     }
     
+    // Container per il widget TradingView
+    const containerId = `tradingview-${Date.now()}`;
     body.innerHTML = `
       <div class="chart-widget-ticker">
         <!-- TradingView Widget BEGIN -->
-        <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container" id="${containerId}">
           <div class="tradingview-widget-container__widget"></div>
-          <div class="tradingview-widget-copyright">
-            <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
-              <span class="blue-text">TradingView</span>
-            </a>
-          </div>
         </div>
         <!-- TradingView Widget END -->
       </div>
     `;
 
     // Carica script TradingView con delay per evitare errori
-    setTimeout(() => {
-      this._loadTradingViewScript(normalizedSymbol);
-    }, 100);
+    const container = document.getElementById(containerId);
+    if (container) {
+      setTimeout(() => {
+        this._loadTradingViewAdvancedChart(container, normalizedSymbol);
+      }, 200);
+    }
 
-    Logger.debug('ChartWidget', `TradingView ticker caricato: ${normalizedSymbol}`);
+    Logger.debug('ChartWidget', `TradingView chart caricato: ${normalizedSymbol}`);
   },
 
   // ===== NORMALIZE SYMBOL =====
@@ -196,35 +197,49 @@ const CHART_WIDGET = {
     return `NASDAQ:${upperSymbol}`;
   },
 
-  // ===== LOAD TRADINGVIEW SCRIPT =====
-  _loadTradingViewScript(symbol) {
+  // ===== LOAD TRADINGVIEW ADVANCED CHART =====
+  _loadTradingViewAdvancedChart(container, symbol) {
+    if (!container) {
+      Logger.error('ChartWidget', 'Container non fornito per TradingView widget');
+      return;
+    }
+
+    const widgetContainer = container.querySelector('.tradingview-widget-container__widget');
+    if (!widgetContainer) {
+      Logger.error('ChartWidget', 'Widget container non trovato');
+      return;
+    }
+
     // Rimuovi script esistente se presente
-    const existingScript = document.getElementById('tradingview-ticker-script');
+    const existingScript = document.getElementById('tradingview-chart-script');
     if (existingScript) {
       existingScript.remove();
     }
 
-    // Crea nuovo script
+    // Crea nuovo script per Advanced Chart
     const script = document.createElement('script');
-    script.id = 'tradingview-ticker-script';
+    script.id = 'tradingview-chart-script';
     script.type = 'text/javascript';
-    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js';
+    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
     script.async = true;
     script.innerHTML = JSON.stringify({
-      "symbol": symbol,
-      "width": "100%",
-      "height": "auto",
-      "locale": "it",
-      "dateRange": "1D",
-      "colorTheme": "dark",
-      "isTransparent": true,
       "autosize": true,
-      "largeChartUrl": ""
+      "symbol": symbol,
+      "interval": "D",
+      "timezone": "Europe/Rome",
+      "theme": "dark",
+      "style": "1",
+      "locale": "it",
+      "backgroundColor": "transparent",
+      "hide_side_toolbar": false,
+      "allow_symbol_change": false,
+      "calendar": false,
+      "support_host": "https://www.tradingview.com"
     });
 
-    document.body.appendChild(script);
+    widgetContainer.appendChild(script);
 
-    Logger.debug('ChartWidget', `TradingView script caricato per ${symbol}`);
+    Logger.debug('ChartWidget', `TradingView Advanced Chart caricato per ${symbol}`);
   },
 
   // ===== CHECK IMAGE EXISTS =====
