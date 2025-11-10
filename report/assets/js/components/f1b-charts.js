@@ -33,7 +33,8 @@ function parseRegimeScore(score) {
 // ===== CHART 1: RegimeScore Gauge =====
 async function renderRegimeScoreGauge(container, f1bData) {
   try {
-    const regimeScore = parseRegimeScore(f1bData?.regime_and_risk?.RegimeScore || f1bData?.f1bSnapshot?.regime_state?.RegimeScore || 0);
+    // Usa solo struttura reale: regime_and_risk (non f1bSnapshot che non viene generato)
+    const regimeScore = parseRegimeScore(f1bData?.regime_and_risk?.RegimeScore || 0);
     const strategyMode = f1bData?.regime_and_risk?.StrategyMode_macro?.raw || f1bData?.regime_and_risk?.StrategyMode_macro || '—';
     
     // Interpretazione
@@ -134,8 +135,9 @@ async function renderRegimeScoreGauge(container, f1bData) {
 // ===== CHART 2: Breadth 1M & RiskTilt =====
 async function renderBreadthRiskTilt(container, f1bData) {
   try {
-    const breadth = parseFloat(f1bData?.breadth_rotation?.Breadth_1M?.raw || f1bData?.breadth_rotation?.Breadth_1M || f1bData?.f1bSnapshot?.breadth_and_rotation?.Breadth_1M_pctSectorsGreen || 0.5);
-    const riskTilt = f1bData?.breadth_rotation?.RiskTilt_1M?.raw || f1bData?.breadth_rotation?.RiskTilt_1M || f1bData?.f1bSnapshot?.breadth_and_rotation?.RiskTilt_1M || 'Neutro';
+    // Usa solo struttura reale: breadth_rotation (non f1bSnapshot che non viene generato)
+    const breadth = parseFloat(f1bData?.breadth_rotation?.Breadth_1M?.raw || f1bData?.breadth_rotation?.Breadth_1M || 0.5);
+    const riskTilt = f1bData?.breadth_rotation?.RiskTilt_1M?.raw || f1bData?.breadth_rotation?.RiskTilt_1M || 'Neutro';
     
     // Converti RiskTilt in valore numerico per visualizzazione
     let riskTiltValue = 0;
@@ -226,12 +228,9 @@ async function renderBreadthRiskTilt(container, f1bData) {
 // ===== CHART 3: Leadership Settoriale =====
 async function renderLeadershipSettoriale(container, f1bData) {
   try {
-    const leaders = f1bData?.breadth_rotation?.Leadership?.LeadersMultiTF?.items || 
-                    f1bData?.f1bSnapshot?.breadth_and_rotation?.LeadersMultiTF || 
-                    [];
-    const lagging = f1bData?.breadth_rotation?.Leadership?.Lagging?.items || 
-                    f1bData?.f1bSnapshot?.breadth_and_rotation?.LaggingSectors || 
-                    [];
+    // Usa solo struttura reale: breadth_rotation.Leadership (non f1bSnapshot che non viene generato)
+    const leaders = f1bData?.breadth_rotation?.Leadership?.LeadersMultiTF?.items || [];
+    const lagging = f1bData?.breadth_rotation?.Leadership?.Lagging?.items || [];
     
     // Se non ci sono dati, mostra messaggio informativo
     if (leaders.length === 0 && lagging.length === 0) {
