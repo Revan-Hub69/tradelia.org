@@ -1,4 +1,714 @@
 // /report/assets/js/components/f1b-charts.js
+// Chart renderers per F1B v19 Dynamic: due chart principali on-card +
+// chart dedicato per ogni drawer section.
+
+import Logger from '../utils/logger.js';
+
+const CHART_JS_SRC = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+
+const COLORS = {
+  ok: 'rgba(22, 163, 74, 0.88)',
+  warn: 'rgba(234, 88, 12, 0.88)',
+  err: 'rgba(220, 38, 38, 0.88)',
+  neutral: '#64748b',
+  primary: '#2563eb',
+  backdrop: 'rgba(15, 23, 42, 0.85)',
+  grid: 'rgba(148, 163, 184, 0.15)',
+  text: '#f8fafc',
+  textMuted: '#cbd5f5'
+};
+
+let chartJsPromise = null;
+
+function ensureChartJs() {
+  if (window.Chart) return Promise.resolve();
+  if (chartJsPromise) return chartJsPromise;
+  chartJsPromise = new Promise((resolve, reject) => {
+    const existing = document.querySelector(`script[src="${CHART_JS_SRC}"]`);
+    if (existing) {
+      existing.addEventListener('load', () => window.Chart ? resolve() : reject(new Error('Chart.js non disponibile')));
+      existing.addEventListener('error', () => reject(new Error('Errore caricamento Chart.js')));
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = CHART_JS_SRC;
+    script.async = false;
+    script.onload = () => window.Chart ? resolve() : reject(new Error('Chart.js non disponibile'));
+    script.onerror = () => reject(new Error('Errore caricamento Chart.js'));
+    document.head.appendChild(script);
+  });
+  return chartJsPromise;
+}
+
+function uniqueId(prefix) {
+  return `${prefix}-${Math.random().toString(16).slice(2, 8)}`;
+}
+
+function parseNumber(value, fallback = 0) {
+  if (value == null || value === '' || value === '—') return fallback;
+  if (typeof value === 'number') return value;
+  if (typeof value === 'boolean') return value ? 1 : 0;
+  const parsed = parseFloat(String(value).replace(/[^0-9+-.]/g, ''));
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function parsePercentString(value) {
+  if (typeof value === 'number') return value;
+  if (typeof value !== 'string') return null;
+  if (value.includes('%')) {
+    const parsed = parseFloat(value.replace(/[^0-9+-.]/g, ''));
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  const parsed = parseFloat(value);
+  if (!Number.isFinite(parsed)) return null;
+  return parsed > 1 ? parsed : parsed * 100;
+}
+
+function computeToneColor(value) {
+  if (value > 0.3) return COLORS.ok;
+  if (value < -0.3) return COLORS.err;
+  if (Math.abs(value) < 0.15) return COLORS.warn;
+  return COLORS.neutral;
+}
+
+// ---------------------------------------------------------------------------
+// Primary charts
+// ---------------------------------------------------------------------------
+
+async function renderRegimePrimary(chartNode, data) {
+  const canvasId = uniqueId('f1b-regime-primary');
+  const regimeScore = parseNumber(data?.regime_and_risk?.RegimeScore?.raw, 0);
+  const strategy = data?.regime_and_risk?.StrategyMode_macro?.raw || data?.regime_and_risk?.StrategyMode_macro || '—';
+  const color = computeToneColor(regimeScore);
+
+  chartNode.innerHTML = `
+    <canvas id="${canvasId}" aria-label="RegimeScore gauge" role="img"></canvas>
+  `;
+
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+
+  new window.Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['RegimeScore'],
+      datasets: [{
+        data: [regimeScore],
+        backgroundColor: color,
+        borderColor: color,
+        borderWidth: 2,
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      scales: {
+        x: {
+          min: -1,
+          max: 1,
+          ticks: {
+            color: COLORS.textMuted,
+            callback: (value) => {
+              if (value === -1) return 'Risk-off (-1)';
+              if (value === 0) return 'Neutro (0)';
+              if (value === 1) return 'Risk-on (+1)';
+              return value.toFixed(2);
+            }
+          },
+          grid: {
+            color: COLORS.grid
+          }
+        },
+        y: {
+          ticks: { display: false },
+          grid: { display: false }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: COLORS.backdrop,
+          titleColor: COLORS.text,
+          bodyColor: COLORS.text,
+          callbacks: {
+            label: () => `RegimeScore ${regimeScore.toFixed(2)} · Mode ${strategy}`
+          }
+        },
+        title: {
+          display: true,
+          text: `Strategy Mode ${strategy}`,
+          color: COLORS.text,
+          padding: { bottom: 12 },
+          font: { size: 14, weight: '600' }
+        }
+      }
+    }
+  });
+}
+
+async function renderBreadthPrimary(chartNode, data) {
+  const canvasId = uniqueId('f1b-breadth-primary');
+  const breadthRaw = data?.breadth_rotation?.Breadth_1M?.raw;
+  const breadthPercent = parsePercentString(
+    typeof breadthRaw === 'number' ? breadthRaw * 100 : breadthRaw
+  );
+  const pct = Number.isFinite(breadthPercent) ? breadthPercent : 50;
+  const riskTilt = data?.breadth_rotation?.RiskTilt_1M?.raw || data?.breadth_rotation?.RiskTilt_1M || '—';
+
+  chartNode.innerHTML = `
+    <canvas id="${canvasId}" aria-label="Breadth 1M" role="img"></canvas>
+  `;
+
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+
+  new window.Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Settori in rialzo', 'Settori in calo/neutri'],
+      datasets: [{
+        data: [pct, Math.max(0, 100 - pct)],
+        backgroundColor: [
+          pct >= 60 ? COLORS.ok : pct <= 40 ? COLORS.err : COLORS.warn,
+          COLORS.neutral
+        ],
+        borderColor: '#0f172a',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: {
+          display: true,
+          position: 'bottom',
+          labels: {
+            color: COLORS.text,
+            padding: 12
+          }
+        },
+        title: {
+          display: true,
+          text: `RiskTilt ${riskTilt}`,
+          color: COLORS.text,
+          padding: { bottom: 10 },
+          font: { size: 14, weight: '600' }
+        },
+        tooltip: {
+          backgroundColor: COLORS.backdrop,
+          titleColor: COLORS.text,
+          bodyColor: COLORS.text,
+          callbacks: {
+            label: (ctx) => `${ctx.label}: ${ctx.parsed.toFixed(1)}%`
+          }
+        }
+      }
+    }
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Section charts
+// ---------------------------------------------------------------------------
+
+async function renderRegimeSection(chartNode, data) {
+  return renderRegimePrimary(chartNode, data);
+}
+
+async function renderBreadthSection(chartNode, data) {
+  const canvasId = uniqueId('f1b-leadership');
+  const leaders = data?.breadth_rotation?.Leadership?.LeadersMultiTF?.items || [];
+  const defensive = data?.breadth_rotation?.Leadership?.DefensiveLeadership?.items || [];
+  const lagging = data?.breadth_rotation?.Leadership?.Lagging?.items || [];
+
+  const bars = [
+    ...leaders.map(sector => ({ label: sector, value: 1, color: COLORS.ok })),
+    ...defensive.map(sector => ({ label: sector, value: 0.4, color: COLORS.warn })),
+    ...lagging.map(sector => ({ label: sector, value: -0.6, color: COLORS.err }))
+  ];
+
+  if (bars.length === 0) {
+    chartNode.innerHTML = `
+      <div class="empty-state">
+        Leadership settoriale non disponibile in questo snapshot.
+      </div>
+    `;
+    return;
+  }
+
+  chartNode.innerHTML = `<canvas id="${canvasId}" role="img"></canvas>`;
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+
+  new window.Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: bars.map(b => b.label),
+      datasets: [{
+        label: 'Leadership relativa',
+        data: bars.map(b => b.value),
+        backgroundColor: bars.map(b => b.color),
+        borderColor: bars.map(b => b.color),
+        borderWidth: 2,
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      scales: {
+        x: {
+          min: -1,
+          max: 1,
+          grid: { color: COLORS.grid },
+          ticks: {
+            color: COLORS.textMuted,
+            callback: (value) => {
+              if (value > 0) return 'Leader';
+              if (value < 0) return 'Lagging';
+              return 'Neutro';
+            }
+          }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { color: COLORS.text }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: COLORS.backdrop,
+          titleColor: COLORS.text,
+          bodyColor: COLORS.text
+        }
+      }
+    }
+  });
+}
+
+async function renderVolatilitySection(chartNode, data) {
+  const canvasId = uniqueId('f1b-volatility');
+  const vix = parseNumber(data?.market_microstructure?.VIX_level, 18);
+  const curveComment = data?.market_microstructure?.Curve_state?.CurveShape_comment || '';
+  const spreadMatch = curveComment.match(/([-+]?\d+\.?\d*)/);
+  const curveSpread = spreadMatch ? parseFloat(spreadMatch[1]) : 0;
+
+  chartNode.innerHTML = `<canvas id="${canvasId}" role="img"></canvas>`;
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+
+  new window.Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['VIX', '2s10s spread'],
+      datasets: [{
+        data: [vix, Math.abs(curveSpread)],
+        backgroundColor: [vix < 20 ? COLORS.ok : vix > 30 ? COLORS.err : COLORS.warn, COLORS.primary],
+        borderColor: [vix < 20 ? COLORS.ok : vix > 30 ? COLORS.err : COLORS.warn, COLORS.primary],
+        borderWidth: 2,
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: COLORS.text }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: COLORS.grid },
+          ticks: { color: COLORS.textMuted }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: COLORS.backdrop,
+          titleColor: COLORS.text,
+          bodyColor: COLORS.text,
+          callbacks: {
+            label: (ctx) => {
+              if (ctx.label === 'VIX') {
+                const tone = vix < 20 ? 'Calma' : vix > 30 ? 'Stress' : 'Moderato';
+                return `VIX ${ctx.parsed.y.toFixed(1)} (${tone})`;
+              }
+              return `Spread ${curveSpread.toFixed(2)}bp`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+async function renderSizeSection(chartNode, data) {
+  const canvasId = uniqueId('f1b-size');
+  const bias = data?.size_distribution?.SizeBiasPattern || 'Mixed';
+  const stress = data?.size_distribution?.StressMicroCap === true ? 1 : 0;
+  const biasPoints = bias.split('/').map(part => part.trim());
+
+  const categories = ['Mega/Large', 'Mid', 'Small/Micro'];
+  const values = categories.map(category =>
+    biasPoints.some(point => point.toLowerCase().includes(category.split('/')[0].toLowerCase())) ? 1 : 0.2
+  );
+
+  chartNode.innerHTML = `<canvas id="${canvasId}" role="img"></canvas>`;
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+
+  new window.Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: categories,
+      datasets: [{
+        label: 'Bias dimensionale',
+        data: values,
+        backgroundColor: 'rgba(37, 99, 235, 0.25)',
+        borderColor: COLORS.primary,
+        borderWidth: 2,
+        pointBackgroundColor: COLORS.primary
+      }, {
+        label: 'Stress microcap',
+        data: categories.map(category => category.includes('Small') ? stress : 0.1),
+        backgroundColor: 'rgba(220, 38, 38, 0.15)',
+        borderColor: COLORS.err,
+        borderWidth: 1.5,
+        borderDash: [6, 6],
+        pointBackgroundColor: COLORS.err
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        r: {
+          min: 0,
+          max: 1.2,
+          grid: { color: COLORS.grid },
+          angleLines: { color: COLORS.grid },
+          pointLabels: { color: COLORS.text },
+          ticks: { display: false }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { color: COLORS.text }
+        },
+        tooltip: {
+          backgroundColor: COLORS.backdrop,
+          titleColor: COLORS.text,
+          bodyColor: COLORS.text
+        }
+      }
+    }
+  });
+}
+
+async function renderRiskWindowSection(chartNode, data) {
+  const canvasId = uniqueId('f1b-risk');
+  const snapshot = data?.risk_window?.RiskWindow_F1 || {};
+  const metrics = [
+    { label: 'Score', value: parseNumber(snapshot.Score, 0) },
+    { label: 'Vol', value: parseNumber(snapshot.Vol, 0) },
+    { label: 'Rates', value: parseNumber(snapshot.Rates, 0) },
+    { label: 'Commodities', value: parseNumber(snapshot.Commodities, 0) },
+    { label: 'Event', value: parseNumber(snapshot.Event, 0) }
+  ];
+
+  chartNode.innerHTML = `<canvas id="${canvasId}" role="img"></canvas>`;
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+
+  new window.Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: metrics.map(m => m.label),
+      datasets: [{
+        label: 'Risk Window Components',
+        data: metrics.map(m => m.value),
+        fill: true,
+        tension: 0.35,
+        backgroundColor: 'rgba(234, 88, 12, 0.18)',
+        borderColor: COLORS.warn,
+        borderWidth: 2,
+        pointBackgroundColor: COLORS.warn,
+        pointRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: COLORS.text }
+        },
+        y: {
+          grid: { color: COLORS.grid },
+          ticks: { color: COLORS.textMuted }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: COLORS.backdrop,
+          titleColor: COLORS.text,
+          bodyColor: COLORS.text
+        }
+      }
+    }
+  });
+}
+
+async function renderStreetSection(chartNode, data) {
+  const canvasId = uniqueId('f1b-street');
+  const toneRaw = data?.analysis_headlines?.T1_ConsensusTone || '';
+  const toneLower = toneRaw.toLowerCase();
+  let toneScore = 0;
+  if (toneLower.includes('pos')) toneScore = 1;
+  if (toneLower.includes('neg')) toneScore = -1;
+
+  chartNode.innerHTML = `<canvas id="${canvasId}" role="img"></canvas>`;
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+
+  new window.Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Consensus Tone'],
+      datasets: [{
+        data: [toneScore],
+        backgroundColor: [toneScore >= 0 ? COLORS.ok : COLORS.err],
+        borderColor: [toneScore >= 0 ? COLORS.ok : COLORS.err],
+        borderWidth: 2,
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      scales: {
+        x: {
+          min: -1,
+          max: 1,
+          ticks: {
+            color: COLORS.textMuted,
+            callback: (value) => {
+              if (value === -1) return 'Negativo';
+              if (value === 0) return 'Neutro';
+              if (value === 1) return 'Positivo';
+              return value;
+            }
+          },
+          grid: { color: COLORS.grid }
+        },
+        y: {
+          ticks: { color: COLORS.text },
+          grid: { display: false }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: COLORS.backdrop,
+          titleColor: COLORS.text,
+          bodyColor: COLORS.text,
+          callbacks: {
+            label: () => `Tone ${toneRaw || 'Neutro'}`
+          }
+        }
+      }
+    }
+  });
+}
+
+async function renderFinvizSection(chartNode, data) {
+  const canvasId = uniqueId('f1b-finviz');
+  const query = data?.finvizFilters?.QueryString || '';
+  const filters = {
+    Momentum: /momentum/i.test(query) ? 1 : 0,
+    Value: /value/i.test(query) ? 1 : 0,
+    Pullback: /pullback/i.test(query) || /WeekDown/i.test(query) ? 1 : 0,
+    LargeCap: /Large|Mega/i.test(query) ? 1 : 0,
+    MidCap: /Mid/i.test(query) ? 1 : 0,
+    SmallCap: /Small|Micro/i.test(query) ? 1 : 0
+  };
+
+  chartNode.innerHTML = `<canvas id="${canvasId}" role="img"></canvas>`;
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+
+  new window.Chart(ctx, {
+    type: 'polarArea',
+    data: {
+      labels: Object.keys(filters),
+      datasets: [{
+        data: Object.values(filters).map(v => v || 0.15),
+        backgroundColor: [
+          COLORS.primary,
+          COLORS.ok,
+          COLORS.err,
+          '#0ea5e9',
+          '#6366f1',
+          '#f97316'
+        ],
+        borderColor: '#0f172a'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        r: {
+          ticks: { display: false },
+          grid: { color: COLORS.grid }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { color: COLORS.text }
+        },
+        tooltip: {
+          backgroundColor: COLORS.backdrop,
+          titleColor: COLORS.text,
+          bodyColor: COLORS.text,
+          callbacks: {
+            label: (ctx) => `${ctx.label}: ${ctx.parsed.toFixed(2)}`
+          }
+        }
+      }
+    }
+  });
+}
+
+async function renderBridgeSection(chartNode, data) {
+  const canvasId = uniqueId('f1b-bridge');
+  const handoff = data?.bridgeF2?.handoffSignals || {};
+  const metrics = [
+    { label: 'RegimeScore', value: parseNumber(handoff.RegimeScore, 0) },
+    { label: 'Breadth 1M', value: parseNumber(handoff.Breadth_1M_pctSectorsGreen, 0) },
+    { label: 'Stress MicroCap', value: handoff.StressMicroCap === true ? -0.5 : 0.2 },
+    { label: 'RiskWindowScore', value: parseNumber(handoff.RiskWindowScore, 0) }
+  ];
+
+  chartNode.innerHTML = `<canvas id="${canvasId}" role="img"></canvas>`;
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+
+  new window.Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: metrics.map(m => m.label),
+      datasets: [{
+        data: metrics.map(m => m.value),
+        backgroundColor: metrics.map(m => m.value >= 0 ? COLORS.ok : COLORS.err),
+        borderColor: metrics.map(m => m.value >= 0 ? COLORS.ok : COLORS.err),
+        borderWidth: 2,
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: COLORS.text }
+        },
+        y: {
+          grid: { color: COLORS.grid },
+          ticks: { color: COLORS.textMuted }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: COLORS.backdrop,
+          titleColor: COLORS.text,
+          bodyColor: COLORS.text,
+          callbacks: {
+            label: (ctx) => `${ctx.label}: ${ctx.parsed.y.toFixed(2)}`
+          }
+        }
+      }
+    }
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Public exports
+// ---------------------------------------------------------------------------
+
+export async function renderF1BPrimaryChart(chartId, container, chartContext) {
+  if (!container) return;
+  try {
+    await ensureChartJs();
+    switch (chartId) {
+      case 'regime-overview':
+        return renderRegimePrimary(container, chartContext);
+      case 'breadth-overview':
+        return renderBreadthPrimary(container, chartContext);
+      default:
+        container.innerHTML = '<div class="empty-state">Chart non disponibile.</div>';
+    }
+  } catch (error) {
+    Logger.error('F1B Charts', `Errore render primary chart ${chartId}`, error);
+    container.innerHTML = `
+      <div class="error-state">
+        <div class="error-state-title">Errore rendering chart</div>
+        <div class="error-state-message">${error?.message || 'Errore sconosciuto'}</div>
+      </div>
+    `;
+  }
+}
+
+export async function renderF1BSectionChart(chartType, container, chartContext) {
+  if (!container) return;
+  try {
+    await ensureChartJs();
+    switch (chartType) {
+      case 'regime-gauge':
+        return renderRegimeSection(container, chartContext);
+      case 'breadth-leadership':
+        return renderBreadthSection(container, chartContext);
+      case 'volatility-curve':
+        return renderVolatilitySection(container, chartContext);
+      case 'size-distribution':
+        return renderSizeSection(container, chartContext);
+      case 'risk-window':
+        return renderRiskWindowSection(container, chartContext);
+      case 'street-tone':
+        return renderStreetSection(container, chartContext);
+      case 'finviz-focus':
+        return renderFinvizSection(container, chartContext);
+      case 'bridge-handsoff':
+        return renderBridgeSection(container, chartContext);
+      default:
+        container.innerHTML = '<div class="empty-state">Chart non disponibile.</div>';
+    }
+  } catch (error) {
+    Logger.error('F1B Charts', `Errore rendering section chart ${chartType}`, error);
+    container.innerHTML = `
+      <div class="error-state">
+        <div class="error-state-title">Errore rendering chart</div>
+        <div class="error-state-message">${error?.message || 'Errore sconosciuto'}</div>
+      </div>
+    `;
+  }
+}
+// /report/assets/js/components/f1b-charts.js
 // F1B Charts Component - Chart Visualizations for Market Regime Analysis
 // Versione 2025 - Design Istituzionale
 // Tutto dinamico, dati dal JSON, spiegazioni AI integrate
