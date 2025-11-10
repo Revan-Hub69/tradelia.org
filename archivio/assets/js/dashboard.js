@@ -831,9 +831,16 @@ async function loadDashboardData() {
     const manifestTimeout = setTimeout(() => manifestController.abort(), 10000); // 10 secondi timeout
     
     try {
-      const manifestResponse = await fetch('/archivio/manifest.json', {
+      // Aggiungi timestamp per forzare refresh cache
+      const timestamp = new Date().getTime();
+      const manifestResponse = await fetch(`/archivio/manifest.json?t=${timestamp}`, {
         signal: manifestController.signal,
-        cache: 'no-cache'
+        cache: 'no-cache',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
       });
       clearTimeout(manifestTimeout);
       
