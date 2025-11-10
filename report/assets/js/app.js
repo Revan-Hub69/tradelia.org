@@ -514,6 +514,13 @@ import { i18n } from './utils/i18n.js';
       // Continua comunque con i moduli
     }
     
+    // Monta market context snapshot (subito dopo header ticker, prima del chart)
+    await mountMarketContextSnapshot(reportId);
+    
+    // Monta chart widget (dopo market context snapshot, prima dei moduli)
+    await mountChartWidget(reportId, headerData);
+    
+    // Carica moduli (dopo chart e market context snapshot)
     try {
       await loadModules(reportId);
     } catch (err) {

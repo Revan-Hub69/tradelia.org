@@ -1,6 +1,22 @@
 // /report/assets/js/components/market-context-snapshot.js
 // Market Context Snapshot - Gradient Band Regime
 // Versione 2025 - Design Istituzionale
+//
+// DESCRIZIONE:
+// Questo componente mostra una fascia gradient che va da risk-off (rosso) a risk-on (verde)
+// con un marker che indica la posizione corrente del RegimeScore.
+//
+// FONTE DATI:
+// I dati vengono caricati da: /report/reports/{reportId}/f1b.json
+// Percorso dati: f1bData.regime_and_risk.RegimeScore
+//   - Valore: numero tra -1 (risk-off) e +1 (risk-on)
+//   - Esempio: "+0.60" (risk-on) o "-0.30" (risk-off)
+//   - Struttura alternativa: f1bData.f1bSnapshot.regime_state.RegimeScore
+//
+// COMPORTAMENTO:
+// - Se RegimeScore è disponibile: mostra marker posizionato sulla gradient band
+// - Se RegimeScore non è disponibile: mostra solo gradient band senza marker
+// - Il marker cambia colore: rosso (risk-off), arancione (neutro), verde (risk-on)
 
 import Logger from '../utils/logger.js';
 

@@ -17,7 +17,7 @@ const CHART_WIDGET = {
     root.innerHTML = `
       <div class="chart-widget-header">
         <div class="chart-widget-title">Price Chart</div>
-        <div class="chart-widget-subtitle" id="chart-widget-subtitle">Snapshot al momento del report</div>
+        <div class="chart-widget-subtitle" id="chart-widget-subtitle">Caricamento...</div>
       </div>
       <div class="chart-widget-body" id="chart-widget-body">
         <div class="chart-widget-loading">Caricamento chart...</div>
@@ -47,27 +47,48 @@ const CHART_WIDGET = {
       chartImageUrl = null 
     } = options;
 
-    // Priorità 1: Immagine statica se fornita
+    // Priorità 1: Screenshot statico se fornito esplicitamente
     if (chartImageUrl) {
+      if (subtitle) subtitle.textContent = 'Snapshot al momento del report';
       this._showStaticChart(body, chartImageUrl, timestamp);
       return;
     }
 
-    // Priorità 2: Widget TradingView Ticker (se simbolo disponibile)
-    if (symbol) {
-      this._showTradingViewTicker(body, symbol, timestamp);
-      return;
-    }
-
-    // Priorità 3: Cerca immagine statica nel report (solo se non c'è simbolo)
+    // Priorità 2: Cerca screenshot statico nella directory del report
+    // Se esiste chart-snapshot.png, usalo invece del LIVE
     if (reportId) {
       const imageUrl = `/report/reports/${reportId}/chart-snapshot.png`;
       const imageExists = await this._checkImageExists(imageUrl);
       
       if (imageExists) {
+        if (subtitle) subtitle.textContent = 'Snapshot al momento del report';
         this._showStaticChart(body, imageUrl, timestamp);
         return;
       }
+    }
+
+    // Priorità 3: Widget TradingView LIVE (se simbolo disponibile e non c'è screenshot)
+    // NOTA: Il chart mostra dati live, non è bloccato al timestamp del report
+    // Il timestamp viene mostrato per indicare quando è stato generato il report
+    if (symbol) {
+      // Mostra timestamp del report se disponibile
+      const timestampText = timestamp 
+        ? new Date(timestamp).toLocaleString('it-IT', { 
+            day: '2-digit', 
+            month: '2-digit', 
+            year: 'numeric',
+            hour: '2-digit', 
+            minute: '2-digit' 
+          })
+        : null;
+      
+      if (subtitle) {
+        subtitle.textContent = timestampText 
+          ? `Chart live - Report generato il ${timestampText} | Dati in tempo reale`
+          : 'Chart live - Dati in tempo reale';
+      }
+      this._showTradingViewTicker(body, symbol, timestamp);
+      return;
     }
 
     // Fallback: nascondi completamente il widget se non ci sono dati
@@ -112,6 +133,23 @@ const CHART_WIDGET = {
             Snapshot: ${timestampText}
           </div>
         ` : ''}
+        <div class="chart-widget-static-info">
+          <div class="chart-widget-static-info-item">
+            <span class="chart-widget-info-label">Timeframe:</span>
+            <span class="chart-widget-info-value">1D (1 giorno)</span>
+          </div>
+          <div class="chart-widget-static-info-item">
+            <span class="chart-widget-info-label">Volumi:</span>
+            <span class="chart-widget-info-value">Mercato reali (no proxy CFD)</span>
+          </div>
+          <div class="chart-widget-static-info-item">
+            <span class="chart-widget-info-label">Fornitore dati:</span>
+            <span class="chart-widget-info-value">Exante Broker</span>
+          </div>
+        </div>
+        <div class="chart-widget-static-source">
+          Fonte: Grafico gentilmente concesso da <a href="/Exante.html" class="chart-widget-source-link">Exante</a>
+        </div>
       </div>
     `;
 
@@ -140,6 +178,7 @@ const CHART_WIDGET = {
       return;
     }
     
+    // IMPORTANTE: Non sovrascrivere il sottotitolo - è già stato impostato sopra
     // Container per il widget TradingView
     const containerId = `tradingview-${Date.now()}`;
     body.innerHTML = `
@@ -159,6 +198,9 @@ const CHART_WIDGET = {
         this._loadTradingViewAdvancedChart(container, normalizedSymbol);
       }, 200);
     }
+    
+    // Log per debug
+    Logger.debug('ChartWidget', `TradingView ticker inizializzato per ${normalizedSymbol}, sottotitolo: ${body.closest('.chart-widget')?.querySelector('#chart-widget-subtitle')?.textContent || 'non trovato'}`);
 
     Logger.debug('ChartWidget', `TradingView chart caricato: ${normalizedSymbol}`);
   },
@@ -223,7 +265,8 @@ const CHART_WIDGET = {
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
     script.async = true;
     script.innerHTML = JSON.stringify({
-      "autosize": true,
+      "autosize": false,
+      "height": 600,
       "symbol": symbol,
       "interval": "D",
       "timezone": "Europe/Rome",
@@ -234,7 +277,11 @@ const CHART_WIDGET = {
       "hide_side_toolbar": false,
       "allow_symbol_change": false,
       "calendar": false,
-      "support_host": "https://www.tradingview.com"
+      "support_host": "https://www.tradingview.com",
+      "enable_publishing": false,
+      "hide_top_toolbar": false,
+      "hide_legend": false,
+      "save_image": false
     });
 
     widgetContainer.appendChild(script);
