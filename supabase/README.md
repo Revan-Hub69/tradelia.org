@@ -11,7 +11,8 @@ Questa cartella contiene gli step minimi per configurare Supabase e ospitare i r
 ## 2. Schema
 1. Apri il pannello SQL di Supabase.
 2. Incolla il contenuto di [`schema.sql`](./schema.sql) e lancialo.
-   - Crea le tabelle `reports` e `report_modules`.
+   - Crea le tabelle `admin_users`, `reports` e `report_modules`.
+   - `admin_users` contiene l’elenco degli UID autorizzati (ruolo admin).
    - Aggiunge il campo `report_type` (per ora supportiamo `swing_master_5_0`, `daily_market_intel_3_1`, `custom`).
    - Abilita RLS con policy che consentono full access agli utenti autenticati.
    - Aggiunge la view `active_reports_expanded` (opzionale).
@@ -23,8 +24,12 @@ Questa cartella contiene gli step minimi per configurare Supabase e ospitare i r
 2. Imposta una policy per consentire a utenti autenticati di leggere/scrivere.
 
 ## 4. Autenticazione
-1. Crea un utente admin (email/password) nella sezione **Authentication** → Users.
-2. Questo account verrà usato dalla dashboard (login con Supabase Auth).
+1. Crea un utente (email/password) nella sezione **Authentication** → Users.
+2. Recupera l'`id` (UUID) dell'utente e aggiungilo alla tabella `admin_users`:
+   ```sql
+   insert into public.admin_users (user_id) values ('<UUID-UTENTE>');
+   ```
+   Solo gli utenti presenti in `admin_users` potranno usare la dashboard.
 
 ## 5. Configurazione dashboard
 Nel repository è presente `report/admin/supabase-config.example.js`. Copialo in `supabase-config.js` (o crea direttamente quest’ultimo) e imposta:
