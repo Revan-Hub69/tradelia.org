@@ -709,11 +709,73 @@
     let selectedChartScreenshotFile = null;
     let chartPasteHandler = null;
 
+    const API_BASE = '/api/admin';
+    const TOKEN_STORAGE_KEY = 'tradelia-admin-token';
+    let adminToken = null;
+
+    function getStoredToken() {
+      if (adminToken) return adminToken;
+      if (typeof window === 'undefined') return null;
+      const stored = localStorage.getItem(TOKEN_STORAGE_KEY);
+      if (stored && stored.trim()) {
+        adminToken = stored.trim();
+        return adminToken;
+      }
+      return null;
+    }
+
+    async function promptForToken() {
+      let attempts = 0;
+      while (true) {
+        const input = window.prompt('Inserisci il token admin per accedere alla dashboard:');
+        if (input && input.trim()) {
+          adminToken = input.trim();
+          localStorage.setItem(TOKEN_STORAGE_KEY, adminToken);
+          return adminToken;
+        }
+        attempts += 1;
+        if (attempts >= 3) {
+          alert('Token admin obbligatorio per utilizzare la dashboard.');
+        }
+      }
+    }
+
+    async function ensureAdminToken(forcePrompt = false) {
+      if (typeof window === 'undefined') return null;
+      if (!forcePrompt) {
+        const existing = getStoredToken();
+        if (existing) return existing;
+      }
+      return await promptForToken();
+    }
+
+    function buildAuthHeaders(initHeaders) {
+      const headers = new Headers(initHeaders || {});
+      const token = adminToken || getStoredToken();
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      return headers;
+    }
+
+    async function apiFetch(path, init = {}, retry = true) {
+      await ensureAdminToken(false);
+      const headers = buildAuthHeaders(init.headers);
+      const response = await fetch(`${API_BASE}${path}`, { ...init, headers });
+      if (response.status === 401 && retry) {
+        localStorage.removeItem(TOKEN_STORAGE_KEY);
+        adminToken = null;
+        await ensureAdminToken(true);
+        return apiFetch(path, init, false);
+      }
+      return response;
+    }
+
     // Load reports
     async function loadReports() {
       try {
         reportsContainer.innerHTML = '<div class="loading">Caricamento report...</div>';
-        const response = await fetch('/report/admin/api/reports');
+        const response = await apiFetch('/reports');
         const data = await response.json();
         reports = data.reports || [];
         console.log(`[Dashboard] Caricati ${reports.length} report`);
@@ -812,7 +874,7 @@
         // Lista tutti i file JSON nella directory del report
         let jsonFiles = [];
         try {
-          const response = await fetch(`/report/admin/api/report-files?reportId=${reportId}`);
+          const response = await apiFetch(`/report-files?reportId=${encodeURIComponent(reportId)}`);
           if (response.ok) {
             const data = await response.json();
             jsonFiles = data.files || [];
@@ -982,7 +1044,7 @@
       showStatus('info', '⏳ Creazione report in corso...', createStatus);
 
       try {
-        const response = await fetch('/report/admin/api/create-report', {
+        const response = await apiFetch('/create-report', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1330,7 +1392,7 @@
         }
         formData.append('fileName', fileName);
 
-        const response = await fetch('/report/admin/api/upload-module-json', {
+        const response = await apiFetch('/upload-module-json', {
           method: 'POST',
           body: formData
         });
@@ -1370,7 +1432,7 @@
         formData.append('moduleId', currentModule);
         formData.append('file', selectedScreenshotFile);
 
-        const response = await fetch('/report/admin/api/upload-module-screenshot', {
+        const response = await apiFetch('/upload-module-screenshot', {
           method: 'POST',
           body: formData
         });
@@ -1390,6 +1452,45 @@
         showStatus('error', `❌ Errore di connessione: ${error.message}`, screenshotStatus);
       } finally {
         uploadScreenshotBtn.disabled = false;
+      }
+    });
+
+    // Upload Chart Screenshot
+    uploadChartScreenshotBtnModal.addEventListener('click', async () => {
+      if (!currentReport || !selectedChartScreenshotFile) {
+        showStatus('error', '❌ Seleziona un file immagine', chartScreenshotStatusEl);
+        return;
+      }
+
+      uploadChartScreenshotBtnModal.disabled = true;
+      showStatus('info', '⏳ Upload in corso...', chartScreenshotStatusEl);
+
+      try {
+        const formData = new FormData();
+        formData.append('reportId', currentReport.id);
+        formData.append('file', selectedChartScreenshotFile);
+
+        const response = await apiFetch('/upload-chart-screenshot', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          showStatus('success', `✅ Chart screenshot salvato con successo!<br><strong>File:</strong> ${result.path}`, chartScreenshotStatusEl);
+          setTimeout(() => {
+            closeUploadChartScreenshotModal();
+            loadReportChartScreenshot(currentReport.id);
+            loadReportModules(currentReport.id);
+          }, 2000);
+        } else {
+          showStatus('error', `❌ Errore: ${result.error || 'Upload fallito'}`, chartScreenshotStatusEl);
+        }
+      } catch (error) {
+        showStatus('error', `❌ Errore di connessione: ${error.message}`, chartScreenshotStatusEl);
+      } finally {
+        uploadChartScreenshotBtnModal.disabled = false;
       }
     });
 
@@ -1448,7 +1549,7 @@
       regenerateManifestBtn.textContent = '⏳ Rigenerazione...';
       
       try {
-        const response = await fetch('/report/admin/api/regenerate-manifest', {
+        const response = await apiFetch('/regenerate-manifest', {
           method: 'POST'
         });
         const result = await response.json();

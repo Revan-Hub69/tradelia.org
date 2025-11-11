@@ -105,6 +105,12 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    // Endpoint API: upload chart screenshot
+    if (pathname === '/report/admin/api/upload-chart-screenshot' && req.method === 'POST') {
+      await handleUploadChartScreenshot(req, res);
+      return;
+    }
+
     // Endpoint upload (legacy - chart snapshot)
     if (pathname === '/report/admin/upload-chart' && req.method === 'POST') {
       await handleUpload(req, res);
@@ -798,6 +804,98 @@ async function handleUploadModuleScreenshot(req, res) {
     path: `report/reports/${reportId}/${screenshotFile}`,
     reportId: reportId,
     moduleId: moduleId
+  }));
+}
+
+// Upload chart screenshot
+async function handleUploadChartScreenshot(req, res) {
+  const chunks = [];
+  let totalSize = 0;
+  const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+
+  for await (const chunk of req) {
+    chunks.push(chunk);
+    totalSize += chunk.length;
+    if (totalSize > MAX_SIZE) {
+      res.writeHead(413, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'File troppo grande (max 10MB)' }));
+      return;
+    }
+  }
+
+  const buffer = Buffer.concat(chunks);
+  const boundary = req.headers['content-type']?.split('boundary=')[1];
+
+  if (!boundary) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Content-Type non valido' }));
+    return;
+  }
+
+  const parts = parseMultipart(buffer, boundary);
+  const reportId = parts.reportId?.toString().trim();
+  const file = parts.file;
+
+  if (!reportId || !file) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Parametri mancanti' }));
+    return;
+  }
+
+  // Valida reportId
+  if (!/^[a-zA-Z0-9_-]+$/.test(reportId)) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Report ID non valido' }));
+    return;
+  }
+
+  const reportDir = path.join(REPORTS_DIR, reportId);
+  const targetPath = path.join(reportDir, 'chart-snapshot.png');
+
+  // Crea directory se non esiste
+  try {
+    await fs.mkdir(reportDir, { recursive: true });
+  } catch (error) {
+    console.error('Error creating directory:', error);
+  }
+
+  // Salva file
+  await fs.writeFile(targetPath, file.data);
+
+  console.log(`✅ Chart screenshot salvato: ${targetPath}`);
+
+  // Rigenera manifest automaticamente se abilitato
+  let manifestResult = null;
+  if (AUTO_REGENERATE_MANIFEST) {
+    try {
+      generateManifest();
+      manifestResult = { success: true, message: 'Manifest rigenerato' };
+      console.log(`✅ Manifest rigenerato`);
+    } catch (error) {
+      console.error('❌ Errore rigenerazione manifest:', error.message);
+      manifestResult = { success: false, error: error.message };
+    }
+  }
+
+  // Push automatico su GitHub se abilitato
+  let gitResult = null;
+  if (AUTO_PUSH_TO_GITHUB) {
+    try {
+      gitResult = await pushToGitHub(reportId, targetPath);
+      console.log(`✅ Push GitHub: ${gitResult.success ? 'OK' : 'Errore'}`);
+    } catch (error) {
+      console.error('❌ Errore push GitHub:', error.message);
+      gitResult = { success: false, error: error.message };
+    }
+  }
+
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({
+    success: true,
+    path: `report/reports/${reportId}/chart-snapshot.png`,
+    reportId: reportId,
+    git: gitResult,
+    manifest: manifestResult
   }));
 }
 

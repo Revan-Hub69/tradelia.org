@@ -314,9 +314,9 @@ function buildSectionsFromStructured(riassuntoSezioni, context) {
     'F1B_regime_state': { id: 'regime', title: 'Regime & Risk Appetite', chart: { type: 'regime-gauge' } },
     'F1B_breadth_and_rotation': { id: 'breadth', title: 'Breadth & Rotazione', chart: { type: 'breadth-leadership' } },
     'F1B_market_microstructure': { id: 'market-micro', title: 'Market Microstructure', chart: { type: 'volatility-curve' } },
-    'F1B_size_distribution': { id: 'size', title: 'Size Distribution', chart: { type: 'size-bias' } },
+    'F1B_size_distribution': { id: 'size', title: 'Size Distribution', chart: { type: 'size-distribution' } },
     'F1B_risk_window': { id: 'risk-window', title: 'Risk Window', chart: { type: 'risk-window' } },
-    'F1B_headlines': { id: 'headlines', title: 'Headlines T-1', chart: null }
+    'F1B_headlines': { id: 'headlines', title: 'Headlines T-1', chart: { type: 'street-tone' } }
   };
 
   const sections = (riassuntoSezioni.sezioni || []).map(sez => {
@@ -384,7 +384,43 @@ function buildSectionsFromStructured(riassuntoSezioni, context) {
           tone: 'neutral'
         })
       ],
-      chart: { type: 'finviz-query' }
+      extraBlocks: finvizFilters.LONG?.QueryString || finvizFilters.SHORT?.QueryString ? [{
+        type: 'code',
+        label: 'QueryString Completa',
+        value: finvizFilters.LONG?.QueryString || finvizFilters.SHORT?.QueryString || ''
+      }] : [],
+      chart: { type: 'finviz-focus' }
+    });
+  }
+
+  if (bridgeF2 && Object.keys(bridgeF2).length > 0) {
+    sections.push({
+      id: 'bridge',
+      title: 'Bridge verso F2',
+      narrative: 'Universe consegnato a F2 con filtri di liquidità, risk window e flag governance.',
+      metrics: [
+        wrapMetric({
+          id: 'FocusSectors',
+          label: 'Focus Sectors',
+          value: safeArray(bridgeF2?.universe_for_F2?.FocusSectors).join(', ') || '—',
+          definition: bridgeF2?.universe_for_F2?.FocusSectors_comment
+        }),
+        wrapMetric({
+          id: 'StrategyMode_macro',
+          label: 'Strategy Mode',
+          value: bridgeF2?.handoffSignals?.StrategyMode_macro || '—',
+          definition: 'Segnale trasmesso ai moduli successivi.',
+          tone: determineTone({ type: 'strategy', value: bridgeF2?.handoffSignals?.StrategyMode_macro })
+        }),
+        wrapMetric({
+          id: 'RegimeScore',
+          label: 'RegimeScore',
+          value: formatSigned(bridgeF2?.handoffSignals?.RegimeScore, 2),
+          definition: 'RegimeScore trasmesso a F2.',
+          tone: determineTone({ type: 'score', value: bridgeF2?.handoffSignals?.RegimeScore })
+        })
+      ],
+      chart: { type: 'bridge-handsoff' }
     });
   }
 
@@ -888,15 +924,25 @@ function renderSectionContent(container, section, normalized) {
 
   container.dataset.rendered = 'true';
 
-  if (section.chart) {
+  if (section.chart && section.chart.type) {
     import('../components/f1b-charts.js')
-      .then(({ renderF1BSectionChart }) => {
+      .then(async ({ renderF1BSectionChart }) => {
         const chartNode = container.querySelector('[data-section-chart]');
         if (!chartNode) return;
-        renderF1BSectionChart(section.chart.type, chartNode, normalized.chartContext, { section });
+        try {
+          await renderF1BSectionChart(section.chart.type, chartNode, normalized.chartContext);
+        } catch (err) {
+          Logger.error('F1B', `Errore rendering chart per sezione ${section.id}`, err);
+          chartNode.innerHTML = `
+            <div class="error-state">
+              <div class="error-state-title">Chart non disponibile</div>
+              <div class="error-state-message">${escapeHtml(err?.message || 'Errore sconosciuto')}</div>
+            </div>
+          `;
+        }
       })
       .catch(err => {
-        Logger.error('F1B', `Errore caricamento chart per sezione ${section.id}`, err);
+        Logger.error('F1B', `Errore caricamento componente chart per sezione ${section.id}`, err);
         const chartNode = container.querySelector('[data-section-chart]');
         if (chartNode) {
           chartNode.innerHTML = `
