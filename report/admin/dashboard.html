@@ -485,44 +485,20 @@
         </div>
 
         <div class="chart-wrapper" id="chart-dropzone">
-        <div class="field">
-          <label for="chart-path">Path chart (bucket storage)</label>
-          <input type="text" id="chart-path" placeholder="es. slug/chart-20251107.png">
-        </div>
-        <label class="upload-area" id="chart-upload-area">
-          <input type="file" id="chart-file" accept="image/png,image/jpeg,image/webp,image/gif,image/webp">
-          <strong>Carica chart</strong>
-          <span>Trascina o incolla uno screenshot, oppure seleziona dal computer.</span>
-          <em>Supporta clipboard da TradingView / Exante (Ctrl + V).</em>
-          <button type="button" class="btn btn-outline" id="upload-chart-btn">Seleziona file</button>
-        </label>
-        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
-          <button class="btn btn-soft" id="open-chart-btn" aria-disabled="true" disabled>Apri chart</button>
-        </div>
-    .upload-area {
-      border: 1px dashed rgba(96, 165, 250, 0.4);
-      border-radius: 14px;
-      padding: 1.25rem;
-      display: grid;
-      gap: 0.45rem;
-      background: rgba(15, 23, 42, 0.42);
-      cursor: pointer;
-      transition: border-color 0.2s ease, background 0.2s ease;
-      position: relative;
-    }
-
-    .upload-area:hover {
-      border-color: rgba(96, 165, 250, 0.75);
-      background: rgba(37, 99, 235, 0.12);
-    }
-
-    .upload-area input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-    }
-
+          <div class="field">
+            <label for="chart-path">Path chart (bucket storage)</label>
+            <input type="text" id="chart-path" placeholder="es. slug/chart-20251107.png">
+          </div>
+          <label class="upload-area" id="chart-upload-area">
+            <input type="file" id="chart-file" accept="image/png,image/jpeg,image/webp,image/gif,image/webp">
+            <strong>Carica chart</strong>
+            <span>Trascina o incolla uno screenshot, oppure seleziona dal computer.</span>
+            <em>Supporta clipboard da TradingView / Exante (Ctrl + V).</em>
+            <button type="button" class="btn btn-outline" id="upload-chart-btn">Seleziona file</button>
+          </label>
+          <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+            <button class="btn btn-soft" id="open-chart-btn" aria-disabled="true" disabled>Apri chart</button>
+          </div>
           <small style="color: var(--ink-soft); font-size:0.75rem;">
             Suggerimenti: trascina o incolla uno screenshot direttamente qui, oppure incolla il path completo.
           </small>
