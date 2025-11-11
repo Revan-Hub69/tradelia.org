@@ -632,6 +632,7 @@
     let isDirty = false;
     let currentChartSignedUrl = null;
     let currentTemplateType = DEFAULT_REPORT_TYPE;
+    let lastFocusedModuleArea = null;
 
     const statusLabels = {
       draft: 'Bozza',
@@ -761,16 +762,22 @@
       orderInput.addEventListener('input', markDirty);
       contentArea.addEventListener('input', markDirty);
 
-      contentArea.addEventListener('paste', () => {
-        setTimeout(() => {
-          try {
-            JSON.parse(contentArea.value);
-            showToast(`JSON incollato in ${keyInput.value || 'modulo'}`, 'success');
-          } catch (error) {
-            showToast(`JSON non valido: ${error.message}`, 'error');
-          }
+      contentArea.addEventListener('focus', () => {
+        lastFocusedModuleArea = contentArea;
+      });
+
+      contentArea.addEventListener('paste', (event) => {
+        const text = event.clipboardData?.getData('text');
+        if (!text) return;
+        try {
+          const parsed = JSON.parse(text);
+          event.preventDefault();
+          contentArea.value = JSON.stringify(parsed, null, 2);
+          showToast(`JSON incollato in ${keyInput.value || 'modulo'}`, 'success');
           markDirty();
-        }, 0);
+        } catch (error) {
+          // lascia comportamento default per testo non JSON
+        }
       });
 
       card.querySelector('.module-import').addEventListener('click', () => fileInput.click());
@@ -1384,6 +1391,52 @@
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 's') {
         event.preventDefault();
         saveReport({ publish: false });
+      }
+    });
+
+    document.addEventListener('paste', async (event) => {
+      const target = event.target;
+      const isEditableTarget = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+      if (isEditableTarget) return; // i campi gestiscono già la loro logica
+
+      const clipboard = event.clipboardData;
+      if (!clipboard) return;
+
+      const imageItem = Array.from(clipboard.items || []).find((item) => item.type?.startsWith('image/'));
+      if (imageItem) {
+        const file = imageItem.getAsFile();
+        if (file) {
+          event.preventDefault();
+          const ext = file.type.split('/')[1] || 'png';
+          const renamed = new File([file], `clipboard-${Date.now()}.${ext}`, { type: file.type });
+          await uploadChartFile(renamed);
+        }
+        return;
+      }
+
+      const text = clipboard.getData('text');
+      if (!text) return;
+
+      if (lastFocusedModuleArea) {
+        try {
+          const parsed = JSON.parse(text);
+          event.preventDefault();
+          lastFocusedModuleArea.value = JSON.stringify(parsed, null, 2);
+          showToast('JSON incollato nel modulo attivo', 'success');
+          setDirty(true);
+          return;
+        } catch {
+          // se non è JSON continuo
+        }
+      }
+
+      const trimmed = text.trim();
+      if (/\.(png|jpe?g|webp)$/i.test(trimmed) || trimmed.includes('/')) {
+        event.preventDefault();
+        chartPathEl.value = trimmed;
+        await updateChartPreview(trimmed);
+        setDirty(true);
+        showToast('Path chart impostato da clipboard', 'info');
       }
     });
 
