@@ -269,93 +269,6 @@
       margin-top: 4rem;
     }
 
-    #hero-dashboard-cta {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      gap: var(--sp-3);
-      padding: calc(var(--sp-4) + 2px) calc(var(--sp-7) + 6px);
-      border-radius: var(--radius-pill);
-      font-size: var(--fs-15);
-      font-weight: 600;
-      letter-spacing: 0.01em;
-      text-decoration: none;
-      color: color-mix(in srgb, var(--brand-200) 85%, white 15%);
-      background: color-mix(in srgb, var(--brand-600) 18%, transparent);
-      border: 1px solid color-mix(in srgb, var(--brand-500) 65%, rgba(255, 255, 255, 0.08) 35%);
-      box-shadow:
-        0 12px 28px rgba(15, 23, 42, 0.28),
-        inset 0 1px 0 rgba(255, 255, 255, 0.06),
-        0 0 0 1px rgba(37, 99, 235, 0.08);
-      backdrop-filter: blur(12px);
-      overflow: hidden;
-      transition:
-        transform var(--transition-fast),
-        box-shadow var(--transition-fast),
-        background var(--transition-base),
-        border-color var(--transition-base),
-        color var(--transition-base);
-    }
-
-    #hero-dashboard-cta::before {
-      content: '';
-      position: absolute;
-      inset: 1px 1px auto 1px;
-      height: 46%;
-      border-radius: calc(var(--radius-pill) - 4px);
-      background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.16) 0%,
-        rgba(255, 255, 255, 0.04) 60%,
-        transparent 100%
-      );
-      opacity: 0.65;
-      pointer-events: none;
-    }
-
-    #hero-dashboard-cta svg {
-      width: 16px;
-      height: 16px;
-      transition: transform var(--transition-fast), color var(--transition-fast);
-      color: currentColor;
-      stroke: currentColor;
-      fill: none;
-    }
-
-    #hero-dashboard-cta span {
-      position: relative;
-      z-index: 1;
-    }
-
-    #hero-dashboard-cta:hover {
-      transform: translateY(-2px);
-      background: color-mix(in srgb, var(--brand-600) 26%, rgba(15, 23, 42, 0.04));
-      border-color: color-mix(in srgb, var(--brand-500) 78%, rgba(255, 255, 255, 0.1) 22%);
-      color: color-mix(in srgb, var(--brand-100) 85%, white 15%);
-      box-shadow:
-        0 18px 32px rgba(15, 23, 42, 0.32),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        0 0 0 1px rgba(59, 130, 246, 0.16);
-    }
-
-    #hero-dashboard-cta:hover svg {
-      transform: translateX(3px);
-    }
-
-    #hero-dashboard-cta:active {
-      transform: translateY(0);
-      box-shadow:
-        0 10px 22px rgba(15, 23, 42, 0.26),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05),
-        0 0 0 1px rgba(37, 99, 235, 0.18);
-      background: color-mix(in srgb, var(--brand-600) 22%, rgba(15, 23, 42, 0.12));
-    }
-
-    #hero-dashboard-cta:focus-visible {
-      outline: 3px solid rgba(96, 165, 250, 0.35);
-      outline-offset: 3px;
-    }
-
 
     .hero-disclaimer {
       margin-top: 5rem;
@@ -1107,117 +1020,129 @@
 
     /* ===== BUTTONS ===== */
     .btn {
+      position: relative;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: var(--sp-3);
-      padding: var(--sp-5) 3rem;
-      border-radius: var(--radius-lg);
-      font-size: var(--fs-15);
-      font-weight: 500;
-      text-decoration: none;
-      border: 1.5px solid;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      font-family: inherit;
+      padding: calc(var(--sp-4) + 2px) calc(var(--sp-7) + 6px);
+      border-radius: var(--radius-pill);
+      font-size: var(--fs-14);
+      font-weight: 600;
       letter-spacing: 0.01em;
-      position: relative;
+      text-decoration: none;
+      cursor: pointer;
+      color: color-mix(in srgb, var(--ink) 75%, #ffffff 25%);
+      background: color-mix(in srgb, var(--surface-card) 88%, rgba(37, 99, 235, 0.12));
+      border: 1px solid color-mix(in srgb, var(--br-soft) 70%, rgba(37, 99, 235, 0.28) 30%);
+      box-shadow:
+        0 12px 28px rgba(15, 23, 42, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(10px);
       overflow: hidden;
-      backdrop-filter: blur(8px);
+      transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background var(--transition-base),
+        border-color var(--transition-base),
+        color var(--transition-base);
     }
 
-    .btn-primary {
-      background: rgba(37, 99, 235, 0.1);
-      color: var(--brand-400);
-      border-color: var(--brand-600);
-      box-shadow: 
-        0 1px 3px rgba(0, 0, 0, 0.12),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
-
-    .btn-primary::before {
+    .btn::before {
       content: '';
       position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(37, 99, 235, 0.05) 100%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      inset: 1px 1px auto 1px;
+      height: 46%;
+      border-radius: calc(var(--radius-pill) - 4px);
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.18) 0%,
+        rgba(255, 255, 255, 0.05) 70%,
+        transparent 100%
+      );
+      opacity: 0.6;
+      pointer-events: none;
     }
 
-    .btn-primary::after {
-      content: '';
-      position: absolute;
-      inset: -2px;
-      background: linear-gradient(135deg, var(--brand-600), var(--brand-400));
-      opacity: 0;
-      border-radius: var(--radius-lg);
-      z-index: -1;
-      transition: opacity 0.3s ease;
-      filter: blur(8px);
+    .btn svg,
+    .btn i {
+      width: 16px;
+      height: 16px;
+      color: currentColor;
+      stroke: currentColor;
+      fill: none;
+      transition: transform var(--transition-fast), color var(--transition-fast);
     }
 
-    .btn-primary:hover {
-      background: rgba(37, 99, 235, 0.15);
-      border-color: var(--brand-500);
-      color: var(--brand-300);
+    .btn span,
+    .btn strong {
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn:hover {
       transform: translateY(-2px);
-      box-shadow: 
-        0 4px 12px rgba(37, 99, 235, 0.3),
-        0 2px 4px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      background: color-mix(in srgb, var(--surface-card) 82%, rgba(37, 99, 235, 0.18));
+      border-color: color-mix(in srgb, var(--brand-500) 70%, rgba(255, 255, 255, 0.12) 30%);
+      box-shadow:
+        0 18px 32px rgba(15, 23, 42, 0.24),
+        0 6px 18px rgba(15, 23, 42, 0.16);
     }
 
-    .btn-primary:hover::before {
-      opacity: 1;
-    }
-
-    .btn-primary:hover::after {
-      opacity: 0.3;
-    }
-
-    .btn-primary:active {
+    .btn:active {
       transform: translateY(0);
-      box-shadow: 
-        0 2px 6px rgba(37, 99, 235, 0.25),
-        inset 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.02);
-      color: var(--ink-soft);
-      border-color: var(--br-soft);
-      box-shadow: 
-        0 1px 3px rgba(0, 0, 0, 0.1),
+      box-shadow:
+        0 10px 22px rgba(15, 23, 42, 0.22),
         inset 0 1px 0 rgba(255, 255, 255, 0.03);
     }
 
-    .btn-secondary::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
+    .btn:focus-visible {
+      outline: 3px solid rgba(96, 165, 250, 0.35);
+      outline-offset: 3px;
+    }
+
+    .btn-primary {
+      color: color-mix(in srgb, #ffffff 30%, var(--brand-400) 70%);
+      background: color-mix(in srgb, rgba(37, 99, 235, 0.26), transparent);
+      border-color: color-mix(in srgb, var(--brand-500) 82%, rgba(255, 255, 255, 0.08) 18%);
+      box-shadow:
+        0 16px 32px rgba(37, 99, 235, 0.26),
+        0 8px 20px rgba(15, 23, 42, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .btn-primary:hover {
+      color: color-mix(in srgb, #ffffff 38%, var(--brand-400) 62%);
+      background: color-mix(in srgb, rgba(37, 99, 235, 0.32), rgba(15, 23, 42, 0.05));
+      border-color: color-mix(in srgb, var(--brand-400) 88%, rgba(255, 255, 255, 0.12) 12%);
+      box-shadow:
+        0 20px 40px rgba(37, 99, 235, 0.3),
+        0 12px 26px rgba(15, 23, 42, 0.2);
+    }
+
+    .btn-primary:active {
+      background: color-mix(in srgb, rgba(37, 99, 235, 0.28), rgba(15, 23, 42, 0.08));
+      border-color: color-mix(in srgb, var(--brand-500) 80%, rgba(255, 255, 255, 0.15) 20%);
+    }
+
+    .btn-secondary {
+      color: color-mix(in srgb, var(--ink) 88%, var(--brand-400) 12%);
+      background: color-mix(in srgb, var(--surface-card) 94%, rgba(37, 99, 235, 0.08));
+      border-color: color-mix(in srgb, var(--br-soft) 75%, rgba(37, 99, 235, 0.25) 25%);
+      box-shadow:
+        0 12px 24px rgba(15, 23, 42, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
     }
 
     .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.04);
-      border-color: var(--br-card);
-      color: var(--ink);
-      transform: translateY(-2px);
-      box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.15),
-        0 2px 4px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      color: color-mix(in srgb, var(--ink) 80%, var(--brand-400) 20%);
+      background: color-mix(in srgb, var(--surface-card) 90%, rgba(37, 99, 235, 0.14));
+      border-color: color-mix(in srgb, var(--brand-500) 60%, rgba(255, 255, 255, 0.1) 40%);
+      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.18);
     }
 
-    .btn-secondary:hover::before {
-      opacity: 1;
-    }
-
-    .btn-secondary:active {
-      transform: translateY(0);
-      background: rgba(255, 255, 255, 0.03);
+    .btn-with-icon:hover svg,
+    .btn-with-icon:hover i {
+      transform: translateX(3px);
     }
 
     .btn-block {
@@ -1781,13 +1706,8 @@
 
       /* Solo i bottoni nel hero-cta e form-actions sono full-width */
       .hero-cta .btn,
-      #hero-dashboard-cta,
       .form-actions .btn {
         width: 100%;
-      }
-
-      #hero-dashboard-cta {
-        justify-content: center;
       }
 
       /* Brokers Section - Mobile */
@@ -1972,7 +1892,7 @@
         </div>
 
         <div class="hero-cta">
-          <a href="/dashboard.html" id="hero-dashboard-cta">
+          <a href="/dashboard.html" class="btn btn-primary btn-with-icon">
             <span data-i18n="nav.dashboard">Accedi Alla Dashboard</span>
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -2132,9 +2052,9 @@
       </div>
       
       <div style="text-align: center; margin-top: var(--sp-10);">
-        <a href="/dashboard.html" class="btn btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-          Accedi Alla Dashboard
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
+        <a href="/dashboard.html" class="btn btn-primary btn-with-icon">
+          <span>Accedi Alla Dashboard</span>
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </a>
@@ -2156,8 +2076,8 @@
       </div>
       
       <div style="text-align: center; margin-top: var(--sp-8);">
-        <button onclick="apriModalCollaboratori()" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px;">
+        <button onclick="apriModalCollaboratori()" class="btn btn-primary btn-with-icon">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
             <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
             <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
@@ -4619,8 +4539,8 @@ Vuoi procedere inviando i dati?`;
               Se sei un consulente finanziario autorizzato (OCF/OPC) o un professionista qualificato e vuoi essere 
               considerato per questa sezione, compila il form qui sotto.
             </p>
-            <button onclick="apriModalProfessionista()" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
-              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px;">
+            <button onclick="apriModalProfessionista()" class="btn btn-primary btn-with-icon">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
               </svg>
