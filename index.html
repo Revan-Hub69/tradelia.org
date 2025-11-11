@@ -269,6 +269,63 @@
       margin-top: 4rem;
     }
 
+    #hero-dashboard-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      padding: 0.9rem 2.6rem;
+      border-radius: var(--radius-pill);
+      font-size: var(--fs-15);
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      text-decoration: none;
+      color: #ffffff;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--brand-600) 92%, white 8%), var(--brand-600));
+      border: 1px solid color-mix(in srgb, var(--brand-600) 82%, black 18%);
+      box-shadow:
+        0 16px 32px rgba(37, 99, 235, 0.28),
+        0 10px 24px rgba(15, 23, 42, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.14);
+      transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background var(--transition-base),
+        border-color var(--transition-base),
+        color var(--transition-base);
+    }
+
+    #hero-dashboard-cta svg {
+      width: 16px;
+      height: 16px;
+      transition: transform var(--transition-fast);
+    }
+
+    #hero-dashboard-cta:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, color-mix(in srgb, var(--brand-500) 90%, white 10%), var(--brand-500));
+      border-color: color-mix(in srgb, var(--brand-500) 80%, black 20%);
+      box-shadow:
+        0 22px 40px rgba(37, 99, 235, 0.34),
+        0 14px 28px rgba(15, 23, 42, 0.2);
+    }
+
+    #hero-dashboard-cta:hover svg {
+      transform: translateX(3px);
+    }
+
+    #hero-dashboard-cta:active {
+      transform: translateY(0);
+      box-shadow:
+        0 10px 24px rgba(37, 99, 235, 0.28),
+        0 6px 16px rgba(15, 23, 42, 0.18);
+    }
+
+    #hero-dashboard-cta:focus-visible {
+      outline: 3px solid rgba(96, 165, 250, 0.45);
+      outline-offset: 3px;
+    }
+
 
     .hero-disclaimer {
       margin-top: 5rem;
@@ -1694,8 +1751,13 @@
 
       /* Solo i bottoni nel hero-cta e form-actions sono full-width */
       .hero-cta .btn,
+      #hero-dashboard-cta,
       .form-actions .btn {
         width: 100%;
+      }
+
+      #hero-dashboard-cta {
+        justify-content: center;
       }
 
       /* Brokers Section - Mobile */
@@ -1880,9 +1942,9 @@
         </div>
 
         <div class="hero-cta">
-          <a href="/dashboard.html" class="btn btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-            Accedi Alla Dashboard
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
+          <a href="/dashboard.html" id="hero-dashboard-cta">
+            <span>Accedi Alla Dashboard</span>
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
           </a>
