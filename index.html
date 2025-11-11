@@ -269,37 +269,6 @@
       margin-top: 4rem;
     }
 
-    .hero-cta__primary {
-      padding-inline: 2.75rem;
-      background: linear-gradient(135deg, color-mix(in srgb, var(--brand-600) 88%, white 12%), var(--brand-600));
-      color: #ffffff;
-      border-color: color-mix(in srgb, var(--brand-600) 80%, black 20%);
-      box-shadow:
-        0 15px 32px rgba(37, 99, 235, 0.24),
-        0 10px 24px rgba(15, 23, 42, 0.15);
-    }
-
-    .hero-cta__primary::before {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.05) 100%);
-    }
-
-    .hero-cta__primary:hover {
-      color: #ffffff;
-      background: linear-gradient(135deg, color-mix(in srgb, var(--brand-500) 90%, white 10%), var(--brand-500));
-      border-color: color-mix(in srgb, var(--brand-500) 78%, black 22%);
-      box-shadow:
-        0 20px 40px rgba(37, 99, 235, 0.28),
-        0 12px 26px rgba(15, 23, 42, 0.18);
-    }
-
-    .hero-cta__primary:hover::after {
-      opacity: 0.45;
-    }
-
-    .hero-cta__primary:focus-visible {
-      outline: 3px solid rgba(59, 130, 246, 0.45);
-      outline-offset: 3px;
-    }
 
     .hero-disclaimer {
       margin-top: 5rem;
@@ -1126,6 +1095,62 @@
         inset 0 1px 2px rgba(0, 0, 0, 0.1);
     }
 
+    .btn-with-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-with-icon svg,
+    .btn-with-icon i {
+      width: 18px;
+      height: 18px;
+      transition: transform var(--transition-fast);
+    }
+
+    .btn-with-icon:hover svg,
+    .btn-with-icon:hover i {
+      transform: translateX(2px);
+    }
+
+    .hero-cta .btn-primary {
+      padding-inline: 2.75rem;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--brand-600) 88%, white 12%), var(--brand-600));
+      color: #ffffff;
+      border-color: color-mix(in srgb, var(--brand-600) 80%, black 20%);
+      box-shadow:
+        0 15px 32px rgba(37, 99, 235, 0.24),
+        0 10px 24px rgba(15, 23, 42, 0.15);
+    }
+
+    .hero-cta .btn-primary::before {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.05) 100%);
+    }
+
+    .hero-cta .btn-primary:hover {
+      color: #ffffff;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--brand-500) 90%, white 10%), var(--brand-500));
+      border-color: color-mix(in srgb, var(--brand-500) 78%, black 22%);
+      box-shadow:
+        0 20px 40px rgba(37, 99, 235, 0.28),
+        0 12px 26px rgba(15, 23, 42, 0.18);
+    }
+
+    .hero-cta .btn-primary:hover::after {
+      opacity: 0.45;
+    }
+
+    .hero-cta .btn-primary:focus-visible {
+      outline: 3px solid rgba(59, 130, 246, 0.45);
+      outline-offset: 3px;
+    }
+
+    .hero-cta .btn-with-icon svg,
+    .hero-cta .btn-with-icon i {
+      width: 16px;
+      height: 16px;
+    }
+
     .btn-secondary {
       background: rgba(255, 255, 255, 0.02);
       color: var(--ink-soft);
@@ -1913,7 +1938,12 @@
         </div>
 
         <div class="hero-cta">
-          <a href="/dashboard.html" class="btn btn-primary hero-cta__primary" data-i18n="nav.dashboard">Dashboard</a>
+          <a href="/dashboard.html" class="btn btn-primary btn-with-icon">
+            <span data-i18n="nav.dashboard">Dashboard</span>
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </a>
         </div>
       </div>
     </div>
@@ -2068,9 +2098,9 @@
       </div>
       
       <div style="text-align: center; margin-top: var(--sp-10);">
-        <a href="/dashboard.html" class="btn btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-          Accedi Alla Dashboard
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
+        <a href="/dashboard.html" class="btn btn-primary btn-with-icon">
+          <span>Accedi Alla Dashboard</span>
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </a>
@@ -2092,8 +2122,8 @@
       </div>
       
       <div style="text-align: center; margin-top: var(--sp-8);">
-        <button onclick="apriModalCollaboratori()" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px;">
+        <button onclick="apriModalCollaboratori()" class="btn btn-primary btn-with-icon">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
             <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
             <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
@@ -4555,8 +4585,8 @@ Vuoi procedere inviando i dati?`;
               Se sei un consulente finanziario autorizzato (OCF/OPC) o un professionista qualificato e vuoi essere 
               considerato per questa sezione, compila il form qui sotto.
             </p>
-            <button onclick="apriModalProfessionista()" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
-              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px;">
+            <button onclick="apriModalProfessionista()" class="btn btn-primary btn-with-icon">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
               </svg>
