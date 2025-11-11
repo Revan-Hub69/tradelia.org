@@ -897,18 +897,6 @@
       const template = REPORT_TEMPLATES[type];
       if (!template) return true;
 
-      const requiredKeys = (template.modules || [])
-        .filter((module) => module.required)
-        .map((module) => module.key);
-
-      if (requiredKeys.length) {
-        const missing = requiredKeys.filter((key) => !modules.some((module) => module.module_key === key));
-        if (missing.length) {
-          showToast(`Mancano i moduli obbligatori: ${missing.join(', ')}`, 'error');
-          return false;
-        }
-      }
-
       if (options.publish) {
         const hasHeader = modules.some((module) => module.module_key === 'header');
         if (!hasHeader) {
