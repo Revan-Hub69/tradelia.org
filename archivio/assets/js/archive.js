@@ -4,6 +4,7 @@
 import Logger from '/report/assets/js/utils/logger.js';
 import { siteHeader } from '/report/assets/js/components/site-header.js';
 import { siteFooter } from '/report/assets/js/components/site-footer.js';
+import { supabase } from '/report/assets/js/supabase-client.js';
 
 // ===== STATE =====
 const STATE = {
@@ -56,38 +57,105 @@ async function mountHeaderFooter() {
 // ===== LOAD DATA =====
 async function loadData() {
   try {
-    // Carica manifest report
-    const manifestResponse = await fetch('/archivio/manifest.json');
-    if (manifestResponse.ok) {
-      const manifest = await manifestResponse.json();
-      STATE.reports = manifest.reports || [];
-      Logger.debug('Archive', `Caricati ${STATE.reports.length} report`);
-    }
-    
-    // Carica documenti tutorial
+    await loadReportsFromSupabase();
+    await loadTutorialsManifest();
+    renderReports();
+    renderTutorials();
+  } catch (err) {
+    Logger.error('Archive', 'Errore caricamento dati', err);
+    showError('Errore nel caricamento dei dati');
+  }
+}
+
+async function loadReportsFromSupabase() {
+  const now = new Date();
+  const { data, error } = await supabase
+    .from('reports')
+    .select('id, slug, title, status, report_type, chart_path, notes, created_at, updated_at, published_at, report_modules!inner(module_key, content)')
+    .eq('status', 'active')
+    .eq('report_modules.module_key', 'header')
+    .order('published_at', { ascending: false, nullsFirst: false });
+
+  if (error) {
+    throw error;
+  }
+
+  const drafts = Array.isArray(data) ? data : [];
+  const parsed = drafts
+    .map(row => {
+      const headerContent = row.report_modules?.find(mod => mod.module_key === 'header')?.content || {};
+      const header = normalizeHeaderContent(headerContent);
+      const ticker = extractHeaderMetric(header, 'Ticker');
+      const companyName = extractHeaderMetric(header, 'CompanyName');
+      const version = extractHeaderMetric(header, 'Version') || header?.meta?.version || '—';
+      const createdAt = row.published_at || row.created_at;
+      if (!createdAt) return null;
+
+      const publicAfter = new Date(createdAt);
+      publicAfter.setHours(publicAfter.getHours() + 24);
+
+      return {
+        id: row.slug,
+        slug: row.slug,
+        title: row.title || `${ticker || 'Report'} • Swing Master 5.0`,
+        ticker: ticker || '—',
+        company: companyName || row.title || '—',
+        type: row.report_type || 'swing_master_5_0',
+        version,
+        status: row.status || 'active',
+        created_at: createdAt,
+        updated_at: row.updated_at,
+        public_after: publicAfter.toISOString(),
+        chart_path: row.chart_path || null
+      };
+    })
+    .filter(Boolean)
+    .filter(report => {
+      const publicDate = new Date(report.public_after);
+      return now >= publicDate;
+    });
+
+  STATE.reports = parsed;
+  Logger.debug('Archive', `Caricati ${STATE.reports.length} report da Supabase`);
+}
+
+async function loadTutorialsManifest() {
+  try {
     const docsResponse = await fetch('/archivio/documents.json');
     if (docsResponse.ok) {
       const docs = await docsResponse.json();
       STATE.tutorials = docs.documents || [];
       Logger.debug('Archive', `Caricati ${STATE.tutorials.length} tutorial`);
     }
-    
-    // Filtra report pubblici (dopo 24h)
-    const now = new Date();
-    STATE.reports = STATE.reports.filter(report => {
-      if (!report.public_after) return false;
-      const publicAfter = new Date(report.public_after);
-      return now >= publicAfter;
-    });
-    
-    // Renderizza
-    renderReports();
-    renderTutorials();
-    
   } catch (err) {
-    Logger.error('Archive', 'Errore caricamento dati', err);
-    showError('Errore nel caricamento dei dati');
+    Logger.warn('Archive', 'Impossibile caricare manifest tutorial', err);
+    STATE.tutorials = [];
   }
+}
+
+function normalizeHeaderContent(header) {
+  if (!header) return null;
+  if (typeof header === 'string') {
+    try {
+      return JSON.parse(header);
+    } catch (err) {
+      Logger.warn('Archive', 'Header JSON non valido', err);
+      return null;
+    }
+  }
+  return header;
+}
+
+function extractHeaderMetric(header, metricKey) {
+  if (!header || !Array.isArray(header.rows)) return null;
+  for (const row of header.rows) {
+    for (const part of row.parts || []) {
+      if (part.kind === 'metric' && part.key === metricKey) {
+        return part.value;
+      }
+    }
+  }
+  return null;
 }
 
 // ===== SETUP TABS =====
@@ -174,13 +242,25 @@ function renderReports() {
         <td>${date}</td>
         <td><strong>${report.ticker || '—'}</strong></td>
         <td>${report.company || '—'}</td>
-        <td>${report.type || '—'}</td>
+        <td>${formatReportType(report.type)}</td>
         <td>${report.version || '—'}</td>
         <td>${statusBadge}</td>
-        <td><a href="/report/index.html?id=${report.id}" target="_blank">Apri Report</a></td>
+        <td><a href="/report/index.html?id=${encodeURIComponent(report.slug)}" target="_blank">Apri Report</a></td>
       </tr>
     `;
   }).join('');
+}
+
+function formatReportType(type) {
+  if (!type) return '—';
+  switch (type) {
+    case 'swing_master_5_0':
+      return 'Swing Master 5.0';
+    case 'daily_market_intel_3_1':
+      return 'Daily Market Intelligence 3.1';
+    default:
+      return type;
+  }
 }
 
 // ===== RENDER TUTORIALS =====

@@ -10,6 +10,7 @@ import { metricPopup } from './components/metric-popup.js';
 import { reportNavigation } from './components/report-navigation.js';
 import { userPreferences } from './utils/user-preferences.js';
 import { i18n } from './utils/i18n.js';
+import { supabase, getSignedChartUrl } from './supabase-client.js';
 
 (function() {
   'use strict';
@@ -31,8 +32,12 @@ import { i18n } from './utils/i18n.js';
     return;
   }
   
+  const DEFAULT_MODULE_ORDER = ['header', 'f1', 'f1b', 'f2', 'f3', 'f3o', 'f4', 'f5', 'f5o', 'f5lt'];
   let __versionQS = '';
   let __header = null;
+  let __reportRecord = null;
+  let __moduleRecords = [];
+  let __moduleMap = {};
   
   // ===== ERROR STATES =====
   function showErrorState(container, error, title = null) {
@@ -261,21 +266,21 @@ import { i18n } from './utils/i18n.js';
   }
   
   // ===== CARICAMENTO HEADER =====
-  async function loadHeader(reportId) {
+  async function loadHeader() {
     try {
-      const headerPath = `/report/reports/${reportId}/header.json`;
-      const header = await fetchJSON(headerPath);
-      
+      const header = getModuleContent('header');
+      if (!header) {
+        throw new Error('Modulo header non disponibile');
+      }
+
       const hasRows = Array.isArray(header?.rows) && header.rows.length > 0;
       const hasLegacy = header?.Ticker || header?.CompanyName;
-      
       if (!hasRows && !hasLegacy) {
         throw new Error('Header senza dati validi');
       }
-      
+
       __header = header;
-      
-      // Estrai valori dalle metriche nelle rows
+
       const extractMetric = (key) => {
         for (const row of header.rows || []) {
           for (const part of row.parts || []) {
@@ -286,29 +291,23 @@ import { i18n } from './utils/i18n.js';
         }
         return null;
       };
-      
+
       const companyName = extractMetric('CompanyName');
       const ticker = extractMetric('Ticker');
       const version = extractMetric('Version') || header?.meta?.version || '—';
       const start = extractMetric('Start');
       const end = extractMetric('End');
-      const updatedAt = extractMetric('UpdatedAt');
-      
+
       __versionQS = version && version !== '—' ? `?v=${encodeURIComponent(version)}` : '';
-      
+
       if (ticker) {
         document.title = `Framework Accademico AI, Tradelia Swing Master 5.0 · ${ticker}`;
-        
-        // Aggiorna meta tags dinamici per SEO e social sharing
         updateMetaTags(ticker, companyName || ticker, version);
-        
-        // Aggiorna structured data dinamico
         updateStructuredData(ticker, companyName || ticker, version, start, end);
       }
-      
+
       await mountHeaderTicker(header);
-      
-      // Aggiorna footer se già montato
+
       if (FOOTER_SLOT && window.__TradeliaFooter) {
         window.__TradeliaFooter.update(header);
       }
@@ -322,129 +321,97 @@ import { i18n } from './utils/i18n.js';
   }
   
   // ===== CARICAMENTO MODULI =====
-  async function loadModules(reportId) {
-    // Carica tutti i moduli dal manifest, con fallback a default se mancanti
-    // Solo F1-F5 vanno nel report (F6, F7, F8 esclusi)
-    // F3O, F5B, F5-LT+ sono moduli separati (come F3O è separato da F3)
-    let manifest = { order: ['F1', 'F1B', 'F2', 'F3', 'F3O', 'F4', 'F5', 'F5B', 'F5-LT+'] };
-    
-    try {
-      const m = await fetchJSON(`/report/reports/${reportId}/manifest.json`, { silent: true });
-      if (Array.isArray(m?.order) && m.order.length) {
-        manifest = { order: m.order };
-        Logger.debug('App', `Manifest caricato: ${manifest.order.length} moduli`);
-      }
-    } catch (err) {
-      // Manifest non trovato è normale, usa lista default
-      Logger.debug('App', 'Manifest non trovato, uso lista default');
-    }
-    
-    Logger.debug('App', `Montaggio ${manifest.order.length} moduli`);
-    
+  async function loadModules() {
+    const modulePathMap = {
+      header: { js: 'header', skip: true },
+      f3o: { js: 'f3o', label: 'F3O' },
+      f5o: { js: 'f5o', label: 'F5O' },
+      f5lt: { js: 'f5lt', label: 'F5-LT+' }
+    };
+
+    const sorted = [...__moduleRecords]
+      .filter(record => record.module_key !== 'header')
+      .sort((a, b) => {
+        const orderA = resolveModuleOrder(a);
+        const orderB = resolveModuleOrder(b);
+        return orderA - orderB;
+      });
+
+    const modulesInfo = [];
     let loadedCount = 0;
-    const totalModules = manifest.order.length;
-    const modulesInfo = []; // Per navigazione
-    
-    for (const modId of manifest.order) {
-      // Mapping per moduli con caratteri speciali nel nome
-      // ID originale -> (nome file JS, nome file JSON)
-      const moduleMap = {
-        'F5-LT+': { js: 'f5lt', json: 'f5-lt+' },
-        'F5B': { js: 'f5b', json: 'f5b' },
-        'F3O': { js: 'f3o', json: 'f3o' }
-      };
-      
-      const modInfo = moduleMap[modId] || { 
-        js: String(modId).toLowerCase().replace(/[^a-z0-9]/g, ''), 
-        json: String(modId).toLowerCase() 
-      };
-      
-      const jsonPath = `/report/reports/${reportId}/${modInfo.json}.json`;
-      const modPath = `/report/assets/js/modules/${modInfo.js}.js`;
-      
-      try {
-        // Carica JSON (fallback a oggetto vuoto se mancante)
-        let json = {};
-        try {
-          // Usa silent=true per moduli opzionali (non loggare errori per file mancanti)
-          json = await fetchJSON(jsonPath, { silent: true });
-          // Se JSON non esiste o è vuoto, salta questo modulo
-          if (!json || Object.keys(json).length === 0 || json._placeholder) {
-            Logger.debug('App', `Modulo ${modId}: JSON non disponibile, salto`);
-            continue;
-          }
-        } catch (jsonErr) {
-          // File non trovato è normale per moduli opzionali, non loggare come errore
-          Logger.debug('App', `Modulo ${modId}: JSON non trovato, salto`);
-          continue; // Salta se JSON non esiste (montaggio dinamico)
-        }
-        
-        // Carica modulo (fallback a placeholder se mancante)
-        let mod;
-        try {
-          mod = await safeImport(modPath);
-        } catch (modErr) {
-          Logger.warn('App', `Modulo ${modPath} non trovato, uso placeholder`, modErr);
-          // Importa placeholder generico
-          const placeholderModule = await safeImport('/report/assets/js/modules/_placeholder.js');
-          mod = placeholderModule;
-        }
-        
-        if (typeof mod.renderCard !== 'function') {
-          Logger.warn('App', `Modulo ${modId}: renderCard non disponibile, uso placeholder`);
-          const placeholderModule = await safeImport('/report/assets/js/modules/_placeholder.js');
-          mod = placeholderModule;
-        }
-        
-        const cardHTML = mod.renderCard(json, { reportId, modId, header: __header });
-        const wrap = document.createElement('article');
-        wrap.id = `sec-${modInfo.js}`;
-        wrap.className = 'report-section-block mb-8';
-        wrap.innerHTML = cardHTML;
-        MODULES_CONTAINER.appendChild(wrap);
-        
-        // Estrai informazioni modulo per navigazione
-        const moduleInfo = {
-          id: `sec-${modInfo.js}`,
-          badge: json?.ui_labels?.badge || modId,
-          title: json?.ui_labels?.hero_title || json?.meta?.module || modId,
-          desc: json?.ui_labels?.hero_desc || json?.meta?.hero_intro || '',
-          status: json?.meta?.moduleStatus || 'ACTIVE',
-          isActive: false // Non impostare attivo di default - sarà gestito dallo scroll tracking
-        };
-        modulesInfo.push(moduleInfo);
-        
-        if (typeof mod.bindCard === 'function') {
-          try {
-            mod.bindCard(wrap, json, { reportId, modId, header: __header });
-          } catch (err) {
-            Logger.warn('App', `Modulo ${modId}: errore bindCard`, err);
-            // Error boundary: mostra errore nel modulo ma continua
-            const errorEl = document.createElement('div');
-            errorEl.className = 'error-state';
-            errorEl.innerHTML = `
-              <div class="error-state-title">Errore nel modulo ${modId}</div>
-              <div class="error-state-message">${escapeHtml(err.message)}</div>
-            `;
-            wrap.appendChild(errorEl);
-          }
-        }
-        
-        loadedCount++;
-        Logger.debug('App', `Modulo ${modId} montato (${loadedCount}/${totalModules})`);
-      } catch (err) {
-        Logger.warn('App', `Modulo ${modId} non caricato`, err);
-        // Error boundary: mostra errore ma continua con altri moduli
-        const errorWrap = document.createElement('article');
-        errorWrap.id = `sec-${modInfo.js}-error`;
-        errorWrap.className = 'report-section-block mb-8';
-        showErrorState(errorWrap, err, `Errore caricamento ${modId}`);
-        MODULES_CONTAINER.appendChild(errorWrap);
+    const totalModules = sorted.length;
+
+    for (const record of sorted) {
+      const key = record.module_key;
+      const mapping = modulePathMap[key] || {};
+      const jsModuleName = mapping.js || key.replace(/[^a-z0-9]/g, '');
+      const modPath = `/report/assets/js/modules/${jsModuleName}.js`;
+
+      const json = record.content;
+      if (!json || typeof json !== 'object' || Object.keys(json).length === 0 || json._placeholder) {
+        Logger.debug('App', `Modulo ${key}: contenuto vuoto, salto`);
         continue;
       }
+
+      let mod;
+      try {
+        mod = await safeImport(modPath);
+      } catch (modErr) {
+        Logger.warn('App', `Modulo ${modPath} non trovato, uso placeholder`, modErr);
+        const placeholderModule = await safeImport('/report/assets/js/modules/_placeholder.js');
+        mod = placeholderModule;
+      }
+
+      if (typeof mod.renderCard !== 'function') {
+        Logger.warn('App', `Modulo ${key}: renderCard non disponibile, uso placeholder`);
+        const placeholderModule = await safeImport('/report/assets/js/modules/_placeholder.js');
+        mod = placeholderModule;
+      }
+
+      const modId = mapping.label || key.toUpperCase();
+      const cardHTML = mod.renderCard(json, { reportId: __reportRecord?.slug, modId, header: __header });
+      const wrap = document.createElement('article');
+      wrap.id = `sec-${jsModuleName}`;
+      wrap.className = 'report-section-block mb-8';
+      wrap.innerHTML = cardHTML;
+      MODULES_CONTAINER.appendChild(wrap);
+
+      const moduleInfo = {
+        id: `sec-${jsModuleName}`,
+        badge: json?.ui_labels?.badge || modId,
+        title: json?.ui_labels?.hero_title || json?.meta?.module || modId,
+        desc: json?.ui_labels?.hero_desc || json?.meta?.hero_intro || '',
+        status: json?.meta?.moduleStatus || 'ACTIVE',
+        isActive: false
+      };
+      modulesInfo.push(moduleInfo);
+
+      if (typeof mod.bindCard === 'function') {
+        try {
+          mod.bindCard(wrap, json, { reportId: __reportRecord?.slug, modId, header: __header });
+        } catch (bindErr) {
+          Logger.warn('App', `Modulo ${key}: errore bindCard`, bindErr);
+        }
+      }
+
+      if (typeof metricPopup?.init === 'function') {
+        metricPopup.init(wrap);
+      }
+
+      loadedCount++;
+      Logger.debug('App', `Modulo ${key} montato (${loadedCount}/${totalModules})`);
     }
 
-    // Inizializza navigazione dopo caricamento moduli
+    initializeNavigation(modulesInfo);
+  }
+
+  function resolveModuleOrder(record) {
+    const index = DEFAULT_MODULE_ORDER.indexOf(record.module_key);
+    const fallback = index >= 0 ? (index + 1) * 10 : 1000;
+    return typeof record.order_index === 'number' ? record.order_index : fallback;
+  }
+
+  function initializeNavigation(modulesInfo) {
     if (modulesInfo.length > 0 && (INDEX_SLOT || BREADCRUMB_SLOT || SEARCH_SLOT)) {
       try {
         reportNavigation.init({
@@ -453,12 +420,11 @@ import { i18n } from './utils/i18n.js';
           breadcrumbContainer: BREADCRUMB_SLOT,
           searchContainer: SEARCH_SLOT
         });
-        
-        // Mostra container navigazione
+
         if (NAVIGATION_CONTAINER) {
           NAVIGATION_CONTAINER.style.display = 'block';
         }
-        
+
         Logger.debug('App', 'Navigazione inizializzata', { modulesCount: modulesInfo.length });
       } catch (err) {
         Logger.warn('App', 'Errore inizializzazione navigazione', err);
@@ -538,10 +504,23 @@ import { i18n } from './utils/i18n.js';
     // Monta header (statico, non dipende da reportId)
     await mountSiteHeader();
     
+    try {
+      const bundle = await fetchReportBundle(reportId);
+      __reportRecord = bundle.report;
+      const { normalized, map } = buildModuleState(bundle.modules);
+      __moduleRecords = normalized;
+      __moduleMap = map;
+    } catch (err) {
+      Logger.error('App', 'Report non disponibile', err);
+      showErrorState(ROOT, err, 'Report non disponibile');
+      _isInitializing = false;
+      return;
+    }
+    
     // Error boundary globale per inizializzazione
     let headerData = null;
     try {
-      headerData = await loadHeader(reportId);
+      headerData = await loadHeader();
     } catch (err) {
       Logger.error('App', 'Errore loadHeader', err);
       showErrorState(TICKER_SLOT, err, 'Errore caricamento header');
@@ -549,14 +528,14 @@ import { i18n } from './utils/i18n.js';
     }
     
     // Monta market context snapshot (subito dopo header ticker, prima del chart)
-    await mountMarketContextSnapshot(reportId);
+    await mountMarketContextSnapshot();
     
     // Monta chart widget (dopo market context snapshot, prima dei moduli)
-    await mountChartWidget(reportId, headerData);
+    await mountChartWidget(headerData);
     
     // Carica moduli (dopo chart e market context snapshot)
     try {
-      await loadModules(reportId);
+      await loadModules();
     } catch (err) {
       Logger.error('App', 'Errore loadModules', err);
       // Se container è vuoto, mostra errore globale
@@ -575,7 +554,7 @@ import { i18n } from './utils/i18n.js';
   }
   
   // ===== MOUNT CHART WIDGET =====
-  async function mountChartWidget(reportId, headerData) {
+  async function mountChartWidget(headerData) {
     if (!CHART_SLOT) {
       Logger.warn('App', 'Chart slot non trovato');
       return;
@@ -620,18 +599,24 @@ import { i18n } from './utils/i18n.js';
         return;
       }
 
-      // Estrai timestamp
       const timestamp = headerData?.meta?.timestamp 
         || headerData?.meta?.created_at 
         || headerData?.meta?.UpdatedAt
         || null;
 
-      Logger.debug('App', `Montaggio chart widget: reportId=${reportId}, symbol=${symbol}, timestamp=${timestamp}`);
+      const reportSlug = __reportRecord?.slug;
+      let chartImageUrl = null;
+      if (__reportRecord?.chart_path) {
+        chartImageUrl = await getSignedChartUrl(__reportRecord.chart_path);
+      }
+
+      Logger.debug('App', `Montaggio chart widget: reportId=${reportSlug}, symbol=${symbol}, timestamp=${timestamp}`);
 
       const node = chartWidget.mount(CHART_SLOT, {
-        reportId: reportId,
-        symbol: symbol,
-        timestamp: timestamp
+        reportId: reportSlug,
+        symbol,
+        timestamp,
+        chartImageUrl
       });
 
       if (!node) {
@@ -658,8 +643,134 @@ import { i18n } from './utils/i18n.js';
     }
   }
 
+  async function fetchReportBundle(slug) {
+    const { data: report, error } = await supabase
+      .from('reports')
+      .select('id, slug, title, status, report_type, chart_path, notes, created_at, updated_at, published_at')
+      .eq('slug', slug)
+      .eq('status', 'active')
+      .maybeSingle();
+
+    if (error || !report) {
+      Logger.warn('App', `Report ${slug} non trovato su Supabase, provo fallback legacy`);
+      const legacy = await fetchLegacyBundle(slug);
+      if (legacy) return legacy;
+      throw new Error('Report non trovato o non pubblicato');
+    }
+
+    const { data: modules, error: modulesError } = await supabase
+      .from('report_modules')
+      .select('module_key, content, order_index')
+      .eq('report_id', report.id)
+      .order('order_index', { ascending: true, nullsFirst: true });
+
+    if (modulesError) {
+      throw modulesError;
+    }
+
+    return {
+      report,
+      modules: Array.isArray(modules) ? modules : []
+    };
+  }
+
+  async function fetchLegacyBundle(slug) {
+    try {
+      const manifest = await fetchJSON(`/report/reports/${slug}/manifest.json`, { silent: true });
+      const legacyOrder = Array.isArray(manifest?.order) && manifest.order.length
+        ? manifest.order
+        : ['HEADER', 'F1', 'F1B', 'F2', 'F3', 'F3O', 'F4', 'F5', 'F5O', 'F5-LT+'];
+
+      const modules = [];
+      const moduleMap = {
+        'HEADER': { json: 'header' },
+        'F5-LT+': { json: 'f5-lt+' },
+        'F5O': { json: 'f5o' },
+        'F3O': { json: 'f3o' }
+      };
+
+      for (let index = 0; index < legacyOrder.length; index++) {
+        const modId = String(legacyOrder[index]);
+        const normalized = modId.toLowerCase();
+        const mapEntry = moduleMap[modId] || {};
+        const jsonName = mapEntry.json || normalized;
+        const moduleKey = normalized.replace(/[^a-z0-9]/g, '');
+
+        try {
+          const jsonData = await fetchJSON(`/report/reports/${slug}/${jsonName}.json`, { silent: true });
+          if (!jsonData || Object.keys(jsonData).length === 0) continue;
+          modules.push({
+            module_key: moduleKey,
+            order_index: (index + 1) * 10,
+            content: jsonData
+          });
+        } catch (err) {
+          Logger.debug('App', `Modulo legacy ${modId} non trovato`, err);
+          continue;
+        }
+      }
+
+      if (!modules.length) {
+        return null;
+      }
+
+      return {
+        report: {
+          id: slug,
+          slug,
+          status: 'legacy',
+          report_type: 'legacy',
+          chart_path: null,
+          published_at: null,
+          updated_at: null,
+          created_at: null
+        },
+        modules
+      };
+    } catch (err) {
+      Logger.warn('App', `Fallback legacy fallito per ${slug}`, err);
+      return null;
+    }
+  }
+
+  function normalizeModuleRecord(record) {
+    if (!record || !record.module_key) return null;
+    const moduleKey = String(record.module_key).toLowerCase();
+    let content = record.content ?? {};
+    if (typeof content === 'string') {
+      try {
+        content = JSON.parse(content);
+      } catch (err) {
+        Logger.warn('App', `JSON modulo ${moduleKey} non valido`, err);
+        content = {};
+      }
+    }
+    return {
+      module_key: moduleKey,
+      order_index: record.order_index,
+      content
+    };
+  }
+
+  function buildModuleState(records) {
+    const normalized = [];
+    const map = {};
+    for (const rec of records) {
+      const norm = normalizeModuleRecord(rec);
+      if (!norm) continue;
+      normalized.push(norm);
+      map[norm.module_key] = norm.content;
+    }
+    return { normalized, map };
+  }
+
+  function getModuleContent(moduleKey) {
+    if (!moduleKey) return null;
+    return __moduleMap[moduleKey.toLowerCase()] || null;
+  }
+
   // ===== MOUNT MARKET CONTEXT SNAPSHOT =====
-  async function mountMarketContextSnapshot(reportId) {
+  async function mountMarketContextSnapshot() {
     if (!MARKET_CONTEXT_SNAPSHOT_SLOT) {
       Logger.warn('App', 'Market context snapshot slot non trovato');
       return;
@@ -680,63 +791,51 @@ import { i18n } from './utils/i18n.js';
       let strategyMode = null;
       let timestamp = null;
 
-      if (reportId) {
-        try {
-          const f1bUrl = `/report/reports/${reportId}/f1b.json`;
-          Logger.debug('App', `Caricamento F1B da: ${f1bUrl}`);
-          
-          const f1bData = await fetchJSON(f1bUrl);
-          
-          Logger.debug('App', 'F1B dati ricevuti, chiavi:', Object.keys(f1bData || {}));
-          
-          // Prova diversi percorsi per RegimeScore (supporta strutture diverse)
-          if (f1bData?.regime_and_risk?.RegimeScore) {
-            const scoreData = f1bData.regime_and_risk.RegimeScore;
-            const scoreStr = scoreData?.raw || scoreData;
-            
-            // Parse "+0.60" o "0.60" o 0.60
-            if (typeof scoreStr === 'string') {
-              regimeScore = parseFloat(scoreStr.replace(/[+\s]/g, '')) || null;
-            } else if (typeof scoreStr === 'number') {
-              regimeScore = scoreStr;
-            }
-            Logger.debug('App', `RegimeScore estratto da regime_and_risk: ${scoreStr} -> ${regimeScore}`);
-          } else if (f1bData?.f1bSnapshot?.regime_state?.RegimeScore) {
-            // Prova struttura alternativa (f1bSnapshot)
-            const scoreData = f1bData.f1bSnapshot.regime_state.RegimeScore;
-            regimeScore = typeof scoreData === 'number' ? scoreData : parseFloat(scoreData) || null;
-            Logger.debug('App', `RegimeScore estratto da f1bSnapshot: ${regimeScore}`);
-          } else {
-            Logger.warn('App', 'RegimeScore non trovato in F1B. Struttura disponibile:', {
-              hasRegimeAndRisk: !!f1bData?.regime_and_risk,
-              hasF1bSnapshot: !!f1bData?.f1bSnapshot,
-              keys: Object.keys(f1bData || {})
-            });
+      const f1bData = getModuleContent('f1b');
+      if (f1bData) {
+        Logger.debug('App', 'F1B dati ricevuti, chiavi:', Object.keys(f1bData || {}));
+
+        if (f1bData?.regime_and_risk?.RegimeScore) {
+          const scoreData = f1bData.regime_and_risk.RegimeScore;
+          const scoreStr = scoreData?.raw || scoreData;
+          if (typeof scoreStr === 'string') {
+            regimeScore = parseFloat(scoreStr.replace(/[+\s]/g, '')) || null;
+          } else if (typeof scoreStr === 'number') {
+            regimeScore = scoreStr;
           }
-
-          // Estrai StrategyMode (prova diversi percorsi)
-          if (f1bData?.regime_and_risk?.StrategyMode_macro) {
-            const modeData = f1bData.regime_and_risk.StrategyMode_macro;
-            strategyMode = modeData?.raw || modeData;
-            Logger.debug('App', `StrategyMode estratto da regime_and_risk: ${strategyMode}`);
-          } else if (f1bData?.f1bSnapshot?.regime_state?.StrategyMode_macro) {
-            strategyMode = f1bData.f1bSnapshot.regime_state.StrategyMode_macro;
-            Logger.debug('App', `StrategyMode estratto da f1bSnapshot: ${strategyMode}`);
-          }
-
-          // Estrai timestamp
-          timestamp = f1bData?.meta?.timestampET 
-            || f1bData?.meta?.timestamp 
-            || f1bData?.meta?.created_at
-            || null;
-
-          Logger.debug('App', `F1B dati finali: RegimeScore=${regimeScore}, StrategyMode=${strategyMode}, timestamp=${timestamp}`);
-        } catch (err) {
-          Logger.warn('App', `Errore caricamento F1B per market context snapshot: ${err.message}`, err);
-          // Continua comunque, mostrerà placeholder senza marker
+          Logger.debug('App', `RegimeScore estratto da regime_and_risk: ${scoreStr} -> ${regimeScore}`);
+        } else if (f1bData?.f1bSnapshot?.regime_state?.RegimeScore) {
+          const scoreData = f1bData.f1bSnapshot.regime_state.RegimeScore;
+          regimeScore = typeof scoreData === 'number' ? scoreData : parseFloat(scoreData) || null;
+          Logger.debug('App', `RegimeScore estratto da f1bSnapshot: ${regimeScore}`);
+        } else if (f1bData?.RegimeScore != null) {
+          regimeScore = typeof f1bData.RegimeScore === 'number'
+            ? f1bData.RegimeScore
+            : parseFloat(String(f1bData.RegimeScore).replace(/[+\s]/g, '')) || null;
+        } else {
+          Logger.warn('App', 'RegimeScore non trovato in F1B', {
+            hasRegimeAndRisk: !!f1bData?.regime_and_risk,
+            hasF1bSnapshot: !!f1bData?.f1bSnapshot,
+            keys: Object.keys(f1bData || {})
+          });
         }
+
+        if (f1bData?.regime_and_risk?.StrategyMode_macro) {
+          const modeData = f1bData.regime_and_risk.StrategyMode_macro;
+          strategyMode = modeData?.raw || modeData;
+        } else if (f1bData?.f1bSnapshot?.regime_state?.StrategyMode_macro) {
+          strategyMode = f1bData.f1bSnapshot.regime_state.StrategyMode_macro;
+        }
+
+        timestamp = f1bData?.meta?.timestampET 
+          || f1bData?.meta?.timestamp 
+          || f1bData?.meta?.created_at
+          || f1bData?.timestamp
+          || null;
+
+        Logger.debug('App', `F1B dati finali: RegimeScore=${regimeScore}, StrategyMode=${strategyMode}, timestamp=${timestamp}`);
       } else {
-        Logger.warn('App', 'reportId non disponibile per market context snapshot');
+        Logger.warn('App', 'Modulo F1B non disponibile per market context snapshot');
       }
 
       const node = marketContextSnapshot.mount(MARKET_CONTEXT_SNAPSHOT_SLOT, {
