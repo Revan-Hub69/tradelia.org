@@ -1022,114 +1022,89 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: var(--sp-3);
-      padding: var(--sp-5) 3rem;
-      border-radius: var(--radius-lg);
-      font-size: var(--fs-15);
-      font-weight: 500;
+      gap: 0.55rem;
+      padding: 0.75rem 1.85rem;
+      border-radius: var(--radius-pill);
+      font-size: var(--fs-14);
+      font-weight: 600;
       text-decoration: none;
-      border: 1.5px solid;
+      border: 1px solid transparent;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      font-family: inherit;
       letter-spacing: 0.01em;
-      position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(8px);
+      font-family: inherit;
+      background: transparent;
+      color: var(--ink);
+      transition:
+        background var(--transition-base),
+        border-color var(--transition-base),
+        color var(--transition-base),
+        box-shadow var(--transition-base),
+        transform var(--transition-fast);
+    }
+
+    .btn svg,
+    .btn i {
+      width: 18px;
+      height: 18px;
     }
 
     .btn-primary {
-      background: rgba(37, 99, 235, 0.1);
-      color: var(--brand-400);
-      border-color: var(--brand-600);
-      box-shadow: 
-        0 1px 3px rgba(0, 0, 0, 0.12),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
-
-    .btn-primary::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(37, 99, 235, 0.05) 100%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .btn-primary::after {
-      content: '';
-      position: absolute;
-      inset: -2px;
-      background: linear-gradient(135deg, var(--brand-600), var(--brand-400));
-      opacity: 0;
-      border-radius: var(--radius-lg);
-      z-index: -1;
-      transition: opacity 0.3s ease;
-      filter: blur(8px);
+      background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--brand-600) 86%, white 14%),
+        var(--brand-600)
+      );
+      border-color: color-mix(in srgb, var(--brand-600) 80%, black 20%);
+      color: #ffffff;
+      box-shadow:
+        0 12px 26px rgba(37, 99, 235, 0.18),
+        0 6px 14px rgba(15, 23, 42, 0.12);
     }
 
     .btn-primary:hover {
-      background: rgba(37, 99, 235, 0.15);
-      border-color: var(--brand-500);
-      color: var(--brand-300);
+      background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--brand-500) 90%, white 10%),
+        var(--brand-500)
+      );
+      border-color: color-mix(in srgb, var(--brand-500) 78%, black 22%);
       transform: translateY(-2px);
-      box-shadow: 
-        0 4px 12px rgba(37, 99, 235, 0.3),
-        0 2px 4px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    }
-
-    .btn-primary:hover::before {
-      opacity: 1;
-    }
-
-    .btn-primary:hover::after {
-      opacity: 0.3;
+      box-shadow:
+        0 18px 34px rgba(37, 99, 235, 0.24),
+        0 8px 18px rgba(15, 23, 42, 0.16);
     }
 
     .btn-primary:active {
       transform: translateY(0);
-      box-shadow: 
-        0 2px 6px rgba(37, 99, 235, 0.25),
-        inset 0 1px 2px rgba(0, 0, 0, 0.1);
+      box-shadow:
+        0 8px 20px rgba(37, 99, 235, 0.2),
+        0 3px 10px rgba(15, 23, 42, 0.14);
+    }
+
+    .btn-primary:focus-visible {
+      outline: 3px solid rgba(59, 130, 246, 0.45);
+      outline-offset: 3px;
     }
 
     .btn-secondary {
-      background: rgba(255, 255, 255, 0.02);
-      color: var(--ink-soft);
-      border-color: var(--br-soft);
-      box-shadow: 
-        0 1px 3px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.03);
-    }
-
-    .btn-secondary::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      background: color-mix(in srgb, var(--surface-card) 92%, var(--brand-600) 8%);
+      border-color: color-mix(in srgb, var(--br-soft) 88%, var(--brand-600) 12%);
+      color: var(--ink);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
     }
 
     .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.04);
-      border-color: var(--br-card);
-      color: var(--ink);
+      background: color-mix(in srgb, var(--surface-elev) 88%, var(--brand-500) 12%);
+      border-color: color-mix(in srgb, var(--br-card) 82%, var(--brand-500) 18%);
       transform: translateY(-2px);
-      box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.15),
-        0 2px 4px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
-
-    .btn-secondary:hover::before {
-      opacity: 1;
+      box-shadow:
+        0 14px 28px rgba(15, 23, 42, 0.16),
+        0 4px 12px rgba(15, 23, 42, 0.12);
     }
 
     .btn-secondary:active {
       transform: translateY(0);
-      background: rgba(255, 255, 255, 0.03);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.14);
     }
 
     .btn-block {
@@ -1183,8 +1158,8 @@
     .card:hover{box-shadow:0 10px 30px rgba(2,6,23,.08); transform: translateY(-2px)}
     .logo-fb{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:.75rem;font-weight:700;color:#fff;box-shadow:inset 0 0 0 1px rgba(15,23,42,.08)}
     .tag{font-size:11px;padding:.125rem .5rem;border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc}
-    .btn{display:inline-block;padding:.5rem .75rem;border-radius:.6rem;font-weight:600;transition:all .2s ease}
-    .btn:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(56,189,248,.5)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:.75rem 1.85rem;border-radius:999px;font-weight:600;transition:transform var(--transition-fast),box-shadow var(--transition-fast),background var(--transition-base),border-color var(--transition-base),color var(--transition-base)}
+    .btn:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(56,189,248,.35)}
     .badge{font-size:10px;padding:.1rem .45rem;border-radius:999px;font-weight:700}
     .score-badge{font-size:11px;padding:.125rem .5rem;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:700}
     .no-scrollbar{scrollbar-width:none}
