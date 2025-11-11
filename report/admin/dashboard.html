@@ -210,6 +210,13 @@
       transform: translateY(-1px);
     }
 
+    .report-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
     .report-meta {
       display: flex;
       flex-wrap: wrap;
@@ -461,7 +468,7 @@
           <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
             <input type="file" id="chart-file" accept="image/png,image/jpeg,image/webp">
             <button class="btn btn-outline" id="upload-chart-btn">Carica chart</button>
-            <button class="btn btn-soft" id="open-chart-btn" aria-disabled="true">Apri chart</button>
+            <button class="btn btn-soft" id="open-chart-btn" aria-disabled="true" disabled>Apri chart</button>
           </div>
           <img id="chart-preview" class="chart-preview" alt="Preview chart">
         </div>
@@ -521,7 +528,6 @@
     });
 
     const toastEl = document.getElementById('toast');
-    const authPanel = document.getElementById('auth-panel');
     const authCard = document.getElementById('auth-card');
     const authLogged = document.getElementById('auth-logged');
     const emailEl = document.getElementById('auth-email');
@@ -563,23 +569,43 @@
     let filteredReports = [];
     let activeReport = null;
     let isDirty = false;
+    let currentChartSignedUrl = null;
+
+    const statusLabels = {
+      draft: 'Bozza',
+      active: 'Pubblicato',
+      archived: 'Archiviato'
+    };
+
+    const statusClasses = {
+      draft: 'status-draft',
+      active: 'status-active',
+      archived: 'status-archived'
+    };
 
     const showToast = (message, type = 'info') => {
       toastEl.textContent = message;
-      toastEl.className = 	oast toast-;
+      toastEl.className = `toast toast-${type}`;
       toastEl.style.display = 'block';
       clearTimeout(showToast._timer);
-      showToast._timer = setTimeout(() => toastEl.style.display = 'none', 3200);
+      showToast._timer = setTimeout(() => {
+        toastEl.style.display = 'none';
+      }, 3200);
+    };
+
+    const updateEditorBadge = () => {
+      if (isDirty) {
+        editorReportIdEl.textContent = 'Modifiche non salvate';
+      } else if (activeReport) {
+        editorReportIdEl.textContent = `${activeReport.slug} · id ${activeReport.id.slice(0, 8)}…`;
+      } else {
+        editorReportIdEl.textContent = 'Nuovo report';
+      }
     };
 
     const setDirty = (state) => {
       isDirty = state;
-      const suffix = activeReport ?  () : ' (nuovo report)';
-      editorReportIdEl.textContent = state
-        ? Modifiche non salvate
-        : activeReport
-          ? ${activeReport.slug} · id 
-          : 'Nuovo report';
+      updateEditorBadge();
     };
 
     const resetDirty = () => setDirty(false);
@@ -589,70 +615,50 @@
       return new Date(iso).toISOString().slice(0, 16);
     };
 
-    const collectModules = () => {
-      const cards = Array.from(modulesContainer.querySelectorAll('.module-card'));
-      if (!cards.length) return [];
-
-      const modules = [];
-      for (const card of cards) {
-        const key = card.querySelector('.module-key').value.trim();
-        if (!key) {
-          showToast('Ogni modulo deve avere una chiave', 'error');
-          return null;
-        }
-        const orderValue = card.querySelector('.module-order').value.trim();
-        const contentText = card.querySelector('.module-content').value.trim();
-        if (!contentText) {
-          showToast(Modulo : contenuto mancante, 'error');
-          return null;
-        }
-        let content;
-        try {
-          content = JSON.parse(contentText);
-        } catch (error) {
-          showToast(Modulo : JSON non valido (), 'error');
-          return null;
-        }
-        modules.push({
-          module_key: key,
-          order_index: orderValue === '' ? null : Number(orderValue),
-          content
+    const formatDateTimeHuman = (iso) => {
+      if (!iso) return '—';
+      try {
+        return new Date(iso).toLocaleString('it-IT', {
+          dateStyle: 'short',
+          timeStyle: 'short'
         });
-      }
-      return modules;
-    };
-
-    const updateModulesEmptyState = () => {
-      const hasModules = modulesContainer.querySelector('.module-card');
-      if (!hasModules) {
-        modulesContainer.innerHTML = '<div class="module-empty">Nessun modulo presente. Aggiungi un modulo per iniziare.</div>';
+      } catch {
+        return iso;
       }
     };
 
-    const clearModules = () => {
+    const renderModulesEmptyState = () => {
       modulesContainer.innerHTML = '<div class="module-empty">Nessun modulo presente. Aggiungi un modulo per iniziare.</div>';
     };
 
-    const createModuleCard = (module = { module_key: '', order_index: null, content: '' }) => {
+    const appendModuleCard = (module = {}) => {
+      const placeholder = modulesContainer.querySelector('.module-empty');
+      if (placeholder) {
+        placeholder.remove();
+      }
+      modulesContainer.appendChild(createModuleCard(module));
+    };
+
+    const createModuleCard = (module = {}) => {
       const node = moduleTemplate.content.cloneNode(true);
       const card = node.querySelector('.module-card');
       const keyInput = card.querySelector('.module-key');
       const orderInput = card.querySelector('.module-order');
-      const area = card.querySelector('.module-content');
+      const contentArea = card.querySelector('.module-content');
       const fileInput = card.querySelector('.module-file');
 
-      keyInput.value = module.module_key || '';
+      keyInput.value = module.module_key ?? '';
       orderInput.value = module.order_index ?? '';
-      area.value = module.content
-        ? (typeof module.content === 'string'
+      contentArea.value = module.content
+        ? typeof module.content === 'string'
           ? module.content
-          : JSON.stringify(module.content, null, 2))
+          : JSON.stringify(module.content, null, 2)
         : '';
 
       const markDirty = () => setDirty(true);
       keyInput.addEventListener('input', markDirty);
       orderInput.addEventListener('input', markDirty);
-      area.addEventListener('input', markDirty);
+      contentArea.addEventListener('input', markDirty);
 
       card.querySelector('.module-import').addEventListener('click', () => fileInput.click());
       fileInput.addEventListener('change', (event) => {
@@ -660,9 +666,9 @@
         if (!file) return;
         const reader = new FileReader();
         reader.onload = (ev) => {
-          area.value = ev.target.result;
+          contentArea.value = ev.target?.result ?? '';
           markDirty();
-          showToast(JSON caricato in , 'success');
+          showToast(`JSON caricato in ${keyInput.value || 'modulo'}`, 'success');
         };
         reader.onerror = () => showToast('Impossibile leggere il file JSON', 'error');
         reader.readAsText(file);
@@ -670,192 +676,73 @@
 
       card.querySelector('.module-validate').addEventListener('click', () => {
         try {
-          JSON.parse(area.value);
+          JSON.parse(contentArea.value);
           showToast('JSON valido', 'success');
         } catch (error) {
-          showToast(JSON non valido: , 'error');
+          showToast(`JSON non valido: ${error.message}`, 'error');
         }
       });
 
       card.querySelector('.module-duplicate').addEventListener('click', () => {
-        const clone = {
-          module_key: ${keyInput.value || 'modulo'}-copy,
-          order_index: orderInput.value,
+        appendModuleCard({
+          module_key: `${keyInput.value || 'modulo'}-copy`,
+          order_index: orderInput.value === '' ? null : Number(orderInput.value),
           content: (() => {
-            try { return JSON.parse(area.value); }
-            catch { return area.value; }
+            try {
+              return JSON.parse(contentArea.value);
+            } catch {
+              return contentArea.value;
+            }
           })()
-        };
-        appendModuleCard(clone);
+        });
         showToast('Modulo duplicato', 'info');
+        setDirty(true);
       });
 
       card.querySelector('.module-remove').addEventListener('click', () => {
         card.remove();
-        updateModulesEmptyState();
+        if (!modulesContainer.querySelector('.module-card')) {
+          renderModulesEmptyState();
+        }
         setDirty(true);
       });
 
       return card;
     };
 
-    const appendModuleCard = (module) => {
-      if (!modulesContainer.querySelector('.module-card')) modulesContainer.innerHTML = '';
-      modulesContainer.appendChild(createModuleCard(module));
-    };
+    const collectModules = () => {
+      const cards = modulesContainer.querySelectorAll('.module-card');
+      if (!cards.length) return [];
+      const modules = [];
+      for (const card of cards) {
+        const key = card.querySelector('.module-key').value.trim();
+        const orderValue = card.querySelector('.module-order').value.trim();
+        const contentText = card.querySelector('.module-content').value.trim();
 
-    const updateAuthUI = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      currentUser = session?.user ?? null;
-      authCard.classList.toggle('hidden', !!currentUser);
-      authLogged.classList.toggle('hidden', !currentUser);
-      appGrid.classList.toggle('hidden', !currentUser);
-      if (currentUser) {
-        authUserBadge.textContent = Connesso come ;
-        loadReports();
-      } else {
-        clearEditor();
-        reportsListEl.innerHTML = '<div class="list-empty">Effettua l\'accesso per visualizzare i report.</div>';
-      }
-    };
+        if (!key) {
+          showToast('Ogni modulo deve avere una chiave', 'error');
+          return null;
+        }
+        if (!contentText) {
+          showToast(`Modulo ${key}: contenuto mancante`, 'error');
+          return null;
+        }
 
-    const login = async () => {
-      const email = emailEl.value.trim();
-      const password = passwordEl.value.trim();
-      if (!email || !password) {
-        showToast('Email e password obbligatorie', 'error');
-        return;
-      }
-      loginBtn.disabled = true;
-      try {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        showToast('Accesso eseguito', 'success');
-      } catch (error) {
-        showToast(error.message, 'error');
-      } finally {
-        loginBtn.disabled = false;
-        updateAuthUI();
-      }
-    };
+        let content;
+        try {
+          content = JSON.parse(contentText);
+        } catch (error) {
+          showToast(`Modulo ${key}: JSON non valido (${error.message})`, 'error');
+          return null;
+        }
 
-    const logout = async () => {
-      await supabase.auth.signOut();
-      showToast('Disconnesso', 'info');
-      updateAuthUI();
-    };
-
-    const loadReports = async () => {
-      if (!currentUser) return;
-      const { data, error } = await supabase
-        .from('reports')
-        .select('id, slug, title, status, chart_path, notes, published_at, updated_at, report_modules(count)')
-        .order('updated_at', { ascending: false });
-      if (error) {
-        console.error(error);
-        showToast('Errore nel caricamento report', 'error');
-        return;
-      }
-      reports = data.map(item => ({
-        id: item.id,
-        slug: item.slug,
-        title: item.title,
-        status: item.status,
-        chart_path: item.chart_path,
-        notes: item.notes,
-        published_at: item.published_at,
-        updated_at: item.updated_at,
-        modules_count: item.report_modules?.[0]?.count ?? 0
-      }));
-      filteredReports = reports;
-      renderReportsList();
-    };
-
-    const renderReportsList = () => {
-      reportsListEl.innerHTML = '';
-      if (!filteredReports.length) {
-        reportsListEl.innerHTML = '<div class="list-empty">Nessun report trovato</div>';
-        return;
-      }
-      filteredReports.forEach(report => {
-        const card = document.createElement('article');
-        card.className = 'report-card';
-        if (activeReport && activeReport.id === report.id) card.classList.add('active');
-        const statusClass =
-          report.status === 'active' ? 'status-active'
-            : report.status === 'archived' ? 'status-archived'
-              : 'status-draft';
-        card.innerHTML = 
-          <div style="display:flex; justify-content:space-between; align-items:center; gap:0.75rem;">
-            <strong></strong>
-            <span class="status-pill "></span>
-          </div>
-          <div class="report-meta">
-            <span>slug: <code></code></span>
-            <span>moduli: </span>
-            <span></span>
-            <span></span>
-          </div>
-        ;
-        card.addEventListener('click', async () => {
-          if (isDirty && !confirm('Ci sono modifiche non salvate. Procedere comunque?')) return;
-          selectReport(report.id);
+        modules.push({
+          module_key: key,
+          order_index: orderValue === '' ? null : Number(orderValue),
+          content
         });
-        reportsListEl.appendChild(card);
-      });
-    };
-
-    const selectReport = async (id) => {
-      const { data: report, error: reportError } = await supabase
-        .from('reports')
-        .select('*')
-        .eq('id', id)
-        .single();
-      if (reportError) {
-        console.error(reportError);
-        showToast('Errore nel recupero report', 'error');
-        return;
       }
-      const { data: modules, error: modulesError } = await supabase
-        .from('report_modules')
-        .select('id, module_key, content, order_index')
-        .eq('report_id', id)
-        .order('order_index', { ascending: true, nullsFirst: true });
-      if (modulesError) {
-        console.error(modulesError);
-        showToast('Errore nel recupero moduli', 'error');
-        return;
-      }
-      activeReport = report;
-      reportSlugEl.value = report.slug || '';
-      reportTitleEl.value = report.title || '';
-      reportStatusEl.value = report.status || 'draft';
-      reportNotesEl.value = report.notes || '';
-      reportPublishedAtEl.value = formatDateTimeLocal(report.published_at);
-      chartPathEl.value = report.chart_path || '';
-      updateChartPreview(report.chart_path);
-      modulesContainer.innerHTML = '';
-      if (modules.length) {
-        modules.forEach(module => appendModuleCard(module));
-      } else {
-        clearModules();
-      }
-      resetDirty();
-      renderReportsList();
-    };
-
-    const updateChartPreview = (path) => {
-      if (!path) {
-        chartPreviewEl.style.display = 'none';
-        openChartBtn.setAttribute('aria-disabled', 'true');
-        openChartBtn.href = '#';
-        return;
-      }
-      const { data } = supabase.storage.from(REPORTS_BUCKET).getPublicUrl(path);
-      chartPreviewEl.src = data.publicUrl;
-      chartPreviewEl.style.display = 'block';
-      openChartBtn.href = data.publicUrl;
-      openChartBtn.setAttribute('aria-disabled', 'false');
+      return modules;
     };
 
     const clearEditor = () => {
@@ -866,13 +753,149 @@
       reportPublishedAtEl.value = '';
       reportNotesEl.value = '';
       chartPathEl.value = '';
-      chartPreviewEl.style.display = 'none';
       chartFileEl.value = '';
-      openChartBtn.href = '#';
+      chartPreviewEl.style.display = 'none';
+      chartPreviewEl.src = '';
+      openChartBtn.disabled = true;
       openChartBtn.setAttribute('aria-disabled', 'true');
-      clearModules();
-      editorReportIdEl.textContent = 'Nuovo report';
+      currentChartSignedUrl = null;
+      renderModulesEmptyState();
       resetDirty();
+    };
+
+    const renderReportsList = () => {
+      reportsListEl.innerHTML = '';
+      if (!filteredReports.length) {
+        reportsListEl.innerHTML = '<div class="list-empty">Nessun report trovato.</div>';
+        return;
+      }
+      filteredReports.forEach((report) => {
+        const card = document.createElement('article');
+        card.className = 'report-card';
+        if (activeReport && activeReport.id === report.id) {
+          card.classList.add('active');
+        }
+        card.innerHTML = `
+          <div class="report-card-header">
+            <strong>${report.title || 'Senza titolo'}</strong>
+            <span class="status-pill ${statusClasses[report.status] || ''}">${statusLabels[report.status] || report.status}</span>
+          </div>
+          <div class="report-meta">
+            <span>slug: <code>${report.slug}</code></span>
+            <span>moduli: ${report.modules_count}</span>
+            <span>pubblicato: ${formatDateTimeHuman(report.published_at)}</span>
+            <span>aggiornato: ${formatDateTimeHuman(report.updated_at)}</span>
+          </div>
+        `;
+        card.addEventListener('click', async () => {
+          if (isDirty && !confirm('Ci sono modifiche non salvate. Procedere comunque?')) return;
+          await selectReport(report.id);
+        });
+        reportsListEl.appendChild(card);
+      });
+    };
+
+    const loadReports = async () => {
+      if (!currentUser) return;
+      const { data, error } = await supabase
+        .from('reports')
+        .select('id, slug, title, status, chart_path, notes, published_at, updated_at, report_modules(count)')
+        .order('updated_at', { ascending: false });
+
+      if (error) {
+        console.error(error);
+        showToast('Errore nel caricamento dei report', 'error');
+        return;
+      }
+
+      reports = data.map((row) => ({
+        id: row.id,
+        slug: row.slug,
+        title: row.title,
+        status: row.status,
+        chart_path: row.chart_path,
+        notes: row.notes,
+        published_at: row.published_at,
+        updated_at: row.updated_at,
+        modules_count: row.report_modules?.[0]?.count ?? 0
+      }));
+
+      filteredReports = reports;
+      renderReportsList();
+    };
+
+    const updateChartPreview = async (path) => {
+      currentChartSignedUrl = null;
+      if (!path) {
+        chartPreviewEl.style.display = 'none';
+        chartPreviewEl.src = '';
+        openChartBtn.disabled = true;
+        openChartBtn.setAttribute('aria-disabled', 'true');
+        return;
+      }
+      const { data, error } = await supabase.storage
+        .from(REPORTS_BUCKET)
+        .createSignedUrl(path, 60 * 60);
+      if (error) {
+        console.error(error);
+        showToast('Impossibile generare il link del chart', 'error');
+        chartPreviewEl.style.display = 'none';
+        chartPreviewEl.src = '';
+        openChartBtn.disabled = true;
+        openChartBtn.setAttribute('aria-disabled', 'true');
+        return;
+      }
+      currentChartSignedUrl = data.signedUrl;
+      chartPreviewEl.src = data.signedUrl;
+      chartPreviewEl.style.display = 'block';
+      openChartBtn.disabled = false;
+      openChartBtn.removeAttribute('aria-disabled');
+    };
+
+    const selectReport = async (id) => {
+      const { data: report, error: reportError } = await supabase
+        .from('reports')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (reportError) {
+        console.error(reportError);
+        showToast('Errore nel recupero del report', 'error');
+        return;
+      }
+
+      const { data: modules, error: modulesError } = await supabase
+        .from('report_modules')
+        .select('id, module_key, content, order_index')
+        .eq('report_id', id)
+        .order('order_index', { ascending: true, nullsFirst: true });
+
+      if (modulesError) {
+        console.error(modulesError);
+        showToast('Errore nel recupero dei moduli', 'error');
+        return;
+      }
+
+      activeReport = report;
+      reportSlugEl.value = report.slug || '';
+      reportTitleEl.value = report.title || '';
+      reportStatusEl.value = report.status || 'draft';
+      reportPublishedAtEl.value = formatDateTimeLocal(report.published_at);
+      reportNotesEl.value = report.notes || '';
+      chartPathEl.value = report.chart_path || '';
+      chartFileEl.value = '';
+      await updateChartPreview(report.chart_path);
+
+      modulesContainer.innerHTML = '';
+      if (modules.length) {
+        modules.forEach((module) => appendModuleCard(module));
+      } else {
+        renderModulesEmptyState();
+      }
+
+      resetDirty();
+      renderReportsList();
     };
 
     const uploadChart = async () => {
@@ -886,20 +909,24 @@
         showToast('Imposta lo slug prima di caricare il chart', 'error');
         return;
       }
-      const path = ${slug}/-;
+
+      const sanitizedName = file.name.replace(/[^a-zA-Z0-9._-]/g, '-');
+      const path = `${slug}/${Date.now()}-${sanitizedName}`;
+
       uploadChartBtn.disabled = true;
       try {
-        const { data, error } = await supabase.storage
+        const { error } = await supabase.storage
           .from(REPORTS_BUCKET)
           .upload(path, file, { upsert: true, cacheControl: '3600' });
         if (error) throw error;
-        chartPathEl.value = data.path;
-        updateChartPreview(data.path);
+
+        chartPathEl.value = path;
+        await updateChartPreview(path);
         setDirty(true);
         showToast('Chart caricato con successo', 'success');
       } catch (error) {
         console.error(error);
-        showToast(Upload chart fallito: , 'error');
+        showToast(`Upload chart fallito: ${error.message}`, 'error');
       } finally {
         uploadChartBtn.disabled = false;
       }
@@ -922,25 +949,34 @@
         status: publish ? 'active' : reportStatusEl.value,
         chart_path: chartPathEl.value.trim() || null,
         notes: reportNotesEl.value.trim() || null,
-        published_at: publish ? new Date().toISOString() :
-          (reportPublishedAtEl.value ? new Date(reportPublishedAtEl.value).toISOString() : null)
+        published_at: publish
+          ? new Date().toISOString()
+          : reportPublishedAtEl.value
+            ? new Date(reportPublishedAtEl.value).toISOString()
+            : null
       };
 
       const isNew = !activeReport;
       const { data: savedReport, error: saveError } = isNew
         ? await supabase.from('reports').insert(reportPayload).select().single()
         : await supabase.from('reports').update(reportPayload).eq('id', activeReport.id).select().single();
+
       if (saveError) {
         console.error(saveError);
-        showToast('Errore salvataggio report', 'error');
+        showToast('Errore durante il salvataggio del report', 'error');
         return;
       }
 
       const reportId = savedReport.id;
-      const { error: deleteError } = await supabase.from('report_modules').delete().eq('report_id', reportId);
+
+      const { error: deleteError } = await supabase
+        .from('report_modules')
+        .delete()
+        .eq('report_id', reportId);
+
       if (deleteError) {
         console.error(deleteError);
-        showToast('Errore nel sovrascrivere i moduli', 'error');
+        showToast('Errore nella sostituzione dei moduli', 'error');
         return;
       }
 
@@ -954,7 +990,7 @@
         const { error: insertError } = await supabase.from('report_modules').insert(inserts);
         if (insertError) {
           console.error(insertError);
-          showToast('Errore durante l’inserimento dei moduli', 'error');
+          showToast('Errore durante l\'inserimento dei moduli', 'error');
           return;
         }
       }
@@ -962,18 +998,23 @@
       showToast(publish ? 'Report pubblicato' : 'Report salvato', 'success');
       await loadReports();
       await selectReport(reportId);
-      resetDirty();
     };
 
     const deleteReport = async () => {
       if (!activeReport) return;
       if (!confirm('Eliminare definitivamente il report?')) return;
-      const { error } = await supabase.from('reports').delete().eq('id', activeReport.id);
+
+      const { error } = await supabase
+        .from('reports')
+        .delete()
+        .eq('id', activeReport.id);
+
       if (error) {
         console.error(error);
-        showToast('Errore eliminazione', 'error');
+        showToast('Errore durante l\'eliminazione', 'error');
         return;
       }
+
       showToast('Report eliminato', 'success');
       await loadReports();
       clearEditor();
@@ -981,37 +1022,94 @@
 
     const duplicateReport = () => {
       if (!activeReport) return;
-      reportSlugEl.value = ${activeReport.slug}-copy;
-      reportTitleEl.value = ${activeReport.title} (copia);
+      reportSlugEl.value = `${activeReport.slug}-copy`;
+      reportTitleEl.value = `${(activeReport.title || '').trim()} (copia)`.trim();
       reportStatusEl.value = 'draft';
       reportPublishedAtEl.value = '';
-      reportNotesEl.value = activeReport.notes || '';
       chartPathEl.value = '';
-      chartPreviewEl.style.display = 'none';
       chartFileEl.value = '';
+      chartPreviewEl.style.display = 'none';
+      chartPreviewEl.src = '';
+      openChartBtn.disabled = true;
+      openChartBtn.setAttribute('aria-disabled', 'true');
+      currentChartSignedUrl = null;
       activeReport = null;
       setDirty(true);
       showToast('Replica pronta. Ricorda di salvare con il nuovo slug.', 'info');
     };
 
+    const updateAuthUI = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      currentUser = session?.user ?? null;
+
+      authCard.classList.toggle('hidden', !!currentUser);
+      authLogged.classList.toggle('hidden', !currentUser);
+      appGrid.classList.toggle('hidden', !currentUser);
+
+      if (currentUser) {
+        authUserBadge.textContent = `Connesso come ${currentUser.email}`;
+        await loadReports();
+      } else {
+        authUserBadge.textContent = '';
+        reportsListEl.innerHTML = '<div class="list-empty">Effettua l\'accesso per visualizzare i report.</div>';
+        clearEditor();
+      }
+
+      updateEditorBadge();
+    };
+
+    const login = async () => {
+      const email = emailEl.value.trim();
+      const password = passwordEl.value;
+      if (!email || !password) {
+        showToast('Email e password obbligatorie', 'error');
+        return;
+      }
+      loginBtn.disabled = true;
+      try {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        showToast('Accesso eseguito', 'success');
+      } catch (error) {
+        console.error(error);
+        showToast(error.message, 'error');
+      } finally {
+        loginBtn.disabled = false;
+        await updateAuthUI();
+      }
+    };
+
+    const logout = async () => {
+      await supabase.auth.signOut();
+      showToast('Disconnesso', 'info');
+      await updateAuthUI();
+    };
+
     loginBtn.addEventListener('click', login);
+    passwordEl.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        login();
+      }
+    });
     logoutBtn.addEventListener('click', logout);
     refreshSessionBtn.addEventListener('click', updateAuthUI);
-    passwordEl.addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
 
     refreshBtn.addEventListener('click', loadReports);
     newReportBtn.addEventListener('click', () => {
-      if (isDirty && !confirm('Ci sono modifiche non salvate. Procedere?')) return;
+      if (isDirty && !confirm('Ci sono modifiche non salvate. Procedere comunque?')) return;
       clearEditor();
+      setDirty(false);
     });
 
     searchEl.addEventListener('input', () => {
       const query = searchEl.value.trim().toLowerCase();
-      filteredReports = reports.filter(r =>
-        r.slug.toLowerCase().includes(query) ||
-        (r.title && r.title.toLowerCase().includes(query)) ||
-        r.status.toLowerCase().includes(query)
-      );
+      filteredReports = reports.filter((report) => {
+        return (
+          report.slug.toLowerCase().includes(query) ||
+          (report.title && report.title.toLowerCase().includes(query)) ||
+          report.status.toLowerCase().includes(query)
+        );
+      });
       renderReportsList();
     });
 
@@ -1020,18 +1118,27 @@
       setDirty(true);
     });
 
+    modulesContainer.addEventListener('input', () => setDirty(true));
+
+    chartPathEl.addEventListener('input', () => setDirty(true));
+    chartPathEl.addEventListener('blur', async () => {
+      const path = chartPathEl.value.trim();
+      await updateChartPreview(path);
+    });
+
     uploadChartBtn.addEventListener('click', uploadChart);
-    openChartBtn.addEventListener('click', (event) => {
-      if (openChartBtn.getAttribute('aria-disabled') === 'true') {
-        event.preventDefault();
-        showToast('Carica o imposta il path del chart per aprirlo', 'info');
+    openChartBtn.addEventListener('click', () => {
+      if (openChartBtn.disabled || !currentChartSignedUrl) {
+        showToast('Carica o imposta un chart per aprirlo', 'info');
+        return;
       }
+      window.open(currentChartSignedUrl, '_blank', 'noopener');
     });
 
     saveDraftBtn.addEventListener('click', () => saveReport({ publish: false }));
     publishBtn.addEventListener('click', () => saveReport({ publish: true }));
-    deleteBtn.addEventListener('click', deleteReport);
     duplicateBtn.addEventListener('click', duplicateReport);
+    deleteBtn.addEventListener('click', deleteReport);
 
     document.addEventListener('keydown', (event) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 's') {
@@ -1040,10 +1147,8 @@
       }
     });
 
-    modulesContainer.addEventListener('input', () => setDirty(true));
-
     const init = async () => {
-      clearEditor();
+      renderModulesEmptyState();
       await updateAuthUI();
       supabase.auth.onAuthStateChange(() => updateAuthUI());
     };
