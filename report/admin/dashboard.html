@@ -567,15 +567,15 @@
         label: 'Swing Master 5.0',
         description: 'Template istituzionale Swing Master 5.0',
         modules: [
-          { key: 'header', order: 10, template: {} },
-          { key: 'f1', order: 20, template: {} },
-          { key: 'f2', order: 30, template: {} },
-          { key: 'f3o', order: 35, template: {} },
-          { key: 'f3', order: 40, template: {} },
-          { key: 'f4', order: 50, template: {} },
-          { key: 'f5', order: 60, template: {} },
-          { key: 'f5o', order: 65, template: {} },
-          { key: 'f5lt', order: 70, template: {} }
+          { key: 'header', order: 10, template: {}, required: true },
+          { key: 'f1', order: 20, template: {}, required: false },
+          { key: 'f2', order: 30, template: {}, required: false },
+          { key: 'f3o', order: 35, template: {}, required: false },
+          { key: 'f3', order: 40, template: {}, required: false },
+          { key: 'f4', order: 50, template: {}, required: false },
+          { key: 'f5', order: 60, template: {}, required: false },
+          { key: 'f5o', order: 65, template: {}, required: false },
+          { key: 'f5lt', order: 70, template: {}, required: false }
         ]
       },
       daily_market_intel_3_1: {
@@ -893,15 +893,30 @@
       return modules;
     };
 
-    const validateModulesForType = (modules, type) => {
-      const requiredKeys = REPORT_TEMPLATES[type]?.modules?.map((module) => module.key) ?? [];
-      if (!requiredKeys.length) return true;
+    const validateModulesForType = (modules, type, options = {}) => {
+      const template = REPORT_TEMPLATES[type];
+      if (!template) return true;
 
-      const missing = requiredKeys.filter((key) => !modules.some((module) => module.module_key === key));
-      if (missing.length) {
-        showToast(`Mancano i moduli obbligatori: ${missing.join(', ')}`, 'error');
-        return false;
+      const requiredKeys = (template.modules || [])
+        .filter((module) => module.required)
+        .map((module) => module.key);
+
+      if (requiredKeys.length) {
+        const missing = requiredKeys.filter((key) => !modules.some((module) => module.module_key === key));
+        if (missing.length) {
+          showToast(`Mancano i moduli obbligatori: ${missing.join(', ')}`, 'error');
+          return false;
+        }
       }
+
+      if (options.publish) {
+        const hasHeader = modules.some((module) => module.module_key === 'header');
+        if (!hasHeader) {
+          showToast('Per pubblicare il report è necessario compilare almeno il modulo header.', 'error');
+          return false;
+        }
+      }
+
       return true;
     };
 
@@ -1178,7 +1193,7 @@
 
       const modules = collectModules();
       if (modules === null) return;
-      if (!validateModulesForType(modules, reportTypeEl.value)) return;
+      if (!validateModulesForType(modules, reportTypeEl.value, { publish })) return;
 
       const reportPayload = {
         slug,
