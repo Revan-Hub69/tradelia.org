@@ -3,8 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Report Admin - Tradelia</title>
+  <title>Tradelia · Report Admin (Supabase)</title>
   <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0f172a;
+      --panel: rgba(15, 23, 42, 0.85);
+      --panel-border: rgba(148, 163, 184, 0.2);
+      --ink: #f8fafc;
+      --ink-soft: #cbd5f5;
+      --accent: #60a5fa;
+      --accent-strong: #3b82f6;
+      --danger: #f87171;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -12,1599 +25,1030 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
-      color: #e4e4e7;
       min-height: 100vh;
-      padding: 2rem;
+      background: radial-gradient(circle at top, rgba(37, 99, 235, 0.12), transparent 60%), #020617;
+      color: var(--ink);
+      padding: 2.5rem clamp(1.5rem, 4vw, 3rem);
     }
 
-    .container {
-      max-width: 1600px;
-      margin: 0 auto;
-      background: rgba(30, 30, 46, 0.8);
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent-strong); }
 
     h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-      color: #f4f4f5;
-      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.4rem;
+      background: linear-gradient(135deg, #60a5fa, #a855f7);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
     }
 
-    .subtitle {
-      color: #a1a1aa;
+    p.subtitle {
+      color: var(--ink-soft);
       margin-bottom: 2rem;
-      font-size: 0.95rem;
+      max-width: 720px;
+      line-height: 1.55;
     }
 
-    .controls {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .search-box {
-      flex: 1;
-      min-width: 250px;
-      padding: 0.75rem 1rem;
-      background: rgba(39, 39, 42, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      color: #f4f4f5;
-      font-size: 1rem;
-    }
-
-    .search-box:focus {
-      outline: none;
-      border-color: #60a5fa;
-      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
-    }
-
-    .btn {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: inline-block;
-      text-decoration: none;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(96, 165, 250, 0.4);
-    }
-
-    .btn-secondary {
-      background: rgba(39, 39, 42, 0.8);
-      color: #e4e4e7;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(39, 39, 42, 1);
-    }
-
-    .btn-small {
-      padding: 0.5rem 1rem;
-      font-size: 0.85rem;
-    }
-
-    /* Views */
-    .view {
-      display: none;
-    }
-
-    .view.active {
-      display: block;
-    }
-
-    /* Reports List View */
-    .reports-grid {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
+      gap: clamp(1.5rem, 3vw, 2rem);
     }
 
-    .report-card {
-      background: rgba(39, 39, 42, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 1.5rem;
-      transition: all 0.3s;
-      cursor: pointer;
+    @media (min-width: 1060px) {
+      .grid {
+        grid-template-columns: minmax(340px, 390px) minmax(0, 1fr);
+        align-items: start;
+      }
     }
 
-    .report-card:hover {
-      border-color: #60a5fa;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(96, 165, 250, 0.2);
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 18px;
+      padding: clamp(1.25rem, 2vw, 1.75rem);
+      box-shadow: 0 24px 80px rgba(8, 47, 73, 0.28);
+      backdrop-filter: blur(18px);
     }
 
-    .report-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: start;
+    .panel h2 {
+      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
       margin-bottom: 1rem;
     }
 
-    .report-id {
-      font-size: 1.1rem;
+    .panel-section {
+      margin-top: clamp(1rem, 3vw, 1.5rem);
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel-section h3 {
+      font-size: 1rem;
       font-weight: 600;
-      color: #f4f4f5;
-      word-break: break-word;
+      color: var(--ink);
     }
 
-    .report-info {
-      font-size: 0.85rem;
-      color: #a1a1aa;
-      margin-bottom: 1rem;
-    }
-
-    .report-actions {
-      display: flex;
-      gap: 0.5rem;
+    .auth-card {
+      display: grid;
+      gap: 0.75rem;
       margin-top: 1rem;
     }
 
-    /* Report Detail View */
-    .report-detail {
-      margin-top: 2rem;
+    .field {
+      display: grid;
+      gap: 0.35rem;
     }
 
-    .report-detail-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    label {
+      font-size: 0.85rem;
+      color: var(--ink-soft);
     }
 
-    .back-btn {
-      background: rgba(39, 39, 42, 0.8);
-      color: #e4e4e7;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    input[type="datetime-local"],
+    textarea,
+    select {
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      color: var(--ink);
+      font: inherit;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: rgba(96, 165, 250, 0.75);
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+    }
+
+    .btn {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 0.5rem;
+      border-radius: 12px;
+      padding: 0.7rem 1.2rem;
+      border: 1px solid transparent;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.15s ease, border-color 0.2s ease;
     }
 
-    .back-btn:hover {
-      background: rgba(39, 39, 42, 1);
+    .btn-primary {
+      background: linear-gradient(135deg, #60a5fa, #a855f7);
+      color: #0b1120;
+      box-shadow: 0 18px 40px rgba(96, 165, 250, 0.35);
     }
 
-    .modules-grid {
+    .btn-outline {
+      background: rgba(15, 23, 42, 0.75);
+      border-color: rgba(96, 165, 250, 0.5);
+      color: var(--ink);
+    }
+
+    .btn-soft {
+      background: rgba(15, 23, 42, 0.6);
+      border-color: rgba(148, 163, 184, 0.3);
+      color: var(--ink-soft);
+    }
+
+    .btn-danger {
+      background: rgba(248, 113, 113, 0.18);
+      border-color: rgba(248, 113, 113, 0.35);
+      color: #fecaca;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.35);
+    }
+
+    .btn:disabled,
+    .btn[aria-disabled="true"] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .reports-list {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
+      gap: 0.75rem;
+      max-height: min(70vh, 560px);
+      overflow-y: auto;
+      padding-right: 0.35rem;
+    }
+
+    .report-card {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 14px;
+      padding: 1rem;
+      display: grid;
+      gap: 0.45rem;
+      transition: border-color 0.2s ease, transform 0.1s ease;
+      cursor: pointer;
+    }
+
+    .report-card.active {
+      border-color: rgba(96, 165, 250, 0.75);
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.32);
+      transform: translateY(-1px);
+    }
+
+    .report-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .status-draft { background: rgba(249, 115, 22, 0.2); color: #fb923c; }
+    .status-active { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+    .status-archived { background: rgba(148, 163, 184, 0.25); color: #cbd5f5; }
+
+    .editor-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .chart-wrapper {
+      border: 1px dashed rgba(96, 165, 250, 0.35);
+      border-radius: 14px;
+      padding: 1rem;
+      display: grid;
+      gap: 0.75rem;
+      background: rgba(15, 23, 42, 0.5);
+    }
+
+    .chart-preview {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      box-shadow: 0 16px 30px rgba(8, 47, 73, 0.4);
+      display: none;
+    }
+
+    .modules-container {
+      display: grid;
+      gap: 1rem;
     }
 
     .module-card {
-      background: rgba(39, 39, 42, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 1.5rem;
+      border: 1px solid rgba(96, 165, 250, 0.22);
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.55);
+      padding: 1rem;
+      display: grid;
+      gap: 0.75rem;
     }
 
     .module-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
     }
 
-    .module-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #f4f4f5;
-    }
-
-    .module-status {
-      padding: 0.25rem 0.75rem;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 500;
-    }
-
-    .module-status.has-json {
-      background: rgba(34, 197, 94, 0.2);
-      color: #86efac;
-      border: 1px solid rgba(34, 197, 94, 0.3);
-    }
-
-    .module-status.has-screenshot {
-      background: rgba(34, 197, 94, 0.2);
-      color: #86efac;
-      border: 1px solid rgba(34, 197, 94, 0.3);
-    }
-
-    .module-status.missing {
-      background: rgba(239, 68, 68, 0.2);
-      color: #fca5a5;
-      border: 1px solid rgba(239, 68, 68, 0.3);
+    .module-header input {
+      max-width: 200px;
     }
 
     .module-actions {
       display: flex;
       gap: 0.5rem;
-      margin-top: 1rem;
       flex-wrap: wrap;
     }
 
-    /* Modals */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.8);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
-
-    .modal.show {
-      display: flex;
-    }
-
-    .modal-content {
-      background: rgba(30, 30, 46, 0.95);
-      border-radius: 16px;
-      padding: 2rem;
-      max-width: 700px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .modal-title {
-      font-size: 1.5rem;
-      color: #f4f4f5;
-    }
-
-    .close-btn {
-      background: none;
-      border: none;
-      color: #a1a1aa;
-      font-size: 1.5rem;
+    .module-actions button {
+      padding: 0.45rem 0.75rem;
+      border-radius: 10px;
+      border: 1px solid rgba(96, 165, 250, 0.25);
+      background: rgba(15, 23, 42, 0.65);
+      color: var(--ink);
+      font-size: 0.8rem;
       cursor: pointer;
-      padding: 0.5rem;
-      line-height: 1;
     }
 
-    .close-btn:hover {
-      color: #f4f4f5;
+    .module-actions button:hover {
+      border-color: rgba(96, 165, 250, 0.5);
     }
 
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-
-    .form-label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: #a1a1aa;
+    .module-empty {
+      border: 1px dashed rgba(148, 163, 184, 0.35);
+      border-radius: 14px;
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--ink-soft);
       font-size: 0.9rem;
     }
 
-    .form-input {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      background: rgba(39, 39, 42, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      color: #f4f4f5;
-      font-size: 1rem;
-    }
-
-    .form-input:focus {
-      outline: none;
-      border-color: #60a5fa;
-      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
-    }
-
-    .upload-area {
-      border: 2px dashed rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-      padding: 3rem 2rem;
-      text-align: center;
-      background: rgba(39, 39, 42, 0.4);
-      transition: all 0.3s;
-      cursor: pointer;
-      margin-bottom: 1.5rem;
-    }
-
-    .upload-area:hover {
-      border-color: #60a5fa;
-      background: rgba(39, 39, 42, 0.6);
-    }
-
-    .upload-area.dragover {
-      border-color: #60a5fa;
-      background: rgba(96, 165, 250, 0.1);
-      transform: scale(1.02);
-    }
-
-    .upload-icon {
-      font-size: 3rem;
+    .toolbar {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
       margin-bottom: 1rem;
-      opacity: 0.6;
     }
 
-    .upload-text {
-      color: #a1a1aa;
-      margin-bottom: 0.5rem;
-      font-size: 1rem;
-    }
-
-    .upload-hint {
-      color: #71717a;
-      font-size: 0.85rem;
-    }
-
-    input[type="file"] {
-      display: none;
-    }
-
-    .preview-container {
+    .danger-zone {
       margin-top: 1.5rem;
-      display: none;
-    }
-
-    .preview-container.show {
-      display: block;
-    }
-
-    .preview-image {
-      max-width: 100%;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .status {
-      margin-top: 1rem;
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      border-radius: 14px;
+      background: rgba(107, 33, 33, 0.25);
       padding: 1rem;
-      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .toast {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(148,163,184,0.2);
       display: none;
+      min-width: 280px;
+      z-index: 100;
     }
 
-    .status.show {
-      display: block;
+    .toast.toast-success { background: rgba(34, 197, 94, 0.15); border-color: rgba(34, 197, 94, 0.4); }
+    .toast.toast-error { background: rgba(248, 113, 113, 0.18); border-color: rgba(248, 113, 113, 0.45); }
+    .toast.toast-info { background: rgba(59, 130, 246, 0.18); border-color: rgba(59, 130, 246, 0.4); }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(96, 165, 250, 0.25);
+      color: var(--ink-soft);
+      font-size: 0.75rem;
     }
 
-    .status.success {
-      background: rgba(34, 197, 94, 0.2);
-      border: 1px solid rgba(34, 197, 94, 0.3);
-      color: #86efac;
-    }
-
-    .status.error {
-      background: rgba(239, 68, 68, 0.2);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #fca5a5;
-    }
-
-    .status.info {
-      background: rgba(96, 165, 250, 0.2);
-      border: 1px solid rgba(96, 165, 250, 0.3);
-      color: #93c5fd;
-    }
-
-    .loading {
+    .list-empty {
+      border: 1px dashed rgba(148,163,184,0.35);
+      border-radius: 14px;
+      padding: 1.5rem;
       text-align: center;
-      padding: 2rem;
-      color: #a1a1aa;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
     }
 
-    .empty-state {
-      text-align: center;
-      padding: 3rem;
-      color: #a1a1aa;
-    }
-
-    .empty-state-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      opacity: 0.5;
-    }
-
-    .json-preview {
-      background: rgba(39, 39, 42, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-top: 1rem;
-      max-height: 200px;
-      overflow-y: auto;
-      font-family: 'Courier New', monospace;
-      font-size: 0.85rem;
-      color: #a1a1aa;
-    }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>📊 Dashboard Report Admin</h1>
-    <p class="subtitle">Gestisci report, moduli, JSON e screenshot</p>
+  <div class="toast" id="toast"></div>
 
-    <div class="controls">
-      <input 
-        type="text" 
-        id="searchBox" 
-        class="search-box" 
-        placeholder="🔍 Cerca report..."
-        autocomplete="off"
-      />
-      <button class="btn btn-primary" id="createReportBtn">➕ Crea Nuovo Report</button>
-      <button class="btn btn-secondary" id="refreshBtn">🔄 Aggiorna</button>
-      <button class="btn btn-secondary" id="regenerateManifestBtn">📋 Rigenera Manifest</button>
+  <header>
+    <h1>Tradelia · Report Admin</h1>
+    <p class="subtitle">
+      Gestione centralizzata dei report istituzionali. Carica chart su Supabase Storage,
+      edita i JSON dei moduli (manifest, header, F1B, …) e pubblica direttamente sul sito.
+    </p>
+  </header>
+
+  <section class="panel" id="auth-panel">
+    <h2>Accesso amministratore</h2>
+    <p>Accedi con le credenziali Supabase (Auth – email/password).</p>
+    <div class="auth-card" id="auth-card">
+      <div class="field">
+        <label for="auth-email">Email</label>
+        <input type="email" id="auth-email" autocomplete="email" placeholder="admin@example.com">
+      </div>
+      <div class="field">
+        <label for="auth-password">Password</label>
+        <input type="password" id="auth-password" autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <button class="btn btn-primary" id="auth-login-btn">Accedi</button>
     </div>
-
-    <!-- Reports List View -->
-    <div class="view active" id="reportsListView">
-      <div id="reportsContainer">
-        <div class="loading">Caricamento report...</div>
+    <div class="auth-card hidden" id="auth-logged">
+      <p class="badge" id="auth-user-badge">Connesso come —</p>
+      <div style="display:flex; gap:0.75rem;">
+        <button class="btn btn-outline" id="auth-logout-btn">Disconnetti</button>
+        <button class="btn btn-soft" id="auth-refresh-session">Aggiorna sessione</button>
       </div>
     </div>
+  </section>
 
-    <!-- Report Detail View -->
-    <div class="view" id="reportDetailView">
-      <div class="report-detail">
-        <div class="report-detail-header">
-          <a href="#" class="back-btn" id="backBtn">← Torna alla lista</a>
-          <h2 id="reportDetailTitle">Report Detail</h2>
+  <div class="grid hidden" id="app-grid">
+    <section class="panel">
+      <div class="panel-section">
+        <div class="field">
+          <label for="search">Cerca report</label>
+          <input type="text" id="search" placeholder="Slug, titolo, stato…">
         </div>
-        
-        <!-- Chart Screenshot Section -->
-        <div class="module-card" style="margin-bottom: 2rem;">
-          <div class="module-header">
-            <div class="module-title">📊 Chart Screenshot</div>
-            <div id="chartScreenshotStatus">
-              <span class="module-status missing">❌ Nessuno screenshot</span>
-            </div>
+        <div class="toolbar">
+          <button class="btn btn-soft" id="refresh-btn">Aggiorna</button>
+          <button class="btn btn-outline" id="new-report-btn">Nuovo report</button>
+        </div>
+        <div class="reports-list" id="reports-list">
+          <div class="list-empty">Nessun report disponibile.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-section">
+        <div class="editor-grid">
+          <div class="field">
+            <label for="report-slug">Slug univoco</label>
+            <input type="text" id="report-slug" placeholder="es. 20251107-1630">
           </div>
-          <div class="module-actions">
-            <button class="btn btn-primary btn-small" id="uploadChartScreenshotBtn">
-              📤 Carica Screenshot Chart
-            </button>
-            <button class="btn btn-secondary btn-small" id="viewChartScreenshotBtn" style="display: none;">
-              👁️ Visualizza
-            </button>
+          <div class="field">
+            <label for="report-title">Titolo</label>
+            <input type="text" id="report-title" placeholder="Titolo pubblico del report">
+          </div>
+          <div class="field">
+            <label for="report-status">Stato</label>
+            <select id="report-status">
+              <option value="draft">Bozza</option>
+              <option value="active">Pubblicato</option>
+              <option value="archived">Archiviato</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="report-published-at">Data pubblicazione (facoltativa)</label>
+            <input type="datetime-local" id="report-published-at">
           </div>
         </div>
 
-        <!-- Modules Section -->
-        <h3 style="margin-bottom: 1rem; color: #f4f4f5;">Moduli</h3>
-        <div id="modulesContainer">
-          <div class="loading">Caricamento moduli...</div>
+        <div class="field">
+          <label for="report-notes">Note interne</label>
+          <textarea id="report-notes" placeholder="Note operative, TODO, riferimenti…"></textarea>
+        </div>
+
+        <div class="chart-wrapper">
+          <div class="field">
+            <label for="chart-path">Path chart (bucket storage)</label>
+            <input type="text" id="chart-path" placeholder="es. slug/chart-20251107.png">
+          </div>
+          <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+            <input type="file" id="chart-file" accept="image/png,image/jpeg,image/webp">
+            <button class="btn btn-outline" id="upload-chart-btn">Carica chart</button>
+            <button class="btn btn-soft" id="open-chart-btn" aria-disabled="true">Apri chart</button>
+          </div>
+          <img id="chart-preview" class="chart-preview" alt="Preview chart">
+        </div>
+
+        <div>
+          <div class="toolbar">
+            <span class="badge" id="editor-report-id">Nessun report selezionato</span>
+            <button class="btn btn-soft" id="add-module-btn">Aggiungi modulo</button>
+          </div>
+          <div class="modules-container" id="modules-container">
+            <div class="module-empty">Nessun modulo presente. Aggiungi un modulo per iniziare.</div>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <button class="btn btn-outline" id="save-draft-btn">Salva bozza</button>
+          <button class="btn btn-primary" id="publish-report-btn">Pubblica</button>
+          <button class="btn btn-soft" id="duplicate-report-btn">Duplica</button>
+        </div>
+
+        <div class="danger-zone">
+          <div>
+            <strong>Danger zone</strong>
+            <p style="font-size:0.8rem; color:#fecaca;">Elimina definitivamente il report e tutti i moduli.</p>
+          </div>
+          <button class="btn btn-danger" id="delete-report-btn">Elimina</button>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 
-  <!-- Modal: Create Report -->
-  <div class="modal" id="createReportModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Crea Nuovo Report</h2>
-        <button class="close-btn" id="closeCreateModal">×</button>
+  <template id="module-template">
+    <article class="module-card">
+      <div class="module-header">
+        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+          <input type="text" class="module-key" placeholder="Chiave (es. manifest, header, F1B)">
+          <input type="number" class="module-order" placeholder="Ordine">
+        </div>
+        <div class="module-actions">
+          <button type="button" class="module-import">Carica JSON</button>
+          <button type="button" class="module-validate">Valida</button>
+          <button type="button" class="module-duplicate">Duplica</button>
+          <button type="button" class="module-remove">Rimuovi</button>
+        </div>
       </div>
-      <form id="createReportForm">
-        <div class="form-group">
-          <label class="form-label" for="reportId">Report ID *</label>
-          <input type="text" id="reportId" class="form-input" required pattern="[a-zA-Z0-9_-]+" placeholder="es: 20251110-1630" />
-          <small style="color: #71717a; font-size: 0.85rem;">Solo lettere, numeri, trattini e underscore</small>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="reportType">Tipo Report *</label>
-          <select id="reportType" class="form-input" required>
-            <option value="swing">Swing Master</option>
-          </select>
-        </div>
-        <div style="padding: 1rem; background: rgba(96, 165, 250, 0.1); border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid rgba(96, 165, 250, 0.3);">
-          <strong style="color: #93c5fd;">💡 Nota:</strong>
-          <p style="color: #a1a1aa; font-size: 0.9rem; margin-top: 0.5rem;">
-            Viene creata solo la directory del report. I file JSON (header.json, f1b.json, f2.json, ecc.) devono essere caricati direttamente dall'output del sistema di generazione report, così come sono generati, senza modifiche manuali.
-          </p>
-        </div>
-        <div class="status" id="createStatus"></div>
-        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-          <button type="submit" class="btn btn-primary" style="flex: 1;">Crea Report</button>
-          <button type="button" class="btn btn-secondary" id="cancelCreateBtn">Annulla</button>
-        </div>
-      </form>
-    </div>
-  </div>
+      <textarea class="module-content" placeholder='Incolla il JSON del modulo'></textarea>
+      <input type="file" class="module-file" accept="application/json" hidden>
+    </article>
+  </template>
 
-  <!-- Modal: Upload JSON -->
-  <div class="modal" id="uploadJsonModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title" id="jsonModalTitle">Carica JSON</h2>
-        <button class="close-btn" id="closeJsonModal">×</button>
-      </div>
-      <div id="jsonReportInfo" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(39, 39, 42, 0.6); border-radius: 8px; color: #a1a1aa; font-size: 0.9rem;"></div>
-      <div class="upload-area" id="jsonUploadArea">
-        <div class="upload-icon">📄</div>
-        <div class="upload-text">Trascina il file JSON qui o clicca per selezionare</div>
-        <div class="upload-hint">File JSON per il modulo</div>
-        <input type="file" id="jsonFileInput" accept=".json,application/json" />
-      </div>
-      <div class="json-preview" id="jsonPreview" style="display: none;"></div>
-      <div class="status" id="jsonStatus"></div>
-      <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-        <button class="btn btn-primary" id="uploadJsonBtn" style="flex: 1;">💾 Salva JSON</button>
-        <button class="btn btn-secondary" id="cancelJsonBtn">Annulla</button>
-      </div>
-    </div>
-  </div>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+    import { SUPABASE_URL, SUPABASE_ANON_KEY, REPORTS_BUCKET } from './supabase-config.js';
 
-  <!-- Modal: Upload Chart Screenshot -->
-  <div class="modal" id="uploadChartScreenshotModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title" id="chartScreenshotModalTitle">Carica Screenshot Chart</h2>
-        <button class="close-btn" id="closeChartScreenshotModal">×</button>
-      </div>
-      <div id="chartScreenshotReportInfo" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(39, 39, 42, 0.6); border-radius: 8px; color: #a1a1aa; font-size: 0.9rem;"></div>
-      <div class="upload-area" id="chartScreenshotUploadArea">
-        <div class="upload-icon">📁</div>
-        <div class="upload-text">Trascina l'immagine qui o clicca per selezionare</div>
-        <div class="upload-hint">PNG, JPG, formato consigliato: chart-snapshot.png</div>
-        <div class="upload-hint" style="margin-top: 0.5rem; color: #60a5fa;">
-          💡 Oppure premi <strong>Ctrl+V</strong> per incollare dall'appunti
-        </div>
-        <input type="file" id="chartScreenshotFileInput" accept="image/png,image/jpeg,image/jpg" />
-      </div>
-      <div class="preview-container" id="chartScreenshotPreviewContainer">
-        <img id="chartScreenshotPreviewImage" class="preview-image" alt="Preview" />
-      </div>
-      <div class="status" id="chartScreenshotStatusModal"></div>
-      <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-        <button class="btn btn-primary" id="uploadChartScreenshotBtnModal" style="flex: 1;">💾 Salva Screenshot</button>
-        <button class="btn btn-secondary" id="cancelChartScreenshotBtn">Annulla</button>
-      </div>
-    </div>
-  </div>
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { persistSession: true, storageKey: 'tradelia-report-admin' }
+    });
 
-  <!-- Modal: Upload Screenshot Modulo -->
-  <div class="modal" id="uploadScreenshotModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title" id="screenshotModalTitle">Carica Screenshot</h2>
-        <button class="close-btn" id="closeScreenshotModal">×</button>
-      </div>
-      <div id="screenshotReportInfo" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(39, 39, 42, 0.6); border-radius: 8px; color: #a1a1aa; font-size: 0.9rem;"></div>
-      <div class="upload-area" id="screenshotUploadArea">
-        <div class="upload-icon">📁</div>
-        <div class="upload-text">Trascina l'immagine qui o clicca per selezionare</div>
-        <div class="upload-hint">PNG, JPG, formato consigliato: screenshot.png</div>
-        <div class="upload-hint" style="margin-top: 0.5rem; color: #60a5fa;">
-          💡 Oppure premi <strong>Ctrl+V</strong> per incollare dall'appunti
-        </div>
-        <input type="file" id="screenshotFileInput" accept="image/png,image/jpeg,image/jpg" />
-      </div>
-      <div class="preview-container" id="screenshotPreviewContainer">
-        <img id="screenshotPreviewImage" class="preview-image" alt="Preview" />
-      </div>
-      <div class="status" id="screenshotStatus"></div>
-      <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-        <button class="btn btn-primary" id="uploadScreenshotBtn" style="flex: 1;">💾 Salva Screenshot</button>
-        <button class="btn btn-secondary" id="cancelScreenshotBtn">Annulla</button>
-      </div>
-    </div>
-  </div>
+    const toastEl = document.getElementById('toast');
+    const authPanel = document.getElementById('auth-panel');
+    const authCard = document.getElementById('auth-card');
+    const authLogged = document.getElementById('auth-logged');
+    const emailEl = document.getElementById('auth-email');
+    const passwordEl = document.getElementById('auth-password');
+    const loginBtn = document.getElementById('auth-login-btn');
+    const logoutBtn = document.getElementById('auth-logout-btn');
+    const refreshSessionBtn = document.getElementById('auth-refresh-session');
+    const authUserBadge = document.getElementById('auth-user-badge');
 
-  <script>
-    // Constants
-    const SWING_MODULES = ['F1B', 'F2', 'F3', 'F3O', 'F4', 'F5', 'F5B', 'F5-LT+'];
-    const MODULE_FILES = {
-      'F1B': 'f1b.json',
-      'F2': 'f2.json',
-      'F3': 'f3.json',
-      'F3O': 'f3o.json',
-      'F4': 'f4.json',
-      'F5': 'f5.json',
-      'F5B': 'f5b.json',
-      'F5-LT+': 'f5-lt+.json'
+    const appGrid = document.getElementById('app-grid');
+    const reportsListEl = document.getElementById('reports-list');
+    const searchEl = document.getElementById('search');
+    const refreshBtn = document.getElementById('refresh-btn');
+    const newReportBtn = document.getElementById('new-report-btn');
+
+    const reportSlugEl = document.getElementById('report-slug');
+    const reportTitleEl = document.getElementById('report-title');
+    const reportStatusEl = document.getElementById('report-status');
+    const reportPublishedAtEl = document.getElementById('report-published-at');
+    const reportNotesEl = document.getElementById('report-notes');
+    const chartPathEl = document.getElementById('chart-path');
+    const chartFileEl = document.getElementById('chart-file');
+    const uploadChartBtn = document.getElementById('upload-chart-btn');
+    const openChartBtn = document.getElementById('open-chart-btn');
+    const chartPreviewEl = document.getElementById('chart-preview');
+    const editorReportIdEl = document.getElementById('editor-report-id');
+
+    const addModuleBtn = document.getElementById('add-module-btn');
+    const modulesContainer = document.getElementById('modules-container');
+    const moduleTemplate = document.getElementById('module-template');
+
+    const saveDraftBtn = document.getElementById('save-draft-btn');
+    const publishBtn = document.getElementById('publish-report-btn');
+    const duplicateBtn = document.getElementById('duplicate-report-btn');
+    const deleteBtn = document.getElementById('delete-report-btn');
+
+    let currentUser = null;
+    let reports = [];
+    let filteredReports = [];
+    let activeReport = null;
+    let isDirty = false;
+
+    const showToast = (message, type = 'info') => {
+      toastEl.textContent = message;
+      toastEl.className = 	oast toast-;
+      toastEl.style.display = 'block';
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => toastEl.style.display = 'none', 3200);
     };
 
-    // State
-    let reports = [];
-    let currentReport = null;
-    let currentModule = null;
-    let selectedJsonFile = null;
-    let selectedScreenshotFile = null;
-    let pasteHandler = null;
+    const setDirty = (state) => {
+      isDirty = state;
+      const suffix = activeReport ?  () : ' (nuovo report)';
+      editorReportIdEl.textContent = state
+        ? Modifiche non salvate
+        : activeReport
+          ? ${activeReport.slug} · id 
+          : 'Nuovo report';
+    };
 
-    // DOM Elements
-    const searchBox = document.getElementById('searchBox');
-    const createReportBtn = document.getElementById('createReportBtn');
-    const refreshBtn = document.getElementById('refreshBtn');
-    const regenerateManifestBtn = document.getElementById('regenerateManifestBtn');
-    const reportsListView = document.getElementById('reportsListView');
-    const reportDetailView = document.getElementById('reportDetailView');
-    const reportsContainer = document.getElementById('reportsContainer');
-    const modulesContainer = document.getElementById('modulesContainer');
-    const backBtn = document.getElementById('backBtn');
-    const reportDetailTitle = document.getElementById('reportDetailTitle');
+    const resetDirty = () => setDirty(false);
 
-    // Modals
-    const createReportModal = document.getElementById('createReportModal');
-    const createReportForm = document.getElementById('createReportForm');
-    const closeCreateModal = document.getElementById('closeCreateModal');
-    const cancelCreateBtn = document.getElementById('cancelCreateBtn');
-    const createStatus = document.getElementById('createStatus');
+    const formatDateTimeLocal = (iso) => {
+      if (!iso) return '';
+      return new Date(iso).toISOString().slice(0, 16);
+    };
 
-    const uploadJsonModal = document.getElementById('uploadJsonModal');
-    const jsonModalTitle = document.getElementById('jsonModalTitle');
-    const jsonReportInfo = document.getElementById('jsonReportInfo');
-    const jsonUploadArea = document.getElementById('jsonUploadArea');
-    const jsonFileInput = document.getElementById('jsonFileInput');
-    const jsonPreview = document.getElementById('jsonPreview');
-    const uploadJsonBtn = document.getElementById('uploadJsonBtn');
-    const closeJsonModal = document.getElementById('closeJsonModal');
-    const cancelJsonBtn = document.getElementById('cancelJsonBtn');
-    const jsonStatus = document.getElementById('jsonStatus');
+    const collectModules = () => {
+      const cards = Array.from(modulesContainer.querySelectorAll('.module-card'));
+      if (!cards.length) return [];
 
-    const uploadChartScreenshotModal = document.getElementById('uploadChartScreenshotModal');
-    const chartScreenshotModalTitle = document.getElementById('chartScreenshotModalTitle');
-    const chartScreenshotReportInfo = document.getElementById('chartScreenshotReportInfo');
-    const chartScreenshotUploadArea = document.getElementById('chartScreenshotUploadArea');
-    const chartScreenshotFileInput = document.getElementById('chartScreenshotFileInput');
-    const chartScreenshotPreviewContainer = document.getElementById('chartScreenshotPreviewContainer');
-    const chartScreenshotPreviewImage = document.getElementById('chartScreenshotPreviewImage');
-    const uploadChartScreenshotBtnModal = document.getElementById('uploadChartScreenshotBtnModal');
-    const closeChartScreenshotModal = document.getElementById('closeChartScreenshotModal');
-    const cancelChartScreenshotBtn = document.getElementById('cancelChartScreenshotBtn');
-    const chartScreenshotStatusEl = document.getElementById('chartScreenshotStatusModal');
-
-    const uploadScreenshotModal = document.getElementById('uploadScreenshotModal');
-    const screenshotModalTitle = document.getElementById('screenshotModalTitle');
-    const screenshotReportInfo = document.getElementById('screenshotReportInfo');
-    const screenshotUploadArea = document.getElementById('screenshotUploadArea');
-    const screenshotFileInput = document.getElementById('screenshotFileInput');
-    const screenshotPreviewContainer = document.getElementById('screenshotPreviewContainer');
-    const screenshotPreviewImage = document.getElementById('screenshotPreviewImage');
-    const uploadScreenshotBtn = document.getElementById('uploadScreenshotBtn');
-    const closeScreenshotModal = document.getElementById('closeScreenshotModal');
-    const cancelScreenshotBtn = document.getElementById('cancelScreenshotBtn');
-    const screenshotStatus = document.getElementById('screenshotStatus');
-
-    let selectedChartScreenshotFile = null;
-    let chartPasteHandler = null;
-
-    const API_BASE = '/api/admin';
-    const TOKEN_STORAGE_KEY = 'tradelia-admin-token';
-    let adminToken = null;
-
-    function getStoredToken() {
-      if (adminToken) return adminToken;
-      if (typeof window === 'undefined') return null;
-      const stored = localStorage.getItem(TOKEN_STORAGE_KEY);
-      if (stored && stored.trim()) {
-        adminToken = stored.trim();
-        return adminToken;
-      }
-      return null;
-    }
-
-    async function promptForToken() {
-      let attempts = 0;
-      while (true) {
-        const input = window.prompt('Inserisci il token admin per accedere alla dashboard:');
-        if (input && input.trim()) {
-          adminToken = input.trim();
-          localStorage.setItem(TOKEN_STORAGE_KEY, adminToken);
-          return adminToken;
+      const modules = [];
+      for (const card of cards) {
+        const key = card.querySelector('.module-key').value.trim();
+        if (!key) {
+          showToast('Ogni modulo deve avere una chiave', 'error');
+          return null;
         }
-        attempts += 1;
-        if (attempts >= 3) {
-          alert('Token admin obbligatorio per utilizzare la dashboard.');
+        const orderValue = card.querySelector('.module-order').value.trim();
+        const contentText = card.querySelector('.module-content').value.trim();
+        if (!contentText) {
+          showToast(Modulo : contenuto mancante, 'error');
+          return null;
         }
-      }
-    }
-
-    async function ensureAdminToken(forcePrompt = false) {
-      if (typeof window === 'undefined') return null;
-      if (!forcePrompt) {
-        const existing = getStoredToken();
-        if (existing) return existing;
-      }
-      return await promptForToken();
-    }
-
-    function buildAuthHeaders(initHeaders) {
-      const headers = new Headers(initHeaders || {});
-      const token = adminToken || getStoredToken();
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-      return headers;
-    }
-
-    async function apiFetch(path, init = {}, retry = true) {
-      await ensureAdminToken(false);
-      const headers = buildAuthHeaders(init.headers);
-      const response = await fetch(`${API_BASE}${path}`, { ...init, headers });
-      if (response.status === 401 && retry) {
-        localStorage.removeItem(TOKEN_STORAGE_KEY);
-        adminToken = null;
-        await ensureAdminToken(true);
-        return apiFetch(path, init, false);
-      }
-      return response;
-    }
-
-    // Load reports
-    async function loadReports() {
-      try {
-        reportsContainer.innerHTML = '<div class="loading">Caricamento report...</div>';
-        const response = await apiFetch('/reports');
-        const data = await response.json();
-        reports = data.reports || [];
-        console.log(`[Dashboard] Caricati ${reports.length} report`);
-        renderReports();
-      } catch (error) {
-        console.error('[Dashboard] Errore caricamento report:', error);
-        reportsContainer.innerHTML = `<div class="empty-state"><div class="empty-state-icon">❌</div><div>Errore nel caricamento: ${error.message}</div></div>`;
-      }
-    }
-
-    // Render reports list
-    function renderReports() {
-      const searchTerm = searchBox.value.toLowerCase();
-      const filteredReports = reports.filter(r => 
-        r.id.toLowerCase().includes(searchTerm) ||
-        (r.ticker && r.ticker.toLowerCase().includes(searchTerm))
-      );
-
-      if (filteredReports.length === 0) {
-        reportsContainer.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><div>Nessun report trovato</div></div>';
-        return;
-      }
-
-      reportsContainer.innerHTML = '<div class="reports-grid"></div>';
-      const grid = reportsContainer.querySelector('.reports-grid');
-
-      filteredReports.forEach(report => {
-        const card = document.createElement('div');
-        card.className = 'report-card';
-        card.innerHTML = `
-          <div class="report-header">
-            <div class="report-id">${escapeHtml(report.id)}</div>
-          </div>
-          ${report.ticker ? `<div class="report-info">Ticker: <strong>${escapeHtml(report.ticker)}</strong></div>` : ''}
-          <div class="report-actions">
-            <button class="btn btn-primary btn-small" data-action="view" data-report-id="${report.id}">
-              👁️ Visualizza
-            </button>
-          </div>
-        `;
-
-        card.querySelector('[data-action="view"]').addEventListener('click', () => {
-          viewReport(report.id);
+        let content;
+        try {
+          content = JSON.parse(contentText);
+        } catch (error) {
+          showToast(Modulo : JSON non valido (), 'error');
+          return null;
+        }
+        modules.push({
+          module_key: key,
+          order_index: orderValue === '' ? null : Number(orderValue),
+          content
         });
-
-        grid.appendChild(card);
-      });
-    }
-
-    // View report detail
-    async function viewReport(reportId) {
-      currentReport = reports.find(r => r.id === reportId);
-      if (!currentReport) {
-        showStatus('error', 'Report non trovato');
-        return;
       }
+      return modules;
+    };
 
-      reportDetailTitle.textContent = `Report: ${currentReport.id}`;
-      reportsListView.classList.remove('active');
-      reportDetailView.classList.add('active');
+    const updateModulesEmptyState = () => {
+      const hasModules = modulesContainer.querySelector('.module-card');
+      if (!hasModules) {
+        modulesContainer.innerHTML = '<div class="module-empty">Nessun modulo presente. Aggiungi un modulo per iniziare.</div>';
+      }
+    };
 
-      await loadReportChartScreenshot(reportId);
-      await loadReportModules(reportId);
-    }
+    const clearModules = () => {
+      modulesContainer.innerHTML = '<div class="module-empty">Nessun modulo presente. Aggiungi un modulo per iniziare.</div>';
+    };
 
-    // Load chart screenshot status
-    async function loadReportChartScreenshot(reportId) {
-      const hasScreenshot = await checkFileExists(`/report/reports/${reportId}/chart-snapshot.png`);
-      const statusEl = document.getElementById('chartScreenshotStatus');
-      const uploadBtn = document.getElementById('uploadChartScreenshotBtn');
-      const viewBtn = document.getElementById('viewChartScreenshotBtn');
-      
-      if (hasScreenshot) {
-        statusEl.innerHTML = '<span class="module-status has-screenshot">✅ Screenshot presente</span>';
-        uploadBtn.textContent = '🔄 Sostituisci Screenshot';
-        viewBtn.style.display = 'inline-block';
-        viewBtn.onclick = () => {
-          window.open(`/report/reports/${reportId}/chart-snapshot.png?t=${Date.now()}`, '_blank');
+    const createModuleCard = (module = { module_key: '', order_index: null, content: '' }) => {
+      const node = moduleTemplate.content.cloneNode(true);
+      const card = node.querySelector('.module-card');
+      const keyInput = card.querySelector('.module-key');
+      const orderInput = card.querySelector('.module-order');
+      const area = card.querySelector('.module-content');
+      const fileInput = card.querySelector('.module-file');
+
+      keyInput.value = module.module_key || '';
+      orderInput.value = module.order_index ?? '';
+      area.value = module.content
+        ? (typeof module.content === 'string'
+          ? module.content
+          : JSON.stringify(module.content, null, 2))
+        : '';
+
+      const markDirty = () => setDirty(true);
+      keyInput.addEventListener('input', markDirty);
+      orderInput.addEventListener('input', markDirty);
+      area.addEventListener('input', markDirty);
+
+      card.querySelector('.module-import').addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          area.value = ev.target.result;
+          markDirty();
+          showToast(JSON caricato in , 'success');
         };
-      } else {
-        statusEl.innerHTML = '<span class="module-status missing">❌ Nessuno screenshot</span>';
-        uploadBtn.textContent = '📤 Carica Screenshot Chart';
-        viewBtn.style.display = 'none';
-      }
-      
-      uploadBtn.onclick = async () => {
-        await openUploadChartScreenshotModal();
-      };
-    }
+        reader.onerror = () => showToast('Impossibile leggere il file JSON', 'error');
+        reader.readAsText(file);
+      });
 
-    // Load report modules
-    async function loadReportModules(reportId) {
-      try {
-        modulesContainer.innerHTML = '<div class="loading">Caricamento moduli...</div>';
-        
-        // Lista tutti i file JSON nella directory del report
-        let jsonFiles = [];
+      card.querySelector('.module-validate').addEventListener('click', () => {
         try {
-          const response = await apiFetch(`/report-files?reportId=${encodeURIComponent(reportId)}`);
-          if (response.ok) {
-            const data = await response.json();
-            jsonFiles = data.files || [];
-          } else {
-            console.warn('[Dashboard] Endpoint report-files non disponibile, uso controllo diretto');
-            // Fallback: controlla direttamente i file
-            jsonFiles = [];
-          }
+          JSON.parse(area.value);
+          showToast('JSON valido', 'success');
         } catch (error) {
-          console.warn('[Dashboard] Errore chiamata report-files:', error);
-          jsonFiles = [];
+          showToast(JSON non valido: , 'error');
         }
-        
-        // Verifica header.json
-        const hasHeader = jsonFiles.includes('header.json') || await checkFileExists(`/report/reports/${reportId}/header.json`);
-        
-        // Check which modules exist
-        const modules = [];
-        for (const moduleId of SWING_MODULES) {
-          const fileName = MODULE_FILES[moduleId];
-          // Cerca il file JSON (può essere f1b.json, f1b-generated.json, ecc.)
-          let hasJson = false;
-          if (jsonFiles.length > 0) {
-            hasJson = jsonFiles.some(f => {
-              const baseName = f.replace('.json', '').toLowerCase();
-              const moduleBase = fileName.replace('.json', '').toLowerCase();
-              return baseName === moduleBase || baseName.includes(moduleBase) || moduleBase.includes(baseName);
-            });
-          } else {
-            // Fallback: controlla direttamente se il file esiste
-            hasJson = await checkFileExists(`/report/reports/${reportId}/${fileName}`);
-          }
-          const hasScreenshot = await checkFileExists(`/report/reports/${reportId}/${moduleId.toLowerCase()}-screenshot.png`);
-          
-          modules.push({
-            id: moduleId,
-            fileName: fileName,
-            hasJson: hasJson,
-            hasScreenshot: hasScreenshot
-          });
-        }
+      });
 
-        renderModules(modules, jsonFiles, hasHeader);
-      } catch (error) {
-        console.error('[Dashboard] Errore caricamento moduli:', error);
-        modulesContainer.innerHTML = `<div class="empty-state"><div class="empty-state-icon">❌</div><div>Errore: ${error.message}</div></div>`;
+      card.querySelector('.module-duplicate').addEventListener('click', () => {
+        const clone = {
+          module_key: ${keyInput.value || 'modulo'}-copy,
+          order_index: orderInput.value,
+          content: (() => {
+            try { return JSON.parse(area.value); }
+            catch { return area.value; }
+          })()
+        };
+        appendModuleCard(clone);
+        showToast('Modulo duplicato', 'info');
+      });
+
+      card.querySelector('.module-remove').addEventListener('click', () => {
+        card.remove();
+        updateModulesEmptyState();
+        setDirty(true);
+      });
+
+      return card;
+    };
+
+    const appendModuleCard = (module) => {
+      if (!modulesContainer.querySelector('.module-card')) modulesContainer.innerHTML = '';
+      modulesContainer.appendChild(createModuleCard(module));
+    };
+
+    const updateAuthUI = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      currentUser = session?.user ?? null;
+      authCard.classList.toggle('hidden', !!currentUser);
+      authLogged.classList.toggle('hidden', !currentUser);
+      appGrid.classList.toggle('hidden', !currentUser);
+      if (currentUser) {
+        authUserBadge.textContent = Connesso come ;
+        loadReports();
+      } else {
+        clearEditor();
+        reportsListEl.innerHTML = '<div class="list-empty">Effettua l\'accesso per visualizzare i report.</div>';
       }
-    }
+    };
 
-    // Check if file exists
-    async function checkFileExists(url) {
-      try {
-        const response = await fetch(url, { method: 'HEAD' });
-        return response.ok;
-      } catch {
-        return false;
-      }
-    }
-
-    // Render modules
-    function renderModules(modules, jsonFiles = [], hasHeader = false) {
-      modulesContainer.innerHTML = '<div class="modules-grid"></div>';
-      const grid = modulesContainer.querySelector('.modules-grid');
-
-      // Header card (sempre visibile)
-      const headerCard = document.createElement('div');
-      headerCard.className = 'module-card';
-      headerCard.style.border = hasHeader ? '1px solid rgba(255, 255, 255, 0.1)' : '2px dashed rgba(239, 68, 68, 0.3)';
-      headerCard.innerHTML = `
-        <div class="module-header">
-          <div class="module-title">📋 Header</div>
-          <div>
-            ${hasHeader ? '<span class="module-status has-json">✅ header.json</span>' : '<span class="module-status missing">❌ header.json</span>'}
-          </div>
-        </div>
-        <div style="color: #a1a1aa; font-size: 0.9rem; margin-bottom: 1rem;">
-          File header.json del report (viene creato automaticamente alla creazione del report)
-        </div>
-        <div class="module-actions">
-          <button class="btn btn-primary btn-small" data-action="upload-header-json">
-            📄 ${hasHeader ? 'Sostituisci' : 'Carica'} header.json
-          </button>
-        </div>
-      `;
-      headerCard.querySelector('[data-action="upload-header-json"]').addEventListener('click', () => {
-        openUploadJsonModal('HEADER');
-      });
-      grid.appendChild(headerCard);
-
-      // Module cards
-      modules.forEach(module => {
-        // Trova il file JSON corrispondente (se esiste)
-        const actualFile = jsonFiles.find(f => {
-          const baseName = f.replace('.json', '').toLowerCase();
-          const moduleBase = module.fileName.replace('.json', '').toLowerCase();
-          return baseName === moduleBase || baseName.includes(moduleBase) || moduleBase.includes(baseName);
-        });
-
-        const card = document.createElement('div');
-        card.className = 'module-card';
-        card.innerHTML = `
-          <div class="module-header">
-            <div class="module-title">${module.id}</div>
-            <div>
-              ${module.hasJson ? `<span class="module-status has-json">✅ JSON${actualFile ? ` (${actualFile})` : ''}</span>` : '<span class="module-status missing">❌ JSON</span>'}
-              ${module.hasScreenshot ? '<span class="module-status has-screenshot" style="margin-left: 0.5rem;">✅ Screenshot</span>' : '<span class="module-status missing" style="margin-left: 0.5rem;">❌ Screenshot</span>'}
-            </div>
-          </div>
-          <div class="module-actions">
-            <button class="btn btn-primary btn-small" data-action="upload-json" data-module="${module.id}">
-              📄 ${module.hasJson ? 'Sostituisci' : 'Carica'} JSON
-            </button>
-            <button class="btn btn-primary btn-small" data-action="upload-screenshot" data-module="${module.id}">
-              📷 ${module.hasScreenshot ? 'Sostituisci' : 'Carica'} Screenshot
-            </button>
-          </div>
-        `;
-
-        card.querySelector('[data-action="upload-json"]').addEventListener('click', () => {
-          openUploadJsonModal(module.id);
-        });
-
-        card.querySelector('[data-action="upload-screenshot"]').addEventListener('click', () => {
-          openUploadScreenshotModal(module.id);
-        });
-
-        grid.appendChild(card);
-      });
-
-      // Aggiungi pulsante per caricare JSON generico (non associato a un modulo specifico)
-      const genericCard = document.createElement('div');
-      genericCard.className = 'module-card';
-      genericCard.style.border = '2px dashed rgba(96, 165, 250, 0.3)';
-      genericCard.innerHTML = `
-        <div class="module-header">
-          <div class="module-title">➕ Altri File JSON</div>
-        </div>
-        <div style="color: #a1a1aa; font-size: 0.9rem; margin-bottom: 1rem;">
-          Carica file JSON generati dall'output (manifest.json, ecc.)
-        </div>
-        <div class="module-actions">
-          <button class="btn btn-secondary btn-small" id="uploadGenericJsonBtn">
-            📄 Carica JSON Generico
-          </button>
-        </div>
-      `;
-      genericCard.querySelector('#uploadGenericJsonBtn').addEventListener('click', () => {
-        openUploadJsonModal(null);
-      });
-      grid.appendChild(genericCard);
-    }
-
-    // Create new report
-    createReportForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const reportId = document.getElementById('reportId').value.trim();
-      const reportType = document.getElementById('reportType').value;
-
-      if (!reportId || !reportType) {
-        showStatus('error', 'Compila tutti i campi obbligatori', createStatus);
+    const login = async () => {
+      const email = emailEl.value.trim();
+      const password = passwordEl.value.trim();
+      if (!email || !password) {
+        showToast('Email e password obbligatorie', 'error');
         return;
       }
-
-      const submitBtn = createReportForm.querySelector('button[type="submit"]');
-      submitBtn.disabled = true;
-      showStatus('info', '⏳ Creazione report in corso...', createStatus);
-
+      loginBtn.disabled = true;
       try {
-        const response = await apiFetch('/create-report', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            reportId,
-            reportType
-          })
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-          showStatus('success', `✅ Report creato con successo!<br>ID: ${result.reportId}`, createStatus);
-          setTimeout(() => {
-            closeCreateReportModal();
-            loadReports();
-            viewReport(reportId);
-          }, 2000);
-        } else {
-          showStatus('error', `❌ Errore: ${result.error || 'Creazione fallita'}`, createStatus);
-        }
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        showToast('Accesso eseguito', 'success');
       } catch (error) {
-        showStatus('error', `❌ Errore di connessione: ${error.message}`, createStatus);
+        showToast(error.message, 'error');
       } finally {
-        const submitBtn = createReportForm.querySelector('button[type="submit"]');
-        submitBtn.disabled = false;
+        loginBtn.disabled = false;
+        updateAuthUI();
       }
-    });
+    };
 
-    // Open upload JSON modal
-    function openUploadJsonModal(moduleId = null) {
-      currentModule = moduleId;
-      selectedJsonFile = null;
-      if (moduleId === 'HEADER') {
-        jsonModalTitle.textContent = `Carica Header JSON - ${currentReport.id}`;
-        jsonReportInfo.innerHTML = `
-          <strong>Report ID:</strong> ${escapeHtml(currentReport.id)}<br>
-          <strong>File:</strong> header.json<br>
-          <strong>Nota:</strong> Il file header.json viene creato automaticamente alla creazione del report. Puoi sostituirlo caricando un nuovo file.
-        `;
-      } else if (moduleId) {
-        jsonModalTitle.textContent = `Carica JSON - ${currentReport.id} - ${moduleId}`;
-        jsonReportInfo.innerHTML = `
-          <strong>Report ID:</strong> ${escapeHtml(currentReport.id)}<br>
-          <strong>Modulo:</strong> ${moduleId}<br>
-          <strong>File suggerito:</strong> ${MODULE_FILES[moduleId] || 'Nome file dall\'output'}
-        `;
+    const logout = async () => {
+      await supabase.auth.signOut();
+      showToast('Disconnesso', 'info');
+      updateAuthUI();
+    };
+
+    const loadReports = async () => {
+      if (!currentUser) return;
+      const { data, error } = await supabase
+        .from('reports')
+        .select('id, slug, title, status, chart_path, notes, published_at, updated_at, report_modules(count)')
+        .order('updated_at', { ascending: false });
+      if (error) {
+        console.error(error);
+        showToast('Errore nel caricamento report', 'error');
+        return;
+      }
+      reports = data.map(item => ({
+        id: item.id,
+        slug: item.slug,
+        title: item.title,
+        status: item.status,
+        chart_path: item.chart_path,
+        notes: item.notes,
+        published_at: item.published_at,
+        updated_at: item.updated_at,
+        modules_count: item.report_modules?.[0]?.count ?? 0
+      }));
+      filteredReports = reports;
+      renderReportsList();
+    };
+
+    const renderReportsList = () => {
+      reportsListEl.innerHTML = '';
+      if (!filteredReports.length) {
+        reportsListEl.innerHTML = '<div class="list-empty">Nessun report trovato</div>';
+        return;
+      }
+      filteredReports.forEach(report => {
+        const card = document.createElement('article');
+        card.className = 'report-card';
+        if (activeReport && activeReport.id === report.id) card.classList.add('active');
+        const statusClass =
+          report.status === 'active' ? 'status-active'
+            : report.status === 'archived' ? 'status-archived'
+              : 'status-draft';
+        card.innerHTML = 
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:0.75rem;">
+            <strong></strong>
+            <span class="status-pill "></span>
+          </div>
+          <div class="report-meta">
+            <span>slug: <code></code></span>
+            <span>moduli: </span>
+            <span></span>
+            <span></span>
+          </div>
+        ;
+        card.addEventListener('click', async () => {
+          if (isDirty && !confirm('Ci sono modifiche non salvate. Procedere comunque?')) return;
+          selectReport(report.id);
+        });
+        reportsListEl.appendChild(card);
+      });
+    };
+
+    const selectReport = async (id) => {
+      const { data: report, error: reportError } = await supabase
+        .from('reports')
+        .select('*')
+        .eq('id', id)
+        .single();
+      if (reportError) {
+        console.error(reportError);
+        showToast('Errore nel recupero report', 'error');
+        return;
+      }
+      const { data: modules, error: modulesError } = await supabase
+        .from('report_modules')
+        .select('id, module_key, content, order_index')
+        .eq('report_id', id)
+        .order('order_index', { ascending: true, nullsFirst: true });
+      if (modulesError) {
+        console.error(modulesError);
+        showToast('Errore nel recupero moduli', 'error');
+        return;
+      }
+      activeReport = report;
+      reportSlugEl.value = report.slug || '';
+      reportTitleEl.value = report.title || '';
+      reportStatusEl.value = report.status || 'draft';
+      reportNotesEl.value = report.notes || '';
+      reportPublishedAtEl.value = formatDateTimeLocal(report.published_at);
+      chartPathEl.value = report.chart_path || '';
+      updateChartPreview(report.chart_path);
+      modulesContainer.innerHTML = '';
+      if (modules.length) {
+        modules.forEach(module => appendModuleCard(module));
       } else {
-        jsonModalTitle.textContent = `Carica JSON - ${currentReport.id}`;
-        jsonReportInfo.innerHTML = `
-          <strong>Report ID:</strong> ${escapeHtml(currentReport.id)}<br>
-          <strong>Nota:</strong> Il file verrà salvato con il nome originale dall'output (es: manifest.json, ecc.)
-        `;
+        clearModules();
       }
-      jsonPreview.style.display = 'none';
-      jsonPreview.textContent = '';
-      hideStatus(jsonStatus);
-      uploadJsonModal.classList.add('show');
-    }
+      resetDirty();
+      renderReportsList();
+    };
 
-    // Open upload chart screenshot modal
-    async function openUploadChartScreenshotModal() {
-      selectedChartScreenshotFile = null;
-      chartScreenshotModalTitle.textContent = `Carica Screenshot Chart - ${currentReport.id}`;
-      const hasScreenshot = await checkFileExists(`/report/reports/${currentReport.id}/chart-snapshot.png`);
-      chartScreenshotReportInfo.innerHTML = `
-        <strong>Report ID:</strong> ${escapeHtml(currentReport.id)}<br>
-        ${currentReport.ticker ? `<strong>Ticker:</strong> ${escapeHtml(currentReport.ticker)}<br>` : ''}
-        <strong>Stato:</strong> ${hasScreenshot ? '✅ Screenshot presente' : '❌ Nessuno screenshot'}
-      `;
-      chartScreenshotPreviewContainer.classList.remove('show');
-      chartScreenshotPreviewImage.src = '';
-      hideStatus(chartScreenshotStatusEl);
-      uploadChartScreenshotModal.classList.add('show');
-      enableChartPaste();
-    }
-
-    // Open upload screenshot modal
-    function openUploadScreenshotModal(moduleId) {
-      currentModule = moduleId;
-      selectedScreenshotFile = null;
-      screenshotModalTitle.textContent = `Carica Screenshot - ${currentReport.id} - ${moduleId}`;
-      screenshotReportInfo.innerHTML = `
-        <strong>Report ID:</strong> ${escapeHtml(currentReport.id)}<br>
-        <strong>Modulo:</strong> ${moduleId}
-      `;
-      screenshotPreviewContainer.classList.remove('show');
-      screenshotPreviewImage.src = '';
-      hideStatus(screenshotStatus);
-      uploadScreenshotModal.classList.add('show');
-      enablePaste();
-    }
-
-    // JSON file handling
-    jsonUploadArea.addEventListener('click', () => jsonFileInput.click());
-    jsonFileInput.addEventListener('change', (e) => {
-      if (e.target.files.length > 0) {
-        handleJsonFile(e.target.files[0]);
+    const updateChartPreview = (path) => {
+      if (!path) {
+        chartPreviewEl.style.display = 'none';
+        openChartBtn.setAttribute('aria-disabled', 'true');
+        openChartBtn.href = '#';
+        return;
       }
-    });
+      const { data } = supabase.storage.from(REPORTS_BUCKET).getPublicUrl(path);
+      chartPreviewEl.src = data.publicUrl;
+      chartPreviewEl.style.display = 'block';
+      openChartBtn.href = data.publicUrl;
+      openChartBtn.setAttribute('aria-disabled', 'false');
+    };
 
-    jsonUploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      jsonUploadArea.classList.add('dragover');
-    });
+    const clearEditor = () => {
+      activeReport = null;
+      reportSlugEl.value = '';
+      reportTitleEl.value = '';
+      reportStatusEl.value = 'draft';
+      reportPublishedAtEl.value = '';
+      reportNotesEl.value = '';
+      chartPathEl.value = '';
+      chartPreviewEl.style.display = 'none';
+      chartFileEl.value = '';
+      openChartBtn.href = '#';
+      openChartBtn.setAttribute('aria-disabled', 'true');
+      clearModules();
+      editorReportIdEl.textContent = 'Nuovo report';
+      resetDirty();
+    };
 
-    jsonUploadArea.addEventListener('dragleave', () => {
-      jsonUploadArea.classList.remove('dragover');
-    });
-
-    jsonUploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      jsonUploadArea.classList.remove('dragover');
-      if (e.dataTransfer.files.length > 0) {
-        handleJsonFile(e.dataTransfer.files[0]);
+    const uploadChart = async () => {
+      const file = chartFileEl.files?.[0];
+      const slug = reportSlugEl.value.trim();
+      if (!file) {
+        showToast('Seleziona un file immagine', 'error');
+        return;
       }
-    });
+      if (!slug) {
+        showToast('Imposta lo slug prima di caricare il chart', 'error');
+        return;
+      }
+      const path = ${slug}/-;
+      uploadChartBtn.disabled = true;
+      try {
+        const { data, error } = await supabase.storage
+          .from(REPORTS_BUCKET)
+          .upload(path, file, { upsert: true, cacheControl: '3600' });
+        if (error) throw error;
+        chartPathEl.value = data.path;
+        updateChartPreview(data.path);
+        setDirty(true);
+        showToast('Chart caricato con successo', 'success');
+      } catch (error) {
+        console.error(error);
+        showToast(Upload chart fallito: , 'error');
+      } finally {
+        uploadChartBtn.disabled = false;
+      }
+    };
 
-    function handleJsonFile(file) {
-      if (!file.name.endsWith('.json')) {
-        showStatus('error', '❌ Seleziona un file JSON', jsonStatus);
+    const saveReport = async ({ publish }) => {
+      const slug = reportSlugEl.value.trim();
+      const title = reportTitleEl.value.trim();
+      if (!slug || !title) {
+        showToast('Slug e titolo sono obbligatori', 'error');
         return;
       }
 
-      selectedJsonFile = file;
+      const modules = collectModules();
+      if (modules === null) return;
 
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const json = JSON.parse(e.target.result);
-          jsonPreview.textContent = JSON.stringify(json, null, 2);
-          jsonPreview.style.display = 'block';
-        } catch (error) {
-          showStatus('error', '❌ File JSON non valido', jsonStatus);
+      const reportPayload = {
+        slug,
+        title,
+        status: publish ? 'active' : reportStatusEl.value,
+        chart_path: chartPathEl.value.trim() || null,
+        notes: reportNotesEl.value.trim() || null,
+        published_at: publish ? new Date().toISOString() :
+          (reportPublishedAtEl.value ? new Date(reportPublishedAtEl.value).toISOString() : null)
+      };
+
+      const isNew = !activeReport;
+      const { data: savedReport, error: saveError } = isNew
+        ? await supabase.from('reports').insert(reportPayload).select().single()
+        : await supabase.from('reports').update(reportPayload).eq('id', activeReport.id).select().single();
+      if (saveError) {
+        console.error(saveError);
+        showToast('Errore salvataggio report', 'error');
+        return;
+      }
+
+      const reportId = savedReport.id;
+      const { error: deleteError } = await supabase.from('report_modules').delete().eq('report_id', reportId);
+      if (deleteError) {
+        console.error(deleteError);
+        showToast('Errore nel sovrascrivere i moduli', 'error');
+        return;
+      }
+
+      if (modules.length) {
+        const inserts = modules.map((module, index) => ({
+          report_id: reportId,
+          module_key: module.module_key,
+          order_index: module.order_index ?? index,
+          content: module.content
+        }));
+        const { error: insertError } = await supabase.from('report_modules').insert(inserts);
+        if (insertError) {
+          console.error(insertError);
+          showToast('Errore durante l’inserimento dei moduli', 'error');
           return;
         }
-      };
-      reader.readAsText(file);
-
-      hideStatus(jsonStatus);
-    }
-
-    // Screenshot file handling
-    screenshotUploadArea.addEventListener('click', () => screenshotFileInput.click());
-    screenshotFileInput.addEventListener('change', (e) => {
-      if (e.target.files.length > 0) {
-        handleScreenshotFile(e.target.files[0]);
       }
-    });
 
-    screenshotUploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      screenshotUploadArea.classList.add('dragover');
-    });
+      showToast(publish ? 'Report pubblicato' : 'Report salvato', 'success');
+      await loadReports();
+      await selectReport(reportId);
+      resetDirty();
+    };
 
-    screenshotUploadArea.addEventListener('dragleave', () => {
-      screenshotUploadArea.classList.remove('dragover');
-    });
-
-    screenshotUploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      screenshotUploadArea.classList.remove('dragover');
-      if (e.dataTransfer.files.length > 0) {
-        handleScreenshotFile(e.dataTransfer.files[0]);
-      }
-    });
-
-    function handleScreenshotFile(file) {
-      if (!file.type.startsWith('image/')) {
-        showStatus('error', '❌ Seleziona un file immagine (PNG, JPG)', screenshotStatus);
+    const deleteReport = async () => {
+      if (!activeReport) return;
+      if (!confirm('Eliminare definitivamente il report?')) return;
+      const { error } = await supabase.from('reports').delete().eq('id', activeReport.id);
+      if (error) {
+        console.error(error);
+        showToast('Errore eliminazione', 'error');
         return;
       }
+      showToast('Report eliminato', 'success');
+      await loadReports();
+      clearEditor();
+    };
 
-      selectedScreenshotFile = file;
+    const duplicateReport = () => {
+      if (!activeReport) return;
+      reportSlugEl.value = ${activeReport.slug}-copy;
+      reportTitleEl.value = ${activeReport.title} (copia);
+      reportStatusEl.value = 'draft';
+      reportPublishedAtEl.value = '';
+      reportNotesEl.value = activeReport.notes || '';
+      chartPathEl.value = '';
+      chartPreviewEl.style.display = 'none';
+      chartFileEl.value = '';
+      activeReport = null;
+      setDirty(true);
+      showToast('Replica pronta. Ricorda di salvare con il nuovo slug.', 'info');
+    };
 
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        screenshotPreviewImage.src = e.target.result;
-        screenshotPreviewContainer.classList.add('show');
-      };
-      reader.readAsDataURL(file);
-
-      hideStatus(screenshotStatus);
-    }
-
-    // Chart screenshot file handling
-    chartScreenshotUploadArea.addEventListener('click', () => chartScreenshotFileInput.click());
-    chartScreenshotFileInput.addEventListener('change', (e) => {
-      if (e.target.files.length > 0) {
-        handleChartScreenshotFile(e.target.files[0]);
-      }
-    });
-
-    chartScreenshotUploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      chartScreenshotUploadArea.classList.add('dragover');
-    });
-
-    chartScreenshotUploadArea.addEventListener('dragleave', () => {
-      chartScreenshotUploadArea.classList.remove('dragover');
-    });
-
-    chartScreenshotUploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      chartScreenshotUploadArea.classList.remove('dragover');
-      if (e.dataTransfer.files.length > 0) {
-        handleChartScreenshotFile(e.dataTransfer.files[0]);
-      }
-    });
-
-    function handleChartScreenshotFile(file) {
-      if (!file.type.startsWith('image/')) {
-        showStatus('error', '❌ Seleziona un file immagine (PNG, JPG)', chartScreenshotStatusEl);
-        return;
-      }
-
-      selectedChartScreenshotFile = file;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        chartScreenshotPreviewImage.src = e.target.result;
-        chartScreenshotPreviewContainer.classList.add('show');
-      };
-      reader.readAsDataURL(file);
-
-      hideStatus(chartScreenshotStatusEl);
-    }
-
-    // Paste handler for chart screenshot
-    function enableChartPaste() {
-      if (chartPasteHandler) return;
-      
-      chartPasteHandler = async (e) => {
-        if (!uploadChartScreenshotModal.classList.contains('show')) return;
-        
-        e.preventDefault();
-        
-        try {
-          const items = await navigator.clipboard.read();
-          
-          for (const item of items) {
-            const imageTypes = item.types.filter(t => t.startsWith('image/'));
-            if (imageTypes.length > 0) {
-              const blob = await item.getType(imageTypes[0]);
-              const file = new File([blob], 'chart-snapshot.png', { type: blob.type });
-              
-              handleChartScreenshotFile(file);
-              showStatus('info', '✅ Immagine incollata dagli appunti!', chartScreenshotStatusEl);
-              return;
-            }
-          }
-        } catch (error) {
-          if (e.clipboardData && e.clipboardData.files.length > 0) {
-            const file = e.clipboardData.files[0];
-            if (file.type.startsWith('image/')) {
-              handleChartScreenshotFile(file);
-              showStatus('info', '✅ Immagine incollata dagli appunti!', chartScreenshotStatusEl);
-              return;
-            }
-          }
-          
-          showStatus('error', '❌ Nessuna immagine negli appunti. Copia prima uno screenshot!', chartScreenshotStatusEl);
-        }
-      };
-      
-      document.addEventListener('paste', chartPasteHandler);
-      chartScreenshotUploadArea.addEventListener('paste', chartPasteHandler);
-    }
-
-    function disableChartPaste() {
-      if (chartPasteHandler) {
-        document.removeEventListener('paste', chartPasteHandler);
-        chartScreenshotUploadArea.removeEventListener('paste', chartPasteHandler);
-        chartPasteHandler = null;
-      }
-    }
-
-    // Paste handler for module screenshots
-    function enablePaste() {
-      if (pasteHandler) return;
-      
-      pasteHandler = async (e) => {
-        if (!uploadScreenshotModal.classList.contains('show')) return;
-        
-        e.preventDefault();
-        
-        try {
-          const items = await navigator.clipboard.read();
-          
-          for (const item of items) {
-            const imageTypes = item.types.filter(t => t.startsWith('image/'));
-            if (imageTypes.length > 0) {
-              const blob = await item.getType(imageTypes[0]);
-              const file = new File([blob], 'screenshot.png', { type: blob.type });
-              
-              handleScreenshotFile(file);
-              showStatus('info', '✅ Immagine incollata dagli appunti!', screenshotStatus);
-              return;
-            }
-          }
-        } catch (error) {
-          if (e.clipboardData && e.clipboardData.files.length > 0) {
-            const file = e.clipboardData.files[0];
-            if (file.type.startsWith('image/')) {
-              handleScreenshotFile(file);
-              showStatus('info', '✅ Immagine incollata dagli appunti!', screenshotStatus);
-              return;
-            }
-          }
-          
-          showStatus('error', '❌ Nessuna immagine negli appunti. Copia prima uno screenshot!', screenshotStatus);
-        }
-      };
-      
-      document.addEventListener('paste', pasteHandler);
-      screenshotUploadArea.addEventListener('paste', pasteHandler);
-    }
-
-    function disablePaste() {
-      if (pasteHandler) {
-        document.removeEventListener('paste', pasteHandler);
-        screenshotUploadArea.removeEventListener('paste', pasteHandler);
-        pasteHandler = null;
-      }
-    }
-
-    // Upload JSON - salva con il nome originale del file
-    uploadJsonBtn.addEventListener('click', async () => {
-      if (!currentReport || !selectedJsonFile) {
-        showStatus('error', '❌ Seleziona un file JSON', jsonStatus);
-        return;
-      }
-
-      uploadJsonBtn.disabled = true;
-      showStatus('info', '⏳ Upload in corso...', jsonStatus);
-
-      try {
-        const formData = new FormData();
-        formData.append('reportId', currentReport.id);
-        formData.append('file', selectedJsonFile);
-        
-        // Se è HEADER, forza il nome a header.json
-        let fileName = selectedJsonFile.name;
-        if (currentModule === 'HEADER') {
-          fileName = 'header.json';
-        }
-        formData.append('fileName', fileName);
-
-        const response = await apiFetch('/upload-module-json', {
-          method: 'POST',
-          body: formData
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-          showStatus('success', `✅ JSON salvato con successo!<br><strong>File:</strong> ${result.fileName || result.path}`, jsonStatus);
-          setTimeout(() => {
-            closeUploadJsonModal();
-            loadReportModules(currentReport.id);
-            loadReportChartScreenshot(currentReport.id);
-          }, 2000);
-        } else {
-          showStatus('error', `❌ Errore: ${result.error || 'Upload fallito'}`, jsonStatus);
-        }
-      } catch (error) {
-        showStatus('error', `❌ Errore di connessione: ${error.message}`, jsonStatus);
-      } finally {
-        uploadJsonBtn.disabled = false;
-      }
-    });
-
-    // Upload Screenshot
-    uploadScreenshotBtn.addEventListener('click', async () => {
-      if (!currentReport || !currentModule || !selectedScreenshotFile) {
-        showStatus('error', '❌ Seleziona un file immagine', screenshotStatus);
-        return;
-      }
-
-      uploadScreenshotBtn.disabled = true;
-      showStatus('info', '⏳ Upload in corso...', screenshotStatus);
-
-      try {
-        const formData = new FormData();
-        formData.append('reportId', currentReport.id);
-        formData.append('moduleId', currentModule);
-        formData.append('file', selectedScreenshotFile);
-
-        const response = await apiFetch('/upload-module-screenshot', {
-          method: 'POST',
-          body: formData
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-          showStatus('success', `✅ Screenshot salvato con successo!<br><strong>File:</strong> ${result.path}`, screenshotStatus);
-          setTimeout(() => {
-            closeUploadScreenshotModal();
-            loadReportModules(currentReport.id);
-          }, 2000);
-        } else {
-          showStatus('error', `❌ Errore: ${result.error || 'Upload fallito'}`, screenshotStatus);
-        }
-      } catch (error) {
-        showStatus('error', `❌ Errore di connessione: ${error.message}`, screenshotStatus);
-      } finally {
-        uploadScreenshotBtn.disabled = false;
-      }
-    });
-
-    // Upload Chart Screenshot
-    uploadChartScreenshotBtnModal.addEventListener('click', async () => {
-      if (!currentReport || !selectedChartScreenshotFile) {
-        showStatus('error', '❌ Seleziona un file immagine', chartScreenshotStatusEl);
-        return;
-      }
-
-      uploadChartScreenshotBtnModal.disabled = true;
-      showStatus('info', '⏳ Upload in corso...', chartScreenshotStatusEl);
-
-      try {
-        const formData = new FormData();
-        formData.append('reportId', currentReport.id);
-        formData.append('file', selectedChartScreenshotFile);
-
-        const response = await apiFetch('/upload-chart-screenshot', {
-          method: 'POST',
-          body: formData
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-          showStatus('success', `✅ Chart screenshot salvato con successo!<br><strong>File:</strong> ${result.path}`, chartScreenshotStatusEl);
-          setTimeout(() => {
-            closeUploadChartScreenshotModal();
-            loadReportChartScreenshot(currentReport.id);
-            loadReportModules(currentReport.id);
-          }, 2000);
-        } else {
-          showStatus('error', `❌ Errore: ${result.error || 'Upload fallito'}`, chartScreenshotStatusEl);
-        }
-      } catch (error) {
-        showStatus('error', `❌ Errore di connessione: ${error.message}`, chartScreenshotStatusEl);
-      } finally {
-        uploadChartScreenshotBtnModal.disabled = false;
-      }
-    });
-
-    // Close modals
-    function closeCreateReportModal() {
-      createReportModal.classList.remove('show');
-      createReportForm.reset();
-      hideStatus(createStatus);
-    }
-
-    function closeUploadJsonModal() {
-      uploadJsonModal.classList.remove('show');
-      currentModule = null;
-      selectedJsonFile = null;
-    }
-
-    function closeUploadChartScreenshotModal() {
-      uploadChartScreenshotModal.classList.remove('show');
-      selectedChartScreenshotFile = null;
-      disableChartPaste();
-    }
-
-    function closeUploadScreenshotModal() {
-      uploadScreenshotModal.classList.remove('show');
-      currentModule = null;
-      selectedScreenshotFile = null;
-      disablePaste();
-    }
-
-    // Event listeners
-    createReportBtn.addEventListener('click', () => {
-      createReportModal.classList.add('show');
-    });
-
-    closeCreateModal.addEventListener('click', closeCreateReportModal);
-    cancelCreateBtn.addEventListener('click', closeCreateReportModal);
-    closeJsonModal.addEventListener('click', closeUploadJsonModal);
-    cancelJsonBtn.addEventListener('click', closeUploadJsonModal);
-    closeChartScreenshotModal.addEventListener('click', closeUploadChartScreenshotModal);
-    cancelChartScreenshotBtn.addEventListener('click', closeUploadChartScreenshotModal);
-    closeScreenshotModal.addEventListener('click', closeUploadScreenshotModal);
-    cancelScreenshotBtn.addEventListener('click', closeUploadScreenshotModal);
-
-    backBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      reportDetailView.classList.remove('active');
-      reportsListView.classList.add('active');
-      currentReport = null;
-    });
+    loginBtn.addEventListener('click', login);
+    logoutBtn.addEventListener('click', logout);
+    refreshSessionBtn.addEventListener('click', updateAuthUI);
+    passwordEl.addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
 
     refreshBtn.addEventListener('click', loadReports);
-    searchBox.addEventListener('input', renderReports);
+    newReportBtn.addEventListener('click', () => {
+      if (isDirty && !confirm('Ci sono modifiche non salvate. Procedere?')) return;
+      clearEditor();
+    });
 
-    regenerateManifestBtn.addEventListener('click', async () => {
-      regenerateManifestBtn.disabled = true;
-      regenerateManifestBtn.textContent = '⏳ Rigenerazione...';
-      
-      try {
-        const response = await apiFetch('/regenerate-manifest', {
-          method: 'POST'
-        });
-        const result = await response.json();
-        
-        if (result.success) {
-          alert('✅ Manifest rigenerato con successo!');
-        } else {
-          alert(`❌ Errore: ${result.error || 'Rigenerazione fallita'}`);
-        }
-      } catch (error) {
-        alert(`❌ Errore di connessione: ${error.message}`);
-      } finally {
-        regenerateManifestBtn.disabled = false;
-        regenerateManifestBtn.textContent = '📋 Rigenera Manifest';
+    searchEl.addEventListener('input', () => {
+      const query = searchEl.value.trim().toLowerCase();
+      filteredReports = reports.filter(r =>
+        r.slug.toLowerCase().includes(query) ||
+        (r.title && r.title.toLowerCase().includes(query)) ||
+        r.status.toLowerCase().includes(query)
+      );
+      renderReportsList();
+    });
+
+    addModuleBtn.addEventListener('click', () => {
+      appendModuleCard();
+      setDirty(true);
+    });
+
+    uploadChartBtn.addEventListener('click', uploadChart);
+    openChartBtn.addEventListener('click', (event) => {
+      if (openChartBtn.getAttribute('aria-disabled') === 'true') {
+        event.preventDefault();
+        showToast('Carica o imposta il path del chart per aprirlo', 'info');
       }
     });
 
-    // Click outside modals
-    createReportModal.addEventListener('click', (e) => {
-      if (e.target === createReportModal) closeCreateReportModal();
+    saveDraftBtn.addEventListener('click', () => saveReport({ publish: false }));
+    publishBtn.addEventListener('click', () => saveReport({ publish: true }));
+    deleteBtn.addEventListener('click', deleteReport);
+    duplicateBtn.addEventListener('click', duplicateReport);
+
+    document.addEventListener('keydown', (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 's') {
+        event.preventDefault();
+        saveReport({ publish: false });
+      }
     });
 
-    uploadJsonModal.addEventListener('click', (e) => {
-      if (e.target === uploadJsonModal) closeUploadJsonModal();
-    });
+    modulesContainer.addEventListener('input', () => setDirty(true));
 
-    uploadChartScreenshotModal.addEventListener('click', (e) => {
-      if (e.target === uploadChartScreenshotModal) closeUploadChartScreenshotModal();
-    });
+    const init = async () => {
+      clearEditor();
+      await updateAuthUI();
+      supabase.auth.onAuthStateChange(() => updateAuthUI());
+    };
 
-    uploadScreenshotModal.addEventListener('click', (e) => {
-      if (e.target === uploadScreenshotModal) closeUploadScreenshotModal();
-    });
-
-    // Utility functions
-    function escapeHtml(str) {
-      const div = document.createElement('div');
-      div.textContent = String(str);
-      return div.innerHTML;
-    }
-
-    function showStatus(type, message, element = null) {
-      const statusEl = element || document.getElementById('status');
-      if (!statusEl) return;
-      statusEl.className = `status ${type} show`;
-      statusEl.innerHTML = message;
-    }
-
-    function hideStatus(element = null) {
-      const statusEl = element || document.getElementById('status');
-      if (statusEl) statusEl.classList.remove('show');
-    }
-
-    // Initialize
-    loadReports();
+    init();
   </script>
 </body>
 </html>

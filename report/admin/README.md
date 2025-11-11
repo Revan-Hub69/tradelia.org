@@ -1,135 +1,64 @@
-# 📊 Admin Dashboard - Upload Chart Screenshot
+# Report Admin (Supabase)
 
-Dashboard per caricare screenshot chart Exante nei report.
+Dashboard per gestire i report istituzionali direttamente su Supabase.
+Permette di creare/aggiornare i metadati del report, caricare il chart
+su Storage e salvare i JSON dei moduli (manifest, header, F1B, ...).
 
-## 🚀 Come Usare
+## Requisiti
+- Supabase con lo schema definito in supabase/schema.sql
+- Bucket Storage (es. eport-charts) privato
+- Utente Supabase (Auth) con ruolo uthenticated
+- eport/admin/supabase-config.js configurato
+- Un semplice static server per servire dashboard.html
 
-### 1. Avvia il Server
+## Setup rapido
+1. Crea un progetto Supabase e applica lo schema (supabase/schema.sql).
+2. Crea il bucket eport-charts (Access: Private) e le policy di read/write
+   per utenti autenticati.
+3. Crea un utente admin Supabase (email/password) nella sezione Authentication.
+4. Copia supabase-config.example.js in supabase-config.js e inserisci
+   SUPABASE_URL, SUPABASE_ANON_KEY, REPORTS_BUCKET.
+5. Avvia un server statico nella cartella eport/admin, ad esempio:
+   `ash
+   npx serve report/admin
+   `
+6. Apri http://localhost:3000/dashboard.html (porta in base al server usato).
 
-```bash
-node report/admin/upload-chart-server.js
-```
+## Cosa puoi fare dalla dashboard
+- Login / logout tramite Supabase Auth.
+- Lista report (eports) con stato, conteggio moduli e chart.
+- Creazione/duplicazione report con campi: slug, titolo, stato, note, data pubblicazione.
+- Upload chart nel bucket (eport-charts) con preview e link.
+- Gestione moduli dinamica: ogni file JSON diventa un modulo (module_key).
+  - Aggiungi/rimuovi/duplica moduli.
+  - Carica JSON da file o incolla manualmente.
+  - Validazione JSON rapida.
+- Salvataggio bozza / pubblicazione (status = ctive).
+- Eliminazione definitiva del report (con cascade sui moduli).
 
-Il server si avvierà su `http://localhost:3001`
+## Flusso consigliato
+1. Effettua login.
+2. Premi "Nuovo report" (oppure seleziona uno esistente).
+3. Imposta slug e titolo.
+4. Carica i moduli (manifest, header, F1B, ...). Ogni modulo è un JSON separato.
+5. Carica lo screenshot del chart (opzionale).
+6. Salva bozza per mantenere il report in stato draft.
+7. Pubblica per impostare status=active (e published_at=now).
+8. Il frontend pubblico può leggere da Supabase e renderizzare i moduli.
 
-### 2. Apri la Dashboard
+## Note su frontend/API
+- I moduli sono salvati in eport_modules con module_key e content (jsonb).
+- Per ottenere un report pubblicato:
+  `sql
+  select * from reports where slug = '...';
+  select * from report_modules where report_id = ... order by order_index;
+  `
+- chart_path va trasformato in URL pubblico (supabase.storage.getPublicUrl
+  o URL firmati).
+- RLS attuale: pieno accesso agli utenti autenticati; personalizza se servono ruoli diversi.
 
-**Dashboard Completa (consigliata):**
-```
-http://localhost:3001/report/admin/dashboard.html
-```
-
-La dashboard completa mostra:
-- ✅ Lista di tutti i report disponibili
-- ✅ Indicatore se ogni report ha screenshot o no
-- ✅ Preview dello screenshot esistente
-- ✅ Click su un report per caricare/sostituire lo screenshot
-- ✅ Ricerca report per nome o ticker
-- ✅ Link per visualizzare il report
-
-**Dashboard Semplice:**
-```
-http://localhost:3001/report/admin/upload-chart.html
-```
-
-La dashboard semplice permette di:
-- ✅ Inserire manualmente il Report ID
-- ✅ Caricare screenshot per un report specifico
-
-### 3. Carica Screenshot
-
-**Con Dashboard Completa:**
-1. **Sfoglia i report**: Vedi tutti i report disponibili nella griglia
-2. **Cerca report**: Usa la barra di ricerca per trovare un report specifico
-3. **Click su "Carica" o "Sostituisci"**: Apre il modal di upload
-4. **Seleziona File**: Clicca o trascina l'immagine (PNG, JPG)
-5. **Preview**: Verifica l'anteprima
-6. **Salva**: Clicca "Salva Screenshot"
-
-**Con Dashboard Semplice:**
-1. **Inserisci Report ID**: Es. `example-complete`, `20251107-1630`
-2. **Seleziona File**: Clicca o trascina l'immagine (PNG, JPG)
-3. **Preview**: Verifica l'anteprima
-4. **Salva**: Clicca "Salva Screenshot"
-
-### 4. Verifica
-
-Lo screenshot sarà salvato in:
-```
-report/reports/{reportId}/chart-snapshot.png
-```
-
-## 📋 Requisiti
-
-- Node.js (v14+)
-- File system scrivibile
-- Immagine PNG o JPG (max 10MB)
-
-## 🔧 Configurazione
-
-- **Porta**: Modifica `PORT` in `upload-chart-server.js` (default: 3001)
-- **Directory Reports**: Modifica `REPORTS_DIR` in `upload-chart-server.js`
-
-## 🎯 Caratteristiche
-
-**Dashboard Completa:**
-- ✅ Lista di tutti i report disponibili
-- ✅ Indicatore visivo se screenshot presente o mancante
-- ✅ Preview dello screenshot esistente
-- ✅ Ricerca report per nome o ticker
-- ✅ Click su report per caricare/sostituire screenshot
-- ✅ Link per visualizzare il report nel browser
-- ✅ Aggiornamento automatico dopo upload
-
-**Dashboard Semplice:**
-- ✅ Drag & Drop
-- ✅ Preview immagine
-- ✅ Validazione file
-- ✅ Report recenti (click rapido)
-- ✅ Feedback visivo
-- ✅ Salvataggio automatico in directory corretta
-
-## 📝 Note
-
-- Lo screenshot viene sempre salvato come `chart-snapshot.png`
-- Se il report non esiste, la directory viene creata automaticamente
-- Il file sostituisce eventuali screenshot precedenti
-- **Push automatico su GitHub**: Dopo ogni upload, lo screenshot viene automaticamente committato e pushato su GitHub
-  - Il commit viene creato con messaggio: `chore: aggiorna screenshot chart per report {reportId}`
-  - Il push viene fatto sul branch corrente del repository
-  - Se il push fallisce, lo screenshot viene comunque salvato localmente
-
-## 🔒 Sicurezza
-
-- Validazione Report ID (solo caratteri alfanumerici, underscore, trattino)
-- Limite dimensione file (10MB)
-- Validazione tipo file (solo immagini)
-- Push GitHub automatico (configurabile in `upload-chart-server.js`)
-
-## ⚙️ Configurazione Push GitHub
-
-Per abilitare/disabilitare il push automatico su GitHub, modifica in `upload-chart-server.js`:
-
-```javascript
-const AUTO_PUSH_TO_GITHUB = true; // true = abilitato, false = disabilitato
-```
-
-**Requisiti per push automatico:**
-- Repository Git inizializzato
-- Remote GitHub configurato (`git remote add origin ...`)
-- Credenziali GitHub configurate
-- Branch corrente valido
-
-## 🚨 Troubleshooting
-
-**Errore: "Cannot find module"**
-- Assicurati di essere nella directory root del progetto
-- Installa le dipendenze: `npm install` (se necessario)
-
-**Errore: "Permission denied"**
-- Verifica i permessi di scrittura sulla directory `report/reports/`
-
-**Porta già in uso**
-- Cambia la porta in `upload-chart-server.js`
-- Oppure chiudi il processo che usa la porta 3001
+## Legacy
+- upload-chart.html e upload-chart-server.js restano disponibili solo per
+  scopi storici (salvataggio su filesystem locale). Il nuovo flusso è esclusivamente
+  basato su Supabase.
 
