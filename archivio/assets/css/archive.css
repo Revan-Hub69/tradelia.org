@@ -234,6 +234,17 @@
   color: var(--ink);
 }
 
+.archive-asset-symbol {
+  font-weight: 600;
+}
+
+.archive-asset-name {
+  display: block;
+  font-size: var(--fs-12);
+  color: var(--muted);
+  margin-top: 2px;
+}
+
 .archive-table a {
   color: var(--brand-600);
   text-decoration: none;

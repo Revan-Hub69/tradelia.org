@@ -85,9 +85,17 @@ async function loadReportsFromSupabase() {
     .map(row => {
       const headerContent = row.report_modules?.find(mod => mod.module_key === 'header')?.content || {};
       const header = normalizeHeaderContent(headerContent);
-      const ticker = extractHeaderMetric(header, 'Ticker');
-      const companyName = extractHeaderMetric(header, 'CompanyName');
-      const version = extractHeaderMetric(header, 'Version') || header?.meta?.version || '—';
+      const ticker = extractHeaderMetric(header, ['Ticker']);
+      const companyName = extractHeaderMetric(header, ['CompanyName', 'Company']);
+      const strategyMode = extractHeaderMetric(header, [
+        'StrategyMode',
+        'strategymode',
+        'StrategyMode_macro',
+        'F1B_StrategyMode',
+        'F1B Strategy Mode'
+      ]);
+      const exchange = extractHeaderMetric(header, ['Venue', 'Exchange', 'Market']);
+      const sector = extractHeaderMetric(header, ['Sector', 'Industry', 'SectorName']);
       const createdAt = row.published_at || row.created_at;
       if (!createdAt) return null;
 
@@ -98,12 +106,15 @@ async function loadReportsFromSupabase() {
         id: row.slug,
         slug: row.slug,
         title: row.title || `${ticker || 'Report'} • Swing Master 5.0`,
-        ticker: ticker || '—',
-        company: companyName || row.title || '—',
-        type: row.report_type || 'swing_master_5_0',
-        version,
+        assetSymbol: ticker || '—',
+        assetName: companyName || row.title || '—',
+        framework: row.report_type || 'swing_master_5_0',
+        typology: row.title || strategyMode || null,
+        exchange: exchange || null,
+        sector: sector || null,
         status: row.status || 'active',
         created_at: createdAt,
+        published_at: createdAt,
         updated_at: row.updated_at,
         public_after: publicAfter.toISOString(),
         chart_path: row.chart_path || null
@@ -147,14 +158,60 @@ function normalizeHeaderContent(header) {
 }
 
 function extractHeaderMetric(header, metricKey) {
-  if (!header || !Array.isArray(header.rows)) return null;
-  for (const row of header.rows) {
-    for (const part of row.parts || []) {
-      if (part.kind === 'metric' && part.key === metricKey) {
-        return part.value;
+  if (!header) return null;
+  const keys = Array.isArray(metricKey)
+    ? metricKey.filter(Boolean).map(k => String(k).toLowerCase())
+    : [String(metricKey).toLowerCase()];
+
+  if (!keys.length) return null;
+
+  const normalizeValue = (value) => {
+    if (value == null) return null;
+    if (typeof value === 'object') {
+      if ('value' in value) return value.value;
+      if ('raw' in value) return value.raw;
+    }
+    return value;
+  };
+
+  if (Array.isArray(header.rows)) {
+    for (const row of header.rows) {
+      for (const part of row.parts || []) {
+        if (part.kind === 'metric') {
+          const partKey = part.key ? String(part.key).toLowerCase() : null;
+          const partLabel = part.label ? String(part.label).toLowerCase() : null;
+          if ((partKey && keys.includes(partKey)) || (partLabel && keys.includes(partLabel))) {
+            return normalizeValue(part.value);
+          }
+        }
       }
     }
   }
+
+  if (Array.isArray(header.metricsPanel)) {
+    for (const entry of header.metricsPanel) {
+      const entryKey = entry.key ? String(entry.key).toLowerCase() : null;
+      const entryLabel = entry.label ? String(entry.label).toLowerCase() : null;
+      if ((entryKey && keys.includes(entryKey)) || (entryLabel && keys.includes(entryLabel))) {
+        return normalizeValue(entry.value);
+      }
+    }
+  }
+
+  if (header.meta && typeof header.meta === 'object') {
+    for (const [metaKey, metaValue] of Object.entries(header.meta)) {
+      if (keys.includes(String(metaKey).toLowerCase())) {
+        return normalizeValue(metaValue);
+      }
+    }
+  }
+
+  for (const [prop, value] of Object.entries(header)) {
+    if (keys.includes(String(prop).toLowerCase())) {
+      return normalizeValue(value);
+    }
+  }
+
   return null;
 }
 
@@ -219,8 +276,8 @@ function renderReports() {
   
   // Sort reports
   const sortedReports = [...STATE.reports].sort((a, b) => {
-    const dateA = new Date(a.created_at);
-    const dateB = new Date(b.created_at);
+    const dateA = new Date(a.published_at || a.created_at);
+    const dateB = new Date(b.published_at || b.created_at);
     return STATE.sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
   });
   
@@ -234,18 +291,28 @@ function renderReports() {
   
   // Render rows
   tbody.innerHTML = sortedReports.map(report => {
-    const date = new Date(report.created_at).toLocaleDateString('it-IT');
-    const statusBadge = `<span class="status-badge" data-status="${report.status || 'active'}">${(report.status || 'active').toUpperCase()}</span>`;
-    
+    const frameworkLabel = formatReportType(report.framework);
+    const date = formatDateTime(report.published_at || report.created_at);
+    const assetSymbol = report.assetSymbol || '—';
+    const assetName = report.assetName || '';
+    const typology = report.typology || '—';
+    const exchange = report.exchange || '—';
+    const sector = report.sector || '—';
+
     return `
       <tr>
+        <td class="archive-id">[ ${report.slug} ]</td>
+        <td>
+          <a class="archive-asset-symbol" href="/report/index.html?id=${encodeURIComponent(report.slug)}" target="_blank" rel="noopener">
+            ${assetSymbol}
+          </a>
+          <span class="archive-asset-name">${assetName}</span>
+        </td>
+        <td>${frameworkLabel}</td>
+        <td>${typology}</td>
+        <td>${exchange}</td>
+        <td>${sector}</td>
         <td>${date}</td>
-        <td><strong>${report.ticker || '—'}</strong></td>
-        <td>${report.company || '—'}</td>
-        <td>${formatReportType(report.type)}</td>
-        <td>${report.version || '—'}</td>
-        <td>${statusBadge}</td>
-        <td><a href="/report/index.html?id=${encodeURIComponent(report.slug)}" target="_blank">Apri Report</a></td>
       </tr>
     `;
   }).join('');
@@ -258,8 +325,27 @@ function formatReportType(type) {
       return 'Swing Master 5.0';
     case 'daily_market_intel_3_1':
       return 'Daily Market Intelligence 3.1';
+    case 'custom':
+      return 'Custom';
+    case 'legacy':
+      return 'Legacy';
     default:
       return type;
+  }
+}
+
+function formatDateTime(iso) {
+  if (!iso) return '—';
+  try {
+    return new Date(iso).toLocaleString('it-IT', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  } catch {
+    return String(iso);
   }
 }
 
