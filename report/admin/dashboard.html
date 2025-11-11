@@ -992,6 +992,17 @@
         openChartBtn.setAttribute('aria-disabled', 'true');
         return;
       }
+
+      const isExternal = /^https?:\/\//i.test(path);
+      if (isExternal) {
+        chartPreviewEl.src = path;
+        chartPreviewEl.style.display = 'block';
+        openChartBtn.disabled = false;
+        openChartBtn.removeAttribute('aria-disabled');
+        currentChartSignedUrl = path;
+        return;
+      }
+
       const { data, error } = await supabase.storage
         .from(REPORTS_BUCKET)
         .createSignedUrl(path, 60 * 60);

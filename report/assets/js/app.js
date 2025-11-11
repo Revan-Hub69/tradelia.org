@@ -607,7 +607,11 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       const reportSlug = __reportRecord?.slug;
       let chartImageUrl = null;
       if (__reportRecord?.chart_path) {
-        chartImageUrl = await getSignedChartUrl(__reportRecord.chart_path);
+        if (/^https?:\/\//i.test(__reportRecord.chart_path)) {
+          chartImageUrl = __reportRecord.chart_path;
+        } else {
+          chartImageUrl = await getSignedChartUrl(__reportRecord.chart_path);
+        }
       }
 
       Logger.debug('App', `Montaggio chart widget: reportId=${reportSlug}, symbol=${symbol}, timestamp=${timestamp}`);
