@@ -83,12 +83,6 @@
       gap: 1rem;
     }
 
-    .panel-section h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--ink);
-    }
-
     .auth-card {
       display: grid;
       gap: 0.75rem;
@@ -172,7 +166,7 @@
       color: #fecaca;
     }
 
-    .btn:hover {
+    .btn:hover:not(:disabled) {
       transform: translateY(-1px);
       box-shadow: 0 16px 30px rgba(15, 23, 42, 0.35);
     }
@@ -241,6 +235,17 @@
     .status-active { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
     .status-archived { background: rgba(148, 163, 184, 0.25); color: #cbd5f5; }
 
+    .type-pill {
+      background: rgba(59, 130, 246, 0.18);
+      color: #93c5fd;
+      border-radius: 999px;
+      padding: 0.15rem 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
     .editor-grid {
       display: grid;
       gap: 1rem;
@@ -254,6 +259,12 @@
       display: grid;
       gap: 0.75rem;
       background: rgba(15, 23, 42, 0.5);
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .chart-wrapper.drop-active {
+      border-color: rgba(96, 165, 250, 0.75);
+      background: rgba(37, 99, 235, 0.12);
     }
 
     .chart-preview {
@@ -290,6 +301,11 @@
       max-width: 200px;
     }
 
+    .module-header input[readonly] {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
     .module-actions {
       display: flex;
       gap: 0.5rem;
@@ -306,7 +322,7 @@
       cursor: pointer;
     }
 
-    .module-actions button:hover {
+    .module-actions button:hover:not(:disabled) {
       border-color: rgba(96, 165, 250, 0.5);
     }
 
@@ -434,6 +450,14 @@
       <div class="panel-section">
         <div class="editor-grid">
           <div class="field">
+            <label for="report-type">Tipo report</label>
+            <select id="report-type">
+              <option value="swing_master_5_0">Swing Master 5.0</option>
+              <option value="daily_market_intel_3_1" disabled>Daily Market Intelligence 3.1 (presto)</option>
+              <option value="custom" disabled>Generico (presto)</option>
+            </select>
+          </div>
+          <div class="field">
             <label for="report-slug">Slug univoco</label>
             <input type="text" id="report-slug" placeholder="es. 20251107-1630">
           </div>
@@ -460,7 +484,7 @@
           <textarea id="report-notes" placeholder="Note operative, TODO, riferimenti…"></textarea>
         </div>
 
-        <div class="chart-wrapper">
+        <div class="chart-wrapper" id="chart-dropzone">
           <div class="field">
             <label for="chart-path">Path chart (bucket storage)</label>
             <input type="text" id="chart-path" placeholder="es. slug/chart-20251107.png">
@@ -470,6 +494,9 @@
             <button class="btn btn-outline" id="upload-chart-btn">Carica chart</button>
             <button class="btn btn-soft" id="open-chart-btn" aria-disabled="true" disabled>Apri chart</button>
           </div>
+          <small style="color: var(--ink-soft); font-size:0.75rem;">
+            Suggerimenti: trascina o incolla uno screenshot direttamente qui, oppure incolla il path completo.
+          </small>
           <img id="chart-preview" class="chart-preview" alt="Preview chart">
         </div>
 
@@ -477,6 +504,7 @@
           <div class="toolbar">
             <span class="badge" id="editor-report-id">Nessun report selezionato</span>
             <button class="btn btn-soft" id="add-module-btn">Aggiungi modulo</button>
+            <button class="btn btn-outline" id="reset-template-btn">Reimposta template</button>
           </div>
           <div class="modules-container" id="modules-container">
             <div class="module-empty">Nessun modulo presente. Aggiungi un modulo per iniziare.</div>
@@ -527,6 +555,36 @@
       auth: { persistSession: true, storageKey: 'tradelia-report-admin' }
     });
 
+    const DEFAULT_REPORT_TYPE = 'swing_master_5_0';
+
+    const REPORT_TEMPLATES = {
+      swing_master_5_0: {
+        label: 'Swing Master 5.0',
+        description: 'Template istituzionale Swing Master 5.0',
+        modules: [
+          { key: 'header', order: 10, template: {} },
+          { key: 'f1', order: 20, template: {} },
+          { key: 'f2', order: 30, template: {} },
+          { key: 'f3o', order: 35, template: {} },
+          { key: 'f3', order: 40, template: {} },
+          { key: 'f4', order: 50, template: {} },
+          { key: 'f5', order: 60, template: {} },
+          { key: 'f5o', order: 65, template: {} },
+          { key: 'f5lt', order: 70, template: {} }
+        ]
+      },
+      daily_market_intel_3_1: {
+        label: 'Daily Market Intelligence 3.1',
+        description: 'Template in definizione',
+        modules: []
+      },
+      custom: {
+        label: 'Report generico',
+        description: 'Composizione manuale',
+        modules: []
+      }
+    };
+
     const toastEl = document.getElementById('toast');
     const authCard = document.getElementById('auth-card');
     const authLogged = document.getElementById('auth-logged');
@@ -543,6 +601,7 @@
     const refreshBtn = document.getElementById('refresh-btn');
     const newReportBtn = document.getElementById('new-report-btn');
 
+    const reportTypeEl = document.getElementById('report-type');
     const reportSlugEl = document.getElementById('report-slug');
     const reportTitleEl = document.getElementById('report-title');
     const reportStatusEl = document.getElementById('report-status');
@@ -553,9 +612,11 @@
     const uploadChartBtn = document.getElementById('upload-chart-btn');
     const openChartBtn = document.getElementById('open-chart-btn');
     const chartPreviewEl = document.getElementById('chart-preview');
+    const chartDropzone = document.getElementById('chart-dropzone');
     const editorReportIdEl = document.getElementById('editor-report-id');
 
     const addModuleBtn = document.getElementById('add-module-btn');
+    const resetTemplateBtn = document.getElementById('reset-template-btn');
     const modulesContainer = document.getElementById('modules-container');
     const moduleTemplate = document.getElementById('module-template');
 
@@ -570,6 +631,7 @@
     let activeReport = null;
     let isDirty = false;
     let currentChartSignedUrl = null;
+    let currentTemplateType = DEFAULT_REPORT_TYPE;
 
     const statusLabels = {
       draft: 'Bozza',
@@ -631,21 +693,55 @@
       modulesContainer.innerHTML = '<div class="module-empty">Nessun modulo presente. Aggiungi un modulo per iniziare.</div>';
     };
 
-    const appendModuleCard = (module = {}) => {
-      const placeholder = modulesContainer.querySelector('.module-empty');
-      if (placeholder) {
-        placeholder.remove();
-      }
-      modulesContainer.appendChild(createModuleCard(module));
+    const syncTemplateControls = (type) => {
+      currentTemplateType = type;
+      const template = REPORT_TEMPLATES[type];
+      const hasTemplate = Array.isArray(template?.modules) && template.modules.length > 0;
+      addModuleBtn.disabled = hasTemplate && type !== 'custom';
+      resetTemplateBtn.disabled = !hasTemplate;
+      resetTemplateBtn.textContent = hasTemplate ? 'Reimposta template' : 'Importa template';
     };
 
-    const createModuleCard = (module = {}) => {
+    const applyTemplateToModules = (type, { skipConfirm = false, markDirty = true } = {}) => {
+      const template = REPORT_TEMPLATES[type];
+      if (!template || !template.modules?.length) {
+        renderModulesEmptyState();
+        syncTemplateControls(type);
+        if (markDirty) setDirty(true);
+        return true;
+      }
+
+      const hasExisting = modulesContainer.querySelector('.module-card');
+      if (hasExisting && !skipConfirm) {
+        const confirmed = confirm('Sostituire i moduli correnti con il template selezionato?');
+        if (!confirmed) {
+          reportTypeEl.value = currentTemplateType;
+          return;
+        }
+      }
+
+      modulesContainer.innerHTML = '';
+      template.modules.forEach((module, index) => {
+        appendModuleCard({
+          module_key: module.key,
+          order_index: module.order ?? index,
+          content: module.template ?? {}
+        }, { lockedKey: true, allowDuplicate: false });
+      });
+      syncTemplateControls(type);
+      if (markDirty) setDirty(true);
+      return true;
+    };
+
+    const appendModuleCard = (module = {}, options = {}) => {
       const node = moduleTemplate.content.cloneNode(true);
       const card = node.querySelector('.module-card');
       const keyInput = card.querySelector('.module-key');
       const orderInput = card.querySelector('.module-order');
       const contentArea = card.querySelector('.module-content');
       const fileInput = card.querySelector('.module-file');
+
+      const { lockedKey = false, allowDuplicate = true } = options;
 
       keyInput.value = module.module_key ?? '';
       orderInput.value = module.order_index ?? '';
@@ -655,10 +751,27 @@
           : JSON.stringify(module.content, null, 2)
         : '';
 
+      if (lockedKey) {
+        keyInput.readOnly = true;
+        keyInput.title = 'Chiave definita dal template';
+      }
+
       const markDirty = () => setDirty(true);
       keyInput.addEventListener('input', markDirty);
       orderInput.addEventListener('input', markDirty);
       contentArea.addEventListener('input', markDirty);
+
+      contentArea.addEventListener('paste', () => {
+        setTimeout(() => {
+          try {
+            JSON.parse(contentArea.value);
+            showToast(`JSON incollato in ${keyInput.value || 'modulo'}`, 'success');
+          } catch (error) {
+            showToast(`JSON non valido: ${error.message}`, 'error');
+          }
+          markDirty();
+        }, 0);
+      });
 
       card.querySelector('.module-import').addEventListener('click', () => fileInput.click());
       fileInput.addEventListener('change', (event) => {
@@ -668,7 +781,12 @@
         reader.onload = (ev) => {
           contentArea.value = ev.target?.result ?? '';
           markDirty();
-          showToast(`JSON caricato in ${keyInput.value || 'modulo'}`, 'success');
+          try {
+            JSON.parse(contentArea.value);
+            showToast(`JSON caricato in ${keyInput.value || 'modulo'}`, 'success');
+          } catch (error) {
+            showToast(`JSON caricato ma non valido: ${error.message}`, 'error');
+          }
         };
         reader.onerror = () => showToast('Impossibile leggere il file JSON', 'error');
         reader.readAsText(file);
@@ -683,7 +801,13 @@
         }
       });
 
-      card.querySelector('.module-duplicate').addEventListener('click', () => {
+      const duplicateBtnEl = card.querySelector('.module-duplicate');
+      duplicateBtnEl.disabled = !allowDuplicate;
+      duplicateBtnEl.addEventListener('click', () => {
+        if (!allowDuplicate) {
+          showToast('Duplicazione disabilitata per i moduli del template', 'info');
+          return;
+        }
         appendModuleCard({
           module_key: `${keyInput.value || 'modulo'}-copy`,
           order_index: orderInput.value === '' ? null : Number(orderInput.value),
@@ -707,13 +831,16 @@
         setDirty(true);
       });
 
-      return card;
+      modulesContainer.appendChild(card);
     };
 
     const collectModules = () => {
       const cards = modulesContainer.querySelectorAll('.module-card');
       if (!cards.length) return [];
+
       const modules = [];
+      const seenKeys = new Set();
+
       for (const card of cards) {
         const key = card.querySelector('.module-key').value.trim();
         const orderValue = card.querySelector('.module-order').value.trim();
@@ -723,6 +850,12 @@
           showToast('Ogni modulo deve avere una chiave', 'error');
           return null;
         }
+        if (seenKeys.has(key)) {
+          showToast(`Chiave duplicata: ${key}`, 'error');
+          return null;
+        }
+        seenKeys.add(key);
+
         if (!contentText) {
           showToast(`Modulo ${key}: contenuto mancante`, 'error');
           return null;
@@ -742,11 +875,25 @@
           content
         });
       }
+
       return modules;
+    };
+
+    const validateModulesForType = (modules, type) => {
+      const requiredKeys = REPORT_TEMPLATES[type]?.modules?.map((module) => module.key) ?? [];
+      if (!requiredKeys.length) return true;
+
+      const missing = requiredKeys.filter((key) => !modules.some((module) => module.module_key === key));
+      if (missing.length) {
+        showToast(`Mancano i moduli obbligatori: ${missing.join(', ')}`, 'error');
+        return false;
+      }
+      return true;
     };
 
     const clearEditor = () => {
       activeReport = null;
+      reportTypeEl.value = DEFAULT_REPORT_TYPE;
       reportSlugEl.value = '';
       reportTitleEl.value = '';
       reportStatusEl.value = 'draft';
@@ -760,6 +907,8 @@
       openChartBtn.setAttribute('aria-disabled', 'true');
       currentChartSignedUrl = null;
       renderModulesEmptyState();
+      syncTemplateControls(DEFAULT_REPORT_TYPE);
+      applyTemplateToModules(DEFAULT_REPORT_TYPE, { skipConfirm: true, markDirty: false });
       resetDirty();
     };
 
@@ -775,12 +924,14 @@
         if (activeReport && activeReport.id === report.id) {
           card.classList.add('active');
         }
+        const typeLabel = REPORT_TEMPLATES[report.report_type]?.label ?? report.report_type;
         card.innerHTML = `
           <div class="report-card-header">
             <strong>${report.title || 'Senza titolo'}</strong>
             <span class="status-pill ${statusClasses[report.status] || ''}">${statusLabels[report.status] || report.status}</span>
           </div>
           <div class="report-meta">
+            <span class="type-pill">${typeLabel}</span>
             <span>slug: <code>${report.slug}</code></span>
             <span>moduli: ${report.modules_count}</span>
             <span>pubblicato: ${formatDateTimeHuman(report.published_at)}</span>
@@ -799,7 +950,7 @@
       if (!currentUser) return;
       const { data, error } = await supabase
         .from('reports')
-        .select('id, slug, title, status, chart_path, notes, published_at, updated_at, report_modules(count)')
+        .select('id, slug, title, status, report_type, chart_path, notes, published_at, updated_at, report_modules(count)')
         .order('updated_at', { ascending: false });
 
       if (error) {
@@ -813,6 +964,7 @@
         slug: row.slug,
         title: row.title,
         status: row.status,
+        report_type: row.report_type,
         chart_path: row.chart_path,
         notes: row.notes,
         published_at: row.published_at,
@@ -878,6 +1030,7 @@
       }
 
       activeReport = report;
+      reportTypeEl.value = report.report_type || DEFAULT_REPORT_TYPE;
       reportSlugEl.value = report.slug || '';
       reportTitleEl.value = report.title || '';
       reportStatusEl.value = report.status || 'draft';
@@ -889,46 +1042,104 @@
 
       modulesContainer.innerHTML = '';
       if (modules.length) {
-        modules.forEach((module) => appendModuleCard(module));
+        modules.forEach((module) => appendModuleCard(module, { lockedKey: REPORT_TEMPLATES[report.report_type]?.modules?.length > 0, allowDuplicate: report.report_type === 'custom' }));
       } else {
         renderModulesEmptyState();
       }
 
+      syncTemplateControls(report.report_type || DEFAULT_REPORT_TYPE);
       resetDirty();
       renderReportsList();
     };
 
-    const uploadChart = async () => {
-      const file = chartFileEl.files?.[0];
+    const sanitizeFilename = (filename, fallback = 'chart.png') => {
+      if (!filename) return fallback;
+      return filename.replace(/[^a-zA-Z0-9._-]/g, '-');
+    };
+
+    const uploadChartFile = async (file) => {
       const slug = reportSlugEl.value.trim();
-      if (!file) {
-        showToast('Seleziona un file immagine', 'error');
-        return;
-      }
       if (!slug) {
         showToast('Imposta lo slug prima di caricare il chart', 'error');
-        return;
+        return false;
       }
-
-      const sanitizedName = file.name.replace(/[^a-zA-Z0-9._-]/g, '-');
-      const path = `${slug}/${Date.now()}-${sanitizedName}`;
-
       uploadChartBtn.disabled = true;
       try {
+        const sanitizedName = sanitizeFilename(file.name, `chart-${Date.now()}.png`);
+        const path = `${slug}/${Date.now()}-${sanitizedName}`;
         const { error } = await supabase.storage
           .from(REPORTS_BUCKET)
           .upload(path, file, { upsert: true, cacheControl: '3600' });
         if (error) throw error;
-
         chartPathEl.value = path;
         await updateChartPreview(path);
         setDirty(true);
         showToast('Chart caricato con successo', 'success');
+        return true;
       } catch (error) {
         console.error(error);
         showToast(`Upload chart fallito: ${error.message}`, 'error');
+        return false;
       } finally {
         uploadChartBtn.disabled = false;
+      }
+    };
+
+    const uploadChart = async () => {
+      const file = chartFileEl.files?.[0];
+      if (!file) {
+        showToast('Seleziona un file immagine', 'error');
+        return;
+      }
+      await uploadChartFile(file);
+    };
+
+    const handleChartPaste = async (event) => {
+      const clipboard = event.clipboardData;
+      if (!clipboard) return;
+
+      const imageItem = Array.from(clipboard.items || []).find((item) => item.type?.startsWith('image/'));
+      if (imageItem) {
+        event.preventDefault();
+        const file = imageItem.getAsFile();
+        if (file) {
+          const ext = file.type.split('/')[1] || 'png';
+          const renamed = new File([file], `clipboard-${Date.now()}.${ext}`, { type: file.type });
+          await uploadChartFile(renamed);
+        }
+        return;
+      }
+
+      const text = clipboard.getData('text');
+      if (text) {
+        event.preventDefault();
+        const trimmed = text.trim();
+        chartPathEl.value = trimmed;
+        await updateChartPreview(trimmed);
+        setDirty(true);
+        showToast('Path chart impostato da clipboard', 'info');
+      }
+    };
+
+    const handleChartDrop = async (event) => {
+      event.preventDefault();
+      chartDropzone.classList.remove('drop-active');
+      const files = event.dataTransfer?.files;
+      if (files && files.length) {
+        const file = files[0];
+        if (file.type.startsWith('image/')) {
+          await uploadChartFile(file);
+        } else {
+          showToast('Il file trascinato non è un’immagine', 'error');
+        }
+        return;
+      }
+      const text = event.dataTransfer?.getData('text');
+      if (text) {
+        chartPathEl.value = text.trim();
+        await updateChartPreview(text.trim());
+        setDirty(true);
+        showToast('Path chart impostato dal drop', 'info');
       }
     };
 
@@ -942,10 +1153,12 @@
 
       const modules = collectModules();
       if (modules === null) return;
+      if (!validateModulesForType(modules, reportTypeEl.value)) return;
 
       const reportPayload = {
         slug,
         title,
+        report_type: reportTypeEl.value,
         status: publish ? 'active' : reportStatusEl.value,
         chart_path: chartPathEl.value.trim() || null,
         notes: reportNotesEl.value.trim() || null,
@@ -1103,13 +1316,11 @@
 
     searchEl.addEventListener('input', () => {
       const query = searchEl.value.trim().toLowerCase();
-      filteredReports = reports.filter((report) => {
-        return (
-          report.slug.toLowerCase().includes(query) ||
-          (report.title && report.title.toLowerCase().includes(query)) ||
-          report.status.toLowerCase().includes(query)
-        );
-      });
+      filteredReports = reports.filter((report) => (
+        report.slug.toLowerCase().includes(query) ||
+        (report.title && report.title.toLowerCase().includes(query)) ||
+        report.status.toLowerCase().includes(query)
+      ));
       renderReportsList();
     });
 
@@ -1118,13 +1329,42 @@
       setDirty(true);
     });
 
+    resetTemplateBtn.addEventListener('click', () => {
+      applyTemplateToModules(reportTypeEl.value, { skipConfirm: false });
+    });
+
     modulesContainer.addEventListener('input', () => setDirty(true));
+
+    reportTypeEl.addEventListener('change', () => {
+      const nextType = reportTypeEl.value;
+      const template = REPORT_TEMPLATES[nextType];
+      if (!template) {
+        showToast('Template non disponibile', 'error');
+        reportTypeEl.value = currentTemplateType;
+        return;
+      }
+      if (template.modules.length === 0) {
+        showToast('Questo template sarà disponibile a breve', 'info');
+        reportTypeEl.value = currentTemplateType;
+        return;
+      }
+      const applied = applyTemplateToModules(nextType, { skipConfirm: false });
+      if (applied) syncTemplateControls(nextType);
+    });
 
     chartPathEl.addEventListener('input', () => setDirty(true));
     chartPathEl.addEventListener('blur', async () => {
       const path = chartPathEl.value.trim();
       await updateChartPreview(path);
     });
+    chartPathEl.addEventListener('paste', handleChartPaste);
+
+    chartDropzone.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      chartDropzone.classList.add('drop-active');
+    });
+    chartDropzone.addEventListener('dragleave', () => chartDropzone.classList.remove('drop-active'));
+    chartDropzone.addEventListener('drop', handleChartDrop);
 
     uploadChartBtn.addEventListener('click', uploadChart);
     openChartBtn.addEventListener('click', () => {

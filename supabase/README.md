@@ -12,6 +12,7 @@ Questa cartella contiene gli step minimi per configurare Supabase e ospitare i r
 1. Apri il pannello SQL di Supabase.
 2. Incolla il contenuto di [`schema.sql`](./schema.sql) e lancialo.
    - Crea le tabelle `reports` e `report_modules`.
+   - Aggiunge il campo `report_type` (per ora supportiamo `swing_master_5_0`, `daily_market_intel_3_1`, `custom`).
    - Abilita RLS con policy che consentono full access agli utenti autenticati.
    - Aggiunge la view `active_reports_expanded` (opzionale).
 
@@ -26,13 +27,7 @@ Questa cartella contiene gli step minimi per configurare Supabase e ospitare i r
 2. Questo account verrà usato dalla dashboard (login con Supabase Auth).
 
 ## 5. Configurazione dashboard
-Nella repo esiste `report/admin/supabase-config.example.js`. Copia il file e rinominalo in `supabase-config.js`.
-
-```bash
-cp report/admin/supabase-config.example.js report/admin/supabase-config.js
-```
-
-Modifica i valori:
+Nel repository è presente `report/admin/supabase-config.example.js`. Copialo in `supabase-config.js` (o crea direttamente quest’ultimo) e imposta:
 
 ```js
 export const SUPABASE_URL = "https://<PROJECT>.supabase.co";
@@ -40,7 +35,7 @@ export const SUPABASE_ANON_KEY = "<PUBLIC_ANON_KEY>";
 export const REPORTS_BUCKET = "report-charts";
 ```
 
-Il file `supabase-config.js` è nel `.gitignore` (non va in versione).
+Se il progetto è deployato (es. Vercel) conviene generare questo file in fase di build usando le env `SUPABASE_URL` / `SUPABASE_ANON_KEY`, altrimenti puoi tenerlo versionato come avviene adesso.
 
 ## 6. Dashboard admin
 Apri `report/admin/dashboard.html` in un browser (da un server locale, es. `npx serve report/admin`).  
@@ -48,7 +43,8 @@ Effettua login con l’utente creato: la dashboard consente di:
 
 - creare/aggiornare un record `reports`;
 - caricare il chart nel bucket `report-charts`;
-- gestire i moduli (`manifest`, `header`, `F1B`, …) come singole righe della tabella `report_modules`.
+- gestire i moduli (per ora il template Swing Master 5.0 popola automaticamente `header`, `f1`, `f2`, `f3o`, `f3`, `f4`, `f5`, `f5o`, `f5lt`) come righe della tabella `report_modules`.
+  È possibile incollare rapidamente i JSON o trascinare/incollare direttamente lo screenshot nella sezione chart.
 
 ## 7. Frontend pubblico
 - Usa il client Supabase (o una edge function) per leggere `reports` + `report_modules`.
