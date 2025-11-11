@@ -87,15 +87,10 @@ async function loadReportsFromSupabase() {
       const header = normalizeHeaderContent(headerContent);
       const ticker = extractHeaderMetric(header, ['Ticker']);
       const companyName = extractHeaderMetric(header, ['CompanyName', 'Company']);
-      const strategyMode = extractHeaderMetric(header, [
-        'StrategyMode',
-        'strategymode',
-        'StrategyMode_macro',
-        'F1B_StrategyMode',
-        'F1B Strategy Mode'
-      ]);
-      const exchange = extractHeaderMetric(header, ['Venue', 'Exchange', 'Market']);
-      const sector = extractHeaderMetric(header, ['Sector', 'Industry', 'SectorName']);
+      const frameworkMetric = extractHeaderMetric(header, ['Framework', 'FrameworkName']);
+      const tipologia = extractHeaderMetric(header, ['Tipologia', 'Typology', 'Categoria', 'Category']);
+      const exchange = extractHeaderMetric(header, ['Exchange', 'Venue', 'Market']);
+      const sector = extractHeaderMetric(header, ['Settore', 'Sector', 'Industry', 'SectorName']);
       const createdAt = row.published_at || row.created_at;
       if (!createdAt) return null;
 
@@ -108,8 +103,8 @@ async function loadReportsFromSupabase() {
         title: row.title || `${ticker || 'Report'} • Swing Master 5.0`,
         assetSymbol: ticker || '—',
         assetName: companyName || row.title || '—',
-        framework: row.report_type || 'swing_master_5_0',
-        typology: row.title || strategyMode || null,
+        framework: frameworkMetric || row.report_type || 'swing_master_5_0',
+        typology: tipologia || null,
         exchange: exchange || null,
         sector: sector || null,
         status: row.status || 'active',

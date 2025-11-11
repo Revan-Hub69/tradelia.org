@@ -46,6 +46,19 @@
       ]
     },
     {
+      "id": "summary-line",
+      "parts": [
+        { "kind": "text", "text": "Framework: " },
+        { "kind": "metric", "key": "Framework", "value": "Swing Master 5.0", "tone": "neutral", "label": "Framework" },
+        { "kind": "text", "text": " • Tipologia: " },
+        { "kind": "metric", "key": "Tipologia", "value": "Analisi Momentum", "tone": "neutral", "label": "Tipologia" },
+        { "kind": "text", "text": " • Exchange: " },
+        { "kind": "metric", "key": "Exchange", "value": "NASDAQ", "tone": "neutral", "label": "Exchange" },
+        { "kind": "text", "text": " • Settore: " },
+        { "kind": "metric", "key": "Settore", "value": "Tecnologia", "tone": "neutral", "label": "Settore" }
+      ]
+    },
+    {
       "id": "price-line",
       "parts": [
         { "kind": "text", "text": "Prezzo al momento dello start: " },
@@ -93,6 +106,10 @@
     ]
   },
   "metricsPanel": [
+    { "key": "Framework", "label": "Framework", "value": "Swing Master 5.0", "tone": "neutral" },
+    { "key": "Tipologia", "label": "Tipologia", "value": "Analisi Momentum", "tone": "neutral" },
+    { "key": "Exchange", "label": "Exchange", "value": "NASDAQ", "tone": "neutral" },
+    { "key": "Settore", "label": "Settore", "value": "Tecnologia", "tone": "neutral" },
     { "key": "CompanyName", "label": "Nome azienda", "value": "Apple Inc.", "tone": "neutral" },
     { "key": "Ticker", "label": "Ticker", "value": "AAPL", "tone": "neutral" },
     { "key": "Venue", "label": "Borsa principale", "value": "NASDAQ", "tone": "neutral" },
