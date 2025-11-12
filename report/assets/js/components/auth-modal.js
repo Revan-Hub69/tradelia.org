@@ -34,7 +34,7 @@ function template() {
       </header>
       <nav class="auth-tabs" role="tablist">
         <button type="button" role="tab" data-auth-switch="login" aria-selected="true">Accedi</button>
-        <button type="button" role="tab" data-auth-switch="upgrade" aria-selected="false">Upgrade piano</button>
+        <button type="button" role="tab" data-auth-switch="register" aria-selected="false">Registrati</button>
         <button type="button" role="tab" data-auth-switch="reset" aria-selected="false">Recupera password</button>
       </nav>
       <div class="auth-body">
@@ -43,19 +43,14 @@ function template() {
           <label>Password<input type="password" name="password" autocomplete="current-password" required minlength="8" placeholder="Password"></label>
           <button class="btn btn-primary" type="submit">Accedi</button>
         </form>
-        <div id="auth-upgrade-card" data-auth-form="upgrade" hidden>
-          <h3>Upgrade Pro / Institutional</h3>
+        <div id="auth-register-card" data-auth-form="register" hidden>
+          <h3>Attiva un piano Tradelia</h3>
           <p>
-            Stiamo finalizzando l’integrazione con gateway di pagamento dedicati (Lemon&nbsp;Squeezy / Paddle) per attivare l’acquisto self-service.
-            Nel frattempo, il team commerciale abilita manualmente i piani Pro e Institutional.
+            Stiamo integrando i provider di pagamento (Lemon&nbsp;Squeezy / Paddle) per abilitare il checkout self-service e la gestione delle licenze.
+            Nel frattempo puoi consultare il listino e avviare l’onboarding dalla pagina pricing ufficiale.
           </p>
-          <ul>
-            <li>Accesso completo ai report e alla community</li>
-            <li>Supporto diretto con il desk Tradelia</li>
-            <li>Pagamenti ricorrenti saranno gestiti via provider certificati</li>
-          </ul>
-          <button type="button" class="btn btn-primary" data-auth-contact>Contatta il team</button>
-          <p class="auth-hint">Scrivici: specifica desk, esigenze operative e numero licenze richiesto.</p>
+          <button type="button" class="btn btn-primary" data-auth-pricing>Vai alla pagina Pricing</button>
+          <p class="auth-hint">Potrai scegliere tra piano Pro e Institutional; il team ti assisterà durante l’attivazione definitiva.</p>
         </div>
         <form id="auth-reset-form" data-auth-form="reset" hidden>
           <label>Email registrata<input type="email" name="email" autocomplete="email" required placeholder="nome@azienda.com"></label>
@@ -77,7 +72,7 @@ function registerEvents() {
   const switchers = state.root.querySelectorAll('[data-auth-switch]');
   const loginForm = state.root.querySelector('#auth-login-form');
   const resetForm = state.root.querySelector('#auth-reset-form');
-  const contactBtn = state.root.querySelector('[data-auth-contact]');
+  const pricingBtn = state.root.querySelector('[data-auth-pricing]');
 
   closeBtn.addEventListener('click', close);
   backdrop.addEventListener('click', close);
@@ -92,8 +87,8 @@ function registerEvents() {
 
   loginForm.addEventListener('submit', handleLogin);
   resetForm.addEventListener('submit', handleReset);
-  contactBtn?.addEventListener('click', () => {
-    window.location.href = 'mailto:info@tradelia.org?subject=Upgrade%20piano%20Tradelia';
+  pricingBtn?.addEventListener('click', () => {
+    window.location.href = '/pricing.html';
   });
 }
 

@@ -5,7 +5,7 @@
 
 /* ===== LAYOUT BASE ===== */
 #archive-main {
-  padding: var(--sp-8) var(--sp-4);
+  padding: calc(var(--sp-8) + 64px) var(--sp-4) var(--sp-8);
   min-height: calc(100vh - 200px);
 }
 
