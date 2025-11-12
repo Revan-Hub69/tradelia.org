@@ -342,6 +342,95 @@
       margin-bottom: 1rem;
     }
 
+    .status-banner {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      border-radius: 16px;
+      padding: 0.9rem 1.1rem;
+      border: 1px solid rgba(96, 165, 250, 0.28);
+      background: rgba(30, 64, 175, 0.18);
+      box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.12);
+      transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      margin-bottom: 1.2rem;
+    }
+
+    .status-banner-text {
+      display: grid;
+      gap: 0.15rem;
+    }
+
+    .status-banner-text strong {
+      font-size: 0.9rem;
+      letter-spacing: 0.01em;
+    }
+
+    .status-banner-text span {
+      font-size: 0.8rem;
+      color: rgba(203, 213, 225, 0.88);
+    }
+
+    .status-banner-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(96, 165, 250, 0.9);
+      box-shadow: 0 0 12px rgba(96, 165, 250, 0.75);
+    }
+
+    .status-banner--info {
+      border-color: rgba(96, 165, 250, 0.32);
+      background: rgba(37, 99, 235, 0.16);
+    }
+
+    .status-banner--success {
+      border-color: rgba(34, 197, 94, 0.32);
+      background: rgba(22, 101, 52, 0.24);
+    }
+
+    .status-banner--warning {
+      border-color: rgba(249, 115, 22, 0.4);
+      background: rgba(120, 53, 15, 0.32);
+    }
+
+    .status-banner--error {
+      border-color: rgba(248, 113, 113, 0.45);
+      background: rgba(127, 29, 29, 0.32);
+    }
+
+    .status-banner--success .status-banner-dot {
+      background: rgba(34, 197, 94, 0.92);
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.75);
+    }
+
+    .status-banner--warning .status-banner-dot {
+      background: rgba(251, 146, 60, 0.92);
+      box-shadow: 0 0 12px rgba(251, 146, 60, 0.75);
+    }
+
+    .status-banner--error .status-banner-dot {
+      background: rgba(248, 113, 113, 0.92);
+      box-shadow: 0 0 12px rgba(248, 113, 113, 0.75);
+    }
+
+    .btn-loading {
+      position: relative;
+      pointer-events: none;
+      opacity: 0.85;
+    }
+
+    .btn-loading::after {
+      content: '';
+      position: absolute;
+      right: 0.85rem;
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      border: 2px solid currentColor;
+      border-top-color: transparent;
+      animation: dashboard-spin 0.75s linear infinite;
+    }
+
     .danger-zone {
       margin-top: 1.5rem;
       border: 1px solid rgba(248, 113, 113, 0.35);
@@ -393,6 +482,11 @@
     }
 
     .hidden { display: none !important; }
+
+    @keyframes dashboard-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -516,10 +610,18 @@
         </div>
       </div>
 
+        <div class="status-banner status-banner--info" id="status-banner" role="status" aria-live="polite">
+          <span class="status-banner-dot" aria-hidden="true"></span>
+          <div class="status-banner-text">
+            <strong id="status-banner-title">Pronto</strong>
+            <span id="status-banner-message">Compila i moduli e salva una bozza per sincronizzare il report.</span>
+          </div>
+        </div>
+
         <div class="toolbar">
-          <button class="btn btn-outline" id="save-draft-btn">Salva bozza</button>
-          <button class="btn btn-primary" id="publish-report-btn">Pubblica</button>
-          <button class="btn btn-soft" id="duplicate-report-btn">Duplica</button>
+          <button class="btn btn-outline" id="save-draft-btn" data-label="Salva bozza">Salva bozza</button>
+          <button class="btn btn-primary" id="publish-report-btn" data-label="Pubblica">Pubblica</button>
+          <button class="btn btn-soft" id="duplicate-report-btn" data-label="Duplica">Duplica</button>
   </div>
 
         <div class="danger-zone">
@@ -631,6 +733,11 @@
     const publishBtn = document.getElementById('publish-report-btn');
     const duplicateBtn = document.getElementById('duplicate-report-btn');
     const deleteBtn = document.getElementById('delete-report-btn');
+    const statusBanner = document.getElementById('status-banner');
+    const statusBannerTitle = document.getElementById('status-banner-title');
+    const statusBannerMessage = document.getElementById('status-banner-message');
+    duplicateBtn.disabled = true;
+    deleteBtn.disabled = true;
 
     let currentUser = null;
     let isAdmin = false;
@@ -638,6 +745,8 @@
     let filteredReports = [];
     let activeReport = null;
     let isDirty = false;
+    let isSaving = false;
+    let lastSavedAt = null;
     let currentChartSignedUrl = null;
     let currentTemplateType = DEFAULT_REPORT_TYPE;
     let lastFocusedModuleArea = null;
@@ -664,6 +773,90 @@
       }, 3200);
     };
 
+    const STATUS_BANNER_CLASSES = {
+      info: 'status-banner--info',
+      success: 'status-banner--success',
+      warning: 'status-banner--warning',
+      error: 'status-banner--error'
+    };
+
+    const setStatusBannerMessage = (tone = 'info', title = '', message = '') => {
+      if (!statusBanner) return;
+      Object.values(STATUS_BANNER_CLASSES).forEach((cls) => statusBanner.classList.remove(cls));
+      const appliedClass = STATUS_BANNER_CLASSES[tone] || STATUS_BANNER_CLASSES.info;
+      statusBanner.classList.add(appliedClass);
+      if (title) {
+        statusBannerTitle.textContent = title;
+      }
+      if (message !== undefined) {
+        statusBannerMessage.textContent = message;
+      }
+    };
+
+    const formatStatusTime = (date) => {
+      try {
+        return new Intl.DateTimeFormat('it-IT', {
+          dateStyle: 'short',
+          timeStyle: 'short'
+        }).format(date);
+      } catch {
+        return date instanceof Date ? date.toISOString() : '';
+      }
+    };
+
+    const toggleButtonLoading = (button, loading, loadingLabel) => {
+      if (!button) return;
+      const baseLabel = button.getAttribute('data-label') || button.textContent.trim();
+      if (loading) {
+        button.textContent = loadingLabel;
+        button.classList.add('btn-loading');
+      } else {
+        button.textContent = baseLabel;
+        button.classList.remove('btn-loading');
+      }
+    };
+
+    const setSavingState = (saving, mode) => {
+      isSaving = saving;
+      const targetButton = mode === 'publish' ? publishBtn : saveDraftBtn;
+      toggleButtonLoading(targetButton, saving, mode === 'publish' ? 'Pubblicazione…' : 'Salvataggio…');
+      if (saving) {
+        saveDraftBtn.disabled = true;
+        publishBtn.disabled = true;
+        duplicateBtn.disabled = true;
+        deleteBtn.disabled = true;
+      } else {
+        saveDraftBtn.disabled = false;
+        publishBtn.disabled = false;
+        duplicateBtn.disabled = !activeReport;
+        deleteBtn.disabled = !activeReport;
+      }
+    };
+
+    const updateStatusAfterDirtyChange = () => {
+      if (isSaving) return;
+      if (isDirty) {
+        setStatusBannerMessage(
+          'warning',
+          'Modifiche non salvate',
+          'Salva una bozza o pubblica il report per sincronizzare i dati.'
+        );
+      } else if (lastSavedAt) {
+        setStatusBannerMessage(
+          'success',
+          'Sincronizzato',
+          `Ultimo salvataggio alle ${formatStatusTime(lastSavedAt)}.`
+        );
+      } else {
+        setStatusBannerMessage(
+          'info',
+          'Pronto',
+          'Compila i moduli e salva una bozza per sincronizzare il report.'
+        );
+      }
+    };
+    updateStatusAfterDirtyChange();
+
     const updateEditorBadge = () => {
       if (isDirty) {
         editorReportIdEl.textContent = 'Modifiche non salvate';
@@ -677,6 +870,7 @@
     const setDirty = (state) => {
       isDirty = state;
       updateEditorBadge();
+      updateStatusAfterDirtyChange();
     };
 
     const resetDirty = () => setDirty(false);
@@ -863,16 +1057,31 @@
 
         if (!key) {
           showToast('Ogni modulo deve avere una chiave', 'error');
+          setStatusBannerMessage(
+            'error',
+            'Modulo senza chiave',
+            'Assegna una chiave univoca a ciascun modulo prima di salvare.'
+          );
           return null;
         }
         if (seenKeys.has(key)) {
           showToast(`Chiave duplicata: ${key}`, 'error');
+          setStatusBannerMessage(
+            'error',
+            'Chiave duplicata',
+            `La chiave ${key} è già utilizzata. Usa identificativi distinti per ogni modulo.`
+          );
           return null;
         }
         seenKeys.add(key);
 
         if (!contentText) {
           showToast(`Modulo ${key}: contenuto mancante`, 'error');
+          setStatusBannerMessage(
+            'error',
+            'Contenuto mancante',
+            `Il modulo ${key} non contiene dati. Incolla o carica il JSON prima di salvare.`
+          );
           return null;
         }
 
@@ -881,6 +1090,11 @@
           content = JSON.parse(contentText);
       } catch (error) {
           showToast(`Modulo ${key}: JSON non valido (${error.message})`, 'error');
+          setStatusBannerMessage(
+            'error',
+            'JSON non valido',
+            `Correggi il formato JSON del modulo ${key} e riprova.`
+          );
           return null;
         }
 
@@ -902,6 +1116,11 @@
         const hasHeader = modules.some((module) => module.module_key === 'header');
         if (!hasHeader) {
           showToast('Per pubblicare il report è necessario compilare almeno il modulo header.', 'error');
+          setStatusBannerMessage(
+            'warning',
+            'Modulo obbligatorio mancante',
+            'Compila il modulo header prima di pubblicare il report.'
+          );
           return false;
         }
       }
@@ -924,6 +1143,9 @@
       openChartBtn.disabled = true;
       openChartBtn.setAttribute('aria-disabled', 'true');
       currentChartSignedUrl = null;
+      lastSavedAt = null;
+      duplicateBtn.disabled = true;
+      deleteBtn.disabled = true;
       renderModulesEmptyState();
       syncTemplateControls(DEFAULT_REPORT_TYPE);
       applyTemplateToModules(DEFAULT_REPORT_TYPE, { skipConfirm: true, markDirty: false });
@@ -1077,6 +1299,9 @@
       }
 
       syncTemplateControls(report.report_type || DEFAULT_REPORT_TYPE);
+      lastSavedAt = report.updated_at ? new Date(report.updated_at) : null;
+      duplicateBtn.disabled = false;
+      deleteBtn.disabled = false;
       resetDirty();
       renderReportsList();
     };
@@ -1174,21 +1399,36 @@
 
     const saveReport = async ({ publish }) => {
       console.log('[Dashboard] saveReport start', { publish });
+      let bannerLocked = false;
+      const actionMode = publish ? 'publish' : 'save';
       const slug = reportSlugEl.value.trim();
       const title = reportTitleEl.value.trim();
       if (!slug || !title) {
         showToast('Slug e titolo sono obbligatori', 'error');
+        setStatusBannerMessage(
+          'error',
+          'Dati mancanti',
+          'Compila sia lo slug sia il titolo prima di salvare o pubblicare.'
+        );
+        bannerLocked = true;
         console.log('[Dashboard] saveReport abort: missing slug/title', { slug, title });
         return;
       }
 
       const modules = collectModules();
       if (modules === null) {
+        setStatusBannerMessage(
+          'error',
+          'Moduli incompleti',
+          'Correggi i moduli segnalati prima di procedere con il salvataggio.'
+        );
+        bannerLocked = true;
         console.log('[Dashboard] saveReport abort: collectModules returned null');
         return;
       }
       console.log('[Dashboard] saveReport collected modules', modules);
       if (!validateModulesForType(modules, reportTypeEl.value, { publish })) {
+        bannerLocked = true;
         console.log('[Dashboard] saveReport abort: validation failed', { publish, type: reportTypeEl.value });
         return;
       }
@@ -1207,6 +1447,14 @@
             : null
       };
 
+      setSavingState(true, actionMode);
+      setStatusBannerMessage(
+        'info',
+        publish ? 'Pubblicazione in corso' : 'Salvataggio in corso',
+        'Attendi qualche secondo: sincronizziamo i dati con Supabase.'
+      );
+      bannerLocked = true;
+
       try {
         const isNew = !activeReport;
         console.log('[Dashboard] saveReport upsert', { isNew, reportPayload });
@@ -1218,6 +1466,12 @@
         if (saveError) {
           console.error(saveError);
           showToast('Errore durante il salvataggio del report', 'error');
+          setStatusBannerMessage(
+            'error',
+            'Errore durante il salvataggio',
+            'Il server ha rifiutato la richiesta. Riprova o verifica i permessi.'
+          );
+          bannerLocked = true;
           console.log('[Dashboard] saveReport abort: saveError', saveError);
           return;
         }
@@ -1233,6 +1487,12 @@
         if (deleteError) {
           console.error(deleteError);
           showToast('Errore nella sostituzione dei moduli', 'error');
+          setStatusBannerMessage(
+            'error',
+            'Errore sui moduli',
+            'Non è stato possibile sostituire i moduli esistenti. Riprova più tardi.'
+          );
+          bannerLocked = true;
           console.log('[Dashboard] saveReport abort: deleteError', deleteError);
           return;
         }
@@ -1249,18 +1509,43 @@
           if (insertError) {
             console.error(insertError);
             showToast('Errore durante l\'inserimento dei moduli', 'error');
+            setStatusBannerMessage(
+              'error',
+              'Errore durante l\'inserimento',
+              'Alcuni moduli non sono stati salvati. Verifica il JSON e riprova.'
+            );
+            bannerLocked = true;
             console.log('[Dashboard] saveReport abort: insertError', insertError);
             return;
           }
-        }
+          }
 
         console.log('[Dashboard] saveReport success', { publish });
         showToast(publish ? 'Report pubblicato' : 'Report salvato', 'success');
+        const completionTime = new Date();
+        lastSavedAt = completionTime;
         await loadReports();
         await selectReport(reportId);
+        setStatusBannerMessage(
+          'success',
+          publish ? 'Report pubblicato' : 'Bozza salvata',
+          `${publish ? 'Il report è ora online.' : 'La bozza è stata sincronizzata.'} Ultimo salvataggio alle ${formatStatusTime(completionTime)}.`
+        );
+        bannerLocked = true;
       } catch (error) {
         console.error('[Dashboard] saveReport exception', error);
         showToast('Errore imprevisto durante il salvataggio', 'error');
+        setStatusBannerMessage(
+          'error',
+          'Errore imprevisto',
+          'Si è verificato un problema non previsto. Riprova più tardi.'
+        );
+        bannerLocked = true;
+      } finally {
+        setSavingState(false, actionMode);
+        if (!bannerLocked) {
+          updateStatusAfterDirtyChange();
+        }
       }
     };
 
