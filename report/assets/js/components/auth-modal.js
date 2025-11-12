@@ -24,42 +24,91 @@ function template() {
     <div class="auth-backdrop" data-auth-dismiss></div>
     <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
       <header class="auth-header">
-        <div>
-          <h2 class="auth-title" id="auth-modal-title">Accesso Tradelia</h2>
-          <p class="auth-subtitle">Credenziali istituzionali per commenti, richieste e area riservata.</p>
+        <div class="auth-header-text">
+          <span class="auth-pill">Accesso Istituzionale</span>
+          <h2 class="auth-title" id="auth-modal-title">Area Riservata Tradelia</h2>
+          <p class="auth-subtitle">
+            Accedi con credenziali verificate per commentare i report, proporre analisi e gestire il tuo profilo professionale.
+          </p>
         </div>
         <button type="button" class="auth-close" data-auth-close aria-label="Chiudi">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
         </button>
       </header>
-      <nav class="auth-tabs" role="tablist">
-        <button type="button" role="tab" data-auth-switch="login" aria-selected="true">Accedi</button>
-        <button type="button" role="tab" data-auth-switch="register" aria-selected="false">Registrati</button>
-        <button type="button" role="tab" data-auth-switch="reset" aria-selected="false">Recupera password</button>
+      <nav class="auth-tabs" role="tablist" aria-label="Modalità di accesso">
+        <button type="button" role="tab" data-auth-switch="login" aria-selected="true">
+          <span class="auth-tab-label">Accedi</span>
+          <span class="auth-tab-hint">Utenti verificati</span>
+        </button>
+        <button type="button" role="tab" data-auth-switch="register" aria-selected="false">
+          <span class="auth-tab-label">Registrati</span>
+          <span class="auth-tab-hint">Piani Pro & Institutional</span>
+        </button>
+        <button type="button" role="tab" data-auth-switch="reset" aria-selected="false">
+          <span class="auth-tab-label">Recupera password</span>
+          <span class="auth-tab-hint">Invia link sicuro</span>
+        </button>
       </nav>
       <div class="auth-body">
-        <form id="auth-login-form" data-auth-form="login">
-          <label>Email aziendale<input type="email" name="email" autocomplete="email" required placeholder="nome@azienda.com"></label>
-          <label>Password<input type="password" name="password" autocomplete="current-password" required minlength="8" placeholder="Password"></label>
-          <button class="btn btn-primary" type="submit">Accedi</button>
+        <form id="auth-login-form" data-auth-form="login" class="auth-form" novalidate>
+          <div class="auth-field">
+            <label for="auth-email-login">Email aziendale</label>
+            <input id="auth-email-login" type="email" name="email" autocomplete="email" required placeholder="nome@azienda.com">
+          </div>
+          <div class="auth-field">
+            <label for="auth-password-login">Password</label>
+            <input id="auth-password-login" type="password" name="password" autocomplete="current-password" required minlength="8" placeholder="Password">
+          </div>
+          <div class="auth-actions">
+            <button class="btn btn-primary" type="submit">Accedi</button>
+            <p class="auth-trust-caption">Connessione crittografata · Sessione persistente per 7 giorni</p>
+          </div>
         </form>
-        <div id="auth-register-card" data-auth-form="register" hidden>
-          <h3>Attiva un piano Tradelia</h3>
-          <p>
-            Stiamo integrando i provider di pagamento (Lemon&nbsp;Squeezy / Paddle) per abilitare il checkout self-service e la gestione delle licenze.
-            Nel frattempo puoi consultare il listino e avviare l’onboarding dalla pagina pricing ufficiale.
-          </p>
+        <div id="auth-register-card" data-auth-form="register" class="auth-form auth-register" hidden>
+          <div class="auth-register-copy">
+            <h3>Attiva un piano professionale</h3>
+            <p>
+              Stiamo integrando checkout certificati (Lemon&nbsp;Squeezy / Paddle) per una gestione autonoma delle licenze.
+              Nell’attesa puoi richiedere l’upgrade dalla pagina pricing ufficiale: il team accelera l’onboarding in 24h.
+            </p>
+          </div>
+          <ul class="auth-register-list">
+            <li>
+              <strong>Commenti e richieste</strong>
+              <span>Interagisci con l’ufficio studi sui report live.</span>
+            </li>
+            <li>
+              <strong>Analisi dedicate</strong>
+              <span>Prenota slot giornalieri per richieste su ticker specifici.</span>
+            </li>
+            <li>
+              <strong>Profilo verificato</strong>
+              <span>Badge istituzionale con dati certificati dal team Tradelia.</span>
+            </li>
+          </ul>
           <button type="button" class="btn btn-primary" data-auth-pricing>Vai alla pagina Pricing</button>
-          <p class="auth-hint">Potrai scegliere tra piano Pro e Institutional; il team ti assisterà durante l’attivazione definitiva.</p>
+          <p class="auth-hint">Pro e Institutional sono soggetti a verifica KYC aziendale.</p>
         </div>
-        <form id="auth-reset-form" data-auth-form="reset" hidden>
-          <label>Email registrata<input type="email" name="email" autocomplete="email" required placeholder="nome@azienda.com"></label>
-          <button class="btn btn-primary" type="submit">Invia link di reset</button>
-          <p class="auth-hint">Ti invieremo un link per impostare una nuova password.</p>
+        <form id="auth-reset-form" data-auth-form="reset" class="auth-form" hidden novalidate>
+          <div class="auth-field">
+            <label for="auth-email-reset">Email registrata</label>
+            <input id="auth-email-reset" type="email" name="email" autocomplete="email" required placeholder="nome@azienda.com">
+          </div>
+          <div class="auth-actions">
+            <button class="btn btn-primary" type="submit">Invia link di reset</button>
+            <p class="auth-trust-caption">Riceverai un link valido 30 minuti.</p>
+          </div>
+          <p class="auth-hint">Controlla anche la cartella spam se non ricevi l’email entro pochi minuti.</p>
         </form>
       </div>
       <footer class="auth-footer">
-        <p>Problemi con l’accesso? Scrivi a <a href="mailto:info@tradelia.org">info@tradelia.org</a>.</p>
+        <div class="auth-footer-grid">
+          <p class="auth-support">Assistenza dedicata: <a href="mailto:info@tradelia.org">info@tradelia.org</a></p>
+          <div class="auth-meta">
+            <span>Standard WCAG 2.2 AA</span>
+            <span>Infrastruttura Supabase EU</span>
+          </div>
+        </div>
       </footer>
       <div class="auth-toast" id="auth-toast" role="status" aria-live="polite"></div>
     </div>
