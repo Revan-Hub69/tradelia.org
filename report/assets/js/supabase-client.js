@@ -6,7 +6,8 @@ export const REPORTS_BUCKET = 'report-charts';
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
-    persistSession: false
+    persistSession: true,
+    storageKey: 'tradelia-user-session'
   }
 });
 

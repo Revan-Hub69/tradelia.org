@@ -38,6 +38,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
   let __reportRecord = null;
   let __moduleRecords = [];
   let __moduleMap = {};
+  window.__tradeliaReportContext = window.__tradeliaReportContext || {};
   
   // ===== ERROR STATES =====
   function showErrorState(container, error, title = null) {
@@ -510,6 +511,8 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       const { normalized, map } = buildModuleState(bundle.modules);
       __moduleRecords = normalized;
       __moduleMap = map;
+      window.__tradeliaReportContext.report = __reportRecord;
+      window.dispatchEvent(new CustomEvent('tradelia:reportLoaded', { detail: { report: __reportRecord } }));
     } catch (err) {
       Logger.error('App', 'Report non disponibile', err);
       showErrorState(ROOT, err, 'Report non disponibile');

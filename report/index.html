@@ -54,6 +54,7 @@
   <link rel="stylesheet" href="/report/assets/css/user-preferences.css" />
   <link rel="stylesheet" href="/report/assets/css/export-menu.css" />
   <link rel="stylesheet" href="/report/assets/css/charts.css" />
+  <link rel="stylesheet" href="/report/assets/css/comments.css" />
   <link rel="stylesheet" href="/report/assets/css/responsive-2025.css" />
   <link rel="stylesheet" href="/report/assets/css/tooltip.css" />
   <link rel="stylesheet" href="/report/assets/css/popover.css" />
@@ -770,6 +771,35 @@
       <!-- Contenuto moduli -->
       <div id="report-modules-container" class="report-modules-main"></div>
     </div>
+
+    <section id="report-comments-section" aria-labelledby="report-comments-title">
+      <div class="comments-panel" id="report-comments-panel">
+        <div class="comments-header">
+          <h2 class="comments-title" id="report-comments-title">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            Discussione della community
+          </h2>
+          <p class="comments-subtitle">
+            Condividi insight e domande operative su questo report. I commenti sono visibili a tutta la community Tradelia e moderati secondo il codice etico istituzionale.
+          </p>
+        </div>
+
+        <div id="report-comments-auth" class="comments-auth-card" hidden></div>
+
+        <div id="report-comments-form-wrapper" class="comments-form-card" hidden></div>
+
+        <div id="report-comments-list-wrapper">
+          <div class="comments-empty" id="report-comments-empty" hidden>
+            Nessun commento pubblicato al momento. Sii il primo a condividere un’analisi o una domanda.
+          </div>
+          <div class="comments-error" id="report-comments-error" hidden></div>
+          <ul class="comments-list" id="report-comments-list" aria-live="polite"></ul>
+        </div>
+      </div>
+      <div class="comments-toast" id="comments-toast" role="status" aria-live="assertive"></div>
+    </section>
   </main>
 
   <!-- FOOTER SLOT -->
@@ -844,6 +874,7 @@
   </div>
 
   <!-- SCRIPTS -->
+  <script type="module" src="/report/assets/js/comments.js" defer></script>
   <script type="module" src="/report/assets/js/app.js" defer></script>
   <script type="module">
     // Pre-load popup component

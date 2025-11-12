@@ -11,13 +11,16 @@ Questa cartella contiene gli step minimi per configurare Supabase e ospitare i r
 ## 2. Schema
 1. Apri il pannello SQL di Supabase.
 2. Incolla il contenuto di [`schema.sql`](./schema.sql) e lancialo.
-   - Crea le tabelle `admin_users`, `user_roles`, `reports` e `report_modules`.
+   - Crea/aggiorna le tabelle `admin_users`, `user_roles`, `user_profiles`, `reports`, `report_modules`, `report_comments`.
    - `admin_users` contiene l’elenco degli UID autorizzati (ruolo admin).
    - `user_roles` mappa ogni utente Supabase ad uno dei ruoli applicativi (`trial`, `pro`, `institutional`).
+   - `user_profiles` conserva metadati profilo (display name, avatar, preferenze).
+   - `report_comments` archivia i commenti pubblici legati ai report.
    - Aggiunge il campo `report_type` (per ora supportiamo `swing_master_5_0`, `daily_market_intel_3_1`, `custom`).
    - Abilita RLS con policy granulari:
      - gli admin (o il service role) possono gestire tabelle e ruoli;
-     - ogni utente autenticato può leggere solamente il proprio record in `user_roles`.
+     - ogni utente autenticato può leggere/modificare solo il proprio profilo;
+     - tutti possono leggere i commenti, mentre l’inserimento è riservato ai ruoli `pro` e `institutional`.
    - Aggiunge la view `active_reports_expanded` (opzionale).
 
 ## 3. Storage (chart)
@@ -39,7 +42,12 @@ Questa cartella contiene gli step minimi per configurare Supabase e ospitare i r
    values ('<UUID-UTENTE>', 'pro');
    ```
    Gli utenti possono leggere solo il proprio ruolo; gli admin o il service role possono aggiornarlo.
-   Lo script SQL elimina e ricrea automaticamente trigger e policy se già presenti, quindi puoi rilanciarlo senza errori.
+4. (Opzionale) inizializza il profilo utente:
+   ```sql
+   insert into public.user_profiles (user_id, display_name)
+   values ('<UUID-UTENTE>', 'Nome Visualizzato');
+   ```
+5. Lo script SQL elimina e ricrea automaticamente trigger e policy se già presenti, quindi puoi rilanciarlo senza errori.
 
 ## 5. Configurazione dashboard
 Nel repository è presente `report/admin/supabase-config.example.js`. Copialo in `supabase-config.js` (o crea direttamente quest’ultimo) e imposta:
