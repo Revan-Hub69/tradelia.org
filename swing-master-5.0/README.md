@@ -1,6 +1,6 @@
-# Swing Master 5.0 Framework
+# SRD v5.0 — Swing Research Deck
 
-Framework completo per analisi swing trading (orizzonte 3-10 giorni).
+Framework proprietario per analisi swing (orizzonte 3-10 giorni) basato su pipeline AI e modelli quantitativi.
 
 ## 📁 Struttura
 

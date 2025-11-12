@@ -10,6 +10,7 @@ import { metricPopup } from './components/metric-popup.js';
 import { reportNavigation } from './components/report-navigation.js';
 import { userPreferences } from './utils/user-preferences.js';
 import { i18n } from './utils/i18n.js';
+import { getFrameworkInfo, formatFrameworkTitle, formatFrameworkDescription } from './utils/frameworks.js';
 import { supabase, getSignedChartUrl } from './supabase-client.js';
 
 (function() {
@@ -117,9 +118,10 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
   }
   
   // ===== META TAGS DINAMICI =====
-  function updateMetaTags(ticker, companyName, version) {
-    const title = `Framework Accademico AI, Tradelia Swing Master 5.0 · ${ticker}`;
-    const description = `Analisi multi-fattore su ${companyName} (${ticker}) - Contesto macro, sentiment e tecnica (orizzonte 3–10 giorni). Report finanziario completo con analisi fondamentale, tecnica e macroeconomica.`;
+  function updateMetaTags(ticker, companyName, version, frameworkType) {
+    const info = getFrameworkInfo(frameworkType);
+    const title = formatFrameworkTitle(frameworkType, ticker || companyName);
+    const description = `${info.description} · Caso studio: ${companyName || ticker}. Versione framework: ${version || 'N/D'}.`;
     const url = `${window.location.origin}${window.location.pathname}${window.location.search}`;
     const imageUrl = `${window.location.origin}/img/tradelia_og_vC_white_clean.png`;
     const imageAlt = `${companyName} (${ticker}) - Analisi Tradelia AI`;
@@ -150,15 +152,15 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
     updateMetaName('twitter:image:alt', imageAlt);
     
     // Update structured data (FinancialProduct)
-    updateFinancialProductStructuredData(ticker, companyName, description, url, version);
+    updateFinancialProductStructuredData(ticker, companyName, description, url, version, frameworkType);
   }
   
   // ===== UPDATE FINANCIAL PRODUCT STRUCTURED DATA =====
-  function updateFinancialProductStructuredData(ticker, companyName, description, url, version) {
+  function updateFinancialProductStructuredData(ticker, companyName, description, url, version, frameworkType) {
     const structuredData = {
       "@context": "https://schema.org",
       "@type": "FinancialProduct",
-      "name": `${companyName} (${ticker}) - Analisi Finanziaria`,
+      "name": formatFrameworkTitle(frameworkType, ticker || companyName),
       "description": description,
       "provider": {
         "@type": "Organization",
@@ -212,15 +214,15 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
   }
   
   // ===== STRUCTURED DATA DINAMICO =====
-  function updateStructuredData(ticker, companyName, version, start, end) {
+  function updateStructuredData(ticker, companyName, version, start, end, frameworkType) {
     const structuredDataScript = document.getElementById('structured-data');
     if (!structuredDataScript) return;
     
     const structuredData = {
       "@context": "https://schema.org",
       "@type": "FinancialProduct",
-      "name": `${companyName} (${ticker}) - Analisi Tradelia AI`,
-      "description": `Framework Accademico AI per analisi finanziaria multi-fattore su ${companyName} (${ticker})`,
+      "name": formatFrameworkTitle(frameworkType, ticker || companyName),
+      "description": formatFrameworkDescription(frameworkType, companyName, ticker),
       "provider": {
         "@type": "Organization",
         "name": "Tradelia AI",
@@ -301,10 +303,12 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
 
       __versionQS = version && version !== '—' ? `?v=${encodeURIComponent(version)}` : '';
 
+      const frameworkType = __reportRecord?.report_type;
+
       if (ticker) {
-        document.title = `Framework Accademico AI, Tradelia Swing Master 5.0 · ${ticker}`;
-        updateMetaTags(ticker, companyName || ticker, version);
-        updateStructuredData(ticker, companyName || ticker, version, start, end);
+        document.title = formatFrameworkTitle(frameworkType, ticker);
+        updateMetaTags(ticker, companyName || ticker, version, frameworkType);
+        updateStructuredData(ticker, companyName || ticker, version, start, end, frameworkType);
       }
 
       await mountHeaderTicker(header);

@@ -1,4 +1,4 @@
-# Swing Master 5.0 - File Operativi vs Documentazione
+# SRD v5.0 — File Operativi vs Documentazione
 
 ## 🎯 File Necessari per Funzionamento
 

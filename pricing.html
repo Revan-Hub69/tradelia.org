@@ -70,6 +70,23 @@
       opacity: 0.6;
       transition: opacity var(--transition-base), width var(--transition-base);
     }
+
+    .pricing-card--highlight {
+      border-color: rgba(96, 165, 250, 0.35);
+      background: linear-gradient(
+        135deg,
+        color-mix(in oklab, var(--surface-card) 96%, var(--brand-600) 4%) 0%,
+        color-mix(in oklab, var(--surface-card) 94%, var(--brand-500) 6%) 100%
+      );
+      box-shadow:
+        var(--shadow-lg),
+        0 1px 0 rgba(255, 255, 255, 0.04) inset;
+    }
+
+    .pricing-card--highlight::before {
+      width: 6px;
+      opacity: 0.9;
+    }
     
     .pricing-card:hover {
       background: linear-gradient(
@@ -109,6 +126,14 @@
       font-size: var(--fs-16);
       color: var(--muted);
       font-weight: 500;
+    }
+
+    .pricing-grid {
+      display: grid;
+      gap: var(--sp-8);
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      align-items: stretch;
+      margin-bottom: var(--sp-16);
     }
     
     /* ===== TRIAL BADGE ===== */
@@ -177,6 +202,7 @@
       box-shadow: 
         var(--shadow-sm),
         0 1px 0 rgba(255, 255, 255, 0.02) inset;
+      width: 100%;
     }
     
     .cta-button::before {
@@ -232,11 +258,7 @@
     .pricing-hero {
       margin-bottom: var(--sp-16);
     }
-    
-    .pricing-card-wrapper {
-      margin-bottom: var(--sp-16);
-    }
-    
+
     .pricing-faq {
       margin-top: var(--sp-16);
     }
@@ -567,86 +589,110 @@
       
       <!-- Hero Section -->
       <header class="pricing-hero" style="text-align: center;">
-        <h1 style="font-size: clamp(2rem, 5vw, 2.75rem); font-weight: 800; color: var(--ink); margin-bottom: var(--sp-4); letter-spacing: -0.02em;" data-i18n="pricing.hero.title">
-          Scegli il Piano Giusto per Te
+        <h1 style="font-size: clamp(2rem, 5vw, 2.75rem); font-weight: 800; color: var(--ink); margin-bottom: var(--sp-4); letter-spacing: -0.02em;">
+          Scegli il livello di ricerca Tradelia
         </h1>
-        <p style="color: var(--ink-soft); font-size: var(--fs-18); max-width: 600px; margin: 0 auto var(--sp-6); line-height: var(--lh-16);" data-i18n="pricing.hero.subtitle">
-          Accesso completo a tutti i report, dashboard interattive e strumenti di analisi
+        <p style="color: var(--ink-soft); font-size: var(--fs-18); max-width: 640px; margin: 0 auto var(--sp-6); line-height: var(--lh-16);">
+          Deck proprietari SRD v5.0 (Swing Research Deck) e MTB v3.1 (Macro Tactical Briefing) sviluppati con metodologia accademica AI e fonti Tier-1.
         </p>
-        <p style="color: var(--muted); font-size: var(--fs-15); max-width: 700px; margin: 0 auto; line-height: var(--lh-17);" data-i18n="pricing.hero.description">
-          <strong style="color: var(--ink-soft);">Tradelia AI</strong> è una piattaforma SaaS che fornisce analisi finanziarie professionali 
-          attraverso metodologia accademica AI. Offriamo report dettagliati su azioni, ETF, commodities e altri asset, 
-          con dashboard interattive e strumenti di analisi tecnica e fondamentale. 
-          Il servizio è progettato per trader, investitori e professionisti finanziari che cercano analisi dati 
-          approfondite e visualizzazioni professionali.
+        <p style="color: var(--muted); font-size: var(--fs-15); max-width: 720px; margin: 0 auto; line-height: var(--lh-17);">
+          Trial formativo di 14 giorni, abbonamento Pro per retail avanzati e soluzioni Institutional con ricerca on-demand, fatturazione dedicata e white label.
         </p>
       </header>
 
-      <!-- Pricing Card -->
-      <div class="pricing-card-wrapper" style="max-width: 600px; margin: 0 auto;">
-        <div class="pricing-card">
-          <div style="text-align: center; margin-bottom: var(--sp-8);">
-            <h2 style="font-size: var(--fs-22); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-4); letter-spacing: -0.01em;" data-i18n="pricing.card.title">
-              Abbonamento Mensile
-            </h2>
-            <div class="trial-badge" style="margin-bottom: var(--sp-5);" data-i18n="pricing.card.trial">
-              14 giorni di prova gratuita
+      <!-- Pricing Grid -->
+      <div class="pricing-grid">
+        <!-- Trial -->
+        <article class="pricing-card">
+          <div style="display:flex; flex-direction:column; gap: var(--sp-4);">
+            <div class="trial-badge">14 giorni full access</div>
+            <h2 style="font-size: var(--fs-22); font-weight:700; color:var(--ink); letter-spacing:-0.01em;">Trial Formativo</h2>
+            <div style="display:flex; align-items:baseline; gap:var(--sp-3);">
+              <span class="pricing-price">€0</span>
+              <span class="pricing-period">/14 giorni</span>
             </div>
-            <div style="display: flex; align-items: baseline; justify-content: center; gap: var(--sp-3); margin-bottom: var(--sp-5);">
-              <span class="pricing-price">€29</span>
-              <span class="pricing-period" data-i18n="pricing.card.period">/mese</span>
-            </div>
-            <p style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-16);" data-i18n="pricing.card.description">
-              Prova gratuita per 14 giorni, poi €29/mese.<br>
-              Annulla in qualsiasi momento.
+            <p style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-16);">
+              Accesso completo ai deck SRD v5.0 e MTB v3.1 per 14 giorni. Al termine puoi continuare
+              a consultare i dossier ufficiali con le sezioni sensibili oscurate.
             </p>
           </div>
-
-          <!-- Features -->
           <div class="pricing-features">
-            <h3 data-i18n="pricing.features.title">Cosa include:</h3>
+            <h3>Include:</h3>
             <ul>
-              <li>
-                <i data-lucide="check"></i>
-                <span data-i18n="pricing.features.reports">Accesso completo a tutti i report</span>
-              </li>
-              <li>
-                <i data-lucide="check"></i>
-                <span data-i18n="pricing.features.dashboard">Dashboard interattive e personalizzabili</span>
-              </li>
-              <li>
-                <i data-lucide="check"></i>
-                <span data-i18n="pricing.features.voting">Sistema di votazione avanzato</span>
-              </li>
-              <li>
-                <i data-lucide="check"></i>
-                <span data-i18n="pricing.features.notifications">Notifiche push per nuovi report</span>
-              </li>
-              <li>
-                <i data-lucide="check"></i>
-                <span data-i18n="pricing.features.priority">Accesso prioritario a nuove funzionalità</span>
-              </li>
-              <li>
-                <i data-lucide="check"></i>
-                <span data-i18n="pricing.features.support">Supporto via email</span>
-              </li>
+              <li><i data-lucide="check"></i><span>Full access temporaneo a SRD v5.0 e MTB v3.1</span></li>
+              <li><i data-lucide="check"></i><span>Documenti istituzionali consultabili anche dopo la prova</span></li>
+              <li><i data-lucide="check"></i><span>Preview community, roadmap e notifiche principali</span></li>
+              <li><i data-lucide="check"></i><span>Upgrade a Pro con un click in qualsiasi momento</span></li>
             </ul>
           </div>
+          <div style="margin-top: var(--sp-6);">
+            <a href="/dashboard.html" class="cta-button">Attiva prova gratuita</a>
+          </div>
+        </article>
 
-          <!-- CTA Button -->
-          <div style="text-align: center; margin-top: var(--sp-8);">
-            <a href="/dashboard.html" class="cta-button" data-i18n="pricing.cta.button">
-              Inizia Subito
-            </a>
-            <div class="pricing-legal">
-              <div class="pricing-legal-links">
-                <a href="/refund.html" data-i18n="pricing.cta.trial">14 giorni di prova gratuita</a>
-                <span class="pricing-legal-separator">·</span>
-                <a href="/terms.html" data-i18n="pricing.cta.terms">Termini e Condizioni</a>
-              </div>
+        <!-- Pro -->
+        <article class="pricing-card pricing-card--highlight">
+          <div style="display:flex; flex-direction:column; gap: var(--sp-4);">
+            <div class="trial-badge" style="background: rgba(59,130,246,0.22); border-color: rgba(96,165,250,0.45); color: rgba(191,219,254,0.95);">
+              Piano consigliato
+            </div>
+            <h2 style="font-size: var(--fs-22); font-weight:700; color:var(--ink); letter-spacing:-0.01em;">Pro Research</h2>
+            <div style="display:flex; align-items:baseline; gap:var(--sp-3);">
+              <span class="pricing-price">€49</span>
+              <span class="pricing-period">/mese</span>
+            </div>
+            <p style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-16);">
+              Accesso stabile ai deck SRD v5.0 e MTB v3.1, strumenti community e notifiche operative. Promo lancio:
+              <strong style="color:var(--ink-soft);">€29/mese</strong> per i primi 100 abbonati.
+            </p>
+          </div>
+          <div class="pricing-features">
+            <h3>Cosa ottieni:</h3>
+            <ul>
+              <li><i data-lucide="check"></i><span>Deck SRD v5.0 e MTB v3.1 completi, con moduli F1→F7</span></li>
+              <li><i data-lucide="check"></i><span>Commenti illimitati e dialogo con il desk di ricerca</span></li>
+              <li><i data-lucide="check"></i><span>Suggerimento e voto giornaliero sui ticker da analizzare</span></li>
+              <li><i data-lucide="check"></i><span>Notifiche push e aggiornamenti operativi in tempo reale</span></li>
+              <li><i data-lucide="check"></i><span>Supporto email prioritario e roadmap condivisa</span></li>
+            </ul>
+          </div>
+          <div style="margin-top: var(--sp-6);">
+            <a href="/dashboard.html" class="cta-button">Abbonati ora</a>
+            <div class="pricing-legal-links" style="justify-content:center; margin-top: var(--sp-4);">
+              <a href="/refund.html">Trial 14 giorni</a>
+              <span class="pricing-legal-separator">·</span>
+              <a href="/terms.html">Termini & condizioni</a>
             </div>
           </div>
-        </div>
+        </article>
+
+        <!-- Institutional -->
+        <article class="pricing-card">
+          <div style="display:flex; flex-direction:column; gap: var(--sp-4);">
+            <div class="trial-badge" style="background: rgba(148,163,184,0.16); border-color: rgba(148,163,184,0.3); color: rgba(226,232,240,0.9);">
+              Corporate / Desk
+            </div>
+            <h2 style="font-size: var(--fs-22); font-weight:700; color:var(--ink); letter-spacing:-0.01em;">Institutional Desk</h2>
+            <div style="display:flex; align-items:baseline; gap:var(--sp-3);">
+              <span class="pricing-price" style="font-size: clamp(2.4rem,6vw,3.6rem);">Su preventivo</span>
+            </div>
+            <p style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-16);">
+              Ricerca dedicata per team professionali: fatturazione corporate, analisi on-demand SRD e personalizzazioni white label.
+            </p>
+          </div>
+          <div class="pricing-features">
+            <h3>Servizi dedicati:</h3>
+            <ul>
+              <li><i data-lucide="check"></i><span>Analisi Swing Research on-demand (99 € per richiesta)</span></li>
+              <li><i data-lucide="check"></i><span>Fatturazione dedicata, SLA e supporto 1:1</span></li>
+              <li><i data-lucide="check"></i><span>Deck SRD/MTB in white label e integrazione dataset interni</span></li>
+              <li><i data-lucide="check"></i><span>Mentorship periodica con il research desk Tradelia</span></li>
+            </ul>
+          </div>
+          <div style="margin-top: var(--sp-6);">
+            <a href="mailto:info@tradelia.org" class="cta-button">Contatta il desk</a>
+          </div>
+        </article>
       </div>
 
       <!-- FAQ Section -->
@@ -657,27 +703,27 @@
         
         <div>
           <details>
-            <summary data-i18n="pricing.faq.cancel.title">Posso cancellare in qualsiasi momento?</summary>
-            <p data-i18n="pricing.faq.cancel.content">
-              Sì, puoi cancellare il tuo abbonamento in qualsiasi momento dalla dashboard. 
-              Continuerai ad avere accesso fino alla fine del periodo già pagato.
+            <summary>Posso cancellare in qualsiasi momento?</summary>
+            <p>
+              Sì. La gestione del piano avviene dalla dashboard: puoi annullare quando vuoi e l’accesso resta attivo fino
+              alla fine del periodo già pagato. Se stai usando la prova gratuita, la cancellazione è immediata e senza costi.
             </p>
           </details>
 
           <details>
-            <summary data-i18n="pricing.faq.trial.title">Come funziona la prova gratuita?</summary>
-            <p data-i18n="pricing.faq.trial.content">
-              Offriamo <strong style="color: var(--ink-soft);">14 giorni di prova gratuita</strong> senza impegno. Puoi accedere a tutte le funzionalità della dashboard 
-              senza pagare nulla. Al termine dei 14 giorni, se non cancelli, l'abbonamento si attiva automaticamente a €29/mese. 
-              Puoi cancellare in qualsiasi momento durante la prova gratuita senza costi.
+            <summary>Come funziona la prova gratuita?</summary>
+            <p>
+              La prova offre <strong style="color: var(--ink-soft);">14 giorni di accesso completo</strong> ai deck SRD v5.0 e MTB v3.1. Al termine puoi scegliere se
+              passare al piano Pro. In assenza di upgrade, continuerai a vedere i dossier istituzionali con le sezioni sensibili oscurate.
+              Il piano Pro ha prezzo standard <strong>€49/mese</strong> (promo lancio <strong>€29/mese</strong> per i primi 100 abbonati).
             </p>
           </details>
 
           <details>
-            <summary data-i18n="pricing.faq.payment.title">Come funziona il pagamento?</summary>
-            <p data-i18n="pricing.faq.payment.content">
-              I pagamenti sono gestiti in modo sicuro tramite Paddle. L'abbonamento si rinnova 
-              automaticamente ogni mese. Puoi cambiare o cancellare in qualsiasi momento.
+            <summary>Quali metodi di pagamento accettate?</summary>
+            <p>
+              Utilizziamo gateway certificati (Paddle / Lemon Squeezy) con fatturazione elettronica e gestione IVA automatica.
+              Il rinnovo è mensile e puoi richiedere invoice intestata. Per il piano Institutional predisponiamo accordo dedicato e fatturazione corporate.
             </p>
           </details>
         </div>

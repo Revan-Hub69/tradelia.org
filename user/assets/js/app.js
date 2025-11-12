@@ -407,36 +407,36 @@ function roleLabel(role) {
 function planDescription(role) {
   switch (role) {
     case 'institutional':
-      return 'Accesso completo ai report Swing Master, desk dedicato, supporto prioritario e roadmap condivisa.';
+      return 'Ricerca dedicata con deck SRD/MTB integrati, fatturazione corporate e canali diretti con il desk analisti.';
     case 'pro':
-      return 'Report completi, commenti illimitati e accesso alle richieste community. Upgrade Institutional su richiesta.';
+      return 'Accesso completo ai deck SRD v5.0 e MTB v3.1, strumenti community e notifiche operative in tempo reale.';
     case 'trial':
     default:
-      return 'Accesso in sola lettura ai report pubblici. Per commentare e votare le analisi richiedi l’upgrade Pro.';
+      return 'Consulta i dossier ufficiali e attiva 14 giorni di accesso completo. Le sezioni ad alto contenuto restano oscurate senza abbonamento.';
   }
 }
 
 function planBenefits(role) {
   if (role === 'institutional') {
     return [
-      'Report completi e note desk in anteprima',
-      'Supporto 1:1 con analisti Tradelia',
-      'Canale dedicato per richieste ticker e macro view',
-      'Accesso anticipato a strumenti AI proprietari'
+      'Deck SRD v5.0 e MTB v3.1 con personalizzazioni white label',
+      'Analisi Swing Research on-demand (99 € / richiesta)',
+      'Fatturazione dedicata e SLA di supporto prioritario',
+      'Sessioni mentorship con il desk di ricerca'
     ];
   }
   if (role === 'pro') {
     return [
-      'Commenti illimitati sui report',
-      'Votazione giornaliera richieste community',
-      'Accesso ai template Swing Master 5.0',
-      'Inviti priority agli eventi Tradelia Live'
+      'Sblocco completo dei deck SRD v5.0 e MTB v3.1',
+      'Commenti illimitati e note condivise con il desk',
+      'Suggerimento e voto giornaliero sui ticker della community',
+      'Notifiche push e roadmap funzionale con priorità Pro'
     ];
   }
   return [
-    'Accesso report pubblici e newsletter settimanale',
-    'Aggiornamenti principali della community',
-    'Possibilità di richiedere upgrade Pro/Institutional'
+    'Accesso ai documenti istituzionali con sezioni sensibili oscurate',
+    'Attivazione prova Pro di 14 giorni con un click',
+    'Aggiornamenti sulle analisi pubbliche e distanza dalle release complete'
   ];
 }
 

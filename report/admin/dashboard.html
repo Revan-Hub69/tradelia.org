@@ -603,9 +603,9 @@
           <div class="field">
             <label for="report-type">Tipo report</label>
             <select id="report-type">
-              <option value="swing_master_5_0">Swing Master 5.0</option>
-              <option value="daily_market_intel_3_1" disabled>Daily Market Intelligence 3.1 (presto)</option>
-              <option value="custom" disabled>Generico (presto)</option>
+              <option value="swing_master_5_0">SRD v5.0 — Swing Research Deck</option>
+              <option value="daily_market_intel_3_1" disabled>MTB v3.1 — Macro Tactical Briefing (presto)</option>
+              <option value="custom" disabled>CRD — Custom Research Deck (presto)</option>
             </select>
       </div>
           <div class="field">
@@ -729,8 +729,8 @@
 
     const REPORT_TEMPLATES = {
       swing_master_5_0: {
-        label: 'Swing Master 5.0',
-        description: 'Template istituzionale Swing Master 5.0',
+        label: 'SRD v5.0 — Swing Research Deck',
+        description: 'Template istituzionale SRD v5.0 (Swing Research Deck)',
         modules: [
           { key: 'header', order: 10, template: {}, required: true },
           { key: 'f1', order: 20, template: {}, required: false },
@@ -744,13 +744,13 @@
         ]
       },
       daily_market_intel_3_1: {
-        label: 'Daily Market Intelligence 3.1',
-        description: 'Template in definizione',
+        label: 'MTB v3.1 — Macro Tactical Briefing',
+        description: 'Deck macro cross-asset in rollout',
         modules: []
       },
       custom: {
-        label: 'Report generico',
-        description: 'Composizione manuale',
+        label: 'CRD — Custom Research Deck',
+        description: 'Analisi su richiesta con composizione manuale',
         modules: []
       }
     };
@@ -936,7 +936,7 @@
         dateStyle: 'medium',
         timeStyle: 'short'
       });
-      return `Swing Master 5.0 · ${formatter.format(date)}`;
+      return `SRD v5.0 · ${formatter.format(date)}`;
     };
 
     const suggestIdentifiers = ({ force = false, markDirty = true } = {}) => {

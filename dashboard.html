@@ -1055,7 +1055,7 @@
       <section class="report-section active">
         <div class="report-header">
           <h2 class="report-title">Report</h2>
-          <p class="report-description">Framework Accademico AI Tradelia - Analisi finanziaria multi-fattore basata su dati Tier-1. Include framework (Swing Master 5.0, Daily Market Intelligence 3.1, Stress Test Avanzato) e tipologia di analisi.</p>
+          <p class="report-description">Framework Accademico AI Tradelia — analisi multi-fattore su dati Tier-1. Include i deck proprietari SRD v5.0 (Swing Research Deck), MTB v3.1 (Macro Tactical Briefing) e le release sperimentali in arrivo.</p>
         </div>
         
         <div class="stats-bar" id="reports-stats" style="display: none;">
@@ -1086,9 +1086,9 @@
         <div class="filter-controls" id="reports-framework-filter" style="display: none;">
           <span class="sort-label">Framework:</span>
           <button class="sort-btn filter-btn active" data-framework="all">Tutti</button>
-          <button class="sort-btn filter-btn" data-framework="swing-master-5.0">Swing Master 5.0</button>
-          <button class="sort-btn filter-btn" data-framework="dmi-3.1">Daily Market Intelligence 3.1</button>
-          <button class="sort-btn filter-btn" data-framework="stress-test">Stress Test Avanzato</button>
+          <button class="sort-btn filter-btn" data-framework="swing-master-5.0">SRD v5.0</button>
+          <button class="sort-btn filter-btn" data-framework="dmi-3.1">MTB v3.1</button>
+          <button class="sort-btn filter-btn" data-framework="stress-test">Research deck sperimentali</button>
         </div>
         
         <!-- Scroll controls (desktop only) -->
@@ -1191,6 +1191,8 @@
   
   <!-- ===== DASHBOARD SCRIPTS ===== -->
   <script type="module">
+    import { getFrameworkInfo } from '/report/assets/js/utils/frameworks.js';
+
     // ===== STATE MANAGEMENT =====
     const STATE = {
       reports: [],
@@ -1486,6 +1488,8 @@
             }
             
             // Crea reportData
+            const frameworkInfo = getFrameworkInfo(framework);
+
             const reportData = {
               id: manifest?.id || reportID,
               ticker: ticker || 'N/A',
@@ -1494,6 +1498,7 @@
               sector: sector || null,
               price: price || null,
               framework: framework,
+              frameworkLabel: frameworkInfo.code,
               tipologia: tipologia,
               timestamp: timestamp,
               reportUrl: `/report/index.html?id=${reportID}`
@@ -1954,12 +1959,8 @@
               const dateTimeDisplay = timeStr ? `${dateStr} ${timeStr}` : (dateStr || '—');
               
               // Format framework name
-              const frameworkNames = {
-                'swing-master-5.0': 'Swing Master 5.0',
-                'dmi-3.1': 'Daily Market Intelligence 3.1',
-                'stress-test': 'Stress Test Avanzato'
-              };
-              const frameworkDisplay = frameworkNames[report.framework] || report.framework || '—';
+              const frameworkInfo = getFrameworkInfo(report.framework);
+              const frameworkDisplay = report.frameworkLabel || frameworkInfo.label;
               
               // Escape HTML per sicurezza
               const escapeHtml = (str) => {

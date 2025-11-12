@@ -1,4 +1,4 @@
-# Swing Master 5.0 - Indice Specifiche
+# SRD v5.0 — Swing Research Deck · Indice Specifiche
 
 ## 📚 Documenti Disponibili
 

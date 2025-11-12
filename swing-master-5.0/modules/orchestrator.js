@@ -107,7 +107,7 @@ export async function generateHeader(ticker, config = {}) {
       {
         id: 'company-line',
         parts: [
-          { kind: 'text', text: 'Report Framework Accademico AI, Tradelia Swing Master 5.0 su ' },
+          { kind: 'text', text: 'Deck di ricerca Tradelia SRD v5.0 — Swing Research Deck su ' },
           { kind: 'metric', key: 'CompanyName', value: tickerData.companyName, tone: 'neutral', label: 'CompanyName' },
           { kind: 'text', text: '. ' },
           { kind: 'text', text: 'Ticker: ' },

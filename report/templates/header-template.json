@@ -10,7 +10,7 @@
     {
       "id": "company-line",
       "parts": [
-        { "kind": "text", "text": "Report Framework Accademico AI, Tradelia Swing Master 5.0 su " },
+        { "kind": "text", "text": "Deck di ricerca Tradelia SRD v5.0 — Swing Research Deck su " },
         { "kind": "metric", "key": "CompanyName", "value": "Nome Azienda", "label": "CompanyName" },
         { "kind": "text", "text": ". Ticker: " },
         { "kind": "metric", "key": "Ticker", "value": "TICK", "label": "Ticker" },
@@ -25,7 +25,7 @@
       "id": "summary-line",
       "parts": [
         { "kind": "text", "text": "Framework: " },
-        { "kind": "metric", "key": "Framework", "value": "Swing Master 5.0", "label": "Framework" },
+        { "kind": "metric", "key": "Framework", "value": "SRD v5.0 — Swing Research Deck", "label": "Framework" },
         { "kind": "text", "text": " • Tipologia: " },
         { "kind": "metric", "key": "Tipologia", "value": "Descrizione tipologia", "label": "Tipologia" },
         { "kind": "text", "text": " • Versione: " },
@@ -47,7 +47,7 @@
   "metricsPanel": [
     { "key": "CompanyName", "label": "Nome azienda", "value": "Nome Azienda" },
     { "key": "Ticker", "label": "Ticker", "value": "TICK" },
-    { "key": "Framework", "label": "Framework", "value": "Swing Master 5.0" },
+    { "key": "Framework", "label": "Framework", "value": "SRD v5.0 — Swing Research Deck" },
     { "key": "Tipologia", "label": "Tipologia", "value": "Descrizione tipologia" },
     { "key": "Exchange", "label": "Exchange", "value": "MERCATO" },
     { "key": "Settore", "label": "Settore", "value": "SETTORE" },

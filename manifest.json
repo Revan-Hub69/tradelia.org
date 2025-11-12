@@ -1,7 +1,7 @@
 {
   "name": "Tradelia AI Dashboard",
   "short_name": "Tradelia AI",
-  "description": "Dashboard Abbonati Tradelia AI - Accesso anticipato ai report Swing Master e Macro Briefing",
+  "description": "Dashboard Abbonati Tradelia AI - Accesso ai deck SRD v5.0 (Swing Research Deck) e MTB v3.1 (Macro Tactical Briefing)",
   "start_url": "/archivio/dashboard.html",
   "display": "standalone",
   "background_color": "#0f0f0f",

@@ -31,7 +31,7 @@
     {
       "id": "company-line",
       "parts": [
-        { "kind": "text", "text": "Report Framework Accademico AI, Tradelia Swing Master 5.0 su " },
+        { "kind": "text", "text": "Deck di ricerca Tradelia SRD v5.0 — Swing Research Deck su " },
         { "kind": "metric", "key": "CompanyName", "value": "Apple Inc.", "tone": "neutral", "label": "CompanyName" },
         { "kind": "text", "text": ". " },
         { "kind": "text", "text": "Ticker: " },
@@ -49,7 +49,7 @@
       "id": "summary-line",
       "parts": [
         { "kind": "text", "text": "Framework: " },
-        { "kind": "metric", "key": "Framework", "value": "Swing Master 5.0", "tone": "neutral", "label": "Framework" },
+        { "kind": "metric", "key": "Framework", "value": "SRD v5.0 — Swing Research Deck", "tone": "neutral", "label": "Framework" },
         { "kind": "text", "text": " • Tipologia: " },
         { "kind": "metric", "key": "Tipologia", "value": "Analisi Momentum", "tone": "neutral", "label": "Tipologia" },
         { "kind": "text", "text": " • Exchange: " },
@@ -106,7 +106,7 @@
     ]
   },
   "metricsPanel": [
-    { "key": "Framework", "label": "Framework", "value": "Swing Master 5.0", "tone": "neutral" },
+    { "key": "Framework", "label": "Framework", "value": "SRD v5.0 — Swing Research Deck", "tone": "neutral" },
     { "key": "Tipologia", "label": "Tipologia", "value": "Analisi Momentum", "tone": "neutral" },
     { "key": "Exchange", "label": "Exchange", "value": "NASDAQ", "tone": "neutral" },
     { "key": "Settore", "label": "Settore", "value": "Tecnologia", "tone": "neutral" },

@@ -1,4 +1,4 @@
-# Workflow Completo Automatico - Swing Master 5.0
+# Workflow Completo Automatico — SRD v5.0
 
 ## 🎯 Come Funziona
 

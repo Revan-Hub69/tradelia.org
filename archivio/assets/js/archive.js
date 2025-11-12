@@ -5,6 +5,7 @@ import Logger from '/report/assets/js/utils/logger.js';
 import { siteHeader } from '/report/assets/js/components/site-header.js';
 import { siteFooter } from '/report/assets/js/components/site-footer.js';
 import { supabase } from '/report/assets/js/supabase-client.js';
+import { getFrameworkInfo } from '/report/assets/js/utils/frameworks.js';
 
 // ===== STATE =====
 const STATE = {
@@ -124,13 +125,17 @@ async function loadReportsFromSupabase() {
       const publicAfter = new Date(createdAt);
       publicAfter.setHours(publicAfter.getHours() + 24);
 
+      const reportType = row.report_type || 'swing_master_5_0';
+      const frameworkInfo = getFrameworkInfo(reportType);
+
       return {
         id: row.slug,
         slug: row.slug,
-        title: row.title || `${ticker || 'Report'} • Swing Master 5.0`,
+        title: row.title || `${ticker || 'Report'} • ${frameworkInfo.code}`,
         assetSymbol: ticker || '—',
         assetName: companyName || row.title || '—',
-        framework: frameworkMetric || row.report_type || 'swing_master_5_0',
+        framework: reportType,
+        frameworkLabel: frameworkMetric || frameworkInfo.code,
         typology: tipologia || null,
         exchange: exchange || null,
         sector: sector || null,
@@ -313,7 +318,7 @@ function renderReports() {
   
   // Render rows
   tbody.innerHTML = sortedReports.map(report => {
-    const frameworkLabel = formatReportType(report.framework);
+    const frameworkLabel = report.frameworkLabel || formatReportType(report.framework);
     const date = formatDateTime(report.published_at || report.created_at);
     const assetSymbol = report.assetSymbol || '—';
     const assetName = report.assetName || '';
@@ -341,19 +346,7 @@ function renderReports() {
 }
 
 function formatReportType(type) {
-  if (!type) return '—';
-  switch (type) {
-    case 'swing_master_5_0':
-      return 'Swing Master 5.0';
-    case 'daily_market_intel_3_1':
-      return 'Daily Market Intelligence 3.1';
-    case 'custom':
-      return 'Custom';
-    case 'legacy':
-      return 'Legacy';
-    default:
-      return type;
-  }
+  return getFrameworkInfo(type).code;
 }
 
 function formatDateTime(iso) {

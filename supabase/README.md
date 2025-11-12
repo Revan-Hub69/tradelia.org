@@ -66,7 +66,7 @@ Effettua login con l’utente creato: la dashboard consente di:
 
 - creare/aggiornare un record `reports`;
 - caricare il chart nel bucket `report-charts`;
-- gestire i moduli (per ora il template Swing Master 5.0 popola automaticamente `header`, `f1`, `f2`, `f3o`, `f3`, `f4`, `f5`, `f5o`, `f5lt`) come righe della tabella `report_modules`.
+- gestire i moduli (per ora il template SRD v5.0 — Swing Research Deck popola automaticamente `header`, `f1`, `f2`, `f3o`, `f3`, `f4`, `f5`, `f5o`, `f5lt`) come righe della tabella `report_modules`.
   È possibile incollare rapidamente i JSON o trascinare/incollare direttamente lo screenshot nella sezione chart.
 
 ## 7. Frontend pubblico
