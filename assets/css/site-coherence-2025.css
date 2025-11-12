@@ -458,3 +458,111 @@ label {
   scrollbar-color: rgba(255, 255, 255, 0.1) rgba(255, 255, 255, 0.02);
 }
 
+/* ===== BUTTONS 2025 UNIFIED ===== */
+.btn,
+.btn:link,
+.btn:visited {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: 36px !important;
+  padding: var(--sp-2) var(--sp-5) var(--sp-2) calc(var(--sp-5) + 1.1rem) !important;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(209, 213, 219, 0.45) !important;
+  background: transparent !important;
+  color: #ffffff !important;
+  font-size: var(--fs-14);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform var(--transition-fast),
+    border-color var(--transition-base),
+    color var(--transition-base);
+}
+
+.btn::before {
+  content: "→";
+  position: absolute;
+  left: var(--sp-4);
+  top: 50%;
+  transform: translate(-6px, -50%);
+  font-size: var(--fs-11);
+  color: rgba(191, 219, 254, 0.75);
+  transition: transform var(--transition-fast), color var(--transition-fast);
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--sp-4) + 0.9rem);
+  bottom: var(--sp-1);
+  width: 0;
+  height: 1px;
+  background: rgba(37, 99, 235, 0.85);
+  transition: width var(--transition-base);
+  transform-origin: left;
+}
+
+.btn:hover {
+  transform: translateY(-1px) translateX(2px);
+  border-color: rgba(96, 165, 250, 0.72) !important;
+  color: #ffffff !important;
+}
+
+.btn:hover::before {
+  color: rgba(96, 165, 250, 0.9);
+  transform: translate(0, -50%);
+}
+
+.btn:hover::after {
+  width: calc(100% - (var(--sp-4) + 0.9rem) - var(--sp-4));
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:focus-visible {
+  outline: 2px solid rgba(96, 165, 250, 0.65);
+  outline-offset: 3px;
+}
+
+.btn-with-icon {
+  padding: var(--sp-2) var(--sp-5) !important;
+}
+
+.btn-with-icon::before,
+.btn-with-icon::after {
+  display: none;
+}
+
+.btn svg,
+.btn i {
+  width: 16px;
+  height: 16px;
+  color: currentColor;
+  transition: color var(--transition-fast);
+}
+
+.btn.btn-primary {
+  border-color: rgba(96, 165, 250, 0.72) !important;
+}
+
+.btn.btn-outline {
+  border-color: rgba(147, 197, 253, 0.45) !important;
+}
+
+.btn.btn-secondary {
+  border-color: rgba(148, 163, 184, 0.5) !important;
+}
+
+.btn.btn-sm,
+.btn-sm {
+  min-height: 32px !important;
+  font-size: var(--fs-13) !important;
+  padding: var(--sp-2) calc(var(--sp-4) + 0.8rem) var(--sp-2) calc(var(--sp-4) + 1rem) !important;
+}
+
