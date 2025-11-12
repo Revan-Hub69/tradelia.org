@@ -100,43 +100,6 @@ header.hdr .container {
   gap: 0.5rem !important;
 }
 
-.header-auth-btn {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 0.4rem !important;
-  padding: 0.5rem 0.9rem !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  border-radius: 999px !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  background: rgba(255, 255, 255, 0.04) !important;
-  color: rgba(226, 232, 240, 0.95) !important;
-  cursor: pointer !important;
-  transition: all 0.2s ease !important;
-}
-
-.header-auth-btn:hover {
-  background: rgba(37, 99, 235, 0.18) !important;
-  border-color: rgba(96, 165, 250, 0.45) !important;
-  color: #ffffff !important;
-  transform: translateY(-1px) !important;
-}
-
-.header-auth-btn--primary {
-  border-color: rgba(96, 165, 250, 0.45) !important;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(79, 70, 229, 0.18)) !important;
-}
-
-.header-auth-btn--primary:hover {
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.28), rgba(79, 70, 229, 0.28)) !important;
-}
-
-.header-auth-btn--ghost {
-  background: transparent !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
-}
-
 .header-user-link {
   display: inline-flex !important;
   align-items: center !important;
@@ -157,8 +120,10 @@ header.hdr .container {
   color: #ffffff !important;
 }
 
-.header-user-link[data-disabled="true"] {
-  opacity: 0.65 !important;
+.header-user-link--auth {
+  border-color: rgba(96, 165, 250, 0.45) !important;
+  background: rgba(37, 99, 235, 0.18) !important;
+  color: #ffffff !important;
 }
 
 .header-user-link svg {
@@ -356,7 +321,6 @@ header.hdr .container {
     gap: 0.5rem;
   }
 
-  .header-auth-btn span,
   .header-user-link span {
     display: none;
   }

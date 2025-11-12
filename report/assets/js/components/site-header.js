@@ -43,14 +43,11 @@ function render(options = {}) {
           <span>Dashboard</span>
         </a>
         <div class="header-auth">
-          <button type="button" class="header-auth-btn" data-auth-action="login">Accedi</button>
-          <button type="button" class="header-auth-btn header-auth-btn--primary" data-auth-action="signup">Richiedi accesso</button>
-          <button type="button" class="header-auth-btn header-auth-btn--ghost" data-auth-action="logout" hidden>Esci</button>
           <button type="button" class="header-user-link" data-auth-action="account" aria-label="Area utente">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4 0-7 2-7 4v1h14v-1c0-2-3-4-7-4Z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
-            <span>Area</span>
+            <span>Accedi</span>
           </button>
         </div>
         ${showExport ? '<div id="header-export-menu-slot"></div>' : ''}
@@ -120,28 +117,8 @@ export const siteHeader = {
 };
 
 function bindAuthActions(node) {
-  const loginBtn = node.querySelector('[data-auth-action="login"]');
-  const signupBtn = node.querySelector('[data-auth-action="signup"]');
-  const logoutBtn = node.querySelector('[data-auth-action="logout"]');
   const accountBtn = node.querySelector('[data-auth-action="account"]');
 
-  if (loginBtn) {
-    loginBtn.addEventListener('click', () => authModal.open('login'));
-  }
-  if (signupBtn) {
-    signupBtn.addEventListener('click', () => authModal.open('signup'));
-  }
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', async () => {
-      try {
-        await supabase.auth.signOut();
-        authModal.showToast('Disconnessione completata.', 'info');
-      } catch (err) {
-        Logger.error('SiteHeader', 'logout error', err);
-        authModal.showToast(err.message || 'Impossibile disconnettersi.', 'error');
-      }
-    });
-  }
   if (accountBtn) {
     accountBtn.addEventListener('click', () => {
       if (HEADER._currentUser) {
@@ -154,15 +131,12 @@ function bindAuthActions(node) {
 }
 
 async function syncAuthState(node) {
-  const loginBtn = node.querySelector('[data-auth-action="login"]');
-  const signupBtn = node.querySelector('[data-auth-action="signup"]');
-  const logoutBtn = node.querySelector('[data-auth-action="logout"]');
   const accountBtn = node.querySelector('[data-auth-action="account"]');
 
   try {
     const { data } = await supabase.auth.getSession();
     HEADER._currentUser = data?.session?.user || null;
-    toggleAuthButtons(loginBtn, signupBtn, logoutBtn, accountBtn, HEADER._currentUser);
+    toggleAccountButton(accountBtn, HEADER._currentUser);
   } catch (err) {
     Logger.warn('SiteHeader', 'Impossibile leggere sessione', err);
   }
@@ -170,24 +144,22 @@ async function syncAuthState(node) {
   if (!HEADER._authListener) {
     HEADER._authListener = supabase.auth.onAuthStateChange((_event, session) => {
       HEADER._currentUser = session?.user || null;
-      toggleAuthButtons(loginBtn, signupBtn, logoutBtn, accountBtn, HEADER._currentUser);
+      toggleAccountButton(accountBtn, HEADER._currentUser);
     }).data;
   }
 }
 
-function toggleAuthButtons(loginBtn, signupBtn, logoutBtn, accountBtn, user) {
+function toggleAccountButton(accountBtn, user) {
+  if (!accountBtn) return;
+  const label = accountBtn.querySelector('span');
   if (user) {
-    loginBtn?.setAttribute('hidden', '');
-    signupBtn?.setAttribute('hidden', '');
-    logoutBtn?.removeAttribute('hidden');
-    accountBtn?.removeAttribute('data-disabled');
-    accountBtn?.setAttribute('title', 'Area utente');
+    label && (label.textContent = 'Area');
+    accountBtn.classList.add('header-user-link--auth');
+    accountBtn.setAttribute('title', 'Vai alla tua area utente');
   } else {
-    loginBtn?.removeAttribute('hidden');
-    signupBtn?.removeAttribute('hidden');
-    logoutBtn?.setAttribute('hidden', '');
-    accountBtn?.setAttribute('data-disabled', 'true');
-    accountBtn?.setAttribute('title', 'Accedi per aprire l’area utente');
+    label && (label.textContent = 'Accedi');
+    accountBtn.classList.remove('header-user-link--auth');
+    accountBtn.setAttribute('title', 'Accedi con le credenziali Tradelia');
   }
 }
 
