@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Area Utente · Tradelia</title>
+  <link rel="stylesheet" href="/report/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/global-header.css">
+  <link rel="stylesheet" href="/user/assets/css/user-area.css">
+</head>
+<body>
+  <div class="user-shell">
+    <div id="site-header-slot"></div>
+
+    <header class="user-header">
+      <div class="user-hero" id="user-hero">
+        <div class="user-hero-main">
+          <div class="user-avatar" id="user-avatar">TR</div>
+          <div class="user-hero-info">
+            <h1 class="user-name" id="user-display-name">Utente Tradelia</h1>
+            <span class="user-email" id="user-email"></span>
+            <div class="user-badges" id="user-badges"></div>
+          </div>
+        </div>
+        <div class="user-cta" id="user-cta"></div>
+      </div>
+    </header>
+
+    <nav class="user-tabs">
+      <div class="tablist" role="tablist" aria-label="Sezioni account">
+        <button type="button" role="tab" id="tab-dashboard" aria-controls="panel-dashboard" aria-selected="true">Dashboard</button>
+        <button type="button" role="tab" id="tab-profile" aria-controls="panel-profile" aria-selected="false">Profilo</button>
+        <button type="button" role="tab" id="tab-comments" aria-controls="panel-comments" aria-selected="false">Commenti</button>
+        <button type="button" role="tab" id="tab-community" aria-controls="panel-community" aria-selected="false">Analisi community</button>
+        <button type="button" role="tab" id="tab-plan" aria-controls="panel-plan" aria-selected="false">Abbonamento</button>
+        <button type="button" role="tab" id="tab-inbox" aria-controls="panel-inbox" aria-selected="false">Inbox</button>
+      </div>
+    </nav>
+
+    <main class="user-main">
+      <div class="user-content">
+        <section class="user-section" id="panel-dashboard" role="tabpanel" aria-labelledby="tab-dashboard">
+          <div class="section-header">
+            <h3>Overview account</h3>
+            <p>Metriche sintetiche sul tuo utilizzo della piattaforma e aggiornamenti operativi.</p>
+          </div>
+          <div class="dashboard-grid" id="dashboard-stats">
+            <article class="stat-card">
+              <span>Report commentati</span>
+              <strong id="stat-comments">0</strong>
+            </article>
+            <article class="stat-card">
+              <span>Richieste analisi inviate</span>
+              <strong id="stat-requests">0</strong>
+            </article>
+            <article class="stat-card">
+              <span>Ultimo accesso</span>
+              <strong id="stat-last-login">—</strong>
+            </article>
+            <article class="stat-card">
+              <span>Stato piano</span>
+              <strong id="stat-plan">—</strong>
+            </article>
+          </div>
+          <div class="placeholder-card">
+            <strong>Attività della community</strong>
+            <span>Feed in arrivo: mostreremo gli ultimi commenti su report premium, gli annunci dello staff e i contenuti evidenziati per il tuo ruolo.</span>
+          </div>
+        </section>
+
+        <section class="user-section" id="panel-profile" role="tabpanel" aria-labelledby="tab-profile" hidden>
+          <div class="section-header">
+            <h3>Profilo e preferenze</h3>
+            <p>Gestisci il tuo profilo istituzionale. Le modifiche sono immediatamente valide per la community.</p>
+          </div>
+          <form class="profile-form" id="profile-form">
+            <label>
+              Nome visualizzato
+              <input type="text" id="profile-display-name" maxlength="80" placeholder="Nome e cognome o desk team">
+            </label>
+            <label>
+              Bio istituzionale
+              <textarea id="profile-bio" maxlength="600" placeholder="Presentati in chiave professionale: desk di riferimento, focus operativo, disclaimer."></textarea>
+            </label>
+            <div class="user-cta">
+              <button class="btn btn-primary" type="submit" id="profile-save-btn">Salva profilo</button>
+              <button class="btn btn-outline" type="button" id="profile-reset-btn">Annulla modifiche</button>
+            </div>
+          </form>
+          <div class="placeholder-card">
+            <strong>Presenza digitale</strong>
+            <span>Audit e linking social (LinkedIn, X, TradingView) in arrivo. Potrai decidere se renderli visibili nella community.</span>
+          </div>
+        </section>
+
+        <section class="user-section" id="panel-comments" role="tabpanel" aria-labelledby="tab-comments" hidden>
+          <div class="section-header">
+            <h3>Commenti sui report</h3>
+            <p>Storico dei tuoi contributi pubblici. Modera o elimina i messaggi diretti dai report Swing Master 5.0.</p>
+          </div>
+          <div id="comments-history-placeholder" class="placeholder-card" hidden>
+            Nessun commento pubblicato finora. Quando commenterai i report, lo storico apparirà qui.
+          </div>
+          <div id="comments-history-list" class="history-list"></div>
+        </section>
+
+        <section class="user-section" id="panel-community" role="tabpanel" aria-labelledby="tab-community" hidden>
+          <div class="section-header">
+            <h3>Analisi richieste dalla community</h3>
+            <p>Prepara la tua lista di richieste ticker e vota quelle proposte dagli altri membri. Funzionalità in rollout.</p>
+          </div>
+          <div class="placeholder-card">
+            <strong>Richieste analisi</strong>
+            <span>Il modulo di richiesta verrà attivato presto. Potrai proporre ticker, asset class o temi macro da analizzare nelle prossime note.</span>
+          </div>
+          <div class="placeholder-card">
+            <strong>Votazione giornaliera</strong>
+            <span>Ogni giorno potrai assegnare un voto alla richiesta che ritieni prioritaria. Il team editoriale utilizzerà questa metrica per definire la roadmap dei report.</span>
+          </div>
+        </section>
+
+        <section class="user-section" id="panel-plan" role="tabpanel" aria-labelledby="tab-plan" hidden>
+          <div class="section-header">
+            <h3>Gestione abbonamento</h3>
+            <p>Dettagli del piano attuale e upgrade disponibili. Il billing verrà integrato in una fase successiva.</p>
+          </div>
+          <div class="plan-card" id="plan-card">
+            <h4>Piano attuale</h4>
+            <p id="plan-description">—</p>
+            <div class="plan-benefits" id="plan-benefits"></div>
+            <div class="user-cta" id="plan-actions"></div>
+          </div>
+          <div class="placeholder-card">
+            <strong>Documenti fiscali</strong>
+            <span>La sezione per scaricare fatture e documentazione di compliance sarà disponibile con l’integrazione del gateway di pagamento.</span>
+          </div>
+        </section>
+
+        <section class="user-section" id="panel-inbox" role="tabpanel" aria-labelledby="tab-inbox" hidden>
+          <div class="section-header">
+            <h3>Inbox e messaggistica</h3>
+            <p>Tieni traccia delle comunicazioni istituzionali, delle note del desk e delle conversazioni 1:1 (funzione in sviluppo).</p>
+          </div>
+          <div class="inbox-list">
+            <strong>Coming soon</strong>
+            <p>La messaggistica diretta e i canali di supporto dedicati agli utenti Pro / Institutional saranno attivati progressivamente. Riceverai un avviso quando la funzione sarà pronta.</p>
+          </div>
+        </section>
+
+        <section class="user-section" id="panel-auth" aria-live="polite" hidden>
+          <div class="section-header">
+            <h3>Accesso richiesto</h3>
+            <p>Effettua login con le credenziali Supabase (email/password) per accedere all’area utente.</p>
+          </div>
+          <div id="auth-container"></div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="user-footer">
+      © <span id="footer-year"></span> Tradelia · Framework Accademico AI. Tutti i diritti riservati.
+    </footer>
+  </div>
+
+  <div class="user-toast" id="user-toast" role="status" aria-live="assertive"></div>
+
+  <script type="module" src="/report/assets/js/components/site-header.js" defer></script>
+  <script type="module" src="/user/assets/js/app.js" defer></script>
+</body>
+</html>
+
