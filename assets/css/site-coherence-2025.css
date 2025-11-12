@@ -228,6 +228,13 @@ section {
   transform: translateX(3px);
 }
 
+.btn-sm {
+  min-height: 34px;
+  padding: var(--sp-2) var(--sp-5);
+  font-size: var(--fs-12);
+  border-radius: var(--radius-pill);
+}
+
 /* ===== LINKS COHERENCE ===== */
 /* Footer gestito completamente da tokens.css - escludiamo footer dai link generici */
 /* Header gestito completamente da global-header.css - escludiamo header dai link generici */
