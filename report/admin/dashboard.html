@@ -342,6 +342,37 @@
       margin-bottom: 1rem;
     }
 
+    .input-with-action {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .input-action-btn {
+      padding: 0.55rem 0.9rem;
+      border-radius: 10px;
+      border: 1px solid rgba(96, 165, 250, 0.35);
+      background: rgba(15, 23, 42, 0.65);
+      color: rgba(226, 232, 240, 0.92);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+
+    .input-action-btn:hover {
+      border-color: rgba(96, 165, 250, 0.65);
+      background: rgba(30, 64, 175, 0.18);
+      color: #bfdbfe;
+    }
+
+    .input-action-btn:focus-visible {
+      outline: 3px solid rgba(96, 165, 250, 0.35);
+      outline-offset: 2px;
+    }
+
     .status-banner {
       display: flex;
       align-items: center;
@@ -553,7 +584,12 @@
       </div>
           <div class="field">
             <label for="report-slug">Slug univoco</label>
-            <input type="text" id="report-slug" placeholder="es. 20251107-1630">
+            <div class="input-with-action">
+              <input type="text" id="report-slug" placeholder="es. 20251107-1630">
+              <button type="button" class="input-action-btn" id="generate-identifiers-btn" aria-label="Genera slug e titolo suggeriti">
+                Suggerisci
+              </button>
+            </div>
         </div>
           <div class="field">
             <label for="report-title">Titolo</label>
@@ -733,6 +769,7 @@
     const publishBtn = document.getElementById('publish-report-btn');
     const duplicateBtn = document.getElementById('duplicate-report-btn');
     const deleteBtn = document.getElementById('delete-report-btn');
+    const generateIdentifiersBtn = document.getElementById('generate-identifiers-btn');
     const statusBanner = document.getElementById('status-banner');
     const statusBannerTitle = document.getElementById('status-banner-title');
     const statusBannerMessage = document.getElementById('status-banner-message');
@@ -856,6 +893,51 @@
       }
     };
     updateStatusAfterDirtyChange();
+
+    const padNumber = (value, length = 2) => value.toString().padStart(length, '0');
+
+    const buildSlugSuggestion = (date = new Date()) => {
+      const year = date.getFullYear();
+      const month = padNumber(date.getMonth() + 1);
+      const day = padNumber(date.getDate());
+      const hour = padNumber(date.getHours());
+      const minutes = padNumber(date.getMinutes());
+      return `${year}${month}${day}-${hour}${minutes}`;
+    };
+
+    const buildTitleSuggestion = (date = new Date()) => {
+      const formatter = new Intl.DateTimeFormat('it-IT', {
+        dateStyle: 'medium',
+        timeStyle: 'short'
+      });
+      return `Swing Master 5.0 · ${formatter.format(date)}`;
+    };
+
+    const suggestIdentifiers = ({ force = false, markDirty = true } = {}) => {
+      const now = new Date();
+      const slugSuggestion = buildSlugSuggestion(now);
+      const titleSuggestion = buildTitleSuggestion(now);
+
+      const currentSlug = reportSlugEl.value.trim();
+      const currentTitle = reportTitleEl.value.trim();
+
+      if (force || !currentSlug) {
+        reportSlugEl.value = slugSuggestion;
+      }
+
+      if (force || !currentTitle) {
+        reportTitleEl.value = titleSuggestion;
+      }
+
+      if (markDirty && (force || !currentSlug || !currentTitle)) {
+        setDirty(true);
+        setStatusBannerMessage(
+          'info',
+          'Suggerimento applicato',
+          `Slug e titolo aggiornati automaticamente (${slugSuggestion}).`
+        );
+      }
+    };
 
     const updateEditorBadge = () => {
       if (isDirty) {
@@ -1149,6 +1231,7 @@
       renderModulesEmptyState();
       syncTemplateControls(DEFAULT_REPORT_TYPE);
       applyTemplateToModules(DEFAULT_REPORT_TYPE, { skipConfirm: true, markDirty: false });
+      suggestIdentifiers({ force: true, markDirty: false });
       resetDirty();
     };
 
@@ -1703,6 +1786,12 @@
     resetTemplateBtn.addEventListener('click', () => {
       applyTemplateToModules(reportTypeEl.value, { skipConfirm: false });
     });
+
+    if (generateIdentifiersBtn) {
+      generateIdentifiersBtn.addEventListener('click', () => {
+        suggestIdentifiers({ force: true, markDirty: true });
+      });
+    }
 
     modulesContainer.addEventListener('input', () => setDirty(true));
 
