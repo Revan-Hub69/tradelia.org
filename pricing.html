@@ -158,20 +158,16 @@
 
     .plan-actions .btn {
       position: relative;
-      min-height: 38px;
-      padding: var(--sp-2) var(--sp-6) var(--sp-2) calc(var(--sp-6) + 1.2rem);
+      min-height: 36px;
+      padding: var(--sp-2) var(--sp-5) var(--sp-2) calc(var(--sp-5) + 1.15rem);
       font-size: var(--fs-13);
       border-radius: var(--radius-pill);
-      border: 1px solid rgba(147, 197, 253, 0.45);
-      background: rgba(15, 23, 42, 0.78);
-      color: rgba(191, 219, 254, 0.92);
-      box-shadow:
-        0 10px 24px rgba(15, 23, 42, 0.32),
-        inset 0 1px 0 rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(8px);
+      border: 1px solid rgba(209, 213, 219, 0.4);
+      background: transparent;
+      color: #ffffff;
+      box-shadow: none;
       transition:
         transform var(--transition-fast),
-        box-shadow var(--transition-fast),
         border-color var(--transition-base),
         color var(--transition-base);
     }
@@ -183,7 +179,7 @@
       top: 50%;
       transform: translate(-6px, -50%);
       font-size: var(--fs-11);
-      color: rgba(147, 197, 253, 0.8);
+      color: rgba(209, 213, 219, 0.85);
       transition: transform var(--transition-fast), color var(--transition-fast);
     }
 
@@ -194,54 +190,38 @@
       bottom: var(--sp-1);
       width: 0;
       height: 1px;
-      background: rgba(147, 197, 253, 0.6);
+      background: rgba(209, 213, 219, 0.85);
       transition: width var(--transition-base);
       transform-origin: left;
     }
 
     .plan-actions .btn:hover {
       transform: translateY(-1px) translateX(2px);
-      border-color: rgba(191, 219, 254, 0.7);
-      color: rgba(241, 245, 249, 0.95);
-      box-shadow:
-        0 16px 32px rgba(15, 23, 42, 0.36),
-        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.85);
+      color: #ffffff;
     }
 
     .plan-actions .btn:hover::before {
-      color: rgba(191, 219, 254, 0.95);
+      color: #ffffff;
       transform: translate(0, -50%);
     }
 
     .plan-actions .btn:hover::after {
-      width: calc(100% - (var(--sp-4) + 0.9rem) - var(--sp-5));
+      width: calc(100% - (var(--sp-4) + 0.9rem) - var(--sp-4));
     }
 
     .plan-actions .btn:active {
       transform: translateY(0);
-      box-shadow:
-        0 12px 24px rgba(15, 23, 42, 0.28),
-        inset 0 1px 0 rgba(255, 255, 255, 0.02);
     }
 
     .plan-actions .btn.btn-primary {
-      background: linear-gradient(180deg, rgba(37, 99, 235, 0.26) 0%, rgba(15, 23, 42, 0.82) 100%);
-      border-color: rgba(147, 197, 253, 0.55);
-      color: rgba(239, 246, 255, 0.95);
-      box-shadow:
-        0 16px 34px rgba(37, 99, 235, 0.28),
-        0 12px 24px rgba(15, 23, 42, 0.3);
-    }
-
-    .plan-actions .btn.btn-primary:hover {
-      border-color: rgba(191, 219, 254, 0.75);
-      box-shadow:
-        0 20px 40px rgba(37, 99, 235, 0.34),
-        0 14px 28px rgba(15, 23, 42, 0.32);
+      background: transparent;
+      border-color: rgba(191, 219, 254, 0.65);
+      color: #ffffff;
     }
 
     .plan-actions .btn.btn-primary::after {
-      background: rgba(191, 219, 254, 0.8);
+      background: rgba(191, 219, 254, 0.9);
     }
 
     .plan-meta {
