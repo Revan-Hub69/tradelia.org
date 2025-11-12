@@ -45,18 +45,11 @@
     
     /* ===== PRICING CARD ===== */
     .pricing-card {
-      background: linear-gradient(
-        135deg,
-        var(--surface-card) 0%,
-        color-mix(in oklab, var(--surface-card) 99%, var(--brand-600) 1%) 100%
-      );
-      border: 1px solid var(--br-card);
+      background: var(--surface-card);
+      border: 1px solid rgba(148, 163, 184, 0.18);
       border-radius: var(--radius-xl);
-      padding: var(--sp-10) var(--sp-8);
-      transition: all var(--transition-base);
-      box-shadow: 
-        var(--shadow-md),
-        0 1px 0 rgba(255, 255, 255, 0.02) inset;
+      padding: var(--sp-8);
+      transition: border-color var(--transition-base), transform var(--transition-base);
       position: relative;
     }
     
@@ -64,66 +57,36 @@
       content: "";
       position: absolute;
       inset: 0 auto 0 0;
-      width: 4px;
-      background: var(--brand-600);
+      width: 3px;
+      background: rgba(59, 130, 246, 0.28);
       border-radius: var(--radius-xl) 0 0 var(--radius-xl);
-      opacity: 0.6;
-      transition: opacity var(--transition-base), width var(--transition-base);
-    }
-
-    .pricing-card--highlight {
-      border-color: rgba(96, 165, 250, 0.35);
-      background: linear-gradient(
-        135deg,
-        color-mix(in oklab, var(--surface-card) 96%, var(--brand-600) 4%) 0%,
-        color-mix(in oklab, var(--surface-card) 94%, var(--brand-500) 6%) 100%
-      );
-      box-shadow:
-        var(--shadow-lg),
-        0 1px 0 rgba(255, 255, 255, 0.04) inset;
-    }
-
-    .pricing-card--highlight::before {
-      width: 6px;
-      opacity: 0.9;
+      opacity: 0.4;
+      transition: opacity var(--transition-base);
     }
     
+    .pricing-card--highlight {
+      border-color: rgba(96, 165, 250, 0.4);
+    }
+
     .pricing-card:hover {
-      background: linear-gradient(
-        135deg,
-        color-mix(in oklab, var(--surface-card) 98%, white 2%) 0%,
-        color-mix(in oklab, var(--surface-card) 97%, var(--brand-600) 3%) 100%
-      );
-      border-color: rgba(255, 255, 255, 0.08);
-      box-shadow: 
-        var(--shadow-lg),
-        0 1px 0 rgba(255, 255, 255, 0.03) inset;
+      border-color: rgba(96, 165, 250, 0.45);
       transform: translateY(-2px);
     }
     
     .pricing-card:hover::before {
       opacity: 1;
-      width: 5px;
     }
     
     .pricing-price {
-      font-size: clamp(3rem, 8vw, 4.5rem);
-      font-weight: 800;
+      font-size: clamp(2.6rem, 6vw, 3.6rem);
+      font-weight: 700;
       color: var(--ink);
       line-height: 1;
-      letter-spacing: -0.03em;
-      background: linear-gradient(
-        135deg,
-        var(--ink) 0%,
-        color-mix(in oklab, var(--ink) 95%, var(--brand-400) 5%) 100%
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      letter-spacing: -0.02em;
     }
     
     .pricing-period {
-      font-size: var(--fs-16);
+      font-size: var(--fs-15);
       color: var(--muted);
       font-weight: 500;
     }
@@ -131,27 +94,23 @@
     .pricing-grid {
       display: grid;
       gap: var(--sp-8);
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       align-items: stretch;
       margin-bottom: var(--sp-16);
     }
     
-    /* ===== TRIAL BADGE ===== */
+    /* ===== BADGE ===== */
     .trial-badge {
       display: inline-flex;
       align-items: center;
       gap: var(--sp-2);
       padding: var(--sp-2) var(--sp-4);
-      background: linear-gradient(
-        135deg,
-        rgba(37, 99, 235, 0.15) 0%,
-        rgba(37, 99, 235, 0.1) 100%
-      );
-      border: 1px solid rgba(37, 99, 235, 0.3);
+      background: rgba(59, 130, 246, 0.14);
+      border: 1px solid rgba(59, 130, 246, 0.28);
       border-radius: var(--radius-pill);
       font-size: var(--fs-12);
       font-weight: 600;
-      color: var(--brand-400);
+      color: rgba(191, 219, 254, 0.95);
       letter-spacing: 0.02em;
       text-transform: uppercase;
       transition: all var(--transition-base);
@@ -178,80 +137,9 @@
     }
     
     /* ===== CTA BUTTON ===== */
-    .cta-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--sp-3);
-      padding: var(--sp-4) var(--sp-10);
-      font-size: var(--fs-16);
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      color: var(--ink);
-      background: linear-gradient(
-        135deg,
-        var(--surface-elev) 0%,
-        color-mix(in oklab, var(--surface-elev) 98%, var(--brand-600) 2%) 100%
-      );
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: var(--radius-lg);
-      text-decoration: none;
-      transition: all var(--transition-base);
-      position: relative;
-      overflow: hidden;
-      box-shadow: 
-        var(--shadow-sm),
-        0 1px 0 rgba(255, 255, 255, 0.02) inset;
+    .pricing-card .btn {
       width: 100%;
-    }
-    
-    .cta-button::before {
-      content: "";
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 4px;
-      background: var(--brand-600);
-      border-radius: var(--radius-lg) 0 0 var(--radius-lg);
-      opacity: 0.6;
-      transition: all var(--transition-base);
-    }
-    
-    .cta-button::after {
-      content: "→";
-      position: absolute;
-      right: var(--sp-6);
-      opacity: 0;
-      transform: translateX(-4px);
-      transition: all var(--transition-base);
-      font-size: var(--fs-18);
-    }
-    
-    .cta-button:hover {
-      background: linear-gradient(
-        135deg,
-        color-mix(in oklab, var(--surface-elev) 96%, white 4%) 0%,
-        color-mix(in oklab, var(--surface-elev) 95%, var(--brand-600) 5%) 100%
-      );
-      border-color: rgba(255, 255, 255, 0.12);
-      box-shadow: 
-        var(--shadow-md),
-        0 1px 0 rgba(255, 255, 255, 0.03) inset;
-      transform: translateY(-2px);
-      padding-right: var(--sp-12);
-    }
-    
-    .cta-button:hover::before {
-      opacity: 1;
-      width: 5px;
-    }
-    
-    .cta-button:hover::after {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    
-    .cta-button:active {
-      transform: translateY(0);
+      justify-content: center;
     }
     
     /* ===== SECTION SPACING ===== */
@@ -596,7 +484,7 @@
           Deck proprietari SRD v5.0 (Swing Research Deck) e MTB v3.1 (Macro Tactical Briefing) sviluppati con metodologia accademica AI e fonti Tier-1.
         </p>
         <p style="color: var(--muted); font-size: var(--fs-15); max-width: 720px; margin: 0 auto; line-height: var(--lh-17);">
-          Trial formativo di 14 giorni, abbonamento Pro per retail avanzati e soluzioni Institutional con ricerca on-demand, fatturazione dedicata e white label.
+          Trial formativo di 14 giorni, abbonamento Pro per retail avanzati e soluzioni Desk Professionale con ricerca on-demand, fatturazione dedicata e white label.
         </p>
       </header>
 
@@ -605,60 +493,56 @@
         <!-- Trial -->
         <article class="pricing-card">
           <div style="display:flex; flex-direction:column; gap: var(--sp-4);">
-            <div class="trial-badge">14 giorni full access</div>
-            <h2 style="font-size: var(--fs-22); font-weight:700; color:var(--ink); letter-spacing:-0.01em;">Trial Formativo</h2>
+            <div class="trial-badge" style="background: rgba(148, 163, 184, 0.12); border-color: rgba(148, 163, 184, 0.25); color: rgba(226,232,240,0.9);">Trial guidato 14 giorni</div>
+            <h2 style="font-size: var(--fs-22); font-weight:700; color:var(--ink); letter-spacing:-0.01em;">Accesso Formativo</h2>
             <div style="display:flex; align-items:baseline; gap:var(--sp-3);">
               <span class="pricing-price">€0</span>
-              <span class="pricing-period">/14 giorni</span>
+              <span class="pricing-period">per 14 giorni</span>
             </div>
             <p style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-16);">
-              Accesso completo ai deck SRD v5.0 e MTB v3.1 per 14 giorni. Al termine puoi continuare
-              a consultare i dossier ufficiali con le sezioni sensibili oscurate.
+              Esplora integralmente i deck SRD v5.0 e MTB v3.1 per due settimane. Al termine restano consultabili i dossier istituzionali, con le sezioni sensibili oscurate.
             </p>
           </div>
           <div class="pricing-features">
-            <h3>Include:</h3>
+            <h3>Cosa comprende</h3>
             <ul>
               <li><i data-lucide="check"></i><span>Full access temporaneo a SRD v5.0 e MTB v3.1</span></li>
-              <li><i data-lucide="check"></i><span>Documenti istituzionali consultabili anche dopo la prova</span></li>
+              <li><i data-lucide="check"></i><span>Documentazione ufficiale sempre disponibile</span></li>
               <li><i data-lucide="check"></i><span>Preview community, roadmap e notifiche principali</span></li>
-              <li><i data-lucide="check"></i><span>Upgrade a Pro con un click in qualsiasi momento</span></li>
+              <li><i data-lucide="check"></i><span>Upgrade immediato al piano Pro quando desideri</span></li>
             </ul>
           </div>
           <div style="margin-top: var(--sp-6);">
-            <a href="/dashboard.html" class="cta-button">Attiva prova gratuita</a>
+            <a href="/dashboard.html" class="btn btn-outline">Attiva prova gratuita</a>
           </div>
         </article>
 
         <!-- Pro -->
         <article class="pricing-card pricing-card--highlight">
           <div style="display:flex; flex-direction:column; gap: var(--sp-4);">
-            <div class="trial-badge" style="background: rgba(59,130,246,0.22); border-color: rgba(96,165,250,0.45); color: rgba(191,219,254,0.95);">
-              Piano consigliato
-            </div>
+            <div class="trial-badge">Piano consigliato</div>
             <h2 style="font-size: var(--fs-22); font-weight:700; color:var(--ink); letter-spacing:-0.01em;">Pro Research</h2>
             <div style="display:flex; align-items:baseline; gap:var(--sp-3);">
               <span class="pricing-price">€49</span>
               <span class="pricing-period">/mese</span>
             </div>
             <p style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-16);">
-              Accesso stabile ai deck SRD v5.0 e MTB v3.1, strumenti community e notifiche operative. Promo lancio:
+              Accesso continuativo ai deck SRD v5.0 e MTB v3.1 con strumenti community e notifiche operative. Promo lancio
               <strong style="color:var(--ink-soft);">€29/mese</strong> per i primi 100 abbonati.
             </p>
           </div>
           <div class="pricing-features">
-            <h3>Cosa ottieni:</h3>
+            <h3>In evidenza</h3>
             <ul>
-              <li><i data-lucide="check"></i><span>Deck SRD v5.0 e MTB v3.1 completi, con moduli F1→F7</span></li>
-              <li><i data-lucide="check"></i><span>Commenti illimitati e dialogo con il desk di ricerca</span></li>
-              <li><i data-lucide="check"></i><span>Suggerimento e voto giornaliero sui ticker da analizzare</span></li>
-              <li><i data-lucide="check"></i><span>Notifiche push e aggiornamenti operativi in tempo reale</span></li>
-              <li><i data-lucide="check"></i><span>Supporto email prioritario e roadmap condivisa</span></li>
+              <li><i data-lucide="check"></i><span>Deck SRD v5.0 e MTB v3.1 completi e aggiornati</span></li>
+              <li><i data-lucide="check"></i><span>Commenti illimitati e canale diretto con il desk Tradelia</span></li>
+              <li><i data-lucide="check"></i><span>Suggerimento e voto giornaliero sui ticker della community</span></li>
+              <li><i data-lucide="check"></i><span>Notifiche push operative e roadmap funzionale prioritaria</span></li>
             </ul>
           </div>
-          <div style="margin-top: var(--sp-6);">
-            <a href="/dashboard.html" class="cta-button">Abbonati ora</a>
-            <div class="pricing-legal-links" style="justify-content:center; margin-top: var(--sp-4);">
+          <div style="margin-top: var(--sp-6); display:flex; flex-direction:column; gap:var(--sp-4);">
+            <a href="/dashboard.html" class="btn btn-primary">Abbonati ora</a>
+            <div class="pricing-legal-links" style="justify-content:center;">
               <a href="/refund.html">Trial 14 giorni</a>
               <span class="pricing-legal-separator">·</span>
               <a href="/terms.html">Termini & condizioni</a>
@@ -666,31 +550,31 @@
           </div>
         </article>
 
-        <!-- Institutional -->
+        <!-- Desk Professionale -->
         <article class="pricing-card">
           <div style="display:flex; flex-direction:column; gap: var(--sp-4);">
             <div class="trial-badge" style="background: rgba(148,163,184,0.16); border-color: rgba(148,163,184,0.3); color: rgba(226,232,240,0.9);">
-              Corporate / Desk
+              Desk professionali
             </div>
-            <h2 style="font-size: var(--fs-22); font-weight:700; color:var(--ink); letter-spacing:-0.01em;">Institutional Desk</h2>
+            <h2 style="font-size: var(--fs-22); font-weight:700; color:var(--ink); letter-spacing:-0.01em;">Desk Professionale</h2>
             <div style="display:flex; align-items:baseline; gap:var(--sp-3);">
               <span class="pricing-price" style="font-size: clamp(2.4rem,6vw,3.6rem);">Su preventivo</span>
             </div>
             <p style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-16);">
-              Ricerca dedicata per team professionali: fatturazione corporate, analisi on-demand SRD e personalizzazioni white label.
+              Ricerca dedicata per team professionali: analisi SRD on-demand, white label e fatturazione corporate con SLA.
             </p>
           </div>
           <div class="pricing-features">
-            <h3>Servizi dedicati:</h3>
+            <h3>Servizi inclusi</h3>
             <ul>
               <li><i data-lucide="check"></i><span>Analisi Swing Research on-demand (99 € per richiesta)</span></li>
-              <li><i data-lucide="check"></i><span>Fatturazione dedicata, SLA e supporto 1:1</span></li>
-              <li><i data-lucide="check"></i><span>Deck SRD/MTB in white label e integrazione dataset interni</span></li>
-              <li><i data-lucide="check"></i><span>Mentorship periodica con il research desk Tradelia</span></li>
+              <li><i data-lucide="check"></i><span>Fatturazione corporate, SLA e supporto dedicato</span></li>
+              <li><i data-lucide="check"></i><span>Deck SRD/MTB in white label con dati personalizzati</span></li>
+              <li><i data-lucide="check"></i><span>Mentorship periodica con il research desk</span></li>
             </ul>
           </div>
           <div style="margin-top: var(--sp-6);">
-            <a href="mailto:info@tradelia.org" class="cta-button">Contatta il desk</a>
+            <a href="mailto:info@tradelia.org" class="btn btn-outline">Contatta il desk</a>
           </div>
         </article>
       </div>
@@ -723,7 +607,7 @@
             <summary>Quali metodi di pagamento accettate?</summary>
             <p>
               Utilizziamo gateway certificati (Paddle / Lemon Squeezy) con fatturazione elettronica e gestione IVA automatica.
-              Il rinnovo è mensile e puoi richiedere invoice intestata. Per il piano Institutional predisponiamo accordo dedicato e fatturazione corporate.
+              Il rinnovo è mensile e puoi richiedere invoice intestata. Per il Desk Professionale predisponiamo accordo dedicato e fatturazione corporate.
             </p>
           </details>
         </div>

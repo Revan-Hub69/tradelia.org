@@ -397,7 +397,7 @@ function roleLabel(role) {
     case 'pro':
       return 'Piano Pro';
     case 'institutional':
-      return 'Institutional';
+      return 'Desk Professionale';
     case 'trial':
     default:
       return 'Trial';

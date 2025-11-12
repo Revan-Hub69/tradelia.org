@@ -42,7 +42,7 @@ function template() {
         </button>
         <button type="button" role="tab" data-auth-switch="register" aria-selected="false">
           <span class="auth-tab-label">Registrati</span>
-          <span class="auth-tab-hint">Piani Pro & Institutional</span>
+          <span class="auth-tab-hint">Piani Pro & Desk</span>
         </button>
         <button type="button" role="tab" data-auth-switch="reset" aria-selected="false">
           <span class="auth-tab-label">Recupera password</span>
@@ -86,7 +86,7 @@ function template() {
             </li>
           </ul>
           <button type="button" class="btn btn-primary" data-auth-pricing>Vai alla pagina Pricing</button>
-          <p class="auth-hint">Pro e Institutional sono soggetti a verifica KYC aziendale.</p>
+          <p class="auth-hint">Pro e Desk Professionale sono soggetti a verifica KYC aziendale.</p>
         </div>
         <form id="auth-reset-form" data-auth-form="reset" class="auth-form" hidden novalidate>
           <div class="auth-field">

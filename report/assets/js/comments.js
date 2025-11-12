@@ -392,7 +392,7 @@ function formatRelativeTime(dateString) {
 function roleLabelMap(role) {
   switch (role) {
     case 'institutional':
-      return 'Institutional';
+      return 'Desk Professionale';
     case 'pro':
       return 'Pro';
     case 'trial':
