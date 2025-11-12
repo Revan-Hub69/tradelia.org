@@ -9,6 +9,32 @@
   min-height: calc(100vh - 200px);
 }
 
+#site-header-slot {
+  position: relative;
+  z-index: 999;
+}
+
+#site-header-slot .hdr {
+  position: fixed !important;
+  inset: 0 auto auto 0 !important;
+  right: 0 !important;
+  height: 64px !important;
+  display: flex !important;
+}
+
+#auth-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2000 !important;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+#auth-overlay[data-open="true"] {
+  display: flex !important;
+}
+
 .archive-header {
   margin-bottom: var(--sp-8);
   padding-bottom: var(--sp-6);
