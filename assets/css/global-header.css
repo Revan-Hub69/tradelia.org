@@ -456,6 +456,22 @@ header.hdr .container {
   gap: 0.9rem;
 }
 
+.auth-body [data-auth-form="upgrade"] {
+  display: grid;
+  gap: 0.85rem;
+  padding: 0.6rem 0;
+  font-size: 0.85rem;
+  color: rgba(226, 232, 240, 0.88);
+}
+
+.auth-body [data-auth-form="upgrade"] ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.35rem;
+  color: rgba(191, 219, 254, 0.85);
+}
+
 .auth-body label {
   display: grid;
   gap: 0.35rem;

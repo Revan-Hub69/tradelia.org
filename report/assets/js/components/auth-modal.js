@@ -34,7 +34,7 @@ function template() {
       </header>
       <nav class="auth-tabs" role="tablist">
         <button type="button" role="tab" data-auth-switch="login" aria-selected="true">Accedi</button>
-        <button type="button" role="tab" data-auth-switch="signup" aria-selected="false">Richiedi accesso</button>
+        <button type="button" role="tab" data-auth-switch="upgrade" aria-selected="false">Upgrade piano</button>
         <button type="button" role="tab" data-auth-switch="reset" aria-selected="false">Recupera password</button>
       </nav>
       <div class="auth-body">
@@ -43,12 +43,20 @@ function template() {
           <label>Password<input type="password" name="password" autocomplete="current-password" required minlength="8" placeholder="Password"></label>
           <button class="btn btn-primary" type="submit">Accedi</button>
         </form>
-        <form id="auth-signup-form" data-auth-form="signup" hidden>
-          <label>Email istituzionale<input type="email" name="email" autocomplete="email" required placeholder="nome@company.com"></label>
-          <label>Password<input type="password" name="password" autocomplete="new-password" required minlength="8" placeholder="Password (min 8 caratteri)"></label>
-          <button class="btn btn-primary" type="submit">Richiedi credenziali</button>
-          <p class="auth-hint">Riceverai una mail per confermare l’account. Il team Tradelia abiliterà il ruolo corretto.</p>
-        </form>
+        <div id="auth-upgrade-card" data-auth-form="upgrade" hidden>
+          <h3>Upgrade Pro / Institutional</h3>
+          <p>
+            Stiamo finalizzando l’integrazione con gateway di pagamento dedicati (Lemon&nbsp;Squeezy / Paddle) per attivare l’acquisto self-service.
+            Nel frattempo, il team commerciale abilita manualmente i piani Pro e Institutional.
+          </p>
+          <ul>
+            <li>Accesso completo ai report e alla community</li>
+            <li>Supporto diretto con il desk Tradelia</li>
+            <li>Pagamenti ricorrenti saranno gestiti via provider certificati</li>
+          </ul>
+          <button type="button" class="btn btn-primary" data-auth-contact>Contatta il team</button>
+          <p class="auth-hint">Scrivici: specifica desk, esigenze operative e numero licenze richiesto.</p>
+        </div>
         <form id="auth-reset-form" data-auth-form="reset" hidden>
           <label>Email registrata<input type="email" name="email" autocomplete="email" required placeholder="nome@azienda.com"></label>
           <button class="btn btn-primary" type="submit">Invia link di reset</button>
@@ -68,8 +76,8 @@ function registerEvents() {
   const backdrop = state.root.querySelector('[data-auth-dismiss]');
   const switchers = state.root.querySelectorAll('[data-auth-switch]');
   const loginForm = state.root.querySelector('#auth-login-form');
-  const signupForm = state.root.querySelector('#auth-signup-form');
   const resetForm = state.root.querySelector('#auth-reset-form');
+  const contactBtn = state.root.querySelector('[data-auth-contact]');
 
   closeBtn.addEventListener('click', close);
   backdrop.addEventListener('click', close);
@@ -83,8 +91,10 @@ function registerEvents() {
   });
 
   loginForm.addEventListener('submit', handleLogin);
-  signupForm.addEventListener('submit', handleSignup);
   resetForm.addEventListener('submit', handleReset);
+  contactBtn?.addEventListener('click', () => {
+    window.location.href = 'mailto:info@tradelia.org?subject=Upgrade%20piano%20Tradelia';
+  });
 }
 
 function handleEscape(event) {
@@ -113,33 +123,6 @@ async function handleLogin(event) {
   } catch (err) {
     Logger.error('AuthModal', 'login error', err);
     showToast(err.message || 'Credenziali non valide.', 'error');
-  } finally {
-    state.busy = false;
-    form.querySelector('button[type="submit"]').disabled = false;
-  }
-}
-
-async function handleSignup(event) {
-  event.preventDefault();
-  if (state.busy) return;
-  const form = event.currentTarget;
-  const email = form.email.value.trim();
-  const password = form.password.value;
-  if (!email || !password) {
-    showToast('Compila tutti i campi.', 'error');
-    return;
-  }
-  state.busy = true;
-  form.querySelector('button[type="submit"]').disabled = true;
-  try {
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) throw error;
-    showToast('Controlla la mail per confermare l’account.', 'success');
-    state.mode = 'login';
-    updateForms();
-  } catch (err) {
-    Logger.error('AuthModal', 'signup error', err);
-    showToast(err.message || 'Registrazione non riuscita.', 'error');
   } finally {
     state.busy = false;
     form.querySelector('button[type="submit"]').disabled = false;
