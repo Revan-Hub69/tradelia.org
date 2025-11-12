@@ -157,10 +157,6 @@ async function syncAuthState(node) {
   const loginBtn = node.querySelector('[data-auth-action="login"]');
   const signupBtn = node.querySelector('[data-auth-action="signup"]');
   const logoutBtn = node.querySelector('[data-auth-action="logout"]');
-
-  const loginBtn = node.querySelector('[data-auth-action="login"]');
-  const signupBtn = node.querySelector('[data-auth-action="signup"]');
-  const logoutBtn = node.querySelector('[data-auth-action="logout"]');
   const accountBtn = node.querySelector('[data-auth-action="account"]');
 
   try {
