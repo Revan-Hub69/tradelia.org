@@ -358,7 +358,9 @@ header.hdr .container {
 .auth-modal {
   position: relative;
   z-index: 1;
-  width: min(380px, 92vw);
+  width: min(420px, 92vw);
+  max-height: min(560px, 90vh);
+  overflow-y: auto;
   background: rgba(15, 23, 42, 0.95);
   border: 1px solid rgba(148, 163, 184, 0.22);
   border-radius: 18px;

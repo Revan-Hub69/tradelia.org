@@ -18,19 +18,13 @@ const STATE = {
 // ===== INIT =====
 async function init() {
   Logger.debug('Archive', 'Inizializzazione archivio');
-  
-  // Monta header e footer
+
   await mountHeaderFooter();
-  
-  // Carica dati
+  await checkAdminAccess();
   await loadData();
-  
-  // Setup tabs
   setupTabs();
-  
-  // Setup filtri (solo per abbonati, nascosti di default)
   setupFilters();
-  
+
   Logger.debug('Archive', 'Archivio inizializzato');
 }
 
@@ -51,6 +45,39 @@ async function mountHeaderFooter() {
     }
   } catch (err) {
     Logger.warn('Archive', 'Errore montaggio header/footer', err);
+  }
+}
+
+async function checkAdminAccess() {
+  const actions = document.getElementById('archive-admin-actions');
+  const button = document.getElementById('archive-admin-button');
+  if (!actions || !button) return;
+
+  try {
+    const { data } = await supabase.auth.getSession();
+    const user = data?.session?.user;
+    if (!user) {
+      actions.hidden = true;
+      return;
+    }
+
+    const { data: adminRecord, error } = await supabase
+      .from('admin_users')
+      .select('user_id')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (adminRecord) {
+      actions.hidden = false;
+      button.addEventListener('click', () => {
+        window.location.href = '/report/admin/dashboard.html';
+      }, { once: true });
+    } else {
+      actions.hidden = true;
+    }
+  } catch (err) {
+    Logger.warn('Archive', 'Errore verifica admin', err);
   }
 }
 
@@ -394,5 +421,9 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
   init();
+
+supabase.auth.onAuthStateChange(() => {
+  checkAdminAccess();
+});
 }
 
