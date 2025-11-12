@@ -8,6 +8,12 @@ create table if not exists public.admin_users (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.user_roles (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  role text not null check (role in ('trial','pro','institutional')),
+  assigned_at timestamptz not null default now()
+);
+
 create table if not exists public.reports (
   id uuid primary key default gen_random_uuid(),
   slug text unique not null,
@@ -63,6 +69,7 @@ where r.status = 'active';
 -- Example policies (adjust roles as needed).
 -- Allow authenticated users full access (admin use-case).
 alter table public.admin_users enable row level security;
+alter table public.user_roles enable row level security;
 alter table public.reports enable row level security;
 alter table public.report_modules enable row level security;
 
@@ -72,6 +79,19 @@ create policy "Admins can read admin_users"
 
 create policy "Service role can manage admin_users"
   on public.admin_users using (auth.role() = 'service_role')
+  with check (auth.role() = 'service_role');
+
+create policy "Users can read own role"
+  on public.user_roles for select
+  using (auth.uid() = user_id);
+
+create policy "Admins manage user roles"
+  on public.user_roles for all
+  using (exists (select 1 from public.admin_users au where au.user_id = auth.uid()))
+  with check (exists (select 1 from public.admin_users au where au.user_id = auth.uid()));
+
+create policy "Service role can manage user roles"
+  on public.user_roles using (auth.role() = 'service_role')
   with check (auth.role() = 'service_role');
 
 create policy "Admins manage reports"

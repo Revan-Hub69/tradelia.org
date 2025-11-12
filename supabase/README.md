@@ -11,10 +11,13 @@ Questa cartella contiene gli step minimi per configurare Supabase e ospitare i r
 ## 2. Schema
 1. Apri il pannello SQL di Supabase.
 2. Incolla il contenuto di [`schema.sql`](./schema.sql) e lancialo.
-   - Crea le tabelle `admin_users`, `reports` e `report_modules`.
+   - Crea le tabelle `admin_users`, `user_roles`, `reports` e `report_modules`.
    - `admin_users` contiene l’elenco degli UID autorizzati (ruolo admin).
+   - `user_roles` mappa ogni utente Supabase ad uno dei ruoli applicativi (`trial`, `pro`, `institutional`).
    - Aggiunge il campo `report_type` (per ora supportiamo `swing_master_5_0`, `daily_market_intel_3_1`, `custom`).
-   - Abilita RLS con policy che consentono full access agli utenti autenticati.
+   - Abilita RLS con policy granulari:
+     - gli admin (o il service role) possono gestire tabelle e ruoli;
+     - ogni utente autenticato può leggere solamente il proprio record in `user_roles`.
    - Aggiunge la view `active_reports_expanded` (opzionale).
 
 ## 3. Storage (chart)
@@ -30,6 +33,12 @@ Questa cartella contiene gli step minimi per configurare Supabase e ospitare i r
    insert into public.admin_users (user_id) values ('<UUID-UTENTE>');
    ```
    Solo gli utenti presenti in `admin_users` potranno usare la dashboard.
+3. Assegna il ruolo applicativo (trial/pro/institutional) nella tabella `user_roles`:
+   ```sql
+   insert into public.user_roles (user_id, role)
+   values ('<UUID-UTENTE>', 'pro');
+   ```
+   Gli utenti possono leggere solo il proprio ruolo; gli admin o il service role possono aggiornarlo.
 
 ## 5. Configurazione dashboard
 Nel repository è presente `report/admin/supabase-config.example.js`. Copialo in `supabase-config.js` (o crea direttamente quest’ultimo) e imposta:
