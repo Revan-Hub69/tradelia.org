@@ -28,7 +28,7 @@ function template() {
           <span class="auth-pill">Accesso Istituzionale</span>
           <h2 class="auth-title" id="auth-modal-title">Area Riservata Tradelia</h2>
           <p class="auth-subtitle">
-            Accedi con credenziali verificate per commentare i report, proporre analisi e gestire il tuo profilo professionale.
+            Credenziali verificate per commenti, richieste analisi e gestione profilo professionale.
           </p>
         </div>
         <button type="button" class="auth-close" data-auth-close aria-label="Chiudi">
@@ -68,22 +68,21 @@ function template() {
           <div class="auth-register-copy">
             <h3>Attiva un piano professionale</h3>
             <p>
-              Stiamo integrando checkout certificati (Lemon&nbsp;Squeezy / Paddle) per una gestione autonoma delle licenze.
-              Nell’attesa puoi richiedere l’upgrade dalla pagina pricing ufficiale: il team accelera l’onboarding in 24h.
+              Integrazione checkout (Lemon&nbsp;Squeezy / Paddle) in rollout. Richiedi upgrade da pricing: onboarding manuale entro 24h.
             </p>
           </div>
           <ul class="auth-register-list">
             <li>
               <strong>Commenti e richieste</strong>
-              <span>Interagisci con l’ufficio studi sui report live.</span>
+              <span>Interazione diretta con l’ufficio studi sui report live.</span>
             </li>
             <li>
               <strong>Analisi dedicate</strong>
-              <span>Prenota slot giornalieri per richieste su ticker specifici.</span>
+              <span>Prenotazione slot giornalieri per richieste su ticker specifici.</span>
             </li>
             <li>
               <strong>Profilo verificato</strong>
-              <span>Badge istituzionale con dati certificati dal team Tradelia.</span>
+              <span>Badge istituzionale con KYC aziendale validato.</span>
             </li>
           </ul>
           <button type="button" class="btn btn-primary" data-auth-pricing>Vai alla pagina Pricing</button>
@@ -166,7 +165,12 @@ async function handleLogin(event) {
     closeAfterDelay();
   } catch (err) {
     Logger.error('AuthModal', 'login error', err);
-    showToast(err.message || 'Credenziali non valide.', 'error');
+    const message = err?.message || 'Credenziali non valide.';
+    if (/api key/i.test(message)) {
+      showToast('Configurazione API non valida. Verifica la Supabase anon key sul deploy.', 'error');
+    } else {
+      showToast(message, 'error');
+    }
   } finally {
     state.busy = false;
     form.querySelector('button[type="submit"]').disabled = false;

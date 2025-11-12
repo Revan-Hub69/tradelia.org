@@ -361,13 +361,14 @@ header.hdr .container {
   width: min(420px, 92vw);
   max-height: min(540px, 88vh);
   overflow-y: auto;
-  background: rgba(15, 23, 42, 0.95);
-  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(17, 24, 39, 0.96);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 18px;
   box-shadow: 0 28px 90px rgba(8, 47, 73, 0.42);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  color: rgba(226, 232, 240, 0.95);
 }
 
 .auth-header {
@@ -377,7 +378,7 @@ header.hdr .container {
   justify-content: space-between;
   gap: 1.1rem;
   border-bottom: 1px solid rgba(148, 163, 184, 0.16);
-  background: linear-gradient(160deg, rgba(37, 99, 235, 0.18) 0%, rgba(15, 23, 42, 0.92) 52%, rgba(15, 23, 42, 0.98) 100%);
+  background: linear-gradient(165deg, rgba(37, 99, 235, 0.28) 0%, rgba(17, 24, 39, 0.94) 46%, rgba(17, 24, 39, 0.98) 100%);
 }
 
 .auth-header-text {
@@ -464,7 +465,7 @@ header.hdr .container {
   font-size: 0.82rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: rgba(226, 232, 240, 0.94);
+  color: rgba(226, 232, 240, 0.92);
 }
 
 .auth-tab-hint {
@@ -493,6 +494,7 @@ header.hdr .container {
   gap: 1.2rem;
   flex: 1;
   overflow-y: auto;
+  background: radial-gradient(circle at top, rgba(37, 99, 235, 0.08), transparent 65%);
 }
 
 .auth-form {
@@ -520,6 +522,7 @@ header.hdr .container {
   color: #ffffff;
   font: inherit;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  line-height: 1.4;
 }
 
 .auth-field input:focus {
@@ -538,7 +541,7 @@ header.hdr .container {
   font-size: 0.7rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: rgba(148, 163, 184, 0.66);
+  color: rgba(148, 163, 184, 0.7);
 }
 
 .auth-register {
@@ -590,6 +593,7 @@ header.hdr .container {
 .auth-register-list li span {
   font-size: 0.74rem;
   color: rgba(148, 163, 184, 0.85);
+  line-height: 1.5;
 }
 
 .auth-hint {
@@ -614,6 +618,7 @@ header.hdr .container {
   margin: 0;
   font-size: 0.82rem;
   color: rgba(203, 213, 225, 0.8);
+  line-height: 1.6;
 }
 
 .auth-support a {
