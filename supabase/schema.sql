@@ -41,6 +41,7 @@ create unique index if not exists uq_report_module_key_per_report
   on public.report_modules(report_id, module_key);
 
 create extension if not exists moddatetime;
+drop trigger if exists set_timestamp on public.reports;
 create trigger set_timestamp
 before update on public.reports
 for each row execute procedure moddatetime(updated_at);
