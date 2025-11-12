@@ -1,6 +1,6 @@
-import { supabase } from '../../report/assets/js/supabase-client.js';
-import Logger from '../../report/assets/js/utils/logger.js';
-import { siteHeader } from '../../report/assets/js/components/site-header.js';
+import { supabase } from '/report/assets/js/supabase-client.js';
+import Logger from '/report/assets/js/utils/logger.js';
+import { siteHeader } from '/report/assets/js/components/site-header.js';
 
 const HERO = document.getElementById('user-hero');
 const AVATAR = document.getElementById('user-avatar');
