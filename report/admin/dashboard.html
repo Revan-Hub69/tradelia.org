@@ -1172,16 +1172,25 @@
     };
 
     const saveReport = async ({ publish }) => {
+      console.log('[Dashboard] saveReport start', { publish });
       const slug = reportSlugEl.value.trim();
       const title = reportTitleEl.value.trim();
       if (!slug || !title) {
         showToast('Slug e titolo sono obbligatori', 'error');
+        console.log('[Dashboard] saveReport abort: missing slug/title', { slug, title });
         return;
       }
 
       const modules = collectModules();
-      if (modules === null) return;
-      if (!validateModulesForType(modules, reportTypeEl.value, { publish })) return;
+      if (modules === null) {
+        console.log('[Dashboard] saveReport abort: collectModules returned null');
+        return;
+      }
+      console.log('[Dashboard] saveReport collected modules', modules);
+      if (!validateModulesForType(modules, reportTypeEl.value, { publish })) {
+        console.log('[Dashboard] saveReport abort: validation failed', { publish, type: reportTypeEl.value });
+        return;
+      }
 
       const reportPayload = {
         slug,
@@ -1198,6 +1207,7 @@
       };
 
       const isNew = !activeReport;
+      console.log('[Dashboard] saveReport upsert', { isNew, reportPayload });
       const { data: savedReport, error: saveError } = isNew
         ? await supabase.from('reports').insert(reportPayload).select().single()
         : await supabase.from('reports').update(reportPayload).eq('id', activeReport.id).select().single();
@@ -1205,10 +1215,12 @@
       if (saveError) {
         console.error(saveError);
         showToast('Errore durante il salvataggio del report', 'error');
+        console.log('[Dashboard] saveReport abort: saveError', saveError);
         return;
       }
 
       const reportId = savedReport.id;
+      console.log('[Dashboard] saveReport saved report', savedReport);
 
       const { error: deleteError } = await supabase
         .from('report_modules')
@@ -1218,6 +1230,7 @@
       if (deleteError) {
         console.error(deleteError);
         showToast('Errore nella sostituzione dei moduli', 'error');
+        console.log('[Dashboard] saveReport abort: deleteError', deleteError);
         return;
       }
 
@@ -1228,14 +1241,17 @@
           order_index: module.order_index ?? index,
           content: module.content
         }));
+        console.log('[Dashboard] saveReport inserting modules', inserts);
         const { error: insertError } = await supabase.from('report_modules').insert(inserts);
         if (insertError) {
           console.error(insertError);
           showToast('Errore durante l\'inserimento dei moduli', 'error');
+          console.log('[Dashboard] saveReport abort: insertError', insertError);
           return;
         }
       }
 
+      console.log('[Dashboard] saveReport success', { publish });
       showToast(publish ? 'Report pubblicato' : 'Report salvato', 'success');
       await loadReports();
       await selectReport(reportId);
