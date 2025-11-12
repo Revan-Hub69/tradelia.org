@@ -42,45 +42,45 @@
     .pricing-layout {
       display: flex;
       flex-direction: column;
-      gap: var(--sp-10);
-      margin: var(--sp-16) 0 var(--sp-24);
+      gap: var(--sp-12);
+      margin: var(--sp-18) 0 var(--sp-26);
     }
 
     .pricing-row {
       display: grid;
-      gap: var(--sp-6);
+      gap: var(--sp-8);
     }
 
     .pricing-row--duo {
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       align-items: stretch;
     }
 
     .pricing-row--solo {
-      grid-template-columns: minmax(280px, 1fr);
+      grid-template-columns: minmax(320px, 1fr);
       justify-content: center;
-      margin-top: var(--sp-6);
+      margin-top: var(--sp-8);
     }
 
     @media (min-width: 1024px) {
       .pricing-row--duo {
-        grid-template-columns: minmax(320px, 0.7fr) minmax(320px, 1fr);
+        grid-template-columns: minmax(360px, 0.72fr) minmax(360px, 1fr);
       }
 
       .pricing-row--solo {
-        grid-template-columns: minmax(420px, min(860px, 72vw));
+        grid-template-columns: minmax(520px, min(920px, 70vw));
       }
     }
 
     .plan-card {
       display: flex;
       flex-direction: column;
-      gap: var(--sp-6);
+      gap: var(--sp-7);
       background: var(--surface-card);
       border: 1px solid rgba(148, 163, 184, 0.18);
       border-radius: var(--radius-xl);
-      padding: var(--sp-8);
-      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+      padding: calc(var(--sp-8) + 4px) calc(var(--sp-8) + 6px);
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.18);
       transition: border-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base);
     }
 
@@ -102,11 +102,11 @@
     }
 
     .plan-card--panorama {
-      padding: var(--sp-10) var(--sp-11);
+      padding: calc(var(--sp-10) + 6px) calc(var(--sp-11) + 8px);
       border-radius: var(--radius-xl);
       background: linear-gradient(180deg, rgba(15, 23, 42, 0.06) 0%, rgba(15, 23, 42, 0.12) 100%);
-      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
-      gap: var(--sp-7);
+      box-shadow: 0 28px 64px rgba(15, 23, 42, 0.24);
+      gap: var(--sp-8);
     }
 
     .plan-heading {
