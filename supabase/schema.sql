@@ -74,32 +74,39 @@ alter table public.user_roles enable row level security;
 alter table public.reports enable row level security;
 alter table public.report_modules enable row level security;
 
+drop policy if exists "Admins can read admin_users" on public.admin_users;
 create policy "Admins can read admin_users"
   on public.admin_users for select
   using (auth.uid() = user_id);
 
+drop policy if exists "Service role can manage admin_users" on public.admin_users;
 create policy "Service role can manage admin_users"
   on public.admin_users using (auth.role() = 'service_role')
   with check (auth.role() = 'service_role');
 
+drop policy if exists "Users can read own role" on public.user_roles;
 create policy "Users can read own role"
   on public.user_roles for select
   using (auth.uid() = user_id);
 
+drop policy if exists "Admins manage user roles" on public.user_roles;
 create policy "Admins manage user roles"
   on public.user_roles for all
   using (exists (select 1 from public.admin_users au where au.user_id = auth.uid()))
   with check (exists (select 1 from public.admin_users au where au.user_id = auth.uid()));
 
+drop policy if exists "Service role can manage user roles" on public.user_roles;
 create policy "Service role can manage user roles"
   on public.user_roles using (auth.role() = 'service_role')
   with check (auth.role() = 'service_role');
 
+drop policy if exists "Admins manage reports" on public.reports;
 create policy "Admins manage reports"
   on public.reports for all
   using (exists (select 1 from public.admin_users au where au.user_id = auth.uid()))
   with check (exists (select 1 from public.admin_users au where au.user_id = auth.uid()));
 
+drop policy if exists "Admins manage modules" on public.report_modules;
 create policy "Admins manage modules"
   on public.report_modules for all
   using (exists (select 1 from public.admin_users au where au.user_id = auth.uid()))

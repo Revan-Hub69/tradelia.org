@@ -39,7 +39,7 @@ Questa cartella contiene gli step minimi per configurare Supabase e ospitare i r
    values ('<UUID-UTENTE>', 'pro');
    ```
    Gli utenti possono leggere solo il proprio ruolo; gli admin o il service role possono aggiornarlo.
-   Lo script SQL elimina e ricrea automaticamente il trigger `set_timestamp` se già presente, quindi puoi rilanciarlo senza errori.
+   Lo script SQL elimina e ricrea automaticamente trigger e policy se già presenti, quindi puoi rilanciarlo senza errori.
 
 ## 5. Configurazione dashboard
 Nel repository è presente `report/admin/supabase-config.example.js`. Copialo in `supabase-config.js` (o crea direttamente quest’ultimo) e imposta:
