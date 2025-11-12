@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0" />
-  <title>Tradelia AI · Progetto Indipendente con Metodo Accademico AI</title>
+  <title>Tradelia AI · Metodo accademico sui mercati · SRD/MTB, report quotidiani</title>
   
   <!-- SEO Meta Tags -->
-  <meta name="description" content="Tradelia AI: Progetto indipendente che utilizza AI con metodo accademico per analisi finanziaria multi-fattore. Report su trading, investimenti, analisi tecnica e fondamentale. Strumenti professionali per trader e investitori." />
-  <meta name="keywords" content="Tradelia AI, progetto indipendente, metodo accademico, trading AI, analisi finanziaria, swing trading, analisi tecnica, analisi fondamentale, investimenti, report finanziari, framework accademico, AI trading" />
+  <meta name="description" content="Framework accademico AI per analisi didattiche dei mercati: deck SRD v5.0 e MTB v3.1, ~3 report al giorno, ensemble multi-LLM (es. GPT-5 Pro, Gemini 1.5 Pro, Claude 3.5 Sonnet) con verifiche incrociate. Materiale educativo, non consulenza finanziaria." />
+  <meta name="keywords" content="Tradelia AI, metodo accademico, multi LLM, SRD v5.0, MTB v3.1, analisi didattiche mercato, ensemble AI, ricerca educativa mercati, swing research deck, macro tactical briefing" />
   <meta name="author" content="Tradelia AI" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="theme-color" content="#0f0f0f" />
@@ -15,8 +15,8 @@
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://tradelia.org" />
-  <meta property="og:title" content="Tradelia AI · Progetto Indipendente con Metodo Accademico AI" />
-  <meta property="og:description" content="Progetto indipendente che utilizza AI con metodo accademico per analisi finanziaria multi-fattore. Report su trading, investimenti, analisi tecnica e fondamentale." />
+  <meta property="og:title" content="Tradelia AI · Metodo accademico sui mercati · SRD/MTB, report quotidiani" />
+  <meta property="og:description" content="Deck SRD v5.0 e MTB v3.1, ~3 report al giorno, ensemble multi-LLM con fonti Tier-1. Analisi didattiche e verificabili. Non è consulenza finanziaria." />
   <meta property="og:image" content="https://tradelia.org/img/tradelia_og_vC_white_clean.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -27,8 +27,8 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:url" content="https://tradelia.org" />
-  <meta name="twitter:title" content="Tradelia AI · Progetto Indipendente con Metodo Accademico AI" />
-  <meta name="twitter:description" content="Progetto indipendente che utilizza AI con metodo accademico per analisi finanziaria multi-fattore. Report su trading, investimenti, analisi tecnica e fondamentale." />
+  <meta name="twitter:title" content="Tradelia AI · Metodo accademico sui mercati · SRD/MTB, report quotidiani" />
+  <meta name="twitter:description" content="Framework accademico AI con ensemble multi-LLM per analisi didattiche dei mercati. Deck SRD/MTB, ~3 report al giorno, fonti Tier-1 e verifiche incrociate." />
   <meta name="twitter:image" content="https://tradelia.org/img/tradelia_og_vC_white_clean.png" />
   <meta name="twitter:image:alt" content="Tradelia AI - Framework Accademico AI" />
   <meta name="twitter:creator" content="@tradelia_ai" />
@@ -46,7 +46,7 @@
     "@type": "WebSite",
     "name": "Tradelia AI",
     "url": "https://tradelia.org",
-    "description": "Framework Accademico AI per analisi finanziaria multi-fattore. Report su trading, investimenti, analisi tecnica e fondamentale.",
+    "description": "Framework accademico AI per analisi didattiche multi-fattore dei mercati con deck SRD/MTB e ensemble multi-LLM validato.",
     "publisher": {
       "@type": "Organization",
       "name": "Tradelia AI",
@@ -76,15 +76,15 @@
         "price": "0",
         "priceCurrency": "EUR"
       },
-      "description": "Framework Accademico AI per analisi finanziaria multi-fattore su contesto macro, sentiment e tecnica",
+      "description": "Framework accademico AI per analisi didattiche multi-fattore su contesto macro, intermarket e tecnica con controlli multi-LLM",
       "featureList": [
-        "Analisi tecnica multi-timeframe",
-        "Analisi fondamentale",
-        "Analisi macroeconomica",
-        "Sentiment analysis",
-        "Report finanziari AI",
-        "Glossario finanziario",
-        "Tutorial educativi"
+        "SRD v5.0 — Swing Research Deck",
+        "MTB v3.1 — Macro Tactical Briefing",
+        "Ensemble multi-LLM (GPT-5 Pro, Gemini 1.5 Pro, Claude 3.5 Sonnet, Llama 3.1 70B, Mistral Large)",
+        "Report quotidiani (~3/giorno)",
+        "Community con suggerimenti e votazioni ticker",
+        "Analisi on-demand (Quick Brief, Deep Dive)",
+        "Materiale educativo conforme MiFID-safe"
       ]
     }
   }
@@ -434,6 +434,122 @@
     .method-card-list strong {
       color: var(--ink);
       font-weight: 600;
+    }
+
+    /* ===== VALUE SECTION ===== */
+    .value-section {
+      padding: 6rem 0;
+      background: var(--surface-card);
+      border-top: 1px solid var(--br-card);
+      border-bottom: 1px solid var(--br-card);
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--sp-6);
+    }
+
+    .value-card {
+      background: var(--surface-elev);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+      transition: box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-base);
+    }
+
+    .value-card:hover {
+      border-color: var(--brand-500);
+      box-shadow: 0 10px 28px rgba(37, 99, 235, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .value-card strong {
+      font-size: var(--fs-16);
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .value-card span {
+      font-size: var(--fs-14);
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    .value-card .badge {
+      align-self: flex-start;
+      font-size: var(--fs-11);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: var(--sp-2) var(--sp-3);
+      border-radius: var(--radius-pill);
+      background: rgba(59, 130, 246, 0.12);
+      color: var(--brand-400);
+    }
+
+    /* ===== LIMITS SECTION ===== */
+    .limits-section {
+      padding: 6rem 0;
+      background: var(--surface-page);
+    }
+
+    .limits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--sp-6);
+    }
+
+    .limit-card {
+      background: var(--surface-elev);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+    }
+
+    .limit-card strong {
+      font-size: var(--fs-15);
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .limit-card ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: var(--sp-2);
+      font-size: var(--fs-14);
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    .limit-card ul li {
+      position: relative;
+      padding-left: var(--sp-4);
+    }
+
+    .limit-card ul li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.6);
+    }
+
+    .limits-note {
+      margin-top: var(--sp-5);
+      font-size: var(--fs-13);
+      color: var(--muted);
     }
 
     /* ===== SERVICES SECTION ===== */
@@ -1385,6 +1501,22 @@
         padding: 4rem 0;
       }
 
+      .value-section,
+      .limits-section {
+        padding: 3.5rem 0;
+      }
+
+      .value-grid,
+      .limits-grid {
+        grid-template-columns: 1fr;
+        gap: var(--sp-5);
+      }
+
+      .value-card,
+      .limit-card {
+        padding: var(--sp-5);
+      }
+
       .services-grid {
         gap: var(--sp-6);
       }
@@ -1797,6 +1929,52 @@
     </div>
   </section>
 
+  <!-- ===== VALUE SECTION ===== -->
+  <section class="value-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Cosa ottieni con Tradelia AI</h2>
+        <p class="section-description">
+          Deck proprietari SRD v5.0 e MTB v3.1, ensemble multi-LLM controllato e community didattica per approfondire mercati, rischio e correlazioni con metodo accademico.
+        </p>
+      </div>
+
+      <div class="value-grid">
+        <article class="value-card">
+          <span class="badge">Deck SRD/MTB</span>
+          <strong>~3 report al giorno, versionati</strong>
+          <span>
+            Accesso continuativo a SRD v5.0 e MTB v3.1: regime detection, intermarket, macro briefing e contestualizzazione delle opportunità con fonti Tier-1 citate.
+          </span>
+        </article>
+
+        <article class="value-card">
+          <span class="badge">Ensemble multi-LLM</span>
+          <strong>Controlli incrociati su ogni output</strong>
+          <span>
+            Routing semantico, best-of-n e consensus su GPT-5 Pro, Gemini 1.5 Pro, Claude 3.5 Sonnet, Llama 3.1 70B e Mistral Large, con verifiche numeriche e cronologiche.
+          </span>
+        </article>
+
+        <article class="value-card">
+          <span class="badge">Community & feedback</span>
+          <strong>Roadmap condivisa con il desk</strong>
+          <span>
+            Commenti illimitati, suggerimenti e voto sui ticker della community, canale diretto col desk e priorità sugli aggiornamenti roadmap e notifiche operative.
+          </span>
+        </article>
+
+        <article class="value-card">
+          <span class="badge">Analisi on-demand</span>
+          <strong>Quick Brief e Deep Dive dedicate</strong>
+          <span>
+            Richiedi analisi personalizzate per desk professionali o gruppi avanzati, con white paper descrittivi, mentoring periodico e option desk disponibile su richiesta.
+          </span>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== METODOLOGIA SECTION ===== -->
   <section id="metodo" class="method-section">
     <div class="container">
@@ -1934,6 +2112,44 @@
           </svg>
         </a>
       </div>
+    </div>
+  </section>
+
+  <!-- ===== LIMITS SECTION ===== -->
+  <section class="limits-section" id="disclaimer">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Materiale didattico, non consulenza</h2>
+        <p class="section-description">
+          Manteniamo una compliance MiFID-safe: trasparenza sulle fonti, attribuzione completa e distinzione netta tra ricerca educativa e consulenza personalizzata.
+        </p>
+      </div>
+
+      <div class="limits-grid">
+        <article class="limit-card">
+          <strong>Non facciamo</strong>
+          <ul>
+            <li>Consulenza finanziaria personalizzata o gestione di portafogli</li>
+            <li>Raccolta capitali, esecuzione ordini o intermediazione su strumenti finanziari</li>
+            <li>Promesse di rendimento, segnali di trading automatici o servizi di copy trading</li>
+            <li>Partnership commerciali che influenzano i contenuti dei deck</li>
+          </ul>
+        </article>
+
+        <article class="limit-card">
+          <strong>Ti garantiamo</strong>
+          <ul>
+            <li>Metodologia accademica con ensemble multi-LLM e verifiche incrociate documentate</li>
+            <li>Fonti Tier-1, attribution e versioning per ogni analisi pubblicata</li>
+            <li>Privacy-first: nessun tracking pubblicitario, gestione dati minimizzata</li>
+            <li>Disclosure completa su limiti, assunzioni e rischi di mercato</li>
+          </ul>
+        </article>
+      </div>
+
+      <p class="limits-note">
+        Prima di prendere decisioni operative consulta sempre un consulente finanziario abilitato. Tradelia AI fornisce contenuti educativi e ricerca accademica sui mercati.
+      </p>
     </div>
   </section>
 
