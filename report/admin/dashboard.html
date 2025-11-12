@@ -417,16 +417,16 @@
       <div class="field">
         <label for="auth-password">Password</label>
         <input type="password" id="auth-password" autocomplete="current-password" placeholder="••••••••">
-      </div>
-      <button class="btn btn-primary" id="auth-login-btn">Accedi</button>
     </div>
+      <button class="btn btn-primary" id="auth-login-btn">Accedi</button>
+        </div>
     <div class="auth-card hidden" id="auth-logged">
       <p class="badge" id="auth-user-badge">Connesso come —</p>
       <div style="display:flex; gap:0.75rem;">
         <button class="btn btn-outline" id="auth-logout-btn">Disconnetti</button>
         <button class="btn btn-soft" id="auth-refresh-session">Aggiorna sessione</button>
-      </div>
-    </div>
+            </div>
+          </div>
   </section>
 
   <div class="grid hidden" id="app-grid">
@@ -439,11 +439,11 @@
         <div class="toolbar">
           <button class="btn btn-soft" id="refresh-btn">Aggiorna</button>
           <button class="btn btn-outline" id="new-report-btn">Nuovo report</button>
-        </div>
+      </div>
         <div class="reports-list" id="reports-list">
           <div class="list-empty">Nessun report disponibile.</div>
-        </div>
-      </div>
+    </div>
+  </div>
     </section>
 
     <section class="panel">
@@ -456,11 +456,11 @@
               <option value="daily_market_intel_3_1" disabled>Daily Market Intelligence 3.1 (presto)</option>
               <option value="custom" disabled>Generico (presto)</option>
             </select>
-          </div>
+      </div>
           <div class="field">
             <label for="report-slug">Slug univoco</label>
             <input type="text" id="report-slug" placeholder="es. 20251107-1630">
-          </div>
+        </div>
           <div class="field">
             <label for="report-title">Titolo</label>
             <input type="text" id="report-title" placeholder="Titolo pubblico del report">
@@ -471,24 +471,24 @@
               <option value="draft">Bozza</option>
               <option value="active">Pubblicato</option>
               <option value="archived">Archiviato</option>
-            </select>
-          </div>
+          </select>
+        </div>
           <div class="field">
             <label for="report-published-at">Data pubblicazione (facoltativa)</label>
             <input type="datetime-local" id="report-published-at">
-          </div>
+        </div>
         </div>
 
         <div class="field">
           <label for="report-notes">Note interne</label>
           <textarea id="report-notes" placeholder="Note operative, TODO, riferimenti…"></textarea>
-        </div>
+  </div>
 
         <div class="chart-wrapper" id="chart-dropzone">
           <div class="field">
             <label for="chart-path">Path chart (bucket storage)</label>
             <input type="text" id="chart-path" placeholder="es. slug/chart-20251107.png">
-          </div>
+      </div>
           <label class="upload-area" id="chart-upload-area">
             <input type="file" id="chart-file" accept="image/png,image/jpeg,image/webp,image/gif,image/webp">
             <strong>Carica chart</strong>
@@ -498,40 +498,40 @@
           </label>
           <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
             <button class="btn btn-soft" id="open-chart-btn" aria-disabled="true" disabled>Apri chart</button>
-          </div>
+      </div>
           <small style="color: var(--ink-soft); font-size:0.75rem;">
             Suggerimenti: trascina o incolla uno screenshot direttamente qui, oppure incolla il path completo.
           </small>
           <img id="chart-preview" class="chart-preview" alt="Preview chart">
-        </div>
+  </div>
 
         <div>
           <div class="toolbar">
             <span class="badge" id="editor-report-id">Nessun report selezionato</span>
             <button class="btn btn-soft" id="add-module-btn">Aggiungi modulo</button>
             <button class="btn btn-outline" id="reset-template-btn">Reimposta template</button>
-          </div>
+      </div>
           <div class="modules-container" id="modules-container">
             <div class="module-empty">Nessun modulo presente. Aggiungi un modulo per iniziare.</div>
-          </div>
         </div>
+      </div>
 
         <div class="toolbar">
           <button class="btn btn-outline" id="save-draft-btn">Salva bozza</button>
           <button class="btn btn-primary" id="publish-report-btn">Pubblica</button>
           <button class="btn btn-soft" id="duplicate-report-btn">Duplica</button>
-        </div>
+  </div>
 
         <div class="danger-zone">
           <div>
             <strong>Danger zone</strong>
             <p style="font-size:0.8rem; color:#fecaca;">Elimina definitivamente il report e tutti i moduli.</p>
-          </div>
+      </div>
           <button class="btn btn-danger" id="delete-report-btn">Elimina</button>
         </div>
       </div>
     </section>
-  </div>
+      </div>
 
   <template id="module-template">
     <article class="module-card">
@@ -539,14 +539,14 @@
         <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
           <input type="text" class="module-key" placeholder="Chiave (es. manifest, header, F1B)">
           <input type="number" class="module-order" placeholder="Ordine">
-        </div>
+      </div>
         <div class="module-actions">
           <button type="button" class="module-import">Carica JSON</button>
           <button type="button" class="module-validate">Valida</button>
           <button type="button" class="module-duplicate">Duplica</button>
           <button type="button" class="module-remove">Rimuovi</button>
-        </div>
-      </div>
+    </div>
+  </div>
       <textarea class="module-content" placeholder='Incolla il JSON del modulo'></textarea>
       <input type="file" class="module-file" accept="application/json" hidden>
     </article>
@@ -724,7 +724,7 @@
         const confirmed = confirm('Sostituire i moduli correnti con il template selezionato?');
         if (!confirmed) {
           reportTypeEl.value = currentTemplateType;
-          return;
+        return;
         }
       }
 
@@ -810,7 +810,7 @@
         try {
           JSON.parse(contentArea.value);
           showToast('JSON valido', 'success');
-        } catch (error) {
+      } catch (error) {
           showToast(`JSON non valido: ${error.message}`, 'error');
         }
       });
@@ -828,7 +828,7 @@
           content: (() => {
             try {
               return JSON.parse(contentArea.value);
-            } catch {
+      } catch {
               return contentArea.value;
             }
           })()
@@ -878,7 +878,7 @@
         let content;
         try {
           content = JSON.parse(contentText);
-        } catch (error) {
+      } catch (error) {
           showToast(`Modulo ${key}: JSON non valido (${error.message})`, 'error');
           return null;
         }
@@ -933,8 +933,8 @@
       reportsListEl.innerHTML = '';
       if (!filteredReports.length) {
         reportsListEl.innerHTML = '<div class="list-empty">Nessun report trovato.</div>';
-        return;
-      }
+          return;
+        }
       filteredReports.forEach((report) => {
         const card = document.createElement('article');
         card.className = 'report-card';
@@ -1117,8 +1117,8 @@
       const file = chartFileEl.files?.[0];
       if (!file) {
         showToast('Seleziona un file immagine', 'error');
-        return;
-      }
+              return;
+            }
       await uploadChartFile(file);
     };
 
@@ -1135,8 +1135,8 @@
           const renamed = new File([file], `clipboard-${Date.now()}.${ext}`, { type: file.type });
           await uploadChartFile(renamed);
         }
-        return;
-      }
+              return;
+            }
 
       const text = clipboard.getData('text');
       if (text) {
@@ -1211,6 +1211,7 @@
       const { data: savedReport, error: saveError } = isNew
         ? await supabase.from('reports').insert(reportPayload).select().single()
         : await supabase.from('reports').update(reportPayload).eq('id', activeReport.id).select().single();
+      console.log('[Dashboard] saveReport upsert result', { savedReport, saveError });
 
       if (saveError) {
         console.error(saveError);
@@ -1231,8 +1232,8 @@
         console.error(deleteError);
         showToast('Errore nella sostituzione dei moduli', 'error');
         console.log('[Dashboard] saveReport abort: deleteError', deleteError);
-        return;
-      }
+              return;
+            }
 
       if (modules.length) {
         const inserts = modules.map((module, index) => ({
@@ -1247,10 +1248,10 @@
           console.error(insertError);
           showToast('Errore durante l\'inserimento dei moduli', 'error');
           console.log('[Dashboard] saveReport abort: insertError', insertError);
-          return;
-        }
-      }
-
+              return;
+            }
+          }
+          
       console.log('[Dashboard] saveReport success', { publish });
       showToast(publish ? 'Report pubblicato' : 'Report salvato', 'success');
       await loadReports();
@@ -1312,7 +1313,7 @@
         }
         authUserBadge.textContent = `Connesso come ${currentUser.email}`;
         await loadReports();
-      } else {
+        } else {
         authUserBadge.textContent = '';
         reportsListEl.innerHTML = '<div class="list-empty">Effettua l\'accesso per visualizzare i report.</div>';
         clearEditor();
