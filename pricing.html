@@ -11,16 +11,11 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
   <meta name="theme-color" content="#ffffff">
 
-  <!-- Tailwind (utility) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
   <!-- Design System -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
   <link rel="stylesheet" href="/assets/css/global-header.css" />
   <link rel="stylesheet" href="/assets/css/site-coherence-2025.css" />
 
-  <!-- Lucide -->
-  <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
   <style>
@@ -43,54 +38,7 @@
     
     /* Footer gestito da tokens.css - nessuno stile aggiuntivo necessario */
     
-    /* ===== PRICING CARD ===== */
-    .pricing-card {
-      background: var(--surface-card);
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      border-radius: var(--radius-xl);
-      padding: var(--sp-8);
-      transition: border-color var(--transition-base), transform var(--transition-base);
-      position: relative;
-    }
-    
-    .pricing-card::before {
-      content: "";
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 3px;
-      background: rgba(59, 130, 246, 0.28);
-      border-radius: var(--radius-xl) 0 0 var(--radius-xl);
-      opacity: 0.4;
-      transition: opacity var(--transition-base);
-    }
-    
-    .pricing-card--highlight {
-      border-color: rgba(96, 165, 250, 0.4);
-    }
-
-    .pricing-card:hover {
-      border-color: rgba(96, 165, 250, 0.45);
-      transform: translateY(-2px);
-    }
-    
-    .pricing-card:hover::before {
-      opacity: 1;
-    }
-    
-    .pricing-price {
-      font-size: clamp(2.6rem, 6vw, 3.6rem);
-      font-weight: 700;
-      color: var(--ink);
-      line-height: 1;
-      letter-spacing: -0.02em;
-    }
-    
-    .pricing-period {
-      font-size: var(--fs-15);
-      color: var(--muted);
-      font-weight: 500;
-    }
-
+    /* ===== PLAN GRID ===== */
     .pricing-grid {
       display: grid;
       gap: var(--sp-8);
@@ -98,112 +46,150 @@
       align-items: stretch;
       margin-bottom: var(--sp-16);
     }
-    
-    /* ===== BADGE ===== */
-    .trial-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--sp-2);
-      padding: var(--sp-2) var(--sp-4);
-      background: rgba(59, 130, 246, 0.14);
-      border: 1px solid rgba(59, 130, 246, 0.28);
-      border-radius: var(--radius-pill);
-      font-size: var(--fs-12);
-      font-weight: 600;
-      color: rgba(191, 219, 254, 0.95);
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      transition: all var(--transition-base);
-    }
-    
-    .trial-badge::before {
-      content: "→";
-      font-size: var(--fs-14);
-      transition: transform var(--transition-fast);
-    }
-    
-    .trial-badge:hover {
-      background: linear-gradient(
-        135deg,
-        rgba(37, 99, 235, 0.2) 0%,
-        rgba(37, 99, 235, 0.15) 100%
-      );
-      border-color: rgba(37, 99, 235, 0.4);
-      transform: translateX(2px);
-    }
-    
-    .trial-badge:hover::before {
-      transform: translateX(2px);
-    }
-    
-    /* ===== CTA BUTTON ===== */
-    .pricing-card .btn {
-      width: 100%;
-      justify-content: center;
-    }
-    
-    /* ===== SECTION SPACING ===== */
-    .pricing-hero {
-      margin-bottom: var(--sp-16);
+
+    .plan-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-5);
+      background: var(--surface-card);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: var(--radius-xl);
+      padding: var(--sp-7) var(--sp-6);
+      transition: border-color var(--transition-base), transform var(--transition-base);
     }
 
-    .pricing-faq {
-      margin-top: var(--sp-16);
+    .plan-card:hover {
+      border-color: rgba(96, 165, 250, 0.4);
+      transform: translateY(-2px);
     }
-    
-    /* ===== FEATURE LIST ===== */
-    .pricing-features {
-      margin: var(--sp-8) 0;
+
+    .plan-card--primary {
+      border-color: rgba(96, 165, 250, 0.5);
+      background: linear-gradient(180deg, rgba(37, 99, 235, 0.08) 0%, rgba(15, 23, 42, 0.02) 100%);
     }
-    
-    .pricing-features h3 {
-      font-size: var(--fs-18);
+
+    .plan-badge {
+      align-self: flex-start;
+      font-size: var(--fs-12);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: var(--sp-2) var(--sp-4);
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(96, 165, 250, 0.35);
+      background: rgba(59, 130, 246, 0.14);
+      color: rgba(191, 219, 254, 0.9);
+    }
+
+    .plan-heading {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+    }
+
+    .plan-title {
+      margin: 0;
+      font-size: var(--fs-22);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+
+    .plan-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: var(--sp-2);
+    }
+
+    .plan-price {
+      font-size: clamp(2.6rem, 6vw, 3.4rem);
       font-weight: 700;
       color: var(--ink);
-      margin-bottom: var(--sp-6);
-      letter-spacing: -0.01em;
+      letter-spacing: -0.02em;
+      line-height: 1;
     }
-    
-    .pricing-features ul {
+
+    .plan-period {
+      font-size: var(--fs-15);
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .plan-description {
+      margin: 0;
+      color: var(--muted);
+      font-size: var(--fs-14);
+      line-height: var(--lh-16);
+    }
+
+    .plan-list {
       list-style: none;
       padding: 0;
       margin: 0;
+      display: grid;
+      gap: var(--sp-3);
+    }
+
+    .plan-list li {
+      position: relative;
+      padding-left: var(--sp-4);
+      color: var(--ink-soft);
+      font-size: var(--fs-14);
+      line-height: var(--lh-16);
+    }
+
+    .plan-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(96, 165, 250, 0.8);
+    }
+
+    .plan-actions {
+      margin-top: auto;
       display: flex;
       flex-direction: column;
       gap: var(--sp-4);
     }
-    
-    .pricing-features li {
-      display: flex;
-      align-items: flex-start;
-      gap: var(--sp-3);
-      padding: var(--sp-3) 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+
+    .plan-meta {
+      margin: 0;
+      font-size: var(--fs-12);
+      color: var(--muted);
     }
-    
-    .pricing-features li:last-child {
-      border-bottom: none;
+
+    .plan-meta-links {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-4);
+      font-size: var(--fs-13);
+      color: var(--muted);
     }
-    
-    .pricing-features li i {
-      width: 20px;
-      height: 20px;
-      color: var(--brand-500);
-      flex-shrink: 0;
-      margin-top: 2px;
-      transition: all var(--transition-fast);
-    }
-    
-    .pricing-features li:hover i {
-      color: var(--brand-400);
-      transform: scale(1.1);
-    }
-    
-    .pricing-features li span {
+
+    .plan-meta-links a {
       color: var(--ink-soft);
-      font-size: var(--fs-15);
-      line-height: var(--lh-16);
-      flex: 1;
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 1px;
+    }
+
+    .plan-meta-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 1px;
+      background: rgba(96, 165, 250, 0.6);
+      transition: width var(--transition-base);
+    }
+
+    .plan-meta-links a:hover::after {
+      width: 100%;
     }
     
     /* ===== FAQ ===== */
@@ -262,52 +248,6 @@
       line-height: var(--lh-17);
     }
     
-    /* ===== LEGAL LINKS ===== */
-    .pricing-legal {
-      margin-top: var(--sp-6);
-      text-align: center;
-    }
-    
-    .pricing-legal-links {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--sp-4);
-      font-size: var(--fs-13);
-      color: var(--muted);
-    }
-    
-    .pricing-legal-links a {
-      color: var(--ink-soft);
-      text-decoration: none;
-      position: relative;
-      padding-bottom: 2px;
-      transition: all var(--transition-fast);
-    }
-    
-    .pricing-legal-links a::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 1px;
-      background: var(--brand-600);
-      transition: width var(--transition-base);
-    }
-    
-    .pricing-legal-links a:hover {
-      color: var(--ink);
-    }
-    
-    .pricing-legal-links a:hover::after {
-      width: 100%;
-    }
-    
-    .pricing-legal-separator {
-      color: var(--muted-strong);
-      opacity: 0.5;
-    }
-
     /* ===== HEADER ===== */
     .hdr {
       position: fixed; 
@@ -488,92 +428,82 @@
         </p>
       </header>
 
-      <!-- Pricing Grid -->
       <div class="pricing-grid">
         <!-- Trial -->
-        <article class="pricing-card">
-          <div style="display:flex; flex-direction:column; gap: var(--sp-4);">
-            <div class="trial-badge" style="background: rgba(148, 163, 184, 0.12); border-color: rgba(148, 163, 184, 0.25); color: rgba(226,232,240,0.9);">Trial guidato 14 giorni</div>
-            <h2 style="font-size: var(--fs-22); font-weight:700; color:var(--ink); letter-spacing:-0.01em;">Accesso Formativo</h2>
-            <div style="display:flex; align-items:baseline; gap:var(--sp-3);">
-              <span class="pricing-price">€0</span>
-              <span class="pricing-period">per 14 giorni</span>
+        <article class="plan-card">
+          <span class="plan-badge">Trial guidato · 14 giorni</span>
+          <div class="plan-heading">
+            <h2 class="plan-title">Accesso Formativo</h2>
+            <div class="plan-price-row">
+              <span class="plan-price">€0</span>
+              <span class="plan-period">per 14 giorni</span>
             </div>
-            <p style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-16);">
-              Esplora integralmente i deck SRD v5.0 e MTB v3.1 per due settimane. Al termine restano consultabili i dossier istituzionali, con le sezioni sensibili oscurate.
+            <p class="plan-description">
+              Esplora integralmente i deck SRD v5.0 e MTB v3.1 per due settimane. Al termine restano consultabili i dossier
+              istituzionali, con le sezioni sensibili oscurate.
             </p>
           </div>
-          <div class="pricing-features">
-            <h3>Cosa comprende</h3>
-            <ul>
-              <li><i data-lucide="check"></i><span>Full access temporaneo a SRD v5.0 e MTB v3.1</span></li>
-              <li><i data-lucide="check"></i><span>Documentazione ufficiale sempre disponibile</span></li>
-              <li><i data-lucide="check"></i><span>Preview community, roadmap e notifiche principali</span></li>
-              <li><i data-lucide="check"></i><span>Upgrade immediato al piano Pro quando desideri</span></li>
-            </ul>
-          </div>
-          <div style="margin-top: var(--sp-6);">
+          <ul class="plan-list">
+            <li>Full access temporaneo a SRD v5.0 e MTB v3.1</li>
+            <li>Documentazione ufficiale sempre disponibile</li>
+            <li>Preview degli strumenti community e della roadmap</li>
+            <li>Upgrade immediato al piano Pro quando desideri</li>
+          </ul>
+          <div class="plan-actions">
             <a href="/dashboard.html" class="btn btn-outline">Attiva prova gratuita</a>
           </div>
         </article>
 
         <!-- Pro -->
-        <article class="pricing-card pricing-card--highlight">
-          <div style="display:flex; flex-direction:column; gap: var(--sp-4);">
-            <div class="trial-badge">Piano consigliato</div>
-            <h2 style="font-size: var(--fs-22); font-weight:700; color:var(--ink); letter-spacing:-0.01em;">Pro Research</h2>
-            <div style="display:flex; align-items:baseline; gap:var(--sp-3);">
-              <span class="pricing-price">€49</span>
-              <span class="pricing-period">/mese</span>
+        <article class="plan-card plan-card--primary">
+          <span class="plan-badge">Piano consigliato</span>
+          <div class="plan-heading">
+            <h2 class="plan-title">Pro Research</h2>
+            <div class="plan-price-row">
+              <span class="plan-price">€49</span>
+              <span class="plan-period">al mese</span>
             </div>
-            <p style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-16);">
-              Accesso continuativo ai deck SRD v5.0 e MTB v3.1 con strumenti community e notifiche operative. Promo lancio
-              <strong style="color:var(--ink-soft);">€29/mese</strong> per i primi 100 abbonati.
+            <p class="plan-description">
+              Accesso continuativo ai deck SRD v5.0 e MTB v3.1, strumenti community e notifiche operative.
+              Promo lancio <strong style="color: var(--ink-soft);">€29/mese</strong> per i primi 100 abbonati.
             </p>
           </div>
-          <div class="pricing-features">
-            <h3>In evidenza</h3>
-            <ul>
-              <li><i data-lucide="check"></i><span>Deck SRD v5.0 e MTB v3.1 completi e aggiornati</span></li>
-              <li><i data-lucide="check"></i><span>Commenti illimitati e canale diretto con il desk Tradelia</span></li>
-              <li><i data-lucide="check"></i><span>Suggerimento e voto giornaliero sui ticker della community</span></li>
-              <li><i data-lucide="check"></i><span>Notifiche push operative e roadmap funzionale prioritaria</span></li>
-            </ul>
-          </div>
-          <div style="margin-top: var(--sp-6); display:flex; flex-direction:column; gap:var(--sp-4);">
+          <ul class="plan-list">
+            <li>Deck SRD v5.0 e MTB v3.1 completi e aggiornati</li>
+            <li>Commenti illimitati e canale diretto con il desk Tradelia</li>
+            <li>Suggerimento e voto giornaliero sui ticker della community</li>
+            <li>Notifiche push operative e roadmap funzionale prioritaria</li>
+          </ul>
+          <div class="plan-actions">
             <a href="/dashboard.html" class="btn btn-primary">Abbonati ora</a>
-            <div class="pricing-legal-links" style="justify-content:center;">
+            <div class="plan-meta-links">
               <a href="/refund.html">Trial 14 giorni</a>
-              <span class="pricing-legal-separator">·</span>
+              <span aria-hidden="true">·</span>
               <a href="/terms.html">Termini & condizioni</a>
             </div>
+            <p class="plan-meta">Promo lancio disponibile fino a esaurimento posti (100 sottoscrizioni).</p>
           </div>
         </article>
 
         <!-- Desk Professionale -->
-        <article class="pricing-card">
-          <div style="display:flex; flex-direction:column; gap: var(--sp-4);">
-            <div class="trial-badge" style="background: rgba(148,163,184,0.16); border-color: rgba(148,163,184,0.3); color: rgba(226,232,240,0.9);">
-              Desk professionali
+        <article class="plan-card">
+          <span class="plan-badge">Desk professionali</span>
+          <div class="plan-heading">
+            <h2 class="plan-title">Desk Professionale</h2>
+            <div class="plan-price-row">
+              <span class="plan-price">Su preventivo</span>
             </div>
-            <h2 style="font-size: var(--fs-22); font-weight:700; color:var(--ink); letter-spacing:-0.01em;">Desk Professionale</h2>
-            <div style="display:flex; align-items:baseline; gap:var(--sp-3);">
-              <span class="pricing-price" style="font-size: clamp(2.4rem,6vw,3.6rem);">Su preventivo</span>
-            </div>
-            <p style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-16);">
+            <p class="plan-description">
               Ricerca dedicata per team professionali: analisi SRD on-demand, white label e fatturazione corporate con SLA.
             </p>
           </div>
-          <div class="pricing-features">
-            <h3>Servizi inclusi</h3>
-            <ul>
-              <li><i data-lucide="check"></i><span>Analisi Swing Research on-demand (99 € per richiesta)</span></li>
-              <li><i data-lucide="check"></i><span>Fatturazione corporate, SLA e supporto dedicato</span></li>
-              <li><i data-lucide="check"></i><span>Deck SRD/MTB in white label con dati personalizzati</span></li>
-              <li><i data-lucide="check"></i><span>Mentorship periodica con il research desk</span></li>
-            </ul>
-          </div>
-          <div style="margin-top: var(--sp-6);">
+          <ul class="plan-list">
+            <li>Analisi Swing Research on-demand (99 € per richiesta)</li>
+            <li>Fatturazione corporate, SLA e supporto dedicato</li>
+            <li>Deck SRD/MTB in white label con integrazione di dataset interni</li>
+            <li>Mentorship periodica con il research desk</li>
+          </ul>
+          <div class="plan-actions">
             <a href="mailto:info@tradelia.org" class="btn btn-outline">Contatta il desk</a>
           </div>
         </article>
@@ -778,10 +708,6 @@
         openLegal('mifid', true);
       }
     })();
-  </script>
-
-  <script>
-    if (window.lucide) lucide.createIcons();
   </script>
 
   <!-- Global Header & i18n -->
