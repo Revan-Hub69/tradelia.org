@@ -1206,56 +1206,61 @@
             : null
       };
 
-      const isNew = !activeReport;
-      console.log('[Dashboard] saveReport upsert', { isNew, reportPayload });
-      const { data: savedReport, error: saveError } = isNew
-        ? await supabase.from('reports').insert(reportPayload).select().single()
-        : await supabase.from('reports').update(reportPayload).eq('id', activeReport.id).select().single();
-      console.log('[Dashboard] saveReport upsert result', { savedReport, saveError });
+      try {
+        const isNew = !activeReport;
+        console.log('[Dashboard] saveReport upsert', { isNew, reportPayload });
+        const { data: savedReport, error: saveError } = isNew
+          ? await supabase.from('reports').insert(reportPayload).select().single()
+          : await supabase.from('reports').update(reportPayload).eq('id', activeReport.id).select().single();
+        console.log('[Dashboard] saveReport upsert result', { savedReport, saveError });
 
-      if (saveError) {
-        console.error(saveError);
-        showToast('Errore durante il salvataggio del report', 'error');
-        console.log('[Dashboard] saveReport abort: saveError', saveError);
-        return;
-      }
+        if (saveError) {
+          console.error(saveError);
+          showToast('Errore durante il salvataggio del report', 'error');
+          console.log('[Dashboard] saveReport abort: saveError', saveError);
+          return;
+        }
 
-      const reportId = savedReport.id;
-      console.log('[Dashboard] saveReport saved report', savedReport);
+        const reportId = savedReport.id;
+        console.log('[Dashboard] saveReport saved report', savedReport);
 
-      const { error: deleteError } = await supabase
-        .from('report_modules')
-        .delete()
-        .eq('report_id', reportId);
+        const { error: deleteError } = await supabase
+          .from('report_modules')
+          .delete()
+          .eq('report_id', reportId);
 
-      if (deleteError) {
-        console.error(deleteError);
-        showToast('Errore nella sostituzione dei moduli', 'error');
-        console.log('[Dashboard] saveReport abort: deleteError', deleteError);
-              return;
-            }
+        if (deleteError) {
+          console.error(deleteError);
+          showToast('Errore nella sostituzione dei moduli', 'error');
+          console.log('[Dashboard] saveReport abort: deleteError', deleteError);
+          return;
+        }
 
-      if (modules.length) {
-        const inserts = modules.map((module, index) => ({
-          report_id: reportId,
-          module_key: module.module_key,
-          order_index: module.order_index ?? index,
-          content: module.content
-        }));
-        console.log('[Dashboard] saveReport inserting modules', inserts);
-        const { error: insertError } = await supabase.from('report_modules').insert(inserts);
-        if (insertError) {
-          console.error(insertError);
-          showToast('Errore durante l\'inserimento dei moduli', 'error');
-          console.log('[Dashboard] saveReport abort: insertError', insertError);
-              return;
-            }
+        if (modules.length) {
+          const inserts = modules.map((module, index) => ({
+            report_id: reportId,
+            module_key: module.module_key,
+            order_index: module.order_index ?? index,
+            content: module.content
+          }));
+          console.log('[Dashboard] saveReport inserting modules', inserts);
+          const { error: insertError } = await supabase.from('report_modules').insert(inserts);
+          if (insertError) {
+            console.error(insertError);
+            showToast('Errore durante l\'inserimento dei moduli', 'error');
+            console.log('[Dashboard] saveReport abort: insertError', insertError);
+            return;
           }
-          
-      console.log('[Dashboard] saveReport success', { publish });
-      showToast(publish ? 'Report pubblicato' : 'Report salvato', 'success');
-      await loadReports();
-      await selectReport(reportId);
+        }
+
+        console.log('[Dashboard] saveReport success', { publish });
+        showToast(publish ? 'Report pubblicato' : 'Report salvato', 'success');
+        await loadReports();
+        await selectReport(reportId);
+      } catch (error) {
+        console.error('[Dashboard] saveReport exception', error);
+        showToast('Errore imprevisto durante il salvataggio', 'error');
+      }
     };
 
     const deleteReport = async () => {
