@@ -356,7 +356,7 @@ async function fetchCommentsHistory() {
   try {
     const { data, error } = await supabase
       .from('report_comments')
-      .select('id, body, created_at, report_id, is_deleted')
+      .select('id, body, created_at, report_id, is_deleted, report:reports!inner(slug)')
       .eq('user_id', state.user.id)
       .eq('is_deleted', false)
       .order('created_at', { ascending: false })
@@ -366,7 +366,7 @@ async function fetchCommentsHistory() {
       id: item.id,
       body: item.body,
       created_at: item.created_at,
-      report_slug: item.report_id
+      report_slug: item.report?.slug || item.report_id
     }));
   } catch (err) {
     Logger.warn('UserArea', 'comment history error', err);

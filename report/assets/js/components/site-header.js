@@ -10,7 +10,8 @@ import { supabase } from '../supabase-client.js';
 const HEADER = {
   _node: null,
   _container: null,
-  _authListener: null
+  _authListener: null,
+  _currentUser: null
 };
 
 // ===== UTILITIES =====
@@ -43,7 +44,7 @@ function render(options = {}) {
         </a>
         <div class="header-auth">
           <button type="button" class="header-auth-btn" data-auth-action="login">Accedi</button>
-          <button type="button" class="header-auth-btn header-auth-btn--primary" data-auth-action="signup">Iscriviti</button>
+          <button type="button" class="header-auth-btn header-auth-btn--primary" data-auth-action="signup">Richiedi accesso</button>
           <button type="button" class="header-auth-btn header-auth-btn--ghost" data-auth-action="logout" hidden>Esci</button>
           <button type="button" class="header-user-link" data-auth-action="account" aria-label="Area utente">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -143,7 +144,11 @@ function bindAuthActions(node) {
   }
   if (accountBtn) {
     accountBtn.addEventListener('click', () => {
-      window.location.href = '/user/';
+      if (HEADER._currentUser) {
+        window.location.href = '/user/';
+      } else {
+        authModal.open('login');
+      }
     });
   }
 }
@@ -153,30 +158,40 @@ async function syncAuthState(node) {
   const signupBtn = node.querySelector('[data-auth-action="signup"]');
   const logoutBtn = node.querySelector('[data-auth-action="logout"]');
 
+  const loginBtn = node.querySelector('[data-auth-action="login"]');
+  const signupBtn = node.querySelector('[data-auth-action="signup"]');
+  const logoutBtn = node.querySelector('[data-auth-action="logout"]');
+  const accountBtn = node.querySelector('[data-auth-action="account"]');
+
   try {
     const { data } = await supabase.auth.getSession();
-    toggleAuthButtons(loginBtn, signupBtn, logoutBtn, data?.session?.user);
+    HEADER._currentUser = data?.session?.user || null;
+    toggleAuthButtons(loginBtn, signupBtn, logoutBtn, accountBtn, HEADER._currentUser);
   } catch (err) {
     Logger.warn('SiteHeader', 'Impossibile leggere sessione', err);
   }
 
   if (!HEADER._authListener) {
     HEADER._authListener = supabase.auth.onAuthStateChange((_event, session) => {
-      toggleAuthButtons(loginBtn, signupBtn, logoutBtn, session?.user || null);
-    });
+      HEADER._currentUser = session?.user || null;
+      toggleAuthButtons(loginBtn, signupBtn, logoutBtn, accountBtn, HEADER._currentUser);
+    }).data;
   }
 }
 
-function toggleAuthButtons(loginBtn, signupBtn, logoutBtn, user) {
-  if (!loginBtn || !signupBtn || !logoutBtn) return;
+function toggleAuthButtons(loginBtn, signupBtn, logoutBtn, accountBtn, user) {
   if (user) {
-    loginBtn.hidden = true;
-    signupBtn.hidden = true;
-    logoutBtn.hidden = false;
+    loginBtn?.setAttribute('hidden', '');
+    signupBtn?.setAttribute('hidden', '');
+    logoutBtn?.removeAttribute('hidden');
+    accountBtn?.removeAttribute('data-disabled');
+    accountBtn?.setAttribute('title', 'Area utente');
   } else {
-    loginBtn.hidden = false;
-    signupBtn.hidden = false;
-    logoutBtn.hidden = true;
+    loginBtn?.removeAttribute('hidden');
+    signupBtn?.removeAttribute('hidden');
+    logoutBtn?.setAttribute('hidden', '');
+    accountBtn?.setAttribute('data-disabled', 'true');
+    accountBtn?.setAttribute('title', 'Accedi per aprire l’area utente');
   }
 }
 

@@ -157,6 +157,10 @@ header.hdr .container {
   color: #ffffff !important;
 }
 
+.header-user-link[data-disabled="true"] {
+  opacity: 0.65 !important;
+}
+
 .header-user-link svg {
   width: 18px !important;
   height: 18px !important;

@@ -26,7 +26,7 @@ function template() {
       <header class="auth-header">
         <div>
           <h2 class="auth-title" id="auth-modal-title">Accesso Tradelia</h2>
-          <p class="auth-subtitle">Accedi o richiedi le credenziali istituzionali per partecipare alla community.</p>
+          <p class="auth-subtitle">Credenziali istituzionali per commenti, richieste e area riservata.</p>
         </div>
         <button type="button" class="auth-close" data-auth-close aria-label="Chiudi">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
@@ -34,7 +34,7 @@ function template() {
       </header>
       <nav class="auth-tabs" role="tablist">
         <button type="button" role="tab" data-auth-switch="login" aria-selected="true">Accedi</button>
-        <button type="button" role="tab" data-auth-switch="signup" aria-selected="false">Registrati</button>
+        <button type="button" role="tab" data-auth-switch="signup" aria-selected="false">Richiedi accesso</button>
         <button type="button" role="tab" data-auth-switch="reset" aria-selected="false">Recupera password</button>
       </nav>
       <div class="auth-body">
@@ -47,16 +47,16 @@ function template() {
           <label>Email istituzionale<input type="email" name="email" autocomplete="email" required placeholder="nome@company.com"></label>
           <label>Password<input type="password" name="password" autocomplete="new-password" required minlength="8" placeholder="Password (min 8 caratteri)"></label>
           <button class="btn btn-primary" type="submit">Richiedi credenziali</button>
-          <p class="auth-hint">Riceverai una mail per confermare e attivare l'account.</p>
+          <p class="auth-hint">Riceverai una mail per confermare l’account. Il team Tradelia abiliterà il ruolo corretto.</p>
         </form>
         <form id="auth-reset-form" data-auth-form="reset" hidden>
           <label>Email registrata<input type="email" name="email" autocomplete="email" required placeholder="nome@azienda.com"></label>
           <button class="btn btn-primary" type="submit">Invia link di reset</button>
-          <p class="auth-hint">Riceverai un link per impostare una nuova password.</p>
+          <p class="auth-hint">Ti invieremo un link per impostare una nuova password.</p>
         </form>
       </div>
       <footer class="auth-footer">
-        <p>Per supporto contatta <a href="mailto:info@tradelia.org">info@tradelia.org</a>.</p>
+        <p>Problemi con l’accesso? Scrivi a <a href="mailto:info@tradelia.org">info@tradelia.org</a>.</p>
       </footer>
       <div class="auth-toast" id="auth-toast" role="status" aria-live="polite"></div>
     </div>
