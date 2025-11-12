@@ -491,6 +491,8 @@ header.hdr .container {
   padding: 1.35rem 1.8rem 1.1rem;
   display: grid;
   gap: 1.2rem;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .auth-form {
@@ -540,7 +542,7 @@ header.hdr .container {
 }
 
 .auth-register {
-  gap: 1.1rem;
+  gap: 1rem;
   color: rgba(226, 232, 240, 0.9);
 }
 
