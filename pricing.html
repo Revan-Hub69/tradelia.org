@@ -164,7 +164,7 @@
       border-radius: var(--radius-pill);
       border: 1px solid rgba(209, 213, 219, 0.4);
       background: transparent;
-      color: #ffffff;
+      color: #ffffff !important;
       box-shadow: none;
       transition:
         transform var(--transition-fast),
@@ -198,7 +198,7 @@
     .plan-actions .btn:hover {
       transform: translateY(-1px) translateX(2px);
       border-color: rgba(255, 255, 255, 0.85);
-      color: #ffffff;
+      color: #ffffff !important;
     }
 
     .plan-actions .btn:hover::before {
@@ -212,12 +212,13 @@
 
     .plan-actions .btn:active {
       transform: translateY(0);
+      color: #ffffff !important;
     }
 
     .plan-actions .btn.btn-primary {
       background: transparent;
       border-color: rgba(191, 219, 254, 0.65);
-      color: #ffffff;
+      color: #ffffff !important;
     }
 
     .plan-actions .btn.btn-primary::after {
