@@ -1,5 +1,6 @@
 import { supabase } from '../../report/assets/js/supabase-client.js';
 import Logger from '../../report/assets/js/utils/logger.js';
+import { siteHeader } from '../../report/assets/js/components/site-header.js';
 
 const HERO = document.getElementById('user-hero');
 const AVATAR = document.getElementById('user-avatar');
@@ -54,7 +55,15 @@ const state = {
 
 init();
 
+if (PROFILE_FORM) {
+  PROFILE_FORM.addEventListener('submit', onProfileSubmit);
+}
+if (PROFILE_RESET) {
+  PROFILE_RESET.addEventListener('click', onProfileReset);
+}
+
 async function init() {
+  siteHeader.mount(document.getElementById('site-header-slot'), { showExport: false });
   document.getElementById('footer-year').textContent = new Date().getFullYear();
   setupTabs();
   await restoreSession();
@@ -161,37 +170,6 @@ function renderProfileForm() {
   if (!PROFILE_FORM) return;
   PROFILE_NAME_FIELD.value = state.profile?.display_name || getDisplayName();
   PROFILE_BIO_FIELD.value = state.profile?.bio || '';
-
-  PROFILE_FORM.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const display_name = PROFILE_NAME_FIELD.value.trim();
-    const bio = PROFILE_BIO_FIELD.value.trim();
-    try {
-      PROFILE_FORM.querySelector('button[type="submit"]').disabled = true;
-      const payload = {
-        user_id: state.user.id,
-        display_name: display_name || null,
-        bio: bio || null
-      };
-      const { error } = await supabase
-        .from('user_profiles')
-        .upsert(payload, { onConflict: 'user_id' });
-      if (error) throw error;
-      state.profile = { ...(state.profile || {}), display_name, bio };
-      renderHero();
-      showToast('Profilo aggiornato.', 'success');
-    } catch (err) {
-      Logger.error('UserArea', 'profile save error', err);
-      showToast(err.message || 'Errore durante il salvataggio.', 'error');
-    } finally {
-      PROFILE_FORM.querySelector('button[type="submit"]').disabled = false;
-    }
-  }, { once: true });
-
-  PROFILE_RESET.addEventListener('click', () => {
-    PROFILE_NAME_FIELD.value = state.profile?.display_name || getDisplayName();
-    PROFILE_BIO_FIELD.value = state.profile?.bio || '';
-  });
 }
 
 function renderDashboard() {
@@ -272,6 +250,41 @@ function renderAuthPanel() {
   btnSignup.addEventListener('click', () => showToast('Scrivi a info@tradelia.org per ottenere credenziali.', 'info'));
 }
 
+async function onProfileSubmit(event) {
+  event.preventDefault();
+  if (!state.user) {
+    showToast('Effettua l’accesso per modificare il profilo.', 'error');
+    return;
+  }
+  const display_name = PROFILE_NAME_FIELD.value.trim();
+  const bio = PROFILE_BIO_FIELD.value.trim();
+  try {
+    PROFILE_FORM.querySelector('button[type="submit"]').disabled = true;
+    const payload = {
+      user_id: state.user.id,
+      display_name: display_name || null,
+      bio: bio || null
+    };
+    const { error } = await supabase
+      .from('user_profiles')
+      .upsert(payload, { onConflict: 'user_id' });
+    if (error) throw error;
+    state.profile = { ...(state.profile || {}), display_name, bio };
+    renderHero();
+    showToast('Profilo aggiornato.', 'success');
+  } catch (err) {
+    Logger.error('UserArea', 'profile save error', err);
+    showToast(err.message || 'Errore durante il salvataggio.', 'error');
+  } finally {
+    PROFILE_FORM.querySelector('button[type="submit"]').disabled = false;
+  }
+}
+
+function onProfileReset() {
+  PROFILE_NAME_FIELD.value = state.profile?.display_name || getDisplayName();
+  PROFILE_BIO_FIELD.value = state.profile?.bio || '';
+}
+
 async function handleLoginSubmit(event) {
   event.preventDefault();
   const form = event.currentTarget;
@@ -343,7 +356,7 @@ async function fetchCommentsHistory() {
   try {
     const { data, error } = await supabase
       .from('report_comments')
-      .select('id, body, created_at, report_id, is_deleted, report:reports!inner(slug)')
+      .select('id, body, created_at, report_id, is_deleted')
       .eq('user_id', state.user.id)
       .eq('is_deleted', false)
       .order('created_at', { ascending: false })
@@ -353,7 +366,7 @@ async function fetchCommentsHistory() {
       id: item.id,
       body: item.body,
       created_at: item.created_at,
-      report_slug: item.report?.slug || 'Report'
+      report_slug: item.report_id
     }));
   } catch (err) {
     Logger.warn('UserArea', 'comment history error', err);
