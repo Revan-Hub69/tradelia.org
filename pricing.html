@@ -44,7 +44,7 @@
       gap: var(--sp-8);
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       align-items: stretch;
-      margin-bottom: var(--sp-16);
+      margin-bottom: var(--sp-20);
     }
 
     .plan-card {
@@ -54,18 +54,29 @@
       background: var(--surface-card);
       border: 1px solid rgba(148, 163, 184, 0.18);
       border-radius: var(--radius-xl);
-      padding: var(--sp-7) var(--sp-6);
+      padding: var(--sp-8) var(--sp-7);
       transition: border-color var(--transition-base), transform var(--transition-base);
+      transform: translateY(0) scale(1);
     }
 
     .plan-card:hover {
       border-color: rgba(96, 165, 250, 0.4);
-      transform: translateY(-2px);
+      transform: translateY(-2px) scale(1);
     }
 
     .plan-card--primary {
-      border-color: rgba(96, 165, 250, 0.5);
-      background: linear-gradient(180deg, rgba(37, 99, 235, 0.08) 0%, rgba(15, 23, 42, 0.02) 100%);
+      border-color: rgba(96, 165, 250, 0.6);
+      background: linear-gradient(180deg, rgba(37, 99, 235, 0.1) 0%, rgba(15, 23, 42, 0.06) 100%);
+      transform: translateY(-4px) scale(1.04);
+      z-index: 2;
+    }
+
+    .plan-card:not(.plan-card--primary) {
+      transform: translateY(0) scale(0.97);
+    }
+
+    .plan-card:not(.plan-card--primary):hover {
+      transform: translateY(-2px) scale(1);
     }
 
     .plan-badge {
@@ -154,15 +165,16 @@
       display: flex;
       flex-direction: column;
       gap: var(--sp-4);
+      align-items: flex-start;
     }
 
     .plan-actions .btn {
       position: relative;
       min-height: 36px;
-      padding: var(--sp-2) var(--sp-5) var(--sp-2) calc(var(--sp-5) + 1.15rem);
+      padding: var(--sp-2) var(--sp-5) var(--sp-2) calc(var(--sp-5) + 1.1rem);
       font-size: var(--fs-13);
       border-radius: var(--radius-pill);
-      border: 1px solid rgba(209, 213, 219, 0.4);
+      border: 1px solid rgba(209, 213, 219, 0.42);
       background: transparent;
       color: #ffffff !important;
       box-shadow: none;
@@ -179,7 +191,7 @@
       top: 50%;
       transform: translate(-6px, -50%);
       font-size: var(--fs-11);
-      color: rgba(209, 213, 219, 0.85);
+      color: rgba(209, 213, 219, 0.78);
       transition: transform var(--transition-fast), color var(--transition-fast);
     }
 
@@ -190,19 +202,19 @@
       bottom: var(--sp-1);
       width: 0;
       height: 1px;
-      background: rgba(209, 213, 219, 0.85);
+      background: rgba(37, 99, 235, 0.85);
       transition: width var(--transition-base);
       transform-origin: left;
     }
 
     .plan-actions .btn:hover {
       transform: translateY(-1px) translateX(2px);
-      border-color: rgba(255, 255, 255, 0.85);
+      border-color: rgba(37, 99, 235, 0.85);
       color: #ffffff !important;
     }
 
     .plan-actions .btn:hover::before {
-      color: #ffffff;
+      color: rgba(37, 99, 235, 0.9);
       transform: translate(0, -50%);
     }
 
@@ -217,12 +229,12 @@
 
     .plan-actions .btn.btn-primary {
       background: transparent;
-      border-color: rgba(191, 219, 254, 0.65);
+      border-color: rgba(96, 165, 250, 0.7);
       color: #ffffff !important;
     }
 
     .plan-actions .btn.btn-primary::after {
-      background: rgba(191, 219, 254, 0.9);
+      background: rgba(59, 130, 246, 0.9);
     }
 
     .plan-meta {
@@ -262,6 +274,10 @@
     }
     
     /* ===== FAQ ===== */
+    .pricing-faq {
+      margin-top: var(--sp-12);
+    }
+    
     .pricing-faq details {
       background: var(--surface-elev);
       border: 1px solid rgba(255, 255, 255, 0.06);
