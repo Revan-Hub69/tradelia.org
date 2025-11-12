@@ -373,6 +373,32 @@
       outline-offset: 2px;
     }
 
+    .upload-area {
+      display: grid;
+      gap: 0.45rem;
+      border: 1px dashed rgba(96, 165, 250, 0.4);
+      border-radius: 14px;
+      padding: 1.25rem;
+      background: rgba(15, 23, 42, 0.45);
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease;
+      position: relative;
+    }
+
+    .upload-area:hover {
+      border-color: rgba(96, 165, 250, 0.75);
+      background: rgba(37, 99, 235, 0.12);
+    }
+
+    .upload-area.drop-active {
+      border-color: rgba(147, 197, 253, 0.85);
+      background: rgba(59, 130, 246, 0.18);
+    }
+
+    .upload-area input[type="file"] {
+      display: none;
+    }
+
     .status-banner {
       display: flex;
       align-items: center;
@@ -589,12 +615,12 @@
               <button type="button" class="input-action-btn" id="generate-identifiers-btn" aria-label="Genera slug e titolo suggeriti">
                 Suggerisci
               </button>
-            </div>
+        </div>
         </div>
           <div class="field">
             <label for="report-title">Titolo</label>
             <input type="text" id="report-title" placeholder="Titolo pubblico del report">
-          </div>
+        </div>
           <div class="field">
             <label for="report-status">Stato</label>
             <select id="report-status">
@@ -606,13 +632,13 @@
           <div class="field">
             <label for="report-published-at">Data pubblicazione (facoltativa)</label>
             <input type="datetime-local" id="report-published-at">
-        </div>
-        </div>
+    </div>
+  </div>
 
         <div class="field">
           <label for="report-notes">Note interne</label>
           <textarea id="report-notes" placeholder="Note operative, TODO, riferimenti…"></textarea>
-  </div>
+      </div>
 
         <div class="chart-wrapper" id="chart-dropzone">
           <div class="field">
@@ -651,8 +677,8 @@
           <div class="status-banner-text">
             <strong id="status-banner-title">Pronto</strong>
             <span id="status-banner-message">Compila i moduli e salva una bozza per sincronizzare il report.</span>
-          </div>
-        </div>
+      </div>
+      </div>
 
         <div class="toolbar">
           <button class="btn btn-outline" id="save-draft-btn" data-label="Salva bozza">Salva bozza</button>
@@ -1170,7 +1196,7 @@
         let content;
         try {
           content = JSON.parse(contentText);
-      } catch (error) {
+        } catch (error) {
           showToast(`Modulo ${key}: JSON non valido (${error.message})`, 'error');
           setStatusBannerMessage(
             'error',
@@ -1225,6 +1251,8 @@
       openChartBtn.disabled = true;
       openChartBtn.setAttribute('aria-disabled', 'true');
       currentChartSignedUrl = null;
+      uploadChartBtn.disabled = false;
+      chartUploadArea.classList.remove('drop-active');
       lastSavedAt = null;
       duplicateBtn.disabled = true;
       deleteBtn.disabled = true;
@@ -1360,7 +1388,7 @@
       if (modulesError) {
         console.error(modulesError);
         showToast('Errore nel recupero dei moduli', 'error');
-        return;
+              return;
       }
 
       activeReport = report;
@@ -1464,13 +1492,13 @@
       const files = event.dataTransfer?.files;
       if (files && files.length) {
         const file = files[0];
-        if (file.type.startsWith('image/')) {
+            if (file.type.startsWith('image/')) {
           await uploadChartFile(file);
         } else {
           showToast('Il file trascinato non è un’immagine', 'error');
         }
-        return;
-      }
+              return;
+            }
       const text = event.dataTransfer?.getData('text');
       if (text) {
         chartPathEl.value = text.trim();
@@ -1599,8 +1627,8 @@
             );
             bannerLocked = true;
             console.log('[Dashboard] saveReport abort: insertError', insertError);
-            return;
-          }
+        return;
+      }
           }
 
         console.log('[Dashboard] saveReport success', { publish });
@@ -1825,10 +1853,7 @@
     });
     chartDropzone.addEventListener('dragleave', () => chartDropzone.classList.remove('drop-active'));
     chartDropzone.addEventListener('drop', handleChartDrop);
-    chartUploadArea.addEventListener('click', (event) => {
-      if (event.target === uploadChartBtn) return;
-      chartFileEl.click();
-    });
+    chartUploadArea.addEventListener('click', () => chartFileEl.click());
     chartFileEl.addEventListener('change', uploadChart);
     chartUploadArea.addEventListener('dragover', (event) => {
       event.preventDefault();
@@ -1851,6 +1876,7 @@
 
     uploadChartBtn.addEventListener('click', (event) => {
       event.preventDefault();
+      event.stopPropagation();
       chartFileEl.click();
     });
     openChartBtn.addEventListener('click', () => {
