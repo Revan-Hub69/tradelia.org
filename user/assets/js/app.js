@@ -910,30 +910,42 @@ function renderDeskLinksSection() {
   const section = document.getElementById('desk-links-section');
   const list = document.getElementById('desk-links-list');
   const addBtn = document.getElementById('add-desk-link-btn');
+  const lockIndicator = document.getElementById('desk-links-lock');
+  const content = document.getElementById('desk-links-content');
   
   console.log('[DeskLinks] renderDeskLinksSection called', {
     role: state.role,
+    isAdmin: state.isAdmin,
     section: !!section,
     list: !!list,
     addBtn: !!addBtn,
     linksCount: state.deskLinks?.length || 0
   });
   
-  if (!section || !list || !addBtn) {
-    console.warn('[DeskLinks] Elements not found', { section: !!section, list: !!list, addBtn: !!addBtn });
+  if (!section || !list || !addBtn || !lockIndicator || !content) {
+    console.warn('[DeskLinks] Elements not found');
     return;
   }
   
-  // Show section for institutional users OR admins
+  // Always show section, but lock it if user doesn't have access
+  section.removeAttribute('hidden');
+  section.style.display = '';
+  
   const canManageLinks = state.role === 'institutional' || state.isAdmin;
+  
   if (canManageLinks) {
-    section.removeAttribute('hidden');
-    section.style.display = '';
-    console.log('[DeskLinks] Section shown for', state.isAdmin ? 'admin' : 'institutional user');
+    // Unlock: remove locked class, hide lock indicator, show content
+    section.classList.remove('locked');
+    lockIndicator.hidden = true;
+    content.style.display = '';
+    console.log('[DeskLinks] Section unlocked for', state.isAdmin ? 'admin' : 'institutional user');
   } else {
-    section.setAttribute('hidden', '');
-    console.log('[DeskLinks] Section hidden - role is:', state.role, 'isAdmin:', state.isAdmin);
-    return;
+    // Lock: add locked class, show lock indicator, hide content
+    section.classList.add('locked');
+    lockIndicator.hidden = false;
+    content.style.display = 'none';
+    console.log('[DeskLinks] Section locked - role is:', state.role, 'isAdmin:', state.isAdmin);
+    return; // Don't render links if locked
   }
   
   // Render existing links
