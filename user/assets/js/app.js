@@ -247,10 +247,8 @@ function renderProfileForm() {
     AVATAR_FILE.addEventListener('change', onAvatarSelected);
   }
   
-  // Setup desk links if institutional
-  if (state.role === 'institutional') {
-    renderDeskLinksSection();
-  }
+  // Setup desk links if institutional - always call to ensure visibility is correct
+  renderDeskLinksSection();
 }
 
 function renderDashboard() {
@@ -900,41 +898,73 @@ function renderDeskLinksSection() {
   const list = document.getElementById('desk-links-list');
   const addBtn = document.getElementById('add-desk-link-btn');
   
-  if (!section || !list || !addBtn) return;
+  if (!section || !list || !addBtn) {
+    console.warn('[DeskLinks] Elements not found');
+    return;
+  }
   
-  section.hidden = false;
+  // Show section for institutional users
+  if (state.role === 'institutional') {
+    section.removeAttribute('hidden');
+  } else {
+    section.setAttribute('hidden', '');
+    return;
+  }
   
   // Render existing links
-  list.innerHTML = state.deskLinks.map((link, idx) => `
-    <div class="desk-link-item">
-      <div style="display: grid; gap: 0.5rem; flex: 1;">
-        <input type="url" 
-               id="link-url-${link.id}" 
-               value="${escapeHtml(link.link_url)}" 
-               placeholder="https://..." 
-               required>
-        <input type="text" 
-               id="link-label-${link.id}" 
-               value="${escapeHtml(link.link_label || '')}" 
-               placeholder="Etichetta (opzionale)">
+  if (state.deskLinks.length === 0) {
+    list.innerHTML = '<p style="color: rgba(203, 213, 225, 0.6); font-size: 0.9rem; margin: 0.5rem 0;">Nessun link aggiunto. Clicca su "Aggiungi link" per iniziare.</p>';
+  } else {
+    list.innerHTML = state.deskLinks.map((link, idx) => `
+      <div class="desk-link-item">
+        <div style="display: grid; gap: 0.5rem; flex: 1;">
+          <input type="url" 
+                 id="link-url-${link.id}" 
+                 value="${escapeHtml(link.link_url)}" 
+                 placeholder="https://..." 
+                 required>
+          <input type="text" 
+                 id="link-label-${link.id}" 
+                 value="${escapeHtml(link.link_label || '')}" 
+                 placeholder="Etichetta (opzionale)">
+        </div>
+        <button type="button" 
+                class="delete-btn" 
+                data-link-id="${link.id}" 
+                title="Rimuovi link">×</button>
       </div>
-      <button type="button" 
-              class="delete-btn" 
-              data-link-id="${link.id}" 
-              title="Rimuovi link">×</button>
-    </div>
-  `).join('');
+    `).join('');
+    
+    // Add remove handlers
+    list.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', () => handleRemoveDeskLink(btn.dataset.linkId));
+    });
+  }
   
-  // Add remove handlers
-  list.querySelectorAll('.delete-btn').forEach(btn => {
-    btn.addEventListener('click', () => handleRemoveDeskLink(btn.dataset.linkId));
-  });
+  // Update add button state
+  if (state.deskLinks.length >= 3) {
+    addBtn.disabled = true;
+    addBtn.textContent = 'Massimo 3 link raggiunto';
+    addBtn.title = 'Puoi aggiungere massimo 3 link pubblici';
+  } else {
+    addBtn.disabled = false;
+    addBtn.textContent = '+ Aggiungi link';
+    addBtn.title = '';
+  }
   
-  // Add button handler
-  addBtn.addEventListener('click', handleAddDeskLink);
+  // Setup handler (use once flag to avoid duplicates on re-render)
+  if (!addBtn._hasHandler) {
+    addBtn.addEventListener('click', handleAddDeskLink);
+    addBtn._hasHandler = true;
+  }
 }
 
 async function handleAddDeskLink() {
+  if (state.role !== 'institutional') {
+    showToast('Solo gli utenti con piano Desk possono aggiungere link pubblici.', 'error');
+    return;
+  }
+  
   if (state.deskLinks.length >= 3) {
     showToast('Massimo 3 link consentiti.', 'error');
     return;
@@ -957,6 +987,7 @@ async function handleAddDeskLink() {
     
     state.deskLinks.push(data);
     renderDeskLinksSection();
+    showToast('Link aggiunto. Modifica l\'URL e salva il profilo.', 'success');
   } catch (err) {
     Logger.error('UserArea', 'add desk link error', err);
     showToast('Errore durante l\'aggiunta del link.', 'error');
