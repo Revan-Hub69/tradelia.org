@@ -289,6 +289,12 @@
   box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
 }
 
+.profile-form input[type="text"]:focus-visible,
+.profile-form textarea:focus-visible {
+  outline: 2px solid rgba(96, 165, 250, 0.5);
+  outline-offset: 2px;
+}
+
 .profile-form textarea {
   min-height: 140px;
   resize: vertical;
