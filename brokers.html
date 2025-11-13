@@ -227,19 +227,26 @@
     .filter-pill {
       border: 1px solid var(--border-strong);
       border-radius: var(--radius-pill);
-      padding: 0.45rem 0.75rem;
-      font-size: 0.83rem;
-      color: var(--ink-soft);
+      padding: 0.48rem 0.85rem;
+      font-size: 0.88rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: rgba(203, 213, 225, 0.85);
       cursor: pointer;
-      background: transparent;
+      background: rgba(15, 23, 42, 0.45);
       transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
     }
 
     .filter-pill[aria-pressed="true"] {
-      border-color: rgba(56, 189, 248, 0.5);
-      background: color-mix(in oklab, rgba(56, 189, 248, 0.12) 70%, transparent);
-      color: var(--ink);
+      border-color: rgba(56, 189, 248, 0.55);
+      background: rgba(14, 165, 233, 0.18);
+      color: rgba(224, 231, 255, 0.92);
       font-weight: 600;
+    }
+
+    .filter-pill:focus-visible {
+      outline: 2px solid rgba(56, 189, 248, 0.6);
+      outline-offset: 2px;
     }
 
     .filter-summary {
@@ -284,165 +291,132 @@
     .broker-card {
       border: 1px solid var(--border-strong);
       border-radius: var(--radius-xl);
-      background: var(--surface-card);
+      background: color-mix(in oklab, var(--surface-card) 92%, rgba(148, 163, 184, 0.08));
       padding: 1.9rem;
       display: flex;
       flex-direction: column;
       gap: 1.35rem;
-      position: relative;
-      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .broker-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      border: 1px solid transparent;
-      transition: border-color 0.18s ease, transform 0.18s ease;
-      pointer-events: none;
-    }
-
-    .broker-card:hover::before {
-      border-color: rgba(56, 189, 248, 0.22);
-      transform: translateY(-3px);
+    .broker-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 35px rgba(15, 23, 42, 0.32);
     }
 
     .broker-card header {
       display: grid;
-      gap: 0.65rem;
+      gap: 0.75rem;
     }
 
     .broker-title-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 0.75rem;
       align-items: center;
       justify-content: space-between;
     }
 
     .broker-title {
-      font-size: 1.25rem;
+      font-size: 1.28rem;
       margin: 0;
       letter-spacing: -0.02em;
       font-weight: 600;
+      color: var(--ink);
     }
 
     .score-pill {
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      padding: 0.4rem 0.75rem;
+      padding: 0.42rem 0.9rem;
       border-radius: var(--radius-pill);
-      border: 1px solid var(--border-strong);
+      border: 1px solid rgba(148, 163, 184, 0.4);
       font-size: 0.78rem;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--ink-muted);
+      color: rgba(226, 232, 240, 0.88);
+      background: rgba(15, 23, 42, 0.35);
     }
 
     .badge-affiliate {
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
-      padding: 0.35rem 0.7rem;
+      padding: 0.32rem 0.7rem;
       border-radius: var(--radius-pill);
-      background: color-mix(in oklab, var(--brand-500) 18%, transparent);
-      border: 1px solid color-mix(in oklab, var(--brand-500) 45%, transparent);
+      background: rgba(14, 165, 233, 0.18);
+      border: 1px solid rgba(125, 211, 252, 0.45);
       font-size: 0.72rem;
       letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(125, 211, 252, 0.85);
-    }
-
-    .broker-description {
-      color: var(--ink-soft);
-      line-height: 1.6;
-      margin: 0;
-    }
-
-    .broker-meta {
-      display: grid;
-      gap: 0.85rem;
-      font-size: 0.92rem;
-    }
-
-    .broker-meta-item {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.75rem;
-    }
-
-    .broker-meta-item span:first-child {
-      color: var(--ink-muted);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      font-size: 0.7rem;
-      flex: 1;
-      max-width: 160px;
-    }
-
-    .broker-meta-item span:last-child {
-      flex: 1.6;
-      text-align: right;
-      font-weight: 600;
-      color: var(--ink);
-    }
-
-    .broker-review {
-      border-top: 1px solid var(--border-strong);
-      padding-top: 1.35rem;
-      display: grid;
-      gap: 1rem;
-    }
-
-    .broker-review h3 {
-      margin: 0;
-      font-size: 0.78rem;
-      letter-spacing: 0.26em;
-      text-transform: uppercase;
-      color: var(--ink-muted);
-    }
-
-    .review-text {
-      color: var(--ink-soft);
-      line-height: 1.6;
-      margin: 0;
-    }
-
-    .review-highlights {
-      display: grid;
-      gap: 0.75rem;
-    }
-
-    .highlight-item {
-      display: grid;
-      gap: 0.2rem;
-      padding: 0.75rem;
-      border-radius: var(--radius-lg);
-      background: color-mix(in oklab, rgba(30, 64, 175, 0.12) 60%, transparent);
-      border: 1px solid rgba(30, 64, 175, 0.28);
-    }
-
-    .highlight-item span:first-child {
-      font-size: 0.7rem;
-      letter-spacing: 0.24em;
       text-transform: uppercase;
       color: rgba(191, 219, 254, 0.9);
     }
 
-    .highlight-item span:last-child {
-      color: var(--ink);
-      font-size: 0.93rem;
-      line-height: 1.5;
+    .broker-description {
+      color: rgba(226, 232, 240, 0.82);
+      line-height: 1.6;
+      margin: 0;
+      font-size: 0.97rem;
     }
 
-    .lab-note {
-      font-size: 0.78rem;
+    .broker-target,
+    .broker-evaluation {
+      display: grid;
+      gap: 0.35rem;
+      padding: 0.95rem 1rem;
+      border-radius: var(--radius-lg);
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+    }
+
+    .broker-target span,
+    .broker-evaluation span {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(148, 163, 184, 0.92);
+    }
+
+    .broker-target p,
+    .broker-evaluation p {
+      margin: 0;
+      color: rgba(226, 232, 240, 0.92);
+      font-size: 0.96rem;
+      line-height: 1.55;
+    }
+
+    .broker-facts {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .broker-facts li {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.85rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.24);
+      padding-top: 0.6rem;
+      align-items: flex-start;
+    }
+
+    .broker-facts li span:first-child {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(148, 163, 184, 0.9);
+      flex: 0 0 135px;
+    }
+
+    .broker-facts li span:last-child {
+      color: rgba(226, 232, 240, 0.88);
+      font-size: 0.94rem;
       line-height: 1.5;
-      color: rgba(248, 250, 252, 0.78);
-      border-left: 2px solid color-mix(in oklab, var(--brand-500) 45%, transparent);
-      padding-left: 0.75rem;
+      flex: 1;
+      text-align: right;
     }
 
     .cfd-disclaimer {
@@ -686,6 +660,28 @@
       line-height: 1.5;
     }
 
+    .modal-note,
+    .modal-lab-note {
+      margin: 0;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--ink-soft);
+    }
+
+    .modal-lab-note {
+      font-size: 0.8rem;
+      color: rgba(148, 163, 184, 0.9);
+      border-left: 2px solid rgba(56, 189, 248, 0.35);
+      padding-left: 0.8rem;
+    }
+
+    .review-text {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
     .modal-columns {
       display: grid;
       gap: 1.5rem;
@@ -897,6 +893,8 @@
           <li>BaFin (2025). <em>Supervisory Priorities for Digital Investment Platforms</em>. Bundesanstalt für Finanzdienstleistungsaufsicht.</li>
           <li>CySEC (2024). <em>Circular C556 – MiFID II Product Governance &amp; Marketing Communications</em>.</li>
           <li>AFM (2024). <em>Retail Trading Platforms Review</em>. Autoriteit Financiële Markten.</li>
+        <li>FCA (2024). <em>Consumer Duty – Fair Value &amp; Communications Guidance</em>. Financial Conduct Authority.</li>
+        <li>W3C (2023). <em>Web Content Accessibility Guidelines (WCAG) 2.2</em>. World Wide Web Consortium.</li>
         </ol>
       </section>
 
@@ -923,37 +921,36 @@
       </div>
       <div class="modal-info-grid">
         <div>
-          <span>Per chi</span>
+          <span>Destinatari</span>
           <p id="modal-recommended"></p>
         </div>
         <div>
-          <span>Integrazione AI</span>
-          <p id="modal-ai"></p>
+          <span>Descrizione sintetica</span>
+          <p id="modal-description"></p>
         </div>
         <div>
-          <span>Segnale di ricerca</span>
-          <p id="modal-signal"></p>
+          <span>Giurisdizione</span>
+          <p id="modal-jurisdiction"></p>
+        </div>
+        <div>
+          <span>Regime / Servizi</span>
+          <p id="modal-regime"></p>
+        </div>
+        <div>
+          <span>Asset principali</span>
+          <p id="modal-assets"></p>
+        </div>
+        <div>
+          <span>Piattaforme</span>
+          <p id="modal-platforms"></p>
         </div>
         <div>
           <span>Deposito minimo</span>
           <p id="modal-minimum"></p>
         </div>
-        <div>
-          <span>Piattaforme &amp; API</span>
-          <p id="modal-platforms"></p>
-        </div>
-        <div>
-          <span>Giurisdizione / Regime</span>
-          <p>
-            <span id="modal-jurisdiction"></span><br />
-            <span id="modal-regime" style="color: var(--ink-muted); font-size: 0.85rem;"></span>
-          </p>
-        </div>
-        <div>
-          <span>Asset focali</span>
-          <p id="modal-assets"></p>
-        </div>
       </div>
+      <p class="modal-note" id="modal-research-note" hidden></p>
+      <p class="modal-lab-note" id="modal-lab-note" hidden></p>
       <div class="modal-columns">
         <div>
           <h4>Punti di forza</h4>
@@ -1005,10 +1002,9 @@
         offersCfd: true,
         cfdDisclosure: 'I CFD sono disponibili tramite entità IBKR UK/IE; la percentuale di conti retail che perde denaro è pubblicata e aggiornata sul sito ufficiale. Utilizza i CFD solo se comprendi pienamente leva e margini.',
         review: {
-          summary: 'Nel framework Tradelia AI rappresenta il riferimento per dataset microstrutturali, test su strategie AI e replica di condizioni istituzionali.',
+          evaluation: 'Nel framework Tradelia AI rappresenta il riferimento per dataset microstrutturali, test su strategie avanzate e replica di condizioni istituzionali.',
           recommendedFor: 'Desk quantitativi, investitori professionali e retail evoluti che necessitano di copertura multi-mercato.',
-          aiSupport: 'API FIX/REST, dati storici tick-level e reporting dettagliato integrabili nei nostri moduli AI.',
-          researchSignal: 'Robusta governance di rischio e disclosure regolamentare riconosciuta da ESMA e autorità USA.'
+          researchNote: 'Robusta governance di rischio e disclosure regolamentare riconosciuta da ESMA e autorità USA.'
         },
         audience: ['Gestori istituzionali', 'Quant / API', 'Investitori evoluti'],
         strengths: [
@@ -1042,10 +1038,9 @@
         offersCfd: true,
         cfdDisclosure: 'EXANTE offre CFD solo su alcune asset class (es. criptovalute). In Tradelia AI analizziamo esclusivamente strumenti quotati regolamentati. I CFD comportano un rischio elevato di perdita rapida del capitale.',
         review: {
-          summary: 'Nel laboratorio viene impiegata per dataset obbligazionari e per test cross-market su tassi e derivati quotati.',
+          evaluation: 'Nel laboratorio viene impiegata per dataset obbligazionari e per test cross-market su tassi e derivati quotati.',
           recommendedFor: 'Investitori professionali, wealth desk e ricercatori con focus su bond avanzati e opzioni.',
-          aiSupport: 'FIX API e feed storici integrabili nei nostri motori di ottimizzazione AI per portafogli multi-asset.',
-          researchSignal: 'Compliance multi-giurisdizionale (MFSA/CySEC/FCA) con segregazione fondi e audit regolari.'
+          researchNote: 'Compliance multi-giurisdizionale (MFSA/CySEC/FCA) con segregazione fondi e audit regolari.'
         },
         audience: ['Gestori istituzionali', 'Ricerca obbligazionaria', 'Quant / API'],
         strengths: [
@@ -1078,10 +1073,9 @@
         platforms: 'Freedom24 Web · App iOS/Android',
         offersCfd: false,
         review: {
-          summary: 'Utilizzato in Tradelia AI per pipeline IPO, analisi di allocazione primaria e percorsi educativi su equity capital markets.',
+          evaluation: 'Utilizzato in Tradelia AI per pipeline IPO, analisi di allocazione primaria e percorsi educativi su equity capital markets.',
           recommendedFor: 'Investitori retail informati interessati a IPO regolamentate e diversificazione globale.',
-          aiSupport: 'Calendario IPO e dati storici integrabili nei nostri moduli di sorveglianza AI su listing e lock-up.',
-          researchSignal: 'Compliance MiFID II monitorata da CySEC, con Investor Compensation Fund europeo.'
+          researchNote: 'Compliance MiFID II monitorata da CySEC, con Investor Compensation Fund europeo.'
         },
         audience: ['Investitori evoluti', 'IPO accesso'],
         strengths: [
@@ -1114,10 +1108,9 @@
         offersCfd: true,
         cfdDisclosure: 'BG Saxo offre anche CFD; in questa valutazione consideriamo la componente di strumenti quotati reali. I CFD restano prodotti complessi a rischio elevato.',
         review: {
-          summary: 'Adottata nei progetti con università italiane per formazione avanzata su derivati quotati e fiscalità amministrata.',
+          evaluation: 'Adottata nei progetti con università italiane per formazione avanzata su derivati quotati e fiscalità amministrata.',
           recommendedFor: 'Investitori evoluti e consulenti vigilati con necessità di sostituto d’imposta italiano.',
-          aiSupport: 'OpenAPI documentata per estrazione dati posizioni e pricing, utile per modelli di controllo rischio explainable.',
-          researchSignal: 'Integrazione con infrastruttura Saxo Bank e controlli CONSOB/Banca d’Italia.'
+          researchNote: 'Integrazione con infrastruttura Saxo Bank e controlli CONSOB/Banca d’Italia.'
         },
         audience: ['Investitori evoluti', 'Desk educativi', 'Consulenti vigilati'],
         strengths: [
@@ -1151,10 +1144,9 @@
         offersCfd: true,
         cfdDisclosure: 'Directa fornisce l’accesso a CFD/FX tramite partner LMAX: valuta attentamente la leva prima di utilizzarli.',
         review: {
-          summary: 'Strumento di riferimento nei laboratori formativi italiani per IDEM, fiscalità amministrata e operatività su titoli domestici.',
+          evaluation: 'Strumento di riferimento nei laboratori formativi italiani per IDEM, fiscalità amministrata e operatività su titoli domestici.',
           recommendedFor: 'Investitori retail evoluti che privilegiano supporto italiano, fiscalità gestita e operatività su mercati nazionali.',
-          aiSupport: 'Report esportabili e integrazione con TradingView utili per pipeline di monitoraggio AI.',
-          researchSignal: 'Trasparenza di listino e vicinanza alla comunità accademica italiana.'
+          researchNote: 'Trasparenza di listino e vicinanza alla comunità accademica italiana.'
         },
         audience: ['Investitori retail evoluti', 'Educazione finanziaria'],
         strengths: [
@@ -1188,10 +1180,9 @@
         offersCfd: true,
         cfdDisclosure: 'I CFD sono forniti tramite le entità Interactive Brokers abilitate. Valuta attentamente se i CFD sono appropriati per il tuo profilo.',
         review: {
-          summary: 'Utilizzato per percorsi educativi avanzati in lingua italiana con accesso TWS e costi competitivi.',
+          evaluation: 'Utilizzato per percorsi educativi avanzati in lingua italiana con accesso TWS e costi competitivi.',
           recommendedFor: 'Trader avanzati e studenti MSc che necessitano di supporto locale mantenendo l’infrastruttura IBKR.',
-          aiSupport: 'Condivide API IBKR, integrabile nei workflow di controllo rischio e portfolio intelligence di Tradelia.',
-          researchSignal: 'Presenza in registri CySEC/FCA e supporto compliance multilingua.'
+          researchNote: 'Presenza in registri CySEC/FCA e supporto compliance multilingua.'
         },
         audience: ['Investitori evoluti', 'Desk educativi', 'Quant / API'],
         strengths: [
@@ -1224,10 +1215,9 @@
         platforms: 'App iOS/Android · Web',
         offersCfd: false,
         review: {
-          summary: 'Nel framework Tradelia AI viene usata per percorsi educativi sulla gestione della liquidità e piani di accumulo disciplinati.',
+          evaluation: 'Nel framework Tradelia AI viene usata per percorsi educativi sulla gestione della liquidità e piani di accumulo disciplinati.',
           recommendedFor: 'Investitori retail disciplinati che cercano PAC automatizzati e regime amministrato con sostituto d’imposta.',
-          aiSupport: 'API private per estrazione cronologia operazioni integrate nei nostri motori di riconciliazione fiscale.',
-          researchSignal: 'Supervisione BaFin e Banca d’Italia con DGS (deposit guarantee scheme) fino a €100k.'
+          researchNote: 'Supervisione BaFin e Banca d’Italia con DGS fino a €100.000.'
         },
         audience: ['Piani di accumulo', 'Educazione finanziaria'],
         strengths: [
@@ -1260,10 +1250,9 @@
         platforms: 'Web · App iOS/Android',
         offersCfd: false,
         review: {
-          summary: 'Impiego prioritario per programmi educativi su investimenti periodici e costruzione di portafogli core ETF.',
+          evaluation: 'Impiego prioritario per programmi educativi su investimenti periodici e costruzione di portafogli core ETF.',
           recommendedFor: 'Risparmiatori retail che cercano automazione e costi trasparenti.',
-          aiSupport: 'Dataset su PAC e flussi periodici integrati nella dashboard di monitoraggio costi effettivi.',
-          researchSignal: 'Supervisione BaFin e MiFID passport con disclosure trasparente su costi e interessi.'
+          researchNote: 'Supervisione BaFin e MiFID passport con disclosure trasparente su costi e interessi.'
         },
         audience: ['Piani di accumulo', 'Educazione finanziaria'],
         strengths: [
@@ -1296,10 +1285,9 @@
         platforms: 'DEGIRO WebTrader · App mobile',
         offersCfd: false,
         review: {
-          summary: 'Utilizzato per benchmarkare i costi operativi su mercati cash e per attività educative su diversificazione geografica.',
+          evaluation: 'Utilizzato per benchmarkare i costi operativi su mercati cash e per attività educative su diversificazione geografica.',
           recommendedFor: 'Investitori retail evoluti che cercano efficienza commisssionale su azioni/ETF.',
-          aiSupport: 'Report esportabili e API non ufficiali sfruttate per controlli di spesa e riconciliazioni automatizzate.',
-          researchSignal: 'Trasparenza tariffaria vigilata da AFM/DNB e segregazione titoli su Deutsche Börse Bank.'
+          researchNote: 'Trasparenza tariffaria vigilata da AFM/DNB e segregazione titoli su Deutsche Börse Bank.'
         },
         audience: ['Investitori evoluti'],
         strengths: [
@@ -1333,10 +1321,9 @@
         offersCfd: true,
         cfdDisclosure: 'XTB mette a disposizione un’ampia gamma di CFD. La percentuale di conti retail che perde denaro con i CFD è pubblicata sul sito ufficiale: verifica sempre il dato aggiornato prima di operare.',
         review: {
-          summary: 'Nella piattaforma Tradelia AI è inserita per confronto costi su azioni/ETF reali e per la didattica su piattaforme intuitive.',
+          evaluation: 'Inserita per confronto costi su azioni/ETF reali e per la didattica su piattaforme intuitive.',
           recommendedFor: 'Investitori evoluti che cercano soluzioni UX-friendly senza commissioni entro soglia annuale.',
-          aiSupport: 'xStation API WebSocket (beta) utile per streaming prezzi in moduli di sentiment e monitoraggio.',
-          researchSignal: 'Supervisione multi-autorità (KNF/CNMV/FCA) con segregazione fondi presso banche UE.'
+          researchNote: 'Supervisione multi-autorità (KNF/CNMV/FCA) con segregazione fondi presso banche UE.'
         },
         audience: ['Investitori evoluti', 'Educazione finanziaria'],
         strengths: [
@@ -1370,10 +1357,9 @@
         offersCfd: true,
         cfdDisclosure: 'IG comunica nei propri documenti regolamentari la percentuale di conti retail che perde denaro con i CFD; consulta sempre il dato aggiornato e valuta adeguatezza ed esperienza prima di usarli.',
         review: {
-          summary: 'Inserito per comparare la componente real assets (azioni/ETF/derivati quotati) con piattaforme evolute e sostituto d’imposta.',
+          evaluation: 'Inserito per comparare la componente real assets (azioni/ETF/derivati quotati) con piattaforme evolute e sostituto d’imposta.',
           recommendedFor: 'Investitori evoluti e desk educativi alla ricerca di tool grafici avanzati e regime amministrato.',
-          aiSupport: 'Integrazione nativa con TradingView e API partner per esportare dati in pipeline AI di monitoraggio.',
-          researchSignal: 'Supervisione FCA/BaFin/CONSOB con reportistica dettagliata e solidità storica oltre 45 anni.'
+          researchNote: 'Supervisione FCA/BaFin/CONSOB con reportistica dettagliata e solidità storica oltre 45 anni.'
         },
         audience: ['Investitori evoluti', 'Desk educativi'],
         strengths: [
@@ -1407,10 +1393,9 @@
         offersCfd: true,
         cfdDisclosure: 'Fineco offre anche CFD e Turbo Certificate. Operare in leva comporta rischi elevati: utilizza questi strumenti solo se ne comprendi funzionamento e margini.',
         review: {
-          summary: 'Nel framework Tradelia AI è utile per simulazioni su clienti retail italiani con conto bancario integrato e accesso IDEM.',
+          evaluation: 'Nel framework Tradelia AI è utile per simulazioni su clienti retail italiani con conto bancario integrato e accesso IDEM.',
           recommendedFor: 'Investitori evoluti che desiderano un’unica piattaforma per banking, trading e regime amministrato.',
-          aiSupport: 'Esportazione ordini e feed PowerDesk integrabili nei modelli di controllo rischio proprietari.',
-          researchSignal: 'Solidità bancaria (CET1 >20%) e trasparenza costi riconosciute dalle autorità italiane.'
+          researchNote: 'Solidità bancaria (CET1 >20%) e trasparenza costi riconosciute dalle autorità italiane.'
         },
         audience: ['Investitori evoluti', 'Desk educativi'],
         strengths: [
@@ -1444,10 +1429,9 @@
         offersCfd: true,
         cfdDisclosure: 'eToro evidenzia nei propri documenti che una quota significativa dei conti retail perde denaro con i CFD (dato aggiornato sul sito). Operare con leva richiede elevata esperienza.',
         review: {
-          summary: 'Utilizzato per benchmarkare esperienze social e funzionalità real assets con forte componente community.',
+          evaluation: 'Utilizzato per benchmarkare esperienze social e funzionalità real assets con forte componente community.',
           recommendedFor: 'Investitori consapevoli interessati a funzionalità social e diversificazione multi-asset.',
-          aiSupport: 'API Partner e flussi dati social integrati nei modelli di sentiment proprietari.',
-          researchSignal: 'Supervisione multi-autorità (CySEC/FCA/ASIC) con segregazione fondi su banche Tier-1.'
+          researchNote: 'Supervisione multi-autorità (CySEC/FCA/ASIC) con segregazione fondi su banche Tier-1.'
         },
         audience: ['Educazione finanziaria', 'Investitori evoluti'],
         strengths: [
@@ -1480,10 +1464,9 @@
         platforms: 'App Revolut (iOS/Android) · Web app limitata',
         offersCfd: false,
         review: {
-          summary: 'Inserito come benchmark entry-level per programmi educativi su prime esperienze di investimento e frazionamento azionario.',
+          evaluation: 'Inserito come benchmark entry-level per programmi educativi su prime esperienze di investimento e frazionamento azionario.',
           recommendedFor: 'Utenti retail alle prime armi che desiderano integrare pagamenti e micro-investimenti.',
-          aiSupport: 'Esportazione CSV transazioni utile per moduli di riconciliazione automatica.',
-          researchSignal: 'Supervisione FCA per la componente trading e protezione depositi tramite Banca di Lituania.'
+          researchNote: 'Supervisione FCA per la componente trading e protezione depositi tramite Banca di Lituania.'
         },
         audience: ['Educazione finanziaria', 'Piani di accumulo'],
         strengths: [
@@ -1516,10 +1499,9 @@
         platforms: 'PrimaryBid App iOS/Android · Web',
         offersCfd: false,
         review: {
-          summary: 'Punto di riferimento per studiare partecipazione retail a collocamenti primari europei.',
+          evaluation: 'Punto di riferimento per studiare partecipazione retail a collocamenti primari europei.',
           recommendedFor: 'Investitori evoluti interessati a IPO e aumenti di capitale in finestre dedicate.',
-          aiSupport: 'Feed offerte integrate nel nostro calendario AI di corporate actions.',
-          researchSignal: 'Partnership ufficiali con Euronext e Borse europee per garantire trasparenza nelle offerte.'
+          researchNote: 'Partnership ufficiali con Euronext e Borse europee per garantire trasparenza nelle offerte.'
         },
         audience: ['IPO accesso', 'Investitori evoluti'],
         strengths: [
@@ -1552,10 +1534,9 @@
         platforms: 'Bitpanda Web · App mobile',
         offersCfd: false,
         review: {
-          summary: 'Inserito per casi studio su infrastrutture crypto-regolamentate e piani di accumulo multi-asset.',
+          evaluation: 'Inserito per casi studio su infrastrutture crypto-regolamentate e piani di accumulo multi-asset.',
           recommendedFor: 'Investitori interessati a ETF/azioni frazionate e crypto spot con licenze UE.',
-          aiSupport: 'API pubbliche per prezzi e cronologia integrate nei nostri moduli di monitoraggio 24/7.',
-          researchSignal: 'Licenza FMA/Austria MiFID e prospetto approvato per strumenti asset-backed.'
+          researchNote: 'Licenza FMA/Austria MiFID e prospetto approvato per strumenti asset-backed.'
         },
         audience: ['Cripto regolamentate', 'Piani di accumulo'],
         strengths: [
@@ -1593,10 +1574,9 @@
         cfdDisclosure: 'Secondo i dati ufficiali Pepperstone EU, tra il 74% e l’89% dei conti retail perde denaro quando negozia CFD. Valuta attentamente se puoi permetterti il rischio elevatissimo di perdita.',
         labUsage: 'Utilizzato da Tradelia AI esclusivamente per test controllati ad alto rischio (<1% del portafoglio satellite sperimentale). Non destinato a raccomandazioni retail.',
         review: {
-          summary: 'Serve per benchmark di execution CFD in ambienti di test ad alta frequenza e validazioni comportamentali.',
+          evaluation: 'Serve per benchmark di execution CFD in ambienti di test ad alta frequenza e validazioni comportamentali.',
           recommendedFor: 'Solo operatori estremamente esperti e istituzionali; non raccomandato al pubblico retail.',
-          aiSupport: 'API e ambienti demo utili per stress test dei nostri algoritmi di valutazione leva.',
-          researchSignal: 'Conformità MiFID II/ESMA, fondi segregati e copertura ICF fino a €20.000.'
+          researchNote: 'Conformità MiFID II/ESMA, fondi segregati e copertura ICF fino a €20.000.'
         },
         audience: ['Gestori istituzionali'],
         strengths: [
@@ -1761,34 +1741,28 @@
         ? '<span class="badge-affiliate">Affiliato</span>'
         : '';
 
-      const cfdDisclaimer = broker.offersCfd && broker.cfdDisclosure
-        ? `<p class="cfd-disclaimer">${broker.cfdDisclosure}</p>`
-        : '';
-
-      const labNote = broker.labUsage
-        ? `<p class="lab-note">${broker.labUsage}</p>`
-        : '';
-
       const visitLink = getVisitLink(broker);
       const visitRel = broker.affiliate ? 'sponsored noopener' : 'noopener';
       const affiliateNoteText = broker.affiliate
         ? 'Link affiliato — compensi destinati alla ricerca Tradelia AI.'
         : 'Link ufficiale (non affiliato).';
 
-      const metaItems = [
+      const facts = [
         { label: 'Giurisdizione', value: broker.jurisdiction },
-        { label: 'Regime', value: broker.regime.join(' · ') },
-        { label: 'Asset principali', value: broker.assetFocus.join(' · ') },
-        { label: 'Deposito minimo', value: broker.minDeposit },
-        { label: 'Piattaforme', value: broker.platforms }
+        { label: 'Piattaforme', value: broker.platforms },
+        { label: 'Deposito minimo', value: broker.minDeposit }
       ];
 
-      const metaHtml = metaItems.map(item => `
-        <div class="broker-meta-item">
+      const factsHtml = facts.map(item => `
+        <li>
           <span>${item.label}</span>
           <span>${item.value}</span>
-        </div>
+        </li>
       `).join('');
+
+      const cfdDisclaimer = broker.offersCfd && broker.cfdDisclosure
+        ? `<p class="cfd-disclaimer">${broker.cfdDisclosure}</p>`
+        : '';
 
       card.innerHTML = `
         <header>
@@ -1799,31 +1773,20 @@
           </div>
           <p class="broker-description">${broker.description}</p>
         </header>
-        <div class="broker-meta">
-          ${metaHtml}
+        <div class="broker-target">
+          <span>A chi è destinato</span>
+          <p>${broker.review.recommendedFor}</p>
         </div>
-        <section class="broker-review">
-          <h3>Tradelia AI Review</h3>
-          <p class="review-text">${broker.review.summary}</p>
-          <div class="review-highlights">
-            <div class="highlight-item">
-              <span>A chi è rivolto</span>
-              <span>${broker.review.recommendedFor}</span>
-            </div>
-            <div class="highlight-item">
-              <span>Integrazione AI</span>
-              <span>${broker.review.aiSupport}</span>
-            </div>
-            <div class="highlight-item">
-              <span>Segnale di ricerca</span>
-              <span>${broker.review.researchSignal}</span>
-            </div>
-          </div>
-        </section>
-        ${labNote}
+        <div class="broker-evaluation">
+          <span>Valutazione Tradelia AI</span>
+          <p>${broker.review.evaluation}</p>
+        </div>
+        <ul class="broker-facts">
+          ${factsHtml}
+        </ul>
         ${cfdDisclaimer}
         <div class="broker-footer">
-          <button class="cta-secondary" type="button" data-open-modal="${broker.id}">Scopri di più</button>
+          <button class="cta-secondary" type="button" data-open-modal="${broker.id}">Maggiori dettagli</button>
           <a class="cta-primary" href="${visitLink}" target="_blank" rel="${visitRel}">Visita il broker</a>
           <small class="affiliate-note">${affiliateNoteText}</small>
         </div>
@@ -1863,13 +1826,14 @@
     const modalAffiliateBadge = document.getElementById('modal-affiliate-badge');
     const modalSummary = document.getElementById('modal-summary');
     const modalRecommended = document.getElementById('modal-recommended');
-    const modalAi = document.getElementById('modal-ai');
-    const modalSignal = document.getElementById('modal-signal');
+    const modalDescription = document.getElementById('modal-description');
     const modalMinimum = document.getElementById('modal-minimum');
     const modalPlatforms = document.getElementById('modal-platforms');
     const modalJurisdiction = document.getElementById('modal-jurisdiction');
     const modalRegime = document.getElementById('modal-regime');
     const modalAssets = document.getElementById('modal-assets');
+    const modalResearchNote = document.getElementById('modal-research-note');
+    const modalLabNote = document.getElementById('modal-lab-note');
     const modalStrengths = document.getElementById('modal-strengths');
     const modalLimitations = document.getElementById('modal-limitations');
     const modalCitations = document.getElementById('modal-citations');
@@ -1901,15 +1865,30 @@
       modalTitle.querySelector('[data-modal-name]').textContent = broker.name;
       modalScore.textContent = `${broker.score}/100`;
       modalAffiliateBadge.hidden = !broker.affiliate;
-      modalSummary.textContent = broker.review.summary;
+      modalSummary.textContent = broker.review.evaluation;
       modalRecommended.textContent = broker.review.recommendedFor;
-      modalAi.textContent = broker.review.aiSupport;
-      modalSignal.textContent = broker.review.researchSignal;
+      modalDescription.textContent = broker.description;
       modalMinimum.textContent = broker.minDeposit;
       modalPlatforms.textContent = broker.platforms;
       modalJurisdiction.textContent = broker.jurisdiction;
       modalRegime.textContent = broker.regime.join(' · ');
       modalAssets.textContent = broker.assetFocus.join(' · ');
+
+      if (broker.review.researchNote) {
+        modalResearchNote.hidden = false;
+        modalResearchNote.textContent = `Nota di ricerca: ${broker.review.researchNote}`;
+      } else {
+        modalResearchNote.hidden = true;
+        modalResearchNote.textContent = '';
+      }
+
+      if (broker.labUsage) {
+        modalLabNote.hidden = false;
+        modalLabNote.textContent = `Uso interno Tradelia AI: ${broker.labUsage}`;
+      } else {
+        modalLabNote.hidden = true;
+        modalLabNote.textContent = '';
+      }
 
       fillList(modalStrengths, broker.strengths);
       fillList(modalLimitations, broker.limitations);
