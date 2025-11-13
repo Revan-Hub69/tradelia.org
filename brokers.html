@@ -251,6 +251,7 @@
       gap: 0.75rem;
       justify-content: space-between;
       color: var(--ink-muted);
+      align-items: center;
     }
 
     .filter-summary button {
@@ -308,25 +309,50 @@
     }
 
     .broker-card header {
-      display: flex;
-      flex-direction: column;
+      display: grid;
       gap: 0.65rem;
+    }
+
+    .broker-title-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: space-between;
     }
 
     .broker-title {
       font-size: 1.25rem;
       margin: 0;
       letter-spacing: -0.02em;
+      font-weight: 600;
     }
 
-    .broker-pill {
+    .score-pill {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.35rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-strong);
       font-size: 0.78rem;
-      letter-spacing: 0.24em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--ink-muted);
+    }
+
+    .badge-affiliate {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: var(--radius-pill);
+      background: color-mix(in oklab, var(--brand-500) 18%, transparent);
+      border: 1px solid color-mix(in oklab, var(--brand-500) 45%, transparent);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(125, 211, 252, 0.85);
     }
 
     .broker-description {
@@ -353,11 +379,11 @@
       text-transform: uppercase;
       font-size: 0.7rem;
       flex: 1;
-      max-width: 140px;
+      max-width: 160px;
     }
 
     .broker-meta-item span:last-child {
-      flex: 2;
+      flex: 1.6;
       text-align: right;
       font-weight: 600;
       color: var(--ink);
@@ -411,12 +437,79 @@
       line-height: 1.5;
     }
 
-    .citation-stack {
-      display: grid;
+    .lab-note {
+      font-size: 0.78rem;
+      line-height: 1.5;
+      color: rgba(248, 250, 252, 0.78);
+      border-left: 2px solid color-mix(in oklab, var(--brand-500) 45%, transparent);
+      padding-left: 0.75rem;
+    }
+
+    .cfd-disclaimer {
+      font-size: 0.78rem;
+      line-height: 1.5;
+      color: rgba(248, 113, 113, 0.86);
+      background: rgba(248, 113, 113, 0.08);
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      border-radius: var(--radius-lg);
+      padding: 0.75rem;
+    }
+
+    .broker-footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border-strong);
+    }
+
+    .cta-primary,
+    .cta-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       gap: 0.35rem;
-      font-size: 0.75rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0.6rem 1.1rem;
+      border-radius: var(--radius-pill);
+      transition: background-color 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .cta-secondary {
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--ink-soft);
+    }
+
+    .cta-secondary:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      color: var(--ink);
+      transform: translateY(-1px);
+    }
+
+    .cta-primary {
+      border: 1px solid color-mix(in oklab, var(--brand-500) 55%, transparent);
+      background: color-mix(in oklab, var(--brand-500) 65%, transparent);
+      color: rgba(15, 23, 42, 0.96);
+    }
+
+    .cta-primary:hover {
+      border-color: color-mix(in oklab, var(--brand-400) 65%, transparent);
+      background: color-mix(in oklab, var(--brand-400) 75%, transparent);
+      transform: translateY(-1px);
+    }
+
+    .affiliate-note {
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
       color: var(--ink-muted);
-      line-height: 1.6;
     }
 
     .empty-state {
@@ -426,6 +519,29 @@
       text-align: center;
       color: var(--ink-muted);
       font-size: 0.95rem;
+    }
+
+    .cfd-section {
+      margin-top: 3rem;
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      border-radius: var(--radius-xl);
+      background: rgba(248, 113, 113, 0.08);
+      padding: 2.5rem;
+      display: grid;
+      gap: 1.75rem;
+    }
+
+    .cfd-section h2 {
+      margin: 0;
+      font-size: 1.35rem;
+      letter-spacing: -0.015em;
+      color: rgba(248, 113, 113, 0.92);
+    }
+
+    .cfd-grid {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     }
 
     .references {
@@ -472,6 +588,163 @@
       background: color-mix(in oklab, var(--surface-card) 70%, transparent);
     }
 
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(7, 11, 19, 0.75);
+      backdrop-filter: blur(4px);
+      padding: 2rem;
+      z-index: 1000;
+    }
+
+    .modal[hidden] {
+      display: none;
+    }
+
+    .modal-panel {
+      position: relative;
+      width: min(780px, 100%);
+      max-height: 90vh;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-strong);
+      background: var(--surface-card);
+      padding: 2.25rem 2.5rem;
+      overflow-y: auto;
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--ink-muted);
+      font-size: 0.9rem;
+      border-radius: var(--radius-pill);
+      padding: 0.35rem 0.75rem;
+      cursor: pointer;
+      transition: border-color 0.18s ease, color 0.18s ease;
+    }
+
+    .modal-close:hover {
+      border-color: rgba(56, 189, 248, 0.45);
+      color: var(--ink);
+    }
+
+    .modal-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .modal-summary {
+      color: var(--ink-soft);
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    .modal-info-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .modal-info-grid div {
+      display: grid;
+      gap: 0.35rem;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      background: color-mix(in oklab, var(--surface-elev) 70%, transparent);
+    }
+
+    .modal-info-grid span {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    .modal-info-grid p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .modal-columns {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .modal-columns h4 {
+      margin: 0 0 0.75rem;
+      font-size: 0.88rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    .modal-columns ul {
+      margin: 0;
+      padding-left: 1.1rem;
+      display: grid;
+      gap: 0.6rem;
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+
+    .modal-citations h4 {
+      margin: 0 0 0.5rem;
+      font-size: 0.82rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    .modal-citations ul {
+      margin: 0;
+      padding-left: 1.1rem;
+      display: grid;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--ink-muted);
+    }
+
+    .modal-disclaimer {
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: rgba(248, 113, 113, 0.86);
+      background: rgba(248, 113, 113, 0.08);
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      border-radius: var(--radius-lg);
+      padding: 0.9rem 1rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
     @media (max-width: 720px) {
       .page-container {
         padding: 5rem 1.25rem 4rem;
@@ -489,6 +762,15 @@
       .broker-meta-item span:last-child {
         text-align: left;
       }
+      .modal-panel {
+        padding: 2rem 1.5rem;
+      }
+      .modal-info-grid {
+        grid-template-columns: 1fr;
+      }
+      .modal-actions {
+        justify-content: flex-start;
+      }
     }
   </style>
 </head>
@@ -504,7 +786,7 @@
           Questa pagina sintetizza la <strong>ricerca comparativa condotta dal laboratorio Tradelia AI</strong> su intermediari che offrono accesso diretto ad azioni,
           ETF, obbligazioni e derivati quotati europei e internazionali. La selezione si fonda su criteri <strong>MiFID II / ESMA 2024-2025</strong>, incrociando
           affidabilità regolamentare, qualità delle piattaforme e disponibilità di dati aperti per workflow di analisi quantitativa. Tutti i contenuti hanno finalità esclusivamente
-          <strong>informativa, formativa e accademica</strong>.
+          <strong>informativa, formativa e accademica</strong>. Gli intermediari contrassegnati come “Affiliato” prevedono link di referral: gli eventuali compensi sono reinvestiti in attività di ricerca.
         </p>
         <div class="hero-meta">
           <div class="hero-meta-item">
@@ -513,7 +795,7 @@
           </div>
           <div class="hero-meta-item">
             <span>Fonti regolamentari</span>
-            <strong>ESMA • CONSOB • BIS • OECD</strong>
+            <strong>ESMA · CONSOB · BaFin · AFM · CySEC</strong>
           </div>
           <div class="hero-meta-item">
             <span>Framework interno</span>
@@ -533,11 +815,11 @@
           <ul class="methodology-list">
             <li class="methodology-item">
               <strong>Dataset regolamentare</strong>
-              <span>Licenze primarie, supervisione e protezione investitori (MiFID II, ESMA Q&A 2025, registri CONSOB e BaFin, reporting SFTR/SRD2).</span>
+              <span>Licenze primarie, supervisione e protezione investitori (MiFID II, ESMA Q&A 2025, registri CONSOB/BaFin/AFM, reporting SFTR/SRD2).</span>
             </li>
             <li class="methodology-item">
               <strong>Strumenti &amp; dati</strong>
-              <span>Copertura mercati reali (azioni, ETF, bond, derivati quotati), accesso a dati storici/API, qualità della documentazione tecnica.</span>
+              <span>Copertura mercati reali, accesso a dati storici/API, qualità della documentazione tecnica e pianificazione fiscale.</span>
             </li>
             <li class="methodology-item">
               <strong>Operatività accademica</strong>
@@ -545,7 +827,7 @@
             </li>
             <li class="methodology-item">
               <strong>Profilazione investitore</strong>
-              <span>Analisi della target audience dichiarata, requisiti minimi, regime fiscale (amministrato/ordinario), disponibilità materiali educativi certificati.</span>
+              <span>Analisi della target audience dichiarata, requisiti minimi, regime fiscale, disponibilità materiale educativo certificato.</span>
             </li>
           </ul>
         </div>
@@ -574,7 +856,7 @@
           </div>
         </div>
         <div class="filter-summary" id="filter-summary">
-          <span>Nessun filtro selezionato · tutti i broker visibili</span>
+          <span data-summary-text>Nessun filtro selezionato · tutti i broker visibili</span>
           <button type="button" id="filters-reset">Azzera filtri</button>
         </div>
       </section>
@@ -585,6 +867,17 @@
         <div class="empty-state" id="empty-state" hidden>
           Nessun intermediario corrisponde ai filtri applicati. Modifica la selezione o ripristina la vista completa.
         </div>
+      </section>
+
+      <section id="cfd-section" class="cfd-section" hidden aria-labelledby="cfd-title">
+        <div>
+          <h2 id="cfd-title">Broker CFD per test controllati ad alto rischio</h2>
+          <p class="review-text" style="margin-top: 0.6rem;">
+            Questa sezione contiene esclusivamente gli intermediari utilizzati da Tradelia AI per attività sperimentali su strumenti a leva. Non costituisce invito all’operatività in CFD.
+            L’esposizione media nei test interni è limitata a <strong>≈1% di un portafoglio satellite</strong>. I CFD sono prodotti complessi ad altissimo rischio: il capitale può essere perso interamente in tempi molto rapidi.
+          </p>
+        </div>
+        <div class="cfd-grid" id="cfd-grid"></div>
       </section>
 
       <section class="references" aria-labelledby="references-title">
@@ -600,7 +893,10 @@
           <li>Bank for International Settlements (2024). <em>Sound Practices: The use of artificial intelligence by financial institutions</em>. BIS Supervisory Guidance No. 38.</li>
           <li>OECD (2025). <em>Artificial Intelligence Adoption in Capital Markets</em>. OECD Digital Finance Working Paper 2025/01.</li>
           <li>CONSOB (2025). <em>Rapporto annuale sugli investitori retail</em>. Sezione “Tecnologie emergenti e tutela del risparmio”.</li>
-          <li>MIT-IBM Watson AI Lab (2024). <em>Explainable AI for Broker Selection in Regulated Markets</em>. Proceedings of AI Finance Forum 2024.</li>
+          <li>MIT-IBM Watson AI Lab (2024). <em>Explainable AI for Broker Selection in Regulated Markets</em>. AI Finance Forum Proceedings.</li>
+          <li>BaFin (2025). <em>Supervisory Priorities for Digital Investment Platforms</em>. Bundesanstalt für Finanzdienstleistungsaufsicht.</li>
+          <li>CySEC (2024). <em>Circular C556 – MiFID II Product Governance &amp; Marketing Communications</em>.</li>
+          <li>AFM (2024). <em>Retail Trading Platforms Review</em>. Autoriteit Financiële Markten.</li>
         </ol>
       </section>
 
@@ -613,6 +909,73 @@
   </main>
 
   <div id="site-footer-slot"></div>
+
+  <div id="broker-modal" class="modal" hidden>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" type="button" data-modal-close aria-label="Chiudi">Chiudi</button>
+      <div class="modal-header">
+        <h3 id="modal-title">
+          <span data-modal-name></span>
+          <span class="score-pill" id="modal-score"></span>
+          <span class="badge-affiliate" id="modal-affiliate-badge" hidden>Affiliato</span>
+        </h3>
+        <p class="modal-summary" id="modal-summary"></p>
+      </div>
+      <div class="modal-info-grid">
+        <div>
+          <span>Per chi</span>
+          <p id="modal-recommended"></p>
+        </div>
+        <div>
+          <span>Integrazione AI</span>
+          <p id="modal-ai"></p>
+        </div>
+        <div>
+          <span>Segnale di ricerca</span>
+          <p id="modal-signal"></p>
+        </div>
+        <div>
+          <span>Deposito minimo</span>
+          <p id="modal-minimum"></p>
+        </div>
+        <div>
+          <span>Piattaforme &amp; API</span>
+          <p id="modal-platforms"></p>
+        </div>
+        <div>
+          <span>Giurisdizione / Regime</span>
+          <p>
+            <span id="modal-jurisdiction"></span><br />
+            <span id="modal-regime" style="color: var(--ink-muted); font-size: 0.85rem;"></span>
+          </p>
+        </div>
+        <div>
+          <span>Asset focali</span>
+          <p id="modal-assets"></p>
+        </div>
+      </div>
+      <div class="modal-columns">
+        <div>
+          <h4>Punti di forza</h4>
+          <ul id="modal-strengths"></ul>
+        </div>
+        <div>
+          <h4>Punti di attenzione</h4>
+          <ul id="modal-limitations"></ul>
+        </div>
+      </div>
+      <div class="modal-citations">
+        <h4>Fonti</h4>
+        <ul id="modal-citations"></ul>
+      </div>
+      <p id="modal-disclaimer" class="modal-disclaimer" hidden></p>
+      <div class="modal-actions">
+        <a id="modal-visit" class="cta-primary" href="#" target="_blank" rel="noopener">Visita il broker</a>
+        <button id="modal-more" class="cta-secondary" type="button" data-modal-close>Chiudi</button>
+        <small id="modal-affiliate-note" class="affiliate-note"></small>
+      </div>
+    </div>
+  </div>
 
   <script type="module">
     document.documentElement.setAttribute('data-theme', 'dark');
@@ -627,251 +990,628 @@
   <script>
     const BROKER_DATA = [
       {
-        id: 'ibkr',
+        id: 'interactive-brokers',
         name: 'Interactive Brokers',
-        jurisdiction: 'SEC · CFTC · FCA · CSSF · ASIC',
+        affiliate: false,
+        affiliateUrl: '',
+        officialUrl: 'https://www.interactivebrokers.eu',
+        jurisdiction: 'SEC · CFTC · FCA · CSSF · MAS',
         regime: ['multi-giurisdizione', 'clienti-professionali'],
         assetFocus: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures'],
         score: 95,
-        description: 'Accesso DMA a 160+ mercati globali con Toolset Trader Workstation, Client Portal e API istituzionali.',
-        minDeposit: 'Nessun minimo formale',
-        platforms: 'TWS · Client Portal · IBKR Mobile · API FIX/REST',
+        description: 'Accesso DMA a oltre 160 mercati globali con infrastruttura Trader Workstation, Client Portal e API istituzionali.',
+        minDeposit: 'Nessun minimo formale (requisiti dipendono dal profilo)',
+        platforms: 'Trader Workstation (TWS) · Client Portal · IBKR Mobile · API FIX/REST',
+        offersCfd: true,
+        cfdDisclosure: 'I CFD sono disponibili tramite entità IBKR UK/IE; la percentuale di conti retail che perde denaro è pubblicata e aggiornata sul sito ufficiale. Utilizza i CFD solo se comprendi pienamente leva e margini.',
         review: {
-          summary: 'Utilizziamo IBKR per dataset microstrutturali e per replicare condizioni istituzionali nelle simulazioni AI di portafoglio.',
-          recommendedFor: 'Desk quantitativi, investitori professionali, master universitari con focus su derivati quotati.',
-          aiSupport: 'API documentate e accesso a dati storici tick-level utili per modelli di reinforcement learning.',
-          researchSignal: 'Copertura multipaese coerente con gli scenari testati nel whitepaper ESMA 2024 su AI explainability.'
+          summary: 'Nel framework Tradelia AI rappresenta il riferimento per dataset microstrutturali, test su strategie AI e replica di condizioni istituzionali.',
+          recommendedFor: 'Desk quantitativi, investitori professionali e retail evoluti che necessitano di copertura multi-mercato.',
+          aiSupport: 'API FIX/REST, dati storici tick-level e reporting dettagliato integrabili nei nostri moduli AI.',
+          researchSignal: 'Robusta governance di rischio e disclosure regolamentare riconosciuta da ESMA e autorità USA.'
         },
-        audience: ['Ricerca quantitativa', 'Gestori istituzionali', 'Quant / API'],
+        audience: ['Gestori istituzionali', 'Quant / API', 'Investitori evoluti'],
         strengths: [
-          'Copertura multi-mercato con DMA reale',
-          'API e dati storici completi',
-          'Gestione rischio margini trasparente'
+          'Copertura multi-asset e multi-mercato senza equivalenti',
+          'Piattaforma TWS e API programmabili',
+          'Gestione margine e risk management trasparente'
         ],
         limitations: [
-          'Curva di apprendimento ripida (TWS)',
-          'Costi dati in tempo reale separati'
+          'Curva di apprendimento ripida per utenti retail',
+          'Dati in tempo reale spesso a pagamento separato',
+          'Offerta CFD da utilizzare con estrema cautela'
         ],
         citations: [
-          'ESMA (2024) – Supervisory Briefing AI in Securities Markets',
-          'BIS (2024) – Sound Practices on AI Adoption'
-        ]
-      },
-      {
-        id: 'bgsaxo',
-        name: 'BG Saxo (SIM Italia)',
-        jurisdiction: 'Consob · Banca d’Italia',
-        regime: ['regime-amministrato-italia', 'multi-giurisdizione'],
-        assetFocus: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures'],
-        score: 90,
-        description: 'Succursale italiana del gruppo Saxo Bank con regime amministrato e piattaforme SaxoTraderGO/PRO.',
-        minDeposit: 'Variabile in base al profilo',
-        platforms: 'SaxoTraderGO · SaxoTraderPRO · OpenAPI',
-        review: {
-          summary: 'Selezionato per progetti pilota con università italiane su fiscalità amministrata e formazione su derivati quotati.',
-          recommendedFor: 'Investitori evoluti che necessitano di sostituto d’imposta italiano con ampia gamma strumenti globali.',
-          aiSupport: 'OpenAPI con SDK ufficiali e esportazione dati posizioni, utile per classificatori risk-aware.',
-          researchSignal: 'Documentazione ESG e risk disclosure aggiornata secondo linee guida CONSOB 2025.'
-        },
-        audience: ['Consulenti vigilati', 'Investitori evoluti', 'Desk educativi'],
-        strengths: [
-          'Regime fiscale amministrato (IT)',
-          'Copertura globale azioni/derivati',
-          'Piattaforme professionali configurabili'
-        ],
-        limitations: [
-          'Struttura commissionale articolata',
-          'Richiede familiarità con marginazione avanzata'
-        ],
-        citations: [
-          'CONSOB (2025) – Rapporto Investitori Retail',
-          'OECD (2025) – AI Adoption in Capital Markets'
-        ]
-      },
-      {
-        id: 'directa',
-        name: 'Directa SIM',
-        jurisdiction: 'Consob · Banca d’Italia',
-        regime: ['regime-amministrato-italia'],
-        assetFocus: ['Azioni', 'ETF', 'Bond', 'IDEM'],
-        score: 84,
-        description: 'Broker italiano storico con focus su Borsa Italiana e mercati USA/Europa, documentazione trasparente.',
-        minDeposit: 'Nessun minimo dichiarato',
-        platforms: 'Directa Platform · dLite · TradingView integrazione',
-        review: {
-          summary: 'Utilizzato in laboratori didattici per la componente fiscale domestica e per testare microflussi IDEM.',
-          recommendedFor: 'Investitori italiani che privilegiano rapporto diretto con SIM vigilata e regime amministrato.',
-          aiSupport: 'API REST (beta) per estrazione movimenti e portafogli, integrate nel nostro framework di reporting fiscale.',
-          researchSignal: 'Case study nella sezione “educazione finanziaria” del Rapporto CONSOB 2025.'
-        },
-        audience: ['Investitori retail evoluti', 'Formazione accademica'],
-        strengths: [
-          'Fiscalità amministrata completamente gestita',
-          'Accesso diretto a IDEM e Borsa Italiana',
-          'Supporto in lingua italiana'
-        ],
-        limitations: [
-          'Interfaccia meno moderna rispetto a peer esteri',
-          'Costi su mercati esteri da valutare caso per caso'
-        ],
-        citations: [
-          'CONSOB (2025) – Educazione Finanziaria e tutela',
-          'MIT-IBM (2024) – Explainable AI for Broker Selection'
+          'Interactive Brokers Group – Form 10-K 2024',
+          'ESMA (2024) Supervisory Briefing – AI in Securities Markets'
         ]
       },
       {
         id: 'exante',
         name: 'Exante',
+        affiliate: true,
+        affiliateUrl: 'https://exantepartner.com/p/38603/',
+        officialUrl: 'https://exante.eu',
         jurisdiction: 'MFSA · CySEC · FCA',
         regime: ['multi-giurisdizione'],
         assetFocus: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures'],
         score: 88,
-        description: 'Intermediario multi-mercato con accesso DMA e copertura obbligazionaria estesa, utilizzato per ricerca su fixed income.',
-        minDeposit: '≈ €10.000 (retail UE)',
-        platforms: 'Piattaforma proprietaria Web/Desktop · API FIX',
+        description: 'DMA multi-mercato con forte copertura obbligazionaria e opzioni quotate; infrastruttura pensata per desk professionali.',
+        minDeposit: '≈ €10.000 (clientela retail UE)',
+        platforms: 'Piattaforma proprietaria Web/Desktop · App mobile · FIX API',
+        offersCfd: true,
+        cfdDisclosure: 'EXANTE offre CFD solo su alcune asset class (es. criptovalute). In Tradelia AI analizziamo esclusivamente strumenti quotati regolamentati. I CFD comportano un rischio elevato di perdita rapida del capitale.',
         review: {
-          summary: 'Nel framework Tradelia AI viene impiegato per dataset obbligazionari e analisi cross-market su tassi benchmark.',
-          recommendedFor: 'Investitori professionali e desk obbligazionari che necessitano di book profondi.',
-          aiSupport: 'Export veloce dei dati storici e FIX gateway utile per strategie basate su reinforcement learning controllato.',
-          researchSignal: 'Allineamento con raccomandazioni BIS 2024 su trasparenza dati fixed-income.'
+          summary: 'Nel laboratorio viene impiegata per dataset obbligazionari e per test cross-market su tassi e derivati quotati.',
+          recommendedFor: 'Investitori professionali, wealth desk e ricercatori con focus su bond avanzati e opzioni.',
+          aiSupport: 'FIX API e feed storici integrabili nei nostri motori di ottimizzazione AI per portafogli multi-asset.',
+          researchSignal: 'Compliance multi-giurisdizionale (MFSA/CySEC/FCA) con segregazione fondi e audit regolari.'
         },
-        audience: ['Gestori istituzionali', 'Ricerca obbligazionaria'],
+        audience: ['Gestori istituzionali', 'Ricerca obbligazionaria', 'Quant / API'],
         strengths: [
-          'Copertura obbligazionaria molto ampia',
-          'DMA su 50+ mercati quotati',
-          'Supporto multi-valuta e tool risk'
+          'Accesso DMA a oltre 50 mercati regolamentati',
+          'Catalogo obbligazionario e opzioni estremamente vasto',
+          'Supporto tecnico su FIX e connettività professionale'
         ],
         limitations: [
-          'Deposito minimo elevato',
-          'Crypto solo via CFD (non considerati in questa selezione)'
+          'Deposito minimo elevato per clientela retail',
+          'Listino commissionale personalizzato (serve contatto)',
+          'Componenti CFD da escludere per investitori buy-and-hold'
         ],
         citations: [
-          'BIS (2024) – Sound Practices AI',
-          'ESMA (2024) – Market Data Reporting'
-        ]
-      },
-      {
-        id: 'mexem',
-        name: 'MEXEM',
-        jurisdiction: 'CySEC · FCA',
-        regime: ['multi-giurisdizione'],
-        assetFocus: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures'],
-        score: 86,
-        description: 'Introducing broker europeo su infrastruttura IBKR con supporto dedicato UE e materiale formativo certificato.',
-        minDeposit: 'Nessun minimo',
-        platforms: 'Trader Workstation · Client Portal · App',
-        review: {
-          summary: 'Adottato per percorsi educativi avanzati in lingua italiana con accesso TWS e supporto compliance europeo.',
-          recommendedFor: 'Trader avanzati e studenti MSc che necessitano di supporto localizzato mantenendo infrastruttura IBKR.',
-          aiSupport: 'Condivide API IBKR, integrabile nei workflow di controllo rischio AI sviluppati dal team.',
-          researchSignal: 'Riferito nel MIT-IBM 2024 per la sezione “accessibilità TWS a studenti e ricercatori”.'
-        },
-        audience: ['Ricerca quantitativa', 'Investitori evoluti'],
-        strengths: [
-          'Accesso TWS con supporto UE',
-          'Nessun deposito minimo',
-          'Documentazione educativa strutturata'
-        ],
-        limitations: [
-          'Dipendenza infrastrutturale da IBKR',
-          'Commissioni su opzioni da monitorare'
-        ],
-        citations: [
-          'MIT-IBM (2024) – Explainable AI for Broker Selection',
-          'OECD (2025) – AI Adoption in Capital Markets'
+          'Malta MFSA Licence IS/52182 (2025)',
+          'EXANTE Market Coverage Factsheet (2024)'
         ]
       },
       {
         id: 'freedom24',
         name: 'Freedom24',
-        jurisdiction: 'CySEC · CONSOB',
-        regime: ['regime-amministrato-italia'],
+        affiliate: true,
+        affiliateUrl: 'https://freedom24.com/invite_from/2953166',
+        officialUrl: 'https://freedom24.com',
+        jurisdiction: 'CySEC (licenza 275/15) · Registrata CONSOB · ICF UE fino a €20k',
+        regime: ['multi-giurisdizione'],
         assetFocus: ['Azioni', 'ETF', 'Bond', 'IPO'],
         score: 85,
-        description: 'Focalizzata su IPO statunitensi ed europee con accesso retail regolamentato e materiale MiFID II dedicato.',
-        minDeposit: '≈ €10 operatività standard · ≈ $2.000 IPO',
-        platforms: 'Web · App iOS/Android',
+        description: 'Accesso retail a IPO USA/EU con piattaforma proprietaria, conto remunerato e gamma estesa di strumenti quotati.',
+        minDeposit: '≈ €10 per operatività standard · ≈ $2.000 per partecipare alle IPO',
+        platforms: 'Freedom24 Web · App iOS/Android',
+        offersCfd: false,
         review: {
-          summary: 'Monitorato per analisi su allocazione primaria e gestione lock-up nelle IPO; interessante per laboratori su equity capital markets.',
-          recommendedFor: 'Investitori informati interessati a pipeline IPO e diversificazione tramite piani di accumulo.',
-          aiSupport: 'Dataset strutturati su pipeline IPO integrati nella nostra dashboard di monitoraggio volatilità post-listing.',
-          researchSignal: 'Casi studio citati nell’OECD 2025 su AI e distribuzione di prodotti primari.'
+          summary: 'Utilizzato in Tradelia AI per pipeline IPO, analisi di allocazione primaria e percorsi educativi su equity capital markets.',
+          recommendedFor: 'Investitori retail informati interessati a IPO regolamentate e diversificazione globale.',
+          aiSupport: 'Calendario IPO e dati storici integrabili nei nostri moduli di sorveglianza AI su listing e lock-up.',
+          researchSignal: 'Compliance MiFID II monitorata da CySEC, con Investor Compensation Fund europeo.'
         },
-        audience: ['Investitori retail evoluti', 'Ricerca ECM'],
+        audience: ['Investitori evoluti', 'IPO accesso'],
         strengths: [
-          'Accesso IPO primarie regolamentato',
-          'Piani di accumulo e conto remunerato',
-          'Protezione fondi UE (ICF fino a 20k €)'
+          'Accesso retail a IPO e offerte primarie internazionali',
+          'Oltre 40.000 strumenti quotati su mercati globali',
+          'Conto remunerato e piani di accumulo tematici'
         ],
         limitations: [
-          'Depositi minimi più elevati per IPO',
-          'Costi cambio valuta da gestire'
+          'Deposito minimo significativo per partecipare alle IPO',
+          'Regime fiscale in Italia gestito in dichiarativo (no sostituto)'
         ],
         citations: [
-          'OECD (2025) – AI Adoption in Capital Markets',
-          'CONSOB (2025) – Rapporto Investitori Retail'
+          'CySEC Public Register – Freedom Finance Europe Ltd (2025)',
+          'Freedom Holding Corp Investor Presentation Q1 2025'
         ]
       },
       {
-        id: 'scalable',
+        id: 'bg-saxo',
+        name: 'BG Saxo (SIM Italia)',
+        affiliate: false,
+        affiliateUrl: '',
+        officialUrl: 'https://www.home.saxo/it-it',
+        jurisdiction: 'CONSOB · Banca d’Italia · parte di Saxo Bank Group',
+        regime: ['regime-amministrato-italia', 'multi-giurisdizione'],
+        assetFocus: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures'],
+        score: 90,
+        description: 'SIM italiana con regime amministrato, piattaforme SaxoTraderGO/PRO e ampia copertura di strumenti globali.',
+        minDeposit: 'Variabile in base al profilo',
+        platforms: 'SaxoTraderGO · SaxoTraderPRO · OpenAPI',
+        offersCfd: true,
+        cfdDisclosure: 'BG Saxo offre anche CFD; in questa valutazione consideriamo la componente di strumenti quotati reali. I CFD restano prodotti complessi a rischio elevato.',
+        review: {
+          summary: 'Adottata nei progetti con università italiane per formazione avanzata su derivati quotati e fiscalità amministrata.',
+          recommendedFor: 'Investitori evoluti e consulenti vigilati con necessità di sostituto d’imposta italiano.',
+          aiSupport: 'OpenAPI documentata per estrazione dati posizioni e pricing, utile per modelli di controllo rischio explainable.',
+          researchSignal: 'Integrazione con infrastruttura Saxo Bank e controlli CONSOB/Banca d’Italia.'
+        },
+        audience: ['Investitori evoluti', 'Desk educativi', 'Consulenti vigilati'],
+        strengths: [
+          'Regime amministrato con sostituto d’imposta italiano',
+          'Piattaforme professionali SaxoTraderGO/PRO',
+          'Derivati quotati su oltre 20 borse internazionali'
+        ],
+        limitations: [
+          'Struttura commissionale articolata e variabile',
+          'Piattaforme complesse per profili completamente retail',
+          'Presenza di CFD da utilizzare con prudenza'
+        ],
+        citations: [
+          'CONSOB – Albo delle SIM (BG Saxo SIM S.p.A.) 2025',
+          'Saxo Bank Group Annual Report 2024'
+        ]
+      },
+      {
+        id: 'directa',
+        name: 'Directa SIM',
+        affiliate: false,
+        affiliateUrl: '',
+        officialUrl: 'https://www.directa.it',
+        jurisdiction: 'CONSOB · Banca d’Italia',
+        regime: ['regime-amministrato-italia'],
+        assetFocus: ['Azioni', 'ETF', 'Bond', 'IDEM'],
+        score: 84,
+        description: 'Pioniere italiano del trading online con accesso diretto a Borsa Italiana, principali mercati USA/UE e regime amministrato.',
+        minDeposit: 'Nessun minimo dichiarato',
+        platforms: 'Directa Platform · dLite · TradingView (integrazione)',
+        offersCfd: true,
+        cfdDisclosure: 'Directa fornisce l’accesso a CFD/FX tramite partner LMAX: valuta attentamente la leva prima di utilizzarli.',
+        review: {
+          summary: 'Strumento di riferimento nei laboratori formativi italiani per IDEM, fiscalità amministrata e operatività su titoli domestici.',
+          recommendedFor: 'Investitori retail evoluti che privilegiano supporto italiano, fiscalità gestita e operatività su mercati nazionali.',
+          aiSupport: 'Report esportabili e integrazione con TradingView utili per pipeline di monitoraggio AI.',
+          researchSignal: 'Trasparenza di listino e vicinanza alla comunità accademica italiana.'
+        },
+        audience: ['Investitori retail evoluti', 'Educazione finanziaria'],
+        strengths: [
+          'Broker italiano vigilato con servizio clienti locale',
+          'Accesso diretto a IDEM, ETFplus, MOT/EuroTLX',
+          'Regime amministrato e gestione ritenute automatica'
+        ],
+        limitations: [
+          'Interfacce meno moderne rispetto a player internazionali',
+          'Costi su mercati esteri da valutare in dettaglio',
+          'Presenza di CFD via partner esterno (da usare con cautela)'
+        ],
+        citations: [
+          'CONSOB – Albo Intermediari: Directa SIM (2025)',
+          'Directa – Listino Commissioni 2024'
+        ]
+      },
+      {
+        id: 'mexem',
+        name: 'MEXEM',
+        affiliate: false,
+        affiliateUrl: '',
+        officialUrl: 'https://www.mexem.com',
+        jurisdiction: 'CySEC · FCA · registrazioni UE',
+        regime: ['multi-giurisdizione'],
+        assetFocus: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures'],
+        score: 86,
+        description: 'Introducing broker europeo sull’infrastruttura IBKR con supporto dedicato UE/IT e materiale formativo certificato.',
+        minDeposit: 'Nessun deposito minimo',
+        platforms: 'Trader Workstation · Client Portal · App mobile',
+        offersCfd: true,
+        cfdDisclosure: 'I CFD sono forniti tramite le entità Interactive Brokers abilitate. Valuta attentamente se i CFD sono appropriati per il tuo profilo.',
+        review: {
+          summary: 'Utilizzato per percorsi educativi avanzati in lingua italiana con accesso TWS e costi competitivi.',
+          recommendedFor: 'Trader avanzati e studenti MSc che necessitano di supporto locale mantenendo l’infrastruttura IBKR.',
+          aiSupport: 'Condivide API IBKR, integrabile nei workflow di controllo rischio e portfolio intelligence di Tradelia.',
+          researchSignal: 'Presenza in registri CySEC/FCA e supporto compliance multilingua.'
+        },
+        audience: ['Investitori evoluti', 'Desk educativi', 'Quant / API'],
+        strengths: [
+          'Accesso completo alla suite IBKR senza deposito minimo',
+          'Supporto e onboarding in lingua italiana',
+          'Materiali educativi e webinar certificati MiFID'
+        ],
+        limitations: [
+          'Commissioni su opzioni e margini superiori a IBKR diretta',
+          'Dipendenza dall’infrastruttura principale IBKR',
+          'Presenza di CFD da usare solo se consapevoli dei rischi'
+        ],
+        citations: [
+          'CySEC Register – MEXEM Ltd (2025)',
+          'MEXEM Pricing Schedule (2024)'
+        ]
+      },
+      {
+        id: 'trade-republic',
+        name: 'Trade Republic',
+        affiliate: false,
+        affiliateUrl: '',
+        officialUrl: 'https://traderepublic.com/it-it',
+        jurisdiction: 'BaFin · Banca d’Italia (succursale) · CONSOB',
+        regime: ['regime-amministrato-italia', 'conto-deposito'],
+        assetFocus: ['Azioni', 'ETF', 'Bond', 'Crypto spot', 'PAC'],
+        score: 88,
+        description: 'Banca d’investimento mobile-first con IBAN italiano, PAC gratuiti su azioni/ETF/crypto e conto remunerato.',
+        minDeposit: '1 € per ordini o piani',
+        platforms: 'App iOS/Android · Web',
+        offersCfd: false,
+        review: {
+          summary: 'Nel framework Tradelia AI viene usata per percorsi educativi sulla gestione della liquidità e piani di accumulo disciplinati.',
+          recommendedFor: 'Investitori retail disciplinati che cercano PAC automatizzati e regime amministrato con sostituto d’imposta.',
+          aiSupport: 'API private per estrazione cronologia operazioni integrate nei nostri motori di riconciliazione fiscale.',
+          researchSignal: 'Supervisione BaFin e Banca d’Italia con DGS (deposit guarantee scheme) fino a €100k.'
+        },
+        audience: ['Piani di accumulo', 'Educazione finanziaria'],
+        strengths: [
+          'IBAN italiano con interessi 3% annuo (condizioni variabili)',
+          'PAC gratuiti su azioni, ETF e crypto spot',
+          'Regime amministrato con sostituto d’imposta automatico'
+        ],
+        limitations: [
+          'Esperienza prevalentemente mobile, nessuna piattaforma desktop avanzata',
+          'Assistenza clienti digitale con tempi variabili',
+          'Gamma derivati quotati limitata per utenti pro'
+        ],
+        citations: [
+          'BaFin Register – Trade Republic Bank GmbH (2025)',
+          'Trade Republic Terms & Conditions (2024)'
+        ]
+      },
+      {
+        id: 'scalable-capital',
         name: 'Scalable Capital',
-        jurisdiction: 'BaFin · CONSOB passporting',
+        affiliate: false,
+        affiliateUrl: '',
+        officialUrl: 'https://it.scalable.capital',
+        jurisdiction: 'BaFin · passaporto UE (CONSOB)',
         regime: ['risparmio-gestito-europeo'],
         assetFocus: ['ETF', 'Azioni', 'PAC'],
         score: 83,
-        description: 'Piattaforma europea focalizzata su ETF, PAC automatizzati e servizi di risparmio regolamentati.',
-        minDeposit: 'Da pochi euro (PAC)',
-        platforms: 'Web · App',
+        description: 'Piattaforma europea focalizzata su PAC automatizzati, ETF a basso costo e conto remunerato.',
+        minDeposit: 'Da pochi euro per i piani di accumulo',
+        platforms: 'Web · App iOS/Android',
+        offersCfd: false,
         review: {
-          summary: 'Analizzata per casi studio su automazione PAC e ottimizzazione costi, utile nei percorsi educativi su accumulo disciplinato.',
-          recommendedFor: 'Investitori retail consapevoli che necessitano di costi bassi e automazione su ETF europei.',
-          aiSupport: 'Dataset periodici sui PAC integrati nella nostra dashboard di monitoraggio costi effettivi.',
-          researchSignal: 'Cita le best practice MiFID II 2025 su informativa precontrattuale digitale.'
+          summary: 'Impiego prioritario per programmi educativi su investimenti periodici e costruzione di portafogli core ETF.',
+          recommendedFor: 'Risparmiatori retail che cercano automazione e costi trasparenti.',
+          aiSupport: 'Dataset su PAC e flussi periodici integrati nella dashboard di monitoraggio costi effettivi.',
+          researchSignal: 'Supervisione BaFin e MiFID passport con disclosure trasparente su costi e interessi.'
         },
         audience: ['Piani di accumulo', 'Educazione finanziaria'],
         strengths: [
-          'Costi contenuti e trasparenti',
-          'Ampia scelta ETF/PAC automatizzati',
-          'Interfaccia intuitiva'
+          'PAC gratuiti o low-cost su 2.000+ ETF',
+          'Conto remunerato e cash management integrato',
+          'Interfaccia intuitiva e materiali educativi approfonditi'
         ],
         limitations: [
-          'Copertura mercati concentrata su Europa',
-          'Limitate funzioni avanzate per derivati'
+          'Copertura mercati focalizzata su piazze tedesche',
+          'Derivati quotati e strumenti avanzati limitati',
+          'Regime fiscale italiano da gestire in dichiarativo'
         ],
         citations: [
-          'ESMA (2025) – Digital Finance Retail Journey',
-          'OECD (2025) – AI Adoption in Capital Markets'
+          'BaFin Register – Scalable Capital Securities GmbH (2025)',
+          'Scalable Capital Pricing & Terms (2025)'
         ]
       },
       {
-        id: 'traderepublic',
-        name: 'Trade Republic',
-        jurisdiction: 'BaFin · Banca d’Italia',
-        regime: ['regime-amministrato-italia', 'conto-deposito'],
-        assetFocus: ['Azioni', 'ETF', 'Bond', 'Crypto spot'],
-        score: 88,
-        description: 'Banca d’investimento con IBAN italiano, interessi 3% annuo e PAC gratuiti su asset reali.',
-        minDeposit: '1 €',
-        platforms: 'App iOS/Android · Web',
+        id: 'degiro',
+        name: 'DEGIRO',
+        affiliate: false,
+        affiliateUrl: '',
+        officialUrl: 'https://www.degiro.it',
+        jurisdiction: 'AFM · DNB · passaporto UE',
+        regime: ['multi-giurisdizione'],
+        assetFocus: ['Azioni', 'ETF', 'Bond', 'Derivati'],
+        score: 82,
+        description: 'Broker europeo low-cost con accesso a oltre 50 borse mondiali e ampia selezione di ETF senza commissioni.',
+        minDeposit: 'Nessun minimo',
+        platforms: 'DEGIRO WebTrader · App mobile',
+        offersCfd: false,
         review: {
-          summary: 'Sperimentata per moduli educativi su gestione tesoreria personale e pacchetti multi-asset con fiscalità amministrata.',
-          recommendedFor: 'Investitori retail disciplinati orientati a PAC e gestione liquidità con infrastruttura bancaria vigilata.',
-          aiSupport: 'API private per estrazione cronologia operazioni, integrate nel nostro motore di reconcialiazione fiscale.',
-          researchSignal: 'Evidenziata nel Rapporto CONSOB 2025 per trasparenza informativa ai giovani risparmiatori.'
+          summary: 'Utilizzato per benchmarkare i costi operativi su mercati cash e per attività educative su diversificazione geografica.',
+          recommendedFor: 'Investitori retail evoluti che cercano efficienza commisssionale su azioni/ETF.',
+          aiSupport: 'Report esportabili e API non ufficiali sfruttate per controlli di spesa e riconciliazioni automatizzate.',
+          researchSignal: 'Trasparenza tariffaria vigilata da AFM/DNB e segregazione titoli su Deutsche Börse Bank.'
         },
-        audience: ['Piani di accumulo', 'Educazione finanziaria'],
+        audience: ['Investitori evoluti'],
         strengths: [
-          'Regime amministrato con sostituto d’imposta',
-          'Interessi sulla liquidità e PAC gratuiti',
-          'Esperienza mobile-first'
+          'Commissioni molto competitive su mercati UE/USA',
+          'Accesso a 50+ mercati e oltre 5.000 ETF',
+          'Segmento “ETF Selection” senza commissioni di negoziazione'
         ],
         limitations: [
-          'Assistenza prevalentemente digitale',
-          'Offerta derivati limitata'
+          'Regime fiscale italiano da gestire in autonomia',
+          'Dati in tempo reale spesso opzionali a pagamento',
+          'Piattaforma priva di funzioni avanzate per derivati complessi'
         ],
         citations: [
-          'CONSOB (2025) – Rapporto Investitori Retail',
-          'ESMA (2025) – Digital Operational Resilience'
+          'AFM Register – DEGIRO B.V. (2025)',
+          'DEGIRO Tariffario 2024'
+        ]
+      },
+      {
+        id: 'xtb',
+        name: 'XTB (sezione azioni e ETF reali)',
+        affiliate: false,
+        affiliateUrl: '',
+        officialUrl: 'https://www.xtb.com/it',
+        jurisdiction: 'KNF · CNMV · FCA · CONSOB (passport)',
+        regime: ['multi-giurisdizione'],
+        assetFocus: ['Azioni', 'ETF'],
+        score: 80,
+        description: 'Piattaforma xStation con azioni/ETF reali zero commissioni fino a €100k/mese e ampia accademia didattica.',
+        minDeposit: '0 € (conto standard)',
+        platforms: 'xStation 5 Desktop/Web · xStation Mobile',
+        offersCfd: true,
+        cfdDisclosure: 'XTB mette a disposizione un’ampia gamma di CFD. La percentuale di conti retail che perde denaro con i CFD è pubblicata sul sito ufficiale: verifica sempre il dato aggiornato prima di operare.',
+        review: {
+          summary: 'Nella piattaforma Tradelia AI è inserita per confronto costi su azioni/ETF reali e per la didattica su piattaforme intuitive.',
+          recommendedFor: 'Investitori evoluti che cercano soluzioni UX-friendly senza commissioni entro soglia annuale.',
+          aiSupport: 'xStation API WebSocket (beta) utile per streaming prezzi in moduli di sentiment e monitoraggio.',
+          researchSignal: 'Supervisione multi-autorità (KNF/CNMV/FCA) con segregazione fondi presso banche UE.'
+        },
+        audience: ['Investitori evoluti', 'Educazione finanziaria'],
+        strengths: [
+          'Azioni/ETF reali senza commissioni fino a €100k di volume annuo',
+          'Piattaforma xStation intuitiva e ricca di analytics',
+          'Accademia e contenuti educativi certificati'
+        ],
+        limitations: [
+          'Soglia 100k annuo oltre la quale si applica commissione',
+          'Componenti CFD e leva elevate presenti nella stessa piattaforma',
+          'Conversione valutaria con spread dedicato'
+        ],
+        citations: [
+          'KNF Register – XTB S.A. (2025)',
+          'XTB Tariffario Azioni 2024'
+        ]
+      },
+      {
+        id: 'ig-real-assets',
+        name: 'IG (strumenti quotati)',
+        affiliate: false,
+        affiliateUrl: '',
+        officialUrl: 'https://www.ig.com/it',
+        jurisdiction: 'FCA · BaFin · CONSOB (succursale) · ASIC',
+        regime: ['regime-amministrato-italia', 'multi-giurisdizione'],
+        assetFocus: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures'],
+        score: 83,
+        description: 'Intermediario storico con piattaforme IG, ProRealTime e TradingView integrabili; offre regime amministrato per residenti italiani.',
+        minDeposit: '≈ €300 (varia in base al tipo di conto)',
+        platforms: 'IG Trading Platform · ProRealTime · TradingView · MetaTrader 4',
+        offersCfd: true,
+        cfdDisclosure: 'IG comunica nei propri documenti regolamentari la percentuale di conti retail che perde denaro con i CFD; consulta sempre il dato aggiornato e valuta adeguatezza ed esperienza prima di usarli.',
+        review: {
+          summary: 'Inserito per comparare la componente real assets (azioni/ETF/derivati quotati) con piattaforme evolute e sostituto d’imposta.',
+          recommendedFor: 'Investitori evoluti e desk educativi alla ricerca di tool grafici avanzati e regime amministrato.',
+          aiSupport: 'Integrazione nativa con TradingView e API partner per esportare dati in pipeline AI di monitoraggio.',
+          researchSignal: 'Supervisione FCA/BaFin/CONSOB con reportistica dettagliata e solidità storica oltre 45 anni.'
+        },
+        audience: ['Investitori evoluti', 'Desk educativi'],
+        strengths: [
+          'Piattaforme multiple (IG, ProRealTime, TradingView) integrate',
+          'Regime amministrato per residenti italiani',
+          'Ampia gamma di derivati quotati internazionali'
+        ],
+        limitations: [
+          'Commissioni non sempre le più basse per buy & hold',
+          'Ampia offerta CFD nella stessa piattaforma (richiede disciplina)',
+          'Deposito minimo superiore a zero per alcune modalità'
+        ],
+        citations: [
+          'IG Markets Ltd – Informazioni Regolamentate 2025',
+          'IG Italia – Condizioni Commerciali 2024'
+        ]
+      },
+      {
+        id: 'fineco',
+        name: 'Fineco (Trading)',
+        affiliate: false,
+        affiliateUrl: '',
+        officialUrl: 'https://finecobank.com/it-it/trading',
+        jurisdiction: 'Banca d’Italia · CONSOB',
+        regime: ['regime-amministrato-italia'],
+        assetFocus: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures'],
+        score: 84,
+        description: 'Banca italiana con piattaforme PowerDesk e servizi trading integrati al conto corrente; sostituto d’imposta completo.',
+        minDeposit: 'Nessun minimo (necessario conto Fineco)',
+        platforms: 'PowerDesk · FinecoX · App mobile',
+        offersCfd: true,
+        cfdDisclosure: 'Fineco offre anche CFD e Turbo Certificate. Operare in leva comporta rischi elevati: utilizza questi strumenti solo se ne comprendi funzionamento e margini.',
+        review: {
+          summary: 'Nel framework Tradelia AI è utile per simulazioni su clienti retail italiani con conto bancario integrato e accesso IDEM.',
+          recommendedFor: 'Investitori evoluti che desiderano un’unica piattaforma per banking, trading e regime amministrato.',
+          aiSupport: 'Esportazione ordini e feed PowerDesk integrabili nei modelli di controllo rischio proprietari.',
+          researchSignal: 'Solidità bancaria (CET1 >20%) e trasparenza costi riconosciute dalle autorità italiane.'
+        },
+        audience: ['Investitori evoluti', 'Desk educativi'],
+        strengths: [
+          'Conto bancario e piattaforma trading integrati',
+          'Regime amministrato completo su tutte le asset class',
+          'Accesso a IDEM, CME, Eurex, LSE con un’unica infrastruttura'
+        ],
+        limitations: [
+          'Commissioni decrescenti con volumi: poco competitive per micro-operatività',
+          'Canone piattaforme avanzate da monitorare',
+          'Offerta CFD e Turbo da utilizzare con cautela'
+        ],
+        citations: [
+          'Banca d’Italia – Albo Banche: FinecoBank S.p.A. (2025)',
+          'Fineco PowerDesk Pricing 2025'
+        ]
+      },
+      {
+        id: 'etoro-real-assets',
+        name: 'eToro (real assets)',
+        affiliate: false,
+        affiliateUrl: '',
+        officialUrl: 'https://www.etoro.com/it',
+        jurisdiction: 'CySEC · FCA · ASIC · registrazioni UE',
+        regime: ['multi-giurisdizione'],
+        assetFocus: ['Azioni', 'ETF', 'Crypto spot'],
+        score: 78,
+        description: 'Piattaforma social con azioni/ETF reali senza commissioni, copy trading e accesso a crypto spot regolamentate.',
+        minDeposit: '≈ $50 (varia per giurisdizione)',
+        platforms: 'eToro Web · App mobile',
+        offersCfd: true,
+        cfdDisclosure: 'eToro evidenzia nei propri documenti che una quota significativa dei conti retail perde denaro con i CFD (dato aggiornato sul sito). Operare con leva richiede elevata esperienza.',
+        review: {
+          summary: 'Utilizzato per benchmarkare esperienze social e funzionalità real assets con forte componente community.',
+          recommendedFor: 'Investitori consapevoli interessati a funzionalità social e diversificazione multi-asset.',
+          aiSupport: 'API Partner e flussi dati social integrati nei modelli di sentiment proprietari.',
+          researchSignal: 'Supervisione multi-autorità (CySEC/FCA/ASIC) con segregazione fondi su banche Tier-1.'
+        },
+        audience: ['Educazione finanziaria', 'Investitori evoluti'],
+        strengths: [
+          'Azioni/ETF reali senza commissioni per operazioni long',
+          'Funzionalità social e copy trading trasparenti',
+          'Crypto spot regolamentate tramite entità europee'
+        ],
+        limitations: [
+          'Spread e costi di cambio da monitorare attentamente',
+          'Presenza significativa di CFD nella stessa piattaforma',
+          'Deposito minimo espresso in USD'
+        ],
+        citations: [
+          'CySEC Register – eToro Europe Ltd (2025)',
+          'eToro Disclosure Statement 2024'
+        ]
+      },
+      {
+        id: 'revolut-trading',
+        name: 'Revolut Trading',
+        affiliate: false,
+        affiliateUrl: '',
+        officialUrl: 'https://www.revolut.com/it-IT/trading',
+        jurisdiction: 'FCA · Bank of Lithuania · passaporto UE',
+        regime: ['multi-giurisdizione'],
+        assetFocus: ['Azioni', 'ETF', 'Crypto spot'],
+        score: 72,
+        description: 'Servizio trading integrato nell’app Revolut con frazioni di azioni, piani ricorrenti e accesso a crypto spot.',
+        minDeposit: 'Nessun minimo (si utilizza il saldo Revolut)',
+        platforms: 'App Revolut (iOS/Android) · Web app limitata',
+        offersCfd: false,
+        review: {
+          summary: 'Inserito come benchmark entry-level per programmi educativi su prime esperienze di investimento e frazionamento azionario.',
+          recommendedFor: 'Utenti retail alle prime armi che desiderano integrare pagamenti e micro-investimenti.',
+          aiSupport: 'Esportazione CSV transazioni utile per moduli di riconciliazione automatica.',
+          researchSignal: 'Supervisione FCA per la componente trading e protezione depositi tramite Banca di Lituania.'
+        },
+        audience: ['Educazione finanziaria', 'Piani di accumulo'],
+        strengths: [
+          'Investimenti frazionati e piani ricorrenti automatici',
+          'Integrazione con servizi bancari Revolut',
+          'Accesso combinato ad azioni, ETF e crypto spot'
+        ],
+        limitations: [
+          'Copertura mercati limitata (USA/UE/UK)',
+          'Operatività concentrata su orari standard (no extended hours)',
+          'Strumenti avanzati e order types limitati'
+        ],
+        citations: [
+          'FCA Register – Revolut Trading Ltd (2025)',
+          'Revolut Trading Terms & Conditions 2024'
+        ]
+      },
+      {
+        id: 'primarybid',
+        name: 'PrimaryBid',
+        affiliate: false,
+        affiliateUrl: '',
+        officialUrl: 'https://primarybid.com',
+        jurisdiction: 'FCA · AMF · Euronext partnership',
+        regime: ['ipo-accesso'],
+        assetFocus: ['IPO', 'Azioni'],
+        score: 74,
+        description: 'Piattaforma dedicata ad IPO, aumenti di capitale e placings per investitori retail in UK/UE.',
+        minDeposit: 'Ticket variabile per offerta (tipicamente da £100/€100)',
+        platforms: 'PrimaryBid App iOS/Android · Web',
+        offersCfd: false,
+        review: {
+          summary: 'Punto di riferimento per studiare partecipazione retail a collocamenti primari europei.',
+          recommendedFor: 'Investitori evoluti interessati a IPO e aumenti di capitale in finestre dedicate.',
+          aiSupport: 'Feed offerte integrate nel nostro calendario AI di corporate actions.',
+          researchSignal: 'Partnership ufficiali con Euronext e Borse europee per garantire trasparenza nelle offerte.'
+        },
+        audience: ['IPO accesso', 'Investitori evoluti'],
+        strengths: [
+          'Accesso digitale a IPO e placings solitamente riservati agli istituzionali',
+          'Processo KYC/AML snello con app mobile',
+          'Collaborazioni con borse europee e banche d’affari'
+        ],
+        limitations: [
+          'Disponibilità offerte limitata e concentrata in finestre temporali',
+          'Nessun trading secondario: serve conto presso broker abilitato',
+          'Ticket minimo e lock-up variabili per ogni operazione'
+        ],
+        citations: [
+          'PrimaryBid Prospectus (2024)',
+          'Euronext & PrimaryBid Partnership Release 2024'
+        ]
+      },
+      {
+        id: 'bitpanda-stocks',
+        name: 'Bitpanda (Stocks & Crypto)',
+        affiliate: false,
+        affiliateUrl: '',
+        officialUrl: 'https://www.bitpanda.com/en/stocks',
+        jurisdiction: 'FMA Austria · BaFin (passport) · MiFID II',
+        regime: ['crypto-regolamentato', 'multi-giurisdizione'],
+        assetFocus: ['Azioni', 'ETF', 'Crypto spot', 'Metalli'],
+        score: 76,
+        description: 'Brokerage regolamentato con azioni/ETF asset-backed 24/7, crypto spot e piani di accumulo automatizzati.',
+        minDeposit: 'Da €1 per piani di accumulo',
+        platforms: 'Bitpanda Web · App mobile',
+        offersCfd: false,
+        review: {
+          summary: 'Inserito per casi studio su infrastrutture crypto-regolamentate e piani di accumulo multi-asset.',
+          recommendedFor: 'Investitori interessati a ETF/azioni frazionate e crypto spot con licenze UE.',
+          aiSupport: 'API pubbliche per prezzi e cronologia integrate nei nostri moduli di monitoraggio 24/7.',
+          researchSignal: 'Licenza FMA/Austria MiFID e prospetto approvato per strumenti asset-backed.'
+        },
+        audience: ['Cripto regolamentate', 'Piani di accumulo'],
+        strengths: [
+          'Azioni ed ETF asset-backed disponibili 24/7',
+          'Piani di accumulo automatici su crypto, azioni e metalli',
+          'Custodia regolamentata con licenza MiFID II'
+        ],
+        limitations: [
+          'Commissioni incorporate negli spread (da monitorare)',
+          'Mercati limitati rispetto ai broker DMA tradizionali',
+          'I titoli sono tokenizzati e custoditi da entità partner'
+        ],
+        citations: [
+          'FMA Austria Register – Bitpanda Financial Services (2025)',
+          'Bitpanda Stocks Prospectus Update 2023'
+        ]
+      }
+    ];
+
+    const CFD_BROKERS = [
+      {
+        id: 'pepperstone',
+        name: 'Pepperstone (CFD specialist)',
+        affiliate: true,
+        affiliateUrl: 'https://pepperstone.com/it',
+        officialUrl: 'https://pepperstone.com/it',
+        jurisdiction: 'CySEC (licenza 388/20) · FCA · ASIC',
+        regime: ['cfd-only'],
+        assetFocus: ['Forex', 'Indici', 'Materie prime', 'Azioni CFD', 'ETF CFD'],
+        score: 68,
+        description: 'Broker CFD ad alte prestazioni con spread ridotti e piattaforme professionali (MT4/MT5/cTrader/TradingView).',
+        minDeposit: '≈ €200',
+        platforms: 'MetaTrader 4 · MetaTrader 5 · cTrader · TradingView · WebTrader',
+        offersCfd: true,
+        cfdDisclosure: 'Secondo i dati ufficiali Pepperstone EU, tra il 74% e l’89% dei conti retail perde denaro quando negozia CFD. Valuta attentamente se puoi permetterti il rischio elevatissimo di perdita.',
+        labUsage: 'Utilizzato da Tradelia AI esclusivamente per test controllati ad alto rischio (<1% del portafoglio satellite sperimentale). Non destinato a raccomandazioni retail.',
+        review: {
+          summary: 'Serve per benchmark di execution CFD in ambienti di test ad alta frequenza e validazioni comportamentali.',
+          recommendedFor: 'Solo operatori estremamente esperti e istituzionali; non raccomandato al pubblico retail.',
+          aiSupport: 'API e ambienti demo utili per stress test dei nostri algoritmi di valutazione leva.',
+          researchSignal: 'Conformità MiFID II/ESMA, fondi segregati e copertura ICF fino a €20.000.'
+        },
+        audience: ['Gestori istituzionali'],
+        strengths: [
+          'Spread e commissioni tra i più bassi nel mondo CFD',
+          'Ampia scelta di piattaforme professionali e API',
+          'Regolamentazione multipla (CySEC/FCA/ASIC)'
+        ],
+        limitations: [
+          'Prodotti esclusivamente CFD: rischio elevatissimo',
+          'La maggior parte dei conti retail perde denaro',
+          'Richiede gestione del rischio rigorosa e consapevole'
+        ],
+        citations: [
+          'CySEC Public Register – Pepperstone EU Ltd (2025)',
+          'Pepperstone Product Disclosure Statement 2024'
         ]
       }
     ];
@@ -880,26 +1620,44 @@
       audience: {
         label: 'Profilo operatore',
         options: [
-          'Ricerca quantitativa',
           'Gestori istituzionali',
           'Quant / API',
           'Investitori evoluti',
-          'Consulenti vigilati',
-          'Desk educativi',
           'Investitori retail evoluti',
-          'Piani di accumulo',
           'Educazione finanziaria',
-          'Ricerca obbligazionaria',
-          'Ricerca ECM'
+          'Desk educativi',
+          'Consulenti vigilati',
+          'Piani di accumulo',
+          'IPO accesso',
+          'Cripto regolamentate'
         ]
       },
       asset: {
         label: 'Asset class prioritarie',
-        options: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures', 'IPO', 'PAC', 'Crypto spot', 'IDEM']
+        options: [
+          'Azioni',
+          'ETF',
+          'Bond',
+          'Opzioni',
+          'Futures',
+          'IPO',
+          'PAC',
+          'Crypto spot',
+          'IDEM',
+          'Metalli'
+        ]
       },
       regime: {
         label: 'Regime e giurisdizione',
-        options: ['regime-amministrato-italia', 'multi-giurisdizione', 'risparmio-gestito-europeo', 'clienti-professionali', 'conto-deposito']
+        options: [
+          'regime-amministrato-italia',
+          'multi-giurisdizione',
+          'clienti-professionali',
+          'risparmio-gestito-europeo',
+          'conto-deposito',
+          'ipo-accesso',
+          'crypto-regolamentato'
+        ]
       }
     };
 
@@ -919,6 +1677,7 @@
     const emptyState = document.getElementById('empty-state');
     const summaryNode = document.getElementById('filter-summary');
     const resetBtn = document.getElementById('filters-reset');
+    const summaryText = summaryNode.querySelector('[data-summary-text]');
 
     function createPill(container, group, value) {
       const button = document.createElement('button');
@@ -980,43 +1739,68 @@
       const baseText = `${filteredLength} broker disponibili`;
 
       if (!activeFilters.length) {
-        summaryNode.firstElementChild.textContent = `Nessun filtro selezionato · ${baseText}`;
+        summaryText.textContent = `Nessun filtro selezionato · ${baseText}`;
         return;
       }
 
-      summaryNode.firstElementChild.textContent = `${baseText} · Filtri attivi → ${activeFilters.join(' | ')}`;
+      summaryText.textContent = `${baseText} · Filtri attivi → ${activeFilters.join(' | ')}`;
     }
 
-    function renderCard(broker) {
-      const article = document.createElement('article');
-      article.className = 'broker-card';
-      article.innerHTML = `
+    function getVisitLink(broker) {
+      if (broker.affiliate && broker.affiliateUrl) {
+        return broker.affiliateUrl;
+      }
+      return broker.officialUrl;
+    }
+
+    function renderCard(broker, container, options = {}) {
+      const card = document.createElement('article');
+      card.className = 'broker-card';
+
+      const affiliateBadge = broker.affiliate
+        ? '<span class="badge-affiliate">Affiliato</span>'
+        : '';
+
+      const cfdDisclaimer = broker.offersCfd && broker.cfdDisclosure
+        ? `<p class="cfd-disclaimer">${broker.cfdDisclosure}</p>`
+        : '';
+
+      const labNote = broker.labUsage
+        ? `<p class="lab-note">${broker.labUsage}</p>`
+        : '';
+
+      const visitLink = getVisitLink(broker);
+      const visitRel = broker.affiliate ? 'sponsored noopener' : 'noopener';
+      const affiliateNoteText = broker.affiliate
+        ? 'Link affiliato — compensi destinati alla ricerca Tradelia AI.'
+        : 'Link ufficiale (non affiliato).';
+
+      const metaItems = [
+        { label: 'Giurisdizione', value: broker.jurisdiction },
+        { label: 'Regime', value: broker.regime.join(' · ') },
+        { label: 'Asset principali', value: broker.assetFocus.join(' · ') },
+        { label: 'Deposito minimo', value: broker.minDeposit },
+        { label: 'Piattaforme', value: broker.platforms }
+      ];
+
+      const metaHtml = metaItems.map(item => `
+        <div class="broker-meta-item">
+          <span>${item.label}</span>
+          <span>${item.value}</span>
+        </div>
+      `).join('');
+
+      card.innerHTML = `
         <header>
-          <div class="broker-pill">Valutazione Tradelia AI · ${broker.score}/100</div>
-          <h3 class="broker-title">${broker.name}</h3>
+          <div class="broker-title-row">
+            <h2 class="broker-title">${broker.name}</h2>
+            <div class="score-pill">${broker.score}/100</div>
+            ${affiliateBadge}
+          </div>
           <p class="broker-description">${broker.description}</p>
         </header>
         <div class="broker-meta">
-          <div class="broker-meta-item">
-            <span>Giurisdizione</span>
-            <span>${broker.jurisdiction}</span>
-          </div>
-          <div class="broker-meta-item">
-            <span>Regime</span>
-            <span>${broker.regime.join(' • ')}</span>
-          </div>
-          <div class="broker-meta-item">
-            <span>Asset principali</span>
-            <span>${broker.assetFocus.join(' · ')}</span>
-          </div>
-          <div class="broker-meta-item">
-            <span>Piattaforme &amp; API</span>
-            <span>${broker.platforms}</span>
-          </div>
-          <div class="broker-meta-item">
-            <span>Deposito minimo</span>
-            <span>${broker.minDeposit}</span>
-          </div>
+          ${metaHtml}
         </div>
         <section class="broker-review">
           <h3>Tradelia AI Review</h3>
@@ -1035,26 +1819,137 @@
               <span>${broker.review.researchSignal}</span>
             </div>
           </div>
-          <div class="citation-stack">
-            <span>Fonti e riferimenti:</span>
-            ${broker.citations.map(item => `<span>• ${item}</span>`).join('')}
-          </div>
         </section>
+        ${labNote}
+        ${cfdDisclaimer}
+        <div class="broker-footer">
+          <button class="cta-secondary" type="button" data-open-modal="${broker.id}">Scopri di più</button>
+          <a class="cta-primary" href="${visitLink}" target="_blank" rel="${visitRel}">Visita il broker</a>
+          <small class="affiliate-note">${affiliateNoteText}</small>
+        </div>
       `;
-      return article;
+
+      card.querySelector('[data-open-modal]').addEventListener('click', () => openModal(broker.id, options.dataset || 'core'));
+      container.appendChild(card);
+    }
+
+    function renderCfdSection() {
+      const section = document.getElementById('cfd-section');
+      const grid = document.getElementById('cfd-grid');
+      if (!section || !grid) return;
+
+      grid.innerHTML = '';
+      CFD_BROKERS.forEach(broker => renderCard(broker, grid, { dataset: 'cfd' }));
+      section.hidden = CFD_BROKERS.length === 0;
     }
 
     function render() {
-      const filtered = BROKER_DATA.filter(matchesFilters);
+      const dataset = BROKER_DATA.slice().sort((a, b) => b.score - a.score);
+      const filtered = dataset.filter(matchesFilters);
 
       countNode.textContent = `${filtered.length} broker disponibili`;
       renderSummary(filtered.length);
 
       gridNode.innerHTML = '';
-      filtered.forEach(broker => gridNode.appendChild(renderCard(broker)));
+      filtered.forEach(broker => renderCard(broker, gridNode));
 
       emptyState.hidden = filtered.length !== 0;
+      renderCfdSection();
     }
+
+    const modal = document.getElementById('broker-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalScore = document.getElementById('modal-score');
+    const modalAffiliateBadge = document.getElementById('modal-affiliate-badge');
+    const modalSummary = document.getElementById('modal-summary');
+    const modalRecommended = document.getElementById('modal-recommended');
+    const modalAi = document.getElementById('modal-ai');
+    const modalSignal = document.getElementById('modal-signal');
+    const modalMinimum = document.getElementById('modal-minimum');
+    const modalPlatforms = document.getElementById('modal-platforms');
+    const modalJurisdiction = document.getElementById('modal-jurisdiction');
+    const modalRegime = document.getElementById('modal-regime');
+    const modalAssets = document.getElementById('modal-assets');
+    const modalStrengths = document.getElementById('modal-strengths');
+    const modalLimitations = document.getElementById('modal-limitations');
+    const modalCitations = document.getElementById('modal-citations');
+    const modalDisclaimer = document.getElementById('modal-disclaimer');
+    const modalVisit = document.getElementById('modal-visit');
+    const modalAffiliateNote = document.getElementById('modal-affiliate-note');
+
+    function fillList(element, items) {
+      element.innerHTML = '';
+      if (!items || !items.length) {
+        const li = document.createElement('li');
+        li.textContent = 'N/D';
+        element.appendChild(li);
+        return;
+      }
+      items.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        element.appendChild(li);
+      });
+    }
+
+    function openModal(id, datasetType = 'core') {
+      const source = datasetType === 'cfd' ? CFD_BROKERS : BROKER_DATA;
+      const broker = source.find(item => item.id === id);
+      if (!broker) return;
+
+      modalTitle.dataset.modalName = broker.name;
+      modalTitle.querySelector('[data-modal-name]').textContent = broker.name;
+      modalScore.textContent = `${broker.score}/100`;
+      modalAffiliateBadge.hidden = !broker.affiliate;
+      modalSummary.textContent = broker.review.summary;
+      modalRecommended.textContent = broker.review.recommendedFor;
+      modalAi.textContent = broker.review.aiSupport;
+      modalSignal.textContent = broker.review.researchSignal;
+      modalMinimum.textContent = broker.minDeposit;
+      modalPlatforms.textContent = broker.platforms;
+      modalJurisdiction.textContent = broker.jurisdiction;
+      modalRegime.textContent = broker.regime.join(' · ');
+      modalAssets.textContent = broker.assetFocus.join(' · ');
+
+      fillList(modalStrengths, broker.strengths);
+      fillList(modalLimitations, broker.limitations);
+      fillList(modalCitations, broker.citations);
+
+      if (broker.offersCfd && broker.cfdDisclosure) {
+        modalDisclaimer.hidden = false;
+        modalDisclaimer.textContent = broker.cfdDisclosure;
+      } else {
+        modalDisclaimer.hidden = true;
+        modalDisclaimer.textContent = '';
+      }
+
+      const visitLink = getVisitLink(broker);
+      modalVisit.href = visitLink;
+      modalVisit.rel = broker.affiliate ? 'sponsored noopener' : 'noopener';
+      modalAffiliateNote.textContent = broker.affiliate
+        ? 'Link affiliato — gli eventuali compensi finanziano la ricerca Tradelia AI.'
+        : 'Link ufficiale (non affiliato).';
+
+      document.body.style.overflow = 'hidden';
+      modal.hidden = false;
+    }
+
+    function closeModal() {
+      modal.hidden = true;
+      document.body.style.overflow = '';
+    }
+
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal || event.target.hasAttribute('data-modal-close')) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !modal.hidden) {
+        closeModal();
+      }
+    });
 
     render();
   </script>
