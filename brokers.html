@@ -673,6 +673,107 @@
       color: var(--ink-muted);
     }
 
+    /* Indicators (semaforica) */
+    .indicators {
+      display: grid;
+      gap: 0.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    .indicator-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      border: 1px solid var(--border-strong);
+      background: color-mix(in oklab, var(--surface-elev) 70%, transparent);
+      border-radius: var(--radius-lg);
+      padding: 0.6rem 0.8rem;
+      font-size: 0.9rem;
+      color: var(--ink);
+    }
+    .indicator-pill span {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    .indicator-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+    }
+    .dot-good { background: rgba(74, 222, 128, 0.9); }
+    .dot-medium { background: rgba(250, 204, 21, 0.9); }
+    .dot-risk { background: rgba(248, 113, 113, 0.9); }
+
+    /* Pricing snapshot */
+    .pricing-snapshot {
+      display: grid;
+      gap: 0.75rem;
+    }
+    .pricing-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 0.7rem 0.9rem;
+      background: color-mix(in oklab, var(--surface-elev) 70%, transparent);
+      font-size: 0.95rem;
+    }
+    .pricing-row strong { color: var(--ink); }
+    .section-links {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+      color: var(--ink-muted);
+    }
+
+    /* Coverage counters */
+    .coverage {
+      display: grid;
+      gap: 0.85rem;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    .coverage-card {
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 0.9rem;
+      background: color-mix(in oklab, var(--surface-elev) 70%, transparent);
+      display: grid;
+      gap: 0.35rem;
+    }
+    .coverage-card span {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    .coverage-num {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    /* Media/Youtube */
+    .media-block {
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-xl);
+      padding: 1rem;
+      background: color-mix(in oklab, var(--surface-elev) 70%, transparent);
+      display: grid;
+      gap: 0.75rem;
+    }
+    .media-actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
     .modal-disclaimer {
       font-size: 0.78rem;
       line-height: 1.6;
@@ -869,6 +970,7 @@
         </h3>
         <p class="modal-summary" id="modal-summary"></p>
       </div>
+      <div id="modal-indicators" class="indicators" hidden></div>
       <div class="modal-info-grid">
         <div>
           <span>Destinatari</span>
@@ -899,6 +1001,8 @@
           <p id="modal-minimum"></p>
         </div>
       </div>
+      <div id="modal-pricing" class="pricing-snapshot" hidden></div>
+      <div id="modal-coverage" class="coverage" hidden></div>
       <p class="modal-note" id="modal-research-note" hidden></p>
       <p class="modal-lab-note" id="modal-lab-note" hidden></p>
       <div class="modal-columns">
@@ -914,6 +1018,13 @@
       <div class="modal-citations">
         <h4>Fonti</h4>
         <ul id="modal-citations"></ul>
+      </div>
+      <div id="modal-media" class="media-block" hidden>
+        <h4 style="margin:0 0 0.25rem; font-size: 0.88rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-muted);">Media ufficiali</h4>
+        <div class="media-actions">
+          <a id="modal-youtube-video" class="btn btn-outline btn-sm" href="#" target="_blank" rel="noopener" hidden>Guarda video ufficiale</a>
+          <a id="modal-youtube-channel" class="btn btn-outline btn-sm" href="#" target="_blank" rel="noopener" hidden>Canale YouTube</a>
+        </div>
       </div>
       <p id="modal-disclaimer" class="modal-disclaimer" hidden></p>
       <div class="modal-actions">
@@ -1010,6 +1121,25 @@
         affiliate: true,
         affiliateUrl: 'https://exante.eu/p/38554/',
         officialUrl: 'https://exante.eu',
+        pricingSnapshot: {
+          lastVerified: '2025-11',
+          feesUrl: 'https://exante.eu/fees/',
+          items: [
+            { asset: 'Azioni USA', text: 'da $0,02/azione · min $2/ordine' },
+            { asset: 'Azioni EU', text: 'da 0,05% · min €10/ordine' },
+            { asset: 'Opzioni', text: 'da $1,5/contratto (mercato dipendente)' }
+          ]
+        },
+        coverage: { stocks: '>50k', etf: '>5k', derivativesVenues: '20+' },
+        coverageUrl: 'https://exante.eu/markets/',
+        media: { youtubeChannel: 'https://www.youtube.com/@EXANTEeu', youtubeVideo: '' },
+        indicators: [
+          { label: 'Trasparenza pricing', value: 'Alta', level: 'good' },
+          { label: 'Copertura real assets', value: 'Estesa', level: 'good' },
+          { label: 'Piattaforme/API', value: 'Pro', level: 'good' },
+          { label: 'Fiscalità IT', value: 'Dichiarativo', level: 'medium' },
+          { label: 'Rischio CFD', value: 'Presente', level: 'risk' }
+        ],
         jurisdiction: 'MFSA · CySEC · FCA',
         regime: ['multi-giurisdizione'],
         assetFocus: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures'],
@@ -1082,6 +1212,24 @@
         affiliate: true,
         affiliateUrl: 'https://freedom24.com/invite_from/2953166',
         officialUrl: 'https://freedom24.com',
+        pricingSnapshot: {
+          lastVerified: '2025-11',
+          feesUrl: 'https://freedom24.com/pricing',
+          items: [
+            { asset: 'Azioni/ETF (Smart)', text: '€0,02/azione + €2/ordine' },
+            { asset: 'Azioni/ETF (All Incl.)', text: '0,5% + €0,012/azione + €1,20/ordine' }
+          ]
+        },
+        coverage: { stocks: '>40k', etf: '1.5k+', ipo: 'USA/EU' },
+        coverageUrl: 'https://freedom24.com/stocks',
+        media: { youtubeChannel: 'https://www.youtube.com/@freedomfinanceeurope', youtubeVideo: '' },
+        indicators: [
+          { label: 'Trasparenza pricing', value: 'Buona', level: 'medium' },
+          { label: 'Copertura real assets', value: 'Ampia', level: 'good' },
+          { label: 'Piattaforme/API', value: 'Retail', level: 'medium' },
+          { label: 'Fiscalità IT', value: 'Dichiarativo', level: 'medium' },
+          { label: 'Rischio CFD', value: 'N/A', level: 'good' }
+        ],
         jurisdiction: 'CySEC (licenza 275/15) · Registrata CONSOB · ICF UE fino a €20k',
         regime: ['multi-giurisdizione'],
         assetFocus: ['Azioni', 'ETF', 'Bond', 'IPO'],
@@ -1365,6 +1513,24 @@
         affiliate: false,
         affiliateUrl: '',
         officialUrl: 'https://www.ig.com/it',
+        pricingSnapshot: {
+          lastVerified: '2025-11',
+          feesUrl: 'https://www.ig.com/it/costi',
+          items: [
+            { asset: 'Azioni Italia', text: 'da €3/ordine (soglie volume)' },
+            { asset: 'Derivati quotati', text: 'tariffe per mercato (Eurex/CME/LSE)' }
+          ]
+        },
+        coverage: { stocks: 'EU/US', derivativesVenues: '20+' },
+        coverageUrl: 'https://www.ig.com/it/mercati',
+        media: { youtubeChannel: 'https://www.youtube.com/@IGItalia', youtubeVideo: '' },
+        indicators: [
+          { label: 'Trasparenza pricing', value: 'Media', level: 'medium' },
+          { label: 'Copertura real assets', value: 'Ampia', level: 'good' },
+          { label: 'Piattaforme/API', value: 'Avanzate', level: 'good' },
+          { label: 'Fiscalità IT', value: 'Amministrato', level: 'good' },
+          { label: 'Rischio CFD', value: 'Presente', level: 'risk' }
+        ],
         jurisdiction: 'FCA · BaFin · CONSOB (succursale) · ASIC',
         regime: ['regime-amministrato-italia', 'multi-giurisdizione'],
         assetFocus: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures'],
@@ -1437,6 +1603,24 @@
         affiliate: true,
         affiliateUrl: 'https://med.etoro.com/B21935_A124128_TClick.aspx', 
         officialUrl: 'https://www.etoro.com/it',
+        pricingSnapshot: {
+          lastVerified: '2025-11',
+          feesUrl: 'https://www.etoro.com/it/trading/fees/',
+          items: [
+            { asset: 'Azioni/ETF', text: '0 commissioni (spread/applicazioni cambio)' },
+            { asset: 'Crypto spot', text: 'commissione indicativa 1%' }
+          ]
+        },
+        coverage: { stocks: 'EU/US selezione', etf: 'ampia selezione', crypto: '40+' },
+        coverageUrl: 'https://www.etoro.com/it/markets/',
+        media: { youtubeChannel: 'https://www.youtube.com/@eToro', youtubeVideo: '' },
+        indicators: [
+          { label: 'Trasparenza pricing', value: 'Media', level: 'medium' },
+          { label: 'Copertura real assets', value: 'Ampia', level: 'good' },
+          { label: 'Piattaforme/API', value: 'Retail', level: 'medium' },
+          { label: 'Fiscalità IT', value: 'Dichiarativo', level: 'medium' },
+          { label: 'Rischio CFD', value: 'Presente', level: 'risk' }
+        ],
         jurisdiction: 'CySEC · FCA · ASIC · registrazioni UE',
         regime: ['multi-giurisdizione'],
         assetFocus: ['Azioni', 'ETF', 'Crypto spot'],
@@ -1546,6 +1730,24 @@
         affiliate: true,
         affiliateUrl: 'https://track.pepperstonepartners.com/visit/?bta=42241&brand=pepperstone',
         officialUrl: 'https://pepperstone.com/it',
+        pricingSnapshot: {
+          lastVerified: '2025-11',
+          feesUrl: 'https://pepperstone.com/it/trading/spreads/',
+          items: [
+            { asset: 'Razor', text: 'spread da 0.0 + commissione per lato' },
+            { asset: 'Standard', text: 'solo spread (più ampi)' }
+          ]
+        },
+        coverage: { fxPairs: '60+', indices: '20+', commodities: '15+' },
+        coverageUrl: 'https://pepperstone.com/it/',
+        media: { youtubeChannel: 'https://www.youtube.com/@pepperstone', youtubeVideo: '' },
+        indicators: [
+          { label: 'Trasparenza pricing', value: 'Alta', level: 'good' },
+          { label: 'Copertura real assets', value: 'N/A', level: 'medium' },
+          { label: 'Piattaforme/API', value: 'Pro (MT4/5, cTrader, TV)', level: 'good' },
+          { label: 'Fiscalità IT', value: 'N/A', level: 'medium' },
+          { label: 'Rischio CFD', value: 'Elevato', level: 'risk' }
+        ],
         jurisdiction: 'CySEC (licenza 388/20) · FCA · ASIC',
         regime: ['cfd-only'],
         assetFocus: ['Forex', 'Indici', 'Materie prime', 'Azioni CFD', 'ETF CFD'],
@@ -1807,6 +2009,12 @@
     const modalDisclaimer = document.getElementById('modal-disclaimer');
     const modalVisit = document.getElementById('modal-visit');
     const modalAffiliateNote = document.getElementById('modal-affiliate-note');
+    const modalIndicators = document.getElementById('modal-indicators');
+    const modalPricing = document.getElementById('modal-pricing');
+    const modalCoverage = document.getElementById('modal-coverage');
+    const modalMedia = document.getElementById('modal-media');
+    const modalYoutubeVideo = document.getElementById('modal-youtube-video');
+    const modalYoutubeChannel = document.getElementById('modal-youtube-channel');
     const modalWebinar = document.getElementById('modal-webinar');
     const webinarModal = document.getElementById('webinar-modal');
     const webinarSuccessModal = document.getElementById('webinar-success-modal');
@@ -1860,6 +2068,125 @@
         modalLabNote.hidden = true;
         modalLabNote.textContent = '';
       }
+
+      // Indicators
+      modalIndicators.innerHTML = '';
+      if (broker.indicators && Array.isArray(broker.indicators) && broker.indicators.length) {
+        broker.indicators.forEach(ind => {
+          const item = document.createElement('div');
+          item.className = 'indicator-pill';
+          const label = document.createElement('span');
+          label.textContent = ind.label;
+          const right = document.createElement('div');
+          right.style.display = 'flex';
+          right.style.alignItems = 'center';
+          right.style.gap = '0.5rem';
+          const value = document.createElement('strong');
+          value.textContent = ind.value;
+          const dot = document.createElement('div');
+          dot.className = `indicator-dot ${ind.level === 'good' ? 'dot-good' : ind.level === 'medium' ? 'dot-medium' : 'dot-risk'}`;
+          dot.setAttribute('aria-label', `Livello ${ind.level}`);
+          right.appendChild(value);
+          right.appendChild(dot);
+          item.appendChild(label);
+          item.appendChild(right);
+          modalIndicators.appendChild(item);
+        });
+        modalIndicators.hidden = false;
+      } else {
+        modalIndicators.hidden = true;
+      }
+
+      // Pricing snapshot
+      modalPricing.innerHTML = '';
+      if (broker.pricingSnapshot && broker.pricingSnapshot.items && broker.pricingSnapshot.items.length) {
+        broker.pricingSnapshot.items.forEach(row => {
+          const line = document.createElement('div');
+          line.className = 'pricing-row';
+          const left = document.createElement('strong');
+          left.textContent = row.asset;
+          const right = document.createElement('span');
+          right.textContent = row.text;
+          line.appendChild(left);
+          line.appendChild(right);
+          modalPricing.appendChild(line);
+        });
+        const links = document.createElement('div');
+        links.className = 'section-links';
+        links.textContent = broker.pricingSnapshot.lastVerified ? `Verificato: ${broker.pricingSnapshot.lastVerified}` : '';
+        if (broker.pricingSnapshot.feesUrl) {
+          const a = document.createElement('a');
+          a.href = broker.pricingSnapshot.feesUrl;
+          a.target = '_blank';
+          a.rel = 'noopener';
+          a.className = 'btn btn-outline btn-sm';
+          a.textContent = 'Listino ufficiale';
+          links.appendChild(a);
+        }
+        modalPricing.appendChild(links);
+        modalPricing.hidden = false;
+      } else {
+        modalPricing.hidden = true;
+      }
+
+      // Coverage
+      modalCoverage.innerHTML = '';
+      if (broker.coverage) {
+        const entries = Object.entries(broker.coverage).filter(([k,v]) => v);
+        entries.forEach(([key, value]) => {
+          const card = document.createElement('div');
+          card.className = 'coverage-card';
+          const label = document.createElement('span');
+          label.textContent = key.replace(/([A-Z])/g, ' $1').trim();
+          const num = document.createElement('div');
+          num.className = 'coverage-num';
+          num.textContent = value;
+          card.appendChild(label);
+          card.appendChild(num);
+          modalCoverage.appendChild(card);
+        });
+        if (entries.length) {
+          const links = document.createElement('div');
+          links.className = 'section-links';
+          if (broker.coverageUrl) {
+            const a = document.createElement('a');
+            a.href = broker.coverageUrl;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.className = 'btn btn-outline btn-sm';
+            a.textContent = 'Copertura mercati';
+            links.appendChild(a);
+          }
+          modalCoverage.appendChild(links);
+          modalCoverage.hidden = false;
+        } else {
+          modalCoverage.hidden = true;
+        }
+      } else {
+        modalCoverage.hidden = true;
+      }
+
+      // Media
+      let hasMedia = false;
+      if (broker.media && (broker.media.youtubeVideo || broker.media.youtubeChannel)) {
+        if (broker.media.youtubeVideo) {
+          modalYoutubeVideo.hidden = false;
+          modalYoutubeVideo.href = broker.media.youtubeVideo;
+          hasMedia = true;
+        } else {
+          modalYoutubeVideo.hidden = true;
+          modalYoutubeVideo.href = '#';
+        }
+        if (broker.media.youtubeChannel) {
+          modalYoutubeChannel.hidden = false;
+          modalYoutubeChannel.href = broker.media.youtubeChannel;
+          hasMedia = true;
+        } else {
+          modalYoutubeChannel.hidden = true;
+          modalYoutubeChannel.href = '#';
+        }
+      }
+      modalMedia.hidden = !hasMedia;
 
       fillList(modalStrengths, broker.strengths);
       fillList(modalLimitations, broker.limitations);
