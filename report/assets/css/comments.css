@@ -195,6 +195,31 @@
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
 }
 
+.comment-avatar.has-image {
+  background: transparent;
+  color: transparent;
+  background-size: cover;
+  background-position: center;
+}
+
+.comment-author-name {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: var(--fs-14);
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.2s ease;
+}
+
+.comment-author-name:hover {
+  color: rgba(96, 165, 250, 0.9);
+  text-decoration: underline;
+}
+
 .comment-role {
   font-size: var(--fs-11);
   text-transform: uppercase;
@@ -302,6 +327,186 @@
   color: rgba(254, 202, 202, 0.95);
 }
 
+/* ===== PROFILE MODAL ===== */
+.profile-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(2, 6, 23, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.profile-modal-content {
+  background: var(--comments-bg);
+  border: 1px solid var(--comments-border);
+  border-radius: var(--radius-xl);
+  padding: clamp(1.5rem, 3vw, 2rem);
+  max-width: 480px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 32px 80px rgba(8, 47, 73, 0.4);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profile-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--comments-muted);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.profile-modal-close:hover {
+  background: rgba(148, 163, 184, 0.15);
+  color: var(--ink);
+}
+
+.profile-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding-right: 2.5rem;
+}
+
+.profile-modal-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.7), rgba(129, 140, 248, 0.6));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: rgba(15, 23, 42, 0.92);
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.profile-modal-avatar.has-image {
+  background: transparent;
+  color: transparent;
+  background-size: cover;
+  background-position: center;
+}
+
+.profile-modal-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-modal-name {
+  font-size: var(--fs-18);
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 0.25rem 0;
+}
+
+.profile-modal-role {
+  display: inline-block;
+  font-size: var(--fs-11);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.15);
+  color: rgba(191, 219, 254, 0.9);
+  border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+.profile-modal-bio {
+  margin-bottom: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.profile-modal-bio p {
+  margin: 0;
+  font-size: var(--fs-14);
+  line-height: 1.7;
+  color: var(--ink-soft);
+  white-space: pre-wrap;
+}
+
+.profile-modal-links {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.profile-modal-links h4 {
+  font-size: var(--fs-13);
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 0.75rem 0;
+}
+
+.profile-modal-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.profile-modal-links li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(96, 165, 250, 0.85);
+  text-decoration: none;
+  font-size: var(--fs-13);
+  transition: color 0.2s ease;
+  word-break: break-word;
+}
+
+.profile-modal-links li a:hover {
+  color: rgba(96, 165, 250, 1);
+  text-decoration: underline;
+}
+
+.profile-modal-links li a svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
 @media (max-width: 768px) {
   #report-comments-section {
     padding: var(--sp-8) var(--sp-4);
@@ -316,6 +521,15 @@
     left: 1rem;
     right: 1rem;
     bottom: 1.5rem;
+  }
+  
+  .profile-modal-content {
+    padding: 1.5rem;
+    max-height: 85vh;
+  }
+  
+  .profile-modal-header {
+    padding-right: 2rem;
   }
 }
 

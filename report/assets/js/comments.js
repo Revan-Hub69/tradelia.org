@@ -173,17 +173,21 @@ function renderComments() {
 }
 
 function renderCommentCard(comment) {
-  const name = comment.author_display_name || `Utente ${comment.user_id.slice(0, 6)}`;
+  const name = comment.display_name || comment.author_display_name || `Utente ${comment.user_id.slice(0, 6)}`;
   const initials = deriveInitials(name);
   const roleLabel = comment.author_role ? roleLabelMap(comment.author_role) : null;
   const canModerate = comment.user_id === state.user?.id || isAdmin();
+  const hasAvatar = !!comment.avatar_url;
+  const avatarStyle = hasAvatar ? `background-image: url('${escapeHtml(comment.avatar_url)}'); background-size: cover; background-position: center;` : '';
 
   return `
     <li class="comment-card" data-comment-id="${comment.id}">
       <div class="comment-header">
         <div class="comment-author">
-          <span class="comment-avatar">${escapeHtml(initials)}</span>
-          <span>${escapeHtml(name)}</span>
+          <span class="comment-avatar ${hasAvatar ? 'has-image' : ''}" style="${avatarStyle}">${hasAvatar ? '' : escapeHtml(initials)}</span>
+          <button type="button" class="comment-author-name" data-user-id="${comment.user_id}" data-user-name="${escapeHtml(name)}" aria-label="Visualizza profilo di ${escapeHtml(name)}">
+            ${escapeHtml(name)}
+          </button>
           ${roleLabel ? `<span class="comment-role">${escapeHtml(roleLabel)}</span>` : ''}
         </div>
         <div class="comment-meta">
@@ -325,12 +329,55 @@ async function loadComments() {
     state.loading = true;
     const { data, error } = await supabase
       .from('report_comments')
-      .select('id, user_id, body, author_display_name, author_role, created_at, is_deleted')
+      .select(`
+        id, 
+        user_id, 
+        body, 
+        author_display_name, 
+        author_role, 
+        created_at, 
+        is_deleted,
+        profile:user_profiles(
+          display_name,
+          avatar_url,
+          bio
+        )
+      `)
       .eq('report_id', state.report.id)
       .eq('is_deleted', false)
       .order('created_at', { ascending: false });
     if (error) throw error;
-    state.comments = Array.isArray(data) ? data : [];
+    
+    // Fetch desk links for Desk users
+    const deskUserIds = (data || [])
+      .filter(c => c.author_role === 'institutional')
+      .map(c => c.user_id);
+    
+    let deskLinksMap = {};
+    if (deskUserIds.length > 0) {
+      const { data: linksData } = await supabase
+        .from('desk_public_links')
+        .select('user_id, link_url, link_label, display_order')
+        .in('user_id', deskUserIds)
+        .order('display_order', { ascending: true });
+      
+      if (linksData) {
+        deskLinksMap = linksData.reduce((acc, link) => {
+          if (!acc[link.user_id]) acc[link.user_id] = [];
+          acc[link.user_id].push(link);
+          return acc;
+        }, {});
+      }
+    }
+    
+    // Merge profile data and desk links
+    state.comments = (data || []).map(comment => ({
+      ...comment,
+      avatar_url: comment.profile?.avatar_url || null,
+      bio: comment.profile?.bio || null,
+      display_name: comment.profile?.display_name || comment.author_display_name,
+      desk_links: deskLinksMap[comment.user_id] || []
+    }));
   } catch (err) {
     Logger.error('Comments', 'Load error', err);
     showError(err.message || 'Impossibile caricare i commenti.');
@@ -412,5 +459,123 @@ function escapeHtml(value) {
 function isAdmin() {
   // TODO: introdurre flag admin tramite JWT custom o tabella dedicata
   return false;
+}
+
+async function handleShowProfile(userId, userName) {
+  if (!userId) return;
+  
+  try {
+    // Fetch profile data
+    const [profileRes, roleRes, linksRes] = await Promise.all([
+      supabase
+        .from('user_profiles')
+        .select('display_name, bio, avatar_url')
+        .eq('user_id', userId)
+        .maybeSingle(),
+      supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .maybeSingle(),
+      supabase
+        .from('desk_public_links')
+        .select('link_url, link_label, display_order')
+        .eq('user_id', userId)
+        .order('display_order', { ascending: true })
+    ]);
+    
+    const profile = profileRes.data || {};
+    const role = roleRes.data?.role || null;
+    const deskLinks = linksRes.data || [];
+    
+    const displayName = profile.display_name || userName;
+    const bio = profile.bio || null;
+    const avatarUrl = profile.avatar_url || null;
+    const hasDeskLinks = deskLinks.length > 0 && role === 'institutional';
+    
+    showProfileModal({
+      userId,
+      displayName,
+      bio,
+      avatarUrl,
+      role,
+      deskLinks: hasDeskLinks ? deskLinks : []
+    });
+  } catch (err) {
+    Logger.error('Comments', 'Profile fetch error', err);
+    showToast('Impossibile caricare il profilo.', 'error');
+  }
+}
+
+function showProfileModal(profile) {
+  // Remove existing modal if present
+  const existing = document.getElementById('profile-modal');
+  if (existing) existing.remove();
+  
+  const initials = deriveInitials(profile.displayName);
+  const roleLabel = profile.role ? roleLabelMap(profile.role) : null;
+  const hasAvatar = !!profile.avatarUrl;
+  const avatarStyle = hasAvatar ? `background-image: url('${escapeHtml(profile.avatarUrl)}'); background-size: cover; background-position: center;` : '';
+  
+  const modal = document.createElement('div');
+  modal.id = 'profile-modal';
+  modal.className = 'profile-modal-overlay';
+  modal.innerHTML = `
+    <div class="profile-modal-content">
+      <button type="button" class="profile-modal-close" aria-label="Chiudi">×</button>
+      <div class="profile-modal-header">
+        <div class="profile-modal-avatar ${hasAvatar ? 'has-image' : ''}" style="${avatarStyle}">${hasAvatar ? '' : escapeHtml(initials)}</div>
+        <div class="profile-modal-info">
+          <h3 class="profile-modal-name">${escapeHtml(profile.displayName)}</h3>
+          ${roleLabel ? `<span class="profile-modal-role">${escapeHtml(roleLabel)}</span>` : ''}
+        </div>
+      </div>
+      ${profile.bio ? `
+        <div class="profile-modal-bio">
+          <p>${escapeHtml(profile.bio)}</p>
+        </div>
+      ` : ''}
+      ${profile.deskLinks.length > 0 ? `
+        <div class="profile-modal-links">
+          <h4>Link pubblici</h4>
+          <ul>
+            ${profile.deskLinks.map(link => `
+              <li>
+                <a href="${escapeHtml(link.link_url)}" target="_blank" rel="noopener noreferrer">
+                  ${escapeHtml(link.link_label || link.link_url)}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </a>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      ` : ''}
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // Close handlers
+  modal.querySelector('.profile-modal-close').addEventListener('click', () => modal.remove());
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.remove();
+  });
+  
+  // ESC key
+  const escHandler = (e) => {
+    if (e.key === 'Escape') {
+      modal.remove();
+      document.removeEventListener('keydown', escHandler);
+    }
+  };
+  document.addEventListener('keydown', escHandler);
+  
+  // Focus trap
+  const firstFocusable = modal.querySelector('button, a');
+  if (firstFocusable) firstFocusable.focus();
 }
 
