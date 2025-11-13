@@ -57,19 +57,7 @@ const COMMUNITY_PROPOSALS_LIST = document.getElementById('community-proposals-li
 const COMMUNITY_PROPOSE_CARD = document.getElementById('community-propose-card');
 const REQUEST_ANALYSIS_CARD = document.getElementById('request-analysis-card');
 
-// Admin overlay controls
-const ADMIN_TOGGLE_BTN = document.getElementById('admin-toggle-btn');
-const ADMIN_OVERLAY = document.getElementById('admin-overlay');
-const ADMIN_OVERLAY_CLOSE = document.getElementById('admin-overlay-close');
-const ADMIN_ROLE_TRIAL = document.getElementById('admin-role-trial');
-const ADMIN_ROLE_PRO = document.getElementById('admin-role-pro');
-const ADMIN_ROLE_DESK = document.getElementById('admin-role-desk');
-const ADMIN_CURRENT_ROLE = document.getElementById('admin-current-role');
-
 const AUTH_CONTAINER = document.getElementById('auth-container');
-
-// Admin preview state
-let adminPreviewRole = null;
 
 const state = {
   user: null,
@@ -179,12 +167,13 @@ async function bootstrapUserArea() {
   if (!state.user) return;
   try {
     await Promise.all([
-      fetchUserRole(),
+      checkAdminStatus(),
       fetchUserProfile(),
       fetchDashboardStats(),
-      fetchCommentsHistory(),
-      checkAdminStatus()
+      fetchCommentsHistory()
     ]);
+    // Fetch role dopo admin check (admin ha sempre ruolo institutional)
+    await fetchUserRole();
     if (state.role === 'trial' || state.role === 'pro') {
       await Promise.all([fetchProposals(), fetchUserVotes()]);
     }
@@ -199,7 +188,6 @@ async function bootstrapUserArea() {
     renderCommentsHistory();
     renderPlanSection();
     renderCommunitySection();
-    setupAdminOverlay();
     setActiveTab('dashboard');
     if (PANELS.auth) PANELS.auth.setAttribute('hidden', '');
   } catch (err) {
@@ -513,13 +501,19 @@ async function handleLoginSubmit(event) {
 
 async function fetchUserRole() {
   try {
+    // Se è admin, ruolo è sempre institutional (Desk illimitato)
+    if (state.isAdmin) {
+      state.role = 'institutional';
+      return;
+    }
+    
     const { data, error } = await supabase
       .from('user_roles')
       .select('role')
       .eq('user_id', state.user.id)
       .maybeSingle();
     if (error) throw error;
-    state.role = data?.role || 'trial';
+    state.role = data?.role || null;
   } catch (err) {
     Logger.warn('UserArea', 'role fetch error', err);
     state.role = null;
@@ -1422,148 +1416,4 @@ async function saveDeskLinks() {
   }
 }
 
-// ===== ADMIN OVERLAY =====
-function setupAdminOverlay() {
-  // Show/hide admin button based on admin status
-  if (ADMIN_TOGGLE_BTN) {
-    ADMIN_TOGGLE_BTN.hidden = !state.isAdmin;
-    
-    if (state.isAdmin) {
-      ADMIN_TOGGLE_BTN.addEventListener('click', () => {
-        openAdminOverlay();
-      });
-    }
-  }
-  
-  // Close overlay handlers
-  if (ADMIN_OVERLAY_CLOSE) {
-    ADMIN_OVERLAY_CLOSE.addEventListener('click', closeAdminOverlay);
-  }
-  
-  if (ADMIN_OVERLAY) {
-    ADMIN_OVERLAY.addEventListener('click', (e) => {
-      if (e.target === ADMIN_OVERLAY) {
-        closeAdminOverlay();
-      }
-    });
-  }
-  
-  // Role switcher handlers
-  if (ADMIN_ROLE_TRIAL) {
-    ADMIN_ROLE_TRIAL.addEventListener('click', () => switchAdminRole('trial'));
-  }
-  if (ADMIN_ROLE_PRO) {
-    ADMIN_ROLE_PRO.addEventListener('click', () => switchAdminRole('pro'));
-  }
-  if (ADMIN_ROLE_DESK) {
-    ADMIN_ROLE_DESK.addEventListener('click', () => switchAdminRole('institutional'));
-  }
-  
-  // Initialize with current role
-  if (state.role) {
-    adminPreviewRole = state.role;
-    updateAdminPreview();
-  }
-}
-
-function openAdminOverlay() {
-  if (!ADMIN_OVERLAY) return;
-  ADMIN_OVERLAY.hidden = false;
-  document.body.style.overflow = 'hidden';
-  
-  // Initialize preview with current role
-  if (!adminPreviewRole && state.role) {
-    adminPreviewRole = state.role;
-  } else if (!adminPreviewRole) {
-    adminPreviewRole = 'trial';
-  }
-  
-  updateAdminPreview();
-}
-
-function closeAdminOverlay() {
-  if (!ADMIN_OVERLAY) return;
-  ADMIN_OVERLAY.hidden = true;
-  document.body.style.overflow = '';
-}
-
-function switchAdminRole(role) {
-  adminPreviewRole = role;
-  updateAdminPreview();
-}
-
-function updateAdminPreview() {
-  if (!adminPreviewRole) return;
-  
-  // Update role switcher buttons
-  [ADMIN_ROLE_TRIAL, ADMIN_ROLE_PRO, ADMIN_ROLE_DESK].forEach(btn => {
-    if (btn) {
-      btn.classList.remove('active');
-      if (btn.dataset.role === adminPreviewRole) {
-        btn.classList.add('active');
-      }
-    }
-  });
-  
-  // Update current role display
-  if (ADMIN_CURRENT_ROLE) {
-    const roleLabels = {
-      trial: 'Trial',
-      pro: 'Pro',
-      institutional: 'Desk'
-    };
-    ADMIN_CURRENT_ROLE.textContent = `Ruolo attuale: ${roleLabels[adminPreviewRole] || adminPreviewRole}`;
-  }
-  
-  // Define what's locked for each role
-  const rolePermissions = {
-    trial: {
-      locked: ['comments', 'on-demand'],
-      credits: 'Non disponibile',
-      community: 'Disponibile'
-    },
-    pro: {
-      locked: ['on-demand'],
-      credits: 'Non disponibile',
-      community: 'Disponibile'
-    },
-    institutional: {
-      locked: [],
-      credits: 'Disponibile',
-      community: 'Non disponibile'
-    }
-  };
-  
-  const permissions = rolePermissions[adminPreviewRole] || rolePermissions.trial;
-  
-  // Update all preview cards
-  const sections = ['dashboard', 'profile', 'comments', 'on-demand', 'plan', 'inbox'];
-  sections.forEach(section => {
-    const card = document.querySelector(`[data-section="${section}"]`);
-    const lockBadge = card?.querySelector(`[data-lock="${section}"]`);
-    
-    if (card && lockBadge) {
-      const isLocked = permissions.locked.includes(section);
-      
-      if (isLocked) {
-        card.classList.add('locked');
-        lockBadge.hidden = false;
-      } else {
-        card.classList.remove('locked');
-        lockBadge.hidden = true;
-      }
-    }
-  });
-  
-  // Update feature details for on-demand section
-  const creditsStatus = document.querySelector('[data-status="credits"]');
-  const communityStatus = document.querySelector('[data-status="community"]');
-  
-  if (creditsStatus) {
-    creditsStatus.textContent = `Crediti: ${permissions.credits}`;
-  }
-  if (communityStatus) {
-    communityStatus.textContent = `Proposte community: ${permissions.community}`;
-  }
-}
 
