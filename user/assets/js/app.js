@@ -76,9 +76,12 @@ async function init() {
     state.user = session?.user || null;
     if (!state.user) {
       showToast('Sessione terminata.', 'info');
-      renderAuthPanel();
+      // Reindirizza alla home quando la sessione termina
+      setTimeout(() => { window.location.href = '/'; }, 200);
     } else {
+      // Assicura l'area utente attiva dopo login
       bootstrapUserArea();
+      setActiveTab('dashboard');
     }
   });
 }
@@ -162,6 +165,8 @@ function renderHero() {
   logoutBtn.addEventListener('click', async () => {
     await supabase.auth.signOut();
     showToast('Logout effettuato.', 'info');
+    // Reindirizza alla home dopo logout
+    setTimeout(() => { window.location.href = '/'; }, 200);
   });
   CTA.appendChild(logoutBtn);
 }

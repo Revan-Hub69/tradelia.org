@@ -161,7 +161,11 @@ async function handleLogin(event) {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
     showToast('Accesso effettuato.', 'success');
+    // Chiudi il modal e reindirizza all’area utente
     closeAfterDelay();
+    setTimeout(() => {
+      window.location.href = '/user/';
+    }, 300);
   } catch (err) {
     Logger.error('AuthModal', 'login error', err);
     const message = err?.message || 'Credenziali non valide.';
