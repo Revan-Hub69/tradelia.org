@@ -546,21 +546,69 @@ async function fetchDashboardStats() {
 }
 
 async function fetchCommentsHistory() {
+  if (!state.user) {
+    state.comments = [];
+    return;
+  }
   try {
     const { data, error } = await supabase
       .from('report_comments')
-      .select('id, body, created_at, report_id, is_deleted, report:reports!inner(slug)')
+      .select(`
+        id, 
+        body, 
+        created_at, 
+        report_id, 
+        is_deleted,
+        report:reports!inner(
+          id,
+          slug,
+          ticker,
+          company_name,
+          header
+        )
+      `)
       .eq('user_id', state.user.id)
       .eq('is_deleted', false)
       .order('created_at', { ascending: false })
-      .limit(10);
+      .limit(50);
     if (error) throw error;
-    state.comments = (data || []).map(item => ({
-      id: item.id,
-      body: item.body,
-      created_at: item.created_at,
-      report_slug: item.report?.slug || item.report_id
-    }));
+    
+    state.comments = (data || []).map(item => {
+      const report = item.report || {};
+      let ticker = report.ticker;
+      let company = report.company_name;
+      
+      // Fallback: estrai da header se disponibile
+      if (!ticker && report.header) {
+        try {
+          const header = typeof report.header === 'string' 
+            ? JSON.parse(report.header) 
+            : report.header;
+          if (header?.rows) {
+            for (const row of header.rows) {
+              for (const part of row.parts || []) {
+                if (part.kind === 'metric') {
+                  if (part.key === 'Ticker' && !ticker) ticker = part.value;
+                  if (part.key === 'CompanyName' && !company) company = part.value;
+                }
+              }
+            }
+          }
+        } catch (e) {
+          Logger.warn('UserArea', 'Header parse error', e);
+        }
+      }
+      
+      return {
+        id: item.id,
+        body: item.body,
+        created_at: item.created_at,
+        report_id: item.report_id,
+        report_slug: report.slug || report.id,
+        report_ticker: ticker || null,
+        report_company: company || null
+      };
+    });
   } catch (err) {
     Logger.warn('UserArea', 'comment history error', err);
     state.comments = [];
