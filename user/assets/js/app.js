@@ -99,19 +99,37 @@ async function init() {
 }
 
 function setupTabs() {
-  TAB_BUTTONS.forEach(button => {
-    button.addEventListener('click', () => {
-      const tabId = button.id.replace('tab-', '');
-      setActiveTab(tabId);
-    });
-  });
+  // Use event delegation instead of individual listeners
+  const tablist = document.querySelector('.tablist');
+  if (!tablist) return;
+  
+  // Remove any existing listener
+  if (tablist._tabHandler) {
+    tablist.removeEventListener('click', tablist._tabHandler);
+  }
+  
+  // Add single delegated listener
+  tablist._tabHandler = (e) => {
+    const button = e.target.closest('button[role="tab"]');
+    if (!button) return;
+    
+    e.preventDefault();
+    const tabId = button.id.replace('tab-', '');
+    setActiveTab(tabId);
+  };
+  
+  tablist.addEventListener('click', tablist._tabHandler);
 }
 
 function setActiveTab(tabId) {
-  TAB_BUTTONS.forEach(btn => {
+  // Re-query buttons to get fresh references
+  const buttons = Array.from(document.querySelectorAll('.tablist button[role="tab"]'));
+  buttons.forEach(btn => {
     const selected = btn.id === `tab-${tabId}`;
     btn.setAttribute('aria-selected', selected ? 'true' : 'false');
   });
+  
+  // Show/hide panels
   Object.entries(PANELS).forEach(([key, panel]) => {
     if (!panel) return;
     if (key === tabId) {
