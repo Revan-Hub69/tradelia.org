@@ -197,7 +197,7 @@ function renderCommentCard(comment) {
       <div class="comment-body">${escapeHtml(comment.body)}</div>
       ${canModerate ? `
         <div class="comment-actions">
-          <button type="button" class="danger" data-comment-delete="${comment.id}">Elimina</button>
+          <button type="button" class="btn btn-sm danger" data-comment-delete="${comment.id}">Elimina</button>
         </div>
       ` : ''}
     </li>
