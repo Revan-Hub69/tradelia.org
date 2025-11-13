@@ -1,6 +1,6 @@
 # Supabase Setup – Tradelia Report System
 
-Questa cartella contiene gli step minimi per configurare Supabase e ospitare i report (manifest, header, moduli e chart).
+Questa cartella contiene gli step minimi per configurare Supabase e ospitare i report didattici (manifest, header, moduli e chart) generati dal framework SRD/MTB.
 
 ## 1. Creazione progetto
 1. Crea un progetto Supabase → <https://supabase.com>

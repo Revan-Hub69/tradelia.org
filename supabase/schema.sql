@@ -1,4 +1,4 @@
--- Supabase schema for Tradelia report system (CTA 2025 refactor)
+-- Supabase schema for Tradelia report system (educational content platform)
 -- Execute this in the Supabase SQL editor or via CLI after creating the project.
 
 set check_function_bodies = off;

@@ -900,13 +900,54 @@ function hideLockOverlay() {
 }
 
 // Render on-demand requests (for institutional users)
-function renderProposalsList() {
+async function renderProposalsList() {
   if (!PROPOSAL_LIST) return;
   
   // For institutional users, show analysis requests
   if (state.role === 'institutional') {
-    // TODO: Fetch and display analysis_requests
-    PROPOSAL_LIST.innerHTML = '<p style="color: rgba(203, 213, 225, 0.6); font-size: 0.9rem;">Le tue richieste di analisi appariranno qui.</p>';
+    try {
+      const { data, error } = await supabase
+        .from('analysis_requests')
+        .select('id, ticker, status, created_at, completed_at')
+        .eq('user_id', state.user.id)
+        .order('created_at', { ascending: false })
+        .limit(20);
+      
+      if (error) throw error;
+      
+      if (!data || data.length === 0) {
+        PROPOSAL_LIST.innerHTML = '<p style="color: rgba(203, 213, 225, 0.6); font-size: 0.9rem;">Nessuna richiesta ancora. Invia un ticker per richiedere un\'analisi.</p>';
+        return;
+      }
+      
+      PROPOSAL_LIST.innerHTML = data.map(request => {
+        const statusLabels = {
+          pending: { text: 'In attesa', color: 'rgba(251, 191, 36, 0.9)' },
+          processing: { text: 'In elaborazione', color: 'rgba(96, 165, 250, 0.9)' },
+          completed: { text: 'Completata', color: 'rgba(34, 197, 94, 0.9)' },
+          cancelled: { text: 'Annullata', color: 'rgba(203, 213, 225, 0.6)' }
+        };
+        const status = statusLabels[request.status] || statusLabels.pending;
+        
+        return `
+          <article class="history-item proposal-item">
+            <div class="proposal-header">
+              <strong>${escapeHtml(request.ticker)}</strong>
+              <span class="badge" style="background: ${status.color}20; border-color: ${status.color}; color: ${status.color};">
+                ${status.text}
+              </span>
+            </div>
+            <div class="proposal-meta">
+              <span>${formatDateTime(request.created_at)}</span>
+              ${request.completed_at ? `<span class="history-item-separator">·</span><span>Completata: ${formatDateTime(request.completed_at)}</span>` : ''}
+            </div>
+          </article>
+        `;
+      }).join('');
+    } catch (err) {
+      Logger.error('UserArea', 'fetch analysis requests error', err);
+      PROPOSAL_LIST.innerHTML = '<p style="color: rgba(248, 113, 113, 0.9); font-size: 0.9rem;">Errore nel caricamento delle richieste.</p>';
+    }
     return;
   }
   
@@ -1037,7 +1078,7 @@ async function handleProposeAsset() {
       renderCreditsCounter();
       
       PROPOSAL_INPUT.value = '';
-      renderProposalsList();
+      await renderProposalsList();
       showToast('Richiesta inviata! Un credito è stato scalato.', 'success');
     } catch (err) {
       Logger.error('UserArea', 'on-demand request error', err);
