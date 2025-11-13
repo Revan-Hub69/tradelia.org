@@ -878,18 +878,31 @@ async function fetchCredits() {
 }
 
 async function fetchDeskLinks() {
-  if (!state.user) return;
+  if (!state.user) {
+    console.warn('[DeskLinks] No user, skipping fetch');
+    return;
+  }
   try {
+    console.log('[DeskLinks] Fetching links for user:', state.user.id);
     const { data, error } = await supabase
       .from('desk_public_links')
       .select('id, link_url, link_label, display_order')
       .eq('user_id', state.user.id)
       .order('display_order', { ascending: true });
-    if (error) throw error;
+    if (error) {
+      console.error('[DeskLinks] Supabase error:', error);
+      throw error;
+    }
     state.deskLinks = data || [];
+    console.log('[DeskLinks] Fetched', state.deskLinks.length, 'links');
   } catch (err) {
-    Logger.warn('UserArea', 'desk links fetch error', err);
+    Logger.error('UserArea', 'desk links fetch error', err);
+    console.error('[DeskLinks] Fetch failed:', err);
     state.deskLinks = [];
+    // Show user-friendly error if table doesn't exist
+    if (err.code === '42P01' || err.message?.includes('does not exist')) {
+      console.error('[DeskLinks] Table desk_public_links does not exist! Run the migration SQL first.');
+    }
   }
 }
 
@@ -898,16 +911,27 @@ function renderDeskLinksSection() {
   const list = document.getElementById('desk-links-list');
   const addBtn = document.getElementById('add-desk-link-btn');
   
+  console.log('[DeskLinks] renderDeskLinksSection called', {
+    role: state.role,
+    section: !!section,
+    list: !!list,
+    addBtn: !!addBtn,
+    linksCount: state.deskLinks?.length || 0
+  });
+  
   if (!section || !list || !addBtn) {
-    console.warn('[DeskLinks] Elements not found');
+    console.warn('[DeskLinks] Elements not found', { section: !!section, list: !!list, addBtn: !!addBtn });
     return;
   }
   
   // Show section for institutional users
   if (state.role === 'institutional') {
     section.removeAttribute('hidden');
+    section.style.display = '';
+    console.log('[DeskLinks] Section shown for institutional user');
   } else {
     section.setAttribute('hidden', '');
+    console.log('[DeskLinks] Section hidden - role is:', state.role);
     return;
   }
   
@@ -960,7 +984,14 @@ function renderDeskLinksSection() {
 }
 
 async function handleAddDeskLink() {
+  console.log('[DeskLinks] handleAddDeskLink called', {
+    role: state.role,
+    linksCount: state.deskLinks.length,
+    userId: state.user?.id
+  });
+  
   if (state.role !== 'institutional') {
+    console.warn('[DeskLinks] Not institutional user, role:', state.role);
     showToast('Solo gli utenti con piano Desk possono aggiungere link pubblici.', 'error');
     return;
   }
@@ -972,6 +1003,7 @@ async function handleAddDeskLink() {
   
   try {
     const nextOrder = state.deskLinks.length;
+    console.log('[DeskLinks] Inserting new link, order:', nextOrder);
     const { data, error } = await supabase
       .from('desk_public_links')
       .insert({
@@ -983,14 +1015,22 @@ async function handleAddDeskLink() {
       .select()
       .single();
     
-    if (error) throw error;
+    if (error) {
+      console.error('[DeskLinks] Insert error:', error);
+      if (error.code === '42P01' || error.message?.includes('does not exist')) {
+        showToast('Tabella non trovata. Esegui la migrazione SQL in Supabase.', 'error');
+      }
+      throw error;
+    }
     
+    console.log('[DeskLinks] Link inserted successfully:', data);
     state.deskLinks.push(data);
     renderDeskLinksSection();
     showToast('Link aggiunto. Modifica l\'URL e salva il profilo.', 'success');
   } catch (err) {
     Logger.error('UserArea', 'add desk link error', err);
-    showToast('Errore durante l\'aggiunta del link.', 'error');
+    console.error('[DeskLinks] Add link failed:', err);
+    showToast('Errore durante l\'aggiunta del link. ' + (err.message || ''), 'error');
   }
 }
 
