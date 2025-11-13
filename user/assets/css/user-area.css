@@ -945,6 +945,208 @@
   line-height: 1.6;
 }
 
+/* ===== ADMIN TOGGLE BUTTON ===== */
+.admin-toggle-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--surface-elev);
+  border: 1px solid var(--br-card);
+  border-radius: var(--radius-md);
+  color: var(--ink-soft);
+  font-size: var(--fs-12);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.admin-toggle-btn:hover {
+  background: var(--surface-hover);
+  border-color: var(--br-strong);
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+
+.admin-toggle-btn svg {
+  flex-shrink: 0;
+}
+
+/* ===== ADMIN OVERLAY ===== */
+.admin-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(12px);
+  z-index: 4000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.admin-overlay-content {
+  background: var(--surface-card);
+  border: 1px solid var(--br-card);
+  border-radius: var(--radius-lg);
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.admin-overlay-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--br-card);
+}
+
+.admin-overlay-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--ink);
+}
+
+.admin-overlay-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--br-card);
+  border-radius: var(--radius-md);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.admin-overlay-close:hover {
+  background: var(--surface-elev);
+  border-color: var(--br-strong);
+  color: var(--ink);
+}
+
+/* ===== ADMIN ROLE SWITCHER ===== */
+.admin-role-switcher {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--br-card);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin-role-switcher label {
+  font-size: var(--fs-13);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.role-switch-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.role-switch-buttons .btn {
+  padding: 0.5rem 1rem;
+}
+
+.role-switch-buttons .btn.active {
+  background: var(--brand-600);
+  border-color: var(--brand-600);
+  color: #ffffff;
+}
+
+.admin-current-role {
+  font-size: var(--fs-12);
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+/* ===== ADMIN PREVIEW SECTIONS ===== */
+.admin-preview-sections {
+  padding: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-preview-card {
+  background: var(--surface-elev);
+  border: 1px solid var(--br-card);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.admin-preview-card.locked {
+  opacity: 0.6;
+  background: var(--surface-card);
+}
+
+.admin-preview-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.admin-preview-card-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--ink);
+}
+
+.admin-lock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.6rem;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-11);
+  font-weight: 600;
+  color: rgba(248, 113, 113, 0.9);
+}
+
+.admin-lock-badge svg {
+  flex-shrink: 0;
+}
+
+.admin-preview-card p {
+  font-size: var(--fs-13);
+  color: var(--ink-soft);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.5;
+}
+
+.admin-feature-detail {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--br-card);
+}
+
+.admin-feature-status {
+  font-size: var(--fs-12);
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
 @media (max-width: 900px) {
   .user-hero {
     grid-template-columns: minmax(0, 1fr);
@@ -962,6 +1164,23 @@
 
   .credits-display {
     justify-content: space-between;
+  }
+
+  .admin-overlay {
+    padding: 1rem;
+  }
+
+  .admin-overlay-content {
+    max-height: 95vh;
+  }
+
+  .admin-toggle-btn {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin-top: 1rem;
+    width: 100%;
+    justify-content: center;
   }
 }
 

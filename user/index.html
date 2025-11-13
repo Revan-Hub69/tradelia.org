@@ -25,6 +25,13 @@
         </div>
       <div class="user-cta" id="user-cta"></div>
       </div>
+      <!-- Pulsante Admin (solo per admin) -->
+      <button class="admin-toggle-btn" id="admin-toggle-btn" hidden>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z"></path>
+        </svg>
+        <span>Admin Preview</span>
+      </button>
     </header>
 
     <nav class="user-tabs">
@@ -240,6 +247,129 @@
   </div>
 
   <div class="user-toast" id="user-toast" role="status" aria-live="assertive"></div>
+
+  <!-- Admin Overlay -->
+  <div class="admin-overlay" id="admin-overlay" hidden>
+    <div class="admin-overlay-content">
+      <div class="admin-overlay-header">
+        <h2>Admin Preview</h2>
+        <button class="admin-overlay-close" id="admin-overlay-close" aria-label="Chiudi">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="admin-role-switcher">
+        <label>Simula ruolo:</label>
+        <div class="role-switch-buttons">
+          <button class="btn btn-sm" data-role="trial" id="admin-role-trial">Trial</button>
+          <button class="btn btn-sm" data-role="pro" id="admin-role-pro">Pro</button>
+          <button class="btn btn-sm" data-role="institutional" id="admin-role-desk">Desk</button>
+        </div>
+        <span class="admin-current-role" id="admin-current-role">Ruolo attuale: —</span>
+      </div>
+
+      <div class="admin-preview-sections">
+        <!-- Dashboard -->
+        <div class="admin-preview-card" data-section="dashboard">
+          <div class="admin-preview-card-header">
+            <h3>Dashboard</h3>
+            <span class="admin-lock-badge" data-lock="dashboard" hidden>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              Bloccato
+            </span>
+          </div>
+          <p>Metriche sintetiche sul tuo utilizzo della piattaforma</p>
+        </div>
+
+        <!-- Profilo -->
+        <div class="admin-preview-card" data-section="profile">
+          <div class="admin-preview-card-header">
+            <h3>Profilo</h3>
+            <span class="admin-lock-badge" data-lock="profile" hidden>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              Bloccato
+            </span>
+          </div>
+          <p>Gestisci le informazioni del tuo profilo</p>
+        </div>
+
+        <!-- Commenti -->
+        <div class="admin-preview-card" data-section="comments">
+          <div class="admin-preview-card-header">
+            <h3>Commenti</h3>
+            <span class="admin-lock-badge" data-lock="comments" hidden>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              Bloccato
+            </span>
+          </div>
+          <p>Storico dei tuoi contributi pubblici sui report</p>
+        </div>
+
+        <!-- Analisi on demand -->
+        <div class="admin-preview-card" data-section="on-demand">
+          <div class="admin-preview-card-header">
+            <h3>Analisi on demand</h3>
+            <span class="admin-lock-badge" data-lock="on-demand" hidden>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              Bloccato
+            </span>
+          </div>
+          <p>Richiedi analisi personalizzate su ticker specifici</p>
+          <div class="admin-feature-detail" data-feature="credits">
+            <span class="admin-feature-status" data-status="credits">Crediti: —</span>
+          </div>
+          <div class="admin-feature-detail" data-feature="community">
+            <span class="admin-feature-status" data-status="community">Proposte community: —</span>
+          </div>
+        </div>
+
+        <!-- Abbonamento -->
+        <div class="admin-preview-card" data-section="plan">
+          <div class="admin-preview-card-header">
+            <h3>Abbonamento</h3>
+            <span class="admin-lock-badge" data-lock="plan" hidden>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              Bloccato
+            </span>
+          </div>
+          <p>Dettagli del piano attuale e upgrade disponibili</p>
+        </div>
+
+        <!-- Inbox -->
+        <div class="admin-preview-card" data-section="inbox">
+          <div class="admin-preview-card-header">
+            <h3>Inbox</h3>
+            <span class="admin-lock-badge" data-lock="inbox" hidden>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              Bloccato
+            </span>
+          </div>
+          <p>Canale diretto con il desk Tradelia</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script type="module" src="/user/assets/js/app.js" defer></script>
 </body>
