@@ -101,7 +101,12 @@ async function init() {
 function setupTabs() {
   // Use event delegation instead of individual listeners
   const tablist = document.querySelector('.tablist');
-  if (!tablist) return;
+  if (!tablist) {
+    console.error('[Tab] Tablist not found!');
+    return;
+  }
+  
+  console.log('[Tab] Setting up tabs...');
   
   // Remove any existing listener
   if (tablist._tabHandler) {
@@ -111,17 +116,25 @@ function setupTabs() {
   // Add single delegated listener
   tablist._tabHandler = (e) => {
     const button = e.target.closest('button[role="tab"]');
-    if (!button) return;
+    if (!button) {
+      console.log('[Tab] Click not on tab button');
+      return;
+    }
     
     e.preventDefault();
+    e.stopPropagation();
     const tabId = button.id.replace('tab-', '');
+    console.log('[Tab] Tab clicked:', tabId);
     setActiveTab(tabId);
   };
   
   tablist.addEventListener('click', tablist._tabHandler);
+  console.log('[Tab] Tabs setup complete');
 }
 
 function setActiveTab(tabId) {
+  console.log('[Tab] Switching to:', tabId); // Debug
+  
   // Re-query buttons to get fresh references
   const buttons = Array.from(document.querySelectorAll('.tablist button[role="tab"]'));
   buttons.forEach(btn => {
@@ -129,13 +142,19 @@ function setActiveTab(tabId) {
     btn.setAttribute('aria-selected', selected ? 'true' : 'false');
   });
   
-  // Show/hide panels
+  // Show/hide panels - use removeAttribute/setAttribute instead of hidden property
   Object.entries(PANELS).forEach(([key, panel]) => {
-    if (!panel) return;
+    if (!panel) {
+      console.warn('[Tab] Panel not found:', key);
+      return;
+    }
     if (key === tabId) {
-      panel.hidden = false;
+      panel.removeAttribute('hidden');
+      panel.style.display = '';
+      console.log('[Tab] Showing panel:', key);
     } else if (key !== 'auth') {
-      panel.hidden = true;
+      panel.setAttribute('hidden', '');
+      console.log('[Tab] Hiding panel:', key);
     }
   });
 }
@@ -169,7 +188,7 @@ async function bootstrapUserArea() {
     renderPlanSection();
     renderCommunitySection();
     setActiveTab('dashboard');
-    if (PANELS.auth) PANELS.auth.hidden = true;
+    if (PANELS.auth) PANELS.auth.setAttribute('hidden', '');
   } catch (err) {
     Logger.error('UserArea', 'bootstrap error', err);
     showToast(err.message || 'Errore nel caricamento dell’area utente.', 'error');
@@ -292,9 +311,9 @@ function renderPlanSection() {
 function renderAuthPanel() {
   if (!PANELS.auth || !AUTH_CONTAINER) return;
   setActiveTab('auth');
-  PANELS.auth.hidden = false;
+  PANELS.auth.removeAttribute('hidden');
   Object.entries(PANELS).forEach(([key, panel]) => {
-    if (key !== 'auth' && panel) panel.hidden = true;
+    if (key !== 'auth' && panel) panel.setAttribute('hidden', '');
   });
   AUTH_CONTAINER.innerHTML = `
     <form class="profile-form" id="area-auth-form">
