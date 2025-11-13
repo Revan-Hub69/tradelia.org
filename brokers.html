@@ -2097,7 +2097,7 @@
         modalIndicators.hidden = true;
       }
 
-      // Pricing snapshot
+      // Pricing snapshot (senza link esterni: solo dati)
       modalPricing.innerHTML = '';
       if (broker.pricingSnapshot && broker.pricingSnapshot.items && broker.pricingSnapshot.items.length) {
         broker.pricingSnapshot.items.forEach(row => {
@@ -2111,25 +2111,19 @@
           line.appendChild(right);
           modalPricing.appendChild(line);
         });
-        const links = document.createElement('div');
-        links.className = 'section-links';
-        links.textContent = broker.pricingSnapshot.lastVerified ? `Verificato: ${broker.pricingSnapshot.lastVerified}` : '';
-        if (broker.pricingSnapshot.feesUrl) {
-          const a = document.createElement('a');
-          a.href = broker.pricingSnapshot.feesUrl;
-          a.target = '_blank';
-          a.rel = 'noopener';
-          a.className = 'btn btn-outline btn-sm';
-          a.textContent = 'Listino ufficiale';
-          links.appendChild(a);
+        // opzionale: mostra solo testo di verifica, senza link
+        if (broker.pricingSnapshot.lastVerified) {
+          const verify = document.createElement('div');
+          verify.className = 'section-links';
+          verify.textContent = `Verificato: ${broker.pricingSnapshot.lastVerified}`;
+          modalPricing.appendChild(verify);
         }
-        modalPricing.appendChild(links);
         modalPricing.hidden = false;
       } else {
         modalPricing.hidden = true;
       }
 
-      // Coverage
+      // Coverage (senza link esterni)
       modalCoverage.innerHTML = '';
       if (broker.coverage) {
         const entries = Object.entries(broker.coverage).filter(([k,v]) => v);
@@ -2145,48 +2139,17 @@
           card.appendChild(num);
           modalCoverage.appendChild(card);
         });
-        if (entries.length) {
-          const links = document.createElement('div');
-          links.className = 'section-links';
-          if (broker.coverageUrl) {
-            const a = document.createElement('a');
-            a.href = broker.coverageUrl;
-            a.target = '_blank';
-            a.rel = 'noopener';
-            a.className = 'btn btn-outline btn-sm';
-            a.textContent = 'Copertura mercati';
-            links.appendChild(a);
-          }
-          modalCoverage.appendChild(links);
-          modalCoverage.hidden = false;
-        } else {
-          modalCoverage.hidden = true;
-        }
+        modalCoverage.hidden = entries.length === 0;
       } else {
         modalCoverage.hidden = true;
       }
 
-      // Media
-      let hasMedia = false;
-      if (broker.media && (broker.media.youtubeVideo || broker.media.youtubeChannel)) {
-        if (broker.media.youtubeVideo) {
-          modalYoutubeVideo.hidden = false;
-          modalYoutubeVideo.href = broker.media.youtubeVideo;
-          hasMedia = true;
-        } else {
-          modalYoutubeVideo.hidden = true;
-          modalYoutubeVideo.href = '#';
-        }
-        if (broker.media.youtubeChannel) {
-          modalYoutubeChannel.hidden = false;
-          modalYoutubeChannel.href = broker.media.youtubeChannel;
-          hasMedia = true;
-        } else {
-          modalYoutubeChannel.hidden = true;
-          modalYoutubeChannel.href = '#';
-        }
-      }
-      modalMedia.hidden = !hasMedia;
+      // Media: disabilitato (niente link/anteprime)
+      modalYoutubeVideo.hidden = true;
+      modalYoutubeVideo.href = '#';
+      modalYoutubeChannel.hidden = true;
+      modalYoutubeChannel.href = '#';
+      modalMedia.hidden = true;
 
       fillList(modalStrengths, broker.strengths);
       fillList(modalLimitations, broker.limitations);
