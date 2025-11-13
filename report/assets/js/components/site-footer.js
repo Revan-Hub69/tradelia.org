@@ -52,9 +52,9 @@ function render(data = {}) {
             </svg>
             <span>Tradelia AI</span>
           </h3>
-          <p data-i18n="footer.about.desc">
-            Tradelia AI sviluppa analisi finanziarie modulari attraverso prompt 
-            proprietari e metodologia accademica scientifica.
+          <p>
+            Tradelia AI produce approfondimenti didattici sui mercati con framework accademico,
+            deck proprietari SRD/MTB e ensemble multi-LLM controllato.
           </p>
           <div class="ftr-quick-links" role="navigation" aria-label="Link rapidi">
             <a href="/index.html" aria-label="Vai alla homepage" data-i18n="nav.home">Homepage</a>
