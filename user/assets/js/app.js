@@ -178,7 +178,7 @@ async function bootstrapUserArea() {
     if (state.role === 'trial' || state.role === 'pro') {
       await Promise.all([fetchProposals(), fetchUserVotes()]);
     }
-    if (state.role === 'institutional') {
+    if (state.role === 'institutional' || state.isAdmin) {
       await Promise.all([fetchCredits(), fetchDeskLinks()]);
     }
     renderHero();
@@ -924,14 +924,15 @@ function renderDeskLinksSection() {
     return;
   }
   
-  // Show section for institutional users
-  if (state.role === 'institutional') {
+  // Show section for institutional users OR admins
+  const canManageLinks = state.role === 'institutional' || state.isAdmin;
+  if (canManageLinks) {
     section.removeAttribute('hidden');
     section.style.display = '';
-    console.log('[DeskLinks] Section shown for institutional user');
+    console.log('[DeskLinks] Section shown for', state.isAdmin ? 'admin' : 'institutional user');
   } else {
     section.setAttribute('hidden', '');
-    console.log('[DeskLinks] Section hidden - role is:', state.role);
+    console.log('[DeskLinks] Section hidden - role is:', state.role, 'isAdmin:', state.isAdmin);
     return;
   }
   
@@ -986,13 +987,15 @@ function renderDeskLinksSection() {
 async function handleAddDeskLink() {
   console.log('[DeskLinks] handleAddDeskLink called', {
     role: state.role,
+    isAdmin: state.isAdmin,
     linksCount: state.deskLinks.length,
     userId: state.user?.id
   });
   
-  if (state.role !== 'institutional') {
-    console.warn('[DeskLinks] Not institutional user, role:', state.role);
-    showToast('Solo gli utenti con piano Desk possono aggiungere link pubblici.', 'error');
+  const canManageLinks = state.role === 'institutional' || state.isAdmin;
+  if (!canManageLinks) {
+    console.warn('[DeskLinks] Not authorized, role:', state.role, 'isAdmin:', state.isAdmin);
+    showToast('Solo gli utenti con piano Desk o admin possono aggiungere link pubblici.', 'error');
     return;
   }
   
@@ -1053,7 +1056,8 @@ async function handleRemoveDeskLink(linkId) {
 }
 
 async function saveDeskLinks() {
-  if (state.role !== 'institutional') return;
+  const canManageLinks = state.role === 'institutional' || state.isAdmin;
+  if (!canManageLinks) return;
   
   const list = document.getElementById('desk-links-list');
   if (!list) return;
