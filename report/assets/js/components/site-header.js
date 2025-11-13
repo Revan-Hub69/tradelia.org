@@ -137,14 +137,16 @@ async function syncAuthState(node) {
     const { data } = await supabase.auth.getSession();
     HEADER._currentUser = data?.session?.user || null;
     toggleAccountButton(accountBtn, HEADER._currentUser);
+    await toggleAdminLink(HEADER._currentUser);
   } catch (err) {
     Logger.warn('SiteHeader', 'Impossibile leggere sessione', err);
   }
 
   if (!HEADER._authListener) {
-    HEADER._authListener = supabase.auth.onAuthStateChange((_event, session) => {
+    HEADER._authListener = supabase.auth.onAuthStateChange(async (_event, session) => {
       HEADER._currentUser = session?.user || null;
       toggleAccountButton(accountBtn, HEADER._currentUser);
+      await toggleAdminLink(HEADER._currentUser);
     }).data;
   }
 }
@@ -160,6 +162,49 @@ function toggleAccountButton(accountBtn, user) {
     label && (label.textContent = 'Accedi');
     accountBtn.classList.remove('header-user-link--auth');
     accountBtn.setAttribute('title', 'Accedi con le credenziali Tradelia');
+  }
+}
+
+async function isAdminUser(user) {
+  if (!user) return false;
+  try {
+    const { data, error } = await supabase
+      .from('admin_users')
+      .select('user_id')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    if (error) return false;
+    return !!data;
+  } catch {
+    return false;
+  }
+}
+
+async function toggleAdminLink(user) {
+  const actions = HEADER._node?.querySelector('.header-actions');
+  if (!actions) return;
+  let adminLink = HEADER._node.querySelector('#header-admin-link');
+
+  const allowed = await isAdminUser(user);
+  if (allowed) {
+    if (!adminLink) {
+      adminLink = document.createElement('a');
+      adminLink.id = 'header-admin-link';
+      adminLink.className = 'header-dashboard-link';
+      adminLink.href = '/report/admin/dashboard.html';
+      adminLink.setAttribute('aria-label', 'Report Admin');
+      adminLink.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l3 7h7l-5.5 4 2 7-6.5-4.5L5.5 20l2-7L2 9h7l3-7z"></path>
+        </svg>
+        <span>Report Admin</span>
+      `;
+      // Inserisci prima del link Dashboard per priorità
+      const firstAction = actions.firstElementChild;
+      actions.insertBefore(adminLink, firstAction);
+    }
+  } else if (adminLink) {
+    adminLink.remove();
   }
 }
 
