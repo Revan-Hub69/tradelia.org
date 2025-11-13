@@ -303,25 +303,110 @@
 .history-item {
   border: 1px solid rgba(148, 163, 184, 0.22);
   border-radius: var(--radius-lg);
-  padding: 1.1rem;
+  padding: 1.25rem;
   display: grid;
-  gap: 0.4rem;
-  background: rgba(15, 23, 42, 0.55);
+  gap: 0.75rem;
+  background: rgba(15, 23, 42, 0.6);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.history-item:hover {
+  border-color: rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.7);
 }
 
 .history-item-header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.history-item-meta {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
   font-size: var(--fs-12);
-  color: rgba(203, 213, 225, 0.68);
+  color: rgba(203, 213, 225, 0.75);
+  flex: 1;
+  min-width: 0;
+}
+
+.history-item-meta time {
+  color: rgba(203, 213, 225, 0.7);
+  white-space: nowrap;
+}
+
+.history-item-separator {
+  color: rgba(148, 163, 184, 0.4);
+}
+
+.history-item-report {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: rgba(96, 165, 250, 0.85);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.history-item-report:hover {
+  color: rgba(96, 165, 250, 1);
+  text-decoration: underline;
+}
+
+.history-item-report svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.history-item-report:hover svg {
+  opacity: 1;
+}
+
+.history-item-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: rgba(203, 213, 225, 0.6);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.history-item-delete:hover {
+  color: rgba(248, 113, 113, 0.9);
+  border-color: rgba(248, 113, 113, 0.3);
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.history-item-delete:active {
+  transform: scale(0.95);
 }
 
 .history-item-body {
   font-size: var(--fs-14);
-  color: var(--ink-soft);
-  line-height: 1.6;
+  line-height: 1.7;
+  color: rgba(226, 232, 240, 0.92);
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
 }
 
 .plan-card {

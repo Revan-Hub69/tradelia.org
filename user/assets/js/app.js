@@ -276,14 +276,114 @@ function renderCommentsHistory() {
     return;
   }
   COMMENTS_HISTORY_PLACEHOLDER.hidden = true;
-  COMMENTS_HISTORY_LIST.innerHTML = state.comments.map(comment => `
-    <article class="history-item">
-      <div class="history-item-header">
-        <span>${formatDateTime(comment.created_at)} · ${escapeHtml(comment.report_slug || '')}</span>
-      </div>
-      <div class="history-item-body">${escapeHtml(comment.body)}</div>
-    </article>
-  `).join('');
+  COMMENTS_HISTORY_LIST.innerHTML = state.comments.map(comment => {
+    const reportLabel = comment.report_ticker 
+      ? `${comment.report_ticker}${comment.report_company ? ` · ${comment.report_company}` : ''}`
+      : comment.report_slug || `Report ${comment.report_id?.slice(0, 8)}`;
+    const reportUrl = `/report/index.html?id=${comment.report_id || comment.report_slug}`;
+    const relativeTime = formatRelativeTime(comment.created_at);
+    
+    return `
+      <article class="history-item" data-comment-id="${comment.id}">
+        <div class="history-item-header">
+          <div class="history-item-meta">
+            <time datetime="${comment.created_at}" title="${formatDateTime(comment.created_at)}">
+              ${relativeTime}
+            </time>
+            <span class="history-item-separator">·</span>
+            <a href="${reportUrl}" class="history-item-report" target="_blank" rel="noopener">
+              ${escapeHtml(reportLabel)}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+          </div>
+          <button 
+            type="button" 
+            class="history-item-delete" 
+            data-comment-delete="${comment.id}"
+            title="Elimina commento"
+            aria-label="Elimina commento">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="history-item-body">${escapeHtml(comment.body)}</div>
+      </article>
+    `;
+  }).join('');
+  
+  // Setup delete handlers
+  COMMENTS_HISTORY_LIST.querySelectorAll('[data-comment-delete]').forEach(btn => {
+    btn.addEventListener('click', handleDeleteComment);
+  });
+}
+
+async function handleDeleteComment(event) {
+  const commentId = event.currentTarget.getAttribute('data-comment-delete');
+  if (!commentId) return;
+  
+  if (!confirm('Eliminare definitivamente questo commento? L\'azione non può essere annullata.')) {
+    return;
+  }
+  
+  try {
+    const { error } = await supabase
+      .from('report_comments')
+      .update({ is_deleted: true })
+      .eq('id', commentId)
+      .eq('user_id', state.user.id); // Solo i propri commenti
+    
+    if (error) throw error;
+    
+    // Rimuovi dal DOM
+    const item = COMMENTS_HISTORY_LIST.querySelector(`[data-comment-id="${commentId}"]`);
+    if (item) {
+      item.style.opacity = '0';
+      item.style.transform = 'translateX(-10px)';
+      setTimeout(() => item.remove(), 200);
+    }
+    
+    // Rimuovi dallo state
+    state.comments = state.comments.filter(c => c.id !== commentId);
+    state.stats.comments = Math.max(0, (state.stats.comments || 0) - 1);
+    renderDashboard();
+    
+    showToast('Commento eliminato.', 'success');
+  } catch (err) {
+    Logger.error('UserArea', 'Delete comment error', err);
+    showToast('Errore durante l\'eliminazione. ' + (err.message || ''), 'error');
+  }
+}
+
+function formatRelativeTime(dateString) {
+  try {
+    const date = new Date(dateString);
+    const diffMs = Date.now() - date.getTime();
+    const diffMinutes = Math.round(diffMs / 60000);
+    
+    if (diffMinutes < 1) return 'Adesso';
+    if (diffMinutes < 60) return `${diffMinutes} min fa`;
+    
+    const diffHours = Math.round(diffMinutes / 60);
+    if (diffHours < 24) return `${diffHours} h fa`;
+    
+    const diffDays = Math.round(diffHours / 24);
+    if (diffDays < 7) return `${diffDays} g fa`;
+    if (diffDays < 30) return `${Math.round(diffDays / 7)} sett fa`;
+    
+    return date.toLocaleDateString('it-IT', { 
+      day: '2-digit', 
+      month: 'short', 
+      year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
+    });
+  } catch {
+    return formatDateTime(dateString);
+  }
 }
 
 function renderPlanSection() {
