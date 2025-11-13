@@ -105,8 +105,76 @@
   gap: 0.75rem;
 }
 
-/* ===== PULSANTI: USA SOLO tokens.css ===== */
-/* Rimossi tutti gli stili custom - i pulsanti usano direttamente tokens.css */
+/* ===== PULSANTI: STILE FOOTER (Freccia + Linea Blu) ===== */
+/* Applica gli stili del footer a tutti i pulsanti nella sezione user */
+.user-shell .btn,
+.user-shell .btn-sm {
+  position: relative;
+  padding-left: var(--sp-5);
+  padding-bottom: var(--sp-2);
+}
+
+.user-shell .btn::before,
+.user-shell .btn-sm::before {
+  content: "→";
+  position: absolute;
+  left: var(--sp-3);
+  color: var(--muted);
+  font-size: var(--fs-11);
+  transition: all var(--transition-fast);
+  transform: translateX(-2px);
+}
+
+.user-shell .btn::after,
+.user-shell .btn-sm::after {
+  content: "";
+  position: absolute;
+  left: var(--sp-5);
+  bottom: var(--sp-2);
+  width: 0;
+  height: 1px;
+  background: var(--brand-600);
+  transition: width var(--transition-base);
+  transform-origin: left;
+}
+
+.user-shell .btn:hover,
+.user-shell .btn-sm:hover {
+  padding-left: var(--sp-6);
+  transform: translateY(-1px) translateX(2px);
+}
+
+.user-shell .btn:hover::before,
+.user-shell .btn-sm:hover::before {
+  color: var(--brand-600);
+  transform: translateX(0);
+}
+
+.user-shell .btn:hover::after,
+.user-shell .btn-sm:hover::after {
+  width: calc(100% - var(--sp-6));
+}
+
+/* Escludi pulsanti con stili specifici (vote, delete) */
+.user-shell .vote-btn.btn-sm::before,
+.user-shell .vote-btn.btn-sm::after,
+.user-shell .delete-btn.btn-sm::before,
+.user-shell .delete-btn.btn-sm::after {
+  display: none;
+}
+
+.user-shell .vote-btn.btn-sm,
+.user-shell .delete-btn.btn-sm {
+  padding-left: var(--sp-3);
+  padding-bottom: var(--sp-2);
+}
+
+.user-shell .vote-btn.btn-sm:hover,
+.user-shell .delete-btn.btn-sm:hover {
+  padding-left: var(--sp-3);
+  transform: translateY(-1px);
+}
+
 /* Se serve solo margin-top per un pulsante specifico */
 #add-desk-link-btn {
   margin-top: 0.5rem;
