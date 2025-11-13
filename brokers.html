@@ -758,21 +758,7 @@
       color: var(--ink);
     }
 
-    /* Media/Youtube */
-    .media-block {
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius-xl);
-      padding: 1rem;
-      background: color-mix(in oklab, var(--surface-elev) 70%, transparent);
-      display: grid;
-      gap: 0.75rem;
-    }
-    .media-actions {
-      display: flex;
-      gap: 0.6rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
+    /* Media section removed */
 
     .modal-disclaimer {
       font-size: 0.78rem;
@@ -1019,13 +1005,6 @@
         <h4>Fonti</h4>
         <ul id="modal-citations"></ul>
       </div>
-      <div id="modal-media" class="media-block" hidden>
-        <h4 style="margin:0 0 0.25rem; font-size: 0.88rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-muted);">Media ufficiali</h4>
-        <div class="media-actions">
-          <a id="modal-youtube-video" class="btn btn-outline btn-sm" href="#" target="_blank" rel="noopener" hidden>Guarda video ufficiale</a>
-          <a id="modal-youtube-channel" class="btn btn-outline btn-sm" href="#" target="_blank" rel="noopener" hidden>Canale YouTube</a>
-        </div>
-      </div>
       <p id="modal-disclaimer" class="modal-disclaimer" hidden></p>
       <div class="modal-actions">
         <a id="modal-visit" class="btn btn-primary" href="#" target="_blank" rel="noopener">Visita il broker</a>
@@ -1132,7 +1111,6 @@
         },
         coverage: { stocks: '>50k', etf: '>5k', derivativesVenues: '20+' },
         coverageUrl: 'https://exante.eu/markets/',
-        media: { youtubeChannel: 'https://www.youtube.com/@EXANTEeu', youtubeVideo: '' },
         indicators: [
           { label: 'Trasparenza pricing', value: 'Alta', level: 'good' },
           { label: 'Copertura real assets', value: 'Estesa', level: 'good' },
@@ -1222,7 +1200,6 @@
         },
         coverage: { stocks: '>40k', etf: '1.5k+', ipo: 'USA/EU' },
         coverageUrl: 'https://freedom24.com/stocks',
-        media: { youtubeChannel: 'https://www.youtube.com/@freedomfinanceeurope', youtubeVideo: '' },
         indicators: [
           { label: 'Trasparenza pricing', value: 'Buona', level: 'medium' },
           { label: 'Copertura real assets', value: 'Ampia', level: 'good' },
@@ -1523,7 +1500,6 @@
         },
         coverage: { stocks: 'EU/US', derivativesVenues: '20+' },
         coverageUrl: 'https://www.ig.com/it/mercati',
-        media: { youtubeChannel: 'https://www.youtube.com/@IGItalia', youtubeVideo: '' },
         indicators: [
           { label: 'Trasparenza pricing', value: 'Media', level: 'medium' },
           { label: 'Copertura real assets', value: 'Ampia', level: 'good' },
@@ -1613,7 +1589,6 @@
         },
         coverage: { stocks: 'EU/US selezione', etf: 'ampia selezione', crypto: '40+' },
         coverageUrl: 'https://www.etoro.com/it/markets/',
-        media: { youtubeChannel: 'https://www.youtube.com/@eToro', youtubeVideo: '' },
         indicators: [
           { label: 'Trasparenza pricing', value: 'Media', level: 'medium' },
           { label: 'Copertura real assets', value: 'Ampia', level: 'good' },
@@ -1740,7 +1715,6 @@
         },
         coverage: { fxPairs: '60+', indices: '20+', commodities: '15+' },
         coverageUrl: 'https://pepperstone.com/it/',
-        media: { youtubeChannel: 'https://www.youtube.com/@pepperstone', youtubeVideo: '' },
         indicators: [
           { label: 'Trasparenza pricing', value: 'Alta', level: 'good' },
           { label: 'Copertura real assets', value: 'N/A', level: 'medium' },
@@ -2012,9 +1986,6 @@
     const modalIndicators = document.getElementById('modal-indicators');
     const modalPricing = document.getElementById('modal-pricing');
     const modalCoverage = document.getElementById('modal-coverage');
-    const modalMedia = document.getElementById('modal-media');
-    const modalYoutubeVideo = document.getElementById('modal-youtube-video');
-    const modalYoutubeChannel = document.getElementById('modal-youtube-channel');
     const modalWebinar = document.getElementById('modal-webinar');
     const webinarModal = document.getElementById('webinar-modal');
     const webinarSuccessModal = document.getElementById('webinar-success-modal');
@@ -2144,12 +2115,7 @@
         modalCoverage.hidden = true;
       }
 
-      // Media: disabilitato (niente link/anteprime)
-      modalYoutubeVideo.hidden = true;
-      modalYoutubeVideo.href = '#';
-      modalYoutubeChannel.hidden = true;
-      modalYoutubeChannel.href = '#';
-      modalMedia.hidden = true;
+      // Sezione media rimossa
 
       fillList(modalStrengths, broker.strengths);
       fillList(modalLimitations, broker.limitations);
