@@ -52,8 +52,8 @@ function template() {
       <div class="auth-body">
         <form id="auth-login-form" data-auth-form="login" class="auth-form" novalidate>
           <div class="auth-field">
-            <label for="auth-email-login">Email aziendale</label>
-            <input id="auth-email-login" type="email" name="email" autocomplete="email" required placeholder="nome@azienda.com">
+            <label for="auth-email-login">Email</label>
+            <input id="auth-email-login" type="email" name="email" autocomplete="email" required placeholder="nome@email.com">
           </div>
           <div class="auth-field">
             <label for="auth-password-login">Password</label>
@@ -90,8 +90,8 @@ function template() {
         </div>
         <form id="auth-reset-form" data-auth-form="reset" class="auth-form" hidden novalidate>
           <div class="auth-field">
-            <label for="auth-email-reset">Email registrata</label>
-            <input id="auth-email-reset" type="email" name="email" autocomplete="email" required placeholder="nome@azienda.com">
+            <label for="auth-email-reset">Email</label>
+            <input id="auth-email-reset" type="email" name="email" autocomplete="email" required placeholder="nome@email.com">
           </div>
           <div class="auth-actions">
             <button class="btn btn-primary" type="submit">Invia link di reset</button>
