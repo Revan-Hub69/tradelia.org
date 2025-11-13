@@ -40,6 +40,11 @@
   color: rgba(15, 23, 42, 0.92);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
+.user-avatar.has-image {
+  background-size: cover;
+  background-position: center;
+  color: transparent;
+}
 
 .user-hero-info {
   display: grid;
@@ -100,6 +105,16 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+}
+.proposal-input {
+  flex: 1 1 240px;
+  min-width: 200px;
+  max-width: 420px;
+  background: rgba(15, 23, 42, 0.78);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 0.9rem;
+  color: var(--ink);
 }
 
 .user-tabs {
@@ -368,9 +383,158 @@
   line-height: 1.65;
 }
 
+.user-avatar.has-image {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.proposal-input {
+  background: rgba(15, 23, 42, 0.78);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  color: var(--ink);
+  font: inherit;
+  flex: 1;
+  min-width: 200px;
+}
+
+.proposal-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.proposal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.proposal-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.vote-btn {
+  background: transparent;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: var(--radius-md);
+  padding: 0.4rem 0.6rem;
+  color: rgba(203, 213, 225, 0.7);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.vote-btn:hover {
+  border-color: rgba(96, 165, 250, 0.6);
+  color: rgba(96, 165, 250, 0.9);
+  background: rgba(96, 165, 250, 0.1);
+}
+
+.vote-btn.voted {
+  color: rgba(250, 204, 21, 0.95);
+  border-color: rgba(250, 204, 21, 0.4);
+}
+
+.vote-count {
+  font-size: var(--fs-13);
+  color: rgba(203, 213, 225, 0.7);
+  font-weight: 600;
+  min-width: 2rem;
+  text-align: center;
+}
+
+.delete-btn {
+  background: transparent;
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: var(--radius-md);
+  padding: 0.3rem 0.6rem;
+  color: rgba(248, 113, 113, 0.8);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.delete-btn:hover {
+  background: rgba(248, 113, 113, 0.15);
+  border-color: rgba(248, 113, 113, 0.6);
+}
+
+.proposal-meta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  font-size: var(--fs-12);
+  color: rgba(203, 213, 225, 0.6);
+}
+
+.plan-credits {
+  padding: 0.75rem;
+  background: rgba(37, 99, 235, 0.12);
+  border: 1px solid rgba(96, 165, 250, 0.24);
+  border-radius: var(--radius-md);
+  margin-bottom: 0.75rem;
+  color: rgba(191, 219, 254, 0.92);
+  font-size: var(--fs-13);
+}
+
+.desk-links-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.desk-link-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.75rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: var(--radius-md);
+}
+
+.desk-link-item input {
+  background: rgba(15, 23, 42, 0.78);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.75rem;
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--fs-13);
+}
+
+.plan-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.plan-list li {
+  padding: 0.5rem 0;
+  color: rgba(191, 219, 254, 0.92);
+  font-size: var(--fs-13);
+}
+
 @media (max-width: 900px) {
   .user-hero {
     grid-template-columns: minmax(0, 1fr);
+  }
+  
+  .proposal-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 

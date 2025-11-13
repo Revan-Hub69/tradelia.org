@@ -22,7 +22,7 @@
             <div class="user-badges" id="user-badges"></div>
           </div>
         </div>
-        <div class="user-cta" id="user-cta"></div>
+      <div class="user-cta" id="user-cta"></div>
       </div>
     </header>
 
@@ -75,6 +75,14 @@
           </div>
           <form class="profile-form" id="profile-form">
             <label>
+              Foto profilo
+              <div class="user-cta">
+                <input id="profile-avatar-file" type="file" accept="image/*" style="display:none">
+                <button class="btn btn-outline" type="button" id="profile-avatar-btn">Carica/aggiorna foto</button>
+              </div>
+              <span class="auth-hint">PNG/JPG fino a 2&nbsp;MB. L’immagine verrà mostrata nella community.</span>
+            </label>
+            <label>
               Nome visualizzato
               <input type="text" id="profile-display-name" maxlength="80" placeholder="Nome e cognome o desk team">
             </label>
@@ -82,6 +90,13 @@
               Profilo pubblico
               <textarea id="profile-bio" maxlength="600" placeholder="Racconta la tua esperienza, obiettivi e preferenze di mercato."></textarea>
             </label>
+            <div id="desk-links-section" hidden>
+              <label>
+                Link pubblici (max 3, solo Piano Desk)
+                <div id="desk-links-list" class="desk-links-list"></div>
+                <button class="btn btn-outline" type="button" id="add-desk-link-btn" style="margin-top: 0.5rem;">+ Aggiungi link</button>
+              </label>
+            </div>
             <div class="user-cta">
               <button class="btn btn-primary" type="submit" id="profile-save-btn">Salva profilo</button>
               <button class="btn btn-outline" type="button" id="profile-reset-btn">Annulla modifiche</button>
@@ -106,16 +121,28 @@
 
         <section class="user-section" id="panel-community" role="tabpanel" aria-labelledby="tab-community" hidden>
           <div class="section-header">
-            <h3>Analisi richieste dalla community</h3>
-            <p>Prepara la tua lista di richieste ticker e vota quelle proposte dagli altri membri. Funzionalità in rollout.</p>
+            <h3>Analisi on‑demand</h3>
+            <p>Partecipa alla roadmap dei prossimi approfondimenti in modo semplice e trasparente.</p>
           </div>
-          <div class="placeholder-card">
-            <strong>Richieste analisi</strong>
-            <span>Il modulo di richiesta verrà attivato presto. Potrai proporre ticker, asset class o temi macro da analizzare nelle prossime note.</span>
+          <div class="placeholder-card" id="community-propose">
+            <strong>Proponi o vota un asset (piani Trial/Pro)</strong>
+            <span>Proponi un ticker/tema o vota quelli già suggeriti dalla community. Disponibile per piani Trial e Pro.</span>
+            <div class="user-cta">
+              <input id="proposal-input" type="text" class="proposal-input" placeholder="Es. AAPL, BTC-USD, S&P 500, settore AI">
+              <button class="btn btn-primary" type="button" id="proposal-submit">Proponi</button>
+            </div>
+            <div id="proposal-list" class="history-list"></div>
           </div>
-          <div class="placeholder-card">
-            <strong>Votazione giornaliera</strong>
-            <span>Ogni giorno potrai assegnare un voto alla richiesta che ritieni prioritaria. Il team editoriale utilizzerà questa metrica per definire la roadmap dei report.</span>
+          <div class="placeholder-card" id="on-demand-desk">
+            <strong>Analisi su richiesta (Piano Desk)</strong>
+            <ul class="plan-list">
+              <li>1 credito = 1 analisi su richiesta · € 99</li>
+              <li>3 crediti = € 249</li>
+              <li>7 crediti = € 499</li>
+            </ul>
+            <div class="user-cta">
+              <a class="btn btn-outline" href="/pricing.html">Consulta prezzi</a>
+            </div>
           </div>
         </section>
 

@@ -1,4 +1,4 @@
-import { supabase } from '/report/assets/js/supabase-client.js';
+import { supabase, AVATAR_BUCKET } from '/report/assets/js/supabase-client.js';
 import Logger from '/report/assets/js/utils/logger.js';
 import { siteHeader } from '/report/assets/js/components/site-header.js';
 
@@ -40,6 +40,13 @@ const PLAN_CARD = document.getElementById('plan-card');
 const PLAN_DESCRIPTION = document.getElementById('plan-description');
 const PLAN_BENEFITS = document.getElementById('plan-benefits');
 const PLAN_ACTIONS = document.getElementById('plan-actions');
+// Avatar controls
+const AVATAR_FILE = document.getElementById('profile-avatar-file');
+const AVATAR_BTN = document.getElementById('profile-avatar-btn');
+// Community propose/vote controls
+const PROPOSAL_INPUT = document.getElementById('proposal-input');
+const PROPOSAL_SUBMIT = document.getElementById('proposal-submit');
+const PROPOSAL_LIST = document.getElementById('proposal-list');
 
 const AUTH_CONTAINER = document.getElementById('auth-container');
 
@@ -50,7 +57,12 @@ const state = {
   stats: { comments: 0, requests: 0 },
   comments: [],
   loading: true,
-  lastSession: null
+  lastSession: null,
+  proposals: [],
+  userVotes: new Set(),
+  isAdmin: false,
+  credits: null,
+  deskLinks: []
 };
 
 init();
@@ -123,13 +135,21 @@ async function bootstrapUserArea() {
       fetchUserRole(),
       fetchUserProfile(),
       fetchDashboardStats(),
-      fetchCommentsHistory()
+      fetchCommentsHistory(),
+      checkAdminStatus()
     ]);
+    if (state.role === 'trial' || state.role === 'pro') {
+      await Promise.all([fetchProposals(), fetchUserVotes()]);
+    }
+    if (state.role === 'institutional') {
+      await Promise.all([fetchCredits(), fetchDeskLinks()]);
+    }
     renderHero();
     renderProfileForm();
     renderDashboard();
     renderCommentsHistory();
     renderPlanSection();
+    renderCommunitySection();
     setActiveTab('dashboard');
     if (PANELS.auth) PANELS.auth.hidden = true;
   } catch (err) {
@@ -142,7 +162,15 @@ function renderHero() {
   if (!HERO) return;
   const displayName = getDisplayName();
   const initials = deriveInitials(displayName);
-  AVATAR.textContent = initials;
+  if (state.profile?.avatar_url) {
+    AVATAR.style.backgroundImage = `url('${state.profile.avatar_url}')`;
+    AVATAR.classList.add('has-image');
+    AVATAR.textContent = '';
+  } else {
+    AVATAR.style.backgroundImage = '';
+    AVATAR.classList.remove('has-image');
+    AVATAR.textContent = initials;
+  }
   NAME.textContent = displayName;
   EMAIL.textContent = state.user?.email || '';
 
@@ -175,6 +203,17 @@ function renderProfileForm() {
   if (!PROFILE_FORM) return;
   PROFILE_NAME_FIELD.value = state.profile?.display_name || getDisplayName();
   PROFILE_BIO_FIELD.value = state.profile?.bio || '';
+  
+  // Setup avatar upload
+  if (AVATAR_BTN && AVATAR_FILE) {
+    AVATAR_BTN.addEventListener('click', () => AVATAR_FILE.click());
+    AVATAR_FILE.addEventListener('change', onAvatarSelected);
+  }
+  
+  // Setup desk links if institutional
+  if (state.role === 'institutional') {
+    renderDeskLinksSection();
+  }
 }
 
 function renderDashboard() {
@@ -217,13 +256,19 @@ function renderPlanSection() {
   PLAN_DESCRIPTION.textContent = planDescription(state.role);
   PLAN_BENEFITS.innerHTML = planBenefits(state.role).map(item => `<span>• ${escapeHtml(item)}</span>`).join('');
   PLAN_ACTIONS.innerHTML = '';
-  const upgradeBtn = document.createElement('button');
-  upgradeBtn.className = 'btn btn-primary';
-  upgradeBtn.textContent = state.role === 'institutional' ? 'Contatta il desk' : 'Richiedi upgrade';
-  upgradeBtn.addEventListener('click', () => {
-    showToast('Il team commerciale ti contatterà a breve.', 'info');
-  });
-  PLAN_ACTIONS.appendChild(upgradeBtn);
+  
+  if (state.role === 'institutional' && state.credits !== null) {
+    const creditsInfo = document.createElement('div');
+    creditsInfo.className = 'plan-credits';
+    creditsInfo.innerHTML = `<strong>Crediti disponibili: ${state.credits.credits_balance}</strong>`;
+    PLAN_ACTIONS.appendChild(creditsInfo);
+  }
+  
+  const actionBtn = document.createElement('a');
+  actionBtn.className = 'btn btn-primary';
+  actionBtn.href = '/pricing.html';
+  actionBtn.textContent = state.role === 'institutional' ? 'Contatta il desk' : 'Consulta prezzi';
+  PLAN_ACTIONS.appendChild(actionBtn);
 }
 
 function renderAuthPanel() {
@@ -258,7 +303,7 @@ function renderAuthPanel() {
 async function onProfileSubmit(event) {
   event.preventDefault();
   if (!state.user) {
-    showToast('Effettua l’accesso per modificare il profilo.', 'error');
+    showToast('Effettua l'accesso per modificare il profilo.', 'error');
     return;
   }
   const display_name = PROFILE_NAME_FIELD.value.trim();
@@ -275,6 +320,12 @@ async function onProfileSubmit(event) {
       .upsert(payload, { onConflict: 'user_id' });
     if (error) throw error;
     state.profile = { ...(state.profile || {}), display_name, bio };
+    
+    // Save desk links if institutional
+    if (state.role === 'institutional') {
+      await saveDeskLinks();
+    }
+    
     renderHero();
     showToast('Profilo aggiornato.', 'success');
   } catch (err) {
@@ -304,6 +355,8 @@ async function handleLoginSubmit(event) {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
     showToast('Accesso effettuato.', 'success');
+    await bootstrapUserArea();
+    setTimeout(() => { setActiveTab('profile'); }, 100);
   } catch (err) {
     Logger.error('UserArea', 'login error', err);
     showToast(err.message || 'Credenziali non valide.', 'error');
@@ -331,7 +384,7 @@ async function fetchUserProfile() {
   try {
     const { data, error } = await supabase
       .from('user_profiles')
-      .select('display_name, bio')
+      .select('display_name, bio, avatar_url')
       .eq('user_id', state.user.id)
       .maybeSingle();
     if (error) throw error;
@@ -477,5 +530,459 @@ function showToast(message, variant = 'info') {
   setTimeout(() => {
     TOAST.removeAttribute('data-visible');
   }, 3200);
+}
+
+// ===== AVATAR UPLOAD =====
+async function onAvatarSelected(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  
+  if (file.size > 2 * 1024 * 1024) {
+    showToast('Il file è troppo grande. Massimo 2 MB.', 'error');
+    return;
+  }
+  
+  if (!file.type.startsWith('image/')) {
+    showToast('Seleziona un file immagine valido.', 'error');
+    return;
+  }
+  
+  try {
+    AVATAR_BTN.disabled = true;
+    AVATAR_BTN.textContent = 'Caricamento...';
+    
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${state.user.id}-${Date.now()}.${fileExt}`;
+    const filePath = `${state.user.id}/${fileName}`;
+    
+    // Upload to Supabase Storage
+    const { error: uploadError } = await supabase.storage
+      .from(AVATAR_BUCKET)
+      .upload(filePath, file, { upsert: true });
+    
+    if (uploadError) throw uploadError;
+    
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from(AVATAR_BUCKET)
+      .getPublicUrl(filePath);
+    
+    // Update profile
+    const { error: updateError } = await supabase
+      .from('user_profiles')
+      .upsert({
+        user_id: state.user.id,
+        avatar_url: publicUrl
+      }, { onConflict: 'user_id' });
+    
+    if (updateError) throw updateError;
+    
+    state.profile = { ...(state.profile || {}), avatar_url: publicUrl };
+    renderHero();
+    showToast('Foto profilo aggiornata.', 'success');
+  } catch (err) {
+    Logger.error('UserArea', 'avatar upload error', err);
+    showToast('Errore durante il caricamento della foto.', 'error');
+  } finally {
+    AVATAR_BTN.disabled = false;
+    AVATAR_BTN.textContent = 'Carica/aggiorna foto';
+    event.target.value = '';
+  }
+}
+
+// ===== COMMUNITY PROPOSALS & VOTES =====
+async function fetchProposals() {
+  try {
+    const { data, error } = await supabase
+      .from('asset_proposals')
+      .select('id, asset_ticker, vote_count, created_at, proposed_by')
+      .eq('is_active', true)
+      .order('vote_count', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(50);
+    if (error) throw error;
+    state.proposals = data || [];
+  } catch (err) {
+    Logger.warn('UserArea', 'proposals fetch error', err);
+    state.proposals = [];
+  }
+}
+
+async function fetchUserVotes() {
+  if (!state.user) return;
+  try {
+    const { data, error } = await supabase
+      .from('asset_votes')
+      .select('proposal_id')
+      .eq('user_id', state.user.id);
+    if (error) throw error;
+    state.userVotes = new Set((data || []).map(v => v.proposal_id));
+  } catch (err) {
+    Logger.warn('UserArea', 'votes fetch error', err);
+    state.userVotes = new Set();
+  }
+}
+
+async function checkAdminStatus() {
+  if (!state.user) return;
+  try {
+    const { data, error } = await supabase
+      .from('admin_users')
+      .select('user_id')
+      .eq('user_id', state.user.id)
+      .maybeSingle();
+    if (error) throw error;
+    state.isAdmin = !!data;
+  } catch (err) {
+    Logger.warn('UserArea', 'admin check error', err);
+    state.isAdmin = false;
+  }
+}
+
+function renderCommunitySection() {
+  if (!PANELS.community) return;
+  
+  const proposeSection = document.getElementById('community-propose');
+  const deskSection = document.getElementById('on-demand-desk');
+  
+  if (!proposeSection || !deskSection) return;
+  
+  // Show/hide based on role
+  if (state.role === 'trial' || state.role === 'pro') {
+    proposeSection.hidden = false;
+    deskSection.hidden = true;
+    renderProposalsList();
+    setupProposalHandlers();
+  } else if (state.role === 'institutional') {
+    proposeSection.hidden = true;
+    deskSection.hidden = false;
+  } else {
+    proposeSection.hidden = true;
+    deskSection.hidden = true;
+  }
+}
+
+function renderProposalsList() {
+  if (!PROPOSAL_LIST) return;
+  
+  if (!state.proposals.length) {
+    PROPOSAL_LIST.innerHTML = '<p style="color: rgba(203, 213, 225, 0.6); font-size: 0.9rem;">Nessuna proposta ancora. Sii il primo a proporre un asset!</p>';
+    return;
+  }
+  
+  PROPOSAL_LIST.innerHTML = state.proposals.map(proposal => {
+    const hasVoted = state.userVotes.has(proposal.id);
+    const isOwner = proposal.proposed_by === state.user?.id;
+    return `
+      <article class="history-item proposal-item">
+        <div class="proposal-header">
+          <strong>${escapeHtml(proposal.asset_ticker)}</strong>
+          <div class="proposal-actions">
+            <button class="vote-btn ${hasVoted ? 'voted' : ''}" 
+                    data-proposal-id="${proposal.id}" 
+                    ${hasVoted ? 'title="Rimuovi voto"' : 'title="Vota"'}
+                    aria-label="${hasVoted ? 'Rimuovi voto' : 'Vota'}">
+              ${hasVoted ? '★' : '☆'}
+            </button>
+            <span class="vote-count">${proposal.vote_count}</span>
+            ${state.isAdmin ? `<button class="delete-btn" data-proposal-id="${proposal.id}" title="Rimuovi proposta">×</button>` : ''}
+          </div>
+        </div>
+        <div class="proposal-meta">
+          ${isOwner ? '<span class="badge">Tua proposta</span>' : ''}
+          <span>${formatDateTime(proposal.created_at)}</span>
+        </div>
+      </article>
+    `;
+  }).join('');
+  
+  // Attach event listeners
+  PROPOSAL_LIST.querySelectorAll('.vote-btn').forEach(btn => {
+    btn.addEventListener('click', () => handleVote(btn.dataset.proposalId));
+  });
+  
+  if (state.isAdmin) {
+    PROPOSAL_LIST.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', () => handleDeleteProposal(btn.dataset.proposalId));
+    });
+  }
+}
+
+function setupProposalHandlers() {
+  if (PROPOSAL_SUBMIT) {
+    PROPOSAL_SUBMIT.addEventListener('click', handleProposeAsset);
+  }
+  if (PROPOSAL_INPUT) {
+    PROPOSAL_INPUT.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleProposeAsset();
+    });
+  }
+}
+
+async function handleProposeAsset() {
+  if (!PROPOSAL_INPUT) return;
+  const ticker = PROPOSAL_INPUT.value.trim().toUpperCase();
+  
+  if (!ticker || ticker.length < 2) {
+    showToast('Inserisci un ticker valido (es. AAPL, BTC-USD).', 'error');
+    return;
+  }
+  
+  if (state.role !== 'trial' && state.role !== 'pro') {
+    showToast('Solo i piani Trial e Pro possono proporre asset.', 'error');
+    return;
+  }
+  
+  try {
+    PROPOSAL_SUBMIT.disabled = true;
+    const { data, error } = await supabase
+      .from('asset_proposals')
+      .insert({
+        asset_ticker: ticker,
+        proposed_by: state.user.id
+      })
+      .select()
+      .single();
+    
+    if (error) throw error;
+    
+    state.proposals.unshift(data);
+    PROPOSAL_INPUT.value = '';
+    renderProposalsList();
+    showToast('Proposta inviata!', 'success');
+  } catch (err) {
+    Logger.error('UserArea', 'proposal error', err);
+    if (err.code === '23505') {
+      showToast('Questa proposta esiste già.', 'error');
+    } else {
+      showToast('Errore durante l\'invio della proposta.', 'error');
+    }
+  } finally {
+    PROPOSAL_SUBMIT.disabled = false;
+  }
+}
+
+async function handleVote(proposalId) {
+  if (state.role !== 'trial' && state.role !== 'pro') {
+    showToast('Solo i piani Trial e Pro possono votare.', 'error');
+    return;
+  }
+  
+  const hasVoted = state.userVotes.has(proposalId);
+  
+  try {
+    if (hasVoted) {
+      // Remove vote
+      const { error } = await supabase
+        .from('asset_votes')
+        .delete()
+        .eq('proposal_id', proposalId)
+        .eq('user_id', state.user.id);
+      
+      if (error) throw error;
+      state.userVotes.delete(proposalId);
+    } else {
+      // Add vote
+      const { error } = await supabase
+        .from('asset_votes')
+        .insert({
+          proposal_id: proposalId,
+          user_id: state.user.id
+        });
+      
+      if (error) throw error;
+      state.userVotes.add(proposalId);
+    }
+    
+    // Refresh proposals to get updated vote counts
+    await fetchProposals();
+    renderProposalsList();
+  } catch (err) {
+    Logger.error('UserArea', 'vote error', err);
+    showToast('Errore durante il voto.', 'error');
+  }
+}
+
+async function handleDeleteProposal(proposalId) {
+  if (!state.isAdmin) return;
+  
+  if (!confirm('Rimuovere questa proposta?')) return;
+  
+  try {
+    const { error } = await supabase
+      .from('asset_proposals')
+      .delete()
+      .eq('id', proposalId);
+    
+    if (error) throw error;
+    
+    state.proposals = state.proposals.filter(p => p.id !== proposalId);
+    renderProposalsList();
+    showToast('Proposta rimossa.', 'success');
+  } catch (err) {
+    Logger.error('UserArea', 'delete proposal error', err);
+    showToast('Errore durante la rimozione.', 'error');
+  }
+}
+
+// ===== DESK LINKS & CREDITS =====
+async function fetchCredits() {
+  if (!state.user) return;
+  try {
+    const { data, error } = await supabase
+      .from('user_analysis_credits')
+      .select('credits_balance, total_purchased, total_used')
+      .eq('user_id', state.user.id)
+      .maybeSingle();
+    if (error) throw error;
+    state.credits = data || { credits_balance: 0, total_purchased: 0, total_used: 0 };
+  } catch (err) {
+    Logger.warn('UserArea', 'credits fetch error', err);
+    state.credits = { credits_balance: 0, total_purchased: 0, total_used: 0 };
+  }
+}
+
+async function fetchDeskLinks() {
+  if (!state.user) return;
+  try {
+    const { data, error } = await supabase
+      .from('desk_public_links')
+      .select('id, link_url, link_label, display_order')
+      .eq('user_id', state.user.id)
+      .order('display_order', { ascending: true });
+    if (error) throw error;
+    state.deskLinks = data || [];
+  } catch (err) {
+    Logger.warn('UserArea', 'desk links fetch error', err);
+    state.deskLinks = [];
+  }
+}
+
+function renderDeskLinksSection() {
+  const section = document.getElementById('desk-links-section');
+  const list = document.getElementById('desk-links-list');
+  const addBtn = document.getElementById('add-desk-link-btn');
+  
+  if (!section || !list || !addBtn) return;
+  
+  section.hidden = false;
+  
+  // Render existing links
+  list.innerHTML = state.deskLinks.map((link, idx) => `
+    <div class="desk-link-item">
+      <div style="display: grid; gap: 0.5rem; flex: 1;">
+        <input type="url" 
+               id="link-url-${link.id}" 
+               value="${escapeHtml(link.link_url)}" 
+               placeholder="https://..." 
+               required>
+        <input type="text" 
+               id="link-label-${link.id}" 
+               value="${escapeHtml(link.link_label || '')}" 
+               placeholder="Etichetta (opzionale)">
+      </div>
+      <button type="button" 
+              class="delete-btn" 
+              data-link-id="${link.id}" 
+              title="Rimuovi link">×</button>
+    </div>
+  `).join('');
+  
+  // Add remove handlers
+  list.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', () => handleRemoveDeskLink(btn.dataset.linkId));
+  });
+  
+  // Add button handler
+  addBtn.addEventListener('click', handleAddDeskLink);
+}
+
+async function handleAddDeskLink() {
+  if (state.deskLinks.length >= 3) {
+    showToast('Massimo 3 link consentiti.', 'error');
+    return;
+  }
+  
+  try {
+    const nextOrder = state.deskLinks.length;
+    const { data, error } = await supabase
+      .from('desk_public_links')
+      .insert({
+        user_id: state.user.id,
+        link_url: 'https://',
+        link_label: '',
+        display_order: nextOrder
+      })
+      .select()
+      .single();
+    
+    if (error) throw error;
+    
+    state.deskLinks.push(data);
+    renderDeskLinksSection();
+  } catch (err) {
+    Logger.error('UserArea', 'add desk link error', err);
+    showToast('Errore durante l\'aggiunta del link.', 'error');
+  }
+}
+
+async function handleRemoveDeskLink(linkId) {
+  try {
+    const { error } = await supabase
+      .from('desk_public_links')
+      .delete()
+      .eq('id', linkId);
+    
+    if (error) throw error;
+    
+    state.deskLinks = state.deskLinks.filter(l => l.id !== linkId);
+    renderDeskLinksSection();
+    showToast('Link rimosso.', 'success');
+  } catch (err) {
+    Logger.error('UserArea', 'remove desk link error', err);
+    showToast('Errore durante la rimozione.', 'error');
+  }
+}
+
+async function saveDeskLinks() {
+  if (state.role !== 'institutional') return;
+  
+  const list = document.getElementById('desk-links-list');
+  if (!list) return;
+  
+  const updates = [];
+  list.querySelectorAll('.desk-link-item').forEach(item => {
+    const urlInput = item.querySelector('input[type="url"]');
+    const labelInput = item.querySelector('input[type="text"]');
+    const linkId = item.querySelector('.delete-btn')?.dataset.linkId;
+    
+    if (urlInput && linkId) {
+      updates.push({
+        id: linkId,
+        link_url: urlInput.value.trim(),
+        link_label: labelInput?.value.trim() || null
+      });
+    }
+  });
+  
+  if (!updates.length) return;
+  
+  try {
+    await Promise.all(updates.map(update => 
+      supabase
+        .from('desk_public_links')
+        .update({
+          link_url: update.link_url,
+          link_label: update.link_label
+        })
+        .eq('id', update.id)
+    ));
+    
+    await fetchDeskLinks();
+    renderDeskLinksSection();
+  } catch (err) {
+    Logger.error('UserArea', 'save desk links error', err);
+    showToast('Errore durante il salvataggio dei link.', 'error');
+  }
 }
 
