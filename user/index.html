@@ -32,7 +32,7 @@
         <button type="button" role="tab" id="tab-dashboard" aria-controls="panel-dashboard" aria-selected="true">Dashboard</button>
         <button type="button" role="tab" id="tab-profile" aria-controls="panel-profile" aria-selected="false">Profilo</button>
         <button type="button" role="tab" id="tab-comments" aria-controls="panel-comments" aria-selected="false">Commenti</button>
-        <button type="button" role="tab" id="tab-community" aria-controls="panel-community" aria-selected="false">Analisi community</button>
+        <button type="button" role="tab" id="tab-community" aria-controls="panel-community" aria-selected="false">Analisi on demand</button>
         <button type="button" role="tab" id="tab-plan" aria-controls="panel-plan" aria-selected="false">Abbonamento</button>
         <button type="button" role="tab" id="tab-inbox" aria-controls="panel-inbox" aria-selected="false">Inbox</button>
       </div>
@@ -138,27 +138,58 @@
 
         <section class="user-section" id="panel-community" role="tabpanel" aria-labelledby="tab-community" hidden>
           <div class="section-header">
-            <h3>Analisi on‑demand</h3>
-            <p>Partecipa alla roadmap dei prossimi approfondimenti in modo semplice e trasparente.</p>
+            <h3>Analisi on demand</h3>
+            <p>Richiedi analisi personalizzate su ticker specifici. Ogni richiesta utilizza un credito.</p>
           </div>
-          <div class="placeholder-card" id="community-propose">
-            <strong>Proponi o vota un asset (piani Trial/Pro)</strong>
-            <span>Proponi un ticker/tema o vota quelli già suggeriti dalla community. Disponibile per piani Trial e Pro.</span>
-            <div class="user-cta">
-              <input id="proposal-input" type="text" class="proposal-input" placeholder="Es. AAPL, BTC-USD, S&P 500, settore AI">
-              <button class="btn btn-primary" type="button" id="proposal-submit">Proponi</button>
+          
+          <!-- Contatore crediti residui -->
+          <div class="credits-counter" id="credits-counter">
+            <div class="credits-display">
+              <span class="credits-label">Crediti residui:</span>
+              <strong class="credits-value" id="credits-balance">—</strong>
             </div>
-            <div id="proposal-list" class="history-list"></div>
+            <button class="btn btn-primary" type="button" id="buy-credits-btn">Acquista crediti</button>
           </div>
-          <div class="placeholder-card" id="on-demand-desk">
-            <strong>Analisi su richiesta (Piano Desk)</strong>
-            <ul class="plan-list">
-              <li>1 credito = 1 analisi su richiesta · € 99</li>
-              <li>3 crediti = € 249</li>
-              <li>7 crediti = € 499</li>
-            </ul>
-            <div class="user-cta">
-              <a class="btn btn-outline" href="/pricing.html">Consulta prezzi</a>
+
+          <!-- Layout due schede parallele su desktop -->
+          <div class="on-demand-grid">
+            <!-- Scheda sinistra: Richiesta analisi -->
+            <div class="on-demand-card" id="request-analysis-card">
+              <div class="on-demand-card-header">
+                <h4>Richiedi analisi</h4>
+                <p>Invia un ticker per richiedere un'analisi personalizzata</p>
+              </div>
+              <div class="on-demand-card-content">
+                <div class="user-cta">
+                  <input id="proposal-input" type="text" class="proposal-input" placeholder="Es. AAPL, BTC-USD, S&P 500, settore AI">
+                  <button class="btn btn-primary" type="button" id="proposal-submit">Invia ticker</button>
+                </div>
+                <div id="proposal-list" class="history-list"></div>
+              </div>
+            </div>
+
+            <!-- Scheda destra: Proposte community (solo Trial/Pro) -->
+            <div class="on-demand-card" id="community-propose-card" hidden>
+              <div class="on-demand-card-header">
+                <h4>Proposte community</h4>
+                <p>Proponi o vota asset suggeriti dalla community (piani Trial/Pro)</p>
+              </div>
+              <div class="on-demand-card-content">
+                <div id="community-proposals-list" class="history-list"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Overlay lucchetto per funzionalità bloccate -->
+          <div class="lock-overlay" id="lock-overlay" hidden>
+            <div class="lock-overlay-content">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <h4>Funzionalità bloccata</h4>
+              <p id="lock-overlay-message">Questa funzionalità richiede un piano attivo.</p>
+              <button class="btn btn-primary" type="button" id="lock-overlay-upgrade">Vedi piani disponibili</button>
             </div>
           </div>
         </section>

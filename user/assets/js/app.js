@@ -47,6 +47,15 @@ const AVATAR_BTN = document.getElementById('profile-avatar-btn');
 const PROPOSAL_INPUT = document.getElementById('proposal-input');
 const PROPOSAL_SUBMIT = document.getElementById('proposal-submit');
 const PROPOSAL_LIST = document.getElementById('proposal-list');
+const CREDITS_COUNTER = document.getElementById('credits-counter');
+const CREDITS_BALANCE = document.getElementById('credits-balance');
+const BUY_CREDITS_BTN = document.getElementById('buy-credits-btn');
+const LOCK_OVERLAY = document.getElementById('lock-overlay');
+const LOCK_OVERLAY_MESSAGE = document.getElementById('lock-overlay-message');
+const LOCK_OVERLAY_UPGRADE = document.getElementById('lock-overlay-upgrade');
+const COMMUNITY_PROPOSALS_LIST = document.getElementById('community-proposals-list');
+const COMMUNITY_PROPOSE_CARD = document.getElementById('community-propose-card');
+const REQUEST_ANALYSIS_CARD = document.getElementById('request-analysis-card');
 
 const AUTH_CONTAINER = document.getElementById('auth-container');
 
@@ -167,8 +176,10 @@ async function bootstrapUserArea() {
     if (state.role === 'trial' || state.role === 'pro') {
       await Promise.all([fetchProposals(), fetchUserVotes()]);
     }
+    // Fetch credits for all users (to show counter)
+    await fetchCredits();
     if (state.role === 'institutional' || state.isAdmin) {
-      await Promise.all([fetchCredits(), fetchDeskLinks()]);
+      await fetchDeskLinks();
     }
     renderHero();
     renderProfileForm();
@@ -812,35 +823,107 @@ async function checkAdminStatus() {
 function renderCommunitySection() {
   if (!PANELS.community) return;
   
-  const proposeSection = document.getElementById('community-propose');
-  const deskSection = document.getElementById('on-demand-desk');
+  // Always show credits counter
+  renderCreditsCounter();
   
-  if (!proposeSection || !deskSection) return;
+  // Show request analysis card for all authenticated users
+  if (REQUEST_ANALYSIS_CARD) {
+    REQUEST_ANALYSIS_CARD.hidden = false;
+  }
   
-  // Show/hide based on role
-  if (state.role === 'trial' || state.role === 'pro') {
-    proposeSection.hidden = false;
-    deskSection.hidden = true;
-    renderProposalsList();
-    setupProposalHandlers();
-  } else if (state.role === 'institutional') {
-    proposeSection.hidden = true;
-    deskSection.hidden = false;
+  // Show community proposals card only for Trial/Pro
+  if (COMMUNITY_PROPOSE_CARD) {
+    if (state.role === 'trial' || state.role === 'pro') {
+      COMMUNITY_PROPOSE_CARD.hidden = false;
+      renderCommunityProposalsList();
+    } else {
+      COMMUNITY_PROPOSE_CARD.hidden = true;
+    }
+  }
+  
+  // Setup handlers
+  setupProposalHandlers();
+  setupCreditsHandlers();
+}
+
+function renderCreditsCounter() {
+  if (!CREDITS_BALANCE) return;
+  
+  const credits = state.credits?.credits_balance ?? 0;
+  CREDITS_BALANCE.textContent = credits;
+  
+  // Update color based on credits
+  if (credits === 0) {
+    CREDITS_BALANCE.style.color = 'rgba(248, 113, 113, 0.9)';
+  } else if (credits < 3) {
+    CREDITS_BALANCE.style.color = 'rgba(251, 191, 36, 0.9)';
   } else {
-    proposeSection.hidden = true;
-    deskSection.hidden = true;
+    CREDITS_BALANCE.style.color = 'var(--brand-600)';
   }
 }
 
+function setupCreditsHandlers() {
+  if (BUY_CREDITS_BTN) {
+    BUY_CREDITS_BTN.addEventListener('click', () => {
+      window.location.href = '/pricing.html';
+    });
+  }
+  
+  if (LOCK_OVERLAY_UPGRADE) {
+    LOCK_OVERLAY_UPGRADE.addEventListener('click', () => {
+      hideLockOverlay();
+      window.location.href = '/pricing.html';
+    });
+  }
+  
+  // Close overlay on click outside
+  if (LOCK_OVERLAY) {
+    LOCK_OVERLAY.addEventListener('click', (e) => {
+      if (e.target === LOCK_OVERLAY) {
+        hideLockOverlay();
+      }
+    });
+  }
+}
+
+function showLockOverlay(message) {
+  if (!LOCK_OVERLAY || !LOCK_OVERLAY_MESSAGE) return;
+  LOCK_OVERLAY_MESSAGE.textContent = message || 'Questa funzionalità richiede un piano attivo.';
+  LOCK_OVERLAY.hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+
+function hideLockOverlay() {
+  if (!LOCK_OVERLAY) return;
+  LOCK_OVERLAY.hidden = true;
+  document.body.style.overflow = '';
+}
+
+// Render on-demand requests (for institutional users)
 function renderProposalsList() {
   if (!PROPOSAL_LIST) return;
   
-  if (!state.proposals.length) {
-    PROPOSAL_LIST.innerHTML = '<p style="color: rgba(203, 213, 225, 0.6); font-size: 0.9rem;">Nessuna proposta ancora. Sii il primo a proporre un asset!</p>';
+  // For institutional users, show analysis requests
+  if (state.role === 'institutional') {
+    // TODO: Fetch and display analysis_requests
+    PROPOSAL_LIST.innerHTML = '<p style="color: rgba(203, 213, 225, 0.6); font-size: 0.9rem;">Le tue richieste di analisi appariranno qui.</p>';
     return;
   }
   
-  PROPOSAL_LIST.innerHTML = state.proposals.map(proposal => {
+  // For other users, show empty state
+  PROPOSAL_LIST.innerHTML = '<p style="color: rgba(203, 213, 225, 0.6); font-size: 0.9rem;">Invia un ticker per richiedere un\'analisi.</p>';
+}
+
+// Render community proposals (for Trial/Pro users)
+function renderCommunityProposalsList() {
+  if (!COMMUNITY_PROPOSALS_LIST) return;
+  
+  if (!state.proposals.length) {
+    COMMUNITY_PROPOSALS_LIST.innerHTML = '<p style="color: rgba(203, 213, 225, 0.6); font-size: 0.9rem;">Nessuna proposta ancora. Sii il primo a proporre un asset!</p>';
+    return;
+  }
+  
+  COMMUNITY_PROPOSALS_LIST.innerHTML = state.proposals.map(proposal => {
     const hasVoted = state.userVotes.has(proposal.id);
     const isOwner = proposal.proposed_by === state.user?.id;
     return `
@@ -867,25 +950,38 @@ function renderProposalsList() {
   }).join('');
   
   // Attach event listeners
-  PROPOSAL_LIST.querySelectorAll('.vote-btn').forEach(btn => {
+  COMMUNITY_PROPOSALS_LIST.querySelectorAll('.vote-btn').forEach(btn => {
     btn.addEventListener('click', () => handleVote(btn.dataset.proposalId));
   });
   
   if (state.isAdmin) {
-    PROPOSAL_LIST.querySelectorAll('.delete-btn').forEach(btn => {
+    COMMUNITY_PROPOSALS_LIST.querySelectorAll('.delete-btn').forEach(btn => {
       btn.addEventListener('click', () => handleDeleteProposal(btn.dataset.proposalId));
     });
   }
 }
 
 function setupProposalHandlers() {
-  if (PROPOSAL_SUBMIT) {
+  if (PROPOSAL_SUBMIT && !PROPOSAL_SUBMIT._hasHandler) {
     PROPOSAL_SUBMIT.addEventListener('click', handleProposeAsset);
+    PROPOSAL_SUBMIT._hasHandler = true;
   }
-  if (PROPOSAL_INPUT) {
+  if (PROPOSAL_INPUT && !PROPOSAL_INPUT._hasHandler) {
     PROPOSAL_INPUT.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') handleProposeAsset();
     });
+    PROPOSAL_INPUT._hasHandler = true;
+  }
+  
+  // Update button text based on role
+  if (PROPOSAL_SUBMIT) {
+    if (state.role === 'institutional') {
+      PROPOSAL_SUBMIT.textContent = 'Invia ticker';
+    } else if (state.role === 'trial' || state.role === 'pro') {
+      PROPOSAL_SUBMIT.textContent = 'Proponi';
+    } else {
+      PROPOSAL_SUBMIT.textContent = 'Invia ticker';
+    }
   }
 }
 
@@ -898,38 +994,94 @@ async function handleProposeAsset() {
     return;
   }
   
-  if (state.role !== 'trial' && state.role !== 'pro') {
-    showToast('Solo i piani Trial e Pro possono proporre asset.', 'error');
+  // Check if user has credits (for on-demand requests)
+  const credits = state.credits?.credits_balance ?? 0;
+  
+  // For institutional users: require credits for on-demand requests
+  if (state.role === 'institutional') {
+    if (credits <= 0) {
+      showLockOverlay('Non hai crediti disponibili. Acquista crediti per richiedere analisi on demand.');
+      return;
+    }
+    
+    // Deduct credit and create request
+    try {
+      PROPOSAL_SUBMIT.disabled = true;
+      
+      // Create analysis request
+      const { data: requestData, error: requestError } = await supabase
+        .from('analysis_requests')
+        .insert({
+          ticker: ticker,
+          user_id: state.user.id,
+          status: 'pending'
+        })
+        .select()
+        .single();
+      
+      if (requestError) throw requestError;
+      
+      // Deduct credit
+      const { error: creditError } = await supabase
+        .from('user_analysis_credits')
+        .update({
+          credits_balance: credits - 1,
+          total_used: (state.credits?.total_used ?? 0) + 1
+        })
+        .eq('user_id', state.user.id);
+      
+      if (creditError) throw creditError;
+      
+      // Refresh credits
+      await fetchCredits();
+      renderCreditsCounter();
+      
+      PROPOSAL_INPUT.value = '';
+      renderProposalsList();
+      showToast('Richiesta inviata! Un credito è stato scalato.', 'success');
+    } catch (err) {
+      Logger.error('UserArea', 'on-demand request error', err);
+      showToast('Errore durante l\'invio della richiesta.', 'error');
+    } finally {
+      PROPOSAL_SUBMIT.disabled = false;
+    }
     return;
   }
   
-  try {
-    PROPOSAL_SUBMIT.disabled = true;
-    const { data, error } = await supabase
-      .from('asset_proposals')
-      .insert({
-        asset_ticker: ticker,
-        proposed_by: state.user.id
-      })
-      .select()
-      .single();
-    
-    if (error) throw error;
-    
-    state.proposals.unshift(data);
-    PROPOSAL_INPUT.value = '';
-    renderProposalsList();
-    showToast('Proposta inviata!', 'success');
-  } catch (err) {
-    Logger.error('UserArea', 'proposal error', err);
-    if (err.code === '23505') {
-      showToast('Questa proposta esiste già.', 'error');
-    } else {
-      showToast('Errore durante l\'invio della proposta.', 'error');
+  // For Trial/Pro users: create community proposal (no credits required)
+  if (state.role === 'trial' || state.role === 'pro') {
+    try {
+      PROPOSAL_SUBMIT.disabled = true;
+      const { data, error } = await supabase
+        .from('asset_proposals')
+        .insert({
+          asset_ticker: ticker,
+          proposed_by: state.user.id
+        })
+        .select()
+        .single();
+      
+      if (error) throw error;
+      
+      state.proposals.unshift(data);
+      PROPOSAL_INPUT.value = '';
+      renderCommunityProposalsList();
+      showToast('Proposta inviata!', 'success');
+    } catch (err) {
+      Logger.error('UserArea', 'proposal error', err);
+      if (err.code === '23505') {
+        showToast('Questa proposta esiste già.', 'error');
+      } else {
+        showToast('Errore durante l\'invio della proposta.', 'error');
+      }
+    } finally {
+      PROPOSAL_SUBMIT.disabled = false;
     }
-  } finally {
-    PROPOSAL_SUBMIT.disabled = false;
+    return;
   }
+  
+  // No role or insufficient permissions
+  showLockOverlay('Questa funzionalità richiede un piano attivo.');
 }
 
 async function handleVote(proposalId) {
@@ -966,7 +1118,7 @@ async function handleVote(proposalId) {
     
     // Refresh proposals to get updated vote counts
     await fetchProposals();
-    renderProposalsList();
+    renderCommunityProposalsList();
   } catch (err) {
     Logger.error('UserArea', 'vote error', err);
     showToast('Errore durante il voto.', 'error');
@@ -987,7 +1139,7 @@ async function handleDeleteProposal(proposalId) {
     if (error) throw error;
     
     state.proposals = state.proposals.filter(p => p.id !== proposalId);
-    renderProposalsList();
+    renderCommunityProposalsList();
     showToast('Proposta rimossa.', 'success');
   } catch (err) {
     Logger.error('UserArea', 'delete proposal error', err);
