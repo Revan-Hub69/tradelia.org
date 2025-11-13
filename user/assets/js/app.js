@@ -14,7 +14,6 @@ const TAB_BUTTONS = Array.from(document.querySelectorAll('.tablist button'));
 const PANELS = {
   dashboard: document.getElementById('panel-dashboard'),
   profile: document.getElementById('panel-profile'),
-  comments: document.getElementById('panel-comments'),
   community: document.getElementById('panel-community'),
   plan: document.getElementById('panel-plan'),
   inbox: document.getElementById('panel-inbox'),
@@ -26,11 +25,8 @@ const PROFILE_NAME_FIELD = document.getElementById('profile-display-name');
 const PROFILE_BIO_FIELD = document.getElementById('profile-bio');
 const PROFILE_RESET = document.getElementById('profile-reset-btn');
 
-const COMMENTS_HISTORY_LIST = document.getElementById('comments-history-list');
-const COMMENTS_HISTORY_PLACEHOLDER = document.getElementById('comments-history-placeholder');
 
 const DASHBOARD_STATS = {
-  comments: document.getElementById('stat-comments'),
   requests: document.getElementById('stat-requests'),
   lastLogin: document.getElementById('stat-last-login'),
   plan: document.getElementById('stat-plan')
@@ -50,9 +46,9 @@ const PROPOSAL_LIST = document.getElementById('proposal-list');
 const CREDITS_COUNTER = document.getElementById('credits-counter');
 const CREDITS_BALANCE = document.getElementById('credits-balance');
 const BUY_CREDITS_BTN = document.getElementById('buy-credits-btn');
-const LOCK_OVERLAY = document.getElementById('lock-overlay');
-const LOCK_OVERLAY_MESSAGE = document.getElementById('lock-overlay-message');
-const LOCK_OVERLAY_UPGRADE = document.getElementById('lock-overlay-upgrade');
+const REQUEST_ANALYSIS_LOCK = document.getElementById('request-analysis-lock');
+const REQUEST_ANALYSIS_LOCK_MESSAGE = document.getElementById('request-analysis-lock-message');
+const REQUEST_ANALYSIS_LOCK_UPGRADE = document.getElementById('request-analysis-lock-upgrade');
 const COMMUNITY_PROPOSALS_LIST = document.getElementById('community-proposals-list');
 const COMMUNITY_PROPOSE_CARD = document.getElementById('community-propose-card');
 const REQUEST_ANALYSIS_CARD = document.getElementById('request-analysis-card');
@@ -63,8 +59,7 @@ const state = {
   user: null,
   role: null,
   profile: null,
-  stats: { comments: 0, requests: 0 },
-  comments: [],
+  stats: { requests: 0 },
   loading: true,
   lastSession: null,
   proposals: [],
@@ -170,7 +165,6 @@ async function bootstrapUserArea() {
       checkAdminStatus(),
       fetchUserProfile(),
       fetchDashboardStats(),
-      fetchCommentsHistory()
     ]);
     // Fetch role dopo admin check (admin ha sempre ruolo institutional)
     await fetchUserRole();
@@ -185,7 +179,6 @@ async function bootstrapUserArea() {
     renderHero();
     renderProfileForm();
     renderDashboard();
-    renderCommentsHistory();
     renderPlanSection();
     renderCommunitySection();
     setActiveTab('dashboard');
@@ -253,9 +246,6 @@ function renderProfileForm() {
 }
 
 function renderDashboard() {
-  if (DASHBOARD_STATS.comments) {
-    DASHBOARD_STATS.comments.textContent = state.stats.comments ?? 0;
-  }
   if (DASHBOARD_STATS.requests) {
     DASHBOARD_STATS.requests.textContent = state.stats.requests ?? 0;
   }
@@ -266,96 +256,6 @@ function renderDashboard() {
   }
   if (DASHBOARD_STATS.plan) {
     DASHBOARD_STATS.plan.textContent = roleLabel(state.role) || '—';
-  }
-}
-
-function renderCommentsHistory() {
-  if (!COMMENTS_HISTORY_LIST || !COMMENTS_HISTORY_PLACEHOLDER) return;
-  if (!state.comments.length) {
-    COMMENTS_HISTORY_PLACEHOLDER.hidden = false;
-    COMMENTS_HISTORY_LIST.innerHTML = '';
-    return;
-  }
-  COMMENTS_HISTORY_PLACEHOLDER.hidden = true;
-  COMMENTS_HISTORY_LIST.innerHTML = state.comments.map(comment => {
-    const reportLabel = comment.report_ticker 
-      ? `${comment.report_ticker}${comment.report_company ? ` · ${comment.report_company}` : ''}`
-      : comment.report_slug || `Report ${comment.report_id?.slice(0, 8)}`;
-    const reportUrl = `/report/index.html?id=${comment.report_id || comment.report_slug}`;
-    const relativeTime = formatRelativeTime(comment.created_at);
-    
-    return `
-      <article class="history-item" data-comment-id="${comment.id}">
-        <div class="history-item-header">
-          <div class="history-item-meta">
-            <time datetime="${comment.created_at}" title="${formatDateTime(comment.created_at)}">
-              ${relativeTime}
-            </time>
-            <span class="history-item-separator">·</span>
-            <a href="${reportUrl}" class="history-item-report" target="_blank" rel="noopener">
-              ${escapeHtml(reportLabel)}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                <polyline points="15 3 21 3 21 9"></polyline>
-                <line x1="10" y1="14" x2="21" y2="3"></line>
-              </svg>
-            </a>
-          </div>
-          <button 
-            type="button" 
-            class="history-item-delete" 
-            data-comment-delete="${comment.id}"
-            title="Elimina commento"
-            aria-label="Elimina commento">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="3 6 5 6 21 6"></polyline>
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-            </svg>
-          </button>
-        </div>
-        <div class="history-item-body">${escapeHtml(comment.body)}</div>
-      </article>
-    `;
-  }).join('');
-  
-  // Setup delete handlers
-  COMMENTS_HISTORY_LIST.querySelectorAll('[data-comment-delete]').forEach(btn => {
-    btn.addEventListener('click', handleDeleteComment);
-  });
-}
-
-async function handleDeleteComment(event) {
-  const commentId = event.currentTarget.getAttribute('data-comment-delete');
-  if (!commentId) return;
-  
-  if (!confirm('Eliminare definitivamente questo commento? L\'azione non può essere annullata.')) {
-    return;
-  }
-  
-  try {
-    const { error } = await supabase
-      .from('report_comments')
-      .update({ is_deleted: true })
-      .eq('id', commentId)
-      .eq('user_id', state.user.id); // Solo i propri commenti
-    
-    if (error) throw error;
-    
-    // Rimuovi dal DOM
-    const item = COMMENTS_HISTORY_LIST.querySelector(`[data-comment-id="${commentId}"]`);
-    if (item) {
-      item.remove();
-    }
-    
-    // Rimuovi dallo state
-    state.comments = state.comments.filter(c => c.id !== commentId);
-    state.stats.comments = Math.max(0, (state.stats.comments || 0) - 1);
-    renderDashboard();
-    
-    showToast('Commento eliminato.', 'success');
-  } catch (err) {
-    Logger.error('UserArea', 'Delete comment error', err);
-    showToast('Errore durante l\'eliminazione. ' + (err.message || ''), 'error');
   }
 }
 
@@ -537,86 +437,20 @@ async function fetchUserProfile() {
 
 async function fetchDashboardStats() {
   try {
-    const { count, error } = await supabase
-      .from('report_comments')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', state.user.id)
-      .eq('is_deleted', false);
-    if (error) throw error;
-    state.stats.comments = count ?? 0;
-    state.stats.requests = 0; // placeholder per future analysis_requests
+    // Conta richieste analisi on-demand
+    if (state.role === 'institutional') {
+      const { count, error } = await supabase
+        .from('analysis_requests')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', state.user.id);
+      if (error) throw error;
+      state.stats.requests = count ?? 0;
+    } else {
+      state.stats.requests = 0;
+    }
   } catch (err) {
     Logger.warn('UserArea', 'stats error', err);
-  }
-}
-
-async function fetchCommentsHistory() {
-  if (!state.user) {
-    state.comments = [];
-    return;
-  }
-  try {
-    const { data, error } = await supabase
-      .from('report_comments')
-      .select(`
-        id, 
-        body, 
-        created_at, 
-        report_id, 
-        is_deleted,
-        report:reports!inner(
-          id,
-          slug,
-          ticker,
-          company_name,
-          header
-        )
-      `)
-      .eq('user_id', state.user.id)
-      .eq('is_deleted', false)
-      .order('created_at', { ascending: false })
-      .limit(50);
-    if (error) throw error;
-    
-    state.comments = (data || []).map(item => {
-      const report = item.report || {};
-      let ticker = report.ticker;
-      let company = report.company_name;
-      
-      // Fallback: estrai da header se disponibile
-      if (!ticker && report.header) {
-        try {
-          const header = typeof report.header === 'string' 
-            ? JSON.parse(report.header) 
-            : report.header;
-          if (header?.rows) {
-            for (const row of header.rows) {
-              for (const part of row.parts || []) {
-                if (part.kind === 'metric') {
-                  if (part.key === 'Ticker' && !ticker) ticker = part.value;
-                  if (part.key === 'CompanyName' && !company) company = part.value;
-                }
-              }
-            }
-          }
-        } catch (e) {
-          Logger.warn('UserArea', 'Header parse error', e);
-        }
-      }
-      
-      return {
-        id: item.id,
-        body: item.body,
-        created_at: item.created_at,
-        report_id: item.report_id,
-        report_slug: report.slug || report.id,
-        report_ticker: ticker || null,
-        report_company: company || null
-      };
-    });
-  } catch (err) {
-    Logger.warn('UserArea', 'comment history error', err);
-    state.comments = [];
+    state.stats.requests = 0;
   }
 }
 
@@ -674,7 +508,7 @@ function planBenefits(role) {
   if (role === 'pro') {
     return [
       'Sblocco completo dei deck SRD v5.0 e MTB v3.1',
-      'Commenti illimitati e note condivise con il desk',
+      'Note condivise con il desk',
       'Suggerimento e voto giornaliero sui ticker della community',
       'Notifiche push e roadmap funzionale con priorità Pro'
     ];
@@ -836,6 +670,20 @@ function renderCommunitySection() {
   // Show request analysis card for all authenticated users
   if (REQUEST_ANALYSIS_CARD) {
     REQUEST_ANALYSIS_CARD.hidden = false;
+    
+    // Mostra/nascondi lock in base a ruolo e crediti
+    if (state.role === 'institutional') {
+      const credits = state.credits?.credits_balance ?? 0;
+      if (!state.isAdmin && credits <= 0) {
+        showRequestAnalysisLock('Non hai crediti disponibili. Acquista crediti per richiedere analisi on demand.');
+      } else {
+        hideRequestAnalysisLock();
+      }
+    } else if (state.role !== 'trial' && state.role !== 'pro') {
+      showRequestAnalysisLock('Questa funzionalità richiede un piano attivo.');
+    } else {
+      hideRequestAnalysisLock();
+    }
   }
   
   // Show community proposals card only for Trial/Pro
@@ -876,34 +724,22 @@ function setupCreditsHandlers() {
     });
   }
   
-  if (LOCK_OVERLAY_UPGRADE) {
-    LOCK_OVERLAY_UPGRADE.addEventListener('click', () => {
-      hideLockOverlay();
+  if (REQUEST_ANALYSIS_LOCK_UPGRADE) {
+    REQUEST_ANALYSIS_LOCK_UPGRADE.addEventListener('click', () => {
       window.location.href = '/pricing.html';
     });
   }
-  
-  // Close overlay on click outside
-  if (LOCK_OVERLAY) {
-    LOCK_OVERLAY.addEventListener('click', (e) => {
-      if (e.target === LOCK_OVERLAY) {
-        hideLockOverlay();
-      }
-    });
-  }
 }
 
-function showLockOverlay(message) {
-  if (!LOCK_OVERLAY || !LOCK_OVERLAY_MESSAGE) return;
-  LOCK_OVERLAY_MESSAGE.textContent = message || 'Questa funzionalità richiede un piano attivo.';
-  LOCK_OVERLAY.hidden = false;
-  document.body.style.overflow = 'hidden';
+function showRequestAnalysisLock(message) {
+  if (!REQUEST_ANALYSIS_LOCK || !REQUEST_ANALYSIS_LOCK_MESSAGE) return;
+  REQUEST_ANALYSIS_LOCK_MESSAGE.textContent = message || 'Questa funzionalità richiede un piano attivo.';
+  REQUEST_ANALYSIS_LOCK.hidden = false;
 }
 
-function hideLockOverlay() {
-  if (!LOCK_OVERLAY) return;
-  LOCK_OVERLAY.hidden = true;
-  document.body.style.overflow = '';
+function hideRequestAnalysisLock() {
+  if (!REQUEST_ANALYSIS_LOCK) return;
+  REQUEST_ANALYSIS_LOCK.hidden = true;
 }
 
 // Render on-demand requests (for institutional users)
@@ -1045,14 +881,17 @@ async function handleProposeAsset() {
   // Check if user has credits (for on-demand requests)
   const credits = state.credits?.credits_balance ?? 0;
   
-  // For institutional users: require credits for on-demand requests
+  // For institutional users: require credits for on-demand requests (admin bypass)
   if (state.role === 'institutional') {
-    if (credits <= 0) {
-      showLockOverlay('Non hai crediti disponibili. Acquista crediti per richiedere analisi on demand.');
+    // Admin ha sempre accesso illimitato, bypass controllo crediti
+    if (!state.isAdmin && credits <= 0) {
+      showRequestAnalysisLock('Non hai crediti disponibili. Acquista crediti per richiedere analisi on demand.');
       return;
     }
+    // Nascondi lock se ha crediti o è admin
+    hideRequestAnalysisLock();
     
-    // Deduct credit and create request
+    // Deduct credit and create request (admin bypass)
     try {
       PROPOSAL_SUBMIT.disabled = true;
       
@@ -1069,24 +908,28 @@ async function handleProposeAsset() {
       
       if (requestError) throw requestError;
       
-      // Deduct credit
-      const { error: creditError } = await supabase
-        .from('user_analysis_credits')
-        .update({
-          credits_balance: credits - 1,
-          total_used: (state.credits?.total_used ?? 0) + 1
-        })
-        .eq('user_id', state.user.id);
-      
-      if (creditError) throw creditError;
-      
-      // Refresh credits
-      await fetchCredits();
-      renderCreditsCounter();
+      // Deduct credit solo se non è admin (admin ha crediti illimitati)
+      if (!state.isAdmin) {
+        const { error: creditError } = await supabase
+          .from('user_analysis_credits')
+          .update({
+            credits_balance: credits - 1,
+            total_used: (state.credits?.total_used ?? 0) + 1
+          })
+          .eq('user_id', state.user.id);
+        
+        if (creditError) throw creditError;
+        
+        // Refresh credits
+        await fetchCredits();
+        renderCreditsCounter();
+        showToast('Richiesta inviata! Un credito è stato scalato.', 'success');
+      } else {
+        showToast('Richiesta inviata! (Admin: crediti illimitati)', 'success');
+      }
       
       PROPOSAL_INPUT.value = '';
       await renderProposalsList();
-      showToast('Richiesta inviata! Un credito è stato scalato.', 'success');
     } catch (err) {
       Logger.error('UserArea', 'on-demand request error', err);
       showToast('Errore durante l\'invio della richiesta.', 'error');
@@ -1129,7 +972,7 @@ async function handleProposeAsset() {
   }
   
   // No role or insufficient permissions
-  showLockOverlay('Questa funzionalità richiede un piano attivo.');
+  showRequestAnalysisLock('Questa funzionalità richiede un piano attivo.');
 }
 
 async function handleVote(proposalId) {
