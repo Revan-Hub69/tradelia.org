@@ -102,11 +102,9 @@ function setupTabs() {
   // Use event delegation instead of individual listeners
   const tablist = document.querySelector('.tablist');
   if (!tablist) {
-    console.error('[Tab] Tablist not found!');
+    Logger.error('UserArea', 'Tablist not found');
     return;
   }
-  
-  console.log('[Tab] Setting up tabs...');
   
   // Remove any existing listener
   if (tablist._tabHandler) {
@@ -116,25 +114,18 @@ function setupTabs() {
   // Add single delegated listener
   tablist._tabHandler = (e) => {
     const button = e.target.closest('button[role="tab"]');
-    if (!button) {
-      console.log('[Tab] Click not on tab button');
-      return;
-    }
+    if (!button) return;
     
     e.preventDefault();
     e.stopPropagation();
     const tabId = button.id.replace('tab-', '');
-    console.log('[Tab] Tab clicked:', tabId);
     setActiveTab(tabId);
   };
   
   tablist.addEventListener('click', tablist._tabHandler);
-  console.log('[Tab] Tabs setup complete');
 }
 
 function setActiveTab(tabId) {
-  console.log('[Tab] Switching to:', tabId); // Debug
-  
   // Re-query buttons to get fresh references
   const buttons = Array.from(document.querySelectorAll('.tablist button[role="tab"]'));
   buttons.forEach(btn => {
@@ -145,16 +136,14 @@ function setActiveTab(tabId) {
   // Show/hide panels - use removeAttribute/setAttribute instead of hidden property
   Object.entries(PANELS).forEach(([key, panel]) => {
     if (!panel) {
-      console.warn('[Tab] Panel not found:', key);
+      Logger.warn('UserArea', `Panel not found: ${key}`);
       return;
     }
     if (key === tabId) {
       panel.removeAttribute('hidden');
       panel.style.display = '';
-      console.log('[Tab] Showing panel:', key);
     } else if (key !== 'auth') {
       panel.setAttribute('hidden', '');
-      console.log('[Tab] Hiding panel:', key);
     }
   });
 }
@@ -225,7 +214,7 @@ function renderHero() {
 
   CTA.innerHTML = '';
   const logoutBtn = document.createElement('button');
-  logoutBtn.className = 'btn btn-outline';
+  logoutBtn.className = 'btn btn-sm btn-outline';
   logoutBtn.textContent = 'Esci';
   logoutBtn.addEventListener('click', async () => {
     await supabase.auth.signOut();
@@ -343,9 +332,7 @@ async function handleDeleteComment(event) {
     // Rimuovi dal DOM
     const item = COMMENTS_HISTORY_LIST.querySelector(`[data-comment-id="${commentId}"]`);
     if (item) {
-      item.style.opacity = '0';
-      item.style.transform = 'translateX(-10px)';
-      setTimeout(() => item.remove(), 200);
+      item.remove();
     }
     
     // Rimuovi dallo state
@@ -400,7 +387,7 @@ function renderPlanSection() {
   }
   
   const actionBtn = document.createElement('a');
-  actionBtn.className = 'btn btn-primary';
+  actionBtn.className = 'btn btn-sm btn-primary';
   actionBtn.href = '/pricing.html';
   actionBtn.textContent = state.role === 'institutional' ? 'Contatta il desk' : 'Consulta prezzi';
   PLAN_ACTIONS.appendChild(actionBtn);
@@ -861,14 +848,14 @@ function renderProposalsList() {
         <div class="proposal-header">
           <strong>${escapeHtml(proposal.asset_ticker)}</strong>
           <div class="proposal-actions">
-            <button class="vote-btn ${hasVoted ? 'voted' : ''}" 
+            <button class="btn btn-sm vote-btn ${hasVoted ? 'voted' : ''}" 
                     data-proposal-id="${proposal.id}" 
                     ${hasVoted ? 'title="Rimuovi voto"' : 'title="Vota"'}
                     aria-label="${hasVoted ? 'Rimuovi voto' : 'Vota'}">
               ${hasVoted ? '★' : '☆'}
             </button>
             <span class="vote-count">${proposal.vote_count}</span>
-            ${state.isAdmin ? `<button class="delete-btn" data-proposal-id="${proposal.id}" title="Rimuovi proposta">×</button>` : ''}
+            ${state.isAdmin ? `<button class="btn btn-sm delete-btn" data-proposal-id="${proposal.id}" title="Rimuovi proposta">×</button>` : ''}
           </div>
         </div>
         <div class="proposal-meta">
@@ -1027,29 +1014,23 @@ async function fetchCredits() {
 
 async function fetchDeskLinks() {
   if (!state.user) {
-    console.warn('[DeskLinks] No user, skipping fetch');
+    Logger.warn('UserArea', 'No user, skipping desk links fetch');
     return;
   }
   try {
-    console.log('[DeskLinks] Fetching links for user:', state.user.id);
     const { data, error } = await supabase
       .from('desk_public_links')
       .select('id, link_url, link_label, display_order')
       .eq('user_id', state.user.id)
       .order('display_order', { ascending: true });
-    if (error) {
-      console.error('[DeskLinks] Supabase error:', error);
-      throw error;
-    }
+    if (error) throw error;
     state.deskLinks = data || [];
-    console.log('[DeskLinks] Fetched', state.deskLinks.length, 'links');
   } catch (err) {
     Logger.error('UserArea', 'desk links fetch error', err);
-    console.error('[DeskLinks] Fetch failed:', err);
     state.deskLinks = [];
     // Show user-friendly error if table doesn't exist
     if (err.code === '42P01' || err.message?.includes('does not exist')) {
-      console.error('[DeskLinks] Table desk_public_links does not exist! Run the migration SQL first.');
+      Logger.error('UserArea', 'Table desk_public_links does not exist! Run the migration SQL first.');
     }
   }
 }
@@ -1061,17 +1042,8 @@ function renderDeskLinksSection() {
   const lockIndicator = document.getElementById('desk-links-lock');
   const content = document.getElementById('desk-links-content');
   
-  console.log('[DeskLinks] renderDeskLinksSection called', {
-    role: state.role,
-    isAdmin: state.isAdmin,
-    section: !!section,
-    list: !!list,
-    addBtn: !!addBtn,
-    linksCount: state.deskLinks?.length || 0
-  });
-  
   if (!section || !list || !addBtn || !lockIndicator || !content) {
-    console.warn('[DeskLinks] Elements not found');
+    Logger.warn('UserArea', 'Desk links elements not found');
     return;
   }
   
@@ -1086,13 +1058,11 @@ function renderDeskLinksSection() {
     section.classList.remove('locked');
     lockIndicator.hidden = true;
     content.style.display = '';
-    console.log('[DeskLinks] Section unlocked for', state.isAdmin ? 'admin' : 'institutional user');
   } else {
     // Lock: add locked class, show lock indicator, hide content
     section.classList.add('locked');
     lockIndicator.hidden = false;
     content.style.display = 'none';
-    console.log('[DeskLinks] Section locked - role is:', state.role, 'isAdmin:', state.isAdmin);
     return; // Don't render links if locked
   }
   
@@ -1114,7 +1084,7 @@ function renderDeskLinksSection() {
                  placeholder="Etichetta (opzionale)">
         </div>
         <button type="button" 
-                class="delete-btn" 
+                class="btn btn-sm delete-btn" 
                 data-link-id="${link.id}" 
                 title="Rimuovi link">×</button>
       </div>
@@ -1145,16 +1115,8 @@ function renderDeskLinksSection() {
 }
 
 async function handleAddDeskLink() {
-  console.log('[DeskLinks] handleAddDeskLink called', {
-    role: state.role,
-    isAdmin: state.isAdmin,
-    linksCount: state.deskLinks.length,
-    userId: state.user?.id
-  });
-  
   const canManageLinks = state.role === 'institutional' || state.isAdmin;
   if (!canManageLinks) {
-    console.warn('[DeskLinks] Not authorized, role:', state.role, 'isAdmin:', state.isAdmin);
     showToast('Solo gli utenti con piano Desk o admin possono aggiungere link pubblici.', 'error');
     return;
   }
@@ -1166,7 +1128,6 @@ async function handleAddDeskLink() {
   
   try {
     const nextOrder = state.deskLinks.length;
-    console.log('[DeskLinks] Inserting new link, order:', nextOrder);
     const { data, error } = await supabase
       .from('desk_public_links')
       .insert({
@@ -1179,20 +1140,17 @@ async function handleAddDeskLink() {
       .single();
     
     if (error) {
-      console.error('[DeskLinks] Insert error:', error);
       if (error.code === '42P01' || error.message?.includes('does not exist')) {
         showToast('Tabella non trovata. Esegui la migrazione SQL in Supabase.', 'error');
       }
       throw error;
     }
     
-    console.log('[DeskLinks] Link inserted successfully:', data);
     state.deskLinks.push(data);
     renderDeskLinksSection();
     showToast('Link aggiunto. Modifica l\'URL e salva il profilo.', 'success');
   } catch (err) {
     Logger.error('UserArea', 'add desk link error', err);
-    console.error('[DeskLinks] Add link failed:', err);
     showToast('Errore durante l\'aggiunta del link. ' + (err.message || ''), 'error');
   }
 }
