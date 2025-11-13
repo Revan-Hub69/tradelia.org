@@ -340,7 +340,7 @@ function renderAuthPanel() {
 async function onProfileSubmit(event) {
   event.preventDefault();
   if (!state.user) {
-    showToast('Effettua l'accesso per modificare il profilo.', 'error');
+    showToast('Effettua l\'accesso per modificare il profilo.', 'error');
     return;
   }
   const display_name = PROFILE_NAME_FIELD.value.trim();
