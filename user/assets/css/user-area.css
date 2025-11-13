@@ -107,18 +107,55 @@
 
 /* ===== PULSANTI: STILE FOOTER (Freccia + Linea Blu) ===== */
 /* Applica gli stili del footer a tutti i pulsanti nella sezione user */
+/* Rimuove blu pesante e uniforma tutti i pulsanti */
 .user-shell .btn,
-.user-shell .btn-sm {
+.user-shell .btn-sm,
+.user-shell .btn-primary,
+.user-shell .btn-outline {
   position: relative;
-  padding-left: var(--sp-5);
+  padding: var(--sp-2) var(--sp-3);
+  padding-left: var(--sp-4);
   padding-bottom: var(--sp-2);
+  background: var(--surface-card);
+  border-color: var(--br-card);
+  color: var(--ink);
+}
+
+.user-shell .btn-primary,
+.user-shell .btn-primary:link,
+.user-shell .btn-primary:visited {
+  background: var(--surface-card);
+  border-color: var(--br-card);
+  color: var(--ink);
+}
+
+.user-shell .btn-primary:hover {
+  background: var(--surface-elev);
+  border-color: var(--br-strong);
+  color: var(--ink);
+}
+
+.user-shell .btn-outline,
+.user-shell .btn-outline:link,
+.user-shell .btn-outline:visited {
+  background: var(--surface-card);
+  border-color: var(--br-card);
+  color: var(--ink);
+}
+
+.user-shell .btn-outline:hover {
+  background: var(--surface-elev);
+  border-color: var(--br-strong);
+  color: var(--ink);
 }
 
 .user-shell .btn::before,
-.user-shell .btn-sm::before {
+.user-shell .btn-sm::before,
+.user-shell .btn-primary::before,
+.user-shell .btn-outline::before {
   content: "→";
   position: absolute;
-  left: var(--sp-3);
+  left: var(--sp-2);
   color: var(--muted);
   font-size: var(--fs-11);
   transition: all var(--transition-fast);
@@ -126,10 +163,12 @@
 }
 
 .user-shell .btn::after,
-.user-shell .btn-sm::after {
+.user-shell .btn-sm::after,
+.user-shell .btn-primary::after,
+.user-shell .btn-outline::after {
   content: "";
   position: absolute;
-  left: var(--sp-5);
+  left: var(--sp-4);
   bottom: var(--sp-2);
   width: 0;
   height: 1px;
@@ -139,20 +178,26 @@
 }
 
 .user-shell .btn:hover,
-.user-shell .btn-sm:hover {
-  padding-left: var(--sp-6);
+.user-shell .btn-sm:hover,
+.user-shell .btn-primary:hover,
+.user-shell .btn-outline:hover {
+  padding-left: var(--sp-5);
   transform: translateY(-1px) translateX(2px);
 }
 
 .user-shell .btn:hover::before,
-.user-shell .btn-sm:hover::before {
+.user-shell .btn-sm:hover::before,
+.user-shell .btn-primary:hover::before,
+.user-shell .btn-outline:hover::before {
   color: var(--brand-600);
   transform: translateX(0);
 }
 
 .user-shell .btn:hover::after,
-.user-shell .btn-sm:hover::after {
-  width: calc(100% - var(--sp-6));
+.user-shell .btn-sm:hover::after,
+.user-shell .btn-primary:hover::after,
+.user-shell .btn-outline:hover::after {
+  width: calc(100% - var(--sp-5));
 }
 
 /* Escludi pulsanti con stili specifici (vote, delete) */
@@ -165,8 +210,8 @@
 
 .user-shell .vote-btn.btn-sm,
 .user-shell .delete-btn.btn-sm {
+  padding: var(--sp-2) var(--sp-3);
   padding-left: var(--sp-3);
-  padding-bottom: var(--sp-2);
 }
 
 .user-shell .vote-btn.btn-sm:hover,
