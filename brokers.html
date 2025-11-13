@@ -13,6 +13,7 @@
 
   <!-- Design System -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/assets/css/site-coherence-2025.css" />
   <link rel="stylesheet" href="/assets/css/global-header.css" />
   <link rel="stylesheet" href="/assets/css/homepage-brokers-2025.css" />
 
@@ -284,18 +285,19 @@
 
     .brokers-grid {
       display: grid;
-      gap: 1.5rem;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.3rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     }
 
     .broker-card {
       border: 1px solid var(--border-strong);
       border-radius: var(--radius-xl);
       background: color-mix(in oklab, var(--surface-card) 92%, rgba(148, 163, 184, 0.08));
-      padding: 1.9rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.35rem;
+      padding: 1.65rem;
+      display: grid;
+      grid-template-rows: auto auto auto 1fr auto;
+      gap: 1.05rem;
+      min-height: 380px;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
@@ -306,21 +308,21 @@
 
     .broker-card header {
       display: grid;
-      gap: 0.75rem;
+      gap: 0.6rem;
     }
 
     .broker-title-row {
       display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 0.6rem;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
     }
 
     .broker-title {
-      font-size: 1.28rem;
+      font-size: 1.2rem;
       margin: 0;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.015em;
       font-weight: 600;
       color: var(--ink);
     }
@@ -329,10 +331,10 @@
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      padding: 0.42rem 0.9rem;
+      padding: 0.4rem 0.85rem;
       border-radius: var(--radius-pill);
       border: 1px solid rgba(148, 163, 184, 0.4);
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: rgba(226, 232, 240, 0.88);
@@ -342,12 +344,12 @@
     .badge-affiliate {
       display: inline-flex;
       align-items: center;
-      gap: 0.3rem;
-      padding: 0.32rem 0.7rem;
+      gap: 0.28rem;
+      padding: 0.28rem 0.65rem;
       border-radius: var(--radius-pill);
       background: rgba(14, 165, 233, 0.18);
       border: 1px solid rgba(125, 211, 252, 0.45);
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: rgba(191, 219, 254, 0.9);
@@ -355,25 +357,29 @@
 
     .broker-description {
       color: rgba(226, 232, 240, 0.82);
-      line-height: 1.6;
+      line-height: 1.5;
       margin: 0;
-      font-size: 0.97rem;
+      font-size: 0.92rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .broker-target,
     .broker-evaluation {
       display: grid;
-      gap: 0.35rem;
-      padding: 0.95rem 1rem;
+      gap: 0.3rem;
+      padding: 0.8rem 0.9rem;
       border-radius: var(--radius-lg);
       background: rgba(15, 23, 42, 0.55);
-      border: 1px solid rgba(148, 163, 184, 0.28);
+      border: 1px solid rgba(148, 163, 184, 0.24);
     }
 
     .broker-target span,
     .broker-evaluation span {
-      font-size: 0.72rem;
-      letter-spacing: 0.22em;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: rgba(148, 163, 184, 0.92);
     }
@@ -382,41 +388,8 @@
     .broker-evaluation p {
       margin: 0;
       color: rgba(226, 232, 240, 0.92);
-      font-size: 0.96rem;
-      line-height: 1.55;
-    }
-
-    .broker-facts {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 0.6rem;
-    }
-
-    .broker-facts li {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.85rem;
-      border-top: 1px solid rgba(148, 163, 184, 0.24);
-      padding-top: 0.6rem;
-      align-items: flex-start;
-    }
-
-    .broker-facts li span:first-child {
-      font-size: 0.72rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(148, 163, 184, 0.9);
-      flex: 0 0 135px;
-    }
-
-    .broker-facts li span:last-child {
-      color: rgba(226, 232, 240, 0.88);
-      font-size: 0.94rem;
+      font-size: 0.92rem;
       line-height: 1.5;
-      flex: 1;
-      text-align: right;
     }
 
     .cfd-disclaimer {
@@ -432,51 +405,28 @@
     .broker-footer {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 0.6rem;
       align-items: center;
+      justify-content: space-between;
       margin-top: auto;
-      padding-top: 1.25rem;
+      padding-top: 1rem;
       border-top: 1px solid var(--border-strong);
     }
 
-    .cta-primary,
-    .cta-secondary {
-      display: inline-flex;
-      align-items: center;
+    .broker-footer .btn {
+      flex: 1 1 auto;
       justify-content: center;
-      gap: 0.35rem;
-      font-size: 0.88rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      padding: 0.6rem 1.1rem;
-      border-radius: var(--radius-pill);
-      transition: background-color 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
-      cursor: pointer;
-      text-decoration: none;
+      text-align: center;
     }
 
-    .cta-secondary {
-      border: 1px solid var(--border-strong);
-      background: transparent;
-      color: var(--ink-soft);
+    .broker-footer .btn:first-child {
+      margin-right: 0.35rem;
     }
 
-    .cta-secondary:hover {
-      border-color: rgba(56, 189, 248, 0.4);
-      color: var(--ink);
-      transform: translateY(-1px);
-    }
-
-    .cta-primary {
-      border: 1px solid color-mix(in oklab, var(--brand-500) 55%, transparent);
-      background: color-mix(in oklab, var(--brand-500) 65%, transparent);
-      color: rgba(15, 23, 42, 0.96);
-    }
-
-    .cta-primary:hover {
-      border-color: color-mix(in oklab, var(--brand-400) 65%, transparent);
-      background: color-mix(in oklab, var(--brand-400) 75%, transparent);
-      transform: translateY(-1px);
+    .broker-footer .affiliate-note {
+      flex-basis: 100%;
+      margin-top: 0.15rem;
+      text-align: left;
     }
 
     .affiliate-note {
@@ -853,7 +803,7 @@
         </div>
         <div class="filter-summary" id="filter-summary">
           <span data-summary-text>Nessun filtro selezionato · tutti i broker visibili</span>
-          <button type="button" id="filters-reset">Azzera filtri</button>
+          <button type="button" id="filters-reset" class="btn btn-outline btn-sm">Azzera filtri</button>
         </div>
       </section>
 
@@ -910,7 +860,7 @@
 
   <div id="broker-modal" class="modal" hidden>
     <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <button class="modal-close" type="button" data-modal-close aria-label="Chiudi">Chiudi</button>
+      <button class="modal-close btn btn-outline btn-sm btn-with-icon" type="button" data-modal-close aria-label="Chiudi">Chiudi</button>
       <div class="modal-header">
         <h3 id="modal-title">
           <span data-modal-name></span>
@@ -967,8 +917,8 @@
       </div>
       <p id="modal-disclaimer" class="modal-disclaimer" hidden></p>
       <div class="modal-actions">
-        <a id="modal-visit" class="cta-primary" href="#" target="_blank" rel="noopener">Visita il broker</a>
-        <button id="modal-more" class="cta-secondary" type="button" data-modal-close>Chiudi</button>
+        <a id="modal-visit" class="btn btn-primary" href="#" target="_blank" rel="noopener">Visita il broker</a>
+        <button id="modal-more" class="btn btn-outline btn-sm" type="button" data-modal-close>Chiudi</button>
         <small id="modal-affiliate-note" class="affiliate-note"></small>
       </div>
     </div>
@@ -1747,19 +1697,6 @@
         ? 'Link affiliato — compensi destinati alla ricerca Tradelia AI.'
         : 'Link ufficiale (non affiliato).';
 
-      const facts = [
-        { label: 'Giurisdizione', value: broker.jurisdiction },
-        { label: 'Piattaforme', value: broker.platforms },
-        { label: 'Deposito minimo', value: broker.minDeposit }
-      ];
-
-      const factsHtml = facts.map(item => `
-        <li>
-          <span>${item.label}</span>
-          <span>${item.value}</span>
-        </li>
-      `).join('');
-
       const cfdDisclaimer = broker.offersCfd && broker.cfdDisclosure
         ? `<p class="cfd-disclaimer">${broker.cfdDisclosure}</p>`
         : '';
@@ -1781,13 +1718,10 @@
           <span>Valutazione Tradelia AI</span>
           <p>${broker.review.evaluation}</p>
         </div>
-        <ul class="broker-facts">
-          ${factsHtml}
-        </ul>
         ${cfdDisclaimer}
         <div class="broker-footer">
-          <button class="cta-secondary" type="button" data-open-modal="${broker.id}">Maggiori dettagli</button>
-          <a class="cta-primary" href="${visitLink}" target="_blank" rel="${visitRel}">Visita il broker</a>
+          <button class="btn btn-outline btn-sm" type="button" data-open-modal="${broker.id}">Maggiori dettagli</button>
+          <a class="btn btn-primary btn-sm" href="${visitLink}" target="_blank" rel="${visitRel}">Visita il broker</a>
           <small class="affiliate-note">${affiliateNoteText}</small>
         </div>
       `;
