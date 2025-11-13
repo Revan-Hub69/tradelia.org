@@ -159,18 +159,30 @@ drop policy if exists "Desk users manage own links" on public.desk_public_links;
 create policy "Desk users manage own links"
   on public.desk_public_links for all
   using (
-    exists (
-      select 1 from public.user_roles ur
-      where ur.user_id = auth.uid()
-        and ur.role = 'institutional'
+    (
+      exists (
+        select 1 from public.user_roles ur
+        where ur.user_id = auth.uid()
+          and ur.role = 'institutional'
+      )
+      or exists (
+        select 1 from public.admin_users au
+        where au.user_id = auth.uid()
+      )
     )
     and user_id = auth.uid()
   )
   with check (
-    exists (
-      select 1 from public.user_roles ur
-      where ur.user_id = auth.uid()
-        and ur.role = 'institutional'
+    (
+      exists (
+        select 1 from public.user_roles ur
+        where ur.user_id = auth.uid()
+          and ur.role = 'institutional'
+      )
+      or exists (
+        select 1 from public.admin_users au
+        where au.user_id = auth.uid()
+      )
     )
     and user_id = auth.uid()
   );
