@@ -25,7 +25,6 @@ function template() {
     <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
       <header class="auth-header">
         <div class="auth-header-text">
-          <span class="auth-pill">Accesso Istituzionale</span>
           <h2 class="auth-title" id="auth-modal-title">Area Riservata Tradelia</h2>
           <p class="auth-subtitle">
             Credenziali verificate per commenti, richieste analisi e gestione profilo professionale.
