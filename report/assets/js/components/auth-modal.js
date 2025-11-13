@@ -229,9 +229,11 @@ function open(mode = 'login') {
 }
 
 function close() {
-  if (state.root) {
-    delete state.root.dataset.open;
-  }
+  if (!state.root) return;
+  // Reset to a safe default view to avoid multiple sections visible on next open
+  state.mode = 'login';
+  updateForms();
+  delete state.root.dataset.open;
 }
 
 function closeAfterDelay() {
