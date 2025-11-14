@@ -820,9 +820,12 @@ function renderCommunitySection() {
     REQUEST_ANALYSIS_CARD.hidden = false;
     
     // Mostra/nascondi lock in base a ruolo e crediti
-    if (state.role === 'institutional') {
+    // Admin ha sempre accesso illimitato, bypassa tutti i controlli
+    if (state.isAdmin && state.role === 'institutional') {
+      hideRequestAnalysisLock();
+    } else if (state.role === 'institutional') {
       const credits = state.credits?.credits_balance ?? 0;
-      if (!state.isAdmin && credits <= 0) {
+      if (credits <= 0) {
         showRequestAnalysisLock('Non hai crediti disponibili. Acquista crediti per richiedere analisi on demand.');
       } else {
         hideRequestAnalysisLock();
@@ -1044,44 +1047,66 @@ function renderCommunityProposalsList() {
   if (!COMMUNITY_PROPOSALS_LIST) return;
   
   if (!state.proposals.length) {
-    COMMUNITY_PROPOSALS_LIST.innerHTML = '<p style="color: rgba(203, 213, 225, 0.6); font-size: 0.9rem;">Nessuna proposta ancora. Sii il primo a proporre un asset!</p>';
+    COMMUNITY_PROPOSALS_LIST.innerHTML = `
+      <div class="empty-state">
+        <p style="color: rgba(203, 213, 225, 0.6); font-size: 0.9rem; margin-bottom: 0.5rem;">Nessuna proposta ancora.</p>
+        <p style="color: rgba(203, 213, 225, 0.5); font-size: 0.85rem;">Usa il form sopra per proporre il primo asset!</p>
+      </div>
+    `;
     return;
   }
   
-  COMMUNITY_PROPOSALS_LIST.innerHTML = state.proposals.map(proposal => {
+  // Ordina per voti (decrescente) e poi per data (decrescente)
+  const sortedProposals = [...state.proposals].sort((a, b) => {
+    if (b.vote_count !== a.vote_count) {
+      return b.vote_count - a.vote_count;
+    }
+    return new Date(b.created_at) - new Date(a.created_at);
+  });
+  
+  COMMUNITY_PROPOSALS_LIST.innerHTML = sortedProposals.map(proposal => {
     const hasVoted = state.userVotes.has(proposal.id);
     const isOwner = proposal.proposed_by === state.user?.id;
+    const isPopular = proposal.vote_count >= 5;
+    
     return `
-      <article class="history-item proposal-item">
+      <article class="history-item proposal-item ${isPopular ? 'proposal-popular' : ''}">
         <div class="proposal-header">
-          <strong>${escapeHtml(proposal.asset_ticker)}</strong>
+          <div class="proposal-title-group">
+            <strong>${escapeHtml(proposal.asset_ticker)}</strong>
+            ${isPopular ? '<span class="badge proposal-badge-popular" title="Proposta popolare">🔥</span>' : ''}
+            ${isOwner ? '<span class="badge proposal-badge-owner">Tua proposta</span>' : ''}
+          </div>
           <div class="proposal-actions">
             <button class="btn btn-sm vote-btn ${hasVoted ? 'voted' : ''}" 
                     data-proposal-id="${proposal.id}" 
-                    ${hasVoted ? 'title="Rimuovi voto"' : 'title="Vota"'}
+                    ${hasVoted ? 'title="Rimuovi voto"' : 'title="Vota questa proposta"'}
                     aria-label="${hasVoted ? 'Rimuovi voto' : 'Vota'}">
               ${hasVoted ? '★' : '☆'}
             </button>
-            <span class="vote-count">${proposal.vote_count}</span>
+            <span class="vote-count" title="${proposal.vote_count} ${proposal.vote_count === 1 ? 'voto' : 'voti'}">${proposal.vote_count}</span>
             ${state.isAdmin ? `<button class="btn btn-sm delete-btn" data-proposal-id="${proposal.id}" title="Rimuovi proposta">×</button>` : ''}
           </div>
         </div>
         <div class="proposal-meta">
-          ${isOwner ? '<span class="badge">Tua proposta</span>' : ''}
-          <span>${formatDateTime(proposal.created_at)}</span>
+          <span>${formatRelativeTime(proposal.created_at)}</span>
         </div>
       </article>
     `;
   }).join('');
   
-  // Attach event listeners
+  // Attach event listeners (rimuovi listener precedenti per evitare duplicati)
   COMMUNITY_PROPOSALS_LIST.querySelectorAll('.vote-btn').forEach(btn => {
-    btn.addEventListener('click', () => handleVote(btn.dataset.proposalId));
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+    newBtn.addEventListener('click', () => handleVote(newBtn.dataset.proposalId));
   });
   
   if (state.isAdmin) {
     COMMUNITY_PROPOSALS_LIST.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', () => handleDeleteProposal(btn.dataset.proposalId));
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+      newBtn.addEventListener('click', () => handleDeleteProposal(newBtn.dataset.proposalId));
     });
   }
 }
@@ -1310,6 +1335,8 @@ async function handleProposeAsset() {
   if (state.role === 'trial' || state.role === 'pro') {
     try {
       PROPOSAL_SUBMIT.disabled = true;
+      PROPOSAL_SUBMIT.textContent = 'Invio...';
+      
       const { data, error } = await supabase
         .from('asset_proposals')
         .insert({
@@ -1321,19 +1348,27 @@ async function handleProposeAsset() {
       
       if (error) throw error;
       
+      // Aggiorna state e UI
       state.proposals.unshift(data);
       PROPOSAL_INPUT.value = '';
       await renderCommunityProposalsList();
-      showToast('Proposta inviata!', 'success');
+      showToast(`Proposta per ${ticker} inviata! Gli altri utenti possono ora votarla.`, 'success');
+      
+      // Aggiorna stats
+      await fetchDashboardStats();
+      renderDashboard();
     } catch (err) {
       Logger.error('UserArea', 'proposal error', err);
       if (err.code === '23505') {
-        showToast('Questa proposta esiste già.', 'error');
+        showToast(`La proposta per ${ticker} esiste già. Puoi votarla nella lista.`, 'error');
       } else {
         showToast('Errore durante l\'invio della proposta.', 'error');
       }
     } finally {
       PROPOSAL_SUBMIT.disabled = false;
+      if (state.role === 'trial' || state.role === 'pro') {
+        PROPOSAL_SUBMIT.textContent = 'Proponi asset';
+      }
     }
     return;
   }
@@ -1351,6 +1386,7 @@ async function handleVote(proposalId) {
   }
   
   const hasVoted = state.userVotes.has(proposalId);
+  const proposal = state.proposals.find(p => p.id === proposalId);
   
   try {
     if (hasVoted) {
@@ -1363,6 +1399,7 @@ async function handleVote(proposalId) {
       
       if (error) throw error;
       state.userVotes.delete(proposalId);
+      showToast(`Voto rimosso da ${proposal?.asset_ticker || 'proposta'}`, 'info');
     } else {
       // Add vote
       const { error } = await supabase
@@ -1374,6 +1411,7 @@ async function handleVote(proposalId) {
       
       if (error) throw error;
       state.userVotes.add(proposalId);
+      showToast(`Voto aggiunto a ${proposal?.asset_ticker || 'proposta'}`, 'success');
     }
     
     // Refresh proposals to get updated vote counts
@@ -1381,7 +1419,11 @@ async function handleVote(proposalId) {
     renderCommunityProposalsList();
   } catch (err) {
     Logger.error('UserArea', 'vote error', err);
-    showToast('Errore durante il voto.', 'error');
+    if (err.code === '23505') {
+      showToast('Hai già votato questa proposta.', 'error');
+    } else {
+      showToast('Errore durante il voto.', 'error');
+    }
   }
 }
 
