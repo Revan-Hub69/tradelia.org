@@ -52,19 +52,22 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account","project_id":"tradelia-push",
 
 ---
 
-### 3. **Resend** (per email backup)
+### 3. **Brevo** (per email)
 
 **Variabili:**
-- `RESEND_API_KEY` - API Key Resend
+- `BREVO_API_KEY` - API Key Brevo
 
 **Dove serve:**
 - `/api/send-email-backup.js`
 - `/api/send-email.js`
+- Supabase SMTP (configurato nel dashboard)
 
 **Formato:**
 ```
-RESEND_API_KEY=re_xxxxx
+BREVO_API_KEY=xkeysib-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
+
+**Nota:** Sostituisce Resend e SendGrid. Rimuovi `RESEND_API_KEY` e `SENDGRID_API_KEY` se presenti.
 
 ---
 

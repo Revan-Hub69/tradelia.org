@@ -14,24 +14,25 @@ export default async function handler(req, res) {
       req.on("error", reject);
     });
 
-    // Usa variabile d'ambiente per la chiave API
-    const RESEND_API_KEY = process.env.RESEND_API_KEY || process.env.NEXT_PUBLIC_RESEND_API_KEY;
+    // Usa variabile d'ambiente per la chiave API Brevo
+    const BREVO_API_KEY = process.env.BREVO_API_KEY;
     
-    if (!RESEND_API_KEY) {
+    if (!BREVO_API_KEY) {
       return res.status(500).json({ error: "API key non configurata" });
     }
 
-    const response = await fetch("https://api.resend.com/emails", {
+    // Brevo API format
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${RESEND_API_KEY}`,
+        "api-key": BREVO_API_KEY,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Tradelia <noreply@resend.dev>",
-        to: "analisi@tradelia.org",
+        sender: { email: "noreply@tradelia.org", name: "Tradelia" },
+        to: [{ email: "analisi@tradelia.org" }],
         subject: "📩 Nuova richiesta analisi",
-        text: body, // manda esattamente ciò che riceve
+        textContent: body // manda esattamente ciò che riceve
       }),
     });
 
