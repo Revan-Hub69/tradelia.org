@@ -298,7 +298,18 @@ async function handleSignup(event) {
     }
   } catch (err) {
     Logger.error('AuthModal', 'signup error', err);
-    showToast(err.message || 'Errore durante la registrazione. Riprova.', 'error');
+    
+    // Gestione rate limit per email
+    let errorMessage = err.message || 'Errore durante la registrazione. Riprova.';
+    if (err.message && (
+      err.message.toLowerCase().includes('rate limit') ||
+      err.message.toLowerCase().includes('too many requests') ||
+      err.message.toLowerCase().includes('email rate limit')
+    )) {
+      errorMessage = 'Troppe richieste di email. Attendi qualche minuto prima di riprovare.';
+    }
+    
+    showToast(errorMessage, 'error');
   } finally {
     state.busy = false;
     const submitBtn = form.querySelector('button[type="submit"]');
@@ -329,7 +340,18 @@ async function handleReset(event) {
     updateForms();
   } catch (err) {
     Logger.error('AuthModal', 'reset error', err);
-    showToast(err.message || 'Errore durante il reset.', 'error');
+    
+    // Gestione rate limit per email
+    let errorMessage = err.message || 'Errore durante il reset.';
+    if (err.message && (
+      err.message.toLowerCase().includes('rate limit') ||
+      err.message.toLowerCase().includes('too many requests') ||
+      err.message.toLowerCase().includes('email rate limit')
+    )) {
+      errorMessage = 'Troppe richieste di reset password. Attendi qualche minuto prima di riprovare.';
+    }
+    
+    showToast(errorMessage, 'error');
   } finally {
     state.busy = false;
     form.querySelector('button[type="submit"]').disabled = false;

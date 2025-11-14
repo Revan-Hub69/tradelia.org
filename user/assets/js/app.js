@@ -885,7 +885,18 @@ async function handleSignupSubmit(event) {
     }
   } catch (err) {
     Logger.error('UserArea', 'signup error', err);
-    showToast(err.message || 'Errore durante la registrazione. Riprova.', 'error');
+    
+    // Gestione rate limit per email
+    let errorMessage = err.message || 'Errore durante la registrazione. Riprova.';
+    if (err.message && (
+      err.message.toLowerCase().includes('rate limit') ||
+      err.message.toLowerCase().includes('too many requests') ||
+      err.message.toLowerCase().includes('email rate limit')
+    )) {
+      errorMessage = 'Troppe richieste di email. Attendi qualche minuto prima di riprovare.';
+    }
+    
+    showToast(errorMessage, 'error');
   } finally {
     const submitBtn = form.querySelector('button[type="submit"]');
     if (submitBtn) {
@@ -1952,7 +1963,18 @@ async function handleChangeEmail(event) {
     form.querySelector('#new-email-input').value = '';
   } catch (err) {
     Logger.error('UserArea', 'change email error', err);
-    showToast(err.message || 'Errore durante il cambio email. Riprova.', 'error');
+    
+    // Gestione rate limit per email
+    let errorMessage = err.message || 'Errore durante il cambio email. Riprova.';
+    if (err.message && (
+      err.message.toLowerCase().includes('rate limit') ||
+      err.message.toLowerCase().includes('too many requests') ||
+      err.message.toLowerCase().includes('email rate limit')
+    )) {
+      errorMessage = 'Troppe richieste di cambio email. Attendi qualche minuto prima di riprovare.';
+    }
+    
+    showToast(errorMessage, 'error');
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = originalText;
