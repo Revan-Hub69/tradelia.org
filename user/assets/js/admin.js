@@ -90,20 +90,37 @@ async function loadUsers() {
     
     if (creditsError) throw creditsError;
     
-    // Fetch emails from auth (richiede RPC function o service role)
-    // Per ora usiamo user_id come identificatore
+    // Fetch emails via RPC function (solo admin)
+    const { data: emails, error: emailsError } = await supabase
+      .rpc('get_user_emails_for_admin');
     
+    if (emailsError) {
+      Logger.warn('Admin', 'RPC emails error, using fallback', emailsError);
+    }
+    
+    // Crea mappe per lookup veloce
+    const emailsMap = new Map((emails || []).map(e => [e.user_id, e.email]));
     const rolesMap = new Map(roles.map(r => [r.user_id, r]));
     const creditsMap = new Map(credits.map(c => [c.user_id, c]));
+    const profilesMap = new Map(profiles.map(p => [p.user_id, p]));
     
-    allUsers = profiles.map(profile => {
-      const role = rolesMap.get(profile.user_id);
-      const credit = creditsMap.get(profile.user_id);
+    // Combina tutti i dati
+    const userIds = new Set([
+      ...(emails || []).map(e => e.user_id),
+      ...profiles.map(p => p.user_id),
+      ...roles.map(r => r.user_id)
+    ]);
+    
+    allUsers = Array.from(userIds).map(userId => {
+      const email = emailsMap.get(userId) || `${userId.slice(0, 8)}...`;
+      const profile = profilesMap.get(userId);
+      const role = rolesMap.get(userId);
+      const credit = creditsMap.get(userId);
       
       return {
-        user_id: profile.user_id,
-        email: profile.user_id, // Placeholder - serve RPC per email reale
-        display_name: profile.display_name || '—',
+        user_id: userId,
+        email: email,
+        display_name: profile?.display_name || '—',
         role: role?.role || null,
         valid_until: role?.valid_until || null,
         credits: credit?.credits_balance || 0,
