@@ -14,7 +14,6 @@ const TAB_BUTTONS = Array.from(document.querySelectorAll('.tablist button'));
 const PANELS = {
   dashboard: document.getElementById('panel-dashboard'),
   profile: document.getElementById('panel-profile'),
-  comments: document.getElementById('panel-comments'),
   community: document.getElementById('panel-community'),
   plan: document.getElementById('panel-plan'),
   inbox: document.getElementById('panel-inbox'),
@@ -23,14 +22,12 @@ const PANELS = {
 
 const PROFILE_FORM = document.getElementById('profile-form');
 const PROFILE_NAME_FIELD = document.getElementById('profile-display-name');
-const PROFILE_BIO_FIELD = document.getElementById('profile-bio');
+const PREF_EMAIL_NOTIFICATIONS = document.getElementById('pref-email-notifications');
+const PREF_DASHBOARD_ALERTS = document.getElementById('pref-dashboard-alerts');
 const PROFILE_RESET = document.getElementById('profile-reset-btn');
 
-const COMMENTS_HISTORY_LIST = document.getElementById('comments-history-list');
-const COMMENTS_HISTORY_PLACEHOLDER = document.getElementById('comments-history-placeholder');
 
 const DASHBOARD_STATS = {
-  comments: document.getElementById('stat-comments'),
   requests: document.getElementById('stat-requests'),
   lastLogin: document.getElementById('stat-last-login'),
   plan: document.getElementById('stat-plan')
@@ -47,6 +44,17 @@ const AVATAR_BTN = document.getElementById('profile-avatar-btn');
 const PROPOSAL_INPUT = document.getElementById('proposal-input');
 const PROPOSAL_SUBMIT = document.getElementById('proposal-submit');
 const PROPOSAL_LIST = document.getElementById('proposal-list');
+const CREDITS_COUNTER = document.getElementById('credits-counter');
+const CREDITS_BALANCE = document.getElementById('credits-balance');
+const BUY_CREDITS_BTN = document.getElementById('buy-credits-btn');
+const REQUEST_ANALYSIS_LOCK = document.getElementById('request-analysis-lock');
+const REQUEST_ANALYSIS_LOCK_MESSAGE = document.getElementById('request-analysis-lock-message');
+const REQUEST_ANALYSIS_LOCK_UPGRADE = document.getElementById('request-analysis-lock-upgrade');
+const COMMUNITY_PROPOSALS_LIST = document.getElementById('community-proposals-list');
+const COMMUNITY_PROPOSE_CARD = document.getElementById('community-propose-card');
+const REQUEST_ANALYSIS_CARD = document.getElementById('request-analysis-card');
+const REQUEST_ANALYSIS_INFO = document.getElementById('request-analysis-info');
+const COMMUNITY_PROPOSAL_INFO = document.getElementById('community-proposal-info');
 
 const AUTH_CONTAINER = document.getElementById('auth-container');
 
@@ -54,15 +62,14 @@ const state = {
   user: null,
   role: null,
   profile: null,
-  stats: { comments: 0, requests: 0 },
-  comments: [],
+  stats: { requests: 0 },
   loading: true,
   lastSession: null,
   proposals: [],
   userVotes: new Set(),
   isAdmin: false,
   credits: null,
-  deskLinks: []
+  planExpiresAt: null,
 };
 
 init();
@@ -87,6 +94,7 @@ async function init() {
   supabase.auth.onAuthStateChange((_event, session) => {
     state.user = session?.user || null;
     if (!state.user) {
+      stopPlanExpiryPolling();
       showToast('Sessione terminata.', 'info');
       // Reindirizza alla home quando la sessione termina
       setTimeout(() => { window.location.href = '/'; }, 200);
@@ -102,11 +110,9 @@ function setupTabs() {
   // Use event delegation instead of individual listeners
   const tablist = document.querySelector('.tablist');
   if (!tablist) {
-    console.error('[Tab] Tablist not found!');
+    Logger.error('UserArea', 'Tablist not found');
     return;
   }
-  
-  console.log('[Tab] Setting up tabs...');
   
   // Remove any existing listener
   if (tablist._tabHandler) {
@@ -116,25 +122,18 @@ function setupTabs() {
   // Add single delegated listener
   tablist._tabHandler = (e) => {
     const button = e.target.closest('button[role="tab"]');
-    if (!button) {
-      console.log('[Tab] Click not on tab button');
-      return;
-    }
+    if (!button) return;
     
     e.preventDefault();
     e.stopPropagation();
     const tabId = button.id.replace('tab-', '');
-    console.log('[Tab] Tab clicked:', tabId);
     setActiveTab(tabId);
   };
   
   tablist.addEventListener('click', tablist._tabHandler);
-  console.log('[Tab] Tabs setup complete');
 }
 
 function setActiveTab(tabId) {
-  console.log('[Tab] Switching to:', tabId); // Debug
-  
   // Re-query buttons to get fresh references
   const buttons = Array.from(document.querySelectorAll('.tablist button[role="tab"]'));
   buttons.forEach(btn => {
@@ -145,16 +144,14 @@ function setActiveTab(tabId) {
   // Show/hide panels - use removeAttribute/setAttribute instead of hidden property
   Object.entries(PANELS).forEach(([key, panel]) => {
     if (!panel) {
-      console.warn('[Tab] Panel not found:', key);
+      Logger.warn('UserArea', `Panel not found: ${key}`);
       return;
     }
     if (key === tabId) {
       panel.removeAttribute('hidden');
       panel.style.display = '';
-      console.log('[Tab] Showing panel:', key);
     } else if (key !== 'auth') {
       panel.setAttribute('hidden', '');
-      console.log('[Tab] Hiding panel:', key);
     }
   });
 }
@@ -165,30 +162,80 @@ async function restoreSession() {
   state.lastSession = data?.session || null;
 }
 
+// Polling per verificare scadenza piano durante sessione (livello accademico)
+let planExpiryCheckInterval = null;
+
+function startPlanExpiryPolling() {
+  // Verifica scadenza ogni 5 minuti
+  if (planExpiryCheckInterval) clearInterval(planExpiryCheckInterval);
+  
+  planExpiryCheckInterval = setInterval(async () => {
+    if (!state.user || state.isAdmin) return; // Admin non ha scadenza
+    
+    try {
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('valid_until')
+        .eq('user_id', state.user.id)
+        .maybeSingle();
+      
+      if (error || !data) return;
+      
+      if (data.valid_until) {
+        const expiresAt = new Date(data.valid_until);
+        const now = new Date();
+        if (expiresAt < now && state.role !== null) {
+          // Piano scaduto durante sessione
+          state.role = null;
+          state.planExpiresAt = data.valid_until;
+          showToast('Il tuo piano è scaduto. Rinnova per continuare.', 'error');
+          // Refresh UI per mostrare lock
+          renderCommunitySection();
+          renderPlanSection();
+          renderDashboard();
+        }
+      }
+    } catch (err) {
+      Logger.warn('UserArea', 'plan expiry check error', err);
+    }
+  }, 5 * 60 * 1000); // 5 minuti
+}
+
+function stopPlanExpiryPolling() {
+  if (planExpiryCheckInterval) {
+    clearInterval(planExpiryCheckInterval);
+    planExpiryCheckInterval = null;
+  }
+}
+
 async function bootstrapUserArea() {
   if (!state.user) return;
   try {
     await Promise.all([
-      fetchUserRole(),
+      checkAdminStatus(),
       fetchUserProfile(),
       fetchDashboardStats(),
-      fetchCommentsHistory(),
-      checkAdminStatus()
     ]);
+    // Fetch role dopo admin check (admin ha sempre ruolo institutional)
+    await fetchUserRole();
+    // Fetch credits DOPO fetchUserRole (per creazione automatica se institutional)
+    // IMPORTANTE: fetchCredits deve essere dopo fetchUserRole perché verifica state.role
+    await fetchCredits();
+    // Fetch proposals per Trial/Pro (per community proposals)
+    // Institutional non ha proposte community, solo richieste on-demand
     if (state.role === 'trial' || state.role === 'pro') {
       await Promise.all([fetchProposals(), fetchUserVotes()]);
-    }
-    if (state.role === 'institutional' || state.isAdmin) {
-      await Promise.all([fetchCredits(), fetchDeskLinks()]);
     }
     renderHero();
     renderProfileForm();
     renderDashboard();
-    renderCommentsHistory();
     renderPlanSection();
     renderCommunitySection();
     setActiveTab('dashboard');
     if (PANELS.auth) PANELS.auth.setAttribute('hidden', '');
+    
+    // Avvia polling scadenza piano
+    startPlanExpiryPolling();
   } catch (err) {
     Logger.error('UserArea', 'bootstrap error', err);
     showToast(err.message || 'Errore nel caricamento dell’area utente.', 'error');
@@ -225,7 +272,7 @@ function renderHero() {
 
   CTA.innerHTML = '';
   const logoutBtn = document.createElement('button');
-  logoutBtn.className = 'btn btn-outline';
+  logoutBtn.className = 'btn btn-sm btn-outline';
   logoutBtn.textContent = 'Esci';
   logoutBtn.addEventListener('click', async () => {
     await supabase.auth.signOut();
@@ -239,22 +286,23 @@ function renderHero() {
 function renderProfileForm() {
   if (!PROFILE_FORM) return;
   PROFILE_NAME_FIELD.value = state.profile?.display_name || getDisplayName();
-  PROFILE_BIO_FIELD.value = state.profile?.bio || '';
+  
+  // Setup preferences
+  if (PREF_EMAIL_NOTIFICATIONS) {
+    PREF_EMAIL_NOTIFICATIONS.checked = state.profile?.preferences?.email_notifications !== false;
+  }
+  if (PREF_DASHBOARD_ALERTS) {
+    PREF_DASHBOARD_ALERTS.checked = state.profile?.preferences?.dashboard_alerts !== false;
+  }
   
   // Setup avatar upload
   if (AVATAR_BTN && AVATAR_FILE) {
     AVATAR_BTN.addEventListener('click', () => AVATAR_FILE.click());
     AVATAR_FILE.addEventListener('change', onAvatarSelected);
   }
-  
-  // Setup desk links if institutional - always call to ensure visibility is correct
-  renderDeskLinksSection();
 }
 
 function renderDashboard() {
-  if (DASHBOARD_STATS.comments) {
-    DASHBOARD_STATS.comments.textContent = state.stats.comments ?? 0;
-  }
   if (DASHBOARD_STATS.requests) {
     DASHBOARD_STATS.requests.textContent = state.stats.requests ?? 0;
   }
@@ -265,98 +313,6 @@ function renderDashboard() {
   }
   if (DASHBOARD_STATS.plan) {
     DASHBOARD_STATS.plan.textContent = roleLabel(state.role) || '—';
-  }
-}
-
-function renderCommentsHistory() {
-  if (!COMMENTS_HISTORY_LIST || !COMMENTS_HISTORY_PLACEHOLDER) return;
-  if (!state.comments.length) {
-    COMMENTS_HISTORY_PLACEHOLDER.hidden = false;
-    COMMENTS_HISTORY_LIST.innerHTML = '';
-    return;
-  }
-  COMMENTS_HISTORY_PLACEHOLDER.hidden = true;
-  COMMENTS_HISTORY_LIST.innerHTML = state.comments.map(comment => {
-    const reportLabel = comment.report_ticker 
-      ? `${comment.report_ticker}${comment.report_company ? ` · ${comment.report_company}` : ''}`
-      : comment.report_slug || `Report ${comment.report_id?.slice(0, 8)}`;
-    const reportUrl = `/report/index.html?id=${comment.report_id || comment.report_slug}`;
-    const relativeTime = formatRelativeTime(comment.created_at);
-    
-    return `
-      <article class="history-item" data-comment-id="${comment.id}">
-        <div class="history-item-header">
-          <div class="history-item-meta">
-            <time datetime="${comment.created_at}" title="${formatDateTime(comment.created_at)}">
-              ${relativeTime}
-            </time>
-            <span class="history-item-separator">·</span>
-            <a href="${reportUrl}" class="history-item-report" target="_blank" rel="noopener">
-              ${escapeHtml(reportLabel)}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                <polyline points="15 3 21 3 21 9"></polyline>
-                <line x1="10" y1="14" x2="21" y2="3"></line>
-              </svg>
-            </a>
-          </div>
-          <button 
-            type="button" 
-            class="history-item-delete" 
-            data-comment-delete="${comment.id}"
-            title="Elimina commento"
-            aria-label="Elimina commento">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="3 6 5 6 21 6"></polyline>
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-            </svg>
-          </button>
-        </div>
-        <div class="history-item-body">${escapeHtml(comment.body)}</div>
-      </article>
-    `;
-  }).join('');
-  
-  // Setup delete handlers
-  COMMENTS_HISTORY_LIST.querySelectorAll('[data-comment-delete]').forEach(btn => {
-    btn.addEventListener('click', handleDeleteComment);
-  });
-}
-
-async function handleDeleteComment(event) {
-  const commentId = event.currentTarget.getAttribute('data-comment-delete');
-  if (!commentId) return;
-  
-  if (!confirm('Eliminare definitivamente questo commento? L\'azione non può essere annullata.')) {
-    return;
-  }
-  
-  try {
-    const { error } = await supabase
-      .from('report_comments')
-      .update({ is_deleted: true })
-      .eq('id', commentId)
-      .eq('user_id', state.user.id); // Solo i propri commenti
-    
-    if (error) throw error;
-    
-    // Rimuovi dal DOM
-    const item = COMMENTS_HISTORY_LIST.querySelector(`[data-comment-id="${commentId}"]`);
-    if (item) {
-      item.style.opacity = '0';
-      item.style.transform = 'translateX(-10px)';
-      setTimeout(() => item.remove(), 200);
-    }
-    
-    // Rimuovi dallo state
-    state.comments = state.comments.filter(c => c.id !== commentId);
-    state.stats.comments = Math.max(0, (state.stats.comments || 0) - 1);
-    renderDashboard();
-    
-    showToast('Commento eliminato.', 'success');
-  } catch (err) {
-    Logger.error('UserArea', 'Delete comment error', err);
-    showToast('Errore durante l\'eliminazione. ' + (err.message || ''), 'error');
   }
 }
 
@@ -392,6 +348,7 @@ function renderPlanSection() {
   PLAN_BENEFITS.innerHTML = planBenefits(state.role).map(item => `<span>• ${escapeHtml(item)}</span>`).join('');
   PLAN_ACTIONS.innerHTML = '';
   
+  // Mostra info crediti per institutional
   if (state.role === 'institutional' && state.credits !== null) {
     const creditsInfo = document.createElement('div');
     creditsInfo.className = 'plan-credits';
@@ -399,11 +356,77 @@ function renderPlanSection() {
     PLAN_ACTIONS.appendChild(creditsInfo);
   }
   
-  const actionBtn = document.createElement('a');
-  actionBtn.className = 'btn btn-primary';
-  actionBtn.href = '/pricing.html';
-  actionBtn.textContent = state.role === 'institutional' ? 'Contatta il desk' : 'Consulta prezzi';
-  PLAN_ACTIONS.appendChild(actionBtn);
+  // Mostra info scadenza piano se presente
+  if (state.planExpiresAt) {
+    const expiresDate = new Date(state.planExpiresAt);
+    const now = new Date();
+    const daysLeft = Math.ceil((expiresDate - now) / (1000 * 60 * 60 * 24));
+    
+    const expiryInfo = document.createElement('div');
+    expiryInfo.className = 'plan-expiry';
+    if (daysLeft > 0) {
+      expiryInfo.innerHTML = `<span>Piano valido fino al ${formatDate(expiresDate)} (${daysLeft} giorni rimanenti)</span>`;
+    } else {
+      expiryInfo.innerHTML = `<span style="color: rgba(248, 113, 113, 0.9);">Piano scaduto il ${formatDate(expiresDate)}</span>`;
+    }
+    PLAN_ACTIONS.appendChild(expiryInfo);
+  }
+  
+  // Pulsanti azione: upgrade o cancellazione
+  const actionsContainer = document.createElement('div');
+  actionsContainer.className = 'user-cta';
+  
+  // Upgrade disponibili
+  if (state.role === 'trial') {
+    const upgradeBtn = document.createElement('a');
+    upgradeBtn.className = 'btn btn-sm btn-primary';
+    upgradeBtn.href = '/pricing.html';
+    upgradeBtn.textContent = 'Passa a Pro';
+    actionsContainer.appendChild(upgradeBtn);
+  } else if (state.role === 'pro') {
+    const upgradeBtn = document.createElement('a');
+    upgradeBtn.className = 'btn btn-sm btn-primary';
+    upgradeBtn.href = '/pricing.html';
+    upgradeBtn.textContent = 'Passa a Desk Professionale';
+    actionsContainer.appendChild(upgradeBtn);
+  }
+  
+  // Cancellazione (solo se piano attivo e non admin)
+  if (state.role && !state.isAdmin && state.planExpiresAt) {
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn btn-sm btn-outline';
+    cancelBtn.textContent = 'Cancella abbonamento';
+    cancelBtn.addEventListener('click', handleCancelSubscription);
+    actionsContainer.appendChild(cancelBtn);
+  }
+  
+  // Se non ha piano, mostra link a pricing
+  if (!state.role) {
+    const pricingBtn = document.createElement('a');
+    pricingBtn.className = 'btn btn-sm btn-primary';
+    pricingBtn.href = '/pricing.html';
+    pricingBtn.textContent = 'Consulta piani disponibili';
+    actionsContainer.appendChild(pricingBtn);
+  }
+  
+  PLAN_ACTIONS.appendChild(actionsContainer);
+}
+
+async function handleCancelSubscription() {
+  if (!confirm('Sei sicuro di voler cancellare il tuo abbonamento? L\'accesso verrà disattivato alla scadenza del periodo pagato.')) {
+    return;
+  }
+  
+  try {
+    showToast('Cancellazione in corso...', 'info');
+    
+    // TODO: Integrare con sistema di pagamento per cancellazione effettiva
+    // Per ora mostra solo messaggio
+    showToast('La cancellazione sarà gestita dal sistema di pagamento. Controlla le impostazioni del tuo metodo di pagamento.', 'info');
+  } catch (err) {
+    Logger.error('UserArea', 'cancel subscription error', err);
+    showToast('Errore durante la cancellazione. Contatta il supporto.', 'error');
+  }
 }
 
 function renderAuthPanel() {
@@ -442,24 +465,23 @@ async function onProfileSubmit(event) {
     return;
   }
   const display_name = PROFILE_NAME_FIELD.value.trim();
-  const bio = PROFILE_BIO_FIELD.value.trim();
+  const preferences = {
+    email_notifications: PREF_EMAIL_NOTIFICATIONS?.checked ?? true,
+    dashboard_alerts: PREF_DASHBOARD_ALERTS?.checked ?? true
+  };
+  
   try {
     PROFILE_FORM.querySelector('button[type="submit"]').disabled = true;
     const payload = {
       user_id: state.user.id,
       display_name: display_name || null,
-      bio: bio || null
+      preferences: preferences
     };
     const { error } = await supabase
       .from('user_profiles')
       .upsert(payload, { onConflict: 'user_id' });
     if (error) throw error;
-    state.profile = { ...(state.profile || {}), display_name, bio };
-    
-    // Save desk links if institutional
-    if (state.role === 'institutional') {
-      await saveDeskLinks();
-    }
+    state.profile = { ...(state.profile || {}), display_name, preferences };
     
     renderHero();
     showToast('Profilo aggiornato.', 'success');
@@ -473,7 +495,13 @@ async function onProfileSubmit(event) {
 
 function onProfileReset() {
   PROFILE_NAME_FIELD.value = state.profile?.display_name || getDisplayName();
-  PROFILE_BIO_FIELD.value = state.profile?.bio || '';
+  // Reset preferences
+  if (PREF_EMAIL_NOTIFICATIONS) {
+    PREF_EMAIL_NOTIFICATIONS.checked = state.profile?.preferences?.email_notifications !== false;
+  }
+  if (PREF_DASHBOARD_ALERTS) {
+    PREF_DASHBOARD_ALERTS.checked = state.profile?.preferences?.dashboard_alerts !== false;
+  }
 }
 
 async function handleLoginSubmit(event) {
@@ -502,16 +530,41 @@ async function handleLoginSubmit(event) {
 
 async function fetchUserRole() {
   try {
+    // Se è admin, ruolo è sempre institutional (Desk illimitato, permanente)
+    if (state.isAdmin) {
+      state.role = 'institutional';
+      state.planExpiresAt = null; // Admin = permanente
+      return;
+    }
+    
     const { data, error } = await supabase
       .from('user_roles')
-      .select('role')
+      .select('role, valid_until')
       .eq('user_id', state.user.id)
       .maybeSingle();
     if (error) throw error;
-    state.role = data?.role || 'trial';
+    
+    state.role = data?.role || null;
+    state.planExpiresAt = data?.valid_until || null;
+    
+    // Verifica se il piano è scaduto
+    if (state.planExpiresAt) {
+      const expiresAt = new Date(state.planExpiresAt);
+      const now = new Date();
+      if (expiresAt < now) {
+        // Piano scaduto - disabilita accesso
+        state.role = null;
+        showToast('Il tuo piano è scaduto. Rinnova per continuare ad utilizzare la piattaforma.', 'error');
+        // Reindirizza a pricing dopo 3 secondi
+        setTimeout(() => {
+          window.location.href = '/pricing.html';
+        }, 3000);
+      }
+    }
   } catch (err) {
     Logger.warn('UserArea', 'role fetch error', err);
     state.role = null;
+    state.planExpiresAt = null;
   }
 }
 
@@ -519,7 +572,7 @@ async function fetchUserProfile() {
   try {
     const { data, error } = await supabase
       .from('user_profiles')
-      .select('display_name, bio, avatar_url')
+      .select('display_name, avatar_url, preferences')
       .eq('user_id', state.user.id)
       .maybeSingle();
     if (error) throw error;
@@ -532,86 +585,20 @@ async function fetchUserProfile() {
 
 async function fetchDashboardStats() {
   try {
-    const { count, error } = await supabase
-      .from('report_comments')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', state.user.id)
-      .eq('is_deleted', false);
-    if (error) throw error;
-    state.stats.comments = count ?? 0;
-    state.stats.requests = 0; // placeholder per future analysis_requests
+    // Conta richieste analisi on-demand
+    if (state.role === 'institutional') {
+      const { count, error } = await supabase
+        .from('analysis_requests')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', state.user.id);
+      if (error) throw error;
+      state.stats.requests = count ?? 0;
+    } else {
+      state.stats.requests = 0;
+    }
   } catch (err) {
     Logger.warn('UserArea', 'stats error', err);
-  }
-}
-
-async function fetchCommentsHistory() {
-  if (!state.user) {
-    state.comments = [];
-    return;
-  }
-  try {
-    const { data, error } = await supabase
-      .from('report_comments')
-      .select(`
-        id, 
-        body, 
-        created_at, 
-        report_id, 
-        is_deleted,
-        report:reports!inner(
-          id,
-          slug,
-          ticker,
-          company_name,
-          header
-        )
-      `)
-      .eq('user_id', state.user.id)
-      .eq('is_deleted', false)
-      .order('created_at', { ascending: false })
-      .limit(50);
-    if (error) throw error;
-    
-    state.comments = (data || []).map(item => {
-      const report = item.report || {};
-      let ticker = report.ticker;
-      let company = report.company_name;
-      
-      // Fallback: estrai da header se disponibile
-      if (!ticker && report.header) {
-        try {
-          const header = typeof report.header === 'string' 
-            ? JSON.parse(report.header) 
-            : report.header;
-          if (header?.rows) {
-            for (const row of header.rows) {
-              for (const part of row.parts || []) {
-                if (part.kind === 'metric') {
-                  if (part.key === 'Ticker' && !ticker) ticker = part.value;
-                  if (part.key === 'CompanyName' && !company) company = part.value;
-                }
-              }
-            }
-          }
-        } catch (e) {
-          Logger.warn('UserArea', 'Header parse error', e);
-        }
-      }
-      
-      return {
-        id: item.id,
-        body: item.body,
-        created_at: item.created_at,
-        report_id: item.report_id,
-        report_slug: report.slug || report.id,
-        report_ticker: ticker || null,
-        report_company: company || null
-      };
-    });
-  } catch (err) {
-    Logger.warn('UserArea', 'comment history error', err);
-    state.comments = [];
+    state.stats.requests = 0;
   }
 }
 
@@ -669,7 +656,7 @@ function planBenefits(role) {
   if (role === 'pro') {
     return [
       'Sblocco completo dei deck SRD v5.0 e MTB v3.1',
-      'Commenti illimitati e note condivise con il desk',
+      'Note condivise con il desk',
       'Suggerimento e voto giornaliero sui ticker della community',
       'Notifiche push e roadmap funzionale con priorità Pro'
     ];
@@ -825,35 +812,243 @@ async function checkAdminStatus() {
 function renderCommunitySection() {
   if (!PANELS.community) return;
   
-  const proposeSection = document.getElementById('community-propose');
-  const deskSection = document.getElementById('on-demand-desk');
+  // Always show credits counter
+  renderCreditsCounter();
   
-  if (!proposeSection || !deskSection) return;
+  // Show request analysis card for all authenticated users
+  if (REQUEST_ANALYSIS_CARD) {
+    REQUEST_ANALYSIS_CARD.hidden = false;
+    
+    // Mostra/nascondi lock in base a ruolo e crediti
+    if (state.role === 'institutional') {
+      const credits = state.credits?.credits_balance ?? 0;
+      if (!state.isAdmin && credits <= 0) {
+        showRequestAnalysisLock('Non hai crediti disponibili. Acquista crediti per richiedere analisi on demand.');
+      } else {
+        hideRequestAnalysisLock();
+      }
+    } else if (state.role !== 'trial' && state.role !== 'pro') {
+      showRequestAnalysisLock('Questa funzionalità richiede un piano attivo.');
+    } else {
+      hideRequestAnalysisLock();
+    }
+  }
   
-  // Show/hide based on role
-  if (state.role === 'trial' || state.role === 'pro') {
-    proposeSection.hidden = false;
-    deskSection.hidden = true;
-    renderProposalsList();
-    setupProposalHandlers();
-  } else if (state.role === 'institutional') {
-    proposeSection.hidden = true;
-    deskSection.hidden = false;
-  } else {
-    proposeSection.hidden = true;
-    deskSection.hidden = true;
+  // Show community proposals card for Trial/Pro only
+  // Institutional ha solo richieste on-demand, non proposte community
+  if (COMMUNITY_PROPOSE_CARD) {
+    if (state.role === 'trial' || state.role === 'pro') {
+      COMMUNITY_PROPOSE_CARD.hidden = false;
+      renderCommunityProposalsList();
+    } else {
+      COMMUNITY_PROPOSE_CARD.hidden = true;
+    }
+  }
+  
+  // Setup handlers
+  setupProposalHandlers();
+  setupCreditsHandlers();
+  
+  // Setup modal checkout (solo una volta)
+  if (!window._creditsModalSetup) {
+    setupCreditsCheckoutModal();
+    window._creditsModalSetup = true;
   }
 }
 
-function renderProposalsList() {
+function renderCreditsCounter() {
+  if (!CREDITS_BALANCE) return;
+  
+  const credits = state.credits?.credits_balance ?? 0;
+  CREDITS_BALANCE.textContent = credits;
+  
+  // Update color based on credits
+  if (credits === 0) {
+    CREDITS_BALANCE.style.color = 'rgba(248, 113, 113, 0.9)';
+  } else if (credits < 3) {
+    CREDITS_BALANCE.style.color = 'rgba(251, 191, 36, 0.9)';
+  } else {
+    CREDITS_BALANCE.style.color = 'var(--brand-600)';
+  }
+}
+
+function setupCreditsHandlers() {
+  // Rimuovi listener precedenti se esistono
+  if (BUY_CREDITS_BTN && BUY_CREDITS_BTN._clickHandler) {
+    BUY_CREDITS_BTN.removeEventListener('click', BUY_CREDITS_BTN._clickHandler);
+  }
+  
+  // Abilita/disabilita pulsante acquista crediti in base al piano
+  if (BUY_CREDITS_BTN) {
+    // Solo utenti con piano desk (institutional) possono acquistare crediti
+    if (state.role === 'institutional') {
+      BUY_CREDITS_BTN.disabled = false;
+      BUY_CREDITS_BTN.title = '';
+      BUY_CREDITS_BTN._clickHandler = openCreditsCheckout;
+      BUY_CREDITS_BTN.addEventListener('click', BUY_CREDITS_BTN._clickHandler);
+    } else {
+      BUY_CREDITS_BTN.disabled = true;
+      BUY_CREDITS_BTN.title = 'Disponibile solo per piano Desk Professionale';
+    }
+  }
+  
+  if (REQUEST_ANALYSIS_LOCK_UPGRADE) {
+    REQUEST_ANALYSIS_LOCK_UPGRADE.addEventListener('click', () => {
+      window.location.href = '/pricing.html';
+    });
+  }
+}
+
+function setupCreditsCheckoutModal() {
+  const modal = document.getElementById('credits-checkout-modal');
+  const closeBtn = document.getElementById('credits-checkout-close');
+  const cancelBtn = document.getElementById('credits-checkout-cancel');
+  const packages = document.querySelectorAll('.credits-package');
+  
+  if (!modal) return;
+  
+  // Chiudi modal
+  const closeModal = () => {
+    modal.setAttribute('hidden', '');
+  };
+  
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+  
+  // Chiudi cliccando fuori
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+  
+  // Gestisci selezione pacchetto
+  packages.forEach(pkg => {
+    pkg.addEventListener('click', () => {
+      const credits = parseInt(pkg.dataset.credits);
+      const price = parseInt(pkg.dataset.price);
+      handleCreditsPurchase(credits, price);
+    });
+  });
+}
+
+function openCreditsCheckout() {
+  const modal = document.getElementById('credits-checkout-modal');
+  if (modal) {
+    modal.removeAttribute('hidden');
+  }
+}
+
+async function handleCreditsPurchase(credits, price) {
+  try {
+    showToast('Inizio checkout...', 'info');
+    
+    // TODO: Integrare con sistema di pagamento (Paddle/LemonSqueezy)
+    // Per ora mostra messaggio
+    showToast(`Checkout per ${credits} crediti (${price}€) - Integrazione pagamento in arrivo`, 'info');
+    
+    // Chiudi modal
+    const modal = document.getElementById('credits-checkout-modal');
+    if (modal) modal.setAttribute('hidden', '');
+    
+    // TODO: Dopo pagamento riuscito, aggiornare crediti:
+    // await supabase.from('user_analysis_credits').update({ credits_balance: increment(credits) })
+  } catch (err) {
+    Logger.error('UserArea', 'credits purchase error', err);
+    showToast('Errore durante l\'acquisto. Riprova.', 'error');
+  }
+}
+
+function showRequestAnalysisLock(message) {
+  if (!REQUEST_ANALYSIS_LOCK || !REQUEST_ANALYSIS_LOCK_MESSAGE) return;
+  REQUEST_ANALYSIS_LOCK_MESSAGE.textContent = message || 'Questa funzionalità richiede un piano attivo.';
+  REQUEST_ANALYSIS_LOCK.hidden = false;
+}
+
+function hideRequestAnalysisLock() {
+  if (!REQUEST_ANALYSIS_LOCK) return;
+  REQUEST_ANALYSIS_LOCK.hidden = true;
+}
+
+// Render on-demand requests (for institutional users)
+async function renderProposalsList() {
   if (!PROPOSAL_LIST) return;
   
-  if (!state.proposals.length) {
-    PROPOSAL_LIST.innerHTML = '<p style="color: rgba(203, 213, 225, 0.6); font-size: 0.9rem;">Nessuna proposta ancora. Sii il primo a proporre un asset!</p>';
+  // For institutional users, show analysis requests
+  if (state.role === 'institutional') {
+    try {
+      const { data, error } = await supabase
+        .from('analysis_requests')
+        .select('id, ticker, status, created_at, completed_at, report_id, report_slug')
+        .eq('user_id', state.user.id)
+        .order('created_at', { ascending: false })
+        .limit(20);
+      
+      if (error) throw error;
+      
+      if (!data || data.length === 0) {
+        PROPOSAL_LIST.innerHTML = '<p style="color: rgba(203, 213, 225, 0.6); font-size: 0.9rem;">Nessuna richiesta ancora. Invia un ticker per richiedere un\'analisi.</p>';
+        return;
+      }
+      
+      PROPOSAL_LIST.innerHTML = data.map(request => {
+        const statusLabels = {
+          pending: { text: 'In attesa', color: 'rgba(251, 191, 36, 0.9)', icon: '⏳' },
+          processing: { text: 'In elaborazione', color: 'rgba(96, 165, 250, 0.9)', icon: '⚙️' },
+          completed: { text: 'Completata', color: 'rgba(34, 197, 94, 0.9)', icon: '✅' },
+          cancelled: { text: 'Annullata', color: 'rgba(203, 213, 225, 0.6)', icon: '❌' }
+        };
+        const status = statusLabels[request.status] || statusLabels.pending;
+        
+        // Link al report se completata
+        const reportLink = (request.report_slug || request.report_id)
+          ? `<div style="margin-top: 0.75rem;">
+              <a href="/report/index.html?id=${request.report_slug || request.report_id}" class="btn btn-sm btn-outline" target="_blank" rel="noopener">
+                Visualizza analisi
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 0.5rem; display: inline-block;">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+            </div>`
+          : '';
+        
+        return `
+          <article class="history-item proposal-item">
+            <div class="proposal-header">
+              <strong>${escapeHtml(request.ticker)}</strong>
+              <span class="badge" style="background: ${status.color}20; border-color: ${status.color}; color: ${status.color};">
+                ${status.icon} ${status.text}
+              </span>
+            </div>
+            <div class="proposal-meta">
+              <span>${formatDateTime(request.created_at)}</span>
+              ${request.completed_at ? `<span class="history-item-separator">·</span><span>Completata: ${formatDateTime(request.completed_at)}</span>` : ''}
+            </div>
+            ${reportLink}
+          </article>
+        `;
+      }).join('');
+    } catch (err) {
+      Logger.error('UserArea', 'fetch analysis requests error', err);
+      PROPOSAL_LIST.innerHTML = '<p style="color: rgba(248, 113, 113, 0.9); font-size: 0.9rem;">Errore nel caricamento delle richieste.</p>';
+    }
     return;
   }
   
-  PROPOSAL_LIST.innerHTML = state.proposals.map(proposal => {
+  // For other users, show empty state
+  PROPOSAL_LIST.innerHTML = '<p style="color: rgba(203, 213, 225, 0.6); font-size: 0.9rem;">Invia un ticker per richiedere un\'analisi.</p>';
+}
+
+// Render community proposals (for Trial/Pro users)
+function renderCommunityProposalsList() {
+  if (!COMMUNITY_PROPOSALS_LIST) return;
+  
+  if (!state.proposals.length) {
+    COMMUNITY_PROPOSALS_LIST.innerHTML = '<p style="color: rgba(203, 213, 225, 0.6); font-size: 0.9rem;">Nessuna proposta ancora. Sii il primo a proporre un asset!</p>';
+    return;
+  }
+  
+  COMMUNITY_PROPOSALS_LIST.innerHTML = state.proposals.map(proposal => {
     const hasVoted = state.userVotes.has(proposal.id);
     const isOwner = proposal.proposed_by === state.user?.id;
     return `
@@ -861,14 +1056,14 @@ function renderProposalsList() {
         <div class="proposal-header">
           <strong>${escapeHtml(proposal.asset_ticker)}</strong>
           <div class="proposal-actions">
-            <button class="vote-btn ${hasVoted ? 'voted' : ''}" 
+            <button class="btn btn-sm vote-btn ${hasVoted ? 'voted' : ''}" 
                     data-proposal-id="${proposal.id}" 
                     ${hasVoted ? 'title="Rimuovi voto"' : 'title="Vota"'}
                     aria-label="${hasVoted ? 'Rimuovi voto' : 'Vota'}">
               ${hasVoted ? '★' : '☆'}
             </button>
             <span class="vote-count">${proposal.vote_count}</span>
-            ${state.isAdmin ? `<button class="delete-btn" data-proposal-id="${proposal.id}" title="Rimuovi proposta">×</button>` : ''}
+            ${state.isAdmin ? `<button class="btn btn-sm delete-btn" data-proposal-id="${proposal.id}" title="Rimuovi proposta">×</button>` : ''}
           </div>
         </div>
         <div class="proposal-meta">
@@ -880,74 +1075,278 @@ function renderProposalsList() {
   }).join('');
   
   // Attach event listeners
-  PROPOSAL_LIST.querySelectorAll('.vote-btn').forEach(btn => {
+  COMMUNITY_PROPOSALS_LIST.querySelectorAll('.vote-btn').forEach(btn => {
     btn.addEventListener('click', () => handleVote(btn.dataset.proposalId));
   });
   
   if (state.isAdmin) {
-    PROPOSAL_LIST.querySelectorAll('.delete-btn').forEach(btn => {
+    COMMUNITY_PROPOSALS_LIST.querySelectorAll('.delete-btn').forEach(btn => {
       btn.addEventListener('click', () => handleDeleteProposal(btn.dataset.proposalId));
     });
   }
 }
 
 function setupProposalHandlers() {
-  if (PROPOSAL_SUBMIT) {
-    PROPOSAL_SUBMIT.addEventListener('click', handleProposeAsset);
-  }
-  if (PROPOSAL_INPUT) {
-    PROPOSAL_INPUT.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') handleProposeAsset();
+  // Setup form per analisi su richiesta
+  const form = document.getElementById('analysis-request-form');
+  if (form && !form._hasHandler) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      handleProposeAsset();
     });
+    form._hasHandler = true;
   }
+  
+  // Mantieni anche handler separati per retrocompatibilità
+  if (PROPOSAL_SUBMIT && !PROPOSAL_SUBMIT._hasHandler) {
+    PROPOSAL_SUBMIT.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleProposeAsset();
+    });
+    PROPOSAL_SUBMIT._hasHandler = true;
+  }
+  if (PROPOSAL_INPUT && !PROPOSAL_INPUT._hasHandler) {
+    PROPOSAL_INPUT.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleProposeAsset();
+      }
+    });
+    PROPOSAL_INPUT._hasHandler = true;
+  }
+  
+  // Update button text, placeholder and info based on role
+  if (PROPOSAL_SUBMIT) {
+    if (state.role === 'institutional') {
+      PROPOSAL_SUBMIT.textContent = 'Richiedi analisi';
+      if (PROPOSAL_INPUT) {
+        PROPOSAL_INPUT.placeholder = 'Inserisci ticker per richiedere analisi on-demand (es. AAPL, BTC-USD)';
+      }
+      if (REQUEST_ANALYSIS_INFO) REQUEST_ANALYSIS_INFO.hidden = false;
+      if (COMMUNITY_PROPOSAL_INFO) COMMUNITY_PROPOSAL_INFO.hidden = true;
+    } else if (state.role === 'trial' || state.role === 'pro') {
+      PROPOSAL_SUBMIT.textContent = 'Proponi asset';
+      if (PROPOSAL_INPUT) {
+        PROPOSAL_INPUT.placeholder = 'Proponi un asset per la community (es. AAPL, BTC-USD, settore AI)';
+      }
+      if (REQUEST_ANALYSIS_INFO) REQUEST_ANALYSIS_INFO.hidden = true;
+      if (COMMUNITY_PROPOSAL_INFO) COMMUNITY_PROPOSAL_INFO.hidden = false;
+    } else {
+      PROPOSAL_SUBMIT.textContent = 'Invia ticker';
+      if (REQUEST_ANALYSIS_INFO) REQUEST_ANALYSIS_INFO.hidden = true;
+      if (COMMUNITY_PROPOSAL_INFO) COMMUNITY_PROPOSAL_INFO.hidden = true;
+    }
+  }
+}
+
+// Validazione ticker avanzata (livello accademico)
+function isValidTicker(ticker) {
+  if (!ticker || ticker.length < 1 || ticker.length > 20) return false;
+  
+  // Formato base: lettere/numeri, possibili trattini o punti
+  // Esempi validi: AAPL, BTC-USD, EURUSD, S&P500, TSLA, MSFT, ^GSPC
+  const tickerPattern = /^[A-Z0-9][A-Z0-9.\-^]{0,19}$/;
+  if (!tickerPattern.test(ticker)) return false;
+  
+  // Blacklist ticker troppo generici o invalidi
+  const blacklist = ['TEST', 'NULL', 'NONE', 'TICKER', 'SYMBOL', 'EXAMPLE'];
+  if (blacklist.includes(ticker)) return false;
+  
+  return true;
 }
 
 async function handleProposeAsset() {
   if (!PROPOSAL_INPUT) return;
   const ticker = PROPOSAL_INPUT.value.trim().toUpperCase();
   
-  if (!ticker || ticker.length < 2) {
+  if (!ticker || ticker.length < 1) {
     showToast('Inserisci un ticker valido (es. AAPL, BTC-USD).', 'error');
     return;
   }
   
-  if (state.role !== 'trial' && state.role !== 'pro') {
-    showToast('Solo i piani Trial e Pro possono proporre asset.', 'error');
+  // Validazione ticker avanzata
+  if (!isValidTicker(ticker)) {
+    showToast('Ticker non valido. Usa formato standard (es. AAPL, BTC-USD, EURUSD).', 'error');
     return;
   }
   
-  try {
-    PROPOSAL_SUBMIT.disabled = true;
-    const { data, error } = await supabase
-      .from('asset_proposals')
-      .insert({
-        asset_ticker: ticker,
-        proposed_by: state.user.id
-      })
-      .select()
-      .single();
-    
-    if (error) throw error;
-    
-    state.proposals.unshift(data);
-    PROPOSAL_INPUT.value = '';
-    renderProposalsList();
-    showToast('Proposta inviata!', 'success');
-  } catch (err) {
-    Logger.error('UserArea', 'proposal error', err);
-    if (err.code === '23505') {
-      showToast('Questa proposta esiste già.', 'error');
-    } else {
-      showToast('Errore durante l\'invio della proposta.', 'error');
+  // Check if user has credits (for on-demand requests)
+  const credits = state.credits?.credits_balance ?? 0;
+  
+  // For institutional users: require credits for on-demand requests (admin bypass)
+  if (state.role === 'institutional') {
+    // Admin ha sempre accesso illimitato, bypass controllo crediti
+    if (!state.isAdmin && credits <= 0) {
+      showRequestAnalysisLock('Non hai crediti disponibili. Acquista crediti per richiedere analisi on demand.');
+      return;
     }
-  } finally {
-    PROPOSAL_SUBMIT.disabled = false;
+    
+    // Rate limiting: max 3 richieste pending per utente
+    const { count: pendingCount, error: countError } = await supabase
+      .from('analysis_requests')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', state.user.id)
+      .eq('status', 'pending');
+    
+    if (countError) {
+      Logger.error('UserArea', 'pending count error', countError);
+      showToast('Errore durante la verifica. Riprova.', 'error');
+      return;
+    }
+    
+    if (pendingCount >= 3) {
+      showToast('Hai già 3 richieste in attesa. Attendi il completamento prima di inviarne altre.', 'error');
+      return;
+    }
+    
+    // Nascondi lock se ha crediti o è admin
+    hideRequestAnalysisLock();
+    
+    // Deduct credit and create request (admin bypass) - TRANSACTION ATOMICA
+    try {
+      PROPOSAL_SUBMIT.disabled = true;
+      PROPOSAL_SUBMIT.textContent = 'Invio in corso...';
+      
+      // Step 1: Deduct credit PRIMA di creare richiesta (per evitare race conditions)
+      if (!state.isAdmin) {
+        // Verifica crediti disponibili (doppio check)
+        if (credits <= 0) {
+          showRequestAnalysisLock('Non hai crediti disponibili. Acquista crediti per richiedere analisi on demand.');
+          PROPOSAL_SUBMIT.disabled = false;
+          PROPOSAL_SUBMIT.textContent = 'Richiedi analisi';
+          return;
+        }
+        
+        // Update crediti (con optimistic locking per prevenire race conditions)
+        const { data: creditUpdate, error: creditError } = await supabase
+          .from('user_analysis_credits')
+          .update({
+            credits_balance: credits - 1,
+            total_used: (state.credits?.total_used ?? 0) + 1,
+            updated_at: new Date().toISOString()
+          })
+          .eq('user_id', state.user.id)
+          .eq('credits_balance', credits) // Optimistic locking
+          .select()
+          .single();
+        
+        if (creditError || !creditUpdate) {
+          // Conflitto: crediti cambiati, riprova
+          await fetchCredits();
+          const newCredits = state.credits?.credits_balance ?? 0;
+          if (newCredits <= 0) {
+            showRequestAnalysisLock('Crediti non disponibili. La richiesta potrebbe essere già stata processata.');
+            PROPOSAL_SUBMIT.disabled = false;
+            PROPOSAL_SUBMIT.textContent = 'Richiedi analisi';
+            return;
+          }
+          // Retry con nuovi crediti
+          showToast('Riprova. I crediti sono stati aggiornati.', 'info');
+          PROPOSAL_SUBMIT.disabled = false;
+          PROPOSAL_SUBMIT.textContent = 'Richiedi analisi';
+          return;
+        }
+      }
+      
+      // Step 2: Create analysis request (solo se scalata crediti OK o admin)
+      const { data: requestData, error: requestError } = await supabase
+        .from('analysis_requests')
+        .insert({
+          ticker: ticker.toUpperCase().trim(),
+          user_id: state.user.id,
+          status: 'pending',
+          priority: 5
+        })
+        .select()
+        .single();
+      
+      if (requestError) {
+        // Rollback: ripristina credito se richiesta fallisce
+        // IMPORTANTE: Ripristina sia credits_balance che total_used ai valori precedenti
+        if (!state.isAdmin && credits > 0) {
+          await supabase
+            .from('user_analysis_credits')
+            .update({
+              credits_balance: credits,
+              total_used: Math.max(0, (state.credits?.total_used ?? 0) - 1) // Decrementa total_used
+            })
+            .eq('user_id', state.user.id);
+        }
+        throw requestError;
+      }
+      
+      // Step 3: Refresh credits e UI
+      await fetchCredits();
+      renderCreditsCounter();
+      
+      if (!state.isAdmin) {
+        showToast('Richiesta inviata! Un credito è stato scalato. L\'analisi sarà completata entro 24-48 ore.', 'success');
+      } else {
+        showToast('Richiesta inviata! (Admin: crediti illimitati)', 'success');
+      }
+      
+      PROPOSAL_INPUT.value = '';
+      await renderProposalsList();
+      
+      // Aggiorna stats
+      await fetchDashboardStats();
+      renderDashboard();
+    } catch (err) {
+      Logger.error('UserArea', 'on-demand request error', err);
+      showToast('Errore durante l\'invio della richiesta. ' + (err.message || ''), 'error');
+    } finally {
+      PROPOSAL_SUBMIT.disabled = false;
+      if (state.role === 'institutional') {
+        PROPOSAL_SUBMIT.textContent = 'Richiedi analisi';
+      } else if (state.role === 'trial' || state.role === 'pro') {
+        PROPOSAL_SUBMIT.textContent = 'Proponi asset';
+      }
+    }
+    return;
   }
+  
+  // For Trial/Pro users: create community proposal (no credits required)
+  // NOTA: Institutional crea solo analysis_requests (vedi blocco sopra), non asset_proposals
+  if (state.role === 'trial' || state.role === 'pro') {
+    try {
+      PROPOSAL_SUBMIT.disabled = true;
+      const { data, error } = await supabase
+        .from('asset_proposals')
+        .insert({
+          asset_ticker: ticker,
+          proposed_by: state.user.id
+        })
+        .select()
+        .single();
+      
+      if (error) throw error;
+      
+      state.proposals.unshift(data);
+      PROPOSAL_INPUT.value = '';
+      await renderCommunityProposalsList();
+      showToast('Proposta inviata!', 'success');
+    } catch (err) {
+      Logger.error('UserArea', 'proposal error', err);
+      if (err.code === '23505') {
+        showToast('Questa proposta esiste già.', 'error');
+      } else {
+        showToast('Errore durante l\'invio della proposta.', 'error');
+      }
+    } finally {
+      PROPOSAL_SUBMIT.disabled = false;
+    }
+    return;
+  }
+  
+  // No role or insufficient permissions
+  showRequestAnalysisLock('Questa funzionalità richiede un piano attivo.');
 }
 
 async function handleVote(proposalId) {
+  // Solo Trial/Pro possono votare proposte community
+  // Institutional non ha accesso a proposte community
   if (state.role !== 'trial' && state.role !== 'pro') {
-    showToast('Solo i piani Trial e Pro possono votare.', 'error');
+    showToast('Solo i piani Trial e Pro possono votare proposte community.', 'error');
     return;
   }
   
@@ -979,7 +1378,7 @@ async function handleVote(proposalId) {
     
     // Refresh proposals to get updated vote counts
     await fetchProposals();
-    renderProposalsList();
+    renderCommunityProposalsList();
   } catch (err) {
     Logger.error('UserArea', 'vote error', err);
     showToast('Errore durante il voto.', 'error');
@@ -1000,7 +1399,7 @@ async function handleDeleteProposal(proposalId) {
     if (error) throw error;
     
     state.proposals = state.proposals.filter(p => p.id !== proposalId);
-    renderProposalsList();
+    renderCommunityProposalsList();
     showToast('Proposta rimossa.', 'success');
   } catch (err) {
     Logger.error('UserArea', 'delete proposal error', err);
@@ -1017,244 +1416,34 @@ async function fetchCredits() {
       .select('credits_balance, total_purchased, total_used')
       .eq('user_id', state.user.id)
       .maybeSingle();
+    
     if (error) throw error;
-    state.credits = data || { credits_balance: 0, total_purchased: 0, total_used: 0 };
+    
+    // Se record non esiste e utente è institutional, crealo automaticamente
+    if (!data && state.role === 'institutional' && !state.isAdmin) {
+      const { data: newRecord, error: createError } = await supabase
+        .from('user_analysis_credits')
+        .insert({
+          user_id: state.user.id,
+          credits_balance: 0,
+          total_purchased: 0,
+          total_used: 0
+        })
+        .select('credits_balance, total_purchased, total_used')
+        .single();
+      
+      if (createError) {
+        Logger.error('UserArea', 'credits creation error', createError);
+        state.credits = { credits_balance: 0, total_purchased: 0, total_used: 0 };
+      } else {
+        state.credits = newRecord;
+      }
+    } else {
+      state.credits = data || { credits_balance: 0, total_purchased: 0, total_used: 0 };
+    }
   } catch (err) {
     Logger.warn('UserArea', 'credits fetch error', err);
     state.credits = { credits_balance: 0, total_purchased: 0, total_used: 0 };
-  }
-}
-
-async function fetchDeskLinks() {
-  if (!state.user) {
-    console.warn('[DeskLinks] No user, skipping fetch');
-    return;
-  }
-  try {
-    console.log('[DeskLinks] Fetching links for user:', state.user.id);
-    const { data, error } = await supabase
-      .from('desk_public_links')
-      .select('id, link_url, link_label, display_order')
-      .eq('user_id', state.user.id)
-      .order('display_order', { ascending: true });
-    if (error) {
-      console.error('[DeskLinks] Supabase error:', error);
-      throw error;
-    }
-    state.deskLinks = data || [];
-    console.log('[DeskLinks] Fetched', state.deskLinks.length, 'links');
-  } catch (err) {
-    Logger.error('UserArea', 'desk links fetch error', err);
-    console.error('[DeskLinks] Fetch failed:', err);
-    state.deskLinks = [];
-    // Show user-friendly error if table doesn't exist
-    if (err.code === '42P01' || err.message?.includes('does not exist')) {
-      console.error('[DeskLinks] Table desk_public_links does not exist! Run the migration SQL first.');
-    }
-  }
-}
-
-function renderDeskLinksSection() {
-  const section = document.getElementById('desk-links-section');
-  const list = document.getElementById('desk-links-list');
-  const addBtn = document.getElementById('add-desk-link-btn');
-  const lockIndicator = document.getElementById('desk-links-lock');
-  const content = document.getElementById('desk-links-content');
-  
-  console.log('[DeskLinks] renderDeskLinksSection called', {
-    role: state.role,
-    isAdmin: state.isAdmin,
-    section: !!section,
-    list: !!list,
-    addBtn: !!addBtn,
-    linksCount: state.deskLinks?.length || 0
-  });
-  
-  if (!section || !list || !addBtn || !lockIndicator || !content) {
-    console.warn('[DeskLinks] Elements not found');
-    return;
-  }
-  
-  // Always show section, but lock it if user doesn't have access
-  section.removeAttribute('hidden');
-  section.style.display = '';
-  
-  const canManageLinks = state.role === 'institutional' || state.isAdmin;
-  
-  if (canManageLinks) {
-    // Unlock: remove locked class, hide lock indicator, show content
-    section.classList.remove('locked');
-    lockIndicator.hidden = true;
-    content.style.display = '';
-    console.log('[DeskLinks] Section unlocked for', state.isAdmin ? 'admin' : 'institutional user');
-  } else {
-    // Lock: add locked class, show lock indicator, hide content
-    section.classList.add('locked');
-    lockIndicator.hidden = false;
-    content.style.display = 'none';
-    console.log('[DeskLinks] Section locked - role is:', state.role, 'isAdmin:', state.isAdmin);
-    return; // Don't render links if locked
-  }
-  
-  // Render existing links
-  if (state.deskLinks.length === 0) {
-    list.innerHTML = '<p style="color: rgba(203, 213, 225, 0.6); font-size: 0.9rem; margin: 0.5rem 0;">Nessun link aggiunto. Clicca su "Aggiungi link" per iniziare.</p>';
-  } else {
-    list.innerHTML = state.deskLinks.map((link, idx) => `
-      <div class="desk-link-item">
-        <div style="display: grid; gap: 0.5rem; flex: 1;">
-          <input type="url" 
-                 id="link-url-${link.id}" 
-                 value="${escapeHtml(link.link_url)}" 
-                 placeholder="https://..." 
-                 required>
-          <input type="text" 
-                 id="link-label-${link.id}" 
-                 value="${escapeHtml(link.link_label || '')}" 
-                 placeholder="Etichetta (opzionale)">
-        </div>
-        <button type="button" 
-                class="delete-btn" 
-                data-link-id="${link.id}" 
-                title="Rimuovi link">×</button>
-      </div>
-    `).join('');
-    
-    // Add remove handlers
-    list.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', () => handleRemoveDeskLink(btn.dataset.linkId));
-    });
-  }
-  
-  // Update add button state
-  if (state.deskLinks.length >= 3) {
-    addBtn.disabled = true;
-    addBtn.textContent = 'Massimo 3 link raggiunto';
-    addBtn.title = 'Puoi aggiungere massimo 3 link pubblici';
-  } else {
-    addBtn.disabled = false;
-    addBtn.textContent = '+ Aggiungi link';
-    addBtn.title = '';
-  }
-  
-  // Setup handler (use once flag to avoid duplicates on re-render)
-  if (!addBtn._hasHandler) {
-    addBtn.addEventListener('click', handleAddDeskLink);
-    addBtn._hasHandler = true;
-  }
-}
-
-async function handleAddDeskLink() {
-  console.log('[DeskLinks] handleAddDeskLink called', {
-    role: state.role,
-    isAdmin: state.isAdmin,
-    linksCount: state.deskLinks.length,
-    userId: state.user?.id
-  });
-  
-  const canManageLinks = state.role === 'institutional' || state.isAdmin;
-  if (!canManageLinks) {
-    console.warn('[DeskLinks] Not authorized, role:', state.role, 'isAdmin:', state.isAdmin);
-    showToast('Solo gli utenti con piano Desk o admin possono aggiungere link pubblici.', 'error');
-    return;
-  }
-  
-  if (state.deskLinks.length >= 3) {
-    showToast('Massimo 3 link consentiti.', 'error');
-    return;
-  }
-  
-  try {
-    const nextOrder = state.deskLinks.length;
-    console.log('[DeskLinks] Inserting new link, order:', nextOrder);
-    const { data, error } = await supabase
-      .from('desk_public_links')
-      .insert({
-        user_id: state.user.id,
-        link_url: 'https://',
-        link_label: '',
-        display_order: nextOrder
-      })
-      .select()
-      .single();
-    
-    if (error) {
-      console.error('[DeskLinks] Insert error:', error);
-      if (error.code === '42P01' || error.message?.includes('does not exist')) {
-        showToast('Tabella non trovata. Esegui la migrazione SQL in Supabase.', 'error');
-      }
-      throw error;
-    }
-    
-    console.log('[DeskLinks] Link inserted successfully:', data);
-    state.deskLinks.push(data);
-    renderDeskLinksSection();
-    showToast('Link aggiunto. Modifica l\'URL e salva il profilo.', 'success');
-  } catch (err) {
-    Logger.error('UserArea', 'add desk link error', err);
-    console.error('[DeskLinks] Add link failed:', err);
-    showToast('Errore durante l\'aggiunta del link. ' + (err.message || ''), 'error');
-  }
-}
-
-async function handleRemoveDeskLink(linkId) {
-  try {
-    const { error } = await supabase
-      .from('desk_public_links')
-      .delete()
-      .eq('id', linkId);
-    
-    if (error) throw error;
-    
-    state.deskLinks = state.deskLinks.filter(l => l.id !== linkId);
-    renderDeskLinksSection();
-    showToast('Link rimosso.', 'success');
-  } catch (err) {
-    Logger.error('UserArea', 'remove desk link error', err);
-    showToast('Errore durante la rimozione.', 'error');
-  }
-}
-
-async function saveDeskLinks() {
-  const canManageLinks = state.role === 'institutional' || state.isAdmin;
-  if (!canManageLinks) return;
-  
-  const list = document.getElementById('desk-links-list');
-  if (!list) return;
-  
-  const updates = [];
-  list.querySelectorAll('.desk-link-item').forEach(item => {
-    const urlInput = item.querySelector('input[type="url"]');
-    const labelInput = item.querySelector('input[type="text"]');
-    const linkId = item.querySelector('.delete-btn')?.dataset.linkId;
-    
-    if (urlInput && linkId) {
-      updates.push({
-        id: linkId,
-        link_url: urlInput.value.trim(),
-        link_label: labelInput?.value.trim() || null
-      });
-    }
-  });
-  
-  if (!updates.length) return;
-  
-  try {
-    await Promise.all(updates.map(update => 
-      supabase
-        .from('desk_public_links')
-        .update({
-          link_url: update.link_url,
-          link_label: update.link_label
-        })
-        .eq('id', update.id)
-    ));
-    
-    await fetchDeskLinks();
-    renderDeskLinksSection();
-  } catch (err) {
-    Logger.error('UserArea', 'save desk links error', err);
-    showToast('Errore durante il salvataggio dei link.', 'error');
   }
 }
 

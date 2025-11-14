@@ -31,8 +31,7 @@
       <div class="tablist" role="tablist" aria-label="Sezioni account">
         <button type="button" role="tab" id="tab-dashboard" aria-controls="panel-dashboard" aria-selected="true">Dashboard</button>
         <button type="button" role="tab" id="tab-profile" aria-controls="panel-profile" aria-selected="false">Profilo</button>
-        <button type="button" role="tab" id="tab-comments" aria-controls="panel-comments" aria-selected="false">Commenti</button>
-        <button type="button" role="tab" id="tab-community" aria-controls="panel-community" aria-selected="false">Analisi community</button>
+        <button type="button" role="tab" id="tab-community" aria-controls="panel-community" aria-selected="false">Analisi on demand</button>
         <button type="button" role="tab" id="tab-plan" aria-controls="panel-plan" aria-selected="false">Abbonamento</button>
         <button type="button" role="tab" id="tab-inbox" aria-controls="panel-inbox" aria-selected="false">Inbox</button>
       </div>
@@ -46,10 +45,6 @@
             <p>Metriche sintetiche sul tuo utilizzo della piattaforma e aggiornamenti operativi.</p>
           </div>
           <div class="dashboard-grid" id="dashboard-stats">
-            <article class="stat-card">
-              <span>Report commentati</span>
-              <strong id="stat-comments">0</strong>
-            </article>
             <article class="stat-card">
               <span>Richieste analisi inviate</span>
               <strong id="stat-requests">0</strong>
@@ -65,7 +60,7 @@
           </div>
           <div class="placeholder-card">
             <strong>Attività della community</strong>
-            <span>Feed in arrivo: mostreremo gli ultimi commenti sui deck SRD v5.0 e MTB v3.1, gli annunci del desk e i contenuti evidenziati per il tuo ruolo.</span>
+            <span>Feed in arrivo: mostreremo gli annunci del desk e i contenuti evidenziati per il tuo ruolo.</span>
           </div>
         </section>
 
@@ -86,79 +81,90 @@
             <label>
               Nome visualizzato
               <input type="text" id="profile-display-name" maxlength="80" placeholder="Es. Mario Rossi o Team Analisi Quantitativa">
-              <span class="form-hint">Nome che apparirà nei tuoi commenti e nel profilo pubblico.</span>
+              <span class="form-hint">Nome utilizzato internamente nella piattaforma.</span>
             </label>
-            <label>
-              Profilo pubblico
-              <textarea id="profile-bio" maxlength="600" placeholder="Descrivi la tua esperienza, focus di ricerca e preferenze di mercato. Massimo 600 caratteri."></textarea>
-              <span class="form-hint">Descrizione visibile nella community. Consigliato: esperienza professionale, specializzazioni, obiettivi di ricerca.</span>
-            </label>
-            <div id="desk-links-section" class="profile-feature-locked">
-              <div class="feature-header">
-                <label>
-                  Link pubblici nel profilo
-                  <span class="feature-badge">Piano Desk</span>
-                </label>
-                <div class="feature-lock-indicator" id="desk-links-lock" hidden>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                  </svg>
-                  <span>Disponibile con piano Desk Professionale</span>
-                </div>
-              </div>
-              <div class="feature-content" id="desk-links-content">
-                <p class="feature-description">Aggiungi fino a 3 link pubblici (es. LinkedIn, sito istituzionale, portfolio) che appariranno nel tuo profilo visibile alla community.</p>
-                <div id="desk-links-list" class="desk-links-list"></div>
-                <button class="btn btn-outline" type="button" id="add-desk-link-btn">+ Aggiungi link</button>
-              </div>
+            
+            <!-- Preferenze interne -->
+            <div class="profile-preferences">
+              <h4>Preferenze</h4>
+              <label class="preference-checkbox">
+                <input type="checkbox" id="pref-email-notifications" checked>
+                <span>Notifiche email per richieste analisi completate</span>
+              </label>
+              <label class="preference-checkbox">
+                <input type="checkbox" id="pref-dashboard-alerts" checked>
+                <span>Avvisi dashboard per aggiornamenti importanti</span>
+              </label>
             </div>
             <div class="user-cta">
               <button class="btn btn-primary" type="submit" id="profile-save-btn">Salva profilo</button>
               <button class="btn btn-outline" type="button" id="profile-reset-btn">Annulla modifiche</button>
             </div>
           </form>
-          <div class="placeholder-card">
-            <strong>Presenza digitale</strong>
-            <span>Integrazioni con piattaforme esterne (LinkedIn, X, TradingView) e audit della presenza digitale saranno disponibili in una fase successiva.</span>
-          </div>
         </section>
 
-        <section class="user-section" id="panel-comments" role="tabpanel" aria-labelledby="tab-comments" hidden>
-          <div class="section-header">
-            <h3>Commenti sui report</h3>
-            <p>Storico dei tuoi contributi pubblici sui report Tradelia. Puoi visualizzare, aprire il report correlato o eliminare i commenti pubblicati.</p>
-          </div>
-          <div id="comments-history-placeholder" class="placeholder-card" hidden>
-            <strong>Nessun commento pubblicato</strong>
-            <span>Quando pubblicherai commenti sui report SRD v5.0 o MTB v3.1, lo storico apparirà qui. I commenti sono visibili alla community e contribuiscono alla discussione istituzionale.</span>
-          </div>
-          <div id="comments-history-list" class="history-list"></div>
-        </section>
 
         <section class="user-section" id="panel-community" role="tabpanel" aria-labelledby="tab-community" hidden>
           <div class="section-header">
-            <h3>Analisi on‑demand</h3>
-            <p>Partecipa alla roadmap dei prossimi approfondimenti in modo semplice e trasparente.</p>
+            <h3>Analisi on demand</h3>
+            <p>Richiedi analisi personalizzate su ticker specifici. Ogni richiesta utilizza un credito.</p>
           </div>
-          <div class="placeholder-card" id="community-propose">
-            <strong>Proponi o vota un asset (piani Trial/Pro)</strong>
-            <span>Proponi un ticker/tema o vota quelli già suggeriti dalla community. Disponibile per piani Trial e Pro.</span>
-            <div class="user-cta">
-              <input id="proposal-input" type="text" class="proposal-input" placeholder="Es. AAPL, BTC-USD, S&P 500, settore AI">
-              <button class="btn btn-primary" type="button" id="proposal-submit">Proponi</button>
+          
+          <!-- Contatore crediti residui -->
+          <div class="credits-counter" id="credits-counter">
+            <div class="credits-display">
+              <span class="credits-label">Crediti residui:</span>
+              <strong class="credits-value" id="credits-balance">—</strong>
             </div>
-            <div id="proposal-list" class="history-list"></div>
+            <button class="btn btn-sm btn-primary" type="button" id="buy-credits-btn" disabled>Acquista crediti</button>
           </div>
-          <div class="placeholder-card" id="on-demand-desk">
-            <strong>Analisi su richiesta (Piano Desk)</strong>
-            <ul class="plan-list">
-              <li>1 credito = 1 analisi su richiesta · € 99</li>
-              <li>3 crediti = € 249</li>
-              <li>7 crediti = € 499</li>
-            </ul>
-            <div class="user-cta">
-              <a class="btn btn-outline" href="/pricing.html">Consulta prezzi</a>
+
+          <!-- Layout due schede parallele su desktop -->
+          <div class="on-demand-grid">
+            <!-- Scheda sinistra: Richiesta analisi -->
+            <div class="on-demand-card" id="request-analysis-card">
+              <div class="on-demand-card-header">
+                <h4>Richiedi analisi</h4>
+                <p>Invia un ticker per richiedere un'analisi personalizzata</p>
+              </div>
+              <div class="on-demand-card-content">
+                <!-- Overlay lucchetto solo dentro la scheda -->
+                <div class="on-demand-card-lock" id="request-analysis-lock" hidden>
+                  <div class="on-demand-card-lock-content">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <p id="request-analysis-lock-message">Questa funzionalità richiede un piano attivo.</p>
+                    <button class="btn btn-sm btn-primary" type="button" id="request-analysis-lock-upgrade">Vedi piani disponibili</button>
+                  </div>
+                </div>
+                <!-- Mini form immediato -->
+                <form id="analysis-request-form" class="analysis-request-form">
+                  <div class="form-row">
+                    <input id="proposal-input" type="text" class="proposal-input" placeholder="Es. AAPL, BTC-USD, EURUSD" required autocomplete="off">
+                    <button class="btn btn-sm btn-primary" type="submit" id="proposal-submit">Richiedi</button>
+                  </div>
+                  <div id="request-analysis-info" class="request-info" hidden>
+                    <p><strong>Richiesta analisi on-demand:</strong> Ogni richiesta utilizza un credito. L'analisi verrà completata entro 24-48 ore.</p>
+                  </div>
+                  <div id="community-proposal-info" class="request-info" hidden>
+                    <p><strong>Proposta community:</strong> Suggerisci un asset per la community. Non richiede crediti.</p>
+                  </div>
+                </form>
+                <div id="proposal-list" class="history-list"></div>
+              </div>
+            </div>
+
+            <!-- Scheda destra: Proposte community (solo Trial/Pro) -->
+            <div class="on-demand-card" id="community-propose-card" hidden>
+              <div class="on-demand-card-header">
+                <h4>Proposte community</h4>
+                <p>Proponi o vota asset suggeriti dalla community (piani Trial/Pro). Non richiede crediti.</p>
+              </div>
+              <div class="on-demand-card-content">
+                <div id="community-proposals-list" class="history-list"></div>
+              </div>
             </div>
           </div>
         </section>
@@ -209,6 +215,50 @@
   </div>
 
   <div class="user-toast" id="user-toast" role="status" aria-live="assertive"></div>
+
+  <!-- Popup Checkout Crediti -->
+  <div id="credits-checkout-modal" class="modal-overlay" hidden>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Acquista crediti</h3>
+        <button type="button" class="modal-close" id="credits-checkout-close" aria-label="Chiudi">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-description">Scegli il pacchetto crediti per analisi on-demand. Ogni credito consente una richiesta di analisi.</p>
+        <div class="credits-packages">
+          <button class="credits-package" data-credits="1" data-price="99">
+            <div class="package-header">
+              <strong>1 credito</strong>
+              <span class="package-price">99 €</span>
+            </div>
+            <span class="package-desc">Per una singola analisi</span>
+          </button>
+          <button class="credits-package" data-credits="3" data-price="249">
+            <div class="package-header">
+              <strong>3 crediti</strong>
+              <span class="package-price">249 €</span>
+            </div>
+            <span class="package-desc">Risparmio 16%</span>
+          </button>
+          <button class="credits-package" data-credits="7" data-price="499">
+            <div class="package-header">
+              <strong>7 crediti</strong>
+              <span class="package-price">499 €</span>
+            </div>
+            <span class="package-desc">Risparmio 28%</span>
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline" id="credits-checkout-cancel">Annulla</button>
+      </div>
+    </div>
+  </div>
 
   <script type="module" src="/user/assets/js/app.js" defer></script>
 </body>
