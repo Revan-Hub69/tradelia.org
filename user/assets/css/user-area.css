@@ -298,8 +298,13 @@
   box-shadow: var(--shadow-md);
 }
 
-.user-section[hidden] {
+.user-section[hidden],
+.user-section[style*="display: none"] {
   display: none !important;
+}
+
+.user-section:not([hidden]):not([style*="display: none"]) {
+  display: block;
 }
 
 .section-header {
@@ -358,6 +363,36 @@
   font-size: var(--fs-13);
   display: grid;
   gap: 0.35rem;
+}
+
+/* ===== AUTH TABS ===== */
+.auth-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--br-card);
+}
+
+.auth-tab-btn {
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-size: var(--fs-14);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.auth-tab-btn:hover {
+  color: var(--ink);
+}
+
+.auth-tab-btn.active {
+  border-bottom-color: var(--brand-600);
+  color: var(--ink);
+  font-weight: 600;
 }
 
 .profile-form {
