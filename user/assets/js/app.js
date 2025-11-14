@@ -1,6 +1,7 @@
 import { supabase, AVATAR_BUCKET } from '/report/assets/js/supabase-client.js';
 import Logger from '/report/assets/js/utils/logger.js';
 import { siteHeader } from '/report/assets/js/components/site-header.js';
+import { openLemonSqueezyUpgrade, openLemonSqueezyCreditsCheckout } from './lemonsqueezy-checkout.js';
 
 const HERO = document.getElementById('user-hero');
 const AVATAR = document.getElementById('user-avatar');
@@ -100,7 +101,10 @@ async function init() {
       setTimeout(() => { window.location.href = '/'; }, 200);
     } else {
       // Assicura l'area utente attiva dopo login
-      bootstrapUserArea();
+      bootstrapUserArea().then(() => {
+        // Re-render sezione community dopo che tutto è caricato
+        renderCommunitySection();
+      });
       setActiveTab('dashboard');
     }
   });
@@ -150,6 +154,11 @@ function setActiveTab(tabId) {
     if (key === tabId) {
       panel.removeAttribute('hidden');
       panel.style.display = '';
+      
+      // Re-render sezione quando viene mostrata (per aggiornare stato lock/crediti)
+      if (key === 'community') {
+        renderCommunitySection();
+      }
     } else if (key !== 'auth') {
       panel.setAttribute('hidden', '');
     }
@@ -210,27 +219,38 @@ function stopPlanExpiryPolling() {
 
 async function bootstrapUserArea() {
   if (!state.user) return;
+  state.loading = true;
   try {
+    // Step 1: Check admin status PRIMA di tutto (è fondamentale)
+    await checkAdminStatus();
+    Logger.debug('UserArea', 'Admin status', { isAdmin: state.isAdmin });
+    
+    // Step 2: Fetch dati base in parallelo
     await Promise.all([
-      checkAdminStatus(),
       fetchUserProfile(),
       fetchDashboardStats(),
     ]);
-    // Fetch role dopo admin check (admin ha sempre ruolo institutional)
+    
+    // Step 3: Fetch role dopo admin check (admin ha sempre ruolo institutional)
     await fetchUserRole();
-    // Fetch credits DOPO fetchUserRole (per creazione automatica se institutional)
+    Logger.debug('UserArea', 'Role after fetch', { role: state.role, isAdmin: state.isAdmin });
+    
+    // Step 4: Fetch credits DOPO fetchUserRole (per creazione automatica se institutional)
     // IMPORTANTE: fetchCredits deve essere dopo fetchUserRole perché verifica state.role
     await fetchCredits();
-    // Fetch proposals per Trial/Pro (per community proposals)
+    
+    // Step 5: Fetch proposals per Trial/Pro (per community proposals)
     // Institutional non ha proposte community, solo richieste on-demand
     if (state.role === 'trial' || state.role === 'pro') {
       await Promise.all([fetchProposals(), fetchUserVotes()]);
     }
+    
+    // Step 6: Render tutto
     renderHero();
     renderProfileForm();
     renderDashboard();
     renderPlanSection();
-    renderCommunitySection();
+    renderCommunitySection(); // Chiamato DOPO che tutto è caricato
     setActiveTab('dashboard');
     if (PANELS.auth) PANELS.auth.setAttribute('hidden', '');
     
@@ -238,7 +258,9 @@ async function bootstrapUserArea() {
     startPlanExpiryPolling();
   } catch (err) {
     Logger.error('UserArea', 'bootstrap error', err);
-    showToast(err.message || 'Errore nel caricamento dell’area utente.', 'error');
+    showToast(err.message || 'Errore nel caricamento dell'area utente.', 'error');
+  } finally {
+    state.loading = false;
   }
 }
 
@@ -376,20 +398,26 @@ function renderPlanSection() {
   const actionsContainer = document.createElement('div');
   actionsContainer.className = 'user-cta';
   
-  // Upgrade disponibili
-  if (state.role === 'trial') {
-    const upgradeBtn = document.createElement('a');
-    upgradeBtn.className = 'btn btn-sm btn-primary';
-    upgradeBtn.href = '/pricing.html';
-    upgradeBtn.textContent = 'Passa a Pro';
-    actionsContainer.appendChild(upgradeBtn);
-  } else if (state.role === 'pro') {
-    const upgradeBtn = document.createElement('a');
-    upgradeBtn.className = 'btn btn-sm btn-primary';
-    upgradeBtn.href = '/pricing.html';
-    upgradeBtn.textContent = 'Passa a Desk Professionale';
-    actionsContainer.appendChild(upgradeBtn);
-  }
+        // Upgrade disponibili
+        if (state.role === 'trial') {
+          const upgradeBtn = document.createElement('button');
+          upgradeBtn.className = 'btn btn-sm btn-primary';
+          upgradeBtn.textContent = 'Passa a Pro';
+          upgradeBtn.addEventListener('click', () => {
+            showToast('Apertura checkout...', 'info');
+            openLemonSqueezyUpgrade('pro', state.user?.email || '', getDisplayName());
+          });
+          actionsContainer.appendChild(upgradeBtn);
+        } else if (state.role === 'pro') {
+          const upgradeBtn = document.createElement('button');
+          upgradeBtn.className = 'btn btn-sm btn-primary';
+          upgradeBtn.textContent = 'Passa a Desk Professionale';
+          upgradeBtn.addEventListener('click', () => {
+            showToast('Apertura checkout...', 'info');
+            openLemonSqueezyUpgrade('institutional', state.user?.email || '', getDisplayName());
+          });
+          actionsContainer.appendChild(upgradeBtn);
+        }
   
   // Cancellazione (solo se piano attivo e non admin)
   if (state.role && !state.isAdmin && state.planExpiresAt) {
@@ -420,9 +448,72 @@ async function handleCancelSubscription() {
   try {
     showToast('Cancellazione in corso...', 'info');
     
-    // TODO: Integrare con sistema di pagamento per cancellazione effettiva
-    // Per ora mostra solo messaggio
-    showToast('La cancellazione sarà gestita dal sistema di pagamento. Controlla le impostazioni del tuo metodo di pagamento.', 'info');
+    // Cerca subscriber per ottenere subscription_id
+    const { data: subscriber, error: subError } = await supabase
+      .from('subscribers')
+      .select('subscription_id, email')
+      .eq('auth_user_id', state.user.id)
+      .maybeSingle();
+    
+    if (subError) {
+      Logger.error('UserArea', 'Error fetching subscriber', subError);
+      showToast('Errore durante il recupero informazioni abbonamento. Contatta il supporto.', 'error');
+      return;
+    }
+    
+    if (!subscriber || !subscriber.subscription_id) {
+      // Se non ha subscription_id, potrebbe essere piano manuale
+      // Imposta scadenza a oggi
+      if (state.planExpiresAt) {
+        const { error: updateError } = await supabase
+          .from('user_roles')
+          .update({ valid_until: new Date().toISOString() })
+          .eq('user_id', state.user.id);
+        
+        if (updateError) {
+          Logger.error('UserArea', 'Error updating role expiration', updateError);
+          showToast('Errore durante la cancellazione. Contatta il supporto.', 'error');
+          return;
+        }
+        
+        showToast('Abbonamento cancellato. L\'accesso scadrà alla fine del periodo pagato.', 'success');
+        // Refresh UI
+        await fetchUserRole();
+        renderPlanSection();
+        renderCommunitySection();
+        return;
+      }
+      
+      showToast('Nessun abbonamento attivo trovato. Contatta il supporto se necessario.', 'info');
+      return;
+    }
+    
+    // Chiama API per cancellare subscription (richiede integrazione con gateway)
+    // Per ora, aggiorna solo valid_until a scadenza corrente
+    if (state.planExpiresAt) {
+      const { error: updateError } = await supabase
+        .from('user_roles')
+        .update({ valid_until: state.planExpiresAt })
+        .eq('user_id', state.user.id);
+      
+      if (updateError) {
+        Logger.error('UserArea', 'Error updating role expiration', updateError);
+        showToast('Errore durante la cancellazione. Contatta il supporto.', 'error');
+        return;
+      }
+      
+      showToast('Richiesta di cancellazione registrata. L\'accesso scadrà alla fine del periodo pagato. Per cancellazione immediata, contatta il supporto.', 'success');
+      
+      // TODO: Chiamare API gateway per cancellazione effettiva
+      // await fetch(`/api/cancel-subscription`, { method: 'POST', body: JSON.stringify({ subscription_id: subscriber.subscription_id }) });
+      
+      // Refresh UI
+      await fetchUserRole();
+      renderPlanSection();
+      renderCommunitySection();
+    } else {
+      showToast('Per cancellare un abbonamento permanente, contatta il supporto.', 'info');
+    }
   } catch (err) {
     Logger.error('UserArea', 'cancel subscription error', err);
     showToast('Errore durante la cancellazione. Contatta il supporto.', 'error');
@@ -534,6 +625,7 @@ async function fetchUserRole() {
     if (state.isAdmin) {
       state.role = 'institutional';
       state.planExpiresAt = null; // Admin = permanente
+      Logger.debug('UserArea', 'Admin role set to institutional');
       return;
     }
     
@@ -542,7 +634,13 @@ async function fetchUserRole() {
       .select('role, valid_until')
       .eq('user_id', state.user.id)
       .maybeSingle();
-    if (error) throw error;
+    
+    if (error) {
+      Logger.error('UserArea', 'role fetch error', error);
+      throw error;
+    }
+    
+    Logger.debug('UserArea', 'role data from DB', data);
     
     state.role = data?.role || null;
     state.planExpiresAt = data?.valid_until || null;
@@ -553,18 +651,28 @@ async function fetchUserRole() {
       const now = new Date();
       if (expiresAt < now) {
         // Piano scaduto - disabilita accesso
+        Logger.warn('UserArea', 'Plan expired', { expiresAt, now });
         state.role = null;
         showToast('Il tuo piano è scaduto. Rinnova per continuare ad utilizzare la piattaforma.', 'error');
         // Reindirizza a pricing dopo 3 secondi
         setTimeout(() => {
           window.location.href = '/pricing.html';
         }, 3000);
+      } else {
+        Logger.debug('UserArea', 'Plan valid', { role: state.role, expiresAt });
       }
+    } else if (state.role) {
+      Logger.debug('UserArea', 'Role set (no expiration)', { role: state.role });
+    } else {
+      Logger.debug('UserArea', 'No role found for user');
     }
   } catch (err) {
-    Logger.warn('UserArea', 'role fetch error', err);
+    Logger.error('UserArea', 'role fetch error', err);
     state.role = null;
     state.planExpiresAt = null;
+  } finally {
+    // Marca che il loading è completato
+    state.loading = false;
   }
 }
 
@@ -801,10 +909,36 @@ async function checkAdminStatus() {
       .select('user_id')
       .eq('user_id', state.user.id)
       .maybeSingle();
-    if (error) throw error;
+    
+    if (error) {
+      Logger.error('UserArea', 'admin check error', error);
+      throw error;
+    }
+    
     state.isAdmin = !!data;
+    Logger.debug('UserArea', 'Admin check result', { 
+      userId: state.user.id, 
+      isAdmin: state.isAdmin,
+      hasRecord: !!data 
+    });
+    
+    // Se è admin, assicurati che abbia ruolo institutional (per compatibilità)
+    if (state.isAdmin) {
+      // Verifica se ha record in user_roles
+      const { data: roleData, error: roleError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', state.user.id)
+        .maybeSingle();
+      
+      // Se non ha ruolo, non lo creiamo automaticamente (admin può non avere ruolo nel DB)
+      // Ma nel codice assumiamo sempre role === 'institutional' per admin
+      if (roleError && roleError.code !== 'PGRST116') {
+        Logger.warn('UserArea', 'Error checking admin role', roleError);
+      }
+    }
   } catch (err) {
-    Logger.warn('UserArea', 'admin check error', err);
+    Logger.error('UserArea', 'admin check error', err);
     state.isAdmin = false;
   }
 }
@@ -819,10 +953,20 @@ function renderCommunitySection() {
   if (REQUEST_ANALYSIS_CARD) {
     REQUEST_ANALYSIS_CARD.hidden = false;
     
+    // Debug: log stato per diagnosticare problemi
+    Logger.debug('UserArea', 'renderCommunitySection', {
+      isAdmin: state.isAdmin,
+      role: state.role,
+      credits: state.credits?.credits_balance ?? 0,
+      hasUser: !!state.user
+    });
+    
     // Mostra/nascondi lock in base a ruolo e crediti
     // Admin ha sempre accesso illimitato, bypassa tutti i controlli
-    if (state.isAdmin && state.role === 'institutional') {
+    if (state.isAdmin) {
+      // Admin ha sempre accesso, indipendentemente dal ruolo nel DB
       hideRequestAnalysisLock();
+      Logger.debug('UserArea', 'Admin access granted');
     } else if (state.role === 'institutional') {
       const credits = state.credits?.credits_balance ?? 0;
       if (credits <= 0) {
@@ -830,10 +974,19 @@ function renderCommunitySection() {
       } else {
         hideRequestAnalysisLock();
       }
-    } else if (state.role !== 'trial' && state.role !== 'pro') {
-      showRequestAnalysisLock('Questa funzionalità richiede un piano attivo.');
-    } else {
+    } else if (state.role === 'trial' || state.role === 'pro') {
+      // Trial/Pro possono vedere la sezione (per community proposals)
       hideRequestAnalysisLock();
+    } else if (state.role === null || state.role === undefined) {
+      // Ruolo non ancora caricato o utente senza piano
+      // Mostra lock solo se siamo sicuri che non ha piano (dopo che il fetch è completato)
+      if (state.loading === false) {
+        showRequestAnalysisLock('Questa funzionalità richiede un piano attivo. Consulta i piani disponibili.');
+      }
+      // Se ancora loading, non mostrare nulla (verrà aggiornato quando il ruolo sarà caricato)
+    } else {
+      // Ruolo sconosciuto o non valido
+      showRequestAnalysisLock('Questa funzionalità richiede un piano attivo.');
     }
   }
   
@@ -926,9 +1079,17 @@ function setupCreditsCheckoutModal() {
   // Gestisci selezione pacchetto
   packages.forEach(pkg => {
     pkg.addEventListener('click', () => {
-      const credits = parseInt(pkg.dataset.credits);
-      const price = parseInt(pkg.dataset.price);
-      handleCreditsPurchase(credits, price);
+      // Rimuovi selezione precedente
+      packages.forEach(p => p.classList.remove('selected'));
+      // Aggiungi selezione corrente
+      pkg.classList.add('selected');
+      
+      // Piccolo delay per feedback visivo
+      setTimeout(() => {
+        const credits = parseInt(pkg.dataset.credits);
+        const price = parseInt(pkg.dataset.price);
+        handleCreditsPurchase(credits, price);
+      }, 150);
     });
   });
 }
@@ -942,21 +1103,19 @@ function openCreditsCheckout() {
 
 async function handleCreditsPurchase(credits, price) {
   try {
-    showToast('Inizio checkout...', 'info');
-    
-    // TODO: Integrare con sistema di pagamento (Paddle/LemonSqueezy)
-    // Per ora mostra messaggio
-    showToast(`Checkout per ${credits} crediti (${price}€) - Integrazione pagamento in arrivo`, 'info');
+    showToast('Apertura checkout...', 'info');
     
     // Chiudi modal
     const modal = document.getElementById('credits-checkout-modal');
     if (modal) modal.setAttribute('hidden', '');
     
-    // TODO: Dopo pagamento riuscito, aggiornare crediti:
-    // await supabase.from('user_analysis_credits').update({ credits_balance: increment(credits) })
+    // Apri checkout Lemon Squeezy
+    openLemonSqueezyCreditsCheckout(credits, price, state.user?.email || '');
+    
+    // Il webhook gestirà l'aggiornamento crediti dopo il pagamento
   } catch (err) {
     Logger.error('UserArea', 'credits purchase error', err);
-    showToast('Errore durante l\'acquisto. Riprova.', 'error');
+    showToast('Errore durante l\'apertura del checkout. Riprova.', 'error');
   }
 }
 

@@ -8,6 +8,10 @@
   <link rel="stylesheet" href="/assets/css/global-header.css">
   <link rel="stylesheet" href="/user/assets/css/user-area.css">
   <!-- NOTA: tokens.css viene caricato PRIMA di user-area.css, quindi gli stili .btn in tokens.css hanno precedenza -->
+  <script>
+    // Configurazione Lemon Squeezy (da variabili ambiente o config)
+    window.LEMONSQUEEZY_STORE_ID = 'YOUR_STORE_ID'; // TODO: Sostituisci con Store ID reale
+  </script>
 </head>
 <body>
   <div class="user-shell">
@@ -232,7 +236,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <p class="modal-description">Scegli il pacchetto crediti per analisi on-demand. Ogni credito consente una richiesta di analisi.</p>
+        <p class="modal-description">Scegli il pacchetto crediti per analisi on-demand. Ogni credito consente una richiesta di analisi personalizzata. L'analisi verrà completata entro 24-48 ore.</p>
         <div class="credits-packages">
           <button class="credits-package" data-credits="1" data-price="99">
             <div class="package-header">

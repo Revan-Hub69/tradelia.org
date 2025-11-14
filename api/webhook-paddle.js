@@ -4,6 +4,7 @@
 // Legale, conforme, UX perfetta, gestione fiscale automatica
 
 import { createClient } from '@supabase/supabase-js';
+import { syncUserRoleFromSubscription, calculateExpirationDate } from './webhook-role-sync.js';
 import crypto from 'crypto';
 
 // Inizializza Supabase
@@ -135,6 +136,24 @@ async function handleSubscription(event) {
       console.error('[Webhook] Errore ricerca subscriber:', selectError);
     }
     
+    // Estrai plan type da Paddle event (da subscription plan o metadata)
+    // Paddle invia plan_id o product_id che va mappato a ruolo
+    const planIdentifier = event.plan_id || 
+                          event.subscription_plan_id || 
+                          event.product_id ||
+                          event.metadata?.plan_type || 
+                          event.metadata?.plan_id ||
+                          null;
+    
+    // Log per debug
+    console.log('[Webhook Paddle] Plan identifier:', planIdentifier, 'Event keys:', Object.keys(event));
+    
+    // Calcola scadenza (Paddle fornisce next_bill_date o expiry_date)
+    const expiryDate = event.next_bill_date || event.expiry_date;
+    const currentPeriodEnd = expiryDate 
+      ? new Date(expiryDate)
+      : calculateExpirationDate(planMetadata, 1);
+    
     // Se subscriber esiste, aggiorna
     if (existingSubscriber) {
       const { error: updateError } = await supabase
@@ -169,6 +188,15 @@ async function handleSubscription(event) {
         console.log('[Webhook] Nuovo subscriber creato:', { id: newSubscriber.id, email, status: mappedStatus });
       }
     }
+    
+    // Sincronizza user_roles (sempre, anche se subscriber update/insert fallisce)
+    // Usa planIdentifier invece di planMetadata (ora viene mappato internamente)
+    try {
+      await syncUserRoleFromSubscription(email, mappedStatus, planIdentifier, currentPeriodEnd);
+    } catch (roleSyncError) {
+      console.error('[Webhook] Errore sincronizzazione ruolo:', roleSyncError);
+      // Non bloccare il webhook se la sincronizzazione ruolo fallisce
+    }
   } catch (err) {
     console.error('[Webhook] Errore handleSubscription:', err);
   }
@@ -200,6 +228,15 @@ async function handleSubscriptionCancelled(event) {
       console.error('[Webhook] Errore aggiornamento status subscriber:', updateError);
     } else {
       console.log('[Webhook] Subscriber cancellato:', { email });
+    }
+    
+    // Sincronizza ruolo quando subscription viene cancellata
+    if (email) {
+      try {
+        await syncUserRoleFromSubscription(email, 'cancelled', null, null);
+      } catch (roleSyncError) {
+        console.error('[Webhook] Errore sincronizzazione ruolo (cancelled):', roleSyncError);
+      }
     }
   } catch (err) {
     console.error('[Webhook] Errore handleSubscriptionCancelled:', err);

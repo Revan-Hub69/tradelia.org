@@ -1,5 +1,6 @@
 import { supabase } from '/report/assets/js/supabase-client.js';
 import Logger from '/report/assets/js/utils/logger.js';
+import './admin-complete.js';
 
 const ADMIN_STATS = {
   totalUsers: document.getElementById('stat-total-users'),
@@ -15,6 +16,11 @@ const USERS_TABLE_BODY = document.getElementById('users-table-body');
 
 let allUsers = [];
 let currentUser = null;
+
+// Import admin-complete functions
+if (typeof window !== 'undefined') {
+  window.allUsers = allUsers;
+}
 
 init();
 
@@ -129,6 +135,11 @@ async function loadUsers() {
     });
     
     Logger.info('Admin', `Loaded ${allUsers.length} users`);
+    
+    // Update global allUsers for admin-complete.js
+    if (typeof window !== 'undefined') {
+      window.allUsers = allUsers;
+    }
   } catch (err) {
     Logger.error('Admin', 'load users error', err);
     throw err;
@@ -241,14 +252,14 @@ function showError(message) {
   alert(message); // TODO: Sostituire con toast
 }
 
-// Global functions per onclick handlers
-window.editUser = async function(userId) {
-  // TODO: Implementare modal per modifica utente
-  alert(`Modifica utente ${userId}`);
+// Global functions per onclick handlers (ora gestite da admin-complete.js)
+window.editUser = window.openEditUserModal || function(userId) {
+  alert(`Modifica utente ${userId} - Funzionalità in caricamento...`);
 };
 
-window.manageCredits = async function(userId) {
-  // TODO: Implementare modal per gestione crediti
-  alert(`Gestisci crediti per ${userId}`);
+window.manageCredits = window.openManageCreditsModal || function(userId) {
+  alert(`Gestisci crediti per ${userId} - Funzionalità in caricamento...`);
 };
 
+// Export loadAllData per admin-complete.js
+window.loadAllData = loadAllData;
