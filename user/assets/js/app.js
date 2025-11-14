@@ -878,13 +878,24 @@ async function handleSignupSubmit(event) {
       Logger.warn('UserArea', 'role creation error (may already exist)', roleError);
     }
     
-    // Verifica se l'email è già confermata
-    const isEmailConfirmed = authData.user.email_confirmed_at !== null;
+    // Verifica se email verification è abilitata in Supabase
+    // Se email_confirmed_at è null, significa che email verification è abilitata
+    // e l'utente deve confermare l'email prima di poter accedere
+    const requiresEmailVerification = authData.user.email_confirmed_at === null;
     
-    if (isEmailConfirmed) {
+    if (requiresEmailVerification) {
+      // Email verification abilitata - l'utente deve confermare l'email
+      showToast('Account creato! Controlla la tua email e clicca sul link di conferma per attivare l\'account.', 'info');
+      
+      // Mostra messaggio più dettagliato
+      setTimeout(() => {
+        showToast('Dopo aver confermato l\'email, potrai accedere con le tue credenziali.', 'info');
+      }, 2000);
+    } else {
+      // Email verification disabilitata - possiamo fare auto-login
       showToast('Registrazione completata! Account creato con ruolo Guest.', 'success');
       
-      // Auto-login dopo registrazione con il NUOVO account (solo se email confermata)
+      // Auto-login dopo registrazione con il NUOVO account
       // Assicurati che non ci siano sessioni residue
       await supabase.auth.signOut();
       await new Promise(resolve => setTimeout(resolve, 200));
@@ -902,14 +913,6 @@ async function handleSignupSubmit(event) {
         Logger.warn('UserArea', 'Auto-login fallito dopo signup', signInError);
         showToast('Account creato. Effettua il login per continuare.', 'info');
       }
-    } else {
-      // Email non confermata - non fare auto-login
-      showToast('Account creato! Controlla la tua email e clicca sul link di conferma per attivare l\'account.', 'info');
-      
-      // Mostra messaggio più dettagliato
-      setTimeout(() => {
-        showToast('Dopo aver confermato l\'email, potrai accedere con le tue credenziali.', 'info');
-      }, 2000);
     }
   } catch (err) {
     Logger.error('UserArea', 'signup error', err);
