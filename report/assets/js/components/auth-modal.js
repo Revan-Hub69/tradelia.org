@@ -41,7 +41,7 @@ function template() {
         </button>
         <button type="button" role="tab" data-auth-switch="register" aria-selected="false">
           <span class="auth-tab-label">Registrati</span>
-          <span class="auth-tab-hint">Piani Pro & Desk</span>
+          <span class="auth-tab-hint">Account gratuito</span>
         </button>
         <button type="button" role="tab" data-auth-switch="reset" aria-selected="false">
           <span class="auth-tab-label">Recupera password</span>
@@ -63,30 +63,26 @@ function template() {
             <p class="auth-trust-caption">Connessione crittografata · Sessione persistente per 7 giorni</p>
           </div>
         </form>
-        <div id="auth-register-card" data-auth-form="register" class="auth-form auth-register" hidden>
-          <div class="auth-register-copy">
-            <h3>Attiva un piano professionale</h3>
-            <p>
-              Integrazione checkout (Lemon&nbsp;Squeezy / Paddle) in rollout. Richiedi upgrade da pricing: onboarding manuale entro 24h.
-            </p>
+        <form id="auth-register-form" data-auth-form="register" class="auth-form" hidden novalidate>
+          <p class="auth-register-intro" style="font-size: 0.875rem; color: var(--ink-soft); margin-bottom: 1.5rem;">
+            Crea un account gratuito. Riceverai un ruolo Guest con accesso limitato. Puoi attivare una prova gratuita di 14 giorni in qualsiasi momento.
+          </p>
+          <div class="auth-field">
+            <label for="auth-email-register">Email</label>
+            <input id="auth-email-register" type="email" name="email" autocomplete="email" required placeholder="nome@azienda.com">
           </div>
-          <ul class="auth-register-list">
-            <li>
-              <strong>Commenti e richieste</strong>
-              <span>Interazione diretta con l’ufficio studi sui report live.</span>
-            </li>
-            <li>
-              <strong>Analisi dedicate</strong>
-              <span>Prenotazione slot giornalieri per richieste su ticker specifici.</span>
-            </li>
-            <li>
-              <strong>Profilo verificato</strong>
-              <span>Badge istituzionale con KYC aziendale validato.</span>
-            </li>
-          </ul>
-          <button type="button" class="btn btn-primary" data-auth-pricing>Vai alla pagina Pricing</button>
-          <p class="auth-hint">Pro e Desk Professionale sono soggetti a verifica KYC aziendale.</p>
-        </div>
+          <div class="auth-field">
+            <label for="auth-password-register">Password</label>
+            <input id="auth-password-register" type="password" name="password" autocomplete="new-password" required minlength="8" placeholder="Password (minimo 8 caratteri)">
+          </div>
+          <div class="auth-actions">
+            <button class="btn btn-primary" type="submit">Crea account</button>
+            <p class="auth-trust-caption">Connessione crittografata · Account verificato</p>
+          </div>
+          <p class="auth-hint" style="font-size: 0.75rem; color: var(--ink-soft); margin-top: 1rem; text-align: center;">
+            Registrandoti, accetti i <a href="/terms.html" style="color: var(--brand-600);">Termini di servizio</a> e la <a href="/privacy.html" style="color: var(--brand-600);">Privacy Policy</a>.
+          </p>
+        </form>
         <form id="auth-reset-form" data-auth-form="reset" class="auth-form" hidden novalidate>
           <div class="auth-field">
             <label for="auth-email-reset">Email</label>
@@ -118,8 +114,8 @@ function registerEvents() {
   const backdrop = state.root.querySelector('[data-auth-dismiss]');
   const switchers = state.root.querySelectorAll('[data-auth-switch]');
   const loginForm = state.root.querySelector('#auth-login-form');
+  const registerForm = state.root.querySelector('#auth-register-form');
   const resetForm = state.root.querySelector('#auth-reset-form');
-  const pricingBtn = state.root.querySelector('[data-auth-pricing]');
 
   closeBtn.addEventListener('click', close);
   backdrop.addEventListener('click', close);
@@ -133,10 +129,10 @@ function registerEvents() {
   });
 
   loginForm.addEventListener('submit', handleLogin);
+  if (registerForm) {
+    registerForm.addEventListener('submit', handleSignup);
+  }
   resetForm.addEventListener('submit', handleReset);
-  pricingBtn?.addEventListener('click', () => {
-    window.location.href = '/pricing.html';
-  });
 }
 
 function handleEscape(event) {
@@ -177,6 +173,103 @@ async function handleLogin(event) {
   } finally {
     state.busy = false;
     form.querySelector('button[type="submit"]').disabled = false;
+  }
+}
+
+async function handleSignup(event) {
+  event.preventDefault();
+  if (state.busy) return;
+  const form = event.currentTarget;
+  const email = form.email.value.trim();
+  const password = form.password.value;
+  
+  if (!email || !password) {
+    showToast('Inserisci email e password.', 'error');
+    return;
+  }
+  
+  if (password.length < 8) {
+    showToast('La password deve essere di almeno 8 caratteri.', 'error');
+    return;
+  }
+  
+  state.busy = true;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Registrazione...';
+  }
+  
+  try {
+    // 1. Crea utente in Supabase Auth
+    const { data: authData, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/user`
+      }
+    });
+    
+    if (signUpError) throw signUpError;
+    
+    if (!authData.user) {
+      throw new Error('Errore durante la creazione dell\'account.');
+    }
+    
+    // 2. Crea profilo utente
+    const { error: profileError } = await supabase
+      .from('user_profiles')
+      .insert({
+        user_id: authData.user.id,
+        display_name: email.split('@')[0],
+        preferences: {
+          email_notifications: true,
+          dashboard_alerts: true
+        }
+      });
+    
+    if (profileError) {
+      Logger.warn('AuthModal', 'profile creation error (may already exist)', profileError);
+    }
+    
+    // 3. Crea ruolo guest di default (senza scadenza, accesso limitato)
+    const { error: roleError } = await supabase
+      .from('user_roles')
+      .insert({
+        user_id: authData.user.id,
+        role: 'guest',
+        valid_until: null // Guest non ha scadenza, ma ha accesso limitato
+      });
+    
+    if (roleError) {
+      Logger.warn('AuthModal', 'role creation error (may already exist)', roleError);
+    }
+    
+    showToast('Registrazione completata! Account creato con ruolo Guest.', 'success');
+    
+    // Auto-login dopo registrazione
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    if (!signInError) {
+      closeAfterDelay();
+      setTimeout(() => {
+        window.location.href = '/user/';
+      }, 300);
+    } else {
+      // Se auto-login fallisce, mostra messaggio
+      showToast('Account creato. Effettua il login per continuare.', 'info');
+      state.mode = 'login';
+      updateForms();
+    }
+  } catch (err) {
+    Logger.error('AuthModal', 'signup error', err);
+    showToast(err.message || 'Errore durante la registrazione. Riprova.', 'error');
+  } finally {
+    state.busy = false;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Crea account';
+    }
   }
 }
 
