@@ -16,6 +16,8 @@ function init() {
   state.root.innerHTML = template();
   document.body.appendChild(state.root);
   registerEvents();
+  // Assicura che solo il form login sia visibile all'inizio
+  updateForms();
   state.initialized = true;
 }
 
