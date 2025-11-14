@@ -34,7 +34,10 @@ export function mapPlanToRole(planIdentifier) {
   // Mapping esplicito per Lemon Squeezy Variant IDs
   // Variant IDs reali da Lemon Squeezy Dashboard
   const planMapping = {
-    // Trial
+    // Guest (nuovo utente senza piano)
+    'guest': 'guest',
+    
+    // Trial (prova gratuita)
     'trial': 'trial',
     'free': 'trial',
     
@@ -70,13 +73,14 @@ export function mapPlanToRole(planIdentifier) {
   }
   
   // Default: prova a inferire dal nome
+  if (planStr.includes('guest')) return 'guest';
   if (planStr.includes('trial') || planStr.includes('free')) return 'trial';
   if (planStr.includes('institutional') || planStr.includes('desk') || planStr.includes('enterprise')) return 'institutional';
   if (planStr.includes('pro') || planStr.includes('professional')) return 'pro';
   
-  // Fallback: default a 'pro' (ma logga warning)
-  console.warn(`[Role Sync] Plan identifier non riconosciuto: ${planIdentifier}, default a 'pro'`);
-  return 'pro';
+  // Fallback: default a 'guest' (nuovo utente senza piano)
+  console.warn(`[Role Sync] Plan identifier non riconosciuto: ${planIdentifier}, default a 'guest'`);
+  return 'guest';
 }
 
 /**
