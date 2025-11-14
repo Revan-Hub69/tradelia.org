@@ -133,7 +133,7 @@
    - **SMTP Host**: `smtp.resend.com`
    - **SMTP Port**: `587` (o `465` per SSL)
    - **SMTP User**: `resend` (fisso, non la tua API key)
-   - **SMTP Password**: `re_esPbadDj_PzRxxMbVzkP4bRq2XxuC1fLx` (la tua API key)
+   - **SMTP Password**: `re_esPbadDj_PzRxxMbVzkP4bRq2XxuC1fLx` (API Key Resend - vedi ARCHIVIO-ENV-VALUES-READY.txt)
    - **Sender email**: 
      - Se dominio verificato: `noreply@tradelia.org`
      - Se dominio NON verificato: `Tradelia <noreply@resend.dev>`
@@ -155,14 +155,14 @@
    - Vai su **Vercel Dashboard** → **Project** → **Settings** → **Environment Variables**
    - Aggiungi:
      - **Key**: `RESEND_API_KEY`
-     - **Value**: `re_esPbadDj_PzRxxMbVzkP4bRq2XxuC1fLx` (la tua API key)
+     - **Value**: `re_esPbadDj_PzRxxMbVzkP4bRq2XxuC1fLx` (vedi ARCHIVIO-ENV-VALUES-READY.txt)
      - **Environments**: ✅ Production, ✅ Preview, ✅ Development
 
 2. **Cloudflare Pages**:
    - Vai su **Cloudflare Dashboard** → **Pages** → **Project** → **Settings** → **Environment Variables**
    - Aggiungi:
      - **Variable name**: `RESEND_API_KEY`
-     - **Value**: `re_esPbadDj_PzRxxMbVzkP4bRq2XxuC1fLx` (la tua API key)
+     - **Value**: `re_esPbadDj_PzRxxMbVzkP4bRq2XxuC1fLx` (vedi ARCHIVIO-ENV-VALUES-READY.txt)
      - **Environments**: ✅ Production, ✅ Preview
 
 ---
