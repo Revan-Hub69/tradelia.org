@@ -825,6 +825,15 @@ async function handleSignupSubmit(event) {
       submitBtn.textContent = 'Registrazione...';
     }
     
+    // 0. Se c'è già una sessione attiva, fai logout prima di registrare nuovo account
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session && session.user) {
+      Logger.debug('UserArea', 'Logout account esistente prima di signup', { userId: session.user.id });
+      await supabase.auth.signOut();
+      // Attendi un momento per assicurarsi che il logout sia completato
+      await new Promise(resolve => setTimeout(resolve, 300));
+    }
+    
     // 1. Crea utente in Supabase Auth
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email,
@@ -871,9 +880,14 @@ async function handleSignupSubmit(event) {
     
     showToast('Registrazione completata! Account creato con ruolo Guest.', 'success');
     
-    // Auto-login dopo registrazione
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-    if (!signInError) {
+    // Auto-login dopo registrazione con il NUOVO account
+    // Assicurati che non ci siano sessioni residue
+    await supabase.auth.signOut();
+    await new Promise(resolve => setTimeout(resolve, 200));
+    
+    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    if (!signInError && signInData?.user) {
+      Logger.debug('UserArea', 'Auto-login riuscito dopo signup', { userId: signInData.user.id, email: signInData.user.email });
       await bootstrapUserArea();
       setTimeout(() => { 
         setActiveTab('profile');
@@ -881,6 +895,7 @@ async function handleSignupSubmit(event) {
       }, 100);
     } else {
       // Se auto-login fallisce, mostra messaggio
+      Logger.warn('UserArea', 'Auto-login fallito dopo signup', signInError);
       showToast('Account creato. Effettua il login per continuare.', 'info');
     }
   } catch (err) {
