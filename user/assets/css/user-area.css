@@ -988,6 +988,23 @@
   line-height: 1.6;
 }
 
+/* ===== REQUEST INFO ===== */
+.request-info {
+  margin-top: 1rem;
+  padding: 0.875rem 1rem;
+  background: var(--surface-elev);
+  border: 1px solid var(--br-card);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-13);
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.request-info strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
 @media (max-width: 900px) {
   .user-hero {
     grid-template-columns: minmax(0, 1fr);

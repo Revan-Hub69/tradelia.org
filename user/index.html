@@ -143,6 +143,12 @@
                   <input id="proposal-input" type="text" class="proposal-input" placeholder="Es. AAPL, BTC-USD, S&P 500, settore AI">
                   <button class="btn btn-primary" type="button" id="proposal-submit">Invia ticker</button>
                 </div>
+                <div id="request-analysis-info" class="request-info" hidden>
+                  <p><strong>Richiesta analisi on-demand:</strong> Ogni richiesta utilizza un credito. L'analisi verrà completata entro 24-48 ore.</p>
+                </div>
+                <div id="community-proposal-info" class="request-info" hidden>
+                  <p><strong>Proposta community:</strong> Suggerisci un asset per la community. Non richiede crediti.</p>
+                </div>
                 <div id="proposal-list" class="history-list"></div>
               </div>
             </div>
@@ -151,7 +157,7 @@
             <div class="on-demand-card" id="community-propose-card" hidden>
               <div class="on-demand-card-header">
                 <h4>Proposte community</h4>
-                <p>Proponi o vota asset suggeriti dalla community (piani Trial/Pro)</p>
+                <p>Proponi o vota asset suggeriti dalla community (piani Trial/Pro). Non richiede crediti.</p>
               </div>
               <div class="on-demand-card-content">
                 <div id="community-proposals-list" class="history-list"></div>

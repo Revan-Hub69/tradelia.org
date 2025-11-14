@@ -53,6 +53,8 @@ const REQUEST_ANALYSIS_LOCK_UPGRADE = document.getElementById('request-analysis-
 const COMMUNITY_PROPOSALS_LIST = document.getElementById('community-proposals-list');
 const COMMUNITY_PROPOSE_CARD = document.getElementById('community-propose-card');
 const REQUEST_ANALYSIS_CARD = document.getElementById('request-analysis-card');
+const REQUEST_ANALYSIS_INFO = document.getElementById('request-analysis-info');
+const COMMUNITY_PROPOSAL_INFO = document.getElementById('community-proposal-info');
 
 const AUTH_CONTAINER = document.getElementById('auth-container');
 
@@ -169,8 +171,9 @@ async function bootstrapUserArea() {
     ]);
     // Fetch role dopo admin check (admin ha sempre ruolo institutional)
     await fetchUserRole();
-    // Fetch proposals per Trial/Pro/Desk (Desk ha accesso a tutte le funzioni)
-    if (state.role === 'trial' || state.role === 'pro' || state.role === 'institutional') {
+    // Fetch proposals per Trial/Pro (per community proposals)
+    // Institutional non ha proposte community, solo richieste on-demand
+    if (state.role === 'trial' || state.role === 'pro') {
       await Promise.all([fetchProposals(), fetchUserVotes()]);
     }
     // Fetch credits for all users (to show counter)
@@ -703,9 +706,10 @@ function renderCommunitySection() {
     }
   }
   
-  // Show community proposals card for Trial/Pro/Desk (Desk ha accesso a tutte le funzioni)
+  // Show community proposals card for Trial/Pro only
+  // Institutional ha solo richieste on-demand, non proposte community
   if (COMMUNITY_PROPOSE_CARD) {
-    if (state.role === 'trial' || state.role === 'pro' || state.role === 'institutional') {
+    if (state.role === 'trial' || state.role === 'pro') {
       COMMUNITY_PROPOSE_CARD.hidden = false;
       renderCommunityProposalsList();
     } else {
@@ -874,14 +878,26 @@ function setupProposalHandlers() {
     PROPOSAL_INPUT._hasHandler = true;
   }
   
-  // Update button text based on role
+  // Update button text, placeholder and info based on role
   if (PROPOSAL_SUBMIT) {
     if (state.role === 'institutional') {
-      PROPOSAL_SUBMIT.textContent = 'Invia ticker';
+      PROPOSAL_SUBMIT.textContent = 'Richiedi analisi';
+      if (PROPOSAL_INPUT) {
+        PROPOSAL_INPUT.placeholder = 'Inserisci ticker per richiedere analisi on-demand (es. AAPL, BTC-USD)';
+      }
+      if (REQUEST_ANALYSIS_INFO) REQUEST_ANALYSIS_INFO.hidden = false;
+      if (COMMUNITY_PROPOSAL_INFO) COMMUNITY_PROPOSAL_INFO.hidden = true;
     } else if (state.role === 'trial' || state.role === 'pro') {
-      PROPOSAL_SUBMIT.textContent = 'Proponi';
+      PROPOSAL_SUBMIT.textContent = 'Proponi asset';
+      if (PROPOSAL_INPUT) {
+        PROPOSAL_INPUT.placeholder = 'Proponi un asset per la community (es. AAPL, BTC-USD, settore AI)';
+      }
+      if (REQUEST_ANALYSIS_INFO) REQUEST_ANALYSIS_INFO.hidden = true;
+      if (COMMUNITY_PROPOSAL_INFO) COMMUNITY_PROPOSAL_INFO.hidden = false;
     } else {
       PROPOSAL_SUBMIT.textContent = 'Invia ticker';
+      if (REQUEST_ANALYSIS_INFO) REQUEST_ANALYSIS_INFO.hidden = true;
+      if (COMMUNITY_PROPOSAL_INFO) COMMUNITY_PROPOSAL_INFO.hidden = true;
     }
   }
 }
@@ -956,9 +972,9 @@ async function handleProposeAsset() {
     return;
   }
   
-  // For Trial/Pro/Desk users: create community proposal (no credits required)
-  // Desk ha accesso a tutte le funzioni dei piani inferiori
-  if (state.role === 'trial' || state.role === 'pro' || state.role === 'institutional') {
+  // For Trial/Pro users: create community proposal (no credits required)
+  // NOTA: Institutional crea solo analysis_requests (vedi blocco sopra), non asset_proposals
+  if (state.role === 'trial' || state.role === 'pro') {
     try {
       PROPOSAL_SUBMIT.disabled = true;
       const { data, error } = await supabase
@@ -994,9 +1010,10 @@ async function handleProposeAsset() {
 }
 
 async function handleVote(proposalId) {
-  // Desk ha accesso a tutte le funzioni dei piani inferiori
-  if (state.role !== 'trial' && state.role !== 'pro' && state.role !== 'institutional') {
-    showToast('Questa funzionalità richiede un piano attivo.', 'error');
+  // Solo Trial/Pro possono votare proposte community
+  // Institutional non ha accesso a proposte community
+  if (state.role !== 'trial' && state.role !== 'pro') {
+    showToast('Solo i piani Trial e Pro possono votare proposte community.', 'error');
     return;
   }
   
