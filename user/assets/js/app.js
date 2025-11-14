@@ -77,7 +77,7 @@ const state = {
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
-  init();
+init();
 }
 
 if (PROFILE_FORM) {
@@ -888,12 +888,18 @@ async function handleSignupSubmit(event) {
     
     // Gestione rate limit per email
     let errorMessage = err.message || 'Errore durante la registrazione. Riprova.';
-    if (err.message && (
-      err.message.toLowerCase().includes('rate limit') ||
-      err.message.toLowerCase().includes('too many requests') ||
-      err.message.toLowerCase().includes('email rate limit')
-    )) {
-      errorMessage = 'Troppe richieste di email. Attendi qualche minuto prima di riprovare.';
+    const errMsgLower = err.message?.toLowerCase() || '';
+    
+    if (errMsgLower.includes('rate limit') || 
+        errMsgLower.includes('too many requests') ||
+        errMsgLower.includes('email rate limit') ||
+        errMsgLower.includes('troppe richieste') ||
+        errMsgLower.includes('email nuova')) {
+      errorMessage = 'Troppe richieste di registrazione. Attendi 10-15 minuti prima di riprovare, oppure prova con un\'email diversa.';
+    } else if (errMsgLower.includes('user already registered') || 
+               errMsgLower.includes('already exists') ||
+               errMsgLower.includes('already registered')) {
+      errorMessage = 'Questa email è già registrata. Prova ad accedere invece di registrarti.';
     }
     
     showToast(errorMessage, 'error');
@@ -982,11 +988,11 @@ async function fetchDashboardStats() {
   try {
     // Conta richieste analisi on-demand
     if (state.role === 'institutional') {
-      const { count, error } = await supabase
+    const { count, error } = await supabase
         .from('analysis_requests')
-        .select('*', { count: 'exact', head: true })
+      .select('*', { count: 'exact', head: true })
         .eq('user_id', state.user.id);
-      if (error) throw error;
+    if (error) throw error;
       state.stats.requests = count ?? 0;
     } else {
       state.stats.requests = 0;
@@ -1061,7 +1067,7 @@ function planBenefits(role) {
     ];
   }
   if (role === 'trial') {
-    return [
+  return [
       'Accesso completo ai deck SRD v5.0 e MTB v3.1',
       'Tutte le funzionalità Pro o Desk attive per 14 giorni',
       'Nessun costo durante il periodo di prova',
@@ -1275,8 +1281,8 @@ function renderCommunitySection() {
   // RIMOSSO: Lock rimosso - tutti possono vedere proposte community
   // Show community proposals card for all authenticated users
   if (COMMUNITY_PROPOSE_CARD) {
-    COMMUNITY_PROPOSE_CARD.hidden = false;
-    renderCommunityProposalsList();
+      COMMUNITY_PROPOSE_CARD.hidden = false;
+      renderCommunityProposalsList();
   }
   
   // Setup handlers
@@ -1505,7 +1511,7 @@ function renderCommunityProposalsList() {
       <article class="history-item proposal-item ${isPopular ? 'proposal-popular' : ''}">
         <div class="proposal-header">
           <div class="proposal-title-group">
-            <strong>${escapeHtml(proposal.asset_ticker)}</strong>
+          <strong>${escapeHtml(proposal.asset_ticker)}</strong>
             ${isPopular ? '<span class="badge proposal-badge-popular" title="Proposta popolare">🔥</span>' : ''}
             ${isOwner ? '<span class="badge proposal-badge-owner">Tua proposta</span>' : ''}
           </div>
@@ -1703,12 +1709,12 @@ async function handleProposeAsset() {
         // IMPORTANTE: Ripristina sia credits_balance che total_used ai valori precedenti
         if (!state.isAdmin && credits > 0) {
           await supabase
-            .from('user_analysis_credits')
-            .update({
+        .from('user_analysis_credits')
+        .update({
               credits_balance: credits,
               total_used: Math.max(0, (state.credits?.total_used ?? 0) - 1) // Decrementa total_used
-            })
-            .eq('user_id', state.user.id);
+        })
+        .eq('user_id', state.user.id);
         }
         throw requestError;
       }
@@ -1832,7 +1838,7 @@ async function handleVote(proposalId) {
     if (err.code === '23505') {
       showToast('Hai già votato questa proposta.', 'error');
     } else {
-      showToast('Errore durante il voto.', 'error');
+    showToast('Errore durante il voto.', 'error');
     }
   }
 }
@@ -1891,7 +1897,7 @@ async function fetchCredits() {
         state.credits = newRecord;
       }
     } else {
-      state.credits = data || { credits_balance: 0, total_purchased: 0, total_used: 0 };
+    state.credits = data || { credits_balance: 0, total_purchased: 0, total_used: 0 };
     }
   } catch (err) {
     Logger.warn('UserArea', 'credits fetch error', err);
@@ -2025,9 +2031,9 @@ async function handleChangePassword(event) {
       const { error } = await supabase.auth.updateUser({
         password: newPassword
       });
-      
-      if (error) throw error;
-      
+    
+    if (error) throw error;
+    
       showToast('Password aggiornata con successo!', 'success');
       // Rimuovi hash dall'URL
       window.history.replaceState(null, '', window.location.pathname);

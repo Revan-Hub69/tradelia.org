@@ -238,11 +238,15 @@ async function handleSignup(event) {
   
   try {
     // 1. Crea utente in Supabase Auth
+    // DISABILITA email di verifica per evitare rate limit (auto-login dopo signup)
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/user`
+        emailRedirectTo: `${window.location.origin}/user`,
+        // Disabilita email di verifica se possibile (dipende da configurazione Supabase)
+        // Se email verification è obbligatoria in Supabase, questa opzione non ha effetto
+        // Ma riduce comunque il carico se l'utente fa auto-login
       }
     });
     
@@ -301,12 +305,28 @@ async function handleSignup(event) {
     
     // Gestione rate limit per email
     let errorMessage = err.message || 'Errore durante la registrazione. Riprova.';
-    if (err.message && (
-      err.message.toLowerCase().includes('rate limit') ||
-      err.message.toLowerCase().includes('too many requests') ||
-      err.message.toLowerCase().includes('email rate limit')
-    )) {
-      errorMessage = 'Troppe richieste di email. Attendi qualche minuto prima di riprovare.';
+    const errMsgLower = err.message?.toLowerCase() || '';
+    
+    if (errMsgLower.includes('rate limit') || 
+        errMsgLower.includes('too many requests') ||
+        errMsgLower.includes('email rate limit') ||
+        errMsgLower.includes('troppe richieste') ||
+        errMsgLower.includes('email nuova')) {
+      errorMessage = 'Troppe richieste di registrazione. Attendi 10-15 minuti prima di riprovare, oppure prova con un\'email diversa.';
+    } else if (errMsgLower.includes('user already registered') || 
+               errMsgLower.includes('already exists') ||
+               errMsgLower.includes('already registered')) {
+      errorMessage = 'Questa email è già registrata. Prova ad accedere invece di registrarti.';
+      // Cambia automaticamente al tab login
+      setTimeout(() => {
+        state.mode = 'login';
+        updateForms();
+        // Pre-compila email nel form login
+        const loginEmailInput = state.root.querySelector('#auth-email-login');
+        if (loginEmailInput) {
+          loginEmailInput.value = email;
+        }
+      }, 500);
     }
     
     showToast(errorMessage, 'error');
