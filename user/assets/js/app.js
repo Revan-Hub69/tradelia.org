@@ -73,7 +73,12 @@ const state = {
   planExpiresAt: null,
 };
 
-init();
+// Initialize app when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
 
 if (PROFILE_FORM) {
   PROFILE_FORM.addEventListener('submit', onProfileSubmit);
@@ -809,6 +814,10 @@ function showToast(message, variant = 'info') {
     TOAST.removeAttribute('data-visible');
   }, 3200);
 }
+
+// Export showToast and state globally for use in other modules
+window.showToast = showToast;
+window.state = state;
 
 // ===== AVATAR UPLOAD =====
 async function onAvatarSelected(event) {
