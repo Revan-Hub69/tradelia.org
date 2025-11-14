@@ -281,12 +281,18 @@ async function handleSignup(event) {
       if (profileError) {
         // Se errore 23505 = unique violation (già esiste), ignora
         // Se errore 42501 = insufficient privilege (RLS), logga ma continua
+        // Se errore 42P01 = table does not exist, errore critico
         if (profileError.code === '23505') {
           Logger.debug('AuthModal', 'profile already exists', profileError);
         } else if (profileError.code === '42501') {
           Logger.warn('AuthModal', 'RLS policy blocked profile creation', profileError);
+          console.error('[AuthModal] RLS Policy Error - Verifica che le policy per user_profiles permettano INSERT durante signup');
+        } else if (profileError.code === '42P01' || profileError.message?.includes('does not exist')) {
+          Logger.error('AuthModal', 'Table user_profiles does not exist', profileError);
+          console.error('[AuthModal] ERRORE CRITICO: Tabella user_profiles non esiste. Esegui supabase/setup-complete-schema.sql');
         } else {
           Logger.warn('AuthModal', 'profile creation error', profileError);
+          console.error('[AuthModal] Profile Error:', profileError);
         }
       }
     } catch (profileErr) {
@@ -307,12 +313,22 @@ async function handleSignup(event) {
       if (roleError) {
         // Se errore 23505 = unique violation (già esiste), ignora
         // Se errore 42501 = insufficient privilege (RLS), logga ma continua
+        // Se errore 42P01 = table does not exist, errore critico
+        // Se errore 23514 = check constraint violation (ruolo non valido)
         if (roleError.code === '23505') {
           Logger.debug('AuthModal', 'role already exists', roleError);
         } else if (roleError.code === '42501') {
           Logger.warn('AuthModal', 'RLS policy blocked role creation', roleError);
+          console.error('[AuthModal] RLS Policy Error - Verifica che le policy per user_roles permettano INSERT durante signup');
+        } else if (roleError.code === '42P01' || roleError.message?.includes('does not exist')) {
+          Logger.error('AuthModal', 'Table user_roles does not exist', roleError);
+          console.error('[AuthModal] ERRORE CRITICO: Tabella user_roles non esiste. Esegui supabase/setup-complete-schema.sql');
+        } else if (roleError.code === '23514' || roleError.message?.includes('check constraint')) {
+          Logger.error('AuthModal', 'Role constraint violation - guest role not allowed', roleError);
+          console.error('[AuthModal] ERRORE: Ruolo "guest" non è nel constraint. Esegui supabase/migration-add-guest-role.sql');
         } else {
           Logger.warn('AuthModal', 'role creation error', roleError);
+          console.error('[AuthModal] Role Error:', roleError);
         }
       }
     } catch (roleErr) {
@@ -416,9 +432,13 @@ async function handleSignup(event) {
         }
       }, 1000);
     } else if (errCode === '42501' || errMsgLower.includes('permission denied') || errMsgLower.includes('insufficient privilege')) {
-      errorMessage = 'Errore di permessi. Verifica le RLS policies in Supabase per user_profiles e user_roles.';
+      errorMessage = 'Errore di permessi. Esegui lo script supabase/setup-complete-schema.sql in Supabase per configurare le RLS policies.';
+    } else if (errCode === '42P01' || errMsgLower.includes('does not exist') || errMsgLower.includes('non esiste')) {
+      errorMessage = 'Tabelle mancanti. Esegui lo script supabase/setup-complete-schema.sql in Supabase SQL Editor.';
+    } else if (errCode === '23514' || errMsgLower.includes('check constraint') || errMsgLower.includes('violates check constraint')) {
+      errorMessage = 'Errore constraint. Esegui supabase/migration-add-guest-role.sql per aggiungere il ruolo "guest".';
     } else if (err.status === 500 || errCode === 'PGRST') {
-      errorMessage = 'Errore server durante la registrazione. Verifica che le tabelle user_profiles e user_roles esistano in Supabase.';
+      errorMessage = 'Errore server. Verifica lo schema Supabase: esegui supabase/setup-complete-schema.sql.';
     }
     
     showToast(errorMessage, 'error');
