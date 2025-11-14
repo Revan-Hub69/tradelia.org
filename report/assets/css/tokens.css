@@ -489,6 +489,35 @@ a:not(.site-footer a):not(.ftr-quick-links a):not(.ftr-socials a):not(.ftr-botto
   width: calc(100% - var(--sp-6));
 }
 
+/* ===== BUTTON VARIANTS ===== */
+.btn-primary,
+.btn-primary:link,
+.btn-primary:visited {
+  background: var(--brand-600);
+  border-color: var(--brand-600);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: var(--brand-500);
+  border-color: var(--brand-500);
+  color: #ffffff;
+}
+
+.btn-outline,
+.btn-outline:link,
+.btn-outline:visited {
+  background: transparent;
+  border-color: var(--br-card);
+  color: var(--ink);
+}
+
+.btn-outline:hover {
+  background: var(--surface-elev);
+  border-color: var(--br-strong);
+  color: var(--ink);
+}
+
 /* ===== CARD ===== */
 .card {
   background: var(--surface-card);

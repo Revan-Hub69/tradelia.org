@@ -1,9 +1,10 @@
 // /api/webhook-stripe.js
 // API Vercel - Webhook Stripe per abbonamenti
-// Alternativa a Lemon Squeezy - Legale, conforme, UX perfetta
+// Alternativa semplice a Paddle/LemonSqueezy - Integrazione diretta Stripe
 
 import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
+import { syncUserRoleFromSubscription } from './webhook-role-sync.js';
 
 // Inizializza Supabase
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://higkhlfjfhlecbtfnznx.supabase.co';
@@ -73,6 +74,11 @@ export default async function handler(req, res) {
         await handlePaymentFailed(event.data.object);
         break;
       
+      case 'invoice.finalized':
+        // Fattura finalizzata e inviata automaticamente da Stripe Invoicing
+        await handleInvoiceFinalized(event.data.object);
+        break;
+      
       default:
         console.log('[Webhook Stripe] Evento non gestito:', event.type);
     }
@@ -101,7 +107,7 @@ async function handleSubscription(subscription) {
       return;
     }
     
-    console.log('[Webhook] Subscription gestita:', { email, subscriptionId, status });
+    console.log('[Webhook Stripe] Subscription gestita:', { email, subscriptionId, status });
     
     // Mappa status Stripe a status nostro
     let mappedStatus = 'cancelled';
@@ -111,7 +117,27 @@ async function handleSubscription(subscription) {
       mappedStatus = 'expired';
     }
     
-    // Cerca subscriber esistente per email
+    // Estrai plan identifier da subscription (price_id o product_id)
+    const priceId = subscription.items?.data[0]?.price?.id;
+    const productId = subscription.items?.data[0]?.price?.product;
+    const planIdentifier = priceId || productId || subscription.plan?.id || subscription.items?.data[0]?.plan?.id;
+    
+    // Calcola scadenza
+    const expiresAt = subscription.current_period_end 
+      ? new Date(subscription.current_period_end * 1000) 
+      : null;
+    
+    console.log('[Webhook Stripe] Plan identifier:', planIdentifier, 'Expires:', expiresAt);
+    
+    // Sincronizza ruolo utente usando webhook-role-sync
+    try {
+      await syncUserRoleFromSubscription(email, mappedStatus, planIdentifier, expiresAt);
+      console.log('[Webhook Stripe] ✅ Ruolo sincronizzato per:', email);
+    } catch (roleSyncError) {
+      console.error('[Webhook Stripe] Errore sincronizzazione ruolo:', roleSyncError);
+    }
+    
+    // Aggiorna anche subscribers table (per compatibilità)
     const { data: existingSubscriber, error: selectError } = await supabase
       .from('subscribers')
       .select('id, email, auth_user_id, status')
@@ -119,7 +145,7 @@ async function handleSubscription(subscription) {
       .single();
     
     if (selectError && selectError.code !== 'PGRST116') {
-      console.error('[Webhook] Errore ricerca subscriber:', selectError);
+      console.error('[Webhook Stripe] Errore ricerca subscriber:', selectError);
     }
     
     // Se subscriber esiste, aggiorna
@@ -134,9 +160,9 @@ async function handleSubscription(subscription) {
         .eq('id', existingSubscriber.id);
       
       if (updateError) {
-        console.error('[Webhook] Errore aggiornamento subscriber:', updateError);
+        console.error('[Webhook Stripe] Errore aggiornamento subscriber:', updateError);
       } else {
-        console.log('[Webhook] Subscriber aggiornato:', { id: existingSubscriber.id, email, status: mappedStatus });
+        console.log('[Webhook Stripe] Subscriber aggiornato:', { id: existingSubscriber.id, email, status: mappedStatus });
       }
     } else {
       // Se subscriber non esiste, crea nuovo record
@@ -151,9 +177,9 @@ async function handleSubscription(subscription) {
         .single();
       
       if (insertError) {
-        console.error('[Webhook] Errore creazione subscriber:', insertError);
+        console.error('[Webhook Stripe] Errore creazione subscriber:', insertError);
       } else {
-        console.log('[Webhook] Nuovo subscriber creato:', { id: newSubscriber.id, email, status: mappedStatus });
+        console.log('[Webhook Stripe] Nuovo subscriber creato:', { id: newSubscriber.id, email, status: mappedStatus });
       }
     }
   } catch (err) {
@@ -171,11 +197,24 @@ async function handleSubscriptionCancelled(subscription) {
     const customer = await stripe.customers.retrieve(customerId);
     const email = customer.email;
     
-    console.log('[Webhook] Subscription cancellata:', { email, subscriptionId });
+    console.log('[Webhook Stripe] Subscription cancellata:', { email, subscriptionId });
     
     if (!email) {
-      console.error('[Webhook] Email mancante nel customer Stripe');
+      console.error('[Webhook Stripe] Email mancante nel customer Stripe');
       return;
+    }
+    
+    // Estrai plan identifier per sincronizzazione
+    const priceId = subscription.items?.data[0]?.price?.id;
+    const productId = subscription.items?.data[0]?.price?.product;
+    const planIdentifier = priceId || productId || subscription.plan?.id || subscription.items?.data[0]?.plan?.id;
+    
+    // Sincronizza ruolo utente (imposta scadenza)
+    try {
+      await syncUserRoleFromSubscription(email, 'cancelled', planIdentifier, new Date());
+      console.log('[Webhook Stripe] ✅ Ruolo scaduto per:', email);
+    } catch (roleSyncError) {
+      console.error('[Webhook Stripe] Errore sincronizzazione ruolo:', roleSyncError);
     }
     
     // Aggiorna status abbonato in Supabase
@@ -188,9 +227,9 @@ async function handleSubscriptionCancelled(subscription) {
       .eq('email', email);
     
     if (updateError) {
-      console.error('[Webhook] Errore aggiornamento status subscriber:', updateError);
+      console.error('[Webhook Stripe] Errore aggiornamento status subscriber:', updateError);
     } else {
-      console.log('[Webhook] Subscriber cancellato:', { email });
+      console.log('[Webhook Stripe] Subscriber cancellato:', { email });
     }
   } catch (err) {
     console.error('[Webhook] Errore handleSubscriptionCancelled:', err);
@@ -243,7 +282,51 @@ async function handlePaymentFailed(invoice) {
       await handleSubscription(subscription);
     }
   } catch (err) {
-    console.error('[Webhook] Errore handlePaymentFailed:', err);
+    console.error('[Webhook Stripe] Errore handlePaymentFailed:', err);
+  }
+}
+
+// ===== HANDLE INVOICE FINALIZED =====
+async function handleInvoiceFinalized(invoice) {
+  try {
+    // Quando una fattura è finalizzata, Stripe Invoicing l'ha già inviata automaticamente
+    // Questo evento serve per logging e tracking
+    const invoiceId = invoice.id;
+    const customerId = invoice.customer;
+    const amount = invoice.amount_paid / 100; // Converti da centesimi
+    const currency = invoice.currency.toUpperCase();
+    const invoiceUrl = invoice.hosted_invoice_url;
+    const invoicePdf = invoice.invoice_pdf;
+    
+    // Recupera customer per email
+    const customer = await stripe.customers.retrieve(customerId);
+    const email = customer.email;
+    
+    console.log('[Webhook Stripe] ✅ Fattura finalizzata e inviata:', {
+      invoiceId,
+      email,
+      amount: `${amount} ${currency}`,
+      invoiceUrl,
+      invoicePdf
+    });
+    
+    // Opzionale: Salva info fattura in Supabase per tracking
+    if (supabase && email) {
+      const { error } = await supabase
+        .from('subscribers')
+        .update({
+          last_invoice_id: invoiceId,
+          last_invoice_date: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .eq('email', email);
+      
+      if (error) {
+        console.warn('[Webhook Stripe] Errore aggiornamento invoice info (non critico):', error);
+      }
+    }
+  } catch (err) {
+    console.error('[Webhook Stripe] Errore handleInvoiceFinalized:', err);
   }
 }
 

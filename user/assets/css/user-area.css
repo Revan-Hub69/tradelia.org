@@ -1256,6 +1256,13 @@
   transform: translateY(0);
 }
 
+.credits-package.selected {
+  background: var(--surface-hover);
+  border-color: var(--brand-600);
+  border-width: 2px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
 .package-header {
   display: flex;
   justify-content: space-between;
