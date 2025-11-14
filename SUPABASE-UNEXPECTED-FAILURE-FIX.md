@@ -48,22 +48,26 @@ Questo è un **errore generico di Supabase Auth** che di solito indica:
 | **Sender email** | `Tradelia <noreply@resend.dev>` |
 | **Sender name** | `Tradelia` |
 
-### **Passo 4: Test SMTP**
+### **Passo 4: Salva e Riabilita Email Verification**
 
-1. Clicca **"Send test email"**
-2. Inserisci la tua email
-3. Clicca **"Send"**
+1. **Salva** le impostazioni SMTP
+2. Vai su **Authentication** → **Settings**
+3. **Abilita** "Enable email confirmations"
+4. **Salva**
 
-**Se test funziona:**
-- ✅ SMTP è configurato correttamente
-- ✅ Signup dovrebbe funzionare
+### **Passo 5: Test SMTP con Signup Reale**
 
-**Se test fallisce:**
-- ❌ Verifica API Key Resend
-- ❌ Verifica che Resend non abbia bloccato l'account
-- ❌ Prova con `@resend.dev` invece di `@tradelia.org`
+**Il modo migliore per testare SMTP è provare un signup reale:**
 
-### **Passo 5: Salva e Riabilita Email Verification**
+1. Vai sul sito e prova a registrarti con un'email di test
+2. **Se signup funziona** (non dà errore 500):
+   - ✅ SMTP è configurato correttamente
+   - ✅ Controlla la casella email per la conferma
+3. **Se signup fallisce** (errore 500):
+   - ❌ Verifica API Key Resend
+   - ❌ Verifica che Resend non abbia bloccato l'account
+   - ❌ Prova con `@resend.dev` invece di `@tradelia.org`
+   - ❌ Controlla Logs → Postgres Logs per errori SMTP
 
 1. **Salva** le impostazioni SMTP
 2. Vai su **Authentication** → **Settings**
@@ -88,7 +92,8 @@ Questo è un **errore generico di Supabase Auth** che di solito indica:
 
 - [ ] **Email verification disabilitata** (per test immediato)
 - [ ] **SMTP configurato** in Supabase (se vuoi email verification)
-- [ ] **Test email SMTP** funziona
+- [ ] **Signup testato** con email verification abilitata
+- [ ] **Email di conferma ricevuta** (se SMTP funziona)
 - [ ] **Trigger verificati** (se errore persiste)
 - [ ] **Log Supabase** controllati per errori specifici
 
