@@ -3,9 +3,12 @@ import Logger from '../utils/logger.js';
 
 const state = {
   root: null,
+  modal: null,
   mode: 'login',
   busy: false,
-  initialized: false
+  initialized: false,
+  previousActiveElement: null, // Per ripristinare focus alla chiusura
+  focusableElements: [] // Per focus trap
 };
 
 function init() {
@@ -13,9 +16,14 @@ function init() {
   state.root = document.createElement('div');
   state.root.id = 'auth-overlay';
   state.root.className = 'auth-overlay';
+  state.root.setAttribute('aria-hidden', 'true');
   state.root.innerHTML = template();
   document.body.appendChild(state.root);
+  state.modal = state.root.querySelector('.auth-modal');
   registerEvents();
+  setupFocusTrap();
+  setupKeyboardNavigation();
+  setupFormValidation();
   // Assicura che solo il form login sia visibile all'inizio
   updateForms();
   state.initialized = true;
@@ -27,7 +35,7 @@ function template() {
     <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
       <header class="auth-header">
         <div class="auth-header-text">
-          <h2 class="auth-title" id="auth-modal-title">Area Riservata Tradelia</h2>
+          <h2 class="auth-title" id="auth-modal-title" title="Credenziali verificate per commenti, richieste analisi e gestione profilo professionale">Area Riservata Tradelia</h2>
           <p class="auth-subtitle">
             Credenziali verificate per commenti, richieste analisi e gestione profilo professionale.
           </p>
@@ -37,15 +45,15 @@ function template() {
         </button>
       </header>
       <nav class="auth-tabs" role="tablist" aria-label="Modalità di accesso">
-        <button type="button" role="tab" data-auth-switch="login" aria-selected="true">
+        <button type="button" role="tab" data-auth-switch="login" aria-selected="true" data-tooltip="Utenti verificati" title="Utenti verificati">
           <span class="auth-tab-label">Accedi</span>
           <span class="auth-tab-hint">Utenti verificati</span>
         </button>
-        <button type="button" role="tab" data-auth-switch="register" aria-selected="false">
+        <button type="button" role="tab" data-auth-switch="register" aria-selected="false" data-tooltip="Account gratuito" title="Account gratuito">
           <span class="auth-tab-label">Registrati</span>
           <span class="auth-tab-hint">Account gratuito</span>
         </button>
-        <button type="button" role="tab" data-auth-switch="reset" aria-selected="false">
+        <button type="button" role="tab" data-auth-switch="reset" aria-selected="false" data-tooltip="Invia link sicuro" title="Invia link sicuro">
           <span class="auth-tab-label">Recupera password</span>
           <span class="auth-tab-hint">Invia link sicuro</span>
         </button>
@@ -54,32 +62,53 @@ function template() {
         <form id="auth-login-form" data-auth-form="login" class="auth-form" novalidate>
           <div class="auth-field">
             <label for="auth-email-login">Email</label>
-            <input id="auth-email-login" type="email" name="email" autocomplete="email" required placeholder="nome@email.com">
+            <input id="auth-email-login" type="email" name="email" autocomplete="email" required placeholder="nome@email.com" aria-describedby="auth-email-login-error">
+            <span id="auth-email-login-error" class="auth-field-error" role="alert" aria-live="polite"></span>
           </div>
           <div class="auth-field">
             <label for="auth-password-login">Password</label>
-            <input id="auth-password-login" type="password" name="password" autocomplete="current-password" required minlength="8" placeholder="Password">
+            <div class="auth-password-wrapper">
+              <input id="auth-password-login" type="password" name="password" autocomplete="current-password" required minlength="8" placeholder="Password" aria-describedby="auth-password-login-error">
+              <button type="button" class="auth-password-toggle" aria-label="Mostra password" data-password-toggle="auth-password-login" tabindex="0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+            <span id="auth-password-login-error" class="auth-field-error" role="alert" aria-live="polite"></span>
           </div>
           <div class="auth-actions">
             <button class="btn btn-primary" type="submit">Accedi</button>
-            <p class="auth-trust-caption">Connessione crittografata · Sessione persistente per 7 giorni</p>
+            <p class="auth-trust-caption" title="Connessione crittografata · Sessione persistente per 7 giorni">Connessione sicura</p>
           </div>
         </form>
         <form id="auth-register-form" data-auth-form="register" class="auth-form" hidden novalidate>
-          <p class="auth-register-intro" style="font-size: 0.875rem; color: var(--ink-soft); margin-bottom: 1.5rem;">
-            Crea un account gratuito. Riceverai un ruolo Guest con accesso limitato. Puoi attivare una prova gratuita di 14 giorni in qualsiasi momento.
+          <p class="auth-register-intro" style="font-size: 0.75rem; color: var(--ink-soft); margin-bottom: 1rem; line-height: 1.5;">
+            Account gratuito con ruolo Guest. Prova gratuita 14 giorni disponibile.
           </p>
           <div class="auth-field">
             <label for="auth-email-register">Email</label>
-            <input id="auth-email-register" type="email" name="email" autocomplete="email" required placeholder="nome@email.com">
+            <input id="auth-email-register" type="email" name="email" autocomplete="email" required placeholder="nome@email.com" aria-describedby="auth-email-register-error">
+            <span id="auth-email-register-error" class="auth-field-error" role="alert" aria-live="polite"></span>
           </div>
           <div class="auth-field">
             <label for="auth-password-register">Password</label>
-            <input id="auth-password-register" type="password" name="password" autocomplete="new-password" required minlength="8" placeholder="Password (minimo 8 caratteri)">
+            <div class="auth-password-wrapper">
+              <input id="auth-password-register" type="password" name="password" autocomplete="new-password" required minlength="8" placeholder="Password (minimo 8 caratteri)" aria-describedby="auth-password-register-error auth-password-register-hint">
+              <button type="button" class="auth-password-toggle" aria-label="Mostra password" data-password-toggle="auth-password-register" tabindex="0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+            <span id="auth-password-register-hint" class="auth-field-hint">Minimo 8 caratteri</span>
+            <span id="auth-password-register-error" class="auth-field-error" role="alert" aria-live="polite"></span>
           </div>
           <div class="auth-actions">
             <button class="btn btn-primary" type="submit">Crea account</button>
-            <p class="auth-trust-caption">Connessione crittografata · Account verificato</p>
+            <p class="auth-trust-caption" title="Connessione crittografata · Account verificato">Connessione sicura</p>
           </div>
           <p class="auth-hint" style="font-size: 0.75rem; color: var(--ink-soft); margin-top: 1rem; text-align: center;">
             Registrandoti, accetti i <a href="/terms.html" style="color: var(--brand-600);">Termini di servizio</a> e la <a href="/privacy.html" style="color: var(--brand-600);">Privacy Policy</a>.
@@ -88,23 +117,18 @@ function template() {
         <form id="auth-reset-form" data-auth-form="reset" class="auth-form" hidden novalidate>
           <div class="auth-field">
             <label for="auth-email-reset">Email</label>
-            <input id="auth-email-reset" type="email" name="email" autocomplete="email" required placeholder="nome@email.com">
+            <input id="auth-email-reset" type="email" name="email" autocomplete="email" required placeholder="nome@email.com" aria-describedby="auth-email-reset-error">
+            <span id="auth-email-reset-error" class="auth-field-error" role="alert" aria-live="polite"></span>
           </div>
           <div class="auth-actions">
             <button class="btn btn-primary" type="submit">Invia link di reset</button>
-            <p class="auth-trust-caption">Riceverai un link valido 1 ora.</p>
+            <p class="auth-trust-caption" title="Riceverai un link valido 1 ora">Link valido 1 ora</p>
           </div>
-          <p class="auth-hint">Controlla anche la cartella spam se non ricevi l'email entro pochi minuti.</p>
+          <p class="auth-hint" style="font-size: 0.7rem;">Controlla anche la cartella spam.</p>
         </form>
       </div>
-      <footer class="auth-footer">
-        <div class="auth-footer-grid">
-          <p class="auth-support">Assistenza dedicata: <a href="mailto:info@tradelia.org">info@tradelia.org</a></p>
-          <div class="auth-meta">
-            <span>Standard WCAG 2.2 AA</span>
-            <span>Infrastruttura Supabase EU</span>
-          </div>
-        </div>
+      <footer class="auth-footer" style="padding: var(--sp-3) var(--sp-6); border-top: 1px solid rgba(148, 163, 184, 0.15); font-size: var(--fs-10); color: var(--muted); text-align: center; opacity: 0.7;">
+        <p style="margin: 0;"><a href="mailto:info@tradelia.org" style="color: var(--brand-600);">Assistenza</a></p>
       </footer>
       <div class="auth-toast" id="auth-toast" role="status" aria-live="polite"></div>
     </div>
@@ -121,6 +145,13 @@ function registerEvents() {
 
   closeBtn.addEventListener('click', close);
   backdrop.addEventListener('click', close);
+  
+  // Password visibility toggles
+  const passwordToggles = state.root.querySelectorAll('[data-password-toggle]');
+  passwordToggles.forEach(toggle => {
+    toggle.addEventListener('click', handlePasswordToggle);
+  });
+  
   document.addEventListener('keydown', handleEscape);
 
   // Event delegation per tab switching (evita listener duplicati)
@@ -177,6 +208,174 @@ function handleEscape(event) {
   }
 }
 
+// Focus trap: mantiene il focus dentro il modale
+function setupFocusTrap() {
+  if (!state.modal) return;
+  
+  state.modal.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    
+    const focusableElements = getFocusableElements();
+    if (focusableElements.length === 0) return;
+    
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+    
+    if (e.shiftKey) {
+      // Shift + Tab
+      if (document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement.focus();
+      }
+    } else {
+      // Tab
+      if (document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement.focus();
+      }
+    }
+  });
+}
+
+function getFocusableElements() {
+  if (!state.modal) return [];
+  return Array.from(state.modal.querySelectorAll(
+    'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  )).filter(el => {
+    const style = window.getComputedStyle(el);
+    return style.display !== 'none' && style.visibility !== 'hidden';
+  });
+}
+
+// Keyboard navigation per tab (frecce sinistra/destra)
+function setupKeyboardNavigation() {
+  const tabsContainer = state.root.querySelector('.auth-tabs');
+  if (!tabsContainer) return;
+  
+  const tabs = Array.from(tabsContainer.querySelectorAll('[role="tab"]'));
+  
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('keydown', (e) => {
+      let targetIndex = index;
+      
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        targetIndex = (index + 1) % tabs.length;
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        targetIndex = (index - 1 + tabs.length) % tabs.length;
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        targetIndex = 0;
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        targetIndex = tabs.length - 1;
+      } else {
+        return; // Non gestire altri tasti
+      }
+      
+      tabs[targetIndex].focus();
+      tabs[targetIndex].click();
+    });
+  });
+}
+
+// Validazione in tempo reale
+function setupFormValidation() {
+  const forms = state.root.querySelectorAll('.auth-form');
+  
+  forms.forEach(form => {
+    const inputs = form.querySelectorAll('input[required]');
+    
+    inputs.forEach(input => {
+      // Validazione on blur
+      input.addEventListener('blur', () => validateField(input));
+      
+      // Validazione on input (per feedback immediato)
+      input.addEventListener('input', () => {
+        if (input.validity.valid) {
+          clearFieldError(input);
+        }
+      });
+    });
+  });
+}
+
+function validateField(input) {
+  const errorEl = input.getAttribute('aria-describedby')?.split(' ').find(id => id.includes('error'));
+  if (!errorEl) return;
+  
+  const errorElement = document.getElementById(errorEl);
+  if (!errorElement) return;
+  
+  if (!input.validity.valid) {
+    let message = '';
+    if (input.validity.valueMissing) {
+      message = 'Campo obbligatorio';
+    } else if (input.validity.typeMismatch && input.type === 'email') {
+      message = 'Inserisci un indirizzo email valido';
+    } else if (input.validity.tooShort) {
+      message = `Minimo ${input.minLength} caratteri`;
+    } else {
+      message = 'Valore non valido';
+    }
+    
+    showFieldError(input, message);
+  } else {
+    clearFieldError(input);
+  }
+}
+
+function showFieldError(input, message) {
+  const errorId = input.getAttribute('aria-describedby')?.split(' ').find(id => id.includes('error'));
+  if (!errorId) return;
+  
+  const errorEl = document.getElementById(errorId);
+  if (errorEl) {
+    errorEl.textContent = message;
+    errorEl.hidden = false;
+    input.setAttribute('aria-invalid', 'true');
+    input.classList.add('auth-input-error');
+  }
+}
+
+function clearFieldError(input) {
+  const errorId = input.getAttribute('aria-describedby')?.split(' ').find(id => id.includes('error'));
+  if (!errorId) return;
+  
+  const errorEl = document.getElementById(errorId);
+  if (errorEl) {
+    errorEl.textContent = '';
+    errorEl.hidden = true;
+  }
+  input.removeAttribute('aria-invalid');
+  input.classList.remove('auth-input-error');
+}
+
+// Toggle password visibility
+function handlePasswordToggle(e) {
+  const toggle = e.currentTarget;
+  const inputId = toggle.getAttribute('data-password-toggle');
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  
+  const isPassword = input.type === 'password';
+  input.type = isPassword ? 'text' : 'password';
+  toggle.setAttribute('aria-label', isPassword ? 'Nascondi password' : 'Mostra password');
+  
+  // Aggiorna icona SVG
+  const svg = toggle.querySelector('svg');
+  if (svg) {
+    if (isPassword) {
+      // Icona occhio barrato
+      svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+    } else {
+      // Icona occhio normale
+      svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+    }
+  }
+}
+
 async function handleLogin(event) {
   event.preventDefault();
   if (state.busy) return;
@@ -188,12 +387,21 @@ async function handleLogin(event) {
     return;
   }
   state.busy = true;
-  form.querySelector('button[type="submit"]').disabled = true;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const originalText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.setAttribute('aria-busy', 'true');
+  submitBtn.textContent = 'Accesso in corso...';
+  
+  // Pulisci errori precedenti
+  clearFieldError(form.querySelector('#auth-email-login'));
+  clearFieldError(form.querySelector('#auth-password-login'));
+  
   try {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
     showToast('Accesso effettuato.', 'success');
-    // Chiudi il modal e reindirizza all’area utente
+    // Chiudi il modal e reindirizza all'area utente
     closeAfterDelay();
     setTimeout(() => {
       window.location.href = '/user/';
@@ -201,14 +409,24 @@ async function handleLogin(event) {
   } catch (err) {
     Logger.error('AuthModal', 'login error', err);
     const message = err?.message || 'Credenziali non valide.';
-    if (/api key/i.test(message)) {
-      showToast('Configurazione API non valida. Verifica la Supabase anon key sul deploy.', 'error');
+    
+    // Mostra errore inline
+    if (err.message?.toLowerCase().includes('email') || err.message?.toLowerCase().includes('user')) {
+      showFieldError(form.querySelector('#auth-email-login'), 'Email non valida o non registrata');
+    } else if (err.message?.toLowerCase().includes('password') || err.message?.toLowerCase().includes('invalid')) {
+      showFieldError(form.querySelector('#auth-password-login'), 'Password non corretta');
     } else {
       showToast(message, 'error');
     }
+    
+    if (/api key/i.test(message)) {
+      showToast('Configurazione API non valida. Verifica la Supabase anon key sul deploy.', 'error');
+    }
   } finally {
     state.busy = false;
-    form.querySelector('button[type="submit"]').disabled = false;
+    submitBtn.disabled = false;
+    submitBtn.removeAttribute('aria-busy');
+    submitBtn.textContent = originalText;
   }
 }
 
@@ -220,21 +438,28 @@ async function handleSignup(event) {
   const password = form.password.value;
   
   if (!email || !password) {
-    showToast('Inserisci email e password.', 'error');
+    if (!email) showFieldError(form.querySelector('#auth-email-register'), 'Campo obbligatorio');
+    if (!password) showFieldError(form.querySelector('#auth-password-register'), 'Campo obbligatorio');
     return;
   }
   
   if (password.length < 8) {
-    showToast('La password deve essere di almeno 8 caratteri.', 'error');
+    showFieldError(form.querySelector('#auth-password-register'), 'La password deve essere di almeno 8 caratteri.');
     return;
   }
   
   state.busy = true;
   const submitBtn = form.querySelector('button[type="submit"]');
+  const originalText = submitBtn?.textContent || 'Crea account';
   if (submitBtn) {
     submitBtn.disabled = true;
+    submitBtn.setAttribute('aria-busy', 'true');
     submitBtn.textContent = 'Registrazione...';
   }
+  
+  // Pulisci errori precedenti
+  clearFieldError(form.querySelector('#auth-email-register'));
+  clearFieldError(form.querySelector('#auth-password-register'));
   
   try {
     // 0. Se c'è già una sessione attiva, fai logout prima di registrare nuovo account
@@ -467,13 +692,21 @@ async function handleSignup(event) {
       }
     }
     
-    showToast(errorMessage, 'error');
+    // Mostra errore inline se possibile
+    if (errMsgLower.includes('email') || errMsgLower.includes('already registered') || errCode === '23505') {
+      showFieldError(form.querySelector('#auth-email-register'), errorMessage);
+    } else if (errMsgLower.includes('password')) {
+      showFieldError(form.querySelector('#auth-password-register'), errorMessage);
+    } else {
+      showToast(errorMessage, 'error');
+    }
   } finally {
     state.busy = false;
     const submitBtn = form.querySelector('button[type="submit"]');
     if (submitBtn) {
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Crea account';
+      submitBtn.removeAttribute('aria-busy');
+      submitBtn.textContent = originalText;
     }
   }
 }
@@ -484,11 +717,20 @@ async function handleReset(event) {
   const form = event.currentTarget;
   const email = form.email.value.trim();
   if (!email) {
-    showToast('Inserisci la mail associata all\'account.', 'error');
+    showFieldError(form.querySelector('#auth-email-reset'), 'Inserisci la mail associata all\'account.');
     return;
   }
+  
   state.busy = true;
-  form.querySelector('button[type="submit"]').disabled = true;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const originalText = submitBtn?.textContent || 'Invia link di reset';
+  submitBtn.disabled = true;
+  submitBtn.setAttribute('aria-busy', 'true');
+  submitBtn.textContent = 'Invio in corso...';
+  
+  // Pulisci errori precedenti
+  clearFieldError(form.querySelector('#auth-email-reset'));
+  
   try {
     const redirectTo = `${window.location.origin}/user/`;
     const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
@@ -507,12 +749,16 @@ async function handleReset(event) {
       err.message.toLowerCase().includes('email rate limit')
     )) {
       errorMessage = 'Troppe richieste di reset password. Attendi qualche minuto prima di riprovare.';
+    } else if (err.message?.toLowerCase().includes('email') || err.message?.toLowerCase().includes('user')) {
+      errorMessage = 'Email non trovata o non valida.';
     }
     
-    showToast(errorMessage, 'error');
+    showFieldError(form.querySelector('#auth-email-reset'), errorMessage);
   } finally {
     state.busy = false;
-    form.querySelector('button[type="submit"]').disabled = false;
+    submitBtn.disabled = false;
+    submitBtn.removeAttribute('aria-busy');
+    submitBtn.textContent = originalText;
   }
 }
 
@@ -544,6 +790,9 @@ function updateForms() {
 function open(mode = 'login') {
   if (!state.initialized) init();
   
+  // Salva elemento attivo prima di aprire
+  state.previousActiveElement = document.activeElement;
+  
   // NASCONDI TUTTI i form PRIMA di cambiare mode
   const allForms = state.root.querySelectorAll('[data-auth-form]');
   allForms.forEach(form => {
@@ -554,11 +803,24 @@ function open(mode = 'login') {
   state.mode = mode;
   updateForms();
   state.root.dataset.open = 'true';
+  state.root.setAttribute('aria-hidden', 'false');
   
+  // Annuncia ai screen reader
+  const modal = state.root.querySelector('.auth-modal');
+  if (modal) {
+    modal.setAttribute('aria-hidden', 'false');
+  }
+  
+  // Focus management: focus sul primo elemento interattivo
   setTimeout(() => {
-    const focusTarget = state.root.querySelector(`[data-auth-form="${mode}"] input`);
-    focusTarget?.focus();
-  }, 10);
+    const focusableElements = getFocusableElements();
+    if (focusableElements.length > 0) {
+      // Focus sul primo input del form attivo, o sul primo elemento focusable
+      const activeForm = state.root.querySelector(`[data-auth-form="${mode}"]`);
+      const firstInput = activeForm?.querySelector('input');
+      (firstInput || focusableElements[0])?.focus();
+    }
+  }, 50);
 }
 
 function close() {
@@ -575,6 +837,28 @@ function close() {
   state.mode = 'login';
   updateForms();
   delete state.root.dataset.open;
+  state.root.setAttribute('aria-hidden', 'true');
+  
+  const modal = state.root.querySelector('.auth-modal');
+  if (modal) {
+    modal.setAttribute('aria-hidden', 'true');
+  }
+  
+  // Ripristina focus all'elemento precedente
+  if (state.previousActiveElement && document.contains(state.previousActiveElement)) {
+    state.previousActiveElement.focus();
+  }
+  state.previousActiveElement = null;
+  
+  // Pulisci errori
+  state.root.querySelectorAll('.auth-field-error').forEach(el => {
+    el.textContent = '';
+    el.hidden = true;
+  });
+  state.root.querySelectorAll('.auth-input-error').forEach(el => {
+    el.classList.remove('auth-input-error');
+    el.removeAttribute('aria-invalid');
+  });
 }
 
 function closeAfterDelay() {
