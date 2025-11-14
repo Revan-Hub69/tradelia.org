@@ -1605,7 +1605,6 @@ async function handleProposeAsset() {
   if (state.role === 'institutional' || state.role === 'trial' || state.role === 'pro' || !state.role) {
     // RIMOSSO: Controllo crediti rimosso per permettere test completo
     // I crediti verranno controllati lato backend
-    
     // Rate limiting: max 3 richieste pending per utente
     const { count: pendingCount, error: countError } = await supabase
       .from('analysis_requests')
@@ -1867,4 +1866,3 @@ async function fetchCredits() {
     state.credits = { credits_balance: 0, total_purchased: 0, total_used: 0 };
   }
 }
-
