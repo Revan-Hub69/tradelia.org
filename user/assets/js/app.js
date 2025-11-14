@@ -533,7 +533,11 @@ function renderAuthPanel() {
     if (key !== 'auth' && panel) panel.setAttribute('hidden', '');
   });
   AUTH_CONTAINER.innerHTML = `
-    <form class="profile-form" id="area-auth-form">
+    <div class="auth-tabs" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--br-card);">
+      <button class="auth-tab-btn active" data-tab="login" style="padding: 0.75rem 1rem; background: none; border: none; border-bottom: 2px solid var(--brand-600); color: var(--ink); cursor: pointer;">Accedi</button>
+      <button class="auth-tab-btn" data-tab="signup" style="padding: 0.75rem 1rem; background: none; border: none; border-bottom: 2px solid transparent; color: var(--ink-soft); cursor: pointer;">Registrati</button>
+    </div>
+    <form class="profile-form" id="area-auth-form" data-mode="login">
       <label>
         Email
         <input type="email" name="email" autocomplete="email" required placeholder="nome@azienda.com">
@@ -543,15 +547,47 @@ function renderAuthPanel() {
         <input type="password" name="password" autocomplete="current-password" required minlength="8" placeholder="Password">
       </label>
       <div class="user-cta">
-        <button class="btn btn-primary" type="submit">Accedi</button>
-        <button class="btn btn-outline" type="button" id="btn-signup">Richiedi accesso</button>
+        <button class="btn btn-primary" type="submit" id="auth-submit-btn">Accedi</button>
       </div>
     </form>
   `;
   const form = document.getElementById('area-auth-form');
-  const btnSignup = document.getElementById('btn-signup');
-  form.addEventListener('submit', handleLoginSubmit);
-  btnSignup.addEventListener('click', () => showToast('Scrivi a info@tradelia.org per ottenere credenziali.', 'info'));
+  const authTabs = document.querySelectorAll('.auth-tab-btn');
+  
+  // Tab switching
+  authTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const mode = tab.dataset.tab;
+      authTabs.forEach(t => {
+        t.classList.remove('active');
+        t.style.borderBottomColor = 'transparent';
+        t.style.color = 'var(--ink-soft)';
+      });
+      tab.classList.add('active');
+      tab.style.borderBottomColor = 'var(--brand-600)';
+      tab.style.color = 'var(--ink)';
+      
+      form.dataset.mode = mode;
+      const submitBtn = document.getElementById('auth-submit-btn');
+      if (mode === 'login') {
+        submitBtn.textContent = 'Accedi';
+        form.querySelector('input[name="password"]').setAttribute('autocomplete', 'current-password');
+      } else {
+        submitBtn.textContent = 'Registrati';
+        form.querySelector('input[name="password"]').setAttribute('autocomplete', 'new-password');
+      }
+    });
+  });
+  
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const mode = form.dataset.mode;
+    if (mode === 'login') {
+      handleLoginSubmit(e);
+    } else {
+      handleSignupSubmit(e);
+    }
+  });
 }
 
 async function onProfileSubmit(event) {
@@ -621,6 +657,93 @@ async function handleLoginSubmit(event) {
     showToast(err.message || 'Credenziali non valide.', 'error');
   } finally {
     form.querySelector('button[type="submit"]').disabled = false;
+  }
+}
+
+async function handleSignupSubmit(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const email = form.email.value.trim();
+  const password = form.password.value;
+  
+  if (!email || !password) {
+    showToast('Inserisci email e password.', 'error');
+    return;
+  }
+  
+  if (password.length < 8) {
+    showToast('La password deve essere di almeno 8 caratteri.', 'error');
+    return;
+  }
+  
+  try {
+    form.querySelector('button[type="submit"]').disabled = true;
+    form.querySelector('button[type="submit"]').textContent = 'Registrazione...';
+    
+    // 1. Crea utente in Supabase Auth
+    const { data: authData, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/user`
+      }
+    });
+    
+    if (signUpError) throw signUpError;
+    
+    if (!authData.user) {
+      throw new Error('Errore durante la creazione dell\'account.');
+    }
+    
+    // 2. Crea profilo utente con ruolo trial di default
+    const { error: profileError } = await supabase
+      .from('user_profiles')
+      .insert({
+        user_id: authData.user.id,
+        display_name: email.split('@')[0],
+        preferences: {
+          email_notifications: true,
+          dashboard_alerts: true
+        }
+      });
+    
+    if (profileError) {
+      Logger.warn('UserArea', 'profile creation error (may already exist)', profileError);
+    }
+    
+    // 3. Crea ruolo trial di default (30 giorni)
+    const trialExpiry = new Date();
+    trialExpiry.setDate(trialExpiry.getDate() + 30);
+    
+    const { error: roleError } = await supabase
+      .from('user_roles')
+      .insert({
+        user_id: authData.user.id,
+        role: 'trial',
+        valid_until: trialExpiry.toISOString()
+      });
+    
+    if (roleError) {
+      Logger.warn('UserArea', 'role creation error (may already exist)', roleError);
+    }
+    
+    showToast('Registrazione completata! Controlla la tua email per verificare l\'account.', 'success');
+    
+    // Auto-login dopo registrazione
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    if (!signInError) {
+      await bootstrapUserArea();
+      setTimeout(() => { setActiveTab('profile'); }, 100);
+    }
+  } catch (err) {
+    Logger.error('UserArea', 'signup error', err);
+    showToast(err.message || 'Errore durante la registrazione. Riprova.', 'error');
+  } finally {
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Registrati';
+    }
   }
 }
 
@@ -970,44 +1093,17 @@ function renderCommunitySection() {
       hasUser: !!state.user
     });
     
-    // Mostra/nascondi lock in base a ruolo e crediti
-    // Admin ha sempre accesso illimitato, bypassa tutti i controlli
-    if (state.isAdmin) {
-      // Admin ha sempre accesso, indipendentemente dal ruolo nel DB
-      hideRequestAnalysisLock();
-      Logger.debug('UserArea', 'Admin access granted');
-    } else if (state.role === 'institutional') {
-      const credits = state.credits?.credits_balance ?? 0;
-      if (credits <= 0) {
-        showRequestAnalysisLock('Non hai crediti disponibili. Acquista crediti per richiedere analisi on demand.');
-      } else {
-        hideRequestAnalysisLock();
-      }
-    } else if (state.role === 'trial' || state.role === 'pro') {
-      // Trial/Pro possono vedere la sezione (per community proposals)
-      hideRequestAnalysisLock();
-    } else if (state.role === null || state.role === undefined) {
-      // Ruolo non ancora caricato o utente senza piano
-      // Mostra lock solo se siamo sicuri che non ha piano (dopo che il fetch è completato)
-      if (state.loading === false) {
-        showRequestAnalysisLock('Questa funzionalità richiede un piano attivo. Consulta i piani disponibili.');
-      }
-      // Se ancora loading, non mostrare nulla (verrà aggiornato quando il ruolo sarà caricato)
-    } else {
-      // Ruolo sconosciuto o non valido
-      showRequestAnalysisLock('Questa funzionalità richiede un piano attivo.');
-    }
+    // RIMOSSO: Tutti i lock sono stati rimossi per permettere accesso completo durante sviluppo
+    // Tutti gli utenti autenticati possono vedere e utilizzare tutte le funzionalità
+    // I limiti verranno applicati lato backend quando necessario
+    hideRequestAnalysisLock();
   }
   
-  // Show community proposals card for Trial/Pro only
-  // Institutional ha solo richieste on-demand, non proposte community
+  // RIMOSSO: Lock rimosso - tutti possono vedere proposte community
+  // Show community proposals card for all authenticated users
   if (COMMUNITY_PROPOSE_CARD) {
-    if (state.role === 'trial' || state.role === 'pro') {
-      COMMUNITY_PROPOSE_CARD.hidden = false;
-      renderCommunityProposalsList();
-    } else {
-      COMMUNITY_PROPOSE_CARD.hidden = true;
-    }
+    COMMUNITY_PROPOSE_CARD.hidden = false;
+    renderCommunityProposalsList();
   }
   
   // Setup handlers
@@ -1043,18 +1139,13 @@ function setupCreditsHandlers() {
     BUY_CREDITS_BTN.removeEventListener('click', BUY_CREDITS_BTN._clickHandler);
   }
   
-  // Abilita/disabilita pulsante acquista crediti in base al piano
+  // RIMOSSO: Lock rimosso - tutti possono acquistare crediti (limitazioni lato backend)
+  // Abilita pulsante acquista crediti per tutti gli utenti autenticati
   if (BUY_CREDITS_BTN) {
-    // Solo utenti con piano desk (institutional) possono acquistare crediti
-    if (state.role === 'institutional') {
-      BUY_CREDITS_BTN.disabled = false;
-      BUY_CREDITS_BTN.title = '';
-      BUY_CREDITS_BTN._clickHandler = openCreditsCheckout;
-      BUY_CREDITS_BTN.addEventListener('click', BUY_CREDITS_BTN._clickHandler);
-    } else {
-      BUY_CREDITS_BTN.disabled = true;
-      BUY_CREDITS_BTN.title = 'Disponibile solo per piano Desk Professionale';
-    }
+    BUY_CREDITS_BTN.disabled = false;
+    BUY_CREDITS_BTN.title = '';
+    BUY_CREDITS_BTN._clickHandler = openCreditsCheckout;
+    BUY_CREDITS_BTN.addEventListener('click', BUY_CREDITS_BTN._clickHandler);
   }
   
   if (REQUEST_ANALYSIS_LOCK_UPGRADE) {
@@ -1363,16 +1454,16 @@ async function handleProposeAsset() {
     return;
   }
   
-  // Check if user has credits (for on-demand requests)
+  // RIMOSSO: Lock rimosso - tutti possono richiedere analisi
+  // I limiti verranno applicati lato backend quando necessario
   const credits = state.credits?.credits_balance ?? 0;
   
-  // For institutional users: require credits for on-demand requests (admin bypass)
-  if (state.role === 'institutional') {
-    // Admin ha sempre accesso illimitato, bypass controllo crediti
-    if (!state.isAdmin && credits <= 0) {
-      showRequestAnalysisLock('Non hai crediti disponibili. Acquista crediti per richiedere analisi on demand.');
-      return;
-    }
+  // RIMOSSO: Tutti i lock rimossi - tutti possono richiedere analisi
+  // I limiti verranno applicati lato backend quando necessario
+  // For all users: allow on-demand requests (backend will enforce limits)
+  if (state.role === 'institutional' || state.role === 'trial' || state.role === 'pro' || !state.role) {
+    // RIMOSSO: Controllo crediti rimosso per permettere test completo
+    // I crediti verranno controllati lato backend
     
     // Rate limiting: max 3 richieste pending per utente
     const { count: pendingCount, error: countError } = await supabase
@@ -1400,16 +1491,10 @@ async function handleProposeAsset() {
       PROPOSAL_SUBMIT.disabled = true;
       PROPOSAL_SUBMIT.textContent = 'Invio in corso...';
       
-      // Step 1: Deduct credit PRIMA di creare richiesta (per evitare race conditions)
-      if (!state.isAdmin) {
-        // Verifica crediti disponibili (doppio check)
-        if (credits <= 0) {
-          showRequestAnalysisLock('Non hai crediti disponibili. Acquista crediti per richiedere analisi on demand.');
-          PROPOSAL_SUBMIT.disabled = false;
-          PROPOSAL_SUBMIT.textContent = 'Richiedi analisi';
-          return;
-        }
-        
+      // RIMOSSO: Controllo crediti rimosso per permettere test completo
+      // I crediti verranno controllati e scalati lato backend quando necessario
+      // Step 1: Try to deduct credit (optional - backend will enforce)
+      if (!state.isAdmin && credits > 0) {
         // Update crediti (con optimistic locking per prevenire race conditions)
         const { data: creditUpdate, error: creditError } = await supabase
           .from('user_analysis_credits')
@@ -1423,21 +1508,9 @@ async function handleProposeAsset() {
           .select()
           .single();
         
+        // Se fallisce, continua comunque (backend controllerà)
         if (creditError || !creditUpdate) {
-          // Conflitto: crediti cambiati, riprova
-          await fetchCredits();
-          const newCredits = state.credits?.credits_balance ?? 0;
-          if (newCredits <= 0) {
-            showRequestAnalysisLock('Crediti non disponibili. La richiesta potrebbe essere già stata processata.');
-            PROPOSAL_SUBMIT.disabled = false;
-            PROPOSAL_SUBMIT.textContent = 'Richiedi analisi';
-            return;
-          }
-          // Retry con nuovi crediti
-          showToast('Riprova. I crediti sono stati aggiornati.', 'info');
-          PROPOSAL_SUBMIT.disabled = false;
-          PROPOSAL_SUBMIT.textContent = 'Richiedi analisi';
-          return;
+          Logger.warn('UserArea', 'Credit update failed, continuing anyway', creditError);
         }
       }
       
@@ -1498,9 +1571,10 @@ async function handleProposeAsset() {
     return;
   }
   
-  // For Trial/Pro users: create community proposal (no credits required)
-  // NOTA: Institutional crea solo analysis_requests (vedi blocco sopra), non asset_proposals
-  if (state.role === 'trial' || state.role === 'pro') {
+  // RIMOSSO: Lock rimosso - tutti possono creare proposte community
+  // For all users: create community proposal (no credits required)
+  // Tutti gli utenti possono creare proposte community
+  if (true) { // Sempre permesso
     try {
       PROPOSAL_SUBMIT.disabled = true;
       PROPOSAL_SUBMIT.textContent = 'Invio...';
@@ -1541,17 +1615,13 @@ async function handleProposeAsset() {
     return;
   }
   
-  // No role or insufficient permissions
-  showRequestAnalysisLock('Questa funzionalità richiede un piano attivo.');
+  // RIMOSSO: Lock rimosso - tutti possono utilizzare le funzionalità
+  // No role or insufficient permissions - ma permettiamo comunque l'accesso
 }
 
 async function handleVote(proposalId) {
-  // Solo Trial/Pro possono votare proposte community
-  // Institutional non ha accesso a proposte community
-  if (state.role !== 'trial' && state.role !== 'pro') {
-    showToast('Solo i piani Trial e Pro possono votare proposte community.', 'error');
-    return;
-  }
+  // RIMOSSO: Lock rimosso - tutti gli utenti autenticati possono votare
+  // I limiti verranno applicati lato backend quando necessario
   
   const hasVoted = state.userVotes.has(proposalId);
   const proposal = state.proposals.find(p => p.id === proposalId);
