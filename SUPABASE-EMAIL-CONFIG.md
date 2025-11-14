@@ -133,11 +133,13 @@
    - **SMTP Host**: `smtp.resend.com`
    - **SMTP Port**: `587` (o `465` per SSL)
    - **SMTP User**: `resend` (fisso, non la tua API key)
-   - **SMTP Password**: `[LA TUA API KEY RESEND]` (es. `re_1234567890...`)
+   - **SMTP Password**: `re_esPbadDj_PzRxxMbVzkP4bRq2XxuC1fLx` (la tua API key)
    - **Sender email**: 
      - Se dominio verificato: `noreply@tradelia.org`
      - Se dominio NON verificato: `Tradelia <noreply@resend.dev>`
    - **Sender name**: `Tradelia` (opzionale)
+   
+   **⚠️ IMPORTANTE**: Usa la stessa API key sia qui che nella variabile d'ambiente `RESEND_API_KEY`
 
 5. **Test SMTP**: Clicca "Send test email" per verificare la configurazione
 
@@ -153,14 +155,14 @@
    - Vai su **Vercel Dashboard** → **Project** → **Settings** → **Environment Variables**
    - Aggiungi:
      - **Key**: `RESEND_API_KEY`
-     - **Value**: `re_1234567890...` (la tua API key)
+     - **Value**: `re_esPbadDj_PzRxxMbVzkP4bRq2XxuC1fLx` (la tua API key)
      - **Environments**: ✅ Production, ✅ Preview, ✅ Development
 
 2. **Cloudflare Pages**:
    - Vai su **Cloudflare Dashboard** → **Pages** → **Project** → **Settings** → **Environment Variables**
    - Aggiungi:
      - **Variable name**: `RESEND_API_KEY`
-     - **Value**: `re_1234567890...` (la tua API key)
+     - **Value**: `re_esPbadDj_PzRxxMbVzkP4bRq2XxuC1fLx` (la tua API key)
      - **Environments**: ✅ Production, ✅ Preview
 
 ---
@@ -212,6 +214,7 @@
 - [Resend API Docs](https://resend.com/docs/api-reference)
 - [Resend Domain Verification](https://resend.com/docs/dashboard/domains/introduction)
 - [Supabase SMTP Configuration](https://supabase.com/docs/guides/auth/auth-smtp)
+- [Guida Setup DNS Resend](RESEND-DNS-SETUP.md) - **Vedi questa guida per aggiungere i record DNS**
 
 ---
 
