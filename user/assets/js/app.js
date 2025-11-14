@@ -403,8 +403,26 @@ function renderPlanSection() {
   const actionsContainer = document.createElement('div');
   actionsContainer.className = 'user-cta';
   
-        // Upgrade disponibili
-        if (state.role === 'trial') {
+        // Upgrade disponibili con prova gratuita
+        if (state.role === 'guest' || !state.role) {
+          // Guest può scegliere tra Pro e Desk con prova gratuita
+          const proBtn = document.createElement('button');
+          proBtn.className = 'btn btn-sm btn-primary';
+          proBtn.textContent = 'Prova Pro gratuitamente (14 giorni)';
+          proBtn.addEventListener('click', () => {
+            handleUpgradeWithTrial('pro');
+          });
+          actionsContainer.appendChild(proBtn);
+          
+          const deskBtn = document.createElement('button');
+          deskBtn.className = 'btn btn-sm btn-primary';
+          deskBtn.textContent = 'Prova Desk gratuitamente (14 giorni)';
+          deskBtn.style.marginLeft = '0.5rem';
+          deskBtn.addEventListener('click', () => {
+            handleUpgradeWithTrial('institutional');
+          });
+          actionsContainer.appendChild(deskBtn);
+        } else if (state.role === 'trial') {
           const upgradeBtn = document.createElement('button');
           upgradeBtn.className = 'btn btn-sm btn-primary';
           upgradeBtn.textContent = 'Passa a Pro';
@@ -425,7 +443,7 @@ function renderPlanSection() {
         }
   
   // Cancellazione (solo se piano attivo e non admin)
-  if (state.role && !state.isAdmin && state.planExpiresAt) {
+  if (state.role && !state.isAdmin && state.planExpiresAt && state.role !== 'guest') {
     const cancelBtn = document.createElement('button');
     cancelBtn.className = 'btn btn-sm btn-outline';
     cancelBtn.textContent = 'Cancella abbonamento';
@@ -433,16 +451,64 @@ function renderPlanSection() {
     actionsContainer.appendChild(cancelBtn);
   }
   
-  // Se non ha piano, mostra link a pricing
-  if (!state.role) {
-    const pricingBtn = document.createElement('a');
-    pricingBtn.className = 'btn btn-sm btn-primary';
-    pricingBtn.href = '/pricing.html';
-    pricingBtn.textContent = 'Consulta piani disponibili';
-    actionsContainer.appendChild(pricingBtn);
-  }
-  
   PLAN_ACTIONS.appendChild(actionsContainer);
+}
+
+async function handleUpgradeWithTrial(targetRole) {
+  try {
+    if (!state.user) {
+      showToast('Effettua l\'accesso per effettuare l\'upgrade.', 'error');
+      return;
+    }
+    
+    // Calcola scadenza trial (14 giorni)
+    const trialExpiry = new Date();
+    trialExpiry.setDate(trialExpiry.getDate() + 14);
+    
+    showToast('Attivazione prova gratuita in corso...', 'info');
+    
+    // Aggiorna ruolo con trial period
+    const { error: roleError } = await supabase
+      .from('user_roles')
+      .upsert({
+        user_id: state.user.id,
+        role: targetRole,
+        valid_until: trialExpiry.toISOString()
+      }, { onConflict: 'user_id' });
+    
+    if (roleError) {
+      Logger.error('UserArea', 'trial upgrade error', roleError);
+      throw roleError;
+    }
+    
+    // Se è institutional, crea record crediti se non esiste
+    if (targetRole === 'institutional') {
+      const { error: creditsError } = await supabase
+        .from('user_analysis_credits')
+        .upsert({
+          user_id: state.user.id,
+          credits_balance: 0,
+          total_purchased: 0,
+          total_used: 0
+        }, { onConflict: 'user_id' });
+      
+      if (creditsError) {
+        Logger.warn('UserArea', 'credits creation error during trial', creditsError);
+      }
+    }
+    
+    // Refresh dati utente
+    await fetchUserRole();
+    await fetchCredits();
+    renderPlanSection();
+    renderCommunitySection();
+    
+    showToast(`Prova gratuita ${targetRole === 'pro' ? 'Pro' : 'Desk'} attivata! Scade il ${trialExpiry.toLocaleDateString('it-IT')}.`, 'success');
+    
+  } catch (err) {
+    Logger.error('UserArea', 'trial upgrade error', err);
+    showToast('Errore durante l\'attivazione della prova gratuita. Riprova.', 'error');
+  }
 }
 
 async function handleCancelSubscription() {
@@ -579,15 +645,18 @@ function renderAuthPanel() {
     });
   });
   
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const mode = form.dataset.mode;
-    if (mode === 'login') {
-      handleLoginSubmit(e);
-    } else {
-      handleSignupSubmit(e);
-    }
-  });
+  // Gestione submit form - importante: usa il form corretto
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const mode = form.dataset.mode || 'login';
+      if (mode === 'login') {
+        handleLoginSubmit(e);
+      } else if (mode === 'signup') {
+        handleSignupSubmit(e);
+      }
+    });
+  }
 }
 
 async function onProfileSubmit(event) {
@@ -711,16 +780,13 @@ async function handleSignupSubmit(event) {
       Logger.warn('UserArea', 'profile creation error (may already exist)', profileError);
     }
     
-    // 3. Crea ruolo trial di default (30 giorni)
-    const trialExpiry = new Date();
-    trialExpiry.setDate(trialExpiry.getDate() + 30);
-    
+    // 3. Crea ruolo guest di default (senza scadenza, accesso limitato)
     const { error: roleError } = await supabase
       .from('user_roles')
       .insert({
         user_id: authData.user.id,
-        role: 'trial',
-        valid_until: trialExpiry.toISOString()
+        role: 'guest',
+        valid_until: null // Guest non ha scadenza, ma ha accesso limitato
       });
     
     if (roleError) {
@@ -863,8 +929,10 @@ function roleLabel(role) {
     case 'institutional':
       return 'Desk Professionale';
     case 'trial':
-    default:
       return 'Trial';
+    case 'guest':
+    default:
+      return 'Guest';
   }
 }
 
@@ -875,8 +943,10 @@ function planDescription(role) {
     case 'pro':
       return 'Accesso completo ai deck SRD v5.0 e MTB v3.1, strumenti community e notifiche operative in tempo reale.';
     case 'trial':
+      return 'Prova gratuita attiva. Consulta i dossier ufficiali e sblocca tutte le funzionalità per 14 giorni.';
+    case 'guest':
     default:
-      return 'Consulta i dossier ufficiali e attiva 14 giorni di accesso completo. Le sezioni ad alto contenuto restano oscurate senza abbonamento.';
+      return 'Account registrato. Attiva una prova gratuita di 14 giorni per Pro o Desk Professionale e scopri tutte le funzionalità.';
   }
 }
 
@@ -897,10 +967,20 @@ function planBenefits(role) {
       'Notifiche push e roadmap funzionale con priorità Pro'
     ];
   }
+  if (role === 'trial') {
+    return [
+      'Accesso completo ai deck SRD v5.0 e MTB v3.1',
+      'Tutte le funzionalità Pro o Desk attive per 14 giorni',
+      'Nessun costo durante il periodo di prova',
+      'Upgrade automatico a pagamento alla scadenza (se configurato)'
+    ];
+  }
+  // Guest
   return [
-    'Accesso ai documenti istituzionali con sezioni sensibili oscurate',
-    'Attivazione prova Pro di 14 giorni con un click',
-    'Aggiornamenti sulle analisi pubbliche e distanza dalle release complete'
+    'Accesso limitato ai contenuti pubblici',
+    'Prova gratuita Pro o Desk Professionale (14 giorni)',
+    'Nessun impegno, cancella quando vuoi',
+    'Scopri tutte le funzionalità prima di abbonarti'
   ];
 }
 
