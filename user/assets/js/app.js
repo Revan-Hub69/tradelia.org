@@ -263,7 +263,7 @@ async function bootstrapUserArea() {
     startPlanExpiryPolling();
   } catch (err) {
     Logger.error('UserArea', 'bootstrap error', err);
-    showToast(err.message || 'Errore nel caricamento dell'area utente.', 'error');
+    showToast(err.message || 'Errore nel caricamento dell\'area utente.', 'error');
   } finally {
     state.loading = false;
   }
