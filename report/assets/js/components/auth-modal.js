@@ -256,33 +256,59 @@ async function handleSignup(event) {
       throw new Error('Errore durante la creazione dell\'account.');
     }
     
-    // 2. Crea profilo utente
-    const { error: profileError } = await supabase
-      .from('user_profiles')
-      .insert({
-        user_id: authData.user.id,
-        display_name: email.split('@')[0],
-        preferences: {
-          email_notifications: true,
-          dashboard_alerts: true
+    // 2. Crea profilo utente (con gestione errori migliorata)
+    try {
+      const { error: profileError } = await supabase
+        .from('user_profiles')
+        .insert({
+          user_id: authData.user.id,
+          display_name: email.split('@')[0],
+          preferences: {
+            email_notifications: true,
+            dashboard_alerts: true
+          }
+        });
+      
+      if (profileError) {
+        // Se errore 23505 = unique violation (già esiste), ignora
+        // Se errore 42501 = insufficient privilege (RLS), logga ma continua
+        if (profileError.code === '23505') {
+          Logger.debug('AuthModal', 'profile already exists', profileError);
+        } else if (profileError.code === '42501') {
+          Logger.warn('AuthModal', 'RLS policy blocked profile creation', profileError);
+        } else {
+          Logger.warn('AuthModal', 'profile creation error', profileError);
         }
-      });
-    
-    if (profileError) {
-      Logger.warn('AuthModal', 'profile creation error (may already exist)', profileError);
+      }
+    } catch (profileErr) {
+      Logger.warn('AuthModal', 'profile creation exception', profileErr);
+      // Continua anche se fallisce (l'utente può creare il profilo dopo)
     }
     
-    // 3. Crea ruolo guest di default (senza scadenza, accesso limitato)
-    const { error: roleError } = await supabase
-      .from('user_roles')
-      .insert({
-        user_id: authData.user.id,
-        role: 'guest',
-        valid_until: null // Guest non ha scadenza, ma ha accesso limitato
-      });
-    
-    if (roleError) {
-      Logger.warn('AuthModal', 'role creation error (may already exist)', roleError);
+    // 3. Crea ruolo guest di default (con gestione errori migliorata)
+    try {
+      const { error: roleError } = await supabase
+        .from('user_roles')
+        .insert({
+          user_id: authData.user.id,
+          role: 'guest',
+          valid_until: null // Guest non ha scadenza, ma ha accesso limitato
+        });
+      
+      if (roleError) {
+        // Se errore 23505 = unique violation (già esiste), ignora
+        // Se errore 42501 = insufficient privilege (RLS), logga ma continua
+        if (roleError.code === '23505') {
+          Logger.debug('AuthModal', 'role already exists', roleError);
+        } else if (roleError.code === '42501') {
+          Logger.warn('AuthModal', 'RLS policy blocked role creation', roleError);
+        } else {
+          Logger.warn('AuthModal', 'role creation error', roleError);
+        }
+      }
+    } catch (roleErr) {
+      Logger.warn('AuthModal', 'role creation exception', roleErr);
+      // Continua anche se fallisce (l'utente può creare il ruolo dopo)
     }
     
     showToast('Registrazione completata! Account creato con ruolo Guest.', 'success');
@@ -303,9 +329,18 @@ async function handleSignup(event) {
   } catch (err) {
     Logger.error('AuthModal', 'signup error', err);
     
+    // Log dettagliato per debug
+    console.error('[AuthModal] Signup error details:', {
+      message: err.message,
+      code: err.code,
+      status: err.status,
+      error: err
+    });
+    
     // Gestione rate limit per email
     let errorMessage = err.message || 'Errore durante la registrazione. Riprova.';
     const errMsgLower = err.message?.toLowerCase() || '';
+    const errCode = err.code || '';
     
     if (errMsgLower.includes('rate limit') || 
         errMsgLower.includes('too many requests') ||
@@ -315,7 +350,8 @@ async function handleSignup(event) {
       errorMessage = 'Troppe richieste di registrazione. Attendi 10-15 minuti prima di riprovare, oppure prova con un\'email diversa.';
     } else if (errMsgLower.includes('user already registered') || 
                errMsgLower.includes('already exists') ||
-               errMsgLower.includes('already registered')) {
+               errMsgLower.includes('already registered') ||
+               errCode === '23505') {
       errorMessage = 'Questa email è già registrata. Prova ad accedere invece di registrarti.';
       // Cambia automaticamente al tab login
       setTimeout(() => {
@@ -327,6 +363,28 @@ async function handleSignup(event) {
           loginEmailInput.value = email;
         }
       }, 500);
+    } else if (errMsgLower.includes('error sending email') ||
+               errMsgLower.includes('email confirmation')) {
+      errorMessage = 'Account creato ma email di verifica non inviata. Controlla la configurazione SMTP in Supabase. Puoi comunque accedere.';
+      // Prova auto-login comunque
+      setTimeout(async () => {
+        try {
+          const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+          if (!signInError) {
+            showToast('Accesso effettuato. Account creato con successo.', 'success');
+            closeAfterDelay();
+            setTimeout(() => {
+              window.location.href = '/user/';
+            }, 300);
+          }
+        } catch (loginErr) {
+          Logger.warn('AuthModal', 'auto-login after email error failed', loginErr);
+        }
+      }, 1000);
+    } else if (errCode === '42501' || errMsgLower.includes('permission denied') || errMsgLower.includes('insufficient privilege')) {
+      errorMessage = 'Errore di permessi. Verifica le RLS policies in Supabase per user_profiles e user_roles.';
+    } else if (err.status === 500 || errCode === 'PGRST') {
+      errorMessage = 'Errore server durante la registrazione. Verifica che le tabelle user_profiles e user_roles esistano in Supabase.';
     }
     
     showToast(errorMessage, 'error');
