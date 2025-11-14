@@ -69,12 +69,6 @@ Questo è un **errore generico di Supabase Auth** che di solito indica:
    - ❌ Prova con `@resend.dev` invece di `@tradelia.org`
    - ❌ Controlla Logs → Postgres Logs per errori SMTP
 
-1. **Salva** le impostazioni SMTP
-2. Vai su **Authentication** → **Settings**
-3. **Abilita** "Enable email confirmations"
-4. **Salva**
-5. Prova signup
-
 ---
 
 ## 🔍 Verifica Trigger/Funzioni
