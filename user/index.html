@@ -81,42 +81,26 @@
             <label>
               Nome visualizzato
               <input type="text" id="profile-display-name" maxlength="80" placeholder="Es. Mario Rossi o Team Analisi Quantitativa">
-              <span class="form-hint">Nome che apparirà nel tuo profilo pubblico.</span>
+              <span class="form-hint">Nome utilizzato internamente nella piattaforma.</span>
             </label>
-            <label>
-              Profilo pubblico
-              <textarea id="profile-bio" maxlength="600" placeholder="Descrivi la tua esperienza, focus di ricerca e preferenze di mercato. Massimo 600 caratteri."></textarea>
-              <span class="form-hint">Descrizione visibile nella community. Consigliato: esperienza professionale, specializzazioni, obiettivi di ricerca.</span>
-            </label>
-            <div id="desk-links-section" class="profile-feature-locked">
-              <div class="feature-header">
-                <label>
-                  Link pubblici nel profilo
-                  <span class="feature-badge">Piano Desk</span>
-                </label>
-                <div class="feature-lock-indicator" id="desk-links-lock" hidden>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                  </svg>
-                  <span>Disponibile con piano Desk Professionale</span>
-                </div>
-              </div>
-              <div class="feature-content" id="desk-links-content">
-                <p class="feature-description">Aggiungi fino a 3 link pubblici (es. LinkedIn, sito istituzionale, portfolio) che appariranno nel tuo profilo visibile alla community.</p>
-                <div id="desk-links-list" class="desk-links-list"></div>
-                <button class="btn btn-outline" type="button" id="add-desk-link-btn">+ Aggiungi link</button>
-              </div>
+            
+            <!-- Preferenze interne -->
+            <div class="profile-preferences">
+              <h4>Preferenze</h4>
+              <label class="preference-checkbox">
+                <input type="checkbox" id="pref-email-notifications" checked>
+                <span>Notifiche email per richieste analisi completate</span>
+              </label>
+              <label class="preference-checkbox">
+                <input type="checkbox" id="pref-dashboard-alerts" checked>
+                <span>Avvisi dashboard per aggiornamenti importanti</span>
+              </label>
             </div>
             <div class="user-cta">
               <button class="btn btn-primary" type="submit" id="profile-save-btn">Salva profilo</button>
               <button class="btn btn-outline" type="button" id="profile-reset-btn">Annulla modifiche</button>
             </div>
           </form>
-          <div class="placeholder-card">
-            <strong>Presenza digitale</strong>
-            <span>Integrazioni con piattaforme esterne (LinkedIn, X, TradingView) e audit della presenza digitale saranno disponibili in una fase successiva.</span>
-          </div>
         </section>
 
 

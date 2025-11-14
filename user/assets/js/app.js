@@ -22,7 +22,8 @@ const PANELS = {
 
 const PROFILE_FORM = document.getElementById('profile-form');
 const PROFILE_NAME_FIELD = document.getElementById('profile-display-name');
-const PROFILE_BIO_FIELD = document.getElementById('profile-bio');
+const PREF_EMAIL_NOTIFICATIONS = document.getElementById('pref-email-notifications');
+const PREF_DASHBOARD_ALERTS = document.getElementById('pref-dashboard-alerts');
 const PROFILE_RESET = document.getElementById('profile-reset-btn');
 
 
@@ -66,7 +67,7 @@ const state = {
   userVotes: new Set(),
   isAdmin: false,
   credits: null,
-  deskLinks: []
+  planExpiresAt: null,
 };
 
 init();
@@ -168,14 +169,12 @@ async function bootstrapUserArea() {
     ]);
     // Fetch role dopo admin check (admin ha sempre ruolo institutional)
     await fetchUserRole();
-    if (state.role === 'trial' || state.role === 'pro') {
+    // Fetch proposals per Trial/Pro/Desk (Desk ha accesso a tutte le funzioni)
+    if (state.role === 'trial' || state.role === 'pro' || state.role === 'institutional') {
       await Promise.all([fetchProposals(), fetchUserVotes()]);
     }
     // Fetch credits for all users (to show counter)
     await fetchCredits();
-    if (state.role === 'institutional' || state.isAdmin) {
-      await fetchDeskLinks();
-    }
     renderHero();
     renderProfileForm();
     renderDashboard();
@@ -233,16 +232,20 @@ function renderHero() {
 function renderProfileForm() {
   if (!PROFILE_FORM) return;
   PROFILE_NAME_FIELD.value = state.profile?.display_name || getDisplayName();
-  PROFILE_BIO_FIELD.value = state.profile?.bio || '';
+  
+  // Setup preferences
+  if (PREF_EMAIL_NOTIFICATIONS) {
+    PREF_EMAIL_NOTIFICATIONS.checked = state.profile?.preferences?.email_notifications !== false;
+  }
+  if (PREF_DASHBOARD_ALERTS) {
+    PREF_DASHBOARD_ALERTS.checked = state.profile?.preferences?.dashboard_alerts !== false;
+  }
   
   // Setup avatar upload
   if (AVATAR_BTN && AVATAR_FILE) {
     AVATAR_BTN.addEventListener('click', () => AVATAR_FILE.click());
     AVATAR_FILE.addEventListener('change', onAvatarSelected);
   }
-  
-  // Setup desk links if institutional - always call to ensure visibility is correct
-  renderDeskLinksSection();
 }
 
 function renderDashboard() {
@@ -341,24 +344,23 @@ async function onProfileSubmit(event) {
     return;
   }
   const display_name = PROFILE_NAME_FIELD.value.trim();
-  const bio = PROFILE_BIO_FIELD.value.trim();
+  const preferences = {
+    email_notifications: PREF_EMAIL_NOTIFICATIONS?.checked ?? true,
+    dashboard_alerts: PREF_DASHBOARD_ALERTS?.checked ?? true
+  };
+  
   try {
     PROFILE_FORM.querySelector('button[type="submit"]').disabled = true;
     const payload = {
       user_id: state.user.id,
       display_name: display_name || null,
-      bio: bio || null
+      preferences: preferences
     };
     const { error } = await supabase
       .from('user_profiles')
       .upsert(payload, { onConflict: 'user_id' });
     if (error) throw error;
-    state.profile = { ...(state.profile || {}), display_name, bio };
-    
-    // Save desk links if institutional
-    if (state.role === 'institutional') {
-      await saveDeskLinks();
-    }
+    state.profile = { ...(state.profile || {}), display_name, preferences };
     
     renderHero();
     showToast('Profilo aggiornato.', 'success');
@@ -401,22 +403,37 @@ async function handleLoginSubmit(event) {
 
 async function fetchUserRole() {
   try {
-    // Se è admin, ruolo è sempre institutional (Desk illimitato)
+    // Se è admin, ruolo è sempre institutional (Desk illimitato, permanente)
     if (state.isAdmin) {
       state.role = 'institutional';
+      state.planExpiresAt = null; // Admin = permanente
       return;
     }
     
     const { data, error } = await supabase
       .from('user_roles')
-      .select('role')
+      .select('role, valid_until')
       .eq('user_id', state.user.id)
       .maybeSingle();
     if (error) throw error;
+    
     state.role = data?.role || null;
+    state.planExpiresAt = data?.valid_until || null;
+    
+    // Verifica se il piano è scaduto
+    if (state.planExpiresAt) {
+      const expiresAt = new Date(state.planExpiresAt);
+      const now = new Date();
+      if (expiresAt < now) {
+        // Piano scaduto - disabilita accesso
+        state.role = null;
+        showToast('Il tuo piano è scaduto. Rinnova per continuare ad utilizzare la piattaforma.', 'error');
+      }
+    }
   } catch (err) {
     Logger.warn('UserArea', 'role fetch error', err);
     state.role = null;
+    state.planExpiresAt = null;
   }
 }
 
@@ -424,7 +441,7 @@ async function fetchUserProfile() {
   try {
     const { data, error } = await supabase
       .from('user_profiles')
-      .select('display_name, bio, avatar_url')
+      .select('display_name, avatar_url, preferences')
       .eq('user_id', state.user.id)
       .maybeSingle();
     if (error) throw error;
@@ -686,9 +703,9 @@ function renderCommunitySection() {
     }
   }
   
-  // Show community proposals card only for Trial/Pro
+  // Show community proposals card for Trial/Pro/Desk (Desk ha accesso a tutte le funzioni)
   if (COMMUNITY_PROPOSE_CARD) {
-    if (state.role === 'trial' || state.role === 'pro') {
+    if (state.role === 'trial' || state.role === 'pro' || state.role === 'institutional') {
       COMMUNITY_PROPOSE_CARD.hidden = false;
       renderCommunityProposalsList();
     } else {
@@ -939,8 +956,9 @@ async function handleProposeAsset() {
     return;
   }
   
-  // For Trial/Pro users: create community proposal (no credits required)
-  if (state.role === 'trial' || state.role === 'pro') {
+  // For Trial/Pro/Desk users: create community proposal (no credits required)
+  // Desk ha accesso a tutte le funzioni dei piani inferiori
+  if (state.role === 'trial' || state.role === 'pro' || state.role === 'institutional') {
     try {
       PROPOSAL_SUBMIT.disabled = true;
       const { data, error } = await supabase
@@ -976,8 +994,9 @@ async function handleProposeAsset() {
 }
 
 async function handleVote(proposalId) {
-  if (state.role !== 'trial' && state.role !== 'pro') {
-    showToast('Solo i piani Trial e Pro possono votare.', 'error');
+  // Desk ha accesso a tutte le funzioni dei piani inferiori
+  if (state.role !== 'trial' && state.role !== 'pro' && state.role !== 'institutional') {
+    showToast('Questa funzionalità richiede un piano attivo.', 'error');
     return;
   }
   
@@ -1054,209 +1073,4 @@ async function fetchCredits() {
     state.credits = { credits_balance: 0, total_purchased: 0, total_used: 0 };
   }
 }
-
-async function fetchDeskLinks() {
-  if (!state.user) {
-    Logger.warn('UserArea', 'No user, skipping desk links fetch');
-    return;
-  }
-  try {
-    const { data, error } = await supabase
-      .from('desk_public_links')
-      .select('id, link_url, link_label, display_order')
-      .eq('user_id', state.user.id)
-      .order('display_order', { ascending: true });
-    if (error) throw error;
-    state.deskLinks = data || [];
-  } catch (err) {
-    Logger.error('UserArea', 'desk links fetch error', err);
-    state.deskLinks = [];
-    // Show user-friendly error if table doesn't exist
-    if (err.code === '42P01' || err.message?.includes('does not exist')) {
-      Logger.error('UserArea', 'Table desk_public_links does not exist! Run the migration SQL first.');
-    }
-  }
-}
-
-function renderDeskLinksSection() {
-  const section = document.getElementById('desk-links-section');
-  const list = document.getElementById('desk-links-list');
-  const addBtn = document.getElementById('add-desk-link-btn');
-  const lockIndicator = document.getElementById('desk-links-lock');
-  const content = document.getElementById('desk-links-content');
-  
-  if (!section || !list || !addBtn || !lockIndicator || !content) {
-    Logger.warn('UserArea', 'Desk links elements not found');
-    return;
-  }
-  
-  // Always show section, but lock it if user doesn't have access
-  section.removeAttribute('hidden');
-  section.style.display = '';
-  
-  const canManageLinks = state.role === 'institutional' || state.isAdmin;
-  
-  if (canManageLinks) {
-    // Unlock: remove locked class, hide lock indicator, show content
-    section.classList.remove('locked');
-    lockIndicator.hidden = true;
-    content.style.display = '';
-  } else {
-    // Lock: add locked class, show lock indicator, hide content
-    section.classList.add('locked');
-    lockIndicator.hidden = false;
-    content.style.display = 'none';
-    return; // Don't render links if locked
-  }
-  
-  // Render existing links
-  if (state.deskLinks.length === 0) {
-    list.innerHTML = '<p style="color: rgba(203, 213, 225, 0.6); font-size: 0.9rem; margin: 0.5rem 0;">Nessun link aggiunto. Clicca su "Aggiungi link" per iniziare.</p>';
-  } else {
-    list.innerHTML = state.deskLinks.map((link, idx) => `
-      <div class="desk-link-item">
-        <div style="display: grid; gap: 0.5rem; flex: 1;">
-          <input type="url" 
-                 id="link-url-${link.id}" 
-                 value="${escapeHtml(link.link_url)}" 
-                 placeholder="https://..." 
-                 required>
-          <input type="text" 
-                 id="link-label-${link.id}" 
-                 value="${escapeHtml(link.link_label || '')}" 
-                 placeholder="Etichetta (opzionale)">
-        </div>
-        <button type="button" 
-                class="btn btn-sm delete-btn" 
-                data-link-id="${link.id}" 
-                title="Rimuovi link">×</button>
-      </div>
-    `).join('');
-    
-    // Add remove handlers
-    list.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', () => handleRemoveDeskLink(btn.dataset.linkId));
-    });
-  }
-  
-  // Update add button state
-  if (state.deskLinks.length >= 3) {
-    addBtn.disabled = true;
-    addBtn.textContent = 'Massimo 3 link raggiunto';
-    addBtn.title = 'Puoi aggiungere massimo 3 link pubblici';
-  } else {
-    addBtn.disabled = false;
-    addBtn.textContent = '+ Aggiungi link';
-    addBtn.title = '';
-  }
-  
-  // Setup handler (use once flag to avoid duplicates on re-render)
-  if (!addBtn._hasHandler) {
-    addBtn.addEventListener('click', handleAddDeskLink);
-    addBtn._hasHandler = true;
-  }
-}
-
-async function handleAddDeskLink() {
-  const canManageLinks = state.role === 'institutional' || state.isAdmin;
-  if (!canManageLinks) {
-    showToast('Solo gli utenti con piano Desk o admin possono aggiungere link pubblici.', 'error');
-    return;
-  }
-  
-  if (state.deskLinks.length >= 3) {
-    showToast('Massimo 3 link consentiti.', 'error');
-    return;
-  }
-  
-  try {
-    const nextOrder = state.deskLinks.length;
-    const { data, error } = await supabase
-      .from('desk_public_links')
-      .insert({
-        user_id: state.user.id,
-        link_url: 'https://',
-        link_label: '',
-        display_order: nextOrder
-      })
-      .select()
-      .single();
-    
-    if (error) {
-      if (error.code === '42P01' || error.message?.includes('does not exist')) {
-        showToast('Tabella non trovata. Esegui la migrazione SQL in Supabase.', 'error');
-      }
-      throw error;
-    }
-    
-    state.deskLinks.push(data);
-    renderDeskLinksSection();
-    showToast('Link aggiunto. Modifica l\'URL e salva il profilo.', 'success');
-  } catch (err) {
-    Logger.error('UserArea', 'add desk link error', err);
-    showToast('Errore durante l\'aggiunta del link. ' + (err.message || ''), 'error');
-  }
-}
-
-async function handleRemoveDeskLink(linkId) {
-  try {
-    const { error } = await supabase
-      .from('desk_public_links')
-      .delete()
-      .eq('id', linkId);
-    
-    if (error) throw error;
-    
-    state.deskLinks = state.deskLinks.filter(l => l.id !== linkId);
-    renderDeskLinksSection();
-    showToast('Link rimosso.', 'success');
-  } catch (err) {
-    Logger.error('UserArea', 'remove desk link error', err);
-    showToast('Errore durante la rimozione.', 'error');
-  }
-}
-
-async function saveDeskLinks() {
-  const canManageLinks = state.role === 'institutional' || state.isAdmin;
-  if (!canManageLinks) return;
-  
-  const list = document.getElementById('desk-links-list');
-  if (!list) return;
-  
-  const updates = [];
-  list.querySelectorAll('.desk-link-item').forEach(item => {
-    const urlInput = item.querySelector('input[type="url"]');
-    const labelInput = item.querySelector('input[type="text"]');
-    const linkId = item.querySelector('.delete-btn')?.dataset.linkId;
-    
-    if (urlInput && linkId) {
-      updates.push({
-        id: linkId,
-        link_url: urlInput.value.trim(),
-        link_label: labelInput?.value.trim() || null
-      });
-    }
-  });
-  
-  if (!updates.length) return;
-  
-  try {
-    await Promise.all(updates.map(update => 
-      supabase
-        .from('desk_public_links')
-        .update({
-          link_url: update.link_url,
-          link_label: update.link_label
-        })
-        .eq('id', update.id)
-    ));
-    
-    await fetchDeskLinks();
-    renderDeskLinksSection();
-  } catch (err) {
-    Logger.error('UserArea', 'save desk links error', err);
-    showToast('Errore durante il salvataggio dei link.', 'error');
-  }
-}
-
 
