@@ -105,6 +105,55 @@
               <button class="btn btn-outline" type="button" id="profile-reset-btn">Annulla modifiche</button>
             </div>
           </form>
+          
+          <!-- Sezione Sicurezza -->
+          <div class="profile-security-section" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--br-soft);">
+            <h4 style="margin-bottom: 1.5rem;">Sicurezza account</h4>
+            
+            <!-- Cambio Email -->
+            <div class="security-item" style="margin-bottom: 2rem;">
+              <div style="margin-bottom: 1rem;">
+                <strong>Indirizzo email</strong>
+                <p style="font-size: 0.875rem; color: var(--ink-soft); margin-top: 0.25rem;" id="current-email-display"></p>
+              </div>
+              <form id="change-email-form" class="profile-form" style="margin-top: 1rem;">
+                <label>
+                  Nuovo indirizzo email
+                  <input type="email" id="new-email-input" required placeholder="nuovo@email.com" autocomplete="email">
+                  <span class="form-hint">Riceverai un'email di conferma al nuovo indirizzo.</span>
+                </label>
+                <div class="user-cta">
+                  <button class="btn btn-sm btn-primary" type="submit">Cambia email</button>
+                </div>
+              </form>
+            </div>
+            
+            <!-- Cambio Password -->
+            <div class="security-item" style="margin-bottom: 2rem;">
+              <div style="margin-bottom: 1rem;">
+                <strong>Password</strong>
+                <p style="font-size: 0.875rem; color: var(--ink-soft); margin-top: 0.25rem;">Ultima modifica: <span id="password-last-changed">—</span></p>
+              </div>
+              <form id="change-password-form" class="profile-form" style="margin-top: 1rem;">
+                <label>
+                  Password attuale
+                  <input type="password" id="current-password-input" required placeholder="Password attuale" autocomplete="current-password">
+                </label>
+                <label>
+                  Nuova password
+                  <input type="password" id="new-password-input" required minlength="8" placeholder="Minimo 8 caratteri" autocomplete="new-password">
+                  <span class="form-hint">La password deve essere di almeno 8 caratteri.</span>
+                </label>
+                <label>
+                  Conferma nuova password
+                  <input type="password" id="confirm-password-input" required minlength="8" placeholder="Ripeti la nuova password" autocomplete="new-password">
+                </label>
+                <div class="user-cta">
+                  <button class="btn btn-sm btn-primary" type="submit">Cambia password</button>
+                </div>
+              </form>
+            </div>
+          </div>
         </section>
 
 

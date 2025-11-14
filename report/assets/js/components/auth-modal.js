@@ -43,6 +43,10 @@ function template() {
           <span class="auth-tab-label">Registrati</span>
           <span class="auth-tab-hint">Account gratuito</span>
         </button>
+        <button type="button" role="tab" data-auth-switch="magic" aria-selected="false">
+          <span class="auth-tab-label">Magic Link</span>
+          <span class="auth-tab-hint">Login senza password</span>
+        </button>
         <button type="button" role="tab" data-auth-switch="reset" aria-selected="false">
           <span class="auth-tab-label">Recupera password</span>
           <span class="auth-tab-hint">Invia link sicuro</span>
@@ -83,6 +87,20 @@ function template() {
             Registrandoti, accetti i <a href="/terms.html" style="color: var(--brand-600);">Termini di servizio</a> e la <a href="/privacy.html" style="color: var(--brand-600);">Privacy Policy</a>.
           </p>
         </form>
+        <form id="auth-magic-form" data-auth-form="magic" class="auth-form" hidden novalidate>
+          <p class="auth-register-intro" style="font-size: 0.875rem; color: var(--ink-soft); margin-bottom: 1.5rem;">
+            Accedi senza password. Riceverai un link sicuro via email valido per 1 ora.
+          </p>
+          <div class="auth-field">
+            <label for="auth-email-magic">Email</label>
+            <input id="auth-email-magic" type="email" name="email" autocomplete="email" required placeholder="nome@email.com">
+          </div>
+          <div class="auth-actions">
+            <button class="btn btn-primary" type="submit">Invia Magic Link</button>
+            <p class="auth-trust-caption">Riceverai un link valido 1 ora.</p>
+          </div>
+          <p class="auth-hint">Controlla anche la cartella spam se non ricevi l'email entro pochi minuti.</p>
+        </form>
         <form id="auth-reset-form" data-auth-form="reset" class="auth-form" hidden novalidate>
           <div class="auth-field">
             <label for="auth-email-reset">Email</label>
@@ -90,9 +108,9 @@ function template() {
           </div>
           <div class="auth-actions">
             <button class="btn btn-primary" type="submit">Invia link di reset</button>
-            <p class="auth-trust-caption">Riceverai un link valido 30 minuti.</p>
+            <p class="auth-trust-caption">Riceverai un link valido 1 ora.</p>
           </div>
-          <p class="auth-hint">Controlla anche la cartella spam se non ricevi l’email entro pochi minuti.</p>
+          <p class="auth-hint">Controlla anche la cartella spam se non ricevi l'email entro pochi minuti.</p>
         </form>
       </div>
       <footer class="auth-footer">
@@ -115,6 +133,7 @@ function registerEvents() {
   const switchers = state.root.querySelectorAll('[data-auth-switch]');
   const loginForm = state.root.querySelector('#auth-login-form');
   const registerForm = state.root.querySelector('#auth-register-form');
+  const magicForm = state.root.querySelector('#auth-magic-form');
   const resetForm = state.root.querySelector('#auth-reset-form');
 
   closeBtn.addEventListener('click', close);
@@ -131,6 +150,9 @@ function registerEvents() {
   loginForm.addEventListener('submit', handleLogin);
   if (registerForm) {
     registerForm.addEventListener('submit', handleSignup);
+  }
+  if (magicForm) {
+    magicForm.addEventListener('submit', handleMagicLink);
   }
   resetForm.addEventListener('submit', handleReset);
 }
@@ -273,13 +295,45 @@ async function handleSignup(event) {
   }
 }
 
+async function handleMagicLink(event) {
+  event.preventDefault();
+  if (state.busy) return;
+  const form = event.currentTarget;
+  const email = form.email.value.trim();
+  if (!email) {
+    showToast('Inserisci la tua email.', 'error');
+    return;
+  }
+  state.busy = true;
+  form.querySelector('button[type="submit"]').disabled = true;
+  try {
+    const redirectTo = `${window.location.origin}/user/`;
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: redirectTo
+      }
+    });
+    if (error) throw error;
+    showToast('Magic Link inviato! Controlla la tua email e clicca sul link per accedere.', 'success');
+    state.mode = 'login';
+    updateForms();
+  } catch (err) {
+    Logger.error('AuthModal', 'magic link error', err);
+    showToast(err.message || 'Errore durante l\'invio del Magic Link.', 'error');
+  } finally {
+    state.busy = false;
+    form.querySelector('button[type="submit"]').disabled = false;
+  }
+}
+
 async function handleReset(event) {
   event.preventDefault();
   if (state.busy) return;
   const form = event.currentTarget;
   const email = form.email.value.trim();
   if (!email) {
-    showToast('Inserisci la mail associata all’account.', 'error');
+    showToast('Inserisci la mail associata all'account.', 'error');
     return;
   }
   state.busy = true;
