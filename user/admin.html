@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Dashboard Admin Tradelia - Gestione utenti e piani" />
+  <title>Admin Dashboard • Tradelia</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/assets/css/global-header.css" />
+  <link rel="stylesheet" href="/user/assets/css/user-area.css" />
+  
+  <style>
+    .admin-shell {
+      min-height: 100vh;
+      background: var(--surface-page);
+      padding: 2rem;
+    }
+    
+    .admin-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--br-card);
+    }
+    
+    .admin-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem 0;
+      color: var(--ink);
+    }
+    
+    .admin-header p {
+      color: var(--ink-soft);
+      margin: 0;
+    }
+    
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .admin-stat-card {
+      background: var(--surface-elev);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+    
+    .admin-stat-card strong {
+      display: block;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--brand-600);
+      margin-bottom: 0.5rem;
+    }
+    
+    .admin-stat-card span {
+      font-size: var(--fs-14);
+      color: var(--ink-soft);
+    }
+    
+    .admin-filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .admin-filters input,
+    .admin-filters select {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-md);
+      background: var(--surface-elev);
+      color: var(--ink);
+      font-size: var(--fs-14);
+    }
+    
+    .admin-filters input {
+      flex: 1;
+      min-width: 250px;
+    }
+    
+    .admin-table {
+      background: var(--surface-elev);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    
+    .admin-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .admin-table th {
+      text-align: left;
+      padding: 1rem;
+      font-size: var(--fs-13);
+      font-weight: 600;
+      color: var(--ink);
+      background: var(--surface-page);
+      border-bottom: 1px solid var(--br-card);
+    }
+    
+    .admin-table td {
+      padding: 1rem;
+      font-size: var(--fs-14);
+      color: var(--ink);
+      border-bottom: 1px solid var(--br-card);
+    }
+    
+    .admin-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .admin-table tr:hover {
+      background: var(--surface-page);
+    }
+    
+    .role-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: var(--fs-12);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .role-badge.trial { background: rgba(251, 191, 36, 0.15); color: rgba(251, 191, 36, 1); }
+    .role-badge.pro { background: rgba(96, 165, 250, 0.15); color: rgba(96, 165, 250, 1); }
+    .role-badge.institutional { background: rgba(34, 197, 94, 0.15); color: rgba(34, 197, 94, 1); }
+    .role-badge.expired { background: rgba(248, 113, 113, 0.15); color: rgba(248, 113, 113, 1); }
+    
+    .admin-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .admin-actions button {
+      padding: 0.5rem 1rem;
+      font-size: var(--fs-13);
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-shell">
+    <div class="admin-header">
+      <h1>Dashboard Admin</h1>
+      <p>Gestione utenti, ruoli, scadenze piani e crediti</p>
+    </div>
+    
+    <div class="admin-stats" id="admin-stats">
+      <div class="admin-stat-card">
+        <strong id="stat-total-users">—</strong>
+        <span>Utenti totali</span>
+      </div>
+      <div class="admin-stat-card">
+        <strong id="stat-active-plans">—</strong>
+        <span>Piani attivi</span>
+      </div>
+      <div class="admin-stat-card">
+        <strong id="stat-expired-plans">—</strong>
+        <span>Piani scaduti</span>
+      </div>
+      <div class="admin-stat-card">
+        <strong id="stat-total-credits">—</strong>
+        <span>Crediti totali</span>
+      </div>
+    </div>
+    
+    <div class="admin-filters">
+      <input type="text" id="filter-search" placeholder="Cerca per email o nome..." />
+      <select id="filter-role">
+        <option value="">Tutti i ruoli</option>
+        <option value="trial">Trial</option>
+        <option value="pro">Pro</option>
+        <option value="institutional">Institutional</option>
+      </select>
+      <select id="filter-status">
+        <option value="">Tutti gli stati</option>
+        <option value="active">Attivi</option>
+        <option value="expired">Scaduti</option>
+      </select>
+    </div>
+    
+    <div class="admin-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Nome</th>
+            <th>Ruolo</th>
+            <th>Scadenza</th>
+            <th>Crediti</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody id="users-table-body">
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 2rem; color: var(--ink-soft);">
+              Caricamento...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <script type="module" src="/user/assets/js/admin.js"></script>
+</body>
+</html>
+
