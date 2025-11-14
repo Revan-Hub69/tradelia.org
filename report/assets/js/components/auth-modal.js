@@ -384,8 +384,19 @@ async function handleSignup(event) {
       message: err.message,
       code: err.code,
       status: err.status,
-      error: err
+      statusCode: err.statusCode,
+      name: err.name,
+      error: err,
+      fullError: JSON.stringify(err, Object.getOwnPropertyNames(err), 2)
     });
+    
+    // Se c'è un errore più dettagliato, loggalo
+    if (err.details) {
+      console.error('[AuthModal] Error details:', err.details);
+    }
+    if (err.hint) {
+      console.error('[AuthModal] Error hint:', err.hint);
+    }
     
     // Gestione rate limit per email
     let errorMessage = err.message || 'Errore durante la registrazione. Riprova.';
