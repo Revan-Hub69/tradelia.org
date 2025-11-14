@@ -198,6 +198,12 @@
   gap: var(--sp-5);
 }
 
+/* Forza display: none per form hidden (evita sovrapposizioni) */
+.auth-form[hidden],
+.auth-form[style*="display: none"] {
+  display: none !important;
+}
+
 .auth-field {
   display: grid;
   gap: var(--sp-2);

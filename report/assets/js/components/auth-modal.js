@@ -112,7 +112,7 @@ function template() {
 function registerEvents() {
   const closeBtn = state.root.querySelector('[data-auth-close]');
   const backdrop = state.root.querySelector('[data-auth-dismiss]');
-  const switchers = state.root.querySelectorAll('[data-auth-switch]');
+  const tabsContainer = state.root.querySelector('.auth-tabs');
   const loginForm = state.root.querySelector('#auth-login-form');
   const registerForm = state.root.querySelector('#auth-register-form');
   const resetForm = state.root.querySelector('#auth-reset-form');
@@ -121,18 +121,52 @@ function registerEvents() {
   backdrop.addEventListener('click', close);
   document.addEventListener('keydown', handleEscape);
 
-  switchers.forEach(btn => {
-    btn.addEventListener('click', () => {
+  // Event delegation per tab switching (evita listener duplicati)
+  if (tabsContainer) {
+    // Rimuovi listener precedenti se esistono
+    if (tabsContainer._clickHandler) {
+      tabsContainer.removeEventListener('click', tabsContainer._clickHandler);
+    }
+    
+    tabsContainer._clickHandler = (e) => {
+      const btn = e.target.closest('[data-auth-switch]');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
       const mode = btn.getAttribute('data-auth-switch');
       open(mode);
-    });
-  });
-
-  loginForm.addEventListener('submit', handleLogin);
-  if (registerForm) {
-    registerForm.addEventListener('submit', handleSignup);
+    };
+    
+    tabsContainer.addEventListener('click', tabsContainer._clickHandler);
   }
-  resetForm.addEventListener('submit', handleReset);
+
+  // Form submit handlers
+  if (loginForm) {
+    // Rimuovi listener precedenti se esistono
+    if (loginForm._submitHandler) {
+      loginForm.removeEventListener('submit', loginForm._submitHandler);
+    }
+    loginForm._submitHandler = handleLogin;
+    loginForm.addEventListener('submit', loginForm._submitHandler);
+  }
+  
+  if (registerForm) {
+    // Rimuovi listener precedenti se esistono
+    if (registerForm._submitHandler) {
+      registerForm.removeEventListener('submit', registerForm._submitHandler);
+    }
+    registerForm._submitHandler = handleSignup;
+    registerForm.addEventListener('submit', registerForm._submitHandler);
+  }
+  
+  if (resetForm) {
+    // Rimuovi listener precedenti se esistono
+    if (resetForm._submitHandler) {
+      resetForm.removeEventListener('submit', resetForm._submitHandler);
+    }
+    resetForm._submitHandler = handleReset;
+    resetForm.addEventListener('submit', resetForm._submitHandler);
+  }
 }
 
 function handleEscape(event) {
@@ -302,11 +336,22 @@ async function handleReset(event) {
 
 function updateForms() {
   if (!state.root) return;
+  
+  // NASCONDI TUTTI i form PRIMA di mostrare quello attivo
   const forms = state.root.querySelectorAll('[data-auth-form]');
   forms.forEach(form => {
     const mode = form.getAttribute('data-auth-form');
-    form.hidden = mode !== state.mode;
+    const isActive = mode === state.mode;
+    form.hidden = !isActive;
+    // Forza display: none per sicurezza
+    if (!isActive) {
+      form.style.display = 'none';
+    } else {
+      form.style.display = '';
+    }
   });
+  
+  // Aggiorna tab attivi
   const tabs = state.root.querySelectorAll('[data-auth-switch]');
   tabs.forEach(btn => {
     const selected = btn.getAttribute('data-auth-switch') === state.mode;
@@ -316,9 +361,18 @@ function updateForms() {
 
 function open(mode = 'login') {
   if (!state.initialized) init();
+  
+  // NASCONDI TUTTI i form PRIMA di cambiare mode
+  const allForms = state.root.querySelectorAll('[data-auth-form]');
+  allForms.forEach(form => {
+    form.hidden = true;
+    form.style.display = 'none';
+  });
+  
   state.mode = mode;
   updateForms();
   state.root.dataset.open = 'true';
+  
   setTimeout(() => {
     const focusTarget = state.root.querySelector(`[data-auth-form="${mode}"] input`);
     focusTarget?.focus();
@@ -327,6 +381,14 @@ function open(mode = 'login') {
 
 function close() {
   if (!state.root) return;
+  
+  // NASCONDI TUTTI i form prima di chiudere
+  const allForms = state.root.querySelectorAll('[data-auth-form]');
+  allForms.forEach(form => {
+    form.hidden = true;
+    form.style.display = 'none';
+  });
+  
   // Reset to a safe default view to avoid multiple sections visible on next open
   state.mode = 'login';
   updateForms();
