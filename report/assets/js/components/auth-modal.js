@@ -333,7 +333,7 @@ async function handleReset(event) {
   const form = event.currentTarget;
   const email = form.email.value.trim();
   if (!email) {
-    showToast('Inserisci la mail associata all'account.', 'error');
+    showToast('Inserisci la mail associata all\'account.', 'error');
     return;
   }
   state.busy = true;
