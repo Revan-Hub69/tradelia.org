@@ -150,12 +150,18 @@ function setActiveTab(tabId) {
     btn.setAttribute('aria-selected', selected ? 'true' : 'false');
   });
   
-  // Show/hide panels - use removeAttribute/setAttribute instead of hidden property
+  // Show/hide panels - IMPORTANTE: nascondi TUTTE le sezioni, poi mostra solo quella attiva
   Object.entries(PANELS).forEach(([key, panel]) => {
     if (!panel) {
       Logger.warn('UserArea', `Panel not found: ${key}`);
       return;
     }
+    
+    // Nascondi TUTTE le sezioni prima
+    panel.setAttribute('hidden', '');
+    panel.style.display = 'none';
+    
+    // Poi mostra solo quella attiva
     if (key === tabId) {
       panel.removeAttribute('hidden');
       panel.style.display = '';
@@ -164,8 +170,6 @@ function setActiveTab(tabId) {
       if (key === 'community') {
         renderCommunitySection();
       }
-    } else if (key !== 'auth') {
-      panel.setAttribute('hidden', '');
     }
   });
 }
@@ -593,61 +597,91 @@ async function handleCancelSubscription() {
 
 function renderAuthPanel() {
   if (!PANELS.auth || !AUTH_CONTAINER) return;
-  setActiveTab('auth');
-  PANELS.auth.removeAttribute('hidden');
+  
+  // Nascondi tutte le altre sezioni PRIMA di mostrare auth
   Object.entries(PANELS).forEach(([key, panel]) => {
-    if (key !== 'auth' && panel) panel.setAttribute('hidden', '');
+    if (key !== 'auth' && panel) {
+      panel.setAttribute('hidden', '');
+      panel.style.display = 'none';
+    }
   });
+  
+  // Mostra solo panel auth
+  PANELS.auth.removeAttribute('hidden');
+  PANELS.auth.style.display = '';
+  
+  // Aggiorna tab attivo
+  setActiveTab('auth');
+  
+  // Renderizza form di autenticazione
+  renderAuthForm('login');
+}
+
+function renderAuthForm(initialMode = 'login') {
+  if (!AUTH_CONTAINER) return;
+  
+  const isLogin = initialMode === 'login';
+  
   AUTH_CONTAINER.innerHTML = `
-    <div class="auth-tabs" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--br-card);">
-      <button class="auth-tab-btn active" data-tab="login" style="padding: 0.75rem 1rem; background: none; border: none; border-bottom: 2px solid var(--brand-600); color: var(--ink); cursor: pointer;">Accedi</button>
-      <button class="auth-tab-btn" data-tab="signup" style="padding: 0.75rem 1rem; background: none; border: none; border-bottom: 2px solid transparent; color: var(--ink-soft); cursor: pointer;">Registrati</button>
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab-btn ${isLogin ? 'active' : ''}" data-tab="login">
+        Accedi
+      </button>
+      <button type="button" class="auth-tab-btn ${!isLogin ? 'active' : ''}" data-tab="signup">
+        Registrati
+      </button>
     </div>
-    <form class="profile-form" id="area-auth-form" data-mode="login">
+    <form class="profile-form" id="area-auth-form" data-mode="${initialMode}">
+      ${!isLogin ? '<p style="font-size: 0.875rem; color: var(--ink-soft); margin-bottom: 1.5rem;">Crea un account gratuito. Riceverai un ruolo Guest con accesso limitato. Puoi attivare una prova gratuita di 14 giorni in qualsiasi momento.</p>' : ''}
       <label>
         Email
-        <input type="email" name="email" autocomplete="email" required placeholder="nome@azienda.com">
+        <input type="email" name="email" id="auth-email" autocomplete="email" required placeholder="nome@azienda.com">
       </label>
       <label>
         Password
-        <input type="password" name="password" autocomplete="current-password" required minlength="8" placeholder="Password">
+        <input type="password" name="password" id="auth-password" autocomplete="${isLogin ? 'current-password' : 'new-password'}" required minlength="8" placeholder="Password (minimo 8 caratteri)">
       </label>
       <div class="user-cta">
-        <button class="btn btn-primary" type="submit" id="auth-submit-btn">Accedi</button>
+        <button class="btn btn-primary" type="submit" id="auth-submit-btn">
+          ${isLogin ? 'Accedi' : 'Crea account'}
+        </button>
       </div>
+      ${!isLogin ? '<p style="font-size: 0.75rem; color: var(--ink-soft); margin-top: 1rem; text-align: center;">Registrandoti, accetti i <a href="/terms.html" style="color: var(--brand-600);">Termini di servizio</a> e la <a href="/privacy.html" style="color: var(--brand-600);">Privacy Policy</a>.</p>' : ''}
     </form>
   `;
-  const form = document.getElementById('area-auth-form');
-  const authTabs = document.querySelectorAll('.auth-tab-btn');
   
-  // Tab switching
-  authTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const mode = tab.dataset.tab;
-      authTabs.forEach(t => {
-        t.classList.remove('active');
-        t.style.borderBottomColor = 'transparent';
-        t.style.color = 'var(--ink-soft)';
-      });
-      tab.classList.add('active');
-      tab.style.borderBottomColor = 'var(--brand-600)';
-      tab.style.color = 'var(--ink)';
+  // Setup tab switching - usa event delegation per evitare problemi con listener duplicati
+  const authTabsContainer = AUTH_CONTAINER.querySelector('.auth-tabs');
+  if (authTabsContainer) {
+    // Rimuovi listener precedenti se esistono
+    if (authTabsContainer._clickHandler) {
+      authTabsContainer.removeEventListener('click', authTabsContainer._clickHandler);
+    }
+    
+    authTabsContainer._clickHandler = (e) => {
+      const tab = e.target.closest('.auth-tab-btn');
+      if (!tab) return;
       
-      form.dataset.mode = mode;
-      const submitBtn = document.getElementById('auth-submit-btn');
-      if (mode === 'login') {
-        submitBtn.textContent = 'Accedi';
-        form.querySelector('input[name="password"]').setAttribute('autocomplete', 'current-password');
-      } else {
-        submitBtn.textContent = 'Registrati';
-        form.querySelector('input[name="password"]').setAttribute('autocomplete', 'new-password');
-      }
-    });
-  });
+      e.preventDefault();
+      e.stopPropagation();
+      const mode = tab.dataset.tab;
+      
+      // Re-render form con nuovo mode
+      renderAuthForm(mode);
+    };
+    
+    authTabsContainer.addEventListener('click', authTabsContainer._clickHandler);
+  }
   
-  // Gestione submit form - importante: usa il form corretto
+  // Setup form submit
+  const form = document.getElementById('area-auth-form');
   if (form) {
-    form.addEventListener('submit', (e) => {
+    // Rimuovi listener precedenti se esistono
+    if (form._submitHandler) {
+      form.removeEventListener('submit', form._submitHandler);
+    }
+    
+    form._submitHandler = (e) => {
       e.preventDefault();
       const mode = form.dataset.mode || 'login';
       if (mode === 'login') {
@@ -655,7 +689,9 @@ function renderAuthPanel() {
       } else if (mode === 'signup') {
         handleSignupSubmit(e);
       }
-    });
+    };
+    
+    form.addEventListener('submit', form._submitHandler);
   }
 }
 
@@ -707,17 +743,27 @@ function onProfileReset() {
 
 async function handleLoginSubmit(event) {
   event.preventDefault();
-  const form = event.currentTarget;
-  const email = form.email.value.trim();
-  const password = form.password.value;
+  const form = event.currentTarget || document.getElementById('area-auth-form');
+  if (!form) return;
+  
+  const emailInput = form.querySelector('input[name="email"]') || form.email;
+  const passwordInput = form.querySelector('input[name="password"]') || form.password;
+  
+  const email = emailInput?.value?.trim() || '';
+  const password = passwordInput?.value || '';
+  
   if (!email || !password) {
     showToast('Inserisci email e password.', 'error');
     return;
   }
+  
   try {
-    form.querySelector('button[type="submit"]').disabled = true;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+    
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
+    
     showToast('Accesso effettuato.', 'success');
     await bootstrapUserArea();
     setTimeout(() => { setActiveTab('profile'); }, 100);
@@ -725,15 +771,21 @@ async function handleLoginSubmit(event) {
     Logger.error('UserArea', 'login error', err);
     showToast(err.message || 'Credenziali non valide.', 'error');
   } finally {
-    form.querySelector('button[type="submit"]').disabled = false;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = false;
   }
 }
 
 async function handleSignupSubmit(event) {
   event.preventDefault();
-  const form = event.currentTarget;
-  const email = form.email.value.trim();
-  const password = form.password.value;
+  const form = event.currentTarget || document.getElementById('area-auth-form');
+  if (!form) return;
+  
+  const emailInput = form.querySelector('input[name="email"]') || form.email;
+  const passwordInput = form.querySelector('input[name="password"]') || form.password;
+  
+  const email = emailInput?.value?.trim() || '';
+  const password = passwordInput?.value || '';
   
   if (!email || !password) {
     showToast('Inserisci email e password.', 'error');
@@ -746,8 +798,11 @@ async function handleSignupSubmit(event) {
   }
   
   try {
-    form.querySelector('button[type="submit"]').disabled = true;
-    form.querySelector('button[type="submit"]').textContent = 'Registrazione...';
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Registrazione...';
+    }
     
     // 1. Crea utente in Supabase Auth
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
@@ -764,7 +819,7 @@ async function handleSignupSubmit(event) {
       throw new Error('Errore durante la creazione dell\'account.');
     }
     
-    // 2. Crea profilo utente con ruolo trial di default
+    // 2. Crea profilo utente
     const { error: profileError } = await supabase
       .from('user_profiles')
       .insert({
@@ -793,13 +848,19 @@ async function handleSignupSubmit(event) {
       Logger.warn('UserArea', 'role creation error (may already exist)', roleError);
     }
     
-    showToast('Registrazione completata! Controlla la tua email per verificare l\'account.', 'success');
+    showToast('Registrazione completata! Account creato con ruolo Guest.', 'success');
     
     // Auto-login dopo registrazione
     const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
     if (!signInError) {
       await bootstrapUserArea();
-      setTimeout(() => { setActiveTab('profile'); }, 100);
+      setTimeout(() => { 
+        setActiveTab('profile');
+        showToast('Benvenuto! Puoi attivare una prova gratuita di 14 giorni nella sezione Abbonamento.', 'info');
+      }, 100);
+    } else {
+      // Se auto-login fallisce, mostra messaggio
+      showToast('Account creato. Effettua il login per continuare.', 'info');
     }
   } catch (err) {
     Logger.error('UserArea', 'signup error', err);
@@ -808,7 +869,7 @@ async function handleSignupSubmit(event) {
     const submitBtn = form.querySelector('button[type="submit"]');
     if (submitBtn) {
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Registrati';
+      submitBtn.textContent = 'Crea account';
     }
   }
 }
