@@ -1,5 +1,5 @@
 // /api/send-email-backup.js
-// API Vercel - Invio email backup (Resend)
+// API Vercel - Invio email backup (Brevo)
 
 export default async function handler(req, res) {
   // CORS headers
@@ -28,37 +28,42 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'To, subject e html/text richiesti' });
     }
     
-    // Usa Resend API
-    const RESEND_API_KEY = process.env.RESEND_API_KEY;
-    if (!RESEND_API_KEY) {
-      return res.status(500).json({ error: 'RESEND_API_KEY non configurata' });
+    // Usa Brevo API
+    const BREVO_API_KEY = process.env.BREVO_API_KEY;
+    if (!BREVO_API_KEY) {
+      return res.status(500).json({ error: 'BREVO_API_KEY non configurata' });
     }
     
-    const response = await fetch('https://api.resend.com/emails', {
+    // Converti 'to' in array se necessario
+    const toArray = Array.isArray(to) ? to : [to];
+    const toEmails = toArray.map(email => ({ email }));
+    
+    // Brevo API format
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'api-key': BREVO_API_KEY,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'Tradelia AI <noreply@tradelia.org>',
-        to: Array.isArray(to) ? to : [to],
+        sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI' },
+        to: toEmails,
         subject: subject,
-        html: html || text,
-        text: text || html
+        ...(html ? { htmlContent: html } : {}),
+        ...(text ? { textContent: text } : {})
       })
     });
     
     if (!response.ok) {
       const error = await response.text();
-      console.error('[Send Email] Errore Resend:', error);
+      console.error('[Send Email] Errore Brevo:', error);
       return res.status(500).json({ error: 'Errore invio email', details: error });
     }
     
     const data = await response.json();
     console.log('[Send Email] Email inviata:', data);
     
-    return res.status(200).json({ success: true, id: data.id });
+    return res.status(200).json({ success: true, id: data.messageId || 'sent' });
   } catch (err) {
     console.error('[Send Email] Errore:', err);
     return res.status(500).json({ error: 'Errore server', details: err.message });

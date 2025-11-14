@@ -87,23 +87,23 @@ if (PROFILE_RESET) {
   PROFILE_RESET.addEventListener('click', onProfileReset);
 }
 
-// Security forms
-const CHANGE_EMAIL_FORM = document.getElementById('change-email-form');
+// Event listeners per form sicurezza
 const CHANGE_PASSWORD_FORM = document.getElementById('change-password-form');
+const CHANGE_EMAIL_FORM = document.getElementById('change-email-form');
 
-if (CHANGE_EMAIL_FORM) {
-  CHANGE_EMAIL_FORM.addEventListener('submit', handleChangeEmail);
-}
 if (CHANGE_PASSWORD_FORM) {
   CHANGE_PASSWORD_FORM.addEventListener('submit', handleChangePassword);
 }
 
+if (CHANGE_EMAIL_FORM) {
+  CHANGE_EMAIL_FORM.addEventListener('submit', handleChangeEmail);
+}
 async function init() {
   siteHeader.mount(document.getElementById('site-header-slot'), { showExport: false });
   document.getElementById('footer-year').textContent = new Date().getFullYear();
   setupTabs();
   
-  // Gestisci redirect dopo reset password (controlla hash URL)
+  // Check for password reset token in URL hash
   await handlePasswordResetRedirect();
   
   await restoreSession();
@@ -1936,168 +1936,221 @@ async function fetchCredits() {
   }
 }
 
-// ===== GESTIONE RESET PASSWORD REDIRECT =====
+// ===== PASSWORD RESET REDIRECT =====
 async function handlePasswordResetRedirect() {
-  // Controlla se c'è un token di reset password nell'URL hash
-  const hashParams = new URLSearchParams(window.location.hash.substring(1));
-  const accessToken = hashParams.get('access_token');
-  const type = hashParams.get('type');
+  // Check if URL has hash fragments (Supabase adds access_token, etc. after password reset)
+  const hash = window.location.hash;
+  if (!hash) return;
   
+  // Parse hash fragments
+  const params = new URLSearchParams(hash.substring(1));
+  const accessToken = params.get('access_token');
+  const type = params.get('type');
+  
+  // If this is a password recovery redirect
   if (type === 'recovery' && accessToken) {
-    // L'utente ha cliccato sul link di reset password
-    // Supabase gestisce automaticamente il token, ma dobbiamo mostrare il form per nuova password
-    showToast('Imposta una nuova password per il tuo account.', 'info');
-    // Rimuovi hash dall'URL
+    Logger.debug('UserArea', 'Password reset token detected');
+    
+    // Clear the hash from URL
     window.history.replaceState(null, '', window.location.pathname);
-    // Mostra tab profilo con form password
-    setActiveTab('profile');
-    // Scrolla alla sezione password
-    setTimeout(() => {
-      const passwordForm = document.getElementById('change-password-form');
-      if (passwordForm) {
-        passwordForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }, 300);
-  }
-}
-
-// ===== CAMBIO EMAIL =====
-async function handleChangeEmail(event) {
-  event.preventDefault();
-  if (!state.user) {
-    showToast('Devi essere autenticato per cambiare l\'email.', 'error');
-    return;
-  }
-  
-  const form = event.currentTarget;
-  const newEmail = form.querySelector('#new-email-input').value.trim();
-  
-  if (!newEmail) {
-    showToast('Inserisci un nuovo indirizzo email.', 'error');
-    return;
-  }
-  
-  if (newEmail === state.user.email) {
-    showToast('Il nuovo indirizzo email deve essere diverso da quello attuale.', 'error');
-    return;
-  }
-  
-  const submitBtn = form.querySelector('button[type="submit"]');
-  const originalText = submitBtn.textContent;
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Invio in corso...';
-  
-  try {
-    // Supabase invia email di conferma al nuovo indirizzo
-    const { error } = await supabase.auth.updateUser(
-      { email: newEmail },
-      { emailRedirectTo: `${window.location.origin}/user/` }
-    );
     
-    if (error) throw error;
+    // Wait for session to be restored
+    await restoreSession();
     
-    showToast('Email di conferma inviata al nuovo indirizzo. Controlla la tua casella email e clicca sul link per completare il cambio.', 'success');
-    form.querySelector('#new-email-input').value = '';
-  } catch (err) {
-    Logger.error('UserArea', 'change email error', err);
-    
-    // Gestione rate limit per email
-    let errorMessage = err.message || 'Errore durante il cambio email. Riprova.';
-    if (err.message && (
-      err.message.toLowerCase().includes('rate limit') ||
-      err.message.toLowerCase().includes('too many requests') ||
-      err.message.toLowerCase().includes('email rate limit')
-    )) {
-      errorMessage = 'Troppe richieste di cambio email. Attendi qualche minuto prima di riprovare.';
+    // If user is now logged in, show password change form
+    if (state.user) {
+      showToast('Inserisci una nuova password.', 'info');
+      setActiveTab('profile');
+      
+      // Scroll to password form and focus it
+      setTimeout(() => {
+        const passwordForm = document.getElementById('change-password-form');
+        if (passwordForm) {
+          passwordForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          const newPasswordInput = document.getElementById('new-password');
+          if (newPasswordInput) {
+            newPasswordInput.focus();
+          }
+        }
+      }, 300);
     }
-    
-    showToast(errorMessage, 'error');
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = originalText;
   }
 }
 
-// ===== CAMBIO PASSWORD =====
+// ===== CHANGE PASSWORD =====
 async function handleChangePassword(event) {
   event.preventDefault();
   if (!state.user) {
-    showToast('Devi essere autenticato per cambiare la password.', 'error');
+    showToast('Effettua l\'accesso per cambiare la password.', 'error');
     return;
   }
   
   const form = event.currentTarget;
-  const currentPassword = form.querySelector('#current-password-input').value;
-  const newPassword = form.querySelector('#new-password-input').value;
-  const confirmPassword = form.querySelector('#confirm-password-input').value;
+  const newPassword = document.getElementById('new-password').value;
+  const confirmPassword = document.getElementById('confirm-password').value;
+  const errorEl = document.getElementById('change-password-error');
+  const successEl = document.getElementById('change-password-success');
+  const submitBtn = document.getElementById('change-password-btn');
   
-  if (!currentPassword || !newPassword || !confirmPassword) {
-    showToast('Compila tutti i campi.', 'error');
-    return;
+  // Reset messages
+  if (errorEl) {
+    errorEl.hidden = true;
+    errorEl.textContent = '';
+  }
+  if (successEl) {
+    successEl.hidden = true;
+    successEl.textContent = '';
   }
   
-  if (newPassword.length < 8) {
-    showToast('La nuova password deve essere di almeno 8 caratteri.', 'error');
+  // Validation
+  if (!newPassword || newPassword.length < 8) {
+    if (errorEl) {
+      errorEl.hidden = false;
+      errorEl.textContent = 'La password deve contenere almeno 8 caratteri.';
+    }
     return;
   }
   
   if (newPassword !== confirmPassword) {
-    showToast('Le password non corrispondono.', 'error');
+    if (errorEl) {
+      errorEl.hidden = false;
+      errorEl.textContent = 'Le password non corrispondono.';
+    }
     return;
   }
   
-  const submitBtn = form.querySelector('button[type="submit"]');
-  const originalText = submitBtn.textContent;
   submitBtn.disabled = true;
   submitBtn.textContent = 'Aggiornamento...';
   
   try {
-    // Se c'è un token di recovery nell'URL, usa quello (dopo reset password)
-    const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    const accessToken = hashParams.get('access_token');
-    const type = hashParams.get('type');
-    
-    if (type === 'recovery' && accessToken) {
-      // Reset password tramite token (dopo click su link email)
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword
-      });
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword
+    });
     
     if (error) throw error;
     
-      showToast('Password aggiornata con successo!', 'success');
-      // Rimuovi hash dall'URL
-      window.history.replaceState(null, '', window.location.pathname);
-      // Pulisci form
-      form.reset();
-    } else {
-      // Cambio password normale (richiede password attuale)
-      // Verifica password attuale facendo login
-      const { error: verifyError } = await supabase.auth.signInWithPassword({
-        email: state.user.email,
-        password: currentPassword
-      });
-      
-      if (verifyError) {
-        throw new Error('Password attuale non corretta.');
-      }
-      
-      // Se la verifica è ok, aggiorna password
-      const { error: updateError } = await supabase.auth.updateUser({
-        password: newPassword
-      });
-      
-      if (updateError) throw updateError;
-      
-      showToast('Password aggiornata con successo!', 'success');
-      // Pulisci form
-      form.reset();
+    // Success
+    if (successEl) {
+      successEl.hidden = false;
+      successEl.textContent = 'Password aggiornata con successo!';
     }
+    
+    // Clear form
+    form.reset();
+    
+    // Clear URL hash if present
+    if (window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+    
+    showToast('Password aggiornata con successo!', 'success');
+    
+    Logger.debug('UserArea', 'Password updated successfully');
   } catch (err) {
     Logger.error('UserArea', 'change password error', err);
-    showToast(err.message || 'Errore durante il cambio password. Riprova.', 'error');
+    let errorMessage = 'Errore durante l\'aggiornamento della password.';
+    
+    if (err.message) {
+      if (err.message.includes('rate limit')) {
+        errorMessage = 'Troppe richieste. Attendi qualche minuto e riprova.';
+      } else {
+        errorMessage = err.message;
+      }
+    }
+    
+    if (errorEl) {
+      errorEl.hidden = false;
+      errorEl.textContent = errorMessage;
+    }
   } finally {
     submitBtn.disabled = false;
-    submitBtn.textContent = originalText;
+    submitBtn.textContent = 'Cambia password';
+  }
+}
+
+// ===== CHANGE EMAIL =====
+async function handleChangeEmail(event) {
+  event.preventDefault();
+  if (!state.user) {
+    showToast('Effettua l\'accesso per cambiare l\'email.', 'error');
+    return;
+  }
+  
+  const form = event.currentTarget;
+  const newEmail = document.getElementById('new-email').value.trim();
+  const errorEl = document.getElementById('change-email-error');
+  const successEl = document.getElementById('change-email-success');
+  const submitBtn = document.getElementById('change-email-btn');
+  
+  // Reset messages
+  if (errorEl) {
+    errorEl.hidden = true;
+    errorEl.textContent = '';
+  }
+  if (successEl) {
+    successEl.hidden = true;
+    successEl.textContent = '';
+  }
+  
+  // Validation
+  if (!newEmail || !newEmail.includes('@')) {
+    if (errorEl) {
+      errorEl.hidden = false;
+      errorEl.textContent = 'Inserisci un indirizzo email valido.';
+    }
+    return;
+  }
+  
+  if (newEmail === state.user.email) {
+    if (errorEl) {
+      errorEl.hidden = false;
+      errorEl.textContent = 'Questa è già la tua email attuale.';
+    }
+    return;
+  }
+  
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Aggiornamento...';
+  
+  try {
+    const { error } = await supabase.auth.updateUser({
+      email: newEmail
+    });
+    
+    if (error) throw error;
+    
+    // Success - email change requires confirmation
+    if (successEl) {
+      successEl.hidden = false;
+      successEl.textContent = 'Email aggiornata! Controlla la nuova casella email per confermare il cambio.';
+    }
+    
+    // Clear form
+    form.reset();
+    
+    showToast('Email aggiornata! Controlla la nuova casella email per confermare.', 'success');
+    
+    Logger.debug('UserArea', 'Email update requested', { newEmail });
+  } catch (err) {
+    Logger.error('UserArea', 'change email error', err);
+    let errorMessage = 'Errore durante l\'aggiornamento dell\'email.';
+    
+    if (err.message) {
+      if (err.message.includes('rate limit')) {
+        errorMessage = 'Troppe richieste. Attendi qualche minuto e riprova.';
+      } else if (err.message.includes('already registered')) {
+        errorMessage = 'Questa email è già associata a un altro account.';
+      } else {
+        errorMessage = err.message;
+      }
+    }
+    
+    if (errorEl) {
+      errorEl.hidden = false;
+      errorEl.textContent = errorMessage;
+    }
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Cambia email';
   }
 }
