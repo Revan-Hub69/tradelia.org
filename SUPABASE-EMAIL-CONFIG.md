@@ -66,17 +66,152 @@
 
 ---
 
-### 3. Configurare Sender Email (Opzionale)
+### 3. Configurare Resend come SMTP Provider
 
-**Passo 1: Vai a SMTP Settings**
-1. Menu laterale: **Settings** → **Auth** → **SMTP Settings**
+**Perché Resend?**
+- Email da dominio personalizzato (`noreply@tradelia.org` invece di `noreply@supabase.io`)
+- Branding completo nelle email
+- Migliore deliverability
+- Analytics e tracking email
+
+---
+
+#### **Passo 1: Crea Account Resend**
+
+1. Vai su https://resend.com
+2. Crea un account (gratuito fino a 3.000 email/mese)
+3. Verifica la tua email
+
+---
+
+#### **Passo 2: Ottieni API Key**
+
+1. Vai su **Resend Dashboard** → **API Keys**
+2. Clicca **Create API Key**
+3. Nome: `Tradelia Supabase SMTP`
+4. Permissions: **Sending access**
+5. Copia l'API Key (inizia con `re_`)
+6. **⚠️ IMPORTANTE**: Salvala subito, non la vedrai più!
+
+**Esempio API Key**: `re_1234567890abcdefghijklmnopqrstuvwxyz`
+
+---
+
+#### **Passo 3: Verifica Dominio in Resend**
+
+**Per inviare email da `noreply@tradelia.org`:**
+
+1. Vai su **Resend Dashboard** → **Domains**
+2. Clicca **Add Domain**
+3. Inserisci: `tradelia.org` (o `www.tradelia.org`)
+4. Resend ti darà dei record DNS da aggiungere:
+   - **SPF Record**: `v=spf1 include:resend.com ~all`
+   - **DKIM Record**: (chiave pubblica fornita da Resend)
+   - **DMARC Record**: (opzionale ma consigliato)
+
+5. **Aggiungi i record DNS**:
+   - Vai al tuo provider DNS (es. Cloudflare, Vercel, etc.)
+   - Aggiungi i record TXT forniti da Resend
+   - Attendi la verifica (può richiedere fino a 48h, di solito pochi minuti)
+
+6. **Verifica dominio**:
+   - Resend verificherà automaticamente i record DNS
+   - Quando vedi "Verified" ✅, il dominio è pronto
+
+**⚠️ NOTA**: Se non verifichi il dominio, puoi comunque usare Resend ma solo con `@resend.dev` (es. `noreply@resend.dev`)
+
+---
+
+#### **Passo 4: Configura Resend in Supabase**
+
+1. Vai su **Supabase Dashboard** → **Settings** → **Auth** → **SMTP Settings**
 2. Oppure: **Project Settings** → **Auth** → **SMTP**
 
-**Passo 2: Configura SMTP personalizzato (opzionale)**
-- Se vuoi usare un dominio email personalizzato (es. `noreply@tradelia.org`)
-- Configura SMTP con provider email (SendGrid, Mailgun, Resend, etc.)
+3. **Abilita Custom SMTP**: Attiva il toggle "Enable Custom SMTP"
 
-**Nota**: Se non configuri SMTP, Supabase usa il suo servizio email predefinito.
+4. **Inserisci le credenziali Resend**:
+   - **SMTP Host**: `smtp.resend.com`
+   - **SMTP Port**: `587` (o `465` per SSL)
+   - **SMTP User**: `resend` (fisso, non la tua API key)
+   - **SMTP Password**: `[LA TUA API KEY RESEND]` (es. `re_1234567890...`)
+   - **Sender email**: 
+     - Se dominio verificato: `noreply@tradelia.org`
+     - Se dominio NON verificato: `Tradelia <noreply@resend.dev>`
+   - **Sender name**: `Tradelia` (opzionale)
+
+5. **Test SMTP**: Clicca "Send test email" per verificare la configurazione
+
+6. **Salva**: Clicca "Save"
+
+---
+
+#### **Passo 5: Configura Variabile d'Ambiente (per API)**
+
+**Per le API che usano Resend direttamente** (`/api/send-email.js`, `/api/send-email-backup.js`):
+
+1. **Vercel**:
+   - Vai su **Vercel Dashboard** → **Project** → **Settings** → **Environment Variables**
+   - Aggiungi:
+     - **Key**: `RESEND_API_KEY`
+     - **Value**: `re_1234567890...` (la tua API key)
+     - **Environments**: ✅ Production, ✅ Preview, ✅ Development
+
+2. **Cloudflare Pages**:
+   - Vai su **Cloudflare Dashboard** → **Pages** → **Project** → **Settings** → **Environment Variables**
+   - Aggiungi:
+     - **Variable name**: `RESEND_API_KEY`
+     - **Value**: `re_1234567890...` (la tua API key)
+     - **Environments**: ✅ Production, ✅ Preview
+
+---
+
+## 📋 Checklist Resend
+
+- [ ] **Account Resend** creato e verificato
+- [ ] **API Key Resend** generata e salvata
+- [ ] **Dominio verificato** in Resend (opzionale ma consigliato)
+- [ ] **SMTP configurato** in Supabase con credenziali Resend
+- [ ] **Test email** inviata con successo da Supabase
+- [ ] **Variabile `RESEND_API_KEY`** aggiunta in Vercel/Cloudflare Pages
+- [ ] **Email di verifica** arrivano da `noreply@tradelia.org` (o `@resend.dev`)
+
+---
+
+## 🔍 Verifica Configurazione Resend
+
+1. **Test da Supabase**:
+   - Vai su **Supabase Dashboard** → **Auth** → **Users**
+   - Crea un utente di test
+   - Verifica che l'email arrivi da `noreply@tradelia.org` (o `@resend.dev`)
+
+2. **Test da API**:
+   - Chiama `/api/send-email` con POST
+   - Verifica che l'email arrivi correttamente
+
+3. **Controlla Resend Dashboard**:
+   - Vai su **Resend Dashboard** → **Emails**
+   - Dovresti vedere tutte le email inviate
+   - Controlla status (delivered, bounced, etc.)
+
+---
+
+## 📝 Note Tecniche Resend
+
+- **SMTP User**: Sempre `resend` (non la tua API key)
+- **SMTP Password**: La tua API Key Resend completa
+- **Porta**: `587` (TLS) o `465` (SSL) - entrambe funzionano
+- **Rate Limit**: Piano gratuito = 3.000 email/mese
+- **Dominio**: Se non verifichi il dominio, puoi usare `@resend.dev` temporaneamente
+- **API Key**: Usa la stessa API Key sia per SMTP Supabase che per le API dirette
+
+---
+
+## 🔗 Link Utili Resend
+
+- [Resend Dashboard](https://resend.com/dashboard)
+- [Resend API Docs](https://resend.com/docs/api-reference)
+- [Resend Domain Verification](https://resend.com/docs/dashboard/domains/introduction)
+- [Supabase SMTP Configuration](https://supabase.com/docs/guides/auth/auth-smtp)
 
 ---
 
