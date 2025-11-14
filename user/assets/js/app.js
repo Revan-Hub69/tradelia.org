@@ -878,25 +878,38 @@ async function handleSignupSubmit(event) {
       Logger.warn('UserArea', 'role creation error (may already exist)', roleError);
     }
     
-    showToast('Registrazione completata! Account creato con ruolo Guest.', 'success');
+    // Verifica se l'email è già confermata
+    const isEmailConfirmed = authData.user.email_confirmed_at !== null;
     
-    // Auto-login dopo registrazione con il NUOVO account
-    // Assicurati che non ci siano sessioni residue
-    await supabase.auth.signOut();
-    await new Promise(resolve => setTimeout(resolve, 200));
-    
-    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-    if (!signInError && signInData?.user) {
-      Logger.debug('UserArea', 'Auto-login riuscito dopo signup', { userId: signInData.user.id, email: signInData.user.email });
-      await bootstrapUserArea();
-      setTimeout(() => { 
-        setActiveTab('profile');
-        showToast('Benvenuto! Puoi attivare una prova gratuita di 14 giorni nella sezione Abbonamento.', 'info');
-      }, 100);
+    if (isEmailConfirmed) {
+      showToast('Registrazione completata! Account creato con ruolo Guest.', 'success');
+      
+      // Auto-login dopo registrazione con il NUOVO account (solo se email confermata)
+      // Assicurati che non ci siano sessioni residue
+      await supabase.auth.signOut();
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+      if (!signInError && signInData?.user) {
+        Logger.debug('UserArea', 'Auto-login riuscito dopo signup', { userId: signInData.user.id, email: signInData.user.email });
+        await bootstrapUserArea();
+        setTimeout(() => { 
+          setActiveTab('profile');
+          showToast('Benvenuto! Puoi attivare una prova gratuita di 14 giorni nella sezione Abbonamento.', 'info');
+        }, 100);
+      } else {
+        // Se auto-login fallisce, mostra messaggio
+        Logger.warn('UserArea', 'Auto-login fallito dopo signup', signInError);
+        showToast('Account creato. Effettua il login per continuare.', 'info');
+      }
     } else {
-      // Se auto-login fallisce, mostra messaggio
-      Logger.warn('UserArea', 'Auto-login fallito dopo signup', signInError);
-      showToast('Account creato. Effettua il login per continuare.', 'info');
+      // Email non confermata - non fare auto-login
+      showToast('Account creato! Controlla la tua email e clicca sul link di conferma per attivare l\'account.', 'info');
+      
+      // Mostra messaggio più dettagliato
+      setTimeout(() => {
+        showToast('Dopo aver confermato l\'email, potrai accedere con le tue credenziali.', 'info');
+      }, 2000);
     }
   } catch (err) {
     Logger.error('UserArea', 'signup error', err);

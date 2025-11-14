@@ -320,27 +320,42 @@ async function handleSignup(event) {
       // Continua anche se fallisce (l'utente può creare il ruolo dopo)
     }
     
-    showToast('Registrazione completata! Account creato con ruolo Guest.', 'success');
+    // Verifica se l'email è già confermata
+    const isEmailConfirmed = authData.user.email_confirmed_at !== null;
     
-    // Auto-login dopo registrazione con il NUOVO account
-    // Assicurati che non ci siano sessioni residue
-    await supabase.auth.signOut();
-    await new Promise(resolve => setTimeout(resolve, 200));
-    
-    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-    if (!signInError && signInData?.user) {
-      Logger.debug('AuthModal', 'Auto-login riuscito dopo signup', { userId: signInData.user.id, email: signInData.user.email });
-      closeAfterDelay();
-      // Forza reload completo per assicurarsi che la nuova sessione sia caricata
-      setTimeout(() => {
-        window.location.href = '/user/';
-      }, 300);
+    if (isEmailConfirmed) {
+      showToast('Registrazione completata! Account creato con ruolo Guest.', 'success');
+      
+      // Auto-login dopo registrazione con il NUOVO account (solo se email confermata)
+      // Assicurati che non ci siano sessioni residue
+      await supabase.auth.signOut();
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+      if (!signInError && signInData?.user) {
+        Logger.debug('AuthModal', 'Auto-login riuscito dopo signup', { userId: signInData.user.id, email: signInData.user.email });
+        closeAfterDelay();
+        // Forza reload completo per assicurarsi che la nuova sessione sia caricata
+        setTimeout(() => {
+          window.location.href = '/user/';
+        }, 300);
+      } else {
+        // Se auto-login fallisce, mostra messaggio
+        Logger.warn('AuthModal', 'Auto-login fallito dopo signup', signInError);
+        showToast('Account creato. Effettua il login per continuare.', 'info');
+        state.mode = 'login';
+        updateForms();
+      }
     } else {
-      // Se auto-login fallisce, mostra messaggio
-      Logger.warn('AuthModal', 'Auto-login fallito dopo signup', signInError);
-      showToast('Account creato. Effettua il login per continuare.', 'info');
+      // Email non confermata - non fare auto-login
+      showToast('Account creato! Controlla la tua email e clicca sul link di conferma per attivare l\'account.', 'info');
       state.mode = 'login';
       updateForms();
+      
+      // Mostra messaggio più dettagliato
+      setTimeout(() => {
+        showToast('Dopo aver confermato l\'email, potrai accedere con le tue credenziali.', 'info');
+      }, 2000);
     }
   } catch (err) {
     Logger.error('AuthModal', 'signup error', err);
