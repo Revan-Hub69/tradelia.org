@@ -259,7 +259,17 @@ async function handleSignup(event) {
       }
     });
     
-    if (signUpError) throw signUpError;
+    if (signUpError) {
+      // Log dettagliato dell'errore Supabase
+      console.error('[AuthModal] Supabase signup error:', {
+        message: signUpError.message,
+        status: signUpError.status,
+        code: signUpError.code,
+        name: signUpError.name,
+        error: signUpError
+      });
+      throw signUpError;
+    }
     
     if (!authData.user) {
       throw new Error('Errore durante la creazione dell\'account.');
@@ -448,8 +458,13 @@ async function handleSignup(event) {
       errorMessage = 'Tabelle mancanti. Esegui lo script supabase/setup-complete-schema.sql in Supabase SQL Editor.';
     } else if (errCode === '23514' || errMsgLower.includes('check constraint') || errMsgLower.includes('violates check constraint')) {
       errorMessage = 'Errore constraint. Esegui supabase/migration-add-guest-role.sql per aggiungere il ruolo "guest".';
-    } else if (err.status === 500 || errCode === 'PGRST') {
-      errorMessage = 'Errore server. Verifica lo schema Supabase: esegui supabase/setup-complete-schema.sql.';
+    } else if (err.status === 500 || errCode === 'PGRST' || errMsgLower.includes('unexpected_failure')) {
+      // Errore 500 da Supabase Auth - probabilmente SMTP o configurazione
+      if (errMsgLower.includes('email') || errMsgLower.includes('smtp') || errMsgLower.includes('mail')) {
+        errorMessage = 'Errore invio email. Disabilita email verification in Supabase (Auth → Settings) oppure configura SMTP correttamente.';
+      } else {
+        errorMessage = 'Errore server Supabase. Verifica: 1) Email verification disabilitata O 2) SMTP configurato correttamente. Vedi SUPABASE-500-SIGNUP-FIX.md';
+      }
     }
     
     showToast(errorMessage, 'error');
