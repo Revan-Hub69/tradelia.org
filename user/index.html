@@ -9,8 +9,9 @@
   <link rel="stylesheet" href="/user/assets/css/user-area.css">
   <!-- NOTA: tokens.css viene caricato PRIMA di user-area.css, quindi gli stili .btn in tokens.css hanno precedenza -->
   <script>
-    // Configurazione Lemon Squeezy (da variabili ambiente o config)
-    window.LEMONSQUEEZY_STORE_ID = 'YOUR_STORE_ID'; // TODO: Sostituisci con Store ID reale
+    // Configurazione Paddle (caricato in pricing.html)
+    // Il checkout Paddle verrà gestito tramite SDK caricato in pricing.html
+    // Se necessario, puoi caricare qui: <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
   </script>
 </head>
 <body>
@@ -158,10 +159,145 @@
               <span class="form-hint">Formati supportati: PNG, JPG. Dimensione massima: 2 MB. L'immagine sarà visibile nel tuo profilo pubblico.</span>
             </label>
             <label>
+              Tipo account
+              <select id="profile-user-type" required>
+                <option value="individual">Individuale</option>
+                <option value="business">Business/Azienda</option>
+              </select>
+              <span class="form-hint">Seleziona il tipo di account. I dati business sono necessari per la fatturazione.</span>
+            </label>
+            
+            <label>
               Nome visualizzato
               <input type="text" id="profile-display-name" maxlength="80" placeholder="Es. Mario Rossi o Team Analisi Quantitativa">
               <span class="form-hint">Nome utilizzato internamente nella piattaforma.</span>
             </label>
+            
+            <!-- Sezione Dati Business (visibile solo se user_type = business) -->
+            <div id="profile-business-section" style="display: none; margin-top: 1.5rem; padding: 1.5rem; background: var(--surface-elev); border: 1px solid var(--br-card); border-radius: var(--radius-lg);">
+              <h4 style="margin: 0 0 1rem 0; font-size: var(--fs-16); font-weight: 600;">Dati Aziendali (per fatturazione Xolo)</h4>
+              
+              <label>
+                Nome/Ragione Sociale *
+                <input type="text" id="profile-business-name" maxlength="200" placeholder="Es. Acme S.r.l.">
+                <span class="form-hint">Ragione sociale o nome azienda completo.</span>
+              </label>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <label>
+                  Paese *
+                  <select id="profile-business-country" required>
+                    <option value="">Seleziona</option>
+                    <option value="IT">Italia</option>
+                    <option value="FR">Francia</option>
+                    <option value="DE">Germania</option>
+                    <option value="ES">Spagna</option>
+                    <option value="GB">Regno Unito</option>
+                    <option value="US">Stati Uniti</option>
+                    <option value="CH">Svizzera</option>
+                    <option value="AT">Austria</option>
+                    <option value="BE">Belgio</option>
+                    <option value="NL">Paesi Bassi</option>
+                    <option value="PT">Portogallo</option>
+                    <option value="PL">Polonia</option>
+                    <option value="SE">Svezia</option>
+                    <option value="NO">Norvegia</option>
+                    <option value="DK">Danimarca</option>
+                    <option value="FI">Finlandia</option>
+                    <option value="IE">Irlanda</option>
+                    <option value="LU">Lussemburgo</option>
+                    <option value="GR">Grecia</option>
+                    <option value="CZ">Repubblica Ceca</option>
+                    <option value="RO">Romania</option>
+                    <option value="HU">Ungheria</option>
+                    <option value="BG">Bulgaria</option>
+                    <option value="HR">Croazia</option>
+                    <option value="SK">Slovacchia</option>
+                    <option value="SI">Slovenia</option>
+                    <option value="EE">Estonia</option>
+                    <option value="LV">Lettonia</option>
+                    <option value="LT">Lituania</option>
+                    <option value="MT">Malta</option>
+                    <option value="CY">Cipro</option>
+                  </select>
+                </label>
+                
+                <label>
+                  Lingua fatturazione
+                  <select id="profile-business-language">
+                    <option value="it">Italiano</option>
+                    <option value="en">Inglese</option>
+                    <option value="fr">Francese</option>
+                    <option value="de">Tedesco</option>
+                    <option value="es">Spagnolo</option>
+                  </select>
+                </label>
+              </div>
+              
+              <label>
+                Indirizzo completo *
+                <input type="text" id="profile-business-address" maxlength="200" placeholder="Es. Via dei Fiori 2">
+                <span class="form-hint">Via, numero civico e dettagli.</span>
+              </label>
+              
+              <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+                <label>
+                  Città *
+                  <input type="text" id="profile-business-city" maxlength="100" placeholder="Es. Milano">
+                </label>
+                
+                <label>
+                  CAP *
+                  <input type="text" id="profile-business-zip" maxlength="20" placeholder="Es. 20100">
+                </label>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <label>
+                  Partita IVA (con prefisso paese)
+                  <input type="text" id="profile-business-vat" maxlength="50" placeholder="Es. IT12345678901">
+                  <span class="form-hint">Includi il prefisso del paese (es. IT, FR, DE).</span>
+                </label>
+                
+                <label>
+                  Codice Fiscale
+                  <input type="text" id="profile-business-tax-id" maxlength="50" placeholder="Es. RSSMRA80A01H501U">
+                  <span class="form-hint">Se diverso dalla Partita IVA.</span>
+                </label>
+              </div>
+              
+              <label>
+                Giorni di scadenza fattura
+                <input type="number" id="profile-business-invoice-days" min="0" max="365" value="0" placeholder="0">
+                <span class="form-hint">Numero di giorni per la scadenza fattura (0 = immediata).</span>
+              </label>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--br-card);">
+                <h5 style="margin: 0 0 0.5rem 0; font-size: var(--fs-14); font-weight: 600; grid-column: 1 / -1;">Referente Aziendale</h5>
+                
+                <label>
+                  Nome referente *
+                  <input type="text" id="profile-business-contact-firstname" maxlength="100" placeholder="Es. Mario">
+                </label>
+                
+                <label>
+                  Cognome referente *
+                  <input type="text" id="profile-business-contact-lastname" maxlength="100" placeholder="Es. Rossi">
+                </label>
+                
+                <label style="grid-column: 1 / -1;">
+                  Email referente *
+                  <input type="email" id="profile-business-contact-email" maxlength="200" placeholder="Es. mario.rossi@azienda.com">
+                  <span class="form-hint">Email del referente per comunicazioni e fatture.</span>
+                </label>
+              </div>
+              
+              <label style="margin-top: 1rem;">
+                Commenti aggiuntivi
+                <textarea id="profile-business-comments" rows="3" maxlength="500" placeholder="Note aggiuntive per la fatturazione..."></textarea>
+                <span class="form-hint">Note opzionali per la gestione del cliente.</span>
+              </label>
+            </div>
             
             <!-- Preferenze interne -->
             <div class="profile-preferences">

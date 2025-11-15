@@ -1,7 +1,7 @@
 import { supabase, AVATAR_BUCKET } from '/report/assets/js/supabase-client.js';
 import Logger from '/report/assets/js/utils/logger.js';
 import { siteHeader } from '/report/assets/js/components/site-header.js';
-import { openLemonSqueezyUpgrade, openLemonSqueezyCreditsCheckout } from './lemonsqueezy-checkout.js';
+import { openPaddleUpgrade } from './paddle-checkout.js';
 
 const HERO = document.getElementById('user-hero');
 const AVATAR = document.getElementById('user-avatar');
@@ -24,6 +24,21 @@ const PANELS = {
 
 const PROFILE_FORM = document.getElementById('profile-form');
 const PROFILE_NAME_FIELD = document.getElementById('profile-display-name');
+const PROFILE_USER_TYPE = document.getElementById('profile-user-type');
+const PROFILE_BUSINESS_SECTION = document.getElementById('profile-business-section');
+const PROFILE_BUSINESS_NAME = document.getElementById('profile-business-name');
+const PROFILE_BUSINESS_COUNTRY = document.getElementById('profile-business-country');
+const PROFILE_BUSINESS_LANGUAGE = document.getElementById('profile-business-language');
+const PROFILE_BUSINESS_ADDRESS = document.getElementById('profile-business-address');
+const PROFILE_BUSINESS_CITY = document.getElementById('profile-business-city');
+const PROFILE_BUSINESS_ZIP = document.getElementById('profile-business-zip');
+const PROFILE_BUSINESS_VAT = document.getElementById('profile-business-vat');
+const PROFILE_BUSINESS_TAX_ID = document.getElementById('profile-business-tax-id');
+const PROFILE_BUSINESS_INVOICE_DAYS = document.getElementById('profile-business-invoice-days');
+const PROFILE_BUSINESS_CONTACT_FIRSTNAME = document.getElementById('profile-business-contact-firstname');
+const PROFILE_BUSINESS_CONTACT_LASTNAME = document.getElementById('profile-business-contact-lastname');
+const PROFILE_BUSINESS_CONTACT_EMAIL = document.getElementById('profile-business-contact-email');
+const PROFILE_BUSINESS_COMMENTS = document.getElementById('profile-business-comments');
 const PREF_EMAIL_NOTIFICATIONS = document.getElementById('pref-email-notifications');
 const PREF_DASHBOARD_ALERTS = document.getElementById('pref-dashboard-alerts');
 const PROFILE_RESET = document.getElementById('profile-reset-btn');
@@ -343,6 +358,40 @@ function renderProfileForm() {
   if (!PROFILE_FORM) return;
   PROFILE_NAME_FIELD.value = state.profile?.display_name || getDisplayName();
   
+  // Setup user type
+  if (PROFILE_USER_TYPE) {
+    PROFILE_USER_TYPE.value = state.profile?.user_type || 'individual';
+    
+    // Show/hide business section based on user type
+    if (PROFILE_BUSINESS_SECTION) {
+      PROFILE_BUSINESS_SECTION.style.display = PROFILE_USER_TYPE.value === 'business' ? 'block' : 'none';
+    }
+    
+    // Add change listener
+    PROFILE_USER_TYPE.addEventListener('change', (e) => {
+      if (PROFILE_BUSINESS_SECTION) {
+        PROFILE_BUSINESS_SECTION.style.display = e.target.value === 'business' ? 'block' : 'none';
+      }
+    });
+  }
+  
+  // Populate business fields
+  if (state.profile?.user_type === 'business') {
+    if (PROFILE_BUSINESS_NAME) PROFILE_BUSINESS_NAME.value = state.profile.business_name || '';
+    if (PROFILE_BUSINESS_COUNTRY) PROFILE_BUSINESS_COUNTRY.value = state.profile.business_country || '';
+    if (PROFILE_BUSINESS_LANGUAGE) PROFILE_BUSINESS_LANGUAGE.value = state.profile.business_language || 'it';
+    if (PROFILE_BUSINESS_ADDRESS) PROFILE_BUSINESS_ADDRESS.value = state.profile.business_address || '';
+    if (PROFILE_BUSINESS_CITY) PROFILE_BUSINESS_CITY.value = state.profile.business_city || '';
+    if (PROFILE_BUSINESS_ZIP) PROFILE_BUSINESS_ZIP.value = state.profile.business_zip || '';
+    if (PROFILE_BUSINESS_VAT) PROFILE_BUSINESS_VAT.value = state.profile.business_vat || '';
+    if (PROFILE_BUSINESS_TAX_ID) PROFILE_BUSINESS_TAX_ID.value = state.profile.business_tax_id || '';
+    if (PROFILE_BUSINESS_INVOICE_DAYS) PROFILE_BUSINESS_INVOICE_DAYS.value = state.profile.business_invoice_days || 0;
+    if (PROFILE_BUSINESS_CONTACT_FIRSTNAME) PROFILE_BUSINESS_CONTACT_FIRSTNAME.value = state.profile.business_contact_firstname || '';
+    if (PROFILE_BUSINESS_CONTACT_LASTNAME) PROFILE_BUSINESS_CONTACT_LASTNAME.value = state.profile.business_contact_lastname || '';
+    if (PROFILE_BUSINESS_CONTACT_EMAIL) PROFILE_BUSINESS_CONTACT_EMAIL.value = state.profile.business_contact_email || '';
+    if (PROFILE_BUSINESS_COMMENTS) PROFILE_BUSINESS_COMMENTS.value = state.profile.business_comments || '';
+  }
+  
   // Mostra email corrente
   const currentEmailDisplay = document.getElementById('current-email-display');
   if (currentEmailDisplay && state.user?.email) {
@@ -365,72 +414,79 @@ function renderProfileForm() {
 }
 
 async function renderDashboard() {
-  // Aggiorna metriche
-  if (DASHBOARD_STATS.completedReports) {
-    const completedCount = await fetchCompletedReportsCount();
-    DASHBOARD_STATS.completedReports.textContent = completedCount;
-  }
-  
-  if (DASHBOARD_STATS.pendingRequests) {
-    const pendingCount = await fetchPendingRequestsCount();
-    DASHBOARD_STATS.pendingRequests.textContent = pendingCount;
-  }
-  
-  // Crediti (solo per institutional)
-  if (state.role === 'institutional' && state.credits !== null) {
-    if (DASHBOARD_STATS.credits) {
-      DASHBOARD_STATS.credits.textContent = state.credits.credits_balance ?? 0;
+  try {
+    // Aggiorna metriche
+    if (DASHBOARD_STATS.completedReports) {
+      const completedCount = await fetchCompletedReportsCount();
+      DASHBOARD_STATS.completedReports.textContent = completedCount ?? 0;
     }
-    if (DASHBOARD_STATS.creditsCard) {
-      DASHBOARD_STATS.creditsCard.hidden = false;
-    }
-  } else {
-    if (DASHBOARD_STATS.creditsCard) {
-      DASHBOARD_STATS.creditsCard.hidden = true;
-    }
-  }
-  
-  if (DASHBOARD_STATS.plan) {
-    DASHBOARD_STATS.plan.textContent = roleLabel(state.role) || 'Nessun piano attivo';
-  }
-  
-  // Scadenza piano
-  if (state.planExpiresAt) {
-    const expiresDate = new Date(state.planExpiresAt);
-    const now = new Date();
-    const daysLeft = Math.ceil((expiresDate - now) / (1000 * 60 * 60 * 24));
     
-    if (DASHBOARD_STATS.expiry) {
-      if (daysLeft > 0) {
-        DASHBOARD_STATS.expiry.textContent = `${daysLeft} ${daysLeft === 1 ? 'giorno' : 'giorni'}`;
-        if (daysLeft <= 7) {
-          DASHBOARD_STATS.expiry.style.color = 'var(--error-500)';
-        }
-      } else {
-        DASHBOARD_STATS.expiry.textContent = 'Scaduto';
-        DASHBOARD_STATS.expiry.style.color = 'var(--error-500)';
+    if (DASHBOARD_STATS.pendingRequests) {
+      const pendingCount = await fetchPendingRequestsCount();
+      DASHBOARD_STATS.pendingRequests.textContent = pendingCount ?? 0;
+    }
+    
+    // Crediti (solo per institutional)
+    if (state.role === 'institutional' && state.credits !== null) {
+      if (DASHBOARD_STATS.credits) {
+        DASHBOARD_STATS.credits.textContent = state.credits.credits_balance ?? 0;
+      }
+      if (DASHBOARD_STATS.creditsCard) {
+        DASHBOARD_STATS.creditsCard.hidden = false;
+      }
+    } else {
+      if (DASHBOARD_STATS.creditsCard) {
+        DASHBOARD_STATS.creditsCard.hidden = true;
       }
     }
-    if (DASHBOARD_STATS.expiryCard) {
-      DASHBOARD_STATS.expiryCard.hidden = false;
+    
+    if (DASHBOARD_STATS.plan) {
+      DASHBOARD_STATS.plan.textContent = roleLabel(state.role) || 'Nessun piano attivo';
     }
-  } else {
-    if (DASHBOARD_STATS.expiryCard) {
-      DASHBOARD_STATS.expiryCard.hidden = true;
+    
+    // Scadenza piano
+    if (state.planExpiresAt) {
+      const expiresDate = new Date(state.planExpiresAt);
+      const now = new Date();
+      const daysLeft = Math.ceil((expiresDate - now) / (1000 * 60 * 60 * 24));
+      
+      if (DASHBOARD_STATS.expiry) {
+        if (daysLeft > 0) {
+          DASHBOARD_STATS.expiry.textContent = `${daysLeft} ${daysLeft === 1 ? 'giorno' : 'giorni'}`;
+          if (daysLeft <= 7) {
+            DASHBOARD_STATS.expiry.style.color = 'var(--error-500)';
+          }
+        } else {
+          DASHBOARD_STATS.expiry.textContent = 'Scaduto';
+          DASHBOARD_STATS.expiry.style.color = 'var(--error-500)';
+        }
+      }
+      if (DASHBOARD_STATS.expiryCard) {
+        DASHBOARD_STATS.expiryCard.hidden = false;
+      }
+    } else {
+      if (DASHBOARD_STATS.expiryCard) {
+        DASHBOARD_STATS.expiryCard.hidden = true;
+      }
     }
+    
+    if (DASHBOARD_STATS.lastLogin) {
+      DASHBOARD_STATS.lastLogin.textContent = state.lastSession
+        ? formatDate(new Date(state.lastSession.created_at * 1000 || Date.now()))
+        : '—';
+    }
+    
+    // Renderizza report recenti e attività
+    await renderRecentReports();
+    await renderRecentActivity();
+    await renderDashboardNotifications();
+    setupQuickActions();
+  } catch (err) {
+    Logger.error('UserArea', 'renderDashboard error', err);
+    // Fallback: mostra 0 se errore
+    if (DASHBOARD_STATS.completedReports) DASHBOARD_STATS.completedReports.textContent = '0';
+    if (DASHBOARD_STATS.pendingRequests) DASHBOARD_STATS.pendingRequests.textContent = '0';
   }
-  
-  if (DASHBOARD_STATS.lastLogin) {
-    DASHBOARD_STATS.lastLogin.textContent = state.lastSession
-      ? formatDate(new Date(state.lastSession.created_at * 1000 || Date.now()))
-      : '—';
-  }
-  
-  // Renderizza report recenti e attività
-  await renderRecentReports();
-  await renderRecentActivity();
-  await renderDashboardNotifications();
-  setupQuickActions();
 }
 
 function formatRelativeTime(dateString) {
@@ -516,18 +572,28 @@ function renderPlanSection() {
           const upgradeBtn = document.createElement('button');
           upgradeBtn.className = 'btn btn-sm btn-primary';
           upgradeBtn.textContent = 'Passa a Pro';
-          upgradeBtn.addEventListener('click', () => {
-            showToast('Apertura checkout...', 'info');
-            openLemonSqueezyUpgrade('pro', state.user?.email || '', getDisplayName());
+          upgradeBtn.addEventListener('click', async () => {
+            try {
+              showToast('Apertura checkout...', 'info');
+              openPaddleUpgrade('pro', state.user?.email || '', getDisplayName());
+            } catch (err) {
+              Logger.error('UserArea', 'upgrade to pro error', err);
+              showToast('Errore durante l\'apertura del checkout. Contatta il supporto.', 'error');
+            }
           });
           actionsContainer.appendChild(upgradeBtn);
         } else if (state.role === 'pro') {
           const upgradeBtn = document.createElement('button');
           upgradeBtn.className = 'btn btn-sm btn-primary';
           upgradeBtn.textContent = 'Passa a Desk Professionale';
-          upgradeBtn.addEventListener('click', () => {
-            showToast('Apertura checkout...', 'info');
-            openLemonSqueezyUpgrade('institutional', state.user?.email || '', getDisplayName());
+          upgradeBtn.addEventListener('click', async () => {
+            try {
+              showToast('Apertura checkout...', 'info');
+              openPaddleUpgrade('institutional', state.user?.email || '', getDisplayName());
+            } catch (err) {
+              Logger.error('UserArea', 'upgrade to institutional error', err);
+              showToast('Errore durante l\'apertura del checkout. Contatta il supporto.', 'error');
+            }
           });
           actionsContainer.appendChild(upgradeBtn);
         }
@@ -645,9 +711,14 @@ async function handleRenewSubscription() {
   try {
     showToast('Apertura checkout per il rinnovo...', 'info');
     
-    // Apri checkout Lemon Squeezy per rinnovo
+    // Apri checkout Paddle per rinnovo
     // Usa email e nome utente per checkout
-    openLemonSqueezyUpgrade(state.role, state.user?.email || '', getDisplayName());
+    try {
+      openPaddleUpgrade(state.role, state.user?.email || '', getDisplayName());
+    } catch (err) {
+      Logger.error('UserArea', 'renew subscription checkout error', err);
+      throw err;
+    }
     
     // Nota: Il webhook gestirà l'aggiornamento valid_until dopo il pagamento
     // Per ora, il rinnovo manuale estende valid_until di 30 giorni
@@ -859,6 +930,7 @@ async function onProfileSubmit(event) {
   }
   // Best practice: sanitize input (trim, validate length)
   const display_name = PROFILE_NAME_FIELD.value.trim();
+  const user_type = PROFILE_USER_TYPE?.value || 'individual';
   
   // Validation
   if (display_name && display_name.length < 2) {
@@ -870,10 +942,73 @@ async function onProfileSubmit(event) {
     showToast('Il nome non può superare 80 caratteri.', 'error');
     return;
   }
+  
+  // Validate business fields if user_type = business
+  if (user_type === 'business') {
+    if (!PROFILE_BUSINESS_NAME?.value.trim()) {
+      showToast('Il nome/ragione sociale è obbligatorio per account business.', 'error');
+      return;
+    }
+    if (!PROFILE_BUSINESS_COUNTRY?.value) {
+      showToast('Il paese è obbligatorio per account business.', 'error');
+      return;
+    }
+    if (!PROFILE_BUSINESS_ADDRESS?.value.trim()) {
+      showToast('L\'indirizzo è obbligatorio per account business.', 'error');
+      return;
+    }
+    if (!PROFILE_BUSINESS_CITY?.value.trim()) {
+      showToast('La città è obbligatoria per account business.', 'error');
+      return;
+    }
+    if (!PROFILE_BUSINESS_ZIP?.value.trim()) {
+      showToast('Il CAP è obbligatorio per account business.', 'error');
+      return;
+    }
+    if (!PROFILE_BUSINESS_CONTACT_FIRSTNAME?.value.trim()) {
+      showToast('Il nome referente è obbligatorio per account business.', 'error');
+      return;
+    }
+    if (!PROFILE_BUSINESS_CONTACT_LASTNAME?.value.trim()) {
+      showToast('Il cognome referente è obbligatorio per account business.', 'error');
+      return;
+    }
+    if (!PROFILE_BUSINESS_CONTACT_EMAIL?.value.trim()) {
+      showToast('L\'email referente è obbligatoria per account business.', 'error');
+      return;
+    }
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(PROFILE_BUSINESS_CONTACT_EMAIL.value.trim())) {
+      showToast('L\'email referente non è valida.', 'error');
+      return;
+    }
+  }
+  
   const preferences = {
     email_notifications: PREF_EMAIL_NOTIFICATIONS?.checked ?? true,
     dashboard_alerts: PREF_DASHBOARD_ALERTS?.checked ?? true
   };
+  
+  // Collect business data
+  const businessData = user_type === 'business' ? {
+    business_name: PROFILE_BUSINESS_NAME?.value.trim() || null,
+    business_country: PROFILE_BUSINESS_COUNTRY?.value || null,
+    business_language: PROFILE_BUSINESS_LANGUAGE?.value || 'it',
+    business_address: PROFILE_BUSINESS_ADDRESS?.value.trim() || null,
+    business_city: PROFILE_BUSINESS_CITY?.value.trim() || null,
+    business_zip: PROFILE_BUSINESS_ZIP?.value.trim() || null,
+    business_vat: PROFILE_BUSINESS_VAT?.value.trim() || null,
+    business_tax_id: PROFILE_BUSINESS_TAX_ID?.value.trim() || null,
+    business_invoice_days: PROFILE_BUSINESS_INVOICE_DAYS?.value ? parseInt(PROFILE_BUSINESS_INVOICE_DAYS.value) : 0,
+    business_contact_firstname: PROFILE_BUSINESS_CONTACT_FIRSTNAME?.value.trim() || null,
+    business_contact_lastname: PROFILE_BUSINESS_CONTACT_LASTNAME?.value.trim() || null,
+    business_contact_email: PROFILE_BUSINESS_CONTACT_EMAIL?.value.trim().toLowerCase() || null,
+    business_comments: PROFILE_BUSINESS_COMMENTS?.value.trim() || null
+  } : null;
+  
+  // Store old data for comparison
+  const oldData = { ...state.profile };
   
   try {
     const submitBtn = PROFILE_FORM.querySelector('button[type="submit"]');
@@ -886,18 +1021,89 @@ async function onProfileSubmit(event) {
       submitBtn.textContent = 'Salvataggio...';
     }
     
+    // Build payload
     const payload = {
       user_id: state.user.id,
       display_name: display_name || null,
+      user_type: user_type,
       preferences: preferences
     };
+    
+    // Add business data if user_type = business
+    if (user_type === 'business' && businessData) {
+      Object.assign(payload, businessData);
+    } else if (user_type === 'individual') {
+      // Clear business data if switching to individual
+      payload.business_name = null;
+      payload.business_country = null;
+      payload.business_language = null;
+      payload.business_address = null;
+      payload.business_city = null;
+      payload.business_zip = null;
+      payload.business_vat = null;
+      payload.business_tax_id = null;
+      payload.business_invoice_days = null;
+      payload.business_contact_firstname = null;
+      payload.business_contact_lastname = null;
+      payload.business_contact_email = null;
+      payload.business_comments = null;
+    }
+    
     const { error } = await supabase
       .from('user_profiles')
       .upsert(payload, { onConflict: 'user_id' });
     if (error) throw error;
-    state.profile = { ...(state.profile || {}), display_name, preferences };
+    
+    // Update state
+    state.profile = { ...(state.profile || {}), ...payload };
+    
+    // Detect changes for email notification
+    const changes = [];
+    const newData = { ...state.profile };
+    
+    // Compare old vs new
+    const fieldsToCheck = [
+      'display_name', 'user_type', 'business_name', 'business_country', 'business_language',
+      'business_address', 'business_city', 'business_zip', 'business_vat', 'business_tax_id',
+      'business_invoice_days', 'business_contact_firstname', 'business_contact_lastname',
+      'business_contact_email', 'business_comments'
+    ];
+    
+    fieldsToCheck.forEach(field => {
+      const oldValue = oldData[field] ?? null;
+      const newValue = newData[field] ?? null;
+      if (oldValue !== newValue) {
+        changes.push({
+          field: field,
+          oldValue: oldValue,
+          newValue: newValue
+        });
+      }
+    });
+    
+    // Send email if there are changes
+    if (changes.length > 0) {
+      try {
+        await fetch('/api/send-profile-update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userEmail: state.user.email,
+            userName: getDisplayName(),
+            changes: changes,
+            oldData: oldData,
+            newData: newData
+          })
+        });
+        Logger.debug('UserArea', 'Profile update email sent', { changesCount: changes.length });
+      } catch (emailErr) {
+        Logger.warn('UserArea', 'Failed to send profile update email', emailErr);
+        // Non bloccare il salvataggio se l'email fallisce
+      }
+    }
     
     renderHero();
+    renderProfileForm(); // Re-render per aggiornare UI
     showToast('Profilo aggiornato con successo.', 'success');
   } catch (err) {
     Logger.error('UserArea', 'profile save error', err);
@@ -1188,7 +1394,7 @@ async function fetchUserProfile() {
   try {
     const { data, error } = await supabase
       .from('user_profiles')
-      .select('display_name, avatar_url, preferences')
+      .select('display_name, avatar_url, preferences, user_type, business_name, business_country, business_language, business_address, business_city, business_zip, business_vat, business_tax_id, business_invoice_days, business_contact_firstname, business_contact_lastname, business_contact_email, business_comments')
       .eq('user_id', state.user.id)
       .maybeSingle();
     if (error) throw error;
@@ -1648,8 +1854,11 @@ async function handleCreditsPurchase(credits, price) {
     const modal = document.getElementById('credits-checkout-modal');
     if (modal) modal.setAttribute('hidden', '');
     
-    // Apri checkout Lemon Squeezy
-    openLemonSqueezyCreditsCheckout(credits, price, state.user?.email || '');
+    // Apri checkout crediti (Paddle/Xolo Go - da implementare)
+    // TODO: Implementare checkout crediti con Paddle o Xolo Go
+    // Per ora mostra messaggio informativo
+    showToast('Checkout crediti non ancora disponibile. Contatta il supporto per acquistare crediti.', 'info');
+    Logger.warn('UserArea', 'Credits checkout non implementato - Paddle/Xolo Go da configurare');
     
     // Il webhook gestirà l'aggiornamento crediti dopo il pagamento
   } catch (err) {

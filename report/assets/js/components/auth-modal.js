@@ -837,8 +837,9 @@ async function handleReset(event) {
   try {
     // Best practice: redirectTo deve essere configurato in Supabase Dashboard
     // Vai su: Authentication > URL Configuration > Redirect URLs
-    // Aggiungi: https://tradelia.org/user/index.html
-    const redirectTo = `${window.location.origin}/user/index.html`;
+    // Aggiungi: https://tradelia.org/user/index.html?reset=true
+    // Il ?reset=true permette all'app di rilevare che siamo in modalità reset password
+    const redirectTo = `${window.location.origin}/user/index.html?reset=true`;
     
     Logger.debug('AuthModal', 'Sending password reset email', { email, redirectTo });
     
