@@ -73,86 +73,11 @@ const state = {
   planExpiresAt: null,
 };
 
-// Parametri di upgrade provenienti dalla pagina pricing (es. ?upgrade_plan=pro&provider=lemon)
-const UPGRADE_PARAMS = (function () {
-  if (typeof window === 'undefined') return null;
-  try {
-    const params = new URLSearchParams(window.location.search || '');
-    const upgradePlan = params.get('upgrade_plan');
-    if (!upgradePlan) return null;
-    const provider = (params.get('provider') || 'lemon').toLowerCase();
-    return { upgradePlan, provider };
-  } catch (_err) {
-    return null;
-  }
-})();
-
-let hasProcessedUpgradeFromUrl = false;
-
-function maybeHandleUpgradeFromUrl() {
-  if (hasProcessedUpgradeFromUrl || !UPGRADE_PARAMS || !state.user) return;
-  hasProcessedUpgradeFromUrl = true;
-
-  const { upgradePlan, provider } = UPGRADE_PARAMS;
-  const email = state.user?.email;
-  const name =
-    (state.profile?.display_name ||
-      (state.user?.email ? state.user.email.split('@')[0] : '')).trim();
-
-  if (!email) {
-    Logger.warn('UserArea', 'Upgrade plan richiesto ma email utente mancante');
-    return;
-  }
-
-  // Quando arriviamo dall'URL pricing vogliamo rendere il funnel prevedibile:
-  // 1) portiamo l'utente nella tab "Abbonamento"
-  // 2) per il piano Pro attiviamo automaticamente la prova gratuita (billing verrà integrato dopo)
-  // 3) per Desk apriamo il contatto email verso il desk
-  if (typeof setActiveTab === 'function') {
-    setActiveTab('plan');
-  }
-
-  if (upgradePlan === 'pro') {
-    Logger.debug('UserArea', 'Upgrade Pro richiesto da URL, attivo trial interno', {
-      email,
-    });
-    // Attiva direttamente la prova gratuita Pro (aggiorna Supabase + UI)
-    // Il checkout Lemon/Paddle verrà integrato in una fase successiva
-    handleUpgradeWithTrial('pro');
-  } else if (upgradePlan === 'desk') {
-    // Per ora: avvia contatto email con dati precompilati per raccolta dati fatturazione e scelta metodo
-    const subject = 'Richiesta piano Desk Professionale';
-    const bodyLines = [
-      'Richiesta attivazione piano Desk.',
-      '',
-      `Email account Tradelia: ${email}`,
-      name ? `Nome / azienda: ${name}` : '',
-      '',
-      'Per favore indica di seguito i dati di fatturazione:',
-      '- Ragione sociale / nome',
-      '- Indirizzo completo',
-      '- Paese e CAP',
-      '- VAT / Codice fiscale',
-      '- Eventuale registry code',
-      '',
-      'Indica anche il metodo preferito:',
-      '- Carta (checkout online Paddle/Lemon Squeezy)',
-      '- Bonifico tramite Xolo Go',
-      '',
-      'Note aggiuntive:'
-    ];
-    const mailto = `mailto:info@tradelia.org?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
-    window.location.href = mailto;
-  }
-}
-
 // Initialize app when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
-  init();
+init();
 }
 
 if (PROFILE_FORM) {
@@ -186,7 +111,6 @@ async function init() {
     renderAuthPanel();
   } else {
     await bootstrapUserArea();
-    maybeHandleUpgradeFromUrl();
   }
   supabase.auth.onAuthStateChange((_event, session) => {
     state.user = session?.user || null;
@@ -200,7 +124,6 @@ async function init() {
       bootstrapUserArea().then(() => {
         // Re-render sezione community dopo che tutto è caricato
         renderCommunitySection();
-        maybeHandleUpgradeFromUrl();
       });
       setActiveTab('dashboard');
     }
