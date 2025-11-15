@@ -15,6 +15,7 @@ const TAB_BUTTONS = Array.from(document.querySelectorAll('.tablist button'));
 const PANELS = {
   dashboard: document.getElementById('panel-dashboard'),
   profile: document.getElementById('panel-profile'),
+  reports: document.getElementById('panel-reports'),
   community: document.getElementById('panel-community'),
   plan: document.getElementById('panel-plan'),
   inbox: document.getElementById('panel-inbox'),
@@ -29,9 +30,14 @@ const PROFILE_RESET = document.getElementById('profile-reset-btn');
 
 
 const DASHBOARD_STATS = {
-  requests: document.getElementById('stat-requests'),
-  lastLogin: document.getElementById('stat-last-login'),
-  plan: document.getElementById('stat-plan')
+  completedReports: document.getElementById('stat-completed-reports'),
+  pendingRequests: document.getElementById('stat-pending-requests'),
+  credits: document.getElementById('stat-credits'),
+  creditsCard: document.getElementById('stat-credits-card'),
+  plan: document.getElementById('stat-plan'),
+  expiry: document.getElementById('stat-expiry'),
+  expiryCard: document.getElementById('stat-expiry-card'),
+  lastLogin: document.getElementById('stat-last-login')
 };
 
 const PLAN_CARD = document.getElementById('plan-card');
@@ -184,6 +190,10 @@ function setActiveTab(tabId) {
       // Re-render sezione quando viene mostrata (per aggiornare stato lock/crediti)
       if (key === 'community') {
         renderCommunitySection();
+      } else if (key === 'reports') {
+        renderReportsSection();
+      } else if (key === 'inbox') {
+        renderNotificationsSection();
       }
     }
   });
@@ -354,18 +364,73 @@ function renderProfileForm() {
   }
 }
 
-function renderDashboard() {
-  if (DASHBOARD_STATS.requests) {
-    DASHBOARD_STATS.requests.textContent = state.stats.requests ?? 0;
+async function renderDashboard() {
+  // Aggiorna metriche
+  if (DASHBOARD_STATS.completedReports) {
+    const completedCount = await fetchCompletedReportsCount();
+    DASHBOARD_STATS.completedReports.textContent = completedCount;
   }
+  
+  if (DASHBOARD_STATS.pendingRequests) {
+    const pendingCount = await fetchPendingRequestsCount();
+    DASHBOARD_STATS.pendingRequests.textContent = pendingCount;
+  }
+  
+  // Crediti (solo per institutional)
+  if (state.role === 'institutional' && state.credits !== null) {
+    if (DASHBOARD_STATS.credits) {
+      DASHBOARD_STATS.credits.textContent = state.credits.credits_balance ?? 0;
+    }
+    if (DASHBOARD_STATS.creditsCard) {
+      DASHBOARD_STATS.creditsCard.hidden = false;
+    }
+  } else {
+    if (DASHBOARD_STATS.creditsCard) {
+      DASHBOARD_STATS.creditsCard.hidden = true;
+    }
+  }
+  
+  if (DASHBOARD_STATS.plan) {
+    DASHBOARD_STATS.plan.textContent = roleLabel(state.role) || 'Nessun piano attivo';
+  }
+  
+  // Scadenza piano
+  if (state.planExpiresAt) {
+    const expiresDate = new Date(state.planExpiresAt);
+    const now = new Date();
+    const daysLeft = Math.ceil((expiresDate - now) / (1000 * 60 * 60 * 24));
+    
+    if (DASHBOARD_STATS.expiry) {
+      if (daysLeft > 0) {
+        DASHBOARD_STATS.expiry.textContent = `${daysLeft} ${daysLeft === 1 ? 'giorno' : 'giorni'}`;
+        if (daysLeft <= 7) {
+          DASHBOARD_STATS.expiry.style.color = 'var(--error-500)';
+        }
+      } else {
+        DASHBOARD_STATS.expiry.textContent = 'Scaduto';
+        DASHBOARD_STATS.expiry.style.color = 'var(--error-500)';
+      }
+    }
+    if (DASHBOARD_STATS.expiryCard) {
+      DASHBOARD_STATS.expiryCard.hidden = false;
+    }
+  } else {
+    if (DASHBOARD_STATS.expiryCard) {
+      DASHBOARD_STATS.expiryCard.hidden = true;
+    }
+  }
+  
   if (DASHBOARD_STATS.lastLogin) {
     DASHBOARD_STATS.lastLogin.textContent = state.lastSession
       ? formatDate(new Date(state.lastSession.created_at * 1000 || Date.now()))
       : '—';
   }
-  if (DASHBOARD_STATS.plan) {
-    DASHBOARD_STATS.plan.textContent = roleLabel(state.role) || '—';
-  }
+  
+  // Renderizza report recenti e attività
+  await renderRecentReports();
+  await renderRecentActivity();
+  await renderDashboardNotifications();
+  setupQuickActions();
 }
 
 function formatRelativeTime(dateString) {
@@ -1136,13 +1201,13 @@ async function fetchUserProfile() {
 
 async function fetchDashboardStats() {
   try {
-    // Conta richieste analisi on-demand
+    // Conta richieste analisi on-demand (per retrocompatibilità)
     if (state.role === 'institutional') {
-    const { count, error } = await supabase
+      const { count, error } = await supabase
         .from('analysis_requests')
-      .select('*', { count: 'exact', head: true })
+        .select('*', { count: 'exact', head: true })
         .eq('user_id', state.user.id);
-    if (error) throw error;
+      if (error) throw error;
       state.stats.requests = count ?? 0;
     } else {
       state.stats.requests = 0;
@@ -1150,6 +1215,38 @@ async function fetchDashboardStats() {
   } catch (err) {
     Logger.warn('UserArea', 'stats error', err);
     state.stats.requests = 0;
+  }
+}
+
+async function fetchCompletedReportsCount() {
+  try {
+    if (!state.user) return 0;
+    const { count, error } = await supabase
+      .from('analysis_requests')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', state.user.id)
+      .eq('status', 'completed');
+    if (error) throw error;
+    return count ?? 0;
+  } catch (err) {
+    Logger.warn('UserArea', 'completed reports count error', err);
+    return 0;
+  }
+}
+
+async function fetchPendingRequestsCount() {
+  try {
+    if (!state.user) return 0;
+    const { count, error } = await supabase
+      .from('analysis_requests')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', state.user.id)
+      .in('status', ['pending', 'processing']);
+    if (error) throw error;
+    return count ?? 0;
+  } catch (err) {
+    Logger.warn('UserArea', 'pending requests count error', err);
+    return 0;
   }
 }
 
@@ -2124,22 +2221,54 @@ async function fetchCredits() {
 async function handlePasswordResetRedirect() {
   // Check if URL has hash fragments (Supabase adds access_token, etc. after password reset)
   const hash = window.location.hash;
-  if (!hash) return;
+  const searchParams = new URLSearchParams(window.location.search);
+  const resetParam = searchParams.get('reset');
   
-  // Parse hash fragments
-  const params = new URLSearchParams(hash.substring(1));
-  const accessToken = params.get('access_token');
-  const type = params.get('type');
+  // Support both hash-based redirect (Supabase default) and query param
+  if (!hash && !resetParam) return;
   
-  // If this is a password recovery redirect
-  if (type === 'recovery' && accessToken) {
-    Logger.debug('UserArea', 'Password reset token detected');
+  Logger.debug('UserArea', 'Password reset redirect detected', { hash, resetParam });
+  
+  // Parse hash fragments if present
+  let accessToken = null;
+  let type = null;
+  
+  if (hash) {
+    try {
+      const params = new URLSearchParams(hash.substring(1));
+      accessToken = params.get('access_token');
+      type = params.get('type');
+    } catch (err) {
+      Logger.warn('UserArea', 'Error parsing hash', err);
+    }
+  }
+  
+  // If this is a password recovery redirect (hash-based or query param)
+  if ((type === 'recovery' && accessToken) || resetParam === 'true') {
+    Logger.debug('UserArea', 'Password reset token detected', { type, hasAccessToken: !!accessToken, resetParam });
     
     // Clear the hash from URL but keep the recovery indicator
-    window.history.replaceState(null, '', window.location.pathname + '?reset=true');
+    if (hash) {
+      window.history.replaceState(null, '', window.location.pathname + '?reset=true');
+    }
     
-    // Wait for session to be restored
+    // Wait for session to be restored (Supabase should have set the session from the token)
     await restoreSession();
+    
+    // Also try to get session from hash if available
+    if (accessToken && !state.user) {
+      try {
+        // Supabase should have already set the session, but try to restore it
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (session && !error) {
+          state.user = session.user;
+          state.lastSession = session;
+          Logger.debug('UserArea', 'Session restored from token');
+        }
+      } catch (err) {
+        Logger.warn('UserArea', 'Error restoring session from token', err);
+      }
+    }
     
     // If user is now logged in, show password change form prominently
     if (state.user) {
@@ -2184,6 +2313,7 @@ async function handlePasswordResetRedirect() {
       }, 300);
     } else {
       // User not logged in - redirect to login
+      Logger.warn('UserArea', 'Password reset token detected but user not logged in');
       showToast('Sessione scaduta. Effettua il login per reimpostare la password.', 'error');
       setTimeout(() => {
         window.location.href = '/';
@@ -2380,5 +2510,584 @@ async function handleChangeEmail(event) {
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Cambia email';
+  }
+}
+
+// ===== DASHBOARD ENHANCED FUNCTIONS =====
+
+async function renderRecentReports() {
+  const container = document.getElementById('recent-reports-list');
+  if (!container) return;
+  
+  try {
+    if (!state.user) {
+      container.innerHTML = '<div class="empty-state"><p>Nessun report completato ancora.</p></div>';
+      return;
+    }
+    
+    const { data, error } = await supabase
+      .from('analysis_requests')
+      .select('id, ticker, status, created_at, completed_at, report_id, report_slug')
+      .eq('user_id', state.user.id)
+      .eq('status', 'completed')
+      .order('completed_at', { ascending: false })
+      .limit(5);
+    
+    if (error) throw error;
+    
+    if (!data || data.length === 0) {
+      container.innerHTML = '<div class="empty-state"><p>Nessun report completato ancora.</p></div>';
+      return;
+    }
+    
+    container.innerHTML = data.map(request => {
+      const reportLink = (request.report_slug || request.report_id)
+        ? `/report/index.html?id=${request.report_slug || request.report_id}`
+        : null;
+      
+      return `
+        <article class="recent-report-item">
+          <div class="recent-report-header">
+            <strong>${escapeHtml(request.ticker)}</strong>
+            <span class="badge" style="background: rgba(34, 197, 94, 0.2); border-color: rgba(34, 197, 94, 0.9); color: rgba(34, 197, 94, 0.9);">
+              ✅ Completata
+            </span>
+          </div>
+          <div class="recent-report-meta">
+            <span>Completata: ${formatDateTime(request.completed_at || request.created_at)}</span>
+          </div>
+          ${reportLink ? `
+            <div style="margin-top: 0.75rem;">
+              <a href="${reportLink}" class="btn btn-sm btn-outline" target="_blank" rel="noopener">
+                Visualizza analisi
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 0.5rem; display: inline-block;">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+            </div>
+          ` : ''}
+        </article>
+      `;
+    }).join('');
+  } catch (err) {
+    Logger.error('UserArea', 'renderRecentReports error', err);
+    container.innerHTML = '<div class="empty-state"><p>Errore nel caricamento dei report.</p></div>';
+  }
+}
+
+async function renderRecentActivity() {
+  const container = document.getElementById('recent-activity-list');
+  if (!container) return;
+  
+  try {
+    if (!state.user) {
+      container.innerHTML = '<div class="empty-state"><p>Nessuna attività recente.</p></div>';
+      return;
+    }
+    
+    const { data, error } = await supabase
+      .from('analysis_requests')
+      .select('id, ticker, status, created_at, completed_at')
+      .eq('user_id', state.user.id)
+      .order('created_at', { ascending: false })
+      .limit(10);
+    
+    if (error) throw error;
+    
+    if (!data || data.length === 0) {
+      container.innerHTML = '<div class="empty-state"><p>Nessuna attività recente.</p></div>';
+      return;
+    }
+    
+    const statusLabels = {
+      pending: { text: 'In attesa', icon: '⏳', color: 'rgba(251, 191, 36, 0.9)' },
+      processing: { text: 'In elaborazione', icon: '⚙️', color: 'rgba(96, 165, 250, 0.9)' },
+      completed: { text: 'Completata', icon: '✅', color: 'rgba(34, 197, 94, 0.9)' },
+      cancelled: { text: 'Annullata', icon: '❌', color: 'rgba(203, 213, 225, 0.6)' }
+    };
+    
+    container.innerHTML = data.map(request => {
+      const status = statusLabels[request.status] || statusLabels.pending;
+      return `
+        <article class="activity-item">
+          <div class="activity-icon" style="color: ${status.color};">${status.icon}</div>
+          <div class="activity-content">
+            <div class="activity-title">
+              <strong>${escapeHtml(request.ticker)}</strong>
+              <span class="badge" style="background: ${status.color}20; border-color: ${status.color}; color: ${status.color};">
+                ${status.text}
+              </span>
+            </div>
+            <div class="activity-meta">
+              <span>${formatRelativeTime(request.created_at)}</span>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join('');
+  } catch (err) {
+    Logger.error('UserArea', 'renderRecentActivity error', err);
+    container.innerHTML = '<div class="empty-state"><p>Errore nel caricamento delle attività.</p></div>';
+  }
+}
+
+async function renderDashboardNotifications() {
+  const container = document.getElementById('notifications-list');
+  const section = document.getElementById('dashboard-notifications');
+  if (!container || !section) return;
+  
+  try {
+    const notifications = [];
+    
+    // Notifica scadenza piano
+    if (state.planExpiresAt) {
+      const expiresDate = new Date(state.planExpiresAt);
+      const now = new Date();
+      const daysLeft = Math.ceil((expiresDate - now) / (1000 * 60 * 60 * 24));
+      
+      if (daysLeft > 0 && daysLeft <= 7) {
+        notifications.push({
+          type: 'warning',
+          icon: '⚠️',
+          title: 'Piano in scadenza',
+          message: `Il tuo piano scade tra ${daysLeft} ${daysLeft === 1 ? 'giorno' : 'giorni'}. Rinnova ora per continuare a utilizzare il servizio.`,
+          action: { text: 'Rinnova', onClick: () => setActiveTab('plan') }
+        });
+      } else if (daysLeft <= 0) {
+        notifications.push({
+          type: 'error',
+          icon: '❌',
+          title: 'Piano scaduto',
+          message: 'Il tuo piano è scaduto. Rinnova per continuare a utilizzare il servizio.',
+          action: { text: 'Rinnova', onClick: () => setActiveTab('plan') }
+        });
+      }
+    }
+    
+    // Notifica crediti bassi (solo institutional)
+    if (state.role === 'institutional' && state.credits !== null && state.credits.credits_balance <= 5) {
+      notifications.push({
+        type: 'info',
+        icon: '💳',
+        title: 'Crediti in esaurimento',
+        message: `Hai solo ${state.credits.credits_balance} ${state.credits.credits_balance === 1 ? 'credito' : 'crediti'} rimasti. Considera di acquistarne altri.`,
+        action: { text: 'Acquista crediti', onClick: () => BUY_CREDITS_BTN?.click() }
+      });
+    }
+    
+    if (notifications.length === 0) {
+      section.hidden = true;
+      return;
+    }
+    
+    section.hidden = false;
+    container.innerHTML = notifications.map(notif => {
+      const actionHtml = notif.action 
+        ? `<button class="btn btn-sm btn-outline" onclick="(${notif.action.onClick.toString()})()">${escapeHtml(notif.action.text)}</button>`
+        : '';
+      
+      return `
+        <div class="notification-item notification-${notif.type}">
+          <div class="notification-icon">${notif.icon}</div>
+          <div class="notification-content">
+            <strong>${escapeHtml(notif.title)}</strong>
+            <p>${escapeHtml(notif.message)}</p>
+            ${actionHtml}
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (err) {
+    Logger.error('UserArea', 'renderDashboardNotifications error', err);
+    section.hidden = true;
+  }
+}
+
+function setupQuickActions() {
+  const newRequestBtn = document.getElementById('quick-action-new-request');
+  const viewReportsBtn = document.getElementById('quick-action-view-reports');
+  const upgradeBtn = document.getElementById('quick-action-upgrade');
+  
+  // Mostra "Nuova richiesta" solo per institutional
+  if (newRequestBtn) {
+    if (state.role === 'institutional') {
+      newRequestBtn.hidden = false;
+      newRequestBtn.onclick = () => setActiveTab('community');
+    } else {
+      newRequestBtn.hidden = true;
+    }
+  }
+  
+  // "Vedi tutti i report"
+  if (viewReportsBtn) {
+    viewReportsBtn.onclick = () => setActiveTab('reports');
+  }
+  
+  // "Upgrade piano" solo se non è già institutional
+  if (upgradeBtn) {
+    if (state.role && state.role !== 'institutional' && !state.isAdmin) {
+      upgradeBtn.hidden = false;
+      upgradeBtn.onclick = () => setActiveTab('plan');
+    } else {
+      upgradeBtn.hidden = true;
+    }
+  }
+  
+  // Link "Vedi tutti" nella sezione report recenti
+  const viewAllReportsLink = document.getElementById('dashboard-view-all-reports');
+  if (viewAllReportsLink) {
+    viewAllReportsLink.onclick = (e) => {
+      e.preventDefault();
+      setActiveTab('reports');
+    };
+  }
+}
+
+// ===== REPORTS SECTION =====
+
+let reportsPage = 1;
+const reportsPerPage = 20;
+let reportsFilters = {
+  date: 'all',
+  ticker: '',
+  status: 'all'
+};
+
+async function renderReportsSection() {
+  const container = document.getElementById('reports-list');
+  if (!container) return;
+  
+  try {
+    if (!state.user) {
+      container.innerHTML = '<div class="empty-state"><p>Effettua l\'accesso per vedere i tuoi report.</p></div>';
+      return;
+    }
+    
+    // Setup filtri
+    setupReportsFilters();
+    
+    // Carica report
+    await loadReports();
+  } catch (err) {
+    Logger.error('UserArea', 'renderReportsSection error', err);
+    const container = document.getElementById('reports-list');
+    if (container) {
+      container.innerHTML = '<div class="empty-state"><p>Errore nel caricamento dei report.</p></div>';
+    }
+  }
+}
+
+function setupReportsFilters() {
+  const dateFilter = document.getElementById('filter-date');
+  const tickerFilter = document.getElementById('filter-ticker');
+  const statusFilter = document.getElementById('filter-status');
+  
+  if (dateFilter) {
+    dateFilter.value = reportsFilters.date;
+    dateFilter.onchange = (e) => {
+      reportsFilters.date = e.target.value;
+      reportsPage = 1;
+      loadReports();
+    };
+  }
+  
+  if (tickerFilter) {
+    tickerFilter.value = reportsFilters.ticker;
+    // Debounce per ricerca ticker
+    let tickerTimeout;
+    tickerFilter.oninput = (e) => {
+      clearTimeout(tickerTimeout);
+      tickerTimeout = setTimeout(() => {
+        reportsFilters.ticker = e.target.value.trim();
+        reportsPage = 1;
+        loadReports();
+      }, 500);
+    };
+  }
+  
+  if (statusFilter) {
+    statusFilter.value = reportsFilters.status;
+    statusFilter.onchange = (e) => {
+      reportsFilters.status = e.target.value;
+      reportsPage = 1;
+      loadReports();
+    };
+  }
+}
+
+async function loadReports() {
+  const container = document.getElementById('reports-list');
+  const pagination = document.getElementById('reports-pagination');
+  if (!container) return;
+  
+  try {
+    container.innerHTML = '<div class="empty-state"><p>Caricamento...</p></div>';
+    
+    if (!state.user) {
+      container.innerHTML = '<div class="empty-state"><p>Effettua l\'accesso per vedere i tuoi report.</p></div>';
+      return;
+    }
+    
+    // Costruisci query
+    let query = supabase
+      .from('analysis_requests')
+      .select('id, ticker, status, created_at, completed_at, report_id, report_slug', { count: 'exact' })
+      .eq('user_id', state.user.id);
+    
+    // Filtro data
+    if (reportsFilters.date !== 'all') {
+      const now = new Date();
+      let dateFrom = new Date();
+      if (reportsFilters.date === '7d') {
+        dateFrom.setDate(now.getDate() - 7);
+      } else if (reportsFilters.date === '30d') {
+        dateFrom.setDate(now.getDate() - 30);
+      } else if (reportsFilters.date === '90d') {
+        dateFrom.setDate(now.getDate() - 90);
+      }
+      query = query.gte('created_at', dateFrom.toISOString());
+    }
+    
+    // Filtro ticker
+    if (reportsFilters.ticker) {
+      query = query.ilike('ticker', `%${reportsFilters.ticker}%`);
+    }
+    
+    // Filtro stato
+    if (reportsFilters.status !== 'all') {
+      query = query.eq('status', reportsFilters.status);
+    }
+    
+    // Ordina e pagina
+    const from = (reportsPage - 1) * reportsPerPage;
+    const to = from + reportsPerPage - 1;
+    
+    const { data, error, count } = await query
+      .order('created_at', { ascending: false })
+      .range(from, to);
+    
+    if (error) throw error;
+    
+    if (!data || data.length === 0) {
+      container.innerHTML = '<div class="empty-state"><p>Nessun report trovato con i filtri selezionati.</p></div>';
+      if (pagination) pagination.hidden = true;
+      return;
+    }
+    
+    // Renderizza report
+    const statusLabels = {
+      pending: { text: 'In attesa', icon: '⏳', color: 'rgba(251, 191, 36, 0.9)' },
+      processing: { text: 'In elaborazione', icon: '⚙️', color: 'rgba(96, 165, 250, 0.9)' },
+      completed: { text: 'Completata', icon: '✅', color: 'rgba(34, 197, 94, 0.9)' },
+      cancelled: { text: 'Annullata', icon: '❌', color: 'rgba(203, 213, 225, 0.6)' }
+    };
+    
+    container.innerHTML = data.map(request => {
+      const status = statusLabels[request.status] || statusLabels.pending;
+      const reportLink = (request.report_slug || request.report_id)
+        ? `/report/index.html?id=${request.report_slug || request.report_id}`
+        : null;
+      
+      return `
+        <article class="report-item">
+          <div class="report-header">
+            <div>
+              <strong>${escapeHtml(request.ticker)}</strong>
+              <span class="badge" style="background: ${status.color}20; border-color: ${status.color}; color: ${status.color};">
+                ${status.icon} ${status.text}
+              </span>
+            </div>
+            ${reportLink ? `
+              <a href="${reportLink}" class="btn btn-sm btn-primary" target="_blank" rel="noopener">
+                Visualizza
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 0.5rem; display: inline-block;">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+            ` : ''}
+          </div>
+          <div class="report-meta">
+            <span>Richiesta: ${formatDateTime(request.created_at)}</span>
+            ${request.completed_at ? `<span class="report-meta-separator">·</span><span>Completata: ${formatDateTime(request.completed_at)}</span>` : ''}
+          </div>
+        </article>
+      `;
+    }).join('');
+    
+    // Paginazione
+    if (pagination && count > reportsPerPage) {
+      pagination.hidden = false;
+      const totalPages = Math.ceil(count / reportsPerPage);
+      const prevBtn = document.getElementById('pagination-prev');
+      const nextBtn = document.getElementById('pagination-next');
+      const info = document.getElementById('pagination-info');
+      
+      if (prevBtn) {
+        prevBtn.disabled = reportsPage === 1;
+        prevBtn.onclick = () => {
+          if (reportsPage > 1) {
+            reportsPage--;
+            loadReports();
+          }
+        };
+      }
+      
+      if (nextBtn) {
+        nextBtn.disabled = reportsPage >= totalPages;
+        nextBtn.onclick = () => {
+          if (reportsPage < totalPages) {
+            reportsPage++;
+            loadReports();
+          }
+        };
+      }
+      
+      if (info) {
+        info.textContent = `Pagina ${reportsPage} di ${totalPages}`;
+      }
+    } else if (pagination) {
+      pagination.hidden = true;
+    }
+  } catch (err) {
+    Logger.error('UserArea', 'loadReports error', err);
+    container.innerHTML = '<div class="empty-state"><p>Errore nel caricamento dei report.</p></div>';
+  }
+}
+
+// ===== NOTIFICATIONS SECTION =====
+
+let notificationsFilter = 'all';
+
+async function renderNotificationsSection() {
+  const container = document.getElementById('notifications-list-full');
+  if (!container) return;
+  
+  try {
+    // Setup tabs notifiche
+    setupNotificationTabs();
+    
+    // Carica notifiche
+    await loadNotifications();
+  } catch (err) {
+    Logger.error('UserArea', 'renderNotificationsSection error', err);
+    const container = document.getElementById('notifications-list-full');
+    if (container) {
+      container.innerHTML = '<div class="empty-state"><p>Errore nel caricamento delle notifiche.</p></div>';
+    }
+  }
+}
+
+function setupNotificationTabs() {
+  const tabs = document.querySelectorAll('.notification-tab');
+  tabs.forEach(tab => {
+    tab.onclick = () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      notificationsFilter = tab.dataset.notificationType || 'all';
+      loadNotifications();
+    };
+  });
+}
+
+async function loadNotifications() {
+  const container = document.getElementById('notifications-list-full');
+  if (!container) return;
+  
+  try {
+    container.innerHTML = '<div class="empty-state"><p>Caricamento...</p></div>';
+    
+    // Per ora, notifiche sono generate dinamicamente
+    // In futuro, potrebbero essere salvate in una tabella notifications
+    const notifications = [];
+    
+    // Notifiche scadenza piano
+    if (state.planExpiresAt && (notificationsFilter === 'all' || notificationsFilter === 'billing')) {
+      const expiresDate = new Date(state.planExpiresAt);
+      const now = new Date();
+      const daysLeft = Math.ceil((expiresDate - now) / (1000 * 60 * 60 * 24));
+      
+      if (daysLeft > 0 && daysLeft <= 30) {
+        notifications.push({
+          type: daysLeft <= 7 ? 'warning' : 'info',
+          category: 'billing',
+          icon: '⚠️',
+          title: 'Piano in scadenza',
+          message: `Il tuo piano scade tra ${daysLeft} ${daysLeft === 1 ? 'giorno' : 'giorni'}.`,
+          date: state.planExpiresAt,
+          action: { text: 'Rinnova', onClick: () => setActiveTab('plan') }
+        });
+      }
+    }
+    
+    // Notifiche report completati (solo se ci sono report recenti)
+    if ((notificationsFilter === 'all' || notificationsFilter === 'reports') && state.user) {
+      const { data } = await supabase
+        .from('analysis_requests')
+        .select('ticker, completed_at, report_id, report_slug')
+        .eq('user_id', state.user.id)
+        .eq('status', 'completed')
+        .order('completed_at', { ascending: false })
+        .limit(5);
+      
+      if (data && data.length > 0) {
+        data.forEach(request => {
+          notifications.push({
+            type: 'success',
+            category: 'reports',
+            icon: '✅',
+            title: 'Analisi completata',
+            message: `L'analisi per ${request.ticker} è stata completata.`,
+            date: request.completed_at,
+            action: { 
+              text: 'Visualizza', 
+              onClick: () => {
+                const reportLink = `/report/index.html?id=${request.report_slug || request.report_id}`;
+                window.open(reportLink, '_blank');
+              }
+            }
+          });
+        });
+      }
+    }
+    
+    // Filtra per categoria
+    const filtered = notificationsFilter === 'all' 
+      ? notifications 
+      : notifications.filter(n => n.category === notificationsFilter);
+    
+    if (filtered.length === 0) {
+      container.innerHTML = '<div class="empty-state"><p>Nessuna notifica disponibile.</p></div>';
+      return;
+    }
+    
+    // Ordina per data (più recenti prima)
+    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    container.innerHTML = filtered.map(notif => {
+      const actionHtml = notif.action 
+        ? `<button class="btn btn-sm btn-outline" onclick="(${notif.action.onClick.toString()})()">${escapeHtml(notif.action.text)}</button>`
+        : '';
+      
+      return `
+        <article class="notification-item-full notification-${notif.type}">
+          <div class="notification-icon">${notif.icon}</div>
+          <div class="notification-content">
+            <div class="notification-header">
+              <strong>${escapeHtml(notif.title)}</strong>
+              <span class="notification-date">${formatRelativeTime(notif.date)}</span>
+            </div>
+            <p>${escapeHtml(notif.message)}</p>
+            ${actionHtml}
+          </div>
+        </article>
+      `;
+    }).join('');
+  } catch (err) {
+    Logger.error('UserArea', 'loadNotifications error', err);
+    container.innerHTML = '<div class="empty-state"><p>Errore nel caricamento delle notifiche.</p></div>';
   }
 }

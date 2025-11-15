@@ -35,9 +35,10 @@
       <div class="tablist" role="tablist" aria-label="Sezioni account">
         <button type="button" role="tab" id="tab-dashboard" aria-controls="panel-dashboard" aria-selected="true">Dashboard</button>
         <button type="button" role="tab" id="tab-profile" aria-controls="panel-profile" aria-selected="false">Profilo</button>
+        <button type="button" role="tab" id="tab-reports" aria-controls="panel-reports" aria-selected="false">Report</button>
         <button type="button" role="tab" id="tab-community" aria-controls="panel-community" aria-selected="false">Analisi on demand</button>
         <button type="button" role="tab" id="tab-plan" aria-controls="panel-plan" aria-selected="false">Abbonamento</button>
-        <button type="button" role="tab" id="tab-inbox" aria-controls="panel-inbox" aria-selected="false">Inbox</button>
+        <button type="button" role="tab" id="tab-inbox" aria-controls="panel-inbox" aria-selected="false">Notifiche</button>
       </div>
     </nav>
 
@@ -45,26 +46,100 @@
       <div class="user-content">
         <section class="user-section" id="panel-dashboard" role="tabpanel" aria-labelledby="tab-dashboard">
           <div class="section-header">
-            <h3>Overview account</h3>
-            <p>Metriche sintetiche sul tuo utilizzo della piattaforma e aggiornamenti operativi.</p>
+            <h3>Dashboard</h3>
+            <p>Panoramica completa del tuo account e attività recenti.</p>
           </div>
+          
+          <!-- Metriche Chiave -->
           <div class="dashboard-grid" id="dashboard-stats">
             <article class="stat-card">
-              <span>Richieste analisi inviate</span>
-              <strong id="stat-requests">0</strong>
+              <span>Report completati</span>
+              <strong id="stat-completed-reports">0</strong>
+            </article>
+            <article class="stat-card">
+              <span>Richieste in corso</span>
+              <strong id="stat-pending-requests">0</strong>
+            </article>
+            <article class="stat-card" id="stat-credits-card" hidden>
+              <span>Crediti disponibili</span>
+              <strong id="stat-credits">—</strong>
+            </article>
+            <article class="stat-card">
+              <span>Piano attivo</span>
+              <strong id="stat-plan">—</strong>
+            </article>
+            <article class="stat-card" id="stat-expiry-card" hidden>
+              <span>Scadenza piano</span>
+              <strong id="stat-expiry">—</strong>
             </article>
             <article class="stat-card">
               <span>Ultimo accesso</span>
               <strong id="stat-last-login">—</strong>
             </article>
-            <article class="stat-card">
-              <span>Stato piano</span>
-              <strong id="stat-plan">—</strong>
-            </article>
           </div>
-          <div class="placeholder-card">
-            <strong>Attività della community</strong>
-            <span>Feed in arrivo: mostreremo gli annunci del desk e i contenuti evidenziati per il tuo ruolo.</span>
+
+          <!-- Quick Actions -->
+          <div class="dashboard-quick-actions" id="dashboard-quick-actions">
+            <h4>Azioni rapide</h4>
+            <div class="quick-actions-grid">
+              <button class="quick-action-btn" id="quick-action-new-request" hidden>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Nuova richiesta analisi</span>
+              </button>
+              <button class="quick-action-btn" id="quick-action-view-reports">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span>Vedi tutti i report</span>
+              </button>
+              <button class="quick-action-btn" id="quick-action-upgrade" hidden>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+                <span>Upgrade piano</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Report Recenti -->
+          <div class="dashboard-section" id="dashboard-recent-reports">
+            <div class="dashboard-section-header">
+              <h4>Report completati recenti</h4>
+              <a href="#" class="btn-link" id="dashboard-view-all-reports">Vedi tutti</a>
+            </div>
+            <div class="recent-reports-list" id="recent-reports-list">
+              <div class="empty-state">
+                <p>Nessun report completato ancora.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Attività Recenti -->
+          <div class="dashboard-section" id="dashboard-recent-activity">
+            <div class="dashboard-section-header">
+              <h4>Attività recenti</h4>
+            </div>
+            <div class="recent-activity-list" id="recent-activity-list">
+              <div class="empty-state">
+                <p>Nessuna attività recente.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notifiche Importanti -->
+          <div class="dashboard-section" id="dashboard-notifications" hidden>
+            <div class="dashboard-section-header">
+              <h4>Notifiche importanti</h4>
+            </div>
+            <div class="notifications-list" id="notifications-list"></div>
           </div>
         </section>
 
@@ -225,22 +300,105 @@
             <div class="plan-benefits" id="plan-benefits"></div>
             <div class="user-cta" id="plan-actions"></div>
           </div>
-          <div class="placeholder-card">
-            <strong>Documenti fiscali</strong>
-            <span>La sezione per scaricare fatture e documentazione di compliance sarà disponibile con l’integrazione del gateway di pagamento.</span>
+          <!-- Fatture e Documenti -->
+          <div class="section-header" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(148, 163, 184, 0.15);">
+            <h3>Fatture e documenti</h3>
+            <p>Scarica le fatture e i documenti fiscali relativi al tuo abbonamento.</p>
+          </div>
+          
+          <div class="invoices-list" id="invoices-list">
+            <div class="empty-state">
+              <p>Nessuna fattura disponibile. Le fatture verranno mostrate qui dopo il primo pagamento.</p>
+            </div>
+          </div>
+
+          <!-- Cronologia Pagamenti -->
+          <div class="section-header" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(148, 163, 184, 0.15);">
+            <h3>Cronologia pagamenti</h3>
+            <p>Storico dei pagamenti e transazioni.</p>
+          </div>
+          
+          <div class="payments-history" id="payments-history">
+            <div class="empty-state">
+              <p>Nessun pagamento registrato.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Sezione Report (Nuova) -->
+        <section class="user-section" id="panel-reports" role="tabpanel" aria-labelledby="tab-reports" hidden>
+          <div class="section-header">
+            <h3>I miei report</h3>
+            <p>Tutti i report completati e disponibili per la consultazione.</p>
+          </div>
+          
+          <!-- Filtri -->
+          <div class="reports-filters" id="reports-filters">
+            <div class="filter-group">
+              <label for="filter-date">Periodo</label>
+              <select id="filter-date" class="filter-select">
+                <option value="all">Tutti</option>
+                <option value="7d">Ultimi 7 giorni</option>
+                <option value="30d">Ultimi 30 giorni</option>
+                <option value="90d">Ultimi 90 giorni</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="filter-ticker">Ticker</label>
+              <input type="text" id="filter-ticker" class="filter-input" placeholder="Es. AAPL, BTC-USD">
+            </div>
+            <div class="filter-group">
+              <label for="filter-status">Stato</label>
+              <select id="filter-status" class="filter-select">
+                <option value="all">Tutti</option>
+                <option value="completed">Completati</option>
+                <option value="processing">In elaborazione</option>
+                <option value="pending">In attesa</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Lista Report -->
+          <div class="reports-list" id="reports-list">
+            <div class="empty-state">
+              <p>Nessun report disponibile.</p>
+            </div>
+          </div>
+
+          <!-- Paginazione -->
+          <div class="pagination" id="reports-pagination" hidden>
+            <button class="pagination-btn" id="pagination-prev" disabled>Precedente</button>
+            <span class="pagination-info" id="pagination-info">Pagina 1 di 1</span>
+            <button class="pagination-btn" id="pagination-next" disabled>Successiva</button>
           </div>
         </section>
 
         <section class="user-section" id="panel-inbox" role="tabpanel" aria-labelledby="tab-inbox" hidden>
           <div class="section-header">
-            <h3>Comunicazioni</h3>
-            <p>Canale diretto con il desk Tradelia per supporto e assistenza.</p>
+            <h3>Notifiche</h3>
+            <p>Comunicazioni importanti, aggiornamenti e notifiche di sistema.</p>
           </div>
-          <div class="inbox-list">
-            <div class="placeholder-card">
-              <strong>Supporto dedicato</strong>
-              <span>Per utenti Pro e Desk Professionale: contatta il desk Tradelia via email a <a href="mailto:info@tradelia.org" style="color: rgba(96, 165, 250, 0.9);">info@tradelia.org</a> per assistenza, domande tecniche o richieste di ricerca on-demand.</span>
+          
+          <div class="notifications-container">
+            <div class="notifications-tabs">
+              <button class="notification-tab active" data-notification-type="all">Tutte</button>
+              <button class="notification-tab" data-notification-type="system">Sistema</button>
+              <button class="notification-tab" data-notification-type="reports">Report</button>
+              <button class="notification-tab" data-notification-type="billing">Fatturazione</button>
             </div>
+            
+            <div class="notifications-list-full" id="notifications-list-full">
+              <div class="empty-state">
+                <p>Nessuna notifica disponibile.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Supporto -->
+          <div class="support-section" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(148, 163, 184, 0.15);">
+            <h4>Supporto</h4>
+            <p>Per assistenza, domande tecniche o richieste di ricerca on-demand, contatta il desk Tradelia:</p>
+            <a href="mailto:info@tradelia.org" class="btn btn-outline">info@tradelia.org</a>
           </div>
         </section>
 

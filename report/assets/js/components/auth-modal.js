@@ -807,9 +807,20 @@ async function handleReset(event) {
   event.preventDefault();
   if (state.busy) return;
   const form = event.currentTarget;
-  const email = form.email.value.trim();
+  
+  // Best practice: sanitize and validate email
+  const email = form.email.value.trim().toLowerCase();
+  
+  // Best practice: specific validation with clear messages
   if (!email) {
     showFieldError(form.querySelector('#auth-email-reset'), 'Inserisci la mail associata all\'account.');
+    return;
+  }
+  
+  // Best practice: email format validation (RFC 5322 compliant)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    showFieldError(form.querySelector('#auth-email-reset'), 'Inserisci un indirizzo email valido.');
     return;
   }
   
@@ -824,13 +835,31 @@ async function handleReset(event) {
   clearFieldError(form.querySelector('#auth-email-reset'));
   
   try {
-    const redirectTo = `${window.location.origin}/user/index.html#type=recovery`;
-    const { error } = await supabase.auth.resetPasswordForEmail(email, { 
+    // Best practice: redirectTo deve essere configurato in Supabase Dashboard
+    // Vai su: Authentication > URL Configuration > Redirect URLs
+    // Aggiungi: https://tradelia.org/user/index.html
+    const redirectTo = `${window.location.origin}/user/index.html`;
+    
+    Logger.debug('AuthModal', 'Sending password reset email', { email, redirectTo });
+    
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, { 
       redirectTo,
       captchaToken: null // Se usi captcha, passa qui il token
     });
-    if (error) throw error;
+    
+    if (error) {
+      Logger.error('AuthModal', 'resetPasswordForEmail error', error);
+      throw error;
+    }
+    
+    Logger.debug('AuthModal', 'Password reset email sent', { email });
+    
+    // Mostra messaggio di successo
     showToast('Email inviata! Controlla la tua casella email (anche spam) e clicca sul link per reimpostare la password.', 'success');
+    
+    // Reset form
+    form.reset();
+    
     // Switch to login mode after showing success
     setTimeout(() => {
       state.mode = 'login';
@@ -839,19 +868,32 @@ async function handleReset(event) {
   } catch (err) {
     Logger.error('AuthModal', 'reset error', err);
     
-    // Gestione rate limit per email
-    let errorMessage = err.message || 'Errore durante il reset.';
-    if (err.message && (
-      err.message.toLowerCase().includes('rate limit') ||
-      err.message.toLowerCase().includes('too many requests') ||
-      err.message.toLowerCase().includes('email rate limit')
-    )) {
-      errorMessage = 'Troppe richieste di reset password. Attendi qualche minuto prima di riprovare.';
-    } else if (err.message?.toLowerCase().includes('email') || err.message?.toLowerCase().includes('user')) {
-      errorMessage = 'Email non trovata o non valida.';
+    // Best practice: messaggi errore user-friendly
+    let errorMessage = 'Errore durante il reset.';
+    
+    if (err.message) {
+      const errMsgLower = err.message.toLowerCase();
+      
+      if (errMsgLower.includes('rate limit') || 
+          errMsgLower.includes('too many requests') ||
+          errMsgLower.includes('email rate limit')) {
+        errorMessage = 'Troppe richieste di reset password. Attendi qualche minuto prima di riprovare.';
+      } else if (errMsgLower.includes('email') || 
+                 errMsgLower.includes('user') ||
+                 errMsgLower.includes('not found') ||
+                 errMsgLower.includes('does not exist')) {
+        errorMessage = 'Email non trovata o non valida. Verifica l\'indirizzo email e riprova.';
+      } else if (errMsgLower.includes('redirect') || 
+                 errMsgLower.includes('url') ||
+                 errMsgLower.includes('configuration')) {
+        errorMessage = 'Errore di configurazione. Contatta il supporto se il problema persiste.';
+      } else {
+        errorMessage = err.message;
+      }
     }
     
     showFieldError(form.querySelector('#auth-email-reset'), errorMessage);
+    showToast(errorMessage, 'error');
   } finally {
     state.busy = false;
     submitBtn.disabled = false;
