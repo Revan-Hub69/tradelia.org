@@ -19,35 +19,73 @@
     }
     
     .admin-header {
-      margin-bottom: 2rem;
-      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
       border-bottom: 1px solid var(--br-card);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
     
     .admin-header h1 {
       font-size: 2rem;
       font-weight: 700;
-      margin: 0 0 0.5rem 0;
+      margin: 0;
       color: var(--ink);
     }
     
     .admin-header p {
       color: var(--ink-soft);
       margin: 0;
+      font-size: var(--fs-14);
+    }
+    
+    .admin-tabs {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      padding: 0.25rem;
+      background: var(--surface-elev);
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--br-card);
+    }
+    
+    .admin-tab {
+      border: none;
+      background: transparent;
+      padding: 0.4rem 0.9rem;
+      border-radius: var(--radius-pill);
+      font-size: var(--fs-13);
+      font-weight: 500;
+      color: var(--ink-soft);
+      cursor: pointer;
+      transition: background 0.18s ease, color 0.18s ease;
+    }
+    
+    .admin-tab[aria-selected="true"] {
+      background: var(--surface-card);
+      color: var(--ink);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .admin-main {
+      margin-top: 1.5rem;
+      display: grid;
+      gap: 1.5rem;
     }
     
     .admin-stats {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
-      margin-bottom: 2rem;
     }
     
     .admin-stat-card {
       background: var(--surface-elev);
       border: 1px solid var(--br-card);
       border-radius: var(--radius-lg);
-      padding: 1.5rem;
+      padding: 1.25rem 1.5rem;
     }
     
     .admin-stat-card strong {
@@ -55,19 +93,20 @@
       font-size: 2rem;
       font-weight: 700;
       color: var(--brand-600);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
     
     .admin-stat-card span {
-      font-size: var(--fs-14);
+      font-size: var(--fs-13);
       color: var(--ink-soft);
     }
     
     .admin-filters {
       display: flex;
       gap: 1rem;
-      margin-bottom: 1.5rem;
       flex-wrap: wrap;
+      margin-top: 1.25rem;
+      margin-bottom: 1.25rem;
     }
     
     .admin-filters input,
@@ -82,7 +121,7 @@
     
     .admin-filters input {
       flex: 1;
-      min-width: 250px;
+      min-width: 220px;
     }
     
     .admin-table {
@@ -145,69 +184,111 @@
       padding: 0.5rem 1rem;
       font-size: var(--fs-13);
     }
+    
+    /* Report tab (iframe wrapper) */
+    .admin-reports-wrapper {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--br-card);
+      overflow: hidden;
+      background: var(--surface-elev);
+      min-height: 70vh;
+    }
+    
+    .admin-reports-iframe {
+      width: 100%;
+      min-height: 70vh;
+      border: none;
+      background: transparent;
+    }
+    
+    @media (max-width: 768px) {
+      .admin-shell {
+        padding: 1.25rem;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="admin-shell">
     <div class="admin-header">
       <h1>Dashboard Admin</h1>
-      <p>Gestione utenti, ruoli, scadenze piani e crediti</p>
-    </div>
-    
-    <div class="admin-stats" id="admin-stats">
-      <div class="admin-stat-card">
-        <strong id="stat-total-users">—</strong>
-        <span>Utenti totali</span>
-      </div>
-      <div class="admin-stat-card">
-        <strong id="stat-active-plans">—</strong>
-        <span>Piani attivi</span>
-      </div>
-      <div class="admin-stat-card">
-        <strong id="stat-expired-plans">—</strong>
-        <span>Piani scaduti</span>
-      </div>
-      <div class="admin-stat-card">
-        <strong id="stat-total-credits">—</strong>
-        <span>Crediti totali</span>
+      <p>Gestione utenti, ruoli, piani, crediti e report Desk</p>
+      <div class="admin-tabs" role="tablist" aria-label="Sezioni admin">
+        <button type="button" class="admin-tab" id="tab-admin-users" aria-controls="panel-admin-users" aria-selected="true">Utenti</button>
+        <button type="button" class="admin-tab" id="tab-admin-reports" aria-controls="panel-admin-reports" aria-selected="false">Report Desk</button>
       </div>
     </div>
     
-    <div class="admin-filters">
-      <input type="text" id="filter-search" placeholder="Cerca per email o nome..." />
-      <select id="filter-role">
-        <option value="">Tutti i ruoli</option>
-        <option value="trial">Trial</option>
-        <option value="pro">Pro</option>
-        <option value="institutional">Institutional</option>
-      </select>
-      <select id="filter-status">
-        <option value="">Tutti gli stati</option>
-        <option value="active">Attivi</option>
-        <option value="expired">Scaduti</option>
-      </select>
-    </div>
-    
-    <div class="admin-table">
-      <table>
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Nome</th>
-            <th>Ruolo</th>
-            <th>Scadenza</th>
-            <th>Crediti</th>
-            <th>Azioni</th>
-          </tr>
-        </thead>
-        <tbody id="users-table-body">
-          <tr>
-            <td colspan="6" style="text-align: center; padding: 2rem; color: var(--ink-soft);">
-              Caricamento...
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="admin-main">
+      <!-- Pannello Utenti -->
+      <section id="panel-admin-users" role="tabpanel" aria-labelledby="tab-admin-users">
+        <div class="admin-stats" id="admin-stats">
+          <div class="admin-stat-card">
+            <strong id="stat-total-users">—</strong>
+            <span>Utenti totali</span>
+          </div>
+          <div class="admin-stat-card">
+            <strong id="stat-active-plans">—</strong>
+            <span>Piani attivi</span>
+          </div>
+          <div class="admin-stat-card">
+            <strong id="stat-expired-plans">—</strong>
+            <span>Piani scaduti</span>
+          </div>
+          <div class="admin-stat-card">
+            <strong id="stat-total-credits">—</strong>
+            <span>Crediti totali (Desk)</span>
+          </div>
+        </div>
+        
+        <div class="admin-filters">
+          <input type="text" id="filter-search" placeholder="Cerca per email o nome..." />
+          <select id="filter-role">
+            <option value="">Tutti i ruoli</option>
+            <option value="trial">Trial</option>
+            <option value="pro">Pro</option>
+            <option value="institutional">Desk / Institutional</option>
+          </select>
+          <select id="filter-status">
+            <option value="">Tutti gli stati</option>
+            <option value="active">Attivi</option>
+            <option value="expired">Scaduti</option>
+          </select>
+        </div>
+        
+        <div class="admin-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Nome</th>
+                <th>Ruolo</th>
+                <th>Scadenza</th>
+                <th>Crediti</th>
+                <th>Azioni</th>
+              </tr>
+            </thead>
+            <tbody id="users-table-body">
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 2rem; color: var(--ink-soft);">
+                  Caricamento...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      
+      <!-- Pannello Report Desk (riusa la dashboard esistente) -->
+      <section id="panel-admin-reports" role="tabpanel" aria-labelledby="tab-admin-reports" hidden>
+        <div class="admin-reports-wrapper">
+          <iframe 
+            src="/report/admin/dashboard.html" 
+            class="admin-reports-iframe" 
+            title="Dashboard report Desk">
+          </iframe>
+        </div>
+      </section>
     </div>
   </div>
   
@@ -324,5 +405,27 @@
   </style>
   
   <script type="module" src="/user/assets/js/admin.js"></script>
+  <script>
+    // Tab switching per admin dashboard (Utenti / Report Desk)
+    (function () {
+      const tabUsers = document.getElementById('tab-admin-users');
+      const tabReports = document.getElementById('tab-admin-reports');
+      const panelUsers = document.getElementById('panel-admin-users');
+      const panelReports = document.getElementById('panel-admin-reports');
+      
+      if (!tabUsers || !tabReports || !panelUsers || !panelReports) return;
+      
+      function selectTab(tabId) {
+        const isUsers = tabId === 'users';
+        tabUsers.setAttribute('aria-selected', isUsers ? 'true' : 'false');
+        tabReports.setAttribute('aria-selected', !isUsers ? 'true' : 'false');
+        panelUsers.hidden = !isUsers;
+        panelReports.hidden = isUsers;
+      }
+      
+      tabUsers.addEventListener('click', () => selectTab('users'));
+      tabReports.addEventListener('click', () => selectTab('reports'));
+    })();
+  </script>
 </body>
 </html>

@@ -71,9 +71,14 @@ async function checkAdminAccess() {
     if (error) throw error;
     if (adminRecord) {
       actions.hidden = false;
-      button.addEventListener('click', () => {
-        window.location.href = '/report/admin/dashboard.html';
-      }, { once: true });
+      // Apri la nuova dashboard admin unificata in una nuova scheda
+      if (button._adminClickHandler) {
+        button.removeEventListener('click', button._adminClickHandler);
+      }
+      button._adminClickHandler = () => {
+        window.open('/user/admin.html', '_blank', 'noopener,noreferrer');
+      };
+      button.addEventListener('click', button._adminClickHandler, { once: true });
     } else {
       actions.hidden = true;
     }
