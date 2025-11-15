@@ -436,6 +436,94 @@
       font-weight: 600;
     }
 
+    /* ===== AUDIENCE SECTION ===== */
+    .audience-section {
+      padding: 5rem 0;
+      background: var(--surface-page);
+    }
+
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--sp-6);
+    }
+
+    .audience-card {
+      background: var(--surface-card);
+      border: 1px solid var(--br-soft);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.35);
+      transition: box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-base), background var(--transition-base);
+    }
+
+    .audience-card:hover {
+      border-color: var(--brand-500);
+      background: var(--surface-elev);
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.6);
+    }
+
+    .audience-card strong {
+      font-size: var(--fs-16);
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .audience-card span {
+      font-size: var(--fs-14);
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    .audience-badge {
+      align-self: flex-start;
+      font-size: var(--fs-11);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: var(--sp-2) var(--sp-3);
+      border-radius: var(--radius-pill);
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--brand-400);
+    }
+
+    .audience-partner-highlight {
+      margin-top: var(--sp-10);
+      padding: var(--sp-5) var(--sp-6);
+      border-radius: var(--radius-lg);
+      border: 1px dashed rgba(148, 163, 184, 0.5);
+      background: radial-gradient(circle at 0 0, rgba(37, 99, 235, 0.18), transparent 60%);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+    }
+
+    .audience-partner-highlight strong {
+      font-size: var(--fs-15);
+      color: var(--ink);
+    }
+
+    .audience-partner-highlight p {
+      margin: 0;
+      font-size: var(--fs-14);
+      color: var(--ink-soft);
+    }
+
+    .audience-partner-highlight .btn {
+      align-self: flex-start;
+      margin-top: var(--sp-2);
+    }
+
+    @media (max-width: 768px) {
+      .audience-section {
+        padding: var(--sp-10) 0;
+      }
+    }
+
     /* ===== VALUE SECTION ===== */
     .value-section {
       padding: 6rem 0;
@@ -1857,18 +1945,16 @@
   <section class="hero-section">
     <div class="container">
       <div class="hero-content">
-        <div class="hero-badge">Progetto Indipendente</div>
+        <div class="hero-badge">Formazione indipendente sui mercati</div>
         
         <h1 class="hero-title">
-          <span class="hero-title-line">Metodo Accademico</span>
-          <span class="hero-title-line">Sui Mercati</span>
+          <span class="hero-title-line">Analisi dei mercati</span>
+          <span class="hero-title-line">spiegate in modo didattico</span>
         </h1>
         
         <p class="hero-description">
-          Tradelia AI produce <strong>approfondimenti didattici</strong> con il framework proprietario SRD/MTB, pubblicando circa <strong>3 deck al giorno</strong>.
-          Usiamo un <strong>ensemble multi-LLM di fascia alta</strong> (es. GPT-5 Pro, Gemini 1.5 Pro, Claude 3.5 Sonnet, Llama 3.1 70B, Mistral Large)
-          con routing semantico, best-of-n e consensus, oltre a verifiche numeriche e cronologiche. Ogni output cita <strong>fonti Tier-1</strong>
-          e mantiene attribution completa.
+          Tradelia AI trasforma dati e notizie in <strong>deck didattici pronti da studiare</strong>, con circa <strong>3 pubblicazioni al giorno</strong>.
+          Pensato per trader, investitori e desk che vogliono capire il <strong>perché dei movimenti di mercato</strong>, non seguire segnali.
         </p>
         
         <div class="hero-features">
@@ -1877,36 +1963,36 @@
               <path d="M3 3v18h18" stroke="currentColor" stroke-width="2" fill="none"/>
               <path d="M7 12l4 4 7-7" stroke="currentColor" stroke-width="2" fill="none"/>
             </svg>
-            <strong>Profondità Didattica</strong>
-            <span>Approfondimenti su contesto tecnico, macro e fondamentale con workflow multistrato</span>
+            <strong>Quadro completo in un unico deck</strong>
+            <span>Macro, intermarket e tecnico nella stessa struttura, con livelli chiave e scenari spiegati passo passo.</span>
           </div>
           <div class="hero-feature">
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 2l7 4v6c0 5-3 8-7 10C8 20 5 17 5 12V6l7-4z" stroke="currentColor" stroke-width="2" fill="none"/>
               <path d="M12 8v4" stroke="currentColor" stroke-width="2"/>
             </svg>
-            <strong>Deck Accademici</strong>
-            <span>SRD/MTB strutturati con metodologia accademica e disclosure MiFID-safe</span>
+            <strong>Materiale pronto da usare</strong>
+            <span>PDF e slide utilizzabili in autonomia o in team, con legenda, note e punti da discutere.</span>
           </div>
           <div class="hero-feature">
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
               <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2" fill="none"/>
             </svg>
-            <strong>Educazione Consapevole</strong>
-            <span>Glossario, tutorial e strumenti per sviluppare autonomia sullo studio dei mercati</span>
+            <strong>Formazione MiFID-safe</strong>
+            <span>Contenuti educativi, disclosure chiare e nessuna indicazione operativa o gestione del capitale.</span>
           </div>
         </div>
 
         <div class="hero-cta">
           <a href="/pricing.html" class="btn btn-primary btn-with-icon">
-            <span>Inizia la prova gratuita</span>
+            <span>Guarda piani e prezzi</span>
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
           </a>
           <a href="#metodo" class="btn btn-outline btn-with-icon">
-            <span>Scopri il framework</span>
+            <span>Come funziona il metodo</span>
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
@@ -1925,6 +2011,54 @@
         <p>
           Materiale educativo basato su metodo accademico. Le analisi non costituiscono <strong>consulenza finanziaria</strong> né ricerca in investimento ai sensi MiFID II.
         </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== AUDIENCE SECTION ===== -->
+  <section class="audience-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Per chi è pensato Tradelia AI</h2>
+        <p class="section-description">
+          Tradelia AI è pensato per chi vuole studiare i mercati con un approccio strutturato, senza ricevere segnali operativi.
+        </p>
+      </div>
+
+      <div class="audience-grid">
+        <article class="audience-card">
+          <span class="audience-badge">B2C</span>
+          <strong>Trader e investitori autonomi</strong>
+          <span>Vuoi una guida per leggere contesto e scenari, mantenendo le decisioni di investimento sempre sulle tue spalle.</span>
+        </article>
+
+        <article class="audience-card">
+          <span class="audience-badge">Desk &amp; analisti</span>
+          <strong>Analisti e desk interni</strong>
+          <span>Ti serve un framework replicabile per briefing periodici, da integrare con i tuoi flussi e dati proprietari.</span>
+        </article>
+
+        <article class="audience-card">
+          <span class="audience-badge">Formazione</span>
+          <strong>Formatori e community educative</strong>
+          <span>Gestisci un corso o una community e vuoi materiale didattico istituzionale, aggiornato e coerente.</span>
+        </article>
+
+        <article class="audience-card">
+          <span class="audience-badge">White-label</span>
+          <strong>Partner con PDF brandizzabili</strong>
+          <span>Broker, academy e società che desiderano PDF white-label con note legali dedicate, da offrire alla propria base clienti.</span>
+        </article>
+      </div>
+
+      <div class="audience-partner-highlight" id="white-label">
+        <strong>White-label per partner professionali</strong>
+        <p>
+          I deck possono essere forniti anche in formato PDF white-label, con logo e intestazione del partner, mantenendo metodo, disclosure e controlli Tradelia.
+        </p>
+        <a href="mailto:info@tradelia.org?subject=Informazioni%20PDF%20white-label" class="btn btn-outline btn-with-icon">
+          <span>Richiedi informazioni white-label</span>
+        </a>
       </div>
     </div>
   </section>
@@ -1975,13 +2109,13 @@
     </div>
   </section>
 
-  <!-- ===== METODOLOGIA SECTION ===== -->
+  <!-- ===== METODOLOGIA SECTION / HOW IT WORKS ===== -->
   <section id="metodo" class="method-section">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Il Framework Tradelia AI</h2>
+        <h2 class="section-title">Come funziona Tradelia AI</h2>
         <p class="section-description">
-          Non siamo un'AI generica: orchestriamo <strong>moduli proprietari</strong>, un <strong>ensemble multi-LLM controllato</strong> e fonti Tier-1 per produrre materiale didattico verificabile.
+          Dal dato grezzo al deck che vedi in area riservata, in <strong>3 passaggi</strong>: raccolta delle informazioni, costruzione dei deck didattici, controlli e pubblicazione MiFID-safe.
         </p>
       </div>
 
@@ -1993,11 +2127,11 @@
               <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" fill="none"/>
             </svg>
           </div>
-          <h3 class="method-card-title">Stack multi-LLM</h3>
+          <h3 class="method-card-title">1 · Raccolta & controlli sui dati</h3>
           <ul class="method-card-list">
-            <li>Routing semantico, best-of-n e consensus tra modelli (es. GPT-5 Pro, Gemini 1.5 Pro, Claude 3.5 Sonnet)</li>
-            <li>Integrazione di Llama 3.1 70B, Mistral Large e Command-R+ per verifiche incrociate e latenza controllata</li>
-            <li>Controlli automatici su coerenza numerica, cronologia e classificazioni</li>
+            <li>Raccogliamo dati e notizie da <strong>fonti istituzionali Tier‑1</strong> (banche centrali, indici, flussi, report ufficiali).</li>
+            <li>Un ensemble multi‑LLM di fascia alta aiuta a confrontare versioni diverse degli stessi dati e individua incongruenze.</li>
+            <li>Applichiamo controlli automatici su coerenza numerica, cronologia e classificazioni dei contenuti.</li>
           </ul>
         </div>
 
@@ -2008,11 +2142,11 @@
               <path d="M7.5 4.27l9 5.15M3.29 7 12 12l8.71-5M12 22V12" stroke="currentColor" stroke-width="2" fill="none"/>
             </svg>
           </div>
-          <h3 class="method-card-title">Moduli proprietari</h3>
+          <h3 class="method-card-title">2 · Costruzione dei deck</h3>
           <ul class="method-card-list">
-            <li>SRD v5.0 (F1→F7) per swing/multi-fattore: regimi, intermarket, volatilità, setup</li>
-            <li>MTB v3.1 per briefing macro quotidiano: ciclo, curva tassi, inflazione, flussi ETF</li>
-            <li>Dataset con timestamp, identificatori e attribution a fonti Tier-1</li>
+            <li><strong>SRD v5.0</strong> organizza il quadro tecnico e intermarket in moduli (regimi, volatilità, scenari) facili da seguire.</li>
+            <li><strong>MTB v3.1</strong> sintetizza il contesto macro: ciclo, curva tassi, inflazione, flussi ETF e rischio sistemico.</li>
+            <li>Ogni slide è pensata per uso didattico: legenda, evidenziazione dei punti chiave e domande guida per il lettore.</li>
           </ul>
         </div>
 
@@ -2023,16 +2157,16 @@
               <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             </svg>
           </div>
-          <h3 class="method-card-title">Validazioni & governance</h3>
+          <h3 class="method-card-title">3 · Revisione, disclosure e pubblicazione</h3>
           <ul class="method-card-list">
-            <li>Cross-check umano + rubriche oggettive su qualità testuale e copertura</li>
-            <li>Data lineage completo: versioni, fonti e assunzioni sempre dichiarate</li>
-            <li>Principio “AI assistita”: supervisione editoriale, privacy-first, nessuna profilazione</li>
+            <li>Ogni deck viene rivisto manualmente: seguiamo rubriche oggettive su chiarezza, copertura e leggibilità.</li>
+            <li>Dichiariamo sempre <strong>fonti, ipotesi e limiti</strong> del materiale, con versioni e date in chiaro.</li>
+            <li>Applichiamo il principio “AI assistita”: supervisione editoriale umana, privacy‑first e nessuna profilazione dell’utente.</li>
           </ul>
         </div>
       </div>
       <p style="margin-top: var(--sp-6); color: var(--ink-soft); font-size: var(--fs-14);">
-        La selezione dei modelli è dinamica per caso d'uso: aggiorniamo periodicamente lo stack per garantire qualità, latenza e compliance.
+        La scelta dei modelli e delle fonti viene aggiornata periodicamente per mantenere <strong>qualità, latenza e conformità</strong> agli standard di ricerca educativa.
       </p>
     </div>
   </section>
@@ -2043,8 +2177,7 @@
       <div class="section-header">
         <h2 class="section-title">Moduli AI Proprietari</h2>
         <p class="section-description">
-          Tre <strong>moduli esclusivi</strong> che trasformano la complessità dei mercati in <strong>insight chiari e didatticamente utili</strong>. 
-          Tecnologia basata su dati Tier-1 e algoritmi proprietari, progettata per finalità formative e di ricerca.
+          I tre moduli che compongono il framework Tradelia AI: SRD, MTB e Stress Test avanzato. Tutti sono progettati per trasformare dati complessi in materiali concreti da usare in studio, riunioni e PDF white‑label.
         </p>
       </div>
 
@@ -2061,8 +2194,8 @@
             <h3 class="service-card-title">SRD v5.0 — Swing Research Deck</h3>
           </div>
           <p class="service-card-description">
-            Pipeline didattica multi-fattore in <strong>sette moduli (F1→F7)</strong>, con regime detection, intermarket, volatilità e setup.
-            Validata da ensemble multi-LLM e fonti Tier-1. Output replicabili, tracciabili e conformi MiFID II.
+            Deck didattico multi‑fattore in <strong>sette blocchi (F1→F7)</strong>: regime di mercato, intermarket, volatilità e livelli di rischio.
+            Pensato per leggere in 10–15 minuti il quadro principale, con fonti Tier‑1 e versioni tracciate.
           </p>
         </div>
 
@@ -2079,7 +2212,7 @@
           </div>
           <p class="service-card-description">
             Briefing macro quotidiano su ciclo economico, curva dei tassi, inflazione, volatilità implicita e flussi ETF.
-            Basato su fonti Tier-1 (Fed, BCE, IMF, Nasdaq) con sintesi didattica e assunzioni esplicitate.
+            Utile per contestualizzare i deck SRD e preparare riunioni o call con il desk, con assunzioni sempre esplicitate.
           </p>
         </div>
 
@@ -2095,10 +2228,8 @@
             <h3 class="service-card-title">Stress Test Avanzato</h3>
           </div>
           <p class="service-card-description">
-            Modulo di valutazione <strong>multi-scenario</strong> che simula l'impatto di variabili macroeconomiche, volatilità,
-            tassi e rotazioni settoriali su portafogli modello o personalizzati. Integra dati storici e real-time da
-            fonti Tier-1 (Fed, BCE, IMF, Bloomberg) con <strong>algoritmi proprietari</strong> cross-asset.
-            <strong>Output descrittivi e comparativi, con finalità didattiche e di ricerca.</strong> Conformi a MiFID II.
+            Modulo <strong>multi‑scenario</strong> che simula l'impatto di shock macro, volatilità e rotazioni settoriali su portafogli modello o personalizzati.
+            Output descrittivi e comparativi a scopo didattico, basati su dati storici e real‑time da fonti Tier‑1 e algoritmi cross‑asset proprietari (in sviluppo).
           </p>
           <div class="service-card-badge">In fase di sviluppo</div>
         </div>
@@ -2106,7 +2237,7 @@
       
       <div style="text-align: center; margin-top: var(--sp-10);">
         <a href="/dashboard.html" class="btn btn-primary btn-with-icon">
-          <span>Accedi Alla Dashboard</span>
+          <span>Guarda la dashboard degli abbonati</span>
           <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
