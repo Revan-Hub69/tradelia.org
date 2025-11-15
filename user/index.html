@@ -147,34 +147,46 @@
         <section class="user-section" id="panel-profile" role="tabpanel" aria-labelledby="tab-profile" hidden>
           <div class="section-header">
             <h3>Profilo e preferenze</h3>
-            <p>Gestisci le informazioni del tuo profilo. Le modifiche sono immediatamente visibili nella community.</p>
+            <p>Gestisci le informazioni del tuo profilo, i dati aziendali e la sicurezza del tuo account.</p>
           </div>
+          
+          <!-- Sub-tabs Profilo -->
+          <div class="profile-tabs" role="tablist" aria-label="Sezioni profilo">
+            <button type="button" class="profile-tab" id="profile-tab-main" aria-controls="profile-block-main" aria-selected="true">Profilo</button>
+            <button type="button" class="profile-tab" id="profile-tab-business" aria-controls="profile-business-section" aria-selected="false">Dati aziendali</button>
+            <button type="button" class="profile-tab" id="profile-tab-security" aria-controls="profile-block-security" aria-selected="false">Sicurezza</button>
+            <button type="button" class="profile-tab" id="profile-tab-preferences" aria-controls="profile-block-preferences" aria-selected="false">Preferenze</button>
+          </div>
+          
+          <!-- Profilo + Business + Preferenze (unico form) -->
           <form class="profile-form" id="profile-form">
-            <label>
-              Foto profilo
-              <div class="user-cta">
-                <input id="profile-avatar-file" type="file" accept="image/*" style="display:none">
-                <button class="btn btn-outline" type="button" id="profile-avatar-btn">Carica/aggiorna foto</button>
-              </div>
-              <span class="form-hint">Formati supportati: PNG, JPG. Dimensione massima: 2 MB. L'immagine sarà visibile nel tuo profilo pubblico.</span>
-            </label>
-            <label>
-              Tipo account
-              <select id="profile-user-type" required>
-                <option value="individual">Individuale</option>
-                <option value="business">Business/Azienda</option>
-              </select>
-              <span class="form-hint">Seleziona il tipo di account. I dati business sono necessari per la fatturazione.</span>
-            </label>
-            
-            <label>
-              Nome visualizzato
-              <input type="text" id="profile-display-name" maxlength="80" placeholder="Es. Mario Rossi o Team Analisi Quantitativa">
-              <span class="form-hint">Nome utilizzato internamente nella piattaforma.</span>
-            </label>
+            <div id="profile-block-main" class="profile-block">
+              <label>
+                Foto profilo
+                <div class="user-cta">
+                  <input id="profile-avatar-file" type="file" accept="image/*" style="display:none">
+                  <button class="btn btn-outline" type="button" id="profile-avatar-btn">Carica/aggiorna foto</button>
+                </div>
+                <span class="form-hint">Formati supportati: PNG, JPG. Dimensione massima: 2 MB. L'immagine sarà visibile nel tuo profilo pubblico.</span>
+              </label>
+              <label>
+                Tipo account
+                <select id="profile-user-type" required>
+                  <option value="individual">Individuale</option>
+                  <option value="business">Business/Azienda</option>
+                </select>
+                <span class="form-hint">Seleziona il tipo di account. I dati business sono necessari per la fatturazione.</span>
+              </label>
+              
+              <label>
+                Nome visualizzato
+                <input type="text" id="profile-display-name" maxlength="80" placeholder="Es. Mario Rossi o Team Analisi Quantitativa">
+                <span class="form-hint">Nome utilizzato internamente nella piattaforma.</span>
+              </label>
+            </div>
             
             <!-- Sezione Dati Business (visibile solo se user_type = business) -->
-            <div id="profile-business-section" style="display: none; margin-top: 1.5rem; padding: 1.5rem; background: var(--surface-elev); border: 1px solid var(--br-card); border-radius: var(--radius-lg);">
+            <div id="profile-business-section" class="profile-block" style="display: none; margin-top: 1.5rem; padding: 1.5rem; background: var(--surface-elev); border: 1px solid var(--br-card); border-radius: var(--radius-lg);">
               <h4 style="margin: 0 0 1rem 0; font-size: var(--fs-16); font-weight: 600;">Dati Aziendali (per fatturazione Xolo)</h4>
               
               <label>
@@ -300,60 +312,64 @@
             </div>
             
             <!-- Preferenze interne -->
-            <div class="profile-preferences">
-              <h4>Preferenze</h4>
-              <label class="preference-checkbox">
-                <input type="checkbox" id="pref-email-notifications" checked>
-                <span>Notifiche email per richieste analisi completate</span>
-              </label>
-              <label class="preference-checkbox">
-                <input type="checkbox" id="pref-dashboard-alerts" checked>
-                <span>Avvisi dashboard per aggiornamenti importanti</span>
-              </label>
-            </div>
-            <div class="user-cta">
-              <button class="btn btn-primary" type="submit" id="profile-save-btn">Salva profilo</button>
-              <button class="btn btn-outline" type="button" id="profile-reset-btn">Annulla modifiche</button>
+            <div id="profile-block-preferences" class="profile-block">
+              <div class="profile-preferences">
+                <h4>Preferenze</h4>
+                <label class="preference-checkbox">
+                  <input type="checkbox" id="pref-email-notifications" checked>
+                  <span>Notifiche email per richieste analisi completate</span>
+                </label>
+                <label class="preference-checkbox">
+                  <input type="checkbox" id="pref-dashboard-alerts" checked>
+                  <span>Avvisi dashboard per aggiornamenti importanti</span>
+                </label>
+              </div>
+              <div class="user-cta">
+                <button class="btn btn-primary" type="submit" id="profile-save-btn">Salva profilo</button>
+                <button class="btn btn-outline" type="button" id="profile-reset-btn">Annulla modifiche</button>
+              </div>
             </div>
           </form>
           
-          <!-- Sezione Sicurezza Account -->
-          <div class="section-header" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(148, 163, 184, 0.15);">
-            <h3>Sicurezza account</h3>
-            <p>Gestisci password e email del tuo account.</p>
+          <!-- Sezione Sicurezza Account (panel separato) -->
+          <div id="profile-block-security" class="profile-block" hidden>
+            <div class="section-header" style="margin-top: 1.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(148, 163, 184, 0.15);">
+              <h3>Sicurezza account</h3>
+              <p>Gestisci password e email del tuo account.</p>
+            </div>
+            
+            <!-- Form Cambio Password -->
+            <form class="profile-form" id="change-password-form">
+              <label>
+                Nuova password
+                <input type="password" id="new-password" name="newPassword" autocomplete="new-password" required minlength="8" placeholder="Minimo 8 caratteri">
+                <span class="form-hint">La password deve contenere almeno 8 caratteri.</span>
+              </label>
+              <label>
+                Conferma password
+                <input type="password" id="confirm-password" name="confirmPassword" autocomplete="new-password" required minlength="8" placeholder="Ripeti la nuova password">
+              </label>
+              <div class="user-cta">
+                <button class="btn btn-primary" type="submit" id="change-password-btn">Cambia password</button>
+              </div>
+              <div id="change-password-error" class="error-message" hidden></div>
+              <div id="change-password-success" class="success-message" hidden></div>
+            </form>
+            
+            <!-- Form Cambio Email -->
+            <form class="profile-form" id="change-email-form" style="margin-top: 2rem;">
+              <label>
+                Nuova email
+                <input type="email" id="new-email" name="newEmail" autocomplete="email" required placeholder="nuova@email.com">
+                <span class="form-hint">Riceverai un'email di conferma alla nuova indirizzo.</span>
+              </label>
+              <div class="user-cta">
+                <button class="btn btn-primary" type="submit" id="change-email-btn">Cambia email</button>
+              </div>
+              <div id="change-email-error" class="error-message" hidden></div>
+              <div id="change-email-success" class="success-message" hidden></div>
+            </form>
           </div>
-          
-          <!-- Form Cambio Password -->
-          <form class="profile-form" id="change-password-form">
-            <label>
-              Nuova password
-              <input type="password" id="new-password" name="newPassword" autocomplete="new-password" required minlength="8" placeholder="Minimo 8 caratteri">
-              <span class="form-hint">La password deve contenere almeno 8 caratteri.</span>
-            </label>
-            <label>
-              Conferma password
-              <input type="password" id="confirm-password" name="confirmPassword" autocomplete="new-password" required minlength="8" placeholder="Ripeti la nuova password">
-            </label>
-            <div class="user-cta">
-              <button class="btn btn-primary" type="submit" id="change-password-btn">Cambia password</button>
-            </div>
-            <div id="change-password-error" class="error-message" hidden></div>
-            <div id="change-password-success" class="success-message" hidden></div>
-          </form>
-          
-          <!-- Form Cambio Email -->
-          <form class="profile-form" id="change-email-form" style="margin-top: 2rem;">
-            <label>
-              Nuova email
-              <input type="email" id="new-email" name="newEmail" autocomplete="email" required placeholder="nuova@email.com">
-              <span class="form-hint">Riceverai un'email di conferma alla nuova indirizzo.</span>
-            </label>
-            <div class="user-cta">
-              <button class="btn btn-primary" type="submit" id="change-email-btn">Cambia email</button>
-            </div>
-            <div id="change-email-error" class="error-message" hidden></div>
-            <div id="change-email-success" class="success-message" hidden></div>
-          </form>
         </section>
 
 

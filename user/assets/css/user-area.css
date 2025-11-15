@@ -81,6 +81,12 @@
   color: var(--ink);
 }
 
+.badge-soft {
+  background: var(--surface-card);
+  border-color: rgba(148, 163, 184, 0.4);
+  color: var(--ink-soft);
+}
+
 .badge-role-trial {
   border-color: var(--brand-600);
   background: var(--surface-elev);
@@ -412,6 +418,40 @@
 .profile-form label:has(input[type="text"]),
 .profile-form label:has(textarea) {
   margin-bottom: 0.25rem;
+}
+
+.profile-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  margin-bottom: 1.5rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--br-card);
+  background: var(--surface-elev);
+}
+
+.profile-tab {
+  border: none;
+  background: transparent;
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-13);
+  font-weight: 500;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.profile-tab[aria-selected="true"] {
+  background: var(--surface-card);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+
+.profile-block {
+  display: grid;
+  gap: 1.25rem;
 }
 
 .profile-form input[type="text"],

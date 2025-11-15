@@ -25,7 +25,14 @@ const PANELS = {
 const PROFILE_FORM = document.getElementById('profile-form');
 const PROFILE_NAME_FIELD = document.getElementById('profile-display-name');
 const PROFILE_USER_TYPE = document.getElementById('profile-user-type');
+const PROFILE_TAB_MAIN = document.getElementById('profile-tab-main');
+const PROFILE_TAB_BUSINESS = document.getElementById('profile-tab-business');
+const PROFILE_TAB_SECURITY = document.getElementById('profile-tab-security');
+const PROFILE_TAB_PREFERENCES = document.getElementById('profile-tab-preferences');
+const PROFILE_BLOCK_MAIN = document.getElementById('profile-block-main');
 const PROFILE_BUSINESS_SECTION = document.getElementById('profile-business-section');
+const PROFILE_BLOCK_PREFERENCES = document.getElementById('profile-block-preferences');
+const PROFILE_BLOCK_SECURITY = document.getElementById('profile-block-security');
 const PROFILE_BUSINESS_NAME = document.getElementById('profile-business-name');
 const PROFILE_BUSINESS_COUNTRY = document.getElementById('profile-business-country');
 const PROFILE_BUSINESS_LANGUAGE = document.getElementById('profile-business-language');
@@ -123,6 +130,7 @@ async function init() {
   siteHeader.mount(document.getElementById('site-header-slot'), { showExport: false });
   document.getElementById('footer-year').textContent = new Date().getFullYear();
   setupTabs();
+  setupProfileTabs();
   
   // IMPORTANTE: restoreSession() PRIMA di handlePasswordResetRedirect()
   // perché Supabase potrebbe aver già impostato la sessione dal token nell'hash
@@ -329,16 +337,38 @@ function renderHero() {
     AVATAR.classList.remove('has-image');
     AVATAR.textContent = initials;
   }
+  
+  // Nome + info ruolo
   NAME.textContent = displayName;
   EMAIL.textContent = state.user?.email || '';
 
   BADGES.innerHTML = '';
-  if (state.role) {
-    const roleBadge = document.createElement('span');
-    roleBadge.className = `badge badge-role-${state.role}`;
-    roleBadge.textContent = roleLabel(state.role);
-    BADGES.appendChild(roleBadge);
+  
+  // Badge ruolo
+  const roleBadge = document.createElement('span');
+  roleBadge.className = `badge badge-role-${state.role || 'guest'}`;
+  roleBadge.textContent = roleLabel(state.role);
+  BADGES.appendChild(roleBadge);
+
+  // Badge extra per guest/trial/admin
+  if (!state.role) {
+    const infoBadge = document.createElement('span');
+    infoBadge.className = 'badge badge-soft';
+    infoBadge.textContent = 'Versione didattica base';
+    BADGES.appendChild(infoBadge);
+  } else if (state.role === 'trial') {
+    const trialBadge = document.createElement('span');
+    trialBadge.className = 'badge badge-soft';
+    trialBadge.textContent = 'Prova gratuita attiva';
+    BADGES.appendChild(trialBadge);
   }
+  if (state.isAdmin) {
+    const adminBadge = document.createElement('span');
+    adminBadge.className = 'badge badge-soft';
+    adminBadge.textContent = 'Admin';
+    BADGES.appendChild(adminBadge);
+  }
+
   const statusBadge = document.createElement('span');
   statusBadge.className = 'badge';
   statusBadge.textContent = state.lastSession?.expires_at ? 'Sessione attiva' : 'Online';
@@ -365,15 +395,28 @@ function renderProfileForm() {
   if (PROFILE_USER_TYPE) {
     PROFILE_USER_TYPE.value = state.profile?.user_type || 'individual';
     
-    // Show/hide business section based on user type
+    // Show/hide business section and tab based on user type / role
+    const isBusiness = PROFILE_USER_TYPE.value === 'business' || state.role === 'institutional';
     if (PROFILE_BUSINESS_SECTION) {
-      PROFILE_BUSINESS_SECTION.style.display = PROFILE_USER_TYPE.value === 'business' ? 'block' : 'none';
+      PROFILE_BUSINESS_SECTION.style.display = isBusiness ? 'block' : 'none';
+    }
+    if (PROFILE_TAB_BUSINESS) {
+      PROFILE_TAB_BUSINESS.hidden = !isBusiness;
     }
     
     // Add change listener
     PROFILE_USER_TYPE.addEventListener('change', (e) => {
+      const val = e.target.value;
+      const business = val === 'business' || state.role === 'institutional';
       if (PROFILE_BUSINESS_SECTION) {
-        PROFILE_BUSINESS_SECTION.style.display = e.target.value === 'business' ? 'block' : 'none';
+        PROFILE_BUSINESS_SECTION.style.display = business ? 'block' : 'none';
+      }
+      if (PROFILE_TAB_BUSINESS) {
+        PROFILE_TAB_BUSINESS.hidden = !business;
+        // Se il tab business è nascosto e attivo, torna a Profilo
+        if (!business && PROFILE_TAB_BUSINESS.getAttribute('aria-selected') === 'true') {
+          selectProfileTab('main');
+        }
       }
     });
   }
@@ -414,6 +457,56 @@ function renderProfileForm() {
     AVATAR_BTN.addEventListener('click', () => AVATAR_FILE.click());
     AVATAR_FILE.addEventListener('change', onAvatarSelected);
   }
+}
+
+function selectProfileTab(tab) {
+  const tabMap = {
+    main: { tab: PROFILE_TAB_MAIN, blocks: [PROFILE_BLOCK_MAIN, PROFILE_BUSINESS_SECTION, PROFILE_BLOCK_PREFERENCES] },
+    business: { tab: PROFILE_TAB_BUSINESS, blocks: [PROFILE_BUSINESS_SECTION] },
+    security: { tab: PROFILE_TAB_SECURITY, blocks: [PROFILE_BLOCK_SECURITY] },
+    preferences: { tab: PROFILE_TAB_PREFERENCES, blocks: [PROFILE_BLOCK_PREFERENCES] }
+  };
+  
+  const selected = tabMap[tab] || tabMap.main;
+  
+  // Aggiorna aria-selected sui tab
+  [PROFILE_TAB_MAIN, PROFILE_TAB_BUSINESS, PROFILE_TAB_SECURITY, PROFILE_TAB_PREFERENCES].forEach(btn => {
+    if (!btn) return;
+    const isActive = btn === selected.tab;
+    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
+  
+  // Nascondi/mostra blocchi
+  if (PROFILE_BLOCK_MAIN) PROFILE_BLOCK_MAIN.hidden = !(tab === 'main');
+  if (PROFILE_BUSINESS_SECTION) {
+    const isBusiness = PROFILE_USER_TYPE?.value === 'business' || state.role === 'institutional';
+    // Business visibile solo se business + tab main (come sezione) o tab business
+    if (!isBusiness) {
+      PROFILE_BUSINESS_SECTION.hidden = true;
+    } else {
+      PROFILE_BUSINESS_SECTION.hidden = !(tab === 'main' || tab === 'business');
+    }
+  }
+  if (PROFILE_BLOCK_PREFERENCES) PROFILE_BLOCK_PREFERENCES.hidden = !(tab === 'main' || tab === 'preferences');
+  if (PROFILE_BLOCK_SECURITY) PROFILE_BLOCK_SECURITY.hidden = !(tab === 'security');
+}
+
+function setupProfileTabs() {
+  if (PROFILE_TAB_MAIN) {
+    PROFILE_TAB_MAIN.addEventListener('click', () => selectProfileTab('main'));
+  }
+  if (PROFILE_TAB_BUSINESS) {
+    PROFILE_TAB_BUSINESS.addEventListener('click', () => selectProfileTab('business'));
+  }
+  if (PROFILE_TAB_SECURITY) {
+    PROFILE_TAB_SECURITY.addEventListener('click', () => selectProfileTab('security'));
+  }
+  if (PROFILE_TAB_PREFERENCES) {
+    PROFILE_TAB_PREFERENCES.addEventListener('click', () => selectProfileTab('preferences'));
+  }
+  
+  // Stato iniziale
+  selectProfileTab('main');
 }
 
 async function renderDashboard() {
