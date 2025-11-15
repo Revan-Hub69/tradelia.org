@@ -124,10 +124,13 @@ async function init() {
   document.getElementById('footer-year').textContent = new Date().getFullYear();
   setupTabs();
   
-  // Check for password reset token in URL hash
+  // IMPORTANTE: restoreSession() PRIMA di handlePasswordResetRedirect()
+  // perché Supabase potrebbe aver già impostato la sessione dal token nell'hash
+  await restoreSession();
+  
+  // Check for password reset token in URL hash (dopo restoreSession)
   await handlePasswordResetRedirect();
   
-  await restoreSession();
   if (!state.user) {
     renderAuthPanel();
   } else {
@@ -2433,101 +2436,143 @@ async function handlePasswordResetRedirect() {
   const searchParams = new URLSearchParams(window.location.search);
   const resetParam = searchParams.get('reset');
   
-  // Support both hash-based redirect (Supabase default) and query param
-  if (!hash && !resetParam) return;
-  
-  Logger.debug('UserArea', 'Password reset redirect detected', { hash, resetParam });
-  
   // Parse hash fragments if present
   let accessToken = null;
   let type = null;
+  let refreshToken = null;
   
   if (hash) {
     try {
       const params = new URLSearchParams(hash.substring(1));
       accessToken = params.get('access_token');
       type = params.get('type');
+      refreshToken = params.get('refresh_token');
+      
+      Logger.debug('UserArea', 'Hash fragments detected', { 
+        hasAccessToken: !!accessToken, 
+        type, 
+        hasRefreshToken: !!refreshToken 
+      });
     } catch (err) {
       Logger.warn('UserArea', 'Error parsing hash', err);
     }
   }
   
   // If this is a password recovery redirect (hash-based or query param)
-  if ((type === 'recovery' && accessToken) || resetParam === 'true') {
-    Logger.debug('UserArea', 'Password reset token detected', { type, hasAccessToken: !!accessToken, resetParam });
-    
-    // Clear the hash from URL but keep the recovery indicator
-    if (hash) {
-      window.history.replaceState(null, '', window.location.pathname + '?reset=true');
-    }
-    
-    // Wait for session to be restored (Supabase should have set the session from the token)
-    await restoreSession();
-    
-    // Also try to get session from hash if available
-    if (accessToken && !state.user) {
-      try {
-        // Supabase should have already set the session, but try to restore it
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (session && !error) {
-          state.user = session.user;
-          state.lastSession = session;
-          Logger.debug('UserArea', 'Session restored from token');
-        }
-      } catch (err) {
-        Logger.warn('UserArea', 'Error restoring session from token', err);
-      }
-    }
-    
-    // If user is now logged in, show password change form prominently
-    if (state.user) {
-      showToast('Reimposta la tua password. Compila il form qui sotto.', 'info');
-      setActiveTab('profile');
+  const isPasswordReset = (type === 'recovery' && accessToken) || resetParam === 'true';
+  
+  if (!isPasswordReset) return;
+  
+  Logger.debug('UserArea', 'Password reset token detected', { 
+    type, 
+    hasAccessToken: !!accessToken, 
+    resetParam,
+    hasHash: !!hash,
+    currentUser: !!state.user
+  });
+  
+  // Se c'è un token nell'hash, Supabase dovrebbe aver già impostato la sessione
+  // Ma verifichiamo e forziamo il refresh se necessario
+  if (accessToken && refreshToken) {
+    try {
+      // Imposta la sessione manualmente se non è già impostata
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
-      // Highlight password form
-      setTimeout(() => {
-        const passwordForm = document.getElementById('change-password-form');
-        if (passwordForm) {
-          // Add visual highlight
-          passwordForm.style.border = '2px solid var(--brand-500)';
-          passwordForm.style.borderRadius = 'var(--radius-lg)';
-          passwordForm.style.padding = 'var(--sp-4)';
-          passwordForm.style.backgroundColor = 'var(--surface-elev)';
-          
-          // Scroll to form
-          passwordForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          
-          // Focus first input
-          const newPasswordInput = document.getElementById('new-password');
-          if (newPasswordInput) {
-            newPasswordInput.focus();
-          }
-          
-          // Show success message in form
-          const successEl = document.getElementById('change-password-success');
-          if (successEl) {
-            successEl.hidden = false;
-            successEl.textContent = 'Inserisci una nuova password sicura (minimo 8 caratteri)';
-            successEl.style.color = 'var(--brand-600)';
-          }
-          
-          // Remove highlight after 5 seconds
-          setTimeout(() => {
-            passwordForm.style.border = '';
-            passwordForm.style.borderRadius = '';
-            passwordForm.style.padding = '';
-            passwordForm.style.backgroundColor = '';
-          }, 5000);
+      if (!session && !sessionError) {
+        // Prova a impostare la sessione dal token
+        const { data: setSessionData, error: setSessionError } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken
+        });
+        
+        if (setSessionData?.session) {
+          state.user = setSessionData.session.user;
+          state.lastSession = setSessionData.session;
+          Logger.debug('UserArea', 'Session set from reset token');
+        } else if (setSessionError) {
+          Logger.error('UserArea', 'Error setting session from token', setSessionError);
         }
-      }, 300);
-    } else {
-      // User not logged in - redirect to login
-      Logger.warn('UserArea', 'Password reset token detected but user not logged in');
-      showToast('Sessione scaduta. Effettua il login per reimpostare la password.', 'error');
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 2000);
+      } else if (session) {
+        // Sessione già presente, aggiorna state
+        state.user = session.user;
+        state.lastSession = session;
+        Logger.debug('UserArea', 'Session already exists, updated state');
+      }
+    } catch (err) {
+      Logger.error('UserArea', 'Error handling reset token', err);
     }
+  }
+  
+  // Refresh session per assicurarsi che sia aggiornata
+  await restoreSession();
+  
+  // Clear the hash from URL but keep the recovery indicator
+  if (hash) {
+    const cleanUrl = window.location.pathname + (resetParam ? `?reset=true` : '?reset=true');
+    window.history.replaceState(null, '', cleanUrl);
+  }
+  
+  // If user is now logged in, show password change form prominently
+  if (state.user) {
+    Logger.debug('UserArea', 'User authenticated, showing password reset form');
+    showToast('Reimposta la tua password. Compila il form qui sotto.', 'info');
+    
+    // Aspetta che l'area utente sia renderizzata se necessario
+    if (!document.getElementById('change-password-form')) {
+      await bootstrapUserArea();
+    }
+    
+    setActiveTab('profile');
+    
+    // Highlight password form
+    setTimeout(() => {
+      const passwordForm = document.getElementById('change-password-form');
+      if (passwordForm) {
+        // Add visual highlight
+        passwordForm.style.border = '2px solid var(--brand-500)';
+        passwordForm.style.borderRadius = 'var(--radius-lg)';
+        passwordForm.style.padding = 'var(--sp-4)';
+        passwordForm.style.backgroundColor = 'var(--surface-elev)';
+        
+        // Scroll to form
+        passwordForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Focus first input
+        const newPasswordInput = document.getElementById('new-password');
+        if (newPasswordInput) {
+          setTimeout(() => newPasswordInput.focus(), 100);
+        }
+        
+        // Show success message in form
+        const successEl = document.getElementById('change-password-success');
+        if (successEl) {
+          successEl.hidden = false;
+          successEl.textContent = 'Inserisci una nuova password sicura (minimo 8 caratteri)';
+          successEl.style.color = 'var(--brand-600)';
+        }
+        
+        // Remove highlight after 5 seconds
+        setTimeout(() => {
+          passwordForm.style.border = '';
+          passwordForm.style.borderRadius = '';
+          passwordForm.style.padding = '';
+          passwordForm.style.backgroundColor = '';
+        }, 5000);
+      } else {
+        Logger.warn('UserArea', 'Password form not found after reset redirect');
+      }
+    }, 500);
+  } else {
+    // User not logged in - potrebbe essere un problema con il token
+    Logger.warn('UserArea', 'Password reset token detected but user not logged in', {
+      hasAccessToken: !!accessToken,
+      hasRefreshToken: !!refreshToken,
+      type
+    });
+    showToast('Errore: token di reset non valido o scaduto. Richiedi un nuovo link di reset password.', 'error');
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 3000);
   }
 }
 
