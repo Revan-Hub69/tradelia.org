@@ -35,27 +35,21 @@ function template() {
     <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
       <header class="auth-header">
         <div class="auth-header-text">
-          <h2 class="auth-title" id="auth-modal-title" title="Credenziali verificate per commenti, richieste analisi e gestione profilo professionale">Area Riservata Tradelia</h2>
-          <p class="auth-subtitle">
-            Credenziali verificate per commenti, richieste analisi e gestione profilo professionale.
-          </p>
+          <h2 class="auth-title" id="auth-modal-title">Area Riservata Tradelia</h2>
         </div>
         <button type="button" class="auth-close" data-auth-close aria-label="Chiudi">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
         </button>
       </header>
       <nav class="auth-tabs" role="tablist" aria-label="Modalità di accesso">
-        <button type="button" role="tab" data-auth-switch="login" aria-selected="true" data-tooltip="Utenti verificati" title="Utenti verificati">
+        <button type="button" role="tab" data-auth-switch="login" aria-selected="true" title="Accedi">
           <span class="auth-tab-label">Accedi</span>
-          <span class="auth-tab-hint">Utenti verificati</span>
         </button>
-        <button type="button" role="tab" data-auth-switch="register" aria-selected="false" data-tooltip="Account gratuito" title="Account gratuito">
+        <button type="button" role="tab" data-auth-switch="register" aria-selected="false" title="Registrati">
           <span class="auth-tab-label">Registrati</span>
-          <span class="auth-tab-hint">Account gratuito</span>
         </button>
-        <button type="button" role="tab" data-auth-switch="reset" aria-selected="false" data-tooltip="Invia link sicuro" title="Invia link sicuro">
+        <button type="button" role="tab" data-auth-switch="reset" aria-selected="false" title="Recupera password">
           <span class="auth-tab-label">Recupera password</span>
-          <span class="auth-tab-hint">Invia link sicuro</span>
         </button>
       </nav>
       <div class="auth-body">
@@ -78,9 +72,12 @@ function template() {
             </div>
             <span id="auth-password-login-error" class="auth-field-error" role="alert" aria-live="polite"></span>
           </div>
+          <div class="auth-remember">
+            <input type="checkbox" id="auth-remember-login" name="remember" value="true">
+            <label for="auth-remember-login">Ricordami per 7 giorni</label>
+          </div>
           <div class="auth-actions">
             <button class="btn btn-primary" type="submit">Accedi</button>
-            <p class="auth-trust-caption" title="Connessione crittografata · Sessione persistente per 7 giorni">Connessione sicura</p>
           </div>
         </form>
         <form id="auth-register-form" data-auth-form="register" class="auth-form" hidden novalidate>
@@ -108,7 +105,6 @@ function template() {
           </div>
           <div class="auth-actions">
             <button class="btn btn-primary" type="submit">Crea account</button>
-            <p class="auth-trust-caption" title="Connessione crittografata · Account verificato">Connessione sicura</p>
           </div>
           <p class="auth-hint" style="font-size: 0.75rem; color: var(--ink-soft); margin-top: 1rem; text-align: center;">
             Registrandoti, accetti i <a href="/terms.html" style="color: var(--brand-600);">Termini di servizio</a> e la <a href="/privacy.html" style="color: var(--brand-600);">Privacy Policy</a>.
@@ -122,13 +118,12 @@ function template() {
           </div>
           <div class="auth-actions">
             <button class="btn btn-primary" type="submit">Invia link di reset</button>
-            <p class="auth-trust-caption" title="Riceverai un link valido 1 ora">Link valido 1 ora</p>
           </div>
           <p class="auth-hint" style="font-size: 0.7rem;">Controlla anche la cartella spam.</p>
         </form>
       </div>
-      <footer class="auth-footer" style="padding: var(--sp-3) var(--sp-6); border-top: 1px solid rgba(148, 163, 184, 0.15); font-size: var(--fs-10); color: var(--muted); text-align: center; opacity: 0.7;">
-        <p style="margin: 0;"><a href="mailto:info@tradelia.org" style="color: var(--brand-600);">Assistenza</a></p>
+      <footer class="auth-footer">
+        <p style="margin: 0;"><a href="mailto:info@tradelia.org">Assistenza</a></p>
       </footer>
       <div class="auth-toast" id="auth-toast" role="status" aria-live="polite"></div>
     </div>
@@ -142,9 +137,18 @@ function registerEvents() {
   const loginForm = state.root.querySelector('#auth-login-form');
   const registerForm = state.root.querySelector('#auth-register-form');
   const resetForm = state.root.querySelector('#auth-reset-form');
+  const assistanceLink = state.root.querySelector('footer a[href^="mailto:"]');
 
   closeBtn.addEventListener('click', close);
   backdrop.addEventListener('click', close);
+  
+  // Assicura che il link mailto funzioni correttamente
+  if (assistanceLink) {
+    assistanceLink.addEventListener('click', (e) => {
+      e.stopPropagation(); // Previene chiusura modale
+      // Il mailto: funzionerà automaticamente tramite href
+    });
+  }
   
   // Password visibility toggles
   const passwordToggles = state.root.querySelectorAll('[data-password-toggle]');
@@ -280,7 +284,20 @@ function setupKeyboardNavigation() {
   });
 }
 
-// Validazione in tempo reale
+// Debounce utility
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+// Validazione in tempo reale con debounce
 function setupFormValidation() {
   const forms = state.root.querySelectorAll('.auth-form');
   
@@ -288,13 +305,30 @@ function setupFormValidation() {
     const inputs = form.querySelectorAll('input[required]');
     
     inputs.forEach(input => {
-      // Validazione on blur
+      // Validazione on blur (immediata)
       input.addEventListener('blur', () => validateField(input));
       
-      // Validazione on input (per feedback immediato)
-      input.addEventListener('input', () => {
+      // Validazione on input con debounce (300ms)
+      const debouncedValidation = debounce(() => {
         if (input.validity.valid) {
           clearFieldError(input);
+        }
+        // Password strength per campo password
+        if (input.type === 'password' && input.id.includes('register')) {
+          updatePasswordStrength(input);
+        }
+      }, 300);
+      
+      input.addEventListener('input', debouncedValidation);
+      
+      // Enter key per submit
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          const submitBtn = form.querySelector('button[type="submit"]');
+          if (submitBtn && !submitBtn.disabled && !state.busy) {
+            form.requestSubmit();
+          }
         }
       });
     });
@@ -352,6 +386,83 @@ function clearFieldError(input) {
   input.classList.remove('auth-input-error');
 }
 
+// Password strength calculator
+function calculatePasswordStrength(password) {
+  if (!password) return { strength: 'none', score: 0 };
+  
+  let score = 0;
+  const checks = {
+    length: password.length >= 8,
+    lowercase: /[a-z]/.test(password),
+    uppercase: /[A-Z]/.test(password),
+    numbers: /[0-9]/.test(password),
+    special: /[^a-zA-Z0-9]/.test(password)
+  };
+  
+  Object.values(checks).forEach(check => {
+    if (check) score++;
+  });
+  
+  // Bonus per lunghezza
+  if (password.length >= 12) score += 0.5;
+  if (password.length >= 16) score += 0.5;
+  
+  let strength = 'weak';
+  if (score >= 4.5) strength = 'strong';
+  else if (score >= 3) strength = 'medium';
+  
+  return { strength, score, checks };
+}
+
+// Update password strength indicator
+function updatePasswordStrength(input) {
+  const password = input.value;
+  const strengthContainer = input.closest('.auth-field')?.querySelector('.auth-password-strength');
+  
+  if (!strengthContainer) {
+    // Crea container se non esiste
+    const field = input.closest('.auth-field');
+    if (!field || !input.id.includes('register')) return;
+    
+    const container = document.createElement('div');
+    container.className = 'auth-password-strength';
+    container.innerHTML = `
+      <div class="auth-password-strength-label">Sicurezza password</div>
+      <div class="auth-password-strength-bar">
+        <div class="auth-password-strength-fill" data-strength="weak"></div>
+      </div>
+      <div class="auth-password-requirements">
+        <div class="auth-password-requirement" data-requirement="length">Almeno 8 caratteri</div>
+        <div class="auth-password-requirement" data-requirement="lowercase">Una lettera minuscola</div>
+        <div class="auth-password-requirement" data-requirement="uppercase">Una lettera maiuscola</div>
+        <div class="auth-password-requirement" data-requirement="numbers">Un numero</div>
+        <div class="auth-password-requirement" data-requirement="special">Un carattere speciale</div>
+      </div>
+    `;
+    field.appendChild(container);
+  }
+  
+  if (!password) {
+    strengthContainer.style.display = 'none';
+    return;
+  }
+  
+  strengthContainer.style.display = 'grid';
+  const { strength, checks } = calculatePasswordStrength(password);
+  const fill = strengthContainer.querySelector('.auth-password-strength-fill');
+  const requirements = strengthContainer.querySelectorAll('.auth-password-requirement');
+  
+  // Aggiorna barra
+  fill.setAttribute('data-strength', strength);
+  
+  // Aggiorna requisiti
+  requirements.forEach(req => {
+    const reqType = req.getAttribute('data-requirement');
+    const met = checks[reqType] || false;
+    req.setAttribute('data-met', met);
+  });
+}
+
 // Toggle password visibility
 function handlePasswordToggle(e) {
   const toggle = e.currentTarget;
@@ -382,6 +493,8 @@ async function handleLogin(event) {
   const form = event.currentTarget;
   const email = form.email.value.trim();
   const password = form.password.value;
+  const remember = form.remember?.checked || false;
+  
   if (!email || !password) {
     showToast('Inserisci email e password.', 'error');
     return;
@@ -398,6 +511,8 @@ async function handleLogin(event) {
   clearFieldError(form.querySelector('#auth-password-login'));
   
   try {
+    // Supabase gestisce automaticamente persistSession (default: true)
+    // Il checkbox "remember" è principalmente per UX
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
     showToast('Accesso effettuato.', 'success');
@@ -859,6 +974,11 @@ function close() {
     el.classList.remove('auth-input-error');
     el.removeAttribute('aria-invalid');
   });
+  
+  // Nascondi password strength indicator
+  state.root.querySelectorAll('.auth-password-strength').forEach(el => {
+    el.style.display = 'none';
+  });
 }
 
 function closeAfterDelay() {
@@ -868,12 +988,20 @@ function closeAfterDelay() {
 function showToast(message, variant = 'info') {
   if (!state.initialized) init();
   const toast = state.root.querySelector('#auth-toast');
+  if (!toast) return;
+  
   toast.textContent = message;
   toast.setAttribute('data-variant', variant);
+  
+  // Forza reflow per animazione
+  toast.offsetHeight;
+  
   toast.dataset.visible = 'true';
+  
+  // Auto-hide dopo 3.5 secondi
   setTimeout(() => {
     toast.removeAttribute('data-visible');
-  }, 3200);
+  }, 3500);
 }
 
 export const authModal = {
