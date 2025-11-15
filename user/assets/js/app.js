@@ -104,29 +104,21 @@ function maybeHandleUpgradeFromUrl() {
     return;
   }
 
-  const normalizedProvider = provider === 'paddle' ? 'paddle' : 'lemon';
+  // Quando arriviamo dall'URL pricing vogliamo rendere il funnel prevedibile:
+  // 1) portiamo l'utente nella tab "Abbonamento"
+  // 2) per il piano Pro attiviamo automaticamente la prova gratuita (billing verrà integrato dopo)
+  // 3) per Desk apriamo il contatto email verso il desk
+  if (typeof setActiveTab === 'function') {
+    setActiveTab('plan');
+  }
 
   if (upgradePlan === 'pro') {
-    if (normalizedProvider === 'lemon') {
-      Logger.debug('UserArea', 'Avvio checkout Pro via Lemon', { email });
-      openLemonSqueezyUpgrade('pro', email, name, 'monthly');
-    } else if (normalizedProvider === 'paddle') {
-      Logger.debug('UserArea', 'Avvio checkout Pro via Paddle', { email });
-      const paddleConfig = window.PADDLE_CHECKOUT_URLS || {};
-      const baseUrl = paddleConfig.proMonthly || paddleConfig.pro || null;
-      if (!baseUrl) {
-        if (typeof showToast === 'function') {
-          showToast('Checkout Paddle non ancora configurato. Contatta il desk.', 'error');
-        } else {
-          alert('Checkout Paddle non ancora configurato. Contatta il desk.');
-        }
-        return;
-      }
-      const url = new URL(baseUrl);
-      url.searchParams.set('customer_email', email);
-      if (name) url.searchParams.set('customer_name', name);
-      window.location.href = url.toString();
-    }
+    Logger.debug('UserArea', 'Upgrade Pro richiesto da URL, attivo trial interno', {
+      email,
+    });
+    // Attiva direttamente la prova gratuita Pro (aggiorna Supabase + UI)
+    // Il checkout Lemon/Paddle verrà integrato in una fase successiva
+    handleUpgradeWithTrial('pro');
   } else if (upgradePlan === 'desk') {
     // Per ora: avvia contatto email con dati precompilati per raccolta dati fatturazione e scelta metodo
     const subject = 'Richiesta piano Desk Professionale';
