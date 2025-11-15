@@ -226,7 +226,8 @@
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .hero-feature:hover {
+    .hero-feature:hover,
+    .hero-feature.is-visible {
       background: var(--surface-hover);
       border-color: var(--br-card);
       transform: translateY(-2px);
@@ -457,7 +458,8 @@
       transition: box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-base), background var(--transition-base);
     }
 
-    .audience-card:hover {
+    .audience-card:hover,
+    .audience-card.is-visible {
       border-color: var(--brand-500);
       background: var(--surface-elev);
       transform: translateY(-2px);
@@ -546,7 +548,8 @@
       transition: box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-base);
     }
 
-    .value-card:hover {
+    .value-card:hover,
+    .value-card.is-visible {
       border-color: var(--brand-500);
       box-shadow: 0 10px 28px rgba(37, 99, 235, 0.15);
       transform: translateY(-2px);
@@ -673,7 +676,8 @@
       gap: var(--sp-6);
     }
 
-    .service-card:hover {
+    .service-card:hover,
+    .service-card.is-visible {
       background: var(--surface-elev);
       border-color: var(--brand-600);
       box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
@@ -756,7 +760,8 @@
       position: relative;
     }
 
-    .testimonial-card:hover {
+    .testimonial-card:hover,
+    .testimonial-card.is-visible {
       border-color: var(--brand-600);
       transform: translateY(-4px);
       box-shadow: 0 12px 32px rgba(37, 99, 235, 0.15);
@@ -2464,7 +2469,7 @@
 
 <!-- MODALE – BLOCCO 1 PROFILO INVESTITORE (v1.2 Mobile-compact + PAC toggle) -->
 <div id="modal-portafoglio" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
-  <div class="bg-white w-full max-w-5xl mx-auto rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[94vh]" role="dialog" aria-modal="true">
+  <div class="bg-white w-full max-w-5xl mx-auto rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[94vh] modal-root" role="dialog" aria-modal="true">
 
     <!-- HEADER + PROGRESS (sticky) -->
     <div class="sticky top-0 z-40">
@@ -3213,7 +3218,7 @@
 
 <!-- MODALE WHITE-LABEL (segnaposto) -->
 <div id="modal-white-label" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
-  <div class="bg-slate-950 w-full max-w-3xl mx-auto rounded-2xl border border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]" role="dialog" aria-modal="true" aria-labelledby="white-label-title">
+  <div class="bg-slate-950 w-full max-w-3xl mx-auto rounded-2xl border border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] modal-root" role="dialog" aria-modal="true" aria-labelledby="white-label-title">
     <!-- Header -->
     <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/80 backdrop-blur">
       <div class="flex items-center gap-3">
@@ -3234,57 +3239,24 @@
     </div>
 
     <!-- Body -->
-    <div class="p-5 md:p-6 overflow-y-auto space-y-6 text-sm md:text-[0.9rem] leading-relaxed text-slate-200">
-      <div class="grid gap-6 md:grid-cols-2">
-        <div class="space-y-3">
-          <h4 class="text-sm font-semibold text-slate-100">Come funzionerà il white-label</h4>
-          <ul class="space-y-2 text-slate-300">
-            <li>1. Definizione del perimetro: mercati, frequenza report, note legali del partner.</li>
-            <li>2. Allineamento su layout, logo e intestazione, mantenendo metodo e disclosure Tradelia.</li>
-            <li>3. Pubblicazione in area riservata + generazione PDF brandizzato per la clientela del partner.</li>
-          </ul>
-          <p class="text-xs text-slate-500">
-            Questa è una bozza funzionale: il flusso dettagliato e le opzioni di personalizzazione verranno definiti insieme ai primi partner pilota.
-          </p>
-        </div>
-
-        <div class="bg-slate-900 border border-dashed border-slate-700 rounded-xl p-4 flex flex-col gap-3">
-          <span class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            Fac-simile PDF (placeholder)
-          </span>
-          <div class="flex-1 bg-slate-950 rounded-lg border border-slate-800 p-3 text-[11px] text-slate-300 space-y-2">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
-              <div>
-                <div class="text-[10px] uppercase tracking-wide text-slate-500">Tradelia AI · Metodo accademico</div>
-                <div class="text-xs font-semibold text-slate-100">SRD/MTB – Briefing mercati (White-label)</div>
-              </div>
-              <div class="text-right text-[10px] text-slate-500">
-                <div>Logo Partner</div>
-                <div>Data · Versione</div>
-              </div>
-            </div>
-            <ul class="list-disc list-inside space-y-1">
-              <li>Quadro macro e intermarket con fonti Tier‑1.</li>
-              <li>Scenari didattici con assunzioni esplicite.</li>
-              <li>Sezione note legali dedicate al partner.</li>
-            </ul>
-          </div>
-        </div>
+    <div class="p-5 md:p-6 overflow-y-auto space-y-4 text-sm md:text-[0.9rem] leading-relaxed text-slate-200">
+      <p>
+        Il formato white-label prevede report SRD/MTB in PDF con logo e intestazione del partner, mantenendo metodo, disclosure e controlli Tradelia.
+        Ogni collaborazione viene definita caso per caso in base a perimetro, frequenza e note legali richieste.
+      </p>
+      <p class="text-xs text-slate-500">
+        Questa sezione è un segnaposto: l’esempio PDF verrà finalizzato insieme ai primi partner pilota. Il bottone seguente è dimostrativo.
+      </p>
+      <div class="mt-2">
+        <button type="button" class="btn btn-primary btn-sm" aria-disabled="true">
+          Scarica esempio PDF (presto disponibile)
+        </button>
       </div>
     </div>
 
     <!-- Footer -->
-    <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 px-5 py-4 border-t border-slate-800 bg-slate-900/80">
-      <p class="text-xs text-slate-400 md:max-w-md">
-        Per accordi o domande sul white-label utilizza il canale email: ogni collaborazione viene valutata caso per caso.
-      </p>
-      <div class="flex gap-2 justify-end">
-        <button type="button" class="btn btn-sm btn-outline" onclick="chiudiModalWhiteLabel()">Chiudi</button>
-        <a href="mailto:info@tradelia.org?subject=Informazioni%20PDF%20white-label" class="btn btn-sm btn-primary">
-          Scrivi per white-label
-        </a>
-      </div>
+    <div class="flex justify-end gap-2 px-5 py-4 border-t border-slate-800 bg-slate-900/80">
+      <button type="button" class="btn btn-sm btn-outline" onclick="chiudiModalWhiteLabel()">Chiudi</button>
     </div>
   </div>
 </div>
@@ -3313,6 +3285,16 @@
     background: linear-gradient(to top, rgba(248,250,252,1), rgba(248,250,252,0));
     pointer-events:none;
   }
+    /* Modal transitions */
+    .modal-root {
+      opacity: 0;
+      transform: translateY(12px) scale(0.98);
+      transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+    }
+    .modal-root.is-open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
 </style>
 <script>
   function onPACStateChange(v){
@@ -3409,6 +3391,10 @@
   function apriModuloPortafoglio(mode=null){
     const modal = document.getElementById('modal-portafoglio');
     modal.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      const panel = modal.querySelector('.modal-root');
+      if (panel) panel.classList.add('is-open');
+    });
     __lockScroll();
     document.getElementById('form-portafoglio').reset();
     currentStep = 0; stepsOrder = baseOrder.slice();
@@ -3420,8 +3406,19 @@
     }
   }
   function chiudiModuloPortafoglio(){
-    document.getElementById('modal-portafoglio').classList.add('hidden');
-    __unlockScroll();
+    const modal = document.getElementById('modal-portafoglio');
+    if (!modal) return;
+    const panel = modal.querySelector('.modal-root');
+    if (panel) {
+      panel.classList.remove('is-open');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        __unlockScroll();
+      }, 180);
+    } else {
+      modal.classList.add('hidden');
+      __unlockScroll();
+    }
   }
 
   // ===== Modale White-label =====
@@ -3429,14 +3426,27 @@
     const modal = document.getElementById('modal-white-label');
     if (!modal) return;
     modal.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      const panel = modal.querySelector('.modal-root');
+      if (panel) panel.classList.add('is-open');
+    });
     __lockScroll();
   }
 
   function chiudiModalWhiteLabel() {
     const modal = document.getElementById('modal-white-label');
     if (!modal) return;
-    modal.classList.add('hidden');
-    __unlockScroll();
+    const panel = modal.querySelector('.modal-root');
+    if (panel) {
+      panel.classList.remove('is-open');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        __unlockScroll();
+      }, 180);
+    } else {
+      modal.classList.add('hidden');
+      __unlockScroll();
+    }
   }
 
   // ===== Stepper =====
@@ -3470,6 +3480,23 @@
     }
     focusPrimoCampo(section);
   }
+
+  // ===== Card reveal on scroll (home) =====
+  (function() {
+    if (!('IntersectionObserver' in window)) return;
+    const selectors = ['.hero-feature', '.audience-card', '.value-card', '.service-card', '.testimonial-card'];
+    const cards = document.querySelectorAll(selectors.join(','));
+    if (!cards.length) return;
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.35 });
+    cards.forEach(card => observer.observe(card));
+  })();
   function aggiornaStep(){
     mostraStep(currentStep);
     const total = stepsOrder.length;
