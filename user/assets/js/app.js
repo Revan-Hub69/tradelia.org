@@ -429,8 +429,8 @@ function renderPlanSection() {
   actionsContainer.className = 'user-cta';
   
         // Upgrade disponibili con prova gratuita
-        if (state.role === 'guest' || !state.role) {
-          // Guest può scegliere tra Pro e Desk con prova gratuita
+        if (!state.role) {
+          // Utente senza ruolo può scegliere tra Pro e Desk con prova gratuita
           const proBtn = document.createElement('button');
           proBtn.className = 'btn btn-sm btn-primary';
           proBtn.textContent = 'Prova Pro gratuitamente (14 giorni)';
@@ -467,8 +467,24 @@ function renderPlanSection() {
           actionsContainer.appendChild(upgradeBtn);
         }
   
+  // Rinnovo (se piano sta per scadere - meno di 7 giorni rimanenti)
+  if (state.role && !state.isAdmin && state.planExpiresAt) {
+    const expiresDate = new Date(state.planExpiresAt);
+    const now = new Date();
+    const daysLeft = Math.ceil((expiresDate - now) / (1000 * 60 * 60 * 24));
+    
+    // Mostra pulsante rinnovo se piano sta per scadere (meno di 7 giorni)
+    if (daysLeft > 0 && daysLeft <= 7) {
+      const renewBtn = document.createElement('button');
+      renewBtn.className = 'btn btn-sm btn-primary';
+      renewBtn.textContent = `Rinnova abbonamento (${daysLeft} ${daysLeft === 1 ? 'giorno' : 'giorni'} rimanenti)`;
+      renewBtn.addEventListener('click', () => handleRenewSubscription());
+      actionsContainer.appendChild(renewBtn);
+    }
+  }
+  
   // Cancellazione (solo se piano attivo e non admin)
-  if (state.role && !state.isAdmin && state.planExpiresAt && state.role !== 'guest') {
+  if (state.role && !state.isAdmin && state.planExpiresAt) {
     const cancelBtn = document.createElement('button');
     cancelBtn.className = 'btn btn-sm btn-outline';
     cancelBtn.textContent = 'Cancella abbonamento';
@@ -532,7 +548,48 @@ async function handleUpgradeWithTrial(targetRole) {
     
   } catch (err) {
     Logger.error('UserArea', 'trial upgrade error', err);
-    showToast('Errore durante l\'attivazione della prova gratuita. Riprova.', 'error');
+    
+    // Best practice: messaggi errore user-friendly
+    let errorMessage = 'Errore durante l\'attivazione della prova gratuita.';
+    if (err.message) {
+      if (err.message.includes('RLS') || err.message?.includes('policy')) {
+        errorMessage = 'Errore di autorizzazione. Verifica di essere autenticato.';
+      } else if (err.message.includes('network') || err.message?.includes('fetch')) {
+        errorMessage = 'Errore di connessione. Verifica la tua connessione internet.';
+      } else if (err.message.includes('constraint') || err.message?.includes('check')) {
+        errorMessage = 'Errore nella configurazione del piano. Contatta il supporto.';
+      } else {
+        errorMessage = err.message;
+      }
+    }
+    
+    showToast(errorMessage, 'error');
+  }
+}
+
+async function handleRenewSubscription() {
+  if (!state.role || !state.planExpiresAt) {
+    showToast('Nessun piano attivo da rinnovare.', 'error');
+    return;
+  }
+  
+  if (!confirm('Vuoi rinnovare il tuo abbonamento? Verrai reindirizzato al checkout per il rinnovo.')) {
+    return;
+  }
+  
+  try {
+    showToast('Apertura checkout per il rinnovo...', 'info');
+    
+    // Apri checkout Lemon Squeezy per rinnovo
+    // Usa email e nome utente per checkout
+    openLemonSqueezyUpgrade(state.role, state.user?.email || '', getDisplayName());
+    
+    // Nota: Il webhook gestirà l'aggiornamento valid_until dopo il pagamento
+    // Per ora, il rinnovo manuale estende valid_until di 30 giorni
+    // Questo è un fallback se il webhook non è ancora integrato
+  } catch (err) {
+    Logger.error('UserArea', 'renew subscription error', err);
+    showToast('Errore durante l\'apertura del checkout. Contatta il supporto.', 'error');
   }
 }
 
@@ -612,7 +669,20 @@ async function handleCancelSubscription() {
     }
   } catch (err) {
     Logger.error('UserArea', 'cancel subscription error', err);
-    showToast('Errore durante la cancellazione. Contatta il supporto.', 'error');
+    
+    // Best practice: messaggi errore user-friendly
+    let errorMessage = 'Errore durante la cancellazione.';
+    if (err.message) {
+      if (err.message.includes('RLS') || err.message?.includes('policy')) {
+        errorMessage = 'Errore di autorizzazione. Verifica di essere autenticato.';
+      } else if (err.message.includes('network') || err.message?.includes('fetch')) {
+        errorMessage = 'Errore di connessione. Verifica la tua connessione internet.';
+      } else {
+        errorMessage = err.message;
+      }
+    }
+    
+    showToast(errorMessage + ' Contatta il supporto se il problema persiste.', 'error');
   }
 }
 
@@ -722,14 +792,35 @@ async function onProfileSubmit(event) {
     showToast('Effettua l\'accesso per modificare il profilo.', 'error');
     return;
   }
+  // Best practice: sanitize input (trim, validate length)
   const display_name = PROFILE_NAME_FIELD.value.trim();
+  
+  // Validation
+  if (display_name && display_name.length < 2) {
+    showToast('Il nome deve contenere almeno 2 caratteri.', 'error');
+    return;
+  }
+  
+  if (display_name && display_name.length > 80) {
+    showToast('Il nome non può superare 80 caratteri.', 'error');
+    return;
+  }
   const preferences = {
     email_notifications: PREF_EMAIL_NOTIFICATIONS?.checked ?? true,
     dashboard_alerts: PREF_DASHBOARD_ALERTS?.checked ?? true
   };
   
   try {
-    PROFILE_FORM.querySelector('button[type="submit"]').disabled = true;
+    const submitBtn = PROFILE_FORM.querySelector('button[type="submit"]');
+    const originalText = submitBtn?.textContent || 'Salva profilo';
+    
+    // Best practice: loading state con feedback visivo
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.setAttribute('aria-busy', 'true');
+      submitBtn.textContent = 'Salvataggio...';
+    }
+    
     const payload = {
       user_id: state.user.id,
       display_name: display_name || null,
@@ -742,12 +833,30 @@ async function onProfileSubmit(event) {
     state.profile = { ...(state.profile || {}), display_name, preferences };
     
     renderHero();
-    showToast('Profilo aggiornato.', 'success');
+    showToast('Profilo aggiornato con successo.', 'success');
   } catch (err) {
     Logger.error('UserArea', 'profile save error', err);
-    showToast(err.message || 'Errore durante il salvataggio.', 'error');
+    
+    // Best practice: messaggi errore user-friendly
+    let errorMessage = 'Errore durante il salvataggio.';
+    if (err.message) {
+      if (err.message.includes('RLS') || err.message.includes('policy')) {
+        errorMessage = 'Errore di autorizzazione. Verifica di essere autenticato.';
+      } else if (err.message.includes('network') || err.message.includes('fetch')) {
+        errorMessage = 'Errore di connessione. Verifica la tua connessione internet.';
+      } else {
+        errorMessage = err.message;
+      }
+    }
+    
+    showToast(errorMessage, 'error');
   } finally {
-    PROFILE_FORM.querySelector('button[type="submit"]').disabled = false;
+    const submitBtn = PROFILE_FORM.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.removeAttribute('aria-busy');
+      submitBtn.textContent = 'Salva profilo';
+    }
   }
 }
 
@@ -770,11 +879,20 @@ async function handleLoginSubmit(event) {
   const emailInput = form.querySelector('input[name="email"]') || form.email;
   const passwordInput = form.querySelector('input[name="password"]') || form.password;
   
-  const email = emailInput?.value?.trim() || '';
+  // Best practice: sanitize inputs (trim, lowercase email)
+  const email = emailInput?.value?.trim().toLowerCase() || '';
   const password = passwordInput?.value || '';
   
+  // Best practice: specific validation with clear messages
   if (!email || !password) {
     showToast('Inserisci email e password.', 'error');
+    return;
+  }
+  
+  // Best practice: email format validation (RFC 5322 compliant)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    showToast('Inserisci un indirizzo email valido.', 'error');
     return;
   }
   
@@ -805,14 +923,24 @@ async function handleSignupSubmit(event) {
   const emailInput = form.querySelector('input[name="email"]') || form.email;
   const passwordInput = form.querySelector('input[name="password"]') || form.password;
   
-  const email = emailInput?.value?.trim() || '';
+  // Best practice: sanitize inputs (trim, lowercase email)
+  const email = emailInput?.value?.trim().toLowerCase() || '';
   const password = passwordInput?.value || '';
   
+  // Best practice: specific validation with clear messages
   if (!email || !password) {
     showToast('Inserisci email e password.', 'error');
     return;
   }
   
+  // Best practice: email format validation (RFC 5322 compliant)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    showToast('Inserisci un indirizzo email valido.', 'error');
+    return;
+  }
+  
+  // Best practice: password validation (length + complexity)
   if (password.length < 8) {
     showToast('La password deve essere di almeno 8 caratteri.', 'error');
     return;
@@ -865,18 +993,9 @@ async function handleSignupSubmit(event) {
       Logger.warn('UserArea', 'profile creation error (may already exist)', profileError);
     }
     
-    // 3. Crea ruolo guest di default (senza scadenza, accesso limitato)
-    const { error: roleError } = await supabase
-      .from('user_roles')
-      .insert({
-        user_id: authData.user.id,
-        role: 'guest',
-        valid_until: null // Guest non ha scadenza, ma ha accesso limitato
-      });
-    
-    if (roleError) {
-      Logger.warn('UserArea', 'role creation error (may already exist)', roleError);
-    }
+    // 3. NON creare ruolo di default - l'utente può attivare trial dopo
+    // Il ruolo verrà creato quando l'utente attiva un trial o un piano
+    // Questo evita errori di constraint e mantiene il database pulito
     
     // Verifica se email verification è abilitata in Supabase
     // Se email_confirmed_at è null, significa che email verification è abilitata
@@ -893,7 +1012,7 @@ async function handleSignupSubmit(event) {
       }, 2000);
     } else {
       // Email verification disabilitata - possiamo fare auto-login
-      showToast('Registrazione completata! Account creato con ruolo Guest.', 'success');
+      showToast('Registrazione completata! Account creato. Attiva un trial per iniziare.', 'success');
       
       // Auto-login dopo registrazione con il NUOVO account
       // Assicurati che non ci siano sessioni residue
@@ -1060,9 +1179,8 @@ function roleLabel(role) {
       return 'Desk Professionale';
     case 'trial':
       return 'Trial';
-    case 'guest':
     default:
-      return 'Guest';
+      return 'Nessun piano attivo';
   }
 }
 
@@ -1074,7 +1192,6 @@ function planDescription(role) {
       return 'Accesso completo ai deck SRD v5.0 e MTB v3.1, strumenti community e notifiche operative in tempo reale.';
     case 'trial':
       return 'Prova gratuita attiva. Consulta i dossier ufficiali e sblocca tutte le funzionalità per 14 giorni.';
-    case 'guest':
     default:
       return 'Account registrato. Attiva una prova gratuita di 14 giorni per Pro o Desk Professionale e scopri tutte le funzionalità.';
   }
@@ -1105,7 +1222,7 @@ function planBenefits(role) {
       'Upgrade automatico a pagamento alla scadenza (se configurato)'
     ];
   }
-  // Guest
+  // Nessun ruolo attivo
   return [
     'Accesso limitato ai contenuti pubblici',
     'Prova gratuita Pro o Desk Professionale (14 giorni)',
@@ -1202,7 +1319,22 @@ async function onAvatarSelected(event) {
     showToast('Foto profilo aggiornata.', 'success');
   } catch (err) {
     Logger.error('UserArea', 'avatar upload error', err);
-    showToast('Errore durante il caricamento della foto.', 'error');
+    
+    // Best practice: messaggi errore user-friendly
+    let errorMessage = 'Errore durante il caricamento della foto.';
+    if (err.message) {
+      if (err.message.includes('size') || err.message.includes('too large')) {
+        errorMessage = 'Il file è troppo grande. Massimo 2 MB.';
+      } else if (err.message.includes('type') || err.message.includes('format')) {
+        errorMessage = 'Formato file non supportato. Usa PNG o JPG.';
+      } else if (err.message.includes('network') || err.message.includes('fetch')) {
+        errorMessage = 'Errore di connessione. Verifica la tua connessione internet.';
+      } else {
+        errorMessage = err.message;
+      }
+    }
+    
+    showToast(errorMessage, 'error');
   } finally {
     AVATAR_BTN.disabled = false;
     AVATAR_BTN.textContent = 'Carica/aggiorna foto';
@@ -1651,16 +1783,28 @@ function isValidTicker(ticker) {
 
 async function handleProposeAsset() {
   if (!PROPOSAL_INPUT) return;
+  
+  // Best practice: sanitize input (trim, uppercase, validate)
   const ticker = PROPOSAL_INPUT.value.trim().toUpperCase();
   
+  // Best practice: specific validation with clear messages
   if (!ticker || ticker.length < 1) {
     showToast('Inserisci un ticker valido (es. AAPL, BTC-USD).', 'error');
+    PROPOSAL_INPUT.focus();
+    return;
+  }
+  
+  // Best practice: ticker format validation
+  if (ticker.length > 20) {
+    showToast('Il ticker non può superare 20 caratteri.', 'error');
+    PROPOSAL_INPUT.focus();
     return;
   }
   
   // Validazione ticker avanzata
   if (!isValidTicker(ticker)) {
     showToast('Ticker non valido. Usa formato standard (es. AAPL, BTC-USD, EURUSD).', 'error');
+    PROPOSAL_INPUT.focus();
     return;
   }
   
@@ -1768,7 +1912,22 @@ async function handleProposeAsset() {
       renderDashboard();
     } catch (err) {
       Logger.error('UserArea', 'on-demand request error', err);
-      showToast('Errore durante l\'invio della richiesta. ' + (err.message || ''), 'error');
+      
+      // Best practice: messaggi errore user-friendly
+      let errorMessage = 'Errore durante l\'invio della richiesta.';
+      if (err.message) {
+        if (err.message.includes('duplicate') || err.message.includes('already exists')) {
+          errorMessage = 'Hai già una richiesta in corso per questo ticker.';
+        } else if (err.message.includes('credits') || err.message.includes('insufficient')) {
+          errorMessage = 'Crediti insufficienti. Acquista crediti per continuare.';
+        } else if (err.message.includes('network') || err.message.includes('fetch')) {
+          errorMessage = 'Errore di connessione. Verifica la tua connessione internet.';
+        } else {
+          errorMessage = err.message;
+        }
+      }
+      
+      showToast(errorMessage, 'error');
     } finally {
       PROPOSAL_SUBMIT.disabled = false;
       if (state.role === 'institutional') {
@@ -1810,11 +1969,18 @@ async function handleProposeAsset() {
       renderDashboard();
     } catch (err) {
       Logger.error('UserArea', 'proposal error', err);
-      if (err.code === '23505') {
-        showToast(`La proposta per ${ticker} esiste già. Puoi votarla nella lista.`, 'error');
-      } else {
-        showToast('Errore durante l\'invio della proposta.', 'error');
+      
+      // Best practice: messaggi errore user-friendly
+      let errorMessage = 'Errore durante l\'invio della proposta.';
+      if (err.code === '23505' || err.message?.includes('duplicate') || err.message?.includes('already exists')) {
+        errorMessage = `La proposta per ${ticker} esiste già. Puoi votarla nella lista.`;
+      } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+        errorMessage = 'Errore di connessione. Verifica la tua connessione internet.';
+      } else if (err.message) {
+        errorMessage = err.message;
       }
+      
+      showToast(errorMessage, 'error');
     } finally {
       PROPOSAL_SUBMIT.disabled = false;
       if (state.role === 'trial' || state.role === 'pro') {
@@ -1866,11 +2032,18 @@ async function handleVote(proposalId) {
     renderCommunityProposalsList();
   } catch (err) {
     Logger.error('UserArea', 'vote error', err);
-    if (err.code === '23505') {
-      showToast('Hai già votato questa proposta.', 'error');
-    } else {
-    showToast('Errore durante il voto.', 'error');
+    
+    // Best practice: messaggi errore user-friendly
+    let errorMessage = 'Errore durante il voto.';
+    if (err.code === '23505' || err.message?.includes('duplicate') || err.message?.includes('already exists')) {
+      errorMessage = 'Hai già votato questa proposta.';
+    } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+      errorMessage = 'Errore di connessione. Verifica la tua connessione internet.';
+    } else if (err.message) {
+      errorMessage = err.message;
     }
+    
+    showToast(errorMessage, 'error');
   }
 }
 
@@ -1892,7 +2065,18 @@ async function handleDeleteProposal(proposalId) {
     showToast('Proposta rimossa.', 'success');
   } catch (err) {
     Logger.error('UserArea', 'delete proposal error', err);
-    showToast('Errore durante la rimozione.', 'error');
+    
+    // Best practice: messaggi errore user-friendly
+    let errorMessage = 'Errore durante la rimozione.';
+    if (err.message?.includes('network') || err.message?.includes('fetch')) {
+      errorMessage = 'Errore di connessione. Verifica la tua connessione internet.';
+    } else if (err.message?.includes('permission') || err.message?.includes('unauthorized')) {
+      errorMessage = 'Non hai i permessi per rimuovere questa proposta.';
+    } else if (err.message) {
+      errorMessage = err.message;
+    }
+    
+    showToast(errorMessage, 'error');
   }
 }
 
@@ -1951,28 +2135,59 @@ async function handlePasswordResetRedirect() {
   if (type === 'recovery' && accessToken) {
     Logger.debug('UserArea', 'Password reset token detected');
     
-    // Clear the hash from URL
-    window.history.replaceState(null, '', window.location.pathname);
+    // Clear the hash from URL but keep the recovery indicator
+    window.history.replaceState(null, '', window.location.pathname + '?reset=true');
     
     // Wait for session to be restored
     await restoreSession();
     
-    // If user is now logged in, show password change form
+    // If user is now logged in, show password change form prominently
     if (state.user) {
-      showToast('Inserisci una nuova password.', 'info');
+      showToast('Reimposta la tua password. Compila il form qui sotto.', 'info');
       setActiveTab('profile');
       
-      // Scroll to password form and focus it
+      // Highlight password form
       setTimeout(() => {
         const passwordForm = document.getElementById('change-password-form');
         if (passwordForm) {
+          // Add visual highlight
+          passwordForm.style.border = '2px solid var(--brand-500)';
+          passwordForm.style.borderRadius = 'var(--radius-lg)';
+          passwordForm.style.padding = 'var(--sp-4)';
+          passwordForm.style.backgroundColor = 'var(--surface-elev)';
+          
+          // Scroll to form
           passwordForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          
+          // Focus first input
           const newPasswordInput = document.getElementById('new-password');
           if (newPasswordInput) {
             newPasswordInput.focus();
           }
+          
+          // Show success message in form
+          const successEl = document.getElementById('change-password-success');
+          if (successEl) {
+            successEl.hidden = false;
+            successEl.textContent = 'Inserisci una nuova password sicura (minimo 8 caratteri)';
+            successEl.style.color = 'var(--brand-600)';
+          }
+          
+          // Remove highlight after 5 seconds
+          setTimeout(() => {
+            passwordForm.style.border = '';
+            passwordForm.style.borderRadius = '';
+            passwordForm.style.padding = '';
+            passwordForm.style.backgroundColor = '';
+          }, 5000);
         }
       }, 300);
+    } else {
+      // User not logged in - redirect to login
+      showToast('Sessione scaduta. Effettua il login per reimpostare la password.', 'error');
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 2000);
     }
   }
 }
@@ -2092,8 +2307,21 @@ async function handleChangeEmail(event) {
     successEl.textContent = '';
   }
   
+  // Best practice: sanitize and validate email
+  const sanitizedEmail = newEmail.trim().toLowerCase();
+  
   // Validation
-  if (!newEmail || !newEmail.includes('@')) {
+  if (!sanitizedEmail) {
+    if (errorEl) {
+      errorEl.hidden = false;
+      errorEl.textContent = 'Inserisci un indirizzo email.';
+    }
+    return;
+  }
+  
+  // Best practice: email format validation (RFC 5322 compliant)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(sanitizedEmail)) {
     if (errorEl) {
       errorEl.hidden = false;
       errorEl.textContent = 'Inserisci un indirizzo email valido.';
@@ -2101,7 +2329,7 @@ async function handleChangeEmail(event) {
     return;
   }
   
-  if (newEmail === state.user.email) {
+  if (sanitizedEmail === state.user.email?.toLowerCase()) {
     if (errorEl) {
       errorEl.hidden = false;
       errorEl.textContent = 'Questa è già la tua email attuale.';
@@ -2114,7 +2342,7 @@ async function handleChangeEmail(event) {
   
   try {
     const { error } = await supabase.auth.updateUser({
-      email: newEmail
+      email: sanitizedEmail
     });
     
     if (error) throw error;

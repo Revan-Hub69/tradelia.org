@@ -491,7 +491,7 @@
           Trial formativo di 14 giorni, abbonamento Pro per retail avanzati e soluzioni Desk Professionale con ricerca on-demand, fatturazione dedicata e white label.
         </p>
         <p style="color: var(--muted); font-size: var(--fs-14); max-width: 720px; margin: var(--sp-4) auto 0; line-height: var(--lh-17); padding: var(--sp-4); background: var(--surface-elev); border-radius: var(--radius-md); border: 1px solid var(--br-card);">
-          <strong>Metodi di pagamento:</strong> Paddle (carta di credito) per Pro e Desk • Xolo Go (bonifico) per Desk Professionale • Gestione IVA automatica e fatturazione elettronica inclusa.
+          <strong>Metodi di pagamento:</strong> <em>Paddle (carta di credito) in fase di attivazione</em> • Xolo Go (bonifico/carta) disponibile ora • Gestione IVA automatica e fatturazione elettronica inclusa.
         </p>
       </header>
 
@@ -518,7 +518,10 @@
               <li>Upgrade immediato al piano Pro quando desideri</li>
             </ul>
             <div class="plan-actions">
-              <a href="/dashboard.html" class="btn btn-outline btn-sm">Attiva prova gratuita</a>
+              <button type="button" class="btn btn-outline btn-sm" id="btn-activate-trial">Attiva prova gratuita</button>
+              <p class="plan-meta" style="margin-top: var(--sp-3); font-size: var(--fs-12); color: var(--muted);">
+                Attivazione tramite Xolo Go con raccolta dati. Paddle (carta) in fase di attivazione.
+              </p>
             </div>
           </article>
 
@@ -542,9 +545,9 @@
               <li>Notifiche push operative e roadmap funzionale prioritaria</li>
             </ul>
             <div class="plan-actions">
-              <a href="user/index.html?upgrade_plan=pro&provider=lemon" class="btn btn-primary btn-sm">Inizia prova gratuita</a>
+              <button type="button" class="btn btn-primary btn-sm" id="btn-activate-pro">Inizia prova gratuita</button>
               <p class="plan-meta">
-                La prova gratuita dura 14 giorni. Il checkout è gestito da gateway certificati (Paddle / Lemon Squeezy) con fatturazione automatica; puoi cancellare in qualsiasi momento dalla dashboard.
+                La prova gratuita dura 14 giorni. Attivazione tramite Xolo Go (bonifico/carta) con fatturazione automatica. <em>Paddle (carta) in fase di attivazione.</em> Puoi cancellare in qualsiasi momento dalla dashboard.
               </p>
             </div>
           </article>
@@ -803,6 +806,23 @@
 
   <!-- Global Header & i18n -->
   <script type="module" src="/assets/js/global-header.js"></script>
+  
+  <!-- Trial Onboarding Modal -->
+  <script type="module">
+    import { trialOnboardingModal } from '/report/assets/js/components/trial-onboarding-modal.js';
+    
+    // Initialize modal
+    trialOnboardingModal.init();
+    
+    // Bind trial activation buttons
+    document.getElementById('btn-activate-trial')?.addEventListener('click', () => {
+      trialOnboardingModal.open('trial', 'xolo');
+    });
+    
+    document.getElementById('btn-activate-pro')?.addEventListener('click', () => {
+      trialOnboardingModal.open('pro', 'xolo');
+    });
+  </script>
 </body>
 </html>
 
