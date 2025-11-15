@@ -7,7 +7,7 @@
   
   <!-- SEO Meta Tags -->
   <meta name="description" content="Framework accademico AI per approfondimenti didattici sui mercati: report SRD v5.0 e MTB v3.1, ~3 report al giorno, ensemble multi-LLM validato con fonti Tier-1. Materiale educativo, non sostituisce il consulente finanziario." />
-  <meta name="keywords" content="Tradelia AI, metodo accademico, multi LLM, SRD v5.0, MTB v3.1, approfondimenti didattici mercato, ensemble AI, ricerca educativa mercati, swing research deck, macro tactical briefing" />
+  <meta name="keywords" content="Tradelia AI, framework accademico AI, metodo accademico, multi LLM, SRD v5.0, MTB v3.1, approfondimenti didattici mercato, ensemble AI, ricerca didattica sui mercati, swing research deck, macro tactical briefing" />
   <meta name="author" content="Tradelia AI" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="theme-color" content="#0f0f0f" />
@@ -99,9 +99,6 @@
   <link rel="stylesheet" href="/assets/css/global-header.css" />
   <link rel="stylesheet" href="/assets/css/mifid-banner.css" />
   <link rel="stylesheet" href="/assets/css/homepage-brokers-2025.css" />
-
-  <!-- Lucide: una sola import -->
-  <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
   <style>
@@ -2041,7 +2038,7 @@
         <article class="audience-card">
           <span class="audience-badge">Formazione</span>
           <strong>Formatori e community educative</strong>
-          <span>Gestisci un corso o una community e vuoi materiale didattico istituzionale, aggiornato e coerente.</span>
+          <span>Gestisci un corso o una community e vuoi materiale didattico strutturato, aggiornato e coerente.</span>
         </article>
 
         <article class="audience-card">
@@ -2056,9 +2053,9 @@
         <p>
           I report possono essere forniti anche in formato PDF white-label, con logo e intestazione del partner, mantenendo metodo, disclosure e controlli Tradelia.
         </p>
-        <a href="mailto:info@tradelia.org?subject=Informazioni%20PDF%20white-label" class="btn btn-outline btn-with-icon">
-          <span>Richiedi informazioni white-label</span>
-        </a>
+        <button type="button" class="btn btn-outline btn-with-icon" onclick="apriModalWhiteLabel()">
+          <span>Come funziona il white-label</span>
+        </button>
       </div>
     </div>
   </section>
@@ -2069,7 +2066,7 @@
       <div class="section-header">
         <h2 class="section-title">Cosa ottieni con Tradelia AI</h2>
         <p class="section-description">
-          Deck proprietari SRD v5.0 e MTB v3.1, ensemble multi-LLM controllato e community didattica per approfondire mercati, rischio e correlazioni con metodo accademico.
+          Deck proprietari SRD v5.0 e MTB v3.1, ensemble multi-LLM controllato e community didattica per approfondire mercati, rischio e correlazioni con un metodo ispirato al mondo accademico.
         </p>
       </div>
 
@@ -2279,7 +2276,7 @@
       </div>
 
       <p class="limits-note">
-        Prima di prendere decisioni operative consulta sempre un <strong>consulente finanziario abilitato</strong>, indipendente o della tua rete di fiducia. Tradelia AI fornisce contenuti educativi e ricerca accademica sui mercati e non sostituisce in alcun modo la consulenza personalizzata.
+        Prima di prendere decisioni operative consulta sempre un <strong>consulente finanziario abilitato</strong>, indipendente o della tua rete di fiducia. Tradelia AI fornisce contenuti educativi e ricerca sui mercati con approccio accademico e non sostituisce in alcun modo la consulenza personalizzata.
       </p>
     </div>
   </section>
@@ -2443,14 +2440,27 @@
       </div>
     </div>
   </section>
-</main>
 
-<!-- ===== HERO SCRIPT ===== -->
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    if (window.lucide) lucide.createIcons();
-  });
-</script>
+  <!-- ===== CLOSING CTA SECTION ===== -->
+  <section class="value-section" aria-label="Chiusura funnel piani e prezzi">
+    <div class="container">
+      <div class="section-header" style="text-align: center;">
+        <h2 class="section-title">Pronto a vedere i piani disponibili?</h2>
+        <p class="section-description">
+          Rivedi con calma report digitali, PDF e opzioni white‑label: trovi tutto nello schema piani e prezzi aggiornato.
+        </p>
+      </div>
+      <div style="text-align: center; margin-top: var(--sp-6);">
+        <a href="/pricing.html" class="btn btn-primary btn-with-icon">
+          <span>Guarda piani e prezzi</span>
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
 
 <!-- MODALE – BLOCCO 1 PROFILO INVESTITORE (v1.2 Mobile-compact + PAC toggle) -->
 <div id="modal-portafoglio" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
@@ -2460,11 +2470,17 @@
     <div class="sticky top-0 z-40">
       <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
         <div class="flex items-center gap-3">
-          <i data-lucide="layers" class="w-6 h-6 text-blue-700"></i>
+          <svg class="w-6 h-6 text-blue-700" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 7l9-5 9 5-9 5-9-5z" stroke="currentColor" stroke-width="2" fill="none" />
+            <path d="M3 12l9 5 9-5" stroke="currentColor" stroke-width="2" fill="none" />
+            <path d="M3 17l9 5 9-5" stroke="currentColor" stroke-width="2" fill="none" />
+          </svg>
           <h3 class="text-lg font-semibold text-slate-900">Profilo Investitore – Validazione / Simulazione</h3>
         </div>
         <button onclick="chiudiModuloPortafoglio()" class="text-slate-500 hover:text-red-500" aria-label="Chiudi">
-          <i data-lucide="x" class="w-5 h-5"></i>
+          <svg class="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
         </button>
       </div>
       <div class="px-6 pt-3 pb-3 bg-white border-b border-slate-200">
@@ -3134,7 +3150,9 @@
 
         <div class="mt-3">
           <button type="button" id="btn-add-row" class="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-100" onclick="aggiungiRigaVal(); scrollToLastRow();">
-            <i data-lucide="plus" class="w-4 h-4"></i>
+            <svg class="w-4 h-4" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
             <span>Aggiungi riga</span>
           </button>
         </div>
@@ -3190,6 +3208,84 @@
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- MODALE WHITE-LABEL (segnaposto) -->
+<div id="modal-white-label" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+  <div class="bg-slate-950 w-full max-w-3xl mx-auto rounded-2xl border border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]" role="dialog" aria-modal="true" aria-labelledby="white-label-title">
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/80 backdrop-blur">
+      <div class="flex items-center gap-3">
+        <svg class="w-6 h-6 text-blue-400" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="16" rx="2" ry="2" stroke="currentColor" stroke-width="2" fill="none" />
+          <path d="M7 8h10M7 12h6M7 16h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <div>
+          <h3 id="white-label-title" class="text-base md:text-lg font-semibold text-slate-50">White-label PDF per partner</h3>
+          <p class="text-xs md:text-sm text-slate-400">Segnaposto: anteprima del flusso e del fac-simile PDF.</p>
+        </div>
+      </div>
+      <button type="button" class="text-slate-400 hover:text-red-400" aria-label="Chiudi" onclick="chiudiModalWhiteLabel()">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="p-5 md:p-6 overflow-y-auto space-y-6 text-sm md:text-[0.9rem] leading-relaxed text-slate-200">
+      <div class="grid gap-6 md:grid-cols-2">
+        <div class="space-y-3">
+          <h4 class="text-sm font-semibold text-slate-100">Come funzionerà il white-label</h4>
+          <ul class="space-y-2 text-slate-300">
+            <li>1. Definizione del perimetro: mercati, frequenza report, note legali del partner.</li>
+            <li>2. Allineamento su layout, logo e intestazione, mantenendo metodo e disclosure Tradelia.</li>
+            <li>3. Pubblicazione in area riservata + generazione PDF brandizzato per la clientela del partner.</li>
+          </ul>
+          <p class="text-xs text-slate-500">
+            Questa è una bozza funzionale: il flusso dettagliato e le opzioni di personalizzazione verranno definiti insieme ai primi partner pilota.
+          </p>
+        </div>
+
+        <div class="bg-slate-900 border border-dashed border-slate-700 rounded-xl p-4 flex flex-col gap-3">
+          <span class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            Fac-simile PDF (placeholder)
+          </span>
+          <div class="flex-1 bg-slate-950 rounded-lg border border-slate-800 p-3 text-[11px] text-slate-300 space-y-2">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
+              <div>
+                <div class="text-[10px] uppercase tracking-wide text-slate-500">Tradelia AI · Metodo accademico</div>
+                <div class="text-xs font-semibold text-slate-100">SRD/MTB – Briefing mercati (White-label)</div>
+              </div>
+              <div class="text-right text-[10px] text-slate-500">
+                <div>Logo Partner</div>
+                <div>Data · Versione</div>
+              </div>
+            </div>
+            <ul class="list-disc list-inside space-y-1">
+              <li>Quadro macro e intermarket con fonti Tier‑1.</li>
+              <li>Scenari didattici con assunzioni esplicite.</li>
+              <li>Sezione note legali dedicate al partner.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 px-5 py-4 border-t border-slate-800 bg-slate-900/80">
+      <p class="text-xs text-slate-400 md:max-w-md">
+        Per accordi o domande sul white-label utilizza il canale email: ogni collaborazione viene valutata caso per caso.
+      </p>
+      <div class="flex gap-2 justify-end">
+        <button type="button" class="btn btn-sm btn-outline" onclick="chiudiModalWhiteLabel()">Chiudi</button>
+        <a href="mailto:info@tradelia.org?subject=Informazioni%20PDF%20white-label" class="btn btn-sm btn-primary">
+          Scrivi per white-label
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -3314,7 +3410,6 @@
     const modal = document.getElementById('modal-portafoglio');
     modal.classList.remove('hidden');
     __lockScroll();
-    if(window.lucide) lucide.createIcons();
     document.getElementById('form-portafoglio').reset();
     currentStep = 0; stepsOrder = baseOrder.slice();
     aggiornaStep();
@@ -3326,6 +3421,21 @@
   }
   function chiudiModuloPortafoglio(){
     document.getElementById('modal-portafoglio').classList.add('hidden');
+    __unlockScroll();
+  }
+
+  // ===== Modale White-label =====
+  function apriModalWhiteLabel() {
+    const modal = document.getElementById('modal-white-label');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    __lockScroll();
+  }
+
+  function chiudiModalWhiteLabel() {
+    const modal = document.getElementById('modal-white-label');
+    if (!modal) return;
+    modal.classList.add('hidden');
     __unlockScroll();
   }
 
@@ -3783,11 +3893,16 @@ Vuoi procedere inviando i dati?`;
     <!-- HEADER -->
     <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
       <div class="flex items-center gap-3">
-        <i data-lucide="search" class="w-6 h-6 text-blue-700"></i>
+        <svg class="w-6 h-6 text-blue-700" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2" fill="none" />
+          <path d="M16 16l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
         <h3 id="asset-title" class="text-lg font-semibold text-slate-900">Analisi AI – Asset singolo</h3>
       </div>
       <button onclick="chiudiModuloAsset()" class="text-slate-500 hover:text-red-500" aria-label="Chiudi">
-        <i data-lucide="x" class="w-5 h-5"></i>
+        <svg class="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
       </button>
     </div>
 
@@ -4083,11 +4198,16 @@ Vuoi procedere inviando i dati?`;
     <!-- HEADER -->
     <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
       <div class="flex items-center gap-3">
-        <i data-lucide="message-square" class="w-6 h-6 text-blue-700"></i>
+        <svg class="w-6 h-6 text-blue-700" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2" fill="none" />
+          <path d="M5 9l7 4 7-4" stroke="currentColor" stroke-width="2" fill="none" />
+        </svg>
         <h3 id="q-title" class="text-lg font-semibold text-slate-900">Domanda Libera – Tradelia AI</h3>
       </div>
       <button onclick="chiudiModuloDomanda()" class="text-slate-500 hover:text-red-500" aria-label="Chiudi">
-        <i data-lucide="x" class="w-5 h-5"></i>
+        <svg class="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
       </button>
     </div>
 
@@ -4445,66 +4565,8 @@ Vuoi procedere inviando i dati?`;
     }
   </script>
 
-  <!-- ===== MIFID BANNER (sostituisce vecchio legal overlay) ===== -->
+  <!-- ===== MIFID BANNER (overlay legale unificato) ===== -->
   <script type="module" src="/assets/js/mifid-banner.js"></script>
-  
-  <!-- ===== LEGAL OVERLAY (per pulsanti footer, gestito da mifid-banner.js) ===== -->
-  <!-- Overlay verrà creato dinamicamente da mifid-banner.js se necessario -->
-  
-  <!-- ===== LEGAL OVERLAY SCRIPT (solo per gestire pulsanti footer) ===== -->
-  <script>
-    (function() {
-      // Bind pulsanti footer quando sono disponibili
-      // Usa la funzione esposta da mifid-banner.js
-      function bindFooterButtons() {
-        const btnPrivacy = document.getElementById('btn-privacy-open');
-        const btnMifid = document.getElementById('btn-mifid-open');
-        
-        if (btnPrivacy) {
-          btnPrivacy.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Usa funzione esposta da mifid-banner.js
-            if (window.openLegalOverlay) {
-              window.openLegalOverlay('privacy', false);
-            } else {
-              // Se non disponibile ancora, riprova dopo un po'
-              setTimeout(() => {
-                if (window.openLegalOverlay) {
-                  window.openLegalOverlay('privacy', false);
-                }
-              }, 500);
-            }
-          });
-        }
-        
-        if (btnMifid) {
-          btnMifid.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Usa funzione esposta da mifid-banner.js
-            if (window.openLegalOverlay) {
-              window.openLegalOverlay('mifid', false);
-            } else {
-              // Se non disponibile ancora, riprova dopo un po'
-              setTimeout(() => {
-                if (window.openLegalOverlay) {
-                  window.openLegalOverlay('mifid', false);
-                }
-              }, 500);
-            }
-          });
-        }
-      }
-      
-      // Bind immediatamente se DOM è pronto
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-          setTimeout(bindFooterButtons, 1000);
-        });
-      } else {
-        setTimeout(bindFooterButtons, 1000);
-      }
-    })();
-  </script>
 
   <!-- ===== MODAL COLLABORATORS ===== -->
   <div id="modal-collaboratori" class="hidden" role="dialog" aria-modal="true" aria-labelledby="modal-collaboratori-title">

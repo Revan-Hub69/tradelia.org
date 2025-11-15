@@ -119,7 +119,7 @@ function renderLegalOverlay() {
         </ul>
         <h4>Conflitti e indipendenza</h4>
         <ul>
-          <li>Framework Accademico AI, Tradelia Swing Master 5.0 è indipendente: non esegue ordini e non gestisce capitali.</li>
+          <li>Il framework AI alla base dei moduli SRD/MTB è indipendente: non esegue ordini e non gestisce capitali.</li>
           <li>Non sono note situazioni di conflitto d'interesse rilevanti nella produzione del materiale.</li>
         </ul>
         <h4>Limitazioni</h4>
@@ -174,7 +174,7 @@ function renderLegalOverlay() {
         </ul>
         <h4>Conflicts and independence</h4>
         <ul>
-          <li>Academic AI Framework, Tradelia Swing Master 5.0 is independent: it does not execute orders or manage capital.</li>
+          <li>The AI framework behind the SRD/MTB modules is independent: it does not execute orders or manage capital.</li>
           <li>No relevant conflict of interest situations are known in the production of the material.</li>
         </ul>
         <h4>Limitations</h4>
