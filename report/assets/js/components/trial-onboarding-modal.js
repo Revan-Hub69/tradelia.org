@@ -712,8 +712,15 @@ async function handleAccountFormSubmit(e) {
           window.location.href = '/';
         }, 2000);
       } else {
-        // Utente ha sessione attiva - redirect diretto all'area utente
-        window.location.href = '/user/index.html';
+        // Utente ha sessione attiva
+        // Se siamo già nell'area utente, refresh invece di redirect
+        if (window.location.pathname.includes('/user')) {
+          // Siamo già nell'area utente - refresh la pagina per aggiornare lo stato
+          window.location.reload();
+        } else {
+          // Non siamo nell'area utente - redirect normale
+          window.location.href = '/user/index.html';
+        }
       }
     }, 2000);
     
@@ -859,12 +866,44 @@ async function open(planType = 'trial', provider = 'xolo') {
   const { data: { session } } = await supabase.auth.getSession();
   
   if (session?.user) {
-    // User already logged in - skip modal and activate directly
-    const trialExpiry = new Date();
-    trialExpiry.setDate(trialExpiry.getDate() + 14);
-    const targetRole = planType === 'pro' ? 'pro' : 'trial';
-    
+    // User already logged in - check if they already have a role
     try {
+      const { data: existingRole, error: roleCheckError } = await supabase
+        .from('user_roles')
+        .select('role, valid_until')
+        .eq('user_id', session.user.id)
+        .maybeSingle();
+      
+      if (roleCheckError && roleCheckError.code !== 'PGRST116') {
+        Logger.error('TrialOnboarding', 'Error checking existing role', roleCheckError);
+      }
+      
+      // If user already has a role, show message instead of activating again
+      if (existingRole?.role) {
+        const roleLabel = existingRole.role === 'institutional' ? 'Desk Professionale' : 
+                         existingRole.role === 'pro' ? 'Pro' : 
+                         existingRole.role === 'trial' ? 'Trial' : existingRole.role;
+        
+        showToast(`Hai già un piano attivo: ${roleLabel}. Vai all'area utente per gestire il tuo abbonamento.`, 'info');
+        
+        // Se siamo già nell'area utente, non fare nulla (refresh se necessario)
+        if (window.location.pathname.includes('/user')) {
+          // Siamo già nell'area utente - non fare nulla, l'utente può gestire il piano qui
+          return;
+        } else {
+          // Non siamo nell'area utente - redirect all'area utente
+          setTimeout(() => {
+            window.location.href = '/user/index.html';
+          }, 2000);
+        }
+        return;
+      }
+      
+      // User logged in but no role - activate trial directly
+      const trialExpiry = new Date();
+      trialExpiry.setDate(trialExpiry.getDate() + 14);
+      const targetRole = planType === 'pro' ? 'pro' : 'trial';
+      
       const { error: roleError } = await supabase
         .from('user_roles')
         .upsert({
@@ -876,9 +915,19 @@ async function open(planType = 'trial', provider = 'xolo') {
       if (roleError) throw roleError;
       
       showToast(`Prova gratuita ${targetRole === 'pro' ? 'Pro' : 'Trial'} attivata!`, 'success');
-      setTimeout(() => {
-        window.location.href = '/user/index.html';
-      }, 1500);
+      
+      // Se siamo già nell'area utente, refresh invece di redirect
+      if (window.location.pathname.includes('/user')) {
+        // Siamo già nell'area utente - refresh la pagina per aggiornare lo stato
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        // Non siamo nell'area utente - redirect normale
+        setTimeout(() => {
+          window.location.href = '/user/index.html';
+        }, 1500);
+      }
       return;
     } catch (err) {
       Logger.error('TrialOnboarding', 'Trial activation error', err);

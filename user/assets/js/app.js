@@ -1370,11 +1370,9 @@ async function fetchUserRole() {
         // Piano scaduto - disabilita accesso
         Logger.warn('UserArea', 'Plan expired', { expiresAt, now });
         state.role = null;
-        showToast('Il tuo piano è scaduto. Rinnova per continuare ad utilizzare la piattaforma.', 'error');
-        // Reindirizza a pricing dopo 3 secondi
-        setTimeout(() => {
-          window.location.href = '/pricing.html';
-        }, 3000);
+        showToast('Il tuo piano è scaduto. Puoi rinnovarlo nella sezione Abbonamento.', 'error');
+        // Non reindirizzare - l'utente può rinnovare dall'area utente
+        // Se necessario, mostra pulsante rinnovo nella sezione Abbonamento
       } else {
         Logger.debug('UserArea', 'Plan valid', { role: state.role, expiresAt });
       }
@@ -1798,7 +1796,18 @@ function setupCreditsHandlers() {
   
   if (REQUEST_ANALYSIS_LOCK_UPGRADE) {
     REQUEST_ANALYSIS_LOCK_UPGRADE.addEventListener('click', () => {
-      window.location.href = '/pricing.html';
+      // Non reindirizzare a pricing - apri checkout Paddle per upgrade a institutional
+      if (state.user) {
+        try {
+          showToast('Apertura checkout per upgrade a Desk Professionale...', 'info');
+          openPaddleUpgrade('institutional', state.user?.email || '', getDisplayName());
+        } catch (err) {
+          Logger.error('UserArea', 'upgrade from lock error', err);
+          showToast('Errore durante l\'apertura del checkout. Contatta il supporto.', 'error');
+        }
+      } else {
+        showToast('Effettua il login per effettuare l\'upgrade.', 'error');
+      }
     });
   }
 }
