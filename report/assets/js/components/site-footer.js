@@ -62,6 +62,7 @@ function render(data = {}) {
             <!-- Tutorial temporaneamente rimosso -->
             <a href="/pricing.html" aria-label="Vai alla pagina prezzi" data-i18n="nav.pricing">Pricing</a>
             <a href="/brokers.html" aria-label="Vai alla pagina brokers" data-i18n="nav.brokers">Brokers</a>
+            <a href="/collegamenti.html" aria-label="Vai alla pagina collegamenti consigliati">Collegamenti</a>
             <a href="/glossario.html" aria-label="Vai al glossario finanziario" data-i18n="nav.glossary">Glossario</a>
           </div>
         </div>

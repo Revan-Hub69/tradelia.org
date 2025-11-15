@@ -235,13 +235,29 @@
               2. Dati che Raccogliamo
             </h2>
             <p style="margin-bottom: var(--sp-3);" data-i18n="privacy.section2.content">
-              Raccogliamo i seguenti tipi di dati:
+              Raccogliamo e trattiamo i seguenti tipi di dati personali, nel rispetto del principio di minimizzazione:
             </p>
             <ul style="list-style: disc; margin-left: var(--sp-6); margin-bottom: var(--sp-3);">
-              <li data-i18n="privacy.section2.item1"><strong>Dati di account:</strong> Email, password (criptata), informazioni di abbonamento</li>
-              <li data-i18n="privacy.section2.item2"><strong>Dati di utilizzo:</strong> Log di accesso, preferenze, interazioni con il Servizio</li>
-              <li data-i18n="privacy.section2.item3"><strong>Dati tecnici:</strong> Indirizzo IP, tipo di browser, dispositivo</li>
-              <li data-i18n="privacy.section2.item4"><strong>Dati di pagamento:</strong> Gestiti da Paddle (non conserviamo dati di carte di credito)</li>
+              <li data-i18n="privacy.section2.item1">
+                <strong>Dati di account (Supabase):</strong>
+                indirizzo email, password (memorizzata solo in forma criptata), identificativo utente, ruolo (es. guest, pro, desk) e metadati di abbonamento.
+              </li>
+              <li data-i18n="privacy.section2.item2">
+                <strong>Dati di utilizzo (Supabase / log applicativi):</strong>
+                log di accesso, azioni principali nella dashboard (es. richieste analisi, uso crediti), preferenze interne al profilo. Queste informazioni sono usate per garantire sicurezza, prevenire abusi e migliorare il Servizio.
+              </li>
+              <li data-i18n="privacy.section2.item3">
+                <strong>Dati tecnici:</strong>
+                indirizzo IP, tipo di browser, sistema operativo, impostazioni del dispositivo, timestamp di richieste HTTP. Utilizziamo tali dati per sicurezza, diagnostica e statistiche aggregate.
+              </li>
+              <li data-i18n="privacy.section2.item4">
+                <strong>Dati relativi a richieste di analisi:</strong>
+                contenuto dei form di richiesta (es. descrizioni portafogli, scenari, recapiti di contatto come email o numero WhatsApp), che vengono inviati tramite email ai nostri canali operativi (infrastruttura Brevo) e conservati per il tempo necessario alla gestione della richiesta.
+              </li>
+              <li data-i18n="privacy.section2.item5">
+                <strong>Dati di pagamento:</strong>
+                gestiti esclusivamente da fornitori terzi di pagamento (es. Paddle, Lemon Squeezy, Xolo Go). Non memorizziamo né accediamo ai dati completi di carte o conti; riceviamo solo identificativi tecnici e metadati necessari per riconciliare pagamenti e abbonamenti (es. ID transazione, piano, importo, stato).
+              </li>
             </ul>
           </section>
 
@@ -265,13 +281,29 @@
               4. Condivisione dei Dati
             </h2>
             <p style="margin-bottom: var(--sp-3);" data-i18n="privacy.section4.content">
-              Non vendiamo i tuoi dati personali. Condividiamo i dati solo con:
+              Non vendiamo i tuoi dati personali. Condividiamo i dati solo con soggetti terzi necessari al funzionamento del Servizio e nel rispetto della normativa applicabile:
             </p>
             <ul style="list-style: disc; margin-left: var(--sp-6); margin-bottom: var(--sp-3);">
-              <li data-i18n="privacy.section4.item1"><strong>Paddle:</strong> Per gestione pagamenti e abbonamenti</li>
-              <li data-i18n="privacy.section4.item2"><strong>Supabase:</strong> Per autenticazione e database (hosting sicuro)</li>
-              <li data-i18n="privacy.section4.item3"><strong>Resend:</strong> Per invio email (solo se necessario)</li>
-              <li data-i18n="privacy.section4.item4"><strong>Autorità legali:</strong> Se richiesto dalla legge</li>
+              <li data-i18n="privacy.section4.item1">
+                <strong>Supabase:</strong>
+                fornitore di infrastruttura per autenticazione, database e log applicativi. Agisce in qualità di responsabile del trattamento, con data center conformi agli standard di sicurezza e protezione dei dati dichiarati nella sua documentazione.
+              </li>
+              <li data-i18n="privacy.section4.item2">
+                <strong>Fornitori di pagamento (es. Paddle, Lemon Squeezy, Xolo Go):</strong>
+                agiscono in qualità di titolari autonomi per la gestione di pagamenti, fatturazione e adempimenti fiscali. Condividiamo solo le informazioni strettamente necessarie per riconciliare pagamenti e piani (es. identificativo utente, piano sottoscritto, stato dell’abbonamento).
+              </li>
+              <li data-i18n="privacy.section4.item3">
+                <strong>Fornitore email (Brevo):</strong>
+                utilizziamo Brevo per l’invio di email transazionali e per la gestione delle richieste provenienti dai moduli di analisi. I contenuti inviati tramite i form possono essere temporaneamente memorizzati nei log del provider ai fini di recapito e diagnostica.
+              </li>
+              <li data-i18n="privacy.section4.item4">
+                <strong>Fornitori di infrastruttura e sicurezza:</strong>
+                come hosting, CDN e sistemi di logging tecnico, utilizzati per erogare il Servizio in modo affidabile e sicuro.
+              </li>
+              <li data-i18n="privacy.section4.item5">
+                <strong>Autorità legali o regolamentari:</strong>
+                qualora ciò sia richiesto dalla legge, da procedimenti giudiziari o da richieste vincolanti di autorità competenti.
+              </li>
             </ul>
           </section>
 
