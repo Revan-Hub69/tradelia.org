@@ -142,6 +142,7 @@ function openManagePaymentsModal(userId) {
     if (modal) {
       modal.hidden = true;
       modal.style.display = 'none';
+      modal.dataset.userOpened = '';
     }
   });
   
@@ -149,8 +150,16 @@ function openManagePaymentsModal(userId) {
   if (PAYMENTS_USER_EMAIL) PAYMENTS_USER_EMAIL.value = user.email || '';
   
   if (PAYMENTS_MODAL) {
+    // Imposta flag per indicare che è stato aperto dall'utente
+    PAYMENTS_MODAL.dataset.userOpened = 'true';
     PAYMENTS_MODAL.hidden = false;
     PAYMENTS_MODAL.style.display = 'flex';
+    // Rimuovi flag dopo breve delay
+    setTimeout(() => {
+      if (PAYMENTS_MODAL) {
+        delete PAYMENTS_MODAL.dataset.userOpened;
+      }
+    }, 100);
   }
 }
 

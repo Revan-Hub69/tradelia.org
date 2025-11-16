@@ -103,41 +103,62 @@ async function init() {
     
     // FORZA CHIUSURA MODALI - CRITICO: devono essere SEMPRE chiusi all'inizio
     const modals = ['edit-user-modal', 'manage-credits-modal', 'manage-payments-modal'];
+    const forceCloseModals = () => {
+      modals.forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.hidden = true;
+          modal.setAttribute('hidden', 'true');
+          modal.style.display = 'none';
+          modal.style.visibility = 'hidden';
+          modal.classList.remove('active', 'open', 'show');
+          modal.setAttribute('aria-hidden', 'true');
+        }
+      });
+    };
+    
+    // Chiudi immediatamente
+    forceCloseModals();
+    
+    // Chiudi anche dopo delay multipli (per sicurezza)
+    [50, 100, 200, 500, 1000].forEach(delay => {
+      setTimeout(forceCloseModals, delay);
+    });
+    
+    // Observer per chiudere automaticamente i modali se si aprono senza click esplicito
+    const modalObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') {
+          const modal = mutation.target;
+          // Se un modale viene aperto (hidden diventa false) senza un flag di "user action"
+          if (!modal.hidden && !modal.dataset.userOpened) {
+            console.log('[Admin] Modale aperto automaticamente, chiudo:', modal.id);
+            forceCloseModals();
+          }
+        }
+      });
+    });
+    
+    // Osserva tutti i modali
     modals.forEach(modalId => {
       const modal = document.getElementById(modalId);
       if (modal) {
-        modal.hidden = true;
-        modal.setAttribute('hidden', 'true');
-        modal.style.display = 'none';
-        modal.style.visibility = 'hidden';
+        modalObserver.observe(modal, { attributes: true, attributeFilter: ['hidden'] });
       }
     });
     
-    // Forza chiusura modali anche dopo un delay (per sicurezza)
-    setTimeout(() => {
-      modals.forEach(modalId => {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-          modal.hidden = true;
-          modal.setAttribute('hidden', 'true');
-          modal.style.display = 'none';
-          modal.style.visibility = 'hidden';
-        }
-      });
-    }, 50);
-    
-    // Forza chiusura anche dopo caricamento completo
-    setTimeout(() => {
-      modals.forEach(modalId => {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-          modal.hidden = true;
-          modal.setAttribute('hidden', 'true');
-          modal.style.display = 'none';
-          modal.style.visibility = 'hidden';
-        }
-      });
-    }, 500);
+    // Wrapper per le funzioni di apertura modali - imposta flag "user action"
+    const originalManagePayments = window.managePayments;
+    window.managePayments = function(...args) {
+      const modal = document.getElementById('manage-payments-modal');
+      if (modal) {
+        modal.dataset.userOpened = 'true';
+        setTimeout(() => delete modal.dataset.userOpened, 100);
+      }
+      if (originalManagePayments) {
+        return originalManagePayments.apply(this, args);
+      }
+    };
     
     // Load data
     await loadAllData();
