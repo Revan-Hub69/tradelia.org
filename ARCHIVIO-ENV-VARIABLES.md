@@ -17,19 +17,32 @@ Le API usano `process.env` ma **NON sono configurate** in Vercel/Cloudflare Page
 
 **Variabili:**
 - `SUPABASE_URL` - URL progetto Supabase
-- `SUPABASE_ANON_KEY` - Anon Key Supabase
+- `SUPABASE_ANON_KEY` - Anon Key Supabase (pubblica, OK hardcoded)
+- `SUPABASE_SERVICE_ROLE_KEY` - ⚠️ **CRITICA** Service Role Key (segreta, NECESSARIA per token/admin)
 
 **Dove serve:**
 - `/api/webhook-lemonsqueezy.js`
 - `/api/check-subscription.js`
 - `/api/send-push.js`
 - `/api/vote.js`
+- `/api/validate-dashboard-token.js` ← **CRITICA** (richiede SERVICE_ROLE_KEY)
+- `/api/request-dashboard-token.js` ← **CRITICA** (richiede SERVICE_ROLE_KEY)
+- `/api/generate-admin-token.js` ← **CRITICA** (richiede SERVICE_ROLE_KEY)
+- `/api/webhook-paddle.js` ← **CRITICA** (richiede SERVICE_ROLE_KEY)
+- `/api/webhook-role-sync.js` ← **CRITICA** (richiede SERVICE_ROLE_KEY)
 
-**Valori attuali (hardcoded):**
+**Valori attuali:**
 ```
 SUPABASE_URL=https://higkhlfjfhlecbtfnznx.supabase.co
 SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZ2tobGZqZmhsZWNidGZuem54Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0NTc5OTksImV4cCI6MjA3ODAzMzk5OX0.qlhVhGkfc0rU7-tUg9Fu40D67HQzHjZhkEdP4mAPqTw
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZ2tobGZqZmhsZWNidGZuem54Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjQ1Nzk5OSwiZXhwIjoyMDc4MDMzOTk5fQ.iOqVIFi-WxChkTNkc58fizixSfRcANohcG1A9ggtkjs
 ```
+
+**⚠️ IMPORTANTE:**
+- `SUPABASE_SERVICE_ROLE_KEY` è **SEGRETA** - non committare nel codice!
+- È **NECESSARIA** per tutte le API token/dashboard/admin
+- Senza questa chiave, le API restituiscono errore 500
+- Si trova in Supabase Dashboard → Settings → API → `service_role` key (secret)
 
 ---
 
@@ -134,6 +147,7 @@ PUSH_API_KEY=your-secret-api-key-here
 ### **Variabili Essenziali (per funzionamento base)**
 - [ ] `SUPABASE_URL` - Aggiunta in Vercel/Cloudflare Pages
 - [ ] `SUPABASE_ANON_KEY` - Aggiunta in Vercel/Cloudflare Pages
+- [ ] `SUPABASE_SERVICE_ROLE_KEY` - ⚠️ **CRITICA** - Aggiunta in Vercel/Cloudflare Pages (NECESSARIA per token/admin)
 - [ ] `FIREBASE_VAPID_PRIVATE_KEY` - Aggiunta in Vercel/Cloudflare Pages
 - [ ] `FIREBASE_SERVICE_ACCOUNT` - Aggiunta in Vercel/Cloudflare Pages (JSON come stringa)
 

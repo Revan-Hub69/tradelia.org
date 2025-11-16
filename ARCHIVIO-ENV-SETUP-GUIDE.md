@@ -14,7 +14,19 @@ https://higkhlfjfhlecbtfnznx.supabase.co
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZ2tobGZqZmhsZWNidGZuem54Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0NTc5OTksImV4cCI6MjA3ODAzMzk5OX0.qlhVhGkfc0rU7-tUg9Fu40D67HQzHjZhkEdP4mAPqTw
 ```
 
-#### 3. **FIREBASE_VAPID_PRIVATE_KEY**
+#### 3. **SUPABASE_SERVICE_ROLE_KEY** ⚠️ **CRITICA**
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZ2tobGZqZmhsZWNidGZuem54Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjQ1Nzk5OSwiZXhwIjoyMDc4MDMzOTk5fQ.iOqVIFi-WxChkTNkc58fizixSfRcANohcG1A9ggtkjs
+```
+**⚠️ IMPORTANTE:** Questa chiave è **SEGRETA** e **NECESSARIA** per:
+- Validazione token dashboard (`/api/validate-dashboard-token`)
+- Generazione token (`/api/request-dashboard-token`, `/api/generate-admin-token`)
+- Webhook pagamenti (Paddle, LemonSqueezy)
+- Dashboard admin
+
+**Senza questa chiave, tutte le API token restituiscono errore 500!**
+
+#### 4. **FIREBASE_VAPID_PRIVATE_KEY**
 ```
 E6cggtHVRuV6vN3vDkoRDU_oRcgsGid8QFAs0R1n9JQ
 ```
@@ -88,6 +100,7 @@ Per ogni variabile:
 |-----|-------|--------------|
 | `SUPABASE_URL` | `https://higkhlfjfhlecbtfnznx.supabase.co` | All |
 | `SUPABASE_ANON_KEY` | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` | All |
+| `SUPABASE_SERVICE_ROLE_KEY` | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` ⚠️ **CRITICA** | All |
 | `FIREBASE_VAPID_PRIVATE_KEY` | `E6cggtHVRuV6vN3vDkoRDU_oRcgsGid8QFAs0R1n9JQ` | All |
 | `FIREBASE_SERVICE_ACCOUNT` | `{"type":"service_account",...}` | All |
 
@@ -172,6 +185,7 @@ Aggiungi solo se hai già configurato i servizi:
 ### **Vercel**
 - [ ] `SUPABASE_URL` aggiunta
 - [ ] `SUPABASE_ANON_KEY` aggiunta
+- [ ] `SUPABASE_SERVICE_ROLE_KEY` aggiunta ⚠️ **CRITICA** (NECESSARIA per token/admin)
 - [ ] `FIREBASE_VAPID_PRIVATE_KEY` aggiunta
 - [ ] `FIREBASE_SERVICE_ACCOUNT` aggiunta (JSON come stringa)
 - [ ] `RESEND_API_KEY` aggiunta
