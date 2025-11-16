@@ -192,8 +192,9 @@ async function handleSubscription(data) {
         const validUntil = currentPeriodEnd instanceof Date 
           ? currentPeriodEnd.toISOString() 
           : new Date(currentPeriodEnd).toISOString();
-        await generateDashboardToken(userId, email, planRole, validUntil, 'lemonsqueezy');
-        console.log('[Webhook] ✅ Token dashboard generato per:', email);
+        // Genera token e invia email automaticamente
+        await generateDashboardToken(userId, email, planRole, validUntil, 'lemonsqueezy', true);
+        console.log('[Webhook] ✅ Token dashboard generato e email inviata per:', email);
       } catch (tokenError) {
         console.error('[Webhook] Errore generazione token (non bloccante):', tokenError);
       }

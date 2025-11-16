@@ -299,15 +299,125 @@ export function calculateExpirationDate(planType, durationMonths = 1) {
 }
 
 /**
+ * Invia email con token via Brevo
+ */
+async function sendTokenEmail(email, token, planRole) {
+  const BREVO_API_KEY = process.env.BREVO_API_KEY;
+  if (!BREVO_API_KEY) {
+    console.warn('[Token Email] BREVO_API_KEY non configurata, email non inviata');
+    return false;
+  }
+  
+  const planNames = {
+    'trial': 'Trial',
+    'pro': 'Pro',
+    'institutional': 'Desk'
+  };
+  const planName = planNames[planRole] || planRole;
+  
+  const emailHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #2563eb; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+    .content { padding: 20px; background: #f9fafb; }
+    .token-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border: 2px solid #2563eb; text-align: center; }
+    .token { font-family: 'Courier New', monospace; font-size: 18px; font-weight: bold; color: #2563eb; letter-spacing: 2px; }
+    .footer { padding: 15px; text-align: center; color: #6b7280; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2 style="margin: 0;">🔑 Il tuo codice di accesso Tradelia</h2>
+    </div>
+    
+    <div class="content">
+      <p>Ciao,</p>
+      <p>Il tuo abbonamento <strong>${planName}</strong> è stato attivato. Ecco il tuo codice di accesso per la dashboard Tradelia.</p>
+      
+      <div class="token-box">
+        <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">Il tuo codice:</p>
+        <div class="token">${token}</div>
+      </div>
+      
+      <p>Usa questo codice nella pagina di accesso per entrare nella dashboard e consultare i report riservati.</p>
+      <p><strong>Importante:</strong> Conserva questo codice in un luogo sicuro. Non condividerlo con altri.</p>
+      
+      <p style="margin-top: 30px;">Per accedere: vai su <a href="https://tradelia.org/accesso.html">tradelia.org/accesso.html</a> e inserisci il codice qui sopra.</p>
+    </div>
+    
+    <div class="footer">
+      <p>Questo è un messaggio automatico da Tradelia AI.</p>
+      <p>Per assistenza: <a href="mailto:support@tradelia.org">support@tradelia.org</a></p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+  
+  const emailText = `
+Il tuo codice di accesso Tradelia
+
+Il tuo abbonamento ${planName} è stato attivato. Ecco il tuo codice di accesso per la dashboard Tradelia.
+
+Il tuo codice: ${token}
+
+Usa questo codice nella pagina di accesso per entrare nella dashboard e consultare i report riservati.
+
+Importante: Conserva questo codice in un luogo sicuro. Non condividerlo con altri.
+
+Per accedere: vai su https://tradelia.org/accesso.html e inserisci il codice qui sopra.
+
+---
+Questo è un messaggio automatico da Tradelia AI.
+Per assistenza: support@tradelia.org
+  `;
+  
+  try {
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'api-key': BREVO_API_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI' },
+        to: [{ email: email }],
+        subject: `🔑 Il tuo codice di accesso Tradelia - Piano ${planName}`,
+        htmlContent: emailHTML,
+        textContent: emailText
+      })
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[Token Email] Errore Brevo:', errorText);
+      return false;
+    }
+    
+    return true;
+  } catch (err) {
+    console.error('[Token Email] Errore invio email:', err);
+    return false;
+  }
+}
+
+/**
  * Genera e salva token dashboard per utente
  * @param {string} userId - User ID (opzionale, può essere null se solo email)
  * @param {string} email - Email utente
  * @param {string} planRole - Ruolo piano ('trial', 'pro', 'institutional')
  * @param {string} validUntil - Data scadenza token (ISO string)
  * @param {string} source - Sorgente token ('paddle', 'xolo', 'stripe', 'lemonsqueezy', 'manual', 'trial')
+ * @param {boolean} sendEmail - Se true, invia email automatica con il token (default: false)
  * @returns {Promise<{token: string, success: boolean}>} - Token generato (in chiaro) e success flag
  */
-export async function generateDashboardToken(userId, email, planRole, validUntil, source = 'manual') {
+export async function generateDashboardToken(userId, email, planRole, validUntil, source = 'manual', sendEmail = false) {
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
     throw new Error('SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devono essere configurati');
   }
@@ -361,6 +471,21 @@ export async function generateDashboardToken(userId, email, planRole, validUntil
     }
     
     console.log(`[Token Generation] ✅ Token generato per ${email || userId} (${planRole})`);
+    
+    // Invia email se richiesto
+    if (sendEmail && email) {
+      try {
+        const emailSent = await sendTokenEmail(email, token, planRole);
+        if (emailSent) {
+          console.log(`[Token Generation] ✅ Email inviata a ${email}`);
+        } else {
+          console.warn(`[Token Generation] ⚠️ Email non inviata a ${email} (token comunque generato)`);
+        }
+      } catch (emailError) {
+        console.error('[Token Generation] Errore invio email (non bloccante):', emailError);
+      }
+    }
+    
     return { token, success: true };
   } catch (err) {
     console.error('[Token Generation] ❌ Errore:', err);
