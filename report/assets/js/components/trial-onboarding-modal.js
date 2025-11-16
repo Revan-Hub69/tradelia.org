@@ -672,11 +672,6 @@ async function handleAccountFormSubmit(e) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           type: 'business-data',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
           userEmail: email,
           userName: fullName,
           userType: state.userType || 'individual',
