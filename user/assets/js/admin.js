@@ -523,19 +523,29 @@ async function loadUsers() {
     allUsers = Array.from(allUsersMap.values());
     
     Logger.info('Admin', `Loaded ${allUsers.length} users (${usersFromIds.length} from profiles, ${usersFromSubscribers.length} from subscribers, ${usersFromTokens.length} from tokens)`);
+    console.log('[Admin] Users loaded:', {
+      total: allUsers.length,
+      fromProfiles: usersFromIds.length,
+      fromSubscribers: usersFromSubscribers.length,
+      fromTokens: usersFromTokens.length,
+      sample: allUsers.slice(0, 3).map(u => ({ email: u.email, role: u.role, source: u.source }))
+    });
     
     // Update global allUsers for admin-complete.js
     if (typeof window !== 'undefined') {
       window.allUsers = allUsers;
     }
     
-    // Se non ci sono utenti, mostra messaggio
+    // Se non ci sono utenti, mostra messaggio con dettagli debug
     if (allUsers.length === 0) {
       if (USERS_TABLE_BODY) {
         USERS_TABLE_BODY.innerHTML = `
           <tr>
             <td colspan="6" style="text-align: center; padding: 2rem; color: var(--ink-soft);">
-              Nessun utente trovato nel database.
+              Nessun utente trovato nel database.<br>
+              <small style="font-size: 0.85rem; margin-top: 0.5rem; display: block;">
+                Debug: profiles=${profiles?.length || 0}, roles=${roles?.length || 0}, subscribers=${subscribers?.length || 0}, tokens=${tokens?.length || 0}
+              </small>
             </td>
           </tr>
         `;
