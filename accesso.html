@@ -120,6 +120,34 @@
       color: var(--muted, #9ca3af);
       line-height: 1.5;
     }
+    .access-close {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.4rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid var(--br-card, #1f2937);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--ink-soft, #e5e7eb);
+      font-size: 1.1rem;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, border-color 0.18s, transform 0.08s;
+    }
+    .access-close:hover {
+      background: var(--surface-elev, #020617);
+      border-color: var(--brand-500, #3b82f6);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+    .access-close:focus-visible {
+      outline: 2px solid var(--brand-500, #3b82f6);
+      outline-offset: 2px;
+    }
     @media (max-width: 640px) {
       #site-header-slot {
         position: static;
@@ -137,6 +165,9 @@
   <div id="site-header-slot"></div>
   <main>
     <section class="access-wrapper" aria-labelledby="access-title">
+      <button type="button" class="access-close" aria-label="Torna alla homepage">
+        ×
+      </button>
       <h1 id="access-title" class="access-title">Accesso alla dashboard Tradelia</h1>
       <p class="access-subtitle">
         Inserisci il <strong>codice di accesso</strong> ricevuto via email per entrare nella dashboard dei dossier
@@ -161,10 +192,10 @@
             Se non hai ancora un codice, puoi richiederlo scrivendo al desk Tradelia.
           </div>
         </div>
-        <div class="access-actions">
-          <button type="submit" class="btn btn-primary">Accedi alla dashboard</button>
+        <div class="access-actions access-cta">
+          <button type="submit" class="btn btn-sm btn-primary">Accedi alla dashboard</button>
           <a href="mailto:info@tradelia.org?subject=Richiesta%20codice%20accesso%20dashboard%20Tradelia"
-             class="btn btn-outline">
+             class="btn btn-sm btn-outline">
             Richiedi un codice
           </a>
         </div>
@@ -182,6 +213,7 @@
       const form = document.getElementById('access-form');
       const input = document.getElementById('access-token');
       const alertBox = document.getElementById('access-alert');
+      const closeBtn = document.querySelector('.access-close');
 
       function showAlert(message) {
         if (!alertBox) return;
@@ -208,6 +240,12 @@
         }
       } catch (e) {
         // ignore
+      }
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          window.location.href = '/index.html';
+        });
       }
 
       form.addEventListener('submit', function(e) {
