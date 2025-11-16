@@ -4,19 +4,29 @@
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Non crashare all'avvio se le variabili non sono configurate
+// Verificheremo nel handler
+let supabase = null;
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-  throw new Error('SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devono essere configurati');
-}
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false
+function getSupabaseClient() {
+  if (supabase) return supabase;
+  
+  const SUPABASE_URL = process.env.SUPABASE_URL;
+  const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+    throw new Error('SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devono essere configurati nelle variabili ambiente Vercel');
   }
-});
+  
+  supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  });
+  
+  return supabase;
+}
 
 /**
  * Calcola hash SHA-256 del token
@@ -40,6 +50,9 @@ export default async function handler(req, res) {
   }
   
   try {
+    // Inizializza Supabase client (lazy)
+    const supabase = getSupabaseClient();
+    
     const { token } = req.body;
     
     if (!token || typeof token !== 'string' || token.trim().length === 0) {
@@ -106,35 +119,45 @@ export default async function handler(req, res) {
     let subscriptionStatus = 'active';
     
     if (userId) {
-      // Cerca subscriber per user_id
-      const { data: subscriber } = await supabase
-        .from('subscribers')
-        .select('status, subscription_id, gateway')
-        .eq('auth_user_id', userId)
-        .single();
-      
-      if (subscriber) {
-        subscriptionStatus = subscriber.status || 'active';
-        // Può cancellare se status è 'active' e ha un gateway integrato
-        canCancel = subscriptionStatus === 'active' && 
-                   subscriber.gateway && 
-                   ['stripe', 'paddle', 'lemonsqueezy'].includes(subscriber.gateway);
+      try {
+        // Cerca subscriber per user_id
+        const { data: subscriber, error: subError } = await supabase
+          .from('subscribers')
+          .select('status, subscription_id, gateway')
+          .eq('auth_user_id', userId)
+          .maybeSingle();
+        
+        if (!subError && subscriber) {
+          subscriptionStatus = subscriber.status || 'active';
+          // Può cancellare se status è 'active' e ha un gateway integrato
+          canCancel = subscriptionStatus === 'active' && 
+                     subscriber.gateway && 
+                     ['stripe', 'paddle', 'lemonsqueezy'].includes(subscriber.gateway);
+        }
+      } catch (err) {
+        // Ignora errori subscribers
+        console.warn('[Validate Token] Errore query subscribers:', err);
       }
-    }
-    
-    // Se non ha subscriber, verifica da user_roles
-    if (!subscriptionStatus || subscriptionStatus === 'active') {
-      const { data: userRole } = await supabase
-        .from('user_roles')
-        .select('role, valid_until')
-        .eq('user_id', userId)
-        .single();
       
-      if (userRole) {
-        const roleValidUntil = new Date(userRole.valid_until || validUntil);
-        if (roleValidUntil < now) {
-          subscriptionStatus = 'expired';
-          canCancel = false;
+      // Se non ha subscriber, verifica da user_roles
+      if (subscriptionStatus === 'active') {
+        try {
+          const { data: userRole, error: roleError } = await supabase
+            .from('user_roles')
+            .select('role, valid_until')
+            .eq('user_id', userId)
+            .maybeSingle();
+          
+          if (!roleError && userRole && userRole.valid_until) {
+            const roleValidUntil = new Date(userRole.valid_until);
+            if (roleValidUntil < now) {
+              subscriptionStatus = 'expired';
+              canCancel = false;
+            }
+          }
+        } catch (err) {
+          // Ignora errori user_roles
+          console.warn('[Validate Token] Errore query user_roles:', err);
         }
       }
     }
