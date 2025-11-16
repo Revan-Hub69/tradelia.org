@@ -5,18 +5,36 @@
 -- Verifica che i dati siano presenti e accessibili
 -- ============================================
 
--- 1. Verifica user_roles (deve avere email)
+-- 1. Verifica struttura user_roles (controlla se email esiste)
 SELECT 
-  COUNT(*) as total_roles,
-  COUNT(DISTINCT user_id) as roles_with_user_id,
-  COUNT(DISTINCT email) as roles_with_email,
-  COUNT(*) FILTER (WHERE email IS NOT NULL) as roles_with_email_not_null
-FROM public.user_roles;
+  column_name,
+  data_type,
+  is_nullable
+FROM information_schema.columns
+WHERE table_schema = 'public' 
+  AND table_name = 'user_roles'
+ORDER BY ordinal_position;
 
--- 2. Mostra tutti i user_roles con email
+-- 2. Verifica user_roles (se email esiste, altrimenti solo user_id)
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_schema = 'public' 
+      AND table_name = 'user_roles' 
+      AND column_name = 'email'
+  ) THEN
+    -- Email esiste
+    RAISE NOTICE 'Colonna email trovata in user_roles';
+  ELSE
+    -- Email non esiste
+    RAISE NOTICE 'Colonna email NON trovata in user_roles - esegui add-email-to-user-roles.sql';
+  END IF;
+END $$;
+
+-- 3. Mostra tutti i user_roles
 SELECT 
   user_id,
-  email,
   role,
   valid_until,
   created_at
