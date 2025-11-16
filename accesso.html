@@ -479,7 +479,23 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token })
           });
-          const data = await res.json();
+          
+          // Verifica content-type prima di parsare JSON
+          const contentType = res.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            // Prova a leggere come testo per vedere cosa c'è
+            const text = await res.text();
+            console.error('[Accesso] Risposta non JSON:', text.substring(0, 200));
+            throw new Error('Il server ha restituito una risposta non valida. Verifica le variabili ambiente in Vercel.');
+          }
+          
+          let data;
+          try {
+            data = JSON.parse(await res.text());
+          } catch (parseError) {
+            console.error('[Accesso] Errore parsing JSON:', parseError);
+            throw new Error('Errore nella risposta del server. Controlla i log di Vercel.');
+          }
           
           if (data.ok) {
             currentToken = token;
