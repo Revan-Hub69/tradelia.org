@@ -115,6 +115,24 @@
       margin-top: 1.25rem;
       align-items: center;
     }
+    .access-recovery {
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.25);
+    }
+    .access-recovery-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.9rem;
+      align-items: center;
+    }
+    .access-meta-small {
+      margin-top: 0.75rem;
+      font-size: 0.76rem;
+      color: var(--muted, #9ca3af);
+      line-height: 1.4;
+    }
     .access-meta {
       margin-top: 1.5rem;
       font-size: 0.78rem;
@@ -195,10 +213,27 @@
         </div>
         <div class="access-actions access-cta">
           <button type="submit" class="btn btn-sm">Accedi alla dashboard</button>
-          <a href="mailto:info@tradelia.org?subject=Richiesta%20codice%20accesso%20dashboard%20Tradelia"
-             class="btn btn-sm">
-            Richiedi un codice
-          </a>
+          <a href="/pricing.html" class="btn btn-sm">Non hai un codice? Vedi i piani</a>
+          <button type="button" class="btn btn-sm" id="access-recovery-open">Ho perso il codice</button>
+        </div>
+        <div id="access-recovery" class="access-recovery" hidden>
+          <div class="access-label">Email</div>
+          <input
+            id="access-recovery-email"
+            class="access-input"
+            type="email"
+            name="recoveryEmail"
+            autocomplete="email"
+            required
+            placeholder="Inserisci la tua email"
+          />
+          <div class="access-recovery-actions">
+            <button type="button" class="btn btn-sm" id="access-recovery-cancel">Annulla</button>
+            <button type="button" class="btn btn-sm" id="access-recovery-submit">Invia richiesta</button>
+          </div>
+          <p class="access-meta-small">
+            Ti apriremo una mail precompilata verso il desk Tradelia con la tua richiesta di nuovo codice.
+          </p>
         </div>
       </form>
       <p class="access-meta">
@@ -215,6 +250,11 @@
       const input = document.getElementById('access-token');
       const alertBox = document.getElementById('access-alert');
       const closeBtn = document.querySelector('.access-close');
+      const recoverySection = document.getElementById('access-recovery');
+      const recoveryOpen = document.getElementById('access-recovery-open');
+      const recoveryCancel = document.getElementById('access-recovery-cancel');
+      const recoverySubmit = document.getElementById('access-recovery-submit');
+      const recoveryEmail = document.getElementById('access-recovery-email');
 
       function showAlert(message) {
         if (!alertBox) return;
@@ -246,6 +286,42 @@
       if (closeBtn) {
         closeBtn.addEventListener('click', function() {
           window.location.href = '/index.html';
+        });
+      }
+
+      if (recoveryOpen && recoverySection && recoveryEmail) {
+        recoveryOpen.addEventListener('click', function() {
+          hideAlert();
+          recoverySection.hidden = false;
+          recoveryEmail.focus();
+        });
+      }
+
+      if (recoveryCancel && recoverySection) {
+        recoveryCancel.addEventListener('click', function() {
+          recoverySection.hidden = true;
+        });
+      }
+
+      if (recoverySubmit && recoveryEmail) {
+        recoverySubmit.addEventListener('click', function() {
+          hideAlert();
+          const email = (recoveryEmail.value || '').trim();
+          if (!email) {
+            showAlert('Inserisci la tua email per richiedere un nuovo codice.');
+            recoveryEmail.focus();
+            return;
+          }
+          // Validazione email semplice
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            showAlert('Inserisci un indirizzo email valido.');
+            recoveryEmail.focus();
+            return;
+          }
+          const subject = encodeURIComponent('Richiesta nuovo codice di accesso dashboard Tradelia');
+          const body = encodeURIComponent(`Ciao desk Tradelia,%0D%0A%0D%0Avorrei ricevere un nuovo codice di accesso alla dashboard.%0D%0AEmail: ${email}%0D%0A%0D%0AGrazie.`);
+          window.location.href = `mailto:info@tradelia.org?subject=${subject}&body=${body}`;
         });
       }
 
