@@ -124,29 +124,43 @@ async function loadAllData() {
 
 async function loadUsers() {
   try {
-    // Fetch users from auth.users (via RPC or service role)
-    // Nota: Per accedere a auth.users serve service role o RPC function
-    // Per ora usiamo user_profiles e user_roles come proxy
+    // Carica utenti da tutte le fonti: user_profiles, user_roles, subscribers, dashboard_access_tokens
     
+    // 1. User profiles e roles (utenti con user_id)
     const { data: profiles, error: profilesError } = await supabase
       .from('user_profiles')
       .select('user_id, display_name');
     
-    if (profilesError) throw profilesError;
+    if (profilesError) Logger.warn('Admin', 'Error loading profiles', profilesError);
     
     const { data: roles, error: rolesError } = await supabase
       .from('user_roles')
       .select('user_id, role, valid_until');
     
-    if (rolesError) throw rolesError;
+    if (rolesError) Logger.warn('Admin', 'Error loading roles', rolesError);
     
     const { data: credits, error: creditsError } = await supabase
       .from('user_analysis_credits')
       .select('user_id, credits_balance');
     
-    if (creditsError) throw creditsError;
+    if (creditsError) Logger.warn('Admin', 'Error loading credits', creditsError);
     
-    // Fetch emails via RPC function (solo admin)
+    // 2. Subscribers (utenti attivi da gateway pagamenti)
+    const { data: subscribers, error: subscribersError } = await supabase
+      .from('subscribers')
+      .select('id, email, status, auth_user_id');
+    
+    if (subscribersError) Logger.warn('Admin', 'Error loading subscribers', subscribersError);
+    
+    // 3. Dashboard access tokens (utenti con token attivo)
+    const { data: tokens, error: tokensError } = await supabase
+      .from('dashboard_access_tokens')
+      .select('email, user_id, plan_role, valid_until, revoked')
+      .eq('revoked', false);
+    
+    if (tokensError) Logger.warn('Admin', 'Error loading tokens', tokensError);
+    
+    // 4. Fetch emails via RPC function (solo admin) - per utenti con user_id
     const { data: emails, error: emailsError } = await supabase
       .rpc('get_user_emails_for_admin');
     
@@ -156,19 +170,33 @@ async function loadUsers() {
     
     // Crea mappe per lookup veloce
     const emailsMap = new Map((emails || []).map(e => [e.user_id, e.email]));
-    const rolesMap = new Map(roles.map(r => [r.user_id, r]));
-    const creditsMap = new Map(credits.map(c => [c.user_id, c]));
-    const profilesMap = new Map(profiles.map(p => [p.user_id, p]));
+    const rolesMap = new Map((roles || []).map(r => [r.user_id, r]));
+    const creditsMap = new Map((credits || []).map(c => [c.user_id, c]));
+    const profilesMap = new Map((profiles || []).map(p => [p.user_id, p]));
+    const subscribersMap = new Map((subscribers || []).map(s => [s.email?.toLowerCase(), s]));
+    const tokensMap = new Map(); // email -> token data
     
-    // Combina tutti i dati
+    // Raggruppa tokens per email
+    (tokens || []).forEach(token => {
+      if (token.email) {
+        const emailKey = token.email.toLowerCase();
+        if (!tokensMap.has(emailKey) || new Date(token.valid_until) > new Date(tokensMap.get(emailKey).valid_until || 0)) {
+          tokensMap.set(emailKey, token);
+        }
+      }
+    });
+    
+    // Combina tutti gli user_id
     const userIds = new Set([
       ...(emails || []).map(e => e.user_id),
-      ...profiles.map(p => p.user_id),
-      ...roles.map(r => r.user_id)
+      ...(profiles || []).map(p => p.user_id),
+      ...(roles || []).map(r => r.user_id),
+      ...(subscribers || []).filter(s => s.auth_user_id).map(s => s.auth_user_id)
     ]);
     
-    allUsers = Array.from(userIds).map(userId => {
-      const email = emailsMap.get(userId) || `${userId.slice(0, 8)}...`;
+    // Crea array di utenti da user_id
+    const usersFromIds = Array.from(userIds).map(userId => {
+      const email = emailsMap.get(userId) || null;
       const profile = profilesMap.get(userId);
       const role = rolesMap.get(userId);
       const credit = creditsMap.get(userId);
@@ -180,11 +208,86 @@ async function loadUsers() {
         role: role?.role || null,
         valid_until: role?.valid_until || null,
         credits: credit?.credits_balance || 0,
-        isExpired: role?.valid_until ? new Date(role.valid_until) < new Date() : false
+        isExpired: role?.valid_until ? new Date(role.valid_until) < new Date() : false,
+        source: 'user_profiles'
       };
     });
     
-    Logger.info('Admin', `Loaded ${allUsers.length} users`);
+    // Aggiungi utenti da subscribers (senza user_id o con email diversa)
+    const usersFromSubscribers = (subscribers || [])
+      .filter(s => {
+        // Includi solo se non è già presente in usersFromIds
+        if (s.auth_user_id && userIds.has(s.auth_user_id)) return false;
+        if (!s.email) return false;
+        return true;
+      })
+      .map(sub => {
+        const emailKey = sub.email.toLowerCase();
+        const token = tokensMap.get(emailKey);
+        const role = token ? token.plan_role : (sub.status === 'active' ? 'pro' : null);
+        const validUntil = token?.valid_until || null;
+        
+        return {
+          user_id: sub.auth_user_id || null,
+          email: sub.email,
+          display_name: '—',
+          role: role,
+          valid_until: validUntil,
+          credits: 0,
+          isExpired: validUntil ? new Date(validUntil) < new Date() : (sub.status !== 'active'),
+          source: 'subscribers'
+        };
+      });
+    
+    // Aggiungi utenti da tokens (senza subscriber o user_id)
+    const usersFromTokens = Array.from(tokensMap.entries())
+      .filter(([emailKey, token]) => {
+        // Includi solo se non è già presente
+        if (token.user_id && userIds.has(token.user_id)) return false;
+        if (subscribersMap.has(emailKey)) return false; // Già incluso da subscribers
+        return true;
+      })
+      .map(([emailKey, token]) => {
+        return {
+          user_id: token.user_id || null,
+          email: token.email,
+          display_name: '—',
+          role: token.plan_role || null,
+          valid_until: token.valid_until || null,
+          credits: 0,
+          isExpired: token.valid_until ? new Date(token.valid_until) < new Date() : false,
+          source: 'dashboard_access_tokens'
+        };
+      });
+    
+    // Combina tutti gli utenti, rimuovendo duplicati per email
+    const allUsersMap = new Map();
+    
+    [...usersFromIds, ...usersFromSubscribers, ...usersFromTokens].forEach(user => {
+      if (!user.email) return;
+      const emailKey = user.email.toLowerCase();
+      const existing = allUsersMap.get(emailKey);
+      
+      if (!existing) {
+        allUsersMap.set(emailKey, user);
+      } else {
+        // Merge: preferisci dati più completi
+        allUsersMap.set(emailKey, {
+          user_id: existing.user_id || user.user_id,
+          email: existing.email || user.email,
+          display_name: existing.display_name !== '—' ? existing.display_name : user.display_name,
+          role: existing.role || user.role,
+          valid_until: existing.valid_until || user.valid_until,
+          credits: existing.credits || user.credits,
+          isExpired: existing.isExpired || user.isExpired,
+          source: existing.source || user.source
+        });
+      }
+    });
+    
+    allUsers = Array.from(allUsersMap.values());
+    
+    Logger.info('Admin', `Loaded ${allUsers.length} users (${usersFromIds.length} from profiles, ${usersFromSubscribers.length} from subscribers, ${usersFromTokens.length} from tokens)`);
     
     // Update global allUsers for admin-complete.js
     if (typeof window !== 'undefined') {
@@ -262,6 +365,10 @@ function renderUsersTable(users) {
       ? new Date(user.valid_until).toLocaleDateString('it-IT')
       : 'Permanente';
     
+    // Usa user_id se disponibile, altrimenti email come identificatore
+    const identifier = user.user_id || user.email;
+    const identifierType = user.user_id ? 'user_id' : 'email';
+    
     return `
       <tr>
         <td>${escapeHtml(user.email)}</td>
@@ -271,9 +378,9 @@ function renderUsersTable(users) {
         <td>${user.credits || 0}</td>
         <td>
           <div class="admin-actions">
-            <button class="btn btn-outline btn-sm" onclick="editUser('${user.user_id}')">Modifica</button>
-            <button class="btn btn-outline btn-sm" onclick="manageCredits('${user.user_id}')">Crediti</button>
-            <button class="btn btn-outline btn-sm" onclick="managePayments('${user.user_id}')">Pagamenti</button>
+            <button class="btn btn-outline btn-sm" onclick="editUser('${identifier}', '${identifierType}')">Modifica</button>
+            ${user.user_id ? `<button class="btn btn-outline btn-sm" onclick="manageCredits('${identifier}', '${identifierType}')">Crediti</button>` : ''}
+            ${user.user_id ? `<button class="btn btn-outline btn-sm" onclick="managePayments('${identifier}', '${identifierType}')">Pagamenti</button>` : ''}
           </div>
         </td>
       </tr>
@@ -304,17 +411,43 @@ function showError(message) {
 }
 
 // Global functions per onclick handlers (ora gestite da admin-complete.js)
-window.editUser = window.openEditUserModal || function(userId) {
-  alert(`Modifica utente ${userId} - Funzionalità in caricamento...`);
+window.editUser = window.openEditUserModal || function(identifier, type = 'user_id') {
+  if (type === 'email') {
+    const user = allUsers.find(u => u.email === identifier);
+    if (user && window.openEditUserModal) {
+      window.openEditUserModal(user.user_id || user.email, type);
+    } else {
+      alert(`Modifica utente ${identifier} - Funzionalità in caricamento...`);
+    }
+  } else {
+    if (window.openEditUserModal) {
+      window.openEditUserModal(identifier, type);
+    } else {
+      alert(`Modifica utente ${identifier} - Funzionalità in caricamento...`);
+    }
+  }
 };
 
-window.manageCredits = window.openManageCreditsModal || function(userId) {
-  alert(`Gestisci crediti per ${userId} - Funzionalità in caricamento...`);
+window.manageCredits = window.openManageCreditsModal || function(identifier, type = 'user_id') {
+  if (type === 'email') {
+    alert('Gestione crediti disponibile solo per utenti con user_id.');
+    return;
+  }
+  if (window.openManageCreditsModal) {
+    window.openManageCreditsModal(identifier, type);
+  } else {
+    alert(`Gestisci crediti per ${identifier} - Funzionalità in caricamento...`);
+  }
 };
 
 // Gestione pagamenti manuali (Xolo)
-window.managePayments = window.openManagePaymentsModal || function(userId) {
-  const user = allUsers.find(u => u.user_id === userId);
+window.managePayments = window.openManagePaymentsModal || function(identifier, type = 'user_id') {
+  if (type === 'email') {
+    alert('Gestione pagamenti disponibile solo per utenti con user_id.');
+    return;
+  }
+  
+  const user = allUsers.find(u => u.user_id === identifier);
   if (!user || !PAYMENTS_MODAL) {
     alert('Utente non trovato o modale non disponibile.');
     return;

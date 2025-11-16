@@ -50,15 +50,18 @@ window.openEditUserModal = openEditUserModal;
 window.openManageCreditsModal = openManageCreditsModal;
 window.openManagePaymentsModal = openManagePaymentsModal;
 
-function openEditUserModal(userId) {
-  const user = allUsers.find(u => u.user_id === userId);
+function openEditUserModal(identifier, type = 'user_id') {
+  const user = type === 'email' 
+    ? allUsers.find(u => u.email === identifier)
+    : allUsers.find(u => u.user_id === identifier);
+    
   if (!user) {
     showToast('Utente non trovato.', 'error');
     return;
   }
 
-  if (EDIT_USER_ID) EDIT_USER_ID.value = user.user_id;
-  if (EDIT_USER_EMAIL) EDIT_USER_EMAIL.value = user.email;
+  if (EDIT_USER_ID) EDIT_USER_ID.value = user.user_id || user.email || '';
+  if (EDIT_USER_EMAIL) EDIT_USER_EMAIL.value = user.email || '';
   if (EDIT_DISPLAY_NAME) EDIT_DISPLAY_NAME.value = user.display_name || '';
   if (EDIT_ROLE) EDIT_ROLE.value = user.role || 'trial';
   if (EDIT_VALID_UNTIL) {
@@ -67,11 +70,21 @@ function openEditUserModal(userId) {
       : '';
   }
   
-  if (EDIT_MODAL) EDIT_MODAL.hidden = false;
+  // Salva il tipo di identificatore per handleSaveUser
+  if (EDIT_MODAL) {
+    EDIT_MODAL.dataset.identifierType = type;
+    EDIT_MODAL.dataset.identifier = identifier;
+    EDIT_MODAL.hidden = false;
+  }
 }
 
-function openManageCreditsModal(userId) {
-  const user = allUsers.find(u => u.user_id === userId);
+function openManageCreditsModal(identifier, type = 'user_id') {
+  if (type === 'email') {
+    showToast('Gestione crediti disponibile solo per utenti con user_id.', 'error');
+    return;
+  }
+  
+  const user = allUsers.find(u => u.user_id === identifier);
   if (!user) {
     showToast('Utente non trovato.', 'error');
     return;
@@ -105,41 +118,92 @@ function openManagePaymentsModal(userId) {
 }
 
 async function handleSaveUser() {
-  const userId = EDIT_USER_ID?.value;
+  const identifier = EDIT_USER_ID?.value;
+  const identifierType = EDIT_MODAL?.dataset.identifierType || 'user_id';
+  const email = EDIT_USER_EMAIL?.value?.trim();
   const newDisplayName = EDIT_DISPLAY_NAME?.value.trim();
   const newRole = EDIT_ROLE?.value;
   const newValidUntil = EDIT_VALID_UNTIL?.value || null;
 
-  if (!userId) {
-    showToast('ID utente mancante.', 'error');
+  if (!identifier && !email) {
+    showToast('Identificatore utente mancante.', 'error');
     return;
   }
 
   try {
     if (SAVE_USER_BTN) SAVE_USER_BTN.disabled = true;
 
-    // Update user_profiles
-    const { error: profileError } = await supabase
-      .from('user_profiles')
-      .upsert({ 
-        user_id: userId, 
-        display_name: newDisplayName || null 
-      }, { onConflict: 'user_id' });
+    // Se abbiamo user_id, aggiorna user_profiles e user_roles
+    if (identifierType === 'user_id' && identifier) {
+      // Update user_profiles
+      const { error: profileError } = await supabase
+        .from('user_profiles')
+        .upsert({ 
+          user_id: identifier, 
+          display_name: newDisplayName || null 
+        }, { onConflict: 'user_id' });
 
-    if (profileError) throw profileError;
+      if (profileError) throw profileError;
 
-    // Update user_roles
-    const roleData = {
-      user_id: userId,
-      role: newRole,
-      valid_until: newValidUntil || null
-    };
+      // Update user_roles
+      const roleData = {
+        user_id: identifier,
+        role: newRole,
+        valid_until: newValidUntil || null
+      };
 
-    const { error: roleError } = await supabase
-      .from('user_roles')
-      .upsert(roleData, { onConflict: 'user_id' });
+      const { error: roleError } = await supabase
+        .from('user_roles')
+        .upsert(roleData, { onConflict: 'user_id' });
 
-    if (roleError) throw roleError;
+      if (roleError) throw roleError;
+    }
+    
+    // Se abbiamo email (con o senza user_id), aggiorna dashboard_access_tokens
+    if (email) {
+      // Trova tutti i token attivi per questa email
+      const { data: tokens, error: tokensError } = await supabase
+        .from('dashboard_access_tokens')
+        .select('id, email, plan_role, valid_until')
+        .eq('email', email.toLowerCase())
+        .eq('revoked', false);
+      
+      if (tokensError) {
+        Logger.warn('Admin', 'Error loading tokens for update', tokensError);
+      } else if (tokens && tokens.length > 0) {
+        // Aggiorna tutti i token attivi per questa email
+        for (const token of tokens) {
+          const { error: updateTokenError } = await supabase
+            .from('dashboard_access_tokens')
+            .update({
+              plan_role: newRole,
+              valid_until: newValidUntil || token.valid_until
+            })
+            .eq('id', token.id);
+          
+          if (updateTokenError) {
+            Logger.warn('Admin', 'Error updating token', updateTokenError);
+          }
+        }
+      } else {
+        // Se non ci sono token, crea un nuovo token (opzionale)
+        // Per ora non creiamo token automaticamente, solo aggiorniamo quelli esistenti
+      }
+      
+      // Aggiorna anche subscribers se esiste
+      if (identifierType === 'email' || !identifier) {
+        const { error: subscriberError } = await supabase
+          .from('subscribers')
+          .update({
+            status: newRole && !newValidUntil ? 'active' : (newValidUntil && new Date(newValidUntil) < new Date() ? 'expired' : 'active')
+          })
+          .eq('email', email.toLowerCase());
+        
+        if (subscriberError && subscriberError.code !== 'PGRST116') {
+          Logger.warn('Admin', 'Error updating subscriber', subscriberError);
+        }
+      }
+    }
 
     showToast('Utente aggiornato con successo!', 'success');
     if (EDIT_MODAL) EDIT_MODAL.hidden = true;

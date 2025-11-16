@@ -211,8 +211,15 @@
 <body>
   <div class="admin-shell">
     <div class="admin-header">
-      <h1>Dashboard Admin</h1>
-      <p>Gestione utenti, ruoli, piani, crediti e report Desk</p>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">
+        <div style="flex: 1;">
+          <h1>Dashboard Admin</h1>
+          <p>Gestione utenti, ruoli, piani, crediti e report Desk</p>
+        </div>
+        <a href="/report/admin/dashboard.html" target="_blank" class="btn btn-sm" style="margin-top: 0.5rem;">
+          📊 Crea Report
+        </a>
+      </div>
       <div class="admin-tabs" role="tablist" aria-label="Sezioni admin">
         <button type="button" class="admin-tab" id="tab-admin-users" aria-controls="panel-admin-users" aria-selected="true">Utenti</button>
         <button type="button" class="admin-tab" id="tab-admin-reports" aria-controls="panel-admin-reports" aria-selected="false">Report Desk</button>
