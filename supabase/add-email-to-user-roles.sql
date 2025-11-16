@@ -43,8 +43,9 @@ SELECT
   user_id,
   email,
   role,
-  valid_until
+  valid_until,
+  updated_at
 FROM public.user_roles
-ORDER BY created_at DESC
+ORDER BY updated_at DESC NULLS LAST
 LIMIT 10;
 
