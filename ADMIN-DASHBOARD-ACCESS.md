@@ -8,23 +8,48 @@ La dashboard admin è disponibile all'indirizzo: **`/user/admin.html`**
 
 ## ✅ Requisiti
 
-1. **Devi essere loggato** in Supabase Auth
-2. **Il tuo user_id deve essere nella tabella `admin_users`** in Supabase
+1. **Devi avere un token dashboard valido** (come per la dashboard normale)
+2. **La tua email deve essere nella tabella `admin_emails`** in Supabase
+
+**Come funziona:**
+1. Vai su `/accesso.html` e inserisci il tuo codice di accesso
+2. Se il token è valido, viene salvato in localStorage
+3. Vai su `/user/admin.html`
+4. La dashboard verifica automaticamente se l'email associata al token è in `admin_emails`
+5. Se sì → mostra la dashboard admin
+6. Se no → redirect a `/dashboard.html`
 
 ## 🛠️ Setup iniziale
 
-### 1. Aggiungi il tuo utente come admin
+### 1. Esegui lo script SQL per creare la tabella `admin_emails`
 
-Vai su **Supabase Dashboard → Table Editor → `admin_users`** e inserisci:
+Vai su **Supabase Dashboard → SQL Editor** e esegui:
+
+```sql
+-- File: supabase/add-admin-emails-table.sql
+```
+
+Questo crea la tabella `admin_emails` e inserisce le email admin di default.
+
+### 2. Aggiungi la tua email come admin
+
+Vai su **Supabase Dashboard → Table Editor → `admin_emails`** e inserisci:
+
+```sql
+INSERT INTO public.admin_emails (email, notes)
+VALUES ('tua-email@example.com', 'Admin principale');
+```
+
+**Oppure** modifica direttamente lo script SQL prima di eseguirlo per includere la tua email.
+
+### 3. (Opzionale) Se usi ancora Supabase Auth
+
+Se hai ancora utenti in `auth.users`, puoi anche aggiungerli in `admin_users`:
 
 ```sql
 INSERT INTO public.admin_users (user_id)
 VALUES ('TUO_USER_ID_QUI');
 ```
-
-**Come trovare il tuo user_id:**
-- Vai su Supabase Dashboard → Authentication → Users
-- Trova il tuo utente e copia l'UUID
 
 ### 2. Esegui la RPC function (se non già fatto)
 
