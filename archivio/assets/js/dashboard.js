@@ -178,11 +178,10 @@ async function sendSubscriptionToServer(subscription) {
     
     // Invia anche all'API endpoint (per compatibilità)
     try {
-      await fetch('/api/push', {
+      await fetch('/api/push-subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          action: 'subscribe',
           subscription,
           userId: STATE.user?.id
         })

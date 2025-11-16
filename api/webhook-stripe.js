@@ -1,25 +1,15 @@
 // /api/webhook-stripe.js
-// API Vercel - Webhook Stripe per abbonamenti (con supporto Xolo opzionale)
+// API Vercel - Webhook Stripe per abbonamenti
 // Alternativa semplice a Paddle/LemonSqueezy - Integrazione diretta Stripe
 
 import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 import { syncUserRoleFromSubscription } from './webhook-role-sync.js';
 
-// Inizializza Supabase (usa SERVICE_ROLE_KEY se disponibile per Xolo, altrimenti ANON_KEY)
+// Inizializza Supabase
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://higkhlfjfhlecbtfnznx.supabase.co';
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZ2tobGZqZmhsZWNidGZuem54Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0NTc5OTksImV4cCI6MjA3ODAzMzk5OX0.qlhVhGkfc0rU7-tUg9Fu40D67HQzHjZhkEdP4mAPqTw';
-const supabase = SUPABASE_SERVICE_KEY 
-  ? createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
-      auth: { autoRefreshToken: false, persistSession: false }
-    })
-  : createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Xolo API Configuration (opzionale)
-const XOLO_API_KEY = process.env.XOLO_API_KEY;
-const XOLO_API_URL = process.env.XOLO_API_URL || 'https://api.xolo.io/v1';
-const ENABLE_XOLO = !!XOLO_API_KEY;
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Inizializza Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
@@ -78,10 +68,6 @@ export default async function handler(req, res) {
       
       case 'invoice.payment_succeeded':
         await handlePaymentSucceeded(event.data.object);
-        // Se Xolo è abilitato, crea fattura
-        if (ENABLE_XOLO) {
-          await createXoloInvoice(event.data.object);
-        }
         break;
       
       case 'invoice.payment_failed':
@@ -341,95 +327,6 @@ async function handleInvoiceFinalized(invoice) {
     }
   } catch (err) {
     console.error('[Webhook Stripe] Errore handleInvoiceFinalized:', err);
-  }
-}
-
-// ===== CREATE XOLO INVOICE (opzionale) =====
-async function createXoloInvoice(stripeInvoice) {
-  if (!ENABLE_XOLO) {
-    return; // Xolo non configurato, skip
-  }
-  
-  try {
-    // Recupera customer da Stripe
-    const customerId = stripeInvoice.customer;
-    const customer = await stripe.customers.retrieve(customerId);
-    
-    const amount = stripeInvoice.amount_paid / 100;
-    const currency = stripeInvoice.currency.toUpperCase();
-    const description = stripeInvoice.description || stripeInvoice.lines?.data[0]?.description || 'Abbonamento Tradelia AI';
-    
-    // Determina se è B2C o B2B
-    const isB2B = customer.metadata?.is_business === 'true' || customer.tax_ids?.data?.length > 0;
-    const customerName = customer.name || customer.email?.split('@')[0] || 'Cliente';
-    const customerEmail = customer.email;
-    const customerVatId = customer.tax_ids?.data[0]?.value || null;
-    
-    // Prepara dati per Xolo
-    const xoloInvoiceData = {
-      customer_email: customerEmail,
-      customer_name: customerName,
-      amount: amount,
-      currency: currency,
-      description: description,
-      date: new Date(stripeInvoice.created * 1000).toISOString().split('T')[0],
-      metadata: {
-        stripe_invoice_id: stripeInvoice.id,
-        stripe_customer_id: customerId,
-        source: 'tradelia_ai',
-        subscription_id: stripeInvoice.subscription
-      }
-    };
-    
-    if (isB2B && customerVatId) {
-      xoloInvoiceData.customer_vat_id = customerVatId;
-      xoloInvoiceData.invoice_type = 'invoice';
-    } else {
-      xoloInvoiceData.invoice_type = 'receipt';
-    }
-    
-    // Chiama API Xolo
-    const response = await fetch(`${XOLO_API_URL}/invoices`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${XOLO_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(xoloInvoiceData)
-    });
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('[Webhook Stripe] Errore API Xolo:', response.status, errorText);
-      // Non bloccare il flusso se Xolo fallisce
-      return;
-    }
-    
-    const xoloInvoice = await response.json();
-    console.log('[Webhook Stripe] ✅ Fattura Xolo creata:', {
-      xoloInvoiceId: xoloInvoice.id,
-      stripeInvoiceId: stripeInvoice.id,
-      customerEmail,
-      amount: `${amount} ${currency}`,
-      type: isB2B ? 'Invoice (B2B)' : 'Receipt (B2C)'
-    });
-    
-    // Salva riferimento in metadata Stripe (opzionale)
-    try {
-      await stripe.invoices.update(stripeInvoice.id, {
-        metadata: {
-          ...stripeInvoice.metadata,
-          xolo_invoice_id: xoloInvoice.id
-        }
-      });
-    } catch (updateError) {
-      console.warn('[Webhook Stripe] Errore aggiornamento metadata Stripe (non critico):', updateError);
-    }
-    
-    return xoloInvoice;
-  } catch (err) {
-    console.error('[Webhook Stripe] Errore createXoloInvoice:', err);
-    // Non bloccare il flusso se Xolo fallisce
   }
 }
 
