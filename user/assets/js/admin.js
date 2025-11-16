@@ -101,11 +101,18 @@ async function init() {
     FILTER_ROLE?.addEventListener('change', applyFilters);
     FILTER_STATUS?.addEventListener('change', applyFilters);
     
+    // Assicurati che tutti i modali siano chiusi all'inizio
+    const modals = ['edit-user-modal', 'manage-credits-modal', 'manage-payments-modal'];
+    modals.forEach(modalId => {
+      const modal = document.getElementById(modalId);
+      if (modal) modal.hidden = true;
+    });
+    
     // Load data
     await loadAllData();
   } catch (err) {
     Logger.error('Admin', 'init error', err);
-    showError('Errore durante l\'inizializzazione della dashboard admin.');
+    showError('Errore durante l\'inizializzazione della dashboard admin: ' + (err.message || 'Errore sconosciuto'));
   }
 }
 
@@ -124,6 +131,17 @@ async function loadAllData() {
 
 async function loadUsers() {
   try {
+    // Mostra stato di caricamento
+    if (USERS_TABLE_BODY) {
+      USERS_TABLE_BODY.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 2rem; color: var(--ink-soft);">
+            Caricamento utenti...
+          </td>
+        </tr>
+      `;
+    }
+    
     // Carica utenti da tutte le fonti: user_profiles, user_roles, subscribers, dashboard_access_tokens
     
     // 1. User profiles e roles (utenti con user_id)
@@ -293,8 +311,32 @@ async function loadUsers() {
     if (typeof window !== 'undefined') {
       window.allUsers = allUsers;
     }
+    
+    // Se non ci sono utenti, mostra messaggio
+    if (allUsers.length === 0) {
+      if (USERS_TABLE_BODY) {
+        USERS_TABLE_BODY.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 2rem; color: var(--ink-soft);">
+              Nessun utente trovato nel database.
+            </td>
+          </tr>
+        `;
+      }
+    }
   } catch (err) {
     Logger.error('Admin', 'load users error', err);
+    if (USERS_TABLE_BODY) {
+      USERS_TABLE_BODY.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 2rem; color: var(--ink-soft);">
+            <div style="color: var(--danger, #f87171); margin-bottom: 0.5rem;">⚠️ Errore caricamento utenti</div>
+            <div>${escapeHtml(err.message || 'Errore sconosciuto')}</div>
+            <button class="btn btn-sm" onclick="location.reload()" style="margin-top: 1rem;">Ricarica pagina</button>
+          </td>
+        </tr>
+      `;
+    }
     throw err;
   }
 }
@@ -407,7 +449,21 @@ function debounce(func, wait) {
 }
 
 function showError(message) {
-  alert(message); // TODO: Sostituire con toast
+  console.error('[Admin]', message);
+  // Mostra errore nella tabella se disponibile
+  if (USERS_TABLE_BODY) {
+    USERS_TABLE_BODY.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align: center; padding: 2rem; color: var(--ink-soft);">
+          <div style="color: var(--danger, #f87171); margin-bottom: 0.5rem;">⚠️ Errore</div>
+          <div>${escapeHtml(message)}</div>
+          <button class="btn btn-sm" onclick="location.reload()" style="margin-top: 1rem;">Ricarica pagina</button>
+        </td>
+      </tr>
+    `;
+  } else {
+    alert(message);
+  }
 }
 
 // Global functions per onclick handlers (ora gestite da admin-complete.js)

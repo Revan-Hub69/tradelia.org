@@ -211,14 +211,19 @@
 <body>
   <div class="admin-shell">
     <div class="admin-header">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
         <div style="flex: 1;">
           <h1>Dashboard Admin</h1>
           <p>Gestione utenti, ruoli, piani, crediti e report Desk</p>
         </div>
-        <a href="/report/admin/dashboard.html" target="_blank" class="btn btn-primary btn-sm" style="margin-top: 0.5rem; white-space: nowrap;">
-          📊 Crea Report
-        </a>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem;">
+          <a href="/report/admin/dashboard.html" target="_blank" class="btn btn-primary btn-sm" style="white-space: nowrap;">
+            📊 Crea Report
+          </a>
+          <a href="/dashboard.html" class="btn btn-outline btn-sm" style="white-space: nowrap;">
+            📈 Dashboard Utenti
+          </a>
+        </div>
       </div>
       <div class="admin-tabs" role="tablist" aria-label="Sezioni admin">
         <button type="button" class="admin-tab" id="tab-admin-users" aria-controls="panel-admin-users" aria-selected="true">👥 Utenti</button>
@@ -310,7 +315,10 @@
   <!-- Modale Modifica Utente -->
   <div id="edit-user-modal" class="modal" hidden>
     <div class="modal-content">
-      <h3>Modifica Utente</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="margin: 0;">Modifica Utente</h3>
+        <button type="button" class="btn btn-sm" onclick="document.getElementById('edit-user-modal').hidden = true;" style="background: none; border: none; color: var(--ink-soft); cursor: pointer; padding: 0.5rem; font-size: 1.5rem; line-height: 1;">×</button>
+      </div>
       <label>
         ID Utente:
         <input type="text" id="edit-user-id" readonly>
@@ -345,7 +353,10 @@
   <!-- Modale Gestione Crediti -->
   <div id="manage-credits-modal" class="modal" hidden>
     <div class="modal-content">
-      <h3>Gestisci Crediti</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="margin: 0;">Gestisci Crediti</h3>
+        <button type="button" class="btn btn-sm" onclick="document.getElementById('manage-credits-modal').hidden = true;" style="background: none; border: none; color: var(--ink-soft); cursor: pointer; padding: 0.5rem; font-size: 1.5rem; line-height: 1;">×</button>
+      </div>
       <label>
         ID Utente:
         <input type="text" id="credits-user-id" readonly>
@@ -372,7 +383,10 @@
   <!-- Modale Gestione Pagamenti (Xolo / manuali) -->
   <div id="manage-payments-modal" class="modal" hidden>
     <div class="modal-content">
-      <h3>Registra pagamento manuale</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="margin: 0;">Registra pagamento manuale</h3>
+        <button type="button" class="btn btn-sm" onclick="document.getElementById('manage-payments-modal').hidden = true;" style="background: none; border: none; color: var(--ink-soft); cursor: pointer; padding: 0.5rem; font-size: 1.5rem; line-height: 1;">×</button>
+      </div>
       <p style="font-size: var(--fs-13); color: var(--ink-soft); margin-top: -0.5rem;">
         Usa questo form per registrare pagamenti confermati da Xolo (bonifico) o altri metodi manuali.
       </p>
