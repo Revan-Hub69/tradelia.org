@@ -345,6 +345,61 @@ if (PAYMENTS_SAVE_BTN && PAYMENTS_MODAL) {
         return;
       }
       
+      // Se il pagamento è riuscito, aggiorna user_roles e genera token
+      if (status === 'succeeded') {
+        const user = allUsers.find(u => u.user_id === userId);
+        if (user) {
+          // Aggiorna user_roles a 'institutional' (Desk) - Xolo è sempre per Desk
+          const newRole = 'institutional';
+          
+          // Calcola valid_until (default: 1 mese da oggi, o estendi se già ha un ruolo)
+          const now = new Date();
+          const currentValidUntil = user.valid_until ? new Date(user.valid_until) : null;
+          const newValidUntil = new Date(now);
+          
+          // Se ha già un abbonamento attivo, estendi di 1 mese dalla scadenza corrente
+          if (currentValidUntil && currentValidUntil > now) {
+            newValidUntil.setTime(currentValidUntil.getTime());
+            newValidUntil.setMonth(newValidUntil.getMonth() + 1);
+          } else {
+            // Altrimenti, 1 mese da oggi
+            newValidUntil.setMonth(newValidUntil.getMonth() + 1);
+          }
+          
+          // Aggiorna user_roles
+          const { error: roleError } = await supabase
+            .from('user_roles')
+            .upsert({
+              user_id: userId,
+              role: newRole,
+              valid_until: newValidUntil.toISOString()
+            }, { onConflict: 'user_id' });
+          
+          if (roleError) {
+            console.error('Admin', 'Errore aggiornamento user_roles', roleError);
+          } else {
+            // Genera token dashboard automaticamente
+            try {
+              const response = await fetch('/api/request-dashboard-token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                  email: user.email,
+                  // Forza generazione anche se esiste già un token
+                  force: true 
+                })
+              });
+              
+              if (response.ok) {
+                console.log('Admin', 'Token dashboard generato automaticamente per', user.email);
+              }
+            } catch (tokenError) {
+              console.warn('Admin', 'Errore generazione token (non bloccante)', tokenError);
+            }
+          }
+        }
+      }
+      
       // Se abbiamo un riferimento fattura o PDF, crea anche invoice
       if (invoiceNumber || pdfUrl) {
         const { error: invoiceError } = await supabase
