@@ -73,6 +73,11 @@
     .access-alert[data-visible="true"] {
       display: block;
     }
+    .access-alert[data-type="success"] {
+      background: rgba(34, 197, 94, 0.08);
+      border-color: rgba(34, 197, 94, 0.35);
+      color: rgb(134, 239, 172);
+    }
     .access-form {
       display: flex;
       flex-direction: column;
@@ -167,6 +172,58 @@
       outline: 2px solid var(--brand-500, #3b82f6);
       outline-offset: 2px;
     }
+    .access-step2 {
+      display: none;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.25);
+    }
+    .access-step2[data-visible="true"] {
+      display: block;
+    }
+    .access-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+    .access-info-row:last-child {
+      border-bottom: none;
+    }
+    .access-info-label {
+      font-size: 0.85rem;
+      color: var(--muted, #9ca3af);
+    }
+    .access-info-value {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink, #e5e7eb);
+    }
+    .access-info-value[data-role="trial"] {
+      color: #60a5fa;
+    }
+    .access-info-value[data-role="pro"] {
+      color: #34d399;
+    }
+    .access-info-value[data-role="institutional"] {
+      color: #fbbf24;
+    }
+    .access-support {
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.25);
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted, #9ca3af);
+    }
+    .access-support a {
+      color: var(--brand-400, #60a5fa);
+      text-decoration: none;
+    }
+    .access-support a:hover {
+      text-decoration: underline;
+    }
     @media (max-width: 640px) {
       #site-header-slot {
         position: static;
@@ -193,29 +250,60 @@
         e dei report riservati. Il codice è personale e può essere revocato in qualsiasi momento.
       </p>
       <div id="access-alert" class="access-alert" role="alert" aria-live="polite"></div>
+      
+      <!-- STEP 1: Inserisci codice -->
       <form id="access-form" class="access-form" novalidate>
-        <div>
-          <div class="access-label">Codice di accesso</div>
-          <input
-            id="access-token"
-            class="access-input"
-            type="password"
-            name="token"
-            autocomplete="off"
-            inputmode="text"
-            required
-            placeholder="Incolla qui il codice Tradelia"
-            aria-describedby="access-help"
-          />
-          <div id="access-help" class="access-meta">
-            Se non hai ancora un codice, puoi richiederlo scrivendo al desk Tradelia.
+        <div id="access-step1">
+          <div>
+            <div class="access-label">Codice di accesso</div>
+            <input
+              id="access-token"
+              class="access-input"
+              type="password"
+              name="token"
+              autocomplete="off"
+              inputmode="text"
+              required
+              placeholder="Incolla qui il codice Tradelia"
+              aria-describedby="access-help"
+            />
+            <div id="access-help" class="access-meta">
+              Se non hai ancora un codice, puoi richiederlo scrivendo al desk Tradelia.
+            </div>
+          </div>
+          <div class="access-actions access-cta">
+            <button type="submit" class="btn btn-sm">Accedi alla dashboard</button>
+            <a href="/pricing.html" class="btn btn-sm">Non hai un codice? Vedi i piani</a>
+            <button type="button" class="btn btn-sm" id="access-recovery-open">Ho perso il codice</button>
           </div>
         </div>
-        <div class="access-actions access-cta">
-          <button type="submit" class="btn btn-sm">Accedi alla dashboard</button>
-          <a href="/pricing.html" class="btn btn-sm">Non hai un codice? Vedi i piani</a>
-          <button type="button" class="btn btn-sm" id="access-recovery-open">Ho perso il codice</button>
+        
+        <!-- STEP 2: Dati abbonamento -->
+        <div id="access-step2" class="access-step2">
+          <h2 style="font-size: 1.1rem; font-weight: 700; margin: 0 0 1rem;">Riepilogo abbonamento</h2>
+          <div class="access-info-row">
+            <span class="access-info-label">Email</span>
+            <span class="access-info-value" id="step2-email">—</span>
+          </div>
+          <div class="access-info-row">
+            <span class="access-info-label">Piano</span>
+            <span class="access-info-value" id="step2-plan">—</span>
+          </div>
+          <div class="access-info-row">
+            <span class="access-info-label">Scadenza accesso</span>
+            <span class="access-info-value" id="step2-expiry">—</span>
+          </div>
+          <div class="access-info-row">
+            <span class="access-info-label">Giorni rimanenti</span>
+            <span class="access-info-value" id="step2-days">—</span>
+          </div>
+          <div class="access-actions" style="margin-top: 1.5rem;">
+            <button type="button" class="btn btn-sm" id="access-go-dashboard">Vai alla dashboard</button>
+            <button type="button" class="btn btn-sm" id="access-cancel-subscription" style="display: none;">Disdici abbonamento</button>
+          </div>
         </div>
+        
+        <!-- Recovery form -->
         <div id="access-recovery" class="access-recovery" hidden>
           <div class="access-label">Email</div>
           <input
@@ -232,14 +320,19 @@
             <button type="button" class="btn btn-sm" id="access-recovery-submit">Invia richiesta</button>
           </div>
           <p class="access-meta-small">
-            Ti apriremo una mail precompilata verso il desk Tradelia con la tua richiesta di nuovo codice.
+            Se esiste un piano attivo su questa email, ti invieremo un nuovo codice automaticamente.
           </p>
         </div>
       </form>
+      
       <p class="access-meta">
         Per motivi di sicurezza non memorizziamo credenziali personali: il codice identifica solo il tuo profilo
         di accesso ai contenuti didattici, nel rispetto delle policy MiFID-safe di Tradelia.
       </p>
+      
+      <div class="access-support">
+        Serve aiuto? <a href="mailto:support@tradelia.org">support@tradelia.org</a>
+      </div>
     </section>
   </main>
   <script type="module" src="/assets/js/global-header.js"></script>
@@ -250,21 +343,30 @@
       const input = document.getElementById('access-token');
       const alertBox = document.getElementById('access-alert');
       const closeBtn = document.querySelector('.access-close');
+      const step1 = document.getElementById('access-step1');
+      const step2 = document.getElementById('access-step2');
       const recoverySection = document.getElementById('access-recovery');
       const recoveryOpen = document.getElementById('access-recovery-open');
       const recoveryCancel = document.getElementById('access-recovery-cancel');
       const recoverySubmit = document.getElementById('access-recovery-submit');
       const recoveryEmail = document.getElementById('access-recovery-email');
+      const goDashboardBtn = document.getElementById('access-go-dashboard');
+      const cancelSubBtn = document.getElementById('access-cancel-subscription');
+      
+      let currentToken = null;
+      let subscriptionData = null;
 
-      function showAlert(message) {
+      function showAlert(message, type = 'error') {
         if (!alertBox) return;
         alertBox.textContent = message;
         alertBox.setAttribute('data-visible', 'true');
+        alertBox.setAttribute('data-type', type);
       }
 
       function hideAlert() {
         if (!alertBox) return;
         alertBox.removeAttribute('data-visible');
+        alertBox.removeAttribute('data-type');
         alertBox.textContent = '';
       }
 
@@ -272,7 +374,7 @@
       try {
         const params = new URLSearchParams(window.location.search);
         const reason = params.get('reason');
-        if (reason === 'missing_token') {
+        if (reason === 'missing_token' || reason === 'invalid_token') {
           showAlert('Per accedere alla dashboard è necessario un codice valido. Inseriscilo qui sotto.');
           params.delete('reason');
           const url = new URL(window.location.href);
@@ -289,6 +391,7 @@
         });
       }
 
+      // Recovery flow
       if (recoveryOpen && recoverySection && recoveryEmail) {
         recoveryOpen.addEventListener('click', function() {
           hideAlert();
@@ -300,11 +403,12 @@
       if (recoveryCancel && recoverySection) {
         recoveryCancel.addEventListener('click', function() {
           recoverySection.hidden = true;
+          recoveryEmail.value = '';
         });
       }
 
       if (recoverySubmit && recoveryEmail) {
-        recoverySubmit.addEventListener('click', function() {
+        recoverySubmit.addEventListener('click', async function() {
           hideAlert();
           const email = (recoveryEmail.value || '').trim();
           if (!email) {
@@ -312,20 +416,42 @@
             recoveryEmail.focus();
             return;
           }
-          // Validazione email semplice
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if (!emailRegex.test(email)) {
             showAlert('Inserisci un indirizzo email valido.');
             recoveryEmail.focus();
             return;
           }
-          const subject = encodeURIComponent('Richiesta nuovo codice di accesso dashboard Tradelia');
-          const body = encodeURIComponent(`Ciao desk Tradelia,%0D%0A%0D%0Avorrei ricevere un nuovo codice di accesso alla dashboard.%0D%0AEmail: ${email}%0D%0A%0D%0AGrazie.`);
-          window.location.href = `mailto:info@tradelia.org?subject=${subject}&body=${body}`;
+          
+          recoverySubmit.disabled = true;
+          recoverySubmit.textContent = 'Invio in corso...';
+          
+          try {
+            const res = await fetch('/api/request-dashboard-token', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+            
+            if (data.ok) {
+              showAlert(data.message || 'Se esiste un piano attivo su questa email, ti abbiamo inviato un nuovo codice. Controlla la tua casella email.', 'success');
+              recoverySection.hidden = true;
+              recoveryEmail.value = '';
+            } else {
+              showAlert(data.error || 'Errore nella richiesta. Riprova più tardi.');
+            }
+          } catch (err) {
+            showAlert('Errore di connessione. Riprova più tardi.');
+          } finally {
+            recoverySubmit.disabled = false;
+            recoverySubmit.textContent = 'Invia richiesta';
+          }
         });
       }
 
-      form.addEventListener('submit', function(e) {
+      // Main form submit: valida token
+      form.addEventListener('submit', async function(e) {
         e.preventDefault();
         hideAlert();
         const token = (input.value || '').trim();
@@ -334,16 +460,123 @@
           input.focus();
           return;
         }
+        
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Verifica in corso...';
+        
         try {
-          localStorage.setItem(KEY, token);
+          const res = await fetch('/api/validate-dashboard-token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token })
+          });
+          const data = await res.json();
+          
+          if (data.ok) {
+            currentToken = token;
+            subscriptionData = data;
+            
+            // Salva token in localStorage
+            try {
+              localStorage.setItem(KEY, token);
+            } catch (err) {
+              // ignore
+            }
+            
+            // Mostra step 2
+            step1.style.display = 'none';
+            step2.setAttribute('data-visible', 'true');
+            
+            // Popola dati step 2
+            document.getElementById('step2-email').textContent = data.email || '—';
+            
+            const planNames = {
+              'trial': 'Trial',
+              'pro': 'Pro',
+              'institutional': 'Desk'
+            };
+            const planEl = document.getElementById('step2-plan');
+            planEl.textContent = planNames[data.planRole] || data.planRole || '—';
+            planEl.setAttribute('data-role', data.planRole || '');
+            
+            if (data.validUntil) {
+              const expiryDate = new Date(data.validUntil);
+              document.getElementById('step2-expiry').textContent = expiryDate.toLocaleDateString('it-IT');
+            } else {
+              document.getElementById('step2-expiry').textContent = '—';
+            }
+            
+            document.getElementById('step2-days').textContent = data.daysLeft !== undefined ? `${data.daysLeft} giorni` : '—';
+            
+            // Mostra/nascondi bottone cancellazione
+            if (data.canCancel) {
+              cancelSubBtn.style.display = 'block';
+            } else {
+              cancelSubBtn.style.display = 'none';
+            }
+            
+            hideAlert();
+          } else {
+            showAlert(data.error || 'Codice non valido o scaduto. Controlla di aver inserito il codice corretto.');
+            input.focus();
+          }
         } catch (err) {
-          // Se localStorage non è disponibile, comunque procediamo al redirect
+          showAlert('Errore di connessione. Riprova più tardi.');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Accedi alla dashboard';
         }
-        window.location.href = '/dashboard.html';
       });
+
+      // Vai alla dashboard
+      if (goDashboardBtn) {
+        goDashboardBtn.addEventListener('click', function() {
+          if (currentToken) {
+            window.location.href = '/dashboard.html';
+          }
+        });
+      }
+
+      // Cancella abbonamento
+      if (cancelSubBtn) {
+        cancelSubBtn.addEventListener('click', async function() {
+          if (!currentToken) return;
+          
+          if (!confirm('Sei sicuro di voler disdire il tuo abbonamento? L\'accesso resterà attivo fino alla scadenza del periodo corrente.')) {
+            return;
+          }
+          
+          cancelSubBtn.disabled = true;
+          cancelSubBtn.textContent = 'Elaborazione...';
+          
+          try {
+            const res = await fetch('/api/cancel-subscription', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ token: currentToken })
+            });
+            const data = await res.json();
+            
+            if (data.ok) {
+              showAlert(data.message || 'La tua richiesta di cancellazione è stata registrata.', 'success');
+              cancelSubBtn.style.display = 'none';
+              // Aggiorna giorni rimanenti se disponibile
+              if (data.daysLeft !== undefined) {
+                document.getElementById('step2-days').textContent = `${data.daysLeft} giorni`;
+              }
+            } else {
+              showAlert(data.error || 'Errore nella cancellazione. Riprova più tardi o contatta il supporto.');
+            }
+          } catch (err) {
+            showAlert('Errore di connessione. Riprova più tardi.');
+          } finally {
+            cancelSubBtn.disabled = false;
+            cancelSubBtn.textContent = 'Disdici abbonamento';
+          }
+        });
+      }
     })();
   </script>
 </body>
 </html>
-
-

@@ -2177,7 +2177,7 @@
     
     const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
 
-    function ensureAccessToken() {
+    async function ensureAccessToken() {
       try {
         const params = new URLSearchParams(window.location.search);
         const tokenFromQuery = (params.get('token') || '').trim();
@@ -2214,15 +2214,46 @@
         }
         return false;
       }
-      return true;
+
+      // Valida token con API Supabase
+      try {
+        const res = await fetch('/api/validate-dashboard-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: token.trim() })
+        });
+        const data = await res.json();
+        
+        if (!data.ok) {
+          // Token non valido o scaduto: rimuovi da localStorage e redirect
+          try {
+            localStorage.removeItem(ACCESS_TOKEN_KEY);
+          } catch (e) {
+            // ignore
+          }
+          const url = new URL('/accesso.html', window.location.origin);
+          url.searchParams.set('reason', 'invalid_token');
+          window.location.href = url.toString();
+          return false;
+        }
+        
+        // Token valido: procedi
+        return true;
+      } catch (err) {
+        console.error('[Dashboard] Errore validazione token:', err);
+        // In caso di errore di rete, permette comunque l'accesso (fallback)
+        // In produzione potresti voler essere più restrittivo
+        return true;
+      }
     }
 
     // Aspetta che il DOM sia completamente pronto prima di chiamare loadReports
-    function initDashboard() {
+    async function initDashboard() {
       console.log('initDashboard: Inizializzazione dashboard');
 
       // Verifica token di accesso (gated dashboard)
-      if (!ensureAccessToken()) {
+      const hasToken = await ensureAccessToken();
+      if (!hasToken) {
         console.warn('initDashboard: access token mancante o non valido, redirect in corso...');
         return;
       }

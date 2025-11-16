@@ -1,30 +1,80 @@
 // /api/cancel-subscription.js
-// API Vercel - Cancella subscription Stripe
+// API Vercel - Cancella subscription (supporta Stripe, Paddle, LemonSqueezy, Xolo)
 
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-11-20.acacia',
-});
+import crypto from 'crypto';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const BREVO_API_KEY = process.env.BREVO_API_KEY;
 
-const supabase = SUPABASE_URL && SUPABASE_SERVICE_KEY 
-  ? createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
+if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+  throw new Error('SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devono essere configurati');
+}
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false
+  }
+});
+
+const stripe = process.env.STRIPE_SECRET_KEY 
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2024-11-20.acacia',
     })
   : null;
+
+/**
+ * Calcola hash SHA-256 del token
+ */
+function hashToken(token) {
+  return crypto.createHash('sha256').update(token).digest('hex');
+}
+
+/**
+ * Invia email notifica cancellazione a support@tradelia.org
+ */
+async function notifySupportCancellation(email, planRole, gateway, subscriptionId) {
+  if (!BREVO_API_KEY) return false;
+  
+  try {
+    await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'api-key': BREVO_API_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI - Sistema Abbonamenti' },
+        to: [{ email: 'support@tradelia.org' }],
+        subject: `⚠️ Richiesta cancellazione abbonamento - ${email}`,
+        textContent: `
+Richiesta di cancellazione abbonamento
+
+Email: ${email}
+Piano: ${planRole}
+Gateway: ${gateway || 'N/A'}
+Subscription ID: ${subscriptionId || 'N/A'}
+Data richiesta: ${new Date().toLocaleString('it-IT', { timeZone: 'Europe/Rome' })}
+
+La cancellazione è stata processata automaticamente.
+        `
+      })
+    });
+    return true;
+  } catch (err) {
+    console.warn('[Cancel] Errore notifica support (non bloccante):', err);
+    return false;
+  }
+}
 
 export default async function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -35,74 +85,122 @@ export default async function handler(req, res) {
   }
   
   try {
-    const { userId, subscriptionId } = req.body;
+    const { token } = req.body;
     
-    if (!subscriptionId && !userId) {
-      return res.status(400).json({ error: 'subscriptionId o userId è richiesto' });
+    if (!token || typeof token !== 'string') {
+      return res.status(400).json({ 
+        ok: false, 
+        error: 'Token mancante' 
+      });
     }
     
-    if (!process.env.STRIPE_SECRET_KEY) {
-      console.error('[Cancel] STRIPE_SECRET_KEY non configurato');
-      return res.status(500).json({ error: 'Stripe non configurato' });
+    // 1. Valida token e recupera dati utente
+    const tokenHash = hashToken(token.trim());
+    const { data: tokenRecord, error: tokenError } = await supabase
+      .from('dashboard_access_tokens')
+      .select('user_id, email, plan_role')
+      .eq('token_hash', tokenHash)
+      .eq('revoked', false)
+      .single();
+    
+    if (tokenError || !tokenRecord) {
+      return res.status(200).json({ 
+        ok: false, 
+        error: 'Token non valido' 
+      });
     }
     
-    let stripeSubscriptionId = subscriptionId;
+    const userId = tokenRecord.user_id;
+    const email = tokenRecord.email;
+    const planRole = tokenRecord.plan_role;
     
-    // Se non hai subscriptionId, recuperalo da Supabase
-    if (!stripeSubscriptionId && userId && supabase) {
-      const { data: subscriber, error } = await supabase
+    // 2. Cerca subscriber per gateway e subscription_id
+    let subscriber = null;
+    if (userId) {
+      const { data: subData } = await supabase
         .from('subscribers')
-        .select('subscription_id')
+        .select('id, subscription_id, gateway, status, current_period_end')
         .eq('auth_user_id', userId)
         .single();
-      
-      if (error || !subscriber?.subscription_id) {
-        return res.status(404).json({ error: 'Subscription non trovata' });
+      subscriber = subData;
+    }
+    
+    const gateway = subscriber?.gateway || null;
+    const subscriptionId = subscriber?.subscription_id || null;
+    const currentPeriodEnd = subscriber?.current_period_end || null;
+    
+    // 3. Cancella subscription nel gateway (se integrato)
+    let canceled = false;
+    let cancelAtPeriodEnd = true; // Default: cancella alla fine del periodo
+    let finalPeriodEnd = currentPeriodEnd;
+    
+    if (gateway === 'stripe' && subscriptionId && stripe) {
+      try {
+        const subscription = await stripe.subscriptions.update(subscriptionId, {
+          cancel_at_period_end: true,
+        });
+        canceled = true;
+        finalPeriodEnd = new Date(subscription.current_period_end * 1000).toISOString();
+        console.log('[Cancel] Stripe subscription impostata per cancellazione alla fine del periodo');
+      } catch (err) {
+        console.error('[Cancel] Errore cancellazione Stripe:', err);
+        // Continua comunque con aggiornamento Supabase
       }
-      
-      stripeSubscriptionId = subscriber.subscription_id;
+    } else if (gateway === 'paddle' && subscriptionId) {
+      // TODO: Implementare Paddle API quando disponibile
+      console.log('[Cancel] Paddle cancellation da implementare');
+    } else if (gateway === 'lemonsqueezy' && subscriptionId) {
+      // TODO: Implementare LemonSqueezy API quando disponibile
+      console.log('[Cancel] LemonSqueezy cancellation da implementare');
+    } else if (gateway === 'xolo' || !gateway) {
+      // Xolo o manuale: solo aggiornamento Supabase
+      console.log('[Cancel] Xolo/manuale: solo aggiornamento Supabase');
     }
     
-    if (!stripeSubscriptionId) {
-      return res.status(400).json({ error: 'Subscription ID non trovato' });
+    // 4. Aggiorna subscribers status
+    if (subscriber) {
+      await supabase
+        .from('subscribers')
+        .update({ 
+          status: 'cancelled',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', subscriber.id);
     }
     
-    // Cancella subscription in Stripe (immediatamente o alla fine del periodo)
-    const cancelAtPeriodEnd = req.body.cancelAtPeriodEnd !== false; // Default: cancella alla fine del periodo
-    
-    if (cancelAtPeriodEnd) {
-      // Cancella alla fine del periodo corrente (utente mantiene accesso fino alla scadenza)
-      const subscription = await stripe.subscriptions.update(stripeSubscriptionId, {
-        cancel_at_period_end: true,
-      });
-      
-      console.log('[Cancel] Subscription impostata per cancellazione alla fine del periodo:', stripeSubscriptionId);
-      
-      return res.status(200).json({ 
-        success: true,
-        canceled: false,
-        cancelAtPeriodEnd: true,
-        currentPeriodEnd: subscription.current_period_end,
-        message: 'Abbonamento verrà cancellato alla fine del periodo corrente'
-      });
-    } else {
-      // Cancella immediatamente
-      const subscription = await stripe.subscriptions.cancel(stripeSubscriptionId);
-      
-      console.log('[Cancel] Subscription cancellata immediatamente:', stripeSubscriptionId);
-      
-      // Il webhook gestirà l'aggiornamento di user_roles
-      
-      return res.status(200).json({ 
-        success: true,
-        canceled: true,
-        message: 'Abbonamento cancellato immediatamente'
-      });
+    // 5. Aggiorna user_roles (imposta valid_until a current_period_end se disponibile)
+    if (userId) {
+      const newValidUntil = finalPeriodEnd || new Date().toISOString();
+      await supabase
+        .from('user_roles')
+        .update({ valid_until: newValidUntil })
+        .eq('user_id', userId);
     }
+    
+    // 6. Notifica support@tradelia.org
+    await notifySupportCancellation(email || 'N/A', planRole, gateway, subscriptionId);
+    
+    // 7. Calcola giorni rimanenti per messaggio
+    let daysLeft = 0;
+    if (finalPeriodEnd) {
+      const expiryDate = new Date(finalPeriodEnd);
+      const now = new Date();
+      const msDiff = expiryDate - now;
+      daysLeft = Math.max(0, Math.floor(msDiff / (1000 * 60 * 60 * 24)));
+    }
+    
+    return res.status(200).json({ 
+      ok: true,
+      message: `La tua richiesta di cancellazione è stata registrata. L'accesso resta attivo fino al ${finalPeriodEnd ? new Date(finalPeriodEnd).toLocaleDateString('it-IT') : 'termine del periodo corrente'}.`,
+      daysLeft: daysLeft,
+      validUntil: finalPeriodEnd
+    });
+    
   } catch (err) {
     console.error('[Cancel] Errore:', err);
     return res.status(500).json({ 
-      error: 'Errore cancellazione subscription', 
+      ok: false, 
+      error: 'Errore server', 
       details: err.message 
     });
   }

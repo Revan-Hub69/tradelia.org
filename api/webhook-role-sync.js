@@ -135,7 +135,7 @@ export async function syncUserRoleFromSubscription(email, status, planIdentifier
         const { error: creditsError } = await supabase
           .from('user_analysis_credits')
           .upsert({
-            user_id: user.id,
+            user_id: userId,
             credits_balance: 0,
             total_purchased: 0,
             total_used: 0
@@ -155,7 +155,7 @@ export async function syncUserRoleFromSubscription(email, status, planIdentifier
       const { error: roleError } = await supabase
         .from('user_roles')
         .update({ valid_until: now })
-        .eq('user_id', user.id);
+        .eq('user_id', userId);
       
       if (roleError && roleError.code !== 'PGRST116') {
         console.error('[Role Sync] Errore update user_roles (cancelled):', roleError);
@@ -296,5 +296,75 @@ export function calculateExpirationDate(planType, durationMonths = 1) {
   const expiration = new Date(now);
   expiration.setMonth(expiration.getMonth() + durationMonths);
   return expiration;
+}
+
+/**
+ * Genera e salva token dashboard per utente
+ * @param {string} userId - User ID (opzionale, può essere null se solo email)
+ * @param {string} email - Email utente
+ * @param {string} planRole - Ruolo piano ('trial', 'pro', 'institutional')
+ * @param {string} validUntil - Data scadenza token (ISO string)
+ * @param {string} source - Sorgente token ('paddle', 'xolo', 'stripe', 'lemonsqueezy', 'manual', 'trial')
+ * @returns {Promise<{token: string, success: boolean}>} - Token generato (in chiaro) e success flag
+ */
+export async function generateDashboardToken(userId, email, planRole, validUntil, source = 'manual') {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+    throw new Error('SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devono essere configurati');
+  }
+  
+  const crypto = await import('crypto');
+  
+  // Genera token random (32 caratteri hex)
+  const token = crypto.randomBytes(16).toString('hex');
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  
+  try {
+    // Revoca token vecchi per questo utente/email
+    if (userId) {
+      await supabase
+        .from('dashboard_access_tokens')
+        .update({ 
+          revoked: true, 
+          revoked_at: new Date().toISOString() 
+        })
+        .eq('user_id', userId)
+        .eq('revoked', false);
+    } else if (email) {
+      await supabase
+        .from('dashboard_access_tokens')
+        .update({ 
+          revoked: true, 
+          revoked_at: new Date().toISOString() 
+        })
+        .eq('email', email)
+        .eq('revoked', false);
+    }
+    
+    // Crea nuovo token
+    const tokenData = {
+      user_id: userId || null,
+      email: userId ? null : email, // Solo se non abbiamo user_id
+      token_hash: tokenHash,
+      plan_role: planRole,
+      valid_until: validUntil || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // Default 1 anno
+      source: source,
+      metadata: { generated_at: new Date().toISOString() }
+    };
+    
+    const { error: insertError } = await supabase
+      .from('dashboard_access_tokens')
+      .insert(tokenData);
+    
+    if (insertError) {
+      console.error('[Token Generation] Errore inserimento token:', insertError);
+      throw insertError;
+    }
+    
+    console.log(`[Token Generation] ✅ Token generato per ${email || userId} (${planRole})`);
+    return { token, success: true };
+  } catch (err) {
+    console.error('[Token Generation] ❌ Errore:', err);
+    return { token: null, success: false };
+  }
 }
 

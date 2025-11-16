@@ -2,7 +2,7 @@
 // API Vercel - Webhook Lemon Squeezy per abbonamenti
 
 import { createClient } from '@supabase/supabase-js';
-import { syncUserRoleFromSubscription, calculateExpirationDate } from './webhook-role-sync.js';
+import { syncUserRoleFromSubscription, calculateExpirationDate, generateDashboardToken } from './webhook-role-sync.js';
 
 // Inizializza Supabase
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://higkhlfjfhlecbtfnznx.supabase.co';
@@ -173,11 +173,30 @@ async function handleSubscription(data) {
     
     // Sincronizza user_roles (sempre, anche se subscriber update/insert fallisce)
     // Usa planIdentifier invece di planMetadata (ora viene mappato internamente)
+    let userId = null;
+    let planRole = null;
     try {
-      await syncUserRoleFromSubscription(email, mappedStatus, planIdentifier, currentPeriodEnd);
+      const roleResult = await syncUserRoleFromSubscription(email, mappedStatus, planIdentifier, currentPeriodEnd);
+      if (roleResult && roleResult.success) {
+        userId = roleResult.user_id;
+        planRole = roleResult.role;
+      }
     } catch (roleSyncError) {
       console.error('[Webhook] Errore sincronizzazione ruolo:', roleSyncError);
       // Non bloccare il webhook se la sincronizzazione ruolo fallisce
+    }
+    
+    // Genera token dashboard se subscription è attiva
+    if (mappedStatus === 'active' && planRole && currentPeriodEnd) {
+      try {
+        const validUntil = currentPeriodEnd instanceof Date 
+          ? currentPeriodEnd.toISOString() 
+          : new Date(currentPeriodEnd).toISOString();
+        await generateDashboardToken(userId, email, planRole, validUntil, 'lemonsqueezy');
+        console.log('[Webhook] ✅ Token dashboard generato per:', email);
+      } catch (tokenError) {
+        console.error('[Webhook] Errore generazione token (non bloccante):', tokenError);
+      }
     }
   } catch (err) {
     console.error('[Webhook] Errore handleSubscription:', err);
