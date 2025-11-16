@@ -253,8 +253,8 @@
           </div>
         </div>
         
-        <div class="admin-filters">
-          <input type="text" id="filter-search" placeholder="Cerca per email o nome..." />
+        <div class="admin-filters" style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem;">
+          <input type="text" id="filter-search" placeholder="Cerca per email o nome..." style="flex: 1; min-width: 200px;" />
           <select id="filter-role">
             <option value="">Tutti i ruoli</option>
             <option value="trial">Trial</option>
@@ -266,6 +266,9 @@
             <option value="active">Attivi</option>
             <option value="expired">Scaduti</option>
           </select>
+          <button type="button" class="btn btn-primary btn-sm" id="add-user-btn" style="white-space: nowrap;">
+            ➕ Aggiungi Utente
+          </button>
         </div>
         
         <div class="admin-table">
@@ -370,6 +373,47 @@
       <div class="modal-actions">
         <button class="btn btn-outline" id="cancel-credits-btn">Annulla</button>
         <button class="btn btn-primary" id="update-credits-btn">Aggiorna Crediti</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modale Aggiungi Nuovo Utente -->
+  <div id="add-user-modal" class="modal" hidden style="display: none !important;">
+    <div class="modal-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="margin: 0;">Aggiungi Nuovo Utente</h3>
+        <button type="button" class="btn btn-sm" onclick="document.getElementById('add-user-modal').hidden = true;" style="background: none; border: none; color: var(--ink-soft); cursor: pointer; padding: 0.5rem; font-size: 1.5rem; line-height: 1;">×</button>
+      </div>
+      <p style="font-size: var(--fs-13); color: var(--ink-soft); margin-top: -0.5rem; margin-bottom: 1rem;">
+        Crea un nuovo utente con email, ruolo e scadenza. Verrà generato automaticamente un token di accesso.
+      </p>
+      <label>
+        Email:
+        <input type="email" id="add-user-email" placeholder="utente@example.com" required>
+      </label>
+      <label>
+        Nome (opzionale):
+        <input type="text" id="add-user-name" placeholder="Nome completo">
+      </label>
+      <label>
+        Ruolo:
+        <select id="add-user-role" required>
+          <option value="trial">Trial</option>
+          <option value="pro">Pro</option>
+          <option value="institutional">Desk / Institutional</option>
+        </select>
+      </label>
+      <label>
+        Scadenza:
+        <input type="date" id="add-user-expiry" required>
+      </label>
+      <label>
+        Crediti iniziali (solo per Desk):
+        <input type="number" id="add-user-credits" min="0" value="0">
+      </label>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="cancel-add-user-btn">Annulla</button>
+        <button class="btn btn-primary" id="save-add-user-btn">Crea Utente</button>
       </div>
     </div>
   </div>

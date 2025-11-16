@@ -102,7 +102,7 @@ async function init() {
     FILTER_STATUS?.addEventListener('change', applyFilters);
     
     // FORZA CHIUSURA MODALI - CRITICO: devono essere SEMPRE chiusi all'inizio
-    const modals = ['edit-user-modal', 'manage-credits-modal', 'manage-payments-modal'];
+    const modals = ['edit-user-modal', 'manage-credits-modal', 'manage-payments-modal', 'add-user-modal'];
     const forceCloseModals = () => {
       modals.forEach(modalId => {
         const modal = document.getElementById(modalId);
@@ -159,6 +159,91 @@ async function init() {
         return originalManagePayments.apply(this, args);
       }
     };
+    
+    // Setup pulsante aggiungi utente
+    const addUserBtn = document.getElementById('add-user-btn');
+    const addUserModal = document.getElementById('add-user-modal');
+    const cancelAddUserBtn = document.getElementById('cancel-add-user-btn');
+    const saveAddUserBtn = document.getElementById('save-add-user-btn');
+    
+    if (addUserBtn && addUserModal) {
+      addUserBtn.addEventListener('click', () => {
+        // Chiudi altri modali
+        forceCloseModals();
+        // Apri modale aggiungi utente
+        addUserModal.dataset.userOpened = 'true';
+        addUserModal.hidden = false;
+        addUserModal.style.display = 'flex';
+        setTimeout(() => delete addUserModal.dataset.userOpened, 100);
+        // Reset form
+        document.getElementById('add-user-email').value = '';
+        document.getElementById('add-user-name').value = '';
+        document.getElementById('add-user-role').value = 'trial';
+        document.getElementById('add-user-expiry').value = '';
+        document.getElementById('add-user-credits').value = '0';
+      });
+    }
+    
+    if (cancelAddUserBtn && addUserModal) {
+      cancelAddUserBtn.addEventListener('click', () => {
+        addUserModal.hidden = true;
+        addUserModal.style.display = 'none';
+      });
+    }
+    
+    if (saveAddUserBtn) {
+      saveAddUserBtn.addEventListener('click', async () => {
+        const email = document.getElementById('add-user-email')?.value?.trim();
+        const name = document.getElementById('add-user-name')?.value?.trim();
+        const role = document.getElementById('add-user-role')?.value;
+        const expiry = document.getElementById('add-user-expiry')?.value;
+        const credits = parseInt(document.getElementById('add-user-credits')?.value || '0');
+        
+        if (!email || !role || !expiry) {
+          alert('Compila tutti i campi obbligatori (Email, Ruolo, Scadenza).');
+          return;
+        }
+        
+        try {
+          saveAddUserBtn.disabled = true;
+          saveAddUserBtn.textContent = 'Creazione...';
+          
+          // Chiama API per creare utente e generare token
+          const res = await fetch('/api/create-user-and-token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: email.toLowerCase(),
+              displayName: name || null,
+              role,
+              validUntil: expiry,
+              credits: role === 'institutional' ? credits : 0,
+              sendEmail: true
+            })
+          });
+          
+          const data = await res.json();
+          
+          if (!data.ok) {
+            throw new Error(data.error || 'Errore nella creazione utente');
+          }
+          
+          alert(`Utente creato con successo!\nEmail: ${email}\nToken: ${data.token}\n\nIl token è stato inviato via email.`);
+          
+          // Chiudi modale e ricarica dati
+          addUserModal.hidden = true;
+          addUserModal.style.display = 'none';
+          await loadAllData();
+          
+        } catch (err) {
+          console.error('[Admin] Error creating user:', err);
+          alert('Errore nella creazione utente: ' + (err.message || 'Errore sconosciuto'));
+        } finally {
+          saveAddUserBtn.disabled = false;
+          saveAddUserBtn.textContent = 'Crea Utente';
+        }
+      });
+    }
     
     // Load data
     await loadAllData();
@@ -257,24 +342,32 @@ async function loadUsers() {
       Logger.info('Admin', `Loaded ${tokens?.length || 0} tokens`);
     }
     
-    // 4. Fetch emails via RPC function (solo admin) - per utenti con user_id
-    // Nota: Se la RPC function non esiste o fallisce, continuiamo senza email (fallback)
+    // 4. Fetch emails - NON usiamo più RPC function perché usa auth.uid() che non funziona con token
+    // Usiamo invece i dati già disponibili da subscribers e dashboard_access_tokens
     let emails = null;
-    try {
-      const { data: emailsData, error: emailsError } = await supabase
-        .rpc('get_user_emails_for_admin');
-      
-      if (emailsError) {
-        Logger.warn('Admin', 'RPC emails error, using fallback', emailsError);
-        // Se la RPC function non esiste (400/404), usiamo solo i dati disponibili
-        emails = null;
-      } else {
-        emails = emailsData;
+    // Costruiamo emails da subscribers e tokens (già caricati sopra)
+    const emailsFromSubscribers = (subscribers || []).map(s => ({
+      user_id: s.auth_user_id || null,
+      email: s.email,
+      created_at: null
+    }));
+    const emailsFromTokens = (tokens || []).map(t => ({
+      user_id: t.user_id || null,
+      email: t.email,
+      created_at: null
+    }));
+    // Unisci e rimuovi duplicati
+    const allEmails = [...emailsFromSubscribers, ...emailsFromTokens];
+    const uniqueEmails = new Map();
+    allEmails.forEach(e => {
+      if (e.email) {
+        const key = e.email.toLowerCase();
+        if (!uniqueEmails.has(key) || (e.user_id && !uniqueEmails.get(key).user_id)) {
+          uniqueEmails.set(key, e);
+        }
       }
-    } catch (rpcErr) {
-      Logger.warn('Admin', 'RPC emails exception, using fallback', rpcErr);
-      emails = null;
-    }
+    });
+    emails = Array.from(uniqueEmails.values());
     
     // Crea mappe per lookup veloce
     // Se emails è null (RPC fallita), creiamo una mappa vuota

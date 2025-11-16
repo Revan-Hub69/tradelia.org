@@ -1778,27 +1778,44 @@
     refreshSessionBtn.addEventListener('click', updateAuthUI);
 
     const ensureAdminAccess = async () => {
-      if (!currentUser) return false;
+      if (!currentUser || !currentUser.email) return false;
       try {
-        const { data, error } = await supabase
-          .from('admin_users')
-          .select('user_id')
-          .eq('user_id', currentUser.id)
+        // Verifica se l'email è in admin_emails (sistema token-based)
+        const { data: adminEmailData, error: adminError } = await supabase
+          .from('admin_emails')
+          .select('email')
+          .eq('email', currentUser.email.toLowerCase())
           .maybeSingle();
-        if (error) throw error;
-        if (!data) {
-          showToast('Accesso negato: utente non abilitato', 'error');
-          currentUser = null;
-          await logout(true);
-          return false;
+        
+        if (adminError) throw adminError;
+        
+        if (!adminEmailData) {
+          // Fallback: verifica anche admin_users se abbiamo user_id (retrocompatibilità)
+          if (currentUser.id) {
+            const { data: adminUserData, error: adminUserError } = await supabase
+              .from('admin_users')
+              .select('user_id')
+              .eq('user_id', currentUser.id)
+              .maybeSingle();
+            if (adminUserError) throw adminUserError;
+            if (!adminUserData) {
+              showToast('Accesso negato: utente non abilitato', 'error');
+              currentUser = null;
+              await logout(true);
+              return false;
+            }
+          } else {
+            showToast('Accesso negato: utente non abilitato', 'error');
+            currentUser = null;
+            await logout(true);
+            return false;
+          }
         }
         isAdmin = true;
         return true;
       } catch (error) {
-        console.error(error);
+        console.error('[Report Admin] Error checking admin access:', error);
         showToast('Impossibile verificare i permessi admin', 'error');
-        currentUser = null;
-        await logout(true);
         return false;
       }
     };
