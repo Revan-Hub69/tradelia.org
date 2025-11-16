@@ -1728,18 +1728,23 @@
           return;
         }
         
-        // Token valido: procedi (NON richiediamo più admin, basta token valido)
+        // Token valido: procedi
         currentUser = { email: data.email };
-        isAdmin = true; // Se ha token valido, può accedere
 
       authCard.classList.toggle('hidden', !!currentUser);
       authLogged.classList.toggle('hidden', !currentUser);
       appGrid.classList.toggle('hidden', !currentUser);
 
       if (currentUser) {
+        const allowed = await ensureAdminAccess();
+        if (!allowed) {
+          authUserBadge.textContent = '';
+          appGrid.classList.add('hidden');
+          return;
+        }
         authUserBadge.textContent = `Connesso come ${currentUser.email}`;
         await loadReports();
-      } else {
+        } else {
         authUserBadge.textContent = '';
         reportsListEl.innerHTML = '<div class="list-empty">Effettua l\'accesso per visualizzare i report.</div>';
         clearEditor();
