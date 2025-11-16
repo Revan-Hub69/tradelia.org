@@ -297,9 +297,15 @@
             <span class="access-info-label">Giorni rimanenti</span>
             <span class="access-info-value" id="step2-days">—</span>
           </div>
-          <div class="access-actions" style="margin-top: 1.5rem;">
+          <div class="access-actions" style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
             <button type="button" class="btn btn-sm" id="access-go-dashboard">Vai alla dashboard</button>
             <button type="button" class="btn btn-sm" id="access-cancel-subscription" style="display: none;">Disdici abbonamento</button>
+            <a href="/user/admin.html" id="access-admin-link" class="btn btn-primary btn-sm" style="display: none; text-align: center; text-decoration: none;">
+              ⚙️ Dashboard Admin
+            </a>
+            <a href="/report/admin/dashboard.html" target="_blank" id="access-report-link" class="btn btn-outline btn-sm" style="display: none; text-align: center; text-decoration: none;">
+              📊 Crea Report
+            </a>
           </div>
         </div>
         
@@ -540,6 +546,9 @@
               cancelSubBtn.style.display = 'none';
             }
             
+            // Verifica se è admin e mostra link dashboard admin
+            checkAndShowAdminLink(data.email);
+            
             hideAlert();
           } else {
             showAlert(data.error || 'Codice non valido o scaduto. Controlla di aver inserito il codice corretto.');
@@ -600,6 +609,33 @@
             cancelSubBtn.textContent = 'Disdici abbonamento';
           }
         });
+      }
+      
+      // Verifica se è admin e mostra link
+      async function checkAndShowAdminLink(email) {
+        if (!email) return;
+        
+        try {
+          // Importa Supabase client
+          const { supabase } = await import('/report/assets/js/supabase-client.js');
+          
+          // Verifica se l'email è in admin_emails
+          const { data, error } = await supabase
+            .from('admin_emails')
+            .select('email')
+            .eq('email', email.toLowerCase())
+            .maybeSingle();
+          
+          if (!error && data) {
+            // È admin: mostra link
+            const adminLink = document.getElementById('access-admin-link');
+            const reportLink = document.getElementById('access-report-link');
+            if (adminLink) adminLink.style.display = 'block';
+            if (reportLink) reportLink.style.display = 'block';
+          }
+        } catch (err) {
+          console.warn('[Accesso] Errore verifica admin:', err);
+        }
       }
     })();
   </script>

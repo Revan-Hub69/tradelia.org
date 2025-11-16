@@ -142,6 +142,8 @@ async function loadUsers() {
       `;
     }
     
+    Logger.info('Admin', 'Inizio caricamento utenti...');
+    
     // Carica utenti da tutte le fonti: user_profiles, user_roles, subscribers, dashboard_access_tokens
     
     // 1. User profiles e roles (utenti con user_id)
@@ -149,26 +151,46 @@ async function loadUsers() {
       .from('user_profiles')
       .select('user_id, display_name');
     
-    if (profilesError) Logger.warn('Admin', 'Error loading profiles', profilesError);
+    if (profilesError) {
+      Logger.error('Admin', 'Error loading profiles', profilesError);
+      console.error('[Admin] Profiles error:', profilesError);
+    } else {
+      Logger.info('Admin', `Loaded ${profiles?.length || 0} profiles`);
+    }
     
     const { data: roles, error: rolesError } = await supabase
       .from('user_roles')
       .select('user_id, role, valid_until');
     
-    if (rolesError) Logger.warn('Admin', 'Error loading roles', rolesError);
+    if (rolesError) {
+      Logger.error('Admin', 'Error loading roles', rolesError);
+      console.error('[Admin] Roles error:', rolesError);
+    } else {
+      Logger.info('Admin', `Loaded ${roles?.length || 0} roles`);
+    }
     
     const { data: credits, error: creditsError } = await supabase
       .from('user_analysis_credits')
       .select('user_id, credits_balance');
     
-    if (creditsError) Logger.warn('Admin', 'Error loading credits', creditsError);
+    if (creditsError) {
+      Logger.error('Admin', 'Error loading credits', creditsError);
+      console.error('[Admin] Credits error:', creditsError);
+    } else {
+      Logger.info('Admin', `Loaded ${credits?.length || 0} credits`);
+    }
     
     // 2. Subscribers (utenti attivi da gateway pagamenti)
     const { data: subscribers, error: subscribersError } = await supabase
       .from('subscribers')
       .select('id, email, status, auth_user_id');
     
-    if (subscribersError) Logger.warn('Admin', 'Error loading subscribers', subscribersError);
+    if (subscribersError) {
+      Logger.error('Admin', 'Error loading subscribers', subscribersError);
+      console.error('[Admin] Subscribers error:', subscribersError);
+    } else {
+      Logger.info('Admin', `Loaded ${subscribers?.length || 0} subscribers`);
+    }
     
     // 3. Dashboard access tokens (utenti con token attivo)
     const { data: tokens, error: tokensError } = await supabase
@@ -176,7 +198,12 @@ async function loadUsers() {
       .select('email, user_id, plan_role, valid_until, revoked')
       .eq('revoked', false);
     
-    if (tokensError) Logger.warn('Admin', 'Error loading tokens', tokensError);
+    if (tokensError) {
+      Logger.error('Admin', 'Error loading tokens', tokensError);
+      console.error('[Admin] Tokens error:', tokensError);
+    } else {
+      Logger.info('Admin', `Loaded ${tokens?.length || 0} tokens`);
+    }
     
     // 4. Fetch emails via RPC function (solo admin) - per utenti con user_id
     // Nota: Se la RPC function non esiste o fallisce, continuiamo senza email (fallback)
