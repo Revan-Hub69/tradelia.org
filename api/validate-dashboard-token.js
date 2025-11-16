@@ -140,6 +140,7 @@ export default async function handler(req, res) {
     
     return res.status(200).json({
       ok: true,
+      userId: userId,
       email: email,
       planRole: planRole,
       status: subscriptionStatus,

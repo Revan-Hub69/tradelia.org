@@ -38,25 +38,63 @@ init();
 
 async function init() {
   try {
-    // Verifica che l'utente sia admin
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      window.location.href = '/dashboard.html';
+    // Verifica token di accesso (come dashboard.html)
+    const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
+    let token = null;
+    try {
+      token = localStorage.getItem(ACCESS_TOKEN_KEY);
+    } catch (e) {
+      token = null;
+    }
+
+    if (!token || !token.trim()) {
+      window.location.href = '/accesso.html?reason=missing_token';
       return;
     }
+
+    // Valida token e verifica se è admin
+    const res = await fetch('/api/validate-dashboard-token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: token.trim() })
+    });
     
-    const { data: adminData } = await supabase
-      .from('admin_users')
-      .select('user_id')
-      .eq('user_id', user.id)
+    const data = await res.json();
+    
+    if (!data.ok) {
+      window.location.href = '/accesso.html?reason=invalid_token';
+      return;
+    }
+
+    // Verifica se l'email è admin (usa admin_emails table)
+    const { data: adminEmailData, error: adminError } = await supabase
+      .from('admin_emails')
+      .select('email')
+      .eq('email', data.email?.toLowerCase() || '')
       .maybeSingle();
     
-    if (!adminData) {
+    // Fallback: verifica anche in admin_users se abbiamo user_id (per retrocompatibilità)
+    let isAdmin = !!adminEmailData;
+    
+    if (!isAdmin && data.userId) {
+      const { data: adminData } = await supabase
+        .from('admin_users')
+        .select('user_id')
+        .eq('user_id', data.userId)
+        .maybeSingle();
+      isAdmin = !!adminData;
+    }
+    
+    if (!isAdmin) {
+      // Non è admin: redirect
       window.location.href = '/dashboard.html';
       return;
     }
     
-    currentUser = user;
+    currentUser = {
+      id: data.userId || null,
+      email: data.email
+    };
     
     // Setup filters
     FILTER_SEARCH?.addEventListener('input', debounce(applyFilters, 300));
