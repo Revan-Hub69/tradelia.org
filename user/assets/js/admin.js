@@ -105,8 +105,21 @@ async function init() {
     const modals = ['edit-user-modal', 'manage-credits-modal', 'manage-payments-modal'];
     modals.forEach(modalId => {
       const modal = document.getElementById(modalId);
-      if (modal) modal.hidden = true;
+      if (modal) {
+        modal.hidden = true;
+        modal.setAttribute('hidden', 'true'); // Doppio controllo
+      }
     });
+    
+    // Forza chiusura modali anche se aperti per errore
+    setTimeout(() => {
+      modals.forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (modal && !modal.hasAttribute('data-keep-open')) {
+          modal.hidden = true;
+        }
+      });
+    }, 100);
     
     // Load data
     await loadAllData();

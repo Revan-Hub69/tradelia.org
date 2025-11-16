@@ -567,7 +567,9 @@
       </div>
       <div class="field">
         <label for="auth-password">Password</label>
-        <input type="password" id="auth-password" autocomplete="current-password" placeholder="••••••••">
+        <p style="font-size: 0.85rem; color: var(--ink-soft); margin-top: -0.5rem;">
+          Inserisci la tua email per ricevere un token di accesso via email.
+        </p>
     </div>
       <button class="btn btn-primary" id="auth-login-btn">Accedi</button>
         </div>
@@ -1699,8 +1701,52 @@
     };
 
     const updateAuthUI = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      currentUser = session?.user ?? null;
+      // Verifica token di accesso invece di Supabase Auth
+      const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
+      let token = null;
+      try {
+        token = localStorage.getItem(ACCESS_TOKEN_KEY);
+      } catch (e) {
+        token = null;
+      }
+      
+      if (!token || !token.trim()) {
+        // Nessun token: mostra login
+        currentUser = null;
+        authCard.classList.remove('hidden');
+        authLogged.classList.add('hidden');
+        appGrid.classList.add('hidden');
+        authUserBadge.textContent = '';
+        reportsListEl.innerHTML = '<div class="list-empty">Effettua l\'accesso per visualizzare i report.</div>';
+        clearEditor();
+        updateEditorBadge();
+        return;
+      }
+      
+      // Valida token con API
+      try {
+        const res = await fetch('/api/validate-dashboard-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: token.trim() })
+        });
+        const data = await res.json();
+        
+        if (!data.ok) {
+          // Token non valido: mostra login
+          currentUser = null;
+          authCard.classList.remove('hidden');
+          authLogged.classList.add('hidden');
+          appGrid.classList.add('hidden');
+          authUserBadge.textContent = '';
+          reportsListEl.innerHTML = '<div class="list-empty">Token non valido. Effettua l\'accesso.</div>';
+          clearEditor();
+          updateEditorBadge();
+          return;
+        }
+        
+        // Token valido: procedi
+        currentUser = { email: data.email };
 
       authCard.classList.toggle('hidden', !!currentUser);
       authLogged.classList.toggle('hidden', !currentUser);
@@ -1733,7 +1779,26 @@
       }
       loginBtn.disabled = true;
       try {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        // Usa token invece di Supabase Auth
+        // Richiedi token tramite email
+        const res = await fetch('/api/request-dashboard-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        
+        if (!data.ok) {
+          throw new Error(data.error || 'Errore richiesta token');
+        }
+        
+        // Token inviato via email - mostra messaggio
+        showToast('Token inviato via email. Controlla la tua casella.', 'success');
+        // Non fare login automatico, l'utente deve inserire il token
+        return;
+        
+        // Codice vecchio (commentato):
+        // const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         showToast('Accesso eseguito', 'success');
       } catch (error) {
@@ -1746,7 +1811,12 @@
     };
 
     const logout = async (silent = false) => {
-      await supabase.auth.signOut();
+      // Rimuovi token invece di Supabase Auth
+      try {
+        localStorage.removeItem('tradelia-access-token-v1');
+      } catch (e) {
+        // ignore
+      }
       isAdmin = false;
       if (!silent) {
         showToast('Disconnesso', 'info');
@@ -1948,7 +2018,11 @@
     const init = async () => {
       renderModulesEmptyState();
       await updateAuthUI();
-      supabase.auth.onAuthStateChange(() => updateAuthUI());
+      // Non serve più: usiamo token invece di Supabase Auth
+      // supabase.auth.onAuthStateChange(() => updateAuthUI());
+      
+      // Verifica token all'inizio
+      updateAuthUI();
     };
 
     init();
