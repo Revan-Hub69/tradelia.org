@@ -7,6 +7,9 @@
     "generate-manifest": "node archivio/generate-manifest.js",
     "setup-hooks": "node scripts/setup-hooks.js",
     "precommit": "node archivio/generate-manifest.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
   }
 }
 
