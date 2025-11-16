@@ -1208,10 +1208,11 @@ async function onProfileSubmit(event) {
     // Send email if there are changes
     if (changes.length > 0) {
       try {
-        await fetch('/api/send-profile-update.js', {
+        await fetch('/api/send-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            type: 'profile-update',
             userEmail: state.user.email,
             userName: getDisplayName(),
             changes: changes,

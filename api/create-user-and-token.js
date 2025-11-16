@@ -82,7 +82,7 @@ export default async function handler(req, res) {
   }
   
   try {
-    const { email, displayName, role, validUntil, credits = 0, sendEmail = true } = req.body;
+    const { email, displayName, role, validUntil, credits = 0, sendEmail = true, isAdmin = false } = req.body;
     
     if (!email || !role || !validUntil) {
       return res.status(400).json({ ok: false, error: 'Missing required fields: email, role, validUntil' });
@@ -102,6 +102,21 @@ export default async function handler(req, res) {
     const validUntilDate = new Date(validUntil);
     if (validUntilDate <= new Date()) {
       return res.status(400).json({ ok: false, error: 'validUntil must be in the future' });
+    }
+    
+    // Se isAdmin=true, verifica che l'email sia in admin_emails
+    if (isAdmin) {
+      const { data: adminCheck, error: adminCheckError } = await supabase
+        .from('admin_emails')
+        .select('email')
+        .eq('email', email.toLowerCase())
+        .maybeSingle();
+      
+      if (adminCheckError || !adminCheck) {
+        return res.status(403).json({ ok: false, error: 'Email non autorizzata per token admin' });
+      }
+      // Forza ruolo institutional per admin
+      role = 'institutional';
     }
     
     // 1. Crea/aggiorna user_role
