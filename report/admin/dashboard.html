@@ -559,17 +559,14 @@
 
   <section class="panel" id="auth-panel">
     <h2>Accesso amministratore</h2>
-    <p>Accedi con le credenziali Supabase (Auth – email/password).</p>
-    <div class="auth-card" id="auth-card">
-      <div class="field">
-        <label for="auth-email">Email</label>
-        <input type="email" id="auth-email" autocomplete="email" placeholder="admin@example.com">
-      </div>
-      <p style="font-size: 0.85rem; color: var(--ink-soft); margin-top: 0.5rem;">
-        Inserisci la tua email per ricevere un token di accesso via email.
+    <p>Accedi con il tuo token di accesso.</p>
+    <div class="auth-card" id="auth-card" style="text-align: center; padding: 2rem;">
+      <h3 style="margin-bottom: 1rem;">Accesso richiesto</h3>
+      <p style="margin-bottom: 1.5rem; color: var(--ink-soft);">
+        Per accedere alla dashboard report, devi avere un token valido.
       </p>
-      <button class="btn btn-primary" id="auth-login-btn" style="margin-top: 1rem;">Richiedi token</button>
-        </div>
+      <a href="/accesso.html" class="btn btn-primary">Vai alla pagina di accesso</a>
+    </div>
     <div class="auth-card hidden" id="auth-logged">
       <p class="badge" id="auth-user-badge">Connesso come —</p>
       <div style="display:flex; gap:0.75rem;">
@@ -757,10 +754,9 @@
     const toastEl = document.getElementById('toast');
     const authCard = document.getElementById('auth-card');
     const authLogged = document.getElementById('auth-logged');
-    const emailEl = document.getElementById('auth-email');
-    // Password field rimosso - ora usiamo solo email per richiedere token
-    // const passwordEl = document.getElementById('auth-password');
-    const loginBtn = document.getElementById('auth-login-btn');
+    // Campi login rimossi - ora redirect a accesso.html
+    // const emailEl = document.getElementById('auth-email');
+    // const loginBtn = document.getElementById('auth-login-btn');
     const logoutBtn = document.getElementById('auth-logout-btn');
     const refreshSessionBtn = document.getElementById('auth-refresh-session');
     const authUserBadge = document.getElementById('auth-user-badge');
@@ -1776,12 +1772,8 @@
       await updateAuthUI();
     };
 
-    loginBtn.addEventListener('click', login);
-    emailEl.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-        login();
-      }
-    });
+    // Login button rimosso - ora redirect a accesso.html
+    // loginBtn.addEventListener('click', login);
     logoutBtn.addEventListener('click', logout);
     refreshSessionBtn.addEventListener('click', updateAuthUI);
 
