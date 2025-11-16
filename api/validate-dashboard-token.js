@@ -51,7 +51,17 @@ export default async function handler(req, res) {
   
   try {
     // Inizializza Supabase client (lazy)
-    const supabase = getSupabaseClient();
+    let supabase;
+    try {
+      supabase = getSupabaseClient();
+    } catch (initError) {
+      console.error('[Validate Token] Errore inizializzazione Supabase:', initError);
+      return res.status(500).json({ 
+        ok: false, 
+        error: 'Errore configurazione server',
+        details: 'Variabili ambiente non configurate correttamente'
+      });
+    }
     
     const { token } = req.body;
     
@@ -175,11 +185,25 @@ export default async function handler(req, res) {
     
   } catch (err) {
     console.error('[Validate Token] Errore:', err);
-    return res.status(500).json({ 
-      ok: false, 
-      error: 'Errore server', 
-      details: err.message 
-    });
+    console.error('[Validate Token] Stack:', err.stack);
+    
+    // Assicurati di restituire sempre JSON valido
+    try {
+      return res.status(500).json({ 
+        ok: false, 
+        error: 'Errore server durante la validazione del token',
+        details: process.env.NODE_ENV === 'development' ? err.message : undefined
+      });
+    } catch (jsonError) {
+      // Se anche questo fallisce, restituisci un errore minimo
+      console.error('[Validate Token] Errore critico nel JSON response:', jsonError);
+      res.status(500);
+      res.setHeader('Content-Type', 'application/json');
+      return res.end(JSON.stringify({ 
+        ok: false, 
+        error: 'Errore server critico' 
+      }));
+    }
   }
 }
 
