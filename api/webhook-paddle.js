@@ -4,13 +4,18 @@
 // Legale, conforme, UX perfetta, gestione fiscale automatica
 
 import { createClient } from '@supabase/supabase-js';
-import { syncUserRoleFromSubscription, calculateExpirationDate } from './webhook-role-sync.js';
+import { 
+  syncUserRoleFromSubscription, 
+  calculateExpirationDate,
+  getUserIdByEmail,
+  recordPaymentAndInvoice
+} from './webhook-role-sync.js';
 import crypto from 'crypto';
 
-// Inizializza Supabase
+// Inizializza Supabase (può usare anche service_role se configurato)
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://higkhlfjfhlecbtfnznx.supabase.co';
-const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZ2tobGZqZmhsZWNidGZuem54Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0NTc5OTksImV4cCI6MjA3ODAzMzk5OX0.qlhVhGkfc0rU7-tUg9Fu40D67HQzHjZhkEdP4mAPqTw';
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 export default async function handler(req, res) {
   // CORS headers
@@ -246,15 +251,47 @@ async function handleSubscriptionCancelled(event) {
 // ===== HANDLE PAYMENT SUCCEEDED =====
 async function handlePaymentSucceeded(event) {
   try {
-    // Quando un pagamento ha successo, assicurati che la subscription sia attiva
+    // Quando un pagamento ha successo:
+    // 1) Assicura che la subscription sia attiva
+    // 2) Registra il pagamento (e opzionalmente la fattura) in Supabase
     const subscriptionId = event.subscription_id || event.data?.subscription_id;
     const email = event.email || event.customer_email || event.data?.email;
+    const amount = event.amount || event.data?.amount;
+    const currency = event.currency || event.data?.currency || 'EUR';
     
     if (subscriptionId && email) {
       await handleSubscription({
         email,
         subscription_id: subscriptionId,
         status: 'active'
+      });
+    }
+    
+    // Registra pagamento solo se abbiamo l'email (per risalire all'utente)
+    if (email && amount) {
+      const userId = await getUserIdByEmail(email);
+      if (!userId) {
+        console.warn('[Webhook Paddle] Impossibile registrare pagamento: userId non trovato per', email);
+        return;
+      }
+      
+      const amountCents = Math.round(parseFloat(amount) * 100);
+      const description = 'Pagamento abbonamento Paddle';
+      const externalPaymentId = event.transaction_id || event.event_id || event.alert_id || subscriptionId || null;
+      
+      await recordPaymentAndInvoice({
+        userId,
+        gateway: 'paddle',
+        amountCents: isNaN(amountCents) ? 0 : amountCents,
+        currency,
+        status: 'succeeded',
+        description,
+        externalPaymentId,
+        externalInvoiceId: null, // potrà essere valorizzato in futuro se Paddle invia ID fattura
+        invoiceNumber: null,
+        issuedAt: event.payout_date || event.event_time || null,
+        pdfUrl: null,
+        metadata: event
       });
     }
   } catch (err) {
@@ -265,14 +302,40 @@ async function handlePaymentSucceeded(event) {
 // ===== HANDLE TRANSACTION COMPLETED =====
 async function handleTransactionCompleted(event) {
   try {
-    // Gestisci transazione completata
+    // Gestisci transazione completata (es. acquisti one-off, crediti, ecc.)
     const subscriptionId = event.subscription_id || event.data?.subscription_id;
     const email = event.email || event.customer_email || event.data?.email;
+    const amount = event.amount || event.data?.amount;
+    const currency = event.currency || event.data?.currency || 'EUR';
     
-    console.log('[Webhook] Transazione completata:', { email, subscriptionId });
+    console.log('[Webhook] Transazione completata:', { email, subscriptionId, amount, currency });
     
-    // Paddle gestisce automaticamente fatturazione e IVA/VAT
-    // Qui possiamo solo loggare o fare azioni aggiuntive
+    if (email && amount) {
+      const userId = await getUserIdByEmail(email);
+      if (!userId) {
+        console.warn('[Webhook Paddle] Impossibile registrare transaction.completed: userId non trovato per', email);
+        return;
+      }
+      
+      const amountCents = Math.round(parseFloat(amount) * 100);
+      const description = 'Transazione Paddle completata';
+      const externalPaymentId = event.transaction_id || event.event_id || event.alert_id || subscriptionId || null;
+      
+      await recordPaymentAndInvoice({
+        userId,
+        gateway: 'paddle',
+        amountCents: isNaN(amountCents) ? 0 : amountCents,
+        currency,
+        status: 'succeeded',
+        description,
+        externalPaymentId,
+        externalInvoiceId: null,
+        invoiceNumber: null,
+        issuedAt: event.payout_date || event.event_time || null,
+        pdfUrl: null,
+        metadata: event
+      });
+    }
   } catch (err) {
     console.error('[Webhook] Errore handleTransactionCompleted:', err);
   }

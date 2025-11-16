@@ -187,7 +187,10 @@
             
             <!-- Sezione Dati Business (visibile solo se user_type = business) -->
             <div id="profile-business-section" class="profile-block" style="display: none; margin-top: 1.5rem; padding: 1.5rem; background: var(--surface-elev); border: 1px solid var(--br-card); border-radius: var(--radius-lg);">
-              <h4 style="margin: 0 0 1rem 0; font-size: var(--fs-16); font-weight: 600;">Dati Aziendali (per fatturazione Xolo)</h4>
+              <h4 style="margin: 0 0 0.5rem 0; font-size: var(--fs-16); font-weight: 600;">Dati Aziendali (per fatturazione Xolo/Paddle)</h4>
+              <p style="margin: 0 0 1rem 0; font-size: var(--fs-13); color: var(--ink-soft);">
+                Questi dati vengono utilizzati esclusivamente per la fatturazione e la compliance fiscale. Ogni modifica invia una notifica al desk amministrativo.
+              </p>
               
               <label>
                 Nome/Ragione Sociale *
@@ -376,7 +379,7 @@
         <section class="user-section" id="panel-community" role="tabpanel" aria-labelledby="tab-community" hidden>
           <div class="section-header">
             <h3>Analisi on demand</h3>
-            <p>Richiedi analisi personalizzate su ticker specifici. Ogni richiesta utilizza un credito.</p>
+            <p>Richiedi analisi personalizzate su ticker specifici (Desk Professionale) o proponi asset per la community Pro.</p>
           </div>
           
           <!-- Contatore crediti residui -->
@@ -415,10 +418,10 @@
                     <button class="btn btn-sm btn-primary" type="submit" id="proposal-submit">Richiedi</button>
                   </div>
                   <div id="request-analysis-info" class="request-info" hidden>
-                    <p><strong>Richiesta analisi on-demand:</strong> Ogni richiesta utilizza un credito. L'analisi verrà completata entro 24-48 ore.</p>
+                    <p><strong>Richiesta analisi Desk:</strong> Ogni richiesta utilizza un credito del piano Desk Professionale. L'analisi verrà completata entro 24-48 ore.</p>
                   </div>
                   <div id="community-proposal-info" class="request-info" hidden>
-                    <p><strong>Proposta community:</strong> Suggerisci un asset per la community. Non richiede crediti.</p>
+                    <p><strong>Proposta community (Pro):</strong> Suggerisci un asset per la community. Non richiede crediti; puoi proporre/votare una volta al giorno.</p>
                   </div>
                 </form>
                 <div id="proposal-list" class="history-list"></div>
@@ -439,12 +442,25 @@
               </div>
             </div>
           </div>
+
+          <!-- Storico movimenti crediti (solo Desk) -->
+          <div style="margin-top: 2.5rem; border-top: 1px solid rgba(148, 163, 184, 0.15); padding-top: 1.5rem;">
+            <div class="section-header" style="margin-bottom: 1rem;">
+              <h4>Storico movimenti crediti</h4>
+              <p>Visualizza aggiunte e utilizzi dei crediti per le analisi on-demand.</p>
+            </div>
+            <div class="history-list" id="credits-history">
+              <div class="empty-state">
+                <p>Nessun movimento crediti ancora registrato.</p>
+              </div>
+            </div>
+          </div>
         </section>
 
         <section class="user-section" id="panel-plan" role="tabpanel" aria-labelledby="tab-plan" hidden>
           <div class="section-header">
             <h3>Gestione abbonamento</h3>
-            <p>Dettagli del piano attuale e upgrade disponibili. Il billing verrà integrato in una fase successiva.</p>
+            <p>Dettagli del piano attuale e upgrade disponibili. I pagamenti ricorrenti sono gestiti da Paddle e la fatturazione business da Xolo Go.</p>
           </div>
           <div class="plan-card" id="plan-card">
             <h4>Piano attuale</h4>
@@ -455,7 +471,7 @@
           <!-- Fatture e Documenti -->
           <div class="section-header" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(148, 163, 184, 0.15);">
             <h3>Fatture e documenti</h3>
-            <p>Scarica le fatture e i documenti fiscali relativi al tuo abbonamento.</p>
+            <p>Le fatture vengono generate automaticamente da Paddle o Xolo. Qui trovi un riepilogo dei documenti emessi a tuo nome.</p>
           </div>
           
           <div class="invoices-list" id="invoices-list">

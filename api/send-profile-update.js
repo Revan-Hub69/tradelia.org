@@ -1,4 +1,122 @@
 // /api/send-profile-update.js
+// Invia email a amministrazione@tradelia.org quando un utente aggiorna il profilo business
+// Usa lo stesso approccio di /api/send-business-data.js con Brevo
+
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
+  try {
+    const { userEmail, userName, changes, oldData, newData } = req.body || {};
+
+    if (!userEmail) {
+      return res.status(400).json({ error: 'userEmail is required' });
+    }
+
+    // Sanitize base fields
+    const safeEmail = String(userEmail).trim().toLowerCase();
+    const safeName = userName ? String(userName).trim() : '';
+
+    const safeChanges = Array.isArray(changes) ? changes.slice(0, 50).map(c => ({
+      field: String(c.field || ''),
+      oldValue: c.oldValue != null ? String(c.oldValue) : '',
+      newValue: c.newValue != null ? String(c.newValue) : ''
+    })) : [];
+
+    const adminEmail = 'amministrazione@tradelia.org';
+
+    // Costruisci HTML semplice con il diff
+    const changesRows = safeChanges.map(c => {
+      return `
+        <tr>
+          <td style="padding:8px;border:1px solid #e5e7eb;font-size:13px;">${c.field}</td>
+          <td style="padding:8px;border:1px solid #e5e7eb;font-size:13px;color:#6b7280;">${escapeHtml(c.oldValue)}</td>
+          <td style="padding:8px;border:1px solid #e5e7eb;font-size:13px;color:#111827;">${escapeHtml(c.newValue)}</td>
+        </tr>
+      `;
+    }).join('');
+
+    const html = `
+      <div style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:14px; color:#111827;">
+        <p>Ciao,</p>
+        <p>l'utente <strong>${escapeHtml(safeName || safeEmail)}</strong> ha aggiornato il proprio profilo nell'area utente Tradelia.</p>
+        <p>Di seguito il riepilogo delle modifiche:</p>
+        <table style="border-collapse:collapse;border:1px solid #e5e7eb;margin-top:12px;">
+          <thead>
+            <tr>
+              <th style="padding:8px;border:1px solid #e5e7eb;font-size:13px;background:#f9fafb;text-align:left;">Campo</th>
+              <th style="padding:8px;border:1px solid #e5e7eb;font-size:13px;background:#f9fafb;text-align:left;">Valore precedente</th>
+              <th style="padding:8px;border:1px solid #e5e7eb;font-size:13px;background:#f9fafb;text-align:left;">Nuovo valore</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${changesRows || '<tr><td colspan="3" style="padding:8px;font-size:13px;color:#6b7280;">Nessuna modifica rilevata.</td></tr>'}
+          </tbody>
+        </table>
+        <p style="margin-top:16px;font-size:13px;color:#6b7280;">
+          Email utente: <strong>${escapeHtml(safeEmail)}</strong>
+        </p>
+      </div>
+    `;
+
+    // Invia con Brevo (stesso pattern di send-business-data)
+    const apiKey = process.env.BREVO_API_KEY;
+    if (!apiKey) {
+      console.warn('[send-profile-update] BREVO_API_KEY non configurata, salto invio email.');
+      return res.status(200).json({ success: true, skipped: true });
+    }
+
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': apiKey
+      },
+      body: JSON.stringify({
+        sender: {
+          name: 'Tradelia',
+          email: 'amministrazione@tradelia.org'
+        },
+        to: [{ email: adminEmail }],
+        replyTo: { email: safeEmail, name: safeName || safeEmail },
+        subject: 'Aggiornamento profilo business utente Tradelia',
+        htmlContent: html
+      })
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      console.error('[send-profile-update] Errore risposta Brevo:', text);
+      return res.status(500).json({ error: 'Errore invio email', details: text });
+    }
+
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('[send-profile-update] Errore:', err);
+    return res.status(500).json({ error: 'Errore server', details: err.message });
+  }
+}
+
+function escapeHtml(value) {
+  if (value == null) return '';
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// /api/send-profile-update.js
 // API Vercel - Invio notifica modifiche profilo a amministrazione@tradelia.org (Brevo)
 
 export default async function handler(req, res) {

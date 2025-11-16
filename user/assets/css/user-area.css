@@ -87,6 +87,24 @@
   color: var(--ink-soft);
 }
 
+/* Pill generiche per tag e stati (usate in storico crediti, fatture, pagamenti) */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-11);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.pill-soft {
+  background: var(--surface-elev);
+  border: 1px solid var(--br-card);
+  color: var(--ink-soft);
+}
+
 .badge-role-trial {
   border-color: var(--brand-600);
   background: var(--surface-elev);
@@ -1968,8 +1986,8 @@
   gap: 0.75rem;
 }
 
-.invoice-header,
-.payment-header {
+.invoice-main,
+.payment-main {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1977,8 +1995,8 @@
   flex-wrap: wrap;
 }
 
-.invoice-header strong,
-.payment-header strong {
+.invoice-main strong,
+.payment-main strong {
   font-size: var(--fs-16);
   font-weight: 600;
   color: var(--ink);

@@ -66,6 +66,8 @@ const PLAN_CARD = document.getElementById('plan-card');
 const PLAN_DESCRIPTION = document.getElementById('plan-description');
 const PLAN_BENEFITS = document.getElementById('plan-benefits');
 const PLAN_ACTIONS = document.getElementById('plan-actions');
+const INVOICES_LIST = document.getElementById('invoices-list');
+const PAYMENTS_HISTORY = document.getElementById('payments-history');
 // Avatar controls
 const AVATAR_FILE = document.getElementById('profile-avatar-file');
 const AVATAR_BTN = document.getElementById('profile-avatar-btn');
@@ -84,6 +86,7 @@ const COMMUNITY_PROPOSE_CARD = document.getElementById('community-propose-card')
 const REQUEST_ANALYSIS_CARD = document.getElementById('request-analysis-card');
 const REQUEST_ANALYSIS_INFO = document.getElementById('request-analysis-info');
 const COMMUNITY_PROPOSAL_INFO = document.getElementById('community-proposal-info');
+const CREDITS_HISTORY = document.getElementById('credits-history');
 
 const AUTH_CONTAINER = document.getElementById('auth-container');
 
@@ -99,6 +102,9 @@ const state = {
   isAdmin: false,
   credits: null,
   planExpiresAt: null,
+  invoices: [],
+  payments: [],
+  creditsLog: [],
 };
 
 // Initialize app when DOM is ready
@@ -220,6 +226,10 @@ function setActiveTab(tabId) {
         renderReportsSection();
       } else if (key === 'inbox') {
         renderNotificationsSection();
+      } else if (key === 'plan') {
+        // Aggiorna anche fatture e pagamenti quando si entra nella sezione piano
+        renderPlanSection();
+        renderInvoicesAndPayments();
       }
     }
   });
@@ -299,10 +309,18 @@ async function bootstrapUserArea() {
     // IMPORTANTE: fetchCredits deve essere dopo fetchUserRole perché verifica state.role
     await fetchCredits();
     
-    // Step 5: Fetch proposals per Trial/Pro (per community proposals)
-    // Institutional non ha proposte community, solo richieste on-demand
-    if (state.role === 'trial' || state.role === 'pro') {
-      await Promise.all([fetchProposals(), fetchUserVotes()]);
+    // Step 5: Fetch proposals per Pro (community proposals), pagamenti/fatture e log crediti
+    const extraFetches = [];
+    if (state.role === 'pro' || state.isAdmin) {
+      extraFetches.push(fetchProposals(), fetchUserVotes());
+    }
+    // Pagamenti/fatture e log crediti: solo se autenticato (qualsiasi ruolo)
+    extraFetches.push(fetchUserPaymentsAndInvoices());
+    if (state.role === 'institutional' || state.isAdmin) {
+      extraFetches.push(fetchCreditsLog());
+    }
+    if (extraFetches.length) {
+      await Promise.all(extraFetches);
     }
     
     // Step 6: Render tutto
@@ -720,6 +738,9 @@ function renderPlanSection() {
   }
   
   PLAN_ACTIONS.appendChild(actionsContainer);
+  
+  // Aggiorna liste fatture/pagamenti se presenti
+  renderInvoicesAndPayments();
 }
 
 async function handleUpgradeWithTrial(targetRole) {
@@ -1584,48 +1605,174 @@ function roleLabel(role) {
 function planDescription(role) {
   switch (role) {
     case 'institutional':
-      return 'Ricerca dedicata con deck SRD/MTB integrati, fatturazione corporate e canali diretti con il desk analisti.';
+      return 'Piano Desk Professionale per operatori qualificati, con ricerca dedicata e fatturazione business tramite Paddle (MoR) e Xolo Go.';
     case 'pro':
-      return 'Accesso completo ai deck SRD v5.0 e MTB v3.1, strumenti community e notifiche operative in tempo reale.';
+      return 'Piano Pro per investitori avanzati, con accesso completo ai framework accademici e agli strumenti community.';
     case 'trial':
-      return 'Prova gratuita attiva. Consulta i dossier ufficiali e sblocca tutte le funzionalità per 14 giorni.';
+      return 'Prova gratuita attiva (14 giorni). Nessun addebito durante il periodo di prova, puoi cancellare in qualsiasi momento.';
     default:
-      return 'Account registrato. Attiva una prova gratuita di 14 giorni per Pro o Desk Professionale e scopri tutte le funzionalità.';
+      return 'Account registrato. Attiva una prova gratuita di 14 giorni per il piano Pro o Desk Professionale e scopri tutte le funzionalità prima di abbonarti.';
   }
 }
 
 function planBenefits(role) {
   if (role === 'institutional') {
     return [
-      'Deck SRD v5.0 e MTB v3.1 con personalizzazioni white label',
-      'Analisi Swing Research on-demand (99 € / richiesta)',
-      'Fatturazione dedicata e SLA di supporto prioritario',
-      'Sessioni mentorship con il desk di ricerca'
+      'Accesso completo a deck SRD v5.0 e MTB v3.1 in modalità Desk',
+      'Richieste di analisi on-demand gestite dal desk Tradelia (a consumo tramite crediti)',
+      'Fatturazione business gestita da Paddle come Merchant of Record e Xolo Go per i pagamenti via bonifico',
+      'Supporto prioritario e canali dedicati con il desk di ricerca'
     ];
   }
   if (role === 'pro') {
     return [
       'Sblocco completo dei deck SRD v5.0 e MTB v3.1',
-      'Note condivise con il desk',
+      'Strumenti accademici e note condivise con il desk',
       'Suggerimento e voto giornaliero sui ticker della community',
-      'Notifiche push e roadmap funzionale con priorità Pro'
+      'Pagamenti ricorrenti gestiti da Paddle, con fatture elettroniche via Xolo Go'
     ];
   }
   if (role === 'trial') {
   return [
       'Accesso completo ai deck SRD v5.0 e MTB v3.1',
       'Tutte le funzionalità Pro o Desk attive per 14 giorni',
-      'Nessun costo durante il periodo di prova',
-      'Upgrade automatico a pagamento alla scadenza (se configurato)'
+      'Nessun costo durante il periodo di prova, cancellazione gratuita entro 14 giorni',
+      'Pagamenti gestiti da Paddle (in fase di attivazione) e fatturazione tramite Xolo Go per i piani attivati'
     ];
   }
   // Nessun ruolo attivo
   return [
     'Accesso limitato ai contenuti pubblici',
-    'Prova gratuita Pro o Desk Professionale (14 giorni)',
-    'Nessun impegno, cancella quando vuoi',
-    'Scopri tutte le funzionalità prima di abbonarti'
+    'Prova gratuita Pro o Desk Professionale (14 giorni) con cancellazione gratuita',
+    'Pagamenti e abbonamenti gestiti da Paddle (Merchant of Record europeo)',
+    'Fatture e incassi business gestiti tramite Xolo Go (bonifico SEPA)',
+    'Scopri tutte le funzionalità prima di confermare l’abbonamento'
   ];
+}
+
+// Carica pagamenti e fatture per l'utente corrente
+async function fetchUserPaymentsAndInvoices() {
+  if (!state.user) return;
+  
+  try {
+    const [paymentsResult, invoicesResult] = await Promise.all([
+      supabase
+        .from('payments')
+        .select('id, gateway, amount_cents, currency, status, description, created_at, metadata')
+        .eq('user_id', state.user.id)
+        .order('created_at', { ascending: false })
+        .limit(50),
+      supabase
+        .from('invoices')
+        .select('id, gateway, number, amount_cents, currency, status, issued_at, pdf_url, metadata')
+        .eq('user_id', state.user.id)
+        .order('issued_at', { ascending: false })
+        .limit(50)
+    ]);
+    
+    if (!paymentsResult.error && paymentsResult.data) {
+      state.payments = paymentsResult.data;
+    } else {
+      state.payments = [];
+    }
+    
+    if (!invoicesResult.error && invoicesResult.data) {
+      state.invoices = invoicesResult.data;
+    } else {
+      state.invoices = [];
+    }
+  } catch (err) {
+    Logger.error('UserArea', 'fetchUserPaymentsAndInvoices error', err);
+    state.payments = [];
+    state.invoices = [];
+  }
+}
+
+function renderInvoicesAndPayments() {
+  // Fatture
+  if (INVOICES_LIST) {
+    if (!state.user) {
+      INVOICES_LIST.innerHTML = `
+        <div class="empty-state">
+          <p>Effettua l'accesso per visualizzare le tue fatture.</p>
+        </div>
+      `;
+    } else if (!state.invoices.length) {
+      INVOICES_LIST.innerHTML = `
+        <div class="empty-state">
+          <p>Nessuna fattura disponibile. Le fatture verranno mostrate qui dopo il primo pagamento.</p>
+        </div>
+      `;
+    } else {
+      INVOICES_LIST.innerHTML = state.invoices.map(inv => {
+        const amount = (inv.amount_cents || 0) / 100;
+        const date = inv.issued_at ? new Date(inv.issued_at).toLocaleDateString('it-IT') : '—';
+        const gatewayLabel = inv.gateway === 'paddle' ? 'Paddle' : inv.gateway === 'xolo' ? 'Xolo' : inv.gateway;
+        const statusLabel = inv.status === 'paid' ? 'Pagata' : inv.status === 'issued' ? 'Emessa' : inv.status;
+        
+        return `
+          <article class="invoice-item">
+            <div class="invoice-main">
+              <div>
+                <strong>${escapeHtml(inv.number || 'Documento')}</strong>
+                <span class="pill pill-soft">${gatewayLabel}</span>
+              </div>
+              <div class="invoice-amount">
+                <span>${amount.toFixed(2)} ${inv.currency || 'EUR'}</span>
+              </div>
+            </div>
+            <div class="invoice-meta">
+              <span>${date}</span>
+              <span>${statusLabel}</span>
+              ${inv.pdf_url ? `<a href="${escapeHtml(inv.pdf_url)}" target="_blank" rel="noopener" class="link-soft">Apri PDF</a>` : ''}
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+  }
+  
+  // Pagamenti
+  if (PAYMENTS_HISTORY) {
+    if (!state.user) {
+      PAYMENTS_HISTORY.innerHTML = `
+        <div class="empty-state">
+          <p>Effettua l'accesso per visualizzare la cronologia pagamenti.</p>
+        </div>
+      `;
+    } else if (!state.payments.length) {
+      PAYMENTS_HISTORY.innerHTML = `
+        <div class="empty-state">
+          <p>Nessun pagamento registrato.</p>
+        </div>
+      `;
+    } else {
+      PAYMENTS_HISTORY.innerHTML = state.payments.map(pay => {
+        const amount = (pay.amount_cents || 0) / 100;
+        const date = pay.created_at ? new Date(pay.created_at).toLocaleDateString('it-IT') : '—';
+        const gatewayLabel = pay.gateway === 'paddle' ? 'Paddle' : pay.gateway === 'xolo' ? 'Xolo' : pay.gateway;
+        const statusLabel = pay.status === 'succeeded' ? 'Completato' : pay.status === 'pending' ? 'In attesa' : pay.status;
+        
+        return `
+          <article class="payment-item">
+            <div class="payment-main">
+              <div>
+                <strong>${amount.toFixed(2)} ${pay.currency || 'EUR'}</strong>
+                <span class="pill pill-soft">${gatewayLabel}</span>
+              </div>
+              <div class="payment-status">
+                <span>${statusLabel}</span>
+              </div>
+            </div>
+            <div class="payment-meta">
+              <span>${date}</span>
+              ${pay.description ? `<span>${escapeHtml(pay.description)}</span>` : ''}
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+  }
 }
 
 function escapeHtml(value) {
@@ -1817,32 +1964,50 @@ async function checkAdminStatus() {
 function renderCommunitySection() {
   if (!PANELS.community) return;
   
-  // Always show credits counter
+  // Aggiorna contatore crediti (solo per Desk)
   renderCreditsCounter();
+  // Aggiorna storico movimenti crediti
+  renderCreditsHistory();
   
-  // Show request analysis card for all authenticated users
+  // Scheda Richiesta analisi:
+  // - Disponibile solo per Desk / admin
   if (REQUEST_ANALYSIS_CARD) {
-    REQUEST_ANALYSIS_CARD.hidden = false;
+    const canRequestDesk = state.role === 'institutional' || state.isAdmin;
     
-    // Debug: log stato per diagnosticare problemi
+    REQUEST_ANALYSIS_CARD.hidden = false; // sempre visibile come concetto
+    
     Logger.debug('UserArea', 'renderCommunitySection', {
       isAdmin: state.isAdmin,
       role: state.role,
       credits: state.credits?.credits_balance ?? 0,
-      hasUser: !!state.user
+      hasUser: !!state.user,
+      canRequestDesk
     });
     
-    // RIMOSSO: Tutti i lock sono stati rimossi per permettere accesso completo durante sviluppo
-    // Tutti gli utenti autenticati possono vedere e utilizzare tutte le funzionalità
-    // I limiti verranno applicati lato backend quando necessario
-    hideRequestAnalysisLock();
+    if (canRequestDesk) {
+      // Desk: form attivo, lock nascosto
+      hideRequestAnalysisLock();
+    } else {
+      // Non Desk: mostra lock, disabilita flusso Desk
+      if (REQUEST_ANALYSIS_LOCK) {
+        REQUEST_ANALYSIS_LOCK.hidden = false;
+      }
+      if (REQUEST_ANALYSIS_LOCK_MESSAGE) {
+        REQUEST_ANALYSIS_LOCK_MESSAGE.textContent = state.user
+          ? 'Le richieste analisi on-demand Desk sono disponibili solo per il Desk Professionale.'
+          : 'Accedi o registrati per richiedere analisi on-demand Desk.';
+      }
+    }
   }
   
-  // RIMOSSO: Lock rimosso - tutti possono vedere proposte community
-  // Show community proposals card for all authenticated users
+  // Scheda Proposte community:
+  // - Disponibile solo per utenti Pro (e admin, per moderazione)
   if (COMMUNITY_PROPOSE_CARD) {
-      COMMUNITY_PROPOSE_CARD.hidden = false;
+    const canUseCommunity = (state.role === 'pro' || state.isAdmin) && state.user;
+    COMMUNITY_PROPOSE_CARD.hidden = !canUseCommunity;
+    if (canUseCommunity) {
       renderCommunityProposalsList();
+    }
   }
   
   // Setup handlers
@@ -1857,7 +2022,16 @@ function renderCommunitySection() {
 }
 
 function renderCreditsCounter() {
-  if (!CREDITS_BALANCE) return;
+  if (!CREDITS_COUNTER || !CREDITS_BALANCE) return;
+  
+  // Contatore crediti visibile solo per Desk / admin
+  const canSeeCredits = (state.role === 'institutional' || state.isAdmin) && state.user;
+  CREDITS_COUNTER.hidden = !canSeeCredits;
+  
+  if (!canSeeCredits) {
+    CREDITS_BALANCE.textContent = '—';
+    return;
+  }
   
   const credits = state.credits?.credits_balance ?? 0;
   CREDITS_BALANCE.textContent = credits;
@@ -1870,6 +2044,77 @@ function renderCreditsCounter() {
   } else {
     CREDITS_BALANCE.style.color = 'var(--brand-600)';
   }
+}
+
+async function fetchCreditsLog() {
+  if (!state.user) return;
+  try {
+    const { data, error } = await supabase
+      .from('user_analysis_credits_log')
+      .select('id, delta, reason, source, old_balance, new_balance, created_at')
+      .eq('user_id', state.user.id)
+      .order('created_at', { ascending: false })
+      .limit(50);
+    
+    if (!error && data) {
+      state.creditsLog = data;
+    } else {
+      state.creditsLog = [];
+    }
+  } catch (err) {
+    Logger.error('UserArea', 'fetchCreditsLog error', err);
+    state.creditsLog = [];
+  }
+}
+
+function renderCreditsHistory() {
+  if (!CREDITS_HISTORY) return;
+  
+  // Storico visibile solo per Desk / admin
+  const canSeeCredits = (state.role === 'institutional' || state.isAdmin) && state.user;
+  if (!canSeeCredits) {
+    CREDITS_HISTORY.innerHTML = `
+      <div class="empty-state">
+        <p>Lo storico crediti è disponibile solo per il Desk Professionale.</p>
+      </div>
+    `;
+    return;
+  }
+  
+  if (!state.creditsLog || state.creditsLog.length === 0) {
+    CREDITS_HISTORY.innerHTML = `
+      <div class="empty-state">
+        <p>Nessun movimento crediti ancora registrato.</p>
+      </div>
+    `;
+    return;
+  }
+  
+  CREDITS_HISTORY.innerHTML = state.creditsLog.map(entry => {
+    const delta = entry.delta || 0;
+    const isIncrease = delta > 0;
+    const sign = isIncrease ? '+' : '';
+    const reason = entry.reason || (isIncrease ? 'Aggiunta crediti' : 'Utilizzo crediti');
+    const when = entry.created_at ? formatRelativeTime(entry.created_at) : '';
+    
+    return `
+      <article class="history-item">
+        <div class="history-item-header">
+          <div>
+            <strong>${sign}${delta} credito${Math.abs(delta) === 1 ? '' : 'i'}</strong>
+            <span class="pill pill-soft">${escapeHtml(reason)}</span>
+          </div>
+          <div style="font-size: 0.85rem; color: rgba(148, 163, 184, 0.9);">
+            Saldo: ${entry.new_balance != null ? entry.new_balance : '—'}
+          </div>
+        </div>
+        <div class="history-item-meta">
+          <span>${when}</span>
+          ${entry.source ? `<span class="history-item-meta-separator">·</span><span>Origine: ${escapeHtml(entry.source)}</span>` : ''}
+        </div>
+      </article>
+    `;
+  }).join('');
 }
 
 function setupCreditsHandlers() {
@@ -2154,14 +2399,14 @@ function setupProposalHandlers() {
   
   // Update button text, placeholder and info based on role
   if (PROPOSAL_SUBMIT) {
-    if (state.role === 'institutional') {
+    if (state.role === 'institutional' || state.isAdmin) {
       PROPOSAL_SUBMIT.textContent = 'Richiedi analisi';
       if (PROPOSAL_INPUT) {
         PROPOSAL_INPUT.placeholder = 'Inserisci ticker per richiedere analisi on-demand (es. AAPL, BTC-USD)';
       }
       if (REQUEST_ANALYSIS_INFO) REQUEST_ANALYSIS_INFO.hidden = false;
       if (COMMUNITY_PROPOSAL_INFO) COMMUNITY_PROPOSAL_INFO.hidden = true;
-    } else if (state.role === 'trial' || state.role === 'pro') {
+    } else if (state.role === 'pro') {
       PROPOSAL_SUBMIT.textContent = 'Proponi asset';
       if (PROPOSAL_INPUT) {
         PROPOSAL_INPUT.placeholder = 'Proponi un asset per la community (es. AAPL, BTC-USD, settore AI)';
@@ -2194,6 +2439,10 @@ function isValidTicker(ticker) {
 
 async function handleProposeAsset() {
   if (!PROPOSAL_INPUT) return;
+  if (!state.user) {
+    showToast('Effettua il login per inviare richieste o proposte.', 'error');
+    return;
+  }
   
   // Best practice: sanitize input (trim, uppercase, validate)
   const ticker = PROPOSAL_INPUT.value.trim().toUpperCase();
@@ -2219,14 +2468,10 @@ async function handleProposeAsset() {
     return;
   }
   
-  // RIMOSSO: Lock rimosso - tutti possono richiedere analisi
-  // I limiti verranno applicati lato backend quando necessario
   const credits = state.credits?.credits_balance ?? 0;
   
-  // RIMOSSO: Tutti i lock rimossi - tutti possono richiedere analisi
-  // I limiti verranno applicati lato backend quando necessario
-  // For all users: allow on-demand requests (backend will enforce limits)
-  if (state.role === 'institutional' || state.role === 'trial' || state.role === 'pro' || !state.role) {
+  // 1) Flusso Desk on-demand: solo Desk / admin
+  if (state.role === 'institutional' || state.isAdmin) {
     // RIMOSSO: Controllo crediti rimosso per permettere test completo
     // I crediti verranno controllati lato backend
     // Rate limiting: max 3 richieste pending per utente
@@ -2343,17 +2588,13 @@ async function handleProposeAsset() {
       PROPOSAL_SUBMIT.disabled = false;
       if (state.role === 'institutional') {
         PROPOSAL_SUBMIT.textContent = 'Richiedi analisi';
-      } else if (state.role === 'trial' || state.role === 'pro') {
-        PROPOSAL_SUBMIT.textContent = 'Proponi asset';
       }
     }
     return;
   }
   
-  // RIMOSSO: Lock rimosso - tutti possono creare proposte community
-  // For all users: create community proposal (no credits required)
-  // Tutti gli utenti possono creare proposte community
-  if (true) { // Sempre permesso
+  // 2) Flusso Proposte community: solo Pro / admin
+  if (state.role === 'pro' || state.isAdmin) {
     try {
       PROPOSAL_SUBMIT.disabled = true;
       PROPOSAL_SUBMIT.textContent = 'Invio...';
@@ -2383,9 +2624,13 @@ async function handleProposeAsset() {
       
       // Best practice: messaggi errore user-friendly
       let errorMessage = 'Errore durante l\'invio della proposta.';
-      if (err.code === '23505' || err.message?.includes('duplicate') || err.message?.includes('already exists')) {
+      const msg = (err.message || '').toLowerCase();
+      if (err.code === '23505' || msg.includes('duplicate') || msg.includes('already exists')) {
         errorMessage = `La proposta per ${ticker} esiste già. Puoi votarla nella lista.`;
-      } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+      } else if (msg.includes('row-level security') || msg.includes('rls')) {
+        // Limite RLS: massimo 1 proposta nelle ultime 24 ore
+        errorMessage = 'Hai già inviato una proposta community nelle ultime 24 ore. Puoi proporre un nuovo asset domani.';
+      } else if (msg.includes('network') || msg.includes('fetch')) {
         errorMessage = 'Errore di connessione. Verifica la tua connessione internet.';
       } else if (err.message) {
         errorMessage = err.message;
@@ -2394,20 +2639,21 @@ async function handleProposeAsset() {
       showToast(errorMessage, 'error');
     } finally {
       PROPOSAL_SUBMIT.disabled = false;
-      if (state.role === 'trial' || state.role === 'pro') {
-        PROPOSAL_SUBMIT.textContent = 'Proponi asset';
-      }
+      PROPOSAL_SUBMIT.textContent = 'Proponi asset';
     }
     return;
   }
   
-  // RIMOSSO: Lock rimosso - tutti possono utilizzare le funzionalità
-  // No role or insufficient permissions - ma permettiamo comunque l'accesso
+  // 3) Nessun permesso (guest, trial, altri ruoli)
+  showToast('Le proposte community sono disponibili solo con il piano Pro.', 'error');
 }
 
 async function handleVote(proposalId) {
-  // RIMOSSO: Lock rimosso - tutti gli utenti autenticati possono votare
-  // I limiti verranno applicati lato backend quando necessario
+  // Solo utenti Pro (e admin) possono votare le proposte community
+  if (!state.user || (state.role !== 'pro' && !state.isAdmin)) {
+    showToast('Il voto sulle proposte community è disponibile solo con il piano Pro.', 'error');
+    return;
+  }
   
   const hasVoted = state.userVotes.has(proposalId);
   const proposal = state.proposals.find(p => p.id === proposalId);
@@ -2446,9 +2692,13 @@ async function handleVote(proposalId) {
     
     // Best practice: messaggi errore user-friendly
     let errorMessage = 'Errore durante il voto.';
-    if (err.code === '23505' || err.message?.includes('duplicate') || err.message?.includes('already exists')) {
+    const msg = (err.message || '').toLowerCase();
+    if (err.code === '23505' || msg.includes('duplicate') || msg.includes('already exists')) {
       errorMessage = 'Hai già votato questa proposta.';
-    } else if (err.message?.includes('network') || err.message?.includes('fetch')) {
+    } else if (msg.includes('row-level security') || msg.includes('rls')) {
+      // Limite RLS: massimo 1 voto nelle ultime 24 ore
+      errorMessage = 'Hai già espresso un voto su una proposta community nelle ultime 24 ore. Puoi votare nuovamente domani.';
+    } else if (msg.includes('network') || msg.includes('fetch')) {
       errorMessage = 'Errore di connessione. Verifica la tua connessione internet.';
     } else if (err.message) {
       errorMessage = err.message;
@@ -3121,6 +3371,14 @@ async function renderReportsSection() {
       return;
     }
     
+    // Solo utenti Desk (institutional) o admin hanno report Desk personali
+    if (state.role !== 'institutional' && !state.isAdmin) {
+      container.innerHTML = '<div class="empty-state"><p>I report Desk personali sono disponibili solo per il piano Desk Professionale. Puoi comunque consultare i report accademici dall\'area pubblica del sito.</p></div>';
+      const pagination = document.getElementById('reports-pagination');
+      if (pagination) pagination.hidden = true;
+      return;
+    }
+    
     // Setup filtri
     setupReportsFilters();
     
@@ -3356,8 +3614,6 @@ async function loadNotifications() {
   try {
     container.innerHTML = '<div class="empty-state"><p>Caricamento...</p></div>';
     
-    // Per ora, notifiche sono generate dinamicamente
-    // In futuro, potrebbero essere salvate in una tabella notifications
     const notifications = [];
     
     // Notifiche scadenza piano
@@ -3379,32 +3635,41 @@ async function loadNotifications() {
       }
     }
     
-    // Notifiche report completati (solo se ci sono report recenti)
-    if ((notificationsFilter === 'all' || notificationsFilter === 'reports') && state.user) {
-      const { data } = await supabase
-        .from('analysis_requests')
-        .select('ticker, completed_at, report_id, report_slug')
+    // Notifiche reali da Supabase (user_notifications)
+    if (state.user) {
+      const { data, error } = await supabase
+        .from('user_notifications')
+        .select('id, type, title, message, link, created_at')
         .eq('user_id', state.user.id)
-        .eq('status', 'completed')
-        .order('completed_at', { ascending: false })
-        .limit(5);
+        .order('created_at', { ascending: false })
+        .limit(50);
       
-      if (data && data.length > 0) {
-        data.forEach(request => {
+      if (!error && data) {
+        data.forEach(n => {
+          const category = n.type === 'analysis_completed' ? 'reports'
+                         : n.type === 'plan_expiring' ? 'billing'
+                         : n.type === 'credits_low' ? 'billing'
+                         : 'system';
+          
+          // Mappa tipo → icon + severity
+          let icon = 'ℹ️';
+          let notifType = 'info';
+          if (n.type === 'analysis_completed') { icon = '✅'; notifType = 'success'; }
+          else if (n.type === 'plan_expiring' || n.type === 'credits_low') { icon = '⚠️'; notifType = 'warning'; }
+          
+          const action = n.link ? {
+            text: 'Apri',
+            onClick: () => { window.open(n.link, '_blank'); }
+          } : null;
+          
           notifications.push({
-            type: 'success',
-            category: 'reports',
-            icon: '✅',
-            title: 'Analisi completata',
-            message: `L'analisi per ${request.ticker} è stata completata.`,
-            date: request.completed_at,
-            action: { 
-              text: 'Visualizza', 
-              onClick: () => {
-                const reportLink = `/report/index.html?id=${request.report_slug || request.report_id}`;
-                window.open(reportLink, '_blank');
-              }
-            }
+            type: notifType,
+            category,
+            icon,
+            title: n.title || '',
+            message: n.message || '',
+            date: n.created_at,
+            action
           });
         });
       }

@@ -14,6 +14,7 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
   throw new Error('SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devono essere configurati');
 }
 
+// Client di servizio (service_role) per operazioni webhook (ruoli, crediti, pagamenti, fatture)
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
   auth: {
     autoRefreshToken: false,
@@ -97,14 +98,8 @@ export async function syncUserRoleFromSubscription(email, status, planIdentifier
     }
     
     // 1. Trova user_id da email usando SERVICE_ROLE_KEY
-    const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
-    if (authError) {
-      console.error('[Role Sync] Errore listUsers:', authError);
-      throw authError;
-    }
-    
-    const user = authUsers.users.find(u => u.email?.toLowerCase() === email?.toLowerCase());
-    if (!user) {
+    const userId = await getUserIdByEmail(email);
+    if (!userId) {
       console.warn(`[Role Sync] Utente non trovato per email: ${email} - potrebbe non essere ancora registrato`);
       return { success: false, reason: 'user_not_found', email };
     }
@@ -119,7 +114,7 @@ export async function syncUserRoleFromSubscription(email, status, planIdentifier
     // 3. Se status è 'active', aggiorna/crea user_roles
     if (status === 'active' && planType) {
       const roleData = {
-        user_id: user.id,
+        user_id: userId,
         role: planType,
         valid_until: expiresAt ? (expiresAt instanceof Date ? expiresAt.toISOString() : expiresAt) : null
       };
@@ -151,7 +146,7 @@ export async function syncUserRoleFromSubscription(email, status, planIdentifier
         }
       }
       
-      return { success: true, user_id: user.id, role: planType };
+      return { success: true, user_id: userId, role: planType };
     }
     
     // 4. Se status è 'cancelled' o 'expired', imposta scadenza a oggi (non rimuoviamo ruolo)
@@ -168,12 +163,125 @@ export async function syncUserRoleFromSubscription(email, status, planIdentifier
       }
       
       console.log(`[Role Sync] ⚠️ Ruolo scaduto: ${email} (valid_until = ${now})`);
-      return { success: true, user_id: user.id, action: 'expired' };
+      return { success: true, user_id: userId, action: 'expired' };
     }
     
     return { success: true, action: 'no_change' };
   } catch (err) {
     console.error('[Role Sync] ❌ Errore:', err);
+    throw err;
+  }
+}
+
+/**
+ * Restituisce user_id dato l'email usando l'admin API (service_role).
+ * @param {string} email 
+ * @returns {Promise<string|null>}
+ */
+export async function getUserIdByEmail(email) {
+  if (!email) return null;
+  
+  try {
+    const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
+    if (authError) {
+      console.error('[Role Sync] Errore listUsers in getUserIdByEmail:', authError);
+      throw authError;
+    }
+    
+    const user = authUsers.users.find(u => u.email?.toLowerCase() === email.toLowerCase());
+    return user ? user.id : null;
+  } catch (err) {
+    console.error('[Role Sync] Errore getUserIdByEmail:', err);
+    return null;
+  }
+}
+
+/**
+ * Registra un pagamento e, se disponibili i dati, anche la relativa fattura.
+ * Usato dai webhook (Paddle, Xolo, ecc.) per alimentare la cronologia pagamenti.
+ */
+export async function recordPaymentAndInvoice({
+  userId,
+  gateway,
+  amountCents,
+  currency = 'EUR',
+  status = 'succeeded',
+  description = null,
+  externalPaymentId = null,
+  externalInvoiceId = null,
+  invoiceNumber = null,
+  issuedAt = null,
+  pdfUrl = null,
+  metadata = {}
+}) {
+  if (!userId || !gateway || amountCents == null) {
+    console.warn('[Payments] Parametri insufficienti per recordPaymentAndInvoice', {
+      userId,
+      gateway,
+      amountCents
+    });
+    return null;
+  }
+  
+  try {
+    // 1) Inserisci pagamento
+    const paymentPayload = {
+      user_id: userId,
+      gateway,
+      amount_cents: amountCents,
+      currency,
+      status,
+      description,
+      external_id: externalPaymentId,
+      metadata
+    };
+    
+    const { data: payment, error: paymentError } = await supabase
+      .from('payments')
+      .insert(paymentPayload)
+      .select('id')
+      .single();
+    
+    if (paymentError) {
+      console.error('[Payments] Errore inserimento pagamento:', paymentError);
+      throw paymentError;
+    }
+    
+    let invoice = null;
+    
+    // 2) Se esistono dati fattura, crea invoice collegata
+    if (externalInvoiceId || invoiceNumber || pdfUrl) {
+      const invoicePayload = {
+        user_id: userId,
+        payment_id: payment.id,
+        gateway,
+        external_id: externalInvoiceId,
+        number: invoiceNumber,
+        amount_cents: amountCents,
+        currency,
+        status: status === 'succeeded' ? 'paid' : 'issued',
+        issued_at: issuedAt || new Date().toISOString(),
+        pdf_url: pdfUrl,
+        metadata
+      };
+      
+      const { data: invoiceData, error: invoiceError } = await supabase
+        .from('invoices')
+        .insert(invoicePayload)
+        .select('id')
+        .single();
+      
+      if (invoiceError) {
+        console.error('[Payments] Errore inserimento invoice (non bloccante):', invoiceError);
+      } else {
+        invoice = invoiceData;
+      }
+    }
+    
+    console.log('[Payments] ✅ Pagamento registrato', { paymentId: payment.id, gateway, amountCents });
+    return { paymentId: payment.id, invoiceId: invoice?.id || null };
+  } catch (err) {
+    console.error('[Payments] ❌ Errore recordPaymentAndInvoice:', err);
     throw err;
   }
 }

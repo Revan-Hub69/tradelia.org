@@ -14,12 +14,24 @@ const FILTER_ROLE = document.getElementById('filter-role');
 const FILTER_STATUS = document.getElementById('filter-status');
 const USERS_TABLE_BODY = document.getElementById('users-table-body');
 
+// Modale pagamenti manuali (Xolo / altri)
+const PAYMENTS_MODAL = document.getElementById('manage-payments-modal');
+const PAYMENTS_USER_ID = document.getElementById('payments-user-id');
+const PAYMENTS_USER_EMAIL = document.getElementById('payments-user-email');
+const PAYMENTS_AMOUNT = document.getElementById('payments-amount');
+const PAYMENTS_STATUS = document.getElementById('payments-status');
+const PAYMENTS_INVOICE_NUMBER = document.getElementById('payments-invoice-number');
+const PAYMENTS_PDF_URL = document.getElementById('payments-pdf-url');
+const PAYMENTS_DESCRIPTION = document.getElementById('payments-description');
+const PAYMENTS_CANCEL_BTN = document.getElementById('cancel-payments-btn');
+const PAYMENTS_SAVE_BTN = document.getElementById('save-payments-btn');
+
 let allUsers = [];
 let currentUser = null;
 
 // Import admin-complete functions
 if (typeof window !== 'undefined') {
-  window.allUsers = allUsers;
+    window.allUsers = allUsers;
 }
 
 init();
@@ -223,6 +235,7 @@ function renderUsersTable(users) {
           <div class="admin-actions">
             <button class="btn btn-outline btn-sm" onclick="editUser('${user.user_id}')">Modifica</button>
             <button class="btn btn-outline btn-sm" onclick="manageCredits('${user.user_id}')">Crediti</button>
+            <button class="btn btn-outline btn-sm" onclick="managePayments('${user.user_id}')">Pagamenti</button>
           </div>
         </td>
       </tr>
@@ -260,6 +273,114 @@ window.editUser = window.openEditUserModal || function(userId) {
 window.manageCredits = window.openManageCreditsModal || function(userId) {
   alert(`Gestisci crediti per ${userId} - Funzionalità in caricamento...`);
 };
+
+// Gestione pagamenti manuali (Xolo)
+window.managePayments = window.openManagePaymentsModal || function(userId) {
+  const user = allUsers.find(u => u.user_id === userId);
+  if (!user || !PAYMENTS_MODAL) {
+    alert('Utente non trovato o modale non disponibile.');
+    return;
+  }
+  
+  PAYMENTS_USER_ID.value = user.user_id;
+  PAYMENTS_USER_EMAIL.value = user.email || '';
+  PAYMENTS_AMOUNT.value = '';
+  PAYMENTS_STATUS.value = 'succeeded';
+  PAYMENTS_INVOICE_NUMBER.value = '';
+  PAYMENTS_PDF_URL.value = '';
+  PAYMENTS_DESCRIPTION.value = '';
+  
+  PAYMENTS_MODAL.hidden = false;
+};
+
+if (PAYMENTS_CANCEL_BTN && PAYMENTS_MODAL) {
+  PAYMENTS_CANCEL_BTN.addEventListener('click', () => {
+    PAYMENTS_MODAL.hidden = true;
+  });
+}
+
+if (PAYMENTS_SAVE_BTN && PAYMENTS_MODAL) {
+  PAYMENTS_SAVE_BTN.addEventListener('click', async () => {
+    const userId = PAYMENTS_USER_ID.value;
+    const amountStr = PAYMENTS_AMOUNT.value;
+    const status = PAYMENTS_STATUS.value || 'succeeded';
+    const invoiceNumber = PAYMENTS_INVOICE_NUMBER.value.trim() || null;
+    const pdfUrl = PAYMENTS_PDF_URL.value.trim() || null;
+    const description = PAYMENTS_DESCRIPTION.value.trim() || null;
+    
+    const amount = parseFloat(amountStr);
+    if (!userId || isNaN(amount) || amount <= 0) {
+      alert('Inserisci un importo valido (maggiore di zero).');
+      return;
+    }
+    
+    try {
+      PAYMENTS_SAVE_BTN.disabled = true;
+      PAYMENTS_SAVE_BTN.textContent = 'Salvataggio...';
+      
+      const amountCents = Math.round(amount * 100);
+      
+      // Inserisci pagamento Xolo
+      const { data: payment, error: paymentError } = await supabase
+        .from('payments')
+        .insert({
+          user_id: userId,
+          gateway: 'xolo',
+          amount_cents: amountCents,
+          currency: 'EUR',
+          status,
+          description: description || 'Pagamento Xolo registrato manualmente',
+          external_id: invoiceNumber,
+          metadata: {
+            source: 'admin_manual_xolo',
+            pdf_url: pdfUrl
+          }
+        })
+        .select('id')
+        .single();
+      
+      if (paymentError) {
+        console.error('Admin', 'Errore inserimento pagamento Xolo', paymentError);
+        alert('Errore durante il salvataggio del pagamento. Controlla la console per i dettagli.');
+        return;
+      }
+      
+      // Se abbiamo un riferimento fattura o PDF, crea anche invoice
+      if (invoiceNumber || pdfUrl) {
+        const { error: invoiceError } = await supabase
+          .from('invoices')
+          .insert({
+            user_id: userId,
+            payment_id: payment.id,
+            gateway: 'xolo',
+            external_id: invoiceNumber,
+            number: invoiceNumber,
+            amount_cents: amountCents,
+            currency: 'EUR',
+            status: status === 'succeeded' ? 'paid' : 'issued',
+            issued_at: new Date().toISOString(),
+            pdf_url: pdfUrl,
+            metadata: {
+              source: 'admin_manual_xolo'
+            }
+          });
+        
+        if (invoiceError) {
+          console.warn('Admin', 'Errore inserimento invoice Xolo (non bloccante)', invoiceError);
+        }
+      }
+      
+      alert('Pagamento registrato correttamente.');
+      PAYMENTS_MODAL.hidden = true;
+    } catch (err) {
+      console.error('Admin', 'Errore salvataggio pagamento Xolo', err);
+      alert('Errore imprevisto durante il salvataggio del pagamento.');
+    } finally {
+      PAYMENTS_SAVE_BTN.disabled = false;
+      PAYMENTS_SAVE_BTN.textContent = 'Salva pagamento';
+    }
+  });
+}
 
 // Export loadAllData per admin-complete.js
 window.loadAllData = loadAllData;

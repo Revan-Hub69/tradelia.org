@@ -302,9 +302,16 @@ create policy "Trial/Pro can propose"
     exists (
       select 1 from public.user_roles ur
       where ur.user_id = auth.uid()
-        and ur.role in ('trial', 'pro')
+        and ur.role = 'pro'
     )
     and proposed_by = auth.uid()
+    -- Limite: massimo 1 proposta nelle ultime 24 ore per utente
+    and not exists (
+      select 1
+      from public.asset_proposals p
+      where p.proposed_by = auth.uid()
+        and p.created_at >= (now() - interval '1 day')
+    )
   );
 
 drop policy if exists "Admins can delete proposals" on public.asset_proposals;
@@ -327,9 +334,16 @@ create policy "Trial/Pro can vote"
     exists (
       select 1 from public.user_roles ur
       where ur.user_id = auth.uid()
-        and ur.role in ('trial', 'pro')
+        and ur.role = 'pro'
     )
     and user_id = auth.uid()
+    -- Limite: massimo 1 voto nelle ultime 24 ore per utente
+    and not exists (
+      select 1
+      from public.asset_votes v
+      where v.user_id = auth.uid()
+        and v.created_at >= (now() - interval '1 day')
+    )
   );
 
 drop policy if exists "Users can remove own vote" on public.asset_votes;
@@ -378,5 +392,184 @@ create policy "Service role manages credits"
   on public.user_analysis_credits for all
   using (auth.role() = 'service_role')
   with check (auth.role() = 'service_role');
+
+-- ===== STORICO MOVIMENTI CREDITI (USER_ANALYSIS_CREDITS_LOG) =====
+
+create table if not exists public.user_analysis_credits_log (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  delta int not null, -- positivo = crediti aggiunti, negativo = crediti utilizzati
+  reason text,        -- es. 'desk_request', 'admin_adjust', 'system'
+  source text,        -- 'user', 'admin', 'system'
+  old_balance int,
+  new_balance int,
+  created_at timestamptz not null default now(),
+  metadata jsonb default '{}'::jsonb
+);
+
+create index if not exists idx_credits_log_user_created on public.user_analysis_credits_log(user_id, created_at desc);
+
+-- Trigger per loggare automaticamente i cambi di saldo
+create or replace function log_user_analysis_credits_change()
+returns trigger as $$
+declare
+  v_delta int;
+  v_source text;
+begin
+  v_delta := coalesce(new.credits_balance, 0) - coalesce(old.credits_balance, 0);
+  if v_delta = 0 then
+    return new;
+  end if;
+
+  if exists (select 1 from public.admin_users au where au.user_id = auth.uid()) then
+    v_source := 'admin';
+  elsif auth.role() = 'service_role' then
+    v_source := 'system';
+  else
+    v_source := 'user';
+  end if;
+
+  insert into public.user_analysis_credits_log (
+    user_id,
+    delta,
+    reason,
+    source,
+    old_balance,
+    new_balance,
+    metadata
+  ) values (
+    new.user_id,
+    v_delta,
+    case 
+      when v_source = 'admin' then 'admin_adjust'
+      when v_delta < 0 then 'desk_request'
+      else 'system_update'
+    end,
+    v_source,
+    old.credits_balance,
+    new.credits_balance,
+    jsonb_build_object(
+      'total_purchased', new.total_purchased,
+      'total_used', new.total_used
+    )
+  );
+
+  return new;
+end;
+$$ language plpgsql;
+
+drop trigger if exists trigger_log_user_analysis_credits_change on public.user_analysis_credits;
+create trigger trigger_log_user_analysis_credits_change
+after update on public.user_analysis_credits
+for each row
+execute function log_user_analysis_credits_change();
+
+-- RLS per log crediti
+alter table public.user_analysis_credits_log enable row level security;
+
+drop policy if exists "Users view own credits log" on public.user_analysis_credits_log;
+create policy "Users view own credits log"
+  on public.user_analysis_credits_log for select
+  using (user_id = auth.uid());
+
+drop policy if exists "Service role manages credits log" on public.user_analysis_credits_log;
+create policy "Service role manages credits log"
+  on public.user_analysis_credits_log for all
+  using (auth.role() = 'service_role')
+  with check (auth.role() = 'service_role');
+
+-- ===== TABELLE PAGAMENTI E FATTURE (PLACEHOLDER PER PADDLE / XOLO) =====
+
+create table if not exists public.payments (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  gateway text not null check (gateway in ('paddle', 'xolo', 'stripe')),
+  amount_cents bigint not null check (amount_cents >= 0),
+  currency text not null default 'EUR',
+  status text not null check (status in ('pending', 'succeeded', 'failed', 'refunded')),
+  description text,
+  external_id text, -- es. paddle_checkout_id / xolo_invoice_id / stripe_charge_id
+  metadata jsonb default '{}'::jsonb,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_payments_user_created on public.payments(user_id, created_at desc);
+
+create table if not exists public.invoices (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  payment_id uuid references public.payments(id) on delete set null,
+  gateway text not null check (gateway in ('paddle', 'xolo', 'stripe')),
+  external_id text, -- es. paddle_invoice_id / xolo_invoice_id
+  number text,      -- numero documento/fattura
+  amount_cents bigint not null check (amount_cents >= 0),
+  currency text not null default 'EUR',
+  status text not null check (status in ('issued', 'paid', 'void', 'refunded')),
+  issued_at timestamptz not null default now(),
+  due_date timestamptz,
+  pdf_url text,     -- link al PDF nella dashboard Paddle/Xolo
+  metadata jsonb default '{}'::jsonb
+);
+
+create index if not exists idx_invoices_user_issued on public.invoices(user_id, issued_at desc);
+
+-- RLS per pagamenti/fatture: gli utenti vedono solo i propri record, scrittura solo service_role (webhook/API)
+alter table public.payments enable row level security;
+alter table public.invoices enable row level security;
+
+drop policy if exists "Users view own payments" on public.payments;
+create policy "Users view own payments"
+  on public.payments for select
+  using (user_id = auth.uid());
+
+drop policy if exists "Service role manages payments" on public.payments;
+create policy "Service role manages payments"
+  on public.payments for all
+  using (auth.role() = 'service_role')
+  with check (auth.role() = 'service_role');
+
+-- Consenti anche agli admin (tabella admin_users) di inserire/modificare pagamenti manuali (es. Xolo) dal frontend
+drop policy if exists "Admins manage payments" on public.payments;
+create policy "Admins manage payments"
+  on public.payments for all
+  using (
+    exists (
+      select 1 from public.admin_users au
+      where au.user_id = auth.uid()
+    )
+  )
+  with check (
+    exists (
+      select 1 from public.admin_users au
+      where au.user_id = auth.uid()
+    )
+  );
+
+drop policy if exists "Users view own invoices" on public.invoices;
+create policy "Users view own invoices"
+  on public.invoices for select
+  using (user_id = auth.uid());
+
+drop policy if exists "Service role manages invoices" on public.invoices;
+create policy "Service role manages invoices"
+  on public.invoices for all
+  using (auth.role() = 'service_role')
+  with check (auth.role() = 'service_role');
+
+drop policy if exists "Admins manage invoices" on public.invoices;
+create policy "Admins manage invoices"
+  on public.invoices for all
+  using (
+    exists (
+      select 1 from public.admin_users au
+      where au.user_id = auth.uid()
+    )
+  )
+  with check (
+    exists (
+      select 1 from public.admin_users au
+      where au.user_id = auth.uid()
+    )
+  );
 
 

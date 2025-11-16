@@ -354,6 +354,52 @@
     </div>
   </div>
   
+  <!-- Modale Gestione Pagamenti (Xolo / manuali) -->
+  <div id="manage-payments-modal" class="modal" hidden>
+    <div class="modal-content">
+      <h3>Registra pagamento manuale</h3>
+      <p style="font-size: var(--fs-13); color: var(--ink-soft); margin-top: -0.5rem;">
+        Usa questo form per registrare pagamenti confermati da Xolo (bonifico) o altri metodi manuali.
+      </p>
+      <label>
+        ID Utente:
+        <input type="text" id="payments-user-id" readonly>
+      </label>
+      <label>
+        Email:
+        <input type="email" id="payments-user-email" readonly>
+      </label>
+      <label>
+        Importo (EUR):
+        <input type="number" id="payments-amount" min="0" step="0.01" placeholder="99.00">
+      </label>
+      <label>
+        Stato pagamento:
+        <select id="payments-status">
+          <option value="succeeded">Riscosso (confermato)</option>
+          <option value="pending">In attesa (bonifico in arrivo)</option>
+          <option value="refunded">Rimborsato</option>
+        </select>
+      </label>
+      <label>
+        Numero fattura / riferimento Xolo (opzionale):
+        <input type="text" id="payments-invoice-number" placeholder="XOLO-INV-0001">
+      </label>
+      <label>
+        URL PDF fattura (opzionale):
+        <input type="url" id="payments-pdf-url" placeholder="https://...">
+      </label>
+      <label>
+        Descrizione (opzionale):
+        <input type="text" id="payments-description" placeholder="Desk Professionale - 1 mese">
+      </label>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="cancel-payments-btn">Annulla</button>
+        <button class="btn btn-primary" id="save-payments-btn">Salva pagamento</button>
+      </div>
+    </div>
+  </div>
+  
   <style>
     .modal {
       position: fixed;
