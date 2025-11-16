@@ -166,22 +166,59 @@ async function init() {
     const cancelAddUserBtn = document.getElementById('cancel-add-user-btn');
     const saveAddUserBtn = document.getElementById('save-add-user-btn');
     
+    if (!addUserBtn) {
+      Logger.error('Admin', 'Pulsante "Aggiungi Utente" non trovato nel DOM');
+      console.error('[Admin] Elemento #add-user-btn non trovato');
+    }
+    
+    if (!addUserModal) {
+      Logger.error('Admin', 'Modale "Aggiungi Utente" non trovato nel DOM');
+      console.error('[Admin] Elemento #add-user-modal non trovato');
+    }
+    
     if (addUserBtn && addUserModal) {
-      addUserBtn.addEventListener('click', () => {
-        // Chiudi altri modali
-        forceCloseModals();
-        // Apri modale aggiungi utente
-        addUserModal.dataset.userOpened = 'true';
-        addUserModal.hidden = false;
-        addUserModal.style.display = 'flex';
-        setTimeout(() => delete addUserModal.dataset.userOpened, 100);
-        // Reset form
-        document.getElementById('add-user-email').value = '';
-        document.getElementById('add-user-name').value = '';
-        document.getElementById('add-user-role').value = 'trial';
-        document.getElementById('add-user-expiry').value = '';
-        document.getElementById('add-user-credits').value = '0';
+      addUserBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        Logger.debug('Admin', 'Click su pulsante Aggiungi Utente');
+        
+        try {
+          // Chiudi altri modali
+          forceCloseModals();
+          
+          // Apri modale aggiungi utente
+          addUserModal.dataset.userOpened = 'true';
+          addUserModal.hidden = false;
+          addUserModal.style.display = 'flex';
+          addUserModal.style.visibility = 'visible';
+          setTimeout(() => delete addUserModal.dataset.userOpened, 100);
+          
+          // Reset form
+          const emailInput = document.getElementById('add-user-email');
+          const nameInput = document.getElementById('add-user-name');
+          const roleInput = document.getElementById('add-user-role');
+          const expiryInput = document.getElementById('add-user-expiry');
+          const creditsInput = document.getElementById('add-user-credits');
+          
+          if (emailInput) emailInput.value = '';
+          if (nameInput) nameInput.value = '';
+          if (roleInput) roleInput.value = 'trial';
+          if (expiryInput) expiryInput.value = '';
+          if (creditsInput) creditsInput.value = '0';
+          
+          Logger.debug('Admin', 'Modale Aggiungi Utente aperto');
+        } catch (err) {
+          Logger.error('Admin', 'Errore apertura modale Aggiungi Utente', err);
+          alert('Errore nell\'apertura del form. Controlla la console per i dettagli.');
+        }
       });
+    } else {
+      // Se mancano elementi, mostra errore visibile
+      if (addUserBtn) {
+        addUserBtn.addEventListener('click', () => {
+          alert('Errore: Il form per aggiungere utenti non è disponibile. Ricarica la pagina o contatta il supporto.');
+        });
+      }
     }
     
     if (cancelAddUserBtn && addUserModal) {
@@ -208,6 +245,8 @@ async function init() {
           saveAddUserBtn.disabled = true;
           saveAddUserBtn.textContent = 'Creazione...';
           
+          Logger.info('Admin', 'Creazione nuovo utente', { email, role, expiry });
+          
           // Chiama API per creare utente e generare token
           const res = await fetch('/api/create-user-and-token', {
             method: 'POST',
@@ -222,13 +261,29 @@ async function init() {
             })
           });
           
+          // Verifica content-type
+          const contentType = res.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            const text = await res.text();
+            Logger.error('Admin', 'Risposta API non JSON', { status: res.status, text: text.substring(0, 200) });
+            throw new Error(`Il server ha restituito una risposta non valida (${res.status}). Verifica le variabili ambiente in Vercel.`);
+          }
+          
           const data = await res.json();
           
           if (!data.ok) {
+            Logger.error('Admin', 'Errore API creazione utente', data);
             throw new Error(data.error || 'Errore nella creazione utente');
           }
           
-          alert(`Utente creato con successo!\nEmail: ${email}\nToken: ${data.token}\n\nIl token è stato inviato via email.`);
+          Logger.info('Admin', 'Utente creato con successo', { email, role });
+          
+          // Mostra messaggio di successo
+          const tokenMessage = data.token 
+            ? `\nToken: ${data.token}\n\nIMPORTANTE: Salva questo token, non verrà mostrato di nuovo!`
+            : '\nIl token è stato inviato via email.';
+          
+          alert(`✅ Utente creato con successo!\n\nEmail: ${email}\nRuolo: ${role}\nScadenza: ${new Date(expiry).toLocaleDateString('it-IT')}${tokenMessage}`);
           
           // Chiudi modale e ricarica dati
           addUserModal.hidden = true;
@@ -236,8 +291,19 @@ async function init() {
           await loadAllData();
           
         } catch (err) {
+          Logger.error('Admin', 'Errore creazione utente', err);
           console.error('[Admin] Error creating user:', err);
-          alert('Errore nella creazione utente: ' + (err.message || 'Errore sconosciuto'));
+          
+          // Messaggio errore più dettagliato
+          let errorMessage = 'Errore nella creazione utente.';
+          if (err.message) {
+            errorMessage += '\n\n' + err.message;
+          }
+          if (err.name === 'TypeError' && err.message.includes('fetch')) {
+            errorMessage += '\n\nPossibile problema di connessione o API endpoint non disponibile.';
+          }
+          
+          alert(errorMessage);
         } finally {
           saveAddUserBtn.disabled = false;
           saveAddUserBtn.textContent = 'Crea Utente';

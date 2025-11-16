@@ -1738,8 +1738,25 @@
       if (currentUser) {
         const allowed = await ensureAdminAccess();
         if (!allowed) {
-          authUserBadge.textContent = '';
+          // Se non è admin, mostra messaggio chiaro e redirect dopo 3 secondi
+          authCard.classList.remove('hidden');
+          authLogged.classList.add('hidden');
           appGrid.classList.add('hidden');
+          authCard.innerHTML = `
+            <h2>Accesso negato</h2>
+            <p style="color: var(--ink-soft); margin: 1rem 0;">
+              L'email <strong>${currentUser.email}</strong> non è autorizzata ad accedere alla dashboard report.
+              Solo gli amministratori possono utilizzare questa funzione.
+            </p>
+            <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+              <a href="/accesso.html" class="btn btn-primary">Torna alla pagina di accesso</a>
+              <a href="/dashboard.html" class="btn btn-outline">Vai alla dashboard utenti</a>
+            </div>
+          `;
+          // Rimuovi token non valido
+          try {
+            localStorage.removeItem('tradelia-access-token-v1');
+          } catch (e) {}
           return;
         }
         authUserBadge.textContent = `Connesso come ${currentUser.email}`;
@@ -1978,12 +1995,10 @@
 
     const init = async () => {
       renderModulesEmptyState();
+      // Verifica token solo una volta all'inizio
       await updateAuthUI();
       // Non serve più: usiamo token invece di Supabase Auth
       // supabase.auth.onAuthStateChange(() => updateAuthUI());
-      
-      // Verifica token all'inizio
-      updateAuthUI();
     };
 
     init();
