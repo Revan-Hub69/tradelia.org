@@ -297,7 +297,7 @@ async function loadUsers() {
     
     const { data: roles, error: rolesError } = await supabase
       .from('user_roles')
-      .select('user_id, role, valid_until');
+      .select('user_id, email, role, valid_until');
     
     if (rolesError) {
       Logger.error('Admin', 'Error loading roles', rolesError);
@@ -372,7 +372,17 @@ async function loadUsers() {
     // Crea mappe per lookup veloce
     // Se emails è null (RPC fallita), creiamo una mappa vuota
     const emailsMap = new Map((emails || []).map(e => [e.user_id, e.email]));
-    const rolesMap = new Map((roles || []).map(r => [r.user_id, r]));
+    // Crea mappa roles: per user_id E per email
+    const rolesMap = new Map();
+    const rolesByEmailMap = new Map();
+    (roles || []).forEach(r => {
+      if (r.user_id) {
+        rolesMap.set(r.user_id, r);
+      }
+      if (r.email) {
+        rolesByEmailMap.set(r.email.toLowerCase(), r);
+      }
+    });
     const creditsMap = new Map((credits || []).map(c => [c.user_id, c]));
     const profilesMap = new Map((profiles || []).map(p => [p.user_id, p]));
     const subscribersMap = new Map((subscribers || []).map(s => [s.email?.toLowerCase(), s]));
@@ -442,8 +452,10 @@ async function loadUsers() {
       .map(sub => {
         const emailKey = sub.email.toLowerCase();
         const token = tokensMap.get(emailKey);
-        const role = token ? token.plan_role : (sub.status === 'active' ? 'pro' : null);
-        const validUntil = token?.valid_until || null;
+        // Cerca ruolo anche in user_roles per email
+        const roleFromRoles = rolesByEmailMap.get(emailKey);
+        const role = roleFromRoles?.role || (token ? token.plan_role : (sub.status === 'active' ? 'pro' : null));
+        const validUntil = roleFromRoles?.valid_until || token?.valid_until || null;
         
         return {
           user_id: sub.auth_user_id || null,
@@ -466,14 +478,19 @@ async function loadUsers() {
         return true;
       })
       .map(([emailKey, token]) => {
+        // Cerca ruolo anche in user_roles per email
+        const roleFromRoles = rolesByEmailMap.get(emailKey);
+        const role = roleFromRoles?.role || token.plan_role;
+        const validUntil = roleFromRoles?.valid_until || token.valid_until;
+        
         return {
           user_id: token.user_id || null,
           email: token.email,
           display_name: '—',
-          role: token.plan_role || null,
-          valid_until: token.valid_until || null,
+          role: role || null,
+          valid_until: validUntil || null,
           credits: 0,
-          isExpired: token.valid_until ? new Date(token.valid_until) < new Date() : false,
+          isExpired: validUntil ? new Date(validUntil) < new Date() : false,
           source: 'dashboard_access_tokens'
         };
       });
