@@ -216,13 +216,13 @@
           <h1>Dashboard Admin</h1>
           <p>Gestione utenti, ruoli, piani, crediti e report Desk</p>
         </div>
-        <a href="/report/admin/dashboard.html" target="_blank" class="btn btn-sm" style="margin-top: 0.5rem;">
+        <a href="/report/admin/dashboard.html" target="_blank" class="btn btn-primary btn-sm" style="margin-top: 0.5rem; white-space: nowrap;">
           📊 Crea Report
         </a>
       </div>
       <div class="admin-tabs" role="tablist" aria-label="Sezioni admin">
-        <button type="button" class="admin-tab" id="tab-admin-users" aria-controls="panel-admin-users" aria-selected="true">Utenti</button>
-        <button type="button" class="admin-tab" id="tab-admin-reports" aria-controls="panel-admin-reports" aria-selected="false">Report Desk</button>
+        <button type="button" class="admin-tab" id="tab-admin-users" aria-controls="panel-admin-users" aria-selected="true">👥 Utenti</button>
+        <button type="button" class="admin-tab" id="tab-admin-reports" aria-controls="panel-admin-reports" aria-selected="false">📊 Report Desk</button>
       </div>
     </div>
     
@@ -288,6 +288,14 @@
       
       <!-- Pannello Report Desk (riusa la dashboard esistente) -->
       <section id="panel-admin-reports" role="tabpanel" aria-labelledby="tab-admin-reports" hidden>
+        <div style="margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; padding: 1rem; background: var(--surface-elev); border-radius: var(--radius-lg); border: 1px solid var(--br-card);">
+          <a href="/report/admin/dashboard.html" target="_blank" class="btn btn-primary btn-sm" style="white-space: nowrap;">
+            📊 Apri Dashboard Report (nuova scheda)
+          </a>
+          <span style="font-size: var(--fs-13); color: var(--ink-soft);">
+            Oppure usa l'iframe qui sotto
+          </span>
+        </div>
         <div class="admin-reports-wrapper">
           <iframe 
             src="/report/admin/dashboard.html" 
