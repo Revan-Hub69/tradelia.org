@@ -48,6 +48,7 @@ if (CANCEL_CREDITS_BTN) {
 // Export functions per uso globale
 window.openEditUserModal = openEditUserModal;
 window.openManageCreditsModal = openManageCreditsModal;
+window.openManagePaymentsModal = openManagePaymentsModal;
 
 function openEditUserModal(userId) {
   const user = allUsers.find(u => u.user_id === userId);
@@ -82,6 +83,25 @@ function openManageCreditsModal(userId) {
   if (CREDITS_CHANGE) CREDITS_CHANGE.value = 0;
   
   if (CREDITS_MODAL) CREDITS_MODAL.hidden = false;
+}
+
+function openManagePaymentsModal(userId) {
+  const user = allUsers.find(u => u.user_id === userId);
+  if (!user) {
+    showToast('Utente non trovato.', 'error');
+    return;
+  }
+
+  // I campi del modal pagamenti sono gestiti direttamente in admin.js
+  // Questa funzione serve solo per compatibilità con onclick handlers
+  const PAYMENTS_MODAL = document.getElementById('manage-payments-modal');
+  const PAYMENTS_USER_ID = document.getElementById('payments-user-id');
+  const PAYMENTS_USER_EMAIL = document.getElementById('payments-user-email');
+  
+  if (PAYMENTS_USER_ID) PAYMENTS_USER_ID.value = user.user_id;
+  if (PAYMENTS_USER_EMAIL) PAYMENTS_USER_EMAIL.value = user.email || '';
+  
+  if (PAYMENTS_MODAL) PAYMENTS_MODAL.hidden = false;
 }
 
 async function handleSaveUser() {
