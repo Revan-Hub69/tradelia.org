@@ -60,6 +60,16 @@ function openEditUserModal(identifier, type = 'user_id') {
     return;
   }
 
+  // Chiudi altri modali prima
+  const otherModals = ['manage-credits-modal', 'manage-payments-modal'];
+  otherModals.forEach(modalId => {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.hidden = true;
+      modal.style.display = 'none';
+    }
+  });
+
   if (EDIT_USER_ID) EDIT_USER_ID.value = user.user_id || user.email || '';
   if (EDIT_USER_EMAIL) EDIT_USER_EMAIL.value = user.email || '';
   if (EDIT_DISPLAY_NAME) EDIT_DISPLAY_NAME.value = user.display_name || '';
@@ -75,6 +85,7 @@ function openEditUserModal(identifier, type = 'user_id') {
     EDIT_MODAL.dataset.identifierType = type;
     EDIT_MODAL.dataset.identifier = identifier;
     EDIT_MODAL.hidden = false;
+    EDIT_MODAL.style.display = 'flex';
   }
 }
 
@@ -90,12 +101,25 @@ function openManageCreditsModal(identifier, type = 'user_id') {
     return;
   }
 
+  // Chiudi altri modali prima
+  const otherModals = ['edit-user-modal', 'manage-payments-modal'];
+  otherModals.forEach(modalId => {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.hidden = true;
+      modal.style.display = 'none';
+    }
+  });
+
   if (CREDITS_USER_ID) CREDITS_USER_ID.value = user.user_id;
   if (CREDITS_USER_EMAIL) CREDITS_USER_EMAIL.value = user.email;
   if (CURRENT_CREDITS) CURRENT_CREDITS.value = user.credits || 0;
   if (CREDITS_CHANGE) CREDITS_CHANGE.value = 0;
   
-  if (CREDITS_MODAL) CREDITS_MODAL.hidden = false;
+  if (CREDITS_MODAL) {
+    CREDITS_MODAL.hidden = false;
+    CREDITS_MODAL.style.display = 'flex';
+  }
 }
 
 function openManagePaymentsModal(userId) {
@@ -111,10 +135,23 @@ function openManagePaymentsModal(userId) {
   const PAYMENTS_USER_ID = document.getElementById('payments-user-id');
   const PAYMENTS_USER_EMAIL = document.getElementById('payments-user-email');
   
+  // Chiudi altri modali prima
+  const otherModals = ['edit-user-modal', 'manage-credits-modal'];
+  otherModals.forEach(modalId => {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.hidden = true;
+      modal.style.display = 'none';
+    }
+  });
+  
   if (PAYMENTS_USER_ID) PAYMENTS_USER_ID.value = user.user_id;
   if (PAYMENTS_USER_EMAIL) PAYMENTS_USER_EMAIL.value = user.email || '';
   
-  if (PAYMENTS_MODAL) PAYMENTS_MODAL.hidden = false;
+  if (PAYMENTS_MODAL) {
+    PAYMENTS_MODAL.hidden = false;
+    PAYMENTS_MODAL.style.display = 'flex';
+  }
 }
 
 async function handleSaveUser() {

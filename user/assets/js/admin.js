@@ -101,25 +101,43 @@ async function init() {
     FILTER_ROLE?.addEventListener('change', applyFilters);
     FILTER_STATUS?.addEventListener('change', applyFilters);
     
-    // Assicurati che tutti i modali siano chiusi all'inizio
+    // FORZA CHIUSURA MODALI - CRITICO: devono essere SEMPRE chiusi all'inizio
     const modals = ['edit-user-modal', 'manage-credits-modal', 'manage-payments-modal'];
     modals.forEach(modalId => {
       const modal = document.getElementById(modalId);
       if (modal) {
         modal.hidden = true;
-        modal.setAttribute('hidden', 'true'); // Doppio controllo
+        modal.setAttribute('hidden', 'true');
+        modal.style.display = 'none';
+        modal.style.visibility = 'hidden';
       }
     });
     
-    // Forza chiusura modali anche se aperti per errore
+    // Forza chiusura modali anche dopo un delay (per sicurezza)
     setTimeout(() => {
       modals.forEach(modalId => {
         const modal = document.getElementById(modalId);
-        if (modal && !modal.hasAttribute('data-keep-open')) {
+        if (modal) {
           modal.hidden = true;
+          modal.setAttribute('hidden', 'true');
+          modal.style.display = 'none';
+          modal.style.visibility = 'hidden';
         }
       });
-    }, 100);
+    }, 50);
+    
+    // Forza chiusura anche dopo caricamento completo
+    setTimeout(() => {
+      modals.forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.hidden = true;
+          modal.setAttribute('hidden', 'true');
+          modal.style.display = 'none';
+          modal.style.visibility = 'hidden';
+        }
+      });
+    }, 500);
     
     // Load data
     await loadAllData();
