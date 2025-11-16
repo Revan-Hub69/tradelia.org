@@ -1964,42 +1964,6 @@ async function checkAdminStatus() {
 function renderCommunitySection() {
   if (!PANELS.community) return;
   
-  // Aggiorna contatore crediti (solo per Desk)
-  renderCreditsCounter();
-  // Aggiorna storico movimenti crediti
-  renderCreditsHistory();
-  
-  // Scheda Richiesta analisi:
-  // - Disponibile solo per Desk / admin
-  if (REQUEST_ANALYSIS_CARD) {
-    const canRequestDesk = state.role === 'institutional' || state.isAdmin;
-    
-    REQUEST_ANALYSIS_CARD.hidden = false; // sempre visibile come concetto
-    
-    Logger.debug('UserArea', 'renderCommunitySection', {
-      isAdmin: state.isAdmin,
-      role: state.role,
-      credits: state.credits?.credits_balance ?? 0,
-      hasUser: !!state.user,
-      canRequestDesk
-    });
-    
-    if (canRequestDesk) {
-      // Desk: form attivo, lock nascosto
-      hideRequestAnalysisLock();
-    } else {
-      // Non Desk: mostra lock, disabilita flusso Desk
-      if (REQUEST_ANALYSIS_LOCK) {
-        REQUEST_ANALYSIS_LOCK.hidden = false;
-      }
-      if (REQUEST_ANALYSIS_LOCK_MESSAGE) {
-        REQUEST_ANALYSIS_LOCK_MESSAGE.textContent = state.user
-          ? 'Le richieste analisi on-demand Desk sono disponibili solo per il Desk Professionale.'
-          : 'Accedi o registrati per richiedere analisi on-demand Desk.';
-      }
-    }
-  }
-  
   // Scheda Proposte community:
   // - Disponibile solo per utenti Pro (e admin, per moderazione)
   if (COMMUNITY_PROPOSE_CARD) {
@@ -2012,13 +1976,6 @@ function renderCommunitySection() {
   
   // Setup handlers
   setupProposalHandlers();
-  setupCreditsHandlers();
-  
-  // Setup modal checkout (solo una volta)
-  if (!window._creditsModalSetup) {
-    setupCreditsCheckoutModal();
-    window._creditsModalSetup = true;
-  }
 }
 
 function renderCreditsCounter() {
@@ -2321,51 +2278,31 @@ function renderCommunityProposalsList() {
     return new Date(b.created_at) - new Date(a.created_at);
   });
   
-  COMMUNITY_PROPOSALS_LIST.innerHTML = sortedProposals.map(proposal => {
-    const hasVoted = state.userVotes.has(proposal.id);
-    const isOwner = proposal.proposed_by === state.user?.id;
-    const isPopular = proposal.vote_count >= 5;
-    
-    return `
-      <article class="history-item proposal-item ${isPopular ? 'proposal-popular' : ''}">
-        <div class="proposal-header">
-          <div class="proposal-title-group">
-          <strong>${escapeHtml(proposal.asset_ticker)}</strong>
-            ${isPopular ? '<span class="badge proposal-badge-popular" title="Proposta popolare">🔥</span>' : ''}
-            ${isOwner ? '<span class="badge proposal-badge-owner">Tua proposta</span>' : ''}
+    COMMUNITY_PROPOSALS_LIST.innerHTML = sortedProposals.map(proposal => {
+      const hasVoted = state.userVotes.has(proposal.id);
+      const isOwner = proposal.proposed_by === state.user?.id;
+      const isPopular = proposal.vote_count >= 5;
+      const canInteract = state.role === 'pro' || state.isAdmin;
+      
+      return `
+        <article class="history-item proposal-item ${isPopular ? 'proposal-popular' : ''}">
+          <div class="proposal-header">
+            <div class="proposal-title-group">
+            <strong>${escapeHtml(proposal.asset_ticker)}</strong>
+              ${isPopular ? '<span class="badge proposal-badge-popular" title="Proposta popolare">🔥</span>' : ''}
+              ${isOwner ? '<span class="badge proposal-badge-owner">Tua proposta</span>' : ''}
+            </div>
+            <div class="proposal-actions">
+              <span class="vote-count" title="${proposal.vote_count} ${proposal.vote_count === 1 ? 'voto' : 'voti'}">${proposal.vote_count}</span>
+            </div>
           </div>
-          <div class="proposal-actions">
-            <button class="btn btn-sm vote-btn ${hasVoted ? 'voted' : ''}" 
-                    data-proposal-id="${proposal.id}" 
-                    ${hasVoted ? 'title="Rimuovi voto"' : 'title="Vota questa proposta"'}
-                    aria-label="${hasVoted ? 'Rimuovi voto' : 'Vota'}">
-              ${hasVoted ? '★' : '☆'}
-            </button>
-            <span class="vote-count" title="${proposal.vote_count} ${proposal.vote_count === 1 ? 'voto' : 'voti'}">${proposal.vote_count}</span>
-            ${state.isAdmin ? `<button class="btn btn-sm delete-btn" data-proposal-id="${proposal.id}" title="Rimuovi proposta">×</button>` : ''}
+          <div class="proposal-meta">
+            <span>${formatRelativeTime(proposal.created_at)}</span>
+            ${!canInteract ? '<span class="history-item-meta-separator">·</span><span>Per proporre o votare è necessario il piano Pro.</span>' : ''}
           </div>
-        </div>
-        <div class="proposal-meta">
-          <span>${formatRelativeTime(proposal.created_at)}</span>
-        </div>
-      </article>
-    `;
-  }).join('');
-  
-  // Attach event listeners (rimuovi listener precedenti per evitare duplicati)
-  COMMUNITY_PROPOSALS_LIST.querySelectorAll('.vote-btn').forEach(btn => {
-    const newBtn = btn.cloneNode(true);
-    btn.parentNode.replaceChild(newBtn, btn);
-    newBtn.addEventListener('click', () => handleVote(newBtn.dataset.proposalId));
-  });
-  
-  if (state.isAdmin) {
-    COMMUNITY_PROPOSALS_LIST.querySelectorAll('.delete-btn').forEach(btn => {
-      const newBtn = btn.cloneNode(true);
-      btn.parentNode.replaceChild(newBtn, btn);
-      newBtn.addEventListener('click', () => handleDeleteProposal(newBtn.dataset.proposalId));
-    });
-  }
+        </article>
+      `;
+    }).join('');
 }
 
 function setupProposalHandlers() {
