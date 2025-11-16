@@ -83,6 +83,9 @@ const REQUEST_ANALYSIS_LOCK_MESSAGE = document.getElementById('request-analysis-
 const REQUEST_ANALYSIS_LOCK_UPGRADE = document.getElementById('request-analysis-lock-upgrade');
 const COMMUNITY_PROPOSALS_LIST = document.getElementById('community-proposals-list');
 const COMMUNITY_PROPOSE_CARD = document.getElementById('community-propose-card');
+const COMMUNITY_PROPOSAL_FORM = document.getElementById('community-proposal-form');
+const COMMUNITY_PROPOSAL_INPUT = document.getElementById('community-proposal-input');
+const COMMUNITY_PROPOSAL_SUBMIT = document.getElementById('community-proposal-submit');
 const REQUEST_ANALYSIS_CARD = document.getElementById('request-analysis-card');
 const REQUEST_ANALYSIS_INFO = document.getElementById('request-analysis-info');
 const COMMUNITY_PROPOSAL_INFO = document.getElementById('community-proposal-info');
@@ -397,10 +400,14 @@ function renderHero() {
   logoutBtn.className = 'btn btn-sm btn-outline';
   logoutBtn.textContent = 'Esci';
   logoutBtn.addEventListener('click', async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      Logger.error('UserArea', 'logout error', err);
+    }
     showToast('Logout effettuato.', 'info');
-    // Reindirizza alla home dopo logout
-    setTimeout(() => { window.location.href = '/'; }, 200);
+    // Reindirizza sempre alla home dopo logout
+    setTimeout(() => { window.location.href = '/'; }, 300);
   });
   CTA.appendChild(logoutBtn);
 }
@@ -664,8 +671,8 @@ function renderPlanSection() {
   actionsContainer.className = 'user-cta';
   
         // Upgrade disponibili con prova gratuita
-        if (!state.role) {
-          // Utente senza ruolo può scegliere tra Pro e Desk con prova gratuita
+        if (!state.role || state.role === 'guest') {
+          // Utente senza ruolo (o guest) può scegliere tra Pro e Desk con prova gratuita
           const proBtn = document.createElement('button');
           proBtn.className = 'btn btn-sm btn-primary';
           proBtn.textContent = 'Prova Pro gratuitamente (14 giorni)';
@@ -1965,11 +1972,12 @@ function renderCommunitySection() {
   if (!PANELS.community) return;
   
   // Scheda Proposte community:
-  // - Disponibile solo per utenti Pro (e admin, per moderazione)
+  // - Disponibile solo per utenti autenticati; interazioni riservate a Pro/Admin
   if (COMMUNITY_PROPOSE_CARD) {
-    const canUseCommunity = (state.role === 'pro' || state.isAdmin) && state.user;
-    COMMUNITY_PROPOSE_CARD.hidden = !canUseCommunity;
-    if (canUseCommunity) {
+    if (!state.user) {
+      COMMUNITY_PROPOSE_CARD.hidden = true;
+    } else {
+      COMMUNITY_PROPOSE_CARD.hidden = false;
       renderCommunityProposalsList();
     }
   }
@@ -2306,7 +2314,7 @@ function renderCommunityProposalsList() {
 }
 
 function setupProposalHandlers() {
-  // Setup form per analisi su richiesta
+  // Setup form per analisi Desk (report personali)
   const form = document.getElementById('analysis-request-form');
   if (form && !form._hasHandler) {
     form.addEventListener('submit', (e) => {
@@ -2316,7 +2324,7 @@ function setupProposalHandlers() {
     form._hasHandler = true;
   }
   
-  // Mantieni anche handler separati per retrocompatibilità
+  // Pulsante submit Desk
   if (PROPOSAL_SUBMIT && !PROPOSAL_SUBMIT._hasHandler) {
     PROPOSAL_SUBMIT.addEventListener('click', (e) => {
       e.preventDefault();
@@ -2334,6 +2342,22 @@ function setupProposalHandlers() {
     PROPOSAL_INPUT._hasHandler = true;
   }
   
+  // Form Proposte community (solo Pro/Admin)
+  if (COMMUNITY_PROPOSAL_FORM && !COMMUNITY_PROPOSAL_FORM._hasHandler) {
+    COMMUNITY_PROPOSAL_FORM.addEventListener('submit', (e) => {
+      e.preventDefault();
+      handleCommunityProposal();
+    });
+    COMMUNITY_PROPOSAL_FORM._hasHandler = true;
+  }
+  if (COMMUNITY_PROPOSAL_SUBMIT && !COMMUNITY_PROPOSAL_SUBMIT._hasHandler) {
+    COMMUNITY_PROPOSAL_SUBMIT.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleCommunityProposal();
+    });
+    COMMUNITY_PROPOSAL_SUBMIT._hasHandler = true;
+  }
+  
   // Update button text, placeholder and info based on role
   if (PROPOSAL_SUBMIT) {
     if (state.role === 'institutional' || state.isAdmin) {
@@ -2343,13 +2367,6 @@ function setupProposalHandlers() {
       }
       if (REQUEST_ANALYSIS_INFO) REQUEST_ANALYSIS_INFO.hidden = false;
       if (COMMUNITY_PROPOSAL_INFO) COMMUNITY_PROPOSAL_INFO.hidden = true;
-    } else if (state.role === 'pro') {
-      PROPOSAL_SUBMIT.textContent = 'Proponi asset';
-      if (PROPOSAL_INPUT) {
-        PROPOSAL_INPUT.placeholder = 'Proponi un asset per la community (es. AAPL, BTC-USD, settore AI)';
-      }
-      if (REQUEST_ANALYSIS_INFO) REQUEST_ANALYSIS_INFO.hidden = true;
-      if (COMMUNITY_PROPOSAL_INFO) COMMUNITY_PROPOSAL_INFO.hidden = false;
     } else {
       PROPOSAL_SUBMIT.textContent = 'Invia ticker';
       if (REQUEST_ANALYSIS_INFO) REQUEST_ANALYSIS_INFO.hidden = true;
@@ -2530,59 +2547,9 @@ async function handleProposeAsset() {
     return;
   }
   
-  // 2) Flusso Proposte community: solo Pro / admin
-  if (state.role === 'pro' || state.isAdmin) {
-    try {
-      PROPOSAL_SUBMIT.disabled = true;
-      PROPOSAL_SUBMIT.textContent = 'Invio...';
-      
-      const { data, error } = await supabase
-        .from('asset_proposals')
-        .insert({
-          asset_ticker: ticker,
-          proposed_by: state.user.id
-        })
-        .select()
-        .single();
-      
-      if (error) throw error;
-      
-      // Aggiorna state e UI
-      state.proposals.unshift(data);
-      PROPOSAL_INPUT.value = '';
-      await renderCommunityProposalsList();
-      showToast(`Proposta per ${ticker} inviata! Gli altri utenti possono ora votarla.`, 'success');
-      
-      // Aggiorna stats
-      await fetchDashboardStats();
-      renderDashboard();
-    } catch (err) {
-      Logger.error('UserArea', 'proposal error', err);
-      
-      // Best practice: messaggi errore user-friendly
-      let errorMessage = 'Errore durante l\'invio della proposta.';
-      const msg = (err.message || '').toLowerCase();
-      if (err.code === '23505' || msg.includes('duplicate') || msg.includes('already exists')) {
-        errorMessage = `La proposta per ${ticker} esiste già. Puoi votarla nella lista.`;
-      } else if (msg.includes('row-level security') || msg.includes('rls')) {
-        // Limite RLS: massimo 1 proposta nelle ultime 24 ore
-        errorMessage = 'Hai già inviato una proposta community nelle ultime 24 ore. Puoi proporre un nuovo asset domani.';
-      } else if (msg.includes('network') || msg.includes('fetch')) {
-        errorMessage = 'Errore di connessione. Verifica la tua connessione internet.';
-      } else if (err.message) {
-        errorMessage = err.message;
-      }
-      
-      showToast(errorMessage, 'error');
-    } finally {
-      PROPOSAL_SUBMIT.disabled = false;
-      PROPOSAL_SUBMIT.textContent = 'Proponi asset';
-    }
-    return;
-  }
-  
-  // 3) Nessun permesso (guest, trial, altri ruoli)
-  showToast('Le proposte community sono disponibili solo con il piano Pro.', 'error');
+  // 2) Nessun altro flusso: le proposte community sono gestite da handleCommunityProposal
+  // Nessun permesso per usare il form Desk se non sei Desk/Admin
+  showToast('Le richieste Desk sono disponibili solo con il piano Desk Professionale.', 'error');
 }
 
 async function handleVote(proposalId) {
@@ -2642,6 +2609,71 @@ async function handleVote(proposalId) {
     }
     
     showToast(errorMessage, 'error');
+  }
+}
+
+async function handleCommunityProposal() {
+  if (!COMMUNITY_PROPOSAL_INPUT) return;
+  if (!state.user) {
+    showToast('Effettua il login per proporre un asset alla community.', 'error');
+    return;
+  }
+  if (state.role !== 'pro' && !state.isAdmin) {
+    showToast('Le proposte community sono disponibili solo con il piano Pro.', 'error');
+    return;
+  }
+  
+  const raw = COMMUNITY_PROPOSAL_INPUT.value.trim().toUpperCase();
+  if (!raw) {
+    showToast('Inserisci un ticker valido (es. AAPL, BTC-USD).', 'error');
+    COMMUNITY_PROPOSAL_INPUT.focus();
+    return;
+  }
+  if (!isValidTicker(raw)) {
+    showToast('Ticker non valido. Usa formato standard (es. AAPL, BTC-USD, EURUSD).', 'error');
+    COMMUNITY_PROPOSAL_INPUT.focus();
+    return;
+  }
+  
+  try {
+    COMMUNITY_PROPOSAL_SUBMIT.disabled = true;
+    COMMUNITY_PROPOSAL_SUBMIT.textContent = 'Invio...';
+    
+    const { data, error } = await supabase
+      .from('asset_proposals')
+      .insert({
+        asset_ticker: raw,
+        proposed_by: state.user.id
+      })
+      .select()
+      .single();
+    
+    if (error) throw error;
+    
+    state.proposals.unshift(data);
+    COMMUNITY_PROPOSAL_INPUT.value = '';
+    await renderCommunityProposalsList();
+    showToast(`Proposta per ${raw} inviata! Gli altri utenti Pro possono ora votarla.`, 'success');
+    
+    await fetchDashboardStats();
+    renderDashboard();
+  } catch (err) {
+    Logger.error('UserArea', 'community proposal error', err);
+    let errorMessage = 'Errore durante l\'invio della proposta.';
+    const msg = (err.message || '').toLowerCase();
+    if (err.code === '23505' || msg.includes('duplicate') || msg.includes('already exists')) {
+      errorMessage = `La proposta per ${raw} esiste già. Puoi votarla nella lista.`;
+    } else if (msg.includes('row-level security') || msg.includes('rls')) {
+      errorMessage = 'Hai già inviato una proposta community nelle ultime 24 ore. Puoi proporre un nuovo asset domani.';
+    } else if (msg.includes('network') || msg.includes('fetch')) {
+      errorMessage = 'Errore di connessione. Verifica la tua connessione internet.';
+    } else if (err.message) {
+      errorMessage = err.message;
+    }
+    showToast(errorMessage, 'error');
+  } finally {
+    COMMUNITY_PROPOSAL_SUBMIT.disabled = false;
+    COMMUNITY_PROPOSAL_SUBMIT.textContent = 'Proponi asset';
   }
 }
 
@@ -3307,19 +3339,39 @@ async function renderReportsSection() {
       container.innerHTML = '<div class="empty-state"><p>Effettua l\'accesso per vedere i tuoi report.</p></div>';
       return;
     }
-    
-    // Solo utenti Desk (institutional) o admin hanno report Desk personali
-    if (state.role !== 'institutional' && !state.isAdmin) {
-      container.innerHTML = '<div class="empty-state"><p>I report Desk personali sono disponibili solo per il piano Desk Professionale. Puoi comunque consultare i report accademici dall\'area pubblica del sito.</p></div>';
-      const pagination = document.getElementById('reports-pagination');
-      if (pagination) pagination.hidden = true;
-      return;
+
+    // Aggiorna contatore/storico crediti e lock richiesta Desk
+    renderCreditsCounter();
+    renderCreditsHistory();
+    setupCreditsHandlers();
+
+    if (REQUEST_ANALYSIS_CARD) {
+      const canRequestDesk = state.role === 'institutional' || state.isAdmin;
+      
+      Logger.debug('UserArea', 'renderReportsSection Desk request', {
+        isAdmin: state.isAdmin,
+        role: state.role,
+        credits: state.credits?.credits_balance ?? 0,
+        hasUser: !!state.user,
+        canRequestDesk
+      });
+      
+      if (canRequestDesk) {
+        hideRequestAnalysisLock();
+      } else if (REQUEST_ANALYSIS_LOCK) {
+        REQUEST_ANALYSIS_LOCK.hidden = false;
+        if (REQUEST_ANALYSIS_LOCK_MESSAGE) {
+          REQUEST_ANALYSIS_LOCK_MESSAGE.textContent = state.user
+            ? 'Le richieste Desk personali sono disponibili solo con il piano Desk Professionale.'
+            : 'Accedi o registrati per richiedere analisi Desk personalizzate.';
+        }
+      }
     }
     
-    // Setup filtri
+    // Setup filtri lista report
     setupReportsFilters();
     
-    // Carica report
+    // Carica report (se non sei Desk/Admin è comunque possibile che non ce ne siano)
     await loadReports();
   } catch (err) {
     Logger.error('UserArea', 'renderReportsSection error', err);

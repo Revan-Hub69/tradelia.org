@@ -4,14 +4,10 @@
 
 import Logger from '../utils/logger.js';
 import { exportMenu } from './export-menu.js';
-import { authModal } from './auth-modal.js';
-import { supabase } from '../supabase-client.js';
 
 const HEADER = {
   _node: null,
-  _container: null,
-  _authListener: null,
-  _currentUser: null
+  _container: null
 };
 
 // ===== UTILITIES =====
@@ -42,14 +38,6 @@ function render(options = {}) {
           </svg>
           <span>Dashboard</span>
         </a>
-        <div class="header-auth">
-          <button type="button" class="header-user-link" data-auth-action="account" aria-label="Area utente">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4 0-7 2-7 4v1h14v-1c0-2-3-4-7-4Z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <span>Accedi</span>
-          </button>
-        </div>
         ${showExport ? '<div id="header-export-menu-slot"></div>' : ''}
       </div>
     </div>
@@ -76,10 +64,6 @@ function mount(containerEl, options = {}) {
   HEADER._node = node;
   HEADER._container = containerEl;
   
-  authModal.init();
-  bindAuthActions(node);
-  syncAuthState(node);
-
   // Renderizza menu export solo se showExport è true
   const exportSlot = node.querySelector('#header-export-menu-slot');
   if (exportSlot) {
@@ -115,96 +99,3 @@ export const siteHeader = {
   mount,
   update
 };
-
-function bindAuthActions(node) {
-  const accountBtn = node.querySelector('[data-auth-action="account"]');
-
-  if (accountBtn) {
-    accountBtn.addEventListener('click', () => {
-      if (HEADER._currentUser) {
-        window.location.href = '/user/';
-      } else {
-        authModal.open('login');
-      }
-    });
-  }
-}
-
-async function syncAuthState(node) {
-  const accountBtn = node.querySelector('[data-auth-action="account"]');
-
-  try {
-    const { data } = await supabase.auth.getSession();
-    HEADER._currentUser = data?.session?.user || null;
-    toggleAccountButton(accountBtn, HEADER._currentUser);
-    await toggleAdminLink(HEADER._currentUser);
-  } catch (err) {
-    Logger.warn('SiteHeader', 'Impossibile leggere sessione', err);
-  }
-
-  if (!HEADER._authListener) {
-    HEADER._authListener = supabase.auth.onAuthStateChange(async (_event, session) => {
-      HEADER._currentUser = session?.user || null;
-      toggleAccountButton(accountBtn, HEADER._currentUser);
-      await toggleAdminLink(HEADER._currentUser);
-    }).data;
-  }
-}
-
-function toggleAccountButton(accountBtn, user) {
-  if (!accountBtn) return;
-  const label = accountBtn.querySelector('span');
-  if (user) {
-    label && (label.textContent = 'Area');
-    accountBtn.classList.add('header-user-link--auth');
-    accountBtn.setAttribute('title', 'Vai alla tua area utente');
-  } else {
-    label && (label.textContent = 'Accedi');
-    accountBtn.classList.remove('header-user-link--auth');
-    accountBtn.setAttribute('title', 'Accedi con le credenziali Tradelia');
-  }
-}
-
-async function isAdminUser(user) {
-  if (!user) return false;
-  try {
-    const { data, error } = await supabase
-      .from('admin_users')
-      .select('user_id')
-      .eq('user_id', user.id)
-      .maybeSingle();
-    if (error) return false;
-    return !!data;
-  } catch {
-    return false;
-  }
-}
-
-async function toggleAdminLink(user) {
-  const actions = HEADER._node?.querySelector('.header-actions');
-  if (!actions) return;
-  let adminLink = HEADER._node.querySelector('#header-admin-link');
-
-  const allowed = await isAdminUser(user);
-  if (allowed) {
-    if (!adminLink) {
-      adminLink = document.createElement('a');
-      adminLink.id = 'header-admin-link';
-      adminLink.className = 'header-dashboard-link';
-      adminLink.href = '/report/admin/dashboard.html';
-      adminLink.setAttribute('aria-label', 'Report Admin');
-      adminLink.innerHTML = `
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2l3 7h7l-5.5 4 2 7-6.5-4.5L5.5 20l2-7L2 9h7l3-7z"></path>
-        </svg>
-        <span>Report Admin</span>
-      `;
-      // Inserisci prima del link Dashboard per priorità
-      const firstAction = actions.firstElementChild;
-      actions.insertBefore(adminLink, firstAction);
-    }
-  } else if (adminLink) {
-    adminLink.remove();
-  }
-}
-

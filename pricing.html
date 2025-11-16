@@ -518,9 +518,12 @@
               <li>Upgrade immediato al piano Pro quando desideri</li>
             </ul>
             <div class="plan-actions">
-              <button type="button" class="btn btn-outline btn-sm" id="btn-activate-trial">Attiva prova gratuita</button>
+              <a href="mailto:info@tradelia.org?subject=Richiesta%20prova%20gratuita%20Tradelia&body=Scrivici%20chi%20sei%20e%20come%20intendi%20usare%20la%20piattaforma."
+                 class="btn btn-outline btn-sm">
+                Attiva prova gratuita
+              </a>
               <p class="plan-meta" style="margin-top: var(--sp-3); font-size: var(--fs-12); color: var(--muted);">
-                Attivazione tramite Xolo Go con raccolta dati. Paddle (carta) in fase di attivazione.
+                Attivazione tramite desk amministrativo con raccolta dati essenziali. Paddle (carta) in fase di attivazione.
               </p>
             </div>
           </article>
@@ -545,9 +548,12 @@
               <li>Notifiche push operative e roadmap funzionale prioritaria</li>
             </ul>
             <div class="plan-actions">
-              <button type="button" class="btn btn-primary btn-sm" id="btn-activate-pro">Inizia prova gratuita</button>
+              <a href="mailto:info@tradelia.org?subject=Attivazione%20piano%20Pro%20Tradelia&body=Indica%20i%20dati%20di%20fatturazione%20e%20le%20tue%20esigenze."
+                 class="btn btn-primary btn-sm">
+                Richiedi attivazione Pro
+              </a>
               <p class="plan-meta">
-                La prova gratuita dura 14 giorni. Attivazione tramite Xolo Go (bonifico/carta) con fatturazione automatica. <em>Paddle (carta) in fase di attivazione.</em> Puoi cancellare in qualsiasi momento dalla dashboard.
+                La prova gratuita e l’attivazione del piano Pro vengono gestite direttamente dal desk. Pagamento tramite Xolo Go (bonifico/carta). <em>Paddle (carta) in fase di attivazione.</em>
               </p>
             </div>
           </article>
@@ -807,22 +813,7 @@
   <!-- Global Header & i18n -->
   <script type="module" src="/assets/js/global-header.js"></script>
   
-  <!-- Trial Onboarding Modal -->
-  <script type="module">
-    import { trialOnboardingModal } from '/report/assets/js/components/trial-onboarding-modal.js';
-    
-    // Initialize modal
-    trialOnboardingModal.init();
-    
-    // Bind trial activation buttons
-    document.getElementById('btn-activate-trial')?.addEventListener('click', () => {
-      trialOnboardingModal.open('trial', 'xolo');
-    });
-    
-    document.getElementById('btn-activate-pro')?.addEventListener('click', () => {
-      trialOnboardingModal.open('pro', 'xolo');
-    });
-  </script>
+      <!-- Modale trial/registrazione rimossa: attivazione gestita via contatto email. -->
 </body>
 </html>
 

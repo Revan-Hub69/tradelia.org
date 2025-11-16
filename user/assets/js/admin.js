@@ -41,7 +41,7 @@ async function init() {
     // Verifica che l'utente sia admin
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      window.location.href = '/user/index.html';
+      window.location.href = '/dashboard.html';
       return;
     }
     
@@ -52,7 +52,7 @@ async function init() {
       .maybeSingle();
     
     if (!adminData) {
-      window.location.href = '/user/index.html';
+      window.location.href = '/dashboard.html';
       return;
     }
     
