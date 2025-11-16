@@ -183,9 +183,6 @@ async function sendSubscriptionToServer(subscription) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'subscribe',
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
           subscription,
           userId: STATE.user?.id
         })
