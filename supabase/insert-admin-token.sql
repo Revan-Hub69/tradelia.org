@@ -66,7 +66,7 @@ BEGIN
     v_token_hash,
     'institutional', -- Admin ha sempre ruolo institutional
     v_valid_until,
-    'admin_manual_sql',
+    'manual', -- Valore permesso dal check constraint
     jsonb_build_object(
       'is_admin', true,
       'generated_at', now(),
