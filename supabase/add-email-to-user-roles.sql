@@ -38,14 +38,13 @@ SELECT
   COUNT(*) FILTER (WHERE email IS NOT NULL) as roles_with_email_not_null
 FROM public.user_roles;
 
--- 6. Mostra alcuni esempi
+-- 6. Mostra alcuni esempi (usa solo colonne base)
 SELECT 
   user_id,
   email,
   role,
-  valid_until,
-  updated_at
+  valid_until
 FROM public.user_roles
-ORDER BY updated_at DESC NULLS LAST
+ORDER BY role, user_id
 LIMIT 10;
 

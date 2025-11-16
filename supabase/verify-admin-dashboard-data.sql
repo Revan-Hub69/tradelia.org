@@ -30,14 +30,13 @@ BEGIN
   END IF;
 END $$;
 
--- 3. Mostra tutti i user_roles (usa solo colonne che esistono)
+-- 3. Mostra tutti i user_roles (usa solo colonne base)
 SELECT 
   user_id,
   role,
-  valid_until,
-  updated_at
+  valid_until
 FROM public.user_roles
-ORDER BY updated_at DESC NULLS LAST
+ORDER BY role, user_id
 LIMIT 20;
 
 -- 4. Verifica dashboard_access_tokens
