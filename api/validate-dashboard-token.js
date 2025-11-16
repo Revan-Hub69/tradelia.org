@@ -108,10 +108,20 @@ export default async function handler(req, res) {
     
     // Se non abbiamo email ma abbiamo user_id, recupera email da auth.users
     if (!email && userId) {
-      const { data: authUser } = await supabase.auth.admin.getUserById(userId);
-      if (authUser && authUser.user) {
-        email = authUser.user.email;
+      try {
+        const { data: authUser, error: authError } = await supabase.auth.admin.getUserById(userId);
+        if (!authError && authUser && authUser.user) {
+          email = authUser.user.email;
+        }
+      } catch (err) {
+        // Ignora errori auth.users (non critico, abbiamo già email nel token)
+        console.warn('[Validate Token] Errore recupero email da auth.users:', err);
       }
+    }
+    
+    // Se ancora non abbiamo email, usa quella dal token record
+    if (!email) {
+      email = tokenRecord.email || null;
     }
     
     const planRole = tokenRecord.plan_role;
