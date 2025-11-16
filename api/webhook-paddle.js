@@ -8,7 +8,8 @@ import {
   syncUserRoleFromSubscription, 
   calculateExpirationDate,
   getUserIdByEmail,
-  recordPaymentAndInvoice
+  recordPaymentAndInvoice,
+  generateDashboardToken
 } from './webhook-role-sync.js';
 import crypto from 'crypto';
 
@@ -196,11 +197,31 @@ async function handleSubscription(event) {
     
     // Sincronizza user_roles (sempre, anche se subscriber update/insert fallisce)
     // Usa planIdentifier invece di planMetadata (ora viene mappato internamente)
+    let userId = null;
+    let planRole = null;
     try {
-      await syncUserRoleFromSubscription(email, mappedStatus, planIdentifier, currentPeriodEnd);
+      const roleResult = await syncUserRoleFromSubscription(email, mappedStatus, planIdentifier, currentPeriodEnd);
+      if (roleResult && roleResult.success) {
+        userId = roleResult.user_id;
+        planRole = roleResult.role;
+      }
     } catch (roleSyncError) {
       console.error('[Webhook] Errore sincronizzazione ruolo:', roleSyncError);
       // Non bloccare il webhook se la sincronizzazione ruolo fallisce
+    }
+    
+    // Genera token dashboard se subscription è attiva
+    if (mappedStatus === 'active' && planRole && currentPeriodEnd) {
+      try {
+        const validUntil = currentPeriodEnd instanceof Date 
+          ? currentPeriodEnd.toISOString() 
+          : new Date(currentPeriodEnd).toISOString();
+        // Genera token e invia email automaticamente
+        await generateDashboardToken(userId, email, planRole, validUntil, 'paddle', true);
+        console.log('[Webhook] ✅ Token dashboard generato e email inviata per:', email);
+      } catch (tokenError) {
+        console.error('[Webhook] Errore generazione token (non bloccante):', tokenError);
+      }
     }
   } catch (err) {
     console.error('[Webhook] Errore handleSubscription:', err);
