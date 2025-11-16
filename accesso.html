@@ -530,7 +530,8 @@
             input.focus();
           }
         } catch (err) {
-          showAlert('Errore di connessione. Riprova più tardi.');
+          console.error('Errore validazione token:', err);
+          showAlert('Errore di connessione. Riprova più tardi. Se il problema persiste, contatta support@tradelia.org');
         } finally {
           submitBtn.disabled = false;
           submitBtn.textContent = 'Accedi alla dashboard';

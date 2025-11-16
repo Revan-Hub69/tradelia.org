@@ -53,9 +53,10 @@ export default async function handler(req, res) {
     const tokenHash = hashToken(token.trim());
     
     // Cerca token in dashboard_access_tokens
+    // Nota: non facciamo join con user_roles perché potrebbe non esistere (token solo email)
     const { data: tokenRecord, error: tokenError } = await supabase
       .from('dashboard_access_tokens')
-      .select('*, user_roles(role, valid_until)')
+      .select('*')
       .eq('token_hash', tokenHash)
       .eq('revoked', false)
       .gte('valid_until', new Date().toISOString())
