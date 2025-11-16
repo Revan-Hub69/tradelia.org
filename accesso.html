@@ -273,7 +273,7 @@
           </div>
           <div class="access-actions access-cta">
             <button type="submit" class="btn btn-sm">Accedi alla dashboard</button>
-            <a href="/pricing.html" class="btn btn-sm">Non hai un codice? Vedi i piani</a>
+            <button type="button" class="btn btn-sm" id="access-pricing">Non hai un codice? Vedi i piani</button>
             <button type="button" class="btn btn-sm" id="access-recovery-open">Ho perso il codice</button>
           </div>
         </div>
@@ -346,6 +346,7 @@
       const step1 = document.getElementById('access-step1');
       const step2 = document.getElementById('access-step2');
       const recoverySection = document.getElementById('access-recovery');
+      const pricingBtn = document.getElementById('access-pricing');
       const recoveryOpen = document.getElementById('access-recovery-open');
       const recoveryCancel = document.getElementById('access-recovery-cancel');
       const recoverySubmit = document.getElementById('access-recovery-submit');
@@ -388,6 +389,13 @@
       if (closeBtn) {
         closeBtn.addEventListener('click', function() {
           window.location.href = '/index.html';
+        });
+      }
+
+      // Pricing button
+      if (pricingBtn) {
+        pricingBtn.addEventListener('click', function() {
+          window.location.href = '/pricing.html';
         });
       }
 
