@@ -119,14 +119,13 @@ export default async function handler(req, res) {
       role = 'institutional';
     }
     
-    // 1. Crea/aggiorna user_role
+    // 1. Crea/aggiorna user_role (senza updated_at - colonna rimossa)
     const { error: roleError } = await supabase
       .from('user_roles')
       .upsert({
         email: email.toLowerCase(),
         role,
-        valid_until: validUntilDate.toISOString(),
-        updated_at: new Date().toISOString()
+        valid_until: validUntilDate.toISOString()
       }, {
         onConflict: 'email'
       });
