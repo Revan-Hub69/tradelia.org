@@ -2175,9 +2175,58 @@
     loadingTimeout = setTimeout(removeLoadingSafety, 3000); // 3 secondi timeout (ridotto ulteriormente)
     console.log('INIT: Timeout sicurezza impostato a 3 secondi');
     
+    const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
+
+    function ensureAccessToken() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const tokenFromQuery = (params.get('token') || '').trim();
+        if (tokenFromQuery) {
+          try {
+            localStorage.setItem(ACCESS_TOKEN_KEY, tokenFromQuery);
+          } catch (e) {
+            // ignore storage errors, token resterà solo in memoria
+          }
+          // pulisci la query per evitare di lasciare il token nell'URL
+          params.delete('token');
+          const cleanUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+          window.history.replaceState({}, '', cleanUrl);
+        }
+      } catch (e) {
+        // ignore
+      }
+
+      let token = null;
+      try {
+        token = localStorage.getItem(ACCESS_TOKEN_KEY);
+      } catch (e) {
+        token = null;
+      }
+
+      if (!token || !token.trim()) {
+        // nessun token valido: redirect alla pagina di accesso
+        try {
+          const url = new URL('/accesso.html', window.location.origin);
+          url.searchParams.set('reason', 'missing_token');
+          window.location.href = url.toString();
+        } catch (e) {
+          window.location.href = '/accesso.html?reason=missing_token';
+        }
+        return false;
+      }
+      return true;
+    }
+
     // Aspetta che il DOM sia completamente pronto prima di chiamare loadReports
     function initDashboard() {
       console.log('initDashboard: Inizializzazione dashboard');
+
+      // Verifica token di accesso (gated dashboard)
+      if (!ensureAccessToken()) {
+        console.warn('initDashboard: access token mancante o non valido, redirect in corso...');
+        return;
+      }
+
       const container = document.getElementById('reports-container');
       if (!container) {
         console.error('initDashboard: Container non trovato!');
@@ -2218,13 +2267,16 @@
     }
     
     // Inizializza quando il DOM è pronto
+    function guardedInit() {
+      // la verifica del token viene fatta dentro initDashboard
+      setTimeout(initDashboard, 100);
+    }
+
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(initDashboard, 100);
-      });
+      document.addEventListener('DOMContentLoaded', guardedInit);
     } else {
       // DOM già pronto
-      setTimeout(initDashboard, 100);
+      guardedInit();
     }
   </script>
   

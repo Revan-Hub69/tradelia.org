@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Accesso Dashboard · Tradelia</title>
+  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/assets/css/global-header.css" />
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--surface-page, #020617);
+      color: var(--ink, #e5e7eb);
+      font-family: var(--ff-sans, system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif);
+    }
+    #site-header-slot {
+      flex-shrink: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 1.5rem 3rem;
+    }
+    .access-wrapper {
+      width: 100%;
+      max-width: 480px;
+      background: var(--surface-card, #020617);
+      border-radius: var(--radius-xl, 1rem);
+      border: 1px solid rgba(148, 163, 184, 0.32);
+      box-shadow:
+        0 18px 48px rgba(15, 23, 42, 0.7),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      padding: 2.4rem 2.1rem 2rem;
+    }
+    .access-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin: 0 0 0.5rem;
+    }
+    .access-subtitle {
+      margin: 0 0 1.5rem;
+      font-size: 0.9rem;
+      color: var(--ink-soft, #e5e7eb);
+      line-height: 1.6;
+    }
+    .access-alert {
+      display: none;
+      margin-bottom: 1rem;
+      padding: 0.75rem 0.9rem;
+      border-radius: var(--radius-md, 0.75rem);
+      font-size: 0.8rem;
+      line-height: 1.5;
+      background: rgba(248, 113, 113, 0.08);
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      color: rgb(252, 165, 165);
+    }
+    .access-alert[data-visible="true"] {
+      display: block;
+    }
+    .access-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      margin-top: 0.5rem;
+    }
+    .access-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted, #9ca3af);
+      margin-bottom: 0.25rem;
+    }
+    .access-input {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      border-radius: 0.55rem;
+      border: 1.5px solid var(--br-card, #1f2937);
+      background: var(--surface-elev, #020617);
+      color: var(--ink, #e5e7eb);
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .access-input::placeholder {
+      color: var(--muted, #9ca3af);
+      opacity: 0.7;
+    }
+    .access-input:focus {
+      border-color: var(--brand-500, #3b82f6);
+      background: var(--surface-card, #020617);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+    }
+    .access-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+      align-items: center;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      border-radius: 999px;
+      padding: 0.6rem 1.4rem;
+      font-size: 0.85rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.18s, color 0.18s, border-color 0.18s, transform 0.08s;
+    }
+    .btn-primary {
+      background: var(--brand-600, #2563eb);
+      color: #0b1120;
+      border-color: transparent;
+    }
+    .btn-primary:hover {
+      background: var(--brand-400, #60a5fa);
+      transform: translateY(-1px);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--ink-soft, #e5e7eb);
+      border-color: rgba(148, 163, 184, 0.7);
+    }
+    .btn-outline:hover {
+      border-color: var(--brand-500, #3b82f6);
+      color: var(--brand-200, #bfdbfe);
+      transform: translateY(-1px);
+    }
+    .access-meta {
+      margin-top: 1.5rem;
+      font-size: 0.78rem;
+      color: var(--muted, #9ca3af);
+      line-height: 1.5;
+    }
+    @media (max-width: 640px) {
+      #site-header-slot {
+        position: static;
+      }
+      main {
+        padding-top: 4.5rem;
+      }
+      .access-wrapper {
+        padding: 1.9rem 1.5rem 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="site-header-slot"></div>
+  <main>
+    <section class="access-wrapper" aria-labelledby="access-title">
+      <h1 id="access-title" class="access-title">Accesso alla dashboard Tradelia</h1>
+      <p class="access-subtitle">
+        Inserisci il <strong>codice di accesso</strong> ricevuto via email per entrare nella dashboard dei dossier
+        e dei report riservati. Il codice è personale e può essere revocato in qualsiasi momento.
+      </p>
+      <div id="access-alert" class="access-alert" role="alert" aria-live="polite"></div>
+      <form id="access-form" class="access-form" novalidate>
+        <div>
+          <div class="access-label">Codice di accesso</div>
+          <input
+            id="access-token"
+            class="access-input"
+            type="password"
+            name="token"
+            autocomplete="off"
+            inputmode="text"
+            required
+            placeholder="Incolla qui il codice Tradelia"
+            aria-describedby="access-help"
+          />
+          <div id="access-help" class="access-meta">
+            Se non hai ancora un codice, puoi richiederlo scrivendo al desk Tradelia.
+          </div>
+        </div>
+        <div class="access-actions">
+          <button type="submit" class="btn btn-primary">Accedi alla dashboard</button>
+          <a href="mailto:info@tradelia.org?subject=Richiesta%20codice%20accesso%20dashboard%20Tradelia"
+             class="btn btn-outline">
+            Richiedi un codice
+          </a>
+        </div>
+      </form>
+      <p class="access-meta">
+        Per motivi di sicurezza non memorizziamo credenziali personali: il codice identifica solo il tuo profilo
+        di accesso ai contenuti didattici, nel rispetto delle policy MiFID-safe di Tradelia.
+      </p>
+    </section>
+  </main>
+  <script type="module" src="/assets/js/global-header.js"></script>
+  <script>
+    (function() {
+      const KEY = 'tradelia-access-token-v1';
+      const form = document.getElementById('access-form');
+      const input = document.getElementById('access-token');
+      const alertBox = document.getElementById('access-alert');
+
+      function showAlert(message) {
+        if (!alertBox) return;
+        alertBox.textContent = message;
+        alertBox.setAttribute('data-visible', 'true');
+      }
+
+      function hideAlert() {
+        if (!alertBox) return;
+        alertBox.removeAttribute('data-visible');
+        alertBox.textContent = '';
+      }
+
+      // Messaggio se arriviamo da redirect senza token
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const reason = params.get('reason');
+        if (reason === 'missing_token') {
+          showAlert('Per accedere alla dashboard è necessario un codice valido. Inseriscilo qui sotto.');
+          params.delete('reason');
+          const url = new URL(window.location.href);
+          url.search = params.toString();
+          window.history.replaceState({}, '', url.toString());
+        }
+      } catch (e) {
+        // ignore
+      }
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        hideAlert();
+        const token = (input.value || '').trim();
+        if (!token) {
+          showAlert('Inserisci il codice di accesso ricevuto via email.');
+          input.focus();
+          return;
+        }
+        try {
+          localStorage.setItem(KEY, token);
+        } catch (err) {
+          // Se localStorage non è disponibile, comunque procediamo al redirect
+        }
+        window.location.href = '/dashboard.html';
+      });
+    })();
+  </script>
+</body>
+</html>
+
+
