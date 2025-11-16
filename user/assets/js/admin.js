@@ -179,14 +179,26 @@ async function loadUsers() {
     if (tokensError) Logger.warn('Admin', 'Error loading tokens', tokensError);
     
     // 4. Fetch emails via RPC function (solo admin) - per utenti con user_id
-    const { data: emails, error: emailsError } = await supabase
-      .rpc('get_user_emails_for_admin');
-    
-    if (emailsError) {
-      Logger.warn('Admin', 'RPC emails error, using fallback', emailsError);
+    // Nota: Se la RPC function non esiste o fallisce, continuiamo senza email (fallback)
+    let emails = null;
+    try {
+      const { data: emailsData, error: emailsError } = await supabase
+        .rpc('get_user_emails_for_admin');
+      
+      if (emailsError) {
+        Logger.warn('Admin', 'RPC emails error, using fallback', emailsError);
+        // Se la RPC function non esiste (400/404), usiamo solo i dati disponibili
+        emails = null;
+      } else {
+        emails = emailsData;
+      }
+    } catch (rpcErr) {
+      Logger.warn('Admin', 'RPC emails exception, using fallback', rpcErr);
+      emails = null;
     }
     
     // Crea mappe per lookup veloce
+    // Se emails è null (RPC fallita), creiamo una mappa vuota
     const emailsMap = new Map((emails || []).map(e => [e.user_id, e.email]));
     const rolesMap = new Map((roles || []).map(r => [r.user_id, r]));
     const creditsMap = new Map((credits || []).map(c => [c.user_id, c]));
@@ -213,15 +225,31 @@ async function loadUsers() {
     ]);
     
     // Crea array di utenti da user_id
+    // Se non abbiamo email dalla RPC, proviamo a recuperarle da subscribers o tokens
     const usersFromIds = Array.from(userIds).map(userId => {
-      const email = emailsMap.get(userId) || null;
+      let email = emailsMap.get(userId) || null;
+      
+      // Fallback: cerca email in subscribers o tokens se RPC fallita
+      if (!email) {
+        const subscriber = Array.from(subscribersMap.values()).find(s => s.auth_user_id === userId);
+        if (subscriber?.email) {
+          email = subscriber.email;
+        } else {
+          // Cerca in tokens
+          const token = Array.from(tokensMap.values()).find(t => t.user_id === userId);
+          if (token?.email) {
+            email = token.email;
+          }
+        }
+      }
+      
       const profile = profilesMap.get(userId);
       const role = rolesMap.get(userId);
       const credit = creditsMap.get(userId);
       
       return {
         user_id: userId,
-        email: email,
+        email: email || `${userId.slice(0, 8)}...`,
         display_name: profile?.display_name || '—',
         role: role?.role || null,
         valid_until: role?.valid_until || null,
