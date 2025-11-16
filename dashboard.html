@@ -1054,8 +1054,15 @@
       <!-- ===== REPORT SECTION ===== -->
       <section class="report-section active">
         <div class="report-header">
-          <h2 class="report-title">Report</h2>
-          <p class="report-description">Framework Accademico AI Tradelia — analisi multi-fattore su dati Tier-1. Include i deck proprietari SRD v5.0 (Swing Research Deck), MTB v3.1 (Macro Tactical Briefing) e le release sperimentali in arrivo.</p>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">
+            <div style="flex: 1;">
+              <h2 class="report-title">Report</h2>
+              <p class="report-description">Framework Accademico AI Tradelia — analisi multi-fattore su dati Tier-1. Include i deck proprietari SRD v5.0 (Swing Research Deck), MTB v3.1 (Macro Tactical Briefing) e le release sperimentali in arrivo.</p>
+            </div>
+            <a href="/user/admin.html" id="admin-dashboard-link" class="btn btn-primary btn-sm" style="margin-top: 0.5rem; white-space: nowrap; display: none;">
+              ⚙️ Dashboard Admin
+            </a>
+          </div>
         </div>
         
         <div class="stats-bar" id="reports-stats" style="display: none;">
@@ -2237,6 +2244,11 @@
           return false;
         }
         
+        // Token valido: verifica se è admin e mostra link
+        if (data.email) {
+          checkAndShowAdminLink(data.email);
+        }
+        
         // Token valido: procedi
         return true;
       } catch (err) {
@@ -2247,6 +2259,32 @@
       }
     }
 
+    // Verifica se l'utente è admin e mostra link
+    async function checkAndShowAdminLink(email) {
+      try {
+        // Importa Supabase client dal modulo esistente
+        const { supabase } = await import('/report/assets/js/supabase-client.js');
+        
+        // Verifica se l'email è in admin_emails
+        const { data, error } = await supabase
+          .from('admin_emails')
+          .select('email')
+          .eq('email', email.toLowerCase())
+          .maybeSingle();
+        
+        if (!error && data) {
+          // È admin: mostra link
+          const adminLink = document.getElementById('admin-dashboard-link');
+          if (adminLink) {
+            adminLink.style.display = 'block';
+          }
+        }
+      } catch (err) {
+        console.warn('[Dashboard] Errore verifica admin:', err);
+        // In caso di errore, non mostrare il link (fail-safe)
+      }
+    }
+    
     // Aspetta che il DOM sia completamente pronto prima di chiamare loadReports
     async function initDashboard() {
       console.log('initDashboard: Inizializzazione dashboard');
