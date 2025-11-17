@@ -1,6 +1,5 @@
-import { getServiceSupabase } from '../_lib/supabase.js';
-import { requireAdmin } from '../_lib/adminAuth.js';
-import { handleRouteError, methodNotAllowed, sendJSON, HttpError } from '../_lib/http.js';
+import { getServiceSupabase } from '../../_lib/supabase.js';
+import { HttpError, methodNotAllowed, sendJSON } from '../../_lib/http.js';
 
 const supabase = getServiceSupabase();
 
@@ -23,9 +22,7 @@ const computeStats = (users = []) => {
 const buildUsersSnapshot = async () => {
   const [roles, profiles, credits, tokens, subscriptions] = await Promise.all([
     fetchAll(
-      supabase
-        .from('user_roles')
-        .select('user_id,email,role,plan_source,valid_until,created_at'),
+      supabase.from('user_roles').select('user_id,email,role,plan_source,valid_until,created_at'),
       'user_roles'
     ),
     fetchAll(supabase.from('user_profiles').select('user_id,display_name'), 'user_profiles'),
@@ -214,15 +211,10 @@ const handleUpdateUser = async (req, res) => {
   }
 
   let userId = identifierType === 'user_id' ? identifier : inputUserId || null;
-  let email =
-    (identifierType === 'email' ? identifier : inputEmail)?.trim().toLowerCase() || null;
+  let email = (identifierType === 'email' ? identifier : inputEmail)?.trim().toLowerCase() || null;
 
   if (!email && userId) {
-    const { data, error } = await supabase
-      .from('user_roles')
-      .select('email')
-      .eq('user_id', userId)
-      .maybeSingle();
+    const { data, error } = await supabase.from('user_roles').select('email').eq('user_id', userId).maybeSingle();
     if (error) {
       throw new HttpError(500, 'Errore nel recupero email utente', error.message);
     }
@@ -294,21 +286,15 @@ const handleUpdateUser = async (req, res) => {
   return sendJSON(res, 200, { ok: true });
 };
 
-export default async function handler(req, res) {
-  try {
-    await requireAdmin(req);
-
-    if (req.method === 'GET') {
-      return await handleListUsers(res);
-    }
-
-    if (req.method === 'PUT') {
-      return await handleUpdateUser(req, res);
-    }
-
-    return methodNotAllowed(res, ['GET', 'PUT']);
-  } catch (error) {
-    return handleRouteError(res, error);
+export const handleUsersRequest = async (req, res) => {
+  if (req.method === 'GET') {
+    return handleListUsers(res);
   }
-}
+
+  if (req.method === 'PUT') {
+    return handleUpdateUser(req, res);
+  }
+
+  return methodNotAllowed(res, ['GET', 'PUT']);
+};
 

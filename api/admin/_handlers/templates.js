@@ -1,6 +1,5 @@
-import { getServiceSupabase } from '../_lib/supabase.js';
-import { requireAdmin } from '../_lib/adminAuth.js';
-import { handleRouteError, methodNotAllowed, sendJSON } from '../_lib/http.js';
+import { getServiceSupabase } from '../../_lib/supabase.js';
+import { methodNotAllowed, sendJSON } from '../../_lib/http.js';
 
 const supabase = getServiceSupabase();
 
@@ -28,17 +27,15 @@ const normalizeTemplate = (raw) => ({
   }))
 });
 
-export default async function handler(req, res) {
-  try {
-    await requireAdmin(req);
+export const handleTemplatesRequest = async (req, res) => {
+  if (req.method !== 'GET') {
+    return methodNotAllowed(res, ['GET']);
+  }
 
-    if (req.method !== 'GET') {
-      return methodNotAllowed(res, ['GET']);
-    }
-
-    const { data, error } = await supabase
-      .from('report_templates')
-      .select(`
+  const { data, error } = await supabase
+    .from('report_templates')
+    .select(
+      `
         id,
         slug,
         label,
@@ -60,17 +57,15 @@ export default async function handler(req, res) {
             default_content
           )
         )
-      `)
-      .order('label', { ascending: true });
+      `
+    )
+    .order('label', { ascending: true });
 
-    if (error) {
-      throw error;
-    }
-
-    const templates = (data || []).map(normalizeTemplate);
-    return sendJSON(res, 200, { ok: true, templates });
-  } catch (error) {
-    return handleRouteError(res, error);
+  if (error) {
+    throw error;
   }
-}
+
+  const templates = (data || []).map(normalizeTemplate);
+  return sendJSON(res, 200, { ok: true, templates });
+};
 

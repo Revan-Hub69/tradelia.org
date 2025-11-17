@@ -1,6 +1,5 @@
-import { getServiceSupabase } from '../_lib/supabase.js';
-import { requireAdmin } from '../_lib/adminAuth.js';
-import { handleRouteError, methodNotAllowed, sendJSON, HttpError } from '../_lib/http.js';
+import { getServiceSupabase } from '../../_lib/supabase.js';
+import { HttpError, methodNotAllowed, sendJSON } from '../../_lib/http.js';
 
 const supabase = getServiceSupabase();
 
@@ -63,9 +62,7 @@ const handleListReports = async (req, res) => {
   }
 
   if (search) {
-    query = query.or(
-      `slug.ilike.%${search}%,title.ilike.%${search}%,report_type.ilike.%${search}%`
-    );
+    query = query.or(`slug.ilike.%${search}%,title.ilike.%${search}%,report_type.ilike.%${search}%`);
   }
 
   const { data, error } = await query.limit(200);
@@ -152,11 +149,7 @@ const handleCreateReport = async (req, res, ctx) => {
 
   payload.created_by = ctx.userId;
 
-  const { data: inserted, error } = await supabase
-    .from('reports')
-    .insert(payload)
-    .select('*')
-    .single();
+  const { data: inserted, error } = await supabase.from('reports').insert(payload).select('*').single();
 
   if (error) {
     throw new HttpError(500, 'Errore durante la creazione del report', error.message);
@@ -239,32 +232,26 @@ const handleArchiveReport = async (req, res, ctx) => {
   });
 };
 
-export default async function handler(req, res) {
-  try {
-    const ctx = await requireAdmin(req);
-
-    if (req.method === 'GET') {
-      if (req.query?.id) {
-        return await handleGetReport(req, res);
-      }
-      return await handleListReports(req, res);
+export const handleReportsRequest = async (req, res, ctx) => {
+  if (req.method === 'GET') {
+    if (req.query?.id) {
+      return handleGetReport(req, res);
     }
-
-    if (req.method === 'POST') {
-      return await handleCreateReport(req, res, ctx);
-    }
-
-    if (req.method === 'PUT') {
-      return await handleUpdateReport(req, res, ctx);
-    }
-
-    if (req.method === 'DELETE') {
-      return await handleArchiveReport(req, res, ctx);
-    }
-
-    return methodNotAllowed(res, ['GET', 'POST', 'PUT', 'DELETE']);
-  } catch (error) {
-    return handleRouteError(res, error);
+    return handleListReports(req, res);
   }
-}
+
+  if (req.method === 'POST') {
+    return handleCreateReport(req, res, ctx);
+  }
+
+  if (req.method === 'PUT') {
+    return handleUpdateReport(req, res, ctx);
+  }
+
+  if (req.method === 'DELETE') {
+    return handleArchiveReport(req, res, ctx);
+  }
+
+  return methodNotAllowed(res, ['GET', 'POST', 'PUT', 'DELETE']);
+};
 

@@ -1,6 +1,5 @@
-import { getServiceSupabase } from '../_lib/supabase.js';
-import { requireAdmin } from '../_lib/adminAuth.js';
-import { handleRouteError, methodNotAllowed, sendJSON, HttpError } from '../_lib/http.js';
+import { getServiceSupabase } from '../../_lib/supabase.js';
+import { HttpError, methodNotAllowed, sendJSON } from '../../_lib/http.js';
 
 const supabase = getServiceSupabase();
 
@@ -10,7 +9,7 @@ const addMonths = (date, months = 1) => {
   return result.toISOString();
 };
 
-const handleManualPayment = async (req, res) => {
+export const handlePaymentsRequest = async (req, res) => {
   if (req.method !== 'POST') {
     return methodNotAllowed(res, ['POST']);
   }
@@ -84,9 +83,7 @@ const handleManualPayment = async (req, res) => {
     valid_until: newValidUntil
   };
 
-  const { error: upsertRoleError } = await supabase
-    .from('user_roles')
-    .upsert(rolePayload, { onConflict: 'email' });
+  const { error: upsertRoleError } = await supabase.from('user_roles').upsert(rolePayload, { onConflict: 'email' });
 
   if (upsertRoleError) {
     throw new HttpError(500, 'Errore durante l\'aggiornamento del ruolo', upsertRoleError.message);
@@ -104,9 +101,7 @@ const handleManualPayment = async (req, res) => {
     }
   };
 
-  const { error: subscriptionError } = await supabase
-    .from('subscriptions')
-    .insert(subscriptionPayload);
+  const { error: subscriptionError } = await supabase.from('subscriptions').insert(subscriptionPayload);
 
   if (subscriptionError) {
     throw new HttpError(500, 'Errore durante la creazione dell\'abbonamento', subscriptionError.message);
@@ -147,13 +142,4 @@ const handleManualPayment = async (req, res) => {
     validUntil: newValidUntil
   });
 };
-
-export default async function handler(req, res) {
-  try {
-    await requireAdmin(req);
-    return await handleManualPayment(req, res);
-  } catch (error) {
-    return handleRouteError(res, error);
-  }
-}
 

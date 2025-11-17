@@ -116,10 +116,23 @@ let reportDetailsRequestSeq = 0;
 
 let defaultTemplateSlug = DEFAULT_REPORT_TYPE;
 
-const callAdminAPI = async (path, { method = 'GET', body, timeout = NETWORK_TIMEOUT_MS } = {}) => {
+const callAdminAPI = async (
+  { resource, action, params = {}, method = 'GET', body, timeout = NETWORK_TIMEOUT_MS } = {}
+) => {
+  if (!resource) {
+    throw new Error('Parametro API mancante: resource');
+  }
+
   if (!currentUser?.token) {
     throw new Error('Token amministratore non disponibile');
   }
+
+  const searchParams = new URLSearchParams({ resource, ...params });
+  if (action) {
+    searchParams.set('action', action);
+  }
+
+  const url = `/api/admin${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
 
   const headers = {
     'X-Admin-Token': currentUser.token
@@ -131,7 +144,7 @@ const callAdminAPI = async (path, { method = 'GET', body, timeout = NETWORK_TIME
     payload = JSON.stringify(body);
   }
 
-  const response = await fetchJSON(path, { method, headers, body: payload }, timeout);
+  const response = await fetchJSON(url, { method, headers, body: payload }, timeout);
 
   if (!response?.ok) {
     throw new Error(response?.error || 'Richiesta API admin fallita');
@@ -181,7 +194,7 @@ const templateRegistry = (() => {
   return {
     async ensureLoaded() {
       if (loaded) return templates;
-      const response = await callAdminAPI('/api/admin/templates');
+      const response = await callAdminAPI({ resource: 'templates' });
       templates = response.templates || [];
       rebuildIndex();
       loaded = true;
@@ -760,7 +773,7 @@ const loadReports = async () => {
   if (!currentUser) return;
   const requestId = ++reportsRequestSeq;
   try {
-    const response = await callAdminAPI('/api/admin/reports');
+    const response = await callAdminAPI({ resource: 'reports' });
     if (requestId !== reportsRequestSeq) return;
     reports = response.reports || [];
     filteredReports = reports;
@@ -817,7 +830,10 @@ const updateChartPreview = async (path) => {
 const selectReport = async (id) => {
   const requestId = ++reportDetailsRequestSeq;
   try {
-    const response = await callAdminAPI(`/api/admin/reports?id=${encodeURIComponent(id)}`);
+    const response = await callAdminAPI({
+      resource: 'reports',
+      params: { id }
+    });
     if (requestId !== reportDetailsRequestSeq) return;
 
     const report = response.report;
@@ -1036,7 +1052,8 @@ const saveReport = async ({ publish }) => {
       modules
     };
 
-    const response = await callAdminAPI('/api/admin/reports', {
+    const response = await callAdminAPI({
+      resource: 'reports',
       method: isNew ? 'POST' : 'PUT',
       body: apiPayload
     });
@@ -1077,7 +1094,8 @@ const deleteReport = async () => {
   if (!confirm('Eliminare definitivamente il report?')) return;
 
   try {
-    await callAdminAPI('/api/admin/reports', {
+    await callAdminAPI({
+      resource: 'reports',
       method: 'DELETE',
       body: { id: activeReport.id }
     });

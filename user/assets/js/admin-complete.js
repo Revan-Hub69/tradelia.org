@@ -191,7 +191,8 @@ async function handleSaveUser() {
     if (SAVE_USER_BTN) SAVE_USER_BTN.disabled = true;
 
     const api = getAdminApiCall();
-    await api('/api/admin/users', {
+    await api({
+      resource: 'users',
       method: 'PUT',
       body: {
         identifier,
@@ -237,7 +238,8 @@ async function handleUpdateCredits() {
     if (UPDATE_CREDITS_BTN) UPDATE_CREDITS_BTN.disabled = true;
 
     const api = getAdminApiCall();
-    await api('/api/admin/credits', {
+    await api({
+      resource: 'credits',
       method: 'POST',
       body: {
         userId,

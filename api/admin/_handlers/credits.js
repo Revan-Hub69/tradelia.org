@@ -1,6 +1,5 @@
-import { getServiceSupabase } from '../_lib/supabase.js';
-import { requireAdmin } from '../_lib/adminAuth.js';
-import { handleRouteError, methodNotAllowed, sendJSON, HttpError } from '../_lib/http.js';
+import { getServiceSupabase } from '../../_lib/supabase.js';
+import { HttpError, methodNotAllowed, sendJSON } from '../../_lib/http.js';
 
 const supabase = getServiceSupabase();
 
@@ -18,7 +17,7 @@ const getCurrentCredits = async (userId) => {
   return data?.credits_balance || 0;
 };
 
-const handleUpdateCredits = async (req, res) => {
+export const handleCreditsRequest = async (req, res) => {
   if (req.method !== 'POST') {
     return methodNotAllowed(res, ['POST']);
   }
@@ -72,13 +71,4 @@ const handleUpdateCredits = async (req, res) => {
     credits: newBalance
   });
 };
-
-export default async function handler(req, res) {
-  try {
-    await requireAdmin(req);
-    return await handleUpdateCredits(req, res);
-  } catch (error) {
-    return handleRouteError(res, error);
-  }
-}
 

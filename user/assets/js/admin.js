@@ -55,7 +55,13 @@ const updateStatsDisplay = () => {
   if (ADMIN_STATS.totalCredits) ADMIN_STATS.totalCredits.textContent = stats.totalCredits;
 };
 
-const callAdminAPI = async (path, { method = 'GET', body, timeout = 15000 } = {}) => {
+const callAdminAPI = async (
+  { resource, action, params = {}, method = 'GET', body, timeout = 15000 } = {}
+) => {
+  if (!resource) {
+    throw new Error('Parametro API mancante: resource');
+  }
+
   if (!adminToken) {
     throw new Error('Token amministratore non disponibile');
   }
@@ -64,6 +70,12 @@ const callAdminAPI = async (path, { method = 'GET', body, timeout = 15000 } = {}
   const timer = setTimeout(() => controller.abort(), timeout);
 
   try {
+    const searchParams = new URLSearchParams({ resource, ...params });
+    if (action) {
+      searchParams.set('action', action);
+    }
+    const url = `/api/admin${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
+
     const headers = { 'X-Admin-Token': adminToken };
     let payload = body;
     if (body && !(body instanceof FormData)) {
@@ -71,7 +83,7 @@ const callAdminAPI = async (path, { method = 'GET', body, timeout = 15000 } = {}
       payload = JSON.stringify(body);
     }
 
-    const response = await fetch(path, {
+    const response = await fetch(url, {
       method,
       headers,
       body: payload,
@@ -80,7 +92,7 @@ const callAdminAPI = async (path, { method = 'GET', body, timeout = 15000 } = {}
 
     const data = await response.json().catch(() => ({}));
     if (!response.ok || data.ok === false) {
-      throw new Error(data.error || `Richiesta ${method} ${path} fallita`);
+      throw new Error(data.error || `Richiesta ${method} ${url} fallita`);
     }
 
     return data;
@@ -90,7 +102,7 @@ const callAdminAPI = async (path, { method = 'GET', body, timeout = 15000 } = {}
 };
 
 if (typeof window !== 'undefined') {
-  window.adminApiCall = (path, options) => callAdminAPI(path, options);
+  window.adminApiCall = (options) => callAdminAPI(options);
 }
 
 init();
@@ -319,7 +331,7 @@ async function loadUsers() {
         </tr>
       `;
     }
-    const response = await callAdminAPI('/api/admin/users');
+    const response = await callAdminAPI({ resource: 'users' });
     setAllUsers(response.users || []);
     latestStats = response.stats || computeStatsFromUsers(allUsers);
   } catch (err) {
@@ -533,7 +545,8 @@ if (PAYMENTS_SAVE_BTN && PAYMENTS_MODAL) {
       PAYMENTS_SAVE_BTN.disabled = true;
       PAYMENTS_SAVE_BTN.textContent = 'Salvataggio...';
 
-      await callAdminAPI('/api/admin/payments', {
+      await callAdminAPI({
+        resource: 'payments',
         method: 'POST',
         body: {
           userId,
