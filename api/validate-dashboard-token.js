@@ -4,6 +4,8 @@
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 
+const ADMIN_PLAN_ROLES = new Set(['admin', 'internal', 'staff', 'team', 'founder']);
+
 // Wrapper per gestire errori non catturati
 export default async function handler(req, res) {
   // CORS headers PRIMA di tutto
@@ -173,9 +175,50 @@ async function validateTokenHandler(req, res) {
   
   // Estrai dati
   const userId = tokenRecord.user_id;
-  let email = tokenRecord.email;
+  const rawEmail = typeof tokenRecord.email === 'string' ? tokenRecord.email.trim() : '';
+  const email = rawEmail || null;
+  const normalizedEmail = rawEmail.toLowerCase();
   const planRole = tokenRecord.plan_role;
+  const normalizedPlanRole = (planRole || '').toLowerCase();
   const validUntil = tokenRecord.valid_until;
+
+  let isAdmin = ADMIN_PLAN_ROLES.has(normalizedPlanRole);
+
+  if (!isAdmin && normalizedEmail) {
+    try {
+      const { data: adminEmailRecord, error: adminEmailError } = await supabase
+        .from('admin_emails')
+        .select('email')
+        .eq('email', normalizedEmail)
+        .maybeSingle();
+
+      if (adminEmailError) {
+        console.warn('[Validate Token] Lookup admin_emails fallita:', adminEmailError);
+      } else if (adminEmailRecord) {
+        isAdmin = true;
+      }
+    } catch (lookupError) {
+      console.warn('[Validate Token] Errore verifica admin_emails:', lookupError);
+    }
+  }
+
+  if (!isAdmin && userId) {
+    try {
+      const { data: adminUserRecord, error: adminUserError } = await supabase
+        .from('admin_users')
+        .select('user_id')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (adminUserError) {
+        console.warn('[Validate Token] Lookup admin_users fallita:', adminUserError);
+      } else if (adminUserRecord) {
+        isAdmin = true;
+      }
+    } catch (adminUserLookupError) {
+      console.warn('[Validate Token] Errore verifica admin_users:', adminUserLookupError);
+    }
+  }
   
   // Calcola giorni rimanenti
   const now = new Date();
@@ -216,6 +259,7 @@ async function validateTokenHandler(req, res) {
     status: subscriptionStatus,
     validUntil: validUntil,
     daysLeft: daysLeft,
-    canCancel: canCancel
+    canCancel: canCancel,
+    isAdmin
   });
 }

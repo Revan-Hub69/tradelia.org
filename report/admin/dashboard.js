@@ -6,6 +6,52 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 });
 window.supabase = supabase;
 
+const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
+const ADMIN_PLAN_ROLES = new Set(['admin', 'internal', 'staff', 'team', 'founder']);
+const NETWORK_TIMEOUT_MS = 15000;
+
+const readStoredAdminToken = () => {
+  try {
+    const rawToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+    return rawToken?.trim() || null;
+  } catch (error) {
+    console.warn('[Report Admin] Impossibile leggere il token locale', error);
+    return null;
+  }
+};
+
+const clearStoredAdminToken = () => {
+  try {
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+  } catch {
+    // ignore
+  }
+};
+
+const fetchWithTimeout = async (resource, options = {}, timeout = NETWORK_TIMEOUT_MS) => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try {
+    const response = await fetch(resource, {
+      ...options,
+      signal: controller.signal
+    });
+    return response;
+  } finally {
+    clearTimeout(timer);
+  }
+};
+
+const fetchJSON = async (resource, options = {}, timeout) => {
+  const response = await fetchWithTimeout(resource, options, timeout);
+  const contentType = response.headers.get('content-type');
+  if (!contentType || !contentType.includes('application/json')) {
+    const preview = await response.text();
+    throw new Error(`Risposta non JSON (${response.status}): ${preview.slice(0, 160)}`);
+  }
+  return response.json();
+};
+
 const DEFAULT_REPORT_TYPE = 'swing_master_5_0';
 
 const REPORT_TEMPLATES = {
@@ -94,6 +140,8 @@ let lastSavedAt = null;
 let currentChartSignedUrl = null;
 let currentTemplateType = DEFAULT_REPORT_TYPE;
 let lastFocusedModuleArea = null;
+let reportsRequestSeq = 0;
+let reportDetailsRequestSeq = 0;
 
 const statusLabels = {
   draft: 'Bozza',
@@ -124,6 +172,25 @@ const STATUS_BANNER_CLASSES = {
   error: 'status-banner--error'
 };
 
+const AUTH_CARD_MESSAGES = {
+  not_admin: {
+    title: 'Accesso non autorizzato',
+    message: 'Il token inserito non dispone dei permessi per accedere alla dashboard report. Richiedi l\'abilitazione a support@tradelia.org.'
+  },
+  lookup_failed: {
+    title: 'Verifica non riuscita',
+    message: 'Non siamo riusciti a verificare i permessi amministratore. Aggiorna il token o contatta il supporto.'
+  },
+  session_error: {
+    title: 'Sessione scaduta',
+    message: 'La sessione non è più valida. Effettua nuovamente l\'accesso dalla pagina dedicata.'
+  },
+  missing_user: {
+    title: 'Sessione non valida',
+    message: 'Non riusciamo a identificare l\'utente associato al token corrente. Torna alla pagina di accesso e ripeti la procedura.'
+  }
+};
+
 const setStatusBannerMessage = (tone = 'info', title = '', message = '') => {
   if (!statusBanner) return;
   Object.values(STATUS_BANNER_CLASSES).forEach((cls) => statusBanner.classList.remove(cls));
@@ -135,6 +202,23 @@ const setStatusBannerMessage = (tone = 'info', title = '', message = '') => {
   if (message !== undefined) {
     statusBannerMessage.textContent = message;
   }
+};
+
+const showUnauthorizedState = (reason = 'not_admin') => {
+  const copy = AUTH_CARD_MESSAGES[reason] || AUTH_CARD_MESSAGES.not_admin;
+  authCard.classList.remove('hidden');
+  authLogged.classList.add('hidden');
+  appGrid.classList.add('hidden');
+  authCard.innerHTML = `
+    <h3 style="margin-bottom: 1rem;">${copy.title}</h3>
+    <p style="margin-bottom: 1.5rem; color: var(--ink-soft);">
+      ${copy.message}
+    </p>
+    <div style="display:flex; gap:0.75rem; flex-wrap:wrap; justify-content:center;">
+      <a href="/accesso.html" class="btn btn-primary">Vai alla pagina di accesso</a>
+      <a href="mailto:support@tradelia.org" class="btn btn-outline">Contatta il supporto</a>
+    </div>
+  `;
 };
 
 const formatStatusTime = (date) => {
@@ -308,7 +392,7 @@ const applyTemplateToModules = (type, { skipConfirm = false, markDirty = true } 
     const confirmed = confirm('Sostituire i moduli correnti con il template selezionato?');
     if (!confirmed) {
       reportTypeEl.value = currentTemplateType;
-    return;
+      return;
     }
   }
 
@@ -394,7 +478,7 @@ const appendModuleCard = (module = {}, options = {}) => {
     try {
       JSON.parse(contentArea.value);
       showToast('JSON valido', 'success');
-  } catch (error) {
+    } catch (error) {
       showToast(`JSON non valido: ${error.message}`, 'error');
     }
   });
@@ -572,7 +656,12 @@ const renderReportsList = () => {
     `;
     card.addEventListener('click', async () => {
       if (isDirty && !confirm('Ci sono modifiche non salvate. Procedere comunque?')) return;
-      await selectReport(report.id);
+      try {
+        await selectReport(report.id);
+      } catch (error) {
+        console.error('[Dashboard] errore nella selezione del report', error);
+        showToast('Errore durante la selezione del report', 'error');
+      }
     });
     reportsListEl.appendChild(card);
   });
@@ -580,13 +669,21 @@ const renderReportsList = () => {
 
 const loadReports = async () => {
   if (!currentUser) return;
+  const requestId = ++reportsRequestSeq;
   const { data, error } = await supabase
     .from('reports')
     .select('id, slug, title, status, report_type, chart_path, notes, published_at, updated_at, report_modules(count)')
     .order('updated_at', { ascending: false });
 
+  if (requestId !== reportsRequestSeq) {
+    return;
+  }
+
   if (error) {
     console.error(error);
+    reports = [];
+    filteredReports = [];
+    renderReportsList();
     showToast('Errore nel caricamento dei report', 'error');
     return;
   }
@@ -648,11 +745,16 @@ const updateChartPreview = async (path) => {
 };
 
 const selectReport = async (id) => {
+  const requestId = ++reportDetailsRequestSeq;
   const { data: report, error: reportError } = await supabase
     .from('reports')
     .select('*')
     .eq('id', id)
     .single();
+
+  if (requestId !== reportDetailsRequestSeq) {
+    return;
+  }
 
   if (reportError) {
     console.error(reportError);
@@ -666,10 +768,14 @@ const selectReport = async (id) => {
     .eq('report_id', id)
     .order('order_index', { ascending: true, nullsFirst: true });
 
+  if (requestId !== reportDetailsRequestSeq) {
+    return;
+  }
+
   if (modulesError) {
     console.error(modulesError);
     showToast('Errore nel recupero dei moduli', 'error');
-          return;
+    return;
   }
 
   activeReport = report;
@@ -683,9 +789,16 @@ const selectReport = async (id) => {
   chartFileEl.value = '';
   await updateChartPreview(report.chart_path);
 
+  const moduleList = Array.isArray(modules) ? modules : [];
+
   modulesContainer.innerHTML = '';
-  if (modules.length) {
-    modules.forEach((module) => appendModuleCard(module, { lockedKey: REPORT_TEMPLATES[report.report_type]?.modules?.length > 0, allowDuplicate: report.report_type === 'custom' }));
+  if (moduleList.length) {
+    moduleList.forEach((module) =>
+      appendModuleCard(module, {
+        lockedKey: REPORT_TEMPLATES[report.report_type]?.modules?.length > 0,
+        allowDuplicate: report.report_type === 'custom'
+      })
+    );
   } else {
     renderModulesEmptyState();
   }
@@ -735,8 +848,8 @@ const uploadChart = async () => {
   const file = chartFileEl.files?.[0];
   if (!file) {
     showToast('Seleziona un file immagine', 'error');
-          return;
-        }
+    return;
+  }
   await uploadChartFile(file);
 };
 
@@ -753,8 +866,8 @@ const handleChartPaste = async (event) => {
       const renamed = new File([file], `clipboard-${Date.now()}.${ext}`, { type: file.type });
       await uploadChartFile(renamed);
     }
-          return;
-        }
+    return;
+  }
 
   const text = clipboard.getData('text');
   if (text) {
@@ -773,13 +886,13 @@ const handleChartDrop = async (event) => {
   const files = event.dataTransfer?.files;
   if (files && files.length) {
     const file = files[0];
-        if (file.type.startsWith('image/')) {
+    if (file.type.startsWith('image/')) {
       await uploadChartFile(file);
     } else {
       showToast('Il file trascinato non ├¿ unÔÇÖimmagine', 'error');
     }
-          return;
-        }
+    return;
+  }
   const text = event.dataTransfer?.getData('text');
   if (text) {
     chartPathEl.value = text.trim();
@@ -980,82 +1093,70 @@ const duplicateReport = () => {
 };
 
 const updateAuthUI = async () => {
-  // Verifica token di accesso invece di Supabase Auth
-  const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
-  let token = null;
-  try {
-    token = localStorage.getItem(ACCESS_TOKEN_KEY);
-  } catch (e) {
-    token = null;
-  }
-  
-  // Se non c'├¿ token, redirect a accesso.html
-  if (!token || !token.trim()) {
+  const token = readStoredAdminToken();
+  if (!token) {
     window.location.href = '/accesso.html?reason=missing_token';
     return;
   }
-  
-  // Valida token con API
+
   try {
-    const res = await fetch('/api/validate-dashboard-token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: token.trim() })
-    });
-    const data = await res.json();
-    
-    if (!data.ok) {
-      // Token non valido: redirect
-      try {
-        localStorage.removeItem(ACCESS_TOKEN_KEY);
-      } catch (e) {}
+    const data = await fetchJSON(
+      '/api/validate-dashboard-token',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+      },
+      NETWORK_TIMEOUT_MS
+    );
+
+    if (!data?.ok) {
+      clearStoredAdminToken();
       window.location.href = '/accesso.html?reason=invalid_token';
       return;
     }
-    
-    // Token valido: procedi
-    currentUser = { email: data.email };
 
-    authCard.classList.toggle('hidden', !!currentUser);
-    authLogged.classList.toggle('hidden', !currentUser);
-    appGrid.classList.toggle('hidden', !currentUser);
+    currentUser = {
+      email: data.email || '',
+      id: data.userId || null,
+      planRole: data.planRole || null,
+      validUntil: data.validUntil || null,
+      token
+    };
 
-    if (currentUser) {
-      const allowed = await ensureAdminAccess();
-      if (!allowed) {
-        // Se non è admin, mostra messaggio chiaro e redirect dopo 3 secondi
-        authCard.classList.remove('hidden');
-        authLogged.classList.add('hidden');
-        appGrid.classList.add('hidden');
-        authCard.innerHTML = `
-          <h2>Accesso negato</h2>
-          <p style="color: var(--ink-soft); margin: 1rem 0;">
-            L'email <strong>${currentUser.email}</strong> non è autorizzata ad accedere alla dashboard report.
-            Solo gli amministratori possono utilizzare questa funzione.
-          </p>
-          <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
-            <a href="/accesso.html" class="btn btn-primary">Torna alla pagina di accesso</a>
-            <a href="/dashboard.html" class="btn btn-outline">Vai alla dashboard utenti</a>
-          </div>
-        `;
-        // Rimuovi token non valido
-        try {
-          localStorage.removeItem('tradelia-access-token-v1');
-        } catch (e) {}
-        return;
+    authCard.classList.add('hidden');
+    authLogged.classList.remove('hidden');
+    appGrid.classList.remove('hidden');
+
+    const adminCheck = await ensureAdminAccess({
+      email: currentUser.email,
+      userId: currentUser.id,
+      planRole: currentUser.planRole,
+      isAdmin: data.isAdmin
+    });
+
+    if (!adminCheck.allowed) {
+      if (adminCheck.reason === 'lookup_failed') {
+        showToast('Impossibile verificare i permessi admin', 'error');
+      } else {
+        showToast('Accesso negato: utente non abilitato', 'error');
       }
-      authUserBadge.textContent = `Connesso come ${currentUser.email}`;
-      await loadReports();
-    } else {
-      authUserBadge.textContent = '';
+      clearStoredAdminToken();
+      currentUser = null;
+      reports = [];
+      filteredReports = [];
       reportsListEl.innerHTML = '<div class="list-empty">Effettua l\'accesso per visualizzare i report.</div>';
       clearEditor();
+      showUnauthorizedState(adminCheck.reason);
+      return;
     }
 
+    authUserBadge.textContent = `Connesso come ${currentUser.email}`;
+    await loadReports();
     updateEditorBadge();
   } catch (err) {
     console.error('[Report Admin] Error validating token:', err);
-    window.location.href = '/accesso.html?reason=error';
+    showUnauthorizedState('session_error');
   }
 };
 
@@ -1065,17 +1166,23 @@ const login = async () => {
 };
 
 const logout = async (silent = false) => {
-  // Rimuovi token invece di Supabase Auth
-  try {
-    localStorage.removeItem('tradelia-access-token-v1');
-  } catch (e) {
-    // ignore
-  }
+  clearStoredAdminToken();
+  currentUser = null;
   isAdmin = false;
+  reportsRequestSeq = 0;
+  reportDetailsRequestSeq = 0;
+  reports = [];
+  filteredReports = [];
+  activeReport = null;
+  renderModulesEmptyState();
+  authUserBadge.textContent = '';
+  authCard?.classList.remove('hidden');
+  authLogged?.classList.add('hidden');
+  appGrid?.classList.add('hidden');
   if (!silent) {
     showToast('Disconnesso', 'info');
   }
-  await updateAuthUI();
+  window.location.href = '/accesso.html';
 };
 
 // Login button rimosso - ora redirect a accesso.html
@@ -1083,47 +1190,70 @@ const logout = async (silent = false) => {
 logoutBtn.addEventListener('click', logout);
 refreshSessionBtn.addEventListener('click', updateAuthUI);
 
-const ensureAdminAccess = async () => {
-  if (!currentUser || !currentUser.email) return false;
+const ensureAdminAccess = async (tokenMeta = {}) => {
+  if (!currentUser || !currentUser.email) {
+    return { allowed: false, reason: 'missing_user' };
+  }
+
+  const normalizedEmail = (tokenMeta.email || currentUser.email || '').trim().toLowerCase();
+  const normalizedPlanRole = (tokenMeta.planRole || currentUser.planRole || '').trim().toLowerCase();
+
+  if (typeof tokenMeta.isAdmin === 'boolean') {
+    isAdmin = tokenMeta.isAdmin;
+    return { allowed: tokenMeta.isAdmin, reason: tokenMeta.isAdmin ? 'api_flag' : 'not_admin' };
+  }
+
+  if (normalizedPlanRole && ADMIN_PLAN_ROLES.has(normalizedPlanRole)) {
+    isAdmin = true;
+    return { allowed: true, reason: 'admin_plan' };
+  }
+
   try {
-    // Verifica se l'email ├¿ in admin_emails (sistema token-based)
     const { data: adminEmailData, error: adminError } = await supabase
       .from('admin_emails')
       .select('email')
-      .eq('email', currentUser.email.toLowerCase())
+      .eq('email', normalizedEmail)
       .maybeSingle();
-    
-    if (adminError) throw adminError;
-    
-    if (!adminEmailData) {
-      // Fallback: verifica anche admin_users se abbiamo user_id (retrocompatibilit├á)
-      if (currentUser.id) {
-        const { data: adminUserData, error: adminUserError } = await supabase
-          .from('admin_users')
-          .select('user_id')
-          .eq('user_id', currentUser.id)
-          .maybeSingle();
-        if (adminUserError) throw adminUserError;
-        if (!adminUserData) {
-          showToast('Accesso negato: utente non abilitato', 'error');
-          currentUser = null;
-          await logout(true);
-          return false;
-        }
-      } else {
-        showToast('Accesso negato: utente non abilitato', 'error');
-        currentUser = null;
-        await logout(true);
-        return false;
-      }
+
+    if (adminError) {
+      console.error('[Report Admin] Error checking admin_emails:', adminError);
+      return { allowed: false, reason: 'lookup_failed' };
     }
-    isAdmin = true;
-    return true;
+
+    if (adminEmailData) {
+      isAdmin = true;
+      return { allowed: true, reason: 'email_whitelist' };
+    }
   } catch (error) {
-    console.error('[Report Admin] Error checking admin access:', error);
-    showToast('Impossibile verificare i permessi admin', 'error');
-    return false;
+    console.error('[Report Admin] Error checking admin emails:', error);
+    return { allowed: false, reason: 'lookup_failed' };
   }
+
+  const candidateUserId = tokenMeta.userId || currentUser.id;
+  if (candidateUserId) {
+    try {
+      const { data: adminUserData, error: adminUserError } = await supabase
+        .from('admin_users')
+        .select('user_id')
+        .eq('user_id', candidateUserId)
+        .maybeSingle();
+
+      if (adminUserError) {
+        console.error('[Report Admin] Error checking admin_users:', adminUserError);
+        return { allowed: false, reason: 'lookup_failed' };
+      }
+
+      if (adminUserData) {
+        isAdmin = true;
+        return { allowed: true, reason: 'legacy_user' };
+      }
+    } catch (error) {
+      console.error('[Report Admin] Error verifying admin_users:', error);
+      return { allowed: false, reason: 'lookup_failed' };
+    }
+  }
+
+  return { allowed: false, reason: 'not_admin' };
 };
 
 refreshBtn.addEventListener('click', loadReports);
