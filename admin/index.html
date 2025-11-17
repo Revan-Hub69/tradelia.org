@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tradelia · Portale Admin</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: radial-gradient(circle at top, rgba(59,130,246,.35), transparent 55%), #020617;
+        --panel: rgba(15,23,42,.85);
+        --panel-border: rgba(148,163,184,.2);
+        --ink: #f8fafc;
+        --ink-soft: #cbd5f5;
+        --accent: #60a5fa;
+        --accent-strong: #a855f7;
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--ink);
+        padding: clamp(1.5rem, 4vw, 3rem);
+      }
+      h1 {
+        font-size: clamp(1.8rem, 4vw, 2.7rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        margin-bottom: .5rem;
+        background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      p.lead {
+        color: var(--ink-soft);
+        margin-bottom: 2rem;
+        max-width: 680px;
+        line-height: 1.6;
+      }
+      .grid {
+        display: grid;
+        gap: clamp(1rem, 3vw, 1.75rem);
+      }
+      @media (min-width: 860px) {
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--panel-border);
+        border-radius: 20px;
+        padding: clamp(1.4rem, 3vw, 2rem);
+        box-shadow: 0 25px 70px rgba(2,6,23,.45);
+        backdrop-filter: blur(18px);
+        display: grid;
+        gap: .9rem;
+      }
+      .card h2 {
+        font-size: 1.3rem;
+        margin: 0;
+      }
+      .card p {
+        color: var(--ink-soft);
+        line-height: 1.5;
+        margin: 0;
+      }
+      .actions {
+        display: flex;
+        gap: .65rem;
+        flex-wrap: wrap;
+      }
+      .btn {
+        border: none;
+        border-radius: 14px;
+        padding: .75rem 1.2rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform .15s ease, box-shadow .15s ease;
+        color: #0b1120;
+        background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+        box-shadow: 0 15px 35px rgba(96, 165, 250, .4);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+      }
+      .btn.secondary {
+        background: rgba(15,23,42,.65);
+        color: var(--ink);
+        border: 1px solid rgba(148,163,184,.35);
+        box-shadow: none;
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+      footer {
+        margin-top: clamp(2rem, 6vw, 3.5rem);
+        color: rgba(203,213,225,.7);
+        font-size: .9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Tradelia Admin</h1>
+        <p class="lead">
+          Portale centrale per gestire report istituzionali e l&rsquo;opera degli utenti (piani, crediti, pagamenti manuali). 
+          Accedi con il token admin e scegli l&rsquo;area di lavoro.
+        </p>
+      </header>
+      <section class="grid">
+        <article class="card">
+          <h2>Report Studio</h2>
+          <p>
+            Editor modulare per creare, duplicare e pubblicare deck ricercativi. Include supporto ai template dinamici,
+            caricamento chart e controllo versioni.
+          </p>
+          <div class="actions">
+            <a class="btn" href="/admin/reports.html">Apri Report Admin</a>
+            <a class="btn secondary" href="/accesso.html">Aggiorna token</a>
+          </div>
+        </article>
+        <article class="card">
+          <h2>Utenti &amp; Billing</h2>
+          <p>
+            Panoramica piani attivi, gestione ruoli e crediti Desk, inserimento pagamenti manuali (Xolo/go). Tutto sincronizzato con le API admin.
+          </p>
+          <div class="actions">
+            <a class="btn" href="/admin/users.html">Apri User Admin</a>
+            <a class="btn secondary" href="/dashboard.html">Vai alla dashboard pubblica</a>
+          </div>
+        </article>
+      </section>
+      <footer>
+        Per assistenza: <a href="mailto:support@tradelia.org" style="color:var(--accent);">support@tradelia.org</a>
+      </footer>
+    </main>
+  </body>
+</html>
+
