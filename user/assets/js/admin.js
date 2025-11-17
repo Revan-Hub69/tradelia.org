@@ -1,6 +1,7 @@
-import { supabase } from '/report/assets/js/supabase-client.js';
 import Logger from '/report/assets/js/utils/logger.js';
 import './admin-complete.js';
+
+const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
 
 const ADMIN_STATS = {
   totalUsers: document.getElementById('stat-total-users'),
@@ -27,19 +28,75 @@ const PAYMENTS_CANCEL_BTN = document.getElementById('cancel-payments-btn');
 const PAYMENTS_SAVE_BTN = document.getElementById('save-payments-btn');
 
 let allUsers = [];
+let latestStats = null;
 let currentUser = null;
+let adminToken = null;
 
-// Import admin-complete functions
-if (typeof window !== 'undefined') {
+const setAllUsers = (users) => {
+  allUsers = users;
+  if (typeof window !== 'undefined') {
     window.allUsers = allUsers;
+  }
+};
+
+const computeStatsFromUsers = (users = []) => {
+  const totalUsers = users.length;
+  const activePlans = users.filter((u) => u.role && !u.isExpired).length;
+  const expiredPlans = users.filter((u) => u.role && u.isExpired).length;
+  const totalCredits = users.reduce((sum, u) => sum + (u.credits || 0), 0);
+  return { totalUsers, activePlans, expiredPlans, totalCredits };
+};
+
+const updateStatsDisplay = () => {
+  const stats = latestStats || computeStatsFromUsers(allUsers);
+  if (ADMIN_STATS.totalUsers) ADMIN_STATS.totalUsers.textContent = stats.totalUsers;
+  if (ADMIN_STATS.activePlans) ADMIN_STATS.activePlans.textContent = stats.activePlans;
+  if (ADMIN_STATS.expiredPlans) ADMIN_STATS.expiredPlans.textContent = stats.expiredPlans;
+  if (ADMIN_STATS.totalCredits) ADMIN_STATS.totalCredits.textContent = stats.totalCredits;
+};
+
+const callAdminAPI = async (path, { method = 'GET', body, timeout = 15000 } = {}) => {
+  if (!adminToken) {
+    throw new Error('Token amministratore non disponibile');
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const headers = { 'X-Admin-Token': adminToken };
+    let payload = body;
+    if (body && !(body instanceof FormData)) {
+      headers['Content-Type'] = 'application/json';
+      payload = JSON.stringify(body);
+    }
+
+    const response = await fetch(path, {
+      method,
+      headers,
+      body: payload,
+      signal: controller.signal
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || data.ok === false) {
+      throw new Error(data.error || `Richiesta ${method} ${path} fallita`);
+    }
+
+    return data;
+  } finally {
+    clearTimeout(timer);
+  }
+};
+
+if (typeof window !== 'undefined') {
+  window.adminApiCall = (path, options) => callAdminAPI(path, options);
 }
 
 init();
 
 async function init() {
   try {
-    // Verifica token di accesso (come dashboard.html)
-    const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
     let token = null;
     try {
       token = localStorage.getItem(ACCESS_TOKEN_KEY);
@@ -52,59 +109,34 @@ async function init() {
       return;
     }
 
-    // Valida token e verifica se è admin
     const res = await fetch('/api/validate-dashboard-token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: token.trim() })
     });
-    
+
     const data = await res.json();
-    
-    if (!data.ok) {
+
+    if (!data.ok || !data.isAdmin) {
       window.location.href = '/accesso.html?reason=invalid_token';
       return;
     }
 
-    // Verifica se l'email è admin (usa admin_emails table)
-    const { data: adminEmailData, error: adminError } = await supabase
-      .from('admin_emails')
-      .select('email')
-      .eq('email', data.email?.toLowerCase() || '')
-      .maybeSingle();
-    
-    // Fallback: verifica anche in admin_users se abbiamo user_id (per retrocompatibilità)
-    let isAdmin = !!adminEmailData;
-    
-    if (!isAdmin && data.userId) {
-      const { data: adminData } = await supabase
-        .from('admin_users')
-        .select('user_id')
-        .eq('user_id', data.userId)
-        .maybeSingle();
-      isAdmin = !!adminData;
-    }
-    
-    if (!isAdmin) {
-      // Non è admin: redirect
-      window.location.href = '/dashboard.html';
-      return;
-    }
-    
+    adminToken = token.trim();
     currentUser = {
       id: data.userId || null,
       email: data.email
     };
-    
+
     // Setup filters
     FILTER_SEARCH?.addEventListener('input', debounce(applyFilters, 300));
     FILTER_ROLE?.addEventListener('change', applyFilters);
     FILTER_STATUS?.addEventListener('change', applyFilters);
-    
-    // FORZA CHIUSURA MODALI - CRITICO: devono essere SEMPRE chiusi all'inizio
+
+    // Forza chiusura modali
     const modals = ['edit-user-modal', 'manage-credits-modal', 'manage-payments-modal', 'add-user-modal'];
     const forceCloseModals = () => {
-      modals.forEach(modalId => {
+      modals.forEach((modalId) => {
         const modal = document.getElementById(modalId);
         if (modal) {
           modal.hidden = true;
@@ -116,21 +148,14 @@ async function init() {
         }
       });
     };
-    
-    // Chiudi immediatamente
+
     forceCloseModals();
-    
-    // Chiudi anche dopo delay multipli (per sicurezza)
-    [50, 100, 200, 500, 1000].forEach(delay => {
-      setTimeout(forceCloseModals, delay);
-    });
-    
-    // Observer per chiudere automaticamente i modali se si aprono senza click esplicito
+    [50, 100, 200, 500, 1000].forEach((delay) => setTimeout(forceCloseModals, delay));
+
     const modalObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') {
           const modal = mutation.target;
-          // Se un modale viene aperto (hidden diventa false) senza un flag di "user action"
           if (!modal.hidden && !modal.dataset.userOpened) {
             console.log('[Admin] Modale aperto automaticamente, chiudo:', modal.id);
             forceCloseModals();
@@ -138,18 +163,16 @@ async function init() {
         }
       });
     });
-    
-    // Osserva tutti i modali
-    modals.forEach(modalId => {
+
+    modals.forEach((modalId) => {
       const modal = document.getElementById(modalId);
       if (modal) {
         modalObserver.observe(modal, { attributes: true, attributeFilter: ['hidden'] });
       }
     });
-    
-    // Wrapper per le funzioni di apertura modali - imposta flag "user action"
+
     const originalManagePayments = window.managePayments;
-    window.managePayments = function(...args) {
+    window.managePayments = function (...args) {
       const modal = document.getElementById('manage-payments-modal');
       if (modal) {
         modal.dataset.userOpened = 'true';
@@ -159,95 +182,61 @@ async function init() {
         return originalManagePayments.apply(this, args);
       }
     };
-    
-    // Setup pulsante aggiungi utente
+
     const addUserBtn = document.getElementById('add-user-btn');
     const addUserModal = document.getElementById('add-user-modal');
     const cancelAddUserBtn = document.getElementById('cancel-add-user-btn');
     const saveAddUserBtn = document.getElementById('save-add-user-btn');
-    
-    if (!addUserBtn) {
-      Logger.error('Admin', 'Pulsante "Aggiungi Utente" non trovato nel DOM');
-      console.error('[Admin] Elemento #add-user-btn non trovato');
-    }
-    
-    if (!addUserModal) {
-      Logger.error('Admin', 'Modale "Aggiungi Utente" non trovato nel DOM');
-      console.error('[Admin] Elemento #add-user-modal non trovato');
-    }
-    
+
     if (addUserBtn && addUserModal) {
       addUserBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        Logger.debug('Admin', 'Click su pulsante Aggiungi Utente');
-        
-        try {
-          // Chiudi altri modali
-          forceCloseModals();
-          
-          // Apri modale aggiungi utente
-          addUserModal.dataset.userOpened = 'true';
-          addUserModal.hidden = false;
-          addUserModal.style.display = 'flex';
-          addUserModal.style.visibility = 'visible';
-          setTimeout(() => delete addUserModal.dataset.userOpened, 100);
-          
-          // Reset form
-          const emailInput = document.getElementById('add-user-email');
-          const nameInput = document.getElementById('add-user-name');
-          const roleInput = document.getElementById('add-user-role');
-          const expiryInput = document.getElementById('add-user-expiry');
-          const creditsInput = document.getElementById('add-user-credits');
-          
-          if (emailInput) emailInput.value = '';
-          if (nameInput) nameInput.value = '';
-          if (roleInput) roleInput.value = 'trial';
-          if (expiryInput) expiryInput.value = '';
-          if (creditsInput) creditsInput.value = '0';
-          
-          Logger.debug('Admin', 'Modale Aggiungi Utente aperto');
-        } catch (err) {
-          Logger.error('Admin', 'Errore apertura modale Aggiungi Utente', err);
-          alert('Errore nell\'apertura del form. Controlla la console per i dettagli.');
-        }
+        forceCloseModals();
+        addUserModal.dataset.userOpened = 'true';
+        addUserModal.hidden = false;
+        addUserModal.style.display = 'flex';
+        addUserModal.style.visibility = 'visible';
+        setTimeout(() => delete addUserModal.dataset.userOpened, 100);
+
+        const emailInput = document.getElementById('add-user-email');
+        const nameInput = document.getElementById('add-user-name');
+        const roleInput = document.getElementById('add-user-role');
+        const expiryInput = document.getElementById('add-user-expiry');
+        const creditsInput = document.getElementById('add-user-credits');
+
+        if (emailInput) emailInput.value = '';
+        if (nameInput) nameInput.value = '';
+        if (roleInput) roleInput.value = 'trial';
+        if (expiryInput) expiryInput.value = '';
+        if (creditsInput) creditsInput.value = '0';
       });
-    } else {
-      // Se mancano elementi, mostra errore visibile
-      if (addUserBtn) {
-        addUserBtn.addEventListener('click', () => {
-          alert('Errore: Il form per aggiungere utenti non è disponibile. Ricarica la pagina o contatta il supporto.');
-        });
-      }
     }
-    
+
     if (cancelAddUserBtn && addUserModal) {
       cancelAddUserBtn.addEventListener('click', () => {
         addUserModal.hidden = true;
         addUserModal.style.display = 'none';
       });
     }
-    
+
     if (saveAddUserBtn) {
       saveAddUserBtn.addEventListener('click', async () => {
         const email = document.getElementById('add-user-email')?.value?.trim();
         const name = document.getElementById('add-user-name')?.value?.trim();
         const role = document.getElementById('add-user-role')?.value;
         const expiry = document.getElementById('add-user-expiry')?.value;
-        const credits = parseInt(document.getElementById('add-user-credits')?.value || '0');
-        
+        const credits = parseInt(document.getElementById('add-user-credits')?.value || '0', 10);
+
         if (!email || !role || !expiry) {
           alert('Compila tutti i campi obbligatori (Email, Ruolo, Scadenza).');
           return;
         }
-        
+
         try {
           saveAddUserBtn.disabled = true;
           saveAddUserBtn.textContent = 'Creazione...';
-          
-          Logger.info('Admin', 'Creazione nuovo utente', { email, role, expiry });
-          
-          // Chiama API per creare utente e generare token
+
           const res = await fetch('/api/create-user-and-token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -260,58 +249,47 @@ async function init() {
               sendEmail: true
             })
           });
-          
-          // Verifica content-type
+
           const contentType = res.headers.get('content-type');
           if (!contentType || !contentType.includes('application/json')) {
             const text = await res.text();
-            Logger.error('Admin', 'Risposta API non JSON', { status: res.status, text: text.substring(0, 200) });
-            throw new Error(`Il server ha restituito una risposta non valida (${res.status}). Verifica le variabili ambiente in Vercel.`);
+            throw new Error(
+              `Il server ha restituito una risposta non valida (${res.status}). Dettagli: ${text.slice(0, 120)}`
+            );
           }
-          
-          const data = await res.json();
-          
-          if (!data.ok) {
-            Logger.error('Admin', 'Errore API creazione utente', data);
-            throw new Error(data.error || 'Errore nella creazione utente');
+
+          const payload = await res.json();
+          if (!payload.ok) {
+            throw new Error(payload.error || 'Errore nella creazione utente');
           }
-          
-          Logger.info('Admin', 'Utente creato con successo', { email, role });
-          
-          // Mostra messaggio di successo
-          const tokenMessage = data.token 
-            ? `\nToken: ${data.token}\n\nIMPORTANTE: Salva questo token, non verrà mostrato di nuovo!`
+
+          const tokenMessage = payload.token
+            ? `\nToken: ${payload.token}\n\nIMPORTANTE: Salva questo token, non verrà mostrato di nuovo!`
             : '\nIl token è stato inviato via email.';
-          
-          alert(`✅ Utente creato con successo!\n\nEmail: ${email}\nRuolo: ${role}\nScadenza: ${new Date(expiry).toLocaleDateString('it-IT')}${tokenMessage}`);
-          
-          // Chiudi modale e ricarica dati
+
+          alert(
+            `✅ Utente creato con successo!\n\nEmail: ${email}\nRuolo: ${role}\nScadenza: ${new Date(
+              expiry
+            ).toLocaleDateString('it-IT')}${tokenMessage}`
+          );
+
           addUserModal.hidden = true;
           addUserModal.style.display = 'none';
           await loadAllData();
-          
         } catch (err) {
           Logger.error('Admin', 'Errore creazione utente', err);
-          console.error('[Admin] Error creating user:', err);
-          
-          // Messaggio errore più dettagliato
-          let errorMessage = 'Errore nella creazione utente.';
-          if (err.message) {
-            errorMessage += '\n\n' + err.message;
-          }
-          if (err.name === 'TypeError' && err.message.includes('fetch')) {
-            errorMessage += '\n\nPossibile problema di connessione o API endpoint non disponibile.';
-          }
-          
-          alert(errorMessage);
+          alert(err.message || 'Errore nella creazione utente.');
         } finally {
           saveAddUserBtn.disabled = false;
           saveAddUserBtn.textContent = 'Crea Utente';
         }
       });
     }
-    
-    // Load data
+
+    if (typeof window !== 'undefined') {
+      window.loadAllData = loadAllData;
+    }
+
     await loadAllData();
   } catch (err) {
     Logger.error('Admin', 'init error', err);
@@ -321,10 +299,8 @@ async function init() {
 
 async function loadAllData() {
   try {
-    await Promise.all([
-      loadUsers(),
-      loadStats()
-    ]);
+    await loadUsers();
+    updateStatsDisplay();
     applyFilters();
   } catch (err) {
     Logger.error('Admin', 'load data error', err);
@@ -334,7 +310,6 @@ async function loadAllData() {
 
 async function loadUsers() {
   try {
-    // Mostra stato di caricamento
     if (USERS_TABLE_BODY) {
       USERS_TABLE_BODY.innerHTML = `
         <tr>
@@ -344,252 +319,9 @@ async function loadUsers() {
         </tr>
       `;
     }
-    
-    Logger.info('Admin', 'Inizio caricamento utenti...');
-    
-    // Carica utenti da tutte le fonti: user_profiles, user_roles, subscribers, dashboard_access_tokens
-    
-    // 1. User profiles e roles (utenti con user_id)
-    const { data: profiles, error: profilesError } = await supabase
-      .from('user_profiles')
-      .select('user_id, display_name');
-    
-    if (profilesError) {
-      Logger.error('Admin', 'Error loading profiles', profilesError);
-      console.error('[Admin] Profiles error:', profilesError);
-    } else {
-      Logger.info('Admin', `Loaded ${profiles?.length || 0} profiles`);
-    }
-    
-    const { data: roles, error: rolesError } = await supabase
-      .from('user_roles')
-      .select('user_id, role, valid_until');
-    
-    if (rolesError) {
-      Logger.error('Admin', 'Error loading roles', rolesError);
-      console.error('[Admin] Roles error:', rolesError);
-    } else {
-      Logger.info('Admin', `Loaded ${roles?.length || 0} roles`);
-    }
-    
-    const { data: credits, error: creditsError } = await supabase
-      .from('user_analysis_credits')
-      .select('user_id, credits_balance');
-    
-    if (creditsError) {
-      Logger.error('Admin', 'Error loading credits', creditsError);
-      console.error('[Admin] Credits error:', creditsError);
-    } else {
-      Logger.info('Admin', `Loaded ${credits?.length || 0} credits`);
-    }
-    
-    // 2. Subscribers (utenti attivi da gateway pagamenti)
-    const { data: subscribers, error: subscribersError } = await supabase
-      .from('subscribers')
-      .select('id, email, status, auth_user_id');
-    
-    if (subscribersError) {
-      Logger.error('Admin', 'Error loading subscribers', subscribersError);
-      console.error('[Admin] Subscribers error:', subscribersError);
-    } else {
-      Logger.info('Admin', `Loaded ${subscribers?.length || 0} subscribers`);
-    }
-    
-    // 3. Dashboard access tokens (utenti con token attivo)
-    const { data: tokens, error: tokensError } = await supabase
-      .from('dashboard_access_tokens')
-      .select('email, user_id, plan_role, valid_until, revoked')
-      .eq('revoked', false);
-    
-    if (tokensError) {
-      Logger.error('Admin', 'Error loading tokens', tokensError);
-      console.error('[Admin] Tokens error:', tokensError);
-    } else {
-      Logger.info('Admin', `Loaded ${tokens?.length || 0} tokens`);
-    }
-    
-    // 4. Fetch emails - NON usiamo più RPC function perché usa auth.uid() che non funziona con token
-    // Usiamo invece i dati già disponibili da subscribers e dashboard_access_tokens
-    let emails = null;
-    // Costruiamo emails da subscribers e tokens (già caricati sopra)
-    const emailsFromSubscribers = (subscribers || []).map(s => ({
-      user_id: s.auth_user_id || null,
-      email: s.email,
-      created_at: null
-    }));
-    const emailsFromTokens = (tokens || []).map(t => ({
-      user_id: t.user_id || null,
-      email: t.email,
-      created_at: null
-    }));
-    // Unisci e rimuovi duplicati
-    const allEmails = [...emailsFromSubscribers, ...emailsFromTokens];
-    const uniqueEmails = new Map();
-    allEmails.forEach(e => {
-      if (e.email) {
-        const key = e.email.toLowerCase();
-        if (!uniqueEmails.has(key) || (e.user_id && !uniqueEmails.get(key).user_id)) {
-          uniqueEmails.set(key, e);
-        }
-      }
-    });
-    emails = Array.from(uniqueEmails.values());
-    
-    // Crea mappe per lookup veloce
-    // Se emails è null (RPC fallita), creiamo una mappa vuota
-    const emailsMap = new Map((emails || []).map(e => [e.user_id, e.email]));
-    const rolesMap = new Map((roles || []).map(r => [r.user_id, r]));
-    const creditsMap = new Map((credits || []).map(c => [c.user_id, c]));
-    const profilesMap = new Map((profiles || []).map(p => [p.user_id, p]));
-    const subscribersMap = new Map((subscribers || []).map(s => [s.email?.toLowerCase(), s]));
-    const tokensMap = new Map(); // email -> token data
-    
-    // Raggruppa tokens per email
-    (tokens || []).forEach(token => {
-      if (token.email) {
-        const emailKey = token.email.toLowerCase();
-        if (!tokensMap.has(emailKey) || new Date(token.valid_until) > new Date(tokensMap.get(emailKey).valid_until || 0)) {
-          tokensMap.set(emailKey, token);
-        }
-      }
-    });
-    
-    // Combina tutti gli user_id
-    const userIds = new Set([
-      ...(emails || []).map(e => e.user_id),
-      ...(profiles || []).map(p => p.user_id),
-      ...(roles || []).map(r => r.user_id),
-      ...(subscribers || []).filter(s => s.auth_user_id).map(s => s.auth_user_id)
-    ]);
-    
-    // Crea array di utenti da user_id
-    // Se non abbiamo email dalla RPC, proviamo a recuperarle da subscribers o tokens
-    const usersFromIds = Array.from(userIds).map(userId => {
-      let email = emailsMap.get(userId) || null;
-      
-      // Fallback: cerca email in subscribers o tokens se RPC fallita
-      if (!email) {
-        const subscriber = Array.from(subscribersMap.values()).find(s => s.auth_user_id === userId);
-        if (subscriber?.email) {
-          email = subscriber.email;
-        } else {
-          // Cerca in tokens
-          const token = Array.from(tokensMap.values()).find(t => t.user_id === userId);
-          if (token?.email) {
-            email = token.email;
-          }
-        }
-      }
-      
-      const profile = profilesMap.get(userId);
-      const role = rolesMap.get(userId);
-      const credit = creditsMap.get(userId);
-      
-      return {
-        user_id: userId,
-        email: email || `${userId.slice(0, 8)}...`,
-        display_name: profile?.display_name || '—',
-        role: role?.role || null,
-        valid_until: role?.valid_until || null,
-        credits: credit?.credits_balance || 0,
-        isExpired: role?.valid_until ? new Date(role.valid_until) < new Date() : false,
-        source: 'user_profiles'
-      };
-    });
-    
-    // Aggiungi utenti da subscribers (senza user_id o con email diversa)
-    const usersFromSubscribers = (subscribers || [])
-      .filter(s => {
-        // Includi solo se non è già presente in usersFromIds
-        if (s.auth_user_id && userIds.has(s.auth_user_id)) return false;
-        if (!s.email) return false;
-        return true;
-      })
-      .map(sub => {
-        const emailKey = sub.email.toLowerCase();
-        const token = tokensMap.get(emailKey);
-        const role = token ? token.plan_role : (sub.status === 'active' ? 'pro' : null);
-        const validUntil = token?.valid_until || null;
-        
-        return {
-          user_id: sub.auth_user_id || null,
-          email: sub.email,
-          display_name: '—',
-          role: role,
-          valid_until: validUntil,
-          credits: 0,
-          isExpired: validUntil ? new Date(validUntil) < new Date() : (sub.status !== 'active'),
-          source: 'subscribers'
-        };
-      });
-    
-    // Aggiungi utenti da tokens (senza subscriber o user_id)
-    const usersFromTokens = Array.from(tokensMap.entries())
-      .filter(([emailKey, token]) => {
-        // Includi solo se non è già presente
-        if (token.user_id && userIds.has(token.user_id)) return false;
-        if (subscribersMap.has(emailKey)) return false; // Già incluso da subscribers
-        return true;
-      })
-      .map(([emailKey, token]) => {
-        return {
-          user_id: token.user_id || null,
-          email: token.email,
-          display_name: '—',
-          role: token.plan_role || null,
-          valid_until: token.valid_until || null,
-          credits: 0,
-          isExpired: token.valid_until ? new Date(token.valid_until) < new Date() : false,
-          source: 'dashboard_access_tokens'
-        };
-      });
-    
-    // Combina tutti gli utenti, rimuovendo duplicati per email
-    const allUsersMap = new Map();
-    
-    [...usersFromIds, ...usersFromSubscribers, ...usersFromTokens].forEach(user => {
-      if (!user.email) return;
-      const emailKey = user.email.toLowerCase();
-      const existing = allUsersMap.get(emailKey);
-      
-      if (!existing) {
-        allUsersMap.set(emailKey, user);
-      } else {
-        // Merge: preferisci dati più completi
-        allUsersMap.set(emailKey, {
-          user_id: existing.user_id || user.user_id,
-          email: existing.email || user.email,
-          display_name: existing.display_name !== '—' ? existing.display_name : user.display_name,
-          role: existing.role || user.role,
-          valid_until: existing.valid_until || user.valid_until,
-          credits: existing.credits || user.credits,
-          isExpired: existing.isExpired || user.isExpired,
-          source: existing.source || user.source
-        });
-      }
-    });
-    
-    allUsers = Array.from(allUsersMap.values());
-    
-    Logger.info('Admin', `Loaded ${allUsers.length} users (${usersFromIds.length} from profiles, ${usersFromSubscribers.length} from subscribers, ${usersFromTokens.length} from tokens)`);
-    
-    // Update global allUsers for admin-complete.js
-    if (typeof window !== 'undefined') {
-      window.allUsers = allUsers;
-    }
-    
-    // Se non ci sono utenti, mostra messaggio
-    if (allUsers.length === 0) {
-      if (USERS_TABLE_BODY) {
-        USERS_TABLE_BODY.innerHTML = `
-          <tr>
-            <td colspan="6" style="text-align: center; padding: 2rem; color: var(--ink-soft);">
-              Nessun utente trovato nel database.
-            </td>
-          </tr>
-        `;
-      }
-    }
+    const response = await callAdminAPI('/api/admin/users');
+    setAllUsers(response.users || []);
+    latestStats = response.stats || computeStatsFromUsers(allUsers);
   } catch (err) {
     Logger.error('Admin', 'load users error', err);
     if (USERS_TABLE_BODY) {
@@ -604,22 +336,6 @@ async function loadUsers() {
       `;
     }
     throw err;
-  }
-}
-
-async function loadStats() {
-  try {
-    const totalUsers = allUsers.length;
-    const activePlans = allUsers.filter(u => u.role && !u.isExpired).length;
-    const expiredPlans = allUsers.filter(u => u.isExpired).length;
-    const totalCredits = allUsers.reduce((sum, u) => sum + (u.credits || 0), 0);
-    
-    if (ADMIN_STATS.totalUsers) ADMIN_STATS.totalUsers.textContent = totalUsers;
-    if (ADMIN_STATS.activePlans) ADMIN_STATS.activePlans.textContent = activePlans;
-    if (ADMIN_STATS.expiredPlans) ADMIN_STATS.expiredPlans.textContent = expiredPlans;
-    if (ADMIN_STATS.totalCredits) ADMIN_STATS.totalCredits.textContent = totalCredits;
-  } catch (err) {
-    Logger.error('Admin', 'load stats error', err);
   }
 }
 
@@ -808,121 +524,51 @@ if (PAYMENTS_SAVE_BTN && PAYMENTS_MODAL) {
     }
     
     try {
-      PAYMENTS_SAVE_BTN.disabled = true;
-      PAYMENTS_SAVE_BTN.textContent = 'Salvataggio...';
-      
-      const amountCents = Math.round(amount * 100);
-      
-      // Inserisci pagamento Xolo
-      const { data: payment, error: paymentError } = await supabase
-        .from('payments')
-        .insert({
-          user_id: userId,
-          gateway: 'xolo',
-          amount_cents: amountCents,
-          currency: 'EUR',
-          status,
-          description: description || 'Pagamento Xolo registrato manualmente',
-          external_id: invoiceNumber,
-          metadata: {
-            source: 'admin_manual_xolo',
-            pdf_url: pdfUrl
-          }
-        })
-        .select('id')
-        .single();
-      
-      if (paymentError) {
-        console.error('Admin', 'Errore inserimento pagamento Xolo', paymentError);
-        alert('Errore durante il salvataggio del pagamento. Controlla la console per i dettagli.');
+      const user = allUsers.find(u => u.user_id === userId);
+      if (!user) {
+        alert('Utente non trovato.');
         return;
       }
-      
-      // Se il pagamento è riuscito, aggiorna user_roles e genera token
+
+      PAYMENTS_SAVE_BTN.disabled = true;
+      PAYMENTS_SAVE_BTN.textContent = 'Salvataggio...';
+
+      await callAdminAPI('/api/admin/payments', {
+        method: 'POST',
+        body: {
+          userId,
+          email: user.email,
+          amount,
+          currency: 'EUR',
+          status,
+          invoiceNumber,
+          pdfUrl,
+          description,
+          planRole: 'institutional',
+          plan: 'desk_manual',
+          months: 1,
+          gateway: 'manual'
+        }
+      });
+
       if (status === 'succeeded') {
-        const user = allUsers.find(u => u.user_id === userId);
-        if (user) {
-          // Aggiorna user_roles a 'institutional' (Desk) - Xolo è sempre per Desk
-          const newRole = 'institutional';
-          
-          // Calcola valid_until (default: 1 mese da oggi, o estendi se già ha un ruolo)
-          const now = new Date();
-          const currentValidUntil = user.valid_until ? new Date(user.valid_until) : null;
-          const newValidUntil = new Date(now);
-          
-          // Se ha già un abbonamento attivo, estendi di 1 mese dalla scadenza corrente
-          if (currentValidUntil && currentValidUntil > now) {
-            newValidUntil.setTime(currentValidUntil.getTime());
-            newValidUntil.setMonth(newValidUntil.getMonth() + 1);
-          } else {
-            // Altrimenti, 1 mese da oggi
-            newValidUntil.setMonth(newValidUntil.getMonth() + 1);
-          }
-          
-          // Aggiorna user_roles
-          const { error: roleError } = await supabase
-            .from('user_roles')
-            .upsert({
-              user_id: userId,
-              role: newRole,
-              valid_until: newValidUntil.toISOString()
-            }, { onConflict: 'user_id' });
-          
-          if (roleError) {
-            console.error('Admin', 'Errore aggiornamento user_roles', roleError);
-          } else {
-            // Genera token dashboard automaticamente
-            try {
-              const response = await fetch('/api/request-dashboard-token', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                  email: user.email,
-                  // Forza generazione anche se esiste già un token
-                  force: true 
-                })
-              });
-              
-              if (response.ok) {
-                console.log('Admin', 'Token dashboard generato automaticamente per', user.email);
-              }
-            } catch (tokenError) {
-              console.warn('Admin', 'Errore generazione token (non bloccante)', tokenError);
-            }
-          }
-        }
-      }
-      
-      // Se abbiamo un riferimento fattura o PDF, crea anche invoice
-      if (invoiceNumber || pdfUrl) {
-        const { error: invoiceError } = await supabase
-          .from('invoices')
-          .insert({
-            user_id: userId,
-            payment_id: payment.id,
-            gateway: 'xolo',
-            external_id: invoiceNumber,
-            number: invoiceNumber,
-            amount_cents: amountCents,
-            currency: 'EUR',
-            status: status === 'succeeded' ? 'paid' : 'issued',
-            issued_at: new Date().toISOString(),
-            pdf_url: pdfUrl,
-            metadata: {
-              source: 'admin_manual_xolo'
-            }
+        try {
+          await fetch('/api/request-dashboard-token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: user.email, force: true })
           });
-        
-        if (invoiceError) {
-          console.warn('Admin', 'Errore inserimento invoice Xolo (non bloccante)', invoiceError);
+        } catch (tokenError) {
+          console.warn('Admin', 'Errore generazione token (non bloccante)', tokenError);
         }
       }
-      
+
       alert('Pagamento registrato correttamente.');
       PAYMENTS_MODAL.hidden = true;
+      await loadAllData();
     } catch (err) {
-      console.error('Admin', 'Errore salvataggio pagamento Xolo', err);
-      alert('Errore imprevisto durante il salvataggio del pagamento.');
+      console.error('Admin', 'Errore salvataggio pagamento manuale', err);
+      alert(err.message || 'Errore imprevisto durante il salvataggio del pagamento.');
     } finally {
       PAYMENTS_SAVE_BTN.disabled = false;
       PAYMENTS_SAVE_BTN.textContent = 'Salva pagamento';

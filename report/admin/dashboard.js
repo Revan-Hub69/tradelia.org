@@ -7,7 +7,6 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 window.supabase = supabase;
 
 const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
-const ADMIN_PLAN_ROLES = new Set(['admin', 'internal', 'staff', 'team', 'founder']);
 const NETWORK_TIMEOUT_MS = 15000;
 
 const readStoredAdminToken = () => {
@@ -53,34 +52,6 @@ const fetchJSON = async (resource, options = {}, timeout) => {
 };
 
 const DEFAULT_REPORT_TYPE = 'swing_master_5_0';
-
-const REPORT_TEMPLATES = {
-  swing_master_5_0: {
-    label: 'SRD v5.0 ÔÇö Swing Research Deck',
-    description: 'Template istituzionale SRD v5.0 (Swing Research Deck)',
-    modules: [
-      { key: 'header', order: 10, template: {}, required: true },
-      { key: 'f1', order: 20, template: {}, required: false },
-      { key: 'f2', order: 30, template: {}, required: false },
-      { key: 'f3o', order: 35, template: {}, required: false },
-      { key: 'f3', order: 40, template: {}, required: false },
-      { key: 'f4', order: 50, template: {}, required: false },
-      { key: 'f5', order: 60, template: {}, required: false },
-      { key: 'f5o', order: 65, template: {}, required: false },
-      { key: 'f5lt', order: 70, template: {}, required: false }
-    ]
-  },
-  daily_market_intel_3_1: {
-    label: 'MTB v3.1 ÔÇö Macro Tactical Briefing',
-    description: 'Deck macro cross-asset in rollout',
-    modules: []
-  },
-  custom: {
-    label: 'CRD ÔÇö Custom Research Deck',
-    description: 'Analisi su richiesta con composizione manuale',
-    modules: []
-  }
-};
 
 const toastEl = document.getElementById('toast');
 const authCard = document.getElementById('auth-card');
@@ -142,6 +113,121 @@ let currentTemplateType = DEFAULT_REPORT_TYPE;
 let lastFocusedModuleArea = null;
 let reportsRequestSeq = 0;
 let reportDetailsRequestSeq = 0;
+
+let defaultTemplateSlug = DEFAULT_REPORT_TYPE;
+
+const callAdminAPI = async (path, { method = 'GET', body, timeout = NETWORK_TIMEOUT_MS } = {}) => {
+  if (!currentUser?.token) {
+    throw new Error('Token amministratore non disponibile');
+  }
+
+  const headers = {
+    'X-Admin-Token': currentUser.token
+  };
+
+  let payload = body;
+  if (body && !(body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+    payload = JSON.stringify(body);
+  }
+
+  const response = await fetchJSON(path, { method, headers, body: payload }, timeout);
+
+  if (!response?.ok) {
+    throw new Error(response?.error || 'Richiesta API admin fallita');
+  }
+
+  return response;
+};
+
+const templateRegistry = (() => {
+  let templates = [];
+  let loaded = false;
+  const templatesBySlug = new Map();
+
+  const selectVersion = (template) => {
+    if (!template?.versions?.length) return null;
+    return (
+      template.versions.find((version) => version.id === template.defaultVersionId) ||
+      template.versions[0]
+    );
+  };
+
+  const rebuildIndex = () => {
+    templatesBySlug.clear();
+    templates.forEach((template) => {
+      templatesBySlug.set(template.slug, template);
+    });
+  };
+
+  const populateTemplateSelect = () => {
+    if (!reportTypeEl || !templates.length) return;
+    const previousValue = reportTypeEl.value;
+    reportTypeEl.innerHTML = templates
+      .map((template) => `<option value="${template.slug}">${template.label || template.slug}</option>`)
+      .join('');
+
+    const fallbackSlug =
+      templatesBySlug.has(previousValue) ||
+      (!previousValue && templatesBySlug.has(defaultTemplateSlug))
+        ? (previousValue || defaultTemplateSlug)
+        : templates[0].slug;
+
+    defaultTemplateSlug = fallbackSlug;
+    reportTypeEl.value = fallbackSlug;
+    currentTemplateType = fallbackSlug;
+  };
+
+  return {
+    async ensureLoaded() {
+      if (loaded) return templates;
+      const response = await callAdminAPI('/api/admin/templates');
+      templates = response.templates || [];
+      rebuildIndex();
+      loaded = true;
+      if (!templatesBySlug.has(defaultTemplateSlug) && templates[0]) {
+        defaultTemplateSlug = templates[0].slug;
+      }
+      populateTemplateSelect();
+      return templates;
+    },
+    getTemplate(slug) {
+      return templatesBySlug.get(slug);
+    },
+    hasTemplate(slug) {
+      const version = selectVersion(templatesBySlug.get(slug));
+      return !!(version?.modules?.length);
+    },
+    getDefaultModules(slug) {
+      const version = selectVersion(templatesBySlug.get(slug));
+      if (!version?.modules?.length) return [];
+      return version.modules.map((module, index) => ({
+        module_key: module.module_key,
+        order_index: module.order_index ?? index,
+        content: module.default_content || {}
+      }));
+    },
+    getRequiredKeys(slug) {
+      const version = selectVersion(templatesBySlug.get(slug));
+      if (!version?.modules?.length) return new Set();
+      return new Set(
+        version.modules.filter((module) => module.required).map((module) => module.module_key)
+      );
+    },
+    getLabel(slug) {
+      return templatesBySlug.get(slug)?.label || slug;
+    },
+    getDefaultVersionId(slug) {
+      const template = templatesBySlug.get(slug);
+      if (!template) return null;
+      const version = selectVersion(template);
+      return version?.id || null;
+    },
+    getDefaultSlug() {
+      return defaultTemplateSlug;
+    }
+  };
+})();
 
 const statusLabels = {
   draft: 'Bozza',
@@ -371,16 +457,15 @@ const renderModulesEmptyState = () => {
 
 const syncTemplateControls = (type) => {
   currentTemplateType = type;
-  const template = REPORT_TEMPLATES[type];
-  const hasTemplate = Array.isArray(template?.modules) && template.modules.length > 0;
+  const hasTemplate = templateRegistry.hasTemplate(type);
   addModuleBtn.disabled = hasTemplate && type !== 'custom';
   resetTemplateBtn.disabled = !hasTemplate;
   resetTemplateBtn.textContent = hasTemplate ? 'Reimposta template' : 'Importa template';
 };
 
 const applyTemplateToModules = (type, { skipConfirm = false, markDirty = true } = {}) => {
-  const template = REPORT_TEMPLATES[type];
-  if (!template || !template.modules?.length) {
+  const templateModules = templateRegistry.getDefaultModules(type);
+  if (!templateModules.length) {
     renderModulesEmptyState();
     syncTemplateControls(type);
     if (markDirty) setDirty(true);
@@ -397,11 +482,11 @@ const applyTemplateToModules = (type, { skipConfirm = false, markDirty = true } 
   }
 
   modulesContainer.innerHTML = '';
-  template.modules.forEach((module, index) => {
+  templateModules.forEach((module, index) => {
     appendModuleCard({
-      module_key: module.key,
-      order_index: module.order ?? index,
-      content: module.template ?? {}
+      module_key: module.module_key,
+      order_index: module.order_index ?? index,
+      content: module.content ?? {}
     }, { lockedKey: true, allowDuplicate: false });
   });
   syncTemplateControls(type);
@@ -582,20 +667,21 @@ const collectModules = () => {
 };
 
 const validateModulesForType = (modules, type, options = {}) => {
-  const template = REPORT_TEMPLATES[type];
-  if (!template) return true;
+  const requiredKeys = templateRegistry.getRequiredKeys(type);
+  if (!requiredKeys.size) return true;
 
-  if (options.publish) {
-    const hasHeader = modules.some((module) => module.module_key === 'header');
-    if (!hasHeader) {
-      showToast('Per pubblicare il report ├¿ necessario compilare almeno il modulo header.', 'error');
-      setStatusBannerMessage(
-        'warning',
-        'Modulo obbligatorio mancante',
-        'Compila il modulo header prima di pubblicare il report.'
-      );
-      return false;
-    }
+  const missingKeys = Array.from(requiredKeys).filter(
+    (key) => !modules.some((module) => module.module_key === key)
+  );
+
+  if (options.publish && missingKeys.length) {
+    showToast('Completa tutti i moduli obbligatori prima di pubblicare.', 'error');
+    setStatusBannerMessage(
+      'warning',
+      'Moduli obbligatori mancanti',
+      `Manca${missingKeys.length > 1 ? 'no' : ''}: ${missingKeys.join(', ')}`
+    );
+    return false;
   }
 
   return true;
@@ -603,7 +689,10 @@ const validateModulesForType = (modules, type, options = {}) => {
 
 const clearEditor = () => {
   activeReport = null;
-  reportTypeEl.value = DEFAULT_REPORT_TYPE;
+  const initialType = templateRegistry.getTemplate(templateRegistry.getDefaultSlug())
+    ? templateRegistry.getDefaultSlug()
+    : DEFAULT_REPORT_TYPE;
+  reportTypeEl.value = initialType;
   reportSlugEl.value = '';
   reportTitleEl.value = '';
   reportStatusEl.value = 'draft';
@@ -622,8 +711,8 @@ const clearEditor = () => {
   duplicateBtn.disabled = true;
   deleteBtn.disabled = true;
   renderModulesEmptyState();
-  syncTemplateControls(DEFAULT_REPORT_TYPE);
-  applyTemplateToModules(DEFAULT_REPORT_TYPE, { skipConfirm: true, markDirty: false });
+  syncTemplateControls(initialType);
+  applyTemplateToModules(initialType, { skipConfirm: true, markDirty: false });
   suggestIdentifiers({ force: true, markDirty: false });
   resetDirty();
 };
@@ -640,7 +729,7 @@ const renderReportsList = () => {
     if (activeReport && activeReport.id === report.id) {
       card.classList.add('active');
     }
-    const typeLabel = REPORT_TEMPLATES[report.report_type]?.label ?? report.report_type;
+    const typeLabel = templateRegistry.getLabel(report.report_type || '');
     card.innerHTML = `
       <div class="report-card-header">
         <strong>${report.title || 'Senza titolo'}</strong>
@@ -649,7 +738,7 @@ const renderReportsList = () => {
       <div class="report-meta">
         <span class="type-pill">${typeLabel}</span>
         <span>slug: <code>${report.slug}</code></span>
-        <span>moduli: ${report.modules_count}</span>
+        <span>moduli: ${typeof report.modules_count === 'number' ? report.modules_count : '—'}</span>
         <span>pubblicato: ${formatDateTimeHuman(report.published_at)}</span>
         <span>aggiornato: ${formatDateTimeHuman(report.updated_at)}</span>
       </div>
@@ -670,39 +759,20 @@ const renderReportsList = () => {
 const loadReports = async () => {
   if (!currentUser) return;
   const requestId = ++reportsRequestSeq;
-  const { data, error } = await supabase
-    .from('reports')
-    .select('id, slug, title, status, report_type, chart_path, notes, published_at, updated_at, report_modules(count)')
-    .order('updated_at', { ascending: false });
-
-  if (requestId !== reportsRequestSeq) {
-    return;
-  }
-
-  if (error) {
-    console.error(error);
+  try {
+    const response = await callAdminAPI('/api/admin/reports');
+    if (requestId !== reportsRequestSeq) return;
+    reports = response.reports || [];
+    filteredReports = reports;
+    renderReportsList();
+  } catch (error) {
+    if (requestId !== reportsRequestSeq) return;
+    console.error('[Report Admin] loadReports error', error);
     reports = [];
     filteredReports = [];
     renderReportsList();
     showToast('Errore nel caricamento dei report', 'error');
-    return;
   }
-
-  reports = data.map((row) => ({
-    id: row.id,
-    slug: row.slug,
-    title: row.title,
-    status: row.status,
-    report_type: row.report_type,
-    chart_path: row.chart_path,
-    notes: row.notes,
-    published_at: row.published_at,
-    updated_at: row.updated_at,
-    modules_count: row.report_modules?.[0]?.count ?? 0
-  }));
-
-  filteredReports = reports;
-  renderReportsList();
 };
 
 const updateChartPreview = async (path) => {
@@ -746,69 +816,49 @@ const updateChartPreview = async (path) => {
 
 const selectReport = async (id) => {
   const requestId = ++reportDetailsRequestSeq;
-  const { data: report, error: reportError } = await supabase
-    .from('reports')
-    .select('*')
-    .eq('id', id)
-    .single();
+  try {
+    const response = await callAdminAPI(`/api/admin/reports?id=${encodeURIComponent(id)}`);
+    if (requestId !== reportDetailsRequestSeq) return;
 
-  if (requestId !== reportDetailsRequestSeq) {
-    return;
-  }
+    const report = response.report;
+    const modules = Array.isArray(response.modules) ? response.modules : [];
 
-  if (reportError) {
-    console.error(reportError);
+    activeReport = report;
+    const nextType = report.report_type || templateRegistry.getDefaultSlug() || DEFAULT_REPORT_TYPE;
+    reportTypeEl.value = nextType;
+    reportSlugEl.value = report.slug || '';
+    reportTitleEl.value = report.title || '';
+    reportStatusEl.value = report.status || 'draft';
+    reportPublishedAtEl.value = formatDateTimeLocal(report.published_at);
+    reportNotesEl.value = report.notes || '';
+    chartPathEl.value = report.chart_path || '';
+    chartFileEl.value = '';
+    await updateChartPreview(report.chart_path);
+
+    modulesContainer.innerHTML = '';
+    const lockKeys = templateRegistry.hasTemplate(nextType);
+    if (modules.length) {
+      modules.forEach((module) =>
+        appendModuleCard(module, {
+          lockedKey: lockKeys,
+          allowDuplicate: nextType === 'custom'
+        })
+      );
+    } else {
+      renderModulesEmptyState();
+    }
+
+    syncTemplateControls(nextType);
+    lastSavedAt = report.updated_at ? new Date(report.updated_at) : null;
+    duplicateBtn.disabled = false;
+    deleteBtn.disabled = false;
+    resetDirty();
+    renderReportsList();
+  } catch (error) {
+    if (requestId !== reportDetailsRequestSeq) return;
+    console.error('[Report Admin] selectReport error', error);
     showToast('Errore nel recupero del report', 'error');
-    return;
   }
-
-  const { data: modules, error: modulesError } = await supabase
-    .from('report_modules')
-    .select('id, module_key, content, order_index')
-    .eq('report_id', id)
-    .order('order_index', { ascending: true, nullsFirst: true });
-
-  if (requestId !== reportDetailsRequestSeq) {
-    return;
-  }
-
-  if (modulesError) {
-    console.error(modulesError);
-    showToast('Errore nel recupero dei moduli', 'error');
-    return;
-  }
-
-  activeReport = report;
-  reportTypeEl.value = report.report_type || DEFAULT_REPORT_TYPE;
-  reportSlugEl.value = report.slug || '';
-  reportTitleEl.value = report.title || '';
-  reportStatusEl.value = report.status || 'draft';
-  reportPublishedAtEl.value = formatDateTimeLocal(report.published_at);
-  reportNotesEl.value = report.notes || '';
-  chartPathEl.value = report.chart_path || '';
-  chartFileEl.value = '';
-  await updateChartPreview(report.chart_path);
-
-  const moduleList = Array.isArray(modules) ? modules : [];
-
-  modulesContainer.innerHTML = '';
-  if (moduleList.length) {
-    moduleList.forEach((module) =>
-      appendModuleCard(module, {
-        lockedKey: REPORT_TEMPLATES[report.report_type]?.modules?.length > 0,
-        allowDuplicate: report.report_type === 'custom'
-      })
-    );
-  } else {
-    renderModulesEmptyState();
-  }
-
-  syncTemplateControls(report.report_type || DEFAULT_REPORT_TYPE);
-  lastSavedAt = report.updated_at ? new Date(report.updated_at) : null;
-  duplicateBtn.disabled = false;
-  deleteBtn.disabled = false;
-  resetDirty();
-  renderReportsList();
 };
 
 const sanitizeFilename = (filename, fallback = 'chart.png') => {
@@ -962,70 +1012,38 @@ const saveReport = async ({ publish }) => {
 
   try {
     const isNew = !activeReport;
-    console.log('[Dashboard] saveReport upsert', { isNew, reportPayload });
-    const { data: savedReport, error: saveError } = isNew
-      ? await supabase.from('reports').insert(reportPayload).select().single()
-      : await supabase.from('reports').update(reportPayload).eq('id', activeReport.id).select().single();
-    console.log('[Dashboard] saveReport upsert result', { savedReport, saveError });
+    const templateVersionId =
+      (activeReport?.report_type === reportTypeEl.value && activeReport?.template_version_id) ||
+      templateRegistry.getDefaultVersionId(reportTypeEl.value);
 
-    if (saveError) {
-      console.error(saveError);
-      showToast('Errore durante il salvataggio del report', 'error');
+    if (!templateVersionId) {
+      showToast('Template non configurato correttamente.', 'error');
       setStatusBannerMessage(
         'error',
-        'Errore durante il salvataggio',
-        'Il server ha rifiutato la richiesta. Riprova o verifica i permessi.'
+        'Template non disponibile',
+        'Seleziona un template valido prima di salvare.'
       );
       bannerLocked = true;
-      console.log('[Dashboard] saveReport abort: saveError', saveError);
       return;
     }
 
+    const apiPayload = {
+      report: {
+        ...(activeReport ? { id: activeReport.id } : {}),
+        ...reportPayload,
+        template_version_id: templateVersionId
+      },
+      modules
+    };
+
+    const response = await callAdminAPI('/api/admin/reports', {
+      method: isNew ? 'POST' : 'PUT',
+      body: apiPayload
+    });
+
+    const savedReport = response.report;
     const reportId = savedReport.id;
-    console.log('[Dashboard] saveReport saved report', savedReport);
 
-    const { error: deleteError } = await supabase
-      .from('report_modules')
-      .delete()
-      .eq('report_id', reportId);
-
-    if (deleteError) {
-      console.error(deleteError);
-      showToast('Errore nella sostituzione dei moduli', 'error');
-      setStatusBannerMessage(
-        'error',
-        'Errore sui moduli',
-        'Non ├¿ stato possibile sostituire i moduli esistenti. Riprova pi├╣ tardi.'
-      );
-      bannerLocked = true;
-      console.log('[Dashboard] saveReport abort: deleteError', deleteError);
-      return;
-    }
-
-    if (modules.length) {
-      const inserts = modules.map((module, index) => ({
-        report_id: reportId,
-        module_key: module.module_key,
-        order_index: module.order_index ?? index,
-        content: module.content
-      }));
-      console.log('[Dashboard] saveReport inserting modules', inserts);
-      const { error: insertError } = await supabase.from('report_modules').insert(inserts);
-      if (insertError) {
-        console.error(insertError);
-        showToast('Errore durante l\'inserimento dei moduli', 'error');
-        setStatusBannerMessage(
-          'error',
-          'Errore durante l\'inserimento',
-          'Alcuni moduli non sono stati salvati. Verifica il JSON e riprova.'
-        );
-        bannerLocked = true;
-        console.log('[Dashboard] saveReport abort: insertError', insertError);
-    return;
-  }
-      }
-
-    console.log('[Dashboard] saveReport success', { publish });
     showToast(publish ? 'Report pubblicato' : 'Report salvato', 'success');
     const completionTime = new Date();
     lastSavedAt = completionTime;
@@ -1034,7 +1052,7 @@ const saveReport = async ({ publish }) => {
     setStatusBannerMessage(
       'success',
       publish ? 'Report pubblicato' : 'Bozza salvata',
-      `${publish ? 'Il report ├¿ ora online.' : 'La bozza ├¿ stata sincronizzata.'} Ultimo salvataggio alle ${formatStatusTime(completionTime)}.`
+      `${publish ? 'Il report e ora online.' : 'La bozza e stata sincronizzata.'} Ultimo salvataggio alle ${formatStatusTime(completionTime)}.`
     );
     bannerLocked = true;
   } catch (error) {
@@ -1058,20 +1076,18 @@ const deleteReport = async () => {
   if (!activeReport) return;
   if (!confirm('Eliminare definitivamente il report?')) return;
 
-  const { error } = await supabase
-    .from('reports')
-    .delete()
-    .eq('id', activeReport.id);
-
-  if (error) {
-    console.error(error);
+  try {
+    await callAdminAPI('/api/admin/reports', {
+      method: 'DELETE',
+      body: { id: activeReport.id }
+    });
+    showToast('Report archiviato', 'success');
+    await loadReports();
+    clearEditor();
+  } catch (error) {
+    console.error('[Report Admin] deleteReport error', error);
     showToast('Errore durante l\'eliminazione', 'error');
-    return;
   }
-
-  showToast('Report eliminato', 'success');
-  await loadReports();
-  clearEditor();
 };
 
 const duplicateReport = () => {
@@ -1128,30 +1144,21 @@ const updateAuthUI = async () => {
     authLogged.classList.remove('hidden');
     appGrid.classList.remove('hidden');
 
-    const adminCheck = await ensureAdminAccess({
-      email: currentUser.email,
-      userId: currentUser.id,
-      planRole: currentUser.planRole,
-      isAdmin: data.isAdmin
-    });
-
-    if (!adminCheck.allowed) {
-      if (adminCheck.reason === 'lookup_failed') {
-        showToast('Impossibile verificare i permessi admin', 'error');
-      } else {
-        showToast('Accesso negato: utente non abilitato', 'error');
-      }
+    if (!data.isAdmin) {
+      showToast('Accesso negato: utente non abilitato', 'error');
       clearStoredAdminToken();
       currentUser = null;
       reports = [];
       filteredReports = [];
       reportsListEl.innerHTML = '<div class="list-empty">Effettua l\'accesso per visualizzare i report.</div>';
       clearEditor();
-      showUnauthorizedState(adminCheck.reason);
+      showUnauthorizedState('not_admin');
       return;
     }
 
+    isAdmin = true;
     authUserBadge.textContent = `Connesso come ${currentUser.email}`;
+    await templateRegistry.ensureLoaded();
     await loadReports();
     updateEditorBadge();
   } catch (err) {
@@ -1190,72 +1197,6 @@ const logout = async (silent = false) => {
 logoutBtn.addEventListener('click', logout);
 refreshSessionBtn.addEventListener('click', updateAuthUI);
 
-const ensureAdminAccess = async (tokenMeta = {}) => {
-  if (!currentUser || !currentUser.email) {
-    return { allowed: false, reason: 'missing_user' };
-  }
-
-  const normalizedEmail = (tokenMeta.email || currentUser.email || '').trim().toLowerCase();
-  const normalizedPlanRole = (tokenMeta.planRole || currentUser.planRole || '').trim().toLowerCase();
-
-  if (typeof tokenMeta.isAdmin === 'boolean') {
-    isAdmin = tokenMeta.isAdmin;
-    return { allowed: tokenMeta.isAdmin, reason: tokenMeta.isAdmin ? 'api_flag' : 'not_admin' };
-  }
-
-  if (normalizedPlanRole && ADMIN_PLAN_ROLES.has(normalizedPlanRole)) {
-    isAdmin = true;
-    return { allowed: true, reason: 'admin_plan' };
-  }
-
-  try {
-    const { data: adminEmailData, error: adminError } = await supabase
-      .from('admin_emails')
-      .select('email')
-      .eq('email', normalizedEmail)
-      .maybeSingle();
-
-    if (adminError) {
-      console.error('[Report Admin] Error checking admin_emails:', adminError);
-      return { allowed: false, reason: 'lookup_failed' };
-    }
-
-    if (adminEmailData) {
-      isAdmin = true;
-      return { allowed: true, reason: 'email_whitelist' };
-    }
-  } catch (error) {
-    console.error('[Report Admin] Error checking admin emails:', error);
-    return { allowed: false, reason: 'lookup_failed' };
-  }
-
-  const candidateUserId = tokenMeta.userId || currentUser.id;
-  if (candidateUserId) {
-    try {
-      const { data: adminUserData, error: adminUserError } = await supabase
-        .from('admin_users')
-        .select('user_id')
-        .eq('user_id', candidateUserId)
-        .maybeSingle();
-
-      if (adminUserError) {
-        console.error('[Report Admin] Error checking admin_users:', adminUserError);
-        return { allowed: false, reason: 'lookup_failed' };
-      }
-
-      if (adminUserData) {
-        isAdmin = true;
-        return { allowed: true, reason: 'legacy_user' };
-      }
-    } catch (error) {
-      console.error('[Report Admin] Error verifying admin_users:', error);
-      return { allowed: false, reason: 'lookup_failed' };
-    }
-  }
-
-  return { allowed: false, reason: 'not_admin' };
-};
-
 refreshBtn.addEventListener('click', loadReports);
 newReportBtn.addEventListener('click', () => {
   if (isDirty && !confirm('Ci sono modifiche non salvate. Procedere comunque?')) return;
@@ -1268,7 +1209,7 @@ searchEl.addEventListener('input', () => {
   filteredReports = reports.filter((report) => (
     report.slug.toLowerCase().includes(query) ||
     (report.title && report.title.toLowerCase().includes(query)) ||
-    report.status.toLowerCase().includes(query)
+    (report.status || '').toLowerCase().includes(query)
   ));
   renderReportsList();
 });
@@ -1292,14 +1233,9 @@ modulesContainer.addEventListener('input', () => setDirty(true));
 
 reportTypeEl.addEventListener('change', () => {
   const nextType = reportTypeEl.value;
-  const template = REPORT_TEMPLATES[nextType];
-  if (!template) {
+  const templateExists = templateRegistry.getTemplate(nextType);
+  if (!templateExists && nextType !== 'custom') {
     showToast('Template non disponibile', 'error');
-    reportTypeEl.value = currentTemplateType;
-    return;
-  }
-  if (template.modules.length === 0) {
-    showToast('Questo template sar├á disponibile a breve', 'info');
     reportTypeEl.value = currentTemplateType;
     return;
   }

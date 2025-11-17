@@ -4,7 +4,6 @@
 // Gestione completa utenti, ruoli, scadenze e crediti
 // ============================================
 
-import { supabase } from '/report/assets/js/supabase-client.js';
 import Logger from '/report/assets/js/utils/logger.js';
 
 // DOM Elements
@@ -25,7 +24,18 @@ const CREDITS_CHANGE = document.getElementById('credits-change');
 const UPDATE_CREDITS_BTN = document.getElementById('update-credits-btn');
 const CANCEL_CREDITS_BTN = document.getElementById('cancel-credits-btn');
 
-let allUsers = [];
+const getUsersSnapshot = () => window.allUsers || [];
+const getAdminApiCall = () => {
+  if (typeof window.adminApiCall !== 'function') {
+    throw new Error('API admin non disponibile');
+  }
+  return window.adminApiCall;
+};
+const reloadUsers = async () => {
+  if (typeof window.loadAllData === 'function') {
+    await window.loadAllData();
+  }
+};
 
 // Setup modals
 if (SAVE_USER_BTN) {
@@ -51,9 +61,10 @@ window.openManageCreditsModal = openManageCreditsModal;
 window.openManagePaymentsModal = openManagePaymentsModal;
 
 function openEditUserModal(identifier, type = 'user_id') {
+  const users = getUsersSnapshot();
   const user = type === 'email' 
-    ? allUsers.find(u => u.email === identifier)
-    : allUsers.find(u => u.user_id === identifier);
+    ? users.find(u => u.email === identifier)
+    : users.find(u => u.user_id === identifier);
     
   if (!user) {
     showToast('Utente non trovato.', 'error');
@@ -95,7 +106,7 @@ function openManageCreditsModal(identifier, type = 'user_id') {
     return;
   }
   
-  const user = allUsers.find(u => u.user_id === identifier);
+  const user = getUsersSnapshot().find(u => u.user_id === identifier);
   if (!user) {
     showToast('Utente non trovato.', 'error');
     return;
@@ -123,7 +134,7 @@ function openManageCreditsModal(identifier, type = 'user_id') {
 }
 
 function openManagePaymentsModal(userId) {
-  const user = allUsers.find(u => u.user_id === userId);
+  const user = getUsersSnapshot().find(u => u.user_id === userId);
   if (!user) {
     showToast('Utente non trovato.', 'error');
     return;
@@ -179,85 +190,25 @@ async function handleSaveUser() {
   try {
     if (SAVE_USER_BTN) SAVE_USER_BTN.disabled = true;
 
-    // Se abbiamo user_id, aggiorna user_profiles e user_roles
-    if (identifierType === 'user_id' && identifier) {
-      // Update user_profiles
-      const { error: profileError } = await supabase
-        .from('user_profiles')
-        .upsert({ 
-          user_id: identifier, 
-          display_name: newDisplayName || null 
-        }, { onConflict: 'user_id' });
-
-      if (profileError) throw profileError;
-
-      // Update user_roles
-      const roleData = {
-        user_id: identifier,
+    const api = getAdminApiCall();
+    await api('/api/admin/users', {
+      method: 'PUT',
+      body: {
+        identifier,
+        identifierType,
+        email,
+        userId: identifierType === 'user_id' ? identifier : null,
+        displayName: newDisplayName || null,
         role: newRole,
-        valid_until: newValidUntil || null
-      };
-
-      const { error: roleError } = await supabase
-        .from('user_roles')
-        .upsert(roleData, { onConflict: 'user_id' });
-
-      if (roleError) throw roleError;
-    }
-    
-    // Se abbiamo email (con o senza user_id), aggiorna dashboard_access_tokens
-    if (email) {
-      // Trova tutti i token attivi per questa email
-      const { data: tokens, error: tokensError } = await supabase
-        .from('dashboard_access_tokens')
-        .select('id, email, plan_role, valid_until')
-        .eq('email', email.toLowerCase())
-        .eq('revoked', false);
-      
-      if (tokensError) {
-        Logger.warn('Admin', 'Error loading tokens for update', tokensError);
-      } else if (tokens && tokens.length > 0) {
-        // Aggiorna tutti i token attivi per questa email
-        for (const token of tokens) {
-          const { error: updateTokenError } = await supabase
-            .from('dashboard_access_tokens')
-            .update({
-              plan_role: newRole,
-              valid_until: newValidUntil || token.valid_until
-            })
-            .eq('id', token.id);
-          
-          if (updateTokenError) {
-            Logger.warn('Admin', 'Error updating token', updateTokenError);
-          }
-        }
-      } else {
-        // Se non ci sono token, crea un nuovo token (opzionale)
-        // Per ora non creiamo token automaticamente, solo aggiorniamo quelli esistenti
+        validUntil: newValidUntil ? new Date(newValidUntil).toISOString() : null
       }
-      
-      // Aggiorna anche subscribers se esiste
-      if (identifierType === 'email' || !identifier) {
-        const { error: subscriberError } = await supabase
-          .from('subscribers')
-          .update({
-            status: newRole && !newValidUntil ? 'active' : (newValidUntil && new Date(newValidUntil) < new Date() ? 'expired' : 'active')
-          })
-          .eq('email', email.toLowerCase());
-        
-        if (subscriberError && subscriberError.code !== 'PGRST116') {
-          Logger.warn('Admin', 'Error updating subscriber', subscriberError);
-        }
-      }
-    }
+    });
 
     showToast('Utente aggiornato con successo!', 'success');
     if (EDIT_MODAL) EDIT_MODAL.hidden = true;
     
     // Reload data
-    if (window.loadAllData) {
-      await window.loadAllData();
-    }
+    await reloadUsers();
   } catch (err) {
     Logger.error('Admin', 'Save user error', err);
     showToast('Errore durante il salvataggio: ' + (err.message || ''), 'error');
@@ -285,35 +236,21 @@ async function handleUpdateCredits() {
   try {
     if (UPDATE_CREDITS_BTN) UPDATE_CREDITS_BTN.disabled = true;
 
-    // Fetch current credits to calculate total_purchased
-    const { data: currentData, error: fetchError } = await supabase
-      .from('user_analysis_credits')
-      .select('total_purchased, total_used')
-      .eq('user_id', userId)
-      .maybeSingle();
-
-    const totalPurchased = (currentData?.total_purchased || 0) + Math.max(0, creditsChange);
-    const totalUsed = currentData?.total_used || 0;
-
-    // Update user_analysis_credits
-    const { error: creditError } = await supabase
-      .from('user_analysis_credits')
-      .upsert({ 
-        user_id: userId, 
-        credits_balance: newCreditsBalance,
-        total_purchased: totalPurchased,
-        total_used: totalUsed
-      }, { onConflict: 'user_id' });
-
-    if (creditError) throw creditError;
+    const api = getAdminApiCall();
+    await api('/api/admin/credits', {
+      method: 'POST',
+      body: {
+        userId,
+        delta: creditsChange,
+        reason: 'admin_manual_adjustment'
+      }
+    });
 
     showToast('Crediti aggiornati con successo!', 'success');
     if (CREDITS_MODAL) CREDITS_MODAL.hidden = true;
     
     // Reload data
-    if (window.loadAllData) {
-      await window.loadAllData();
-    }
+    await reloadUsers();
   } catch (err) {
     Logger.error('Admin', 'Update credits error', err);
     showToast('Errore durante l\'aggiornamento: ' + (err.message || ''), 'error');
@@ -345,6 +282,5 @@ function showToast(message, type = 'info') {
 }
 
 // Export per uso in admin.js
-window.allUsers = allUsers;
 window.showToast = showToast;
 
