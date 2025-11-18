@@ -53,8 +53,7 @@ function render(data = {}) {
             <span>Tradelia AI</span>
           </h3>
           <p>
-            Tradelia AI produce approfondimenti didattici sui mercati con un metodo ispirato al mondo accademico,
-            deck proprietari SRD/MTB e ensemble multi-LLM controllato.
+            Tradelia AI è un progetto indipendente che pubblica analisi sui mercati basate su framework AI proprietari e documentazione trasparente.
           </p>
           <div class="ftr-quick-links" role="navigation" aria-label="Link rapidi">
             <a href="/index.html" aria-label="Vai alla homepage" data-i18n="nav.home">Homepage</a>
@@ -64,6 +63,11 @@ function render(data = {}) {
             <a href="/brokers.html" aria-label="Vai alla pagina brokers" data-i18n="nav.brokers">Brokers</a>
             <a href="/collegamenti.html" aria-label="Vai alla pagina collegamenti consigliati">Collegamenti</a>
             <a href="/glossario.html" aria-label="Vai al glossario finanziario" data-i18n="nav.glossary">Glossario</a>
+            <a href="/percorsi.html" aria-label="Vai alla pagina percorsi formativi">Percorsi formativi</a>
+          </div>
+          <div style="margin-top: var(--sp-4); font-size: var(--fs-13); color: rgba(226, 232, 240, 0.85);">
+            <strong style="display: block; font-size: var(--fs-14); color: #fff;">Percorsi formativi</strong>
+            Percorsi tematici basati su testi riconosciuti e materiali verificabili. <a href="/percorsi.html">Scoprili qui</a>.
           </div>
         </div>
 

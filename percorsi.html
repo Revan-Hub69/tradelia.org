@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Percorsi didattici Tradelia</title>
+  <meta name="description" content="Percorsi tematici basati su testi riconosciuti per utilizzare al meglio i framework FDM, MLT e PAC di Tradelia AI." />
+  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/assets/css/site-coherence-2025.css" />
+  <link rel="stylesheet" href="/assets/css/global-header.css" />
+  <link rel="stylesheet" href="/assets/css/mifid-banner.css" />
+</head>
+<body>
+  <div id="site-header-slot"></div>
+
+  <main>
+    <section class="hero-section" style="padding: 6rem 0 4rem;">
+      <div class="container">
+        <div class="hero-content" style="text-align: center;">
+          <div class="hero-badge">Percorsi didattici Tradelia</div>
+          <h1 class="hero-title" style="font-size: clamp(2.5rem, 4vw, 3.5rem);">
+            Percorsi basati su testi riconosciuti
+          </h1>
+          <p class="hero-description" style="margin-inline: auto;">
+            Ogni percorso combina manuali di riferimento, framework AI proprietari (FDM, MLT, PAC) e materiali di supporto.
+            Servono a chi vuole studiare i mercati con metodo, senza indicazioni operative.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="value-section" style="padding: 4rem 0;">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Percorsi disponibili</h2>
+          <p class="section-description">
+            Sono organizzati in tre livelli. Ogni blocco riporta i testi principali e il collegamento con i framework Tradelia.
+          </p>
+        </div>
+        <div class="value-grid">
+          <article class="value-card">
+            <span class="badge">Base</span>
+            <strong>Lettura del contesto</strong>
+            <span>
+              Testi: Bodie–Kane–Marcus, CFA Investment Foundations. Focus su glossario, indicatori macro e primi moduli FDM.
+            </span>
+          </article>
+          <article class="value-card">
+            <span class="badge">Intermedio</span>
+            <strong>Letture tattiche</strong>
+            <span>
+              Testi: Edwards &amp; Magee, paper multi-agent tactician 2025. Uso guidato della MLT con esempi documentati.
+            </span>
+          </article>
+          <article class="value-card">
+            <span class="badge">Avanzato</span>
+            <strong>Rischio e scenari</strong>
+            <span>
+              Testi: BIS/IMF stress testing 2025, manuali AIAF. Applicazione del PAC e dei dossier su richiesta per analisi di rischio.
+            </span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="audience-section" style="padding: 4rem 0;">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Come usarli</h2>
+          <p class="section-description">
+            I percorsi sono gratuiti e pensati per chi vuole approfondire il metodo prima di richiedere analisi personalizzate.
+          </p>
+        </div>
+        <div class="audience-grid">
+          <article class="audience-card">
+            <strong>Dashboard pubblica</strong>
+            <span>Ogni percorso indica quali sezioni FDM, MLT o PAC consultare per esercitarsi.</span>
+          </article>
+          <article class="audience-card">
+            <strong>Testi consigliati</strong>
+            <span>Elenco di capitoli e pagine utili per ripassare concetti chiave.</span>
+          </article>
+          <article class="audience-card">
+            <strong>Note operative</strong>
+            <span>Checklist per annotare fonti, limiti e domande da portare al proprio consulente.</span>
+          </article>
+        </div>
+        <div style="text-align: center; margin-top: var(--sp-8);">
+          <a href="/dashboard.html" class="btn btn-primary btn-with-icon">
+            <span>Apri la dashboard delle pubblicazioni</span>
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer-slot"></div>
+  <script type="module">
+    document.documentElement.setAttribute('data-theme', 'dark');
+    import { siteFooter } from '/report/assets/js/components/site-footer.js';
+    const footerSlot = document.getElementById('site-footer-slot');
+    if (footerSlot) siteFooter.mount(footerSlot);
+  </script>
+  <script type="module" src="/assets/js/global-header.js"></script>
+  <script type="module" src="/assets/js/mifid-banner.js"></script>
+</body>
+</html>
+
