@@ -590,6 +590,23 @@
       line-height: 1.6;
     }
 
+    .value-card-meta {
+      list-style: none;
+      margin: var(--sp-3) 0 0 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+    }
+
+    .value-card-meta li strong {
+      color: var(--ink);
+      margin-right: 0.35rem;
+      font-weight: 600;
+    }
+
     .value-card .badge {
       align-self: flex-start;
       font-size: var(--fs-11);
@@ -1912,7 +1929,7 @@
         </div>
 
         <div class="hero-cta">
-          <a href="/dashboard.html" class="btn btn-primary btn-with-icon">
+          <a href="/dashboard.html" class="btn btn-primary btn-with-icon" aria-label="Apri la dashboard pubblica delle analisi Tradelia">
             <span>Vai alla dashboard delle pubblicazioni Tradelia</span>
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -1921,7 +1938,7 @@
         </div>
 
         <div class="hero-cta" style="margin-top: var(--sp-4);">
-          <a href="/glossario.html" class="btn-inline">
+          <a href="/glossario.html" class="btn-inline" aria-label="Apri il glossario di Tradelia AI">
             <span>Consulta anche il glossario Tradelia</span>
           </a>
         </div>
@@ -1989,18 +2006,33 @@
           <span class="badge">FDM</span>
           <strong>Framework Dinamico dei Mercati</strong>
           <span>8 moduli che interpretano regimi e relazioni tra asset, con indicatori macro, intermarket e volatilità spiegati passo passo.</span>
+          <ul class="value-card-meta">
+            <li><strong>Fonti:</strong> banche centrali, curve tassi, flussi ETF.</li>
+            <li><strong>Modello:</strong> reti ricorrenti + regressori multi-fattore.</li>
+            <li><strong>Controllo:</strong> drift test e coerenza numerica giornaliera.</li>
+          </ul>
         </article>
 
         <article class="value-card">
           <span class="badge">MLT</span>
           <strong>Matrice delle Letture Tattiche</strong>
           <span>6 tavole che combinano pattern, fattori e contributi di agenti AI specializzati per leggere il contesto tattico senza finalità operative.</span>
+          <ul class="value-card-meta">
+            <li><strong>Fonti:</strong> prezzi azionari/bond, fattori risk-on/off, volatilità implicita.</li>
+            <li><strong>Modello:</strong> agenti LLM cooperativi + pattern matching.</li>
+            <li><strong>Controllo:</strong> consensus multi-agente e verifica cronologica.</li>
+          </ul>
         </article>
 
         <article class="value-card">
           <span class="badge">PAC</span>
           <strong>Protocollo di Allerta Criptovalute</strong>
           <span>Sistema che si attiva solo quando le metriche di rischio mostrano anomalie rilevanti su spread, liquidità e volatilità.</span>
+          <ul class="value-card-meta">
+            <li><strong>Fonti:</strong> order book, funding rate, vol implicita crypto.</li>
+            <li><strong>Modello:</strong> soglie adattive e regole di sorveglianza rischio.</li>
+            <li><strong>Controllo:</strong> trigger manuale dal desk con log pubblico.</li>
+          </ul>
         </article>
       </div>
 
@@ -2182,6 +2214,9 @@
           </ul>
         </div>
       </div>
+      <p style="margin-top: var(--sp-6); color: var(--ink-soft); font-size: var(--fs-14);">
+        Ultimo audit interno: ottobre 2025 · registro versioni e checklist disponibili nella dashboard (sezione Archivio).
+      </p>
     </div>
   </section>
 
