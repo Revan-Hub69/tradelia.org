@@ -133,42 +133,30 @@
 
     .pricing-row {
       display: grid;
-      gap: var(--sp-8);
+      gap: var(--sp-6);
+      grid-template-columns: 1fr;
     }
 
-    .pricing-row--duo {
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      align-items: stretch;
-    }
-
-    .pricing-row--solo {
-      grid-template-columns: minmax(320px, 1fr);
-      justify-content: center;
-      margin-top: var(--sp-6);
-    }
-
-    @media (min-width: 1024px) {
-      .pricing-row--duo {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .pricing-row--solo {
-        grid-template-columns: minmax(600px, min(1000px, 80vw));
+    @media (min-width: 768px) {
+      .pricing-row--trio {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--sp-5);
       }
     }
 
     .plan-card {
       display: flex;
       flex-direction: column;
-      gap: var(--sp-5);
+      gap: var(--sp-4);
       background: var(--surface-card);
       border: 1px solid rgba(148, 163, 184, 0.18);
-      border-radius: var(--radius-xl);
-      padding: var(--sp-6) var(--sp-5);
-      margin: var(--sp-4) 0;
-      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.18);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-5) var(--sp-4);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
       transition: all 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
       opacity: 1;
       transform: translateY(0);
+      min-height: auto;
     }
 
     .plan-card:not(.has-entered) {
@@ -194,39 +182,40 @@
     }
 
     .plan-card--panorama {
-      padding: var(--sp-7) var(--sp-6);
-      border-radius: var(--radius-xl);
+      padding: var(--sp-5) var(--sp-4);
+      border-radius: var(--radius-lg);
       background: linear-gradient(180deg, rgba(15, 23, 42, 0.06) 0%, rgba(15, 23, 42, 0.12) 100%);
-      box-shadow: 0 28px 64px rgba(15, 23, 42, 0.24);
-      gap: var(--sp-6);
-      margin: var(--sp-6) 0;
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.2);
+      gap: var(--sp-4);
     }
 
     .plan-heading {
       display: flex;
       flex-direction: column;
-      gap: var(--sp-3);
+      gap: var(--sp-2);
     }
 
     .plan-badge {
       align-self: flex-start;
-      font-size: var(--fs-12);
+      font-size: var(--fs-11);
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: var(--sp-2) var(--sp-4);
+      letter-spacing: 0.06em;
+      padding: 0.25rem var(--sp-3);
       border-radius: var(--radius-pill);
       border: 1px solid rgba(96, 165, 250, 0.35);
       background: rgba(59, 130, 246, 0.14);
       color: rgba(191, 219, 254, 0.9);
+      margin-bottom: var(--sp-1);
     }
 
     .plan-title {
       margin: 0;
-      font-size: var(--fs-22);
+      font-size: var(--fs-18);
       font-weight: 700;
       letter-spacing: -0.01em;
       color: var(--ink);
+      line-height: 1.2;
     }
 
     .plan-price-row {
@@ -236,7 +225,7 @@
     }
 
     .plan-price {
-      font-size: clamp(2rem, 5vw, 2.5rem);
+      font-size: clamp(1.75rem, 4vw, 2rem);
       font-weight: 700;
       color: var(--ink);
       letter-spacing: -0.02em;
@@ -252,25 +241,26 @@
     .plan-description {
       margin: 0;
       color: var(--muted);
-      font-size: var(--fs-13);
-      line-height: 1.5;
-      margin-bottom: var(--sp-3);
+      font-size: var(--fs-12);
+      line-height: 1.4;
+      margin-bottom: var(--sp-2);
     }
 
     .plan-list {
       list-style: none;
       padding: 0;
-      margin: 0 0 var(--sp-3) 0;
+      margin: 0;
       display: grid;
-      gap: var(--sp-2);
+      gap: var(--sp-1_5);
+      flex: 1;
     }
 
     .plan-list li {
       position: relative;
       padding-left: var(--sp-3);
       color: var(--ink-soft);
-      font-size: var(--fs-13);
-      line-height: 1.5;
+      font-size: var(--fs-12);
+      line-height: 1.4;
     }
 
     .plan-list li::before {
@@ -285,10 +275,10 @@
     }
 
     .plan-actions {
-      margin-top: auto;
+      margin-top: var(--sp-3);
       display: flex;
       flex-direction: column;
-      gap: var(--sp-3);
+      gap: var(--sp-2);
       align-items: stretch;
     }
 
@@ -440,7 +430,7 @@
       </header>
 
       <div class="pricing-layout">
-        <div class="pricing-row pricing-row--duo">
+        <div class="pricing-row pricing-row--trio">
           <!-- Gratuito -->
           <article class="plan-card plan-card--compact" aria-labelledby="plan-gratuito-heading">
             <span class="plan-badge">Accesso pubblico</span>
@@ -494,9 +484,7 @@
               </p>
             </div>
           </article>
-        </div>
 
-        <div class="pricing-row pricing-row--solo">
           <!-- Desk -->
           <article class="plan-card plan-card--panorama" aria-labelledby="plan-desk-heading">
             <span class="plan-badge">Desk professionali</span>
