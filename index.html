@@ -2302,9 +2302,9 @@
       <div class="audience-partner-highlight">
         <strong>Come funziona</strong>
         <p>Concordiamo il perimetro, inseriamo le note richieste e forniamo i file in formato digitale e PDF. Nessuna esclusiva, nessun accordo commerciale nascosto.</p>
-        <button type="button" class="btn btn-outline btn-with-icon" onclick="apriModalWhiteLabel()">
+        <a href="/pricing.html#contatti" class="btn btn-outline btn-with-icon">
           <span>Richiedi dettagli</span>
-        </button>
+        </a>
       </div>
     </div>
   </section>
@@ -2507,51 +2507,6 @@
   </section>
 </main>
 
-<!-- MODALE WHITE-LABEL (segnaposto) -->
-<div id="modal-white-label" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
-  <div class="bg-slate-950 w-full max-w-3xl mx-auto rounded-2xl border border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] modal-root" role="dialog" aria-modal="true" aria-labelledby="white-label-title">
-    <!-- Header -->
-    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/80 backdrop-blur">
-      <div class="flex items-center gap-3">
-        <svg class="w-6 h-6 text-blue-400" viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="3" y="4" width="18" height="16" rx="2" ry="2" stroke="currentColor" stroke-width="2" fill="none" />
-          <path d="M7 8h10M7 12h6M7 16h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        </svg>
-        <div>
-          <h3 id="white-label-title" class="text-base md:text-lg font-semibold text-slate-50">White-label PDF per partner</h3>
-          <p class="text-xs md:text-sm text-slate-400">Segnaposto: anteprima del flusso e del fac-simile PDF.</p>
-        </div>
-      </div>
-      <button type="button" class="text-slate-400 hover:text-red-400" aria-label="Chiudi" onclick="chiudiModalWhiteLabel()">
-        <svg class="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        </svg>
-      </button>
-    </div>
-
-    <!-- Body -->
-    <div class="p-5 md:p-6 overflow-y-auto space-y-4 text-sm md:text-[0.9rem] leading-relaxed text-slate-200">
-      <p>
-        Il formato white-label prevede estratti FDM/MLT/PAC in PDF con logo e intestazione del partner, mantenendo metodo, disclosure e controlli Tradelia.
-        Ogni collaborazione viene definita caso per caso in base a perimetro, frequenza e note legali richieste.
-      </p>
-      <p class="text-xs text-slate-500">
-        Questa sezione è un segnaposto: l’esempio PDF verrà finalizzato insieme ai primi partner pilota. Il bottone seguente è dimostrativo.
-      </p>
-      <div class="mt-2">
-        <button type="button" class="btn btn-primary btn-sm" aria-disabled="true">
-          Scarica esempio PDF (presto disponibile)
-        </button>
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="flex justify-end gap-2 px-5 py-4 border-t border-slate-800 bg-slate-900/80">
-      <button type="button" class="btn btn-sm btn-outline" onclick="chiudiModalWhiteLabel()">Chiudi</button>
-    </div>
-  </div>
-</div>
-
 <!-- Back to top (mobile-first) -->
 <button id="back-to-top" class="back-to-top" type="button" aria-label="Torna all'inizio">
   <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -2640,33 +2595,6 @@
 
 
 <script>
-  const lockScroll = () => document.body.classList.add('overflow-hidden');
-  const unlockScroll = () => document.body.classList.remove('overflow-hidden');
-
-  function apriModalWhiteLabel() {
-    const modal = document.getElementById('modal-white-label');
-    if (!modal) return;
-    modal.classList.remove('hidden');
-    requestAnimationFrame(() => modal.querySelector('.modal-root')?.classList.add('is-open'));
-    lockScroll();
-  }
-
-  function chiudiModalWhiteLabel() {
-    const modal = document.getElementById('modal-white-label');
-    if (!modal) return;
-    const panel = modal.querySelector('.modal-root');
-    if (panel) {
-      panel.classList.remove('is-open');
-      setTimeout(() => {
-        modal.classList.add('hidden');
-        unlockScroll();
-      }, 220);
-    } else {
-      modal.classList.add('hidden');
-      unlockScroll();
-    }
-  }
-
   (function cardReveal() {
     if (!('IntersectionObserver' in window)) return;
     const cards = document.querySelectorAll('.hero-feature, .audience-card, .value-card, .service-card, .testimonial-card');
