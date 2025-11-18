@@ -23,5 +23,10 @@
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/webhook-stripe.js": {
+      "maxDuration": 30
+    }
+  }
 }
