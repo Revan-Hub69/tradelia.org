@@ -136,35 +136,35 @@
       gap: var(--sp-8);
     }
 
-    .pricing-row--trio {
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    .pricing-row--duo {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       align-items: stretch;
     }
 
     .pricing-row--solo {
       grid-template-columns: minmax(320px, 1fr);
       justify-content: center;
-      margin-top: var(--sp-8);
+      margin-top: var(--sp-6);
     }
 
     @media (min-width: 1024px) {
-      .pricing-row--trio {
-        grid-template-columns: repeat(3, 1fr);
+      .pricing-row--duo {
+        grid-template-columns: repeat(2, 1fr);
       }
       .pricing-row--solo {
-        grid-template-columns: minmax(520px, min(920px, 70vw));
+        grid-template-columns: minmax(600px, min(1000px, 80vw));
       }
     }
 
     .plan-card {
       display: flex;
       flex-direction: column;
-      gap: var(--sp-7);
+      gap: var(--sp-5);
       background: var(--surface-card);
       border: 1px solid rgba(148, 163, 184, 0.18);
       border-radius: var(--radius-xl);
-      padding: clamp(2.6rem, 3.8vw, 3.2rem) clamp(2.8rem, 4.1vw, 3.6rem);
-      margin: var(--sp-5) 0;
+      padding: var(--sp-6) var(--sp-5);
+      margin: var(--sp-4) 0;
       box-shadow: 0 16px 36px rgba(15, 23, 42, 0.18);
       transition: all 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
       opacity: 1;
@@ -194,18 +194,18 @@
     }
 
     .plan-card--panorama {
-      padding: clamp(3.2rem, 4.6vw, 3.8rem) clamp(3.8rem, 5.4vw, 4.4rem);
+      padding: var(--sp-7) var(--sp-6);
       border-radius: var(--radius-xl);
       background: linear-gradient(180deg, rgba(15, 23, 42, 0.06) 0%, rgba(15, 23, 42, 0.12) 100%);
       box-shadow: 0 28px 64px rgba(15, 23, 42, 0.24);
-      gap: calc(var(--sp-8) + var(--sp-2));
-      margin: var(--sp-8) 0;
+      gap: var(--sp-6);
+      margin: var(--sp-6) 0;
     }
 
     .plan-heading {
       display: flex;
       flex-direction: column;
-      gap: var(--sp-4);
+      gap: var(--sp-3);
     }
 
     .plan-badge {
@@ -236,7 +236,7 @@
     }
 
     .plan-price {
-      font-size: clamp(2.6rem, 6vw, 3.4rem);
+      font-size: clamp(2rem, 5vw, 2.5rem);
       font-weight: 700;
       color: var(--ink);
       letter-spacing: -0.02em;
@@ -252,25 +252,25 @@
     .plan-description {
       margin: 0;
       color: var(--muted);
-      font-size: var(--fs-14);
-      line-height: var(--lh-16);
-      margin-bottom: var(--sp-2);
+      font-size: var(--fs-13);
+      line-height: 1.5;
+      margin-bottom: var(--sp-3);
     }
 
     .plan-list {
       list-style: none;
       padding: 0;
-      margin: 0 0 var(--sp-4) 0;
+      margin: 0 0 var(--sp-3) 0;
       display: grid;
-      gap: var(--sp-3);
+      gap: var(--sp-2);
     }
 
     .plan-list li {
       position: relative;
-      padding-left: var(--sp-4);
+      padding-left: var(--sp-3);
       color: var(--ink-soft);
-      font-size: var(--fs-14);
-      line-height: var(--lh-16);
+      font-size: var(--fs-13);
+      line-height: 1.5;
     }
 
     .plan-list li::before {
@@ -285,11 +285,11 @@
     }
 
     .plan-actions {
-      margin-top: var(--sp-6);
+      margin-top: auto;
       display: flex;
       flex-direction: column;
-      gap: var(--sp-4);
-      align-items: flex-start;
+      gap: var(--sp-3);
+      align-items: stretch;
     }
 
     .plan-actions .btn {
@@ -440,7 +440,7 @@
       </header>
 
       <div class="pricing-layout">
-        <div class="pricing-row pricing-row--trio">
+        <div class="pricing-row pricing-row--duo">
           <!-- Gratuito -->
           <article class="plan-card plan-card--compact" aria-labelledby="plan-gratuito-heading">
             <span class="plan-badge">Accesso pubblico</span>
@@ -451,14 +451,12 @@
                 <span class="plan-period">sempre</span>
               </div>
               <p class="plan-description">
-                Accesso completo alla dashboard pubblica con tutti i framework FDM, MLT e PAC. Alcuni moduli interni sono bloccati.
+                Dashboard pubblica completa: framework FDM, MLT, PAC. Alcuni moduli interni bloccati.
               </p>
             </div>
             <ul class="plan-list">
-              <li>Framework FDM, MLT, PAC completi e aggiornati</li>
-              <li>Dashboard pubblica con tutti i report giornalieri</li>
-              <li>Documentazione completa su fonti e metodo</li>
-              <li>Alcuni moduli interni bloccati (export avanzato, storico esteso)</li>
+              <li>Framework FDM, MLT, PAC completi</li>
+              <li>Report giornalieri e documentazione</li>
               <li>1 dispositivo connesso</li>
             </ul>
             <div class="plan-actions">
@@ -478,30 +476,29 @@
                 <span class="plan-period">al mese</span>
               </div>
               <p class="plan-description">
-                Accesso completo senza limiti: tutti i moduli sbloccati, storico completo, export avanzato. Per trader e investitori che vogliono approfondire il metodo Tradelia AI.
+                Accesso completo senza limiti: tutti i moduli sbloccati, storico completo, export avanzato.
               </p>
             </div>
             <ul class="plan-list">
-              <li>Tutto del piano gratuito</li>
-              <li>Nessun modulo oscurato o bloccato</li>
-              <li>Accesso completo a tutti i report storici</li>
-              <li>Export PDF e CSV avanzati</li>
-              <li>Notifiche su nuovi report</li>
-              <li>2 dispositivi connessi simultaneamente</li>
-              <li>Sconto 10% su analisi su richiesta (€44 invece di €49)</li>
+              <li>Tutto del gratuito + moduli sbloccati</li>
+              <li>Storico completo e export PDF/CSV</li>
+              <li>2 dispositivi connessi</li>
+              <li>Sconto 10% su analisi (€44)</li>
             </ul>
             <div class="plan-actions">
               <a href="mailto:info@tradelia.org?subject=Attivazione%20piano%20Pro%20Tradelia&body=Indica%20i%20dati%20di%20fatturazione%20e%20le%20tue%20esigenze." class="btn btn-primary btn-sm">
                 Attiva Pro
               </a>
               <p class="plan-meta">
-                Pagamento tramite <strong>Stripe</strong> (carta di credito, Apple Pay, Google Pay). Fatturazione automatica mensile.
+                <strong>Stripe</strong> (carta, Apple Pay, Google Pay)
               </p>
             </div>
           </article>
+        </div>
 
+        <div class="pricing-row pricing-row--solo">
           <!-- Desk -->
-          <article class="plan-card" aria-labelledby="plan-desk-heading">
+          <article class="plan-card plan-card--panorama" aria-labelledby="plan-desk-heading">
             <span class="plan-badge">Desk professionali</span>
             <div class="plan-heading">
               <h2 class="plan-title" id="plan-desk-heading">Desk</h2>
@@ -510,24 +507,22 @@
                 <span class="plan-period">al mese</span>
               </div>
               <p class="plan-description">
-                Per desk, uffici studi e partner: white-label su tutti i report, download PDF personalizzati, supporto prioritario e fatturazione corporate.
+                Per desk, uffici studi e partner: white-label su tutti i report, download PDF personalizzati, supporto prioritario.
               </p>
             </div>
             <ul class="plan-list">
-              <li>Tutto del piano Pro</li>
-              <li>White-label su tutti i report della dashboard</li>
+              <li>Tutto del Pro + white-label completo</li>
               <li>Download PDF con logo e intestazione personalizzata</li>
-              <li>Fino a 5 dispositivi connessi simultaneamente</li>
-              <li>Supporto prioritario e canale diretto con il desk</li>
-              <li>Fatturazione corporate (bonifico o carta)</li>
-              <li>Sconto 20% su analisi su richiesta (€39 invece di €49)</li>
+              <li>5 dispositivi connessi</li>
+              <li>Supporto prioritario e fatturazione corporate</li>
+              <li>Sconto 20% su analisi (€39)</li>
             </ul>
             <div class="plan-actions">
               <a href="mailto:info@tradelia.org?subject=Richiesta%20piano%20Desk%20Tradelia&body=Indica%20i%20dati%20aziendali%20e%20le%20tue%20esigenze%20specifiche." class="btn btn-outline btn-sm">
                 Contatta per attivazione
               </a>
               <p class="plan-meta">
-                Pagamento tramite <strong>Xolo</strong> (bonifico o carta). Fatturazione B2B con gestione IVA automatica.
+                <strong>Xolo</strong> (bonifico o carta). Fatturazione B2B.
               </p>
             </div>
           </article>
