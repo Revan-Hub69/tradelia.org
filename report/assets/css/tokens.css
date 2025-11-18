@@ -2632,7 +2632,7 @@ body::-webkit-scrollbar-track,
 html::-webkit-scrollbar-thumb,
 body::-webkit-scrollbar-thumb,
 *::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
   border-radius: 4px !important;
   border: none !important;
   transition: background 0.2s ease !important;
@@ -2655,5 +2655,5 @@ html,
 body,
 * {
   scrollbar-width: thin !important;
-  scrollbar-color: rgba(255, 255, 255, 0.08) transparent !important;
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent !important;
 }
