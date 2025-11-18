@@ -627,18 +627,24 @@
     /* Scroll progress indicator (discreto) */
     .scroll-progress {
       position: fixed;
-      top: 0;
+      top: 64px; /* Sotto l'header */
       left: 0;
       width: 0%;
-      height: 2px;
+      height: 3px;
       background: linear-gradient(90deg, var(--brand-500), var(--brand-400));
-      z-index: 1001;
-      transition: width 0.1s ease-out;
-      opacity: 0.8;
+      z-index: 999; /* Sotto header ma sopra contenuto */
+      transition: width 0.15s ease-out;
+      opacity: 1;
+      box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
     }
     @media (prefers-reduced-motion: reduce) {
       .scroll-progress {
         display: none;
+      }
+    }
+    @media (max-width: 768px) {
+      .scroll-progress {
+        top: 56px; /* Header più basso su mobile */
       }
     }
 
@@ -2801,16 +2807,25 @@
     }
     
     const updateProgress = () => {
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const progress = (scrollTop / (documentHeight - windowHeight)) * 100;
-      progressBar.style.width = Math.min(100, Math.max(0, progress)) + '%';
-      progressBar.setAttribute('aria-valuenow', Math.round(progress));
+      const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+      const documentHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+      const scrollableHeight = documentHeight - windowHeight;
+      
+      if (scrollableHeight <= 0) {
+        progressBar.style.width = '0%';
+        progressBar.setAttribute('aria-valuenow', 0);
+        return;
+      }
+      
+      const progress = (scrollTop / scrollableHeight) * 100;
+      const clampedProgress = Math.min(100, Math.max(0, progress));
+      progressBar.style.width = clampedProgress + '%';
+      progressBar.setAttribute('aria-valuenow', Math.round(clampedProgress));
     };
     
     let ticking = false;
-    window.addEventListener('scroll', () => {
+    const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           updateProgress();
@@ -2818,8 +2833,18 @@
         });
         ticking = true;
       }
-    }, { passive: true });
-    updateProgress(); // Initial state
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', updateProgress, { passive: true });
+    
+    // Initial state e dopo load completo
+    if (document.readyState === 'complete') {
+      updateProgress();
+    } else {
+      window.addEventListener('load', updateProgress, { once: true });
+      updateProgress(); // Fallback immediato
+    }
   })();
 
   (function backToTop() {
