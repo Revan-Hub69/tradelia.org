@@ -53,7 +53,9 @@
           "name": "Gratuito",
           "price": "0",
           "priceCurrency": "EUR",
-          "description": "Accesso completo alla dashboard pubblica con framework FDM, MLT, PAC"
+          "description": "Accesso completo alla dashboard pubblica con framework FDM, MLT, PAC",
+          "availability": "https://schema.org/InStock",
+          "category": "Educational Service"
         },
         {
           "@type": "Offer",
@@ -61,7 +63,15 @@
           "price": "29",
           "priceCurrency": "EUR",
           "billingIncrement": "P1M",
-          "description": "Accesso completo senza limiti, 2 dispositivi, sconto 10% su analisi"
+          "description": "Accesso completo senza limiti, 2 dispositivi, sconto 10% su analisi",
+          "availability": "https://schema.org/InStock",
+          "category": "Educational Service",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "29",
+            "priceCurrency": "EUR",
+            "billingDuration": "P1M"
+          }
         },
         {
           "@type": "Offer",
@@ -69,10 +79,25 @@
           "price": "149",
           "priceCurrency": "EUR",
           "billingIncrement": "P1M",
-          "description": "White-label, 5 dispositivi, supporto prioritario, sconto 20% su analisi"
+          "description": "White-label, 5 dispositivi, supporto prioritario, sconto 20% su analisi",
+          "availability": "https://schema.org/InStock",
+          "category": "Educational Service",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "149",
+            "priceCurrency": "EUR",
+            "billingDuration": "P1M"
+          }
         }
       ]
-    }
+    },
+    "about": {
+      "@type": "Thing",
+      "name": "Educational Financial Market Analysis",
+      "description": "Framework AI proprietari per analisi educative sui mercati finanziari"
+    },
+    "educationalUse": "Professional Development",
+    "learningResourceType": "Educational Service"
   }
   </script>
 
@@ -582,7 +607,7 @@
           <details>
             <summary>Posso cancellare in qualsiasi momento?</summary>
             <p>
-              Sì. La gestione del piano avviene dalla dashboard: puoi annullare quando vuoi e l'accesso resta attivo fino alla fine del periodo già pagato.
+              Sì. La gestione del piano avviene dalla dashboard: puoi annullare quando vuoi e l'accesso resta attivo fino alla fine del periodo già pagato. Nessun costo di cancellazione.
             </p>
           </details>
 
@@ -604,16 +629,53 @@
           <details>
             <summary>Come funzionano le analisi su richiesta?</summary>
             <p>
-              Ogni analisi costa €49 (€44 per Pro, €39 per Desk) e richiede circa 1 ora di lavoro. Puoi richiederle via email specificando il tipo di analisi. Gestiamo fino a 4 analisi al giorno, in ordine di arrivo.
+              Ogni analisi costa €49 (€44 per Pro, €39 per Desk) e richiede circa 1 ora di lavoro. Puoi richiederle via email specificando il tipo di analisi. Gestiamo fino a 4 analisi al giorno, in ordine di arrivo. Ogni analisi include fonti, ipotesi e controlli documentati.
             </p>
           </details>
 
           <details>
             <summary>Cosa include il white-label per Desk?</summary>
             <p>
-              Tutti i report pubblicati nella dashboard possono essere scaricati in versione PDF con logo, intestazione e contatti del partner. Manteniamo metodo, fonti e disclosure standard Tradelia.
+              Tutti i report pubblicati nella dashboard possono essere scaricati in versione PDF con logo, intestazione e contatti del partner. Manteniamo metodo, fonti e disclosure standard Tradelia. I report white-label sono identici nella sostanza, cambiano solo logo e contatti.
             </p>
           </details>
+
+          <details>
+            <summary>Dove posso consultare il metodo e le fonti?</summary>
+            <p>
+              Tutti i framework (FDM, MLT, PAC) sono documentati nella dashboard pubblica. Ogni report include riferimenti alle fonti utilizzate e al metodo applicato. La documentazione completa è accessibile gratuitamente nella sezione "Archivio" della dashboard.
+            </p>
+          </details>
+
+          <details>
+            <summary>Offrite garanzie o rimborsi?</summary>
+            <p>
+              Puoi cancellare l'abbonamento in qualsiasi momento senza penali. Per le analisi su richiesta, se l'analisi non rispetta le specifiche concordate, provvediamo a revisione o rimborso. Per abbonamenti, non offriamo rimborsi retroattivi ma l'accesso resta attivo fino alla fine del periodo pagato anche dopo la cancellazione.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <!-- Disclaimer Section -->
+      <section style="max-width: 800px; margin: calc(var(--sp-10) * 2) auto; padding: var(--sp-6) var(--sp-5); background: var(--surface-elev); border: 1px solid var(--br-card); border-radius: var(--radius-lg);" aria-labelledby="disclaimer-heading">
+        <h2 id="disclaimer-heading" style="font-size: var(--fs-18); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-4); letter-spacing: -0.01em;">
+          Materiale educativo, non consulenza
+        </h2>
+        <div style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-17);">
+          <p style="margin-bottom: var(--sp-3);">
+            Tutto il materiale Tradelia AI ha finalità <strong>informative e didattiche</strong>. Non è consulenza finanziaria, non è ricerca in investimento e non sostituisce il lavoro di un professionista abilitato.
+          </p>
+          <p style="margin-bottom: var(--sp-3);">
+            I framework FDM, MLT e PAC sono strumenti di analisi basati su metodologie verificabili e fonti pubbliche. Non forniscono segnali operativi né raccomandazioni di investimento.
+          </p>
+          <p style="margin: 0;">
+            Prima di prendere decisioni operative consulta sempre un <strong>consulente finanziario abilitato</strong>. Tradelia AI fornisce contenuti educativi e non sostituisce in alcun modo la consulenza personalizzata.
+          </p>
+        </div>
+        <div style="margin-top: var(--sp-5); padding-top: var(--sp-4); border-top: 1px solid var(--br-card);">
+          <p style="color: var(--ink-soft); font-size: var(--fs-13); margin: 0; line-height: 1.5;">
+            <strong>Metodo e trasparenza:</strong> Consulta la <a href="/" style="color: var(--brand-500); text-decoration: underline;">documentazione completa</a> nella dashboard pubblica per dettagli su fonti, metodologie e controlli applicati.
+          </p>
         </div>
       </section>
 
