@@ -102,6 +102,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
   <style>
+    html { 
+      scroll-behavior: smooth;
+    }
     html, body { 
       height: 100%; 
       margin: 0;
@@ -494,6 +497,11 @@
       border-radius: var(--radius-pill);
       background: rgba(37, 99, 235, 0.12);
       color: var(--brand-400);
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+    .audience-card:hover .audience-badge {
+      background: rgba(37, 99, 235, 0.18);
+      transform: scale(1.02);
     }
 
     .audience-partner-highlight {
@@ -563,8 +571,8 @@
       opacity: 1;
       transform: translateY(0);
       transition:
-        opacity 0.28s cubic-bezier(0.22, 0.61, 0.36, 1),
-        transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1),
+        opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
         box-shadow var(--transition-base),
         border-color var(--transition-base),
         background var(--transition-base);
@@ -584,6 +592,10 @@
       border-color: var(--brand-500);
       box-shadow: 0 10px 28px rgba(37, 99, 235, 0.15);
       transform: translateY(-2px);
+    }
+    .value-card:hover .badge {
+      background: rgba(59, 130, 246, 0.18);
+      transform: scale(1.02);
     }
 
     .value-card strong {
@@ -622,6 +634,7 @@
       text-transform: uppercase;
       letter-spacing: 0.08em;
       padding: var(--sp-2) var(--sp-3);
+      transition: background 0.2s ease, transform 0.15s ease;
       border-radius: var(--radius-pill);
       background: rgba(59, 130, 246, 0.12);
       color: var(--brand-400);
@@ -747,6 +760,15 @@
       border: 1px solid var(--br-card);
       border-radius: var(--radius-lg);
       color: var(--brand-400);
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease;
+    }
+    .service-card:hover .service-card-icon {
+      transform: scale(1.05);
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%);
+    }
+    .service-card:hover .service-card-icon svg {
+      transform: rotate(2deg);
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .service-card-title {
@@ -1311,10 +1333,22 @@
       box-shadow: 0 6px 18px oklab(0% 0 0 / .10);
       transform: translateY(-1px);
     }
-    .btn:active, .btn-sm:active, .btn-inline:active { transform: translateY(0); }
+    .btn:active, .btn-sm:active, .btn-inline:active { 
+      transform: translateY(0) scale(0.98);
+      transition: transform 0.08s ease;
+    }
     .btn:focus-visible, .btn-sm:focus-visible, .btn-inline:focus-visible {
       outline: 2px solid var(--brand-500);
       outline-offset: 2px;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    /* ===== LINK INTERNI (ANCHOR) ===== */
+    a[href^="#"] {
+      transition: opacity 0.15s ease;
+    }
+    a[href^="#"]:active {
+      opacity: 0.7;
     }
 
     /* Footer gestito completamente da tokens.css - nessuno stile aggiuntivo necessario */
