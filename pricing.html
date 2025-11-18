@@ -541,13 +541,58 @@
               </p>
             </div>
           </div>
+
+          <!-- Dettagli Fatturazione e Pagamento -->
+          <div style="background: var(--surface-card); border: 1px solid var(--br-card); border-radius: var(--radius-lg); padding: var(--sp-5) var(--sp-4); margin-bottom: var(--sp-5);">
+            <h3 style="font-size: var(--fs-16); font-weight: 600; color: var(--ink); margin-bottom: var(--sp-4); text-align: center;">
+              Fatturazione e pagamento
+            </h3>
+            <div style="display: grid; gap: var(--sp-3); max-width: 600px; margin: 0 auto;">
+              <div style="display: flex; align-items: flex-start; gap: var(--sp-2);">
+                <span style="color: var(--brand-500); font-weight: 600; flex-shrink: 0;">1.</span>
+                <div>
+                  <strong style="color: var(--ink); font-size: var(--fs-13);">Fattura emessa al momento dell'ordine</strong>
+                  <p style="color: var(--muted); font-size: var(--fs-12); margin: var(--sp-1) 0 0 0; line-height: 1.4;">
+                    Riceverai la fattura via email immediatamente dopo la conferma dell'ordine, emessa tramite Xolo Go.
+                  </p>
+                </div>
+              </div>
+              <div style="display: flex; align-items: flex-start; gap: var(--sp-2);">
+                <span style="color: var(--brand-500); font-weight: 600; flex-shrink: 0;">2.</span>
+                <div>
+                  <strong style="color: var(--ink); font-size: var(--fs-13);">Pagamento entro 14 giorni</strong>
+                  <p style="color: var(--muted); font-size: var(--fs-12); margin: var(--sp-1) 0 0 0; line-height: 1.4;">
+                    Puoi pagare la fattura entro 14 giorni dalla data di emissione tramite bonifico o carta di credito (Xolo Go).
+                  </p>
+                </div>
+              </div>
+              <div style="display: flex; align-items: flex-start; gap: var(--sp-2);">
+                <span style="color: var(--brand-500); font-weight: 600; flex-shrink: 0;">3.</span>
+                <div>
+                  <strong style="color: var(--ink); font-size: var(--fs-13);">Consegna garantita entro 24 ore</strong>
+                  <p style="color: var(--muted); font-size: var(--fs-12); margin: var(--sp-1) 0 0 0; line-height: 1.4;">
+                    L'analisi viene consegnata entro 24 ore successive all'ordine, indipendentemente dal pagamento. Garantiamo la consegna anche se il pagamento avviene successivamente.
+                  </p>
+                </div>
+              </div>
+              <div style="display: flex; align-items: flex-start; gap: var(--sp-2);">
+                <span style="color: var(--brand-500); font-weight: 600; flex-shrink: 0;">4.</span>
+                <div>
+                  <strong style="color: var(--ink); font-size: var(--fs-13);">Diritto di annullamento gratuito</strong>
+                  <p style="color: var(--muted); font-size: var(--fs-12); margin: var(--sp-1) 0 0 0; line-height: 1.4;">
+                    Puoi annullare l'ordine gratuitamente entro 24 ore dalla conferma, prima della consegna. Dopo la consegna, il servizio è considerato erogato e non è possibile l'annullamento.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
           
           <div style="text-align: center;">
             <a href="mailto:info@tradelia.org?subject=Richiesta%20analisi%20Tradelia&body=Indica%20il%20tipo%20di%20analisi%20richiesta%20e%20i%20dettagli%20necessari." class="btn btn-primary">
               Richiedi un'analisi
             </a>
             <p class="plan-meta" style="margin-top: var(--sp-3);">
-              <strong>Stripe</strong> (carta, Apple Pay, Google Pay). Pagamento una tantum. 
+              <strong>Xolo Go</strong> per fatturazione e pagamento (bonifico o carta). 
               <a href="/terms.html#section4" style="color: var(--brand-500); text-decoration: underline; font-size: var(--fs-11);">Termini di pagamento</a>
             </p>
           </div>
@@ -571,15 +616,30 @@
           <details>
             <summary>Come funzionano le analisi su richiesta?</summary>
             <p>
-              Ogni analisi costa €49 e richiede circa 1 ora di lavoro. Puoi richiederle via email specificando il tipo di analisi. Gestiamo fino a 4 analisi al giorno, in ordine di arrivo. Ogni analisi include fonti, ipotesi e controlli documentati. Pagamento tramite Stripe (una tantum, non abbonamento).
+              Ogni analisi costa €49 e richiede circa 1 ora di lavoro. Puoi richiederle via email specificando il tipo di analisi. Gestiamo fino a 4 analisi al giorno, in ordine di arrivo. Ogni analisi include fonti, ipotesi e controlli documentati. La fattura viene emessa immediatamente al momento dell'ordine tramite Xolo Go, e puoi pagare entro 14 giorni. La consegna è garantita entro 24 ore dall'ordine, indipendentemente dal pagamento.
+            </p>
+          </details>
+
+          <details>
+            <summary>Come funziona la fatturazione e il pagamento?</summary>
+            <p>
+              <strong>Fatturazione:</strong> La fattura viene emessa immediatamente al momento dell'ordine tramite Xolo Go e inviata via email. Xolo Go è la piattaforma che utilizziamo per gestire fatturazione e pagamenti, garantendo compliance fiscale automatica.<br><br>
+              <strong>Pagamento:</strong> Puoi pagare entro 14 giorni dalla data di emissione della fattura tramite bonifico o carta di credito (gestito da Xolo Go). La consegna del servizio avviene entro 24 ore dall'ordine, anche se il pagamento avviene successivamente.
             </p>
           </details>
 
           <details>
             <summary>Quali metodi di pagamento accettate?</summary>
             <p>
-              <strong>Analisi su richiesta:</strong> Stripe (carta di credito, Apple Pay, Google Pay). Pagamento una tantum.<br>
+              <strong>Analisi su richiesta:</strong> Xolo Go (bonifico o carta di credito). Fatturazione automatica tramite Xolo Go.<br>
               <strong>Piano Desk:</strong> Xolo Go (bonifico o carta). Fatturazione B2B automatica con gestione IVA.
+            </p>
+          </details>
+
+          <details>
+            <summary>Posso annullare un ordine di analisi?</summary>
+            <p>
+              Sì, puoi annullare l'ordine gratuitamente entro 24 ore dalla conferma, prima della consegna dell'analisi. Dopo la consegna (entro 24 ore dall'ordine), il servizio è considerato erogato e non è possibile l'annullamento. Per annullare, contattaci via email indicando il numero di fattura.
             </p>
           </details>
 
@@ -600,7 +660,8 @@
           <details>
             <summary>Offrite garanzie o rimborsi?</summary>
             <p>
-              Per le analisi su richiesta, se l'analisi non rispetta le specifiche concordate, provvediamo a revisione o rimborso. Per il piano Desk, l'accesso è valido 30 giorni dalla data di pagamento e non offriamo rimborsi retroattivi. Se riscontri problemi tecnici, contattaci per assistenza.
+              <strong>Analisi su richiesta:</strong> Puoi annullare l'ordine gratuitamente entro 24 ore dalla conferma, prima della consegna. Dopo la consegna, se l'analisi non rispetta le specifiche concordate, provvediamo a revisione o rimborso. Se l'analisi è già stata consegnata e rispetta le specifiche, non è possibile il rimborso.<br><br>
+              <strong>Piano Desk:</strong> L'accesso è valido 30 giorni dalla data di pagamento e non offriamo rimborsi retroattivi. Se riscontri problemi tecnici durante il periodo di accesso, contattaci per assistenza.
             </p>
           </details>
 
@@ -727,23 +788,65 @@
       </section>
 
       <!-- Termini di Pagamento e Link Legali -->
-      <section style="max-width: 800px; margin: var(--sp-10) auto; padding: var(--sp-5) var(--sp-4); background: var(--surface-elev); border: 1px solid var(--br-card); border-radius: var(--radius-lg); text-align: center;">
-        <h2 style="font-size: var(--fs-16); font-weight: 600; color: var(--ink); margin-bottom: var(--sp-3);">
-          Informazioni legali e termini
+      <section style="max-width: 800px; margin: var(--sp-10) auto; padding: var(--sp-6) var(--sp-5); background: var(--surface-elev); border: 1px solid var(--br-card); border-radius: var(--radius-lg);">
+        <h2 style="font-size: var(--fs-18); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-4); letter-spacing: -0.01em;">
+          Termini di pagamento e fatturazione
         </h2>
-        <p style="color: var(--muted); font-size: var(--fs-13); line-height: 1.6; margin-bottom: var(--sp-4);">
-          Procedendo con un servizio a pagamento, accetti i nostri <a href="/terms.html" style="color: var(--brand-500); text-decoration: underline;">Termini di Servizio</a> e la nostra 
-          <a href="/privacy.html" style="color: var(--brand-500); text-decoration: underline;">Privacy Policy</a>. 
-          I pagamenti sono gestiti in modo sicuro da Stripe (analisi su richiesta) e Xolo Go (piano Desk), conformi PCI DSS e GDPR.
-        </p>
-        <div style="display: flex; flex-wrap: wrap; gap: var(--sp-3); justify-content: center; font-size: var(--fs-12);">
-          <a href="/terms.html" style="color: var(--ink-soft); text-decoration: underline;">Termini di Servizio</a>
-          <span style="color: var(--muted);">·</span>
-          <a href="/privacy.html" style="color: var(--ink-soft); text-decoration: underline;">Privacy Policy</a>
-          <span style="color: var(--muted);">·</span>
-          <a href="https://stripe.com/it/legal" target="_blank" rel="noopener noreferrer" style="color: var(--ink-soft); text-decoration: underline;">Termini Stripe</a>
-          <span style="color: var(--muted);">·</span>
-          <a href="https://www.xolo.io/legal/terms" target="_blank" rel="noopener noreferrer" style="color: var(--ink-soft); text-decoration: underline;">Termini Xolo</a>
+        
+        <div style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-17); margin-bottom: var(--sp-5);">
+          <h3 style="font-size: var(--fs-15); font-weight: 600; color: var(--ink); margin-bottom: var(--sp-2);">
+            Utilizzo di Xolo Go
+          </h3>
+          <p style="margin-bottom: var(--sp-3);">
+            Tradelia AI utilizza <strong>Xolo Go</strong> per la gestione completa di fatturazione e pagamenti. Xolo Go è una piattaforma che consente l'emissione di fatture e la gestione dei pagamenti senza necessità di costituire una società, garantendo transazioni sicure e conformi alle normative fiscali italiane ed europee.
+          </p>
+          <p style="margin-bottom: var(--sp-3);">
+            <strong>Vantaggi di Xolo Go:</strong>
+          </p>
+          <ul style="margin: 0 0 var(--sp-3) var(--sp-4); padding: 0; list-style: disc;">
+            <li style="margin-bottom: var(--sp-1);">Fatturazione automatica e compliance fiscale gestita</li>
+            <li style="margin-bottom: var(--sp-1);">Pagamenti sicuri tramite bonifico o carta di credito</li>
+            <li style="margin-bottom: var(--sp-1);">Gestione IVA automatica per fatturazione B2B</li>
+            <li style="margin-bottom: var(--sp-1);">Fatture PDF professionali e tracciabili</li>
+          </ul>
+          <p style="margin: 0;">
+            Per ulteriori informazioni su Xolo Go, consulta i <a href="https://www.xolo.io/legal/terms" target="_blank" rel="noopener noreferrer" style="color: var(--brand-500); text-decoration: underline;">termini di servizio di Xolo</a>.
+          </p>
+        </div>
+
+        <div style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-17); margin-bottom: var(--sp-5); padding-top: var(--sp-4); border-top: 1px solid var(--br-card);">
+          <h3 style="font-size: var(--fs-15); font-weight: 600; color: var(--ink); margin-bottom: var(--sp-2);">
+            Processo di fatturazione e pagamento
+          </h3>
+          <p style="margin-bottom: var(--sp-2);">
+            <strong>1. Fatturazione:</strong> La fattura viene emessa immediatamente al momento dell'ordine tramite Xolo Go e inviata via email. La fattura include tutti i dettagli del servizio richiesto.
+          </p>
+          <p style="margin-bottom: var(--sp-2);">
+            <strong>2. Pagamento:</strong> Il pagamento può essere effettuato entro 14 giorni dalla data di emissione della fattura tramite bonifico bancario o carta di credito (gestito da Xolo Go).
+          </p>
+          <p style="margin-bottom: var(--sp-2);">
+            <strong>3. Consegna:</strong> La consegna del servizio è garantita entro 24 ore successive all'ordine, indipendentemente dal momento del pagamento. Garantiamo la consegna anche se il pagamento avviene successivamente.
+          </p>
+          <p style="margin: 0;">
+            <strong>4. Annullamento:</strong> È possibile annullare l'ordine gratuitamente entro 24 ore dalla conferma, prima della consegna. Dopo la consegna, il servizio è considerato erogato e non è possibile l'annullamento.
+          </p>
+        </div>
+
+        <div style="color: var(--muted); font-size: var(--fs-14); line-height: var(--lh-17); padding-top: var(--sp-4); border-top: 1px solid var(--br-card);">
+          <p style="margin-bottom: var(--sp-3);">
+            Procedendo con un servizio a pagamento, accetti i nostri <a href="/terms.html" style="color: var(--brand-500); text-decoration: underline;">Termini di Servizio</a> e la nostra 
+            <a href="/privacy.html" style="color: var(--brand-500); text-decoration: underline;">Privacy Policy</a>. 
+            I pagamenti sono gestiti in modo sicuro da Xolo Go, conforme PCI DSS e GDPR.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: var(--sp-3); justify-content: flex-start; font-size: var(--fs-12);">
+            <a href="/terms.html" style="color: var(--ink-soft); text-decoration: underline;">Termini di Servizio</a>
+            <span style="color: var(--muted);">·</span>
+            <a href="/privacy.html" style="color: var(--ink-soft); text-decoration: underline;">Privacy Policy</a>
+            <span style="color: var(--muted);">·</span>
+            <a href="https://www.xolo.io/legal/terms" target="_blank" rel="noopener noreferrer" style="color: var(--ink-soft); text-decoration: underline;">Termini Xolo Go</a>
+            <span style="color: var(--muted);">·</span>
+            <a href="https://www.xolo.io/privacy" target="_blank" rel="noopener noreferrer" style="color: var(--ink-soft); text-decoration: underline;">Privacy Policy Xolo</a>
+          </div>
         </div>
       </section>
 
