@@ -264,7 +264,7 @@
             </p>
           </section>
 
-          <section style="margin-bottom: var(--sp-6);">
+          <section id="section4" style="margin-bottom: var(--sp-6);">
             <h2 style="font-size: var(--fs-20); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3);" data-i18n="terms.section4.title">
               4. Abbonamenti e Pagamenti
             </h2>
@@ -280,10 +280,15 @@
             </p>
             <p style="margin-bottom: var(--sp-3);" data-i18n="terms.section4.content3">
               <strong>Metodi di Pagamento:</strong><br>
-              • <strong>Piano Pro e Desk (carta di credito):</strong> I pagamenti sono gestiti tramite <strong>Paddle</strong> (Merchant of Record) 
-              con fatturazione elettronica e gestione IVA automatica. Supportiamo carte di credito/debito internazionali.<br>
-              • <strong>Desk Professionale (bonifico):</strong> Per il piano Desk Professionale è disponibile anche il pagamento tramite 
-              <strong>Xolo Go</strong> (bonifico bancario) con fatturazione corporate dedicata.
+              • <strong>Piano Pro:</strong> I pagamenti sono gestiti tramite <strong>Stripe</strong> (Stripe Payments Europe, Ltd., Irlanda). 
+              Supportiamo carte di credito/debito (Visa, Mastercard, American Express), Apple Pay e Google Pay. 
+              Stripe gestisce la sicurezza dei pagamenti in conformità PCI DSS Level 1. 
+              Fatturazione automatica mensile tramite Stripe. Per dettagli su privacy e sicurezza, consulta la 
+              <a href="https://stripe.com/it/privacy" target="_blank" rel="noopener noreferrer" style="color: var(--brand-600); text-decoration: underline;">Privacy Policy di Stripe</a>.<br>
+              • <strong>Piano Desk:</strong> I pagamenti sono gestiti tramite <strong>Xolo</strong> (Xolo Go, Estonia). 
+              Supportiamo bonifico bancario e carta di credito. Fatturazione B2B con gestione IVA automatica tramite Xolo. 
+              Per dettagli, consulta i <a href="https://www.xolo.io/legal/terms" target="_blank" rel="noopener noreferrer" style="color: var(--brand-600); text-decoration: underline;">Termini di Xolo</a>.<br>
+              • <strong>Analisi su richiesta:</strong> Pagamento tramite Stripe (carta, Apple Pay, Google Pay) per tutti gli utenti.
             </p>
             <p style="margin-bottom: var(--sp-3);" data-i18n="terms.section4.content4">
               <strong>Rinnovo Automatico:</strong> L'abbonamento si rinnova automaticamente ogni mese fino a cancellazione. 
