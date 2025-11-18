@@ -11,6 +11,7 @@
   <meta name="author" content="Tradelia AI" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="theme-color" content="#0f0f0f" />
+  <link rel="canonical" href="https://tradelia.org/" />
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
@@ -43,50 +44,70 @@
   <script type="application/ld+json" id="structured-data">
   {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Tradelia AI",
-    "url": "https://tradelia.org",
-    "description": "Framework AI proprietari per la lettura quotidiana dei mercati con dashboard pubblica e documentazione trasparente.",
-    "publisher": {
-      "@type": "Organization",
-      "name": "Tradelia AI",
-      "url": "https://tradelia.org",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://tradelia.org/img/tradelia_og_vC_white_clean.png",
-        "width": 1200,
-        "height": 630
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "name": "Tradelia AI",
+        "url": "https://tradelia.org",
+        "description": "Framework AI proprietari per la lettura quotidiana dei mercati con dashboard pubblica e documentazione trasparente.",
+        "publisher": {
+          "@id": "https://tradelia.org/#organization"
+        },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://tradelia.org/search?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@id": "https://tradelia.org/#organization",
+        "@type": "Organization",
+        "name": "Tradelia AI",
+        "url": "https://tradelia.org",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://tradelia.org/img/tradelia_og_vC_white_clean.png",
+          "width": 1200,
+          "height": 630
+        },
+        "description": "Progetto indipendente di analisi sui mercati basato su framework AI proprietari e metodo verificabile"
+      },
+      {
+        "@type": "ResearchProject",
+        "name": "Tradelia AI Framework",
+        "description": "Framework AI proprietari per approfondimenti multiformato su contesto macro, intermarket e tecnico con controlli incrociati",
+        "url": "https://tradelia.org",
+        "funder": {
+          "@id": "https://tradelia.org/#organization"
+        },
+        "researchMethod": "Quantitative analysis using proprietary AI frameworks (FDM, MLT, PAC)",
+        "keywords": "financial markets analysis, AI frameworks, market research, quantitative analysis"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Tradelia AI Framework",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "EUR"
+        },
+        "description": "Framework AI proprietari per approfondimenti multiformato su contesto macro, intermarket e tecnico con controlli incrociati",
+        "featureList": [
+          "FDM — Framework Dinamico dei Mercati",
+          "MLT — Matrice delle Letture Tattiche",
+          "PAC — Protocollo di Allerta Criptovalute",
+          "Suite su richiesta: monitor ETF, dossier fondi/certificati, schede titolo, quadro rischio",
+          "Pubblicazioni quotidiane (~3/giorno) con versioni archiviate",
+          "Documentazione di fonti, ipotesi e limiti per ogni uscita",
+          "Materiale educativo conforme alle regole MiFID-safe"
+        ]
       }
-    },
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://tradelia.org/search?q={search_term_string}"
-      },
-      "query-input": "required name=search_term_string"
-    },
-    "mainEntity": {
-      "@type": "SoftwareApplication",
-      "name": "Tradelia AI Framework",
-      "applicationCategory": "FinanceApplication",
-      "operatingSystem": "Web",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "EUR"
-      },
-      "description": "Framework AI proprietari per approfondimenti multiformato su contesto macro, intermarket e tecnico con controlli incrociati",
-      "featureList": [
-        "FDM — Framework Dinamico dei Mercati",
-        "MLT — Matrice delle Letture Tattiche",
-        "PAC — Protocollo di Allerta Criptovalute",
-        "Suite su richiesta: monitor ETF, dossier fondi/certificati, schede titolo, quadro rischio",
-        "Pubblicazioni quotidiane (~3/giorno) con versioni archiviate",
-        "Documentazione di fonti, ipotesi e limiti per ogni uscita",
-        "Materiale educativo conforme alle regole MiFID-safe"
-      ]
-    }
+    ]
   }
   </script>
 
@@ -130,6 +151,26 @@
     }
 
     /* Header gestito completamente da global-header.css - nessuno stile aggiuntivo necessario */
+
+    /* Skip link (accessibility) */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 0;
+      z-index: 10000;
+      padding: var(--sp-3) var(--sp-4);
+      background: var(--brand-600);
+      color: var(--ink-invert);
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 0 0 var(--radius-md) 0;
+      transition: top 0.2s ease;
+    }
+    .skip-link:focus {
+      top: 0;
+      outline: 2px solid var(--brand-400);
+      outline-offset: 2px;
+    }
 
     /* container */
     .container { max-width: 90rem; margin-inline: auto; padding-inline: 1rem; }
@@ -1983,13 +2024,16 @@
   </style>
 </head>
 <body>
+  <!-- Skip to main content (accessibility) -->
+  <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
+  
   <!-- Scroll progress indicator -->
   <div id="scroll-progress" class="scroll-progress" role="progressbar" aria-label="Progresso lettura pagina" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
 <!-- ===== HEADER SLOT (montato via JS) ===== -->
 <div id="site-header-slot"></div>
 
 <!-- ===== MAIN CONTENT ===== -->
-<main>
+<main id="main-content" role="main">
   <!-- ===== HERO SECTION ===== -->
   <section class="hero-section">
     <div class="container">
@@ -2065,10 +2109,10 @@
 
 
   <!-- ===== MATERIALI GRATUITI ===== -->
-  <section class="audience-section" id="materiali-gratuiti">
+  <section class="audience-section" id="materiali-gratuiti" aria-labelledby="materiali-gratuiti-heading">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Cosa trovi gratuitamente ogni giorno</h2>
+        <h2 class="section-title" id="materiali-gratuiti-heading">Cosa trovi gratuitamente ogni giorno</h2>
         <p class="section-description">
           La dashboard pubblica ospita materiali aggiornati con la stessa struttura dei report completi. Ogni blocco indica fonti e limiti in modo chiaro.
         </p>
@@ -2097,10 +2141,10 @@
   </section>
 
   <!-- ===== FRAMEWORK PUBBLICI ===== -->
-  <section class="value-section" id="framework-pubblici">
+  <section class="value-section" id="framework-pubblici" aria-labelledby="framework-pubblici-heading">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Framework pubblici Tradelia</h2>
+        <h2 class="section-title" id="framework-pubblici-heading">Framework pubblici Tradelia</h2>
         <p class="section-description">
           Ogni framework è stato progettato per organizzare i dati in modo leggibile. Le uscite sono consultabili dalla dashboard e includono fonti, limiti e versioni.
         </p>
@@ -2151,10 +2195,10 @@
   </section>
 
   <!-- ===== SUITE PER UTENTI AVANZATI ===== -->
-  <section class="services-section" id="suite-avanzata">
+  <section class="services-section" id="suite-avanzata" aria-labelledby="suite-avanzata-heading">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Suite per utenti avanzati (su richiesta)</h2>
+        <h2 class="section-title" id="suite-avanzata-heading">Suite per utenti avanzati (su richiesta)</h2>
         <p class="section-description">
           Per gli abbonamenti desk, tutti i report presenti nella dashboard sono disponibili anche in versione white-label con logo, note introduttive e contatti del partner. Possiamo inoltre produrre analisi su richiesta e dossier dedicati: ogni consegna include fonti, ipotesi e controlli documentati.
         </p>
@@ -2264,10 +2308,10 @@
   </section>
 
   <!-- ===== METODOLOGIA SECTION / HOW IT WORKS ===== -->
-  <section id="metodo" class="method-section">
+  <section id="metodo" class="method-section" aria-labelledby="metodo-heading">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Metodo Tradelia AI</h2>
+        <h2 class="section-title" id="metodo-heading">Metodo Tradelia AI</h2>
         <p class="section-description">
           Ogni pubblicazione segue tre passaggi ripetibili: raccolta dei dati, applicazione dei framework e revisione prima del rilascio.
         </p>
