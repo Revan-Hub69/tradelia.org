@@ -302,6 +302,53 @@
       font-weight: 600;
     }
 
+    /* ===== PAGE NAV ===== */
+    .page-nav {
+      background: var(--surface-card);
+      border-top: 1px solid var(--br-card);
+      border-bottom: 1px solid var(--br-card);
+      padding: var(--sp-3) 0;
+    }
+
+    .page-nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+      justify-content: center;
+    }
+
+    .page-nav a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: var(--sp-2) var(--sp-3);
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--br-soft);
+      font-size: var(--fs-13);
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .page-nav a:hover,
+    .page-nav a:focus-visible {
+      border-color: var(--brand-400);
+      background: rgba(59, 130, 246, 0.12);
+      color: var(--ink);
+    }
+
+    .section-alt {
+      background: var(--surface-card);
+    }
+
+    .section-contrast {
+      background: var(--surface-elev);
+    }
+
     /* Header gestito completamente da global-header.css - nessuno stile aggiuntivo necessario */
 
     /* ===== SECTION HEADERS ===== */
@@ -1959,6 +2006,22 @@
     </div>
   </section>
 
+  <nav class="page-nav" aria-label="Mappa delle sezioni">
+    <div class="container">
+      <ul>
+        <li><a href="#materiali-gratuiti">Accesso libero</a></li>
+        <li><a href="#framework-pubblici">Framework pubblici</a></li>
+        <li><a href="#suite-avanzata">Suite avanzata</a></li>
+        <li><a href="#metodo">Metodo</a></li>
+        <li><a href="#moduli-proprietari">Moduli</a></li>
+        <li><a href="#percorsi">Percorsi</a></li>
+        <li><a href="#per-chi">Per chi è</a></li>
+        <li><a href="#white-label">White-label</a></li>
+        <li><a href="#intermediari">Intermediari</a></li>
+      </ul>
+    </div>
+  </nav>
+
   <!-- ===== MATERIALI GRATUITI ===== -->
   <section class="audience-section" id="materiali-gratuiti">
     <div class="container">
@@ -2051,7 +2114,7 @@
       <div class="section-header">
         <h2 class="section-title">Suite per utenti avanzati (su richiesta)</h2>
         <p class="section-description">
-          Per desk, partner e uffici studi che necessitano approfondimenti specifici sono disponibili analisi su richiesta. Ogni documento include fonti, ipotesi e controlli.
+          Per desk, partner e uffici studi che necessitano approfondimenti specifici sono disponibili analisi su richiesta: oltre ai dataset digitali forniamo pacchetti PDF white-label con intestazioni e contatti del partner, pronti per newsletter e canali proprietari. Ogni documento include fonti, ipotesi e controlli.
         </p>
       </div>
 
@@ -2265,7 +2328,7 @@
   </section>
 
   <!-- ===== PERCORSI FORMATIVI ===== -->
-  <section class="audience-section" id="percorsi">
+  <section class="audience-section section-alt" id="percorsi">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Percorsi didattici Tradelia</h2>
@@ -2326,17 +2389,17 @@
   </section>
 
   <!-- ===== WHITE LABEL ===== -->
-  <section class="value-section" id="white-label">
+  <section class="value-section section-contrast" id="white-label">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">White-label e documenti personalizzati</h2>
         <p class="section-description">
-          Alcuni report possono essere forniti con intestazione personalizzata. Manteniamo lo stesso metodo, le stesse note e tutte le disclosure standard.
+          Pacchetti PDF pronti per newsletter e canali proprietari: possiamo integrare logo, copy introduttivo, disclaimer dedicati e contatti commerciali del partner mantenendo il metodo e le fonti Tradelia.
         </p>
       </div>
       <div class="audience-partner-highlight">
         <strong>Come funziona</strong>
-        <p>Concordiamo il perimetro, inseriamo le note richieste e forniamo i file in formato digitale e PDF. Nessuna esclusiva, nessun accordo commerciale nascosto.</p>
+        <p>Definiamo insieme il perimetro editoriale, predisponiamo layout e call-to-action del partner e consegniamo file digitali e PDF ottimizzati per e‑mail, CRM o piattaforme di distribuzione. Nessuna esclusiva: ogni pacchetto resta aggiornabile e tracciato nel registro versioni.</p>
         <a href="/pricing.html#contatti" class="btn btn-outline btn-with-icon">
           <span>Richiedi dettagli</span>
         </a>

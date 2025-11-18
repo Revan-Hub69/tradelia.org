@@ -66,6 +66,13 @@ function render(data = {}) {
             <a href="/percorsi.html" aria-label="Vai alla pagina percorsi formativi">Percorsi formativi</a>
           </div>
           <div style="margin-top: var(--sp-4); font-size: var(--fs-13); color: rgba(226, 232, 240, 0.85);">
+            <strong style="display: block; font-size: var(--fs-14); color: #fff;">Contatti rapidi</strong>
+            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+              <span><strong>Supporto</strong> · <a href="mailto:support@tradelia.org">support@tradelia.org</a></span>
+              <span><strong>Amministrazione</strong> · <a href="mailto:amministrazione@tradelia.org">amministrazione@tradelia.org</a></span>
+            </div>
+          </div>
+          <div style="margin-top: var(--sp-3); font-size: var(--fs-13); color: rgba(226, 232, 240, 0.85);">
             <strong style="display: block; font-size: var(--fs-14); color: #fff;">Percorsi formativi</strong>
             Percorsi tematici basati su testi riconosciuti e materiali verificabili. <a href="/percorsi.html">Scoprili qui</a>.
           </div>
