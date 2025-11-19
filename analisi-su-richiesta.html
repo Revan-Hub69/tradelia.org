@@ -1049,8 +1049,18 @@ Timestamp: ${data.timestamp}`;
         });
 
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ error: 'Errore invio' }));
-          throw new Error(errorData.error || 'Errore invio');
+          let errorMessage = 'Errore invio';
+          if (response.status === 404) {
+            errorMessage = 'Servizio temporaneamente non disponibile. Contattaci direttamente a info@tradelia.org';
+          } else {
+            try {
+              const errorData = await response.json();
+              errorMessage = errorData.error || errorData.details || 'Errore invio';
+            } catch (e) {
+              errorMessage = `Errore server (${response.status}). Contattaci direttamente a info@tradelia.org`;
+            }
+          }
+          throw new Error(errorMessage);
         }
 
         const result = await response.json();
