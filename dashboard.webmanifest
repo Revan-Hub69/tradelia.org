@@ -1,7 +1,7 @@
 {
   "name": "Tradelia AI · Dashboard",
   "short_name": "Tradelia",
-  "start_url": "/dashboard.html",
+  "start_url": "/dashboard.html?pwa=1",
   "scope": "/",
   "display": "standalone",
   "orientation": "any",

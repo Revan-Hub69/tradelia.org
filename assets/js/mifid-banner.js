@@ -362,6 +362,13 @@ export function initMifidBanner() {
   setupLegalOverlay();
 }
 
+// Expose function for version check to call
+window.checkLegalConsent = function() {
+  if (legalOverlayInstance && !hasSeenBanner()) {
+    legalOverlayInstance.openLegal('mifid', true);
+  }
+};
+
 // Auto-init se DOM è pronto
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') {

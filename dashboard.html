@@ -17,6 +17,25 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
   <link rel="manifest" href="/dashboard.webmanifest">
   
+  <!-- PWA Redirect: If opened as PWA, ensure we're on dashboard -->
+  <script>
+    (function() {
+      // Check if opened as PWA (standalone mode)
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                          window.navigator.standalone === true ||
+                          document.referrer.includes('android-app://');
+      
+      // Check if URL has pwa=1 parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const isPWA = urlParams.get('pwa') === '1';
+      
+      // If in standalone mode but not on dashboard, redirect
+      if (isStandalone && !window.location.pathname.includes('dashboard.html')) {
+        window.location.href = '/dashboard.html?pwa=1';
+      }
+    })();
+  </script>
+  
   <!-- Design System -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
   <link rel="stylesheet" href="/assets/css/global-header.css" />
@@ -1224,11 +1243,38 @@
       }
     }
     
-    /* High contrast mode support */
+    /* High contrast mode support (WCAG 2.2) */
     @media (prefers-contrast: high) {
       :root {
-        --dash-border: rgba(255, 255, 255, 0.2);
-        --dash-text-muted: #d0d0d0;
+        --dash-border: rgba(255, 255, 255, 0.3);
+        --dash-text-muted: #e0e0e0;
+        --dash-text-soft: #f5f5f5;
+        --dash-accent: #60a5fa;
+      }
+      
+      .pwa-btn,
+      .btn-modal {
+        border-width: 2px;
+      }
+    }
+    
+    /* Color scheme preference support (2024-25 best practice) */
+    @media (prefers-color-scheme: light) {
+      /* Maintain dark theme as default, but respect system preference if needed */
+      /* Currently using dark theme as primary design */
+    }
+    
+    /* Print accessibility (WCAG 2.2) */
+    @media print {
+      .modal-overlay,
+      .pwa-btn,
+      #pwa-settings-btn {
+        display: none !important;
+      }
+      
+      body {
+        background: white;
+        color: black;
       }
     }
     
@@ -1367,6 +1413,19 @@
     .modal-overlay.active .modal-panel {
       transform: scale(1);
     }
+    
+    /* Reduced motion support for modal animations (WCAG 2.2) */
+    @media (prefers-reduced-motion: reduce) {
+      .modal-overlay,
+      .modal-panel {
+        transition: none;
+        transform: none;
+      }
+      
+      .modal-overlay.active .modal-panel {
+        transform: none;
+      }
+    }
 
     .modal-header {
       display: flex;
@@ -1405,6 +1464,45 @@
       padding: var(--sp-6);
       overflow-y: auto;
       flex: 1;
+      /* Smooth scrolling for better UX (2024-25 best practice) */
+      scroll-behavior: smooth;
+      /* Custom scrollbar for better visibility (WCAG 2.2) */
+      scrollbar-width: thin;
+      scrollbar-color: var(--dash-accent) transparent;
+    }
+    
+    .modal-body::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .modal-body::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .modal-body::-webkit-scrollbar-thumb {
+      background: var(--dash-accent);
+      border-radius: 4px;
+    }
+    
+    .modal-body::-webkit-scrollbar-thumb:hover {
+      background: var(--dash-accent-hover);
+    }
+    
+    /* Reduced motion support for modal animations (WCAG 2.2) */
+    @media (prefers-reduced-motion: reduce) {
+      .modal-overlay,
+      .modal-panel {
+        transition: none;
+        transform: none;
+      }
+      
+      .modal-overlay.active .modal-panel {
+        transform: none;
+      }
+      
+      .modal-body {
+        scroll-behavior: auto;
+      }
     }
 
     .modal-footer {
@@ -1473,13 +1571,27 @@
     }
 
     .btn-modal-primary {
-      background: var(--dash-surface-elev);
-      border-color: var(--dash-border-strong);
-      color: var(--dash-text);
+      background: var(--dash-accent);
+      border-color: var(--dash-accent);
+      color: var(--ink-invert, #ffffff);
     }
 
     .btn-modal-primary:hover {
-      background: var(--dash-surface);
+      background: var(--dash-accent-hover);
+      border-color: var(--dash-accent-hover);
+    }
+    
+    .btn-modal-primary:focus-visible {
+      outline: 2px solid var(--dash-accent);
+      outline-offset: 2px;
+    }
+    
+    /* Touch target size (WCAG 2.2 - minimum 44x44px) */
+    .btn-modal,
+    .btn-modal-primary,
+    .modal-close {
+      min-height: 44px;
+      min-width: 44px;
     }
 
     /* ===== REQUEST SECTIONS ===== */
@@ -3463,24 +3575,33 @@
         console.warn('Errore lettura localStorage:', e);
       }
       
-      // Se non c'è consenso, apri overlay in modalità bloccante
-      // Ma solo DOPO che il DOM è pronto
-      if (!ack) {
-        // Aspetta che tutto sia caricato
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => openLegal('mifid', true), 100);
-          });
-        } else {
-          setTimeout(() => openLegal('mifid', true), 100);
+      // Expose function globally for version check
+      window.checkLegalConsent = function() {
+        let ack = null;
+        try {
+          const stored = localStorage.getItem(KEY);
+          if (stored) {
+            ack = JSON.parse(stored);
+          }
+        } catch(e) {
+          console.warn('Errore lettura localStorage:', e);
         }
-      } else {
-        // Assicurati che l'overlay sia chiuso e il body non sia bloccato
-        overlay.hidden = true;
-        document.body.style.overflow = '';
-      }
+        if (!ack) {
+          openLegal('mifid', true);
+        } else {
+          // Assicurati che l'overlay sia chiuso e il body non sia bloccato
+          overlay.hidden = true;
+          document.body.style.overflow = '';
+        }
+      };
+
+      // Version check will call checkLegalConsent() when ready
+      // Don't auto-open here - let version-check.js handle it
     })();
   </script>
+  
+  <!-- Version Check - MUST BE BEFORE LEGAL OVERLAY -->
+  <script src="/assets/js/version-check.js"></script>
 
   <!-- ===== TOKEN INPUT MODAL (Step 1) ===== -->
   <div id="modal-token-input" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-token-input-title" aria-describedby="modal-token-input-description" hidden>
@@ -3514,7 +3635,7 @@
   </div>
 
   <!-- ===== TOKEN INFO + PWA MODAL (Step 2) ===== -->
-  <div id="modal-token-info" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-token-info-title" aria-describedby="modal-token-info-description" hidden>
+  <div id="modal-token-info" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-token-info-title" aria-describedby="modal-token-info-description" aria-live="polite" hidden>
     <div class="modal-panel" style="max-width: min(36rem, 90vw);">
       <div class="modal-header">
         <h2 class="modal-title" id="modal-token-info-title">Token attivo</h2>
@@ -3791,7 +3912,13 @@
         }, 200);
       }
       
-      tokenInfoClose?.addEventListener('click', closeTokenInfoModal);
+      // Close buttons - handle all buttons with data-modal-close
+      document.querySelectorAll('[data-modal-close="token-info"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          closeTokenInfoModal();
+        });
+      });
 
       // PWA settings button (apre modale info)
       const pwaSettingsBtn = document.getElementById('pwa-settings-btn');
@@ -3950,6 +4077,7 @@
 
     window.addEventListener('appinstalled', () => {
       deferredPrompt = null;
+      localStorage.setItem('pwa-installed', 'true');
       setInstallButton('installed');
       updateInstallStatus('App installata sul dispositivo.');
     });
@@ -4191,14 +4319,50 @@
       }
     }
 
+    // Check if app is installed (even if not in standalone mode)
+    async function checkIfAppInstalled() {
+      // Check if service worker is registered (indicates PWA was installed)
+      if ('serviceWorker' in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        if (registrations.length > 0) {
+          // Check if we can detect installed app via matchMedia
+          if (window.matchMedia('(display-mode: standalone)').matches) {
+            return true;
+          }
+          // Check if manifest is installed (heuristic)
+          if (window.matchMedia('(display-mode: fullscreen)').matches ||
+              window.matchMedia('(display-mode: minimal-ui)').matches) {
+            return true;
+          }
+          // Check localStorage for install flag
+          if (localStorage.getItem('pwa-installed') === 'true') {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
     // Inizializza PWA quando il modale info è aperto
     async function initPWAModal() {
       if (installBtn) {
+        const appInstalled = await checkIfAppInstalled();
         if (isStandalone()) {
           setInstallButton('installed');
           updateInstallStatus('App installata e aperta sul dispositivo.');
+        } else if (appInstalled) {
+          // App is installed but user is in browser
+          setInstallButton('installed');
+          updateInstallStatus('App installata. Apri l\'app dalla schermata Home o dal menu applicazioni.');
         } else {
-          updateInstallStatus('Segui le istruzioni del browser per installare l\'app.');
+          // Check if install prompt is available
+          if (deferredPrompt) {
+            setInstallButton('ready');
+            updateInstallStatus('Disponibile l\'installazione sui dispositivi supportati.');
+          } else {
+            setInstallButton('wait');
+            updateInstallStatus('Segui le istruzioni del browser per installare l\'app.');
+          }
         }
       }
       await registerServiceWorker();
@@ -4217,6 +4381,32 @@
     } else {
       initModals();
     }
+
+    // Auto-update check on page load
+    (async function() {
+      try {
+        if ('serviceWorker' in navigator) {
+          const registration = await navigator.serviceWorker.getRegistration();
+          if (registration) {
+            await registration.update();
+            // Check for updates immediately
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              if (newWorker) {
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    // New version available - auto-update script will show notification
+                    console.log('[PWA] Nuova versione disponibile');
+                  }
+                });
+              }
+            });
+          }
+        }
+      } catch (err) {
+        console.error('[PWA] Errore controllo aggiornamenti iniziale:', err);
+      }
+    })();
   </script>
   
   <!-- Auto-Update System -->
