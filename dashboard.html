@@ -2833,14 +2833,29 @@
     function setInstallButton(state) {
       if (!installBtn) return;
       if (state === 'installed') {
-        installBtn.disabled = true;
-        if (installLabel) {
-          installLabel.textContent = 'App installata';
+        // Se l'app è installata ma siamo nel browser, mostra "Apri app"
+        // Se siamo già nell'app installata, mostra "App installata"
+        if (isStandalone()) {
+          // Siamo già nell'app installata
+          installBtn.disabled = true;
+          if (installLabel) {
+            installLabel.textContent = 'App installata';
+          } else {
+            installBtn.textContent = 'App installata';
+          }
         } else {
-          installBtn.textContent = 'App installata';
+          // App installata ma siamo nel browser: mostra "Apri app"
+          installBtn.disabled = false;
+          installBtn.dataset.action = 'open-app';
+          if (installLabel) {
+            installLabel.textContent = 'Apri app';
+          } else {
+            installBtn.textContent = 'Apri app';
+          }
         }
       } else if (state === 'ready') {
         installBtn.disabled = false;
+        installBtn.dataset.action = 'install';
         if (installLabel) {
           installLabel.textContent = 'Installa la dashboard';
         } else {
@@ -2848,6 +2863,7 @@
         }
       } else {
         installBtn.disabled = true;
+        installBtn.dataset.action = 'wait';
         if (installLabel) {
           installLabel.textContent = 'Installa la dashboard';
         }
@@ -2868,17 +2884,42 @@
     });
 
     installBtn?.addEventListener('click', async () => {
-      if (!deferredPrompt) {
-        updateInstallStatus('Apri il menu del browser e scegli “Aggiungi alla schermata Home”.');
+      const action = installBtn.dataset.action;
+      
+      // Se l'app è installata e siamo nel browser, apri l'app
+      if (action === 'open-app') {
+        // Su mobile, non possiamo aprire programmaticamente l'app installata
+        // Ma possiamo suggerire all'utente di aprire l'app dalla home screen
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+          updateInstallStatus('Apri l\'app Tradelia dalla schermata Home del dispositivo.');
+        } else {
+          // Su desktop, possiamo provare ad aprire l'app usando il protocollo o un link diretto
+          // In realtà, su desktop l'app installata si apre automaticamente quando si clicca sull'icona
+          // Quindi suggeriamo all'utente di aprire l'app dalla barra delle applicazioni
+          updateInstallStatus('Apri l\'app Tradelia dalla barra delle applicazioni o dal menu Start.');
+        }
         return;
       }
-      deferredPrompt.prompt();
-      const choice = await deferredPrompt.userChoice;
-      if (choice.outcome === 'accepted') {
-        setInstallButton('installed');
-        updateInstallStatus('Installazione completata: trovi la dashboard tra le tue app.');
-      } else {
-        updateInstallStatus('Installazione annullata. Puoi riprovare quando vuoi.');
+      
+      // Se non c'è deferredPrompt, l'installazione non è disponibile
+      if (!deferredPrompt) {
+        updateInstallStatus('Apri il menu del browser e scegli "Aggiungi alla schermata Home".');
+        return;
+      }
+      
+      // Mostra il prompt di installazione
+      try {
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        if (choice.outcome === 'accepted') {
+          setInstallButton('installed');
+          updateInstallStatus('Installazione completata: trovi la dashboard tra le tue app.');
+        } else {
+          updateInstallStatus('Installazione annullata. Puoi riprovare quando vuoi.');
+        }
+      } catch (err) {
+        console.error('[PWA] Errore durante il prompt di installazione:', err);
+        updateInstallStatus('Errore durante l\'installazione. Riprova più tardi.');
       }
       deferredPrompt = null;
     });
@@ -3058,9 +3099,13 @@
       if (installBtn) {
         if (isStandalone()) {
           setInstallButton('installed');
-          updateInstallStatus('App già installata sul dispositivo.');
+          // Siamo già nell'app installata
+          updateInstallStatus('App installata e aperta sul dispositivo.');
         } else {
-          updateInstallStatus('Segui le istruzioni del browser per installare l’app.');
+          // Siamo nel browser: verifica se l'app è installata
+          // Nota: non possiamo rilevare perfettamente se l'app è installata quando siamo nel browser
+          // Ma possiamo aspettare l'evento beforeinstallprompt per sapere se è installabile
+          updateInstallStatus('Segui le istruzioni del browser per installare l'app.');
         }
       }
       await registerServiceWorker();
