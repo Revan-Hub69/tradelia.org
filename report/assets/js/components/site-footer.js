@@ -62,7 +62,6 @@ function render(data = {}) {
             <a href="/pricing.html" aria-label="Vai alla pagina prezzi" data-i18n="nav.pricing">Pricing</a>
             <a href="/brokers.html" aria-label="Vai alla pagina brokers" data-i18n="nav.brokers">Brokers</a>
             <a href="/collegamenti.html" aria-label="Vai alla pagina collegamenti consigliati">Collegamenti</a>
-            <a href="/glossario.html" aria-label="Vai al glossario finanziario" data-i18n="nav.glossary">Glossario</a>
             <a href="/percorsi.html" aria-label="Vai alla pagina percorsi formativi">Percorsi formativi</a>
           </div>
           <div style="margin-top: var(--sp-4); font-size: var(--fs-13); color: rgba(226, 232, 240, 0.85);">

@@ -350,7 +350,7 @@ const TRANSLATIONS = {
     'legal.overlay.accept': 'Accetto e chiudi',
     'legal.overlay.continue': 'Continuando dichiari di aver letto e compreso le informative.',
     'legal.mifid.purpose.title': 'Finalità del materiale',
-    'legal.mifid.purpose.content': 'Il presente sito web e tutti i suoi contenuti (analisi, moduli AI, report, articoli, glossario) hanno esclusiva finalità <strong>informativa e didattica</strong>. Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa <strong>MiFID II / ESMA</strong>.',
+    'legal.mifid.purpose.content': 'Il presente sito web e tutti i suoi contenuti (analisi, moduli AI, report, articoli e percorsi formativi) hanno esclusiva finalità <strong>informativa e didattica</strong>. Non costituiscono consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa <strong>MiFID II / ESMA</strong>.',
     'legal.mifid.educational.title': 'Natura educativa',
     'legal.mifid.educational.content': 'Tradelia AI è una piattaforma di <strong>educazione finanziaria accademica</strong>. Tutti i contenuti, inclusi moduli AI proprietari, analisi di mercato, report e strumenti didattici, sono progettati esclusivamente per finalità formative e di ricerca. Non viene svolta verifica di adeguatezza/appropriatezza, profilo di rischio o obiettivi finanziari dell\'utente.',
     'legal.mifid.risks.title': 'Rischi',

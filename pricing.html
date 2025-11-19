@@ -379,50 +379,119 @@
       line-height: var(--lh-17);
     }
     
-    /* ===== BUTTONS ===== */
-    .btn, .btn-sm {
+    /* ===== BUTTONS (aligned to MiFID/Homepage) ===== */
+    .btn,
+    .btn:link,
+    .btn:visited,
+    .btn-sm {
+      position: relative;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      border-radius: var(--radius-pill);
+      justify-content: center;
+      gap: var(--sp-3);
+      padding: calc(var(--sp-4) + 2px) calc(var(--sp-7) + 6px);
+      font-size: var(--fs-13);
       font-weight: 600;
-      font-size: var(--fs-14);
+      letter-spacing: 0.01em;
       text-decoration: none;
-      transition: all 0.15s ease;
-      border: 1px solid transparent;
-    }
-    
-    .btn-primary {
-      background: var(--brand-600);
-      color: var(--ink-invert);
-      border-color: var(--brand-600);
-    }
-    
-    .btn-primary:hover {
-      background: var(--brand-700);
-      transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.3);
-    }
-    
-    .btn-outline {
-      background: transparent;
-      color: var(--ink);
-      border-color: var(--br-soft);
-    }
-    
-    .btn-outline:hover {
-      background: var(--surface-hover);
-      border-color: var(--brand-500);
+      cursor: pointer;
+      color: color-mix(in srgb, var(--ink) 78%, #ffffff 22%);
+      background: color-mix(in srgb, var(--surface-card) 88%, rgba(37, 99, 235, 0.12));
+      border: 1px solid color-mix(in srgb, var(--br-card) 72%, rgba(37, 99, 235, 0.24) 28%);
+      border-radius: var(--radius-pill);
+      box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.32),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+      min-height: 46px;
+      transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background var(--transition-base),
+        border-color var(--transition-base),
+        color var(--transition-base);
     }
     
     .btn-sm {
-      padding: 0.6rem 1.2rem;
-      font-size: var(--fs-13);
+      padding: var(--sp-2) var(--sp-4);
+      font-size: var(--fs-12);
+      min-height: 34px;
+      box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
     }
     
-    button.btn {
-      cursor: pointer;
+    .btn::before,
+    .btn-sm::before {
+      content: '';
+      position: absolute;
+      inset: 1px 1px auto 1px;
+      height: 46%;
+      border-radius: calc(var(--radius-pill) - 4px);
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.02) 100%
+      );
+      pointer-events: none;
+    }
+    
+    .btn:hover,
+    .btn-sm:hover {
+      background: color-mix(in srgb, var(--surface-card) 92%, rgba(37, 99, 235, 0.18));
+      border-color: color-mix(in srgb, var(--br-card) 60%, rgba(37, 99, 235, 0.32) 40%);
+      box-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      transform: translateY(-1px);
+    }
+    
+    .btn:active,
+    .btn-sm:active {
+      transform: translateY(0) scale(0.98);
+      transition: transform 0.08s ease;
+    }
+    
+    .btn:focus-visible,
+    .btn-sm:focus-visible {
+      outline: 2px solid var(--brand-500);
+      outline-offset: 2px;
+      box-shadow:
+        0 0 0 4px rgba(37, 99, 235, 0.12),
+        0 12px 28px rgba(0, 0, 0, 0.32);
+    }
+    
+    .btn-primary {
+      color: var(--ink-invert);
+      background: linear-gradient(120deg, #2563eb 0%, #3b82f6 60%, #60a5fa 100%);
+      border-color: rgba(59, 130, 246, 0.8);
+      box-shadow:
+        0 14px 40px rgba(37, 99, 235, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(120deg, #1d4ed8 0%, #2563eb 65%, #60a5fa 100%);
+      border-color: rgba(147, 197, 253, 0.9);
+    }
+    
+    .btn-outline {
+      color: var(--ink);
+      background: color-mix(in srgb, var(--surface-card) 92%, transparent);
+      border-color: var(--br-soft);
+      box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+    
+    .btn-outline:hover {
+      border-color: color-mix(in srgb, var(--br-soft) 70%, rgba(59, 130, 246, 0.4));
+    }
+    
+    .btn-block {
+      width: 100%;
+      justify-content: center;
     }
     
     /* ===== MODAL ===== */
@@ -558,35 +627,6 @@
     .form-textarea {
       min-height: 100px;
       resize: vertical;
-    }
-    
-    .form-submit {
-      width: 100%;
-      padding: var(--sp-4) var(--sp-6);
-      background: linear-gradient(120deg, var(--brand-600), var(--brand-500));
-      color: var(--ink-invert);
-      border: none;
-      border-radius: var(--radius-pill);
-      font-size: var(--fs-14);
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 10px 30px rgba(37, 99, 235, 0.35);
-      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
-    }
-    
-    .form-submit:hover:not(:disabled) {
-      transform: translateY(-1px);
-      box-shadow: 0 16px 36px rgba(37, 99, 235, 0.4);
-    }
-    
-    .form-submit:active:not(:disabled) {
-      transform: translateY(0) scale(0.99);
-    }
-    
-    .form-submit:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      box-shadow: none;
     }
     
     .form-note {
@@ -841,6 +881,15 @@
                   </p>
                 </div>
               </div>
+              <div style="display: flex; align-items: flex-start; gap: var(--sp-2);">
+                <span style="color: var(--brand-500); font-weight: 600; flex-shrink: 0;">5.</span>
+                <div>
+                  <strong style="color: var(--ink); font-size: var(--fs-13);">Rimborso entro 14 giorni dalla richiesta</strong>
+                  <p style="color: var(--muted); font-size: var(--fs-12); margin: var(--sp-1) 0 0 0; line-height: 1.4;">
+                    Una volta ricevuta la comunicazione di recesso, il rimborso viene disposto entro 14 giorni sullo stesso metodo di pagamento usato (bonifico o carta tramite Xolo Go).
+                  </p>
+                </div>
+              </div>
         </div>
       </div>
           
@@ -873,7 +922,7 @@
           <details>
             <summary>Come funzionano le analisi su richiesta?</summary>
             <p>
-              Ogni analisi costa €49 e richiede circa 1 ora di lavoro. Puoi richiederle via email specificando il tipo di analisi. Gestiamo fino a 4 analisi al giorno, in ordine di arrivo. Ogni analisi include fonti, ipotesi e controlli documentati. La fattura viene emessa immediatamente al momento dell'ordine tramite Xolo Go, e puoi pagare entro 14 giorni. La consegna è garantita entro 24 ore dall'ordine, indipendentemente dal pagamento.
+              Ogni analisi costa €49 e richiede circa 1 ora di lavoro. Puoi richiederle via email specificando il tipo di analisi. Gestiamo fino a 4 analisi al giorno, in ordine di arrivo. Ogni analisi include fonti, ipotesi e controlli documentati. La fattura viene emessa immediatamente al momento dell'ordine tramite Xolo Go, e puoi pagare entro 14 giorni. La consegna è garantita entro 24 ore dall'ordine, indipendentemente dal pagamento, e hai sempre diritto di recedere entro 14 giorni dalla consegna con rimborso erogato entro 14 giorni dalla richiesta.
             </p>
           </details>
 
@@ -917,8 +966,8 @@
           <details>
             <summary>Offrite garanzie o rimborsi?</summary>
             <p>
-              <strong>Analisi su richiesta:</strong> Hai diritto di recedere dal contratto entro 14 giorni dalla data di consegna del servizio, indipendentemente dalla fatturazione o dal pagamento. Se l'analisi non rispetta le specifiche concordate, provvediamo a revisione o rimborso anche dopo la consegna.<br><br>
-              <strong>Piano Desk:</strong> Il diritto di recesso è di 14 giorni dalla data di attivazione dell'accesso (consegna del servizio). L'accesso è valido 30 giorni dalla data di pagamento. Se riscontri problemi tecnici durante il periodo di accesso, contattaci per assistenza.
+              <strong>Analisi su richiesta:</strong> Hai diritto di recedere dal contratto entro 14 giorni dalla data di consegna del servizio, indipendentemente dalla fatturazione o dal pagamento. Una volta ricevuta la comunicazione, emettiamo il rimborso entro 14 giorni sullo stesso metodo di pagamento. Se l'analisi non rispetta le specifiche concordate, provvediamo a revisione o rimborso anche dopo la consegna.<br><br>
+              <strong>Piano Desk:</strong> Il diritto di recesso è di 14 giorni dalla data di attivazione dell'accesso (consegna del servizio). Rimborso entro 14 giorni dalla richiesta, sullo stesso metodo di pagamento. L'accesso è valido 30 giorni dalla data di pagamento. Se riscontri problemi tecnici durante il periodo di accesso, contattaci per assistenza.
             </p>
           </details>
 
@@ -1203,7 +1252,7 @@
             </span>
           </label>
         </div>
-        <button type="submit" class="form-submit" id="submit-analisi">
+        <button type="submit" class="btn btn-primary btn-block" id="submit-analisi">
           Invia richiesta
         </button>
         <p class="form-note">
@@ -1281,7 +1330,7 @@
             </span>
           </label>
         </div>
-        <button type="submit" class="form-submit" id="submit-desk">
+        <button type="submit" class="btn btn-primary btn-block" id="submit-desk">
           Invia richiesta
         </button>
         <p class="form-note">
