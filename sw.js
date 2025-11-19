@@ -4,11 +4,16 @@
 const CACHE_NAME = 'tradelia-ai-v1';
 const STATIC_CACHE = [
   '/',
+  '/dashboard.html',
+  '/dashboard.webmanifest',
   '/archivio/index.html',
   '/archivio/dashboard.html',
   '/report/assets/css/tokens.css',
+  '/assets/css/global-header.css',
   '/archivio/assets/css/archive.css',
-  '/archivio/assets/css/dashboard.css'
+  '/archivio/assets/css/dashboard.css',
+  '/icons/icon-192.svg',
+  '/icons/icon-512.svg'
 ];
 
 // ===== INSTALL =====
