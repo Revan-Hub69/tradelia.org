@@ -152,7 +152,7 @@ async function handleRequest(req, res) {
   const newToken = generateToken();
   const tokenHash = hashToken(newToken);
   const now = new Date();
-  const validUntil = addDays(now, TOKEN_DURATION_DAYS).toISOString();
+  const valid_until = addDays(now, TOKEN_DURATION_DAYS).toISOString();
 
   // Revoca token trial precedenti per questa email
   const { error: revokeError } = await supabase
