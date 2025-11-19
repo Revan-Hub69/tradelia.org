@@ -1,7 +1,6 @@
 import { supabase, AVATAR_BUCKET } from '/report/assets/js/supabase-client.js';
 import Logger from '/report/assets/js/utils/logger.js';
 import { siteHeader } from '/report/assets/js/components/site-header.js';
-import { openPaddleUpgrade } from './paddle-checkout.js';
 
 const HERO = document.getElementById('user-hero');
 const AVATAR = document.getElementById('user-avatar');
@@ -694,13 +693,7 @@ function renderPlanSection() {
           upgradeBtn.className = 'btn btn-sm btn-primary';
           upgradeBtn.textContent = 'Passa a Pro';
           upgradeBtn.addEventListener('click', async () => {
-            try {
-              showToast('Apertura checkout...', 'info');
-              openPaddleUpgrade('pro', state.user?.email || '', getDisplayName());
-            } catch (err) {
-              Logger.error('UserArea', 'upgrade to pro error', err);
-              showToast('Errore durante l\'apertura del checkout. Contatta il supporto.', 'error');
-            }
+            window.location.href = '/pricing.html';
           });
           actionsContainer.appendChild(upgradeBtn);
         } else if (state.role === 'pro') {
@@ -708,13 +701,7 @@ function renderPlanSection() {
           upgradeBtn.className = 'btn btn-sm btn-primary';
           upgradeBtn.textContent = 'Passa a Desk Professionale';
           upgradeBtn.addEventListener('click', async () => {
-            try {
-              showToast('Apertura checkout...', 'info');
-              openPaddleUpgrade('institutional', state.user?.email || '', getDisplayName());
-            } catch (err) {
-              Logger.error('UserArea', 'upgrade to institutional error', err);
-              showToast('Errore durante l\'apertura del checkout. Contatta il supporto.', 'error');
-            }
+            window.location.href = '/pricing.html';
           });
           actionsContainer.appendChild(upgradeBtn);
         }
@@ -833,16 +820,8 @@ async function handleRenewSubscription() {
   }
   
   try {
-    showToast('Apertura checkout per il rinnovo...', 'info');
-    
-    // Apri checkout Paddle per rinnovo
-    // Usa email e nome utente per checkout
-    try {
-      openPaddleUpgrade(state.role, state.user?.email || '', getDisplayName());
-    } catch (err) {
-      Logger.error('UserArea', 'renew subscription checkout error', err);
-      throw err;
-    }
+    // Reindirizza a pricing per rinnovo
+    window.location.href = '/pricing.html';
     
     // Nota: Il webhook gestirà l'aggiornamento valid_until dopo il pagamento
     // Per ora, il rinnovo manuale estende valid_until di 30 giorni
@@ -2100,15 +2079,8 @@ function setupCreditsHandlers() {
   
   if (REQUEST_ANALYSIS_LOCK_UPGRADE) {
     REQUEST_ANALYSIS_LOCK_UPGRADE.addEventListener('click', () => {
-      // Non reindirizzare a pricing - apri checkout Paddle per upgrade a institutional
       if (state.user) {
-        try {
-          showToast('Apertura checkout per upgrade a Desk Professionale...', 'info');
-          openPaddleUpgrade('institutional', state.user?.email || '', getDisplayName());
-        } catch (err) {
-          Logger.error('UserArea', 'upgrade from lock error', err);
-          showToast('Errore durante l\'apertura del checkout. Contatta il supporto.', 'error');
-        }
+        window.location.href = '/pricing.html';
       } else {
         showToast('Effettua il login per effettuare l\'upgrade.', 'error');
       }

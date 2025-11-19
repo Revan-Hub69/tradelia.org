@@ -1,7 +1,6 @@
 // /api/cancel-subscription.js
-// API Vercel - Cancella subscription (supporta Stripe, Paddle, LemonSqueezy, Xolo)
+// API Vercel - Cancella subscription (Xolo/manuale)
 
-import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 
@@ -19,12 +18,6 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
     persistSession: false
   }
 });
-
-const stripe = process.env.STRIPE_SECRET_KEY 
-  ? new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: '2024-11-20.acacia',
-    })
-  : null;
 
 /**
  * Calcola hash SHA-256 del token
@@ -129,33 +122,11 @@ export default async function handler(req, res) {
     const subscriptionId = subscriber?.subscription_id || null;
     const currentPeriodEnd = subscriber?.current_period_end || null;
     
-    // 3. Cancella subscription nel gateway (se integrato)
-    let canceled = false;
-    let cancelAtPeriodEnd = true; // Default: cancella alla fine del periodo
+    // 3. Xolo/manuale: solo aggiornamento Supabase (nessuna integrazione gateway esterna)
     let finalPeriodEnd = currentPeriodEnd;
     
-    if (gateway === 'stripe' && subscriptionId && stripe) {
-      try {
-        const subscription = await stripe.subscriptions.update(subscriptionId, {
-          cancel_at_period_end: true,
-        });
-        canceled = true;
-        finalPeriodEnd = new Date(subscription.current_period_end * 1000).toISOString();
-        console.log('[Cancel] Stripe subscription impostata per cancellazione alla fine del periodo');
-      } catch (err) {
-        console.error('[Cancel] Errore cancellazione Stripe:', err);
-        // Continua comunque con aggiornamento Supabase
-      }
-    } else if (gateway === 'paddle' && subscriptionId) {
-      // TODO: Implementare Paddle API quando disponibile
-      console.log('[Cancel] Paddle cancellation da implementare');
-    } else if (gateway === 'lemonsqueezy' && subscriptionId) {
-      // TODO: Implementare LemonSqueezy API quando disponibile
-      console.log('[Cancel] LemonSqueezy cancellation da implementare');
-    } else if (gateway === 'xolo' || !gateway) {
-      // Xolo o manuale: solo aggiornamento Supabase
-      console.log('[Cancel] Xolo/manuale: solo aggiornamento Supabase');
-    }
+    // Xolo o manuale: solo aggiornamento Supabase
+    console.log('[Cancel] Xolo/manuale: aggiornamento Supabase');
     
     // 4. Aggiorna subscribers status
     if (subscriber) {

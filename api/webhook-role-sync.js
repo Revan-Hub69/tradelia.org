@@ -2,7 +2,7 @@
 // WEBHOOK ROLE SYNC - Sincronizza user_roles da subscribers
 // ============================================
 // Funzione helper per aggiornare user_roles quando subscriber cambia status
-// Da chiamare da webhook Stripe/Paddle/LemonSqueezy dopo aggiornamento subscriber
+// Usato per sincronizzazione ruoli da pagamenti Xolo/manuali
 // ============================================
 
 import { createClient } from '@supabase/supabase-js';
@@ -413,7 +413,7 @@ Per assistenza: support@tradelia.org
  * @param {string} email - Email utente
  * @param {string} planRole - Ruolo piano ('trial', 'pro', 'institutional')
  * @param {string} validUntil - Data scadenza token (ISO string)
- * @param {string} source - Sorgente token ('paddle', 'xolo', 'stripe', 'lemonsqueezy', 'manual', 'trial')
+ * @param {string} source - Sorgente token ('xolo', 'manual', 'trial')
  * @param {boolean} sendEmail - Se true, invia email automatica con il token (default: false)
  * @returns {Promise<{token: string, success: boolean}>} - Token generato (in chiaro) e success flag
  */

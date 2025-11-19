@@ -77,10 +77,8 @@ async function validateTokenHandler(req, res) {
 
     if (!subscriptionError && subscription) {
       subscriptionStatus = subscription.status || 'active';
-      canCancel =
-        subscriptionStatus === 'active' &&
-        subscription.gateway &&
-        ['stripe', 'paddle', 'lemonsqueezy'].includes(subscription.gateway);
+      // Xolo/manuale: cancellazione sempre disponibile (gestita manualmente)
+      canCancel = subscriptionStatus === 'active';
     }
   }
 
