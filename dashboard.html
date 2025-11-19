@@ -8,11 +8,14 @@
   <!-- SEO Meta Tags -->
   <meta name="description" content="Dashboard Tradelia AI - Accesso rapido a report finanziari e tutorial educativi" />
   <meta name="theme-color" content="#0f0f0f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="#0f0f0f" />
   
   <!-- Favicons -->
   <link rel="icon" href="/favicon.ico?v=1">
   <link rel="icon" type="image/png" href="/favicon.png?v=1">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
+  <link rel="manifest" href="/dashboard.webmanifest">
   
   <!-- Design System -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
@@ -405,6 +408,72 @@
       color: var(--dash-text-muted);
       opacity: 0.3;
       font-weight: 300;
+    }
+
+    /* ===== PWA ACTIONS ===== */
+    .pwa-actions {
+      margin: 1.5rem 0 2.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      padding: 1.5rem;
+      border: 1px solid var(--dash-border);
+      border-radius: var(--radius-lg, 18px);
+      background: linear-gradient(180deg, rgba(37, 99, 235, 0.08), rgba(15, 23, 42, 0.35));
+    }
+
+    .pwa-card {
+      padding: 1.5rem;
+      border-radius: var(--radius-md, 14px);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      background: rgba(15, 23, 42, 0.55);
+      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .pwa-card h3 {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    .pwa-card p {
+      margin: 0;
+      color: var(--dash-text-soft);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    .pwa-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.25rem;
+      border-radius: 999px;
+      border: 1px solid rgba(96, 165, 250, 0.45);
+      background: linear-gradient(130deg, rgba(59, 130, 246, 0.25), rgba(15, 23, 42, 0.85));
+      color: var(--dash-text);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .pwa-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .pwa-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      border-color: rgba(147, 197, 253, 0.9);
+    }
+
+    .pwa-status {
+      font-size: 0.8rem;
+      color: var(--dash-text-muted);
     }
     
     /* ===== STATS BAR - ACADEMIC ===== */
@@ -1047,6 +1116,26 @@
         <h1 class="dashboard-title">Dashboard</h1>
         <p class="dashboard-subtitle">Report finanziari AI</p>
       </div>
+
+      <section class="pwa-actions" aria-label="Installazione app e notifiche">
+        <article class="pwa-card">
+          <h3>Installa la dashboard come app</h3>
+          <p>Funziona su desktop, iOS e Android. Offline caching, avvio rapido e interfaccia a tutto schermo.</p>
+          <button class="pwa-btn" id="pwa-install-btn" type="button" disabled>
+            📲 Installa l’app
+          </button>
+          <span class="pwa-status" id="pwa-install-status">In attesa di disponibilità dell’install prompt…</span>
+        </article>
+
+        <article class="pwa-card">
+          <h3>Notifiche push</h3>
+          <p>Ricevi un avviso quando pubblichiamo un nuovo deck o aggiorniamo i framework pubblici.</p>
+          <button class="pwa-btn" id="push-toggle-btn" type="button">
+            🔔 Attiva notifiche
+          </button>
+          <span class="pwa-status" id="push-status">Permessi non ancora richiesti.</span>
+        </article>
+      </section>
       
       <!-- ===== SECTION TOGGLE ===== -->
       <!-- Rimossa sezione tutorial - ora disponibile in /tutorials.html -->
@@ -2347,6 +2436,199 @@
       // DOM già pronto
       guardedInit();
     }
+  </script>
+  
+  <!-- ===== PWA + PUSH HANDLER ===== -->
+  <script type="module">
+    import { FCM_CONFIG } from '/archivio/assets/js/fcm-config.js';
+
+    const installBtn = document.getElementById('pwa-install-btn');
+    const installStatus = document.getElementById('pwa-install-status');
+    const pushBtn = document.getElementById('push-toggle-btn');
+    const pushStatus = document.getElementById('push-status');
+
+    let deferredPrompt = null;
+    let swRegistration = null;
+
+    const isStandalone = () =>
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true;
+
+    function updateInstallStatus(message) {
+      if (installStatus) {
+        installStatus.textContent = message;
+      }
+    }
+
+    function setInstallButton(state) {
+      if (!installBtn) return;
+      if (state === 'installed') {
+        installBtn.disabled = true;
+        installBtn.textContent = '✅ App installata';
+      } else if (state === 'ready') {
+        installBtn.disabled = false;
+        installBtn.textContent = '📲 Installa l’app';
+      } else {
+        installBtn.disabled = true;
+      }
+    }
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+      setInstallButton('ready');
+      updateInstallStatus('Disponibile l’installazione sui dispositivi supportati.');
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredPrompt = null;
+      setInstallButton('installed');
+      updateInstallStatus('App installata sul dispositivo.');
+    });
+
+    installBtn?.addEventListener('click', async () => {
+      if (!deferredPrompt) {
+        updateInstallStatus('Apri il menu del browser e scegli “Aggiungi alla schermata Home”.');
+        return;
+      }
+      deferredPrompt.prompt();
+      const choice = await deferredPrompt.userChoice;
+      if (choice.outcome === 'accepted') {
+        setInstallButton('installed');
+        updateInstallStatus('Installazione completata: trovi la dashboard tra le tue app.');
+      } else {
+        updateInstallStatus('Installazione annullata. Puoi riprovare quando vuoi.');
+      }
+      deferredPrompt = null;
+    });
+
+    async function registerServiceWorker() {
+      if (!('serviceWorker' in navigator)) {
+        updatePushStatus('Service Worker non supportato dal browser.');
+        return null;
+      }
+      if (swRegistration) return swRegistration;
+      try {
+        swRegistration = await navigator.serviceWorker.register('/sw.js');
+        await navigator.serviceWorker.ready;
+        return swRegistration;
+      } catch (err) {
+        console.error('[PWA] Errore registrazione SW', err);
+        updatePushStatus('Errore nella registrazione del Service Worker.');
+        return null;
+      }
+    }
+
+    function updatePushStatus(message) {
+      if (pushStatus) {
+        pushStatus.textContent = message;
+      }
+    }
+
+    async function updatePushUI() {
+      if (!pushBtn) return;
+      if (!('Notification' in window)) {
+        pushBtn.disabled = true;
+        updatePushStatus('Notifiche push non supportate da questo browser.');
+        return;
+      }
+      const permission = Notification.permission;
+      if (permission === 'denied') {
+        pushBtn.disabled = true;
+        updatePushStatus('Hai negato il permesso alle notifiche. Abilitalo dalle impostazioni del browser.');
+        return;
+      }
+      const registration = await registerServiceWorker();
+      if (!registration) return;
+      const subscription = await registration.pushManager.getSubscription();
+      if (subscription && permission === 'granted') {
+        pushBtn.dataset.enabled = 'true';
+        pushBtn.textContent = '🔕 Disattiva notifiche';
+        updatePushStatus('Notifiche attive su questo dispositivo.');
+      } else {
+        pushBtn.dataset.enabled = 'false';
+        pushBtn.textContent = '🔔 Attiva notifiche';
+        if (permission === 'default') {
+          updatePushStatus('Permessi non ancora richiesti.');
+        } else {
+          updatePushStatus('Permesso concesso, attiva per ricevere alert.');
+        }
+      }
+    }
+
+    function urlBase64ToUint8Array(base64String) {
+      const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+      const base64 = (base64String + padding)
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
+      const rawData = window.atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+      for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
+    }
+
+    async function subscribeToPush() {
+      const registration = await registerServiceWorker();
+      if (!registration) return;
+
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        updatePushStatus('Permesso notifiche non concesso.');
+        return;
+      }
+
+      try {
+        const subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(FCM_CONFIG.vapidPublicKey)
+        });
+
+        await fetch('/api/push', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'subscribe', subscription })
+        });
+
+        updatePushUI();
+      } catch (err) {
+        console.error('[PWA] Errore attivazione push', err);
+        updatePushStatus('Errore durante l’attivazione delle notifiche.');
+      }
+    }
+
+    async function unsubscribePush() {
+      const registration = await registerServiceWorker();
+      if (!registration) return;
+      const subscription = await registration.pushManager.getSubscription();
+      if (subscription) {
+        await subscription.unsubscribe();
+      }
+      updatePushUI();
+    }
+
+    pushBtn?.addEventListener('click', async () => {
+      const enabled = pushBtn.dataset.enabled === 'true';
+      if (enabled) {
+        await unsubscribePush();
+      } else {
+        await subscribeToPush();
+      }
+    });
+
+    (async function bootstrapPWA() {
+      if (installBtn) {
+        if (isStandalone()) {
+          setInstallButton('installed');
+          updateInstallStatus('App già installata sul dispositivo.');
+        } else {
+          updateInstallStatus('Segui le istruzioni del browser per installare l’app.');
+        }
+      }
+      await registerServiceWorker();
+      await updatePushUI();
+    })();
   </script>
   
   <!-- ===== LEGAL OVERLAY ===== -->

@@ -248,6 +248,80 @@
       font-weight: 600;
     }
 
+    .hero-plan-grid {
+      margin-top: 2.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--sp-4);
+    }
+
+    .hero-plan-card {
+      background: var(--surface-elev);
+      border: 1px solid var(--br-card);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-5);
+      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.35);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+    }
+
+    .hero-plan-card strong {
+      font-size: var(--fs-16);
+      color: var(--ink);
+    }
+
+    .hero-plan-card ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
+      color: var(--ink-soft);
+      font-size: var(--fs-13);
+      line-height: 1.55;
+    }
+
+    .hero-plan-card ul li {
+      display: flex;
+      gap: var(--sp-2);
+    }
+
+    .hero-plan-card ul li::before {
+      content: "•";
+      color: var(--brand-500);
+      font-weight: 700;
+    }
+
+    .hero-plan-card .plan-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      font-size: var(--fs-11);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    .hero-plan-card--free {
+      border-color: rgba(16, 185, 129, 0.35);
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.12), rgba(15, 23, 42, 0.2));
+    }
+
+    .hero-plan-card--paid {
+      border-color: rgba(59, 130, 246, 0.4);
+      background: linear-gradient(180deg, rgba(59, 130, 246, 0.12), rgba(15, 23, 42, 0.2));
+    }
+
+    .hero-plan-card .btn {
+      align-self: flex-start;
+    }
+
     .hero-features {
       display: grid;
       grid-template-columns: 1fr;
@@ -2049,6 +2123,32 @@
           Gran parte del materiale è disponibile gratuitamente tramite la dashboard pubblica, con documentazione completa su fonti e limiti.
         </p>
 
+        <div class="hero-plan-grid" aria-label="Panoramica servizi gratuiti e a pagamento">
+          <article class="hero-plan-card hero-plan-card--free">
+            <span class="plan-badge">Gratis per tutti</span>
+            <strong>Dashboard pubblica aggiornata ogni giorno</strong>
+            <ul>
+              <li>Framework FDM · MLT · PAC completi con versioni archiviate</li>
+              <li>Quadri macro, intermarket e note di rilascio senza registrazione</li>
+              <li>Audit trail e note metodologiche identiche ai report completi</li>
+              <li>Nessuna carta richiesta: basta aprire la dashboard e consultare</li>
+            </ul>
+            <a href="/dashboard.html" class="btn btn-primary btn-sm" aria-label="Apri subito la dashboard gratuita">Apri la dashboard gratuita</a>
+          </article>
+
+          <article class="hero-plan-card hero-plan-card--paid">
+            <span class="plan-badge">Servizi on-demand</span>
+            <strong>Analisi su richiesta e Piano Desk</strong>
+            <ul>
+              <li>Analisi personalizzate a €49 con consegna entro 24 ore</li>
+              <li>Piano Desk €149 una tantum per report white-label (30 giorni)</li>
+              <li>Fatturazione Xolo Go, pagamento entro 14 giorni e recesso garantito</li>
+              <li>Possibilità di allegare loghi, richieste specifiche e revisioni</li>
+            </ul>
+            <a href="/pricing.html" class="btn btn-outline btn-sm" aria-label="Vai alla pagina pricing per i servizi on-demand">Vedi come funziona</a>
+          </article>
+        </div>
+
         <div class="hero-features">
           <div class="hero-feature">
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
@@ -2109,7 +2209,7 @@
       <div class="section-header">
         <h2 class="section-title" id="materiali-gratuiti-heading">Cosa trovi gratuitamente ogni giorno</h2>
         <p class="section-description">
-          La dashboard pubblica ospita materiali aggiornati con la stessa struttura dei report completi. Ogni blocco indica fonti e limiti in modo chiaro.
+          Nessuna registrazione, nessuna carta: basta aprire la dashboard pubblica per consultare gli stessi blocchi usati nei report completi. Ogni sezione indica fonti, limiti e timestamp, così puoi verificare tutto in autonomia.
         </p>
       </div>
 
