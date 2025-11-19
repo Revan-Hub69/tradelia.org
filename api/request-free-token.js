@@ -1,21 +1,11 @@
-import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import { getServiceSupabase } from './_lib/supabase.js';
+import { HttpError, handleRouteError } from './_lib/http.js';
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const SUPPORT_EMAIL = 'support@tradelia.org';
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-  throw new Error('SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devono essere configurati');
-}
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false
-  }
-});
+const supabase = getServiceSupabase();
 
 const TOKEN_DURATION_DAYS = 30;
 const ALLOWED_PROFILES = ['privato', 'desk', 'media'];
@@ -34,8 +24,7 @@ function addDays(date, days) {
 
 async function sendTokenEmail({ email, nome, token, profilo, uso, organizzazione }) {
   if (!BREVO_API_KEY) {
-    console.warn('[Request Free Token] BREVO_API_KEY non configurata, email non inviata');
-    return false;
+    throw new HttpError(500, 'Servizio email non configurato (BREVO_API_KEY mancante)');
   }
 
   const emphasizedUso = uso.replace(/\n/g, '<br/>');
@@ -104,10 +93,8 @@ Valido 30 giorni su dashboard e PWA. Per supporto scrivi a ${SUPPORT_EMAIL}.`;
   if (!response.ok) {
     const errorText = await response.text();
     console.error('[Request Free Token] Errore Brevo:', errorText);
-    return false;
+    throw new HttpError(502, 'Errore invio email token');
   }
-
-  return true;
 }
 
 export default async function handler(req, res) {
@@ -124,7 +111,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { nome, email, profilo, organizzazione, uso } = req.body || {};
+    return await handleRequest(req, res);
+  } catch (error) {
+    return handleRouteError(res, error);
+  }
+}
+
+async function handleRequest(req, res) {
+  const { nome, email, profilo, organizzazione, uso } = req.body || {};
 
     if (!nome || typeof nome !== 'string' || nome.trim().length < 2) {
       return res.status(400).json({ ok: false, error: 'Nome non valido' });
@@ -218,8 +212,13 @@ export default async function handler(req, res) {
       message: 'Token generato. Controlla la tua email (inclusa la cartella spam) per recuperarlo.'
     });
   } catch (error) {
-    console.error('[Request Free Token] Errore inatteso:', error);
-    return res.status(500).json({ ok: false, error: 'Errore server', details: error.message });
+      console.warn('[Request Free Token] Notifica support non inviata:', notifyErr);
+    }
   }
+
+  return res.status(200).json({
+    ok: true,
+    message: 'Token generato. Controlla la tua email (inclusa la cartella spam) per recuperarlo.'
+  });
 }
 
