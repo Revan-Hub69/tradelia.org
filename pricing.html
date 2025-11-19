@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0" />
   <title>Pricing · Tradelia AI</title>
-  
+
   <!-- SEO Meta Tags -->
   <meta name="description" content="Tradelia AI: accesso gratuito alla dashboard pubblica, analisi su richiesta a €49, piano Desk una tantum mensile a €149. Framework AI per analisi educative sui mercati." />
   <meta name="keywords" content="Tradelia AI pricing, analisi on demand, piano Desk, analisi finanziarie, framework AI, FDM MLT PAC" />
@@ -535,81 +535,58 @@
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
     
+    .form-select {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9l6 6 6-6' stroke='%23a5b4fc' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: calc(100% - 1rem) center;
+      background-size: 1.15rem;
+      padding-right: calc(var(--sp-7) + 10px);
+      color: var(--ink);
+    }
+
+    .form-select option {
+      background: #0f172a;
+      color: #f8fafc;
+    }
+
+    .form-select::-ms-expand {
+      display: none;
+    }
+
     .form-textarea {
       min-height: 100px;
       resize: vertical;
     }
     
     .form-submit {
-      position: relative;
       width: 100%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--sp-3);
-      padding: calc(var(--sp-4) + 2px) calc(var(--sp-7) + 6px);
-      font-size: var(--fs-13);
-      font-weight: 600;
-      letter-spacing: 0.01em;
-      cursor: pointer;
-      color: color-mix(in srgb, var(--ink) 78%, #ffffff 22%);
-      background: color-mix(in srgb, var(--surface-card) 88%, rgba(37, 99, 235, 0.12));
-      border: 1px solid color-mix(in srgb, var(--br-card) 72%, rgba(37, 99, 235, 0.24) 28%);
+      padding: var(--sp-4) var(--sp-6);
+      background: linear-gradient(120deg, var(--brand-600), var(--brand-500));
+      color: var(--ink-invert);
+      border: none;
       border-radius: var(--radius-pill);
-      box-shadow:
-        0 12px 28px rgba(0, 0, 0, 0.32),
-        inset 0 1px 0 rgba(255, 255, 255, 0.04);
-      backdrop-filter: blur(10px);
-      overflow: hidden;
-      min-height: 46px;
-      transition:
-        transform var(--transition-fast),
-        box-shadow var(--transition-fast),
-        background var(--transition-base),
-        border-color var(--transition-base),
-        color var(--transition-base);
-    }
-    
-    .form-submit::before {
-      content: '';
-      position: absolute;
-      inset: 1px 1px auto 1px;
-      height: 46%;
-      border-radius: calc(var(--radius-pill) - 4px);
-      background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.08) 0%,
-        rgba(255, 255, 255, 0.02) 100%
-      );
-      pointer-events: none;
+      font-size: var(--fs-14);
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(37, 99, 235, 0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
     }
     
     .form-submit:hover:not(:disabled) {
-      background: color-mix(in srgb, var(--surface-card) 92%, rgba(37, 99, 235, 0.18));
-      border-color: color-mix(in srgb, var(--br-card) 60%, rgba(37, 99, 235, 0.32) 40%);
-      box-shadow:
-        0 18px 36px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.06);
       transform: translateY(-1px);
+      box-shadow: 0 16px 36px rgba(37, 99, 235, 0.4);
     }
     
     .form-submit:active:not(:disabled) {
-      transform: translateY(0) scale(0.98);
-      transition: transform 0.08s ease;
-    }
-    
-    .form-submit:focus-visible:not(:disabled) {
-      outline: 2px solid var(--brand-500);
-      outline-offset: 2px;
-      box-shadow:
-        0 0 0 4px rgba(37, 99, 235, 0.12),
-        0 12px 28px rgba(0, 0, 0, 0.32);
+      transform: translateY(0) scale(0.99);
     }
     
     .form-submit:disabled {
-      opacity: 0.5;
+      opacity: 0.6;
       cursor: not-allowed;
-      transform: none;
+      box-shadow: none;
     }
     
     .form-note {
@@ -684,6 +661,21 @@
     .form-textarea:valid:not(:placeholder-shown),
     .form-select:valid:not(:placeholder-shown) {
       border-color: rgba(34, 197, 94, 0.4);
+    }
+
+    .form-hint {
+      margin-top: 0.4rem;
+      font-size: var(--fs-12);
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .form-group[data-client-field] {
+      display: none;
+    }
+
+    .form-group[data-client-field].is-visible {
+      display: block;
     }
   </style>
 </head>
@@ -1145,16 +1137,34 @@
           <input type="email" id="analisi-email" name="email" class="form-input" required placeholder="tua@email.com" />
         </div>
         <div class="form-group">
+          <label class="form-label" for="analisi-tipologia">
+            Tipologia cliente <span class="required">*</span>
+          </label>
+          <select id="analisi-tipologia" name="tipologia" class="form-select" required>
+            <option value="">Seleziona...</option>
+            <option value="privato">Privato / persona fisica</option>
+            <option value="azienda">Azienda / professionista</option>
+          </select>
+          <p class="form-hint">Le analisi su richiesta sono disponibili sia per utenti privati sia per professionisti. Seleziona il profilo per ricevere la fattura corretta.</p>
+        </div>
+        <div class="form-group" data-client-field="analisi-privato">
+          <label class="form-label" for="analisi-cf">
+            Codice fiscale <span class="required">*</span>
+          </label>
+          <input type="text" id="analisi-cf" name="codice-fiscale" class="form-input" data-required="true" placeholder="RSSMRA80A01H501U" maxlength="16" pattern="[A-Za-z0-9]{16}" style="text-transform: uppercase;" />
+          <p class="form-hint">Richiesto solo per privati. Useremo questi dati per emettere fattura elettronica.</p>
+        </div>
+        <div class="form-group" data-client-field="analisi-azienda">
           <label class="form-label" for="analisi-ragione-sociale">
             Ragione sociale / Nome azienda <span class="required">*</span>
           </label>
-          <input type="text" id="analisi-ragione-sociale" name="ragione-sociale" class="form-input" required placeholder="Ragione sociale o nome completo per fatturazione" />
+          <input type="text" id="analisi-ragione-sociale" name="ragione-sociale" class="form-input" data-required="true" placeholder="Ragione sociale completa per fatturazione" />
         </div>
-        <div class="form-group">
+        <div class="form-group" data-client-field="analisi-azienda">
           <label class="form-label" for="analisi-piva">
             Partita IVA <span class="required">*</span>
           </label>
-          <input type="text" id="analisi-piva" name="piva" class="form-input" required placeholder="IT12345678901" pattern="IT[0-9]{11}" title="Formato: IT seguito da 11 cifre (es. IT12345678901)" maxlength="13" style="text-transform: uppercase;" />
+          <input type="text" id="analisi-piva" name="piva" class="form-input" data-required="true" placeholder="IT12345678901" pattern="IT[0-9]{11}" maxlength="13" style="text-transform: uppercase;" />
         </div>
         <div class="form-group">
           <label class="form-label" for="analisi-indirizzo">
@@ -1186,7 +1196,7 @@
           <label class="form-checkbox-label" style="display: flex; align-items: flex-start; gap: var(--sp-2); cursor: pointer;">
             <input type="checkbox" id="analisi-consenso" name="consenso" required style="margin-top: 0.25rem; flex-shrink: 0;" />
             <span style="font-size: var(--fs-12); color: var(--ink-soft); line-height: 1.5;">
-              Acconsento al trattamento dei miei dati personali (nome, email, ragione sociale, P.IVA, indirizzo, dettagli richiesta) per la gestione della richiesta di analisi, fatturazione tramite Xolo Go e comunicazioni relative al servizio. I dati saranno trattati in conformità al 
+              Acconsento al trattamento dei miei dati personali (nome, email, tipologia cliente, codice fiscale e/o ragione sociale + P.IVA, indirizzo, dettagli richiesta) per la gestione della richiesta di analisi, fatturazione tramite Xolo Go e comunicazioni relative al servizio. I dati saranno trattati in conformità al 
               <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style="color: var(--brand-500); text-decoration: underline;">GDPR</a> e alla nostra 
               <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style="color: var(--brand-500); text-decoration: underline;">Privacy Policy</a>. 
               <span class="required">*</span>
@@ -1321,6 +1331,49 @@
     })();
   </script>
 
+  <!-- Form client type helpers -->
+  <script>
+    (function() {
+      function initClientForms() {
+        const analisiSelect = document.getElementById('analisi-tipologia');
+        const analisiPrivatoGroups = document.querySelectorAll('[data-client-field="analisi-privato"]');
+        const analisiAziendaGroups = document.querySelectorAll('[data-client-field="analisi-azienda"]');
+
+        if (!analisiSelect) return;
+
+        const toggleGroup = (groups, show) => {
+          groups.forEach(group => {
+            group.classList.toggle('is-visible', show);
+            const field = group.querySelector('input, textarea, select');
+            if (!field) return;
+            const shouldRequire = show && field.dataset.required === 'true';
+            field.required = shouldRequire;
+            if (!show) {
+              field.value = '';
+            }
+          });
+        };
+
+        const handleAnalisiChange = (value) => {
+          toggleGroup(analisiPrivatoGroups, value === 'privato');
+          toggleGroup(analisiAziendaGroups, value === 'azienda');
+        };
+
+        analisiSelect.addEventListener('change', (event) => {
+          handleAnalisiChange(event.target.value);
+        });
+
+        handleAnalisiChange(analisiSelect.value || '');
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initClientForms);
+      } else {
+        initClientForms();
+      }
+    })();
+  </script>
+
   <!-- Auto-open modal from hash -->
   <script>
     (function() {
@@ -1376,7 +1429,12 @@
         document.body.style.overflow = '';
         // Reset form
         const form = modal.querySelector('form');
-        if (form) form.reset();
+        if (form) {
+          form.reset();
+          if (modalId === 'modal-analisi') {
+            document.getElementById('analisi-tipologia')?.dispatchEvent(new Event('change'));
+          }
+        }
         // Hide messages
         const success = modal.querySelector('.success-message');
         const error = modal.querySelector('.error-message');
@@ -1422,12 +1480,41 @@
         alert('È necessario acconsentire al trattamento dei dati personali per procedere.');
         return;
       }
-      
-      // Validazione P.IVA
-      const piva = formData.get('piva').toUpperCase().trim();
-      if (!piva.match(/^IT[0-9]{11}$/)) {
-        alert('Partita IVA non valida. Formato richiesto: IT seguito da 11 cifre (es. IT12345678901)');
-        document.getElementById('analisi-piva').focus();
+      const tipologia = formData.get('tipologia');
+      if (!tipologia) {
+        alert('Seleziona la tipologia cliente (privato o azienda).');
+        document.getElementById('analisi-tipologia')?.focus();
+        return;
+      }
+
+      let ragioneSociale = 'Privato / persona fisica';
+      let codiceFiscale = 'N/A';
+      let partitaIva = 'N/A';
+
+      if (tipologia === 'privato') {
+        const cfRaw = (formData.get('codice-fiscale') || '').toUpperCase().trim();
+        if (!cfRaw.match(/^[A-Z0-9]{16}$/)) {
+          alert('Codice fiscale non valido. Inserisci 16 caratteri alfanumerici.');
+          document.getElementById('analisi-cf')?.focus();
+          return;
+        }
+        codiceFiscale = cfRaw;
+      } else if (tipologia === 'azienda') {
+        ragioneSociale = (formData.get('ragione-sociale') || '').trim();
+        const pivaRaw = (formData.get('piva') || '').toUpperCase().trim();
+        if (!ragioneSociale.length) {
+          alert('Inserisci la ragione sociale completa.');
+          document.getElementById('analisi-ragione-sociale')?.focus();
+          return;
+        }
+        if (!pivaRaw.match(/^IT[0-9]{11}$/)) {
+          alert('Partita IVA non valida. Formato richiesto: IT seguito da 11 cifre (es. IT12345678901).');
+          document.getElementById('analisi-piva')?.focus();
+          return;
+        }
+        partitaIva = pivaRaw;
+      } else {
+        alert('Tipologia cliente non valida.');
         return;
       }
       
@@ -1435,8 +1522,10 @@
         tipo: 'analisi-su-richiesta',
         nome: formData.get('nome').trim(),
         email: formData.get('email').trim().toLowerCase(),
-        ragioneSociale: formData.get('ragione-sociale').trim(),
-        piva: piva,
+        tipologia,
+        codiceFiscale,
+        ragioneSociale,
+        piva: partitaIva,
         indirizzo: formData.get('indirizzo').trim(),
         tipoAnalisi: formData.get('tipo'),
         dettagli: formData.get('dettagli').trim(),
@@ -1444,14 +1533,20 @@
         timestamp: new Date().toISOString()
       };
 
+      const billingBlock = tipologia === 'privato'
+        ? `Tipologia cliente: Privato / persona fisica
+Codice fiscale: ${data.codiceFiscale}`
+        : `Tipologia cliente: Azienda / professionista
+Ragione sociale: ${data.ragioneSociale}
+Partita IVA: ${data.piva}`;
+
       // Format email body
       const emailBody = `Richiesta Analisi su Richiesta - Tradelia AI
 
 Dati anagrafici:
 Nome: ${data.nome}
 Email: ${data.email}
-Ragione sociale: ${data.ragioneSociale}
-Partita IVA: ${data.piva}
+${billingBlock}
 Indirizzo: ${data.indirizzo}
 
 Dettagli richiesta:
