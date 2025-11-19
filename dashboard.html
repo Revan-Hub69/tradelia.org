@@ -68,6 +68,29 @@
       background: var(--dash-bg);
       color: var(--dash-text);
     }
+
+    /* Inert support for accessibility */
+    main[inert] {
+      pointer-events: none;
+      user-select: none;
+    }
+
+    main[inert] * {
+      pointer-events: none;
+    }
+
+    /* Screen reader only text */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
     
     .container {
       max-width: 1400px;
@@ -2750,11 +2773,16 @@
 
     // Mostra modale per inserire token
     function showTokenModal() {
-      const modal = document.getElementById('modal-token-input');
-      if (modal) {
-        modal.hidden = false;
-        setTimeout(() => modal.classList.add('active'), 10);
-        document.body.style.overflow = 'hidden';
+      if (window.openTokenModal) {
+        window.openTokenModal();
+      } else {
+        // Fallback se modali non ancora inizializzati
+        const modal = document.getElementById('modal-token-input');
+        if (modal) {
+          modal.hidden = false;
+          setTimeout(() => modal.classList.add('active'), 10);
+          document.body.style.overflow = 'hidden';
+        }
       }
     }
 
@@ -2790,17 +2818,26 @@
         validUntilEl.textContent = date.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
       }
       
-      modal.hidden = false;
-      setTimeout(() => {
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
+      if (window.openTokenInfoModal) {
+        window.openTokenInfoModal();
         // Inizializza PWA dopo che il modale è aperto
         if (window.initPWAModal) {
-          window.initPWAModal();
+          setTimeout(() => window.initPWAModal(), 100);
         }
         // Marca come mostrato
         sessionStorage.setItem(shownKey, 'true');
-      }, 10);
+      } else {
+        // Fallback
+        modal.hidden = false;
+        setTimeout(() => {
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          if (window.initPWAModal) {
+            window.initPWAModal();
+          }
+          sessionStorage.setItem(shownKey, 'true');
+        }, 10);
+      }
     }
 
     // Verifica se l'utente è admin e mostra link
@@ -3446,7 +3483,7 @@
   </script>
 
   <!-- ===== TOKEN INPUT MODAL (Step 1) ===== -->
-  <div id="modal-token-input" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-token-input-title" hidden>
+  <div id="modal-token-input" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-token-input-title" aria-describedby="modal-token-input-description" hidden>
     <div class="modal-panel">
       <div class="modal-header">
         <h2 class="modal-title" id="modal-token-input-title">Accesso dashboard</h2>
@@ -3457,7 +3494,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <p style="margin-bottom: 1.5rem; color: var(--dash-text-soft);">Inserisci il tuo token personale per accedere alla dashboard. Se non hai un token, puoi richiederlo gratuitamente.</p>
+        <p id="modal-token-input-description" style="margin-bottom: 1.5rem; color: var(--dash-text-soft);">Inserisci il tuo token personale per accedere alla dashboard. Se non hai un token, puoi richiederlo gratuitamente.</p>
         <form id="form-token-input" onsubmit="return false;">
           <div class="form-group">
             <label class="form-label" for="token-input-value">Token personale *</label>
@@ -3477,7 +3514,7 @@
   </div>
 
   <!-- ===== TOKEN INFO + PWA MODAL (Step 2) ===== -->
-  <div id="modal-token-info" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-token-info-title" hidden>
+  <div id="modal-token-info" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-token-info-title" aria-describedby="modal-token-info-description" hidden>
     <div class="modal-panel" style="max-width: min(36rem, 90vw);">
       <div class="modal-header">
         <h2 class="modal-title" id="modal-token-info-title">Token attivo</h2>
@@ -3488,6 +3525,7 @@
         </button>
       </div>
       <div class="modal-body">
+        <p id="modal-token-info-description" class="sr-only">Informazioni sul token di accesso, installazione PWA e notifiche push.</p>
         <!-- Info Token -->
         <div style="margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--dash-border);">
           <h3 style="margin: 0 0 1rem; font-size: 1rem; color: var(--dash-text);">Informazioni token</h3>
@@ -3562,21 +3600,84 @@
 
     const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
     
+    // Focus trap utility
+    function trapFocus(modal) {
+      const focusableElements = modal.querySelectorAll(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      function handleTabKey(e) {
+        if (e.key !== 'Tab') return;
+        
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement?.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement?.focus();
+          }
+        }
+      }
+
+      modal.addEventListener('keydown', handleTabKey);
+      return () => modal.removeEventListener('keydown', handleTabKey);
+    }
+
+    // Store previous active element for focus restoration
+    let previousActiveElement = null;
+    let focusTrapCleanup = null;
+
     // Modal handlers
     function initModals() {
       // Token input modal
       const tokenInputModal = document.getElementById('modal-token-input');
       const tokenInputClose = document.querySelector('[data-modal-close="token-input"]');
       const btnSubmitTokenInput = document.getElementById('btn-submit-token-input');
+      const tokenInputField = document.getElementById('token-input-value');
       
-      tokenInputClose?.addEventListener('click', () => {
+      function openTokenModal() {
+        previousActiveElement = document.activeElement;
+        tokenInputModal.hidden = false;
+        // Set inert on main content
+        const main = document.querySelector('main');
+        if (main) main.setAttribute('inert', '');
+        setTimeout(() => {
+          tokenInputModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          // Focus on first interactive element
+          tokenInputField?.focus();
+          // Setup focus trap
+          if (focusTrapCleanup) focusTrapCleanup();
+          focusTrapCleanup = trapFocus(tokenInputModal);
+        }, 10);
+      }
+
+      function closeTokenModal() {
         tokenInputModal.classList.remove('active');
         setTimeout(() => {
           tokenInputModal.hidden = true;
           document.body.style.overflow = '';
-          // Redirect se chiude senza inserire token
-          window.location.href = '/accesso.html?reason=missing_token';
+          // Remove inert from main
+          const main = document.querySelector('main');
+          if (main) main.removeAttribute('inert');
+          // Restore focus
+          previousActiveElement?.focus();
+          if (focusTrapCleanup) {
+            focusTrapCleanup();
+            focusTrapCleanup = null;
+          }
         }, 200);
+      }
+      
+      tokenInputClose?.addEventListener('click', () => {
+        closeTokenModal();
+        // Redirect se chiude senza inserire token
+        window.location.href = '/accesso.html?reason=missing_token';
       });
 
       btnSubmitTokenInput?.addEventListener('click', async () => {
@@ -3600,36 +3701,97 @@
           
           if (data.ok) {
             localStorage.setItem(ACCESS_TOKEN_KEY, token);
-            tokenInputModal.classList.remove('active');
+            // Close token modal
+            if (window.closeTokenModal) {
+              window.closeTokenModal();
+            } else {
+              tokenInputModal.classList.remove('active');
+              setTimeout(() => {
+                tokenInputModal.hidden = true;
+                document.body.style.overflow = '';
+              }, 200);
+            }
+            // Show info modal
             setTimeout(() => {
-              tokenInputModal.hidden = true;
               showTokenInfoModal(data);
-            }, 200);
+            }, 250);
             // Ricarica la pagina per inizializzare la dashboard
-            window.location.reload();
+            setTimeout(() => window.location.reload(), 500);
           } else {
-            alert('Token non valido o scaduto. Controlla il token e riprova.');
+            // Show inline error message
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'form-error';
+            errorMsg.style.cssText = 'margin-top: 0.75rem; padding: 0.75rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 6px; color: #fca5a5; font-size: 0.85rem;';
+            errorMsg.textContent = 'Token non valido o scaduto. Controlla il token e riprova.';
+            errorMsg.setAttribute('role', 'alert');
+            const formGroup = input?.closest('.form-group');
+            const existingError = formGroup?.querySelector('.form-error');
+            if (existingError) existingError.remove();
+            formGroup?.appendChild(errorMsg);
+            input?.focus();
             btnSubmitTokenInput.disabled = false;
             btnSubmitTokenInput.textContent = 'Accedi';
+            // Remove error after 5 seconds
+            setTimeout(() => errorMsg.remove(), 5000);
           }
         } catch (err) {
-          alert('Errore di connessione. Riprova più tardi.');
+          // Show inline error message
+          const errorMsg = document.createElement('div');
+          errorMsg.className = 'form-error';
+          errorMsg.style.cssText = 'margin-top: 0.75rem; padding: 0.75rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 6px; color: #fca5a5; font-size: 0.85rem;';
+          errorMsg.textContent = 'Errore di connessione. Riprova più tardi.';
+          errorMsg.setAttribute('role', 'alert');
+          const formGroup = input?.closest('.form-group');
+          const existingError = formGroup?.querySelector('.form-error');
+          if (existingError) existingError.remove();
+          formGroup?.appendChild(errorMsg);
+          input?.focus();
           btnSubmitTokenInput.disabled = false;
           btnSubmitTokenInput.textContent = 'Accedi';
+          setTimeout(() => errorMsg.remove(), 5000);
         }
       });
 
       // Token info modal
       const tokenInfoModal = document.getElementById('modal-token-info');
       const tokenInfoClose = document.querySelector('[data-modal-close="token-info"]');
+      const tokenInfoFirstButton = tokenInfoModal?.querySelector('button');
       
-      tokenInfoClose?.addEventListener('click', () => {
+      function openTokenInfoModal() {
+        previousActiveElement = document.activeElement;
+        tokenInfoModal.hidden = false;
+        // Set inert on main content
+        const main = document.querySelector('main');
+        if (main) main.setAttribute('inert', '');
+        setTimeout(() => {
+          tokenInfoModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          // Focus on close button (first interactive element)
+          tokenInfoClose?.focus();
+          // Setup focus trap
+          if (focusTrapCleanup) focusTrapCleanup();
+          focusTrapCleanup = trapFocus(tokenInfoModal);
+        }, 10);
+      }
+
+      function closeTokenInfoModal() {
         tokenInfoModal.classList.remove('active');
         setTimeout(() => {
           tokenInfoModal.hidden = true;
           document.body.style.overflow = '';
+          // Remove inert from main
+          const main = document.querySelector('main');
+          if (main) main.removeAttribute('inert');
+          // Restore focus
+          previousActiveElement?.focus();
+          if (focusTrapCleanup) {
+            focusTrapCleanup();
+            focusTrapCleanup = null;
+          }
         }, 200);
-      });
+      }
+      
+      tokenInfoClose?.addEventListener('click', closeTokenInfoModal);
 
       // PWA settings button (apre modale info)
       const pwaSettingsBtn = document.getElementById('pwa-settings-btn');
@@ -3670,14 +3832,21 @@
                 validUntilEl.textContent = date.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
               }
               
-              modal.hidden = false;
-              setTimeout(() => {
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
+              if (window.openTokenInfoModal) {
+                window.openTokenInfoModal();
                 if (window.initPWAModal) {
-                  window.initPWAModal();
+                  setTimeout(() => window.initPWAModal(), 100);
                 }
-              }, 10);
+              } else {
+                modal.hidden = false;
+                setTimeout(() => {
+                  modal.classList.add('active');
+                  document.body.style.overflow = 'hidden';
+                  if (window.initPWAModal) {
+                    window.initPWAModal();
+                  }
+                }, 10);
+              }
             }
           } else {
             showTokenModal();
@@ -3688,32 +3857,37 @@
       });
 
       // Close on overlay click
-      [tokenInputModal, tokenInfoModal].forEach(modal => {
-        if (modal) {
-          modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-              modal.classList.remove('active');
-              setTimeout(() => {
-                modal.hidden = true;
-                document.body.style.overflow = '';
-              }, 200);
-            }
-          });
+      tokenInputModal?.addEventListener('click', (e) => {
+        if (e.target === tokenInputModal) {
+          closeTokenModal();
+          window.location.href = '/accesso.html?reason=missing_token';
+        }
+      });
+
+      tokenInfoModal?.addEventListener('click', (e) => {
+        if (e.target === tokenInfoModal) {
+          closeTokenInfoModal();
         }
       });
 
       // Close on Escape
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-          document.querySelectorAll('.modal-overlay.active').forEach(modal => {
-            modal.classList.remove('active');
-            setTimeout(() => {
-              modal.hidden = true;
-              document.body.style.overflow = '';
-            }, 200);
-          });
+          const activeModal = document.querySelector('.modal-overlay.active');
+          if (activeModal === tokenInputModal) {
+            closeTokenModal();
+            window.location.href = '/accesso.html?reason=missing_token';
+          } else if (activeModal === tokenInfoModal) {
+            closeTokenInfoModal();
+          }
         }
       });
+
+      // Expose functions globally
+      window.openTokenModal = openTokenModal;
+      window.openTokenInfoModal = openTokenInfoModal;
+      window.closeTokenModal = closeTokenModal;
+      window.closeTokenInfoModal = closeTokenInfoModal;
     }
 
     // PWA functions
