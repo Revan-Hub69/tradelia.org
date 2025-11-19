@@ -3,6 +3,7 @@
 // Gestisce: analisi, business-data, profile-update, backup
 
 export default async function handler(req, res) {
+  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -14,6 +15,14 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
+
+  // Log per debug (rimuovere in produzione se necessario)
+  console.log('[Send-Email] Request received:', {
+    method: req.method,
+    url: req.url,
+    hasBody: !!req.body,
+    bodyType: typeof req.body
+  });
 
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) {
