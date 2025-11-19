@@ -422,6 +422,10 @@
         const reason = params.get('reason');
         if (reason === 'missing_token' || reason === 'invalid_token') {
           showAlert('Per accedere alla dashboard è necessario un codice valido. Inseriscilo qui sotto.');
+        } else if (reason === 'logout') {
+          showAlert('Sei uscito dalla dashboard. Inserisci un nuovo token o richiedine uno gratuito.', 'success');
+        }
+        if (reason) {
           params.delete('reason');
           const url = new URL(window.location.href);
           url.search = params.toString();
