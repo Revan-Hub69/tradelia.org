@@ -1029,7 +1029,7 @@ Timestamp: ${data.timestamp}`;
       errorMsg.classList.remove('active');
 
       try {
-        const response = await fetch('/api/send-email', {
+        const response = await fetch('/api/request-analysis', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1050,21 +1050,17 @@ Timestamp: ${data.timestamp}`;
 
         if (!response.ok) {
           let errorMessage = 'Errore invio';
-          if (response.status === 404) {
-            errorMessage = 'Servizio temporaneamente non disponibile. Contattaci direttamente a info@tradelia.org';
-          } else {
-            try {
-              const errorData = await response.json();
-              errorMessage = errorData.error || errorData.details || 'Errore invio';
-            } catch (e) {
-              errorMessage = `Errore server (${response.status}). Contattaci direttamente a info@tradelia.org`;
-            }
+          try {
+            const errorData = await response.json();
+            errorMessage = errorData.error || errorData.details || 'Errore invio';
+          } catch (e) {
+            errorMessage = `Errore server (${response.status}). Contattaci direttamente a info@tradelia.org`;
           }
           throw new Error(errorMessage);
         }
 
         const result = await response.json();
-        if (!result.success) {
+        if (!result.ok) {
           throw new Error(result.error || 'Errore invio');
         }
 
