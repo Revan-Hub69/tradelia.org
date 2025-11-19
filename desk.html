@@ -867,14 +867,20 @@ Timestamp: ${data.timestamp}`;
       errorMsg.classList.remove('active');
 
       try {
-        const response = await fetch('/api/send-email', {
+        const response = await fetch('/api/request-analysis', {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
-          body: emailBody
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
         });
 
         if (!response.ok) {
-          throw new Error('Errore invio');
+          const errorData = await response.json().catch(() => ({ error: 'Errore invio' }));
+          throw new Error(errorData.error || 'Errore invio');
+        }
+
+        const result = await response.json();
+        if (!result.ok) {
+          throw new Error(result.error || 'Errore invio');
         }
 
         successMsg.classList.add('active');

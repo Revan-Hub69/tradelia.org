@@ -36,6 +36,7 @@ async function handleRequest(req, res) {
   }
 
   const {
+    tipo, // 'analisi-su-richiesta' o 'piano-desk'
     nome,
     email,
     tipologia,
@@ -45,11 +46,13 @@ async function handleRequest(req, res) {
     indirizzo,
     tipoAnalisi,
     dettagli,
+    telefono,
+    note,
     consensoGDPR,
     timestamp
   } = req.body || {};
 
-  // Validazione
+  // Validazione base
   if (!nome || typeof nome !== 'string' || nome.trim().length < 2) {
     return res.status(400).json({ ok: false, error: 'Nome non valido' });
   }
@@ -58,20 +61,33 @@ async function handleRequest(req, res) {
     return res.status(400).json({ ok: false, error: 'Email non valida' });
   }
 
-  if (!tipologia || !['privato', 'azienda'].includes(tipologia)) {
-    return res.status(400).json({ ok: false, error: 'Tipologia cliente non valida' });
-  }
-
-  if (!tipoAnalisi || typeof tipoAnalisi !== 'string') {
-    return res.status(400).json({ ok: false, error: 'Tipo analisi richiesto' });
-  }
-
-  if (!dettagli || typeof dettagli !== 'string' || dettagli.trim().length < 10) {
-    return res.status(400).json({ ok: false, error: 'Dettagli richiesta insufficienti (minimo 10 caratteri)' });
-  }
-
   if (!consensoGDPR) {
     return res.status(400).json({ ok: false, error: 'Consenso GDPR richiesto' });
+  }
+
+  // Validazione specifica per tipo richiesta
+  if (tipo === 'analisi-su-richiesta') {
+    if (!tipologia || !['privato', 'azienda'].includes(tipologia)) {
+      return res.status(400).json({ ok: false, error: 'Tipologia cliente non valida' });
+    }
+    if (!tipoAnalisi || typeof tipoAnalisi !== 'string') {
+      return res.status(400).json({ ok: false, error: 'Tipo analisi richiesto' });
+    }
+    if (!dettagli || typeof dettagli !== 'string' || dettagli.trim().length < 10) {
+      return res.status(400).json({ ok: false, error: 'Dettagli richiesta insufficienti (minimo 10 caratteri)' });
+    }
+  } else if (tipo === 'piano-desk') {
+    if (!ragioneSociale || typeof ragioneSociale !== 'string' || ragioneSociale.trim().length < 2) {
+      return res.status(400).json({ ok: false, error: 'Ragione sociale richiesta' });
+    }
+    if (!piva || !piva.match(/^IT[0-9]{11}$/)) {
+      return res.status(400).json({ ok: false, error: 'Partita IVA non valida (formato: IT seguito da 11 cifre)' });
+    }
+    if (!indirizzo || typeof indirizzo !== 'string' || indirizzo.trim().length < 5) {
+      return res.status(400).json({ ok: false, error: 'Indirizzo richiesto' });
+    }
+  } else {
+    return res.status(400).json({ ok: false, error: 'Tipo richiesta non valido (analisi-su-richiesta o piano-desk)' });
   }
 
   // Sanitizzazione
@@ -87,35 +103,38 @@ async function handleRequest(req, res) {
 
   // Prepara dati per Supabase
   const requestData = {
+    tipo_richiesta: tipo, // 'analisi-su-richiesta' o 'piano-desk'
     nome: sanitizedName,
     email: sanitizedEmail,
-    tipologia: sanitizedTipologia,
+    tipologia: sanitizedTipologia || null,
     codice_fiscale: sanitizedCodiceFiscale,
     ragione_sociale: sanitizedRagioneSociale,
     piva: sanitizedPiva,
     indirizzo: sanitizedIndirizzo,
-    tipo_analisi: sanitizedTipoAnalisi,
-    dettagli: sanitizedDettagli,
+    telefono: telefono ? telefono.trim() : null,
+    note: note ? note.trim() : null,
+    tipo_analisi: sanitizedTipoAnalisi || null,
+    dettagli: sanitizedDettagli || null,
     consenso_gdpr: true,
     status: 'pending', // pending, in_progress, completed, cancelled
     created_at: timestamp || new Date().toISOString()
   };
 
   // Salva in Supabase - usa una tabella dedicata per richieste pubbliche
-  // La tabella on_demand_analysis_requests è per richieste non autenticate
+  // La tabella on_demand_requests è per richieste non autenticate (analisi e desk)
   let insertResult = await supabase
-    .from('on_demand_analysis_requests')
+    .from('on_demand_requests')
     .insert(requestData)
     .select()
     .single();
 
   // Se la tabella non esiste, restituisci errore con istruzioni
   if (insertResult.error && insertResult.error.code === '42P01') {
-    console.error('[Request Analysis] Tabella on_demand_analysis_requests non trovata');
+    console.error('[Request Analysis] Tabella on_demand_requests non trovata');
     return res.status(500).json({ 
       ok: false, 
       error: 'Configurazione database incompleta',
-      details: 'La tabella on_demand_analysis_requests non esiste. Esegui lo script SQL in supabase/create-on-demand-analysis-table.sql'
+      details: 'La tabella on_demand_requests non esiste. Esegui lo script SQL in supabase/create-on-demand-analysis-table.sql'
     });
   }
 
