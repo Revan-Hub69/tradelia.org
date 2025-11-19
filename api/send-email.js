@@ -21,17 +21,31 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { type, ...data } = req.body || {};
+    // Vercel parsa automaticamente il body JSON, quindi req.body è già disponibile
+    let bodyData = req.body;
+    
+    // Se req.body è undefined o vuoto, potrebbe essere che Vercel non ha parsato il body
+    // In questo caso, proviamo a leggerlo manualmente (raro, ma possibile)
+    if (!bodyData && req.method === 'POST') {
+      try {
+        // Vercel dovrebbe aver già parsato, ma se non l'ha fatto, proviamo a leggere
+        const chunks = [];
+        for await (const chunk of req) {
+          chunks.push(chunk);
+        }
+        const rawBody = Buffer.concat(chunks).toString('utf-8');
+        bodyData = JSON.parse(rawBody);
+      } catch (parseError) {
+        return res.status(400).json({ error: 'Body non valido', details: parseError.message });
+      }
+    }
+
+    const { type, ...data } = bodyData || {};
     
     // Se type non specificato, usa il formato legacy (analisi)
     if (!type) {
-      // Legacy: body raw (YAML, JSON, testo)
-      const body = await new Promise((resolve, reject) => {
-        let raw = "";
-        req.on("data", chunk => { raw += chunk; });
-        req.on("end", () => resolve(raw));
-        req.on("error", reject);
-      });
+      // Legacy: body come testo semplice
+      const bodyText = typeof bodyData === 'string' ? bodyData : JSON.stringify(bodyData);
 
       const response = await fetch("https://api.brevo.com/v3/smtp/email", {
         method: "POST",
@@ -43,7 +57,7 @@ export default async function handler(req, res) {
           sender: { email: "noreply@tradelia.org", name: "Tradelia" },
           to: [{ email: "analisi@tradelia.org" }],
           subject: "📩 Nuova richiesta analisi",
-          textContent: body
+          textContent: bodyText
         }),
       });
 
