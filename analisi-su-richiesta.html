@@ -752,7 +752,7 @@
         Richiesta inviata con successo! Ti contatteremo via email entro 24 ore.
       </div>
       <div id="error-analisi" class="error-message">
-        Si è verificato un errore. Riprova o contattaci direttamente a info@tradelia.org
+        <span>Si è verificato un errore. Riprova o contattaci direttamente a info@tradelia.org</span>
       </div>
       <form id="form-analisi" onsubmit="submitAnalisi(event)">
         <div class="form-group">
@@ -1053,12 +1053,27 @@ Timestamp: ${data.timestamp}`;
       try {
         const response = await fetch('/api/send-email', {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
-          body: emailBody
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'analisi-su-richiesta',
+            nome: data.nome,
+            email: data.email,
+            tipologia: data.tipologia,
+            codiceFiscale: data.codiceFiscale,
+            ragioneSociale: data.ragioneSociale,
+            piva: data.piva,
+            indirizzo: data.indirizzo,
+            tipoAnalisi: data.tipoAnalisi,
+            dettagli: data.dettagli,
+            consensoGDPR: data.consensoGDPR,
+            timestamp: data.timestamp
+          })
         });
 
+        const result = await response.json();
+        
         if (!response.ok) {
-          throw new Error('Errore invio');
+          throw new Error(result.error || 'Errore invio');
         }
 
         successMsg.classList.add('active');
@@ -1069,6 +1084,7 @@ Timestamp: ${data.timestamp}`;
       } catch (error) {
         console.error('Errore invio analisi:', error);
         errorMsg.classList.add('active');
+        errorMsg.textContent = error.message || 'Si è verificato un errore. Riprova o contattaci direttamente a info@tradelia.org';
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Invia richiesta';

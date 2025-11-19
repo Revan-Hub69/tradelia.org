@@ -57,7 +57,40 @@ export default async function handler(req, res) {
     // Nuovo formato con type
     let emailConfig = null;
 
-    if (type === 'business-data') {
+    if (type === 'analisi-su-richiesta') {
+      const { nome, email, tipologia, codiceFiscale, ragioneSociale, piva, indirizzo, tipoAnalisi, dettagli, consensoGDPR, timestamp } = data;
+      
+      if (!nome || !email || !tipologia || !tipoAnalisi || !dettagli) {
+        return res.status(400).json({ error: 'Dati richiesti mancanti' });
+      }
+      
+      const billingBlock = tipologia === 'privato'
+        ? `Tipologia cliente: Privato / persona fisica\nCodice fiscale: ${codiceFiscale || 'N/A'}`
+        : `Tipologia cliente: Azienda / professionista\nRagione sociale: ${ragioneSociale || 'N/A'}\nPartita IVA: ${piva || 'N/A'}`;
+      
+      const emailSubject = `📩 Nuova richiesta analisi - ${nome}`;
+      const emailBody = `Richiesta Analisi su Richiesta - Tradelia AI
+
+Dati anagrafici:
+Nome: ${nome}
+Email: ${email}
+${billingBlock}
+Indirizzo: ${indirizzo || 'N/A'}
+
+Dettagli richiesta:
+Tipo analisi: ${tipoAnalisi}
+Dettagli: ${dettagli}
+
+Consenso GDPR: ${consensoGDPR || 'Sì'}
+Timestamp: ${timestamp || new Date().toISOString()}`;
+      
+      emailConfig = {
+        sender: { email: 'noreply@tradelia.org', name: 'Tradelia' },
+        to: [{ email: 'analisi@tradelia.org' }],
+        subject: emailSubject,
+        textContent: emailBody
+      };
+    } else if (type === 'business-data') {
       const { userEmail, userName, userType, planType, businessData } = data;
       if (!userEmail || !userName || !userType) {
         return res.status(400).json({ error: 'Dati utente mancanti' });
