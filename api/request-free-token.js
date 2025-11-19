@@ -5,8 +5,6 @@ import { HttpError, handleRouteError } from './_lib/http.js';
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const SUPPORT_EMAIL = 'support@tradelia.org';
 
-const supabase = getServiceSupabase();
-
 const TOKEN_DURATION_DAYS = 30;
 const ALLOWED_PROFILES = ['privato', 'desk', 'media'];
 
@@ -118,66 +116,84 @@ export default async function handler(req, res) {
 }
 
 async function handleRequest(req, res) {
+  // Inizializza Supabase dentro la funzione per gestire meglio gli errori
+  let supabase;
+  try {
+    supabase = getServiceSupabase();
+  } catch (error) {
+    console.error('[Request Free Token] Errore inizializzazione Supabase:', error);
+    return res.status(500).json({ ok: false, error: 'Errore configurazione server' });
+  }
+
   const { nome, email, profilo, organizzazione, uso } = req.body || {};
 
-    if (!nome || typeof nome !== 'string' || nome.trim().length < 2) {
-      return res.status(400).json({ ok: false, error: 'Nome non valido' });
-    }
+  if (!nome || typeof nome !== 'string' || nome.trim().length < 2) {
+    return res.status(400).json({ ok: false, error: 'Nome non valido' });
+  }
 
-    if (!email || typeof email !== 'string' || !email.includes('@')) {
-      return res.status(400).json({ ok: false, error: 'Email non valida' });
-    }
+  if (!email || typeof email !== 'string' || !email.includes('@')) {
+    return res.status(400).json({ ok: false, error: 'Email non valida' });
+  }
 
-    if (!profilo || typeof profilo !== 'string' || !ALLOWED_PROFILES.includes(profilo)) {
-      return res.status(400).json({ ok: false, error: 'Profilo non valido' });
-    }
+  if (!profilo || typeof profilo !== 'string' || !ALLOWED_PROFILES.includes(profilo)) {
+    return res.status(400).json({ ok: false, error: 'Profilo non valido' });
+  }
 
-    if (!uso || typeof uso !== 'string' || uso.trim().length < 10) {
-      return res.status(400).json({ ok: false, error: 'Descrivi come userai il token (minimo 10 caratteri)' });
-    }
+  if (!uso || typeof uso !== 'string' || uso.trim().length < 10) {
+    return res.status(400).json({ ok: false, error: 'Descrivi come userai il token (minimo 10 caratteri)' });
+  }
 
-    const sanitizedName = nome.trim();
-    const sanitizedEmail = email.trim().toLowerCase();
-    const sanitizedProfile = profilo;
-    const sanitizedOrg = (organizzazione || '').trim();
-    const sanitizedUsage = uso.trim().slice(0, 500);
+  const sanitizedName = nome.trim();
+  const sanitizedEmail = email.trim().toLowerCase();
+  const sanitizedProfile = profilo;
+  const sanitizedOrg = (organizzazione || '').trim();
+  const sanitizedUsage = uso.trim().slice(0, 500);
 
-    const newToken = generateToken();
-    const tokenHash = hashToken(newToken);
-    const now = new Date();
-    const validUntil = addDays(now, TOKEN_DURATION_DAYS).toISOString();
+  const newToken = generateToken();
+  const tokenHash = hashToken(newToken);
+  const now = new Date();
+  const validUntil = addDays(now, TOKEN_DURATION_DAYS).toISOString();
 
-    await supabase
-      .from('dashboard_access_tokens')
-      .update({
-        revoked: true,
-        revoked_at: now.toISOString()
-      })
-      .eq('email', sanitizedEmail)
-      .eq('source', 'trial')
-      .eq('revoked', false);
+  // Revoca token trial precedenti per questa email
+  const { error: revokeError } = await supabase
+    .from('dashboard_access_tokens')
+    .update({
+      revoked: true,
+      revoked_at: now.toISOString()
+    })
+    .eq('email', sanitizedEmail)
+    .eq('source', 'trial')
+    .eq('revoked', false);
 
-    const { error: insertError } = await supabase
-      .from('dashboard_access_tokens')
-      .insert({
-        email: sanitizedEmail,
-        token_hash: tokenHash,
-        plan_role: 'trial',
-        valid_until,
-        source: 'trial',
-        metadata: {
-          requester_name: sanitizedName,
-          profile: sanitizedProfile,
-          organization: sanitizedOrg || null,
-          usage: sanitizedUsage
-        }
-      });
+  if (revokeError) {
+    console.warn('[Request Free Token] Avviso revoca token precedenti:', revokeError);
+    // Non bloccare se la revoca fallisce
+  }
 
-    if (insertError) {
-      console.error('[Request Free Token] Errore inserimento token:', insertError);
-      return res.status(500).json({ ok: false, error: 'Errore creazione token' });
-    }
+  // Inserisci nuovo token
+  const { error: insertError } = await supabase
+    .from('dashboard_access_tokens')
+    .insert({
+      email: sanitizedEmail,
+      token_hash: tokenHash,
+      plan_role: 'trial',
+      valid_until,
+      source: 'trial',
+      metadata: {
+        requester_name: sanitizedName,
+        profile: sanitizedProfile,
+        organization: sanitizedOrg || null,
+        usage: sanitizedUsage
+      }
+    });
 
+  if (insertError) {
+    console.error('[Request Free Token] Errore inserimento token:', insertError);
+    return res.status(500).json({ ok: false, error: 'Errore creazione token', details: insertError.message });
+  }
+
+  // Invia email con token
+  try {
     await sendTokenEmail({
       email: sanitizedEmail,
       nome: sanitizedName,
@@ -186,33 +202,36 @@ async function handleRequest(req, res) {
       uso: sanitizedUsage,
       organizzazione: sanitizedOrg
     });
-
-    if (BREVO_API_KEY) {
-      try {
-        await fetch('https://api.brevo.com/v3/smtp/email', {
-          method: 'POST',
-          headers: {
-            'api-key': BREVO_API_KEY,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI - Token Form' },
-            to: [{ email: SUPPORT_EMAIL }],
-            subject: `Nuovo token gratuito generato - ${sanitizedEmail}`,
-            textContent: `Profilo: ${sanitizedProfile}\nOrganizzazione: ${sanitizedOrg || '-'}\nUso dichiarato: ${sanitizedUsage}`
-          })
-        });
-      } catch (notifyErr) {
-        console.warn('[Request Free Token] Notifica support non inviata:', notifyErr);
-      }
-    }
-
-    return res.status(200).json({
-      ok: true,
-      message: 'Token generato. Controlla la tua email (inclusa la cartella spam) per recuperarlo.'
+  } catch (emailError) {
+    console.error('[Request Free Token] Errore invio email token:', emailError);
+    // Il token è già stato creato, quindi non fallire completamente
+    // Ma segnala l'errore
+    return res.status(500).json({ 
+      ok: false, 
+      error: 'Token creato ma errore invio email. Contatta support@tradelia.org',
+      details: emailError.message 
     });
-  } catch (error) {
+  }
+
+  // Notifica support (opzionale, non blocca)
+  if (BREVO_API_KEY) {
+    try {
+      await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': BREVO_API_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI - Token Form' },
+          to: [{ email: SUPPORT_EMAIL }],
+          subject: `Nuovo token gratuito generato - ${sanitizedEmail}`,
+          textContent: `Profilo: ${sanitizedProfile}\nOrganizzazione: ${sanitizedOrg || '-'}\nUso dichiarato: ${sanitizedUsage}`
+        })
+      });
+    } catch (notifyErr) {
       console.warn('[Request Free Token] Notifica support non inviata:', notifyErr);
+      // Non bloccare se la notifica fallisce
     }
   }
 

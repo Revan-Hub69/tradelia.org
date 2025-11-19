@@ -1305,7 +1305,16 @@
           <h1 class="dashboard-title">Dashboard</h1>
           <p class="dashboard-subtitle">Report finanziari AI</p>
         </div>
-        <div class="session-actions">
+        <div class="session-actions" style="display: flex; gap: 0.75rem; align-items: center;">
+          <a href="/user/admin.html" id="admin-dashboard-link-header" class="btn btn-primary btn-sm" style="white-space: nowrap; display: none; gap: 0.4rem; align-items: center;">
+            <span class="btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c0 .69.4 1.31 1.03 1.58.21.09.45.14.69.14H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+            </span>
+            <span class="btn-label">Admin</span>
+          </a>
           <button class="logout-btn" id="logout-btn" type="button">Disconnetti il dispositivo</button>
         </div>
       </div>
@@ -2680,26 +2689,54 @@
 
     // Verifica se l'utente è admin e mostra link
     async function checkAndShowAdminLink(email) {
+      if (!email) {
+        console.warn('[Dashboard] Email mancante per verifica admin');
+        return;
+      }
+      
       try {
         // Importa Supabase client dal modulo esistente
         const { supabase } = await import('/report/assets/js/supabase-client.js');
+        
+        const normalizedEmail = email.toLowerCase().trim();
+        console.log('[Dashboard] Verifica admin per:', normalizedEmail);
         
         // Verifica se l'email è in admin_emails
         const { data, error } = await supabase
           .from('admin_emails')
           .select('email')
-          .eq('email', email.toLowerCase())
+          .eq('email', normalizedEmail)
           .maybeSingle();
         
-        if (!error && data) {
+        if (error) {
+          console.warn('[Dashboard] Errore query admin_emails:', error);
+          return;
+        }
+        
+        if (data) {
           // È admin: mostra link
+          console.log('[Dashboard] Utente è admin, mostro link');
           const adminLink = document.getElementById('admin-dashboard-link');
+          const adminLinkHeader = document.getElementById('admin-dashboard-link-header');
+          
           if (adminLink) {
             adminLink.style.display = 'inline-flex';
+            console.log('[Dashboard] Link admin (sezione report) mostrato');
           }
+          
+          if (adminLinkHeader) {
+            adminLinkHeader.style.display = 'inline-flex';
+            console.log('[Dashboard] Link admin (header) mostrato');
+          }
+          
+          if (!adminLink && !adminLinkHeader) {
+            console.warn('[Dashboard] Link admin non trovato nel DOM');
+          }
+        } else {
+          console.log('[Dashboard] Utente non è admin');
         }
       } catch (err) {
-        console.warn('[Dashboard] Errore verifica admin:', err);
+        console.error('[Dashboard] Errore verifica admin:', err);
         // In caso di errore, non mostrare il link (fail-safe)
       }
     }
