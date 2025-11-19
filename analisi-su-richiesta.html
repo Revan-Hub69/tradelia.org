@@ -332,12 +332,30 @@
       font-family: inherit;
     }
 
+    .form-select {
+      background-color: var(--surface-card) !important;
+      color: var(--ink) !important;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right var(--sp-3) center;
+      padding-right: calc(var(--sp-3) + 20px);
+    }
+
+    .form-select option {
+      background-color: var(--surface-card) !important;
+      color: var(--ink) !important;
+    }
+
     .form-input:focus,
     .form-textarea:focus,
     .form-select:focus {
       outline: none;
       border-color: var(--brand-500);
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      background-color: var(--surface-card);
+      color: var(--ink);
     }
 
     .form-textarea {
@@ -823,8 +841,6 @@
   <!-- Global Header -->
   <script type="module" src="/assets/js/global-header.js"></script>
   
-  <!-- Version Check System (solo al primo accesso o nuova versione) -->
-  <script src="/assets/js/version-check.js"></script>
   
   <!-- Modal Functions -->
   <script>
