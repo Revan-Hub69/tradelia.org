@@ -1,7 +1,22 @@
-// /sw.js
-// Service Worker - PWA + Push Notifications
+/**
+ * Service Worker - PWA + Push Notifications
+ * 
+ * Implements W3C Service Worker API for:
+ * - Offline functionality
+ * - Cache management
+ * - Push notifications
+ * - Automatic updates
+ * 
+ * @version 2.0.0
+ * @references
+ * - W3C (2023). Service Workers. W3C Working Draft
+ * - Microsoft (2024). Progressive Web Apps Best Practices
+ * - Google (2024). Service Worker Cookbook
+ */
 
-const CACHE_NAME = 'tradelia-ai-v1';
+// Version number - increment this to force cache update
+const VERSION = '2.0.0';
+const CACHE_NAME = `tradelia-ai-v${VERSION}`;
 const STATIC_CACHE = [
   '/',
   '/dashboard.html',
@@ -38,7 +53,25 @@ self.addEventListener('activate', (event) => {
       );
     })
     .then(() => self.clients.claim())
+    .then(() => {
+      // Notify all clients about the update
+      return self.clients.matchAll().then(clients => {
+        clients.forEach(client => {
+          client.postMessage({
+            type: 'SW_UPDATED',
+            version: VERSION
+          });
+        });
+      });
+    })
   );
+});
+
+// ===== MESSAGE HANDLER =====
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 // ===== FETCH =====
@@ -48,6 +81,27 @@ self.addEventListener('fetch', (event) => {
     return; // Non cache API
   }
   
+  // Network-first strategy for HTML pages to ensure fresh content
+  if (event.request.headers.get('accept').includes('text/html')) {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          // Cache the response for offline use
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseClone);
+          });
+          return response;
+        })
+        .catch(() => {
+          // Fallback to cache if network fails
+          return caches.match(event.request);
+        })
+    );
+    return;
+  }
+  
+  // Cache-first for static assets
   event.respondWith(
     caches.match(event.request)
       .then(response => response || fetch(event.request))
