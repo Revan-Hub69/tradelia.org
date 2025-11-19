@@ -410,6 +410,157 @@
       font-weight: 300;
     }
 
+    /* ===== ACCESS BANNER ===== */
+    .access-banner {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .access-card {
+      padding: 1.5rem;
+      border: 1px solid var(--dash-border);
+      border-radius: var(--radius-lg, 18px);
+      background: var(--dash-surface);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .access-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 1px solid rgba(37, 99, 235, 0.2);
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    .access-card.desk-card {
+      background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.15), transparent 60%), rgba(15, 23, 42, 0.65);
+      border-color: rgba(59, 130, 246, 0.35);
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      border: 1px solid rgba(96, 165, 250, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--dash-accent);
+      background: rgba(37, 99, 235, 0.12);
+    }
+
+    .card-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .access-card h2,
+    .access-card h3 {
+      margin: 0;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .access-card p {
+      margin: 0;
+      color: var(--dash-text-soft);
+      line-height: 1.6;
+    }
+
+    .access-meta {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .token-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--dash-accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .access-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      color: var(--dash-text-soft);
+      font-size: 0.85rem;
+    }
+
+    .access-list li {
+      position: relative;
+      padding-left: 1.25rem;
+    }
+
+    .access-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.45rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid rgba(147, 197, 253, 0.8);
+    }
+
+    .access-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--dash-accent);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+    }
+
+    .access-link svg {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.25s ease;
+    }
+
+    .access-link:hover svg {
+      transform: translateX(3px);
+    }
+
+    .btn-icon {
+      display: inline-flex;
+      width: 1.25rem;
+      height: 1.25rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-icon svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .btn-label {
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+
     /* ===== PWA ACTIONS ===== */
     .pwa-actions {
       margin: 1.5rem 0 2.5rem;
@@ -549,9 +700,18 @@
       top: 50%;
       transform: translateY(-50%);
       color: var(--dash-text-muted);
-      font-size: 16px;
       pointer-events: none;
       opacity: 0.6;
+      width: 1rem;
+      height: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-icon svg {
+      width: 100%;
+      height: 100%;
     }
     
     .search-results-count {
@@ -1117,23 +1277,135 @@
         <p class="dashboard-subtitle">Report finanziari AI</p>
       </div>
 
+      <section class="access-banner" aria-label="Accesso token e Desk">
+        <article class="access-card">
+          <div class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3.5" y="5" width="17" height="14" rx="2.5" />
+              <path d="M7 10h10" />
+              <path d="M9.5 14h5" />
+            </svg>
+          </div>
+          <div>
+            <h2>Accesso solo con token gratuito</h2>
+            <p>La versione web e la PWA condividono lo stesso token personale (validità 30 giorni). Lo richiedi gratuitamente dal modulo dedicato su pricing oppure lo ricevi insieme alle richieste di Analisi/Desk. Serve anche per sincronizzare installazione e notifiche.</p>
+          </div>
+          <ul class="access-list">
+            <li>Nessuna password: il token è legato alla tua mail e al consenso GDPR.</li>
+            <li>Puoi rigenerarlo gratuitamente in qualsiasi momento.</li>
+            <li>Il Service Worker usa il token per filtrare i dati in cache.</li>
+          </ul>
+          <div class="access-meta">
+            <span class="token-pill">Token personale atteso</span>
+            <a class="access-link" href="/pricing.html#richiedi-token">
+              Richiedi o rinnova il token
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14" />
+                <path d="M13 6l6 6-6 6" />
+              </svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="access-card desk-card">
+          <div class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 7h16v10H4z" />
+              <path d="M4 11h16" />
+              <path d="M8 15h2" />
+              <path d="M12 15h4" />
+            </svg>
+          </div>
+          <div>
+            <h2>Desk attivo = report brandizzati</h2>
+            <p>Con Desk On-Demand sblocchi il download dei deck con logo e palette del tuo brand, watermark configurabili e priorità sulle notifiche push di progetto.</p>
+          </div>
+          <ul class="access-list">
+            <li>Download PDF/Keynote con firma Tradelia + brand cliente.</li>
+            <li>Workflow firmato per il trasferimento degli asset e log degli accessi.</li>
+            <li>Canale push dedicato per aggiornamenti Desk.</li>
+          </ul>
+          <a class="access-link" href="/pricing.html#richiedi-desk">
+            Attiva Desk e scarica i deck personalizzati
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14" />
+              <path d="M13 6l6 6-6 6" />
+            </svg>
+          </a>
+        </article>
+      </section>
+
       <section class="pwa-actions" aria-label="Installazione app e notifiche">
         <article class="pwa-card">
-          <h3>Installa la dashboard come app</h3>
-          <p>Funziona su desktop, iOS e Android. Offline caching, avvio rapido e interfaccia a tutto schermo.</p>
+          <div class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3v12" />
+              <path d="M8 11l4 4 4-4" />
+              <rect x="5" y="3" width="14" height="18" rx="3" />
+            </svg>
+          </div>
+          <h3>Installa la dashboard (PWA)</h3>
+          <p>L’installazione richiede il token attivo: in questo modo sincronizzi cache offline, login rapido e shortcut desktop in linea con la best practice 2024/25.</p>
           <button class="pwa-btn" id="pwa-install-btn" type="button" disabled>
-            📲 Installa l’app
+            <span class="btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v10" />
+                <path d="M8 11l4 4 4-4" />
+                <path d="M5 19h14" />
+              </svg>
+            </span>
+            <span class="btn-label">Installa la dashboard</span>
           </button>
           <span class="pwa-status" id="pwa-install-status">In attesa di disponibilità dell’install prompt…</span>
         </article>
 
         <article class="pwa-card">
-          <h3>Notifiche push</h3>
-          <p>Ricevi un avviso quando pubblichiamo un nuovo deck o aggiorniamo i framework pubblici.</p>
+          <div class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 15a6 6 0 0 0 0-6" />
+              <path d="M6 15a6 6 0 0 1 0-6" />
+              <path d="M8 15V9a4 4 0 0 1 8 0v6" />
+              <path d="M10 19h4" />
+            </svg>
+          </div>
+          <h3>Notifiche push verificate</h3>
+          <p>Usiamo il token per collegare il dispositivo al tuo profilo e registrare prove di consenso. Puoi attivarle solo dopo aver installato (o aperto) la PWA.</p>
           <button class="pwa-btn" id="push-toggle-btn" type="button">
-            🔔 Attiva notifiche
+            <span class="btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 15a6 6 0 0 0 0-6" />
+                <path d="M6 15a6 6 0 0 1 0-6" />
+                <path d="M8 15V9a4 4 0 0 1 8 0v6" />
+                <path d="M10 19h4" />
+              </svg>
+            </span>
+            <span class="btn-label">Attiva notifiche</span>
           </button>
           <span class="pwa-status" id="push-status">Permessi non ancora richiesti.</span>
+        </article>
+
+        <article class="pwa-card">
+          <div class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 4h12v16H6z" />
+              <path d="M9 8h6" />
+              <path d="M9 12h6" />
+              <path d="M9 16h4" />
+              <path d="M4 20h16" />
+            </svg>
+          </div>
+          <h3>Download brandizzati (Desk)</h3>
+          <p>Quando il Desk è attivo sblocchi i folder con i report in versione white-label e il monitoraggio delle aperture. È la stessa esperienza sia da web che da PWA.</p>
+          <a class="pwa-btn" href="/pricing.html#richiedi-desk">
+            <span class="btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 12h16" />
+                <path d="M12 4l8 8-8 8" />
+              </svg>
+            </span>
+            <span class="btn-label">Configura Desk On-Demand</span>
+          </a>
+          <span class="pwa-status">Richiede attivazione Desk e billing completo.</span>
         </article>
       </section>
       
@@ -1148,8 +1420,14 @@
               <h2 class="report-title">Report</h2>
               <p class="report-description">Framework Accademico AI Tradelia — analisi multi-fattore su dati Tier-1. Include i deck proprietari SRD v5.0 (Swing Research Deck), MTB v3.1 (Macro Tactical Briefing) e le release sperimentali in arrivo.</p>
             </div>
-            <a href="/user/admin.html" id="admin-dashboard-link" class="btn btn-primary btn-sm" style="margin-top: 0.5rem; white-space: nowrap; display: none;">
-              ⚙️ Dashboard Admin
+            <a href="/user/admin.html" id="admin-dashboard-link" class="btn btn-primary btn-sm" style="margin-top: 0.5rem; white-space: nowrap; display: none; gap: 0.4rem; align-items: center;">
+              <span class="btn-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c0 .69.4 1.31 1.03 1.58.21.09.45.14.69.14H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+              </span>
+              <span class="btn-label">Dashboard Admin</span>
             </a>
           </div>
         </div>
@@ -1162,7 +1440,12 @@
         </div>
         
         <div class="search-container">
-          <span class="search-icon">🔍</span>
+          <span class="search-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M16 16l5 5" />
+            </svg>
+          </span>
           <input 
             type="text" 
             id="reports-search" 
@@ -1173,7 +1456,7 @@
           <span class="search-results-count" id="reports-search-count" style="display: none;"></span>
           <div style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); pointer-events: none;">
             <span class="shortcut-hint" id="reports-shortcut-hint">
-              <span class="shortcut-key" id="reports-shortcut-mod">⌘</span>
+              <span class="shortcut-key" id="reports-shortcut-mod">Ctrl</span>
               <span>K</span>
             </span>
           </div>
@@ -1331,7 +1614,7 @@
     // Detect OS for shortcut hint
     function updateShortcutHints() {
       const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-      const modKey = isMac ? '⌘' : 'Ctrl';
+      const modKey = isMac ? 'Cmd' : 'Ctrl';
       
       // Aggiorna solo se gli elementi esistono (null-safe)
       const reportsShortcut = document.getElementById('reports-shortcut-mod');
@@ -2365,7 +2648,7 @@
           // È admin: mostra link
           const adminLink = document.getElementById('admin-dashboard-link');
           if (adminLink) {
-            adminLink.style.display = 'block';
+            adminLink.style.display = 'inline-flex';
           }
         }
       } catch (err) {
@@ -2442,10 +2725,13 @@
   <script type="module">
     import { FCM_CONFIG } from '/archivio/assets/js/fcm-config.js';
 
+    const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
     const installBtn = document.getElementById('pwa-install-btn');
     const installStatus = document.getElementById('pwa-install-status');
     const pushBtn = document.getElementById('push-toggle-btn');
     const pushStatus = document.getElementById('push-status');
+    const installLabel = installBtn?.querySelector('.btn-label');
+    const pushLabel = pushBtn?.querySelector('.btn-label');
 
     let deferredPrompt = null;
     let swRegistration = null;
@@ -2464,12 +2750,23 @@
       if (!installBtn) return;
       if (state === 'installed') {
         installBtn.disabled = true;
-        installBtn.textContent = '✅ App installata';
+        if (installLabel) {
+          installLabel.textContent = 'App installata';
+        } else {
+          installBtn.textContent = 'App installata';
+        }
       } else if (state === 'ready') {
         installBtn.disabled = false;
-        installBtn.textContent = '📲 Installa l’app';
+        if (installLabel) {
+          installLabel.textContent = 'Installa la dashboard';
+        } else {
+          installBtn.textContent = 'Installa la dashboard';
+        }
       } else {
         installBtn.disabled = true;
+        if (installLabel) {
+          installLabel.textContent = 'Installa la dashboard';
+        }
       }
     }
 
@@ -2519,6 +2816,14 @@
       }
     }
 
+    function getStoredToken() {
+      try {
+        return localStorage.getItem(ACCESS_TOKEN_KEY);
+      } catch (e) {
+        return null;
+      }
+    }
+
     function updatePushStatus(message) {
       if (pushStatus) {
         pushStatus.textContent = message;
@@ -2527,6 +2832,18 @@
 
     async function updatePushUI() {
       if (!pushBtn) return;
+      const userToken = getStoredToken();
+      if (!userToken) {
+        pushBtn.disabled = true;
+        updatePushStatus('Serve il token personale per collegare questo dispositivo.');
+        return;
+      }
+      if (!isStandalone()) {
+        pushBtn.disabled = true;
+        updatePushStatus('Installa o apri la PWA per gestire le notifiche.');
+        return;
+      }
+      pushBtn.disabled = false;
       if (!('Notification' in window)) {
         pushBtn.disabled = true;
         updatePushStatus('Notifiche push non supportate da questo browser.');
@@ -2543,11 +2860,19 @@
       const subscription = await registration.pushManager.getSubscription();
       if (subscription && permission === 'granted') {
         pushBtn.dataset.enabled = 'true';
-        pushBtn.textContent = '🔕 Disattiva notifiche';
+        if (pushLabel) {
+          pushLabel.textContent = 'Disattiva notifiche';
+        } else {
+          pushBtn.textContent = 'Disattiva notifiche';
+        }
         updatePushStatus('Notifiche attive su questo dispositivo.');
       } else {
         pushBtn.dataset.enabled = 'false';
-        pushBtn.textContent = '🔔 Attiva notifiche';
+        if (pushLabel) {
+          pushLabel.textContent = 'Attiva notifiche';
+        } else {
+          pushBtn.textContent = 'Attiva notifiche';
+        }
         if (permission === 'default') {
           updatePushStatus('Permessi non ancora richiesti.');
         } else {
@@ -2570,6 +2895,15 @@
     }
 
     async function subscribeToPush() {
+      const userToken = getStoredToken();
+      if (!userToken) {
+        updatePushStatus('Serve il token personale per collegare questo dispositivo.');
+        return;
+      }
+      if (!isStandalone()) {
+        updatePushStatus('Apri la versione installata per attivare le notifiche.');
+        return;
+      }
       const registration = await registerServiceWorker();
       if (!registration) return;
 
@@ -2588,7 +2922,7 @@
         await fetch('/api/push', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'subscribe', subscription })
+          body: JSON.stringify({ action: 'subscribe', subscription, token: userToken })
         });
 
         updatePushUI();
@@ -2599,16 +2933,35 @@
     }
 
     async function unsubscribePush() {
+      const userToken = getStoredToken();
+      if (!userToken) {
+        updatePushStatus('Token non trovato, aggiorna la pagina.');
+        return;
+      }
       const registration = await registerServiceWorker();
       if (!registration) return;
       const subscription = await registration.pushManager.getSubscription();
       if (subscription) {
         await subscription.unsubscribe();
       }
+      await fetch('/api/push', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'unsubscribe', token: userToken })
+      }).catch(() => {});
       updatePushUI();
     }
 
     pushBtn?.addEventListener('click', async () => {
+      const userToken = getStoredToken();
+      if (!userToken) {
+        updatePushStatus('Serve il token personale per collegare questo dispositivo.');
+        return;
+      }
+      if (!isStandalone()) {
+        updatePushStatus('Installa la PWA per gestire le notifiche.');
+        return;
+      }
       const enabled = pushBtn.dataset.enabled === 'true';
       if (enabled) {
         await unsubscribePush();

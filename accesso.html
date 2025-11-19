@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Accesso Dashboard · Tradelia</title>
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/assets/css/site-coherence-2025.css" />
   <link rel="stylesheet" href="/assets/css/global-header.css" />
   <style>
     html, body {
@@ -148,19 +149,21 @@
       position: absolute;
       top: 1.2rem;
       right: 1.4rem;
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       border-radius: 999px;
       border: 1px solid var(--br-card, #1f2937);
       background: rgba(15, 23, 42, 0.9);
       color: var(--ink-soft, #e5e7eb);
-      font-size: 1.1rem;
-      line-height: 1;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: background 0.18s, color 0.18s, border-color 0.18s, transform 0.08s;
+    }
+    .access-close svg {
+      width: 18px;
+      height: 18px;
     }
     .access-close:hover {
       background: var(--surface-elev, #020617);
@@ -224,6 +227,21 @@
     .access-support a:hover {
       text-decoration: underline;
     }
+    .btn-icon {
+      display: inline-flex;
+      width: 1.15rem;
+      height: 1.15rem;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-icon svg {
+      width: 100%;
+      height: 100%;
+    }
+    .btn-label {
+      display: inline-flex;
+      align-items: center;
+    }
     @media (max-width: 640px) {
       #site-header-slot {
         position: static;
@@ -242,12 +260,18 @@
   <main>
     <section class="access-wrapper" aria-labelledby="access-title">
       <button type="button" class="access-close" aria-label="Torna alla homepage">
-        ×
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6L6 18" />
+          <path d="M6 6l12 12" />
+        </svg>
       </button>
       <h1 id="access-title" class="access-title">Accesso alla dashboard Tradelia</h1>
       <p class="access-subtitle">
-        Inserisci il <strong>codice di accesso</strong> ricevuto via email per entrare nella dashboard dei dossier
-        e dei report riservati. Il codice è personale e può essere revocato in qualsiasi momento.
+        Inserisci il <strong>token personale</strong> ricevuto via email. Puoi richiederlo gratuitamente dal modulo
+        <a href="/pricing.html#richiedi-token" style="color: var(--brand-400); text-decoration: underline;">“Richiedi token gratuito”</a>,
+        oppure lo ricevi automaticamente dopo aver richiesto
+        <a href="/pricing.html#richiedi-analisi" style="color: var(--brand-400); text-decoration: underline;">Analisi su richiesta</a> o dopo l'attivazione del
+        <a href="/pricing.html#richiedi-desk" style="color: var(--brand-400); text-decoration: underline;">Piano Desk</a>. Il token è gratuito, dura 30 giorni, vale su web e PWA e può essere revocato in qualsiasi momento.
       </p>
       <div id="access-alert" class="access-alert" role="alert" aria-live="polite"></div>
       
@@ -268,12 +292,12 @@
               aria-describedby="access-help"
             />
             <div id="access-help" class="access-meta">
-              Se non hai ancora un codice, puoi richiederlo scrivendo al desk Tradelia.
+              Non hai ancora il token? Clicca su “Richiedi token gratuito” per aprire il modulo dedicato, oppure usa i form “Analisi su richiesta” / “Piano Desk” se ti servono i servizi a pagamento.
             </div>
           </div>
           <div class="access-actions access-cta">
             <button type="submit" class="btn btn-sm">Accedi alla dashboard</button>
-            <button type="button" class="btn btn-sm" id="access-pricing">Non hai un codice? Vedi i piani</button>
+            <button type="button" class="btn btn-sm" id="access-pricing">Richiedi token gratuito</button>
             <button type="button" class="btn btn-sm" id="access-recovery-open">Ho perso il codice</button>
           </div>
         </div>
@@ -300,11 +324,26 @@
           <div class="access-actions" style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
             <button type="button" class="btn btn-sm" id="access-go-dashboard">Vai alla dashboard</button>
             <button type="button" class="btn btn-sm" id="access-cancel-subscription" style="display: none;">Disdici abbonamento</button>
-            <a href="/user/admin.html" id="access-admin-link" class="btn btn-primary btn-sm" style="display: none; text-align: center; text-decoration: none;">
-              ⚙️ Dashboard Admin
+            <a href="/user/admin.html" id="access-admin-link" class="btn btn-primary btn-sm" style="display: none; text-align: center; text-decoration: none; gap: 0.35rem; align-items: center;">
+              <span class="btn-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c0 .69.4 1.31 1.03 1.58.21.09.45.14.69.14H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+              </span>
+              <span class="btn-label">Dashboard Admin</span>
             </a>
-            <a href="/report/admin/dashboard.html" target="_blank" id="access-report-link" class="btn btn-outline btn-sm" style="display: none; text-align: center; text-decoration: none;">
-              📊 Crea Report
+            <a href="/report/admin/dashboard.html" target="_blank" id="access-report-link" class="btn btn-outline btn-sm" style="display: none; text-align: center; text-decoration: none; gap: 0.35rem; align-items: center;">
+              <span class="btn-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 19h16" />
+                  <path d="M4 5h16" />
+                  <path d="M8 5v14" />
+                  <path d="M12 9v10" />
+                  <path d="M16 13v6" />
+                </svg>
+              </span>
+              <span class="btn-label">Crea report</span>
             </a>
           </div>
         </div>
@@ -332,8 +371,8 @@
       </form>
       
       <p class="access-meta">
-        Per motivi di sicurezza non memorizziamo credenziali personali: il codice identifica solo il tuo profilo
-        di accesso ai contenuti didattici, nel rispetto delle policy MiFID-safe di Tradelia.
+        Per motivi di sicurezza non memorizziamo credenziali personali: il token identifica solo il tuo profilo d’accesso,
+        lega il dispositivo alle notifiche push e certifica la provenienza dei download Desk, nel rispetto delle policy MiFID-safe di Tradelia.
       </p>
       
       <div class="access-support">
@@ -401,7 +440,7 @@
       // Pricing button
       if (pricingBtn) {
         pricingBtn.addEventListener('click', function() {
-          window.location.href = '/pricing.html';
+          window.location.href = '/pricing.html#richiedi-token';
         });
       }
 
@@ -630,8 +669,8 @@
             // È admin: mostra link
             const adminLink = document.getElementById('access-admin-link');
             const reportLink = document.getElementById('access-report-link');
-            if (adminLink) adminLink.style.display = 'block';
-            if (reportLink) reportLink.style.display = 'block';
+            if (adminLink) adminLink.style.display = 'inline-flex';
+            if (reportLink) reportLink.style.display = 'inline-flex';
           }
         } catch (err) {
           console.warn('[Accesso] Errore verifica admin:', err);

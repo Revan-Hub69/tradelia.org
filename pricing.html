@@ -552,17 +552,29 @@
     
     .modal-close {
       background: transparent;
-      border: none;
+      border: 1px solid var(--br-card);
+      border-radius: 999px;
       color: var(--muted);
-      font-size: var(--fs-24);
       cursor: pointer;
-      padding: var(--sp-1);
+      padding: var(--sp-1_5);
       line-height: 1;
-      transition: color 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+    }
+    
+    .modal-close svg {
+      width: 18px;
+      height: 18px;
     }
     
     .modal-close:hover {
       color: var(--ink);
+      border-color: var(--ink-soft);
+      background: rgba(255, 255, 255, 0.02);
     }
     
     .form-group {
@@ -764,9 +776,15 @@
               <li>Accesso storico e archivio</li>
             </ul>
             <div class="plan-actions">
+              <button type="button" class="btn btn-primary btn-sm" onclick="openTokenModal()" aria-label="Richiedi token gratuito per dashboard e PWA">
+                Richiedi token gratuito
+              </button>
               <a href="/dashboard.html" class="btn btn-outline btn-sm" aria-label="Apri la dashboard pubblica Tradelia">
                 Vai alla dashboard
               </a>
+              <p class="plan-meta" style="text-align: left;">
+                Token personale valido 30 giorni (web + PWA). Ricevi istruzioni via email e puoi rigenerarlo quando vuoi.
+              </p>
             </div>
           </article>
 
@@ -1158,12 +1176,92 @@
       </div>
   </main>
 
+  <!-- Modal Token gratuito -->
+  <div id="modal-token" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-token-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-token-title" class="modal-title">Richiedi token gratuito</h2>
+        <button type="button" class="modal-close" onclick="closeModal('modal-token')" aria-label="Chiudi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 6L6 18" />
+            <path d="M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div id="success-token" class="success-message">
+        Richiesta inviata! Riceverai il token personale e le istruzioni via email entro poche ore.
+      </div>
+      <div id="error-token" class="error-message">
+        Invio non riuscito. Riprova tra qualche minuto o scrivi a support@tradelia.org
+      </div>
+      <form id="form-token" onsubmit="submitToken(event)">
+        <div class="form-group">
+          <label class="form-label" for="token-nome">
+            Nome completo <span class="required">*</span>
+          </label>
+          <input type="text" id="token-nome" name="nome" class="form-input" required placeholder="Il tuo nome e cognome" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="token-email">
+            Email <span class="required">*</span>
+          </label>
+          <input type="email" id="token-email" name="email" class="form-input" required placeholder="tua@email.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="token-profilo">
+            Profilo di utilizzo <span class="required">*</span>
+          </label>
+          <select id="token-profilo" name="profilo" class="form-select" required>
+            <option value="">Seleziona...</option>
+            <option value="privato">Privato / persona fisica</option>
+            <option value="desk">Desk / uffici studi</option>
+            <option value="media">Media, formazione o ricerca</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="token-organizzazione">
+            Organizzazione (opzionale)
+          </label>
+          <input type="text" id="token-organizzazione" name="organizzazione" class="form-input" placeholder="Nome ufficio studi, testata o progetto" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="token-uso">
+            Come userai il token? <span class="required">*</span>
+          </label>
+          <textarea id="token-uso" name="uso" class="form-textarea" rows="4" maxlength="500" required placeholder="Esempio: consulto la dashboard giornalmente e voglio installare la PWA con notifiche per i nuovi report."></textarea>
+          <p class="form-hint">Queste informazioni ci aiutano a tracciare l’utilizzo educativo e a prevenire abusi.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-checkbox-label" style="display: flex; align-items: flex-start; gap: var(--sp-2); cursor: pointer;">
+            <input type="checkbox" id="token-consenso" name="consenso" required style="margin-top: 0.25rem; flex-shrink: 0;" />
+            <span style="font-size: var(--fs-12); color: var(--ink-soft); line-height: 1.5;">
+              Autorizzo il trattamento dei miei dati per l’emissione e la gestione del token gratuito, il monitoraggio delle installazioni PWA e l’invio di comunicazioni operative. I dati saranno trattati secondo la 
+              <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style="color: var(--brand-500); text-decoration: underline;">Privacy Policy</a>.
+              <span class="required">*</span>
+            </span>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="submit-token">
+          Invia richiesta token
+        </button>
+        <p class="form-note">
+          Il token è valido 30 giorni, vale sia sul sito sia sulla PWA e puoi rigenerarlo in qualsiasi momento. Tracciamo ogni richiesta per accountability MiFID/GDPR.
+        </p>
+      </form>
+    </div>
+  </div>
+
   <!-- Modal Analisi su Richiesta -->
   <div id="modal-analisi" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-analisi-title">
     <div class="modal-content">
       <div class="modal-header">
         <h2 id="modal-analisi-title" class="modal-title">Richiedi un'analisi</h2>
-        <button type="button" class="modal-close" onclick="closeModal('modal-analisi')" aria-label="Chiudi">×</button>
+        <button type="button" class="modal-close" onclick="closeModal('modal-analisi')" aria-label="Chiudi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 6L6 18" />
+            <path d="M6 6l12 12" />
+          </svg>
+        </button>
       </div>
       <div id="success-analisi" class="success-message">
         Richiesta inviata con successo! Ti contatteremo via email entro 24 ore.
@@ -1267,7 +1365,12 @@
     <div class="modal-content">
       <div class="modal-header">
         <h2 id="modal-desk-title" class="modal-title">Richiedi accesso Desk</h2>
-        <button type="button" class="modal-close" onclick="closeModal('modal-desk')" aria-label="Chiudi">×</button>
+        <button type="button" class="modal-close" onclick="closeModal('modal-desk')" aria-label="Chiudi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 6L6 18" />
+            <path d="M6 6l12 12" />
+          </svg>
+        </button>
       </div>
       <div id="success-desk" class="success-message">
         Richiesta inviata con successo! Ti contatteremo via email per completare l'attivazione.
@@ -1433,6 +1536,9 @@
           history.replaceState(null, null, window.location.pathname);
         } else if (hash === '#richiedi-desk') {
           setTimeout(() => openDeskModal(), 300);
+          history.replaceState(null, null, window.location.pathname);
+        } else if (hash === '#richiedi-token') {
+          setTimeout(() => openTokenModal(), 300);
           // Remove hash after opening
           history.replaceState(null, null, window.location.pathname);
         }
@@ -1452,6 +1558,15 @@
 
   <!-- Modal Functions -->
   <script>
+    function openTokenModal() {
+      const modal = document.getElementById('modal-token');
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        document.getElementById('token-nome')?.focus();
+      }
+    }
+
     function openAnalisiModal() {
       const modal = document.getElementById('modal-analisi');
       if (modal) {
@@ -1718,6 +1833,66 @@ Timestamp: ${data.timestamp}`;
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Invia richiesta';
+      }
+    }
+
+    async function submitToken(e) {
+      e.preventDefault();
+      const form = e.target;
+      const submitBtn = document.getElementById('submit-token');
+      const successMsg = document.getElementById('success-token');
+      const errorMsg = document.getElementById('error-token');
+      
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      
+      const formData = new FormData(form);
+      const consenso = formData.get('consenso') === 'on';
+      if (!consenso) {
+        alert('È necessario acconsentire al trattamento dei dati personali per procedere.');
+        return;
+      }
+      
+      const payload = {
+        nome: formData.get('nome').trim(),
+        email: formData.get('email').trim().toLowerCase(),
+        profilo: formData.get('profilo'),
+        organizzazione: (formData.get('organizzazione') || '').trim(),
+        uso: formData.get('uso').trim()
+      };
+      
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Invio in corso...';
+      successMsg.classList.remove('active');
+      errorMsg.classList.remove('active');
+      
+      try {
+        const response = await fetch('/api/request-free-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.ok) {
+          throw new Error(result.error || 'Errore invio');
+        }
+        
+        successMsg.textContent = result.message || 'Richiesta inviata! Controlla la tua email per il token.';
+        successMsg.classList.add('active');
+        form.reset();
+        setTimeout(() => {
+          closeModal('modal-token');
+        }, 3000);
+      } catch (error) {
+        console.error('Errore invio token:', error);
+        errorMsg.textContent = error.message || 'Invio non riuscito. Riprova più tardi.';
+        errorMsg.classList.add('active');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Invia richiesta token';
       }
     }
   </script>
