@@ -4416,31 +4416,8 @@
       initModals();
     }
 
-    // Auto-update check on page load
-    (async function() {
-      try {
-        if ('serviceWorker' in navigator) {
-          const registration = await navigator.serviceWorker.getRegistration();
-          if (registration) {
-            await registration.update();
-            // Check for updates immediately
-            registration.addEventListener('updatefound', () => {
-              const newWorker = registration.installing;
-              if (newWorker) {
-                newWorker.addEventListener('statechange', () => {
-                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    // New version available - auto-update script will show notification
-                    console.log('[PWA] Nuova versione disponibile');
-                  }
-                });
-              }
-            });
-          }
-        }
-      } catch (err) {
-        console.error('[PWA] Errore controllo aggiornamenti iniziale:', err);
-      }
-    })();
+    // Version check gestito da version-check.js (solo al primo accesso o nuova versione)
+    // Update check manuale disponibile tramite pulsante "Aggiorna app" nel modal token-info
   </script>
   
   <!-- Auto-Update System -->
