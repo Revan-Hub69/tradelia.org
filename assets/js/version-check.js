@@ -116,6 +116,9 @@
    * Academic design aligned with Tradelia design system
    */
   function showVersionModal(hasUpdate, currentVersion, newVersion) {
+    // DISABILITATO - Progetto abbandonato
+    return;
+    
     // Don't show if already shown in this session
     const sessionKey = 'version-modal-shown';
     if (sessionStorage.getItem(sessionKey)) {
@@ -398,7 +401,7 @@
   // Expose for manual check
   window.checkVersionUpdate = init;
 
-  // Auto-init
-  init();
+  // Auto-init DISABILITATO - Progetto abbandonato
+  // init();
 })();
 

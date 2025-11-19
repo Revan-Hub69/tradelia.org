@@ -278,11 +278,11 @@
     window.addEventListener('focus', checkForUpdates);
   }
 
-  // Start when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  // Start when DOM is ready - DISABILITATO (Progetto abbandonato)
+  // if (document.readyState === 'loading') {
+  //   document.addEventListener('DOMContentLoaded', init);
+  // } else {
+  //   init();
+  // }
 })();
 
