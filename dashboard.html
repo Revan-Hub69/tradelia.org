@@ -463,26 +463,26 @@
       position: absolute;
       inset: 0;
       border-radius: inherit;
-      border: 1px solid rgba(37, 99, 235, 0.2);
+      border: 1px solid var(--dash-border);
       pointer-events: none;
-      opacity: 0.4;
+      opacity: 0.3;
     }
 
     .access-card.desk-card {
-      background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.15), transparent 60%), rgba(15, 23, 42, 0.65);
-      border-color: rgba(59, 130, 246, 0.35);
+      background: var(--dash-surface);
+      border-color: var(--dash-border-strong);
     }
 
     .card-icon {
       width: 48px;
       height: 48px;
       border-radius: 14px;
-      border: 1px solid rgba(96, 165, 250, 0.4);
+      border: 1px solid var(--dash-border);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--dash-accent);
-      background: rgba(37, 99, 235, 0.12);
+      color: var(--dash-text-soft);
+      background: var(--dash-surface-elev);
     }
 
     .card-icon svg {
@@ -516,8 +516,9 @@
       gap: 0.4rem;
       padding: 0.35rem 0.85rem;
       border-radius: 999px;
-      background: rgba(37, 99, 235, 0.12);
-      color: var(--dash-accent);
+      background: var(--dash-surface-elev);
+      border: 1px solid var(--dash-border);
+      color: var(--dash-text-soft);
       font-size: 0.8rem;
       font-weight: 600;
     }
@@ -543,21 +544,27 @@
       position: absolute;
       left: 0;
       top: 0.45rem;
-      width: 10px;
-      height: 10px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      border: 1px solid rgba(147, 197, 253, 0.8);
+      background: var(--dash-text-muted);
+      opacity: 0.6;
     }
 
     .access-link {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      color: var(--dash-accent);
+      color: var(--dash-text-soft);
       text-decoration: none;
       font-weight: 600;
       font-size: 0.85rem;
       margin-top: 0.25rem;
+      transition: color 0.2s ease;
+    }
+
+    .access-link:hover {
+      color: var(--dash-text);
     }
 
     .access-link svg {
@@ -598,15 +605,14 @@
       padding: 1.5rem;
       border: 1px solid var(--dash-border);
       border-radius: var(--radius-lg, 18px);
-      background: linear-gradient(180deg, rgba(37, 99, 235, 0.08), rgba(15, 23, 42, 0.35));
+      background: var(--dash-surface);
     }
 
     .pwa-card {
       padding: 1.5rem;
       border-radius: var(--radius-md, 14px);
-      border: 1px solid rgba(59, 130, 246, 0.25);
-      background: rgba(15, 23, 42, 0.55);
-      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--dash-border);
+      background: var(--dash-surface-elev);
       display: flex;
       flex-direction: column;
       gap: 0.9rem;
@@ -631,13 +637,14 @@
       gap: 0.4rem;
       padding: 0.55rem 1.25rem;
       border-radius: 999px;
-      border: 1px solid rgba(96, 165, 250, 0.45);
-      background: linear-gradient(130deg, rgba(59, 130, 246, 0.25), rgba(15, 23, 42, 0.85));
+      border: 1px solid var(--dash-border);
+      background: var(--dash-surface);
       color: var(--dash-text);
       font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
-      transition: transform 0.15s ease, border-color 0.15s ease;
+      transition: all 0.2s ease;
+      text-decoration: none;
     }
 
     .pwa-btn:disabled {
@@ -646,8 +653,8 @@
     }
 
     .pwa-btn:hover:not(:disabled) {
-      transform: translateY(-1px);
-      border-color: rgba(147, 197, 253, 0.9);
+      border-color: var(--dash-border-strong);
+      background: var(--dash-surface-elev);
     }
 
     .pwa-status {
@@ -1291,6 +1298,188 @@
       border-top: 1px solid var(--br-card);
       gap: var(--sp-4);
     }
+
+    /* ===== MODAL SYSTEM ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      padding: var(--sp-4);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-overlay[hidden] {
+      display: none !important;
+    }
+
+    .modal-panel {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: min(42rem, 90vw);
+      max-height: 90vh;
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      transform: scale(0.95);
+      transition: transform 0.2s ease;
+    }
+
+    .modal-overlay.active .modal-panel {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sp-5) var(--sp-6);
+      border-bottom: 1px solid var(--dash-border);
+    }
+
+    .modal-title {
+      font-size: var(--fs-20);
+      font-weight: 700;
+      color: var(--dash-text);
+      margin: 0;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--dash-text-muted);
+      cursor: pointer;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: var(--dash-surface-elev);
+      color: var(--dash-text);
+    }
+
+    .modal-body {
+      padding: var(--sp-6);
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--sp-4);
+      padding: var(--sp-5) var(--sp-6);
+      border-top: 1px solid var(--dash-border);
+    }
+
+    .form-group {
+      margin-bottom: var(--sp-5);
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: var(--sp-2);
+      color: var(--dash-text-soft);
+      font-size: var(--fs-14);
+      font-weight: 600;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--dash-surface-elev);
+      border: 1px solid var(--dash-border);
+      border-radius: 6px;
+      color: var(--dash-text);
+      font-family: var(--ff-sans);
+      font-size: var(--fs-14);
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: var(--dash-border-strong);
+      background: var(--dash-surface);
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .btn-modal {
+      padding: 0.625rem 1.5rem;
+      border-radius: 6px;
+      border: 1px solid var(--dash-border);
+      background: var(--dash-surface-elev);
+      color: var(--dash-text);
+      font-size: var(--fs-14);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-modal:hover {
+      border-color: var(--dash-border-strong);
+      background: var(--dash-surface);
+    }
+
+    .btn-modal-primary {
+      background: var(--dash-surface-elev);
+      border-color: var(--dash-border-strong);
+      color: var(--dash-text);
+    }
+
+    .btn-modal-primary:hover {
+      background: var(--dash-surface);
+    }
+
+    /* ===== REQUEST SECTIONS ===== */
+    .request-section {
+      margin: 2rem 0;
+      padding: 1.5rem;
+      border: 1px solid var(--dash-border);
+      border-radius: var(--radius-lg);
+      background: var(--dash-surface);
+    }
+
+    .request-section h3 {
+      margin: 0 0 0.75rem;
+      font-size: 1.1rem;
+      color: var(--dash-text);
+    }
+
+    .request-section p {
+      margin: 0 0 1rem;
+      color: var(--dash-text-soft);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
@@ -1315,145 +1504,20 @@
             </span>
             <span class="btn-label">Admin</span>
           </a>
+          <button class="logout-btn" id="pwa-settings-btn" type="button" style="border: 1px solid var(--dash-border); background: transparent; color: var(--dash-text-muted); font-size: 0.85rem; padding: 0.45rem 1.25rem; border-radius: 999px; cursor: pointer; transition: all 0.2s ease;">
+            <span style="display: inline-flex; gap: 0.4rem; align-items: center;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: inline-block;">
+                <rect x="5" y="3" width="14" height="18" rx="3" />
+                <path d="M12 5v10" />
+                <path d="M8 11l4 4 4-4" />
+              </svg>
+              PWA
+            </span>
+          </button>
           <button class="logout-btn" id="logout-btn" type="button">Disconnetti il dispositivo</button>
         </div>
       </div>
 
-      <section class="access-banner" aria-label="Accesso token e Desk">
-        <article class="access-card">
-          <div class="card-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3.5" y="5" width="17" height="14" rx="2.5" />
-              <path d="M7 10h10" />
-              <path d="M9.5 14h5" />
-            </svg>
-          </div>
-          <div>
-            <h2>Accesso solo con token gratuito</h2>
-            <p>La versione web e la PWA condividono lo stesso token personale (validità 30 giorni). Lo richiedi gratuitamente dal modulo dedicato su pricing oppure lo ricevi insieme alle richieste di Analisi/Desk. Serve anche per sincronizzare installazione e notifiche.</p>
-          </div>
-          <ul class="access-list">
-            <li>Nessuna password: il token è legato alla tua mail e al consenso GDPR.</li>
-            <li>Puoi rigenerarlo gratuitamente in qualsiasi momento.</li>
-            <li>Il Service Worker usa il token per filtrare i dati in cache.</li>
-          </ul>
-          <div class="access-meta">
-            <span class="token-pill">Token personale atteso</span>
-            <a class="access-link" href="/pricing.html#richiedi-token">
-              Richiedi o rinnova il token
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14" />
-                <path d="M13 6l6 6-6 6" />
-              </svg>
-            </a>
-          </div>
-        </article>
-
-        <article class="access-card desk-card">
-          <div class="card-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 7h16v10H4z" />
-              <path d="M4 11h16" />
-              <path d="M8 15h2" />
-              <path d="M12 15h4" />
-            </svg>
-          </div>
-          <div>
-            <h2>Desk attivo = report brandizzati</h2>
-            <p>Con Desk On-Demand sblocchi il download dei deck con logo e palette del tuo brand, watermark configurabili e priorità sulle notifiche push di progetto.</p>
-          </div>
-          <ul class="access-list">
-            <li>Download PDF/Keynote con firma Tradelia + brand cliente.</li>
-            <li>Workflow firmato per il trasferimento degli asset e log degli accessi.</li>
-            <li>Canale push dedicato per aggiornamenti Desk.</li>
-          </ul>
-          <a class="access-link" href="/pricing.html#richiedi-desk">
-            Attiva Desk e scarica i deck personalizzati
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14" />
-              <path d="M13 6l6 6-6 6" />
-            </svg>
-          </a>
-        </article>
-      </section>
-
-      <section class="pwa-actions" aria-label="Installazione app e notifiche">
-        <article class="pwa-card">
-          <div class="card-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 3v12" />
-              <path d="M8 11l4 4 4-4" />
-              <rect x="5" y="3" width="14" height="18" rx="3" />
-            </svg>
-          </div>
-          <h3>Installa la dashboard (PWA)</h3>
-          <p>L’installazione richiede il token attivo: in questo modo sincronizzi cache offline, login rapido e shortcut desktop in linea con la best practice 2024/25.</p>
-          <button class="pwa-btn" id="pwa-install-btn" type="button" disabled>
-            <span class="btn-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 5v10" />
-                <path d="M8 11l4 4 4-4" />
-                <path d="M5 19h14" />
-              </svg>
-            </span>
-            <span class="btn-label">Installa la dashboard</span>
-          </button>
-          <span class="pwa-status" id="pwa-install-status">In attesa di disponibilità dell’install prompt…</span>
-        </article>
-
-        <article class="pwa-card">
-          <div class="card-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 15a6 6 0 0 0 0-6" />
-              <path d="M6 15a6 6 0 0 1 0-6" />
-              <path d="M8 15V9a4 4 0 0 1 8 0v6" />
-              <path d="M10 19h4" />
-            </svg>
-          </div>
-          <h3>Notifiche push verificate</h3>
-          <p>Usiamo il token per collegare il dispositivo al tuo profilo e registrare prove di consenso. Puoi attivarle solo dopo aver installato (o aperto) la PWA.</p>
-          <button class="pwa-btn" id="push-toggle-btn" type="button">
-            <span class="btn-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 15a6 6 0 0 0 0-6" />
-                <path d="M6 15a6 6 0 0 1 0-6" />
-                <path d="M8 15V9a4 4 0 0 1 8 0v6" />
-                <path d="M10 19h4" />
-              </svg>
-            </span>
-            <span class="btn-label">Attiva notifiche</span>
-          </button>
-          <span class="pwa-status" id="push-status">Permessi non ancora richiesti.</span>
-        </article>
-
-        <article class="pwa-card">
-          <div class="card-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M6 4h12v16H6z" />
-              <path d="M9 8h6" />
-              <path d="M9 12h6" />
-              <path d="M9 16h4" />
-              <path d="M4 20h16" />
-            </svg>
-          </div>
-          <h3>Download brandizzati (Desk)</h3>
-          <p>Quando il Desk è attivo sblocchi i folder con i report in versione white-label e il monitoraggio delle aperture. È la stessa esperienza sia da web che da PWA.</p>
-          <a class="pwa-btn" href="/pricing.html#richiedi-desk">
-            <span class="btn-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 12h16" />
-                <path d="M12 4l8 8-8 8" />
-              </svg>
-            </span>
-            <span class="btn-label">Configura Desk On-Demand</span>
-          </a>
-          <span class="pwa-status">Richiede attivazione Desk e billing completo.</span>
-        </article>
-      </section>
-      
-      <!-- ===== SECTION TOGGLE ===== -->
-      <!-- Rimossa sezione tutorial - ora disponibile in /tutorials.html -->
-      
       <!-- ===== REPORT SECTION ===== -->
       <section class="report-section active">
         <div class="report-header">
@@ -2639,14 +2703,8 @@
       }
 
       if (!token || !token.trim()) {
-        // nessun token valido: redirect alla pagina di accesso
-        try {
-          const url = new URL('/accesso.html', window.location.origin);
-          url.searchParams.set('reason', 'missing_token');
-          window.location.href = url.toString();
-        } catch (e) {
-          window.location.href = '/accesso.html?reason=missing_token';
-        }
+        // nessun token valido: mostra modale per inserire token
+        showTokenModal();
         return false;
       }
 
@@ -2677,6 +2735,9 @@
           checkAndShowAdminLink(data.email);
         }
         
+        // Token valido: mostra modale con info token e PWA
+        showTokenInfoModal(data);
+        
         // Token valido: procedi
         return true;
       } catch (err) {
@@ -2685,6 +2746,61 @@
         // In produzione potresti voler essere più restrittivo
         return true;
       }
+    }
+
+    // Mostra modale per inserire token
+    function showTokenModal() {
+      const modal = document.getElementById('modal-token-input');
+      if (modal) {
+        modal.hidden = false;
+        setTimeout(() => modal.classList.add('active'), 10);
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    // Mostra modale con info token e PWA (solo se non già mostrato in questa sessione)
+    function showTokenInfoModal(tokenData) {
+      const modal = document.getElementById('modal-token-info');
+      if (!modal) return;
+      
+      // Controlla se già mostrato in questa sessione
+      const shownKey = 'token-info-modal-shown';
+      if (sessionStorage.getItem(shownKey)) {
+        return; // Già mostrato, non riaprire
+      }
+      
+      // Aggiorna info token nel modale
+      const emailEl = document.getElementById('token-info-email');
+      const planEl = document.getElementById('token-info-plan');
+      const validUntilEl = document.getElementById('token-info-valid-until');
+      
+      if (emailEl && tokenData.email) {
+        emailEl.textContent = tokenData.email;
+      }
+      if (planEl && tokenData.plan_role) {
+        const planNames = {
+          'trial': 'Gratuito (Trial)',
+          'pro': 'Pro',
+          'desk': 'Desk'
+        };
+        planEl.textContent = planNames[tokenData.plan_role] || tokenData.plan_role;
+      }
+      if (validUntilEl && tokenData.valid_until) {
+        const date = new Date(tokenData.valid_until);
+        validUntilEl.textContent = date.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+      }
+      
+      modal.hidden = false;
+      setTimeout(() => {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        // Inizializza PWA dopo che il modale è aperto
+        if (window.initPWAModal) {
+          window.initPWAModal();
+        }
+        // Marca come mostrato
+        sessionStorage.setItem(shownKey, 'true');
+      }, 10);
     }
 
     // Verifica se l'utente è admin e mostra link
@@ -2805,9 +2921,10 @@
     }
   </script>
   
-  <!-- ===== PWA + PUSH HANDLER ===== -->
+  <!-- PWA code removed - dashboard simplified to reports only -->
+  <!--
   <script type="module">
-    import { FCM_CONFIG } from '/archivio/assets/js/fcm-config.js';
+    // PWA code removed for simplicity
 
     const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
     const installBtn = document.getElementById('pwa-install-btn');
@@ -3095,6 +3212,44 @@
       }
     });
 
+    // Check for app updates
+    async function checkForUpdates() {
+      const registration = await registerServiceWorker();
+      if (!registration) return;
+      
+      try {
+        await registration.update();
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            const updateBtn = document.getElementById('pwa-update-btn');
+            if (updateBtn) {
+              updateBtn.style.display = 'inline-flex';
+              updateBtn.onclick = () => {
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
+                window.location.reload();
+              };
+            }
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // New service worker available
+                const updateBtn = document.getElementById('pwa-update-btn');
+                if (updateBtn) {
+                  updateBtn.style.display = 'inline-flex';
+                  updateBtn.onclick = () => {
+                    newWorker.postMessage({ type: 'SKIP_WAITING' });
+                    window.location.reload();
+                  };
+                }
+              }
+            });
+          }
+        });
+      } catch (err) {
+        console.error('[PWA] Errore controllo aggiornamenti:', err);
+      }
+    }
+
     (async function bootstrapPWA() {
       if (installBtn) {
         if (isStandalone()) {
@@ -3109,9 +3264,11 @@
         }
       }
       await registerServiceWorker();
+      await checkForUpdates();
       await updatePushUI();
     })();
   </script>
+  -->
   
   <!-- ===== LEGAL OVERLAY ===== -->
   <div id="legal-consent-overlay" role="dialog" aria-modal="true" aria-labelledby="legal-consent-title" hidden>
@@ -3286,6 +3443,606 @@
         document.body.style.overflow = '';
       }
     })();
+  </script>
+
+  <!-- ===== TOKEN INPUT MODAL (Step 1) ===== -->
+  <div id="modal-token-input" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-token-input-title" hidden>
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-token-input-title">Accesso dashboard</h2>
+        <button class="modal-close" type="button" aria-label="Chiudi" data-modal-close="token-input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 1.5rem; color: var(--dash-text-soft);">Inserisci il tuo token personale per accedere alla dashboard. Se non hai un token, puoi richiederlo gratuitamente.</p>
+        <form id="form-token-input" onsubmit="return false;">
+          <div class="form-group">
+            <label class="form-label" for="token-input-value">Token personale *</label>
+            <input class="form-input" type="text" id="token-input-value" name="token" required placeholder="Incolla qui il tuo token" autocomplete="off" />
+          </div>
+        </form>
+        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--dash-border);">
+          <p style="font-size: 0.85rem; color: var(--dash-text-muted); margin-bottom: 0.75rem;">Non hai un token?</p>
+          <a href="/pricing.html#richiedi-token" class="btn-modal btn-modal-primary" style="text-decoration: none; display: inline-flex;">Richiedi token gratuito</a>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal" type="button" data-modal-close="token-input">Annulla</button>
+        <button class="btn-modal btn-modal-primary" type="button" id="btn-submit-token-input">Accedi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOKEN INFO + PWA MODAL (Step 2) ===== -->
+  <div id="modal-token-info" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-token-info-title" hidden>
+    <div class="modal-panel" style="max-width: min(36rem, 90vw);">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-token-info-title">Token attivo</h2>
+        <button class="modal-close" type="button" aria-label="Chiudi" data-modal-close="token-info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Info Token -->
+        <div style="margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--dash-border);">
+          <h3 style="margin: 0 0 1rem; font-size: 1rem; color: var(--dash-text);">Informazioni token</h3>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div>
+              <span style="font-size: 0.8rem; color: var(--dash-text-muted);">Email:</span>
+              <div style="font-size: 0.9rem; color: var(--dash-text-soft); margin-top: 0.25rem;" id="token-info-email">-</div>
+            </div>
+            <div>
+              <span style="font-size: 0.8rem; color: var(--dash-text-muted);">Piano:</span>
+              <div style="font-size: 0.9rem; color: var(--dash-text-soft); margin-top: 0.25rem;" id="token-info-plan">-</div>
+            </div>
+            <div>
+              <span style="font-size: 0.8rem; color: var(--dash-text-muted);">Valido fino a:</span>
+              <div style="font-size: 0.9rem; color: var(--dash-text-soft); margin-top: 0.25rem;" id="token-info-valid-until">-</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PWA Install -->
+        <div style="margin-bottom: 1.5rem;">
+          <h3 style="margin: 0 0 0.75rem; font-size: 1rem; color: var(--dash-text);">Installa la dashboard (PWA)</h3>
+          <p style="margin: 0 0 1rem; font-size: 0.85rem; color: var(--dash-text-soft); line-height: 1.6;">Installa la dashboard come app sul tuo dispositivo per accesso rapido e funzionalità offline.</p>
+          <button class="pwa-btn" id="pwa-install-btn" type="button" disabled style="width: 100%; justify-content: center;">
+            <span class="btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v10" />
+                <path d="M8 11l4 4 4-4" />
+                <path d="M5 19h14" />
+              </svg>
+            </span>
+            <span class="btn-label">Installa la dashboard</span>
+          </button>
+          <button class="pwa-btn" id="pwa-update-btn" type="button" style="display: none; margin-top: 0.5rem; width: 100%; justify-content: center;">
+            <span class="btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
+              </svg>
+            </span>
+            <span class="btn-label">Aggiorna app</span>
+          </button>
+          <div style="margin-top: 0.75rem; font-size: 0.8rem; color: var(--dash-text-muted);" id="pwa-install-status">In attesa...</div>
+        </div>
+
+        <!-- Push Notifications -->
+        <div>
+          <h3 style="margin: 0 0 0.75rem; font-size: 1rem; color: var(--dash-text);">Notifiche push</h3>
+          <p style="margin: 0 0 1rem; font-size: 0.85rem; color: var(--dash-text-soft); line-height: 1.6;">Ricevi notifiche quando viene pubblicato nuovo materiale nella dashboard.</p>
+          <button class="pwa-btn" id="push-toggle-btn" type="button" style="width: 100%; justify-content: center;">
+            <span class="btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 15a6 6 0 0 0 0-6" />
+                <path d="M6 15a6 6 0 0 1 0-6" />
+                <path d="M8 15V9a4 4 0 0 1 8 0v6" />
+                <path d="M10 19h4" />
+              </svg>
+            </span>
+            <span class="btn-label">Attiva notifiche</span>
+          </button>
+          <div style="margin-top: 0.75rem; font-size: 0.8rem; color: var(--dash-text-muted);" id="push-status">Permessi non ancora richiesti.</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal btn-modal-primary" type="button" data-modal-close="token-info" style="width: 100%;">Continua</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL & PWA SCRIPTS ===== -->
+  <script type="module">
+    import { FCM_CONFIG } from '/archivio/assets/js/fcm-config.js';
+
+    const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
+    
+    // Modal handlers
+    function initModals() {
+      // Token input modal
+      const tokenInputModal = document.getElementById('modal-token-input');
+      const tokenInputClose = document.querySelector('[data-modal-close="token-input"]');
+      const btnSubmitTokenInput = document.getElementById('btn-submit-token-input');
+      
+      tokenInputClose?.addEventListener('click', () => {
+        tokenInputModal.classList.remove('active');
+        setTimeout(() => {
+          tokenInputModal.hidden = true;
+          document.body.style.overflow = '';
+          // Redirect se chiude senza inserire token
+          window.location.href = '/accesso.html?reason=missing_token';
+        }, 200);
+      });
+
+      btnSubmitTokenInput?.addEventListener('click', async () => {
+        const input = document.getElementById('token-input-value');
+        const token = input?.value?.trim();
+        if (!token) {
+          input?.focus();
+          return;
+        }
+        
+        btnSubmitTokenInput.disabled = true;
+        btnSubmitTokenInput.textContent = 'Verifica in corso...';
+        
+        try {
+          const res = await fetch('/api/validate-dashboard-token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token })
+          });
+          const data = await res.json();
+          
+          if (data.ok) {
+            localStorage.setItem(ACCESS_TOKEN_KEY, token);
+            tokenInputModal.classList.remove('active');
+            setTimeout(() => {
+              tokenInputModal.hidden = true;
+              showTokenInfoModal(data);
+            }, 200);
+            // Ricarica la pagina per inizializzare la dashboard
+            window.location.reload();
+          } else {
+            alert('Token non valido o scaduto. Controlla il token e riprova.');
+            btnSubmitTokenInput.disabled = false;
+            btnSubmitTokenInput.textContent = 'Accedi';
+          }
+        } catch (err) {
+          alert('Errore di connessione. Riprova più tardi.');
+          btnSubmitTokenInput.disabled = false;
+          btnSubmitTokenInput.textContent = 'Accedi';
+        }
+      });
+
+      // Token info modal
+      const tokenInfoModal = document.getElementById('modal-token-info');
+      const tokenInfoClose = document.querySelector('[data-modal-close="token-info"]');
+      
+      tokenInfoClose?.addEventListener('click', () => {
+        tokenInfoModal.classList.remove('active');
+        setTimeout(() => {
+          tokenInfoModal.hidden = true;
+          document.body.style.overflow = '';
+        }, 200);
+      });
+
+      // PWA settings button (apre modale info)
+      const pwaSettingsBtn = document.getElementById('pwa-settings-btn');
+      pwaSettingsBtn?.addEventListener('click', async () => {
+        const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+        if (!token) {
+          showTokenModal();
+          return;
+        }
+        try {
+          const res = await fetch('/api/validate-dashboard-token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token })
+          });
+          const data = await res.json();
+          if (data.ok) {
+            // Forza apertura anche se già mostrato (utente ha cliccato manualmente)
+            const modal = document.getElementById('modal-token-info');
+            if (modal) {
+              const emailEl = document.getElementById('token-info-email');
+              const planEl = document.getElementById('token-info-plan');
+              const validUntilEl = document.getElementById('token-info-valid-until');
+              
+              if (emailEl && data.email) {
+                emailEl.textContent = data.email;
+              }
+              if (planEl && data.plan_role) {
+                const planNames = {
+                  'trial': 'Gratuito (Trial)',
+                  'pro': 'Pro',
+                  'desk': 'Desk'
+                };
+                planEl.textContent = planNames[data.plan_role] || data.plan_role;
+              }
+              if (validUntilEl && data.valid_until) {
+                const date = new Date(data.valid_until);
+                validUntilEl.textContent = date.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+              }
+              
+              modal.hidden = false;
+              setTimeout(() => {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                if (window.initPWAModal) {
+                  window.initPWAModal();
+                }
+              }, 10);
+            }
+          } else {
+            showTokenModal();
+          }
+        } catch (err) {
+          showTokenModal();
+        }
+      });
+
+      // Close on overlay click
+      [tokenInputModal, tokenInfoModal].forEach(modal => {
+        if (modal) {
+          modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+              modal.classList.remove('active');
+              setTimeout(() => {
+                modal.hidden = true;
+                document.body.style.overflow = '';
+              }, 200);
+            }
+          });
+        }
+      });
+
+      // Close on Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+            modal.classList.remove('active');
+            setTimeout(() => {
+              modal.hidden = true;
+              document.body.style.overflow = '';
+            }, 200);
+          });
+        }
+      });
+    }
+
+    // PWA functions
+    const installBtn = document.getElementById('pwa-install-btn');
+    const installStatus = document.getElementById('pwa-install-status');
+    const pushBtn = document.getElementById('push-toggle-btn');
+    const pushStatus = document.getElementById('push-status');
+    const installLabel = installBtn?.querySelector('.btn-label');
+    const pushLabel = pushBtn?.querySelector('.btn-label');
+
+    let deferredPrompt = null;
+    let swRegistration = null;
+
+    const isStandalone = () =>
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true;
+
+    function updateInstallStatus(message) {
+      if (installStatus) {
+        installStatus.textContent = message;
+      }
+    }
+
+    function setInstallButton(state) {
+      if (!installBtn) return;
+      if (state === 'installed') {
+        if (isStandalone()) {
+          installBtn.disabled = true;
+          if (installLabel) {
+            installLabel.textContent = 'App installata';
+          }
+        } else {
+          installBtn.disabled = false;
+          installBtn.dataset.action = 'open-app';
+          if (installLabel) {
+            installLabel.textContent = 'Apri app';
+          }
+        }
+      } else if (state === 'ready') {
+        installBtn.disabled = false;
+        installBtn.dataset.action = 'install';
+        if (installLabel) {
+          installLabel.textContent = 'Installa la dashboard';
+        }
+      } else {
+        installBtn.disabled = true;
+        installBtn.dataset.action = 'wait';
+        if (installLabel) {
+          installLabel.textContent = 'Installa la dashboard';
+        }
+      }
+    }
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+      setInstallButton('ready');
+      updateInstallStatus('Disponibile l\'installazione sui dispositivi supportati.');
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredPrompt = null;
+      setInstallButton('installed');
+      updateInstallStatus('App installata sul dispositivo.');
+    });
+
+    installBtn?.addEventListener('click', async () => {
+      const action = installBtn.dataset.action;
+      
+      if (action === 'open-app') {
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+          updateInstallStatus('Apri l\'app Tradelia dalla schermata Home del dispositivo.');
+        } else {
+          updateInstallStatus('Apri l\'app Tradelia dalla barra delle applicazioni o dal menu Start.');
+        }
+        return;
+      }
+      
+      if (!deferredPrompt) {
+        updateInstallStatus('Apri il menu del browser e scegli "Aggiungi alla schermata Home".');
+        return;
+      }
+      
+      try {
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        if (choice.outcome === 'accepted') {
+          setInstallButton('installed');
+          updateInstallStatus('Installazione completata: trovi la dashboard tra le tue app.');
+        } else {
+          updateInstallStatus('Installazione annullata. Puoi riprovare quando vuoi.');
+        }
+      } catch (err) {
+        console.error('[PWA] Errore durante il prompt di installazione:', err);
+        updateInstallStatus('Errore durante l\'installazione. Riprova più tardi.');
+      }
+      deferredPrompt = null;
+    });
+
+    async function registerServiceWorker() {
+      if (!('serviceWorker' in navigator)) {
+        updatePushStatus('Service Worker non supportato dal browser.');
+        return null;
+      }
+      if (swRegistration) return swRegistration;
+      try {
+        swRegistration = await navigator.serviceWorker.register('/sw.js');
+        await navigator.serviceWorker.ready;
+        return swRegistration;
+      } catch (err) {
+        console.error('[PWA] Errore registrazione SW', err);
+        updatePushStatus('Errore nella registrazione del Service Worker.');
+        return null;
+      }
+    }
+
+    function getStoredToken() {
+      try {
+        return localStorage.getItem(ACCESS_TOKEN_KEY);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function updatePushStatus(message) {
+      if (pushStatus) {
+        pushStatus.textContent = message;
+      }
+    }
+
+    async function updatePushUI() {
+      if (!pushBtn) return;
+      const userToken = getStoredToken();
+      if (!userToken) {
+        pushBtn.disabled = true;
+        updatePushStatus('Serve il token personale per collegare questo dispositivo.');
+        return;
+      }
+      if (!isStandalone()) {
+        pushBtn.disabled = true;
+        updatePushStatus('Installa o apri la PWA per gestire le notifiche.');
+        return;
+      }
+      pushBtn.disabled = false;
+      if (!('Notification' in window)) {
+        pushBtn.disabled = true;
+        updatePushStatus('Notifiche push non supportate da questo browser.');
+        return;
+      }
+      const permission = Notification.permission;
+      if (permission === 'denied') {
+        pushBtn.disabled = true;
+        updatePushStatus('Hai negato il permesso alle notifiche. Abilitalo dalle impostazioni del browser.');
+        return;
+      }
+      const registration = await registerServiceWorker();
+      if (!registration) return;
+      const subscription = await registration.pushManager.getSubscription();
+      if (subscription && permission === 'granted') {
+        pushBtn.dataset.enabled = 'true';
+        if (pushLabel) {
+          pushLabel.textContent = 'Disattiva notifiche';
+        }
+        updatePushStatus('Notifiche attive su questo dispositivo.');
+      } else {
+        pushBtn.dataset.enabled = 'false';
+        if (pushLabel) {
+          pushLabel.textContent = 'Attiva notifiche';
+        }
+        if (permission === 'default') {
+          updatePushStatus('Permessi non ancora richiesti.');
+        } else {
+          updatePushStatus('Permesso concesso, attiva per ricevere alert.');
+        }
+      }
+    }
+
+    function urlBase64ToUint8Array(base64String) {
+      const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+      const base64 = (base64String + padding)
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
+      const rawData = window.atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+      for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
+    }
+
+    async function subscribeToPush() {
+      const userToken = getStoredToken();
+      if (!userToken) {
+        updatePushStatus('Serve il token personale per collegare questo dispositivo.');
+        return;
+      }
+      if (!isStandalone()) {
+        updatePushStatus('Apri la versione installata per attivare le notifiche.');
+        return;
+      }
+      const registration = await registerServiceWorker();
+      if (!registration) return;
+
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        updatePushStatus('Permesso notifiche non concesso.');
+        return;
+      }
+
+      try {
+        const subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(FCM_CONFIG.vapidPublicKey)
+        });
+
+        await fetch('/api/push', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'subscribe', subscription, token: userToken })
+        });
+
+        updatePushUI();
+      } catch (err) {
+        console.error('[PWA] Errore attivazione push', err);
+        updatePushStatus('Errore durante l\'attivazione delle notifiche.');
+      }
+    }
+
+    async function unsubscribePush() {
+      const userToken = getStoredToken();
+      if (!userToken) {
+        updatePushStatus('Token non trovato, aggiorna la pagina.');
+        return;
+      }
+      const registration = await registerServiceWorker();
+      if (!registration) return;
+      const subscription = await registration.pushManager.getSubscription();
+      if (subscription) {
+        await subscription.unsubscribe();
+      }
+      await fetch('/api/push', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'unsubscribe', token: userToken })
+      }).catch(() => {});
+      updatePushUI();
+    }
+
+    pushBtn?.addEventListener('click', async () => {
+      const userToken = getStoredToken();
+      if (!userToken) {
+        updatePushStatus('Serve il token personale per collegare questo dispositivo.');
+        return;
+      }
+      if (!isStandalone()) {
+        updatePushStatus('Installa la PWA per gestire le notifiche.');
+        return;
+      }
+      const enabled = pushBtn.dataset.enabled === 'true';
+      if (enabled) {
+        await unsubscribePush();
+      } else {
+        await subscribeToPush();
+      }
+    });
+
+    // Check for app updates
+    async function checkForUpdates() {
+      const registration = await registerServiceWorker();
+      if (!registration) return;
+      
+      try {
+        await registration.update();
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            const updateBtn = document.getElementById('pwa-update-btn');
+            if (updateBtn) {
+              updateBtn.style.display = 'inline-flex';
+              updateBtn.onclick = () => {
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
+                window.location.reload();
+              };
+            }
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                const updateBtn = document.getElementById('pwa-update-btn');
+                if (updateBtn) {
+                  updateBtn.style.display = 'inline-flex';
+                  updateBtn.onclick = () => {
+                    newWorker.postMessage({ type: 'SKIP_WAITING' });
+                    window.location.reload();
+                  };
+                }
+              }
+            });
+          }
+        });
+      } catch (err) {
+        console.error('[PWA] Errore controllo aggiornamenti:', err);
+      }
+    }
+
+    // Inizializza PWA quando il modale info è aperto
+    async function initPWAModal() {
+      if (installBtn) {
+        if (isStandalone()) {
+          setInstallButton('installed');
+          updateInstallStatus('App installata e aperta sul dispositivo.');
+        } else {
+          updateInstallStatus('Segui le istruzioni del browser per installare l\'app.');
+        }
+      }
+      await registerServiceWorker();
+      await checkForUpdates();
+      await updatePushUI();
+    }
+
+    // Esponi funzioni globalmente
+    window.showTokenInfoModal = showTokenInfoModal;
+    window.showTokenModal = showTokenModal;
+    window.initPWAModal = initPWAModal;
+
+    // Inizializza modali
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initModals);
+    } else {
+      initModals();
+    }
   </script>
 </body>
 </html>
