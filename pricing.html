@@ -849,8 +849,8 @@
             <h2 class="plan-title" id="analisi-heading" style="font-size: var(--fs-24); margin-bottom: var(--sp-3);">Analisi su richiesta</h2>
             <p class="plan-description" style="font-size: var(--fs-15); max-width: 600px; margin: 0 auto; line-height: 1.5;">
               Disponibili per tutti, anche per utenti gratuiti. Ogni analisi richiede circa 1 ora di lavoro e include fonti, ipotesi e controlli documentati. Approccio on-demand: paghi solo per ciò che richiedi.
-            </p>
-          </div>
+              </p>
+            </div>
           
           <div style="background: var(--surface-elev); border: 1px solid var(--br-card); border-radius: var(--radius-lg); padding: var(--sp-5) var(--sp-4); margin-bottom: var(--sp-5);">
             <div style="display: flex; align-items: baseline; justify-content: center; gap: var(--sp-2); margin-bottom: var(--sp-4);">
@@ -875,7 +875,7 @@
                 Capacità: massimo 4 analisi al giorno. Gestione first come, first served. Ogni analisi include fonti, metodologia e controlli documentati.
               </p>
             </div>
-          </div>
+        </div>
           
           <div style="text-align: center;">
             <a href="/analisi-su-richiesta.html" class="btn btn-primary" aria-label="Vai alla pagina dedicata Analisi su richiesta">
@@ -885,7 +885,7 @@
               <strong>Xolo Go</strong> per fatturazione e pagamento (bonifico o carta). 
               <a href="/terms.html#section4" style="color: var(--brand-500); text-decoration: underline; font-size: var(--fs-11);">Termini di pagamento</a>
             </p>
-          </div>
+      </div>
         </div>
       </section>
 
@@ -1595,7 +1595,7 @@
     });
 
     // Close modal on Escape key
-    document.addEventListener('keydown', (e) => {
+      document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         const activeModal = document.querySelector('.modal-overlay.active');
         if (activeModal) {
@@ -1706,14 +1706,33 @@ Timestamp: ${data.timestamp}`;
       errorMsg.classList.remove('active');
 
       try {
-        const response = await fetch('/api/send-email', {
+        const response = await fetch('/api/request-analysis', {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
-          body: emailBody
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tipo: 'analisi-su-richiesta',
+            nome: data.nome,
+            email: data.email,
+            tipologia: data.tipologia,
+            codiceFiscale: data.codiceFiscale,
+            ragioneSociale: data.ragioneSociale,
+            piva: data.piva,
+            indirizzo: data.indirizzo,
+            tipoAnalisi: data.tipoAnalisi,
+            dettagli: data.dettagli,
+            consensoGDPR: data.consensoGDPR,
+            timestamp: data.timestamp
+          })
         });
 
         if (!response.ok) {
-          throw new Error('Errore invio');
+          const errorData = await response.json().catch(() => ({ error: 'Errore invio' }));
+          throw new Error(errorData.error || 'Errore invio');
+        }
+
+        const result = await response.json();
+        if (!result.ok) {
+          throw new Error(result.error || 'Errore invio');
         }
 
         successMsg.classList.add('active');
@@ -1793,14 +1812,20 @@ Timestamp: ${data.timestamp}`;
       errorMsg.classList.remove('active');
 
       try {
-        const response = await fetch('/api/send-email', {
+        const response = await fetch('/api/request-analysis', {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
-          body: emailBody
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
         });
 
         if (!response.ok) {
-          throw new Error('Errore invio');
+          const errorData = await response.json().catch(() => ({ error: 'Errore invio' }));
+          throw new Error(errorData.error || 'Errore invio');
+        }
+
+        const result = await response.json();
+        if (!result.ok) {
+          throw new Error(result.error || 'Errore invio');
         }
 
         successMsg.classList.add('active');
