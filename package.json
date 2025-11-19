@@ -6,7 +6,10 @@
   "scripts": {
     "generate-manifest": "node archivio/generate-manifest.js",
     "setup-hooks": "node scripts/setup-hooks.js",
-    "precommit": "node archivio/generate-manifest.js"
+    "precommit": "node archivio/generate-manifest.js",
+    "version:patch": "node scripts/update-version.js patch",
+    "version:minor": "node scripts/update-version.js minor",
+    "version:major": "node scripts/update-version.js major"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0"

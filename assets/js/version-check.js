@@ -113,6 +113,7 @@
 
   /**
    * Show version update modal BEFORE MiFID
+   * Academic design aligned with Tradelia design system
    */
   function showVersionModal(hasUpdate, currentVersion, newVersion) {
     // Don't show if already shown in this session
@@ -127,6 +128,8 @@
     modal.setAttribute('role', 'dialog');
     modal.setAttribute('aria-modal', 'true');
     modal.setAttribute('aria-labelledby', 'version-modal-title');
+    modal.setAttribute('aria-describedby', 'version-modal-description');
+    modal.className = 'version-modal-overlay';
     modal.style.cssText = `
       position: fixed;
       inset: 0;
@@ -136,89 +139,77 @@
       justify-content: center;
       background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(12px);
-      padding: 1rem;
+      padding: var(--sp-4, 1rem);
       animation: fadeIn 0.3s ease;
     `;
 
     const content = document.createElement('div');
+    content.className = 'version-modal-panel';
     content.style.cssText = `
-      background: var(--surface-elev, #202020);
+      background: var(--surface-card, #181818);
       border: 1px solid var(--br-card, #323232);
-      border-radius: 12px;
-      max-width: 500px;
+      border-radius: var(--radius-lg, 14px);
+      max-width: min(500px, 90vw);
       width: 100%;
-      padding: 2rem;
-      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+      padding: var(--sp-8, 2rem);
+      box-shadow: var(--shadow-xl, 0 8px 24px rgba(0, 0, 0, 0.35));
       position: relative;
     `;
 
     if (hasUpdate) {
       content.innerHTML = `
-        <div style="text-align: center; margin-bottom: 1.5rem;">
-          <div style="width: 64px; height: 64px; margin: 0 auto 1rem; background: rgba(34, 197, 94, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="rgb(34, 197, 94)" stroke-width="2" style="width: 32px; height: 32px;">
+        <div style="text-align: center; margin-bottom: var(--sp-6, 1.5rem);">
+          <div style="width: 64px; height: 64px; margin: 0 auto var(--sp-4, 1rem); background: rgba(37, 99, 235, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--brand-400, #60a5fa)" stroke-width="2" style="width: 32px; height: 32px;">
               <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
             </svg>
           </div>
-          <h2 id="version-modal-title" style="font-size: 1.5rem; font-weight: 700; color: var(--ink, #ffffff); margin: 0 0 0.5rem;">
+          <h2 id="version-modal-title" style="font-size: var(--fs-20, 20px); font-weight: 700; color: var(--ink, #ffffff); margin: 0 0 var(--sp-2, 0.5rem); line-height: var(--lh-12, 1.2);">
             Aggiornamento disponibile
           </h2>
-          <p style="color: var(--muted, #b8b8b8); font-size: 0.9rem; margin: 0;">
-            Versione ${newVersion} disponibile (attuale: ${currentVersion})
+          <p id="version-modal-description" style="color: var(--muted, #b8b8b8); font-size: var(--fs-14, 14px); margin: 0; line-height: var(--lh-15, 1.5);">
+            Versione <strong style="color: var(--ink-soft, #f0f0f0);">${newVersion}</strong> disponibile<br>
+            <span style="font-size: var(--fs-12, 12px); color: var(--muted, #b8b8b8);">(attuale: ${currentVersion})</span>
           </p>
         </div>
         
-        <div style="margin-bottom: 1.5rem;">
-          <div style="background: rgba(0, 0, 0, 0.3); border-radius: 8px; height: 8px; overflow: hidden; position: relative;">
+        <div style="margin-bottom: var(--sp-6, 1.5rem);">
+          <div style="background: rgba(0, 0, 0, 0.3); border-radius: var(--radius-sm, 6px); height: 8px; overflow: hidden; position: relative;">
             <div id="update-progress" style="
-              background: linear-gradient(90deg, rgb(34, 197, 94) 0%, rgb(16, 185, 129) 100%);
+              background: linear-gradient(90deg, var(--brand-600, #2563eb) 0%, var(--brand-400, #60a5fa) 100%);
               height: 100%;
               width: 0%;
-              transition: width 0.3s ease;
-              border-radius: 8px;
-              box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+              transition: width var(--transition-base, 0.22s ease-out);
+              border-radius: var(--radius-sm, 6px);
+              box-shadow: 0 0 12px rgba(37, 99, 235, 0.4);
             "></div>
           </div>
-          <p id="update-status" style="text-align: center; color: var(--muted, #b8b8b8); font-size: 0.85rem; margin-top: 0.75rem;">
+          <p id="update-status" style="text-align: center; color: var(--muted, #b8b8b8); font-size: var(--fs-13, 13px); margin-top: var(--sp-3, 0.75rem); line-height: var(--lh-15, 1.5);">
             Aggiornamento in corso...
           </p>
         </div>
         
-        <button id="version-continue-btn" type="button" style="
+        <button id="version-continue-btn" type="button" class="btn-modal btn-modal-primary" style="
           display: none;
           width: 100%;
-          padding: 0.875rem 1.5rem;
-          background: var(--brand-600, #2563eb);
-          color: white;
-          border: none;
-          border-radius: 8px;
-          font-weight: 600;
-          font-size: 0.95rem;
-          cursor: pointer;
-          transition: all 0.2s;
+          min-height: 44px;
         ">Continua</button>
       `;
     } else {
       content.innerHTML = `
         <div style="text-align: center;">
-          <h2 id="version-modal-title" style="font-size: 1.5rem; font-weight: 700; color: var(--ink, #ffffff); margin: 0 0 1rem;">
+          <div style="width: 56px; height: 56px; margin: 0 auto var(--sp-4, 1rem); background: var(--surface-elev, #202020); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--br-card, #323232);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--brand-400, #60a5fa)" stroke-width="2" style="width: 28px; height: 28px;">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+            </svg>
+          </div>
+          <h2 id="version-modal-title" style="font-size: var(--fs-20, 20px); font-weight: 700; color: var(--ink, #ffffff); margin: 0 0 var(--sp-4, 1rem); line-height: var(--lh-12, 1.2);">
             Tradelia AI
           </h2>
-          <p style="color: var(--muted, #b8b8b8); font-size: 0.9rem; margin: 0 0 1.5rem;">
-            Versione ${currentVersion}
+          <p id="version-modal-description" style="color: var(--muted, #b8b8b8); font-size: var(--fs-14, 14px); margin: 0 0 var(--sp-6, 1.5rem); line-height: var(--lh-15, 1.5);">
+            Versione <strong style="color: var(--ink-soft, #f0f0f0); font-weight: 600;">${currentVersion}</strong>
           </p>
-          <button id="version-continue-btn" type="button" style="
-            width: 100%;
-            padding: 0.875rem 1.5rem;
-            background: var(--brand-600, #2563eb);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.2s;
-          ">Continua</button>
+          <button id="version-continue-btn" type="button" class="btn-modal btn-modal-primary" style="width: 100%; min-height: 44px;">Continua</button>
         </div>
       `;
     }
@@ -226,18 +217,32 @@
     modal.appendChild(content);
     document.body.appendChild(modal);
 
-    // Add animation
+    // Add animation and styles aligned with Tradelia design system
     const style = document.createElement('style');
     style.textContent = `
       @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      
+      .version-modal-overlay {
+        animation: fadeIn var(--transition-base, 0.22s ease-out);
+      }
+      
+      .version-modal-panel {
+        animation: fadeIn var(--transition-base, 0.22s ease-out);
       }
       
       @media (prefers-reduced-motion: reduce) {
-        #version-update-modal {
+        .version-modal-overlay,
+        .version-modal-panel {
           animation: none;
         }
+      }
+      
+      .version-modal-panel button:focus-visible {
+        outline: 2px solid var(--brand-400, #60a5fa);
+        outline-offset: 2px;
       }
     `;
     document.head.appendChild(style);

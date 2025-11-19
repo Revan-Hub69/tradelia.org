@@ -1399,15 +1399,15 @@
       width: 100%;
       max-width: min(42rem, 90vw);
       max-height: 90vh;
-      background: var(--dash-surface);
-      border: 1px solid var(--dash-border);
-      border-radius: var(--radius-lg);
+      background: var(--surface-card, #181818);
+      border: 1px solid var(--br-card, #323232);
+      border-radius: var(--radius-lg, 14px);
       display: flex;
       flex-direction: column;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      box-shadow: var(--shadow-xl, 0 8px 24px rgba(0, 0, 0, 0.35));
       overflow: hidden;
       transform: scale(0.95);
-      transition: transform 0.2s ease;
+      transition: transform var(--transition-base, 0.22s ease-out);
     }
 
     .modal-overlay.active .modal-panel {
@@ -1431,44 +1431,50 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: var(--sp-5) var(--sp-6);
-      border-bottom: 1px solid var(--dash-border);
+      padding: var(--sp-5, 1.25rem) var(--sp-6, 1.5rem);
+      border-bottom: 1px solid var(--br-card, #323232);
     }
 
     .modal-title {
-      font-size: var(--fs-20);
+      font-size: var(--fs-20, 20px);
       font-weight: 700;
-      color: var(--dash-text);
+      color: var(--ink, #ffffff);
       margin: 0;
+      line-height: var(--lh-12, 1.2);
     }
 
     .modal-close {
       background: none;
       border: none;
-      color: var(--dash-text-muted);
+      color: var(--muted, #b8b8b8);
       cursor: pointer;
-      padding: 0.5rem;
+      padding: var(--sp-2, 0.5rem);
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 6px;
-      transition: all 0.2s ease;
+      border-radius: var(--radius-sm, 6px);
+      transition: all var(--transition-base, 0.22s ease-out);
     }
 
     .modal-close:hover {
-      background: var(--dash-surface-elev);
-      color: var(--dash-text);
+      background: var(--surface-elev, #202020);
+      color: var(--ink, #ffffff);
+    }
+    
+    .modal-close:focus-visible {
+      outline: 2px solid var(--brand-400, #60a5fa);
+      outline-offset: 2px;
     }
 
     .modal-body {
-      padding: var(--sp-6);
+      padding: var(--sp-6, 1.5rem);
       overflow-y: auto;
       flex: 1;
       /* Smooth scrolling for better UX (2024-25 best practice) */
       scroll-behavior: smooth;
       /* Custom scrollbar for better visibility (WCAG 2.2) */
       scrollbar-width: thin;
-      scrollbar-color: var(--dash-accent) transparent;
+      scrollbar-color: var(--brand-400, #60a5fa) transparent;
     }
     
     .modal-body::-webkit-scrollbar {
@@ -1480,12 +1486,12 @@
     }
     
     .modal-body::-webkit-scrollbar-thumb {
-      background: var(--dash-accent);
+      background: var(--brand-400, #60a5fa);
       border-radius: 4px;
     }
     
     .modal-body::-webkit-scrollbar-thumb:hover {
-      background: var(--dash-accent-hover);
+      background: var(--brand-500, #3b82f6);
     }
     
     /* Reduced motion support for modal animations (WCAG 2.2) */
@@ -1509,9 +1515,9 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: var(--sp-4);
-      padding: var(--sp-5) var(--sp-6);
-      border-top: 1px solid var(--dash-border);
+      gap: var(--sp-4, 1rem);
+      padding: var(--sp-5, 1.25rem) var(--sp-6, 1.5rem);
+      border-top: 1px solid var(--br-card, #323232);
     }
 
     .form-group {
@@ -1555,30 +1561,43 @@
 
     .btn-modal {
       padding: 0.625rem 1.5rem;
-      border-radius: 6px;
-      border: 1px solid var(--dash-border);
-      background: var(--dash-surface-elev);
-      color: var(--dash-text);
-      font-size: var(--fs-14);
+      border-radius: var(--radius-sm, 6px);
+      border: 1px solid var(--br-card, #323232);
+      background: var(--surface-elev, #202020);
+      color: var(--ink, #ffffff);
+      font-size: var(--fs-14, 14px);
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all var(--transition-base, 0.22s ease-out);
+      font-family: var(--ff-sans, 'Inter', sans-serif);
     }
 
     .btn-modal:hover {
-      border-color: var(--dash-border-strong);
-      background: var(--dash-surface);
+      border-color: var(--br-strong, #3e3e3e);
+      background: var(--surface-card, #181818);
+      color: var(--ink-soft, #f0f0f0);
+    }
+    
+    .btn-modal:focus-visible {
+      outline: 2px solid var(--brand-400, #60a5fa);
+      outline-offset: 2px;
     }
 
     .btn-modal-primary {
-      background: var(--dash-accent);
-      border-color: var(--dash-accent);
-      color: var(--ink-invert, #ffffff);
+      background: var(--brand-600, #2563eb);
+      border-color: var(--brand-600, #2563eb);
+      color: var(--ink, #ffffff);
+      font-weight: 600;
     }
 
     .btn-modal-primary:hover {
-      background: var(--dash-accent-hover);
-      border-color: var(--dash-accent-hover);
+      background: var(--brand-500, #3b82f6);
+      border-color: var(--brand-500, #3b82f6);
+    }
+    
+    .btn-modal-primary:active {
+      background: var(--brand-400, #60a5fa);
+      border-color: var(--brand-400, #60a5fa);
     }
     
     .btn-modal-primary:focus-visible {
@@ -3648,28 +3667,28 @@
       <div class="modal-body">
         <p id="modal-token-info-description" class="sr-only">Informazioni sul token di accesso, installazione PWA e notifiche push.</p>
         <!-- Info Token -->
-        <div style="margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--dash-border);">
-          <h3 style="margin: 0 0 1rem; font-size: 1rem; color: var(--dash-text);">Informazioni token</h3>
+        <div style="margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--br-card, #323232);">
+          <h3 style="margin: 0 0 1rem; font-size: var(--fs-16, 16px); font-weight: 600; color: var(--ink, #ffffff);">Informazioni token</h3>
           <div style="display: flex; flex-direction: column; gap: 0.75rem;">
             <div>
-              <span style="font-size: 0.8rem; color: var(--dash-text-muted);">Email:</span>
-              <div style="font-size: 0.9rem; color: var(--dash-text-soft); margin-top: 0.25rem;" id="token-info-email">-</div>
+              <span style="font-size: var(--fs-12, 12px); color: var(--muted, #b8b8b8); font-weight: 500;">Email:</span>
+              <div style="font-size: var(--fs-14, 14px); color: var(--ink-soft, #f0f0f0); margin-top: 0.25rem; font-weight: 400;" id="token-info-email">-</div>
             </div>
             <div>
-              <span style="font-size: 0.8rem; color: var(--dash-text-muted);">Piano:</span>
-              <div style="font-size: 0.9rem; color: var(--dash-text-soft); margin-top: 0.25rem;" id="token-info-plan">-</div>
+              <span style="font-size: var(--fs-12, 12px); color: var(--muted, #b8b8b8); font-weight: 500;">Piano:</span>
+              <div style="font-size: var(--fs-14, 14px); color: var(--ink-soft, #f0f0f0); margin-top: 0.25rem; font-weight: 400;" id="token-info-plan">-</div>
             </div>
             <div>
-              <span style="font-size: 0.8rem; color: var(--dash-text-muted);">Valido fino a:</span>
-              <div style="font-size: 0.9rem; color: var(--dash-text-soft); margin-top: 0.25rem;" id="token-info-valid-until">-</div>
+              <span style="font-size: var(--fs-12, 12px); color: var(--muted, #b8b8b8); font-weight: 500;">Valido fino a:</span>
+              <div style="font-size: var(--fs-14, 14px); color: var(--ink-soft, #f0f0f0); margin-top: 0.25rem; font-weight: 400;" id="token-info-valid-until">-</div>
             </div>
           </div>
         </div>
 
         <!-- PWA Install -->
         <div style="margin-bottom: 1.5rem;">
-          <h3 style="margin: 0 0 0.75rem; font-size: 1rem; color: var(--dash-text);">Installa la dashboard (PWA)</h3>
-          <p style="margin: 0 0 1rem; font-size: 0.85rem; color: var(--dash-text-soft); line-height: 1.6;">Installa la dashboard come app sul tuo dispositivo per accesso rapido e funzionalità offline.</p>
+          <h3 style="margin: 0 0 0.75rem; font-size: var(--fs-16, 16px); font-weight: 600; color: var(--ink, #ffffff);">Installa la dashboard (PWA)</h3>
+          <p style="margin: 0 0 1rem; font-size: var(--fs-13, 13px); color: var(--ink-soft, #f0f0f0); line-height: var(--lh-16, 1.6);">Installa la dashboard come app sul tuo dispositivo per accesso rapido e funzionalità offline.</p>
           <button class="pwa-btn" id="pwa-install-btn" type="button" disabled style="width: 100%; justify-content: center;">
             <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -3688,13 +3707,13 @@
             </span>
             <span class="btn-label">Aggiorna app</span>
           </button>
-          <div style="margin-top: 0.75rem; font-size: 0.8rem; color: var(--dash-text-muted);" id="pwa-install-status">In attesa...</div>
+          <div style="margin-top: 0.75rem; font-size: var(--fs-12, 12px); color: var(--muted, #b8b8b8);" id="pwa-install-status">In attesa...</div>
         </div>
 
         <!-- Push Notifications -->
         <div>
-          <h3 style="margin: 0 0 0.75rem; font-size: 1rem; color: var(--dash-text);">Notifiche push</h3>
-          <p style="margin: 0 0 1rem; font-size: 0.85rem; color: var(--dash-text-soft); line-height: 1.6;">Ricevi notifiche quando viene pubblicato nuovo materiale nella dashboard.</p>
+          <h3 style="margin: 0 0 0.75rem; font-size: var(--fs-16, 16px); font-weight: 600; color: var(--ink, #ffffff);">Notifiche push</h3>
+          <p style="margin: 0 0 1rem; font-size: var(--fs-13, 13px); color: var(--ink-soft, #f0f0f0); line-height: var(--lh-16, 1.6);">Ricevi notifiche quando viene pubblicato nuovo materiale nella dashboard.</p>
           <button class="pwa-btn" id="push-toggle-btn" type="button" style="width: 100%; justify-content: center;">
             <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -3706,7 +3725,7 @@
             </span>
             <span class="btn-label">Attiva notifiche</span>
           </button>
-          <div style="margin-top: 0.75rem; font-size: 0.8rem; color: var(--dash-text-muted);" id="push-status">Permessi non ancora richiesti.</div>
+          <div style="margin-top: 0.75rem; font-size: var(--fs-12, 12px); color: var(--muted, #b8b8b8);" id="push-status">Permessi non ancora richiesti.</div>
         </div>
       </div>
       <div class="modal-footer">
@@ -3916,8 +3935,23 @@
       document.querySelectorAll('[data-modal-close="token-info"]').forEach(btn => {
         btn.addEventListener('click', (e) => {
           e.preventDefault();
+          e.stopPropagation();
           closeTokenInfoModal();
         });
+      });
+      
+      // Close on overlay click
+      tokenInfoModal?.addEventListener('click', (e) => {
+        if (e.target === tokenInfoModal) {
+          closeTokenInfoModal();
+        }
+      });
+      
+      // Close on ESC key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && tokenInfoModal && !tokenInfoModal.hidden && tokenInfoModal.classList.contains('active')) {
+          closeTokenInfoModal();
+        }
       });
 
       // PWA settings button (apre modale info)
@@ -4413,5 +4447,6 @@
   <script src="/assets/js/auto-update.js"></script>
 </body>
 </html>
+
 
 
