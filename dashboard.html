@@ -3829,6 +3829,16 @@
 
     const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
     
+    function setButtonDisabled(element, disabled) {
+      if (!element) return;
+      element.disabled = !!disabled;
+      if (disabled) {
+        element.setAttribute('aria-disabled', 'true');
+      } else {
+        element.removeAttribute('aria-disabled');
+      }
+    }
+
     // Focus trap utility
     function trapFocus(modal) {
       const focusableElements = modal.querySelectorAll(
