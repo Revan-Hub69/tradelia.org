@@ -215,6 +215,115 @@ p + p {
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ===== CTA BUTTONS · METODOLOGIA ACCADEMICA ===== */
+.btn-icon {
+  display: inline-flex;
+  width: 1.25rem;
+  height: 1.25rem;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btn-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.btn-label {
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: 0.01em;
+}
+
+.btn-pill {
+  --btn-bg: rgba(255, 255, 255, 0.02);
+  --btn-border: rgba(255, 255, 255, 0.12);
+  --btn-color: var(--ink);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0.55rem 1.4rem;
+  cursor: pointer;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--btn-color);
+  font-size: var(--fs-14);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+  min-height: 44px; /* WCAG 2.5.5 touch target */
+}
+
+.btn-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35);
+}
+
+.btn-pill:active {
+  transform: translateY(0);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.btn-pill--sm {
+  min-height: 38px;
+  padding: 0.4rem 1.1rem;
+  font-size: var(--fs-13);
+}
+
+.btn-pill--wide {
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-pill--primary {
+  --btn-bg: linear-gradient(135deg, var(--brand-400), var(--brand-600));
+  --btn-border: transparent;
+  box-shadow: 0 18px 36px rgba(37, 99, 235, 0.4);
+  color: #ffffff;
+}
+
+.btn-pill--primary:hover {
+  box-shadow: 0 22px 44px rgba(37, 99, 235, 0.45);
+}
+
+.btn-pill--outline {
+  --btn-bg: rgba(255, 255, 255, 0.01);
+  --btn-border: rgba(255, 255, 255, 0.18);
+  color: var(--ink);
+}
+
+.btn-pill--ghost {
+  --btn-bg: transparent;
+  --btn-border: transparent;
+  color: var(--muted);
+  box-shadow: none;
+}
+
+.btn-pill--disabled,
+.btn-pill[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-pill {
+    transition: none;
+    transform: none !important;
+  }
+}
+
 /* ===== ACCESSIBILITY ENHANCEMENTS ===== */
 
 /* Focus Visible (WCAG 2.4.7) */
