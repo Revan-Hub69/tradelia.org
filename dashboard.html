@@ -82,24 +82,38 @@
       }
     }
     
-    /* ===== DASHBOARD HEADER (Accademico 2025 - Minimal) ===== */
+    /* ===== DASHBOARD HEADER (Accademico 2025 - Alta Fascia) ===== */
     .dashboard-header-minimal {
-      margin-bottom: var(--spacing-xl);
-      padding-bottom: var(--spacing-lg);
+      margin-bottom: var(--spacing-2xl);
+      padding: var(--spacing-xl) 0;
       border-bottom: 1px solid var(--dash-border);
       display: flex;
-      align-items: baseline;
-      gap: var(--spacing-md);
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: var(--spacing-lg);
       flex-wrap: wrap;
+      position: relative;
+    }
+    
+    .dashboard-header-minimal::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 60px;
+      height: 2px;
+      background: var(--dash-accent);
+      opacity: 0.6;
     }
     
     .dashboard-title {
       color: var(--dash-text);
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      font-weight: 700;
-      letter-spacing: -0.01em;
+      font-size: clamp(1.75rem, 4vw, 2.25rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
       margin: 0;
-      line-height: var(--lh-14, 1.4);
+      line-height: 1.2;
+      font-family: var(--ff-sans, -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif);
     }
     
     .dashboard-subtitle {
@@ -107,7 +121,8 @@
       font-size: var(--fs-13, 13px);
       font-weight: 400;
       margin: 0;
-      margin-left: auto;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
     }
     
     /* ===== MODULES GRID ===== */
@@ -620,26 +635,38 @@
       background: var(--dash-surface);
       border: 1px solid var(--dash-border);
       border-radius: var(--radius-md);
-      padding: var(--spacing-lg);
-      text-align: center;
+      padding: var(--spacing-xl);
+      text-align: left;
+      transition: var(--transition);
+    }
+    
+    .stat-card:hover {
+      background: var(--dash-surface-elev);
+      border-color: var(--dash-border);
     }
     
     .stat-label {
-      font-size: var(--fs-13, 13px);
+      font-size: var(--fs-12, 12px);
       color: var(--dash-text-muted);
-      margin-bottom: var(--spacing-xs);
+      margin-bottom: var(--spacing-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 500;
     }
     
     .stat-value {
-      font-size: 28px;
+      font-size: 32px;
       font-weight: 600;
       color: var(--dash-text);
       margin-bottom: var(--spacing-xs);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
     }
     
     .stat-change {
-      font-size: var(--fs-12, 12px);
-      color: var(--dash-text-soft);
+      font-size: var(--fs-11, 11px);
+      color: var(--dash-text-muted);
+      opacity: 0.8;
     }
     
     .overview-section {
@@ -672,8 +699,17 @@
     }
     
     .activity-icon {
-      font-size: 24px;
+      width: 20px;
+      height: 20px;
       flex-shrink: 0;
+      color: var(--dash-text-muted);
+      opacity: 0.7;
+    }
+    
+    .activity-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke-width: 1.5;
     }
     
     .activity-content {
@@ -701,29 +737,52 @@
       background: var(--dash-surface);
       border: 1px solid var(--dash-border);
       border-radius: var(--radius-md);
-      padding: var(--spacing-lg);
+      padding: var(--spacing-xl);
       text-align: center;
       text-decoration: none;
       color: inherit;
       transition: var(--transition);
       cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-sm);
     }
     
     .quick-action-card:hover {
       background: var(--dash-surface-elev);
-      border-color: var(--dash-accent);
-      transform: translateY(-2px);
+      border-color: var(--dash-border);
+      transform: translateY(-1px);
+    }
+    
+    .quick-action-card:hover .quick-action-icon {
+      opacity: 1;
+      transform: scale(1.05);
     }
     
     .quick-action-icon {
-      font-size: 32px;
+      width: 24px;
+      height: 24px;
       margin-bottom: var(--spacing-sm);
+      color: var(--dash-accent);
+      opacity: 0.8;
+    }
+    
+    .quick-action-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke-width: 1.5;
     }
     
     .quick-action-label {
-      font-size: var(--fs-14, 14px);
-      color: var(--dash-text);
+      font-size: var(--fs-13, 13px);
+      color: var(--dash-text-soft);
       font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    
+    .quick-action-card:hover .quick-action-label {
+      color: var(--dash-text);
     }
     
     /* ===== FRAMEWORKS PANEL ===== */
@@ -1359,7 +1418,14 @@
           <h3 class="overview-section-title">Attività Recente</h3>
           <div class="recent-activity-list" id="recent-activity">
             <div class="recent-activity-item">
-              <div class="activity-icon">📄</div>
+              <div class="activity-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+              </div>
               <div class="activity-content">
                 <div class="activity-title">Nessuna attività recente</div>
                 <div class="activity-time">Visualizza i report per iniziare</div>
@@ -1371,19 +1437,43 @@
           <h3 class="overview-section-title">Azioni Rapide</h3>
           <div class="quick-actions-grid">
             <a href="#reports" class="quick-action-card" data-module="reports">
-              <div class="quick-action-icon">📊</div>
+              <div class="quick-action-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+              </div>
               <div class="quick-action-label">Visualizza Report</div>
             </a>
             <a href="#on-demand" class="quick-action-card" data-module="on-demand">
-              <div class="quick-action-icon">📝</div>
+              <div class="quick-action-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="12" y1="18" x2="12" y2="12"/>
+                  <line x1="9" y1="15" x2="15" y2="15"/>
+                </svg>
+              </div>
               <div class="quick-action-label">Nuova Richiesta</div>
             </a>
             <a href="#frameworks" class="quick-action-card" data-module="frameworks">
-              <div class="quick-action-icon">📚</div>
+              <div class="quick-action-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                  <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+              </div>
               <div class="quick-action-label">Documentazione</div>
             </a>
             <a href="#education" class="quick-action-card" data-module="education">
-              <div class="quick-action-icon">🎓</div>
+              <div class="quick-action-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                  <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                </svg>
+              </div>
               <div class="quick-action-label">Tutorial</div>
             </a>
           </div>
