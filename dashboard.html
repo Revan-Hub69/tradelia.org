@@ -1192,7 +1192,7 @@
         --dash-accent: #60a5fa;
       }
       
-      .btn-pill,
+      .btn,
       .btn-modal {
         border-width: 2px;
       }
@@ -1207,7 +1207,7 @@
     /* Print accessibility (WCAG 2.2) */
     @media print {
       .modal-overlay,
-      .btn-pill,
+      .btn,
       .btn-modal {
         display: none !important;
       }
@@ -1589,7 +1589,7 @@
           <p class="dashboard-subtitle">Report finanziari AI</p>
         </div>
         <div class="session-actions" style="display: flex; gap: 0.75rem; align-items: center;">
-          <a href="/admin/index.html" id="admin-dashboard-link-header" class="btn-pill btn-pill--primary btn-pill--sm" style="white-space: nowrap; display: none;">
+          <a href="/admin/index.html" id="admin-dashboard-link-header" class="btn btn-primary btn-sm btn-with-icon" style="white-space: nowrap; display: none;">
             <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="3" />
@@ -1598,7 +1598,7 @@
             </span>
             <span class="btn-label">Admin</span>
           </a>
-          <button class="btn-pill btn-pill--outline btn-pill--sm btn-pill--disabled" id="pwa-settings-btn" type="button" disabled>
+          <button class="btn btn-outline btn-sm btn-with-icon" id="pwa-settings-btn" type="button" disabled aria-disabled="true">
             <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: inline-block;">
                 <rect x="5" y="3" width="14" height="18" rx="3" />
@@ -1608,7 +1608,7 @@
               PWA
             </span>
           </button>
-          <button class="btn-pill btn-pill--primary btn-pill--sm" id="open-app-btn" type="button" hidden>
+          <button class="btn btn-primary btn-sm btn-with-icon" id="open-app-btn" type="button" hidden>
             <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: inline-block;">
                 <path d="M9 18H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4" />
@@ -1618,7 +1618,7 @@
               Apri nell'app
             </span>
           </button>
-          <button class="btn-pill btn-pill--outline btn-pill--sm" id="logout-btn" type="button">Disconnetti il dispositivo</button>
+          <button class="btn btn-outline btn-sm" id="logout-btn" type="button">Disconnetti il dispositivo</button>
         </div>
       </div>
 
@@ -3062,6 +3062,16 @@
     const openModalBtn = document.getElementById('pwa-open-modal-btn');
     const openAppBtn = document.getElementById('open-app-btn');
 
+    function setButtonDisabled(button, disabled) {
+      if (!button) return;
+      button.disabled = !!disabled;
+      if (disabled) {
+        button.setAttribute('aria-disabled', 'true');
+      } else {
+        button.removeAttribute('aria-disabled');
+      }
+    }
+
     let deferredPrompt = null;
     let swRegistration = null;
 
@@ -3082,8 +3092,7 @@
         // Se siamo già nell'app installata, mostra "App installata"
         if (isStandalone()) {
           // Siamo già nell'app installata
-          installBtn.disabled = true;
-          installBtn.classList.add('btn-pill--disabled');
+          setButtonDisabled(installBtn, true);
           if (installLabel) {
             installLabel.textContent = 'App installata';
           } else {
@@ -3093,8 +3102,7 @@
           toggleHeaderOpenButton(false);
         } else {
           // App installata ma siamo nel browser: mostra "Apri app"
-          installBtn.disabled = false;
-          installBtn.classList.remove('btn-pill--disabled');
+          setButtonDisabled(installBtn, false);
           installBtn.dataset.action = 'open-app';
           if (installLabel) {
             installLabel.textContent = 'Apri app';
@@ -3105,8 +3113,7 @@
           toggleHeaderOpenButton(true);
         }
       } else if (state === 'ready') {
-        installBtn.disabled = false;
-        installBtn.classList.remove('btn-pill--disabled');
+        setButtonDisabled(installBtn, false);
         installBtn.dataset.action = 'install';
         if (installLabel) {
           installLabel.textContent = 'Installa la dashboard';
@@ -3116,8 +3123,7 @@
         toggleOpenModalButton(false);
         toggleHeaderOpenButton(false);
       } else {
-        installBtn.disabled = true;
-        installBtn.classList.add('btn-pill--disabled');
+        setButtonDisabled(installBtn, true);
         installBtn.dataset.action = 'wait';
         if (installLabel) {
           installLabel.textContent = 'Installa la dashboard';
@@ -3136,7 +3142,6 @@
       if (!openAppBtn) return;
       if (show) {
         openAppBtn.hidden = false;
-        openAppBtn.classList.remove('btn-pill--disabled');
       } else {
         openAppBtn.hidden = true;
       }
@@ -3286,8 +3291,8 @@
         } else {
           pushBtn.textContent = 'Disattiva notifiche';
         }
-        pushBtn.classList.add('btn-pill--primary');
-        pushBtn.classList.remove('btn-pill--outline');
+        pushBtn.classList.add('btn-primary');
+        pushBtn.classList.remove('btn-outline');
         updatePushStatus('Notifiche attive su questo dispositivo.');
       } else {
         pushBtn.dataset.enabled = 'false';
@@ -3296,8 +3301,8 @@
         } else {
           pushBtn.textContent = 'Attiva notifiche';
         }
-        pushBtn.classList.remove('btn-pill--primary');
-        pushBtn.classList.add('btn-pill--outline');
+        pushBtn.classList.remove('btn-primary');
+        pushBtn.classList.add('btn-outline');
         if (permission === 'default') {
           updatePushStatus('Permessi non ancora richiesti.');
         } else {
@@ -3763,7 +3768,7 @@
         <div style="margin-bottom: 1.5rem;">
           <h3 style="margin: 0 0 0.75rem; font-size: var(--fs-16, 16px); font-weight: 600; color: var(--ink, #ffffff);">Installa la dashboard (PWA)</h3>
           <p style="margin: 0 0 1rem; font-size: var(--fs-13, 13px); color: var(--ink-soft, #f0f0f0); line-height: var(--lh-16, 1.6);">Installa la dashboard come app sul tuo dispositivo per accesso rapido e funzionalità offline.</p>
-          <button class="btn-pill btn-pill--primary btn-pill--wide btn-pill--disabled" id="pwa-install-btn" type="button" disabled>
+          <button class="btn btn-primary btn-with-icon" id="pwa-install-btn" type="button" disabled style="width: 100%;">
             <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 5v10" />
@@ -3773,7 +3778,7 @@
             </span>
             <span class="btn-label">Installa la dashboard</span>
           </button>
-          <button class="btn-pill btn-pill--primary btn-pill--wide" id="pwa-open-modal-btn" type="button" style="display: none; margin-top: 0.5rem;">
+          <button class="btn btn-primary btn-with-icon" id="pwa-open-modal-btn" type="button" style="display: none; margin-top: 0.5rem; width: 100%;">
             <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 18H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4" />
@@ -3783,7 +3788,7 @@
             </span>
             <span class="btn-label">Apri nell'app</span>
           </button>
-          <button class="btn-pill btn-pill--outline btn-pill--wide" id="pwa-update-btn" type="button" style="display: none; margin-top: 0.5rem;">
+          <button class="btn btn-outline btn-with-icon" id="pwa-update-btn" type="button" style="display: none; margin-top: 0.5rem; width: 100%;">
             <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
@@ -3798,7 +3803,7 @@
         <div>
           <h3 style="margin: 0 0 0.75rem; font-size: var(--fs-16, 16px); font-weight: 600; color: var(--ink, #ffffff);">Notifiche push</h3>
           <p style="margin: 0 0 1rem; font-size: var(--fs-13, 13px); color: var(--ink-soft, #f0f0f0); line-height: var(--lh-16, 1.6);">Ricevi notifiche quando viene pubblicato nuovo materiale nella dashboard.</p>
-          <button class="btn-pill btn-pill--outline btn-pill--wide" id="push-toggle-btn" type="button">
+          <button class="btn btn-outline btn-with-icon" id="push-toggle-btn" type="button" style="width: 100%;">
             <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 15a6 6 0 0 0 0-6" />
@@ -4037,9 +4042,7 @@
       // PWA settings button (apre modale info)
       const pwaSettingsBtn = document.getElementById('pwa-settings-btn');
       if (pwaSettingsBtn) {
-        pwaSettingsBtn.disabled = false;
-        pwaSettingsBtn.classList.remove('btn-pill--disabled');
-        pwaSettingsBtn.removeAttribute('aria-disabled');
+        setButtonDisabled(pwaSettingsBtn, false);
       }
       pwaSettingsBtn?.addEventListener('click', async () => {
         const token = localStorage.getItem(ACCESS_TOKEN_KEY);
