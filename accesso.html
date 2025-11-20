@@ -608,9 +608,16 @@
 
       // Vai alla dashboard
       if (goDashboardBtn) {
-        goDashboardBtn.addEventListener('click', function() {
+        goDashboardBtn.addEventListener('click', function(e) {
           if (currentToken) {
-            window.location.href = '/dashboard.html';
+            // Usa handler PWA invece di redirect diretto
+            if (window.openDashboardPWA) {
+              e.preventDefault();
+              window.openDashboardPWA();
+            } else {
+              // Fallback se script non caricato
+              window.location.href = '/dashboard.html?pwa=1';
+            }
           }
         });
       }
@@ -743,5 +750,6 @@
       }
     })();
   </script>
+  <script src="/assets/js/pwa-dashboard-handler.js"></script>
 </body>
 </html>
