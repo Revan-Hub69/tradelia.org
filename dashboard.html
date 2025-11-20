@@ -1777,7 +1777,7 @@
           </svg>
           <span>Analisi On-Demand</span>
         </a>
-        <a href="#community" class="nav-rail-item" data-panel="community" id="nav-community" style="display: none;">
+        <a href="#community" class="nav-rail-item" data-panel="community" id="nav-community">
           <svg class="nav-rail-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
             <circle cx="9" cy="7" r="4"/>
@@ -1895,6 +1895,7 @@
             <div>
               <h3 style="margin: 0 0 0.5rem; font-size: 1.1rem;">Richiedi analisi</h3>
               <p style="margin: 0; font-size: 0.9rem; color: var(--dash-text-soft);">Invia brief riservati. Nome ed email vengono recuperati automaticamente dal tuo token.</p>
+              <p style="margin: 0; font-size: 0.85rem; color: var(--dash-text-muted);">Gli account Guest possono attivare una fatturazione una tantum per inviare richieste on-demand, mentre il Desk mantiene l'accesso completo a report e analisi Desk.</p>
             </div>
             <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
               <button class="btn btn-primary btn-sm btn-with-icon" type="button" id="btn-open-analysis-request" disabled aria-disabled="true">
@@ -1907,7 +1908,7 @@
                 <span class="btn-label">Richiedi analisi</span>
               </button>
             </div>
-            <p style="font-size: 0.8rem; color: var(--dash-text-muted); margin: 0;">Le richieste vengono salvate in Supabase e notificate al Desk solo se il token è attivo (Trial, Pro o Desk).</p>
+            <p style="font-size: 0.8rem; color: var(--dash-text-muted); margin: 0;">Le richieste vengono salvate in Supabase e notificate al Desk solo se il token è attivo (Guest o Desk).</p>
           </div>
         </div>
       </div>
@@ -1916,7 +1917,7 @@
       <div class="panel-container" id="panel-community" data-panel="community">
         <div class="panel-header">
           <h2 class="panel-title">Community Proposals</h2>
-          <p class="panel-description">Proponi e vota analisi della community. Disponibile solo per utenti Pro e Admin.</p>
+          <p class="panel-description">Proponi e vota analisi della community. Accesso diretto per Guest e Desk.</p>
         </div>
         <div style="padding: 2rem; text-align: center; color: var(--dash-text-muted);">
           <p>Sezione in sviluppo. Le community proposals saranno disponibili a breve.</p>
@@ -1955,7 +1956,7 @@
           </svg>
           <span>On-Demand</span>
         </a>
-        <a href="#community" class="nav-tab" data-panel="community" id="nav-tab-community" style="display: none;">
+        <a href="#community" class="nav-tab" data-panel="community" id="nav-tab-community">
           <svg class="nav-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
             <circle cx="9" cy="7" r="4"/>
@@ -3205,10 +3206,8 @@
           checkAndShowAdminLink(data.email);
         }
         
-        // Aggiorna visibilità sezione Community in base al ruolo
-        updateCommunityVisibility(data).catch(err => {
-          console.warn('[Dashboard] Errore aggiornamento visibilità Community:', err);
-        });
+        // Community sempre disponibile nella dashboard
+        updateCommunityVisibility();
         
         // Token valido: procedi
         return true;
@@ -3237,7 +3236,7 @@
       const validUntilEl = document.getElementById('token-info-valid-until');
       if (emailEl && tokenData?.email) emailEl.textContent = tokenData.email;
       if (planEl && tokenData?.plan_role) {
-        const planNames = { trial: 'Gratuito (Trial)', pro: 'Pro', desk: 'Desk' };
+        const planNames = { guest: 'Guest', desk: 'Desk', trial: 'Guest (trial)', pro: 'Pro (legacy)' };
         planEl.textContent = planNames[tokenData.plan_role] || tokenData.plan_role;
       }
       if (validUntilEl && tokenData?.valid_until) {
@@ -3297,30 +3296,20 @@
       }
     }
     
-    // Mostra/nascondi sezione Community in base al ruolo (Pro o Admin)
-    async function updateCommunityVisibility(tokenData) {
+    // Sezione Community sempre disponibile per tutti i pass
+    function updateCommunityVisibility() {
       const navCommunity = document.getElementById('nav-community');
       const navTabCommunity = document.getElementById('nav-tab-community');
       const panelCommunity = document.getElementById('panel-community');
-      
-      const planRole = tokenData?.plan_role;
-      const isPro = planRole === 'pro' || planRole === 'desk';
-      let isAdmin = false;
-      
-      if (tokenData?.email) {
-        isAdmin = await checkAdminViaAPI();
-      }
-      
-      const shouldShow = isPro || isAdmin;
-      
+
       if (navCommunity) {
-        navCommunity.style.display = shouldShow ? 'flex' : 'none';
+        navCommunity.style.display = '';
       }
       if (navTabCommunity) {
-        navTabCommunity.style.display = shouldShow ? 'flex' : 'none';
+        navTabCommunity.style.display = '';
       }
       if (panelCommunity) {
-        panelCommunity.style.display = shouldShow ? 'block' : 'none';
+        panelCommunity.style.display = '';
       }
     }
 
@@ -5008,6 +4997,4 @@
   <!-- Auto-Update System -->
 </body>
 </html>
-
-
 
