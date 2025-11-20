@@ -252,12 +252,13 @@
   function initDashboardLinks() {
     // Trova tutti i link/pulsanti dashboard non ancora gestiti
     const dashboardLinks = document.querySelectorAll(
-      'a[href="/dashboard.html"]:not([data-dashboard-handler="true"]), ' +
-      'a[href*="dashboard.html"]:not([data-dashboard-handler="true"]), ' +
+      'a[href="/dashboard.html"]:not([data-listener-added]), ' +
+      'a[href*="dashboard.html"]:not([data-listener-added]), ' +
       'a[href="#"]:not([data-listener-added])[data-dashboard-handler="true"], ' +
-      'button[data-dashboard]:not([data-dashboard-handler="true"]), ' +
-      '.dashboard-link:not([data-dashboard-handler="true"]), ' +
-      '[data-action="dashboard"]:not([data-dashboard-handler="true"])'
+      'a.header-dashboard-link:not([data-listener-added]), ' +
+      'button[data-dashboard]:not([data-listener-added]), ' +
+      '.dashboard-link:not([data-listener-added]), ' +
+      '[data-action="dashboard"]:not([data-listener-added])'
     );
     
     dashboardLinks.forEach(link => {
@@ -313,8 +314,10 @@
       initTimeout = setTimeout(() => {
         // Solo se ci sono nuovi link dashboard non ancora gestiti
         const unhandledLinks = document.querySelectorAll(
-          'a[href="/dashboard.html"]:not([data-dashboard-handler="true"]), ' +
-          'a[href*="dashboard.html"]:not([data-dashboard-handler="true"])'
+          'a[href="/dashboard.html"]:not([data-listener-added]), ' +
+          'a[href*="dashboard.html"]:not([data-listener-added]), ' +
+          'a.header-dashboard-link:not([data-listener-added]), ' +
+          'a[href="#"][data-dashboard-handler="true"]:not([data-listener-added])'
         );
         if (unhandledLinks.length > 0) {
           initDashboardLinks();
@@ -328,12 +331,16 @@
       subtree: true
     });
     
-    // Aggiorna testi periodicamente (per elementi caricati dopo)
+    // Aggiorna testi periodicamente (per elementi caricati dopo, es. header montato dinamicamente)
     setTimeout(() => {
+      initDashboardLinks(); // Riprova dopo che header è montato
       updateCTATexts();
       isInitializing = false;
     }, 1000);
-    setTimeout(updateCTATexts, 3000);
+    setTimeout(() => {
+      initDashboardLinks(); // Riprova dopo 3 secondi per header caricati lentamente
+      updateCTATexts();
+    }, 3000);
   }
   
   if (document.readyState === 'loading') {
