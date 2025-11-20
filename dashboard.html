@@ -28,15 +28,19 @@
     }
     
     :root {
-      --dash-bg: #0a0a0a;
-      --dash-surface: #141414;
-      --dash-surface-elev: #1a1a1a;
-      --dash-border: #252525;
-      --dash-text: #f5f5f5;
-      --dash-text-soft: #d0d0d0;
-      --dash-text-muted: #888888;
-      --dash-accent: #ffffff;
-      --dash-accent-bg: rgba(255, 255, 255, 0.05);
+      /* Terminal-style palette (ibrida) */
+      --dash-bg: #000000;
+      --dash-surface: #0a0a0a;
+      --dash-surface-elev: #141414;
+      --dash-border: #1a1a1a;
+      --dash-text: #00ff00;
+      --dash-text-soft: #00cc00;
+      --dash-text-muted: #666666;
+      --dash-accent: #00ffff;
+      --dash-accent-bg: rgba(0, 255, 255, 0.1);
+      --dash-prompt: #00ffff;
+      --dash-error: #ff0000;
+      --dash-warning: #ffff00;
       --spacing-xs: 0.5rem;
       --spacing-sm: 0.75rem;
       --spacing-md: 1rem;
@@ -44,57 +48,67 @@
       --spacing-xl: 2rem;
       --spacing-2xl: 3rem;
       --radius-sm: 4px;
-      --radius-md: 8px;
-      --radius-lg: 12px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
       --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
       background: var(--dash-bg);
       color: var(--dash-text);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
+      margin: 0;
+      padding: 0;
     }
     
-    /* ===== MAIN CONTAINER ===== */
+    /* ===== MAIN CONTAINER (Fullscreen, no header/footer) ===== */
     .dashboard-container {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding: var(--spacing-xl);
-      max-width: 1400px;
-      margin: 0 auto;
+      padding: var(--spacing-lg);
+      margin: 0;
+      max-width: 100%;
+      width: 100%;
     }
     
-    /* ===== HEADER (Minimal) ===== */
-    .dashboard-header {
-      margin-bottom: var(--spacing-2xl);
-      padding-bottom: var(--spacing-lg);
+    @media (max-width: 768px) {
+      .dashboard-container {
+        padding: var(--spacing-md);
+      }
+    }
+    
+    /* ===== TERMINAL PROMPT HEADER (Minimal, inline) ===== */
+    .terminal-prompt-header {
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-md);
       border-bottom: 1px solid var(--dash-border);
-    }
-    
-    .dashboard-title {
-      font-size: 28px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: var(--spacing-xs);
-      color: var(--dash-text);
-    }
-    
-    .dashboard-subtitle {
-      font-size: 14px;
-      color: var(--dash-text-muted);
-      font-weight: 400;
-    }
-    
-    .dashboard-actions {
-      margin-top: var(--spacing-md);
       display: flex;
+      align-items: center;
       gap: var(--spacing-sm);
-      flex-wrap: wrap;
+    }
+    
+    .prompt-prefix {
+      color: var(--dash-prompt);
+      font-weight: 600;
+      font-size: 14px;
+    }
+    
+    .prompt-title {
+      color: var(--dash-text);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    
+    .prompt-subtitle {
+      color: var(--dash-text-muted);
+      font-size: 12px;
+      margin-left: auto;
     }
     
     /* ===== MODULES GRID ===== */
@@ -112,12 +126,13 @@
       }
     }
     
-    /* ===== MODULE CARD ===== */
+    /* ===== MODULE CARD (Terminal-style) ===== */
     .module-card {
       background: var(--dash-surface);
       border: 1px solid var(--dash-border);
-      border-radius: var(--radius-lg);
-      padding: var(--spacing-xl);
+      border-left: 3px solid transparent;
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
       transition: var(--transition);
       cursor: pointer;
       text-decoration: none;
@@ -130,25 +145,25 @@
     }
     
     .module-card::before {
-      content: '';
+      content: '>';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: var(--dash-accent);
-      transform: scaleX(0);
+      left: var(--spacing-sm);
+      top: var(--spacing-lg);
+      color: var(--dash-prompt);
+      opacity: 0;
       transition: var(--transition);
+      font-weight: 600;
     }
     
     .module-card:hover {
       background: var(--dash-surface-elev);
-      border-color: var(--dash-accent);
-      transform: translateY(-2px);
+      border-left-color: var(--dash-accent);
+      transform: translateX(4px);
+      box-shadow: 0 2px 8px rgba(0, 255, 0, 0.1);
     }
     
     .module-card:hover::before {
-      transform: scaleX(1);
+      opacity: 1;
     }
     
     .module-card-header {
@@ -180,17 +195,18 @@
     }
     
     .module-title {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
       margin-bottom: var(--spacing-xs);
       color: var(--dash-text);
-      letter-spacing: -0.01em;
+      letter-spacing: 0.02em;
     }
     
     .module-description {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--dash-text-soft);
       line-height: 1.5;
+      opacity: 0.8;
     }
     
     .module-arrow {
@@ -227,8 +243,8 @@
     }
     
     .panel-header {
-      margin-bottom: var(--spacing-xl);
-      padding-bottom: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-md);
       border-bottom: 1px solid var(--dash-border);
     }
     
@@ -236,29 +252,36 @@
       display: inline-flex;
       align-items: center;
       gap: var(--spacing-xs);
-      color: var(--dash-text-muted);
+      color: var(--dash-prompt);
       text-decoration: none;
-      font-size: 14px;
-      margin-bottom: var(--spacing-lg);
+      font-size: 13px;
+      margin-bottom: var(--spacing-md);
       transition: var(--transition);
+      font-weight: 500;
+    }
+    
+    .panel-back::before {
+      content: '< ';
+      color: var(--dash-prompt);
     }
     
     .panel-back:hover {
-      color: var(--dash-text);
+      color: var(--dash-accent);
     }
     
     .panel-title {
-      font-size: 32px;
+      font-size: 20px;
       font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: var(--spacing-sm);
+      letter-spacing: 0.02em;
+      margin-bottom: var(--spacing-xs);
       color: var(--dash-text);
     }
     
     .panel-description {
-      font-size: 15px;
+      font-size: 13px;
       color: var(--dash-text-soft);
       line-height: 1.6;
+      opacity: 0.8;
     }
     
     .panel-content {
@@ -321,8 +344,9 @@
     .report-card {
       background: var(--dash-surface);
       border: 1px solid var(--dash-border);
-      border-radius: var(--radius-lg);
-      padding: var(--spacing-xl);
+      border-left: 3px solid transparent;
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
       margin-bottom: var(--spacing-md);
       transition: var(--transition);
       position: relative;
@@ -330,22 +354,21 @@
     }
     
     .report-card::before {
-      content: '';
+      content: '→';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 3px;
-      height: 100%;
-      background: var(--dash-accent);
+      left: var(--spacing-sm);
+      top: var(--spacing-lg);
+      color: var(--dash-prompt);
       opacity: 0;
       transition: var(--transition);
+      font-weight: 600;
     }
     
     .report-card:hover {
       background: var(--dash-surface-elev);
-      border-color: var(--dash-accent);
+      border-left-color: var(--dash-accent);
       transform: translateX(4px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 2px 8px rgba(0, 255, 0, 0.1);
     }
     
     .report-card:hover::before {
@@ -366,12 +389,13 @@
     }
     
     .report-ticker {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 600;
-      letter-spacing: -0.02em;
+      letter-spacing: 0.05em;
       margin: 0 0 var(--spacing-xs);
       color: var(--dash-text);
       line-height: 1.3;
+      font-family: 'Courier New', monospace;
     }
     
     .report-company {
@@ -575,14 +599,12 @@
 </head>
 <body>
   <div class="dashboard-container">
-    <!-- ===== HEADER ===== -->
-    <header class="dashboard-header">
-      <h1 class="dashboard-title">Dashboard</h1>
-      <p class="dashboard-subtitle">Framework Accademico AI Tradelia</p>
-      <div class="dashboard-actions">
-        <a href="/admin/index.html" class="btn" id="admin-link" style="display: none;">Admin</a>
-      </div>
-    </header>
+    <!-- ===== TERMINAL PROMPT HEADER (Minimal) ===== -->
+    <div class="terminal-prompt-header">
+      <span class="prompt-prefix">$</span>
+      <span class="prompt-title">tradelia</span>
+      <span class="prompt-subtitle">Framework Accademico AI</span>
+    </div>
     
     <!-- ===== MODULES VIEW (Default) ===== -->
     <div class="modules-view" id="modules-view">
