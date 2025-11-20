@@ -15,7 +15,7 @@
  */
 
 // Version number - increment this to force cache update
-const VERSION = '2.0.1';
+const VERSION = '2.0.2';
 const CACHE_NAME = `tradelia-ai-v${VERSION}`;
 const STATIC_CACHE = [
   '/',
@@ -23,12 +23,21 @@ const STATIC_CACHE = [
   '/dashboard.webmanifest',
   '/archivio/index.html',
   '/archivio/dashboard.html',
+  '/admin/index.html',
+  '/admin/tokens.html',
+  '/admin/requests.html',
+  '/admin/reports.html',
+  '/admin/users.html',
+  '/accesso.html',
   '/report/assets/css/tokens.css',
   '/assets/css/global-header.css',
   '/archivio/assets/css/archive.css',
   '/archivio/assets/css/dashboard.css',
   '/icons/icon-192.svg',
-  '/icons/icon-512.svg'
+  '/icons/icon-512.svg',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png',
+  '/favicon.png'
 ];
 
 // ===== INSTALL =====

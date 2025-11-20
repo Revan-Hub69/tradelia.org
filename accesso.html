@@ -659,8 +659,23 @@
         if (!email) return;
         
         try {
-          // Importa Supabase client
-          const { supabase } = await import('/report/assets/js/supabase-client.js');
+          // Prova a importare Supabase client
+          let supabase;
+          try {
+            const module = await import('/report/assets/js/supabase-client.js');
+            supabase = module.supabase;
+          } catch (importErr) {
+            console.warn('[Accesso] Impossibile importare supabase-client, uso fetch diretto:', importErr);
+            // Fallback: usa API per verificare admin
+            await checkAdminViaAPI(email);
+            return;
+          }
+          
+          if (!supabase) {
+            console.warn('[Accesso] Supabase client non disponibile, uso API');
+            await checkAdminViaAPI(email);
+            return;
+          }
           
           // Verifica se l'email è in admin_emails
           const { data, error } = await supabase
@@ -669,15 +684,61 @@
             .eq('email', email.toLowerCase())
             .maybeSingle();
           
-          if (!error && data) {
+          if (error) {
+            console.warn('[Accesso] Errore query admin_emails:', error);
+            // Fallback: prova con API
+            await checkAdminViaAPI(email);
+            return;
+          }
+          
+          if (data) {
             // È admin: mostra link
             const adminLink = document.getElementById('access-admin-link');
             const reportLink = document.getElementById('access-report-link');
-            if (adminLink) adminLink.style.display = 'inline-flex';
+            if (adminLink) {
+              adminLink.style.display = 'inline-flex';
+              console.log('[Accesso] Link admin mostrato (verifica Supabase)');
+            }
             if (reportLink) reportLink.style.display = 'inline-flex';
+          } else {
+            console.log('[Accesso] Email non trovata in admin_emails:', email);
           }
         } catch (err) {
-          console.warn('[Accesso] Errore verifica admin:', err);
+          console.error('[Accesso] Errore verifica admin:', err);
+          // Fallback: prova con API
+          await checkAdminViaAPI(email);
+        }
+      }
+      
+      // Fallback: verifica admin via API
+      async function checkAdminViaAPI(email) {
+        try {
+          // Usa il token corrente per verificare se è admin
+          const token = localStorage.getItem('tradelia-access-token-v1');
+          if (!token) return;
+          
+          // Prova a chiamare API admin (se il token è admin, funzionerà)
+          const res = await fetch('/api/admin?resource=requests&limit=1', {
+            headers: {
+              'X-Admin-Token': token
+            }
+          });
+          
+          if (res.ok || res.status === 401) {
+            // Se 401, il token non è admin
+            // Se ok, il token è admin
+            if (res.ok) {
+              const adminLink = document.getElementById('access-admin-link');
+              const reportLink = document.getElementById('access-report-link');
+              if (adminLink) {
+                adminLink.style.display = 'inline-flex';
+                console.log('[Accesso] Link admin mostrato (verifica API)');
+              }
+              if (reportLink) reportLink.style.display = 'inline-flex';
+            }
+          }
+        } catch (apiErr) {
+          console.warn('[Accesso] Errore verifica admin via API:', apiErr);
         }
       }
     })();

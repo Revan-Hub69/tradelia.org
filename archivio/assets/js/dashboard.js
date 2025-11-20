@@ -352,7 +352,9 @@ function hideInstallButton() {
 // ===== HANDLE INSTALL APP =====
 async function handleInstallApp() {
   if (!STATE.deferredPrompt) {
-    Logger.warn('Dashboard', 'Installazione non disponibile');
+    Logger.warn('Dashboard', 'Installazione non disponibile - deferredPrompt non presente');
+    // Mostra messaggio all'utente
+    alert('Installazione non disponibile al momento. Assicurati di:\n1. Usare un browser supportato (Chrome, Edge, Safari)\n2. Essere su HTTPS\n3. Avere il manifest e service worker configurati');
     return;
   }
   
@@ -373,9 +375,12 @@ async function handleInstallApp() {
     
     if (outcome === 'accepted') {
       showInstallSuccess();
+    } else {
+      Logger.debug('Dashboard', 'Installazione rifiutata dall\'utente');
     }
   } catch (err) {
     Logger.error('Dashboard', 'Errore installazione PWA', err);
+    alert('Errore durante l\'installazione: ' + err.message);
   }
 }
 
