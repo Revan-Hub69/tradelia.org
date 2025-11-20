@@ -92,6 +92,14 @@ Compliance e normative:
 - MiFID Compliance Review
 - Review normative
 
+### `/archive/`
+Documentazione storica e obsoleta:
+- Fix completati
+- Verifiche completate
+- Design abbandonati (terminal, PWA)
+- Report storici
+- Riepiloghi storici
+
 ## 🔍 Documenti Principali
 
 ### Architettura
@@ -111,8 +119,9 @@ Compliance e normative:
 
 ## 📊 Statistiche
 
-- **Totale documenti**: ~150 file .md
-- **Organizzati in**: 7 categorie principali
+- **Totale documenti attivi**: ~90 file .md
+- **Documenti archiviati**: ~30 file .md
+- **Organizzati in**: 8 categorie principali (7 attive + 1 archivio)
 - **Root**: Solo README.md (questo file)
 
 ## 🎯 Come Navigare
