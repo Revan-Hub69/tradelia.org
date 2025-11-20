@@ -20,3 +20,8 @@ export const firebaseConfig = {
   measurementId: 'G-DCGFDF0N38'
 };
 
+if (typeof window !== 'undefined') {
+  window.FCM_CONFIG = FCM_CONFIG;
+  window.firebaseConfig = firebaseConfig;
+}
+

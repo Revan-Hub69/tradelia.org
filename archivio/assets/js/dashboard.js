@@ -6,11 +6,14 @@ import { i18n } from '/report/assets/js/utils/i18n.js';
 import { siteHeader } from '/report/assets/js/components/site-header.js';
 import { siteFooter } from '/report/assets/js/components/site-footer.js';
 import { SUPABASE_CONFIG } from './supabase-config.js';
-import { FCM_CONFIG } from './fcm-config.js';
+import { FCM_CONFIG as IMPORTED_FCM_CONFIG } from './fcm-config.js';
 
 // ===== SUPABASE CONFIG =====
 const SUPABASE_URL = SUPABASE_CONFIG.url;
 const SUPABASE_ANON_KEY = SUPABASE_CONFIG.anonKey;
+const ACTIVE_FCM_CONFIG = typeof window !== 'undefined' && window.FCM_CONFIG
+  ? window.FCM_CONFIG
+  : IMPORTED_FCM_CONFIG;
 
 // Importa Supabase client (via CDN per browser)
 // Nota: Per produzione, considera di usare npm install @supabase/supabase-js
@@ -108,7 +111,7 @@ async function requestPushPermission(registration) {
     // Subscribe to push notifications
     try {
       // Converti VAPID public key per FCM
-      const vapidPublicKey = FCM_CONFIG.vapidPublicKey;
+      const vapidPublicKey = ACTIVE_FCM_CONFIG.vapidPublicKey;
       if (!vapidPublicKey || vapidPublicKey === 'YOUR_VAPID_PUBLIC_KEY') {
         Logger.warn('Dashboard', 'VAPID public key non configurata');
         return;
@@ -350,7 +353,6 @@ function showInstallButton() {
   }
   if (pwaSettingsBtn) {
     pwaSettingsBtn.disabled = false;
-    pwaSettingsBtn.classList.remove('btn-pill--disabled');
     pwaSettingsBtn.removeAttribute('aria-disabled');
     pwaSettingsBtn.title = '';
   }
@@ -366,7 +368,6 @@ function hideInstallButton() {
   }
   if (pwaSettingsBtn) {
     pwaSettingsBtn.disabled = true;
-    pwaSettingsBtn.classList.add('btn-pill--disabled');
     pwaSettingsBtn.setAttribute('aria-disabled', 'true');
     if (!pwaSettingsBtn.title) {
       pwaSettingsBtn.title = 'Disponibile solo su browser supportati e con HTTPS';

@@ -5,7 +5,8 @@
 
 import fetch from './_lib/fetch.js';
 import { getServiceSupabase } from './_lib/supabase.js';
-import { handleRouteError } from './_lib/http.js';
+import { getAdminContextFromToken } from './_lib/adminAuth.js';
+import { handleRouteError, HttpError } from './_lib/http.js';
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const ADMIN_EMAIL = 'amministrazione@tradelia.org';
@@ -41,22 +42,33 @@ async function handleRequest(req, res) {
     return res.status(500).json({ ok: false, error: 'Errore configurazione server' });
   }
 
-  const {
-    tipo, // 'analisi-su-richiesta' o 'piano-desk'
-    nome,
-    email,
-    tipologia,
-    codiceFiscale,
-    ragioneSociale,
-    piva,
-    indirizzo,
-    tipoAnalisi,
-    dettagli,
-    telefono,
-    note,
-    consensoGDPR,
-    timestamp
-  } = req.body || {};
+  const body = req.body || {};
+  const dashboardToken = body.dashboardToken;
+
+  if (!dashboardToken || typeof dashboardToken !== 'string') {
+    throw new HttpError(401, 'Richiesta consentita solo dalla dashboard autenticata');
+  }
+
+  const tokenContext = await getAdminContextFromToken(dashboardToken, { enforceAdmin: false });
+
+  const tipo = body.tipo;
+  const nomeInput = typeof body.nome === 'string' ? body.nome.trim() : '';
+  const emailFromToken = tokenContext.email || '';
+  const fallbackEmail = typeof body.email === 'string' ? body.email.trim() : '';
+  const email = (emailFromToken || fallbackEmail || '').toLowerCase();
+  const tipologiaInput = typeof body.tipologia === 'string' ? body.tipologia : '';
+  const tipologia = tipologiaInput || (tokenContext.planRole === 'desk' ? 'azienda' : 'privato');
+  const codiceFiscale = body.codiceFiscale;
+  const ragioneSociale = body.ragioneSociale;
+  const piva = body.piva;
+  const indirizzo = body.indirizzo;
+  const tipoAnalisi = body.tipoAnalisi;
+  const dettagli = body.dettagli;
+  const telefono = body.telefono;
+  const note = body.note;
+  const consensoGDPR = true;
+  const timestamp = body.timestamp;
+  const nome = nomeInput || (email ? email.split('@')[0] : 'Utente Dashboard');
 
   // Validazione base
   if (!nome || typeof nome !== 'string' || nome.trim().length < 2) {

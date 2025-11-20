@@ -1622,6 +1622,30 @@
         </div>
       </div>
 
+      <section class="request-section" id="analysis-request-card" style="margin-bottom: 2rem;">
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <div>
+            <h3>Analisi su richiesta</h3>
+            <p>Invia brief riservati e attiva il Desk solo se il token è valido. Nome ed email vengono recuperati automaticamente dal tuo token.</p>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+            <button class="btn btn-primary btn-sm btn-with-icon" type="button" id="btn-open-analysis-request" disabled aria-disabled="true">
+              <span class="btn-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 5v14" />
+                  <path d="M5 12h14" />
+                </svg>
+              </span>
+              <span class="btn-label">Richiedi analisi</span>
+            </button>
+            <button class="btn btn-outline btn-sm" type="button" onclick="window.location.href='/pricing.html#richiedi-token'">
+              Genera nuovo token
+            </button>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--dash-text-muted); margin: 0;">Le richieste vengono salvate in Supabase e notificate al Desk solo se il token è attivo (Trial, Pro o Desk).</p>
+        </div>
+      </section>
+
       <!-- ===== REPORT SECTION ===== -->
       <section class="report-section active">
         <div class="report-header">
@@ -2847,6 +2871,16 @@
           return false;
         }
         
+        currentTokenInfo = data;
+        window.dashboardTokenInfo = data;
+        if (analysisOpenBtn) {
+          setButtonDisabled(analysisOpenBtn, false);
+          analysisOpenBtn.removeAttribute('aria-disabled');
+        }
+        if (analysisEmailInput && data.email) {
+          analysisEmailInput.value = data.email;
+        }
+
         // Token valido: verifica se è admin e mostra link
         if (data.email) {
           checkAndShowAdminLink(data.email);
@@ -3833,12 +3867,79 @@
     </div>
   </div>
 
+  <div id="modal-analysis-dashboard" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-analysis-title" hidden>
+    <div class="modal-panel" style="max-width: min(40rem, 92vw);">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-analysis-title">Analisi su richiesta</h2>
+        <button class="modal-close" type="button" aria-label="Chiudi" data-modal-close="analysis">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.9rem; color: var(--dash-text-soft); margin-bottom: 1rem;">
+          Il brief viene salvato insieme al tuo token attivo. Completa i dettagli e il Desk ti risponderà via email.
+        </p>
+        <div id="analysis-request-success" class="success-message" style="display: none; margin-bottom: 1rem;">
+          Richiesta inviata! Riceverai aggiornamenti via email.
+        </div>
+        <div id="analysis-request-error" class="error-message" style="display: none; margin-bottom: 1rem;">
+          Invio non riuscito. Verifica il token o riprova più tardi.
+        </div>
+        <form id="form-dashboard-analysis">
+          <div class="form-group">
+            <label class="form-label" for="analysis-dashboard-email">Email collegata al token</label>
+            <input class="form-input" id="analysis-dashboard-email" type="email" readonly />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="analysis-dashboard-name">Nome referente</label>
+            <input class="form-input" id="analysis-dashboard-name" name="nome" type="text" placeholder="Nome e cognome" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="analysis-dashboard-type">Tipologia cliente</label>
+            <select class="form-select" id="analysis-dashboard-type" name="tipologia" required>
+              <option value="privato">Privato / persona fisica</option>
+              <option value="azienda">Azienda / professionista</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="analysis-dashboard-focus">Tipo di analisi</label>
+            <select class="form-select" id="analysis-dashboard-focus" name="tipoAnalisi" required>
+              <option value="">Seleziona...</option>
+              <option value="Single Stock Analysis">Single Stock Analysis</option>
+              <option value="ETF Monitor">ETF Monitor</option>
+              <option value="Fund Dossier">Fund Dossier</option>
+              <option value="Certificate Dossier">Certificate Dossier</option>
+              <option value="Portfolio Risk Analysis">Portfolio Risk Analysis</option>
+              <option value="Stress Test Custom">Stress Test Custom</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="analysis-dashboard-details">Brief / dettagli</label>
+            <textarea class="form-textarea" id="analysis-dashboard-details" name="dettagli" rows="5" minlength="20" placeholder="Inserisci ticker, timeframe e obiettivi." required></textarea>
+          </div>
+        </form>
+        <p style="font-size: 0.75rem; color: var(--dash-text-muted); margin-top: 0.25rem;">
+          Proseguendo confermi MiFID/Privacy e autorizzi il trattamento dei dati per la gestione della richiesta.
+        </p>
+      </div>
+      <div class="modal-footer" style="gap: 0.5rem;">
+        <button class="btn-modal" type="button" data-modal-close="analysis">Annulla</button>
+        <button class="btn-modal btn-modal-primary" type="button" id="analysis-submit-btn">Invia richiesta</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== MODAL & PWA SCRIPTS ===== -->
   <script type="module">
-    import { FCM_CONFIG } from '/archivio/assets/js/fcm-config.js';
+    import { FCM_CONFIG as IMPORTED_FCM_CONFIG } from '/archivio/assets/js/fcm-config.js';
 
     const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
+    const FCM_CONFIG = window.FCM_CONFIG || IMPORTED_FCM_CONFIG;
     
+    let currentTokenInfo = null;
+
     const setButtonDisabled = window.setButtonDisabled || ((element, disabled) => {
       if (!element) return;
       element.disabled = !!disabled;
@@ -3849,6 +3950,17 @@
       }
     });
     
+    const analysisModal = document.getElementById('modal-analysis-dashboard');
+    const analysisForm = document.getElementById('form-dashboard-analysis');
+    const analysisOpenBtn = document.getElementById('btn-open-analysis-request');
+    const analysisSuccessMsg = document.getElementById('analysis-request-success');
+    const analysisErrorMsg = document.getElementById('analysis-request-error');
+    const analysisSubmitBtn = document.getElementById('analysis-submit-btn');
+    const analysisEmailInput = document.getElementById('analysis-dashboard-email');
+    const analysisNameInput = document.getElementById('analysis-dashboard-name');
+    const analysisTypeSelect = document.getElementById('analysis-dashboard-type');
+    const analysisFocusSelect = document.getElementById('analysis-dashboard-focus');
+    const analysisDetailsInput = document.getElementById('analysis-dashboard-details');
     // Focus trap utility
     function trapFocus(modal) {
       const focusableElements = modal.querySelectorAll(
@@ -4125,6 +4237,78 @@
         }
       });
 
+      const analysisCloseButtons = document.querySelectorAll('[data-modal-close="analysis"]');
+
+      function openAnalysisModal() {
+        if (!analysisModal) return;
+        if (!getStoredToken()) {
+          showTokenModal();
+          return;
+        }
+        analysisForm?.reset();
+        if (analysisSuccessMsg) analysisSuccessMsg.style.display = 'none';
+        if (analysisErrorMsg) analysisErrorMsg.style.display = 'none';
+        if (analysisEmailInput && currentTokenInfo?.email) {
+          analysisEmailInput.value = currentTokenInfo.email;
+        }
+        if (analysisNameInput) {
+          analysisNameInput.value = currentTokenInfo?.email?.split('@')[0] || '';
+        }
+        if (analysisTypeSelect) {
+          const defaultType = currentTokenInfo?.planRole === 'desk' ? 'azienda' : 'privato';
+          analysisTypeSelect.value = defaultType;
+        }
+        previousActiveElement = document.activeElement;
+        analysisModal.hidden = false;
+        const main = document.querySelector('main');
+        if (main) main.setAttribute('inert', '');
+        setTimeout(() => {
+          analysisModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          analysisNameInput?.focus();
+          if (focusTrapCleanup) focusTrapCleanup();
+          focusTrapCleanup = trapFocus(analysisModal);
+        }, 10);
+      }
+
+      function closeAnalysisModal() {
+        if (!analysisModal) return;
+        analysisModal.classList.remove('active');
+        setTimeout(() => {
+          analysisModal.hidden = true;
+          document.body.style.overflow = '';
+          const main = document.querySelector('main');
+          if (main) main.removeAttribute('inert');
+          previousActiveElement?.focus();
+          if (focusTrapCleanup) {
+            focusTrapCleanup();
+            focusTrapCleanup = null;
+          }
+        }, 200);
+      }
+
+      analysisCloseButtons.forEach(btn => {
+        btn.addEventListener('click', (event) => {
+          event.preventDefault();
+          closeAnalysisModal();
+        });
+      });
+
+      analysisOpenBtn?.addEventListener('click', () => {
+        openAnalysisModal();
+      });
+
+      analysisSubmitBtn?.addEventListener('click', (event) => {
+        event.preventDefault();
+        submitAnalysisRequest();
+      });
+
+      analysisModal?.addEventListener('click', (event) => {
+        if (event.target === analysisModal) {
+          closeAnalysisModal();
+        }
+      });
+
       // Close on overlay click
       tokenInputModal?.addEventListener('click', (e) => {
         if (e.target === tokenInputModal) {
@@ -4380,6 +4564,84 @@
     window.showTokenInfoModal = showTokenInfoModal;
     window.showTokenModal = showTokenModal;
     window.initPWAModal = initPWAModal;
+
+    async function submitAnalysisRequest() {
+      if (!analysisForm || !analysisSubmitBtn) return;
+      const token = getStoredToken();
+      if (!token) {
+        showTokenModal();
+        return;
+      }
+      if (!analysisForm.checkValidity()) {
+        analysisForm.reportValidity();
+        return;
+      }
+      const dettagliValue = (analysisDetailsInput?.value || '').trim();
+      if (dettagliValue.length < 20) {
+        alert('Inserisci almeno 20 caratteri nel brief.');
+        analysisDetailsInput?.focus();
+        return;
+      }
+      setButtonDisabled(analysisSubmitBtn, true);
+      analysisSubmitBtn.textContent = 'Invio in corso...';
+      if (analysisSuccessMsg) analysisSuccessMsg.style.display = 'none';
+      if (analysisErrorMsg) analysisErrorMsg.style.display = 'none';
+
+      const payload = {
+        dashboardToken: token,
+        tipo: 'analisi-su-richiesta',
+        nome: (analysisNameInput?.value || '').trim(),
+        tipologia: analysisTypeSelect?.value || (currentTokenInfo?.planRole === 'desk' ? 'azienda' : 'privato'),
+        tipoAnalisi: analysisFocusSelect?.value || '',
+        dettagli: dettagliValue,
+        consensoGDPR: true,
+        timestamp: new Date().toISOString()
+      };
+
+      if (!payload.nome && currentTokenInfo?.email) {
+        payload.nome = currentTokenInfo.email.split('@')[0];
+      }
+
+      payload.email = currentTokenInfo?.email || analysisEmailInput?.value || '';
+
+      try {
+        const response = await fetch('/api/request-analysis', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.ok) {
+          throw new Error(result.error || 'Invio non riuscito');
+        }
+        if (analysisSuccessMsg) {
+          analysisSuccessMsg.style.display = 'block';
+          analysisSuccessMsg.textContent = result.message || 'Richiesta inviata! Controlla la tua email.';
+        }
+        if (analysisErrorMsg) {
+          analysisErrorMsg.style.display = 'none';
+        }
+        analysisForm.reset();
+        if (analysisEmailInput && currentTokenInfo?.email) {
+          analysisEmailInput.value = currentTokenInfo.email;
+        }
+        setTimeout(() => {
+          if (analysisModal?.classList.contains('active')) {
+            document.querySelector('[data-modal-close="analysis"]')?.click();
+          }
+        }, 1500);
+      } catch (err) {
+        if (analysisErrorMsg) {
+          analysisErrorMsg.style.display = 'block';
+          analysisErrorMsg.textContent = err.message || 'Errore invio';
+        } else {
+          alert(err.message || 'Errore invio');
+        }
+      } finally {
+        setButtonDisabled(analysisSubmitBtn, false);
+        analysisSubmitBtn.textContent = 'Invia richiesta';
+      }
+    }
 
     // Inizializza modali
     if (document.readyState === 'loading') {
