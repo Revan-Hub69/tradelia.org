@@ -1,0 +1,838 @@
+/* /report/assets/css/design-system-academico-2025.css
+   Design System Accademico 2025 - Tradelia AI
+   Basato su: Cognitive Load Theory, Typography Research, WCAG 2.2 AAA
+   ----------------------------------------------------------- */
+
+/* ===== COGNITIVE LOAD OPTIMIZATION ===== */
+
+/* Chunking: Max 7±2 items per gruppo (Miller's Law) */
+.cognitive-chunk {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--sp-6);
+  max-width: 100%;
+}
+
+/* Progressive Disclosure: Informazioni mostrate gradualmente */
+.progressive-disclosure {
+  display: none;
+}
+
+.progressive-disclosure.active {
+  display: block;
+  animation: fadeInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Visual Hierarchy: F-pattern e Z-pattern support */
+.visual-hierarchy-f {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.visual-hierarchy-z {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-6);
+}
+
+/* ===== INFORMATION ARCHITECTURE ===== */
+
+/* Breadcrumb Navigation (WCAG 2.4.8) */
+.breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-13);
+  color: var(--muted);
+  padding: var(--sp-3) 0;
+}
+
+.breadcrumb-nav a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.breadcrumb-nav a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.breadcrumb-nav a[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.breadcrumb-separator {
+  color: var(--muted-strong);
+  margin: 0 var(--sp-1);
+}
+
+/* Skip Links (WCAG 2.4.1) */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  z-index: 10000;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--brand-600);
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 0 0 var(--radius-md) 0;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid var(--brand-400);
+  outline-offset: 2px;
+}
+
+/* Landmark Regions (ARIA) */
+[role="banner"],
+[role="navigation"],
+[role="main"],
+[role="complementary"],
+[role="contentinfo"] {
+  position: relative;
+}
+
+/* ===== TYPOGRAPHY OPTIMIZATION (Tinker, 1963; Bringhurst, 2004) ===== */
+
+/* Optimal Line Length (45-75 characters, 50-65 ideal) */
+.optimal-line-length {
+  max-width: 65ch;
+  margin-inline: auto;
+}
+
+.optimal-line-length-narrow {
+  max-width: 50ch;
+  margin-inline: auto;
+}
+
+/* Paragraph Spacing (1.5em vertical margin) */
+p + p {
+  margin-top: 1.5em;
+}
+
+/* Typography Scale (Major Third: 1.25) */
+.typography-scale {
+  --scale-ratio: 1.25;
+}
+
+/* Reading Comfort */
+.reading-comfort {
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  word-spacing: 0.05em;
+}
+
+/* ===== COLOR ACCESSIBILITY ENHANCEMENTS ===== */
+
+/* Color + Pattern (non solo colore per informazioni) */
+.color-pattern {
+  position: relative;
+}
+
+.color-pattern::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.1) 2px,
+    rgba(255, 255, 255, 0.1) 4px
+  );
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  :root {
+    --ink: #ffffff;
+    --ink-soft: #ffffff;
+    --muted: #ffffff;
+    --surface-card: #000000;
+    --br-card: #ffffff;
+  }
+  
+  .btn,
+  .card,
+  .module-card {
+    border-width: 2px;
+  }
+}
+
+/* ===== MICRO-INTERACTIONS ENHANCEMENTS ===== */
+
+/* Ripple Effect (Material Design inspired) */
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease, opacity 0.6s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ripple-effect:active::after {
+  width: 300px;
+  height: 300px;
+  opacity: 1;
+  transition: width 0s, height 0s, opacity 0.3s ease;
+}
+
+/* Smooth Transitions (cubic-bezier optimized) */
+.smooth-transition {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== ACCESSIBILITY ENHANCEMENTS ===== */
+
+/* Focus Visible (WCAG 2.4.7) */
+*:focus-visible {
+  outline: 3px solid var(--brand-500);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Focus Within (per container) */
+.focus-within-highlight:focus-within {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  border-radius: var(--radius-md);
+}
+
+/* Reduced Motion (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+
+/* Content Visibility (lazy rendering) */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
+/* Will Change (per animazioni) */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+/* ===== RESPONSIVE TYPOGRAPHY ENHANCEMENTS ===== */
+
+/* Fluid Typography (clamp-based) */
+.fluid-heading-1 {
+  font-size: clamp(22px, 2.4vw + 1rem, 28px);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.fluid-heading-2 {
+  font-size: clamp(18px, 1.8vw + 1rem, 22px);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.fluid-body {
+  font-size: clamp(14px, 0.5vw + 0.875rem, 15px);
+  line-height: 1.7;
+}
+
+/* ===== TOUCH TARGET OPTIMIZATION ===== */
+
+/* Touch Target Size (WCAG 2.5.5: 44x44px minimum) */
+@media (max-width: 768px) {
+  .touch-target {
+    min-width: 44px;
+    min-height: 44px;
+    padding: var(--sp-3) var(--sp-4);
+  }
+  
+  .touch-target-spacing {
+    gap: var(--sp-2);
+  }
+}
+
+/* ===== LOADING STATES (Skeleton Screens) ===== */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-elev) 0%,
+    color-mix(in srgb, var(--surface-elev) 80%, var(--surface-hover) 20%) 50%,
+    var(--surface-elev) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-text {
+  height: 1em;
+  margin-bottom: var(--sp-2);
+}
+
+.skeleton-text:last-child {
+  width: 80%;
+}
+
+/* ===== ERROR STATES ===== */
+
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-10) var(--sp-4);
+  text-align: center;
+  color: var(--muted);
+}
+
+.error-state-icon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: var(--sp-4);
+  color: var(--err);
+  opacity: 0.6;
+}
+
+.error-state-title {
+  font-size: var(--fs-18);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: var(--sp-2);
+}
+
+.error-state-message {
+  font-size: var(--fs-14);
+  line-height: var(--lh-16);
+  color: var(--ink-soft);
+  max-width: 50ch;
+  margin-bottom: var(--sp-6);
+}
+
+/* ===== EMPTY STATES ===== */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-12) var(--sp-4);
+  text-align: center;
+}
+
+.empty-state-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: var(--sp-6);
+  color: var(--muted);
+  opacity: 0.4;
+}
+
+.empty-state-title {
+  font-size: var(--fs-20);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: var(--sp-3);
+}
+
+.empty-state-description {
+  font-size: var(--fs-15);
+  line-height: var(--lh-17);
+  color: var(--ink-soft);
+  max-width: 50ch;
+  margin-bottom: var(--sp-6);
+}
+
+/* ===== SUCCESS STATES ===== */
+
+.success-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-8) var(--sp-4);
+  text-align: center;
+}
+
+.success-state-icon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: var(--sp-4);
+  color: var(--ok);
+}
+
+.success-state-title {
+  font-size: var(--fs-18);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: var(--sp-2);
+}
+
+.success-state-message {
+  font-size: var(--fs-14);
+  line-height: var(--lh-16);
+  color: var(--ink-soft);
+  max-width: 50ch;
+}
+
+/* ===== FORM ENHANCEMENTS ===== */
+
+/* Label + Input Group */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-5);
+}
+
+.form-label {
+  font-size: var(--fs-14);
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: var(--sp-1);
+}
+
+.form-label-required::after {
+  content: ' *';
+  color: var(--err);
+}
+
+.form-input {
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  font-size: var(--fs-15);
+  color: var(--ink);
+  background: var(--surface-elev);
+  border: 1px solid var(--br-card);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--brand-600);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-input:invalid {
+  border-color: var(--err);
+}
+
+.form-input:invalid:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.form-error {
+  font-size: var(--fs-13);
+  color: var(--err);
+  margin-top: var(--sp-1);
+  display: none;
+}
+
+.form-input:invalid ~ .form-error {
+  display: block;
+}
+
+.form-help {
+  font-size: var(--fs-13);
+  color: var(--muted);
+  margin-top: var(--sp-1);
+}
+
+/* ===== DATA VISUALIZATION ENHANCEMENTS ===== */
+
+/* Chart Accessibility */
+.chart-container {
+  position: relative;
+}
+
+.chart-container[aria-label]::before {
+  content: attr(aria-label);
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Table Enhancements */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-14);
+}
+
+.data-table th {
+  text-align: left;
+  padding: var(--sp-3) var(--sp-4);
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--surface-elev);
+  border-bottom: 2px solid var(--br-card);
+}
+
+.data-table td {
+  padding: var(--sp-3) var(--sp-4);
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--br-soft);
+}
+
+.data-table tr:hover {
+  background: var(--surface-elev);
+}
+
+.data-table tr:focus-within {
+  outline: 2px solid var(--brand-600);
+  outline-offset: -2px;
+}
+
+/* ===== PRINT STYLES ===== */
+
+@media print {
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+  
+  .page-break {
+    page-break-after: always;
+  }
+}
+
+/* ===== DARK MODE ENHANCEMENTS ===== */
+
+/* Automatic dark mode based on system preference */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: dark; /* Forced dark for Tradelia */
+  }
+}
+
+/* ===== PERFORMANCE: CONTENT VISIBILITY ===== */
+
+/* Lazy load sections below fold */
+.below-fold {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 1000px;
+}
+
+/* ===== ACCESSIBILITY: SCREEN READER ONLY ===== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* ===== ACADEMIC CITATIONS ===== */
+
+.citation {
+  font-size: var(--fs-12);
+  color: var(--muted);
+  font-style: italic;
+  margin-top: var(--sp-2);
+}
+
+.citation::before {
+  content: 'Source: ';
+  font-weight: 600;
+}
+
+/* ===== RESEARCH-BASED SPACING ===== */
+
+/* Golden Ratio spacing (1.618) */
+.spacing-golden {
+  --golden-ratio: 1.618;
+}
+
+.spacing-golden-small {
+  margin-bottom: calc(var(--sp-4) * var(--golden-ratio));
+}
+
+.spacing-golden-large {
+  margin-bottom: calc(var(--sp-6) * var(--golden-ratio));
+}
+
+/* ===== COGNITIVE LOAD: INFORMATION DENSITY ===== */
+
+/* Optimal information density (not too sparse, not too dense) */
+.information-density-optimal {
+  padding: var(--sp-5) var(--sp-6);
+  line-height: var(--lh-17);
+  max-width: 75ch;
+}
+
+/* ===== TYPOGRAPHY: OPTIMAL READING ===== */
+
+/* Optimal reading width (50-75 characters) */
+.reading-optimal {
+  max-width: 65ch;
+  margin-inline: auto;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+/* ===== MICRO-INTERACTIONS: HAPTIC FEEDBACK ===== */
+
+/* Visual feedback for touch interactions */
+@media (hover: none) and (pointer: coarse) {
+  .touch-feedback:active {
+    transform: scale(0.98);
+    opacity: 0.8;
+  }
+}
+
+/* ===== ACCESSIBILITY: KEYBOARD NAVIGATION ===== */
+
+/* Keyboard navigation indicators */
+.keyboard-nav-indicator {
+  position: relative;
+}
+
+.keyboard-nav-indicator::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  pointer-events: none;
+}
+
+.keyboard-nav-indicator:focus-visible::before {
+  border-color: var(--brand-600);
+}
+
+/* ===== PERFORMANCE: IMAGE OPTIMIZATION ===== */
+
+/* Lazy loading images */
+img[loading="lazy"] {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+img[loading="lazy"].loaded {
+  opacity: 1;
+}
+
+/* ===== ACADEMIC DESIGN: CITATION STYLE ===== */
+
+.academic-citation {
+  font-size: var(--fs-12);
+  color: var(--muted);
+  font-family: var(--ff-mono);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--surface-elev);
+  border-left: 3px solid var(--brand-600);
+  border-radius: var(--radius-sm);
+  margin: var(--sp-4) 0;
+}
+
+.academic-citation::before {
+  content: '📚 ';
+  margin-right: var(--sp-1);
+}
+
+/* ===== RESEARCH-BASED COLOR PSYCHOLOGY ===== */
+
+/* Financial data colors (based on color psychology research) */
+.financial-positive {
+  color: var(--ok);
+  font-weight: 600;
+}
+
+.financial-negative {
+  color: var(--err);
+  font-weight: 600;
+}
+
+.financial-neutral {
+  color: var(--neutral);
+  font-weight: 500;
+}
+
+/* ===== COGNITIVE LOAD: PROGRESSIVE ENHANCEMENT ===== */
+
+/* Show more/less functionality */
+.progressive-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.progressive-content.expanded {
+  max-height: 2000px;
+  opacity: 1;
+}
+
+.progressive-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-4);
+  font-size: var(--fs-13);
+  color: var(--brand-600);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.progressive-toggle:hover {
+  color: var(--brand-500);
+  background: var(--surface-elev);
+  border-radius: var(--radius-md);
+}
+
+.progressive-toggle::after {
+  content: '▼';
+  font-size: var(--fs-11);
+  transition: transform var(--transition-fast);
+}
+
+.progressive-toggle.expanded::after {
+  transform: rotate(180deg);
+}
+
+/* ===== ACADEMIC DESIGN: RESEARCH FOOTNOTES ===== */
+
+.footnote {
+  font-size: var(--fs-11);
+  color: var(--muted);
+  vertical-align: super;
+  text-decoration: none;
+}
+
+.footnote:hover {
+  text-decoration: underline;
+}
+
+.footnotes-section {
+  margin-top: var(--sp-10);
+  padding-top: var(--sp-6);
+  border-top: 1px solid var(--br-card);
+  font-size: var(--fs-13);
+  color: var(--ink-soft);
+}
+
+.footnote-item {
+  margin-bottom: var(--sp-3);
+  padding-left: var(--sp-6);
+  position: relative;
+}
+
+.footnote-item::before {
+  content: attr(data-number);
+  position: absolute;
+  left: 0;
+  font-weight: 600;
+  color: var(--brand-600);
+}
+
+/* ===== FINAL OPTIMIZATIONS ===== */
+
+/* GPU acceleration for smooth animations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Containment for performance */
+.contain-layout {
+  contain: layout;
+}
+
+.contain-paint {
+  contain: paint;
+}
+
+.contain-strict {
+  contain: strict;
+}
+
