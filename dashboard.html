@@ -3071,6 +3071,7 @@
         button.removeAttribute('aria-disabled');
       }
     }
+    window.setButtonDisabled = setButtonDisabled;
 
     let deferredPrompt = null;
     let swRegistration = null;
@@ -3087,55 +3088,60 @@
 
     function setInstallButton(state) {
       if (!installBtn) return;
-      if (state === 'installed') {
-        // Se l'app è installata ma siamo nel browser, mostra "Apri app"
-        // Se siamo già nell'app installata, mostra "App installata"
-        if (isStandalone()) {
-          // Siamo già nell'app installata
-          setButtonDisabled(installBtn, true);
+
+      const showInstallButton = (visible) => {
+        installBtn.style.display = visible ? 'inline-flex' : 'none';
+      };
+
+      switch (state) {
+        case 'standalone':
+          showInstallButton(false);
+          installBtn.dataset.action = '';
+          toggleOpenModalButton(false);
+          toggleHeaderOpenButton(false);
+          break;
+        case 'installed':
+          showInstallButton(false);
+          installBtn.dataset.action = '';
+          toggleOpenModalButton(true);
+          toggleHeaderOpenButton(true);
+          break;
+        case 'ready':
+          showInstallButton(true);
+          installBtn.dataset.action = 'install';
+          setButtonDisabled(installBtn, false);
           if (installLabel) {
-            installLabel.textContent = 'App installata';
+            installLabel.textContent = 'Installa la dashboard';
           } else {
-            installBtn.textContent = 'App installata';
+            installBtn.textContent = 'Installa la dashboard';
           }
           toggleOpenModalButton(false);
           toggleHeaderOpenButton(false);
-        } else {
-          // App installata ma siamo nel browser: mostra "Apri app"
-          setButtonDisabled(installBtn, false);
-          installBtn.dataset.action = 'open-app';
+          break;
+        case 'wait':
+        default:
+          showInstallButton(true);
+          installBtn.dataset.action = '';
+          setButtonDisabled(installBtn, true);
           if (installLabel) {
-            installLabel.textContent = 'Apri app';
+            installLabel.textContent = 'Installa la dashboard';
           } else {
-            installBtn.textContent = 'Apri app';
+            installBtn.textContent = 'Installa la dashboard';
           }
-          toggleOpenModalButton(true);
-          toggleHeaderOpenButton(true);
-        }
-      } else if (state === 'ready') {
-        setButtonDisabled(installBtn, false);
-        installBtn.dataset.action = 'install';
-        if (installLabel) {
-          installLabel.textContent = 'Installa la dashboard';
-        } else {
-          installBtn.textContent = 'Installa la dashboard';
-        }
-        toggleOpenModalButton(false);
-        toggleHeaderOpenButton(false);
-      } else {
-        setButtonDisabled(installBtn, true);
-        installBtn.dataset.action = 'wait';
-        if (installLabel) {
-          installLabel.textContent = 'Installa la dashboard';
-        }
-        toggleOpenModalButton(false);
-        toggleHeaderOpenButton(false);
+          toggleOpenModalButton(false);
+          toggleHeaderOpenButton(false);
+          break;
       }
     }
 
     function toggleOpenModalButton(show) {
       if (!openModalBtn) return;
-      openModalBtn.style.display = show ? 'inline-flex' : 'none';
+      if (show) {
+        openModalBtn.style.display = 'inline-flex';
+        setButtonDisabled(openModalBtn, false);
+      } else {
+        openModalBtn.style.display = 'none';
+      }
     }
     
     function toggleHeaderOpenButton(show) {
@@ -3489,12 +3495,16 @@
     (async function bootstrapPWA() {
       if (installBtn) {
         if (isStandalone()) {
-          setInstallButton('installed');
+          setInstallButton('standalone');
           updateInstallStatus('App installata e aperta sul dispositivo.');
         } else if (localStorage.getItem(PWA_FLAG_KEY) === 'true') {
           setInstallButton('installed');
           updateInstallStatus('App installata. Puoi aprirla dalla schermata Home.');
+        } else if (deferredPrompt) {
+          setInstallButton('ready');
+          updateInstallStatus('Disponibile l’installazione sui dispositivi supportati.');
         } else {
+          setInstallButton('wait');
           updateInstallStatus('Segui le istruzioni del browser per installare l\'app.');
         }
       }
@@ -3505,7 +3515,7 @@
 
     window.initPWAModal = async function() {
       if (isStandalone()) {
-        setInstallButton('installed');
+        setInstallButton('standalone');
       } else if (localStorage.getItem(PWA_FLAG_KEY) === 'true') {
         setInstallButton('installed');
       } else if (deferredPrompt) {
@@ -3829,7 +3839,7 @@
 
     const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
     
-    function setButtonDisabled(element, disabled) {
+    const setButtonDisabled = window.setButtonDisabled || ((element, disabled) => {
       if (!element) return;
       element.disabled = !!disabled;
       if (disabled) {
@@ -3837,8 +3847,8 @@
       } else {
         element.removeAttribute('aria-disabled');
       }
-    }
-
+    });
+    
     // Focus trap utility
     function trapFocus(modal) {
       const focusableElements = modal.querySelectorAll(
