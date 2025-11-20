@@ -457,6 +457,12 @@
       display: flex;
       gap: var(--spacing-sm);
       flex-shrink: 0;
+      align-items: flex-start;
+    }
+    
+    .report-card-actions .btn {
+      min-width: 120px;
+      justify-content: center;
     }
     
     .report-badge {
@@ -556,37 +562,81 @@
       line-height: 1.5;
     }
     
-    /* ===== BUTTONS ===== */
+    /* ===== BUTTONS (Accademico 2025 - Alta Fascia) ===== */
     .btn {
+      position: relative;
       display: inline-flex;
       align-items: center;
-      gap: var(--spacing-xs);
-      padding: var(--spacing-sm) var(--spacing-md);
-      background: var(--dash-surface);
-      border: 1px solid var(--dash-border);
+      justify-content: center;
+      gap: var(--spacing-sm);
+      padding: calc(var(--spacing-md) + 2px) calc(var(--spacing-lg) + 4px);
+      background: color-mix(in srgb, var(--dash-surface) 92%, rgba(37, 99, 235, 0.08));
+      border: 1px solid color-mix(in srgb, var(--dash-border) 85%, rgba(37, 99, 235, 0.15));
       border-radius: var(--radius-md);
-      color: var(--dash-text);
-      font-size: 14px;
+      color: color-mix(in srgb, var(--dash-text) 90%, var(--dash-accent) 10%);
+      font-size: var(--fs-13, 13px);
       font-weight: 500;
+      letter-spacing: 0.01em;
       cursor: pointer;
-      transition: var(--transition);
+      transition: all var(--transition-fast, 0.2s ease);
       text-decoration: none;
+      min-height: 40px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
     
     .btn:hover {
-      background: var(--dash-surface-elev);
-      border-color: var(--dash-accent);
+      background: color-mix(in srgb, var(--dash-surface-elev) 94%, rgba(37, 99, 235, 0.12));
+      border-color: color-mix(in srgb, var(--dash-border) 70%, rgba(37, 99, 235, 0.25));
+      color: var(--dash-text);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn:focus-visible {
+      outline: 2px solid var(--dash-accent);
+      outline-offset: 2px;
+      border-radius: var(--radius-md);
+    }
+    
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
     }
     
     .btn-primary {
-      background: var(--dash-accent);
-      color: var(--dash-bg);
-      border-color: var(--dash-accent);
+      background: color-mix(in srgb, rgba(37, 99, 235, 0.18), var(--dash-surface) 82%);
+      color: color-mix(in srgb, var(--dash-text) 85%, var(--dash-accent) 15%);
+      border-color: color-mix(in srgb, var(--dash-accent) 60%, var(--dash-border) 40%);
+      box-shadow: 
+        0 2px 8px rgba(37, 99, 235, 0.15),
+        0 1px 2px rgba(0, 0, 0, 0.1);
     }
     
     .btn-primary:hover {
-      background: var(--dash-text);
-      border-color: var(--dash-text);
+      background: color-mix(in srgb, rgba(37, 99, 235, 0.24), var(--dash-surface-elev) 76%);
+      border-color: color-mix(in srgb, var(--dash-accent) 75%, var(--dash-border) 25%);
+      color: var(--dash-text);
+      box-shadow: 
+        0 4px 12px rgba(37, 99, 235, 0.2),
+        0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn-primary:active {
+      background: color-mix(in srgb, rgba(37, 99, 235, 0.20), var(--dash-surface) 80%);
+      box-shadow: 
+        0 1px 4px rgba(37, 99, 235, 0.12),
+        0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn svg {
+      flex-shrink: 0;
+      stroke-width: 1.5;
     }
     
     /* ===== UTILITY ===== */
@@ -621,6 +671,132 @@
     .empty-state-text {
       font-size: 14px;
       line-height: 1.6;
+    }
+    
+    /* ===== SKIP LINK (Accessibilità WCAG 2.4.1) ===== */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 0;
+      z-index: 10000;
+      padding: var(--spacing-md) var(--spacing-lg);
+      background: var(--dash-accent);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: var(--fs-14, 14px);
+      border-radius: 0 0 var(--radius-md) 0;
+      transition: top 0.2s ease;
+    }
+    
+    .skip-link:focus {
+      top: 0;
+      outline: 3px solid var(--dash-accent);
+      outline-offset: 2px;
+    }
+    
+    /* ===== TOAST NOTIFICATION SYSTEM (WCAG 2.2) ===== */
+    .dashboard-toast {
+      position: fixed;
+      bottom: var(--spacing-xl);
+      right: var(--spacing-xl);
+      z-index: 10000;
+      max-width: 400px;
+      min-width: 280px;
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+      transition: 
+        opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+    
+    .dashboard-toast[data-visible="true"] {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    
+    .dashboard-toast-content {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-md) var(--spacing-lg);
+      background: color-mix(in srgb, var(--dash-surface) 95%, rgba(37, 99, 235, 0.1));
+      border: 1px solid color-mix(in srgb, var(--dash-border) 80%, rgba(37, 99, 235, 0.2));
+      border-radius: var(--radius-md);
+      box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.3),
+        0 4px 12px rgba(0, 0, 0, 0.2);
+      font-size: var(--fs-14, 14px);
+      color: var(--dash-text);
+    }
+    
+    .dashboard-toast-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      stroke-width: 2;
+    }
+    
+    .dashboard-toast-message {
+      flex: 1;
+      line-height: 1.5;
+    }
+    
+    .dashboard-toast[data-variant="success"] .dashboard-toast-content {
+      border-color: color-mix(in srgb, rgba(22, 163, 74, 0.4), var(--dash-border) 60%);
+      background: color-mix(in srgb, rgba(22, 163, 74, 0.12), var(--dash-surface) 88%);
+    }
+    
+    .dashboard-toast[data-variant="success"] .dashboard-toast-icon {
+      color: rgba(22, 163, 74, 0.9);
+    }
+    
+    .dashboard-toast[data-variant="error"] .dashboard-toast-content {
+      border-color: color-mix(in srgb, rgba(220, 38, 38, 0.4), var(--dash-border) 60%);
+      background: color-mix(in srgb, rgba(220, 38, 38, 0.12), var(--dash-surface) 88%);
+    }
+    
+    .dashboard-toast[data-variant="error"] .dashboard-toast-icon {
+      color: rgba(220, 38, 38, 0.9);
+    }
+    
+    .dashboard-toast[data-variant="info"] .dashboard-toast-content {
+      border-color: color-mix(in srgb, rgba(37, 99, 235, 0.4), var(--dash-border) 60%);
+      background: color-mix(in srgb, rgba(37, 99, 235, 0.12), var(--dash-surface) 88%);
+    }
+    
+    .dashboard-toast[data-variant="info"] .dashboard-toast-icon {
+      color: rgba(37, 99, 235, 0.9);
+    }
+    
+    .dashboard-toast[data-variant="warning"] .dashboard-toast-content {
+      border-color: color-mix(in srgb, rgba(234, 88, 12, 0.4), var(--dash-border) 60%);
+      background: color-mix(in srgb, rgba(234, 88, 12, 0.12), var(--dash-surface) 88%);
+    }
+    
+    .dashboard-toast[data-variant="warning"] .dashboard-toast-icon {
+      color: rgba(234, 88, 12, 0.9);
+    }
+    
+    /* Reduced Motion Support (WCAG 2.3.3) */
+    @media (prefers-reduced-motion: reduce) {
+      .dashboard-toast {
+        transition: opacity 0.1s ease;
+      }
+      
+      .dashboard-toast[data-visible="true"] {
+        transform: none;
+      }
+      
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
     
     /* ===== OVERVIEW PANEL ===== */
@@ -862,24 +1038,28 @@
     
     .filter-btn {
       padding: var(--spacing-sm) var(--spacing-md);
-      background: var(--dash-surface);
+      background: color-mix(in srgb, var(--dash-surface) 95%, rgba(37, 99, 235, 0.05));
       border: 1px solid var(--dash-border);
       border-radius: var(--radius-md);
       color: var(--dash-text-soft);
-      font-size: var(--fs-13, 13px);
+      font-size: var(--fs-12, 12px);
+      font-weight: 500;
+      letter-spacing: 0.01em;
       cursor: pointer;
-      transition: var(--transition);
+      transition: all var(--transition-fast, 0.2s ease);
     }
     
     .filter-btn:hover {
-      background: var(--dash-surface-elev);
-      border-color: var(--dash-accent);
+      background: color-mix(in srgb, var(--dash-surface-elev) 96%, rgba(37, 99, 235, 0.08));
+      border-color: color-mix(in srgb, var(--dash-border) 80%, rgba(37, 99, 235, 0.2));
+      color: var(--dash-text);
     }
     
     .filter-btn.active {
-      background: var(--dash-accent);
-      color: var(--dash-bg);
-      border-color: var(--dash-accent);
+      background: color-mix(in srgb, rgba(37, 99, 235, 0.15), var(--dash-surface) 85%);
+      color: color-mix(in srgb, var(--dash-text) 90%, var(--dash-accent) 10%);
+      border-color: color-mix(in srgb, var(--dash-accent) 50%, var(--dash-border) 50%);
+      font-weight: 600;
     }
     
     .requests-list {
@@ -1005,7 +1185,10 @@
   </style>
 </head>
 <body>
-  <div class="dashboard-container">
+  <!-- Skip Link (WCAG 2.4.1) -->
+  <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
+  
+  <div class="dashboard-container" id="main-content">
     <!-- ===== DASHBOARD HEADER (Accademico 2025) ===== -->
     <header class="dashboard-header-minimal">
       <h1 class="dashboard-title">Dashboard</h1>
@@ -1036,7 +1219,7 @@
           </div>
         </a>
         
-        <a href="#reports" class="module-card" data-module="reports">
+        <a href="#reports" class="module-card" data-module="reports" aria-label="Apri sezione Report Ufficiali">
           <div class="module-card-header">
             <div class="module-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -1058,7 +1241,7 @@
           </div>
         </a>
         
-        <a href="#education" class="module-card" data-module="education">
+        <a href="#education" class="module-card" data-module="education" aria-label="Apri sezione Percorsi Formativi">
           <div class="module-card-header">
             <div class="module-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -1078,7 +1261,7 @@
           </div>
         </a>
         
-        <a href="#access" class="module-card" data-module="access">
+        <a href="#access" class="module-card" data-module="access" aria-label="Apri sezione Gestione Accesso">
           <div class="module-card-header">
             <div class="module-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -1098,7 +1281,7 @@
           </div>
         </a>
         
-        <a href="#on-demand" class="module-card" data-module="on-demand">
+        <a href="#on-demand" class="module-card" data-module="on-demand" aria-label="Apri sezione Analisi On-Demand">
           <div class="module-card-header">
             <div class="module-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -1120,7 +1303,7 @@
           </div>
         </a>
         
-        <a href="#community" class="module-card" data-module="community">
+        <a href="#community" class="module-card" data-module="community" aria-label="Apri sezione Community Proposals">
           <div class="module-card-header">
             <div class="module-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -1142,7 +1325,7 @@
           </div>
         </a>
         
-        <a href="#frameworks" class="module-card" data-module="frameworks">
+        <a href="#frameworks" class="module-card" data-module="frameworks" aria-label="Apri sezione Framework Documentation">
           <div class="module-card-header">
             <div class="module-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -1162,7 +1345,7 @@
           </div>
         </a>
         
-        <a href="#requests-history" class="module-card" data-module="requests-history">
+        <a href="#requests-history" class="module-card" data-module="requests-history" aria-label="Apri sezione Storico Richieste">
           <div class="module-card-header">
             <div class="module-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -1185,7 +1368,7 @@
           </div>
         </a>
         
-        <a href="#notifications" class="module-card" data-module="notifications">
+        <a href="#notifications" class="module-card" data-module="notifications" aria-label="Apri sezione Notifiche">
           <div class="module-card-header">
             <div class="module-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -1205,7 +1388,7 @@
           </div>
         </a>
         
-        <a href="#settings" class="module-card" data-module="settings">
+        <a href="#settings" class="module-card" data-module="settings" aria-label="Apri sezione Impostazioni">
           <div class="module-card-header">
             <div class="module-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -1225,7 +1408,7 @@
           </div>
         </a>
         
-        <a href="#resources" class="module-card" data-module="resources">
+        <a href="#resources" class="module-card" data-module="resources" aria-label="Apri sezione Risorse e Supporto">
           <div class="module-card-header">
             <div class="module-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -1272,12 +1455,44 @@
           <div class="reports-stats" id="reports-stats"></div>
         </div>
         <div class="reports-list" id="reports-container">
-          <div class="reports-loading">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-            </svg>
-            <span>Caricamento report...</span>
+          <!-- Skeleton Loading States (Best Practice 2024-2025) -->
+          <div class="reports-loading" id="reports-loading-skeleton">
+            <div class="report-card-skeleton">
+              <div class="skeleton-header">
+                <div class="skeleton-line skeleton-title"></div>
+                <div class="skeleton-line skeleton-badge"></div>
+              </div>
+              <div class="skeleton-line skeleton-text"></div>
+              <div class="skeleton-line skeleton-text-short"></div>
+              <div class="skeleton-meta">
+                <div class="skeleton-line skeleton-meta-item"></div>
+                <div class="skeleton-line skeleton-meta-item"></div>
+              </div>
+            </div>
+            <div class="report-card-skeleton">
+              <div class="skeleton-header">
+                <div class="skeleton-line skeleton-title"></div>
+                <div class="skeleton-line skeleton-badge"></div>
+              </div>
+              <div class="skeleton-line skeleton-text"></div>
+              <div class="skeleton-line skeleton-text-short"></div>
+              <div class="skeleton-meta">
+                <div class="skeleton-line skeleton-meta-item"></div>
+                <div class="skeleton-line skeleton-meta-item"></div>
+              </div>
+            </div>
+            <div class="report-card-skeleton">
+              <div class="skeleton-header">
+                <div class="skeleton-line skeleton-title"></div>
+                <div class="skeleton-line skeleton-badge"></div>
+              </div>
+              <div class="skeleton-line skeleton-text"></div>
+              <div class="skeleton-line skeleton-text-short"></div>
+              <div class="skeleton-meta">
+                <div class="skeleton-line skeleton-meta-item"></div>
+                <div class="skeleton-line skeleton-meta-item"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1686,6 +1901,18 @@
     </div>
   </div>
   
+  <!-- ===== TOAST NOTIFICATION SYSTEM (WCAG 2.2 - aria-live) ===== -->
+  <div id="dashboard-toast" class="dashboard-toast" role="status" aria-live="polite" aria-atomic="true" hidden>
+    <div class="dashboard-toast-content">
+      <svg class="dashboard-toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span class="dashboard-toast-message"></span>
+    </div>
+  </div>
+  
   <script type="module">
     // ===== IMPORT MODULES =====
     import { loadModule } from '/assets/js/dashboard/index.js';
@@ -1916,9 +2143,17 @@
         STATE.reports = reports;
         STATE.filteredReports = [...reports];
         
+        // Hide skeleton
+        if (skeleton) skeleton.style.display = 'none';
+        
         renderReports();
+        showToast(`${reports.length} report caricati`, 'success', 2000);
       } catch (err) {
         console.error('Errore caricamento report:', err);
+        
+        // Hide skeleton
+        if (skeleton) skeleton.style.display = 'none';
+        
         container.innerHTML = `
           <div class="reports-empty">
             <svg class="reports-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1928,8 +2163,18 @@
             </svg>
             <div class="reports-empty-title">Errore caricamento report</div>
             <div class="reports-empty-text">Si è verificato un errore durante il caricamento. Riprova più tardi.</div>
+            <button class="btn btn-primary" onclick="location.reload()" style="margin-top: var(--spacing-md);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                <polyline points="23 4 23 10 17 10"/>
+                <polyline points="1 20 1 14 7 14"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+              Riprova
+            </button>
           </div>
         `;
+        
+        showToast('Errore nel caricamento dei report', 'error', 5000);
       }
     }
     
