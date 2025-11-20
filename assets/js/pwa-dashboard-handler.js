@@ -242,6 +242,7 @@
     const dashboardLinks = document.querySelectorAll(
       'a[href="/dashboard.html"]:not([data-dashboard-handler="true"]), ' +
       'a[href*="dashboard.html"]:not([data-dashboard-handler="true"]), ' +
+      'a[href="#"]:not([data-listener-added])[data-dashboard-handler="true"], ' +
       'button[data-dashboard]:not([data-dashboard-handler="true"]), ' +
       '.dashboard-link:not([data-dashboard-handler="true"]), ' +
       '[data-action="dashboard"]:not([data-dashboard-handler="true"])'

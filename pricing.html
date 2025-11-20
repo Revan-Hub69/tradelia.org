@@ -798,7 +798,7 @@
               <li>Accesso storico e archivio</li>
             </ul>
             <div class="plan-actions">
-              <a href="/dashboard.html" class="btn btn-primary btn-sm" aria-label="Installa la dashboard PWA Tradelia">
+              <a href="#" class="btn btn-primary btn-sm" aria-label="Installa la dashboard PWA Tradelia" data-dashboard-handler="true">
                 Installa la dashboard PWA
               </a>
               <p class="plan-meta" style="text-align: left;">
@@ -1510,8 +1510,10 @@
       function checkHash() {
         const hash = window.location.hash;
         if (hash === '#richiedi-analisi' || hash === '#richiedi-desk' || hash === '#richiedi-token') {
-          // Redirect alla dashboard PWA
-          window.location.href = '/dashboard.html';
+          // Apri dashboard PWA tramite handler
+          if (window.openDashboardPWA) {
+            window.openDashboardPWA();
+          }
         }
       }
       

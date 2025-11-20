@@ -438,10 +438,16 @@
         });
       }
 
-      // Pricing button
+      // Pricing button - apre dashboard PWA
       if (pricingBtn) {
-        pricingBtn.addEventListener('click', function() {
-          window.location.href = '/dashboard.html';
+        pricingBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          if (window.openDashboardPWA) {
+            window.openDashboardPWA();
+          } else {
+            // Fallback se script non caricato
+            alert('Installa la dashboard PWA per accedere alle funzionalità.');
+          }
         });
       }
 
