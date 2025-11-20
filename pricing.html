@@ -828,12 +828,11 @@
               <li>Fatturazione B2B professionale</li>
             </ul>
             <div class="plan-actions">
-              <a href="/desk.html" class="btn btn-primary btn-sm" aria-label="Vai alla pagina dedicata Piano Desk">
-                Scopri di più e richiedi Desk
+              <a href="#" class="btn btn-primary btn-sm" aria-label="Installa la dashboard PWA" data-dashboard-handler="true">
+                Installa la dashboard PWA
               </a>
               <p class="plan-meta">
-                <strong>Xolo Go</strong> (bonifico o carta). Fatturazione automatica. 
-                <a href="/terms.html#section4" style="color: var(--brand-500); text-decoration: underline; font-size: var(--fs-11);">Termini di pagamento</a>
+                Tutte le richieste (Desk, analisi, codice di accesso) si gestiscono direttamente nella dashboard PWA installabile.
               </p>
             </div>
           </article>
@@ -876,14 +875,13 @@
         </div>
           
           <div style="text-align: center;">
-            <a href="/analisi-su-richiesta.html" class="btn btn-primary" aria-label="Vai alla pagina dedicata Analisi su richiesta">
-              Scopri di più e richiedi un'analisi
+            <a href="#" class="btn btn-primary" aria-label="Installa la dashboard PWA" data-dashboard-handler="true">
+              Installa la dashboard PWA
             </a>
             <p class="plan-meta" style="margin-top: var(--sp-3);">
-              <strong>Xolo Go</strong> per fatturazione e pagamento (bonifico o carta). 
-              <a href="/terms.html#section4" style="color: var(--brand-500); text-decoration: underline; font-size: var(--fs-11);">Termini di pagamento</a>
+              Tutte le richieste (analisi, Desk, codice di accesso) si gestiscono direttamente nella dashboard PWA installabile.
             </p>
-      </div>
+          </div>
         </div>
       </section>
 
@@ -1154,8 +1152,25 @@
   <div id="site-footer-slot"></div>
 
   <!-- Mount Footer -->
-        <button type="button" class="modal-close" onclick="closeModal('modal-token')" aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <script type="module">
+    document.documentElement.setAttribute('data-theme', 'dark');
+    import { siteFooter } from '/report/assets/js/components/site-footer.js';
+    const footerSlot = document.getElementById('site-footer-slot');
+    if (footerSlot) {
+      siteFooter.mount(footerSlot);
+    }
+  </script>
+
+  <!-- Global Header -->
+  <script type="module" src="/assets/js/global-header.js"></script>
+  
+  <!-- Auto-Update System -->
+  <script src="/assets/js/auto-update.js"></script>
+  
+  <!-- PWA Dashboard Handler -->
+  <script src="/assets/js/pwa-dashboard-handler.js"></script>
+</body>
+</html>
             <path d="M18 6L6 18" />
             <path d="M6 6l12 12" />
           </svg>
@@ -1460,48 +1475,6 @@
     })();
   </script>
 
-  <!-- Form client type helpers -->
-  <script>
-    (function() {
-      function initClientForms() {
-        const analisiSelect = document.getElementById('analisi-tipologia');
-        const analisiPrivatoGroups = document.querySelectorAll('[data-client-field="analisi-privato"]');
-        const analisiAziendaGroups = document.querySelectorAll('[data-client-field="analisi-azienda"]');
-
-        if (!analisiSelect) return;
-
-        const toggleGroup = (groups, show) => {
-          groups.forEach(group => {
-            group.classList.toggle('is-visible', show);
-            const field = group.querySelector('input, textarea, select');
-            if (!field) return;
-            const shouldRequire = show && field.dataset.required === 'true';
-            field.required = shouldRequire;
-            if (!show) {
-              field.value = '';
-            }
-          });
-        };
-
-        const handleAnalisiChange = (value) => {
-          toggleGroup(analisiPrivatoGroups, value === 'privato');
-          toggleGroup(analisiAziendaGroups, value === 'azienda');
-        };
-
-        analisiSelect.addEventListener('change', (event) => {
-          handleAnalisiChange(event.target.value);
-        });
-
-        handleAnalisiChange(analisiSelect.value || '');
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initClientForms);
-      } else {
-        initClientForms();
-      }
-    })();
-  </script>
 
   <!-- Auto-open modal from hash -->
   <script>

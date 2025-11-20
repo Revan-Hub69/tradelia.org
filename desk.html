@@ -438,12 +438,15 @@
         <p style="color: var(--muted); font-size: var(--fs-14);">
           Accesso valido 30 giorni dalla data di pagamento. Download illimitato durante il periodo di accesso.
         </p>
-        <a href="#richiedi-desk" class="btn-cta" onclick="event.preventDefault(); openDeskModal(); return false;">
-          <span>Richiedi accesso Desk</span>
+        <a href="#" class="btn-cta" data-dashboard-handler="true">
+          <span>Installa la dashboard PWA</span>
           <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 20px; height: 20px;">
             <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </a>
+        <p style="margin-top: var(--sp-4); font-size: var(--fs-13); color: var(--ink-soft); text-align: center; line-height: 1.5;">
+          Tutte le richieste (Desk, analisi, codice di accesso) si gestiscono direttamente nella dashboard PWA installabile.
+        </p>
       </header>
 
       <!-- Cosa Include -->
@@ -647,8 +650,8 @@
         <p style="color: var(--muted); font-size: var(--fs-15); margin-bottom: var(--sp-6); line-height: 1.6;">
           Compila il modulo per richiedere l'accesso al Piano Desk. Ti contatteremo via email per completare l'attivazione.
         </p>
-        <a href="#richiedi-desk" class="btn-cta" onclick="event.preventDefault(); openDeskModal(); return false;">
-          <span>Richiedi accesso Desk</span>
+        <a href="#" class="btn-cta" data-dashboard-handler="true">
+          <span>Installa la dashboard PWA</span>
           <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 20px; height: 20px;">
             <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -661,9 +664,8 @@
     </div>
   </main>
 
-  <!-- Modal Piano Desk -->
-  <div id="modal-desk" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-desk-title">
-    <div class="modal-content">
+  <!-- Footer Slot -->
+  <div id="site-footer-slot"></div>
       <div class="modal-header">
         <h2 id="modal-desk-title" class="modal-title">Richiedi accesso Desk</h2>
         <button type="button" class="modal-close" onclick="closeModal('modal-desk')" aria-label="Chiudi">
@@ -764,146 +766,17 @@
   <!-- Auto-Update System -->
   <script src="/assets/js/auto-update.js"></script>
   
-  <!-- Modal Functions -->
+  <!-- Tutte le richieste si gestiscono nella dashboard PWA -->
   <script>
-    function openDeskModal() {
-      const modal = document.getElementById('modal-desk');
-      if (modal) {
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        document.getElementById('desk-nome')?.focus();
-      }
-    }
-
-    function closeModal(modalId) {
-      const modal = document.getElementById(modalId);
-      if (modal) {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-        const form = modal.querySelector('form');
-        if (form) {
-          form.reset();
-        }
-        const success = modal.querySelector('.success-message');
-        const error = modal.querySelector('.error-message');
-        if (success) success.classList.remove('active');
-        if (error) error.classList.remove('active');
-      }
-    }
-
-    // Close modal on overlay click
-    document.addEventListener('click', (e) => {
-      if (e.target.classList.contains('modal-overlay')) {
-        closeModal(e.target.id);
-      }
-    });
-
-    // Close modal on Escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        const activeModal = document.querySelector('.modal-overlay.active');
-        if (activeModal) {
-          closeModal(activeModal.id);
-        }
-      }
-    });
-
-    async function submitDesk(e) {
-      e.preventDefault();
-      const form = e.target;
-      const submitBtn = document.getElementById('submit-desk');
-      const successMsg = document.getElementById('success-desk');
-      const errorMsg = document.getElementById('error-desk');
-      
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-      
-      const formData = new FormData(form);
-      const consenso = formData.get('consenso') === 'on';
-      if (!consenso) {
-        alert('È necessario acconsentire al trattamento dei dati personali per procedere.');
-        return;
-      }
-      
-      const piva = formData.get('piva').toUpperCase().trim();
-      if (!piva.match(/^IT[0-9]{11}$/)) {
-        alert('Partita IVA non valida. Formato richiesto: IT seguito da 11 cifre (es. IT12345678901)');
-        document.getElementById('desk-piva').focus();
-        return;
-      }
-      
-      const data = {
-        tipo: 'piano-desk',
-        nome: formData.get('nome').trim(),
-        email: formData.get('email').trim().toLowerCase(),
-        ragioneSociale: formData.get('ragione-sociale').trim(),
-        piva: piva,
-        indirizzo: formData.get('indirizzo').trim(),
-        telefono: formData.get('telefono').trim(),
-        note: formData.get('note')?.trim() || 'Nessuna nota',
-        consensoGDPR: 'Sì',
-        timestamp: new Date().toISOString()
-      };
-
-      const emailBody = `Richiesta Piano Desk - Tradelia AI
-
-Dati azienda:
-Nome/Azienda: ${data.nome}
-Email: ${data.email}
-Ragione sociale: ${data.ragioneSociale}
-Partita IVA: ${data.piva}
-Indirizzo: ${data.indirizzo}
-Telefono: ${data.telefono}
-Note: ${data.note}
-
-Consenso GDPR: ${data.consensoGDPR}
-Timestamp: ${data.timestamp}`;
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Invio in corso...';
-      successMsg.classList.remove('active');
-      errorMsg.classList.remove('active');
-
-      try {
-        const response = await fetch('/api/request-analysis', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ error: 'Errore invio' }));
-          throw new Error(errorData.error || 'Errore invio');
-        }
-
-        const result = await response.json();
-        if (!result.ok) {
-          throw new Error(result.error || 'Errore invio');
-        }
-
-        successMsg.classList.add('active');
-        form.reset();
-        setTimeout(() => {
-          closeModal('modal-desk');
-        }, 3000);
-      } catch (error) {
-        console.error('Errore invio desk:', error);
-        errorMsg.classList.add('active');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Invia richiesta';
-      }
-    }
-
-    // Auto-open modal from hash
+    // Auto-redirect hash to dashboard PWA
     (function() {
       function checkHash() {
         const hash = window.location.hash;
         if (hash === '#richiedi-desk') {
-          setTimeout(() => openDeskModal(), 300);
-          history.replaceState(null, null, window.location.pathname);
+          // Apri dashboard PWA tramite handler
+          if (window.openDashboardPWA) {
+            window.openDashboardPWA();
+          }
         }
       }
       
@@ -916,6 +789,9 @@ Timestamp: ${data.timestamp}`;
       window.addEventListener('hashchange', checkHash);
     })();
   </script>
+  
+  <!-- PWA Dashboard Handler -->
+  <script src="/assets/js/pwa-dashboard-handler.js"></script>
 </body>
 </html>
 
