@@ -39,17 +39,18 @@
   }
   
   /**
-   * Apre la dashboard PWA installata (SOLO se già installata)
+   * Apre la dashboard PWA installata
    */
   function openPWA() {
     if (isPWAInstalled()) {
-      // Se già in PWA, ricarica
+      // Se PWA è installata, naviga alla dashboard
+      // Il browser aprirà automaticamente la PWA se configurato così
+      // Altrimenti la dashboard verificherà se è standalone e reindirizzerà se necessario
       window.location.href = DASHBOARD_URL;
       return;
     }
     
-    // Se PWA non installata, NON aprire come pagina web
-    // Mostra solo prompt installazione
+    // Se PWA non installata, mostra prompt installazione
     if (deferredPrompt) {
       installPWA();
     } else {

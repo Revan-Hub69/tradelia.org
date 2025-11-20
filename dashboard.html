@@ -845,10 +845,73 @@
     
     // Dashboard accessibile SOLO se PWA standalone
     if (!isPWAStandalone()) {
-      // Reindirizza alla homepage - nessun token, nessun modale, solo PWA
+      // Se PWA è installata ma aperta nel browser, mostra messaggio
+      const pwaInstalled = localStorage.getItem('tradelia-pwa-installed') === 'true';
+      if (pwaInstalled) {
+        alert('Apri la dashboard dalla PWA installata.\n\nCerca "Tradelia AI" nella schermata Home o nel menu app.');
+      } else {
+        alert('La dashboard è disponibile solo come PWA installabile.\n\nInstalla la dashboard PWA per accedere.');
+      }
       window.location.href = '/index.html';
       // Blocca esecuzione script
       throw new Error('Dashboard accessibile solo come PWA standalone');
+    }
+    
+    // ===== TOKEN VALIDATION - Richiesto per funzionalità dashboard =====
+    const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
+    
+    async function ensureAccessToken() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const tokenFromQuery = (params.get('token') || '').trim();
+        if (tokenFromQuery) {
+          localStorage.setItem(ACCESS_TOKEN_KEY, tokenFromQuery);
+          params.delete('token');
+          const cleanUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+          window.history.replaceState({}, '', cleanUrl);
+        }
+      } catch (e) {}
+      
+      let token = null;
+      try {
+        token = localStorage.getItem(ACCESS_TOKEN_KEY);
+      } catch (e) {
+        token = null;
+      }
+      
+      if (!token || !token.trim()) {
+        // In PWA, mostra messaggio e reindirizza a accesso
+        alert('Codice di accesso richiesto.\n\nInserisci il tuo codice di accesso per utilizzare la dashboard.');
+        window.location.href = '/accesso.html?reason=missing_token';
+        return false;
+      }
+      
+      try {
+        const res = await fetch('/api/validate-dashboard-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: token.trim() })
+        });
+        const data = await res.json();
+        
+        if (!data.ok) {
+          localStorage.removeItem(ACCESS_TOKEN_KEY);
+          alert('Codice di accesso non valido.\n\nInserisci un codice di accesso valido.');
+          window.location.href = '/accesso.html?reason=invalid_token';
+          return false;
+        }
+        
+        // Enable analysis button if token is valid
+        const analysisBtn = document.getElementById('btn-open-analysis-request');
+        if (analysisBtn) {
+          analysisBtn.disabled = false;
+        }
+        
+        return true;
+      } catch (err) {
+        console.error('[Dashboard] Errore validazione token:', err);
+        return true; // Fallback: allow access in PWA
+      }
     }
     
     // ===== STATE =====
@@ -920,23 +983,17 @@
       showModule(hash);
     }
     
-    // ===== TOKEN - Solo per funzionalità interne dashboard =====
-    const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
-    
-    // Funzione helper per ottenere token (solo per funzionalità interne)
-    function getToken() {
-      try {
-        return localStorage.getItem(ACCESS_TOKEN_KEY);
-      } catch (e) {
-        return null;
+    // ===== INIT =====
+    (async function init() {
+      // Valida token (richiesto per funzionalità dashboard)
+      const hasToken = await ensureAccessToken();
+      if (!hasToken) return;
+      
+      // If on reports panel, load reports
+      if (STATE.currentModule === 'reports') {
+        loadReports();
       }
-    }
-    
-    // Abilita pulsante analisi (sempre disponibile in PWA)
-    const analysisBtn = document.getElementById('btn-open-analysis-request');
-    if (analysisBtn) {
-      analysisBtn.disabled = false;
-    }
+    })();
     
     // ===== REPORTS LOADING =====
     async function loadReports() {
