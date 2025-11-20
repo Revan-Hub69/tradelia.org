@@ -2930,6 +2930,11 @@
       console.debug('[Dashboard] Token info modal disabilitato - usare il flusso /accesso.html', tokenData);
     }
 
+    // Espone funzioni legacy per compatibilità con script PWA
+    window.showTokenInfoModal = showTokenInfoModal;
+    window.showTokenModal = showTokenModal;
+    window.initPWAModal = () => { console.debug('[Dashboard] initPWAModal legacy chiamato'); };
+
     // Verifica se l'utente è admin e mostra link
     async function checkAndShowAdminLink(email) {
       if (!email) {
