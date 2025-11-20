@@ -846,10 +846,12 @@
     // Dashboard accessibile sempre (browser normale o PWA standalone)
     // Non bloccare l'accesso - la dashboard funziona in entrambi i modi
     
-    // ===== TOKEN VALIDATION - Richiesto per funzionalità dashboard =====
+    // ===== TOKEN VALIDATION - Opzionale, solo per funzionalità avanzate =====
     const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
     
     async function ensureAccessToken() {
+      // Token opzionale - non blocca l'accesso alla dashboard
+      // Serve solo per abilitare funzionalità avanzate (analisi su richiesta)
       try {
         const params = new URLSearchParams(window.location.search);
         const tokenFromQuery = (params.get('token') || '').trim();
@@ -868,39 +870,36 @@
         token = null;
       }
       
-      if (!token || !token.trim()) {
-        // In PWA, mostra messaggio e reindirizza a accesso
-        alert('Codice di accesso richiesto.\n\nInserisci il tuo codice di accesso per utilizzare la dashboard.');
-        window.location.href = '/accesso.html?reason=missing_token';
-        return false;
+      // Se c'è token, validalo (opzionale)
+      if (token && token.trim()) {
+        try {
+          const res = await fetch('/api/validate-dashboard-token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: token.trim() })
+          });
+          const data = await res.json();
+          
+          if (data.ok) {
+            // Enable analysis button if token is valid
+            const analysisBtn = document.getElementById('btn-open-analysis-request');
+            if (analysisBtn) {
+              analysisBtn.disabled = false;
+            }
+            return true;
+          } else {
+            // Token non valido - rimuovi ma non bloccare accesso
+            localStorage.removeItem(ACCESS_TOKEN_KEY);
+            return false;
+          }
+        } catch (err) {
+          console.error('[Dashboard] Errore validazione token:', err);
+          return false; // Non bloccare accesso in caso di errore
+        }
       }
       
-      try {
-        const res = await fetch('/api/validate-dashboard-token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token: token.trim() })
-        });
-        const data = await res.json();
-        
-        if (!data.ok) {
-          localStorage.removeItem(ACCESS_TOKEN_KEY);
-          alert('Codice di accesso non valido.\n\nInserisci un codice di accesso valido.');
-          window.location.href = '/accesso.html?reason=invalid_token';
-          return false;
-        }
-        
-        // Enable analysis button if token is valid
-        const analysisBtn = document.getElementById('btn-open-analysis-request');
-        if (analysisBtn) {
-          analysisBtn.disabled = false;
-        }
-        
-        return true;
-      } catch (err) {
-        console.error('[Dashboard] Errore validazione token:', err);
-        return true; // Fallback: allow access in PWA
-      }
+      // Nessun token - dashboard accessibile comunque
+      return false;
     }
     
     // ===== STATE =====
@@ -974,9 +973,8 @@
     
     // ===== INIT =====
     (async function init() {
-      // Valida token (richiesto per funzionalità dashboard)
-      const hasToken = await ensureAccessToken();
-      if (!hasToken) return;
+      // Token opzionale - valida se presente (non blocca accesso)
+      await ensureAccessToken();
       
       // If on reports panel, load reports
       if (STATE.currentModule === 'reports') {
