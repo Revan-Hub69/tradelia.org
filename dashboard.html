@@ -607,6 +607,342 @@
       font-size: 14px;
       line-height: 1.6;
     }
+    
+    /* ===== OVERVIEW PANEL ===== */
+    .overview-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-2xl);
+    }
+    
+    .stat-card {
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      text-align: center;
+    }
+    
+    .stat-label {
+      font-size: var(--fs-13, 13px);
+      color: var(--dash-text-muted);
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .stat-value {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--dash-text);
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .stat-change {
+      font-size: var(--fs-12, 12px);
+      color: var(--dash-text-soft);
+    }
+    
+    .overview-section {
+      margin-bottom: var(--spacing-2xl);
+    }
+    
+    .overview-section-title {
+      font-size: var(--fs-18, 18px);
+      font-weight: 600;
+      color: var(--dash-text);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .recent-activity-list {
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+    }
+    
+    .recent-activity-item {
+      display: flex;
+      gap: var(--spacing-md);
+      padding: var(--spacing-md);
+      border-bottom: 1px solid var(--dash-border);
+    }
+    
+    .recent-activity-item:last-child {
+      border-bottom: none;
+    }
+    
+    .activity-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    
+    .activity-content {
+      flex: 1;
+    }
+    
+    .activity-title {
+      font-size: var(--fs-15, 15px);
+      color: var(--dash-text);
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .activity-time {
+      font-size: var(--fs-13, 13px);
+      color: var(--dash-text-muted);
+    }
+    
+    .quick-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--spacing-md);
+    }
+    
+    .quick-action-card {
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      text-align: center;
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    
+    .quick-action-card:hover {
+      background: var(--dash-surface-elev);
+      border-color: var(--dash-accent);
+      transform: translateY(-2px);
+    }
+    
+    .quick-action-icon {
+      font-size: 32px;
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .quick-action-label {
+      font-size: var(--fs-14, 14px);
+      color: var(--dash-text);
+      font-weight: 500;
+    }
+    
+    /* ===== FRAMEWORKS PANEL ===== */
+    .frameworks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--spacing-lg);
+    }
+    
+    .framework-card {
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-xl);
+    }
+    
+    .framework-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .framework-title {
+      font-size: var(--fs-18, 18px);
+      font-weight: 600;
+      color: var(--dash-text);
+      margin: 0;
+    }
+    
+    .framework-badge {
+      font-size: var(--fs-11, 11px);
+      padding: 2px 8px;
+      background: var(--dash-accent-bg);
+      border: 1px solid var(--dash-border);
+      border-radius: var(--radius-sm);
+      color: var(--dash-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .framework-description {
+      font-size: var(--fs-14, 14px);
+      color: var(--dash-text-soft);
+      line-height: var(--lh-17, 1.7);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .framework-links {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+    
+    .framework-link {
+      font-size: var(--fs-13, 13px);
+      color: var(--dash-accent);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    
+    .framework-link:hover {
+      color: var(--dash-accent-hover);
+      text-decoration: underline;
+    }
+    
+    /* ===== REQUESTS HISTORY PANEL ===== */
+    .requests-toolbar {
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .requests-filters {
+      display: flex;
+      gap: var(--spacing-sm);
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: var(--radius-md);
+      color: var(--dash-text-soft);
+      font-size: var(--fs-13, 13px);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .filter-btn:hover {
+      background: var(--dash-surface-elev);
+      border-color: var(--dash-accent);
+    }
+    
+    .filter-btn.active {
+      background: var(--dash-accent);
+      color: var(--dash-bg);
+      border-color: var(--dash-accent);
+    }
+    
+    .requests-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+    
+    /* ===== NOTIFICATIONS PANEL ===== */
+    .notifications-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+    
+    /* ===== SETTINGS PANEL ===== */
+    .settings-sections {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-2xl);
+      max-width: 600px;
+    }
+    
+    .settings-section {
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-xl);
+    }
+    
+    .settings-section-title {
+      font-size: var(--fs-18, 18px);
+      font-weight: 600;
+      color: var(--dash-text);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .settings-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-md) 0;
+      border-bottom: 1px solid var(--dash-border);
+    }
+    
+    .settings-item:last-child {
+      border-bottom: none;
+    }
+    
+    .settings-label {
+      font-size: var(--fs-14, 14px);
+      color: var(--dash-text);
+    }
+    
+    .settings-toggle {
+      width: 40px;
+      height: 20px;
+      cursor: pointer;
+    }
+    
+    .settings-select {
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: var(--dash-surface-elev);
+      border: 1px solid var(--dash-border);
+      border-radius: var(--radius-md);
+      color: var(--dash-text);
+      font-size: var(--fs-14, 14px);
+      cursor: pointer;
+    }
+    
+    /* ===== RESOURCES PANEL ===== */
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-lg);
+    }
+    
+    .resource-card {
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-xl);
+    }
+    
+    .resource-title {
+      font-size: var(--fs-18, 18px);
+      font-weight: 600;
+      color: var(--dash-text);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .resource-description {
+      font-size: var(--fs-14, 14px);
+      color: var(--dash-text-soft);
+      line-height: var(--lh-17, 1.7);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .resource-link {
+      font-size: var(--fs-13, 13px);
+      color: var(--dash-accent);
+      text-decoration: none;
+      transition: var(--transition);
+      display: inline-block;
+    }
+    
+    .resource-link:hover {
+      color: var(--dash-accent-hover);
+      text-decoration: underline;
+    }
+    
+    @media (max-width: 768px) {
+      .overview-stats-grid,
+      .frameworks-grid,
+      .resources-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .quick-actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
   </style>
 </head>
 <body>
@@ -620,6 +956,27 @@
     <!-- ===== MODULES VIEW (Default) ===== -->
     <div class="modules-view" id="modules-view">
       <div class="modules-grid">
+        <a href="#overview" class="module-card" data-module="overview">
+          <div class="module-card-header">
+            <div class="module-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <line x1="3" y1="9" x2="21" y2="9"/>
+                <line x1="9" y1="21" x2="9" y2="9"/>
+              </svg>
+            </div>
+            <div class="module-info">
+              <h2 class="module-title">Panoramica</h2>
+              <p class="module-description">Statistiche, attività recente e accesso rapido alle funzionalità principali.</p>
+            </div>
+            <div class="module-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </a>
+        
         <a href="#reports" class="module-card" data-module="reports">
           <div class="module-card-header">
             <div class="module-icon">
@@ -717,6 +1074,110 @@
             <div class="module-info">
               <h2 class="module-title">Community Proposals</h2>
               <p class="module-description">Proponi e vota analisi della community. Accesso diretto per Guest e Desk.</p>
+            </div>
+            <div class="module-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </a>
+        
+        <a href="#frameworks" class="module-card" data-module="frameworks">
+          <div class="module-card-header">
+            <div class="module-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <div class="module-info">
+              <h2 class="module-title">Framework Documentation</h2>
+              <p class="module-description">Documentazione completa di SRD v5.0, MTB v3.1, PAC e specifiche tecniche.</p>
+            </div>
+            <div class="module-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </a>
+        
+        <a href="#requests-history" class="module-card" data-module="requests-history">
+          <div class="module-card-header">
+            <div class="module-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+            </div>
+            <div class="module-info">
+              <h2 class="module-title">Storico Richieste</h2>
+              <p class="module-description">Visualizza e gestisci le tue richieste di analisi on-demand e il loro stato.</p>
+            </div>
+            <div class="module-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </a>
+        
+        <a href="#notifications" class="module-card" data-module="notifications">
+          <div class="module-card-header">
+            <div class="module-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+            </div>
+            <div class="module-info">
+              <h2 class="module-title">Notifiche</h2>
+              <p class="module-description">Avvisi, aggiornamenti sistema e comunicazioni importanti.</p>
+            </div>
+            <div class="module-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </a>
+        
+        <a href="#settings" class="module-card" data-module="settings">
+          <div class="module-card-header">
+            <div class="module-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"/>
+              </svg>
+            </div>
+            <div class="module-info">
+              <h2 class="module-title">Impostazioni</h2>
+              <p class="module-description">Preferenze visualizzazione, notifiche e personalizzazione dashboard.</p>
+            </div>
+            <div class="module-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </a>
+        
+        <a href="#resources" class="module-card" data-module="resources">
+          <div class="module-card-header">
+            <div class="module-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+            </div>
+            <div class="module-info">
+              <h2 class="module-title">Risorse & Supporto</h2>
+              <p class="module-description">FAQ, guide utente, documentazione e contatti per assistenza.</p>
             </div>
             <div class="module-arrow">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
@@ -863,9 +1324,282 @@
         </div>
       </div>
     </div>
+    
+    <!-- ===== PANEL OVERVIEW ===== -->
+    <div class="panel-view" id="panel-overview">
+      <div class="panel-header">
+        <a href="#" class="panel-back" id="back-to-modules-overview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Torna ai moduli
+        </a>
+        <h2 class="panel-title">Panoramica</h2>
+        <p class="panel-description">Statistiche, attività recente e accesso rapido alle funzionalità principali della dashboard.</p>
+      </div>
+      <div class="panel-content">
+        <div class="overview-stats-grid" id="overview-stats">
+          <div class="stat-card">
+            <div class="stat-label">Report Totali</div>
+            <div class="stat-value" id="stat-total-reports">-</div>
+            <div class="stat-change">Caricamento...</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Richieste Attive</div>
+            <div class="stat-value" id="stat-active-requests">-</div>
+            <div class="stat-change">Caricamento...</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Ultimo Aggiornamento</div>
+            <div class="stat-value" id="stat-last-update">-</div>
+            <div class="stat-change">Framework SRD v5.0</div>
+          </div>
+        </div>
+        <div class="overview-section">
+          <h3 class="overview-section-title">Attività Recente</h3>
+          <div class="recent-activity-list" id="recent-activity">
+            <div class="recent-activity-item">
+              <div class="activity-icon">📄</div>
+              <div class="activity-content">
+                <div class="activity-title">Nessuna attività recente</div>
+                <div class="activity-time">Visualizza i report per iniziare</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="overview-section">
+          <h3 class="overview-section-title">Azioni Rapide</h3>
+          <div class="quick-actions-grid">
+            <a href="#reports" class="quick-action-card" data-module="reports">
+              <div class="quick-action-icon">📊</div>
+              <div class="quick-action-label">Visualizza Report</div>
+            </a>
+            <a href="#on-demand" class="quick-action-card" data-module="on-demand">
+              <div class="quick-action-icon">📝</div>
+              <div class="quick-action-label">Nuova Richiesta</div>
+            </a>
+            <a href="#frameworks" class="quick-action-card" data-module="frameworks">
+              <div class="quick-action-icon">📚</div>
+              <div class="quick-action-label">Documentazione</div>
+            </a>
+            <a href="#education" class="quick-action-card" data-module="education">
+              <div class="quick-action-icon">🎓</div>
+              <div class="quick-action-label">Tutorial</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ===== PANEL FRAMEWORKS ===== -->
+    <div class="panel-view" id="panel-frameworks">
+      <div class="panel-header">
+        <a href="#" class="panel-back" id="back-to-modules-frameworks">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Torna ai moduli
+        </a>
+        <h2 class="panel-title">Framework Documentation</h2>
+        <p class="panel-description">Documentazione completa dei framework AI Tradelia: SRD v5.0, MTB v3.1, PAC e specifiche tecniche.</p>
+      </div>
+      <div class="panel-content">
+        <div class="frameworks-grid">
+          <div class="framework-card">
+            <div class="framework-header">
+              <h3 class="framework-title">SRD v5.0</h3>
+              <span class="framework-badge">Swing Research Deck</span>
+            </div>
+            <p class="framework-description">Framework proprietario per analisi swing (orizzonte 3-10 giorni) basato su pipeline AI e modelli quantitativi.</p>
+            <div class="framework-links">
+              <a href="#" class="framework-link">Documentazione completa</a>
+              <a href="#" class="framework-link">Specifiche tecniche</a>
+              <a href="#" class="framework-link">Esempi di utilizzo</a>
+            </div>
+          </div>
+          <div class="framework-card">
+            <div class="framework-header">
+              <h3 class="framework-title">MTB v3.1</h3>
+              <span class="framework-badge">Macro Tactical Briefing</span>
+            </div>
+            <p class="framework-description">Framework per analisi macroeconomica e contesto tattico multi-fattore con integrazione sentiment.</p>
+            <div class="framework-links">
+              <a href="#" class="framework-link">Documentazione completa</a>
+              <a href="#" class="framework-link">Specifiche tecniche</a>
+              <a href="#" class="framework-link">Esempi di utilizzo</a>
+            </div>
+          </div>
+          <div class="framework-card">
+            <div class="framework-header">
+              <h3 class="framework-title">PAC</h3>
+              <span class="framework-badge">Protocollo Allerta Criptovalute</span>
+            </div>
+            <p class="framework-description">Protocollo specializzato per monitoraggio e analisi del mercato delle criptovalute.</p>
+            <div class="framework-links">
+              <a href="#" class="framework-link">Documentazione completa</a>
+              <a href="#" class="framework-link">Specifiche tecniche</a>
+              <a href="#" class="framework-link">Esempi di utilizzo</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ===== PANEL REQUESTS HISTORY ===== -->
+    <div class="panel-view" id="panel-requests-history">
+      <div class="panel-header">
+        <a href="#" class="panel-back" id="back-to-modules-requests">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Torna ai moduli
+        </a>
+        <h2 class="panel-title">Storico Richieste</h2>
+        <p class="panel-description">Visualizza e gestisci le tue richieste di analisi on-demand e il loro stato di elaborazione.</p>
+      </div>
+      <div class="panel-content">
+        <div class="requests-toolbar">
+          <div class="requests-filters">
+            <button class="filter-btn active" data-filter="all">Tutte</button>
+            <button class="filter-btn" data-filter="pending">In attesa</button>
+            <button class="filter-btn" data-filter="processing">In elaborazione</button>
+            <button class="filter-btn" data-filter="completed">Completate</button>
+          </div>
+        </div>
+        <div class="requests-list" id="requests-list">
+          <div class="reports-empty">
+            <svg class="reports-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            <div class="reports-empty-title">Nessuna richiesta</div>
+            <div class="reports-empty-text">Le tue richieste di analisi appariranno qui.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ===== PANEL NOTIFICATIONS ===== -->
+    <div class="panel-view" id="panel-notifications">
+      <div class="panel-header">
+        <a href="#" class="panel-back" id="back-to-modules-notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Torna ai moduli
+        </a>
+        <h2 class="panel-title">Notifiche</h2>
+        <p class="panel-description">Avvisi, aggiornamenti sistema e comunicazioni importanti.</p>
+      </div>
+      <div class="panel-content">
+        <div class="notifications-list" id="notifications-list">
+          <div class="reports-empty">
+            <svg class="reports-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            <div class="reports-empty-title">Nessuna notifica</div>
+            <div class="reports-empty-text">Non ci sono notifiche al momento.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ===== PANEL SETTINGS ===== -->
+    <div class="panel-view" id="panel-settings">
+      <div class="panel-header">
+        <a href="#" class="panel-back" id="back-to-modules-settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Torna ai moduli
+        </a>
+        <h2 class="panel-title">Impostazioni</h2>
+        <p class="panel-description">Preferenze visualizzazione, notifiche e personalizzazione dashboard.</p>
+      </div>
+      <div class="panel-content">
+        <div class="settings-sections">
+          <div class="settings-section">
+            <h3 class="settings-section-title">Visualizzazione</h3>
+            <div class="settings-item">
+              <label class="settings-label">Modalità scura</label>
+              <input type="checkbox" class="settings-toggle" id="setting-dark-mode" checked disabled>
+            </div>
+            <div class="settings-item">
+              <label class="settings-label">Densità contenuti</label>
+              <select class="settings-select" id="setting-density">
+                <option value="comfortable">Comfortevole</option>
+                <option value="compact">Compatta</option>
+              </select>
+            </div>
+          </div>
+          <div class="settings-section">
+            <h3 class="settings-section-title">Notifiche</h3>
+            <div class="settings-item">
+              <label class="settings-label">Notifiche email</label>
+              <input type="checkbox" class="settings-toggle" id="setting-email-notifications">
+            </div>
+            <div class="settings-item">
+              <label class="settings-label">Notifiche sistema</label>
+              <input type="checkbox" class="settings-toggle" id="setting-system-notifications">
+            </div>
+          </div>
+          <div class="settings-section">
+            <h3 class="settings-section-title">Dati</h3>
+            <div class="settings-item">
+              <label class="settings-label">Export dati</label>
+              <button class="btn btn-primary" id="btn-export-data">Esporta</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ===== PANEL RESOURCES ===== -->
+    <div class="panel-view" id="panel-resources">
+      <div class="panel-header">
+        <a href="#" class="panel-back" id="back-to-modules-resources">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Torna ai moduli
+        </a>
+        <h2 class="panel-title">Risorse & Supporto</h2>
+        <p class="panel-description">FAQ, guide utente, documentazione e contatti per assistenza.</p>
+      </div>
+      <div class="panel-content">
+        <div class="resources-grid">
+          <div class="resource-card">
+            <h3 class="resource-title">FAQ</h3>
+            <p class="resource-description">Domande frequenti e risposte su framework, report e utilizzo dashboard.</p>
+            <a href="#" class="resource-link">Visualizza FAQ →</a>
+          </div>
+          <div class="resource-card">
+            <h3 class="resource-title">Guide Utente</h3>
+            <p class="resource-description">Tutorial passo-passo per utilizzare tutte le funzionalità della dashboard.</p>
+            <a href="#" class="resource-link">Visualizza Guide →</a>
+          </div>
+          <div class="resource-card">
+            <h3 class="resource-title">Documentazione Tecnica</h3>
+            <p class="resource-description">Specifiche tecniche, API reference e documentazione sviluppatori.</p>
+            <a href="#" class="resource-link">Visualizza Docs →</a>
+          </div>
+          <div class="resource-card">
+            <h3 class="resource-title">Supporto</h3>
+            <p class="resource-description">Contatti per assistenza tecnica e supporto utente.</p>
+            <a href="mailto:support@tradelia.org" class="resource-link">Contatta Supporto →</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   
   <script type="module">
+    // ===== IMPORT MODULES =====
+    import { loadModule } from '/assets/js/dashboard/index.js';
+    
     // ===== PWA CHECK - Dashboard accessibile sempre =====
     function isPWAStandalone() {
       // Verifica se siamo in standalone mode (PWA installata e aperta come app)
@@ -1004,14 +1738,20 @@
       showModule(hash);
     }
     
+    // Funzioni duplicate rimosse - ora in moduli separati
+    // Vedi: /assets/js/dashboard/
+    
     // ===== INIT =====
     (async function init() {
       // Token opzionale - valida se presente (non blocca accesso)
       await ensureAccessToken();
       
-      // If on reports panel, load reports
-      if (STATE.currentModule === 'reports') {
-        loadReports();
+      // Check hash for initial module
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        showModule(hash);
+      } else if (STATE.currentModule) {
+        loadModule(STATE.currentModule);
       }
     })();
     
