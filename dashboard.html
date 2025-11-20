@@ -28,36 +28,36 @@
     }
     
     :root {
-      /* Terminal-style palette (ibrida) */
-      --dash-bg: #000000;
-      --dash-surface: #0a0a0a;
-      --dash-surface-elev: #141414;
-      --dash-border: #1a1a1a;
-      --dash-text: #00ff00;
-      --dash-text-soft: #00cc00;
-      --dash-text-muted: #666666;
-      --dash-accent: #00ffff;
-      --dash-accent-bg: rgba(0, 255, 255, 0.1);
-      --dash-prompt: #00ffff;
-      --dash-error: #ff0000;
-      --dash-warning: #ffff00;
-      --spacing-xs: 0.5rem;
-      --spacing-sm: 0.75rem;
-      --spacing-md: 1rem;
-      --spacing-lg: 1.5rem;
-      --spacing-xl: 2rem;
-      --spacing-2xl: 3rem;
-      --radius-sm: 4px;
-      --radius-md: 6px;
-      --radius-lg: 8px;
-      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      /* Usa design system accademico 2025 - allineato con tokens.css */
+      /* Variabili ereditate da tokens.css e design-system-academico-2025.css */
+      --dash-bg: var(--surface-page, #0f0f0f);
+      --dash-surface: var(--surface-card, #181818);
+      --dash-surface-elev: var(--surface-elev, #202020);
+      --dash-border: var(--br-soft, #252525);
+      --dash-text: var(--ink, #ffffff);
+      --dash-text-soft: var(--ink-soft, #f0f0f0);
+      --dash-text-muted: var(--muted, #888888);
+      --dash-accent: var(--brand-600, #2563eb);
+      --dash-accent-hover: var(--brand-500, #3b82f6);
+      --dash-accent-bg: rgba(37, 99, 235, 0.1);
+      --spacing-xs: var(--sp-1, 0.25rem);
+      --spacing-sm: var(--sp-2, 0.5rem);
+      --spacing-md: var(--sp-3, 0.75rem);
+      --spacing-lg: var(--sp-4, 1rem);
+      --spacing-xl: var(--sp-6, 1.5rem);
+      --spacing-2xl: var(--sp-8, 2rem);
+      --radius-sm: var(--radius-sm, 4px);
+      --radius-md: var(--radius-md, 8px);
+      --radius-lg: var(--radius-lg, 12px);
+      --transition: var(--transition-fast, all 0.2s cubic-bezier(0.4, 0, 0.2, 1));
     }
     
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
+      font-family: var(--ff-sans, -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif);
+      font-size: var(--fs-15, 15px);
+      line-height: var(--lh-17, 1.7);
       background: var(--dash-bg);
       color: var(--dash-text);
-      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
@@ -82,32 +82,31 @@
       }
     }
     
-    /* ===== TERMINAL PROMPT HEADER (Minimal, inline) ===== */
-    .terminal-prompt-header {
-      margin-bottom: var(--spacing-lg);
-      padding-bottom: var(--spacing-md);
+    /* ===== DASHBOARD HEADER (Accademico 2025 - Minimal) ===== */
+    .dashboard-header-minimal {
+      margin-bottom: var(--spacing-xl);
+      padding-bottom: var(--spacing-lg);
       border-bottom: 1px solid var(--dash-border);
       display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
+      align-items: baseline;
+      gap: var(--spacing-md);
+      flex-wrap: wrap;
     }
     
-    .prompt-prefix {
-      color: var(--dash-prompt);
-      font-weight: 600;
-      font-size: 14px;
-    }
-    
-    .prompt-title {
+    .dashboard-title {
       color: var(--dash-text);
-      font-size: 18px;
-      font-weight: 600;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
       letter-spacing: -0.01em;
+      margin: 0;
+      line-height: var(--lh-14, 1.4);
     }
     
-    .prompt-subtitle {
+    .dashboard-subtitle {
       color: var(--dash-text-muted);
-      font-size: 12px;
+      font-size: var(--fs-13, 13px);
+      font-weight: 400;
+      margin: 0;
       margin-left: auto;
     }
     
@@ -126,13 +125,13 @@
       }
     }
     
-    /* ===== MODULE CARD (Terminal-style) ===== */
+    /* ===== MODULE CARD (Accademico 2025 - Best Practice) ===== */
     .module-card {
       background: var(--dash-surface);
       border: 1px solid var(--dash-border);
       border-left: 3px solid transparent;
       border-radius: var(--radius-md);
-      padding: var(--spacing-lg);
+      padding: var(--spacing-xl);
       transition: var(--transition);
       cursor: pointer;
       text-decoration: none;
@@ -145,25 +144,31 @@
     }
     
     .module-card::before {
-      content: '>';
+      content: '';
       position: absolute;
-      left: var(--spacing-sm);
-      top: var(--spacing-lg);
-      color: var(--dash-prompt);
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--dash-accent);
       opacity: 0;
       transition: var(--transition);
-      font-weight: 600;
     }
     
     .module-card:hover {
       background: var(--dash-surface-elev);
       border-left-color: var(--dash-accent);
-      transform: translateX(4px);
-      box-shadow: 0 2px 8px rgba(0, 255, 0, 0.1);
+      transform: translateX(2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
     }
     
     .module-card:hover::before {
       opacity: 1;
+    }
+    
+    .module-card:focus {
+      outline: 2px solid var(--dash-accent);
+      outline-offset: 2px;
     }
     
     .module-card-header {
@@ -195,18 +200,18 @@
     }
     
     .module-title {
-      font-size: 16px;
+      font-size: var(--fs-18, 18px);
       font-weight: 600;
       margin-bottom: var(--spacing-xs);
       color: var(--dash-text);
-      letter-spacing: 0.02em;
+      letter-spacing: -0.01em;
+      line-height: var(--lh-14, 1.4);
     }
     
     .module-description {
-      font-size: 12px;
+      font-size: var(--fs-13, 13px);
       color: var(--dash-text-soft);
-      line-height: 1.5;
-      opacity: 0.8;
+      line-height: var(--lh-17, 1.7);
     }
     
     .module-arrow {
@@ -252,21 +257,22 @@
       display: inline-flex;
       align-items: center;
       gap: var(--spacing-xs);
-      color: var(--dash-prompt);
+      color: var(--dash-text-muted);
       text-decoration: none;
-      font-size: 13px;
+      font-size: var(--fs-13, 13px);
       margin-bottom: var(--spacing-md);
       transition: var(--transition);
       font-weight: 500;
     }
     
-    .panel-back::before {
-      content: '< ';
-      color: var(--dash-prompt);
-    }
-    
     .panel-back:hover {
       color: var(--dash-accent);
+    }
+    
+    .panel-back:focus {
+      outline: 2px solid var(--dash-accent);
+      outline-offset: 2px;
+      border-radius: var(--radius-sm);
     }
     
     .panel-title {
@@ -346,33 +352,40 @@
       border: 1px solid var(--dash-border);
       border-left: 3px solid transparent;
       border-radius: var(--radius-md);
-      padding: var(--spacing-lg);
+      padding: var(--spacing-xl);
       margin-bottom: var(--spacing-md);
       transition: var(--transition);
       position: relative;
       overflow: hidden;
+      cursor: pointer;
     }
     
     .report-card::before {
-      content: '→';
+      content: '';
       position: absolute;
-      left: var(--spacing-sm);
-      top: var(--spacing-lg);
-      color: var(--dash-prompt);
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--dash-accent);
       opacity: 0;
       transition: var(--transition);
-      font-weight: 600;
     }
     
     .report-card:hover {
       background: var(--dash-surface-elev);
       border-left-color: var(--dash-accent);
-      transform: translateX(4px);
-      box-shadow: 0 2px 8px rgba(0, 255, 0, 0.1);
+      transform: translateX(2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
     }
     
     .report-card:hover::before {
       opacity: 1;
+    }
+    
+    .report-card:focus {
+      outline: 2px solid var(--dash-accent);
+      outline-offset: 2px;
     }
     
     .report-card-header {
@@ -389,13 +402,12 @@
     }
     
     .report-ticker {
-      font-size: 18px;
+      font-size: var(--fs-18, 18px);
       font-weight: 600;
-      letter-spacing: 0.05em;
+      letter-spacing: -0.01em;
       margin: 0 0 var(--spacing-xs);
       color: var(--dash-text);
-      line-height: 1.3;
-      font-family: 'Courier New', monospace;
+      line-height: var(--lh-14, 1.4);
     }
     
     .report-company {
@@ -599,12 +611,11 @@
 </head>
 <body>
   <div class="dashboard-container">
-    <!-- ===== TERMINAL PROMPT HEADER (Minimal) ===== -->
-    <div class="terminal-prompt-header">
-      <span class="prompt-prefix">$</span>
-      <span class="prompt-title">tradelia</span>
-      <span class="prompt-subtitle">Framework Accademico AI</span>
-    </div>
+    <!-- ===== DASHBOARD HEADER (Accademico 2025) ===== -->
+    <header class="dashboard-header-minimal">
+      <h1 class="dashboard-title">Dashboard</h1>
+      <p class="dashboard-subtitle">Framework Accademico AI Tradelia</p>
+    </header>
     
     <!-- ===== MODULES VIEW (Default) ===== -->
     <div class="modules-view" id="modules-view">
