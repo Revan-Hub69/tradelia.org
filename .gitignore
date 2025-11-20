@@ -22,7 +22,11 @@ firebase-private-config.local.js
 *-private-config.local.js
 
 # Node modules
-node_modules/
+node_modules
+dist/
+design-tokens/tokens.css
+*.log
+.DS_Store/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
