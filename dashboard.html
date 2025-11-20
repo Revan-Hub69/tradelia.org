@@ -580,7 +580,6 @@
       <h1 class="dashboard-title">Dashboard</h1>
       <p class="dashboard-subtitle">Framework Accademico AI Tradelia</p>
       <div class="dashboard-actions">
-        <button class="btn" id="logout-btn" type="button">Disconnetti</button>
         <a href="/admin/index.html" class="btn" id="admin-link" style="display: none;">Admin</a>
       </div>
     </header>
@@ -834,7 +833,7 @@
   </div>
   
   <script type="module">
-    // ===== PWA CHECK - Dashboard accessibile solo come PWA standalone =====
+    // ===== PWA CHECK - Dashboard SOLO PWA standalone =====
     function isPWAStandalone() {
       // Solo standalone mode (PWA installata e aperta come app)
       return (
@@ -844,13 +843,12 @@
       );
     }
     
-    // Se non è PWA standalone, reindirizza
+    // Dashboard accessibile SOLO se PWA standalone
     if (!isPWAStandalone()) {
-      // Reindirizza alla homepage con messaggio
-      alert('La dashboard è disponibile solo come PWA installabile.\n\nInstalla la dashboard PWA per accedere alle funzionalità.');
+      // Reindirizza alla homepage - nessun token, nessun modale, solo PWA
       window.location.href = '/index.html';
       // Blocca esecuzione script
-      throw new Error('Dashboard accessibile solo come PWA');
+      throw new Error('Dashboard accessibile solo come PWA standalone');
     }
     
     // ===== STATE =====
@@ -859,8 +857,6 @@
       filteredReports: [],
       currentModule: null
     };
-    
-    const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
     
     // ===== NAVIGATION =====
     function showModule(moduleId) {
@@ -924,78 +920,22 @@
       showModule(hash);
     }
     
-    // ===== TOKEN VALIDATION =====
-    async function ensureAccessToken() {
+    // ===== TOKEN - Solo per funzionalità interne dashboard =====
+    const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
+    
+    // Funzione helper per ottenere token (solo per funzionalità interne)
+    function getToken() {
       try {
-        const params = new URLSearchParams(window.location.search);
-        const tokenFromQuery = (params.get('token') || '').trim();
-        if (tokenFromQuery) {
-          localStorage.setItem(ACCESS_TOKEN_KEY, tokenFromQuery);
-          params.delete('token');
-          const cleanUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
-          window.history.replaceState({}, '', cleanUrl);
-        }
-      } catch (e) {}
-      
-      let token = null;
-      try {
-        token = localStorage.getItem(ACCESS_TOKEN_KEY);
+        return localStorage.getItem(ACCESS_TOKEN_KEY);
       } catch (e) {
-        token = null;
-      }
-      
-      if (!token || !token.trim()) {
-        window.location.href = '/accesso.html?reason=missing_token';
-        return false;
-      }
-      
-      try {
-        const res = await fetch('/api/validate-dashboard-token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token: token.trim() })
-        });
-        const data = await res.json();
-        
-        if (!data.ok) {
-          localStorage.removeItem(ACCESS_TOKEN_KEY);
-          window.location.href = '/accesso.html?reason=invalid_token';
-          return false;
-        }
-        
-        // Enable analysis button if token is valid
-        const analysisBtn = document.getElementById('btn-open-analysis-request');
-        if (analysisBtn) {
-          analysisBtn.disabled = false;
-        }
-        
-        // Check admin
-        if (data.email) {
-          checkAdmin(data.email);
-        }
-        
-        return true;
-      } catch (err) {
-        console.error('[Dashboard] Errore validazione token:', err);
-        return true; // Fallback: allow access
+        return null;
       }
     }
     
-    async function checkAdmin(email) {
-      try {
-        const { supabase } = await import('/report/assets/js/supabase-client.js');
-        const { data } = await supabase
-          .from('admin_emails')
-          .select('email')
-          .eq('email', email.toLowerCase().trim())
-          .maybeSingle();
-        
-        if (data) {
-          document.getElementById('admin-link').style.display = 'inline-flex';
-        }
-      } catch (err) {
-        console.warn('[Dashboard] Errore verifica admin:', err);
-      }
+    // Abilita pulsante analisi (sempre disponibile in PWA)
+    const analysisBtn = document.getElementById('btn-open-analysis-request');
+    if (analysisBtn) {
+      analysisBtn.disabled = false;
     }
     
     // ===== REPORTS LOADING =====
@@ -1197,25 +1137,14 @@
       });
     }
     
-    // ===== LOGOUT =====
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem(ACCESS_TOKEN_KEY);
-        window.location.href = '/accesso.html?reason=logout';
-      });
-    }
-    
     // ===== INIT =====
-    (async function init() {
-      const hasToken = await ensureAccessToken();
-      if (!hasToken) return;
-      
-      // If on reports panel, load reports
-      if (STATE.currentModule === 'reports') {
-        loadReports();
-      }
-    })();
+    // Dashboard accessibile solo come PWA standalone (già verificato all'inizio)
+    // Token usato solo per funzionalità interne, non per validare accesso
+    
+    // If on reports panel, load reports
+    if (STATE.currentModule === 'reports') {
+      loadReports();
+    }
   </script>
 </body>
 </html>
