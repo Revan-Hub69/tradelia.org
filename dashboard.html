@@ -2831,6 +2831,14 @@
       });
     }
 
+    function redirectToAccess(reason) {
+      const url = new URL('/accesso.html', window.location.origin);
+      if (reason) {
+        url.searchParams.set('reason', reason);
+      }
+      window.location.href = url.toString();
+    }
+
     async function ensureAccessToken() {
       try {
         const params = new URLSearchParams(window.location.search);
@@ -2858,8 +2866,8 @@
       }
 
       if (!token || !token.trim()) {
-        // nessun token valido: mostra modale per inserire token
-        showTokenModal();
+        // nessun token valido: reindirizza alla pagina di accesso
+        redirectToAccess('missing_token');
         return false;
       }
 
@@ -2879,9 +2887,7 @@
           } catch (e) {
             // ignore
           }
-          const url = new URL('/accesso.html', window.location.origin);
-          url.searchParams.set('reason', 'invalid_token');
-          window.location.href = url.toString();
+          redirectToAccess('invalid_token');
           return false;
         }
         
@@ -2889,9 +2895,6 @@
         if (data.email) {
           checkAndShowAdminLink(data.email);
         }
-        
-        // Token valido: mostra modale con info token e PWA
-        showTokenInfoModal(data);
         
         // Token valido: procedi
         return true;
@@ -2905,71 +2908,14 @@
 
     // Mostra modale per inserire token
     function showTokenModal() {
-      if (window.openTokenModal) {
-        window.openTokenModal();
-      } else {
-        // Fallback se modali non ancora inizializzati
-        const modal = document.getElementById('modal-token-input');
-        if (modal) {
-          modal.hidden = false;
-          setTimeout(() => modal.classList.add('active'), 10);
-          document.body.style.overflow = 'hidden';
-        }
-      }
+      redirectToAccess('missing_token');
     }
 
-    // Mostra modale con info token e PWA (solo se non già mostrato in questa sessione)
+    // Mostra modale con info token e PWA (legacy disabilitato: gestito da /accesso.html)
     function showTokenInfoModal(tokenData) {
-      const modal = document.getElementById('modal-token-info');
-      if (!modal) return;
-      
-      // Controlla se già mostrato in questa sessione
       const shownKey = 'token-info-modal-shown';
-      if (sessionStorage.getItem(shownKey)) {
-        return; // Già mostrato, non riaprire
-      }
-      
-      // Aggiorna info token nel modale
-      const emailEl = document.getElementById('token-info-email');
-      const planEl = document.getElementById('token-info-plan');
-      const validUntilEl = document.getElementById('token-info-valid-until');
-      
-      if (emailEl && tokenData.email) {
-        emailEl.textContent = tokenData.email;
-      }
-      if (planEl && tokenData.plan_role) {
-        const planNames = {
-          'trial': 'Gratuito (Trial)',
-          'pro': 'Pro',
-          'desk': 'Desk'
-        };
-        planEl.textContent = planNames[tokenData.plan_role] || tokenData.plan_role;
-      }
-      if (validUntilEl && tokenData.valid_until) {
-        const date = new Date(tokenData.valid_until);
-        validUntilEl.textContent = date.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
-      }
-      
-      if (window.openTokenInfoModal) {
-        window.openTokenInfoModal();
-        // Inizializza PWA dopo che il modale è aperto
-        if (window.initPWAModal) {
-          setTimeout(() => window.initPWAModal(), 100);
-        }
-        // Marca come mostrato
-        sessionStorage.setItem(shownKey, 'true');
-      } else {
-        // Fallback
-        modal.hidden = false;
-        setTimeout(() => {
-          modal.classList.add('active');
-          document.body.style.overflow = 'hidden';
-          if (window.initPWAModal) {
-            window.initPWAModal();
-          }
-          sessionStorage.setItem(shownKey, 'true');
-        }, 10);
-      }
+      sessionStorage.setItem(shownKey, 'true');
+      console.debug('[Dashboard] Token info modal disabilitato - usare il flusso /accesso.html', tokenData);
     }
 
     // Verifica se l'utente è admin e mostra link
@@ -3851,10 +3797,6 @@
                 document.body.style.overflow = '';
               }, 200);
             }
-            // Show info modal
-            setTimeout(() => {
-              showTokenInfoModal(data);
-            }, 250);
             // Ricarica la pagina per inizializzare la dashboard
             setTimeout(() => window.location.reload(), 500);
           } else {
