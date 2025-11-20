@@ -349,7 +349,9 @@ function showInstallButton() {
     installBtn.hidden = false;
   }
   if (pwaSettingsBtn) {
-    pwaSettingsBtn.classList.remove('btn-disabled');
+    pwaSettingsBtn.disabled = false;
+    pwaSettingsBtn.classList.remove('btn-pill--disabled');
+    pwaSettingsBtn.removeAttribute('aria-disabled');
     pwaSettingsBtn.title = '';
   }
   hideOpenAppButton();
@@ -363,7 +365,9 @@ function hideInstallButton() {
     installBtn.hidden = true;
   }
   if (pwaSettingsBtn) {
-    pwaSettingsBtn.classList.add('btn-disabled');
+    pwaSettingsBtn.disabled = true;
+    pwaSettingsBtn.classList.add('btn-pill--disabled');
+    pwaSettingsBtn.setAttribute('aria-disabled', 'true');
     if (!pwaSettingsBtn.title) {
       pwaSettingsBtn.title = 'Disponibile solo su browser supportati e con HTTPS';
     }

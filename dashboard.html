@@ -464,26 +464,70 @@
       gap: 0.75rem;
     }
 
-    .logout-btn {
-      border: 1px solid var(--dash-border);
-      background: transparent;
-      color: var(--dash-text-muted);
-      font-size: 0.85rem;
-      padding: 0.45rem 1.25rem;
+    .btn-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.55rem 1.35rem;
       border-radius: 999px;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--dash-text);
+      font-size: 0.9rem;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
     }
 
-    .logout-btn:hover {
-      border-color: var(--dash-accent);
-      color: var(--dash-accent);
-      background: rgba(37, 99, 235, 0.08);
+    .btn-pill:focus-visible {
+      outline: 2px solid var(--dash-accent);
+      outline-offset: 2px;
     }
 
-    #pwa-settings-btn.btn-disabled {
-      opacity: 0.5;
+    .btn-pill--sm {
+      padding: 0.4rem 1rem;
+      font-size: 0.82rem;
+    }
+
+    .btn-pill--wide {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-pill--primary {
+      background: linear-gradient(135deg, #60a5fa, #2563eb);
+      color: #fff;
+      border: none;
+      box-shadow: 0 15px 35px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-pill--primary:hover:not(.btn-pill--disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 45px rgba(37, 99, 235, 0.45);
+    }
+
+    .btn-pill--outline {
+      border: 1px solid var(--dash-border);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--dash-text);
+    }
+
+    .btn-pill--outline:hover:not(.btn-pill--disabled) {
+      border-color: var(--dash-border-strong);
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    .btn-pill--ghost {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: transparent;
+      color: var(--dash-text-soft);
+    }
+
+    .btn-pill--disabled {
+      opacity: 0.45;
       cursor: not-allowed;
+      box-shadow: none;
     }
 
     /* ===== ACCESS BANNER ===== */
@@ -1655,7 +1699,7 @@
           <p class="dashboard-subtitle">Report finanziari AI</p>
         </div>
         <div class="session-actions" style="display: flex; gap: 0.75rem; align-items: center;">
-          <a href="/admin/index.html" id="admin-dashboard-link-header" class="btn btn-primary btn-sm" style="white-space: nowrap; display: none; gap: 0.4rem; align-items: center;">
+          <a href="/admin/index.html" id="admin-dashboard-link-header" class="btn-pill btn-pill--primary btn-pill--sm" style="white-space: nowrap; display: none;">
             <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="3" />
@@ -1664,8 +1708,8 @@
             </span>
             <span class="btn-label">Admin</span>
           </a>
-          <button class="logout-btn btn-disabled" id="pwa-settings-btn" type="button" style="border: 1px solid var(--dash-border); background: transparent; color: var(--dash-text-muted); font-size: 0.85rem; padding: 0.45rem 1.25rem; border-radius: 999px; cursor: pointer; transition: all 0.2s ease;">
-            <span style="display: inline-flex; gap: 0.4rem; align-items: center;">
+          <button class="btn-pill btn-pill--outline btn-pill--sm btn-pill--disabled" id="pwa-settings-btn" type="button" disabled>
+            <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: inline-block;">
                 <rect x="5" y="3" width="14" height="18" rx="3" />
                 <path d="M12 5v10" />
@@ -1674,8 +1718,8 @@
               PWA
             </span>
           </button>
-          <button class="logout-btn" id="open-app-btn" type="button" hidden style="border: 1px solid var(--dash-border); background: transparent; color: var(--dash-text); font-size: 0.85rem; padding: 0.45rem 1.25rem; border-radius: 999px; cursor: pointer; transition: all 0.2s ease;">
-            <span style="display: inline-flex; gap: 0.4rem; align-items: center;">
+          <button class="btn-pill btn-pill--primary btn-pill--sm" id="open-app-btn" type="button" hidden>
+            <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: inline-block;">
                 <path d="M9 18H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4" />
                 <polyline points="15 6 21 6 21 12" />
@@ -1684,7 +1728,7 @@
               Apri nell'app
             </span>
           </button>
-          <button class="logout-btn" id="logout-btn" type="button">Disconnetti il dispositivo</button>
+          <button class="btn-pill btn-pill--outline btn-pill--sm" id="logout-btn" type="button">Disconnetti il dispositivo</button>
         </div>
       </div>
 
@@ -3146,6 +3190,7 @@
         if (isStandalone()) {
           // Siamo già nell'app installata
           installBtn.disabled = true;
+          installBtn.classList.add('btn-pill--disabled');
           if (installLabel) {
             installLabel.textContent = 'App installata';
           } else {
@@ -3155,6 +3200,7 @@
         } else {
           // App installata ma siamo nel browser: mostra "Apri app"
           installBtn.disabled = false;
+          installBtn.classList.remove('btn-pill--disabled');
           installBtn.dataset.action = 'open-app';
           if (installLabel) {
             installLabel.textContent = 'Apri app';
@@ -3165,6 +3211,7 @@
         }
       } else if (state === 'ready') {
         installBtn.disabled = false;
+        installBtn.classList.remove('btn-pill--disabled');
         installBtn.dataset.action = 'install';
         if (installLabel) {
           installLabel.textContent = 'Installa la dashboard';
@@ -3174,6 +3221,7 @@
         toggleOpenModalButton(false);
       } else {
         installBtn.disabled = true;
+        installBtn.classList.add('btn-pill--disabled');
         installBtn.dataset.action = 'wait';
         if (installLabel) {
           installLabel.textContent = 'Installa la dashboard';
@@ -3317,6 +3365,8 @@
         } else {
           pushBtn.textContent = 'Disattiva notifiche';
         }
+        pushBtn.classList.add('btn-pill--primary');
+        pushBtn.classList.remove('btn-pill--outline');
         updatePushStatus('Notifiche attive su questo dispositivo.');
       } else {
         pushBtn.dataset.enabled = 'false';
@@ -3325,6 +3375,8 @@
         } else {
           pushBtn.textContent = 'Attiva notifiche';
         }
+        pushBtn.classList.remove('btn-pill--primary');
+        pushBtn.classList.add('btn-pill--outline');
         if (permission === 'default') {
           updatePushStatus('Permessi non ancora richiesti.');
         } else {
@@ -3742,7 +3794,7 @@
         <div style="margin-bottom: 1.5rem;">
           <h3 style="margin: 0 0 0.75rem; font-size: var(--fs-16, 16px); font-weight: 600; color: var(--ink, #ffffff);">Installa la dashboard (PWA)</h3>
           <p style="margin: 0 0 1rem; font-size: var(--fs-13, 13px); color: var(--ink-soft, #f0f0f0); line-height: var(--lh-16, 1.6);">Installa la dashboard come app sul tuo dispositivo per accesso rapido e funzionalità offline.</p>
-          <button class="pwa-btn" id="pwa-install-btn" type="button" disabled style="width: 100%;">
+          <button class="btn-pill btn-pill--primary btn-pill--wide btn-pill--disabled" id="pwa-install-btn" type="button" disabled>
             <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 5v10" />
@@ -3752,7 +3804,7 @@
             </span>
             <span class="btn-label">Installa la dashboard</span>
           </button>
-          <button class="pwa-btn" id="pwa-open-modal-btn" type="button" style="display: none; margin-top: 0.5rem; width: 100%;">
+          <button class="btn-pill btn-pill--primary btn-pill--wide" id="pwa-open-modal-btn" type="button" style="display: none; margin-top: 0.5rem;">
             <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 18H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4" />
@@ -3762,7 +3814,7 @@
             </span>
             <span class="btn-label">Apri nell'app</span>
           </button>
-          <button class="pwa-btn" id="pwa-update-btn" type="button" style="display: none; margin-top: 0.5rem; width: 100%;">
+          <button class="btn-pill btn-pill--outline btn-pill--wide" id="pwa-update-btn" type="button" style="display: none; margin-top: 0.5rem;">
             <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
@@ -3777,7 +3829,7 @@
         <div>
           <h3 style="margin: 0 0 0.75rem; font-size: var(--fs-16, 16px); font-weight: 600; color: var(--ink, #ffffff);">Notifiche push</h3>
           <p style="margin: 0 0 1rem; font-size: var(--fs-13, 13px); color: var(--ink-soft, #f0f0f0); line-height: var(--lh-16, 1.6);">Ricevi notifiche quando viene pubblicato nuovo materiale nella dashboard.</p>
-          <button class="pwa-btn" id="push-toggle-btn" type="button" style="width: 100%; justify-content: center;">
+          <button class="btn-pill btn-pill--outline btn-pill--wide" id="push-toggle-btn" type="button">
             <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 15a6 6 0 0 0 0-6" />
@@ -4238,142 +4290,6 @@
         pushStatus.textContent = message;
       }
     }
-
-    async function updatePushUI() {
-      if (!pushBtn) return;
-      const userToken = getStoredToken();
-      if (!userToken) {
-        pushBtn.disabled = true;
-        updatePushStatus('Serve il token personale per collegare questo dispositivo.');
-        return;
-      }
-      if (!isStandalone()) {
-        pushBtn.disabled = true;
-        updatePushStatus('Installa o apri la PWA per gestire le notifiche.');
-        return;
-      }
-      pushBtn.disabled = false;
-      if (!('Notification' in window)) {
-        pushBtn.disabled = true;
-        updatePushStatus('Notifiche push non supportate da questo browser.');
-        return;
-      }
-      const permission = Notification.permission;
-      if (permission === 'denied') {
-        pushBtn.disabled = true;
-        updatePushStatus('Hai negato il permesso alle notifiche. Abilitalo dalle impostazioni del browser.');
-        return;
-      }
-      const registration = await registerServiceWorker();
-      if (!registration) return;
-      const subscription = await registration.pushManager.getSubscription();
-      if (subscription && permission === 'granted') {
-        pushBtn.dataset.enabled = 'true';
-        if (pushLabel) {
-          pushLabel.textContent = 'Disattiva notifiche';
-        }
-        updatePushStatus('Notifiche attive su questo dispositivo.');
-      } else {
-        pushBtn.dataset.enabled = 'false';
-        if (pushLabel) {
-          pushLabel.textContent = 'Attiva notifiche';
-        }
-        if (permission === 'default') {
-          updatePushStatus('Permessi non ancora richiesti.');
-        } else {
-          updatePushStatus('Permesso concesso, attiva per ricevere alert.');
-        }
-      }
-    }
-
-    function urlBase64ToUint8Array(base64String) {
-      const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-      const base64 = (base64String + padding)
-        .replace(/-/g, '+')
-        .replace(/_/g, '/');
-      const rawData = window.atob(base64);
-      const outputArray = new Uint8Array(rawData.length);
-      for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-      }
-      return outputArray;
-    }
-
-    async function subscribeToPush() {
-      const userToken = getStoredToken();
-      if (!userToken) {
-        updatePushStatus('Serve il token personale per collegare questo dispositivo.');
-        return;
-      }
-      if (!isStandalone()) {
-        updatePushStatus('Apri la versione installata per attivare le notifiche.');
-        return;
-      }
-      const registration = await registerServiceWorker();
-      if (!registration) return;
-
-      const permission = await Notification.requestPermission();
-      if (permission !== 'granted') {
-        updatePushStatus('Permesso notifiche non concesso.');
-        return;
-      }
-
-      try {
-        const subscription = await registration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(FCM_CONFIG.vapidPublicKey)
-        });
-
-        await fetch('/api/push', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'subscribe', subscription, token: userToken })
-        });
-
-        updatePushUI();
-      } catch (err) {
-        console.error('[PWA] Errore attivazione push', err);
-        updatePushStatus('Errore durante l\'attivazione delle notifiche.');
-      }
-    }
-
-    async function unsubscribePush() {
-      const userToken = getStoredToken();
-      if (!userToken) {
-        updatePushStatus('Token non trovato, aggiorna la pagina.');
-        return;
-      }
-      const registration = await registerServiceWorker();
-      if (!registration) return;
-      const subscription = await registration.pushManager.getSubscription();
-      if (subscription) {
-        await subscription.unsubscribe();
-      }
-      await fetch('/api/push', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'unsubscribe', token: userToken })
-      }).catch(() => {});
-      updatePushUI();
-    }
-
-    pushBtn?.addEventListener('click', async () => {
-      const userToken = getStoredToken();
-      if (!userToken) {
-        updatePushStatus('Serve il token personale per collegare questo dispositivo.');
-        return;
-      }
-      if (!isStandalone()) {
-        updatePushStatus('Installa la PWA per gestire le notifiche.');
-        return;
-      }
-      const enabled = pushBtn.dataset.enabled === 'true';
-      if (enabled) {
-        await unsubscribePush();
-      } else {
-        await subscribeToPush();
-      }
-    });
 
     // Check for app updates
     async function checkForUpdates() {
