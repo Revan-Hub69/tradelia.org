@@ -834,6 +834,25 @@
   </div>
   
   <script type="module">
+    // ===== PWA CHECK - Dashboard accessibile solo come PWA standalone =====
+    function isPWAStandalone() {
+      // Solo standalone mode (PWA installata e aperta come app)
+      return (
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true ||
+        document.referrer.includes('android-app://')
+      );
+    }
+    
+    // Se non è PWA standalone, reindirizza
+    if (!isPWAStandalone()) {
+      // Reindirizza alla homepage con messaggio
+      alert('La dashboard è disponibile solo come PWA installabile.\n\nInstalla la dashboard PWA per accedere alle funzionalità.');
+      window.location.href = '/index.html';
+      // Blocca esecuzione script
+      throw new Error('Dashboard accessibile solo come PWA');
+    }
+    
     // ===== STATE =====
     const STATE = {
       reports: [],

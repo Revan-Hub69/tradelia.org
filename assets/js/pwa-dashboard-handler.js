@@ -39,7 +39,7 @@
   }
   
   /**
-   * Apre la dashboard PWA installata
+   * Apre la dashboard PWA installata (SOLO se già installata)
    */
   function openPWA() {
     if (isPWAInstalled()) {
@@ -48,18 +48,13 @@
       return;
     }
     
-    // Prova ad aprire come PWA
-    const pwaUrl = `${window.location.origin}${DASHBOARD_URL}?pwa=1`;
-    
-    // Su mobile iOS
-    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-      // Apri in nuovo tab (iOS non supporta window.open per PWA)
-      window.open(pwaUrl, '_blank');
-      return;
+    // Se PWA non installata, NON aprire come pagina web
+    // Mostra solo prompt installazione
+    if (deferredPrompt) {
+      installPWA();
+    } else {
+      showInstallInstructions();
     }
-    
-    // Su Android/Desktop
-    window.location.href = pwaUrl;
   }
   
   /**
@@ -133,8 +128,7 @@
     
     alert(message);
     
-    // Apri comunque la dashboard
-    openPWA();
+    // NON aprire la dashboard come pagina web - solo PWA installata
   }
   
   /**
