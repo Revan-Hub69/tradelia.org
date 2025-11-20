@@ -238,13 +238,13 @@
    * Inizializza tutti i link dashboard
    */
   function initDashboardLinks() {
-    // Trova tutti i link/pulsanti dashboard
+    // Trova tutti i link/pulsanti dashboard non ancora gestiti
     const dashboardLinks = document.querySelectorAll(
-      'a[href="/dashboard.html"], ' +
-      'a[href*="dashboard.html"], ' +
-      'button[data-dashboard], ' +
-      '.dashboard-link, ' +
-      '[data-action="dashboard"]'
+      'a[href="/dashboard.html"]:not([data-dashboard-handler="true"]), ' +
+      'a[href*="dashboard.html"]:not([data-dashboard-handler="true"]), ' +
+      'button[data-dashboard]:not([data-dashboard-handler="true"]), ' +
+      '.dashboard-link:not([data-dashboard-handler="true"]), ' +
+      '[data-action="dashboard"]:not([data-dashboard-handler="true"])'
     );
     
     dashboardLinks.forEach(link => {
@@ -252,49 +252,62 @@
       if (link.tagName === 'A') {
         link.href = '#';
         link.setAttribute('data-dashboard-handler', 'true');
+      } else {
+        link.setAttribute('data-dashboard-handler', 'true');
       }
       
-      // Aggiungi handler
-      link.addEventListener('click', handleDashboardClick);
+      // Aggiungi handler solo se non già presente
+      if (!link.hasAttribute('data-listener-added')) {
+        link.addEventListener('click', handleDashboardClick);
+        link.setAttribute('data-listener-added', 'true');
+      }
     });
     
-    // Handler per pulsanti specifici
+    // Handler per pulsanti specifici (solo se non già gestiti)
     const goDashboardBtn = document.getElementById('go-dashboard-btn');
-    if (goDashboardBtn) {
+    if (goDashboardBtn && !goDashboardBtn.hasAttribute('data-listener-added')) {
       goDashboardBtn.addEventListener('click', handleDashboardClick);
+      goDashboardBtn.setAttribute('data-listener-added', 'true');
     }
     
     const accessGoDashboard = document.getElementById('access-go-dashboard');
-    if (accessGoDashboard) {
+    if (accessGoDashboard && !accessGoDashboard.hasAttribute('data-listener-added')) {
       accessGoDashboard.addEventListener('click', handleDashboardClick);
+      accessGoDashboard.setAttribute('data-listener-added', 'true');
     }
     
-    // Aggiorna testi CTA
-    updateCTATexts();
-    
-    // Aggiorna quando deferredPrompt diventa disponibile
-    if (!deferredPrompt) {
-      const checkPrompt = setInterval(() => {
-        if (deferredPrompt) {
-          updateCTATexts();
-          clearInterval(checkPrompt);
-        }
-      }, 500);
-      
-      // Timeout dopo 5 secondi
-      setTimeout(() => clearInterval(checkPrompt), 5000);
+    // Aggiorna testi CTA (solo se ci sono nuovi link)
+    if (dashboardLinks.length > 0) {
+      updateCTATexts();
     }
   }
   
   /**
    * Inizializza quando DOM è pronto
    */
+  let initTimeout = null;
+  let isInitializing = false;
+  
   function init() {
+    if (isInitializing) return;
+    isInitializing = true;
+    
     initDashboardLinks();
     
-    // Observer per elementi aggiunti dinamicamente (es. footer)
+    // Observer per elementi aggiunti dinamicamente (es. footer) con debounce
     const observer = new MutationObserver(() => {
-      initDashboardLinks();
+      if (initTimeout) clearTimeout(initTimeout);
+      initTimeout = setTimeout(() => {
+        // Solo se ci sono nuovi link dashboard non ancora gestiti
+        const unhandledLinks = document.querySelectorAll(
+          'a[href="/dashboard.html"]:not([data-dashboard-handler="true"]), ' +
+          'a[href*="dashboard.html"]:not([data-dashboard-handler="true"])'
+        );
+        if (unhandledLinks.length > 0) {
+          initDashboardLinks();
+          updateCTATexts();
+        }
+      }, 300);
     });
     
     observer.observe(document.body, {
@@ -303,7 +316,10 @@
     });
     
     // Aggiorna testi periodicamente (per elementi caricati dopo)
-    setTimeout(updateCTATexts, 1000);
+    setTimeout(() => {
+      updateCTATexts();
+      isInitializing = false;
+    }, 1000);
     setTimeout(updateCTATexts, 3000);
   }
   
