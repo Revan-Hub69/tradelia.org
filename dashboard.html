@@ -230,6 +230,11 @@
       display: block;
     }
     
+    /* Fallback: ensure reports panel is visible by default if no JS */
+    #panel-reports.active {
+      display: block !important;
+    }
+    
     /* Panel Header */
     .panel-header {
       margin-bottom: 2rem;
@@ -1973,8 +1978,28 @@
   <!-- ===== IMMEDIATE LOADING REMOVAL (BEFORE ANY OTHER SCRIPT) ===== -->
   <script>
     // Rimuovi loading IMMEDIATAMENTE - eseguito prima di qualsiasi altro script
+    // Assicura che il pannello reports sia visibile di default
     (function() {
       'use strict';
+      
+      // Ensure reports panel is visible immediately
+      function ensureReportsVisible() {
+        const reportsPanel = document.getElementById('panel-reports');
+        if (reportsPanel) {
+          reportsPanel.classList.add('active');
+          reportsPanel.style.display = 'block';
+        }
+      }
+      
+      // Try immediately
+      ensureReportsVisible();
+      
+      // Try when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', ensureReportsVisible, { once: true });
+      } else {
+        setTimeout(ensureReportsVisible, 0);
+      }
       let hasRemovedLoading = false;
       
       function hideAllLoading() {
@@ -2093,8 +2118,20 @@
       
       // Initialize when DOM is ready
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initPanelNavigation);
+        document.addEventListener('DOMContentLoaded', () => {
+          // Ensure reports panel is visible by default
+          const reportsPanel = document.getElementById('panel-reports');
+          if (reportsPanel && !reportsPanel.classList.contains('active')) {
+            reportsPanel.classList.add('active');
+          }
+          initPanelNavigation();
+        });
       } else {
+        // Ensure reports panel is visible by default
+        const reportsPanel = document.getElementById('panel-reports');
+        if (reportsPanel && !reportsPanel.classList.contains('active')) {
+          reportsPanel.classList.add('active');
+        }
         initPanelNavigation();
       }
     })();
