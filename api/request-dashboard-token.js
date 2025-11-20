@@ -292,10 +292,59 @@ export default async function handler(req, res) {
       console.warn('[Request Token] Email non inviata, ma token creato');
     }
     
-    // 7. Notifica anche support@tradelia.org (per log)
+    // 7. Notifica admin (amministrazione@tradelia.org)
     if (BREVO_API_KEY) {
       try {
-        await fetch('https://api.brevo.com/v3/smtp/email', {
+        const adminEmailHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #0f172a; }
+    .container { max-width: 640px; margin: 0 auto; padding: 24px; background: #f8fafc; border-radius: 18px; border: 1px solid #e2e8f0; }
+    .header { background: #2563eb; color: #fff; padding: 20px; border-radius: 14px; margin-bottom: 24px; }
+    .section { background: #fff; border-radius: 14px; padding: 20px; margin-bottom: 16px; border: 1px solid #e2e8f0; }
+    .label { font-weight: 600; color: #475569; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .value { color: #0f172a; font-size: 15px; margin-bottom: 16px; }
+    .meta { font-size: 13px; color: #64748b; margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2 style="margin: 0;">🔑 Richiesta Nuovo Token Dashboard</h2>
+      <p style="margin: 8px 0 0 0;">Token rigenerato per utente esistente</p>
+    </div>
+    
+    <div class="section">
+      <div class="label">Dati Utente</div>
+      <div class="value"><strong>Email:</strong> ${sanitizedEmail}</div>
+      <div class="value"><strong>Piano:</strong> ${planRole}</div>
+      ${validUntil ? `<div class="value"><strong>Validità Piano:</strong> ${new Date(validUntil).toLocaleString('it-IT')}</div>` : ''}
+      ${userId ? `<div class="value"><strong>User ID:</strong> ${userId}</div>` : ''}
+    </div>
+
+    <div class="meta">
+      <strong>Token generato:</strong> ${new Date().toLocaleString('it-IT')}<br>
+      <strong>Motivo:</strong> Richiesta "Ho perso il codice"<br>
+      <strong>Token precedenti:</strong> Revocati automaticamente
+    </div>
+  </div>
+</body>
+</html>
+        `;
+
+        const adminEmailText = `Richiesta Nuovo Token Dashboard - Tradelia AI
+
+Email: ${sanitizedEmail}
+Piano: ${planRole}
+${validUntil ? `Validità Piano: ${new Date(validUntil).toLocaleString('it-IT')}\n` : ''}${userId ? `User ID: ${userId}\n` : ''}
+Token generato: ${new Date().toLocaleString('it-IT')}
+Motivo: Richiesta "Ho perso il codice"
+Token precedenti: Revocati automaticamente`;
+
+        const adminEmailResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
           method: 'POST',
           headers: {
             'api-key': BREVO_API_KEY,
@@ -303,14 +352,38 @@ export default async function handler(req, res) {
           },
           body: JSON.stringify({
             sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI - Sistema Token' },
-            to: [{ email: 'support@tradelia.org' }],
+            to: [{ email: 'amministrazione@tradelia.org' }],
             subject: `🔑 Richiesta nuovo token dashboard - ${sanitizedEmail}`,
-            textContent: `Un nuovo token è stato generato per: ${sanitizedEmail}\n\nToken generato: ${new Date().toISOString()}\nPiano: ${planRole}`
+            htmlContent: adminEmailHTML,
+            textContent: adminEmailText
           })
         });
+
+        if (!adminEmailResponse.ok) {
+          const errorText = await adminEmailResponse.text();
+          console.error('[Request Token] Errore invio email admin:', {
+            status: adminEmailResponse.status,
+            statusText: adminEmailResponse.statusText,
+            error: errorText,
+            to: 'amministrazione@tradelia.org'
+          });
+        } else {
+          const adminEmailResult = await adminEmailResponse.json();
+          console.log('[Request Token] Email admin inviata con successo:', {
+            messageId: adminEmailResult.messageId,
+            to: 'amministrazione@tradelia.org'
+          });
+        }
       } catch (err) {
-        console.warn('[Request Token] Errore notifica support (non bloccante):', err);
+        console.error('[Request Token] ERRORE CRITICO - Notifica admin non inviata:', {
+          error: err.message,
+          stack: err.stack,
+          adminEmail: 'amministrazione@tradelia.org',
+          hasBrevoKey: !!BREVO_API_KEY
+        });
       }
+    } else {
+      console.error('[Request Token] BREVO_API_KEY non configurato - email admin NON inviata!');
     }
     
     return res.status(200).json({

@@ -4,6 +4,7 @@ import { HttpError, handleRouteError } from './_lib/http.js';
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const SUPPORT_EMAIL = 'support@tradelia.org';
+const ADMIN_EMAIL = 'amministrazione@tradelia.org';
 
 const TOKEN_DURATION_DAYS = 30;
 const ALLOWED_PROFILES = ['privato', 'desk', 'media'];
@@ -213,10 +214,72 @@ async function handleRequest(req, res) {
     });
   }
 
-  // Notifica support (opzionale, non blocca)
+  // Notifica admin (opzionale, non blocca)
   if (BREVO_API_KEY) {
     try {
-      await fetch('https://api.brevo.com/v3/smtp/email', {
+      const adminEmailHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #0f172a; }
+    .container { max-width: 640px; margin: 0 auto; padding: 24px; background: #f8fafc; border-radius: 18px; border: 1px solid #e2e8f0; }
+    .header { background: #2563eb; color: #fff; padding: 20px; border-radius: 14px; margin-bottom: 24px; }
+    .section { background: #fff; border-radius: 14px; padding: 20px; margin-bottom: 16px; border: 1px solid #e2e8f0; }
+    .label { font-weight: 600; color: #475569; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .value { color: #0f172a; font-size: 15px; margin-bottom: 16px; }
+    .highlight { background: #eff6ff; padding: 12px 16px; border-radius: 8px; border-left: 4px solid #2563eb; }
+    .meta { font-size: 13px; color: #64748b; margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2 style="margin: 0;">🔑 Nuovo Token Gratuito Generato</h2>
+      <p style="margin: 8px 0 0 0;">Richiesta token trial ricevuta</p>
+    </div>
+    
+    <div class="section">
+      <div class="label">Dati Richiedente</div>
+      <div class="value"><strong>Nome:</strong> ${sanitizedName}</div>
+      <div class="value"><strong>Email:</strong> ${sanitizedEmail}</div>
+      <div class="value"><strong>Profilo:</strong> ${sanitizedProfile === 'desk' ? 'Desk / uffici studi' : sanitizedProfile === 'media' ? 'Media / formazione / ricerca' : 'Privato / persona fisica'}</div>
+      ${sanitizedOrg ? `<div class="value"><strong>Organizzazione:</strong> ${sanitizedOrg}</div>` : ''}
+    </div>
+
+    <div class="section">
+      <div class="label">Uso Dichiarato</div>
+      <div class="highlight">
+        <div class="value" style="white-space: pre-wrap;">${sanitizedUsage}</div>
+      </div>
+    </div>
+
+    <div class="meta">
+      <strong>Token generato:</strong> ${new Date().toLocaleString('it-IT')}<br>
+      <strong>Validità:</strong> 30 giorni<br>
+      <strong>Piano:</strong> Trial
+    </div>
+  </div>
+</body>
+</html>
+      `;
+
+      const adminEmailText = `Nuovo Token Gratuito Generato - Tradelia AI
+
+Dati Richiedente:
+Nome: ${sanitizedName}
+Email: ${sanitizedEmail}
+Profilo: ${sanitizedProfile}
+${sanitizedOrg ? `Organizzazione: ${sanitizedOrg}\n` : ''}
+Uso Dichiarato:
+${sanitizedUsage}
+
+Token generato: ${new Date().toLocaleString('it-IT')}
+Validità: 30 giorni
+Piano: Trial`;
+
+      const adminEmailResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
         method: 'POST',
         headers: {
           'api-key': BREVO_API_KEY,
@@ -224,15 +287,40 @@ async function handleRequest(req, res) {
         },
         body: JSON.stringify({
           sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI - Token Form' },
-          to: [{ email: SUPPORT_EMAIL }],
-          subject: `Nuovo token gratuito generato - ${sanitizedEmail}`,
-          textContent: `Profilo: ${sanitizedProfile}\nOrganizzazione: ${sanitizedOrg || '-'}\nUso dichiarato: ${sanitizedUsage}`
+          to: [{ email: ADMIN_EMAIL }],
+          subject: `🔑 Nuovo token gratuito generato - ${sanitizedEmail}`,
+          htmlContent: adminEmailHTML,
+          textContent: adminEmailText
         })
       });
+
+      if (!adminEmailResponse.ok) {
+        const errorText = await adminEmailResponse.text();
+        console.error('[Request Free Token] Errore invio email admin:', {
+          status: adminEmailResponse.status,
+          statusText: adminEmailResponse.statusText,
+          error: errorText,
+          to: ADMIN_EMAIL
+        });
+      } else {
+        const adminEmailResult = await adminEmailResponse.json();
+        console.log('[Request Free Token] Email admin inviata con successo:', {
+          messageId: adminEmailResult.messageId,
+          to: ADMIN_EMAIL
+        });
+      }
     } catch (notifyErr) {
-      console.warn('[Request Free Token] Notifica support non inviata:', notifyErr);
+      console.error('[Request Free Token] ERRORE CRITICO - Notifica admin non inviata:', {
+        error: notifyErr.message,
+        stack: notifyErr.stack,
+        adminEmail: ADMIN_EMAIL,
+        hasBrevoKey: !!BREVO_API_KEY
+      });
       // Non bloccare se la notifica fallisce
     }
+  } else {
+    console.error('[Request Free Token] BREVO_API_KEY non configurato - email admin NON inviata!');
+  }
   }
 
   return res.status(200).json({

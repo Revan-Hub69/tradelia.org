@@ -14,11 +14,20 @@
 - `pricing.html:1709, 1815`
 - `desk.html:870`
 
+**Funzionalità:**
+- Salva richiesta analisi o piano desk in Supabase (`on_demand_requests`)
+- Invia email notifica all'admin (`amministrazione@tradelia.org`)
+- Invia email conferma all'utente
+- Gestione errori non bloccante (richiesta salvata anche se email fallisce)
+
 **Variabili d'ambiente richieste:**
-- `SUPABASE_URL` ✅
-- `SUPABASE_SERVICE_ROLE_KEY` ✅
+- `SUPABASE_URL` ✅ (obbligatorio)
+- `SUPABASE_SERVICE_ROLE_KEY` ✅ (obbligatorio)
+- `BREVO_API_KEY` ⚠️ (opzionale, per email)
 
 **Status:** ✅ ATTIVA - Mantenere
+
+**Documentazione completa:** Vedi `FLUSSO-RICHIESTA-ANALISI.md`
 
 ---
 

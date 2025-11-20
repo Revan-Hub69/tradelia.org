@@ -293,11 +293,17 @@
 </head>
 <body>
   <header style="margin-bottom: 1.5rem;">
+    <nav style="display:flex; gap:0.5rem; margin-bottom: 1rem; flex-wrap:wrap;">
+      <a href="/admin/index.html" style="padding:0.5rem 1rem; border-radius:8px; background:rgba(15,23,42,0.65); border:1px solid rgba(148,163,184,0.35); color:var(--ink); text-decoration:none; font-size:0.9rem;">🏠 Portale Admin</a>
+      <a href="/admin/tokens.html" style="padding:0.5rem 1rem; border-radius:8px; background:rgba(15,23,42,0.65); border:1px solid rgba(148,163,184,0.35); color:var(--ink); text-decoration:none; font-size:0.9rem;">🔑 Token</a>
+      <a href="/admin/requests.html" style="padding:0.5rem 1rem; border-radius:8px; background:rgba(15,23,42,0.65); border:1px solid rgba(148,163,184,0.35); color:var(--ink); text-decoration:none; font-size:0.9rem;">📋 Richieste</a>
+      <a href="/admin/reports.html" style="padding:0.5rem 1rem; border-radius:8px; background:rgba(96,165,250,0.2); border:1px solid rgba(96,165,250,0.5); color:var(--accent); text-decoration:none; font-size:0.9rem; font-weight:600;">📊 Report</a>
+    </nav>
     <div style="display:flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; align-items: center;">
       <div>
         <h1>Report Studio</h1>
         <p class="subtitle">
-          Editor modulare per la pubblicazione dei deck. Compila i moduli JSON, allega i chart e sincronizza con Supabase.
+          Editor modulare per creare, modificare, cancellare e pubblicare deck ricercativi. Aggiungi immagini, moduli, titoli, sottotitoli e variabili.
         </p>
       </div>
       <div id="status-banner" class="status-banner status-banner--info">
