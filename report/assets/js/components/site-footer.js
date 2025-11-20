@@ -57,23 +57,16 @@ function render(data = {}) {
           </p>
           <div class="ftr-quick-links" role="navigation" aria-label="Link rapidi">
             <a href="/index.html" aria-label="Vai alla homepage" data-i18n="nav.home">Homepage</a>
-            <a href="/dashboard.html" aria-label="Vai alla dashboard abbonati" data-i18n="nav.dashboard" data-dashboard-handler="true">Dashboard</a>
-            <!-- Tutorial temporaneamente rimosso -->
+            <a href="/dashboard.html" aria-label="Vai alla dashboard PWA" data-i18n="nav.dashboard" data-dashboard-handler="true">Dashboard PWA</a>
             <a href="/pricing.html" aria-label="Vai alla pagina prezzi" data-i18n="nav.pricing">Pricing</a>
             <a href="/brokers.html" aria-label="Vai alla pagina brokers" data-i18n="nav.brokers">Brokers</a>
-            <a href="/collegamenti.html" aria-label="Vai alla pagina collegamenti consigliati">Collegamenti</a>
-            <a href="/percorsi.html" aria-label="Vai alla pagina percorsi formativi">Percorsi formativi</a>
           </div>
           <div style="margin-top: var(--sp-4); font-size: var(--fs-13); color: rgba(226, 232, 240, 0.85);">
-            <strong style="display: block; font-size: var(--fs-14); color: #fff;">Contatti rapidi</strong>
+            <strong style="display: block; font-size: var(--fs-14); color: #fff;">Contatti</strong>
             <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-              <span><strong>Supporto</strong> · <a href="mailto:support@tradelia.org">support@tradelia.org</a></span>
-              <span><strong>Amministrazione</strong> · <a href="mailto:amministrazione@tradelia.org">amministrazione@tradelia.org</a></span>
+              <span><a href="mailto:support@tradelia.org">support@tradelia.org</a></span>
+              <span><a href="mailto:info@tradelia.org">info@tradelia.org</a></span>
             </div>
-          </div>
-          <div style="margin-top: var(--sp-3); font-size: var(--fs-13); color: rgba(226, 232, 240, 0.85);">
-            <strong style="display: block; font-size: var(--fs-14); color: #fff;">Percorsi formativi</strong>
-            Percorsi tematici basati su testi riconosciuti e materiali verificabili. <a href="/percorsi.html">Scoprili qui</a>.
           </div>
         </div>
 
@@ -85,10 +78,9 @@ function render(data = {}) {
             <span data-i18n="footer.legal.title">Compliance &amp; Risk</span>
           </h3>
           <ul class="ftr-list">
-            <li data-i18n="footer.legal.disclaimer1"><strong>Non è consulenza in materia di investimenti</strong> (MiFID II / ESMA / CONSOB)</li>
-            <li data-i18n="footer.legal.disclaimer2">Tradelia AI non è un intermediario autorizzato; <strong>non gestisce capitali né esegue ordini</strong></li>
-            <li data-i18n="footer.legal.disclaimer3"><strong>Rischio di perdita totale o parziale del capitale</strong> — investire comporta rischi</li>
-            <li data-i18n="footer.legal.disclaimer4">Le informazioni hanno <strong>scopo puramente informativo e formativo</strong> — non costituiscono raccomandazione personalizzata</li>
+            <li data-i18n="footer.legal.disclaimer1"><strong>Non è consulenza in materia di investimenti</strong> (MiFID II)</li>
+            <li data-i18n="footer.legal.disclaimer2"><strong>Rischio di perdita totale o parziale del capitale</strong></li>
+            <li data-i18n="footer.legal.disclaimer3">Le informazioni hanno <strong>scopo puramente informativo e formativo</strong></li>
           </ul>
           <div class="ftr-quick-links" role="navigation" aria-label="Documenti legali" style="margin-top: var(--sp-4);">
             <a href="/privacy.html" aria-label="Vai alla privacy policy" data-i18n="nav.privacy">Privacy Policy</a>
