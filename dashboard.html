@@ -2926,14 +2926,40 @@
     // Mostra modale con info token e PWA (legacy disabilitato: gestito da /accesso.html)
     function showTokenInfoModal(tokenData) {
       const shownKey = 'token-info-modal-shown';
+      if (sessionStorage.getItem(shownKey)) return;
       sessionStorage.setItem(shownKey, 'true');
-      console.debug('[Dashboard] Token info modal disabilitato - usare il flusso /accesso.html', tokenData);
+      const modal = document.getElementById('modal-token-info');
+      if (!modal) return;
+      const emailEl = document.getElementById('token-info-email');
+      const planEl = document.getElementById('token-info-plan');
+      const validUntilEl = document.getElementById('token-info-valid-until');
+      if (emailEl && tokenData?.email) emailEl.textContent = tokenData.email;
+      if (planEl && tokenData?.plan_role) {
+        const planNames = { trial: 'Gratuito (Trial)', pro: 'Pro', desk: 'Desk' };
+        planEl.textContent = planNames[tokenData.plan_role] || tokenData.plan_role;
+      }
+      if (validUntilEl && tokenData?.valid_until) {
+        const date = new Date(tokenData.valid_until);
+        validUntilEl.textContent = date.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+      }
+      modal.hidden = false;
+      setTimeout(() => {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }, 10);
     }
 
-    // Espone funzioni legacy per compatibilità con script PWA
+    function initPWAModal() {
+      const pwaSection = document.getElementById('pwa-settings-btn');
+      if (pwaSection && pwaSection.classList.contains('btn-disabled')) {
+        const status = document.getElementById('pwa-install-status');
+        if (status) status.textContent = 'Installa la dashboard dalla header principale.';
+      }
+    }
+
     window.showTokenInfoModal = showTokenInfoModal;
     window.showTokenModal = showTokenModal;
-    window.initPWAModal = () => { console.debug('[Dashboard] initPWAModal legacy chiamato'); };
+    window.initPWAModal = initPWAModal;
 
     // Verifica se l'utente è admin e mostra link
     async function checkAndShowAdminLink(email) {
