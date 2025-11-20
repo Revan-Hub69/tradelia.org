@@ -366,7 +366,7 @@ Il tuo codice di accesso Tradelia
 
 Il tuo abbonamento ${planName} è stato attivato. Ecco il tuo codice di accesso per la dashboard Tradelia.
 
-Il tuo codice: ${token}
+Il tuo codice di accesso: ${token}
 
 Usa questo codice nella pagina di accesso per entrare nella dashboard e consultare i report riservati.
 

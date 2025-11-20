@@ -93,7 +93,7 @@ Il tuo codice di accesso Tradelia
 
 Hai richiesto un nuovo codice di accesso per la dashboard Tradelia.
 
-Il tuo codice: ${token}
+Il tuo codice di accesso: ${token}
 
 Usa questo codice nella pagina di accesso per entrare nella dashboard.
 

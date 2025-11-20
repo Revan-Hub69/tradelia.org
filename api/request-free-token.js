@@ -45,30 +45,30 @@ async function sendTokenEmail({ email, nome, token, profilo, uso, organizzazione
 <body>
   <div class="container">
     <div class="header">
-      <h2 style="margin: 0;">Token gratuito Tradelia</h2>
-      <p style="margin: 8px 0 0 0;">Ciao ${nome || 'utente'}, ecco il token personale richiesto.</p>
+      <h2 style="margin: 0;">Codice di accesso gratuito Tradelia</h2>
+      <p style="margin: 8px 0 0 0;">Ciao ${nome || 'utente'}, ecco il codice di accesso personale richiesto.</p>
     </div>
-    <p>Il token è valido 30 giorni e funziona sulla dashboard PWA installata. Puoi rigenerarlo in qualsiasi momento compilando di nuovo il modulo.</p>
+    <p>Il codice di accesso è valido 30 giorni e funziona sulla dashboard PWA installata. Puoi rigenerarlo in qualsiasi momento compilando di nuovo il modulo.</p>
     <div class="token-box">
-      <div style="margin-bottom: 10px; color: #94a3b8;">Token personale</div>
+      <div style="margin-bottom: 10px; color: #94a3b8;">Codice di accesso personale</div>
       <div class="token">${token}</div>
     </div>
     <p style="margin-bottom: 4px;"><strong>Profilo dichiarato:</strong> ${profilo === 'desk' ? 'Desk / uffici studi' : profilo === 'media' ? 'Media / formazione / ricerca' : 'Privato / persona fisica'}</p>
     ${organizzazione ? `<p style="margin: 4px 0;"><strong>Organizzazione:</strong> ${organizzazione}</p>` : ''}
     <p style="margin: 4px 0;"><strong>Uso previsto:</strong></p>
     <p style="background: #e2e8f0; padding: 12px 16px; border-radius: 12px; font-size: 14px;">${emphasizedUso}</p>
-    <p>Per motivi di sicurezza non condividere il token e conserva questa email come riferimento.</p>
+    <p>Per motivi di sicurezza non condividere il codice di accesso e conserva questa email come riferimento.</p>
     <div class="meta">
-      Token generato automaticamente il ${new Date().toLocaleDateString('it-IT')} · Validità 30 giorni · Supporto: <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a>
+      Codice di accesso generato automaticamente il ${new Date().toLocaleDateString('it-IT')} · Validità 30 giorni · Supporto: <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a>
     </div>
   </div>
 </body>
 </html>
   `;
 
-  const emailText = `Token gratuito Tradelia
+  const emailText = `Codice di accesso gratuito Tradelia
 
-Token: ${token}
+Codice di accesso: ${token}
 Profilo: ${profilo}
 Organizzazione: ${organizzazione || '-'}
 Uso previsto: ${uso}
@@ -84,7 +84,7 @@ Valido 30 giorni su dashboard e PWA. Per supporto scrivi a ${SUPPORT_EMAIL}.`;
     body: JSON.stringify({
       sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI' },
       to: [{ email }],
-      subject: 'Il tuo token gratuito per la dashboard Tradelia',
+      subject: 'Il tuo codice di accesso gratuito per la dashboard Tradelia',
       htmlContent: emailHTML,
       textContent: emailText
     })
