@@ -85,9 +85,12 @@
     main {
       flex: 1;
       padding-top: 64px;
-      padding-bottom: 4rem;
+      padding-bottom: 0;
       background: var(--dash-bg);
       color: var(--dash-text);
+      display: flex;
+      flex-direction: row;
+      overflow: hidden;
     }
 
     /* Inert support for accessibility */
@@ -117,6 +120,163 @@
       max-width: 1400px;
       margin-inline: auto;
       padding-inline: 2rem;
+    }
+    
+    /* ===== CONTROL PANEL LAYOUT ===== */
+    .control-panel {
+      display: flex;
+      flex-direction: row;
+      height: calc(100vh - 64px);
+      overflow: hidden;
+    }
+    
+    /* Navigation Rail (Desktop) */
+    .nav-rail {
+      width: 240px;
+      background: var(--dash-surface);
+      border-right: 1px solid var(--dash-border);
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 0;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    
+    .nav-rail-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      color: var(--dash-text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      border-left: 3px solid transparent;
+      cursor: pointer;
+    }
+    
+    .nav-rail-item:hover {
+      background: var(--dash-surface-elev);
+      color: var(--dash-text);
+    }
+    
+    .nav-rail-item.active {
+      background: var(--dash-accent-bg);
+      color: var(--dash-accent);
+      border-left-color: var(--dash-accent);
+    }
+    
+    .nav-rail-item-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    
+    /* Bottom Tab Bar (Mobile) */
+    .nav-tabs {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--dash-surface);
+      border-top: 1px solid var(--dash-border);
+      padding: 0.5rem 0;
+      z-index: 100;
+      overflow-x: auto;
+    }
+    
+    .nav-tabs-inner {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      max-width: 100%;
+    }
+    
+    .nav-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.5rem 0.75rem;
+      color: var(--dash-text-muted);
+      text-decoration: none;
+      font-size: 10px;
+      font-weight: 500;
+      transition: color 0.2s ease;
+      min-width: 60px;
+      flex: 1;
+    }
+    
+    .nav-tab.active {
+      color: var(--dash-accent);
+    }
+    
+    .nav-tab-icon {
+      width: 24px;
+      height: 24px;
+    }
+    
+    /* Main Content Area */
+    .panel-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem;
+      display: none;
+    }
+    
+    .panel-container.active {
+      display: block;
+    }
+    
+    /* Panel Header */
+    .panel-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--dash-border);
+    }
+    
+    .panel-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 0.5rem;
+      color: var(--dash-text);
+    }
+    
+    .panel-description {
+      font-size: 13px;
+      color: var(--dash-text-soft);
+      margin: 0;
+      line-height: 1.6;
+    }
+    
+    /* Panel Actions */
+    .panel-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .control-panel {
+        flex-direction: column;
+        height: calc(100vh - 64px - 60px); /* Account for bottom tabs */
+      }
+      
+      .nav-rail {
+        display: none;
+      }
+      
+      .nav-tabs {
+        display: block;
+      }
+      
+      .panel-container {
+        padding: 1.5rem 1rem;
+      }
     }
     
     /* ===== ACADEMIC TYPOGRAPHY HIERARCHY ===== */
@@ -1574,130 +1734,6 @@
       font-size: 0.9rem;
       line-height: 1.6;
     }
-
-    /* ===== PANEL SECTIONS ===== */
-    .panel-section {
-      margin: 2.5rem 0;
-      padding: 1.75rem;
-      border: 1px solid var(--dash-border);
-      border-radius: var(--radius-xl, 24px);
-      background: var(--dash-surface);
-    }
-
-    .section-heading {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1.5rem;
-    }
-
-    .section-heading h2 {
-      margin: 0 0 0.35rem;
-      font-size: 1.25rem;
-      letter-spacing: -0.02em;
-    }
-
-    .section-heading p {
-      margin: 0;
-      color: var(--dash-text-soft);
-      font-size: 0.95rem;
-    }
-
-    .forms-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.25rem;
-    }
-
-    .panel-card {
-      padding: 1.5rem;
-      border: 1px solid var(--dash-border);
-      border-radius: var(--radius-lg, 18px);
-      background: var(--dash-surface-elev);
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .panel-card h3 {
-      margin: 0;
-      font-size: 1.05rem;
-    }
-
-    .panel-card p {
-      margin: 0;
-      font-size: 0.9rem;
-      color: var(--dash-text-soft);
-      line-height: 1.5;
-    }
-
-    .panel-form {
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 0.75rem;
-    }
-
-    .form-feedback {
-      margin: 0.25rem 0 0;
-      font-size: 0.85rem;
-      border-radius: 6px;
-      padding: 0.5rem 0.75rem;
-      display: none;
-    }
-
-    .form-feedback[data-state="success"] {
-      display: block;
-      background: rgba(34, 197, 94, 0.12);
-      border: 1px solid rgba(34, 197, 94, 0.4);
-      color: #86efac;
-    }
-
-    .form-feedback[data-state="error"] {
-      display: block;
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.35);
-      color: #fca5a5;
-    }
-
-    .toggle-row {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-      border-top: 1px solid var(--dash-border);
-      padding-top: 1rem;
-    }
-
-    .toggle-checkbox {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
-      font-size: 0.9rem;
-      color: var(--dash-text-soft);
-    }
-
-    .toggle-checkbox input {
-      width: 1.1rem;
-      height: 1.1rem;
-      accent-color: var(--dash-accent);
-    }
-
-    .collapsible {
-      margin-top: 1.5rem;
-    }
-
-    .collapsible[hidden] {
-      display: none !important;
-    }
   </style>
 </head>
 <body>
@@ -1705,379 +1741,60 @@
   <div id="site-header-slot"></div>
   
   <main>
-    <div class="container">
-      <!-- ===== DASHBOARD HEADER ===== -->
-      <div class="dashboard-header">
-        <div>
-          <h1 class="dashboard-title">Dashboard</h1>
-          <p class="dashboard-subtitle">Report finanziari AI</p>
-        </div>
-        <div class="session-actions" style="display: flex; gap: 0.75rem; align-items: center;">
-          <a href="/admin/index.html" id="admin-dashboard-link-header" class="btn btn-primary btn-sm btn-with-icon" style="white-space: nowrap; display: none;">
-            <span class="btn-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="3" />
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c0 .69.4 1.31 1.03 1.58.21.09.45.14.69.14H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-              </svg>
-            </span>
-            <span class="btn-label">Admin</span>
-          </a>
-          <button class="btn btn-outline btn-sm btn-with-icon" id="pwa-settings-btn" type="button" disabled aria-disabled="true">
-            <span class="btn-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: inline-block;">
-                <rect x="5" y="3" width="14" height="18" rx="3" />
-                <path d="M12 5v10" />
-                <path d="M8 11l4 4 4-4" />
-              </svg>
-              PWA
-            </span>
-          </button>
-          <button class="btn btn-primary btn-sm btn-with-icon" id="open-app-btn" type="button" hidden>
-            <span class="btn-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: inline-block;">
-                <path d="M9 18H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4" />
-                <polyline points="15 6 21 6 21 12" />
-                <line x1="10" y1="14" x2="21" y2="3" />
-              </svg>
-              Apri nell'app
-            </span>
-          </button>
-          <button class="btn btn-outline btn-sm" id="logout-btn" type="button">Disconnetti il dispositivo</button>
-        </div>
-      </div>
-
-      <section class="access-banner" aria-labelledby="overview-heading">
-        <h2 class="sr-only" id="overview-heading">Panoramica accesso e risorse</h2>
-        <article class="access-card" id="card-pass-overview">
-          <div class="card-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
-              <path d="M12 3a9 9 0 0 0-9 9v6l3-2 3 2 3-2 3 2 3-2 3 2v-6a9 9 0 0 0-9-9z"/>
-            </svg>
-          </div>
-          <div>
-            <h3>Pass di accesso</h3>
-            <p>Il pass accademico governa report, percorsi e Desk. Ogni codice dura 30 giorni e viene inviato via email.</p>
-          </div>
-          <div class="access-meta">
-            <span class="token-pill" id="pass-plan-pill">Piano: —</span>
-            <span class="token-pill" id="pass-expiry-pill">Scadenza: —</span>
-          </div>
-          <ul class="access-list">
-            <li>Rigenera token accademico con un click</li>
-            <li>Conserva audit trail per 12 mesi</li>
-          </ul>
-          <button class="btn btn-outline btn-sm" type="button" data-scroll-target="#pass-management">Gestisci pass</button>
-        </article>
-        <article class="access-card" id="card-training-overview">
-          <div class="card-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 19.5V5.8a1 1 0 0 1 .62-.92l7-3a1 1 0 0 1 .76 0l7 3a1 1 0 0 1 .62.92v13.7"/>
-              <path d="M4 12l7 3 9-4"/>
-            </svg>
-          </div>
-          <div>
-            <h3>Percorsi e report</h3>
-            <p>Framework SRD v5.0, MTB v3.1, percorsi metodologici e materiali ufficiali vivono tutti qui.</p>
-          </div>
-          <ul class="access-list">
-            <li>Report filtrabili per framework</li>
-            <li>Percorsi formativi e note metodologiche</li>
-          </ul>
-          <button class="btn btn-outline btn-sm" type="button" data-scroll-target=".report-section">Vai ai report</button>
-        </article>
-        <article class="access-card desk-card" id="card-billing-overview">
-          <div class="card-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="14" rx="2" />
-              <path d="M3 10h18" />
-              <path d="M7 15h.01M11 15h2" />
-            </svg>
-          </div>
-          <div>
-            <h3>Fatturazione Xolo Go</h3>
-            <p>Individui, desk accademici e studi possono attivare fatturazione una tantum direttamente dalla dashboard.</p>
-          </div>
-          <ul class="access-list">
-            <li>Profilo fiscale italiano (B2C)</li>
-            <li>Desk 30 giorni con PEC/SDI</li>
-          </ul>
-          <button class="btn btn-outline btn-sm" type="button" data-scroll-target="#billing-center">Attiva fatturazione</button>
-        </article>
-      </section>
-
-      <section class="panel-section" id="pass-management">
-        <div class="section-heading">
-          <div>
-            <h2>Gestione pass e token</h2>
-            <p>Richiedi un nuovo pass accademico o recupera il codice collegato al tuo piano a pagamento.</p>
-          </div>
-          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-            <button class="btn btn-outline btn-sm" type="button" data-scroll-target="#billing-center">Vai alla fatturazione</button>
-            <button class="btn btn-outline btn-sm" type="button" data-scroll-target="#analysis-on-demand">Richiedi analisi</button>
-          </div>
-        </div>
-        <div class="forms-grid">
-          <div class="panel-card">
-            <div>
-              <h3>Token gratuito 30 giorni</h3>
-              <p>Riservato a ospiti, desk di ricerca, media. Il token viene inviato via email e archiviato in Supabase.</p>
-            </div>
-            <form id="form-pass-free" class="panel-form">
-              <div class="form-group">
-                <label class="form-label" for="pass-free-name">Nome e cognome</label>
-                <input class="form-input" type="text" id="pass-free-name" name="nome" required minlength="2" autocomplete="name" />
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="pass-free-email">Email istituzionale</label>
-                <input class="form-input" type="email" id="pass-free-email" name="email" required autocomplete="email" />
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="pass-free-profile">Profilo</label>
-                <select class="form-select" id="pass-free-profile" name="profilo" required>
-                  <option value="privato">Privato / studente</option>
-                  <option value="desk">Desk / ufficio studi</option>
-                  <option value="media">Media / divulgazione</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="pass-free-org">Organizzazione (facoltativa)</label>
-                <input class="form-input" type="text" id="pass-free-org" name="organizzazione" placeholder="Università, desk, testata" />
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="pass-free-usage">Uso previsto</label>
-                <textarea class="form-textarea" id="pass-free-usage" name="uso" rows="3" minlength="10" placeholder="Es. studio accademico su ETF, newsletter educativa" required></textarea>
-              </div>
-              <p class="form-feedback" id="pass-free-feedback" role="status"></p>
-              <button class="btn btn-primary btn-sm" type="submit" id="pass-free-submit">Invia token gratuito</button>
-            </form>
-          </div>
-          <div class="panel-card">
-            <div>
-              <h3>Recupera pass Pro/Desk</h3>
-              <p>Rigenera il codice collegato a un piano attivo (Xolo Go, Stripe, Paddle). Revoca automatica dei token precedenti.</p>
-            </div>
-            <form id="form-pass-recovery" class="panel-form">
-              <div class="form-group">
-                <label class="form-label" for="pass-recovery-email">Email del piano attivo</label>
-                <input class="form-input" type="email" id="pass-recovery-email" name="email" required autocomplete="email" />
-              </div>
-              <p class="form-feedback" id="pass-recovery-feedback" role="status"></p>
-              <button class="btn btn-outline btn-sm" type="submit" id="pass-recovery-submit">Invia nuovo codice</button>
-              <p style="margin: 0; font-size: 0.8rem; color: var(--dash-text-muted);">Se l'email non ha un piano attivo riceverai istruzioni per attivarlo.</p>
-            </form>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel-section" id="billing-center">
-        <div class="section-heading">
-          <div>
-            <h2>Attiva fatturazione Xolo Go</h2>
-            <p>La dashboard raccoglie tutti i dati fiscali necessari per emettere fatture italiane compliant tramite Xolo Go.</p>
-          </div>
-        </div>
-        <div class="panel-card">
-          <h3>Preferenze</h3>
-          <p>Seleziona che tipo di fatturazione vuoi abilitare. Le sezioni si aprono automaticamente senza modali.</p>
-          <div class="toggle-row">
-            <label class="toggle-checkbox">
-              <input type="checkbox" id="toggle-billing-b2c" />
-              Attiva fatturazione individuale (analisi €49)
-            </label>
-            <label class="toggle-checkbox">
-              <input type="checkbox" id="toggle-billing-desk" />
-              Attiva Desk 30 giorni (B2B, €149 una tantum)
-            </label>
-          </div>
-          <div class="collapsible" id="b2c-billing-form" hidden>
-            <h4 style="margin: 1.5rem 0 0.5rem;">Profilo fiscale individuale</h4>
-            <form id="form-billing-b2c" class="panel-form">
-              <div class="form-group">
-                <label class="form-label" for="b2c-name">Nome e cognome</label>
-                <input class="form-input" type="text" id="b2c-name" name="nome" required autocomplete="name" />
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="b2c-cf">Codice Fiscale</label>
-                  <input class="form-input" type="text" id="b2c-cf" name="codiceFiscale" required maxlength="16" />
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="b2c-phone">Telefono (opzionale)</label>
-                  <input class="form-input" type="tel" id="b2c-phone" name="telefono" />
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="b2c-address">Indirizzo</label>
-                  <input class="form-input" type="text" id="b2c-address" name="indirizzo" required placeholder="Via, numero civico" />
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="b2c-city">Città</label>
-                  <input class="form-input" type="text" id="b2c-city" name="citta" required />
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="b2c-cap">CAP</label>
-                  <input class="form-input" type="text" id="b2c-cap" name="cap" required maxlength="5" />
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="b2c-provincia">Provincia</label>
-                  <input class="form-input" type="text" id="b2c-provincia" name="provincia" required maxlength="2" />
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="b2c-email">Email fatture</label>
-                  <input class="form-input" type="email" id="b2c-email" name="emailFattura" required />
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="b2c-payment">Metodo di pagamento</label>
-                  <select class="form-select" id="b2c-payment" name="metodoPagamento" required>
-                    <option value="">Seleziona…</option>
-                    <option value="Carta (Stripe)">Carta (Stripe)</option>
-                    <option value="Bonifico SEPA">Bonifico SEPA</option>
-                    <option value="PayPal">PayPal</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="b2c-notes">Note per il Desk (facoltative)</label>
-                <textarea class="form-textarea" id="b2c-notes" name="note" rows="3" placeholder="Es. urgenza, riferimenti ordine, preferenze consegna"></textarea>
-              </div>
-              <p class="form-feedback" id="b2c-billing-feedback" role="status"></p>
-              <button class="btn btn-primary btn-sm" type="submit" id="b2c-billing-submit">Attiva fatturazione individuale</button>
-            </form>
-          </div>
-          <div class="collapsible" id="desk-billing-form" hidden>
-            <h4 style="margin: 1.5rem 0 0.5rem;">Desk 30 giorni (B2B)</h4>
-            <form id="form-billing-desk" class="panel-form">
-              <div class="form-group">
-                <label class="form-label" for="desk-ragione">Ragione sociale</label>
-                <input class="form-input" type="text" id="desk-ragione" name="ragioneSociale" required />
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="desk-piva">Partita IVA</label>
-                  <input class="form-input" type="text" id="desk-piva" name="piva" required />
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="desk-sdi">Codice destinatario / SDI</label>
-                  <input class="form-input" type="text" id="desk-sdi" name="codiceDestinatario" />
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="desk-address">Indirizzo legale</label>
-                <input class="form-input" type="text" id="desk-address" name="indirizzo" required />
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="desk-pec">PEC</label>
-                  <input class="form-input" type="email" id="desk-pec" name="pec" required />
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="desk-brand">Brand assets / link</label>
-                  <input class="form-input" type="url" id="desk-brand" name="brandAssets" placeholder="https://…" />
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="desk-contact-name">Referente</label>
-                  <input class="form-input" type="text" id="desk-contact-name" name="referente" required />
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="desk-contact-email">Email referente</label>
-                  <input class="form-input" type="email" id="desk-contact-email" name="emailReferente" required />
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="desk-phone">Telefono</label>
-                <input class="form-input" type="tel" id="desk-phone" name="telefono" />
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="desk-notes">Note e richieste</label>
-                <textarea class="form-textarea" id="desk-notes" name="note" rows="3" placeholder="PEC aggiuntive, riferimenti contratto, preferenze fatturazione" required></textarea>
-              </div>
-              <p class="form-feedback" id="desk-billing-feedback" role="status"></p>
-              <button class="btn btn-primary btn-sm" type="submit" id="desk-billing-submit">Invia dati a Desk</button>
-            </form>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel-section" id="analysis-on-demand">
-        <div class="section-heading">
-          <div>
-            <h2>Analisi on demand</h2>
-            <p>Brief accademico, massimo 4 richieste al giorno, consegna in 24 ore. Tutto tracciato in Supabase.</p>
-          </div>
-        </div>
-        <form id="form-dashboard-analysis" class="panel-form">
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label" for="analysis-dashboard-email">Email collegata al pass</label>
-              <input class="form-input" id="analysis-dashboard-email" type="email" readonly />
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="analysis-dashboard-name">Nome referente</label>
-              <input class="form-input" id="analysis-dashboard-name" name="nome" type="text" placeholder="Nome e cognome" required />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label" for="analysis-dashboard-type">Tipologia cliente</label>
-              <select class="form-select" id="analysis-dashboard-type" name="tipologia" required>
-                <option value="privato">Privato / persona fisica</option>
-                <option value="azienda">Azienda / professionista</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="analysis-dashboard-focus">Tipo di analisi</label>
-              <select class="form-select" id="analysis-dashboard-focus" name="tipoAnalisi" required>
-                <option value="">Seleziona…</option>
-                <option value="Single Stock Analysis">Single Stock Analysis</option>
-                <option value="ETF Monitor">ETF Monitor</option>
-                <option value="Fund Dossier">Fund Dossier</option>
-                <option value="Certificate Dossier">Certificate Dossier</option>
-                <option value="Portfolio Risk Analysis">Portfolio Risk Analysis</option>
-                <option value="Stress Test Custom">Stress Test Custom</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="analysis-dashboard-details">Brief / dettagli</label>
-            <textarea class="form-textarea" id="analysis-dashboard-details" name="dettagli" rows="5" minlength="20" placeholder="Ticker, timeframe, obiettivi, vincoli informativi" required></textarea>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label" for="analysis-dashboard-phone">Telefono (opzionale)</label>
-              <input class="form-input" id="analysis-dashboard-phone" type="tel" name="telefono" />
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="analysis-dashboard-notes">Note operative</label>
-              <input class="form-input" id="analysis-dashboard-notes" type="text" name="note" placeholder="Es. deadline, preferenze formato" />
-            </div>
-          </div>
-          <p style="font-size: 0.8rem; color: var(--dash-text-muted); margin: 0;">Proseguendo confermi MiFID/Privacy e autorizzi il trattamento per la gestione della richiesta.</p>
-          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; margin-top: 0.75rem;">
-            <button class="btn btn-primary btn-sm" type="submit" id="analysis-submit-btn">Invia analisi al Desk</button>
-            <span id="analysis-status-label" style="font-size: 0.85rem; color: var(--dash-text-muted);">Capacità: max 4 richieste/giorno.</span>
-          </div>
-          <div id="analysis-request-success" class="form-feedback" role="status"></div>
-          <div id="analysis-request-error" class="form-feedback" role="alert"></div>
-        </form>
-      </section>
-
-      <!-- ===== REPORT SECTION ===== -->
-      <section class="report-section active">
-        <div class="report-header">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">
-            <div style="flex: 1;">
-              <h2 class="report-title">Report</h2>
-              <p class="report-description">Framework Accademico AI Tradelia — analisi multi-fattore su dati Tier-1. Include i deck proprietari SRD v5.0 (Swing Research Deck), MTB v3.1 (Macro Tactical Briefing) e le release sperimentali in arrivo.</p>
-            </div>
-            <a href="/admin/index.html" id="admin-dashboard-link" class="btn btn-primary btn-sm" style="margin-top: 0.5rem; white-space: nowrap; display: none; gap: 0.4rem; align-items: center;">
+    <div class="control-panel">
+      <!-- ===== NAVIGATION RAIL (Desktop) ===== -->
+      <nav class="nav-rail" aria-label="Navigazione dashboard">
+        <a href="#reports" class="nav-rail-item active" data-panel="reports" aria-current="page">
+          <svg class="nav-rail-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          <span>Report Ufficiali</span>
+        </a>
+        <a href="#education" class="nav-rail-item" data-panel="education">
+          <svg class="nav-rail-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+          <span>Percorsi Formativi</span>
+        </a>
+        <a href="#access" class="nav-rail-item" data-panel="access">
+          <svg class="nav-rail-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <span>Gestione Accesso</span>
+        </a>
+        <a href="#on-demand" class="nav-rail-item" data-panel="on-demand">
+          <svg class="nav-rail-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="12" y1="18" x2="12" y2="12"/>
+            <line x1="9" y1="15" x2="15" y2="15"/>
+          </svg>
+          <span>Analisi On-Demand</span>
+        </a>
+        <a href="#community" class="nav-rail-item" data-panel="community" id="nav-community" style="display: none;">
+          <svg class="nav-rail-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <span>Community Proposals</span>
+        </a>
+      </nav>
+      
+      <!-- ===== MAIN CONTENT AREA ===== -->
+      <div class="panel-container active" id="panel-reports" data-panel="reports">
+        <div class="panel-header">
+          <h2 class="panel-title">Report Ufficiali</h2>
+          <p class="panel-description">Framework Accademico AI Tradelia — analisi multi-fattore su dati Tier-1. Include i deck proprietari SRD v5.0 (Swing Research Deck), MTB v3.1 (Macro Tactical Briefing) e le release sperimentali in arrivo.</p>
+          <div class="panel-actions">
+            <a href="/admin/index.html" id="admin-dashboard-link" class="btn btn-primary btn-sm" style="white-space: nowrap; display: none; gap: 0.4rem; align-items: center;">
               <span class="btn-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="3" />
@@ -2127,7 +1844,6 @@
           <button class="sort-btn filter-btn" data-framework="stress-test">Research deck sperimentali</button>
         </div>
         
-        <!-- Scroll controls (desktop only) -->
         <div class="scroll-controls" id="scroll-controls">
           <button class="scroll-btn scroll-up" aria-label="Scroll su" title="Scroll su">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2144,9 +1860,110 @@
         <div id="reports-container">
           <!-- Content verrà caricato dinamicamente da JavaScript -->
         </div>
-      </section>
+      </div>
       
+      <!-- ===== PANEL: PERCORSI FORMATIVI ===== -->
+      <div class="panel-container" id="panel-education" data-panel="education">
+        <div class="panel-header">
+          <h2 class="panel-title">Percorsi Formativi</h2>
+          <p class="panel-description">Materiali educativi e tutorial per approfondire i framework AI Tradelia.</p>
+        </div>
+        <div style="padding: 2rem; text-align: center; color: var(--dash-text-muted);">
+          <p>Sezione in sviluppo. I percorsi formativi saranno disponibili a breve.</p>
+        </div>
+      </div>
+      
+      <!-- ===== PANEL: GESTIONE ACCESSO ===== -->
+      <div class="panel-container" id="panel-access" data-panel="access">
+        <div class="panel-header">
+          <h2 class="panel-title">Gestione Accesso</h2>
+          <p class="panel-description">Visualizza e gestisci il tuo pass di accesso, token e permessi.</p>
+        </div>
+        <div style="padding: 2rem; text-align: center; color: var(--dash-text-muted);">
+          <p>Sezione in sviluppo. La gestione accesso sarà disponibile a breve.</p>
+        </div>
+      </div>
+      
+      <!-- ===== PANEL: ANALISI ON-DEMAND ===== -->
+      <div class="panel-container" id="panel-on-demand" data-panel="on-demand">
+        <div class="panel-header">
+          <h2 class="panel-title">Analisi On-Demand</h2>
+          <p class="panel-description">Richiedi analisi personalizzate e gestisci le tue richieste.</p>
+        </div>
+        <div style="padding: 1.5rem; background: var(--dash-surface); border: 1px solid var(--dash-border); border-radius: var(--radius-lg); margin-bottom: 2rem;">
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div>
+              <h3 style="margin: 0 0 0.5rem; font-size: 1.1rem;">Richiedi analisi</h3>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--dash-text-soft);">Invia brief riservati. Nome ed email vengono recuperati automaticamente dal tuo token.</p>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+              <button class="btn btn-primary btn-sm btn-with-icon" type="button" id="btn-open-analysis-request" disabled aria-disabled="true">
+                <span class="btn-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5v14" />
+                    <path d="M5 12h14" />
+                  </svg>
+                </span>
+                <span class="btn-label">Richiedi analisi</span>
+              </button>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--dash-text-muted); margin: 0;">Le richieste vengono salvate in Supabase e notificate al Desk solo se il token è attivo (Trial, Pro o Desk).</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- ===== PANEL: COMMUNITY PROPOSALS ===== -->
+      <div class="panel-container" id="panel-community" data-panel="community">
+        <div class="panel-header">
+          <h2 class="panel-title">Community Proposals</h2>
+          <p class="panel-description">Proponi e vota analisi della community. Disponibile solo per utenti Pro e Admin.</p>
+        </div>
+        <div style="padding: 2rem; text-align: center; color: var(--dash-text-muted);">
+          <p>Sezione in sviluppo. Le community proposals saranno disponibili a breve.</p>
+        </div>
+      </div>
     </div>
+    
+    <!-- ===== BOTTOM TAB BAR (Mobile) ===== -->
+    <nav class="nav-tabs" aria-label="Navigazione mobile">
+      <div class="nav-tabs-inner">
+        <a href="#reports" class="nav-tab active" data-panel="reports" aria-current="page">
+          <svg class="nav-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <span>Report</span>
+        </a>
+        <a href="#education" class="nav-tab" data-panel="education">
+          <svg class="nav-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+          </svg>
+          <span>Formazione</span>
+        </a>
+        <a href="#access" class="nav-tab" data-panel="access">
+          <svg class="nav-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <span>Accesso</span>
+        </a>
+        <a href="#on-demand" class="nav-tab" data-panel="on-demand">
+          <svg class="nav-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <line x1="12" y1="18" x2="12" y2="12"/>
+            <line x1="9" y1="15" x2="15" y2="15"/>
+          </svg>
+          <span>On-Demand</span>
+        </a>
+        <a href="#community" class="nav-tab" data-panel="community" id="nav-tab-community" style="display: none;">
+          <svg class="nav-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+          </svg>
+          <span>Community</span>
+        </a>
+      </div>
+    </nav>
   </main>
   
   <!-- ===== FOOTER SLOT ===== -->
@@ -2199,6 +2016,85 @@
         document.addEventListener('DOMContentLoaded', hideAllLoading, { once: true });
       } else {
         setTimeout(hideAllLoading, 0);
+      }
+    })();
+  </script>
+  
+  <!-- ===== PANEL NAVIGATION LOGIC ===== -->
+  <script>
+    (function() {
+      'use strict';
+      
+      function initPanelNavigation() {
+        const navItems = document.querySelectorAll('.nav-rail-item, .nav-tab');
+        const panels = document.querySelectorAll('.panel-container');
+        
+        function switchPanel(panelId) {
+          // Update URL hash
+          if (panelId) {
+            window.location.hash = panelId;
+          }
+          
+          // Hide all panels
+          panels.forEach(panel => {
+            panel.classList.remove('active');
+          });
+          
+          // Show selected panel
+          const targetPanel = document.getElementById(`panel-${panelId}`);
+          if (targetPanel) {
+            targetPanel.classList.add('active');
+          }
+          
+          // Update nav items
+          navItems.forEach(item => {
+            const itemPanel = item.getAttribute('data-panel');
+            if (itemPanel === panelId) {
+              item.classList.add('active');
+              item.setAttribute('aria-current', 'page');
+            } else {
+              item.classList.remove('active');
+              item.removeAttribute('aria-current');
+            }
+          });
+        }
+        
+        // Handle nav item clicks
+        navItems.forEach(item => {
+          item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const panelId = item.getAttribute('data-panel');
+            if (panelId) {
+              switchPanel(panelId);
+            }
+          });
+        });
+        
+        // Handle hash change (browser back/forward)
+        function handleHashChange() {
+          const hash = window.location.hash.replace('#', '');
+          if (hash) {
+            switchPanel(hash);
+          } else {
+            switchPanel('reports'); // Default
+          }
+        }
+        
+        window.addEventListener('hashchange', handleHashChange);
+        
+        // Initialize from hash or default to reports
+        if (window.location.hash) {
+          handleHashChange();
+        } else {
+          switchPanel('reports');
+        }
+      }
+      
+      // Initialize when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPanelNavigation);
+      } else {
+        initPanelNavigation();
       }
     })();
   </script>
@@ -3296,21 +3192,23 @@
         
         currentTokenInfo = data;
         window.dashboardTokenInfo = data;
-        updatePassOverview(data);
+        if (analysisOpenBtn) {
+          setButtonDisabled(analysisOpenBtn, false);
+          analysisOpenBtn.removeAttribute('aria-disabled');
+        }
         if (analysisEmailInput && data.email) {
           analysisEmailInput.value = data.email;
-        }
-        if (analysisNameInput && data.email) {
-          analysisNameInput.value = data.email.split('@')[0];
-        }
-        if (analysisTypeSelect) {
-          analysisTypeSelect.value = data.plan_role === 'desk' ? 'azienda' : 'privato';
         }
 
         // Token valido: verifica se è admin e mostra link
         if (data.email) {
           checkAndShowAdminLink(data.email);
         }
+        
+        // Aggiorna visibilità sezione Community in base al ruolo
+        updateCommunityVisibility(data).catch(err => {
+          console.warn('[Dashboard] Errore aggiornamento visibilità Community:', err);
+        });
         
         // Token valido: procedi
         return true;
@@ -3396,6 +3294,33 @@
         showAdminLinks();
       } else {
         console.log('[Dashboard] Utente non è admin');
+      }
+    }
+    
+    // Mostra/nascondi sezione Community in base al ruolo (Pro o Admin)
+    async function updateCommunityVisibility(tokenData) {
+      const navCommunity = document.getElementById('nav-community');
+      const navTabCommunity = document.getElementById('nav-tab-community');
+      const panelCommunity = document.getElementById('panel-community');
+      
+      const planRole = tokenData?.plan_role;
+      const isPro = planRole === 'pro' || planRole === 'desk';
+      let isAdmin = false;
+      
+      if (tokenData?.email) {
+        isAdmin = await checkAdminViaAPI();
+      }
+      
+      const shouldShow = isPro || isAdmin;
+      
+      if (navCommunity) {
+        navCommunity.style.display = shouldShow ? 'flex' : 'none';
+      }
+      if (navTabCommunity) {
+        navTabCommunity.style.display = shouldShow ? 'flex' : 'none';
+      }
+      if (panelCommunity) {
+        panelCommunity.style.display = shouldShow ? 'block' : 'none';
       }
     }
 
@@ -4293,6 +4218,70 @@
     </div>
   </div>
 
+  <div id="modal-analysis-dashboard" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-analysis-title" hidden>
+    <div class="modal-panel" style="max-width: min(40rem, 92vw);">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-analysis-title">Analisi su richiesta</h2>
+        <button class="modal-close" type="button" aria-label="Chiudi" data-modal-close="analysis">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.9rem; color: var(--dash-text-soft); margin-bottom: 1rem;">
+          Il brief viene salvato insieme al tuo token attivo. Completa i dettagli e il Desk ti risponderà via email.
+        </p>
+        <div id="analysis-request-success" class="success-message" style="display: none; margin-bottom: 1rem;">
+          Richiesta inviata! Riceverai aggiornamenti via email.
+        </div>
+        <div id="analysis-request-error" class="error-message" style="display: none; margin-bottom: 1rem;">
+          Invio non riuscito. Verifica il token o riprova più tardi.
+        </div>
+        <form id="form-dashboard-analysis">
+          <div class="form-group">
+            <label class="form-label" for="analysis-dashboard-email">Email collegata al token</label>
+            <input class="form-input" id="analysis-dashboard-email" type="email" readonly />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="analysis-dashboard-name">Nome referente</label>
+            <input class="form-input" id="analysis-dashboard-name" name="nome" type="text" placeholder="Nome e cognome" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="analysis-dashboard-type">Tipologia cliente</label>
+            <select class="form-select" id="analysis-dashboard-type" name="tipologia" required>
+              <option value="privato">Privato / persona fisica</option>
+              <option value="azienda">Azienda / professionista</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="analysis-dashboard-focus">Tipo di analisi</label>
+            <select class="form-select" id="analysis-dashboard-focus" name="tipoAnalisi" required>
+              <option value="">Seleziona...</option>
+              <option value="Single Stock Analysis">Single Stock Analysis</option>
+              <option value="ETF Monitor">ETF Monitor</option>
+              <option value="Fund Dossier">Fund Dossier</option>
+              <option value="Certificate Dossier">Certificate Dossier</option>
+              <option value="Portfolio Risk Analysis">Portfolio Risk Analysis</option>
+              <option value="Stress Test Custom">Stress Test Custom</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="analysis-dashboard-details">Brief / dettagli</label>
+            <textarea class="form-textarea" id="analysis-dashboard-details" name="dettagli" rows="5" minlength="20" placeholder="Inserisci ticker, timeframe e obiettivi." required></textarea>
+          </div>
+        </form>
+        <p style="font-size: 0.75rem; color: var(--dash-text-muted); margin-top: 0.25rem;">
+          Proseguendo confermi MiFID/Privacy e autorizzi il trattamento dei dati per la gestione della richiesta.
+        </p>
+      </div>
+      <div class="modal-footer" style="gap: 0.5rem;">
+        <button class="btn-modal" type="button" data-modal-close="analysis">Annulla</button>
+        <button class="btn-modal btn-modal-primary" type="button" id="analysis-submit-btn">Invia richiesta</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== MODAL & PWA SCRIPTS ===== -->
   <script type="module">
     import { FCM_CONFIG as IMPORTED_FCM_CONFIG } from '/archivio/assets/js/fcm-config.js';
@@ -4312,7 +4301,9 @@
       }
     });
     
+    const analysisModal = document.getElementById('modal-analysis-dashboard');
     const analysisForm = document.getElementById('form-dashboard-analysis');
+    const analysisOpenBtn = document.getElementById('btn-open-analysis-request');
     const analysisSuccessMsg = document.getElementById('analysis-request-success');
     const analysisErrorMsg = document.getElementById('analysis-request-error');
     const analysisSubmitBtn = document.getElementById('analysis-submit-btn');
@@ -4321,240 +4312,6 @@
     const analysisTypeSelect = document.getElementById('analysis-dashboard-type');
     const analysisFocusSelect = document.getElementById('analysis-dashboard-focus');
     const analysisDetailsInput = document.getElementById('analysis-dashboard-details');
-    const analysisPhoneInput = document.getElementById('analysis-dashboard-phone');
-    const analysisNotesInput = document.getElementById('analysis-dashboard-notes');
-
-    const passPlanPill = document.getElementById('pass-plan-pill');
-    const passExpiryPill = document.getElementById('pass-expiry-pill');
-    const scrollTriggers = document.querySelectorAll('[data-scroll-target]');
-    const passRequestForm = document.getElementById('form-pass-free');
-    const passFreeFeedback = document.getElementById('pass-free-feedback');
-    const passRecoveryForm = document.getElementById('form-pass-recovery');
-    const passRecoveryFeedback = document.getElementById('pass-recovery-feedback');
-    const billingB2CToggle = document.getElementById('toggle-billing-b2c');
-    const billingDeskToggle = document.getElementById('toggle-billing-desk');
-    const billingB2CContainer = document.getElementById('b2c-billing-form');
-    const billingDeskContainer = document.getElementById('desk-billing-form');
-    const billingB2CForm = document.getElementById('form-billing-b2c');
-    const billingB2CFeedback = document.getElementById('b2c-billing-feedback');
-    const billingDeskForm = document.getElementById('form-billing-desk');
-    const billingDeskFeedback = document.getElementById('desk-billing-feedback');
-
-    function setFeedback(element, type, message) {
-      if (!element) return;
-      if (!type) {
-        element.removeAttribute('data-state');
-        element.textContent = '';
-        return;
-      }
-      element.dataset.state = type;
-      element.textContent = message;
-    }
-
-    async function performRequest({ url, body, button, feedbackEl, successMessage }) {
-      if (button) setButtonDisabled(button, true);
-      setFeedback(feedbackEl);
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-        const result = await response.json().catch(() => ({}));
-        if (!response.ok || result.ok === false) {
-          throw new Error(result.error || 'Operazione non riuscita');
-        }
-        setFeedback(feedbackEl, 'success', result.message || successMessage || 'Operazione completata.');
-        return result;
-      } catch (error) {
-        setFeedback(feedbackEl, 'error', error.message || 'Errore imprevisto');
-        throw error;
-      } finally {
-        if (button) setButtonDisabled(button, false);
-      }
-    }
-
-    function initScrollTriggers() {
-      scrollTriggers.forEach(trigger => {
-        trigger.addEventListener('click', () => {
-          const targetSelector = trigger.getAttribute('data-scroll-target');
-          if (!targetSelector) return;
-          const target = document.querySelector(targetSelector);
-          target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-      });
-    }
-
-    function updatePassOverview(tokenData) {
-      if (!tokenData) return;
-      if (passPlanPill) {
-        const planNames = { trial: 'Trial', pro: 'Pro', desk: 'Desk' };
-        passPlanPill.textContent = `Piano: ${planNames[tokenData.plan_role] || tokenData.plan_role || '—'}`;
-      }
-      if (passExpiryPill) {
-        passExpiryPill.textContent = tokenData.valid_until
-          ? `Scadenza: ${new Date(tokenData.valid_until).toLocaleDateString('it-IT')}`
-          : 'Scadenza: —';
-      }
-    }
-
-    function toggleSection(toggle, section) {
-      if (!toggle || !section) return;
-      const updateVisibility = () => {
-        section.hidden = !toggle.checked;
-      };
-      updateVisibility();
-      toggle.addEventListener('change', updateVisibility);
-    }
-
-    function initPassForms() {
-      passRequestForm?.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        if (!passRequestForm.checkValidity()) {
-          passRequestForm.reportValidity();
-          return;
-        }
-        const formData = new FormData(passRequestForm);
-        const payload = {
-          nome: (formData.get('nome') || '').toString().trim(),
-          email: (formData.get('email') || '').toString().trim().toLowerCase(),
-          profilo: formData.get('profilo'),
-          organizzazione: (formData.get('organizzazione') || '').toString().trim(),
-          uso: (formData.get('uso') || '').toString().trim()
-        };
-        await performRequest({
-          url: '/api/request-free-token',
-          body: payload,
-          button: passRequestForm.querySelector('button[type="submit"]'),
-          feedbackEl: passFreeFeedback,
-          successMessage: 'Token inviato via email. Controlla anche la cartella spam.'
-        });
-        passRequestForm.reset();
-      });
-
-      passRecoveryForm?.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        if (!passRecoveryForm.checkValidity()) {
-          passRecoveryForm.reportValidity();
-          return;
-        }
-        const emailInput = passRecoveryForm.querySelector('#pass-recovery-email');
-        const email = emailInput?.value?.trim().toLowerCase();
-        if (!email) {
-          passRecoveryForm.reportValidity();
-          return;
-        }
-        await performRequest({
-          url: '/api/request-dashboard-token',
-          body: { email },
-          button: passRecoveryForm.querySelector('button[type="submit"]'),
-          feedbackEl: passRecoveryFeedback,
-          successMessage: 'Se esiste un piano attivo riceverai un nuovo codice via email.'
-        });
-        passRecoveryForm.reset();
-      });
-    }
-
-    function initBillingForms() {
-      toggleSection(billingB2CToggle, billingB2CContainer);
-      toggleSection(billingDeskToggle, billingDeskContainer);
-
-      billingB2CForm?.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        if (!billingB2CForm.checkValidity()) {
-          billingB2CForm.reportValidity();
-          return;
-        }
-        const token = getStoredToken();
-        if (!token) {
-          showTokenModal();
-          return;
-        }
-        const formData = new FormData(billingB2CForm);
-        const indirizzo = `${formData.get('indirizzo') || ''}, ${formData.get('cap') || ''} ${formData.get('citta') || ''} (${(formData.get('provincia') || '').toString().toUpperCase()})`;
-        const dettagli = [
-          `Metodo di pagamento: ${formData.get('metodoPagamento') || '-'}`,
-          `Email fatture: ${formData.get('emailFattura') || '-'}`,
-          formData.get('note') ? `Note: ${formData.get('note')}` : ''
-        ].filter(Boolean).join('\n');
-        const payload = {
-          dashboardToken: token,
-          tipo: 'analisi-su-richiesta',
-          nome: (formData.get('nome') || '').toString().trim(),
-          email: currentTokenInfo?.email || '',
-          tipologia: 'privato',
-          codiceFiscale: (formData.get('codiceFiscale') || '').toString().trim().toUpperCase(),
-          indirizzo: indirizzo.trim(),
-          telefono: (formData.get('telefono') || '').toString().trim() || null,
-          tipoAnalisi: 'Attivazione fatturazione B2C',
-          dettagli,
-          note: (formData.get('note') || '').toString().trim() || null
-        };
-        await performRequest({
-          url: '/api/request-analysis',
-          body: payload,
-          button: billingB2CForm.querySelector('button[type="submit"]'),
-          feedbackEl: billingB2CFeedback,
-          successMessage: 'Dati inviati al Desk. Riceverai la fattura tramite Xolo Go.'
-        });
-        billingB2CForm.reset();
-        if (billingB2CToggle) {
-          billingB2CToggle.checked = false;
-          if (billingB2CContainer) billingB2CContainer.hidden = true;
-        }
-      });
-
-      billingDeskForm?.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        if (!billingDeskForm.checkValidity()) {
-          billingDeskForm.reportValidity();
-          return;
-        }
-        const token = getStoredToken();
-        if (!token) {
-          showTokenModal();
-          return;
-        }
-        const formData = new FormData(billingDeskForm);
-        const noteParts = [
-          `PEC: ${formData.get('pec') || '-'}`,
-          formData.get('codiceDestinatario') ? `SDI: ${formData.get('codiceDestinatario')}` : '',
-          formData.get('brandAssets') ? `Brand assets: ${formData.get('brandAssets')}` : '',
-          formData.get('note') ? `Note: ${formData.get('note')}` : ''
-        ].filter(Boolean).join('\n');
-        const payload = {
-          dashboardToken: token,
-          tipo: 'piano-desk',
-          nome: (formData.get('referente') || '').toString().trim(),
-          email: currentTokenInfo?.email || '',
-          tipologia: 'azienda',
-          ragioneSociale: (formData.get('ragioneSociale') || '').toString().trim(),
-          piva: (formData.get('piva') || '').toString().trim().toUpperCase(),
-          indirizzo: (formData.get('indirizzo') || '').toString().trim(),
-          telefono: (formData.get('telefono') || '').toString().trim() || null,
-          tipoAnalisi: 'Attivazione Desk 30 giorni',
-          dettagli: 'Attivazione fatturazione Desk 30 giorni (white-label report).',
-          note: noteParts
-        };
-        await performRequest({
-          url: '/api/request-analysis',
-          body: payload,
-          button: billingDeskForm.querySelector('button[type="submit"]'),
-          feedbackEl: billingDeskFeedback,
-          successMessage: 'Richiesta Desk inviata. Riceverai fattura e istruzioni via email.'
-        });
-        billingDeskForm.reset();
-        if (billingDeskToggle) {
-          billingDeskToggle.checked = false;
-          if (billingDeskContainer) billingDeskContainer.hidden = true;
-        }
-      });
-    }
-
-    initScrollTriggers();
-    initPassForms();
-    initBillingForms();
-
     // Focus trap utility
     function trapFocus(modal) {
       const focusableElements = modal.querySelectorAll(
@@ -4831,9 +4588,76 @@
         }
       });
 
-      analysisForm?.addEventListener('submit', (event) => {
+      const analysisCloseButtons = document.querySelectorAll('[data-modal-close="analysis"]');
+
+      function openAnalysisModal() {
+        if (!analysisModal) return;
+        if (!getStoredToken()) {
+          showTokenModal();
+          return;
+        }
+        analysisForm?.reset();
+        if (analysisSuccessMsg) analysisSuccessMsg.style.display = 'none';
+        if (analysisErrorMsg) analysisErrorMsg.style.display = 'none';
+        if (analysisEmailInput && currentTokenInfo?.email) {
+          analysisEmailInput.value = currentTokenInfo.email;
+        }
+        if (analysisNameInput) {
+          analysisNameInput.value = currentTokenInfo?.email?.split('@')[0] || '';
+        }
+        if (analysisTypeSelect) {
+          const defaultType = currentTokenInfo?.planRole === 'desk' ? 'azienda' : 'privato';
+          analysisTypeSelect.value = defaultType;
+        }
+        previousActiveElement = document.activeElement;
+        analysisModal.hidden = false;
+        const main = document.querySelector('main');
+        if (main) main.setAttribute('inert', '');
+        setTimeout(() => {
+          analysisModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          analysisNameInput?.focus();
+          if (focusTrapCleanup) focusTrapCleanup();
+          focusTrapCleanup = trapFocus(analysisModal);
+        }, 10);
+      }
+
+      function closeAnalysisModal() {
+        if (!analysisModal) return;
+        analysisModal.classList.remove('active');
+        setTimeout(() => {
+          analysisModal.hidden = true;
+          document.body.style.overflow = '';
+          const main = document.querySelector('main');
+          if (main) main.removeAttribute('inert');
+          previousActiveElement?.focus();
+          if (focusTrapCleanup) {
+            focusTrapCleanup();
+            focusTrapCleanup = null;
+          }
+        }, 200);
+      }
+
+      analysisCloseButtons.forEach(btn => {
+        btn.addEventListener('click', (event) => {
+          event.preventDefault();
+          closeAnalysisModal();
+        });
+      });
+
+      analysisOpenBtn?.addEventListener('click', () => {
+        openAnalysisModal();
+      });
+
+      analysisSubmitBtn?.addEventListener('click', (event) => {
         event.preventDefault();
         submitAnalysisRequest();
+      });
+
+      analysisModal?.addEventListener('click', (event) => {
+        if (event.target === analysisModal) {
+          closeAnalysisModal();
+        }
       });
 
       // Close on overlay click
@@ -5111,8 +4935,8 @@
       }
       setButtonDisabled(analysisSubmitBtn, true);
       analysisSubmitBtn.textContent = 'Invio in corso...';
-      setFeedback(analysisSuccessMsg);
-      setFeedback(analysisErrorMsg);
+      if (analysisSuccessMsg) analysisSuccessMsg.style.display = 'none';
+      if (analysisErrorMsg) analysisErrorMsg.style.display = 'none';
 
       const payload = {
         dashboardToken: token,
@@ -5122,9 +4946,7 @@
         tipoAnalisi: analysisFocusSelect?.value || '',
         dettagli: dettagliValue,
         consensoGDPR: true,
-        timestamp: new Date().toISOString(),
-        telefono: (analysisPhoneInput?.value || '').trim() || null,
-        note: (analysisNotesInput?.value || '').trim() || null
+        timestamp: new Date().toISOString()
       };
 
       if (!payload.nome && currentTokenInfo?.email) {
@@ -5143,17 +4965,32 @@
         if (!response.ok || !result.ok) {
           throw new Error(result.error || 'Invio non riuscito');
         }
-        setFeedback(analysisSuccessMsg, 'success', result.message || 'Richiesta inviata! Controlla la tua email.');
-        setFeedback(analysisErrorMsg);
+        if (analysisSuccessMsg) {
+          analysisSuccessMsg.style.display = 'block';
+          analysisSuccessMsg.textContent = result.message || 'Richiesta inviata! Controlla la tua email.';
+        }
+        if (analysisErrorMsg) {
+          analysisErrorMsg.style.display = 'none';
+        }
         analysisForm.reset();
         if (analysisEmailInput && currentTokenInfo?.email) {
           analysisEmailInput.value = currentTokenInfo.email;
         }
+        setTimeout(() => {
+          if (analysisModal?.classList.contains('active')) {
+            document.querySelector('[data-modal-close="analysis"]')?.click();
+          }
+        }, 1500);
       } catch (err) {
-        setFeedback(analysisErrorMsg, 'error', err.message || 'Errore invio');
+        if (analysisErrorMsg) {
+          analysisErrorMsg.style.display = 'block';
+          analysisErrorMsg.textContent = err.message || 'Errore invio';
+        } else {
+          alert(err.message || 'Errore invio');
+        }
       } finally {
         setButtonDisabled(analysisSubmitBtn, false);
-        analysisSubmitBtn.textContent = 'Invia analisi al Desk';
+        analysisSubmitBtn.textContent = 'Invia richiesta';
       }
     }
 
