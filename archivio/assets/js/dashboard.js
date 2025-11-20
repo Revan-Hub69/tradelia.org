@@ -438,6 +438,8 @@ function openInstalledApp(showHint = false) {
   }
 }
 
+window.openInstalledApp = openInstalledApp;
+
 // ===== SHOW INSTALL SUCCESS =====
 function showInstallSuccess() {
   // Mostra messaggio temporaneo di successo

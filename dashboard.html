@@ -682,27 +682,30 @@
     .pwa-btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      padding: 0.55rem 1.25rem;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.35rem;
       border-radius: 999px;
-      border: 1px solid var(--dash-border);
-      background: var(--dash-surface);
-      color: var(--dash-text);
-      font-size: 0.85rem;
+      border: none;
+      background: linear-gradient(135deg, #60a5fa, #2563eb);
+      color: #fff;
+      font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
       text-decoration: none;
+      box-shadow: 0 15px 35px rgba(37, 99, 235, 0.35);
     }
 
     .pwa-btn:disabled {
-      opacity: 0.45;
+      opacity: 0.6;
       cursor: not-allowed;
+      box-shadow: none;
     }
 
     .pwa-btn:hover:not(:disabled) {
-      border-color: var(--dash-border-strong);
-      background: var(--dash-surface-elev);
+      transform: translateY(-1px);
+      box-shadow: 0 18px 45px rgba(37, 99, 235, 0.45);
     }
 
     .pwa-status {
@@ -2949,17 +2952,8 @@
       }, 10);
     }
 
-    function initPWAModal() {
-      const pwaSection = document.getElementById('pwa-settings-btn');
-      if (pwaSection && pwaSection.classList.contains('btn-disabled')) {
-        const status = document.getElementById('pwa-install-status');
-        if (status) status.textContent = 'Installa la dashboard dalla header principale.';
-      }
-    }
-
     window.showTokenInfoModal = showTokenInfoModal;
     window.showTokenModal = showTokenModal;
-    window.initPWAModal = initPWAModal;
 
     // Verifica se l'utente è admin e mostra link
     async function checkAndShowAdminLink(email) {
@@ -3114,10 +3108,7 @@
     }
   </script>
   
-  <!-- PWA code removed - dashboard simplified to reports only -->
-  <!--
   <script type="module">
-    // PWA code removed for simplicity
 
     const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
     const installBtn = document.getElementById('pwa-install-btn');
@@ -3126,6 +3117,7 @@
     const pushStatus = document.getElementById('push-status');
     const installLabel = installBtn?.querySelector('.btn-label');
     const pushLabel = pushBtn?.querySelector('.btn-label');
+    const openModalBtn = document.getElementById('pwa-open-modal-btn');
 
     let deferredPrompt = null;
     let swRegistration = null;
@@ -3153,6 +3145,7 @@
           } else {
             installBtn.textContent = 'App installata';
           }
+          toggleOpenModalButton(false);
         } else {
           // App installata ma siamo nel browser: mostra "Apri app"
           installBtn.disabled = false;
@@ -3162,6 +3155,7 @@
           } else {
             installBtn.textContent = 'Apri app';
           }
+          toggleOpenModalButton(true);
         }
       } else if (state === 'ready') {
         installBtn.disabled = false;
@@ -3171,13 +3165,20 @@
         } else {
           installBtn.textContent = 'Installa la dashboard';
         }
+        toggleOpenModalButton(false);
       } else {
         installBtn.disabled = true;
         installBtn.dataset.action = 'wait';
         if (installLabel) {
           installLabel.textContent = 'Installa la dashboard';
         }
+        toggleOpenModalButton(false);
       }
+    }
+
+    function toggleOpenModalButton(show) {
+      if (!openModalBtn) return;
+      openModalBtn.style.display = show ? 'inline-flex' : 'none';
     }
 
     window.addEventListener('beforeinstallprompt', (event) => {
@@ -3193,6 +3194,10 @@
       updateInstallStatus('App installata sul dispositivo.');
     });
 
+    openModalBtn?.addEventListener('click', () => {
+      openAppFromModal(true);
+    });
+
     installBtn?.addEventListener('click', async () => {
       const action = installBtn.dataset.action;
       
@@ -3200,14 +3205,7 @@
       if (action === 'open-app') {
         // Su mobile, non possiamo aprire programmaticamente l'app installata
         // Ma possiamo suggerire all'utente di aprire l'app dalla home screen
-        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-          updateInstallStatus('Apri l\'app Tradelia dalla schermata Home del dispositivo.');
-        } else {
-          // Su desktop, possiamo provare ad aprire l'app usando il protocollo o un link diretto
-          // In realtà, su desktop l'app installata si apre automaticamente quando si clicca sull'icona
-          // Quindi suggeriamo all'utente di aprire l'app dalla barra delle applicazioni
-          updateInstallStatus('Apri l\'app Tradelia dalla barra delle applicazioni o dal menu Start.');
-        }
+        openAppFromModal(true);
         return;
       }
       
@@ -3248,6 +3246,19 @@
         console.error('[PWA] Errore registrazione SW', err);
         updatePushStatus('Errore nella registrazione del Service Worker.');
         return null;
+      }
+    }
+
+    function openAppFromModal(showHint = false) {
+      const targetUrl = `${window.location.origin}/dashboard.html?pwa=1`;
+      window.open(targetUrl, '_blank', 'noopener');
+      localStorage.setItem('pwa-installed', 'true');
+      setInstallButton('installed');
+      updateInstallStatus('App aperta. Se non si apre automaticamente, usala dalla schermata Home.');
+      if (showHint) {
+        setTimeout(() => {
+          updateInstallStatus('Se non si è aperta, lancia l’app Tradelia dalla home del dispositivo.');
+        }, 800);
       }
     }
 
@@ -3460,8 +3471,21 @@
       await checkForUpdates();
       await updatePushUI();
     })();
+
+    window.initPWAModal = async function() {
+      if (isStandalone()) {
+        setInstallButton('installed');
+      } else if (deferredPrompt) {
+        setInstallButton('ready');
+      } else if (localStorage.getItem('pwa-installed') === 'true') {
+        setInstallButton('installed');
+      } else {
+        setInstallButton('wait');
+      }
+      await registerServiceWorker();
+      await updatePushUI();
+    };
   </script>
-  -->
   
   <!-- ===== LEGAL OVERLAY ===== -->
   <div id="legal-consent-overlay" role="dialog" aria-modal="true" aria-labelledby="legal-consent-title" hidden>
@@ -3713,7 +3737,7 @@
         <div style="margin-bottom: 1.5rem;">
           <h3 style="margin: 0 0 0.75rem; font-size: var(--fs-16, 16px); font-weight: 600; color: var(--ink, #ffffff);">Installa la dashboard (PWA)</h3>
           <p style="margin: 0 0 1rem; font-size: var(--fs-13, 13px); color: var(--ink-soft, #f0f0f0); line-height: var(--lh-16, 1.6);">Installa la dashboard come app sul tuo dispositivo per accesso rapido e funzionalità offline.</p>
-          <button class="pwa-btn" id="pwa-install-btn" type="button" disabled style="width: 100%; justify-content: center;">
+          <button class="pwa-btn" id="pwa-install-btn" type="button" disabled style="width: 100%;">
             <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 5v10" />
@@ -3723,7 +3747,17 @@
             </span>
             <span class="btn-label">Installa la dashboard</span>
           </button>
-          <button class="pwa-btn" id="pwa-update-btn" type="button" style="display: none; margin-top: 0.5rem; width: 100%; justify-content: center;">
+          <button class="pwa-btn" id="pwa-open-modal-btn" type="button" style="display: none; margin-top: 0.5rem; width: 100%;">
+            <span class="btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4" />
+                <polyline points="15 6 21 6 21 12" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </span>
+            <span class="btn-label">Apri nell'app</span>
+          </button>
+          <button class="pwa-btn" id="pwa-update-btn" type="button" style="display: none; margin-top: 0.5rem; width: 100%;">
             <span class="btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
