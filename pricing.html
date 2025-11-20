@@ -1529,59 +1529,5 @@
 
   <!-- Tutte le richieste si gestiscono nella dashboard PWA -->
   <script src="/assets/js/pwa-dashboard-handler.js"></script>
-      const submitBtn = document.getElementById('submit-token');
-      const successMsg = document.getElementById('success-token');
-      const errorMsg = document.getElementById('error-token');
-      
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-      
-      const formData = new FormData(form);
-      const consenso = formData.get('consenso') === 'on';
-      if (!consenso) {
-        alert('È necessario acconsentire al trattamento dei dati personali per procedere.');
-        return;
-      }
-      
-      const payload = {
-        nome: formData.get('nome').trim(),
-        email: formData.get('email').trim().toLowerCase(),
-        profilo: formData.get('profilo'),
-        organizzazione: (formData.get('organizzazione') || '').trim(),
-        uso: formData.get('uso').trim()
-      };
-      
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Invio in corso...';
-      successMsg.classList.remove('active');
-      errorMsg.classList.remove('active');
-      
-      try {
-        const response = await fetch('/api/request-free-token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        
-        const result = await response.json().catch(() => ({}));
-        if (!response.ok || !result.ok) {
-          throw new Error(result.error || 'Errore invio');
-        }
-        
-        successMsg.textContent = result.message || 'Richiesta inviata! Controlla la tua email per il token.';
-        successMsg.classList.add('active');
-        form.reset();
-        setTimeout(() => {
-          closeModal('modal-token');
-        }, 3000);
-      } catch (error) {
-        console.error('Errore invio token:', error);
-        errorMsg.textContent = error.message || 'Invio non riuscito. Riprova più tardi.';
-        errorMsg.classList.add('active');
-      } finally {
-        submitBtn.disabled = false;
-  <script src="/assets/js/pwa-dashboard-handler.js"></script>
 </body>
 </html>
