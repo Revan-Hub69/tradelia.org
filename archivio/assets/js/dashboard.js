@@ -336,16 +336,30 @@ function setupPWAInstall() {
 // ===== SHOW INSTALL BUTTON =====
 function showInstallButton() {
   const installBtn = document.getElementById('install-app-btn');
+  const pwaSettingsBtn = document.getElementById('pwa-settings-btn');
   if (installBtn) {
     installBtn.hidden = false;
+  }
+  if (pwaSettingsBtn) {
+    pwaSettingsBtn.disabled = false;
+    pwaSettingsBtn.classList.remove('btn-disabled');
+    pwaSettingsBtn.title = '';
   }
 }
 
 // ===== HIDE INSTALL BUTTON =====
 function hideInstallButton() {
   const installBtn = document.getElementById('install-app-btn');
+  const pwaSettingsBtn = document.getElementById('pwa-settings-btn');
   if (installBtn) {
     installBtn.hidden = true;
+  }
+  if (pwaSettingsBtn) {
+    pwaSettingsBtn.disabled = true;
+    pwaSettingsBtn.classList.add('btn-disabled');
+    if (!pwaSettingsBtn.title) {
+      pwaSettingsBtn.title = 'Disponibile solo su browser supportati e con HTTPS';
+    }
   }
 }
 
@@ -464,6 +478,10 @@ function setupEventListeners() {
   const installBtn = document.getElementById('install-app-btn');
   if (installBtn) {
     installBtn.addEventListener('click', handleInstallApp);
+  }
+  const pwaSettingsBtn = document.getElementById('pwa-settings-btn');
+  if (pwaSettingsBtn) {
+    pwaSettingsBtn.addEventListener('click', handleInstallApp);
   }
   
   // Dashboard tabs
