@@ -349,7 +349,6 @@ function showInstallButton() {
     installBtn.hidden = false;
   }
   if (pwaSettingsBtn) {
-    pwaSettingsBtn.disabled = false;
     pwaSettingsBtn.classList.remove('btn-disabled');
     pwaSettingsBtn.title = '';
   }
@@ -364,7 +363,6 @@ function hideInstallButton() {
     installBtn.hidden = true;
   }
   if (pwaSettingsBtn) {
-    pwaSettingsBtn.disabled = true;
     pwaSettingsBtn.classList.add('btn-disabled');
     if (!pwaSettingsBtn.title) {
       pwaSettingsBtn.title = 'Disponibile solo su browser supportati e con HTTPS';
@@ -424,6 +422,9 @@ function openInstalledApp(showHint = false) {
   try {
     const targetUrl = `${window.location.origin}/dashboard.html?pwa=1`;
     window.open(targetUrl, '_blank', 'noopener');
+    localStorage.setItem(PWA_INSTALLED_FLAG, 'true');
+    showOpenAppButton();
+    hideInstallButton();
     if (showHint) {
       setTimeout(() => {
         alert('Se l’app non si è aperta automaticamente, aprila dalla schermata home/Start come “Tradelia AI”.');
