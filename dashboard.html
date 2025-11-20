@@ -1203,5 +1203,20 @@
       loadReports();
     }
   </script>
+  
+  <!-- Service Worker Registration - PWA Best Practice -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('Service Worker registrato:', registration.scope);
+          })
+          .catch(error => {
+            console.warn('Service Worker registrazione fallita:', error);
+          });
+      });
+    }
+  </script>
 </body>
 </html>
