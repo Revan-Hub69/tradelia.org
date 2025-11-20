@@ -304,7 +304,10 @@ function setupPWAInstall() {
   const isStandalone =
     window.matchMedia('(display-mode: standalone)').matches ||
     window.navigator.standalone === true;
-  const installedFlag = localStorage.getItem(PWA_INSTALLED_FLAG) === 'true';
+  const installedFlag =
+    localStorage.getItem(PWA_INSTALLED_FLAG) === 'true' ||
+    window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.matchMedia('(display-mode: minimal-ui)').matches;
 
   if (isStandalone) {
     STATE.isInstalled = true;
