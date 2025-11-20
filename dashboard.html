@@ -9,6 +9,7 @@
   <meta name="description" content="Dashboard Tradelia AI - Accesso rapido a report finanziari e tutorial educativi" />
   <meta name="theme-color" content="#0f0f0f" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="#0f0f0f" />
   
   <!-- Favicons -->
@@ -2765,6 +2766,7 @@
     
     const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
     const PWA_FLAG_KEY = 'tradelia-pwa-installed';
+    window.PWA_FLAG_KEY = PWA_FLAG_KEY;
     const legacyFlag = localStorage.getItem('pwa-installed');
     if (legacyFlag) {
       localStorage.setItem(PWA_FLAG_KEY, legacyFlag);
@@ -3050,6 +3052,7 @@
   <script type="module">
 
     const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
+    const PWA_FLAG_KEY = window.PWA_FLAG_KEY || 'tradelia-pwa-installed';
     const installBtn = document.getElementById('pwa-install-btn');
     const installStatus = document.getElementById('pwa-install-status');
     const pushBtn = document.getElementById('push-toggle-btn');
@@ -3057,6 +3060,7 @@
     const installLabel = installBtn?.querySelector('.btn-label');
     const pushLabel = pushBtn?.querySelector('.btn-label');
     const openModalBtn = document.getElementById('pwa-open-modal-btn');
+    const openAppBtn = document.getElementById('open-app-btn');
 
     let deferredPrompt = null;
     let swRegistration = null;
@@ -3086,6 +3090,7 @@
             installBtn.textContent = 'App installata';
           }
           toggleOpenModalButton(false);
+          toggleHeaderOpenButton(false);
         } else {
           // App installata ma siamo nel browser: mostra "Apri app"
           installBtn.disabled = false;
@@ -3097,6 +3102,7 @@
             installBtn.textContent = 'Apri app';
           }
           toggleOpenModalButton(true);
+          toggleHeaderOpenButton(true);
         }
       } else if (state === 'ready') {
         installBtn.disabled = false;
@@ -3108,6 +3114,7 @@
           installBtn.textContent = 'Installa la dashboard';
         }
         toggleOpenModalButton(false);
+        toggleHeaderOpenButton(false);
       } else {
         installBtn.disabled = true;
         installBtn.classList.add('btn-pill--disabled');
@@ -3116,12 +3123,23 @@
           installLabel.textContent = 'Installa la dashboard';
         }
         toggleOpenModalButton(false);
+        toggleHeaderOpenButton(false);
       }
     }
 
     function toggleOpenModalButton(show) {
       if (!openModalBtn) return;
       openModalBtn.style.display = show ? 'inline-flex' : 'none';
+    }
+    
+    function toggleHeaderOpenButton(show) {
+      if (!openAppBtn) return;
+      if (show) {
+        openAppBtn.hidden = false;
+        openAppBtn.classList.remove('btn-pill--disabled');
+      } else {
+        openAppBtn.hidden = true;
+      }
     }
 
     window.addEventListener('beforeinstallprompt', (event) => {
@@ -3133,11 +3151,24 @@
 
     window.addEventListener('appinstalled', () => {
       deferredPrompt = null;
+      try {
+        localStorage.setItem(PWA_FLAG_KEY, 'true');
+      } catch (err) {
+        console.warn('[PWA] impossibile salvare flag installazione', err);
+      }
       setInstallButton('installed');
       updateInstallStatus('App installata sul dispositivo.');
     });
 
     openModalBtn?.addEventListener('click', () => {
+      openAppFromModal(true);
+    });
+    
+    openAppBtn?.addEventListener('click', () => {
+      if (isStandalone()) {
+        window.location.reload();
+        return;
+      }
       openAppFromModal(true);
     });
 
@@ -3197,6 +3228,7 @@
       window.open(targetUrl, '_blank', 'noopener');
       localStorage.setItem(PWA_FLAG_KEY, 'true');
       setInstallButton('installed');
+      toggleHeaderOpenButton(!isStandalone());
       updateInstallStatus('App aperta. Se non si apre automaticamente, usala dalla schermata Home.');
       if (showHint) {
         setTimeout(() => {
@@ -4004,6 +4036,11 @@
 
       // PWA settings button (apre modale info)
       const pwaSettingsBtn = document.getElementById('pwa-settings-btn');
+      if (pwaSettingsBtn) {
+        pwaSettingsBtn.disabled = false;
+        pwaSettingsBtn.classList.remove('btn-pill--disabled');
+        pwaSettingsBtn.removeAttribute('aria-disabled');
+      }
       pwaSettingsBtn?.addEventListener('click', async () => {
         const token = localStorage.getItem(ACCESS_TOKEN_KEY);
         if (!token) {
