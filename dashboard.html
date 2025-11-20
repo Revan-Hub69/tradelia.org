@@ -2831,6 +2831,12 @@
     console.log('INIT: Timeout sicurezza impostato a 3 secondi');
     
     const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
+    const PWA_FLAG_KEY = 'tradelia-pwa-installed';
+    const legacyFlag = localStorage.getItem('pwa-installed');
+    if (legacyFlag) {
+      localStorage.setItem(PWA_FLAG_KEY, legacyFlag);
+      localStorage.removeItem('pwa-installed');
+    }
     setupLogout();
 
     function setupLogout() {
@@ -3252,7 +3258,7 @@
     function openAppFromModal(showHint = false) {
       const targetUrl = `${window.location.origin}/dashboard.html?pwa=1`;
       window.open(targetUrl, '_blank', 'noopener');
-      localStorage.setItem('pwa-installed', 'true');
+      localStorage.setItem(PWA_FLAG_KEY, 'true');
       setInstallButton('installed');
       updateInstallStatus('App aperta. Se non si apre automaticamente, usala dalla schermata Home.');
       if (showHint) {
@@ -3458,13 +3464,12 @@
       if (installBtn) {
         if (isStandalone()) {
           setInstallButton('installed');
-          // Siamo già nell'app installata
           updateInstallStatus('App installata e aperta sul dispositivo.');
+        } else if (localStorage.getItem(PWA_FLAG_KEY) === 'true') {
+          setInstallButton('installed');
+          updateInstallStatus('App installata. Puoi aprirla dalla schermata Home.');
         } else {
-          // Siamo nel browser: verifica se l'app è installata
-          // Nota: non possiamo rilevare perfettamente se l'app è installata quando siamo nel browser
-          // Ma possiamo aspettare l'evento beforeinstallprompt per sapere se è installabile
-          updateInstallStatus('Segui le istruzioni del browser per installare l'app.');
+          updateInstallStatus('Segui le istruzioni del browser per installare l\'app.');
         }
       }
       await registerServiceWorker();
@@ -3475,10 +3480,10 @@
     window.initPWAModal = async function() {
       if (isStandalone()) {
         setInstallButton('installed');
+      } else if (localStorage.getItem(PWA_FLAG_KEY) === 'true') {
+        setInstallButton('installed');
       } else if (deferredPrompt) {
         setInstallButton('ready');
-      } else if (localStorage.getItem('pwa-installed') === 'true') {
-        setInstallButton('installed');
       } else {
         setInstallButton('wait');
       }
@@ -4165,7 +4170,7 @@
 
     window.addEventListener('appinstalled', () => {
       deferredPrompt = null;
-      localStorage.setItem('pwa-installed', 'true');
+      localStorage.setItem(PWA_FLAG_KEY, 'true');
       setInstallButton('installed');
       updateInstallStatus('App installata sul dispositivo.');
     });
@@ -4423,7 +4428,7 @@
             return true;
           }
           // Check localStorage for install flag
-          if (localStorage.getItem('pwa-installed') === 'true') {
+          if (localStorage.getItem(PWA_FLAG_KEY) === 'true') {
             return true;
           }
         }
