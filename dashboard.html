@@ -37,9 +37,9 @@
       --dash-text: var(--ink, #ffffff);
       --dash-text-soft: var(--ink-soft, #f0f0f0);
       --dash-text-muted: var(--muted, #888888);
-      --dash-accent: var(--brand-600, #2563eb);
-      --dash-accent-hover: var(--brand-500, #3b82f6);
-      --dash-accent-bg: rgba(37, 99, 235, 0.1);
+      --dash-accent: var(--muted, #b8b8b8);
+      --dash-accent-hover: var(--ink-soft, #f0f0f0);
+      --dash-accent-bg: rgba(255, 255, 255, 0.03);
       --spacing-xs: var(--sp-1, 0.25rem);
       --spacing-sm: var(--sp-2, 0.5rem);
       --spacing-md: var(--sp-3, 0.75rem);
@@ -101,9 +101,9 @@
       bottom: -1px;
       left: 0;
       width: 60px;
-      height: 2px;
-      background: var(--dash-accent);
-      opacity: 0.6;
+      height: 1px;
+      background: var(--dash-text-muted);
+      opacity: 0.4;
     }
     
     .dashboard-title {
@@ -570,10 +570,10 @@
       justify-content: center;
       gap: var(--spacing-sm);
       padding: calc(var(--spacing-md) + 2px) calc(var(--spacing-lg) + 4px);
-      background: color-mix(in srgb, var(--dash-surface) 92%, rgba(37, 99, 235, 0.08));
-      border: 1px solid color-mix(in srgb, var(--dash-border) 85%, rgba(37, 99, 235, 0.15));
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
       border-radius: var(--radius-md);
-      color: color-mix(in srgb, var(--dash-text) 90%, var(--dash-accent) 10%);
+      color: var(--dash-text-soft);
       font-size: var(--fs-13, 13px);
       font-weight: 500;
       letter-spacing: 0.01em;
@@ -585,8 +585,8 @@
     }
     
     .btn:hover {
-      background: color-mix(in srgb, var(--dash-surface-elev) 94%, rgba(37, 99, 235, 0.12));
-      border-color: color-mix(in srgb, var(--dash-border) 70%, rgba(37, 99, 235, 0.25));
+      background: var(--dash-surface-elev);
+      border-color: color-mix(in srgb, var(--dash-border) 80%, var(--dash-text-muted) 20%);
       color: var(--dash-text);
       transform: translateY(-1px);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -598,7 +598,7 @@
     }
     
     .btn:focus-visible {
-      outline: 2px solid var(--dash-accent);
+      outline: 2px solid var(--dash-text-muted);
       outline-offset: 2px;
       border-radius: var(--radius-md);
     }
@@ -610,27 +610,27 @@
     }
     
     .btn-primary {
-      background: color-mix(in srgb, rgba(37, 99, 235, 0.18), var(--dash-surface) 82%);
-      color: color-mix(in srgb, var(--dash-text) 85%, var(--dash-accent) 15%);
-      border-color: color-mix(in srgb, var(--dash-accent) 60%, var(--dash-border) 40%);
+      background: var(--dash-surface-elev);
+      color: var(--dash-text);
+      border-color: color-mix(in srgb, var(--dash-border) 60%, var(--dash-text-muted) 40%);
       box-shadow: 
-        0 2px 8px rgba(37, 99, 235, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.2),
         0 1px 2px rgba(0, 0, 0, 0.1);
     }
     
     .btn-primary:hover {
-      background: color-mix(in srgb, rgba(37, 99, 235, 0.24), var(--dash-surface-elev) 76%);
-      border-color: color-mix(in srgb, var(--dash-accent) 75%, var(--dash-border) 25%);
+      background: color-mix(in srgb, var(--dash-surface-elev) 90%, var(--dash-text-muted) 10%);
+      border-color: color-mix(in srgb, var(--dash-border) 40%, var(--dash-text-muted) 60%);
       color: var(--dash-text);
       box-shadow: 
-        0 4px 12px rgba(37, 99, 235, 0.2),
+        0 4px 12px rgba(0, 0, 0, 0.25),
         0 2px 4px rgba(0, 0, 0, 0.15);
     }
     
     .btn-primary:active {
-      background: color-mix(in srgb, rgba(37, 99, 235, 0.20), var(--dash-surface) 80%);
+      background: var(--dash-surface-elev);
       box-shadow: 
-        0 1px 4px rgba(37, 99, 235, 0.12),
+        0 1px 4px rgba(0, 0, 0, 0.15),
         0 1px 2px rgba(0, 0, 0, 0.1);
     }
     
@@ -691,7 +691,7 @@
     
     .skip-link:focus {
       top: 0;
-      outline: 3px solid var(--dash-accent);
+      outline: 3px solid var(--dash-text-muted);
       outline-offset: 2px;
     }
     
@@ -1038,7 +1038,7 @@
     
     .filter-btn {
       padding: var(--spacing-sm) var(--spacing-md);
-      background: color-mix(in srgb, var(--dash-surface) 95%, rgba(37, 99, 235, 0.05));
+      background: var(--dash-surface);
       border: 1px solid var(--dash-border);
       border-radius: var(--radius-md);
       color: var(--dash-text-soft);
@@ -1050,15 +1050,15 @@
     }
     
     .filter-btn:hover {
-      background: color-mix(in srgb, var(--dash-surface-elev) 96%, rgba(37, 99, 235, 0.08));
-      border-color: color-mix(in srgb, var(--dash-border) 80%, rgba(37, 99, 235, 0.2));
+      background: var(--dash-surface-elev);
+      border-color: color-mix(in srgb, var(--dash-border) 70%, var(--dash-text-muted) 30%);
       color: var(--dash-text);
     }
     
     .filter-btn.active {
-      background: color-mix(in srgb, rgba(37, 99, 235, 0.15), var(--dash-surface) 85%);
-      color: color-mix(in srgb, var(--dash-text) 90%, var(--dash-accent) 10%);
-      border-color: color-mix(in srgb, var(--dash-accent) 50%, var(--dash-border) 50%);
+      background: var(--dash-surface-elev);
+      color: var(--dash-text);
+      border-color: color-mix(in srgb, var(--dash-text-muted) 40%, var(--dash-border) 60%);
       font-weight: 600;
     }
     
