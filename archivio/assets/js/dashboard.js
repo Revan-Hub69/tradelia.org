@@ -31,6 +31,8 @@ const STATE = {
   isInstalled: false // Se l'app è già installata
 };
 
+const PWA_INSTALLED_FLAG = 'tradelia-pwa-installed';
+
 // ===== INIT =====
 async function init() {
   Logger.debug('Dashboard', 'Inizializzazione dashboard');
@@ -299,36 +301,39 @@ async function ensureSubscriber(authUser) {
 
 // ===== SETUP PWA INSTALL =====
 function setupPWAInstall() {
-  // Verifica se l'app è già installata
-  if (window.matchMedia('(display-mode: standalone)').matches || 
-      window.navigator.standalone === true) {
+  const isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true;
+  const installedFlag = localStorage.getItem(PWA_INSTALLED_FLAG) === 'true';
+
+  if (isStandalone) {
     STATE.isInstalled = true;
     hideInstallButton();
+    showOpenAppButton();
     return;
   }
+
+  if (installedFlag) {
+    showOpenAppButton();
+  } else {
+    hideOpenAppButton();
+  }
   
-  // Intercetta evento beforeinstallprompt
   window.addEventListener('beforeinstallprompt', (e) => {
-    // Previeni il prompt automatico del browser
     e.preventDefault();
-    
-    // Salva l'evento per usarlo quando l'utente clicca "Installa"
     STATE.deferredPrompt = e;
-    
-    // Mostra pulsante "Installa App"
     showInstallButton();
-    
+    hideOpenAppButton();
     Logger.debug('Dashboard', 'PWA installabile - pulsante mostrato');
   });
   
-  // Verifica se l'app è stata installata
   window.addEventListener('appinstalled', () => {
     STATE.isInstalled = true;
     STATE.deferredPrompt = null;
     hideInstallButton();
+    showOpenAppButton();
+    localStorage.setItem(PWA_INSTALLED_FLAG, 'true');
     Logger.debug('Dashboard', 'PWA installata');
-    
-    // Mostra messaggio di conferma
     showInstallSuccess();
   });
 }
@@ -345,6 +350,7 @@ function showInstallButton() {
     pwaSettingsBtn.classList.remove('btn-disabled');
     pwaSettingsBtn.title = '';
   }
+  hideOpenAppButton();
 }
 
 // ===== HIDE INSTALL BUTTON =====
@@ -363,12 +369,25 @@ function hideInstallButton() {
   }
 }
 
+function showOpenAppButton() {
+  const openBtn = document.getElementById('open-app-btn');
+  if (openBtn) {
+    openBtn.hidden = false;
+  }
+}
+
+function hideOpenAppButton() {
+  const openBtn = document.getElementById('open-app-btn');
+  if (openBtn) {
+    openBtn.hidden = true;
+  }
+}
+
 // ===== HANDLE INSTALL APP =====
 async function handleInstallApp() {
   if (!STATE.deferredPrompt) {
     Logger.warn('Dashboard', 'Installazione non disponibile - deferredPrompt non presente');
-    // Mostra messaggio all'utente
-    alert('Installazione non disponibile al momento. Assicurati di:\n1. Usare un browser supportato (Chrome, Edge, Safari)\n2. Essere su HTTPS\n3. Avere il manifest e service worker configurati');
+    openInstalledApp(true);
     return;
   }
   
@@ -395,6 +414,23 @@ async function handleInstallApp() {
   } catch (err) {
     Logger.error('Dashboard', 'Errore installazione PWA', err);
     alert('Errore durante l\'installazione: ' + err.message);
+  }
+}
+
+function openInstalledApp(showHint = false) {
+  try {
+    const targetUrl = `${window.location.origin}/dashboard.html?pwa=1`;
+    window.open(targetUrl, '_blank', 'noopener');
+    if (showHint) {
+      setTimeout(() => {
+        alert('Se l’app non si è aperta automaticamente, aprila dalla schermata home/Start come “Tradelia AI”.');
+      }, 800);
+    }
+  } catch (err) {
+    Logger.warn('Dashboard', 'Impossibile aprire app installata', err);
+    if (showHint) {
+      alert('Apri l’app “Tradelia AI” dalla schermata home del dispositivo.');
+    }
   }
 }
 
@@ -472,6 +508,11 @@ function setupEventListeners() {
   const logoutBtn = document.getElementById('logout-btn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', handleLogout);
+  }
+  
+  const openAppBtn = document.getElementById('open-app-btn');
+  if (openAppBtn) {
+    openAppBtn.addEventListener('click', () => openInstalledApp(true));
   }
   
   // Install App button
