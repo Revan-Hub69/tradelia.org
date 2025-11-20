@@ -48,7 +48,7 @@ async function sendTokenEmail({ email, nome, token, profilo, uso, organizzazione
       <h2 style="margin: 0;">Token gratuito Tradelia</h2>
       <p style="margin: 8px 0 0 0;">Ciao ${nome || 'utente'}, ecco il token personale richiesto.</p>
     </div>
-    <p>Il token è valido 30 giorni e funziona sia sulla dashboard web sia sulla PWA installata. Puoi rigenerarlo in qualsiasi momento compilando di nuovo il modulo.</p>
+    <p>Il token è valido 30 giorni e funziona sulla dashboard PWA installata. Puoi rigenerarlo in qualsiasi momento compilando di nuovo il modulo.</p>
     <div class="token-box">
       <div style="margin-bottom: 10px; color: #94a3b8;">Token personale</div>
       <div class="token">${token}</div>
