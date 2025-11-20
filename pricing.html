@@ -135,12 +135,32 @@
       padding-bottom: 8rem; 
     }
     
+    @media (max-width: 768px) {
+      body {
+        padding-top: 56px;
+      }
+      main {
+        padding-top: 1rem;
+        padding-bottom: 4rem;
+      }
+      .container {
+        padding-inline: 0.75rem;
+      }
+    }
+    
     /* ===== PRICING LAYOUT ===== */
     .pricing-layout {
       display: flex;
       flex-direction: column;
       gap: var(--sp-12);
       margin: var(--sp-18) 0 var(--sp-26);
+    }
+    
+    @media (max-width: 768px) {
+      .pricing-layout {
+        gap: var(--sp-8);
+        margin: var(--sp-10) 0 var(--sp-14);
+      }
     }
 
     .pricing-row {
@@ -169,6 +189,13 @@
       opacity: 1;
       transform: translateY(0);
       min-height: auto;
+    }
+
+    @media (max-width: 768px) {
+      .plan-card {
+        padding: var(--sp-4) var(--sp-3);
+        gap: var(--sp-3);
+      }
     }
 
     @media (min-width: 768px) {
@@ -1169,288 +1196,6 @@
   
   <!-- PWA Dashboard Handler -->
   <script src="/assets/js/pwa-dashboard-handler.js"></script>
-</body>
-</html>
-            <path d="M18 6L6 18" />
-            <path d="M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-      <div id="success-token" class="success-message">
-        Richiesta inviata! Riceverai il codice di accesso personale e le istruzioni via email entro poche ore.
-      </div>
-      <div id="error-token" class="error-message">
-        Invio non riuscito. Riprova tra qualche minuto o scrivi a support@tradelia.org
-      </div>
-      <form id="form-token" onsubmit="submitToken(event)">
-        <div class="form-group">
-          <label class="form-label" for="token-nome">
-            Nome completo <span class="required">*</span>
-          </label>
-          <input type="text" id="token-nome" name="nome" class="form-input" required placeholder="Il tuo nome e cognome" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="token-email">
-            Email <span class="required">*</span>
-          </label>
-          <input type="email" id="token-email" name="email" class="form-input" required placeholder="tua@email.com" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="token-profilo">
-            Profilo di utilizzo <span class="required">*</span>
-          </label>
-          <select id="token-profilo" name="profilo" class="form-select" required>
-            <option value="">Seleziona...</option>
-            <option value="privato">Privato / persona fisica</option>
-            <option value="desk">Desk / uffici studi</option>
-            <option value="media">Media, formazione o ricerca</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="token-organizzazione">
-            Organizzazione (opzionale)
-          </label>
-          <input type="text" id="token-organizzazione" name="organizzazione" class="form-input" placeholder="Nome ufficio studi, testata o progetto" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="token-uso">
-            Come userai il codice di accesso? <span class="required">*</span>
-          </label>
-          <textarea id="token-uso" name="uso" class="form-textarea" rows="4" maxlength="500" required placeholder="Esempio: consulto la dashboard giornalmente e voglio installare la PWA con notifiche per i nuovi report."></textarea>
-          <p class="form-hint">Queste informazioni ci aiutano a tracciare l’utilizzo educativo e a prevenire abusi.</p>
-        </div>
-        <div class="form-group">
-          <label class="form-checkbox-label" style="display: flex; align-items: flex-start; gap: var(--sp-2); cursor: pointer;">
-            <input type="checkbox" id="token-consenso" name="consenso" required style="margin-top: 0.25rem; flex-shrink: 0;" />
-            <span style="font-size: var(--fs-12); color: var(--ink-soft); line-height: 1.5;">
-              Autorizzo il trattamento dei miei dati per l'emissione e la gestione del codice di accesso gratuito, il monitoraggio delle installazioni PWA e l'invio di comunicazioni operative. I dati saranno trattati secondo la 
-              <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style="color: var(--brand-500); text-decoration: underline;">Privacy Policy</a>.
-              <span class="required">*</span>
-            </span>
-          </label>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block" id="submit-token">
-          Invia richiesta codice di accesso
-        </button>
-        <p class="form-note">
-          Il codice di accesso è valido 30 giorni, funziona sulla dashboard PWA e puoi rigenerarlo in qualsiasi momento. Tracciamo ogni richiesta per accountability MiFID/GDPR.
-        </p>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Analisi su Richiesta -->
-  <div id="modal-analisi" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-analisi-title">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="modal-analisi-title" class="modal-title">Richiedi un'analisi</h2>
-        <button type="button" class="modal-close" onclick="closeModal('modal-analisi')" aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M18 6L6 18" />
-            <path d="M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-      <p class="modal-price">€49 per analisi · fatturazione tramite Xolo Go (paghi entro 14 giorni)</p>
-      <div id="success-analisi" class="success-message">
-        Richiesta inviata con successo! Ti contatteremo via email entro 24 ore.
-      </div>
-      <div id="error-analisi" class="error-message">
-        Si è verificato un errore. Riprova o contattaci direttamente a info@tradelia.org
-      </div>
-      <form id="form-analisi" onsubmit="submitAnalisi(event)">
-        <div class="form-group">
-          <label class="form-label" for="analisi-nome">
-            Nome completo <span class="required">*</span>
-          </label>
-          <input type="text" id="analisi-nome" name="nome" class="form-input" required placeholder="Il tuo nome completo" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="analisi-email">
-            Email <span class="required">*</span>
-          </label>
-          <input type="email" id="analisi-email" name="email" class="form-input" required placeholder="tua@email.com" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="analisi-tipologia">
-            Tipologia cliente <span class="required">*</span>
-          </label>
-          <select id="analisi-tipologia" name="tipologia" class="form-select" required>
-            <option value="">Seleziona...</option>
-            <option value="privato">Privato / persona fisica</option>
-            <option value="azienda">Azienda / professionista</option>
-          </select>
-          <p class="form-hint">Le analisi su richiesta sono disponibili sia per utenti privati sia per professionisti. Seleziona il profilo per ricevere la fattura corretta.</p>
-        </div>
-        <div class="form-group" data-client-field="analisi-privato">
-          <label class="form-label" for="analisi-cf">
-            Codice fiscale <span class="required">*</span>
-          </label>
-          <input type="text" id="analisi-cf" name="codice-fiscale" class="form-input" data-required="true" placeholder="RSSMRA80A01H501U" maxlength="16" pattern="[A-Za-z0-9]{16}" style="text-transform: uppercase;" />
-          <p class="form-hint">Richiesto solo per privati. Useremo questi dati per emettere fattura elettronica.</p>
-        </div>
-        <div class="form-group" data-client-field="analisi-azienda">
-          <label class="form-label" for="analisi-ragione-sociale">
-            Ragione sociale / Nome azienda <span class="required">*</span>
-          </label>
-          <input type="text" id="analisi-ragione-sociale" name="ragione-sociale" class="form-input" data-required="true" placeholder="Ragione sociale completa per fatturazione" />
-        </div>
-        <div class="form-group" data-client-field="analisi-azienda">
-          <label class="form-label" for="analisi-piva">
-            Partita IVA <span class="required">*</span>
-          </label>
-          <input type="text" id="analisi-piva" name="piva" class="form-input" data-required="true" placeholder="IT12345678901" pattern="IT[0-9]{11}" maxlength="13" style="text-transform: uppercase;" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="analisi-indirizzo">
-            Indirizzo completo <span class="required">*</span>
-          </label>
-          <textarea id="analisi-indirizzo" name="indirizzo" class="form-textarea" required placeholder="Via, numero civico, CAP, città, provincia" rows="3"></textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="analisi-tipo">
-            Tipo di analisi <span class="required">*</span>
-          </label>
-          <select id="analisi-tipo" name="tipo" class="form-select" required>
-            <option value="">Seleziona...</option>
-            <option value="Single Stock Analysis">Single Stock Analysis</option>
-            <option value="ETF Monitor">ETF Monitor</option>
-            <option value="Fund Dossier">Fund Dossier</option>
-            <option value="Certificate Dossier">Certificate Dossier</option>
-            <option value="Portfolio Risk Analysis">Portfolio Risk Analysis</option>
-            <option value="Stress Test Custom">Stress Test Custom</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="analisi-dettagli">
-            Dettagli richiesta <span class="required">*</span>
-          </label>
-          <textarea id="analisi-dettagli" name="dettagli" class="form-textarea" required placeholder="Indica il ticker, l'asset o i dettagli specifici dell'analisi richiesta..."></textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-checkbox-label" style="display: flex; align-items: flex-start; gap: var(--sp-2); cursor: pointer;">
-            <input type="checkbox" id="analisi-consenso" name="consenso" required style="margin-top: 0.25rem; flex-shrink: 0;" />
-            <span style="font-size: var(--fs-12); color: var(--ink-soft); line-height: 1.5;">
-              Acconsento al trattamento dei miei dati personali (nome, email, tipologia cliente, codice fiscale e/o ragione sociale + P.IVA, indirizzo, dettagli richiesta) per la gestione della richiesta di analisi, fatturazione tramite Xolo Go e comunicazioni relative al servizio. I dati saranno trattati in conformità al 
-              <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style="color: var(--brand-500); text-decoration: underline;">GDPR</a> e alla nostra 
-              <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style="color: var(--brand-500); text-decoration: underline;">Privacy Policy</a>. 
-              <span class="required">*</span>
-            </span>
-          </label>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block" id="submit-analisi">
-          Invia richiesta
-        </button>
-        <p class="form-note">
-          Riceverai la fattura via email entro 24 ore. Il pagamento può essere effettuato entro 14 giorni dalla fatturazione. 
-          La consegna è garantita entro 24 ore dall'ordine. <a href="/terms.html#section4" style="color: var(--brand-500); text-decoration: underline;">Termini completi</a>.
-        </p>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Piano Desk -->
-  <div id="modal-desk" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-desk-title">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="modal-desk-title" class="modal-title">Richiedi accesso Desk</h2>
-        <button type="button" class="modal-close" onclick="closeModal('modal-desk')" aria-label="Chiudi">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M18 6L6 18" />
-            <path d="M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-      <p class="modal-price">€149 una tantum · accesso 30 giorni con download white-label illimitati</p>
-      <div id="success-desk" class="success-message">
-        Richiesta inviata con successo! Ti contatteremo via email per completare l'attivazione.
-      </div>
-      <div id="error-desk" class="error-message">
-        Si è verificato un errore. Riprova o contattaci direttamente a info@tradelia.org
-      </div>
-      <form id="form-desk" onsubmit="submitDesk(event)">
-        <div class="form-group">
-          <label class="form-label" for="desk-nome">
-            Nome completo / Azienda <span class="required">*</span>
-          </label>
-          <input type="text" id="desk-nome" name="nome" class="form-input" required placeholder="Nome o ragione sociale" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="desk-email">
-            Email <span class="required">*</span>
-          </label>
-          <input type="email" id="desk-email" name="email" class="form-input" required placeholder="email@azienda.com" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="desk-ragione-sociale">
-            Ragione sociale <span class="required">*</span>
-          </label>
-          <input type="text" id="desk-ragione-sociale" name="ragione-sociale" class="form-input" required placeholder="Ragione sociale completa per fatturazione" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="desk-piva">
-            Partita IVA <span class="required">*</span>
-          </label>
-          <input type="text" id="desk-piva" name="piva" class="form-input" required placeholder="IT12345678901" pattern="IT[0-9]{11}" title="Formato: IT seguito da 11 cifre (es. IT12345678901)" maxlength="13" style="text-transform: uppercase;" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="desk-indirizzo">
-            Indirizzo completo <span class="required">*</span>
-          </label>
-          <textarea id="desk-indirizzo" name="indirizzo" class="form-textarea" required placeholder="Via, numero civico, CAP, città, provincia" rows="3"></textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="desk-telefono">
-            Telefono <span class="required">*</span>
-          </label>
-          <input type="tel" id="desk-telefono" name="telefono" class="form-input" required placeholder="+39 123 456 7890" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="desk-note">
-            Note aggiuntive
-          </label>
-          <textarea id="desk-note" name="note" class="form-textarea" placeholder="Esigenze specifiche, logo da utilizzare, contatti per white-label..."></textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-checkbox-label" style="display: flex; align-items: flex-start; gap: var(--sp-2); cursor: pointer;">
-            <input type="checkbox" id="desk-consenso" name="consenso" required style="margin-top: 0.25rem; flex-shrink: 0;" />
-            <span style="font-size: var(--fs-12); color: var(--ink-soft); line-height: 1.5;">
-              Acconsento al trattamento dei miei dati personali (nome/azienda, email, ragione sociale, P.IVA, indirizzo, telefono) per la gestione della richiesta, fatturazione B2B tramite Xolo Go, comunicazioni relative al servizio e adempimenti fiscali. I dati saranno trattati in conformità al 
-              <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style="color: var(--brand-500); text-decoration: underline;">GDPR</a> e alla nostra 
-              <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style="color: var(--brand-500); text-decoration: underline;">Privacy Policy</a>. 
-              <span class="required">*</span>
-            </span>
-          </label>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block" id="submit-desk">
-          Invia richiesta
-        </button>
-        <p class="form-note">
-          Ti invieremo la fattura tramite Xolo Go. L'accesso sarà attivo per 30 giorni dalla data di pagamento. 
-          <a href="/terms.html#section4" style="color: var(--brand-500); text-decoration: underline;">Termini completi</a>.
-        </p>
-      </form>
-    </div>
-  </div>
-
-  <!-- Footer Slot -->
-  <div id="site-footer-slot"></div>
-
-  <!-- Mount Footer -->
-  <script type="module">
-    document.documentElement.setAttribute('data-theme', 'dark');
-    import { siteFooter } from '/report/assets/js/components/site-footer.js';
-    const footerSlot = document.getElementById('site-footer-slot');
-    if (footerSlot) {
-      siteFooter.mount(footerSlot);
-    }
-  </script>
-
-  <!-- Global Header -->
-  <script type="module" src="/assets/js/global-header.js"></script>
-  
-  <!-- Auto-Update System -->
-  <script src="/assets/js/auto-update.js"></script>
   
   <!-- Card reveal on scroll -->
   <script>
@@ -1474,36 +1219,6 @@
       cards.forEach(card => observer.observe(card));
     })();
   </script>
-
-
-  <!-- Auto-open modal from hash -->
-  <script>
-    // Tutte le richieste si gestiscono nella dashboard PWA
-    (function() {
-      function checkHash() {
-        const hash = window.location.hash;
-        if (hash === '#richiedi-analisi' || hash === '#richiedi-desk' || hash === '#richiedi-token') {
-          // Apri dashboard PWA tramite handler
-          if (window.openDashboardPWA) {
-            window.openDashboardPWA();
-          }
-        }
-      }
-      
-      // Check on load
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', checkHash);
-      } else {
-        checkHash();
-      }
-      
-      // Check on hash change
-      window.addEventListener('hashchange', checkHash);
-    })();
-  </script>
-
-  <!-- Tutte le richieste si gestiscono nella dashboard PWA -->
-  <script src="/assets/js/pwa-dashboard-handler.js"></script>
   
   <!-- ===== MIFID BANNER (overlay legale unificato) ===== -->
   <link rel="stylesheet" href="/assets/css/mifid-banner.css" />

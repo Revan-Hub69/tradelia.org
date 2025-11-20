@@ -11,12 +11,11 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
   <meta name="theme-color" content="#0b1220">
 
-  <!-- Utility (legacy support) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
   <!-- Design System -->
   <link rel="stylesheet" href="/report/assets/css/tokens.css" />
   <link rel="stylesheet" href="/assets/css/global-header.css" />
+  <link rel="stylesheet" href="/assets/css/site-coherence-2025.css" />
+  <link rel="stylesheet" href="/report/assets/css/design-system-academico-2025.css" />
 
   <style>
     html, body { height: 100%; }
@@ -24,9 +23,18 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      padding-top: 64px;
       background: var(--surface-page);
       color: var(--ink);
       font-family: var(--ff-sans);
+    }
+    
+    #site-header-slot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
     }
 
     main { flex: 1; }
@@ -704,16 +712,84 @@
     }
 
     @media (max-width: 768px) {
-      .site-container {
-        padding-top: calc(4.5rem + var(--sp-4));
+      body {
+        padding-top: 56px;
       }
-
-      .broker-card__meta {
+      
+      .site-container {
+        padding: calc(3.5rem + var(--sp-3)) var(--sp-3) var(--sp-8);
+        gap: var(--sp-6);
+      }
+      
+      .intro-header h1 {
+        font-size: clamp(var(--fs-22), 5vw, var(--fs-28));
+      }
+      
+      .intro-lead {
+        font-size: var(--fs-14);
+      }
+      
+      .intro-grid,
+      .legend-columns,
+      .methodology-grid {
         grid-template-columns: 1fr;
       }
-
+      
+      .brokers-grid {
+        grid-template-columns: 1fr;
+        gap: var(--sp-4);
+      }
+      
+      .broker-card {
+        padding: var(--sp-4);
+      }
+      
+      .broker-card__meta {
+        grid-template-columns: 1fr;
+        padding: var(--sp-3);
+      }
+      
+      .broker-card__actions {
+        flex-direction: column;
+      }
+      
+      .broker-card__actions .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
       .modal-panel {
         max-height: 92vh;
+        margin: var(--sp-2);
+      }
+      
+      .modal-header,
+      .modal-body,
+      .modal-footer {
+        padding: var(--sp-4);
+      }
+      
+      .compliance-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .cfd-banner {
+        padding: var(--sp-4);
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .site-container {
+        padding: calc(3rem + var(--sp-2)) var(--sp-2) var(--sp-6);
+      }
+      
+      .broker-card__head {
+        flex-direction: column;
+        gap: var(--sp-3);
+      }
+      
+      .broker-card__title-row {
+        flex-wrap: wrap;
       }
     }
   </style>
@@ -1028,6 +1104,10 @@
 
   <!-- Global Header -->
   <script type="module" src="/assets/js/global-header.js"></script>
+  
+  <!-- MiFID Banner -->
+  <link rel="stylesheet" href="/assets/css/mifid-banner.css" />
+  <script type="module" src="/assets/js/mifid-banner.js"></script>
 
   <!-- ===== LEGAL OVERLAY SCRIPT ===== -->
   <script>
