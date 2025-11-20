@@ -80,7 +80,7 @@ sk_test_xxxxx (per test) o sk_live_xxxxx (per produzione)
 (Nota: Vedi ARCHIVIO-STRIPE-SETUP.md per dettagli)
 
 ### 14. PUSH_API_KEY
-your-secret-api-key-here
+9afe0536c2a03ee54930ce16e7569068e74ec4c929bc4a0123489084d2f1c6ad
 (Nota: Scegli una chiave segreta a tua scelta)
 
 ---
