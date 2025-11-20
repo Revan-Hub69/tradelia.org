@@ -165,16 +165,16 @@
       top: 0;
       bottom: 0;
       width: 3px;
-      background: var(--dash-accent);
+      background: var(--dash-text-muted);
       opacity: 0;
       transition: var(--transition);
     }
     
     .module-card:hover {
       background: var(--dash-surface-elev);
-      border-left-color: var(--dash-accent);
+      border-left-color: var(--dash-text-muted);
       transform: translateX(2px);
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
     
     .module-card:hover::before {
@@ -182,7 +182,7 @@
     }
     
     .module-card:focus {
-      outline: 2px solid var(--dash-accent);
+      outline: 2px solid var(--dash-text-muted);
       outline-offset: 2px;
     }
     
@@ -199,7 +199,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--dash-accent-bg);
+      background: var(--dash-surface);
       border-radius: var(--radius-md);
       color: var(--dash-text);
     }
@@ -281,11 +281,11 @@
     }
     
     .panel-back:hover {
-      color: var(--dash-accent);
+      color: var(--dash-text);
     }
     
     .panel-back:focus {
-      outline: 2px solid var(--dash-accent);
+      outline: 2px solid var(--dash-text-muted);
       outline-offset: 2px;
       border-radius: var(--radius-sm);
     }
@@ -339,7 +339,7 @@
     
     .search-input:focus {
       outline: none;
-      border-color: var(--dash-accent);
+      border-color: var(--dash-text-muted);
       background: var(--dash-surface-elev);
       box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
     }
@@ -382,16 +382,16 @@
       top: 0;
       bottom: 0;
       width: 3px;
-      background: var(--dash-accent);
+      background: var(--dash-text-muted);
       opacity: 0;
       transition: var(--transition);
     }
     
     .report-card:hover {
       background: var(--dash-surface-elev);
-      border-left-color: var(--dash-accent);
+      border-left-color: var(--dash-text-muted);
       transform: translateX(2px);
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
     
     .report-card:hover::before {
@@ -399,7 +399,7 @@
     }
     
     .report-card:focus {
-      outline: 2px solid var(--dash-accent);
+      outline: 2px solid var(--dash-text-muted);
       outline-offset: 2px;
     }
     
@@ -469,7 +469,7 @@
       display: inline-flex;
       align-items: center;
       padding: 2px 8px;
-      background: var(--dash-accent-bg);
+      background: var(--dash-surface);
       border: 1px solid var(--dash-border);
       border-radius: var(--radius-sm);
       font-size: 11px;
@@ -680,8 +680,9 @@
       left: 0;
       z-index: 10000;
       padding: var(--spacing-md) var(--spacing-lg);
-      background: var(--dash-accent);
-      color: #ffffff;
+      background: var(--dash-surface-elev);
+      border: 1px solid var(--dash-border);
+      color: var(--dash-text);
       text-decoration: none;
       font-weight: 600;
       font-size: var(--fs-14, 14px);
@@ -940,8 +941,8 @@
       width: 24px;
       height: 24px;
       margin-bottom: var(--spacing-sm);
-      color: var(--dash-accent);
-      opacity: 0.8;
+      color: var(--dash-text-muted);
+      opacity: 0.7;
     }
     
     .quick-action-icon svg {
@@ -992,7 +993,7 @@
     .framework-badge {
       font-size: var(--fs-11, 11px);
       padding: 2px 8px;
-      background: var(--dash-accent-bg);
+      background: var(--dash-surface);
       border: 1px solid var(--dash-border);
       border-radius: var(--radius-sm);
       color: var(--dash-accent);
@@ -1015,13 +1016,13 @@
     
     .framework-link {
       font-size: var(--fs-13, 13px);
-      color: var(--dash-accent);
+      color: var(--dash-text-soft);
       text-decoration: none;
       transition: var(--transition);
     }
     
     .framework-link:hover {
-      color: var(--dash-accent-hover);
+      color: var(--dash-text);
       text-decoration: underline;
     }
     
