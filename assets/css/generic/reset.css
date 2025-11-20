@@ -1,0 +1,26 @@
+/* ITCSS: Generic Layer
+ * Reset CSS - Base styles for html, body, box-sizing
+ */
+
+:root, :host { --_1: initial; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+button { background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; }
+
+/* Base HTML styles */
+html {
+  color-scheme: dark;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--ff-sans);
+  font-size: var(--fs-15);
+  line-height: var(--lh-15);
+  color: var(--ink);
+  background: var(--surface-page);
+  min-height: 100vh;
+}
+

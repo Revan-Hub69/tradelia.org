@@ -1,0 +1,7 @@
+/* ITCSS: Settings Layer
+ * Design Tokens - Auto-generated from tokens.json
+ * DO NOT EDIT MANUALLY - Run: npm run generate-tokens
+ */
+
+@import '../../../design-tokens/tokens.css';
+
