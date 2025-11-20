@@ -267,11 +267,8 @@
       </button>
       <h1 id="access-title" class="access-title">Accesso alla dashboard Tradelia</h1>
       <p class="access-subtitle">
-        Inserisci il <strong>token personale</strong> ricevuto via email. Puoi richiederlo gratuitamente dal modulo
-        <a href="/pricing.html#richiedi-token" style="color: var(--brand-400); text-decoration: underline;">“Richiedi token gratuito”</a>,
-        oppure lo ricevi automaticamente dopo aver richiesto
-        <a href="/pricing.html#richiedi-analisi" style="color: var(--brand-400); text-decoration: underline;">Analisi su richiesta</a> o dopo l'attivazione del
-        <a href="/pricing.html#richiedi-desk" style="color: var(--brand-400); text-decoration: underline;">Piano Desk</a>. Il token è gratuito, dura 30 giorni, vale su web e PWA e può essere revocato in qualsiasi momento.
+        Inserisci il <strong>codice di accesso</strong> ricevuto via email. Puoi richiederlo gratuitamente dal modulo
+        Richiedilo direttamente nella dashboard PWA installabile. Il codice di accesso è gratuito, dura 30 giorni, funziona sulla dashboard PWA e può essere revocato in qualsiasi momento.
       </p>
       <div id="access-alert" class="access-alert" role="alert" aria-live="polite"></div>
       
@@ -292,12 +289,12 @@
               aria-describedby="access-help"
             />
             <div id="access-help" class="access-meta">
-              Non hai ancora il token? Clicca su “Richiedi token gratuito” per aprire il modulo dedicato, oppure usa i form “Analisi su richiesta” / “Piano Desk” se ti servono i servizi a pagamento.
+              Non hai ancora il codice di accesso? Installa la dashboard PWA e richiedilo direttamente dall'interno.
             </div>
           </div>
           <div class="access-actions access-cta">
             <button type="submit" class="btn btn-sm">Installa la dashboard</button>
-            <button type="button" class="btn btn-sm" id="access-pricing">Richiedi token gratuito</button>
+            <button type="button" class="btn btn-sm" id="access-pricing">Richiedi codice di accesso</button>
             <button type="button" class="btn btn-sm" id="access-recovery-open">Ho perso il codice</button>
           </div>
         </div>
@@ -371,7 +368,7 @@
       </form>
       
       <p class="access-meta">
-        Per motivi di sicurezza non memorizziamo credenziali personali: il token identifica solo il tuo profilo d’accesso,
+        Per motivi di sicurezza non memorizziamo credenziali personali: il codice di accesso identifica solo il tuo profilo d'accesso,
         lega il dispositivo alle notifiche push e certifica la provenienza dei download Desk, nel rispetto delle policy MiFID-safe di Tradelia.
       </p>
       
@@ -423,7 +420,7 @@
         if (reason === 'missing_token' || reason === 'invalid_token') {
           showAlert('Per accedere alla dashboard è necessario un codice valido. Inseriscilo qui sotto.');
         } else if (reason === 'logout') {
-          showAlert('Sei uscito dalla dashboard. Inserisci un nuovo token o richiedine uno gratuito.', 'success');
+          showAlert('Sei uscito dalla dashboard. Inserisci un nuovo codice di accesso o richiedine uno gratuito.', 'success');
         }
         if (reason) {
           params.delete('reason');
@@ -444,7 +441,7 @@
       // Pricing button
       if (pricingBtn) {
         pricingBtn.addEventListener('click', function() {
-          window.location.href = '/pricing.html#richiedi-token';
+          window.location.href = '/dashboard.html';
         });
       }
 

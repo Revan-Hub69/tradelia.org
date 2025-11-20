@@ -798,14 +798,11 @@
               <li>Accesso storico e archivio</li>
             </ul>
             <div class="plan-actions">
-              <button type="button" class="btn btn-primary btn-sm" onclick="openTokenModal()" aria-label="Richiedi token gratuito per dashboard e PWA">
-                Richiedi token gratuito
-              </button>
-              <a href="/dashboard.html" class="btn btn-outline btn-sm" aria-label="Installa la dashboard PWA Tradelia">
-                Installa la dashboard
+              <a href="/dashboard.html" class="btn btn-primary btn-sm" aria-label="Installa la dashboard PWA Tradelia">
+                Installa la dashboard PWA
               </a>
               <p class="plan-meta" style="text-align: left;">
-                Token personale valido 30 giorni (web + PWA). Ricevi istruzioni via email e puoi rigenerarlo quando vuoi.
+                Tutte le richieste (codice di accesso, analisi, piano Desk) si gestiscono direttamente nella dashboard PWA installabile.
               </p>
             </div>
           </article>
@@ -1153,11 +1150,10 @@
       </div>
   </main>
 
-  <!-- Modal Token gratuito -->
-  <div id="modal-token" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-token-title">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="modal-token-title" class="modal-title">Richiedi token gratuito</h2>
+  <!-- Footer Slot -->
+  <div id="site-footer-slot"></div>
+
+  <!-- Mount Footer -->
         <button type="button" class="modal-close" onclick="closeModal('modal-token')" aria-label="Chiudi">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M18 6L6 18" />
@@ -1166,7 +1162,7 @@
         </button>
       </div>
       <div id="success-token" class="success-message">
-        Richiesta inviata! Riceverai il token personale e le istruzioni via email entro poche ore.
+        Richiesta inviata! Riceverai il codice di accesso personale e le istruzioni via email entro poche ore.
       </div>
       <div id="error-token" class="error-message">
         Invio non riuscito. Riprova tra qualche minuto o scrivi a support@tradelia.org
@@ -1203,7 +1199,7 @@
         </div>
         <div class="form-group">
           <label class="form-label" for="token-uso">
-            Come userai il token? <span class="required">*</span>
+            Come userai il codice di accesso? <span class="required">*</span>
           </label>
           <textarea id="token-uso" name="uso" class="form-textarea" rows="4" maxlength="500" required placeholder="Esempio: consulto la dashboard giornalmente e voglio installare la PWA con notifiche per i nuovi report."></textarea>
           <p class="form-hint">Queste informazioni ci aiutano a tracciare l’utilizzo educativo e a prevenire abusi.</p>
@@ -1212,17 +1208,17 @@
           <label class="form-checkbox-label" style="display: flex; align-items: flex-start; gap: var(--sp-2); cursor: pointer;">
             <input type="checkbox" id="token-consenso" name="consenso" required style="margin-top: 0.25rem; flex-shrink: 0;" />
             <span style="font-size: var(--fs-12); color: var(--ink-soft); line-height: 1.5;">
-              Autorizzo il trattamento dei miei dati per l’emissione e la gestione del token gratuito, il monitoraggio delle installazioni PWA e l’invio di comunicazioni operative. I dati saranno trattati secondo la 
+              Autorizzo il trattamento dei miei dati per l'emissione e la gestione del codice di accesso gratuito, il monitoraggio delle installazioni PWA e l'invio di comunicazioni operative. I dati saranno trattati secondo la 
               <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style="color: var(--brand-500); text-decoration: underline;">Privacy Policy</a>.
               <span class="required">*</span>
             </span>
           </label>
         </div>
         <button type="submit" class="btn btn-primary btn-block" id="submit-token">
-          Invia richiesta token
+          Invia richiesta codice di accesso
         </button>
         <p class="form-note">
-          Il token è valido 30 giorni, vale sia sul sito sia sulla PWA e puoi rigenerarlo in qualsiasi momento. Tracciamo ogni richiesta per accountability MiFID/GDPR.
+          Il codice di accesso è valido 30 giorni, funziona sulla dashboard PWA e puoi rigenerarlo in qualsiasi momento. Tracciamo ogni richiesta per accountability MiFID/GDPR.
         </p>
       </form>
     </div>
@@ -1509,20 +1505,13 @@
 
   <!-- Auto-open modal from hash -->
   <script>
+    // Tutte le richieste si gestiscono nella dashboard PWA
     (function() {
       function checkHash() {
         const hash = window.location.hash;
-        if (hash === '#richiedi-analisi') {
-          setTimeout(() => openAnalisiModal(), 300);
-          // Remove hash after opening
-          history.replaceState(null, null, window.location.pathname);
-        } else if (hash === '#richiedi-desk') {
-          setTimeout(() => openDeskModal(), 300);
-          history.replaceState(null, null, window.location.pathname);
-        } else if (hash === '#richiedi-token') {
-          setTimeout(() => openTokenModal(), 300);
-          // Remove hash after opening
-          history.replaceState(null, null, window.location.pathname);
+        if (hash === '#richiedi-analisi' || hash === '#richiedi-desk' || hash === '#richiedi-token') {
+          // Redirect alla dashboard PWA
+          window.location.href = '/dashboard.html';
         }
       }
       
@@ -1538,86 +1527,8 @@
     })();
   </script>
 
-  <!-- Modal Functions -->
-  <script>
-    function openTokenModal() {
-      const modal = document.getElementById('modal-token');
-      if (modal) {
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        document.getElementById('token-nome')?.focus();
-      }
-    }
-
-    function redirectToDashboard(reason) {
-      const url = new URL('/accesso.html', window.location.origin);
-      if (reason) url.searchParams.set('reason', reason);
-      window.location.href = url.toString();
-    }
-
-    function openAnalisiModal() {
-      alert('Le analisi personalizzate si richiedono solo dalla dashboard con token attivo.');
-      redirectToDashboard('request_analysis');
-    }
-
-    function openDeskModal() {
-      alert('I piani Desk si attivano esclusivamente dalla dashboard autenticata.');
-      redirectToDashboard('request_desk');
-    }
-
-    function closeModal(modalId) {
-      const modal = document.getElementById(modalId);
-      if (modal) {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-        // Reset form
-        const form = modal.querySelector('form');
-        if (form) {
-          form.reset();
-          if (modalId === 'modal-analisi') {
-            document.getElementById('analisi-tipologia')?.dispatchEvent(new Event('change'));
-          }
-        }
-        // Hide messages
-        const success = modal.querySelector('.success-message');
-        const error = modal.querySelector('.error-message');
-        if (success) success.classList.remove('active');
-        if (error) error.classList.remove('active');
-      }
-    }
-
-    // Close modal on overlay click
-    document.addEventListener('click', (e) => {
-      if (e.target.classList.contains('modal-overlay')) {
-        closeModal(e.target.id);
-      }
-    });
-
-    // Close modal on Escape key
-      document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        const activeModal = document.querySelector('.modal-overlay.active');
-        if (activeModal) {
-          closeModal(activeModal.id);
-        }
-      }
-    });
-
-    function submitAnalisi(e) {
-      e.preventDefault();
-      alert('Questa richiesta si invia solo dalla dashboard con token attivo.');
-      redirectToDashboard('request_analysis');
-    }
-
-    function submitDesk(e) {
-      e.preventDefault();
-      alert('Questa richiesta si gestisce solo dalla dashboard con token attivo.');
-      redirectToDashboard('request_desk');
-    }
-
-    async function submitToken(e) {
-      e.preventDefault();
-      const form = e.target;
+  <!-- Tutte le richieste si gestiscono nella dashboard PWA -->
+  <script src="/assets/js/pwa-dashboard-handler.js"></script>
       const submitBtn = document.getElementById('submit-token');
       const successMsg = document.getElementById('success-token');
       const errorMsg = document.getElementById('error-token');
@@ -1671,10 +1582,6 @@
         errorMsg.classList.add('active');
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Invia richiesta token';
-      }
-    }
-  </script>
   <script src="/assets/js/pwa-dashboard-handler.js"></script>
 </body>
 </html>
