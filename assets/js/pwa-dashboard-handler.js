@@ -42,20 +42,16 @@
    * Apre la dashboard PWA installata
    */
   function openPWA() {
+    // Se PWA è installata e siamo in standalone mode, apri la dashboard
+    // La dashboard verificherà se è standalone e funzionerà correttamente
     if (isPWAInstalled()) {
-      // Se PWA è installata, naviga alla dashboard
-      // Il browser aprirà automaticamente la PWA se configurato così
-      // Altrimenti la dashboard verificherà se è standalone e reindirizzerà se necessario
       window.location.href = DASHBOARD_URL;
       return;
     }
     
-    // Se PWA non installata, mostra prompt installazione
-    if (deferredPrompt) {
-      installPWA();
-    } else {
-      showInstallInstructions();
-    }
+    // Se PWA non installata, apri comunque la dashboard come pagina web
+    // L'utente può installare la PWA dalla dashboard stessa
+    window.location.href = DASHBOARD_URL;
   }
   
   /**
@@ -72,11 +68,13 @@
   
   function installPWA() {
     if (!deferredPrompt) {
-      // Se non c'è deferredPrompt, mostra istruzioni
-      showInstallInstructions();
+      // Se non c'è deferredPrompt, apri la dashboard normalmente
+      // L'utente può installare dalla dashboard stessa
+      window.location.href = DASHBOARD_URL;
       return;
     }
     
+    // Mostra il prompt nativo di installazione del browser
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then((choiceResult) => {
       if (choiceResult.outcome === 'accepted') {
@@ -91,10 +89,17 @@
         updateCTATexts();
         // Dopo installazione, apri la PWA
         setTimeout(() => {
-          openPWA();
+          window.location.href = DASHBOARD_URL;
         }, 500);
+      } else {
+        // Utente ha rifiutato, apri comunque la dashboard
+        window.location.href = DASHBOARD_URL;
       }
       deferredPrompt = null;
+    }).catch((error) => {
+      console.error('Errore durante installazione PWA:', error);
+      // In caso di errore, apri comunque la dashboard
+      window.location.href = DASHBOARD_URL;
     });
   }
   
@@ -110,26 +115,12 @@
   });
   
   /**
-   * Mostra istruzioni per installazione manuale
+   * Mostra istruzioni per installazione manuale (solo se necessario)
+   * Questa funzione NON viene più chiamata automaticamente
    */
   function showInstallInstructions() {
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-    const isAndroid = /Android/i.test(navigator.userAgent);
-    
-    let message = '';
-    
-    if (isIOS) {
-      message = 'Per installare la dashboard:\n\n1. Tocca il pulsante Condividi\n2. Seleziona "Aggiungi alla schermata Home"\n3. Apri dalla schermata Home';
-    } else if (isAndroid) {
-      message = 'Per installare la dashboard:\n\n1. Apri il menu del browser (tre puntini)\n2. Seleziona "Aggiungi alla schermata Home" o "Installa app"\n3. Apri dalla schermata Home';
-    } else {
-      message = 'Per installare la dashboard:\n\n1. Cerca l\'icona di installazione nella barra degli indirizzi\n2. Oppure apri il menu del browser e cerca "Installa app" o "Aggiungi alla schermata Home"';
-    }
-    
-    alert(message);
-    
-    // NON aprire la dashboard come pagina web - solo PWA installata
+    // Non mostrare più istruzioni - apri sempre la dashboard
+    window.location.href = DASHBOARD_URL;
   }
   
   /**
@@ -156,20 +147,20 @@
     e.preventDefault();
     e.stopPropagation();
     
-    // Se PWA già installata (standalone o flag), apri
+    // Se PWA già installata (standalone o flag), apri direttamente
     if (hasPWAInstalled()) {
       openPWA();
       return;
     }
     
-    // Se installabile, mostra prompt
+    // Se c'è il prompt di installazione disponibile, mostra il prompt nativo
     if (deferredPrompt) {
       installPWA();
       return;
     }
     
-    // Altrimenti, mostra istruzioni installazione
-    showInstallInstructions();
+    // Altrimenti apri sempre la dashboard come pagina web normale
+    openPWA();
   }
   
   /**
