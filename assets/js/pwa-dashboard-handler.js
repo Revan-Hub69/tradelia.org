@@ -141,6 +141,13 @@
   }
   
   /**
+   * Verifica se è iOS
+   */
+  function isIOS() {
+    return /iPhone|iPad|iPod/.test(navigator.userAgent);
+  }
+  
+  /**
    * Handler principale: installa o apre PWA
    */
   function handleDashboardClick(e) {
@@ -153,7 +160,13 @@
       return;
     }
     
-    // Se c'è il prompt di installazione disponibile, mostra il prompt nativo
+    // iOS: mostra istruzioni specifiche (non supporta beforeinstallprompt)
+    if (isIOS()) {
+      showIOSInstallInstructions();
+      return;
+    }
+    
+    // Android/Desktop: se c'è il prompt di installazione disponibile, mostra il prompt nativo
     if (deferredPrompt) {
       installPWA();
       return;
@@ -161,6 +174,22 @@
     
     // Altrimenti apri sempre la dashboard come pagina web normale
     openPWA();
+  }
+  
+  /**
+   * Mostra istruzioni installazione iOS (Safari non supporta beforeinstallprompt)
+   */
+  function showIOSInstallInstructions() {
+    const message = 'Per installare la dashboard su iOS:\n\n' +
+      '1. Tocca il pulsante Condividi (quadrato con freccia) in basso\n' +
+      '2. Scorri e seleziona "Aggiungi alla schermata Home"\n' +
+      '3. Tocca "Aggiungi" in alto a destra\n' +
+      '4. Apri "Tradelia AI" dalla schermata Home\n\n' +
+      'Vuoi aprire la dashboard ora?';
+    
+    if (confirm(message)) {
+      openPWA();
+    }
   }
   
   /**

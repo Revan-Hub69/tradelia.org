@@ -833,9 +833,9 @@
   </div>
   
   <script type="module">
-    // ===== PWA CHECK - Dashboard SOLO PWA standalone =====
+    // ===== PWA CHECK - Dashboard accessibile sempre =====
     function isPWAStandalone() {
-      // Solo standalone mode (PWA installata e aperta come app)
+      // Verifica se siamo in standalone mode (PWA installata e aperta come app)
       return (
         window.matchMedia('(display-mode: standalone)').matches ||
         window.navigator.standalone === true ||
@@ -843,19 +843,8 @@
       );
     }
     
-    // Dashboard accessibile SOLO se PWA standalone
-    if (!isPWAStandalone()) {
-      // Se PWA è installata ma aperta nel browser, mostra messaggio
-      const pwaInstalled = localStorage.getItem('tradelia-pwa-installed') === 'true';
-      if (pwaInstalled) {
-        alert('Apri la dashboard dalla PWA installata.\n\nCerca "Tradelia AI" nella schermata Home o nel menu app.');
-      } else {
-        alert('La dashboard è disponibile solo come PWA installabile.\n\nInstalla la dashboard PWA per accedere.');
-      }
-      window.location.href = '/index.html';
-      // Blocca esecuzione script
-      throw new Error('Dashboard accessibile solo come PWA standalone');
-    }
+    // Dashboard accessibile sempre (browser normale o PWA standalone)
+    // Non bloccare l'accesso - la dashboard funziona in entrambi i modi
     
     // ===== TOKEN VALIDATION - Richiesto per funzionalità dashboard =====
     const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
@@ -1195,7 +1184,7 @@
     }
     
     // ===== INIT =====
-    // Dashboard accessibile solo come PWA standalone (già verificato all'inizio)
+    // Dashboard accessibile sempre (browser normale o PWA standalone)
     // Token usato solo per funzionalità interne, non per validare accesso
     
     // If on reports panel, load reports
