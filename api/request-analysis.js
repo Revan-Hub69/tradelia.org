@@ -3,6 +3,7 @@
 // Usa Supabase invece di invio email diretto (più affidabile)
 // Invia notifica email all'admin dopo il salvataggio
 
+import fetch from './_lib/fetch.js';
 import { getServiceSupabase } from './_lib/supabase.js';
 import { handleRouteError } from './_lib/http.js';
 

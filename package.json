@@ -12,7 +12,8 @@
     "version:major": "node scripts/update-version.js major"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.0"
+    "@supabase/supabase-js": "^2.39.0",
+    "node-fetch": "^3.3.2"
   }
 }
 

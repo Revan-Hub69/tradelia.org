@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import fetch from './_lib/fetch.js';
 import { getServiceSupabase } from './_lib/supabase.js';
 import { HttpError, handleRouteError } from './_lib/http.js';
 
