@@ -266,9 +266,18 @@
     }
     
     /* ===== REPORTS PANEL ===== */
+    .reports-toolbar {
+      display: flex;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-xl);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
     .search-container {
       position: relative;
-      margin-bottom: var(--spacing-lg);
+      flex: 1;
+      min-width: 280px;
     }
     
     .search-input {
@@ -281,12 +290,14 @@
       color: var(--dash-text);
       font-size: 14px;
       transition: var(--transition);
+      font-family: inherit;
     }
     
     .search-input:focus {
       outline: none;
       border-color: var(--dash-accent);
       background: var(--dash-surface-elev);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
     }
     
     .search-icon {
@@ -297,6 +308,201 @@
       color: var(--dash-text-muted);
       width: 20px;
       height: 20px;
+      pointer-events: none;
+    }
+    
+    .reports-stats {
+      font-size: 13px;
+      color: var(--dash-text-muted);
+      white-space: nowrap;
+    }
+    
+    /* ===== REPORT CARD ===== */
+    .report-card {
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-md);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .report-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--dash-accent);
+      opacity: 0;
+      transition: var(--transition);
+    }
+    
+    .report-card:hover {
+      background: var(--dash-surface-elev);
+      border-color: var(--dash-accent);
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .report-card:hover::before {
+      opacity: 1;
+    }
+    
+    .report-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .report-card-main {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .report-ticker {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0 0 var(--spacing-xs);
+      color: var(--dash-text);
+      line-height: 1.3;
+    }
+    
+    .report-company {
+      font-size: 15px;
+      color: var(--dash-text-soft);
+      margin: 0 0 var(--spacing-sm);
+      line-height: 1.4;
+    }
+    
+    .report-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-sm);
+      font-size: 12px;
+      color: var(--dash-text-muted);
+    }
+    
+    .report-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+    
+    .report-meta-item svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+    
+    .report-card-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+      flex-shrink: 0;
+    }
+    
+    .report-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      background: var(--dash-accent-bg);
+      border: 1px solid var(--dash-border);
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--dash-text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-left: var(--spacing-xs);
+    }
+    
+    .reports-list {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .reports-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-2xl);
+      color: var(--dash-text-muted);
+      gap: var(--spacing-md);
+    }
+    
+    .reports-loading svg {
+      width: 32px;
+      height: 32px;
+      animation: spin 1s linear infinite;
+      opacity: 0.5;
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    .reports-empty {
+      padding: var(--spacing-2xl);
+      text-align: center;
+      color: var(--dash-text-muted);
+    }
+    
+    .reports-empty-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto var(--spacing-lg);
+      opacity: 0.3;
+    }
+    
+    .reports-empty-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: var(--spacing-xs);
+      color: var(--dash-text-soft);
+    }
+    
+    .reports-empty-text {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    
+    /* ===== ON-DEMAND PANEL ===== */
+    .on-demand-card {
+      padding: var(--spacing-xl);
+      background: var(--dash-surface);
+      border: 1px solid var(--dash-border);
+      border-radius: var(--radius-lg);
+      max-width: 600px;
+    }
+    
+    .on-demand-title {
+      margin: 0 0 var(--spacing-md);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--dash-text);
+    }
+    
+    .on-demand-description {
+      margin: 0 0 var(--spacing-md);
+      font-size: 14px;
+      color: var(--dash-text-soft);
+      line-height: 1.6;
+    }
+    
+    .on-demand-note {
+      margin: var(--spacing-md) 0 0;
+      font-size: 12px;
+      color: var(--dash-text-muted);
+      line-height: 1.5;
     }
     
     /* ===== BUTTONS ===== */
@@ -345,6 +551,25 @@
       padding: var(--spacing-2xl);
       text-align: center;
       color: var(--dash-text-muted);
+    }
+    
+    .empty-state-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto var(--spacing-lg);
+      opacity: 0.3;
+    }
+    
+    .empty-state-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: var(--spacing-xs);
+      color: var(--dash-text-soft);
+    }
+    
+    .empty-state-text {
+      font-size: 14px;
+      line-height: 1.6;
     }
   </style>
 </head>
@@ -484,15 +709,24 @@
         <p class="panel-description">Framework Accademico AI Tradelia — analisi multi-fattore su dati Tier-1. Include i deck proprietari SRD v5.0 (Swing Research Deck), MTB v3.1 (Macro Tactical Briefing) e le release sperimentali in arrivo.</p>
       </div>
       <div class="panel-content">
-        <div class="search-container">
-          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="7"/>
-            <path d="M16 16l5 5"/>
-          </svg>
-          <input type="text" class="search-input" id="reports-search" placeholder="Cerca per ticker, azienda, ID, exchange o settore..." autocomplete="off"/>
+        <div class="reports-toolbar">
+          <div class="search-container">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7"/>
+              <path d="M16 16l5 5"/>
+            </svg>
+            <input type="text" class="search-input" id="reports-search" placeholder="Cerca per ticker, azienda, ID, exchange o settore..." autocomplete="off"/>
+          </div>
+          <div class="reports-stats" id="reports-stats"></div>
         </div>
-        <div id="reports-container">
-          <div class="empty-state">Caricamento report...</div>
+        <div class="reports-list" id="reports-container">
+          <div class="reports-loading">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            </svg>
+            <span>Caricamento report...</span>
+          </div>
         </div>
       </div>
     </div>
@@ -509,7 +743,14 @@
         <p class="panel-description">Materiali educativi e tutorial per approfondire i framework AI Tradelia.</p>
       </div>
       <div class="panel-content">
-        <div class="empty-state">Sezione in sviluppo. I percorsi formativi saranno disponibili a breve.</div>
+        <div class="reports-empty">
+          <svg class="reports-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+          <div class="reports-empty-title">Sezione in sviluppo</div>
+          <div class="reports-empty-text">I percorsi formativi saranno disponibili a breve.</div>
+        </div>
       </div>
     </div>
     
@@ -525,7 +766,14 @@
         <p class="panel-description">Visualizza e gestisci il tuo pass di accesso, token e permessi.</p>
       </div>
       <div class="panel-content">
-        <div class="empty-state">Sezione in sviluppo. La gestione accesso sarà disponibile a breve.</div>
+        <div class="reports-empty">
+          <svg class="reports-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <div class="reports-empty-title">Sezione in sviluppo</div>
+          <div class="reports-empty-text">La gestione accesso sarà disponibile a breve.</div>
+        </div>
       </div>
     </div>
     
@@ -541,12 +789,20 @@
         <p class="panel-description">Richiedi analisi personalizzate e gestisci le tue richieste.</p>
       </div>
       <div class="panel-content">
-        <div style="padding: var(--spacing-xl); background: var(--dash-surface); border: 1px solid var(--dash-border); border-radius: var(--radius-lg);">
-          <h3 style="margin-bottom: var(--spacing-md); font-size: 18px;">Richiedi analisi</h3>
-          <p style="margin-bottom: var(--spacing-md); font-size: 14px; color: var(--dash-text-soft);">Invia brief riservati. Nome ed email vengono recuperati automaticamente dal tuo token.</p>
-          <p style="margin-bottom: var(--spacing-lg); font-size: 13px; color: var(--dash-text-muted);">Gli account Guest possono attivare una fatturazione una tantum per inviare richieste on-demand, mentre il Desk mantiene l'accesso completo a report e analisi Desk.</p>
-          <button class="btn btn-primary" type="button" id="btn-open-analysis-request" disabled>Richiedi analisi</button>
-          <p style="margin-top: var(--spacing-md); font-size: 12px; color: var(--dash-text-muted);">Le richieste vengono salvate in Supabase e notificate al Desk solo se il token è attivo (Guest o Desk).</p>
+        <div class="on-demand-card">
+          <h3 class="on-demand-title">Richiedi analisi</h3>
+          <p class="on-demand-description">Invia brief riservati. Nome ed email vengono recuperati automaticamente dal tuo codice di accesso.</p>
+          <p class="on-demand-description" style="font-size: 13px; color: var(--dash-text-muted);">Gli account Guest possono attivare una fatturazione una tantum per inviare richieste on-demand, mentre il Desk mantiene l'accesso completo a report e analisi Desk.</p>
+          <button class="btn btn-primary" type="button" id="btn-open-analysis-request" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="12" y1="18" x2="12" y2="12"/>
+              <line x1="9" y1="15" x2="15" y2="15"/>
+            </svg>
+            Richiedi analisi
+          </button>
+          <p class="on-demand-note">Le richieste vengono salvate in Supabase e notificate al Desk solo se il codice di accesso è attivo (Guest o Desk).</p>
         </div>
       </div>
     </div>
@@ -563,7 +819,16 @@
         <p class="panel-description">Proponi e vota analisi della community. Accesso diretto per Guest e Desk.</p>
       </div>
       <div class="panel-content">
-        <div class="empty-state">Sezione in sviluppo. Le community proposals saranno disponibili a breve.</div>
+        <div class="reports-empty">
+          <svg class="reports-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <div class="reports-empty-title">Sezione in sviluppo</div>
+          <div class="reports-empty-text">Le community proposals saranno disponibili a breve.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -720,7 +985,15 @@
       if (!container) return;
       
       try {
-        container.innerHTML = '<div class="empty-state">Caricamento report...</div>';
+        container.innerHTML = `
+          <div class="reports-loading">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            </svg>
+            <span>Caricamento report...</span>
+          </div>
+        `;
         
         let reportDirs = [];
         try {
@@ -780,32 +1053,105 @@
         renderReports();
       } catch (err) {
         console.error('Errore caricamento report:', err);
-        container.innerHTML = '<div class="empty-state">Errore caricamento report. Riprova più tardi.</div>';
+        container.innerHTML = `
+          <div class="reports-empty">
+            <svg class="reports-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <div class="reports-empty-title">Errore caricamento report</div>
+            <div class="reports-empty-text">Si è verificato un errore durante il caricamento. Riprova più tardi.</div>
+          </div>
+        `;
       }
     }
     
     function renderReports() {
       const container = document.getElementById('reports-container');
+      const statsEl = document.getElementById('reports-stats');
       if (!container) return;
       
+      // Update stats
+      if (statsEl) {
+        const total = STATE.reports.length;
+        const filtered = STATE.filteredReports.length;
+        if (filtered === total) {
+          statsEl.textContent = `${total} report disponibili`;
+        } else {
+          statsEl.textContent = `${filtered} di ${total} report`;
+        }
+      }
+      
       if (STATE.filteredReports.length === 0) {
-        container.innerHTML = '<div class="empty-state">Nessun report disponibile.</div>';
+        container.innerHTML = `
+          <div class="reports-empty">
+            <svg class="reports-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            <div class="reports-empty-title">Nessun report trovato</div>
+            <div class="reports-empty-text">Prova a modificare i criteri di ricerca</div>
+          </div>
+        `;
         return;
       }
       
       const html = STATE.filteredReports.map(report => {
         const date = new Date(report.timestamp);
-        const formattedDate = isNaN(date.getTime()) ? 'N/A' : date.toLocaleDateString('it-IT', { year: 'numeric', month: 'short', day: 'numeric' });
+        const formattedDate = isNaN(date.getTime()) 
+          ? 'N/A' 
+          : date.toLocaleDateString('it-IT', { 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            });
+        
+        // Extract report type from ID if possible
+        const reportType = report.id.includes('SRD') ? 'SRD' : 
+                          report.id.includes('MTB') ? 'MTB' : 
+                          'Report';
         
         return `
-          <div style="padding: var(--spacing-lg); background: var(--dash-surface); border: 1px solid var(--dash-border); border-radius: var(--radius-lg); margin-bottom: var(--spacing-md);">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: var(--spacing-md);">
-              <div style="flex: 1;">
-                <h3 style="margin: 0 0 var(--spacing-xs); font-size: 18px; font-weight: 600;">${report.ticker}</h3>
-                ${report.company ? `<p style="margin: 0 0 var(--spacing-xs); font-size: 14px; color: var(--dash-text-soft);">${report.company}</p>` : ''}
-                <p style="margin: 0; font-size: 12px; color: var(--dash-text-muted);">${formattedDate}</p>
+          <div class="report-card">
+            <div class="report-card-header">
+              <div class="report-card-main">
+                <h3 class="report-ticker">
+                  ${report.ticker}
+                  <span class="report-badge">${reportType}</span>
+                </h3>
+                ${report.company ? `<div class="report-company">${report.company}</div>` : ''}
+                <div class="report-meta">
+                  <div class="report-meta-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span>${formattedDate}</span>
+                  </div>
+                  <div class="report-meta-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                      <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                    <span>ID: ${report.id}</span>
+                  </div>
+                </div>
               </div>
-              <a href="${report.reportUrl}" target="_blank" class="btn btn-primary">Visualizza</a>
+              <div class="report-card-actions">
+                <a href="${report.reportUrl}" target="_blank" class="btn btn-primary">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                  </svg>
+                  Visualizza
+                </a>
+              </div>
             </div>
           </div>
         `;
