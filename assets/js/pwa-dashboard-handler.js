@@ -133,14 +133,31 @@
   }
   
   /**
+   * Verifica se PWA è installata (anche se non in standalone mode)
+   */
+  function hasPWAInstalled() {
+    // Se siamo in standalone mode, PWA è installata e aperta
+    if (isPWAInstalled()) {
+      return true;
+    }
+    
+    // Verifica flag localStorage (PWA installata ma aperta nel browser)
+    try {
+      return localStorage.getItem('tradelia-pwa-installed') === 'true';
+    } catch (e) {
+      return false;
+    }
+  }
+  
+  /**
    * Handler principale: installa o apre PWA
    */
   function handleDashboardClick(e) {
     e.preventDefault();
     e.stopPropagation();
     
-    // Se PWA già installata, apri
-    if (isPWAInstalled()) {
+    // Se PWA già installata (standalone o flag), apri
+    if (hasPWAInstalled()) {
       openPWA();
       return;
     }
@@ -151,7 +168,7 @@
       return;
     }
     
-    // Altrimenti, mostra istruzioni e apri
+    // Altrimenti, mostra istruzioni installazione
     showInstallInstructions();
   }
   
@@ -159,7 +176,7 @@
    * Aggiorna testi CTA in base allo stato PWA (Best Practice)
    */
   function updateCTATexts() {
-    const installed = isPWAInstalled();
+    const installed = hasPWAInstalled();
     const installable = !!deferredPrompt;
     
     // Testi secondo best practice PWA
@@ -331,6 +348,6 @@
     handleDashboardClick({ preventDefault: () => {}, stopPropagation: () => {} });
   };
   window.updateDashboardCTAs = updateCTATexts;
-  window.isDashboardPWAInstalled = isPWAInstalled;
+  window.isDashboardPWAInstalled = hasPWAInstalled;
 })();
 
