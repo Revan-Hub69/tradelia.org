@@ -1,5 +1,6 @@
 import { getServiceSupabase } from "./_lib/supabase.js";
 import { HttpError } from "./_lib/http.js";
+import { getAdminContextFromToken } from "./_lib/adminAuth.js";
 
 /**
  * Salva o aggiorna una push subscription per l'utente autenticato
@@ -19,14 +20,11 @@ export default async function handler(req) {
     const token = authHeader.replace("Bearer ", "");
     const supabase = getServiceSupabase();
 
-    // Verifica token e ottieni user_id
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser(token);
+    // Verifica token dashboard e ottieni user_id
+    const context = await getAdminContextFromToken(token, { enforceAdmin: false });
 
-    if (authError || !user) {
-      throw new HttpError(401, "Unauthorized", "Invalid token");
+    if (!context.userId) {
+      throw new HttpError(401, "Unauthorized", "User ID non disponibile dal token");
     }
 
     // Parse body
@@ -41,7 +39,7 @@ export default async function handler(req) {
     const { data: existing } = await supabase
       .from("push_subscriptions")
       .select("id")
-      .eq("user_id", user.id)
+      .eq("user_id", context.userId)
       .eq("endpoint", subscription.endpoint)
       .single();
 
@@ -75,7 +73,7 @@ export default async function handler(req) {
       const { data: newSubscription, error: insertError } = await supabase
         .from("push_subscriptions")
         .insert({
-          user_id: user.id,
+          user_id: context.userId,
           subscription,
         })
         .select()
