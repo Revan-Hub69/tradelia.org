@@ -108,11 +108,12 @@ async function loadTechnicalInfo(container) {
       }
     }
 
-    // Build info - data da version.json timestamp o data corrente
+    // Build info - data da API endpoint timestamp o data corrente
     const buildEl = container.querySelector("#footer-build");
     if (buildEl) {
       try {
-        const response = await fetch("/version.json");
+        // Prova prima l'endpoint API
+        const response = await fetch("/api/version.js");
         if (response.ok) {
           const data = await response.json();
           if (data.timestamp) {
@@ -122,10 +123,11 @@ async function loadTechnicalInfo(container) {
             buildEl.textContent = new Date().toISOString().split("T")[0];
           }
         } else {
+          // Fallback a data corrente
           buildEl.textContent = new Date().toISOString().split("T")[0];
         }
-      } catch (fetchError) {
-        console.warn("[Footer] Errore caricamento build date:", fetchError);
+      } catch {
+        // Errore di rete, usa data corrente (non loggare per evitare spam)
         buildEl.textContent = new Date().toISOString().split("T")[0];
       }
     }
