@@ -452,7 +452,8 @@ async function handleNotifications(req, res, action) {
 
 /**
  * Invia notifica push a uno o più utenti
- * Body: { user_ids?: string[], user_id?: string, title: string, body: string, url?: string, tag?: string }
+ * Body: { user_ids?: string[], user_id?: string, title: string, body: string, url?: string, tag?: string, ttl?: number }
+ * BEST PRACTICE: Validazione input, sanitizzazione URL, rate limiting, timeout
  */
 async function sendNotification(req, res, supabase, webpush) {
   try {
@@ -464,11 +465,43 @@ async function sendNotification(req, res, supabase, webpush) {
     }
 
     const body = await req.json();
-    const { user_ids, user_id, title, body: messageBody, url, tag } = body;
+    const { user_ids, user_id, title, body: messageBody, url, tag, ttl } = body;
 
+    // BEST PRACTICE: Validazione input
     if (!title || !messageBody) {
       return res.status(400).json({ ok: false, error: "title e body sono obbligatori" });
     }
+
+    // BEST PRACTICE: Sanitizzazione e validazione
+    if (typeof title !== "string" || title.length > 100) {
+      return res
+        .status(400)
+        .json({ ok: false, error: "title deve essere stringa max 100 caratteri" });
+    }
+
+    if (typeof messageBody !== "string" || messageBody.length > 500) {
+      return res
+        .status(400)
+        .json({ ok: false, error: "body deve essere stringa max 500 caratteri" });
+    }
+
+    // BEST PRACTICE: Sanitizzazione URL (previene XSS)
+    let sanitizedUrl = "/dashboard.html";
+    if (url) {
+      try {
+        const urlObj = new URL(url, "https://tradelia.org");
+        // Solo URL interni (stesso dominio)
+        if (urlObj.origin === "https://tradelia.org" || url.startsWith("/")) {
+          sanitizedUrl = urlObj.pathname + urlObj.search;
+        }
+      } catch {
+        // URL non valido, usa default
+        sanitizedUrl = "/dashboard.html";
+      }
+    }
+
+    // BEST PRACTICE: Rate limiting - max 1000 subscription per richiesta
+    const MAX_SUBSCRIPTIONS = 1000;
 
     // Determina gli user_id target
     let targetUserIds = [];
@@ -499,30 +532,54 @@ async function sendNotification(req, res, supabase, webpush) {
       });
     }
 
-    // Prepara payload notifica
+    // BEST PRACTICE: Rate limiting
+    if (subscriptions.length > MAX_SUBSCRIPTIONS) {
+      return res.status(400).json({
+        ok: false,
+        error: `Troppe subscription (${subscriptions.length}). Massimo ${MAX_SUBSCRIPTIONS} per richiesta`,
+      });
+    }
+
+    // BEST PRACTICE: Prepara payload notifica con TTL
     const payload = JSON.stringify({
-      title,
-      body: messageBody,
-      url: url || "/dashboard.html",
-      tag: tag || "tradelia-notification",
+      title: title.trim(),
+      body: messageBody.trim(),
+      url: sanitizedUrl,
+      tag: (tag || "tradelia-notification").substring(0, 50), // Max 50 caratteri per tag
     });
 
-    // Invia notifica a tutte le subscription
+    // BEST PRACTICE: Opzioni webpush con timeout e TTL
+    const webpushOptions = {
+      TTL: ttl && ttl > 0 && ttl <= 86400 ? ttl : 86400, // Default 24h, max 24h
+    };
+
+    // BEST PRACTICE: Invia notifica con timeout (max 10s per subscription)
+    const SEND_TIMEOUT = 10000; // 10 secondi
     const results = await Promise.allSettled(
       subscriptions.map(async (sub) => {
         try {
-          await webpush.sendNotification(sub.subscription, payload);
+          // BEST PRACTICE: Timeout per evitare hang
+          const sendPromise = webpush.sendNotification(sub.subscription, payload, webpushOptions);
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Timeout invio notifica")), SEND_TIMEOUT)
+          );
+
+          await Promise.race([sendPromise, timeoutPromise]);
           return { success: true, subscription_id: sub.id, user_id: sub.user_id };
         } catch (error) {
-          // Se subscription non valida, rimuovila
+          // BEST PRACTICE: Rimuovi subscription non valide (410 Gone, 404 Not Found)
           if (error.statusCode === 410 || error.statusCode === 404) {
-            await supabase.from("push_subscriptions").delete().eq("id", sub.id);
+            try {
+              await supabase.from("push_subscriptions").delete().eq("id", sub.id);
+            } catch (deleteError) {
+              console.error("[Admin API] Errore rimozione subscription:", deleteError);
+            }
           }
           return {
             success: false,
             subscription_id: sub.id,
             user_id: sub.user_id,
-            error: error.message,
+            error: error.message || "Unknown error",
           };
         }
       })
