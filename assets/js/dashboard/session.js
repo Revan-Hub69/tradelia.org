@@ -102,12 +102,16 @@ function showExpiryWarning(daysLeft) {
 
 /**
  * Avvia periodic check token
+ * BEST PRACTICE: Non reindirizza se non c'è token (utente guest)
+ * Reindirizza solo se token esiste ma è scaduto/revocato
  */
 export function startSessionCheck() {
   // Verifica immediatamente
   checkTokenValidity().then((result) => {
-    if (!result.valid && result.reason !== "error") {
-      // Token non valido, redirect a accesso
+    // BEST PRACTICE: Reindirizza solo se token esiste ma è invalido
+    // Se non c'è token (missing_token), l'utente è guest e può rimanere nella dashboard
+    if (!result.valid && result.reason !== "error" && result.reason !== "missing_token") {
+      // Token esiste ma è scaduto/revocato, redirect a accesso
       const reason = result.reason || "expired_token";
       window.location.href = `/accesso.html?reason=${reason}&redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
     }
@@ -120,7 +124,9 @@ export function startSessionCheck() {
 
   checkInterval = setInterval(async () => {
     const result = await checkTokenValidity();
-    if (!result.valid && result.reason !== "error") {
+    // BEST PRACTICE: Reindirizza solo se token esiste ma è invalido
+    // Se non c'è token (missing_token), l'utente è guest e può rimanere nella dashboard
+    if (!result.valid && result.reason !== "error" && result.reason !== "missing_token") {
       // Token scaduto o revocato, redirect
       const reason = result.reason || "expired_token";
       clearInterval(checkInterval);
