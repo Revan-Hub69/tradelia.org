@@ -199,18 +199,29 @@ export async function enablePushNotifications() {
     return false;
   }
 
+  console.warn("[Notifications] Inizio abilitazione notifiche...");
+  console.warn("[Notifications] Stato permesso attuale:", Notification.permission);
+  console.warn("[Notifications] Service Worker registrato:", !!serviceWorkerRegistration);
+
   // Assicura che service worker sia registrato
   if (!serviceWorkerRegistration) {
     console.warn("[Notifications] Service Worker non registrato, registrazione in corso...");
-    const registration = await registerServiceWorker();
-    if (!registration) {
-      console.error("[Notifications] Impossibile registrare Service Worker");
+    try {
+      const registration = await registerServiceWorker();
+      if (!registration) {
+        console.error("[Notifications] Impossibile registrare Service Worker");
+        return false;
+      }
+      console.warn("[Notifications] Service Worker registrato con successo");
+    } catch (error) {
+      console.error("[Notifications] Errore registrazione Service Worker:", error);
       return false;
     }
   }
 
   // Se permesso già concesso, verifica se già sottoscritto
   if (Notification.permission === "granted") {
+    console.warn("[Notifications] Permesso già concesso, verifica sottoscrizione...");
     const alreadySubscribed = await areNotificationsEnabled();
     if (alreadySubscribed) {
       console.warn("[Notifications] Già sottoscritto");
@@ -218,7 +229,9 @@ export async function enablePushNotifications() {
     }
     // Permesso concesso ma non sottoscritto → sottoscrivi
     try {
+      console.warn("[Notifications] Sottoscrizione in corso...");
       await subscribeToPush();
+      console.warn("[Notifications] Sottoscrizione completata con successo");
       return true;
     } catch (error) {
       console.error("[Notifications] Errore durante sottoscrizione:", error);
@@ -236,18 +249,25 @@ export async function enablePushNotifications() {
   // BEST PRACTICE: Permesso "default" → richiedi solo se chiamato esplicitamente dall'utente
   // (questa funzione viene chiamata solo quando l'utente clicca "Abilita Notifiche")
   try {
+    console.warn("[Notifications] Richiesta permesso all'utente...");
     const permission = await Notification.requestPermission();
+    console.warn("[Notifications] Risposta permesso:", permission);
+
     if (permission === "granted") {
-      console.warn("[Notifications] Permesso concesso");
+      console.warn("[Notifications] Permesso concesso, sottoscrizione in corso...");
       try {
         await subscribeToPush();
+        console.warn("[Notifications] Sottoscrizione completata con successo");
         return true;
       } catch (error) {
         console.error("[Notifications] Errore durante sottoscrizione:", error);
         return false;
       }
+    } else if (permission === "denied") {
+      console.warn("[Notifications] Permesso negato dall'utente");
+      return false;
     } else {
-      console.warn("[Notifications] Permesso negato");
+      console.warn("[Notifications] Permesso in stato default dopo richiesta");
       return false;
     }
   } catch (error) {
@@ -304,6 +324,13 @@ async function subscribeToPush() {
   }
 
   try {
+    // Verifica che pushManager sia disponibile
+    if (!serviceWorkerRegistration.pushManager) {
+      const error = new Error("Push Manager non disponibile nel Service Worker");
+      console.error("[Notifications]", error);
+      throw error;
+    }
+
     // Ottieni VAPID public key dal server
     const vapidPublicKey = await getVAPIDPublicKey();
 
@@ -313,21 +340,41 @@ async function subscribeToPush() {
       throw error;
     }
 
+    console.warn("[Notifications] Tentativo sottoscrizione con VAPID key...");
+
     const subscription = await serviceWorkerRegistration.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
     });
 
-    console.warn("[Notifications] Sottoscritto:", subscription);
+    console.warn("[Notifications] Sottoscritto con successo:", subscription);
 
     // Invia subscription al server
+    console.warn("[Notifications] Invio subscription al server...");
     await sendSubscriptionToServer(subscription);
+    console.warn("[Notifications] Subscription inviata al server con successo");
   } catch (error) {
     console.error("[Notifications] Errore sottoscrizione:", error);
+    console.error("[Notifications] Dettagli errore:", {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    });
+
     // Se errore è "Permission denied" o simile, rilancia con messaggio più chiaro
-    if (error.name === "NotAllowedError" || error.message?.includes("permission")) {
+    if (
+      error.name === "NotAllowedError" ||
+      error.message?.includes("permission") ||
+      error.message?.includes("denied")
+    ) {
       throw new Error("Permesso notifiche negato. Verifica le impostazioni del browser.");
     }
+
+    // Se errore è "NotSupportedError", il browser non supporta push
+    if (error.name === "NotSupportedError") {
+      throw new Error("Il browser non supporta le notifiche push.");
+    }
+
     throw error; // Rilancia per permettere gestione errore nel chiamante
   }
 }
