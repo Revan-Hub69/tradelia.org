@@ -3,16 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tradelia AI · Dashboard</title>
+    <title>Tradelia AI Ã‚Â· Dashboard</title>
 
     <meta
       name="description"
       content="Dashboard Tradelia AI - Accesso rapido a report finanziari e tutorial educativi"
     />
-    <meta name="theme-color" content="#0f0f0f" />
+    <meta name="theme-color" content="#050910" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="#0f0f0f" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="#050910" />
 
     <link rel="icon" href="/favicon.ico?v=1" />
     <link rel="icon" type="image/png" href="/favicon.png?v=1" />
@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="/assets/css/elements/links.css" />
     <link rel="stylesheet" href="/assets/css/objects/container.css" />
     <link rel="stylesheet" href="/assets/css/components/dashboard.css" />
+    <link rel="stylesheet" href="/assets/css/components/dashboard-theme-overrides.css" />
   </head>
   <body>
     <a href="#main-content" class="skip-link">Salta al contenuto principale</a>
@@ -68,7 +69,9 @@
                 </div>
                 <div class="module-info">
                   <h2 class="module-title">Panoramica</h2>
-                  <p class="module-description">Statistiche, attività recente e accesso rapido</p>
+                  <p class="module-description">
+                    Statistiche, attivitÃƒÂ  recente e accesso rapido
+                  </p>
                 </div>
                 <div class="module-arrow">
                   <svg
@@ -363,8 +366,8 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   >
-                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
                   </svg>
                 </div>
                 <div class="module-info">
@@ -405,8 +408,8 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   >
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                 </div>
                 <div class="module-info">
@@ -447,10 +450,10 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   >
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <line x1="12" y1="18" x2="12" y2="12"/>
-                    <line x1="9" y1="15" x2="15" y2="15"/>
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="12" y1="18" x2="12" y2="12" />
+                    <line x1="9" y1="15" x2="15" y2="15" />
                   </svg>
                 </div>
                 <div class="module-info">
@@ -491,10 +494,10 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   >
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                   </svg>
                 </div>
                 <div class="module-info">
@@ -539,7 +542,7 @@
               Torna ai moduli
             </a>
             <h2 class="panel-title">Panoramica</h2>
-            <p class="panel-description">Statistiche e attività recente</p>
+            <p class="panel-description">Statistiche e attivitÃƒÂ  recente</p>
           </div>
           <div class="panel-content" id="overview-container">
             <!-- Content loaded by overview.js -->
@@ -839,19 +842,19 @@
     <!-- JavaScript - FASE 2: Modulare e Separato (Best Practice) -->
     <script type="module">
       // Import moduli separati (Best Practice: separazione concerns)
-      import { initDashboard } from '/assets/js/dashboard/app.js';
-      import '/assets/js/dashboard/toast.js';
+      import { initDashboard } from "/assets/js/dashboard/app.js";
+      import "/assets/js/dashboard/toast.js";
 
       // FASE 4: Performance Monitoring
-      import '/assets/js/performance/web-vitals.js';
-      import { monitorBundleSizes } from '/assets/js/performance/bundle-monitor.js';
+      import "/assets/js/performance/web-vitals.js";
+      import { monitorBundleSizes } from "/assets/js/performance/bundle-monitor.js";
 
       // Initialize dashboard
       initDashboard();
 
       // Monitor bundle sizes (dopo load)
-      if (document.readyState === 'loading') {
-        window.addEventListener('load', () => {
+      if (document.readyState === "loading") {
+        window.addEventListener("load", () => {
           setTimeout(monitorBundleSizes, 1000);
         });
       } else {
@@ -859,8 +862,8 @@
       }
 
       // Service Worker Registration
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch(() => {
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js").catch(() => {
           // Silent fail
         });
       }

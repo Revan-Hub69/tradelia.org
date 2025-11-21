@@ -5,16 +5,18 @@
 
 /* ===== DASHBOARD VARIABLES ===== */
 :root {
-  --dash-bg: var(--surface-page, #070b12);
-  --dash-surface: var(--surface-card, #111826);
-  --dash-surface-elev: var(--surface-elev, #162133);
-  --dash-border: var(--br-soft, #1e2a3c);
-  --dash-text: var(--ink, #ffffff);
-  --dash-text-soft: var(--ink-soft, #f5f7ff);
-  --dash-text-muted: var(--muted, #9fb3d5);
+  --dash-bg: var(--surface-page, #050910);
+  --dash-bg-soft: #0a1423;
+  --dash-surface: var(--surface-card, #0f1725);
+  --dash-surface-elev: var(--surface-elev, #152238);
+  --dash-border: rgba(70, 101, 140, 0.45);
+  --dash-border-strong: rgba(120, 162, 220, 0.6);
+  --dash-text: #f5f7fb;
+  --dash-text-soft: #d5e1ff;
+  --dash-text-muted: #8fa2c7;
   --dash-accent: #7fb8ff;
   --dash-accent-hover: #b7d4ff;
-  --dash-accent-bg: rgba(112, 167, 255, 0.08);
+  --dash-accent-bg: rgba(112, 167, 255, 0.12);
   --dash-glow-blue: rgba(70, 136, 255, 0.35);
   --spacing-xs: var(--sp-1, 0.25rem);
   --spacing-sm: var(--sp-2, 0.5rem);
@@ -59,7 +61,7 @@
 }
 
 .dashboard-header-minimal::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -1px;
   left: 0;
@@ -76,7 +78,7 @@
   letter-spacing: -0.02em;
   margin: 0;
   line-height: 1.2;
-  font-family: var(--ff-sans, -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif);
+  font-family: var(--ff-sans, -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif);
 }
 
 .dashboard-subtitle {
@@ -122,7 +124,7 @@
 }
 
 .module-card::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -339,7 +341,7 @@
 }
 
 .report-card::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -834,7 +836,7 @@
   pointer-events: none;
 }
 
-.dashboard-toast[data-visible='true'] {
+.dashboard-toast[data-visible="true"] {
   opacity: 1;
   transform: translateY(0) scale(1);
   pointer-events: auto;
@@ -867,39 +869,39 @@
   line-height: 1.5;
 }
 
-.dashboard-toast[data-variant='success'] .dashboard-toast-content {
+.dashboard-toast[data-variant="success"] .dashboard-toast-content {
   border-color: color-mix(in srgb, rgba(22, 163, 74, 0.4), var(--dash-border) 60%);
   background: color-mix(in srgb, rgba(22, 163, 74, 0.12), var(--dash-surface) 88%);
 }
 
-.dashboard-toast[data-variant='success'] .dashboard-toast-icon {
+.dashboard-toast[data-variant="success"] .dashboard-toast-icon {
   color: rgba(22, 163, 74, 0.9);
 }
 
-.dashboard-toast[data-variant='error'] .dashboard-toast-content {
+.dashboard-toast[data-variant="error"] .dashboard-toast-content {
   border-color: color-mix(in srgb, rgba(220, 38, 38, 0.4), var(--dash-border) 60%);
   background: color-mix(in srgb, rgba(220, 38, 38, 0.12), var(--dash-surface) 88%);
 }
 
-.dashboard-toast[data-variant='error'] .dashboard-toast-icon {
+.dashboard-toast[data-variant="error"] .dashboard-toast-icon {
   color: rgba(220, 38, 38, 0.9);
 }
 
-.dashboard-toast[data-variant='info'] .dashboard-toast-content {
+.dashboard-toast[data-variant="info"] .dashboard-toast-content {
   border-color: color-mix(in srgb, rgba(37, 99, 235, 0.4), var(--dash-border) 60%);
   background: color-mix(in srgb, rgba(37, 99, 235, 0.12), var(--dash-surface) 88%);
 }
 
-.dashboard-toast[data-variant='info'] .dashboard-toast-icon {
+.dashboard-toast[data-variant="info"] .dashboard-toast-icon {
   color: rgba(37, 99, 235, 0.9);
 }
 
-.dashboard-toast[data-variant='warning'] .dashboard-toast-content {
+.dashboard-toast[data-variant="warning"] .dashboard-toast-content {
   border-color: color-mix(in srgb, rgba(234, 88, 12, 0.4), var(--dash-border) 60%);
   background: color-mix(in srgb, rgba(234, 88, 12, 0.12), var(--dash-surface) 88%);
 }
 
-.dashboard-toast[data-variant='warning'] .dashboard-toast-icon {
+.dashboard-toast[data-variant="warning"] .dashboard-toast-icon {
   color: rgba(234, 88, 12, 0.9);
 }
 
@@ -909,7 +911,7 @@
     transition: opacity 0.1s ease;
   }
 
-  .dashboard-toast[data-visible='true'] {
+  .dashboard-toast[data-visible="true"] {
     transform: none;
   }
 
@@ -1305,4 +1307,3 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
-
