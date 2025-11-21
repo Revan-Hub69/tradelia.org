@@ -9,7 +9,6 @@ import {
   initPWANotifications,
   installPWA,
   isPWAInstalled,
-  isPWAInstallable,
   enablePushNotifications,
   disablePushNotifications,
   areNotificationsEnabled,
@@ -44,12 +43,11 @@ export async function initAccountBanner() {
 async function renderBanner(container, role, planData) {
   // Verifica stato reale PWA e notifiche
   const pwaInstalled = isPWAInstalled();
-  const pwaInstallable = isPWAInstallable();
   const notificationsEnabled = await areNotificationsEnabled();
   const notificationPermission = getNotificationPermission();
 
   // Genera pulsanti PWA e Notifiche
-  const pwaButton = generatePWAButton(pwaInstalled, pwaInstallable);
+  const pwaButton = generatePWAButton(pwaInstalled);
   const notificationsButton = generateNotificationsButton(
     notificationsEnabled,
     notificationPermission
@@ -202,20 +200,17 @@ function getNotificationDeniedIcon() {
 
 /**
  * Genera pulsante PWA in base allo stato
+ * BEST PRACTICE: Mostra sempre il pulsante se non installata (anche se prompt non ancora disponibile)
  */
-function generatePWAButton(pwaInstalled, pwaInstallable) {
+function generatePWAButton(pwaInstalled) {
   if (pwaInstalled) {
     // PWA installata: mostra badge indicatore
     return `<span class="account-banner-badge badge-success" title="App installata">${getAppInstalledIcon()}App Installata</span>`;
   }
 
-  if (pwaInstallable) {
-    // PWA installabile: mostra pulsante "Installa App"
-    return `<button class="btn btn-secondary btn-sm" id="btn-install-pwa" title="Installa l'app sul dispositivo">${getInstallAppIcon()}Installa App</button>`;
-  }
-
-  // PWA non installabile: non mostrare nulla
-  return "";
+  // BEST PRACTICE: Mostra sempre pulsante se non installata
+  // Se prompt non disponibile, mostrerà istruzioni manuali
+  return `<button class="btn btn-secondary btn-sm" id="btn-install-pwa" title="Installa l'app sul dispositivo">${getInstallAppIcon()}Installa App</button>`;
 }
 
 /**
@@ -300,6 +295,16 @@ function bindBannerEvents(container, role) {
         setNotificationPreference(false);
         // Aggiorna banner per mostrare pulsante "Abilita Notifiche"
         await refreshAccountBanner();
+      } else {
+        // Se riattivato, riabilita notifiche
+        const success = await enablePushNotifications();
+        if (success) {
+          setNotificationPreference(true);
+          await refreshAccountBanner();
+        } else {
+          // Se fallisce, ripristina toggle a off
+          e.target.checked = false;
+        }
       }
     });
   }
