@@ -52,19 +52,9 @@ export default defineConfig({
         },
       },
     },
-    // Minificazione ottimizzata
-    minify: "terser",
-    terserOptions: {
-      compress: {
-        drop_console: true, // Rimuovi console in production
-        drop_debugger: true,
-        pure_funcs: ["console.log", "console.info"], // Rimuovi funzioni pure
-        passes: 2, // Multi-pass compression
-      },
-      format: {
-        comments: false, // Rimuovi commenti
-      },
-    },
+    // Minificazione (usa esbuild - default di Vite, veloce e incluso)
+    minify: "esbuild",
+    // esbuild è incluso in Vite e non richiede dipendenze aggiuntive
     // Source maps solo in development
     sourcemap: process.env.NODE_ENV === "development",
     // Target browsers moderni
@@ -90,10 +80,14 @@ export default defineConfig({
     include: ["@supabase/supabase-js"],
     exclude: [], // Aggiungi moduli che non devono essere pre-bundlati
   },
-  // Performance: Pre-bundling
+  // Performance: Pre-bundling e minificazione
   esbuild: {
     target: "es2020",
     legalComments: "none", // Rimuovi commenti legali
+    drop: ["console", "debugger"], // Rimuovi console e debugger in production
+    minifyIdentifiers: true,
+    minifySyntax: true,
+    minifyWhitespace: true,
   },
   // Alias per import più puliti
   resolve: {
