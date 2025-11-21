@@ -10,6 +10,7 @@ import { getAdminContextFromToken } from "./_lib/adminAuth.js";
 import { handleRouteError, HttpError, sendJSON } from "./_lib/http.js";
 import { getServiceDescription, getServicePrice, checkXoloPayment } from "./_lib/xolo.js";
 import { sendEmail } from "./send-email.js";
+import { sendUserNotification } from "./_lib/notifications.js";
 
 const supabase = getServiceSupabase();
 
@@ -433,27 +434,26 @@ async function handleActivateOrder(req, res) {
   if (email) {
     try {
       const serviceName = getServiceName(order.order_type);
-      await sendEmail({
-        to: email,
-        subject: `Servizio Attivato - Tradelia AI`,
-        html: `
-          <h2>Servizio Attivato</h2>
-          <p>Ciao,</p>
-          <p>Il tuo servizio è stato attivato!</p>
-          <p><strong>${serviceName}</strong></p>
-          ${
-            order.order_type.startsWith("access_")
-              ? `<p>Accesso attivo fino a: ${activationResult?.expires_at ? new Date(activationResult.expires_at).toLocaleDateString("it-IT") : "30 giorni"}</p>`
-              : order.order_type.startsWith("analysis_")
-                ? `<p>La tua analisi sarà pronta entro 24-48 ore.</p>`
-                : `<p>Puoi scaricare il PDF dalla dashboard.</p>`
-          }
-          <p><a href="https://tradelia.org/dashboard.html">Vai alla Dashboard</a></p>
-          <p>Grazie,<br>Tradelia AI</p>
-        `,
-      });
-    } catch (emailError) {
-      console.error("[Activate Order] Errore invio email:", emailError);
+      let message = `Il tuo servizio è stato attivato!\n\n${serviceName}\n\n`;
+
+      if (order.order_type.startsWith("access_")) {
+        message += `Accesso attivo fino a: ${activationResult?.expires_at ? new Date(activationResult.expires_at).toLocaleDateString("it-IT") : "30 giorni"}`;
+      } else if (order.order_type.startsWith("analysis_")) {
+        message += "La tua analisi sarà pronta entro 24-48 ore.";
+      } else {
+        message += "Puoi scaricare il PDF dalla dashboard.";
+      }
+
+      // Usa metodo preferito utente (SMS/WhatsApp/Email)
+      await sendUserNotification(
+        order.user_id,
+        email,
+        "Servizio Attivato - Tradelia AI",
+        message,
+        "https://tradelia.org/dashboard.html"
+      );
+    } catch (notificationError) {
+      console.error("[Activate Order] Errore invio notifica:", notificationError);
     }
   }
 
