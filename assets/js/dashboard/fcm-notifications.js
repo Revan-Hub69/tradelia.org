@@ -6,7 +6,7 @@
 
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
-import { firebaseConfig } from "../../../archivio/assets/js/fcm-config.js";
+import { firebaseConfig, VAPID_PUBLIC_KEY } from "./fcm-config.js";
 
 let messaging = null;
 let fcmToken = null;
@@ -67,8 +67,7 @@ async function requestFCMPermission() {
     // Nota: getToken richiede che il service worker sia registrato
     // e che firebase-messaging-sw.js sia presente nella root
     fcmToken = await getToken(messaging, {
-      vapidKey:
-        "BGUfdP2IYXrvOwDYEqmRwhZqodiQB1CKeaLd1-oILrVCfgTW7n_mjCe3WQYzYXQw1dqgOtIRTOEfBHu6gj22Uc0",
+      vapidKey: VAPID_PUBLIC_KEY,
     });
 
     if (!fcmToken) {

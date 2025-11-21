@@ -14,6 +14,7 @@ import {
   areNotificationsEnabled,
   getNotificationPermission,
 } from "./pwa-notifications.js";
+import { initFCM } from "./fcm-notifications.js";
 
 let currentRole = null;
 let currentPlanData = null;
@@ -30,6 +31,8 @@ export async function initAccountBanner() {
 
   // Inizializza PWA e notifiche
   await initPWANotifications();
+  // Inizializza FCM (sostituisce VAPID)
+  await initFCM();
 
   currentRole = await getUserRole();
   currentPlanData = await getPlanData();
@@ -268,6 +271,7 @@ function bindBannerEvents(container, role) {
   if (enableNotificationsBtn) {
     enableNotificationsBtn.addEventListener("click", async () => {
       try {
+        // Prima prova a richiedere il permesso
         const success = await enablePushNotifications();
         if (success) {
           // Mostra toast di successo
@@ -277,12 +281,19 @@ function bindBannerEvents(container, role) {
           // Aggiorna banner per mostrare toggle
           await refreshAccountBanner();
         } else {
-          // Mostra toast di errore
-          if (window.showToast) {
-            window.showToast(
-              "Impossibile abilitare le notifiche. Verifica le impostazioni del browser.",
-              "error"
-            );
+          // Se fallisce, verifica se il permesso è negato
+          const permission = Notification.permission;
+          if (permission === "denied") {
+            // Solo se negato, mostra istruzioni
+            showNotificationInstructions();
+          } else {
+            // Altrimenti mostra toast generico (permesso "default" o altro)
+            if (window.showToast) {
+              window.showToast(
+                "Impossibile abilitare le notifiche. Riprova più tardi.",
+                "error"
+              );
+            }
           }
         }
       } catch (error) {
@@ -295,12 +306,21 @@ function bindBannerEvents(container, role) {
   }
 
   // Pulsante Fix Notifiche (quando permesso negato)
-  // BEST PRACTICE: Quando negato, non possiamo richiedere di nuovo
-  // Mostriamo solo istruzioni per cambiare le impostazioni del browser
+  // BEST PRACTICE: Quando negato, prova prima a richiedere (alcuni browser permettono riprovare)
   const fixNotificationsBtn = container.querySelector("#btn-fix-notifications");
   if (fixNotificationsBtn) {
-    fixNotificationsBtn.addEventListener("click", () => {
-      showNotificationInstructions();
+    fixNotificationsBtn.addEventListener("click", async () => {
+      // Prova prima a richiedere il permesso
+      const success = await enablePushNotifications();
+      if (!success && Notification.permission === "denied") {
+        // Solo se ancora negato dopo il tentativo, mostra istruzioni
+        showNotificationInstructions();
+      } else if (success) {
+        if (window.showToast) {
+          window.showToast("Notifiche abilitate!", "success");
+        }
+        await refreshAccountBanner();
+      }
     });
   }
 
@@ -384,10 +404,26 @@ function showNotificationInstructions() {
   const isFirefox = /Firefox/.test(navigator.userAgent);
   const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
   const isEdge = /Edg/.test(navigator.userAgent);
+  const isOpera = /OPR|Opera/.test(navigator.userAgent);
 
   let instructions = "";
 
-  if (isChrome || isEdge) {
+  if (isOpera) {
+    instructions = `
+⚠️ Opera potrebbe avere limitazioni con le notifiche push.
+
+Per abilitare le notifiche in Opera:
+
+1. Vai su Impostazioni (Menu → Impostazioni)
+2. Cerca "Notifiche" o "Siti web"
+3. Trova tradelia.org nella lista
+4. Imposta "Consenti" per le notifiche
+5. Ricarica la pagina e riprova
+
+Nota: Se non funziona, Opera potrebbe non supportare completamente le push notifications.
+Prova con Chrome o Firefox per un'esperienza ottimale.
+`;
+  } else if (isChrome || isEdge) {
     instructions = `
 Per abilitare le notifiche in Chrome/Edge:
 
