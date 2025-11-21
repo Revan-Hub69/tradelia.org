@@ -5,5 +5,5 @@ const runtimeFetch =
 
 // Export named invece di default per evitare che Vercel lo conti come serverless function
 // Vercel conta TUTTI i file in api/ che esportano "export default" come serverless functions
-export { runtimeFetch as default };
+// NON usare export default qui, solo named export
 export { runtimeFetch };
