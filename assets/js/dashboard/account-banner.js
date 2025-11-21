@@ -384,26 +384,10 @@ function showNotificationInstructions() {
   const isFirefox = /Firefox/.test(navigator.userAgent);
   const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
   const isEdge = /Edg/.test(navigator.userAgent);
-  const isOpera = /OPR|Opera/.test(navigator.userAgent);
 
   let instructions = "";
 
-  if (isOpera) {
-    instructions = `
-⚠️ Opera potrebbe avere limitazioni con le notifiche push.
-
-Per abilitare le notifiche in Opera:
-
-1. Vai su Impostazioni (Menu → Impostazioni)
-2. Cerca "Notifiche" o "Siti web"
-3. Trova tradelia.org nella lista
-4. Imposta "Consenti" per le notifiche
-5. Ricarica la pagina e riprova
-
-Nota: Se non funziona, Opera potrebbe non supportare completamente le push notifications.
-Prova con Chrome o Firefox per un'esperienza ottimale.
-`;
-  } else if (isChrome || isEdge) {
+  if (isChrome || isEdge) {
     instructions = `
 Per abilitare le notifiche in Chrome/Edge:
 
