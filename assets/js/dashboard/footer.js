@@ -83,19 +83,28 @@ async function loadTechnicalInfo(container) {
         if (response.ok) {
           const data = await response.json();
           versionEl.textContent = data.version || "—";
-        } else {
-          // Fallback a package.json se version.json non disponibile
-          const pkgResponse = await fetch("/package.json");
-          if (pkgResponse.ok) {
-            const pkgData = await pkgResponse.json();
-            versionEl.textContent = pkgData.version || "—";
-          } else {
-            versionEl.textContent = "—";
+        } else if (response.status === 404) {
+          // Se version.json non esiste, prova package.json solo una volta
+          try {
+            const pkgResponse = await fetch("/package.json");
+            if (pkgResponse.ok) {
+              const pkgData = await pkgResponse.json();
+              versionEl.textContent = pkgData.version || "—";
+            } else {
+              // Se anche package.json non esiste, usa versione hardcoded
+              versionEl.textContent = "2.0.1";
+            }
+          } catch {
+            // Se package.json fallisce, usa versione hardcoded
+            versionEl.textContent = "2.0.1";
           }
+        } else {
+          // Altri errori HTTP, usa versione hardcoded
+          versionEl.textContent = "2.0.1";
         }
-      } catch (fetchError) {
-        console.warn("[Footer] Errore caricamento versione:", fetchError);
-        versionEl.textContent = "—";
+      } catch {
+        // Errore di rete, usa versione hardcoded (non loggare per evitare spam)
+        versionEl.textContent = "2.0.1";
       }
     }
 
