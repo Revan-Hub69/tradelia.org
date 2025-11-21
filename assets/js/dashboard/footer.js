@@ -108,28 +108,10 @@ async function loadTechnicalInfo(container) {
       }
     }
 
-    // Build info - data da API endpoint timestamp o data corrente
+    // Build info - data corrente (non serve fetch, evita 404)
     const buildEl = container.querySelector("#footer-build");
     if (buildEl) {
-      try {
-        // Prova prima l'endpoint API
-        const response = await fetch("/api/version.js");
-        if (response.ok) {
-          const data = await response.json();
-          if (data.timestamp) {
-            const buildDate = new Date(data.timestamp);
-            buildEl.textContent = buildDate.toISOString().split("T")[0];
-          } else {
-            buildEl.textContent = new Date().toISOString().split("T")[0];
-          }
-        } else {
-          // Fallback a data corrente
-          buildEl.textContent = new Date().toISOString().split("T")[0];
-        }
-      } catch {
-        // Errore di rete, usa data corrente (non loggare per evitare spam)
-        buildEl.textContent = new Date().toISOString().split("T")[0];
-      }
+      buildEl.textContent = new Date().toISOString().split("T")[0];
     }
   } catch (e) {
     console.error("[Footer] Errore caricamento info tecniche:", e);
