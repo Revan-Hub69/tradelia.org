@@ -7,6 +7,7 @@
 
 import { loadModule } from "./index.js";
 import { initAccountBanner } from "./account-banner.js";
+import { initFooter } from "./footer.js";
 import { isAdmin } from "./permissions.js";
 import { getUserRole } from "./auth.js";
 
@@ -23,6 +24,9 @@ export const STATE = {
 export async function initDashboard() {
   // Initialize account banner (shows user status, plan, usage)
   await initAccountBanner();
+
+  // Initialize footer
+  await initFooter();
 
   // Show/hide admin module based on permissions
   await toggleAdminModule();
