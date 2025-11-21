@@ -1,19 +1,10 @@
 /* eslint-env browser */
 /**
  * Dashboard Account Status Banner
- * Mostra stato account, saldo, toggle PWA e notifiche
+ * Mostra stato account, saldo
  */
 
 import { getUserRole, logout, getPlanData } from "./auth.js";
-import {
-  initPWANotifications,
-  installPWA,
-  isPWAInstalled,
-  enablePushNotifications,
-  disablePushNotifications,
-  areNotificationsEnabled,
-  getNotificationPermission,
-} from "./pwa-notifications.js";
 
 let currentRole = null;
 let currentPlanData = null;
@@ -28,9 +19,6 @@ export async function initAccountBanner() {
     return;
   }
 
-  // Inizializza PWA e notifiche
-  await initPWANotifications();
-
   currentRole = await getUserRole();
   currentPlanData = await getPlanData();
   await renderBanner(bannerContainer, currentRole, currentPlanData);
@@ -41,18 +29,6 @@ export async function initAccountBanner() {
  * Renderizza il banner in base al ruolo e plan data
  */
 async function renderBanner(container, role, planData) {
-  // Verifica stato reale PWA e notifiche
-  const pwaInstalled = isPWAInstalled();
-  const notificationsEnabled = await areNotificationsEnabled();
-  const notificationPermission = getNotificationPermission();
-
-  // Genera pulsanti PWA e Notifiche
-  const pwaButton = generatePWAButton(pwaInstalled);
-  const notificationsButton = generateNotificationsButton(
-    notificationsEnabled,
-    notificationPermission
-  );
-
   if (role.role === "guest") {
     container.innerHTML = `
       <div class="account-banner account-banner-guest">
@@ -63,8 +39,7 @@ async function renderBanner(container, role, planData) {
             <div class="account-banner-subtitle">Accedi per sbloccare PDF e analisi</div>
           </div>
           <div class="account-banner-actions">
-            ${pwaButton}
-            ${notificationsButton}
+            ${await generateNotificationPreferencesButton(role, planData)}
             <a href="/accesso.html?reason=login_required&modal=account" class="btn btn-elegant btn-sm">Accedi</a>
           </div>
         </div>
@@ -108,8 +83,7 @@ async function renderBanner(container, role, planData) {
             </div>
           </div>
           <div class="account-banner-actions">
-            ${pwaButton}
-            ${notificationsButton}
+            ${await generateNotificationPreferencesButton(role, planData)}
             ${
               plan.status === "pending_manual" || plan.status === "pending_payment"
                 ? `<a href="/accesso.html?reason=payment_required&modal=payment" class="btn btn-elegant btn-sm">Gestisci Pagamento</a>`
@@ -148,8 +122,7 @@ async function renderBanner(container, role, planData) {
             </div>
           </div>
           <div class="account-banner-actions">
-            ${pwaButton}
-            ${notificationsButton}
+            ${await generateNotificationPreferencesButton(role, planData)}
             <button class="btn btn-secondary btn-sm" id="btn-logout">Esci</button>
           </div>
         </div>
@@ -160,195 +133,33 @@ async function renderBanner(container, role, planData) {
 }
 
 /**
- * SVG Icon: App installata
- */
-function getAppInstalledIcon() {
-  return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 4px;">
-    <path d="M13.5 2.5L6 10L2.5 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>`;
-}
-
-/**
- * SVG Icon: Installa app
- */
-function getInstallAppIcon() {
-  return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 4px;">
-    <path d="M8 2V14M2 8H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-  </svg>`;
-}
-
-/**
- * SVG Icon: Notifiche
- */
-function getNotificationIcon() {
-  return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 4px;">
-    <path d="M8 2C6.34 2 5 3.34 5 5V9C5 9.55 4.78 10.05 4.41 10.41L3.5 11.32C3.22 11.6 3 12.05 3 12.5C3 13.33 3.67 14 4.5 14H11.5C12.33 14 13 13.33 13 12.5C13 12.05 12.78 11.6 12.5 11.32L11.59 10.41C11.22 10.05 11 9.55 11 9V5C11 3.34 9.66 2 8 2Z" stroke="currentColor" stroke-width="1.2" fill="none"/>
-    <path d="M6 14C6 15.1 6.9 16 8 16C9.1 16 10 15.1 10 14" stroke="currentColor" stroke-width="1.2" fill="none"/>
-  </svg>`;
-}
-
-/**
- * SVG Icon: Notifiche negate
- */
-function getNotificationDeniedIcon() {
-  return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 4px;">
-    <path d="M8 2C6.34 2 5 3.34 5 5V9C5 9.55 4.78 10.05 4.41 10.41L3.5 11.32C3.22 11.6 3 12.05 3 12.5C3 13.33 3.67 14 4.5 14H11.5C12.33 14 13 13.33 13 12.5C13 12.05 12.78 11.6 12.5 11.32L11.59 10.41C11.22 10.05 11 9.55 11 9V5C11 3.34 9.66 2 8 2Z" stroke="currentColor" stroke-width="1.2" fill="none"/>
-    <path d="M6 14C6 15.1 6.9 16 8 16C9.1 16 10 15.1 10 14" stroke="currentColor" stroke-width="1.2" fill="none"/>
-    <path d="M2 2L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-  </svg>`;
-}
-
-/**
- * Genera pulsante PWA in base allo stato
- * BEST PRACTICE: Mostra sempre il pulsante se non installata (anche se prompt non ancora disponibile)
- */
-function generatePWAButton(pwaInstalled) {
-  if (pwaInstalled) {
-    // PWA installata: mostra badge indicatore
-    return `<span class="account-banner-badge badge-success" title="App installata">${getAppInstalledIcon()}App Installata</span>`;
-  }
-
-  // BEST PRACTICE: Mostra sempre pulsante se non installata
-  // Se prompt non disponibile, mostrerà istruzioni manuali
-  return `<button class="btn btn-secondary btn-sm" id="btn-install-pwa" title="Installa l'app sul dispositivo">${getInstallAppIcon()}Installa App</button>`;
-}
-
-/**
- * Genera pulsante/toggle notifiche in base allo stato
- */
-function generateNotificationsButton(notificationsEnabled, notificationPermission) {
-  if (notificationPermission === "denied") {
-    // Permesso negato: mostra pulsante con istruzioni
-    return `<button class="btn btn-secondary btn-sm" id="btn-fix-notifications" title="Come abilitare le notifiche">${getNotificationDeniedIcon()}Abilita Notifiche</button>`;
-  }
-
-  if (notificationsEnabled) {
-    // Notifiche abilitate: mostra toggle per disabilitare
-    return `
-      <label class="toggle-switch" title="Disabilita notifiche push">
-        <input type="checkbox" id="toggle-notifications" checked>
-        <span class="toggle-slider"></span>
-        <span class="toggle-label">${getNotificationIcon()}Notifiche</span>
-      </label>
-    `;
-  }
-
-  // Notifiche non abilitate: mostra pulsante "Abilita Notifiche"
-  return `<button class="btn btn-secondary btn-sm" id="btn-enable-notifications" title="Abilita notifiche push">${getNotificationIcon()}Abilita Notifiche</button>`;
-}
-
-/**
  * Bind event listeners al banner
  */
 function bindBannerEvents(container, role) {
+  // Pulsante Preferenze Notifiche
+  const notificationPrefsBtn = container.querySelector("#btn-notification-preferences");
+  if (notificationPrefsBtn) {
+    // Solo Pro/Desk possono cliccare
+    if (role.role === "pro" || role.role === "desk") {
+      notificationPrefsBtn.addEventListener("click", () => {
+        showNotificationPreferencesModal(role);
+      });
+    } else {
+      // Per utenti non Pro, mostra tooltip al hover
+      notificationPrefsBtn.addEventListener("mouseenter", () => {
+        if (window.showToast) {
+          // Non mostriamo toast, il tooltip HTML è sufficiente
+        }
+      });
+    }
+  }
+
   // Logout button
   const logoutBtn = container.querySelector("#btn-logout");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", async () => {
       if (confirm("Sei sicuro di voler uscire?")) {
         await logout();
-      }
-    });
-  }
-
-  // Pulsante Installa PWA
-  const installPWABtn = container.querySelector("#btn-install-pwa");
-  if (installPWABtn) {
-    installPWABtn.addEventListener("click", async () => {
-      const installed = await installPWA();
-      if (installed) {
-        // Aggiorna banner per mostrare badge "App Installata"
-        await refreshAccountBanner();
-      }
-    });
-  }
-
-  // Pulsante Abilita Notifiche
-  const enableNotificationsBtn = container.querySelector("#btn-enable-notifications");
-  if (enableNotificationsBtn) {
-    enableNotificationsBtn.addEventListener("click", async () => {
-      try {
-        const success = await enablePushNotifications();
-        if (success) {
-          // Mostra toast di successo
-          if (window.showToast) {
-            window.showToast("Notifiche abilitate con successo!", "success");
-          }
-          // Aggiorna banner per mostrare toggle
-          await refreshAccountBanner();
-        } else {
-          // Mostra toast di errore
-          if (window.showToast) {
-            window.showToast(
-              "Impossibile abilitare le notifiche. Verifica le impostazioni del browser.",
-              "error"
-            );
-          }
-        }
-      } catch (error) {
-        console.error("[Account Banner] Errore abilitazione notifiche:", error);
-        if (window.showToast) {
-          window.showToast("Errore durante l'abilitazione delle notifiche", "error");
-        }
-      }
-    });
-  }
-
-  // Pulsante Fix Notifiche (quando permesso negato)
-  // BEST PRACTICE: Quando negato, non possiamo richiedere di nuovo
-  // Mostriamo solo istruzioni per cambiare le impostazioni del browser
-  const fixNotificationsBtn = container.querySelector("#btn-fix-notifications");
-  if (fixNotificationsBtn) {
-    fixNotificationsBtn.addEventListener("click", () => {
-      showNotificationInstructions();
-    });
-  }
-
-  // Toggle notifiche (solo se già abilitate, per disabilitare)
-  const notificationsToggle = container.querySelector("#toggle-notifications");
-  if (notificationsToggle) {
-    notificationsToggle.addEventListener("change", async (e) => {
-      if (!e.target.checked) {
-        // Disabilita notifiche
-        try {
-          await disablePushNotifications();
-          setNotificationPreference(false);
-          if (window.showToast) {
-            window.showToast("Notifiche disabilitate", "info");
-          }
-          // Aggiorna banner per mostrare pulsante "Abilita Notifiche"
-          await refreshAccountBanner();
-        } catch (error) {
-          console.error("[Account Banner] Errore disabilitazione notifiche:", error);
-          e.target.checked = true; // Ripristina toggle
-          if (window.showToast) {
-            window.showToast("Errore durante la disabilitazione", "error");
-          }
-        }
-      } else {
-        // Se riattivato, riabilita notifiche
-        try {
-          const success = await enablePushNotifications();
-          if (success) {
-            setNotificationPreference(true);
-            if (window.showToast) {
-              window.showToast("Notifiche riabilitate!", "success");
-            }
-            await refreshAccountBanner();
-          } else {
-            // Se fallisce, ripristina toggle a off
-            e.target.checked = false;
-            if (window.showToast) {
-              window.showToast("Impossibile riabilitare le notifiche", "error");
-            }
-          }
-        } catch (error) {
-          console.error("[Account Banner] Errore riabilitazione notifiche:", error);
-          e.target.checked = false; // Ripristina toggle
-          if (window.showToast) {
-            window.showToast("Errore durante la riabilitazione", "error");
-          }
-        }
       }
     });
   }
@@ -368,76 +179,216 @@ function bindBannerEvents(container, role) {
 }
 
 /**
+ * Genera pulsante preferenze notifiche
+ * - Pro/Desk: pulsante attivo con preferenze
+ * - Altri: pulsante inattivo con tooltip "Presto disponibile per Pro"
+ */
+async function generateNotificationPreferencesButton(role, _planData) {
+  const isProOrDesk = role.role === "pro" || role.role === "desk";
+
+  if (isProOrDesk) {
+    // Recupera preferenze attuali
+    const preferences = await getNotificationPreferences();
+    const currentMethod = preferences?.notification_method || "email";
+    const methodLabel =
+      currentMethod === "email" ? "Email" : currentMethod === "sms" ? "SMS" : "WhatsApp";
+
+    return `
+      <button class="btn btn-secondary btn-sm" id="btn-notification-preferences" title="Configura notifiche (SMS/WhatsApp)">
+        ${getNotificationIcon()}Notifiche: ${methodLabel}
+      </button>
+    `;
+  }
+
+  // Utenti non Pro: mostra pulsante inattivo
+  return `
+    <button 
+      class="btn btn-secondary btn-sm btn-inactive" 
+      id="btn-notification-preferences" 
+      disabled
+      title="Presto disponibile per Pro"
+      data-tooltip="Presto disponibile per Pro"
+    >
+      ${getNotificationIcon()}Notifiche: SMS/WhatsApp
+    </button>
+  `;
+}
+
+/**
+ * Recupera preferenze notifiche utente
+ */
+async function getNotificationPreferences() {
+  const token = localStorage.getItem("tradelia-access-token-v1");
+  if (!token) {
+    return null;
+  }
+
+  try {
+    const response = await fetch("/api/user.js?action=notification-preferences", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return data.preferences || null;
+  } catch (error) {
+    console.error("[Account Banner] Errore recupero preferenze:", error);
+    return null;
+  }
+}
+
+/**
+ * SVG Icon: Notifiche
+ */
+function getNotificationIcon() {
+  return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 4px;">
+    <path d="M8 2C6.34 2 5 3.34 5 5V9C5 9.55 4.78 10.05 4.41 10.41L3.5 11.32C3.22 11.6 3 12.05 3 12.5C3 13.33 3.67 14 4.5 14H11.5C12.33 14 13 13.33 13 12.5C13 12.05 12.78 11.6 12.5 11.32L11.59 10.41C11.22 10.05 11 9.55 11 9V5C11 3.34 9.66 2 8 2Z" stroke="currentColor" stroke-width="1.2" fill="none"/>
+    <path d="M6 14C6 15.1 6.9 16 8 16C9.1 16 10 15.1 10 14" stroke="currentColor" stroke-width="1.2" fill="none"/>
+  </svg>`;
+}
+
+/**
+ * Mostra modale preferenze notifiche
+ */
+async function showNotificationPreferencesModal(_role) {
+  const preferences = await getNotificationPreferences();
+  const currentMethod = preferences?.notification_method || "email";
+  const currentPhone = preferences?.phone_number || "";
+
+  const modal = document.createElement("div");
+  modal.className = "modal show";
+  modal.innerHTML = `
+    <div class="modal-content" style="max-width: 500px;">
+      <h2 style="margin-top: 0; margin-bottom: 1.5rem;">Preferenze Notifiche</h2>
+      <p style="margin-bottom: 1.5rem; color: var(--ink-secondary);">
+        Scegli come ricevere le notifiche per report pronti, ordini attivati e aggiornamenti.
+      </p>
+      
+      <form id="notification-preferences-form">
+        <div style="margin-bottom: 1.5rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Metodo di notifica:</label>
+          <select id="notification-method" style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid var(--br-card); background: var(--surface-card); color: var(--ink);">
+            <option value="email" ${currentMethod === "email" ? "selected" : ""}>Email</option>
+            <option value="sms" ${currentMethod === "sms" ? "selected" : ""}>SMS</option>
+            <option value="whatsapp" ${currentMethod === "whatsapp" ? "selected" : ""}>WhatsApp</option>
+          </select>
+        </div>
+
+        <div id="phone-number-container" style="margin-bottom: 1.5rem; ${currentMethod === "email" ? "display: none;" : ""}">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Numero telefono:</label>
+          <input 
+            type="tel" 
+            id="phone-number" 
+            placeholder="+393491234567" 
+            value="${currentPhone}"
+            style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid var(--br-card); background: var(--surface-card); color: var(--ink);"
+          />
+          <small style="display: block; margin-top: 0.25rem; color: var(--ink-secondary);">
+            Formato internazionale (es: +393491234567)
+          </small>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-preferences">Annulla</button>
+          <button type="submit" class="btn btn-elegant btn-sm">Salva</button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // Mostra/nascondi campo telefono in base al metodo
+  const methodSelect = modal.querySelector("#notification-method");
+  const phoneContainer = modal.querySelector("#phone-number-container");
+
+  methodSelect.addEventListener("change", () => {
+    phoneContainer.style.display = methodSelect.value === "email" ? "none" : "block";
+  });
+
+  // Salva preferenze
+  const form = modal.querySelector("#notification-preferences-form");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    await saveNotificationPreferences(
+      methodSelect.value,
+      phoneContainer.style.display !== "none" ? modal.querySelector("#phone-number").value : null
+    );
+    modal.remove();
+  });
+
+  // Chiudi modale
+  modal.querySelector("#btn-cancel-preferences").addEventListener("click", () => {
+    modal.remove();
+  });
+
+  // Chiudi cliccando fuori
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.remove();
+    }
+  });
+}
+
+/**
+ * Salva preferenze notifiche
+ */
+async function saveNotificationPreferences(method, phoneNumber) {
+  const token = localStorage.getItem("tradelia-access-token-v1");
+  if (!token) {
+    if (window.showToast) {
+      window.showToast("Token non trovato", "error");
+    }
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/save-notification-preferences.js", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        notification_method: method,
+        phone_number: phoneNumber || null,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      if (window.showToast) {
+        window.showToast("Preferenze salvate con successo!", "success");
+      }
+      await refreshAccountBanner();
+    } else {
+      if (window.showToast) {
+        window.showToast(data.error || "Errore nel salvataggio", "error");
+      }
+    }
+  } catch (error) {
+    console.error("[Account Banner] Errore salvataggio preferenze:", error);
+    if (window.showToast) {
+      window.showToast("Errore nel salvataggio delle preferenze", "error");
+    }
+  }
+}
+
+/**
  * Utility: escape HTML
  */
 function escapeHtml(text) {
   const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
-}
-
-/**
- * Mostra istruzioni per abilitare notifiche quando negate
- */
-function showNotificationInstructions() {
-  const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-  const isFirefox = /Firefox/.test(navigator.userAgent);
-  const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
-  const isEdge = /Edg/.test(navigator.userAgent);
-
-  let instructions = "";
-
-  if (isChrome || isEdge) {
-    instructions = `
-Per abilitare le notifiche in Chrome/Edge:
-
-1. Clicca sull'icona del lucchetto o "i" nella barra degli indirizzi
-2. Trova "Notifiche" nel menu
-3. Seleziona "Consenti" o "Chiedi"
-4. Ricarica la pagina
-
-Oppure:
-1. Vai su Impostazioni > Privacy e sicurezza > Impostazioni sito
-2. Trova questo sito nella lista
-3. Imposta "Notifiche" su "Consenti"
-    `;
-  } else if (isFirefox) {
-    instructions = `
-Per abilitare le notifiche in Firefox:
-
-1. Clicca sull'icona del lucchetto nella barra degli indirizzi
-2. Clicca su "Più informazioni"
-3. Nella sezione "Permessi", trova "Notifiche"
-4. Seleziona "Consenti" e ricarica la pagina
-    `;
-  } else if (isSafari) {
-    instructions = `
-Per abilitare le notifiche in Safari:
-
-1. Vai su Safari > Impostazioni > Siti web
-2. Seleziona "Notifiche" nel menu laterale
-3. Trova questo sito e imposta su "Consenti"
-4. Ricarica la pagina
-    `;
-  } else {
-    instructions = `
-Per abilitare le notifiche:
-
-1. Apri le impostazioni del browser
-2. Cerca "Notifiche" o "Permessi sito"
-3. Trova questo sito e consenti le notifiche
-4. Ricarica la pagina
-    `;
-  }
-
-  alert(instructions);
-}
-
-/**
- * Salva preferenza notifiche in localStorage (per riferimento futuro)
- */
-function setNotificationPreference(enabled) {
-  localStorage.setItem("tradelia-notifications-enabled", enabled ? "true" : "false");
 }
 
 /**

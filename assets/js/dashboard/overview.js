@@ -100,6 +100,39 @@ function renderOverviewStructure() {
       </div>
     </div>
 
+    <!-- Leading Indicators Section (Indicatori Predittivi) -->
+    <div class="overview-section" id="leading-indicators-section">
+      <div class="overview-section-header">
+        <h3 class="overview-section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" style="vertical-align: middle; margin-right: 8px;">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+          Indicatori Predittivi
+        </h3>
+        <p class="overview-section-description">Metriche che anticipano le tendenze future (leading indicators)</p>
+      </div>
+      <div class="leading-indicators-grid" id="leading-indicators-grid">
+        <div class="leading-indicator-card">
+          <div class="leading-indicator-label">Trend Analisi</div>
+          <div class="leading-indicator-value" id="leading-trend">—</div>
+          <div class="leading-indicator-description">Prossimi report previsti</div>
+        </div>
+        <div class="leading-indicator-card">
+          <div class="leading-indicator-label">Alert Proattivi</div>
+          <div class="leading-indicator-value" id="leading-alerts">0</div>
+          <div class="leading-indicator-description">Notifiche importanti</div>
+        </div>
+        <div class="leading-indicator-card">
+          <div class="leading-indicator-label">Forecast</div>
+          <div class="leading-indicator-value" id="leading-forecast">—</div>
+          <div class="leading-indicator-description">Previsioni prossimi 7 giorni</div>
+        </div>
+      </div>
+      <div class="overview-section-note">
+        <small>⚠️ Questa sezione è in sviluppo. Gli indicatori predittivi verranno implementati nelle prossime versioni.</small>
+      </div>
+    </div>
+
     <div class="overview-section">
       <h3 class="overview-section-title">Attività Recente</h3>
       <div class="recent-activity-list" id="recent-activity">
