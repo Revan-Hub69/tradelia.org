@@ -267,10 +267,29 @@ function bindBannerEvents(container, role) {
   const enableNotificationsBtn = container.querySelector("#btn-enable-notifications");
   if (enableNotificationsBtn) {
     enableNotificationsBtn.addEventListener("click", async () => {
-      const success = await enablePushNotifications();
-      if (success) {
-        // Aggiorna banner per mostrare toggle
-        await refreshAccountBanner();
+      try {
+        const success = await enablePushNotifications();
+        if (success) {
+          // Mostra toast di successo
+          if (window.showToast) {
+            window.showToast("Notifiche abilitate con successo!", "success");
+          }
+          // Aggiorna banner per mostrare toggle
+          await refreshAccountBanner();
+        } else {
+          // Mostra toast di errore
+          if (window.showToast) {
+            window.showToast(
+              "Impossibile abilitare le notifiche. Verifica le impostazioni del browser.",
+              "error"
+            );
+          }
+        }
+      } catch (error) {
+        console.error("[Account Banner] Errore abilitazione notifiche:", error);
+        if (window.showToast) {
+          window.showToast("Errore durante l'abilitazione delle notifiche", "error");
+        }
       }
     });
   }
@@ -291,19 +310,44 @@ function bindBannerEvents(container, role) {
     notificationsToggle.addEventListener("change", async (e) => {
       if (!e.target.checked) {
         // Disabilita notifiche
-        await disablePushNotifications();
-        setNotificationPreference(false);
-        // Aggiorna banner per mostrare pulsante "Abilita Notifiche"
-        await refreshAccountBanner();
+        try {
+          await disablePushNotifications();
+          setNotificationPreference(false);
+          if (window.showToast) {
+            window.showToast("Notifiche disabilitate", "info");
+          }
+          // Aggiorna banner per mostrare pulsante "Abilita Notifiche"
+          await refreshAccountBanner();
+        } catch (error) {
+          console.error("[Account Banner] Errore disabilitazione notifiche:", error);
+          e.target.checked = true; // Ripristina toggle
+          if (window.showToast) {
+            window.showToast("Errore durante la disabilitazione", "error");
+          }
+        }
       } else {
         // Se riattivato, riabilita notifiche
-        const success = await enablePushNotifications();
-        if (success) {
-          setNotificationPreference(true);
-          await refreshAccountBanner();
-        } else {
-          // Se fallisce, ripristina toggle a off
-          e.target.checked = false;
+        try {
+          const success = await enablePushNotifications();
+          if (success) {
+            setNotificationPreference(true);
+            if (window.showToast) {
+              window.showToast("Notifiche riabilitate!", "success");
+            }
+            await refreshAccountBanner();
+          } else {
+            // Se fallisce, ripristina toggle a off
+            e.target.checked = false;
+            if (window.showToast) {
+              window.showToast("Impossibile riabilitare le notifiche", "error");
+            }
+          }
+        } catch (error) {
+          console.error("[Account Banner] Errore riabilitazione notifiche:", error);
+          e.target.checked = false; // Ripristina toggle
+          if (window.showToast) {
+            window.showToast("Errore durante la riabilitazione", "error");
+          }
         }
       }
     });

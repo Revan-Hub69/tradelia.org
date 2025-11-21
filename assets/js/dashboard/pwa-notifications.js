@@ -297,8 +297,9 @@ async function subscribeToPush() {
     console.warn("[Notifications] Service Worker non registrato, registrazione in corso...");
     const registration = await registerServiceWorker();
     if (!registration) {
-      console.error("[Notifications] Impossibile registrare Service Worker");
-      return;
+      const error = new Error("Impossibile registrare Service Worker");
+      console.error("[Notifications]", error);
+      throw error;
     }
   }
 
@@ -307,8 +308,9 @@ async function subscribeToPush() {
     const vapidPublicKey = await getVAPIDPublicKey();
 
     if (!vapidPublicKey) {
-      console.warn("[Notifications] VAPID key non disponibile");
-      return;
+      const error = new Error("VAPID key non disponibile");
+      console.error("[Notifications]", error);
+      throw error;
     }
 
     const subscription = await serviceWorkerRegistration.pushManager.subscribe({
@@ -322,6 +324,10 @@ async function subscribeToPush() {
     await sendSubscriptionToServer(subscription);
   } catch (error) {
     console.error("[Notifications] Errore sottoscrizione:", error);
+    // Se errore è "Permission denied" o simile, rilancia con messaggio più chiaro
+    if (error.name === "NotAllowedError" || error.message?.includes("permission")) {
+      throw new Error("Permesso notifiche negato. Verifica le impostazioni del browser.");
+    }
     throw error; // Rilancia per permettere gestione errore nel chiamante
   }
 }
