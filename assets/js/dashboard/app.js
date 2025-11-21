@@ -67,24 +67,37 @@ export async function initDashboard() {
 }
 
 /**
- * Show/hide admin module card based on user permissions
+ * Show/hide admin module card and category based on user permissions
  */
 async function toggleAdminModule() {
   const adminCard = document.querySelector(".module-card-admin");
-  if (!adminCard) {
-    return;
-  }
+  const adminCategory = document.querySelector(".module-category-admin");
 
   try {
     const role = await getUserRole();
     if (isAdmin(role)) {
-      adminCard.style.display = "";
+      if (adminCard) {
+        adminCard.style.display = "";
+      }
+      if (adminCategory) {
+        adminCategory.style.display = "";
+      }
     } else {
-      adminCard.style.display = "none";
+      if (adminCard) {
+        adminCard.style.display = "none";
+      }
+      if (adminCategory) {
+        adminCategory.style.display = "none";
+      }
     }
   } catch (error) {
     console.error("[Dashboard] Errore verifica permessi admin:", error);
-    adminCard.style.display = "none";
+    if (adminCard) {
+      adminCard.style.display = "none";
+    }
+    if (adminCategory) {
+      adminCategory.style.display = "none";
+    }
   }
 }
 
