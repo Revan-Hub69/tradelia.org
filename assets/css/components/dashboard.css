@@ -495,6 +495,62 @@
   border: 1px solid var(--dash-border);
 }
 
+/* ===== BUTTON INACTIVE STATE ===== */
+.account-banner-actions .btn-inactive {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--dash-surface-card, var(--surface-card)) !important;
+  color: var(--dash-text-muted, var(--ink-soft)) !important;
+  border-color: var(--dash-border, var(--br-soft)) !important;
+  position: relative;
+}
+
+.account-banner-actions .btn-inactive:hover {
+  opacity: 0.6;
+  transform: none !important;
+  background: var(--dash-surface-card, var(--surface-card)) !important;
+  border-color: var(--dash-border, var(--br-soft)) !important;
+}
+
+.account-banner-actions .btn-inactive:disabled {
+  pointer-events: auto; /* Mantieni hover per tooltip */
+}
+
+/* Tooltip per pulsante inattivo */
+.account-banner-actions .btn-inactive[data-tooltip] {
+  position: relative;
+}
+
+.account-banner-actions .btn-inactive[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--dash-surface-elev, var(--surface-elev));
+  color: var(--dash-text, var(--ink));
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  border: 1px solid var(--dash-border, var(--br-card));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.account-banner-actions .btn-inactive[data-tooltip]:hover::before {
+  content: "";
+  position: absolute;
+  bottom: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--dash-surface-elev, var(--surface-elev));
+  z-index: 1001;
+  pointer-events: none;
+}
+
 .account-banner-badge {
   display: inline-flex;
   align-items: center;
