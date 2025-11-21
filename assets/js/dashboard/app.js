@@ -179,7 +179,7 @@ async function checkAuthentication() {
 
   try {
     // Verifica token con API
-    const response = await fetch("/api/validate-dashboard-token", {
+    const response = await fetch("/api/user.js?action=validate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token }),

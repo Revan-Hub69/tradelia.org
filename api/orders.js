@@ -1,9 +1,8 @@
 /* eslint-env node */
 /**
- * API: Salva Dati Fatturazione
- * POST /api/save-billing-data
- *
- * Salva dati fatturazione (individual o business) in user_profiles
+ * API Router Unificato: Ordini e Fatturazione
+ * Gestisce: crea ordine, attiva ordine, salva billing data
+ * POST /api/orders?action=create|activate|save-billing
  */
 
 import { getServiceSupabase } from "./_lib/supabase.js";
@@ -26,12 +25,43 @@ export default async function handler(req, res) {
   }
 
   try {
-    return await handleSaveBillingData(req, res);
+    const action = req.query?.action || req.body?.action || "create";
+    return await handleOrderAction(req, res, action);
   } catch (error) {
     return handleRouteError(res, error);
   }
 }
 
+async function handleOrderAction(req, res, action) {
+  switch (action) {
+    case "create":
+      return await handleCreateOrder(req, res);
+    case "activate":
+      return await handleActivateOrder(req, res);
+    case "save-billing":
+      return await handleSaveBillingData(req, res);
+    default:
+      throw new HttpError(400, `Action non valida: ${action}`);
+  }
+}
+
+// ===== CREATE ORDER =====
+async function handleCreateOrder(req, res) {
+  // Reindirizza alla funzione originale (per compatibilità)
+  // TODO: Spostare logica qui per ridurre funzioni
+  const originalHandler = await import("./create-order.js");
+  return originalHandler.default(req, res);
+}
+
+// ===== ACTIVATE ORDER =====
+async function handleActivateOrder(req, res) {
+  // Reindirizza alla funzione originale (per compatibilità)
+  // TODO: Spostare logica qui per ridurre funzioni
+  const originalHandler = await import("./activate-order.js");
+  return originalHandler.default(req, res);
+}
+
+// ===== SAVE BILLING DATA =====
 async function handleSaveBillingData(req, res) {
   const body = req.body || {};
   const { token, billing_data } = body;
@@ -44,7 +74,6 @@ async function handleSaveBillingData(req, res) {
     throw new HttpError(400, "billing_data richiesto");
   }
 
-  // Valida token e ottiene utente
   const context = await getAdminContextFromToken(token, { enforceAdmin: false });
   const userId = context.userId;
 
@@ -52,20 +81,15 @@ async function handleSaveBillingData(req, res) {
     throw new HttpError(401, "Utente non trovato");
   }
 
-  // Valida tipo utente
   const userType = billing_data.user_type;
   if (!userType || !["individual", "business"].includes(userType)) {
     throw new HttpError(400, 'user_type deve essere "individual" o "business"');
   }
 
-  // Valida dati individual
-  if (userType === "individual") {
-    if (!billing_data.email) {
-      throw new HttpError(400, "Email richiesta per utente individual");
-    }
+  if (userType === "individual" && !billing_data.email) {
+    throw new HttpError(400, "Email richiesta per utente individual");
   }
 
-  // Valida dati business
   if (userType === "business") {
     if (!billing_data.business_name) {
       throw new HttpError(400, "business_name richiesto per utente business");
@@ -73,10 +97,8 @@ async function handleSaveBillingData(req, res) {
     if (!billing_data.business_country) {
       throw new HttpError(400, "business_country richiesto per utente business");
     }
-    // P.IVA opzionale ma consigliata per B2B
   }
 
-  // Prepara dati per user_profiles
   const profileData = {
     user_type: userType,
     business_name: billing_data.business_name || null,
@@ -94,21 +116,14 @@ async function handleSaveBillingData(req, res) {
     business_comments: billing_data.business_comments || null,
   };
 
-  // Cerca o crea user_profile
-  const { data: existingProfile, error: fetchError } = await supabase
+  const { data: existingProfile } = await supabase
     .from("user_profiles")
     .select("id")
     .eq("user_id", userId)
     .maybeSingle();
 
-  if (fetchError && fetchError.code !== "PGRST116") {
-    console.error("[Save Billing Data] Errore verifica profile:", fetchError);
-    throw new HttpError(500, "Errore verifica profilo utente", fetchError.message);
-  }
-
   let result;
   if (existingProfile) {
-    // Aggiorna profilo esistente
     const { data, error } = await supabase
       .from("user_profiles")
       .update(profileData)
@@ -117,12 +132,10 @@ async function handleSaveBillingData(req, res) {
       .single();
 
     if (error) {
-      console.error("[Save Billing Data] Errore aggiornamento profile:", error);
       throw new HttpError(500, "Errore aggiornamento profilo", error.message);
     }
     result = data;
   } else {
-    // Crea nuovo profilo
     const { data, error } = await supabase
       .from("user_profiles")
       .insert({
@@ -133,7 +146,6 @@ async function handleSaveBillingData(req, res) {
       .single();
 
     if (error) {
-      console.error("[Save Billing Data] Errore creazione profile:", error);
       throw new HttpError(500, "Errore creazione profilo", error.message);
     }
     result = data;
