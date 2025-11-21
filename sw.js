@@ -35,14 +35,14 @@ const STATIC_CACHE = [
   "/archivio/assets/css/dashboard.css",
   "/icons/icon-192.svg",
   "/icons/icon-512.svg",
-  "/icons/icon-192.png",
-  "/icons/icon-512.png",
+  "/icons/icon-192.svg",
+  "/icons/icon-512.svg",
   "/favicon.png",
 ];
 
 // ===== INSTALL =====
 self.addEventListener("install", (event) => {
-  console.warn("[SW] Install");
+  console.log("[SW] Install");
   event.waitUntil(
     caches
       .open(CACHE_NAME)
@@ -53,7 +53,7 @@ self.addEventListener("install", (event) => {
 
 // ===== ACTIVATE =====
 self.addEventListener("activate", (event) => {
-  console.warn("[SW] Activate");
+  console.log("[SW] Activate");
   event.waitUntil(
     caches
       .keys()
@@ -118,52 +118,26 @@ self.addEventListener("fetch", (event) => {
 });
 
 // ===== PUSH NOTIFICATIONS =====
-// BEST PRACTICE: Validazione e sanitizzazione dati push
 self.addEventListener("push", (event) => {
-  console.warn("[SW] Push notification received");
+  console.log("[SW] Push notification received");
 
   let data = {};
   if (event.data) {
     try {
       data = event.data.json();
     } catch {
-      // BEST PRACTICE: Fallback sicuro per dati non JSON
-      data = { title: "Tradelia AI", body: event.data.text() || "Nuovo aggiornamento disponibile" };
+      data = { title: "Tradelia AI", body: event.data.text() };
     }
   }
 
-  // BEST PRACTICE: Sanitizzazione title e body
-  const title = (data.title || "Tradelia AI").substring(0, 100); // Max 100 caratteri
-  const body = (data.body || "Nuovo report disponibile").substring(0, 500); // Max 500 caratteri
-
-  // BEST PRACTICE: Sanitizzazione URL (solo URL interni)
-  let notificationUrl = "/dashboard.html";
-  if (data.url) {
-    try {
-      // Verifica che sia URL relativo o stesso dominio
-      if (data.url.startsWith("/")) {
-        notificationUrl = data.url;
-      } else {
-        const urlObj = new URL(data.url);
-        if (urlObj.origin === self.location.origin) {
-          notificationUrl = urlObj.pathname + urlObj.search;
-        }
-      }
-    } catch {
-      // URL non valido, usa default
-      notificationUrl = "/dashboard.html";
-    }
-  }
-
-  // BEST PRACTICE: Opzioni notifica con validazione
+  const title = data.title || "Tradelia AI";
   const options = {
-    body: body,
-    icon: "/icons/icon-192.png",
-    badge: "/icons/icon-192.png",
-    data: notificationUrl,
-    tag: (data.tag || "tradelia-notification").substring(0, 50), // Max 50 caratteri
+    body: data.body || "Nuovo report disponibile",
+    icon: "/icons/icon-192.svg",
+    badge: "/icons/icon-192.svg",
+    data: data.url || "/archivio/dashboard.html",
+    tag: data.tag || "tradelia-notification",
     requireInteraction: false,
-    timestamp: Date.now(), // BEST PRACTICE: Timestamp per ordering
     actions: [
       {
         action: "open",
@@ -176,13 +150,12 @@ self.addEventListener("push", (event) => {
     ],
   };
 
-  // BEST PRACTICE: waitUntil per assicurare che notifica sia mostrata
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
 // ===== NOTIFICATION CLICK =====
 self.addEventListener("notificationclick", (event) => {
-  console.warn("[SW] Notification click");
+  console.log("[SW] Notification click");
 
   event.notification.close();
 
@@ -195,5 +168,5 @@ self.addEventListener("notificationclick", (event) => {
 
 // ===== NOTIFICATION CLOSE =====
 self.addEventListener("notificationclose", () => {
-  console.warn("[SW] Notification closed");
+  console.log("[SW] Notification closed");
 });

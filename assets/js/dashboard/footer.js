@@ -75,37 +75,10 @@ function bindFooterEvents(container) {
  */
 async function loadTechnicalInfo(container) {
   try {
-    // Carica versione da version.json
+    // Versione hardcoded (niente fetch, niente 404)
     const versionEl = container.querySelector("#footer-version");
     if (versionEl) {
-      try {
-        const response = await fetch("/version.json");
-        if (response.ok) {
-          const data = await response.json();
-          versionEl.textContent = data.version || "—";
-        } else if (response.status === 404) {
-          // Se version.json non esiste, prova package.json solo una volta
-          try {
-            const pkgResponse = await fetch("/package.json");
-            if (pkgResponse.ok) {
-              const pkgData = await pkgResponse.json();
-              versionEl.textContent = pkgData.version || "—";
-            } else {
-              // Se anche package.json non esiste, usa versione hardcoded
-              versionEl.textContent = "2.0.1";
-            }
-          } catch {
-            // Se package.json fallisce, usa versione hardcoded
-            versionEl.textContent = "2.0.1";
-          }
-        } else {
-          // Altri errori HTTP, usa versione hardcoded
-          versionEl.textContent = "2.0.1";
-        }
-      } catch {
-        // Errore di rete, usa versione hardcoded (non loggare per evitare spam)
-        versionEl.textContent = "2.0.1";
-      }
+      versionEl.textContent = "2.0.1";
     }
 
     // Build info - data corrente (non serve fetch, evita 404)
