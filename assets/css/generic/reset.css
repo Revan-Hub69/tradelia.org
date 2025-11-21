@@ -36,10 +36,10 @@ html {
 }
 
 body {
-  font-family: var(--ff-sans);
-  font-size: var(--fs-15);
-  line-height: var(--lh-15);
-  color: var(--ink);
-  background: var(--surface-page);
+  font-family: var(--ff-sans, ui-sans-serif, system-ui, sans-serif);
+  font-size: var(--fs-15, 15px);
+  line-height: var(--lh-15, 1.5);
+  color: var(--ink, #ffffff);
+  background: var(--surface-page, #0f0f0f);
   min-height: 100vh;
 }

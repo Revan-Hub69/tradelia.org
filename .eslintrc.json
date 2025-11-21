@@ -3,7 +3,8 @@
   "env": {
     "browser": true,
     "es2024": true,
-    "node": true
+    "node": true,
+    "webextensions": false
   },
   "extends": [
     "eslint:recommended",
@@ -51,12 +52,19 @@
         "sourceType": "module"
       },
       "env": {
-        "node": true
+        "node": true,
+        "browser": true
       },
       "rules": {
         "@typescript-eslint/no-var-requires": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
         "no-console": "off"
+      }
+    },
+    {
+      "files": ["assets/js/**/*.js", "assets/js/**/*.ts"],
+      "env": {
+        "browser": true
       }
     },
     {

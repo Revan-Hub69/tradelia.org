@@ -560,116 +560,18 @@
       aria-atomic="true"
     ></div>
 
-    <!-- JavaScript -->
+    <!-- JavaScript - FASE 2: Modulare e Separato (Best Practice) -->
     <script type="module">
-      import { loadModule } from "/assets/js/dashboard/index.js";
+      // Import moduli separati (Best Practice: separazione concerns)
+      import { initDashboard } from '/assets/js/dashboard/app.js';
+      import '/assets/js/dashboard/toast.js';
 
-      // Global state
-      const STATE = {
-        currentModule: null,
-        reports: [],
-        filteredReports: [],
-      };
-
-      // Initialize
-      (async function init() {
-        // Handle hash navigation
-        const hash = window.location.hash.slice(1);
-        if (hash) {
-          showModule(hash);
-        }
-
-        // Handle hash changes
-        window.addEventListener("hashchange", () => {
-          const newHash = window.location.hash.slice(1);
-          showModule(newHash || null);
-        });
-
-        // Handle module card clicks
-        document.querySelectorAll(".module-card").forEach((card) => {
-          card.addEventListener("click", (e) => {
-            e.preventDefault();
-            const moduleId = card.dataset.module;
-            if (moduleId) {
-              window.location.hash = moduleId;
-            }
-          });
-        });
-
-        // Handle back buttons
-        document.querySelectorAll(".panel-back").forEach((btn) => {
-          btn.addEventListener("click", (e) => {
-            e.preventDefault();
-            window.location.hash = "";
-          });
-        });
-
-        // Keyboard navigation
-        document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape" && STATE.currentModule) {
-            window.location.hash = "";
-          }
-        });
-      })();
-
-      function showModule(moduleId) {
-        // Hide all views
-        document.getElementById("modules-view")?.classList.remove("active");
-        document.querySelectorAll(".panel-view").forEach((panel) => {
-          panel.classList.remove("active");
-        });
-
-        if (!moduleId) {
-          // Show modules grid
-          document.getElementById("modules-view")?.classList.add("active");
-          STATE.currentModule = null;
-          return;
-        }
-
-        // Show panel
-        const panel = document.getElementById(`panel-${moduleId}`);
-        if (panel) {
-          panel.classList.add("active");
-          STATE.currentModule = moduleId;
-          loadModule(moduleId);
-        }
-      }
-
-      // Toast notification system
-      window.showToast = function (message, variant = "info", duration = 4000) {
-        const toast = document.getElementById("dashboard-toast");
-        if (!toast) return;
-
-        const icons = {
-          success:
-            '<svg class="dashboard-toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
-          error:
-            '<svg class="dashboard-toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
-          info: '<svg class="dashboard-toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
-          warning:
-            '<svg class="dashboard-toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
-        };
-
-        toast.setAttribute("data-variant", variant);
-        toast.setAttribute("data-visible", "true");
-        toast.innerHTML = `
-          <div class="dashboard-toast-content">
-            ${icons[variant] || icons.info}
-            <div class="dashboard-toast-message">${message}</div>
-          </div>
-        `;
-
-        setTimeout(() => {
-          toast.setAttribute("data-visible", "false");
-          setTimeout(() => {
-            toast.innerHTML = "";
-          }, 300);
-        }, duration);
-      };
+      // Initialize dashboard
+      initDashboard();
 
       // Service Worker Registration
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("/sw.js").catch(() => {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {
           // Silent fail
         });
       }
