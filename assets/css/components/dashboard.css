@@ -77,7 +77,7 @@
   position: absolute;
   bottom: -2px;
   left: 0;
-  width: 0;
+  width: 20%;
   height: 1.5px;
   background: var(--dash-blue-line);
   transition: width var(--transition-smooth);
@@ -765,7 +765,7 @@
   position: absolute;
   bottom: -2px;
   left: 0;
-  width: 0;
+  width: 20%;
   height: 1.5px;
   background: var(--dash-blue-line);
   transition: width var(--transition-smooth);
@@ -946,7 +946,7 @@
   position: absolute;
   bottom: -2px;
   left: 0;
-  width: 0;
+  width: 20%;
   height: 1.5px;
   background: var(--dash-blue-line);
   transition: width var(--transition-smooth);
@@ -959,6 +959,15 @@
 
 .contacts-link:hover::after {
   width: 100%;
+}
+
+.contacts-hint {
+  display: block;
+  font-size: var(--fs-11, 11px);
+  color: var(--dash-text-muted);
+  margin-top: 0.25rem;
+  font-style: italic;
+  opacity: 0.8;
 }
 
 /* ===== STATUS POPUP STYLES ===== */

@@ -39,22 +39,16 @@ function renderBanner(container, role, planData) {
             <div class="account-banner-subtitle">Accedi per sbloccare PDF e analisi</div>
           </div>
           <div class="account-banner-actions">
-            <div class="toggle-switch-wrapper">
-              <label class="toggle-switch toggle-switch-disabled" title="Passa a Pro per sbloccare">
-                <input type="checkbox" id="toggle-notifications" disabled>
-                <span class="toggle-slider"></span>
-                <span class="toggle-label">Notifiche Push</span>
-              </label>
-              <div class="popover-tooltip">Passa a Pro per sbloccare</div>
-            </div>
-            <div class="toggle-switch-wrapper">
-              <label class="toggle-switch toggle-switch-disabled" title="Passa a Pro per sbloccare">
-                <input type="checkbox" id="toggle-pwa" disabled>
-                <span class="toggle-slider"></span>
-                <span class="toggle-label">PWA</span>
-              </label>
-              <div class="popover-tooltip">Passa a Pro per sbloccare</div>
-            </div>
+            <label class="toggle-switch" title="Notifiche Push">
+              <input type="checkbox" id="toggle-notifications" ${getNotificationPreference() ? "checked" : ""}>
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Notifiche Push</span>
+            </label>
+            <label class="toggle-switch" title="Installa PWA">
+              <input type="checkbox" id="toggle-pwa" ${getPWAPreference() ? "checked" : ""}>
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">PWA</span>
+            </label>
             <a href="/accesso.html?reason=login_required&modal=account" class="btn btn-elegant btn-sm">Accedi</a>
           </div>
         </div>
@@ -179,75 +173,26 @@ function bindBannerEvents(container, role) {
     });
   }
 
-  // Toggle notifiche (tutti gli utenti)
+  // Toggle notifiche (tutti gli utenti - abilitato per tutti)
   const notificationsToggle = container.querySelector("#toggle-notifications");
   if (notificationsToggle) {
-    if (notificationsToggle.disabled) {
-      // Guest: mostra popover
-      const wrapper = notificationsToggle.closest(".toggle-switch-wrapper");
-      if (wrapper) {
-        const toggleSwitch = wrapper.querySelector(".toggle-switch");
-        if (toggleSwitch) {
-          toggleSwitch.addEventListener("mouseenter", () => {
-            const popover = wrapper.querySelector(".popover-tooltip");
-            if (popover) {
-              popover.style.opacity = "1";
-              popover.style.visibility = "visible";
-            }
-          });
-          toggleSwitch.addEventListener("mouseleave", () => {
-            const popover = wrapper.querySelector(".popover-tooltip");
-            if (popover) {
-              popover.style.opacity = "0";
-              popover.style.visibility = "hidden";
-            }
-          });
-        }
-      }
-    } else {
-      notificationsToggle.addEventListener("change", (e) => {
-        setNotificationPreference(e.target.checked);
-        // TODO: Integrare con sistema notifiche push
-        // Notifiche push attivate/disattivate
-        // TODO: Integrare con sistema notifiche push
-      });
-    }
+    notificationsToggle.addEventListener("change", (e) => {
+      setNotificationPreference(e.target.checked);
+      // TODO: Integrare con sistema notifiche push
+      // Notifiche push attivate/disattivate
+    });
   }
 
-  // Toggle PWA (tutti gli utenti)
+  // Toggle PWA (tutti gli utenti - abilitato per tutti)
   const pwaToggle = container.querySelector("#toggle-pwa");
   if (pwaToggle) {
-    if (pwaToggle.disabled) {
-      // Guest: mostra popover
-      const wrapper = pwaToggle.closest(".toggle-switch-wrapper");
-      if (wrapper) {
-        const toggleSwitch = wrapper.querySelector(".toggle-switch");
-        if (toggleSwitch) {
-          toggleSwitch.addEventListener("mouseenter", () => {
-            const popover = wrapper.querySelector(".popover-tooltip");
-            if (popover) {
-              popover.style.opacity = "1";
-              popover.style.visibility = "visible";
-            }
-          });
-          toggleSwitch.addEventListener("mouseleave", () => {
-            const popover = wrapper.querySelector(".popover-tooltip");
-            if (popover) {
-              popover.style.opacity = "0";
-              popover.style.visibility = "hidden";
-            }
-          });
-        }
+    pwaToggle.addEventListener("change", (e) => {
+      setPWAPreference(e.target.checked);
+      if (e.target.checked) {
+        // TODO: Mostrare prompt installazione PWA
       }
-    } else {
-      pwaToggle.addEventListener("change", (e) => {
-        setPWAPreference(e.target.checked);
-        if (e.target.checked) {
-          // TODO: Mostrare prompt installazione PWA
-        }
-        // PWA attivata/disattivata
-      });
-    }
+      // PWA attivata/disattivata
+    });
   }
 
   // Activate Desk button (solo Pro)

@@ -242,8 +242,19 @@ function openContactsModal(type) {
       <div class="contacts-info">
         <p class="contacts-description">Per assistenza tecnica, domande o segnalazioni:</p>
         <div class="contacts-item">
-          <strong>Email:</strong>
+          <strong>Supporto:</strong>
           <a href="mailto:support@tradelia.org" class="contacts-link">support@tradelia.org</a>
+          <span class="contacts-hint">Assistenza tecnica e domande</span>
+        </div>
+        <div class="contacts-item">
+          <strong>Amministrazione:</strong>
+          <a href="mailto:amministrazione@tradelia.org" class="contacts-link">amministrazione@tradelia.org</a>
+          <span class="contacts-hint">Fatturazione e pagamenti</span>
+        </div>
+        <div class="contacts-item">
+          <strong>Info:</strong>
+          <a href="mailto:info@tradelia.org" class="contacts-link">info@tradelia.org</a>
+          <span class="contacts-hint">Informazioni generali</span>
         </div>
         <div class="contacts-item">
           <strong>Risposta entro:</strong> 24-48 ore
