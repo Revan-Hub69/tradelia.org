@@ -139,7 +139,8 @@ function main() {
   }
 }
 
-if (require.main === module) {
+// Run if executed directly
+if (import.meta.url === `file://${process.argv[1]}`) {
   process.exit(main());
 }
 
