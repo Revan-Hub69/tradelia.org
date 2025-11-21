@@ -6,8 +6,8 @@
 /* ===== OVERRIDE GENERIC LINKS ===== */
 /* Tutti i link nella dashboard devono essere grigi con linea blu all'hover */
 .dashboard-container a:not(.dashboard-brand):not(.btn):not(.footer-link):not(.resource-link):not(.panel-back) {
-  color: var(--dash-text-soft);
-  text-decoration: none;
+  color: var(--dash-text-soft) !important;
+  text-decoration: none !important;
   position: relative;
   transition: var(--transition-smooth);
   display: inline-block;
@@ -26,11 +26,42 @@
 }
 
 .dashboard-container a:not(.dashboard-brand):not(.btn):not(.footer-link):not(.resource-link):not(.panel-back):hover {
-  color: var(--dash-text);
+  color: var(--dash-text) !important;
 }
 
 .dashboard-container a:not(.dashboard-brand):not(.btn):not(.footer-link):not(.resource-link):not(.panel-back):hover::after {
   width: 100%;
+}
+
+/* Override specifico per footer dashboard - deve sovrascrivere links.css */
+.dashboard-footer a,
+.dashboard-footer .footer-link {
+  color: var(--dash-text-soft) !important;
+}
+
+.dashboard-footer a:hover,
+.dashboard-footer .footer-link:hover {
+  color: var(--dash-text) !important;
+}
+
+/* Override globale per TUTTI i link nella dashboard - deve sovrascrivere links.css */
+.dashboard-container a,
+.dashboard-container a:link,
+.dashboard-container a:visited {
+  color: var(--dash-text-soft) !important;
+}
+
+.dashboard-container a:hover {
+  color: var(--dash-text) !important;
+}
+
+/* Eccezioni per elementi che hanno già stili specifici */
+.dashboard-container .btn,
+.dashboard-container .dashboard-brand,
+.dashboard-container .footer-link,
+.dashboard-container .resource-link,
+.dashboard-container .panel-back {
+  /* Questi hanno già stili specifici, non sovrascrivere */
 }
 
 /* ===== DASHBOARD VARIABLES ===== */
@@ -602,8 +633,8 @@
 
 .footer-link {
   font-size: var(--fs-12, 12px);
-  color: var(--dash-text-soft);
-  text-decoration: none;
+  color: var(--dash-text-soft) !important;
+  text-decoration: none !important;
   position: relative;
   transition: var(--transition-smooth);
   display: inline-block;
@@ -622,7 +653,7 @@
 }
 
 .footer-link:hover {
-  color: var(--dash-text);
+  color: var(--dash-text) !important;
 }
 
 .footer-link:hover::after {
