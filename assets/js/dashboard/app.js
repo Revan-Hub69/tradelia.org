@@ -21,21 +21,16 @@ export const STATE = {
 
 /**
  * Initialize dashboard application
+ * BEST PRACTICE: Dashboard accessibile senza token
+ * Il token viene richiesto solo quando l'utente clicca esplicitamente "Accedi"
  */
 export async function initDashboard() {
-  // BEST PRACTICE: Verifica autenticazione PRIMA di inizializzare dashboard
-  const authCheck = await checkAuthentication();
-  if (!authCheck.authenticated) {
-    // Reindirizza a accesso.html con motivo
-    const reason = authCheck.reason || "missing_token";
-    const redirectUrl =
-      authCheck.redirectTo ||
-      `/accesso.html?reason=${reason}&redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
-    window.location.href = redirectUrl;
-    return;
-  }
+  // BEST PRACTICE: Non richiedere token automaticamente
+  // La dashboard è accessibile anche senza autenticazione
+  // Il token verrà richiesto solo quando l'utente clicca "Accedi"
 
   // Initialize account banner (shows user status, plan, usage)
+  // Il banner gestirà autonomamente la richiesta del token se necessario
   await initAccountBanner();
 
   // Initialize footer
@@ -168,9 +163,10 @@ function showModule(moduleId) {
 /**
  * Verifica autenticazione utente
  * Best Practice: Separazione autenticazione da dashboard
+ * Esportata per uso da altri moduli quando necessario
  * @returns {Promise<{authenticated: boolean, reason?: string}>}
  */
-async function checkAuthentication() {
+export async function checkAuthentication() {
   const token = localStorage.getItem("tradelia-access-token-v1");
 
   if (!token) {
