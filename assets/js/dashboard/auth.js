@@ -5,7 +5,7 @@
  * Usa API get-user-plan.js per stato plan e usage
  */
 
-const API_BASE = '/api';
+const API_BASE = "/api";
 
 let userRoleCache = null;
 let userPlanDataCache = null;
@@ -19,18 +19,18 @@ export async function getUserRole() {
     return { ...userRoleCache, ...userPlanDataCache };
   }
 
-  const token = localStorage.getItem('tradelia-access-token-v1');
+  const token = localStorage.getItem("tradelia-access-token-v1");
   if (!token) {
-    userRoleCache = { role: 'guest', user: null, isAdmin: false };
+    userRoleCache = { role: "guest", user: null, isAdmin: false };
     userPlanDataCache = { plan: null, usage: null };
     return { ...userRoleCache, ...userPlanDataCache };
   }
 
   try {
     const response = await fetch(`${API_BASE}/get-user-plan.js`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ token }),
     });
@@ -38,19 +38,20 @@ export async function getUserRole() {
     const data = await response.json();
 
     if (data.ok && data.plan) {
-      // Determina ruolo: guest, authenticated (pro), desk
-      let role = 'authenticated';
-      if (data.plan.type === 'guest') {
-        role = 'guest';
-      } else if (data.plan.type === 'pro') {
-        role = 'pro';
-      } else if (data.plan.type === 'desk') {
-        role = 'desk';
+      // BEST PRACTICE: Gerarchia ruoli: guest → pro → desk → admin
+      // Non esiste "authenticated" come ruolo, solo guest/pro/desk
+      // Se utente ha token ma piano è guest = guest autenticato (può vedere più contenuti)
+      let role = data.plan.type || "guest"; // Usa direttamente il tipo piano
+
+      // Verifica che il ruolo sia valido
+      if (!["guest", "pro", "desk"].includes(role)) {
+        console.warn("[Auth] Ruolo non valido dal piano:", role, "- default a guest");
+        role = "guest";
       }
 
       userRoleCache = {
         role: role,
-        user: { email: data.plan.email || 'Utente', id: data.plan.userId },
+        user: { email: data.plan.email || "Utente", id: data.plan.userId },
         isAdmin: data.isAdmin || false,
       };
       userPlanDataCache = {
@@ -59,14 +60,14 @@ export async function getUserRole() {
       };
     } else {
       // Token non valido o scaduto, trattiamo come guest
-      console.warn('[Auth] Token non valido o scaduto, utente trattato come guest.');
-      localStorage.removeItem('tradelia-access-token-v1');
-      userRoleCache = { role: 'guest', user: null, isAdmin: false };
+      console.warn("[Auth] Token non valido o scaduto, utente trattato come guest.");
+      localStorage.removeItem("tradelia-access-token-v1");
+      userRoleCache = { role: "guest", user: null, isAdmin: false };
       userPlanDataCache = { plan: null, usage: null };
     }
   } catch (error) {
-    console.error('[Auth] Errore durante la verifica del ruolo utente:', error);
-    userRoleCache = { role: 'guest', user: null, isAdmin: false };
+    console.error("[Auth] Errore durante la verifica del ruolo utente:", error);
+    userRoleCache = { role: "guest", user: null, isAdmin: false };
     userPlanDataCache = { plan: null, usage: null };
   }
 
@@ -78,13 +79,13 @@ export async function getUserRole() {
  */
 export async function logout() {
   try {
-    localStorage.removeItem('tradelia-access-token-v1');
-    userRoleCache = { role: 'guest', user: null, isAdmin: false };
+    localStorage.removeItem("tradelia-access-token-v1");
+    userRoleCache = { role: "guest", user: null, isAdmin: false };
     userPlanDataCache = { plan: null, usage: null };
-    window.location.href = '/accesso.html?reason=logout';
+    window.location.href = "/accesso.html?reason=logout";
   } catch (error) {
-    console.error('[Auth] Errore durante il logout:', error);
-    alert('Errore durante il logout. Riprova.');
+    console.error("[Auth] Errore durante il logout:", error);
+    alert("Errore durante il logout. Riprova.");
   }
 }
 
@@ -105,11 +106,10 @@ export async function getPlanData() {
  * Reindirizza a login se non autenticato
  */
 export function requireAuth() {
-  const token = localStorage.getItem('tradelia-access-token-v1');
+  const token = localStorage.getItem("tradelia-access-token-v1");
   if (!token) {
-    window.location.href = '/accesso.html?reason=login_required';
+    window.location.href = "/accesso.html?reason=login_required";
     return false;
   }
   return true;
 }
-

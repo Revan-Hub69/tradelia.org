@@ -4,18 +4,22 @@
  * Notifiche sistema, avvisi, comunicazioni con integrazione Supabase
  */
 
-import { initSupabase } from './supabase-client.js';
+import { initSupabase } from "./supabase-client.js";
 
 export async function loadNotifications() {
-  const notificationsList = document.getElementById('notifications-list');
-  if (!notificationsList) return;
+  const notificationsList = document.getElementById("notifications-list");
+  if (!notificationsList) {
+    return;
+  }
 
   await loadNotificationsData();
 }
 
 async function loadNotificationsData() {
-  const notificationsList = document.getElementById('notifications-list');
-  if (!notificationsList) return;
+  const notificationsList = document.getElementById("notifications-list");
+  if (!notificationsList) {
+    return;
+  }
 
   // Mostra loading
   notificationsList.innerHTML = `
@@ -32,15 +36,30 @@ async function loadNotificationsData() {
     // Prova Supabase
     const supabase = await initSupabase();
     if (supabase) {
-      const token = localStorage.getItem('tradelia-access-token-v1');
+      const token = localStorage.getItem("tradelia-access-token-v1");
       if (token) {
-        // Query notifiche (assumendo tabella 'notifications')
-        const { data, error } = await supabase
-          .from('notifications')
-          .select('*')
-          .eq('user_token', token)
-          .order('created_at', { ascending: false })
+        // Query notifiche
+        // Prima prova con user_id (se autenticato)
+        let query = supabase
+          .from("notifications")
+          .select("*")
+          .order("created_at", { ascending: false })
           .limit(50);
+
+        // Se abbiamo user_id dal token, usa quello, altrimenti usa user_token
+        try {
+          const tokenData = JSON.parse(atob(token.split(".")[1])); // Decodifica JWT se possibile
+          if (tokenData?.user_id) {
+            query = query.eq("user_id", tokenData.user_id);
+          } else {
+            query = query.eq("user_token", token);
+          }
+        } catch {
+          // Fallback: usa user_token
+          query = query.eq("user_token", token);
+        }
+
+        const { data, error } = await query;
 
         if (error) {
           throw error;
@@ -52,20 +71,20 @@ async function loadNotificationsData() {
     }
 
     // Fallback: API endpoint
-    const response = await fetch('/api/user/notifications', {
+    const response = await fetch("/api/user/notifications", {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('tradelia-access-token-v1') || ''}`
-      }
+        Authorization: `Bearer ${localStorage.getItem("tradelia-access-token-v1") || ""}`,
+      },
     });
 
     if (response.ok) {
       const data = await response.json();
       renderNotifications(data.notifications || []);
     } else {
-      throw new Error('Errore caricamento notifiche');
+      throw new Error("Errore caricamento notifiche");
     }
   } catch (err) {
-    console.error('[Notifications] Errore:', err);
+    console.error("[Notifications] Errore:", err);
     // Mostra empty state (già presente in HTML)
     notificationsList.innerHTML = `
       <div class="reports-empty">
@@ -81,8 +100,10 @@ async function loadNotificationsData() {
 }
 
 function renderNotifications(notifications) {
-  const notificationsList = document.getElementById('notifications-list');
-  if (!notificationsList) return;
+  const notificationsList = document.getElementById("notifications-list");
+  if (!notificationsList) {
+    return;
+  }
 
   if (notifications.length === 0) {
     notificationsList.innerHTML = `
@@ -98,36 +119,40 @@ function renderNotifications(notifications) {
     return;
   }
 
-  notificationsList.innerHTML = notifications.map(notification => {
-    const type = notification.type || 'info';
-    const date = notification.created_at 
-      ? new Date(notification.created_at).toLocaleDateString('it-IT', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        })
-      : 'Data non disponibile';
+  notificationsList.innerHTML = notifications
+    .map((notification) => {
+      const type = notification.type || "info";
+      const date = notification.created_at
+        ? new Date(notification.created_at).toLocaleDateString("it-IT", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : "Data non disponibile";
 
-    const icons = {
-      success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
-      error: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
-      info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
-      warning: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
-    };
+      const icons = {
+        success:
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+        error:
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+        info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+        warning:
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+      };
 
-    return `
-      <div class="report-card" data-notification-id="${notification.id || ''}">
+      return `
+      <div class="report-card" data-notification-id="${notification.id || ""}">
         <div class="report-card-header">
           <div class="report-card-main">
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
               <div style="color: var(--${type}); width: 20px; height: 20px;">
                 ${icons[type] || icons.info}
               </div>
-              <h3 class="report-ticker" style="margin: 0;">${notification.title || 'Notifica'}</h3>
+              <h3 class="report-ticker" style="margin: 0;">${notification.title || "Notifica"}</h3>
             </div>
-            <p class="report-company">${notification.message || notification.body || ''}</p>
+            <p class="report-company">${notification.message || notification.body || ""}</p>
             <div class="report-meta">
               <div class="report-meta-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -141,5 +166,6 @@ function renderNotifications(notifications) {
         </div>
       </div>
     `;
-  }).join('');
+    })
+    .join("");
 }

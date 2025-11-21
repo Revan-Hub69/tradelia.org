@@ -10,6 +10,7 @@ import { initAccountBanner } from "./account-banner.js";
 import { initFooter } from "./footer.js";
 import { isAdmin } from "./permissions.js";
 import { getUserRole } from "./auth.js";
+import { startSessionCheck } from "./session.js";
 
 // Global state
 export const STATE = {
@@ -22,11 +23,26 @@ export const STATE = {
  * Initialize dashboard application
  */
 export async function initDashboard() {
+  // BEST PRACTICE: Verifica autenticazione PRIMA di inizializzare dashboard
+  const authCheck = await checkAuthentication();
+  if (!authCheck.authenticated) {
+    // Reindirizza a accesso.html con motivo
+    const reason = authCheck.reason || "missing_token";
+    const redirectUrl =
+      authCheck.redirectTo ||
+      `/accesso.html?reason=${reason}&redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+    window.location.href = redirectUrl;
+    return;
+  }
+
   // Initialize account banner (shows user status, plan, usage)
   await initAccountBanner();
 
   // Initialize footer
   await initFooter();
+
+  // BEST PRACTICE: Avvia session management (periodic token check, auto-logout)
+  startSessionCheck();
 
   // Show/hide admin module based on permissions
   await toggleAdminModule();
@@ -119,6 +135,18 @@ function showModule(moduleId) {
     panel.classList.remove("active");
   });
 
+  // Mostra/nascondi account banner (solo sulla home/overview)
+  const accountBannerSlot = document.getElementById("account-banner-slot");
+  if (accountBannerSlot) {
+    if (!moduleId || moduleId === "overview") {
+      // Mostra banner solo sulla home o su overview
+      accountBannerSlot.style.display = "";
+    } else {
+      // Nascondi banner su altre pagine
+      accountBannerSlot.style.display = "none";
+    }
+  }
+
   if (!moduleId) {
     // Show modules grid
     if (modulesView) {
@@ -134,6 +162,76 @@ function showModule(moduleId) {
     panel.classList.add("active");
     STATE.currentModule = moduleId;
     loadModule(moduleId);
+  }
+}
+
+/**
+ * Verifica autenticazione utente
+ * Best Practice: Separazione autenticazione da dashboard
+ * @returns {Promise<{authenticated: boolean, reason?: string}>}
+ */
+async function checkAuthentication() {
+  const token = localStorage.getItem("tradelia-access-token-v1");
+
+  if (!token) {
+    return { authenticated: false, reason: "missing_token" };
+  }
+
+  try {
+    // Verifica token con API
+    const response = await fetch("/api/validate-dashboard-token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    });
+
+    if (!response.ok) {
+      // Token non valido o scaduto
+      localStorage.removeItem("tradelia-access-token-v1");
+      return { authenticated: false, reason: "invalid_token" };
+    }
+
+    const data = await response.json();
+
+    if (!data.ok) {
+      // Token scaduto o revocato
+      localStorage.removeItem("tradelia-access-token-v1");
+      return { authenticated: false, reason: data.reason || "invalid_token" };
+    }
+
+    // Verifica scadenza
+    if (data.validUntil) {
+      const expiryDate = new Date(data.validUntil);
+      if (expiryDate < new Date()) {
+        localStorage.removeItem("tradelia-access-token-v1");
+        return { authenticated: false, reason: "expired_token" };
+      }
+    }
+
+    // BEST PRACTICE: Reindirizza a accesso.html se serve gestione pagamento/account
+    // Verifica se ci sono problemi che richiedono modale account
+    if (data.status === "pending_payment" || data.status === "pending_manual") {
+      // Pagamento in attesa: reindirizza a accesso.html con modale
+      return {
+        authenticated: false,
+        reason: "payment_required",
+        redirectTo: `/accesso.html?reason=payment_required&modal=payment&token=${encodeURIComponent(token)}`,
+      };
+    }
+
+    // Scadenza imminente (entro 7 giorni): suggerisci modale
+    if (data.daysLeft !== undefined && data.daysLeft <= 7 && data.daysLeft > 0) {
+      // Non blocca accesso, ma potrebbe mostrare warning
+      // Per ora permette accesso, ma potrebbe essere migliorato
+    }
+
+    // Token valido
+    return { authenticated: true };
+  } catch (error) {
+    console.error("[Dashboard] Errore verifica autenticazione:", error);
+    // In caso di errore, permettere accesso guest (fallback)
+    // Ma loggare per debug
+    return { authenticated: false, reason: "auth_error" };
   }
 }
 

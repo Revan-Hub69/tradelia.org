@@ -4,14 +4,15 @@
  * Storico richieste analisi on-demand con integrazione Supabase
  */
 
-import { initSupabase } from './supabase-client.js';
+import { initSupabase } from "./supabase-client.js";
 
 let allRequests = [];
-let currentFilter = 'all';
 
 export async function loadRequestsHistory() {
-  const requestsList = document.getElementById('requests-list');
-  if (!requestsList) return;
+  const requestsList = document.getElementById("requests-list");
+  if (!requestsList) {
+    return;
+  }
 
   // Setup filtri
   setupFilters();
@@ -21,23 +22,24 @@ export async function loadRequestsHistory() {
 }
 
 function setupFilters() {
-  const filterBtns = document.querySelectorAll('.filter-btn');
+  const filterBtns = document.querySelectorAll(".filter-btn");
   filterBtns.forEach((btn) => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener("click", (e) => {
       e.preventDefault();
-      filterBtns.forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
+      filterBtns.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
 
-      const filter = btn.getAttribute('data-filter');
-      currentFilter = filter;
+      const filter = btn.getAttribute("data-filter");
       filterRequests(filter);
     });
   });
 }
 
 async function loadRequests() {
-  const requestsList = document.getElementById('requests-list');
-  if (!requestsList) return;
+  const requestsList = document.getElementById("requests-list");
+  if (!requestsList) {
+    return;
+  }
 
   // Mostra loading
   requestsList.innerHTML = `
@@ -55,14 +57,24 @@ async function loadRequests() {
     const supabase = await initSupabase();
     if (supabase) {
       // Recupera token da localStorage
-      const token = localStorage.getItem('tradelia-access-token-v1');
+      const token = localStorage.getItem("tradelia-access-token-v1");
       if (token) {
-        // Query richieste utente (assumendo tabella 'analysis_requests')
-        const { data, error } = await supabase
-          .from('analysis_requests')
-          .select('*')
-          .eq('access_token', token)
-          .order('created_at', { ascending: false });
+        // Query richieste utente
+        // Prima prova con user_id (se autenticato)
+        let query = supabase
+          .from("analysis_requests")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        // Se abbiamo user_id dal token, usa quello, altrimenti usa access_token
+        const tokenData = JSON.parse(atob(token.split(".")[1])); // Decodifica JWT se possibile
+        if (tokenData?.user_id) {
+          query = query.eq("user_id", tokenData.user_id);
+        } else {
+          query = query.eq("access_token", token);
+        }
+
+        const { data, error } = await query;
 
         if (error) {
           throw error;
@@ -75,10 +87,10 @@ async function loadRequests() {
     }
 
     // Fallback: API endpoint
-    const response = await fetch('/api/user/requests', {
+    const response = await fetch("/api/user/requests", {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('tradelia-access-token-v1') || ''}`
-      }
+        Authorization: `Bearer ${localStorage.getItem("tradelia-access-token-v1") || ""}`,
+      },
     });
 
     if (response.ok) {
@@ -86,10 +98,10 @@ async function loadRequests() {
       allRequests = data.requests || [];
       renderRequests(allRequests);
     } else {
-      throw new Error('Errore caricamento richieste');
+      throw new Error("Errore caricamento richieste");
     }
   } catch (err) {
-    console.error('[Requests History] Errore:', err);
+    console.error("[Requests History] Errore:", err);
     requestsList.innerHTML = `
       <div class="reports-empty">
         <svg class="reports-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -104,13 +116,11 @@ async function loadRequests() {
 }
 
 function filterRequests(filter) {
-  currentFilter = filter;
-  
   let filtered = [...allRequests];
-  
-  if (filter !== 'all') {
-    filtered = allRequests.filter(req => {
-      const status = req.status?.toLowerCase() || 'pending';
+
+  if (filter !== "all") {
+    filtered = allRequests.filter((req) => {
+      const status = req.status?.toLowerCase() || "pending";
       return status === filter;
     });
   }
@@ -119,8 +129,10 @@ function filterRequests(filter) {
 }
 
 function renderRequests(requests) {
-  const requestsList = document.getElementById('requests-list');
-  if (!requestsList) return;
+  const requestsList = document.getElementById("requests-list");
+  if (!requestsList) {
+    return;
+  }
 
   if (requests.length === 0) {
     requestsList.innerHTML = `
@@ -136,43 +148,44 @@ function renderRequests(requests) {
     return;
   }
 
-  requestsList.innerHTML = requests.map(request => {
-    const status = request.status?.toLowerCase() || 'pending';
-    const statusLabels = {
-      pending: 'In attesa',
-      processing: 'In elaborazione',
-      completed: 'Completata',
-      failed: 'Fallita'
-    };
+  requestsList.innerHTML = requests
+    .map((request) => {
+      const status = request.status?.toLowerCase() || "pending";
+      const statusLabels = {
+        pending: "In attesa",
+        processing: "In elaborazione",
+        completed: "Completata",
+        failed: "Fallita",
+      };
 
-    const statusColors = {
-      pending: 'var(--warning)',
-      processing: 'var(--info)',
-      completed: 'var(--success)',
-      failed: 'var(--error)'
-    };
+      const statusColors = {
+        pending: "var(--warning)",
+        processing: "var(--info)",
+        completed: "var(--success)",
+        failed: "var(--error)",
+      };
 
-    const date = request.created_at 
-      ? new Date(request.created_at).toLocaleDateString('it-IT', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        })
-      : 'Data non disponibile';
+      const date = request.created_at
+        ? new Date(request.created_at).toLocaleDateString("it-IT", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : "Data non disponibile";
 
-    return `
+      return `
       <div class="report-card">
         <div class="report-card-header">
           <div class="report-card-main">
             <h3 class="report-ticker">
-              ${request.ticker || request.asset || 'N/A'}
+              ${request.ticker || request.asset || "N/A"}
               <span class="report-badge" style="background: ${statusColors[status] || statusColors.pending}">
                 ${statusLabels[status] || status}
               </span>
             </h3>
-            <p class="report-company">${request.brief || request.description || 'Nessuna descrizione'}</p>
+            <p class="report-company">${request.brief || request.description || "Nessuna descrizione"}</p>
             <div class="report-meta">
               <div class="report-meta-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -181,7 +194,9 @@ function renderRequests(requests) {
                 </svg>
                 ${date}
               </div>
-              ${request.id ? `
+              ${
+                request.id
+                  ? `
                 <div class="report-meta-item">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -189,11 +204,14 @@ function renderRequests(requests) {
                   </svg>
                   ID: ${request.id}
                 </div>
-              ` : ''}
+              `
+                  : ""
+              }
             </div>
           </div>
         </div>
       </div>
     `;
-  }).join('');
+    })
+    .join("");
 }

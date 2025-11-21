@@ -55,7 +55,7 @@ function renderBanner(container, role, planData) {
               </label>
               <div class="popover-tooltip">Passa a Pro per sbloccare</div>
             </div>
-            <a href="/accesso.html" class="btn btn-elegant btn-sm">Accedi</a>
+            <a href="/accesso.html?reason=login_required&modal=account" class="btn btn-elegant btn-sm">Accedi</a>
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@ function renderBanner(container, role, planData) {
   const usage = planData?.usage || {};
   const email = role.user?.email || "Utente";
 
-  if (role.role === "authenticated" || role.role === "pro" || plan.type === "pro") {
+  if (role.role === "pro" || plan.type === "pro") {
     // Pro: 19€/mese, 1 analisi inclusa, max 3 extra a 29€
     const proIncludedRemaining = usage.proIncludedRemaining || 0;
     const proExtraRemaining = usage.proExtraRemaining || 0;
@@ -110,8 +110,8 @@ function renderBanner(container, role, planData) {
             </label>
             ${
               plan.status === "pending_manual" || plan.status === "pending_payment"
-                ? `<span class="account-banner-warning">Attendi attivazione</span>`
-                : `<a href="#on-demand" class="btn btn-elegant btn-sm" data-action="activate-desk">Attiva Desk</a>`
+                ? `<a href="/accesso.html?reason=payment_required&modal=payment" class="btn btn-elegant btn-sm">Gestisci Pagamento</a>`
+                : `<a href="/accesso.html?modal=account&action=upgrade-desk" class="btn btn-elegant btn-sm">Attiva Desk</a>`
             }
             <button class="btn btn-secondary btn-sm" id="btn-logout">Esci</button>
           </div>
@@ -250,21 +250,15 @@ function bindBannerEvents(container, role) {
     }
   }
 
-  // Activate Desk button (solo Autenticato/Pro)
-  if (role.role === "authenticated" || role.role === "pro") {
+  // Activate Desk button (solo Pro)
+  if (role.role === "pro") {
     const activateDeskBtn = container.querySelector('[data-action="activate-desk"]');
     if (activateDeskBtn) {
       activateDeskBtn.addEventListener("click", (e) => {
         e.preventDefault();
-        // TODO: Aprire modale o reindirizzare a pagina attivazione Desk
-        window.location.hash = "on-demand";
-        // Scroll al form attivazione Desk
-        setTimeout(() => {
-          const deskForm = document.querySelector("[data-desk-activation]");
-          if (deskForm) {
-            deskForm.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        }, 300);
+        // BEST PRACTICE: Reindirizza a accesso.html con modale per gestione account
+        // L'utente può gestire upgrade/attivazione Desk da lì
+        window.location.href = "/accesso.html?modal=account&action=upgrade-desk";
       });
     }
   }
