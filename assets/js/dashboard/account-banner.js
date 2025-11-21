@@ -44,8 +44,16 @@ export async function initAccountBanner() {
 async function renderBanner(container, role, planData) {
   // Verifica stato reale PWA e notifiche
   const pwaInstalled = isPWAInstalled();
+  const pwaInstallable = isPWAInstallable();
   const notificationsEnabled = await areNotificationsEnabled();
   const notificationPermission = getNotificationPermission();
+
+  // Genera pulsanti PWA e Notifiche
+  const pwaButton = generatePWAButton(pwaInstalled, pwaInstallable);
+  const notificationsButton = generateNotificationsButton(
+    notificationsEnabled,
+    notificationPermission
+  );
 
   if (role.role === "guest") {
     container.innerHTML = `
@@ -57,16 +65,8 @@ async function renderBanner(container, role, planData) {
             <div class="account-banner-subtitle">Accedi per sbloccare PDF e analisi</div>
           </div>
           <div class="account-banner-actions">
-            <label class="toggle-switch" title="Notifiche Push">
-              <input type="checkbox" id="toggle-notifications" ${notificationsEnabled ? "checked" : ""} ${notificationPermission === "denied" ? "disabled" : ""}>
-              <span class="toggle-slider"></span>
-              <span class="toggle-label">Notifiche Push</span>
-            </label>
-            <label class="toggle-switch" title="Installa PWA">
-              <input type="checkbox" id="toggle-pwa" ${pwaInstalled ? "checked" : ""} ${!isPWAInstallable() && !pwaInstalled ? "disabled" : ""}>
-              <span class="toggle-slider"></span>
-              <span class="toggle-label">PWA</span>
-            </label>
+            ${pwaButton}
+            ${notificationsButton}
             <a href="/accesso.html?reason=login_required&modal=account" class="btn btn-elegant btn-sm">Accedi</a>
           </div>
         </div>
@@ -110,16 +110,8 @@ async function renderBanner(container, role, planData) {
             </div>
           </div>
           <div class="account-banner-actions">
-            <label class="toggle-switch" title="Notifiche Push">
-              <input type="checkbox" id="toggle-notifications" ${notificationsEnabled ? "checked" : ""} ${notificationPermission === "denied" ? "disabled" : ""}>
-              <span class="toggle-slider"></span>
-              <span class="toggle-label">Notifiche Push</span>
-            </label>
-            <label class="toggle-switch" title="Installa PWA">
-              <input type="checkbox" id="toggle-pwa" ${pwaInstalled ? "checked" : ""} ${!isPWAInstallable() && !pwaInstalled ? "disabled" : ""}>
-              <span class="toggle-slider"></span>
-              <span class="toggle-label">PWA</span>
-            </label>
+            ${pwaButton}
+            ${notificationsButton}
             ${
               plan.status === "pending_manual" || plan.status === "pending_payment"
                 ? `<a href="/accesso.html?reason=payment_required&modal=payment" class="btn btn-elegant btn-sm">Gestisci Pagamento</a>`
@@ -158,16 +150,8 @@ async function renderBanner(container, role, planData) {
             </div>
           </div>
           <div class="account-banner-actions">
-            <label class="toggle-switch" title="Notifiche Push">
-              <input type="checkbox" id="toggle-notifications" ${notificationsEnabled ? "checked" : ""} ${notificationPermission === "denied" ? "disabled" : ""}>
-              <span class="toggle-slider"></span>
-              <span class="toggle-label">Notifiche Push</span>
-            </label>
-            <label class="toggle-switch" title="Installa PWA">
-              <input type="checkbox" id="toggle-pwa" ${pwaInstalled ? "checked" : ""} ${!isPWAInstallable() && !pwaInstalled ? "disabled" : ""}>
-              <span class="toggle-slider"></span>
-              <span class="toggle-label">PWA</span>
-            </label>
+            ${pwaButton}
+            ${notificationsButton}
             <button class="btn btn-secondary btn-sm" id="btn-logout">Esci</button>
           </div>
         </div>
@@ -175,6 +159,48 @@ async function renderBanner(container, role, planData) {
     `;
     return;
   }
+}
+
+/**
+ * Genera pulsante PWA in base allo stato
+ */
+function generatePWAButton(pwaInstalled, pwaInstallable) {
+  if (pwaInstalled) {
+    // PWA installata: mostra badge indicatore
+    return `<span class="account-banner-badge badge-success" title="App installata">✓ App Installata</span>`;
+  }
+
+  if (pwaInstallable) {
+    // PWA installabile: mostra pulsante "Installa App"
+    return `<button class="btn btn-secondary btn-sm" id="btn-install-pwa" title="Installa l'app sul dispositivo">📱 Installa App</button>`;
+  }
+
+  // PWA non installabile: non mostrare nulla (o opzionalmente badge nascosto)
+  return "";
+}
+
+/**
+ * Genera pulsante/toggle notifiche in base allo stato
+ */
+function generateNotificationsButton(notificationsEnabled, notificationPermission) {
+  if (notificationPermission === "denied") {
+    // Permesso negato: mostra badge informativo
+    return `<span class="account-banner-badge badge-warning" title="Notifiche negate nelle impostazioni del browser">🔕 Notifiche Negate</span>`;
+  }
+
+  if (notificationsEnabled) {
+    // Notifiche abilitate: mostra toggle per disabilitare
+    return `
+      <label class="toggle-switch" title="Disabilita notifiche push">
+        <input type="checkbox" id="toggle-notifications" checked>
+        <span class="toggle-slider"></span>
+        <span class="toggle-label">🔔 Notifiche</span>
+      </label>
+    `;
+  }
+
+  // Notifiche non abilitate: mostra pulsante "Abilita Notifiche"
+  return `<button class="btn btn-secondary btn-sm" id="btn-enable-notifications" title="Abilita notifiche push">🔔 Abilita Notifiche</button>`;
 }
 
 /**
@@ -191,60 +217,42 @@ function bindBannerEvents(container, role) {
     });
   }
 
-  // Toggle notifiche (tutti gli utenti - abilitato per tutti)
-  const notificationsToggle = container.querySelector("#toggle-notifications");
-  if (notificationsToggle) {
-    notificationsToggle.addEventListener("change", async (e) => {
-      const enabled = e.target.checked;
-
-      if (enabled) {
-        // Abilita notifiche
-        const success = await enablePushNotifications();
-        if (!success) {
-          // Se fallito, ripristina toggle
-          e.target.checked = false;
-        } else {
-          setNotificationPreference(true);
-        }
-      } else {
-        // Disabilita notifiche
-        await disablePushNotifications();
-        setNotificationPreference(false);
+  // Pulsante Installa PWA
+  const installPWABtn = container.querySelector("#btn-install-pwa");
+  if (installPWABtn) {
+    installPWABtn.addEventListener("click", async () => {
+      const installed = await installPWA();
+      if (installed) {
+        // Aggiorna banner per mostrare badge "App Installata"
+        await refreshAccountBanner();
       }
-
-      // Aggiorna banner per riflettere stato reale
-      await refreshAccountBanner();
     });
   }
 
-  // Toggle PWA (tutti gli utenti - abilitato per tutti)
-  const pwaToggle = container.querySelector("#toggle-pwa");
-  if (pwaToggle) {
-    // Se PWA è già installata, il toggle è solo indicatore (non cliccabile)
-    const pwaInstalled = isPWAInstalled();
-    if (pwaInstalled) {
-      // PWA installata: toggle sempre checked e disabilitato (solo indicatore)
-      pwaToggle.disabled = true;
-      pwaToggle.checked = true;
-      pwaToggle.title = "PWA già installata";
-    } else {
-      // PWA non installata: al click mostra prompt installazione
-      pwaToggle.addEventListener("change", async (e) => {
-        if (e.target.checked) {
-          const installed = await installPWA();
-          if (!installed) {
-            // Se installazione fallita o annullata, ripristina toggle
-            e.target.checked = false;
-          } else {
-            // Installata con successo → disabilita toggle e mantieni checked
-            e.target.disabled = true;
-            e.target.title = "PWA installata";
-            setPWAPreference(true);
-          }
-        }
-        // Se disabilitato, non fare nulla (PWA non può essere "disinstallata" via toggle)
-      });
-    }
+  // Pulsante Abilita Notifiche
+  const enableNotificationsBtn = container.querySelector("#btn-enable-notifications");
+  if (enableNotificationsBtn) {
+    enableNotificationsBtn.addEventListener("click", async () => {
+      const success = await enablePushNotifications();
+      if (success) {
+        // Aggiorna banner per mostrare toggle
+        await refreshAccountBanner();
+      }
+    });
+  }
+
+  // Toggle notifiche (solo se già abilitate, per disabilitare)
+  const notificationsToggle = container.querySelector("#toggle-notifications");
+  if (notificationsToggle) {
+    notificationsToggle.addEventListener("change", async (e) => {
+      if (!e.target.checked) {
+        // Disabilita notifiche
+        await disablePushNotifications();
+        setNotificationPreference(false);
+        // Aggiorna banner per mostrare pulsante "Abilita Notifiche"
+        await refreshAccountBanner();
+      }
+    });
   }
 
   // Activate Desk button (solo Pro)
@@ -271,17 +279,10 @@ function escapeHtml(text) {
 }
 
 /**
- * Salva preferenza notifiche in localStorage
+ * Salva preferenza notifiche in localStorage (per riferimento futuro)
  */
 function setNotificationPreference(enabled) {
   localStorage.setItem("tradelia-notifications-enabled", enabled ? "true" : "false");
-}
-
-/**
- * Salva preferenza PWA in localStorage
- */
-function setPWAPreference(enabled) {
-  localStorage.setItem("tradelia-pwa-enabled", enabled ? "true" : "false");
 }
 
 /**
