@@ -7,8 +7,12 @@ import { HttpError, handleRouteError } from "./_lib/http.js";
 
 const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
 const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
+// Numero WhatsApp: usa sandbox (whatsapp:+14155238886) o numero business verificato
+// Per sandbox: TWILIO_WHATSAPP_NUMBER=whatsapp:+14155238886
+// Per produzione: TWILIO_WHATSAPP_NUMBER=whatsapp:+393491234567 (il tuo numero Twilio)
 const TWILIO_WHATSAPP_NUMBER =
-  process.env.TWILIO_WHATSAPP_NUMBER || `whatsapp:${process.env.TWILIO_PHONE_NUMBER}`;
+  process.env.TWILIO_WHATSAPP_NUMBER ||
+  (process.env.TWILIO_PHONE_NUMBER ? `whatsapp:${process.env.TWILIO_PHONE_NUMBER}` : null);
 
 if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN) {
   console.warn("[Send WhatsApp] Twilio non configurato - invio WhatsApp disabilitato");
@@ -28,7 +32,16 @@ async function sendWhatsAppViaTwilio({ to, message }) {
   if (!TWILIO_WHATSAPP_NUMBER) {
     throw new HttpError(
       500,
-      "Numero WhatsApp Twilio non configurato (TWILIO_WHATSAPP_NUMBER mancante)"
+      "Numero WhatsApp Twilio non configurato (TWILIO_WHATSAPP_NUMBER mancante). " +
+        "Per sandbox usa: whatsapp:+14155238886 (o il numero sandbox dalla console Twilio)"
+    );
+  }
+
+  // Verifica formato numero WhatsApp
+  if (!TWILIO_WHATSAPP_NUMBER.startsWith("whatsapp:")) {
+    throw new HttpError(
+      500,
+      "TWILIO_WHATSAPP_NUMBER deve iniziare con 'whatsapp:' (es: whatsapp:+14155238886)"
     );
   }
 

@@ -2,7 +2,6 @@
 // Helper per inviare notifiche agli utenti usando il metodo preferito (email/SMS/WhatsApp)
 
 import { getServiceSupabase } from "./supabase.js";
-import { runtimeFetch as fetch } from "./fetch.js";
 
 const supabase = getServiceSupabase();
 
@@ -72,17 +71,39 @@ export async function sendUserNotification(userId, email, title, message, url = 
  * Invia notifica email
  */
 async function sendEmailNotification(email, title, message, url = null) {
-  const { sendEmail } = await import("../send-email.js");
-  await sendEmail({
-    to: email,
-    subject: title,
-    html: `
-      <h2>${title}</h2>
-      <p>${message.replace(/\n/g, "<br/>")}</p>
-      ${url ? `<p><a href="${url}">Apri Dashboard</a></p>` : ""}
-      <p>Grazie,<br>Tradelia AI</p>
-    `,
-  });
+  const sendEmailModule = await import("../send-email.js");
+  const sendEmail = sendEmailModule.default;
+
+  // sendEmail è un handler Vercel, dobbiamo chiamarlo come funzione
+  // Creiamo un mock request/response per chiamare la funzione
+  const mockReq = {
+    method: "POST",
+    body: {
+      type: "richiesta-servizio",
+      to: email,
+      subject: title,
+      html: `
+        <h2>${title}</h2>
+        <p>${message.replace(/\n/g, "<br/>")}</p>
+        ${url ? `<p><a href="${url}">Apri Dashboard</a></p>` : ""}
+        <p>Grazie,<br>Tradelia AI</p>
+      `,
+    },
+  };
+
+  const mockRes = {
+    status: (code) => ({
+      json: (data) => {
+        if (code !== 200) {
+          throw new Error(data.error || "Errore invio email");
+        }
+        return { ok: true };
+      },
+    }),
+    setHeader: () => {},
+  };
+
+  await sendEmail(mockReq, mockRes);
   return { success: true, method: "email" };
 }
 
@@ -90,56 +111,60 @@ async function sendEmailNotification(email, title, message, url = null) {
  * Invia notifica SMS
  */
 async function sendSMSNotification(phoneNumber, message) {
-  const response = await fetch(
-    `${process.env.VERCEL_URL || "https://tradelia.org"}/api/send-sms.js`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+  const sendSMSModule = await import("../send-sms.js");
+  const sendSMS = sendSMSModule.default;
+
+  const mockReq = {
+    method: "POST",
+    body: {
+      to: phoneNumber,
+      message,
+    },
+  };
+
+  const mockRes = {
+    status: (code) => ({
+      json: (data) => {
+        if (code !== 200 || !data.ok) {
+          throw new Error(data.error || "Errore invio SMS");
+        }
+        return data;
       },
-      body: JSON.stringify({
-        to: phoneNumber,
-        message,
-      }),
-    }
-  );
+    }),
+    setHeader: () => {},
+    end: () => {},
+  };
 
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`SMS API error: ${error}`);
-  }
-
-  const data = await response.json();
-  if (!data.ok) {
-    throw new Error(data.error || "Errore invio SMS");
-  }
+  await sendSMS(mockReq, mockRes);
 }
 
 /**
  * Invia notifica WhatsApp
  */
 async function sendWhatsAppNotification(phoneNumber, message) {
-  const response = await fetch(
-    `${process.env.VERCEL_URL || "https://tradelia.org"}/api/send-whatsapp.js`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+  const sendWhatsAppModule = await import("../send-whatsapp.js");
+  const sendWhatsApp = sendWhatsAppModule.default;
+
+  const mockReq = {
+    method: "POST",
+    body: {
+      to: phoneNumber,
+      message,
+    },
+  };
+
+  const mockRes = {
+    status: (code) => ({
+      json: (data) => {
+        if (code !== 200 || !data.ok) {
+          throw new Error(data.error || "Errore invio WhatsApp");
+        }
+        return data;
       },
-      body: JSON.stringify({
-        to: phoneNumber,
-        message,
-      }),
-    }
-  );
+    }),
+    setHeader: () => {},
+    end: () => {},
+  };
 
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`WhatsApp API error: ${error}`);
-  }
-
-  const data = await response.json();
-  if (!data.ok) {
-    throw new Error(data.error || "Errore invio WhatsApp");
-  }
+  await sendWhatsApp(mockReq, mockRes);
 }
