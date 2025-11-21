@@ -1,60 +1,60 @@
 :root {
-  --dash-bg: #050910;
-  --dash-bg-soft: #0a1423;
-  --dash-surface: #0f1725;
-  --dash-surface-elev: #152238;
-  --dash-border: rgba(70, 101, 140, 0.45);
-  --dash-border-strong: rgba(120, 162, 220, 0.6);
-  --dash-text: #f5f7fb;
-  --dash-text-soft: #d5e1ff;
-  --dash-text-muted: #8fa2c7;
+  --dash-bg: var(--surface-page, #070b12);
+  --dash-surface: var(--surface-card, #111826);
+  --dash-surface-elev: var(--surface-elev, #162133);
+  --dash-border: rgba(255, 255, 255, 0.05);
+  --dash-border-strong: rgba(96, 165, 250, 0.3);
+  --dash-text: var(--ink, #f5f7ff);
+  --dash-text-soft: rgba(229, 233, 246, 0.92);
+  --dash-text-muted: rgba(160, 176, 206, 0.7);
   --dash-accent: #7fb8ff;
   --dash-accent-hover: #b7d4ff;
-  --dash-accent-bg: rgba(112, 167, 255, 0.12);
-  --dash-glow-blue: rgba(68, 145, 255, 0.35);
+  --dash-accent-bg: rgba(96, 165, 250, 0.08);
+  --dash-link-underline: rgba(96, 165, 250, 0.4);
 }
 
 body,
 .dashboard-container {
-  background:
-    radial-gradient(circle at 20% -10%, rgba(87, 146, 255, 0.18), transparent 55%),
-    radial-gradient(circle at 80% 0, rgba(31, 63, 116, 0.2), transparent 55%),
-    linear-gradient(180deg, var(--dash-bg) 0%, var(--dash-bg-soft, #0b1423) 65%, #02060b 100%);
+  background-color: var(--dash-bg);
   color: var(--dash-text);
 }
 
-.module-card,
+.dashboard-header-minimal::after {
+  background: linear-gradient(90deg, rgba(96, 165, 250, 0.35), transparent);
+  opacity: 1;
+}
+
+.modules-grid .module-card,
 .report-card,
 .access-card,
 .on-demand-card {
-  background: linear-gradient(135deg, rgba(23, 36, 60, 0.85), rgba(8, 14, 26, 0.85));
+  background: var(--dash-surface);
   border-color: var(--dash-border);
-  box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.25),
-    0 0 18px rgba(68, 145, 255, 0.12);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.module-card::before,
+.report-card::before {
+  background: linear-gradient(180deg, rgba(96, 165, 250, 0.45), rgba(96, 165, 250, 0));
 }
 
 .module-card:hover,
 .report-card:hover,
 .access-card:hover,
 .on-demand-card:hover {
-  background: linear-gradient(135deg, rgba(29, 51, 91, 0.95), rgba(9, 16, 32, 0.92));
-  border-color: var(--dash-border-strong, rgba(120, 162, 220, 0.6));
-  box-shadow:
-    0 14px 36px rgba(0, 0, 0, 0.35),
-    0 0 22px rgba(127, 184, 255, 0.35);
-}
-
-.module-card::before,
-.report-card::before {
-  background: linear-gradient(180deg, rgba(127, 184, 255, 0.8), rgba(127, 184, 255, 0));
+  border-left-color: rgba(96, 165, 250, 0.5);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
 }
 
 .module-icon {
-  background: rgba(127, 184, 255, 0.08);
-  border: 1px solid rgba(127, 184, 255, 0.3);
-  color: var(--dash-accent);
-  box-shadow: inset 0 0 10px rgba(127, 184, 255, 0.15);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--dash-text);
+}
+
+.module-card:hover .module-icon {
+  border-color: rgba(96, 165, 250, 0.35);
+  color: #cfe0ff;
 }
 
 .module-arrow,
@@ -62,64 +62,79 @@ body,
   color: var(--dash-text-muted);
 }
 
-.module-card:hover .module-arrow {
-  color: var(--dash-accent-hover);
+.module-card:hover .module-arrow,
+.panel-back:hover {
+  color: var(--dash-text-soft);
 }
 
 .panel-view {
-  background: linear-gradient(165deg, rgba(10, 17, 30, 0.85), rgba(5, 9, 17, 0.9));
-  border: 1px solid rgba(120, 162, 220, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: var(--radius-lg, 12px);
-  padding: var(--spacing-xl, 1.5rem);
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.35),
-    0 0 35px rgba(68, 145, 255, 0.1);
+  background: var(--dash-surface-elev);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
 }
 
 .panel-header,
 .panel-content {
-  border-color: rgba(120, 162, 220, 0.2);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.panel-content a {
+  color: var(--dash-text-soft);
+  text-decoration-color: var(--dash-link-underline);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.panel-content a:hover,
+.panel-content a:focus-visible {
+  color: #f8fbff;
+  text-decoration-color: rgba(96, 165, 250, 0.6);
 }
 
 .search-input,
-.requests-filters select,
-.requests-filters input,
+.widget-search input,
+.filters-select,
 .settings-control select,
 .settings-control input[type="text"],
 .settings-control input[type="number"] {
-  background: rgba(15, 23, 37, 0.7);
-  border: 1px solid rgba(127, 184, 255, 0.2);
-  box-shadow: inset 0 0 20px rgba(5, 10, 18, 0.4);
+  background: var(--dash-surface);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .search-input:focus,
-.requests-filters select:focus,
-.requests-filters input:focus,
+.widget-search input:focus,
+.filters-select:focus,
 .settings-control select:focus,
-.settings-control input:focus {
-  border-color: var(--dash-border-strong, rgba(120, 162, 220, 0.6));
-  box-shadow: 0 0 0 3px rgba(127, 184, 255, 0.15);
+.settings-control input[type="text"]:focus,
+.settings-control input[type="number"]:focus {
+  border-color: rgba(96, 165, 250, 0.45);
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
 }
 
-.btn,
 .btn-primary {
-  border-radius: var(--radius-md, 8px);
-  border: 1px solid rgba(127, 184, 255, 0.35);
-  background: linear-gradient(120deg, rgba(66, 113, 196, 0.25), rgba(30, 52, 96, 0.8));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0));
   color: var(--dash-text);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
 }
 
-.btn:hover,
 .btn-primary:hover {
-  background: linear-gradient(120deg, rgba(106, 160, 255, 0.45), rgba(20, 36, 72, 0.95));
-  border-color: rgba(160, 208, 255, 0.85);
-  box-shadow:
-    0 12px 28px rgba(0, 0, 0, 0.35),
-    0 0 20px rgba(127, 184, 255, 0.3);
+  border-color: rgba(96, 165, 250, 0.45);
+  color: #f2f6ff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
-.reports-empty {
-  background: linear-gradient(160deg, rgba(101, 149, 223, 0.12), rgba(6, 12, 22, 0.92));
-  border-color: rgba(127, 184, 255, 0.18);
+.reports-empty,
+.empty-state {
+  border-color: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.01);
+  backdrop-filter: blur(4px);
+}
+
+.empty-state-title {
+  color: var(--dash-text);
+}
+
+.empty-state-text {
+  color: var(--dash-text-muted);
 }
