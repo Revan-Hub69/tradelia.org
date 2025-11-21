@@ -91,3 +91,4 @@ function showModule(moduleId) {
 // Make STATE available globally for modules that need it
 window.DASHBOARD_STATE = STATE;
 
+

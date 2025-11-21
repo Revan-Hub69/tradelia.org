@@ -1,36 +1,62 @@
-# Testing Structure
+# 🧪 Test Suite - Tradelia Dashboard
 
-Struttura base per testing del progetto.
+**FASE 3: Testing Framework Setup**
 
-## Organizzazione
+## 📋 Struttura Test
 
 ```
 tests/
-├── unit/              # Unit tests
-│   ├── utils/         # Test utilities
-│   └── components/    # Test componenti
-├── integration/       # Integration tests
-└── e2e/              # E2E tests
-    └── dashboard.spec.js
+├── setup.js                    # Configurazione globale Vitest
+├── unit/                       # Test unitari
+│   ├── generate-tokens.test.js
+│   └── dashboard-state.test.js
+├── integration/                # Test integrazione
+│   └── module-loader.test.js
+├── utils/                      # Helper per test
+│   └── test-helpers.js
+└── README.md                   # Questo file
 ```
 
-## Setup Futuro
-
-Quando configurato, utilizzeremo:
-- **Vitest** per unit/integration tests
-- **Playwright** per E2E tests
-
-## Scripts
+## 🚀 Comandi
 
 ```bash
-npm test              # Run all tests
-npm run test:unit     # Unit tests only
-npm run test:e2e      # E2E tests only
+# Esegui tutti i test
+npm test
+
+# Esegui test in watch mode
+npm run test:watch
+
+# Esegui test con UI
+npm run test:ui
+
+# Esegui test con coverage
+npm run test:coverage
 ```
 
-## Best Practice
+## 📝 Convenzioni
 
-1. Test per ogni utility function
-2. Test per componenti critici
-3. E2E per critical paths (login, dashboard navigation)
+- **File test**: `*.test.js` o `*.spec.js`
+- **Naming**: `describe('Feature', () => { it('should...', () => {}) })`
+- **Setup**: Usa `beforeEach` per reset state
+- **Helpers**: Usa `tests/utils/test-helpers.js` per utility comuni
 
+## ✅ Best Practice
+
+1. **Test isolati**: Ogni test deve essere indipendente
+2. **Cleanup**: Usa `afterEach` per pulire DOM/mocks
+3. **Assertions chiare**: Usa matchers descrittivi
+4. **Coverage**: Obiettivo 80%+ per utilities critiche
+
+## 🎯 Priorità Test
+
+### ✅ Fatto
+- [x] Setup Vitest
+- [x] Test generate-tokens
+- [x] Test state management
+- [x] Test module loader base
+
+### ⏳ Da Fare
+- [ ] Test componenti dashboard completi
+- [ ] Test API integration
+- [ ] Test error handling
+- [ ] E2E tests (Playwright) - FASE 3.2

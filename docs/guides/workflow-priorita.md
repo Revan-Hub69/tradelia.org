@@ -83,12 +83,14 @@
 **Tempo stimato**: 2-3 ore
 
 **Azioni**:
-- [ ] Installare Vitest
-- [ ] Configurare test structure
-- [ ] Scrivere test per utilities critiche
-- [ ] Test per componenti dashboard
+- [x] Installare Vitest
+- [x] Configurare test structure
+- [x] Scrivere test per utilities critiche
+- [x] Test per componenti dashboard base
 
 **Perché ora**: Testing early previene regressioni.
+
+**Stato**: ✅ COMPLETATO
 
 ---
 
