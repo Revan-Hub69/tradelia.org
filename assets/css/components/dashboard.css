@@ -78,79 +78,110 @@
   }
 }
 
-/* ===== DASHBOARD HEADER ===== */
+/* ===== DASHBOARD HEADER (Minimale - Best Practice) ===== */
 .dashboard-header-minimal {
-  margin-bottom: var(--spacing-xl);
-  padding: var(--spacing-xl) 0;
-  border-bottom: 2px solid var(--dash-border);
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--spacing-lg);
-  flex-wrap: wrap;
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-lg) 0;
+  border-bottom: 1px solid var(--dash-border);
   position: relative;
 }
 
 .dashboard-header-minimal::after {
   content: "";
   position: absolute;
-  bottom: -2px;
+  bottom: -1px;
   left: 0;
-  width: 80px;
-  height: 2px;
+  width: 60px;
+  height: 1px;
   background: linear-gradient(90deg, var(--dash-blue-line), transparent);
-  border-radius: 2px;
-  box-shadow: 0 0 8px var(--dash-accent-glow);
+  opacity: 0.6;
+}
+
+.dashboard-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
 }
 
 .dashboard-title {
   color: var(--dash-text);
-  font-size: clamp(1.75rem, 4vw, 2.25rem);
-  font-weight: 600;
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  font-weight: 700;
   letter-spacing: -0.02em;
   margin: 0;
   line-height: 1.2;
   font-family: var(--ff-sans, -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
 
-.dashboard-subtitle {
-  color: var(--dash-text-muted);
-  font-size: var(--fs-13, 13px);
-  font-weight: 400;
-  margin: 0;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+.dashboard-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.dashboard-brand-word {
+  color: var(--dash-text);
+}
+
+.dashboard-brand-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dash-blue-line);
+  display: inline-block;
   opacity: 0.8;
+}
+
+.dashboard-brand-suffix {
+  color: var(--dash-text);
+  font-weight: 900;
+}
+
+.dashboard-title-separator {
+  color: var(--dash-text-muted);
+  opacity: 0.5;
+  font-weight: 400;
+}
+
+.dashboard-title-text {
+  color: var(--dash-text-soft);
+  font-weight: 600;
 }
 
 /* Responsive: Dashboard Header */
 @media (max-width: 768px) {
   .dashboard-header-minimal {
-    margin-bottom: var(--spacing-lg);
-    padding: var(--spacing-lg) 0;
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md) 0;
   }
 
   .dashboard-header-minimal::after {
-    width: 60px;
+    width: 40px;
   }
 
   .dashboard-title {
-    font-size: clamp(1.5rem, 5vw, 1.75rem);
-  }
-
-  .dashboard-subtitle {
-    font-size: var(--fs-12, 12px);
+    font-size: clamp(1.125rem, 4vw, 1.25rem);
   }
 }
 
 @media (max-width: 480px) {
   .dashboard-header-minimal {
-    padding: var(--spacing-md) 0;
-    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm) 0;
+    margin-bottom: var(--spacing-sm);
   }
 
   .dashboard-header-minimal::after {
-    width: 40px;
+    width: 30px;
+  }
+
+  .dashboard-title {
+    flex-wrap: wrap;
   }
 }
 
