@@ -521,6 +521,93 @@
                 </div>
               </div>
             </a>
+
+            <!-- Brokers Module -->
+            <a
+              href="#brokers"
+              class="module-card"
+              data-module="brokers"
+              aria-label="Broker regolamentati"
+            >
+              <div class="module-card-header">
+                <div class="module-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="12" y1="2" x2="12" y2="22" />
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                  </svg>
+                </div>
+                <div class="module-info">
+                  <h2 class="module-title">Broker Regolamentati</h2>
+                  <p class="module-description">Lista broker verificati e regolamentati</p>
+                </div>
+                <div class="module-arrow">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    width="16"
+                    height="16"
+                  >
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </div>
+              </div>
+            </a>
+
+            <!-- Admin Module (solo admin) -->
+            <a
+              href="#admin"
+              class="module-card module-card-admin"
+              data-module="admin"
+              aria-label="Amministrazione"
+              style="display: none"
+            >
+              <div class="module-card-header">
+                <div class="module-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                      d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"
+                    />
+                  </svg>
+                </div>
+                <div class="module-info">
+                  <h2 class="module-title">Amministrazione</h2>
+                  <p class="module-description">Gestione utenti, token e report (solo admin)</p>
+                </div>
+                <div class="module-arrow">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    width="16"
+                    height="16"
+                  >
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </div>
+              </div>
+            </a>
           </div>
         </div>
 
@@ -826,6 +913,58 @@
           </div>
           <div class="panel-content" id="community-container">
             <!-- Content loaded by community.js -->
+          </div>
+        </div>
+
+        <!-- Brokers Panel -->
+        <div id="panel-brokers" class="panel-view">
+          <div class="panel-header">
+            <a href="#" class="panel-back" data-back="modules">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                width="16"
+                height="16"
+              >
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+              Torna ai moduli
+            </a>
+            <h2 class="panel-title">Broker Regolamentati</h2>
+            <p class="panel-description">Lista broker verificati e regolamentati</p>
+          </div>
+          <div class="panel-content" id="brokers-container">
+            <!-- Content loaded by brokers.js -->
+          </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="panel-admin" class="panel-view">
+          <div class="panel-header">
+            <a href="#" class="panel-back" data-back="modules">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                width="16"
+                height="16"
+              >
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+              Torna ai moduli
+            </a>
+            <h2 class="panel-title">Amministrazione</h2>
+            <p class="panel-description">Gestione utenti, token e report (solo admin)</p>
+          </div>
+          <div class="panel-content" id="admin-container">
+            <!-- Content loaded by admin.js -->
           </div>
         </div>
       </main>

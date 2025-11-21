@@ -5,7 +5,9 @@
 ### ✅ Moduli Revisionati
 
 #### F5 - Analisi Configurazione Tecnica (ex "Setup Operativo")
+
 **Modifiche applicate:**
+
 - ❌ "Setup Operativo" → ✅ "Analisi Configurazione Tecnica"
 - ❌ "Analisi Setup" → ✅ "Analisi Configurazione Tecnica"
 - ❌ "Entry" → ✅ "Punto di Riferimento Iniziale"
@@ -15,7 +17,9 @@
 - ✅ Descrizioni aggiornate: "Analisi educativa di configurazioni tecniche esemplificative"
 
 #### F5B - Analisi Strutture Opzioni (ex "Setup Opzioni")
+
 **Modifiche applicate:**
+
 - ❌ "Setup Opzioni" → ✅ "Analisi Strutture Opzioni"
 - ❌ "Bias Option" → ✅ "Orientamento Strutturale"
 - ❌ "IV Regime" → ✅ "Regime Volatilità Implicita"
@@ -23,7 +27,9 @@
 - ✅ Descrizioni aggiornate: "Analisi educativa di strutture opzioni esemplificative"
 
 #### Documentazione Swing Master 5.0
+
 **Modifiche applicate:**
+
 - ❌ "Setup Operativo" → ✅ "Analisi Configurazione Tecnica"
 - ❌ "Gestione Dinamica" → ✅ "Analisi Dinamica"
 - ❌ "Registro Performance" → ✅ "Analisi Performance"
@@ -75,21 +81,25 @@
 ## 📝 Raccomandazioni Future
 
 ### 1. Verifica Altri Moduli
+
 - [ ] Revisionare F1-F4 per riferimenti operativi nascosti
 - [ ] Revisionare F6-F8 per terminologia operativa
 - [ ] Verificare uso di tone 'err'/'ok' in metriche che potrebbero suggerire operatività
 
 ### 2. Design Consistency
+
 - [ ] Considerare uso uniforme di tone 'neutral' per tutte le metriche in moduli F5/F5B
 - [ ] Verificare che i colori verde/rosso siano usati solo per stati tecnici (ACTIVE/HOLD/REVIEW), non per metriche
 - [ ] Assicurarsi che i disclaimer MiFID siano sempre visibili e chiari
 
 ### 3. Documentazione
+
 - [ ] Creare linee guida per sviluppo futuro: "Terminologia MiFID-Compliant"
 - [ ] Documentare esempi di terminologia da evitare vs. terminologia accettabile
 - [ ] Aggiornare specifiche moduli F6-F8 per rimuovere riferimenti operativi
 
 ### 4. Testing
+
 - [ ] Testare con utenti finali per verificare che non interpretino i contenuti come segnali operativi
 - [ ] Verificare che i disclaimer siano sufficientemente visibili
 - [ ] Assicurarsi che la terminologia educativa sia chiara e comprensibile
@@ -99,6 +109,7 @@
 ## 🔍 Checklist Conformità MiFID II
 
 ### Terminologia
+
 - [x] Nessun riferimento a "setup operativo"
 - [x] Nessun riferimento a "entry/exit"
 - [x] Nessun riferimento a "stop loss/take profit"
@@ -106,18 +117,21 @@
 - [x] Terminologia educativa/descrittiva utilizzata
 
 ### Design
+
 - [x] Colori verde/rosso usati solo per stati tecnici (non per segnali)
 - [x] Tone metriche impostati a 'neutral' in moduli F5/F5B
 - [x] Disclaimer MiFID sempre visibili
 - [x] Nessun elemento visivo che suggerisca azioni operative
 
 ### Contenuti
+
 - [x] Descrizioni chiariscono natura educativa
 - [x] Esempi etichettati come "esemplificativi"
 - [x] Nessuna raccomandazione operativa
 - [x] Linguaggio descrittivo ("indica", "mostra", "evidenzia")
 
 ### Documentazione
+
 - [x] Documentazione framework aggiornata
 - [x] Riferimenti operativi rimossi da MASTER-FRAMEWORK.md
 - [x] Esempi JSON aggiornati
@@ -131,7 +145,6 @@
   - `report/assets/js/modules/f5b.js`
   - `report/reports/sample-id/f5.json`
   - `report/reports/sample-id/f5b.json`
-  - `swing-master-5.0/docs/specs/00-MASTER-FRAMEWORK.md`
 
 - **Termini sostituiti:** 12+
   - Setup Operativo → Analisi Configurazione Tecnica
@@ -153,4 +166,3 @@ Le modifiche applicate rimuovono tutti i riferimenti operativi espliciti dai mod
 **Status complessivo:** ✅ Conforme a MiFID II per moduli F5/F5B
 
 **Prossimi passi:** Revisionare moduli F1-F4 e F6-F8 per garantire conformità completa.
-
