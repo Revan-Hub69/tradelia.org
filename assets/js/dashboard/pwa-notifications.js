@@ -51,8 +51,10 @@ async function registerServiceWorker() {
 
 /**
  * Setup PWA install prompt
+ * BEST PRACTICE: Registra listener PRIMA che l'evento possa essere lanciato
  */
 function setupPWAInstallPrompt() {
+  // Registra listener immediatamente (prima possibile)
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredPrompt = e;
@@ -64,6 +66,10 @@ function setupPWAInstallPrompt() {
     deferredPrompt = null;
     localStorage.setItem("tradelia-pwa-installed", "true");
   });
+
+  // BEST PRACTICE: Se l'evento è già stato lanciato prima del listener,
+  // controlla se window.deferredPrompt esiste (alcuni browser lo salvano)
+  // Nota: questo è un fallback, non tutti i browser lo supportano
 }
 
 /**
@@ -87,11 +93,32 @@ function checkPWAInstalled() {
 export async function installPWA() {
   // Se già installata, ritorna true
   if (isPWAInstalled()) {
+    if (window.showToast) {
+      window.showToast("App già installata!", "info");
+    }
     return true;
   }
 
+  // BEST PRACTICE: Aspetta un attimo per vedere se deferredPrompt arriva
+  // (l'evento potrebbe essere in arrivo)
   if (!deferredPrompt) {
-    // Se non c'è prompt nativo, mostra istruzioni manuali
+    // Aspetta 500ms per vedere se l'evento arriva
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    // Se ancora non c'è, verifica se il browser supporta installazione
+    const isInstallable =
+      window.matchMedia("(display-mode: standalone)").matches === false &&
+      !window.navigator.standalone;
+
+    if (!isInstallable) {
+      // Browser non supporta installazione PWA o già installata
+      if (window.showToast) {
+        window.showToast("App già installata o browser non supportato", "info");
+      }
+      return false;
+    }
+
+    // Se non c'è prompt ma browser supporta, mostra istruzioni
     showPWAInstructions();
     return false;
   }

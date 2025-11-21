@@ -268,32 +268,30 @@ function bindBannerEvents(container, role) {
   if (enableNotificationsBtn) {
     enableNotificationsBtn.addEventListener("click", async () => {
       try {
-        // Controlla permesso PRIMA di chiamare enablePushNotifications
+        // Controlla permesso PRIMA di tentare
         const currentPermission = Notification.permission;
 
-        // Se permesso è già negato, mostra istruzioni direttamente
+        // Se già negato, mostra istruzioni e basta
         if (currentPermission === "denied") {
           showNotificationInstructions();
           return;
         }
 
-        // Altrimenti prova a richiedere il permesso
+        // Altrimenti prova a richiedere
         const success = await enablePushNotifications();
         if (success) {
-          // Mostra toast di successo
           if (window.showToast) {
             window.showToast("Notifiche abilitate con successo!", "success");
           }
-          // Aggiorna banner per mostrare toggle
           await refreshAccountBanner();
         } else {
-          // Se fallisce, controlla se ora è negato
+          // Controlla se ora è negato DOPO il tentativo
           const newPermission = Notification.permission;
           if (newPermission === "denied") {
             // Solo se negato DOPO il tentativo, mostra istruzioni
             showNotificationInstructions();
           } else {
-            // Altrimenti mostra toast generico
+            // Altrimenti errore generico
             if (window.showToast) {
               window.showToast("Impossibile abilitare le notifiche. Riprova più tardi.", "error");
             }
