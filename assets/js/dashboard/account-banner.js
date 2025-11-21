@@ -268,6 +268,16 @@ function bindBannerEvents(container, role) {
   if (enableNotificationsBtn) {
     enableNotificationsBtn.addEventListener("click", async () => {
       try {
+        // Controlla permesso PRIMA di chiamare enablePushNotifications
+        const currentPermission = Notification.permission;
+
+        // Se permesso è già negato, mostra istruzioni direttamente
+        if (currentPermission === "denied") {
+          showNotificationInstructions();
+          return;
+        }
+
+        // Altrimenti prova a richiedere il permesso
         const success = await enablePushNotifications();
         if (success) {
           // Mostra toast di successo
@@ -277,18 +287,27 @@ function bindBannerEvents(container, role) {
           // Aggiorna banner per mostrare toggle
           await refreshAccountBanner();
         } else {
-          // Mostra toast di errore
-          if (window.showToast) {
-            window.showToast(
-              "Impossibile abilitare le notifiche. Verifica le impostazioni del browser.",
-              "error"
-            );
+          // Se fallisce, controlla se ora è negato
+          const newPermission = Notification.permission;
+          if (newPermission === "denied") {
+            // Solo se negato DOPO il tentativo, mostra istruzioni
+            showNotificationInstructions();
+          } else {
+            // Altrimenti mostra toast generico
+            if (window.showToast) {
+              window.showToast("Impossibile abilitare le notifiche. Riprova più tardi.", "error");
+            }
           }
         }
       } catch (error) {
         console.error("[Account Banner] Errore abilitazione notifiche:", error);
-        if (window.showToast) {
-          window.showToast("Errore durante l'abilitazione delle notifiche", "error");
+        // Controlla permesso anche in caso di errore
+        if (Notification.permission === "denied") {
+          showNotificationInstructions();
+        } else {
+          if (window.showToast) {
+            window.showToast("Errore durante l'abilitazione delle notifiche", "error");
+          }
         }
       }
     });
