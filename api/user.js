@@ -40,6 +40,8 @@ async function handleUserAction(req, res, action) {
       return await handleGetUserPlan(req, res);
     case "request-token":
       return await handleRequestToken(req, res);
+    case "notification-preferences":
+      return await handleGetNotificationPreferences(req, res);
     default:
       throw new HttpError(400, `Action non valida: ${action}`);
   }
@@ -257,6 +259,37 @@ async function handleRequestToken(req, res) {
   // In futuro possiamo spostare la logica qui
   const originalHandler = await import("./request-dashboard-token.js");
   return originalHandler.default(req, res);
+}
+
+// ===== GET NOTIFICATION PREFERENCES =====
+async function handleGetNotificationPreferences(req, res) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    throw new HttpError(401, "Unauthorized", "Missing or invalid authorization header");
+  }
+
+  const token = authHeader.replace("Bearer ", "");
+  const context = await getAdminContextFromToken(token, { enforceAdmin: false });
+
+  if (!context.userId) {
+    throw new HttpError(401, "Unauthorized", "User ID non disponibile dal token");
+  }
+
+  const { data: preferences, error } = await supabase
+    .from("user_notification_preferences")
+    .select("*")
+    .eq("user_id", context.userId)
+    .single();
+
+  if (error && error.code !== "PGRST116") {
+    // PGRST116 = no rows returned (non è un errore, semplicemente non ci sono preferenze)
+    throw new HttpError(500, "Errore recupero preferenze", error.message);
+  }
+
+  return sendJSON(res, 200, {
+    ok: true,
+    preferences: preferences || null,
+  });
 }
 
 function getCurrentMonth() {
