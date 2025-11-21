@@ -9,14 +9,10 @@ pages/api/
 
 # ===== EMAIL FUNCTIONS (Private) =====
 api/send-email-backup.js
-api/send-email.js
 
 # ===== PUSH FUNCTIONS (Private) =====
 api/send-push.js
 api/push-subscribe.js
-
-# ===== SUBSCRIPTION MANAGEMENT (Private) =====
-api/cancel-subscription.js
 
 # ===== WEBHOOK OPZIONALI (Private) =====
 api/webhook-stripe-xolo.js
