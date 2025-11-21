@@ -13,7 +13,6 @@ api/send-email-backup.js
 # ===== PUSH FUNCTIONS (Private) =====
 api/send-push.js
 api/push-subscribe.js
-api/get-vapid-public-key.js
 
 # ===== WEBHOOK OPZIONALI (Private) =====
 api/webhook-stripe-xolo.js
