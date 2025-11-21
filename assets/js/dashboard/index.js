@@ -19,11 +19,19 @@ const MODULE_LOADERS = {
   notifications: loadNotifications,
   settings: loadSettings,
   resources: loadResources,
-  // Sezioni vuote (in sviluppo)
-  education: async () => {},
-  access: async () => {},
-  'on-demand': async () => {},
-  community: async () => {},
+  // Sezioni vuote (in sviluppo) - placeholder per future implementazioni
+  education: async () => {
+    console.log('[Dashboard] Modulo Education in sviluppo');
+  },
+  access: async () => {
+    console.log('[Dashboard] Modulo Access in sviluppo');
+  },
+  'on-demand': async () => {
+    console.log('[Dashboard] Modulo On-Demand in sviluppo');
+  },
+  community: async () => {
+    console.log('[Dashboard] Modulo Community in sviluppo');
+  },
 };
 
 export async function loadModule(moduleId) {

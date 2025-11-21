@@ -66,7 +66,38 @@ function applyDensity(density) {
 }
 
 async function handleExportData() {
-  // TODO: Implementare export dati
-  console.log('[Settings] Export data');
-  alert('Funzionalità export in sviluppo');
+  try {
+    // Raccogli dati utente
+    const exportData = {
+      timestamp: new Date().toISOString(),
+      preferences: {
+        density: localStorage.getItem('dashboard-density') || 'comfortable',
+        emailNotifications: localStorage.getItem('dashboard-email-notifications') === 'true',
+        systemNotifications: localStorage.getItem('dashboard-system-notifications') === 'true'
+      },
+      recentReports: JSON.parse(localStorage.getItem('tradelia-recent-reports') || '[]'),
+      accessToken: localStorage.getItem('tradelia-access-token-v1') ? '***' : null
+    };
+
+    // Crea file JSON
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `tradelia-export-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    // Toast success
+    if (window.showToast) {
+      window.showToast('Dati esportati con successo', 'success');
+    }
+  } catch (err) {
+    console.error('[Settings] Errore export:', err);
+    if (window.showToast) {
+      window.showToast('Errore durante l\'export dei dati', 'error');
+    }
+  }
 }
