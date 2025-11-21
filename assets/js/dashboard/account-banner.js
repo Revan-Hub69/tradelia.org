@@ -218,8 +218,8 @@ function generatePWAButton(pwaInstalled) {
  */
 function generateNotificationsButton(notificationsEnabled, notificationPermission) {
   if (notificationPermission === "denied") {
-    // Permesso negato: mostra pulsante con istruzioni
-    return `<button class="btn btn-secondary btn-sm" id="btn-fix-notifications" title="Come abilitare le notifiche">${getNotificationDeniedIcon()}Abilita Notifiche</button>`;
+    // Permesso negato: mostra pulsante con messaggio chiaro
+    return `<button class="btn btn-secondary btn-sm" id="btn-fix-notifications" title="Permesso negato - clicca per istruzioni">${getNotificationDeniedIcon()}Permesso Negato</button>`;
   }
 
   if (notificationsEnabled) {
@@ -268,44 +268,27 @@ function bindBannerEvents(container, role) {
   if (enableNotificationsBtn) {
     enableNotificationsBtn.addEventListener("click", async () => {
       try {
-        // Controlla permesso PRIMA di tentare
-        const currentPermission = Notification.permission;
-
-        // Se già negato, mostra istruzioni e basta
-        if (currentPermission === "denied") {
-          showNotificationInstructions();
-          return;
-        }
-
-        // Altrimenti prova a richiedere
         const success = await enablePushNotifications();
         if (success) {
+          // Mostra toast di successo
           if (window.showToast) {
             window.showToast("Notifiche abilitate con successo!", "success");
           }
+          // Aggiorna banner per mostrare toggle
           await refreshAccountBanner();
         } else {
-          // Controlla se ora è negato DOPO il tentativo
-          const newPermission = Notification.permission;
-          if (newPermission === "denied") {
-            // Solo se negato DOPO il tentativo, mostra istruzioni
-            showNotificationInstructions();
-          } else {
-            // Altrimenti errore generico
-            if (window.showToast) {
-              window.showToast("Impossibile abilitare le notifiche. Riprova più tardi.", "error");
-            }
+          // Mostra toast di errore
+          if (window.showToast) {
+            window.showToast(
+              "Impossibile abilitare le notifiche. Verifica le impostazioni del browser.",
+              "error"
+            );
           }
         }
       } catch (error) {
         console.error("[Account Banner] Errore abilitazione notifiche:", error);
-        // Controlla permesso anche in caso di errore
-        if (Notification.permission === "denied") {
-          showNotificationInstructions();
-        } else {
-          if (window.showToast) {
-            window.showToast("Errore durante l'abilitazione delle notifiche", "error");
-          }
+        if (window.showToast) {
+          window.showToast("Errore durante l'abilitazione delle notifiche", "error");
         }
       }
     });
