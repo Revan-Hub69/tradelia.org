@@ -10,6 +10,10 @@ import { loadRequestsHistory } from './requests-history.js';
 import { loadNotifications } from './notifications.js';
 import { loadSettings } from './settings.js';
 import { loadResources } from './resources.js';
+import { loadAccess } from './access.js';
+import { loadOnDemand } from './on-demand.js';
+import { loadCommunity } from './community.js';
+import { loadEducation } from './education.js';
 
 const MODULE_LOADERS = {
   overview: loadOverview,
@@ -19,19 +23,10 @@ const MODULE_LOADERS = {
   notifications: loadNotifications,
   settings: loadSettings,
   resources: loadResources,
-  // Sezioni vuote (in sviluppo) - placeholder per future implementazioni
-  education: async () => {
-    console.log('[Dashboard] Modulo Education in sviluppo');
-  },
-  access: async () => {
-    console.log('[Dashboard] Modulo Access in sviluppo');
-  },
-  'on-demand': async () => {
-    console.log('[Dashboard] Modulo On-Demand in sviluppo');
-  },
-  community: async () => {
-    console.log('[Dashboard] Modulo Community in sviluppo');
-  },
+  access: loadAccess,
+  'on-demand': loadOnDemand,
+  community: loadCommunity,
+  education: loadEducation,
 };
 
 export async function loadModule(moduleId) {
