@@ -8,7 +8,7 @@ import { resolve } from "path";
 
 export default defineConfig({
   root: ".",
-  publicDir: "public",
+  publicDir: false, // Non usare publicDir, tutti i file statici sono nella root
   build: {
     outDir: "dist",
     emptyOutDir: true,
