@@ -40,26 +40,24 @@ export const handleCreditsRequest = async (req, res) => {
     throw new HttpError(400, 'Il saldo crediti non può essere negativo');
   }
 
-  const { error: upsertError } = await supabase
-    .from('user_analysis_credits')
-    .upsert(
-      {
-        user_id: userId,
-        credits_balance: newBalance,
-        updated_at: new Date().toISOString()
-      },
-      { onConflict: 'user_id' }
-    );
+  const { error: upsertError } = await supabase.from('user_analysis_credits').upsert(
+    {
+      user_id: userId,
+      credits_balance: newBalance,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: 'user_id' }
+  );
 
   if (upsertError) {
-    throw new HttpError(500, 'Errore durante l\'aggiornamento dei crediti', upsertError.message);
+    throw new HttpError(500, "Errore durante l'aggiornamento dei crediti", upsertError.message);
   }
 
   const { error: logError } = await supabase.from('user_analysis_credits_log').insert({
     user_id: userId,
     delta: parsedDelta,
     reason: reason || 'manual_adjustment',
-    related_request_id: relatedRequestId || null
+    related_request_id: relatedRequestId || null,
   });
 
   if (logError) {
@@ -68,7 +66,6 @@ export const handleCreditsRequest = async (req, res) => {
 
   return sendJSON(res, 200, {
     ok: true,
-    credits: newBalance
+    credits: newBalance,
   });
 };
-

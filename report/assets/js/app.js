@@ -10,12 +10,16 @@ import { metricPopup } from './components/metric-popup.js';
 import { reportNavigation } from './components/report-navigation.js';
 import { userPreferences } from './utils/user-preferences.js';
 import { i18n } from './utils/i18n.js';
-import { getFrameworkInfo, formatFrameworkTitle, formatFrameworkDescription } from './utils/frameworks.js';
+import {
+  getFrameworkInfo,
+  formatFrameworkTitle,
+  formatFrameworkDescription,
+} from './utils/frameworks.js';
 import { supabase, getSignedChartUrl } from './supabase-client.js';
 
-(function() {
+(function () {
   'use strict';
-  
+
   const ROOT = document.getElementById('app-root');
   const MODULES_CONTAINER = document.getElementById('report-modules-container') || ROOT;
   const TICKER_SLOT = document.getElementById('header-ticker-slot');
@@ -27,20 +31,31 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
   const BREADCRUMB_SLOT = document.getElementById('report-breadcrumb-slot');
   const SEARCH_SLOT = document.getElementById('report-search-slot');
   const NAVIGATION_CONTAINER = document.getElementById('report-navigation-container');
-  
+
   if (!ROOT || !TICKER_SLOT) {
     Logger.error('App', 'DOM non valido');
     return;
   }
-  
-  const DEFAULT_MODULE_ORDER = ['header', 'f1', 'f1b', 'f2', 'f3', 'f3o', 'f4', 'f5', 'f5o', 'f5lt'];
+
+  const DEFAULT_MODULE_ORDER = [
+    'header',
+    'f1',
+    'f1b',
+    'f2',
+    'f3',
+    'f3o',
+    'f4',
+    'f5',
+    'f5o',
+    'f5lt',
+  ];
   let __versionQS = '';
   let __header = null;
   let __reportRecord = null;
   let __moduleRecords = [];
   let __moduleMap = {};
   window.__tradeliaReportContext = window.__tradeliaReportContext || {};
-  
+
   // ===== ERROR STATES =====
   function showErrorState(container, error, title = null) {
     const errorTitle = title || i18n.t('error.loading');
@@ -53,14 +68,14 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       </div>
     `;
   }
-  
+
   function escapeHtml(str) {
     if (str == null) return '';
     const div = document.createElement('div');
     div.textContent = String(str);
     return div.innerHTML;
   }
-  
+
   // ===== UTILITIES =====
   async function fetchJSON(path, options = {}) {
     const { silent = false } = options;
@@ -88,7 +103,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       throw err;
     }
   }
-  
+
   async function safeImport(path) {
     try {
       return await import(path + __versionQS);
@@ -97,12 +112,12 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       throw err;
     }
   }
-  
+
   function setText(id, val) {
     const el = document.getElementById(id);
     if (el) el.textContent = val ?? '—';
   }
-  
+
   function fmtDate(str) {
     if (!str) return '—';
     try {
@@ -111,12 +126,12 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       return String(str);
     }
   }
-  
+
   function getReportId() {
     const params = new URLSearchParams(window.location.search);
     return params.get('id') || 'sample-id';
   }
-  
+
   // ===== META TAGS DINAMICI =====
   function updateMetaTags(ticker, companyName, version, frameworkType) {
     const info = getFrameworkInfo(frameworkType);
@@ -125,17 +140,20 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
     const url = `${window.location.origin}${window.location.pathname}${window.location.search}`;
     const imageUrl = `${window.location.origin}/img/tradelia_og_vC_white_clean.png`;
     const imageAlt = `${companyName} (${ticker}) - Analisi Tradelia AI`;
-    
+
     // Update title
     document.title = title;
-    
+
     // Update meta description (ottimizzato per AI)
     let metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.content = description;
-    
+
     // Update keywords
-    updateMetaName('keywords', `Tradelia AI, ${ticker}, ${companyName}, analisi finanziaria, report finanziario, analisi tecnica, analisi fondamentale, trading, investimenti`);
-    
+    updateMetaName(
+      'keywords',
+      `Tradelia AI, ${ticker}, ${companyName}, analisi finanziaria, report finanziario, analisi tecnica, analisi fondamentale, trading, investimenti`
+    );
+
     // Update Open Graph
     updateMetaProperty('og:title', title);
     updateMetaProperty('og:description', description);
@@ -143,48 +161,62 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
     updateMetaProperty('og:image', imageUrl);
     updateMetaProperty('og:image:alt', imageAlt);
     updateMetaProperty('og:type', 'article');
-    
+
     // Update Twitter Card
     updateMetaName('twitter:title', title);
     updateMetaName('twitter:description', description);
     updateMetaName('twitter:url', url);
     updateMetaName('twitter:image', imageUrl);
     updateMetaName('twitter:image:alt', imageAlt);
-    
+
     // Update structured data (FinancialProduct)
-    updateFinancialProductStructuredData(ticker, companyName, description, url, version, frameworkType);
+    updateFinancialProductStructuredData(
+      ticker,
+      companyName,
+      description,
+      url,
+      version,
+      frameworkType
+    );
   }
-  
+
   // ===== UPDATE FINANCIAL PRODUCT STRUCTURED DATA =====
-  function updateFinancialProductStructuredData(ticker, companyName, description, url, version, frameworkType) {
+  function updateFinancialProductStructuredData(
+    ticker,
+    companyName,
+    description,
+    url,
+    version,
+    frameworkType
+  ) {
     const structuredData = {
-      "@context": "https://schema.org",
-      "@type": "FinancialProduct",
-      "name": formatFrameworkTitle(frameworkType, ticker || companyName),
-      "description": description,
-      "provider": {
-        "@type": "Organization",
-        "name": "Tradelia AI",
-        "url": "https://tradelia.org"
+      '@context': 'https://schema.org',
+      '@type': 'FinancialProduct',
+      name: formatFrameworkTitle(frameworkType, ticker || companyName),
+      description: description,
+      provider: {
+        '@type': 'Organization',
+        name: 'Tradelia AI',
+        url: 'https://tradelia.org',
       },
-      "tickerSymbol": ticker,
-      "url": url,
-      "datePublished": new Date().toISOString(),
-      "category": "Financial Analysis",
-      "applicationCategory": "FinanceApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "EUR"
-      }
+      tickerSymbol: ticker,
+      url: url,
+      datePublished: new Date().toISOString(),
+      category: 'Financial Analysis',
+      applicationCategory: 'FinanceApplication',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'EUR',
+      },
     };
-    
+
     // Rimuovi structured data esistente
     const existing = document.querySelector('script[type="application/ld+json"]#structured-data');
     if (existing) {
       existing.remove();
     }
-    
+
     // Inietta nuovo structured data
     const script = document.createElement('script');
     script.type = 'application/ld+json';
@@ -192,7 +224,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
     script.textContent = JSON.stringify(structuredData, null, 2);
     document.head.appendChild(script);
   }
-  
+
   function updateMetaProperty(property, content) {
     let meta = document.querySelector(`meta[property="${property}"]`);
     if (!meta) {
@@ -202,7 +234,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
     }
     meta.setAttribute('content', content);
   }
-  
+
   function updateMetaName(name, content) {
     let meta = document.querySelector(`meta[name="${name}"]`);
     if (!meta) {
@@ -212,54 +244,56 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
     }
     meta.setAttribute('content', content);
   }
-  
+
   // ===== STRUCTURED DATA DINAMICO =====
   function updateStructuredData(ticker, companyName, version, start, end, frameworkType) {
     const structuredDataScript = document.getElementById('structured-data');
     if (!structuredDataScript) return;
-    
+
     const structuredData = {
-      "@context": "https://schema.org",
-      "@type": "FinancialProduct",
-      "name": formatFrameworkTitle(frameworkType, ticker || companyName),
-      "description": formatFrameworkDescription(frameworkType, companyName, ticker),
-      "provider": {
-        "@type": "Organization",
-        "name": "Tradelia AI",
-        "url": "https://tradelia.org"
+      '@context': 'https://schema.org',
+      '@type': 'FinancialProduct',
+      name: formatFrameworkTitle(frameworkType, ticker || companyName),
+      description: formatFrameworkDescription(frameworkType, companyName, ticker),
+      provider: {
+        '@type': 'Organization',
+        name: 'Tradelia AI',
+        url: 'https://tradelia.org',
       },
-      "additionalType": "https://schema.org/InvestmentOrDeposit",
-      "category": "Analisi Finanziaria",
-      "applicationCategory": "FinanceApplication",
-      "version": version || undefined,
-      ...(start && end ? {
-        "validFrom": start,
-        "validThrough": end
-      } : {})
+      additionalType: 'https://schema.org/InvestmentOrDeposit',
+      category: 'Analisi Finanziaria',
+      applicationCategory: 'FinanceApplication',
+      version: version || undefined,
+      ...(start && end
+        ? {
+            validFrom: start,
+            validThrough: end,
+          }
+        : {}),
     };
-    
+
     structuredDataScript.textContent = JSON.stringify(structuredData, null, 2);
   }
-  
+
   // ===== HEADER TICKER =====
   async function mountHeaderTicker(headerData) {
     if (!headerData || typeof headerData !== 'object') {
       showErrorState(TICKER_SLOT, new Error('Dati header non validi'), 'Dati non disponibili');
       return;
     }
-    
+
     try {
       const { headerTicker } = await safeImport('/report/assets/js/components/header-ticker.js');
-      
+
       if (!headerTicker || typeof headerTicker.mount !== 'function') {
         throw new Error('headerTicker.mount non disponibile');
       }
-      
+
       const node = headerTicker.mount(TICKER_SLOT);
       if (!node) {
         throw new Error('headerTicker.mount ha restituito null');
       }
-      
+
       await headerTicker.update(node, headerData);
       Logger.debug('App', 'Header ticker montato');
     } catch (err) {
@@ -267,7 +301,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       showErrorState(TICKER_SLOT, err, 'Errore caricamento metriche');
     }
   }
-  
+
   // ===== CARICAMENTO HEADER =====
   async function loadHeader() {
     try {
@@ -324,18 +358,18 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       return null;
     }
   }
-  
+
   // ===== CARICAMENTO MODULI =====
   async function loadModules() {
     const modulePathMap = {
       header: { js: 'header', skip: true },
       f3o: { js: 'f3o', label: 'F3O' },
       f5o: { js: 'f5o', label: 'F5O' },
-      f5lt: { js: 'f5lt', label: 'F5-LT+' }
+      f5lt: { js: 'f5lt', label: 'F5-LT+' },
     };
 
     const sorted = [...__moduleRecords]
-      .filter(record => record.module_key !== 'header')
+      .filter((record) => record.module_key !== 'header')
       .sort((a, b) => {
         const orderA = resolveModuleOrder(a);
         const orderB = resolveModuleOrder(b);
@@ -353,7 +387,12 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       const modPath = `/report/assets/js/modules/${jsModuleName}.js`;
 
       const json = record.content;
-      if (!json || typeof json !== 'object' || Object.keys(json).length === 0 || json._placeholder) {
+      if (
+        !json ||
+        typeof json !== 'object' ||
+        Object.keys(json).length === 0 ||
+        json._placeholder
+      ) {
         Logger.debug('App', `Modulo ${key}: contenuto vuoto, salto`);
         continue;
       }
@@ -374,7 +413,11 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       }
 
       const modId = mapping.label || key.toUpperCase();
-      const cardHTML = mod.renderCard(json, { reportId: __reportRecord?.slug, modId, header: __header });
+      const cardHTML = mod.renderCard(json, {
+        reportId: __reportRecord?.slug,
+        modId,
+        header: __header,
+      });
       const wrap = document.createElement('article');
       wrap.id = `sec-${jsModuleName}`;
       wrap.className = 'report-section-block mb-8';
@@ -387,7 +430,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
         title: json?.ui_labels?.hero_title || json?.meta?.module || modId,
         desc: json?.ui_labels?.hero_desc || json?.meta?.hero_intro || '',
         status: json?.meta?.moduleStatus || 'ACTIVE',
-        isActive: false
+        isActive: false,
       };
       modulesInfo.push(moduleInfo);
 
@@ -423,7 +466,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
           modules: modulesInfo,
           indexContainer: INDEX_SLOT,
           breadcrumbContainer: BREADCRUMB_SLOT,
-          searchContainer: SEARCH_SLOT
+          searchContainer: SEARCH_SLOT,
         });
 
         if (NAVIGATION_CONTAINER) {
@@ -436,14 +479,14 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       }
     }
   }
-  
+
   // ===== MOUNT HEADER & FOOTER =====
   async function mountSiteHeader(options = {}) {
     if (!HEADER_SLOT) {
       Logger.warn('App', 'Header slot non trovato, skip');
       return;
     }
-    
+
     try {
       const { siteHeader } = await safeImport('/report/assets/js/components/site-header.js');
       if (siteHeader && typeof siteHeader.mount === 'function') {
@@ -454,13 +497,13 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       Logger.warn('App', 'Errore montaggio site header', err);
     }
   }
-  
+
   async function mountSiteFooter(headerData) {
     if (!FOOTER_SLOT) {
       Logger.warn('App', 'Footer slot non trovato, skip');
       return;
     }
-    
+
     try {
       const { siteFooter } = await safeImport('/report/assets/js/components/site-footer.js');
       if (siteFooter && typeof siteFooter.mount === 'function') {
@@ -475,27 +518,27 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       Logger.warn('App', 'Errore montaggio site footer', err);
     }
   }
-  
+
   // ===== INIZIALIZZAZIONE =====
   let _isInitializing = false;
   let _isInitialized = false;
-  
+
   async function init() {
     // Evita inizializzazioni multiple
     if (_isInitializing) {
       Logger.warn('App', 'Inizializzazione già in corso, ignoro chiamata duplicata');
       return;
     }
-    
+
     if (_isInitialized) {
       Logger.warn('App', 'App già inizializzata, ignoro chiamata duplicata');
       return;
     }
-    
+
     _isInitializing = true;
     const reportId = getReportId();
     Logger.debug('App', `Inizializzazione: ${reportId}`);
-    
+
     // Pulisci TUTTI i container prima di iniziare (evita duplicati)
     if (TICKER_SLOT) TICKER_SLOT.innerHTML = '';
     if (MARKET_CONTEXT_SNAPSHOT_SLOT) MARKET_CONTEXT_SNAPSHOT_SLOT.innerHTML = '';
@@ -505,10 +548,10 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
     } else if (ROOT) {
       ROOT.innerHTML = '';
     }
-    
+
     // Monta header (statico, non dipende da reportId)
     await mountSiteHeader();
-    
+
     try {
       const bundle = await fetchReportBundle(reportId);
       __reportRecord = bundle.report;
@@ -516,14 +559,16 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       __moduleRecords = normalized;
       __moduleMap = map;
       window.__tradeliaReportContext.report = __reportRecord;
-      window.dispatchEvent(new CustomEvent('tradelia:reportLoaded', { detail: { report: __reportRecord } }));
+      window.dispatchEvent(
+        new CustomEvent('tradelia:reportLoaded', { detail: { report: __reportRecord } })
+      );
     } catch (err) {
       Logger.error('App', 'Report non disponibile', err);
       showErrorState(ROOT, err, 'Report non disponibile');
       _isInitializing = false;
       return;
     }
-    
+
     // Error boundary globale per inizializzazione
     let headerData = null;
     try {
@@ -533,13 +578,13 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       showErrorState(TICKER_SLOT, err, 'Errore caricamento header');
       // Continua comunque con i moduli
     }
-    
+
     // Monta market context snapshot (subito dopo header ticker, prima del chart)
     await mountMarketContextSnapshot();
-    
+
     // Monta chart widget (dopo market context snapshot, prima dei moduli)
     await mountChartWidget(headerData);
-    
+
     // Carica moduli (dopo chart e market context snapshot)
     try {
       await loadModules();
@@ -551,15 +596,15 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
         showErrorState(container, err, 'Errore caricamento moduli');
       }
     }
-    
+
     // Monta footer DOPO il contenuto (con dati dinamici)
     await mountSiteFooter(headerData);
-    
+
     _isInitializing = false;
     _isInitialized = true;
     Logger.debug('App', 'Inizializzazione completata');
   }
-  
+
   // ===== MOUNT CHART WIDGET =====
   async function mountChartWidget(headerData) {
     if (!CHART_SLOT) {
@@ -572,7 +617,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
 
     try {
       const { chartWidget } = await safeImport('/report/assets/js/components/chart-widget.js');
-      
+
       if (!chartWidget || typeof chartWidget.mount !== 'function') {
         throw new Error('chartWidget.mount non disponibile');
       }
@@ -606,10 +651,11 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
         return;
       }
 
-      const timestamp = headerData?.meta?.timestamp 
-        || headerData?.meta?.created_at 
-        || headerData?.meta?.UpdatedAt
-        || null;
+      const timestamp =
+        headerData?.meta?.timestamp ||
+        headerData?.meta?.created_at ||
+        headerData?.meta?.UpdatedAt ||
+        null;
 
       const reportSlug = __reportRecord?.slug;
       let chartImageUrl = null;
@@ -621,13 +667,16 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
         }
       }
 
-      Logger.debug('App', `Montaggio chart widget: reportId=${reportSlug}, symbol=${symbol}, timestamp=${timestamp}`);
+      Logger.debug(
+        'App',
+        `Montaggio chart widget: reportId=${reportSlug}, symbol=${symbol}, timestamp=${timestamp}`
+      );
 
       const node = chartWidget.mount(CHART_SLOT, {
         reportId: reportSlug,
         symbol,
         timestamp,
-        chartImageUrl
+        chartImageUrl,
       });
 
       if (!node) {
@@ -637,7 +686,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       // Salva istanza globalmente per aggiornamenti
       window.chartWidgetInstance = {
         node: node,
-        update: chartWidget.update.bind(chartWidget)
+        update: chartWidget.update.bind(chartWidget),
       };
 
       Logger.debug('App', `Chart widget montato con successo per ${symbol}`);
@@ -657,7 +706,9 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
   async function fetchReportBundle(slug) {
     const { data: report, error } = await supabase
       .from('reports')
-      .select('id, slug, title, status, report_type, chart_path, notes, created_at, updated_at, published_at')
+      .select(
+        'id, slug, title, status, report_type, chart_path, notes, created_at, updated_at, published_at'
+      )
       .eq('slug', slug)
       .eq('status', 'active')
       .maybeSingle();
@@ -681,23 +732,24 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
 
     return {
       report,
-      modules: Array.isArray(modules) ? modules : []
+      modules: Array.isArray(modules) ? modules : [],
     };
   }
 
   async function fetchLegacyBundle(slug) {
     try {
       const manifest = await fetchJSON(`/report/reports/${slug}/manifest.json`, { silent: true });
-      const legacyOrder = Array.isArray(manifest?.order) && manifest.order.length
-        ? manifest.order
-        : ['HEADER', 'F1', 'F1B', 'F2', 'F3', 'F3O', 'F4', 'F5', 'F5O', 'F5-LT+'];
+      const legacyOrder =
+        Array.isArray(manifest?.order) && manifest.order.length
+          ? manifest.order
+          : ['HEADER', 'F1', 'F1B', 'F2', 'F3', 'F3O', 'F4', 'F5', 'F5O', 'F5-LT+'];
 
       const modules = [];
       const moduleMap = {
-        'HEADER': { json: 'header' },
+        HEADER: { json: 'header' },
         'F5-LT+': { json: 'f5-lt+' },
-        'F5O': { json: 'f5o' },
-        'F3O': { json: 'f3o' }
+        F5O: { json: 'f5o' },
+        F3O: { json: 'f3o' },
       };
 
       for (let index = 0; index < legacyOrder.length; index++) {
@@ -708,12 +760,14 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
         const moduleKey = normalized.replace(/[^a-z0-9]/g, '');
 
         try {
-          const jsonData = await fetchJSON(`/report/reports/${slug}/${jsonName}.json`, { silent: true });
+          const jsonData = await fetchJSON(`/report/reports/${slug}/${jsonName}.json`, {
+            silent: true,
+          });
           if (!jsonData || Object.keys(jsonData).length === 0) continue;
           modules.push({
             module_key: moduleKey,
             order_index: (index + 1) * 10,
-            content: jsonData
+            content: jsonData,
           });
         } catch (err) {
           Logger.debug('App', `Modulo legacy ${modId} non trovato`, err);
@@ -734,9 +788,9 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
           chart_path: null,
           published_at: null,
           updated_at: null,
-          created_at: null
+          created_at: null,
         },
-        modules
+        modules,
       };
     } catch (err) {
       Logger.warn('App', `Fallback legacy fallito per ${slug}`, err);
@@ -759,7 +813,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
     return {
       module_key: moduleKey,
       order_index: record.order_index,
-      content
+      content,
     };
   }
 
@@ -791,8 +845,10 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
     MARKET_CONTEXT_SNAPSHOT_SLOT.innerHTML = '';
 
     try {
-      const { marketContextSnapshot } = await safeImport('/report/assets/js/components/market-context-snapshot.js');
-      
+      const { marketContextSnapshot } = await safeImport(
+        '/report/assets/js/components/market-context-snapshot.js'
+      );
+
       if (!marketContextSnapshot || typeof marketContextSnapshot.mount !== 'function') {
         throw new Error('marketContextSnapshot.mount non disponibile');
       }
@@ -814,20 +870,24 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
           } else if (typeof scoreStr === 'number') {
             regimeScore = scoreStr;
           }
-          Logger.debug('App', `RegimeScore estratto da regime_and_risk: ${scoreStr} -> ${regimeScore}`);
+          Logger.debug(
+            'App',
+            `RegimeScore estratto da regime_and_risk: ${scoreStr} -> ${regimeScore}`
+          );
         } else if (f1bData?.f1bSnapshot?.regime_state?.RegimeScore) {
           const scoreData = f1bData.f1bSnapshot.regime_state.RegimeScore;
           regimeScore = typeof scoreData === 'number' ? scoreData : parseFloat(scoreData) || null;
           Logger.debug('App', `RegimeScore estratto da f1bSnapshot: ${regimeScore}`);
         } else if (f1bData?.RegimeScore != null) {
-          regimeScore = typeof f1bData.RegimeScore === 'number'
-            ? f1bData.RegimeScore
-            : parseFloat(String(f1bData.RegimeScore).replace(/[+\s]/g, '')) || null;
+          regimeScore =
+            typeof f1bData.RegimeScore === 'number'
+              ? f1bData.RegimeScore
+              : parseFloat(String(f1bData.RegimeScore).replace(/[+\s]/g, '')) || null;
         } else {
           Logger.warn('App', 'RegimeScore non trovato in F1B', {
             hasRegimeAndRisk: !!f1bData?.regime_and_risk,
             hasF1bSnapshot: !!f1bData?.f1bSnapshot,
-            keys: Object.keys(f1bData || {})
+            keys: Object.keys(f1bData || {}),
           });
         }
 
@@ -838,13 +898,17 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
           strategyMode = f1bData.f1bSnapshot.regime_state.StrategyMode_macro;
         }
 
-        timestamp = f1bData?.meta?.timestampET 
-          || f1bData?.meta?.timestamp 
-          || f1bData?.meta?.created_at
-          || f1bData?.timestamp
-          || null;
+        timestamp =
+          f1bData?.meta?.timestampET ||
+          f1bData?.meta?.timestamp ||
+          f1bData?.meta?.created_at ||
+          f1bData?.timestamp ||
+          null;
 
-        Logger.debug('App', `F1B dati finali: RegimeScore=${regimeScore}, StrategyMode=${strategyMode}, timestamp=${timestamp}`);
+        Logger.debug(
+          'App',
+          `F1B dati finali: RegimeScore=${regimeScore}, StrategyMode=${strategyMode}, timestamp=${timestamp}`
+        );
       } else {
         Logger.warn('App', 'Modulo F1B non disponibile per market context snapshot');
       }
@@ -852,7 +916,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       const node = marketContextSnapshot.mount(MARKET_CONTEXT_SNAPSHOT_SLOT, {
         regimeScore: regimeScore,
         strategyMode: strategyMode,
-        timestamp: timestamp
+        timestamp: timestamp,
       });
 
       if (!node) {
@@ -868,7 +932,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
       }
     }
   }
-  
+
   // ===== AVVIO =====
   // Sistema traduzione disabilitato - sempre italiano
   // i18n.init(); // Disabilitato
@@ -879,7 +943,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
   } else {
     init();
   }
-  
+
   // ===== EXPOSE UI API =====
   window.__TradeliaUI = {
     openMetricPopup: (metricKey, allMetrics = []) => {
@@ -891,23 +955,23 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
     bindMetricInfoButtons: (container) => {
       // Trova tutti i pulsanti info-btn con data-metric e collega al glossario
       if (!container) return;
-      
+
       const infoButtons = container.querySelectorAll('.info-btn[data-metric]');
-      infoButtons.forEach(btn => {
+      infoButtons.forEach((btn) => {
         // Rimuovi listener esistenti per evitare duplicati
         const newBtn = btn.cloneNode(true);
         btn.parentNode?.replaceChild(newBtn, btn);
-        
+
         newBtn.addEventListener('click', async (e) => {
           e.preventDefault();
           e.stopPropagation();
-          
+
           const metricKey = newBtn.getAttribute('data-metric');
           if (!metricKey) return;
-          
+
           // Rimuovi suffisso "_info" se presente
           const cleanKey = metricKey.replace(/_info$/, '');
-          
+
           // Apri drawer glossario (stesso sistema di glossario.html)
           try {
             const { glossaryPopup } = await import('./components/glossary-popup.js');
@@ -919,15 +983,15 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
           }
         });
       });
-      
+
       Logger.debug('App', `Collegati ${infoButtons.length} pulsanti metriche al glossario`);
-    }
+    },
   };
-  
+
   window.TradeliaApp = {
     init,
     getReportId,
     loadHeader,
-    loadModules
+    loadModules,
   };
 })();

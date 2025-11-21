@@ -15,7 +15,7 @@ export const OVERLAY_TYPES = {
   METRIC_POPUP: 'metric-popup',
   GLOSSARY: 'glossary',
   PANEL: 'panel',
-  POPOVER: 'popover'
+  POPOVER: 'popover',
 };
 
 /**
@@ -35,20 +35,20 @@ export function registerOverlay(id, type, overlayEl, drawerEl = null) {
   // Rimuovi se già presente (evita duplicati)
   unregisterOverlay(id);
 
-  const zIndex = BASE_Z_INDEX + (OVERLAY_STACK.length * Z_INDEX_INCREMENT);
+  const zIndex = BASE_Z_INDEX + OVERLAY_STACK.length * Z_INDEX_INCREMENT;
   const entry = {
     id,
     type,
     overlayEl,
     drawerEl, // Drawer/panel separato (se presente)
     zIndex,
-    registeredAt: Date.now()
+    registeredAt: Date.now(),
   };
 
   OVERLAY_STACK.push(entry);
   overlayEl.style.zIndex = zIndex;
   overlayEl.style.pointerEvents = 'all'; // Assicura che l'overlay blocchi lo sfondo
-  
+
   // Se c'è un drawer/panel separato, imposta z-index + 10 (sempre in primo piano)
   if (drawerEl) {
     drawerEl.style.zIndex = zIndex + 10;
@@ -57,7 +57,9 @@ export function registerOverlay(id, type, overlayEl, drawerEl = null) {
     drawerEl.style.opacity = '1'; // Forza opacità
   } else {
     // Altrimenti cerca dentro l'overlay
-    const drawer = overlayEl.querySelector('.module-tabs-drawer, .metrics-drawer-panel, .metric-popup-panel, .glossary-drawer-panel');
+    const drawer = overlayEl.querySelector(
+      '.module-tabs-drawer, .metrics-drawer-panel, .metric-popup-panel, .glossary-drawer-panel'
+    );
     if (drawer) {
       drawer.style.zIndex = zIndex + 10;
       drawer.style.pointerEvents = 'auto'; // Forza pointer-events sul drawer
@@ -65,10 +67,10 @@ export function registerOverlay(id, type, overlayEl, drawerEl = null) {
       drawer.style.opacity = '1'; // Forza opacità
     }
   }
-  
+
   // Aggiorna overflow body
   updateBodyOverflow();
-  
+
   Logger.debug('OverlayManager', `Overlay registrato: ${id} (z-index: ${zIndex})`);
   return zIndex;
 }
@@ -78,14 +80,14 @@ export function registerOverlay(id, type, overlayEl, drawerEl = null) {
  * @param {string} id - ID overlay
  */
 export function unregisterOverlay(id) {
-  const index = OVERLAY_STACK.findIndex(entry => entry.id === id);
+  const index = OVERLAY_STACK.findIndex((entry) => entry.id === id);
   if (index === -1) return;
 
   OVERLAY_STACK.splice(index, 1);
-  
+
   // Ricalcola z-index per overlay rimanenti
   OVERLAY_STACK.forEach((entry, i) => {
-    const newZIndex = BASE_Z_INDEX + (i * Z_INDEX_INCREMENT);
+    const newZIndex = BASE_Z_INDEX + i * Z_INDEX_INCREMENT;
     entry.zIndex = newZIndex;
     if (entry.overlayEl) {
       entry.overlayEl.style.zIndex = newZIndex;
@@ -96,16 +98,18 @@ export function unregisterOverlay(id) {
       entry.drawerEl.style.zIndex = newZIndex + 10;
     } else if (entry.overlayEl) {
       // Altrimenti cerca dentro l'overlay
-      const drawer = entry.overlayEl.querySelector('.module-tabs-drawer, .metrics-drawer-panel, .metric-popup-panel, .glossary-drawer-panel');
+      const drawer = entry.overlayEl.querySelector(
+        '.module-tabs-drawer, .metrics-drawer-panel, .metric-popup-panel, .glossary-drawer-panel'
+      );
       if (drawer) {
         drawer.style.zIndex = newZIndex + 10;
       }
     }
   });
-  
+
   // Aggiorna overflow body
   updateBodyOverflow();
-  
+
   Logger.debug('OverlayManager', `Overlay rimosso: ${id}`);
 }
 
@@ -126,7 +130,7 @@ export function closeTopOverlay() {
 
   // Trigger evento custom per chiudere (ogni overlay gestisce la propria chiusura)
   const event = new CustomEvent('overlay-close-request', {
-    detail: { id: top.id, type: top.type }
+    detail: { id: top.id, type: top.type },
   });
   top.overlayEl.dispatchEvent(event);
 }
@@ -149,7 +153,7 @@ let escListenerAttached = false;
 
 export function initEscHandler() {
   if (escListenerAttached) return;
-  
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && OVERLAY_STACK.length > 0) {
       e.preventDefault();
@@ -157,7 +161,7 @@ export function initEscHandler() {
       closeTopOverlay();
     }
   });
-  
+
   escListenerAttached = true;
   Logger.debug('OverlayManager', 'ESC handler inizializzato');
 }
@@ -175,4 +179,3 @@ export function clearAllOverlays() {
 if (typeof document !== 'undefined') {
   initEscHandler();
 }
-

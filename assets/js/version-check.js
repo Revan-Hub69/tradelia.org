@@ -1,19 +1,19 @@
 /**
  * Version Check & Auto-Update System for Tradelia AI
- * 
+ *
  * Implements automatic version checking and update BEFORE MiFID consent overlay.
  * Preserves all localStorage data (MiFID consent, tokens, preferences) during updates.
- * 
+ *
  * Academic References:
  * - W3C (2023). Service Workers. W3C Working Draft
  * - ESMA (2021). Guidelines on MiFID II product governance requirements
  * - Microsoft (2024). Progressive Web Apps Best Practices
  * - Google (2024). PWA Update Patterns
- * 
+ *
  * @version 2.0.0
  */
 
-(function() {
+(function () {
   'use strict';
 
   const VERSION_KEY = 'tradelia-app-version';
@@ -47,7 +47,7 @@
    */
   function restoreLocalStorage(backup) {
     try {
-      Object.keys(backup).forEach(key => {
+      Object.keys(backup).forEach((key) => {
         localStorage.setItem(key, backup[key]);
       });
       console.log('[Version] localStorage ripristinato');
@@ -63,11 +63,11 @@
     try {
       const response = await fetch(`${VERSION_URL}?t=${Date.now()}`, {
         cache: 'no-store',
-        headers: { 'Cache-Control': 'no-cache' }
+        headers: { 'Cache-Control': 'no-cache' },
       });
-      
+
       if (!response.ok) return null;
-      
+
       const data = await response.json();
       return data.version || null;
     } catch (e) {
@@ -81,13 +81,13 @@
    */
   async function checkServiceWorkerUpdate() {
     if (!('serviceWorker' in navigator)) return false;
-    
+
     try {
       const registration = await navigator.serviceWorker.getRegistration();
       if (!registration) return false;
-      
+
       await registration.update();
-      
+
       return new Promise((resolve) => {
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
@@ -101,7 +101,7 @@
             });
           }
         });
-        
+
         // Timeout after 2 seconds
         setTimeout(() => resolve(false), 2000);
       });
@@ -118,7 +118,7 @@
   function showVersionModal(hasUpdate, currentVersion, newVersion) {
     // DISABILITATO - Progetto abbandonato
     return;
-    
+
     // Don't show if already shown in this session
     const sessionKey = 'version-modal-shown';
     if (sessionStorage.getItem(sessionKey)) {
@@ -299,18 +299,18 @@
 
     try {
       updateProgress(10, 'Backup dati in corso...');
-      await new Promise(resolve => setTimeout(resolve, 300));
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
       updateProgress(30, 'Aggiornamento cache...');
-      
+
       // Clear all caches
       if ('caches' in window) {
         const cacheNames = await caches.keys();
-        await Promise.all(cacheNames.map(name => caches.delete(name)));
+        await Promise.all(cacheNames.map((name) => caches.delete(name)));
       }
 
       updateProgress(50, 'Aggiornamento service worker...');
-      
+
       // Update service worker
       if ('serviceWorker' in navigator) {
         const registration = await navigator.serviceWorker.getRegistration();
@@ -324,13 +324,13 @@
       }
 
       updateProgress(80, 'Ripristino dati...');
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await new Promise((resolve) => setTimeout(resolve, 200));
 
       // Restore localStorage
       restoreLocalStorage(backup);
 
       updateProgress(100, 'Aggiornamento completato!');
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Update version in localStorage
       localStorage.setItem(VERSION_KEY, CURRENT_VERSION);
@@ -348,7 +348,6 @@
           window.location.reload();
         }
       }, 2000);
-
     } catch (error) {
       console.error('[Version] Errore durante aggiornamento:', error);
       updateProgress(100, 'Errore durante aggiornamento. Ricarica manualmente.');
@@ -375,8 +374,8 @@
     const lastCheck = localStorage.getItem(VERSION_CHECK_KEY);
     const now = Date.now();
     const oneHour = 60 * 60 * 1000;
-    
-    if (lastCheck && (now - parseInt(lastCheck)) < oneHour) {
+
+    if (lastCheck && now - parseInt(lastCheck) < oneHour) {
       // Already checked recently, skip
       return;
     }
@@ -404,4 +403,3 @@
   // Auto-init DISABILITATO - Progetto abbandonato
   // init();
 })();
-

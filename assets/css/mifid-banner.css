@@ -10,11 +10,7 @@
   left: 0;
   right: 0;
   z-index: 999;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 193, 7, 0.15) 0%,
-    rgba(255, 152, 0, 0.1) 100%
-  );
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.15) 0%, rgba(255, 152, 0, 0.1) 100%);
   border-bottom: 1px solid rgba(255, 193, 7, 0.2);
   backdrop-filter: blur(8px);
   padding: var(--sp-4) 0;
@@ -164,7 +160,7 @@
   background: var(--surface-card, #1a1a1a);
 }
 
-.legal-tab[aria-selected="true"] {
+.legal-tab[aria-selected='true'] {
   color: var(--ink, #ffffff);
   background: var(--surface-card, #1a1a1a);
   border-color: var(--br-card, rgba(255, 255, 255, 0.08));
@@ -248,21 +244,21 @@
     align-items: flex-start;
     gap: var(--sp-3);
   }
-  
+
   .mifid-banner-actions {
     width: 100%;
   }
-  
+
   .mifid-banner-btn {
     flex: 1;
   }
-  
+
   .legal-panel {
     max-width: 100vw;
     max-height: 100vh;
     border-radius: 0;
   }
-  
+
   .legal-hdr,
   .legal-tabs,
   .legal-body,
@@ -271,4 +267,3 @@
     padding-right: var(--sp-4);
   }
 }
-

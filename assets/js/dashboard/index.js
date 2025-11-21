@@ -12,18 +12,18 @@ import { loadSettings } from './settings.js';
 import { loadResources } from './resources.js';
 
 const MODULE_LOADERS = {
-  'overview': loadOverview,
-  'reports': loadReports,
-  'frameworks': loadFrameworks,
+  overview: loadOverview,
+  reports: loadReports,
+  frameworks: loadFrameworks,
   'requests-history': loadRequestsHistory,
-  'notifications': loadNotifications,
-  'settings': loadSettings,
-  'resources': loadResources,
+  notifications: loadNotifications,
+  settings: loadSettings,
+  resources: loadResources,
   // Sezioni vuote (in sviluppo)
-  'education': async () => {},
-  'access': async () => {},
+  education: async () => {},
+  access: async () => {},
   'on-demand': async () => {},
-  'community': async () => {}
+  community: async () => {},
 };
 
 export async function loadModule(moduleId) {
@@ -38,4 +38,3 @@ export async function loadModule(moduleId) {
     console.warn(`[Dashboard] Modulo ${moduleId} non trovato`);
   }
 }
-

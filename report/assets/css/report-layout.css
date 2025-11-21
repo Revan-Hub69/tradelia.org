@@ -93,19 +93,19 @@
   color: var(--ink);
 }
 
-.module-status-pill[data-state="ACTIVE"] {
+.module-status-pill[data-state='ACTIVE'] {
   background: rgba(22, 163, 74, 0.15);
   border-color: rgba(22, 163, 74, 0.3);
   color: var(--ok);
 }
 
-.module-status-pill[data-state="HOLD"] {
+.module-status-pill[data-state='HOLD'] {
   background: rgba(234, 88, 12, 0.15);
   border-color: rgba(234, 88, 12, 0.3);
   color: var(--warn);
 }
 
-.module-status-pill[data-state="REVIEW"] {
+.module-status-pill[data-state='REVIEW'] {
   background: rgba(100, 116, 139, 0.15);
   border-color: rgba(100, 116, 139, 0.3);
   color: var(--neutral);
@@ -137,19 +137,19 @@
   .f1b-card-container {
     padding: var(--sp-4);
   }
-  
+
   .section-head-topline {
     gap: var(--sp-1_5);
   }
-  
+
   .section-title-main {
     font-size: var(--fs-13);
   }
-  
+
   .section-desc {
     font-size: var(--fs-11);
   }
-  
+
   .f1a-ticker-container,
   .f1b-ticker-container {
     padding: var(--sp-3);
@@ -238,4 +238,3 @@
   color: var(--muted);
   line-height: var(--lh-15);
 }
-

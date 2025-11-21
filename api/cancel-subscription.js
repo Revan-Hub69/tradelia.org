@@ -16,8 +16,8 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
   auth: {
     autoRefreshToken: false,
-    persistSession: false
-  }
+    persistSession: false,
+  },
 });
 
 /**
@@ -32,13 +32,13 @@ function hashToken(token) {
  */
 async function notifySupportCancellation(email, planRole, gateway, subscriptionId) {
   if (!BREVO_API_KEY) return false;
-  
+
   try {
     await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
         'api-key': BREVO_API_KEY,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI - Sistema Abbonamenti' },
@@ -54,8 +54,8 @@ Subscription ID: ${subscriptionId || 'N/A'}
 Data richiesta: ${new Date().toLocaleString('it-IT', { timeZone: 'Europe/Rome' })}
 
 La cancellazione è stata processata automaticamente.
-        `
-      })
+        `,
+      }),
     });
     return true;
   } catch (err) {
@@ -69,25 +69,25 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-  
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
-  
+
   try {
     const { token } = req.body;
-    
+
     if (!token || typeof token !== 'string') {
-      return res.status(400).json({ 
-        ok: false, 
-        error: 'Token mancante' 
+      return res.status(400).json({
+        ok: false,
+        error: 'Token mancante',
       });
     }
-    
+
     // 1. Valida token e recupera dati utente
     const tokenHash = hashToken(token.trim());
     const { data: tokenRecord, error: tokenError } = await supabase
@@ -96,18 +96,18 @@ export default async function handler(req, res) {
       .eq('token_hash', tokenHash)
       .eq('revoked', false)
       .single();
-    
+
     if (tokenError || !tokenRecord) {
-      return res.status(200).json({ 
-        ok: false, 
-        error: 'Token non valido' 
+      return res.status(200).json({
+        ok: false,
+        error: 'Token non valido',
       });
     }
-    
+
     const userId = tokenRecord.user_id;
     const email = tokenRecord.email;
     const planRole = tokenRecord.plan_role;
-    
+
     // 2. Cerca subscriber per gateway e subscription_id
     let subscriber = null;
     if (userId) {
@@ -118,28 +118,28 @@ export default async function handler(req, res) {
         .single();
       subscriber = subData;
     }
-    
+
     const gateway = subscriber?.gateway || null;
     const subscriptionId = subscriber?.subscription_id || null;
     const currentPeriodEnd = subscriber?.current_period_end || null;
-    
+
     // 3. Xolo/manuale: solo aggiornamento Supabase (nessuna integrazione gateway esterna)
     let finalPeriodEnd = currentPeriodEnd;
-    
+
     // Xolo o manuale: solo aggiornamento Supabase
     console.log('[Cancel] Xolo/manuale: aggiornamento Supabase');
-    
+
     // 4. Aggiorna subscribers status
     if (subscriber) {
       await supabase
         .from('subscribers')
-        .update({ 
+        .update({
           status: 'cancelled',
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('id', subscriber.id);
     }
-    
+
     // 5. Aggiorna user_roles (imposta valid_until a current_period_end se disponibile)
     if (userId) {
       const newValidUntil = finalPeriodEnd || new Date().toISOString();
@@ -148,10 +148,10 @@ export default async function handler(req, res) {
         .update({ valid_until: newValidUntil })
         .eq('user_id', userId);
     }
-    
+
     // 6. Notifica support@tradelia.org
     await notifySupportCancellation(email || 'N/A', planRole, gateway, subscriptionId);
-    
+
     // 7. Calcola giorni rimanenti per messaggio
     let daysLeft = 0;
     if (finalPeriodEnd) {
@@ -160,21 +160,19 @@ export default async function handler(req, res) {
       const msDiff = expiryDate - now;
       daysLeft = Math.max(0, Math.floor(msDiff / (1000 * 60 * 60 * 24)));
     }
-    
-    return res.status(200).json({ 
+
+    return res.status(200).json({
       ok: true,
       message: `La tua richiesta di cancellazione è stata registrata. L'accesso resta attivo fino al ${finalPeriodEnd ? new Date(finalPeriodEnd).toLocaleDateString('it-IT') : 'termine del periodo corrente'}.`,
       daysLeft: daysLeft,
-      validUntil: finalPeriodEnd
+      validUntil: finalPeriodEnd,
     });
-    
   } catch (err) {
     console.error('[Cancel] Errore:', err);
-    return res.status(500).json({ 
-      ok: false, 
-      error: 'Errore server', 
-      details: err.message 
+    return res.status(500).json({
+      ok: false,
+      error: 'Errore server',
+      details: err.message,
     });
   }
 }
-

@@ -8,7 +8,7 @@
 export function formatF1BToRows(f1bData) {
   const rows = [];
   const d = f1bData;
-  
+
   // Estrai valori da struttura originale o nuova
   const getValue = (path, fallback = '—') => {
     const paths = path.split('|');
@@ -27,11 +27,15 @@ export function formatF1BToRows(f1bData) {
     }
     return fallback;
   };
-  
+
   // === ROW 1: StrategyMode + RegimeScore ===
-  const strategyMode = getValue('regime_and_risk.StrategyMode_macro.raw|f1bSnapshot.regime_state.StrategyMode_macro');
-  const regimeScore = getValue('regime_and_risk.RegimeScore.raw|f1bSnapshot.regime_state.RegimeScore');
-  
+  const strategyMode = getValue(
+    'regime_and_risk.StrategyMode_macro.raw|f1bSnapshot.regime_state.StrategyMode_macro'
+  );
+  const regimeScore = getValue(
+    'regime_and_risk.RegimeScore.raw|f1bSnapshot.regime_state.RegimeScore'
+  );
+
   rows.push({
     id: 'strategy-mode-line',
     parts: [
@@ -41,7 +45,7 @@ export function formatF1BToRows(f1bData) {
         key: 'StrategyMode_macro',
         value: strategyMode,
         label: 'StrategyMode',
-        tone: getToneForStrategyMode(strategyMode)
+        tone: getToneForStrategyMode(strategyMode),
       },
       { kind: 'text', text: ' · RegimeScore: ' },
       {
@@ -49,15 +53,19 @@ export function formatF1BToRows(f1bData) {
         key: 'RegimeScore',
         value: formatRegimeScore(regimeScore),
         label: 'RegimeScore',
-        tone: getToneForRegimeScore(regimeScore)
-      }
-    ]
+        tone: getToneForRegimeScore(regimeScore),
+      },
+    ],
   });
-  
+
   // === ROW 2: Volatility + Breadth ===
-  const volRegime = getValue('regime_and_risk.VolRegime.raw|f1bSnapshot.market_microstructure.VolRegime_comment');
-  const breadth = getValue('breadth_rotation.Breadth_1M.raw|f1bSnapshot.breadth_and_rotation.Breadth_1M_pctSectorsGreen');
-  
+  const volRegime = getValue(
+    'regime_and_risk.VolRegime.raw|f1bSnapshot.market_microstructure.VolRegime_comment'
+  );
+  const breadth = getValue(
+    'breadth_rotation.Breadth_1M.raw|f1bSnapshot.breadth_and_rotation.Breadth_1M_pctSectorsGreen'
+  );
+
   rows.push({
     id: 'vol-breadth-line',
     parts: [
@@ -67,7 +75,7 @@ export function formatF1BToRows(f1bData) {
         key: 'VolRegime',
         value: volRegime,
         label: 'VolRegime',
-        tone: 'neutral'
+        tone: 'neutral',
       },
       { kind: 'text', text: ' · Breadth 1M: ' },
       {
@@ -75,17 +83,21 @@ export function formatF1BToRows(f1bData) {
         key: 'Breadth_1M',
         value: formatBreadth(breadth),
         label: 'Breadth 1M',
-        tone: getToneForBreadth(breadth)
-      }
-    ]
+        tone: getToneForBreadth(breadth),
+      },
+    ],
   });
-  
+
   // === ROW 3: RiskTilt + Leaders ===
-  const riskTilt = getValue('breadth_rotation.RiskTilt_1M.raw|f1bSnapshot.breadth_and_rotation.RiskTilt_1M');
-  const leaders = d.breadth_rotation?.Leadership?.LeadersMultiTF?.items || 
-                  d.f1bSnapshot?.breadth_and_rotation?.LeadersMultiTF || [];
+  const riskTilt = getValue(
+    'breadth_rotation.RiskTilt_1M.raw|f1bSnapshot.breadth_and_rotation.RiskTilt_1M'
+  );
+  const leaders =
+    d.breadth_rotation?.Leadership?.LeadersMultiTF?.items ||
+    d.f1bSnapshot?.breadth_and_rotation?.LeadersMultiTF ||
+    [];
   const leadersText = Array.isArray(leaders) ? leaders.slice(0, 3).join(', ') : '—';
-  
+
   rows.push({
     id: 'risk-tilt-line',
     parts: [
@@ -95,17 +107,21 @@ export function formatF1BToRows(f1bData) {
         key: 'RiskTilt_1M',
         value: riskTilt,
         label: 'RiskTilt 1M',
-        tone: getToneForRiskTilt(riskTilt)
+        tone: getToneForRiskTilt(riskTilt),
       },
       { kind: 'text', text: ' · Leaders: ' },
-      { kind: 'text', text: leadersText }
-    ]
+      { kind: 'text', text: leadersText },
+    ],
   });
-  
+
   // === ROW 4: Size Bias + SmallCap Pressure ===
-  const sizeBias = getValue('breadth_rotation.SizeBias.raw|f1bSnapshot.size_distribution.SizeBiasPattern');
-  const smallCapPressure = getValue('breadth_rotation.SmallCapPressure_1W.raw|f1bSnapshot.breadth_and_rotation.SmallCapPressure_1W');
-  
+  const sizeBias = getValue(
+    'breadth_rotation.SizeBias.raw|f1bSnapshot.size_distribution.SizeBiasPattern'
+  );
+  const smallCapPressure = getValue(
+    'breadth_rotation.SmallCapPressure_1W.raw|f1bSnapshot.breadth_and_rotation.SmallCapPressure_1W'
+  );
+
   rows.push({
     id: 'size-bias-line',
     parts: [
@@ -115,7 +131,7 @@ export function formatF1BToRows(f1bData) {
         key: 'SizeBias',
         value: sizeBias,
         label: 'SizeBias',
-        tone: 'neutral'
+        tone: 'neutral',
       },
       { kind: 'text', text: ' · SmallCap Pressure: ' },
       {
@@ -123,15 +139,19 @@ export function formatF1BToRows(f1bData) {
         key: 'SmallCapPressure_1W',
         value: formatSmallCapPressure(smallCapPressure),
         label: 'SmallCap Pressure 1W',
-        tone: getToneForSmallCap(smallCapPressure)
-      }
-    ]
+        tone: getToneForSmallCap(smallCapPressure),
+      },
+    ],
   });
-  
+
   // === ROW 5: Credit + FX ===
-  const credit = getValue('regime_and_risk.CreditRiskBlock.raw|f1bSnapshot.regime_state.CreditRiskBlock');
-  const fx = getValue('regime_and_risk.FX_Regime.raw|f1bSnapshot.market_microstructure.FX_Regime_comment');
-  
+  const credit = getValue(
+    'regime_and_risk.CreditRiskBlock.raw|f1bSnapshot.regime_state.CreditRiskBlock'
+  );
+  const fx = getValue(
+    'regime_and_risk.FX_Regime.raw|f1bSnapshot.market_microstructure.FX_Regime_comment'
+  );
+
   rows.push({
     id: 'credit-fx-line',
     parts: [
@@ -141,7 +161,7 @@ export function formatF1BToRows(f1bData) {
         key: 'CreditRiskBlock',
         value: credit,
         label: 'CreditRiskBlock',
-        tone: 'neutral'
+        tone: 'neutral',
       },
       { kind: 'text', text: ' · FX: ' },
       {
@@ -149,14 +169,16 @@ export function formatF1BToRows(f1bData) {
         key: 'FX_Regime',
         value: fx,
         label: 'FX_Regime',
-        tone: 'neutral'
-      }
-    ]
+        tone: 'neutral',
+      },
+    ],
   });
-  
+
   // === ROW 6: Risk Window ===
-  const riskWindow = getValue('regime_and_risk.RiskWindow.raw|f1bSnapshot.risk_window.RiskWindow_F1');
-  
+  const riskWindow = getValue(
+    'regime_and_risk.RiskWindow.raw|f1bSnapshot.risk_window.RiskWindow_F1'
+  );
+
   rows.push({
     id: 'risk-window-line',
     parts: [
@@ -166,15 +188,19 @@ export function formatF1BToRows(f1bData) {
         key: 'RiskWindow',
         value: riskWindow,
         label: 'RiskWindow',
-          tone: 'warn' // yellow -> warn
-      }
-    ]
+        tone: 'warn', // yellow -> warn
+      },
+    ],
   });
-  
+
   // === ROW 7: Liquidity + Index Momentum ===
-  const liquidity = getValue('regime_and_risk.LiquidityRegimeScore.raw|f1bSnapshot.regime_state.LiquidityRegimeScore');
-  const indexMomentum = getValue('breadth_rotation.IndexMomentum_1W.raw|f1bSnapshot.breadth_and_rotation.IndexMomentum_1W');
-  
+  const liquidity = getValue(
+    'regime_and_risk.LiquidityRegimeScore.raw|f1bSnapshot.regime_state.LiquidityRegimeScore'
+  );
+  const indexMomentum = getValue(
+    'breadth_rotation.IndexMomentum_1W.raw|f1bSnapshot.breadth_and_rotation.IndexMomentum_1W'
+  );
+
   rows.push({
     id: 'liquidity-momentum-line',
     parts: [
@@ -184,7 +210,7 @@ export function formatF1BToRows(f1bData) {
         key: 'LiquidityRegimeScore',
         value: formatRegimeScore(liquidity),
         label: 'LiquidityRegimeScore',
-        tone: 'neutral'
+        tone: 'neutral',
       },
       { kind: 'text', text: ' · Index Momentum 1W: ' },
       {
@@ -192,18 +218,20 @@ export function formatF1BToRows(f1bData) {
         key: 'IndexMomentum_1W',
         value: formatRegimeScore(indexMomentum),
         label: 'IndexMomentum 1W',
-        tone: 'neutral'
-      }
-    ]
+        tone: 'neutral',
+      },
+    ],
   });
-  
+
   // === ROW 8: Defensive Leadership + Lagging ===
   const defensive = d.breadth_rotation?.Leadership?.DefensiveLeadership?.items || [];
-  const lagging = d.breadth_rotation?.Leadership?.Lagging?.items || 
-                  d.f1bSnapshot?.breadth_and_rotation?.LaggingSectors || [];
+  const lagging =
+    d.breadth_rotation?.Leadership?.Lagging?.items ||
+    d.f1bSnapshot?.breadth_and_rotation?.LaggingSectors ||
+    [];
   const defensiveText = Array.isArray(defensive) ? defensive.slice(0, 2).join(', ') : '—';
   const laggingText = Array.isArray(lagging) ? lagging.slice(0, 2).join(', ') : '—';
-  
+
   if (defensiveText !== '—' || laggingText !== '—') {
     rows.push({
       id: 'defensive-lagging-line',
@@ -211,24 +239,25 @@ export function formatF1BToRows(f1bData) {
         { kind: 'text', text: 'Defensivi: ' },
         { kind: 'text', text: defensiveText || '—' },
         { kind: 'text', text: ' · In ritardo: ' },
-        { kind: 'text', text: laggingText || '—' }
-      ]
+        { kind: 'text', text: laggingText || '—' },
+      ],
     });
   }
-  
+
   // === ROW 9: T1 Headlines (Street View) ===
   const t1MacroNews = d.street_view?.T1_MacroNews || '';
   if (t1MacroNews) {
-    const newsPreview = t1MacroNews.length > 80 ? t1MacroNews.substring(0, 80) + '...' : t1MacroNews;
+    const newsPreview =
+      t1MacroNews.length > 80 ? t1MacroNews.substring(0, 80) + '...' : t1MacroNews;
     rows.push({
       id: 't1-headlines-line',
       parts: [
         { kind: 'text', text: 'Street View: ' },
-        { kind: 'text', text: newsPreview }
-      ]
+        { kind: 'text', text: newsPreview },
+      ],
     });
   }
-  
+
   // === ROW 10: Finviz Query (se disponibile) ===
   const finvizQuery = d.finvizFilters?.QueryString || '';
   if (finvizQuery) {
@@ -241,12 +270,12 @@ export function formatF1BToRows(f1bData) {
           key: 'FinvizQuery',
           value: finvizQuery.substring(0, 50) + (finvizQuery.length > 50 ? '...' : ''),
           label: 'Finviz Query',
-          tone: 'neutral'
-        }
-      ]
+          tone: 'neutral',
+        },
+      ],
     });
   }
-  
+
   return rows;
 }
 
@@ -325,4 +354,3 @@ function getToneForSmallCap(pressure) {
   }
   return 'neutral';
 }
-

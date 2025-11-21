@@ -168,7 +168,7 @@ html {
     var(--brand-600) 50%,
     var(--brand-500) 100%
   );
-  -webkit-mask: 
+  -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -270,7 +270,7 @@ html {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-lg);
   padding: var(--sp-6);
-  box-shadow: 
+  box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.4),
     0 4px 12px rgba(0, 0, 0, 0.3);
   text-align: center;
@@ -285,7 +285,7 @@ html {
   background: var(--surface-card);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-lg);
-  box-shadow: 
+  box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.3),
     0 4px 12px rgba(0, 0, 0, 0.2);
   font-size: var(--fs-14);
@@ -295,7 +295,7 @@ html {
   max-width: 320px;
   opacity: 0;
   transform: translateY(20px) scale(0.95);
-  transition: 
+  transition:
     opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -341,11 +341,7 @@ html {
 
 .progress-bar-fill {
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--brand-500) 0%,
-    var(--brand-400) 100%
-  );
+  background: linear-gradient(90deg, var(--brand-500) 0%, var(--brand-400) 100%);
   border-radius: inherit;
   transition: width 0.3s ease;
   position: relative;
@@ -410,7 +406,7 @@ html {
     bottom: var(--sp-4);
     max-width: calc(100vw - 32px);
   }
-  
+
   .loading-overlay-content {
     margin: var(--sp-4);
     max-width: calc(100vw - 32px);
@@ -428,7 +424,7 @@ html {
   .badge-pulse::before {
     animation: none;
   }
-  
+
   .glow-effect::before,
   .gradient-border::before {
     opacity: 0;
@@ -447,4 +443,3 @@ html {
   backface-visibility: hidden;
   -webkit-font-smoothing: antialiased;
 }
-

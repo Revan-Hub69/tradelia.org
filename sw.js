@@ -1,12 +1,12 @@
 /**
  * Service Worker - PWA + Push Notifications
- * 
+ *
  * Implements W3C Service Worker API for:
  * - Offline functionality
  * - Cache management
  * - Push notifications
  * - Automatic updates
- * 
+ *
  * @version 2.0.0
  * @references
  * - W3C (2023). Service Workers. W3C Working Draft
@@ -37,15 +37,16 @@ const STATIC_CACHE = [
   '/icons/icon-512.svg',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
-  '/favicon.png'
+  '/favicon.png',
 ];
 
 // ===== INSTALL =====
 self.addEventListener('install', (event) => {
   console.log('[SW] Install');
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(STATIC_CACHE))
+    caches
+      .open(CACHE_NAME)
+      .then((cache) => cache.addAll(STATIC_CACHE))
       .then(() => self.skipWaiting())
   );
 });
@@ -54,25 +55,25 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   console.log('[SW] Activate');
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames
-          .filter(name => name !== CACHE_NAME)
-          .map(name => caches.delete(name))
-      );
-    })
-    .then(() => self.clients.claim())
-    .then(() => {
-      // Notify all clients about the update
-      return self.clients.matchAll().then(clients => {
-        clients.forEach(client => {
-          client.postMessage({
-            type: 'SW_UPDATED',
-            version: VERSION
+    caches
+      .keys()
+      .then((cacheNames) => {
+        return Promise.all(
+          cacheNames.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))
+        );
+      })
+      .then(() => self.clients.claim())
+      .then(() => {
+        // Notify all clients about the update
+        return self.clients.matchAll().then((clients) => {
+          clients.forEach((client) => {
+            client.postMessage({
+              type: 'SW_UPDATED',
+              version: VERSION,
+            });
           });
         });
-      });
-    })
+      })
   );
 });
 
@@ -89,15 +90,15 @@ self.addEventListener('fetch', (event) => {
   if (event.request.url.includes('/api/')) {
     return; // Non cache API
   }
-  
+
   // Network-first strategy for HTML pages to ensure fresh content
   if (event.request.headers.get('accept').includes('text/html')) {
     event.respondWith(
       fetch(event.request)
-        .then(response => {
+        .then((response) => {
           // Cache the response for offline use
           const responseClone = response.clone();
-          caches.open(CACHE_NAME).then(cache => {
+          caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, responseClone);
           });
           return response;
@@ -109,18 +110,17 @@ self.addEventListener('fetch', (event) => {
     );
     return;
   }
-  
+
   // Cache-first for static assets
   event.respondWith(
-    caches.match(event.request)
-      .then(response => response || fetch(event.request))
+    caches.match(event.request).then((response) => response || fetch(event.request))
   );
 });
 
 // ===== PUSH NOTIFICATIONS =====
 self.addEventListener('push', (event) => {
   console.log('[SW] Push notification received');
-  
+
   let data = {};
   if (event.data) {
     try {
@@ -129,7 +129,7 @@ self.addEventListener('push', (event) => {
       data = { title: 'Tradelia AI', body: event.data.text() };
     }
   }
-  
+
   const title = data.title || 'Tradelia AI';
   const options = {
     body: data.body || 'Nuovo report disponibile',
@@ -141,31 +141,27 @@ self.addEventListener('push', (event) => {
     actions: [
       {
         action: 'open',
-        title: 'Apri Dashboard'
+        title: 'Apri Dashboard',
       },
       {
         action: 'close',
-        title: 'Chiudi'
-      }
-    ]
+        title: 'Chiudi',
+      },
+    ],
   };
-  
-  event.waitUntil(
-    self.registration.showNotification(title, options)
-  );
+
+  event.waitUntil(self.registration.showNotification(title, options));
 });
 
 // ===== NOTIFICATION CLICK =====
 self.addEventListener('notificationclick', (event) => {
   console.log('[SW] Notification click');
-  
+
   event.notification.close();
-  
+
   if (event.action === 'open' || !event.action) {
     const url = event.notification.data || '/archivio/dashboard.html';
-    event.waitUntil(
-      clients.openWindow(url)
-    );
+    event.waitUntil(clients.openWindow(url));
   }
 });
 
@@ -173,4 +169,3 @@ self.addEventListener('notificationclick', (event) => {
 self.addEventListener('notificationclose', (event) => {
   console.log('[SW] Notification closed');
 });
-

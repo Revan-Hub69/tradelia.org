@@ -15,16 +15,18 @@ function exportToCSV(data, filename = 'report') {
 
     // Headers (prima riga)
     const headers = Object.keys(data[0]);
-    const csvHeaders = headers.map(h => `"${String(h).replace(/"/g, '""')}"`).join(',');
+    const csvHeaders = headers.map((h) => `"${String(h).replace(/"/g, '""')}"`).join(',');
 
     // Rows
-    const csvRows = data.map(row => {
-      return headers.map(header => {
-        const value = row[header];
-        if (value == null) return '""';
-        const str = String(value).replace(/"/g, '""');
-        return `"${str}"`;
-      }).join(',');
+    const csvRows = data.map((row) => {
+      return headers
+        .map((header) => {
+          const value = row[header];
+          if (value == null) return '""';
+          const str = String(value).replace(/"/g, '""');
+          return `"${str}"`;
+        })
+        .join(',');
     });
 
     // CSV completo
@@ -85,18 +87,18 @@ function exportToPDF(filename = 'report') {
   try {
     // Salva titolo originale
     const originalTitle = document.title;
-    
+
     // Aggiorna titolo per stampa
     document.title = `${filename} - ${new Date().toISOString().split('T')[0]}`;
-    
+
     // Trigger stampa
     window.print();
-    
+
     // Ripristina titolo
     setTimeout(() => {
       document.title = originalTitle;
     }, 1000);
-    
+
     Logger.debug('Export', `PDF esportato: ${filename}`);
     return true;
   } catch (err) {
@@ -117,20 +119,26 @@ function extractModuleData(moduleElement) {
   // Estrai metriche
   const metrics = [];
   const metricElements = moduleElement.querySelectorAll('.metric-inline');
-  metricElements.forEach(metricEl => {
+  metricElements.forEach((metricEl) => {
     const key = metricEl.getAttribute('data-metric') || '';
     const value = metricEl.querySelector('.metric-inline-text')?.textContent || '';
-    const tone = metricEl.classList.contains('metric-inline--ok') ? 'ok' :
-                 metricEl.classList.contains('metric-inline--warn') ? 'warn' :
-                 metricEl.classList.contains('metric-inline--err') ? 'err' : 'neutral';
-    
+    const tone = metricEl.classList.contains('metric-inline--ok')
+      ? 'ok'
+      : metricEl.classList.contains('metric-inline--warn')
+        ? 'warn'
+        : metricEl.classList.contains('metric-inline--err')
+          ? 'err'
+          : 'neutral';
+
     metrics.push({ key, value, tone });
   });
 
   // Estrai righe header-ticker (AI summary)
   const aiSummaryRows = [];
-  const tickerRows = moduleElement.querySelectorAll('[data-ai-summary-ticker="true"] .header-ticker-row');
-  tickerRows.forEach(row => {
+  const tickerRows = moduleElement.querySelectorAll(
+    '[data-ai-summary-ticker="true"] .header-ticker-row'
+  );
+  tickerRows.forEach((row) => {
     const text = row.textContent?.trim() || '';
     if (text) {
       aiSummaryRows.push(text);
@@ -144,7 +152,7 @@ function extractModuleData(moduleElement) {
     moduleStatus,
     metrics,
     aiSummary: aiSummaryRows.join(' '),
-    exportedAt: new Date().toISOString()
+    exportedAt: new Date().toISOString(),
   };
 }
 
@@ -153,7 +161,7 @@ function extractReportData() {
   const modules = [];
   const moduleElements = document.querySelectorAll('.report-section-block, .module-card');
 
-  moduleElements.forEach(moduleEl => {
+  moduleElements.forEach((moduleEl) => {
     const moduleData = extractModuleData(moduleEl);
     if (moduleData) {
       modules.push(moduleData);
@@ -165,7 +173,7 @@ function extractReportData() {
   const headerData = {};
   if (headerTicker) {
     const tickerRows = headerTicker.querySelectorAll('.header-ticker-row');
-    tickerRows.forEach(row => {
+    tickerRows.forEach((row) => {
       const text = row.textContent?.trim() || '';
       if (text) {
         headerData[`row_${row.getAttribute('id') || tickerRows.length}`] = text;
@@ -177,7 +185,7 @@ function extractReportData() {
     reportId: new URLSearchParams(window.location.search).get('id') || 'unknown',
     exportedAt: new Date().toISOString(),
     header: headerData,
-    modules
+    modules,
   };
 }
 
@@ -186,7 +194,7 @@ function exportSelectedModules(moduleIds = [], format = 'json') {
   const allModules = document.querySelectorAll('.report-section-block, .module-card');
   const selectedModules = [];
 
-  allModules.forEach(moduleEl => {
+  allModules.forEach((moduleEl) => {
     const moduleId = moduleEl.id || '';
     if (moduleIds.length === 0 || moduleIds.includes(moduleId)) {
       const moduleData = extractModuleData(moduleEl);
@@ -206,15 +214,15 @@ function exportSelectedModules(moduleIds = [], format = 'json') {
 
   if (format === 'csv') {
     // Flatten per CSV
-    const csvData = selectedModules.flatMap(module => {
-      return module.metrics.map(metric => ({
+    const csvData = selectedModules.flatMap((module) => {
+      return module.metrics.map((metric) => ({
         moduleId: module.moduleId,
         moduleTitle: module.moduleTitle,
         metricKey: metric.key,
         metricValue: metric.value,
         metricTone: metric.tone,
         moduleStatus: module.moduleStatus,
-        aiSummary: module.aiSummary
+        aiSummary: module.aiSummary,
       }));
     });
     return exportToCSV(csvData, filename);
@@ -245,17 +253,17 @@ export const exportUtils = {
     const allModules = document.querySelectorAll('.report-section-block, .module-card');
     const allMetrics = [];
 
-    allModules.forEach(moduleEl => {
+    allModules.forEach((moduleEl) => {
       const moduleData = extractModuleData(moduleEl);
       if (moduleData && moduleData.metrics.length > 0) {
-        moduleData.metrics.forEach(metric => {
+        moduleData.metrics.forEach((metric) => {
           allMetrics.push({
             moduleId: moduleData.moduleId,
             moduleTitle: moduleData.moduleTitle,
             metricKey: metric.key,
             metricValue: metric.value,
             metricTone: metric.tone,
-            moduleStatus: moduleData.moduleStatus
+            moduleStatus: moduleData.moduleStatus,
           });
         });
       }
@@ -291,6 +299,5 @@ export const exportUtils = {
    */
   getReportData() {
     return extractReportData();
-  }
+  },
 };
-

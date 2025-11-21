@@ -5,15 +5,7 @@
     "category": "Strumenti Derivati e Fixed Income",
     "difficulty": "Intermedio-Avanzato"
   },
-  "tags": [
-    "CoCo Bonds",
-    "AT1",
-    "Obbligazioni",
-    "Banche",
-    "Rischio",
-    "Fixed Income",
-    "Basilea III"
-  ],
+  "tags": ["CoCo Bonds", "AT1", "Obbligazioni", "Banche", "Rischio", "Fixed Income", "Basilea III"],
   "glossaryTerms": {
     "CoCo Bonds": "CreditRiskBlock",
     "AT1": "CreditRiskBlock",
@@ -365,20 +357,8 @@
           "type": "table",
           "headers": ["Strumento", "Priorità", "Cedola", "Rischio Capitale", "Trigger"],
           "rows": [
-            [
-              "Obbligazione Senior",
-              "Alta",
-              "Fissa o variabile",
-              "Molto basso",
-              "Nessuno"
-            ],
-            [
-              "Subordinato Tier 2",
-              "Media",
-              "Fissa o variabile",
-              "Moderato",
-              "Evento di default"
-            ],
+            ["Obbligazione Senior", "Alta", "Fissa o variabile", "Molto basso", "Nessuno"],
+            ["Subordinato Tier 2", "Media", "Fissa o variabile", "Moderato", "Evento di default"],
             [
               "CoCo Bond / AT1",
               "Molto bassa",
@@ -563,4 +543,3 @@
     }
   ]
 }
-

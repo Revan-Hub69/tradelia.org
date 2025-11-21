@@ -8,7 +8,7 @@
 export function formatF1AToRows(f1aData) {
   const rows = [];
   const d = f1aData;
-  
+
   // Estrai valori da struttura F1A
   const getValue = (path, fallback = '—') => {
     const paths = path.split('|');
@@ -27,12 +27,12 @@ export function formatF1AToRows(f1aData) {
     }
     return fallback;
   };
-  
+
   // === ROW 1: Ticker + Sector + Market Cap ===
   const ticker = getValue('ticker|meta.ticker');
   const sector = getValue('sector|ticker_context.sector');
   const marketCap = getValue('marketCap|ticker_context.marketCap');
-  
+
   rows.push({
     id: 'ticker-context-line',
     parts: [
@@ -42,7 +42,7 @@ export function formatF1AToRows(f1aData) {
         key: 'Ticker',
         value: ticker,
         label: 'Ticker',
-        tone: 'neutral'
+        tone: 'neutral',
       },
       { kind: 'text', text: ' · Settore: ' },
       {
@@ -50,7 +50,7 @@ export function formatF1AToRows(f1aData) {
         key: 'Sector',
         value: sector,
         label: 'Sector',
-        tone: 'neutral'
+        tone: 'neutral',
       },
       { kind: 'text', text: ' · Market Cap: ' },
       {
@@ -58,16 +58,16 @@ export function formatF1AToRows(f1aData) {
         key: 'MarketCap',
         value: formatMarketCap(marketCap),
         label: 'MarketCap',
-        tone: 'neutral'
-      }
-    ]
+        tone: 'neutral',
+      },
+    ],
   });
-  
+
   // === ROW 2: Price + Change + Volume ===
   const price = getValue('price|ticker_context.price');
   const changePct = getValue('changePct|ticker_context.changePct');
   const volume = getValue('volume|ticker_context.volume');
-  
+
   rows.push({
     id: 'price-volume-line',
     parts: [
@@ -77,7 +77,7 @@ export function formatF1AToRows(f1aData) {
         key: 'Price',
         value: formatPrice(price),
         label: 'Price',
-        tone: 'ok'
+        tone: 'ok',
       },
       { kind: 'text', text: ' · Variazione: ' },
       {
@@ -85,7 +85,7 @@ export function formatF1AToRows(f1aData) {
         key: 'ChangePct',
         value: formatChangePct(changePct),
         label: 'ChangePct',
-        tone: getToneForChange(changePct)
+        tone: getToneForChange(changePct),
       },
       { kind: 'text', text: ' · Volume: ' },
       {
@@ -93,15 +93,15 @@ export function formatF1AToRows(f1aData) {
         key: 'Volume',
         value: formatVolume(volume),
         label: 'Volume',
-        tone: 'neutral'
-      }
-    ]
+        tone: 'neutral',
+      },
+    ],
   });
-  
+
   // === ROW 3: Beta + Sector Performance ===
   const beta = getValue('beta|ticker_context.beta');
   const sectorPerf = getValue('sectorPerformance_1M|ticker_context.sectorPerformance_1M');
-  
+
   rows.push({
     id: 'beta-sector-line',
     parts: [
@@ -111,7 +111,7 @@ export function formatF1AToRows(f1aData) {
         key: 'Beta',
         value: formatBeta(beta),
         label: 'Beta',
-        tone: 'neutral'
+        tone: 'neutral',
       },
       { kind: 'text', text: ' · Performance Settore 1M: ' },
       {
@@ -119,15 +119,15 @@ export function formatF1AToRows(f1aData) {
         key: 'SectorPerformance_1M',
         value: formatPercentage(sectorPerf),
         label: 'Sector Performance 1M',
-        tone: getToneForPercentage(sectorPerf)
-      }
-    ]
+        tone: getToneForPercentage(sectorPerf),
+      },
+    ],
   });
-  
+
   // === ROW 4: Relative Strength + Index Exposure ===
   const relativeStrength = getValue('relativeStrength|ticker_context.relativeStrength');
   const indexExposure = getValue('indexExposure|ticker_context.indexExposure');
-  
+
   rows.push({
     id: 'strength-exposure-line',
     parts: [
@@ -137,7 +137,7 @@ export function formatF1AToRows(f1aData) {
         key: 'RelativeStrength',
         value: formatRelativeStrength(relativeStrength),
         label: 'RelativeStrength',
-        tone: getToneForRelativeStrength(relativeStrength)
+        tone: getToneForRelativeStrength(relativeStrength),
       },
       { kind: 'text', text: ' · Esposizione Indici: ' },
       {
@@ -145,11 +145,11 @@ export function formatF1AToRows(f1aData) {
         key: 'IndexExposure',
         value: indexExposure,
         label: 'IndexExposure',
-        tone: 'neutral'
-      }
-    ]
+        tone: 'neutral',
+      },
+    ],
   });
-  
+
   return rows;
 }
 
@@ -256,4 +256,3 @@ function getToneForRelativeStrength(strength) {
   }
   return 'neutral';
 }
-

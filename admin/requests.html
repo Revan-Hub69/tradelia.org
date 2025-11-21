@@ -1,455 +1,494 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it" data-theme="light">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="Dashboard Admin Tradelia - Gestione richieste analisi e desk" />
-  <title>Admin Richieste • Tradelia</title>
-  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
-  <link rel="stylesheet" href="/assets/css/global-header.css" />
-  <link rel="stylesheet" href="/user/assets/css/user-area.css" />
-  <style>
-    .admin-shell {
-      min-height: 100vh;
-      background: var(--surface-page);
-      padding: clamp(1.5rem, 4vw, 2.5rem);
-    }
-    .admin-header {
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--br-card);
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    .admin-header h1 {
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      font-weight: 700;
-      margin: 0;
-      color: var(--ink);
-    }
-    .admin-header p { color: var(--ink-soft); margin: 0; font-size: var(--fs-14); }
-    .admin-nav {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .admin-nav a {
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius-md);
-      background: var(--surface-elev);
-      border: 1px solid var(--br-card);
-      color: var(--ink);
-      text-decoration: none;
-      font-size: var(--fs-14);
-      transition: all 0.2s;
-    }
-    .admin-nav a:hover {
-      background: var(--surface-page);
-      border-color: var(--brand-500);
-    }
-    .admin-nav a.active {
-      background: var(--brand-500);
-      color: white;
-      border-color: var(--brand-500);
-    }
-    .admin-main { margin-top: 1.5rem; display: grid; gap: 1.25rem; }
-    .admin-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-    }
-    .admin-stat-card {
-      background: var(--surface-elev);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-lg);
-      padding: 1.1rem 1.35rem;
-    }
-    .admin-stat-card strong {
-      display: block;
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--brand-600);
-      margin-bottom: 0.3rem;
-    }
-    .admin-stat-card span {
-      font-size: var(--fs-13);
-      color: var(--ink-soft);
-    }
-    .admin-filters {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      margin: 1.25rem 0;
-    }
-    .admin-filters input,
-    .admin-filters select {
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-md);
-      background: var(--surface-elev);
-      color: var(--ink);
-      font-size: var(--fs-14);
-    }
-    .admin-filters input { flex: 1; min-width: 220px; }
-    .admin-table {
-      background: var(--surface-elev);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-    }
-    .admin-table table { width: 100%; border-collapse: collapse; }
-    .admin-table th,
-    .admin-table td {
-      padding: 1rem;
-      font-size: var(--fs-14);
-      color: var(--ink);
-      border-bottom: 1px solid var(--br-card);
-      text-align: left;
-    }
-    .admin-table th {
-      font-size: var(--fs-13);
-      font-weight: 600;
-      background: var(--surface-page);
-    }
-    .admin-table tr:last-child td { border-bottom: none; }
-    .admin-table tr:hover { background: var(--surface-page); }
-    .status-badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: var(--radius-sm);
-      font-size: var(--fs-12);
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-    .status-badge.pending { background: rgba(251, 191, 36, 0.15); color: rgba(251, 191, 36); }
-    .status-badge.processing { background: rgba(96, 165, 250, 0.15); color: rgba(96, 165, 250); }
-    .status-badge.completed { background: rgba(34, 197, 94, 0.15); color: rgba(34, 197, 94); }
-    .status-badge.cancelled { background: rgba(248, 113, 113, 0.15); color: rgba(248, 113, 113); }
-    .tipo-badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: var(--radius-sm);
-      font-size: var(--fs-12);
-      font-weight: 600;
-      background: rgba(139, 92, 246, 0.15);
-      color: rgba(139, 92, 246);
-    }
-    .btn {
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius-md);
-      border: none;
-      font-size: var(--fs-14);
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-primary {
-      background: var(--brand-500);
-      color: white;
-    }
-    .btn-primary:hover { background: var(--brand-600); }
-    .btn-sm {
-      padding: 0.375rem 0.75rem;
-      font-size: var(--fs-12);
-    }
-    .btn-secondary {
-      background: var(--surface-page);
-      border: 1px solid var(--br-card);
-      color: var(--ink);
-    }
-    .btn-secondary:hover { background: var(--surface-elev); }
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-    .modal-overlay.active { display: flex; }
-    .modal-content {
-      background: var(--surface-elev);
-      border-radius: var(--radius-lg);
-      padding: 2rem;
-      max-width: 600px;
-      width: 90%;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .modal-header {
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--br-card);
-    }
-    .modal-header h2 {
-      margin: 0;
-      font-size: var(--fs-20);
-      color: var(--ink);
-    }
-    .modal-body {
-      margin-bottom: 1.5rem;
-    }
-    .modal-field {
-      margin-bottom: 1rem;
-    }
-    .modal-field label {
-      display: block;
-      font-size: var(--fs-13);
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--ink-soft);
-    }
-    .modal-field input,
-    .modal-field select,
-    .modal-field textarea {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-md);
-      background: var(--surface-page);
-      color: var(--ink);
-      font-size: var(--fs-14);
-    }
-    .modal-field textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-    .modal-actions {
-      display: flex;
-      gap: 0.75rem;
-      justify-content: flex-end;
-    }
-    .loading {
-      text-align: center;
-      padding: 2rem;
-      color: var(--ink-soft);
-    }
-    .error {
-      background: rgba(248, 113, 113, 0.15);
-      color: rgba(248, 113, 113);
-      padding: 1rem;
-      border-radius: var(--radius-md);
-      margin: 1rem 0;
-    }
-    .empty {
-      text-align: center;
-      padding: 3rem;
-      color: var(--ink-soft);
-    }
-  </style>
-</head>
-<body>
-  <div class="admin-shell">
-    <div class="admin-header">
-      <h1>📋 Gestione Richieste</h1>
-      <p>Gestisci richieste analisi e piano desk</p>
-    </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="Dashboard Admin Tradelia - Gestione richieste analisi e desk"
+    />
+    <title>Admin Richieste • Tradelia</title>
+    <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+    <link rel="stylesheet" href="/assets/css/global-header.css" />
+    <link rel="stylesheet" href="/user/assets/css/user-area.css" />
+    <style>
+      .admin-shell {
+        min-height: 100vh;
+        background: var(--surface-page);
+        padding: clamp(1.5rem, 4vw, 2.5rem);
+      }
+      .admin-header {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--br-card);
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .admin-header h1 {
+        font-size: clamp(1.6rem, 4vw, 2.4rem);
+        font-weight: 700;
+        margin: 0;
+        color: var(--ink);
+      }
+      .admin-header p {
+        color: var(--ink-soft);
+        margin: 0;
+        font-size: var(--fs-14);
+      }
+      .admin-nav {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+      }
+      .admin-nav a {
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-md);
+        background: var(--surface-elev);
+        border: 1px solid var(--br-card);
+        color: var(--ink);
+        text-decoration: none;
+        font-size: var(--fs-14);
+        transition: all 0.2s;
+      }
+      .admin-nav a:hover {
+        background: var(--surface-page);
+        border-color: var(--brand-500);
+      }
+      .admin-nav a.active {
+        background: var(--brand-500);
+        color: white;
+        border-color: var(--brand-500);
+      }
+      .admin-main {
+        margin-top: 1.5rem;
+        display: grid;
+        gap: 1.25rem;
+      }
+      .admin-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+      }
+      .admin-stat-card {
+        background: var(--surface-elev);
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-lg);
+        padding: 1.1rem 1.35rem;
+      }
+      .admin-stat-card strong {
+        display: block;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--brand-600);
+        margin-bottom: 0.3rem;
+      }
+      .admin-stat-card span {
+        font-size: var(--fs-13);
+        color: var(--ink-soft);
+      }
+      .admin-filters {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin: 1.25rem 0;
+      }
+      .admin-filters input,
+      .admin-filters select {
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-md);
+        background: var(--surface-elev);
+        color: var(--ink);
+        font-size: var(--fs-14);
+      }
+      .admin-filters input {
+        flex: 1;
+        min-width: 220px;
+      }
+      .admin-table {
+        background: var(--surface-elev);
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+      }
+      .admin-table table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .admin-table th,
+      .admin-table td {
+        padding: 1rem;
+        font-size: var(--fs-14);
+        color: var(--ink);
+        border-bottom: 1px solid var(--br-card);
+        text-align: left;
+      }
+      .admin-table th {
+        font-size: var(--fs-13);
+        font-weight: 600;
+        background: var(--surface-page);
+      }
+      .admin-table tr:last-child td {
+        border-bottom: none;
+      }
+      .admin-table tr:hover {
+        background: var(--surface-page);
+      }
+      .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--radius-sm);
+        font-size: var(--fs-12);
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .status-badge.pending {
+        background: rgba(251, 191, 36, 0.15);
+        color: rgba(251, 191, 36);
+      }
+      .status-badge.processing {
+        background: rgba(96, 165, 250, 0.15);
+        color: rgba(96, 165, 250);
+      }
+      .status-badge.completed {
+        background: rgba(34, 197, 94, 0.15);
+        color: rgba(34, 197, 94);
+      }
+      .status-badge.cancelled {
+        background: rgba(248, 113, 113, 0.15);
+        color: rgba(248, 113, 113);
+      }
+      .tipo-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--radius-sm);
+        font-size: var(--fs-12);
+        font-weight: 600;
+        background: rgba(139, 92, 246, 0.15);
+        color: rgba(139, 92, 246);
+      }
+      .btn {
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-md);
+        border: none;
+        font-size: var(--fs-14);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-primary {
+        background: var(--brand-500);
+        color: white;
+      }
+      .btn-primary:hover {
+        background: var(--brand-600);
+      }
+      .btn-sm {
+        padding: 0.375rem 0.75rem;
+        font-size: var(--fs-12);
+      }
+      .btn-secondary {
+        background: var(--surface-page);
+        border: 1px solid var(--br-card);
+        color: var(--ink);
+      }
+      .btn-secondary:hover {
+        background: var(--surface-elev);
+      }
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+      .modal-overlay.active {
+        display: flex;
+      }
+      .modal-content {
+        background: var(--surface-elev);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      .modal-header {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--br-card);
+      }
+      .modal-header h2 {
+        margin: 0;
+        font-size: var(--fs-20);
+        color: var(--ink);
+      }
+      .modal-body {
+        margin-bottom: 1.5rem;
+      }
+      .modal-field {
+        margin-bottom: 1rem;
+      }
+      .modal-field label {
+        display: block;
+        font-size: var(--fs-13);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--ink-soft);
+      }
+      .modal-field input,
+      .modal-field select,
+      .modal-field textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-md);
+        background: var(--surface-page);
+        color: var(--ink);
+        font-size: var(--fs-14);
+      }
+      .modal-field textarea {
+        min-height: 100px;
+        resize: vertical;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+      }
+      .loading {
+        text-align: center;
+        padding: 2rem;
+        color: var(--ink-soft);
+      }
+      .error {
+        background: rgba(248, 113, 113, 0.15);
+        color: rgba(248, 113, 113);
+        padding: 1rem;
+        border-radius: var(--radius-md);
+        margin: 1rem 0;
+      }
+      .empty {
+        text-align: center;
+        padding: 3rem;
+        color: var(--ink-soft);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-shell">
+      <div class="admin-header">
+        <h1>📋 Gestione Richieste</h1>
+        <p>Gestisci richieste analisi e piano desk</p>
+      </div>
 
-    <nav class="admin-nav">
-      <a href="/admin/users.html">Utenti</a>
-      <a href="/admin/requests.html" class="active">Richieste</a>
-      <a href="/admin/reports.html">Report</a>
-    </nav>
+      <nav class="admin-nav">
+        <a href="/admin/users.html">Utenti</a>
+        <a href="/admin/requests.html" class="active">Richieste</a>
+        <a href="/admin/reports.html">Report</a>
+      </nav>
 
-    <div class="admin-main">
-      <!-- Statistiche -->
-      <div class="admin-stats" id="stats-container">
-        <div class="admin-stat-card">
-          <strong id="stat-pending">-</strong>
-          <span>In Attesa</span>
+      <div class="admin-main">
+        <!-- Statistiche -->
+        <div class="admin-stats" id="stats-container">
+          <div class="admin-stat-card">
+            <strong id="stat-pending">-</strong>
+            <span>In Attesa</span>
+          </div>
+          <div class="admin-stat-card">
+            <strong id="stat-processing">-</strong>
+            <span>In Elaborazione</span>
+          </div>
+          <div class="admin-stat-card">
+            <strong id="stat-completed">-</strong>
+            <span>Completate</span>
+          </div>
+          <div class="admin-stat-card">
+            <strong id="stat-total">-</strong>
+            <span>Totale</span>
+          </div>
         </div>
-        <div class="admin-stat-card">
-          <strong id="stat-processing">-</strong>
-          <span>In Elaborazione</span>
-        </div>
-        <div class="admin-stat-card">
-          <strong id="stat-completed">-</strong>
-          <span>Completate</span>
-        </div>
-        <div class="admin-stat-card">
-          <strong id="stat-total">-</strong>
-          <span>Totale</span>
-        </div>
-      </div>
 
-      <!-- Filtri -->
-      <div class="admin-filters">
-        <input type="text" id="filter-search" placeholder="Cerca per nome, email..." />
-        <select id="filter-status">
-          <option value="">Tutti gli status</option>
-          <option value="pending">In Attesa</option>
-          <option value="processing">In Elaborazione</option>
-          <option value="completed">Completate</option>
-          <option value="cancelled">Cancellate</option>
-        </select>
-        <select id="filter-tipo">
-          <option value="">Tutti i tipi</option>
-          <option value="analisi-su-richiesta">Analisi</option>
-          <option value="piano-desk">Piano Desk</option>
-        </select>
-        <button class="btn btn-primary" onclick="loadRequests()">Aggiorna</button>
-      </div>
-
-      <!-- Tabella -->
-      <div class="admin-table">
-        <div id="loading" class="loading" style="display: none;">Caricamento...</div>
-        <div id="error" class="error" style="display: none;"></div>
-        <table id="requests-table" style="display: none;">
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Tipo</th>
-              <th>Nome</th>
-              <th>Email</th>
-              <th>Dettagli</th>
-              <th>Status</th>
-              <th>Azioni</th>
-            </tr>
-          </thead>
-          <tbody id="requests-tbody">
-          </tbody>
-        </table>
-        <div id="empty" class="empty" style="display: none;">Nessuna richiesta trovata</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Dettagli -->
-  <div class="modal-overlay" id="modal-details">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Dettagli Richiesta</h2>
-      </div>
-      <div class="modal-body" id="modal-details-body">
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-secondary" onclick="closeModal()">Chiudi</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Modifica Status -->
-  <div class="modal-overlay" id="modal-edit">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Modifica Richiesta</h2>
-      </div>
-      <div class="modal-body">
-        <div class="modal-field">
-          <label>Status</label>
-          <select id="edit-status">
+        <!-- Filtri -->
+        <div class="admin-filters">
+          <input type="text" id="filter-search" placeholder="Cerca per nome, email..." />
+          <select id="filter-status">
+            <option value="">Tutti gli status</option>
             <option value="pending">In Attesa</option>
             <option value="processing">In Elaborazione</option>
-            <option value="completed">Completata</option>
-            <option value="cancelled">Cancellata</option>
+            <option value="completed">Completate</option>
+            <option value="cancelled">Cancellate</option>
           </select>
+          <select id="filter-tipo">
+            <option value="">Tutti i tipi</option>
+            <option value="analisi-su-richiesta">Analisi</option>
+            <option value="piano-desk">Piano Desk</option>
+          </select>
+          <button class="btn btn-primary" onclick="loadRequests()">Aggiorna</button>
         </div>
-        <div class="modal-field">
-          <label>Note Admin</label>
-          <textarea id="edit-note" placeholder="Aggiungi note interne..."></textarea>
+
+        <!-- Tabella -->
+        <div class="admin-table">
+          <div id="loading" class="loading" style="display: none">Caricamento...</div>
+          <div id="error" class="error" style="display: none"></div>
+          <table id="requests-table" style="display: none">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Dettagli</th>
+                <th>Status</th>
+                <th>Azioni</th>
+              </tr>
+            </thead>
+            <tbody id="requests-tbody"></tbody>
+          </table>
+          <div id="empty" class="empty" style="display: none">Nessuna richiesta trovata</div>
         </div>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-secondary" onclick="closeEditModal()">Annulla</button>
-        <button class="btn btn-primary" onclick="saveRequest()">Salva</button>
       </div>
     </div>
-  </div>
 
-  <script type="module">
-    import { callAdminAPI } from '/user/assets/js/admin.js';
+    <!-- Modal Dettagli -->
+    <div class="modal-overlay" id="modal-details">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Dettagli Richiesta</h2>
+        </div>
+        <div class="modal-body" id="modal-details-body"></div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" onclick="closeModal()">Chiudi</button>
+        </div>
+      </div>
+    </div>
 
-    const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
-    let adminToken = null;
-    let currentRequestId = null;
+    <!-- Modal Modifica Status -->
+    <div class="modal-overlay" id="modal-edit">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Modifica Richiesta</h2>
+        </div>
+        <div class="modal-body">
+          <div class="modal-field">
+            <label>Status</label>
+            <select id="edit-status">
+              <option value="pending">In Attesa</option>
+              <option value="processing">In Elaborazione</option>
+              <option value="completed">Completata</option>
+              <option value="cancelled">Cancellata</option>
+            </select>
+          </div>
+          <div class="modal-field">
+            <label>Note Admin</label>
+            <textarea id="edit-note" placeholder="Aggiungi note interne..."></textarea>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" onclick="closeEditModal()">Annulla</button>
+          <button class="btn btn-primary" onclick="saveRequest()">Salva</button>
+        </div>
+      </div>
+    </div>
 
-    // Carica token admin
-    function loadAdminToken() {
-      adminToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-      if (!adminToken) {
-        alert('Token admin non trovato. Vai su /accesso.html per accedere.');
-        window.location.href = '/accesso.html';
-        return false;
+    <script type="module">
+      import { callAdminAPI } from '/user/assets/js/admin.js';
+
+      const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
+      let adminToken = null;
+      let currentRequestId = null;
+
+      // Carica token admin
+      function loadAdminToken() {
+        adminToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+        if (!adminToken) {
+          alert('Token admin non trovato. Vai su /accesso.html per accedere.');
+          window.location.href = '/accesso.html';
+          return false;
+        }
+        return true;
       }
-      return true;
-    }
 
-    // Carica richieste
-    window.loadRequests = async function() {
-      if (!loadAdminToken()) return;
+      // Carica richieste
+      window.loadRequests = async function () {
+        if (!loadAdminToken()) return;
 
-      const search = document.getElementById('filter-search').value;
-      const status = document.getElementById('filter-status').value;
-      const tipo = document.getElementById('filter-tipo').value;
+        const search = document.getElementById('filter-search').value;
+        const status = document.getElementById('filter-status').value;
+        const tipo = document.getElementById('filter-tipo').value;
 
-      document.getElementById('loading').style.display = 'block';
-      document.getElementById('error').style.display = 'none';
-      document.getElementById('requests-table').style.display = 'none';
-      document.getElementById('empty').style.display = 'none';
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('error').style.display = 'none';
+        document.getElementById('requests-table').style.display = 'none';
+        document.getElementById('empty').style.display = 'none';
 
-      try {
-        const params = {};
-        if (status) params.status = status;
-        if (tipo) params.tipo = tipo;
+        try {
+          const params = {};
+          if (status) params.status = status;
+          if (tipo) params.tipo = tipo;
 
-        const data = await callAdminAPI({
-          resource: 'requests',
-          params,
-          method: 'GET'
-        });
+          const data = await callAdminAPI({
+            resource: 'requests',
+            params,
+            method: 'GET',
+          });
 
-        let requests = data.data || [];
+          let requests = data.data || [];
 
-        // Filtro ricerca lato client
-        if (search) {
-          const searchLower = search.toLowerCase();
-          requests = requests.filter(r => 
-            r.nome?.toLowerCase().includes(searchLower) ||
-            r.email?.toLowerCase().includes(searchLower) ||
-            r.dettagli?.toLowerCase().includes(searchLower)
-          );
+          // Filtro ricerca lato client
+          if (search) {
+            const searchLower = search.toLowerCase();
+            requests = requests.filter(
+              (r) =>
+                r.nome?.toLowerCase().includes(searchLower) ||
+                r.email?.toLowerCase().includes(searchLower) ||
+                r.dettagli?.toLowerCase().includes(searchLower)
+            );
+          }
+
+          displayRequests(requests);
+          updateStats(requests);
+        } catch (err) {
+          document.getElementById('error').textContent =
+            err.message || 'Errore caricamento richieste';
+          document.getElementById('error').style.display = 'block';
+        } finally {
+          document.getElementById('loading').style.display = 'none';
+        }
+      };
+
+      // Mostra richieste
+      function displayRequests(requests) {
+        const tbody = document.getElementById('requests-tbody');
+        tbody.innerHTML = '';
+
+        if (requests.length === 0) {
+          document.getElementById('empty').style.display = 'block';
+          return;
         }
 
-        displayRequests(requests);
-        updateStats(requests);
-      } catch (err) {
-        document.getElementById('error').textContent = err.message || 'Errore caricamento richieste';
-        document.getElementById('error').style.display = 'block';
-      } finally {
-        document.getElementById('loading').style.display = 'none';
-      }
-    };
+        document.getElementById('requests-table').style.display = 'table';
+        document.getElementById('empty').style.display = 'none';
 
-    // Mostra richieste
-    function displayRequests(requests) {
-      const tbody = document.getElementById('requests-tbody');
-      tbody.innerHTML = '';
+        requests.forEach((req) => {
+          const row = document.createElement('tr');
+          const date = new Date(req.created_at).toLocaleDateString('it-IT', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          });
 
-      if (requests.length === 0) {
-        document.getElementById('empty').style.display = 'block';
-        return;
-      }
-
-      document.getElementById('requests-table').style.display = 'table';
-      document.getElementById('empty').style.display = 'none';
-
-      requests.forEach(req => {
-        const row = document.createElement('tr');
-        const date = new Date(req.created_at).toLocaleDateString('it-IT', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        });
-
-        row.innerHTML = `
+          row.innerHTML = `
           <td>${date}</td>
           <td><span class="tipo-badge">${req.tipo_richiesta === 'analisi-su-richiesta' ? 'Analisi' : 'Desk'}</span></td>
           <td>${req.nome || '-'}</td>
@@ -461,42 +500,42 @@
             <button class="btn btn-sm btn-secondary" onclick="editRequest('${req.id}')">Modifica</button>
           </td>
         `;
-        tbody.appendChild(row);
-      });
-    }
-
-    // Aggiorna statistiche
-    function updateStats(requests) {
-      const pending = requests.filter(r => r.status === 'pending').length;
-      const processing = requests.filter(r => r.status === 'processing').length;
-      const completed = requests.filter(r => r.status === 'completed').length;
-      const total = requests.length;
-
-      document.getElementById('stat-pending').textContent = pending;
-      document.getElementById('stat-processing').textContent = processing;
-      document.getElementById('stat-completed').textContent = completed;
-      document.getElementById('stat-total').textContent = total;
-    }
-
-    // Mostra dettagli
-    window.showDetails = async function(id) {
-      if (!loadAdminToken()) return;
-
-      try {
-        const data = await callAdminAPI({
-          resource: 'requests',
-          params: {},
-          method: 'GET'
+          tbody.appendChild(row);
         });
+      }
 
-        const request = data.data.find(r => r.id === id);
-        if (!request) {
-          alert('Richiesta non trovata');
-          return;
-        }
+      // Aggiorna statistiche
+      function updateStats(requests) {
+        const pending = requests.filter((r) => r.status === 'pending').length;
+        const processing = requests.filter((r) => r.status === 'processing').length;
+        const completed = requests.filter((r) => r.status === 'completed').length;
+        const total = requests.length;
 
-        const body = document.getElementById('modal-details-body');
-        body.innerHTML = `
+        document.getElementById('stat-pending').textContent = pending;
+        document.getElementById('stat-processing').textContent = processing;
+        document.getElementById('stat-completed').textContent = completed;
+        document.getElementById('stat-total').textContent = total;
+      }
+
+      // Mostra dettagli
+      window.showDetails = async function (id) {
+        if (!loadAdminToken()) return;
+
+        try {
+          const data = await callAdminAPI({
+            resource: 'requests',
+            params: {},
+            method: 'GET',
+          });
+
+          const request = data.data.find((r) => r.id === id);
+          if (!request) {
+            alert('Richiesta non trovata');
+            return;
+          }
+
+          const body = document.getElementById('modal-details-body');
+          body.innerHTML = `
           <div class="modal-field">
             <label>ID Richiesta</label>
             <div>${request.id}</div>
@@ -533,82 +572,81 @@
           ${request.completed_at ? `<div class="modal-field"><label>Data Completamento</label><div>${new Date(request.completed_at).toLocaleString('it-IT')}</div></div>` : ''}
         `;
 
-        document.getElementById('modal-details').classList.add('active');
-      } catch (err) {
-        alert('Errore: ' + err.message);
-      }
-    };
-
-    // Modifica richiesta
-    window.editRequest = async function(id) {
-      if (!loadAdminToken()) return;
-
-      currentRequestId = id;
-
-      try {
-        const data = await callAdminAPI({
-          resource: 'requests',
-          params: {},
-          method: 'GET'
-        });
-
-        const request = data.data.find(r => r.id === id);
-        if (!request) {
-          alert('Richiesta non trovata');
-          return;
+          document.getElementById('modal-details').classList.add('active');
+        } catch (err) {
+          alert('Errore: ' + err.message);
         }
+      };
 
-        document.getElementById('edit-status').value = request.status;
-        document.getElementById('edit-note').value = request.note || '';
+      // Modifica richiesta
+      window.editRequest = async function (id) {
+        if (!loadAdminToken()) return;
 
-        document.getElementById('modal-edit').classList.add('active');
-      } catch (err) {
-        alert('Errore: ' + err.message);
-      }
-    };
+        currentRequestId = id;
 
-    // Salva modifiche
-    window.saveRequest = async function() {
-      if (!loadAdminToken() || !currentRequestId) return;
+        try {
+          const data = await callAdminAPI({
+            resource: 'requests',
+            params: {},
+            method: 'GET',
+          });
 
-      const status = document.getElementById('edit-status').value;
-      const note = document.getElementById('edit-note').value;
+          const request = data.data.find((r) => r.id === id);
+          if (!request) {
+            alert('Richiesta non trovata');
+            return;
+          }
 
-      try {
-        await callAdminAPI({
-          resource: 'requests',
-          params: { id: currentRequestId },
-          method: 'PATCH',
-          body: { status, note }
-        });
+          document.getElementById('edit-status').value = request.status;
+          document.getElementById('edit-note').value = request.note || '';
 
-        closeEditModal();
+          document.getElementById('modal-edit').classList.add('active');
+        } catch (err) {
+          alert('Errore: ' + err.message);
+        }
+      };
+
+      // Salva modifiche
+      window.saveRequest = async function () {
+        if (!loadAdminToken() || !currentRequestId) return;
+
+        const status = document.getElementById('edit-status').value;
+        const note = document.getElementById('edit-note').value;
+
+        try {
+          await callAdminAPI({
+            resource: 'requests',
+            params: { id: currentRequestId },
+            method: 'PATCH',
+            body: { status, note },
+          });
+
+          closeEditModal();
+          loadRequests();
+        } catch (err) {
+          alert('Errore: ' + err.message);
+        }
+      };
+
+      // Chiudi modali
+      window.closeModal = function () {
+        document.getElementById('modal-details').classList.remove('active');
+      };
+
+      window.closeEditModal = function () {
+        document.getElementById('modal-edit').classList.remove('active');
+        currentRequestId = null;
+      };
+
+      // Event listeners
+      document.getElementById('filter-search').addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') loadRequests();
+      });
+
+      // Carica all'avvio
+      if (loadAdminToken()) {
         loadRequests();
-      } catch (err) {
-        alert('Errore: ' + err.message);
       }
-    };
-
-    // Chiudi modali
-    window.closeModal = function() {
-      document.getElementById('modal-details').classList.remove('active');
-    };
-
-    window.closeEditModal = function() {
-      document.getElementById('modal-edit').classList.remove('active');
-      currentRequestId = null;
-    };
-
-    // Event listeners
-    document.getElementById('filter-search').addEventListener('keyup', (e) => {
-      if (e.key === 'Enter') loadRequests();
-    });
-
-    // Carica all'avvio
-    if (loadAdminToken()) {
-      loadRequests();
-    }
-  </script>
-</body>
+    </script>
+  </body>
 </html>
-

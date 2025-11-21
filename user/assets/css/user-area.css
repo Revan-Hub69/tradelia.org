@@ -177,7 +177,7 @@
 .user-shell .btn-sm::before,
 .user-shell .btn-primary::before,
 .user-shell .btn-outline::before {
-  content: "→";
+  content: '→';
   position: absolute;
   left: var(--sp-2);
   color: var(--muted);
@@ -190,7 +190,7 @@
 .user-shell .btn-sm::after,
 .user-shell .btn-primary::after,
 .user-shell .btn-outline::after {
-  content: "";
+  content: '';
   position: absolute;
   left: var(--sp-4);
   bottom: var(--sp-2);
@@ -286,7 +286,10 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   cursor: pointer;
-  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
 .tablist button:hover {
@@ -295,7 +298,7 @@
   background: var(--surface-elev);
 }
 
-.tablist button[aria-selected="true"] {
+.tablist button[aria-selected='true'] {
   border-color: var(--brand-600);
   background: var(--surface-elev);
   color: var(--ink);
@@ -323,11 +326,11 @@
 }
 
 .user-section[hidden],
-.user-section[style*="display: none"] {
+.user-section[style*='display: none'] {
   display: none !important;
 }
 
-.user-section:not([hidden]):not([style*="display: none"]) {
+.user-section:not([hidden]):not([style*='display: none']) {
   display: block;
 }
 
@@ -433,7 +436,7 @@
   color: var(--ink);
 }
 
-.profile-form label:has(input[type="text"]),
+.profile-form label:has(input[type='text']),
 .profile-form label:has(textarea) {
   margin-bottom: 0.25rem;
 }
@@ -458,10 +461,13 @@
   font-weight: 500;
   color: var(--ink-soft);
   cursor: pointer;
-  transition: background-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
-.profile-tab[aria-selected="true"] {
+.profile-tab[aria-selected='true'] {
   background: var(--surface-card);
   color: var(--ink);
   box-shadow: var(--shadow-sm);
@@ -472,7 +478,7 @@
   gap: 1.25rem;
 }
 
-.profile-form input[type="text"],
+.profile-form input[type='text'],
 .profile-form textarea {
   background: var(--surface-elev);
   border: 1px solid var(--br-card);
@@ -482,16 +488,18 @@
   font-size: var(--fs-14);
   font-family: inherit;
   line-height: 1.5;
-  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
 }
 
-.profile-form input[type="text"]:hover,
+.profile-form input[type='text']:hover,
 .profile-form textarea:hover {
   border-color: var(--br-strong);
   background: var(--surface-hover);
 }
 
-.profile-form input[type="text"]:focus,
+.profile-form input[type='text']:focus,
 .profile-form textarea:focus {
   outline: none;
   border-color: var(--brand-600);
@@ -499,7 +507,7 @@
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-.profile-form input[type="text"]:focus-visible,
+.profile-form input[type='text']:focus-visible,
 .profile-form textarea:focus-visible {
   outline: 2px solid rgba(96, 165, 250, 0.5);
   outline-offset: 2px;
@@ -523,7 +531,9 @@
   display: grid;
   gap: 0.75rem;
   background: var(--surface-elev);
-  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
   position: relative;
 }
 
@@ -601,7 +611,10 @@
   border-radius: var(--radius-md);
   color: var(--ink-soft);
   cursor: pointer;
-  transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
   flex-shrink: 0;
 }
 
@@ -670,19 +683,19 @@
   z-index: 2000;
 }
 
-.user-toast[data-visible="true"] {
+.user-toast[data-visible='true'] {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
 }
 
-.user-toast[data-variant="success"] {
+.user-toast[data-variant='success'] {
   border-color: rgba(34, 197, 94, 0.3);
   background: rgba(34, 197, 94, 0.1);
   color: var(--ink);
 }
 
-.user-toast[data-variant="error"] {
+.user-toast[data-variant='error'] {
   border-color: rgba(248, 113, 113, 0.3);
   background: rgba(248, 113, 113, 0.1);
   color: var(--ink);
@@ -854,7 +867,7 @@
   background: var(--surface-page);
 }
 
-.preference-checkbox input[type="checkbox"] {
+.preference-checkbox input[type='checkbox'] {
   width: 18px;
   height: 18px;
   cursor: pointer;
@@ -874,7 +887,9 @@
   background: var(--surface-elev);
   border: 1px solid var(--br-card);
   border-radius: var(--radius-lg);
-  transition: opacity var(--transition-base), background-color var(--transition-base);
+  transition:
+    opacity var(--transition-base),
+    background-color var(--transition-base);
 }
 
 .profile-feature-locked.locked {
@@ -1273,7 +1288,7 @@
 .modal-footer .btn::before,
 .modal-footer .btn-sm::before,
 .modal-footer .btn-outline::before {
-  content: "→";
+  content: '→';
   position: absolute;
   left: var(--sp-2);
   color: var(--muted);
@@ -1285,7 +1300,7 @@
 .modal-footer .btn::after,
 .modal-footer .btn-sm::after,
 .modal-footer .btn-outline::after {
-  content: "";
+  content: '';
   position: absolute;
   left: var(--sp-4);
   bottom: var(--sp-2);
@@ -1384,7 +1399,7 @@
   .user-hero {
     grid-template-columns: minmax(0, 1fr);
   }
-  
+
   .proposal-header {
     flex-direction: column;
     align-items: flex-start;
@@ -1398,15 +1413,15 @@
   .credits-display {
     justify-content: space-between;
   }
-  
+
   .credits-packages {
     grid-template-columns: 1fr;
   }
-  
+
   .form-row {
     flex-direction: column;
   }
-  
+
   .form-row .btn {
     width: 100%;
   }
@@ -1706,7 +1721,9 @@
   color: var(--ink);
   font-size: var(--fs-14);
   font-family: inherit;
-  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
 }
 
 .filter-select:hover,
@@ -2061,4 +2078,3 @@
     align-items: flex-start;
   }
 }
-

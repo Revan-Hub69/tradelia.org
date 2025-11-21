@@ -5,29 +5,29 @@
 import Logger from '../utils/logger.js';
 
 const MODULE_NAMES = {
-  'f1': 'F1 - Analisi',
-  'f1b': 'F1B - Regime di mercato',
-  'f2': 'F2 - Macro & Sentiment',
-  'f3': 'F3 - Analisi Tecnica',
-  'f3o': 'F3O - Options Overlay',
-  'f4': 'F4 - Analisi',
-  'f5': 'F5 - Analisi',
-  'f5b': 'F5B - Analisi',
-  'f6': 'F6 - Analisi',
-  'f7': 'F7 - Analisi'
+  f1: 'F1 - Analisi',
+  f1b: 'F1B - Regime di mercato',
+  f2: 'F2 - Macro & Sentiment',
+  f3: 'F3 - Analisi Tecnica',
+  f3o: 'F3O - Options Overlay',
+  f4: 'F4 - Analisi',
+  f5: 'F5 - Analisi',
+  f5b: 'F5B - Analisi',
+  f6: 'F6 - Analisi',
+  f7: 'F7 - Analisi',
 };
 
 const MODULE_DESCRIPTIONS = {
-  'f1': 'Analisi in sviluppo',
-  'f1b': 'Regime di mercato e contesto rischio (orizzonte 3–10 giorni)',
-  'f2': 'Macro & Sentiment overlay (orizzonte 3–10 giorni)',
-  'f3': 'Analisi tecnica multi-timeframe (orizzonte 3–10 giorni)',
-  'f3o': 'Options overlay e derivati (orizzonte 3–10 giorni)',
-  'f4': 'Analisi in sviluppo',
-  'f5': 'Analisi in sviluppo',
-  'f5b': 'Analisi in sviluppo',
-  'f6': 'Analisi in sviluppo',
-  'f7': 'Analisi in sviluppo'
+  f1: 'Analisi in sviluppo',
+  f1b: 'Regime di mercato e contesto rischio (orizzonte 3–10 giorni)',
+  f2: 'Macro & Sentiment overlay (orizzonte 3–10 giorni)',
+  f3: 'Analisi tecnica multi-timeframe (orizzonte 3–10 giorni)',
+  f3o: 'Options overlay e derivati (orizzonte 3–10 giorni)',
+  f4: 'Analisi in sviluppo',
+  f5: 'Analisi in sviluppo',
+  f5b: 'Analisi in sviluppo',
+  f6: 'Analisi in sviluppo',
+  f7: 'Analisi in sviluppo',
 };
 
 function escapeHtml(str) {
@@ -42,9 +42,10 @@ export function renderCard(rawData, ctx = {}) {
   const modId = String(ctx.modId || '').toLowerCase();
   const moduleName = MODULE_NAMES[modId] || `Modulo ${ctx.modId || 'Unknown'}`;
   const moduleDesc = MODULE_DESCRIPTIONS[modId] || 'Modulo in sviluppo';
-  
-  const isPlaceholder = rawData?._placeholder === true || !rawData || Object.keys(rawData).length === 0;
-  
+
+  const isPlaceholder =
+    rawData?._placeholder === true || !rawData || Object.keys(rawData).length === 0;
+
   return `
     <section class="module-card">
       <header class="module-header">
@@ -61,7 +62,9 @@ export function renderCard(rawData, ctx = {}) {
       </header>
       
       <div class="module-body">
-        ${isPlaceholder ? `
+        ${
+          isPlaceholder
+            ? `
           <div class="module-placeholder">
             <div class="module-placeholder-icon">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -73,13 +76,15 @@ export function renderCard(rawData, ctx = {}) {
               Questo modulo è in fase di sviluppo e sarà disponibile a breve.
             </p>
           </div>
-        ` : `
+        `
+            : `
           <div class="module-content">
             <p class="module-content-text">
               Dati caricati. Il modulo è in fase di sviluppo.
             </p>
           </div>
-        `}
+        `
+        }
       </div>
     </section>
   `;
@@ -90,4 +95,3 @@ export function bindCard(node, rawData, ctx = {}) {
   Logger.debug('Placeholder', `bindCard per modulo ${ctx.modId}`);
   // Nessun binding necessario per placeholder
 }
-

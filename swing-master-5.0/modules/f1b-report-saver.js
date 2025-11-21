@@ -12,7 +12,7 @@ export function generateReportID(timestamp = null) {
   const day = String(date.getDate()).padStart(2, '0');
   const hours = String(date.getHours()).padStart(2, '0');
   const minutes = String(date.getMinutes()).padStart(2, '0');
-  
+
   return `${year}${month}${day}-${hours}${minutes}`;
 }
 
@@ -35,24 +35,20 @@ export async function saveReportJSON(f1bOutput, config = {}) {
   const basePath = config.basePath || '../../report';
   const reportPath = `${basePath}/reports/${reportID}`;
   const filePath = `${reportPath}/f1b.json`;
-  
+
   // Node.js filesystem
   if (typeof window === 'undefined') {
     try {
       const fs = await import('fs/promises');
       const path = await import('path');
-      
+
       // Crea directory se non esiste
       const fullPath = path.resolve(reportPath);
       await fs.mkdir(fullPath, { recursive: true });
-      
+
       // Salva JSON
-      await fs.writeFile(
-        path.resolve(filePath),
-        JSON.stringify(f1bOutput, null, 2),
-        'utf8'
-      );
-      
+      await fs.writeFile(path.resolve(filePath), JSON.stringify(f1bOutput, null, 2), 'utf8');
+
       console.log(`✅ Report salvato: ${filePath}`);
       return filePath;
     } catch (error) {
@@ -70,7 +66,7 @@ export async function saveReportJSON(f1bOutput, config = {}) {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
+
     console.log(`✅ Report scaricato: f1b-${reportID}.json`);
     return `f1b-${reportID}.json`;
   }
@@ -83,32 +79,28 @@ export async function saveManifest(reportID, config = {}) {
   const basePath = config.basePath || '../../report';
   const reportPath = `${basePath}/reports/${reportID}`;
   const filePath = `${reportPath}/manifest.json`;
-  
+
   const manifest = {
     reportID: reportID,
     timestamp: new Date().toISOString(),
     modules: ['F1B'],
-    version: 'F1B v19-Dynamic'
+    version: 'F1B v19-Dynamic',
   };
-  
+
   if (typeof window === 'undefined') {
     try {
       const fs = await import('fs/promises');
       const path = await import('path');
-      
-      await fs.writeFile(
-        path.resolve(filePath),
-        JSON.stringify(manifest, null, 2),
-        'utf8'
-      );
-      
+
+      await fs.writeFile(path.resolve(filePath), JSON.stringify(manifest, null, 2), 'utf8');
+
       return filePath;
     } catch (error) {
       console.warn('⚠️ Errore salvataggio manifest:', error);
       return null;
     }
   }
-  
+
   return null;
 }
 
@@ -117,19 +109,18 @@ export async function saveManifest(reportID, config = {}) {
  */
 export async function saveCompleteReport(f1bOutput, config = {}) {
   const reportID = config.reportID || generateReportID(f1bOutput.meta?.timestampET);
-  
+
   // Salva F1B
   const f1bPath = await saveReportJSON(f1bOutput, { ...config, reportID });
-  
+
   // Salva manifest (opzionale)
   if (config.saveManifest !== false) {
     await saveManifest(reportID, config);
   }
-  
+
   return {
     reportID,
     f1bPath,
-    reportPath: `reports/${reportID}/`
+    reportPath: `reports/${reportID}/`,
   };
 }
-

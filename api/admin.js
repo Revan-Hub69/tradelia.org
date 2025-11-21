@@ -71,7 +71,7 @@ async function handleRequest(req, res) {
 async function verifyAdminToken(token) {
   try {
     const supabase = getServiceSupabase();
-    
+
     // Cerca token in dashboard_access_tokens
     const { data: tokenData, error } = await supabase
       .from('dashboard_access_tokens')
@@ -152,7 +152,9 @@ async function getRequests(req, res, supabase, action) {
 
     if (error) {
       console.error('[Admin API] Errore recupero richieste:', error);
-      return res.status(500).json({ ok: false, error: 'Errore recupero richieste', details: error.message });
+      return res
+        .status(500)
+        .json({ ok: false, error: 'Errore recupero richieste', details: error.message });
     }
 
     // Conta totale (per paginazione)
@@ -166,8 +168,8 @@ async function getRequests(req, res, supabase, action) {
       pagination: {
         total: totalCount || 0,
         limit: limitNum,
-        offset: offsetNum
-      }
+        offset: offsetNum,
+      },
     });
   } catch (err) {
     console.error('[Admin API] Errore getRequests:', err);
@@ -219,12 +221,14 @@ async function updateRequest(req, res, supabase) {
 
     if (error) {
       console.error('[Admin API] Errore aggiornamento richiesta:', error);
-      return res.status(500).json({ ok: false, error: 'Errore aggiornamento richiesta', details: error.message });
+      return res
+        .status(500)
+        .json({ ok: false, error: 'Errore aggiornamento richiesta', details: error.message });
     }
 
     return res.status(200).json({
       ok: true,
-      data: data
+      data: data,
     });
   } catch (err) {
     console.error('[Admin API] Errore updateRequest:', err);
@@ -285,7 +289,9 @@ async function getTokens(req, res, supabase, action) {
 
     if (error) {
       console.error('[Admin API] Errore recupero token:', error);
-      return res.status(500).json({ ok: false, error: 'Errore recupero token', details: error.message });
+      return res
+        .status(500)
+        .json({ ok: false, error: 'Errore recupero token', details: error.message });
     }
 
     // Conta totale (per paginazione)
@@ -299,8 +305,8 @@ async function getTokens(req, res, supabase, action) {
       pagination: {
         total: totalCount || 0,
         limit: limitNum,
-        offset: offsetNum
-      }
+        offset: offsetNum,
+      },
     });
   } catch (err) {
     console.error('[Admin API] Errore getTokens:', err);
@@ -355,12 +361,14 @@ async function updateToken(req, res, supabase) {
 
     if (error) {
       console.error('[Admin API] Errore aggiornamento token:', error);
-      return res.status(500).json({ ok: false, error: 'Errore aggiornamento token', details: error.message });
+      return res
+        .status(500)
+        .json({ ok: false, error: 'Errore aggiornamento token', details: error.message });
     }
 
     return res.status(200).json({
       ok: true,
-      data: data
+      data: data,
     });
   } catch (err) {
     console.error('[Admin API] Errore updateToken:', err);
@@ -384,7 +392,7 @@ async function deleteToken(req, res, supabase) {
       .from('dashboard_access_tokens')
       .update({
         revoked: true,
-        revoked_at: new Date().toISOString()
+        revoked_at: new Date().toISOString(),
       })
       .eq('id', id)
       .select()
@@ -392,17 +400,18 @@ async function deleteToken(req, res, supabase) {
 
     if (error) {
       console.error('[Admin API] Errore revoca token:', error);
-      return res.status(500).json({ ok: false, error: 'Errore revoca token', details: error.message });
+      return res
+        .status(500)
+        .json({ ok: false, error: 'Errore revoca token', details: error.message });
     }
 
     return res.status(200).json({
       ok: true,
       data: data,
-      message: 'Token revocato con successo'
+      message: 'Token revocato con successo',
     });
   } catch (err) {
     console.error('[Admin API] Errore deleteToken:', err);
     return res.status(500).json({ ok: false, error: 'Errore server', details: err.message });
   }
 }
-

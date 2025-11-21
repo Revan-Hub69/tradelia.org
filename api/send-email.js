@@ -25,7 +25,7 @@ async function sendEmailViaBrevo({ to, subject, htmlContent, textContent, replyT
     method: 'POST',
     headers: {
       'api-key': BREVO_API_KEY,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI' },
@@ -33,8 +33,8 @@ async function sendEmailViaBrevo({ to, subject, htmlContent, textContent, replyT
       subject,
       htmlContent,
       textContent,
-      replyTo: replyTo ? { email: replyTo } : undefined
-    })
+      replyTo: replyTo ? { email: replyTo } : undefined,
+    }),
   });
 
   if (!response.ok) {
@@ -63,7 +63,7 @@ function processEmailRequest(body) {
           <p><strong>Account Manager:</strong> ${data.accountManager || 'Giuseppe Olivero'}</p>
           <p><strong>Timestamp:</strong> ${data.timestamp || new Date().toISOString()}</p>
         `,
-        textContent: `Richiesta Webinar Exante\n\nWhatsApp: ${data.whatsapp || 'N/A'}\nAccount Manager: ${data.accountManager || 'Giuseppe Olivero'}\nTimestamp: ${data.timestamp || new Date().toISOString()}`
+        textContent: `Richiesta Webinar Exante\n\nWhatsApp: ${data.whatsapp || 'N/A'}\nAccount Manager: ${data.accountManager || 'Giuseppe Olivero'}\nTimestamp: ${data.timestamp || new Date().toISOString()}`,
       };
 
     case 'profile-update':
@@ -76,7 +76,7 @@ function processEmailRequest(body) {
           <p><strong>Modifiche:</strong></p>
           <pre>${JSON.stringify(data.changes || [], null, 2)}</pre>
         `,
-        textContent: `Aggiornamento Profilo\n\nEmail: ${data.email || 'N/A'}\nModifiche: ${JSON.stringify(data.changes || [])}`
+        textContent: `Aggiornamento Profilo\n\nEmail: ${data.email || 'N/A'}\nModifiche: ${JSON.stringify(data.changes || [])}`,
       };
 
     case 'business-data':
@@ -89,7 +89,7 @@ function processEmailRequest(body) {
           <p><strong>Dettagli:</strong></p>
           <pre>${JSON.stringify(data.details || {}, null, 2)}</pre>
         `,
-        textContent: `Dati Business Trial\n\nEmail: ${data.email || 'N/A'}\nDettagli: ${JSON.stringify(data.details || {})}`
+        textContent: `Dati Business Trial\n\nEmail: ${data.email || 'N/A'}\nDettagli: ${JSON.stringify(data.details || {})}`,
       };
 
     case 'richiesta-servizio':
@@ -107,7 +107,7 @@ function processEmailRequest(body) {
           ${data.whatsapp ? `<p><strong>WhatsApp:</strong> ${data.whatsapp}</p>` : ''}
           <p><strong>Timestamp:</strong> ${data.timestamp || new Date().toISOString()}</p>
         `,
-        textContent: `${data.tipo || 'Richiesta Generica'}\n\n${data.nome ? `Nome: ${data.nome}\n` : ''}${data.email ? `Email: ${data.email}\n` : ''}${data.telefono ? `Telefono: ${data.telefono}\n` : ''}${data.messaggio ? `Messaggio: ${data.messaggio}\n` : ''}${data.whatsapp ? `WhatsApp: ${data.whatsapp}\n` : ''}Timestamp: ${data.timestamp || new Date().toISOString()}`
+        textContent: `${data.tipo || 'Richiesta Generica'}\n\n${data.nome ? `Nome: ${data.nome}\n` : ''}${data.email ? `Email: ${data.email}\n` : ''}${data.telefono ? `Telefono: ${data.telefono}\n` : ''}${data.messaggio ? `Messaggio: ${data.messaggio}\n` : ''}${data.whatsapp ? `WhatsApp: ${data.whatsapp}\n` : ''}Timestamp: ${data.timestamp || new Date().toISOString()}`,
       };
   }
 }
@@ -136,9 +136,9 @@ async function handleRequest(req, res) {
   if (!BREVO_API_KEY) {
     console.warn('[Send Email] BREVO_API_KEY non configurato - richiesta ignorata');
     // Ritorna successo per non rompere il frontend, ma logga l'errore
-    return res.status(200).json({ 
-      ok: true, 
-      message: 'Richiesta ricevuta (email non configurata)' 
+    return res.status(200).json({
+      ok: true,
+      message: 'Richiesta ricevuta (email non configurata)',
     });
   }
 
@@ -152,24 +152,23 @@ async function handleRequest(req, res) {
     const emailConfig = processEmailRequest(body);
     await sendEmailViaBrevo(emailConfig);
 
-    return res.status(200).json({ 
-      ok: true, 
-      message: 'Email inviata con successo' 
+    return res.status(200).json({
+      ok: true,
+      message: 'Email inviata con successo',
     });
   } catch (error) {
     console.error('[Send Email] Errore:', error);
-    
+
     if (error instanceof HttpError) {
-      return res.status(error.status).json({ 
-        ok: false, 
-        error: error.message 
+      return res.status(error.status).json({
+        ok: false,
+        error: error.message,
       });
     }
 
-    return res.status(500).json({ 
-      ok: false, 
-      error: 'Errore interno invio email' 
+    return res.status(500).json({
+      ok: false,
+      error: 'Errore interno invio email',
     });
   }
 }
-

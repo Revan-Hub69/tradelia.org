@@ -4,13 +4,7 @@
     "published": "Gennaio 2025",
     "category": "Derivati e Trading"
   },
-  "tags": [
-    "CFD",
-    "Trading",
-    "Derivati",
-    "Strategie Avanzate",
-    "Risk Management"
-  ],
+  "tags": ["CFD", "Trading", "Derivati", "Strategie Avanzate", "Risk Management"],
   "glossaryTerms": {
     "CFD": "CreditRiskBlock",
     "Contracts for Difference": "CreditRiskBlock",
@@ -709,4 +703,3 @@
     }
   ]
 }
-

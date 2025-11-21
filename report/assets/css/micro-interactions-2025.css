@@ -6,10 +6,10 @@
 /* ===== BUTTON INTERACTIONS ===== */
 .btn,
 button:not([disabled]),
-a[role="button"] {
+a[role='button'] {
   position: relative;
   overflow: hidden;
-  transition: 
+  transition:
     transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 0.2s ease,
     background-color 0.2s ease;
@@ -18,7 +18,7 @@ a[role="button"] {
 /* Ripple effect su click */
 .btn::after,
 button:not([disabled])::after,
-a[role="button"]::after {
+a[role='button']::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -28,13 +28,15 @@ a[role="button"]::after {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.2);
   transform: translate(-50%, -50%);
-  transition: width 0.4s ease, height 0.4s ease;
+  transition:
+    width 0.4s ease,
+    height 0.4s ease;
   pointer-events: none;
 }
 
 .btn:active::after,
 button:not([disabled]):active::after,
-a[role="button"]:active::after {
+a[role='button']:active::after {
   width: 300px;
   height: 300px;
 }
@@ -42,18 +44,18 @@ a[role="button"]:active::after {
 /* Hover lift effect */
 .btn:hover,
 button:not([disabled]):hover,
-a[role="button"]:hover {
+a[role='button']:hover {
   transform: translateY(-2px);
-  box-shadow: 
+  box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.2),
     0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .btn:active,
 button:not([disabled]):active,
-a[role="button"]:active {
+a[role='button']:active {
   transform: translateY(0);
-  box-shadow: 
+  box-shadow:
     0 2px 6px rgba(0, 0, 0, 0.15),
     inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
@@ -63,7 +65,7 @@ a[role="button"]:active {
 .report-index-item,
 .glossary-drawer-term-item {
   position: relative;
-  transition: 
+  transition:
     transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 0.2s ease,
     border-color 0.2s ease;
@@ -73,7 +75,7 @@ a[role="button"]:active {
 .report-index-item:hover,
 .glossary-drawer-term-item:hover {
   transform: translateY(-2px);
-  box-shadow: 
+  box-shadow:
     0 4px 16px rgba(0, 0, 0, 0.25),
     0 2px 8px rgba(0, 0, 0, 0.15);
   border-color: rgba(255, 255, 255, 0.12);
@@ -88,7 +90,7 @@ a[role="button"]:active {
 /* ===== METRIC INTERACTIONS ===== */
 .metric-inline {
   position: relative;
-  transition: 
+  transition:
     transform 0.15s ease,
     background-color 0.15s ease,
     box-shadow 0.15s ease;
@@ -97,7 +99,7 @@ a[role="button"]:active {
 .metric-inline:hover {
   transform: scale(1.05);
   background: rgba(255, 255, 255, 0.06);
-  box-shadow: 
+  box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.2),
     0 1px 4px rgba(0, 0, 0, 0.15);
 }
@@ -107,12 +109,13 @@ a[role="button"]:active {
 }
 
 /* Pulse effect per metriche importanti */
-.metric-inline[data-key-metric="true"] {
+.metric-inline[data-key-metric='true'] {
   animation: metric-pulse 2s ease-in-out infinite;
 }
 
 @keyframes metric-pulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4);
   }
   50% {
@@ -121,26 +124,26 @@ a[role="button"]:active {
 }
 
 /* ===== INPUT INTERACTIONS ===== */
-input[type="text"],
-input[type="search"],
-input[type="email"],
-input[type="password"],
+input[type='text'],
+input[type='search'],
+input[type='email'],
+input[type='password'],
 textarea,
 select {
-  transition: 
+  transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease,
     background-color 0.2s ease;
 }
 
-input[type="text"]:focus,
-input[type="search"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
+input[type='text']:focus,
+input[type='search']:focus,
+input[type='email']:focus,
+input[type='password']:focus,
 textarea:focus,
 select:focus {
   border-color: var(--brand-500);
-  box-shadow: 
+  box-shadow:
     0 0 0 3px rgba(37, 99, 235, 0.1),
     0 2px 8px rgba(0, 0, 0, 0.1);
   background: rgba(255, 255, 255, 0.02);
@@ -159,7 +162,7 @@ select:focus {
   font-size: var(--fs-14);
   color: var(--muted);
   pointer-events: none;
-  transition: 
+  transition:
     transform 0.2s ease,
     font-size 0.2s ease,
     color 0.2s ease;
@@ -183,7 +186,9 @@ select:focus {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-skeleton {
@@ -214,7 +219,7 @@ select:focus {
   right: var(--sp-6);
   padding: var(--sp-4) var(--sp-5);
   border-radius: var(--radius-lg);
-  box-shadow: 
+  box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.3),
     0 4px 12px rgba(0, 0, 0, 0.2);
   font-size: var(--fs-14);
@@ -222,7 +227,7 @@ select:focus {
   z-index: 10002;
   opacity: 0;
   transform: translateY(20px);
-  transition: 
+  transition:
     opacity 0.3s ease,
     transform 0.3s ease;
   max-width: 320px;
@@ -251,7 +256,7 @@ select:focus {
 .module-status-pill {
   position: relative;
   overflow: hidden;
-  transition: 
+  transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
 }
@@ -259,7 +264,7 @@ select:focus {
 .badge:hover,
 .module-status-pill:hover {
   transform: scale(1.05);
-  box-shadow: 
+  box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.2),
     0 1px 4px rgba(0, 0, 0, 0.15);
 }
@@ -291,7 +296,7 @@ select:focus {
 .module-tab-button,
 .report-index-item {
   position: relative;
-  transition: 
+  transition:
     color 0.2s ease,
     background-color 0.2s ease,
     transform 0.2s ease;
@@ -309,7 +314,7 @@ select:focus {
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.module-tab-button[data-active="true"]::after,
+.module-tab-button[data-active='true']::after,
 .report-index-item.is-active::after {
   width: 100%;
 }
@@ -347,7 +352,8 @@ select:focus {
 }
 
 @keyframes scroll-bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(-50%) translateY(0);
   }
   50% {
@@ -393,19 +399,19 @@ textarea:focus-visible {
   /* Riduci animazioni su mobile per performance */
   .btn:hover,
   button:not([disabled]):hover,
-  a[role="button"]:hover {
+  a[role='button']:hover {
     transform: none;
   }
-  
+
   .module-card:hover,
   .report-index-item:hover {
     transform: none;
   }
-  
+
   /* Touch feedback più pronunciato */
   .btn:active,
   button:not([disabled]):active,
-  a[role="button"]:active {
+  a[role='button']:active {
     transform: scale(0.97);
     opacity: 0.8;
   }
@@ -420,20 +426,20 @@ textarea:focus-visible {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   .loading-spinner {
     animation: none;
     border-top-color: transparent;
   }
-  
-  .metric-inline[data-key-metric="true"] {
+
+  .metric-inline[data-key-metric='true'] {
     animation: none;
   }
-  
+
   .scroll-indicator {
     animation: none;
   }
-  
+
   .scroll-indicator::before {
     animation: none;
   }
@@ -449,4 +455,3 @@ textarea:focus-visible {
   backface-visibility: hidden;
   -webkit-font-smoothing: antialiased;
 }
-

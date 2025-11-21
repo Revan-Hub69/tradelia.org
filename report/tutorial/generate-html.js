@@ -69,32 +69,36 @@ function getTemplateBase(tutorialName) {
 async function generateHTML() {
   const dataDir = join(__dirname, 'data');
   const tutorialDir = __dirname;
-  
+
   try {
     const files = await readdir(dataDir);
-    const jsonFiles = files.filter(f => f.endsWith('.json'));
-    
+    const jsonFiles = files.filter((f) => f.endsWith('.json'));
+
     for (const jsonFile of jsonFiles) {
       const tutorialName = jsonFile.replace('.json', '');
       const htmlFileName = `${tutorialName}.html`;
       const htmlPath = join(tutorialDir, htmlFileName);
-      
+
       // Leggi JSON per aggiornare meta tags
       const jsonPath = join(dataDir, jsonFile);
       const jsonContent = await readFile(jsonPath, 'utf-8');
       const data = JSON.parse(jsonContent);
-      
+
       // Aggiorna template con meta tags dal JSON
       let html = getTemplateBase(tutorialName);
-      html = html.replace('<title>TRADELIA • AI — Tutorial</title>', 
-        `<title>TRADELIA • AI — ${data.title || 'Tutorial'}</title>`);
-      html = html.replace('<meta name="description" content="Tutorial Tradelia AI" />', 
-        `<meta name="description" content="Tutorial Tradelia AI - ${data.title || 'Tutorial'}" />`);
-      
+      html = html.replace(
+        '<title>TRADELIA • AI — Tutorial</title>',
+        `<title>TRADELIA • AI — ${data.title || 'Tutorial'}</title>`
+      );
+      html = html.replace(
+        '<meta name="description" content="Tutorial Tradelia AI" />',
+        `<meta name="description" content="Tutorial Tradelia AI - ${data.title || 'Tutorial'}" />`
+      );
+
       await writeFile(htmlPath, html, 'utf-8');
       console.log(`✓ Generato: ${htmlFileName}`);
     }
-    
+
     console.log(`\n✅ Generati ${jsonFiles.length} file HTML`);
   } catch (error) {
     console.error('Errore:', error);
@@ -102,12 +106,14 @@ async function generateHTML() {
 }
 
 // Esegui solo se chiamato direttamente
-if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith('generate-html.js')) {
-  generateHTML().catch(err => {
+if (
+  import.meta.url === `file://${process.argv[1]}` ||
+  process.argv[1]?.endsWith('generate-html.js')
+) {
+  generateHTML().catch((err) => {
     console.error('Errore generazione HTML:', err);
     process.exit(1);
   });
 }
 
 export { generateHTML };
-

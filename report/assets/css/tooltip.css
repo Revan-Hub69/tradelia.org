@@ -11,7 +11,7 @@
   background: var(--surface-elev);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-md);
-  box-shadow: 
+  box-shadow:
     0 4px 16px rgba(0, 0, 0, 0.3),
     0 2px 8px rgba(0, 0, 0, 0.2);
   font-size: var(--fs-13);
@@ -20,7 +20,7 @@
   pointer-events: none;
   opacity: 0;
   transform: scale(0.95) translateY(-4px);
-  transition: 
+  transition:
     opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: opacity, transform;
@@ -136,7 +136,7 @@
     font-size: var(--fs-14);
     padding: var(--sp-3) var(--sp-4);
   }
-  
+
   /* Su mobile, tooltip sempre in alto per evitare problemi con keyboard */
   .tooltip--bottom,
   .tooltip--left,
@@ -152,7 +152,7 @@
     transition: opacity 0.01s;
     transform: none;
   }
-  
+
   .tooltip--visible {
     transform: none;
   }
@@ -171,4 +171,3 @@
     /* Tooltip mostrato solo su focus su touch devices */
   }
 }
-

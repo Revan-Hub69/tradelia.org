@@ -44,10 +44,10 @@ const ASSET_SELECTOR = {
     `;
 
     containerEl.appendChild(root);
-    
+
     // Bind eventi
     this._bindEvents(root);
-    
+
     Logger.debug('AssetSelector', 'Widget montato');
     return root;
   },
@@ -71,7 +71,7 @@ const ASSET_SELECTOR = {
     // Suggerimenti durante la digitazione
     input.addEventListener('input', (e) => {
       const query = e.target.value.trim().toUpperCase();
-      
+
       clearTimeout(suggestionTimeout);
       suggestions.innerHTML = '';
       suggestions.classList.remove('asset-selector-suggestions--visible');
@@ -158,10 +158,12 @@ const ASSET_SELECTOR = {
       { symbol: 'OIL', name: 'Crude Oil', type: 'Commodity' },
     ];
 
-    const filtered = commonAssets.filter(asset => 
-      asset.symbol.includes(query) || 
-      asset.name.toLowerCase().includes(query.toLowerCase())
-    ).slice(0, 8);
+    const filtered = commonAssets
+      .filter(
+        (asset) =>
+          asset.symbol.includes(query) || asset.name.toLowerCase().includes(query.toLowerCase())
+      )
+      .slice(0, 8);
 
     if (filtered.length === 0) {
       container.innerHTML = `
@@ -170,13 +172,17 @@ const ASSET_SELECTOR = {
         </div>
       `;
     } else {
-      container.innerHTML = filtered.map(asset => `
+      container.innerHTML = filtered
+        .map(
+          (asset) => `
         <div class="asset-selector-suggestion-item" data-symbol="${asset.symbol}" role="option">
           <div class="asset-selector-suggestion-symbol">${asset.symbol}</div>
           <div class="asset-selector-suggestion-name">${asset.name}</div>
           <div class="asset-selector-suggestion-type">${asset.type}</div>
         </div>
-      `).join('');
+      `
+        )
+        .join('');
     }
 
     container.classList.add('asset-selector-suggestions--visible');
@@ -191,12 +197,12 @@ const ASSET_SELECTOR = {
     try {
       // TODO: Integrare con API reale per dati asset
       // Per ora simuliamo un caricamento
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Emetti evento cambio asset
       this._emitAssetChange(symbol);
       this._showStatus(statusEl, `Asset ${symbol} caricato`, 'success');
-      
+
       Logger.debug('AssetSelector', `Asset ${symbol} caricato`);
     } catch (error) {
       Logger.error('AssetSelector', `Errore caricamento asset ${symbol}`, error);
@@ -211,7 +217,7 @@ const ASSET_SELECTOR = {
   _emitAssetChange(symbol) {
     const event = new CustomEvent('asset-changed', {
       detail: { symbol },
-      bubbles: true
+      bubbles: true,
     });
     document.dispatchEvent(event);
   },
@@ -232,8 +238,7 @@ const ASSET_SELECTOR = {
         statusEl.className = 'asset-selector-status';
       }, 5000);
     }
-  }
+  },
 };
 
 export { ASSET_SELECTOR as assetSelector };
-

@@ -8,7 +8,7 @@ export const FRAMEWORKS = {
     short: 'SRD v5.0',
     description:
       'Deck di ricerca swing a orizzonte 3–10 giorni. Modelli quantitativi proprietari, regime detection e scoring multi-fattore per operatività tattica.',
-    tone: 'Analisi swing quantitativa'
+    tone: 'Analisi swing quantitativa',
   },
   daily_market_intel_3_1: {
     code: 'MTB v3.1',
@@ -16,7 +16,7 @@ export const FRAMEWORKS = {
     short: 'MTB v3.1',
     description:
       'Briefing macro cross-asset quotidiano. Sintesi di indicatori di regime, curva dei tassi, volatilità implicita e leading indicator settoriali.',
-    tone: 'Executive macro briefing'
+    tone: 'Executive macro briefing',
   },
   custom: {
     code: 'CRD',
@@ -24,7 +24,7 @@ export const FRAMEWORKS = {
     short: 'CRD',
     description:
       'Analisi su richiesta con pipeline modulare SRD/MTB. Ideale per desk istituzionali che necessitano report dedicati e integrazione dei propri dataset.',
-    tone: 'Ricerca su misura'
+    tone: 'Ricerca su misura',
   },
   legacy: {
     code: 'Research Deck',
@@ -32,8 +32,8 @@ export const FRAMEWORKS = {
     short: 'Research Deck',
     description:
       'Composite deck di ricerca Tradelia. Alcune funzionalità potrebbero essere limitate nella versione legacy.',
-    tone: 'Ricerca'
-  }
+    tone: 'Ricerca',
+  },
 };
 
 export function getFrameworkInfo(type) {
@@ -51,5 +51,3 @@ export function formatFrameworkDescription(type, companyName, ticker) {
   const subject = companyName || ticker || 'asset analizzato';
   return `${info.description} · Focus: ${subject}`;
 }
-
-

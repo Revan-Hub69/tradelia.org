@@ -163,12 +163,7 @@
           "type": "table",
           "headers": ["Strumento", "Protezione", "Condizioni", "Rischio"],
           "rows": [
-            [
-              "Titoli di Stato Sovrani",
-              "Piena e incondizionata",
-              "Nessuna",
-              "Minimo"
-            ],
+            ["Titoli di Stato Sovrani", "Piena e incondizionata", "Nessuna", "Minimo"],
             [
               "Depositi Bancari Assicurati",
               "Piena fino a 100.000 €",
@@ -295,4 +290,3 @@
     }
   ]
 }
-

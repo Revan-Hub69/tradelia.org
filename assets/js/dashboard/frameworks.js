@@ -9,9 +9,9 @@ export async function loadFrameworks() {
   // - Caricamento documentazione dinamica
   // - Link a documentazione esterna
   // - Esempi interattivi
-  
+
   const frameworkLinks = document.querySelectorAll('.framework-link');
-  frameworkLinks.forEach(link => {
+  frameworkLinks.forEach((link) => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       // TODO: Implementare navigazione a documentazione
@@ -19,4 +19,3 @@ export async function loadFrameworks() {
     });
   });
 }
-

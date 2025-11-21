@@ -4,13 +4,7 @@
     "published": "Gennaio 2025",
     "category": "Strumenti Derivati"
   },
-  "tags": [
-    "Obbligazioni",
-    "Derivati",
-    "Strumenti Strutturati",
-    "Rischio",
-    "Fixed Income"
-  ],
+  "tags": ["Obbligazioni", "Derivati", "Strumenti Strutturati", "Rischio", "Fixed Income"],
   "glossaryTerms": {
     "obbligazioni strutturate": "CreditRiskBlock",
     "componente obbligazionaria": "CreditRiskBlock",
@@ -582,4 +576,3 @@
     }
   ]
 }
-

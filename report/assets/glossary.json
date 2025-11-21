@@ -436,7 +436,7 @@
     "how": "Zone estreme utili come contesto di rischio, non come timing.",
     "source": "Approcci compositi al sentiment; confronti con misure accademiche (Baker & Wurgler, 2006)."
   },
-  
+
   "Governance_info": {
     "title": "Governance",
     "what": "Trasparenza su versione, fonti e qualità dati del modulo.",
@@ -537,7 +537,7 @@
     "how": "Esplicitare la valuta evita ambiguità in presenza di multi-listing/FX; la metrica è informativa, senza conversione implicita.",
     "source": "Obstfeld, M., & Rogoff, K. (1996), *Foundations of International Macroeconomics*, MIT Press."
   },
-  
+
   "F3O_IV_ATM_info": {
     "title": "IV (ATM)",
     "what": "Volatilità implicita delle opzioni più vicine al prezzo corrente del titolo.",

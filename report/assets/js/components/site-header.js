@@ -7,7 +7,7 @@ import { exportMenu } from './export-menu.js';
 
 const HEADER = {
   _node: null,
-  _container: null
+  _container: null,
 };
 
 // ===== UTILITIES =====
@@ -50,26 +50,26 @@ function mount(containerEl, options = {}) {
     Logger.error('SiteHeader', 'mount: containerEl non fornito');
     return null;
   }
-  
+
   if (HEADER._node) {
     Logger.warn('SiteHeader', 'Header già montato');
     return HEADER._node;
   }
-  
+
   const node = createEl('header', 'hdr');
   node.innerHTML = render(options);
-  
+
   containerEl.appendChild(node);
-  
+
   HEADER._node = node;
   HEADER._container = containerEl;
-  
+
   // Renderizza menu export solo se showExport è true
   const exportSlot = node.querySelector('#header-export-menu-slot');
   if (exportSlot) {
     exportMenu.render(exportSlot);
   }
-  
+
   Logger.debug('SiteHeader', 'Header montato');
   return node;
 }
@@ -80,7 +80,7 @@ function update(data = {}) {
     Logger.warn('SiteHeader', 'update: header non montato');
     return;
   }
-  
+
   // Se richiesto, aggiorna header completo
   if (data.refresh) {
     const showExport = HEADER._node.querySelector('#header-export-menu-slot') !== null;
@@ -90,12 +90,12 @@ function update(data = {}) {
       exportMenu.render(exportSlot);
     }
   }
-  
+
   Logger.debug('SiteHeader', 'Header aggiornato');
 }
 
 // ===== PUBLIC API =====
 export const siteHeader = {
   mount,
-  update
+  update,
 };

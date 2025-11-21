@@ -24,8 +24,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           'X-RapidAPI-Host': 'yh-finance.p.rapidapi.com',
         },
       }),
-      axios.get(`https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1day&outputsize=7&apikey=${TWELVE_API_KEY}`),
-      axios.get(`https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1day&outputsize=30&apikey=${TWELVE_API_KEY}`),
+      axios.get(
+        `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1day&outputsize=7&apikey=${TWELVE_API_KEY}`
+      ),
+      axios.get(
+        `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1day&outputsize=30&apikey=${TWELVE_API_KEY}`
+      ),
     ]);
 
     const profile = profileRes.data;

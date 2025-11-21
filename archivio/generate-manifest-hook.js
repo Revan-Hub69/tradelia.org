@@ -3,4 +3,3 @@
 import { generateManifest } from './generate-manifest.js';
 
 generateManifest();
-

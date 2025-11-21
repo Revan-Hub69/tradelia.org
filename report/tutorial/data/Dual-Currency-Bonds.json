@@ -218,15 +218,15 @@
         },
         {
           "type": "table",
-          "headers": ["Strumento", "Cedola", "Rimborso", "Rischio Valutario", "Rischio Complessivo"],
+          "headers": [
+            "Strumento",
+            "Cedola",
+            "Rimborso",
+            "Rischio Valutario",
+            "Rischio Complessivo"
+          ],
           "rows": [
-            [
-              "Obbligazione Tradizionale",
-              "Fissa in EUR",
-              "100% in EUR",
-              "Nessuno",
-              "Limitato"
-            ],
+            ["Obbligazione Tradizionale", "Fissa in EUR", "100% in EUR", "Nessuno", "Limitato"],
             [
               "Dual Currency Bond",
               "Fissa in EUR",
@@ -316,4 +316,3 @@
     }
   ]
 }
-

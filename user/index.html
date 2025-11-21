@@ -1,140 +1,151 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it" data-theme="dark">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Area Utente · Tradelia</title>
-  <link rel="stylesheet" href="/report/assets/css/tokens.css">
-  <link rel="stylesheet" href="/assets/css/global-header.css">
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      background: var(--surface-page, #020617);
-      color: var(--ink, #e5e7eb);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
-    }
-    main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 4rem 1.5rem;
-    }
-    .lite-wrapper {
-      max-width: 640px;
-      width: 100%;
-      background: var(--surface-card, #020617);
-      border-radius: var(--radius-xl, 1rem);
-      border: 1px solid rgba(148, 163, 184, 0.32);
-      box-shadow: 0 24px 64px rgba(15, 23, 42, 0.65);
-      padding: 2.5rem 2rem 2.25rem;
-    }
-    .lite-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin: 0 0 0.5rem;
-    }
-    .lite-body {
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: var(--ink-soft, #e5e7eb);
-      margin-bottom: 1.5rem;
-    }
-    .lite-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      border-radius: 999px;
-      padding: 0.55rem 1.3rem;
-      font-size: 0.85rem;
-      border: 1px solid transparent;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
-    }
-    .btn-primary {
-      background: var(--brand-600, #2563eb);
-      color: #0b1120;
-      border-color: transparent;
-    }
-    .btn-primary:hover {
-      background: var(--brand-400, #60a5fa);
-      transform: translateY(-1px);
-    }
-    .btn-outline {
-      background: transparent;
-      color: var(--ink-soft, #e5e7eb);
-      border-color: rgba(148, 163, 184, 0.6);
-    }
-    .btn-outline:hover {
-      border-color: var(--brand-500, #3b82f6);
-      color: var(--brand-200, #bfdbfe);
-      transform: translateY(-1px);
-    }
-    .lite-meta {
-      margin-top: 1rem;
-      font-size: 0.8rem;
-      color: var(--muted, #9ca3af);
-    }
-    @media (max-width: 640px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Area Utente · Tradelia</title>
+    <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+    <link rel="stylesheet" href="/assets/css/global-header.css" />
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: var(--surface-page, #020617);
+        color: var(--ink, #e5e7eb);
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Inter',
+          sans-serif;
+      }
+      main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 1.5rem;
+      }
       .lite-wrapper {
-        padding: 1.75rem 1.4rem 1.6rem;
+        max-width: 640px;
+        width: 100%;
+        background: var(--surface-card, #020617);
+        border-radius: var(--radius-xl, 1rem);
+        border: 1px solid rgba(148, 163, 184, 0.32);
+        box-shadow: 0 24px 64px rgba(15, 23, 42, 0.65);
+        padding: 2.5rem 2rem 2.25rem;
+      }
+      .lite-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0 0 0.5rem;
+      }
+      .lite-body {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: var(--ink-soft, #e5e7eb);
+        margin-bottom: 1.5rem;
       }
       .lite-actions {
-        flex-direction: column;
-        align-items: flex-start;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
       }
-    }
-  </style>
-</head>
-<body>
-  <div id="site-header-slot"></div>
-  <main>
-    <section class="lite-wrapper" aria-label="Area utente non più disponibile">
-      <h1 class="lite-title">L’area utente Tradelia è stata semplificata</h1>
-      <p class="lite-body">
-        La vecchia area utente è stata dismessa per ridurre complessità tecnica e migliorare stabilità.
-        L’accesso ai dossier e ai servizi Tradelia avviene ora tramite la dashboard report e link dedicati
-        inviati via email.
-      </p>
-      <div class="lite-actions">
-        <a href="/dashboard.html" class="btn btn-primary">Vai alla dashboard report</a>
-        <a href="mailto:info@tradelia.org?subject=Supporto%20accesso%20Tradelia" class="btn btn-outline">
-          Contatta il desk
-        </a>
-      </div>
-      <p class="lite-meta">
-        Se sei arrivato qui da un vecchio link (reset password, checkout, area utente), puoi usare la dashboard
-        per consultare i report pubblici oppure scriverci per assistenza dedicata.
-      </p>
-    </section>
-  </main>
-  <script type="module" src="/assets/js/global-header.js"></script>
-  <script>
-    // Redirect morbido verso la dashboard dopo qualche secondo, mantenendo comunque il messaggio.
-    setTimeout(() => {
-      try {
-        if (window.location.search.includes('checkout=success')) {
-          // In caso di ritorno da pagamento, manda direttamente alla dashboard report
-          window.location.href = '/dashboard.html?checkout=success';
-        } else {
-          window.location.href = '/dashboard.html';
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        border-radius: 999px;
+        padding: 0.55rem 1.3rem;
+        font-size: 0.85rem;
+        border: 1px solid transparent;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          background 0.2s,
+          color 0.2s,
+          border-color 0.2s,
+          transform 0.1s;
+      }
+      .btn-primary {
+        background: var(--brand-600, #2563eb);
+        color: #0b1120;
+        border-color: transparent;
+      }
+      .btn-primary:hover {
+        background: var(--brand-400, #60a5fa);
+        transform: translateY(-1px);
+      }
+      .btn-outline {
+        background: transparent;
+        color: var(--ink-soft, #e5e7eb);
+        border-color: rgba(148, 163, 184, 0.6);
+      }
+      .btn-outline:hover {
+        border-color: var(--brand-500, #3b82f6);
+        color: var(--brand-200, #bfdbfe);
+        transform: translateY(-1px);
+      }
+      .lite-meta {
+        margin-top: 1rem;
+        font-size: 0.8rem;
+        color: var(--muted, #9ca3af);
+      }
+      @media (max-width: 640px) {
+        .lite-wrapper {
+          padding: 1.75rem 1.4rem 1.6rem;
         }
-      } catch (e) {
-        // fallback: non fare nulla se qualcosa va storto
+        .lite-actions {
+          flex-direction: column;
+          align-items: flex-start;
+        }
       }
-    }, 3500);
-  </script>
-</body>
+    </style>
+  </head>
+  <body>
+    <div id="site-header-slot"></div>
+    <main>
+      <section class="lite-wrapper" aria-label="Area utente non più disponibile">
+        <h1 class="lite-title">L’area utente Tradelia è stata semplificata</h1>
+        <p class="lite-body">
+          La vecchia area utente è stata dismessa per ridurre complessità tecnica e migliorare
+          stabilità. L’accesso ai dossier e ai servizi Tradelia avviene ora tramite la dashboard
+          report e link dedicati inviati via email.
+        </p>
+        <div class="lite-actions">
+          <a href="/dashboard.html" class="btn btn-primary">Vai alla dashboard report</a>
+          <a
+            href="mailto:info@tradelia.org?subject=Supporto%20accesso%20Tradelia"
+            class="btn btn-outline"
+          >
+            Contatta il desk
+          </a>
+        </div>
+        <p class="lite-meta">
+          Se sei arrivato qui da un vecchio link (reset password, checkout, area utente), puoi usare
+          la dashboard per consultare i report pubblici oppure scriverci per assistenza dedicata.
+        </p>
+      </section>
+    </main>
+    <script type="module" src="/assets/js/global-header.js"></script>
+    <script>
+      // Redirect morbido verso la dashboard dopo qualche secondo, mantenendo comunque il messaggio.
+      setTimeout(() => {
+        try {
+          if (window.location.search.includes('checkout=success')) {
+            // In caso di ritorno da pagamento, manda direttamente alla dashboard report
+            window.location.href = '/dashboard.html?checkout=success';
+          } else {
+            window.location.href = '/dashboard.html';
+          }
+        } catch (e) {
+          // fallback: non fare nulla se qualcosa va storto
+        }
+      }, 3500);
+    </script>
+  </body>
 </html>
-

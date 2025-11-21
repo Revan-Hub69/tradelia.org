@@ -38,10 +38,10 @@ const MARKET_CONTEXT_SNAPSHOT = {
 
     const root = document.createElement('div');
     root.className = 'market-context-snapshot';
-    
+
     // Carica dati e renderizza
     this._render(root, options);
-    
+
     containerEl.appendChild(root);
     Logger.debug('MarketContextSnapshot', 'Widget montato');
     return root;
@@ -49,11 +49,7 @@ const MARKET_CONTEXT_SNAPSHOT = {
 
   // ===== RENDER =====
   _render(root, options = {}) {
-    const { 
-      regimeScore = null,
-      strategyMode = null,
-      timestamp = null
-    } = options;
+    const { regimeScore = null, strategyMode = null, timestamp = null } = options;
 
     // Pulisci root prima di renderizzare (evita duplicati)
     root.innerHTML = '';
@@ -70,9 +66,8 @@ const MARKET_CONTEXT_SNAPSHOT = {
     }
 
     // Normalizza RegimeScore (-1 a +1) a percentuale (0 a 100%)
-    const scorePercent = regimeScore !== null 
-      ? Math.max(0, Math.min(100, ((regimeScore + 1) / 2) * 100))
-      : 50; // Default centro se non disponibile
+    const scorePercent =
+      regimeScore !== null ? Math.max(0, Math.min(100, ((regimeScore + 1) / 2) * 100)) : 50; // Default centro se non disponibile
 
     // Determina colore del marker in base al score
     const markerColor = this._getMarkerColor(regimeScore);
@@ -102,7 +97,10 @@ const MARKET_CONTEXT_SNAPSHOT = {
       </div>
     `;
 
-    Logger.debug('MarketContextSnapshot', `RegimeScore: ${regimeScore}, Position: ${scorePercent}%`);
+    Logger.debug(
+      'MarketContextSnapshot',
+      `RegimeScore: ${regimeScore}, Position: ${scorePercent}%`
+    );
   },
 
   // ===== GET MARKER COLOR =====
@@ -115,12 +113,12 @@ const MARKET_CONTEXT_SNAPSHOT = {
     if (regimeScore < -0.3) {
       return 'var(--err)'; // Rosso
     }
-    
+
     // Risk-on (verde): +0.3 a +1
     if (regimeScore > 0.3) {
       return 'var(--ok)'; // Verde
     }
-    
+
     // Neutro (giallo/arancione): -0.3 a +0.3
     return 'var(--warn)'; // Arancione/giallo
   },
@@ -133,8 +131,7 @@ const MARKET_CONTEXT_SNAPSHOT = {
     }
 
     this._render(node, options);
-  }
+  },
 };
 
 export { MARKET_CONTEXT_SNAPSHOT as marketContextSnapshot };
-

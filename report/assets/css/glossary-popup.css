@@ -23,7 +23,7 @@
   max-width: 480px;
   background: var(--surface-card);
   border-left: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 
+  box-shadow:
     -4px 0 20px rgba(0, 0, 0, 0.5),
     0 1px 0 rgba(255, 255, 255, 0.02) inset;
   display: flex;
@@ -39,7 +39,7 @@
 }
 
 .glossary-popup-panel::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -65,11 +65,11 @@
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     transform: translateY(100%);
-    box-shadow: 
+    box-shadow:
       0 -4px 20px rgba(0, 0, 0, 0.5),
       0 1px 0 rgba(255, 255, 255, 0.02) inset;
   }
-  
+
   .glossary-popup-overlay:not([hidden]) .glossary-popup-panel {
     transform: translateY(0);
   }
@@ -222,7 +222,7 @@
 }
 
 .glossary-popup-section-title::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: 0;
@@ -250,7 +250,7 @@
 }
 
 .glossary-popup-source::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 50%;
@@ -267,4 +267,3 @@
 }
 
 /* Scrollbar rimossa - usa stile globale da tokens.css */
-

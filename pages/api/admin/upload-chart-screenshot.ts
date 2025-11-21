@@ -7,13 +7,13 @@ import {
   parseMultipartRequest,
   pushToGit,
   requireAdminAuth,
-  sanitizeReportId
+  sanitizeReportId,
 } from './_utils';
 
 export const config = {
   api: {
-    bodyParser: false
-  }
+    bodyParser: false,
+  },
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -53,10 +53,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       path: path.relative(process.cwd(), targetPath).replace(/\\/g, '/'),
       reportId,
       manifest,
-      git
+      git,
     });
   } catch (error: any) {
     res.status(500).json({ error: error?.message || 'Errore upload chart screenshot' });
   }
 }
-

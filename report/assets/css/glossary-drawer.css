@@ -176,7 +176,10 @@
   text-decoration: none;
   text-decoration-thickness: 0;
   text-underline-offset: 0;
-  transition: text-decoration var(--transition-base), opacity var(--transition-base), color var(--transition-base);
+  transition:
+    text-decoration var(--transition-base),
+    opacity var(--transition-base),
+    color var(--transition-base);
 }
 
 /* Colorazione semaforica nel drawer schede */
@@ -212,7 +215,9 @@
 }
 
 .glossary-drawer-content.module-tabs-content-wrapper .metric-inline--warn:hover .metric-inline-text,
-.glossary-drawer-content.module-tabs-content-wrapper .metric-inline--warn:focus .metric-inline-text {
+.glossary-drawer-content.module-tabs-content-wrapper
+  .metric-inline--warn:focus
+  .metric-inline-text {
   text-decoration-color: var(--warn);
 }
 
@@ -221,8 +226,12 @@
   text-decoration-color: var(--err);
 }
 
-.glossary-drawer-content.module-tabs-content-wrapper .metric-inline--neutral:hover .metric-inline-text,
-.glossary-drawer-content.module-tabs-content-wrapper .metric-inline--neutral:focus .metric-inline-text {
+.glossary-drawer-content.module-tabs-content-wrapper
+  .metric-inline--neutral:hover
+  .metric-inline-text,
+.glossary-drawer-content.module-tabs-content-wrapper
+  .metric-inline--neutral:focus
+  .metric-inline-text {
   text-decoration-color: var(--muted);
 }
 
@@ -282,14 +291,17 @@
   overflow-wrap: break-word;
   white-space: normal !important; /* Forza wrap anche su desktop nel drawer */
   letter-spacing: 0.01em; /* Leggero letter-spacing */
-  
+
   /* Rimuovi underline di default */
   text-decoration: none;
   text-decoration-thickness: 0;
   text-underline-offset: 0;
-  
+
   /* Transizione smooth */
-  transition: text-decoration var(--transition-base), opacity var(--transition-base), color var(--transition-base);
+  transition:
+    text-decoration var(--transition-base),
+    opacity var(--transition-base),
+    color var(--transition-base);
 }
 
 /* Colorazione semaforica */
@@ -550,13 +562,12 @@
     width: 100%;
     max-width: 100%;
   }
-  
+
   .glossary-drawer-header {
     padding: var(--sp-4) var(--sp-4) var(--sp-3);
   }
-  
+
   .glossary-drawer-content {
     padding: var(--sp-4);
   }
 }
-

@@ -9,9 +9,9 @@ export async function loadResources() {
   // - Caricamento FAQ dinamica
   // - Search FAQ
   // - Link a guide/documentazione
-  
+
   const resourceLinks = document.querySelectorAll('.resource-link');
-  resourceLinks.forEach(link => {
+  resourceLinks.forEach((link) => {
     link.addEventListener('click', (e) => {
       // Gestione link (alcuni sono mailto, altri navigazione)
       if (link.href.startsWith('mailto:')) {
@@ -24,4 +24,3 @@ export async function loadResources() {
     });
   });
 }
-

@@ -27,14 +27,14 @@ function escapeHtml(str) {
 // ===== DATA LOADING =====
 async function loadGlossaryData() {
   if (GLOSSARY._data) return GLOSSARY._data;
-  
+
   try {
     // Prova prima il glossario completo, poi fallback a quello report
     let res = await fetch('/glossario.json', { cache: 'no-store' });
     if (!res.ok) {
       res = await fetch('/report/assets/glossary.json', { cache: 'no-store' });
     }
-    
+
     if (res.ok) {
       GLOSSARY._data = await res.json();
       Logger.debug('GlossaryEmbedded', 'Glossario caricato');
@@ -43,7 +43,7 @@ async function loadGlossaryData() {
   } catch (err) {
     Logger.warn('GlossaryEmbedded', 'Errore caricamento glossario', err);
   }
-  
+
   GLOSSARY._data = {};
   return GLOSSARY._data;
 }
@@ -51,14 +51,16 @@ async function loadGlossaryData() {
 // ===== RENDERING =====
 function renderGlossary() {
   if (!GLOSSARY._container || !GLOSSARY._data) return;
-  
+
   const data = GLOSSARY._data;
   const terms = Object.entries(data).filter(([key]) => !key.startsWith('_'));
-  
+
   // Filtri dinamici
-  const universi = [...new Set(terms.map(([, term]) => term.universo || term.category).filter(Boolean))];
+  const universi = [
+    ...new Set(terms.map(([, term]) => term.universo || term.category).filter(Boolean)),
+  ];
   const difficolta = [...new Set(terms.map(([, term]) => term.difficolta).filter(Boolean))];
-  
+
   GLOSSARY._container.innerHTML = `
     <header class="glossary-embedded-header">
       <div class="glossary-embedded-header-content">
@@ -97,9 +99,13 @@ function renderGlossary() {
           <label class="glossary-embedded-filter-label">${i18n.t('glossary.filter.universe')}</label>
           <div class="glossary-embedded-filter-buttons" data-filter="universo">
             <button class="glossary-embedded-filter-btn active" data-value="all" type="button">${i18n.t('glossary.filter.all')}</button>
-            ${universi.map(u => `
+            ${universi
+              .map(
+                (u) => `
               <button class="glossary-embedded-filter-btn" data-value="${escapeHtml(u)}" type="button">${escapeHtml(u)}</button>
-            `).join('')}
+            `
+              )
+              .join('')}
           </div>
         </div>
         
@@ -107,9 +113,13 @@ function renderGlossary() {
           <label class="glossary-embedded-filter-label">${i18n.t('glossary.filter.difficulty')}</label>
           <div class="glossary-embedded-filter-buttons" data-filter="difficolta">
             <button class="glossary-embedded-filter-btn active" data-value="all" type="button">${i18n.t('glossary.filter.allDifficulties')}</button>
-            ${difficolta.map(d => `
+            ${difficolta
+              .map(
+                (d) => `
               <button class="glossary-embedded-filter-btn" data-value="${escapeHtml(d)}" type="button">${escapeHtml(d)}</button>
-            `).join('')}
+            `
+              )
+              .join('')}
           </div>
         </div>
       </div>
@@ -131,7 +141,7 @@ function renderGlossary() {
       </div>
     </div>
   `;
-  
+
   // Event listeners
   setupEventListeners();
 }
@@ -145,23 +155,31 @@ function renderTermsList(terms) {
       </div>
     `;
   }
-  
+
   return terms
     .map(([key, term]) => {
       const title = term.nomeTecnico || term.title || key;
       const universo = term.universo || term.category;
-      
+
       return `
         <button class="glossary-embedded-term-item" data-key="${escapeHtml(key)}" type="button">
           <div class="glossary-embedded-term-content">
             <h3 class="glossary-embedded-term-title">${escapeHtml(title)}</h3>
             <div class="glossary-embedded-term-badges">
-              ${universo ? `
+              ${
+                universo
+                  ? `
                 <span class="glossary-embedded-term-badge glossary-embedded-term-badge--universo">${escapeHtml(universo)}</span>
-              ` : ''}
-              ${term.difficolta ? `
+              `
+                  : ''
+              }
+              ${
+                term.difficolta
+                  ? `
                 <span class="glossary-embedded-term-badge glossary-embedded-term-badge--difficolta ${term.difficolta.toLowerCase()}">${escapeHtml(term.difficolta)}</span>
-              ` : ''}
+              `
+                  : ''
+              }
             </div>
           </div>
           <svg class="glossary-embedded-term-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -181,27 +199,29 @@ function setupEventListeners() {
       if (GLOSSARY._backCallback) GLOSSARY._backCallback();
     });
   }
-  
+
   // Search
   const searchInput = GLOSSARY._container.querySelector('#glossary-embedded-search-input');
   if (searchInput) {
     searchInput.addEventListener('input', filterTerms);
   }
-  
+
   // Filter buttons
   const filterButtons = GLOSSARY._container.querySelectorAll('.glossary-embedded-filter-btn');
-  filterButtons.forEach(btn => {
+  filterButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       const group = btn.closest('.glossary-embedded-filter-buttons');
-      group.querySelectorAll('.glossary-embedded-filter-btn').forEach(b => b.classList.remove('active'));
+      group
+        .querySelectorAll('.glossary-embedded-filter-btn')
+        .forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
       filterTerms();
     });
   });
-  
+
   // Term items
   const termItems = GLOSSARY._container.querySelectorAll('.glossary-embedded-term-item');
-  termItems.forEach(item => {
+  termItems.forEach((item) => {
     item.addEventListener('click', () => {
       const key = item.dataset.key;
       openTermPopup(key);
@@ -211,26 +231,36 @@ function setupEventListeners() {
 
 function filterTerms() {
   if (!GLOSSARY._data || !GLOSSARY._container) return;
-  
-  const searchQuery = GLOSSARY._container.querySelector('#glossary-embedded-search-input')?.value.toLowerCase().trim() || '';
-  
-  const universoFilter = GLOSSARY._container.querySelector('[data-filter="universo"] .glossary-embedded-filter-btn.active')?.dataset.value || 'all';
-  const difficoltaFilter = GLOSSARY._container.querySelector('[data-filter="difficolta"] .glossary-embedded-filter-btn.active')?.dataset.value || 'all';
-  
+
+  const searchQuery =
+    GLOSSARY._container
+      .querySelector('#glossary-embedded-search-input')
+      ?.value.toLowerCase()
+      .trim() || '';
+
+  const universoFilter =
+    GLOSSARY._container.querySelector(
+      '[data-filter="universo"] .glossary-embedded-filter-btn.active'
+    )?.dataset.value || 'all';
+  const difficoltaFilter =
+    GLOSSARY._container.querySelector(
+      '[data-filter="difficolta"] .glossary-embedded-filter-btn.active'
+    )?.dataset.value || 'all';
+
   const terms = Object.entries(GLOSSARY._data).filter(([key, term]) => {
     if (key.startsWith('_')) return false;
-    
+
     // Filtro universo
     if (universoFilter !== 'all') {
       const termUniverso = term.universo || term.category;
       if (termUniverso !== universoFilter) return false;
     }
-    
+
     // Filtro difficoltà
     if (difficoltaFilter !== 'all') {
       if (term.difficolta !== difficoltaFilter) return false;
     }
-    
+
     // Filtro ricerca
     if (searchQuery) {
       const searchable = [
@@ -239,118 +269,143 @@ function filterTerms() {
         term.definizioneAccademica?.toLowerCase() || term.what?.toLowerCase() || '',
         term.spiegazioneAI?.toLowerCase() || term.how?.toLowerCase() || '',
         term.universo?.toLowerCase() || term.category?.toLowerCase() || '',
-        term.difficolta?.toLowerCase() || ''
+        term.difficolta?.toLowerCase() || '',
       ].join(' ');
-      
+
       if (!searchable.includes(searchQuery)) return false;
     }
-    
+
     return true;
   });
-  
+
   // Render filtered terms
   const termsContainer = GLOSSARY._container.querySelector('#glossary-embedded-terms');
   if (termsContainer) {
     termsContainer.innerHTML = renderTermsList(terms);
-    
+
     // Re-attach event listeners
     const termItems = termsContainer.querySelectorAll('.glossary-embedded-term-item');
-    termItems.forEach(item => {
+    termItems.forEach((item) => {
       item.addEventListener('click', () => {
         const key = item.dataset.key;
         openTermPopup(key);
       });
     });
   }
-  
+
   // Update stats
   const statsText = GLOSSARY._container.querySelector('#glossary-embedded-stats-text');
   if (statsText) {
-    const total = Object.keys(GLOSSARY._data).filter(k => !k.startsWith('_')).length;
+    const total = Object.keys(GLOSSARY._data).filter((k) => !k.startsWith('_')).length;
     if (terms.length === total) {
       statsText.textContent = `${total} ${i18n.t('glossary.stats')}`;
     } else {
-      statsText.textContent = i18n.t('glossary.stats.showing').replace('{count}', terms.length).replace('{total}', total);
+      statsText.textContent = i18n
+        .t('glossary.stats.showing')
+        .replace('{count}', terms.length)
+        .replace('{total}', total);
     }
   }
 }
 
 function openTermPopup(key) {
   if (!GLOSSARY._data || !key) return;
-  
+
   const term = GLOSSARY._data[key];
   if (!term) return;
-  
+
   const overlay = GLOSSARY._container.querySelector('#glossary-embedded-popup-overlay');
   const panel = overlay.querySelector('.glossary-popup-panel');
-  
+
   if (!overlay || !panel) return;
-  
+
   const title = term.nomeTecnico || term.title || key;
   const universo = term.universo || term.category;
-  
+
   panel.innerHTML = `
     <header class="glossary-popup-header">
       <div class="glossary-popup-header-content">
         <h2 class="glossary-popup-title">${escapeHtml(title)}</h2>
         <div class="glossary-popup-badges">
-          ${universo ? `
+          ${
+            universo
+              ? `
             <span class="glossary-popup-badge glossary-popup-badge--universo">${escapeHtml(universo)}</span>
-          ` : ''}
-          ${term.difficolta ? `
+          `
+              : ''
+          }
+          ${
+            term.difficolta
+              ? `
             <span class="glossary-popup-badge glossary-popup-badge--difficolta ${term.difficolta.toLowerCase()}">${escapeHtml(term.difficolta)}</span>
-          ` : ''}
+          `
+              : ''
+          }
         </div>
       </div>
       <button class="glossary-popup-close" aria-label="${i18n.t('common.close')}" type="button">×</button>
     </header>
     <div class="glossary-popup-body">
-      ${term.definizioneAccademica ? `
+      ${
+        term.definizioneAccademica
+          ? `
         <div class="glossary-popup-section">
           <h3 class="glossary-popup-section-title">${i18n.t('glossary.term.definition')}</h3>
           <p class="glossary-popup-section-text">${escapeHtml(term.definizioneAccademica)}</p>
         </div>
-      ` : ''}
+      `
+          : ''
+      }
       
-      ${term.spiegazioneAI ? `
+      ${
+        term.spiegazioneAI
+          ? `
         <div class="glossary-popup-section">
           <h3 class="glossary-popup-section-title">${i18n.t('glossary.term.explanation')}</h3>
           <p class="glossary-popup-section-text">${escapeHtml(term.spiegazioneAI)}</p>
         </div>
-      ` : ''}
+      `
+          : ''
+      }
       
-      ${term.fonteAccademica ? `
+      ${
+        term.fonteAccademica
+          ? `
         <div class="glossary-popup-source">
           <strong>${i18n.t('glossary.term.source')}:</strong> ${escapeHtml(term.fonteAccademica)}
         </div>
-      ` : term.source ? `
+      `
+          : term.source
+            ? `
         <div class="glossary-popup-source">
           <strong>${i18n.t('glossary.term.source')}:</strong> ${escapeHtml(term.source)}
         </div>
-      ` : ''}
+      `
+            : ''
+      }
     </div>
     <footer class="glossary-popup-footer">
       <button class="glossary-popup-close-bottom" type="button">${i18n.t('common.close')}</button>
     </footer>
   `;
-  
+
   // Close handlers
   const closeBtn = panel.querySelector('.glossary-popup-close');
   const closeBtnBottom = panel.querySelector('.glossary-popup-close-bottom');
-  
+
   const closePopup = () => {
     overlay.hidden = true;
   };
-  
+
   if (closeBtn) closeBtn.addEventListener('click', closePopup);
   if (closeBtnBottom) closeBtnBottom.addEventListener('click', closePopup);
-  
+
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) closePopup();
   });
-  
+
   // ESC gestito dal popup parent (overlay-manager), non gestire qui per evitare conflitti
-  
+
   overlay.hidden = false;
   // Overflow gestito dal popup/drawer parent (non gestire qui)
 }
@@ -361,39 +416,39 @@ async function mount(panel, backCallback) {
     Logger.warn('GlossaryEmbedded', 'Già montato, unmount prima');
     return;
   }
-  
+
   GLOSSARY._panel = panel;
   GLOSSARY._backCallback = backCallback;
-  
+
   // Svuota il panel e crea container
   GLOSSARY._container = document.createElement('div');
   GLOSSARY._container.className = 'glossary-embedded-container';
-  
+
   panel.innerHTML = '';
   panel.appendChild(GLOSSARY._container);
-  
+
   // Carica dati
   await loadGlossaryData();
-  
+
   // Render
   renderGlossary();
-  
+
   GLOSSARY._isMounted = true;
   Logger.debug('GlossaryEmbedded', 'Glossario embedded montato');
 }
 
 function unmount() {
   if (!GLOSSARY._isMounted) return;
-  
+
   if (GLOSSARY._container) {
     GLOSSARY._container.remove();
     GLOSSARY._container = null;
   }
-  
+
   GLOSSARY._panel = null;
   GLOSSARY._backCallback = null;
   GLOSSARY._isMounted = false;
-  
+
   Logger.debug('GlossaryEmbedded', 'Glossario embedded smontato');
 }
 
@@ -404,4 +459,3 @@ const glossaryEmbedded = {
 };
 
 export { glossaryEmbedded };
-

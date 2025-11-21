@@ -22,12 +22,12 @@ export async function loadNotifications(userId) {
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(50);
-    
+
     if (error) throw error;
-    
+
     notifications = data || [];
-    unreadCount = notifications.filter(n => !n.is_read).length;
-    
+    unreadCount = notifications.filter((n) => !n.is_read).length;
+
     return { notifications, unreadCount };
   } catch (err) {
     Logger.error('Notifications', 'load error', err);
@@ -45,16 +45,16 @@ export async function markNotificationAsRead(notificationId, userId) {
       .update({ is_read: true })
       .eq('id', notificationId)
       .eq('user_id', userId);
-    
+
     if (error) throw error;
-    
+
     // Update local state
-    const notification = notifications.find(n => n.id === notificationId);
+    const notification = notifications.find((n) => n.id === notificationId);
     if (notification) {
       notification.is_read = true;
       unreadCount = Math.max(0, unreadCount - 1);
     }
-    
+
     return true;
   } catch (err) {
     Logger.error('Notifications', 'mark read error', err);
@@ -72,13 +72,15 @@ export async function markAllNotificationsAsRead(userId) {
       .update({ is_read: true })
       .eq('user_id', userId)
       .eq('is_read', false);
-    
+
     if (error) throw error;
-    
+
     // Update local state
-    notifications.forEach(n => { n.is_read = true; });
+    notifications.forEach((n) => {
+      n.is_read = true;
+    });
     unreadCount = 0;
-    
+
     return true;
   } catch (err) {
     Logger.error('Notifications', 'mark all read error', err);
@@ -93,22 +95,26 @@ export function subscribeToNotifications(userId, callback) {
   if (notificationSubscription) {
     notificationSubscription.unsubscribe();
   }
-  
+
   notificationSubscription = supabase
     .channel('user_notifications')
-    .on('postgres_changes', {
-      event: 'INSERT',
-      schema: 'public',
-      table: 'user_notifications',
-      filter: `user_id=eq.${userId}`
-    }, (payload) => {
-      const newNotification = payload.new;
-      notifications.unshift(newNotification);
-      unreadCount++;
-      if (callback) callback(newNotification);
-    })
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'user_notifications',
+        filter: `user_id=eq.${userId}`,
+      },
+      (payload) => {
+        const newNotification = payload.new;
+        notifications.unshift(newNotification);
+        unreadCount++;
+        if (callback) callback(newNotification);
+      }
+    )
     .subscribe();
-  
+
   return notificationSubscription;
 }
 
@@ -127,34 +133,42 @@ export function unsubscribeFromNotifications() {
  */
 export function renderNotifications(container, userId) {
   if (!container) return;
-  
-  const unreadNotifications = notifications.filter(n => !n.is_read);
-  const readNotifications = notifications.filter(n => n.is_read);
-  
+
+  const unreadNotifications = notifications.filter((n) => !n.is_read);
+  const readNotifications = notifications.filter((n) => n.is_read);
+
   container.innerHTML = `
     <div class="notifications-header">
       <h4>Notifiche ${unreadCount > 0 ? `<span class="badge">${unreadCount}</span>` : ''}</h4>
       ${unreadCount > 0 ? `<button class="btn btn-sm btn-outline" id="mark-all-read-btn">Segna tutte come lette</button>` : ''}
     </div>
     <div class="notifications-list">
-      ${unreadNotifications.length > 0 ? `
+      ${
+        unreadNotifications.length > 0
+          ? `
         <div class="notifications-section">
           <h5>Non lette</h5>
-          ${unreadNotifications.map(n => renderNotificationItem(n, userId)).join('')}
+          ${unreadNotifications.map((n) => renderNotificationItem(n, userId)).join('')}
         </div>
-      ` : ''}
-      ${readNotifications.length > 0 ? `
+      `
+          : ''
+      }
+      ${
+        readNotifications.length > 0
+          ? `
         <div class="notifications-section">
           <h5>Lette</h5>
-          ${readNotifications.map(n => renderNotificationItem(n, userId)).join('')}
+          ${readNotifications.map((n) => renderNotificationItem(n, userId)).join('')}
         </div>
-      ` : ''}
+      `
+          : ''
+      }
       ${notifications.length === 0 ? '<p style="color: var(--ink-soft); text-align: center; padding: 2rem;">Nessuna notifica.</p>' : ''}
     </div>
   `;
-  
+
   // Setup event listeners
-  container.querySelectorAll('.notification-item').forEach(item => {
+  container.querySelectorAll('.notification-item').forEach((item) => {
     const notificationId = item.dataset.notificationId;
     item.addEventListener('click', () => {
       markNotificationAsRead(notificationId, userId);
@@ -163,7 +177,7 @@ export function renderNotifications(container, userId) {
       }
     });
   });
-  
+
   const markAllReadBtn = container.querySelector('#mark-all-read-btn');
   if (markAllReadBtn) {
     markAllReadBtn.addEventListener('click', () => {
@@ -176,7 +190,7 @@ export function renderNotifications(container, userId) {
 function renderNotificationItem(notification, userId) {
   const isUnread = !notification.is_read;
   const linkAttr = notification.link ? `data-link="${notification.link}"` : '';
-  
+
   return `
     <div class="notification-item ${isUnread ? 'unread' : ''}" data-notification-id="${notification.id}" ${linkAttr}>
       <div class="notification-content">
@@ -202,15 +216,14 @@ function formatDateTime(dateString) {
   const diffMins = Math.floor(diffMs / 60000);
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
-  
+
   if (diffMins < 1) return 'Adesso';
   if (diffMins < 60) return `${diffMins} min fa`;
   if (diffHours < 24) return `${diffHours} ore fa`;
   if (diffDays < 7) return `${diffDays} giorni fa`;
-  
+
   return date.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
 }
 
 // Export per uso globale
 export { notifications, unreadCount };
-

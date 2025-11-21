@@ -40,7 +40,7 @@ const buildUsersSnapshot = async () => {
         .select('user_id,plan,status,gateway,renew_at,cancelled_at,started_at')
         .order('started_at', { ascending: false }),
       'subscriptions'
-    )
+    ),
   ]);
 
   const profilesMap = new Map(profiles.map((p) => [p.user_id, p]));
@@ -59,7 +59,10 @@ const buildUsersSnapshot = async () => {
     }
     if (token.user_id) {
       const current = tokensByUserId.get(token.user_id);
-      if (!current || tokenDate > (current.valid_until ? new Date(current.valid_until).getTime() : 0)) {
+      if (
+        !current ||
+        tokenDate > (current.valid_until ? new Date(current.valid_until).getTime() : 0)
+      ) {
         tokensByUserId.set(token.user_id, token);
       }
     }
@@ -87,7 +90,7 @@ const buildUsersSnapshot = async () => {
         token_plan_role: null,
         token_source: null,
         created_at: defaults.created_at || null,
-        source: defaults.source || null
+        source: defaults.source || null,
       });
     }
     const entry = usersByEmail.get(key);
@@ -112,7 +115,7 @@ const buildUsersSnapshot = async () => {
     const entry = ensureEntry(role.email, {
       user_id: role.user_id,
       source: 'user_roles',
-      created_at: role.created_at
+      created_at: role.created_at,
     });
     if (!entry) return;
     entry.role = role.role || entry.role;
@@ -123,7 +126,7 @@ const buildUsersSnapshot = async () => {
   tokens.forEach((token) => {
     const entry = ensureEntry(token.email, {
       user_id: token.user_id,
-      source: 'dashboard_access_tokens'
+      source: 'dashboard_access_tokens',
     });
     if (!entry) return;
     if (!entry.valid_until) {
@@ -203,7 +206,7 @@ const handleUpdateUser = async (req, res) => {
     displayName,
     role,
     validUntil,
-    planSource
+    planSource,
   } = req.body || {};
 
   if (!identifier) {
@@ -214,7 +217,11 @@ const handleUpdateUser = async (req, res) => {
   let email = (identifierType === 'email' ? identifier : inputEmail)?.trim().toLowerCase() || null;
 
   if (!email && userId) {
-    const { data, error } = await supabase.from('user_roles').select('email').eq('user_id', userId).maybeSingle();
+    const { data, error } = await supabase
+      .from('user_roles')
+      .select('email')
+      .eq('user_id', userId)
+      .maybeSingle();
     if (error) {
       throw new HttpError(500, 'Errore nel recupero email utente', error.message);
     }
@@ -222,22 +229,20 @@ const handleUpdateUser = async (req, res) => {
   }
 
   if (!email) {
-    throw new HttpError(400, 'Email necessaria per aggiornare l\'utente');
+    throw new HttpError(400, "Email necessaria per aggiornare l'utente");
   }
 
   const updates = [];
 
   if (userId && displayName !== undefined) {
     updates.push(
-      supabase
-        .from('user_profiles')
-        .upsert(
-          {
-            user_id: userId,
-            display_name: displayName || null
-          },
-          { onConflict: 'user_id' }
-        )
+      supabase.from('user_profiles').upsert(
+        {
+          user_id: userId,
+          display_name: displayName || null,
+        },
+        { onConflict: 'user_id' }
+      )
     );
   }
 
@@ -246,14 +251,14 @@ const handleUpdateUser = async (req, res) => {
       email,
       role: role || null,
       plan_source: planSource || null,
-      valid_until: validUntil ? new Date(validUntil).toISOString() : null
+      valid_until: validUntil ? new Date(validUntil).toISOString() : null,
     };
     if (userId) {
       rolePayload.user_id = userId;
     }
     updates.push(
       supabase.from('user_roles').upsert(rolePayload, {
-        onConflict: 'email'
+        onConflict: 'email',
       })
     );
   }
@@ -262,7 +267,7 @@ const handleUpdateUser = async (req, res) => {
     const results = await Promise.all(updates);
     results.forEach(({ error }) => {
       if (error) {
-        throw new HttpError(500, 'Errore durante l\'aggiornamento utente', error.message);
+        throw new HttpError(500, "Errore durante l'aggiornamento utente", error.message);
       }
     });
   }
@@ -297,4 +302,3 @@ export const handleUsersRequest = async (req, res) => {
 
   return methodNotAllowed(res, ['GET', 'PUT']);
 };
-

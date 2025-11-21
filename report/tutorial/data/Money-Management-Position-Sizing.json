@@ -1400,13 +1400,7 @@
               { "text": "Molto Alta", "class": "negative" },
               "Professionisti, sistemi meccanici, dati estesi"
             ],
-            [
-              "Fixed Ratio",
-              "Media",
-              "Stabile",
-              "Bassa",
-              "Trading moderato, crescita controllata"
-            ],
+            ["Fixed Ratio", "Media", "Stabile", "Bassa", "Trading moderato, crescita controllata"],
             [
               "Basato su Volatilità",
               "Media",
@@ -1645,4 +1639,3 @@
     }
   ]
 }
-

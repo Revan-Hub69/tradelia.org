@@ -48,7 +48,7 @@
   flex-shrink: 0;
 }
 
-.export-menu-btn[aria-expanded="true"] .export-menu-arrow {
+.export-menu-btn[aria-expanded='true'] .export-menu-arrow {
   transform: rotate(180deg);
 }
 
@@ -125,4 +125,3 @@
     left: auto;
   }
 }
-

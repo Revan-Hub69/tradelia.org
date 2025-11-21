@@ -1,237 +1,345 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fetch Real Data - AAPL</title>
-  <style>
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 20px;
-      background: #0f0f0f;
-      color: #fff;
-    }
-    button {
-      background: #0066ff;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-      margin: 10px 0;
-    }
-    button:hover {
-      background: #0052cc;
-    }
-    pre {
-      background: #1a1a1a;
-      padding: 20px;
-      border-radius: 8px;
-      overflow-x: auto;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
-    .status {
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 6px;
-    }
-    .success { background: #0a5; }
-    .error { background: #a00; }
-    .info { background: #0066ff; }
-  </style>
-</head>
-<body>
-  <h1>🚀 Fetch Real Data - AAPL</h1>
-  <p>Questo script fetcha dati REALI da Yahoo Finance API e genera il report.</p>
-  
-  <button onclick="fetchAAPL()">Fetch Dati Real-time AAPL</button>
-  <button onclick="generateReport()">Genera Report Completo</button>
-  
-  <div id="status"></div>
-  <pre id="output"></pre>
-
-  <script type="module">
-    let tickerData = null;
-
-    window.fetchAAPL = async function() {
-      const status = document.getElementById('status');
-      const output = document.getElementById('output');
-      
-      status.innerHTML = '<div class="status info">🔄 Fetching dati da Yahoo Finance...</div>';
-      
-      try {
-        const ticker = 'AAPL';
-        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1d`;
-        
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        
-        const data = await response.json();
-        const result = data.chart.result[0];
-        const meta = result.meta;
-        
-        const currentPrice = meta.regularMarketPrice || meta.previousClose;
-        const previousClose = meta.previousClose;
-        const changePct = previousClose ? ((currentPrice - previousClose) / previousClose) * 100 : null;
-        
-        tickerData = {
-          ticker: ticker,
-          companyName: meta.longName || meta.shortName || ticker,
-          price: currentPrice,
-          changePct: changePct,
-          currency: meta.currency || 'USD',
-          exchange: meta.exchangeName || meta.fullExchangeName || 'NASDAQ',
-          sector: meta.sector || 'Technology',
-          industry: meta.industry || null,
-          timestamp: new Date().toISOString()
-        };
-        
-        status.innerHTML = '<div class="status success">✅ Dati fetchati con successo!</div>';
-        output.textContent = JSON.stringify(tickerData, null, 2);
-        
-      } catch (error) {
-        status.innerHTML = `<div class="status error">❌ Errore: ${error.message}</div>`;
-        output.textContent = error.stack;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fetch Real Data - AAPL</title>
+    <style>
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        background: #0f0f0f;
+        color: #fff;
       }
-    };
-
-    window.generateReport = async function() {
-      if (!tickerData) {
-        alert('Prima fetcha i dati!');
-        return;
+      button {
+        background: #0066ff;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 10px 0;
       }
-      
-      const status = document.getElementById('status');
-      status.innerHTML = '<div class="status info">🔄 Generando report...</div>';
-      
-      // Genera header.json
-      const timestamp = new Date().toISOString();
-      const reportID = new Date().toISOString().replace(/[-:]/g, '').split('T')[0] + '-' + 
-                       new Date().toLocaleTimeString('it-IT', {hour: '2-digit', minute: '2-digit'}).replace(':', '');
-      const startDate = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-      const endDate = new Date().toISOString().split('T')[0];
-      const version = `v${endDate.replace(/-/g, '.')}-rc1`;
-      
-      const header = {
-        meta: {
-          module: "HEADER",
-          version: version,
-          auditPathId: `RPT-${endDate.replace(/-/g, '-')}-${tickerData.ticker}-HEAD`,
-          state: "ACTIVE",
-          generatedAt: timestamp,
-          reportID: reportID,
-          changes: [
-            {
-              timestamp: timestamp,
-              version: version,
-              changes: ["Header generato automaticamente con dati reali"]
-            }
-          ],
-          moduleVersions: {
-            header: "1.0.0",
-            f1b: "v19-Dynamic"
-          }
-        },
-        rows: [
-          {
-            id: "company-line",
-            parts: [
-              { kind: "text", text: "Deck di ricerca Tradelia SRD v5.0 — Swing Research Deck su " },
-              { kind: "metric", key: "CompanyName", value: tickerData.companyName, tone: "neutral", label: "CompanyName" },
-              { kind: "text", text: ". " },
-              { kind: "text", text: "Ticker: " },
-              { kind: "metric", key: "Ticker", value: tickerData.ticker, tone: "neutral", label: "Ticker" },
-              { kind: "text", text: ". " },
-              { kind: "text", text: "Borsa principale: " },
-              { kind: "metric", key: "Venue", value: tickerData.exchange, tone: "neutral", label: "Venue" },
-              { kind: "text", text: ". " },
-              { kind: "text", text: "Settore: " },
-              { kind: "metric", key: "Sector", value: tickerData.sector || "Tecnologia", tone: "neutral", label: "Sector" },
-              { kind: "text", text: "." }
-            ]
-          },
-          {
-            id: "price-line",
-            parts: [
-              { kind: "text", text: "Prezzo al momento dello start: " },
-              { kind: "metric", key: "Price", value: tickerData.price || "—", tone: tickerData.price ? "ok" : "neutral", label: "Price" },
-              { kind: "text", text: ". " },
-              { kind: "text", text: "Cambiamento di prezzo registrato dall'ultima chiusura di mercato: " },
-              { kind: "metric", key: "ChangePct", value: tickerData.changePct ? `${tickerData.changePct > 0 ? '+' : ''}${tickerData.changePct.toFixed(2)}%` : "—%", tone: tickerData.changePct > 0 ? "ok" : (tickerData.changePct < 0 ? "err" : "neutral"), label: "ChangePct" },
-              { kind: "text", text: "." }
-            ]
-          },
-          {
-            id: "quality-line",
-            parts: [
-              { kind: "text", text: "Freshness dei dati: " },
-              { kind: "metric", key: "Freshness", value: "< 24h", tone: "ok", label: "Freshness" },
-              { kind: "text", text: ". " },
-              { kind: "text", text: "Stato del report: " },
-              { kind: "metric", key: "State", value: "ACTIVE", tone: "ok", label: "State" },
-              { kind: "text", text: "." }
-            ]
-          },
-          {
-            id: "window-line",
-            parts: [
-              { kind: "text", text: "Report iniziato il " },
-              { kind: "metric", key: "Start", value: startDate, tone: "neutral", label: "Start" },
-              { kind: "text", text: " e concluso il " },
-              { kind: "metric", key: "End", value: endDate, tone: "neutral", label: "End" },
-              { kind: "text", text: ". " },
-              { kind: "text", text: "Ultimo aggiornamento: " },
-              { kind: "metric", key: "UpdatedAt", value: timestamp, tone: "neutral", label: "UpdatedAt" },
-              { kind: "text", text: ". " },
-              { kind: "text", text: "Versione: " },
-              { kind: "metric", key: "Version", value: version, tone: "neutral", label: "Version" },
-              { kind: "text", text: "." }
-            ]
-          }
-        ],
-        footer: {
-          links: [
-            {
-              label: "Scopri tutte le metriche",
-              action: "open-metrics-panel"
-            }
-          ]
-        },
-        metricsPanel: [
-          { key: "CompanyName", label: "Nome azienda", value: tickerData.companyName, tone: "neutral" },
-          { key: "Ticker", label: "Ticker", value: tickerData.ticker, tone: "neutral" },
-          { key: "Venue", label: "Borsa principale", value: tickerData.exchange, tone: "neutral" },
-          { key: "Sector", label: "Settore", value: tickerData.sector || "Tecnologia", tone: "neutral" },
-          { key: "Price", label: "Prezzo allo start", value: tickerData.price || "—", tone: tickerData.price ? "ok" : "neutral" },
-          { key: "ChangePct", label: "Variazione dall'ultima chiusura", value: tickerData.changePct ? `${tickerData.changePct > 0 ? '+' : ''}${tickerData.changePct.toFixed(2)}%` : "—%", tone: tickerData.changePct > 0 ? "ok" : (tickerData.changePct < 0 ? "err" : "neutral") },
-          { key: "Freshness", label: "Freshness dei dati", value: "< 24h", tone: "ok" },
-          { key: "State", label: "Stato del report", value: "ACTIVE", tone: "ok" },
-          { key: "Start", label: "Inizio report", value: startDate, tone: "neutral" },
-          { key: "End", label: "Fine report", value: endDate, tone: "neutral" },
-          { key: "UpdatedAt", label: "Ultimo aggiornamento", value: timestamp, tone: "neutral" },
-          { key: "Version", label: "Versione del report", value: version, tone: "neutral" }
-        ]
+      button:hover {
+        background: #0052cc;
+      }
+      pre {
+        background: #1a1a1a;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+      .status {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 6px;
+      }
+      .success {
+        background: #0a5;
+      }
+      .error {
+        background: #a00;
+      }
+      .info {
+        background: #0066ff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🚀 Fetch Real Data - AAPL</h1>
+    <p>Questo script fetcha dati REALI da Yahoo Finance API e genera il report.</p>
+
+    <button onclick="fetchAAPL()">Fetch Dati Real-time AAPL</button>
+    <button onclick="generateReport()">Genera Report Completo</button>
+
+    <div id="status"></div>
+    <pre id="output"></pre>
+
+    <script type="module">
+      let tickerData = null;
+
+      window.fetchAAPL = async function () {
+        const status = document.getElementById('status');
+        const output = document.getElementById('output');
+
+        status.innerHTML = '<div class="status info">🔄 Fetching dati da Yahoo Finance...</div>';
+
+        try {
+          const ticker = 'AAPL';
+          const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1d`;
+
+          const response = await fetch(url);
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+          const data = await response.json();
+          const result = data.chart.result[0];
+          const meta = result.meta;
+
+          const currentPrice = meta.regularMarketPrice || meta.previousClose;
+          const previousClose = meta.previousClose;
+          const changePct = previousClose
+            ? ((currentPrice - previousClose) / previousClose) * 100
+            : null;
+
+          tickerData = {
+            ticker: ticker,
+            companyName: meta.longName || meta.shortName || ticker,
+            price: currentPrice,
+            changePct: changePct,
+            currency: meta.currency || 'USD',
+            exchange: meta.exchangeName || meta.fullExchangeName || 'NASDAQ',
+            sector: meta.sector || 'Technology',
+            industry: meta.industry || null,
+            timestamp: new Date().toISOString(),
+          };
+
+          status.innerHTML = '<div class="status success">✅ Dati fetchati con successo!</div>';
+          output.textContent = JSON.stringify(tickerData, null, 2);
+        } catch (error) {
+          status.innerHTML = `<div class="status error">❌ Errore: ${error.message}</div>`;
+          output.textContent = error.stack;
+        }
       };
-      
-      // Download header.json
-      const headerBlob = new Blob([JSON.stringify(header, null, 2)], { type: 'application/json' });
-      const headerUrl = URL.createObjectURL(headerBlob);
-      const headerLink = document.createElement('a');
-      headerLink.href = headerUrl;
-      headerLink.download = `header-${reportID}.json`;
-      headerLink.click();
-      URL.revokeObjectURL(headerUrl);
-      
-      status.innerHTML = '<div class="status success">✅ Header generato e scaricato! Controlla i download.</div>';
-      output.textContent = 'Header JSON:\n' + JSON.stringify(header, null, 2);
-      
-      // TODO: Aggiungere generazione F1B e altri moduli
-    };
-  </script>
-</body>
-</html>
 
+      window.generateReport = async function () {
+        if (!tickerData) {
+          alert('Prima fetcha i dati!');
+          return;
+        }
+
+        const status = document.getElementById('status');
+        status.innerHTML = '<div class="status info">🔄 Generando report...</div>';
+
+        // Genera header.json
+        const timestamp = new Date().toISOString();
+        const reportID =
+          new Date().toISOString().replace(/[-:]/g, '').split('T')[0] +
+          '-' +
+          new Date()
+            .toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })
+            .replace(':', '');
+        const startDate = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split('T')[0];
+        const endDate = new Date().toISOString().split('T')[0];
+        const version = `v${endDate.replace(/-/g, '.')}-rc1`;
+
+        const header = {
+          meta: {
+            module: 'HEADER',
+            version: version,
+            auditPathId: `RPT-${endDate.replace(/-/g, '-')}-${tickerData.ticker}-HEAD`,
+            state: 'ACTIVE',
+            generatedAt: timestamp,
+            reportID: reportID,
+            changes: [
+              {
+                timestamp: timestamp,
+                version: version,
+                changes: ['Header generato automaticamente con dati reali'],
+              },
+            ],
+            moduleVersions: {
+              header: '1.0.0',
+              f1b: 'v19-Dynamic',
+            },
+          },
+          rows: [
+            {
+              id: 'company-line',
+              parts: [
+                {
+                  kind: 'text',
+                  text: 'Deck di ricerca Tradelia SRD v5.0 — Swing Research Deck su ',
+                },
+                {
+                  kind: 'metric',
+                  key: 'CompanyName',
+                  value: tickerData.companyName,
+                  tone: 'neutral',
+                  label: 'CompanyName',
+                },
+                { kind: 'text', text: '. ' },
+                { kind: 'text', text: 'Ticker: ' },
+                {
+                  kind: 'metric',
+                  key: 'Ticker',
+                  value: tickerData.ticker,
+                  tone: 'neutral',
+                  label: 'Ticker',
+                },
+                { kind: 'text', text: '. ' },
+                { kind: 'text', text: 'Borsa principale: ' },
+                {
+                  kind: 'metric',
+                  key: 'Venue',
+                  value: tickerData.exchange,
+                  tone: 'neutral',
+                  label: 'Venue',
+                },
+                { kind: 'text', text: '. ' },
+                { kind: 'text', text: 'Settore: ' },
+                {
+                  kind: 'metric',
+                  key: 'Sector',
+                  value: tickerData.sector || 'Tecnologia',
+                  tone: 'neutral',
+                  label: 'Sector',
+                },
+                { kind: 'text', text: '.' },
+              ],
+            },
+            {
+              id: 'price-line',
+              parts: [
+                { kind: 'text', text: 'Prezzo al momento dello start: ' },
+                {
+                  kind: 'metric',
+                  key: 'Price',
+                  value: tickerData.price || '—',
+                  tone: tickerData.price ? 'ok' : 'neutral',
+                  label: 'Price',
+                },
+                { kind: 'text', text: '. ' },
+                {
+                  kind: 'text',
+                  text: "Cambiamento di prezzo registrato dall'ultima chiusura di mercato: ",
+                },
+                {
+                  kind: 'metric',
+                  key: 'ChangePct',
+                  value: tickerData.changePct
+                    ? `${tickerData.changePct > 0 ? '+' : ''}${tickerData.changePct.toFixed(2)}%`
+                    : '—%',
+                  tone:
+                    tickerData.changePct > 0 ? 'ok' : tickerData.changePct < 0 ? 'err' : 'neutral',
+                  label: 'ChangePct',
+                },
+                { kind: 'text', text: '.' },
+              ],
+            },
+            {
+              id: 'quality-line',
+              parts: [
+                { kind: 'text', text: 'Freshness dei dati: ' },
+                {
+                  kind: 'metric',
+                  key: 'Freshness',
+                  value: '< 24h',
+                  tone: 'ok',
+                  label: 'Freshness',
+                },
+                { kind: 'text', text: '. ' },
+                { kind: 'text', text: 'Stato del report: ' },
+                { kind: 'metric', key: 'State', value: 'ACTIVE', tone: 'ok', label: 'State' },
+                { kind: 'text', text: '.' },
+              ],
+            },
+            {
+              id: 'window-line',
+              parts: [
+                { kind: 'text', text: 'Report iniziato il ' },
+                { kind: 'metric', key: 'Start', value: startDate, tone: 'neutral', label: 'Start' },
+                { kind: 'text', text: ' e concluso il ' },
+                { kind: 'metric', key: 'End', value: endDate, tone: 'neutral', label: 'End' },
+                { kind: 'text', text: '. ' },
+                { kind: 'text', text: 'Ultimo aggiornamento: ' },
+                {
+                  kind: 'metric',
+                  key: 'UpdatedAt',
+                  value: timestamp,
+                  tone: 'neutral',
+                  label: 'UpdatedAt',
+                },
+                { kind: 'text', text: '. ' },
+                { kind: 'text', text: 'Versione: ' },
+                {
+                  kind: 'metric',
+                  key: 'Version',
+                  value: version,
+                  tone: 'neutral',
+                  label: 'Version',
+                },
+                { kind: 'text', text: '.' },
+              ],
+            },
+          ],
+          footer: {
+            links: [
+              {
+                label: 'Scopri tutte le metriche',
+                action: 'open-metrics-panel',
+              },
+            ],
+          },
+          metricsPanel: [
+            {
+              key: 'CompanyName',
+              label: 'Nome azienda',
+              value: tickerData.companyName,
+              tone: 'neutral',
+            },
+            { key: 'Ticker', label: 'Ticker', value: tickerData.ticker, tone: 'neutral' },
+            {
+              key: 'Venue',
+              label: 'Borsa principale',
+              value: tickerData.exchange,
+              tone: 'neutral',
+            },
+            {
+              key: 'Sector',
+              label: 'Settore',
+              value: tickerData.sector || 'Tecnologia',
+              tone: 'neutral',
+            },
+            {
+              key: 'Price',
+              label: 'Prezzo allo start',
+              value: tickerData.price || '—',
+              tone: tickerData.price ? 'ok' : 'neutral',
+            },
+            {
+              key: 'ChangePct',
+              label: "Variazione dall'ultima chiusura",
+              value: tickerData.changePct
+                ? `${tickerData.changePct > 0 ? '+' : ''}${tickerData.changePct.toFixed(2)}%`
+                : '—%',
+              tone: tickerData.changePct > 0 ? 'ok' : tickerData.changePct < 0 ? 'err' : 'neutral',
+            },
+            { key: 'Freshness', label: 'Freshness dei dati', value: '< 24h', tone: 'ok' },
+            { key: 'State', label: 'Stato del report', value: 'ACTIVE', tone: 'ok' },
+            { key: 'Start', label: 'Inizio report', value: startDate, tone: 'neutral' },
+            { key: 'End', label: 'Fine report', value: endDate, tone: 'neutral' },
+            { key: 'UpdatedAt', label: 'Ultimo aggiornamento', value: timestamp, tone: 'neutral' },
+            { key: 'Version', label: 'Versione del report', value: version, tone: 'neutral' },
+          ],
+        };
+
+        // Download header.json
+        const headerBlob = new Blob([JSON.stringify(header, null, 2)], {
+          type: 'application/json',
+        });
+        const headerUrl = URL.createObjectURL(headerBlob);
+        const headerLink = document.createElement('a');
+        headerLink.href = headerUrl;
+        headerLink.download = `header-${reportID}.json`;
+        headerLink.click();
+        URL.revokeObjectURL(headerUrl);
+
+        status.innerHTML =
+          '<div class="status success">✅ Header generato e scaricato! Controlla i download.</div>';
+        output.textContent = 'Header JSON:\n' + JSON.stringify(header, null, 2);
+
+        // TODO: Aggiungere generazione F1B e altri moduli
+      };
+    </script>
+  </body>
+</html>

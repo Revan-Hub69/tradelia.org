@@ -6,14 +6,14 @@
 async function initGlobalHeader() {
   try {
     // Sistema traduzione disabilitato - sempre italiano
-    
+
     // Trova header slot
     const headerSlot = document.getElementById('site-header-slot');
     if (!headerSlot) {
       console.warn('GlobalHeader: Header slot non trovato');
       return;
     }
-    
+
     // Carica site-header component
     const { siteHeader } = await import('/report/assets/js/components/site-header.js');
     if (siteHeader && typeof siteHeader.mount === 'function') {
@@ -32,4 +32,3 @@ if (document.readyState === 'loading') {
 } else {
   initGlobalHeader();
 }
-

@@ -6,10 +6,10 @@
 export async function loadRequestsHistory() {
   const requestsList = document.getElementById('requests-list');
   if (!requestsList) return;
-  
+
   // Setup filtri
   setupFilters();
-  
+
   // TODO: Caricare richieste da API/Supabase
   // Per ora mostra empty state
   loadRequests();
@@ -17,12 +17,12 @@ export async function loadRequestsHistory() {
 
 function setupFilters() {
   const filterBtns = document.querySelectorAll('.filter-btn');
-  filterBtns.forEach(btn => {
+  filterBtns.forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      filterBtns.forEach(b => b.classList.remove('active'));
+      filterBtns.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
-      
+
       const filter = btn.getAttribute('data-filter');
       filterRequests(filter);
     });
@@ -44,12 +44,11 @@ function filterRequests(filter) {
 function renderRequests(requests) {
   const requestsList = document.getElementById('requests-list');
   if (!requestsList) return;
-  
+
   if (requests.length === 0) {
     // Mostra empty state (già presente in HTML)
     return;
   }
-  
+
   // TODO: Render lista richieste
 }
-

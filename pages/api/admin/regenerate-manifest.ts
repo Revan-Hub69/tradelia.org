@@ -12,9 +12,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const result = await generateReportsManifest();
   if (result.success) {
-    res.status(200).json({ success: true, manifest: result.manifest, timestamp: new Date().toISOString() });
+    res
+      .status(200)
+      .json({ success: true, manifest: result.manifest, timestamp: new Date().toISOString() });
   } else {
     res.status(500).json({ success: false, error: result.error });
   }
 }
-

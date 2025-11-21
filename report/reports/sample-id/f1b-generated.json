@@ -16,7 +16,7 @@
     ],
     "integrity": {
       "confidenceFinal": 0.85,
-      "dataIntegrity": 0.90,
+      "dataIntegrity": 0.9,
       "feedSyncScore": 0.88
     }
   },
@@ -39,10 +39,7 @@
         "Healthcare"
       ],
       "Leaders_definition": "Settori con forza/inflow coerente multi-timeframe.",
-      "LaggingSectors": [
-        "Energy",
-        "Real Estate"
-      ],
+      "LaggingSectors": ["Energy", "Real Estate"],
       "Lagging_definition": "Settori venduti o usati come hedge e non in leadership."
     },
     "market_microstructure": {
@@ -82,10 +79,7 @@
     "QueryString": "sector:(Technology OR CommunicationServices OR ConsumerDiscretionary) AND marketcap:(Mid OR Large) AND performance:MonthUp AND RSI(14)<65 AND avgvolume>800000 AND price>10 AND country:USA",
     "FilterType": "Momentum-light",
     "GeneratedFrom": "StrategyMode_macro=Momentum-light, LeadersMultiTF=[Technology, Communication Services, Consumer Discretionary], SizeBias=Mixed",
-    "AuditSrc": [
-      "Finviz Premium <2025-11-07T16:00:00Z>",
-      "ETFdb <2025-11-07T16:00:00Z>"
-    ]
+    "AuditSrc": ["Finviz Premium <2025-11-07T16:00:00Z>", "ETFdb <2025-11-07T16:00:00Z>"]
   },
   "bridgeF2": {
     "universe_for_F2": {
@@ -96,11 +90,7 @@
         "Healthcare"
       ],
       "FocusSectors_comment": "Settori con leadership multi-timeframe o domanda di qualità.",
-      "IncludeMarketCap": [
-        "Mid",
-        "Large",
-        "Mega"
-      ],
+      "IncludeMarketCap": ["Mid", "Large", "Mega"],
       "IncludeMarketCap_comment": "Solo bucket liquidi; Small/Micro esclusi se StressMicroCap=true.",
       "LiquidityFilters": {
         "minAvgVolume": 800000,
@@ -190,28 +180,17 @@
     "Leadership": {
       "LeadersMultiTF": {
         "tone": "green",
-        "items": [
-          "Technology",
-          "Communication Services",
-          "Consumer Discretionary",
-          "Healthcare"
-        ],
+        "items": ["Technology", "Communication Services", "Consumer Discretionary", "Healthcare"],
         "ai_note": "Leadership coerente multi-timeframe a favore dei temi growth/innovazione."
       },
       "DefensiveLeadership": {
         "tone": "neutral",
-        "items": [
-          "Utilities",
-          "Consumer Staples"
-        ],
+        "items": ["Utilities", "Consumer Staples"],
         "ai_note": "Difensivi in secondo piano; reattivi solo a shock macro."
       },
       "Lagging": {
         "tone": "yellow",
-        "items": [
-          "Energy",
-          "Real Estate"
-        ],
+        "items": ["Energy", "Real Estate"],
         "ai_note": "Sotto-performance relativa coerente con sensibilità a tassi e credito."
       },
       "ai_note": "Rotazione pro-growth con concentrazione su MegaCap; lag di settori sensibili ai tassi."
@@ -220,36 +199,22 @@
   "internals_raw": {
     "Indices_1W": {
       "tone": "green",
-      "items": [
-        "NDX: momentum positivo",
-        "SPX: positivo",
-        "RUT: positivo ma lag"
-      ],
+      "items": ["NDX: momentum positivo", "SPX: positivo", "RUT: positivo ma lag"],
       "ai_note": "Forza trainata dai grandi nomi tech; breadth migliora ma resta concentrata."
     },
     "Futures_Move_1W": {
       "tone": "neutral",
-      "items": [
-        "WTI Crude Oil +8.0%",
-        "Gold +1.0%",
-        "Natural Gas -2.5%",
-        "VIX -2.1%"
-      ],
+      "items": ["WTI Crude Oil +8.0%", "Gold +1.0%", "Natural Gas -2.5%", "VIX -2.1%"],
       "ai_note": "Energia mista; softs/agri in rialzo selettivo; vol implicita in calo su base settimanale."
     },
     "Curve_UST": {
       "tone": "neutral",
-      "items": [
-        "2s10s ≈ +0.50% (T-1)"
-      ],
+      "items": ["2s10s ≈ +0.50% (T-1)"],
       "ai_note": "Curva non invertita sul dato più recente; segnale neutro-moderatamente favorevole."
     },
     "Vol_USD": {
       "tone": "green",
-      "items": [
-        "VIX ~18.5",
-        "USD moderatamente forte (+0.3% W/W)"
-      ],
+      "items": ["VIX ~18.5", "USD moderatamente forte (+0.3% W/W)"],
       "ai_note": "Combinazione che non ostacola il rischio su equity."
     },
     "ai_note": "Internals coerenti con regime risk-on; principali rischi da sorprese macro (Jobs Report) e volatilità episodica."
@@ -330,4 +295,3 @@
     "disclaimer": "Questo contenuto ha finalità esclusivamente educativa e informativa e non costituisce in alcun modo raccomandazione d'investimento o consulenza personalizzata ai sensi della normativa MiFID II."
   }
 }
-

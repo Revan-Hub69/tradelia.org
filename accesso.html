@@ -1,762 +1,881 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it" data-theme="dark">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Accesso Dashboard · Tradelia</title>
-  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
-  <link rel="stylesheet" href="/assets/css/site-coherence-2025.css" />
-  <link rel="stylesheet" href="/assets/css/global-header.css" />
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      background: var(--surface-page, #020617);
-      color: var(--ink, #e5e7eb);
-      font-family: var(--ff-sans, system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif);
-    }
-    #site-header-slot {
-      flex-shrink: 0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-    }
-    main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 6rem 1.5rem 3rem;
-    }
-    .access-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 480px;
-      background: var(--surface-card, #020617);
-      border-radius: var(--radius-xl, 1rem);
-      border: 1px solid rgba(148, 163, 184, 0.32);
-      box-shadow:
-        0 18px 48px rgba(15, 23, 42, 0.7),
-        0 0 0 1px rgba(15, 23, 42, 0.9);
-      padding: 2.4rem 2.1rem 2rem;
-    }
-    .access-title {
-      font-size: 1.4rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin: 0 0 0.5rem;
-    }
-    .access-subtitle {
-      margin: 0 0 1.5rem;
-      font-size: 0.9rem;
-      color: var(--ink-soft, #e5e7eb);
-      line-height: 1.6;
-    }
-    .access-alert {
-      display: none;
-      margin-bottom: 1rem;
-      padding: 0.75rem 0.9rem;
-      border-radius: var(--radius-md, 0.75rem);
-      font-size: 0.8rem;
-      line-height: 1.5;
-      background: rgba(248, 113, 113, 0.08);
-      border: 1px solid rgba(248, 113, 113, 0.35);
-      color: rgb(252, 165, 165);
-    }
-    .access-alert[data-visible="true"] {
-      display: block;
-    }
-    .access-alert[data-type="success"] {
-      background: rgba(34, 197, 94, 0.08);
-      border-color: rgba(34, 197, 94, 0.35);
-      color: rgb(134, 239, 172);
-    }
-    .access-form {
-      display: flex;
-      flex-direction: column;
-      gap: 0.9rem;
-      margin-top: 0.5rem;
-    }
-    .access-label {
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted, #9ca3af);
-      margin-bottom: 0.25rem;
-    }
-    .access-input {
-      width: 100%;
-      padding: 0.75rem 0.9rem;
-      border-radius: 0.55rem;
-      border: 1.5px solid var(--br-card, #1f2937);
-      background: var(--surface-elev, #020617);
-      color: var(--ink, #e5e7eb);
-      font-size: 0.9rem;
-      font-family: inherit;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-    }
-    .access-input::placeholder {
-      color: var(--muted, #9ca3af);
-      opacity: 0.7;
-    }
-    .access-input:focus {
-      border-color: var(--brand-500, #3b82f6);
-      background: var(--surface-card, #020617);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
-    }
-    .access-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 1.25rem;
-      align-items: center;
-    }
-    .access-recovery {
-      margin-top: 1.5rem;
-      padding-top: 1.25rem;
-      border-top: 1px solid rgba(148, 163, 184, 0.25);
-    }
-    .access-recovery-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 0.9rem;
-      align-items: center;
-    }
-    .access-meta-small {
-      margin-top: 0.75rem;
-      font-size: 0.76rem;
-      color: var(--muted, #9ca3af);
-      line-height: 1.4;
-    }
-    .access-meta {
-      margin-top: 1.5rem;
-      font-size: 0.78rem;
-      color: var(--muted, #9ca3af);
-      line-height: 1.5;
-    }
-    .access-close {
-      position: absolute;
-      top: 1.2rem;
-      right: 1.4rem;
-      width: 36px;
-      height: 36px;
-      border-radius: 999px;
-      border: 1px solid var(--br-card, #1f2937);
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--ink-soft, #e5e7eb);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: background 0.18s, color 0.18s, border-color 0.18s, transform 0.08s;
-    }
-    .access-close svg {
-      width: 18px;
-      height: 18px;
-    }
-    .access-close:hover {
-      background: var(--surface-elev, #020617);
-      border-color: var(--brand-500, #3b82f6);
-      color: #ffffff;
-      transform: translateY(-1px);
-    }
-    .access-close:focus-visible {
-      outline: 2px solid var(--brand-500, #3b82f6);
-      outline-offset: 2px;
-    }
-    .access-step2 {
-      display: none;
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid rgba(148, 163, 184, 0.25);
-    }
-    .access-step2[data-visible="true"] {
-      display: block;
-    }
-    .access-info-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.6rem 0;
-      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
-    }
-    .access-info-row:last-child {
-      border-bottom: none;
-    }
-    .access-info-label {
-      font-size: 0.85rem;
-      color: var(--muted, #9ca3af);
-    }
-    .access-info-value {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--ink, #e5e7eb);
-    }
-    .access-info-value[data-role="trial"] {
-      color: #60a5fa;
-    }
-    .access-info-value[data-role="pro"] {
-      color: #34d399;
-    }
-    .access-info-value[data-role="institutional"] {
-      color: #fbbf24;
-    }
-    .access-support {
-      margin-top: 1.5rem;
-      padding-top: 1.25rem;
-      border-top: 1px solid rgba(148, 163, 184, 0.25);
-      text-align: center;
-      font-size: 0.78rem;
-      color: var(--muted, #9ca3af);
-    }
-    .access-support a {
-      color: var(--brand-400, #60a5fa);
-      text-decoration: none;
-    }
-    .access-support a:hover {
-      text-decoration: underline;
-    }
-    .btn-icon {
-      display: inline-flex;
-      width: 1.15rem;
-      height: 1.15rem;
-      align-items: center;
-      justify-content: center;
-    }
-    .btn-icon svg {
-      width: 100%;
-      height: 100%;
-    }
-    .btn-label {
-      display: inline-flex;
-      align-items: center;
-    }
-    @media (max-width: 640px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Accesso Dashboard · Tradelia</title>
+    <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+    <link rel="stylesheet" href="/assets/css/site-coherence-2025.css" />
+    <link rel="stylesheet" href="/assets/css/global-header.css" />
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background: var(--surface-page, #020617);
+        color: var(--ink, #e5e7eb);
+        font-family: var(
+          --ff-sans,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Inter',
+          sans-serif
+        );
+      }
       #site-header-slot {
-        position: static;
+        flex-shrink: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
       }
       main {
-        padding-top: 4.5rem;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6rem 1.5rem 3rem;
       }
       .access-wrapper {
-        padding: 1.9rem 1.5rem 1.6rem;
+        position: relative;
+        width: 100%;
+        max-width: 480px;
+        background: var(--surface-card, #020617);
+        border-radius: var(--radius-xl, 1rem);
+        border: 1px solid rgba(148, 163, 184, 0.32);
+        box-shadow:
+          0 18px 48px rgba(15, 23, 42, 0.7),
+          0 0 0 1px rgba(15, 23, 42, 0.9);
+        padding: 2.4rem 2.1rem 2rem;
       }
-    }
-  </style>
-</head>
-<body>
-  <div id="site-header-slot"></div>
-  <main>
-    <section class="access-wrapper" aria-labelledby="access-title">
-      <button type="button" class="access-close" aria-label="Torna alla homepage">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M18 6L6 18" />
-          <path d="M6 6l12 12" />
-        </svg>
-      </button>
-      <h1 id="access-title" class="access-title">Accesso alla dashboard Tradelia</h1>
-      <p class="access-subtitle">
-        Inserisci il <strong>codice di accesso</strong> ricevuto via email. Puoi richiederlo gratuitamente dal modulo
-        Richiedilo direttamente nella dashboard PWA installabile. Il codice di accesso è gratuito, dura 30 giorni, funziona sulla dashboard PWA e può essere revocato in qualsiasi momento.
-      </p>
-      <div id="access-alert" class="access-alert" role="alert" aria-live="polite"></div>
-      
-      <!-- STEP 1: Inserisci codice -->
-      <form id="access-form" class="access-form" novalidate>
-        <div id="access-step1">
-          <div>
-            <div class="access-label">Codice di accesso</div>
-            <input
-              id="access-token"
-              class="access-input"
-              type="password"
-              name="token"
-              autocomplete="off"
-              inputmode="text"
-              required
-              placeholder="Incolla qui il codice Tradelia"
-              aria-describedby="access-help"
-            />
-            <div id="access-help" class="access-meta">
-              Non hai ancora il codice di accesso? Installa la dashboard PWA e richiedilo direttamente dall'interno.
+      .access-title {
+        font-size: 1.4rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        margin: 0 0 0.5rem;
+      }
+      .access-subtitle {
+        margin: 0 0 1.5rem;
+        font-size: 0.9rem;
+        color: var(--ink-soft, #e5e7eb);
+        line-height: 1.6;
+      }
+      .access-alert {
+        display: none;
+        margin-bottom: 1rem;
+        padding: 0.75rem 0.9rem;
+        border-radius: var(--radius-md, 0.75rem);
+        font-size: 0.8rem;
+        line-height: 1.5;
+        background: rgba(248, 113, 113, 0.08);
+        border: 1px solid rgba(248, 113, 113, 0.35);
+        color: rgb(252, 165, 165);
+      }
+      .access-alert[data-visible='true'] {
+        display: block;
+      }
+      .access-alert[data-type='success'] {
+        background: rgba(34, 197, 94, 0.08);
+        border-color: rgba(34, 197, 94, 0.35);
+        color: rgb(134, 239, 172);
+      }
+      .access-form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+        margin-top: 0.5rem;
+      }
+      .access-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted, #9ca3af);
+        margin-bottom: 0.25rem;
+      }
+      .access-input {
+        width: 100%;
+        padding: 0.75rem 0.9rem;
+        border-radius: 0.55rem;
+        border: 1.5px solid var(--br-card, #1f2937);
+        background: var(--surface-elev, #020617);
+        color: var(--ink, #e5e7eb);
+        font-size: 0.9rem;
+        font-family: inherit;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s,
+          background 0.2s;
+      }
+      .access-input::placeholder {
+        color: var(--muted, #9ca3af);
+        opacity: 0.7;
+      }
+      .access-input:focus {
+        border-color: var(--brand-500, #3b82f6);
+        background: var(--surface-card, #020617);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+      }
+      .access-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+        align-items: center;
+      }
+      .access-recovery {
+        margin-top: 1.5rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba(148, 163, 184, 0.25);
+      }
+      .access-recovery-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 0.9rem;
+        align-items: center;
+      }
+      .access-meta-small {
+        margin-top: 0.75rem;
+        font-size: 0.76rem;
+        color: var(--muted, #9ca3af);
+        line-height: 1.4;
+      }
+      .access-meta {
+        margin-top: 1.5rem;
+        font-size: 0.78rem;
+        color: var(--muted, #9ca3af);
+        line-height: 1.5;
+      }
+      .access-close {
+        position: absolute;
+        top: 1.2rem;
+        right: 1.4rem;
+        width: 36px;
+        height: 36px;
+        border-radius: 999px;
+        border: 1px solid var(--br-card, #1f2937);
+        background: rgba(15, 23, 42, 0.9);
+        color: var(--ink-soft, #e5e7eb);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition:
+          background 0.18s,
+          color 0.18s,
+          border-color 0.18s,
+          transform 0.08s;
+      }
+      .access-close svg {
+        width: 18px;
+        height: 18px;
+      }
+      .access-close:hover {
+        background: var(--surface-elev, #020617);
+        border-color: var(--brand-500, #3b82f6);
+        color: #ffffff;
+        transform: translateY(-1px);
+      }
+      .access-close:focus-visible {
+        outline: 2px solid var(--brand-500, #3b82f6);
+        outline-offset: 2px;
+      }
+      .access-step2 {
+        display: none;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(148, 163, 184, 0.25);
+      }
+      .access-step2[data-visible='true'] {
+        display: block;
+      }
+      .access-info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+      }
+      .access-info-row:last-child {
+        border-bottom: none;
+      }
+      .access-info-label {
+        font-size: 0.85rem;
+        color: var(--muted, #9ca3af);
+      }
+      .access-info-value {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--ink, #e5e7eb);
+      }
+      .access-info-value[data-role='trial'] {
+        color: #60a5fa;
+      }
+      .access-info-value[data-role='pro'] {
+        color: #34d399;
+      }
+      .access-info-value[data-role='institutional'] {
+        color: #fbbf24;
+      }
+      .access-support {
+        margin-top: 1.5rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba(148, 163, 184, 0.25);
+        text-align: center;
+        font-size: 0.78rem;
+        color: var(--muted, #9ca3af);
+      }
+      .access-support a {
+        color: var(--brand-400, #60a5fa);
+        text-decoration: none;
+      }
+      .access-support a:hover {
+        text-decoration: underline;
+      }
+      .btn-icon {
+        display: inline-flex;
+        width: 1.15rem;
+        height: 1.15rem;
+        align-items: center;
+        justify-content: center;
+      }
+      .btn-icon svg {
+        width: 100%;
+        height: 100%;
+      }
+      .btn-label {
+        display: inline-flex;
+        align-items: center;
+      }
+      @media (max-width: 640px) {
+        #site-header-slot {
+          position: static;
+        }
+        main {
+          padding-top: 4.5rem;
+        }
+        .access-wrapper {
+          padding: 1.9rem 1.5rem 1.6rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="site-header-slot"></div>
+    <main>
+      <section class="access-wrapper" aria-labelledby="access-title">
+        <button type="button" class="access-close" aria-label="Torna alla homepage">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M18 6L6 18" />
+            <path d="M6 6l12 12" />
+          </svg>
+        </button>
+        <h1 id="access-title" class="access-title">Accesso alla dashboard Tradelia</h1>
+        <p class="access-subtitle">
+          Inserisci il <strong>codice di accesso</strong> ricevuto via email. Puoi richiederlo
+          gratuitamente dal modulo Richiedilo direttamente nella dashboard PWA installabile. Il
+          codice di accesso è gratuito, dura 30 giorni, funziona sulla dashboard PWA e può essere
+          revocato in qualsiasi momento.
+        </p>
+        <div id="access-alert" class="access-alert" role="alert" aria-live="polite"></div>
+
+        <!-- STEP 1: Inserisci codice -->
+        <form id="access-form" class="access-form" novalidate>
+          <div id="access-step1">
+            <div>
+              <div class="access-label">Codice di accesso</div>
+              <input
+                id="access-token"
+                class="access-input"
+                type="password"
+                name="token"
+                autocomplete="off"
+                inputmode="text"
+                required
+                placeholder="Incolla qui il codice Tradelia"
+                aria-describedby="access-help"
+              />
+              <div id="access-help" class="access-meta">
+                Non hai ancora il codice di accesso? Installa la dashboard PWA e richiedilo
+                direttamente dall'interno.
+              </div>
+            </div>
+            <div class="access-actions access-cta">
+              <button type="submit" class="btn btn-sm">Installa la dashboard</button>
+              <button type="button" class="btn btn-sm" id="access-pricing">
+                Richiedi codice di accesso
+              </button>
+              <button type="button" class="btn btn-sm" id="access-recovery-open">
+                Ho perso il codice
+              </button>
             </div>
           </div>
-          <div class="access-actions access-cta">
-            <button type="submit" class="btn btn-sm">Installa la dashboard</button>
-            <button type="button" class="btn btn-sm" id="access-pricing">Richiedi codice di accesso</button>
-            <button type="button" class="btn btn-sm" id="access-recovery-open">Ho perso il codice</button>
+
+          <!-- STEP 2: Dati abbonamento -->
+          <div id="access-step2" class="access-step2">
+            <h2 style="font-size: 1.1rem; font-weight: 700; margin: 0 0 1rem">
+              Riepilogo abbonamento
+            </h2>
+            <div class="access-info-row">
+              <span class="access-info-label">Email</span>
+              <span class="access-info-value" id="step2-email">—</span>
+            </div>
+            <div class="access-info-row">
+              <span class="access-info-label">Piano</span>
+              <span class="access-info-value" id="step2-plan">—</span>
+            </div>
+            <div class="access-info-row">
+              <span class="access-info-label">Scadenza accesso</span>
+              <span class="access-info-value" id="step2-expiry">—</span>
+            </div>
+            <div class="access-info-row">
+              <span class="access-info-label">Giorni rimanenti</span>
+              <span class="access-info-value" id="step2-days">—</span>
+            </div>
+            <div
+              class="access-actions"
+              style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem"
+            >
+              <button type="button" class="btn btn-sm" id="access-go-dashboard">
+                Vai alla dashboard
+              </button>
+              <button
+                type="button"
+                class="btn btn-sm"
+                id="access-cancel-subscription"
+                style="display: none"
+              >
+                Disdici abbonamento
+              </button>
+              <a
+                href="/admin/index.html"
+                id="access-admin-link"
+                class="btn btn-primary btn-sm"
+                style="
+                  display: none;
+                  text-align: center;
+                  text-decoration: none;
+                  gap: 0.35rem;
+                  align-items: center;
+                "
+              >
+                <span class="btn-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                      d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c0 .69.4 1.31 1.03 1.58.21.09.45.14.69.14H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                    />
+                  </svg>
+                </span>
+                <span class="btn-label">Portale Admin</span>
+              </a>
+              <a
+                href="/report/admin/dashboard.html"
+                target="_blank"
+                id="access-report-link"
+                class="btn btn-outline btn-sm"
+                style="
+                  display: none;
+                  text-align: center;
+                  text-decoration: none;
+                  gap: 0.35rem;
+                  align-items: center;
+                "
+              >
+                <span class="btn-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M4 19h16" />
+                    <path d="M4 5h16" />
+                    <path d="M8 5v14" />
+                    <path d="M12 9v10" />
+                    <path d="M16 13v6" />
+                  </svg>
+                </span>
+                <span class="btn-label">Crea report</span>
+              </a>
+            </div>
           </div>
+
+          <!-- Recovery form -->
+          <div id="access-recovery" class="access-recovery" hidden>
+            <div class="access-label">Email</div>
+            <input
+              id="access-recovery-email"
+              class="access-input"
+              type="email"
+              name="recoveryEmail"
+              autocomplete="email"
+              required
+              placeholder="Inserisci la tua email"
+            />
+            <div class="access-recovery-actions">
+              <button type="button" class="btn btn-sm" id="access-recovery-cancel">Annulla</button>
+              <button type="button" class="btn btn-sm" id="access-recovery-submit">
+                Invia richiesta
+              </button>
+            </div>
+            <p class="access-meta-small">
+              Se esiste un piano attivo su questa email, ti invieremo un nuovo codice
+              automaticamente.
+            </p>
+          </div>
+        </form>
+
+        <p class="access-meta">
+          Per motivi di sicurezza non memorizziamo credenziali personali: il codice di accesso
+          identifica solo il tuo profilo d'accesso, lega il dispositivo alle notifiche push e
+          certifica la provenienza dei download Desk, nel rispetto delle policy MiFID-safe di
+          Tradelia.
+        </p>
+
+        <div class="access-support">
+          Serve aiuto? <a href="mailto:support@tradelia.org">support@tradelia.org</a>
         </div>
-        
-        <!-- STEP 2: Dati abbonamento -->
-        <div id="access-step2" class="access-step2">
-          <h2 style="font-size: 1.1rem; font-weight: 700; margin: 0 0 1rem;">Riepilogo abbonamento</h2>
-          <div class="access-info-row">
-            <span class="access-info-label">Email</span>
-            <span class="access-info-value" id="step2-email">—</span>
-          </div>
-          <div class="access-info-row">
-            <span class="access-info-label">Piano</span>
-            <span class="access-info-value" id="step2-plan">—</span>
-          </div>
-          <div class="access-info-row">
-            <span class="access-info-label">Scadenza accesso</span>
-            <span class="access-info-value" id="step2-expiry">—</span>
-          </div>
-          <div class="access-info-row">
-            <span class="access-info-label">Giorni rimanenti</span>
-            <span class="access-info-value" id="step2-days">—</span>
-          </div>
-          <div class="access-actions" style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
-            <button type="button" class="btn btn-sm" id="access-go-dashboard">Vai alla dashboard</button>
-            <button type="button" class="btn btn-sm" id="access-cancel-subscription" style="display: none;">Disdici abbonamento</button>
-            <a href="/admin/index.html" id="access-admin-link" class="btn btn-primary btn-sm" style="display: none; text-align: center; text-decoration: none; gap: 0.35rem; align-items: center;">
-              <span class="btn-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="3" />
-                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c0 .69.4 1.31 1.03 1.58.21.09.45.14.69.14H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-                </svg>
-              </span>
-              <span class="btn-label">Portale Admin</span>
-            </a>
-            <a href="/report/admin/dashboard.html" target="_blank" id="access-report-link" class="btn btn-outline btn-sm" style="display: none; text-align: center; text-decoration: none; gap: 0.35rem; align-items: center;">
-              <span class="btn-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 19h16" />
-                  <path d="M4 5h16" />
-                  <path d="M8 5v14" />
-                  <path d="M12 9v10" />
-                  <path d="M16 13v6" />
-                </svg>
-              </span>
-              <span class="btn-label">Crea report</span>
-            </a>
-          </div>
-        </div>
-        
-        <!-- Recovery form -->
-        <div id="access-recovery" class="access-recovery" hidden>
-          <div class="access-label">Email</div>
-          <input
-            id="access-recovery-email"
-            class="access-input"
-            type="email"
-            name="recoveryEmail"
-            autocomplete="email"
-            required
-            placeholder="Inserisci la tua email"
-          />
-          <div class="access-recovery-actions">
-            <button type="button" class="btn btn-sm" id="access-recovery-cancel">Annulla</button>
-            <button type="button" class="btn btn-sm" id="access-recovery-submit">Invia richiesta</button>
-          </div>
-          <p class="access-meta-small">
-            Se esiste un piano attivo su questa email, ti invieremo un nuovo codice automaticamente.
-          </p>
-        </div>
-      </form>
-      
-      <p class="access-meta">
-        Per motivi di sicurezza non memorizziamo credenziali personali: il codice di accesso identifica solo il tuo profilo d'accesso,
-        lega il dispositivo alle notifiche push e certifica la provenienza dei download Desk, nel rispetto delle policy MiFID-safe di Tradelia.
-      </p>
-      
-      <div class="access-support">
-        Serve aiuto? <a href="mailto:support@tradelia.org">support@tradelia.org</a>
-      </div>
-    </section>
-  </main>
-  <script type="module" src="/assets/js/global-header.js"></script>
-  <script>
-    (function() {
-      const KEY = 'tradelia-access-token-v1';
-      const form = document.getElementById('access-form');
-      const input = document.getElementById('access-token');
-      const alertBox = document.getElementById('access-alert');
-      const closeBtn = document.querySelector('.access-close');
-      const step1 = document.getElementById('access-step1');
-      const step2 = document.getElementById('access-step2');
-      const recoverySection = document.getElementById('access-recovery');
-      const pricingBtn = document.getElementById('access-pricing');
-      const recoveryOpen = document.getElementById('access-recovery-open');
-      const recoveryCancel = document.getElementById('access-recovery-cancel');
-      const recoverySubmit = document.getElementById('access-recovery-submit');
-      const recoveryEmail = document.getElementById('access-recovery-email');
-      const goDashboardBtn = document.getElementById('access-go-dashboard');
-      const cancelSubBtn = document.getElementById('access-cancel-subscription');
-      
-      let currentToken = null;
-      let subscriptionData = null;
+      </section>
+    </main>
+    <script type="module" src="/assets/js/global-header.js"></script>
+    <script>
+      (function () {
+        const KEY = 'tradelia-access-token-v1';
+        const form = document.getElementById('access-form');
+        const input = document.getElementById('access-token');
+        const alertBox = document.getElementById('access-alert');
+        const closeBtn = document.querySelector('.access-close');
+        const step1 = document.getElementById('access-step1');
+        const step2 = document.getElementById('access-step2');
+        const recoverySection = document.getElementById('access-recovery');
+        const pricingBtn = document.getElementById('access-pricing');
+        const recoveryOpen = document.getElementById('access-recovery-open');
+        const recoveryCancel = document.getElementById('access-recovery-cancel');
+        const recoverySubmit = document.getElementById('access-recovery-submit');
+        const recoveryEmail = document.getElementById('access-recovery-email');
+        const goDashboardBtn = document.getElementById('access-go-dashboard');
+        const cancelSubBtn = document.getElementById('access-cancel-subscription');
 
-      function showAlert(message, type = 'error') {
-        if (!alertBox) return;
-        alertBox.textContent = message;
-        alertBox.setAttribute('data-visible', 'true');
-        alertBox.setAttribute('data-type', type);
-      }
+        let currentToken = null;
+        let subscriptionData = null;
 
-      function hideAlert() {
-        if (!alertBox) return;
-        alertBox.removeAttribute('data-visible');
-        alertBox.removeAttribute('data-type');
-        alertBox.textContent = '';
-      }
-
-      // Messaggio se arriviamo da redirect senza token
-      try {
-        const params = new URLSearchParams(window.location.search);
-        const reason = params.get('reason');
-        if (reason === 'missing_token' || reason === 'invalid_token') {
-          showAlert('Per accedere alla dashboard è necessario un codice valido. Inseriscilo qui sotto.');
-        } else if (reason === 'logout') {
-          showAlert('Sei uscito dalla dashboard. Inserisci un nuovo codice di accesso o richiedine uno gratuito.', 'success');
+        function showAlert(message, type = 'error') {
+          if (!alertBox) return;
+          alertBox.textContent = message;
+          alertBox.setAttribute('data-visible', 'true');
+          alertBox.setAttribute('data-type', type);
         }
-        if (reason) {
-          params.delete('reason');
-          const url = new URL(window.location.href);
-          url.search = params.toString();
-          window.history.replaceState({}, '', url.toString());
+
+        function hideAlert() {
+          if (!alertBox) return;
+          alertBox.removeAttribute('data-visible');
+          alertBox.removeAttribute('data-type');
+          alertBox.textContent = '';
         }
-      } catch (e) {
-        // ignore
-      }
 
-      if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
-          window.location.href = '/index.html';
-        });
-      }
-
-      // Pricing button - apre dashboard PWA
-      if (pricingBtn) {
-        pricingBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          if (window.openDashboardPWA) {
-            window.openDashboardPWA();
-          } else {
-            // Fallback se script non caricato
-            alert('Installa la dashboard PWA per accedere alle funzionalità.');
-          }
-        });
-      }
-
-      // Recovery flow
-      if (recoveryOpen && recoverySection && recoveryEmail) {
-        recoveryOpen.addEventListener('click', function() {
-          hideAlert();
-          recoverySection.hidden = false;
-          recoveryEmail.focus();
-        });
-      }
-
-      if (recoveryCancel && recoverySection) {
-        recoveryCancel.addEventListener('click', function() {
-          recoverySection.hidden = true;
-          recoveryEmail.value = '';
-        });
-      }
-
-      if (recoverySubmit && recoveryEmail) {
-        recoverySubmit.addEventListener('click', async function() {
-          hideAlert();
-          const email = (recoveryEmail.value || '').trim();
-          if (!email) {
-            showAlert('Inserisci la tua email per richiedere un nuovo codice.');
-            recoveryEmail.focus();
-            return;
-          }
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(email)) {
-            showAlert('Inserisci un indirizzo email valido.');
-            recoveryEmail.focus();
-            return;
-          }
-          
-          recoverySubmit.disabled = true;
-          recoverySubmit.textContent = 'Invio in corso...';
-          
-          try {
-            const res = await fetch('/api/request-dashboard-token', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email })
-            });
-            const data = await res.json();
-            
-            if (data.ok) {
-              showAlert(data.message || 'Se esiste un piano attivo su questa email, ti abbiamo inviato un nuovo codice. Controlla la tua casella email.', 'success');
-              recoverySection.hidden = true;
-              recoveryEmail.value = '';
-            } else {
-              showAlert(data.error || 'Errore nella richiesta. Riprova più tardi.');
-            }
-          } catch (err) {
-            showAlert('Errore di connessione. Riprova più tardi.');
-          } finally {
-            recoverySubmit.disabled = false;
-            recoverySubmit.textContent = 'Invia richiesta';
-          }
-        });
-      }
-
-      // Main form submit: valida token
-      form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        hideAlert();
-        const token = (input.value || '').trim();
-        if (!token) {
-          showAlert('Inserisci il codice di accesso ricevuto via email.');
-          input.focus();
-          return;
-        }
-        
-        const submitBtn = form.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Verifica in corso...';
-        
+        // Messaggio se arriviamo da redirect senza token
         try {
-          const res = await fetch('/api/validate-dashboard-token', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token })
-          });
-          
-          // Verifica content-type prima di parsare JSON
-          const contentType = res.headers.get('content-type');
-          if (!contentType || !contentType.includes('application/json')) {
-            // Prova a leggere come testo per vedere cosa c'è
-            const text = await res.text();
-            console.error('[Accesso] Risposta non JSON:', text.substring(0, 200));
-            throw new Error('Il server ha restituito una risposta non valida. Verifica le variabili ambiente in Vercel.');
+          const params = new URLSearchParams(window.location.search);
+          const reason = params.get('reason');
+          if (reason === 'missing_token' || reason === 'invalid_token') {
+            showAlert(
+              'Per accedere alla dashboard è necessario un codice valido. Inseriscilo qui sotto.'
+            );
+          } else if (reason === 'logout') {
+            showAlert(
+              'Sei uscito dalla dashboard. Inserisci un nuovo codice di accesso o richiedine uno gratuito.',
+              'success'
+            );
           }
-          
-          let data;
-          try {
-            data = JSON.parse(await res.text());
-          } catch (parseError) {
-            console.error('[Accesso] Errore parsing JSON:', parseError);
-            throw new Error('Errore nella risposta del server. Controlla i log di Vercel.');
+          if (reason) {
+            params.delete('reason');
+            const url = new URL(window.location.href);
+            url.search = params.toString();
+            window.history.replaceState({}, '', url.toString());
           }
-          
-          if (data.ok) {
-            currentToken = token;
-            subscriptionData = data;
-            
-            // Salva token in localStorage
-            try {
-              localStorage.setItem(KEY, token);
-            } catch (err) {
-              // ignore
-            }
-            
-            // Mostra step 2
-            step1.style.display = 'none';
-            step2.setAttribute('data-visible', 'true');
-            
-            // Popola dati step 2
-            document.getElementById('step2-email').textContent = data.email || '—';
-            
-            const planNames = {
-              'trial': 'Trial',
-              'pro': 'Pro',
-              'institutional': 'Desk'
-            };
-            const planEl = document.getElementById('step2-plan');
-            planEl.textContent = planNames[data.planRole] || data.planRole || '—';
-            planEl.setAttribute('data-role', data.planRole || '');
-            
-            if (data.validUntil) {
-              const expiryDate = new Date(data.validUntil);
-              document.getElementById('step2-expiry').textContent = expiryDate.toLocaleDateString('it-IT');
-            } else {
-              document.getElementById('step2-expiry').textContent = '—';
-            }
-            
-            document.getElementById('step2-days').textContent = data.daysLeft !== undefined ? `${data.daysLeft} giorni` : '—';
-            
-            // Mostra/nascondi bottone cancellazione
-            if (data.canCancel) {
-              cancelSubBtn.style.display = 'block';
-            } else {
-              cancelSubBtn.style.display = 'none';
-            }
-            
-            // Verifica se è admin e mostra link dashboard admin
-            checkAndShowAdminLink(data.email);
-            
-            hideAlert();
-          } else {
-            showAlert(data.error || 'Codice non valido o scaduto. Controlla di aver inserito il codice corretto.');
-            input.focus();
-          }
-        } catch (err) {
-          console.error('Errore validazione token:', err);
-          showAlert('Errore di connessione. Riprova più tardi. Se il problema persiste, contatta support@tradelia.org');
-        } finally {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Installa la dashboard';
+        } catch (e) {
+          // ignore
         }
-      });
 
-      // Vai alla dashboard
-      if (goDashboardBtn) {
-        goDashboardBtn.addEventListener('click', function(e) {
-          if (currentToken) {
-            // Usa handler PWA invece di redirect diretto
+        if (closeBtn) {
+          closeBtn.addEventListener('click', function () {
+            window.location.href = '/index.html';
+          });
+        }
+
+        // Pricing button - apre dashboard PWA
+        if (pricingBtn) {
+          pricingBtn.addEventListener('click', function (e) {
+            e.preventDefault();
             if (window.openDashboardPWA) {
-              e.preventDefault();
               window.openDashboardPWA();
             } else {
               // Fallback se script non caricato
-              window.location.href = '/dashboard.html?pwa=1';
-            }
-          }
-        });
-      }
-
-      // Cancella abbonamento
-      if (cancelSubBtn) {
-        cancelSubBtn.addEventListener('click', async function() {
-          if (!currentToken) return;
-          
-          if (!confirm('Sei sicuro di voler disdire il tuo abbonamento? L\'accesso resterà attivo fino alla scadenza del periodo corrente.')) {
-            return;
-          }
-          
-          cancelSubBtn.disabled = true;
-          cancelSubBtn.textContent = 'Elaborazione...';
-          
-          try {
-            const res = await fetch('/api/cancel-subscription', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ token: currentToken })
-            });
-            const data = await res.json();
-            
-            if (data.ok) {
-              showAlert(data.message || 'La tua richiesta di cancellazione è stata registrata.', 'success');
-              cancelSubBtn.style.display = 'none';
-              // Aggiorna giorni rimanenti se disponibile
-              if (data.daysLeft !== undefined) {
-                document.getElementById('step2-days').textContent = `${data.daysLeft} giorni`;
-              }
-            } else {
-              showAlert(data.error || 'Errore nella cancellazione. Riprova più tardi o contatta il supporto.');
-            }
-          } catch (err) {
-            showAlert('Errore di connessione. Riprova più tardi.');
-          } finally {
-            cancelSubBtn.disabled = false;
-            cancelSubBtn.textContent = 'Disdici abbonamento';
-          }
-        });
-      }
-      
-      // Verifica se è admin e mostra link
-      async function checkAndShowAdminLink(email) {
-        if (!email) return;
-        
-        try {
-          // Prova a importare Supabase client
-          let supabase;
-          try {
-            const module = await import('/report/assets/js/supabase-client.js');
-            supabase = module.supabase;
-          } catch (importErr) {
-            console.warn('[Accesso] Impossibile importare supabase-client, uso fetch diretto:', importErr);
-            // Fallback: usa API per verificare admin
-            await checkAdminViaAPI(email);
-            return;
-          }
-          
-          if (!supabase) {
-            console.warn('[Accesso] Supabase client non disponibile, uso API');
-            await checkAdminViaAPI(email);
-            return;
-          }
-          
-          // Verifica se l'email è in admin_emails
-          const { data, error } = await supabase
-            .from('admin_emails')
-            .select('email')
-            .eq('email', email.toLowerCase())
-            .maybeSingle();
-          
-          if (error) {
-            console.warn('[Accesso] Errore query admin_emails:', error);
-            // Fallback: prova con API
-            await checkAdminViaAPI(email);
-            return;
-          }
-          
-          if (data) {
-            // È admin: mostra link
-            const adminLink = document.getElementById('access-admin-link');
-            const reportLink = document.getElementById('access-report-link');
-            if (adminLink) {
-              adminLink.style.display = 'inline-flex';
-              console.log('[Accesso] Link admin mostrato (verifica Supabase)');
-            }
-            if (reportLink) reportLink.style.display = 'inline-flex';
-          } else {
-            console.log('[Accesso] Email non trovata in admin_emails:', email);
-          }
-        } catch (err) {
-          console.error('[Accesso] Errore verifica admin:', err);
-          // Fallback: prova con API
-          await checkAdminViaAPI(email);
-        }
-      }
-      
-      // Fallback: verifica admin via API
-      async function checkAdminViaAPI(email) {
-        try {
-          // Usa il token corrente per verificare se è admin
-          const token = localStorage.getItem('tradelia-access-token-v1');
-          if (!token) return;
-          
-          // Prova a chiamare API admin (se il token è admin, funzionerà)
-          const res = await fetch('/api/admin?resource=requests&limit=1', {
-            headers: {
-              'X-Admin-Token': token
+              alert('Installa la dashboard PWA per accedere alle funzionalità.');
             }
           });
-          
-          if (res.ok || res.status === 401) {
-            // Se 401, il token non è admin
-            // Se ok, il token è admin
-            if (res.ok) {
+        }
+
+        // Recovery flow
+        if (recoveryOpen && recoverySection && recoveryEmail) {
+          recoveryOpen.addEventListener('click', function () {
+            hideAlert();
+            recoverySection.hidden = false;
+            recoveryEmail.focus();
+          });
+        }
+
+        if (recoveryCancel && recoverySection) {
+          recoveryCancel.addEventListener('click', function () {
+            recoverySection.hidden = true;
+            recoveryEmail.value = '';
+          });
+        }
+
+        if (recoverySubmit && recoveryEmail) {
+          recoverySubmit.addEventListener('click', async function () {
+            hideAlert();
+            const email = (recoveryEmail.value || '').trim();
+            if (!email) {
+              showAlert('Inserisci la tua email per richiedere un nuovo codice.');
+              recoveryEmail.focus();
+              return;
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+              showAlert('Inserisci un indirizzo email valido.');
+              recoveryEmail.focus();
+              return;
+            }
+
+            recoverySubmit.disabled = true;
+            recoverySubmit.textContent = 'Invio in corso...';
+
+            try {
+              const res = await fetch('/api/request-dashboard-token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+              });
+              const data = await res.json();
+
+              if (data.ok) {
+                showAlert(
+                  data.message ||
+                    'Se esiste un piano attivo su questa email, ti abbiamo inviato un nuovo codice. Controlla la tua casella email.',
+                  'success'
+                );
+                recoverySection.hidden = true;
+                recoveryEmail.value = '';
+              } else {
+                showAlert(data.error || 'Errore nella richiesta. Riprova più tardi.');
+              }
+            } catch (err) {
+              showAlert('Errore di connessione. Riprova più tardi.');
+            } finally {
+              recoverySubmit.disabled = false;
+              recoverySubmit.textContent = 'Invia richiesta';
+            }
+          });
+        }
+
+        // Main form submit: valida token
+        form.addEventListener('submit', async function (e) {
+          e.preventDefault();
+          hideAlert();
+          const token = (input.value || '').trim();
+          if (!token) {
+            showAlert('Inserisci il codice di accesso ricevuto via email.');
+            input.focus();
+            return;
+          }
+
+          const submitBtn = form.querySelector('button[type="submit"]');
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Verifica in corso...';
+
+          try {
+            const res = await fetch('/api/validate-dashboard-token', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ token }),
+            });
+
+            // Verifica content-type prima di parsare JSON
+            const contentType = res.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+              // Prova a leggere come testo per vedere cosa c'è
+              const text = await res.text();
+              console.error('[Accesso] Risposta non JSON:', text.substring(0, 200));
+              throw new Error(
+                'Il server ha restituito una risposta non valida. Verifica le variabili ambiente in Vercel.'
+              );
+            }
+
+            let data;
+            try {
+              data = JSON.parse(await res.text());
+            } catch (parseError) {
+              console.error('[Accesso] Errore parsing JSON:', parseError);
+              throw new Error('Errore nella risposta del server. Controlla i log di Vercel.');
+            }
+
+            if (data.ok) {
+              currentToken = token;
+              subscriptionData = data;
+
+              // Salva token in localStorage
+              try {
+                localStorage.setItem(KEY, token);
+              } catch (err) {
+                // ignore
+              }
+
+              // Mostra step 2
+              step1.style.display = 'none';
+              step2.setAttribute('data-visible', 'true');
+
+              // Popola dati step 2
+              document.getElementById('step2-email').textContent = data.email || '—';
+
+              const planNames = {
+                trial: 'Trial',
+                pro: 'Pro',
+                institutional: 'Desk',
+              };
+              const planEl = document.getElementById('step2-plan');
+              planEl.textContent = planNames[data.planRole] || data.planRole || '—';
+              planEl.setAttribute('data-role', data.planRole || '');
+
+              if (data.validUntil) {
+                const expiryDate = new Date(data.validUntil);
+                document.getElementById('step2-expiry').textContent =
+                  expiryDate.toLocaleDateString('it-IT');
+              } else {
+                document.getElementById('step2-expiry').textContent = '—';
+              }
+
+              document.getElementById('step2-days').textContent =
+                data.daysLeft !== undefined ? `${data.daysLeft} giorni` : '—';
+
+              // Mostra/nascondi bottone cancellazione
+              if (data.canCancel) {
+                cancelSubBtn.style.display = 'block';
+              } else {
+                cancelSubBtn.style.display = 'none';
+              }
+
+              // Verifica se è admin e mostra link dashboard admin
+              checkAndShowAdminLink(data.email);
+
+              hideAlert();
+            } else {
+              showAlert(
+                data.error ||
+                  'Codice non valido o scaduto. Controlla di aver inserito il codice corretto.'
+              );
+              input.focus();
+            }
+          } catch (err) {
+            console.error('Errore validazione token:', err);
+            showAlert(
+              'Errore di connessione. Riprova più tardi. Se il problema persiste, contatta support@tradelia.org'
+            );
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Installa la dashboard';
+          }
+        });
+
+        // Vai alla dashboard
+        if (goDashboardBtn) {
+          goDashboardBtn.addEventListener('click', function (e) {
+            if (currentToken) {
+              // Usa handler PWA invece di redirect diretto
+              if (window.openDashboardPWA) {
+                e.preventDefault();
+                window.openDashboardPWA();
+              } else {
+                // Fallback se script non caricato
+                window.location.href = '/dashboard.html?pwa=1';
+              }
+            }
+          });
+        }
+
+        // Cancella abbonamento
+        if (cancelSubBtn) {
+          cancelSubBtn.addEventListener('click', async function () {
+            if (!currentToken) return;
+
+            if (
+              !confirm(
+                "Sei sicuro di voler disdire il tuo abbonamento? L'accesso resterà attivo fino alla scadenza del periodo corrente."
+              )
+            ) {
+              return;
+            }
+
+            cancelSubBtn.disabled = true;
+            cancelSubBtn.textContent = 'Elaborazione...';
+
+            try {
+              const res = await fetch('/api/cancel-subscription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: currentToken }),
+              });
+              const data = await res.json();
+
+              if (data.ok) {
+                showAlert(
+                  data.message || 'La tua richiesta di cancellazione è stata registrata.',
+                  'success'
+                );
+                cancelSubBtn.style.display = 'none';
+                // Aggiorna giorni rimanenti se disponibile
+                if (data.daysLeft !== undefined) {
+                  document.getElementById('step2-days').textContent = `${data.daysLeft} giorni`;
+                }
+              } else {
+                showAlert(
+                  data.error ||
+                    'Errore nella cancellazione. Riprova più tardi o contatta il supporto.'
+                );
+              }
+            } catch (err) {
+              showAlert('Errore di connessione. Riprova più tardi.');
+            } finally {
+              cancelSubBtn.disabled = false;
+              cancelSubBtn.textContent = 'Disdici abbonamento';
+            }
+          });
+        }
+
+        // Verifica se è admin e mostra link
+        async function checkAndShowAdminLink(email) {
+          if (!email) return;
+
+          try {
+            // Prova a importare Supabase client
+            let supabase;
+            try {
+              const module = await import('/report/assets/js/supabase-client.js');
+              supabase = module.supabase;
+            } catch (importErr) {
+              console.warn(
+                '[Accesso] Impossibile importare supabase-client, uso fetch diretto:',
+                importErr
+              );
+              // Fallback: usa API per verificare admin
+              await checkAdminViaAPI(email);
+              return;
+            }
+
+            if (!supabase) {
+              console.warn('[Accesso] Supabase client non disponibile, uso API');
+              await checkAdminViaAPI(email);
+              return;
+            }
+
+            // Verifica se l'email è in admin_emails
+            const { data, error } = await supabase
+              .from('admin_emails')
+              .select('email')
+              .eq('email', email.toLowerCase())
+              .maybeSingle();
+
+            if (error) {
+              console.warn('[Accesso] Errore query admin_emails:', error);
+              // Fallback: prova con API
+              await checkAdminViaAPI(email);
+              return;
+            }
+
+            if (data) {
+              // È admin: mostra link
               const adminLink = document.getElementById('access-admin-link');
               const reportLink = document.getElementById('access-report-link');
               if (adminLink) {
                 adminLink.style.display = 'inline-flex';
-                console.log('[Accesso] Link admin mostrato (verifica API)');
+                console.log('[Accesso] Link admin mostrato (verifica Supabase)');
               }
               if (reportLink) reportLink.style.display = 'inline-flex';
+            } else {
+              console.log('[Accesso] Email non trovata in admin_emails:', email);
             }
+          } catch (err) {
+            console.error('[Accesso] Errore verifica admin:', err);
+            // Fallback: prova con API
+            await checkAdminViaAPI(email);
           }
-        } catch (apiErr) {
-          console.warn('[Accesso] Errore verifica admin via API:', apiErr);
         }
-      }
-    })();
-  </script>
-  <script src="/assets/js/pwa-dashboard-handler.js"></script>
-  
-  <!-- ===== MIFID BANNER (overlay legale unificato) ===== -->
-  <link rel="stylesheet" href="/assets/css/mifid-banner.css" />
-  <script type="module" src="/assets/js/mifid-banner.js"></script>
-</body>
+
+        // Fallback: verifica admin via API
+        async function checkAdminViaAPI(email) {
+          try {
+            // Usa il token corrente per verificare se è admin
+            const token = localStorage.getItem('tradelia-access-token-v1');
+            if (!token) return;
+
+            // Prova a chiamare API admin (se il token è admin, funzionerà)
+            const res = await fetch('/api/admin?resource=requests&limit=1', {
+              headers: {
+                'X-Admin-Token': token,
+              },
+            });
+
+            if (res.ok || res.status === 401) {
+              // Se 401, il token non è admin
+              // Se ok, il token è admin
+              if (res.ok) {
+                const adminLink = document.getElementById('access-admin-link');
+                const reportLink = document.getElementById('access-report-link');
+                if (adminLink) {
+                  adminLink.style.display = 'inline-flex';
+                  console.log('[Accesso] Link admin mostrato (verifica API)');
+                }
+                if (reportLink) reportLink.style.display = 'inline-flex';
+              }
+            }
+          } catch (apiErr) {
+            console.warn('[Accesso] Errore verifica admin via API:', apiErr);
+          }
+        }
+      })();
+    </script>
+    <script src="/assets/js/pwa-dashboard-handler.js"></script>
+
+    <!-- ===== MIFID BANNER (overlay legale unificato) ===== -->
+    <link rel="stylesheet" href="/assets/css/mifid-banner.css" />
+    <script type="module" src="/assets/js/mifid-banner.js"></script>
+  </body>
 </html>

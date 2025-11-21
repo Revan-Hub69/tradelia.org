@@ -822,12 +822,42 @@
           "type": "table",
           "headers": ["Metodo", "Vantaggi", "Svantaggi", "Quando Usare"],
           "rows": [
-            ["Mean-Variance (Markowitz)", "Base teorica solida, massimizza rendimento per rischio", "Sensibile a stime, instabile, concentrato", "Stime affidabili, expertise quantitativa"],
-            ["Risk Parity", "Robusto, diversificato rischio, meno sensibile a stime", "Rendimenti più bassi, può richiedere leva", "Focus su rischio, diversificazione"],
-            ["Black-Litterman", "Robusto, incorpora viste, pesi realistici", "Complesso, richiede portafoglio di mercato", "Viste specifiche, expertise avanzata"],
-            ["Minimum Variance", "Robusto, non richiede stime rendimenti", "Rendimenti più bassi, concentrato", "Minimizzare rischio, evitare stime"],
-            ["Factor Investing", "Diversificazione fattoriale, performance storica", "Periodi underperformance, complessità", "Esposizione a fattori, expertise fattoriale"],
-            ["Equal Weight", "Semplice, diversificato, robusto", "Ignora differenze rischio/rendimento", "Semplicità, mancanza di dati"]
+            [
+              "Mean-Variance (Markowitz)",
+              "Base teorica solida, massimizza rendimento per rischio",
+              "Sensibile a stime, instabile, concentrato",
+              "Stime affidabili, expertise quantitativa"
+            ],
+            [
+              "Risk Parity",
+              "Robusto, diversificato rischio, meno sensibile a stime",
+              "Rendimenti più bassi, può richiedere leva",
+              "Focus su rischio, diversificazione"
+            ],
+            [
+              "Black-Litterman",
+              "Robusto, incorpora viste, pesi realistici",
+              "Complesso, richiede portafoglio di mercato",
+              "Viste specifiche, expertise avanzata"
+            ],
+            [
+              "Minimum Variance",
+              "Robusto, non richiede stime rendimenti",
+              "Rendimenti più bassi, concentrato",
+              "Minimizzare rischio, evitare stime"
+            ],
+            [
+              "Factor Investing",
+              "Diversificazione fattoriale, performance storica",
+              "Periodi underperformance, complessità",
+              "Esposizione a fattori, expertise fattoriale"
+            ],
+            [
+              "Equal Weight",
+              "Semplice, diversificato, robusto",
+              "Ignora differenze rischio/rendimento",
+              "Semplicità, mancanza di dati"
+            ]
           ]
         },
         {
@@ -1077,4 +1107,3 @@
     }
   ]
 }
-

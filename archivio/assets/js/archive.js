@@ -13,7 +13,7 @@ const STATE = {
   tutorials: [],
   currentTab: 'reports',
   sortBy: 'date',
-  sortOrder: 'desc'
+  sortOrder: 'desc',
 };
 
 // ===== INIT =====
@@ -33,13 +33,13 @@ async function init() {
 async function mountHeaderFooter() {
   // Assicura tema dark
   document.documentElement.setAttribute('data-theme', 'dark');
-  
+
   try {
     const headerSlot = document.getElementById('site-header-slot');
     if (headerSlot) {
       siteHeader.mount(headerSlot);
     }
-    
+
     const footerSlot = document.getElementById('site-footer-slot');
     if (footerSlot) {
       siteFooter.mount(footerSlot);
@@ -104,7 +104,9 @@ async function loadReportsFromSupabase() {
   const now = new Date();
   const { data, error } = await supabase
     .from('reports')
-    .select('id, slug, title, status, report_type, chart_path, notes, created_at, updated_at, published_at, report_modules!inner(module_key, content)')
+    .select(
+      'id, slug, title, status, report_type, chart_path, notes, created_at, updated_at, published_at, report_modules!inner(module_key, content)'
+    )
     .eq('status', 'active')
     .eq('report_modules.module_key', 'header')
     .order('published_at', { ascending: false, nullsFirst: false });
@@ -115,13 +117,19 @@ async function loadReportsFromSupabase() {
 
   const drafts = Array.isArray(data) ? data : [];
   const parsed = drafts
-    .map(row => {
-      const headerContent = row.report_modules?.find(mod => mod.module_key === 'header')?.content || {};
+    .map((row) => {
+      const headerContent =
+        row.report_modules?.find((mod) => mod.module_key === 'header')?.content || {};
       const header = normalizeHeaderContent(headerContent);
       const ticker = extractHeaderMetric(header, ['Ticker']);
       const companyName = extractHeaderMetric(header, ['CompanyName', 'Company']);
       const frameworkMetric = extractHeaderMetric(header, ['Framework', 'FrameworkName']);
-      const tipologia = extractHeaderMetric(header, ['Tipologia', 'Typology', 'Categoria', 'Category']);
+      const tipologia = extractHeaderMetric(header, [
+        'Tipologia',
+        'Typology',
+        'Categoria',
+        'Category',
+      ]);
       const exchange = extractHeaderMetric(header, ['Exchange', 'Venue', 'Market']);
       const sector = extractHeaderMetric(header, ['Settore', 'Sector', 'Industry', 'SectorName']);
       const createdAt = row.published_at || row.created_at;
@@ -149,11 +157,11 @@ async function loadReportsFromSupabase() {
         published_at: createdAt,
         updated_at: row.updated_at,
         public_after: publicAfter.toISOString(),
-        chart_path: row.chart_path || null
+        chart_path: row.chart_path || null,
       };
     })
     .filter(Boolean)
-    .filter(report => {
+    .filter((report) => {
       const publicDate = new Date(report.public_after);
       return now >= publicDate;
     });
@@ -192,7 +200,7 @@ function normalizeHeaderContent(header) {
 function extractHeaderMetric(header, metricKey) {
   if (!header) return null;
   const keys = Array.isArray(metricKey)
-    ? metricKey.filter(Boolean).map(k => String(k).toLowerCase())
+    ? metricKey.filter(Boolean).map((k) => String(k).toLowerCase())
     : [String(metricKey).toLowerCase()];
 
   if (!keys.length) return null;
@@ -251,31 +259,31 @@ function extractHeaderMetric(header, metricKey) {
 function setupTabs() {
   const tabs = document.querySelectorAll('.archive-tab');
   const sections = document.querySelectorAll('.archive-section');
-  
-  tabs.forEach(tab => {
+
+  tabs.forEach((tab) => {
     tab.addEventListener('click', () => {
       const tabName = tab.dataset.tab;
-      
+
       // Update tabs
-      tabs.forEach(t => {
+      tabs.forEach((t) => {
         t.classList.remove('active');
         t.setAttribute('aria-selected', 'false');
       });
       tab.classList.add('active');
       tab.setAttribute('aria-selected', 'true');
-      
+
       // Update sections
-      sections.forEach(s => {
+      sections.forEach((s) => {
         s.classList.remove('active');
         s.hidden = true;
       });
-      
+
       const section = document.getElementById(`${tabName}-section`);
       if (section) {
         section.classList.add('active');
         section.hidden = false;
       }
-      
+
       STATE.currentTab = tabName;
     });
   });
@@ -285,7 +293,7 @@ function setupTabs() {
 function setupFilters() {
   const toggleBtn = document.querySelector('.btn-toggle-filters');
   const filtersPanel = document.querySelector('.filters-panel');
-  
+
   if (toggleBtn && filtersPanel) {
     toggleBtn.addEventListener('click', () => {
       const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
@@ -300,38 +308,39 @@ function renderReports() {
   const tbody = document.getElementById('reports-tbody');
   const loading = document.getElementById('loading-state');
   const empty = document.getElementById('empty-state');
-  
+
   if (!tbody) return;
-  
+
   // Hide loading
   if (loading) loading.hidden = true;
-  
+
   // Sort reports
   const sortedReports = [...STATE.reports].sort((a, b) => {
     const dateA = new Date(a.published_at || a.created_at);
     const dateB = new Date(b.published_at || b.created_at);
     return STATE.sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
   });
-  
+
   if (sortedReports.length === 0) {
     if (empty) empty.hidden = false;
     tbody.innerHTML = '';
     return;
   }
-  
-  if (empty) empty.hidden = true;
-  
-  // Render rows
-  tbody.innerHTML = sortedReports.map(report => {
-    const frameworkLabel = report.frameworkLabel || formatReportType(report.framework);
-    const date = formatDateTime(report.published_at || report.created_at);
-    const assetSymbol = report.assetSymbol || '—';
-    const assetName = report.assetName || '';
-    const typology = report.typology || '—';
-    const exchange = report.exchange || '—';
-    const sector = report.sector || '—';
 
-    return `
+  if (empty) empty.hidden = true;
+
+  // Render rows
+  tbody.innerHTML = sortedReports
+    .map((report) => {
+      const frameworkLabel = report.frameworkLabel || formatReportType(report.framework);
+      const date = formatDateTime(report.published_at || report.created_at);
+      const assetSymbol = report.assetSymbol || '—';
+      const assetName = report.assetName || '';
+      const typology = report.typology || '—';
+      const exchange = report.exchange || '—';
+      const sector = report.sector || '—';
+
+      return `
       <tr>
         <td class="archive-id">[ ${report.slug} ]</td>
         <td>
@@ -347,7 +356,8 @@ function renderReports() {
         <td>${date}</td>
       </tr>
     `;
-  }).join('');
+    })
+    .join('');
 }
 
 function formatReportType(type) {
@@ -362,7 +372,7 @@ function formatDateTime(iso) {
       month: '2-digit',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   } catch {
     return String(iso);
@@ -373,22 +383,23 @@ function formatDateTime(iso) {
 function renderTutorials() {
   const list = document.getElementById('tutorials-list');
   const loading = document.getElementById('tutorials-loading');
-  
+
   if (!list) return;
-  
+
   if (loading) loading.hidden = true;
-  
+
   if (STATE.tutorials.length === 0) {
     list.innerHTML = '<p class="archive-empty">Nessun tutorial disponibile</p>';
     return;
   }
-  
-  list.innerHTML = STATE.tutorials.map(tutorial => {
-    const tags = (tutorial.tags || []).map(tag => 
-      `<span class="tutorial-tag">${tag}</span>`
-    ).join('');
-    
-    return `
+
+  list.innerHTML = STATE.tutorials
+    .map((tutorial) => {
+      const tags = (tutorial.tags || [])
+        .map((tag) => `<span class="tutorial-tag">${tag}</span>`)
+        .join('');
+
+      return `
       <div class="tutorial-card">
         <h3 class="tutorial-card-title">${tutorial.title || 'Tutorial'}</h3>
         <div class="tutorial-card-meta">
@@ -402,7 +413,8 @@ function renderTutorials() {
         <a href="${tutorial.link}" target="_blank" class="btn btn-sm" style="margin-top: var(--sp-3);">Apri Tutorial</a>
       </div>
     `;
-  }).join('');
+    })
+    .join('');
 }
 
 // ===== SHOW ERROR =====
@@ -420,8 +432,7 @@ if (document.readyState === 'loading') {
 } else {
   init();
 
-supabase.auth.onAuthStateChange(() => {
-  checkAdminAccess();
-});
+  supabase.auth.onAuthStateChange(() => {
+    checkAdminAccess();
+  });
 }
-

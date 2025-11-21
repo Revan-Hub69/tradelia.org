@@ -5,15 +5,7 @@
     "category": "Criptovalute",
     "difficulty": "Intermedio-Avanzato"
   },
-  "tags": [
-    "Stablecoin",
-    "Algoritmiche",
-    "DeFi",
-    "Criptovalute",
-    "Peg",
-    "Rischio",
-    "Collateral"
-  ],
+  "tags": ["Stablecoin", "Algoritmiche", "DeFi", "Criptovalute", "Peg", "Rischio", "Collateral"],
   "glossaryTerms": {
     "stablecoin": "CreditRiskBlock",
     "algoritmiche": "CreditRiskBlock",
@@ -279,36 +271,12 @@
           "type": "table",
           "headers": ["Caratteristica", "Stablecoin Algoritmiche", "Stablecoin Collateralizzate"],
           "rows": [
-            [
-              "Collateral",
-              "Nessuno o cripto",
-              "Fiat o cripto"
-            ],
-            [
-              "Decentralizzazione",
-              "Elevata",
-              "Variabile"
-            ],
-            [
-              "Rischio De-pegging",
-              { "text": "Elevato", "class": "negative" },
-              "Moderato"
-            ],
-            [
-              "Trasparenza",
-              "Limitata",
-              "Elevata"
-            ],
-            [
-              "Liquidità",
-              "Variabile",
-              "Elevata"
-            ],
-            [
-              "Regolamentazione",
-              "Limitata",
-              "In aumento"
-            ]
+            ["Collateral", "Nessuno o cripto", "Fiat o cripto"],
+            ["Decentralizzazione", "Elevata", "Variabile"],
+            ["Rischio De-pegging", { "text": "Elevato", "class": "negative" }, "Moderato"],
+            ["Trasparenza", "Limitata", "Elevata"],
+            ["Liquidità", "Variabile", "Elevata"],
+            ["Regolamentazione", "Limitata", "In aumento"]
           ]
         },
         {
@@ -390,4 +358,3 @@
     }
   ]
 }
-

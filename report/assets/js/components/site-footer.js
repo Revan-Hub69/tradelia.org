@@ -7,7 +7,7 @@ import { i18n } from '../utils/i18n.js';
 
 const FOOTER = {
   _node: null,
-  _container: null
+  _container: null,
 };
 
 // ===== UTILITIES =====
@@ -41,7 +41,7 @@ function setText(id, val) {
 // ===== RENDER =====
 function render(data = {}) {
   const year = new Date().getFullYear();
-  
+
   return `
     <div class="container">
       <section class="ftr-grid">
@@ -144,31 +144,31 @@ function mount(containerEl) {
     Logger.error('SiteFooter', 'mount: containerEl non fornito');
     return null;
   }
-  
+
   if (FOOTER._node) {
     Logger.warn('SiteFooter', 'Footer già montato');
     return FOOTER._node;
   }
-  
+
   const node = createEl('footer', 'site-footer py-10');
   node.innerHTML = render();
-  
+
   containerEl.appendChild(node);
-  
+
   FOOTER._node = node;
   FOOTER._container = containerEl;
-  
+
   // Bind event listeners per MiFID/Privacy (stesso sistema di index.html)
   bindLegalButtons();
-  
+
   // Sistema traduzione disabilitato - sempre italiano
-  
+
   // Chiama update con dati vuoti per nascondere i campi dinamici di default
   // (verranno mostrati solo quando update() viene chiamata con dati reali)
   setTimeout(() => {
     update({});
   }, 0);
-  
+
   Logger.debug('SiteFooter', 'Footer montato');
   return node;
 }
@@ -215,7 +215,7 @@ function update(data = {}) {
     Logger.warn('SiteFooter', 'update: footer non montato');
     return;
   }
-  
+
   // Estrai dati da header.json (se disponibili)
   const extractMetric = (key) => {
     if (!data?.rows) return null;
@@ -228,23 +228,23 @@ function update(data = {}) {
     }
     return null;
   };
-  
+
   const companyName = extractMetric('CompanyName');
   const ticker = extractMetric('Ticker');
   const version = extractMetric('Version') || data?.meta?.version || null;
   const start = extractMetric('Start');
   const end = extractMetric('End');
   const updatedAt = extractMetric('UpdatedAt');
-  
+
   // Aggiorna elementi dinamici
   setText('footer-year', new Date().getFullYear());
-  
+
   // Mostra/nascondi campi dinamici solo se ci sono dati (solo nei report)
   const hasReportData = companyName || ticker || version || start || end || updatedAt;
-  
+
   // Footer company/version (solo se ci sono dati)
   const footerCompanyVersionContainer = document.getElementById('footer-company-version-container');
-  
+
   if (footerCompanyVersionContainer) {
     if (hasReportData && (companyName || ticker || version)) {
       footerCompanyVersionContainer.style.display = '';
@@ -254,10 +254,10 @@ function update(data = {}) {
       footerCompanyVersionContainer.style.display = 'none';
     }
   }
-  
+
   // Footer snapshot/updated (solo se ci sono dati)
   const footerSnapshotContainer = document.getElementById('footer-snapshot-container');
-  
+
   if (footerSnapshotContainer) {
     if (hasReportData && (start || end || updatedAt)) {
       footerSnapshotContainer.style.display = '';
@@ -267,18 +267,17 @@ function update(data = {}) {
       footerSnapshotContainer.style.display = 'none';
     }
   }
-  
+
   Logger.debug('SiteFooter', 'Footer aggiornato');
 }
 
 // ===== PUBLIC API =====
 export const siteFooter = {
   mount,
-  update
+  update,
 };
 
 // Esponi globalmente per aggiornamenti dinamici
 if (typeof window !== 'undefined') {
   window.__TradeliaFooter = { update };
 }
-

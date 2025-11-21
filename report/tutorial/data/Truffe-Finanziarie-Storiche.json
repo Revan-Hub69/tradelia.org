@@ -5,15 +5,7 @@
     "category": "Sicurezza e Prevenzione",
     "difficulty": "Principiante-Intermedio"
   },
-  "tags": [
-    "Truffe Finanziarie",
-    "Storia",
-    "Ponzi",
-    "Madoff",
-    "Enron",
-    "Parmalat",
-    "Prevenzione"
-  ],
+  "tags": ["Truffe Finanziarie", "Storia", "Ponzi", "Madoff", "Enron", "Parmalat", "Prevenzione"],
   "glossaryTerms": {
     "schema Ponzi": "CreditRiskBlock",
     "Ponzi": "CreditRiskBlock",
@@ -297,4 +289,3 @@
     }
   ]
 }
-

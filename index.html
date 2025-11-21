@@ -1,2694 +1,3166 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it" data-theme="dark">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0" />
-  <title>Tradelia AI · progetto indipendente di analisi sui mercati</title>
-  
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Tradelia AI pubblica analisi quotidiane basate su framework AI proprietari (FDM, MLT, PAC). Dashboard PWA installabile, documentazione trasparente, nessun segnale operativo." />
-  <meta name="keywords" content="Tradelia AI, analisi mercati, framework AI proprietari, FDM, MLT, PAC, dashboard pubblicazioni, materiale didattico mercati, metodo trasparente" />
-  <meta name="author" content="Tradelia AI" />
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-  <meta name="theme-color" content="#0f0f0f" />
-  <link rel="canonical" href="https://tradelia.org/" />
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://tradelia.org" />
-  <meta property="og:title" content="Tradelia AI · progetto indipendente di analisi sui mercati" />
-  <meta property="og:description" content="Framework AI proprietari, dashboard PWA installabile e materiali trasparenti per leggere il mercato senza segnali operativi." />
-  <meta property="og:image" content="https://tradelia.org/img/tradelia_og_vC_white_clean.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:type" content="image/png" />
-  <meta property="og:site_name" content="Tradelia AI" />
-  <meta property="og:locale" content="it_IT" />
-  
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:url" content="https://tradelia.org" />
-  <meta name="twitter:title" content="Tradelia AI · progetto indipendente di analisi sui mercati" />
-  <meta name="twitter:description" content="Framework AI proprietari, dashboard PWA installabile e documentazione completa basata sul metodo." />
-  <meta name="twitter:image" content="https://tradelia.org/img/tradelia_og_vC_white_clean.png" />
-  <meta name="twitter:image:alt" content="Tradelia AI - Framework Accademico AI" />
-  <meta name="twitter:creator" content="@tradelia_ai" />
-  <meta name="twitter:site" content="@tradelia_ai" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0"
+    />
+    <title>Tradelia AI · progetto indipendente di analisi sui mercati</title>
 
-  <!-- Favicons -->
-  <link rel="icon" href="/favicon.ico?v=1">
-  <link rel="icon" type="image/png" href="/favicon.png?v=1">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
-  
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="/dashboard.webmanifest">
-  
-  <!-- iOS PWA Meta Tags -->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Tradelia AI" />
-  
-  <!-- Structured Data (JSON-LD) for SEO AI -->
-  <script type="application/ld+json" id="structured-data">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
+    <!-- SEO Meta Tags -->
+    <meta
+      name="description"
+      content="Tradelia AI pubblica analisi quotidiane basate su framework AI proprietari (FDM, MLT, PAC). Dashboard PWA installabile, documentazione trasparente, nessun segnale operativo."
+    />
+    <meta
+      name="keywords"
+      content="Tradelia AI, analisi mercati, framework AI proprietari, FDM, MLT, PAC, dashboard pubblicazioni, materiale didattico mercati, metodo trasparente"
+    />
+    <meta name="author" content="Tradelia AI" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <meta name="theme-color" content="#0f0f0f" />
+    <link rel="canonical" href="https://tradelia.org/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tradelia.org" />
+    <meta
+      property="og:title"
+      content="Tradelia AI · progetto indipendente di analisi sui mercati"
+    />
+    <meta
+      property="og:description"
+      content="Framework AI proprietari, dashboard PWA installabile e materiali trasparenti per leggere il mercato senza segnali operativi."
+    />
+    <meta property="og:image" content="https://tradelia.org/img/tradelia_og_vC_white_clean.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:site_name" content="Tradelia AI" />
+    <meta property="og:locale" content="it_IT" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://tradelia.org" />
+    <meta
+      name="twitter:title"
+      content="Tradelia AI · progetto indipendente di analisi sui mercati"
+    />
+    <meta
+      name="twitter:description"
+      content="Framework AI proprietari, dashboard PWA installabile e documentazione completa basata sul metodo."
+    />
+    <meta name="twitter:image" content="https://tradelia.org/img/tradelia_og_vC_white_clean.png" />
+    <meta name="twitter:image:alt" content="Tradelia AI - Framework Accademico AI" />
+    <meta name="twitter:creator" content="@tradelia_ai" />
+    <meta name="twitter:site" content="@tradelia_ai" />
+
+    <!-- Favicons -->
+    <link rel="icon" href="/favicon.ico?v=1" />
+    <link rel="icon" type="image/png" href="/favicon.png?v=1" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1" />
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/dashboard.webmanifest" />
+
+    <!-- iOS PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Tradelia AI" />
+
+    <!-- Structured Data (JSON-LD) for SEO AI -->
+    <script type="application/ld+json" id="structured-data">
       {
-    "@type": "WebSite",
-    "name": "Tradelia AI",
-    "url": "https://tradelia.org",
-        "description": "Framework AI proprietari per la lettura quotidiana dei mercati con dashboard PWA installabile e documentazione trasparente.",
-    "publisher": {
-          "@id": "https://tradelia.org/#organization"
-        },
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": "https://tradelia.org/search?q={search_term_string}"
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "name": "Tradelia AI",
+            "url": "https://tradelia.org",
+            "description": "Framework AI proprietari per la lettura quotidiana dei mercati con dashboard PWA installabile e documentazione trasparente.",
+            "publisher": {
+              "@id": "https://tradelia.org/#organization"
+            },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://tradelia.org/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
           },
-          "query-input": "required name=search_term_string"
-        }
-      },
-      {
-        "@id": "https://tradelia.org/#organization",
-      "@type": "Organization",
-      "name": "Tradelia AI",
-      "url": "https://tradelia.org",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://tradelia.org/img/tradelia_og_vC_white_clean.png",
-        "width": 1200,
-        "height": 630
-        },
-        "description": "Progetto indipendente di analisi sui mercati basato su framework AI proprietari e metodo verificabile"
-      },
-      {
-        "@type": "ResearchProject",
-        "name": "Tradelia AI Framework",
-        "description": "Framework AI proprietari per approfondimenti multiformato su contesto macro, intermarket e tecnico con controlli incrociati",
-        "url": "https://tradelia.org",
-        "funder": {
-          "@id": "https://tradelia.org/#organization"
-        },
-        "researchMethod": "Quantitative analysis using proprietary AI frameworks (FDM, MLT, PAC)",
-        "keywords": "financial markets analysis, AI frameworks, market research, quantitative analysis"
-      },
-      {
-      "@type": "SoftwareApplication",
-      "name": "Tradelia AI Framework",
-      "applicationCategory": "FinanceApplication",
-      "operatingSystem": "Web",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "EUR"
-      },
-        "description": "Framework AI proprietari per approfondimenti multiformato su contesto macro, intermarket e tecnico con controlli incrociati",
-      "featureList": [
-          "FDM — Framework Dinamico dei Mercati",
-          "MLT — Matrice delle Letture Tattiche",
-          "PAC — Protocollo di Allerta Criptovalute",
-          "Suite su richiesta: monitor ETF, dossier fondi/certificati, schede titolo, quadro rischio",
-          "Pubblicazioni quotidiane (~3/giorno) con versioni archiviate",
-          "Documentazione di fonti, ipotesi e limiti per ogni uscita",
-          "Materiale educativo conforme alle regole MiFID-safe"
+          {
+            "@id": "https://tradelia.org/#organization",
+            "@type": "Organization",
+            "name": "Tradelia AI",
+            "url": "https://tradelia.org",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://tradelia.org/img/tradelia_og_vC_white_clean.png",
+              "width": 1200,
+              "height": 630
+            },
+            "description": "Progetto indipendente di analisi sui mercati basato su framework AI proprietari e metodo verificabile"
+          },
+          {
+            "@type": "ResearchProject",
+            "name": "Tradelia AI Framework",
+            "description": "Framework AI proprietari per approfondimenti multiformato su contesto macro, intermarket e tecnico con controlli incrociati",
+            "url": "https://tradelia.org",
+            "funder": {
+              "@id": "https://tradelia.org/#organization"
+            },
+            "researchMethod": "Quantitative analysis using proprietary AI frameworks (FDM, MLT, PAC)",
+            "keywords": "financial markets analysis, AI frameworks, market research, quantitative analysis"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "Tradelia AI Framework",
+            "applicationCategory": "FinanceApplication",
+            "operatingSystem": "Web",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "EUR"
+            },
+            "description": "Framework AI proprietari per approfondimenti multiformato su contesto macro, intermarket e tecnico con controlli incrociati",
+            "featureList": [
+              "FDM — Framework Dinamico dei Mercati",
+              "MLT — Matrice delle Letture Tattiche",
+              "PAC — Protocollo di Allerta Criptovalute",
+              "Suite su richiesta: monitor ETF, dossier fondi/certificati, schede titolo, quadro rischio",
+              "Pubblicazioni quotidiane (~3/giorno) con versioni archiviate",
+              "Documentazione di fonti, ipotesi e limiti per ogni uscita",
+              "Materiale educativo conforme alle regole MiFID-safe"
+            ]
+          }
         ]
       }
-    ]
-  }
-  </script>
+    </script>
 
-  <!-- Tailwind (utility) -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind (utility) -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Design System -->
-  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
-  <link rel="stylesheet" href="/assets/css/site-coherence-2025.css" />
-  <link rel="stylesheet" href="/assets/css/global-header.css" />
-  <link rel="stylesheet" href="/assets/css/homepage-brokers-2025.css" />
-  <link rel="stylesheet" href="/report/assets/css/design-system-academico-2025.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <!-- Design System -->
+    <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+    <link rel="stylesheet" href="/assets/css/site-coherence-2025.css" />
+    <link rel="stylesheet" href="/assets/css/global-header.css" />
+    <link rel="stylesheet" href="/assets/css/homepage-brokers-2025.css" />
+    <link rel="stylesheet" href="/report/assets/css/design-system-academico-2025.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <style>
-    html { 
-      scroll-behavior: smooth;
-    }
-    html, body { 
-      height: 100%; 
-      margin: 0;
-      padding: 0;
-    }
-    body { 
-      display: flex; 
-      flex-direction: column; 
-      min-height: 100vh;
-      background: var(--surface-page);
-      color: var(--ink);
-      font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
-      padding-top: 64px; /* Spazio per header fixed */
-    }
-
-    /* Header slot (gestito da global-header.css) */
-    #site-header-slot {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-    }
-
-    /* Header gestito completamente da global-header.css - nessuno stile aggiuntivo necessario */
-
-    /* Skip link (accessibility) */
-    .skip-link {
-      position: absolute;
-      top: -100px;
-      left: 0;
-      z-index: 10000;
-      padding: var(--sp-3) var(--sp-4);
-      background: var(--brand-600);
-      color: var(--ink-invert);
-      text-decoration: none;
-      font-weight: 600;
-      border-radius: 0 0 var(--radius-md) 0;
-      transition: top 0.2s ease;
-    }
-    .skip-link:focus {
-      top: 0;
-      outline: 2px solid var(--brand-400);
-      outline-offset: 2px;
-    }
-
-    /* container */
-    .container { max-width: 90rem; margin-inline: auto; padding-inline: 1rem; }
-    main { 
-      flex: 1; 
-      padding-top: 0;
-      padding-bottom: 0;
-      background: var(--surface-page);
-      color: var(--ink);
-    }
-    
-    main * {
-      color: inherit;
-    }
-
-    /* ===== HERO SECTION ===== */
-    .hero-section {
-      position: relative;
-      padding: 10rem 0 7rem;
-      background: var(--surface-page);
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      max-width: 60rem;
-      margin: 0 auto;
-    }
-
-    .hero-badge {
-      display: inline-block;
-      padding: 0.625rem 1.25rem;
-      background: var(--surface-elev);
-      border: 1px solid var(--br-card);
-      border-radius: 6px;
-      font-size: 0.6875rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--brand-400);
-      margin-bottom: 2.5rem;
-    }
-
-    .hero-title {
-      font-family: var(--ff-sans);
-      font-size: clamp(2.5rem, 5vw, 4.25rem);
-      font-weight: 700;
-      line-height: 1.2;
-      letter-spacing: -0.03em;
-      color: var(--ink);
-      margin: 0 0 2.5rem;
-    }
-    
-    .hero-title-line {
-      display: block;
-    }
-    
-    .hero-title-line:first-child {
-      margin-bottom: 0.5rem;
-    }
-
-    .hero-description {
-      font-family: var(--ff-sans);
-      font-size: 1.1875rem;
-      font-weight: 400;
-      line-height: 1.75;
-      letter-spacing: -0.008em;
-      color: var(--ink-soft);
-      margin: 0 0 3.5rem;
-      max-width: 50rem;
-    }
-
-    .hero-description strong {
-      color: var(--ink);
-      font-weight: 600;
-    }
-
-    .hero-plan-grid {
-      margin-top: 2.5rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: var(--sp-4);
-    }
-
-    .hero-plan-card {
-      background: var(--surface-elev);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-lg);
-      padding: var(--sp-5);
-      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.35);
-      display: flex;
-      flex-direction: column;
-      gap: var(--sp-3);
-    }
-
-    .hero-plan-card strong {
-      font-size: var(--fs-16);
-      color: var(--ink);
-    }
-
-    .hero-plan-card ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: var(--sp-2);
-      color: var(--ink-soft);
-      font-size: var(--fs-13);
-      line-height: 1.55;
-    }
-
-    .hero-plan-card ul li {
-      display: flex;
-      gap: var(--sp-2);
-    }
-
-    .hero-plan-card ul li::before {
-      content: "•";
-      color: var(--brand-500);
-      font-weight: 700;
-    }
-
-    .hero-plan-card .plan-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.35rem 0.75rem;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      font-size: var(--fs-11);
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-    }
-
-    .hero-plan-card--free {
-      border-color: rgba(16, 185, 129, 0.35);
-      background: linear-gradient(180deg, rgba(16, 185, 129, 0.12), rgba(15, 23, 42, 0.2));
-    }
-
-    .hero-plan-card--paid {
-      border-color: rgba(59, 130, 246, 0.4);
-      background: linear-gradient(180deg, rgba(59, 130, 246, 0.12), rgba(15, 23, 42, 0.2));
-    }
-
-    .hero-plan-card .btn {
-      align-self: flex-start;
-    }
-
-    .hero-features {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.75rem;
-      margin: 4rem 0;
-    }
-
-    @media (min-width: 768px) {
-      .hero-features {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
+    <style>
+      html {
+        scroll-behavior: smooth;
       }
-    }
-
-    .hero-feature {
-      padding: 2rem 1.75rem;
-      background: var(--surface-elev);
-      border: 1px solid var(--br-soft);
-      border-radius: var(--radius-lg);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .hero-feature:hover {
-      background: var(--surface-hover);
-      border-color: var(--br-card);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .hero-feature .ico {
-      width: 22px;
-      height: 22px;
-      color: var(--brand-500);
-      margin-bottom: 1rem;
-    }
-
-    .hero-feature strong {
-      display: block;
-      font-family: var(--ff-sans);
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      color: var(--ink);
-      margin-bottom: 0.625rem;
-      line-height: 1.4;
-    }
-
-    .hero-feature span {
-      display: block;
-      font-family: var(--ff-sans);
-      font-size: 0.875rem;
-      font-weight: 400;
-      line-height: 1.65;
-      letter-spacing: -0.005em;
-      color: var(--muted);
-    }
-
-    .hero-cta {
-      display: flex;
-      gap: 1.25rem;
-      margin-top: 4rem;
-    }
-
-
-    .hero-disclaimer {
-      margin-top: 5rem;
-      padding: 1.5rem 0;
-      border-top: 1px solid var(--br-card);
-    }
-
-    .hero-disclaimer .container {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-    }
-
-    .hero-disclaimer .ico {
-      width: 18px;
-      height: 18px;
-      color: var(--brand-500);
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .hero-disclaimer p {
-      font-family: var(--ff-sans);
-      font-size: 0.8125rem;
-      font-weight: 400;
-      line-height: 1.7;
-      color: var(--muted);
-      margin: 0;
-    }
-
-    .hero-disclaimer strong {
-      color: var(--ink-soft);
-      font-weight: 600;
-    }
-
-    .section-alt {
-      background: var(--surface-card);
-    }
-
-    .section-contrast {
-      background: var(--surface-elev);
-    }
-
-    /* Header gestito completamente da global-header.css - nessuno stile aggiuntivo necessario */
-
-    /* ===== SECTION HEADERS ===== */
-    .section-header {
-      text-align: center;
-      max-width: 48rem;
-      margin: 0 auto var(--sp-16);
-      padding: 0 var(--sp-4);
-    }
-
-    .section-title {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 800;
-      line-height: 1.2;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      margin: 0 0 var(--sp-6);
-    }
-
-    .section-description {
-      font-size: var(--fs-18);
-      line-height: var(--lh-17);
-      color: var(--ink-soft);
-      margin: 0 0 var(--sp-4);
-    }
-
-    .section-description strong {
-      color: var(--ink);
-      font-weight: 600;
-    }
-
-    /* ===== METHOD SECTION ===== */
-    .method-section {
-      padding: 6rem 0;
-      background: var(--surface-card);
-      color: var(--ink);
-      margin-top: var(--sp-8);
-    }
-    
-    .method-section * {
-      color: inherit;
-    }
-    
-    .method-section .section-description {
-      color: var(--ink-soft);
-    }
-    
-    .method-section .section-description strong {
-      color: var(--ink);
-    }
-
-    .method-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: var(--sp-8);
-    }
-
-    @media (min-width: 768px) {
-      .method-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--sp-10);
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
       }
-    }
-
-    .method-card {
-      padding: var(--sp-8);
-      background: var(--surface-elev);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-xl);
-      transition: all var(--transition-base);
-      display: flex;
-      flex-direction: column;
-      gap: var(--sp-5);
-    }
-
-    .method-card:hover {
-      background: var(--surface-hover);
-      border-color: var(--brand-600);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-      transform: translateY(-4px);
-    }
-
-    .method-card-icon {
-      width: 56px;
-      height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(37, 99, 235, 0.1) 100%);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-lg);
-      color: var(--brand-500);
-    }
-
-    .method-card-title {
-      font-size: var(--fs-20);
-      font-weight: 700;
-      color: var(--ink);
-      margin: 0;
-    }
-
-    .method-card-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: var(--sp-3);
-    }
-
-    .method-card-list li {
-      font-size: var(--fs-15);
-      line-height: var(--lh-17);
-      color: var(--ink-soft);
-      padding-left: var(--sp-5);
-      position: relative;
-    }
-
-    .method-card-list li::before {
-      content: '▸';
-      position: absolute;
-      left: 0;
-      color: var(--brand-500);
-      font-weight: 700;
-    }
-
-    .method-card-list strong {
-      color: var(--ink);
-      font-weight: 600;
-    }
-
-    /* ===== AUDIENCE SECTION ===== */
-    .audience-section {
-      padding: 5rem 0;
-      background: var(--surface-page);
-    }
-
-    .audience-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: var(--sp-6);
-    }
-
-    .audience-card {
-      background: var(--surface-card);
-      border: 1px solid var(--br-soft);
-      border-radius: var(--radius-lg);
-      padding: var(--sp-5);
-      display: flex;
-      flex-direction: column;
-      gap: var(--sp-3);
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.35);
-      transition: box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-base), background var(--transition-base);
-    }
-
-    .audience-card:hover {
-      border-color: var(--brand-500);
-      background: var(--surface-elev);
-      transform: translateY(-2px);
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.6);
-    }
-
-    .audience-card strong {
-      font-size: var(--fs-16);
-      font-weight: 700;
-      color: var(--ink);
-    }
-
-    .audience-card span {
-      font-size: var(--fs-14);
-      color: var(--ink-soft);
-      line-height: 1.6;
-    }
-
-    .audience-badge {
-      align-self: flex-start;
-      font-size: var(--fs-11);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: var(--sp-2) var(--sp-3);
-      border-radius: var(--radius-pill);
-      background: rgba(37, 99, 235, 0.12);
-      color: var(--brand-400);
-      transition: background 0.2s ease, transform 0.15s ease;
-    }
-    .audience-card:hover .audience-badge {
-      background: rgba(37, 99, 235, 0.18);
-      transform: scale(1.02);
-    }
-
-    .audience-partner-highlight {
-      margin-top: var(--sp-10);
-      padding: var(--sp-5) var(--sp-6);
-      border-radius: var(--radius-lg);
-      border: 1px dashed rgba(148, 163, 184, 0.5);
-      background: radial-gradient(circle at 0 0, rgba(37, 99, 235, 0.18), transparent 60%);
-      display: flex;
-      flex-direction: column;
-      gap: var(--sp-3);
-    }
-
-    .audience-partner-highlight strong {
-      font-size: var(--fs-15);
-      color: var(--ink);
-    }
-
-    .audience-partner-highlight p {
-      margin: 0;
-      font-size: var(--fs-14);
-      color: var(--ink-soft);
-    }
-
-    .audience-partner-highlight .btn {
-      align-self: flex-start;
-      margin-top: var(--sp-2);
-    }
-
-    @media (max-width: 768px) {
-      .audience-section {
-        padding: var(--sp-10) 0;
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background: var(--surface-page);
+        color: var(--ink);
+        font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+        padding-top: 64px; /* Spazio per header fixed */
       }
-    }
 
-    /* ===== VALUE SECTION ===== */
-    .value-section {
-      padding: 6rem 0;
-      background: var(--surface-card);
-      border-top: 1px solid var(--br-card);
-      border-bottom: 1px solid var(--br-card);
-    }
-
-    .value-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: var(--sp-6);
-    }
-
-    .value-card {
-      background: var(--surface-elev);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-lg);
-      padding: var(--sp-6);
-      display: flex;
-      flex-direction: column;
-      gap: var(--sp-3);
-      transition: box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-base);
-    }
-
-    .hero-feature,
-    .audience-card,
-    .value-card,
-    .service-card,
-    .testimonial-card,
-    .plan-card {
-      opacity: 1;
-      transform: translateY(0);
-      transition:
-        opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-        transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-        box-shadow var(--transition-base),
-        border-color var(--transition-base),
-        background var(--transition-base);
-    }
-
-    .hero-feature:not(.has-entered),
-    .audience-card:not(.has-entered),
-    .value-card:not(.has-entered),
-    .service-card:not(.has-entered),
-    .testimonial-card:not(.has-entered),
-    .plan-card:not(.has-entered) {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    
-    /* Animazioni progressive per sezioni */
-    .section-header:not(.has-entered) {
-      opacity: 0;
-      transform: translateY(16px);
-    }
-    .section-header {
-      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    
-    /* Stagger effect per grid items */
-    .value-card.has-entered,
-    .service-card.has-entered,
-    .audience-card.has-entered {
-      animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
+      /* Header slot (gestito da global-header.css) */
+      #site-header-slot {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
+
+      /* Header gestito completamente da global-header.css - nessuno stile aggiuntivo necessario */
+
+      /* Skip link (accessibility) */
+      .skip-link {
+        position: absolute;
+        top: -100px;
+        left: 0;
+        z-index: 10000;
+        padding: var(--sp-3) var(--sp-4);
+        background: var(--brand-600);
+        color: var(--ink-invert);
+        text-decoration: none;
+        font-weight: 600;
+        border-radius: 0 0 var(--radius-md) 0;
+        transition: top 0.2s ease;
       }
-    }
-    
-    /* Parallax leggero per sezioni */
-    @media (prefers-reduced-motion: no-preference) {
-      .section-alt,
-      .section-contrast {
-        transition: transform 0.3s ease-out;
+      .skip-link:focus {
+        top: 0;
+        outline: 2px solid var(--brand-400);
+        outline-offset: 2px;
       }
-    }
-    
-    /* Scroll progress indicator (discreto) */
-    .scroll-progress {
-      position: fixed;
-      top: 64px; /* Sotto l'header */
-      left: 0;
-      width: 0%;
-      height: 3px;
-      background: linear-gradient(90deg, var(--brand-500), var(--brand-400));
-      z-index: 999; /* Sotto header ma sopra contenuto */
-      transition: width 0.15s ease-out;
-      opacity: 1;
-      box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .scroll-progress {
-        display: none;
-      }
-    }
-    @media (max-width: 768px) {
-      .scroll-progress {
-        top: 56px; /* Header più basso su mobile */
-      }
-    }
 
-    .value-card:hover {
-      border-color: var(--brand-500);
-      box-shadow: 0 10px 28px rgba(37, 99, 235, 0.15);
-      transform: translateY(-2px);
-    }
-    .value-card:hover .badge {
-      background: rgba(59, 130, 246, 0.18);
-      transform: scale(1.02);
-    }
-
-    .value-card strong {
-      font-size: var(--fs-16);
-      font-weight: 700;
-      color: var(--ink);
-    }
-
-    .value-card span {
-      font-size: var(--fs-14);
-      color: var(--ink-soft);
-      line-height: 1.6;
-    }
-
-    .value-card-meta {
-      list-style: none;
-      margin: var(--sp-3) 0 0 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-      font-size: 0.85rem;
-      color: var(--ink-soft);
-    }
-
-    .value-card-meta li strong {
-      color: var(--ink);
-      margin-right: 0.35rem;
-      font-weight: 600;
-    }
-
-    .value-card .badge {
-      align-self: flex-start;
-      font-size: var(--fs-11);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: var(--sp-2) var(--sp-3);
-      transition: background 0.2s ease, transform 0.15s ease;
-      border-radius: var(--radius-pill);
-      background: rgba(59, 130, 246, 0.12);
-      color: var(--brand-400);
-    }
-
-    /* ===== LIMITS SECTION ===== */
-    .limits-section {
-      padding: 6rem 0;
-      background: var(--surface-page);
-    }
-
-    .limits-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: var(--sp-6);
-    }
-
-    .limit-card {
-      background: var(--surface-elev);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-lg);
-      padding: var(--sp-6);
-      display: flex;
-      flex-direction: column;
-      gap: var(--sp-3);
-    }
-
-    .limit-card strong {
-      font-size: var(--fs-15);
-      font-weight: 700;
-      color: var(--ink);
-    }
-
-    .limit-card ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      gap: var(--sp-2);
-      font-size: var(--fs-14);
-      color: var(--ink-soft);
-      line-height: 1.6;
-    }
-
-    .limit-card ul li {
-      position: relative;
-      padding-left: var(--sp-4);
-    }
-
-    .limit-card ul li::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0.55em;
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(37, 99, 235, 0.6);
-    }
-
-    .limits-note {
-      margin-top: var(--sp-5);
-      font-size: var(--fs-13);
-      color: var(--muted);
-    }
-
-    /* ===== SERVICES SECTION ===== */
-    .services-section {
-      padding: 6rem 0;
-      background: var(--surface-page);
-      color: var(--ink);
-      margin-top: var(--sp-8);
-    }
-    
-    .services-section * {
-      color: inherit;
-    }
-
-    .services-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: var(--sp-10);
-    }
-
-    @media (min-width: 768px) {
-      .services-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--sp-10);
-      }
-    }
-
-    .service-card {
-      padding: var(--sp-8);
-      background: var(--surface-card);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-xl);
-      transition: all var(--transition-base);
-      display: flex;
-      flex-direction: column;
-      gap: var(--sp-6);
-    }
-
-    .service-card:hover {
-      background: var(--surface-elev);
-      border-color: var(--brand-600);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-      transform: translateY(-6px);
-    }
-
-    .service-card-header {
-      display: flex;
-      flex-direction: column;
-      gap: var(--sp-4);
-    }
-
-    .service-card-icon {
-      width: 64px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(37, 99, 235, 0.15) 100%);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-lg);
-      color: var(--brand-400);
-      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease;
-    }
-    .service-card:hover .service-card-icon {
-      transform: scale(1.05);
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%);
-    }
-    .service-card:hover .service-card-icon svg {
-      transform: rotate(2deg);
-      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .service-card-title {
-      font-size: var(--fs-22);
-      font-weight: 700;
-      color: var(--ink);
-      margin: 0;
-      line-height: 1.3;
-    }
-
-    .service-card-description {
-      font-size: var(--fs-15);
-      line-height: var(--lh-17);
-      color: var(--ink-soft);
-      margin: 0;
-      flex: 1;
-    }
-    
-    .service-card-badge {
-      display: inline-block;
-      padding: 0.375rem 0.75rem;
-      background: rgba(168, 85, 247, 0.15);
-      border: 1px solid rgba(168, 85, 247, 0.3);
-      border-radius: 4px;
-      font-size: 0.75rem;
-      color: rgba(196, 181, 253, 0.95);
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      margin-top: 0.75rem;
-    }
-
-    /* ===== COLLABORATORS SECTION ===== */
-    .collaborators-section {
-      padding: 6rem 0;
-      background: var(--surface-card);
-    }
-
-    /* ===== TESTIMONIALS SECTION ===== */
-    .testimonials-section {
-      padding: 6rem 0;
-      background: var(--surface-page);
-      display: none; /* Nascosta fino a quando non viene riempita con testimonials reali */
-    }
-
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 2rem;
-      margin-top: var(--sp-8);
-    }
-
-    .testimonial-card {
-      background: var(--surface-card);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-lg);
-      padding: 2rem;
-      transition: all 0.3s;
-      position: relative;
-    }
-
-    .testimonial-card:hover {
-      border-color: var(--brand-600);
-      transform: translateY(-4px);
-      box-shadow: 0 12px 32px rgba(37, 99, 235, 0.15);
-    }
-
-    .testimonial-rating {
-      display: flex;
-      gap: 0.25rem;
-      margin-bottom: var(--sp-4);
-    }
-
-    .testimonial-star {
-      width: 18px;
-      height: 18px;
-      color: #fbbf24;
-      fill: currentColor;
-    }
-
-    .testimonial-star.empty {
-      color: var(--br-card, #333);
-      opacity: 0.3;
-    }
-
-    .testimonial-text {
-      font-size: var(--fs-15);
-      line-height: 1.7;
-      color: var(--ink-soft);
-      margin-bottom: var(--sp-5);
-      font-style: italic;
-    }
-
-    .testimonial-author {
-      display: flex;
-      align-items: center;
-      gap: var(--sp-3);
-      padding-top: var(--sp-4);
-      border-top: 1px solid var(--br-card);
-    }
-
-    .testimonial-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--brand-600, #2563eb), var(--brand-400, #60a5fa));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 700;
-      font-size: var(--fs-16);
-      flex-shrink: 0;
-    }
-
-    .testimonial-author-info {
-      flex: 1;
-    }
-
-    .testimonial-author-name {
-      font-size: var(--fs-15);
-      font-weight: 700;
-      color: var(--ink);
-      margin: 0 0 0.25rem;
-    }
-
-    .testimonial-author-role {
-      font-size: var(--fs-13);
-      color: var(--muted, #888);
-      margin: 0;
-    }
-
-    .testimonial-date {
-      font-size: var(--fs-12);
-      color: var(--muted, #888);
-      margin-top: var(--sp-2);
-    }
-
-    .collaborator-tab {
-      padding: 0.75rem 1.5rem;
-      background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
-      color: var(--ink-soft);
-      font-size: var(--fs-15);
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-bottom: -1px;
-    }
-
-    .collaborator-tab:hover {
-      color: var(--ink);
-    }
-
-    .collaborator-tab.active {
-      color: var(--brand-400);
-      border-bottom-color: var(--brand-400);
-    }
-
-    .collaborators-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.25rem;
-    }
-
-    .collaborator-card {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      background: var(--surface-elev);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-md);
-      padding: 1.25rem 1.4rem;
-      transition: all 0.3s;
-    }
-
-    .collaborator-card:hover {
-      border-color: var(--brand-600);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.1);
-    }
-
-    .collaborator-card-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(37, 99, 235, 0.1);
-      color: var(--brand-400);
-      margin-bottom: 1rem;
-    }
-
-    .collaborator-card-title {
-      font-size: var(--fs-18);
-      font-weight: 700;
-      color: var(--ink);
-      margin: 0 0 0.5rem;
-    }
-
-    .collaborator-card-description {
-      font-size: var(--fs-13);
-      color: var(--ink-soft);
-      line-height: 1.6;
-      margin: 0 0 var(--sp-2);
-    }
-
-    .collaborator-card-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: var(--fs-13);
-    }
-
-    /* ===== SECURITY GUIDE BOXES ===== */
-    .security-guide {
-      margin-top: var(--sp-8);
-      padding: var(--sp-5);
-      border-radius: var(--radius-lg);
-      border-left: 4px solid;
-      background: rgba(234, 88, 12, 0.08);
-      border-color: rgba(234, 88, 12, 0.4);
-    }
-
-    .security-guide.warning {
-      background: rgba(234, 88, 12, 0.08);
-      border-color: rgba(234, 88, 12, 0.4);
-    }
-
-    .security-guide.info {
-      background: rgba(37, 99, 235, 0.08);
-      border-color: rgba(37, 99, 235, 0.4);
-    }
-
-    .security-guide-header {
-      display: flex;
-      align-items: center;
-      gap: var(--sp-2);
-      margin-bottom: var(--sp-3);
-    }
-
-    .security-guide-icon {
-      width: 24px;
-      height: 24px;
-      flex-shrink: 0;
-      color: var(--warn, #ea580c);
-    }
-
-    .security-guide.info .security-guide-icon {
-      color: var(--brand-600, #2563eb);
-    }
-
-    .security-guide-title {
-      font-size: var(--fs-16);
-      font-weight: 700;
-      color: var(--ink);
-      margin: 0;
-    }
-
-    .security-guide-content {
-      font-size: var(--fs-14);
-      line-height: 1.6;
-      color: var(--ink-soft);
-    }
-
-    .security-guide-list {
-      margin: var(--sp-3) 0;
-      padding-left: var(--sp-5);
-      list-style: none;
-    }
-
-    .security-guide-list li {
-      margin-bottom: var(--sp-2);
-      position: relative;
-      padding-left: var(--sp-4);
-    }
-
-    .security-guide-list li::before {
-      content: "•";
-      position: absolute;
-      left: 0;
-      color: var(--warn, #ea580c);
-      font-weight: 700;
-    }
-
-    .security-guide.info .security-guide-list li::before {
-      color: var(--brand-600, #2563eb);
-    }
-
-    .security-guide-strong {
-      font-weight: 700;
-      color: var(--ink);
-    }
-
-    /* ===== MODAL PROFESSIONISTA ===== */
-    #modal-professionista {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.75);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      padding: 1rem;
-      backdrop-filter: blur(4px);
-    }
-
-    #modal-professionista.hidden {
-      display: none;
-    }
-
-    .modal-professionista-content {
-      background: var(--surface-card);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-lg);
-      max-width: 40rem;
-      width: 100%;
-      max-height: 90vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    }
-
-    .modal-professionista-header {
-      padding: 2rem 2rem 1.5rem;
-      border-bottom: 1px solid var(--br-card);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .modal-professionista-title {
-      font-size: var(--fs-24);
-      font-weight: 700;
-      color: var(--ink);
-      margin: 0;
-    }
-
-    .modal-professionista-close {
-      background: none;
-      border: none;
-      color: var(--ink-soft);
-      cursor: pointer;
-      padding: 0.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 4px;
-      transition: all 0.2s;
-    }
-
-    .modal-professionista-close:hover {
-      background: var(--surface-elev);
-      color: var(--ink);
-    }
-
-    .modal-professionista-body {
-      padding: 2rem;
-      overflow-y: auto;
-      flex: 1;
-    }
-
-    .form-group {
-      margin-bottom: var(--sp-5);
-    }
-
-    .form-label {
-      display: block;
-      font-size: var(--fs-14);
-      font-weight: 600;
-      color: var(--ink);
-      margin-bottom: var(--sp-2);
-    }
-
-    .form-label .required {
-      color: var(--err, #ef4444);
-      margin-left: 2px;
-    }
-
-    .form-input,
-    .form-select,
-    .form-textarea {
-      width: 100%;
-      padding: var(--sp-3);
-      font-size: var(--fs-14);
-      font-family: var(--ff-sans);
-      color: var(--ink);
-      background: var(--surface-page);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-md);
-      transition: all 0.2s;
-    }
-
-    .form-input:focus,
-    .form-select:focus,
-    .form-textarea:focus {
-      outline: none;
-      border-color: var(--brand-600, #2563eb);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-
-    .form-textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
-
-    .form-help {
-      font-size: var(--fs-12);
-      color: var(--muted, #888);
-      margin-top: var(--sp-1);
-    }
-
-    .form-actions {
-      display: flex;
-      gap: var(--sp-3);
-      margin-top: var(--sp-6);
-    }
-
-    .form-actions .btn {
-      flex: 1;
-    }
-
-    .form-actions .btn-secondary {
-      background: var(--surface-elev);
-      color: var(--ink);
-      border: 1px solid var(--br-card);
-    }
-
-    .form-actions .btn-secondary:hover {
-      background: var(--surface-hover);
-    }
-
-    .collaborator-card-description {
-      font-size: var(--fs-14);
-      color: var(--ink-soft);
-      margin: 0 0 1rem;
-      line-height: 1.6;
-    }
-
-    .collaborator-card-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--brand-400);
-      font-size: var(--fs-14);
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-
-    .collaborator-card-link:hover {
-      color: var(--brand-300);
-      gap: 0.75rem;
-    }
-
-    .collaborator-panel {
-      display: none;
-    }
-
-    .collaborator-panel.active {
-      display: block;
-    }
-
-    .btn-block {
-      width: 100%;
-    }
-
-    /* ===== BROKERS SECTION ===== */
-    .brokers-section {
-      padding: 6rem 0;
-      background: var(--surface-card);
-      border-top: 1px solid var(--br-card);
-      color: var(--ink);
-      margin-top: var(--sp-8);
-    }
-    
-    .brokers-section * {
-      color: inherit;
-    }
-
-    /* Header gestito completamente da global-header.css - nessuno stile aggiuntivo necessario */
-
-    /* Scrollbar gestita da tokens.css - rimossa custom light */
-    .modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      display: flex; align-items: center; justify-content: center;
-      background: rgba(0, 0, 0, 0.7);
-      visibility: hidden; opacity: 0;
-      z-index: 50;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-    .modal.show {
-      visibility: visible;
-      opacity: 1;
-    }
-    .modal-content {
-      background: var(--surface-card);
-      max-width: 640px;
-      padding: 28px;
-      border-radius: 16px;
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--ink);
-      text-align: left;
-      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
-      border: 1px solid var(--br-card);
-    }
-   body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-    .card{transition:transform .2s ease, box-shadow .2s ease}
-    .card:hover{box-shadow:0 10px 30px rgba(2,6,23,.08); transform: translateY(-2px)}
-    .logo-fb{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:.75rem;font-weight:700;color:#fff;box-shadow:inset 0 0 0 1px rgba(15,23,42,.08)}
-    .tag{font-size:11px;padding:.125rem .5rem;border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc}
-    .badge{font-size:10px;padding:.1rem .45rem;border-radius:999px;font-weight:700}
-    .score-badge{font-size:11px;padding:.125rem .5rem;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:700}
-    .no-scrollbar{scrollbar-width:none}
-    .no-scrollbar::-webkit-scrollbar{display:none}
-    .clamp-3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-  html:has(#modal.flex), body:has(#modal.flex){overflow:hidden}
-
-    /* ===== ICONS ===== */
-    .ico { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-    .ico-lg { width: 24px; height: 24px; stroke-width: 2; }
-    .ico-xl { width: 32px; height: 32px; stroke-width: 2; }
-    
-    /* ===== TYPED.JS FADE OUT ===== */
-    .typed-fade-out {
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    /* ===== BUTTONS ===== */
-    :root { --hover-bg: color-mix(in oklab, var(--surface-card) 92%, transparent); }
-    .btn, .btn-sm, .btn-inline {
-      transition: background-color .15s ease, border-color .15s ease,
-                  color .15s ease, transform .12s ease, box-shadow .15s ease;
-    }
-    .btn-inline {
-      display:inline-flex; align-items:center; gap:.45rem;
-      padding:.42rem .70rem;
-      border-radius: var(--radius-pill);
-      border:1px solid var(--br-soft);
-      background: var(--surface-card);
-      color: var(--ink);
-      font-size:12px; font-weight:600;
-    }
-    .btn-sm {
-      display:inline-flex; align-items:center; gap:.35rem;
-      padding:.35rem .6rem;
-      border-radius: var(--radius-pill);
-      border:1px solid var(--br-soft);
-      background: var(--surface-card);
-      color: var(--ink);
-      font-size:12px; font-weight:600;
-    }
-    .btn:hover, .btn-sm:hover, .btn-inline:hover {
-      background: var(--hover-bg);
-      border-color: color-mix(in oklab, var(--br-soft) 70%, var(--brand-600) 30%);
-      box-shadow: 0 6px 18px oklab(0% 0 0 / .10);
-      transform: translateY(-1px);
-    }
-    .btn:active, .btn-sm:active, .btn-inline:active { 
-      transform: translateY(0) scale(0.98);
-      transition: transform 0.08s ease;
-    }
-    .btn:focus-visible, .btn-sm:focus-visible, .btn-inline:focus-visible {
-      outline: 2px solid var(--brand-500);
-      outline-offset: 2px;
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
-    }
-
-    /* ===== LINK INTERNI (ANCHOR) ===== */
-    a[href^="#"] {
-      transition: opacity 0.15s ease;
-    }
-    a[href^="#"]:active {
-      opacity: 0.7;
-    }
-
-    /* Footer gestito completamente da tokens.css - nessuno stile aggiuntivo necessario */
-
-    /* ===== LEGAL OVERLAY ===== */
-    #legal-consent-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: var(--sp-4);
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px);
-    }
-    
-    #legal-consent-overlay[hidden] {
-      display: none !important;
-    }
-    
-    .legal-panel {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: min(90rem, 90vw);
-      max-height: 90vh;
-      background: var(--surface-card);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-xl);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    
-    .legal-hdr {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: var(--sp-5) var(--sp-6);
-      border-bottom: 1px solid var(--br-card);
-    }
-    
-    .legal-title {
-      font-size: var(--fs-18);
-      font-weight: 700;
-      color: var(--ink);
-    }
-    
-    .legal-tabs {
-      display: flex;
-      gap: var(--sp-2);
-      padding: var(--sp-3) var(--sp-6);
-      border-bottom: 1px solid var(--br-card);
-      background: var(--surface-elev);
-    }
-    
-    .legal-tab {
-      padding: var(--sp-2) var(--sp-4);
-      font-size: var(--fs-13);
-      font-weight: 600;
-      color: var(--muted);
-      background: transparent;
-      border: 1px solid transparent;
-      border-radius: var(--radius-pill);
-      cursor: pointer;
-      transition: all var(--transition-fast);
-    }
-    
-    .legal-tab:hover {
-      color: var(--ink);
-      background: var(--surface-card);
-    }
-    
-    .legal-tab[aria-selected="true"] {
-      color: var(--ink);
-      background: var(--surface-card);
-      border-color: var(--br-card);
-      box-shadow: var(--shadow-sm);
-    }
-    
-    .legal-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: var(--sp-6);
-    }
-    
-    .legal-body section[hidden] {
-      display: none !important;
-    }
-    
-    .legal-body h4 {
-      font-size: var(--fs-16);
-      font-weight: 700;
-      color: var(--ink);
-      margin-top: var(--sp-6);
-      margin-bottom: var(--sp-3);
-    }
-    
-    .legal-body h4:first-child {
-      margin-top: 0;
-    }
-    
-    .legal-body p,
-    .legal-body ul {
-      color: var(--ink-soft);
-      line-height: var(--lh-17);
-      margin-bottom: var(--sp-4);
-    }
-    
-    .legal-body ul {
-      padding-left: var(--sp-5);
-      list-style: disc;
-    }
-    
-    .legal-body li {
-      margin-bottom: var(--sp-2);
-    }
-    
-    .legal-body code {
-      background: var(--surface-elev);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: var(--fs-12);
-      color: var(--brand-400);
-    }
-    
-    .legal-ftr {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: var(--sp-4) var(--sp-6);
-      border-top: 1px solid var(--br-card);
-      background: var(--surface-elev);
-    }
-    
-    .legal-ftr small {
-      color: var(--muted);
-      font-size: var(--fs-12);
-    }
-
-    /* ===== MOBILE RESPONSIVE DESIGN ===== */
-    @media (max-width: 767px) {
-      /* Container padding ridotto su mobile */
+      /* container */
       .container {
-        padding-inline: var(--sp-4);
+        max-width: 90rem;
+        margin-inline: auto;
+        padding-inline: 1rem;
+      }
+      main {
+        flex: 1;
+        padding-top: 0;
+        padding-bottom: 0;
+        background: var(--surface-page);
+        color: var(--ink);
       }
 
-      /* Hero Section - Mobile */
+      main * {
+        color: inherit;
+      }
+
+      /* ===== HERO SECTION ===== */
       .hero-section {
-        padding: 4rem 0 3rem;
+        position: relative;
+        padding: 10rem 0 7rem;
+        background: var(--surface-page);
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 60rem;
+        margin: 0 auto;
       }
 
       .hero-badge {
-        font-size: 0.625rem;
-        padding: 0.375rem 0.75rem;
-        margin-bottom: 1.5rem;
+        display: inline-block;
+        padding: 0.625rem 1.25rem;
+        background: var(--surface-elev);
+        border: 1px solid var(--br-card);
+        border-radius: 6px;
+        font-size: 0.6875rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--brand-400);
+        margin-bottom: 2.5rem;
       }
 
       .hero-title {
-        font-size: clamp(2rem, 8vw, 3rem);
-        margin-bottom: 1.5rem;
+        font-family: var(--ff-sans);
+        font-size: clamp(2.5rem, 5vw, 4.25rem);
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.03em;
+        color: var(--ink);
+        margin: 0 0 2.5rem;
       }
 
-      .hero-description {
-        font-size: 1rem;
-        line-height: 1.6;
-        margin-bottom: 2rem;
+      .hero-title-line {
+        display: block;
       }
 
-      .hero-features {
-        gap: 1.25rem;
-        margin: 2.5rem 0;
-      }
-
-      .hero-feature {
-        padding: 1.5rem 1.25rem;
-      }
-
-      .hero-feature .ico {
-        width: 20px;
-        height: 20px;
-        margin-bottom: 0.75rem;
-      }
-
-      .hero-feature strong {
-        font-size: 0.9375rem;
+      .hero-title-line:first-child {
         margin-bottom: 0.5rem;
       }
 
+      .hero-description {
+        font-family: var(--ff-sans);
+        font-size: 1.1875rem;
+        font-weight: 400;
+        line-height: 1.75;
+        letter-spacing: -0.008em;
+        color: var(--ink-soft);
+        margin: 0 0 3.5rem;
+        max-width: 50rem;
+      }
+
+      .hero-description strong {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .hero-plan-grid {
+        margin-top: 2.5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: var(--sp-4);
+      }
+
+      .hero-plan-card {
+        background: var(--surface-elev);
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-lg);
+        padding: var(--sp-5);
+        box-shadow: 0 18px 36px rgba(15, 23, 42, 0.35);
+        display: flex;
+        flex-direction: column;
+        gap: var(--sp-3);
+      }
+
+      .hero-plan-card strong {
+        font-size: var(--fs-16);
+        color: var(--ink);
+      }
+
+      .hero-plan-card ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--sp-2);
+        color: var(--ink-soft);
+        font-size: var(--fs-13);
+        line-height: 1.55;
+      }
+
+      .hero-plan-card ul li {
+        display: flex;
+        gap: var(--sp-2);
+      }
+
+      .hero-plan-card ul li::before {
+        content: '•';
+        color: var(--brand-500);
+        font-weight: 700;
+      }
+
+      .hero-plan-card .plan-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.35rem 0.75rem;
+        border-radius: var(--radius-pill);
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        font-size: var(--fs-11);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+      }
+
+      .hero-plan-card--free {
+        border-color: rgba(16, 185, 129, 0.35);
+        background: linear-gradient(180deg, rgba(16, 185, 129, 0.12), rgba(15, 23, 42, 0.2));
+      }
+
+      .hero-plan-card--paid {
+        border-color: rgba(59, 130, 246, 0.4);
+        background: linear-gradient(180deg, rgba(59, 130, 246, 0.12), rgba(15, 23, 42, 0.2));
+      }
+
+      .hero-plan-card .btn {
+        align-self: flex-start;
+      }
+
+      .hero-features {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.75rem;
+        margin: 4rem 0;
+      }
+
+      @media (min-width: 768px) {
+        .hero-features {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 2rem;
+        }
+      }
+
+      .hero-feature {
+        padding: 2rem 1.75rem;
+        background: var(--surface-elev);
+        border: 1px solid var(--br-soft);
+        border-radius: var(--radius-lg);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .hero-feature:hover {
+        background: var(--surface-hover);
+        border-color: var(--br-card);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .hero-feature .ico {
+        width: 22px;
+        height: 22px;
+        color: var(--brand-500);
+        margin-bottom: 1rem;
+      }
+
+      .hero-feature strong {
+        display: block;
+        font-family: var(--ff-sans);
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+        margin-bottom: 0.625rem;
+        line-height: 1.4;
+      }
+
       .hero-feature span {
-        font-size: 0.8125rem;
+        display: block;
+        font-family: var(--ff-sans);
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1.65;
+        letter-spacing: -0.005em;
+        color: var(--muted);
       }
 
       .hero-cta {
-        flex-direction: column;
-        gap: 1rem;
-        margin-top: 2.5rem;
+        display: flex;
+        gap: 1.25rem;
+        margin-top: 4rem;
       }
 
       .hero-disclaimer {
-        margin-top: 3rem;
-        padding: 1.25rem 0;
+        margin-top: 5rem;
+        padding: 1.5rem 0;
+        border-top: 1px solid var(--br-card);
       }
 
       .hero-disclaimer .container {
-        flex-direction: column;
-        gap: 0.75rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .hero-disclaimer .ico {
+        width: 18px;
+        height: 18px;
+        color: var(--brand-500);
+        flex-shrink: 0;
+        margin-top: 2px;
       }
 
       .hero-disclaimer p {
-        font-size: 0.75rem;
+        font-family: var(--ff-sans);
+        font-size: 0.8125rem;
+        font-weight: 400;
+        line-height: 1.7;
+        color: var(--muted);
+        margin: 0;
       }
 
-      /* Section Headers - Mobile */
+      .hero-disclaimer strong {
+        color: var(--ink-soft);
+        font-weight: 600;
+      }
+
+      .section-alt {
+        background: var(--surface-card);
+      }
+
+      .section-contrast {
+        background: var(--surface-elev);
+      }
+
+      /* Header gestito completamente da global-header.css - nessuno stile aggiuntivo necessario */
+
+      /* ===== SECTION HEADERS ===== */
       .section-header {
-        margin-bottom: var(--sp-10);
-        padding: 0 var(--sp-2);
+        text-align: center;
+        max-width: 48rem;
+        margin: 0 auto var(--sp-16);
+        padding: 0 var(--sp-4);
       }
 
       .section-title {
-        font-size: clamp(1.75rem, 6vw, 2.5rem);
-        margin-bottom: var(--sp-4);
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 800;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        margin: 0 0 var(--sp-6);
       }
 
       .section-description {
-        font-size: var(--fs-16);
-        line-height: 1.6;
-        margin-bottom: var(--sp-3);
+        font-size: var(--fs-18);
+        line-height: var(--lh-17);
+        color: var(--ink-soft);
+        margin: 0 0 var(--sp-4);
       }
 
-      /* Method Section - Mobile */
+      .section-description strong {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      /* ===== METHOD SECTION ===== */
       .method-section {
-        padding: 4rem 0;
+        padding: 6rem 0;
+        background: var(--surface-card);
+        color: var(--ink);
+        margin-top: var(--sp-8);
+      }
+
+      .method-section * {
+        color: inherit;
+      }
+
+      .method-section .section-description {
+        color: var(--ink-soft);
+      }
+
+      .method-section .section-description strong {
+        color: var(--ink);
       }
 
       .method-grid {
-        gap: var(--sp-6);
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--sp-8);
+      }
+
+      @media (min-width: 768px) {
+        .method-grid {
+          grid-template-columns: repeat(3, 1fr);
+          gap: var(--sp-10);
+        }
       }
 
       .method-card {
-        padding: var(--sp-6);
-      }
-
-      .method-card-icon {
-        width: 48px;
-        height: 48px;
-      }
-
-      .method-card-title {
-        font-size: var(--fs-18);
-      }
-
-      .method-card-list li {
-        font-size: var(--fs-14);
-      }
-
-      /* Services Section - Mobile */
-      .services-section {
-        padding: 4rem 0;
-      }
-
-      .value-section,
-      .limits-section {
-        padding: 3.5rem 0;
-      }
-
-      .value-grid,
-      .limits-grid {
-        grid-template-columns: 1fr;
+        padding: var(--sp-8);
+        background: var(--surface-elev);
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-xl);
+        transition: all var(--transition-base);
+        display: flex;
+        flex-direction: column;
         gap: var(--sp-5);
       }
 
-      .value-card,
-      .limit-card {
-        padding: var(--sp-5);
+      .method-card:hover {
+        background: var(--surface-hover);
+        border-color: var(--brand-600);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        transform: translateY(-4px);
       }
 
-      .services-grid {
+      .method-card-icon {
+        width: 56px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(37, 99, 235, 0.1) 100%);
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-lg);
+        color: var(--brand-500);
+      }
+
+      .method-card-title {
+        font-size: var(--fs-20);
+        font-weight: 700;
+        color: var(--ink);
+        margin: 0;
+      }
+
+      .method-card-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--sp-3);
+      }
+
+      .method-card-list li {
+        font-size: var(--fs-15);
+        line-height: var(--lh-17);
+        color: var(--ink-soft);
+        padding-left: var(--sp-5);
+        position: relative;
+      }
+
+      .method-card-list li::before {
+        content: '▸';
+        position: absolute;
+        left: 0;
+        color: var(--brand-500);
+        font-weight: 700;
+      }
+
+      .method-card-list strong {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      /* ===== AUDIENCE SECTION ===== */
+      .audience-section {
+        padding: 5rem 0;
+        background: var(--surface-page);
+      }
+
+      .audience-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: var(--sp-6);
       }
 
-      .service-card {
+      .audience-card {
+        background: var(--surface-card);
+        border: 1px solid var(--br-soft);
+        border-radius: var(--radius-lg);
+        padding: var(--sp-5);
+        display: flex;
+        flex-direction: column;
+        gap: var(--sp-3);
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.35);
+        transition:
+          box-shadow var(--transition-base),
+          transform var(--transition-base),
+          border-color var(--transition-base),
+          background var(--transition-base);
+      }
+
+      .audience-card:hover {
+        border-color: var(--brand-500);
+        background: var(--surface-elev);
+        transform: translateY(-2px);
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.6);
+      }
+
+      .audience-card strong {
+        font-size: var(--fs-16);
+        font-weight: 700;
+        color: var(--ink);
+      }
+
+      .audience-card span {
+        font-size: var(--fs-14);
+        color: var(--ink-soft);
+        line-height: 1.6;
+      }
+
+      .audience-badge {
+        align-self: flex-start;
+        font-size: var(--fs-11);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: var(--sp-2) var(--sp-3);
+        border-radius: var(--radius-pill);
+        background: rgba(37, 99, 235, 0.12);
+        color: var(--brand-400);
+        transition:
+          background 0.2s ease,
+          transform 0.15s ease;
+      }
+      .audience-card:hover .audience-badge {
+        background: rgba(37, 99, 235, 0.18);
+        transform: scale(1.02);
+      }
+
+      .audience-partner-highlight {
+        margin-top: var(--sp-10);
+        padding: var(--sp-5) var(--sp-6);
+        border-radius: var(--radius-lg);
+        border: 1px dashed rgba(148, 163, 184, 0.5);
+        background: radial-gradient(circle at 0 0, rgba(37, 99, 235, 0.18), transparent 60%);
+        display: flex;
+        flex-direction: column;
+        gap: var(--sp-3);
+      }
+
+      .audience-partner-highlight strong {
+        font-size: var(--fs-15);
+        color: var(--ink);
+      }
+
+      .audience-partner-highlight p {
+        margin: 0;
+        font-size: var(--fs-14);
+        color: var(--ink-soft);
+      }
+
+      .audience-partner-highlight .btn {
+        align-self: flex-start;
+        margin-top: var(--sp-2);
+      }
+
+      @media (max-width: 768px) {
+        .audience-section {
+          padding: var(--sp-10) 0;
+        }
+      }
+
+      /* ===== VALUE SECTION ===== */
+      .value-section {
+        padding: 6rem 0;
+        background: var(--surface-card);
+        border-top: 1px solid var(--br-card);
+        border-bottom: 1px solid var(--br-card);
+      }
+
+      .value-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: var(--sp-6);
+      }
+
+      .value-card {
+        background: var(--surface-elev);
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-lg);
         padding: var(--sp-6);
+        display: flex;
+        flex-direction: column;
+        gap: var(--sp-3);
+        transition:
+          box-shadow var(--transition-base),
+          transform var(--transition-base),
+          border-color var(--transition-base);
+      }
+
+      .hero-feature,
+      .audience-card,
+      .value-card,
+      .service-card,
+      .testimonial-card,
+      .plan-card {
+        opacity: 1;
+        transform: translateY(0);
+        transition:
+          opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+          box-shadow var(--transition-base),
+          border-color var(--transition-base),
+          background var(--transition-base);
+      }
+
+      .hero-feature:not(.has-entered),
+      .audience-card:not(.has-entered),
+      .value-card:not(.has-entered),
+      .service-card:not(.has-entered),
+      .testimonial-card:not(.has-entered),
+      .plan-card:not(.has-entered) {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      /* Animazioni progressive per sezioni */
+      .section-header:not(.has-entered) {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      .section-header {
+        transition:
+          opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      /* Stagger effect per grid items */
+      .value-card.has-entered,
+      .service-card.has-entered,
+      .audience-card.has-entered {
+        animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Parallax leggero per sezioni */
+      @media (prefers-reduced-motion: no-preference) {
+        .section-alt,
+        .section-contrast {
+          transition: transform 0.3s ease-out;
+        }
+      }
+
+      /* Scroll progress indicator (discreto) */
+      .scroll-progress {
+        position: fixed;
+        top: 64px; /* Sotto l'header */
+        left: 0;
+        width: 0%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--brand-500), var(--brand-400));
+        z-index: 999; /* Sotto header ma sopra contenuto */
+        transition: width 0.15s ease-out;
+        opacity: 1;
+        box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .scroll-progress {
+          display: none;
+        }
+      }
+      @media (max-width: 768px) {
+        .scroll-progress {
+          top: 56px; /* Header più basso su mobile */
+        }
+      }
+
+      .value-card:hover {
+        border-color: var(--brand-500);
+        box-shadow: 0 10px 28px rgba(37, 99, 235, 0.15);
+        transform: translateY(-2px);
+      }
+      .value-card:hover .badge {
+        background: rgba(59, 130, 246, 0.18);
+        transform: scale(1.02);
+      }
+
+      .value-card strong {
+        font-size: var(--fs-16);
+        font-weight: 700;
+        color: var(--ink);
+      }
+
+      .value-card span {
+        font-size: var(--fs-14);
+        color: var(--ink-soft);
+        line-height: 1.6;
+      }
+
+      .value-card-meta {
+        list-style: none;
+        margin: var(--sp-3) 0 0 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        font-size: 0.85rem;
+        color: var(--ink-soft);
+      }
+
+      .value-card-meta li strong {
+        color: var(--ink);
+        margin-right: 0.35rem;
+        font-weight: 600;
+      }
+
+      .value-card .badge {
+        align-self: flex-start;
+        font-size: var(--fs-11);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: var(--sp-2) var(--sp-3);
+        transition:
+          background 0.2s ease,
+          transform 0.15s ease;
+        border-radius: var(--radius-pill);
+        background: rgba(59, 130, 246, 0.12);
+        color: var(--brand-400);
+      }
+
+      /* ===== LIMITS SECTION ===== */
+      .limits-section {
+        padding: 6rem 0;
+        background: var(--surface-page);
+      }
+
+      .limits-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: var(--sp-6);
+      }
+
+      .limit-card {
+        background: var(--surface-elev);
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-lg);
+        padding: var(--sp-6);
+        display: flex;
+        flex-direction: column;
+        gap: var(--sp-3);
+      }
+
+      .limit-card strong {
+        font-size: var(--fs-15);
+        font-weight: 700;
+        color: var(--ink);
+      }
+
+      .limit-card ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: var(--sp-2);
+        font-size: var(--fs-14);
+        color: var(--ink-soft);
+        line-height: 1.6;
+      }
+
+      .limit-card ul li {
+        position: relative;
+        padding-left: var(--sp-4);
+      }
+
+      .limit-card ul li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.55em;
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: rgba(37, 99, 235, 0.6);
+      }
+
+      .limits-note {
+        margin-top: var(--sp-5);
+        font-size: var(--fs-13);
+        color: var(--muted);
+      }
+
+      /* ===== SERVICES SECTION ===== */
+      .services-section {
+        padding: 6rem 0;
+        background: var(--surface-page);
+        color: var(--ink);
+        margin-top: var(--sp-8);
+      }
+
+      .services-section * {
+        color: inherit;
+      }
+
+      .services-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--sp-10);
+      }
+
+      @media (min-width: 768px) {
+        .services-grid {
+          grid-template-columns: repeat(3, 1fr);
+          gap: var(--sp-10);
+        }
+      }
+
+      .service-card {
+        padding: var(--sp-8);
+        background: var(--surface-card);
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-xl);
+        transition: all var(--transition-base);
+        display: flex;
+        flex-direction: column;
+        gap: var(--sp-6);
+      }
+
+      .service-card:hover {
+        background: var(--surface-elev);
+        border-color: var(--brand-600);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+        transform: translateY(-6px);
+      }
+
+      .service-card-header {
+        display: flex;
+        flex-direction: column;
+        gap: var(--sp-4);
       }
 
       .service-card-icon {
-        width: 48px;
-        height: 48px;
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(
+          135deg,
+          rgba(37, 99, 235, 0.25) 0%,
+          rgba(37, 99, 235, 0.15) 100%
+        );
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-lg);
+        color: var(--brand-400);
+        transition:
+          transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+          background 0.2s ease;
+      }
+      .service-card:hover .service-card-icon {
+        transform: scale(1.05);
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%);
+      }
+      .service-card:hover .service-card-icon svg {
+        transform: rotate(2deg);
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .service-card-title {
-        font-size: var(--fs-18);
+        font-size: var(--fs-22);
+        font-weight: 700;
+        color: var(--ink);
+        margin: 0;
+        line-height: 1.3;
       }
 
-      /* Collaborators Section - Mobile */
+      .service-card-description {
+        font-size: var(--fs-15);
+        line-height: var(--lh-17);
+        color: var(--ink-soft);
+        margin: 0;
+        flex: 1;
+      }
+
+      .service-card-badge {
+        display: inline-block;
+        padding: 0.375rem 0.75rem;
+        background: rgba(168, 85, 247, 0.15);
+        border: 1px solid rgba(168, 85, 247, 0.3);
+        border-radius: 4px;
+        font-size: 0.75rem;
+        color: rgba(196, 181, 253, 0.95);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        margin-top: 0.75rem;
+      }
+
+      /* ===== COLLABORATORS SECTION ===== */
       .collaborators-section {
-        padding: 4rem 0;
+        padding: 6rem 0;
+        background: var(--surface-card);
       }
 
-      /* Collaborators grid nella sezione principale */
-      .collaborators-section .collaborators-grid,
-      #panel-facebook .collaborators-grid,
-      #panel-piattaforme .collaborators-grid,
-      #panel-consulenti .collaborators-grid {
-        grid-template-columns: 1fr;
+      /* ===== TESTIMONIALS SECTION ===== */
+      .testimonials-section {
+        padding: 6rem 0;
+        background: var(--surface-page);
+        display: none; /* Nascosta fino a quando non viene riempita con testimonials reali */
+      }
+
+      .testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 2rem;
+        margin-top: var(--sp-8);
+      }
+
+      .testimonial-card {
+        background: var(--surface-card);
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        transition: all 0.3s;
+        position: relative;
+      }
+
+      .testimonial-card:hover {
+        border-color: var(--brand-600);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(37, 99, 235, 0.15);
+      }
+
+      .testimonial-rating {
+        display: flex;
+        gap: 0.25rem;
+        margin-bottom: var(--sp-4);
+      }
+
+      .testimonial-star {
+        width: 18px;
+        height: 18px;
+        color: #fbbf24;
+        fill: currentColor;
+      }
+
+      .testimonial-star.empty {
+        color: var(--br-card, #333);
+        opacity: 0.3;
+      }
+
+      .testimonial-text {
+        font-size: var(--fs-15);
+        line-height: 1.7;
+        color: var(--ink-soft);
+        margin-bottom: var(--sp-5);
+        font-style: italic;
+      }
+
+      .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: var(--sp-3);
+        padding-top: var(--sp-4);
+        border-top: 1px solid var(--br-card);
+      }
+
+      .testimonial-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--brand-600, #2563eb), var(--brand-400, #60a5fa));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: var(--fs-16);
+        flex-shrink: 0;
+      }
+
+      .testimonial-author-info {
+        flex: 1;
+      }
+
+      .testimonial-author-name {
+        font-size: var(--fs-15);
+        font-weight: 700;
+        color: var(--ink);
+        margin: 0 0 0.25rem;
+      }
+
+      .testimonial-author-role {
+        font-size: var(--fs-13);
+        color: var(--muted, #888);
+        margin: 0;
+      }
+
+      .testimonial-date {
+        font-size: var(--fs-12);
+        color: var(--muted, #888);
+        margin-top: var(--sp-2);
+      }
+
+      .collaborator-tab {
+        padding: 0.75rem 1.5rem;
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        color: var(--ink-soft);
+        font-size: var(--fs-15);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-bottom: -1px;
+      }
+
+      .collaborator-tab:hover {
+        color: var(--ink);
+      }
+
+      .collaborator-tab.active {
+        color: var(--brand-400);
+        border-bottom-color: var(--brand-400);
+      }
+
+      .collaborators-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 1.25rem;
       }
 
       .collaborator-card {
-        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        background: var(--surface-elev);
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-md);
+        padding: 1.25rem 1.4rem;
+        transition: all 0.3s;
+      }
+
+      .collaborator-card:hover {
+        border-color: var(--brand-600);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(37, 99, 235, 0.1);
       }
 
       .collaborator-card-icon {
-        width: 40px;
-        height: 40px;
-        margin-bottom: 0.75rem;
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(37, 99, 235, 0.1);
+        color: var(--brand-400);
+        margin-bottom: 1rem;
       }
 
       .collaborator-card-title {
-        font-size: var(--fs-16);
-        margin-bottom: 0.375rem;
+        font-size: var(--fs-18);
+        font-weight: 700;
+        color: var(--ink);
+        margin: 0 0 0.5rem;
       }
 
       .collaborator-card-description {
         font-size: var(--fs-13);
-        margin-bottom: 0.75rem;
-        line-height: 1.5;
+        color: var(--ink-soft);
+        line-height: 1.6;
+        margin: 0 0 var(--sp-2);
       }
 
       .collaborator-card-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
         font-size: var(--fs-13);
       }
 
-      /* Security Guide - Mobile */
+      /* ===== SECURITY GUIDE BOXES ===== */
       .security-guide {
-        margin-top: var(--sp-6);
-        padding: var(--sp-4);
+        margin-top: var(--sp-8);
+        padding: var(--sp-5);
+        border-radius: var(--radius-lg);
+        border-left: 4px solid;
+        background: rgba(234, 88, 12, 0.08);
+        border-color: rgba(234, 88, 12, 0.4);
+      }
+
+      .security-guide.warning {
+        background: rgba(234, 88, 12, 0.08);
+        border-color: rgba(234, 88, 12, 0.4);
+      }
+
+      .security-guide.info {
+        background: rgba(37, 99, 235, 0.08);
+        border-color: rgba(37, 99, 235, 0.4);
       }
 
       .security-guide-header {
-        margin-bottom: var(--sp-2);
+        display: flex;
+        align-items: center;
+        gap: var(--sp-2);
+        margin-bottom: var(--sp-3);
       }
 
       .security-guide-icon {
-        width: 20px;
-        height: 20px;
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+        color: var(--warn, #ea580c);
+      }
+
+      .security-guide.info .security-guide-icon {
+        color: var(--brand-600, #2563eb);
       }
 
       .security-guide-title {
-        font-size: var(--fs-15);
+        font-size: var(--fs-16);
+        font-weight: 700;
+        color: var(--ink);
+        margin: 0;
       }
 
       .security-guide-content {
-        font-size: var(--fs-13);
-        line-height: 1.5;
+        font-size: var(--fs-14);
+        line-height: 1.6;
+        color: var(--ink-soft);
       }
 
       .security-guide-list {
-        margin: var(--sp-2) 0;
-        padding-left: var(--sp-4);
+        margin: var(--sp-3) 0;
+        padding-left: var(--sp-5);
+        list-style: none;
       }
 
       .security-guide-list li {
-        margin-bottom: var(--sp-1_5);
-        padding-left: var(--sp-3);
-        font-size: var(--fs-13);
+        margin-bottom: var(--sp-2);
+        position: relative;
+        padding-left: var(--sp-4);
       }
 
+      .security-guide-list li::before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        color: var(--warn, #ea580c);
+        font-weight: 700;
+      }
 
-      /* Modal Professionista - Mobile */
+      .security-guide.info .security-guide-list li::before {
+        color: var(--brand-600, #2563eb);
+      }
+
+      .security-guide-strong {
+        font-weight: 700;
+        color: var(--ink);
+      }
+
+      /* ===== MODAL PROFESSIONISTA ===== */
       #modal-professionista {
-        padding: 0.5rem;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        padding: 1rem;
+        backdrop-filter: blur(4px);
+      }
+
+      #modal-professionista.hidden {
+        display: none;
       }
 
       .modal-professionista-content {
-        max-width: 100%;
-        max-height: 95vh;
-        border-radius: var(--radius-md);
+        background: var(--surface-card);
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-lg);
+        max-width: 40rem;
+        width: 100%;
+        max-height: 90vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
       }
 
       .modal-professionista-header {
-        padding: 1.5rem 1.25rem 1rem;
+        padding: 2rem 2rem 1.5rem;
+        border-bottom: 1px solid var(--br-card);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
 
       .modal-professionista-title {
-        font-size: var(--fs-20);
+        font-size: var(--fs-24);
+        font-weight: 700;
+        color: var(--ink);
+        margin: 0;
+      }
+
+      .modal-professionista-close {
+        background: none;
+        border: none;
+        color: var(--ink-soft);
+        cursor: pointer;
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        transition: all 0.2s;
+      }
+
+      .modal-professionista-close:hover {
+        background: var(--surface-elev);
+        color: var(--ink);
       }
 
       .modal-professionista-body {
-        padding: 1.25rem;
+        padding: 2rem;
+        overflow-y: auto;
+        flex: 1;
       }
 
       .form-group {
-        margin-bottom: var(--sp-4);
+        margin-bottom: var(--sp-5);
       }
 
       .form-label {
-        font-size: var(--fs-13);
-        margin-bottom: var(--sp-1_5);
+        display: block;
+        font-size: var(--fs-14);
+        font-weight: 600;
+        color: var(--ink);
+        margin-bottom: var(--sp-2);
+      }
+
+      .form-label .required {
+        color: var(--err, #ef4444);
+        margin-left: 2px;
       }
 
       .form-input,
       .form-select,
       .form-textarea {
-        padding: var(--sp-2_5);
-        font-size: var(--fs-15); /* 15px per evitare zoom su iOS */
-        min-height: 44px; /* Touch-friendly */
+        width: 100%;
+        padding: var(--sp-3);
+        font-size: var(--fs-14);
+        font-family: var(--ff-sans);
+        color: var(--ink);
+        background: var(--surface-page);
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-md);
+        transition: all 0.2s;
+      }
+
+      .form-input:focus,
+      .form-select:focus,
+      .form-textarea:focus {
+        outline: none;
+        border-color: var(--brand-600, #2563eb);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
       }
 
       .form-textarea {
-        min-height: 100px;
+        min-height: 120px;
+        resize: vertical;
       }
 
       .form-help {
-        font-size: var(--fs-11);
+        font-size: var(--fs-12);
+        color: var(--muted, #888);
+        margin-top: var(--sp-1);
       }
 
       .form-actions {
-        flex-direction: column;
-        gap: var(--sp-2);
-        margin-top: var(--sp-5);
-      }
-
-      .form-actions .btn {
-        width: 100%;
-      }
-
-      /* Buttons - Mobile */
-      .btn {
-        padding: var(--sp-4) 2rem;
-        font-size: var(--fs-15);
-        min-height: 44px; /* Touch-friendly */
-        justify-content: center;
-      }
-
-      /* Solo i bottoni nel hero-cta e form-actions sono full-width */
-      .hero-cta .btn,
-      .form-actions .btn {
-        width: 100%;
-      }
-
-      /* Brokers Section - Mobile */
-      .brokers-section {
-        padding: 4rem 0;
-      }
-
-      /* Testimonials Grid - Mobile (se riattivata) */
-      .testimonials-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
+        display: flex;
+        gap: var(--sp-3);
         margin-top: var(--sp-6);
       }
 
-      .testimonial-card {
-        padding: 1.5rem;
+      .form-actions .btn {
+        flex: 1;
       }
 
-      .testimonial-text {
+      .form-actions .btn-secondary {
+        background: var(--surface-elev);
+        color: var(--ink);
+        border: 1px solid var(--br-card);
+      }
+
+      .form-actions .btn-secondary:hover {
+        background: var(--surface-hover);
+      }
+
+      .collaborator-card-description {
         font-size: var(--fs-14);
-        margin-bottom: var(--sp-4);
+        color: var(--ink-soft);
+        margin: 0 0 1rem;
+        line-height: 1.6;
       }
 
-      .testimonial-author {
-        padding-top: var(--sp-3);
-      }
-
-      .testimonial-avatar {
-        width: 40px;
-        height: 40px;
+      .collaborator-card-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--brand-400);
         font-size: var(--fs-14);
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
       }
 
-      .testimonial-author-name {
-        font-size: var(--fs-14);
+      .collaborator-card-link:hover {
+        color: var(--brand-300);
+        gap: 0.75rem;
       }
 
-      .testimonial-author-role {
-        font-size: var(--fs-12);
+      .collaborator-panel {
+        display: none;
       }
 
-      /* Legal Overlay - Mobile */
+      .collaborator-panel.active {
+        display: block;
+      }
+
+      .btn-block {
+        width: 100%;
+      }
+
+      /* ===== BROKERS SECTION ===== */
+      .brokers-section {
+        padding: 6rem 0;
+        background: var(--surface-card);
+        border-top: 1px solid var(--br-card);
+        color: var(--ink);
+        margin-top: var(--sp-8);
+      }
+
+      .brokers-section * {
+        color: inherit;
+      }
+
+      /* Header gestito completamente da global-header.css - nessuno stile aggiuntivo necessario */
+
+      /* Scrollbar gestita da tokens.css - rimossa custom light */
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.7);
+        visibility: hidden;
+        opacity: 0;
+        z-index: 50;
+        transition:
+          opacity 0.3s ease,
+          visibility 0.3s ease;
+      }
+      .modal.show {
+        visibility: visible;
+        opacity: 1;
+      }
+      .modal-content {
+        background: var(--surface-card);
+        max-width: 640px;
+        padding: 28px;
+        border-radius: 16px;
+        font-size: 15px;
+        line-height: 1.7;
+        color: var(--ink);
+        text-align: left;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+        border: 1px solid var(--br-card);
+      }
+      body {
+        font-family:
+          'Inter',
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Helvetica,
+          Arial;
+      }
+      .card {
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+      .card:hover {
+        box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+        transform: translateY(-2px);
+      }
+      .logo-fb {
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.75rem;
+        font-weight: 700;
+        color: #fff;
+        box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.08);
+      }
+      .tag {
+        font-size: 11px;
+        padding: 0.125rem 0.5rem;
+        border-radius: 999px;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+      }
+      .badge {
+        font-size: 10px;
+        padding: 0.1rem 0.45rem;
+        border-radius: 999px;
+        font-weight: 700;
+      }
+      .score-badge {
+        font-size: 11px;
+        padding: 0.125rem 0.5rem;
+        border-radius: 999px;
+        background: #eef2ff;
+        color: #3730a3;
+        font-weight: 700;
+      }
+      .no-scrollbar {
+        scrollbar-width: none;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      html:has(#modal.flex),
+      body:has(#modal.flex) {
+        overflow: hidden;
+      }
+
+      /* ===== ICONS ===== */
+      .ico {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+      .ico-lg {
+        width: 24px;
+        height: 24px;
+        stroke-width: 2;
+      }
+      .ico-xl {
+        width: 32px;
+        height: 32px;
+        stroke-width: 2;
+      }
+
+      /* ===== TYPED.JS FADE OUT ===== */
+      .typed-fade-out {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      /* ===== BUTTONS ===== */
+      :root {
+        --hover-bg: color-mix(in oklab, var(--surface-card) 92%, transparent);
+      }
+      .btn,
+      .btn-sm,
+      .btn-inline {
+        transition:
+          background-color 0.15s ease,
+          border-color 0.15s ease,
+          color 0.15s ease,
+          transform 0.12s ease,
+          box-shadow 0.15s ease;
+      }
+      .btn-inline {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.42rem 0.7rem;
+        border-radius: var(--radius-pill);
+        border: 1px solid var(--br-soft);
+        background: var(--surface-card);
+        color: var(--ink);
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .btn-sm {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.35rem 0.6rem;
+        border-radius: var(--radius-pill);
+        border: 1px solid var(--br-soft);
+        background: var(--surface-card);
+        color: var(--ink);
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .btn:hover,
+      .btn-sm:hover,
+      .btn-inline:hover {
+        background: var(--hover-bg);
+        border-color: color-mix(in oklab, var(--br-soft) 70%, var(--brand-600) 30%);
+        box-shadow: 0 6px 18px oklab(0% 0 0 / 0.1);
+        transform: translateY(-1px);
+      }
+      .btn:active,
+      .btn-sm:active,
+      .btn-inline:active {
+        transform: translateY(0) scale(0.98);
+        transition: transform 0.08s ease;
+      }
+      .btn:focus-visible,
+      .btn-sm:focus-visible,
+      .btn-inline:focus-visible {
+        outline: 2px solid var(--brand-500);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+      }
+
+      /* ===== LINK INTERNI (ANCHOR) ===== */
+      a[href^='#'] {
+        transition: opacity 0.15s ease;
+      }
+      a[href^='#']:active {
+        opacity: 0.7;
+      }
+
+      /* Footer gestito completamente da tokens.css - nessuno stile aggiuntivo necessario */
+
+      /* ===== LEGAL OVERLAY ===== */
+      #legal-consent-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--sp-4);
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+      }
+
+      #legal-consent-overlay[hidden] {
+        display: none !important;
+      }
+
       .legal-panel {
-        max-width: 100%;
-        max-height: 95vh;
-        border-radius: var(--radius-md);
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: min(90rem, 90vw);
+        max-height: 90vh;
+        background: var(--surface-card);
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-xl);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
       }
 
       .legal-hdr {
-        padding: 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--sp-5) var(--sp-6);
+        border-bottom: 1px solid var(--br-card);
       }
 
       .legal-title {
         font-size: var(--fs-18);
+        font-weight: 700;
+        color: var(--ink);
       }
 
       .legal-tabs {
-        padding: var(--sp-2) var(--sp-4);
-        flex-wrap: wrap;
+        display: flex;
+        gap: var(--sp-2);
+        padding: var(--sp-3) var(--sp-6);
+        border-bottom: 1px solid var(--br-card);
+        background: var(--surface-elev);
       }
 
       .legal-tab {
-        padding: var(--sp-1_5) var(--sp-3);
-        font-size: var(--fs-12);
-        flex: 1;
-        min-width: 0;
+        padding: var(--sp-2) var(--sp-4);
+        font-size: var(--fs-13);
+        font-weight: 600;
+        color: var(--muted);
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: var(--radius-pill);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+      }
+
+      .legal-tab:hover {
+        color: var(--ink);
+        background: var(--surface-card);
+      }
+
+      .legal-tab[aria-selected='true'] {
+        color: var(--ink);
+        background: var(--surface-card);
+        border-color: var(--br-card);
+        box-shadow: var(--shadow-sm);
       }
 
       .legal-body {
-        padding: var(--sp-4);
+        flex: 1;
+        overflow-y: auto;
+        padding: var(--sp-6);
+      }
+
+      .legal-body section[hidden] {
+        display: none !important;
       }
 
       .legal-body h4 {
-        font-size: var(--fs-15);
-        margin-top: var(--sp-4);
-        margin-bottom: var(--sp-2);
+        font-size: var(--fs-16);
+        font-weight: 700;
+        color: var(--ink);
+        margin-top: var(--sp-6);
+        margin-bottom: var(--sp-3);
+      }
+
+      .legal-body h4:first-child {
+        margin-top: 0;
       }
 
       .legal-body p,
       .legal-body ul {
-        font-size: var(--fs-13);
-        margin-bottom: var(--sp-3);
+        color: var(--ink-soft);
+        line-height: var(--lh-17);
+        margin-bottom: var(--sp-4);
+      }
+
+      .legal-body ul {
+        padding-left: var(--sp-5);
+        list-style: disc;
+      }
+
+      .legal-body li {
+        margin-bottom: var(--sp-2);
+      }
+
+      .legal-body code {
+        background: var(--surface-elev);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: var(--fs-12);
+        color: var(--brand-400);
       }
 
       .legal-ftr {
-        padding: var(--sp-3) var(--sp-4);
-        flex-direction: column;
-        gap: var(--sp-2);
-        align-items: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--sp-4) var(--sp-6);
+        border-top: 1px solid var(--br-card);
+        background: var(--surface-elev);
       }
 
-      .legal-ftr .btn {
-        width: 100%;
-      }
-    }
-
-    /* ===== TABLET RESPONSIVE (768px - 1023px) ===== */
-    @media (min-width: 768px) and (max-width: 1023px) {
-      .container {
-        padding-inline: var(--sp-6);
+      .legal-ftr small {
+        color: var(--muted);
+        font-size: var(--fs-12);
       }
 
-      .hero-section {
-        padding: 5rem 0 4rem;
+      /* ===== MOBILE RESPONSIVE DESIGN ===== */
+      @media (max-width: 767px) {
+        /* Container padding ridotto su mobile */
+        .container {
+          padding-inline: var(--sp-4);
+        }
+
+        /* Hero Section - Mobile */
+        .hero-section {
+          padding: 4rem 0 3rem;
+        }
+
+        .hero-badge {
+          font-size: 0.625rem;
+          padding: 0.375rem 0.75rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+          font-size: clamp(2rem, 8vw, 3rem);
+          margin-bottom: 1.5rem;
+        }
+
+        .hero-description {
+          font-size: 1rem;
+          line-height: 1.6;
+          margin-bottom: 2rem;
+        }
+
+        .hero-features {
+          gap: 1.25rem;
+          margin: 2.5rem 0;
+        }
+
+        .hero-feature {
+          padding: 1.5rem 1.25rem;
+        }
+
+        .hero-feature .ico {
+          width: 20px;
+          height: 20px;
+          margin-bottom: 0.75rem;
+        }
+
+        .hero-feature strong {
+          font-size: 0.9375rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .hero-feature span {
+          font-size: 0.8125rem;
+        }
+
+        .hero-cta {
+          flex-direction: column;
+          gap: 1rem;
+          margin-top: 2.5rem;
+        }
+
+        .hero-disclaimer {
+          margin-top: 3rem;
+          padding: 1.25rem 0;
+        }
+
+        .hero-disclaimer .container {
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+
+        .hero-disclaimer p {
+          font-size: 0.75rem;
+        }
+
+        /* Section Headers - Mobile */
+        .section-header {
+          margin-bottom: var(--sp-10);
+          padding: 0 var(--sp-2);
+        }
+
+        .section-title {
+          font-size: clamp(1.75rem, 6vw, 2.5rem);
+          margin-bottom: var(--sp-4);
+        }
+
+        .section-description {
+          font-size: var(--fs-16);
+          line-height: 1.6;
+          margin-bottom: var(--sp-3);
+        }
+
+        /* Method Section - Mobile */
+        .method-section {
+          padding: 4rem 0;
+        }
+
+        .method-grid {
+          gap: var(--sp-6);
+        }
+
+        .method-card {
+          padding: var(--sp-6);
+        }
+
+        .method-card-icon {
+          width: 48px;
+          height: 48px;
+        }
+
+        .method-card-title {
+          font-size: var(--fs-18);
+        }
+
+        .method-card-list li {
+          font-size: var(--fs-14);
+        }
+
+        /* Services Section - Mobile */
+        .services-section {
+          padding: 4rem 0;
+        }
+
+        .value-section,
+        .limits-section {
+          padding: 3.5rem 0;
+        }
+
+        .value-grid,
+        .limits-grid {
+          grid-template-columns: 1fr;
+          gap: var(--sp-5);
+        }
+
+        .value-card,
+        .limit-card {
+          padding: var(--sp-5);
+        }
+
+        .services-grid {
+          gap: var(--sp-6);
+        }
+
+        .service-card {
+          padding: var(--sp-6);
+        }
+
+        .service-card-icon {
+          width: 48px;
+          height: 48px;
+        }
+
+        .service-card-title {
+          font-size: var(--fs-18);
+        }
+
+        /* Collaborators Section - Mobile */
+        .collaborators-section {
+          padding: 4rem 0;
+        }
+
+        /* Collaborators grid nella sezione principale */
+        .collaborators-section .collaborators-grid,
+        #panel-facebook .collaborators-grid,
+        #panel-piattaforme .collaborators-grid,
+        #panel-consulenti .collaborators-grid {
+          grid-template-columns: 1fr;
+          gap: 1.25rem;
+        }
+
+        .collaborator-card {
+          padding: 1.25rem;
+        }
+
+        .collaborator-card-icon {
+          width: 40px;
+          height: 40px;
+          margin-bottom: 0.75rem;
+        }
+
+        .collaborator-card-title {
+          font-size: var(--fs-16);
+          margin-bottom: 0.375rem;
+        }
+
+        .collaborator-card-description {
+          font-size: var(--fs-13);
+          margin-bottom: 0.75rem;
+          line-height: 1.5;
+        }
+
+        .collaborator-card-link {
+          font-size: var(--fs-13);
+        }
+
+        /* Security Guide - Mobile */
+        .security-guide {
+          margin-top: var(--sp-6);
+          padding: var(--sp-4);
+        }
+
+        .security-guide-header {
+          margin-bottom: var(--sp-2);
+        }
+
+        .security-guide-icon {
+          width: 20px;
+          height: 20px;
+        }
+
+        .security-guide-title {
+          font-size: var(--fs-15);
+        }
+
+        .security-guide-content {
+          font-size: var(--fs-13);
+          line-height: 1.5;
+        }
+
+        .security-guide-list {
+          margin: var(--sp-2) 0;
+          padding-left: var(--sp-4);
+        }
+
+        .security-guide-list li {
+          margin-bottom: var(--sp-1_5);
+          padding-left: var(--sp-3);
+          font-size: var(--fs-13);
+        }
+
+        /* Modal Professionista - Mobile */
+        #modal-professionista {
+          padding: 0.5rem;
+        }
+
+        .modal-professionista-content {
+          max-width: 100%;
+          max-height: 95vh;
+          border-radius: var(--radius-md);
+        }
+
+        .modal-professionista-header {
+          padding: 1.5rem 1.25rem 1rem;
+        }
+
+        .modal-professionista-title {
+          font-size: var(--fs-20);
+        }
+
+        .modal-professionista-body {
+          padding: 1.25rem;
+        }
+
+        .form-group {
+          margin-bottom: var(--sp-4);
+        }
+
+        .form-label {
+          font-size: var(--fs-13);
+          margin-bottom: var(--sp-1_5);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+          padding: var(--sp-2_5);
+          font-size: var(--fs-15); /* 15px per evitare zoom su iOS */
+          min-height: 44px; /* Touch-friendly */
+        }
+
+        .form-textarea {
+          min-height: 100px;
+        }
+
+        .form-help {
+          font-size: var(--fs-11);
+        }
+
+        .form-actions {
+          flex-direction: column;
+          gap: var(--sp-2);
+          margin-top: var(--sp-5);
+        }
+
+        .form-actions .btn {
+          width: 100%;
+        }
+
+        /* Buttons - Mobile */
+        .btn {
+          padding: var(--sp-4) 2rem;
+          font-size: var(--fs-15);
+          min-height: 44px; /* Touch-friendly */
+          justify-content: center;
+        }
+
+        /* Solo i bottoni nel hero-cta e form-actions sono full-width */
+        .hero-cta .btn,
+        .form-actions .btn {
+          width: 100%;
+        }
+
+        /* Brokers Section - Mobile */
+        .brokers-section {
+          padding: 4rem 0;
+        }
+
+        /* Testimonials Grid - Mobile (se riattivata) */
+        .testimonials-grid {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+          margin-top: var(--sp-6);
+        }
+
+        .testimonial-card {
+          padding: 1.5rem;
+        }
+
+        .testimonial-text {
+          font-size: var(--fs-14);
+          margin-bottom: var(--sp-4);
+        }
+
+        .testimonial-author {
+          padding-top: var(--sp-3);
+        }
+
+        .testimonial-avatar {
+          width: 40px;
+          height: 40px;
+          font-size: var(--fs-14);
+        }
+
+        .testimonial-author-name {
+          font-size: var(--fs-14);
+        }
+
+        .testimonial-author-role {
+          font-size: var(--fs-12);
+        }
+
+        /* Legal Overlay - Mobile */
+        .legal-panel {
+          max-width: 100%;
+          max-height: 95vh;
+          border-radius: var(--radius-md);
+        }
+
+        .legal-hdr {
+          padding: 1.25rem;
+        }
+
+        .legal-title {
+          font-size: var(--fs-18);
+        }
+
+        .legal-tabs {
+          padding: var(--sp-2) var(--sp-4);
+          flex-wrap: wrap;
+        }
+
+        .legal-tab {
+          padding: var(--sp-1_5) var(--sp-3);
+          font-size: var(--fs-12);
+          flex: 1;
+          min-width: 0;
+        }
+
+        .legal-body {
+          padding: var(--sp-4);
+        }
+
+        .legal-body h4 {
+          font-size: var(--fs-15);
+          margin-top: var(--sp-4);
+          margin-bottom: var(--sp-2);
+        }
+
+        .legal-body p,
+        .legal-body ul {
+          font-size: var(--fs-13);
+          margin-bottom: var(--sp-3);
+        }
+
+        .legal-ftr {
+          padding: var(--sp-3) var(--sp-4);
+          flex-direction: column;
+          gap: var(--sp-2);
+          align-items: stretch;
+        }
+
+        .legal-ftr .btn {
+          width: 100%;
+        }
       }
 
-      .collaborators-section .collaborators-grid,
-      #panel-facebook .collaborators-grid,
-      #panel-piattaforme .collaborators-grid,
-      #panel-consulenti .collaborators-grid {
-        grid-template-columns: repeat(2, 1fr);
+      /* ===== TABLET RESPONSIVE (768px - 1023px) ===== */
+      @media (min-width: 768px) and (max-width: 1023px) {
+        .container {
+          padding-inline: var(--sp-6);
+        }
+
+        .hero-section {
+          padding: 5rem 0 4rem;
+        }
+
+        .collaborators-section .collaborators-grid,
+        #panel-facebook .collaborators-grid,
+        #panel-piattaforme .collaborators-grid,
+        #panel-consulenti .collaborators-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .testimonials-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .modal-professionista-content {
+          max-width: 90%;
+        }
+
+        .hero-cta {
+          flex-wrap: wrap;
+        }
+
+        .hero-cta .btn {
+          flex: 1;
+          min-width: 200px;
+        }
       }
+    </style>
+  </head>
+  <body>
+    <!-- Skip to main content (accessibility) -->
+    <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
 
-      .testimonials-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    <!-- Scroll progress indicator -->
+    <div
+      id="scroll-progress"
+      class="scroll-progress"
+      role="progressbar"
+      aria-label="Progresso lettura pagina"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="0"
+    ></div>
+    <!-- ===== HEADER SLOT (montato via JS) ===== -->
+    <div id="site-header-slot"></div>
 
-      .modal-professionista-content {
-        max-width: 90%;
-      }
+    <!-- ===== MAIN CONTENT ===== -->
+    <main id="main-content" role="main">
+      <!-- ===== HERO SECTION ===== -->
+      <section class="hero-section">
+        <div class="container">
+          <div class="hero-content">
+            <div class="hero-badge">Metodo · Trasparenza · Fonti verificabili</div>
 
-      .hero-cta {
-        flex-wrap: wrap;
-      }
+            <h1 class="hero-title">
+              <span class="hero-title-line"
+                >Tradelia AI · progetto indipendente di analisi sui mercati</span
+              >
+            </h1>
 
-      .hero-cta .btn {
-        flex: 1;
-        min-width: 200px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <!-- Skip to main content (accessibility) -->
-  <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
-  
-  <!-- Scroll progress indicator -->
-  <div id="scroll-progress" class="scroll-progress" role="progressbar" aria-label="Progresso lettura pagina" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
-<!-- ===== HEADER SLOT (montato via JS) ===== -->
-<div id="site-header-slot"></div>
+            <p class="hero-description">
+              Tradelia AI pubblica ogni giorno analisi strutturate basate su framework AI
+              proprietari e passaggi verificabili. Gran parte del materiale è disponibile
+              gratuitamente tramite la dashboard PWA, con documentazione completa su fonti e limiti.
+            </p>
 
-<!-- ===== MAIN CONTENT ===== -->
-<main id="main-content" role="main">
-  <!-- ===== HERO SECTION ===== -->
-  <section class="hero-section">
-    <div class="container">
-      <div class="hero-content">
-        <div class="hero-badge">Metodo · Trasparenza · Fonti verificabili</div>
-        
-        <h1 class="hero-title">
-          <span class="hero-title-line">Tradelia AI · progetto indipendente di analisi sui mercati</span>
-        </h1>
-        
-      <p class="hero-description">
-          Tradelia AI pubblica ogni giorno analisi strutturate basate su framework AI proprietari e passaggi verificabili.
-          Gran parte del materiale è disponibile gratuitamente tramite la dashboard PWA, con documentazione completa su fonti e limiti.
-        </p>
+            <div class="hero-plan-grid" aria-label="Panoramica servizi gratuiti e a pagamento">
+              <article class="hero-plan-card hero-plan-card--free">
+                <span class="plan-badge">Gratis per tutti</span>
+                <strong>Dashboard PWA aggiornata ogni giorno</strong>
+                <ul>
+                  <li>Framework FDM · MLT · PAC completi con versioni archiviate</li>
+                  <li>Quadri macro, intermarket e note di rilascio senza registrazione</li>
+                  <li>Audit trail e note metodologiche identiche ai report completi</li>
+                  <li>Nessuna carta richiesta: basta aprire la dashboard e consultare</li>
+                </ul>
+                <a
+                  href="#"
+                  class="btn btn-primary btn-sm"
+                  aria-label="Installa la dashboard PWA"
+                  data-dashboard-handler="true"
+                  >Installa la dashboard PWA</a
+                >
+              </article>
 
-        <div class="hero-plan-grid" aria-label="Panoramica servizi gratuiti e a pagamento">
-          <article class="hero-plan-card hero-plan-card--free">
-            <span class="plan-badge">Gratis per tutti</span>
-            <strong>Dashboard PWA aggiornata ogni giorno</strong>
-            <ul>
-              <li>Framework FDM · MLT · PAC completi con versioni archiviate</li>
-              <li>Quadri macro, intermarket e note di rilascio senza registrazione</li>
-              <li>Audit trail e note metodologiche identiche ai report completi</li>
-              <li>Nessuna carta richiesta: basta aprire la dashboard e consultare</li>
-            </ul>
-            <a href="#" class="btn btn-primary btn-sm" aria-label="Installa la dashboard PWA" data-dashboard-handler="true">Installa la dashboard PWA</a>
-          </article>
-
-          <article class="hero-plan-card hero-plan-card--paid">
-            <span class="plan-badge">Servizi on-demand</span>
-            <strong>Analisi su richiesta e Piano Desk</strong>
-            <ul>
-              <li>Analisi personalizzate a €49 con consegna entro 24 ore</li>
-              <li>Piano Desk €149 una tantum per report white-label (30 giorni)</li>
-              <li>Fatturazione Xolo Go, pagamento entro 14 giorni e recesso garantito</li>
-              <li>Possibilità di allegare loghi, richieste specifiche e revisioni</li>
-            </ul>
-            <a href="/pricing.html" class="btn btn-outline btn-sm" aria-label="Vai alla pagina pricing per i servizi on-demand">Vedi come funziona</a>
-          </article>
-        </div>
-        
-        <div class="hero-features">
-          <div class="hero-feature">
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M3 3v18h18" stroke="currentColor" stroke-width="2" fill="none"/>
-              <path d="M7 12l4 4 7-7" stroke="currentColor" stroke-width="2" fill="none"/>
-            </svg>
-            <strong>3 analisi al giorno</strong>
-            <span>Frequenza fissa con versioni archiviate e note di rilascio.</span>
-          </div>
-          <div class="hero-feature">
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 6h16v12H4z" stroke="currentColor" stroke-width="2" fill="none"/>
-              <path d="M8 10h8M8 14h5" stroke="currentColor" stroke-width="2" fill="none"/>
-            </svg>
-            <strong>Fonti verificabili</strong>
-            <span>Solo dati pubblici e documentazione consultabile da chi legge.</span>
-          </div>
-          <div class="hero-feature">
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-              <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
-              <path d="M8 9h8M8 13h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            <strong>Supervisione umana</strong>
-            <span>Ogni pubblicazione passa da un controllo editoriale prima del rilascio.</span>
-          </div>
-        </div>
-
-        <div class="hero-cta">
-          <a href="#" class="btn btn-primary btn-with-icon" aria-label="Installa la dashboard PWA Tradelia" data-dashboard-handler="true">
-            <span>Installa la dashboard PWA</span>
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-          </a>
-        </div>
-
-      </div>
-    </div>
-    
-    <!-- Disclaimer Banner -->
-    <div class="hero-disclaimer">
-      <div class="container">
-        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
-          <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <p>
-          Tutto il materiale Tradelia AI ha finalità informative e didattiche. Non è consulenza finanziaria, non è ricerca in investimento e non sostituisce il lavoro di un professionista abilitato.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== CHI SIAMO E COSA FACCIAMO ===== -->
-  <section class="value-section" id="chi-siamo" aria-labelledby="chi-siamo-heading">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title" id="chi-siamo-heading">Chi siamo e cosa facciamo</h2>
-        <p class="section-description">
-          Tradelia AI è un progetto indipendente di analisi sui mercati finanziari. Pubblichiamo ogni giorno analisi strutturate basate su framework AI proprietari (FDM, MLT, PAC) con documentazione completa su fonti, limiti e metodologia.
-        </p>
-      </div>
-      <div class="value-grid" style="max-width: 900px; margin: 0 auto;">
-        <article class="value-card">
-          <span class="badge">Metodo</span>
-          <strong>Framework AI documentati</strong>
-          <span>Ogni analisi segue un processo ripetibile: raccolta dati pubblici, applicazione dei framework e revisione editoriale prima del rilascio.</span>
-        </article>
-        <article class="value-card">
-          <span class="badge">Trasparenza</span>
-          <strong>Fonti verificabili</strong>
-          <span>Tutti i dati provengono da fonti pubbliche (banche centrali, curve tassi, flussi ETF). Ogni report indica chiaramente fonti, ipotesi e limiti.</span>
-        </article>
-        <article class="value-card">
-          <span class="badge">Educativo</span>
-          <strong>Nessun segnale operativo</strong>
-          <span>Il materiale ha finalità informative e didattiche. Non forniamo consulenza finanziaria, segnali di trading o indicazioni personalizzate.</span>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== PERCORSI FORMATIVI ===== -->
-  <section class="value-section section-contrast" id="percorsi" aria-labelledby="percorsi-heading">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title" id="percorsi-heading">Percorsi formativi</h2>
-        <p class="section-description">
-          Percorsi tematici basati su testi riconosciuti e materiali verificabili per approfondire metodo e struttura passo dopo passo. Impara con tutorial interattivi, esempi pratici e documentazione completa.
-        </p>
-      </div>
-      
-      <div class="value-grid" style="max-width: 1000px; margin: 0 auto var(--sp-8);">
-        <article class="value-card" style="background: linear-gradient(180deg, rgba(37, 99, 235, 0.08) 0%, rgba(15, 23, 42, 0.04) 100%); border: 1px solid rgba(59, 130, 246, 0.2);">
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 48px; height: 48px; color: var(--brand-500); margin-bottom: var(--sp-3);">
-            <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="2" fill="none"/>
-            <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" fill="none"/>
-          </svg>
-          <strong style="display: block; font-size: var(--fs-18); margin-bottom: var(--sp-2);">Tutorial interattivi</strong>
-          <span style="color: var(--muted); line-height: 1.6;">Guide passo-passo con esempi pratici e esercizi per consolidare le conoscenze sui framework Tradelia.</span>
-        </article>
-        
-        <article class="value-card" style="background: linear-gradient(180deg, rgba(37, 99, 235, 0.08) 0%, rgba(15, 23, 42, 0.04) 100%); border: 1px solid rgba(59, 130, 246, 0.2);">
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 48px; height: 48px; color: var(--brand-500); margin-bottom: var(--sp-3);">
-            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="2" fill="none"/>
-            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" stroke-width="2" fill="none"/>
-            <path d="M8 7h8M8 11h8M8 15h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          <strong style="display: block; font-size: var(--fs-18); margin-bottom: var(--sp-2);">Documentazione completa</strong>
-          <span style="color: var(--muted); line-height: 1.6;">Testi riconosciuti, riferimenti accademici e materiali verificabili per ogni argomento trattato.</span>
-        </article>
-        
-        <article class="value-card" style="background: linear-gradient(180deg, rgba(37, 99, 235, 0.08) 0%, rgba(15, 23, 42, 0.04) 100%); border: 1px solid rgba(59, 130, 246, 0.2);">
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width: 48px; height: 48px; color: var(--brand-500); margin-bottom: var(--sp-3);">
-            <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="2" fill="none"/>
-            <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" fill="none"/>
-            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"/>
-          </svg>
-          <strong style="display: block; font-size: var(--fs-18); margin-bottom: var(--sp-2);">Metodo strutturato</strong>
-          <span style="color: var(--muted); line-height: 1.6;">Approfondisci FDM, MLT e PAC con percorsi tematici che guidano dall'introduzione all'applicazione pratica.</span>
-        </article>
-      </div>
-      
-      <div style="text-align: center; margin-top: var(--sp-8);">
-        <a href="/percorsi.html" class="btn btn-primary btn-with-icon" style="font-size: var(--fs-16); padding: var(--sp-4) var(--sp-6);">
-          <span>Esplora tutti i percorsi formativi</span>
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== DASHBOARD PWA ===== -->
-  <section class="value-section" id="dashboard" aria-labelledby="dashboard-heading">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title" id="dashboard-heading">Dashboard PWA</h2>
-        <p class="section-description">
-          Installa la dashboard PWA per consultare analisi quotidiane, framework completi e archivi. Funziona offline, nessuna registrazione richiesta.
-        </p>
-      </div>
-      <div style="text-align: center; max-width: 600px; margin: 0 auto;">
-        <a href="#" class="btn btn-primary btn-lg btn-with-icon" style="font-size: var(--fs-16); padding: 1rem 2rem;" data-dashboard-handler="true">
-          <span>Installa la dashboard PWA</span>
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-        <p style="margin-top: var(--sp-4); color: var(--muted); font-size: var(--fs-13);">
-          Framework FDM, MLT e PAC completi con versioni archiviate, quadri macro e intermarket, note di rilascio.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== COSA È GRATUITO ===== -->
-  <section class="audience-section" id="gratuiti" aria-labelledby="gratuiti-heading">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title" id="gratuiti-heading">Cosa trovi gratuitamente</h2>
-        <p class="section-description">
-          Tutto il materiale pubblicato sulla dashboard è gratuito e accessibile senza registrazione. Stessi blocchi usati nei report completi, con documentazione identica.
-        </p>
-      </div>
-      <div class="audience-grid">
-        <article class="audience-card">
-          <span class="audience-badge">Analisi quotidiane</span>
-          <strong>3 analisi al giorno</strong>
-          <span>Framework FDM, MLT e PAC aggiornati ogni giorno con versioni archiviate e note di rilascio.</span>
-        </article>
-        <article class="audience-card">
-          <span class="audience-badge">Quadri di mercato</span>
-          <strong>Macro, intermarket e tecnico</strong>
-          <span>Quadri sintetici del mercato con legenda, riferimenti e fonti verificabili.</span>
-        </article>
-        <article class="audience-card">
-          <span class="audience-badge">Archivi completi</span>
-          <strong>Storico consultabile</strong>
-          <span>Accesso a tutte le versioni precedenti per verificare note precedenti o confrontare analisi.</span>
-        </article>
-        <article class="audience-card">
-          <span class="audience-badge">Metodologia</span>
-          <strong>Documentazione completa</strong>
-          <span>Spiegazione dettagliata di come raccogliamo i dati, come li elaboriamo e quali controlli applichiamo.</span>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== PIANO DESK ===== -->
-  <section class="value-section section-contrast" id="piano-desk" aria-labelledby="piano-desk-heading">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title" id="piano-desk-heading">Piano Desk</h2>
-        <p class="section-description">
-          Report brandizzati white-label con logo, intestazione e disclaimer personalizzati. Tutti i report della dashboard scaricabili in PDF.
-        </p>
-      </div>
-      <div style="max-width: 700px; margin: 0 auto; text-align: center; padding: var(--sp-6); background: var(--surface-elev); border: 1px solid var(--br-card); border-radius: var(--radius-lg);">
-        <div style="margin-bottom: var(--sp-5);">
-          <h3 style="font-size: var(--fs-24); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-2);">€149</h3>
-          <p style="color: var(--muted); font-size: var(--fs-14); margin-bottom: var(--sp-4);">
-            Una tantum per accesso mensile (30 giorni)
-          </p>
-          <p style="color: var(--ink-soft); font-size: var(--fs-14); line-height: 1.6; margin-bottom: var(--sp-4);">
-            Tutti i report pubblicati sulla dashboard disponibili in versione white-label (digitale e PDF) con logo, copy introduttivo, disclaimer dedicati e contatti commerciali del partner, mantenendo metodo e fonti Tradelia.
-          </p>
-          <p style="color: var(--muted); font-size: var(--fs-13); line-height: 1.5;">
-            Fatturazione B2B tramite Xolo Go. Diritto di recesso entro 14 giorni dall'attivazione e rimborso entro 14 giorni dalla comunicazione.
-          </p>
-        </div>
-        <a href="#" class="btn btn-primary btn-with-icon" data-dashboard-handler="true" aria-label="Installa la dashboard PWA per accedere al Piano Desk">
-          <span>Installa la dashboard PWA</span>
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== ANALISI SU COMMISSIONE ===== -->
-  <section class="services-section" id="analisi-commissione" aria-labelledby="analisi-commissione-heading">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title" id="analisi-commissione-heading">Analisi su commissione</h2>
-        <p class="section-description">
-          Analisi personalizzate su richiesta per approfondimenti specifici. Approccio on-demand: paghi solo per ciò che richiedi, senza abbonamenti ricorrenti.
-        </p>
-      </div>
-      <div style="max-width: 700px; margin: 0 auto; text-align: center; padding: var(--sp-6); background: var(--surface-elev); border: 1px solid var(--br-card); border-radius: var(--radius-lg);">
-        <div style="margin-bottom: var(--sp-5);">
-          <h3 style="font-size: var(--fs-24); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-2);">€49</h3>
-          <p style="color: var(--muted); font-size: var(--fs-14); margin-bottom: var(--sp-4);">
-            Per qualsiasi analisi. Circa 1 ora di lavoro, massimo 4 analisi al giorno.
-          </p>
-          <p style="color: var(--ink-soft); font-size: var(--fs-14); line-height: 1.6; margin-bottom: var(--sp-4);">
-            Ogni analisi include fonti, metodologia e controlli documentati. Disponibile per tutti, anche per utenti gratuiti. Disponibile a privati (codice fiscale) e professionisti (P.IVA).
-          </p>
-          <p style="color: var(--muted); font-size: var(--fs-13); line-height: 1.5;">
-            Fatturazione tramite Xolo Go. Consegna garantita entro 24 ore. Diritto di recesso entro 14 giorni dalla consegna con rimborso entro 14 giorni dalla richiesta.
-          </p>
+              <article class="hero-plan-card hero-plan-card--paid">
+                <span class="plan-badge">Servizi on-demand</span>
+                <strong>Analisi su richiesta e Piano Desk</strong>
+                <ul>
+                  <li>Analisi personalizzate a €49 con consegna entro 24 ore</li>
+                  <li>Piano Desk €149 una tantum per report white-label (30 giorni)</li>
+                  <li>Fatturazione Xolo Go, pagamento entro 14 giorni e recesso garantito</li>
+                  <li>Possibilità di allegare loghi, richieste specifiche e revisioni</li>
+                </ul>
+                <a
+                  href="/pricing.html"
+                  class="btn btn-outline btn-sm"
+                  aria-label="Vai alla pagina pricing per i servizi on-demand"
+                  >Vedi come funziona</a
+                >
+              </article>
             </div>
-        <a href="#" class="btn btn-primary btn-with-icon" data-dashboard-handler="true" aria-label="Installa la dashboard PWA per richiedere analisi">
-          <span>Installa la dashboard PWA</span>
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-  </section>
-</main>
 
-<!-- Back to top (mobile-first) -->
-<button id="back-to-top" class="back-to-top" type="button" aria-label="Torna all'inizio">
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
-</button>
+            <div class="hero-features">
+              <div class="hero-feature">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 3v18h18" stroke="currentColor" stroke-width="2" fill="none" />
+                  <path d="M7 12l4 4 7-7" stroke="currentColor" stroke-width="2" fill="none" />
+                </svg>
+                <strong>3 analisi al giorno</strong>
+                <span>Frequenza fissa con versioni archiviate e note di rilascio.</span>
+              </div>
+              <div class="hero-feature">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 6h16v12H4z" stroke="currentColor" stroke-width="2" fill="none" />
+                  <path d="M8 10h8M8 14h5" stroke="currentColor" stroke-width="2" fill="none" />
+                </svg>
+                <strong>Fonti verificabili</strong>
+                <span>Solo dati pubblici e documentazione consultabile da chi legge.</span>
+              </div>
+              <div class="hero-feature">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                  <rect
+                    x="3"
+                    y="4"
+                    width="18"
+                    height="16"
+                    rx="2"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    fill="none"
+                  />
+                  <path
+                    d="M8 9h8M8 13h5"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <strong>Supervisione umana</strong>
+                <span>Ogni pubblicazione passa da un controllo editoriale prima del rilascio.</span>
+              </div>
+            </div>
 
-<style>
-    /* Modal transitions */
-    .modal-root {
-      opacity: 0;
-      transform: translateY(16px) scale(0.96);
-      transition: opacity 0.26s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.26s cubic-bezier(0.22, 0.61, 0.36, 1);
-    }
-    .modal-root.is-open {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
+            <div class="hero-cta">
+              <a
+                href="#"
+                class="btn btn-primary btn-with-icon"
+                aria-label="Installa la dashboard PWA Tradelia"
+                data-dashboard-handler="true"
+              >
+                <span>Installa la dashboard PWA</span>
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M5 12h14M12 5l7 7-7 7"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
 
-    /* Back to top button (mobile-first) */
-    .back-to-top {
-      position: fixed;
-      right: 1.25rem;
-      bottom: 1.25rem;
-      z-index: 60;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.45);
-      background: radial-gradient(circle at 30% 0, rgba(59, 130, 246, 0.32), rgba(15, 23, 42, 0.98));
-      color: #e5f0ff;
-      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.7);
-      opacity: 0;
-      transform: translateY(10px);
-      pointer-events: none;
-      transition:
-        opacity 0.22s ease-out,
-        transform 0.22s ease-out,
-        box-shadow 0.18s ease-out,
-        border-color 0.18s ease-out;
-    }
+        <!-- Disclaimer Banner -->
+        <div class="hero-disclaimer">
+          <div class="container">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" />
+              <path
+                d="M12 8v4M12 16h.01"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+            <p>
+              Tutto il materiale Tradelia AI ha finalità informative e didattiche. Non è consulenza
+              finanziaria, non è ricerca in investimento e non sostituisce il lavoro di un
+              professionista abilitato.
+            </p>
+          </div>
+        </div>
+      </section>
 
-    .back-to-top svg {
-      width: 18px;
-      height: 18px;
-    }
+      <!-- ===== CHI SIAMO E COSA FACCIAMO ===== -->
+      <section class="value-section" id="chi-siamo" aria-labelledby="chi-siamo-heading">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title" id="chi-siamo-heading">Chi siamo e cosa facciamo</h2>
+            <p class="section-description">
+              Tradelia AI è un progetto indipendente di analisi sui mercati finanziari. Pubblichiamo
+              ogni giorno analisi strutturate basate su framework AI proprietari (FDM, MLT, PAC) con
+              documentazione completa su fonti, limiti e metodologia.
+            </p>
+          </div>
+          <div class="value-grid" style="max-width: 900px; margin: 0 auto">
+            <article class="value-card">
+              <span class="badge">Metodo</span>
+              <strong>Framework AI documentati</strong>
+              <span
+                >Ogni analisi segue un processo ripetibile: raccolta dati pubblici, applicazione dei
+                framework e revisione editoriale prima del rilascio.</span
+              >
+            </article>
+            <article class="value-card">
+              <span class="badge">Trasparenza</span>
+              <strong>Fonti verificabili</strong>
+              <span
+                >Tutti i dati provengono da fonti pubbliche (banche centrali, curve tassi, flussi
+                ETF). Ogni report indica chiaramente fonti, ipotesi e limiti.</span
+              >
+            </article>
+            <article class="value-card">
+              <span class="badge">Educativo</span>
+              <strong>Nessun segnale operativo</strong>
+              <span
+                >Il materiale ha finalità informative e didattiche. Non forniamo consulenza
+                finanziaria, segnali di trading o indicazioni personalizzate.</span
+              >
+            </article>
+          </div>
+        </div>
+      </section>
 
-    .back-to-top.is-visible {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
+      <!-- ===== PERCORSI FORMATIVI ===== -->
+      <section
+        class="value-section section-contrast"
+        id="percorsi"
+        aria-labelledby="percorsi-heading"
+      >
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title" id="percorsi-heading">Percorsi formativi</h2>
+            <p class="section-description">
+              Percorsi tematici basati su testi riconosciuti e materiali verificabili per
+              approfondire metodo e struttura passo dopo passo. Impara con tutorial interattivi,
+              esempi pratici e documentazione completa.
+            </p>
+          </div>
 
-    .back-to-top:active {
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.85);
-      transform: translateY(1px);
-    }
+          <div class="value-grid" style="max-width: 1000px; margin: 0 auto var(--sp-8)">
+            <article
+              class="value-card"
+              style="
+                background: linear-gradient(
+                  180deg,
+                  rgba(37, 99, 235, 0.08) 0%,
+                  rgba(15, 23, 42, 0.04) 100%
+                );
+                border: 1px solid rgba(59, 130, 246, 0.2);
+              "
+            >
+              <svg
+                class="ico"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                style="
+                  width: 48px;
+                  height: 48px;
+                  color: var(--brand-500);
+                  margin-bottom: var(--sp-3);
+                "
+              >
+                <path
+                  d="M12 2L2 7l10 5 10-5-10-5z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                />
+                <path
+                  d="M2 17l10 5 10-5M2 12l10 5 10-5"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                />
+              </svg>
+              <strong style="display: block; font-size: var(--fs-18); margin-bottom: var(--sp-2)"
+                >Tutorial interattivi</strong
+              >
+              <span style="color: var(--muted); line-height: 1.6"
+                >Guide passo-passo con esempi pratici e esercizi per consolidare le conoscenze sui
+                framework Tradelia.</span
+              >
+            </article>
 
-    @media (min-width: 1024px) {
+            <article
+              class="value-card"
+              style="
+                background: linear-gradient(
+                  180deg,
+                  rgba(37, 99, 235, 0.08) 0%,
+                  rgba(15, 23, 42, 0.04) 100%
+                );
+                border: 1px solid rgba(59, 130, 246, 0.2);
+              "
+            >
+              <svg
+                class="ico"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                style="
+                  width: 48px;
+                  height: 48px;
+                  color: var(--brand-500);
+                  margin-bottom: var(--sp-3);
+                "
+              >
+                <path
+                  d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                />
+                <path
+                  d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                />
+                <path
+                  d="M8 7h8M8 11h8M8 15h4"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <strong style="display: block; font-size: var(--fs-18); margin-bottom: var(--sp-2)"
+                >Documentazione completa</strong
+              >
+              <span style="color: var(--muted); line-height: 1.6"
+                >Testi riconosciuti, riferimenti accademici e materiali verificabili per ogni
+                argomento trattato.</span
+              >
+            </article>
+
+            <article
+              class="value-card"
+              style="
+                background: linear-gradient(
+                  180deg,
+                  rgba(37, 99, 235, 0.08) 0%,
+                  rgba(15, 23, 42, 0.04) 100%
+                );
+                border: 1px solid rgba(59, 130, 246, 0.2);
+              "
+            >
+              <svg
+                class="ico"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                style="
+                  width: 48px;
+                  height: 48px;
+                  color: var(--brand-500);
+                  margin-bottom: var(--sp-3);
+                "
+              >
+                <path
+                  d="M12 2L2 7l10 5 10-5-10-5z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                />
+                <path
+                  d="M2 17l10 5 10-5M2 12l10 5 10-5"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                />
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none" />
+              </svg>
+              <strong style="display: block; font-size: var(--fs-18); margin-bottom: var(--sp-2)"
+                >Metodo strutturato</strong
+              >
+              <span style="color: var(--muted); line-height: 1.6"
+                >Approfondisci FDM, MLT e PAC con percorsi tematici che guidano dall'introduzione
+                all'applicazione pratica.</span
+              >
+            </article>
+          </div>
+
+          <div style="text-align: center; margin-top: var(--sp-8)">
+            <a
+              href="/percorsi.html"
+              class="btn btn-primary btn-with-icon"
+              style="font-size: var(--fs-16); padding: var(--sp-4) var(--sp-6)"
+            >
+              <span>Esplora tutti i percorsi formativi</span>
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M5 12h14M12 5l7 7-7 7"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== DASHBOARD PWA ===== -->
+      <section class="value-section" id="dashboard" aria-labelledby="dashboard-heading">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title" id="dashboard-heading">Dashboard PWA</h2>
+            <p class="section-description">
+              Installa la dashboard PWA per consultare analisi quotidiane, framework completi e
+              archivi. Funziona offline, nessuna registrazione richiesta.
+            </p>
+          </div>
+          <div style="text-align: center; max-width: 600px; margin: 0 auto">
+            <a
+              href="#"
+              class="btn btn-primary btn-lg btn-with-icon"
+              style="font-size: var(--fs-16); padding: 1rem 2rem"
+              data-dashboard-handler="true"
+            >
+              <span>Installa la dashboard PWA</span>
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M5 12h14M12 5l7 7-7 7"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+            <p style="margin-top: var(--sp-4); color: var(--muted); font-size: var(--fs-13)">
+              Framework FDM, MLT e PAC completi con versioni archiviate, quadri macro e intermarket,
+              note di rilascio.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== COSA È GRATUITO ===== -->
+      <section class="audience-section" id="gratuiti" aria-labelledby="gratuiti-heading">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title" id="gratuiti-heading">Cosa trovi gratuitamente</h2>
+            <p class="section-description">
+              Tutto il materiale pubblicato sulla dashboard è gratuito e accessibile senza
+              registrazione. Stessi blocchi usati nei report completi, con documentazione identica.
+            </p>
+          </div>
+          <div class="audience-grid">
+            <article class="audience-card">
+              <span class="audience-badge">Analisi quotidiane</span>
+              <strong>3 analisi al giorno</strong>
+              <span
+                >Framework FDM, MLT e PAC aggiornati ogni giorno con versioni archiviate e note di
+                rilascio.</span
+              >
+            </article>
+            <article class="audience-card">
+              <span class="audience-badge">Quadri di mercato</span>
+              <strong>Macro, intermarket e tecnico</strong>
+              <span
+                >Quadri sintetici del mercato con legenda, riferimenti e fonti verificabili.</span
+              >
+            </article>
+            <article class="audience-card">
+              <span class="audience-badge">Archivi completi</span>
+              <strong>Storico consultabile</strong>
+              <span
+                >Accesso a tutte le versioni precedenti per verificare note precedenti o confrontare
+                analisi.</span
+              >
+            </article>
+            <article class="audience-card">
+              <span class="audience-badge">Metodologia</span>
+              <strong>Documentazione completa</strong>
+              <span
+                >Spiegazione dettagliata di come raccogliamo i dati, come li elaboriamo e quali
+                controlli applichiamo.</span
+              >
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== PIANO DESK ===== -->
+      <section
+        class="value-section section-contrast"
+        id="piano-desk"
+        aria-labelledby="piano-desk-heading"
+      >
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title" id="piano-desk-heading">Piano Desk</h2>
+            <p class="section-description">
+              Report brandizzati white-label con logo, intestazione e disclaimer personalizzati.
+              Tutti i report della dashboard scaricabili in PDF.
+            </p>
+          </div>
+          <div
+            style="
+              max-width: 700px;
+              margin: 0 auto;
+              text-align: center;
+              padding: var(--sp-6);
+              background: var(--surface-elev);
+              border: 1px solid var(--br-card);
+              border-radius: var(--radius-lg);
+            "
+          >
+            <div style="margin-bottom: var(--sp-5)">
+              <h3
+                style="
+                  font-size: var(--fs-24);
+                  font-weight: 700;
+                  color: var(--ink);
+                  margin-bottom: var(--sp-2);
+                "
+              >
+                €149
+              </h3>
+              <p style="color: var(--muted); font-size: var(--fs-14); margin-bottom: var(--sp-4)">
+                Una tantum per accesso mensile (30 giorni)
+              </p>
+              <p
+                style="
+                  color: var(--ink-soft);
+                  font-size: var(--fs-14);
+                  line-height: 1.6;
+                  margin-bottom: var(--sp-4);
+                "
+              >
+                Tutti i report pubblicati sulla dashboard disponibili in versione white-label
+                (digitale e PDF) con logo, copy introduttivo, disclaimer dedicati e contatti
+                commerciali del partner, mantenendo metodo e fonti Tradelia.
+              </p>
+              <p style="color: var(--muted); font-size: var(--fs-13); line-height: 1.5">
+                Fatturazione B2B tramite Xolo Go. Diritto di recesso entro 14 giorni
+                dall'attivazione e rimborso entro 14 giorni dalla comunicazione.
+              </p>
+            </div>
+            <a
+              href="#"
+              class="btn btn-primary btn-with-icon"
+              data-dashboard-handler="true"
+              aria-label="Installa la dashboard PWA per accedere al Piano Desk"
+            >
+              <span>Installa la dashboard PWA</span>
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M5 12h14M12 5l7 7-7 7"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ANALISI SU COMMISSIONE ===== -->
+      <section
+        class="services-section"
+        id="analisi-commissione"
+        aria-labelledby="analisi-commissione-heading"
+      >
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title" id="analisi-commissione-heading">Analisi su commissione</h2>
+            <p class="section-description">
+              Analisi personalizzate su richiesta per approfondimenti specifici. Approccio
+              on-demand: paghi solo per ciò che richiedi, senza abbonamenti ricorrenti.
+            </p>
+          </div>
+          <div
+            style="
+              max-width: 700px;
+              margin: 0 auto;
+              text-align: center;
+              padding: var(--sp-6);
+              background: var(--surface-elev);
+              border: 1px solid var(--br-card);
+              border-radius: var(--radius-lg);
+            "
+          >
+            <div style="margin-bottom: var(--sp-5)">
+              <h3
+                style="
+                  font-size: var(--fs-24);
+                  font-weight: 700;
+                  color: var(--ink);
+                  margin-bottom: var(--sp-2);
+                "
+              >
+                €49
+              </h3>
+              <p style="color: var(--muted); font-size: var(--fs-14); margin-bottom: var(--sp-4)">
+                Per qualsiasi analisi. Circa 1 ora di lavoro, massimo 4 analisi al giorno.
+              </p>
+              <p
+                style="
+                  color: var(--ink-soft);
+                  font-size: var(--fs-14);
+                  line-height: 1.6;
+                  margin-bottom: var(--sp-4);
+                "
+              >
+                Ogni analisi include fonti, metodologia e controlli documentati. Disponibile per
+                tutti, anche per utenti gratuiti. Disponibile a privati (codice fiscale) e
+                professionisti (P.IVA).
+              </p>
+              <p style="color: var(--muted); font-size: var(--fs-13); line-height: 1.5">
+                Fatturazione tramite Xolo Go. Consegna garantita entro 24 ore. Diritto di recesso
+                entro 14 giorni dalla consegna con rimborso entro 14 giorni dalla richiesta.
+              </p>
+            </div>
+            <a
+              href="#"
+              class="btn btn-primary btn-with-icon"
+              data-dashboard-handler="true"
+              aria-label="Installa la dashboard PWA per richiedere analisi"
+            >
+              <span>Installa la dashboard PWA</span>
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M5 12h14M12 5l7 7-7 7"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Back to top (mobile-first) -->
+    <button id="back-to-top" class="back-to-top" type="button" aria-label="Torna all'inizio">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M12 19V5M5 12l7-7 7 7"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+    <style>
+      /* Modal transitions */
+      .modal-root {
+        opacity: 0;
+        transform: translateY(16px) scale(0.96);
+        transition:
+          opacity 0.26s cubic-bezier(0.22, 0.61, 0.36, 1),
+          transform 0.26s cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+      .modal-root.is-open {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      /* Back to top button (mobile-first) */
       .back-to-top {
-        right: 2rem;
-        bottom: 2rem;
+        position: fixed;
+        right: 1.25rem;
+        bottom: 1.25rem;
+        z-index: 60;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.45);
+        background: radial-gradient(
+          circle at 30% 0,
+          rgba(59, 130, 246, 0.32),
+          rgba(15, 23, 42, 0.98)
+        );
+        color: #e5f0ff;
+        box-shadow: 0 14px 40px rgba(15, 23, 42, 0.7);
+        opacity: 0;
+        transform: translateY(10px);
+        pointer-events: none;
+        transition:
+          opacity 0.22s ease-out,
+          transform 0.22s ease-out,
+          box-shadow 0.18s ease-out,
+          border-color 0.18s ease-out;
       }
-    }
-</style>
 
+      .back-to-top svg {
+        width: 18px;
+        height: 18px;
+      }
 
+      .back-to-top.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
 
+      .back-to-top:active {
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.85);
+        transform: translateY(1px);
+      }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
-  (function cardReveal() {
-    if (!('IntersectionObserver' in window)) return;
-      const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) return; // Skip animations se l'utente preferisce motion ridotto
-    
-    // Cards con stagger effect
-    const cards = document.querySelectorAll('.hero-feature, .audience-card, .value-card, .service-card, .testimonial-card, .plan-card');
-    const sectionHeaders = document.querySelectorAll('.section-header');
-    
-    // Observer per cards con stagger
-    const cardObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry, index) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            entry.target.classList.add('has-entered');
-            cardObserver.unobserve(entry.target);
-          }, index % 3 * 50); // Stagger di 50ms ogni 3 elementi
+      @media (min-width: 1024px) {
+        .back-to-top {
+          right: 2rem;
+          bottom: 2rem;
         }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
-    
-    cards.forEach(card => cardObserver.observe(card));
-    
-    // Observer per section headers (più veloce)
-    const headerObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('has-entered');
-          headerObserver.unobserve(entry.target);
+      }
+    </style>
+
+    <script>
+      (function cardReveal() {
+        if (!('IntersectionObserver' in window)) return;
+        const reduceMotion =
+          window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduceMotion) return; // Skip animations se l'utente preferisce motion ridotto
+
+        // Cards con stagger effect
+        const cards = document.querySelectorAll(
+          '.hero-feature, .audience-card, .value-card, .service-card, .testimonial-card, .plan-card'
+        );
+        const sectionHeaders = document.querySelectorAll('.section-header');
+
+        // Observer per cards con stagger
+        const cardObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry, index) => {
+              if (entry.isIntersecting) {
+                setTimeout(
+                  () => {
+                    entry.target.classList.add('has-entered');
+                    cardObserver.unobserve(entry.target);
+                  },
+                  (index % 3) * 50
+                ); // Stagger di 50ms ogni 3 elementi
+              }
+            });
+          },
+          { threshold: 0.1, rootMargin: '0px 0px -10% 0px' }
+        );
+
+        cards.forEach((card) => cardObserver.observe(card));
+
+        // Observer per section headers (più veloce)
+        const headerObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('has-entered');
+                headerObserver.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.2, rootMargin: '0px 0px -15% 0px' }
+        );
+
+        sectionHeaders.forEach((header) => headerObserver.observe(header));
+
+        // Parallax leggero per sezioni (solo desktop, molto discreto)
+        if (window.innerWidth >= 768) {
+          let ticking = false;
+          const parallaxSections = document.querySelectorAll('.section-alt, .section-contrast');
+
+          const updateParallax = () => {
+            const scrollY = window.scrollY;
+            parallaxSections.forEach((section, index) => {
+              const rect = section.getBoundingClientRect();
+              const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+              if (isVisible) {
+                const offset = (rect.top - window.innerHeight / 2) * 0.02;
+                section.style.transform = `translateY(${offset}px)`;
+              }
+            });
+            ticking = false;
+          };
+
+          window.addEventListener(
+            'scroll',
+            () => {
+              if (!ticking) {
+                window.requestAnimationFrame(updateParallax);
+                ticking = true;
+              }
+            },
+            { passive: true }
+          );
         }
-      });
-    }, { threshold: 0.2, rootMargin: '0px 0px -15% 0px' });
-    
-    sectionHeaders.forEach(header => headerObserver.observe(header));
-    
-    // Parallax leggero per sezioni (solo desktop, molto discreto)
-    if (window.innerWidth >= 768) {
-      let ticking = false;
-      const parallaxSections = document.querySelectorAll('.section-alt, .section-contrast');
-      
-      const updateParallax = () => {
-        const scrollY = window.scrollY;
-        parallaxSections.forEach((section, index) => {
-          const rect = section.getBoundingClientRect();
-          const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-          if (isVisible) {
-            const offset = (rect.top - window.innerHeight / 2) * 0.02;
-            section.style.transform = `translateY(${offset}px)`;
+      })();
+
+      (function scrollProgress() {
+        const progressBar = document.getElementById('scroll-progress');
+        if (!progressBar) return;
+        const reduceMotion =
+          window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduceMotion) {
+          progressBar.style.display = 'none';
+          return;
+        }
+
+        const updateProgress = () => {
+          const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+          const documentHeight =
+            document.documentElement.scrollHeight || document.body.scrollHeight;
+          const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+          const scrollableHeight = documentHeight - windowHeight;
+
+          if (scrollableHeight <= 0) {
+            progressBar.style.width = '0%';
+            progressBar.setAttribute('aria-valuenow', 0);
+            return;
           }
-        });
-        ticking = false;
-      };
-      
-      window.addEventListener('scroll', () => {
-        if (!ticking) {
-          window.requestAnimationFrame(updateParallax);
-          ticking = true;
-        }
-      }, { passive: true });
-    }
-  })();
 
-  (function scrollProgress() {
-    const progressBar = document.getElementById('scroll-progress');
-    if (!progressBar) return;
-    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) {
-      progressBar.style.display = 'none';
-      return;
-    }
+          const progress = (scrollTop / scrollableHeight) * 100;
+          const clampedProgress = Math.min(100, Math.max(0, progress));
+          progressBar.style.width = clampedProgress + '%';
+          progressBar.setAttribute('aria-valuenow', Math.round(clampedProgress));
+        };
 
-    const updateProgress = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
-      const documentHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-      const scrollableHeight = documentHeight - windowHeight;
-      
-      if (scrollableHeight <= 0) {
-        progressBar.style.width = '0%';
-        progressBar.setAttribute('aria-valuenow', 0);
-        return;
-      }
-      
-      const progress = (scrollTop / scrollableHeight) * 100;
-      const clampedProgress = Math.min(100, Math.max(0, progress));
-      progressBar.style.width = clampedProgress + '%';
-      progressBar.setAttribute('aria-valuenow', Math.round(clampedProgress));
-    };
-    
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
+        let ticking = false;
+        const handleScroll = () => {
+          if (!ticking) {
+            window.requestAnimationFrame(() => {
+              updateProgress();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('resize', updateProgress, { passive: true });
+
+        // Initial state e dopo load completo
+        if (document.readyState === 'complete') {
           updateProgress();
-          ticking = false;
+        } else {
+          window.addEventListener('load', updateProgress, { once: true });
+          updateProgress(); // Fallback immediato
+        }
+      })();
+
+      (function backToTop() {
+        const btn = document.getElementById('back-to-top');
+        if (!btn) return;
+        const handleScroll = () => {
+          if (window.scrollY > 480) btn.classList.add('is-visible');
+          else btn.classList.remove('is-visible');
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        btn.addEventListener('click', () => {
+          const reduceMotion =
+            window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
         });
-        ticking = true;
+      })();
+    </script>
+
+    <!-- FOOTER -->
+
+    <!-- Cookie & Legal helpers (fix: racchiusi in <script>) -->
+    <script>
+      function chiudiPopupCookie() {
+        localStorage.setItem('tradelia_cookie_consent', 'true');
+        const popup = document.getElementById('cookie-popup');
+        if (popup) popup.style.display = 'none';
       }
-    };
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', updateProgress, { passive: true });
-    
-    // Initial state e dopo load completo
-    if (document.readyState === 'complete') {
-      updateProgress();
-    } else {
-      window.addEventListener('load', updateProgress, { once: true });
-      updateProgress(); // Fallback immediato
-    }
-  })();
 
-  (function backToTop() {
-    const btn = document.getElementById('back-to-top');
-    if (!btn) return;
-    const handleScroll = () => {
-      if (window.scrollY > 480) btn.classList.add('is-visible');
-      else btn.classList.remove('is-visible');
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    btn.addEventListener('click', () => {
-      const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
-    });
-  })();
-</script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const consento = localStorage.getItem('tradelia_cookie_consent');
+        if (consento === 'true') {
+          const popup = document.getElementById('cookie-popup');
+          if (popup) popup.style.display = 'none';
+        }
+      });
 
-<!-- FOOTER -->
+      // Funzione usata nel footer
+      function apriSezioneLegale(id) {
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+        const map = {
+          'section-tc': '/legal/termini.html#section-tc',
+          'section-privacy': '/legal/privacy.html#section-privacy',
+        };
+        window.location.href = map[id] || '/legal/';
+      }
+    </script>
 
-<!-- Cookie & Legal helpers (fix: racchiusi in <script>) -->
-<script>
-  function chiudiPopupCookie() {
-    localStorage.setItem("tradelia_cookie_consent", "true");
-    const popup = document.getElementById("cookie-popup");
-    if (popup) popup.style.display = "none";
-  }
+    <!-- ===== FOOTER SLOT (montato via JS) ===== -->
+    <div id="site-footer-slot"></div>
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const consento = localStorage.getItem("tradelia_cookie_consent");
-    if (consento === "true") {
-      const popup = document.getElementById("cookie-popup");
-      if (popup) popup.style.display = "none";
-    }
-  });
+    <!-- ===== LEGAL OVERLAY ===== -->
+    <!-- Overlay verrà creato dinamicamente da mifid-banner.js -->
 
-  // Funzione usata nel footer
-  function apriSezioneLegale(id) {
-    const el = document.getElementById(id);
-    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
-    const map = {
-      'section-tc': '/legal/termini.html#section-tc',
-      'section-privacy': '/legal/privacy.html#section-privacy'
-    };
-    window.location.href = map[id] || '/legal/';
-  }
-</script>
+    <!-- ===== MOUNT FOOTER ===== -->
+    <script type="module">
+      // Imposta tema dark
+      document.documentElement.setAttribute('data-theme', 'dark');
 
-  <!-- ===== FOOTER SLOT (montato via JS) ===== -->
-  <div id="site-footer-slot"></div>
+      // Importa footer (header gestito da global-header.js)
+      import { siteFooter } from '/report/assets/js/components/site-footer.js';
 
-  <!-- ===== LEGAL OVERLAY ===== -->
-  <!-- Overlay verrà creato dinamicamente da mifid-banner.js -->
+      // Monta footer
+      const footerSlot = document.getElementById('site-footer-slot');
+      if (footerSlot) {
+        siteFooter.mount(footerSlot);
+      }
+    </script>
 
-  <!-- ===== MOUNT FOOTER ===== -->
-  <script type="module">
-    // Imposta tema dark
-    document.documentElement.setAttribute('data-theme', 'dark');
-    
-    // Importa footer (header gestito da global-header.js)
-    import { siteFooter } from '/report/assets/js/components/site-footer.js';
-    
-    // Monta footer
-    const footerSlot = document.getElementById('site-footer-slot');
-    if (footerSlot) {
-      siteFooter.mount(footerSlot);
-    }
-  </script>
+    <!-- Version Check - MUST BE BEFORE MIFID BANNER -->
 
-  <!-- Version Check - MUST BE BEFORE MIFID BANNER -->
-  
-  <!-- ===== MIFID BANNER (overlay legale unificato) ===== -->
-  <link rel="stylesheet" href="/assets/css/mifid-banner.css" />
-  <script type="module" src="/assets/js/mifid-banner.js"></script>
+    <!-- ===== MIFID BANNER (overlay legale unificato) ===== -->
+    <link rel="stylesheet" href="/assets/css/mifid-banner.css" />
+    <script type="module" src="/assets/js/mifid-banner.js"></script>
 
-  <!-- ===== MODAL COLLABORATORS ===== -->
-  <script type="module" src="/assets/js/global-header.js"></script>
-  <script src="/assets/js/pwa-dashboard-handler.js"></script>
-
-</body>
+    <!-- ===== MODAL COLLABORATORS ===== -->
+    <script type="module" src="/assets/js/global-header.js"></script>
+    <script src="/assets/js/pwa-dashboard-handler.js"></script>
+  </body>
 </html>
-

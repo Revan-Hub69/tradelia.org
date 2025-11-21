@@ -26,7 +26,7 @@ export const handlePaymentsRequest = async (req, res) => {
     planRole = 'desk',
     plan = 'desk_manual',
     months = 1,
-    gateway = 'manual'
+    gateway = 'manual',
   } = req.body || {};
 
   if (!userId || !email) {
@@ -50,8 +50,8 @@ export const handlePaymentsRequest = async (req, res) => {
       metadata: {
         source: 'admin_manual_payment',
         description: description || null,
-        pdf_url: pdfUrl || null
-      }
+        pdf_url: pdfUrl || null,
+      },
     })
     .select('id')
     .single();
@@ -80,13 +80,15 @@ export const handlePaymentsRequest = async (req, res) => {
     email: (currentRole?.email || email).toLowerCase(),
     role: planRole,
     plan_source: gateway,
-    valid_until: newValidUntil
+    valid_until: newValidUntil,
   };
 
-  const { error: upsertRoleError } = await supabase.from('user_roles').upsert(rolePayload, { onConflict: 'email' });
+  const { error: upsertRoleError } = await supabase
+    .from('user_roles')
+    .upsert(rolePayload, { onConflict: 'email' });
 
   if (upsertRoleError) {
-    throw new HttpError(500, 'Errore durante l\'aggiornamento del ruolo', upsertRoleError.message);
+    throw new HttpError(500, "Errore durante l'aggiornamento del ruolo", upsertRoleError.message);
   }
 
   const subscriptionPayload = {
@@ -97,14 +99,20 @@ export const handlePaymentsRequest = async (req, res) => {
     started_at: now.toISOString(),
     renew_at: newValidUntil,
     metadata: {
-      invoice_number: invoiceNumber || null
-    }
+      invoice_number: invoiceNumber || null,
+    },
   };
 
-  const { error: subscriptionError } = await supabase.from('subscriptions').insert(subscriptionPayload);
+  const { error: subscriptionError } = await supabase
+    .from('subscriptions')
+    .insert(subscriptionPayload);
 
   if (subscriptionError) {
-    throw new HttpError(500, 'Errore durante la creazione dell\'abbonamento', subscriptionError.message);
+    throw new HttpError(
+      500,
+      "Errore durante la creazione dell'abbonamento",
+      subscriptionError.message
+    );
   }
 
   if (invoiceNumber || pdfUrl) {
@@ -118,12 +126,16 @@ export const handlePaymentsRequest = async (req, res) => {
       pdf_url: pdfUrl || null,
       metadata: {
         payment_id: payment.id,
-        description: description || null
-      }
+        description: description || null,
+      },
     });
 
     if (invoiceError) {
-      throw new HttpError(500, 'Errore durante la registrazione della fattura', invoiceError.message);
+      throw new HttpError(
+        500,
+        'Errore durante la registrazione della fattura',
+        invoiceError.message
+      );
     }
   }
 
@@ -131,7 +143,7 @@ export const handlePaymentsRequest = async (req, res) => {
     .from('dashboard_access_tokens')
     .update({
       plan_role: planRole,
-      valid_until: newValidUntil
+      valid_until: newValidUntil,
     })
     .eq('email', email.toLowerCase())
     .eq('revoked', false);
@@ -139,7 +151,6 @@ export const handlePaymentsRequest = async (req, res) => {
   return sendJSON(res, 200, {
     ok: true,
     paymentId: payment.id,
-    validUntil: newValidUntil
+    validUntil: newValidUntil,
   });
 };
-

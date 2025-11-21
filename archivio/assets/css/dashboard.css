@@ -23,7 +23,7 @@
 }
 
 .loading-spinner::before {
-  content: "";
+  content: '';
   width: 16px;
   height: 16px;
   border: 2px solid var(--br-card, #333);
@@ -33,7 +33,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ===== LOGIN ===== */
@@ -457,7 +459,9 @@
   color: currentColor;
   stroke: currentColor;
   fill: none;
-  transition: transform var(--transition-fast), color var(--transition-fast);
+  transition:
+    transform var(--transition-fast),
+    color var(--transition-fast);
 }
 
 .btn span,
@@ -524,9 +528,8 @@
     align-items: flex-start;
     gap: var(--sp-4);
   }
-  
+
   .stats-grid {
     grid-template-columns: 1fr;
   }
 }
-

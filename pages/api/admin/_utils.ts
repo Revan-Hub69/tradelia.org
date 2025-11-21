@@ -70,7 +70,10 @@ export async function readJSON<T = any>(filePath: string): Promise<T | null> {
   }
 }
 
-export type ParsedMultipart = Record<string, string | { filename?: string; contentType?: string; data: Buffer }>;
+export type ParsedMultipart = Record<
+  string,
+  string | { filename?: string; contentType?: string; data: Buffer }
+>;
 
 export async function parseMultipartRequest(req: NextApiRequest): Promise<ParsedMultipart> {
   const contentType = req.headers['content-type'];
@@ -133,7 +136,7 @@ function parseMultipart(buffer: Buffer, boundary: string): ParsedMultipart {
       result[fieldName] = {
         filename: filenameMatch[1],
         contentType: contentTypeMatch ? contentTypeMatch[1].trim() : 'application/octet-stream',
-        data: body
+        data: body,
       };
     } else {
       result[fieldName] = body.toString();
@@ -145,7 +148,11 @@ function parseMultipart(buffer: Buffer, boundary: string): ParsedMultipart {
   return result;
 }
 
-export async function generateReportsManifest(): Promise<{ success: boolean; manifest?: any; error?: string }> {
+export async function generateReportsManifest(): Promise<{
+  success: boolean;
+  manifest?: any;
+  error?: string;
+}> {
   if (!AUTO_REGENERATE_MANIFEST) {
     return { success: false, error: 'Rigenerazione automatica disabilitata' };
   }
@@ -160,7 +167,10 @@ export async function generateReportsManifest(): Promise<{ success: boolean; man
   }
 }
 
-export async function pushToGit(reportId: string, filePath: string): Promise<{ success: boolean; [key: string]: any }> {
+export async function pushToGit(
+  reportId: string,
+  filePath: string
+): Promise<{ success: boolean; [key: string]: any }> {
   if (!AUTO_PUSH_TO_GITHUB) {
     return { success: false, error: 'Push automatico disabilitato' };
   }
@@ -184,7 +194,10 @@ export async function pushToGit(reportId: string, filePath: string): Promise<{ s
   const escapedMessage = commitMessage.replace(/"/g, '\\"');
 
   try {
-    await execAsync(`git commit -m "${escapedMessage}"`, { cwd: PROJECT_ROOT, maxBuffer: 10 * 1024 * 1024 });
+    await execAsync(`git commit -m "${escapedMessage}"`, {
+      cwd: PROJECT_ROOT,
+      maxBuffer: 10 * 1024 * 1024,
+    });
   } catch (error: any) {
     if (error?.message?.includes('nothing to commit') || error?.message?.includes('no changes')) {
       return { success: true, message: 'Nessuna modifica da committare' };
@@ -194,28 +207,38 @@ export async function pushToGit(reportId: string, filePath: string): Promise<{ s
 
   let currentBranch = 'main';
   try {
-    const { stdout } = await execAsync('git branch --show-current', { cwd: PROJECT_ROOT, maxBuffer: 1024 * 1024 });
+    const { stdout } = await execAsync('git branch --show-current', {
+      cwd: PROJECT_ROOT,
+      maxBuffer: 1024 * 1024,
+    });
     currentBranch = stdout.trim() || 'main';
   } catch {
     // usa default
   }
 
   try {
-    await execAsync(`git push origin ${currentBranch}`, { cwd: PROJECT_ROOT, maxBuffer: 10 * 1024 * 1024 });
+    await execAsync(`git push origin ${currentBranch}`, {
+      cwd: PROJECT_ROOT,
+      maxBuffer: 10 * 1024 * 1024,
+    });
     return { success: true, branch: currentBranch, commit: commitMessage, path: relativePath };
   } catch (error: any) {
     return { success: false, error: `Errore push: ${error?.message}`, branch: currentBranch };
   }
 }
 
-export async function listReports(): Promise<Array<{ id: string; ticker: string | null; hasScreenshot: boolean }>> {
+export async function listReports(): Promise<
+  Array<{ id: string; ticker: string | null; hasScreenshot: boolean }>
+> {
   const reports: Array<{ id: string; ticker: string | null; hasScreenshot: boolean }> = [];
 
   if (!fsSync.existsSync(REPORTS_DIR)) {
     return reports;
   }
 
-  const directories = fsSync.readdirSync(REPORTS_DIR, { withFileTypes: true }).filter(d => d.isDirectory());
+  const directories = fsSync
+    .readdirSync(REPORTS_DIR, { withFileTypes: true })
+    .filter((d) => d.isDirectory());
 
   for (const dirent of directories) {
     const reportId = dirent.name;
@@ -265,8 +288,8 @@ export async function listReportFiles(reportId: string): Promise<string[]> {
   try {
     const entries = await fs.readdir(reportDir, { withFileTypes: true });
     return entries
-      .filter(entry => entry.isFile() && entry.name.toLowerCase().endsWith('.json'))
-      .map(entry => entry.name);
+      .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith('.json'))
+      .map((entry) => entry.name);
   } catch {
     return [];
   }

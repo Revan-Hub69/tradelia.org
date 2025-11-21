@@ -31,7 +31,7 @@
   justify-content: center;
 }
 
-#auth-overlay[data-open="true"] {
+#auth-overlay[data-open='true'] {
   display: flex !important;
 }
 
@@ -210,7 +210,7 @@
   transition: transform var(--transition-base);
 }
 
-.btn-toggle-filters[aria-expanded="true"] svg {
+.btn-toggle-filters[aria-expanded='true'] svg {
   transform: rotate(180deg);
 }
 
@@ -261,18 +261,18 @@
 }
 
 .archive-table th[data-sort]::after {
-  content: " ↕";
+  content: ' ↕';
   opacity: 0.5;
   font-size: var(--fs-12);
 }
 
-.archive-table th[data-sort="asc"]::after {
-  content: " ↑";
+.archive-table th[data-sort='asc']::after {
+  content: ' ↑';
   opacity: 1;
 }
 
-.archive-table th[data-sort="desc"]::after {
-  content: " ↓";
+.archive-table th[data-sort='desc']::after {
+  content: ' ↓';
   opacity: 1;
 }
 
@@ -304,7 +304,9 @@
 }
 
 .archive-id {
-  font-family: "Fira Mono", "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family:
+    'Fira Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
   font-weight: 600;
   color: color-mix(in srgb, var(--ink-soft) 80%, #ffffff 20%);
 }
@@ -344,17 +346,17 @@
   border-radius: var(--radius-pill);
 }
 
-.status-badge[data-status="active"] {
+.status-badge[data-status='active'] {
   background: rgba(22, 163, 74, 0.2);
   color: var(--tone-pos-fg);
 }
 
-.status-badge[data-status="hold"] {
+.status-badge[data-status='hold'] {
   background: rgba(234, 88, 12, 0.2);
   color: var(--tone-warn-fg);
 }
 
-.status-badge[data-status="review"] {
+.status-badge[data-status='review'] {
   background: rgba(220, 38, 38, 0.2);
   color: var(--tone-neg-fg);
 }
@@ -430,13 +432,12 @@
   .archive-table-container {
     overflow-x: scroll;
   }
-  
+
   .archive-table {
     min-width: 800px;
   }
-  
+
   .tutorials-list {
     grid-template-columns: 1fr;
   }
 }
-

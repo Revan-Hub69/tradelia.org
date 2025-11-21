@@ -6,4 +6,3 @@ console.log('🔄 Generando manifest.json...');
 const manifest = generateManifest();
 console.log(`✅ Manifest generato con ${manifest.total_reports} report`);
 process.exit(0);
-

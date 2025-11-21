@@ -2,10 +2,10 @@
 /**
  * Server per upload chart screenshot
  * Avvia un server HTTP semplice per gestire l'upload degli screenshot
- * 
+ *
  * Uso:
  *   node report/admin/upload-chart-server.js
- * 
+ *
  * Poi apri: http://localhost:3001/report/admin/upload-chart.html
  */
 
@@ -31,14 +31,14 @@ const AUTO_REGENERATE_MANIFEST = true; // Abilita/disabilita rigenerazione autom
 
 // Mappatura moduli
 const MODULE_FILES = {
-  'F1B': 'f1b.json',
-  'F2': 'f2.json',
-  'F3': 'f3.json',
-  'F3O': 'f3o.json',
-  'F4': 'f4.json',
-  'F5': 'f5.json',
-  'F5B': 'f5b.json',
-  'F5-LT+': 'f5-lt+.json'
+  F1B: 'f1b.json',
+  F2: 'f2.json',
+  F3: 'f3.json',
+  F3O: 'f3o.json',
+  F4: 'f4.json',
+  F5: 'f5.json',
+  F5B: 'f5b.json',
+  'F5-LT+': 'f5-lt+.json',
 };
 
 // MIME types
@@ -121,12 +121,14 @@ const server = http.createServer(async (req, res) => {
     if (pathname.startsWith('/report/reports/') && !pathname.startsWith('/report/admin/')) {
       // Serve chart snapshot
       if (pathname.endsWith('/chart-snapshot.png')) {
-        const reportPath = pathname.replace('/report/reports/', '').replace('/chart-snapshot.png', '');
+        const reportPath = pathname
+          .replace('/report/reports/', '')
+          .replace('/chart-snapshot.png', '');
         const filePath = path.join(REPORTS_DIR, reportPath, 'chart-snapshot.png');
         await serveFile(res, filePath, 'image/png');
         return;
       }
-      
+
       // Serve module JSON files
       if (pathname.endsWith('.json')) {
         const parts = pathname.replace('/report/reports/', '').split('/');
@@ -137,7 +139,7 @@ const server = http.createServer(async (req, res) => {
           return;
         }
       }
-      
+
       // Serve module screenshot images
       if (pathname.includes('-screenshot.png')) {
         const parts = pathname.replace('/report/reports/', '').split('/');
@@ -263,13 +265,15 @@ async function handleUpload(req, res) {
   }
 
   res.writeHead(200, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({
-    success: true,
-    path: `report/reports/${reportId}/chart-snapshot.png`,
-    reportId: reportId,
-    git: gitResult,
-    manifest: manifestResult
-  }));
+  res.end(
+    JSON.stringify({
+      success: true,
+      path: `report/reports/${reportId}/chart-snapshot.png`,
+      reportId: reportId,
+      git: gitResult,
+      manifest: manifestResult,
+    })
+  );
 }
 
 // Parse multipart form data
@@ -277,19 +281,19 @@ function parseMultipart(buffer, boundary) {
   const parts = {};
   const boundaryBuffer = Buffer.from(`--${boundary}`);
   const sections = [];
-  
+
   // Dividi il buffer usando indexOf invece di split (che non esiste per Buffer)
   let start = 0;
   while (true) {
     const index = buffer.indexOf(boundaryBuffer, start);
     if (index === -1) break;
-    
+
     if (start < index) {
       sections.push(buffer.slice(start, index));
     }
     start = index + boundaryBuffer.length;
   }
-  
+
   // Aggiungi l'ultima sezione se c'è
   if (start < buffer.length) {
     sections.push(buffer.slice(start));
@@ -316,20 +320,24 @@ function parseMultipart(buffer, boundary) {
       const contentTypeMatch = headers.match(/Content-Type:\s*([^\r\n]+)/);
       // Rimuovi \r\n finale se presente
       let data = body;
-      if (data.length >= 2 && data[data.length - 2] === 0x0D && data[data.length - 1] === 0x0A) {
+      if (data.length >= 2 && data[data.length - 2] === 0x0d && data[data.length - 1] === 0x0a) {
         data = data.slice(0, -2);
       }
-      
+
       parts[name] = {
         filename: filenameMatch[1],
         contentType: contentTypeMatch ? contentTypeMatch[1].trim() : 'application/octet-stream',
-        data: data
+        data: data,
       };
     } else {
       // Field
       let fieldData = body;
       // Rimuovi \r\n finale se presente
-      if (fieldData.length >= 2 && fieldData[fieldData.length - 2] === 0x0D && fieldData[fieldData.length - 1] === 0x0A) {
+      if (
+        fieldData.length >= 2 &&
+        fieldData[fieldData.length - 2] === 0x0d &&
+        fieldData[fieldData.length - 1] === 0x0a
+      ) {
         fieldData = fieldData.slice(0, -2);
       }
       parts[name] = fieldData.toString();
@@ -344,19 +352,23 @@ async function handleRegenerateManifest(req, res) {
   try {
     generateManifest();
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ 
-      success: true, 
-      message: 'Manifest rigenerato con successo',
-      timestamp: new Date().toISOString()
-    }));
+    res.end(
+      JSON.stringify({
+        success: true,
+        message: 'Manifest rigenerato con successo',
+        timestamp: new Date().toISOString(),
+      })
+    );
     console.log('[API] Manifest rigenerato manualmente');
   } catch (error) {
     console.error('[API] Errore rigenerazione manifest:', error);
     res.writeHead(500, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ 
-      success: false, 
-      error: error.message 
-    }));
+    res.end(
+      JSON.stringify({
+        success: false,
+        error: error.message,
+      })
+    );
   }
 }
 
@@ -365,21 +377,21 @@ async function handleListReportFiles(req, res) {
   try {
     const url = new URL(req.url, `http://${req.headers.host}`);
     const reportId = url.searchParams.get('reportId');
-    
+
     if (!reportId) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Report ID mancante' }));
       return;
     }
-    
+
     const reportDir = path.join(REPORTS_DIR, reportId);
-    
+
     try {
       const entries = await fs.readdir(reportDir, { withFileTypes: true });
       const files = entries
-        .filter(entry => entry.isFile() && entry.name.endsWith('.json'))
-        .map(entry => entry.name);
-      
+        .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
+        .map((entry) => entry.name);
+
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ files: files }));
     } catch (error) {
@@ -398,27 +410,32 @@ async function handleListReportFiles(req, res) {
 async function handleListReports(req, res) {
   try {
     const reports = [];
-    
-    if (!await fs.access(REPORTS_DIR).then(() => true).catch(() => false)) {
+
+    if (
+      !(await fs
+        .access(REPORTS_DIR)
+        .then(() => true)
+        .catch(() => false))
+    ) {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ reports: [] }));
       return;
     }
 
     const entries = await fs.readdir(REPORTS_DIR, { withFileTypes: true });
-    
+
     for (const entry of entries) {
       if (!entry.isDirectory()) continue;
-      
+
       const reportId = entry.name;
       const reportDir = path.join(REPORTS_DIR, reportId);
       const screenshotPath = path.join(reportDir, 'chart-snapshot.png');
       const headerPath = path.join(reportDir, 'header.json');
       const manifestPath = path.join(reportDir, 'manifest.json');
-      
+
       let ticker = null;
       let hasScreenshot = false;
-      
+
       // Verifica screenshot
       try {
         await fs.access(screenshotPath);
@@ -426,12 +443,12 @@ async function handleListReports(req, res) {
       } catch {
         hasScreenshot = false;
       }
-      
+
       // Leggi ticker da header.json (priorità 1)
       try {
         const headerContent = await fs.readFile(headerPath, 'utf-8');
         const header = JSON.parse(headerContent);
-        
+
         // Cerca ticker nei rows
         if (header.rows && Array.isArray(header.rows)) {
           for (const row of header.rows) {
@@ -449,7 +466,7 @@ async function handleListReports(req, res) {
       } catch {
         // Ignora errori di lettura header
       }
-      
+
       // Fallback: leggi ticker da manifest.json se non trovato in header
       if (!ticker) {
         try {
@@ -464,19 +481,22 @@ async function handleListReports(req, res) {
           // Ignora errori di lettura manifest
         }
       }
-      
+
       reports.push({
         id: reportId,
         ticker: ticker,
-        hasScreenshot: hasScreenshot
+        hasScreenshot: hasScreenshot,
       });
     }
-    
-    console.log(`[API Reports] Trovati ${reports.length} report:`, reports.map(r => r.id).join(', '));
-    
+
+    console.log(
+      `[API Reports] Trovati ${reports.length} report:`,
+      reports.map((r) => r.id).join(', ')
+    );
+
     // Ordina per ID
     reports.sort((a, b) => a.id.localeCompare(b.id));
-    
+
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ reports: reports }));
   } catch (error) {
@@ -498,14 +518,14 @@ async function pushToGitHub(reportId, filePath) {
 
     // Aggiungi solo il file screenshot (usa path relativo)
     const relativePath = path.relative(PROJECT_ROOT, filePath).replace(/\\/g, '/');
-    
+
     // Escape path per Windows
     const escapedPath = relativePath.replace(/"/g, '\\"');
-    
+
     try {
-      await execAsync(`git add "${escapedPath}"`, { 
+      await execAsync(`git add "${escapedPath}"`, {
         cwd: PROJECT_ROOT,
-        maxBuffer: 10 * 1024 * 1024 // 10MB buffer
+        maxBuffer: 10 * 1024 * 1024, // 10MB buffer
       });
     } catch (error) {
       return { success: false, error: `Errore git add: ${error.message}` };
@@ -514,11 +534,11 @@ async function pushToGitHub(reportId, filePath) {
     // Commit
     const commitMessage = `chore: aggiorna screenshot chart per report ${reportId}`;
     const escapedMessage = commitMessage.replace(/"/g, '\\"');
-    
+
     try {
-      await execAsync(`git commit -m "${escapedMessage}"`, { 
+      await execAsync(`git commit -m "${escapedMessage}"`, {
         cwd: PROJECT_ROOT,
-        maxBuffer: 10 * 1024 * 1024
+        maxBuffer: 10 * 1024 * 1024,
       });
     } catch (error) {
       // Se non ci sono modifiche, il commit fallisce - è ok
@@ -531,9 +551,9 @@ async function pushToGitHub(reportId, filePath) {
     // Ottieni branch corrente
     let currentBranch = 'main';
     try {
-      const { stdout: branch } = await execAsync('git branch --show-current', { 
+      const { stdout: branch } = await execAsync('git branch --show-current', {
         cwd: PROJECT_ROOT,
-        maxBuffer: 1024 * 1024
+        maxBuffer: 1024 * 1024,
       });
       currentBranch = branch.trim() || 'main';
     } catch {
@@ -542,15 +562,15 @@ async function pushToGitHub(reportId, filePath) {
 
     // Push
     try {
-      await execAsync(`git push origin ${currentBranch}`, { 
+      await execAsync(`git push origin ${currentBranch}`, {
         cwd: PROJECT_ROOT,
-        maxBuffer: 10 * 1024 * 1024
+        maxBuffer: 10 * 1024 * 1024,
       });
     } catch (error) {
-      return { 
-        success: false, 
+      return {
+        success: false,
         error: `Errore push: ${error.message}`,
-        branch: currentBranch
+        branch: currentBranch,
       };
     }
 
@@ -558,12 +578,12 @@ async function pushToGitHub(reportId, filePath) {
       success: true,
       branch: currentBranch,
       commit: commitMessage,
-      path: relativePath
+      path: relativePath,
     };
   } catch (error) {
     return {
       success: false,
-      error: error.message || 'Errore push GitHub'
+      error: error.message || 'Errore push GitHub',
     };
   }
 }
@@ -574,26 +594,26 @@ async function handleCreateReport(req, res) {
   for await (const chunk of req) {
     chunks.push(chunk);
   }
-  
+
   try {
     const body = JSON.parse(Buffer.concat(chunks).toString());
     const { reportId, reportType } = body;
-    
+
     if (!reportId || !reportType) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Report ID e Tipo Report sono obbligatori' }));
       return;
     }
-    
+
     // Valida reportId
     if (!/^[a-zA-Z0-9_-]+$/.test(reportId)) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Report ID non valido' }));
       return;
     }
-    
+
     const reportDir = path.join(REPORTS_DIR, reportId);
-    
+
     // Verifica se esiste già
     try {
       await fs.access(reportDir);
@@ -603,10 +623,10 @@ async function handleCreateReport(req, res) {
     } catch {
       // OK, non esiste
     }
-    
+
     // Crea directory
     await fs.mkdir(reportDir, { recursive: true });
-    
+
     // Crea header.json minimo
     const header = {
       meta: {
@@ -616,38 +636,42 @@ async function handleCreateReport(req, res) {
         state: 'ACTIVE',
         generatedAt: new Date().toISOString(),
         lastUpdated: new Date().toISOString(),
-        reportID: reportId
+        reportID: reportId,
       },
       rows: [
         {
           id: 'company-line',
           parts: [
-            { kind: 'text', text: 'Report Framework Accademico AI, Tradelia Swing Master 5.0' }
-          ]
-        }
+            { kind: 'text', text: 'Report Framework Accademico AI, Tradelia Swing Master 5.0' },
+          ],
+        },
       ],
       footer: {
-        links: []
+        links: [],
       },
-      metricsPanel: []
+      metricsPanel: [],
     };
-    
+
     await fs.writeFile(
       path.join(reportDir, 'header.json'),
       JSON.stringify(header, null, 2),
       'utf-8'
     );
-    
+
     console.log(`✅ Directory report creata: ${reportId}`);
     console.log(`✅ Header.json creato`);
-    console.log(`   I file JSON (f1b.json, f2.json, ecc.) verranno caricati direttamente dall'output`);
-    
+    console.log(
+      `   I file JSON (f1b.json, f2.json, ecc.) verranno caricati direttamente dall'output`
+    );
+
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({
-      success: true,
-      reportId: reportId,
-      path: `report/reports/${reportId}/`
-    }));
+    res.end(
+      JSON.stringify({
+        success: true,
+        reportId: reportId,
+        path: `report/reports/${reportId}/`,
+      })
+    );
   } catch (error) {
     console.error('Error creating report:', error);
     res.writeHead(500, { 'Content-Type': 'application/json' });
@@ -731,12 +755,14 @@ async function handleUploadModuleJson(req, res) {
   console.log(`✅ JSON salvato: ${targetPath}`);
 
   res.writeHead(200, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({
-    success: true,
-    path: `report/reports/${reportId}/${safeFileName}`,
-    reportId: reportId,
-    fileName: safeFileName
-  }));
+  res.end(
+    JSON.stringify({
+      success: true,
+      path: `report/reports/${reportId}/${safeFileName}`,
+      reportId: reportId,
+      fileName: safeFileName,
+    })
+  );
 }
 
 // Upload screenshot modulo
@@ -799,12 +825,14 @@ async function handleUploadModuleScreenshot(req, res) {
   console.log(`✅ Screenshot modulo salvato: ${targetPath}`);
 
   res.writeHead(200, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({
-    success: true,
-    path: `report/reports/${reportId}/${screenshotFile}`,
-    reportId: reportId,
-    moduleId: moduleId
-  }));
+  res.end(
+    JSON.stringify({
+      success: true,
+      path: `report/reports/${reportId}/${screenshotFile}`,
+      reportId: reportId,
+      moduleId: moduleId,
+    })
+  );
 }
 
 // Upload chart screenshot
@@ -890,13 +918,15 @@ async function handleUploadChartScreenshot(req, res) {
   }
 
   res.writeHead(200, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({
-    success: true,
-    path: `report/reports/${reportId}/chart-snapshot.png`,
-    reportId: reportId,
-    git: gitResult,
-    manifest: manifestResult
-  }));
+  res.end(
+    JSON.stringify({
+      success: true,
+      path: `report/reports/${reportId}/chart-snapshot.png`,
+      reportId: reportId,
+      git: gitResult,
+      manifest: manifestResult,
+    })
+  );
 }
 
 // Serve file statico
@@ -918,9 +948,10 @@ server.listen(PORT, () => {
   console.log(`📊 Upload semplice: http://localhost:${PORT}/report/admin/upload-chart.html`);
   console.log(`📁 Reports directory: ${REPORTS_DIR}`);
   console.log(`🌐 Push GitHub: ${AUTO_PUSH_TO_GITHUB ? '✅ Abilitato' : '❌ Disabilitato'}`);
-  console.log(`📋 Rigenerazione Manifest: ${AUTO_REGENERATE_MANIFEST ? '✅ Abilitato' : '❌ Disabilitato'}`);
+  console.log(
+    `📋 Rigenerazione Manifest: ${AUTO_REGENERATE_MANIFEST ? '✅ Abilitato' : '❌ Disabilitato'}`
+  );
   if (AUTO_PUSH_TO_GITHUB) {
     console.log(`   Branch: ${process.env.GIT_BRANCH || 'auto-detect'}`);
   }
 });
-

@@ -4,4 +4,3 @@ const runtimeFetch =
   typeof globalThis.fetch === 'function' ? globalThis.fetch.bind(globalThis) : nodeFetch;
 
 export default runtimeFetch;
-

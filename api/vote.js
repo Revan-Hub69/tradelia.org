@@ -27,7 +27,7 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const { ticker, votes, userId } = req.body;
-      
+
       if (!ticker || !votes || votes < 1 || votes > 10) {
         return res.status(400).json({ error: 'Ticker e voti (1-10) richiesti' });
       }
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
           .select('id')
           .eq('auth_user_id', userId)
           .single();
-        
+
         if (subscriber) {
           subscriberId = subscriber.id;
         }
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
         votes: parseInt(votes),
         user_id: subscriberId,
         auth_user_id: userId || null,
-        date: today
+        date: today,
       };
 
       const { data: newVote, error } = await supabase
@@ -67,16 +67,16 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: 'Errore server', details: error.message });
       }
 
-      return res.status(200).json({ 
-        success: true, 
+      return res.status(200).json({
+        success: true,
         vote: {
           id: newVote.id,
           ticker: newVote.ticker,
           votes: newVote.votes,
           userId: newVote.auth_user_id,
           date: newVote.date,
-          timestamp: newVote.created_at
-        }
+          timestamp: newVote.created_at,
+        },
       });
     } catch (err) {
       console.error('[API] Errore voto:', err);
@@ -100,12 +100,12 @@ export default async function handler(req, res) {
       }
 
       // Formatta voti per compatibilità con il codice esistente
-      const formattedVotes = (votes || []).map(vote => ({
+      const formattedVotes = (votes || []).map((vote) => ({
         ticker: vote.ticker,
         votes: vote.votes,
         userId: vote.auth_user_id || 'anonymous',
         date: vote.date,
-        timestamp: vote.created_at
+        timestamp: vote.created_at,
       }));
 
       return res.status(200).json({ votes: formattedVotes });

@@ -568,7 +568,13 @@
         },
         {
           "type": "table",
-          "headers": ["Tipo Ordine", "Prezzo Garantito", "Esecuzione Garantita", "Slippage", "Uso Principale"],
+          "headers": [
+            "Tipo Ordine",
+            "Prezzo Garantito",
+            "Esecuzione Garantita",
+            "Slippage",
+            "Uso Principale"
+          ],
           "rows": [
             [
               "Market Order",
@@ -986,4 +992,3 @@
     }
   ]
 }
-

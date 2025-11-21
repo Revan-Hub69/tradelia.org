@@ -5,15 +5,7 @@
     "category": "Strumenti Derivati",
     "difficulty": "Intermedio-Avanzato"
   },
-  "tags": [
-    "ETF",
-    "Leva",
-    "Inversi",
-    "Derivati",
-    "Volatilità",
-    "Rischio",
-    "Divergenza"
-  ],
+  "tags": ["ETF", "Leva", "Inversi", "Derivati", "Volatilità", "Rischio", "Divergenza"],
   "glossaryTerms": {
     "ETF": "CreditRiskBlock",
     "leva": "CreditRiskBlock",
@@ -335,4 +327,3 @@
     }
   ]
 }
-

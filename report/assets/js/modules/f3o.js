@@ -2,7 +2,11 @@
 // F3O · Options Overlay - Design Unificato
 // Usa stessa logica di header-ticker: riassunto AI sempre visibile + tabs laterali
 
-import { renderModuleHeader, renderModuleTabsSidebar, bindModuleTabs } from '../components/module-header.js';
+import {
+  renderModuleHeader,
+  renderModuleTabsSidebar,
+  bindModuleTabs,
+} from '../components/module-header.js';
 import Logger from '../utils/logger.js';
 // header-ticker viene importato dinamicamente quando necessario
 
@@ -21,12 +25,14 @@ function escapeAttr(str) {
 
 function normalizeDataPublicF3O(src = {}) {
   const meta = {
-    timestampET: src?.meta?.timestampET ?? "—",
-    module: src?.meta?.module ?? "F3O · Options Overlay",
-    moduleStatus: src?.meta?.moduleStatus ?? "ACTIVE",
-    freshness: src?.meta?.freshness ?? "≤ T-1",
-    hero_intro: src?.meta?.hero_intro ?? "",
-    hero_disclaimer: src?.meta?.hero_disclaimer ?? "Output a fini educativi/informativi (orizzonte 3–10 giorni). Non costituisce consulenza o raccomandazione (MiFID II)."
+    timestampET: src?.meta?.timestampET ?? '—',
+    module: src?.meta?.module ?? 'F3O · Options Overlay',
+    moduleStatus: src?.meta?.moduleStatus ?? 'ACTIVE',
+    freshness: src?.meta?.freshness ?? '≤ T-1',
+    hero_intro: src?.meta?.hero_intro ?? '',
+    hero_disclaimer:
+      src?.meta?.hero_disclaimer ??
+      'Output a fini educativi/informativi (orizzonte 3–10 giorni). Non costituisce consulenza o raccomandazione (MiFID II).',
   };
 
   // UI labels (user-friendly) — tutto override‑abile da src.ui_labels
@@ -34,7 +40,8 @@ function normalizeDataPublicF3O(src = {}) {
     badge: 'F3O',
     hero_title: 'Volatilità, curva IV, skew e posizionamento',
     hero_subtitle: 'Options Overlay · Orizzonte 3–10 giorni',
-    hero_desc: 'Analisi opzioni: volatilità implicita, gamma, vega, skew e posizionamento. Nessun contenuto operativo.',
+    hero_desc:
+      'Analisi opzioni: volatilità implicita, gamma, vega, skew e posizionamento. Nessun contenuto operativo.',
     ai_summary_label: 'Riassunto AI',
     // Tab titles
     tab_kpi: 'Quadro rapido',
@@ -54,12 +61,13 @@ function normalizeDataPublicF3O(src = {}) {
     // Separatori
     separator_dot: ' · ',
     separator_colon: ': ',
-    separator_comma: ', '
+    separator_comma: ', ',
   };
 
   // Mappa dinamicamente ui_labels → labels
   const UL = src?.ui_labels || {};
-  const uiFromS = (k, fallback) => (typeof UL[k] === 'string' && UL[k].trim()) ? UL[k].trim() : fallback;
+  const uiFromS = (k, fallback) =>
+    typeof UL[k] === 'string' && UL[k].trim() ? UL[k].trim() : fallback;
 
   const labels = {
     ...defaults,
@@ -77,7 +85,7 @@ function normalizeDataPublicF3O(src = {}) {
     tab_gamma: uiFromS('tab_gamma', defaults.tab_gamma),
     tab_flow: uiFromS('tab_flow', defaults.tab_flow),
     tab_sintesi: uiFromS('tab_sintesi', defaults.tab_sintesi),
-    tab_governance: uiFromS('tab_governance', defaults.tab_governance)
+    tab_governance: uiFromS('tab_governance', defaults.tab_governance),
   };
 
   return {
@@ -92,7 +100,7 @@ function normalizeDataPublicF3O(src = {}) {
     flow: src.flow || {},
     sintesi_ai: src.sintesi_ai || {},
     audit_quality: src.audit_quality || {},
-    mifid: src.mifid || {}
+    mifid: src.mifid || {},
   };
 }
 
@@ -103,59 +111,71 @@ function generateAISummaryRows(data) {
   const rows = [];
   const d = data;
   const labels = d.labels || {};
-  
+
   // ROW 1: IV_ATM + IV_rank_pct
   const ivAtm = d.head?.IV_ATM?.raw || d.head?.IV_ATM || '—';
   const ivRank = d.head?.IV_rank_pct?.raw || d.head?.IV_rank_pct || '—';
-  
+
   rows.push({
     id: 'f3o-summary-iv',
     parts: [
-      { kind: 'text', text: `${labels.label_iv_atm || 'IV (ATM)'}${labels.separator_colon || ': '}` },
+      {
+        kind: 'text',
+        text: `${labels.label_iv_atm || 'IV (ATM)'}${labels.separator_colon || ': '}`,
+      },
       {
         kind: 'metric',
         key: 'IV_ATM',
         value: String(ivAtm),
         label: labels.label_iv_atm || 'IV_ATM',
-        tone: 'neutral'
+        tone: 'neutral',
       },
-      { kind: 'text', text: `${labels.separator_dot || ' · '}${labels.label_iv_rank || 'IV Rank / %tile'}${labels.separator_colon || ': '}` },
+      {
+        kind: 'text',
+        text: `${labels.separator_dot || ' · '}${labels.label_iv_rank || 'IV Rank / %tile'}${labels.separator_colon || ': '}`,
+      },
       {
         kind: 'metric',
         key: 'IV_rank_pct',
         value: String(ivRank),
         label: labels.label_iv_rank || 'IV_rank_pct',
-        tone: 'neutral'
-      }
-    ]
+        tone: 'neutral',
+      },
+    ],
   });
-  
+
   // ROW 2: GSR_tkr + DealerGamma
   const gsr = d.head?.GSR_tkr?.raw || d.head?.GSR_tkr || '—';
   const dealer = d.head?.DealerGamma?.raw || d.head?.DealerGamma || '—';
-  
+
   rows.push({
     id: 'f3o-summary-gsr',
     parts: [
-      { kind: 'text', text: `${labels.label_gsr || 'GSR (Γ/Vega)'}${labels.separator_colon || ': '}` },
+      {
+        kind: 'text',
+        text: `${labels.label_gsr || 'GSR (Γ/Vega)'}${labels.separator_colon || ': '}`,
+      },
       {
         kind: 'metric',
         key: 'GSR_tkr',
         value: String(gsr),
         label: labels.label_gsr || 'GSR_tkr',
-        tone: 'neutral'
+        tone: 'neutral',
       },
-      { kind: 'text', text: `${labels.separator_dot || ' · '}${labels.label_dealer || 'Dealer Regime'}${labels.separator_colon || ': '}` },
+      {
+        kind: 'text',
+        text: `${labels.separator_dot || ' · '}${labels.label_dealer || 'Dealer Regime'}${labels.separator_colon || ': '}`,
+      },
       {
         kind: 'metric',
         key: 'DealerGamma',
         value: String(dealer),
         label: labels.label_dealer || 'DealerGamma',
-        tone: 'neutral'
-      }
-    ]
+        tone: 'neutral',
+      },
+    ],
   });
-  
+
   return rows;
 }
 
@@ -166,57 +186,65 @@ function generateKPITabRows(data) {
   const rows = [];
   const d = data.head || {};
   const labels = data.labels || {};
-  
+
   if (d.IV_ATM) {
     rows.push({
       id: 'kpi-iv-atm',
       parts: [
-        { kind: 'text', text: `${labels.label_iv_atm || 'IV (ATM)'}${labels.separator_colon || ': '}` },
+        {
+          kind: 'text',
+          text: `${labels.label_iv_atm || 'IV (ATM)'}${labels.separator_colon || ': '}`,
+        },
         {
           kind: 'metric',
           key: 'IV_ATM',
           value: String(d.IV_ATM?.raw || d.IV_ATM || '—'),
           label: labels.label_iv_atm || 'IV_ATM',
-          tone: 'neutral'
-        }
-      ]
+          tone: 'neutral',
+        },
+      ],
     });
   }
-  
+
   if (d.IV_rank_pct) {
     rows.push({
       id: 'kpi-iv-rank',
       parts: [
-        { kind: 'text', text: `${labels.label_iv_rank || 'IV Rank / %tile'}${labels.separator_colon || ': '}` },
+        {
+          kind: 'text',
+          text: `${labels.label_iv_rank || 'IV Rank / %tile'}${labels.separator_colon || ': '}`,
+        },
         {
           kind: 'metric',
           key: 'IV_rank_pct',
           value: String(d.IV_rank_pct?.raw || d.IV_rank_pct || '—'),
           label: labels.label_iv_rank || 'IV_rank_pct',
-          tone: 'neutral'
-        }
-      ]
+          tone: 'neutral',
+        },
+      ],
     });
   }
-  
+
   return rows;
 }
 
 export function renderCard(rawData, ctx = {}) {
   const d = normalizeDataPublicF3O(rawData);
   const labels = d.labels || {};
-  
+
   // Header modulo (tutto da labels/JSON)
   const headerHTML = renderModuleHeader({
     badge: labels.badge || 'F3O',
     subtitle: labels.hero_subtitle || 'Options Overlay · Orizzonte 3–10 giorni',
     title: labels.hero_title || 'Volatilità, curva IV, skew e posizionamento',
-    desc: labels.hero_desc || 'Analisi opzioni: volatilità implicita, gamma, vega, skew e posizionamento. Nessun contenuto operativo.',
+    desc:
+      labels.hero_desc ||
+      'Analisi opzioni: volatilità implicita, gamma, vega, skew e posizionamento. Nessun contenuto operativo.',
     status: d.meta.moduleStatus,
     freshness: d.meta.freshness,
-    disclaimer: d.meta.hero_disclaimer || d.mifid?.disclaimer || ''
+    disclaimer: d.meta.hero_disclaimer || d.mifid?.disclaimer || '',
   });
-  
+
   // Riassunto AI sempre visibile (usa header-ticker)
   const aiSummaryRows = generateAISummaryRows(d);
   const aiSummaryContainer = `
@@ -225,10 +253,10 @@ export function renderCard(rawData, ctx = {}) {
       <div data-ai-summary-ticker="true"></div>
     </div>
   `;
-  
+
   // Tabs per sezioni
   const tabs = [];
-  
+
   // Tab 1: KPI
   if (d.head && Object.keys(d.head).length > 0) {
     tabs.push({
@@ -236,13 +264,13 @@ export function renderCard(rawData, ctx = {}) {
       title: labels.tab_kpi || 'Quadro rapido',
       content: '<div data-tab-ticker="kpi"></div>',
       active: false,
-      rows: generateKPITabRows(d)
+      rows: generateKPITabRows(d),
     });
   }
-  
+
   // Genera menu tabs + drawer + content
   const { drawerHTML, contentHTML, menuHTML } = renderModuleTabsSidebar(tabs);
-  
+
   return `
     <section class="module-card" data-state="${escapeAttr(d.meta.moduleStatus)}">
       ${headerHTML}
@@ -259,64 +287,68 @@ export function renderCard(rawData, ctx = {}) {
 export function bindCard(node, rawData, ctx = {}) {
   if (!node || !rawData) return;
   const data = normalizeDataPublicF3O(rawData);
-  
+
   // Bind tabs menu + drawer
   const tabsWrapper = node.querySelector('.module-tabs-wrapper');
   if (tabsWrapper) {
     bindModuleTabs(tabsWrapper);
-    
+
     // Listener per quando si apre una tab nel drawer
     tabsWrapper.addEventListener('drawer-tab-opened', (e) => {
       const { tabId, container } = e.detail;
       if (!container) return;
-      
+
       // Monta header-ticker nel drawer
-      import('../components/header-ticker.js').then(({ headerTicker }) => {
-        let rows = [];
-        if (tabId === 'kpi') {
-          rows = generateKPITabRows(data);
-        }
-        
+      import('../components/header-ticker.js')
+        .then(({ headerTicker }) => {
+          let rows = [];
+          if (tabId === 'kpi') {
+            rows = generateKPITabRows(data);
+          }
+
+          if (rows.length > 0) {
+            const tickerNode = headerTicker.mount(container);
+            if (tickerNode) {
+              headerTicker.update(tickerNode, {
+                ...rawData.meta,
+                rows: rows,
+                metricsPanel: rawData?.metricsPanel || [],
+              });
+
+              setTimeout(() => {
+                const metricButtons = tickerNode.querySelectorAll('.metric-inline[data-metric]');
+                if (metricButtons.length > 0) {
+                  Logger.debug('F3O', `Metriche montate nel drawer: ${metricButtons.length}`);
+                }
+              }, 50);
+            }
+          }
+        })
+        .catch((err) => {
+          Logger.warn('F3O', `Errore caricamento header-ticker per drawer tab ${tabId}`, err);
+        });
+    });
+  }
+
+  // Monta header-ticker per AI Summary (sempre visibile) - import dinamico
+  const aiSummaryTicker = node.querySelector('[data-ai-summary-ticker="true"]');
+  if (aiSummaryTicker) {
+    import('../components/header-ticker.js')
+      .then(({ headerTicker }) => {
+        const rows = generateAISummaryRows(data);
         if (rows.length > 0) {
-          const tickerNode = headerTicker.mount(container);
+          const tickerNode = headerTicker.mount(aiSummaryTicker);
           if (tickerNode) {
             headerTicker.update(tickerNode, {
               ...rawData.meta,
               rows: rows,
-              metricsPanel: rawData?.metricsPanel || []
+              metricsPanel: rawData?.metricsPanel || [],
             });
-            
-            setTimeout(() => {
-              const metricButtons = tickerNode.querySelectorAll('.metric-inline[data-metric]');
-              if (metricButtons.length > 0) {
-                Logger.debug('F3O', `Metriche montate nel drawer: ${metricButtons.length}`);
-              }
-            }, 50);
           }
         }
-      }).catch(err => {
-        Logger.warn('F3O', `Errore caricamento header-ticker per drawer tab ${tabId}`, err);
+      })
+      .catch((err) => {
+        Logger.warn('F3O', 'Errore caricamento header-ticker per AI summary', err);
       });
-    });
-  }
-  
-  // Monta header-ticker per AI Summary (sempre visibile) - import dinamico
-  const aiSummaryTicker = node.querySelector('[data-ai-summary-ticker="true"]');
-  if (aiSummaryTicker) {
-    import('../components/header-ticker.js').then(({ headerTicker }) => {
-      const rows = generateAISummaryRows(data);
-      if (rows.length > 0) {
-        const tickerNode = headerTicker.mount(aiSummaryTicker);
-        if (tickerNode) {
-          headerTicker.update(tickerNode, {
-            ...rawData.meta,
-            rows: rows,
-            metricsPanel: rawData?.metricsPanel || []
-          });
-        }
-      }
-    }).catch(err => {
-      Logger.warn('F3O', 'Errore caricamento header-ticker per AI summary', err);
-    });
   }
 }

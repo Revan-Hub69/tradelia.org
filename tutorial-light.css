@@ -4,45 +4,45 @@
    ----------------------------------------------------------- */
 
 /* ===== LIGHT THEME (PALETTE INVERSA) ===== */
-:root[data-theme="light"] {
+:root[data-theme='light'] {
   /* Colori Testo - Inversi */
-  --ink: #0f0f0f;             /* Testo principale - nero */
-  --ink-soft: #1a1a1a;         /* Testo secondario - grigio scuro */
-  --muted: #4a4a4a;            /* Testo muted - grigio medio */
-  --muted-strong: #6a6a6a;      /* Testo molto muted */
-  
+  --ink: #0f0f0f; /* Testo principale - nero */
+  --ink-soft: #1a1a1a; /* Testo secondario - grigio scuro */
+  --muted: #4a4a4a; /* Testo muted - grigio medio */
+  --muted-strong: #6a6a6a; /* Testo molto muted */
+
   /* Superfici - Bianco/Grigio Chiaro */
-  --surface-page: #ffffff;      /* Background principale - bianco */
-  --surface-card: #f8f8f8;     /* Card background - grigio chiaro */
-  --surface-elev: #f0f0f0;     /* Superficie elevata */
-  --surface-hover: #e8e8e8;    /* Hover state */
-  
+  --surface-page: #ffffff; /* Background principale - bianco */
+  --surface-card: #f8f8f8; /* Card background - grigio chiaro */
+  --surface-elev: #f0f0f0; /* Superficie elevata */
+  --surface-hover: #e8e8e8; /* Hover state */
+
   /* Bordi - Sottili e Discreti */
-  --br-soft: #e0e0e0;          /* Bordo sottile */
-  --br-card: #d0d0d0;          /* Bordo card */
-  --br-strong: #c0c0c0;        /* Bordo forte */
-  
+  --br-soft: #e0e0e0; /* Bordo sottile */
+  --br-card: #d0d0d0; /* Bordo card */
+  --br-strong: #c0c0c0; /* Bordo forte */
+
   /* Footer */
   --footer-bg: #f5f5f5;
   --footer-br: #e0e0e0;
-  
+
   /* Brand - Blu Istituzionale (stesso) */
   --brand-600: #2563eb;
   --brand-500: #3b82f6;
   --brand-400: #60a5fa;
-  
+
   /* Stati - Palette Finanziaria Standard */
   --ok: rgba(22, 163, 74, 0.9);
   --warn: rgba(234, 88, 12, 0.9);
   --err: rgba(220, 38, 38, 0.9);
   --neutral: #64748b;
-  
+
   /* Tone Colors */
   --tone-pos-fg: #16a34a;
   --tone-neg-fg: #dc2626;
   --tone-warn-fg: #ea580c;
   --tone-neu-fg: #64748b;
-  
+
   /* Background e Text Color */
   background: var(--surface-page);
   color: var(--ink);
@@ -336,16 +336,25 @@ main#tutorial-content {
   background: var(--surface-elev);
 }
 
-.positive { color: var(--tone-pos-fg); font-weight: 600; }
-.negative { color: var(--tone-neg-fg); font-weight: 600; }
-.neutral { color: var(--tone-neu-fg); font-weight: 500; }
+.positive {
+  color: var(--tone-pos-fg);
+  font-weight: 600;
+}
+.negative {
+  color: var(--tone-neg-fg);
+  font-weight: 600;
+}
+.neutral {
+  color: var(--tone-neu-fg);
+  font-weight: 500;
+}
 
 @media (max-width: 768px) {
   main#tutorial-content {
     padding-top: var(--sp-6);
     padding-bottom: var(--sp-6);
   }
-  
+
   .tutorial-section {
     margin-bottom: var(--sp-8);
   }
@@ -354,4 +363,3 @@ main#tutorial-content {
 /* ===== HEADER & FOOTER LIGHT THEME ===== */
 /* NOTA: Gli stili header/footer sono in /report/assets/css/header-footer-light.css */
 /* Questo file contiene solo stili tutorial-specifici */
-

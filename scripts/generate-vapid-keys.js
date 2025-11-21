@@ -26,4 +26,3 @@ console.log('2. Copia la PRIVATE KEY e aggiungila in Vercel come FIREBASE_VAPID_
 console.log('3. Se hai già una public key in uso, NON generare nuove chiavi!');
 console.log('   (dovresti trovare la private key corrispondente in Firebase Console)');
 console.log('\n');
-

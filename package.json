@@ -11,12 +11,29 @@
     "version:patch": "node scripts/update-version.js patch",
     "version:minor": "node scripts/update-version.js minor",
     "version:major": "node scripts/update-version.js major",
-    "lint": "echo 'Linting not configured yet'",
-    "test": "echo 'Tests not configured yet'"
+    "lint": "eslint . --ext .js,.ts --fix",
+    "lint:check": "eslint . --ext .js,.ts",
+    "format": "prettier --write \"**/*.{js,ts,json,css,html,md}\"",
+    "format:check": "prettier --check \"**/*.{js,ts,json,css,html,md}\"",
+    "test": "echo 'Tests not configured yet'",
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
     "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.47.0",
+    "@typescript-eslint/parser": "^8.47.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.47.0"
   }
 }
-

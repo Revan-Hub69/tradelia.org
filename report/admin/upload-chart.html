@@ -1,461 +1,461 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upload Chart Screenshot - Tradelia Admin</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Chart Screenshot - Tradelia Admin</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
-      color: #e4e4e7;
-      min-height: 100vh;
-      padding: 2rem;
-    }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          sans-serif;
+        background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+        color: #e4e4e7;
+        min-height: 100vh;
+        padding: 2rem;
+      }
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: rgba(30, 30, 46, 0.8);
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: rgba(30, 30, 46, 0.8);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
 
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-      color: #f4f4f5;
-      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: #f4f4f5;
+        background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
 
-    .subtitle {
-      color: #a1a1aa;
-      margin-bottom: 2rem;
-      font-size: 0.95rem;
-    }
+      .subtitle {
+        color: #a1a1aa;
+        margin-bottom: 2rem;
+        font-size: 0.95rem;
+      }
 
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
 
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: #e4e4e7;
-      font-weight: 500;
-      font-size: 0.9rem;
-    }
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #e4e4e7;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
 
-    input[type="text"] {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      background: rgba(39, 39, 42, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      color: #f4f4f5;
-      font-size: 1rem;
-      transition: all 0.2s;
-    }
+      input[type='text'] {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: rgba(39, 39, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        color: #f4f4f5;
+        font-size: 1rem;
+        transition: all 0.2s;
+      }
 
-    input[type="text"]:focus {
-      outline: none;
-      border-color: #60a5fa;
-      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
-    }
+      input[type='text']:focus {
+        outline: none;
+        border-color: #60a5fa;
+        box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+      }
 
-    .upload-area {
-      border: 2px dashed rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-      padding: 3rem 2rem;
-      text-align: center;
-      background: rgba(39, 39, 42, 0.4);
-      transition: all 0.3s;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-    }
+      .upload-area {
+        border: 2px dashed rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 3rem 2rem;
+        text-align: center;
+        background: rgba(39, 39, 42, 0.4);
+        transition: all 0.3s;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
 
-    .upload-area:hover {
-      border-color: #60a5fa;
-      background: rgba(39, 39, 42, 0.6);
-    }
+      .upload-area:hover {
+        border-color: #60a5fa;
+        background: rgba(39, 39, 42, 0.6);
+      }
 
-    .upload-area.dragover {
-      border-color: #60a5fa;
-      background: rgba(96, 165, 250, 0.1);
-      transform: scale(1.02);
-    }
+      .upload-area.dragover {
+        border-color: #60a5fa;
+        background: rgba(96, 165, 250, 0.1);
+        transform: scale(1.02);
+      }
 
-    .upload-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      opacity: 0.6;
-    }
+      .upload-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.6;
+      }
 
-    .upload-text {
-      color: #a1a1aa;
-      margin-bottom: 0.5rem;
-      font-size: 1rem;
-    }
+      .upload-text {
+        color: #a1a1aa;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+      }
 
-    .upload-hint {
-      color: #71717a;
-      font-size: 0.85rem;
-    }
+      .upload-hint {
+        color: #71717a;
+        font-size: 0.85rem;
+      }
 
-    input[type="file"] {
-      display: none;
-    }
+      input[type='file'] {
+        display: none;
+      }
 
-    .preview-container {
-      margin-top: 1.5rem;
-      display: none;
-    }
+      .preview-container {
+        margin-top: 1.5rem;
+        display: none;
+      }
 
-    .preview-container.show {
-      display: block;
-    }
+      .preview-container.show {
+        display: block;
+      }
 
-    .preview-image {
-      max-width: 100%;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
+      .preview-image {
+        max-width: 100%;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
 
-    .file-info {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: rgba(39, 39, 42, 0.6);
-      border-radius: 8px;
-      font-size: 0.9rem;
-      color: #a1a1aa;
-    }
+      .file-info {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: rgba(39, 39, 42, 0.6);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: #a1a1aa;
+      }
 
-    .btn {
-      padding: 0.75rem 2rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: inline-block;
-      text-decoration: none;
-    }
+      .btn {
+        padding: 0.75rem 2rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-block;
+        text-decoration: none;
+      }
 
-    .btn-primary {
-      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
-      color: white;
-    }
+      .btn-primary {
+        background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+        color: white;
+      }
 
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(96, 165, 250, 0.4);
-    }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(96, 165, 250, 0.4);
+      }
 
-    .btn-primary:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
 
-    .btn-secondary {
-      background: rgba(39, 39, 42, 0.8);
-      color: #e4e4e7;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
+      .btn-secondary {
+        background: rgba(39, 39, 42, 0.8);
+        color: #e4e4e7;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
 
-    .btn-secondary:hover {
-      background: rgba(39, 39, 42, 1);
-    }
+      .btn-secondary:hover {
+        background: rgba(39, 39, 42, 1);
+      }
 
-    .actions {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
+      .actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
 
-    .status {
-      margin-top: 1rem;
-      padding: 1rem;
-      border-radius: 8px;
-      display: none;
-    }
+      .status {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 8px;
+        display: none;
+      }
 
-    .status.show {
-      display: block;
-    }
+      .status.show {
+        display: block;
+      }
 
-    .status.success {
-      background: rgba(34, 197, 94, 0.2);
-      border: 1px solid rgba(34, 197, 94, 0.3);
-      color: #86efac;
-    }
+      .status.success {
+        background: rgba(34, 197, 94, 0.2);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        color: #86efac;
+      }
 
-    .status.error {
-      background: rgba(239, 68, 68, 0.2);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #fca5a5;
-    }
+      .status.error {
+        background: rgba(239, 68, 68, 0.2);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+      }
 
-    .status.info {
-      background: rgba(96, 165, 250, 0.2);
-      border: 1px solid rgba(96, 165, 250, 0.3);
-      color: #93c5fd;
-    }
+      .status.info {
+        background: rgba(96, 165, 250, 0.2);
+        border: 1px solid rgba(96, 165, 250, 0.3);
+        color: #93c5fd;
+      }
 
-    .recent-reports {
-      margin-top: 2rem;
-      padding-top: 2rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
+      .recent-reports {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
 
-    .recent-reports h2 {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-      color: #e4e4e7;
-    }
+      .recent-reports h2 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        color: #e4e4e7;
+      }
 
-    .report-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
+      .report-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
 
-    .report-tag {
-      padding: 0.5rem 1rem;
-      background: rgba(39, 39, 42, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 6px;
-      font-size: 0.85rem;
-      color: #a1a1aa;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+      .report-tag {
+        padding: 0.5rem 1rem;
+        background: rgba(39, 39, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #a1a1aa;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
 
-    .report-tag:hover {
-      background: rgba(96, 165, 250, 0.2);
-      border-color: #60a5fa;
-      color: #e4e4e7;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>📊 Upload Chart Screenshot</h1>
-    <p class="subtitle">Carica screenshot chart Exante per i report</p>
+      .report-tag:hover {
+        background: rgba(96, 165, 250, 0.2);
+        border-color: #60a5fa;
+        color: #e4e4e7;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📊 Upload Chart Screenshot</h1>
+      <p class="subtitle">Carica screenshot chart Exante per i report</p>
 
-    <form id="uploadForm">
-      <div class="form-group">
-        <label for="reportId">Report ID *</label>
-        <input 
-          type="text" 
-          id="reportId" 
-          name="reportId" 
-          placeholder="es: 20251107-1630 o example-complete" 
-          required
-          autocomplete="off"
-        />
-      </div>
+      <form id="uploadForm">
+        <div class="form-group">
+          <label for="reportId">Report ID *</label>
+          <input
+            type="text"
+            id="reportId"
+            name="reportId"
+            placeholder="es: 20251107-1630 o example-complete"
+            required
+            autocomplete="off"
+          />
+        </div>
 
-      <div class="form-group">
-        <label>Screenshot Chart (PNG) *</label>
-        <div class="upload-area" id="uploadArea">
-          <div class="upload-icon">📁</div>
-          <div class="upload-text">Trascina l'immagine qui o clicca per selezionare</div>
-          <div class="upload-hint">PNG, JPG, formato consigliato: chart-snapshot.png</div>
-          <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg" required />
+        <div class="form-group">
+          <label>Screenshot Chart (PNG) *</label>
+          <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">Trascina l'immagine qui o clicca per selezionare</div>
+            <div class="upload-hint">PNG, JPG, formato consigliato: chart-snapshot.png</div>
+            <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg" required />
+          </div>
+        </div>
+
+        <div class="preview-container" id="previewContainer">
+          <img id="previewImage" class="preview-image" alt="Preview" />
+          <div class="file-info" id="fileInfo"></div>
+        </div>
+
+        <div class="status" id="status"></div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary" id="submitBtn">💾 Salva Screenshot</button>
+          <button type="button" class="btn btn-secondary" id="clearBtn">🔄 Reset</button>
+        </div>
+      </form>
+
+      <div class="recent-reports">
+        <h2>Report Recenti</h2>
+        <div class="report-list" id="recentReports">
+          <div class="report-tag" data-report="example-complete">example-complete</div>
+          <div class="report-tag" data-report="20251107-1630">20251107-1630</div>
+          <div class="report-tag" data-report="sample-id">sample-id</div>
         </div>
       </div>
-
-      <div class="preview-container" id="previewContainer">
-        <img id="previewImage" class="preview-image" alt="Preview" />
-        <div class="file-info" id="fileInfo"></div>
-      </div>
-
-      <div class="status" id="status"></div>
-
-      <div class="actions">
-        <button type="submit" class="btn btn-primary" id="submitBtn">
-          💾 Salva Screenshot
-        </button>
-        <button type="button" class="btn btn-secondary" id="clearBtn">
-          🔄 Reset
-        </button>
-      </div>
-    </form>
-
-    <div class="recent-reports">
-      <h2>Report Recenti</h2>
-      <div class="report-list" id="recentReports">
-        <div class="report-tag" data-report="example-complete">example-complete</div>
-        <div class="report-tag" data-report="20251107-1630">20251107-1630</div>
-        <div class="report-tag" data-report="sample-id">sample-id</div>
-      </div>
     </div>
-  </div>
 
-  <script>
-    const uploadArea = document.getElementById('uploadArea');
-    const fileInput = document.getElementById('fileInput');
-    const previewContainer = document.getElementById('previewContainer');
-    const previewImage = document.getElementById('previewImage');
-    const fileInfo = document.getElementById('fileInfo');
-    const uploadForm = document.getElementById('uploadForm');
-    const status = document.getElementById('status');
-    const submitBtn = document.getElementById('submitBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const reportIdInput = document.getElementById('reportId');
-    const recentReports = document.getElementById('recentReports');
+    <script>
+      const uploadArea = document.getElementById('uploadArea');
+      const fileInput = document.getElementById('fileInput');
+      const previewContainer = document.getElementById('previewContainer');
+      const previewImage = document.getElementById('previewImage');
+      const fileInfo = document.getElementById('fileInfo');
+      const uploadForm = document.getElementById('uploadForm');
+      const status = document.getElementById('status');
+      const submitBtn = document.getElementById('submitBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      const reportIdInput = document.getElementById('reportId');
+      const recentReports = document.getElementById('recentReports');
 
-    let selectedFile = null;
+      let selectedFile = null;
 
-    // Click sull'area di upload
-    uploadArea.addEventListener('click', () => fileInput.click());
+      // Click sull'area di upload
+      uploadArea.addEventListener('click', () => fileInput.click());
 
-    // Drag and drop
-    uploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadArea.classList.add('dragover');
-    });
+      // Drag and drop
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+      });
 
-    uploadArea.addEventListener('dragleave', () => {
-      uploadArea.classList.remove('dragover');
-    });
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+      });
 
-    uploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      uploadArea.classList.remove('dragover');
-      const files = e.dataTransfer.files;
-      if (files.length > 0) {
-        handleFile(files[0]);
-      }
-    });
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          handleFile(files[0]);
+        }
+      });
 
-    // Selezione file
-    fileInput.addEventListener('change', (e) => {
-      if (e.target.files.length > 0) {
-        handleFile(e.target.files[0]);
-      }
-    });
+      // Selezione file
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+          handleFile(e.target.files[0]);
+        }
+      });
 
-    // Gestione file
-    function handleFile(file) {
-      if (!file.type.startsWith('image/')) {
-        showStatus('error', '❌ Seleziona un file immagine (PNG, JPG)');
-        return;
-      }
+      // Gestione file
+      function handleFile(file) {
+        if (!file.type.startsWith('image/')) {
+          showStatus('error', '❌ Seleziona un file immagine (PNG, JPG)');
+          return;
+        }
 
-      selectedFile = file;
+        selectedFile = file;
 
-      // Preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        previewImage.src = e.target.result;
-        previewContainer.classList.add('show');
-        
-        // Info file
-        const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-        fileInfo.innerHTML = `
+        // Preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          previewImage.src = e.target.result;
+          previewContainer.classList.add('show');
+
+          // Info file
+          const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+          fileInfo.innerHTML = `
           <strong>File:</strong> ${file.name}<br>
           <strong>Dimensione:</strong> ${sizeMB} MB<br>
           <strong>Tipo:</strong> ${file.type}
         `;
-      };
-      reader.readAsDataURL(file);
+        };
+        reader.readAsDataURL(file);
 
-      submitBtn.disabled = false;
-      hideStatus();
-    }
-
-    // Click su report recente
-    recentReports.addEventListener('click', (e) => {
-      if (e.target.classList.contains('report-tag')) {
-        const reportId = e.target.dataset.report;
-        reportIdInput.value = reportId;
-        reportIdInput.focus();
-      }
-    });
-
-    // Submit form
-    uploadForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const reportId = reportIdInput.value.trim();
-      if (!reportId) {
-        showStatus('error', '❌ Inserisci un Report ID');
-        return;
-      }
-
-      if (!selectedFile) {
-        showStatus('error', '❌ Seleziona un file immagine');
-        return;
-      }
-
-      submitBtn.disabled = true;
-      showStatus('info', '⏳ Upload in corso...');
-
-      try {
-        const formData = new FormData();
-        formData.append('reportId', reportId);
-        formData.append('file', selectedFile);
-
-        const response = await fetch('/report/admin/upload-chart', {
-          method: 'POST',
-          body: formData
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-          showStatus('success', `✅ Screenshot salvato con successo!<br><strong>Percorso:</strong> ${result.path}`);
-          setTimeout(() => {
-            resetForm();
-          }, 3000);
-        } else {
-          showStatus('error', `❌ Errore: ${result.error || 'Upload fallito'}`);
-        }
-      } catch (error) {
-        showStatus('error', `❌ Errore di connessione: ${error.message}`);
-      } finally {
         submitBtn.disabled = false;
+        hideStatus();
       }
-    });
 
-    // Reset form
-    clearBtn.addEventListener('click', resetForm);
+      // Click su report recente
+      recentReports.addEventListener('click', (e) => {
+        if (e.target.classList.contains('report-tag')) {
+          const reportId = e.target.dataset.report;
+          reportIdInput.value = reportId;
+          reportIdInput.focus();
+        }
+      });
 
-    function resetForm() {
-      uploadForm.reset();
-      selectedFile = null;
-      previewContainer.classList.remove('show');
-      previewImage.src = '';
-      fileInfo.innerHTML = '';
-      submitBtn.disabled = false;
-      hideStatus();
-    }
+      // Submit form
+      uploadForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    function showStatus(type, message) {
-      status.className = `status ${type} show`;
-      status.innerHTML = message;
-    }
+        const reportId = reportIdInput.value.trim();
+        if (!reportId) {
+          showStatus('error', '❌ Inserisci un Report ID');
+          return;
+        }
 
-    function hideStatus() {
-      status.classList.remove('show');
-    }
-  </script>
-</body>
+        if (!selectedFile) {
+          showStatus('error', '❌ Seleziona un file immagine');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        showStatus('info', '⏳ Upload in corso...');
+
+        try {
+          const formData = new FormData();
+          formData.append('reportId', reportId);
+          formData.append('file', selectedFile);
+
+          const response = await fetch('/report/admin/upload-chart', {
+            method: 'POST',
+            body: formData,
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            showStatus(
+              'success',
+              `✅ Screenshot salvato con successo!<br><strong>Percorso:</strong> ${result.path}`
+            );
+            setTimeout(() => {
+              resetForm();
+            }, 3000);
+          } else {
+            showStatus('error', `❌ Errore: ${result.error || 'Upload fallito'}`);
+          }
+        } catch (error) {
+          showStatus('error', `❌ Errore di connessione: ${error.message}`);
+        } finally {
+          submitBtn.disabled = false;
+        }
+      });
+
+      // Reset form
+      clearBtn.addEventListener('click', resetForm);
+
+      function resetForm() {
+        uploadForm.reset();
+        selectedFile = null;
+        previewContainer.classList.remove('show');
+        previewImage.src = '';
+        fileInfo.innerHTML = '';
+        submitBtn.disabled = false;
+        hideStatus();
+      }
+
+      function showStatus(type, message) {
+        status.className = `status ${type} show`;
+        status.innerHTML = message;
+      }
+
+      function hideStatus() {
+        status.classList.remove('show');
+      }
+    </script>
+  </body>
 </html>
-

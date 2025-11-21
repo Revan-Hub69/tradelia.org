@@ -4,12 +4,7 @@
     "published": "Gennaio 2025",
     "category": "Strumenti Derivati"
   },
-  "tags": [
-    "Derivati",
-    "Crisi Finanziaria",
-    "Rischio Sistemico",
-    "Storia Finanziaria"
-  ],
+  "tags": ["Derivati", "Crisi Finanziaria", "Rischio Sistemico", "Storia Finanziaria"],
   "glossaryTerms": {
     "mutui ad alto rischio": "CreditRiskBlock",
     "leva finanziaria": "LiquidityRegimeScore"
@@ -204,13 +199,55 @@
           "type": "table",
           "headers": ["Nome", "Ruolo", "Esposizione", "Premi pagati", "Profitto netto"],
           "rows": [
-            ["John Paulson", "Paulson & Co.", "~12,5 Mld $ in CDS", "~250–375 M$/anno", { "text": "~19 Mld $ totali", "class": "positive" }],
-            ["Michael Burry", "Scion Capital", "750 M$ CDS (dal 2005)", "~45 M$/anno", { "text": "~825 M$ totali", "class": "positive" }],
-            ["Steve Eisman", "FrontPoint Partners", "50–500 M$ CDS", "4–6% annuo", { "text": "~1 Mld $ stimato", "class": "positive" }],
-            ["Cornwall Capital", "Hedge fund indipendente", "1 M$ in CDS", "~20–30 k$", { "text": "~80 M$ (~8.000%)", "class": "positive" }],
-            ["Kyle Bass", "Hayman Capital", "~110 M$ in CDS", "~2,2–3,3 M$/anno", { "text": "~400 M$ (~600%)", "class": "positive" }],
-            ["Andrew Lahde", "Lahde Capital", "8–80 M$ in CDS", "2–3% stimati", { "text": "~870–1.000% yield", "class": "positive" }],
-            ["Goldman Sachs", "Investment bank", "Short MBS/CDS", "Costi interni inclusi", { "text": "~4 Mld $", "class": "positive" }]
+            [
+              "John Paulson",
+              "Paulson & Co.",
+              "~12,5 Mld $ in CDS",
+              "~250–375 M$/anno",
+              { "text": "~19 Mld $ totali", "class": "positive" }
+            ],
+            [
+              "Michael Burry",
+              "Scion Capital",
+              "750 M$ CDS (dal 2005)",
+              "~45 M$/anno",
+              { "text": "~825 M$ totali", "class": "positive" }
+            ],
+            [
+              "Steve Eisman",
+              "FrontPoint Partners",
+              "50–500 M$ CDS",
+              "4–6% annuo",
+              { "text": "~1 Mld $ stimato", "class": "positive" }
+            ],
+            [
+              "Cornwall Capital",
+              "Hedge fund indipendente",
+              "1 M$ in CDS",
+              "~20–30 k$",
+              { "text": "~80 M$ (~8.000%)", "class": "positive" }
+            ],
+            [
+              "Kyle Bass",
+              "Hayman Capital",
+              "~110 M$ in CDS",
+              "~2,2–3,3 M$/anno",
+              { "text": "~400 M$ (~600%)", "class": "positive" }
+            ],
+            [
+              "Andrew Lahde",
+              "Lahde Capital",
+              "8–80 M$ in CDS",
+              "2–3% stimati",
+              { "text": "~870–1.000% yield", "class": "positive" }
+            ],
+            [
+              "Goldman Sachs",
+              "Investment bank",
+              "Short MBS/CDS",
+              "Costi interni inclusi",
+              { "text": "~4 Mld $", "class": "positive" }
+            ]
           ]
         },
         {
@@ -222,19 +259,84 @@
           "type": "table",
           "headers": ["Categoria", "Entità", "Perdita stimata / Bailout", "Note"],
           "rows": [
-            ["Investment bank", "Lehman Brothers", { "text": "Fallita; ~3,9 Mld $ write-down", "class": "negative" }, "Nessun salvataggio"],
-            ["Investment bank", "Bear Stearns", { "text": "~2,6 Mld $ + prestito FRBNY 29 Mld", "class": "negative" }, "Acquisto JPMorgan ($2/azione)"],
-            ["Investment bank", "Merrill Lynch", { "text": "~29 Mld $ write-down", "class": "negative" }, "Fusione con BofA"],
-            ["Banca universale", "Citigroup", { "text": "~39 Mld $ + TARP", "class": "negative" }, "Bailout USA 2008"],
-            ["Banca universale", "UBS", { "text": "~37,7 Mld $ write-down", "class": "negative" }, "—"],
-            ["Banca universale", "Bank of America", { "text": "~7,95 Mld $ write-down", "class": "negative" }, "Bailout TARP"],
-            ["Banca universale", "Deutsche Bank", { "text": "~7,7 Mld $ write-down", "class": "negative" }, "—"],
-            ["Banca universale", "RBS", { "text": "~15,2 Mld $", "class": "negative" }, "UK bailout £137 Mld (~$225 Mld)"],
-            ["Assicurazione", "AIG", { "text": "~11,1 Mld + $182 Mld bailout", "class": "negative" }, "Salvataggio FRBNY/Treasury"],
-            ["Pensioni & fondi", "Fondi pensione (OECD)", { "text": "~4–5 Tln $ di asset persi", "class": "negative" }, "—"],
-            ["Cittadini USA", "Wealth families", { "text": "−22% (~1,3 Tln $)", "class": "negative" }, "—"],
-            ["Cittadini USA", "Famiglie pignorate", { "text": ">9 milioni (2008–11)", "class": "negative" }, "Perdita casa e credito"],
-            ["Governo USA", "TARP", { "text": "$700 Mld", "class": "neutral" }, "Supporto a banche, auto e AIG"]
+            [
+              "Investment bank",
+              "Lehman Brothers",
+              { "text": "Fallita; ~3,9 Mld $ write-down", "class": "negative" },
+              "Nessun salvataggio"
+            ],
+            [
+              "Investment bank",
+              "Bear Stearns",
+              { "text": "~2,6 Mld $ + prestito FRBNY 29 Mld", "class": "negative" },
+              "Acquisto JPMorgan ($2/azione)"
+            ],
+            [
+              "Investment bank",
+              "Merrill Lynch",
+              { "text": "~29 Mld $ write-down", "class": "negative" },
+              "Fusione con BofA"
+            ],
+            [
+              "Banca universale",
+              "Citigroup",
+              { "text": "~39 Mld $ + TARP", "class": "negative" },
+              "Bailout USA 2008"
+            ],
+            [
+              "Banca universale",
+              "UBS",
+              { "text": "~37,7 Mld $ write-down", "class": "negative" },
+              "—"
+            ],
+            [
+              "Banca universale",
+              "Bank of America",
+              { "text": "~7,95 Mld $ write-down", "class": "negative" },
+              "Bailout TARP"
+            ],
+            [
+              "Banca universale",
+              "Deutsche Bank",
+              { "text": "~7,7 Mld $ write-down", "class": "negative" },
+              "—"
+            ],
+            [
+              "Banca universale",
+              "RBS",
+              { "text": "~15,2 Mld $", "class": "negative" },
+              "UK bailout £137 Mld (~$225 Mld)"
+            ],
+            [
+              "Assicurazione",
+              "AIG",
+              { "text": "~11,1 Mld + $182 Mld bailout", "class": "negative" },
+              "Salvataggio FRBNY/Treasury"
+            ],
+            [
+              "Pensioni & fondi",
+              "Fondi pensione (OECD)",
+              { "text": "~4–5 Tln $ di asset persi", "class": "negative" },
+              "—"
+            ],
+            [
+              "Cittadini USA",
+              "Wealth families",
+              { "text": "−22% (~1,3 Tln $)", "class": "negative" },
+              "—"
+            ],
+            [
+              "Cittadini USA",
+              "Famiglie pignorate",
+              { "text": ">9 milioni (2008–11)", "class": "negative" },
+              "Perdita casa e credito"
+            ],
+            [
+              "Governo USA",
+              "TARP",
+              { "text": "$700 Mld", "class": "neutral" },
+              "Supporto a banche, auto e AIG"
+            ]
           ]
         },
         {
@@ -442,4 +544,3 @@
     }
   ]
 }
-

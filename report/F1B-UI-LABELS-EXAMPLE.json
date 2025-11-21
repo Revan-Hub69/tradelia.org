@@ -15,11 +15,11 @@
     "hero_subtitle": "Regime di mercato · Orizzonte 3–10 giorni",
     "hero_desc": "Lettura di contesto. Non è un'istruzione operativa.",
     "ai_summary_label": "Riassunto AI",
-    
+
     "tab_regime": "Regime & Rischio",
     "tab_breadth": "Breadth & Rotazione",
     "tab_street": "Street View",
-    
+
     "label_strategy_mode": "StrategyMode",
     "label_regime_score": "RegimeScore",
     "label_volatility": "Volatilità",
@@ -43,7 +43,7 @@
     "label_macro_news": "Macro News",
     "label_sellside_notes": "Sell-Side Notes",
     "label_consensus_tone": "Consensus Tone",
-    
+
     "separator_dot": " · ",
     "separator_colon": ": ",
     "separator_comma": ", "
@@ -57,4 +57,3 @@
     }
   }
 }
-

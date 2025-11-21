@@ -26,10 +26,14 @@ function escapeHtml(str) {
 
 function getToneClass(tone) {
   switch (tone) {
-    case 'ok': return 'metric-inline--ok';
-    case 'warn': return 'metric-inline--warn';
-    case 'err': return 'metric-inline--err';
-    default: return 'metric-inline--neutral';
+    case 'ok':
+      return 'metric-inline--ok';
+    case 'warn':
+      return 'metric-inline--warn';
+    case 'err':
+      return 'metric-inline--err';
+    default:
+      return 'metric-inline--neutral';
   }
 }
 
@@ -37,12 +41,12 @@ function getToneClass(tone) {
 function renderTextPart(part) {
   const el = createEl('span', 'header-ticker-text');
   el.textContent = part.text || '';
-  
+
   // Marca punteggiatura per gluing
   if (/^[,.;:!?()—–\-«»""]+$/.test((part.text || '').trim().replace(/\s+/g, ''))) {
     el.dataset.glue = '1';
   }
-  
+
   return el;
 }
 
@@ -52,30 +56,37 @@ function renderMetricPart(part) {
   wrap.dataset.metric = part.key;
   wrap.setAttribute('aria-label', part.label || part.key);
   wrap.style.cursor = 'pointer';
-  
+
   // Formatta valore
   let displayValue = '—';
   if (part.value != null && part.value !== '') {
     if (typeof part.value === 'number') {
       displayValue = Number.isInteger(part.value)
         ? String(part.value)
-        : Number(part.value).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        : Number(part.value).toLocaleString('it-IT', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
     } else {
       displayValue = String(part.value);
     }
   }
-  
-  const txt = createEl('span', `metric-inline-text metric-inline-text--${part.tone || 'neutral'}`, displayValue);
+
+  const txt = createEl(
+    'span',
+    `metric-inline-text metric-inline-text--${part.tone || 'neutral'}`,
+    displayValue
+  );
   // Stili gestiti da CSS (tokens.css) - underline solo al hover
   wrap.appendChild(txt);
-  
+
   // Click handler
   wrap.addEventListener('click', (e) => {
     e.stopPropagation();
     e.preventDefault();
     handleMetricClick(part.key);
   });
-  
+
   return wrap;
 }
 
@@ -87,7 +98,7 @@ function renderPart(part) {
 
 function renderRow(row) {
   const rowEl = createEl('div', 'header-ticker-row');
-  
+
   // Classi per tipo riga
   if (row.id === 'company-line' || row.id === 'intro-line' || row.id === 'price-line') {
     rowEl.classList.add('header-ticker-row--intro');
@@ -96,22 +107,22 @@ function renderRow(row) {
   } else if (row.id === 'window-line') {
     rowEl.classList.add('header-ticker-row--meta');
   }
-  
+
   // Rendering parts con gluing intelligente
   const parts = row.parts || [];
   let pendingPunct = null;
-  
+
   parts.forEach((part, idx) => {
     if (part.kind === 'text') {
       let text = String(part.text || '');
-      
+
       // Gluing: punteggiatura iniziale
       const punctMatch = text.match(/^\s*([,.;:!?)—–\-«»""])\s*(.*)$/);
       if (punctMatch && idx > 0) {
         const punct = punctMatch[1];
         const rest = punctMatch[2] || '';
         const last = rowEl.lastElementChild;
-        
+
         if (last) {
           const metricTxt = last.querySelector('.metric-inline-text');
           if (metricTxt) {
@@ -120,26 +131,26 @@ function renderRow(row) {
             last.textContent = (last.textContent || '') + punct + '\u00A0';
           }
         }
-        
+
         text = rest;
       }
-      
+
       // Gluing: parentesi prima di metrica
       const openPunctMatch = text.match(/^\s*([(«"])\s*$/);
       const nextIsMetric = idx + 1 < parts.length && parts[idx + 1]?.kind === 'metric';
-      
+
       if (openPunctMatch && nextIsMetric) {
         pendingPunct = openPunctMatch[1];
         return; // Salta questo part
       }
-      
+
       // Aggiungi testo rimanente
       if (text.trim()) {
         rowEl.appendChild(renderTextPart({ kind: 'text', text }));
       }
     } else if (part.kind === 'metric') {
       const metricEl = renderPart(part);
-      
+
       // Aggiungi parentesi pendente
       if (pendingPunct) {
         const metricTxt = metricEl.querySelector('.metric-inline-text');
@@ -148,18 +159,18 @@ function renderRow(row) {
         }
         pendingPunct = null;
       }
-      
+
       rowEl.appendChild(metricEl);
     }
   });
-  
+
   return rowEl;
 }
 
 function renderFooter(node, data) {
   const footer = node._footer;
   if (!footer) return;
-  
+
   // Footer vuoto - pulsante "Scopri tutte le metriche" rimosso
   footer.innerHTML = '';
   footer.style.display = 'none';
@@ -168,7 +179,7 @@ function renderFooter(node, data) {
 // ===== METRIC CLICK HANDLER =====
 async function handleMetricClick(metricKey) {
   Logger.debug('HeaderTicker', `Click su metrica: ${metricKey}`);
-  
+
   try {
     // Apri drawer glossario (stesso sistema di glossario.html)
     const { glossaryPopup } = await import('./glossary-popup.js');
@@ -188,17 +199,17 @@ function mount(containerEl) {
     Logger.error('HeaderTicker', 'mount: containerEl non fornito');
     return null;
   }
-  
+
   const root = createEl('section', 'header-ticker');
   const body = createEl('div', 'header-ticker-body');
   const footer = createEl('div', 'header-ticker-footer');
-  
+
   root.appendChild(body);
   root.appendChild(footer);
-  
+
   root._body = body;
   root._footer = footer;
-  
+
   containerEl.appendChild(root);
   return root;
 }
@@ -209,7 +220,7 @@ function update(node, data) {
     Logger.error('HeaderTicker', 'update: node non fornito');
     return;
   }
-  
+
   if (!data || typeof data !== 'object') {
     Logger.error('HeaderTicker', 'update: data non valido', data);
     if (node._body) {
@@ -221,7 +232,7 @@ function update(node, data) {
     }
     return;
   }
-  
+
   // Salva dati globalmente
   if (typeof window !== 'undefined') {
     const headerData = { ...data };
@@ -229,30 +240,37 @@ function update(node, data) {
       headerData.metricsPanel = Array.isArray(data.metricsPanel) ? data.metricsPanel : [];
     }
     window.__headerTickerData = headerData;
-    Logger.debug('HeaderTicker', `headerData salvato con ${headerData.metricsPanel.length} metriche`);
+    Logger.debug(
+      'HeaderTicker',
+      `headerData salvato con ${headerData.metricsPanel.length} metriche`
+    );
   }
-  
+
   // State classes
-  node.classList.remove('header-ticker--state-ok', 'header-ticker--state-warn', 'header-ticker--state-err');
+  node.classList.remove(
+    'header-ticker--state-ok',
+    'header-ticker--state-warn',
+    'header-ticker--state-err'
+  );
   const st = data.meta?.state || data.State?.raw || data.State;
   if (st === 'ACTIVE') node.classList.add('header-ticker--state-ok');
   else if (st === 'HOLD') node.classList.add('header-ticker--state-warn');
   else if (st === 'REVIEW') node.classList.add('header-ticker--state-err');
-  
+
   const body = node._body;
   if (!body) {
     Logger.error('HeaderTicker', 'update: body non trovato');
     return;
   }
-  
+
   body.innerHTML = '';
-  
+
   // Rendering rows
   const rows = Array.isArray(data.rows) ? data.rows : [];
-  
+
   if (rows.length > 0) {
     Logger.debug('HeaderTicker', `Rendering ${rows.length} righe`);
-    
+
     rows.forEach((row) => {
       try {
         const rowEl = renderRow(row);
@@ -263,7 +281,7 @@ function update(node, data) {
         Logger.error('HeaderTicker', 'Errore rendering riga', err);
       }
     });
-    
+
     if (body.children.length === 0) {
       Logger.error('HeaderTicker', 'Nessuna riga renderizzata');
       body.innerHTML = `
@@ -275,26 +293,33 @@ function update(node, data) {
   } else {
     // Fallback legacy
     Logger.debug('HeaderTicker', 'Usando fallback legacy');
-    
+
     const intro = {
       id: 'intro-line',
       parts: [
         { kind: 'text', text: data.Ticker ? String(data.Ticker) : '—' },
-        ...(data.Venue ? [
-          { kind: 'text', text: '(' },
-          { kind: 'text', text: String(data.Venue) },
-          { kind: 'text', text: ')' }
-        ] : [])
-      ]
+        ...(data.Venue
+          ? [
+              { kind: 'text', text: '(' },
+              { kind: 'text', text: String(data.Venue) },
+              { kind: 'text', text: ')' },
+            ]
+          : []),
+      ],
     };
-    
-    const priceStr = (data.Price == null || isNaN(data.Price))
-      ? '—'
-      : Number(data.Price).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    const chgVal = (data.ChangePct != null && !isNaN(Number(data.ChangePct))) ? Number(data.ChangePct) : null;
-    const chgTone = chgVal == null ? 'neutral' : (chgVal > 0 ? 'ok' : (chgVal < 0 ? 'err' : 'neutral'));
+
+    const priceStr =
+      data.Price == null || isNaN(data.Price)
+        ? '—'
+        : Number(data.Price).toLocaleString('it-IT', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+    const chgVal =
+      data.ChangePct != null && !isNaN(Number(data.ChangePct)) ? Number(data.ChangePct) : null;
+    const chgTone = chgVal == null ? 'neutral' : chgVal > 0 ? 'ok' : chgVal < 0 ? 'err' : 'neutral';
     const chgStr = chgVal == null ? '—%' : `${chgVal > 0 ? '+' : ''}${chgVal.toFixed(2)}%`;
-    
+
     const quality = {
       id: 'quality-line',
       parts: [
@@ -303,26 +328,35 @@ function update(node, data) {
         { kind: 'text', text: ', Change ' },
         { kind: 'metric', key: 'ChangePct', value: chgStr, tone: chgTone, label: 'ChangePct' },
         { kind: 'text', text: ', CCY ' },
-        { kind: 'metric', key: 'Currency', value: data.Currency || '—', tone: 'neutral', label: 'Currency' }
-      ]
+        {
+          kind: 'metric',
+          key: 'Currency',
+          value: data.Currency || '—',
+          tone: 'neutral',
+          label: 'Currency',
+        },
+      ],
     };
-    
+
     const windowLine = {
       id: 'window-line',
       parts: [
         { kind: 'text', text: `Snapshot ${data.Start ?? '—'} → ${data.End ?? '—'}` },
         { kind: 'text', text: ' · ' },
-        { kind: 'text', text: `Updated ${(() => {
-          try {
-            return new Date(data.UpdatedAt).toISOString().slice(11, 16) + '\u00A0UTC';
-          } catch {
-            return data.UpdatedAt || '—';
-          }
-        })()}` }
-      ]
+        {
+          kind: 'text',
+          text: `Updated ${(() => {
+            try {
+              return new Date(data.UpdatedAt).toISOString().slice(11, 16) + '\u00A0UTC';
+            } catch {
+              return data.UpdatedAt || '—';
+            }
+          })()}`,
+        },
+      ],
     };
-    
-    [intro, quality, windowLine].forEach(r => {
+
+    [intro, quality, windowLine].forEach((r) => {
       try {
         const rowEl = renderRow(r);
         if (rowEl) body.appendChild(rowEl);
@@ -331,15 +365,15 @@ function update(node, data) {
       }
     });
   }
-  
+
   // Footer
   renderFooter(node, data);
-  
+
   Logger.debug('HeaderTicker', `Update completato: ${body.children.length} righe`);
 }
 
 // ===== EXPORT =====
 export const headerTicker = {
   mount,
-  update
+  update,
 };

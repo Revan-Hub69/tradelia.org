@@ -21,13 +21,12 @@ export const handleRouteError = (res, error) => {
     return sendJSON(res, error.status, {
       ok: false,
       error: error.message,
-      details: error.details
+      details: error.details,
     });
   }
   console.error('[Route] Unhandled error:', error);
   return sendJSON(res, 500, {
     ok: false,
-    error: 'Internal server error'
+    error: 'Internal server error',
   });
 };
-

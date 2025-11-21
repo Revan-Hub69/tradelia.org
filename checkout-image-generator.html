@@ -1,313 +1,318 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tradelia AI - Checkout Image Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tradelia AI - Checkout Image Generator</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #1a1a1a;
-      padding: 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 40px;
-    }
+      body {
+        font-family: 'Inter', sans-serif;
+        background: #1a1a1a;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+      }
 
-    .controls {
-      background: #2a2a2a;
-      padding: 24px;
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      max-width: 600px;
-      width: 100%;
-    }
+      .controls {
+        background: #2a2a2a;
+        padding: 24px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        max-width: 600px;
+        width: 100%;
+      }
 
-    .controls h2 {
-      color: #ffffff;
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
+      .controls h2 {
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
 
-    .controls label {
-      color: rgba(255, 255, 255, 0.75);
-      font-size: 14px;
-      display: block;
-      margin-bottom: 8px;
-    }
+      .controls label {
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 14px;
+        display: block;
+        margin-bottom: 8px;
+      }
 
-    .controls input,
-    .controls select {
-      width: 100%;
-      padding: 10px;
-      background: #1a1a1a;
-      border: 1px solid rgba(37, 99, 235, 0.3);
-      border-radius: 6px;
-      color: #ffffff;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-    }
+      .controls input,
+      .controls select {
+        width: 100%;
+        padding: 10px;
+        background: #1a1a1a;
+        border: 1px solid rgba(37, 99, 235, 0.3);
+        border-radius: 6px;
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+      }
 
-    .controls button {
-      padding: 12px 24px;
-      background: #2563eb;
-      color: #ffffff;
-      border: none;
-      border-radius: 6px;
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
+      .controls button {
+        padding: 12px 24px;
+        background: #2563eb;
+        color: #ffffff;
+        border: none;
+        border-radius: 6px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
 
-    .controls button:hover {
-      background: #3b82f6;
-    }
+      .controls button:hover {
+        background: #3b82f6;
+      }
 
-    .canvas-container {
-      position: relative;
-      background: #ffffff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    }
+      .canvas-container {
+        position: relative;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
 
-    #checkout-canvas {
-      width: 800px;
-      height: 800px;
-      display: block;
-      border: 1px solid #e5e5e5;
-      border-radius: 8px;
-    }
+      #checkout-canvas {
+        width: 800px;
+        height: 800px;
+        display: block;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+      }
 
-    .download-btn {
-      margin-top: 20px;
-      padding: 12px 24px;
-      background: #16a34a;
-      color: #ffffff;
-      border: none;
-      border-radius: 6px;
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
+      .download-btn {
+        margin-top: 20px;
+        padding: 12px 24px;
+        background: #16a34a;
+        color: #ffffff;
+        border: none;
+        border-radius: 6px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
 
-    .download-btn:hover {
-      background: #22c55e;
-    }
+      .download-btn:hover {
+        background: #22c55e;
+      }
 
-    .instructions {
-      background: #2a2a2a;
-      padding: 24px;
-      border-radius: 12px;
-      max-width: 600px;
-      width: 100%;
-      color: rgba(255, 255, 255, 0.75);
-      font-size: 14px;
-      line-height: 1.6;
-    }
+      .instructions {
+        background: #2a2a2a;
+        padding: 24px;
+        border-radius: 12px;
+        max-width: 600px;
+        width: 100%;
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 14px;
+        line-height: 1.6;
+      }
 
-    .instructions h3 {
-      color: #ffffff;
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
+      .instructions h3 {
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
 
-    .instructions ol {
-      margin-left: 20px;
-      margin-top: 8px;
-    }
+      .instructions ol {
+        margin-left: 20px;
+        margin-top: 8px;
+      }
 
-    .instructions li {
-      margin-bottom: 8px;
-    }
-  </style>
-</head>
-<body>
-  <div class="controls">
-    <h2>Controlli Immagine</h2>
-    
-    <div>
-      <label>Variante Stile:</label>
-      <select id="style-variant">
-        <option value="minimal">Minimalista (Consigliata)</option>
-        <option value="pattern">Con Pattern</option>
-        <option value="accent">Con Accenti</option>
-      </select>
+      .instructions li {
+        margin-bottom: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="controls">
+      <h2>Controlli Immagine</h2>
+
+      <div>
+        <label>Variante Stile:</label>
+        <select id="style-variant">
+          <option value="minimal">Minimalista (Consigliata)</option>
+          <option value="pattern">Con Pattern</option>
+          <option value="accent">Con Accenti</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Mostra Sottotitolo:</label>
+        <select id="show-subtitle">
+          <option value="true">Sì</option>
+          <option value="false">No</option>
+        </select>
+      </div>
+
+      <button onclick="generateImage()">Genera Immagine</button>
     </div>
 
-    <div>
-      <label>Mostra Sottotitolo:</label>
-      <select id="show-subtitle">
-        <option value="true">Sì</option>
-        <option value="false">No</option>
-      </select>
+    <div class="canvas-container">
+      <canvas id="checkout-canvas" width="800" height="800"></canvas>
+      <button class="download-btn" onclick="downloadImage()">Scarica Immagine (PNG)</button>
     </div>
 
-    <button onclick="generateImage()">Genera Immagine</button>
-  </div>
+    <div class="instructions">
+      <h3>Come Usare:</h3>
+      <ol>
+        <li>Seleziona variante stile e opzioni</li>
+        <li>Clicca "Genera Immagine"</li>
+        <li>Verifica anteprima</li>
+        <li>Clicca "Scarica Immagine" per salvare PNG</li>
+        <li>Upload su Stripe Dashboard → Products → Add image</li>
+      </ol>
+      <p style="margin-top: 16px; color: rgba(255, 255, 255, 0.6)">
+        <strong>Nota:</strong> L'immagine sarà 800x800px, formato PNG, pronta per Stripe checkout.
+      </p>
+    </div>
 
-  <div class="canvas-container">
-    <canvas id="checkout-canvas" width="800" height="800"></canvas>
-    <button class="download-btn" onclick="downloadImage()">Scarica Immagine (PNG)</button>
-  </div>
+    <script>
+      const canvas = document.getElementById('checkout-canvas');
+      const ctx = canvas.getContext('2d');
 
-  <div class="instructions">
-    <h3>Come Usare:</h3>
-    <ol>
-      <li>Seleziona variante stile e opzioni</li>
-      <li>Clicca "Genera Immagine"</li>
-      <li>Verifica anteprima</li>
-      <li>Clicca "Scarica Immagine" per salvare PNG</li>
-      <li>Upload su Stripe Dashboard → Products → Add image</li>
-    </ol>
-    <p style="margin-top: 16px; color: rgba(255, 255, 255, 0.6);">
-      <strong>Nota:</strong> L'immagine sarà 800x800px, formato PNG, pronta per Stripe checkout.
-    </p>
-  </div>
+      function generateImage() {
+        const variant = document.getElementById('style-variant').value;
+        const showSubtitle = document.getElementById('show-subtitle').value === 'true';
 
-  <script>
-    const canvas = document.getElementById('checkout-canvas');
-    const ctx = canvas.getContext('2d');
+        // Sfondo
+        if (variant === 'minimal') {
+          const gradient = ctx.createLinearGradient(0, 0, 0, 800);
+          gradient.addColorStop(0, '#0f0f0f');
+          gradient.addColorStop(1, '#1a1f2e');
+          ctx.fillStyle = gradient;
+        } else if (variant === 'pattern') {
+          ctx.fillStyle = '#0f0f0f';
+          ctx.fillRect(0, 0, 800, 800);
 
-    function generateImage() {
-      const variant = document.getElementById('style-variant').value;
-      const showSubtitle = document.getElementById('show-subtitle').value === 'true';
+          // Grid pattern sottile
+          ctx.strokeStyle = 'rgba(37, 99, 235, 0.1)';
+          ctx.lineWidth = 1;
+          for (let i = 0; i < 800; i += 40) {
+            ctx.beginPath();
+            ctx.moveTo(i, 0);
+            ctx.lineTo(i, 800);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(0, i);
+            ctx.lineTo(800, i);
+            ctx.stroke();
+          }
+        } else {
+          // accent
+          const gradient = ctx.createLinearGradient(0, 0, 800, 800);
+          gradient.addColorStop(0, '#0f0f0f');
+          gradient.addColorStop(0.5, '#0f1419');
+          gradient.addColorStop(1, '#0f0f0f');
+          ctx.fillStyle = gradient;
+          ctx.fillRect(0, 0, 800, 800);
 
-      // Sfondo
-      if (variant === 'minimal') {
-        const gradient = ctx.createLinearGradient(0, 0, 0, 800);
-        gradient.addColorStop(0, '#0f0f0f');
-        gradient.addColorStop(1, '#1a1f2e');
-        ctx.fillStyle = gradient;
-      } else if (variant === 'pattern') {
-        ctx.fillStyle = '#0f0f0f';
-        ctx.fillRect(0, 0, 800, 800);
-        
-        // Grid pattern sottile
-        ctx.strokeStyle = 'rgba(37, 99, 235, 0.1)';
-        ctx.lineWidth = 1;
-        for (let i = 0; i < 800; i += 40) {
-          ctx.beginPath();
-          ctx.moveTo(i, 0);
-          ctx.lineTo(i, 800);
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(0, i);
-          ctx.lineTo(800, i);
-          ctx.stroke();
+          // Accenti angoli
+          ctx.fillStyle = 'rgba(37, 99, 235, 0.15)';
+          ctx.fillRect(0, 0, 100, 100);
+          ctx.fillRect(700, 700, 100, 100);
         }
-      } else { // accent
-        const gradient = ctx.createLinearGradient(0, 0, 800, 800);
-        gradient.addColorStop(0, '#0f0f0f');
-        gradient.addColorStop(0.5, '#0f1419');
-        gradient.addColorStop(1, '#0f0f0f');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 800, 800);
-        
-        // Accenti angoli
-        ctx.fillStyle = 'rgba(37, 99, 235, 0.15)';
-        ctx.fillRect(0, 0, 100, 100);
-        ctx.fillRect(700, 700, 100, 100);
+
+        if (variant !== 'pattern' && variant !== 'accent') {
+          ctx.fillRect(0, 0, 800, 800);
+        }
+
+        // Logo/Icona centrale (200x200px)
+        const centerX = 400;
+        const centerY = 300;
+        const logoSize = 200;
+
+        // Gradiente blu per logo
+        const logoGradient = ctx.createLinearGradient(
+          centerX - logoSize / 2,
+          centerY - logoSize / 2,
+          centerX + logoSize / 2,
+          centerY + logoSize / 2
+        );
+        logoGradient.addColorStop(0, '#3b82f6');
+        logoGradient.addColorStop(1, '#60a5fa');
+        ctx.fillStyle = logoGradient;
+        ctx.beginPath();
+        ctx.roundRect(centerX - logoSize / 2, centerY - logoSize / 2, logoSize, logoSize, 24);
+        ctx.fill();
+
+        // Icona grafico stilizzato (opzionale)
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        // Linea grafico semplice
+        ctx.moveTo(centerX - 60, centerY + 20);
+        ctx.lineTo(centerX - 30, centerY - 10);
+        ctx.lineTo(centerX, centerY + 10);
+        ctx.lineTo(centerX + 30, centerY - 20);
+        ctx.lineTo(centerX + 60, centerY);
+        ctx.stroke();
+
+        // Testo "TRADELIA AI"
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '700 36px Inter';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText('TRADELIA AI', centerX, centerY + logoSize / 2 + 32);
+
+        // Sottotitolo (opzionale)
+        if (showSubtitle) {
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+          ctx.font = '400 18px Inter';
+          ctx.fillText('Framework AI per analisi mercati', centerX, centerY + logoSize / 2 + 80);
+        }
+
+        // Bordo sottile (opzionale)
+        if (variant === 'accent') {
+          ctx.strokeStyle = 'rgba(37, 99, 235, 0.3)';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(20, 20, 760, 760);
+        }
       }
 
-      if (variant !== 'pattern' && variant !== 'accent') {
-        ctx.fillRect(0, 0, 800, 800);
+      // Polyfill per roundRect (se non supportato)
+      if (!CanvasRenderingContext2D.prototype.roundRect) {
+        CanvasRenderingContext2D.prototype.roundRect = function (x, y, width, height, radius) {
+          this.beginPath();
+          this.moveTo(x + radius, y);
+          this.lineTo(x + width - radius, y);
+          this.quadraticCurveTo(x + width, y, x + width, y + radius);
+          this.lineTo(x + width, y + height - radius);
+          this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+          this.lineTo(x + radius, y + height);
+          this.quadraticCurveTo(x, y + height, x, y + height - radius);
+          this.lineTo(x, y + radius);
+          this.quadraticCurveTo(x, y, x + radius, y);
+          this.closePath();
+        };
       }
 
-      // Logo/Icona centrale (200x200px)
-      const centerX = 400;
-      const centerY = 300;
-      const logoSize = 200;
-
-      // Gradiente blu per logo
-      const logoGradient = ctx.createLinearGradient(
-        centerX - logoSize/2, centerY - logoSize/2,
-        centerX + logoSize/2, centerY + logoSize/2
-      );
-      logoGradient.addColorStop(0, '#3b82f6');
-      logoGradient.addColorStop(1, '#60a5fa');
-      ctx.fillStyle = logoGradient;
-      ctx.beginPath();
-      ctx.roundRect(centerX - logoSize/2, centerY - logoSize/2, logoSize, logoSize, 24);
-      ctx.fill();
-
-      // Icona grafico stilizzato (opzionale)
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      // Linea grafico semplice
-      ctx.moveTo(centerX - 60, centerY + 20);
-      ctx.lineTo(centerX - 30, centerY - 10);
-      ctx.lineTo(centerX, centerY + 10);
-      ctx.lineTo(centerX + 30, centerY - 20);
-      ctx.lineTo(centerX + 60, centerY);
-      ctx.stroke();
-
-      // Testo "TRADELIA AI"
-      ctx.fillStyle = '#ffffff';
-      ctx.font = '700 36px Inter';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'top';
-      ctx.fillText('TRADELIA AI', centerX, centerY + logoSize/2 + 32);
-
-      // Sottotitolo (opzionale)
-      if (showSubtitle) {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
-        ctx.font = '400 18px Inter';
-        ctx.fillText('Framework AI per analisi mercati', centerX, centerY + logoSize/2 + 80);
+      function downloadImage() {
+        const link = document.createElement('a');
+        link.download = 'tradelia-ai-checkout-image.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
       }
 
-      // Bordo sottile (opzionale)
-      if (variant === 'accent') {
-        ctx.strokeStyle = 'rgba(37, 99, 235, 0.3)';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(20, 20, 760, 760);
-      }
-    }
-
-    // Polyfill per roundRect (se non supportato)
-    if (!CanvasRenderingContext2D.prototype.roundRect) {
-      CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
-        this.beginPath();
-        this.moveTo(x + radius, y);
-        this.lineTo(x + width - radius, y);
-        this.quadraticCurveTo(x + width, y, x + width, y + radius);
-        this.lineTo(x + width, y + height - radius);
-        this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-        this.lineTo(x + radius, y + height);
-        this.quadraticCurveTo(x, y + height, x, y + height - radius);
-        this.lineTo(x, y + radius);
-        this.quadraticCurveTo(x, y, x + radius, y);
-        this.closePath();
-      };
-    }
-
-    function downloadImage() {
-      const link = document.createElement('a');
-      link.download = 'tradelia-ai-checkout-image.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    }
-
-    // Genera immagine al caricamento
-    window.addEventListener('load', () => {
-      generateImage();
-    });
-  </script>
-</body>
+      // Genera immagine al caricamento
+      window.addEventListener('load', () => {
+        generateImage();
+      });
+    </script>
+  </body>
 </html>
-

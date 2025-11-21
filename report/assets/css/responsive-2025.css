@@ -18,8 +18,8 @@
 @media (max-width: 768px) {
   button,
   a,
-  input[type="button"],
-  input[type="submit"],
+  input[type='button'],
+  input[type='submit'],
   .btn,
   .metric-inline,
   .module-tab-button,
@@ -31,7 +31,7 @@
     min-width: 44px;
     padding: var(--sp-3) var(--sp-4);
   }
-  
+
   /* Pulsanti piccoli devono avere area touch sufficiente */
   .report-index-toggle,
   .glossary-drawer-close {
@@ -52,19 +52,27 @@
     font-size: var(--fs-14);
     line-height: var(--lh-16);
   }
-  
+
   /* Titoli più piccoli ma leggibili */
-  h1 { font-size: var(--fs-20); }
-  h2 { font-size: var(--fs-18); }
-  h3 { font-size: var(--fs-16); }
-  h4 { font-size: var(--fs-15); }
-  
+  h1 {
+    font-size: var(--fs-20);
+  }
+  h2 {
+    font-size: var(--fs-18);
+  }
+  h3 {
+    font-size: var(--fs-16);
+  }
+  h4 {
+    font-size: var(--fs-15);
+  }
+
   /* Metriche finanziarie: font size minimo 14px */
   .metric-inline-text {
     font-size: var(--fs-14) !important;
     line-height: var(--lh-16);
   }
-  
+
   /* Numeri finanziari: font size aumentato per leggibilità */
   .metric-value,
   .financial-number {
@@ -80,11 +88,11 @@
     font-size: var(--fs-15);
     line-height: var(--lh-16);
   }
-  
+
   .metric-inline-text {
     font-size: var(--fs-15);
   }
-  
+
   .metric-value,
   .financial-number {
     font-size: var(--fs-18);
@@ -110,17 +118,17 @@
     --sp-mobile-3: 1.25rem;
     --sp-mobile-4: 1.5rem;
   }
-  
+
   .report-section-block {
     margin-bottom: var(--sp-6);
     padding: var(--sp-4);
   }
-  
+
   .module-card {
     padding: var(--sp-4);
     margin-bottom: var(--sp-6);
   }
-  
+
   .container {
     padding-left: var(--sp-4);
     padding-right: var(--sp-4);
@@ -133,12 +141,12 @@
     margin-bottom: var(--sp-8);
     padding: var(--sp-5);
   }
-  
+
   .module-card {
     padding: var(--sp-5);
     margin-bottom: var(--sp-8);
   }
-  
+
   .container {
     padding-left: var(--sp-6);
     padding-right: var(--sp-6);
@@ -162,28 +170,28 @@
     flex-direction: column;
     gap: var(--sp-4);
   }
-  
+
   .report-index-sidebar {
     order: -1;
     position: relative;
     top: 0;
     margin-bottom: var(--sp-4);
   }
-  
+
   /* Grid moduli: 1 colonna su mobile */
   .module-grid-2,
   .module-grid-3 {
     grid-template-columns: 1fr;
     gap: var(--sp-4);
   }
-  
+
   /* Header ticker: stack verticale su mobile */
   .header-ticker-row {
     flex-direction: column;
     gap: var(--sp-2);
     align-items: flex-start;
   }
-  
+
   .header-ticker-text {
     margin-bottom: var(--sp-1);
   }
@@ -193,12 +201,12 @@
 @media (min-width: 641px) and (max-width: 1023px) {
   /* report-content-wrapper usa flex column (definito in report-layout.css) */
   /* Non usare grid perché la sidebar è sempre nascosta */
-  
+
   .module-grid-2 {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--sp-5);
   }
-  
+
   .module-grid-3 {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--sp-5);
@@ -209,12 +217,12 @@
 @media (min-width: 1024px) {
   /* report-content-wrapper usa flex column (definito in report-layout.css) */
   /* Non usare grid perché la sidebar è sempre nascosta */
-  
+
   .module-grid-2 {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--sp-6);
   }
-  
+
   .module-grid-3 {
     grid-template-columns: repeat(3, 1fr);
     gap: var(--sp-6);
@@ -229,12 +237,12 @@
   table {
     display: none;
   }
-  
+
   /* Mostra card layout alternativo */
   .table-mobile-cards {
     display: block;
   }
-  
+
   .table-mobile-card {
     background: var(--surface-card);
     border: 1px solid var(--br-card);
@@ -243,7 +251,7 @@
     margin-bottom: var(--sp-4);
     box-shadow: var(--shadow-sm);
   }
-  
+
   .table-mobile-card-header {
     font-size: var(--fs-14);
     font-weight: 600;
@@ -252,7 +260,7 @@
     padding-bottom: var(--sp-2);
     border-bottom: 1px solid var(--br-card);
   }
-  
+
   .table-mobile-card-row {
     display: flex;
     justify-content: space-between;
@@ -260,17 +268,17 @@
     padding: var(--sp-2) 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   }
-  
+
   .table-mobile-card-row:last-child {
     border-bottom: none;
   }
-  
+
   .table-mobile-card-label {
     font-size: var(--fs-13);
     color: var(--muted);
     flex: 1;
   }
-  
+
   .table-mobile-card-value {
     font-size: var(--fs-14);
     font-weight: 600;
@@ -278,11 +286,11 @@
     text-align: right;
     flex: 1;
   }
-  
+
   .table-mobile-card-value.positive {
     color: var(--ok);
   }
-  
+
   .table-mobile-card-value.negative {
     color: var(--err);
   }
@@ -293,17 +301,17 @@
   table {
     display: table;
   }
-  
+
   .table-mobile-cards {
     display: none;
   }
-  
+
   /* Tabelle scrollabili orizzontali se necessario */
   .table-container {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
-  
+
   table {
     min-width: 600px;
   }
@@ -326,7 +334,7 @@
     bottom: 0;
     left: 0;
   }
-  
+
   .glossary-drawer-content,
   .glossary-popup-body,
   .metrics-drawer-content {
@@ -335,7 +343,7 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
-  
+
   /* Header drawer più grande su mobile */
   .glossary-drawer-header,
   .glossary-popup-header,
@@ -343,7 +351,7 @@
     padding: var(--sp-4);
     min-height: 60px;
   }
-  
+
   /* Close button più grande su mobile */
   .glossary-drawer-close,
   .glossary-popup-close,
@@ -385,7 +393,7 @@
     margin-bottom: var(--sp-4);
     border-radius: var(--radius-md);
   }
-  
+
   .report-index-list {
     display: flex;
     flex-direction: row;
@@ -396,31 +404,31 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
   }
-  
+
   .report-index-item {
     flex-shrink: 0;
     white-space: nowrap;
     min-width: fit-content;
     padding: var(--sp-2) var(--sp-3);
   }
-  
+
   /* Breadcrumb: stack su mobile se troppo lungo */
   .report-breadcrumb {
     flex-wrap: wrap;
     gap: var(--sp-1);
   }
-  
+
   /* Search: full-width su mobile */
   .report-search {
     width: 100%;
   }
-  
+
   .report-search-input {
     width: 100%;
     font-size: var(--fs-14);
     padding: var(--sp-3) var(--sp-4);
   }
-  
+
   /* Search results: full-width su mobile */
   .report-search-results {
     width: 100%;
@@ -438,23 +446,23 @@
   .header-ticker {
     padding: var(--sp-3);
   }
-  
+
   .header-ticker-body {
     gap: var(--sp-2);
   }
-  
+
   .header-ticker-row {
     flex-wrap: wrap;
     gap: var(--sp-2);
     padding: var(--sp-2) 0;
   }
-  
+
   /* Metriche: stack su mobile se necessario */
   .header-ticker-row .metric-inline {
     flex: 1 1 auto;
     min-width: 0;
   }
-  
+
   /* Testo: può andare a capo su mobile */
   .header-ticker-text {
     flex: 1 1 100%;
@@ -479,7 +487,7 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
-  
+
   .export-menu-option {
     padding: var(--sp-4);
     min-height: 56px;
@@ -498,14 +506,14 @@
     scrollbar-width: thin;
     padding-bottom: var(--sp-2);
   }
-  
+
   .module-tabs-list {
     display: flex;
     flex-direction: row;
     gap: var(--sp-2);
     min-width: fit-content;
   }
-  
+
   .module-tab-button {
     flex-shrink: 0;
     white-space: nowrap;
@@ -525,7 +533,7 @@
     outline: 3px solid var(--brand-400);
     outline-offset: 2px;
   }
-  
+
   /* Skip link più visibile su mobile */
   .skip-link {
     padding: var(--sp-3) var(--sp-4);
@@ -551,13 +559,13 @@
   .hdr {
     padding: var(--sp-2) 0;
   }
-  
+
   /* Drawer: altezza ridotta in landscape */
   .glossary-drawer-panel,
   .metrics-drawer-panel {
     max-height: 90vh;
   }
-  
+
   .glossary-drawer-content,
   .metrics-drawer-content {
     max-height: calc(90vh - 100px);
@@ -577,25 +585,24 @@
   .metrics-drawer {
     display: none !important;
   }
-  
+
   /* Layout single column per stampa */
   .report-content-wrapper {
     display: block;
   }
-  
+
   .report-modules-main {
     width: 100%;
   }
-  
+
   /* Ottimizza colori per stampa */
   .module-card {
     border: 1px solid #000;
     page-break-inside: avoid;
   }
-  
+
   /* Metriche: nero su bianco per stampa */
   .metric-inline-text {
     color: #000 !important;
   }
 }
-

@@ -19,7 +19,7 @@ const state = {
   loading: false,
   authMode: 'login',
   isSubmitting: false,
-  hasBootstraped: false
+  hasBootstraped: false,
 };
 
 if (SECTION) {
@@ -86,9 +86,11 @@ function renderAuthCard() {
   const isLogin = state.authMode === 'login';
   AUTH_CARD.innerHTML = `
     <h3>${isLogin ? 'Accedi per partecipare' : 'Richiedi le tue credenziali'}</h3>
-    <p>${isLogin
-      ? 'Inserisci le credenziali istituzionali per commentare e partecipare alla community Tradelia.'
-      : 'Compila i campi per creare un account. Riceverai una mail di conferma per completare l’attivazione.'}</p>
+    <p>${
+      isLogin
+        ? 'Inserisci le credenziali istituzionali per commentare e partecipare alla community Tradelia.'
+        : 'Compila i campi per creare un account. Riceverai una mail di conferma per completare l’attivazione.'
+    }</p>
     <form id="comments-auth-form">
       <label>
         Email istituzionale
@@ -101,9 +103,11 @@ function renderAuthCard() {
       <button class="btn btn-primary" type="submit">${isLogin ? 'Accedi' : 'Registrati'}</button>
     </form>
     <div class="comments-login-switch">
-      ${isLogin
-        ? 'Non hai ancora un account? <button type="button" data-switch="signup">Richiedi accesso</button>'
-        : 'Hai già le credenziali? <button type="button" data-switch="login">Accedi qui</button>'}
+      ${
+        isLogin
+          ? 'Non hai ancora un account? <button type="button" data-switch="signup">Richiedi accesso</button>'
+          : 'Hai già le credenziali? <button type="button" data-switch="login">Accedi qui</button>'
+      }
     </div>
   `;
 
@@ -173,12 +177,15 @@ function renderComments() {
 }
 
 function renderCommentCard(comment) {
-  const name = comment.display_name || comment.author_display_name || `Utente ${comment.user_id.slice(0, 6)}`;
+  const name =
+    comment.display_name || comment.author_display_name || `Utente ${comment.user_id.slice(0, 6)}`;
   const initials = deriveInitials(name);
   const roleLabel = comment.author_role ? roleLabelMap(comment.author_role) : null;
   const canModerate = comment.user_id === state.user?.id || isAdmin();
   const hasAvatar = !!comment.avatar_url;
-  const avatarStyle = hasAvatar ? `background-image: url('${escapeHtml(comment.avatar_url)}'); background-size: cover; background-position: center;` : '';
+  const avatarStyle = hasAvatar
+    ? `background-image: url('${escapeHtml(comment.avatar_url)}'); background-size: cover; background-position: center;`
+    : '';
 
   return `
     <li class="comment-card" data-comment-id="${comment.id}">
@@ -195,11 +202,15 @@ function renderCommentCard(comment) {
         </div>
       </div>
       <div class="comment-body">${escapeHtml(comment.body)}</div>
-      ${canModerate ? `
+      ${
+        canModerate
+          ? `
         <div class="comment-actions">
           <button type="button" class="btn btn-sm danger" data-comment-delete="${comment.id}">Elimina</button>
         </div>
-      ` : ''}
+      `
+          : ''
+      }
     </li>
   `;
 }
@@ -257,7 +268,7 @@ async function handleCommentSubmit(event) {
       user_id: state.user.id,
       body,
       author_display_name: getDisplayName(),
-      author_role: state.role || null
+      author_role: state.role || null,
     };
     const { data, error } = await supabase
       .from('report_comments')
@@ -314,7 +325,11 @@ async function synchronizeUserContext() {
   try {
     const [roleRes, profileRes] = await Promise.all([
       supabase.from('user_roles').select('role').eq('user_id', state.user.id).maybeSingle(),
-      supabase.from('user_profiles').select('display_name, avatar_url').eq('user_id', state.user.id).maybeSingle()
+      supabase
+        .from('user_profiles')
+        .select('display_name, avatar_url')
+        .eq('user_id', state.user.id)
+        .maybeSingle(),
     ]);
     state.role = roleRes.data?.role || null;
     state.profile = profileRes.data || null;
@@ -329,7 +344,8 @@ async function loadComments() {
     state.loading = true;
     const { data, error } = await supabase
       .from('report_comments')
-      .select(`
+      .select(
+        `
         id, 
         user_id, 
         body, 
@@ -342,17 +358,18 @@ async function loadComments() {
           avatar_url,
           bio
         )
-      `)
+      `
+      )
       .eq('report_id', state.report.id)
       .eq('is_deleted', false)
       .order('created_at', { ascending: false });
     if (error) throw error;
-    
+
     // Fetch desk links for Desk users
     const deskUserIds = (data || [])
-      .filter(c => c.author_role === 'institutional')
-      .map(c => c.user_id);
-    
+      .filter((c) => c.author_role === 'institutional')
+      .map((c) => c.user_id);
+
     let deskLinksMap = {};
     if (deskUserIds.length > 0) {
       const { data: linksData } = await supabase
@@ -360,7 +377,7 @@ async function loadComments() {
         .select('user_id, link_url, link_label, display_order')
         .in('user_id', deskUserIds)
         .order('display_order', { ascending: true });
-      
+
       if (linksData) {
         deskLinksMap = linksData.reduce((acc, link) => {
           if (!acc[link.user_id]) acc[link.user_id] = [];
@@ -369,14 +386,14 @@ async function loadComments() {
         }, {});
       }
     }
-    
+
     // Merge profile data and desk links
-    state.comments = (data || []).map(comment => ({
+    state.comments = (data || []).map((comment) => ({
       ...comment,
       avatar_url: comment.profile?.avatar_url || null,
       bio: comment.profile?.bio || null,
       display_name: comment.profile?.display_name || comment.author_display_name,
-      desk_links: deskLinksMap[comment.user_id] || []
+      desk_links: deskLinksMap[comment.user_id] || [],
     }));
   } catch (err) {
     Logger.error('Comments', 'Load error', err);
@@ -411,12 +428,14 @@ function getDisplayName() {
 
 function deriveInitials(name) {
   if (!name) return 'T';
-  return name
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part.charAt(0).toUpperCase())
-    .join('') || 'T';
+  return (
+    name
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part.charAt(0).toUpperCase())
+      .join('') || 'T'
+  );
 }
 
 function formatRelativeTime(dateString) {
@@ -463,7 +482,7 @@ function isAdmin() {
 
 async function handleShowProfile(userId, userName) {
   if (!userId) return;
-  
+
   try {
     // Fetch profile data
     const [profileRes, roleRes, linksRes] = await Promise.all([
@@ -472,34 +491,30 @@ async function handleShowProfile(userId, userName) {
         .select('display_name, bio, avatar_url')
         .eq('user_id', userId)
         .maybeSingle(),
-      supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userId)
-        .maybeSingle(),
+      supabase.from('user_roles').select('role').eq('user_id', userId).maybeSingle(),
       supabase
         .from('desk_public_links')
         .select('link_url, link_label, display_order')
         .eq('user_id', userId)
-        .order('display_order', { ascending: true })
+        .order('display_order', { ascending: true }),
     ]);
-    
+
     const profile = profileRes.data || {};
     const role = roleRes.data?.role || null;
     const deskLinks = linksRes.data || [];
-    
+
     const displayName = profile.display_name || userName;
     const bio = profile.bio || null;
     const avatarUrl = profile.avatar_url || null;
     const hasDeskLinks = deskLinks.length > 0 && role === 'institutional';
-    
+
     showProfileModal({
       userId,
       displayName,
       bio,
       avatarUrl,
       role,
-      deskLinks: hasDeskLinks ? deskLinks : []
+      deskLinks: hasDeskLinks ? deskLinks : [],
     });
   } catch (err) {
     Logger.error('Comments', 'Profile fetch error', err);
@@ -511,12 +526,14 @@ function showProfileModal(profile) {
   // Remove existing modal if present
   const existing = document.getElementById('profile-modal');
   if (existing) existing.remove();
-  
+
   const initials = deriveInitials(profile.displayName);
   const roleLabel = profile.role ? roleLabelMap(profile.role) : null;
   const hasAvatar = !!profile.avatarUrl;
-  const avatarStyle = hasAvatar ? `background-image: url('${escapeHtml(profile.avatarUrl)}'); background-size: cover; background-position: center;` : '';
-  
+  const avatarStyle = hasAvatar
+    ? `background-image: url('${escapeHtml(profile.avatarUrl)}'); background-size: cover; background-position: center;`
+    : '';
+
   const modal = document.createElement('div');
   modal.id = 'profile-modal';
   modal.className = 'profile-modal-overlay';
@@ -530,16 +547,24 @@ function showProfileModal(profile) {
           ${roleLabel ? `<span class="profile-modal-role">${escapeHtml(roleLabel)}</span>` : ''}
         </div>
       </div>
-      ${profile.bio ? `
+      ${
+        profile.bio
+          ? `
         <div class="profile-modal-bio">
           <p>${escapeHtml(profile.bio)}</p>
         </div>
-      ` : ''}
-      ${profile.deskLinks.length > 0 ? `
+      `
+          : ''
+      }
+      ${
+        profile.deskLinks.length > 0
+          ? `
         <div class="profile-modal-links">
           <h4>Link pubblici</h4>
           <ul>
-            ${profile.deskLinks.map(link => `
+            ${profile.deskLinks
+              .map(
+                (link) => `
               <li>
                 <a href="${escapeHtml(link.link_url)}" target="_blank" rel="noopener noreferrer">
                   ${escapeHtml(link.link_label || link.link_url)}
@@ -550,21 +575,25 @@ function showProfileModal(profile) {
                   </svg>
                 </a>
               </li>
-            `).join('')}
+            `
+              )
+              .join('')}
           </ul>
         </div>
-      ` : ''}
+      `
+          : ''
+      }
     </div>
   `;
-  
+
   document.body.appendChild(modal);
-  
+
   // Close handlers
   modal.querySelector('.profile-modal-close').addEventListener('click', () => modal.remove());
   modal.addEventListener('click', (e) => {
     if (e.target === modal) modal.remove();
   });
-  
+
   // ESC key
   const escHandler = (e) => {
     if (e.key === 'Escape') {
@@ -573,9 +602,8 @@ function showProfileModal(profile) {
     }
   };
   document.addEventListener('keydown', escHandler);
-  
+
   // Focus trap
   const firstFocusable = modal.querySelector('button, a');
   if (firstFocusable) firstFocusable.focus();
 }
-

@@ -1,12 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import path from 'path';
 import { promises as fs } from 'fs';
-import { ensureReportDirectory, parseMultipartRequest, requireAdminAuth, sanitizeReportId } from './_utils';
+import {
+  ensureReportDirectory,
+  parseMultipartRequest,
+  requireAdminAuth,
+  sanitizeReportId,
+} from './_utils';
 
 export const config = {
   api: {
-    bodyParser: false
-  }
+    bodyParser: false,
+  },
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -50,7 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       success: true,
       path: path.relative(process.cwd(), targetPath).replace(/\\/g, '/'),
       reportId,
-      moduleId
+      moduleId,
     });
   } catch (error: any) {
     res.status(500).json({ error: error?.message || 'Errore upload screenshot' });

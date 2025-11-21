@@ -7,13 +7,13 @@ import {
   isValidJsonFileName,
   parseMultipartRequest,
   requireAdminAuth,
-  sanitizeReportId
+  sanitizeReportId,
 } from './_utils';
 
 export const config = {
   api: {
-    bodyParser: false
-  }
+    bodyParser: false,
+  },
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -74,7 +74,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       path: path.relative(process.cwd(), targetPath).replace(/\\/g, '/'),
       reportId,
       fileName,
-      manifest
+      manifest,
     });
   } catch (error: any) {
     res.status(500).json({ error: error?.message || 'Errore upload JSON' });

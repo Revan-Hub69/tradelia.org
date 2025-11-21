@@ -5,15 +5,7 @@
     "category": "Strumenti Derivati e Rischio",
     "difficulty": "Intermedio-Avanzato"
   },
-  "tags": [
-    "CFD",
-    "Contracts for Difference",
-    "Retail",
-    "Rischio",
-    "Leva",
-    "Derivati",
-    "Trading"
-  ],
+  "tags": ["CFD", "Contracts for Difference", "Retail", "Rischio", "Leva", "Derivati", "Trading"],
   "glossaryTerms": {
     "CFD": "CreditRiskBlock",
     "Contracts for Difference": "CreditRiskBlock",
@@ -481,4 +473,3 @@
     }
   ]
 }
-

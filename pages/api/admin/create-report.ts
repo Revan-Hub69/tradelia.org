@@ -50,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         generatedAt: now,
         lastUpdated: now,
         reportID: reportId,
-        reportType: type
+        reportType: type,
       },
       rows: [
         {
@@ -58,22 +58,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           parts: [
             {
               kind: 'text',
-              text: 'Report Framework Accademico AI, Tradelia Swing Master 5.0'
-            }
-          ]
-        }
+              text: 'Report Framework Accademico AI, Tradelia Swing Master 5.0',
+            },
+          ],
+        },
       ],
       footer: {
-        links: []
+        links: [],
       },
-      metricsPanel: []
+      metricsPanel: [],
     };
 
     await fs.writeFile(headerPath, JSON.stringify(header, null, 2), 'utf-8');
 
-    res.status(200).json({ success: true, reportId, path: path.relative(process.cwd(), reportDir) });
+    res
+      .status(200)
+      .json({ success: true, reportId, path: path.relative(process.cwd(), reportDir) });
   } catch (error: any) {
     res.status(500).json({ error: error?.message || 'Errore creazione report' });
   }
 }
-

@@ -17,15 +17,15 @@ export default async function handler(req, res) {
   } catch (headerError) {
     console.error('[Validate Token] Errore header CORS:', headerError);
   }
-  
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-  
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
-  
+
   try {
     return await validateTokenHandler(req, res);
   } catch (error) {
@@ -40,7 +40,7 @@ async function validateTokenHandler(req, res) {
     if (!body || typeof body !== 'object') {
       return res.status(400).json({
         ok: false,
-        error: 'Body richiesta non valido'
+        error: 'Body richiesta non valido',
       });
     }
     token = body.token;
@@ -48,7 +48,7 @@ async function validateTokenHandler(req, res) {
     console.error('[Validate Token] Errore lettura body:', bodyError);
     return res.status(400).json({
       ok: false,
-      error: 'Errore lettura richiesta'
+      error: 'Errore lettura richiesta',
     });
   }
   if (!token || typeof token !== 'string' || token.trim().length === 0) {
@@ -91,6 +91,6 @@ async function validateTokenHandler(req, res) {
     validUntil,
     daysLeft,
     canCancel,
-    isAdmin: context.isAdmin
+    isAdmin: context.isAdmin,
   });
 }

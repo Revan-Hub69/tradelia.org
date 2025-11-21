@@ -19,7 +19,7 @@ const DEFAULT_PREFERENCES = {
   highContrast: false,
   reducedMotion: false,
   // Multilingua
-  language: null // null = auto-detect, 'it', 'en'
+  language: null, // null = auto-detect, 'it', 'en'
 };
 
 // ===== UTILITIES =====
@@ -112,19 +112,19 @@ export const userPreferences = {
    */
   addSearchHistory(term, maxHistory = 10) {
     if (!term || term.trim().length < 2) return false;
-    
+
     const prefs = getPreferences();
     const history = prefs.searchHistory || [];
-    
+
     // Rimuovi duplicati
-    const filtered = history.filter(item => item.toLowerCase() !== term.toLowerCase());
-    
+    const filtered = history.filter((item) => item.toLowerCase() !== term.toLowerCase());
+
     // Aggiungi in cima
     filtered.unshift(term.trim());
-    
+
     // Limita dimensione
     prefs.searchHistory = filtered.slice(0, maxHistory);
-    
+
     return savePreferences(prefs);
   },
 
@@ -160,7 +160,7 @@ export const userPreferences = {
   showModule(moduleId) {
     const prefs = getPreferences();
     const hidden = prefs.hiddenModules || [];
-    prefs.hiddenModules = hidden.filter(id => id !== moduleId);
+    prefs.hiddenModules = hidden.filter((id) => id !== moduleId);
     return savePreferences(prefs);
   },
 
@@ -213,7 +213,7 @@ export const userPreferences = {
     }
 
     Logger.debug('UserPreferences', 'Preferenze applicate al DOM', prefs);
-  }
+  },
 };
 
 // Applica preferenze al caricamento
@@ -224,4 +224,3 @@ if (typeof document !== 'undefined') {
     userPreferences.applyToDOM();
   }
 }
-

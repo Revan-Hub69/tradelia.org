@@ -10,24 +10,23 @@ let firebaseAdminInitialized = false;
 
 function initializeFirebaseAdmin() {
   if (firebaseAdminInitialized) return;
-  
+
   try {
     const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT;
-    
+
     if (!serviceAccount) {
       throw new Error('FIREBASE_SERVICE_ACCOUNT non configurato');
     }
-    
-    const serviceAccountJson = typeof serviceAccount === 'string' 
-      ? JSON.parse(serviceAccount) 
-      : serviceAccount;
-    
+
+    const serviceAccountJson =
+      typeof serviceAccount === 'string' ? JSON.parse(serviceAccount) : serviceAccount;
+
     if (!admin.apps.length) {
       admin.initializeApp({
-        credential: admin.credential.cert(serviceAccountJson)
+        credential: admin.credential.cert(serviceAccountJson),
       });
     }
-    
+
     firebaseAdminInitialized = true;
   } catch (err) {
     console.error('[Push] Errore inizializzazione Firebase Admin:', err);
@@ -40,11 +39,12 @@ const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const PUSH_API_KEY = process.env.PUSH_API_KEY || null;
 
-const supabase = SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY
-  ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
-      auth: { persistSession: false }
-    })
-  : null;
+const supabase =
+  SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY
+    ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+        auth: { persistSession: false },
+      })
+    : null;
 
 async function upsertSubscriptionRecord(subscription, userId) {
   if (!supabase) {
@@ -58,7 +58,7 @@ async function upsertSubscriptionRecord(subscription, userId) {
 
   const basePayload = {
     subscription,
-    user_id: userId || null
+    user_id: userId || null,
   };
 
   const { data: existing, error: lookupError } = await supabase
@@ -105,10 +105,7 @@ async function deleteSubscriptionRecord(endpoint, userId) {
     throw new Error('Endpoint subscription mancante');
   }
 
-  let query = supabase
-    .from('push_subscriptions')
-    .delete()
-    .eq('subscription->>endpoint', endpoint);
+  let query = supabase.from('push_subscriptions').delete().eq('subscription->>endpoint', endpoint);
 
   if (userId) {
     query = query.eq('user_id', userId);
@@ -127,9 +124,7 @@ async function fetchStoredSubscriptions(userIds) {
     throw new Error('Archivio push non configurato');
   }
 
-  let query = supabase
-    .from('push_subscriptions')
-    .select('subscription');
+  let query = supabase.from('push_subscriptions').select('subscription');
 
   if (userIds && Array.isArray(userIds) && userIds.length > 0) {
     query = query.in('user_id', userIds);
@@ -140,9 +135,7 @@ async function fetchStoredSubscriptions(userIds) {
     throw new Error(`Recupero subscription fallito: ${error.message}`);
   }
 
-  return (data || [])
-    .map(row => row?.subscription)
-    .filter(Boolean);
+  return (data || []).map((row) => row?.subscription).filter(Boolean);
 }
 
 function normalizeEndpoint(subscription, endpointOverride) {
@@ -164,14 +157,14 @@ export default async function handler(req, res) {
 
   try {
     const { action, ...data } = req.body || {};
-    
+
     // Se action non specificato, usa 'subscribe' (compatibilità legacy)
     const actionType = (action || 'subscribe').toLowerCase();
-    
+
     if (actionType === 'subscribe') {
       // SUBSCRIBE: Registra subscription push
       const { subscription, endpoint: endpointOverride, userId, subscriberId } = data;
-      
+
       if (!subscription) {
         return res.status(400).json({ error: 'Subscription richiesta' });
       }
@@ -190,13 +183,12 @@ export default async function handler(req, res) {
           storage = { stored: false, reason: 'storage_failed', message: storageErr.message };
         }
       }
-      
+
       return res.status(200).json({
         success: true,
         endpoint,
-        storage
+        storage,
       });
-      
     } else if (actionType === 'unsubscribe') {
       const { subscription, endpoint: endpointOverride, userId, subscriberId } = data;
       const endpoint = normalizeEndpoint(subscription, endpointOverride);
@@ -218,7 +210,7 @@ export default async function handler(req, res) {
       return res.status(200).json({
         success: true,
         endpoint,
-        removal
+        removal,
       });
     } else if (actionType === 'send') {
       // SEND: Invia notifiche push
@@ -253,19 +245,17 @@ export default async function handler(req, res) {
       const subscriptions = await fetchStoredSubscriptions(userIds);
 
       if (subscriptions.length === 0) {
-        return res.status(200).json({ success: true, sent: 0, message: 'Nessuna subscription trovata' });
+        return res
+          .status(200)
+          .json({ success: true, sent: 0, message: 'Nessuna subscription trovata' });
       }
 
       // Configura web-push
       const VAPID_PUBLIC_KEY = process.env.FIREBASE_VAPID_PUBLIC_KEY;
       const VAPID_PRIVATE_KEY = process.env.FIREBASE_VAPID_PRIVATE_KEY;
-      
+
       if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
-        webpush.setVapidDetails(
-          'mailto:tradelia@example.com',
-          VAPID_PUBLIC_KEY,
-          VAPID_PRIVATE_KEY
-        );
+        webpush.setVapidDetails('mailto:tradelia@example.com', VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
       } else {
         console.warn('[Push] Chiavi VAPID mancanti: il canale WebPush potrebbe non funzionare.');
       }
@@ -278,8 +268,8 @@ export default async function handler(req, res) {
         badge: '/icons/icon-192.png',
         data: {
           url: pushData?.url || '/archivio/dashboard.html',
-          ...pushData
-        }
+          ...pushData,
+        },
       });
 
       // Invia push
@@ -294,14 +284,17 @@ export default async function handler(req, res) {
               return {
                 success: false,
                 endpoint: subscription.endpoint,
-                error: 'Chiavi VAPID non configurate'
+                error: 'Chiavi VAPID non configurate',
               };
             }
 
-            await webpush.sendNotification({
-              endpoint: subscription.endpoint,
-              keys: subscription.keys
-            }, payload);
+            await webpush.sendNotification(
+              {
+                endpoint: subscription.endpoint,
+                keys: subscription.keys,
+              },
+              payload
+            );
 
             return { success: true, endpoint: subscription.endpoint };
           }
@@ -310,12 +303,16 @@ export default async function handler(req, res) {
             await admin.messaging().send({
               notification: { title, body },
               data: pushData || {},
-              token: subscription.token
+              token: subscription.token,
             });
             return { success: true, token: subscription.token };
           }
 
-          return { success: false, endpoint: subscription.endpoint, error: 'Formato subscription non supportato' };
+          return {
+            success: false,
+            endpoint: subscription.endpoint,
+            error: 'Formato subscription non supportato',
+          };
         } catch (err) {
           console.error('[Push] Errore invio singola push:', err);
           return { success: false, endpoint: subscription?.endpoint, error: err.message };
@@ -323,26 +320,29 @@ export default async function handler(req, res) {
       });
 
       const results = await Promise.allSettled(sendPromises);
-      const normalized = results.map(result => {
+      const normalized = results.map((result) => {
         if (result.status === 'fulfilled') {
           return result.value;
         }
         return { success: false, error: result.reason?.message || 'Errore sconosciuto' };
       });
-      const successful = normalized.filter(entry => entry.success).length;
+      const successful = normalized.filter((entry) => entry.success).length;
 
       return res.status(200).json({
         success: true,
         sent: successful,
         total: subscriptions.length,
-        results: normalized
+        results: normalized,
       });
     } else {
-      return res.status(400).json({ error: `Action non supportato: ${actionType}. Usa 'subscribe', 'unsubscribe' o 'send'` });
+      return res
+        .status(400)
+        .json({
+          error: `Action non supportato: ${actionType}. Usa 'subscribe', 'unsubscribe' o 'send'`,
+        });
     }
   } catch (err) {
     console.error('[Push] Errore:', err);
     return res.status(500).json({ error: 'Errore server', details: err.message });
   }
 }
-

@@ -11,9 +11,8 @@ import { FCM_CONFIG as IMPORTED_FCM_CONFIG } from './fcm-config.js';
 // ===== SUPABASE CONFIG =====
 const SUPABASE_URL = SUPABASE_CONFIG.url;
 const SUPABASE_ANON_KEY = SUPABASE_CONFIG.anonKey;
-const ACTIVE_FCM_CONFIG = typeof window !== 'undefined' && window.FCM_CONFIG
-  ? window.FCM_CONFIG
-  : IMPORTED_FCM_CONFIG;
+const ACTIVE_FCM_CONFIG =
+  typeof window !== 'undefined' && window.FCM_CONFIG ? window.FCM_CONFIG : IMPORTED_FCM_CONFIG;
 
 // Importa Supabase client (via CDN per browser)
 // Nota: Per produzione, considera di usare npm install @supabase/supabase-js
@@ -31,7 +30,7 @@ const STATE = {
   sortBy: 'date',
   sortOrder: 'desc',
   deferredPrompt: null, // Evento installazione PWA
-  isInstalled: false // Se l'app è già installata
+  isInstalled: false, // Se l'app è già installata
 };
 
 const PWA_INSTALLED_FLAG = 'tradelia-pwa-installed';
@@ -39,38 +38,38 @@ const PWA_INSTALLED_FLAG = 'tradelia-pwa-installed';
 // ===== INIT =====
 async function init() {
   Logger.debug('Dashboard', 'Inizializzazione dashboard');
-  
+
   // Monta header e footer
   await mountHeaderFooter();
-  
+
   // Registra Service Worker per PWA
   await registerServiceWorker();
-  
+
   // Controlla autenticazione
   await checkAuth();
-  
+
   // Setup event listeners
   setupEventListeners();
-  
+
   // Setup PWA install
   setupPWAInstall();
-  
+
   Logger.debug('Dashboard', 'Dashboard inizializzata');
 }
 
 // ===== MOUNT HEADER & FOOTER =====
 async function mountHeaderFooter() {
   document.documentElement.setAttribute('data-theme', 'dark');
-  
+
   try {
     // Sistema traduzione disabilitato - sempre italiano
-    
+
     const headerSlot = document.getElementById('site-header-slot');
     if (headerSlot) {
       // Monta header SENZA export menu (dashboard non ha export)
       siteHeader.mount(headerSlot, { showExport: false });
     }
-    
+
     const footerSlot = document.getElementById('site-footer-slot');
     if (footerSlot) {
       siteFooter.mount(footerSlot);
@@ -86,7 +85,7 @@ async function registerServiceWorker() {
     try {
       const registration = await navigator.serviceWorker.register('/sw.js');
       Logger.debug('Dashboard', 'Service Worker registrato', registration);
-      
+
       // Richiedi permessi push
       await requestPushPermission(registration);
     } catch (err) {
@@ -101,12 +100,12 @@ async function requestPushPermission(registration) {
     Logger.warn('Dashboard', 'Notifiche non supportate');
     return;
   }
-  
+
   if (Notification.permission === 'default') {
     const permission = await Notification.requestPermission();
     Logger.debug('Dashboard', `Permesso notifiche: ${permission}`);
   }
-  
+
   if (Notification.permission === 'granted' && registration) {
     // Subscribe to push notifications
     try {
@@ -116,12 +115,12 @@ async function requestPushPermission(registration) {
         Logger.warn('Dashboard', 'VAPID public key non configurata');
         return;
       }
-      
+
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
       });
-      
+
       // Invia subscription al server
       await sendSubscriptionToServer(subscription);
     } catch (err) {
@@ -137,14 +136,14 @@ async function sendSubscriptionToServer(subscription) {
       Logger.warn('Dashboard', 'User non autenticato, skip subscription');
       return;
     }
-    
+
     // Salva subscription in Supabase
     const subscriber = await ensureSubscriber(STATE.user);
     if (!subscriber) {
       Logger.warn('Dashboard', 'Subscriber non trovato, skip subscription');
       return;
     }
-    
+
     // Verifica se subscription esiste già
     const { data: existing } = await supabase
       .from('push_subscriptions')
@@ -152,14 +151,14 @@ async function sendSubscriptionToServer(subscription) {
       .eq('user_id', subscriber.id)
       .eq('subscription->>endpoint', subscription.endpoint)
       .single();
-    
+
     if (existing) {
       // Aggiorna subscription esistente
       const { error } = await supabase
         .from('push_subscriptions')
         .update({ subscription, updated_at: new Date().toISOString() })
         .eq('id', existing.id);
-      
+
       if (error) {
         Logger.warn('Dashboard', 'Errore aggiornamento subscription', error);
       } else {
@@ -167,20 +166,18 @@ async function sendSubscriptionToServer(subscription) {
       }
     } else {
       // Crea nuova subscription
-      const { error } = await supabase
-        .from('push_subscriptions')
-        .insert({
-          user_id: subscriber.id,
-          subscription
-        });
-      
+      const { error } = await supabase.from('push_subscriptions').insert({
+        user_id: subscriber.id,
+        subscription,
+      });
+
       if (error) {
         Logger.warn('Dashboard', 'Errore creazione subscription', error);
       } else {
         Logger.debug('Dashboard', 'Subscription salvata in Supabase');
       }
     }
-    
+
     // Invia anche all'API endpoint (per compatibilità)
     try {
       await fetch('/api/push-subscribe', {
@@ -188,11 +185,11 @@ async function sendSubscriptionToServer(subscription) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           subscription,
-          userId: STATE.user?.id
-        })
+          userId: STATE.user?.id,
+        }),
       });
     } catch (apiErr) {
-      Logger.warn('Dashboard', 'Errore invio subscription all\'API', apiErr);
+      Logger.warn('Dashboard', "Errore invio subscription all'API", apiErr);
     }
   } catch (err) {
     Logger.warn('Dashboard', 'Errore invio subscription', err);
@@ -201,14 +198,12 @@ async function sendSubscriptionToServer(subscription) {
 
 // ===== URL BASE64 TO UINT8ARRAY =====
 function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding)
-    .replace(/\-/g, '+')
-    .replace(/_/g, '/');
-  
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+
   const rawData = window.atob(base64);
   const outputArray = new Uint8Array(rawData.length);
-  
+
   for (let i = 0; i < rawData.length; ++i) {
     outputArray[i] = rawData.charCodeAt(i);
   }
@@ -218,21 +213,24 @@ function urlBase64ToUint8Array(base64String) {
 // ===== CHECK AUTH =====
 async function checkAuth() {
   try {
-    const { data: { session }, error } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
+
     if (error) {
       Logger.warn('Dashboard', 'Errore verifica sessione', error);
       showLogin();
       return;
     }
-    
+
     if (session && session.user) {
       STATE.user = session.user;
-      
+
       // Crea/aggiorna record subscriber se non esiste
       const subscriber = await ensureSubscriber(session.user);
       STATE.subscriber = subscriber;
-      
+
       // Verifica status abbonamento
       if (subscriber && subscriber.status === 'active') {
         showDashboard();
@@ -257,11 +255,12 @@ async function ensureSubscriber(authUser) {
       .select('id')
       .eq('auth_user_id', authUser.id)
       .single();
-    
-    if (selectError && selectError.code !== 'PGRST116') { // PGRST116 = no rows returned
+
+    if (selectError && selectError.code !== 'PGRST116') {
+      // PGRST116 = no rows returned
       Logger.warn('Dashboard', 'Errore verifica subscriber', selectError);
     }
-    
+
     if (!existing) {
       // Crea nuovo subscriber (senza abbonamento attivo di default)
       // L'abbonamento verrà attivato tramite webhook Lemon Squeezy
@@ -270,31 +269,31 @@ async function ensureSubscriber(authUser) {
         .insert({
           auth_user_id: authUser.id,
           email: authUser.email,
-          status: 'cancelled' // Default: non abbonato fino a quando non arriva webhook
+          status: 'cancelled', // Default: non abbonato fino a quando non arriva webhook
         })
         .select('id, email, subscription_id, status')
         .single();
-      
+
       if (insertError) {
         Logger.warn('Dashboard', 'Errore creazione subscriber', insertError);
         return null;
       }
-      
+
       return newSubscriber;
     }
-    
+
     // Ritorna subscriber con tutti i campi
     const { data: fullSubscriber, error: selectError2 } = await supabase
       .from('subscribers')
       .select('id, email, subscription_id, status')
       .eq('id', existing.id)
       .single();
-    
+
     if (selectError2) {
       Logger.warn('Dashboard', 'Errore recupero subscriber completo', selectError2);
       return existing;
     }
-    
+
     return fullSubscriber;
   } catch (err) {
     Logger.warn('Dashboard', 'Errore ensureSubscriber', err);
@@ -305,8 +304,7 @@ async function ensureSubscriber(authUser) {
 // ===== SETUP PWA INSTALL =====
 function setupPWAInstall() {
   const isStandalone =
-    window.matchMedia('(display-mode: standalone)').matches ||
-    window.navigator.standalone === true;
+    window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
   const installedFlag =
     localStorage.getItem(PWA_INSTALLED_FLAG) === 'true' ||
     window.matchMedia('(display-mode: fullscreen)').matches ||
@@ -324,7 +322,7 @@ function setupPWAInstall() {
   } else {
     hideOpenAppButton();
   }
-  
+
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     STATE.deferredPrompt = e;
@@ -332,7 +330,7 @@ function setupPWAInstall() {
     hideOpenAppButton();
     Logger.debug('Dashboard', 'PWA installabile - pulsante mostrato');
   });
-  
+
   window.addEventListener('appinstalled', () => {
     STATE.isInstalled = true;
     STATE.deferredPrompt = null;
@@ -396,30 +394,30 @@ async function handleInstallApp() {
     openInstalledApp(true);
     return;
   }
-  
+
   try {
     // Mostra prompt installazione
     STATE.deferredPrompt.prompt();
-    
+
     // Attendi risposta utente
     const { outcome } = await STATE.deferredPrompt.userChoice;
-    
+
     Logger.debug('Dashboard', `Installazione: ${outcome}`);
-    
+
     // Pulisci evento
     STATE.deferredPrompt = null;
-    
+
     // Nascondi pulsante
     hideInstallButton();
-    
+
     if (outcome === 'accepted') {
       showInstallSuccess();
     } else {
-      Logger.debug('Dashboard', 'Installazione rifiutata dall\'utente');
+      Logger.debug('Dashboard', "Installazione rifiutata dall'utente");
     }
   } catch (err) {
     Logger.error('Dashboard', 'Errore installazione PWA', err);
-    alert('Errore durante l\'installazione: ' + err.message);
+    alert("Errore durante l'installazione: " + err.message);
   }
 }
 
@@ -432,7 +430,9 @@ function openInstalledApp(showHint = false) {
     hideInstallButton();
     if (showHint) {
       setTimeout(() => {
-        alert('Se l’app non si è aperta automaticamente, aprila dalla schermata home/Start come “Tradelia AI”.');
+        alert(
+          'Se l’app non si è aperta automaticamente, aprila dalla schermata home/Start come “Tradelia AI”.'
+        );
       }, 800);
     }
   } catch (err) {
@@ -463,9 +463,9 @@ function showInstallSuccess() {
     z-index: 10000;
     animation: slideIn 0.3s ease;
   `;
-  
+
   document.body.appendChild(successMsg);
-  
+
   // Rimuovi dopo 3 secondi
   setTimeout(() => {
     successMsg.style.animation = 'slideOut 0.3s ease';
@@ -480,13 +480,13 @@ function setupEventListeners() {
   if (loginForm) {
     loginForm.addEventListener('submit', handleLogin);
   }
-  
+
   // Demo login button
   const demoLoginBtn = document.getElementById('demo-login-btn');
   if (demoLoginBtn) {
     demoLoginBtn.addEventListener('click', handleDemoLogin);
   }
-  
+
   // Forgot password button
   const forgotPasswordBtn = document.getElementById('forgot-password-btn');
   if (forgotPasswordBtn) {
@@ -497,7 +497,7 @@ function setupEventListeners() {
       }
     });
   }
-  
+
   // Cancel reset button
   const cancelResetBtn = document.getElementById('cancel-reset-btn');
   if (cancelResetBtn) {
@@ -508,24 +508,24 @@ function setupEventListeners() {
       }
     });
   }
-  
+
   // Forgot password form
   const forgotPasswordForm = document.getElementById('forgot-password-form');
   if (forgotPasswordForm) {
     forgotPasswordForm.addEventListener('submit', handleForgotPassword);
   }
-  
+
   // Logout button
   const logoutBtn = document.getElementById('logout-btn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', handleLogout);
   }
-  
+
   const openAppBtn = document.getElementById('open-app-btn');
   if (openAppBtn) {
     openAppBtn.addEventListener('click', () => openInstalledApp(true));
   }
-  
+
   // Install App button
   const installBtn = document.getElementById('install-app-btn');
   if (installBtn) {
@@ -535,16 +535,16 @@ function setupEventListeners() {
   if (pwaSettingsBtn) {
     pwaSettingsBtn.addEventListener('click', handleInstallApp);
   }
-  
+
   // Dashboard tabs
   const tabs = document.querySelectorAll('.dashboard-tab');
-  tabs.forEach(tab => {
+  tabs.forEach((tab) => {
     tab.addEventListener('click', () => {
       const tabName = tab.dataset.tab;
       switchTab(tabName);
     });
   });
-  
+
   // Voting form
   const votingForm = document.getElementById('voting-form');
   if (votingForm) {
@@ -555,12 +555,12 @@ function setupEventListeners() {
 // ===== HANDLE LOGIN =====
 async function handleLogin(event) {
   event.preventDefault();
-  
+
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
   const errorEl = document.getElementById('login-error');
   const successEl = document.getElementById('login-success');
-  
+
   // Reset messaggi
   if (errorEl) {
     errorEl.hidden = true;
@@ -570,52 +570,53 @@ async function handleLogin(event) {
     successEl.hidden = true;
     successEl.textContent = '';
   }
-  
+
   try {
     if (!email || !password) {
       throw new Error('Email e password richieste');
     }
-    
+
     Logger.debug('Dashboard', 'Tentativo login', { email: email.trim() });
-    
-    const { data, error } = await supabase.auth.signInWithPassword({ 
-      email: email.trim(), 
-      password 
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
     });
-    
+
     if (error) {
       Logger.error('Dashboard', 'Errore Supabase login', error);
-      
+
       // Messaggi di errore specifici
       let errorMessage = 'Errore durante il login';
       if (error.message) {
         if (error.message.includes('Invalid login credentials')) {
           errorMessage = 'Email o password non corretti. Verifica le credenziali e riprova.';
         } else if (error.message.includes('Email not confirmed')) {
-          errorMessage = 'Email non confermata. Controlla la tua casella email e clicca sul link di conferma.';
+          errorMessage =
+            'Email non confermata. Controlla la tua casella email e clicca sul link di conferma.';
         } else if (error.message.includes('Too many requests')) {
           errorMessage = 'Troppi tentativi. Attendi qualche minuto e riprova.';
         } else {
           errorMessage = error.message;
         }
       }
-      
+
       throw new Error(errorMessage);
     }
-    
+
     if (data && data.user) {
       Logger.debug('Dashboard', 'Login riuscito', { userId: data.user.id });
       STATE.user = data.user;
-      
+
       // Crea/aggiorna subscriber
       await ensureSubscriber(data.user);
-      
+
       // Mostra messaggio di successo
       if (successEl) {
         successEl.hidden = false;
         successEl.textContent = 'Login riuscito! Accesso in corso...';
       }
-      
+
       // Piccolo delay per mostrare messaggio
       setTimeout(() => {
         showDashboard();
@@ -623,12 +624,12 @@ async function handleLogin(event) {
     } else {
       throw new Error('Login fallito: nessun dato utente ricevuto');
     }
-    
   } catch (err) {
     Logger.error('Dashboard', 'Errore login', err);
     if (errorEl) {
       errorEl.hidden = false;
-      errorEl.textContent = err.message || 'Errore durante il login. Verifica le credenziali e riprova.';
+      errorEl.textContent =
+        err.message || 'Errore durante il login. Verifica le credenziali e riprova.';
     }
   }
 }
@@ -637,7 +638,7 @@ async function handleLogin(event) {
 async function handleDemoLogin() {
   const errorEl = document.getElementById('login-error');
   const successEl = document.getElementById('login-success');
-  
+
   // Reset messaggi
   if (errorEl) {
     errorEl.hidden = true;
@@ -647,49 +648,49 @@ async function handleDemoLogin() {
     successEl.hidden = true;
     successEl.textContent = '';
   }
-  
+
   try {
     // Credenziali demo (da creare in Supabase)
     const demoEmail = 'demo@tradelia.org';
     const demoPassword = 'Demo123!';
-    
+
     Logger.debug('Dashboard', 'Tentativo login demo', { email: demoEmail });
-    
-    const { data, error } = await supabase.auth.signInWithPassword({ 
-      email: demoEmail, 
-      password: demoPassword 
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: demoEmail,
+      password: demoPassword,
     });
-    
+
     if (error) {
       Logger.error('Dashboard', 'Errore login demo', error);
-      
+
       // Se login demo fallisce, mostra messaggio informativo
       if (errorEl) {
         errorEl.hidden = false;
-        errorEl.textContent = 'Login demo non disponibile. Crea un account o usa le tue credenziali.';
+        errorEl.textContent =
+          'Login demo non disponibile. Crea un account o usa le tue credenziali.';
       }
       return;
     }
-    
+
     if (data && data.user) {
       Logger.debug('Dashboard', 'Login demo riuscito', { userId: data.user.id });
       STATE.user = data.user;
-      
+
       // Crea/aggiorna subscriber
       await ensureSubscriber(data.user);
-      
+
       // Mostra messaggio di successo
       if (successEl) {
         successEl.hidden = false;
         successEl.textContent = 'Login demo riuscito! Accesso in corso...';
       }
-      
+
       // Piccolo delay per mostrare messaggio
       setTimeout(() => {
         showDashboard();
       }, 500);
     }
-    
   } catch (err) {
     Logger.error('Dashboard', 'Errore login demo', err);
     if (errorEl) {
@@ -702,11 +703,11 @@ async function handleDemoLogin() {
 // ===== HANDLE FORGOT PASSWORD =====
 async function handleForgotPassword(event) {
   event.preventDefault();
-  
+
   const email = document.getElementById('reset-email').value;
   const errorEl = document.getElementById('reset-error');
   const successEl = document.getElementById('reset-success');
-  
+
   // Reset messaggi
   if (errorEl) {
     errorEl.hidden = true;
@@ -716,21 +717,21 @@ async function handleForgotPassword(event) {
     successEl.hidden = true;
     successEl.textContent = '';
   }
-  
+
   try {
     if (!email) {
       throw new Error('Email richiesta');
     }
-    
+
     Logger.debug('Dashboard', 'Richiesta reset password', { email: email.trim() });
-    
+
     const { data, error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${window.location.origin}/archivio/dashboard.html?reset=true`
+      redirectTo: `${window.location.origin}/archivio/dashboard.html?reset=true`,
     });
-    
+
     if (error) {
       Logger.error('Dashboard', 'Errore reset password', error);
-      
+
       // Messaggi di errore specifici
       let errorMessage = 'Errore durante la richiesta di reset password';
       if (error.message) {
@@ -740,23 +741,24 @@ async function handleForgotPassword(event) {
           errorMessage = error.message;
         }
       }
-      
+
       throw new Error(errorMessage);
     }
-    
+
     // Mostra messaggio di successo
     if (successEl) {
       successEl.hidden = false;
-      successEl.textContent = 'Email di ripristino inviata! Controlla la tua casella email e segui le istruzioni.';
+      successEl.textContent =
+        'Email di ripristino inviata! Controlla la tua casella email e segui le istruzioni.';
     }
-    
+
     Logger.debug('Dashboard', 'Reset password inviato', { email: email.trim() });
-    
   } catch (err) {
     Logger.error('Dashboard', 'Errore forgot password', err);
     if (errorEl) {
       errorEl.hidden = false;
-      errorEl.textContent = err.message || 'Errore durante la richiesta di reset password. Riprova.';
+      errorEl.textContent =
+        err.message || 'Errore durante la richiesta di reset password. Riprova.';
     }
   }
 }
@@ -769,7 +771,7 @@ async function handleLogout() {
     if (error) {
       Logger.warn('Dashboard', 'Errore logout Supabase', error);
     }
-    
+
     localStorage.removeItem('tradelia_session');
     STATE.user = null;
     showLogin();
@@ -787,7 +789,7 @@ function showLogin() {
   const loginSection = document.getElementById('login-section');
   const dashboardContent = document.getElementById('dashboard-content');
   const subscriptionRequiredSection = document.getElementById('subscription-required-section');
-  
+
   if (loginSection) loginSection.hidden = false;
   if (dashboardContent) dashboardContent.hidden = true;
   if (subscriptionRequiredSection) subscriptionRequiredSection.hidden = true;
@@ -798,11 +800,11 @@ function showSubscriptionRequired() {
   const loginSection = document.getElementById('login-section');
   const dashboardContent = document.getElementById('dashboard-content');
   const subscriptionRequiredSection = document.getElementById('subscription-required-section');
-  
+
   if (loginSection) loginSection.hidden = true;
   if (dashboardContent) dashboardContent.hidden = true;
   if (subscriptionRequiredSection) subscriptionRequiredSection.hidden = false;
-  
+
   // Setup event listeners per refresh subscription
   const refreshBtn = document.getElementById('refresh-subscription-btn');
   if (refreshBtn) {
@@ -810,7 +812,7 @@ function showSubscriptionRequired() {
       await checkSubscriptionStatus();
     };
   }
-  
+
   const logoutBtn2 = document.getElementById('logout-btn-2');
   if (logoutBtn2) {
     logoutBtn2.onclick = handleLogout;
@@ -821,21 +823,21 @@ function showSubscriptionRequired() {
 async function checkSubscriptionStatus() {
   try {
     if (!STATE.user) return;
-    
+
     // Recupera subscriber aggiornato da Supabase
     const { data: subscriber, error } = await supabase
       .from('subscribers')
       .select('id, email, subscription_id, status')
       .eq('auth_user_id', STATE.user.id)
       .single();
-    
+
     if (error) {
       Logger.warn('Dashboard', 'Errore verifica subscription', error);
       return;
     }
-    
+
     STATE.subscriber = subscriber;
-    
+
     // Se abbonamento attivo, mostra dashboard
     if (subscriber && subscriber.status === 'active') {
       showDashboard();
@@ -852,13 +854,13 @@ async function showDashboard() {
   const loginSection = document.getElementById('login-section');
   const dashboardContent = document.getElementById('dashboard-content');
   const userEmail = document.getElementById('user-email');
-  
+
   if (loginSection) loginSection.hidden = true;
   if (dashboardContent) dashboardContent.hidden = false;
   if (userEmail && STATE.user) {
     userEmail.textContent = STATE.user.email;
   }
-  
+
   // Timeout globale: se il caricamento dura più di 15 secondi, forza il rendering
   const globalTimeout = setTimeout(() => {
     Logger.warn('Dashboard', 'Timeout globale caricamento dati (15s), forzo rendering');
@@ -866,20 +868,20 @@ async function showDashboard() {
     // renderDashboardTutorials(); // Tutorial temporaneamente disabilitati
     hideLoadingState();
   }, 15000);
-  
+
   try {
     // Carica dati
     await loadDashboardData();
     clearTimeout(globalTimeout);
-    
+
     // Renderizza sempre, anche se non ci sono dati
     renderDashboardReports();
     // renderDashboardTutorials(); // Tutorial temporaneamente disabilitati
-    
+
     // Sistema traduzione disabilitato - sempre italiano
-    
+
     // Carica votazioni in background (non blocca il rendering)
-    loadVotingData().catch(err => {
+    loadVotingData().catch((err) => {
       Logger.warn('Dashboard', 'Errore caricamento votazioni (non critico)', err);
     });
   } catch (err) {
@@ -890,7 +892,7 @@ async function showDashboard() {
     // renderDashboardTutorials(); // Tutorial temporaneamente disabilitati
     hideLoadingState();
     showErrorState('Errore nel caricamento della dashboard. Riprova più tardi.');
-    
+
     // Sistema traduzione disabilitato - sempre italiano
   }
 }
@@ -899,12 +901,12 @@ async function showDashboard() {
 async function loadDashboardData() {
   // Mostra stato di loading
   showLoadingState();
-  
+
   try {
     // Carica manifest report (tutti, anche < 24h per abbonati) con timeout
     const manifestController = new AbortController();
     const manifestTimeout = setTimeout(() => manifestController.abort(), 10000); // 10 secondi timeout
-    
+
     try {
       // Aggiungi timestamp per forzare refresh cache
       const timestamp = new Date().getTime();
@@ -913,24 +915,27 @@ async function loadDashboardData() {
         cache: 'no-cache',
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0'
-        }
+          Pragma: 'no-cache',
+          Expires: '0',
+        },
       });
       clearTimeout(manifestTimeout);
-      
+
       if (manifestResponse.ok) {
         const manifest = await manifestResponse.json();
         STATE.reports = manifest.reports || [];
         console.log('[Dashboard] Manifest caricato:', manifest);
         console.log('[Dashboard] Report caricati:', STATE.reports.length);
         Logger.debug('Dashboard', `Caricati ${STATE.reports.length} report`);
-        
+
         if (STATE.reports.length === 0) {
           Logger.warn('Dashboard', 'Nessun report trovato nel manifest');
         }
       } else {
-        Logger.error('Dashboard', `Errore caricamento manifest: ${manifestResponse.status} ${manifestResponse.statusText}`);
+        Logger.error(
+          'Dashboard',
+          `Errore caricamento manifest: ${manifestResponse.status} ${manifestResponse.statusText}`
+        );
         STATE.reports = [];
       }
     } catch (fetchErr) {
@@ -942,19 +947,19 @@ async function loadDashboardData() {
       }
       STATE.reports = [];
     }
-    
+
     // Tutorial temporaneamente disabilitati - verranno riattivati quando completati
     // Carica documenti tutorial con timeout
     // const docsController = new AbortController();
     // const docsTimeout = setTimeout(() => docsController.abort(), 10000);
-    
+
     // try {
     //   const docsResponse = await fetch('/archivio/documents.json', {
     //     signal: docsController.signal,
     //     cache: 'no-cache'
     //   });
     //   clearTimeout(docsTimeout);
-      
+
     //   if (docsResponse.ok) {
     //     const docs = await docsResponse.json();
     //     STATE.tutorials = docs.documents || [];
@@ -972,7 +977,7 @@ async function loadDashboardData() {
     //   }
     //   STATE.tutorials = [];
     // }
-    
+
     // Tutorial disabilitati - non caricarli
     STATE.tutorials = [];
     Logger.debug('Dashboard', 'Tutorial temporaneamente disabilitati');
@@ -995,7 +1000,7 @@ function renderDashboardReports() {
     hideLoadingState();
     return;
   }
-  
+
   try {
     // Verifica se ci sono report
     if (!STATE.reports || STATE.reports.length === 0) {
@@ -1005,7 +1010,7 @@ function renderDashboardReports() {
       // Sistema traduzione disabilitato - sempre italiano
       return;
     }
-    
+
     // Sort reports (più recenti prima)
     const sortedReports = [...STATE.reports].sort((a, b) => {
       try {
@@ -1017,18 +1022,23 @@ function renderDashboardReports() {
         return 0;
       }
     });
-    
+
     Logger.debug('Dashboard', `Renderizzando ${sortedReports.length} report`);
-    
-    tbody.innerHTML = sortedReports.map(report => {
-      try {
-        const date = report.created_at ? new Date(report.created_at).toLocaleDateString('it-IT') : '—';
-        const statusBadge = `<span class="status-badge" data-status="${report.status || 'active'}">${(report.status || 'active').toUpperCase()}</span>`;
-        const isLocked = isReportLocked(report);
-        const lockedBadge = isLocked ? '<span class="status-badge" data-status="hold" style="margin-left: var(--sp-2);">LOCKED</span>' : '';
-        
-        const openReportText = i18n.t('dashboard.table.openReport') || 'Apri Report';
-        return `
+
+    tbody.innerHTML = sortedReports
+      .map((report) => {
+        try {
+          const date = report.created_at
+            ? new Date(report.created_at).toLocaleDateString('it-IT')
+            : '—';
+          const statusBadge = `<span class="status-badge" data-status="${report.status || 'active'}">${(report.status || 'active').toUpperCase()}</span>`;
+          const isLocked = isReportLocked(report);
+          const lockedBadge = isLocked
+            ? '<span class="status-badge" data-status="hold" style="margin-left: var(--sp-2);">LOCKED</span>'
+            : '';
+
+          const openReportText = i18n.t('dashboard.table.openReport') || 'Apri Report';
+          return `
           <tr>
             <td>${date}</td>
             <td><strong>${report.ticker || '—'}</strong></td>
@@ -1039,12 +1049,13 @@ function renderDashboardReports() {
             <td><a href="/report/index.html?id=${report.id}" target="_blank" data-i18n="dashboard.table.openReport">${openReportText}</a></td>
           </tr>
         `;
-      } catch (err) {
-        Logger.warn('Dashboard', 'Errore rendering report', err);
-        return '<tr><td colspan="7">Errore caricamento report</td></tr>';
-      }
-    }).join('');
-    
+        } catch (err) {
+          Logger.warn('Dashboard', 'Errore rendering report', err);
+          return '<tr><td colspan="7">Errore caricamento report</td></tr>';
+        }
+      })
+      .join('');
+
     // Sistema traduzione disabilitato - sempre italiano
   } catch (err) {
     Logger.error('Dashboard', 'Errore renderDashboardReports', err);
@@ -1068,18 +1079,19 @@ function isReportLocked(report) {
 function renderDashboardTutorials() {
   const list = document.getElementById('dashboard-tutorials-list');
   if (!list) return;
-  
+
   if (STATE.tutorials.length === 0) {
     list.innerHTML = '<p class="archive-empty">Nessun tutorial disponibile</p>';
     return;
   }
-  
-  list.innerHTML = STATE.tutorials.map(tutorial => {
-    const tags = (tutorial.tags || []).map(tag => 
-      `<span class="tutorial-tag">${tag}</span>`
-    ).join('');
-    
-    return `
+
+  list.innerHTML = STATE.tutorials
+    .map((tutorial) => {
+      const tags = (tutorial.tags || [])
+        .map((tag) => `<span class="tutorial-tag">${tag}</span>`)
+        .join('');
+
+      return `
       <div class="tutorial-card">
         <h3 class="tutorial-card-title">${tutorial.title || 'Tutorial'}</h3>
         <div class="tutorial-card-meta">
@@ -1093,15 +1105,16 @@ function renderDashboardTutorials() {
         <a href="${tutorial.link}" target="_blank" class="btn btn-sm" style="margin-top: var(--sp-3);">Apri Tutorial</a>
       </div>
     `;
-  }).join('');
+    })
+    .join('');
 }
 
 // ===== SWITCH TAB =====
 function switchTab(tabName) {
   const tabs = document.querySelectorAll('.dashboard-tab');
   const sections = document.querySelectorAll('.dashboard-section');
-  
-  tabs.forEach(tab => {
+
+  tabs.forEach((tab) => {
     tab.classList.remove('active');
     tab.setAttribute('aria-selected', 'false');
     if (tab.dataset.tab === tabName) {
@@ -1109,25 +1122,25 @@ function switchTab(tabName) {
       tab.setAttribute('aria-selected', 'true');
     }
   });
-  
-  sections.forEach(section => {
+
+  sections.forEach((section) => {
     section.classList.remove('active');
     section.hidden = true;
   });
-  
+
   const section = document.getElementById(`dashboard-${tabName}`);
   if (section) {
     section.classList.add('active');
     section.hidden = false;
   }
-  
+
   STATE.currentTab = tabName;
-  
+
   // Carica dati specifici per tab
   if (tabName === 'voting') {
     loadVotingData();
   }
-  
+
   // Applica traduzioni dopo il cambio tab
   setTimeout(() => {
     i18n.translatePage();
@@ -1140,14 +1153,14 @@ async function loadVotingData() {
     // L'API /api/vote supporta GET per recuperare i voti con timeout
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000); // 5 secondi timeout
-    
+
     try {
       const response = await fetch('/api/vote', {
         signal: controller.signal,
-        cache: 'no-cache'
+        cache: 'no-cache',
       });
       clearTimeout(timeout);
-      
+
       if (response.ok) {
         const data = await response.json();
         STATE.votes = data.votes || [];
@@ -1190,10 +1203,10 @@ async function loadVotingData() {
 // ===== HANDLE VOTE =====
 async function handleVote(event) {
   event.preventDefault();
-  
+
   const ticker = document.getElementById('ticker-input').value.toUpperCase();
   const votes = parseInt(document.getElementById('votes-input').value);
-  
+
   try {
     const response = await fetch('/api/vote', {
       method: 'POST',
@@ -1201,10 +1214,10 @@ async function handleVote(event) {
       body: JSON.stringify({
         ticker,
         votes,
-        userId: STATE.user?.id
-      })
+        userId: STATE.user?.id,
+      }),
     });
-    
+
     if (response.ok) {
       Logger.debug('Dashboard', 'Voto inviato', { ticker, votes });
       // Reset form
@@ -1212,11 +1225,11 @@ async function handleVote(event) {
       // Ricarica votazioni
       await loadVotingData();
     } else {
-      throw new Error('Errore nell\'invio del voto');
+      throw new Error("Errore nell'invio del voto");
     }
   } catch (err) {
     Logger.error('Dashboard', 'Errore voto', err);
-    alert('Errore nell\'invio del voto. Riprova.');
+    alert("Errore nell'invio del voto. Riprova.");
   }
 }
 
@@ -1224,45 +1237,49 @@ async function handleVote(event) {
 function renderVotingRanking() {
   const list = document.getElementById('ranking-list');
   if (!list) return;
-  
+
   // Aggrega voti per ticker
   const voteMap = {};
-  STATE.votes.forEach(vote => {
+  STATE.votes.forEach((vote) => {
     if (!voteMap[vote.ticker]) {
       voteMap[vote.ticker] = 0;
     }
     voteMap[vote.ticker] += vote.votes;
   });
-  
+
   // Ordina per voti (discendente)
   const ranking = Object.entries(voteMap)
     .map(([ticker, totalVotes]) => ({ ticker, totalVotes }))
     .sort((a, b) => b.totalVotes - a.totalVotes)
     .slice(0, 10); // Top 10
-  
+
   if (ranking.length === 0) {
     list.innerHTML = '<p class="archive-empty">Nessun voto ancora</p>';
     return;
   }
-  
-  list.innerHTML = ranking.map((item, index) => `
+
+  list.innerHTML = ranking
+    .map(
+      (item, index) => `
     <div class="ranking-item">
       <span class="ranking-item-position">#${index + 1}</span>
       <span class="ranking-item-ticker">${item.ticker}</span>
       <span class="ranking-item-votes">${item.totalVotes} voti</span>
     </div>
-  `).join('');
+  `
+    )
+    .join('');
 }
 
 // ===== RENDER VOTING STATS =====
 function renderVotingStats() {
   const stats = document.getElementById('voting-stats');
   if (!stats) return;
-  
+
   const totalVotes = STATE.votes.length;
-  const uniqueTickers = new Set(STATE.votes.map(v => v.ticker)).size;
+  const uniqueTickers = new Set(STATE.votes.map((v) => v.ticker)).size;
   const totalVoteCount = STATE.votes.reduce((sum, v) => sum + v.votes, 0);
-  
+
   stats.innerHTML = `
     <div class="stat-item">
       <div class="stat-label">Voti Totali</div>
@@ -1283,7 +1300,8 @@ function renderVotingStats() {
 function showLoadingState() {
   const tbody = document.getElementById('dashboard-reports-tbody');
   if (tbody) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: var(--sp-6);"><div class="loading-spinner">Caricamento report...</div></td></tr>';
+    tbody.innerHTML =
+      '<tr><td colspan="7" style="text-align: center; padding: var(--sp-6);"><div class="loading-spinner">Caricamento report...</div></td></tr>';
   }
 }
 
@@ -1293,10 +1311,14 @@ function hideLoadingState() {
   if (tbody) {
     // Se è ancora in loading, mostra messaggio vuoto
     const currentContent = tbody.innerHTML;
-    if (currentContent.includes('loading-spinner') || currentContent.includes('Caricamento report')) {
+    if (
+      currentContent.includes('loading-spinner') ||
+      currentContent.includes('Caricamento report')
+    ) {
       // Il rendering lo sostituirà, ma se non ci sono dati mostriamo messaggio
       if (!STATE.reports || STATE.reports.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: var(--sp-6);">Nessun report disponibile</td></tr>';
+        tbody.innerHTML =
+          '<tr><td colspan="7" style="text-align: center; padding: var(--sp-6);">Nessun report disponibile</td></tr>';
       }
     }
   }
@@ -1316,4 +1338,3 @@ if (document.readyState === 'loading') {
 } else {
   init();
 }
-

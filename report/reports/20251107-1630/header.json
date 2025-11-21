@@ -32,16 +32,40 @@
       "id": "company-line",
       "parts": [
         { "kind": "text", "text": "Deck di ricerca Tradelia SRD v5.0 — Swing Research Deck su " },
-        { "kind": "metric", "key": "CompanyName", "value": "Apple Inc.", "tone": "neutral", "label": "CompanyName" },
+        {
+          "kind": "metric",
+          "key": "CompanyName",
+          "value": "Apple Inc.",
+          "tone": "neutral",
+          "label": "CompanyName"
+        },
         { "kind": "text", "text": ". " },
         { "kind": "text", "text": "Ticker: " },
-        { "kind": "metric", "key": "Ticker", "value": "AAPL", "tone": "neutral", "label": "Ticker" },
+        {
+          "kind": "metric",
+          "key": "Ticker",
+          "value": "AAPL",
+          "tone": "neutral",
+          "label": "Ticker"
+        },
         { "kind": "text", "text": ". " },
         { "kind": "text", "text": "Borsa principale: " },
-        { "kind": "metric", "key": "Venue", "value": "NASDAQ", "tone": "neutral", "label": "Venue" },
+        {
+          "kind": "metric",
+          "key": "Venue",
+          "value": "NASDAQ",
+          "tone": "neutral",
+          "label": "Venue"
+        },
         { "kind": "text", "text": ". " },
         { "kind": "text", "text": "Settore: " },
-        { "kind": "metric", "key": "Sector", "value": "Tecnologia", "tone": "neutral", "label": "Sector" },
+        {
+          "kind": "metric",
+          "key": "Sector",
+          "value": "Tecnologia",
+          "tone": "neutral",
+          "label": "Sector"
+        },
         { "kind": "text", "text": "." }
       ]
     },
@@ -49,13 +73,37 @@
       "id": "summary-line",
       "parts": [
         { "kind": "text", "text": "Framework: " },
-        { "kind": "metric", "key": "Framework", "value": "SRD v5.0 — Swing Research Deck", "tone": "neutral", "label": "Framework" },
+        {
+          "kind": "metric",
+          "key": "Framework",
+          "value": "SRD v5.0 — Swing Research Deck",
+          "tone": "neutral",
+          "label": "Framework"
+        },
         { "kind": "text", "text": " • Tipologia: " },
-        { "kind": "metric", "key": "Tipologia", "value": "Analisi Momentum", "tone": "neutral", "label": "Tipologia" },
+        {
+          "kind": "metric",
+          "key": "Tipologia",
+          "value": "Analisi Momentum",
+          "tone": "neutral",
+          "label": "Tipologia"
+        },
         { "kind": "text", "text": " • Exchange: " },
-        { "kind": "metric", "key": "Exchange", "value": "NASDAQ", "tone": "neutral", "label": "Exchange" },
+        {
+          "kind": "metric",
+          "key": "Exchange",
+          "value": "NASDAQ",
+          "tone": "neutral",
+          "label": "Exchange"
+        },
         { "kind": "text", "text": " • Settore: " },
-        { "kind": "metric", "key": "Settore", "value": "Tecnologia", "tone": "neutral", "label": "Settore" }
+        {
+          "kind": "metric",
+          "key": "Settore",
+          "value": "Tecnologia",
+          "tone": "neutral",
+          "label": "Settore"
+        }
       ]
     },
     {
@@ -64,8 +112,17 @@
         { "kind": "text", "text": "Prezzo al momento dello start: " },
         { "kind": "metric", "key": "Price", "value": 270.14, "tone": "ok", "label": "Price" },
         { "kind": "text", "text": ". " },
-        { "kind": "text", "text": "Cambiamento di prezzo registrato dall'ultima chiusura di mercato: " },
-        { "kind": "metric", "key": "ChangePct", "value": "+0.03%", "tone": "ok", "label": "ChangePct" },
+        {
+          "kind": "text",
+          "text": "Cambiamento di prezzo registrato dall'ultima chiusura di mercato: "
+        },
+        {
+          "kind": "metric",
+          "key": "ChangePct",
+          "value": "+0.03%",
+          "tone": "ok",
+          "label": "ChangePct"
+        },
         { "kind": "text", "text": "." }
       ]
     },
@@ -73,7 +130,13 @@
       "id": "quality-line",
       "parts": [
         { "kind": "text", "text": "Freshness dei dati: " },
-        { "kind": "metric", "key": "Freshness", "value": "< 24h", "tone": "ok", "label": "Freshness" },
+        {
+          "kind": "metric",
+          "key": "Freshness",
+          "value": "< 24h",
+          "tone": "ok",
+          "label": "Freshness"
+        },
         { "kind": "text", "text": ". " },
         { "kind": "text", "text": "Stato del report: " },
         { "kind": "metric", "key": "State", "value": "ACTIVE", "tone": "ok", "label": "State" },
@@ -84,15 +147,39 @@
       "id": "window-line",
       "parts": [
         { "kind": "text", "text": "Report iniziato il " },
-        { "kind": "metric", "key": "Start", "value": "2025-10-28", "tone": "neutral", "label": "Start" },
+        {
+          "kind": "metric",
+          "key": "Start",
+          "value": "2025-10-28",
+          "tone": "neutral",
+          "label": "Start"
+        },
         { "kind": "text", "text": " e concluso il " },
-        { "kind": "metric", "key": "End", "value": "2025-11-07", "tone": "neutral", "label": "End" },
+        {
+          "kind": "metric",
+          "key": "End",
+          "value": "2025-11-07",
+          "tone": "neutral",
+          "label": "End"
+        },
         { "kind": "text", "text": ". " },
         { "kind": "text", "text": "Ultimo aggiornamento: " },
-        { "kind": "metric", "key": "UpdatedAt", "value": "2025-11-07T16:30:15Z", "tone": "neutral", "label": "UpdatedAt" },
+        {
+          "kind": "metric",
+          "key": "UpdatedAt",
+          "value": "2025-11-07T16:30:15Z",
+          "tone": "neutral",
+          "label": "UpdatedAt"
+        },
         { "kind": "text", "text": ". " },
         { "kind": "text", "text": "Versione: " },
-        { "kind": "metric", "key": "Version", "value": "v2025.11.07-rc2", "tone": "neutral", "label": "Version" },
+        {
+          "kind": "metric",
+          "key": "Version",
+          "value": "v2025.11.07-rc2",
+          "tone": "neutral",
+          "label": "Version"
+        },
         { "kind": "text", "text": "." }
       ]
     }
@@ -106,7 +193,12 @@
     ]
   },
   "metricsPanel": [
-    { "key": "Framework", "label": "Framework", "value": "SRD v5.0 — Swing Research Deck", "tone": "neutral" },
+    {
+      "key": "Framework",
+      "label": "Framework",
+      "value": "SRD v5.0 — Swing Research Deck",
+      "tone": "neutral"
+    },
     { "key": "Tipologia", "label": "Tipologia", "value": "Analisi Momentum", "tone": "neutral" },
     { "key": "Exchange", "label": "Exchange", "value": "NASDAQ", "tone": "neutral" },
     { "key": "Settore", "label": "Settore", "value": "Tecnologia", "tone": "neutral" },
@@ -115,15 +207,34 @@
     { "key": "Venue", "label": "Borsa principale", "value": "NASDAQ", "tone": "neutral" },
     { "key": "Sector", "label": "Settore", "value": "Tecnologia", "tone": "neutral" },
     { "key": "Price", "label": "Prezzo allo start", "value": 270.14, "tone": "ok" },
-    { "key": "ChangePct", "label": "Variazione dall'ultima chiusura", "value": "+0.03%", "tone": "ok" },
+    {
+      "key": "ChangePct",
+      "label": "Variazione dall'ultima chiusura",
+      "value": "+0.03%",
+      "tone": "ok"
+    },
     { "key": "Freshness", "label": "Freshness dei dati", "value": "< 24h", "tone": "ok" },
     { "key": "State", "label": "Stato del report", "value": "ACTIVE", "tone": "ok" },
     { "key": "Start", "label": "Inizio report", "value": "2025-10-28", "tone": "neutral" },
     { "key": "End", "label": "Fine report", "value": "2025-11-07", "tone": "neutral" },
-    { "key": "UpdatedAt", "label": "Ultimo aggiornamento", "value": "2025-11-07T16:30:15Z", "tone": "neutral" },
-    { "key": "Version", "label": "Versione del report", "value": "v2025.11.07-rc2", "tone": "neutral" },
-    { "key": "F1B_StrategyMode", "label": "F1B Strategy Mode", "value": "Momentum-light", "tone": "ok" },
+    {
+      "key": "UpdatedAt",
+      "label": "Ultimo aggiornamento",
+      "value": "2025-11-07T16:30:15Z",
+      "tone": "neutral"
+    },
+    {
+      "key": "Version",
+      "label": "Versione del report",
+      "value": "v2025.11.07-rc2",
+      "tone": "neutral"
+    },
+    {
+      "key": "F1B_StrategyMode",
+      "label": "F1B Strategy Mode",
+      "value": "Momentum-light",
+      "tone": "ok"
+    },
     { "key": "F1B_RegimeScore", "label": "F1B Regime Score", "value": "+0.25", "tone": "ok" }
   ]
 }
-

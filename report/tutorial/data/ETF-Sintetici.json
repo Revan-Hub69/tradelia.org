@@ -5,15 +5,7 @@
     "category": "Strumenti Derivati",
     "difficulty": "Intermedio-Avanzato"
   },
-  "tags": [
-    "ETF",
-    "Sintetici",
-    "Swap",
-    "Derivati",
-    "Rischio Controparte",
-    "Collateral",
-    "UCITS"
-  ],
+  "tags": ["ETF", "Sintetici", "Swap", "Derivati", "Rischio Controparte", "Collateral", "UCITS"],
   "glossaryTerms": {
     "ETF sintetici": "CreditRiskBlock",
     "swap": "CreditRiskBlock",
@@ -275,36 +267,12 @@
           "type": "table",
           "headers": ["Caratteristica", "ETF Fisici", "ETF Sintetici"],
           "rows": [
-            [
-              "Replica",
-              "Acquisto diretto dei titoli",
-              "Swap con controparte"
-            ],
-            [
-              "Tracking Error",
-              "Moderato (dividendi, ritardi)",
-              "Basso (swap elimina errori)"
-            ],
-            [
-              "Costi",
-              "Moderati",
-              "Bassi (ma con rischi nascosti)"
-            ],
-            [
-              "Rischio Controparte",
-              "Nessuno",
-              { "text": "Elevato", "class": "negative" }
-            ],
-            [
-              "Trasparenza",
-              "Elevata",
-              { "text": "Limitata", "class": "negative" }
-            ],
-            [
-              "Liquidità",
-              "Elevata",
-              "Variabile (dipende da controparte)"
-            ]
+            ["Replica", "Acquisto diretto dei titoli", "Swap con controparte"],
+            ["Tracking Error", "Moderato (dividendi, ritardi)", "Basso (swap elimina errori)"],
+            ["Costi", "Moderati", "Bassi (ma con rischi nascosti)"],
+            ["Rischio Controparte", "Nessuno", { "text": "Elevato", "class": "negative" }],
+            ["Trasparenza", "Elevata", { "text": "Limitata", "class": "negative" }],
+            ["Liquidità", "Elevata", "Variabile (dipende da controparte)"]
           ]
         },
         {
@@ -398,4 +366,3 @@
     }
   ]
 }
-

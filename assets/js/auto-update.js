@@ -1,18 +1,18 @@
 /**
  * Auto-update system for Tradelia AI
- * 
+ *
  * Implements automatic update detection and notification following:
  * - W3C Service Worker API (https://www.w3.org/TR/service-workers/)
  * - PWA Best Practices (Microsoft Learn, 2024)
  * - WCAG 2.2 AA accessibility guidelines
  * - Non-intrusive UX patterns (Norman, 2013)
- * 
+ *
  * Features:
  * - Automatic update detection every 5 minutes
  * - Network-first strategy for HTML content
  * - Accessible notification banner with ARIA
  * - Graceful degradation for unsupported browsers
- * 
+ *
  * @version 2.0.0
  * @references
  * - W3C (2023). Service Workers. W3C Working Draft
@@ -20,7 +20,7 @@
  * - Norman, D. A. (2013). The Design of Everyday Things
  */
 
-(function() {
+(function () {
   'use strict';
 
   const VERSION = '2.0.0'; // Must match sw.js version
@@ -41,7 +41,7 @@
         const registration = await navigator.serviceWorker.getRegistration();
         if (registration) {
           await registration.update();
-          
+
           // Listen for new service worker
           registration.addEventListener('updatefound', () => {
             const newWorker = registration.installing;
@@ -61,10 +61,10 @@
         const response = await fetch(`${VERSION_CHECK_URL}?t=${Date.now()}`, {
           cache: 'no-store',
           headers: {
-            'Cache-Control': 'no-cache'
-          }
+            'Cache-Control': 'no-cache',
+          },
         });
-        
+
         if (response.ok) {
           const data = await response.json();
           if (data.version && data.version !== VERSION) {
@@ -231,7 +231,7 @@
       // Clear all caches
       if ('caches' in window) {
         const cacheNames = await caches.keys();
-        await Promise.all(cacheNames.map(name => caches.delete(name)));
+        await Promise.all(cacheNames.map((name) => caches.delete(name)));
       }
 
       // Update service worker
@@ -242,11 +242,11 @@
           if (registration.waiting) {
             registration.waiting.postMessage({ type: 'SKIP_WAITING' });
           }
-          
+
           // Unregister and re-register
           await registration.unregister();
         }
-        
+
         // Re-register service worker
         await navigator.serviceWorker.register('/sw.js');
       }
@@ -255,7 +255,7 @@
       window.location.reload(true);
     } catch (error) {
       console.error('[Auto-Update] Error performing update:', error);
-      alert('Errore durante l\'aggiornamento. Ricarica manualmente la pagina.');
+      alert("Errore durante l'aggiornamento. Ricarica manualmente la pagina.");
     }
   }
 
@@ -285,4 +285,3 @@
   //   init();
   // }
 })();
-

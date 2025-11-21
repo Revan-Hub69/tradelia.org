@@ -5,15 +5,7 @@
     "category": "Strumenti Strutturati",
     "difficulty": "Intermedio-Avanzato"
   },
-  "tags": [
-    "SPAC",
-    "IPO",
-    "Fusione",
-    "Diluizione",
-    "Warrant",
-    "Sponsor",
-    "De-SPAC"
-  ],
+  "tags": ["SPAC", "IPO", "Fusione", "Diluizione", "Warrant", "Sponsor", "De-SPAC"],
   "glossaryTerms": {
     "SPAC": "CreditRiskBlock",
     "IPO": "CreditRiskBlock",
@@ -407,4 +399,3 @@
     }
   ]
 }
-

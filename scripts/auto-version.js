@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * Automatic Version Increment on Push
- * 
+ *
  * Analyzes commit messages to determine version bump type:
  * - [major] or BREAKING: major version bump
- * - [minor] or feat: minor version bump  
+ * - [minor] or feat: minor version bump
  * - [patch] or fix: patch version bump (default)
- * 
+ *
  * Academic References:
  * - Semantic Versioning 2.0.0 (SemVer)
  * - Conventional Commits specification
@@ -24,8 +24,10 @@ const __dirname = path.dirname(__filename);
 function getCommitMessages() {
   try {
     // Get commit messages since last tag, or last 10 commits if no tag
-    const hasTag = execSync('git describe --tags --abbrev=0 2>/dev/null || echo ""', { encoding: 'utf8' }).trim();
-    
+    const hasTag = execSync('git describe --tags --abbrev=0 2>/dev/null || echo ""', {
+      encoding: 'utf8',
+    }).trim();
+
     if (hasTag) {
       return execSync(`git log ${hasTag}..HEAD --pretty=format:"%s"`, { encoding: 'utf8' })
         .split('\n')
@@ -43,24 +45,24 @@ function getCommitMessages() {
 function determineVersionType(commitMessages) {
   // Check for major version indicators
   const majorKeywords = ['[major]', 'breaking', 'BREAKING', 'major'];
-  const hasMajor = commitMessages.some(msg => 
-    majorKeywords.some(keyword => msg.toLowerCase().includes(keyword))
+  const hasMajor = commitMessages.some((msg) =>
+    majorKeywords.some((keyword) => msg.toLowerCase().includes(keyword))
   );
-  
+
   if (hasMajor) {
     return 'major';
   }
-  
+
   // Check for minor version indicators
   const minorKeywords = ['[minor]', 'feat:', 'feature:', 'minor'];
-  const hasMinor = commitMessages.some(msg => 
-    minorKeywords.some(keyword => msg.toLowerCase().includes(keyword))
+  const hasMinor = commitMessages.some((msg) =>
+    minorKeywords.some((keyword) => msg.toLowerCase().includes(keyword))
   );
-  
+
   if (hasMinor) {
     return 'minor';
   }
-  
+
   // Default to patch
   return 'patch';
 }
@@ -69,18 +71,18 @@ function updateVersionFiles(newVersion) {
   const VERSION_FILES = {
     'sw.js': {
       pattern: /const VERSION = ['"]([\d.]+)['"];?/,
-      replace: (version) => `const VERSION = '${version}';`
+      replace: (version) => `const VERSION = '${version}';`,
     },
     'version.json': {
       pattern: /"version":\s*"([\d.]+)"/,
-      replace: (version) => `"version": "${version}"`
+      replace: (version) => `"version": "${version}"`,
     },
     'assets/js/version-check.js': {
       pattern: /const CURRENT_VERSION = ['"]([\d.]+)['"];?/,
-      replace: (version) => `const CURRENT_VERSION = '${version}';`
-    }
+      replace: (version) => `const CURRENT_VERSION = '${version}';`,
+    },
   };
-  
+
   let updated = 0;
   for (const [file, config] of Object.entries(VERSION_FILES)) {
     const fullPath = path.join(__dirname, '..', file);
@@ -94,19 +96,16 @@ function updateVersionFiles(newVersion) {
       }
     }
   }
-  
+
   // Update timestamp
   const versionFile = path.join(__dirname, '..', 'version.json');
   if (fs.existsSync(versionFile)) {
     let content = fs.readFileSync(versionFile, 'utf8');
     const timestamp = new Date().toISOString();
-    content = content.replace(
-      /"timestamp":\s*"[^"]*"/,
-      `"timestamp": "${timestamp}"`
-    );
+    content = content.replace(/"timestamp":\s*"[^"]*"/, `"timestamp": "${timestamp}"`);
     fs.writeFileSync(versionFile, content, 'utf8');
   }
-  
+
   return updated;
 }
 
@@ -116,13 +115,13 @@ function main() {
     const commitMessages = getCommitMessages();
     const versionType = determineVersionType(commitMessages);
     const newVersion = incrementVersion(currentVersion, versionType);
-    
+
     const updated = updateVersionFiles(newVersion);
-    
+
     if (updated > 0) {
       console.log(`\n📦 Auto-version: ${currentVersion} → ${newVersion} (${versionType})`);
       console.log(`   Based on commit messages: ${commitMessages.length} commit(s)\n`);
-      
+
       // Stage version files
       try {
         execSync('git add sw.js version.json assets/js/version-check.js', { stdio: 'inherit' });
@@ -130,7 +129,7 @@ function main() {
         // Ignore if git add fails (not in git repo or files not changed)
       }
     }
-    
+
     return 0;
   } catch (error) {
     console.error('❌ Error in auto-version:', error.message);
@@ -143,4 +142,3 @@ if (require.main === module) {
 }
 
 export { determineVersionType, getCommitMessages, updateVersionFiles, main };
-

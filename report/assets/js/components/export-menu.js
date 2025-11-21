@@ -9,7 +9,7 @@ import { exportUtils } from '../utils/export.js';
 const EXPORT_MENU = {
   _button: null,
   _dropdown: null,
-  _isOpen: false
+  _isOpen: false,
 };
 
 // ===== RENDER =====
@@ -86,7 +86,7 @@ function setupEventHandlers(container) {
   });
 
   // Click su opzione export
-  options.forEach(option => {
+  options.forEach((option) => {
     option.addEventListener('click', (e) => {
       e.stopPropagation();
       const format = option.getAttribute('data-export');
@@ -102,7 +102,7 @@ function setupEventHandlers(container) {
     btn.setAttribute('aria-expanded', 'false');
     EXPORT_MENU._isOpen = false;
   };
-  
+
   // Gestione click esterno
   const handleClickOutside = (e) => {
     if (!container.contains(e.target)) {
@@ -113,10 +113,10 @@ function setupEventHandlers(container) {
       closeDropdown();
     }
   };
-  
+
   // Usa capture per intercettare prima
   document.addEventListener('click', handleClickOutside, true);
-  
+
   // Chiudi quando si apre language selector
   const headerNode = container.closest('.hdr');
   if (headerNode) {
@@ -195,6 +195,5 @@ export const exportMenu = {
 
     Logger.debug('ExportMenu', 'Menu export renderizzato');
     return container.firstElementChild;
-  }
+  },
 };
-

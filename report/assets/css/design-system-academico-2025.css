@@ -70,7 +70,7 @@
   text-decoration: underline;
 }
 
-.breadcrumb-nav a[aria-current="page"] {
+.breadcrumb-nav a[aria-current='page'] {
   color: var(--ink);
   font-weight: 600;
   text-decoration: none;
@@ -103,11 +103,11 @@
 }
 
 /* Landmark Regions (ARIA) */
-[role="banner"],
-[role="navigation"],
-[role="main"],
-[role="complementary"],
-[role="contentinfo"] {
+[role='banner'],
+[role='navigation'],
+[role='main'],
+[role='complementary'],
+[role='contentinfo'] {
   position: relative;
 }
 
@@ -172,7 +172,7 @@ p + p {
     --surface-card: #000000;
     --br-card: #ffffff;
   }
-  
+
   .btn,
   .card,
   .module-card {
@@ -198,7 +198,10 @@ p + p {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.3);
   transform: translate(-50%, -50%);
-  transition: width 0.6s ease, height 0.6s ease, opacity 0.6s ease;
+  transition:
+    width 0.6s ease,
+    height 0.6s ease,
+    opacity 0.6s ease;
   opacity: 0;
   pointer-events: none;
 }
@@ -207,7 +210,10 @@ p + p {
   width: 300px;
   height: 300px;
   opacity: 1;
-  transition: width 0s, height 0s, opacity 0.3s ease;
+  transition:
+    width 0s,
+    height 0s,
+    opacity 0.3s ease;
 }
 
 /* Smooth Transitions (cubic-bezier optimized) */
@@ -397,7 +403,7 @@ p + p {
     min-height: 44px;
     padding: var(--sp-3) var(--sp-4);
   }
-  
+
   .touch-target-spacing {
     gap: var(--sp-2);
   }
@@ -655,17 +661,17 @@ p + p {
     color: black !important;
     box-shadow: none !important;
   }
-  
+
   .no-print {
     display: none !important;
   }
-  
+
   a[href]::after {
-    content: " (" attr(href) ")";
+    content: ' (' attr(href) ')';
     font-size: 0.8em;
     color: #666;
   }
-  
+
   .page-break {
     page-break-after: always;
   }
@@ -800,12 +806,12 @@ p + p {
 /* ===== PERFORMANCE: IMAGE OPTIMIZATION ===== */
 
 /* Lazy loading images */
-img[loading="lazy"] {
+img[loading='lazy'] {
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
-img[loading="lazy"].loaded {
+img[loading='lazy'].loaded {
   opacity: 1;
 }
 
@@ -851,7 +857,9 @@ img[loading="lazy"].loaded {
 .progressive-content {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.3s ease;
   opacity: 0;
 }
 
@@ -944,4 +952,3 @@ img[loading="lazy"].loaded {
 .contain-strict {
   contain: strict;
 }
-

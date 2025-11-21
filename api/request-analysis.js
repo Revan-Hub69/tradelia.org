@@ -92,20 +92,26 @@ async function handleRequest(req, res) {
       return res.status(400).json({ ok: false, error: 'Tipo analisi richiesto' });
     }
     if (!dettagli || typeof dettagli !== 'string' || dettagli.trim().length < 10) {
-      return res.status(400).json({ ok: false, error: 'Dettagli richiesta insufficienti (minimo 10 caratteri)' });
+      return res
+        .status(400)
+        .json({ ok: false, error: 'Dettagli richiesta insufficienti (minimo 10 caratteri)' });
     }
   } else if (tipo === 'piano-desk') {
     if (!ragioneSociale || typeof ragioneSociale !== 'string' || ragioneSociale.trim().length < 2) {
       return res.status(400).json({ ok: false, error: 'Ragione sociale richiesta' });
     }
     if (!piva || !piva.match(/^IT[0-9]{11}$/)) {
-      return res.status(400).json({ ok: false, error: 'Partita IVA non valida (formato: IT seguito da 11 cifre)' });
+      return res
+        .status(400)
+        .json({ ok: false, error: 'Partita IVA non valida (formato: IT seguito da 11 cifre)' });
     }
     if (!indirizzo || typeof indirizzo !== 'string' || indirizzo.trim().length < 5) {
       return res.status(400).json({ ok: false, error: 'Indirizzo richiesto' });
     }
   } else {
-    return res.status(400).json({ ok: false, error: 'Tipo richiesta non valido (analisi-su-richiesta o piano-desk)' });
+    return res
+      .status(400)
+      .json({ ok: false, error: 'Tipo richiesta non valido (analisi-su-richiesta o piano-desk)' });
   }
 
   // Sanitizzazione
@@ -135,7 +141,7 @@ async function handleRequest(req, res) {
     dettagli: sanitizedDettagli || null,
     consenso_gdpr: true,
     status: 'pending', // pending, in_progress, completed, cancelled
-    created_at: timestamp || new Date().toISOString()
+    created_at: timestamp || new Date().toISOString(),
   };
 
   // Salva in Supabase - usa una tabella dedicata per richieste pubbliche
@@ -149,19 +155,20 @@ async function handleRequest(req, res) {
   // Se la tabella non esiste, restituisci errore con istruzioni
   if (insertResult.error && insertResult.error.code === '42P01') {
     console.error('[Request Analysis] Tabella on_demand_requests non trovata');
-    return res.status(500).json({ 
-      ok: false, 
+    return res.status(500).json({
+      ok: false,
       error: 'Configurazione database incompleta',
-      details: 'La tabella on_demand_requests non esiste. Esegui lo script SQL in supabase/create-on-demand-analysis-table.sql'
+      details:
+        'La tabella on_demand_requests non esiste. Esegui lo script SQL in supabase/create-on-demand-analysis-table.sql',
     });
   }
 
   if (insertResult.error) {
     console.error('[Request Analysis] Errore inserimento:', insertResult.error);
-    return res.status(500).json({ 
-      ok: false, 
-      error: 'Errore salvataggio richiesta', 
-      details: insertResult.error.message 
+    return res.status(500).json({
+      ok: false,
+      error: 'Errore salvataggio richiesta',
+      details: insertResult.error.message,
     });
   }
 
@@ -170,9 +177,10 @@ async function handleRequest(req, res) {
     console.error('[Request Analysis] BREVO_API_KEY non configurato - email admin NON inviata!');
   } else {
     try {
-      const emailSubject = tipo === 'analisi-su-richiesta' 
-        ? `📊 Nuova richiesta analisi - ${sanitizedName}`
-        : `💼 Nuova richiesta Piano Desk - ${sanitizedRagioneSociale || sanitizedName}`;
+      const emailSubject =
+        tipo === 'analisi-su-richiesta'
+          ? `📊 Nuova richiesta analisi - ${sanitizedName}`
+          : `💼 Nuova richiesta Piano Desk - ${sanitizedRagioneSociale || sanitizedName}`;
 
       const emailHTML = `
 <!DOCTYPE html>
@@ -209,7 +217,9 @@ async function handleRequest(req, res) {
       ${sanitizedIndirizzo ? `<div class="value"><strong>Indirizzo:</strong> ${sanitizedIndirizzo}</div>` : ''}
     </div>
 
-    ${tipo === 'analisi-su-richiesta' ? `
+    ${
+      tipo === 'analisi-su-richiesta'
+        ? `
     <div class="section">
       <div class="label">Dettagli Analisi</div>
       <div class="value"><strong>Tipo Analisi:</strong> ${sanitizedTipoAnalisi}</div>
@@ -218,14 +228,20 @@ async function handleRequest(req, res) {
         <div class="value" style="white-space: pre-wrap;">${sanitizedDettagli}</div>
       </div>
     </div>
-    ` : ''}
+    `
+        : ''
+    }
 
-    ${note ? `
+    ${
+      note
+        ? `
     <div class="section">
       <div class="label">Note Aggiuntive</div>
       <div class="value" style="white-space: pre-wrap;">${note}</div>
     </div>
-    ` : ''}
+    `
+        : ''
+    }
 
     <div class="meta">
       <strong>ID Richiesta:</strong> ${insertResult.data.id}<br>
@@ -254,15 +270,15 @@ Consenso GDPR: ${consensoGDPR ? 'Sì' : 'No'}`;
         method: 'POST',
         headers: {
           'api-key': BREVO_API_KEY,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI - Richieste' },
           to: [{ email: ADMIN_EMAIL }],
           subject: emailSubject,
           htmlContent: emailHTML,
-          textContent: emailText
-        })
+          textContent: emailText,
+        }),
       });
 
       if (!emailResponse.ok) {
@@ -270,7 +286,7 @@ Consenso GDPR: ${consensoGDPR ? 'Sì' : 'No'}`;
         console.error('[Request Analysis] Errore invio email admin:', {
           status: emailResponse.status,
           statusText: emailResponse.statusText,
-          error: errorText
+          error: errorText,
         });
         throw new Error(`Brevo API error: ${emailResponse.status} - ${errorText}`);
       }
@@ -278,14 +294,14 @@ Consenso GDPR: ${consensoGDPR ? 'Sì' : 'No'}`;
       const emailResult = await emailResponse.json();
       console.log('[Request Analysis] Email admin inviata con successo:', {
         messageId: emailResult.messageId,
-        to: ADMIN_EMAIL
+        to: ADMIN_EMAIL,
       });
     } catch (emailError) {
       console.error('[Request Analysis] ERRORE CRITICO - Notifica admin non inviata:', {
         error: emailError.message,
         stack: emailError.stack,
         adminEmail: ADMIN_EMAIL,
-        hasBrevoKey: !!BREVO_API_KEY
+        hasBrevoKey: !!BREVO_API_KEY,
       });
       // Non bloccare se l'email fallisce - la richiesta è già salvata
     }
@@ -317,13 +333,17 @@ Consenso GDPR: ${consensoGDPR ? 'Sì' : 'No'}`;
     <div class="content">
       <p>Abbiamo ricevuto la tua richiesta${tipo === 'analisi-su-richiesta' ? ' di analisi' : ' per il Piano Desk'}.</p>
       <p>Il nostro team la esaminerà e ti contatterà via email entro <strong>24 ore</strong>.</p>
-      ${tipo === 'analisi-su-richiesta' ? `
+      ${
+        tipo === 'analisi-su-richiesta'
+          ? `
       <p><strong>Dettagli richiesta:</strong></p>
       <p style="background: #eff6ff; padding: 12px 16px; border-radius: 8px; border-left: 4px solid #2563eb;">
         ${sanitizedTipoAnalisi}<br>
         ${sanitizedDettagli}
       </p>
-      ` : ''}
+      `
+          : ''
+      }
       <p>Se hai domande urgenti, puoi contattarci direttamente a <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a>.</p>
     </div>
 
@@ -353,17 +373,18 @@ Data/Ora: ${new Date(insertResult.data.created_at).toLocaleString('it-IT')}`;
         method: 'POST',
         headers: {
           'api-key': BREVO_API_KEY,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI' },
           to: [{ email: sanitizedEmail }],
-          subject: tipo === 'analisi-su-richiesta' 
-            ? 'Richiesta analisi ricevuta - Tradelia AI'
-            : 'Richiesta Piano Desk ricevuta - Tradelia AI',
+          subject:
+            tipo === 'analisi-su-richiesta'
+              ? 'Richiesta analisi ricevuta - Tradelia AI'
+              : 'Richiesta Piano Desk ricevuta - Tradelia AI',
           htmlContent: userEmailHTML,
-          textContent: userEmailText
-        })
+          textContent: userEmailText,
+        }),
       });
 
       if (!userEmailResponse.ok) {
@@ -372,31 +393,32 @@ Data/Ora: ${new Date(insertResult.data.created_at).toLocaleString('it-IT')}`;
           status: userEmailResponse.status,
           statusText: userEmailResponse.statusText,
           error: errorText,
-          to: sanitizedEmail
+          to: sanitizedEmail,
         });
       } else {
         const userEmailResult = await userEmailResponse.json();
         console.log('[Request Analysis] Email conferma utente inviata:', {
           messageId: userEmailResult.messageId,
-          to: sanitizedEmail
+          to: sanitizedEmail,
         });
       }
     } catch (userEmailError) {
       console.error('[Request Analysis] ERRORE invio email conferma utente:', {
         error: userEmailError.message,
         stack: userEmailError.stack,
-        to: sanitizedEmail
+        to: sanitizedEmail,
       });
     }
   } else {
-    console.error('[Request Analysis] BREVO_API_KEY non configurato - email conferma utente NON inviata!');
+    console.error(
+      '[Request Analysis] BREVO_API_KEY non configurato - email conferma utente NON inviata!'
+    );
   }
 
   // Successo
   return res.status(200).json({
     ok: true,
     message: 'Richiesta salvata con successo. Ti contatteremo via email entro 24 ore.',
-    request_id: insertResult.data.id
+    request_id: insertResult.data.id,
   });
 }
-

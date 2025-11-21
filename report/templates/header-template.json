@@ -25,9 +25,19 @@
       "id": "summary-line",
       "parts": [
         { "kind": "text", "text": "Framework: " },
-        { "kind": "metric", "key": "Framework", "value": "SRD v5.0 — Swing Research Deck", "label": "Framework" },
+        {
+          "kind": "metric",
+          "key": "Framework",
+          "value": "SRD v5.0 — Swing Research Deck",
+          "label": "Framework"
+        },
         { "kind": "text", "text": " • Tipologia: " },
-        { "kind": "metric", "key": "Tipologia", "value": "Descrizione tipologia", "label": "Tipologia" },
+        {
+          "kind": "metric",
+          "key": "Tipologia",
+          "value": "Descrizione tipologia",
+          "label": "Tipologia"
+        },
         { "kind": "text", "text": " • Versione: " },
         { "kind": "metric", "key": "Version", "value": "vYYYY.MM.DD", "label": "Version" }
       ]
@@ -40,7 +50,12 @@
         { "kind": "text", "text": " e concluso il " },
         { "kind": "metric", "key": "End", "value": "YYYY-MM-DD", "label": "End" },
         { "kind": "text", "text": ". Ultimo aggiornamento: " },
-        { "kind": "metric", "key": "UpdatedAt", "value": "YYYY-MM-DDTHH:MM:SSZ", "label": "UpdatedAt" }
+        {
+          "kind": "metric",
+          "key": "UpdatedAt",
+          "value": "YYYY-MM-DDTHH:MM:SSZ",
+          "label": "UpdatedAt"
+        }
       ]
     }
   ],
@@ -60,4 +75,3 @@
     { "key": "UpdatedAt", "label": "Ultimo aggiornamento", "value": "YYYY-MM-DDTHH:MM:SSZ" }
   ]
 }
-

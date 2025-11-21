@@ -2,7 +2,11 @@
 // F4 · Intermarket & Strutturale - Design Unificato
 // Usa stessa logica di header-ticker: riassunto AI sempre visibile + tabs laterali
 
-import { renderModuleHeader, renderModuleTabsSidebar, bindModuleTabs } from '../components/module-header.js';
+import {
+  renderModuleHeader,
+  renderModuleTabsSidebar,
+  bindModuleTabs,
+} from '../components/module-header.js';
 import Logger from '../utils/logger.js';
 // header-ticker viene importato dinamicamente quando necessario
 
@@ -21,12 +25,14 @@ function escapeAttr(str) {
 
 function normalizeDataPublicF4(src = {}) {
   const meta = {
-    timestampET: src?.meta?.timestampET ?? "—",
-    module: src?.meta?.module ?? "F4 · Intermarket & Strutturale",
-    moduleStatus: src?.meta?.moduleStatus ?? "ACTIVE",
-    freshness: src?.meta?.freshness ?? "≤ T-1",
-    hero_intro: src?.meta?.hero_intro ?? "",
-    hero_disclaimer: src?.meta?.hero_disclaimer ?? "Output a fini educativi/informativi (orizzonte 3–10 giorni). Non costituisce consulenza o raccomandazione (MiFID II)."
+    timestampET: src?.meta?.timestampET ?? '—',
+    module: src?.meta?.module ?? 'F4 · Intermarket & Strutturale',
+    moduleStatus: src?.meta?.moduleStatus ?? 'ACTIVE',
+    freshness: src?.meta?.freshness ?? '≤ T-1',
+    hero_intro: src?.meta?.hero_intro ?? '',
+    hero_disclaimer:
+      src?.meta?.hero_disclaimer ??
+      'Output a fini educativi/informativi (orizzonte 3–10 giorni). Non costituisce consulenza o raccomandazione (MiFID II).',
   };
 
   // UI labels (user-friendly) — tutto override‑abile da src.ui_labels
@@ -34,7 +40,8 @@ function normalizeDataPublicF4(src = {}) {
     badge: 'F4',
     hero_title: 'Verifica coerenza cross-asset e macro con il bias tecnico',
     hero_subtitle: 'Intermarket & Strutturale · Orizzonte 3–10 giorni',
-    hero_desc: 'Validazione coerenza cross-asset e macro con il bias tecnico. Nessun contenuto operativo.',
+    hero_desc:
+      'Validazione coerenza cross-asset e macro con il bias tecnico. Nessun contenuto operativo.',
     ai_summary_label: 'Riassunto AI',
     // Tab titles
     tab_intermarket: 'Intermarket Score',
@@ -48,12 +55,13 @@ function normalizeDataPublicF4(src = {}) {
     // Separatori
     separator_dot: ' · ',
     separator_colon: ': ',
-    separator_comma: ', '
+    separator_comma: ', ',
   };
 
   // Mappa dinamicamente ui_labels → labels
   const UL = src?.ui_labels || {};
-  const uiFromS = (k, fallback) => (typeof UL[k] === 'string' && UL[k].trim()) ? UL[k].trim() : fallback;
+  const uiFromS = (k, fallback) =>
+    typeof UL[k] === 'string' && UL[k].trim() ? UL[k].trim() : fallback;
 
   const labels = {
     ...defaults,
@@ -67,7 +75,7 @@ function normalizeDataPublicF4(src = {}) {
     tab_concordance: uiFromS('tab_concordance', defaults.tab_concordance),
     tab_cross_asset: uiFromS('tab_cross_asset', defaults.tab_cross_asset),
     tab_structural: uiFromS('tab_structural', defaults.tab_structural),
-    tab_governance: uiFromS('tab_governance', defaults.tab_governance)
+    tab_governance: uiFromS('tab_governance', defaults.tab_governance),
   };
 
   return {
@@ -77,7 +85,7 @@ function normalizeDataPublicF4(src = {}) {
     concordance: src.concordance || {},
     cross_asset: src.cross_asset || {},
     structural: src.structural || {},
-    governance: src.governance || {}
+    governance: src.governance || {},
   };
 }
 
@@ -88,33 +96,40 @@ function generateAISummaryRows(data) {
   const rows = [];
   const d = data;
   const labels = d.labels || {};
-  
+
   // ROW 1: BiasIntermarketScore + Concordance
-  const biasIntermarket = d.intermarket?.BiasIntermarketScore?.raw || d.intermarket?.BiasIntermarketScore || '—';
+  const biasIntermarket =
+    d.intermarket?.BiasIntermarketScore?.raw || d.intermarket?.BiasIntermarketScore || '—';
   const concordance = d.concordance?.Concordance?.raw || d.concordance?.Concordance || '—';
-  
+
   rows.push({
     id: 'f4-summary-bias',
     parts: [
-      { kind: 'text', text: `${labels.label_bias_intermarket || 'BiasIntermarketScore'}${labels.separator_colon || ': '}` },
+      {
+        kind: 'text',
+        text: `${labels.label_bias_intermarket || 'BiasIntermarketScore'}${labels.separator_colon || ': '}`,
+      },
       {
         kind: 'metric',
         key: 'BiasIntermarketScore',
         value: String(biasIntermarket),
         label: labels.label_bias_intermarket || 'BiasIntermarketScore',
-        tone: 'neutral'
+        tone: 'neutral',
       },
-      { kind: 'text', text: `${labels.separator_dot || ' · '}${labels.label_concordance || 'Concordance'}${labels.separator_colon || ': '}` },
+      {
+        kind: 'text',
+        text: `${labels.separator_dot || ' · '}${labels.label_concordance || 'Concordance'}${labels.separator_colon || ': '}`,
+      },
       {
         kind: 'metric',
         key: 'Concordance',
         value: String(concordance),
         label: labels.label_concordance || 'Concordance',
-        tone: 'neutral'
-      }
-    ]
+        tone: 'neutral',
+      },
+    ],
   });
-  
+
   return rows;
 }
 
@@ -125,23 +140,26 @@ function generateIntermarketTabRows(data) {
   const rows = [];
   const d = data.intermarket || {};
   const labels = data.labels || {};
-  
+
   if (d.BiasIntermarketScore) {
     rows.push({
       id: 'intermarket-bias',
       parts: [
-        { kind: 'text', text: `${labels.label_bias_intermarket || 'BiasIntermarketScore'}${labels.separator_colon || ': '}` },
+        {
+          kind: 'text',
+          text: `${labels.label_bias_intermarket || 'BiasIntermarketScore'}${labels.separator_colon || ': '}`,
+        },
         {
           kind: 'metric',
           key: 'BiasIntermarketScore',
           value: String(d.BiasIntermarketScore?.raw || d.BiasIntermarketScore || '—'),
           label: labels.label_bias_intermarket || 'BiasIntermarketScore',
-          tone: 'neutral'
-        }
-      ]
+          tone: 'neutral',
+        },
+      ],
     });
   }
-  
+
   return rows;
 }
 
@@ -152,41 +170,46 @@ function generateConcordanceTabRows(data) {
   const rows = [];
   const d = data.concordance || {};
   const labels = data.labels || {};
-  
+
   if (d.Concordance) {
     rows.push({
       id: 'concordance-score',
       parts: [
-        { kind: 'text', text: `${labels.label_concordance || 'Concordance'}${labels.separator_colon || ': '}` },
+        {
+          kind: 'text',
+          text: `${labels.label_concordance || 'Concordance'}${labels.separator_colon || ': '}`,
+        },
         {
           kind: 'metric',
           key: 'Concordance',
           value: String(d.Concordance?.raw || d.Concordance || '—'),
           label: labels.label_concordance || 'Concordance',
-          tone: 'neutral'
-        }
-      ]
+          tone: 'neutral',
+        },
+      ],
     });
   }
-  
+
   return rows;
 }
 
 export function renderCard(rawData, ctx = {}) {
   const d = normalizeDataPublicF4(rawData);
   const labels = d.labels || {};
-  
+
   // Header modulo (tutto da labels/JSON)
   const headerHTML = renderModuleHeader({
     badge: labels.badge || 'F4',
     subtitle: labels.hero_subtitle || 'Intermarket & Strutturale · Orizzonte 3–10 giorni',
     title: labels.hero_title || 'Verifica coerenza cross-asset e macro con il bias tecnico',
-    desc: labels.hero_desc || 'Validazione coerenza cross-asset e macro con il bias tecnico. Nessun contenuto operativo.',
+    desc:
+      labels.hero_desc ||
+      'Validazione coerenza cross-asset e macro con il bias tecnico. Nessun contenuto operativo.',
     status: d.meta.moduleStatus,
     freshness: d.meta.freshness,
-    disclaimer: d.meta.hero_disclaimer || d.mifid?.disclaimer || ''
+    disclaimer: d.meta.hero_disclaimer || d.mifid?.disclaimer || '',
   });
-  
+
   // Riassunto AI sempre visibile (usa header-ticker)
   const aiSummaryRows = generateAISummaryRows(d);
   const aiSummaryContainer = `
@@ -195,10 +218,10 @@ export function renderCard(rawData, ctx = {}) {
       <div data-ai-summary-ticker="true"></div>
     </div>
   `;
-  
+
   // Tabs per sezioni
   const tabs = [];
-  
+
   // Tab 1: Intermarket
   if (d.intermarket && Object.keys(d.intermarket).length > 0) {
     tabs.push({
@@ -206,10 +229,10 @@ export function renderCard(rawData, ctx = {}) {
       title: labels.tab_intermarket || 'Intermarket Score',
       content: '<div data-tab-ticker="intermarket"></div>',
       active: false,
-      rows: generateIntermarketTabRows(d)
+      rows: generateIntermarketTabRows(d),
     });
   }
-  
+
   // Tab 2: Concordance
   if (d.concordance && Object.keys(d.concordance).length > 0) {
     tabs.push({
@@ -217,13 +240,13 @@ export function renderCard(rawData, ctx = {}) {
       title: labels.tab_concordance || 'Concordance',
       content: '<div data-tab-ticker="concordance"></div>',
       active: false,
-      rows: generateConcordanceTabRows(d)
+      rows: generateConcordanceTabRows(d),
     });
   }
-  
+
   // Genera menu tabs + drawer + content
   const { drawerHTML, contentHTML, menuHTML } = renderModuleTabsSidebar(tabs);
-  
+
   return `
     <section class="module-card" data-state="${escapeAttr(d.meta.moduleStatus)}">
       ${headerHTML}
@@ -240,67 +263,70 @@ export function renderCard(rawData, ctx = {}) {
 export function bindCard(node, rawData, ctx = {}) {
   if (!node || !rawData) return;
   const data = normalizeDataPublicF4(rawData);
-  
+
   // Bind tabs menu + drawer
   const tabsWrapper = node.querySelector('.module-tabs-wrapper');
   if (tabsWrapper) {
     bindModuleTabs(tabsWrapper);
-    
+
     // Listener per quando si apre una tab nel drawer
     tabsWrapper.addEventListener('drawer-tab-opened', (e) => {
       const { tabId, container } = e.detail;
       if (!container) return;
-      
+
       // Monta header-ticker nel drawer
-      import('../components/header-ticker.js').then(({ headerTicker }) => {
-        let rows = [];
-        if (tabId === 'intermarket') {
-          rows = generateIntermarketTabRows(data);
-        } else if (tabId === 'concordance') {
-          rows = generateConcordanceTabRows(data);
-        }
-        
+      import('../components/header-ticker.js')
+        .then(({ headerTicker }) => {
+          let rows = [];
+          if (tabId === 'intermarket') {
+            rows = generateIntermarketTabRows(data);
+          } else if (tabId === 'concordance') {
+            rows = generateConcordanceTabRows(data);
+          }
+
+          if (rows.length > 0) {
+            const tickerNode = headerTicker.mount(container);
+            if (tickerNode) {
+              headerTicker.update(tickerNode, {
+                ...rawData.meta,
+                rows: rows,
+                metricsPanel: rawData?.metricsPanel || [],
+              });
+
+              setTimeout(() => {
+                const metricButtons = tickerNode.querySelectorAll('.metric-inline[data-metric]');
+                if (metricButtons.length > 0) {
+                  Logger.debug('F4', `Metriche montate nel drawer: ${metricButtons.length}`);
+                }
+              }, 50);
+            }
+          }
+        })
+        .catch((err) => {
+          Logger.warn('F4', `Errore caricamento header-ticker per drawer tab ${tabId}`, err);
+        });
+    });
+  }
+
+  // Monta header-ticker per AI Summary (sempre visibile) - import dinamico
+  const aiSummaryTicker = node.querySelector('[data-ai-summary-ticker="true"]');
+  if (aiSummaryTicker) {
+    import('../components/header-ticker.js')
+      .then(({ headerTicker }) => {
+        const rows = generateAISummaryRows(data);
         if (rows.length > 0) {
-          const tickerNode = headerTicker.mount(container);
+          const tickerNode = headerTicker.mount(aiSummaryTicker);
           if (tickerNode) {
             headerTicker.update(tickerNode, {
               ...rawData.meta,
               rows: rows,
-              metricsPanel: rawData?.metricsPanel || []
+              metricsPanel: rawData?.metricsPanel || [],
             });
-            
-            setTimeout(() => {
-              const metricButtons = tickerNode.querySelectorAll('.metric-inline[data-metric]');
-              if (metricButtons.length > 0) {
-                Logger.debug('F4', `Metriche montate nel drawer: ${metricButtons.length}`);
-              }
-            }, 50);
           }
         }
-      }).catch(err => {
-        Logger.warn('F4', `Errore caricamento header-ticker per drawer tab ${tabId}`, err);
+      })
+      .catch((err) => {
+        Logger.warn('F4', 'Errore caricamento header-ticker per AI summary', err);
       });
-    });
-  }
-  
-  // Monta header-ticker per AI Summary (sempre visibile) - import dinamico
-  const aiSummaryTicker = node.querySelector('[data-ai-summary-ticker="true"]');
-  if (aiSummaryTicker) {
-    import('../components/header-ticker.js').then(({ headerTicker }) => {
-      const rows = generateAISummaryRows(data);
-      if (rows.length > 0) {
-        const tickerNode = headerTicker.mount(aiSummaryTicker);
-        if (tickerNode) {
-          headerTicker.update(tickerNode, {
-            ...rawData.meta,
-            rows: rows,
-            metricsPanel: rawData?.metricsPanel || []
-          });
-        }
-      }
-    }).catch(err => {
-      Logger.warn('F4', 'Errore caricamento header-ticker per AI summary', err);
-    });
   }
 }
-

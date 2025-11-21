@@ -7,7 +7,7 @@ const ADMIN_STATS = {
   totalUsers: document.getElementById('stat-total-users'),
   activePlans: document.getElementById('stat-active-plans'),
   expiredPlans: document.getElementById('stat-expired-plans'),
-  totalCredits: document.getElementById('stat-total-credits')
+  totalCredits: document.getElementById('stat-total-credits'),
 };
 
 const FILTER_SEARCH = document.getElementById('filter-search');
@@ -55,9 +55,14 @@ const updateStatsDisplay = () => {
   if (ADMIN_STATS.totalCredits) ADMIN_STATS.totalCredits.textContent = stats.totalCredits;
 };
 
-const callAdminAPI = async (
-  { resource, action, params = {}, method = 'GET', body, timeout = 15000 } = {}
-) => {
+const callAdminAPI = async ({
+  resource,
+  action,
+  params = {},
+  method = 'GET',
+  body,
+  timeout = 15000,
+} = {}) => {
   if (!resource) {
     throw new Error('Parametro API mancante: resource');
   }
@@ -87,7 +92,7 @@ const callAdminAPI = async (
       method,
       headers,
       body: payload,
-      signal: controller.signal
+      signal: controller.signal,
     });
 
     const data = await response.json().catch(() => ({}));
@@ -124,7 +129,7 @@ async function init() {
     const res = await fetch('/api/validate-dashboard-token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: token.trim() })
+      body: JSON.stringify({ token: token.trim() }),
     });
 
     const data = await res.json();
@@ -137,7 +142,7 @@ async function init() {
     adminToken = token.trim();
     currentUser = {
       id: data.userId || null,
-      email: data.email
+      email: data.email,
     };
 
     // Setup filters
@@ -146,7 +151,12 @@ async function init() {
     FILTER_STATUS?.addEventListener('change', applyFilters);
 
     // Forza chiusura modali
-    const modals = ['edit-user-modal', 'manage-credits-modal', 'manage-payments-modal', 'add-user-modal'];
+    const modals = [
+      'edit-user-modal',
+      'manage-credits-modal',
+      'manage-payments-modal',
+      'add-user-modal',
+    ];
     const forceCloseModals = () => {
       modals.forEach((modalId) => {
         const modal = document.getElementById(modalId);
@@ -258,8 +268,8 @@ async function init() {
               role,
               validUntil: expiry,
               credits: role === 'institutional' ? credits : 0,
-              sendEmail: true
-            })
+              sendEmail: true,
+            }),
           });
 
           const contentType = res.headers.get('content-type');
@@ -305,7 +315,10 @@ async function init() {
     await loadAllData();
   } catch (err) {
     Logger.error('Admin', 'init error', err);
-    showError('Errore durante l\'inizializzazione della dashboard admin: ' + (err.message || 'Errore sconosciuto'));
+    showError(
+      "Errore durante l'inizializzazione della dashboard admin: " +
+        (err.message || 'Errore sconosciuto')
+    );
   }
 }
 
@@ -355,32 +368,33 @@ function applyFilters() {
   const searchTerm = FILTER_SEARCH?.value.toLowerCase() || '';
   const roleFilter = FILTER_ROLE?.value || '';
   const statusFilter = FILTER_STATUS?.value || '';
-  
+
   let filtered = allUsers;
-  
+
   if (searchTerm) {
-    filtered = filtered.filter(u => 
-      (u.email && u.email.toLowerCase().includes(searchTerm)) ||
-      (u.display_name && u.display_name.toLowerCase().includes(searchTerm))
+    filtered = filtered.filter(
+      (u) =>
+        (u.email && u.email.toLowerCase().includes(searchTerm)) ||
+        (u.display_name && u.display_name.toLowerCase().includes(searchTerm))
     );
   }
-  
+
   if (roleFilter) {
-    filtered = filtered.filter(u => u.role === roleFilter);
+    filtered = filtered.filter((u) => u.role === roleFilter);
   }
-  
+
   if (statusFilter === 'active') {
-    filtered = filtered.filter(u => u.role && !u.isExpired);
+    filtered = filtered.filter((u) => u.role && !u.isExpired);
   } else if (statusFilter === 'expired') {
-    filtered = filtered.filter(u => u.isExpired);
+    filtered = filtered.filter((u) => u.isExpired);
   }
-  
+
   renderUsersTable(filtered);
 }
 
 function renderUsersTable(users) {
   if (!USERS_TABLE_BODY) return;
-  
+
   if (users.length === 0) {
     USERS_TABLE_BODY.innerHTML = `
       <tr>
@@ -391,21 +405,22 @@ function renderUsersTable(users) {
     `;
     return;
   }
-  
-  USERS_TABLE_BODY.innerHTML = users.map(user => {
-    const roleBadge = user.role 
-      ? `<span class="role-badge ${user.isExpired ? 'expired' : user.role}">${user.isExpired ? 'Scaduto' : user.role}</span>`
-      : '<span style="color: var(--ink-soft);">—</span>';
-    
-    const expiresText = user.valid_until
-      ? new Date(user.valid_until).toLocaleDateString('it-IT')
-      : 'Permanente';
-    
-    // Usa user_id se disponibile, altrimenti email come identificatore
-    const identifier = user.user_id || user.email;
-    const identifierType = user.user_id ? 'user_id' : 'email';
-    
-    return `
+
+  USERS_TABLE_BODY.innerHTML = users
+    .map((user) => {
+      const roleBadge = user.role
+        ? `<span class="role-badge ${user.isExpired ? 'expired' : user.role}">${user.isExpired ? 'Scaduto' : user.role}</span>`
+        : '<span style="color: var(--ink-soft);">—</span>';
+
+      const expiresText = user.valid_until
+        ? new Date(user.valid_until).toLocaleDateString('it-IT')
+        : 'Permanente';
+
+      // Usa user_id se disponibile, altrimenti email come identificatore
+      const identifier = user.user_id || user.email;
+      const identifierType = user.user_id ? 'user_id' : 'email';
+
+      return `
       <tr>
         <td>${escapeHtml(user.email)}</td>
         <td>${escapeHtml(user.display_name)}</td>
@@ -421,7 +436,8 @@ function renderUsersTable(users) {
         </td>
       </tr>
     `;
-  }).join('');
+    })
+    .join('');
 }
 
 function escapeHtml(text) {
@@ -461,58 +477,64 @@ function showError(message) {
 }
 
 // Global functions per onclick handlers (ora gestite da admin-complete.js)
-window.editUser = window.openEditUserModal || function(identifier, type = 'user_id') {
-  if (type === 'email') {
-    const user = allUsers.find(u => u.email === identifier);
-    if (user && window.openEditUserModal) {
-      window.openEditUserModal(user.user_id || user.email, type);
+window.editUser =
+  window.openEditUserModal ||
+  function (identifier, type = 'user_id') {
+    if (type === 'email') {
+      const user = allUsers.find((u) => u.email === identifier);
+      if (user && window.openEditUserModal) {
+        window.openEditUserModal(user.user_id || user.email, type);
+      } else {
+        alert(`Modifica utente ${identifier} - Funzionalità in caricamento...`);
+      }
     } else {
-      alert(`Modifica utente ${identifier} - Funzionalità in caricamento...`);
+      if (window.openEditUserModal) {
+        window.openEditUserModal(identifier, type);
+      } else {
+        alert(`Modifica utente ${identifier} - Funzionalità in caricamento...`);
+      }
     }
-  } else {
-    if (window.openEditUserModal) {
-      window.openEditUserModal(identifier, type);
-    } else {
-      alert(`Modifica utente ${identifier} - Funzionalità in caricamento...`);
-    }
-  }
-};
+  };
 
-window.manageCredits = window.openManageCreditsModal || function(identifier, type = 'user_id') {
-  if (type === 'email') {
-    alert('Gestione crediti disponibile solo per utenti con user_id.');
-    return;
-  }
-  if (window.openManageCreditsModal) {
-    window.openManageCreditsModal(identifier, type);
-  } else {
-    alert(`Gestisci crediti per ${identifier} - Funzionalità in caricamento...`);
-  }
-};
+window.manageCredits =
+  window.openManageCreditsModal ||
+  function (identifier, type = 'user_id') {
+    if (type === 'email') {
+      alert('Gestione crediti disponibile solo per utenti con user_id.');
+      return;
+    }
+    if (window.openManageCreditsModal) {
+      window.openManageCreditsModal(identifier, type);
+    } else {
+      alert(`Gestisci crediti per ${identifier} - Funzionalità in caricamento...`);
+    }
+  };
 
 // Gestione pagamenti manuali (Xolo)
-window.managePayments = window.openManagePaymentsModal || function(identifier, type = 'user_id') {
-  if (type === 'email') {
-    alert('Gestione pagamenti disponibile solo per utenti con user_id.');
-    return;
-  }
-  
-  const user = allUsers.find(u => u.user_id === identifier);
-  if (!user || !PAYMENTS_MODAL) {
-    alert('Utente non trovato o modale non disponibile.');
-    return;
-  }
-  
-  PAYMENTS_USER_ID.value = user.user_id;
-  PAYMENTS_USER_EMAIL.value = user.email || '';
-  PAYMENTS_AMOUNT.value = '';
-  PAYMENTS_STATUS.value = 'succeeded';
-  PAYMENTS_INVOICE_NUMBER.value = '';
-  PAYMENTS_PDF_URL.value = '';
-  PAYMENTS_DESCRIPTION.value = '';
-  
-  PAYMENTS_MODAL.hidden = false;
-};
+window.managePayments =
+  window.openManagePaymentsModal ||
+  function (identifier, type = 'user_id') {
+    if (type === 'email') {
+      alert('Gestione pagamenti disponibile solo per utenti con user_id.');
+      return;
+    }
+
+    const user = allUsers.find((u) => u.user_id === identifier);
+    if (!user || !PAYMENTS_MODAL) {
+      alert('Utente non trovato o modale non disponibile.');
+      return;
+    }
+
+    PAYMENTS_USER_ID.value = user.user_id;
+    PAYMENTS_USER_EMAIL.value = user.email || '';
+    PAYMENTS_AMOUNT.value = '';
+    PAYMENTS_STATUS.value = 'succeeded';
+    PAYMENTS_INVOICE_NUMBER.value = '';
+    PAYMENTS_PDF_URL.value = '';
+    PAYMENTS_DESCRIPTION.value = '';
+
+    PAYMENTS_MODAL.hidden = false;
+  };
 
 if (PAYMENTS_CANCEL_BTN && PAYMENTS_MODAL) {
   PAYMENTS_CANCEL_BTN.addEventListener('click', () => {
@@ -528,15 +550,15 @@ if (PAYMENTS_SAVE_BTN && PAYMENTS_MODAL) {
     const invoiceNumber = PAYMENTS_INVOICE_NUMBER.value.trim() || null;
     const pdfUrl = PAYMENTS_PDF_URL.value.trim() || null;
     const description = PAYMENTS_DESCRIPTION.value.trim() || null;
-    
+
     const amount = parseFloat(amountStr);
     if (!userId || isNaN(amount) || amount <= 0) {
       alert('Inserisci un importo valido (maggiore di zero).');
       return;
     }
-    
+
     try {
-      const user = allUsers.find(u => u.user_id === userId);
+      const user = allUsers.find((u) => u.user_id === userId);
       if (!user) {
         alert('Utente non trovato.');
         return;
@@ -560,8 +582,8 @@ if (PAYMENTS_SAVE_BTN && PAYMENTS_MODAL) {
           planRole: 'institutional',
           plan: 'desk_manual',
           months: 1,
-          gateway: 'manual'
-        }
+          gateway: 'manual',
+        },
       });
 
       if (status === 'succeeded') {
@@ -569,7 +591,7 @@ if (PAYMENTS_SAVE_BTN && PAYMENTS_MODAL) {
           await fetch('/api/request-dashboard-token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: user.email, force: true })
+            body: JSON.stringify({ email: user.email, force: true }),
           });
         } catch (tokenError) {
           console.warn('Admin', 'Errore generazione token (non bloccante)', tokenError);

@@ -5,13 +5,12 @@
 import Logger from '../utils/logger.js';
 
 const reportNavigation = {
-  init: function(config = {}) {
+  init: function (config = {}) {
     Logger.debug('ReportNavigation', 'Navigation init chiamato (stub)', config);
     // Stub: non fa nulla per ora
     // TODO: Implementare navigazione report se necessario
     return;
-  }
+  },
 };
 
 export { reportNavigation };
-

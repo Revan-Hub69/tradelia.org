@@ -87,7 +87,7 @@ export const getAdminContextFromToken = async (token, { enforceAdmin = true } = 
     .from('dashboard_access_tokens')
     .update({
       last_used_at: new Date().toISOString(),
-      usage_count: (tokenRecord.usage_count || 0) + 1
+      usage_count: (tokenRecord.usage_count || 0) + 1,
     })
     .eq('id', tokenRecord.id)
     .then()
@@ -102,7 +102,7 @@ export const getAdminContextFromToken = async (token, { enforceAdmin = true } = 
     email: normalizedEmail,
     userId: tokenRecord.user_id || null,
     planRole: tokenRecord.plan_role,
-    isAdmin
+    isAdmin,
   };
 };
 
@@ -110,4 +110,3 @@ export const requireAdmin = async (req, options = {}) => {
   const token = extractAdminToken(req);
   return getAdminContextFromToken(token, { enforceAdmin: true, ...options });
 };
-

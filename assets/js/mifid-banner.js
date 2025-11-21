@@ -36,10 +36,13 @@ function hasSeenBanner() {
 
 function saveBannerAck() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      acceptedAt: new Date().toISOString(),
-      v: '2025-11'
-    }));
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        acceptedAt: new Date().toISOString(),
+        v: '2025-11',
+      })
+    );
   } catch (e) {
     // Ignore
   }
@@ -48,26 +51,28 @@ function saveBannerAck() {
 // ===== RENDER BANNER =====
 function renderBanner() {
   const currentLang = i18n.getLanguage();
-  
+
   const translations = {
     it: {
       title: 'Informativa legale',
-      message: 'Questo sito ha finalità esclusivamente educativa e informativa. Non costituisce consulenza in materia di investimenti (MiFID II).',
+      message:
+        'Questo sito ha finalità esclusivamente educativa e informativa. Non costituisce consulenza in materia di investimenti (MiFID II).',
       accept: 'Accetto e chiudi',
       mifid: 'Informativa MiFID',
-      privacy: 'Privacy'
+      privacy: 'Privacy',
     },
     en: {
       title: 'Legal information',
-      message: 'This site is for educational and informational purposes only. It does not constitute investment advice (MiFID II).',
+      message:
+        'This site is for educational and informational purposes only. It does not constitute investment advice (MiFID II).',
       accept: 'Accept and close',
       mifid: 'MiFID Information',
-      privacy: 'Privacy'
-    }
+      privacy: 'Privacy',
+    },
   };
-  
+
   const t = translations[currentLang] || translations.it;
-  
+
   return `
     <div id="mifid-banner" class="mifid-banner" role="banner" aria-live="polite">
       <div class="mifid-banner-content">
@@ -92,7 +97,7 @@ function renderBanner() {
 // ===== LEGAL OVERLAY =====
 function renderLegalOverlay() {
   const currentLang = i18n.getLanguage();
-  
+
   const translations = {
     it: {
       title: 'Informativa legale',
@@ -147,7 +152,7 @@ function renderLegalOverlay() {
           <li>Per informazioni o esercizio diritti privacy, scrivi a <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</li>
           <li>Il titolare potrà aggiornare questa informativa: controlla periodicamente le revisioni.</li>
         </ul>
-      `
+      `,
     },
     en: {
       title: 'Legal information',
@@ -202,12 +207,12 @@ function renderLegalOverlay() {
           <li>For information or to exercise privacy rights, write to <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</li>
           <li>The owner may update this information: check for revisions periodically.</li>
         </ul>
-      `
-    }
+      `,
+    },
   };
-  
+
   const t = translations[currentLang] || translations.it;
-  
+
   return `
     <div id="legal-consent-overlay" role="dialog" aria-modal="true" aria-labelledby="legal-consent-title" hidden>
       <div style="position: absolute; inset: 0;" data-legal-dismiss></div>
@@ -248,29 +253,29 @@ function createLegalOverlay() {
   if (document.getElementById('legal-consent-overlay')) {
     return document.getElementById('legal-consent-overlay');
   }
-  
+
   // Crea overlay
   const overlay = document.createElement('div');
   overlay.innerHTML = renderLegalOverlay();
   document.body.appendChild(overlay.firstElementChild);
-  
+
   const overlayEl = document.getElementById('legal-consent-overlay');
   if (!overlayEl) return null;
-  
+
   const btnAccept = overlayEl.querySelector('#btn-accept-legal');
   const tabM = overlayEl.querySelector('#tab-mifid');
   const tabP = overlayEl.querySelector('#tab-privacy');
   const panelM = overlayEl.querySelector('#panel-mifid');
   const panelP = overlayEl.querySelector('#panel-privacy');
-  
+
   function showTab(which) {
-    const mifid = (which === 'mifid');
+    const mifid = which === 'mifid';
     if (tabM) tabM.setAttribute('aria-selected', mifid ? 'true' : 'false');
     if (tabP) tabP.setAttribute('aria-selected', mifid ? 'false' : 'true');
     if (panelM) panelM.hidden = !mifid;
     if (panelP) panelP.hidden = mifid;
   }
-  
+
   function openLegal(which = 'mifid', blocking = true) {
     showTab(which);
     overlayEl.hidden = false;
@@ -282,15 +287,15 @@ function createLegalOverlay() {
       if (targetTab) targetTab.focus();
     }, 0);
   }
-  
+
   function closeLegal() {
     overlayEl.hidden = true;
     document.body.style.overflow = '';
   }
-  
+
   if (tabM) tabM.addEventListener('click', () => showTab('mifid'));
   if (tabP) tabP.addEventListener('click', () => showTab('privacy'));
-  
+
   if (btnAccept) {
     btnAccept.addEventListener('click', () => {
       saveBannerAck();
@@ -302,49 +307,50 @@ function createLegalOverlay() {
       }
     });
   }
-  
+
   overlayEl.addEventListener('click', (e) => {
     if (e.target.matches('[data-legal-dismiss]') || e.target.closest('[data-legal-dismiss]')) {
       if (!overlayEl.hasAttribute('data-blocking')) closeLegal();
     }
   });
-  
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !overlayEl.hasAttribute('data-blocking') && !overlayEl.hidden) {
       closeLegal();
     }
   });
-  
+
   // Esponi funzione openLegal globalmente per pulsanti footer
   window.openLegalOverlay = openLegal;
-  
+
   legalOverlayInstance = { overlayEl, openLegal, closeLegal, showTab };
   return overlayEl;
 }
 
 function setupLegalOverlay() {
   // Controlla se è homepage
-  const isHomepage = window.location.pathname === '/' || window.location.pathname.endsWith('index.html');
-  
+  const isHomepage =
+    window.location.pathname === '/' || window.location.pathname.endsWith('index.html');
+
   // Salva prima pagina visitata
   const currentPage = window.location.pathname;
   if (!getFirstPage()) {
     setFirstPage(currentPage);
   }
-  
+
   // Crea overlay sempre (serve anche per pulsanti footer)
   createLegalOverlay();
-  
+
   // Se non è homepage, non mostrare automaticamente
   if (!isHomepage) {
     return;
   }
-  
+
   // Se già visto, non mostrare automaticamente
   if (hasSeenBanner()) {
     return;
   }
-  
+
   // Mostra overlay al primo accesso su homepage (bloccante)
   if (legalOverlayInstance) {
     // Piccolo delay per assicurarsi che tutto sia caricato
@@ -363,7 +369,7 @@ export function initMifidBanner() {
 }
 
 // Expose function for version check to call
-window.checkLegalConsent = function() {
+window.checkLegalConsent = function () {
   if (legalOverlayInstance && !hasSeenBanner()) {
     legalOverlayInstance.openLegal('mifid', true);
   }
@@ -384,4 +390,3 @@ if (typeof document !== 'undefined') {
     }, 100);
   }
 }
-

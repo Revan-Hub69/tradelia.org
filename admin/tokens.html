@@ -1,493 +1,531 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it" data-theme="light">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="Dashboard Admin Tradelia - Gestione token dashboard" />
-  <title>Admin Token • Tradelia</title>
-  <link rel="stylesheet" href="/report/assets/css/tokens.css" />
-  <link rel="stylesheet" href="/assets/css/global-header.css" />
-  <link rel="stylesheet" href="/user/assets/css/user-area.css" />
-  <style>
-    .admin-shell {
-      min-height: 100vh;
-      background: var(--surface-page);
-      padding: clamp(1.5rem, 4vw, 2.5rem);
-    }
-    .admin-header {
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--br-card);
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    .admin-header h1 {
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      font-weight: 700;
-      margin: 0;
-      color: var(--ink);
-    }
-    .admin-header p { color: var(--ink-soft); margin: 0; font-size: var(--fs-14); }
-    .admin-nav {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .admin-nav a {
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius-md);
-      background: var(--surface-elev);
-      border: 1px solid var(--br-card);
-      color: var(--ink);
-      text-decoration: none;
-      font-size: var(--fs-14);
-      transition: all 0.2s;
-    }
-    .admin-nav a:hover {
-      background: var(--surface-page);
-      border-color: var(--brand-500);
-    }
-    .admin-nav a.active {
-      background: var(--brand-500);
-      color: white;
-      border-color: var(--brand-500);
-    }
-    .admin-main { margin-top: 1.5rem; display: grid; gap: 1.25rem; }
-    .admin-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-    }
-    .admin-stat-card {
-      background: var(--surface-elev);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-lg);
-      padding: 1.1rem 1.35rem;
-    }
-    .admin-stat-card strong {
-      display: block;
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--brand-600);
-      margin-bottom: 0.3rem;
-    }
-    .admin-stat-card span {
-      font-size: var(--fs-13);
-      color: var(--ink-soft);
-    }
-    .admin-filters {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      margin: 1.25rem 0;
-    }
-    .admin-filters input,
-    .admin-filters select {
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-md);
-      background: var(--surface-elev);
-      color: var(--ink);
-      font-size: var(--fs-14);
-    }
-    .admin-filters input { flex: 1; min-width: 220px; }
-    .admin-table {
-      background: var(--surface-elev);
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-    }
-    .admin-table table { width: 100%; border-collapse: collapse; }
-    .admin-table th,
-    .admin-table td {
-      padding: 1rem;
-      font-size: var(--fs-14);
-      color: var(--ink);
-      border-bottom: 1px solid var(--br-card);
-      text-align: left;
-    }
-    .admin-table th {
-      font-size: var(--fs-13);
-      font-weight: 600;
-      background: var(--surface-page);
-    }
-    .admin-table tr:last-child td { border-bottom: none; }
-    .admin-table tr:hover { background: var(--surface-page); }
-    .role-badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: var(--radius-sm);
-      font-size: var(--fs-12);
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-    .role-badge.trial { background: rgba(251, 191, 36, 0.15); color: rgba(251, 191, 36); }
-    .role-badge.pro { background: rgba(96, 165, 250, 0.15); color: rgba(96, 165, 250); }
-    .role-badge.desk { background: rgba(34, 197, 94, 0.15); color: rgba(34, 197, 94); }
-    .status-badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: var(--radius-sm);
-      font-size: var(--fs-12);
-      font-weight: 600;
-    }
-    .status-badge.active { background: rgba(34, 197, 94, 0.15); color: rgba(34, 197, 94); }
-    .status-badge.revoked { background: rgba(248, 113, 113, 0.15); color: rgba(248, 113, 113); }
-    .status-badge.expired { background: rgba(148, 163, 184, 0.15); color: rgba(148, 163, 184); }
-    .btn {
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius-md);
-      border: none;
-      font-size: var(--fs-14);
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-primary {
-      background: var(--brand-500);
-      color: white;
-    }
-    .btn-primary:hover { background: var(--brand-600); }
-    .btn-sm {
-      padding: 0.375rem 0.75rem;
-      font-size: var(--fs-12);
-    }
-    .btn-secondary {
-      background: var(--surface-page);
-      border: 1px solid var(--br-card);
-      color: var(--ink);
-    }
-    .btn-secondary:hover { background: var(--surface-elev); }
-    .btn-danger {
-      background: rgba(248, 113, 113, 0.15);
-      border: 1px solid rgba(248, 113, 113, 0.3);
-      color: rgba(248, 113, 113);
-    }
-    .btn-danger:hover {
-      background: rgba(248, 113, 113, 0.25);
-    }
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-    .modal-overlay.active { display: flex; }
-    .modal-content {
-      background: var(--surface-elev);
-      border-radius: var(--radius-lg);
-      padding: 2rem;
-      max-width: 600px;
-      width: 90%;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .modal-header {
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--br-card);
-    }
-    .modal-header h2 {
-      margin: 0;
-      font-size: var(--fs-20);
-      color: var(--ink);
-    }
-    .modal-body {
-      margin-bottom: 1.5rem;
-    }
-    .modal-field {
-      margin-bottom: 1rem;
-    }
-    .modal-field label {
-      display: block;
-      font-size: var(--fs-13);
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--ink-soft);
-    }
-    .modal-field input,
-    .modal-field select {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid var(--br-card);
-      border-radius: var(--radius-md);
-      background: var(--surface-page);
-      color: var(--ink);
-      font-size: var(--fs-14);
-    }
-    .modal-actions {
-      display: flex;
-      gap: 0.75rem;
-      justify-content: flex-end;
-    }
-    .loading {
-      text-align: center;
-      padding: 2rem;
-      color: var(--ink-soft);
-    }
-    .error {
-      background: rgba(248, 113, 113, 0.15);
-      color: rgba(248, 113, 113);
-      padding: 1rem;
-      border-radius: var(--radius-md);
-      margin: 1rem 0;
-    }
-    .empty {
-      text-align: center;
-      padding: 3rem;
-      color: var(--ink-soft);
-    }
-  </style>
-</head>
-<body>
-  <div class="admin-shell">
-    <div class="admin-header">
-      <h1>🔑 Gestione Token</h1>
-      <p>Gestisci token di accesso dashboard (trial, pro, desk)</p>
-    </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="Dashboard Admin Tradelia - Gestione token dashboard" />
+    <title>Admin Token • Tradelia</title>
+    <link rel="stylesheet" href="/report/assets/css/tokens.css" />
+    <link rel="stylesheet" href="/assets/css/global-header.css" />
+    <link rel="stylesheet" href="/user/assets/css/user-area.css" />
+    <style>
+      .admin-shell {
+        min-height: 100vh;
+        background: var(--surface-page);
+        padding: clamp(1.5rem, 4vw, 2.5rem);
+      }
+      .admin-header {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--br-card);
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .admin-header h1 {
+        font-size: clamp(1.6rem, 4vw, 2.4rem);
+        font-weight: 700;
+        margin: 0;
+        color: var(--ink);
+      }
+      .admin-header p {
+        color: var(--ink-soft);
+        margin: 0;
+        font-size: var(--fs-14);
+      }
+      .admin-nav {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+      }
+      .admin-nav a {
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-md);
+        background: var(--surface-elev);
+        border: 1px solid var(--br-card);
+        color: var(--ink);
+        text-decoration: none;
+        font-size: var(--fs-14);
+        transition: all 0.2s;
+      }
+      .admin-nav a:hover {
+        background: var(--surface-page);
+        border-color: var(--brand-500);
+      }
+      .admin-nav a.active {
+        background: var(--brand-500);
+        color: white;
+        border-color: var(--brand-500);
+      }
+      .admin-main {
+        margin-top: 1.5rem;
+        display: grid;
+        gap: 1.25rem;
+      }
+      .admin-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+      }
+      .admin-stat-card {
+        background: var(--surface-elev);
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-lg);
+        padding: 1.1rem 1.35rem;
+      }
+      .admin-stat-card strong {
+        display: block;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--brand-600);
+        margin-bottom: 0.3rem;
+      }
+      .admin-stat-card span {
+        font-size: var(--fs-13);
+        color: var(--ink-soft);
+      }
+      .admin-filters {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin: 1.25rem 0;
+      }
+      .admin-filters input,
+      .admin-filters select {
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-md);
+        background: var(--surface-elev);
+        color: var(--ink);
+        font-size: var(--fs-14);
+      }
+      .admin-filters input {
+        flex: 1;
+        min-width: 220px;
+      }
+      .admin-table {
+        background: var(--surface-elev);
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+      }
+      .admin-table table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .admin-table th,
+      .admin-table td {
+        padding: 1rem;
+        font-size: var(--fs-14);
+        color: var(--ink);
+        border-bottom: 1px solid var(--br-card);
+        text-align: left;
+      }
+      .admin-table th {
+        font-size: var(--fs-13);
+        font-weight: 600;
+        background: var(--surface-page);
+      }
+      .admin-table tr:last-child td {
+        border-bottom: none;
+      }
+      .admin-table tr:hover {
+        background: var(--surface-page);
+      }
+      .role-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--radius-sm);
+        font-size: var(--fs-12);
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .role-badge.trial {
+        background: rgba(251, 191, 36, 0.15);
+        color: rgba(251, 191, 36);
+      }
+      .role-badge.pro {
+        background: rgba(96, 165, 250, 0.15);
+        color: rgba(96, 165, 250);
+      }
+      .role-badge.desk {
+        background: rgba(34, 197, 94, 0.15);
+        color: rgba(34, 197, 94);
+      }
+      .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--radius-sm);
+        font-size: var(--fs-12);
+        font-weight: 600;
+      }
+      .status-badge.active {
+        background: rgba(34, 197, 94, 0.15);
+        color: rgba(34, 197, 94);
+      }
+      .status-badge.revoked {
+        background: rgba(248, 113, 113, 0.15);
+        color: rgba(248, 113, 113);
+      }
+      .status-badge.expired {
+        background: rgba(148, 163, 184, 0.15);
+        color: rgba(148, 163, 184);
+      }
+      .btn {
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-md);
+        border: none;
+        font-size: var(--fs-14);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-primary {
+        background: var(--brand-500);
+        color: white;
+      }
+      .btn-primary:hover {
+        background: var(--brand-600);
+      }
+      .btn-sm {
+        padding: 0.375rem 0.75rem;
+        font-size: var(--fs-12);
+      }
+      .btn-secondary {
+        background: var(--surface-page);
+        border: 1px solid var(--br-card);
+        color: var(--ink);
+      }
+      .btn-secondary:hover {
+        background: var(--surface-elev);
+      }
+      .btn-danger {
+        background: rgba(248, 113, 113, 0.15);
+        border: 1px solid rgba(248, 113, 113, 0.3);
+        color: rgba(248, 113, 113);
+      }
+      .btn-danger:hover {
+        background: rgba(248, 113, 113, 0.25);
+      }
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+      .modal-overlay.active {
+        display: flex;
+      }
+      .modal-content {
+        background: var(--surface-elev);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      .modal-header {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--br-card);
+      }
+      .modal-header h2 {
+        margin: 0;
+        font-size: var(--fs-20);
+        color: var(--ink);
+      }
+      .modal-body {
+        margin-bottom: 1.5rem;
+      }
+      .modal-field {
+        margin-bottom: 1rem;
+      }
+      .modal-field label {
+        display: block;
+        font-size: var(--fs-13);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--ink-soft);
+      }
+      .modal-field input,
+      .modal-field select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--br-card);
+        border-radius: var(--radius-md);
+        background: var(--surface-page);
+        color: var(--ink);
+        font-size: var(--fs-14);
+      }
+      .modal-actions {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+      }
+      .loading {
+        text-align: center;
+        padding: 2rem;
+        color: var(--ink-soft);
+      }
+      .error {
+        background: rgba(248, 113, 113, 0.15);
+        color: rgba(248, 113, 113);
+        padding: 1rem;
+        border-radius: var(--radius-md);
+        margin: 1rem 0;
+      }
+      .empty {
+        text-align: center;
+        padding: 3rem;
+        color: var(--ink-soft);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-shell">
+      <div class="admin-header">
+        <h1>🔑 Gestione Token</h1>
+        <p>Gestisci token di accesso dashboard (trial, pro, desk)</p>
+      </div>
 
-    <nav class="admin-nav">
-      <a href="/admin/index.html">🏠 Portale Admin</a>
-      <a href="/admin/tokens.html" class="active">🔑 Token</a>
-      <a href="/admin/requests.html">📋 Richieste</a>
-      <a href="/admin/reports.html">📊 Report</a>
-    </nav>
+      <nav class="admin-nav">
+        <a href="/admin/index.html">🏠 Portale Admin</a>
+        <a href="/admin/tokens.html" class="active">🔑 Token</a>
+        <a href="/admin/requests.html">📋 Richieste</a>
+        <a href="/admin/reports.html">📊 Report</a>
+      </nav>
 
-    <div class="admin-main">
-      <!-- Statistiche -->
-      <div class="admin-stats" id="stats-container">
-        <div class="admin-stat-card">
-          <strong id="stat-active">-</strong>
-          <span>Token Attivi</span>
+      <div class="admin-main">
+        <!-- Statistiche -->
+        <div class="admin-stats" id="stats-container">
+          <div class="admin-stat-card">
+            <strong id="stat-active">-</strong>
+            <span>Token Attivi</span>
+          </div>
+          <div class="admin-stat-card">
+            <strong id="stat-revoked">-</strong>
+            <span>Token Revocati</span>
+          </div>
+          <div class="admin-stat-card">
+            <strong id="stat-expired">-</strong>
+            <span>Token Scaduti</span>
+          </div>
+          <div class="admin-stat-card">
+            <strong id="stat-total">-</strong>
+            <span>Totale</span>
+          </div>
         </div>
-        <div class="admin-stat-card">
-          <strong id="stat-revoked">-</strong>
-          <span>Token Revocati</span>
-        </div>
-        <div class="admin-stat-card">
-          <strong id="stat-expired">-</strong>
-          <span>Token Scaduti</span>
-        </div>
-        <div class="admin-stat-card">
-          <strong id="stat-total">-</strong>
-          <span>Totale</span>
-        </div>
-      </div>
 
-      <!-- Filtri -->
-      <div class="admin-filters">
-        <input type="text" id="filter-search" placeholder="Cerca per email..." />
-        <select id="filter-role">
-          <option value="">Tutti i ruoli</option>
-          <option value="trial">Trial</option>
-          <option value="pro">Pro</option>
-          <option value="desk">Desk</option>
-        </select>
-        <select id="filter-status">
-          <option value="">Tutti gli status</option>
-          <option value="active">Attivi</option>
-          <option value="revoked">Revocati</option>
-          <option value="expired">Scaduti</option>
-        </select>
-        <button class="btn btn-primary" onclick="loadTokens()">Aggiorna</button>
-      </div>
-
-      <!-- Tabella -->
-      <div class="admin-table">
-        <div id="loading" class="loading" style="display: none;">Caricamento...</div>
-        <div id="error" class="error" style="display: none;"></div>
-        <table id="tokens-table" style="display: none;">
-          <thead>
-            <tr>
-              <th>Data Creazione</th>
-              <th>Email</th>
-              <th>Ruolo</th>
-              <th>Scadenza</th>
-              <th>Status</th>
-              <th>Source</th>
-              <th>Azioni</th>
-            </tr>
-          </thead>
-          <tbody id="tokens-tbody">
-          </tbody>
-        </table>
-        <div id="empty" class="empty" style="display: none;">Nessun token trovato</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Dettagli -->
-  <div class="modal-overlay" id="modal-details">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Dettagli Token</h2>
-      </div>
-      <div class="modal-body" id="modal-details-body">
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-secondary" onclick="closeModal()">Chiudi</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Modifica -->
-  <div class="modal-overlay" id="modal-edit">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Modifica Token</h2>
-      </div>
-      <div class="modal-body">
-        <div class="modal-field">
-          <label>Ruolo</label>
-          <select id="edit-role">
+        <!-- Filtri -->
+        <div class="admin-filters">
+          <input type="text" id="filter-search" placeholder="Cerca per email..." />
+          <select id="filter-role">
+            <option value="">Tutti i ruoli</option>
             <option value="trial">Trial</option>
             <option value="pro">Pro</option>
             <option value="desk">Desk</option>
           </select>
-        </div>
-        <div class="modal-field">
-          <label>Data Scadenza</label>
-          <input type="datetime-local" id="edit-valid-until" />
-        </div>
-        <div class="modal-field">
-          <label>Revocato</label>
-          <select id="edit-revoked">
-            <option value="false">No</option>
-            <option value="true">Sì</option>
+          <select id="filter-status">
+            <option value="">Tutti gli status</option>
+            <option value="active">Attivi</option>
+            <option value="revoked">Revocati</option>
+            <option value="expired">Scaduti</option>
           </select>
+          <button class="btn btn-primary" onclick="loadTokens()">Aggiorna</button>
         </div>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-secondary" onclick="closeEditModal()">Annulla</button>
-        <button class="btn btn-primary" onclick="saveToken()">Salva</button>
+
+        <!-- Tabella -->
+        <div class="admin-table">
+          <div id="loading" class="loading" style="display: none">Caricamento...</div>
+          <div id="error" class="error" style="display: none"></div>
+          <table id="tokens-table" style="display: none">
+            <thead>
+              <tr>
+                <th>Data Creazione</th>
+                <th>Email</th>
+                <th>Ruolo</th>
+                <th>Scadenza</th>
+                <th>Status</th>
+                <th>Source</th>
+                <th>Azioni</th>
+              </tr>
+            </thead>
+            <tbody id="tokens-tbody"></tbody>
+          </table>
+          <div id="empty" class="empty" style="display: none">Nessun token trovato</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script type="module">
-    import { callAdminAPI } from '/user/assets/js/admin.js';
+    <!-- Modal Dettagli -->
+    <div class="modal-overlay" id="modal-details">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Dettagli Token</h2>
+        </div>
+        <div class="modal-body" id="modal-details-body"></div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" onclick="closeModal()">Chiudi</button>
+        </div>
+      </div>
+    </div>
 
-    const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
-    let adminToken = null;
-    let currentTokenId = null;
+    <!-- Modal Modifica -->
+    <div class="modal-overlay" id="modal-edit">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Modifica Token</h2>
+        </div>
+        <div class="modal-body">
+          <div class="modal-field">
+            <label>Ruolo</label>
+            <select id="edit-role">
+              <option value="trial">Trial</option>
+              <option value="pro">Pro</option>
+              <option value="desk">Desk</option>
+            </select>
+          </div>
+          <div class="modal-field">
+            <label>Data Scadenza</label>
+            <input type="datetime-local" id="edit-valid-until" />
+          </div>
+          <div class="modal-field">
+            <label>Revocato</label>
+            <select id="edit-revoked">
+              <option value="false">No</option>
+              <option value="true">Sì</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" onclick="closeEditModal()">Annulla</button>
+          <button class="btn btn-primary" onclick="saveToken()">Salva</button>
+        </div>
+      </div>
+    </div>
 
-    // Carica token admin
-    function loadAdminToken() {
-      adminToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-      if (!adminToken) {
-        alert('Token admin non trovato. Vai su /accesso.html per accedere.');
-        window.location.href = '/accesso.html';
-        return false;
+    <script type="module">
+      import { callAdminAPI } from '/user/assets/js/admin.js';
+
+      const ACCESS_TOKEN_KEY = 'tradelia-access-token-v1';
+      let adminToken = null;
+      let currentTokenId = null;
+
+      // Carica token admin
+      function loadAdminToken() {
+        adminToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+        if (!adminToken) {
+          alert('Token admin non trovato. Vai su /accesso.html per accedere.');
+          window.location.href = '/accesso.html';
+          return false;
+        }
+        return true;
       }
-      return true;
-    }
 
-    // Carica token
-    window.loadTokens = async function() {
-      if (!loadAdminToken()) return;
+      // Carica token
+      window.loadTokens = async function () {
+        if (!loadAdminToken()) return;
 
-      const search = document.getElementById('filter-search').value;
-      const role = document.getElementById('filter-role').value;
-      const status = document.getElementById('filter-status').value;
+        const search = document.getElementById('filter-search').value;
+        const role = document.getElementById('filter-role').value;
+        const status = document.getElementById('filter-status').value;
 
-      document.getElementById('loading').style.display = 'block';
-      document.getElementById('error').style.display = 'none';
-      document.getElementById('tokens-table').style.display = 'none';
-      document.getElementById('empty').style.display = 'none';
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('error').style.display = 'none';
+        document.getElementById('tokens-table').style.display = 'none';
+        document.getElementById('empty').style.display = 'none';
 
-      try {
-        const params = {};
-        if (role) params.plan_role = role;
-        if (status === 'revoked') params.revoked = 'true';
-        if (status === 'active') params.revoked = 'false';
+        try {
+          const params = {};
+          if (role) params.plan_role = role;
+          if (status === 'revoked') params.revoked = 'true';
+          if (status === 'active') params.revoked = 'false';
 
-        const data = await callAdminAPI({
-          resource: 'tokens',
-          params,
-          method: 'GET'
-        });
+          const data = await callAdminAPI({
+            resource: 'tokens',
+            params,
+            method: 'GET',
+          });
 
-        let tokens = data.data || [];
+          let tokens = data.data || [];
 
-        // Filtro ricerca lato client
-        if (search) {
-          const searchLower = search.toLowerCase();
-          tokens = tokens.filter(t => 
-            t.email?.toLowerCase().includes(searchLower)
-          );
+          // Filtro ricerca lato client
+          if (search) {
+            const searchLower = search.toLowerCase();
+            tokens = tokens.filter((t) => t.email?.toLowerCase().includes(searchLower));
+          }
+
+          // Filtro scaduti
+          if (status === 'expired') {
+            const now = new Date();
+            tokens = tokens.filter((t) => {
+              if (!t.valid_until) return false;
+              return new Date(t.valid_until) < now && !t.revoked;
+            });
+          } else if (status === 'active') {
+            const now = new Date();
+            tokens = tokens.filter((t) => {
+              if (t.revoked) return false;
+              if (!t.valid_until) return true;
+              return new Date(t.valid_until) >= now;
+            });
+          }
+
+          displayTokens(tokens);
+          updateStats(tokens);
+        } catch (err) {
+          document.getElementById('error').textContent = err.message || 'Errore caricamento token';
+          document.getElementById('error').style.display = 'block';
+        } finally {
+          document.getElementById('loading').style.display = 'none';
+        }
+      };
+
+      // Mostra token
+      function displayTokens(tokens) {
+        const tbody = document.getElementById('tokens-tbody');
+        tbody.innerHTML = '';
+
+        if (tokens.length === 0) {
+          document.getElementById('empty').style.display = 'block';
+          return;
         }
 
-        // Filtro scaduti
-        if (status === 'expired') {
-          const now = new Date();
-          tokens = tokens.filter(t => {
-            if (!t.valid_until) return false;
-            return new Date(t.valid_until) < now && !t.revoked;
+        document.getElementById('tokens-table').style.display = 'table';
+        document.getElementById('empty').style.display = 'none';
+
+        tokens.forEach((token) => {
+          const row = document.createElement('tr');
+          const date = new Date(token.created_at).toLocaleDateString('it-IT', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
           });
-        } else if (status === 'active') {
+
+          const validUntil = token.valid_until
+            ? new Date(token.valid_until).toLocaleDateString('it-IT', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+              })
+            : 'N/A';
+
           const now = new Date();
-          tokens = tokens.filter(t => {
-            if (t.revoked) return false;
-            if (!t.valid_until) return true;
-            return new Date(t.valid_until) >= now;
-          });
-        }
+          const isExpired = token.valid_until && new Date(token.valid_until) < now;
+          const statusClass = token.revoked ? 'revoked' : isExpired ? 'expired' : 'active';
+          const statusText = token.revoked ? 'Revocato' : isExpired ? 'Scaduto' : 'Attivo';
 
-        displayTokens(tokens);
-        updateStats(tokens);
-      } catch (err) {
-        document.getElementById('error').textContent = err.message || 'Errore caricamento token';
-        document.getElementById('error').style.display = 'block';
-      } finally {
-        document.getElementById('loading').style.display = 'none';
-      }
-    };
-
-    // Mostra token
-    function displayTokens(tokens) {
-      const tbody = document.getElementById('tokens-tbody');
-      tbody.innerHTML = '';
-
-      if (tokens.length === 0) {
-        document.getElementById('empty').style.display = 'block';
-        return;
-      }
-
-      document.getElementById('tokens-table').style.display = 'table';
-      document.getElementById('empty').style.display = 'none';
-
-      tokens.forEach(token => {
-        const row = document.createElement('tr');
-        const date = new Date(token.created_at).toLocaleDateString('it-IT', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        });
-
-        const validUntil = token.valid_until 
-          ? new Date(token.valid_until).toLocaleDateString('it-IT', {
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric'
-            })
-          : 'N/A';
-
-        const now = new Date();
-        const isExpired = token.valid_until && new Date(token.valid_until) < now;
-        const statusClass = token.revoked ? 'revoked' : (isExpired ? 'expired' : 'active');
-        const statusText = token.revoked ? 'Revocato' : (isExpired ? 'Scaduto' : 'Attivo');
-
-        row.innerHTML = `
+          row.innerHTML = `
           <td>${date}</td>
           <td>${token.email || '-'}</td>
           <td><span class="role-badge ${token.plan_role}">${token.plan_role}</span></td>
@@ -500,58 +538,58 @@
             ${!token.revoked ? `<button class="btn btn-sm btn-danger" onclick="revokeToken('${token.id}')">Revoca</button>` : ''}
           </td>
         `;
-        tbody.appendChild(row);
-      });
-    }
-
-    // Aggiorna statistiche
-    function updateStats(tokens) {
-      const now = new Date();
-      const active = tokens.filter(t => {
-        if (t.revoked) return false;
-        if (!t.valid_until) return true;
-        return new Date(t.valid_until) >= now;
-      }).length;
-      const revoked = tokens.filter(t => t.revoked).length;
-      const expired = tokens.filter(t => {
-        if (t.revoked) return false;
-        if (!t.valid_until) return false;
-        return new Date(t.valid_until) < now;
-      }).length;
-      const total = tokens.length;
-
-      document.getElementById('stat-active').textContent = active;
-      document.getElementById('stat-revoked').textContent = revoked;
-      document.getElementById('stat-expired').textContent = expired;
-      document.getElementById('stat-total').textContent = total;
-    }
-
-    // Mostra dettagli
-    window.showDetails = async function(id) {
-      if (!loadAdminToken()) return;
-
-      try {
-        const data = await callAdminAPI({
-          resource: 'tokens',
-          params: {},
-          method: 'GET'
+          tbody.appendChild(row);
         });
+      }
 
-        const token = data.data.find(t => t.id === id);
-        if (!token) {
-          alert('Token non trovato');
-          return;
-        }
+      // Aggiorna statistiche
+      function updateStats(tokens) {
+        const now = new Date();
+        const active = tokens.filter((t) => {
+          if (t.revoked) return false;
+          if (!t.valid_until) return true;
+          return new Date(t.valid_until) >= now;
+        }).length;
+        const revoked = tokens.filter((t) => t.revoked).length;
+        const expired = tokens.filter((t) => {
+          if (t.revoked) return false;
+          if (!t.valid_until) return false;
+          return new Date(t.valid_until) < now;
+        }).length;
+        const total = tokens.length;
 
-        const body = document.getElementById('modal-details-body');
-        const validUntil = token.valid_until 
-          ? new Date(token.valid_until).toLocaleString('it-IT')
-          : 'Nessuna scadenza';
-        const revokedAt = token.revoked_at
-          ? new Date(token.revoked_at).toLocaleString('it-IT')
-          : '-';
+        document.getElementById('stat-active').textContent = active;
+        document.getElementById('stat-revoked').textContent = revoked;
+        document.getElementById('stat-expired').textContent = expired;
+        document.getElementById('stat-total').textContent = total;
+      }
 
-        body.innerHTML = `
+      // Mostra dettagli
+      window.showDetails = async function (id) {
+        if (!loadAdminToken()) return;
+
+        try {
+          const data = await callAdminAPI({
+            resource: 'tokens',
+            params: {},
+            method: 'GET',
+          });
+
+          const token = data.data.find((t) => t.id === id);
+          if (!token) {
+            alert('Token non trovato');
+            return;
+          }
+
+          const body = document.getElementById('modal-details-body');
+          const validUntil = token.valid_until
+            ? new Date(token.valid_until).toLocaleString('it-IT')
+            : 'Nessuna scadenza';
+          const revokedAt = token.revoked_at
+            ? new Date(token.revoked_at).toLocaleString('it-IT')
+            : '-';
+
+          body.innerHTML = `
           <div class="modal-field">
             <label>ID Token</label>
             <div>${token.id}</div>
@@ -588,115 +626,116 @@
           ${token.metadata ? `<div class="modal-field"><label>Metadata</label><div style="white-space: pre-wrap; font-family: monospace; font-size: 0.85rem;">${JSON.stringify(token.metadata, null, 2)}</div></div>` : ''}
         `;
 
-        document.getElementById('modal-details').classList.add('active');
-      } catch (err) {
-        alert('Errore: ' + err.message);
-      }
-    };
-
-    // Modifica token
-    window.editToken = async function(id) {
-      if (!loadAdminToken()) return;
-
-      currentTokenId = id;
-
-      try {
-        const data = await callAdminAPI({
-          resource: 'tokens',
-          params: {},
-          method: 'GET'
-        });
-
-        const token = data.data.find(t => t.id === id);
-        if (!token) {
-          alert('Token non trovato');
-          return;
+          document.getElementById('modal-details').classList.add('active');
+        } catch (err) {
+          alert('Errore: ' + err.message);
         }
+      };
 
-        document.getElementById('edit-role').value = token.plan_role || 'trial';
-        if (token.valid_until) {
-          const date = new Date(token.valid_until);
-          const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-          document.getElementById('edit-valid-until').value = localDate.toISOString().slice(0, 16);
+      // Modifica token
+      window.editToken = async function (id) {
+        if (!loadAdminToken()) return;
+
+        currentTokenId = id;
+
+        try {
+          const data = await callAdminAPI({
+            resource: 'tokens',
+            params: {},
+            method: 'GET',
+          });
+
+          const token = data.data.find((t) => t.id === id);
+          if (!token) {
+            alert('Token non trovato');
+            return;
+          }
+
+          document.getElementById('edit-role').value = token.plan_role || 'trial';
+          if (token.valid_until) {
+            const date = new Date(token.valid_until);
+            const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+            document.getElementById('edit-valid-until').value = localDate
+              .toISOString()
+              .slice(0, 16);
+          }
+          document.getElementById('edit-revoked').value = token.revoked ? 'true' : 'false';
+
+          document.getElementById('modal-edit').classList.add('active');
+        } catch (err) {
+          alert('Errore: ' + err.message);
         }
-        document.getElementById('edit-revoked').value = token.revoked ? 'true' : 'false';
+      };
 
-        document.getElementById('modal-edit').classList.add('active');
-      } catch (err) {
-        alert('Errore: ' + err.message);
-      }
-    };
+      // Salva modifiche
+      window.saveToken = async function () {
+        if (!loadAdminToken() || !currentTokenId) return;
 
-    // Salva modifiche
-    window.saveToken = async function() {
-      if (!loadAdminToken() || !currentTokenId) return;
+        const role = document.getElementById('edit-role').value;
+        const validUntil = document.getElementById('edit-valid-until').value;
+        const revoked = document.getElementById('edit-revoked').value === 'true';
 
-      const role = document.getElementById('edit-role').value;
-      const validUntil = document.getElementById('edit-valid-until').value;
-      const revoked = document.getElementById('edit-revoked').value === 'true';
+        try {
+          const updateData = {
+            plan_role: role,
+            revoked: revoked,
+          };
 
-      try {
-        const updateData = {
-          plan_role: role,
-          revoked: revoked
-        };
+          if (validUntil) {
+            updateData.valid_until = new Date(validUntil).toISOString();
+          }
 
-        if (validUntil) {
-          updateData.valid_until = new Date(validUntil).toISOString();
+          await callAdminAPI({
+            resource: 'tokens',
+            params: { id: currentTokenId },
+            method: 'PATCH',
+            body: updateData,
+          });
+
+          closeEditModal();
+          loadTokens();
+        } catch (err) {
+          alert('Errore: ' + err.message);
         }
+      };
 
-        await callAdminAPI({
-          resource: 'tokens',
-          params: { id: currentTokenId },
-          method: 'PATCH',
-          body: updateData
-        });
+      // Revoca token
+      window.revokeToken = async function (id) {
+        if (!loadAdminToken()) return;
+        if (!confirm('Sei sicuro di voler revocare questo token?')) return;
 
-        closeEditModal();
+        try {
+          await callAdminAPI({
+            resource: 'tokens',
+            params: { id },
+            method: 'DELETE',
+          });
+
+          loadTokens();
+        } catch (err) {
+          alert('Errore: ' + err.message);
+        }
+      };
+
+      // Chiudi modali
+      window.closeModal = function () {
+        document.getElementById('modal-details').classList.remove('active');
+      };
+
+      window.closeEditModal = function () {
+        document.getElementById('modal-edit').classList.remove('active');
+        currentTokenId = null;
+      };
+
+      // Event listeners
+      document.getElementById('filter-search').addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') loadTokens();
+      });
+
+      // Carica all'avvio
+      if (loadAdminToken()) {
         loadTokens();
-      } catch (err) {
-        alert('Errore: ' + err.message);
       }
-    };
-
-    // Revoca token
-    window.revokeToken = async function(id) {
-      if (!loadAdminToken()) return;
-      if (!confirm('Sei sicuro di voler revocare questo token?')) return;
-
-      try {
-        await callAdminAPI({
-          resource: 'tokens',
-          params: { id },
-          method: 'DELETE'
-        });
-
-        loadTokens();
-      } catch (err) {
-        alert('Errore: ' + err.message);
-      }
-    };
-
-    // Chiudi modali
-    window.closeModal = function() {
-      document.getElementById('modal-details').classList.remove('active');
-    };
-
-    window.closeEditModal = function() {
-      document.getElementById('modal-edit').classList.remove('active');
-      currentTokenId = null;
-    };
-
-    // Event listeners
-    document.getElementById('filter-search').addEventListener('keyup', (e) => {
-      if (e.key === 'Enter') loadTokens();
-    });
-
-    // Carica all'avvio
-    if (loadAdminToken()) {
-      loadTokens();
-    }
-  </script>
-</body>
+    </script>
+  </body>
 </html>
-

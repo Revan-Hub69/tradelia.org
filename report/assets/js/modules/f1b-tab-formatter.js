@@ -7,7 +7,7 @@
 export function formatRegimeTabToRows(regimeData) {
   const rows = [];
   if (!regimeData || Object.keys(regimeData).length === 0) return rows;
-  
+
   // ROW 1: StrategyMode + RegimeScore
   rows.push({
     id: 'regime-strategy-line',
@@ -18,7 +18,7 @@ export function formatRegimeTabToRows(regimeData) {
         key: 'StrategyMode_macro',
         value: regimeData.StrategyMode_macro?.raw || '—',
         label: 'StrategyMode',
-        tone: getToneForStrategyMode(regimeData.StrategyMode_macro?.raw)
+        tone: getToneForStrategyMode(regimeData.StrategyMode_macro?.raw),
       },
       { kind: 'text', text: ' · RegimeScore: ' },
       {
@@ -26,11 +26,11 @@ export function formatRegimeTabToRows(regimeData) {
         key: 'RegimeScore',
         value: formatRegimeScore(regimeData.RegimeScore?.raw),
         label: 'RegimeScore',
-        tone: getToneForRegimeScore(regimeData.RegimeScore?.raw)
-      }
-    ]
+        tone: getToneForRegimeScore(regimeData.RegimeScore?.raw),
+      },
+    ],
   });
-  
+
   // ROW 2: VolRegime + Liquidity
   rows.push({
     id: 'regime-vol-liquidity-line',
@@ -41,7 +41,7 @@ export function formatRegimeTabToRows(regimeData) {
         key: 'VolRegime',
         value: regimeData.VolRegime?.raw || '—',
         label: 'VolRegime',
-        tone: 'neutral'
+        tone: 'neutral',
       },
       { kind: 'text', text: ' · Liquidità: ' },
       {
@@ -49,11 +49,11 @@ export function formatRegimeTabToRows(regimeData) {
         key: 'LiquidityRegimeScore',
         value: formatRegimeScore(regimeData.LiquidityRegimeScore?.raw),
         label: 'LiquidityRegimeScore',
-        tone: 'neutral'
-      }
-    ]
+        tone: 'neutral',
+      },
+    ],
   });
-  
+
   // ROW 3: Credit + FX
   rows.push({
     id: 'regime-credit-fx-line',
@@ -64,7 +64,7 @@ export function formatRegimeTabToRows(regimeData) {
         key: 'CreditRiskBlock',
         value: regimeData.CreditRiskBlock?.raw || '—',
         label: 'CreditRiskBlock',
-        tone: 'neutral'
+        tone: 'neutral',
       },
       { kind: 'text', text: ' · FX: ' },
       {
@@ -72,11 +72,11 @@ export function formatRegimeTabToRows(regimeData) {
         key: 'FX_Regime',
         value: regimeData.FX_Regime?.raw || '—',
         label: 'FX_Regime',
-        tone: 'neutral'
-      }
-    ]
+        tone: 'neutral',
+      },
+    ],
   });
-  
+
   // ROW 4: RiskWindow
   if (regimeData.RiskWindow?.raw) {
     rows.push({
@@ -88,12 +88,12 @@ export function formatRegimeTabToRows(regimeData) {
           key: 'RiskWindow',
           value: regimeData.RiskWindow.raw,
           label: 'RiskWindow',
-          tone: 'yellow'
-        }
-      ]
+          tone: 'yellow',
+        },
+      ],
     });
   }
-  
+
   return rows;
 }
 
@@ -103,7 +103,7 @@ export function formatRegimeTabToRows(regimeData) {
 export function formatBreadthTabToRows(breadthData) {
   const rows = [];
   if (!breadthData || Object.keys(breadthData).length === 0) return rows;
-  
+
   // ROW 1: Breadth + RiskTilt
   rows.push({
     id: 'breadth-breadth-tilt-line',
@@ -114,7 +114,7 @@ export function formatBreadthTabToRows(breadthData) {
         key: 'Breadth_1M',
         value: formatBreadth(breadthData.Breadth_1M?.raw),
         label: 'Breadth 1M',
-        tone: getToneForBreadth(breadthData.Breadth_1M?.raw)
+        tone: getToneForBreadth(breadthData.Breadth_1M?.raw),
       },
       { kind: 'text', text: ' · RiskTilt: ' },
       {
@@ -122,11 +122,11 @@ export function formatBreadthTabToRows(breadthData) {
         key: 'RiskTilt_1M',
         value: breadthData.RiskTilt_1M?.raw || '—',
         label: 'RiskTilt 1M',
-        tone: getToneForRiskTilt(breadthData.RiskTilt_1M?.raw)
-      }
-    ]
+        tone: getToneForRiskTilt(breadthData.RiskTilt_1M?.raw),
+      },
+    ],
   });
-  
+
   // ROW 2: SmallCap + Index Momentum
   rows.push({
     id: 'breadth-smallcap-momentum-line',
@@ -137,7 +137,7 @@ export function formatBreadthTabToRows(breadthData) {
         key: 'SmallCapPressure_1W',
         value: formatSmallCapPressure(breadthData.SmallCapPressure_1W?.raw),
         label: 'SmallCap Pressure 1W',
-        tone: getToneForSmallCap(breadthData.SmallCapPressure_1W?.raw)
+        tone: getToneForSmallCap(breadthData.SmallCapPressure_1W?.raw),
       },
       { kind: 'text', text: ' · Index Momentum: ' },
       {
@@ -145,11 +145,11 @@ export function formatBreadthTabToRows(breadthData) {
         key: 'IndexMomentum_1W',
         value: formatRegimeScore(breadthData.IndexMomentum_1W?.raw),
         label: 'Index Momentum 1W',
-        tone: 'neutral'
-      }
-    ]
+        tone: 'neutral',
+      },
+    ],
   });
-  
+
   // ROW 3: Size Bias
   if (breadthData.SizeBias?.raw) {
     rows.push({
@@ -161,12 +161,12 @@ export function formatBreadthTabToRows(breadthData) {
           key: 'SizeBias',
           value: breadthData.SizeBias.raw,
           label: 'SizeBias',
-          tone: 'neutral'
-        }
-      ]
+          tone: 'neutral',
+        },
+      ],
     });
   }
-  
+
   // ROW 4: Leaders
   if (breadthData.Leadership?.LeadersMultiTF?.items) {
     const leaders = breadthData.Leadership.LeadersMultiTF.items.slice(0, 3).join(', ');
@@ -174,11 +174,11 @@ export function formatBreadthTabToRows(breadthData) {
       id: 'breadth-leaders-line',
       parts: [
         { kind: 'text', text: 'Leaders: ' },
-        { kind: 'text', text: leaders }
-      ]
+        { kind: 'text', text: leaders },
+      ],
     });
   }
-  
+
   // ROW 5: Defensivi + Lagging
   const defensive = breadthData.Leadership?.DefensiveLeadership?.items || [];
   const lagging = breadthData.Leadership?.Lagging?.items || [];
@@ -189,11 +189,11 @@ export function formatBreadthTabToRows(breadthData) {
         { kind: 'text', text: 'Defensivi: ' },
         { kind: 'text', text: defensive.slice(0, 2).join(', ') || '—' },
         { kind: 'text', text: ' · In ritardo: ' },
-        { kind: 'text', text: lagging.slice(0, 2).join(', ') || '—' }
-      ]
+        { kind: 'text', text: lagging.slice(0, 2).join(', ') || '—' },
+      ],
     });
   }
-  
+
   return rows;
 }
 
@@ -203,35 +203,37 @@ export function formatBreadthTabToRows(breadthData) {
 export function formatStreetTabToRows(streetData) {
   const rows = [];
   if (!streetData || Object.keys(streetData).length === 0) return rows;
-  
+
   // ROW 1: Macro News (troncato se troppo lungo)
   if (streetData.T1_MacroNews) {
-    const news = streetData.T1_MacroNews.length > 100 
-      ? streetData.T1_MacroNews.substring(0, 100) + '...' 
-      : streetData.T1_MacroNews;
+    const news =
+      streetData.T1_MacroNews.length > 100
+        ? streetData.T1_MacroNews.substring(0, 100) + '...'
+        : streetData.T1_MacroNews;
     rows.push({
       id: 'street-macro-news-line',
       parts: [
         { kind: 'text', text: 'Macro News: ' },
-        { kind: 'text', text: news }
-      ]
+        { kind: 'text', text: news },
+      ],
     });
   }
-  
+
   // ROW 2: Sell-Side Notes (troncato se troppo lungo)
   if (streetData.T1_SellSideNotes) {
-    const notes = streetData.T1_SellSideNotes.length > 100 
-      ? streetData.T1_SellSideNotes.substring(0, 100) + '...' 
-      : streetData.T1_SellSideNotes;
+    const notes =
+      streetData.T1_SellSideNotes.length > 100
+        ? streetData.T1_SellSideNotes.substring(0, 100) + '...'
+        : streetData.T1_SellSideNotes;
     rows.push({
       id: 'street-sellside-line',
       parts: [
         { kind: 'text', text: 'Sell-Side: ' },
-        { kind: 'text', text: notes }
-      ]
+        { kind: 'text', text: notes },
+      ],
     });
   }
-  
+
   // ROW 3: Consensus Tone
   if (streetData.T1_ConsensusTone?.raw) {
     rows.push({
@@ -243,12 +245,12 @@ export function formatStreetTabToRows(streetData) {
           key: 'T1_ConsensusTone',
           value: streetData.T1_ConsensusTone.raw,
           label: 'Consensus Tone',
-          tone: streetData.T1_ConsensusTone.tone || 'neutral'
-        }
-      ]
+          tone: streetData.T1_ConsensusTone.tone || 'neutral',
+        },
+      ],
     });
   }
-  
+
   return rows;
 }
 
@@ -327,4 +329,3 @@ function getToneForSmallCap(pressure) {
   }
   return 'neutral';
 }
-

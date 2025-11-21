@@ -11,7 +11,7 @@ const sanitizeReportPayload = (payload = {}) => ({
   template_version_id: payload.template_version_id || payload.templateVersionId || null,
   chart_path: payload.chart_path || payload.chartPath || null,
   notes: payload.notes || null,
-  metadata: payload.metadata || {}
+  metadata: payload.metadata || {},
 });
 
 const replaceReportModules = async (reportId, modules = []) => {
@@ -27,7 +27,7 @@ const replaceReportModules = async (reportId, modules = []) => {
         : module.order_index === null
           ? null
           : index,
-    content: module.content || {}
+    content: module.content || {},
   }));
 
   const { data, error } = await supabase.from('report_modules').insert(normalized).select();
@@ -42,7 +42,7 @@ const logAudit = async (reportId, action, performedBy, payload = {}) => {
     report_id: reportId,
     action,
     performed_by: performedBy,
-    payload
+    payload,
   });
 };
 
@@ -62,7 +62,9 @@ const handleListReports = async (req, res) => {
   }
 
   if (search) {
-    query = query.or(`slug.ilike.%${search}%,title.ilike.%${search}%,report_type.ilike.%${search}%`);
+    query = query.or(
+      `slug.ilike.%${search}%,title.ilike.%${search}%,report_type.ilike.%${search}%`
+    );
   }
 
   const { data, error } = await query.limit(200);
@@ -73,12 +75,12 @@ const handleListReports = async (req, res) => {
   const normalized =
     data?.map((row) => ({
       ...row,
-      modules_count: row.report_modules?.[0]?.count ?? 0
+      modules_count: row.report_modules?.[0]?.count ?? 0,
     })) || [];
 
   return sendJSON(res, 200, {
     ok: true,
-    reports: normalized
+    reports: normalized,
   });
 };
 
@@ -118,7 +120,7 @@ const handleGetReport = async (req, res) => {
       .select('id, action, payload, created_at, performed_by')
       .eq('report_id', id)
       .order('created_at', { ascending: false })
-      .limit(20)
+      .limit(20),
   ]);
 
   return sendJSON(res, 200, {
@@ -126,7 +128,7 @@ const handleGetReport = async (req, res) => {
     report,
     modules: modules || [],
     assets: assets || [],
-    audit: audit || []
+    audit: audit || [],
   });
 };
 
@@ -149,7 +151,11 @@ const handleCreateReport = async (req, res, ctx) => {
 
   payload.created_by = ctx.userId;
 
-  const { data: inserted, error } = await supabase.from('reports').insert(payload).select('*').single();
+  const { data: inserted, error } = await supabase
+    .from('reports')
+    .insert(payload)
+    .select('*')
+    .single();
 
   if (error) {
     throw new HttpError(500, 'Errore durante la creazione del report', error.message);
@@ -161,7 +167,7 @@ const handleCreateReport = async (req, res, ctx) => {
   return sendJSON(res, 201, {
     ok: true,
     report: inserted,
-    modules: savedModules
+    modules: savedModules,
   });
 };
 
@@ -194,7 +200,7 @@ const handleUpdateReport = async (req, res, ctx) => {
     .single();
 
   if (error) {
-    throw new HttpError(500, 'Errore durante l\'aggiornamento del report', error.message);
+    throw new HttpError(500, "Errore durante l'aggiornamento del report", error.message);
   }
 
   const savedModules = await replaceReportModules(reportId, modules);
@@ -203,7 +209,7 @@ const handleUpdateReport = async (req, res, ctx) => {
   return sendJSON(res, 200, {
     ok: true,
     report: updated,
-    modules: savedModules
+    modules: savedModules,
   });
 };
 
@@ -221,14 +227,14 @@ const handleArchiveReport = async (req, res, ctx) => {
     .single();
 
   if (error) {
-    throw new HttpError(500, 'Errore durante l\'archiviazione del report', error.message);
+    throw new HttpError(500, "Errore durante l'archiviazione del report", error.message);
   }
 
   await logAudit(reportId, 'archive', ctx.userId, {});
 
   return sendJSON(res, 200, {
     ok: true,
-    report: updated
+    report: updated,
   });
 };
 
@@ -254,4 +260,3 @@ export const handleReportsRequest = async (req, res, ctx) => {
 
   return methodNotAllowed(res, ['GET', 'POST', 'PUT', 'DELETE']);
 };
-

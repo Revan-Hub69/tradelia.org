@@ -6,7 +6,7 @@
 export async function loadNotifications() {
   const notificationsList = document.getElementById('notifications-list');
   if (!notificationsList) return;
-  
+
   // TODO: Caricare notifiche da API/Supabase
   // Per ora mostra empty state
   loadNotificationsData();
@@ -22,12 +22,11 @@ async function loadNotificationsData() {
 function renderNotifications(notifications) {
   const notificationsList = document.getElementById('notifications-list');
   if (!notificationsList) return;
-  
+
   if (notifications.length === 0) {
     // Mostra empty state (già presente in HTML)
     return;
   }
-  
+
   // TODO: Render lista notifiche
 }
-

@@ -2,7 +2,7 @@
 import { SUPABASE_URL, SUPABASE_ANON_KEY, REPORTS_BUCKET } from './supabase-config.js';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: { persistSession: true, storageKey: 'tradelia-report-admin' }
+  auth: { persistSession: true, storageKey: 'tradelia-report-admin' },
 });
 window.supabase = supabase;
 
@@ -33,7 +33,7 @@ const fetchWithTimeout = async (resource, options = {}, timeout = NETWORK_TIMEOU
   try {
     const response = await fetch(resource, {
       ...options,
-      signal: controller.signal
+      signal: controller.signal,
     });
     return response;
   } finally {
@@ -116,9 +116,14 @@ let reportDetailsRequestSeq = 0;
 
 let defaultTemplateSlug = DEFAULT_REPORT_TYPE;
 
-const callAdminAPI = async (
-  { resource, action, params = {}, method = 'GET', body, timeout = NETWORK_TIMEOUT_MS } = {}
-) => {
+const callAdminAPI = async ({
+  resource,
+  action,
+  params = {},
+  method = 'GET',
+  body,
+  timeout = NETWORK_TIMEOUT_MS,
+} = {}) => {
   if (!resource) {
     throw new Error('Parametro API mancante: resource');
   }
@@ -135,7 +140,7 @@ const callAdminAPI = async (
   const url = `/api/admin${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
 
   const headers = {
-    'X-Admin-Token': currentUser.token
+    'X-Admin-Token': currentUser.token,
   };
 
   let payload = body;
@@ -177,13 +182,15 @@ const templateRegistry = (() => {
     if (!reportTypeEl || !templates.length) return;
     const previousValue = reportTypeEl.value;
     reportTypeEl.innerHTML = templates
-      .map((template) => `<option value="${template.slug}">${template.label || template.slug}</option>`)
+      .map(
+        (template) => `<option value="${template.slug}">${template.label || template.slug}</option>`
+      )
       .join('');
 
     const fallbackSlug =
       templatesBySlug.has(previousValue) ||
       (!previousValue && templatesBySlug.has(defaultTemplateSlug))
-        ? (previousValue || defaultTemplateSlug)
+        ? previousValue || defaultTemplateSlug
         : templates[0].slug;
 
     defaultTemplateSlug = fallbackSlug;
@@ -209,7 +216,7 @@ const templateRegistry = (() => {
     },
     hasTemplate(slug) {
       const version = selectVersion(templatesBySlug.get(slug));
-      return !!(version?.modules?.length);
+      return !!version?.modules?.length;
     },
     getDefaultModules(slug) {
       const version = selectVersion(templatesBySlug.get(slug));
@@ -217,7 +224,7 @@ const templateRegistry = (() => {
       return version.modules.map((module, index) => ({
         module_key: module.module_key,
         order_index: module.order_index ?? index,
-        content: module.default_content || {}
+        content: module.default_content || {},
       }));
     },
     getRequiredKeys(slug) {
@@ -238,20 +245,20 @@ const templateRegistry = (() => {
     },
     getDefaultSlug() {
       return defaultTemplateSlug;
-    }
+    },
   };
 })();
 
 const statusLabels = {
   draft: 'Bozza',
   active: 'Pubblicato',
-  archived: 'Archiviato'
+  archived: 'Archiviato',
 };
 
 const statusClasses = {
   draft: 'status-draft',
   active: 'status-active',
-  archived: 'status-archived'
+  archived: 'status-archived',
 };
 
 const showToast = (message, type = 'info') => {
@@ -268,26 +275,29 @@ const STATUS_BANNER_CLASSES = {
   info: 'status-banner--info',
   success: 'status-banner--success',
   warning: 'status-banner--warning',
-  error: 'status-banner--error'
+  error: 'status-banner--error',
 };
 
 const AUTH_CARD_MESSAGES = {
   not_admin: {
     title: 'Accesso non autorizzato',
-    message: 'Il token inserito non dispone dei permessi per accedere alla dashboard report. Richiedi l\'abilitazione a support@tradelia.org.'
+    message:
+      "Il token inserito non dispone dei permessi per accedere alla dashboard report. Richiedi l'abilitazione a support@tradelia.org.",
   },
   lookup_failed: {
     title: 'Verifica non riuscita',
-    message: 'Non siamo riusciti a verificare i permessi amministratore. Aggiorna il token o contatta il supporto.'
+    message:
+      'Non siamo riusciti a verificare i permessi amministratore. Aggiorna il token o contatta il supporto.',
   },
   session_error: {
     title: 'Sessione scaduta',
-    message: 'La sessione non è più valida. Effettua nuovamente l\'accesso dalla pagina dedicata.'
+    message: "La sessione non è più valida. Effettua nuovamente l'accesso dalla pagina dedicata.",
   },
   missing_user: {
     title: 'Sessione non valida',
-    message: 'Non riusciamo a identificare l\'utente associato al token corrente. Torna alla pagina di accesso e ripeti la procedura.'
-  }
+    message:
+      "Non riusciamo a identificare l'utente associato al token corrente. Torna alla pagina di accesso e ripeti la procedura.",
+  },
 };
 
 const setStatusBannerMessage = (tone = 'info', title = '', message = '') => {
@@ -324,7 +334,7 @@ const formatStatusTime = (date) => {
   try {
     return new Intl.DateTimeFormat('it-IT', {
       dateStyle: 'short',
-      timeStyle: 'short'
+      timeStyle: 'short',
     }).format(date);
   } catch {
     return date instanceof Date ? date.toISOString() : '';
@@ -346,7 +356,11 @@ const toggleButtonLoading = (button, loading, loadingLabel) => {
 const setSavingState = (saving, mode) => {
   isSaving = saving;
   const targetButton = mode === 'publish' ? publishBtn : saveDraftBtn;
-  toggleButtonLoading(targetButton, saving, mode === 'publish' ? 'PubblicazioneÔÇª' : 'SalvataggioÔÇª');
+  toggleButtonLoading(
+    targetButton,
+    saving,
+    mode === 'publish' ? 'PubblicazioneÔÇª' : 'SalvataggioÔÇª'
+  );
   if (saving) {
     saveDraftBtn.disabled = true;
     publishBtn.disabled = true;
@@ -398,7 +412,7 @@ const buildSlugSuggestion = (date = new Date()) => {
 const buildTitleSuggestion = (date = new Date()) => {
   const formatter = new Intl.DateTimeFormat('it-IT', {
     dateStyle: 'medium',
-    timeStyle: 'short'
+    timeStyle: 'short',
   });
   return `SRD v5.0 ┬À ${formatter.format(date)}`;
 };
@@ -457,7 +471,7 @@ const formatDateTimeHuman = (iso) => {
   try {
     return new Date(iso).toLocaleString('it-IT', {
       dateStyle: 'short',
-      timeStyle: 'short'
+      timeStyle: 'short',
     });
   } catch {
     return iso;
@@ -465,7 +479,8 @@ const formatDateTimeHuman = (iso) => {
 };
 
 const renderModulesEmptyState = () => {
-  modulesContainer.innerHTML = '<div class="module-empty">Nessun modulo presente. Aggiungi un modulo per iniziare.</div>';
+  modulesContainer.innerHTML =
+    '<div class="module-empty">Nessun modulo presente. Aggiungi un modulo per iniziare.</div>';
 };
 
 const syncTemplateControls = (type) => {
@@ -496,11 +511,14 @@ const applyTemplateToModules = (type, { skipConfirm = false, markDirty = true } 
 
   modulesContainer.innerHTML = '';
   templateModules.forEach((module, index) => {
-    appendModuleCard({
-      module_key: module.module_key,
-      order_index: module.order_index ?? index,
-      content: module.content ?? {}
-    }, { lockedKey: true, allowDuplicate: false });
+    appendModuleCard(
+      {
+        module_key: module.module_key,
+        order_index: module.order_index ?? index,
+        content: module.content ?? {},
+      },
+      { lockedKey: true, allowDuplicate: false }
+    );
   });
   syncTemplateControls(type);
   if (markDirty) setDirty(true);
@@ -594,10 +612,10 @@ const appendModuleCard = (module = {}, options = {}) => {
       content: (() => {
         try {
           return JSON.parse(contentArea.value);
-  } catch {
+        } catch {
           return contentArea.value;
         }
-      })()
+      })(),
     });
     showToast('Modulo duplicato', 'info');
     setDirty(true);
@@ -672,7 +690,7 @@ const collectModules = () => {
     modules.push({
       module_key: key,
       order_index: orderValue === '' ? null : Number(orderValue),
-      content
+      content,
     });
   }
 
@@ -734,8 +752,8 @@ const renderReportsList = () => {
   reportsListEl.innerHTML = '';
   if (!filteredReports.length) {
     reportsListEl.innerHTML = '<div class="list-empty">Nessun report trovato.</div>';
-      return;
-    }
+    return;
+  }
   filteredReports.forEach((report) => {
     const card = document.createElement('article');
     card.className = 'report-card';
@@ -832,7 +850,7 @@ const selectReport = async (id) => {
   try {
     const response = await callAdminAPI({
       resource: 'reports',
-      params: { id }
+      params: { id },
     });
     if (requestId !== reportDetailsRequestSeq) return;
 
@@ -857,7 +875,7 @@ const selectReport = async (id) => {
       modules.forEach((module) =>
         appendModuleCard(module, {
           lockedKey: lockKeys,
-          allowDuplicate: nextType === 'custom'
+          allowDuplicate: nextType === 'custom',
         })
       );
     } else {
@@ -923,7 +941,9 @@ const handleChartPaste = async (event) => {
   const clipboard = event.clipboardData;
   if (!clipboard) return;
 
-  const imageItem = Array.from(clipboard.items || []).find((item) => item.type?.startsWith('image/'));
+  const imageItem = Array.from(clipboard.items || []).find((item) =>
+    item.type?.startsWith('image/')
+  );
   if (imageItem) {
     event.preventDefault();
     const file = imageItem.getAsFile();
@@ -1000,7 +1020,10 @@ const saveReport = async ({ publish }) => {
   console.log('[Dashboard] saveReport collected modules', modules);
   if (!validateModulesForType(modules, reportTypeEl.value, { publish })) {
     bannerLocked = true;
-    console.log('[Dashboard] saveReport abort: validation failed', { publish, type: reportTypeEl.value });
+    console.log('[Dashboard] saveReport abort: validation failed', {
+      publish,
+      type: reportTypeEl.value,
+    });
     return;
   }
 
@@ -1015,7 +1038,7 @@ const saveReport = async ({ publish }) => {
       ? new Date().toISOString()
       : reportPublishedAtEl.value
         ? new Date(reportPublishedAtEl.value).toISOString()
-        : null
+        : null,
   };
 
   setSavingState(true, actionMode);
@@ -1047,15 +1070,15 @@ const saveReport = async ({ publish }) => {
       report: {
         ...(activeReport ? { id: activeReport.id } : {}),
         ...reportPayload,
-        template_version_id: templateVersionId
+        template_version_id: templateVersionId,
       },
-      modules
+      modules,
     };
 
     const response = await callAdminAPI({
       resource: 'reports',
       method: isNew ? 'POST' : 'PUT',
-      body: apiPayload
+      body: apiPayload,
     });
 
     const savedReport = response.report;
@@ -1097,14 +1120,14 @@ const deleteReport = async () => {
     await callAdminAPI({
       resource: 'reports',
       method: 'DELETE',
-      body: { id: activeReport.id }
+      body: { id: activeReport.id },
     });
     showToast('Report archiviato', 'success');
     await loadReports();
     clearEditor();
   } catch (error) {
     console.error('[Report Admin] deleteReport error', error);
-    showToast('Errore durante l\'eliminazione', 'error');
+    showToast("Errore durante l'eliminazione", 'error');
   }
 };
 
@@ -1139,7 +1162,7 @@ const updateAuthUI = async () => {
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token })
+        body: JSON.stringify({ token }),
       },
       NETWORK_TIMEOUT_MS
     );
@@ -1155,7 +1178,7 @@ const updateAuthUI = async () => {
       id: data.userId || null,
       planRole: data.planRole || null,
       validUntil: data.validUntil || null,
-      token
+      token,
     };
 
     authCard.classList.add('hidden');
@@ -1168,7 +1191,8 @@ const updateAuthUI = async () => {
       currentUser = null;
       reports = [];
       filteredReports = [];
-      reportsListEl.innerHTML = '<div class="list-empty">Effettua l\'accesso per visualizzare i report.</div>';
+      reportsListEl.innerHTML =
+        '<div class="list-empty">Effettua l\'accesso per visualizzare i report.</div>';
       clearEditor();
       showUnauthorizedState('not_admin');
       return;
@@ -1224,11 +1248,12 @@ newReportBtn.addEventListener('click', () => {
 
 searchEl.addEventListener('input', () => {
   const query = searchEl.value.trim().toLowerCase();
-  filteredReports = reports.filter((report) => (
-    report.slug.toLowerCase().includes(query) ||
-    (report.title && report.title.toLowerCase().includes(query)) ||
-    (report.status || '').toLowerCase().includes(query)
-  ));
+  filteredReports = reports.filter(
+    (report) =>
+      report.slug.toLowerCase().includes(query) ||
+      (report.title && report.title.toLowerCase().includes(query)) ||
+      (report.status || '').toLowerCase().includes(query)
+  );
   renderReportsList();
 });
 
@@ -1280,7 +1305,9 @@ chartUploadArea.addEventListener('dragover', (event) => {
   event.preventDefault();
   chartUploadArea.classList.add('drop-active');
 });
-chartUploadArea.addEventListener('dragleave', () => chartUploadArea.classList.remove('drop-active'));
+chartUploadArea.addEventListener('dragleave', () =>
+  chartUploadArea.classList.remove('drop-active')
+);
 chartUploadArea.addEventListener('drop', async (event) => {
   event.preventDefault();
   chartUploadArea.classList.remove('drop-active');
@@ -1322,13 +1349,17 @@ document.addEventListener('keydown', (event) => {
 
 document.addEventListener('paste', async (event) => {
   const target = event.target;
-  const isEditableTarget = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+  const isEditableTarget =
+    target &&
+    (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
   if (isEditableTarget) return; // i campi gestiscono gi├á la loro logica
 
   const clipboard = event.clipboardData;
   if (!clipboard) return;
 
-  const imageItem = Array.from(clipboard.items || []).find((item) => item.type?.startsWith('image/'));
+  const imageItem = Array.from(clipboard.items || []).find((item) =>
+    item.type?.startsWith('image/')
+  );
   if (imageItem) {
     const file = imageItem.getAsFile();
     if (file) {

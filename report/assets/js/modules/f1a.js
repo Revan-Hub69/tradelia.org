@@ -38,16 +38,18 @@ function escapeAttr(str) {
 function normalizeDataPublicF1A(src = {}) {
   return {
     meta: {
-      timestampET: src?.meta?.timestampET ?? "—",
-      module: src?.meta?.module ?? "F1A · Ticker Macro Context",
-      moduleVersion: src?.meta?.moduleVersion ?? "v1.0",
-      moduleStatus: src?.meta?.moduleStatus ?? "ACTIVE",
-      freshness: src?.meta?.freshness ?? "≤ T-1",
-      hero_intro: src?.meta?.hero_intro ?? "Contesto macro contestuale per il ticker specifico.",
-      hero_disclaimer: src?.meta?.hero_disclaimer ?? "Output a fini educativi/informativi (orizzonte 3–10 giorni). Non costituisce consulenza o raccomandazione (MiFID II)."
+      timestampET: src?.meta?.timestampET ?? '—',
+      module: src?.meta?.module ?? 'F1A · Ticker Macro Context',
+      moduleVersion: src?.meta?.moduleVersion ?? 'v1.0',
+      moduleStatus: src?.meta?.moduleStatus ?? 'ACTIVE',
+      freshness: src?.meta?.freshness ?? '≤ T-1',
+      hero_intro: src?.meta?.hero_intro ?? 'Contesto macro contestuale per il ticker specifico.',
+      hero_disclaimer:
+        src?.meta?.hero_disclaimer ??
+        'Output a fini educativi/informativi (orizzonte 3–10 giorni). Non costituisce consulenza o raccomandazione (MiFID II).',
     },
-    ticker: src.ticker || src?.meta?.ticker || "—",
-    ticker_context: src.ticker_context || src.context || {}
+    ticker: src.ticker || src?.meta?.ticker || '—',
+    ticker_context: src.ticker_context || src.context || {},
   };
 }
 
@@ -59,7 +61,7 @@ export function renderCard(rawData, ctx = {}) {
 
   // Genera rows formattate (formato header-ticker) da F1A
   const formattedRows = rawData?.rows || rawData?.formattedRows || formatF1AToRows(rawData);
-  
+
   // Usa header-ticker rendering (SCORREVOLE, non tabelle)
   if (formattedRows && Array.isArray(formattedRows) && formattedRows.length > 0) {
     return `
@@ -75,17 +77,17 @@ export function renderCard(rawData, ctx = {}) {
               <span class="module-status-pill text-[10px] font-semibold leading-[1.2] px-[6px] py-[2px] rounded-[4px] border"
                 data-state="${escapeAttr(d.meta?.moduleStatus || 'ACTIVE')}"
                 style="background:var(--surface-card-alt);border-color:var(--br-card);color:var(--ink);">
-                ${escapeHtml(d.meta?.moduleStatus || "ACTIVE")}
+                ${escapeHtml(d.meta?.moduleStatus || 'ACTIVE')}
               </span>
               <span class="text-[10px] leading-[1.3] text-[color:var(--muted)]">
-                ${escapeHtml(d.meta?.freshness || "≤ T-1")}
+                ${escapeHtml(d.meta?.freshness || '≤ T-1')}
               </span>
             </div>
             <div class="section-title-main text-[14px] font-bold leading-[1.4] text-[color:var(--ink)] mt-1">
               Contesto macro contestuale per il ticker
             </div>
             <div class="section-desc text-[12px] text-[color:var(--muted)] leading-[1.45] mt-1">
-              ${escapeHtml(d.meta?.hero_intro || "")}
+              ${escapeHtml(d.meta?.hero_intro || '')}
               <br/>
               <span class="text-[11px] text-[color:var(--muted)]">
                 Lettura di contesto. Non è un'istruzione operativa.
@@ -119,31 +121,35 @@ export function bindCard(node, rawData, ctx = {}) {
   // Genera rows formattate se non presenti
   const formattedRows = rawData?.rows || rawData?.formattedRows || formatF1AToRows(rawData);
   const tickerContainer = node.querySelector('[data-f1a-ticker="true"]');
-  
+
   // Monta header-ticker per renderizzare F1A in formato scorrevole (come header-ticker)
-  if (formattedRows && Array.isArray(formattedRows) && formattedRows.length > 0 && tickerContainer) {
+  if (
+    formattedRows &&
+    Array.isArray(formattedRows) &&
+    formattedRows.length > 0 &&
+    tickerContainer
+  ) {
     // Importa e monta header-ticker component (stesso sistema di header.json)
-    import('../components/header-ticker.js').then(({ headerTicker }) => {
-      const tickerNode = headerTicker.mount(tickerContainer);
-      if (tickerNode) {
-        // Prepara dati per header-ticker (stesso formato di header.json)
-        const tickerData = {
-          ...rawData.meta,
-          rows: formattedRows,
-          metricsPanel: rawData?.metricsPanel || []
-        };
-        headerTicker.update(tickerNode, tickerData);
-      }
-    }).catch(err => {
-      console.warn('F1A: Errore caricamento header-ticker', err);
-    });
+    import('../components/header-ticker.js')
+      .then(({ headerTicker }) => {
+        const tickerNode = headerTicker.mount(tickerContainer);
+        if (tickerNode) {
+          // Prepara dati per header-ticker (stesso formato di header.json)
+          const tickerData = {
+            ...rawData.meta,
+            rows: formattedRows,
+            metricsPanel: rawData?.metricsPanel || [],
+          };
+          headerTicker.update(tickerNode, tickerData);
+        }
+      })
+      .catch((err) => {
+        console.warn('F1A: Errore caricamento header-ticker', err);
+      });
   }
 
   // Tooltip "?" nella card (metriche cliccabili)
-  if (
-    window.__TradeliaUI &&
-    typeof window.__TradeliaUI.bindMetricInfoButtons === "function"
-  ) {
+  if (window.__TradeliaUI && typeof window.__TradeliaUI.bindMetricInfoButtons === 'function') {
     try {
       window.__TradeliaUI.bindMetricInfoButtons(node);
     } catch (e) {
@@ -151,4 +157,3 @@ export function bindCard(node, rawData, ctx = {}) {
     }
   }
 }
-

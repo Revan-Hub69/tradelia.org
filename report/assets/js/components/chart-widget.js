@@ -33,10 +33,10 @@ const CHART_WIDGET = {
     `;
 
     containerEl.appendChild(root);
-    
+
     // Carica chart
     this._loadChart(root, options);
-    
+
     Logger.debug('ChartWidget', 'Widget montato');
     return root;
   },
@@ -45,15 +45,10 @@ const CHART_WIDGET = {
   async _loadChart(root, options = {}) {
     const body = root.querySelector('#chart-widget-body');
     const subtitle = root.querySelector('#chart-widget-subtitle');
-    
+
     if (!body) return;
 
-    const { 
-      reportId = null, 
-      symbol = null, 
-      timestamp = null,
-      chartImageUrl = null 
-    } = options;
+    const { reportId = null, symbol = null, timestamp = null, chartImageUrl = null } = options;
 
     // Priorità 1: Screenshot statico se fornito esplicitamente
     if (chartImageUrl) {
@@ -67,7 +62,7 @@ const CHART_WIDGET = {
     if (reportId) {
       const imageUrl = `/report/reports/${reportId}/chart-snapshot.png`;
       const imageExists = await this._checkImageExists(imageUrl);
-      
+
       if (imageExists) {
         if (subtitle) subtitle.textContent = 'Snapshot al momento del report';
         this._showStaticChart(body, imageUrl, timestamp);
@@ -80,18 +75,18 @@ const CHART_WIDGET = {
     // Il timestamp viene mostrato per indicare quando è stato generato il report
     if (symbol) {
       // Mostra timestamp del report se disponibile
-      const timestampText = timestamp 
-        ? new Date(timestamp).toLocaleString('it-IT', { 
-            day: '2-digit', 
-            month: '2-digit', 
+      const timestampText = timestamp
+        ? new Date(timestamp).toLocaleString('it-IT', {
+            day: '2-digit',
+            month: '2-digit',
             year: 'numeric',
-            hour: '2-digit', 
-            minute: '2-digit' 
+            hour: '2-digit',
+            minute: '2-digit',
           })
         : null;
-      
+
       if (subtitle) {
-        subtitle.textContent = timestampText 
+        subtitle.textContent = timestampText
           ? `Chart live - Report generato il ${timestampText} | Dati in tempo reale`
           : 'Chart live - Dati in tempo reale';
       }
@@ -115,13 +110,13 @@ const CHART_WIDGET = {
 
   // ===== STATIC CHART =====
   _showStaticChart(body, imageUrl, timestamp) {
-    const timestampText = timestamp 
-      ? new Date(timestamp).toLocaleString('it-IT', { 
-          day: '2-digit', 
-          month: '2-digit', 
+    const timestampText = timestamp
+      ? new Date(timestamp).toLocaleString('it-IT', {
+          day: '2-digit',
+          month: '2-digit',
           year: 'numeric',
-          hour: '2-digit', 
-          minute: '2-digit' 
+          hour: '2-digit',
+          minute: '2-digit',
         })
       : '';
 
@@ -131,7 +126,7 @@ const CHART_WIDGET = {
     img.alt = 'Chart snapshot';
     img.className = 'chart-widget-static-image';
     img.loading = 'lazy';
-    
+
     img.onerror = () => {
       // Se l'immagine non carica, nascondi il widget invece di mostrare errore
       const root = body.closest('.chart-widget');
@@ -145,11 +140,15 @@ const CHART_WIDGET = {
       <div class="chart-widget-static">
         <div class="chart-widget-static-image-container">
         </div>
-        ${timestampText ? `
+        ${
+          timestampText
+            ? `
           <div class="chart-widget-static-timestamp">
             Snapshot: ${timestampText}
           </div>
-        ` : ''}
+        `
+            : ''
+        }
         <div class="chart-widget-static-info">
           <div class="chart-widget-static-info-item">
             <span class="chart-widget-info-label">Timeframe:</span>
@@ -184,7 +183,7 @@ const CHART_WIDGET = {
     // Normalizza simbolo per TradingView
     // Es: AAPL -> NASDAQ:AAPL, BTCUSD -> BINANCE:BTCUSD
     const normalizedSymbol = this._normalizeSymbol(symbol);
-    
+
     if (!normalizedSymbol) {
       // Se il simbolo non può essere normalizzato, nascondi il widget
       const root = body.closest('.chart-widget');
@@ -194,7 +193,7 @@ const CHART_WIDGET = {
       Logger.warn('ChartWidget', `Simbolo non valido: ${symbol}`);
       return;
     }
-    
+
     // IMPORTANTE: Non sovrascrivere il sottotitolo - è già stato impostato sopra
     // Container per il widget TradingView
     const containerId = `tradingview-${Date.now()}`;
@@ -215,9 +214,12 @@ const CHART_WIDGET = {
         this._loadTradingViewAdvancedChart(container, normalizedSymbol);
       }, 200);
     }
-    
+
     // Log per debug
-    Logger.debug('ChartWidget', `TradingView ticker inizializzato per ${normalizedSymbol}, sottotitolo: ${body.closest('.chart-widget')?.querySelector('#chart-widget-subtitle')?.textContent || 'non trovato'}`);
+    Logger.debug(
+      'ChartWidget',
+      `TradingView ticker inizializzato per ${normalizedSymbol}, sottotitolo: ${body.closest('.chart-widget')?.querySelector('#chart-widget-subtitle')?.textContent || 'non trovato'}`
+    );
 
     Logger.debug('ChartWidget', `TradingView chart caricato: ${normalizedSymbol}`);
   },
@@ -225,20 +227,20 @@ const CHART_WIDGET = {
   // ===== NORMALIZE SYMBOL =====
   _normalizeSymbol(symbol) {
     if (!symbol) return symbol;
-    
+
     const upperSymbol = symbol.toUpperCase();
-    
+
     // Stock USA (NASDAQ/NYSE)
     const nasdaqStocks = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'NFLX'];
     const nyseStocks = ['JPM', 'BAC', 'WMT', 'JNJ', 'V', 'MA', 'PG', 'HD'];
-    
+
     if (nasdaqStocks.includes(upperSymbol)) {
       return `NASDAQ:${upperSymbol}`;
     }
     if (nyseStocks.includes(upperSymbol)) {
       return `NYSE:${upperSymbol}`;
     }
-    
+
     // Crypto
     if (upperSymbol.includes('BTC') || upperSymbol.includes('ETH')) {
       if (upperSymbol.includes('USD')) {
@@ -246,12 +248,17 @@ const CHART_WIDGET = {
       }
       return `BINANCE:${upperSymbol}USD`;
     }
-    
+
     // Forex
-    if (upperSymbol.includes('EUR') || upperSymbol.includes('GBP') || upperSymbol.includes('USD') || upperSymbol.includes('JPY')) {
+    if (
+      upperSymbol.includes('EUR') ||
+      upperSymbol.includes('GBP') ||
+      upperSymbol.includes('USD') ||
+      upperSymbol.includes('JPY')
+    ) {
       return `FX:${upperSymbol}`;
     }
-    
+
     // Default: prova NASDAQ
     return `NASDAQ:${upperSymbol}`;
   },
@@ -282,23 +289,23 @@ const CHART_WIDGET = {
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
     script.async = true;
     script.innerHTML = JSON.stringify({
-      "autosize": false,
-      "height": 600,
-      "symbol": symbol,
-      "interval": "D",
-      "timezone": "Europe/Rome",
-      "theme": "dark",
-      "style": "1",
-      "locale": "it",
-      "backgroundColor": "transparent",
-      "hide_side_toolbar": false,
-      "allow_symbol_change": false,
-      "calendar": false,
-      "support_host": "https://www.tradingview.com",
-      "enable_publishing": false,
-      "hide_top_toolbar": false,
-      "hide_legend": false,
-      "save_image": false
+      autosize: false,
+      height: 600,
+      symbol: symbol,
+      interval: 'D',
+      timezone: 'Europe/Rome',
+      theme: 'dark',
+      style: '1',
+      locale: 'it',
+      backgroundColor: 'transparent',
+      hide_side_toolbar: false,
+      allow_symbol_change: false,
+      calendar: false,
+      support_host: 'https://www.tradingview.com',
+      enable_publishing: false,
+      hide_top_toolbar: false,
+      hide_legend: false,
+      save_image: false,
     });
 
     widgetContainer.appendChild(script);
@@ -327,8 +334,7 @@ const CHART_WIDGET = {
     if (!body) return;
 
     this._loadChart(node, options);
-  }
+  },
 };
 
 export { CHART_WIDGET as chartWidget };
-

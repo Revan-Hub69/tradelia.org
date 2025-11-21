@@ -62,10 +62,11 @@ window.openManagePaymentsModal = openManagePaymentsModal;
 
 function openEditUserModal(identifier, type = 'user_id') {
   const users = getUsersSnapshot();
-  const user = type === 'email' 
-    ? users.find(u => u.email === identifier)
-    : users.find(u => u.user_id === identifier);
-    
+  const user =
+    type === 'email'
+      ? users.find((u) => u.email === identifier)
+      : users.find((u) => u.user_id === identifier);
+
   if (!user) {
     showToast('Utente non trovato.', 'error');
     return;
@@ -73,7 +74,7 @@ function openEditUserModal(identifier, type = 'user_id') {
 
   // Chiudi altri modali prima
   const otherModals = ['manage-credits-modal', 'manage-payments-modal'];
-  otherModals.forEach(modalId => {
+  otherModals.forEach((modalId) => {
     const modal = document.getElementById(modalId);
     if (modal) {
       modal.hidden = true;
@@ -86,11 +87,9 @@ function openEditUserModal(identifier, type = 'user_id') {
   if (EDIT_DISPLAY_NAME) EDIT_DISPLAY_NAME.value = user.display_name || '';
   if (EDIT_ROLE) EDIT_ROLE.value = user.role || 'trial';
   if (EDIT_VALID_UNTIL) {
-    EDIT_VALID_UNTIL.value = user.valid_until 
-      ? user.valid_until.split('T')[0] 
-      : '';
+    EDIT_VALID_UNTIL.value = user.valid_until ? user.valid_until.split('T')[0] : '';
   }
-  
+
   // Salva il tipo di identificatore per handleSaveUser
   if (EDIT_MODAL) {
     EDIT_MODAL.dataset.identifierType = type;
@@ -105,8 +104,8 @@ function openManageCreditsModal(identifier, type = 'user_id') {
     showToast('Gestione crediti disponibile solo per utenti con user_id.', 'error');
     return;
   }
-  
-  const user = getUsersSnapshot().find(u => u.user_id === identifier);
+
+  const user = getUsersSnapshot().find((u) => u.user_id === identifier);
   if (!user) {
     showToast('Utente non trovato.', 'error');
     return;
@@ -114,7 +113,7 @@ function openManageCreditsModal(identifier, type = 'user_id') {
 
   // Chiudi altri modali prima
   const otherModals = ['edit-user-modal', 'manage-payments-modal'];
-  otherModals.forEach(modalId => {
+  otherModals.forEach((modalId) => {
     const modal = document.getElementById(modalId);
     if (modal) {
       modal.hidden = true;
@@ -126,7 +125,7 @@ function openManageCreditsModal(identifier, type = 'user_id') {
   if (CREDITS_USER_EMAIL) CREDITS_USER_EMAIL.value = user.email;
   if (CURRENT_CREDITS) CURRENT_CREDITS.value = user.credits || 0;
   if (CREDITS_CHANGE) CREDITS_CHANGE.value = 0;
-  
+
   if (CREDITS_MODAL) {
     CREDITS_MODAL.hidden = false;
     CREDITS_MODAL.style.display = 'flex';
@@ -134,7 +133,7 @@ function openManageCreditsModal(identifier, type = 'user_id') {
 }
 
 function openManagePaymentsModal(userId) {
-  const user = getUsersSnapshot().find(u => u.user_id === userId);
+  const user = getUsersSnapshot().find((u) => u.user_id === userId);
   if (!user) {
     showToast('Utente non trovato.', 'error');
     return;
@@ -145,10 +144,10 @@ function openManagePaymentsModal(userId) {
   const PAYMENTS_MODAL = document.getElementById('manage-payments-modal');
   const PAYMENTS_USER_ID = document.getElementById('payments-user-id');
   const PAYMENTS_USER_EMAIL = document.getElementById('payments-user-email');
-  
+
   // Chiudi altri modali prima
   const otherModals = ['edit-user-modal', 'manage-credits-modal'];
-  otherModals.forEach(modalId => {
+  otherModals.forEach((modalId) => {
     const modal = document.getElementById(modalId);
     if (modal) {
       modal.hidden = true;
@@ -156,10 +155,10 @@ function openManagePaymentsModal(userId) {
       modal.dataset.userOpened = '';
     }
   });
-  
+
   if (PAYMENTS_USER_ID) PAYMENTS_USER_ID.value = user.user_id;
   if (PAYMENTS_USER_EMAIL) PAYMENTS_USER_EMAIL.value = user.email || '';
-  
+
   if (PAYMENTS_MODAL) {
     // Imposta flag per indicare che è stato aperto dall'utente
     PAYMENTS_MODAL.dataset.userOpened = 'true';
@@ -201,13 +200,13 @@ async function handleSaveUser() {
         userId: identifierType === 'user_id' ? identifier : null,
         displayName: newDisplayName || null,
         role: newRole,
-        validUntil: newValidUntil ? new Date(newValidUntil).toISOString() : null
-      }
+        validUntil: newValidUntil ? new Date(newValidUntil).toISOString() : null,
+      },
     });
 
     showToast('Utente aggiornato con successo!', 'success');
     if (EDIT_MODAL) EDIT_MODAL.hidden = true;
-    
+
     // Reload data
     await reloadUsers();
   } catch (err) {
@@ -244,18 +243,18 @@ async function handleUpdateCredits() {
       body: {
         userId,
         delta: creditsChange,
-        reason: 'admin_manual_adjustment'
-      }
+        reason: 'admin_manual_adjustment',
+      },
     });
 
     showToast('Crediti aggiornati con successo!', 'success');
     if (CREDITS_MODAL) CREDITS_MODAL.hidden = true;
-    
+
     // Reload data
     await reloadUsers();
   } catch (err) {
     Logger.error('Admin', 'Update credits error', err);
-    showToast('Errore durante l\'aggiornamento: ' + (err.message || ''), 'error');
+    showToast("Errore durante l'aggiornamento: " + (err.message || ''), 'error');
   } finally {
     if (UPDATE_CREDITS_BTN) UPDATE_CREDITS_BTN.disabled = false;
   }
@@ -285,4 +284,3 @@ function showToast(message, type = 'info') {
 
 // Export per uso in admin.js
 window.showToast = showToast;
-

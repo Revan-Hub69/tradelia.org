@@ -18,23 +18,23 @@ function escapeHtml(str) {
 
 function processText(text, glossaryTerms = {}) {
   if (!text) return '';
-  
+
   // Converti in stringa per sicurezza
   let processed = String(text);
-  
+
   // STEP 1: Processa markdown PRIMA dell'escape HTML (così i tag HTML vengono preservati)
   processed = processed.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   processed = processed.replace(/\*(.+?)\*/g, '<em>$1</em>');
   processed = processed.replace(/__(.+?)__/g, '<u>$1</u>');
-  
+
   // STEP 2: Escape HTML manualmente, preservando i tag che abbiamo creato
   // Prima escape i tag che abbiamo creato in modo temporaneo
   const tagPlaceholders = {
     strong: '___STRONG_TAG___',
     em: '___EM_TAG___',
-    u: '___U_TAG___'
+    u: '___U_TAG___',
   };
-  
+
   processed = processed
     .replace(/<strong>/g, tagPlaceholders.strong + 'OPEN')
     .replace(/<\/strong>/g, tagPlaceholders.strong + 'CLOSE')
@@ -42,7 +42,7 @@ function processText(text, glossaryTerms = {}) {
     .replace(/<\/em>/g, tagPlaceholders.em + 'CLOSE')
     .replace(/<u>/g, tagPlaceholders.u + 'OPEN')
     .replace(/<\/u>/g, tagPlaceholders.u + 'CLOSE');
-  
+
   // Escape HTML characters (previene errori con <<, <, >, &, etc.)
   processed = processed
     .replace(/&/g, '&amp;')
@@ -50,7 +50,7 @@ function processText(text, glossaryTerms = {}) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
-  
+
   // Ripristina i tag HTML
   processed = processed
     .replace(new RegExp(tagPlaceholders.strong + 'OPEN', 'g'), '<strong>')
@@ -59,7 +59,7 @@ function processText(text, glossaryTerms = {}) {
     .replace(new RegExp(tagPlaceholders.em + 'CLOSE', 'g'), '</em>')
     .replace(new RegExp(tagPlaceholders.u + 'OPEN', 'g'), '<u>')
     .replace(new RegExp(tagPlaceholders.u + 'CLOSE', 'g'), '</u>');
-  
+
   // STEP 3: Processa termini glossario DOPO markdown e escape HTML
   Object.entries(glossaryTerms).forEach(([term, key]) => {
     // Escape il termine per la regex (ma il testo è già escaped)
@@ -71,7 +71,7 @@ function processText(text, glossaryTerms = {}) {
       return `<span class="glossary-term" data-glossary="${escapeHtml(key)}">${match}</span>`;
     });
   });
-  
+
   return processed;
 }
 
@@ -79,7 +79,7 @@ function processText(text, glossaryTerms = {}) {
 function renderHeader(data) {
   const meta = data.meta || {};
   const tags = data.tags || [];
-  
+
   return `
     <header class="tutorial-header">
       <h1 class="tutorial-title">${escapeHtml(data.title || 'Tutorial')}</h1>
@@ -88,11 +88,15 @@ function renderHeader(data) {
         ${meta.published && meta.category ? '<span>•</span>' : ''}
         ${meta.category ? `<span>Categoria: ${escapeHtml(meta.category)}</span>` : ''}
       </div>
-      ${tags.length > 0 ? `
+      ${
+        tags.length > 0
+          ? `
         <div class="tutorial-tags">
-          ${tags.map(tag => `<span class="tutorial-tag">${escapeHtml(tag)}</span>`).join('')}
+          ${tags.map((tag) => `<span class="tutorial-tag">${escapeHtml(tag)}</span>`).join('')}
         </div>
-      ` : ''}
+      `
+          : ''
+      }
     </header>
   `;
 }
@@ -100,18 +104,22 @@ function renderHeader(data) {
 // ===== RENDER TOC =====
 function renderTOC(sections) {
   if (!sections || sections.length === 0) return '';
-  
+
   return `
     <nav class="tutorial-toc" aria-label="Indice del tutorial">
       <h2 class="tutorial-toc-title">Indice del Tutorial</h2>
       <ol class="tutorial-toc-list">
-        ${sections.map((section, index) => `
+        ${sections
+          .map(
+            (section, index) => `
           <li class="tutorial-toc-item">
             <a href="#${section.id || `sezione-${index + 1}`}" class="tutorial-toc-link">
               ${index + 1}. ${escapeHtml(section.title || `Sezione ${index + 1}`)}
             </a>
           </li>
-        `).join('')}
+        `
+          )
+          .join('')}
       </ol>
     </nav>
   `;
@@ -122,14 +130,14 @@ function renderSection(section, index, glossaryTerms = {}) {
   const sectionId = section.id || `sezione-${index + 1}`;
   const title = section.title || `Sezione ${index + 1}`;
   const content = section.content || [];
-  
+
   let html = `
     <section id="${sectionId}" class="tutorial-section">
       <h2 class="tutorial-section-title">${index + 1}. ${escapeHtml(title)}</h2>
       <div class="tutorial-content">
   `;
-  
-  content.forEach(item => {
+
+  content.forEach((item) => {
     if (item.type === 'paragraph') {
       html += `<p>${processText(item.text, glossaryTerms)}</p>`;
     } else if (item.type === 'heading') {
@@ -139,7 +147,7 @@ function renderSection(section, index, glossaryTerms = {}) {
     } else if (item.type === 'list') {
       const listTag = item.ordered ? 'ol' : 'ul';
       html += `<${listTag}>`;
-      item.items.forEach(itemText => {
+      item.items.forEach((itemText) => {
         html += `<li>${processText(itemText, glossaryTerms)}</li>`;
       });
       html += `</${listTag}>`;
@@ -151,30 +159,30 @@ function renderSection(section, index, glossaryTerms = {}) {
       html += item.content;
     }
   });
-  
+
   html += `
       </div>
     </section>
   `;
-  
+
   return html;
 }
 
 // ===== RENDER TABLE =====
 function renderTable(tableData, glossaryTerms = {}) {
   if (!tableData.headers || !tableData.rows) return '';
-  
+
   let html = `
     <table class="tutorial-table">
       <thead>
         <tr>
-          ${tableData.headers.map(header => `<th>${escapeHtml(header)}</th>`).join('')}
+          ${tableData.headers.map((header) => `<th>${escapeHtml(header)}</th>`).join('')}
         </tr>
       </thead>
       <tbody>
   `;
-  
-  tableData.rows.forEach(row => {
+
+  tableData.rows.forEach((row) => {
     html += '<tr>';
     row.forEach((cell, index) => {
       const cellClass = cell.class || '';
@@ -189,12 +197,12 @@ function renderTable(tableData, glossaryTerms = {}) {
     });
     html += '</tr>';
   });
-  
+
   html += `
       </tbody>
     </table>
   `;
-  
+
   return html;
 }
 
@@ -202,27 +210,27 @@ function renderTable(tableData, glossaryTerms = {}) {
 async function loadTutorialData() {
   // Estrai nome file tutorial da URL parameter o path
   let fileName = null;
-  
+
   // Prova a leggere dal parametro URL ?tutorial=nome
   const urlParams = new URLSearchParams(window.location.search);
   const tutorialParam = urlParams.get('tutorial');
-  
+
   if (tutorialParam) {
     fileName = tutorialParam;
   } else {
     // Fallback: estrai dal path (per compatibilità con vecchi link)
     const pathParts = window.location.pathname.split('/');
     fileName = pathParts[pathParts.length - 1].replace('.html', '').replace('index', '');
-    
+
     // Se il fileName è vuoto o 'index', non possiamo procedere
     if (!fileName || fileName === 'index') {
       Logger.error('TutorialRenderer', 'Nome tutorial non trovato in URL parameter o path');
       return null;
     }
   }
-  
+
   const jsonPath = `/report/tutorial/data/${fileName}.json`;
-  
+
   try {
     const response = await fetch(jsonPath);
     if (!response.ok) {
@@ -244,7 +252,7 @@ async function renderTutorial() {
     Logger.error('TutorialRenderer', 'Container tutorial-content non trovato');
     return;
   }
-  
+
   // Carica dati
   const data = await loadTutorialData();
   if (!data) {
@@ -255,45 +263,45 @@ async function renderTutorial() {
     `;
     return;
   }
-  
+
   // Aggiorna meta tags SEO
   updateSEOMetaTags(data);
-  
+
   // Render header
   const headerHtml = renderHeader(data);
-  
+
   // Render TOC
   const tocHtml = renderTOC(data.sections || []);
-  
+
   // Render sections
   const glossaryTerms = data.glossaryTerms || {};
-  const sectionsHtml = (data.sections || []).map((section, index) => 
-    renderSection(section, index, glossaryTerms)
-  ).join('');
-  
+  const sectionsHtml = (data.sections || [])
+    .map((section, index) => renderSection(section, index, glossaryTerms))
+    .join('');
+
   // Assembla HTML
   container.innerHTML = headerHtml + tocHtml + sectionsHtml;
-  
+
   // Mount header/footer
   const headerSlot = document.getElementById('site-header-slot');
   if (headerSlot) {
     siteHeader.mount(headerSlot);
   }
-  
+
   const footerSlot = document.getElementById('site-footer-slot');
   if (footerSlot) {
     siteFooter.mount(footerSlot);
   }
-  
+
   // Mount glossary popup
   glossaryPopup.mount();
-  
+
   // Bind glossary terms
   bindGlossaryTerms();
-  
+
   // Set light theme
   document.documentElement.setAttribute('data-theme', 'light');
-  
+
   Logger.debug('TutorialRenderer', 'Tutorial renderizzato');
 }
 
@@ -303,13 +311,13 @@ function updateSEOMetaTags(data) {
   const meta = data.meta || {};
   const tags = data.tags || [];
   const category = meta.category || 'Trading & Investimenti';
-  
+
   // Estrai descrizione dal primo paragrafo o usa default
   let baseDescription = '';
   if (data.sections && data.sections.length > 0) {
     const firstSection = data.sections[0];
     if (firstSection.content) {
-      const firstParagraph = firstSection.content.find(item => item.type === 'paragraph');
+      const firstParagraph = firstSection.content.find((item) => item.type === 'paragraph');
       if (firstParagraph && firstParagraph.text) {
         // Rimuovi markdown e tag HTML, estrai solo testo pulito
         let cleanText = firstParagraph.text
@@ -321,7 +329,7 @@ function updateSEOMetaTags(data) {
       }
     }
   }
-  
+
   // Costruisci descrizione ottimizzata per social sharing
   // Enfatizza: progetto indipendente, metodo accademico, non istituzionale
   let description = '';
@@ -332,32 +340,37 @@ function updateSEOMetaTags(data) {
     // Default che enfatizza il progetto indipendente
     description = `Tutorial completo su ${title.toLowerCase()}. Progetto indipendente che utilizza AI con metodo accademico per analisi finanziaria multi-fattore. ${category}.`;
   }
-  
+
   // Assicurati che la descrizione non superi i limiti per social (max ~155-160 caratteri per Twitter)
   // Ma Open Graph può essere più lungo, quindi creiamo due versioni se necessario
-  const socialDescription = description.length > 155 
-    ? description.substring(0, 152) + '...'
-    : description;
-  
+  const socialDescription =
+    description.length > 155 ? description.substring(0, 152) + '...' : description;
+
   // Ottimizza descrizione per AI
-  const keywords = tags.concat(['Tradelia AI', category, 'Tutorial', 'Metodo Accademico', 'Progetto Indipendente']);
+  const keywords = tags.concat([
+    'Tradelia AI',
+    category,
+    'Tutorial',
+    'Metodo Accademico',
+    'Progetto Indipendente',
+  ]);
   const optimizedDescription = optimizeDescriptionForAI(socialDescription, keywords);
-  
+
   // URL pagina
   const pathParts = window.location.pathname.split('/');
   const fileName = pathParts[pathParts.length - 1].replace('.html', '');
   const url = `https://tradelia.org/report/tutorial/${fileName}.html`;
   const imageUrl = 'https://tradelia.org/img/tradelia_og_vC_white_clean.png';
-  
+
   // Aggiorna title - enfatizza progetto indipendente
   document.title = `TRADELIA • AI — ${title}`;
-  
+
   // Aggiorna meta description
   updateOrCreateMeta('name', 'description', optimizedDescription);
-  
+
   // Aggiorna keywords
   updateOrCreateMeta('name', 'keywords', keywords.join(', '));
-  
+
   // Aggiorna Open Graph - importante per social sharing
   updateOrCreateMeta('property', 'og:type', 'article');
   updateOrCreateMeta('property', 'og:title', `TRADELIA • AI — ${title}`);
@@ -369,7 +382,7 @@ function updateSEOMetaTags(data) {
   updateOrCreateMeta('property', 'og:image:type', 'image/png');
   updateOrCreateMeta('property', 'og:site_name', 'Tradelia AI');
   updateOrCreateMeta('property', 'og:locale', 'it_IT');
-  
+
   // Aggiorna Twitter Card
   updateOrCreateMeta('name', 'twitter:card', 'summary_large_image');
   updateOrCreateMeta('name', 'twitter:title', `TRADELIA • AI — ${title}`);
@@ -378,7 +391,7 @@ function updateSEOMetaTags(data) {
   updateOrCreateMeta('name', 'twitter:image:alt', `${title} - Tradelia AI`);
   updateOrCreateMeta('name', 'twitter:creator', '@tradelia_ai');
   updateOrCreateMeta('name', 'twitter:site', '@tradelia_ai');
-  
+
   // Aggiorna article tags
   if (meta.published) {
     // Converti data pubblicazione in ISO
@@ -386,38 +399,40 @@ function updateSEOMetaTags(data) {
     updateOrCreateMeta('property', 'article:published_time', publishedDate);
   }
   updateOrCreateMeta('property', 'article:section', category);
-  tags.forEach(tag => {
+  tags.forEach((tag) => {
     const metaTag = document.createElement('meta');
     metaTag.setAttribute('property', 'article:tag');
     metaTag.setAttribute('content', tag);
     document.head.appendChild(metaTag);
   });
-  
+
   // Aggiorna structured data JSON-LD
   const structuredData = generateArticleStructuredData({
     title: `TRADELIA • AI — ${title}`,
     description: description,
     url: url,
     author: 'Tradelia AI',
-    datePublished: meta.published ? new Date(meta.published).toISOString() : new Date().toISOString(),
+    datePublished: meta.published
+      ? new Date(meta.published).toISOString()
+      : new Date().toISOString(),
     dateModified: new Date().toISOString(),
     section: category,
-    keywords: keywords
+    keywords: keywords,
   });
-  
+
   // Rimuovi structured data esistente
   const existing = document.querySelector('script[type="application/ld+json"]#structured-data');
   if (existing) {
     existing.remove();
   }
-  
+
   // Inietta nuovo structured data
   const script = document.createElement('script');
   script.type = 'application/ld+json';
   script.id = 'structured-data';
   script.textContent = JSON.stringify(structuredData, null, 2);
   document.head.appendChild(script);
-  
+
   Logger.debug('TutorialRenderer', 'Meta tags SEO aggiornati');
 }
 
@@ -435,8 +450,8 @@ function updateOrCreateMeta(attr, value, content) {
 // ===== BIND GLOSSARY TERMS =====
 function bindGlossaryTerms() {
   const glossaryTerms = document.querySelectorAll('.glossary-term[data-glossary]');
-  
-  glossaryTerms.forEach(term => {
+
+  glossaryTerms.forEach((term) => {
     term.addEventListener('click', async (e) => {
       e.preventDefault();
       const termKey = term.dataset.glossary;
@@ -457,4 +472,3 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 export { renderTutorial, processText, renderSection };
-

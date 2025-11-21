@@ -10,7 +10,7 @@ export async function loadOverview() {
     if (reports && reports.length > 0) {
       const totalEl = document.getElementById('stat-total-reports');
       if (totalEl) totalEl.textContent = reports.length;
-      
+
       const lastUpdateEl = document.getElementById('stat-last-update');
       if (lastUpdateEl && reports[0].date) {
         lastUpdateEl.textContent = new Date(reports[0].date).toLocaleDateString('it-IT');
@@ -19,7 +19,7 @@ export async function loadOverview() {
   } catch (e) {
     console.error('[Overview] Errore caricamento statistiche:', e);
   }
-  
+
   // Carica attività recente
   loadRecentActivity();
 }
@@ -27,11 +27,14 @@ export async function loadOverview() {
 function loadRecentActivity() {
   const activityList = document.getElementById('recent-activity');
   if (!activityList) return;
-  
+
   const recentReports = JSON.parse(localStorage.getItem('tradelia-recent-reports') || '[]');
-  
+
   if (recentReports.length > 0) {
-    activityList.innerHTML = recentReports.slice(0, 5).map(report => `
+    activityList.innerHTML = recentReports
+      .slice(0, 5)
+      .map(
+        (report) => `
       <div class="recent-activity-item">
         <div class="activity-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -46,7 +49,9 @@ function loadRecentActivity() {
           <div class="activity-time">${report.date ? new Date(report.date).toLocaleDateString('it-IT') : 'Data non disponibile'}</div>
         </div>
       </div>
-    `).join('');
+    `
+      )
+      .join('');
   }
 }
 
@@ -62,4 +67,3 @@ async function loadReportsData() {
   }
   return [];
 }
-

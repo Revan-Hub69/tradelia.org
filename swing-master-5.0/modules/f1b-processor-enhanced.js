@@ -16,7 +16,7 @@ let processF1B;
 /**
  * Process F1B with ETF proxy data collection
  * Complete workflow: collect data → process → output
- * 
+ *
  * @param {Object} config - Configuration
  * @param {string} config.fredApiKey - Optional FRED API key
  * @param {Object} config.customData - Optional custom data override
@@ -25,7 +25,7 @@ let processF1B;
 // Lazy load processor
 async function getProcessor() {
   if (processF1B) return processF1B;
-  
+
   try {
     // Prova path relativo (Node)
     const module = await import('../../report/assets/js/modules/f1b-processor.js');
@@ -50,31 +50,30 @@ export async function processF1BWithETFProxy(config = {}) {
     const marketData = await collectF1BMarketData({
       fredApiKey: config.fredApiKey,
       period1m: config.period1m || '1m',
-      period1w: config.period1w || '1w'
+      period1w: config.period1w || '1w',
     });
-    
+
     // Step 2: Merge with custom data if provided
     const rawMarketData = {
       ...marketData,
-      ...(config.customData || {})
+      ...(config.customData || {}),
     };
-    
+
     // Step 3: Load processor and process
     console.log('⚙️ Processing F1B metrics...');
     const processor = await getProcessor();
     const f1bOutput = processor(rawMarketData, {
       timestampET: config.timestampET || new Date().toISOString(),
-      auditPathID: config.auditPathID || null
+      auditPathID: config.auditPathID || null,
     });
-    
+
     // Step 4: Add data source metadata
     f1bOutput.meta.dataSource = 'ETF_Proxy_Free_APIs';
     f1bOutput.meta.dataCollectionMethod = 'Automated_ETF_Proxy';
     f1bOutput.meta.confidence = marketData.meta.confidence;
-    
+
     console.log('✅ F1B processing complete');
     return f1bOutput;
-    
   } catch (error) {
     console.error('❌ Error in F1B processing:', error);
     throw error;
@@ -90,11 +89,10 @@ export async function example() {
       // Optional: Add FRED API key for better Treasury data
       // fredApiKey: 'YOUR_FRED_API_KEY'
     });
-    
+
     console.log('F1B Output:', JSON.stringify(result, null, 2));
     return result;
   } catch (error) {
     console.error('Error:', error);
   }
 }
-

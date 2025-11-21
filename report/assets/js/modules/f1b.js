@@ -2,7 +2,11 @@
 // F1B · Market Regime v19 Dynamic – nuova orchestrazione con riassunto AI fluido,
 // 2 chart istituzionali sempre visibili e drawer per sezione con chart dedicato.
 
-import { renderModuleHeader, renderModuleTabsSidebar, bindModuleTabs } from '../components/module-header.js';
+import {
+  renderModuleHeader,
+  renderModuleTabsSidebar,
+  bindModuleTabs,
+} from '../components/module-header.js';
 import Logger from '../utils/logger.js';
 
 // ---------------------------------------------------------------------------
@@ -26,7 +30,12 @@ function coalesce(...values) {
     if (val === 0) return 0;
     if (val === false) return false;
     if (val === true) return true;
-    if (val !== undefined && val !== null && val !== '' && !(Array.isArray(val) && val.length === 0)) {
+    if (
+      val !== undefined &&
+      val !== null &&
+      val !== '' &&
+      !(Array.isArray(val) && val.length === 0)
+    ) {
       return val;
     }
   }
@@ -46,7 +55,7 @@ function toPercent(value, opts = {}) {
   if (value == null || value === '—' || value === '') return fallback;
   const num = typeof value === 'number' ? value : toNumber(value, Number.NaN);
   if (!Number.isFinite(num)) return fallback;
-  const pct = (opts.asFraction ? num : num * 100);
+  const pct = opts.asFraction ? num : num * 100;
   return `${pct.toFixed(decimals)}${suffix}`;
 }
 
@@ -95,7 +104,11 @@ function determineTone({ type, value }) {
 
 function safeArray(value) {
   if (Array.isArray(value)) return value;
-  if (typeof value === 'string' && value.trim()) return value.split(',').map(s => s.trim()).filter(Boolean);
+  if (typeof value === 'string' && value.trim())
+    return value
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
   return [];
 }
 
@@ -117,7 +130,7 @@ function wrapMetric({ id, label, value, definition, tone, hint }) {
     value: value ?? '—',
     definition: definition ? String(definition) : '',
     tone: tone || 'neutral',
-    hint: hint ? String(hint) : ''
+    hint: hint ? String(hint) : '',
   };
 }
 
@@ -125,16 +138,18 @@ function extractAnalysisHeadlines(raw) {
   const swingPacket = raw?.swingPacket || {};
   const snapshot = swingPacket?.f1bSnapshot || {};
 
-  return coalesce(
-    raw?.['F1B|ANALYSIS_T1_HEADLINES'],
-    raw?.F1B_ANALYSIS_T1_HEADLINES,
-    swingPacket?.analysisHeadlines,
-    swingPacket?.analysis_t1_headlines,
-    snapshot?.analysis_t1_headlines,
-    raw?.analysis_headlines,
-    raw?.ANALYSIS_T1_HEADLINES,
-    {}
-  ) || {};
+  return (
+    coalesce(
+      raw?.['F1B|ANALYSIS_T1_HEADLINES'],
+      raw?.F1B_ANALYSIS_T1_HEADLINES,
+      swingPacket?.analysisHeadlines,
+      swingPacket?.analysis_t1_headlines,
+      snapshot?.analysis_t1_headlines,
+      raw?.analysis_headlines,
+      raw?.ANALYSIS_T1_HEADLINES,
+      {}
+    ) || {}
+  );
 }
 
 function extractFinvizFilters(raw) {
@@ -171,8 +186,14 @@ function normalizeDataPublicF1B(raw = {}) {
     ),
     hero_intro: metaRaw.hero_intro || '',
     hero_title: firstNonEmptyString(metaRaw.hero_title, 'Contesto rischio & ampiezza del mercato'),
-    hero_subtitle: firstNonEmptyString(metaRaw.hero_subtitle, 'Regime di mercato · Orizzonte 3–10 giorni'),
-    hero_desc: firstNonEmptyString(metaRaw.hero_desc, 'Lettura istituzionale. Non istruzione operativa.')
+    hero_subtitle: firstNonEmptyString(
+      metaRaw.hero_subtitle,
+      'Regime di mercato · Orizzonte 3–10 giorni'
+    ),
+    hero_desc: firstNonEmptyString(
+      metaRaw.hero_desc,
+      'Lettura istituzionale. Non istruzione operativa.'
+    ),
   };
 
   const regimeState = snapshot?.regime_state || {};
@@ -184,7 +205,7 @@ function normalizeDataPublicF1B(raw = {}) {
   const finvizFilters = extractFinvizFilters(raw);
   const bridgeF2 = raw?.bridgeF2 || swingPacket?.bridgeF2 || {};
   const handoffGuidance = raw?.handoffGuidance || swingPacket?.handoffGuidance || {};
-  
+
   // Nuovo formato: riassunto e sezioni già strutturati
   const riassuntoAI = raw?.riassuntoTradeliaAI || null;
   const riassuntoSezioni = raw?.riassuntoSezioniF1B || null;
@@ -198,7 +219,7 @@ function normalizeDataPublicF1B(raw = {}) {
       LiquidityRegimeScore: { raw: riskWindow?.RiskWindow_F1?.Score },
       CreditRiskBlock: { raw: microState?.CreditRiskBlock },
       FX_Regime: { raw: microState?.FX_Regime_comment },
-      RiskWindow: { raw: riskWindow?.RiskWindow_F1?.Score }
+      RiskWindow: { raw: riskWindow?.RiskWindow_F1?.Score },
     },
     breadth_rotation: {
       Breadth_1M: { raw: breadthState.Breadth_1M_pctSectorsGreen },
@@ -209,8 +230,8 @@ function normalizeDataPublicF1B(raw = {}) {
       Leadership: {
         LeadersMultiTF: { items: safeArray(breadthState.LeadersMultiTF) },
         DefensiveLeadership: { items: safeArray(breadthState.DefensiveLeadership) },
-        Lagging: { items: safeArray(breadthState.LaggingSectors) }
-      }
+        Lagging: { items: safeArray(breadthState.LaggingSectors) },
+      },
     },
     analysis_headlines: analysisHeadlines,
     market_microstructure: microState,
@@ -218,16 +239,16 @@ function normalizeDataPublicF1B(raw = {}) {
     risk_window: riskWindow,
     finvizFilters,
     bridgeF2,
-    handoffGuidance
+    handoffGuidance,
   };
 
   // Usa riassunto già strutturato se presente (nuovo formato), altrimenti costruisci
-  const summary = riassuntoAI 
+  const summary = riassuntoAI
     ? buildSummaryFromStructured(riassuntoAI)
     : buildSummary(regimeState, breadthState, microState, sizeState, riskWindow);
-  
+
   const primaryCharts = buildPrimaryChartsDescriptors(regimeState, breadthState, riskWindow);
-  
+
   // Usa sezioni già strutturate se presenti (nuovo formato), altrimenti costruisci
   const sections = riassuntoSezioni
     ? buildSectionsFromStructured(riassuntoSezioni, {
@@ -239,7 +260,7 @@ function normalizeDataPublicF1B(raw = {}) {
         analysisHeadlines,
         finvizFilters,
         bridgeF2,
-        handoffGuidance
+        handoffGuidance,
       })
     : buildSections({
         regimeState,
@@ -250,11 +271,13 @@ function normalizeDataPublicF1B(raw = {}) {
         analysisHeadlines,
         finvizFilters,
         bridgeF2,
-        handoffGuidance
+        handoffGuidance,
       });
 
   const sectionsMap = {};
-  sections.forEach(section => { sectionsMap[section.id] = section; });
+  sections.forEach((section) => {
+    sectionsMap[section.id] = section;
+  });
 
   return {
     meta,
@@ -262,7 +285,7 @@ function normalizeDataPublicF1B(raw = {}) {
     primaryCharts,
     sections,
     sectionsMap,
-    chartContext
+    chartContext,
   };
 }
 
@@ -274,7 +297,7 @@ function normalizeDataPublicF1B(raw = {}) {
  * Costruisce summary da riassuntoTradeliaAI strutturato (nuovo formato)
  */
 function buildSummaryFromStructured(riassuntoAI) {
-  const metrics = (riassuntoAI.metriche || []).map(m => {
+  const metrics = (riassuntoAI.metriche || []).map((m) => {
     let value = m.valore;
     // Normalizza array a stringa
     if (Array.isArray(value)) {
@@ -287,20 +310,20 @@ function buildSummaryFromStructured(riassuntoAI) {
     } else if (m.id_metrica === 'F1B_StrategyMode_macro') {
       tone = determineTone({ type: 'strategy', value });
     }
-    
+
     return wrapMetric({
       id: m.id_metrica,
       label: m.nome_metrica,
       value: String(value || '—'),
       definition: '',
-      tone
+      tone,
     });
   });
 
   return {
     label: riassuntoAI.titolo || 'Riassunto AI',
     narrative: riassuntoAI.testo || '',
-    metrics
+    metrics,
   };
 }
 
@@ -308,30 +331,56 @@ function buildSummaryFromStructured(riassuntoAI) {
  * Costruisce sections da riassuntoSezioniF1B strutturato (nuovo formato)
  */
 function buildSectionsFromStructured(riassuntoSezioni, context) {
-  const { regimeState, breadthState, microState, sizeState, riskWindow, analysisHeadlines, finvizFilters, bridgeF2, handoffGuidance } = context;
-  
+  const {
+    regimeState,
+    breadthState,
+    microState,
+    sizeState,
+    riskWindow,
+    analysisHeadlines,
+    finvizFilters,
+    bridgeF2,
+    handoffGuidance,
+  } = context;
+
   const sectionsMap = {
-    'F1B_regime_state': { id: 'regime', title: 'Regime & Risk Appetite', chart: { type: 'regime-gauge' } },
-    'F1B_breadth_and_rotation': { id: 'breadth', title: 'Breadth & Rotazione', chart: { type: 'breadth-leadership' } },
-    'F1B_market_microstructure': { id: 'market-micro', title: 'Market Microstructure', chart: { type: 'volatility-curve' } },
-    'F1B_size_distribution': { id: 'size', title: 'Size Distribution', chart: { type: 'size-distribution' } },
-    'F1B_risk_window': { id: 'risk-window', title: 'Risk Window', chart: { type: 'risk-window' } },
-    'F1B_headlines': { id: 'headlines', title: 'Headlines T-1', chart: { type: 'street-tone' } }
+    F1B_regime_state: {
+      id: 'regime',
+      title: 'Regime & Risk Appetite',
+      chart: { type: 'regime-gauge' },
+    },
+    F1B_breadth_and_rotation: {
+      id: 'breadth',
+      title: 'Breadth & Rotazione',
+      chart: { type: 'breadth-leadership' },
+    },
+    F1B_market_microstructure: {
+      id: 'market-micro',
+      title: 'Market Microstructure',
+      chart: { type: 'volatility-curve' },
+    },
+    F1B_size_distribution: {
+      id: 'size',
+      title: 'Size Distribution',
+      chart: { type: 'size-distribution' },
+    },
+    F1B_risk_window: { id: 'risk-window', title: 'Risk Window', chart: { type: 'risk-window' } },
+    F1B_headlines: { id: 'headlines', title: 'Headlines T-1', chart: { type: 'street-tone' } },
   };
 
-  const sections = (riassuntoSezioni.sezioni || []).map(sez => {
-    const sectionMeta = sectionsMap[sez.id_sezione] || { 
+  const sections = (riassuntoSezioni.sezioni || []).map((sez) => {
+    const sectionMeta = sectionsMap[sez.id_sezione] || {
       id: sez.id_sezione.toLowerCase().replace('F1B_', '').replace(/_/g, '-'),
       title: sez.nome_sezione,
-      chart: { type: 'default' }
+      chart: { type: 'default' },
     };
 
-    const metrics = (sez.metriche || []).map(m => {
+    const metrics = (sez.metriche || []).map((m) => {
       let value = m.valore;
       if (Array.isArray(value)) {
         value = value.join(', ');
       }
-      
+
       // Determina tone basato su tipo metrica
       let tone = 'neutral';
       if (m.id_metrica.includes('RegimeScore') || m.id_metrica.includes('Score')) {
@@ -349,7 +398,7 @@ function buildSectionsFromStructured(riassuntoSezioni, context) {
         label: m.nome_metrica,
         value: String(value || '—'),
         definition: '',
-        tone
+        tone,
       });
     });
 
@@ -358,7 +407,7 @@ function buildSectionsFromStructured(riassuntoSezioni, context) {
       title: sectionMeta.title,
       narrative: sez.riassunto || '',
       metrics,
-      chart: sectionMeta.chart
+      chart: sectionMeta.chart,
     };
   });
 
@@ -374,22 +423,31 @@ function buildSectionsFromStructured(riassuntoSezioni, context) {
           label: 'Polarità Filtro',
           value: finvizFilters.FilterPolarity || '—',
           definition: finvizFilters.polarity_rule || '',
-          tone: finvizFilters.FilterPolarity === 'long' ? 'ok' : 'err'
+          tone: finvizFilters.FilterPolarity === 'long' ? 'ok' : 'err',
         }),
         wrapMetric({
           id: 'QueryString',
           label: 'Query Finviz',
-          value: (finvizFilters.LONG?.QueryString || finvizFilters.SHORT?.QueryString || '—').substring(0, 100) + '...',
+          value:
+            (finvizFilters.LONG?.QueryString || finvizFilters.SHORT?.QueryString || '—').substring(
+              0,
+              100
+            ) + '...',
           definition: finvizFilters.LONG?.GeneratedFrom || finvizFilters.SHORT?.GeneratedFrom || '',
-          tone: 'neutral'
-        })
+          tone: 'neutral',
+        }),
       ],
-      extraBlocks: finvizFilters.LONG?.QueryString || finvizFilters.SHORT?.QueryString ? [{
-        type: 'code',
-        label: 'QueryString Completa',
-        value: finvizFilters.LONG?.QueryString || finvizFilters.SHORT?.QueryString || ''
-      }] : [],
-      chart: { type: 'finviz-focus' }
+      extraBlocks:
+        finvizFilters.LONG?.QueryString || finvizFilters.SHORT?.QueryString
+          ? [
+              {
+                type: 'code',
+                label: 'QueryString Completa',
+                value: finvizFilters.LONG?.QueryString || finvizFilters.SHORT?.QueryString || '',
+              },
+            ]
+          : [],
+      chart: { type: 'finviz-focus' },
     });
   }
 
@@ -403,24 +461,27 @@ function buildSectionsFromStructured(riassuntoSezioni, context) {
           id: 'FocusSectors',
           label: 'Focus Sectors',
           value: safeArray(bridgeF2?.universe_for_F2?.FocusSectors).join(', ') || '—',
-          definition: bridgeF2?.universe_for_F2?.FocusSectors_comment
+          definition: bridgeF2?.universe_for_F2?.FocusSectors_comment,
         }),
         wrapMetric({
           id: 'StrategyMode_macro',
           label: 'Strategy Mode',
           value: bridgeF2?.handoffSignals?.StrategyMode_macro || '—',
           definition: 'Segnale trasmesso ai moduli successivi.',
-          tone: determineTone({ type: 'strategy', value: bridgeF2?.handoffSignals?.StrategyMode_macro })
+          tone: determineTone({
+            type: 'strategy',
+            value: bridgeF2?.handoffSignals?.StrategyMode_macro,
+          }),
         }),
         wrapMetric({
           id: 'RegimeScore',
           label: 'RegimeScore',
           value: formatSigned(bridgeF2?.handoffSignals?.RegimeScore, 2),
           definition: 'RegimeScore trasmesso a F2.',
-          tone: determineTone({ type: 'score', value: bridgeF2?.handoffSignals?.RegimeScore })
-        })
+          tone: determineTone({ type: 'score', value: bridgeF2?.handoffSignals?.RegimeScore }),
+        }),
       ],
-      chart: { type: 'bridge-handsoff' }
+      chart: { type: 'bridge-handsoff' },
     });
   }
 
@@ -437,9 +498,13 @@ function buildSummary(regimeState, breadthState, microState, sizeState, riskWind
   const riskScore = riskWindow?.RiskWindow_F1?.Score;
 
   const narrativeParts = [];
-  narrativeParts.push(`Mercato in modalità ${strategy || '—'} con RegimeScore ${formatSigned(regimeScore, 2)}.`);
+  narrativeParts.push(
+    `Mercato in modalità ${strategy || '—'} con RegimeScore ${formatSigned(regimeScore, 2)}.`
+  );
   if (Number.isFinite(breadthPct)) {
-    narrativeParts.push(`Breadth 1M ${toPercent(breadthPct, { asFraction: breadthPct <= 1, decimals: 0 })} e RiskTilt ${riskTilt}.`);
+    narrativeParts.push(
+      `Breadth 1M ${toPercent(breadthPct, { asFraction: breadthPct <= 1, decimals: 0 })} e RiskTilt ${riskTilt}.`
+    );
   } else if (riskTilt) {
     narrativeParts.push(`RiskTilt ${riskTilt}.`);
   }
@@ -455,41 +520,41 @@ function buildSummary(regimeState, breadthState, microState, sizeState, riskWind
       label: 'Strategy Mode',
       value: strategy,
       definition: regimeState.StrategyMode_definition,
-      tone: determineTone({ type: 'strategy', value: strategy })
+      tone: determineTone({ type: 'strategy', value: strategy }),
     }),
     wrapMetric({
       id: 'RegimeScore',
       label: 'RegimeScore',
       value: formatSigned(regimeScore, 2),
       definition: regimeState.RegimeScore_definition,
-      tone: determineTone({ type: 'score', value: regimeScore })
+      tone: determineTone({ type: 'score', value: regimeScore }),
     }),
     wrapMetric({
       id: 'Breadth_1M',
       label: 'Breadth 1M',
       value: toPercent(breadthPct, { asFraction: true }),
       definition: breadthState.Breadth_definition,
-      tone: determineTone({ type: 'breadth', value: breadthPct })
+      tone: determineTone({ type: 'breadth', value: breadthPct }),
     }),
     wrapMetric({
       id: 'RiskTilt_1M',
       label: 'Risk Tilt',
       value: riskTilt,
       definition: breadthState.RiskTilt_definition,
-      tone: determineTone({ type: 'strategy', value: riskTilt })
+      tone: determineTone({ type: 'strategy', value: riskTilt }),
     }),
     wrapMetric({
       id: 'VolRegime',
       label: 'Volatilità',
       value: microState.VolRegime_comment || microState.VIX_level || '—',
-      definition: 'Sintesi su volatilità implicita e segnali di stress.'
-    })
+      definition: 'Sintesi su volatilità implicita e segnali di stress.',
+    }),
   ];
 
   return {
     label: 'Riassunto AI',
     narrative: narrativeParts.join(' '),
-    metrics
+    metrics,
   };
 }
 
@@ -503,13 +568,13 @@ function buildPrimaryChartsDescriptors(regimeState, breadthState, riskWindow) {
     {
       id: 'regime-overview',
       title: 'RegimeScore & Risk Appetite',
-      description: `Strategy Mode ${strategy} · RegimeScore ${regimeScore}`
+      description: `Strategy Mode ${strategy} · RegimeScore ${regimeScore}`,
     },
     {
       id: 'breadth-overview',
       title: 'Breadth & Leadership',
-      description: `Breadth 1M ${breadthPct} · RiskTilt ${riskTilt}`
-    }
+      description: `Breadth 1M ${breadthPct} · RiskTilt ${riskTilt}`,
+    },
   ];
 }
 
@@ -522,7 +587,7 @@ function buildSections({
   analysisHeadlines,
   finvizFilters,
   bridgeF2,
-  handoffGuidance
+  handoffGuidance,
 }) {
   const sections = [];
 
@@ -536,29 +601,29 @@ function buildSections({
         label: 'Strategy Mode',
         value: regimeState.StrategyMode_macro,
         definition: regimeState.StrategyMode_definition,
-        tone: determineTone({ type: 'strategy', value: regimeState.StrategyMode_macro })
+        tone: determineTone({ type: 'strategy', value: regimeState.StrategyMode_macro }),
       }),
       wrapMetric({
         id: 'RegimeScore',
         label: 'RegimeScore',
         value: formatSigned(regimeState.RegimeScore, 2),
         definition: regimeState.RegimeScore_definition,
-        tone: determineTone({ type: 'score', value: regimeState.RegimeScore })
+        tone: determineTone({ type: 'score', value: regimeState.RegimeScore }),
       }),
       wrapMetric({
         id: 'VolRegime_comment',
         label: 'Volatilità (VIX)',
         value: microState.VolRegime_comment || microState.VIX_level || '—',
-        definition: 'Commento sintetico sulla volatilità implicita e la sua variazione.'
+        definition: 'Commento sintetico sulla volatilità implicita e la sua variazione.',
       }),
       wrapMetric({
         id: 'FX_Regime_comment',
         label: 'FX Regime',
         value: microState.FX_Regime_comment || '—',
-        definition: 'Lettura qualitativa della domanda di USD / FX risk-on risk-off.'
-      })
+        definition: 'Lettura qualitativa della domanda di USD / FX risk-on risk-off.',
+      }),
     ],
-    chart: { type: 'regime-gauge' }
+    chart: { type: 'regime-gauge' },
   });
 
   sections.push({
@@ -571,35 +636,35 @@ function buildSections({
         label: 'Breadth 1M',
         value: toPercent(breadthState.Breadth_1M_pctSectorsGreen, { asFraction: true }),
         definition: breadthState.Breadth_definition,
-        tone: determineTone({ type: 'breadth', value: breadthState.Breadth_1M_pctSectorsGreen })
+        tone: determineTone({ type: 'breadth', value: breadthState.Breadth_1M_pctSectorsGreen }),
       }),
       wrapMetric({
         id: 'RiskTilt_1M',
         label: 'Risk Tilt',
         value: breadthState.RiskTilt_1M || '—',
         definition: breadthState.RiskTilt_definition,
-        tone: determineTone({ type: 'strategy', value: breadthState.RiskTilt_1M })
+        tone: determineTone({ type: 'strategy', value: breadthState.RiskTilt_1M }),
       }),
       wrapMetric({
         id: 'LeadersMultiTF',
         label: 'Leaders Multi-TF',
         value: safeArray(breadthState.LeadersMultiTF).join(', ') || '—',
-        definition: 'Settori GICS con forza coerente multi-timeframe.'
+        definition: 'Settori GICS con forza coerente multi-timeframe.',
       }),
       wrapMetric({
         id: 'DefensiveLeadership',
         label: 'Difensivi in Leadership',
         value: safeArray(breadthState.DefensiveLeadership).join(', ') || '—',
-        definition: 'Settori difensivi che assumono leadership relativa.'
+        definition: 'Settori difensivi che assumono leadership relativa.',
       }),
       wrapMetric({
         id: 'LaggingSectors',
         label: 'Settori in Ritardo',
         value: safeArray(breadthState.LaggingSectors).join(', ') || '—',
-        definition: breadthState.Lagging_definition
-      })
+        definition: breadthState.Lagging_definition,
+      }),
     ],
-    chart: { type: 'breadth-leadership' }
+    chart: { type: 'breadth-leadership' },
   });
 
   sections.push({
@@ -611,28 +676,28 @@ function buildSections({
         id: 'VIX_level',
         label: 'VIX livello',
         value: microState.VIX_level ?? microState.VolRegime_comment ?? '—',
-        definition: microState.VolRegime_comment
+        definition: microState.VolRegime_comment,
       }),
       wrapMetric({
         id: 'CurveShape',
         label: 'Curva 2s10s',
         value: microState.Curve_state?.CurveShape_comment || '—',
-        definition: 'Commento sulla pendenza della curva tassi USA.'
+        definition: 'Commento sulla pendenza della curva tassi USA.',
       }),
       wrapMetric({
         id: 'MacroShock_Commodities',
         label: 'Commodities shock',
         value: microState.MacroShock_Commodities?.Comment || '—',
-        definition: 'Variazioni settimanali rilevanti su Oil, Gold e principali commodity.'
+        definition: 'Variazioni settimanali rilevanti su Oil, Gold e principali commodity.',
       }),
       wrapMetric({
         id: 'FX_Regime_comment',
         label: 'FX Regime',
         value: microState.FX_Regime_comment || '—',
-        definition: 'Segnale sintetico su USD risk-on/off e pressioni FX.'
-      })
+        definition: 'Segnale sintetico su USD risk-on/off e pressioni FX.',
+      }),
     ],
-    chart: { type: 'volatility-curve' }
+    chart: { type: 'volatility-curve' },
   });
 
   sections.push({
@@ -644,63 +709,64 @@ function buildSections({
         id: 'SizeBiasPattern',
         label: 'Size Bias',
         value: sizeState.SizeBiasPattern || '—',
-        definition: sizeState.SizeBias_definition
+        definition: sizeState.SizeBias_definition,
       }),
       wrapMetric({
         id: 'StressMicroCap',
         label: 'Stress MicroCap',
         value: boolLabel(sizeState.StressMicroCap, { trueLabel: 'True', falseLabel: 'False' }),
         definition: sizeState.StressMicroCap_definition,
-        tone: determineTone({ type: 'boolean', value: sizeState.StressMicroCap })
+        tone: determineTone({ type: 'boolean', value: sizeState.StressMicroCap }),
       }),
       wrapMetric({
         id: 'SmallCapPressure_1W',
         label: 'SmallCap Pressure',
         value: sizeState.SmallCapPressure_1W_comment || '—',
-        definition: 'Commento su pressione relativa small/micro cap (1W).'
-      })
+        definition: 'Commento su pressione relativa small/micro cap (1W).',
+      }),
     ],
-    chart: { type: 'size-distribution' }
+    chart: { type: 'size-distribution' },
   });
 
   sections.push({
     id: 'risk-window',
     title: 'Risk Window 3–10 giorni',
-    narrative: riskWindow?.RiskWindow_definition || 'Snapshot macro per valutare rischi su 3–10 giorni.',
+    narrative:
+      riskWindow?.RiskWindow_definition || 'Snapshot macro per valutare rischi su 3–10 giorni.',
     metrics: [
       wrapMetric({
         id: 'RiskWindowScore',
         label: 'Score',
         value: formatSigned(riskWindow?.RiskWindow_F1?.Score, 2),
         definition: riskWindow?.RiskWindow_definition,
-        tone: determineTone({ type: 'score', value: riskWindow?.RiskWindow_F1?.Score })
+        tone: determineTone({ type: 'score', value: riskWindow?.RiskWindow_F1?.Score }),
       }),
       wrapMetric({
         id: 'RiskWindowVol',
         label: 'Volatilità',
         value: riskWindow?.RiskWindow_F1?.Vol || '—',
-        definition: 'Componente volatilità del risk window.'
+        definition: 'Componente volatilità del risk window.',
       }),
       wrapMetric({
         id: 'RiskWindowRates',
         label: 'Tassi',
         value: riskWindow?.RiskWindow_F1?.Rates || '—',
-        definition: 'Componente curve/tassi del risk window.'
+        definition: 'Componente curve/tassi del risk window.',
       }),
       wrapMetric({
         id: 'RiskWindowCommodities',
         label: 'Commodities',
         value: riskWindow?.RiskWindow_F1?.Commodities || '—',
-        definition: 'Componente commodities del risk window.'
+        definition: 'Componente commodities del risk window.',
       }),
       wrapMetric({
         id: 'RiskWindowEvent',
         label: 'Eventi',
         value: riskWindow?.RiskWindow_F1?.Event || '—',
-        definition: 'Eventi macro imminenti rilevanti.'
-      })
+        definition: 'Eventi macro imminenti rilevanti.',
+      }),
     ],
-    chart: { type: 'risk-window' }
+    chart: { type: 'risk-window' },
   });
 
   sections.push({
@@ -712,61 +778,66 @@ function buildSections({
         id: 'T1_MacroNews',
         label: 'Macro News',
         value: analysisHeadlines?.T1_MacroNews || '—',
-        definition: 'Headline macro principali (Bloomberg / Reuters).'
+        definition: 'Headline macro principali (Bloomberg / Reuters).',
       }),
       wrapMetric({
         id: 'T1_SellSideNotes',
         label: 'Sell-Side Notes',
         value: analysisHeadlines?.T1_SellSideNotes || '—',
-        definition: 'Punti chiave dalle note sell-side Tier-1.'
+        definition: 'Punti chiave dalle note sell-side Tier-1.',
       }),
       wrapMetric({
         id: 'T1_ConsensusTone',
         label: 'Consensus Tone',
         value: analysisHeadlines?.T1_ConsensusTone || '—',
-        definition: 'Tono sintetico del consensus istituzionale.'
+        definition: 'Tono sintetico del consensus istituzionale.',
       }),
       wrapMetric({
         id: 'T1_AuditSrc',
         label: 'Audit Sources',
         value: safeArray(analysisHeadlines?.T1_AuditSrc).join(' · ') || '—',
-        definition: 'Fonti con timestamp per audit trail.'
-      })
+        definition: 'Fonti con timestamp per audit trail.',
+      }),
     ],
-    chart: { type: 'street-tone' }
+    chart: { type: 'street-tone' },
   });
 
   if (finvizFilters) {
     sections.push({
       id: 'finviz',
       title: 'Finviz Filters (Dynamic)',
-      narrative: 'Query Finviz Premium generata automaticamente da StrategyMode, leadership e size bias.',
+      narrative:
+        'Query Finviz Premium generata automaticamente da StrategyMode, leadership e size bias.',
       metrics: [
         wrapMetric({
           id: 'FilterType',
           label: 'Filtro',
           value: finvizFilters.FilterType || '—',
-          definition: 'Cluster dinamico: Momentum / Momentum-light / Pullback.'
+          definition: 'Cluster dinamico: Momentum / Momentum-light / Pullback.',
         }),
         wrapMetric({
           id: 'GeneratedFrom',
           label: 'Generato Da',
           value: finvizFilters.GeneratedFrom || '—',
-          definition: 'Logica dinamica e input utilizzati per la query.'
+          definition: 'Logica dinamica e input utilizzati per la query.',
         }),
         wrapMetric({
           id: 'AuditSrc',
           label: 'Audit Src',
           value: safeArray(finvizFilters.AuditSrc).join(' · ') || '—',
-          definition: 'Fonti e timestamp Finviz / ETFdb.'
-        })
+          definition: 'Fonti e timestamp Finviz / ETFdb.',
+        }),
       ],
-      extraBlocks: finvizFilters.QueryString ? [{
-        type: 'code',
-        label: 'QueryString',
-        value: finvizFilters.QueryString
-      }] : [],
-      chart: { type: 'finviz-focus' }
+      extraBlocks: finvizFilters.QueryString
+        ? [
+            {
+              type: 'code',
+              label: 'QueryString',
+              value: finvizFilters.QueryString,
+            },
+          ]
+        : [],
+      chart: { type: 'finviz-focus' },
     });
   }
 
@@ -780,13 +851,13 @@ function buildSections({
           id: 'FocusSectors',
           label: 'Focus Sectors',
           value: safeArray(bridgeF2?.universe_for_F2?.FocusSectors).join(', ') || '—',
-          definition: bridgeF2?.universe_for_F2?.FocusSectors_comment
+          definition: bridgeF2?.universe_for_F2?.FocusSectors_comment,
         }),
         wrapMetric({
           id: 'IncludeMarketCap',
           label: 'Include Market Cap',
           value: safeArray(bridgeF2?.universe_for_F2?.IncludeMarketCap).join(', ') || '—',
-          definition: bridgeF2?.universe_for_F2?.IncludeMarketCap_comment
+          definition: bridgeF2?.universe_for_F2?.IncludeMarketCap_comment,
         }),
         wrapMetric({
           id: 'LiquidityFilters',
@@ -794,28 +865,35 @@ function buildSections({
           value: bridgeF2?.universe_for_F2?.LiquidityFilters
             ? `minAvgVolume ${bridgeF2.universe_for_F2.LiquidityFilters.minAvgVolume} · minPrice ${bridgeF2.universe_for_F2.LiquidityFilters.minPrice}`
             : '—',
-          definition: 'Requisiti minimi di liquidità per l’universo swing.'
+          definition: 'Requisiti minimi di liquidità per l’universo swing.',
         }),
         wrapMetric({
           id: 'StrategyMode_macro',
           label: 'Strategy Mode',
           value: bridgeF2?.handoffSignals?.StrategyMode_macro || '—',
           definition: 'Segnale trasmesso ai moduli successivi per coerenza narrativa.',
-          tone: determineTone({ type: 'strategy', value: bridgeF2?.handoffSignals?.StrategyMode_macro })
+          tone: determineTone({
+            type: 'strategy',
+            value: bridgeF2?.handoffSignals?.StrategyMode_macro,
+          }),
         }),
         wrapMetric({
           id: 'RegimeScore_bridge',
           label: 'RegimeScore',
           value: formatSigned(bridgeF2?.handoffSignals?.RegimeScore, 2),
-          definition: 'Score finale usato per sizing risk by desk.'
-        })
+          definition: 'Score finale usato per sizing risk by desk.',
+        }),
       ],
-      extraBlocks: bridgeF2?.universe_for_F2?.FinvizQuery ? [{
-        type: 'code',
-        label: 'Finviz Query (Feed to F2)',
-        value: bridgeF2.universe_for_F2.FinvizQuery
-      }] : [],
-      chart: { type: 'bridge-handsoff' }
+      extraBlocks: bridgeF2?.universe_for_F2?.FinvizQuery
+        ? [
+            {
+              type: 'code',
+              label: 'Finviz Query (Feed to F2)',
+              value: bridgeF2.universe_for_F2.FinvizQuery,
+            },
+          ]
+        : [],
+      chart: { type: 'bridge-handsoff' },
     });
   }
 
@@ -832,13 +910,17 @@ function renderSummaryHTML(summary) {
       <div class="module-ai-summary-label">${escapeHtml(summary.label || 'Riassunto AI')}</div>
       <p class="f1b-summary-narrative">${escapeHtml(summary.narrative || '')}</p>
       <div class="f1b-summary-metrics">
-        ${(summary.metrics || []).map(metric => `
+        ${(summary.metrics || [])
+          .map(
+            (metric) => `
           <div class="f1b-summary-metric" data-tone="${escapeAttr(metric.tone || 'neutral')}">
             <div class="f1b-summary-metric-label">${escapeHtml(metric.label)}</div>
             <div class="f1b-summary-metric-value">${escapeHtml(metric.value)}</div>
             ${metric.definition ? `<div class="f1b-summary-metric-note">${escapeHtml(metric.definition)}</div>` : ''}
           </div>
-        `).join('')}
+        `
+          )
+          .join('')}
       </div>
     </section>
   `;
@@ -848,7 +930,9 @@ function renderPrimaryChartsHTML(primaryCharts) {
   if (!Array.isArray(primaryCharts) || primaryCharts.length === 0) return '';
   return `
     <section class="f1b-primary-charts">
-      ${primaryCharts.map(chart => `
+      ${primaryCharts
+        .map(
+          (chart) => `
         <article class="f1b-primary-chart-card">
           <header class="f1b-primary-chart-header">
             <h3 class="f1b-primary-chart-title">${escapeHtml(chart.title)}</h3>
@@ -856,46 +940,50 @@ function renderPrimaryChartsHTML(primaryCharts) {
           </header>
           <div class="f1b-primary-chart-canvas" data-primary-chart="${escapeAttr(chart.id)}"></div>
         </article>
-      `).join('')}
+      `
+        )
+        .join('')}
     </section>
   `;
 }
 
 function buildTabs(sections) {
   if (!Array.isArray(sections) || sections.length === 0) return [];
-  return sections.map(section => ({
+  return sections.map((section) => ({
     id: section.id,
     title: section.title,
     active: false,
     content: `
       <div class="f1b-drawer-section" data-tab-ticker="${escapeAttr(section.id)}" data-section-id="${escapeAttr(section.id)}"></div>
-    `
+    `,
   }));
 }
 
 function renderExtraBlocks(extraBlocks) {
   if (!Array.isArray(extraBlocks) || extraBlocks.length === 0) return '';
-  return extraBlocks.map(block => {
-    if (block.type === 'code') {
-      return `
+  return extraBlocks
+    .map((block) => {
+      if (block.type === 'code') {
+        return `
         <div class="f1b-drawer-block f1b-drawer-block--code">
           <div class="f1b-drawer-block-label">${escapeHtml(block.label || '')}</div>
           <pre class="f1b-drawer-code">${escapeHtml(block.value || '')}</pre>
         </div>
       `;
-    }
-    if (block.type === 'list') {
-      return `
+      }
+      if (block.type === 'list') {
+        return `
         <div class="f1b-drawer-block">
           <div class="f1b-drawer-block-label">${escapeHtml(block.label || '')}</div>
           <ul class="f1b-drawer-list">
-            ${(block.items || []).map(item => `<li>${escapeHtml(item)}</li>`).join('')}
+            ${(block.items || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}
           </ul>
         </div>
       `;
-    }
-    return '';
-  }).join('');
+      }
+      return '';
+    })
+    .join('');
 }
 
 function renderSectionContent(container, section, normalized) {
@@ -906,7 +994,9 @@ function renderSectionContent(container, section, normalized) {
     <div class="f1b-drawer-section-inner">
       ${section.narrative ? `<p class="f1b-drawer-narrative">${escapeHtml(section.narrative)}</p>` : ''}
       <div class="f1b-drawer-metrics">
-        ${(section.metrics || []).map(metric => `
+        ${(section.metrics || [])
+          .map(
+            (metric) => `
           <div class="f1b-metric" data-tone="${escapeAttr(metric.tone || 'neutral')}">
             <div class="f1b-metric-header">
               <span class="f1b-metric-label">${escapeHtml(metric.label)}</span>
@@ -915,7 +1005,9 @@ function renderSectionContent(container, section, normalized) {
             ${metric.definition ? `<p class="f1b-metric-definition">${escapeHtml(metric.definition)}</p>` : ''}
             ${metric.hint ? `<p class="f1b-metric-hint">${escapeHtml(metric.hint)}</p>` : ''}
           </div>
-        `).join('')}
+        `
+          )
+          .join('')}
       </div>
       ${section.extraBlocks ? renderExtraBlocks(section.extraBlocks) : ''}
       ${section.chart ? `<div class="f1b-drawer-chart" data-section-chart="${escapeAttr(section.chart.type)}"></div>` : ''}
@@ -941,7 +1033,7 @@ function renderSectionContent(container, section, normalized) {
           `;
         }
       })
-      .catch(err => {
+      .catch((err) => {
         Logger.error('F1B', `Errore caricamento componente chart per sezione ${section.id}`, err);
         const chartNode = container.querySelector('[data-section-chart]');
         if (chartNode) {
@@ -969,7 +1061,7 @@ export function renderCard(rawData, ctx = {}) {
     desc: normalized.meta.hero_desc,
     status: normalized.meta.moduleStatus,
     freshness: normalized.meta.freshness,
-    disclaimer: normalized.meta.hero_disclaimer
+    disclaimer: normalized.meta.hero_disclaimer,
   });
 
   const summaryHTML = renderSummaryHTML(normalized.summary);
@@ -1015,15 +1107,15 @@ export function bindCard(node, rawData, ctx = {}) {
   if (chartNodes.length > 0) {
     import('../components/f1b-charts.js')
       .then(({ renderF1BPrimaryChart }) => {
-        chartNodes.forEach(chartNode => {
+        chartNodes.forEach((chartNode) => {
           const chartId = chartNode.dataset.primaryChart;
           if (!chartId) return;
           renderF1BPrimaryChart(chartId, chartNode, normalized.chartContext);
         });
       })
-      .catch(err => {
+      .catch((err) => {
         Logger.error('F1B', 'Errore caricamento chart principali', err);
-        chartNodes.forEach(chartNode => {
+        chartNodes.forEach((chartNode) => {
           chartNode.innerHTML = `
             <div class="error-state">
               <div class="error-state-title">Chart non disponibile</div>

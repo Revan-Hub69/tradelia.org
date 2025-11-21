@@ -15,13 +15,13 @@ const state = {
   planType: null, // 'trial' | 'pro'
   provider: null, // 'xolo' | 'paddle'
   initialized: false,
-  previousActiveElement: null
+  previousActiveElement: null,
 };
 
 const STEPS = {
-  TYPE_SELECTION: 1,      // Individuale/Business
-  BUSINESS_DATA: 2,        // Raccolta dati business (solo se business)
-  ACCOUNT_CREATION: 3      // Creazione account / Login
+  TYPE_SELECTION: 1, // Individuale/Business
+  BUSINESS_DATA: 2, // Raccolta dati business (solo se business)
+  ACCOUNT_CREATION: 3, // Creazione account / Login
 };
 
 function init() {
@@ -338,46 +338,49 @@ function getAccountCreationMessage() {
 function registerEvents() {
   const root = state.root;
   if (!root) return;
-  
+
   // Close buttons
-  root.querySelectorAll('[data-trial-close], [data-trial-dismiss]').forEach(btn => {
+  root.querySelectorAll('[data-trial-close], [data-trial-dismiss]').forEach((btn) => {
     btn.addEventListener('click', close);
   });
-  
+
   // User type selection (Step 1)
-  root.querySelectorAll('[data-user-type]').forEach(btn => {
+  root.querySelectorAll('[data-user-type]').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       const userType = e.currentTarget.dataset.userType;
       selectUserType(userType);
     });
   });
-  
+
   // Business form (Step 2)
   const businessForm = root.querySelector('#trial-business-form');
   if (businessForm) {
     businessForm.addEventListener('submit', handleBusinessFormSubmit);
   }
-  
+
   // Account form (Step 3)
   const accountForm = root.querySelector('#trial-account-form');
   if (accountForm) {
     accountForm.addEventListener('submit', handleAccountFormSubmit);
   }
-  
+
   // Back buttons
-  root.querySelectorAll('[data-trial-back]').forEach(btn => {
+  root.querySelectorAll('[data-trial-back]').forEach((btn) => {
     btn.addEventListener('click', goToPreviousStep);
   });
-  
+
   // Password toggle
-  root.querySelectorAll('[data-password-toggle]').forEach(btn => {
+  root.querySelectorAll('[data-password-toggle]').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       const targetId = e.currentTarget.dataset.passwordToggle;
       const input = document.getElementById(targetId);
       if (input) {
         const type = input.type === 'password' ? 'text' : 'password';
         input.type = type;
-        e.currentTarget.setAttribute('aria-label', type === 'password' ? 'Mostra password' : 'Nascondi password');
+        e.currentTarget.setAttribute(
+          'aria-label',
+          type === 'password' ? 'Mostra password' : 'Nascondi password'
+        );
       }
     });
   });
@@ -385,14 +388,14 @@ function registerEvents() {
 
 function selectUserType(userType) {
   state.userType = userType;
-  
+
   // Update visual selection
-  state.root.querySelectorAll('[data-user-type]').forEach(btn => {
+  state.root.querySelectorAll('[data-user-type]').forEach((btn) => {
     const isSelected = btn.dataset.userType === userType;
     btn.style.borderColor = isSelected ? 'var(--brand-500)' : 'var(--br-card)';
     btn.style.background = isSelected ? 'var(--surface-hover)' : 'var(--surface-card)';
   });
-  
+
   // Move to next step
   setTimeout(() => {
     if (userType === 'business') {
@@ -408,16 +411,16 @@ function handleBusinessFormSubmit(e) {
   e.preventDefault();
   const form = e.target;
   const formData = new FormData(form);
-  
+
   // Collect all Xolo required fields (best practice: sanitize inputs)
-  const sanitize = (str) => str ? str.trim() : null;
-  
+  const sanitize = (str) => (str ? str.trim() : null);
+
   state.businessData = {
     // Dati Cliente
     businessName: sanitize(formData.get('businessName')),
     businessCountry: sanitize(formData.get('businessCountry')),
     businessLanguage: sanitize(formData.get('businessLanguage')) || 'it',
-    
+
     // Indirizzo
     businessAddress: sanitize(formData.get('businessAddress')),
     businessCity: sanitize(formData.get('businessCity')),
@@ -425,14 +428,14 @@ function handleBusinessFormSubmit(e) {
     businessVat: sanitize(formData.get('businessVat')) || null,
     businessTaxId: sanitize(formData.get('businessTaxId')) || null,
     businessInvoiceDays: parseInt(formData.get('businessInvoiceDays') || '0', 10),
-    
+
     // Recapiti
     businessContactFirstname: sanitize(formData.get('businessContactFirstname')),
     businessContactLastname: sanitize(formData.get('businessContactLastname')),
     businessContactEmail: sanitize(formData.get('businessContactEmail'))?.toLowerCase() || null,
-    businessComments: sanitize(formData.get('businessComments')) || null
+    businessComments: sanitize(formData.get('businessComments')) || null,
   };
-  
+
   // Validate required fields
   const requiredFields = [
     { field: 'businessName', el: form.querySelector('#business-name') },
@@ -442,9 +445,9 @@ function handleBusinessFormSubmit(e) {
     { field: 'businessZip', el: form.querySelector('#business-zip') },
     { field: 'businessContactFirstname', el: form.querySelector('#business-contact-firstname') },
     { field: 'businessContactLastname', el: form.querySelector('#business-contact-lastname') },
-    { field: 'businessContactEmail', el: form.querySelector('#business-contact-email') }
+    { field: 'businessContactEmail', el: form.querySelector('#business-contact-email') },
   ];
-  
+
   let hasError = false;
   requiredFields.forEach(({ field, el }) => {
     if (!state.businessData[field]) {
@@ -454,21 +457,28 @@ function handleBusinessFormSubmit(e) {
       clearFieldError(el);
     }
   });
-  
+
   // Validate email format (best practice: RFC 5322 compliant)
-  if (state.businessData.businessContactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.businessData.businessContactEmail)) {
+  if (
+    state.businessData.businessContactEmail &&
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.businessData.businessContactEmail)
+  ) {
     showFieldError(form.querySelector('#business-contact-email'), 'Email non valida');
     hasError = true;
   }
-  
+
   // Validate CAP format for Italy (best practice: country-specific validation)
-  if (state.businessData.businessCountry === 'IT' && state.businessData.businessZip && !/^\d{5}$/.test(state.businessData.businessZip)) {
+  if (
+    state.businessData.businessCountry === 'IT' &&
+    state.businessData.businessZip &&
+    !/^\d{5}$/.test(state.businessData.businessZip)
+  ) {
     showFieldError(form.querySelector('#business-zip'), 'CAP italiano deve essere di 5 cifre');
     hasError = true;
   }
-  
+
   if (hasError) return;
-  
+
   goToStep(STEPS.ACCOUNT_CREATION);
 }
 
@@ -488,49 +498,54 @@ async function handleAccountFormSubmit(e) {
   const submitBtn = form.querySelector('#trial-submit-btn');
   const submitText = form.querySelector('#trial-submit-text');
   const submitSpinner = form.querySelector('#trial-submit-spinner');
-  
+
   // Sanitize and validate inputs (best practice: trim, validate format)
   const email = form.querySelector('#trial-email').value.trim().toLowerCase();
   const password = form.querySelector('#trial-password').value;
   const fullName = form.querySelector('#trial-name').value.trim();
-  
+
   // Validate (best practice: specific error messages)
   if (!email || !password || !fullName) {
     showFieldError(form.querySelector('#trial-email'), 'Compila tutti i campi');
     return;
   }
-  
+
   // Email format validation (best practice: RFC 5322 compliant)
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     showFieldError(form.querySelector('#trial-email'), 'Inserisci un indirizzo email valido');
     return;
   }
-  
+
   // Password validation (best practice: length + complexity)
   if (password.length < 8) {
     showFieldError(form.querySelector('#trial-password'), 'Password minimo 8 caratteri');
     return;
   }
-  
+
   // Name validation (best practice: prevent empty or only spaces)
   if (fullName.length < 2) {
-    showFieldError(form.querySelector('#trial-name'), 'Inserisci un nome valido (minimo 2 caratteri)');
+    showFieldError(
+      form.querySelector('#trial-name'),
+      'Inserisci un nome valido (minimo 2 caratteri)'
+    );
     return;
   }
-  
+
   // Disable form
   submitBtn.disabled = true;
   submitText.hidden = true;
   submitSpinner.hidden = false;
-  
+
   try {
     // 1. Check if user is already logged in
-    const { data: { session } } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     let user;
     let signUpData = null; // Per verificare se email confirmation è richiesta
-    
+
     if (session?.user) {
       // User already logged in
       user = session.user;
@@ -544,29 +559,34 @@ async function handleAccountFormSubmit(e) {
           data: {
             full_name: fullName,
             user_type: state.userType,
-            business_data: state.userType === 'business' ? state.businessData : null
+            business_data: state.userType === 'business' ? state.businessData : null,
           },
           emailRedirectTo: `${window.location.origin}/user/index.html`,
           // Auto-confirm: se disabilitato in Supabase, l'utente riceverà email di conferma
           // ma possiamo comunque procedere con l'attivazione trial
-        }
+        },
       });
-      
+
       const signUpError = signUpResult.error;
       signUpData = signUpResult.data;
-      
+
       if (signUpError) {
         // If email exists, try to sign in
-        if (signUpError.message.includes('already registered') || signUpError.message.includes('already exists')) {
+        if (
+          signUpError.message.includes('already registered') ||
+          signUpError.message.includes('already exists')
+        ) {
           const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
             email,
-            password
+            password,
           });
-          
+
           if (loginError) {
-            throw new Error('Email già registrata. Usa la password corretta o recupera la password.');
+            throw new Error(
+              'Email già registrata. Usa la password corretta o recupera la password.'
+            );
           }
-          
+
           user = loginData.user;
         } else {
           throw signUpError;
@@ -576,7 +596,7 @@ async function handleAccountFormSubmit(e) {
           throw new Error('Errore nella creazione account. Riprova.');
         }
         user = signUpData.user;
-        
+
         // IMPORTANT: Anche se l'email non è confermata, procediamo comunque
         // L'utente riceverà l'email di conferma ma il trial sarà già attivo
         // Potrà fare login dopo aver confermato l'email
@@ -586,38 +606,49 @@ async function handleAccountFormSubmit(e) {
         }
       }
     }
-    
+
     // 2. Update user profile with all business data
     // IMPORTANT: Non bloccare il flusso se il profilo fallisce - il trial deve essere attivato comunque
     const profileData = {
       user_id: user.id,
       display_name: fullName,
-      user_type: state.userType || 'individual'
+      user_type: state.userType || 'individual',
     };
-    
+
     if (state.userType === 'business' && state.businessData) {
       // Add all Xolo business fields (solo se presenti)
-      if (state.businessData.businessName) profileData.business_name = state.businessData.businessName;
-      if (state.businessData.businessCountry) profileData.business_country = state.businessData.businessCountry;
-      if (state.businessData.businessLanguage) profileData.business_language = state.businessData.businessLanguage;
-      if (state.businessData.businessAddress) profileData.business_address = state.businessData.businessAddress;
-      if (state.businessData.businessCity) profileData.business_city = state.businessData.businessCity;
+      if (state.businessData.businessName)
+        profileData.business_name = state.businessData.businessName;
+      if (state.businessData.businessCountry)
+        profileData.business_country = state.businessData.businessCountry;
+      if (state.businessData.businessLanguage)
+        profileData.business_language = state.businessData.businessLanguage;
+      if (state.businessData.businessAddress)
+        profileData.business_address = state.businessData.businessAddress;
+      if (state.businessData.businessCity)
+        profileData.business_city = state.businessData.businessCity;
       if (state.businessData.businessZip) profileData.business_zip = state.businessData.businessZip;
       if (state.businessData.businessVat) profileData.business_vat = state.businessData.businessVat;
-      if (state.businessData.businessTaxId) profileData.business_tax_id = state.businessData.businessTaxId;
-      if (state.businessData.businessInvoiceDays !== undefined) profileData.business_invoice_days = state.businessData.businessInvoiceDays;
-      if (state.businessData.businessContactFirstname) profileData.business_contact_firstname = state.businessData.businessContactFirstname;
-      if (state.businessData.businessContactLastname) profileData.business_contact_lastname = state.businessData.businessContactLastname;
-      if (state.businessData.businessContactEmail) profileData.business_contact_email = state.businessData.businessContactEmail;
-      if (state.businessData.businessComments) profileData.business_comments = state.businessData.businessComments;
+      if (state.businessData.businessTaxId)
+        profileData.business_tax_id = state.businessData.businessTaxId;
+      if (state.businessData.businessInvoiceDays !== undefined)
+        profileData.business_invoice_days = state.businessData.businessInvoiceDays;
+      if (state.businessData.businessContactFirstname)
+        profileData.business_contact_firstname = state.businessData.businessContactFirstname;
+      if (state.businessData.businessContactLastname)
+        profileData.business_contact_lastname = state.businessData.businessContactLastname;
+      if (state.businessData.businessContactEmail)
+        profileData.business_contact_email = state.businessData.businessContactEmail;
+      if (state.businessData.businessComments)
+        profileData.business_comments = state.businessData.businessComments;
     }
-    
+
     // Try to save profile, but don't block on error
     try {
       const { error: profileError } = await supabase
         .from('user_profiles')
         .upsert(profileData, { onConflict: 'user_id' });
-      
+
       if (profileError) {
         Logger.warn('TrialOnboarding', 'Profile update error (non-blocking)', profileError);
         // Log but continue - profile can be updated later
@@ -626,44 +657,46 @@ async function handleAccountFormSubmit(e) {
       Logger.warn('TrialOnboarding', 'Profile update exception (non-blocking)', profileErr);
       // Continue anyway
     }
-    
+
     // 3. Activate trial - CRITICAL: questo deve sempre funzionare
     const trialExpiry = new Date();
     trialExpiry.setDate(trialExpiry.getDate() + 14);
-    
+
     const targetRole = state.planType === 'pro' ? 'pro' : 'trial';
-    
-    const { error: roleError } = await supabase
-      .from('user_roles')
-      .upsert({
+
+    const { error: roleError } = await supabase.from('user_roles').upsert(
+      {
         user_id: user.id,
         role: targetRole,
-        valid_until: trialExpiry.toISOString()
-      }, { onConflict: 'user_id' });
-    
+        valid_until: trialExpiry.toISOString(),
+      },
+      { onConflict: 'user_id' }
+    );
+
     if (roleError) {
       Logger.error('TrialOnboarding', 'Trial activation error', roleError);
       // Questo è un errore critico - blocca il flusso
-      throw new Error('Errore nell\'attivazione del trial. Riprova o contatta il supporto.');
+      throw new Error("Errore nell'attivazione del trial. Riprova o contatta il supporto.");
     }
-    
+
     // 4. If institutional role, create credits record if needed
     if (targetRole === 'institutional' || state.planType === 'desk') {
       try {
-        await supabase
-          .from('user_analysis_credits')
-          .upsert({
+        await supabase.from('user_analysis_credits').upsert(
+          {
             user_id: user.id,
             credits_balance: 0,
             total_purchased: 0,
-            total_used: 0
-          }, { onConflict: 'user_id' });
+            total_used: 0,
+          },
+          { onConflict: 'user_id' }
+        );
       } catch (creditsErr) {
         Logger.warn('TrialOnboarding', 'Credits creation error (non-blocking)', creditsErr);
         // Non bloccare - può essere creato dopo
       }
     }
-    
+
     // 5. Send notification email to amministrazione@tradelia.org (non-blocking)
     // Invia sempre per avere un record completo, con dettagli business se disponibili
     try {
@@ -676,37 +709,44 @@ async function handleAccountFormSubmit(e) {
           userName: fullName,
           userType: state.userType || 'individual',
           planType: state.planType,
-          businessData: state.userType === 'business' ? state.businessData : null
-        })
+          businessData: state.userType === 'business' ? state.businessData : null,
+        }),
       });
-      
+
       if (emailResponse.ok) {
         Logger.info('TrialOnboarding', 'Notification email sent successfully');
       } else {
-        Logger.warn('TrialOnboarding', 'Notification email failed (non-blocking)', await emailResponse.text());
+        Logger.warn(
+          'TrialOnboarding',
+          'Notification email failed (non-blocking)',
+          await emailResponse.text()
+        );
       }
     } catch (emailErr) {
       Logger.warn('TrialOnboarding', 'Notification email error (non-blocking)', emailErr);
       // Non bloccare - l'email può essere inviata manualmente se necessario
     }
-    
+
     // 6. Success - redirect (sempre, anche se email non confermata)
     // Verifica se abbiamo signUpData per controllare la sessione
     const needsEmailConfirmation = !session?.user && signUpData?.user && !signUpData?.session;
-    
+
     const successMessage = needsEmailConfirmation
       ? 'Account creato! Controlla la tua email per confermare. Il trial è già attivo.'
       : 'Account creato e prova gratuita attivata!';
-    
+
     showToast(successMessage, 'success');
-    
+
     // Redirect dopo breve delay per mostrare il messaggio
     setTimeout(() => {
       // Se l'utente non ha sessione (email non confermata), reindirizza alla home
       // L'utente potrà fare login dopo aver confermato l'email
       if (needsEmailConfirmation) {
         // Mostra messaggio più dettagliato prima di redirect
-        showToast('Il trial è attivo. Dopo aver confermato l\'email, potrai accedere con le tue credenziali.', 'info');
+        showToast(
+          "Il trial è attivo. Dopo aver confermato l'email, potrai accedere con le tue credenziali.",
+          'info'
+        );
         setTimeout(() => {
           window.location.href = '/';
         }, 2000);
@@ -722,13 +762,12 @@ async function handleAccountFormSubmit(e) {
         }
       }
     }, 2000);
-    
   } catch (err) {
     Logger.error('TrialOnboarding', 'Account creation error', err);
-    
+
     // Mostra errore specifico
     let errorMessage = err.message || 'Errore nella creazione account';
-    
+
     // Messaggi di errore più user-friendly
     if (err.message?.includes('already registered') || err.message?.includes('already exists')) {
       errorMessage = 'Email già registrata. Usa la password corretta o recupera la password.';
@@ -739,14 +778,14 @@ async function handleAccountFormSubmit(e) {
     } else if (err.message?.includes('rate limit') || err.message?.includes('too many')) {
       errorMessage = 'Troppi tentativi. Attendi qualche minuto e riprova.';
     }
-    
+
     showFieldError(form.querySelector('#trial-email'), errorMessage);
-    
+
     // Re-enable form
     submitBtn.disabled = false;
     submitText.hidden = false;
     submitSpinner.hidden = true;
-    
+
     // Scroll to error
     form.querySelector('#trial-email')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
@@ -754,21 +793,21 @@ async function handleAccountFormSubmit(e) {
 
 function goToStep(step) {
   state.currentStep = step;
-  
+
   // Hide all steps
-  state.root.querySelectorAll('.trial-step').forEach(stepEl => {
+  state.root.querySelectorAll('.trial-step').forEach((stepEl) => {
     stepEl.hidden = true;
   });
-  
+
   // Show current step
   const currentStepEl = state.root.querySelector(`#step-${step}`);
   if (currentStepEl) {
     currentStepEl.hidden = false;
   }
-  
+
   // Update progress
   updateProgress();
-  
+
   // Update account creation message
   if (step === STEPS.ACCOUNT_CREATION) {
     const messageEl = state.root.querySelector('#step-3 p');
@@ -793,10 +832,10 @@ function goToPreviousStep() {
 function updateProgress() {
   const progressBar = state.root.querySelector('#trial-progress-bar');
   const progressText = state.root.querySelector('#trial-progress-text');
-  
+
   const totalSteps = state.userType === 'business' ? 3 : 2;
   const progress = (state.currentStep / totalSteps) * 100;
-  
+
   if (progressBar) {
     // Use CSS variable for progress
     progressBar.style.setProperty('--progress', `${progress}%`);
@@ -806,7 +845,7 @@ function updateProgress() {
       barFill.style.width = `${progress}%`;
     }
   }
-  
+
   if (progressText) {
     progressText.textContent = `Passo ${state.currentStep} di ${totalSteps}`;
   }
@@ -841,7 +880,7 @@ function setupKeyboardNavigation() {
 
 async function open(planType = 'trial', provider = 'xolo') {
   if (!state.initialized) init();
-  
+
   // Close auth modal if open to avoid conflicts
   if (typeof window.authModal !== 'undefined' && window.authModal) {
     try {
@@ -850,20 +889,22 @@ async function open(planType = 'trial', provider = 'xolo') {
       // Ignore if authModal not available
     }
   }
-  
+
   state.planType = planType;
   state.provider = provider;
   state.currentStep = STEPS.TYPE_SELECTION;
   state.userType = null;
   state.businessData = {};
-  
+
   // Reset form
-  state.root.querySelectorAll('form').forEach(form => form.reset());
-  state.root.querySelectorAll('.trial-step').forEach(step => step.hidden = true);
-  
+  state.root.querySelectorAll('form').forEach((form) => form.reset());
+  state.root.querySelectorAll('.trial-step').forEach((step) => (step.hidden = true));
+
   // Check if user is already logged in
-  const { data: { session } } = await supabase.auth.getSession();
-  
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
   if (session?.user) {
     // User already logged in - check if they already have a role
     try {
@@ -872,19 +913,27 @@ async function open(planType = 'trial', provider = 'xolo') {
         .select('role, valid_until')
         .eq('user_id', session.user.id)
         .maybeSingle();
-      
+
       if (roleCheckError && roleCheckError.code !== 'PGRST116') {
         Logger.error('TrialOnboarding', 'Error checking existing role', roleCheckError);
       }
-      
+
       // If user already has a role, show message instead of activating again
       if (existingRole?.role) {
-        const roleLabel = existingRole.role === 'institutional' ? 'Desk Professionale' : 
-                         existingRole.role === 'pro' ? 'Pro' : 
-                         existingRole.role === 'trial' ? 'Trial' : existingRole.role;
-        
-        showToast(`Hai già un piano attivo: ${roleLabel}. Vai all'area utente per gestire il tuo abbonamento.`, 'info');
-        
+        const roleLabel =
+          existingRole.role === 'institutional'
+            ? 'Desk Professionale'
+            : existingRole.role === 'pro'
+              ? 'Pro'
+              : existingRole.role === 'trial'
+                ? 'Trial'
+                : existingRole.role;
+
+        showToast(
+          `Hai già un piano attivo: ${roleLabel}. Vai all'area utente per gestire il tuo abbonamento.`,
+          'info'
+        );
+
         // Se siamo già nell'area utente, non fare nulla (refresh se necessario)
         if (window.location.pathname.includes('/user')) {
           // Siamo già nell'area utente - non fare nulla, l'utente può gestire il piano qui
@@ -897,24 +946,25 @@ async function open(planType = 'trial', provider = 'xolo') {
         }
         return;
       }
-      
+
       // User logged in but no role - activate trial directly
       const trialExpiry = new Date();
       trialExpiry.setDate(trialExpiry.getDate() + 14);
       const targetRole = planType === 'pro' ? 'pro' : 'trial';
-      
-      const { error: roleError } = await supabase
-        .from('user_roles')
-        .upsert({
+
+      const { error: roleError } = await supabase.from('user_roles').upsert(
+        {
           user_id: session.user.id,
           role: targetRole,
-          valid_until: trialExpiry.toISOString()
-        }, { onConflict: 'user_id' });
-      
+          valid_until: trialExpiry.toISOString(),
+        },
+        { onConflict: 'user_id' }
+      );
+
       if (roleError) throw roleError;
-      
+
       showToast(`Prova gratuita ${targetRole === 'pro' ? 'Pro' : 'Trial'} attivata!`, 'success');
-      
+
       // Se siamo già nell'area utente, refresh invece di redirect
       if (window.location.pathname.includes('/user')) {
         // Siamo già nell'area utente - refresh la pagina per aggiornare lo stato
@@ -930,23 +980,23 @@ async function open(planType = 'trial', provider = 'xolo') {
       return;
     } catch (err) {
       Logger.error('TrialOnboarding', 'Trial activation error', err);
-      showToast('Errore nell\'attivazione. Riprova.', 'error');
+      showToast("Errore nell'attivazione. Riprova.", 'error');
       // Don't show modal if activation fails - user is already logged in
       return;
     }
   }
-  
+
   // Show first step
   goToStep(STEPS.TYPE_SELECTION);
-  
+
   // Show modal
   state.root.hidden = false;
   state.root.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
-  
+
   // Save previous active element
   state.previousActiveElement = document.activeElement;
-  
+
   // Focus first interactive element
   setTimeout(() => {
     const firstButton = state.root.querySelector('[data-user-type]');
@@ -956,11 +1006,11 @@ async function open(planType = 'trial', provider = 'xolo') {
 
 function close() {
   if (!state.root) return;
-  
+
   state.root.hidden = true;
   state.root.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
-  
+
   // Restore focus
   if (state.previousActiveElement) {
     state.previousActiveElement.focus();
@@ -1012,11 +1062,10 @@ document.head.appendChild(style);
 export const trialOnboardingModal = {
   open,
   close,
-  init
+  init,
 };
 
 // Expose globally for conflict prevention
 if (typeof window !== 'undefined') {
   window.trialOnboardingModal = trialOnboardingModal;
 }
-

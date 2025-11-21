@@ -22,7 +22,7 @@ export function generateSEOMetaTags(config) {
     type = 'website',
     structuredData,
     keywords,
-    article = {}
+    article = {},
   } = config;
 
   const baseUrl = 'https://tradelia.org';
@@ -34,14 +34,18 @@ export function generateSEOMetaTags(config) {
 
   // Meta description
   updateOrCreateMeta('name', 'description', description);
-  
+
   // Keywords
   if (keywords) {
     updateOrCreateMeta('name', 'keywords', keywords);
   }
 
   // Robots
-  updateOrCreateMeta('name', 'robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+  updateOrCreateMeta(
+    'name',
+    'robots',
+    'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+  );
 
   // Open Graph
   updateOrCreateMeta('property', 'og:type', type);
@@ -70,7 +74,7 @@ export function generateSEOMetaTags(config) {
       updateOrCreateMeta('property', 'article:section', article.section);
     }
     if (article.tags && Array.isArray(article.tags)) {
-      article.tags.forEach(tag => {
+      article.tags.forEach((tag) => {
         const meta = document.createElement('meta');
         meta.setAttribute('property', 'article:tag');
         meta.setAttribute('content', tag);
@@ -107,41 +111,45 @@ export function generateArticleStructuredData(config) {
     datePublished,
     dateModified,
     section = 'Trading & Investimenti',
-    keywords = []
+    keywords = [],
   } = config;
 
   const baseUrl = 'https://tradelia.org';
   const fullUrl = url ? (url.startsWith('http') ? url : `${baseUrl}${url}`) : baseUrl;
-  const fullImageUrl = image ? (image.startsWith('http') ? image : `${baseUrl}${image}`) : `${baseUrl}/img/tradelia_og_vC_white_clean.png`;
+  const fullImageUrl = image
+    ? image.startsWith('http')
+      ? image
+      : `${baseUrl}${image}`
+    : `${baseUrl}/img/tradelia_og_vC_white_clean.png`;
 
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    'headline': title,
-    'description': description,
-    'image': fullImageUrl,
-    'author': {
+    headline: title,
+    description: description,
+    image: fullImageUrl,
+    author: {
       '@type': 'Organization',
-      'name': author,
-      'url': baseUrl
+      name: author,
+      url: baseUrl,
     },
-    'publisher': {
+    publisher: {
       '@type': 'Organization',
-      'name': 'Tradelia AI',
-      'url': baseUrl,
-      'logo': {
+      name: 'Tradelia AI',
+      url: baseUrl,
+      logo: {
         '@type': 'ImageObject',
-        'url': `${baseUrl}/img/tradelia_og_vC_white_clean.png`
-      }
+        url: `${baseUrl}/img/tradelia_og_vC_white_clean.png`,
+      },
     },
-    'datePublished': datePublished || new Date().toISOString(),
-    'dateModified': dateModified || new Date().toISOString(),
-    'mainEntityOfPage': {
+    datePublished: datePublished || new Date().toISOString(),
+    dateModified: dateModified || new Date().toISOString(),
+    mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': fullUrl
+      '@id': fullUrl,
     },
-    'articleSection': section,
-    'keywords': keywords.join(', ')
+    articleSection: section,
+    keywords: keywords.join(', '),
   };
 }
 
@@ -149,14 +157,7 @@ export function generateArticleStructuredData(config) {
  * Genera structured data per FinancialProduct (report, analisi)
  */
 export function generateFinancialProductStructuredData(config) {
-  const {
-    ticker,
-    companyName,
-    description,
-    url,
-    datePublished,
-    provider = 'Tradelia AI'
-  } = config;
+  const { ticker, companyName, description, url, datePublished, provider = 'Tradelia AI' } = config;
 
   const baseUrl = 'https://tradelia.org';
   const fullUrl = url ? (url.startsWith('http') ? url : `${baseUrl}${url}`) : baseUrl;
@@ -164,18 +165,18 @@ export function generateFinancialProductStructuredData(config) {
   return {
     '@context': 'https://schema.org',
     '@type': 'FinancialProduct',
-    'name': `${companyName} (${ticker}) - Analisi Finanziaria`,
-    'description': description,
-    'provider': {
+    name: `${companyName} (${ticker}) - Analisi Finanziaria`,
+    description: description,
+    provider: {
       '@type': 'Organization',
-      'name': provider,
-      'url': baseUrl
+      name: provider,
+      url: baseUrl,
     },
-    'tickerSymbol': ticker,
-    'url': fullUrl,
-    'datePublished': datePublished || new Date().toISOString(),
-    'category': 'Financial Analysis',
-    'applicationCategory': 'FinanceApplication'
+    tickerSymbol: ticker,
+    url: fullUrl,
+    datePublished: datePublished || new Date().toISOString(),
+    category: 'Financial Analysis',
+    applicationCategory: 'FinanceApplication',
   };
 }
 
@@ -183,13 +184,7 @@ export function generateFinancialProductStructuredData(config) {
  * Genera structured data per CollectionPage (glossario, archivio)
  */
 export function generateCollectionPageStructuredData(config) {
-  const {
-    title,
-    description,
-    url,
-    itemCount,
-    items = []
-  } = config;
+  const { title, description, url, itemCount, items = [] } = config;
 
   const baseUrl = 'https://tradelia.org';
   const fullUrl = url ? (url.startsWith('http') ? url : `${baseUrl}${url}`) : baseUrl;
@@ -197,22 +192,26 @@ export function generateCollectionPageStructuredData(config) {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    'name': title,
-    'description': description,
-    'url': fullUrl,
-    'mainEntity': {
+    name: title,
+    description: description,
+    url: fullUrl,
+    mainEntity: {
       '@type': 'ItemList',
-      'numberOfItems': itemCount || items.length,
-      'itemListElement': items.slice(0, 10).map((item, index) => ({
+      numberOfItems: itemCount || items.length,
+      itemListElement: items.slice(0, 10).map((item, index) => ({
         '@type': 'ListItem',
-        'position': index + 1,
-        'item': {
+        position: index + 1,
+        item: {
           '@type': 'Thing',
-          'name': item.name || item.title,
-          'url': item.url ? (item.url.startsWith('http') ? item.url : `${baseUrl}${item.url}`) : fullUrl
-        }
-      }))
-    }
+          name: item.name || item.title,
+          url: item.url
+            ? item.url.startsWith('http')
+              ? item.url
+              : `${baseUrl}${item.url}`
+            : fullUrl,
+        },
+      })),
+    },
   };
 
   return structuredData;
@@ -228,30 +227,30 @@ export function generateWebSiteStructuredData(config = {}) {
     description = 'Framework Accademico AI per analisi finanziaria multi-fattore',
     potentialAction = {
       '@type': 'SearchAction',
-      'target': {
+      target: {
         '@type': 'EntryPoint',
-        'urlTemplate': 'https://tradelia.org/search?q={search_term_string}'
+        urlTemplate: 'https://tradelia.org/search?q={search_term_string}',
       },
-      'query-input': 'required name=search_term_string'
-    }
+      'query-input': 'required name=search_term_string',
+    },
   } = config;
 
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    'name': name,
-    'url': url,
-    'description': description,
-    'publisher': {
+    name: name,
+    url: url,
+    description: description,
+    publisher: {
       '@type': 'Organization',
-      'name': 'Tradelia AI',
-      'url': url,
-      'logo': {
+      name: 'Tradelia AI',
+      url: url,
+      logo: {
         '@type': 'ImageObject',
-        'url': `${url}/img/tradelia_og_vC_white_clean.png`
-      }
+        url: `${url}/img/tradelia_og_vC_white_clean.png`,
+      },
     },
-    'potentialAction': potentialAction
+    potentialAction: potentialAction,
   };
 }
 
@@ -259,21 +258,19 @@ export function generateWebSiteStructuredData(config = {}) {
  * Genera structured data per FAQPage (se applicabile)
  */
 export function generateFAQPageStructuredData(config) {
-  const {
-    faqs = []
-  } = config;
+  const { faqs = [] } = config;
 
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    'mainEntity': faqs.map(faq => ({
+    mainEntity: faqs.map((faq) => ({
       '@type': 'Question',
-      'name': faq.question,
-      'acceptedAnswer': {
+      name: faq.question,
+      acceptedAnswer: {
         '@type': 'Answer',
-        'text': faq.answer
-      }
-    }))
+        text: faq.answer,
+      },
+    })),
   };
 }
 
@@ -315,14 +312,14 @@ function injectStructuredData(data) {
  */
 export function generateSocialImageUrl(pageType, identifier = '') {
   const baseUrl = 'https://tradelia.org/img';
-  
+
   // Mappa tipi pagina a immagini
   const imageMap = {
-    'homepage': `${baseUrl}/tradelia_og_vC_white_clean.png`,
-    'tutorial': `${baseUrl}/tradelia_og_vC_white_clean.png`,
-    'report': `${baseUrl}/tradelia_og_vC_white_clean.png`,
-    'glossario': `${baseUrl}/tradelia_og_vC_white_clean.png`,
-    'default': `${baseUrl}/tradelia_og_vC_white_clean.png`
+    homepage: `${baseUrl}/tradelia_og_vC_white_clean.png`,
+    tutorial: `${baseUrl}/tradelia_og_vC_white_clean.png`,
+    report: `${baseUrl}/tradelia_og_vC_white_clean.png`,
+    glossario: `${baseUrl}/tradelia_og_vC_white_clean.png`,
+    default: `${baseUrl}/tradelia_og_vC_white_clean.png`,
   };
 
   // TODO: In futuro, generare immagini dinamiche con titolo/identifier
@@ -342,14 +339,14 @@ export function optimizeDescriptionForAI(description, keywords = []) {
   // - Sii specifico e informativo
   // - Usa linguaggio chiaro
   // - Enfatizza "progetto indipendente" e "metodo accademico", evita "istituzionale"
-  
+
   let optimized = description;
-  
+
   // Rimuovi eventuali riferimenti fuorvianti a "istituzionale" nel contesto del progetto
   // (manteniamo "istituzionale" solo se si riferisce a tipi di analisi/metodi, non al progetto stesso)
   optimized = optimized.replace(/\bMetodo istituzionale\b/gi, 'Metodo accademico');
   optimized = optimized.replace(/\bapproccio istituzionale\b/gi, 'metodo accademico');
-  
+
   // Se troppo corta, aggiungi contesto che enfatizza il progetto indipendente
   if (optimized.length < 100 && keywords.length > 0) {
     // Verifica se già menziona "progetto indipendente" o "metodo accademico"
@@ -361,12 +358,11 @@ export function optimizeDescriptionForAI(description, keywords = []) {
       optimized = `${description} Scopri ${keywordsStr} con Tradelia AI.`;
     }
   }
-  
+
   // Taglia a max 320 caratteri (AI-friendly)
   if (optimized.length > 320) {
     optimized = optimized.substring(0, 317) + '...';
   }
-  
+
   return optimized;
 }
-

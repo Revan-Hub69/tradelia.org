@@ -1,10 +1,10 @@
 /**
  * Sistema di logging centralizzato per Tradelia Report
- * 
+ *
  * Supporta logging condizionale basato su ambiente:
  * - DEBUG_MODE: Abilita log dettagliati (solo sviluppo)
  * - PRODUCTION: Solo errori critici
- * 
+ *
  * @module logger
  */
 
@@ -13,21 +13,20 @@
  */
 const LOG_CONFIG = {
   // Abilita log dettagliati in sviluppo (disabilitare in produzione)
-  DEBUG_MODE: typeof window !== 'undefined' && (
-    window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1' ||
-    window.location.search.includes('debug=true')
-  ),
+  DEBUG_MODE:
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.search.includes('debug=true')),
   // Flag produzione (impostare a true in build produzione)
-  PRODUCTION: typeof window !== 'undefined' && !(
-    window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1'
-  )
+  PRODUCTION:
+    typeof window !== 'undefined' &&
+    !(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'),
 };
 
 /**
  * Logger centralizzato
- * 
+ *
  * @namespace Logger
  */
 const Logger = {
@@ -99,8 +98,7 @@ const Logger = {
    */
   isDebugEnabled() {
     return LOG_CONFIG.DEBUG_MODE;
-  }
+  },
 };
 
 export default Logger;
-

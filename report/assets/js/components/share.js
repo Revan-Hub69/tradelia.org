@@ -8,14 +8,11 @@
 import { i18n } from '../utils/i18n.js';
 
 function initShareSystem() {
-
   function bootShare() {
     const overlayEl = document.getElementById('share-overlay');
     const linkField = document.getElementById('share-link-field');
-    const copyBtn   = document.getElementById('share-copy-btn');
-    const shareButtonsNode = overlayEl
-      ? Array.from(overlayEl.querySelectorAll('.share-btn'))
-      : [];
+    const copyBtn = document.getElementById('share-copy-btn');
+    const shareButtonsNode = overlayEl ? Array.from(overlayEl.querySelectorAll('.share-btn')) : [];
 
     // ---------------------------------
     // 1. URL da condividere (senza hash)
@@ -25,7 +22,7 @@ function initShareSystem() {
         const loc = window.location;
         const base = loc.origin + loc.pathname + loc.search;
         return base;
-      } catch(e){
+      } catch (e) {
         return window.location.href;
       }
     })();
@@ -36,22 +33,20 @@ function initShareSystem() {
 
     // testo social (usa headerData se disponibile)
     function getShareMeta() {
-      const hd = window.Tradelia && window.Tradelia.headerData
-        ? window.Tradelia.headerData
-        : null;
+      const hd = window.Tradelia && window.Tradelia.headerData ? window.Tradelia.headerData : null;
 
       if (hd) {
-        const tkr   = hd.Ticker || '';
+        const tkr = hd.Ticker || '';
         const venue = hd.Venue ? ` (${hd.Venue})` : '';
         return {
           title: `Tradelia · ${tkr}${venue}`.trim(),
-          text:  `Report Runtime su ${tkr}${venue ? ' ' + venue : ''}. Snapshot ${hd.Start || ''} → ${hd.End || ''}.`
+          text: `Report Runtime su ${tkr}${venue ? ' ' + venue : ''}. Snapshot ${hd.Start || ''} → ${hd.End || ''}.`,
         };
       }
 
       return {
         title: 'Tradelia · Report Runtime',
-        text:  'Analisi multi-timeframe, sentiment, intermarket, rischio e broker regolamentati.'
+        text: 'Analisi multi-timeframe, sentiment, intermarket, rischio e broker regolamentati.',
       };
     }
 
@@ -64,11 +59,11 @@ function initShareSystem() {
         try {
           await navigator.share({
             title: meta.title,
-            text:  meta.text,
-            url:   fullUrl
+            text: meta.text,
+            url: fullUrl,
           });
           return true;
-        } catch(err){
+        } catch (err) {
           // utente annulla o share non supportata -> ignora
           return false;
         }
@@ -82,13 +77,13 @@ function initShareSystem() {
     function openSocial(service) {
       const meta = getShareMeta();
 
-      const encUrl   = encodeURIComponent(fullUrl);
-      const encText  = encodeURIComponent(meta.text || '');
+      const encUrl = encodeURIComponent(fullUrl);
+      const encText = encodeURIComponent(meta.text || '');
       const encTitle = encodeURIComponent(meta.title || '');
 
       let shareUrl = '';
 
-      switch(service){
+      switch (service) {
         case 'linkedin':
           shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encUrl}`;
           break;
@@ -107,8 +102,8 @@ function initShareSystem() {
 
       const w = 600;
       const h = 500;
-      const left = (window.screen.width  - w) / 2;
-      const top  = (window.screen.height - h) / 2;
+      const left = (window.screen.width - w) / 2;
+      const top = (window.screen.height - h) / 2;
 
       window.open(
         shareUrl,
@@ -125,7 +120,7 @@ function initShareSystem() {
       try {
         await navigator.clipboard.writeText(fullUrl);
         flashCopied(copyBtn, linkField);
-      } catch(err){
+      } catch (err) {
         fallbackManualCopy(fullUrl);
         flashCopied(copyBtn, linkField);
       }
@@ -134,17 +129,19 @@ function initShareSystem() {
     function fallbackManualCopy(text) {
       const ta = document.createElement('textarea');
       ta.value = text;
-      ta.setAttribute('readonly','');
+      ta.setAttribute('readonly', '');
       ta.style.position = 'absolute';
       ta.style.left = '-9999px';
       document.body.appendChild(ta);
       ta.select();
-      try { document.execCommand('copy'); } catch(e){}
+      try {
+        document.execCommand('copy');
+      } catch (e) {}
       document.body.removeChild(ta);
     }
 
     function flashCopied(btnEl, fieldEl) {
-      if (btnEl){
+      if (btnEl) {
         btnEl.classList.add('is-copied');
         btnEl.textContent = i18n.t('share.copied');
         setTimeout(() => {
@@ -159,7 +156,7 @@ function initShareSystem() {
         }, 1500);
       }
 
-      if (fieldEl){
+      if (fieldEl) {
         fieldEl.classList.add('copied');
         setTimeout(() => {
           fieldEl.classList.remove('copied');
@@ -170,7 +167,7 @@ function initShareSystem() {
     // ---------------------------------
     // 5. Bind pulsanti social nella share-sheet
     // ---------------------------------
-    shareButtonsNode.forEach(btn => {
+    shareButtonsNode.forEach((btn) => {
       btn.addEventListener('click', async () => {
         const svc = btn.getAttribute('data-share-svc');
 
@@ -198,8 +195,8 @@ function initShareSystem() {
   }
 
   // assicurati che il DOM esista
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", bootShare, { once: true });
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootShare, { once: true });
   } else {
     bootShare();
   }

@@ -22,9 +22,9 @@ const normalizeTemplate = (raw) => ({
       module_key: module.module_key,
       order_index: module.order_index,
       required: module.required,
-      default_content: module.default_content || {}
-    }))
-  }))
+      default_content: module.default_content || {},
+    })),
+  })),
 });
 
 export const handleTemplatesRequest = async (req, res) => {
@@ -68,4 +68,3 @@ export const handleTemplatesRequest = async (req, res) => {
   const templates = (data || []).map(normalizeTemplate);
   return sendJSON(res, 200, { ok: true, templates });
 };
-

@@ -9,162 +9,190 @@ import { getExplanation, toMetricPopupFormat } from './f1b-explanations.js';
  */
 export function formatF1BWithExplanations(f1bOutput) {
   const rows = [];
-  
+
   // === ROW 1: StrategyMode + RegimeScore ===
-  const strategyMode = f1bOutput.f1bSnapshot?.regime_state?.StrategyMode_macro || 
-                       f1bOutput.regime_and_risk?.StrategyMode_macro?.raw || '—';
-  const regimeScore = f1bOutput.f1bSnapshot?.regime_state?.RegimeScore || 
-                      f1bOutput.regime_and_risk?.RegimeScore?.raw || '—';
-  
+  const strategyMode =
+    f1bOutput.f1bSnapshot?.regime_state?.StrategyMode_macro ||
+    f1bOutput.regime_and_risk?.StrategyMode_macro?.raw ||
+    '—';
+  const regimeScore =
+    f1bOutput.f1bSnapshot?.regime_state?.RegimeScore ||
+    f1bOutput.regime_and_risk?.RegimeScore?.raw ||
+    '—';
+
   rows.push({
     id: 'strategy-mode-line',
     parts: [
       { kind: 'text', text: 'StrategyMode: ' },
-      { 
-        kind: 'metric', 
-        key: 'StrategyMode_macro', 
+      {
+        kind: 'metric',
+        key: 'StrategyMode_macro',
         value: strategyMode,
         label: 'StrategyMode',
-        tone: getToneForStrategyMode(strategyMode)
+        tone: getToneForStrategyMode(strategyMode),
       },
       { kind: 'text', text: ' · RegimeScore: ' },
-      { 
-        kind: 'metric', 
-        key: 'RegimeScore', 
+      {
+        kind: 'metric',
+        key: 'RegimeScore',
         value: formatRegimeScore(regimeScore),
         label: 'RegimeScore',
-        tone: getToneForRegimeScore(regimeScore)
-      }
-    ]
+        tone: getToneForRegimeScore(regimeScore),
+      },
+    ],
   });
-  
+
   // === ROW 2: Volatility + Breadth ===
-  const volRegime = f1bOutput.f1bSnapshot?.market_microstructure?.VolRegime_comment || 
-                    f1bOutput.regime_and_risk?.VolRegime?.raw || '—';
-  const breadth = f1bOutput.f1bSnapshot?.breadth_and_rotation?.Breadth_1M_pctSectorsGreen || 
-                  f1bOutput.breadth_rotation?.Breadth_1M?.raw || '—';
-  
+  const volRegime =
+    f1bOutput.f1bSnapshot?.market_microstructure?.VolRegime_comment ||
+    f1bOutput.regime_and_risk?.VolRegime?.raw ||
+    '—';
+  const breadth =
+    f1bOutput.f1bSnapshot?.breadth_and_rotation?.Breadth_1M_pctSectorsGreen ||
+    f1bOutput.breadth_rotation?.Breadth_1M?.raw ||
+    '—';
+
   rows.push({
     id: 'vol-breadth-line',
     parts: [
       { kind: 'text', text: 'Volatilità: ' },
-      { 
-        kind: 'metric', 
-        key: 'VolRegime', 
+      {
+        kind: 'metric',
+        key: 'VolRegime',
         value: volRegime,
         label: 'VolRegime',
-        tone: 'neutral'
+        tone: 'neutral',
       },
       { kind: 'text', text: ' · Breadth 1M: ' },
-      { 
-        kind: 'metric', 
-        key: 'Breadth_1M', 
+      {
+        kind: 'metric',
+        key: 'Breadth_1M',
         value: formatBreadth(breadth),
         label: 'Breadth 1M',
-        tone: getToneForBreadth(breadth)
-      }
-    ]
+        tone: getToneForBreadth(breadth),
+      },
+    ],
   });
-  
+
   // === ROW 3: RiskTilt + Leaders ===
-  const riskTilt = f1bOutput.f1bSnapshot?.breadth_and_rotation?.RiskTilt_1M || 
-                   f1bOutput.breadth_rotation?.RiskTilt_1M?.raw || '—';
+  const riskTilt =
+    f1bOutput.f1bSnapshot?.breadth_and_rotation?.RiskTilt_1M ||
+    f1bOutput.breadth_rotation?.RiskTilt_1M?.raw ||
+    '—';
   const leaders = f1bOutput.f1bSnapshot?.breadth_and_rotation?.LeadersMultiTF || [];
-  
+
   rows.push({
     id: 'risk-tilt-line',
     parts: [
       { kind: 'text', text: 'RiskTilt: ' },
-      { 
-        kind: 'metric', 
-        key: 'RiskTilt_1M', 
+      {
+        kind: 'metric',
+        key: 'RiskTilt_1M',
         value: riskTilt,
         label: 'RiskTilt 1M',
-        tone: getToneForRiskTilt(riskTilt)
+        tone: getToneForRiskTilt(riskTilt),
       },
       { kind: 'text', text: ' · Leaders: ' },
-      { kind: 'text', text: leaders.slice(0, 3).join(', ') || '—' }
-    ]
+      { kind: 'text', text: leaders.slice(0, 3).join(', ') || '—' },
+    ],
   });
-  
+
   // === ROW 4: Size Bias + SmallCap Pressure ===
-  const sizeBias = f1bOutput.f1bSnapshot?.size_distribution?.SizeBiasPattern || 
-                   f1bOutput.breadth_rotation?.SizeBias?.raw || '—';
-  const smallCapPressure = f1bOutput.f1bSnapshot?.breadth_and_rotation?.SmallCapPressure_1W || 
-                           f1bOutput.breadth_rotation?.SmallCapPressure_1W?.raw || '—';
-  
+  const sizeBias =
+    f1bOutput.f1bSnapshot?.size_distribution?.SizeBiasPattern ||
+    f1bOutput.breadth_rotation?.SizeBias?.raw ||
+    '—';
+  const smallCapPressure =
+    f1bOutput.f1bSnapshot?.breadth_and_rotation?.SmallCapPressure_1W ||
+    f1bOutput.breadth_rotation?.SmallCapPressure_1W?.raw ||
+    '—';
+
   rows.push({
     id: 'size-bias-line',
     parts: [
       { kind: 'text', text: 'Size Bias: ' },
-      { 
-        kind: 'metric', 
-        key: 'SizeBias', 
+      {
+        kind: 'metric',
+        key: 'SizeBias',
         value: sizeBias,
         label: 'Size Bias',
-        tone: 'neutral'
+        tone: 'neutral',
       },
       { kind: 'text', text: ' · SmallCap Pressure: ' },
-      { 
-        kind: 'metric', 
-        key: 'SmallCapPressure_1W', 
+      {
+        kind: 'metric',
+        key: 'SmallCapPressure_1W',
         value: formatSmallCapPressure(smallCapPressure),
         label: 'SmallCap Pressure',
-        tone: getToneForSmallCapPressure(smallCapPressure)
-      }
-    ]
+        tone: getToneForSmallCapPressure(smallCapPressure),
+      },
+    ],
   });
-  
+
   // === ROW 5: Finviz Query (if available) ===
-  const finvizQuery = f1bOutput.finvizFilters?.QueryString || 
-                      f1bOutput.bridgeF2?.universe_for_F2?.FinvizQuery || null;
-  
+  const finvizQuery =
+    f1bOutput.finvizFilters?.QueryString ||
+    f1bOutput.bridgeF2?.universe_for_F2?.FinvizQuery ||
+    null;
+
   if (finvizQuery) {
     rows.push({
       id: 'finviz-query-line',
       parts: [
         { kind: 'text', text: 'Finviz Query: ' },
-        { 
-          kind: 'metric', 
-          key: 'FinvizQuery', 
+        {
+          kind: 'metric',
+          key: 'FinvizQuery',
           value: finvizQuery.substring(0, 80) + '...',
           label: 'Finviz Query',
-          tone: 'neutral'
-        }
-      ]
+          tone: 'neutral',
+        },
+      ],
     });
   }
-  
+
   // === ROW 6: Risk Window ===
-  const riskWindow = f1bOutput.f1bSnapshot?.risk_window?.RiskWindow_F1?.Event || 
-                     f1bOutput.regime_and_risk?.RiskWindow?.raw || '—';
-  
+  const riskWindow =
+    f1bOutput.f1bSnapshot?.risk_window?.RiskWindow_F1?.Event ||
+    f1bOutput.regime_and_risk?.RiskWindow?.raw ||
+    '—';
+
   rows.push({
     id: 'risk-window-line',
     parts: [
       { kind: 'text', text: 'Risk Window (3-10g): ' },
-      { 
-        kind: 'metric', 
-        key: 'RiskWindow', 
+      {
+        kind: 'metric',
+        key: 'RiskWindow',
         value: riskWindow,
         label: 'Risk Window',
-        tone: 'yellow'
-      }
-    ]
+        tone: 'yellow',
+      },
+    ],
   });
-  
+
   // === METRICS PANEL (per popup) ===
   const metricsPanel = [];
-  
+
   // Aggiungi tutte le metriche con spiegazioni
   const metrics = [
-    'StrategyMode_macro', 'RegimeScore', 'VolRegime', 'Breadth_1M',
-    'RiskTilt_1M', 'SmallCapPressure_1W', 'LeadersMultiTF', 'SizeBias',
-    'CreditRiskBlock', 'FX_Regime', 'LiquidityRegimeScore', 'RiskWindow',
-    'FinvizQuery', 'StressMicroCap'
+    'StrategyMode_macro',
+    'RegimeScore',
+    'VolRegime',
+    'Breadth_1M',
+    'RiskTilt_1M',
+    'SmallCapPressure_1W',
+    'LeadersMultiTF',
+    'SizeBias',
+    'CreditRiskBlock',
+    'FX_Regime',
+    'LiquidityRegimeScore',
+    'RiskWindow',
+    'FinvizQuery',
+    'StressMicroCap',
   ];
-  
-  metrics.forEach(key => {
+
+  metrics.forEach((key) => {
     const exp = getExplanation(key);
     if (exp) {
       const value = getMetricValue(f1bOutput, key);
@@ -175,15 +203,15 @@ export function formatF1BWithExplanations(f1bOutput) {
         what: exp.what,
         how: exp.how,
         source: exp.fonte,
-        esempio: exp.esempio
+        esempio: exp.esempio,
       });
     }
   });
-  
+
   return {
     rows,
     metricsPanel,
-    meta: f1bOutput.meta || {}
+    meta: f1bOutput.meta || {},
   };
 }
 
@@ -266,20 +294,19 @@ function getMetricValue(f1bOutput, key) {
     `regime_and_risk.${key}.raw`,
     `breadth_rotation.${key}.raw`,
     `finvizFilters.${key}`,
-    `bridgeF2.universe_for_F2.${key}`
+    `bridgeF2.universe_for_F2.${key}`,
   ];
-  
+
   for (const path of paths) {
     const value = getNestedValue(f1bOutput, path);
     if (value !== undefined && value !== null) {
       return value;
     }
   }
-  
+
   return '—';
 }
 
 function getNestedValue(obj, path) {
   return path.split('.').reduce((current, prop) => current?.[prop], obj);
 }
-

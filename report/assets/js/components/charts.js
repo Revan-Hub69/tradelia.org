@@ -18,7 +18,7 @@ async function loadChartJS() {
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
     script.async = true;
-    
+
     await new Promise((resolve, reject) => {
       script.onload = () => {
         ChartJS = window.Chart;
@@ -77,7 +77,7 @@ const CHART_COLORS = {
   neutral: '#64748b', // --neutral
   grid: 'rgba(255, 255, 255, 0.05)',
   text: '#f0f0f0', // --ink-soft
-  textMuted: '#b8b8b8' // --muted
+  textMuted: '#b8b8b8', // --muted
 };
 
 // ===== LINE CHART =====
@@ -89,7 +89,7 @@ async function createLineChart(canvas, data, options = {}) {
     type: 'line',
     data: {
       labels: data.labels || [],
-      datasets: data.datasets || []
+      datasets: data.datasets || [],
     },
     options: {
       responsive: true,
@@ -104,9 +104,9 @@ async function createLineChart(canvas, data, options = {}) {
             padding: 12,
             font: {
               size: 12,
-              family: 'Inter, ui-sans-serif, system-ui'
-            }
-          }
+              family: 'Inter, ui-sans-serif, system-ui',
+            },
+          },
         },
         tooltip: {
           enabled: true,
@@ -121,44 +121,44 @@ async function createLineChart(canvas, data, options = {}) {
           callbacks: {
             label: (context) => {
               return `${context.dataset.label}: ${context.parsed.y}`;
-            }
-          }
-        }
+            },
+          },
+        },
       },
       scales: {
         x: {
           grid: {
             color: CHART_COLORS.grid,
-            drawBorder: false
+            drawBorder: false,
           },
           ticks: {
             color: CHART_COLORS.textMuted,
             font: {
               size: 11,
-              family: 'Inter, ui-sans-serif, system-ui'
-            }
-          }
+              family: 'Inter, ui-sans-serif, system-ui',
+            },
+          },
         },
         y: {
           grid: {
             color: CHART_COLORS.grid,
-            drawBorder: false
+            drawBorder: false,
           },
           ticks: {
             color: CHART_COLORS.textMuted,
             font: {
               size: 11,
-              family: 'Inter, ui-sans-serif, system-ui'
-            }
-          }
-        }
+              family: 'Inter, ui-sans-serif, system-ui',
+            },
+          },
+        },
       },
       interaction: {
         intersect: false,
-        mode: 'index'
+        mode: 'index',
       },
-      ...options
-    }
+      ...options,
+    },
   };
 
   return new Chart(canvas, config);
@@ -173,7 +173,7 @@ async function createBarChart(canvas, data, options = {}) {
     type: 'bar',
     data: {
       labels: data.labels || [],
-      datasets: data.datasets || []
+      datasets: data.datasets || [],
     },
     options: {
       responsive: true,
@@ -181,34 +181,34 @@ async function createBarChart(canvas, data, options = {}) {
       plugins: {
         legend: {
           display: options.showLegend !== false,
-          position: options.legendPosition || 'top'
+          position: options.legendPosition || 'top',
         },
         tooltip: {
-          enabled: true
-        }
+          enabled: true,
+        },
       },
       scales: {
         x: {
           grid: {
             color: CHART_COLORS.grid,
-            drawBorder: false
+            drawBorder: false,
           },
           ticks: {
-            color: CHART_COLORS.textMuted
-          }
+            color: CHART_COLORS.textMuted,
+          },
         },
         y: {
           grid: {
             color: CHART_COLORS.grid,
-            drawBorder: false
+            drawBorder: false,
           },
           ticks: {
-            color: CHART_COLORS.textMuted
-          }
-        }
+            color: CHART_COLORS.textMuted,
+          },
+        },
       },
-      ...options
-    }
+      ...options,
+    },
   };
 
   return new Chart(canvas, config);
@@ -223,18 +223,20 @@ async function createPieChart(canvas, data, options = {}) {
     type: 'pie',
     data: {
       labels: data.labels || [],
-      datasets: [{
-        data: data.values || [],
-        backgroundColor: data.colors || [
-          CHART_COLORS.primary,
-          CHART_COLORS.ok,
-          CHART_COLORS.warn,
-          CHART_COLORS.err,
-          CHART_COLORS.neutral
-        ],
-        borderColor: 'rgba(255, 255, 255, 0.1)',
-        borderWidth: 1
-      }]
+      datasets: [
+        {
+          data: data.values || [],
+          backgroundColor: data.colors || [
+            CHART_COLORS.primary,
+            CHART_COLORS.ok,
+            CHART_COLORS.warn,
+            CHART_COLORS.err,
+            CHART_COLORS.neutral,
+          ],
+          borderColor: 'rgba(255, 255, 255, 0.1)',
+          borderWidth: 1,
+        },
+      ],
     },
     options: {
       responsive: true,
@@ -242,7 +244,7 @@ async function createPieChart(canvas, data, options = {}) {
       plugins: {
         legend: {
           display: options.showLegend !== false,
-          position: options.legendPosition || 'right'
+          position: options.legendPosition || 'right',
         },
         tooltip: {
           enabled: true,
@@ -253,12 +255,12 @@ async function createPieChart(canvas, data, options = {}) {
               const total = context.dataset.data.reduce((a, b) => a + b, 0);
               const percentage = ((value / total) * 100).toFixed(1);
               return `${label}: ${value} (${percentage}%)`;
-            }
-          }
-        }
+            },
+          },
+        },
       },
-      ...options
-    }
+      ...options,
+    },
   };
 
   return new Chart(canvas, config);
@@ -287,10 +289,11 @@ export const charts = {
    * @returns {Promise<Chart>} Istanza Chart.js
    */
   async createLineChart(container, data, options = {}) {
-    const canvas = typeof container === 'string' 
-      ? document.getElementById(container)
-      : container.querySelector('canvas') || container;
-    
+    const canvas =
+      typeof container === 'string'
+        ? document.getElementById(container)
+        : container.querySelector('canvas') || container;
+
     if (!canvas) {
       Logger.error('Charts', 'Canvas non trovato');
       return null;
@@ -307,10 +310,11 @@ export const charts = {
    * @returns {Promise<Chart>} Istanza Chart.js
    */
   async createBarChart(container, data, options = {}) {
-    const canvas = typeof container === 'string' 
-      ? document.getElementById(container)
-      : container.querySelector('canvas') || container;
-    
+    const canvas =
+      typeof container === 'string'
+        ? document.getElementById(container)
+        : container.querySelector('canvas') || container;
+
     if (!canvas) {
       Logger.error('Charts', 'Canvas non trovato');
       return null;
@@ -327,10 +331,11 @@ export const charts = {
    * @returns {Promise<Chart>} Istanza Chart.js
    */
   async createPieChart(container, data, options = {}) {
-    const canvas = typeof container === 'string' 
-      ? document.getElementById(container)
-      : container.querySelector('canvas') || container;
-    
+    const canvas =
+      typeof container === 'string'
+        ? document.getElementById(container)
+        : container.querySelector('canvas') || container;
+
     if (!canvas) {
       Logger.error('Charts', 'Canvas non trovato');
       return null;
@@ -356,6 +361,5 @@ export const charts = {
    */
   isLoaded() {
     return ChartLoaded && ChartJS !== null;
-  }
+  },
 };
-

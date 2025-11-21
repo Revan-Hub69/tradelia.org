@@ -124,7 +124,7 @@
 }
 
 .chart-loading::before {
-  content: "";
+  content: '';
   width: 20px;
   height: 20px;
   border: 2px solid var(--br-card);
@@ -135,7 +135,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ===== CHART ERROR STATE ===== */
@@ -182,4 +184,3 @@
   outline: 2px solid var(--brand-500);
   outline-offset: 2px;
 }
-

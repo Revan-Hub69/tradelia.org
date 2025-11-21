@@ -16,8 +16,8 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
   auth: {
     autoRefreshToken: false,
-    persistSession: false
-  }
+    persistSession: false,
+  },
 });
 
 /**
@@ -42,7 +42,7 @@ async function sendTokenEmail(email, token) {
     console.error('[Request Token] BREVO_API_KEY non configurata');
     return false;
   }
-  
+
   const emailHTML = `
 <!DOCTYPE html>
 <html>
@@ -87,7 +87,7 @@ async function sendTokenEmail(email, token) {
 </body>
 </html>
   `;
-  
+
   const emailText = `
 Il tuo codice di accesso Tradelia
 
@@ -105,29 +105,29 @@ Se non hai richiesto questo codice, ignora questa email o contatta il supporto.
 Questo è un messaggio automatico da Tradelia AI.
 Per assistenza: support@tradelia.org
   `;
-  
+
   try {
     const response = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
         'api-key': BREVO_API_KEY,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI' },
         to: [{ email: email }],
         subject: '🔑 Il tuo codice di accesso Tradelia',
         htmlContent: emailHTML,
-        textContent: emailText
-      })
+        textContent: emailText,
+      }),
     });
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error('[Request Token] Errore Brevo:', errorText);
       return false;
     }
-    
+
     return true;
   } catch (err) {
     console.error('[Request Token] Errore invio email:', err);
@@ -140,27 +140,27 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-  
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
-  
+
   try {
     const { email } = req.body;
-    
+
     if (!email || typeof email !== 'string' || !email.includes('@')) {
-      return res.status(400).json({ 
-        ok: false, 
-        error: 'Email non valida' 
+      return res.status(400).json({
+        ok: false,
+        error: 'Email non valida',
       });
     }
-    
+
     const sanitizedEmail = email.trim().toLowerCase();
-    
+
     // 1. Verifica che esista un utente con piano attivo
     // Cerca prima in subscribers
     const { data: subscriber } = await supabase
@@ -169,46 +169,49 @@ export default async function handler(req, res) {
       .eq('email', sanitizedEmail)
       .eq('status', 'active')
       .single();
-    
+
     let userId = subscriber?.auth_user_id || null;
     let validUntil = subscriber?.current_period_end || null;
-    
+
     // Se non ha subscriber, cerca in auth.users e user_roles
     if (!userId) {
       const { data: authUsers } = await supabase.auth.admin.listUsers();
-      const user = authUsers?.users?.find(u => u.email?.toLowerCase() === sanitizedEmail);
+      const user = authUsers?.users?.find((u) => u.email?.toLowerCase() === sanitizedEmail);
       userId = user?.id || null;
-      
+
       if (userId) {
         const { data: userRole } = await supabase
           .from('user_roles')
           .select('role, valid_until')
           .eq('user_id', userId)
           .single();
-        
+
         if (userRole && userRole.valid_until) {
           const expiryDate = new Date(userRole.valid_until);
           if (expiryDate > new Date()) {
             validUntil = userRole.valid_until;
           } else {
             // Piano scaduto
-            return res.status(200).json({ 
-              ok: false, 
-              error: 'Non risulta un piano attivo per questa email. Vai ai piani o contattaci per attivare un abbonamento.' 
+            return res.status(200).json({
+              ok: false,
+              error:
+                'Non risulta un piano attivo per questa email. Vai ai piani o contattaci per attivare un abbonamento.',
             });
           }
         } else {
           // Nessun piano attivo
-          return res.status(200).json({ 
-            ok: false, 
-            error: 'Non risulta un piano attivo per questa email. Vai ai piani o contattaci per attivare un abbonamento.' 
+          return res.status(200).json({
+            ok: false,
+            error:
+              'Non risulta un piano attivo per questa email. Vai ai piani o contattaci per attivare un abbonamento.',
           });
         }
       } else {
         // Utente non trovato
-        return res.status(200).json({ 
-          ok: false, 
-          error: 'Non risulta un piano attivo per questa email. Vai ai piani o contattaci per attivare un abbonamento.' 
+        return res.status(200).json({
+          ok: false,
+          error:
+            'Non risulta un piano attivo per questa email. Vai ai piani o contattaci per attivare un abbonamento.',
         });
       }
     } else {
@@ -216,14 +219,14 @@ export default async function handler(req, res) {
       if (validUntil) {
         const expiryDate = new Date(validUntil);
         if (expiryDate <= new Date()) {
-          return res.status(200).json({ 
-            ok: false, 
-            error: 'Il tuo abbonamento è scaduto. Vai ai piani per rinnovare.' 
+          return res.status(200).json({
+            ok: false,
+            error: 'Il tuo abbonamento è scaduto. Vai ai piani per rinnovare.',
           });
         }
       }
     }
-    
+
     // 2. Determina plan_role da user_roles
     let planRole = 'trial';
     if (userId) {
@@ -232,37 +235,37 @@ export default async function handler(req, res) {
         .select('role')
         .eq('user_id', userId)
         .single();
-      
+
       if (userRole) {
         planRole = userRole.role;
       }
     }
-    
+
     // 3. Genera nuovo token
     const newToken = generateToken();
     const tokenHash = hashToken(newToken);
-    
+
     // 4. Revoca token vecchi per questo utente/email
     if (userId) {
       await supabase
         .from('dashboard_access_tokens')
-        .update({ 
-          revoked: true, 
-          revoked_at: new Date().toISOString() 
+        .update({
+          revoked: true,
+          revoked_at: new Date().toISOString(),
         })
         .eq('user_id', userId)
         .eq('revoked', false);
     } else {
       await supabase
         .from('dashboard_access_tokens')
-        .update({ 
-          revoked: true, 
-          revoked_at: new Date().toISOString() 
+        .update({
+          revoked: true,
+          revoked_at: new Date().toISOString(),
         })
         .eq('email', sanitizedEmail)
         .eq('revoked', false);
     }
-    
+
     // 5. Crea nuovo token
     const tokenData = {
       user_id: userId,
@@ -271,28 +274,26 @@ export default async function handler(req, res) {
       plan_role: planRole,
       valid_until: validUntil || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // Default 1 anno se non specificato
       source: 'manual',
-      metadata: { requested_at: new Date().toISOString() }
+      metadata: { requested_at: new Date().toISOString() },
     };
-    
-    const { error: insertError } = await supabase
-      .from('dashboard_access_tokens')
-      .insert(tokenData);
-    
+
+    const { error: insertError } = await supabase.from('dashboard_access_tokens').insert(tokenData);
+
     if (insertError) {
       console.error('[Request Token] Errore inserimento token:', insertError);
-      return res.status(500).json({ 
-        ok: false, 
-        error: 'Errore generazione token' 
+      return res.status(500).json({
+        ok: false,
+        error: 'Errore generazione token',
       });
     }
-    
+
     // 6. Invia email con nuovo token
     const emailSent = await sendTokenEmail(sanitizedEmail, newToken);
-    
+
     if (!emailSent) {
       console.warn('[Request Token] Email non inviata, ma token creato');
     }
-    
+
     // 7. Notifica admin (amministrazione@tradelia.org)
     if (BREVO_API_KEY) {
       try {
@@ -349,15 +350,15 @@ Token precedenti: Revocati automaticamente`;
           method: 'POST',
           headers: {
             'api-key': BREVO_API_KEY,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI - Sistema Token' },
             to: [{ email: 'amministrazione@tradelia.org' }],
             subject: `🔑 Richiesta nuovo token dashboard - ${sanitizedEmail}`,
             htmlContent: adminEmailHTML,
-            textContent: adminEmailText
-          })
+            textContent: adminEmailText,
+          }),
         });
 
         if (!adminEmailResponse.ok) {
@@ -366,13 +367,13 @@ Token precedenti: Revocati automaticamente`;
             status: adminEmailResponse.status,
             statusText: adminEmailResponse.statusText,
             error: errorText,
-            to: 'amministrazione@tradelia.org'
+            to: 'amministrazione@tradelia.org',
           });
         } else {
           const adminEmailResult = await adminEmailResponse.json();
           console.log('[Request Token] Email admin inviata con successo:', {
             messageId: adminEmailResult.messageId,
-            to: 'amministrazione@tradelia.org'
+            to: 'amministrazione@tradelia.org',
           });
         }
       } catch (err) {
@@ -380,25 +381,24 @@ Token precedenti: Revocati automaticamente`;
           error: err.message,
           stack: err.stack,
           adminEmail: 'amministrazione@tradelia.org',
-          hasBrevoKey: !!BREVO_API_KEY
+          hasBrevoKey: !!BREVO_API_KEY,
         });
       }
     } else {
       console.error('[Request Token] BREVO_API_KEY non configurato - email admin NON inviata!');
     }
-    
+
     return res.status(200).json({
       ok: true,
-      message: 'Se esiste un piano attivo su questa email, ti abbiamo inviato un nuovo codice. Controlla la tua casella email.'
+      message:
+        'Se esiste un piano attivo su questa email, ti abbiamo inviato un nuovo codice. Controlla la tua casella email.',
     });
-    
   } catch (err) {
     console.error('[Request Token] Errore:', err);
-    return res.status(500).json({ 
-      ok: false, 
-      error: 'Errore server', 
-      details: err.message 
+    return res.status(500).json({
+      ok: false,
+      error: 'Errore server',
+      details: err.message,
     });
   }
 }
-
