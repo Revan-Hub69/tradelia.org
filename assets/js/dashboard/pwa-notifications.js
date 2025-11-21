@@ -199,6 +199,16 @@ export async function enablePushNotifications() {
     return false;
   }
 
+  // Assicura che service worker sia registrato
+  if (!serviceWorkerRegistration) {
+    console.warn("[Notifications] Service Worker non registrato, registrazione in corso...");
+    const registration = await registerServiceWorker();
+    if (!registration) {
+      console.error("[Notifications] Impossibile registrare Service Worker");
+      return false;
+    }
+  }
+
   // Se permesso già concesso, verifica se già sottoscritto
   if (Notification.permission === "granted") {
     const alreadySubscribed = await areNotificationsEnabled();
@@ -207,8 +217,13 @@ export async function enablePushNotifications() {
       return true;
     }
     // Permesso concesso ma non sottoscritto → sottoscrivi
-    await subscribeToPush();
-    return true;
+    try {
+      await subscribeToPush();
+      return true;
+    } catch (error) {
+      console.error("[Notifications] Errore durante sottoscrizione:", error);
+      return false;
+    }
   }
 
   // BEST PRACTICE: Se permesso negato, non forzare
@@ -224,8 +239,13 @@ export async function enablePushNotifications() {
     const permission = await Notification.requestPermission();
     if (permission === "granted") {
       console.warn("[Notifications] Permesso concesso");
-      await subscribeToPush();
-      return true;
+      try {
+        await subscribeToPush();
+        return true;
+      } catch (error) {
+        console.error("[Notifications] Errore durante sottoscrizione:", error);
+        return false;
+      }
     } else {
       console.warn("[Notifications] Permesso negato");
       return false;
@@ -269,11 +289,17 @@ async function getVAPIDPublicKey() {
 
 /**
  * Subscribe alle push notifications
+ * BEST PRACTICE: Assicura che service worker sia registrato prima di sottoscrivere
  */
 async function subscribeToPush() {
+  // Se service worker non è registrato, registralo
   if (!serviceWorkerRegistration) {
-    console.warn("[Notifications] Service Worker non registrato");
-    return;
+    console.warn("[Notifications] Service Worker non registrato, registrazione in corso...");
+    const registration = await registerServiceWorker();
+    if (!registration) {
+      console.error("[Notifications] Impossibile registrare Service Worker");
+      return;
+    }
   }
 
   try {
@@ -296,6 +322,7 @@ async function subscribeToPush() {
     await sendSubscriptionToServer(subscription);
   } catch (error) {
     console.error("[Notifications] Errore sottoscrizione:", error);
+    throw error; // Rilancia per permettere gestione errore nel chiamante
   }
 }
 
