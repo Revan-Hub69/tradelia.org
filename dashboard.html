@@ -566,8 +566,21 @@
       import { initDashboard } from '/assets/js/dashboard/app.js';
       import '/assets/js/dashboard/toast.js';
 
+      // FASE 4: Performance Monitoring
+      import '/assets/js/performance/web-vitals.js';
+      import { monitorBundleSizes } from '/assets/js/performance/bundle-monitor.js';
+
       // Initialize dashboard
       initDashboard();
+
+      // Monitor bundle sizes (dopo load)
+      if (document.readyState === 'loading') {
+        window.addEventListener('load', () => {
+          setTimeout(monitorBundleSizes, 1000);
+        });
+      } else {
+        setTimeout(monitorBundleSizes, 1000);
+      }
 
       // Service Worker Registration
       if ('serviceWorker' in navigator) {

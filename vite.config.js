@@ -12,6 +12,8 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    // Performance: Chunk size warnings
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
@@ -23,7 +25,7 @@ export default defineConfig({
       output: {
         // Organizza output per mantenere struttura
         entryFileNames: 'assets/js/[name]-[hash].js',
-        chunkFileNames: 'assets/js/[name]-[hash].js',
+        chunkFileNames: 'assets/js/chunks/[name]-[hash].js',
         assetFileNames: (assetInfo) => {
           if (assetInfo.name.endsWith('.css')) {
             return 'assets/css/[name]-[hash][extname]';
@@ -32,23 +34,50 @@ export default defineConfig({
             return 'assets/img/[name]-[hash][extname]';
           }
           return 'assets/[name]-[hash][extname]';
+        },
+        // Code splitting manuale per moduli dashboard
+        manualChunks: (id) => {
+          // Dashboard modules in chunk separato
+          if (id.includes('assets/js/dashboard/')) {
+            const moduleName = id.split('/').pop().replace('.js', '');
+            return `dashboard-${moduleName}`;
+          }
+          // Vendor chunks
+          if (id.includes('node_modules')) {
+            if (id.includes('@supabase')) {
+              return 'vendor-supabase';
+            }
+            return 'vendor';
+          }
         }
       }
     },
-    // Minificazione
+    // Minificazione ottimizzata
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: false, // Mantieni console in dev
-        drop_debugger: true
+        drop_console: true, // Rimuovi console in production
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info'], // Rimuovi funzioni pure
+        passes: 2 // Multi-pass compression
+      },
+      format: {
+        comments: false // Rimuovi commenti
       }
     },
-    // Source maps per debugging
-    sourcemap: false, // Disabilita in production
-    // Target browsers
-    target: 'es2020',
+    // Source maps solo in development
+    sourcemap: process.env.NODE_ENV === 'development',
+    // Target browsers moderni
+    target: ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14'],
     // CSS code splitting
-    cssCodeSplit: true
+    cssCodeSplit: true,
+    cssMinify: 'lightningcss', // CSS minification veloce
+    // Asset inlining threshold (files < 4KB inline)
+    assetsInlineLimit: 4096,
+    // Report bundle size
+    reportCompressedSize: true,
+    // Compression
+    brotliSize: true
   },
   // Server per development
   server: {
@@ -56,9 +85,15 @@ export default defineConfig({
     open: true,
     cors: true
   },
-  // Ottimizzazioni
+  // Ottimizzazioni dipendenze
   optimizeDeps: {
-    include: ['@supabase/supabase-js']
+    include: ['@supabase/supabase-js'],
+    exclude: [] // Aggiungi moduli che non devono essere pre-bundlati
+  },
+  // Performance: Pre-bundling
+  esbuild: {
+    target: 'es2020',
+    legalComments: 'none' // Rimuovi commenti legali
   },
   // Alias per import più puliti
   resolve: {
