@@ -2,7 +2,7 @@
 // API Vercel - Invio email generico tramite Brevo
 // Gestisce richieste da Exante.html, Skilling.html, app.js, trial-onboarding-modal.js
 
-import fetch from "./_lib/fetch.js";
+import { runtimeFetch as fetch } from "./_lib/fetch.js";
 import { HttpError, handleRouteError } from "./_lib/http.js";
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
