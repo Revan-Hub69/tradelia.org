@@ -13,7 +13,8 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 
 const tokensPath = path.join(rootDir, 'design-tokens', 'tokens.json');
-const outputPath = path.join(rootDir, 'design-tokens', 'tokens.css');
+const outputPathDesignTokens = path.join(rootDir, 'design-tokens', 'tokens.css');
+const outputPathSettings = path.join(rootDir, 'assets', 'css', 'settings', 'tokens.css');
 
 function flattenTokens(obj, prefix = '') {
   const result = {};
@@ -253,14 +254,29 @@ try {
   const tokens = JSON.parse(fs.readFileSync(tokensPath, 'utf8'));
   const css = generateCSS(tokens);
 
-  // Ensure output directory exists
-  const outputDir = path.dirname(outputPath);
-  if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true });
+  // Write to design-tokens/tokens.css
+  const outputDirDesignTokens = path.dirname(outputPathDesignTokens);
+  if (!fs.existsSync(outputDirDesignTokens)) {
+    fs.mkdirSync(outputDirDesignTokens, { recursive: true });
+  }
+  fs.writeFileSync(outputPathDesignTokens, css, 'utf8');
+  console.log('✅ Design tokens CSS generated:', outputPathDesignTokens);
+
+  // Write to assets/css/settings/tokens.css (ITCSS Settings layer)
+  const outputDirSettings = path.dirname(outputPathSettings);
+  if (!fs.existsSync(outputDirSettings)) {
+    fs.mkdirSync(outputDirSettings, { recursive: true });
   }
 
-  fs.writeFileSync(outputPath, css, 'utf8');
-  console.log('✅ Design tokens CSS generated:', outputPath);
+  const settingsCSS = `/* ITCSS: Settings Layer
+ * Design Tokens - Auto-generated from tokens.json
+ * DO NOT EDIT MANUALLY - Run: npm run generate-tokens
+ */
+
+${css}`;
+
+  fs.writeFileSync(outputPathSettings, settingsCSS, 'utf8');
+  console.log('✅ Settings tokens CSS generated:', outputPathSettings);
   console.log('✅ FASE 1.1: Design System Consolidato - Tokens migrati e generati');
 } catch (error) {
   console.error('❌ Error generating tokens:', error);
