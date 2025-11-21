@@ -35,8 +35,8 @@ const STATIC_CACHE = [
   "/archivio/assets/css/dashboard.css",
   "/icons/icon-192.svg",
   "/icons/icon-512.svg",
-  "/icons/icon-192.svg",
-  "/icons/icon-512.svg",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png",
   "/favicon.png",
 ];
 
@@ -133,8 +133,8 @@ self.addEventListener("push", (event) => {
   const title = data.title || "Tradelia AI";
   const options = {
     body: data.body || "Nuovo report disponibile",
-    icon: "/icons/icon-192.svg",
-    badge: "/icons/icon-192.svg",
+    icon: "/icons/icon-192.png",
+    badge: "/icons/icon-192.png",
     data: data.url || "/archivio/dashboard.html",
     tag: data.tag || "tradelia-notification",
     requireInteraction: false,
