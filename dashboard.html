@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="/assets/css/objects/container.css" />
     <link rel="stylesheet" href="/assets/css/components/dashboard.css" />
     <link rel="stylesheet" href="/assets/css/components/dashboard-theme-overrides.css" />
+    <link rel="stylesheet" href="/assets/css/mifid-banner.css" />
   </head>
   <body>
     <a href="#main-content" class="skip-link">Salta al contenuto principale</a>
@@ -1148,6 +1149,7 @@
       // Import moduli separati (Best Practice: separazione concerns)
       import { initDashboard } from "/assets/js/dashboard/app.js";
       import "/assets/js/dashboard/toast.js";
+      import { initMifidBanner } from "/assets/js/mifid-banner.js";
 
       // FASE 4: Performance Monitoring
       import "/assets/js/performance/web-vitals.js";
@@ -1155,6 +1157,9 @@
 
       // Initialize dashboard
       initDashboard();
+      
+      // Inizializza MIFID overlay (non bloccante in dashboard, solo per pulsanti footer)
+      initMifidBanner();
 
       // Monitor bundle sizes (dopo load)
       if (document.readyState === "loading") {

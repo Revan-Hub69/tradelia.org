@@ -44,7 +44,9 @@ function renderFooter(container) {
           <span class="footer-separator">·</span>
           <a href="/status" class="footer-link">Status</a>
           <span class="footer-separator">·</span>
-          <a href="/privacy.html" class="footer-link">Privacy</a>
+          <button type="button" class="footer-link footer-link-btn" id="btn-privacy-open" aria-label="Apri informativa privacy">Privacy</button>
+          <span class="footer-separator">·</span>
+          <button type="button" class="footer-link footer-link-btn" id="btn-mifid-open" aria-label="Apri informativa MiFID">MiFID</button>
           <span class="footer-separator">·</span>
           <span class="footer-tech">
             v<span id="footer-version">1.0.0</span>
@@ -63,6 +65,9 @@ function renderFooter(container) {
 function bindFooterEvents(container) {
   // Carica versione e build
   loadTechnicalInfo(container);
+  
+  // Bind pulsanti MIFID/Privacy
+  bindLegalButtons(container);
 }
 
 /**
@@ -86,4 +91,47 @@ async function loadTechnicalInfo(container) {
   } catch (e) {
     console.error("[Footer] Errore caricamento info tecniche:", e);
   }
+}
+
+/**
+ * Bind pulsanti legali (MIFID/Privacy)
+ */
+function bindLegalButtons(container) {
+  // Usa setTimeout per assicurarsi che mifid-banner.js sia inizializzato
+  setTimeout(() => {
+    const btnPrivacy = container.querySelector('#btn-privacy-open');
+    const btnMifid = container.querySelector('#btn-mifid-open');
+
+    if (btnPrivacy) {
+      btnPrivacy.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (window.openLegalOverlay) {
+          window.openLegalOverlay('privacy', false);
+        } else {
+          // Se l'overlay non è ancora pronto, riprova
+          setTimeout(() => {
+            if (window.openLegalOverlay) {
+              window.openLegalOverlay('privacy', false);
+            }
+          }, 400);
+        }
+      });
+    }
+
+    if (btnMifid) {
+      btnMifid.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (window.openLegalOverlay) {
+          window.openLegalOverlay('mifid', false);
+        } else {
+          // Se l'overlay non è ancora pronto, riprova
+          setTimeout(() => {
+            if (window.openLegalOverlay) {
+              window.openLegalOverlay('mifid', false);
+            }
+          }, 400);
+        }
+      });
+    }
+  }, 150);
 }
