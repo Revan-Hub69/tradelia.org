@@ -35,12 +35,22 @@ export default async function handler(req) {
       throw new HttpError(400, "Bad Request", "Invalid subscription data");
     }
 
-    // Verifica se subscription esiste già
+    // Estrai endpoint dalla subscription (può essere oggetto o stringa)
+    const endpoint =
+      typeof subscription.endpoint === "string"
+        ? subscription.endpoint
+        : subscription.endpoint?.endpoint || subscription.endpoint;
+
+    if (!endpoint) {
+      throw new HttpError(400, "Bad Request", "Subscription endpoint non trovato");
+    }
+
+    // Verifica se subscription esiste già (usa endpoint dalla colonna generata)
     const { data: existing } = await supabase
       .from("push_subscriptions")
       .select("id")
       .eq("user_id", context.userId)
-      .eq("endpoint", subscription.endpoint)
+      .eq("endpoint", endpoint)
       .single();
 
     if (existing) {

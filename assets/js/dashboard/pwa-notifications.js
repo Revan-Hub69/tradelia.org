@@ -396,7 +396,7 @@ async function sendSubscriptionToServer(subscription) {
       return;
     }
 
-    const response = await fetch("/api/save-push-subscription", {
+    const response = await fetch("/api/save-push-subscription.js", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

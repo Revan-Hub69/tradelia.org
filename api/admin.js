@@ -3,26 +3,9 @@
 // Gestisce tutte le risorse admin (users, requests, notifications, ecc.)
 
 import crypto from "crypto";
-import admin from "firebase-admin";
+import webpush from "web-push";
 import { getServiceSupabase } from "./_lib/supabase.js";
 import { handleRouteError } from "./_lib/http.js";
-
-// Inizializza Firebase Admin
-let firebaseApp = null;
-try {
-  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-    if (!admin.apps.length) {
-      firebaseApp = admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-      });
-    } else {
-      firebaseApp = admin.app();
-    }
-  }
-} catch (error) {
-  console.error("[Admin API] Errore inizializzazione Firebase:", error);
-}
 
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN; // Token admin da variabile ambiente (opzionale)
 
@@ -443,16 +426,23 @@ async function deleteToken(req, res, supabase) {
 async function handleNotifications(req, res, action) {
   const supabase = getServiceSupabase();
 
-  if (!firebaseApp) {
-    return res.status(503).json({
-      ok: false,
-      error: "Firebase non configurato (FIREBASE_SERVICE_ACCOUNT mancante)",
-    });
+  // Inizializza web-push con VAPID keys
+  const VAPID_PUBLIC_KEY =
+    process.env.VAPID_PUBLIC_KEY ||
+    "BGUfdP2IYXrvOwDYEqmRwhZqodiQB1CKeaLd1-oILrVCfgTW7n_mjCe3WQYzYXQw1dqgOtIRTOEfBHu6gj22Uc0";
+  const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY;
+
+  if (VAPID_PRIVATE_KEY) {
+    webpush.setVapidDetails(
+      "mailto:amministrazione@tradelia.org",
+      VAPID_PUBLIC_KEY,
+      VAPID_PRIVATE_KEY
+    );
   }
 
   switch (req.method) {
     case "POST":
-      return await sendNotification(req, res, supabase);
+      return await sendNotification(req, res, supabase, webpush);
     case "GET":
       return await getNotifications(req, res, supabase, action);
     default:
@@ -461,15 +451,15 @@ async function handleNotifications(req, res, action) {
 }
 
 /**
- * Invia notifica push a uno o più utenti usando FCM
+ * Invia notifica push a uno o più utenti
  * Body: { user_ids?: string[], user_id?: string, title: string, body: string, url?: string, tag?: string }
  */
-async function sendNotification(req, res, supabase) {
+async function sendNotification(req, res, supabase, webpush) {
   try {
-    if (!firebaseApp) {
+    if (!process.env.VAPID_PRIVATE_KEY) {
       return res.status(503).json({
         ok: false,
-        error: "Firebase non configurato (FIREBASE_SERVICE_ACCOUNT mancante)",
+        error: "Push notifications non configurate (VAPID_PRIVATE_KEY mancante)",
       });
     }
 
@@ -490,7 +480,7 @@ async function sendNotification(req, res, supabase) {
       return res.status(400).json({ ok: false, error: "user_id o user_ids richiesti" });
     }
 
-    // Recupera tutte le subscription FCM per gli utenti target
+    // Recupera tutte le subscription per gli utenti target
     const { data: subscriptions, error: subError } = await supabase
       .from("push_subscriptions")
       .select("id, user_id, subscription")
@@ -509,59 +499,30 @@ async function sendNotification(req, res, supabase) {
       });
     }
 
-    // Prepara messaggio FCM
-    const message = {
-      notification: {
-        title,
-        body: messageBody,
-      },
-      data: {
-        url: url || "/dashboard.html",
-        tag: tag || "tradelia-notification",
-      },
-      webpush: {
-        fcmOptions: {
-          link: url || "/dashboard.html",
-        },
-      },
-    };
+    // Prepara payload notifica
+    const payload = JSON.stringify({
+      title,
+      body: messageBody,
+      url: url || "/dashboard.html",
+      tag: tag || "tradelia-notification",
+    });
 
-    // Invia notifica FCM a tutte le subscription
+    // Invia notifica a tutte le subscription
     const results = await Promise.allSettled(
       subscriptions.map(async (sub) => {
         try {
-          // Estrai FCM token dalla subscription
-          const subscriptionData = sub.subscription;
-          let fcmToken = null;
-
-          // FCM token può essere direttamente nel campo subscription o in subscription.token
-          if (typeof subscriptionData === "string") {
-            fcmToken = subscriptionData;
-          } else if (subscriptionData?.token) {
-            fcmToken = subscriptionData.token;
-          } else if (subscriptionData?.fcmToken) {
-            fcmToken = subscriptionData.fcmToken;
-          } else {
-            throw new Error("FCM token non trovato nella subscription");
-          }
-
-          // Invia notifica FCM
-          await admin.messaging().send({
-            ...message,
-            token: fcmToken,
-          });
-
+          await webpush.sendNotification(sub.subscription, payload);
           return { success: true, subscription_id: sub.id, user_id: sub.user_id };
         } catch (error) {
-          // Se token non valido, rimuovi subscription
-          if (error.code === "messaging/invalid-registration-token" || error.code === "messaging/registration-token-not-registered") {
+          // Se subscription non valida, rimuovila
+          if (error.statusCode === 410 || error.statusCode === 404) {
             await supabase.from("push_subscriptions").delete().eq("id", sub.id);
           }
           return {
             success: false,
             subscription_id: sub.id,
             user_id: sub.user_id,
-            error: error.message || error.code,
+            error: error.message,
           };
         }
       })
