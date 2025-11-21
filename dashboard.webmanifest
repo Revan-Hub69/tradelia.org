@@ -5,8 +5,8 @@
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#0f0f0f",
-  "theme_color": "#0f0f0f",
+  "background_color": "#050910",
+  "theme_color": "#050910",
   "description": "Consulta i framework pubblici e i report Tradelia AI direttamente da desktop o mobile anche offline.",
   "icons": [
     {

@@ -91,6 +91,14 @@
 }
 
 /* ===== MODULES GRID ===== */
+.modules-view {
+  display: none;
+}
+
+.modules-view.active {
+  display: block;
+}
+
 .modules-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
