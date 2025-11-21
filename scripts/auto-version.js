@@ -122,13 +122,12 @@ function main() {
       console.log(`\n📦 Auto-version: ${currentVersion} → ${newVersion} (${versionType})`);
       console.log(`   Based on commit messages: ${commitMessages.length} commit(s)\n`);
 
-      // Stage version files
+      // Stage version files (l'utente farà il commit manualmente)
       try {
         execSync('git add sw.js version.json assets/js/version-check.js', { stdio: 'inherit' });
-        // Commit automatico delle modifiche alla versione
-        execSync(`git commit -m "chore: auto-bump version to ${newVersion}" --no-verify`, { stdio: 'inherit' });
+        console.log(`\n💡 Version files staged. Remember to commit: git commit -m "chore: bump version to ${newVersion}"`);
       } catch (e) {
-        // Ignore if git add/commit fails (not in git repo or files not changed)
+        // Ignore if git add fails (not in git repo or files not changed)
       }
     }
 
