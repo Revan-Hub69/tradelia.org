@@ -10,7 +10,7 @@ import {
   installPWA,
   isPWAInstalled,
   isPWAInstallable,
-  requestPushPermission,
+  enablePushNotifications,
   disablePushNotifications,
   areNotificationsEnabled,
   getNotificationPermission,
@@ -196,16 +196,18 @@ function bindBannerEvents(container, role) {
   if (notificationsToggle) {
     notificationsToggle.addEventListener("change", async (e) => {
       const enabled = e.target.checked;
-      setNotificationPreference(enabled);
 
       if (enabled) {
-        const granted = await requestPushPermission();
-        if (!granted) {
-          // Se permesso negato, disabilita toggle
+        // Abilita notifiche
+        const success = await enablePushNotifications();
+        if (!success) {
+          // Se fallito, ripristina toggle
           e.target.checked = false;
-          setNotificationPreference(false);
+        } else {
+          setNotificationPreference(true);
         }
       } else {
+        // Disabilita notifiche
         await disablePushNotifications();
         setNotificationPreference(false);
       }
@@ -218,27 +220,31 @@ function bindBannerEvents(container, role) {
   // Toggle PWA (tutti gli utenti - abilitato per tutti)
   const pwaToggle = container.querySelector("#toggle-pwa");
   if (pwaToggle) {
-    pwaToggle.addEventListener("change", async (e) => {
-      const enabled = e.target.checked;
-
-      if (enabled) {
-        const installed = await installPWA();
-        if (!installed) {
-          // Se installazione fallita, disabilita toggle
-          e.target.checked = false;
-          setPWAPreference(false);
-        } else {
-          setPWAPreference(true);
+    // Se PWA è già installata, il toggle è solo indicatore (non cliccabile)
+    const pwaInstalled = isPWAInstalled();
+    if (pwaInstalled) {
+      // PWA installata: toggle sempre checked e disabilitato (solo indicatore)
+      pwaToggle.disabled = true;
+      pwaToggle.checked = true;
+      pwaToggle.title = "PWA già installata";
+    } else {
+      // PWA non installata: al click mostra prompt installazione
+      pwaToggle.addEventListener("change", async (e) => {
+        if (e.target.checked) {
+          const installed = await installPWA();
+          if (!installed) {
+            // Se installazione fallita o annullata, ripristina toggle
+            e.target.checked = false;
+          } else {
+            // Installata con successo → disabilita toggle e mantieni checked
+            e.target.disabled = true;
+            e.target.title = "PWA installata";
+            setPWAPreference(true);
+          }
         }
-      } else {
-        // PWA non può essere "disinstallata" via toggle
-        // Il toggle riflette solo lo stato
-        setPWAPreference(false);
-      }
-
-      // Aggiorna banner per riflettere stato reale
-      await refreshAccountBanner();
-    });
+        // Se disabilitato, non fare nulla (PWA non può essere "disinstallata" via toggle)
+      });
+    }
   }
 
   // Activate Desk button (solo Pro)

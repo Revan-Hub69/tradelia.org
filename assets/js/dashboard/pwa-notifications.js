@@ -76,15 +76,22 @@ function checkPWAInstalled() {
 
 /**
  * Installa PWA
+ * Mostra prompt nativo del browser se disponibile, altrimenti istruzioni
  */
 export async function installPWA() {
+  // Se già installata, ritorna true
+  if (isPWAInstalled()) {
+    return true;
+  }
+
   if (!deferredPrompt) {
-    // Se non c'è prompt, mostra istruzioni
+    // Se non c'è prompt nativo, mostra istruzioni manuali
     showPWAInstructions();
     return false;
   }
 
   try {
+    // Mostra prompt nativo del browser
     deferredPrompt.prompt();
     const choiceResult = await deferredPrompt.userChoice;
 
@@ -92,9 +99,17 @@ export async function installPWA() {
       console.warn("[PWA] Utente ha accettato installazione");
       localStorage.setItem("tradelia-pwa-installed", "true");
       deferredPrompt = null;
+      // Aggiorna stato dopo installazione
+      setTimeout(() => {
+        if (isPWAInstalled()) {
+          // Ricarica per mostrare PWA installata
+          window.location.reload();
+        }
+      }, 1000);
       return true;
     } else {
       console.warn("[PWA] Utente ha rifiutato installazione");
+      deferredPrompt = null;
       return false;
     }
   } catch (error) {
@@ -151,32 +166,43 @@ export function isPWAInstalled() {
 }
 
 /**
- * Richiedi permesso notifiche push
+ * Abilita notifiche push (richiede permesso e sottoscrive)
  */
-export async function requestPushPermission() {
+export async function enablePushNotifications() {
   if (!("Notification" in window)) {
     console.warn("[Notifications] Notifiche non supportate");
     return false;
   }
 
+  // Se permesso già concesso, verifica se già sottoscritto
   if (Notification.permission === "granted") {
+    const alreadySubscribed = await areNotificationsEnabled();
+    if (alreadySubscribed) {
+      console.warn("[Notifications] Già sottoscritto");
+      return true;
+    }
+    // Permesso concesso ma non sottoscritto → sottoscrivi
+    await subscribeToPush();
     return true;
   }
 
   if (Notification.permission === "denied") {
     console.warn("[Notifications] Permesso negato dall'utente");
+    alert(
+      "Le notifiche sono state negate. Abilita le notifiche nelle impostazioni del browser per riprovare."
+    );
     return false;
   }
 
+  // Permesso "default" → richiedi
   try {
     const permission = await Notification.requestPermission();
     if (permission === "granted") {
-      console.log("[Notifications] Permesso concesso");
-      // Subscribe alle push notifications
+      console.warn("[Notifications] Permesso concesso");
       await subscribeToPush();
       return true;
     } else {
-      console.log("[Notifications] Permesso negato");
+      console.warn("[Notifications] Permesso negato");
       return false;
     }
   } catch (error) {
@@ -253,7 +279,7 @@ async function subscribeToPush() {
  */
 async function sendSubscriptionToServer(subscription) {
   try {
-    const token = localStorage.getItem("tradelia-dashboard-token");
+    const token = localStorage.getItem("tradelia-access-token-v1");
     if (!token) {
       console.warn("[Notifications] Token non disponibile");
       return;
