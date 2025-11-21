@@ -125,8 +125,10 @@ function main() {
       // Stage version files
       try {
         execSync('git add sw.js version.json assets/js/version-check.js', { stdio: 'inherit' });
+        // Commit automatico delle modifiche alla versione
+        execSync(`git commit -m "chore: auto-bump version to ${newVersion}" --no-verify`, { stdio: 'inherit' });
       } catch (e) {
-        // Ignore if git add fails (not in git repo or files not changed)
+        // Ignore if git add/commit fails (not in git repo or files not changed)
       }
     }
 

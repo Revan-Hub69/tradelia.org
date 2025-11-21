@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Auto-version update basato sui commit messages
+# Analizza i commit e aggiorna version.json automaticamente
+node scripts/auto-version.js
+
