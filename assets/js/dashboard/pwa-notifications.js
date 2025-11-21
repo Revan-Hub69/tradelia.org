@@ -9,6 +9,8 @@ let serviceWorkerRegistration = null;
 
 /**
  * Inizializza PWA e notifiche
+ * BEST PRACTICE: Non richiede permessi automaticamente all'avvio
+ * I permessi vengono richiesti solo quando l'utente clicca esplicitamente "Abilita Notifiche"
  */
 export async function initPWANotifications() {
   // Registra Service Worker
@@ -19,6 +21,10 @@ export async function initPWANotifications() {
 
   // Verifica stato PWA installata
   checkPWAInstalled();
+
+  // BEST PRACTICE: Se permesso già concesso, sottoscrivi automaticamente
+  // (l'utente ha già dato il consenso in passato)
+  await autoSubscribeIfGranted();
 }
 
 /**
@@ -166,7 +172,26 @@ export function isPWAInstalled() {
 }
 
 /**
+ * BEST PRACTICE: Sottoscrivi automaticamente se permesso già concesso
+ * (l'utente ha già dato il consenso in passato, non serve richiedere di nuovo)
+ */
+async function autoSubscribeIfGranted() {
+  if (!("Notification" in window)) {
+    return;
+  }
+
+  if (Notification.permission === "granted" && serviceWorkerRegistration) {
+    const alreadySubscribed = await areNotificationsEnabled();
+    if (!alreadySubscribed) {
+      // Permesso concesso ma non sottoscritto → sottoscrivi automaticamente
+      await subscribeToPush();
+    }
+  }
+}
+
+/**
  * Abilita notifiche push (richiede permesso e sottoscrive)
+ * BEST PRACTICE: Richiede permesso solo quando l'utente clicca esplicitamente
  */
 export async function enablePushNotifications() {
   if (!("Notification" in window)) {
@@ -186,26 +211,15 @@ export async function enablePushNotifications() {
     return true;
   }
 
+  // BEST PRACTICE: Se permesso negato, non forzare
+  // L'utente deve cambiare le impostazioni del browser manualmente
   if (Notification.permission === "denied") {
-    // Anche se negato, proviamo comunque a richiedere (l'utente potrebbe aver cambiato le impostazioni)
-    // Se l'utente ha cambiato le impostazioni del browser, requestPermission() potrebbe funzionare
-    try {
-      const permission = await Notification.requestPermission();
-      if (permission === "granted") {
-        console.warn("[Notifications] Permesso concesso dopo essere stato negato");
-        await subscribeToPush();
-        return true;
-      } else {
-        console.warn("[Notifications] Permesso ancora negato");
-        return false;
-      }
-    } catch (error) {
-      console.error("[Notifications] Errore richiesta permesso:", error);
-      return false;
-    }
+    console.warn("[Notifications] Permesso negato - utente deve cambiare impostazioni browser");
+    return false;
   }
 
-  // Permesso "default" → richiedi
+  // BEST PRACTICE: Permesso "default" → richiedi solo se chiamato esplicitamente dall'utente
+  // (questa funzione viene chiamata solo quando l'utente clicca "Abilita Notifiche")
   try {
     const permission = await Notification.requestPermission();
     if (permission === "granted") {
