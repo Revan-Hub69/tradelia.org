@@ -1,27 +1,27 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import axios from 'axios';
+import type { NextApiRequest, NextApiResponse } from "next";
+import axios from "axios";
 
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY!;
 const TWELVE_API_KEY = process.env.TWELVE_API_KEY!;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const symbol = req.query.symbol as string;
-  if (!symbol) return res.status(400).json({ error: 'Missing symbol parameter' });
+  if (!symbol) return res.status(400).json({ error: "Missing symbol parameter" });
 
   try {
     const [profileRes, quoteRes, prices7dRes, prices30dRes] = await Promise.all([
       axios.get(`https://yh-finance.p.rapidapi.com/stock/v2/get-profile`, {
-        params: { symbol, region: 'US' },
+        params: { symbol, region: "US" },
         headers: {
-          'X-RapidAPI-Key': RAPIDAPI_KEY,
-          'X-RapidAPI-Host': 'yh-finance.p.rapidapi.com',
+          "X-RapidAPI-Key": RAPIDAPI_KEY,
+          "X-RapidAPI-Host": "yh-finance.p.rapidapi.com",
         },
       }),
       axios.get(`https://yh-finance.p.rapidapi.com/market/v2/get-quotes`, {
-        params: { symbols: symbol, region: 'US' },
+        params: { symbols: symbol, region: "US" },
         headers: {
-          'X-RapidAPI-Key': RAPIDAPI_KEY,
-          'X-RapidAPI-Host': 'yh-finance.p.rapidapi.com',
+          "X-RapidAPI-Key": RAPIDAPI_KEY,
+          "X-RapidAPI-Host": "yh-finance.p.rapidapi.com",
         },
       }),
       axios.get(
@@ -70,6 +70,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       yearLow: quote.fiftyTwoWeekLow,
     });
   } catch (err: any) {
-    res.status(500).json({ error: err.message || 'Internal server error' });
+    res.status(500).json({ error: err.message || "Internal server error" });
   }
 }

@@ -15,6 +15,7 @@ export default tseslint.config(
       "archivio/manifest.json",
       "docs/**",
       "archivio/**",
+      "_internal/**",
       "*.config.js",
       "*.config.ts",
     ],
