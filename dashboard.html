@@ -57,6 +57,31 @@
       <main id="main-content">
         <!-- Modules Grid View (Default) -->
         <div id="modules-view" class="modules-view active">
+          <!-- Toggle Mostra Tutti i Moduli -->
+          <div class="modules-view-controls">
+            <button
+              id="toggle-all-modules"
+              class="btn btn-secondary btn-sm"
+              aria-label="Mostra tutti i moduli"
+              title="Mostra tutti i moduli (default: solo principali)"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                width="16"
+                height="16"
+                style="vertical-align: middle; margin-right: 4px"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+              <span id="toggle-all-modules-text">Mostra tutti i moduli</span>
+            </button>
+          </div>
+
           <!-- Categoria: Principale -->
           <section class="module-category">
             <h2 class="category-title">
@@ -80,8 +105,9 @@
               <!-- Overview Module -->
               <a
                 href="#overview"
-                class="module-card"
+                class="module-card module-primary"
                 data-module="overview"
+                data-priority="primary"
                 aria-label="Panoramica dashboard"
               >
                 <div class="module-card-header">
@@ -123,8 +149,9 @@
               <!-- Reports Module -->
               <a
                 href="#reports"
-                class="module-card"
+                class="module-card module-primary"
                 data-module="reports"
+                data-priority="primary"
                 aria-label="Report ufficiali"
               >
                 <div class="module-card-header">
@@ -169,8 +196,9 @@
               <!-- Education Module -->
               <a
                 href="#education"
-                class="module-card"
+                class="module-card module-primary"
                 data-module="education"
+                data-priority="primary"
                 aria-label="Percorsi formativi"
               >
                 <div class="module-card-header">
@@ -213,8 +241,9 @@
               <!-- Frameworks Module -->
               <a
                 href="#frameworks"
-                class="module-card"
+                class="module-card module-primary"
                 data-module="frameworks"
+                data-priority="primary"
                 aria-label="Documentazione framework"
               >
                 <div class="module-card-header">
@@ -275,8 +304,9 @@
               <!-- On-Demand Module -->
               <a
                 href="#on-demand"
-                class="module-card"
+                class="module-card module-primary"
                 data-module="on-demand"
+                data-priority="primary"
                 aria-label="Analisi on-demand"
               >
                 <div class="module-card-header">
@@ -319,8 +349,9 @@
               <!-- Requests History Module -->
               <a
                 href="#requests-history"
-                class="module-card"
+                class="module-card module-secondary"
                 data-module="requests-history"
+                data-priority="secondary"
                 aria-label="Storico richieste"
               >
                 <div class="module-card-header">
@@ -362,8 +393,9 @@
               <!-- Community Module -->
               <a
                 href="#community"
-                class="module-card"
+                class="module-card module-primary"
                 data-module="community"
+                data-priority="primary"
                 aria-label="Community proposals"
               >
                 <div class="module-card-header">
@@ -473,8 +505,9 @@
               <!-- Access Module -->
               <a
                 href="#access"
-                class="module-card"
+                class="module-card module-secondary"
                 data-module="access"
+                data-priority="secondary"
                 aria-label="Gestione accesso"
               >
                 <div class="module-card-header">
@@ -515,8 +548,9 @@
               <!-- Notifications Module -->
               <a
                 href="#notifications"
-                class="module-card"
+                class="module-card module-secondary"
                 data-module="notifications"
+                data-priority="secondary"
                 aria-label="Notifiche"
               >
                 <div class="module-card-header">
@@ -624,8 +658,9 @@
               <!-- Resources Module -->
               <a
                 href="#resources"
-                class="module-card"
+                class="module-card module-secondary"
                 data-module="resources"
+                data-priority="secondary"
                 aria-label="Risorse e supporto"
               >
                 <div class="module-card-header">

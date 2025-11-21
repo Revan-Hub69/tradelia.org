@@ -11,6 +11,7 @@ import { initFooter } from "./footer.js";
 import { isAdmin } from "./permissions.js";
 import { getUserRole } from "./auth.js";
 import { startSessionCheck } from "./session.js";
+import { initModulesView } from "./modules-view.js";
 
 // Global state
 export const STATE = {
@@ -35,6 +36,9 @@ export async function initDashboard() {
 
   // Initialize footer
   await initFooter();
+
+  // Initialize modules view (gestisce information overload: mostra solo 5-7 moduli principali)
+  initModulesView();
 
   // BEST PRACTICE: Avvia session management (periodic token check, auto-logout)
   startSessionCheck();
