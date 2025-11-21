@@ -206,24 +206,14 @@ export async function disablePushNotifications() {
 }
 
 /**
- * Ottiene VAPID public key dal server
+ * Ottiene VAPID public key
+ * Usa la key hardcoded (già configurata nel progetto)
+ * In futuro può essere esposta via meta tag o config statico
  */
 async function getVAPIDPublicKey() {
-  try {
-    const response = await fetch("/api/get-vapid-public-key");
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    if (data.success && data.vapidPublicKey) {
-      return data.vapidPublicKey;
-    }
-    throw new Error("VAPID key non trovata nella risposta");
-  } catch (error) {
-    console.warn("[Notifications] Errore fetch VAPID key:", error);
-    // Fallback alla key hardcoded (per compatibilità)
-    return "BGUfdP2IYXrvOwDYEqmRwhZqodiQB1CKeaLd1-oILrVCfgTW7n_mjCe3WQYzYXQw1dqgOtIRTOEfBHu6gj22Uc0";
-  }
+  // Usa la key hardcoded già presente nel progetto (archivio/assets/js/fcm-config.js)
+  // Questa è la stessa key usata in archivio e già configurata
+  return "BGUfdP2IYXrvOwDYEqmRwhZqodiQB1CKeaLd1-oILrVCfgTW7n_mjCe3WQYzYXQw1dqgOtIRTOEfBHu6gj22Uc0";
 }
 
 /**
