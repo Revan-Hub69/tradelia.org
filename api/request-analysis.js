@@ -122,8 +122,181 @@ async function handleRequest(req, res) {
   const sanitizedRagioneSociale = ragioneSociale ? ragioneSociale.trim() : null;
   const sanitizedPiva = piva ? piva.trim().toUpperCase() : null;
   const sanitizedIndirizzo = indirizzo ? indirizzo.trim() : null;
-  const sanitizedTipoAnalisi = tipoAnalisi.trim();
-  const sanitizedDettagli = dettagli.trim();
+  const sanitizedTipoAnalisi = tipoAnalisi ? tipoAnalisi.trim() : null;
+  const sanitizedDettagli = dettagli ? dettagli.trim() : null;
+
+  // ===== LOGICA PLAN/USAGE (solo per tipo 'analisi-su-richiesta') =====
+  let planInfo = null;
+  let requestType = 'standalone';
+  let cost = 49.0; // Default: analisi completa standalone
+  let paymentOrderId = null;
+  let includedInPlan = false;
+
+  if (tipo === 'analisi-su-richiesta' && tokenContext.userId) {
+    // Ottieni piano attivo
+    const now = new Date().toISOString();
+    const { data: activePlan } = await supabase
+      .from('user_plans')
+      .select('*')
+      .eq('user_id', tokenContext.userId)
+      .in('status', ['active', 'pending_payment', 'pending_manual'])
+      .order('plan_type', { ascending: false })
+      .order('started_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (activePlan && activePlan.status === 'active') {
+      planInfo = activePlan;
+      const currentMonth = getCurrentMonth();
+
+      // Recupera usage corrente
+      const { data: usage } = await supabase
+        .from('plan_usage')
+        .select('*')
+        .eq('user_id', tokenContext.userId)
+        .eq('month_year', currentMonth)
+        .maybeSingle();
+
+      if (activePlan.plan_type === 'pro') {
+        // Pro: 1 inclusa/mese, max 3 extra a 29€
+        const includedUsed = usage?.pro_included_used || 0;
+        const extraUsed = usage?.pro_extra_used || 0;
+
+        if (includedUsed < 1) {
+          // Usa analisi inclusa
+          requestType = 'included';
+          cost = 0.0;
+          includedInPlan = true;
+        } else if (extraUsed < 3) {
+          // Usa analisi extra (29€)
+          requestType = 'extra_pro';
+          cost = 29.0;
+        } else {
+          // Nessuno slot disponibile, standalone (49€)
+          requestType = 'standalone';
+          cost = 49.0;
+        }
+      } else if (activePlan.plan_type === 'desk') {
+        // Desk: 2 incluse/mese, extra a 49€
+        const includedUsed = usage?.desk_included_used || 0;
+        const extraUsed = usage?.desk_extra_used || 0;
+
+        if (includedUsed < 2) {
+          // Usa analisi inclusa
+          requestType = 'included';
+          cost = 0.0;
+          includedInPlan = true;
+        } else {
+          // Usa analisi extra (49€)
+          requestType = 'extra_desk';
+          cost = 49.0;
+        }
+      }
+    }
+  }
+
+  // Crea payment_order se costo > 0
+  if (cost > 0 && planInfo) {
+    const invoiceDate = new Date();
+    const dueDate = new Date(invoiceDate);
+    dueDate.setDate(dueDate.getDate() + 14);
+
+    const { data: paymentOrder, error: paymentError } = await supabase
+      .from('payment_orders')
+      .insert({
+        user_id: tokenContext.userId,
+        plan_id: planInfo.id,
+        amount: cost,
+        currency: 'EUR',
+        status: 'pending_manual',
+        invoice_date: invoiceDate.toISOString(),
+        due_date: dueDate.toISOString(),
+        description: `Analisi On-Demand - ${sanitizedTipoAnalisi || 'Completa'}`,
+      })
+      .select()
+      .single();
+
+    if (!paymentError && paymentOrder) {
+      paymentOrderId = paymentOrder.id;
+
+      // Invia email ad admin per creare fattura Xolo
+      if (BREVO_API_KEY) {
+        try {
+          await fetch('https://api.brevo.com/v3/smtp/email', {
+            method: 'POST',
+            headers: {
+              'api-key': BREVO_API_KEY,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI - Richieste' },
+              to: [{ email: ADMIN_EMAIL }],
+              subject: `📊 Richiesta Analisi On-Demand - ${sanitizedEmail}`,
+              htmlContent: `<p>Nuova richiesta analisi on-demand da ${sanitizedEmail}</p><p><strong>Costo:</strong> ${cost.toFixed(2)}€</p><p><strong>Payment Order ID:</strong> ${paymentOrderId}</p><p>Crea fattura Xolo Go per completare il pagamento.</p>`,
+              textContent: `Nuova richiesta analisi on-demand da ${sanitizedEmail}\nCosto: ${cost.toFixed(2)}€\nPayment Order ID: ${paymentOrderId}\nCrea fattura Xolo Go per completare il pagamento.`,
+            }),
+          });
+        } catch (emailError) {
+          console.error('[Request Analysis] Errore invio email admin pagamento:', emailError);
+        }
+      }
+    }
+  }
+
+  // Aggiorna plan_usage se necessario
+  if (planInfo && requestType !== 'standalone') {
+    const currentMonth = getCurrentMonth();
+    const { data: existingUsage } = await supabase
+      .from('plan_usage')
+      .select('*')
+      .eq('user_id', tokenContext.userId)
+      .eq('month_year', currentMonth)
+      .maybeSingle();
+
+    if (existingUsage) {
+      // Aggiorna
+      const updateData = {};
+      if (requestType === 'included') {
+        if (planInfo.plan_type === 'pro') {
+          updateData.pro_included_used = (existingUsage.pro_included_used || 0) + 1;
+        } else if (planInfo.plan_type === 'desk') {
+          updateData.desk_included_used = (existingUsage.desk_included_used || 0) + 1;
+        }
+      } else if (requestType === 'extra_pro') {
+        updateData.pro_extra_used = (existingUsage.pro_extra_used || 0) + 1;
+      } else if (requestType === 'extra_desk') {
+        updateData.desk_extra_used = (existingUsage.desk_extra_used || 0) + 1;
+      }
+
+      await supabase
+        .from('plan_usage')
+        .update(updateData)
+        .eq('id', existingUsage.id);
+    } else {
+      // Crea nuovo
+      const insertData = {
+        user_id: tokenContext.userId,
+        plan_id: planInfo.id,
+        month_year: currentMonth,
+      };
+
+      if (requestType === 'included') {
+        if (planInfo.plan_type === 'pro') {
+          insertData.pro_included_used = 1;
+        } else if (planInfo.plan_type === 'desk') {
+          insertData.desk_included_used = 1;
+        }
+      } else if (requestType === 'extra_pro') {
+        insertData.pro_extra_used = 1;
+      } else if (requestType === 'extra_desk') {
+        insertData.desk_extra_used = 1;
+      }
+
+      await supabase
+        .from('plan_usage')
+        .insert(insertData);
+    }
+  }
 
   // Prepara dati per Supabase
   const requestData = {
@@ -142,15 +315,33 @@ async function handleRequest(req, res) {
     consenso_gdpr: true,
     status: 'pending', // pending, in_progress, completed, cancelled
     created_at: timestamp || new Date().toISOString(),
+    // Nuovi campi per plan/usage
+    plan_type: planInfo?.plan_type || null,
+    cost: cost,
+    payment_order_id: paymentOrderId,
+    included_in_plan: includedInPlan,
+    request_type: requestType,
+    user_id: tokenContext.userId || null,
   };
 
-  // Salva in Supabase - usa una tabella dedicata per richieste pubbliche
-  // La tabella on_demand_requests è per richieste non autenticate (analisi e desk)
+  // Salva in Supabase
+  // Prova prima analysis_requests (se esiste con nuovi campi), altrimenti on_demand_requests
   let insertResult = await supabase
-    .from('on_demand_requests')
+    .from('analysis_requests')
     .insert(requestData)
     .select()
     .single();
+
+  // Fallback a on_demand_requests se analysis_requests non esiste o errore
+  if (insertResult.error && insertResult.error.code === '42P01') {
+    // Rimuovi campi non supportati da on_demand_requests
+    const { plan_type, cost, payment_order_id, included_in_plan, request_type, user_id, ...legacyData } = requestData;
+    insertResult = await supabase
+      .from('on_demand_requests')
+      .insert(legacyData)
+      .select()
+      .single();
+  }
 
   // Se la tabella non esiste, restituisci errore con istruzioni
   if (insertResult.error && insertResult.error.code === '42P01') {
@@ -416,9 +607,26 @@ Data/Ora: ${new Date(insertResult.data.created_at).toLocaleString('it-IT')}`;
   }
 
   // Successo
+  const responseMessage = cost > 0 && paymentOrderId
+    ? 'Richiesta salvata. Ti contatteremo per completare il pagamento e procedere con l\'analisi.'
+    : includedInPlan
+    ? 'Richiesta salvata. Analisi inclusa nel tuo piano, procederemo entro 24 ore.'
+    : 'Richiesta salvata con successo. Ti contatteremo via email entro 24 ore.';
+
   return res.status(200).json({
     ok: true,
-    message: 'Richiesta salvata con successo. Ti contatteremo via email entro 24 ore.',
+    message: responseMessage,
     request_id: insertResult.data.id,
+    cost: cost,
+    included: includedInPlan,
+    payment_required: cost > 0,
+    payment_order_id: paymentOrderId,
   });
+}
+
+function getCurrentMonth() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  return `${year}-${month}`;
 }

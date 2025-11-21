@@ -1,3 +1,4 @@
+/* eslint-env browser */
 /**
  * Dashboard Application Entry Point
  * FASE 2: TypeScript Migration - Gradual
@@ -5,6 +6,7 @@
  */
 
 import { loadModule } from './index.js';
+import { initAccountBanner } from './account-banner.js';
 
 // Global state
 export const STATE = {
@@ -17,6 +19,9 @@ export const STATE = {
  * Initialize dashboard application
  */
 export async function initDashboard() {
+  // Initialize account banner (shows user status, plan, usage)
+  await initAccountBanner();
+
   // Handle hash navigation
   const hash = window.location.hash.slice(1);
   if (hash) {
