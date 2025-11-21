@@ -46,7 +46,7 @@ report/reports/{reportId}/
     {
       "id": "company-line",
       "parts": [
-        { "kind": "text", "text": "Report Framework Accademico AI, Tradelia Swing Master 5.0 su " },
+        { "kind": "text", "text": "Report Framework Accademico AI, Tradelia su " },
         { "kind": "metric", "key": "CompanyName", "value": "NVIDIA Corporation", "tone": "neutral" },
         { "kind": "text", "text": ". " },
         { "kind": "text", "text": "Ticker: " },

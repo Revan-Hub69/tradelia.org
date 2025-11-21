@@ -58,7 +58,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           parts: [
             {
               kind: 'text',
-              text: 'Report Framework Accademico AI, Tradelia Swing Master 5.0',
+              text: 'Report Framework Accademico AI, Tradelia',
             },
           ],
         },

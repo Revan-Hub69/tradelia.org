@@ -31,7 +31,6 @@
     "dist",
     "build",
     "archivio",
-    "swing-master-5.0",
     "report",
     "docs",
     "*.min.js"

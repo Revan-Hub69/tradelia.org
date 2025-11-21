@@ -67,9 +67,9 @@ function scanReports() {
       const publicAfter = new Date(createdDate.getTime() + 24 * 60 * 60 * 1000); // +24h
 
       // Determina tipo report (SRD v5.0 o MTB v3.1)
-      // Default: swing-master se non specificato (i report Tradelia sono principalmente SRD)
+      // Default: analysis se non specificato (i report Tradelia sono principalmente analisi)
       const type =
-        header.meta?.type || (reportId.includes('macro') ? 'macro-briefing' : 'swing-master');
+        header.meta?.type || (reportId.includes('macro') ? 'macro-briefing' : 'analysis');
 
       const report = {
         id: reportId,

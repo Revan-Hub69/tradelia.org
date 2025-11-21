@@ -3,6 +3,36 @@
  * FASE 1: Design System Consolidato - Production Ready
  */
 
+/* ===== OVERRIDE GENERIC LINKS ===== */
+/* Tutti i link nella dashboard devono essere grigi con linea blu all'hover */
+.dashboard-container a:not(.dashboard-brand):not(.btn):not(.footer-link):not(.resource-link):not(.panel-back) {
+  color: var(--dash-text-soft);
+  text-decoration: none;
+  position: relative;
+  transition: var(--transition-smooth);
+  display: inline-block;
+}
+
+.dashboard-container a:not(.dashboard-brand):not(.btn):not(.footer-link):not(.resource-link):not(.panel-back)::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--dash-blue-line);
+  transition: width var(--transition-smooth);
+  box-shadow: 0 0 4px var(--dash-accent-glow);
+}
+
+.dashboard-container a:not(.dashboard-brand):not(.btn):not(.footer-link):not(.resource-link):not(.panel-back):hover {
+  color: var(--dash-text);
+}
+
+.dashboard-container a:not(.dashboard-brand):not(.btn):not(.footer-link):not(.resource-link):not(.panel-back):hover::after {
+  width: 100%;
+}
+
 /* ===== DASHBOARD VARIABLES ===== */
 :root {
   /* Nero/Grigio Lucido Elegante */
@@ -524,9 +554,10 @@
 .footer-brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.35rem;
   font-weight: 900;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  transition: var(--transition-smooth);
 }
 
 .footer-brand-word {
@@ -534,12 +565,19 @@
 }
 
 .footer-brand-dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: var(--dash-blue-line);
+  background: var(--dash-text-muted);
   display: inline-block;
-  opacity: 0.8;
+  opacity: 0.6;
+  transition: var(--transition-smooth);
+}
+
+.footer-brand:hover .footer-brand-dot {
+  background: var(--dash-blue-line);
+  opacity: 1;
+  box-shadow: 0 0 8px var(--dash-accent-glow);
 }
 
 .footer-brand-suffix {
@@ -993,16 +1031,33 @@
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-xs);
-  color: var(--dash-text-muted);
+  color: var(--dash-text-soft);
   text-decoration: none;
   font-size: var(--fs-13, 13px);
   margin-bottom: var(--spacing-md);
-  transition: var(--transition);
+  transition: var(--transition-smooth);
   font-weight: 500;
+  position: relative;
+}
+
+.panel-back::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--dash-blue-line);
+  transition: width var(--transition-smooth);
+  box-shadow: 0 0 4px var(--dash-accent-glow);
 }
 
 .panel-back:hover {
   color: var(--dash-text);
+}
+
+.panel-back:hover::after {
+  width: 100%;
 }
 
 .panel-back:focus {

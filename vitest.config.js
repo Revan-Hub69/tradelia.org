@@ -23,7 +23,6 @@ export default defineConfig({
         'dist/',
         'build/',
         'archivio/',
-        'swing-master-5.0/',
         'report/',
         'docs/',
         '.git/'

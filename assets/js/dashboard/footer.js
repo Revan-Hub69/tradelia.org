@@ -27,7 +27,7 @@ function renderFooter(container) {
         <p class="footer-copyright">
           &copy; ${year} 
           <span class="footer-brand">
-            <span class="footer-brand-word">Tradelia</span>
+            <span class="footer-brand-word">TRADELIA</span>
             <span class="footer-brand-dot"></span>
             <span class="footer-brand-suffix">AI</span>
           </span>
