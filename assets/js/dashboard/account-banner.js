@@ -283,8 +283,16 @@ function bindBannerEvents(container, role) {
   // Pulsante Fix Notifiche (quando permesso negato)
   const fixNotificationsBtn = container.querySelector("#btn-fix-notifications");
   if (fixNotificationsBtn) {
-    fixNotificationsBtn.addEventListener("click", () => {
-      showNotificationInstructions();
+    fixNotificationsBtn.addEventListener("click", async () => {
+      // Prova comunque a richiedere il permesso (potrebbe essere stato cambiato nelle impostazioni)
+      const success = await enablePushNotifications();
+      if (!success) {
+        // Se fallisce, mostra istruzioni
+        showNotificationInstructions();
+      } else {
+        // Se funziona, aggiorna banner
+        await refreshAccountBanner();
+      }
     });
   }
 

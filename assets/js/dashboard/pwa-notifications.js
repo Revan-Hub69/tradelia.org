@@ -187,11 +187,22 @@ export async function enablePushNotifications() {
   }
 
   if (Notification.permission === "denied") {
-    console.warn("[Notifications] Permesso negato dall'utente");
-    alert(
-      "Le notifiche sono state negate. Abilita le notifiche nelle impostazioni del browser per riprovare."
-    );
-    return false;
+    // Anche se negato, proviamo comunque a richiedere (l'utente potrebbe aver cambiato le impostazioni)
+    // Se l'utente ha cambiato le impostazioni del browser, requestPermission() potrebbe funzionare
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission === "granted") {
+        console.warn("[Notifications] Permesso concesso dopo essere stato negato");
+        await subscribeToPush();
+        return true;
+      } else {
+        console.warn("[Notifications] Permesso ancora negato");
+        return false;
+      }
+    } catch (error) {
+      console.error("[Notifications] Errore richiesta permesso:", error);
+      return false;
+    }
   }
 
   // Permesso "default" → richiedi
