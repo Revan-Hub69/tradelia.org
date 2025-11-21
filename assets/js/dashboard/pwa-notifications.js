@@ -199,6 +199,12 @@ export async function enablePushNotifications() {
     return false;
   }
 
+  // Verifica browser - Opera potrebbe avere limitazioni
+  const isOpera = /OPR|Opera/.test(navigator.userAgent);
+  if (isOpera) {
+    console.warn("[Notifications] Rilevato Opera - potrebbe avere limitazioni");
+  }
+
   console.warn("[Notifications] Inizio abilitazione notifiche...");
   console.warn("[Notifications] Stato permesso attuale:", Notification.permission);
   console.warn("[Notifications] Service Worker registrato:", !!serviceWorkerRegistration);
