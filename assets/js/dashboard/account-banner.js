@@ -162,20 +162,59 @@ async function renderBanner(container, role, planData) {
 }
 
 /**
+ * SVG Icon: App installata
+ */
+function getAppInstalledIcon() {
+  return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 4px;">
+    <path d="M13.5 2.5L6 10L2.5 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+/**
+ * SVG Icon: Installa app
+ */
+function getInstallAppIcon() {
+  return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 4px;">
+    <path d="M8 2V14M2 8H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>`;
+}
+
+/**
+ * SVG Icon: Notifiche
+ */
+function getNotificationIcon() {
+  return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 4px;">
+    <path d="M8 2C6.34 2 5 3.34 5 5V9C5 9.55 4.78 10.05 4.41 10.41L3.5 11.32C3.22 11.6 3 12.05 3 12.5C3 13.33 3.67 14 4.5 14H11.5C12.33 14 13 13.33 13 12.5C13 12.05 12.78 11.6 12.5 11.32L11.59 10.41C11.22 10.05 11 9.55 11 9V5C11 3.34 9.66 2 8 2Z" stroke="currentColor" stroke-width="1.2" fill="none"/>
+    <path d="M6 14C6 15.1 6.9 16 8 16C9.1 16 10 15.1 10 14" stroke="currentColor" stroke-width="1.2" fill="none"/>
+  </svg>`;
+}
+
+/**
+ * SVG Icon: Notifiche negate
+ */
+function getNotificationDeniedIcon() {
+  return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 4px;">
+    <path d="M8 2C6.34 2 5 3.34 5 5V9C5 9.55 4.78 10.05 4.41 10.41L3.5 11.32C3.22 11.6 3 12.05 3 12.5C3 13.33 3.67 14 4.5 14H11.5C12.33 14 13 13.33 13 12.5C13 12.05 12.78 11.6 12.5 11.32L11.59 10.41C11.22 10.05 11 9.55 11 9V5C11 3.34 9.66 2 8 2Z" stroke="currentColor" stroke-width="1.2" fill="none"/>
+    <path d="M6 14C6 15.1 6.9 16 8 16C9.1 16 10 15.1 10 14" stroke="currentColor" stroke-width="1.2" fill="none"/>
+    <path d="M2 2L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>`;
+}
+
+/**
  * Genera pulsante PWA in base allo stato
  */
 function generatePWAButton(pwaInstalled, pwaInstallable) {
   if (pwaInstalled) {
     // PWA installata: mostra badge indicatore
-    return `<span class="account-banner-badge badge-success" title="App installata">✓ App Installata</span>`;
+    return `<span class="account-banner-badge badge-success" title="App installata">${getAppInstalledIcon()}App Installata</span>`;
   }
 
   if (pwaInstallable) {
     // PWA installabile: mostra pulsante "Installa App"
-    return `<button class="btn btn-secondary btn-sm" id="btn-install-pwa" title="Installa l'app sul dispositivo">📱 Installa App</button>`;
+    return `<button class="btn btn-secondary btn-sm" id="btn-install-pwa" title="Installa l'app sul dispositivo">${getInstallAppIcon()}Installa App</button>`;
   }
 
-  // PWA non installabile: non mostrare nulla (o opzionalmente badge nascosto)
+  // PWA non installabile: non mostrare nulla
   return "";
 }
 
@@ -184,8 +223,8 @@ function generatePWAButton(pwaInstalled, pwaInstallable) {
  */
 function generateNotificationsButton(notificationsEnabled, notificationPermission) {
   if (notificationPermission === "denied") {
-    // Permesso negato: mostra badge informativo
-    return `<span class="account-banner-badge badge-warning" title="Notifiche negate nelle impostazioni del browser">🔕 Notifiche Negate</span>`;
+    // Permesso negato: mostra pulsante con istruzioni
+    return `<button class="btn btn-secondary btn-sm" id="btn-fix-notifications" title="Come abilitare le notifiche">${getNotificationDeniedIcon()}Abilita Notifiche</button>`;
   }
 
   if (notificationsEnabled) {
@@ -194,13 +233,13 @@ function generateNotificationsButton(notificationsEnabled, notificationPermissio
       <label class="toggle-switch" title="Disabilita notifiche push">
         <input type="checkbox" id="toggle-notifications" checked>
         <span class="toggle-slider"></span>
-        <span class="toggle-label">🔔 Notifiche</span>
+        <span class="toggle-label">${getNotificationIcon()}Notifiche</span>
       </label>
     `;
   }
 
   // Notifiche non abilitate: mostra pulsante "Abilita Notifiche"
-  return `<button class="btn btn-secondary btn-sm" id="btn-enable-notifications" title="Abilita notifiche push">🔔 Abilita Notifiche</button>`;
+  return `<button class="btn btn-secondary btn-sm" id="btn-enable-notifications" title="Abilita notifiche push">${getNotificationIcon()}Abilita Notifiche</button>`;
 }
 
 /**
@@ -241,6 +280,14 @@ function bindBannerEvents(container, role) {
     });
   }
 
+  // Pulsante Fix Notifiche (quando permesso negato)
+  const fixNotificationsBtn = container.querySelector("#btn-fix-notifications");
+  if (fixNotificationsBtn) {
+    fixNotificationsBtn.addEventListener("click", () => {
+      showNotificationInstructions();
+    });
+  }
+
   // Toggle notifiche (solo se già abilitate, per disabilitare)
   const notificationsToggle = container.querySelector("#toggle-notifications");
   if (notificationsToggle) {
@@ -276,6 +323,63 @@ function escapeHtml(text) {
   const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
+}
+
+/**
+ * Mostra istruzioni per abilitare notifiche quando negate
+ */
+function showNotificationInstructions() {
+  const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+  const isFirefox = /Firefox/.test(navigator.userAgent);
+  const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+  const isEdge = /Edg/.test(navigator.userAgent);
+
+  let instructions = "";
+
+  if (isChrome || isEdge) {
+    instructions = `
+Per abilitare le notifiche in Chrome/Edge:
+
+1. Clicca sull'icona del lucchetto o "i" nella barra degli indirizzi
+2. Trova "Notifiche" nel menu
+3. Seleziona "Consenti" o "Chiedi"
+4. Ricarica la pagina
+
+Oppure:
+1. Vai su Impostazioni > Privacy e sicurezza > Impostazioni sito
+2. Trova questo sito nella lista
+3. Imposta "Notifiche" su "Consenti"
+    `;
+  } else if (isFirefox) {
+    instructions = `
+Per abilitare le notifiche in Firefox:
+
+1. Clicca sull'icona del lucchetto nella barra degli indirizzi
+2. Clicca su "Più informazioni"
+3. Nella sezione "Permessi", trova "Notifiche"
+4. Seleziona "Consenti" e ricarica la pagina
+    `;
+  } else if (isSafari) {
+    instructions = `
+Per abilitare le notifiche in Safari:
+
+1. Vai su Safari > Impostazioni > Siti web
+2. Seleziona "Notifiche" nel menu laterale
+3. Trova questo sito e imposta su "Consenti"
+4. Ricarica la pagina
+    `;
+  } else {
+    instructions = `
+Per abilitare le notifiche:
+
+1. Apri le impostazioni del browser
+2. Cerca "Notifiche" o "Permessi sito"
+3. Trova questo sito e consenti le notifiche
+4. Ricarica la pagina
+    `;
+  }
+
+  alert(instructions);
 }
 
 /**
