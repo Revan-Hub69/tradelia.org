@@ -49,7 +49,7 @@ function renderFooter(container) {
           <button type="button" class="footer-link footer-link-btn" id="btn-mifid-open" aria-label="Apri informativa MiFID">MiFID</button>
           <span class="footer-separator">·</span>
           <span class="footer-tech">
-            v<span id="footer-version">1.0.0</span>
+            v<span id="footer-version">—</span>
             <span class="footer-separator">·</span>
             <span id="footer-build">—</span>
           </span>
@@ -75,18 +75,50 @@ function bindFooterEvents(container) {
  */
 async function loadTechnicalInfo(container) {
   try {
-    // Versione da package.json o manifest
+    // Carica versione da version.json
     const versionEl = container.querySelector("#footer-version");
     if (versionEl) {
-      // TODO: Caricare da API o manifest
-      versionEl.textContent = "1.0.0";
+      try {
+        const response = await fetch("/version.json");
+        if (response.ok) {
+          const data = await response.json();
+          versionEl.textContent = data.version || "—";
+        } else {
+          // Fallback a package.json se version.json non disponibile
+          const pkgResponse = await fetch("/package.json");
+          if (pkgResponse.ok) {
+            const pkgData = await pkgResponse.json();
+            versionEl.textContent = pkgData.version || "—";
+          } else {
+            versionEl.textContent = "—";
+          }
+        }
+      } catch (fetchError) {
+        console.warn("[Footer] Errore caricamento versione:", fetchError);
+        versionEl.textContent = "—";
+      }
     }
 
-    // Build info
+    // Build info - data da version.json timestamp o data corrente
     const buildEl = container.querySelector("#footer-build");
     if (buildEl) {
-      // TODO: Caricare da API o env
-      buildEl.textContent = new Date().toISOString().split("T")[0];
+      try {
+        const response = await fetch("/version.json");
+        if (response.ok) {
+          const data = await response.json();
+          if (data.timestamp) {
+            const buildDate = new Date(data.timestamp);
+            buildEl.textContent = buildDate.toISOString().split("T")[0];
+          } else {
+            buildEl.textContent = new Date().toISOString().split("T")[0];
+          }
+        } else {
+          buildEl.textContent = new Date().toISOString().split("T")[0];
+        }
+      } catch (fetchError) {
+        console.warn("[Footer] Errore caricamento build date:", fetchError);
+        buildEl.textContent = new Date().toISOString().split("T")[0];
+      }
     }
   } catch (e) {
     console.error("[Footer] Errore caricamento info tecniche:", e);
