@@ -8,13 +8,18 @@ const supabase = getServiceSupabase();
 /**
  * Invia notifica all'utente usando il metodo preferito
  * @param {string} userId - ID utente
- * @param {string} email - Email utente (fallback se preferenza non trovata)
+ * @param {string} email - Email utente (OBBLIGATORIA - sempre usata come fallback)
  * @param {string} title - Titolo notifica
  * @param {string} message - Messaggio notifica
  * @param {string} url - URL opzionale (per email)
  * @returns {Promise<{success: boolean, method: string, error?: string}>}
  */
 export async function sendUserNotification(userId, email, title, message, url = null) {
+  // Email è sempre obbligatoria (fallback garantito)
+  if (!email) {
+    throw new Error("Email obbligatoria per invio notifiche");
+  }
+
   if (!userId) {
     // Se non c'è userId, usa solo email
     return await sendEmailNotification(email, title, message, url);

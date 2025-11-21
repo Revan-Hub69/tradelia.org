@@ -430,8 +430,12 @@ async function handleActivateOrder(req, res) {
     console.error("[Activate Order] Errore aggiornamento ordine:", updateError);
   }
 
+  // Email è sempre obbligatoria per le notifiche (fallback garantito)
   const email = order.metadata?.email || context.email;
-  if (email) {
+  if (!email) {
+    console.error("[Activate Order] Email non disponibile per invio notifica");
+    // Non blocchiamo l'attivazione, ma loggiamo l'errore
+  } else {
     try {
       const serviceName = getServiceName(order.order_type);
       let message = `Il tuo servizio è stato attivato!\n\n${serviceName}\n\n`;
@@ -445,6 +449,7 @@ async function handleActivateOrder(req, res) {
       }
 
       // Usa metodo preferito utente (SMS/WhatsApp/Email)
+      // Email è sempre usata come fallback se SMS/WhatsApp falliscono
       await sendUserNotification(
         order.user_id,
         email,
