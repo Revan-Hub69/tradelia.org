@@ -2,8 +2,10 @@
 # Queste funzioni non vengono incluse nel deployment Vercel
 # Vercel Hobby: max 12 funzioni - manteniamo solo quelle pubbliche essenziali
 
-# ===== ADMIN FUNCTIONS (Private) =====
-pages/api/admin/
+# ===== PAGES/API - TUTTE LE FUNZIONI IGNORATE =====
+# Vercel conta anche pages/api/ come serverless functions
+# Ignoriamo tutto pages/api/ per rispettare il limite
+pages/api/
 
 # ===== EMAIL FUNCTIONS (Private) =====
 api/send-email-backup.js
@@ -26,11 +28,14 @@ api/webhook-stripe-xolo.js
 # (Vercel include automaticamente i file importati)
 
 # ===== FUNZIONI PUBBLICHE (da mantenere su Vercel) =====
-# ✅ api/webhook-lemonsqueezy.js
-# ✅ api/webhook-stripe.js
-# ✅ api/webhook-paddle.js
-# ✅ api/create-checkout-session.js
-# ✅ api/check-subscription.js
+# ✅ api/activate-order.js
+# ✅ api/create-order.js
+# ✅ api/get-user-plan.js
+# ✅ api/save-billing-data.js
+# ✅ api/validate-dashboard-token.js
 # ✅ api/vote.js
-# ✅ pages/api/azioniblocco1.ts
-# Totale: 7 funzioni (sotto il limite di 12)
+# ✅ api/request-dashboard-token.js
+# ✅ api/request-analysis.js
+# ✅ api/admin.js
+# ✅ api/webhook-role-sync.js
+# Totale: 10 funzioni (sotto il limite di 12)
