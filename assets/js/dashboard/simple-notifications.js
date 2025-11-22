@@ -37,18 +37,17 @@ export async function initSimpleNotifications() {
   isPWA = isPWAInstalled();
 
   if (isPWA) {
-    // PWA installata: richiedi permesso notifiche browser per funzionare in background
-    await requestNotificationPermission();
+    // PWA installata: NON richiedere permesso automaticamente
+    // BEST PRACTICE ACCADEMICA: Richiedere solo dopo interazione utente o valore dimostrato
+    // Verifica solo se permesso già concesso
+    notificationPermission = Notification.permission;
 
     // Registra periodic background sync per funzionare anche quando PWA è chiusa
+    // (funziona anche senza permesso notifiche, per controlli in background)
     await registerPeriodicBackgroundSync();
 
-    console.log(
-      "[Simple Notifications] PWA installata - notifiche abilitate anche in background e quando chiusa"
-    );
-  } else {
-    // Browser normale: solo notifiche quando la pagina è aperta
-    console.log("[Simple Notifications] Browser normale - notifiche solo quando pagina aperta");
+    // Verifica stato permesso (non richiede automaticamente)
+    checkNotificationPermission();
   }
 
   // Controlla notifiche ogni 2 minuti
@@ -79,7 +78,6 @@ export async function initSimpleNotifications() {
  */
 async function registerPeriodicBackgroundSync() {
   if (!("serviceWorker" in navigator) || !("PeriodicBackgroundSync" in window)) {
-    console.log("[Simple Notifications] Periodic Background Sync non supportato");
     return;
   }
 
@@ -88,39 +86,25 @@ async function registerPeriodicBackgroundSync() {
 
     // Registra sync periodico ogni 2 ore (quando PWA è chiusa)
     // Nota: il browser può decidere l'intervallo effettivo (minimo 1 ora)
-    const status = await registration.periodicSync.register("check-notifications", {
+    await registration.periodicSync.register("check-notifications", {
       minInterval: 2 * 60 * 60 * 1000, // 2 ore in millisecondi
     });
-
-    if (status === "granted") {
-      console.log("[Simple Notifications] Periodic Background Sync registrato");
-    } else {
-      console.log("[Simple Notifications] Periodic Background Sync non permesso:", status);
-    }
   } catch (error) {
     console.warn("[Simple Notifications] Errore registrazione Periodic Background Sync:", error);
   }
 }
 
 /**
- * Richiedi permesso notifiche browser
+ * Verifica stato permesso notifiche browser
+ * BEST PRACTICE ACCADEMICA: Non richiedere automaticamente
+ * Questa funzione verifica solo lo stato, non richiede permesso
  */
-async function requestNotificationPermission() {
+function checkNotificationPermission() {
   if (!("Notification" in window)) {
-    console.log("[Simple Notifications] Browser non supporta notifiche");
     return;
   }
 
   notificationPermission = Notification.permission;
-
-  // Se permesso già concesso o negato, non richiedere
-  if (notificationPermission === "granted" || notificationPermission === "denied") {
-    return;
-  }
-
-  // Richiedi permesso solo se l'utente interagisce (best practice)
-  // Non richiediamo automaticamente all'avvio
-  console.log("[Simple Notifications] Permesso notifiche:", notificationPermission);
 }
 
 /**
