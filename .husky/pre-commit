@@ -1,6 +1,3 @@
-# Auto-version: increment version based on commit messages
-node scripts/auto-version.js
-
 # Run lint-staged for staged files
 npx lint-staged
 
