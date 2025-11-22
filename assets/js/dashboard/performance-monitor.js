@@ -42,9 +42,10 @@ export function initPerformanceMonitoring() {
 
 /**
  * Monitor Core Web Vitals
+ * BEST PRACTICE: Google Core Web Vitals - Enhanced tracking
  */
 function monitorWebVitals() {
-  if (typeof window === 'undefined' || !window.PerformanceObserver) {
+  if (typeof window === "undefined" || !window.PerformanceObserver) {
     return;
   }
 
@@ -56,19 +57,28 @@ function monitorWebVitals() {
       PERFORMANCE_STATE.vitals.lcp = lastEntry.renderTime || lastEntry.loadTime;
 
       // Log LCP
-      logVital('LCP', PERFORMANCE_STATE.vitals.lcp, {
+      logVital("LCP", PERFORMANCE_STATE.vitals.lcp, {
         good: 2500,
         needsImprovement: 4000,
       });
 
       // Save to localStorage
-      savePerformanceVital('lcp', PERFORMANCE_STATE.vitals.lcp);
+      savePerformanceVital("lcp", PERFORMANCE_STATE.vitals.lcp);
+
+      // BEST PRACTICE: Report to analytics if available
+      if (window.gtag) {
+        window.gtag("event", "web_vitals", {
+          event_category: "Web Vitals",
+          event_label: "LCP",
+          value: Math.round(PERFORMANCE_STATE.vitals.lcp),
+        });
+      }
     });
 
     try {
-      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+      lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
     } catch (e) {
-      console.warn('[PerformanceMonitor] LCP not supported:', e);
+      console.warn("[PerformanceMonitor] LCP not supported:", e);
     }
 
     // FID - First Input Delay (replaced by INP in future)
@@ -78,20 +88,20 @@ function monitorWebVitals() {
         PERFORMANCE_STATE.vitals.fid = entry.processingStart - entry.startTime;
 
         // Log FID
-        logVital('FID', PERFORMANCE_STATE.vitals.fid, {
+        logVital("FID", PERFORMANCE_STATE.vitals.fid, {
           good: 100,
           needsImprovement: 300,
         });
 
         // Save to localStorage
-        savePerformanceVital('fid', PERFORMANCE_STATE.vitals.fid);
+        savePerformanceVital("fid", PERFORMANCE_STATE.vitals.fid);
       });
     });
 
     try {
-      fidObserver.observe({ entryTypes: ['first-input'] });
+      fidObserver.observe({ entryTypes: ["first-input"] });
     } catch (e) {
-      console.warn('[PerformanceMonitor] FID not supported:', e);
+      console.warn("[PerformanceMonitor] FID not supported:", e);
     }
 
     // CLS - Cumulative Layout Shift
@@ -107,22 +117,22 @@ function monitorWebVitals() {
       PERFORMANCE_STATE.vitals.cls = clsValue;
 
       // Log CLS
-      logVital('CLS', PERFORMANCE_STATE.vitals.cls, {
+      logVital("CLS", PERFORMANCE_STATE.vitals.cls, {
         good: 0.1,
         needsImprovement: 0.25,
       });
 
       // Save to localStorage
-      savePerformanceVital('cls', clsValue);
+      savePerformanceVital("cls", clsValue);
     });
 
     try {
-      clsObserver.observe({ entryTypes: ['layout-shift'] });
+      clsObserver.observe({ entryTypes: ["layout-shift"] });
     } catch (e) {
-      console.warn('[PerformanceMonitor] CLS not supported:', e);
+      console.warn("[PerformanceMonitor] CLS not supported:", e);
     }
   } catch (error) {
-    console.error('[PerformanceMonitor] Error monitoring vitals:', error);
+    console.error("[PerformanceMonitor] Error monitoring vitals:", error);
   }
 }
 
@@ -130,15 +140,15 @@ function monitorWebVitals() {
  * Monitor Performance API metrics
  */
 function monitorPerformanceMetrics() {
-  if (typeof window === 'undefined' || !window.performance || !window.performance.timing) {
+  if (typeof window === "undefined" || !window.performance || !window.performance.timing) {
     return;
   }
 
   // Wait for page load
-  if (document.readyState === 'complete') {
+  if (document.readyState === "complete") {
     collectPerformanceMetrics();
   } else {
-    window.addEventListener('load', () => {
+    window.addEventListener("load", () => {
       setTimeout(collectPerformanceMetrics, 0);
     });
   }
@@ -155,8 +165,8 @@ function collectPerformanceMetrics() {
   PERFORMANCE_STATE.metrics.ttfb = timing.responseStart - timing.requestStart;
 
   // First Contentful Paint (if available)
-  const paintEntries = window.performance.getEntriesByType('paint');
-  const fcpEntry = paintEntries.find((entry) => entry.name === 'first-contentful-paint');
+  const paintEntries = window.performance.getEntriesByType("paint");
+  const fcpEntry = paintEntries.find((entry) => entry.name === "first-contentful-paint");
   if (fcpEntry) {
     PERFORMANCE_STATE.metrics.fcp = fcpEntry.startTime;
   }
@@ -175,7 +185,7 @@ function collectPerformanceMetrics() {
   };
 
   // Log metrics
-  console.log('[PerformanceMonitor] Metrics:', PERFORMANCE_STATE.metrics);
+  console.warn("[PerformanceMonitor] Metrics:", PERFORMANCE_STATE.metrics);
 
   // Save to localStorage
   savePerformanceMetrics();
@@ -185,14 +195,18 @@ function collectPerformanceMetrics() {
  * Monitor resource timing
  */
 function monitorResourceTiming() {
-  if (typeof window === 'undefined' || !window.performance || !window.performance.getEntriesByType) {
+  if (
+    typeof window === "undefined" ||
+    !window.performance ||
+    !window.performance.getEntriesByType
+  ) {
     return;
   }
 
   // Wait for resources to load
-  window.addEventListener('load', () => {
+  window.addEventListener("load", () => {
     setTimeout(() => {
-      const resources = window.performance.getEntriesByType('resource');
+      const resources = window.performance.getEntriesByType("resource");
 
       PERFORMANCE_STATE.resources = resources.map((resource) => ({
         name: resource.name,
@@ -208,7 +222,7 @@ function monitorResourceTiming() {
       );
 
       if (slowResources.length > 0) {
-        console.warn('[PerformanceMonitor] Slow resources:', slowResources);
+        console.warn("[PerformanceMonitor] Slow resources:", slowResources);
       }
 
       // Save to localStorage
@@ -221,30 +235,30 @@ function monitorResourceTiming() {
  * Log vital metric with thresholds
  */
 function logVital(name, value, thresholds) {
-  let status = 'good';
+  let status = "good";
   if (value > thresholds.needsImprovement) {
-    status = 'poor';
+    status = "poor";
   } else if (value > thresholds.good) {
-    status = 'needs-improvement';
+    status = "needs-improvement";
   }
 
-  console.log(`[PerformanceMonitor] ${name}: ${value.toFixed(2)}ms (${status})`);
+  console.warn(`[PerformanceMonitor] ${name}: ${value.toFixed(2)}ms (${status})`);
 
   // Send to analytics if available
   if (window.gtag) {
-    window.gtag('event', name.toLowerCase(), {
+    window.gtag("event", name.toLowerCase(), {
       value: Math.round(value),
-      event_category: 'Web Vitals',
+      event_category: "Web Vitals",
       event_label: status,
       non_interaction: true,
     });
   }
 
   // Show warning if poor
-  if (status === 'poor' && window.showToast) {
+  if (status === "poor" && window.showToast) {
     window.showToast(
-      `Performance ${name}: ${status === 'poor' ? 'Da migliorare' : 'Buona'}`,
-      status === 'poor' ? 'warning' : 'info',
+      `Performance ${name}: ${status === "poor" ? "Da migliorare" : "Buona"}`,
+      status === "poor" ? "warning" : "info",
       5000
     );
   }
@@ -255,11 +269,18 @@ function logVital(name, value, thresholds) {
  */
 function reportPerformanceData() {
   // Report to server every 5 minutes (if enabled)
-  setInterval(() => {
-    if (PERFORMANCE_STATE.vitals.lcp || PERFORMANCE_STATE.vitals.fid || PERFORMANCE_STATE.vitals.cls) {
-      sendPerformanceReport();
-    }
-  }, 5 * 60 * 1000);
+  setInterval(
+    () => {
+      if (
+        PERFORMANCE_STATE.vitals.lcp ||
+        PERFORMANCE_STATE.vitals.fid ||
+        PERFORMANCE_STATE.vitals.cls
+      ) {
+        sendPerformanceReport();
+      }
+    },
+    5 * 60 * 1000
+  );
 }
 
 /**
@@ -267,8 +288,10 @@ function reportPerformanceData() {
  */
 async function sendPerformanceReport() {
   try {
-    const token = localStorage.getItem('tradelia-access-token-v1');
-    if (!token) return;
+    const token = localStorage.getItem("tradelia-access-token-v1");
+    if (!token) {
+      return;
+    }
 
     const report = {
       vitals: PERFORMANCE_STATE.vitals,
@@ -278,16 +301,16 @@ async function sendPerformanceReport() {
       userAgent: navigator.userAgent,
     };
 
-    await fetch('/api/health?action=performance', {
-      method: 'POST',
+    await fetch("/api/health?action=performance", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(report),
     });
   } catch (error) {
-    console.error('[PerformanceMonitor] Error sending report:', error);
+    console.error("[PerformanceMonitor] Error sending report:", error);
   }
 }
 
@@ -303,7 +326,7 @@ function savePerformanceVital(name, value) {
     };
     localStorage.setItem(key, JSON.stringify(data));
   } catch (e) {
-    console.warn('[PerformanceMonitor] Error saving vital:', e);
+    console.warn("[PerformanceMonitor] Error saving vital:", e);
   }
 }
 
@@ -312,9 +335,9 @@ function savePerformanceVital(name, value) {
  */
 function savePerformanceMetrics() {
   try {
-    localStorage.setItem('performance-metrics', JSON.stringify(PERFORMANCE_STATE.metrics));
+    localStorage.setItem("performance-metrics", JSON.stringify(PERFORMANCE_STATE.metrics));
   } catch (e) {
-    console.warn('[PerformanceMonitor] Error saving metrics:', e);
+    console.warn("[PerformanceMonitor] Error saving metrics:", e);
   }
 }
 
@@ -323,9 +346,9 @@ function savePerformanceMetrics() {
  */
 function saveResourceTiming() {
   try {
-    localStorage.setItem('performance-resources', JSON.stringify(PERFORMANCE_STATE.resources));
+    localStorage.setItem("performance-resources", JSON.stringify(PERFORMANCE_STATE.resources));
   } catch (e) {
-    console.warn('[PerformanceMonitor] Error saving resources:', e);
+    console.warn("[PerformanceMonitor] Error saving resources:", e);
   }
 }
 
@@ -335,7 +358,7 @@ function saveResourceTiming() {
 function loadPerformanceData() {
   try {
     // Load vitals
-    ['lcp', 'fid', 'cls'].forEach((name) => {
+    ["lcp", "fid", "cls"].forEach((name) => {
       const saved = localStorage.getItem(`performance-vital-${name}`);
       if (saved) {
         const data = JSON.parse(saved);
@@ -344,18 +367,18 @@ function loadPerformanceData() {
     });
 
     // Load metrics
-    const savedMetrics = localStorage.getItem('performance-metrics');
+    const savedMetrics = localStorage.getItem("performance-metrics");
     if (savedMetrics) {
       Object.assign(PERFORMANCE_STATE.metrics, JSON.parse(savedMetrics));
     }
 
     // Load resources
-    const savedResources = localStorage.getItem('performance-resources');
+    const savedResources = localStorage.getItem("performance-resources");
     if (savedResources) {
       PERFORMANCE_STATE.resources = JSON.parse(savedResources);
     }
   } catch (e) {
-    console.warn('[PerformanceMonitor] Error loading data:', e);
+    console.warn("[PerformanceMonitor] Error loading data:", e);
   }
 }
 
@@ -400,13 +423,12 @@ export function getPerformanceSummary() {
 }
 
 // Initialize on module load
-if (typeof window !== 'undefined') {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
+if (typeof window !== "undefined") {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
       initPerformanceMonitoring();
     });
   } else {
     initPerformanceMonitoring();
   }
 }
-

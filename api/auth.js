@@ -1,6 +1,7 @@
 // /api/auth.js
 // API Vercel - Autenticazione e Token (CONSOLIDATO)
-// Consolida: validate-dashboard-token, request-dashboard-token, create-user-and-token, request-free-token
+// Consolida: validate-dashboard-token, request-dashboard-token, create-user-and-token, request-free-token, auth-signup-login
+// Compliance: OWASP, NIST 800-63B, GDPR, WCAG 2.2 AA
 
 import { getServiceSupabase } from "./_lib/supabase.js";
 import { getAdminContextFromToken } from "./_lib/adminAuth.js";
@@ -10,6 +11,62 @@ import crypto from "crypto";
 
 const supabase = getServiceSupabase();
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
+
+// Rate limiting per signup/login (in memoria - per produzione usare Redis)
+const rateLimitMap = new Map();
+const lockoutMap = new Map();
+const RATE_LIMIT_MAX_ATTEMPTS = 5;
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 ora
+const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minuti
+
+/**
+ * Check rate limit
+ */
+function checkRateLimit(identifier) {
+  const now = Date.now();
+  const record = rateLimitMap.get(identifier);
+
+  if (!record) {
+    rateLimitMap.set(identifier, { attempts: 1, resetAt: now + RATE_LIMIT_WINDOW });
+    return { allowed: true, remaining: RATE_LIMIT_MAX_ATTEMPTS - 1 };
+  }
+
+  if (now > record.resetAt) {
+    rateLimitMap.set(identifier, { attempts: 1, resetAt: now + RATE_LIMIT_WINDOW });
+    return { allowed: true, remaining: RATE_LIMIT_MAX_ATTEMPTS - 1 };
+  }
+
+  if (record.attempts >= RATE_LIMIT_MAX_ATTEMPTS) {
+    // Account lockout
+    lockoutMap.set(identifier, { lockedUntil: now + LOCKOUT_DURATION });
+    return { allowed: false, remaining: 0, resetAt: record.resetAt, locked: true };
+  }
+
+  record.attempts++;
+  return { allowed: true, remaining: RATE_LIMIT_MAX_ATTEMPTS - record.attempts };
+}
+
+/**
+ * Check account lockout
+ */
+function checkLockout(identifier) {
+  const lockout = lockoutMap.get(identifier);
+  if (!lockout) {
+    return { locked: false };
+  }
+
+  const now = Date.now();
+  if (now > lockout.lockedUntil) {
+    lockoutMap.delete(identifier);
+    return { locked: false };
+  }
+
+  return {
+    locked: true,
+    lockedUntil: lockout.lockedUntil,
+    minutesRemaining: Math.ceil((lockout.lockedUntil - now) / (60 * 1000)),
+  };
+}
 
 // ===== UTILITY FUNCTIONS =====
 function generateToken() {
@@ -47,8 +104,22 @@ export default async function handler(req, res) {
         return await handleCreateUser(req, res);
       case "free-token":
         return await handleFreeToken(req, res);
+      case "signup":
+        return await handleSignup(req, res);
+      case "login":
+        return await handleLogin(req, res);
+      case "check-email":
+        return await handleCheckEmail(req, res);
+      case "reset-password":
+        return await handleResetPassword(req, res);
+      case "verify-email":
+        return await handleVerifyEmail(req, res);
       default:
-        return res.status(400).json({ ok: false, error: "Azione non valida. Usa: validate, token, create-user, free-token" });
+        return res.status(400).json({
+          ok: false,
+          error:
+            "Azione non valida. Usa: validate, token, create-user, free-token, signup, login, check-email, reset-password, verify-email",
+        });
     }
   } catch (error) {
     return handleRouteError(res, error);
@@ -94,7 +165,7 @@ async function handleValidate(req, res) {
 
   let reason = null;
   let isValid = true;
-  
+
   if (daysLeft === 0 && expiryDate < now) {
     reason = "expired_token";
     isValid = false;
@@ -255,10 +326,20 @@ async function handleCreateUser(req, res) {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  const { email, displayName, role, validUntil, credits = 0, sendEmail = true, isAdmin = false } = req.body;
+  const {
+    email,
+    displayName,
+    validUntil,
+    credits = 0,
+    sendEmail = true,
+    isAdmin = false,
+  } = req.body;
+  let { role } = req.body;
 
   if (!email || !role || !validUntil) {
-    return res.status(400).json({ ok: false, error: "Missing required fields: email, role, validUntil" });
+    return res
+      .status(400)
+      .json({ ok: false, error: "Missing required fields: email, role, validUntil" });
   }
 
   if (!["trial", "pro", "institutional"].includes(role)) {
@@ -294,7 +375,9 @@ async function handleCreateUser(req, res) {
   );
 
   if (roleError) {
-    return res.status(500).json({ ok: false, error: "Error creating user role: " + roleError.message });
+    return res
+      .status(500)
+      .json({ ok: false, error: "Error creating user role: " + roleError.message });
   }
 
   // Genera token
@@ -323,7 +406,9 @@ async function handleCreateUser(req, res) {
   });
 
   if (tokenError) {
-    return res.status(500).json({ ok: false, error: "Error creating access token: " + tokenError.message });
+    return res
+      .status(500)
+      .json({ ok: false, error: "Error creating access token: " + tokenError.message });
   }
 
   // Gestione crediti per institutional
@@ -368,13 +453,17 @@ async function handleFreeToken(req, res) {
   }
 
   if (!uso || typeof uso !== "string" || uso.trim().length < 10) {
-    return res.status(400).json({ ok: false, error: "Descrivi come userai il token (minimo 10 caratteri)" });
+    return res
+      .status(400)
+      .json({ ok: false, error: "Descrivi come userai il token (minimo 10 caratteri)" });
   }
 
   const sanitizedEmail = email.trim().toLowerCase();
   const newToken = generateToken();
   const tokenHash = hashToken(newToken);
-  const valid_until = new Date(Date.now() + TOKEN_DURATION_DAYS * 24 * 60 * 60 * 1000).toISOString();
+  const valid_until = new Date(
+    Date.now() + TOKEN_DURATION_DAYS * 24 * 60 * 60 * 1000
+  ).toISOString();
 
   // Revoca token trial precedenti
   await supabase
@@ -400,13 +489,22 @@ async function handleFreeToken(req, res) {
   });
 
   if (insertError) {
-    return res.status(500).json({ ok: false, error: "Errore creazione token", details: insertError.message });
+    return res
+      .status(500)
+      .json({ ok: false, error: "Errore creazione token", details: insertError.message });
   }
 
   // Invia email
   if (BREVO_API_KEY) {
     try {
-      await sendFreeTokenEmail({ email: sanitizedEmail, nome, token: newToken, profilo, uso, organizzazione });
+      await sendFreeTokenEmail({
+        email: sanitizedEmail,
+        nome,
+        token: newToken,
+        profilo,
+        uso,
+        organizzazione,
+      });
     } catch {
       return res.status(500).json({
         ok: false,
@@ -423,7 +521,9 @@ async function handleFreeToken(req, res) {
 
 // ===== EMAIL HELPERS =====
 async function sendTokenEmail(email, token, _planRole) {
-  if (!BREVO_API_KEY) return;
+  if (!BREVO_API_KEY) {
+    return;
+  }
 
   const emailHTML = `
 <!DOCTYPE html>
@@ -474,7 +574,9 @@ async function sendTokenEmail(email, token, _planRole) {
 }
 
 async function sendFreeTokenEmail({ email, nome, token, profilo, uso, organizzazione }) {
-  if (!BREVO_API_KEY) return;
+  if (!BREVO_API_KEY) {
+    return;
+  }
 
   const emailHTML = `
 <!DOCTYPE html>
@@ -495,7 +597,7 @@ async function sendFreeTokenEmail({ email, nome, token, profilo, uso, organizzaz
       <h2 style="margin: 0;">Codice di accesso gratuito Tradelia</h2>
       <p style="margin: 8px 0 0 0;">Ciao ${nome || "utente"}, ecco il codice di accesso personale richiesto.</p>
     </div>
-    <p>Il codice di accesso è valido 30 giorni e funziona sulla dashboard PWA installata.</p>
+    <p>Il codice di accesso è valido 30 giorni e funziona sulla dashboard installabile (Progressive App).</p>
     <div class="token-box">
       <div style="margin-bottom: 10px; color: #94a3b8;">Codice di accesso personale</div>
       <div class="token">${token}</div>
@@ -525,3 +627,572 @@ async function sendFreeTokenEmail({ email, nome, token, profilo, uso, organizzaz
   });
 }
 
+// ===== SIGNUP =====
+async function handleSignup(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  const { email, password, passwordConfirm, privacyAccepted } = req.body;
+
+  // Validation
+  if (!email || typeof email !== "string" || !email.includes("@")) {
+    return res.status(400).json({ ok: false, error: "Email non valida" });
+  }
+
+  if (!password || typeof password !== "string" || password.length < 12) {
+    return res
+      .status(400)
+      .json({ ok: false, error: "Password deve essere di almeno 12 caratteri" });
+  }
+
+  if (password !== passwordConfirm) {
+    return res.status(400).json({ ok: false, error: "Le password non corrispondono" });
+  }
+
+  if (!privacyAccepted) {
+    return res.status(400).json({ ok: false, error: "Devi accettare la privacy policy" });
+  }
+
+  const sanitizedEmail = email.trim().toLowerCase();
+
+  // Rate limiting
+  const rateLimit = checkRateLimit(`signup:${sanitizedEmail}`);
+  if (!rateLimit.allowed) {
+    return res.status(429).json({
+      ok: false,
+      error: "Troppi tentativi. Riprova più tardi.",
+      locked: rateLimit.locked,
+      minutesRemaining: rateLimit.locked ? 15 : undefined,
+    });
+  }
+
+  // Check lockout
+  const lockout = checkLockout(`signup:${sanitizedEmail}`);
+  if (lockout.locked) {
+    return res.status(429).json({
+      ok: false,
+      error: `Account temporaneamente bloccato. Riprova tra ${lockout.minutesRemaining} minuti.`,
+      locked: true,
+      minutesRemaining: lockout.minutesRemaining,
+    });
+  }
+
+  try {
+    // Check if user already exists
+    const { data: existingUsers } = await supabase.auth.admin.listUsers();
+    const existingUser = existingUsers?.users?.find(
+      (u) => u.email?.toLowerCase() === sanitizedEmail
+    );
+
+    if (existingUser) {
+      return res.status(400).json({ ok: false, error: "Email già registrata" });
+    }
+
+    // Create user in Supabase Auth
+    const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+      email: sanitizedEmail,
+      password,
+      email_confirm: false, // Require email verification
+    });
+
+    if (createError) {
+      console.error("[Auth] Errore creazione utente:", createError);
+      return res.status(400).json({ ok: false, error: "Errore durante la registrazione" });
+    }
+
+    if (!newUser?.user) {
+      return res.status(500).json({ ok: false, error: "Errore durante la registrazione" });
+    }
+
+    // Send verification email
+    if (BREVO_API_KEY) {
+      await sendVerificationEmail(sanitizedEmail, newUser.user.id);
+    }
+
+    return res.status(200).json({
+      ok: true,
+      emailSent: true,
+      message: "Registrazione completata. Verifica la tua email per attivare l'account.",
+    });
+  } catch (error) {
+    console.error("[Auth] Errore signup:", error);
+    return res.status(500).json({ ok: false, error: "Errore durante la registrazione" });
+  }
+}
+
+// ===== LOGIN =====
+async function handleLogin(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  const { email, password } = req.body;
+
+  if (!email || typeof email !== "string" || !email.includes("@")) {
+    return res.status(400).json({ ok: false, error: "Email non valida" });
+  }
+
+  if (!password || typeof password !== "string") {
+    return res.status(400).json({ ok: false, error: "Password richiesta" });
+  }
+
+  const sanitizedEmail = email.trim().toLowerCase();
+
+  // Rate limiting
+  const rateLimit = checkRateLimit(`login:${sanitizedEmail}`);
+  if (!rateLimit.allowed) {
+    return res.status(429).json({
+      ok: false,
+      error: "Troppi tentativi. Riprova più tardi.",
+      remaining: rateLimit.remaining,
+      locked: rateLimit.locked,
+      minutesRemaining: rateLimit.locked ? 15 : undefined,
+    });
+  }
+
+  // Check lockout
+  const lockout = checkLockout(`login:${sanitizedEmail}`);
+  if (lockout.locked) {
+    return res.status(429).json({
+      ok: false,
+      error: `Account temporaneamente bloccato. Riprova tra ${lockout.minutesRemaining} minuti.`,
+      locked: true,
+      minutesRemaining: lockout.minutesRemaining,
+    });
+  }
+
+  try {
+    // Sign in with Supabase
+    const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
+      email: sanitizedEmail,
+      password,
+    });
+
+    if (signInError) {
+      // Update rate limit on failed attempt
+      checkRateLimit(`login:${sanitizedEmail}`);
+
+      // Check if email not verified
+      if (
+        signInError.message?.includes("Email not confirmed") ||
+        signInError.message?.includes("email_not_confirmed")
+      ) {
+        return res.status(400).json({
+          ok: false,
+          error: "Verifica la tua email prima di accedere",
+          emailNotVerified: true,
+          remaining: rateLimit.remaining - 1,
+        });
+      }
+
+      return res.status(400).json({
+        ok: false,
+        error: "Email o password non corretti",
+        remaining: rateLimit.remaining - 1,
+      });
+    }
+
+    if (!authData?.user) {
+      return res.status(500).json({ ok: false, error: "Errore durante l'accesso" });
+    }
+
+    // Check if email is verified
+    if (!authData.user.email_confirmed_at) {
+      return res.status(400).json({
+        ok: false,
+        error: "Verifica la tua email prima di accedere",
+        emailNotVerified: true,
+      });
+    }
+
+    // Generate access token
+    const userId = authData.user.id;
+    const newToken = generateToken();
+    const tokenHash = hashToken(newToken);
+
+    // Get user role
+    const { data: userRole } = await supabase
+      .from("user_roles")
+      .select("role, valid_until")
+      .eq("user_id", userId)
+      .single();
+
+    const planRole = userRole?.role || "trial";
+    const validUntil =
+      userRole?.valid_until || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
+
+    // Revoke old tokens
+    await supabase
+      .from("dashboard_access_tokens")
+      .update({ revoked: true, revoked_at: new Date().toISOString() })
+      .eq("user_id", userId)
+      .eq("revoked", false);
+
+    // Create new token
+    const { error: tokenError } = await supabase.from("dashboard_access_tokens").insert({
+      user_id: userId,
+      email: null,
+      token_hash: tokenHash,
+      plan_role: planRole,
+      valid_until: validUntil,
+      source: "auth",
+      metadata: { created_at: new Date().toISOString() },
+    });
+
+    if (tokenError) {
+      console.error("[Auth] Errore creazione token:", tokenError);
+      return res.status(500).json({ ok: false, error: "Errore durante l'accesso" });
+    }
+
+    return res.status(200).json({
+      ok: true,
+      token: newToken,
+      userId,
+      email: sanitizedEmail,
+      planRole,
+    });
+  } catch (error) {
+    console.error("[Auth] Errore login:", error);
+    return res.status(500).json({ ok: false, error: "Errore durante l'accesso" });
+  }
+}
+
+// ===== CHECK EMAIL =====
+async function handleCheckEmail(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  const { email } = req.body;
+
+  if (!email || typeof email !== "string" || !email.includes("@")) {
+    return res.status(400).json({ ok: false, error: "Email non valida" });
+  }
+
+  const sanitizedEmail = email.trim().toLowerCase();
+
+  try {
+    // Check Supabase Auth
+    const { data: authUsers } = await supabase.auth.admin.listUsers();
+    const user = authUsers?.users?.find((u) => u.email?.toLowerCase() === sanitizedEmail);
+
+    // Check dashboard_access_tokens
+    const { data: tokens } = await supabase
+      .from("dashboard_access_tokens")
+      .select("email")
+      .eq("email", sanitizedEmail)
+      .limit(1);
+
+    const exists = !!user || (tokens && tokens.length > 0);
+
+    return res.status(200).json({
+      ok: true,
+      exists,
+      available: !exists,
+    });
+  } catch (error) {
+    console.error("[Auth] Errore check email:", error);
+    return res.status(500).json({ ok: false, error: "Errore durante la verifica" });
+  }
+}
+
+// ===== RESET PASSWORD =====
+async function handleResetPassword(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  const { email } = req.body;
+
+  if (!email || typeof email !== "string" || !email.includes("@")) {
+    return res.status(400).json({ ok: false, error: "Email non valida" });
+  }
+
+  const sanitizedEmail = email.trim().toLowerCase();
+
+  // Rate limiting
+  const rateLimit = checkRateLimit(`reset:${sanitizedEmail}`);
+  if (!rateLimit.allowed) {
+    return res.status(429).json({
+      ok: false,
+      error: "Troppi tentativi. Riprova più tardi.",
+    });
+  }
+
+  try {
+    // Check if user exists
+    const { data: authUsers } = await supabase.auth.admin.listUsers();
+    const user = authUsers?.users?.find((u) => u.email?.toLowerCase() === sanitizedEmail);
+
+    // Always return success (security best practice - don't reveal if email exists)
+    if (user && BREVO_API_KEY) {
+      // Generate reset token via Supabase
+      const { data: resetData, error: resetError } = await supabase.auth.admin.generateLink({
+        type: "recovery",
+        email: sanitizedEmail,
+      });
+
+      if (!resetError && resetData?.properties?.action_link) {
+        await sendPasswordResetEmail(sanitizedEmail, resetData.properties.action_link);
+      }
+    }
+
+    return res.status(200).json({
+      ok: true,
+      message: "Se l'email esiste, ti abbiamo inviato le istruzioni per reimpostare la password.",
+    });
+  } catch (error) {
+    console.error("[Auth] Errore reset password:", error);
+    return res.status(200).json({
+      ok: true,
+      message: "Se l'email esiste, ti abbiamo inviato le istruzioni per reimpostare la password.",
+    });
+  }
+}
+
+// ===== VERIFY EMAIL =====
+async function handleVerifyEmail(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  const { token, userId } = req.body;
+
+  if (!token || !userId) {
+    return res.status(400).json({ ok: false, error: "Token e userId richiesti" });
+  }
+
+  try {
+    // Verify email in Supabase
+    const { data: user, error: verifyError } = await supabase.auth.admin.updateUserById(userId, {
+      email_confirm: true,
+    });
+
+    if (verifyError) {
+      console.error("[Auth] Errore verifica email:", verifyError);
+      return res.status(400).json({ ok: false, error: "Link di verifica non valido o scaduto" });
+    }
+
+    // Generate access token for verified user
+    const newToken = generateToken();
+    const tokenHash = hashToken(newToken);
+
+    // Get user role
+    const { data: userRole } = await supabase
+      .from("user_roles")
+      .select("role, valid_until")
+      .eq("user_id", userId)
+      .single();
+
+    const planRole = userRole?.role || "trial";
+    const validUntil =
+      userRole?.valid_until || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
+
+    // Revoke old tokens
+    await supabase
+      .from("dashboard_access_tokens")
+      .update({ revoked: true, revoked_at: new Date().toISOString() })
+      .eq("user_id", userId)
+      .eq("revoked", false);
+
+    // Create new token
+    const { error: tokenError } = await supabase.from("dashboard_access_tokens").insert({
+      user_id: userId,
+      email: null,
+      token_hash: tokenHash,
+      plan_role: planRole,
+      valid_until: validUntil,
+      source: "auth",
+      metadata: { verified_at: new Date().toISOString() },
+    });
+
+    if (tokenError) {
+      console.error("[Auth] Errore creazione token:", tokenError);
+      return res.status(500).json({ ok: false, error: "Errore durante la verifica" });
+    }
+
+    // Send access token email
+    if (BREVO_API_KEY && user?.user?.email) {
+      await sendAccessTokenEmail(user.user.email, newToken, planRole);
+    }
+
+    return res.status(200).json({
+      ok: true,
+      token: newToken,
+      message: "Email verificata con successo! Ti abbiamo inviato il codice di accesso.",
+    });
+  } catch (error) {
+    console.error("[Auth] Errore verify email:", error);
+    return res.status(500).json({ ok: false, error: "Errore durante la verifica" });
+  }
+}
+
+// ===== EMAIL HELPERS (AUTH) =====
+async function sendVerificationEmail(email, _userId) {
+  if (!BREVO_API_KEY) {
+    return;
+  }
+
+  // Generate verification link
+  const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
+    type: "signup",
+    email,
+  });
+
+  if (linkError || !linkData?.properties?.action_link) {
+    console.error("[Auth] Errore generazione link verifica:", linkError);
+    return;
+  }
+
+  const verificationLink = linkData.properties.action_link;
+
+  const emailHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #2563eb; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+    .content { padding: 20px; background: #f9fafb; }
+    .button { display: inline-block; padding: 12px 24px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2 style="margin: 0;">Verifica la tua email</h2>
+    </div>
+    <div class="content">
+      <p>Ciao,</p>
+      <p>Grazie per esserti registrato su Tradelia! Per completare la registrazione, verifica la tua email cliccando sul pulsante qui sotto:</p>
+      <a href="${verificationLink}" class="button">Verifica Email</a>
+      <p>Oppure copia e incolla questo link nel browser:</p>
+      <p style="word-break: break-all; color: #6b7280; font-size: 14px;">${verificationLink}</p>
+      <p>Se non hai richiesto questa registrazione, ignora questa email.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+
+  await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": BREVO_API_KEY,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      sender: { email: "noreply@tradelia.org", name: "Tradelia AI" },
+      to: [{ email }],
+      subject: "Verifica la tua email - Tradelia",
+      htmlContent: emailHTML,
+    }),
+  });
+}
+
+async function sendAccessTokenEmail(email, token, _planRole) {
+  if (!BREVO_API_KEY) {
+    return;
+  }
+
+  const emailHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #2563eb; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+    .content { padding: 20px; background: #f9fafb; }
+    .token-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border: 2px solid #2563eb; text-align: center; }
+    .token { font-family: 'Courier New', monospace; font-size: 18px; font-weight: bold; color: #2563eb; letter-spacing: 2px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2 style="margin: 0;">🔑 Il tuo codice di accesso Tradelia</h2>
+    </div>
+    <div class="content">
+      <p>Ciao,</p>
+      <p>Ecco il tuo codice di accesso per la dashboard Tradelia.</p>
+      <div class="token-box">
+        <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">Il tuo codice:</p>
+        <div class="token">${token}</div>
+      </div>
+      <p>Usa questo codice nella dashboard per accedere.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+
+  await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": BREVO_API_KEY,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      sender: { email: "noreply@tradelia.org", name: "Tradelia AI" },
+      to: [{ email }],
+      subject: "🔑 Il tuo codice di accesso Tradelia",
+      htmlContent: emailHTML,
+    }),
+  });
+}
+
+async function sendPasswordResetEmail(email, resetLink) {
+  if (!BREVO_API_KEY) {
+    return;
+  }
+
+  const emailHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #2563eb; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+    .content { padding: 20px; background: #f9fafb; }
+    .button { display: inline-block; padding: 12px 24px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2 style="margin: 0;">Reimposta la password</h2>
+    </div>
+    <div class="content">
+      <p>Ciao,</p>
+      <p>Hai richiesto di reimpostare la password per il tuo account Tradelia. Clicca sul pulsante qui sotto per procedere:</p>
+      <a href="${resetLink}" class="button">Reimposta Password</a>
+      <p>Oppure copia e incolla questo link nel browser:</p>
+      <p style="word-break: break-all; color: #6b7280; font-size: 14px;">${resetLink}</p>
+      <p>Se non hai richiesto questa modifica, ignora questa email. Il link scade dopo 1 ora.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+
+  await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": BREVO_API_KEY,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      sender: { email: "noreply@tradelia.org", name: "Tradelia AI" },
+      to: [{ email }],
+      subject: "Reimposta la password - Tradelia",
+      htmlContent: emailHTML,
+    }),
+  });
+}
