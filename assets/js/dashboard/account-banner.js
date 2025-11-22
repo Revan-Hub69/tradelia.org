@@ -5,13 +5,8 @@
  */
 
 import { getUserRole, logout, getPlanData } from "./auth.js";
-// Notifiche push - DISABILITATE
-// import {
-//   enablePushNotifications,
-//   disablePushNotifications,
-//   areNotificationsEnabled,
-// } from "./pwa-notifications.js";
 import { installPWA, isPWAInstalled } from "./pwa-notifications.js";
+import { requestNotificationPermissionExplicit } from "./simple-notifications.js";
 
 let currentRole = null;
 let currentPlanData = null;
@@ -46,6 +41,13 @@ function renderBanner(container, role, planData) {
             <div class="account-banner-subtitle">Accedi per sbloccare PDF e analisi</div>
           </div>
           <div class="account-banner-actions">
+            <div class="toggle-switch-wrapper">
+              <label class="toggle-switch" title="Notifiche Browser" id="toggle-notifications-label">
+                <input type="checkbox" id="toggle-notifications">
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">Notifiche</span>
+              </label>
+            </div>
             <div class="toggle-switch-wrapper">
               <label class="toggle-switch" title="Installa PWA">
                 <input type="checkbox" id="toggle-pwa">
@@ -96,6 +98,11 @@ function renderBanner(container, role, planData) {
             </div>
           </div>
           <div class="account-banner-actions">
+            <label class="toggle-switch" title="Notifiche Browser" id="toggle-notifications-label">
+              <input type="checkbox" id="toggle-notifications" ${getNotificationPermissionState() ? "checked" : ""}>
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Notifiche</span>
+            </label>
             <label class="toggle-switch" title="Installa PWA">
               <input type="checkbox" id="toggle-pwa" ${getPWAPreference() ? "checked" : ""}>
               <span class="toggle-slider"></span>
@@ -140,6 +147,13 @@ function renderBanner(container, role, planData) {
           </div>
           <div class="account-banner-actions">
             <div class="toggle-switch-wrapper">
+              <label class="toggle-switch" title="Notifiche Browser" id="toggle-notifications-label">
+                <input type="checkbox" id="toggle-notifications" ${getNotificationPermissionState() ? "checked" : ""}>
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">Notifiche</span>
+              </label>
+            </div>
+            <div class="toggle-switch-wrapper">
               <label class="toggle-switch" title="Installa PWA">
                 <input type="checkbox" id="toggle-pwa">
                 <span class="toggle-slider"></span>
@@ -169,7 +183,39 @@ function bindBannerEvents(container, role) {
     });
   }
 
-  // Toggle notifiche - DISABILITATO
+  // Toggle notifiche browser native
+  const notificationsToggle = container.querySelector("#toggle-notifications");
+  if (notificationsToggle) {
+    // Verifica stato iniziale
+    updateNotificationToggleState(notificationsToggle);
+
+    notificationsToggle.addEventListener("change", async (e) => {
+      const enabled = e.target.checked;
+
+      if (enabled) {
+        // Richiedi permesso esplicitamente (best practice accademica)
+        const granted = await requestNotificationPermissionExplicit();
+        if (!granted) {
+          // Se permesso negato, ripristina toggle
+          e.target.checked = false;
+          updateNotificationToggleState(notificationsToggle);
+        } else {
+          // Aggiorna stato dopo permesso concesso
+          updateNotificationToggleState(notificationsToggle);
+        }
+      } else {
+        // Non possiamo "disabilitare" il permesso, ma possiamo informare l'utente
+        if (window.showToast) {
+          window.showToast(
+            "Per disabilitare le notifiche, usa le impostazioni del browser.",
+            "info"
+          );
+        }
+        // Ripristina toggle se permesso ancora concesso
+        updateNotificationToggleState(notificationsToggle);
+      }
+    });
+  }
 
   // Toggle PWA (tutti gli utenti, anche guest)
   const pwaToggle = container.querySelector("#toggle-pwa");
@@ -240,7 +286,51 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-// Funzioni notifiche push - DISABILITATE
+/**
+ * Verifica stato permesso notifiche browser
+ */
+function getNotificationPermissionState() {
+  if (!("Notification" in window)) {
+    return false;
+  }
+  return Notification.permission === "granted";
+}
+
+/**
+ * Aggiorna stato toggle notifiche
+ */
+function updateNotificationToggleState(toggle) {
+  if (!toggle) {
+    return;
+  }
+
+  if (!("Notification" in window)) {
+    toggle.disabled = true;
+    toggle.checked = false;
+    const label = toggle.closest("label");
+    if (label) {
+      label.title = "Notifiche non supportate dal browser";
+    }
+    return;
+  }
+
+  const permission = Notification.permission;
+  toggle.checked = permission === "granted";
+
+  if (permission === "denied") {
+    toggle.disabled = true;
+    const label = toggle.closest("label");
+    if (label) {
+      label.title = "Notifiche bloccate. Abilita nelle impostazioni del browser.";
+    }
+  } else {
+    toggle.disabled = false;
+    const label = toggle.closest("label");
+    if (label) {
+      label.title = permission === "granted" ? "Notifiche abilitate" : "Abilita notifiche browser";
+    }
+  }
+}
 
 /**
  * Ottiene preferenza PWA da localStorage
