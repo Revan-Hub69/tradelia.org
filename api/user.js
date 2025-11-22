@@ -108,8 +108,33 @@ async function handleGetUserPlan(req, res) {
   const body = req.body || {};
   const token = body.token;
 
+  // BEST PRACTICE: Se non c'è token, restituisci guest plan invece di errore
+  // Questo permette accesso guest alla dashboard
   if (!token || typeof token !== "string") {
-    throw new HttpError(401, "Token mancante");
+    return sendJSON(res, 200, {
+      ok: true,
+      plan: {
+        type: "guest",
+        status: "active",
+        startedAt: null,
+        expiresAt: null,
+        xoloPaymentStatus: null,
+        xoloPaymentDueDate: null,
+        desk: null,
+        email: null,
+        userId: null,
+      },
+      usage: {
+        month: getCurrentMonth(),
+        proIncludedUsed: 0,
+        proExtraUsed: 0,
+        proExtraRemaining: 0,
+        deskIncludedUsed: 0,
+        deskExtraUsed: 0,
+        deskIncludedRemaining: 0,
+      },
+      isAdmin: false,
+    });
   }
 
   const context = await getAdminContextFromToken(token, { enforceAdmin: false });

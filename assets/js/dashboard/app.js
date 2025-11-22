@@ -48,6 +48,9 @@ export async function initDashboard() {
     console.log("[Dashboard] Accesso guest - token non presente o non valido");
   }
 
+  // NON fare redirect automatico - accesso libero sempre consentito
+  // Se c'è un redirectTo, viene ignorato per permettere accesso guest
+
   // Initialize account banner (shows user status, plan, usage)
   await initAccountBanner();
 
