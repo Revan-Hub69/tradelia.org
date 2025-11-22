@@ -52,30 +52,39 @@ function setupFavoriteButtons() {
       favoriteBtn.setAttribute("aria-label", removeLabel);
     }
 
-    // Add click handler
-    favoriteBtn.addEventListener("click", (e) => {
-      // BEST PRACTICE: Ferma la propagazione per evitare che si apra il modulo
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation(); // Ferma anche altri listener sullo stesso elemento
+    // Add click handler con capture phase per intercettare prima del click sulla card
+    favoriteBtn.addEventListener(
+      "click",
+      (e) => {
+        // BEST PRACTICE: Ferma la propagazione per evitare che si apra il modulo
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
 
-      toggleFavorite(moduleId);
-      updateFavoriteButton(favoriteBtn, moduleId);
-      applyFavoritesOrder();
+        // BEST PRACTICE: Microinterazione - feedback immediato
+        favoriteBtn.style.transform = "scale(0.9)";
+        setTimeout(() => {
+          favoriteBtn.style.transform = "";
+        }, 150);
 
-      // BEST PRACTICE: Aggiorna sezione preferiti dopo toggle
-      setTimeout(() => {
-        createFavoritesSection();
-      }, 100);
+        toggleFavorite(moduleId);
+        updateFavoriteButton(favoriteBtn, moduleId);
+        applyFavoritesOrder();
 
-      // Haptic feedback
-      if (window.triggerHapticFeedback) {
-        window.triggerHapticFeedback("light");
-      }
+        // BEST PRACTICE: Aggiorna sezione preferiti dopo toggle
+        setTimeout(() => {
+          createFavoritesSection();
+        }, 100);
 
-      // BEST PRACTICE: Ritorna false per sicurezza
-      return false;
-    });
+        // Haptic feedback
+        if (window.triggerHapticFeedback) {
+          window.triggerHapticFeedback("light");
+        }
+
+        return false;
+      },
+      true
+    ); // Use capture phase to intercept before card click
 
     // BEST PRACTICE: Aggiungi pulsante preferiti alla card (non al header per evitare sovrapposizioni)
     // Posizionato in basso a destra della card
@@ -256,18 +265,69 @@ export function createFavoritesSection() {
   } else {
     // Mostra moduli preferiti
     favorites.forEach((moduleId) => {
-      const card = document.querySelector(`.module-card[data-module="${moduleId}"]`);
+      const card = document.querySelector(
+        `.module-card[data-module="${moduleId}"]:not(.favorites-grid .module-card)`
+      );
       if (card) {
-        // Clona la card e aggiungi event listener
-        const clonedCard = card.cloneNode(true);
-        // Rimuovi il clone dalla griglia originale se presente
-        const originalCard = document.querySelector(`.module-card[data-module="${moduleId}"]`);
-        if (originalCard && originalCard.parentElement) {
-          originalCard.style.display = "none"; // Nascondi dalla griglia principale
+        // BEST PRACTICE: Non clonare, sposta la card nella sezione preferiti
+        // Questo mantiene tutti gli event listener e il pulsante preferiti funzionante
+        const cardToMove = card.cloneNode(true);
+
+        // Rimuovi il pulsante preferiti dal clone (sarà gestito dalla card originale)
+        const favoriteBtnInClone = cardToMove.querySelector(".module-favorite-btn");
+        if (favoriteBtnInClone) {
+          favoriteBtnInClone.remove();
         }
-        favoritesGrid.appendChild(clonedCard);
+
+        // Aggiungi il clone alla griglia preferiti
+        favoritesGrid.appendChild(cardToMove);
+
+        // BEST PRACTICE: Nascondi la card originale dalla griglia principale
+        // ma mantienila nel DOM per gli event listener
+        if (card.parentElement && card.parentElement.classList.contains("modules-grid")) {
+          card.style.display = "none";
+        }
       }
     });
+
+    // BEST PRACTICE: Re-inizializza i pulsanti preferiti sulle card clonate
+    setTimeout(() => {
+      favoritesGrid.querySelectorAll(".module-card").forEach((clonedCard) => {
+        const moduleId = clonedCard.dataset.module;
+        if (moduleId) {
+          // Trova la card originale per copiare lo stato del pulsante preferiti
+          const originalCard = document.querySelector(
+            `.module-card[data-module="${moduleId}"]:not(.favorites-grid .module-card)`
+          );
+          if (originalCard) {
+            const originalBtn = originalCard.querySelector(".module-favorite-btn");
+            if (originalBtn && !clonedCard.querySelector(".module-favorite-btn")) {
+              // Clona il pulsante preferiti dalla card originale
+              const favoriteBtn = originalBtn.cloneNode(true);
+              clonedCard.style.position = "relative";
+              clonedCard.appendChild(favoriteBtn);
+
+              // Aggiungi event listener al pulsante clonato
+              favoriteBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                toggleFavorite(moduleId);
+                updateFavoriteButton(favoriteBtn, moduleId);
+                applyFavoritesOrder();
+                setTimeout(() => {
+                  createFavoritesSection();
+                }, 100);
+                if (window.triggerHapticFeedback) {
+                  window.triggerHapticFeedback("light");
+                }
+                return false;
+              });
+            }
+          }
+        }
+      });
+    }, 50);
   }
 
   favoritesSection.appendChild(categoryTitle);

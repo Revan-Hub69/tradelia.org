@@ -1710,7 +1710,7 @@ a[role="button"]:focus-visible {
   transition: var(--transition-smooth);
 }
 
-/* BEST PRACTICE: Hover states chiari e accessibili */
+/* BEST PRACTICE: Hover states chiari e accessibili con microinterazioni */
 .module-card:hover {
   background: var(--dash-surface-elev);
   border-color: var(--dash-border-strong);
@@ -1720,6 +1720,17 @@ a[role="button"]:focus-visible {
     0 8px 16px rgba(0, 0, 0, 0.3),
     0 0 20px rgba(59, 130, 246, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  /* BEST PRACTICE: Microinterazione - migliora gerarchia al hover */
+}
+
+.module-card:hover .module-title {
+  color: var(--dash-accent);
+  text-shadow: 0 1px 3px rgba(59, 130, 246, 0.2);
+}
+
+.module-card:hover .module-description {
+  opacity: 1;
+  color: var(--dash-text);
 }
 
 /* BEST PRACTICE: Focus su keyboard navigation */
@@ -1751,6 +1762,9 @@ a[role="button"]:focus-visible {
   display: flex;
   align-items: flex-start;
   gap: var(--spacing-md);
+  /* BEST PRACTICE: Gerarchia visiva - header prominente */
+  position: relative;
+  z-index: 1;
 }
 
 .module-icon {
@@ -1861,11 +1875,16 @@ a[role="button"]:focus-visible {
   background: rgba(0, 0, 0, 0.5);
   border-color: var(--dash-accent);
   color: var(--dash-accent);
-  transform: scale(1.1);
+  transform: scale(1.15);
+  /* BEST PRACTICE: Microinterazione - feedback hover più evidente */
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .module-favorite-btn:active {
-  transform: scale(0.95);
+  transform: scale(0.85);
+  /* BEST PRACTICE: Microinterazione - feedback tattile più pronunciato */
+  transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .module-favorite-btn.favorited {

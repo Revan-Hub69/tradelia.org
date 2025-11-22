@@ -241,6 +241,13 @@ export async function initDashboard() {
 
       if (isFavoriteBtn || isInteractiveElement) {
         // Il click è su un elemento interattivo, non aprire il modulo
+        e.stopPropagation();
+        return;
+      }
+
+      // BEST PRACTICE: Verifica se il click è partito dal pulsante preferiti (anche se propagato)
+      if (e.target.closest(".module-favorite-btn")) {
+        e.stopPropagation();
         return;
       }
 
