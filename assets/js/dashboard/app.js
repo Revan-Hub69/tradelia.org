@@ -355,10 +355,15 @@ function closeModule() {
     panel.classList.remove("active");
   });
 
-  // Show account banner
+  // BEST PRACTICE: Account banner solo nella home, non nelle schede
   const accountBannerSlot = document.getElementById("account-banner-slot");
   if (accountBannerSlot) {
-    accountBannerSlot.style.display = "";
+    // Mostra solo se siamo nella home (overview o nessun modulo)
+    if (!STATE.currentModule || STATE.currentModule === "overview") {
+      accountBannerSlot.style.display = "";
+    } else {
+      accountBannerSlot.style.display = "none";
+    }
   }
 }
 

@@ -1621,52 +1621,7 @@ a[role="button"]:focus-visible {
     gap: var(--spacing-md); /* Separazione tra card */
   }
 
-  /* BEST PRACTICE: Bottom navigation per mobile (Material Design, Thumb Zone) */
-  .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-around;
-    padding: var(--spacing-sm) env(safe-area-inset-bottom, 0px);
-    background: var(--dash-surface-elev);
-    border-top: 1px solid var(--dash-border);
-    z-index: 1000;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
-  }
-
-  .bottom-nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--spacing-xs);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    color: var(--dash-text-muted);
-    text-decoration: none;
-    font-size: var(--fs-11, 11px);
-    transition: var(--transition);
-    min-width: 60px;
-    min-height: 60px;
-    justify-content: center;
-    border-radius: var(--radius-md);
-  }
-
-  .bottom-nav-item svg {
-    width: 22px;
-    height: 22px;
-  }
-
-  .bottom-nav-item:hover,
-  .bottom-nav-item:focus-visible {
-    color: var(--dash-accent);
-    background: var(--dash-accent-bg);
-  }
-
-  .bottom-nav-item[aria-current="page"],
-  .bottom-nav-item.active {
-    color: var(--dash-accent);
-  }
+  /* Bottom navigation rimosso - non più utilizzato */
 
   /* Spazio per bottom nav */
   .dashboard-container {
@@ -1689,7 +1644,7 @@ a[role="button"]:focus-visible {
   padding-top: env(safe-area-inset-top, 0px);
 }
 
-/* BEST PRACTICE: Nascondi sidebar su mobile, mostra solo bottom nav */
+/* BEST PRACTICE: Nascondi sidebar su mobile */
 @media (max-width: 768px) {
   .desktop-sidebar {
     display: none !important;
@@ -1698,19 +1653,10 @@ a[role="button"]:focus-visible {
   .dashboard-container {
     margin-left: 0 !important;
   }
-
-  /* Assicura che bottom nav sia visibile su mobile */
-  .bottom-nav {
-    display: flex !important;
-  }
 }
 
-/* BEST PRACTICE: Nascondi bottom nav su desktop, mostra solo sidebar */
+/* BEST PRACTICE: Mostra sidebar su desktop */
 @media (min-width: 769px) {
-  .bottom-nav {
-    display: none !important;
-  }
-
   .desktop-sidebar {
     display: flex !important;
   }
@@ -2061,10 +2007,10 @@ a[role="button"]:focus-visible {
 /* ===== MODULE FAVORITES SYSTEM (BEST PRACTICE: Prioritario rispetto a drag-and-drop) ===== */
 .module-favorite-btn {
   position: absolute;
-  top: var(--spacing-sm);
-  right: var(--spacing-sm);
-  width: 32px;
-  height: 32px;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2074,7 +2020,7 @@ a[role="button"]:focus-visible {
   color: var(--dash-text-muted);
   cursor: pointer;
   transition: var(--transition-smooth);
-  z-index: 10;
+  z-index: 5; /* Sotto altri pulsanti ma sopra il contenuto */
   padding: 0;
   opacity: 0;
 }
@@ -2096,15 +2042,15 @@ a[role="button"]:focus-visible {
 
 .module-favorite-btn.favorited {
   opacity: 1;
-  background: rgba(234, 179, 8, 0.2);
-  border-color: rgba(234, 179, 8, 0.5);
-  color: #fbbf24;
+  background: var(--dash-accent-bg);
+  border-color: var(--dash-accent);
+  color: var(--dash-accent);
 }
 
 .module-favorite-btn.favorited:hover {
-  background: rgba(234, 179, 8, 0.3);
-  border-color: #fbbf24;
-  color: #fbbf24;
+  background: var(--dash-accent-bg);
+  border-color: var(--dash-accent-hover);
+  color: var(--dash-accent-hover);
 }
 
 .module-favorite-btn svg {
@@ -2126,15 +2072,16 @@ a[role="button"]:focus-visible {
 }
 
 .favorites-category .category-title {
-  color: #fbbf24;
+  color: var(--dash-accent);
 }
 
 .favorites-category .category-title svg {
-  color: #fbbf24;
+  color: var(--dash-accent);
 }
 
 .module-card[data-favorited="true"] {
-  border-left-color: rgba(234, 179, 8, 0.5);
+  border-left-color: var(--dash-accent);
+  border-left-width: 3px;
 }
 
 /* ===== DRAG & DROP STYLES (DEPRECATED - Non più prioritario) ===== */
