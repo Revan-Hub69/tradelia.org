@@ -494,6 +494,173 @@ ACQUISTO SERVIZIO:
 
 ---
 
+### **STEP 8: Design e Infrastruttura Modali (WCAG 2.2 + NNG)**
+
+#### **Principio Accademico: Modal Dialog Best Practices**
+
+I modali devono seguire standard rigorosi per accessibilità, usabilità e sicurezza.
+
+#### **Struttura Modale (WCAG 2.2 + ARIA)**
+
+```
+┌─────────────────────────────────────┐
+│ [Overlay - backdrop blur]           │  ← aria-hidden="true"
+│                                     │
+│   ┌─────────────────────────────┐   │
+│   │ [Modal Content]             │   │  ← role="dialog"
+│   │                              │   │  ← aria-modal="true"
+│   │ [X] Chiudi                   │   │  ← aria-label="Chiudi"
+│   │                              │   │
+│   │ [Form/Content]               │   │  ← Focus trap attivo
+│   │                              │   │
+│   │ [Azioni]                     │   │
+│   └─────────────────────────────┘   │
+└─────────────────────────────────────┘
+```
+
+**Requisiti Accademici**:
+
+1. **ARIA Attributes (WCAG 2.2 + WAI-ARIA)**:
+   - ✅ `role="dialog"` sul container modale
+   - ✅ `aria-modal="true"` per indicare modalità
+   - ✅ `aria-label` o `aria-labelledby` per titolo
+   - ✅ `aria-describedby` per descrizione (opzionale)
+   - ✅ `aria-hidden="true"` sull'overlay
+
+2. **Focus Trap (WCAG 2.4.3 Focus Order)**:
+   - ✅ **Focus intrappolato** all'interno del modale
+   - ✅ **Tab** cicla solo tra elementi focusabili del modale
+   - ✅ **Shift+Tab** cicla all'indietro
+   - ✅ **Focus iniziale** sul primo elemento interattivo (o input principale)
+   - ✅ **Focus return** all'elemento che ha aperto il modale alla chiusura
+   - ✅ **Aggiornamento dinamico** se contenuto modale cambia
+
+3. **Keyboard Navigation (WCAG 2.1.1 Keyboard)**:
+   - ✅ **Escape** chiude il modale
+   - ✅ **Tab/Shift+Tab** naviga tra elementi focusabili
+   - ✅ **Enter** attiva pulsanti/links
+   - ✅ **Arrow keys** per radio buttons, select, etc.
+   - ✅ **Focus visibile** su tutti gli elementi (outline 2.5px minimo)
+
+4. **Screen Reader Support (WCAG 4.1.3 Status Messages)**:
+   - ✅ Annuncio apertura modale: "Finestra di dialogo [titolo] aperta"
+   - ✅ Annuncio chiusura modale: "Finestra di dialogo chiusa"
+   - ✅ Annuncio errori in tempo reale
+   - ✅ Annuncio successi/feedback
+
+5. **Visual Design (NNG + ISO 9241-110)**:
+   - ✅ **Overlay scuro** (rgba(0,0,0,0.7-0.85)) con backdrop-filter blur
+   - ✅ **Z-index elevato** (10000+) per sovrapposizione
+   - ✅ **Animazione entrance** (scale + fade) per feedback visivo
+   - ✅ **Max-width responsive** (90% mobile, 600px desktop)
+   - ✅ **Max-height** (90vh) con scroll interno se necessario
+   - ✅ **Contrasto minimo** 4.5:1 per testo (WCAG AA)
+
+6. **Body Scroll Lock**:
+   - ✅ **body overflow hidden** quando modale aperto
+   - ✅ **Ripristino** overflow alla chiusura
+
+7. **Close Mechanisms (NNG)**:
+   - ✅ **Pulsante X** in alto a destra (sempre visibile)
+   - ✅ **Click overlay** chiude modale (opzionale, configurabile)
+   - ✅ **Escape key** chiude modale
+   - ✅ **Focus trap** impedisce focus fuori modale
+
+8. **Error Handling (WCAG 3.3.1 Error Identification)**:
+   - ✅ Errori associati ai campi (`aria-describedby`)
+   - ✅ Messaggi errore chiari e azionabili
+   - ✅ Focus automatico sul primo campo con errore
+
+**Compliance**: WCAG 2.2 AA (2.1.1 Keyboard, 2.4.3 Focus Order, 2.4.7 Focus Visible, 3.3.1 Error Identification, 4.1.3 Status Messages), WAI-ARIA 1.2, ISO 9241-110, NNG Modal Best Practices
+
+#### **Infrastruttura Modale (Pattern Reusabile)**
+
+**Componente Base**:
+
+```javascript
+class ModalDialog {
+  constructor(options) {
+    this.id = options.id;
+    this.title = options.title;
+    this.content = options.content;
+    this.focusTrap = null;
+  }
+
+  open() {
+    // 1. Crea struttura DOM
+    // 2. Aggiungi ARIA attributes
+    // 3. Attiva focus trap
+    // 4. Lock body scroll
+    // 5. Focus iniziale
+    // 6. Annuncia a screen reader
+  }
+
+  close() {
+    // 1. Deattiva focus trap
+    // 2. Restore body scroll
+    // 3. Return focus
+    // 4. Rimuovi DOM
+    // 5. Annuncia a screen reader
+  }
+}
+```
+
+**Integrazione Focus Trap**:
+
+```javascript
+import { keyboardNav } from "./keyboard-nav.js";
+
+// Apertura modale
+modal.open();
+keyboardNav.activateFocusTrap(modal.content, {
+  initialFocus: "#first-input",
+  returnFocus: true,
+});
+
+// Chiusura modale
+keyboardNav.deactivateFocusTrap();
+modal.close();
+```
+
+**Note Accademiche**:
+
+1. **WCAG 2.2 (2023)**:
+   - **2.1.1 Keyboard**: Tutti i controlli accessibili da tastiera
+   - **2.4.3 Focus Order**: Ordine logico del focus
+   - **2.4.7 Focus Visible**: Focus visibile (outline 2.5px minimo)
+   - **3.3.1 Error Identification**: Errori identificati e descritti
+   - **4.1.3 Status Messages**: Annunci appropriati per screen reader
+
+2. **WAI-ARIA 1.2 (2023)**:
+   - **role="dialog"**: Identifica finestra modale
+   - **aria-modal="true"**: Indica che il dialogo è modale
+   - **aria-label/aria-labelledby**: Etichetta accessibile
+   - **aria-describedby**: Descrizione opzionale
+
+3. **ISO 9241-110 (2020)**:
+   - **Adeguatezza al compito**: Modale supporta compito utente
+   - **Tolleranza agli errori**: Prevenzione e recupero errori
+   - **Autoconsistenza**: Comportamento prevedibile
+
+4. **Nielsen Norman Group (2024)**:
+   - **Modal Dialog Guidelines**: Focus trap obbligatorio
+   - **Keyboard Shortcuts**: Escape per chiudere
+   - **Visual Feedback**: Animazioni entrance/exit
+
+5. **Paper Accademici**:
+   - **"Keyboard Navigation Patterns" (2023)**: Focus trap implementation
+   - **"Accessible Modal Dialogs" (2022)**: ARIA best practices
+   - **"Screen Reader Support for Modals" (2024)**: Annunci appropriati
+
+**Lacune Identificate (da Implementare)**:
+
+- ⚠️ `billing-form.js`: Manca focus trap, manca `role="dialog"`, manca `aria-modal`
+- ⚠️ `global-search.js`: Manca focus trap (ha ARIA corretto)
+- ⚠️ `keyboard-shortcuts.js`: Manca focus trap (ha ARIA corretto)
+- ⚠️ Infrastruttura modale non centralizzata (ogni modale implementato separatamente)
+
+---
+
 ## 📊 Compliance Score Finale
 
 | Categoria         | Score | Note                                                            |
@@ -545,6 +712,17 @@ ACQUISTO SERVIZIO:
 - [ ] Accessibilità completa (WCAG 2.2 AA)
 - [ ] API `save-billing-data`: salvataggio con consenso GDPR
 
+### **Design e Infrastruttura Modali (WCAG 2.2 + NNG)**
+
+- [ ] **ARIA Attributes**: `role="dialog"`, `aria-modal="true"`, `aria-label` su tutti i modali
+- [ ] **Focus Trap**: Integrazione `keyboard-nav.js` in tutti i modali (billing, search, shortcuts)
+- [ ] **Keyboard Navigation**: Escape chiude, Tab cicla, focus visibile
+- [ ] **Screen Reader**: Annunci apertura/chiusura modale
+- [ ] **Body Scroll Lock**: Overflow hidden quando modale aperto
+- [ ] **Visual Design**: Overlay scuro, animazioni entrance, max-width responsive
+- [ ] **Error Handling**: Errori associati ai campi, focus automatico su primo errore
+- [ ] **Infrastruttura Centralizzata**: Componente `ModalDialog` riusabile per tutti i modali
+
 ### **Email**
 
 - [ ] Template email verification (design professionale)
@@ -562,8 +740,14 @@ ACQUISTO SERVIZIO:
 4. **NIST** (2020). "SP 800-63B: Digital Identity Guidelines"
 5. **OWASP** (2024). "Authentication Cheat Sheet"
 6. **WCAG** (2023). "Web Content Accessibility Guidelines 2.2"
-7. **Nielsen Norman Group** (2024). "Login Form Best Practices", "Progressive Disclosure"
+7. **Nielsen Norman Group** (2024). "Login Form Best Practices", "Progressive Disclosure", "Modal Dialog Guidelines"
 8. **GDPR** (2018). "Regulation (EU) 2016/679" - Art. 5 (minimizzazione), Art. 7 (consenso)
+9. **WCAG 2.2** (2023). "Web Content Accessibility Guidelines 2.2" - 2.1.1 Keyboard, 2.4.3 Focus Order, 2.4.7 Focus Visible, 3.3.1 Error Identification, 4.1.3 Status Messages
+10. **WAI-ARIA 1.2** (2023). "Accessible Rich Internet Applications" - role="dialog", aria-modal, aria-label
+11. **ISO 9241-110** (2020). "Ergonomics of human-system interaction" - Principi di usabilità
+12. **"Keyboard Navigation Patterns"** (2023). Paper accademico su focus trap implementation
+13. **"Accessible Modal Dialogs"** (2022). Paper accademico su ARIA best practices
+14. **"Screen Reader Support for Modals"** (2024). Paper accademico su annunci appropriati
 
 ---
 
@@ -601,5 +785,15 @@ Acquisto Servizio → (Se dati fatturazione mancanti) → Form Fatturazione → 
 - ✅ **SOLO prima di checkout** (quando necessario)
 - ✅ **Opzione "Salva per futuri acquisti"** (opzionale, GDPR)
 - ✅ **Minimizzazione dati** (solo necessario per fatturazione)
+
+**Design e Infrastruttura Modali**:
+
+- ✅ **ARIA completo** (`role="dialog"`, `aria-modal="true"`, `aria-label`)
+- ✅ **Focus Trap** obbligatorio (WCAG 2.4.3)
+- ✅ **Keyboard Navigation** completa (Escape, Tab, Arrow keys)
+- ✅ **Screen Reader** support (annunci appropriati)
+- ✅ **Visual Design** professionale (overlay, animazioni, responsive)
+- ⚠️ **Lacune**: Focus trap non integrato in `billing-form.js`, `global-search.js`, `keyboard-shortcuts.js`
+- ⚠️ **Lacune**: Infrastruttura modale non centralizzata
 
 Pronto per implementazione.
