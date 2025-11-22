@@ -106,31 +106,27 @@ function showExpiryWarning(daysLeft) {
  * Reindirizza solo se token esiste ma è scaduto/revocato
  */
 export function startSessionCheck() {
-  // Verifica immediatamente
+  // BEST PRACTICE: Accesso libero - non reindirizza automaticamente
+  // Verifica token solo per mostrare warning se scade tra poco, ma non blocca l'accesso
   checkTokenValidity().then((result) => {
-    // BEST PRACTICE: Reindirizza solo se token esiste ma è invalido
-    // Se non c'è token (missing_token), l'utente è guest e può rimanere nella dashboard
+    // Log per debug (non reindirizza)
     if (!result.valid && result.reason !== "error" && result.reason !== "missing_token") {
-      // Token esiste ma è scaduto/revocato, redirect a accesso
-      const reason = result.reason || "expired_token";
-      window.location.href = `/accesso.html?reason=${reason}&redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+      console.log("[Session] Token non valido:", result.reason);
+      // Mostra warning se necessario, ma non reindirizza
     }
   });
 
-  // Avvia periodic check
+  // Avvia periodic check (solo per warning, non per redirect)
   if (checkInterval) {
     clearInterval(checkInterval);
   }
 
   checkInterval = setInterval(async () => {
     const result = await checkTokenValidity();
-    // BEST PRACTICE: Reindirizza solo se token esiste ma è invalido
-    // Se non c'è token (missing_token), l'utente è guest e può rimanere nella dashboard
+    // Log per debug (non reindirizza)
     if (!result.valid && result.reason !== "error" && result.reason !== "missing_token") {
-      // Token scaduto o revocato, redirect
-      const reason = result.reason || "expired_token";
-      clearInterval(checkInterval);
-      window.location.href = `/accesso.html?reason=${reason}&redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+      console.log("[Session] Token non valido:", result.reason);
+      // Mostra warning se necessario, ma non reindirizza
     }
   }, CHECK_INTERVAL);
 }

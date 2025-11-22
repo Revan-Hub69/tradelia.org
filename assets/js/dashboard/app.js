@@ -34,23 +34,14 @@ export const STATE = {
  * Initialize dashboard application
  */
 export async function initDashboard() {
-  // BEST PRACTICE: Verifica autenticazione PRIMA di inizializzare dashboard
+  // BEST PRACTICE: Accesso libero alla dashboard (guest mode)
+  // La verifica autenticazione è opzionale e non blocca l'accesso
+  // L'utente può accedere alla pagina di accesso tramite il pulsante dedicato
   const authCheck = await checkAuthentication();
+
+  // Log per debug (non blocca l'accesso)
   if (!authCheck.authenticated) {
-    // BEST PRACTICE: Se è un errore di rete, permettere accesso guest temporaneo
-    // Reindirizza solo se è un problema di autenticazione reale
-    if (authCheck.reason === "network_error") {
-      console.warn("[Dashboard] Errore di rete durante verifica autenticazione, accesso guest temporaneo");
-      // Continua con accesso guest
-    } else {
-      // Reindirizza a accesso.html con motivo
-      const reason = authCheck.reason || "missing_token";
-      const redirectUrl =
-        authCheck.redirectTo ||
-        `/accesso.html?reason=${reason}&redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
-      window.location.href = redirectUrl;
-      return;
-    }
+    console.log("[Dashboard] Accesso guest - token non presente o non valido");
   }
 
   // Initialize account banner (shows user status, plan, usage)
