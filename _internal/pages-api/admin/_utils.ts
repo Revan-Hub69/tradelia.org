@@ -1,26 +1,26 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { promises as fs } from 'fs';
-import fsSync from 'fs';
-import path from 'path';
-import { exec } from 'child_process';
-import { promisify } from 'util';
-import { pathToFileURL } from 'url';
+import type { NextApiRequest, NextApiResponse } from "next";
+import { promises as fs } from "fs";
+import fsSync from "fs";
+import path from "path";
+import { exec } from "child_process";
+import { promisify } from "util";
+import { pathToFileURL } from "url";
 
 const execAsync = promisify(exec);
 
 export const PROJECT_ROOT = process.cwd();
-export const REPORTS_DIR = path.join(PROJECT_ROOT, 'report', 'reports');
-const AUTO_PUSH_TO_GITHUB = process.env.ADMIN_AUTO_PUSH === 'true';
-const AUTO_REGENERATE_MANIFEST = process.env.ADMIN_AUTO_MANIFEST !== 'false';
-const ADMIN_TOKEN = process.env.ADMIN_DASHBOARD_TOKEN || '';
+export const REPORTS_DIR = path.join(PROJECT_ROOT, "report", "reports");
+const AUTO_PUSH_TO_GITHUB = process.env.ADMIN_AUTO_PUSH === "true";
+const AUTO_REGENERATE_MANIFEST = process.env.ADMIN_AUTO_MANIFEST !== "false";
+const ADMIN_TOKEN = process.env.ADMIN_DASHBOARD_TOKEN || "";
 
 export function getAuthToken(req: NextApiRequest): string | undefined {
-  const headerAuth = req.headers['authorization'];
-  if (typeof headerAuth === 'string' && headerAuth.startsWith('Bearer ')) {
-    return headerAuth.slice('Bearer '.length).trim();
+  const headerAuth = req.headers["authorization"];
+  if (typeof headerAuth === "string" && headerAuth.startsWith("Bearer ")) {
+    return headerAuth.slice("Bearer ".length).trim();
   }
-  const tokenHeader = req.headers['x-admin-token'];
-  if (typeof tokenHeader === 'string') {
+  const tokenHeader = req.headers["x-admin-token"];
+  if (typeof tokenHeader === "string") {
     return tokenHeader.trim();
   }
   if (Array.isArray(tokenHeader) && tokenHeader.length > 0) {
@@ -36,7 +36,7 @@ export function requireAdminAuth(req: NextApiRequest, res: NextApiResponse): boo
   }
   const token = getAuthToken(req);
   if (!token || token !== ADMIN_TOKEN) {
-    res.status(401).json({ error: 'Unauthorized' });
+    res.status(401).json({ error: "Unauthorized" });
     return false;
   }
   return true;
@@ -49,7 +49,7 @@ export async function ensureReportDirectory(reportId: string): Promise<string> {
 }
 
 export function sanitizeReportId(reportId: string): string {
-  return reportId.replace(/[^a-zA-Z0-9_-]/g, '');
+  return reportId.replace(/[^a-zA-Z0-9_-]/g, "");
 }
 
 export async function fileExists(filePath: string): Promise<boolean> {
@@ -63,7 +63,7 @@ export async function fileExists(filePath: string): Promise<boolean> {
 
 export async function readJSON<T = any>(filePath: string): Promise<T | null> {
   try {
-    const content = await fs.readFile(filePath, 'utf-8');
+    const content = await fs.readFile(filePath, "utf-8");
     return JSON.parse(content) as T;
   } catch {
     return null;
@@ -76,13 +76,13 @@ export type ParsedMultipart = Record<
 >;
 
 export async function parseMultipartRequest(req: NextApiRequest): Promise<ParsedMultipart> {
-  const contentType = req.headers['content-type'];
-  if (!contentType || !contentType.includes('multipart/form-data')) {
-    throw new Error('Content-Type non valido');
+  const contentType = req.headers["content-type"];
+  if (!contentType || !contentType.includes("multipart/form-data")) {
+    throw new Error("Content-Type non valido");
   }
   const boundaryMatch = contentType.match(/boundary=([^;]+)/i);
   if (!boundaryMatch) {
-    throw new Error('Boundary non trovato');
+    throw new Error("Boundary non trovato");
   }
   const boundary = boundaryMatch[1];
 
@@ -109,7 +109,7 @@ function parseMultipart(buffer: Buffer, boundary: string): ParsedMultipart {
     if (end === -1) break;
 
     const section = buffer.slice(start, end);
-    const headerEnd = section.indexOf(Buffer.from('\r\n\r\n'));
+    const headerEnd = section.indexOf(Buffer.from("\r\n\r\n"));
     if (headerEnd === -1) {
       start = end + boundaryBuffer.length;
       continue;
@@ -135,7 +135,7 @@ function parseMultipart(buffer: Buffer, boundary: string): ParsedMultipart {
       const contentTypeMatch = header.match(/Content-Type:\s*([^\r\n]+)/i);
       result[fieldName] = {
         filename: filenameMatch[1],
-        contentType: contentTypeMatch ? contentTypeMatch[1].trim() : 'application/octet-stream',
+        contentType: contentTypeMatch ? contentTypeMatch[1].trim() : "application/octet-stream",
         data: body,
       };
     } else {
@@ -154,16 +154,16 @@ export async function generateReportsManifest(): Promise<{
   error?: string;
 }> {
   if (!AUTO_REGENERATE_MANIFEST) {
-    return { success: false, error: 'Rigenerazione automatica disabilitata' };
+    return { success: false, error: "Rigenerazione automatica disabilitata" };
   }
   try {
-    const modulePath = path.join(PROJECT_ROOT, 'report', 'reports', 'generate-reports-manifest.js');
+    const modulePath = path.join(PROJECT_ROOT, "report", "reports", "generate-reports-manifest.js");
     const url = pathToFileURL(modulePath).href;
     const manifestModule = await import(url);
     const manifest = await manifestModule.generateManifest();
     return { success: true, manifest };
   } catch (error: any) {
-    return { success: false, error: error?.message || 'Errore generazione manifest' };
+    return { success: false, error: error?.message || "Errore generazione manifest" };
   }
 }
 
@@ -172,16 +172,16 @@ export async function pushToGit(
   filePath: string
 ): Promise<{ success: boolean; [key: string]: any }> {
   if (!AUTO_PUSH_TO_GITHUB) {
-    return { success: false, error: 'Push automatico disabilitato' };
+    return { success: false, error: "Push automatico disabilitato" };
   }
 
   try {
-    await execAsync('git rev-parse --git-dir', { cwd: PROJECT_ROOT });
+    await execAsync("git rev-parse --git-dir", { cwd: PROJECT_ROOT });
   } catch {
-    return { success: false, error: 'Non è un repository Git' };
+    return { success: false, error: "Non è un repository Git" };
   }
 
-  const relativePath = path.relative(PROJECT_ROOT, filePath).replace(/\\/g, '/');
+  const relativePath = path.relative(PROJECT_ROOT, filePath).replace(/\\/g, "/");
   const escapedPath = relativePath.replace(/"/g, '\\"');
 
   try {
@@ -199,19 +199,19 @@ export async function pushToGit(
       maxBuffer: 10 * 1024 * 1024,
     });
   } catch (error: any) {
-    if (error?.message?.includes('nothing to commit') || error?.message?.includes('no changes')) {
-      return { success: true, message: 'Nessuna modifica da committare' };
+    if (error?.message?.includes("nothing to commit") || error?.message?.includes("no changes")) {
+      return { success: true, message: "Nessuna modifica da committare" };
     }
     return { success: false, error: `Errore commit: ${error?.message}` };
   }
 
-  let currentBranch = 'main';
+  let currentBranch = "main";
   try {
-    const { stdout } = await execAsync('git branch --show-current', {
+    const { stdout } = await execAsync("git branch --show-current", {
       cwd: PROJECT_ROOT,
       maxBuffer: 1024 * 1024,
     });
-    currentBranch = stdout.trim() || 'main';
+    currentBranch = stdout.trim() || "main";
   } catch {
     // usa default
   }
@@ -243,9 +243,9 @@ export async function listReports(): Promise<
   for (const dirent of directories) {
     const reportId = dirent.name;
     const reportDir = path.join(REPORTS_DIR, reportId);
-    const screenshotPath = path.join(reportDir, 'chart-snapshot.png');
-    const headerPath = path.join(reportDir, 'header.json');
-    const manifestPath = path.join(reportDir, 'manifest.json');
+    const screenshotPath = path.join(reportDir, "chart-snapshot.png");
+    const headerPath = path.join(reportDir, "header.json");
+    const manifestPath = path.join(reportDir, "manifest.json");
 
     let ticker: string | null = null;
     let hasScreenshot = fsSync.existsSync(screenshotPath);
@@ -255,7 +255,7 @@ export async function listReports(): Promise<
       for (const row of headerData.rows) {
         if (row?.parts) {
           for (const part of row.parts) {
-            if (part?.key === 'Ticker' && typeof part?.value === 'string') {
+            if (part?.key === "Ticker" && typeof part?.value === "string") {
               ticker = part.value;
               break;
             }
@@ -288,7 +288,7 @@ export async function listReportFiles(reportId: string): Promise<string[]> {
   try {
     const entries = await fs.readdir(reportDir, { withFileTypes: true });
     return entries
-      .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith('.json'))
+      .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith(".json"))
       .map((entry) => entry.name);
   } catch {
     return [];
@@ -309,7 +309,7 @@ export function trimString(value: unknown): string | undefined {
     if (value.length === 0) return undefined;
     return trimString(value[0]);
   }
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     const trimmed = value.trim();
     return trimmed ? trimmed : undefined;
   }

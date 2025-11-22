@@ -126,7 +126,7 @@ function main() {
       try {
         execSync('git add sw.js version.json assets/js/version-check.js', { stdio: 'inherit' });
         console.log(`\n💡 Version files staged. Remember to commit: git commit -m "chore: bump version to ${newVersion}"`);
-      } catch {
+      } catch (e) {
         // Ignore if git add fails (not in git repo or files not changed)
       }
     }

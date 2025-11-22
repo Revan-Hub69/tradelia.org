@@ -1,3 +1,4 @@
+/* eslint-env serviceworker */
 /**
  * Service Worker - PWA + Push Notifications
  *
@@ -125,7 +126,7 @@ self.addEventListener('push', (event) => {
   if (event.data) {
     try {
       data = event.data.json();
-    } catch (e) {
+    } catch {
       data = { title: 'Tradelia AI', body: event.data.text() };
     }
   }
@@ -160,12 +161,13 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
   if (event.action === 'open' || !event.action) {
-    const url = event.notification.data || '/archivio/dashboard.html';
-    event.waitUntil(clients.openWindow(url));
+    const url = event.notification.data || '/dashboard.html';
+    // eslint-disable-next-line no-undef
+    event.waitUntil(self.clients.openWindow(url));
   }
 });
 
 // ===== NOTIFICATION CLOSE =====
-self.addEventListener('notificationclose', (event) => {
+self.addEventListener('notificationclose', () => {
   console.log('[SW] Notification closed');
 });

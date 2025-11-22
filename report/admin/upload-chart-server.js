@@ -642,7 +642,7 @@ async function handleCreateReport(req, res) {
         {
           id: 'company-line',
           parts: [
-            { kind: 'text', text: 'Report Framework Accademico AI, Tradelia Swing Master 5.0' },
+            { kind: 'text', text: 'Report Framework Accademico AI, Tradelia' },
           ],
         },
       ],

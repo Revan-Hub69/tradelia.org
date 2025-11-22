@@ -351,7 +351,7 @@ function bindBillingFormEvents(modal, resolve, reject) {
         submitBtn.disabled = true;
         submitBtn.textContent = "Salvataggio...";
 
-        await fetch("/api/billing?action=data", {
+        await fetch("/api/orders.js?action=save-billing", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ token, billing_data: billingData }),

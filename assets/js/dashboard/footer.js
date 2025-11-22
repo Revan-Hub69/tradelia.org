@@ -75,50 +75,16 @@ function bindFooterEvents(container) {
  */
 async function loadTechnicalInfo(container) {
   try {
-    // Carica versione da version.json
+    // Versione hardcoded (niente fetch, niente 404)
     const versionEl = container.querySelector("#footer-version");
     if (versionEl) {
-      try {
-        const response = await fetch("/version.json");
-        if (response.ok) {
-          const data = await response.json();
-          versionEl.textContent = data.version || "—";
-        } else {
-          // Fallback a package.json se version.json non disponibile
-          const pkgResponse = await fetch("/package.json");
-          if (pkgResponse.ok) {
-            const pkgData = await pkgResponse.json();
-            versionEl.textContent = pkgData.version || "—";
-          } else {
-            versionEl.textContent = "—";
-          }
-        }
-      } catch (fetchError) {
-        console.warn("[Footer] Errore caricamento versione:", fetchError);
-        versionEl.textContent = "—";
-      }
+      versionEl.textContent = "2.0.1";
     }
 
-    // Build info - data da version.json timestamp o data corrente
+    // Build info - data corrente (non serve fetch, evita 404)
     const buildEl = container.querySelector("#footer-build");
     if (buildEl) {
-      try {
-        const response = await fetch("/version.json");
-        if (response.ok) {
-          const data = await response.json();
-          if (data.timestamp) {
-            const buildDate = new Date(data.timestamp);
-            buildEl.textContent = buildDate.toISOString().split("T")[0];
-          } else {
-            buildEl.textContent = new Date().toISOString().split("T")[0];
-          }
-        } else {
-          buildEl.textContent = new Date().toISOString().split("T")[0];
-        }
-      } catch (fetchError) {
-        console.warn("[Footer] Errore caricamento build date:", fetchError);
-        buildEl.textContent = new Date().toISOString().split("T")[0];
-      }
+      buildEl.textContent = new Date().toISOString().split("T")[0];
     }
   } catch (e) {
     console.error("[Footer] Errore caricamento info tecniche:", e);
@@ -242,8 +208,19 @@ function openContactsModal(type) {
       <div class="contacts-info">
         <p class="contacts-description">Per assistenza tecnica, domande o segnalazioni:</p>
         <div class="contacts-item">
-          <strong>Email:</strong>
+          <strong>Supporto:</strong>
           <a href="mailto:support@tradelia.org" class="contacts-link">support@tradelia.org</a>
+          <span class="contacts-hint">Assistenza tecnica e domande</span>
+        </div>
+        <div class="contacts-item">
+          <strong>Amministrazione:</strong>
+          <a href="mailto:amministrazione@tradelia.org" class="contacts-link">amministrazione@tradelia.org</a>
+          <span class="contacts-hint">Fatturazione e pagamenti</span>
+        </div>
+        <div class="contacts-item">
+          <strong>Info:</strong>
+          <a href="mailto:info@tradelia.org" class="contacts-link">info@tradelia.org</a>
+          <span class="contacts-hint">Informazioni generali</span>
         </div>
         <div class="contacts-item">
           <strong>Risposta entro:</strong> 24-48 ore

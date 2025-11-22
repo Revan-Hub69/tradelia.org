@@ -1,12 +1,12 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import path from 'path';
-import { promises as fs } from 'fs';
+import type { NextApiRequest, NextApiResponse } from "next";
+import path from "path";
+import { promises as fs } from "fs";
 import {
   ensureReportDirectory,
   parseMultipartRequest,
   requireAdminAuth,
   sanitizeReportId,
-} from './_utils';
+} from "./_utils";
 
 export const config = {
   api: {
@@ -17,9 +17,9 @@ export const config = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!requireAdminAuth(req, res)) return;
 
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    res.status(405).json({ error: 'Method Not Allowed' });
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    res.status(405).json({ error: "Method Not Allowed" });
     return;
   }
 
@@ -30,16 +30,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const moduleIdRaw = parts.moduleId;
     const filePart = parts.file;
 
-    if (typeof reportIdRaw !== 'string' || reportIdRaw.trim() === '') {
-      res.status(400).json({ error: 'Report ID mancante' });
+    if (typeof reportIdRaw !== "string" || reportIdRaw.trim() === "") {
+      res.status(400).json({ error: "Report ID mancante" });
       return;
     }
-    if (typeof moduleIdRaw !== 'string' || moduleIdRaw.trim() === '') {
-      res.status(400).json({ error: 'Module ID mancante' });
+    if (typeof moduleIdRaw !== "string" || moduleIdRaw.trim() === "") {
+      res.status(400).json({ error: "Module ID mancante" });
       return;
     }
-    if (!filePart || typeof filePart === 'string') {
-      res.status(400).json({ error: 'File immagine mancante' });
+    if (!filePart || typeof filePart === "string") {
+      res.status(400).json({ error: "File immagine mancante" });
       return;
     }
 
@@ -53,11 +53,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     res.status(200).json({
       success: true,
-      path: path.relative(process.cwd(), targetPath).replace(/\\/g, '/'),
+      path: path.relative(process.cwd(), targetPath).replace(/\\/g, "/"),
       reportId,
       moduleId,
     });
   } catch (error: any) {
-    res.status(500).json({ error: error?.message || 'Errore upload screenshot' });
+    res.status(500).json({ error: error?.message || "Errore upload screenshot" });
   }
 }
