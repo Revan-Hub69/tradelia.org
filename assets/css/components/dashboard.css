@@ -1819,6 +1819,10 @@ a[role="button"]:focus-visible {
   line-height: var(--lh-13, 1.3);
   /* BEST PRACTICE: Better visual hierarchy */
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  /* BEST PRACTICE: Microinterazione - transizione fluida */
+  transition:
+    color var(--transition-smooth),
+    text-shadow var(--transition-smooth);
 }
 
 /* BEST PRACTICE: Leggibilità migliorata (WCAG AA) */
@@ -1828,6 +1832,13 @@ a[role="button"]:focus-visible {
   line-height: var(--lh-16, 1.6);
   /* BEST PRACTICE: Optimal line height for readability */
   max-width: 65ch;
+  /* BEST PRACTICE: Gerarchia visiva - descrizione secondaria */
+  font-weight: 400;
+  opacity: 0.9;
+  /* BEST PRACTICE: Microinterazione - transizione fluida */
+  transition:
+    opacity var(--transition-smooth),
+    color var(--transition-smooth);
 }
 
 .module-arrow {
