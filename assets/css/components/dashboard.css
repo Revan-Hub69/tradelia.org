@@ -2007,8 +2007,8 @@ a[role="button"]:focus-visible {
 /* ===== MODULE FAVORITES SYSTEM (BEST PRACTICE: Prioritario rispetto a drag-and-drop) ===== */
 .module-favorite-btn {
   position: absolute;
-  top: var(--spacing-md);
-  right: var(--spacing-md);
+  bottom: var(--spacing-sm);
+  right: var(--spacing-sm);
   width: 28px;
   height: 28px;
   display: flex;

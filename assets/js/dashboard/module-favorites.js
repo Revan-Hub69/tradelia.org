@@ -71,13 +71,10 @@ function setupFavoriteButtons() {
       }
     });
 
-    // Add to card
-    const cardHeader = card.querySelector(".module-card-header");
-    if (cardHeader) {
-      cardHeader.appendChild(favoriteBtn);
-    } else {
-      card.insertBefore(favoriteBtn, card.firstChild);
-    }
+    // BEST PRACTICE: Aggiungi pulsante preferiti alla card (non al header per evitare sovrapposizioni)
+    // Posizionato in basso a destra della card
+    card.style.position = "relative"; // Assicura che position: absolute funzioni
+    card.appendChild(favoriteBtn);
   });
 }
 
