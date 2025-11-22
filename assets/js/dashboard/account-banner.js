@@ -7,6 +7,7 @@
 import { getUserRole, logout, getPlanData } from "./auth.js";
 import { installPWA, isPWAInstalled } from "./pwa-notifications.js";
 import { requestNotificationPermissionExplicit } from "./simple-notifications.js";
+import { showAuthModal } from "./auth-modal.js";
 
 let currentRole = null;
 let currentPlanData = null;
@@ -55,7 +56,7 @@ function renderBanner(container, role, planData) {
                 <span class="toggle-label">PWA</span>
               </label>
             </div>
-            <a href="/accesso.html?reason=login_required&modal=account" class="btn btn-elegant btn-sm">Accedi</a>
+            <button type="button" class="btn btn-elegant btn-sm" id="btn-open-auth-modal">Accedi</button>
           </div>
         </div>
       </div>
@@ -173,6 +174,14 @@ function renderBanner(container, role, planData) {
  * Bind event listeners al banner
  */
 function bindBannerEvents(container, role) {
+  // Auth modal button (guest users)
+  const authModalBtn = container.querySelector("#btn-open-auth-modal");
+  if (authModalBtn) {
+    authModalBtn.addEventListener("click", () => {
+      showAuthModal("code");
+    });
+  }
+
   // Logout button
   const logoutBtn = container.querySelector("#btn-logout");
   if (logoutBtn) {

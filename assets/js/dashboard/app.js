@@ -102,6 +102,10 @@ export async function initDashboard() {
   // Initialize communication preferences modal (newsletter, SMS, WhatsApp)
   initCommunicationPreferences();
 
+  // Initialize auth modal (login/accesso direttamente nella dashboard)
+  const { initAuthModal } = await import("./auth-modal.js");
+  initAuthModal();
+
   // Initialize simple notifications (polling-based, no push)
   const { initSimpleNotifications } = await import("./simple-notifications.js");
   await initSimpleNotifications();
