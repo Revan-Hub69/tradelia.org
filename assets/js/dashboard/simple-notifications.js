@@ -324,7 +324,7 @@ async function updateNotificationBadge() {
     let query = supabase
       .from("notifications")
       .select("id", { count: "exact", head: true })
-      .eq("read", false);
+      .eq("is_read", false);
 
     if (token) {
       try {
