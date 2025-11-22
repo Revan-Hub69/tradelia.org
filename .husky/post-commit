@@ -1,2 +1,0 @@
-# Auto-version: commit automatico bump versione dopo ogni commit
-node scripts/auto-version-post-commit.js
