@@ -80,6 +80,11 @@ export async function getUserRole() {
 export async function logout() {
   try {
     localStorage.removeItem("tradelia-access-token-v1");
+
+    // Rimuovi token anche da IndexedDB per Service Worker
+    const { removeTokenFromIndexedDB } = await import("./token-storage.js");
+    await removeTokenFromIndexedDB();
+
     userRoleCache = { role: "guest", user: null, isAdmin: false };
     userPlanDataCache = { plan: null, usage: null };
     window.location.href = "/accesso.html?reason=logout";

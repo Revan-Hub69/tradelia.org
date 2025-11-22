@@ -186,14 +186,19 @@ self.addEventListener("periodicsync", (event) => {
  */
 async function checkNotificationsInBackground() {
   try {
-    // Ottieni token dall'IndexedDB o da un messaggio dal client
-    // Per semplicità, usiamo un endpoint API che non richiede token
-    // (o possiamo salvare il token in IndexedDB quando l'utente si autentica)
+    // Ottieni token da IndexedDB
+    const token = await getTokenFromIndexedDB();
+
+    if (!token) {
+      console.log("[SW] Nessun token disponibile, skip controllo notifiche");
+      return;
+    }
 
     const response = await fetch("/api/notifications?action=check-background", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -223,4 +228,38 @@ async function checkNotificationsInBackground() {
   } catch (error) {
     console.warn("[SW] Errore controllo notifiche background:", error);
   }
+}
+
+/**
+ * Ottiene token da IndexedDB (Service Worker non ha accesso a localStorage)
+ */
+async function getTokenFromIndexedDB() {
+  return new Promise((resolve) => {
+    const request = indexedDB.open("tradelia-auth", 1);
+
+    request.onsuccess = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains("tokens")) {
+        resolve(null);
+        return;
+      }
+
+      const transaction = db.transaction(["tokens"], "readonly");
+      const store = transaction.objectStore("tokens");
+      const getRequest = store.get("access-token");
+
+      getRequest.onsuccess = () => {
+        const result = getRequest.result;
+        resolve(result?.value || null);
+      };
+
+      getRequest.onerror = () => {
+        resolve(null);
+      };
+    };
+
+    request.onerror = () => {
+      resolve(null);
+    };
+  });
 }

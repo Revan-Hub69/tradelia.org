@@ -8,6 +8,7 @@
 import { showToast } from "./toast.js";
 import { initSupabase } from "./supabase-client.js";
 import { isPWAInstalled } from "./pwa-notifications.js";
+import { syncTokenToIndexedDB } from "./token-storage.js";
 
 let pollingInterval = null;
 let lastCheckTime = null;
@@ -49,6 +50,9 @@ export async function initSimpleNotifications() {
 
   // Controlla subito all'avvio
   await checkForNewNotifications();
+
+  // Sincronizza token in IndexedDB per Service Worker
+  await syncTokenToIndexedDB();
 }
 
 /**

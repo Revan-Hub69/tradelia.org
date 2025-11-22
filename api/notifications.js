@@ -277,12 +277,49 @@ async function handleCheckBackground(req, res) {
   }
 
   // Questo endpoint è chiamato dal Service Worker in background
-  // Per semplicità, restituiamo un array vuoto
-  // In futuro, possiamo implementare logica per controllare notifiche non lette
-  // usando un token salvato in IndexedDB o un identificatore univoco
+  // Il token viene passato nell'header Authorization
+  const authHeader = req.headers.authorization;
 
-  return res.status(200).json({
-    ok: true,
-    notifications: [], // Per ora vuoto, da implementare con logica di controllo
-  });
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ ok: false, error: "Unauthorized" });
+  }
+
+  const token = authHeader.replace("Bearer ", "");
+  const { getAdminContextFromToken } = await import("./_lib/adminAuth.js");
+
+  try {
+    const context = await getAdminContextFromToken(token, { enforceAdmin: false });
+
+    if (!context.userId) {
+      return res.status(401).json({ ok: false, error: "User ID non disponibile" });
+    }
+
+    // Controlla notifiche non lette create nelle ultime 2 ore
+    const { getServiceSupabase } = await import("./_lib/supabase.js");
+    const supabase = getServiceSupabase();
+
+    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
+
+    const { data: notifications, error } = await supabase
+      .from("notifications")
+      .select("id, title, message, body, type, created_at")
+      .eq("user_id", context.userId)
+      .eq("read", false)
+      .gt("created_at", twoHoursAgo)
+      .order("created_at", { ascending: false })
+      .limit(10);
+
+    if (error) {
+      console.error("[Notifications] Errore controllo background:", error);
+      return res.status(500).json({ ok: false, error: "Errore controllo notifiche" });
+    }
+
+    return res.status(200).json({
+      ok: true,
+      notifications: notifications || [],
+    });
+  } catch (error) {
+    console.error("[Notifications] Errore handleCheckBackground:", error);
+    return res.status(500).json({ ok: false, error: "Errore server" });
+  }
 }
