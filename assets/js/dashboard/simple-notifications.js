@@ -171,7 +171,7 @@ async function checkForNewNotifications() {
     } else {
       // Guest user: usa device ID
       const deviceId = getOrCreateDeviceId();
-      query = query.eq("device_id", deviceId);
+      query = query.eq("user_token", deviceId);
     }
 
     // Se abbiamo un timestamp dell'ultimo controllo, filtra solo notifiche più recenti
@@ -340,7 +340,7 @@ async function updateNotificationBadge() {
     } else {
       // Guest user: usa device ID
       const deviceId = getOrCreateDeviceId();
-      query = query.eq("device_id", deviceId);
+      query = query.eq("user_token", deviceId);
     }
 
     const { count, error } = await query;
