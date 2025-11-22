@@ -88,8 +88,9 @@ export async function initDashboard() {
   // Initialize RUM dashboard
   initRUMDashboard();
 
-  // Initialize PWA and notifications - DISABILITATO
-  // await initPWANotifications();
+  // Initialize simple notifications (polling-based, no push)
+  const { initSimpleNotifications } = await import("./simple-notifications.js");
+  await initSimpleNotifications();
 
   // Handle hash navigation
   const hash = window.location.hash.slice(1);
