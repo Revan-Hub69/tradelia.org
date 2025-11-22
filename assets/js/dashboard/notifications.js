@@ -278,9 +278,7 @@ async function markAsRead(notificationId) {
       // BEST PRACTICE: Gestione errori 401 (Unauthorized) - fallback silenzioso
       if (error) {
         if (error.code === "PGRST301" || error.status === 401 || error.message?.includes("401")) {
-          console.debug(
-            "[Notifications] Accesso non autorizzato per marcatura letta (401) - fallback silenzioso"
-          );
+          // BEST PRACTICE: Fallback silenzioso per 401 - non loggare come errore
           return;
         }
         throw error;
@@ -312,9 +310,7 @@ async function markAllAsRead() {
         if (error) {
           // BEST PRACTICE: Gestione errori 401 (Unauthorized) - fallback silenzioso
           if (error.code === "PGRST301" || error.status === 401 || error.message?.includes("401")) {
-            console.debug(
-              "[Notifications] Accesso non autorizzato per marcatura tutte (401) - fallback silenzioso"
-            );
+            // BEST PRACTICE: Fallback silenzioso per 401 - non loggare come errore
             return;
           }
           console.warn("[Notifications] Errore marcatura tutte:", error);
