@@ -60,6 +60,11 @@ function setupFavoriteButtons() {
       updateFavoriteButton(favoriteBtn, moduleId);
       applyFavoritesOrder();
 
+      // BEST PRACTICE: Aggiorna sezione preferiti dopo toggle
+      setTimeout(() => {
+        createFavoritesSection();
+      }, 100);
+
       // Haptic feedback
       if (window.triggerHapticFeedback) {
         window.triggerHapticFeedback("light");
