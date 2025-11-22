@@ -97,8 +97,7 @@ export async function initDashboard() {
   initSecurityIndicators();
 
   // BEST PRACTICE: Initialize desktop sidebar (Coerenza Desktop vs Mobile)
-  const { initDesktopSidebar } = await import("./desktop-sidebar.js");
-  initDesktopSidebar();
+  // Desktop sidebar rimosso - non più utilizzato
 
   // BEST PRACTICE: Initialize theme toggle (Dark Mode Best Practices)
   const { initThemeToggle } = await import("./theme-toggle.js");
