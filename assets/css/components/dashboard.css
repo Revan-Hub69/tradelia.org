@@ -1847,9 +1847,10 @@ a[role="button"]:focus-visible {
   color: var(--dash-text-muted);
   cursor: pointer;
   transition: var(--transition-smooth);
-  z-index: 5; /* Sotto altri pulsanti ma sopra il contenuto */
+  z-index: 10; /* Sopra il contenuto della card per essere sempre cliccabile */
   padding: 0;
   opacity: 0;
+  pointer-events: auto; /* Assicura che sia sempre cliccabile */
 }
 
 .module-card:hover .module-favorite-btn {

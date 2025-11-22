@@ -54,8 +54,11 @@ function setupFavoriteButtons() {
 
     // Add click handler
     favoriteBtn.addEventListener("click", (e) => {
+      // BEST PRACTICE: Ferma la propagazione per evitare che si apra il modulo
       e.preventDefault();
       e.stopPropagation();
+      e.stopImmediatePropagation(); // Ferma anche altri listener sullo stesso elemento
+
       toggleFavorite(moduleId);
       updateFavoriteButton(favoriteBtn, moduleId);
       applyFavoritesOrder();
@@ -69,6 +72,9 @@ function setupFavoriteButtons() {
       if (window.triggerHapticFeedback) {
         window.triggerHapticFeedback("light");
       }
+
+      // BEST PRACTICE: Ritorna false per sicurezza
+      return false;
     });
 
     // BEST PRACTICE: Aggiungi pulsante preferiti alla card (non al header per evitare sovrapposizioni)

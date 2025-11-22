@@ -234,6 +234,16 @@ export async function initDashboard() {
 
     // Gestisci click/tap
     card.addEventListener("click", (e) => {
+      // BEST PRACTICE: Ignora click se è sul pulsante preferiti o altri elementi interattivi
+      const target = e.target;
+      const isFavoriteBtn = target.closest(".module-favorite-btn");
+      const isInteractiveElement = target.closest("button, a, input, select, textarea");
+
+      if (isFavoriteBtn || isInteractiveElement) {
+        // Il click è su un elemento interattivo, non aprire il modulo
+        return;
+      }
+
       // Su mobile, se c'è stato movimento durante il touch, non aprire il modulo
       if (touchMoved) {
         return;
