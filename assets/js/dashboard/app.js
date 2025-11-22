@@ -22,6 +22,7 @@ import { initDashboardWidgets } from "./dashboard-widgets.js";
 import { initPerformanceMonitoring } from "./performance-monitor.js";
 import { initCharts } from "./charts.js";
 import { initRUMDashboard } from "./rum-dashboard.js";
+import { initCommunicationPreferences } from "./communication-preferences.js";
 // Notifiche push - DISABILITATE
 // import { initPWANotifications } from "./pwa-notifications.js";
 
@@ -43,6 +44,7 @@ export async function initDashboard() {
 
   // Log per debug (non blocca l'accesso)
   if (!authCheck.authenticated) {
+    // eslint-disable-next-line no-console
     console.log("[Dashboard] Accesso guest - token non presente o non valido");
   }
 
@@ -87,6 +89,9 @@ export async function initDashboard() {
 
   // Initialize RUM dashboard
   initRUMDashboard();
+
+  // Initialize communication preferences modal (newsletter, SMS, WhatsApp)
+  initCommunicationPreferences();
 
   // Initialize simple notifications (polling-based, no push)
   const { initSimpleNotifications } = await import("./simple-notifications.js");

@@ -96,6 +96,13 @@
 
 **Requisiti Accademici**:
 
+| Best Practice (Fonte)          | Implementazione                                                | Compliance | Evidenza     |
+| ------------------------------ | -------------------------------------------------------------- | ---------- | ------------ |
+| **NNG**: Validazione real-time | ✅ Validazione formato real-time (regex)                       | ✅ ALTA    | Implementato |
+| **NNG**: Feedback immediato    | ✅ Verifica disponibilità real-time (API call debounced 500ms) | ✅ ALTA    | Implementato |
+| **NNG**: Messaggi chiari       | ✅ "Email già registrata? [Accedi]"                            | ✅ ALTA    | Implementato |
+| **WCAG**: Autocomplete         | ✅ `autocomplete="email"`                                      | ✅ ALTA    | Implementato |
+
 1. **Email (NNG + OWASP)**:
    - ✅ Validazione formato real-time (regex)
    - ✅ Verifica disponibilità real-time (API call debounced 500ms)

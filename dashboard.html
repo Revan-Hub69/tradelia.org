@@ -18,7 +18,10 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://tradelia.org/dashboard.html" />
     <meta property="og:title" content="Tradelia AI - Dashboard" />
-    <meta property="og:description" content="Dashboard professionale per analisi finanziarie istituzionali, report conformi MiFID II e tutorial educativi." />
+    <meta
+      property="og:description"
+      content="Dashboard professionale per analisi finanziarie istituzionali, report conformi MiFID II e tutorial educativi."
+    />
     <meta property="og:image" content="https://tradelia.org/og-image.png" />
     <meta property="og:site_name" content="Tradelia AI" />
     <meta property="og:locale" content="it_IT" />
@@ -27,39 +30,37 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://tradelia.org/dashboard.html" />
     <meta name="twitter:title" content="Tradelia AI - Dashboard" />
-    <meta name="twitter:description" content="Dashboard professionale per analisi finanziarie istituzionali, report conformi MiFID II e tutorial educativi." />
+    <meta
+      name="twitter:description"
+      content="Dashboard professionale per analisi finanziarie istituzionali, report conformi MiFID II e tutorial educativi."
+    />
     <meta name="twitter:image" content="https://tradelia.org/twitter-image.png" />
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Tradelia AI Dashboard",
-      "description": "Dashboard professionale per analisi finanziarie istituzionali, report conformi MiFID II e tutorial educativi.",
-      "url": "https://tradelia.org/dashboard.html",
-      "applicationCategory": "FinanceApplication",
-      "operatingSystem": "Web Browser",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "EUR"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "Tradelia AI",
-        "url": "https://tradelia.org"
-      },
-      "accessibilityFeature": [
-        "screenReader",
-        "keyboardNavigation",
-        "ARIA",
-        "reducedMotion"
-      ],
-      "accessibilityHazard": "none",
-      "accessMode": ["visual", "textual"],
-      "inLanguage": "it-IT"
-    }
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Tradelia AI Dashboard",
+        "description": "Dashboard professionale per analisi finanziarie istituzionali, report conformi MiFID II e tutorial educativi.",
+        "url": "https://tradelia.org/dashboard.html",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "EUR"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Tradelia AI",
+          "url": "https://tradelia.org"
+        },
+        "accessibilityFeature": ["screenReader", "keyboardNavigation", "ARIA", "reducedMotion"],
+        "accessibilityHazard": "none",
+        "accessMode": ["visual", "textual"],
+        "inLanguage": "it-IT"
+      }
     </script>
 
     <link rel="icon" href="/favicon.ico?v=1" />
@@ -75,6 +76,7 @@
     <link rel="stylesheet" href="/assets/css/objects/container.css" />
     <link rel="stylesheet" href="/assets/css/components/dashboard.css" />
     <link rel="stylesheet" href="/assets/css/components/dashboard-theme-overrides.css" />
+    <link rel="stylesheet" href="/assets/css/components/communication-preferences.css" />
     <link rel="stylesheet" href="/assets/css/mifid-banner.css" />
   </head>
   <body>
@@ -1205,7 +1207,7 @@
 
       // Initialize dashboard
       initDashboard();
-      
+
       // Inizializza MIFID overlay (non bloccante in dashboard, solo per pulsanti footer)
       initMifidBanner();
 

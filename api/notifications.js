@@ -197,13 +197,17 @@ async function handleSavePreferences(req, res) {
     return res.status(401).json({ ok: false, error: "User ID non disponibile" });
   }
 
-  const { notification_method, phone_number } = req.body;
-  if (!notification_method || !["email", "sms", "whatsapp"].includes(notification_method)) {
+  const { notification_method, phone_number, newsletter_consent, sms_consent, whatsapp_consent } =
+    req.body;
+
+  // Validate notification_method if provided
+  if (notification_method && !["email", "sms", "whatsapp"].includes(notification_method)) {
     return res
       .status(400)
       .json({ ok: false, error: "notification_method deve essere email, sms o whatsapp" });
   }
 
+  // Validate phone_number if SMS/WhatsApp is selected
   if ((notification_method === "sms" || notification_method === "whatsapp") && !phone_number) {
     return res.status(400).json({ ok: false, error: "phone_number richiesto per SMS/WhatsApp" });
   }
@@ -214,35 +218,61 @@ async function handleSavePreferences(req, res) {
       .json({ ok: false, error: "phone_number deve essere in formato internazionale" });
   }
 
+  // Build update/insert object
+  const now = new Date().toISOString();
+  const preferenceData = {
+    updated_at: now,
+  };
+
+  if (notification_method !== undefined) {
+    preferenceData.notification_method = notification_method;
+  }
+  if (phone_number !== undefined) {
+    preferenceData.phone_number = notification_method === "email" ? null : phone_number;
+  }
+
+  // GDPR: Timestamp consenso (Art. 7)
+  if (newsletter_consent !== undefined) {
+    preferenceData.newsletter_consent = Boolean(newsletter_consent);
+    preferenceData.newsletter_consent_timestamp = newsletter_consent ? now : null;
+  }
+  if (sms_consent !== undefined) {
+    preferenceData.sms_consent = Boolean(sms_consent);
+    preferenceData.sms_consent_timestamp = sms_consent ? now : null;
+  }
+  if (whatsapp_consent !== undefined) {
+    preferenceData.whatsapp_consent = Boolean(whatsapp_consent);
+    preferenceData.whatsapp_consent_timestamp = whatsapp_consent ? now : null;
+  }
+
   const { data: existing } = await supabase
     .from("user_notification_preferences")
     .select("id")
     .eq("user_id", context.userId)
-    .single();
+    .maybeSingle();
 
   if (existing) {
-    await supabase
+    const { error: updateError } = await supabase
       .from("user_notification_preferences")
-      .update({
-        notification_method,
-        phone_number: notification_method === "email" ? null : phone_number,
-        updated_at: new Date().toISOString(),
-      })
+      .update(preferenceData)
       .eq("id", existing.id);
+
+    if (updateError) {
+      return res.status(500).json({ ok: false, error: "Failed to update preferences" });
+    }
 
     return res.status(200).json({ ok: true, message: "Preferenze aggiornate", id: existing.id });
   } else {
-    const { data: newPreference, error } = await supabase
+    const { data: newPreference, error: insertError } = await supabase
       .from("user_notification_preferences")
       .insert({
         user_id: context.userId,
-        notification_method,
-        phone_number: notification_method === "email" ? null : phone_number,
+        ...preferenceData,
       })
       .select()
       .single();
 
-    if (error) {
+    if (insertError) {
       return res.status(500).json({ ok: false, error: "Failed to save preferences" });
     }
 

@@ -1,0 +1,285 @@
+/* ============================================
+   Communication Preferences Modal Styles
+   ============================================ */
+
+/* Screen reader only (WCAG 2.2) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.communication-preferences-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+  pointer-events: none;
+}
+
+.communication-preferences-modal.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+.communication-preferences-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+}
+
+.communication-preferences-content {
+  position: relative;
+  background: var(--surface-card, #020617);
+  border: 1px solid rgba(148, 163, 184, 0.32);
+  border-radius: var(--radius-xl, 1rem);
+  padding: 0;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow:
+    0 18px 48px rgba(15, 23, 42, 0.7),
+    0 0 0 1px rgba(15, 23, 42, 0.9);
+  transform: scale(0.95) translateY(20px);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.communication-preferences-modal.active .communication-preferences-content {
+  transform: scale(1) translateY(0);
+}
+
+.communication-preferences-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--br-card, #1f2937);
+  flex-shrink: 0;
+}
+
+.communication-preferences-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0;
+  color: var(--ink, #e5e7eb);
+}
+
+.communication-preferences-close {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid var(--br-card, #1f2937);
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--ink-soft, #e5e7eb);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.communication-preferences-close:hover {
+  background: var(--surface-elev, #020617);
+  border-color: var(--brand-500, #3b82f6);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.communication-preferences-close:focus-visible {
+  outline: 2px solid var(--brand-500, #3b82f6);
+  outline-offset: 2px;
+}
+
+.communication-preferences-body {
+  padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.communication-preferences-intro {
+  font-size: 0.9rem;
+  color: var(--ink-soft, #9ca3af);
+  margin: 0 0 2rem;
+  line-height: 1.6;
+}
+
+.communication-preferences-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.communication-preference-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.communication-preference-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  cursor: pointer;
+  padding: 1rem;
+  border-radius: var(--radius-md, 0.75rem);
+  border: 1.5px solid var(--br-card, #1f2937);
+  background: var(--surface-elev, #020617);
+  transition: all 0.2s;
+}
+
+.communication-preference-label:hover {
+  border-color: var(--brand-500, #3b82f6);
+  background: var(--surface-card, #020617);
+}
+
+.communication-preference-checkbox {
+  margin: 0;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.communication-preference-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.communication-preference-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink, #e5e7eb);
+}
+
+.communication-preference-icon {
+  color: var(--brand-400, #60a5fa);
+  flex-shrink: 0;
+}
+
+.communication-preference-description {
+  font-size: 0.85rem;
+  color: var(--ink-soft, #9ca3af);
+  line-height: 1.5;
+}
+
+.communication-preference-phone {
+  margin-top: 0.5rem;
+  padding-left: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.communication-preference-phone-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-soft, #9ca3af);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.communication-preference-phone-input {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.55rem;
+  border: 1.5px solid var(--br-card, #1f2937);
+  background: var(--surface-elev, #020617);
+  color: var(--ink, #e5e7eb);
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.communication-preference-phone-input:focus {
+  border-color: var(--brand-500, #3b82f6);
+  background: var(--surface-card, #020617);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.communication-preferences-gdpr {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: var(--radius-md, 0.75rem);
+}
+
+.communication-preferences-gdpr-text {
+  font-size: 0.85rem;
+  color: var(--ink-soft, #9ca3af);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.communication-preferences-gdpr-text a {
+  color: var(--brand-400, #60a5fa);
+  text-decoration: none;
+}
+
+.communication-preferences-gdpr-text a:hover {
+  text-decoration: underline;
+}
+
+.communication-preferences-footer {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--br-card, #1f2937);
+  background: var(--surface-elev, #020617);
+  flex-shrink: 0;
+  justify-content: flex-end;
+}
+
+@media (max-width: 640px) {
+  .communication-preferences-content {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .communication-preferences-header,
+  .communication-preferences-body,
+  .communication-preferences-footer {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .communication-preferences-footer {
+    flex-direction: column-reverse;
+  }
+
+  .communication-preferences-footer .btn {
+    width: 100%;
+  }
+}
