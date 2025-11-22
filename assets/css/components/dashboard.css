@@ -1684,10 +1684,9 @@ a[role="button"]:focus-visible {
     margin-bottom: var(--spacing-md);
   }
 
-  /* Categoria Principale non ha accordion - sempre visibile */
-  .module-category:not(.favorites-category) .category-title:has-text("Principale"),
-  .module-category:not(.favorites-category) .category-title:has-text("Principali") {
-    cursor: default !important;
+  /* Categoria Principale: se contiene "Principale" nel titolo, non applicare accordion */
+  .module-category:not(.favorites-category)[data-expanded="true"]:first-of-type .category-title {
+    cursor: default;
   }
 
   .module-category:not(.favorites-category)[data-expanded] .category-title {
