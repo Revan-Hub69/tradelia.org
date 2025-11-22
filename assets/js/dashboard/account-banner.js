@@ -46,20 +46,18 @@ function renderBanner(container, role, planData) {
           </div>
           <div class="account-banner-actions">
             <div class="toggle-switch-wrapper">
-              <label class="toggle-switch toggle-switch-disabled" title="Passa a Pro per sbloccare">
-                <input type="checkbox" id="toggle-notifications" disabled>
+              <label class="toggle-switch" title="Notifiche Push">
+                <input type="checkbox" id="toggle-notifications">
                 <span class="toggle-slider"></span>
                 <span class="toggle-label">Notifiche Push</span>
               </label>
-              <div class="popover-tooltip">Passa a Pro per sbloccare</div>
             </div>
             <div class="toggle-switch-wrapper">
-              <label class="toggle-switch toggle-switch-disabled" title="Passa a Pro per sbloccare">
-                <input type="checkbox" id="toggle-pwa" disabled>
+              <label class="toggle-switch" title="Installa PWA">
+                <input type="checkbox" id="toggle-pwa">
                 <span class="toggle-slider"></span>
                 <span class="toggle-label">PWA</span>
               </label>
-              <div class="popover-tooltip">Passa a Pro per sbloccare</div>
             </div>
             <a href="/accesso.html?reason=login_required&modal=account" class="btn btn-elegant btn-sm">Accedi</a>
           </div>
@@ -189,132 +187,86 @@ function bindBannerEvents(container, role) {
     });
   }
 
-  // Toggle notifiche (tutti gli utenti)
+  // Toggle notifiche (tutti gli utenti, anche guest)
   const notificationsToggle = container.querySelector("#toggle-notifications");
   if (notificationsToggle) {
-    if (notificationsToggle.disabled) {
-      // Guest: mostra popover
-      const wrapper = notificationsToggle.closest(".toggle-switch-wrapper");
-      if (wrapper) {
-        const toggleSwitch = wrapper.querySelector(".toggle-switch");
-        if (toggleSwitch) {
-          toggleSwitch.addEventListener("mouseenter", () => {
-            const popover = wrapper.querySelector(".popover-tooltip");
-            if (popover) {
-              popover.style.opacity = "1";
-              popover.style.visibility = "visible";
-            }
-          });
-          toggleSwitch.addEventListener("mouseleave", () => {
-            const popover = wrapper.querySelector(".popover-tooltip");
-            if (popover) {
-              popover.style.opacity = "0";
-              popover.style.visibility = "hidden";
-            }
-          });
-        }
-      }
-    } else {
-      // Verifica stato iniziale notifiche
-      checkNotificationState(notificationsToggle);
+    // Verifica stato iniziale notifiche
+    checkNotificationState(notificationsToggle);
 
-      notificationsToggle.addEventListener("change", async (e) => {
-        const enabled = e.target.checked;
-        setNotificationPreference(enabled);
+    notificationsToggle.addEventListener("change", async (e) => {
+      const enabled = e.target.checked;
+      setNotificationPreference(enabled);
 
-        if (enabled) {
-          const success = await enablePushNotifications();
-          if (!success) {
-            // Se fallisce, ripristina toggle
-            e.target.checked = false;
-            setNotificationPreference(false);
-            if (window.showToast) {
-              window.showToast(
-                "Errore nell'abilitazione delle notifiche. Verifica le impostazioni del browser.",
-                "error"
-              );
-            }
-          } else {
-            if (window.showToast) {
-              window.showToast("Notifiche push abilitate", "success");
-            }
+      if (enabled) {
+        const success = await enablePushNotifications();
+        if (!success) {
+          // Se fallisce, ripristina toggle
+          e.target.checked = false;
+          setNotificationPreference(false);
+          if (window.showToast) {
+            window.showToast(
+              "Errore nell'abilitazione delle notifiche. Verifica le impostazioni del browser.",
+              "error"
+            );
           }
         } else {
-          await disablePushNotifications();
           if (window.showToast) {
-            window.showToast("Notifiche push disabilitate", "info");
+            window.showToast("Notifiche push abilitate", "success");
           }
         }
-      });
-    }
+      } else {
+        await disablePushNotifications();
+        if (window.showToast) {
+          window.showToast("Notifiche push disabilitate", "info");
+        }
+      }
+    });
   }
 
-  // Toggle PWA (tutti gli utenti)
+  // Toggle PWA (tutti gli utenti, anche guest)
   const pwaToggle = container.querySelector("#toggle-pwa");
   if (pwaToggle) {
-    if (pwaToggle.disabled) {
-      // Guest: mostra popover
-      const wrapper = pwaToggle.closest(".toggle-switch-wrapper");
-      if (wrapper) {
-        const toggleSwitch = wrapper.querySelector(".toggle-switch");
-        if (toggleSwitch) {
-          toggleSwitch.addEventListener("mouseenter", () => {
-            const popover = wrapper.querySelector(".popover-tooltip");
-            if (popover) {
-              popover.style.opacity = "1";
-              popover.style.visibility = "visible";
-            }
-          });
-          toggleSwitch.addEventListener("mouseleave", () => {
-            const popover = wrapper.querySelector(".popover-tooltip");
-            if (popover) {
-              popover.style.opacity = "0";
-              popover.style.visibility = "hidden";
-            }
-          });
-        }
-      }
-    } else {
-      // Verifica stato iniziale PWA
-      checkPWAState(pwaToggle);
+    // Verifica stato iniziale PWA
+    checkPWAState(pwaToggle);
 
-      pwaToggle.addEventListener("change", async (e) => {
-        const enabled = e.target.checked;
-        setPWAPreference(enabled);
+    pwaToggle.addEventListener("change", async (e) => {
+      const enabled = e.target.checked;
+      setPWAPreference(enabled);
 
-        if (enabled) {
-          const installed = await installPWA();
-          if (!installed) {
-            // Se non installata, ripristina toggle
-            e.target.checked = false;
-            setPWAPreference(false);
-            if (window.showToast) {
-              window.showToast(
-                "Installazione PWA non disponibile. Verifica che il browser supporti l'installazione.",
-                "error"
-              );
-            }
-          } else {
-            if (window.showToast) {
-              window.showToast("PWA installata con successo!", "success");
-            }
-            // Aggiorna stato toggle
-            checkPWAState(pwaToggle);
+      if (enabled) {
+        const installed = await installPWA();
+        if (!installed) {
+          // Se non installata, ripristina toggle
+          e.target.checked = false;
+          setPWAPreference(false);
+          if (window.showToast) {
+            window.showToast(
+              "Installazione PWA non disponibile. Verifica che il browser supporti l'installazione.",
+              "error"
+            );
           }
         } else {
-          // PWA non può essere "disinstallata" via toggle
-          // Il toggle serve solo per installare
           if (window.showToast) {
-            window.showToast("Per disinstallare la PWA, usa le impostazioni del browser.", "info");
+            window.showToast("PWA installata con successo!", "success");
           }
-          // Ripristina toggle se PWA è installata
-          if (isPWAInstalled()) {
-            e.target.checked = true;
-            setPWAPreference(true);
-          }
+          // Aggiorna stato toggle dopo installazione
+          setTimeout(() => {
+            checkPWAState(pwaToggle);
+          }, 1000);
         }
-      });
-    }
+      } else {
+        // PWA non può essere "disinstallata" via toggle
+        // Il toggle serve solo per installare
+        if (window.showToast) {
+          window.showToast("Per disinstallare la PWA, usa le impostazioni del browser.", "info");
+        }
+        // Ripristina toggle se PWA è installata
+        if (isPWAInstalled()) {
+          e.target.checked = true;
+          setPWAPreference(true);
+        }
+      }
+    });
   }
 
   // Activate Desk button (solo Pro)
