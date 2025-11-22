@@ -292,7 +292,7 @@ function openSearch() {
 /**
  * Close search modal
  */
-export function closeSearch() {
+function closeSearch() {
   const modal = document.getElementById("global-search-modal");
   if (!modal) {
     return;
@@ -681,5 +681,4 @@ function escapeHtml(text) {
 }
 
 // Export for use in other modules
-export { openSearch };
-export { closeSearch };
+export { openSearch, closeSearch };
