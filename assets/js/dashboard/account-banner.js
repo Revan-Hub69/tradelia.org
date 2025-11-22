@@ -5,11 +5,12 @@
  */
 
 import { getUserRole, logout, getPlanData } from "./auth.js";
-import {
-  enablePushNotifications,
-  disablePushNotifications,
-  areNotificationsEnabled,
-} from "./pwa-notifications.js";
+// Notifiche push - DISABILITATE
+// import {
+//   enablePushNotifications,
+//   disablePushNotifications,
+//   areNotificationsEnabled,
+// } from "./pwa-notifications.js";
 import { installPWA, isPWAInstalled } from "./pwa-notifications.js";
 
 let currentRole = null;
@@ -45,13 +46,6 @@ function renderBanner(container, role, planData) {
             <div class="account-banner-subtitle">Accedi per sbloccare PDF e analisi</div>
           </div>
           <div class="account-banner-actions">
-            <div class="toggle-switch-wrapper">
-              <label class="toggle-switch" title="Notifiche Push">
-                <input type="checkbox" id="toggle-notifications">
-                <span class="toggle-slider"></span>
-                <span class="toggle-label">Notifiche Push</span>
-              </label>
-            </div>
             <div class="toggle-switch-wrapper">
               <label class="toggle-switch" title="Installa PWA">
                 <input type="checkbox" id="toggle-pwa">
@@ -102,11 +96,6 @@ function renderBanner(container, role, planData) {
             </div>
           </div>
           <div class="account-banner-actions">
-            <label class="toggle-switch" title="Notifiche Push">
-              <input type="checkbox" id="toggle-notifications" ${getNotificationPreference() ? "checked" : ""}>
-              <span class="toggle-slider"></span>
-              <span class="toggle-label">Notifiche Push</span>
-            </label>
             <label class="toggle-switch" title="Installa PWA">
               <input type="checkbox" id="toggle-pwa" ${getPWAPreference() ? "checked" : ""}>
               <span class="toggle-slider"></span>
@@ -151,13 +140,6 @@ function renderBanner(container, role, planData) {
           </div>
           <div class="account-banner-actions">
             <div class="toggle-switch-wrapper">
-              <label class="toggle-switch" title="Notifiche Push">
-                <input type="checkbox" id="toggle-notifications">
-                <span class="toggle-slider"></span>
-                <span class="toggle-label">Notifiche Push</span>
-              </label>
-            </div>
-            <div class="toggle-switch-wrapper">
               <label class="toggle-switch" title="Installa PWA">
                 <input type="checkbox" id="toggle-pwa">
                 <span class="toggle-slider"></span>
@@ -187,41 +169,7 @@ function bindBannerEvents(container, role) {
     });
   }
 
-  // Toggle notifiche (tutti gli utenti, anche guest)
-  const notificationsToggle = container.querySelector("#toggle-notifications");
-  if (notificationsToggle) {
-    // Verifica stato iniziale notifiche
-    checkNotificationState(notificationsToggle);
-
-    notificationsToggle.addEventListener("change", async (e) => {
-      const enabled = e.target.checked;
-      setNotificationPreference(enabled);
-
-      if (enabled) {
-        const success = await enablePushNotifications();
-        if (!success) {
-          // Se fallisce, ripristina toggle
-          e.target.checked = false;
-          setNotificationPreference(false);
-          if (window.showToast) {
-            window.showToast(
-              "Errore nell'abilitazione delle notifiche. Verifica le impostazioni del browser.",
-              "error"
-            );
-          }
-        } else {
-          if (window.showToast) {
-            window.showToast("Notifiche push abilitate", "success");
-          }
-        }
-      } else {
-        await disablePushNotifications();
-        if (window.showToast) {
-          window.showToast("Notifiche push disabilitate", "info");
-        }
-      }
-    });
-  }
+  // Toggle notifiche - DISABILITATO
 
   // Toggle PWA (tutti gli utenti, anche guest)
   const pwaToggle = container.querySelector("#toggle-pwa");
@@ -292,20 +240,7 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-/**
- * Ottiene preferenza notifiche da localStorage
- */
-function getNotificationPreference() {
-  const pref = localStorage.getItem("tradelia-notifications-enabled");
-  return pref === "true";
-}
-
-/**
- * Salva preferenza notifiche in localStorage
- */
-function setNotificationPreference(enabled) {
-  localStorage.setItem("tradelia-notifications-enabled", enabled ? "true" : "false");
-}
+// Funzioni notifiche push - DISABILITATE
 
 /**
  * Ottiene preferenza PWA da localStorage
@@ -322,18 +257,7 @@ function setPWAPreference(enabled) {
   localStorage.setItem("tradelia-pwa-enabled", enabled ? "true" : "false");
 }
 
-/**
- * Verifica stato iniziale notifiche e aggiorna toggle
- */
-async function checkNotificationState(toggle) {
-  try {
-    const enabled = await areNotificationsEnabled();
-    toggle.checked = enabled;
-    setNotificationPreference(enabled);
-  } catch (error) {
-    console.error("[Account Banner] Errore verifica stato notifiche:", error);
-  }
-}
+// Funzione checkNotificationState - DISABILITATA
 
 /**
  * Verifica stato iniziale PWA e aggiorna toggle

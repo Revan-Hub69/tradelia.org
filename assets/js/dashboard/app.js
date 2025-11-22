@@ -22,7 +22,8 @@ import { initDashboardWidgets } from "./dashboard-widgets.js";
 import { initPerformanceMonitoring } from "./performance-monitor.js";
 import { initCharts } from "./charts.js";
 import { initRUMDashboard } from "./rum-dashboard.js";
-import { initPWANotifications } from "./pwa-notifications.js";
+// Notifiche push - DISABILITATE
+// import { initPWANotifications } from "./pwa-notifications.js";
 
 // Global state
 export const STATE = {
@@ -87,8 +88,8 @@ export async function initDashboard() {
   // Initialize RUM dashboard
   initRUMDashboard();
 
-  // Initialize PWA and notifications
-  await initPWANotifications();
+  // Initialize PWA and notifications - DISABILITATO
+  // await initPWANotifications();
 
   // Handle hash navigation
   const hash = window.location.hash.slice(1);
