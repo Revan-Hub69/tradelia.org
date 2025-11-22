@@ -329,30 +329,78 @@ export async function disablePushNotifications() {
   }
 }
 
+// Cache per VAPID key per evitare richieste ripetute
+let vapidKeyCache = null;
+let vapidKeyCacheTimestamp = 0;
+const VAPID_KEY_CACHE_DURATION = 5 * 60 * 1000; // 5 minuti
+
 /**
  * Ottiene VAPID public key dal server
  * Fallback a key hardcoded se l'API non è disponibile
+ * Usa cache per evitare richieste ripetute
  */
 async function getVAPIDPublicKey() {
+  // Se abbiamo una cache valida, usala
+  const now = Date.now();
+  if (vapidKeyCache && now - vapidKeyCacheTimestamp < VAPID_KEY_CACHE_DURATION) {
+    return vapidKeyCache;
+  }
+
   try {
-    const response = await fetch("/api/notifications?action=vapid-key");
+    // Timeout di 3 secondi per evitare attese lunghe
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+    const response = await fetch("/api/notifications?action=vapid-key", {
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
+      // Se 404, significa che VAPID non è configurato - usa fallback immediatamente
+      if (response.status === 404) {
+        console.log("[Notifications] VAPID non configurato sul server, uso fallback");
+        return getFallbackVAPIDKey();
+      }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
 
     if (data.ok && data.publicKey) {
+      // Salva in cache
+      vapidKeyCache = data.publicKey;
+      vapidKeyCacheTimestamp = now;
       return data.publicKey;
     }
 
     throw new Error("VAPID key non disponibile nella risposta");
   } catch (error) {
-    console.warn("[Notifications] Errore recupero VAPID key dal server, uso fallback:", error);
-    // Fallback a key hardcoded (già configurata nel progetto)
-    return "BGUfdP2IYXrvOwDYEqmRwhZqodiQB1CKeaLd1-oILrVCfgTW7n_mjCe3WQYzYXQw1dqgOtIRTOEfBHu6gj22Uc0";
+    // Se è un errore di timeout o network, usa fallback
+    if (
+      error.name === "TimeoutError" ||
+      error.name === "TypeError" ||
+      error.message.includes("fetch")
+    ) {
+      console.log("[Notifications] Errore network recupero VAPID key, uso fallback");
+    } else {
+      console.warn(
+        "[Notifications] Errore recupero VAPID key dal server, uso fallback:",
+        error.message
+      );
+    }
+    return getFallbackVAPIDKey();
   }
+}
+
+/**
+ * Restituisce la VAPID key hardcoded come fallback
+ */
+function getFallbackVAPIDKey() {
+  // Fallback a key hardcoded (già configurata nel progetto)
+  // Questa è la stessa key usata in archivio e già configurata
+  return "BGUfdP2IYXrvOwDYEqmRwhZqodiQB1CKeaLd1-oILrVCfgTW7n_mjCe3WQYzYXQw1dqgOtIRTOEfBHu6gj22Uc0";
 }
 
 /**

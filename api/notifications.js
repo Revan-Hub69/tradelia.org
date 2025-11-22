@@ -256,7 +256,13 @@ async function handleGetVapidKey(req, res) {
 
   const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY;
   if (!VAPID_PUBLIC_KEY) {
-    return res.status(500).json({ ok: false, error: "VAPID non configurato" });
+    // Restituisce 404 invece di 500 per indicare che la risorsa non è disponibile
+    // Il client userà il fallback hardcoded
+    return res.status(404).json({
+      ok: false,
+      error: "VAPID non configurato",
+      useFallback: true,
+    });
   }
 
   return res.status(200).json({ ok: true, publicKey: VAPID_PUBLIC_KEY });
