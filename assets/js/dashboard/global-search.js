@@ -7,21 +7,21 @@
 // Global search state
 const SEARCH_STATE = {
   isOpen: false,
-  query: '',
+  query: "",
   results: [],
   selectedIndex: -1,
   searchHistory: [],
 };
 
-// Keyboard shortcuts
-const SEARCH_SHORTCUT = {
-  open: 'ctrl+k',
-  macOpen: 'meta+k',
-  close: 'escape',
-  navigateDown: 'arrowdown',
-  navigateUp: 'arrowup',
-  select: 'enter',
-};
+// Keyboard shortcuts (kept for future reference)
+// const SEARCH_SHORTCUT = {
+//   open: 'ctrl+k',
+//   macOpen: 'meta+k',
+//   close: 'escape',
+//   navigateDown: 'arrowdown',
+//   navigateUp: 'arrowup',
+//   select: 'enter',
+// };
 
 /**
  * Initialize global search
@@ -38,14 +38,16 @@ export function initGlobalSearch() {
  */
 function createSearchModal() {
   // Check if already exists
-  if (document.getElementById('global-search-modal')) return;
+  if (document.getElementById("global-search-modal")) {
+    return;
+  }
 
-  const modal = document.createElement('div');
-  modal.id = 'global-search-modal';
-  modal.className = 'global-search-modal';
-  modal.setAttribute('role', 'dialog');
-  modal.setAttribute('aria-label', 'Ricerca globale');
-  modal.setAttribute('aria-modal', 'true');
+  const modal = document.createElement("div");
+  modal.id = "global-search-modal";
+  modal.className = "global-search-modal";
+  modal.setAttribute("role", "dialog");
+  modal.setAttribute("aria-label", "Ricerca globale");
+  modal.setAttribute("aria-modal", "true");
   modal.innerHTML = `
     <div class="global-search-overlay" aria-hidden="true"></div>
     <div class="global-search-content">
@@ -130,63 +132,62 @@ function createSearchModal() {
  * Setup search modal event listeners
  */
 function setupSearchModalListeners() {
-  const modal = document.getElementById('global-search-modal');
-  const overlay = modal.querySelector('.global-search-overlay');
-  const closeBtn = document.getElementById('global-search-close');
-  const clearBtn = document.getElementById('global-search-clear');
-  const input = document.getElementById('global-search-input');
-  const results = document.getElementById('global-search-results');
+  const modal = document.getElementById("global-search-modal");
+  const overlay = modal.querySelector(".global-search-overlay");
+  const closeBtn = document.getElementById("global-search-close");
+  const clearBtn = document.getElementById("global-search-clear");
+  const input = document.getElementById("global-search-input");
 
   // Close on overlay click
-  overlay.addEventListener('click', () => closeSearch());
+  overlay.addEventListener("click", () => closeSearch());
 
   // Close on close button
-  closeBtn.addEventListener('click', () => closeSearch());
+  closeBtn.addEventListener("click", () => closeSearch());
 
   // Clear input
-  clearBtn.addEventListener('click', () => {
-    input.value = '';
+  clearBtn.addEventListener("click", () => {
+    input.value = "";
     input.focus();
-    clearBtn.style.display = 'none';
-    SEARCH_STATE.query = '';
+    clearBtn.style.display = "none";
+    SEARCH_STATE.query = "";
     SEARCH_STATE.results = [];
     SEARCH_STATE.selectedIndex = -1;
     showEmptyState();
   });
 
   // Input events
-  input.addEventListener('input', (e) => {
+  input.addEventListener("input", (e) => {
     const query = e.target.value.trim();
-    clearBtn.style.display = query ? 'block' : 'none';
-    
+    clearBtn.style.display = query ? "block" : "none";
+
     if (query.length >= 2) {
       performSearch(query);
     } else {
-      SEARCH_STATE.query = '';
+      SEARCH_STATE.query = "";
       SEARCH_STATE.results = [];
       SEARCH_STATE.selectedIndex = -1;
       showEmptyState();
     }
   });
 
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
       closeSearch();
-    } else if (e.key === 'ArrowDown') {
+    } else if (e.key === "ArrowDown") {
       e.preventDefault();
       navigateResults(1);
-    } else if (e.key === 'ArrowUp') {
+    } else if (e.key === "ArrowUp") {
       e.preventDefault();
       navigateResults(-1);
-    } else if (e.key === 'Enter' && SEARCH_STATE.selectedIndex >= 0) {
+    } else if (e.key === "Enter" && SEARCH_STATE.selectedIndex >= 0) {
       e.preventDefault();
       selectResult(SEARCH_STATE.selectedIndex);
     }
   });
 
   // Focus trap
-  modal.addEventListener('keydown', (e) => {
-    if (e.key === 'Tab') {
+  modal.addEventListener("keydown", (e) => {
+    if (e.key === "Tab") {
       const focusableElements = modal.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
@@ -208,18 +209,17 @@ function setupSearchModalListeners() {
  * Setup keyboard shortcuts
  */
 function setupKeyboardShortcuts() {
-  document.addEventListener('keydown', (e) => {
+  document.addEventListener("keydown", (e) => {
     // Check if input is focused (don't trigger if typing in input)
     if (
-      e.target.tagName === 'INPUT' ||
-      e.target.tagName === 'TEXTAREA' ||
+      e.target.tagName === "INPUT" ||
+      e.target.tagName === "TEXTAREA" ||
       e.target.isContentEditable
     ) {
       // Allow Ctrl+K / Cmd+K even when input is focused
-      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
       const isOpenShortcut =
-        (!isMac && e.ctrlKey && e.key === 'k') ||
-        (isMac && e.metaKey && e.key === 'k');
+        (!isMac && e.ctrlKey && e.key === "k") || (isMac && e.metaKey && e.key === "k");
 
       if (isOpenShortcut) {
         e.preventDefault();
@@ -229,10 +229,9 @@ function setupKeyboardShortcuts() {
     }
 
     // Global shortcuts
-    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
     const isOpenShortcut =
-      (!isMac && e.ctrlKey && e.key === 'k') ||
-      (isMac && e.metaKey && e.key === 'k');
+      (!isMac && e.ctrlKey && e.key === "k") || (isMac && e.metaKey && e.key === "k");
 
     if (isOpenShortcut) {
       e.preventDefault();
@@ -246,12 +245,12 @@ function setupKeyboardShortcuts() {
  */
 function setupSearchInput() {
   // Add search trigger button to header if needed
-  const header = document.querySelector('.dashboard-header-content');
-  if (header && !document.getElementById('global-search-trigger')) {
-    const trigger = document.createElement('button');
-    trigger.id = 'global-search-trigger';
-    trigger.className = 'global-search-trigger';
-    trigger.setAttribute('aria-label', 'Apri ricerca (Ctrl+K)');
+  const header = document.querySelector(".dashboard-header-content");
+  if (header && !document.getElementById("global-search-trigger")) {
+    const trigger = document.createElement("button");
+    trigger.id = "global-search-trigger";
+    trigger.className = "global-search-trigger";
+    trigger.setAttribute("aria-label", "Apri ricerca (Ctrl+K)");
     trigger.innerHTML = `
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
         <circle cx="11" cy="11" r="8" />
@@ -260,7 +259,7 @@ function setupSearchInput() {
       <span class="global-search-trigger-text">Cerca</span>
       <kbd class="global-search-trigger-kbd">Ctrl+K</kbd>
     `;
-    trigger.addEventListener('click', () => openSearch());
+    trigger.addEventListener("click", () => openSearch());
     header.appendChild(trigger);
   }
 }
@@ -268,15 +267,17 @@ function setupSearchInput() {
 /**
  * Open search modal
  */
-export function openSearch() {
-  const modal = document.getElementById('global-search-modal');
-  if (!modal) return;
+function openSearch() {
+  const modal = document.getElementById("global-search-modal");
+  if (!modal) {
+    return;
+  }
 
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
+  modal.classList.add("active");
+  document.body.style.overflow = "hidden";
   SEARCH_STATE.isOpen = true;
 
-  const input = document.getElementById('global-search-input');
+  const input = document.getElementById("global-search-input");
   if (input) {
     input.focus();
     if (SEARCH_STATE.query) {
@@ -285,30 +286,32 @@ export function openSearch() {
   }
 
   // Update ARIA
-  modal.setAttribute('aria-hidden', 'false');
+  modal.setAttribute("aria-hidden", "false");
 }
 
 /**
  * Close search modal
  */
-function closeSearch() {
-  const modal = document.getElementById('global-search-modal');
-  if (!modal) return;
+export function closeSearch() {
+  const modal = document.getElementById("global-search-modal");
+  if (!modal) {
+    return;
+  }
 
-  modal.classList.remove('active');
-  document.body.style.overflow = '';
+  modal.classList.remove("active");
+  document.body.style.overflow = "";
   SEARCH_STATE.isOpen = false;
 
-  const input = document.getElementById('global-search-input');
+  const input = document.getElementById("global-search-input");
   if (input) {
-    input.value = '';
-    SEARCH_STATE.query = '';
+    input.value = "";
+    SEARCH_STATE.query = "";
     SEARCH_STATE.results = [];
     SEARCH_STATE.selectedIndex = -1;
   }
 
   // Update ARIA
-  modal.setAttribute('aria-hidden', 'true');
+  modal.setAttribute("aria-hidden", "true");
 }
 
 /**
@@ -319,18 +322,18 @@ async function performSearch(query) {
   SEARCH_STATE.selectedIndex = -1;
 
   const results = [];
-  
+
   // Search in reports
   const reportsResults = await searchReports(query);
-  results.push(...reportsResults.map(r => ({ ...r, type: 'report' })));
+  results.push(...reportsResults.map((r) => ({ ...r, type: "report" })));
 
   // Search in modules (framework, resources, etc.)
   const modulesResults = searchModules(query);
-  results.push(...modulesResults.map(r => ({ ...r, type: 'module' })));
+  results.push(...modulesResults.map((r) => ({ ...r, type: "module" })));
 
   // Search in help/content
   const contentResults = searchContent(query);
-  results.push(...contentResults.map(r => ({ ...r, type: 'content' })));
+  results.push(...contentResults.map((r) => ({ ...r, type: "content" })));
 
   SEARCH_STATE.results = results;
   renderResults(results);
@@ -344,14 +347,16 @@ async function performSearch(query) {
  */
 async function searchReports(query) {
   const results = [];
-  
+
   try {
     const manifestResponse = await fetch(`/archivio/manifest.json?t=${Date.now()}`);
-    if (!manifestResponse.ok) return results;
+    if (!manifestResponse.ok) {
+      return results;
+    }
 
     const manifest = await manifestResponse.json();
     const reportDirs = Array.isArray(manifest.reports)
-      ? manifest.reports.map((r) => (typeof r === 'string' ? r : r.id)).filter(Boolean)
+      ? manifest.reports.map((r) => (typeof r === "string" ? r : r.id)).filter(Boolean)
       : manifest.dirs || [];
 
     const lowerQuery = query.toLowerCase();
@@ -361,9 +366,9 @@ async function searchReports(query) {
         const headerResponse = await fetch(`/archivio/reports/${dir}/header.json?t=${Date.now()}`);
         if (headerResponse.ok) {
           const header = await headerResponse.json();
-          const ticker = (header.ticker || header.asset || '').toLowerCase();
-          const company = (header.company || header.asset_name || '').toLowerCase();
-          const sector = (header.sector || '').toLowerCase();
+          const ticker = (header.ticker || header.asset || "").toLowerCase();
+          const company = (header.company || header.asset_name || "").toLowerCase();
+          const sector = (header.sector || "").toLowerCase();
 
           if (
             ticker.includes(lowerQuery) ||
@@ -374,19 +379,19 @@ async function searchReports(query) {
             results.push({
               id: dir,
               title: header.ticker || header.asset || dir,
-              subtitle: header.company || header.asset_name || '',
-              date: header.date || header.timestamp || '',
+              subtitle: header.company || header.asset_name || "",
+              date: header.date || header.timestamp || "",
               url: `/archivio/reports/${dir}/`,
-              icon: 'report',
+              icon: "report",
             });
           }
         }
-      } catch (e) {
+      } catch {
         // Skip failed requests
       }
     }
   } catch (e) {
-    console.error('[GlobalSearch] Errore ricerca report:', e);
+    console.error("[GlobalSearch] Errore ricerca report:", e);
   }
 
   return results.slice(0, 10);
@@ -400,12 +405,32 @@ function searchModules(query) {
   const lowerQuery = query.toLowerCase();
 
   const modules = [
-    { id: 'overview', title: 'Panoramica', description: 'Statistiche e attività recente', url: '#overview' },
-    { id: 'reports', title: 'Report Ufficiali', description: 'Consulta i report pubblici', url: '#reports' },
-    { id: 'frameworks', title: 'Framework Documentation', description: 'SRD, MTB, PAC', url: '#frameworks' },
-    { id: 'education', title: 'Formazione', description: 'Percorsi formativi', url: '#education' },
-    { id: 'resources', title: 'Risorse', description: 'Risorse utili', url: '#resources' },
-    { id: 'settings', title: 'Impostazioni', description: 'Preferenze e configurazioni', url: '#settings' },
+    {
+      id: "overview",
+      title: "Panoramica",
+      description: "Statistiche e attività recente",
+      url: "#overview",
+    },
+    {
+      id: "reports",
+      title: "Report Ufficiali",
+      description: "Consulta i report pubblici",
+      url: "#reports",
+    },
+    {
+      id: "frameworks",
+      title: "Framework Documentation",
+      description: "SRD, MTB, PAC",
+      url: "#frameworks",
+    },
+    { id: "education", title: "Formazione", description: "Percorsi formativi", url: "#education" },
+    { id: "resources", title: "Risorse", description: "Risorse utili", url: "#resources" },
+    {
+      id: "settings",
+      title: "Impostazioni",
+      description: "Preferenze e configurazioni",
+      url: "#settings",
+    },
   ];
 
   modules.forEach((module) => {
@@ -419,7 +444,7 @@ function searchModules(query) {
         title: module.title,
         subtitle: module.description,
         url: module.url,
-        icon: 'module',
+        icon: "module",
       });
     }
   });
@@ -430,7 +455,7 @@ function searchModules(query) {
 /**
  * Search in content/help
  */
-function searchContent(query) {
+function searchContent(_query) {
   // Placeholder for future content search
   return [];
 }
@@ -439,8 +464,10 @@ function searchContent(query) {
  * Render search results
  */
 function renderResults(results) {
-  const container = document.getElementById('global-search-results');
-  if (!container) return;
+  const container = document.getElementById("global-search-results");
+  if (!container) {
+    return;
+  }
 
   if (results.length === 0) {
     container.innerHTML = `
@@ -461,13 +488,13 @@ function renderResults(results) {
   container.innerHTML = results
     .map((result, index) => {
       const iconSVG = getIconSVG(result.icon || result.type);
-      const date = result.date ? new Date(result.date).toLocaleDateString('it-IT') : '';
+      const date = result.date ? new Date(result.date).toLocaleDateString("it-IT") : "";
 
       return `
         <div
-          class="global-search-result ${index === SEARCH_STATE.selectedIndex ? 'selected' : ''}"
+          class="global-search-result ${index === SEARCH_STATE.selectedIndex ? "selected" : ""}"
           data-index="${index}"
-          data-url="${result.url || '#'}"
+          data-url="${result.url || "#"}"
           role="option"
           aria-selected="${index === SEARCH_STATE.selectedIndex}"
         >
@@ -477,8 +504,8 @@ function renderResults(results) {
           <div class="global-search-result-content">
             <div class="global-search-result-title">${escapeHtml(result.title)}</div>
             <div class="global-search-result-subtitle">
-              ${escapeHtml(result.subtitle || '')}
-              ${date ? ` · ${date}` : ''}
+              ${escapeHtml(result.subtitle || "")}
+              ${date ? ` · ${date}` : ""}
             </div>
           </div>
           <div class="global-search-result-arrow">
@@ -489,11 +516,11 @@ function renderResults(results) {
         </div>
       `;
     })
-    .join('');
+    .join("");
 
   // Add click listeners
-  container.querySelectorAll('.global-search-result').forEach((el) => {
-    el.addEventListener('click', () => {
+  container.querySelectorAll(".global-search-result").forEach((el) => {
+    el.addEventListener("click", () => {
       const index = parseInt(el.dataset.index, 10);
       selectResult(index);
     });
@@ -536,7 +563,9 @@ function getIconSVG(type) {
  * Navigate results with arrow keys
  */
 function navigateResults(direction) {
-  if (SEARCH_STATE.results.length === 0) return;
+  if (SEARCH_STATE.results.length === 0) {
+    return;
+  }
 
   SEARCH_STATE.selectedIndex += direction;
 
@@ -549,9 +578,11 @@ function navigateResults(direction) {
   renderResults(SEARCH_STATE.results);
 
   // Scroll selected into view
-  const selected = document.querySelector(`.global-search-result[data-index="${SEARCH_STATE.selectedIndex}"]`);
+  const selected = document.querySelector(
+    `.global-search-result[data-index="${SEARCH_STATE.selectedIndex}"]`
+  );
   if (selected) {
-    selected.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    selected.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
 }
 
@@ -559,16 +590,18 @@ function navigateResults(direction) {
  * Select result and navigate
  */
 function selectResult(index) {
-  if (index < 0 || index >= SEARCH_STATE.results.length) return;
+  if (index < 0 || index >= SEARCH_STATE.results.length) {
+    return;
+  }
 
   const result = SEARCH_STATE.results[index];
-  
+
   // Close search
   closeSearch();
 
   // Navigate to result
   if (result.url) {
-    if (result.url.startsWith('#')) {
+    if (result.url.startsWith("#")) {
       window.location.hash = result.url.slice(1);
     } else {
       window.location.href = result.url;
@@ -580,8 +613,10 @@ function selectResult(index) {
  * Show empty state
  */
 function showEmptyState() {
-  const container = document.getElementById('global-search-results');
-  if (!container) return;
+  const container = document.getElementById("global-search-results");
+  if (!container) {
+    return;
+  }
 
   container.innerHTML = `
     <div class="global-search-empty">
@@ -602,12 +637,12 @@ function showEmptyState() {
  */
 function loadSearchHistory() {
   try {
-    const history = localStorage.getItem('dashboard-search-history');
+    const history = localStorage.getItem("dashboard-search-history");
     if (history) {
       SEARCH_STATE.searchHistory = JSON.parse(history);
     }
   } catch (e) {
-    console.error('[GlobalSearch] Errore caricamento history:', e);
+    console.error("[GlobalSearch] Errore caricamento history:", e);
   }
 }
 
@@ -615,7 +650,9 @@ function loadSearchHistory() {
  * Save query to history
  */
 function saveToHistory(query) {
-  if (!query || query.length < 2) return;
+  if (!query || query.length < 2) {
+    return;
+  }
 
   // Remove if exists
   SEARCH_STATE.searchHistory = SEARCH_STATE.searchHistory.filter((q) => q !== query);
@@ -628,9 +665,9 @@ function saveToHistory(query) {
 
   // Save
   try {
-    localStorage.setItem('dashboard-search-history', JSON.stringify(SEARCH_STATE.searchHistory));
+    localStorage.setItem("dashboard-search-history", JSON.stringify(SEARCH_STATE.searchHistory));
   } catch (e) {
-    console.error('[GlobalSearch] Errore salvataggio history:', e);
+    console.error("[GlobalSearch] Errore salvataggio history:", e);
   }
 }
 
@@ -638,11 +675,11 @@ function saveToHistory(query) {
  * Escape HTML
  */
 function escapeHtml(text) {
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
 }
 
 // Export for use in other modules
-export { openSearch, closeSearch };
-
+export { openSearch };
+export { closeSearch };
