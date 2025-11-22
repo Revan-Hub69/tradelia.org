@@ -69,13 +69,13 @@ function setupToggleButton() {
 }
 
 /**
- * Set theme
+ * Set theme (exported for account banner)
  */
-function setTheme(theme) {
+export function setTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
   document.documentElement.setAttribute("data-theme-manual", "true");
 
-  // Update toggle button icon
+  // Update toggle button icon (if exists)
   updateToggleIcon(theme);
 
   // Update meta theme-color
@@ -134,9 +134,9 @@ function updateThemeColor(theme) {
 }
 
 /**
- * Save theme preference
+ * Save theme preference (exported for account banner)
  */
-function saveTheme(theme) {
+export function saveTheme(theme) {
   localStorage.setItem(THEME_STORAGE_KEY, theme);
 }
 
