@@ -1,6 +1,47 @@
 # Esempio Integrazione Compliance Info
 
-## Come Usare
+## ⚠️ Versione Leggera Consigliata
+
+**Invece del componente complesso**, usa testo piccolo inline:
+
+```html
+<label for="password" class="access-label">
+  Password
+  <small class="compliance-hint">
+    (Min. 12 caratteri -
+    <a
+      href="/docs/signup-flow-optimal-academic.md#password"
+      class="compliance-hint-link"
+      target="_blank"
+      >NIST 800-63B</a
+    >)
+  </small>
+</label>
+```
+
+**CSS minimo** (solo 20 righe):
+
+```css
+.compliance-hint {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.25rem;
+}
+```
+
+**Vantaggi**:
+
+- ✅ Zero JS
+- ✅ Sempre visibile
+- ✅ Leggerissimo
+- ✅ Accessibile
+
+---
+
+## Componente Completo (Opzionale - Solo se necessario)
+
+Se vuoi tooltip interattivi, usa il componente completo:
 
 ### 1. Importa CSS e JS
 

@@ -1,0 +1,31 @@
+/* ============================================
+   Compliance Hint - Versione Leggera
+   Testo piccolo inline invece di tooltip complesso
+   ============================================ */
+
+.compliance-hint {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted, #9ca3af);
+  margin-top: 0.25rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.compliance-hint-link {
+  color: var(--brand-400, #60a5fa);
+  text-decoration: none;
+  margin-left: 0.25rem;
+}
+
+.compliance-hint-link:hover {
+  text-decoration: underline;
+  color: var(--brand-300, #93c5fd);
+}
+
+/* Inline version (accanto al label) */
+.compliance-hint-inline {
+  display: inline;
+  margin-left: 0.5rem;
+  font-size: 0.7rem;
+}
