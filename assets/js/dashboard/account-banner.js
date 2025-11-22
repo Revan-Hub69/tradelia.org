@@ -8,6 +8,7 @@ import { getUserRole, logout, getPlanData } from "./auth.js";
 import { installPWA, isPWAInstalled } from "./pwa-notifications.js";
 import { requestNotificationPermissionExplicit } from "./simple-notifications.js";
 import { showAuthModal } from "./auth-modal.js";
+import { getCurrentTheme, setTheme, saveTheme } from "./theme-toggle.js";
 
 let currentRole = null;
 let currentPlanData = null;
@@ -42,18 +43,23 @@ function renderBanner(container, role, planData) {
             <div class="account-banner-subtitle">Accedi per sbloccare PDF e analisi</div>
           </div>
           <div class="account-banner-actions">
+            <button type="button" class="btn-icon btn-icon-theme" id="btn-theme-toggle" title="Cambia tema (chiaro/scuro)" aria-label="Cambia tema">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                ${getCurrentTheme() === "dark" ? `<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>` : `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`}
+              </svg>
+            </button>
             <div class="toggle-switch-wrapper">
               <label class="toggle-switch" title="Ricevi notifiche push sul browser quando ci sono nuovi contenuti" id="toggle-notifications-label">
                 <input type="checkbox" id="toggle-notifications" ${getNotificationPermissionState() ? "checked" : ""}>
                 <span class="toggle-slider"></span>
-                <span class="toggle-label">Notifiche Browser</span>
+                <span class="toggle-label">Notifiche</span>
               </label>
             </div>
             <div class="toggle-switch-wrapper">
               <label class="toggle-switch" title="Installa l'app sul dispositivo per accesso rapido e funzionalità offline">
                 <input type="checkbox" id="toggle-pwa">
                 <span class="toggle-slider"></span>
-                <span class="toggle-label">App Installabile</span>
+                <span class="toggle-label">App</span>
               </label>
             </div>
             <button type="button" class="btn btn-elegant btn-sm" id="btn-open-auth-modal">Accedi</button>
@@ -99,6 +105,11 @@ function renderBanner(container, role, planData) {
             </div>
           </div>
           <div class="account-banner-actions">
+            <button type="button" class="btn-icon btn-icon-theme" id="btn-theme-toggle" title="Cambia tema (chiaro/scuro)" aria-label="Cambia tema">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                ${getCurrentTheme() === "dark" ? `<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>` : `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`}
+              </svg>
+            </button>
             <label class="toggle-switch" title="Notifiche Browser" id="toggle-notifications-label">
               <input type="checkbox" id="toggle-notifications" ${getNotificationPermissionState() ? "checked" : ""}>
               <span class="toggle-slider"></span>
@@ -147,18 +158,23 @@ function renderBanner(container, role, planData) {
             </div>
           </div>
           <div class="account-banner-actions">
+            <button type="button" class="btn-icon btn-icon-theme" id="btn-theme-toggle" title="Cambia tema (chiaro/scuro)" aria-label="Cambia tema">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                ${getCurrentTheme() === "dark" ? `<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>` : `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`}
+              </svg>
+            </button>
             <div class="toggle-switch-wrapper">
               <label class="toggle-switch" title="Ricevi notifiche push sul browser quando ci sono nuovi contenuti" id="toggle-notifications-label">
                 <input type="checkbox" id="toggle-notifications" ${getNotificationPermissionState() ? "checked" : ""}>
                 <span class="toggle-slider"></span>
-                <span class="toggle-label">Notifiche Browser</span>
+                <span class="toggle-label">Notifiche</span>
               </label>
             </div>
             <div class="toggle-switch-wrapper">
               <label class="toggle-switch" title="Installa l'app sul dispositivo per accesso rapido e funzionalità offline">
                 <input type="checkbox" id="toggle-pwa">
                 <span class="toggle-slider"></span>
-                <span class="toggle-label">App Installabile</span>
+                <span class="toggle-label">App</span>
               </label>
             </div>
             <button class="btn btn-secondary btn-sm" id="btn-logout">Esci</button>
@@ -283,6 +299,41 @@ function bindBannerEvents(container, role) {
         window.location.href = "/accesso.html?modal=account&action=upgrade-desk";
       });
     }
+  }
+
+  // Theme toggle button
+  const themeToggleBtn = container.querySelector("#btn-theme-toggle");
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener("click", () => {
+      const currentTheme = getCurrentTheme();
+      const newTheme = currentTheme === "dark" ? "light" : "dark";
+      setTheme(newTheme);
+      saveTheme(newTheme);
+
+      // Update icon
+      const svg = themeToggleBtn.querySelector("svg");
+      if (svg) {
+        if (newTheme === "dark") {
+          svg.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`;
+          themeToggleBtn.setAttribute("aria-label", "Passa a tema chiaro");
+        } else {
+          svg.innerHTML = `<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>`;
+          themeToggleBtn.setAttribute("aria-label", "Passa a tema scuro");
+        }
+      }
+
+      // Haptic feedback
+      if (window.triggerHapticFeedback) {
+        window.triggerHapticFeedback("light");
+      }
+
+      // Screen reader announcement
+      if (window.announceToScreenReader) {
+        window.announceToScreenReader(
+          `Tema cambiato a ${newTheme === "dark" ? "scuro" : "chiaro"}`
+        );
+      }
+    });
   }
 }
 

@@ -14,6 +14,10 @@ import { getUserRole } from "./auth.js";
 import { startSessionCheck } from "./session.js";
 import { keyboardNav } from "./keyboard-nav.js";
 import { initModuleManager } from "./module-manager.js";
+import { initCategoryAccordion, reinitCategoryAccordion } from "./category-accordion.js";
+
+// Export per module-favorites.js
+window.reinitCategoryAccordion = reinitCategoryAccordion;
 import { initGlobalSearch } from "./global-search.js";
 import { initWatchlist } from "./watchlist.js";
 import { initKeyboardShortcuts } from "./keyboard-shortcuts.js";
@@ -72,6 +76,12 @@ export async function initDashboard() {
 
   // Initialize module manager (visibility, hierarchy)
   initModuleManager();
+
+  // BEST PRACTICE: Accordion per categorie su mobile
+  initCategoryAccordion();
+
+  // Re-inizializza accordion quando cambia dimensione finestra
+  window.addEventListener("resize", reinitCategoryAccordion);
 
   // BEST PRACTICE: Initialize module favorites system (prioritario rispetto a drag-and-drop)
   const { initModuleFavorites, createFavoritesSection } = await import("./module-favorites.js");

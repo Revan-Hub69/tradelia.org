@@ -146,3 +146,5 @@ function saveTheme(theme) {
 export function getCurrentTheme() {
   return document.documentElement.getAttribute("data-theme") || "dark";
 }
+
+// setTheme e saveTheme sono già esportati sopra, non serve ridefinirli
