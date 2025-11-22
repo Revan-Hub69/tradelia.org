@@ -198,11 +198,11 @@ function showModule(moduleId) {
       modulesView.classList.add("active");
     }
     STATE.currentModule = null;
-    
+
     // BEST PRACTICE: Deactivate focus trap when returning to modules view
     keyboardNav.deactivateFocusTrap();
     keyboardNav.updateModuleCards(); // Update module cards list
-    
+
     return;
   }
 
@@ -211,12 +211,13 @@ function showModule(moduleId) {
   if (panel) {
     panel.classList.add("active");
     STATE.currentModule = moduleId;
-    
+
     // BEST PRACTICE: Activate focus trap for panel (WCAG 2.2 SC 2.1.1)
     keyboardNav.activateFocusTrap(panel);
-    
+
     loadModule(moduleId);
   }
+}
 
 /**
  * Verifica autenticazione utente
