@@ -14,13 +14,13 @@
  */
 
 (function () {
-  'use strict';
+  "use strict";
 
-  const VERSION_KEY = 'tradelia-app-version';
-  const VERSION_CHECK_KEY = 'tradelia-version-checked';
-  const VERSION_URL = '/version.json';
+  const VERSION_KEY = "tradelia-app-version";
+  const VERSION_CHECK_KEY = "tradelia-version-checked";
+  const VERSION_URL = "/version.json";
   // Get current version from sw.js or default
-  const CURRENT_VERSION = '2.0.1'; // Must match sw.js and version.json
+  const CURRENT_VERSION = "2.0.2"; // Must match sw.js and version.json
 
   let updateInProgress = false;
 
@@ -31,11 +31,11 @@
     const backup = {};
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key && !key.startsWith('_temp_')) {
+      if (key && !key.startsWith("_temp_")) {
         try {
           backup[key] = localStorage.getItem(key);
         } catch (e) {
-          console.warn('[Version] Errore backup localStorage:', key, e);
+          console.warn("[Version] Errore backup localStorage:", key, e);
         }
       }
     }
@@ -50,9 +50,10 @@
       Object.keys(backup).forEach((key) => {
         localStorage.setItem(key, backup[key]);
       });
-      console.log('[Version] localStorage ripristinato');
+      // eslint-disable-next-line no-console
+      console.log("[Version] localStorage ripristinato");
     } catch (e) {
-      console.error('[Version] Errore ripristino localStorage:', e);
+      console.error("[Version] Errore ripristino localStorage:", e);
     }
   }
 
@@ -62,16 +63,19 @@
   async function checkVersion() {
     try {
       const response = await fetch(`${VERSION_URL}?t=${Date.now()}`, {
-        cache: 'no-store',
-        headers: { 'Cache-Control': 'no-cache' },
+        cache: "no-store",
+        headers: { "Cache-Control": "no-cache" },
       });
 
-      if (!response.ok) return null;
+      if (!response.ok) {
+        return null;
+      }
 
       const data = await response.json();
       return data.version || null;
     } catch (e) {
-      console.log('[Version] Version check skipped:', e);
+      // eslint-disable-next-line no-console
+      console.log("[Version] Version check skipped:", e);
       return null;
     }
   }
@@ -80,22 +84,26 @@
    * Check service worker for updates
    */
   async function checkServiceWorkerUpdate() {
-    if (!('serviceWorker' in navigator)) return false;
+    if (!("serviceWorker" in navigator)) {
+      return false;
+    }
 
     try {
       const registration = await navigator.serviceWorker.getRegistration();
-      if (!registration) return false;
+      if (!registration) {
+        return false;
+      }
 
       await registration.update();
 
       return new Promise((resolve) => {
-        registration.addEventListener('updatefound', () => {
+        registration.addEventListener("updatefound", () => {
           const newWorker = registration.installing;
           if (newWorker) {
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            newWorker.addEventListener("statechange", () => {
+              if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
                 resolve(true);
-              } else if (newWorker.state === 'activated') {
+              } else if (newWorker.state === "activated") {
                 resolve(true);
               }
             });
@@ -106,7 +114,7 @@
         setTimeout(() => resolve(false), 2000);
       });
     } catch (e) {
-      console.error('[Version] Errore controllo SW:', e);
+      console.error("[Version] Errore controllo SW:", e);
       return false;
     }
   }
@@ -118,21 +126,21 @@
   function showVersionModal(hasUpdate, currentVersion, newVersion) {
     // DISABILITATO - Progetto abbandonato
     return;
-
+    /* eslint-disable no-unreachable */
     // Don't show if already shown in this session
-    const sessionKey = 'version-modal-shown';
+    const sessionKey = "version-modal-shown";
     if (sessionStorage.getItem(sessionKey)) {
       return;
     }
-    sessionStorage.setItem(sessionKey, 'true');
+    sessionStorage.setItem(sessionKey, "true");
 
-    const modal = document.createElement('div');
-    modal.id = 'version-update-modal';
-    modal.setAttribute('role', 'dialog');
-    modal.setAttribute('aria-modal', 'true');
-    modal.setAttribute('aria-labelledby', 'version-modal-title');
-    modal.setAttribute('aria-describedby', 'version-modal-description');
-    modal.className = 'version-modal-overlay';
+    const modal = document.createElement("div");
+    modal.id = "version-update-modal";
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-labelledby", "version-modal-title");
+    modal.setAttribute("aria-describedby", "version-modal-description");
+    modal.className = "version-modal-overlay";
     modal.style.cssText = `
       position: fixed;
       inset: 0;
@@ -146,8 +154,8 @@
       animation: fadeIn 0.3s ease;
     `;
 
-    const content = document.createElement('div');
-    content.className = 'version-modal-panel';
+    const content = document.createElement("div");
+    content.className = "version-modal-panel";
     content.style.cssText = `
       background: var(--surface-card, #181818);
       border: 1px solid var(--br-card, #323232);
@@ -221,7 +229,7 @@
     document.body.appendChild(modal);
 
     // Add animation and styles aligned with Tradelia design system
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       @keyframes fadeIn {
         from { opacity: 0; transform: scale(0.95); }
@@ -251,9 +259,9 @@
     document.head.appendChild(style);
 
     // Continue button
-    const continueBtn = content.querySelector('#version-continue-btn');
+    const continueBtn = content.querySelector("#version-continue-btn");
     if (continueBtn) {
-      continueBtn.addEventListener('click', () => {
+      continueBtn.addEventListener("click", () => {
         modal.remove();
         style.remove();
         // Trigger MiFID check after version modal
@@ -266,7 +274,7 @@
       if (hasUpdate) {
         performAutoUpdate(modal, content);
       } else {
-        continueBtn.style.display = 'block';
+        continueBtn.style.display = "block";
         // Focus management for accessibility
         setTimeout(() => continueBtn.focus(), 100);
       }
@@ -277,12 +285,14 @@
    * Perform automatic update with progress bar
    */
   async function performAutoUpdate(modal, content) {
-    if (updateInProgress) return;
+    if (updateInProgress) {
+      return;
+    }
     updateInProgress = true;
 
-    const progressBar = content.querySelector('#update-progress');
-    const statusText = content.querySelector('#update-status');
-    const continueBtn = content.querySelector('#version-continue-btn');
+    const progressBar = content.querySelector("#update-progress");
+    const statusText = content.querySelector("#update-status");
+    const continueBtn = content.querySelector("#version-continue-btn");
 
     // Backup localStorage
     const backup = backupLocalStorage();
@@ -298,38 +308,38 @@
     };
 
     try {
-      updateProgress(10, 'Backup dati in corso...');
+      updateProgress(10, "Backup dati in corso...");
       await new Promise((resolve) => setTimeout(resolve, 300));
 
-      updateProgress(30, 'Aggiornamento cache...');
+      updateProgress(30, "Aggiornamento cache...");
 
       // Clear all caches
-      if ('caches' in window) {
+      if ("caches" in window) {
         const cacheNames = await caches.keys();
         await Promise.all(cacheNames.map((name) => caches.delete(name)));
       }
 
-      updateProgress(50, 'Aggiornamento service worker...');
+      updateProgress(50, "Aggiornamento service worker...");
 
       // Update service worker
-      if ('serviceWorker' in navigator) {
+      if ("serviceWorker" in navigator) {
         const registration = await navigator.serviceWorker.getRegistration();
         if (registration) {
           if (registration.waiting) {
-            registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            registration.waiting.postMessage({ type: "SKIP_WAITING" });
           }
           await registration.unregister();
         }
-        await navigator.serviceWorker.register('/sw.js');
+        await navigator.serviceWorker.register("/sw.js");
       }
 
-      updateProgress(80, 'Ripristino dati...');
+      updateProgress(80, "Ripristino dati...");
       await new Promise((resolve) => setTimeout(resolve, 200));
 
       // Restore localStorage
       restoreLocalStorage(backup);
 
-      updateProgress(100, 'Aggiornamento completato!');
+      updateProgress(100, "Aggiornamento completato!");
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Update version in localStorage
@@ -338,8 +348,8 @@
 
       // Show continue button
       if (continueBtn) {
-        continueBtn.style.display = 'block';
-        continueBtn.textContent = 'Continua';
+        continueBtn.style.display = "block";
+        continueBtn.textContent = "Continua";
       }
 
       // Auto-reload after 2 seconds if user doesn't click
@@ -349,11 +359,11 @@
         }
       }, 2000);
     } catch (error) {
-      console.error('[Version] Errore durante aggiornamento:', error);
-      updateProgress(100, 'Errore durante aggiornamento. Ricarica manualmente.');
+      console.error("[Version] Errore durante aggiornamento:", error);
+      updateProgress(100, "Errore durante aggiornamento. Ricarica manualmente.");
       if (continueBtn) {
-        continueBtn.style.display = 'block';
-        continueBtn.textContent = 'Continua comunque';
+        continueBtn.style.display = "block";
+        continueBtn.textContent = "Continua comunque";
       }
     } finally {
       updateInProgress = false;
@@ -365,8 +375,8 @@
    */
   async function init() {
     // Wait for DOM
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init);
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
       return;
     }
 
