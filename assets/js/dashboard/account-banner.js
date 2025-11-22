@@ -33,6 +33,13 @@ export async function initAccountBanner() {
  * Renderizza il banner in base al ruolo e plan data
  */
 function renderBanner(container, role, planData) {
+  // BEST PRACTICE: Calcola tema una volta all'inizio per evitare problemi con Rollup
+  const currentTheme = getCurrentTheme();
+  const isDark = currentTheme === "dark";
+  const sunIcon = `<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>`;
+  const moonIcon = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`;
+  const themeIcon = isDark ? sunIcon : moonIcon;
+
   if (role.role === "guest") {
     container.innerHTML = `
       <div class="account-banner account-banner-guest">
@@ -45,7 +52,7 @@ function renderBanner(container, role, planData) {
           <div class="account-banner-actions">
             <button type="button" class="btn-icon btn-icon-theme" id="btn-theme-toggle" title="Cambia tema (chiaro/scuro)" aria-label="Cambia tema">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                ${getCurrentTheme() === "dark" ? `<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>` : `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`}
+                ${themeIcon}
               </svg>
             </button>
             <div class="toggle-switch-wrapper">
@@ -107,7 +114,7 @@ function renderBanner(container, role, planData) {
           <div class="account-banner-actions">
             <button type="button" class="btn-icon btn-icon-theme" id="btn-theme-toggle" title="Cambia tema (chiaro/scuro)" aria-label="Cambia tema">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                ${getCurrentTheme() === "dark" ? `<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>` : `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`}
+                ${themeIcon}
               </svg>
             </button>
             <label class="toggle-switch" title="Notifiche Browser" id="toggle-notifications-label">
@@ -160,7 +167,7 @@ function renderBanner(container, role, planData) {
           <div class="account-banner-actions">
             <button type="button" class="btn-icon btn-icon-theme" id="btn-theme-toggle" title="Cambia tema (chiaro/scuro)" aria-label="Cambia tema">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                ${getCurrentTheme() === "dark" ? `<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>` : `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`}
+                ${themeIcon}
               </svg>
             </button>
             <div class="toggle-switch-wrapper">
