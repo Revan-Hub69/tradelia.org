@@ -22,12 +22,18 @@ export function initCategoryAccordion() {
       return;
     }
 
-    // BEST PRACTICE: Categoria "Principale" sempre visibile (contiene Report, Formazione, Documentazione)
-    const categoryName = title.textContent.trim();
-    const isMainCategory = categoryName === "Principale" || categoryName === "Principali";
+    // BEST PRACTICE: Prima categoria (Principale) sempre visibile - NON applicare accordion
+    const isFirstCategory = index === 0;
 
-    // Espandi categoria Principale + prime 2 altre categorie
-    const shouldExpand = isMainCategory || index < 3; // Principale + 2 altre sempre visibili
+    if (isFirstCategory) {
+      // Prima categoria: non applicare accordion, sempre visibile
+      category.removeAttribute("data-expanded");
+      return; // Skip accordion per prima categoria
+    }
+
+    // Altre categorie: accordion normale
+    // Espandi prime 2 altre categorie (dopo la prima)
+    const shouldExpand = index < 3; // Prime 3 categorie totali sempre visibili (1 Principale + 2 altre)
     category.setAttribute("data-expanded", shouldExpand ? "true" : "false");
 
     // Aggiungi event listener
@@ -53,16 +59,6 @@ export function initCategoryAccordion() {
     title.setAttribute("tabindex", "0");
     title.setAttribute("role", "button");
     title.setAttribute("aria-expanded", shouldExpand ? "true" : "false");
-
-    // Se è la categoria Principale, non renderla cliccabile (sempre visibile)
-    if (isMainCategory) {
-      title.style.cursor = "default";
-      title.removeAttribute("tabindex");
-      title.removeAttribute("role");
-      // Forza sempre espansa
-      category.setAttribute("data-expanded", "true");
-      title.setAttribute("aria-expanded", "true");
-    }
     title.setAttribute(
       "aria-controls",
       `category-${category.dataset.categoryId || Math.random().toString(36).substr(2, 9)}`
