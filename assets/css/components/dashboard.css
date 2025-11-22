@@ -776,72 +776,101 @@ a[role="button"]:focus-visible {
 @media (max-width: 768px) {
   /* BEST PRACTICE: Account banner più compatto su mobile */
   .account-banner {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
   }
 
   .account-banner-content {
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
+    flex-direction: column;
   }
 
   .account-banner-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 24px;
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+
+  .account-banner-info {
+    flex: 1;
+    min-width: 0;
   }
 
   .account-banner-title {
-    font-size: var(--fs-14, 14px);
+    font-size: var(--fs-13, 13px);
     margin-bottom: 2px;
+    line-height: 1.3;
   }
 
   .account-banner-subtitle {
-    font-size: var(--fs-12, 12px);
-    line-height: 1.4;
+    font-size: var(--fs-11, 11px);
+    line-height: 1.3;
   }
 
   .account-banner-actions {
     width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     justify-content: flex-start;
-    margin-top: var(--spacing-sm);
     gap: var(--spacing-xs);
+    margin-top: var(--spacing-xs);
+    flex-wrap: nowrap;
   }
 
   .btn-icon {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
   }
 
   .btn-icon svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
 
   .toggle-switch-wrapper {
-    min-width: 60px;
+    min-width: 0;
+    flex: 0 0 auto;
   }
 
-  .toggle-label {
-    font-size: var(--fs-11, 11px);
+  .account-banner-actions .toggle-switch {
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+    margin: 0;
   }
 
-  .toggle-slider {
-    width: 44px;
-    height: 24px;
+  .account-banner-actions .toggle-label {
+    font-size: var(--fs-10, 10px);
+    white-space: nowrap;
+    order: 2;
+    margin: 0;
+    line-height: 1;
   }
 
-  .toggle-slider::before {
-    width: 20px;
-    height: 20px;
+  .account-banner-actions .toggle-slider {
+    width: 32px;
+    height: 18px;
+    order: 1;
+    flex-shrink: 0;
   }
 
-  .toggle-switch input[type="checkbox"]:checked + .toggle-slider::before {
-    transform: translateX(20px);
+  .account-banner-actions .toggle-slider::before {
+    width: 14px;
+    height: 14px;
+  }
+
+  .account-banner-actions .toggle-switch input[type="checkbox"]:checked + .toggle-slider::before {
+    transform: translateX(14px);
   }
 
   .account-banner-actions .btn {
-    font-size: var(--fs-12, 12px);
+    font-size: var(--fs-11, 11px);
     padding: var(--spacing-xs) var(--spacing-sm);
-    min-height: 36px;
+    min-height: 32px;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 }
 
@@ -1650,8 +1679,15 @@ a[role="button"]:focus-visible {
 @media (max-width: 768px) {
   /* BEST PRACTICE: Accordion per categorie (non preferiti) su mobile */
   /* IMPORTANTE: Solo se data-expanded è impostato (accordion attivo) */
+  /* Categoria "Principale" sempre visibile (non accordion) */
   .module-category:not(.favorites-category)[data-expanded] {
     margin-bottom: var(--spacing-md);
+  }
+
+  /* Categoria Principale non ha accordion - sempre visibile */
+  .module-category:not(.favorites-category) .category-title:has-text("Principale"),
+  .module-category:not(.favorites-category) .category-title:has-text("Principali") {
+    cursor: default !important;
   }
 
   .module-category:not(.favorites-category)[data-expanded] .category-title {

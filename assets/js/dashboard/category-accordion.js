@@ -22,9 +22,12 @@ export function initCategoryAccordion() {
       return;
     }
 
-    // BEST PRACTICE: Espandi prime 2-3 categorie di default per migliorare usabilità
-    // (Research: Accordion troppo aggressivi riducono usabilità)
-    const shouldExpand = index < 2; // Prime 2 categorie sempre visibili
+    // BEST PRACTICE: Categoria "Principale" sempre visibile (contiene Report, Formazione, Documentazione)
+    const categoryName = title.textContent.trim();
+    const isMainCategory = categoryName === "Principale" || categoryName === "Principali";
+
+    // Espandi categoria Principale + prime 2 altre categorie
+    const shouldExpand = isMainCategory || index < 3; // Principale + 2 altre sempre visibili
     category.setAttribute("data-expanded", shouldExpand ? "true" : "false");
 
     // Aggiungi event listener
@@ -50,6 +53,16 @@ export function initCategoryAccordion() {
     title.setAttribute("tabindex", "0");
     title.setAttribute("role", "button");
     title.setAttribute("aria-expanded", shouldExpand ? "true" : "false");
+
+    // Se è la categoria Principale, non renderla cliccabile (sempre visibile)
+    if (isMainCategory) {
+      title.style.cursor = "default";
+      title.removeAttribute("tabindex");
+      title.removeAttribute("role");
+      // Forza sempre espansa
+      category.setAttribute("data-expanded", "true");
+      title.setAttribute("aria-expanded", "true");
+    }
     title.setAttribute(
       "aria-controls",
       `category-${category.dataset.categoryId || Math.random().toString(36).substr(2, 9)}`
