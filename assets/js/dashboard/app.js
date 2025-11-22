@@ -209,8 +209,7 @@ export async function initDashboard() {
     }
   });
 
-  // BEST PRACTICE: Bottom navigation handling (Mobile UX Patterns)
-  setupBottomNavigation();
+  // Bottom navigation rimosso - non più utilizzato
 
   // Handle module card clicks (con supporto mobile per distinguere tap da scroll)
   document.querySelectorAll(".module-card").forEach((card) => {
@@ -289,48 +288,10 @@ export async function initDashboard() {
     }
   });
 
-  // BEST PRACTICE: Bottom navigation handling (Mobile UX Patterns)
-  setupBottomNavigation();
+  // Bottom navigation rimosso - non più utilizzato
 }
 
-/**
- * BEST PRACTICE: Setup bottom navigation (Mobile UX Patterns, Thumb Zone)
- */
-function setupBottomNavigation() {
-  if (window.innerWidth > 768) {
-    return;
-  } // Solo su mobile
-
-  const bottomNavItems = document.querySelectorAll(".bottom-nav-item");
-  bottomNavItems.forEach((item) => {
-    item.addEventListener("click", (e) => {
-      e.preventDefault();
-      const moduleId = item.dataset.module || item.getAttribute("href")?.slice(1);
-      if (moduleId) {
-        showModule(moduleId);
-        // Update active state
-        bottomNavItems.forEach((nav) => nav.classList.remove("active"));
-        item.classList.add("active");
-        item.setAttribute("aria-current", "page");
-      }
-    });
-  });
-
-  // Update active state based on current module
-  window.addEventListener("hashchange", () => {
-    const hash = window.location.hash.slice(1);
-    bottomNavItems.forEach((item) => {
-      const moduleId = item.dataset.module || item.getAttribute("href")?.slice(1);
-      if (moduleId === hash || (!hash && moduleId === "overview")) {
-        item.classList.add("active");
-        item.setAttribute("aria-current", "page");
-      } else {
-        item.classList.remove("active");
-        item.removeAttribute("aria-current");
-      }
-    });
-  });
-}
+// Bottom navigation rimosso - non più utilizzato
 
 /**
  * Close current module and return to modules view
