@@ -186,20 +186,26 @@ self.addEventListener("periodicsync", (event) => {
  */
 async function checkNotificationsInBackground() {
   try {
-    // Ottieni token da IndexedDB
+    // Ottieni token da IndexedDB (se autenticato) o device ID (se guest)
     const token = await getTokenFromIndexedDB();
+    const deviceId = await getDeviceIdFromIndexedDB();
 
-    if (!token) {
-      console.log("[SW] Nessun token disponibile, skip controllo notifiche");
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    } else if (deviceId) {
+      headers["X-Device-ID"] = deviceId;
+    } else {
+      console.log("[SW] Nessun token o device ID disponibile, skip controllo notifiche");
       return;
     }
 
     const response = await fetch("/api/notifications?action=check-background", {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers,
     });
 
     if (!response.ok) {
@@ -247,6 +253,40 @@ async function getTokenFromIndexedDB() {
       const transaction = db.transaction(["tokens"], "readonly");
       const store = transaction.objectStore("tokens");
       const getRequest = store.get("access-token");
+
+      getRequest.onsuccess = () => {
+        const result = getRequest.result;
+        resolve(result?.value || null);
+      };
+
+      getRequest.onerror = () => {
+        resolve(null);
+      };
+    };
+
+    request.onerror = () => {
+      resolve(null);
+    };
+  });
+}
+
+/**
+ * Ottiene device ID da IndexedDB (per guest users)
+ */
+async function getDeviceIdFromIndexedDB() {
+  return new Promise((resolve) => {
+    const request = indexedDB.open("tradelia-auth", 1);
+
+    request.onsuccess = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains("tokens")) {
+        resolve(null);
+        return;
+      }
+
+      const transaction = db.transaction(["tokens"], "readonly");
+      const store = transaction.objectStore("tokens");
+      const getRequest = store.get("device-id");
 
       getRequest.onsuccess = () => {
         const result = getRequest.result;

@@ -277,37 +277,54 @@ async function handleCheckBackground(req, res) {
   }
 
   // Questo endpoint è chiamato dal Service Worker in background
-  // Il token viene passato nell'header Authorization
+  // Supporta sia utenti autenticati (token) che guest (device ID)
   const authHeader = req.headers.authorization;
+  const deviceId = req.headers["x-device-id"];
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ ok: false, error: "Unauthorized" });
+  const { getServiceSupabase } = await import("./_lib/supabase.js");
+  const supabase = getServiceSupabase();
+
+  const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
+
+  let query = supabase
+    .from("notifications")
+    .select("id, title, message, body, type, created_at")
+    .eq("read", false)
+    .gt("created_at", twoHoursAgo)
+    .order("created_at", { ascending: false })
+    .limit(10);
+
+  // Filtra per user_id (autenticato) o device_id (guest)
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.replace("Bearer ", "");
+    const { getAdminContextFromToken } = await import("./_lib/adminAuth.js");
+
+    try {
+      const context = await getAdminContextFromToken(token, { enforceAdmin: false });
+      if (context.userId) {
+        query = query.eq("user_id", context.userId);
+      } else {
+        query = query.eq("user_token", token);
+      }
+    } catch (error) {
+      console.warn("[Notifications] Errore verifica token:", error);
+      // Fallback a device ID se token non valido
+      if (deviceId) {
+        query = query.eq("device_id", deviceId);
+      } else {
+        return res.status(200).json({ ok: true, notifications: [] });
+      }
+    }
+  } else if (deviceId) {
+    // Guest user: usa device ID
+    query = query.eq("device_id", deviceId);
+  } else {
+    // Nessun identificatore: nessuna notifica
+    return res.status(200).json({ ok: true, notifications: [] });
   }
 
-  const token = authHeader.replace("Bearer ", "");
-  const { getAdminContextFromToken } = await import("./_lib/adminAuth.js");
-
   try {
-    const context = await getAdminContextFromToken(token, { enforceAdmin: false });
-
-    if (!context.userId) {
-      return res.status(401).json({ ok: false, error: "User ID non disponibile" });
-    }
-
-    // Controlla notifiche non lette create nelle ultime 2 ore
-    const { getServiceSupabase } = await import("./_lib/supabase.js");
-    const supabase = getServiceSupabase();
-
-    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
-
-    const { data: notifications, error } = await supabase
-      .from("notifications")
-      .select("id, title, message, body, type, created_at")
-      .eq("user_id", context.userId)
-      .eq("read", false)
-      .gt("created_at", twoHoursAgo)
-      .order("created_at", { ascending: false })
-      .limit(10);
+    const { data: notifications, error } = await query;
 
     if (error) {
       console.error("[Notifications] Errore controllo background:", error);

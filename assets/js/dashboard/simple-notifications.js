@@ -17,6 +17,19 @@ let isPWA = false;
 let notificationPermission = null;
 
 /**
+ * Ottiene o crea un device ID univoco per guest users
+ */
+function getOrCreateDeviceId() {
+  let deviceId = localStorage.getItem("tradelia-device-id");
+  if (!deviceId) {
+    // Genera un ID univoco
+    deviceId = `device-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem("tradelia-device-id", deviceId);
+  }
+  return deviceId;
+}
+
+/**
  * Inizializza il sistema notifiche semplice
  */
 export async function initSimpleNotifications() {
@@ -51,8 +64,14 @@ export async function initSimpleNotifications() {
   // Controlla subito all'avvio
   await checkForNewNotifications();
 
-  // Sincronizza token in IndexedDB per Service Worker
+  // Sincronizza token e device ID in IndexedDB per Service Worker
   await syncTokenToIndexedDB();
+
+  // Assicura che device ID esista (per guest users)
+  if (!localStorage.getItem("tradelia-device-id")) {
+    getOrCreateDeviceId();
+    await syncTokenToIndexedDB();
+  }
 }
 
 /**
@@ -142,9 +161,7 @@ async function checkForNewNotifications() {
     }
 
     const token = localStorage.getItem("tradelia-access-token-v1");
-    if (!token) {
-      return; // Guest user, nessuna notifica
-    }
+    // Guest users possono ricevere notifiche usando un device ID
 
     // Query per notifiche non lette
     let query = supabase
@@ -154,16 +171,22 @@ async function checkForNewNotifications() {
       .order("created_at", { ascending: false })
       .limit(10);
 
-    // Filtra per user_id o user_token
-    try {
-      const tokenData = JSON.parse(atob(token.split(".")[1]));
-      if (tokenData?.user_id) {
-        query = query.eq("user_id", tokenData.user_id);
-      } else {
+    // Filtra per user_id, user_token, o device_id (per guest)
+    if (token) {
+      try {
+        const tokenData = JSON.parse(atob(token.split(".")[1]));
+        if (tokenData?.user_id) {
+          query = query.eq("user_id", tokenData.user_id);
+        } else {
+          query = query.eq("user_token", token);
+        }
+      } catch {
         query = query.eq("user_token", token);
       }
-    } catch {
-      query = query.eq("user_token", token);
+    } else {
+      // Guest user: usa device ID
+      const deviceId = getOrCreateDeviceId();
+      query = query.eq("device_id", deviceId);
     }
 
     // Se abbiamo un timestamp dell'ultimo controllo, filtra solo notifiche più recenti
@@ -312,24 +335,27 @@ async function updateNotificationBadge() {
     }
 
     const token = localStorage.getItem("tradelia-access-token-v1");
-    if (!token) {
-      return;
-    }
 
     let query = supabase
       .from("notifications")
       .select("id", { count: "exact", head: true })
       .eq("read", false);
 
-    try {
-      const tokenData = JSON.parse(atob(token.split(".")[1]));
-      if (tokenData?.user_id) {
-        query = query.eq("user_id", tokenData.user_id);
-      } else {
+    if (token) {
+      try {
+        const tokenData = JSON.parse(atob(token.split(".")[1]));
+        if (tokenData?.user_id) {
+          query = query.eq("user_id", tokenData.user_id);
+        } else {
+          query = query.eq("user_token", token);
+        }
+      } catch {
         query = query.eq("user_token", token);
       }
-    } catch {
-      query = query.eq("user_token", token);
+    } else {
+      // Guest user: usa device ID
+      const deviceId = getOrCreateDeviceId();
+      query = query.eq("device_id", deviceId);
     }
 
     const { count, error } = await query;

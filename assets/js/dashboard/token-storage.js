@@ -86,7 +86,27 @@ export async function removeTokenFromIndexedDB() {
 }
 
 /**
- * Sincronizza token da localStorage a IndexedDB
+ * Salva device ID in IndexedDB
+ */
+export async function saveDeviceIdToIndexedDB(deviceId) {
+  if (!deviceId) {
+    return;
+  }
+
+  try {
+    const db = await initDB();
+    const transaction = db.transaction([STORE_NAME], "readwrite");
+    const store = transaction.objectStore(STORE_NAME);
+
+    await store.put({ key: "device-id", value: deviceId, updatedAt: Date.now() });
+    console.log("[Token Storage] Device ID salvato in IndexedDB");
+  } catch (error) {
+    console.warn("[Token Storage] Errore salvataggio device ID:", error);
+  }
+}
+
+/**
+ * Sincronizza token e device ID da localStorage a IndexedDB
  * Chiamare quando l'utente si autentica o il token cambia
  */
 export async function syncTokenToIndexedDB() {
@@ -95,5 +115,11 @@ export async function syncTokenToIndexedDB() {
     await saveTokenToIndexedDB(token);
   } else {
     await removeTokenFromIndexedDB();
+  }
+
+  // Sincronizza anche device ID (per guest users)
+  const deviceId = localStorage.getItem("tradelia-device-id");
+  if (deviceId) {
+    await saveDeviceIdToIndexedDB(deviceId);
   }
 }
