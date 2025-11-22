@@ -1,21 +1,37 @@
 /**
  * Simple Notifications System
- * Sistema notifiche semplice e solido - polling automatico
- * Nessuna complessità di push subscriptions o service worker
+ * Sistema notifiche semplice e solido
+ * - Se PWA installata: notifiche anche in background (via Service Worker)
+ * - Se browser normale: solo toast quando la pagina è aperta
  */
 
 import { showToast } from "./toast.js";
 import { initSupabase } from "./supabase-client.js";
+import { isPWAInstalled } from "./pwa-notifications.js";
 
 let pollingInterval = null;
 let lastCheckTime = null;
 let unreadCount = 0;
+let isPWA = false;
+let notificationPermission = null;
 
 /**
  * Inizializza il sistema notifiche semplice
  */
 export async function initSimpleNotifications() {
-  // Controlla notifiche ogni 2 minuti quando l'utente è sulla dashboard
+  // Verifica se PWA è installata
+  isPWA = isPWAInstalled();
+
+  if (isPWA) {
+    // PWA installata: richiedi permesso notifiche browser per funzionare in background
+    await requestNotificationPermission();
+    console.log("[Simple Notifications] PWA installata - notifiche abilitate anche in background");
+  } else {
+    // Browser normale: solo notifiche quando la pagina è aperta
+    console.log("[Simple Notifications] Browser normale - notifiche solo quando pagina aperta");
+  }
+
+  // Controlla notifiche ogni 2 minuti
   startPolling();
 
   // Controlla anche quando la pagina diventa visibile
@@ -30,6 +46,27 @@ export async function initSimpleNotifications() {
 }
 
 /**
+ * Richiedi permesso notifiche browser
+ */
+async function requestNotificationPermission() {
+  if (!("Notification" in window)) {
+    console.log("[Simple Notifications] Browser non supporta notifiche");
+    return;
+  }
+
+  notificationPermission = Notification.permission;
+
+  // Se permesso già concesso o negato, non richiedere
+  if (notificationPermission === "granted" || notificationPermission === "denied") {
+    return;
+  }
+
+  // Richiedi permesso solo se l'utente interagisce (best practice)
+  // Non richiediamo automaticamente all'avvio
+  console.log("[Simple Notifications] Permesso notifiche:", notificationPermission);
+}
+
+/**
  * Avvia polling automatico
  */
 function startPolling() {
@@ -38,10 +75,12 @@ function startPolling() {
     clearInterval(pollingInterval);
   }
 
-  // Controlla ogni 2 minuti (120000ms)
+  // PWA: controlla ogni 2 minuti (funziona anche in background)
+  // Browser normale: controlla ogni 2 minuti (solo quando pagina aperta)
+  const interval = isPWA ? 120000 : 120000; // 2 minuti in entrambi i casi
   pollingInterval = setInterval(() => {
     checkForNewNotifications();
-  }, 120000); // 2 minuti
+  }, interval);
 }
 
 /**
@@ -104,10 +143,16 @@ async function checkForNewNotifications() {
     // Aggiorna timestamp
     lastCheckTime = new Date().toISOString();
 
-    // Se ci sono nuove notifiche, mostra toast
+    // Se ci sono nuove notifiche
     if (data && data.length > 0) {
       data.forEach((notification) => {
+        // Sempre mostra toast (quando pagina aperta)
         showNotificationToast(notification);
+
+        // Notifiche browser native solo se PWA installata
+        if (isPWA) {
+          showBrowserNotification(notification);
+        }
       });
 
       // Aggiorna badge contatore
@@ -126,6 +171,96 @@ function showNotificationToast(notification) {
   const type = notification.type || "info";
 
   showToast(message, type, 5000); // 5 secondi
+}
+
+/**
+ * Mostra notifica browser nativa (funziona anche quando la pagina è in background)
+ */
+function showBrowserNotification(notification) {
+  // Solo se permesso concesso
+  if (notificationPermission !== "granted") {
+    return;
+  }
+
+  const title = notification.title || "Tradelia";
+  const body = notification.message || notification.body || "Nuova notifica";
+  const icon = "/icons/icon-192.png";
+
+  try {
+    const browserNotification = new Notification(title, {
+      body,
+      icon,
+      badge: "/icons/icon-192.png",
+      tag: `notification-${notification.id}`, // Evita duplicati
+      requireInteraction: false, // Si chiude automaticamente
+    });
+
+    // Chiudi dopo 5 secondi
+    setTimeout(() => {
+      browserNotification.close();
+    }, 5000);
+
+    // Click sulla notifica apre la dashboard
+    browserNotification.onclick = () => {
+      window.focus();
+      browserNotification.close();
+      // Se siamo già sulla dashboard, apri il pannello notifiche
+      if (window.location.pathname.includes("dashboard")) {
+        window.location.hash = "#notifications";
+      } else {
+        window.location.href = "/dashboard.html#notifications";
+      }
+    };
+  } catch (error) {
+    console.warn("[Simple Notifications] Errore creazione notifica browser:", error);
+  }
+}
+
+/**
+ * Richiedi permesso notifiche (da chiamare quando l'utente clicca un pulsante)
+ */
+export async function requestNotificationPermissionExplicit() {
+  if (!("Notification" in window)) {
+    if (window.showToast) {
+      window.showToast("Il browser non supporta le notifiche", "error");
+    }
+    return false;
+  }
+
+  if (Notification.permission === "granted") {
+    if (window.showToast) {
+      window.showToast("Notifiche già abilitate", "info");
+    }
+    notificationPermission = "granted";
+    return true;
+  }
+
+  if (Notification.permission === "denied") {
+    if (window.showToast) {
+      window.showToast("Notifiche bloccate. Abilita nelle impostazioni del browser.", "error");
+    }
+    return false;
+  }
+
+  try {
+    const permission = await Notification.requestPermission();
+    notificationPermission = permission;
+
+    if (permission === "granted") {
+      if (window.showToast) {
+        window.showToast("Notifiche abilitate", "success");
+      }
+      return true;
+    } else {
+      if (window.showToast) {
+        window.showToast("Permesso notifiche negato", "info");
+      }
+      return false;
+    }
+  } catch (error) {
+    console.error("[Simple Notifications] Errore richiesta permesso:", error);
+    return false;
+  }
 }
 
 /**
