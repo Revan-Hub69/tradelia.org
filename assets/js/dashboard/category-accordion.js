@@ -16,15 +16,16 @@ export function initCategoryAccordion() {
 
   const categories = document.querySelectorAll(".module-category:not(.favorites-category)");
 
-  categories.forEach((category) => {
+  categories.forEach((category, index) => {
     const title = category.querySelector(".category-title");
     if (!title) {
       return;
     }
 
-    // Imposta stato iniziale: prima categoria espansa, altre chiuse
-    const isFirst = category === categories[0];
-    category.setAttribute("data-expanded", isFirst ? "true" : "false");
+    // BEST PRACTICE: Espandi prime 2-3 categorie di default per migliorare usabilità
+    // (Research: Accordion troppo aggressivi riducono usabilità)
+    const shouldExpand = index < 2; // Prime 2 categorie sempre visibili
+    category.setAttribute("data-expanded", shouldExpand ? "true" : "false");
 
     // Aggiungi event listener
     title.addEventListener("click", () => {
@@ -48,7 +49,7 @@ export function initCategoryAccordion() {
     // Keyboard support
     title.setAttribute("tabindex", "0");
     title.setAttribute("role", "button");
-    title.setAttribute("aria-expanded", isFirst ? "true" : "false");
+    title.setAttribute("aria-expanded", shouldExpand ? "true" : "false");
     title.setAttribute(
       "aria-controls",
       `category-${category.dataset.categoryId || Math.random().toString(36).substr(2, 9)}`
