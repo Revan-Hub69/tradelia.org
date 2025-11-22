@@ -349,7 +349,18 @@ async function searchReports(query) {
   const results = [];
 
   try {
-    const manifestResponse = await fetch(`/archivio/manifest.json?t=${Date.now()}`);
+    // BEST PRACTICE: Gestione errore 404 per manifest.json
+    let manifestResponse;
+    try {
+      manifestResponse = await fetch(`/archivio/manifest.json?t=${Date.now()}`);
+      if (!manifestResponse.ok) {
+        console.warn("[GlobalSearch] manifest.json non trovato");
+        return [];
+      }
+    } catch (error) {
+      console.warn("[GlobalSearch] Errore caricamento manifest.json:", error);
+      return [];
+    }
     if (!manifestResponse.ok) {
       return results;
     }

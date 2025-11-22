@@ -1689,6 +1689,17 @@ a[role="button"]:focus-visible {
   padding-top: env(safe-area-inset-top, 0px);
 }
 
+/* BEST PRACTICE: Nascondi sidebar su mobile */
+@media (max-width: 768px) {
+  .desktop-sidebar {
+    display: none !important;
+  }
+
+  .dashboard-container {
+    margin-left: 0 !important;
+  }
+}
+
 .desktop-sidebar-header {
   padding: var(--spacing-lg);
   border-bottom: 1px solid var(--dash-border);

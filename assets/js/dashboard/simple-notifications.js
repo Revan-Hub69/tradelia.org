@@ -148,10 +148,11 @@ async function checkForNewNotifications() {
     // Guest users possono ricevere notifiche usando un device ID
 
     // Query per notifiche non lette
+    // Nota: "read" è parola riservata in PostgREST, usiamo il nome colonna esatto
     let query = supabase
       .from("notifications")
       .select("id, title, message, type, created_at")
-      .eq("read", false)
+      .eq("read", false) // Usa nome colonna esatto dalla tabella
       .order("created_at", { ascending: false })
       .limit(10);
 

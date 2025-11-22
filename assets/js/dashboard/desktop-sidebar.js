@@ -10,13 +10,50 @@
  * Initialize desktop sidebar
  */
 export function initDesktopSidebar() {
+  // BEST PRACTICE: Solo su desktop, nascondi su mobile
   if (window.innerWidth <= 768) {
+    // Rimuovi sidebar se esiste su mobile
+    const existingSidebar = document.getElementById("desktop-sidebar");
+    if (existingSidebar) {
+      existingSidebar.remove();
+    }
     return;
-  } // Solo su desktop
+  }
 
   createSidebar();
   setupSidebarNavigation();
   syncWithBottomNav();
+
+  // BEST PRACTICE: Listener per resize window
+  let resizeTimeout;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      if (window.innerWidth <= 768) {
+        // Nascondi sidebar su mobile
+        const sidebar = document.getElementById("desktop-sidebar");
+        if (sidebar) {
+          sidebar.style.display = "none";
+        }
+        // Rimuovi margin-left dal container
+        const container = document.querySelector(".dashboard-container");
+        if (container) {
+          container.style.marginLeft = "0";
+        }
+      } else {
+        // Mostra sidebar su desktop
+        const sidebar = document.getElementById("desktop-sidebar");
+        if (sidebar) {
+          sidebar.style.display = "flex";
+        }
+        // Ripristina margin-left
+        const container = document.querySelector(".dashboard-container");
+        if (container) {
+          container.style.marginLeft = "240px";
+        }
+      }
+    }, 150);
+  });
 }
 
 /**

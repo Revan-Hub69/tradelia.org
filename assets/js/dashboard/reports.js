@@ -26,7 +26,18 @@ export async function loadReports() {
     // BEST PRACTICE: Retry with exponential backoff
     const reportDirs = await retryWithBackoff(
       async () => {
-        const manifestResponse = await fetch(`/archivio/manifest.json?t=${Date.now()}`);
+        // BEST PRACTICE: Gestione errore 404 per manifest.json
+        let manifestResponse;
+        try {
+          manifestResponse = await fetch(`/archivio/manifest.json?t=${Date.now()}`);
+          if (!manifestResponse.ok) {
+            console.warn("[Reports] manifest.json non trovato, uso fallback");
+            return [];
+          }
+        } catch (error) {
+          console.warn("[Reports] Errore caricamento manifest.json:", error);
+          return [];
+        }
         if (!manifestResponse.ok) {
           throw new Error("Errore nel caricamento del manifest");
         }

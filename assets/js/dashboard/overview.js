@@ -10,7 +10,9 @@ import { showToast } from "./toast.js";
 
 export async function loadOverview() {
   const container = document.getElementById("overview-container");
-  if (!container) return;
+  if (!container) {
+    return;
+  }
 
   // BEST PRACTICE: Show skeleton loading while data loads
   container.innerHTML = "";
@@ -27,7 +29,7 @@ export async function loadOverview() {
   // Carica statistiche
   try {
     const reports = await loadReportsData();
-    
+
     // Hide skeleton
     hideSkeleton(statsGrid);
 
@@ -50,7 +52,7 @@ export async function loadOverview() {
 
   // Carica attività recente (reports + navigation)
   loadRecentActivity();
-  
+
   // Carica navigation history se disponibile
   if (window.getRecentActivity) {
     const navHistory = window.getRecentActivity();
@@ -91,19 +93,24 @@ function loadRecentActivity() {
       )
       .join("");
   }
-  
+
   // Load navigation history if available
-  const navHistory = JSON.parse(localStorage.getItem('dashboard-navigation-history') || '[]');
+  const navHistory = JSON.parse(localStorage.getItem("dashboard-navigation-history") || "[]");
   if (navHistory.length > 0) {
     loadNavigationHistory(navHistory);
   }
 }
 
 function loadNavigationHistory(navHistory) {
-  const activityList = document.getElementById('recent-activity');
-  if (!activityList) return;
-  
-  const navItems = navHistory.slice(0, 5).map((item) => `
+  const activityList = document.getElementById("recent-activity");
+  if (!activityList) {
+    return;
+  }
+
+  const navItems = navHistory
+    .slice(0, 5)
+    .map(
+      (item) => `
     <div class="recent-activity-item">
       <div class="activity-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -114,17 +121,19 @@ function loadNavigationHistory(navHistory) {
         <div class="activity-title">${escapeHtml(item.moduleName || item.moduleId)}</div>
         <div class="activity-time">${getTimeAgo(new Date(item.timestamp))}</div>
       </div>
-      <a href="${item.url || '#'}" class="activity-link">
+      <a href="${item.url || "#"}" class="activity-link">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
           <polyline points="9 18 15 12 9 6" />
         </svg>
       </a>
     </div>
-  `).join('');
-  
-  if (activityList.innerHTML.includes('recent-activity-item')) {
+  `
+    )
+    .join("");
+
+  if (activityList.innerHTML.includes("recent-activity-item")) {
     activityList.innerHTML += navItems;
-  } else if (activityList.innerHTML.includes('empty-state')) {
+  } else if (activityList.innerHTML.includes("empty-state")) {
     activityList.innerHTML = navItems;
   }
 }
@@ -136,22 +145,41 @@ function getTimeAgo(date) {
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
 
-  if (diffMins < 1) return 'Ora';
-  if (diffMins < 60) return `${diffMins} minuti fa`;
-  if (diffHours < 24) return `${diffHours} ore fa`;
-  if (diffDays < 7) return `${diffDays} giorni fa`;
-  return date.toLocaleDateString('it-IT');
+  if (diffMins < 1) {
+    return "Ora";
+  }
+  if (diffMins < 60) {
+    return `${diffMins} minuti fa`;
+  }
+  if (diffHours < 24) {
+    return `${diffHours} ore fa`;
+  }
+  if (diffDays < 7) {
+    return `${diffDays} giorni fa`;
+  }
+  return date.toLocaleDateString("it-IT");
 }
 
 function escapeHtml(text) {
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
 }
 
 async function loadReportsData() {
   try {
-    const response = await fetch("/archivio/manifest.json");
+    // BEST PRACTICE: Gestione errore 404 per manifest.json
+    let response;
+    try {
+      response = await fetch("/archivio/manifest.json");
+      if (!response.ok) {
+        console.warn("[Overview] manifest.json non trovato");
+        return;
+      }
+    } catch (error) {
+      console.warn("[Overview] Errore caricamento manifest.json:", error);
+      return;
+    }
     if (response.ok) {
       const data = await response.json();
       return data.reports || [];
@@ -167,7 +195,9 @@ async function loadReportsData() {
  */
 function renderOverviewStructure() {
   const container = document.getElementById("overview-container");
-  if (!container) return;
+  if (!container) {
+    return;
+  }
 
   // Check if stats grid already exists
   let statsGrid = container.querySelector(".overview-stats-grid");
