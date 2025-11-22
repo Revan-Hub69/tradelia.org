@@ -3,12 +3,17 @@
  * Impostazioni utente, preferenze, export dati
  */
 
+import { toggleModuleVisibility, resetModuleOrder, getModuleVisibility, getModuleOrder } from './module-manager.js';
+
 export async function loadSettings() {
   // Carica preferenze salvate
   loadSavedPreferences();
 
   // Setup event listeners
   setupSettingsListeners();
+  
+  // Setup module visibility toggles
+  setupModuleVisibilityToggles();
 }
 
 function loadSavedPreferences() {
@@ -58,6 +63,107 @@ function setupSettingsListeners() {
   if (exportBtn) {
     exportBtn.addEventListener('click', handleExportData);
   }
+  
+  // Reset module order
+  const resetOrderBtn = document.getElementById('btn-reset-module-order');
+  if (resetOrderBtn) {
+    resetOrderBtn.addEventListener('click', () => {
+      if (confirm('Vuoi ripristinare l\'ordine e la visibilità predefinita dei moduli?')) {
+        resetModuleOrder();
+      }
+    });
+  }
+}
+
+/**
+ * Setup module visibility toggles
+ */
+function setupModuleVisibilityToggles() {
+  const visibilityContainer = document.getElementById('module-visibility-container');
+  if (!visibilityContainer) {
+    // Create container if it doesn't exist
+    const settingsContainer = document.querySelector('.panel-content');
+    if (settingsContainer) {
+      const moduleSection = document.createElement('div');
+      moduleSection.className = 'settings-section';
+      moduleSection.innerHTML = `
+        <h3 class="settings-section-title">Gestione Moduli</h3>
+        <div id="module-visibility-container" class="module-visibility-container"></div>
+        <div class="settings-actions">
+          <button id="btn-reset-module-order" class="btn btn-secondary">
+            Ripristina ordine predefinito
+          </button>
+        </div>
+      `;
+      settingsContainer.appendChild(moduleSection);
+      
+      // Setup reset button
+      const resetBtn = document.getElementById('btn-reset-module-order');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          if (confirm('Vuoi ripristinare l\'ordine e la visibilità predefinita dei moduli?')) {
+            resetModuleOrder();
+          }
+        });
+      }
+    }
+  }
+  
+  // Render module visibility toggles
+  renderModuleVisibilityToggles();
+}
+
+/**
+ * Render module visibility toggles
+ */
+function renderModuleVisibilityToggles() {
+  const container = document.getElementById('module-visibility-container');
+  if (!container) return;
+  
+  const moduleNames = {
+    overview: 'Panoramica',
+    reports: 'Report Ufficiali',
+    settings: 'Impostazioni',
+    brokers: 'Broker Regolamentati',
+    admin: 'Amministrazione'
+  };
+  
+  const currentVisibility = getModuleVisibility();
+  const order = getModuleOrder();
+  
+  container.innerHTML = `
+    <div class="module-visibility-list">
+      ${order.map((moduleId) => {
+        const isVisible = currentVisibility[moduleId] !== false; // Default visible
+        return `
+          <div class="module-visibility-item">
+            <label class="toggle-label">
+              <input 
+                type="checkbox" 
+                class="module-visibility-toggle" 
+                data-module="${moduleId}"
+                ${isVisible ? 'checked' : ''}
+              />
+              <span class="toggle-text">${moduleNames[moduleId] || moduleId}</span>
+            </label>
+          </div>
+        `;
+      }).join('')}
+    </div>
+    <p class="settings-help-text">
+      Deseleziona i moduli che vuoi nascondere dalla griglia principale.
+      Puoi riordinare i moduli trascinandoli nella griglia.
+    </p>
+  `;
+  
+  // Setup toggle listeners
+  container.querySelectorAll('.module-visibility-toggle').forEach((toggle) => {
+    toggle.addEventListener('change', (e) => {
+      const moduleId = e.target.dataset.module;
+      const isVisible = e.target.checked;
+      toggleModuleVisibility(moduleId, isVisible);
+    });
+  });
 }
 
 function applyDensity(density) {

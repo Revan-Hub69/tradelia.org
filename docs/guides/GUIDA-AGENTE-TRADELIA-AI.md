@@ -7,6 +7,7 @@
 **ChatGPT 5.0 (GPT-5)** è stato rilasciato il **7 agosto 2025** da OpenAI.
 
 **Caratteristiche principali:**
+
 - ✅ **Ragionamento avanzato** - capacità di ragionamento significativamente migliorate
 - ✅ **Maggiore velocità** - performance ottimizzate
 - ✅ **Ricerca web avanzata** - accesso integrato a moduli di ricerca web avanzati
@@ -38,6 +39,7 @@ Per analisi finanziarie complesse come Tradelia AI, hai bisogno di:
 #### **Opzione 1: GPT-5 (ChatGPT 5.0)** 🏆 SCELTA OTTIMALE PER ANALISI FINANZIARIE
 
 **Vantaggi:**
+
 - ✅ **Ragionamento avanzato** - capacità di ragionamento significativamente migliorate rispetto a GPT-4
 - ✅ **Ricerca web avanzata integrata** - accesso diretto a moduli di ricerca web avanzati
 - ✅ **Database finanziari** - accesso integrato a database finanziari
@@ -48,6 +50,7 @@ Per analisi finanziarie complesse come Tradelia AI, hai bisogno di:
 - ✅ **Context window ampliato** - gestione di documenti molto lunghi
 
 **Quando usarlo:**
+
 - ✅ **Analisi Tradelia AI complete (12 blocchi)** - PERFETTO
 - ✅ **Calcoli finanziari complessi** (DCF, multipli, metriche) - IDEALE
 - ✅ **Analisi SEC filings dettagliate** - OTTIMO
@@ -60,6 +63,7 @@ Per analisi finanziarie complesse come Tradelia AI, hai bisogno di:
 #### **Opzione 2: GPT-4 Turbo / GPT-4o** ⭐ ALTERNATIVA VALIDA
 
 **Vantaggi:**
+
 - ✅ **Ragionamento quantitativo eccellente** - ideale per calcoli finanziari
 - ✅ **Context window ampio** (128k+ token) - può analizzare documenti lunghi
 - ✅ **Web search disponibile** (se configurato)
@@ -67,6 +71,7 @@ Per analisi finanziarie complesse come Tradelia AI, hai bisogno di:
 - ✅ **Supporto JSON/markdown** per output strutturati
 
 **Quando usarlo:**
+
 - Se GPT-5 non è disponibile in Cursor
 - Analisi Tradelia AI complete (12 blocchi)
 - Calcoli finanziari complessi (DCF, multipli, metriche)
@@ -75,6 +80,7 @@ Per analisi finanziarie complesse come Tradelia AI, hai bisogno di:
 #### **Opzione 3: Claude 3.5 Sonnet** ⭐ ALTERNATIVA ECCELLENTE
 
 **Vantaggi:**
+
 - ✅ **Ragionamento analitico molto forte**
 - ✅ **Context window enorme** (200k+ token)
 - ✅ **Eccellente per documenti lunghi** (SEC filings, paper accademici)
@@ -82,6 +88,7 @@ Per analisi finanziarie complesse come Tradelia AI, hai bisogno di:
 - ✅ **Ottimo per analisi qualitativa** (governance, ESG, sentiment)
 
 **Quando usarlo:**
+
 - Se GPT-5 non è disponibile
 - Analisi qualitativa approfondita
 - Lettura e sintesi di documenti molto lunghi
@@ -92,12 +99,14 @@ Per analisi finanziarie complesse come Tradelia AI, hai bisogno di:
 **Auto è un router intelligente** che sceglie il modello migliore automaticamente.
 
 **Vantaggi:**
+
 - ✅ Convenienza (sceglie automaticamente)
 - ✅ Potrebbe selezionare GPT-5 se disponibile
 - ✅ Web search integrato
 - ✅ Accesso codebase completo
 
 **Limitazioni:**
+
 - ⚠️ Non sai quale modello viene usato
 - ⚠️ Potrebbe non usare sempre GPT-5 anche se disponibile
 
@@ -106,6 +115,7 @@ Per analisi finanziarie complesse come Tradelia AI, hai bisogno di:
 **🏆 PER ANALISI TRADELIA AI: USA GPT-5 (ChatGPT 5.0) - SCELTA OTTIMALE**
 
 **Motivi principali:**
+
 1. **✅ Accesso nativo a ricerca web avanzata** - integrato, non serve configurazione
 2. **✅ Accesso diretto a database finanziari** - esattamente quello che serve
 3. **✅ Accesso a paper accademici** - per validazione metodologica
@@ -114,6 +124,7 @@ Per analisi finanziarie complesse come Tradelia AI, hai bisogno di:
 6. **✅ Precisione migliorata** - calcoli finanziari più accurati
 
 **Come verificare se GPT-5 è disponibile in Cursor:**
+
 1. Apri le impostazioni di Cursor (Ctrl/Cmd + ,)
 2. Vai alla sezione "AI Model" o "Agent"
 3. Cerca **"GPT-5"** o **"ChatGPT 5.0"** nell'elenco modelli
@@ -121,6 +132,7 @@ Per analisi finanziarie complesse come Tradelia AI, hai bisogno di:
 5. **Verifica che ricerca web avanzata sia abilitata** (dovrebbe essere integrata)
 
 **Se GPT-5 non è disponibile in Cursor:**
+
 - Usa **GPT-4 Turbo/GPT-4o** come alternativa valida
 - Oppure **Claude 3.5 Sonnet** per analisi qualitative
 - **Auto** può funzionare, ma seleziona manualmente GPT-5 se possibile
@@ -248,7 +260,7 @@ Sei un analista finanziario istituzionale specializzato nell'analisi azionaria c
 ## Workflow di Analisi
 
 1. **Ricevi Ticker**: Ticker dell'azione da analizzare
-2. **Raccolta Dati**: 
+2. **Raccolta Dati**:
    - Usa `web_search` per cercare dati finanziari
    - Cerca SEC filings per dati fondamentali
    - Cerca dati macro (VIX, Treasury, commodities)
@@ -284,7 +296,7 @@ Quando l'utente chiede: "Analizza AAPL usando Tradelia AI"
    - SEC filings (10-K, 10-Q)
    - Dati macro (VIX, Treasury)
    - Paper accademici rilevanti
-   
+
 2. Analizza ogni blocco sistematicamente
 
 3. Genera output strutturato JSON o markdown
@@ -325,6 +337,7 @@ Quando vuoi effettuare un'analisi Tradelia AI:
 4. **Fornisci il ticker**: "Analizza AAPL usando il metodo Tradelia AI"
 
 **Vantaggio GPT-5**: Con GPT-5, il modello ha **accesso diretto** a:
+
 - Database finanziari (senza bisogno di ricerca web manuale)
 - Paper accademici (ricerca integrata)
 - Ricerca web avanzata (automatica)
@@ -342,12 +355,14 @@ Quando vuoi effettuare un'analisi Tradelia AI:
 ## 📊 Esempio di Workflow Completo
 
 ### Comando Utente:
+
 ```
-Analizza AAPL usando il metodo Tradelia AI completo. 
+Analizza AAPL usando il metodo Tradelia AI completo.
 Usa il prompt in prompts/tradelia-ai-prompt.md come riferimento.
 ```
 
 ### Azioni del Modello (GPT-5 - Ottimale):
+
 1. Legge il prompt da `prompts/tradelia-ai-prompt.md`
 2. **Accesso diretto a database finanziari** (GPT-5 integrato):
    - Database finanziari nativi per dati in tempo reale
@@ -369,6 +384,7 @@ Usa il prompt in prompts/tradelia-ai-prompt.md come riferimento.
 ## 🎯 Vantaggi dei Modelli Disponibili
 
 ### 🏆 GPT-5 (ChatGPT 5.0) - SCELTA OTTIMALE:
+
 1. **✅ Accesso Nativo a Database Finanziari**: Integrato, non serve configurazione
 2. **✅ Accesso Diretto a Paper Accademici**: Ricerca scientifica integrata
 3. **✅ Ricerca Web Avanzata Integrata**: Automatica e ottimizzata
@@ -380,6 +396,7 @@ Usa il prompt in prompts/tradelia-ai-prompt.md come riferimento.
 9. **✅ Accesso Codebase**: Può leggere/modificare file, salvare report
 
 ### GPT-4 Turbo/GPT-4o (Alternativa Valida):
+
 1. **✅ Ragionamento Quantitativo Eccellente**: Calcoli finanziari precisi
 2. **✅ Precisione Numerica**: Essenziale per multipli, valutazioni, metriche
 3. **✅ Web Search Disponibile**: Accesso a dati finanziari (se configurato)
@@ -388,6 +405,7 @@ Usa il prompt in prompts/tradelia-ai-prompt.md come riferimento.
 6. **✅ Accesso Codebase**: Può leggere/modificare file, salvare report
 
 ### Claude 3.5 Sonnet (Alternativa Eccellente):
+
 1. **✅ Ragionamento Analitico Forte**: Analisi qualitative approfondite
 2. **✅ Context Window Enorme**: Gestisce documenti molto lunghi
 3. **✅ Eccellente per Testi**: Perfetto per SEC filings, paper accademici
@@ -399,12 +417,14 @@ Usa il prompt in prompts/tradelia-ai-prompt.md come riferimento.
 ## ⚠️ Limitazioni e Considerazioni
 
 ### Nota su ChatGPT 5.0:
+
 - **✅ GPT-5 (ChatGPT 5.0) è stato rilasciato il 7 agosto 2025** da OpenAI
 - **✅ È il modello più avanzato disponibile** per analisi finanziarie complesse
 - **✅ Offre accesso nativo** a ricerca web avanzata, database finanziari e paper accademici
 - **✅ Perfetto per analisi Tradelia AI** - esattamente quello che serve!
 
 ### Cosa Funziona in Cursor:
+
 - ✅ **Ricerca web avanzata** (se abilitata nel modello)
 - ✅ **Accesso a dati finanziari pubblici** (Yahoo Finance, SEC, FRED, CBOE)
 - ✅ **Paper accademici** via ricerca web (arXiv, SSRN, Google Scholar)
@@ -413,12 +433,14 @@ Usa il prompt in prompts/tradelia-ai-prompt.md come riferimento.
 - ✅ **Calcoli finanziari precisi** (multipli, DCF, metriche)
 
 ### Cosa Non Funziona (richiede API a pagamento):
+
 - ❌ **Bloomberg Terminal API** (solo contenuti pubblici via web)
 - ❌ **Reuters API** (solo contenuti pubblici via web)
 - ❌ **Finviz Premium API** (solo dati pubblici)
 - ❌ **Alcuni dati opzioni avanzati** (dipende da disponibilità pubblica)
 
 ### Workaround:
+
 - ✅ **Usa ETF proxy** per dati settoriali (XLK, XLC, XLY, ecc.)
 - ✅ **Usa dati pubblici aggregati** (Yahoo Finance, TradingView)
 - ✅ **Cerca paper accademici** per metodologie e validazione
@@ -430,6 +452,7 @@ Usa il prompt in prompts/tradelia-ai-prompt.md come riferimento.
 ## 📚 Risorse Aggiuntive
 
 ### Fonti Dati Pubbliche Disponibili:
+
 - **FRED**: https://fred.stlouisfed.org/ (API gratuita)
 - **SEC EDGAR**: https://www.sec.gov/edgar.shtml (pubblico)
 - **CBOE**: https://www.cboe.com/ (dati pubblici)
@@ -437,9 +460,10 @@ Usa il prompt in prompts/tradelia-ai-prompt.md come riferimento.
 - **Paper Accademici**: arXiv, SSRN, Google Scholar
 
 ### Documentazione Progetto:
-- `swing-master-5.0/docs/specs/00-MASTER-FRAMEWORK.md` - Framework generale
-- `swing-master-5.0/docs/specs/01-F1-Workflow.md` - Workflow F1
-- `tutorial/data/valutare-azioni.json` - Metodo Tradelia AI (12 blocchi)
+
+- `report/tutorial/data/valutare-azioni.json` - Metodo Tradelia AI (12 blocchi)
+- `docs/architecture-roadmap.md` - Architettura e roadmap
+- `docs/RIEPILOGO-FASI-COMPLETATE.md` - Stato progetto
 
 ---
 
@@ -459,6 +483,7 @@ A: **Sì!** GPT-5 (ChatGPT 5.0) è stato rilasciato il **7 agosto 2025** da Open
 
 **Q: Quale modello è meglio per analisi finanziarie?**  
 A: **🏆 GPT-5 (ChatGPT 5.0)** è la scelta ottimale perché ha:
+
 - Accesso nativo a database finanziari
 - Accesso diretto a paper accademici
 - Ricerca web avanzata integrata
@@ -477,7 +502,8 @@ A: Con **GPT-5**, l'accesso a ricerca web avanzata, database finanziari e paper 
 A: Dipende dalla disponibilità pubblica e dalla freschezza delle fonti. Obiettivo T-1 (dati di ieri), ma alcuni dati potrebbero avere lag. Web search aiuta a ottenere dati più recenti.
 
 **Q: Come posso migliorare la qualità delle analisi?**  
-A: 
+A:
+
 - Usa **GPT-5** per accesso nativo a database finanziari e paper accademici
 - Se GPT-5 non disponibile, usa **GPT-4 Turbo** per calcoli precisi
 - Abilita **web search** (se necessario con GPT-4)
@@ -509,6 +535,7 @@ A: Sì, il modello può eseguire workflow automatizzati e salvare report in form
 3. **Alternative**: Claude 3.5 Sonnet se preferisci analisi qualitative approfondite
 
 ### ⚠️ Limitazioni:
+
 - **Nessun accesso a API a pagamento**: Bloomberg Terminal, Reuters API, Finviz Premium
 - **Dati pubblici solo**: Alcuni dati avanzati potrebbero non essere disponibili
 - **Workaround**: Usa ETF proxy, dati pubblici aggregati, SEC filings
@@ -522,10 +549,10 @@ A: Sì, il modello può eseguire workflow automatizzati e salvare report in form
 4. **Chiedi analisi**: **"Analizza [TICKER] usando il metodo Tradelia AI"**
 
 **Con GPT-5**, il modello eseguirà un'analisi completa dei 12 blocchi con:
+
 - ✅ Accesso diretto a database finanziari
 - ✅ Accesso a paper accademici per validazione
 - ✅ Calcoli precisi con dati real-time
 - ✅ Report strutturato completo
 
 **Il tuo prompt originale per ChatGPT 5.0 funzionerà perfettamente!** 🎯
-

@@ -14,7 +14,7 @@ export async function loadAccess() {
   if (token) {
     try {
       // Valida token e mostra info
-      const response = await fetch('/api/validate-dashboard-token', {
+      const response = await fetch('/api/auth?action=validate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token })

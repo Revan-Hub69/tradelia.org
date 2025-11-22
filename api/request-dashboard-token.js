@@ -1,16 +1,16 @@
 // /api/request-dashboard-token.js
 // API Vercel - Genera nuovo token dashboard e invia email (per "Ho perso il codice")
 
-import { createClient } from '@supabase/supabase-js';
-import crypto from 'crypto';
-import fetch from './_lib/fetch.js';
+import { createClient } from "@supabase/supabase-js";
+import crypto from "crypto";
+import { runtimeFetch as fetch } from "./_lib/fetch.js";
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-  throw new Error('SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devono essere configurati');
+  throw new Error("SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devono essere configurati");
 }
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
@@ -24,14 +24,14 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
  * Genera token random sicuro (32 caratteri alfanumerici)
  */
 function generateToken() {
-  return crypto.randomBytes(16).toString('hex');
+  return crypto.randomBytes(16).toString("hex");
 }
 
 /**
  * Calcola hash SHA-256 del token
  */
 function hashToken(token) {
-  return crypto.createHash('sha256').update(token).digest('hex');
+  return crypto.createHash("sha256").update(token).digest("hex");
 }
 
 /**
@@ -39,7 +39,7 @@ function hashToken(token) {
  */
 async function sendTokenEmail(email, token) {
   if (!BREVO_API_KEY) {
-    console.error('[Request Token] BREVO_API_KEY non configurata');
+    console.error("[Request Token] BREVO_API_KEY non configurata");
     return false;
   }
 
@@ -107,16 +107,16 @@ Per assistenza: support@tradelia.org
   `;
 
   try {
-    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST',
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
       headers: {
-        'api-key': BREVO_API_KEY,
-        'Content-Type': 'application/json',
+        "api-key": BREVO_API_KEY,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI' },
+        sender: { email: "noreply@tradelia.org", name: "Tradelia AI" },
         to: [{ email: email }],
-        subject: '🔑 Il tuo codice di accesso Tradelia',
+        subject: "🔑 Il tuo codice di accesso Tradelia",
         htmlContent: emailHTML,
         textContent: emailText,
       }),
@@ -124,38 +124,38 @@ Per assistenza: support@tradelia.org
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('[Request Token] Errore Brevo:', errorText);
+      console.error("[Request Token] Errore Brevo:", errorText);
       return false;
     }
 
     return true;
   } catch (err) {
-    console.error('[Request Token] Errore invio email:', err);
+    console.error("[Request Token] Errore invio email:", err);
     return false;
   }
 }
 
 export default async function handler(req, res) {
   // CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
   }
 
   try {
     const { email } = req.body;
 
-    if (!email || typeof email !== 'string' || !email.includes('@')) {
+    if (!email || typeof email !== "string" || !email.includes("@")) {
       return res.status(400).json({
         ok: false,
-        error: 'Email non valida',
+        error: "Email non valida",
       });
     }
 
@@ -164,10 +164,10 @@ export default async function handler(req, res) {
     // 1. Verifica che esista un utente con piano attivo
     // Cerca prima in subscribers
     const { data: subscriber } = await supabase
-      .from('subscribers')
-      .select('auth_user_id, status, current_period_end')
-      .eq('email', sanitizedEmail)
-      .eq('status', 'active')
+      .from("subscribers")
+      .select("auth_user_id, status, current_period_end")
+      .eq("email", sanitizedEmail)
+      .eq("status", "active")
       .single();
 
     let userId = subscriber?.auth_user_id || null;
@@ -181,9 +181,9 @@ export default async function handler(req, res) {
 
       if (userId) {
         const { data: userRole } = await supabase
-          .from('user_roles')
-          .select('role, valid_until')
-          .eq('user_id', userId)
+          .from("user_roles")
+          .select("role, valid_until")
+          .eq("user_id", userId)
           .single();
 
         if (userRole && userRole.valid_until) {
@@ -195,7 +195,7 @@ export default async function handler(req, res) {
             return res.status(200).json({
               ok: false,
               error:
-                'Non risulta un piano attivo per questa email. Vai ai piani o contattaci per attivare un abbonamento.',
+                "Non risulta un piano attivo per questa email. Vai ai piani o contattaci per attivare un abbonamento.",
             });
           }
         } else {
@@ -203,7 +203,7 @@ export default async function handler(req, res) {
           return res.status(200).json({
             ok: false,
             error:
-              'Non risulta un piano attivo per questa email. Vai ai piani o contattaci per attivare un abbonamento.',
+              "Non risulta un piano attivo per questa email. Vai ai piani o contattaci per attivare un abbonamento.",
           });
         }
       } else {
@@ -211,7 +211,7 @@ export default async function handler(req, res) {
         return res.status(200).json({
           ok: false,
           error:
-            'Non risulta un piano attivo per questa email. Vai ai piani o contattaci per attivare un abbonamento.',
+            "Non risulta un piano attivo per questa email. Vai ai piani o contattaci per attivare un abbonamento.",
         });
       }
     } else {
@@ -221,19 +221,19 @@ export default async function handler(req, res) {
         if (expiryDate <= new Date()) {
           return res.status(200).json({
             ok: false,
-            error: 'Il tuo abbonamento è scaduto. Vai ai piani per rinnovare.',
+            error: "Il tuo abbonamento è scaduto. Vai ai piani per rinnovare.",
           });
         }
       }
     }
 
     // 2. Determina plan_role da user_roles
-    let planRole = 'trial';
+    let planRole = "trial";
     if (userId) {
       const { data: userRole } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userId)
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId)
         .single();
 
       if (userRole) {
@@ -248,22 +248,22 @@ export default async function handler(req, res) {
     // 4. Revoca token vecchi per questo utente/email
     if (userId) {
       await supabase
-        .from('dashboard_access_tokens')
+        .from("dashboard_access_tokens")
         .update({
           revoked: true,
           revoked_at: new Date().toISOString(),
         })
-        .eq('user_id', userId)
-        .eq('revoked', false);
+        .eq("user_id", userId)
+        .eq("revoked", false);
     } else {
       await supabase
-        .from('dashboard_access_tokens')
+        .from("dashboard_access_tokens")
         .update({
           revoked: true,
           revoked_at: new Date().toISOString(),
         })
-        .eq('email', sanitizedEmail)
-        .eq('revoked', false);
+        .eq("email", sanitizedEmail)
+        .eq("revoked", false);
     }
 
     // 5. Crea nuovo token
@@ -273,17 +273,17 @@ export default async function handler(req, res) {
       token_hash: tokenHash,
       plan_role: planRole,
       valid_until: validUntil || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // Default 1 anno se non specificato
-      source: 'manual',
+      source: "manual",
       metadata: { requested_at: new Date().toISOString() },
     };
 
-    const { error: insertError } = await supabase.from('dashboard_access_tokens').insert(tokenData);
+    const { error: insertError } = await supabase.from("dashboard_access_tokens").insert(tokenData);
 
     if (insertError) {
-      console.error('[Request Token] Errore inserimento token:', insertError);
+      console.error("[Request Token] Errore inserimento token:", insertError);
       return res.status(500).json({
         ok: false,
-        error: 'Errore generazione token',
+        error: "Errore generazione token",
       });
     }
 
@@ -291,7 +291,7 @@ export default async function handler(req, res) {
     const emailSent = await sendTokenEmail(sanitizedEmail, newToken);
 
     if (!emailSent) {
-      console.warn('[Request Token] Email non inviata, ma token creato');
+      console.warn("[Request Token] Email non inviata, ma token creato");
     }
 
     // 7. Notifica admin (amministrazione@tradelia.org)
@@ -323,12 +323,12 @@ export default async function handler(req, res) {
       <div class="label">Dati Utente</div>
       <div class="value"><strong>Email:</strong> ${sanitizedEmail}</div>
       <div class="value"><strong>Piano:</strong> ${planRole}</div>
-      ${validUntil ? `<div class="value"><strong>Validità Piano:</strong> ${new Date(validUntil).toLocaleString('it-IT')}</div>` : ''}
-      ${userId ? `<div class="value"><strong>User ID:</strong> ${userId}</div>` : ''}
+      ${validUntil ? `<div class="value"><strong>Validità Piano:</strong> ${new Date(validUntil).toLocaleString("it-IT")}</div>` : ""}
+      ${userId ? `<div class="value"><strong>User ID:</strong> ${userId}</div>` : ""}
     </div>
 
     <div class="meta">
-      <strong>Token generato:</strong> ${new Date().toLocaleString('it-IT')}<br>
+      <strong>Token generato:</strong> ${new Date().toLocaleString("it-IT")}<br>
       <strong>Motivo:</strong> Richiesta "Ho perso il codice"<br>
       <strong>Token precedenti:</strong> Revocati automaticamente
     </div>
@@ -341,20 +341,20 @@ export default async function handler(req, res) {
 
 Email: ${sanitizedEmail}
 Piano: ${planRole}
-${validUntil ? `Validità Piano: ${new Date(validUntil).toLocaleString('it-IT')}\n` : ''}${userId ? `User ID: ${userId}\n` : ''}
-Token generato: ${new Date().toLocaleString('it-IT')}
+${validUntil ? `Validità Piano: ${new Date(validUntil).toLocaleString("it-IT")}\n` : ""}${userId ? `User ID: ${userId}\n` : ""}
+Token generato: ${new Date().toLocaleString("it-IT")}
 Motivo: Richiesta "Ho perso il codice"
 Token precedenti: Revocati automaticamente`;
 
-        const adminEmailResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
-          method: 'POST',
+        const adminEmailResponse = await fetch("https://api.brevo.com/v3/smtp/email", {
+          method: "POST",
           headers: {
-            'api-key': BREVO_API_KEY,
-            'Content-Type': 'application/json',
+            "api-key": BREVO_API_KEY,
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI - Sistema Token' },
-            to: [{ email: 'amministrazione@tradelia.org' }],
+            sender: { email: "noreply@tradelia.org", name: "Tradelia AI - Sistema Token" },
+            to: [{ email: "amministrazione@tradelia.org" }],
             subject: `🔑 Richiesta nuovo token dashboard - ${sanitizedEmail}`,
             htmlContent: adminEmailHTML,
             textContent: adminEmailText,
@@ -363,41 +363,41 @@ Token precedenti: Revocati automaticamente`;
 
         if (!adminEmailResponse.ok) {
           const errorText = await adminEmailResponse.text();
-          console.error('[Request Token] Errore invio email admin:', {
+          console.error("[Request Token] Errore invio email admin:", {
             status: adminEmailResponse.status,
             statusText: adminEmailResponse.statusText,
             error: errorText,
-            to: 'amministrazione@tradelia.org',
+            to: "amministrazione@tradelia.org",
           });
         } else {
           const adminEmailResult = await adminEmailResponse.json();
-          console.log('[Request Token] Email admin inviata con successo:', {
+          console.log("[Request Token] Email admin inviata con successo:", {
             messageId: adminEmailResult.messageId,
-            to: 'amministrazione@tradelia.org',
+            to: "amministrazione@tradelia.org",
           });
         }
       } catch (err) {
-        console.error('[Request Token] ERRORE CRITICO - Notifica admin non inviata:', {
+        console.error("[Request Token] ERRORE CRITICO - Notifica admin non inviata:", {
           error: err.message,
           stack: err.stack,
-          adminEmail: 'amministrazione@tradelia.org',
+          adminEmail: "amministrazione@tradelia.org",
           hasBrevoKey: !!BREVO_API_KEY,
         });
       }
     } else {
-      console.error('[Request Token] BREVO_API_KEY non configurato - email admin NON inviata!');
+      console.error("[Request Token] BREVO_API_KEY non configurato - email admin NON inviata!");
     }
 
     return res.status(200).json({
       ok: true,
       message:
-        'Se esiste un piano attivo su questa email, ti abbiamo inviato un nuovo codice. Controlla la tua casella email.',
+        "Se esiste un piano attivo su questa email, ti abbiamo inviato un nuovo codice. Controlla la tua casella email.",
     });
   } catch (err) {
-    console.error('[Request Token] Errore:', err);
+    console.error("[Request Token] Errore:", err);
     return res.status(500).json({
       ok: false,
-      error: 'Errore server',
+      error: "Errore server",
       details: err.message,
     });
   }

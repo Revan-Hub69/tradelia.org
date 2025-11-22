@@ -4,20 +4,51 @@
  * (Logica esistente, qui per modularità)
  */
 
+import { showSkeletons, hideSkeleton } from "./loading-skeleton.js";
+import { showToast } from "./toast.js";
+import { createErrorBoundary, retryWithBackoff } from "./error-handler.js";
+import { createWatchlistButton, isInWatchlist } from "./watchlist.js";
+import { applyFilters } from "./advanced-filters.js";
+
+const errorBoundary = createErrorBoundary("Reports", "#reports-container");
+
 export async function loadReports() {
   const container = document.getElementById('reports-container');
   if (!container) return;
 
+  // BEST PRACTICE: Show skeleton loading
+  container.innerHTML = "";
+  showSkeletons(container, "card", 3);
+
   try {
-    container.innerHTML = `
-      <div class="reports-loading">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-        </svg>
-        <span>Caricamento report...</span>
-      </div>
-    `;
+    // BEST PRACTICE: Retry with exponential backoff
+    const reportDirs = await retryWithBackoff(
+      async () => {
+        const manifestResponse = await fetch(`/archivio/manifest.json?t=${Date.now()}`);
+        if (!manifestResponse.ok) {
+          throw new Error("Errore nel caricamento del manifest");
+        }
+        const manifest = await manifestResponse.json();
+        if (Array.isArray(manifest.reports)) {
+          return manifest.reports
+            .map((r) => (typeof r === 'string' ? r : r.id))
+            .filter(Boolean);
+        } else if (Array.isArray(manifest.dirs)) {
+          return manifest.dirs;
+        }
+        return [];
+      },
+      {
+        maxRetries: 3,
+        initialDelay: 1000,
+        onRetry: (attempt) => {
+          console.log(`[Reports] Retry ${attempt}...`);
+        },
+      }
+    );
+
+    // Hide skeleton
+    hideSkeleton(container);
 
     let reportDirs = [];
     try {
@@ -32,9 +63,8 @@ export async function loadReports() {
           reportDirs = manifest.dirs;
         }
       }
-    } catch (e) {
-      console.error('[Reports] Errore caricamento manifest:', e);
-    }
+    // Hide skeleton before rendering
+    hideSkeleton(container);
 
     if (reportDirs.length === 0) {
       container.innerHTML = `
@@ -80,11 +110,39 @@ export async function loadReports() {
       return dateB - dateA;
     });
 
-    renderReports(reports);
-    setupSearch(reports);
-    updateStats(reports);
+    // Apply advanced filters if any
+    const filteredReports = applyFilters(reports) || reports;
+    
+    renderReports(filteredReports);
+    setupSearch(filteredReports);
+    updateStats(filteredReports);
+    setupWatchlistButtons(filteredReports);
+    
+    // Listen for advanced filter events
+    document.addEventListener('advanced-filter-apply', (e) => {
+      const filtered = applyFilters(reports);
+      if (filtered) {
+        renderReports(filtered);
+        updateStats(filtered);
+      }
+    });
   } catch (err) {
     console.error('[Reports] Errore:', err);
+    
+    // BEST PRACTICE: Hide skeleton and show error state
+    hideSkeleton(container);
+    
+    // BEST PRACTICE: Show error toast
+    showToast("Errore nel caricamento dei report. Riprova più tardi.", "error");
+    
+    // BEST PRACTICE: Render error state with error boundary
+    errorBoundary.renderErrorState(err, {
+      retryable: true,
+      onRetry: async () => {
+        await loadReports();
+      },
+    });
+    
     container.innerHTML = `
       <div class="reports-empty">
         <div class="reports-empty-title">Errore caricamento</div>
@@ -152,6 +210,11 @@ function renderReports(reports) {
           </div>
         </div>
         <div class="report-card-actions">
+          <button class="watchlist-button" data-report-id="${report.id}" data-favorite="${isInWatchlist(report.id) ? 'true' : 'false'}" aria-label="${isInWatchlist(report.id) ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}" title="${isInWatchlist(report.id) ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}">
+            <svg viewBox="0 0 24 24" fill="${isInWatchlist(report.id) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </button>
           <a href="/report/index.html?slug=${report.id}" class="btn btn-primary" target="_blank">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
@@ -212,4 +275,27 @@ function updateStats(reports) {
   if (statsEl) {
     statsEl.textContent = `${reports.length} report${reports.length !== 1 ? '' : ''}`;
   }
+}
+
+function setupWatchlistButtons(reports) {
+  document.querySelectorAll('.watchlist-button').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const reportId = btn.dataset.reportId;
+      const report = reports.find((r) => r.id === reportId);
+      if (report) {
+        import('./watchlist.js').then(({ toggleWatchlist }) => {
+          const isFavorite = toggleWatchlist(report);
+          btn.dataset.favorite = isFavorite ? 'true' : 'false';
+          btn.setAttribute('aria-label', isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti');
+          const svg = btn.querySelector('svg');
+          if (svg) {
+            svg.setAttribute('fill', isFavorite ? 'currentColor' : 'none');
+          }
+          btn.style.color = isFavorite ? 'var(--dash-accent)' : '';
+        });
+      }
+    });
+  });
 }

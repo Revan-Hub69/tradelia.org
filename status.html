@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="it" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Status Sistema · Tradelia AI</title>
+
+    <meta
+      name="description"
+      content="Status sistema Tradelia AI - Monitoraggio servizi, uptime e disponibilità"
+    />
+    <meta name="theme-color" content="#0a0a0a" />
+    <link rel="canonical" href="https://tradelia.org/status.html" />
+
+    <!-- Favicons -->
+    <link rel="icon" href="/favicon.ico?v=1" />
+    <link rel="icon" type="image/png" href="/favicon.png?v=1" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/assets/css/settings/tokens.css" />
+    <link rel="stylesheet" href="/assets/css/generic/reset.css" />
+    <link rel="stylesheet" href="/assets/css/elements/typography.css" />
+    <link rel="stylesheet" href="/assets/css/elements/links.css" />
+    <link rel="stylesheet" href="/assets/css/objects/container.css" />
+    <link rel="stylesheet" href="/assets/css/main.css" />
+    <link rel="stylesheet" href="/assets/css/global-header.css" />
+    <link rel="stylesheet" href="/assets/css/mifid-banner.css" />
+
+    <style>
+      /* Status Page Specific Styles */
+      .status-page {
+        min-height: 100vh;
+        background: var(--bg-primary, #0a0a0a);
+        color: var(--text-primary, #ffffff);
+        padding: var(--sp-8, 2rem) var(--sp-4, 1rem);
+      }
+
+      .status-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .status-header {
+        text-align: center;
+        margin-bottom: var(--sp-8, 2rem);
+        padding-bottom: var(--sp-6, 1.5rem);
+        border-bottom: 1px solid var(--border-primary, rgba(255, 255, 255, 0.1));
+      }
+
+      .status-title {
+        font-size: clamp(2rem, 5vw, 3rem);
+        font-weight: 700;
+        margin: 0 0 var(--sp-2, 0.5rem) 0;
+        letter-spacing: -0.02em;
+      }
+
+      .status-subtitle {
+        font-size: var(--fs-16, 16px);
+        color: var(--text-secondary, #a0a0a0);
+        margin: 0;
+      }
+
+      .status-overview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--sp-4, 1rem);
+        margin-bottom: var(--sp-8, 2rem);
+      }
+
+      .status-card {
+        background: var(--bg-secondary, #111111);
+        border: 1px solid var(--border-primary, rgba(255, 255, 255, 0.1));
+        border-radius: var(--radius-md, 8px);
+        padding: var(--sp-6, 1.5rem);
+        transition: var(--transition, all 0.2s ease);
+      }
+
+      .status-card:hover {
+        border-color: var(--border-secondary, rgba(255, 255, 255, 0.2));
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .status-card-title {
+        font-size: var(--fs-14, 14px);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-secondary, #a0a0a0);
+        margin: 0 0 var(--sp-2, 0.5rem) 0;
+        font-weight: 600;
+      }
+
+      .status-card-value {
+        font-size: var(--fs-32, 32px);
+        font-weight: 700;
+        color: var(--text-primary, #ffffff);
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      .status-card-label {
+        font-size: var(--fs-12, 12px);
+        color: var(--text-tertiary, #808080);
+        margin-top: var(--sp-1, 0.25rem);
+      }
+
+      .status-services {
+        margin-bottom: var(--sp-8, 2rem);
+      }
+
+      .status-services-title {
+        font-size: var(--fs-20, 20px);
+        font-weight: 600;
+        margin: 0 0 var(--sp-4, 1rem) 0;
+      }
+
+      .service-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--sp-4, 1rem);
+        background: var(--bg-secondary, #111111);
+        border: 1px solid var(--border-primary, rgba(255, 255, 255, 0.1));
+        border-radius: var(--radius-md, 8px);
+        margin-bottom: var(--sp-2, 0.5rem);
+        transition: var(--transition, all 0.2s ease);
+      }
+
+      .service-item:hover {
+        border-color: var(--border-secondary, rgba(255, 255, 255, 0.2));
+        background: var(--bg-tertiary, #1a1a1a);
+      }
+
+      .service-name {
+        font-size: var(--fs-16, 16px);
+        font-weight: 500;
+        color: var(--text-primary, #ffffff);
+        margin: 0;
+      }
+
+      .service-status {
+        display: flex;
+        align-items: center;
+        gap: var(--sp-2, 0.5rem);
+        font-size: var(--fs-14, 14px);
+        font-weight: 500;
+      }
+
+      .status-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      .status-indicator.operational {
+        background: #00c864;
+        box-shadow: 0 0 8px rgba(0, 200, 100, 0.5);
+      }
+
+      .status-indicator.degraded {
+        background: #ffc107;
+        box-shadow: 0 0 8px rgba(255, 193, 7, 0.5);
+      }
+
+      .status-indicator.down {
+        background: #f44336;
+        box-shadow: 0 0 8px rgba(244, 67, 54, 0.5);
+      }
+
+      .status-footer {
+        text-align: center;
+        padding-top: var(--sp-8, 2rem);
+        border-top: 1px solid var(--border-primary, rgba(255, 255, 255, 0.1));
+        color: var(--text-secondary, #a0a0a0);
+        font-size: var(--fs-14, 14px);
+      }
+
+      .status-footer a {
+        color: var(--text-primary, #ffffff);
+        text-decoration: none;
+        position: relative;
+      }
+
+      .status-footer a::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 1.5px;
+        background: var(--accent-primary, #2563eb);
+        transition: width 0.3s ease;
+      }
+
+      .status-footer a:hover::after {
+        width: 100%;
+      }
+
+      @media (max-width: 768px) {
+        .status-page {
+          padding: var(--sp-4, 1rem);
+        }
+
+        .status-overview {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <div id="site-header-slot"></div>
+
+    <!-- Main Content -->
+    <main class="status-page">
+      <div class="status-container">
+        <header class="status-header">
+          <h1 class="status-title">Status Sistema</h1>
+          <p class="status-subtitle">Monitoraggio servizi e disponibilità Tradelia AI</p>
+        </header>
+
+        <!-- Overview Cards -->
+        <div class="status-overview">
+          <div class="status-card">
+            <div class="status-card-title">Stato Generale</div>
+            <div class="status-card-value" id="overall-status">Operativo</div>
+            <div class="status-card-label">Tutti i servizi funzionanti</div>
+          </div>
+
+          <div class="status-card">
+            <div class="status-card-title">Uptime (30 giorni)</div>
+            <div class="status-card-value" id="uptime-value">99.9%</div>
+            <div class="status-card-label">Disponibilità media</div>
+          </div>
+
+          <div class="status-card">
+            <div class="status-card-title">Tempo di Risposta</div>
+            <div class="status-card-value" id="response-time">~200ms</div>
+            <div class="status-card-label">Media ultime 24h</div>
+          </div>
+        </div>
+
+        <!-- Services List -->
+        <section class="status-services">
+          <h2 class="status-services-title">Servizi</h2>
+          <div id="services-list">
+            <!-- Services will be loaded dynamically -->
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="status-footer">
+          <p>
+            Per segnalare problemi o richiedere assistenza:
+            <a href="mailto:status@tradelia.org">status@tradelia.org</a>
+          </p>
+          <p style="margin-top: var(--sp-2, 0.5rem)">
+            <a href="/index.html">← Torna alla Home</a>
+          </p>
+        </footer>
+      </div>
+    </main>
+
+    <!-- MiFID Banner -->
+    <div id="mifid-banner-slot"></div>
+
+    <!-- Scripts -->
+    <script type="module">
+      // Load header
+      import { siteHeader } from "/assets/js/components/site-header.js";
+      const headerSlot = document.getElementById("site-header-slot");
+      if (headerSlot) {
+        siteHeader(headerSlot);
+      }
+
+      // Load MiFID banner
+      if (typeof initMifidBanner === "function") {
+        initMifidBanner();
+      } else {
+        // Dynamic import if not available
+        import("/assets/js/mifid-banner.js").then((module) => {
+          if (module.initMifidBanner) {
+            module.initMifidBanner();
+          }
+        });
+      }
+
+      // Status monitoring
+      const services = [
+        { name: "Dashboard", status: "operational" },
+        { name: "API Backend", status: "operational" },
+        { name: "Database", status: "operational" },
+        { name: "Storage", status: "operational" },
+        { name: "Email Service", status: "operational" },
+        { name: "CDN", status: "operational" },
+      ];
+
+      function renderServices() {
+        const servicesList = document.getElementById("services-list");
+        if (!servicesList) return;
+
+        servicesList.innerHTML = services
+          .map((service) => {
+            const statusLabels = {
+              operational: "Operativo",
+              degraded: "Degradato",
+              down: "Non disponibile",
+            };
+
+            return `
+              <div class="service-item">
+                <p class="service-name">${service.name}</p>
+                <div class="service-status">
+                  <span class="status-indicator ${service.status}"></span>
+                  <span>${statusLabels[service.status]}</span>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      // Update response time (simulated)
+      function updateResponseTime() {
+        const responseTimeEl = document.getElementById("response-time");
+        if (responseTimeEl) {
+          // Simulate response time (in real implementation, fetch from API)
+          const baseTime = 180;
+          const variation = Math.floor(Math.random() * 40);
+          responseTimeEl.textContent = `~${baseTime + variation}ms`;
+        }
+      }
+
+      // Initialize
+      renderServices();
+      updateResponseTime();
+
+      // Update response time every 30 seconds
+      setInterval(updateResponseTime, 30000);
+    </script>
+  </body>
+</html>

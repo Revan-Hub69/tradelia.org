@@ -7,12 +7,60 @@
 
     <meta
       name="description"
-      content="Dashboard Tradelia AI - Accesso rapido a report finanziari e tutorial educativi"
+      content="Dashboard Tradelia AI - Accesso rapido a report finanziari istituzionali, analisi on-demand e tutorial educativi. Piattaforma professionale per analisi finanziarie conformi MiFID II."
     />
     <meta name="theme-color" content="#050910" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="#050910" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tradelia.org/dashboard.html" />
+    <meta property="og:title" content="Tradelia AI - Dashboard" />
+    <meta property="og:description" content="Dashboard professionale per analisi finanziarie istituzionali, report conformi MiFID II e tutorial educativi." />
+    <meta property="og:image" content="https://tradelia.org/og-image.png" />
+    <meta property="og:site_name" content="Tradelia AI" />
+    <meta property="og:locale" content="it_IT" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://tradelia.org/dashboard.html" />
+    <meta name="twitter:title" content="Tradelia AI - Dashboard" />
+    <meta name="twitter:description" content="Dashboard professionale per analisi finanziarie istituzionali, report conformi MiFID II e tutorial educativi." />
+    <meta name="twitter:image" content="https://tradelia.org/twitter-image.png" />
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Tradelia AI Dashboard",
+      "description": "Dashboard professionale per analisi finanziarie istituzionali, report conformi MiFID II e tutorial educativi.",
+      "url": "https://tradelia.org/dashboard.html",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Tradelia AI",
+        "url": "https://tradelia.org"
+      },
+      "accessibilityFeature": [
+        "screenReader",
+        "keyboardNavigation",
+        "ARIA",
+        "reducedMotion"
+      ],
+      "accessibilityHazard": "none",
+      "accessMode": ["visual", "textual"],
+      "inLanguage": "it-IT"
+    }
+    </script>
 
     <link rel="icon" href="/favicon.ico?v=1" />
     <link rel="icon" type="image/png" href="/favicon.png?v=1" />
@@ -27,6 +75,7 @@
     <link rel="stylesheet" href="/assets/css/objects/container.css" />
     <link rel="stylesheet" href="/assets/css/components/dashboard.css" />
     <link rel="stylesheet" href="/assets/css/components/dashboard-theme-overrides.css" />
+    <link rel="stylesheet" href="/assets/css/mifid-banner.css" />
   </head>
   <body>
     <a href="#main-content" class="skip-link">Salta al contenuto principale</a>
@@ -34,9 +83,16 @@
     <div class="dashboard-container">
       <!-- Dashboard Header -->
       <header class="dashboard-header-minimal">
-        <div>
-          <h1 class="dashboard-title">Dashboard</h1>
-          <p class="dashboard-subtitle">Tradelia AI</p>
+        <div class="dashboard-header-content">
+          <h1 class="dashboard-title">
+            <a href="/index.html" class="dashboard-brand">
+              <span class="dashboard-brand-word">TRADELIA</span>
+              <span class="dashboard-brand-dot"></span>
+              <span class="dashboard-brand-suffix">AI</span>
+            </a>
+            <span class="dashboard-title-separator">·</span>
+            <span class="dashboard-title-text">Dashboard</span>
+          </h1>
         </div>
       </header>
 
@@ -47,481 +103,725 @@
       <main id="main-content">
         <!-- Modules Grid View (Default) -->
         <div id="modules-view" class="modules-view active">
-          <div class="modules-grid">
-            <!-- Overview Module -->
-            <a
-              href="#overview"
-              class="module-card"
-              data-module="overview"
-              aria-label="Panoramica dashboard"
-            >
-              <div class="module-card-header">
-                <div class="module-icon">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                    <line x1="3" y1="9" x2="21" y2="9" />
-                    <line x1="9" y1="21" x2="9" y2="9" />
-                  </svg>
+          <!-- Categoria: Principale -->
+          <section class="module-category">
+            <h2 class="category-title">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                width="20"
+                height="20"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <line x1="3" y1="9" x2="21" y2="9" />
+                <line x1="9" y1="21" x2="9" y2="9" />
+              </svg>
+              Principale
+            </h2>
+            <div class="modules-grid">
+              <!-- Overview Module -->
+              <a
+                href="#overview"
+                class="module-card"
+                data-module="overview"
+                aria-label="Panoramica dashboard"
+              >
+                <div class="module-card-header">
+                  <div class="module-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <line x1="3" y1="9" x2="21" y2="9" />
+                      <line x1="9" y1="21" x2="9" y2="9" />
+                    </svg>
+                  </div>
+                  <div class="module-info">
+                    <h2 class="module-title">Panoramica</h2>
+                    <p class="module-description">Statistiche, attività recente e accesso rapido</p>
+                  </div>
+                  <div class="module-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      width="16"
+                      height="16"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
                 </div>
-                <div class="module-info">
-                  <h2 class="module-title">Panoramica</h2>
-                  <p class="module-description">Statistiche, attività recente e accesso rapido</p>
-                </div>
-                <div class="module-arrow">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    width="16"
-                    height="16"
-                  >
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                </div>
-              </div>
-            </a>
+              </a>
 
-            <!-- Reports Module -->
-            <a
-              href="#reports"
-              class="module-card"
-              data-module="reports"
-              aria-label="Report ufficiali"
-            >
-              <div class="module-card-header">
-                <div class="module-icon">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                    <polyline points="14 2 14 8 20 8" />
-                    <line x1="16" y1="13" x2="8" y2="13" />
-                    <line x1="16" y1="17" x2="8" y2="17" />
-                  </svg>
+              <!-- Reports Module -->
+              <a
+                href="#reports"
+                class="module-card"
+                data-module="reports"
+                aria-label="Report ufficiali"
+              >
+                <div class="module-card-header">
+                  <div class="module-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                      <line x1="16" y1="13" x2="8" y2="13" />
+                      <line x1="16" y1="17" x2="8" y2="17" />
+                    </svg>
+                  </div>
+                  <div class="module-info">
+                    <h2 class="module-title">Report Ufficiali</h2>
+                    <p class="module-description">
+                      Consulta i report pubblici e le analisi disponibili
+                    </p>
+                  </div>
+                  <div class="module-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      width="16"
+                      height="16"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
                 </div>
-                <div class="module-info">
-                  <h2 class="module-title">Report Ufficiali</h2>
-                  <p class="module-description">
-                    Consulta i report pubblici e le analisi disponibili
-                  </p>
-                </div>
-                <div class="module-arrow">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    width="16"
-                    height="16"
-                  >
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                </div>
-              </div>
-            </a>
+              </a>
 
-            <!-- Frameworks Module -->
-            <a
-              href="#frameworks"
-              class="module-card"
-              data-module="frameworks"
-              aria-label="Documentazione framework"
-            >
-              <div class="module-card-header">
-                <div class="module-icon">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-                  </svg>
+              <!-- Education Module -->
+              <a
+                href="#education"
+                class="module-card"
+                data-module="education"
+                aria-label="Percorsi formativi"
+              >
+                <div class="module-card-header">
+                  <div class="module-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                      <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                    </svg>
+                  </div>
+                  <div class="module-info">
+                    <h2 class="module-title">Formazione</h2>
+                    <p class="module-description">
+                      Percorsi formativi dinamici con test e certificazioni
+                    </p>
+                  </div>
+                  <div class="module-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      width="16"
+                      height="16"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
                 </div>
-                <div class="module-info">
-                  <h2 class="module-title">Framework Documentation</h2>
-                  <p class="module-description">SRD, MTB, PAC e metodologie di analisi</p>
-                </div>
-                <div class="module-arrow">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    width="16"
-                    height="16"
-                  >
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                </div>
-              </div>
-            </a>
+              </a>
 
-            <!-- Requests History Module -->
-            <a
-              href="#requests-history"
-              class="module-card"
-              data-module="requests-history"
-              aria-label="Storico richieste"
-            >
-              <div class="module-card-header">
-                <div class="module-icon">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                  </svg>
+              <!-- Frameworks Module -->
+              <a
+                href="#frameworks"
+                class="module-card"
+                data-module="frameworks"
+                aria-label="Documentazione framework"
+              >
+                <div class="module-card-header">
+                  <div class="module-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                    </svg>
+                  </div>
+                  <div class="module-info">
+                    <h2 class="module-title">Framework Documentation</h2>
+                    <p class="module-description">SRD, MTB, PAC e metodologie di analisi</p>
+                  </div>
+                  <div class="module-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      width="16"
+                      height="16"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
                 </div>
-                <div class="module-info">
-                  <h2 class="module-title">Storico Richieste</h2>
-                  <p class="module-description">Visualizza le tue richieste di analisi on-demand</p>
-                </div>
-                <div class="module-arrow">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    width="16"
-                    height="16"
-                  >
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                </div>
-              </div>
-            </a>
+              </a>
+            </div>
+          </section>
 
-            <!-- Notifications Module -->
-            <a
-              href="#notifications"
-              class="module-card"
-              data-module="notifications"
-              aria-label="Notifiche"
-            >
-              <div class="module-card-header">
-                <div class="module-icon">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                  </svg>
+          <!-- Categoria: Analisi & Servizi -->
+          <section class="module-category">
+            <h2 class="category-title">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                width="20"
+                height="20"
+              >
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+              </svg>
+              Analisi & Servizi
+            </h2>
+            <div class="modules-grid">
+              <!-- On-Demand Module -->
+              <a
+                href="#on-demand"
+                class="module-card"
+                data-module="on-demand"
+                aria-label="Analisi on-demand"
+              >
+                <div class="module-card-header">
+                  <div class="module-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                      <line x1="12" y1="18" x2="12" y2="12" />
+                      <line x1="9" y1="15" x2="15" y2="15" />
+                    </svg>
+                  </div>
+                  <div class="module-info">
+                    <h2 class="module-title">Analisi On-Demand</h2>
+                    <p class="module-description">Richiedi analisi personalizzate</p>
+                  </div>
+                  <div class="module-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      width="16"
+                      height="16"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
                 </div>
-                <div class="module-info">
-                  <h2 class="module-title">Notifiche</h2>
-                  <p class="module-description">Notifiche di sistema e aggiornamenti</p>
-                </div>
-                <div class="module-arrow">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    width="16"
-                    height="16"
-                  >
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                </div>
-              </div>
-            </a>
+              </a>
 
-            <!-- Settings Module -->
-            <a
-              href="#settings"
-              class="module-card"
-              data-module="settings"
-              aria-label="Impostazioni"
-            >
-              <div class="module-card-header">
-                <div class="module-icon">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="3" />
-                    <path
-                      d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"
-                    />
-                  </svg>
+              <!-- Requests History Module -->
+              <a
+                href="#requests-history"
+                class="module-card"
+                data-module="requests-history"
+                aria-label="Storico richieste"
+              >
+                <div class="module-card-header">
+                  <div class="module-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                    </svg>
+                  </div>
+                  <div class="module-info">
+                    <h2 class="module-title">Storico Richieste</h2>
+                    <p class="module-description">
+                      Visualizza le tue richieste di analisi on-demand
+                    </p>
+                  </div>
+                  <div class="module-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      width="16"
+                      height="16"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
                 </div>
-                <div class="module-info">
-                  <h2 class="module-title">Impostazioni</h2>
-                  <p class="module-description">Preferenze utente e configurazioni</p>
-                </div>
-                <div class="module-arrow">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    width="16"
-                    height="16"
-                  >
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                </div>
-              </div>
-            </a>
+              </a>
 
-            <!-- Resources Module -->
-            <a
-              href="#resources"
-              class="module-card"
-              data-module="resources"
-              aria-label="Risorse e supporto"
-            >
-              <div class="module-card-header">
-                <div class="module-icon">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-                    <line x1="12" y1="11" x2="12" y2="17" />
-                    <line x1="9" y1="14" x2="15" y2="14" />
-                  </svg>
+              <!-- Community Module -->
+              <a
+                href="#community"
+                class="module-card"
+                data-module="community"
+                aria-label="Community proposals"
+              >
+                <div class="module-card-header">
+                  <div class="module-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                  </div>
+                  <div class="module-info">
+                    <h2 class="module-title">Community Proposals</h2>
+                    <p class="module-description">Proponi e vota analisi (solo Pro)</p>
+                  </div>
+                  <div class="module-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      width="16"
+                      height="16"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
                 </div>
-                <div class="module-info">
-                  <h2 class="module-title">Risorse & Supporto</h2>
-                  <p class="module-description">FAQ, guide e contatti</p>
-                </div>
-                <div class="module-arrow">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    width="16"
-                    height="16"
-                  >
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                </div>
-              </div>
-            </a>
+              </a>
+            </div>
+          </section>
 
-            <!-- Education Module -->
-            <a
-              href="#education"
-              class="module-card"
-              data-module="education"
-              aria-label="Percorsi formativi"
-            >
-              <div class="module-card-header">
-                <div class="module-icon">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
-                  </svg>
+          <!-- Categoria: Account & Impostazioni -->
+          <section class="module-category">
+            <h2 class="category-title">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                width="20"
+                height="20"
+              >
+                <circle cx="12" cy="12" r="3" />
+                <path
+                  d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"
+                />
+              </svg>
+              Account & Impostazioni
+            </h2>
+            <div class="modules-grid">
+              <!-- Settings Module -->
+              <a
+                href="#settings"
+                class="module-card"
+                data-module="settings"
+                aria-label="Impostazioni"
+              >
+                <div class="module-card-header">
+                  <div class="module-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="3" />
+                      <path
+                        d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"
+                      />
+                    </svg>
+                  </div>
+                  <div class="module-info">
+                    <h2 class="module-title">Impostazioni</h2>
+                    <p class="module-description">Preferenze utente e configurazioni</p>
+                  </div>
+                  <div class="module-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      width="16"
+                      height="16"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
                 </div>
-                <div class="module-info">
-                  <h2 class="module-title">Percorsi Formativi</h2>
-                  <p class="module-description">Tutorial e corsi educativi</p>
-                </div>
-                <div class="module-arrow">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    width="16"
-                    height="16"
-                  >
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                </div>
-              </div>
-            </a>
+              </a>
 
-            <!-- Access Module -->
-            <a
-              href="#access"
-              class="module-card"
-              data-module="access"
-              aria-label="Gestione accesso"
-            >
-              <div class="module-card-header">
-                <div class="module-icon">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                  </svg>
+              <!-- Access Module -->
+              <a
+                href="#access"
+                class="module-card"
+                data-module="access"
+                aria-label="Gestione accesso"
+              >
+                <div class="module-card-header">
+                  <div class="module-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                  </div>
+                  <div class="module-info">
+                    <h2 class="module-title">Gestione Accesso</h2>
+                    <p class="module-description">Token, permessi e account</p>
+                  </div>
+                  <div class="module-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      width="16"
+                      height="16"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
                 </div>
-                <div class="module-info">
-                  <h2 class="module-title">Gestione Accesso</h2>
-                  <p class="module-description">Token, permessi e account</p>
-                </div>
-                <div class="module-arrow">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    width="16"
-                    height="16"
-                  >
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                </div>
-              </div>
-            </a>
+              </a>
 
-            <!-- On-Demand Module -->
-            <a
-              href="#on-demand"
-              class="module-card"
-              data-module="on-demand"
-              aria-label="Analisi on-demand"
-            >
-              <div class="module-card-header">
-                <div class="module-icon">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                    <polyline points="14 2 14 8 20 8" />
-                    <line x1="12" y1="18" x2="12" y2="12" />
-                    <line x1="9" y1="15" x2="15" y2="15" />
-                  </svg>
+              <!-- Notifications Module -->
+              <a
+                href="#notifications"
+                class="module-card"
+                data-module="notifications"
+                aria-label="Notifiche"
+              >
+                <div class="module-card-header">
+                  <div class="module-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                    </svg>
+                  </div>
+                  <div class="module-info">
+                    <h2 class="module-title">Notifiche</h2>
+                    <p class="module-description">Notifiche di sistema e aggiornamenti</p>
+                  </div>
+                  <div class="module-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      width="16"
+                      height="16"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
                 </div>
-                <div class="module-info">
-                  <h2 class="module-title">Analisi On-Demand</h2>
-                  <p class="module-description">Richiedi analisi personalizzate</p>
-                </div>
-                <div class="module-arrow">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    width="16"
-                    height="16"
-                  >
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                </div>
-              </div>
-            </a>
+              </a>
 
-            <!-- Community Module -->
-            <a
-              href="#community"
-              class="module-card"
-              data-module="community"
-              aria-label="Community proposals"
-            >
-              <div class="module-card-header">
-                <div class="module-icon">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
+              <!-- Settings Module -->
+              <a
+                href="#settings"
+                class="module-card"
+                data-module="settings"
+                aria-label="Impostazioni"
+              >
+                <div class="module-card-header">
+                  <div class="module-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="3" />
+                      <path
+                        d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"
+                      />
+                    </svg>
+                  </div>
+                  <div class="module-info">
+                    <h2 class="module-title">Impostazioni</h2>
+                    <p class="module-description">Preferenze utente e configurazioni</p>
+                  </div>
+                  <div class="module-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      width="16"
+                      height="16"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
                 </div>
-                <div class="module-info">
-                  <h2 class="module-title">Community Proposals</h2>
-                  <p class="module-description">Proponi e vota analisi (solo Pro)</p>
+              </a>
+            </div>
+          </section>
+
+          <!-- Categoria: Risorse -->
+          <section class="module-category">
+            <h2 class="category-title">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                width="20"
+                height="20"
+              >
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                <line x1="12" y1="11" x2="12" y2="17" />
+                <line x1="9" y1="14" x2="15" y2="14" />
+              </svg>
+              Risorse
+            </h2>
+            <div class="modules-grid">
+              <!-- Resources Module -->
+              <a
+                href="#resources"
+                class="module-card"
+                data-module="resources"
+                aria-label="Risorse e supporto"
+              >
+                <div class="module-card-header">
+                  <div class="module-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                      <line x1="12" y1="11" x2="12" y2="17" />
+                      <line x1="9" y1="14" x2="15" y2="14" />
+                    </svg>
+                  </div>
+                  <div class="module-info">
+                    <h2 class="module-title">Risorse & Supporto</h2>
+                    <p class="module-description">FAQ, guide e contatti</p>
+                  </div>
+                  <div class="module-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      width="16"
+                      height="16"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
                 </div>
-                <div class="module-arrow">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    width="16"
-                    height="16"
-                  >
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
+              </a>
+
+              <!-- Brokers Module -->
+              <a
+                href="#brokers"
+                class="module-card"
+                data-module="brokers"
+                aria-label="Broker regolamentati"
+              >
+                <div class="module-card-header">
+                  <div class="module-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <line x1="12" y1="2" x2="12" y2="22" />
+                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                    </svg>
+                  </div>
+                  <div class="module-info">
+                    <h2 class="module-title">Broker Regolamentati</h2>
+                    <p class="module-description">Lista broker verificati e regolamentati</p>
+                  </div>
+                  <div class="module-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      width="16"
+                      height="16"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
                 </div>
-              </div>
-            </a>
-          </div>
+              </a>
+            </div>
+          </section>
+
+          <!-- Categoria: Amministrazione (solo admin) -->
+          <section class="module-category module-category-admin" style="display: none">
+            <h2 class="category-title">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                width="20"
+                height="20"
+              >
+                <circle cx="12" cy="12" r="3" />
+                <path
+                  d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"
+                />
+              </svg>
+              Amministrazione
+            </h2>
+            <div class="modules-grid">
+              <!-- Admin Module (solo admin) -->
+              <a
+                href="#admin"
+                class="module-card module-card-admin"
+                data-module="admin"
+                aria-label="Amministrazione"
+                style="display: none"
+              >
+                <div class="module-card-header">
+                  <div class="module-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="3" />
+                      <path
+                        d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"
+                      />
+                    </svg>
+                  </div>
+                  <div class="module-info">
+                    <h2 class="module-title">Amministrazione</h2>
+                    <p class="module-description">Gestione utenti, token e report (solo admin)</p>
+                  </div>
+                  <div class="module-arrow">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      width="16"
+                      height="16"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </section>
         </div>
 
         <!-- Panel Views (Hidden by default) -->
@@ -828,6 +1128,58 @@
             <!-- Content loaded by community.js -->
           </div>
         </div>
+
+        <!-- Brokers Panel -->
+        <div id="panel-brokers" class="panel-view">
+          <div class="panel-header">
+            <a href="#" class="panel-back" data-back="modules">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                width="16"
+                height="16"
+              >
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+              Torna ai moduli
+            </a>
+            <h2 class="panel-title">Broker Regolamentati</h2>
+            <p class="panel-description">Lista broker verificati e regolamentati</p>
+          </div>
+          <div class="panel-content" id="brokers-container">
+            <!-- Content loaded by brokers.js -->
+          </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="panel-admin" class="panel-view">
+          <div class="panel-header">
+            <a href="#" class="panel-back" data-back="modules">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                width="16"
+                height="16"
+              >
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+              Torna ai moduli
+            </a>
+            <h2 class="panel-title">Amministrazione</h2>
+            <p class="panel-description">Gestione utenti, token e report (solo admin)</p>
+          </div>
+          <div class="panel-content" id="admin-container">
+            <!-- Content loaded by admin.js -->
+          </div>
+        </div>
       </main>
     </div>
 
@@ -845,6 +1197,7 @@
       // Import moduli separati (Best Practice: separazione concerns)
       import { initDashboard } from "/assets/js/dashboard/app.js";
       import "/assets/js/dashboard/toast.js";
+      import { initMifidBanner } from "/assets/js/mifid-banner.js";
 
       // FASE 4: Performance Monitoring
       import "/assets/js/performance/web-vitals.js";
@@ -852,6 +1205,9 @@
 
       // Initialize dashboard
       initDashboard();
+      
+      // Inizializza MIFID overlay (non bloccante in dashboard, solo per pulsanti footer)
+      initMifidBanner();
 
       // Monitor bundle sizes (dopo load)
       if (document.readyState === "loading") {
@@ -869,5 +1225,10 @@
         });
       }
     </script>
+
+    <!-- Footer Tecnico -->
+    <footer class="dashboard-footer" id="dashboard-footer">
+      <!-- Content loaded by footer.js -->
+    </footer>
   </body>
 </html>

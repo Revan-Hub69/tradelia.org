@@ -5,6 +5,7 @@ Questo documento elenca tutte le variabili d'ambiente necessarie per il funziona
 ## 📋 Variabili Obbligatorie
 
 ### Supabase
+
 ```bash
 # URL del progetto Supabase
 SUPABASE_URL=https://your-project.supabase.co
@@ -17,6 +18,7 @@ SUPABASE_ANON_KEY=your-anon-key
 ```
 
 **Dove sono usate:**
+
 - `api/_lib/supabase.js` - Client Supabase principale
 - `api/webhook-role-sync.js` - Sincronizzazione ruoli
 - `api/cancel-subscription.js` - Cancellazione abbonamenti
@@ -28,12 +30,14 @@ SUPABASE_ANON_KEY=your-anon-key
 ---
 
 ### Brevo (Email Service)
+
 ```bash
 # API Key per invio email tramite Brevo
 BREVO_API_KEY=your-brevo-api-key
 ```
 
 **Dove sono usate:**
+
 - `api/request-free-token.js` - Invio token gratuiti
 - `api/request-dashboard-token.js` - Invio token dashboard
 - `api/create-user-and-token.js` - Invio email creazione utente
@@ -45,6 +49,7 @@ BREVO_API_KEY=your-brevo-api-key
 ## 🔧 Variabili Opzionali / Condizionali
 
 ### Firebase (Push Notifications)
+
 ```bash
 # Service Account JSON per Firebase Admin SDK
 # Deve essere un JSON stringificato o oggetto
@@ -56,6 +61,7 @@ FIREBASE_VAPID_PRIVATE_KEY=your-vapid-private-key
 ```
 
 **Dove sono usate:**
+
 - `api/push.js` - Inizializzazione Firebase Admin e Web Push
 
 **Nota:** Se `FIREBASE_SERVICE_ACCOUNT` non è configurato, l'API `push.js` crasha all'avvio.
@@ -63,6 +69,7 @@ FIREBASE_VAPID_PRIVATE_KEY=your-vapid-private-key
 ---
 
 ### Push API Key
+
 ```bash
 # API Key per autorizzare invio push notifications
 # Default: 'your-secret-api-key' (NON SICURO - cambiare in produzione)
@@ -70,6 +77,7 @@ PUSH_API_KEY=your-secret-push-api-key
 ```
 
 **Dove è usata:**
+
 - `api/push.js` - Autorizzazione invio push (action: 'send')
 
 **⚠️ IMPORTANTE:** Cambiare il valore di default in produzione!
@@ -77,17 +85,20 @@ PUSH_API_KEY=your-secret-push-api-key
 ---
 
 ### Xolo Go (Payment Gateway)
+
 ```bash
 # API Key per integrazione Xolo Go
 XOLO_API_KEY=your-xolo-api-key
 ```
 
 **Dove è usata:**
+
 - `GUIDA-XOLO-GO.md` - Documentazione integrazione (non implementata nel codice attuale)
 
 ---
 
 ### RapidAPI / Twelve Data (API Esterne)
+
 ```bash
 # API Key per RapidAPI
 RAPIDAPI_KEY=your-rapidapi-key
@@ -97,11 +108,13 @@ TWELVE_API_KEY=your-twelve-api-key
 ```
 
 **Dove sono usate:**
+
 - `pages/api/azioniblocco1.ts` - Fetch dati azionari
 
 ---
 
 ### Admin Dashboard
+
 ```bash
 # Token per accesso admin dashboard
 ADMIN_DASHBOARD_TOKEN=your-admin-token
@@ -114,11 +127,13 @@ ADMIN_AUTO_MANIFEST=true
 ```
 
 **Dove sono usate:**
+
 - `pages/api/admin/_utils.ts` - Utilità admin
 
 ---
 
 ### Debug / Development
+
 ```bash
 # Abilita debug logging
 DEBUG=true
@@ -128,7 +143,7 @@ GIT_BRANCH=main
 ```
 
 **Dove sono usate:**
-- `swing-master-5.0/test/test-f1b.js` - Test debug
+
 - `report/admin/upload-chart-server.js` - Info branch
 
 ---
@@ -199,14 +214,14 @@ Questi file hanno fallback hardcoded che **devono essere rimossi** per sicurezza
 
 ```javascript
 // ❌ DA RIMUOVERE
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://higkhlfjfhlecbtfnznx.supabase.co';
-const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'eyJhbGci...';
+const SUPABASE_URL = process.env.SUPABASE_URL || "https://higkhlfjfhlecbtfnznx.supabase.co";
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || "eyJhbGci...";
 
 // ✅ CORRETTO
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  throw new Error('Variabili d\'ambiente mancanti');
+  throw new Error("Variabili d'ambiente mancanti");
 }
 ```
 
@@ -224,6 +239,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
 ## 📊 Riepilogo Variabili per Ambiente
 
 ### Produzione (Vercel)
+
 - ✅ `SUPABASE_URL`
 - ✅ `SUPABASE_SERVICE_ROLE_KEY`
 - ✅ `SUPABASE_ANON_KEY`
@@ -233,6 +249,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
 - ✅ `XOLO_API_KEY` (se usato)
 
 ### Sviluppo Locale
+
 - Tutte le variabili sopra
 - `DEBUG=true` (opzionale)
 - `GIT_BRANCH=local` (opzionale)
@@ -241,4 +258,3 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
 
 **Ultimo aggiornamento:** 2025-01-27  
 **Versione:** 1.0
-

@@ -144,7 +144,7 @@ async function handleOnDemandSubmit(e) {
   }
 
   try {
-    const response = await fetch('/api/request-analysis', {
+    const response = await fetch('/api/analysis?action=request', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)

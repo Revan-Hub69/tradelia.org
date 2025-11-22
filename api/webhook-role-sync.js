@@ -5,14 +5,14 @@
 // Usato per sincronizzazione ruoli da pagamenti Xolo/manuali
 // ============================================
 
-import { createClient } from '@supabase/supabase-js';
-import fetch from './_lib/fetch.js';
+import { createClient } from "@supabase/supabase-js";
+import { runtimeFetch as fetch } from "./_lib/fetch.js";
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-  throw new Error('SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devono essere configurati');
+  throw new Error("SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devono essere configurati");
 }
 
 // Client di servizio (service_role) per operazioni webhook (ruoli, crediti, pagamenti, fatture)
@@ -29,7 +29,9 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
  * @returns {string} - Ruolo applicativo ('trial', 'pro', 'institutional')
  */
 export function mapPlanToRole(planIdentifier) {
-  if (!planIdentifier) return null;
+  if (!planIdentifier) {
+    return null;
+  }
 
   const planStr = String(planIdentifier).toLowerCase();
 
@@ -37,24 +39,24 @@ export function mapPlanToRole(planIdentifier) {
   // Variant IDs reali da Lemon Squeezy Dashboard
   const planMapping = {
     // Guest (nuovo utente senza piano)
-    guest: 'guest',
+    guest: "guest",
 
     // Trial (prova gratuita)
-    trial: 'trial',
-    free: 'trial',
+    trial: "trial",
+    free: "trial",
 
     // Pro - Variant IDs Lemon Squeezy
-    1091082: 'pro', // Piano Pro mensile
-    1091075: 'pro', // Piano Pro annuale
-    pro: 'pro',
-    professional: 'pro',
+    1091082: "pro", // Piano Pro mensile
+    1091075: "pro", // Piano Pro annuale
+    pro: "pro",
+    professional: "pro",
 
     // Institutional/Desk - Variant IDs Lemon Squeezy
-    1091084: 'institutional', // Piano Desk mensile
-    1091083: 'institutional', // Piano Desk annuale
-    institutional: 'institutional',
-    desk: 'institutional',
-    enterprise: 'institutional',
+    1091084: "institutional", // Piano Desk mensile
+    1091083: "institutional", // Piano Desk annuale
+    institutional: "institutional",
+    desk: "institutional",
+    enterprise: "institutional",
 
     // Crediti (non sono ruoli, ma prodotti)
     693409: null, // 1 credito
@@ -75,21 +77,28 @@ export function mapPlanToRole(planIdentifier) {
   }
 
   // Default: prova a inferire dal nome
-  if (planStr.includes('guest')) return 'guest';
-  if (planStr.includes('trial') || planStr.includes('free')) return 'trial';
+  if (planStr.includes("guest")) {
+    return "guest";
+  }
+  if (planStr.includes("trial") || planStr.includes("free")) {
+    return "trial";
+  }
   if (
-    planStr.includes('institutional') ||
-    planStr.includes('desk') ||
-    planStr.includes('enterprise')
-  )
-    return 'institutional';
-  if (planStr.includes('pro') || planStr.includes('professional')) return 'pro';
+    planStr.includes("institutional") ||
+    planStr.includes("desk") ||
+    planStr.includes("enterprise")
+  ) {
+    return "institutional";
+  }
+  if (planStr.includes("pro") || planStr.includes("professional")) {
+    return "pro";
+  }
 
   // Fallback: default a 'guest' (nuovo utente senza piano)
   console.warn(
     `[Role Sync] Plan identifier non riconosciuto: ${planIdentifier}, default a 'guest'`
   );
-  return 'guest';
+  return "guest";
 }
 
 /**
@@ -107,7 +116,7 @@ export async function syncUserRoleFromSubscription(
 ) {
   try {
     if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-      throw new Error('SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devono essere configurati');
+      throw new Error("SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devono essere configurati");
     }
 
     // 1. Trova user_id da email usando SERVICE_ROLE_KEY
@@ -116,18 +125,18 @@ export async function syncUserRoleFromSubscription(
       console.warn(
         `[Role Sync] Utente non trovato per email: ${email} - potrebbe non essere ancora registrato`
       );
-      return { success: false, reason: 'user_not_found', email };
+      return { success: false, reason: "user_not_found", email };
     }
 
     // 2. Mappa plan identifier a ruolo
     const planType = mapPlanToRole(planIdentifier);
     if (!planType) {
       console.warn(`[Role Sync] Plan identifier non valido: ${planIdentifier}`);
-      return { success: false, reason: 'invalid_plan' };
+      return { success: false, reason: "invalid_plan" };
     }
 
     // 3. Se status è 'active', aggiorna/crea user_roles
-    if (status === 'active' && planType) {
+    if (status === "active" && planType) {
       const roleData = {
         user_id: userId,
         role: planType,
@@ -139,32 +148,32 @@ export async function syncUserRoleFromSubscription(
       };
 
       const { error: roleError } = await supabase
-        .from('user_roles')
-        .upsert(roleData, { onConflict: 'user_id' });
+        .from("user_roles")
+        .upsert(roleData, { onConflict: "user_id" });
 
       if (roleError) {
-        console.error('[Role Sync] Errore upsert user_roles:', roleError);
+        console.error("[Role Sync] Errore upsert user_roles:", roleError);
         throw roleError;
       }
 
       console.log(
-        `[Role Sync] ✅ Ruolo aggiornato: ${email} → ${planType} (scadenza: ${expiresAt ? new Date(expiresAt).toISOString() : 'permanente'})`
+        `[Role Sync] ✅ Ruolo aggiornato: ${email} → ${planType} (scadenza: ${expiresAt ? new Date(expiresAt).toISOString() : "permanente"})`
       );
 
       // Se è institutional, assicurati che abbia record credits
-      if (planType === 'institutional') {
-        const { error: creditsError } = await supabase.from('user_analysis_credits').upsert(
+      if (planType === "institutional") {
+        const { error: creditsError } = await supabase.from("user_analysis_credits").upsert(
           {
             user_id: userId,
             credits_balance: 0,
             total_purchased: 0,
             total_used: 0,
           },
-          { onConflict: 'user_id' }
+          { onConflict: "user_id" }
         );
 
         if (creditsError) {
-          console.warn('[Role Sync] Errore creazione credits (non critico):', creditsError);
+          console.warn("[Role Sync] Errore creazione credits (non critico):", creditsError);
         }
       }
 
@@ -172,25 +181,25 @@ export async function syncUserRoleFromSubscription(
     }
 
     // 4. Se status è 'cancelled' o 'expired', imposta scadenza a oggi (non rimuoviamo ruolo)
-    if (status === 'cancelled' || status === 'expired') {
+    if (status === "cancelled" || status === "expired") {
       const now = new Date().toISOString();
       const { error: roleError } = await supabase
-        .from('user_roles')
+        .from("user_roles")
         .update({ valid_until: now })
-        .eq('user_id', userId);
+        .eq("user_id", userId);
 
-      if (roleError && roleError.code !== 'PGRST116') {
-        console.error('[Role Sync] Errore update user_roles (cancelled):', roleError);
+      if (roleError && roleError.code !== "PGRST116") {
+        console.error("[Role Sync] Errore update user_roles (cancelled):", roleError);
         throw roleError;
       }
 
       console.log(`[Role Sync] ⚠️ Ruolo scaduto: ${email} (valid_until = ${now})`);
-      return { success: true, user_id: userId, action: 'expired' };
+      return { success: true, user_id: userId, action: "expired" };
     }
 
-    return { success: true, action: 'no_change' };
+    return { success: true, action: "no_change" };
   } catch (err) {
-    console.error('[Role Sync] ❌ Errore:', err);
+    console.error("[Role Sync] ❌ Errore:", err);
     throw err;
   }
 }
@@ -201,19 +210,21 @@ export async function syncUserRoleFromSubscription(
  * @returns {Promise<string|null>}
  */
 export async function getUserIdByEmail(email) {
-  if (!email) return null;
+  if (!email) {
+    return null;
+  }
 
   try {
     const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
     if (authError) {
-      console.error('[Role Sync] Errore listUsers in getUserIdByEmail:', authError);
+      console.error("[Role Sync] Errore listUsers in getUserIdByEmail:", authError);
       throw authError;
     }
 
     const user = authUsers.users.find((u) => u.email?.toLowerCase() === email.toLowerCase());
     return user ? user.id : null;
   } catch (err) {
-    console.error('[Role Sync] Errore getUserIdByEmail:', err);
+    console.error("[Role Sync] Errore getUserIdByEmail:", err);
     return null;
   }
 }
@@ -226,8 +237,8 @@ export async function recordPaymentAndInvoice({
   userId,
   gateway,
   amountCents,
-  currency = 'EUR',
-  status = 'succeeded',
+  currency = "EUR",
+  status = "succeeded",
   description = null,
   externalPaymentId = null,
   externalInvoiceId = null,
@@ -236,8 +247,8 @@ export async function recordPaymentAndInvoice({
   pdfUrl = null,
   metadata = {},
 }) {
-  if (!userId || !gateway || amountCents == null) {
-    console.warn('[Payments] Parametri insufficienti per recordPaymentAndInvoice', {
+  if (!userId || !gateway || amountCents === null || amountCents === undefined) {
+    console.warn("[Payments] Parametri insufficienti per recordPaymentAndInvoice", {
       userId,
       gateway,
       amountCents,
@@ -259,13 +270,13 @@ export async function recordPaymentAndInvoice({
     };
 
     const { data: payment, error: paymentError } = await supabase
-      .from('payments')
+      .from("payments")
       .insert(paymentPayload)
-      .select('id')
+      .select("id")
       .single();
 
     if (paymentError) {
-      console.error('[Payments] Errore inserimento pagamento:', paymentError);
+      console.error("[Payments] Errore inserimento pagamento:", paymentError);
       throw paymentError;
     }
 
@@ -281,33 +292,33 @@ export async function recordPaymentAndInvoice({
         number: invoiceNumber,
         amount_cents: amountCents,
         currency,
-        status: status === 'succeeded' ? 'paid' : 'issued',
+        status: status === "succeeded" ? "paid" : "issued",
         issued_at: issuedAt || new Date().toISOString(),
         pdf_url: pdfUrl,
         metadata,
       };
 
       const { data: invoiceData, error: invoiceError } = await supabase
-        .from('invoices')
+        .from("invoices")
         .insert(invoicePayload)
-        .select('id')
+        .select("id")
         .single();
 
       if (invoiceError) {
-        console.error('[Payments] Errore inserimento invoice (non bloccante):', invoiceError);
+        console.error("[Payments] Errore inserimento invoice (non bloccante):", invoiceError);
       } else {
         invoice = invoiceData;
       }
     }
 
-    console.log('[Payments] ✅ Pagamento registrato', {
+    console.log("[Payments] ✅ Pagamento registrato", {
       paymentId: payment.id,
       gateway,
       amountCents,
     });
     return { paymentId: payment.id, invoiceId: invoice?.id || null };
   } catch (err) {
-    console.error('[Payments] ❌ Errore recordPaymentAndInvoice:', err);
+    console.error("[Payments] ❌ Errore recordPaymentAndInvoice:", err);
     throw err;
   }
 }
@@ -330,14 +341,14 @@ export function calculateExpirationDate(planType, durationMonths = 1) {
 async function sendTokenEmail(email, token, planRole) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) {
-    console.warn('[Token Email] BREVO_API_KEY non configurata, email non inviata');
+    console.warn("[Token Email] BREVO_API_KEY non configurata, email non inviata");
     return false;
   }
 
   const planNames = {
-    trial: 'Trial',
-    pro: 'Pro',
-    institutional: 'Desk',
+    trial: "Trial",
+    pro: "Pro",
+    institutional: "Desk",
   };
   const planName = planNames[planRole] || planRole;
 
@@ -405,14 +416,14 @@ Per assistenza: support@tradelia.org
   `;
 
   try {
-    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST',
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
       headers: {
-        'api-key': BREVO_API_KEY,
-        'Content-Type': 'application/json',
+        "api-key": BREVO_API_KEY,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        sender: { email: 'noreply@tradelia.org', name: 'Tradelia AI' },
+        sender: { email: "noreply@tradelia.org", name: "Tradelia AI" },
         to: [{ email: email }],
         subject: `🔑 Il tuo codice di accesso Tradelia - Piano ${planName}`,
         htmlContent: emailHTML,
@@ -422,13 +433,13 @@ Per assistenza: support@tradelia.org
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('[Token Email] Errore Brevo:', errorText);
+      console.error("[Token Email] Errore Brevo:", errorText);
       return false;
     }
 
     return true;
   } catch (err) {
-    console.error('[Token Email] Errore invio email:', err);
+    console.error("[Token Email] Errore invio email:", err);
     return false;
   }
 }
@@ -448,39 +459,39 @@ export async function generateDashboardToken(
   email,
   planRole,
   validUntil,
-  source = 'manual',
+  source = "manual",
   sendEmail = false
 ) {
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-    throw new Error('SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devono essere configurati');
+    throw new Error("SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devono essere configurati");
   }
 
-  const crypto = await import('crypto');
+  const crypto = await import("crypto");
 
   // Genera token random (32 caratteri hex)
-  const token = crypto.randomBytes(16).toString('hex');
-  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  const token = crypto.randomBytes(16).toString("hex");
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
 
   try {
     // Revoca token vecchi per questo utente/email
     if (userId) {
       await supabase
-        .from('dashboard_access_tokens')
+        .from("dashboard_access_tokens")
         .update({
           revoked: true,
           revoked_at: new Date().toISOString(),
         })
-        .eq('user_id', userId)
-        .eq('revoked', false);
+        .eq("user_id", userId)
+        .eq("revoked", false);
     } else if (email) {
       await supabase
-        .from('dashboard_access_tokens')
+        .from("dashboard_access_tokens")
         .update({
           revoked: true,
           revoked_at: new Date().toISOString(),
         })
-        .eq('email', email)
-        .eq('revoked', false);
+        .eq("email", email)
+        .eq("revoked", false);
     }
 
     // Crea nuovo token
@@ -494,10 +505,10 @@ export async function generateDashboardToken(
       metadata: { generated_at: new Date().toISOString() },
     };
 
-    const { error: insertError } = await supabase.from('dashboard_access_tokens').insert(tokenData);
+    const { error: insertError } = await supabase.from("dashboard_access_tokens").insert(tokenData);
 
     if (insertError) {
-      console.error('[Token Generation] Errore inserimento token:', insertError);
+      console.error("[Token Generation] Errore inserimento token:", insertError);
       throw insertError;
     }
 
@@ -515,13 +526,13 @@ export async function generateDashboardToken(
           );
         }
       } catch (emailError) {
-        console.error('[Token Generation] Errore invio email (non bloccante):', emailError);
+        console.error("[Token Generation] Errore invio email (non bloccante):", emailError);
       }
     }
 
     return { token, success: true };
   } catch (err) {
-    console.error('[Token Generation] ❌ Errore:', err);
+    console.error("[Token Generation] ❌ Errore:", err);
     return { token: null, success: false };
   }
 }
