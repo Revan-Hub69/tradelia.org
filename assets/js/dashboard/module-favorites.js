@@ -201,6 +201,7 @@ function applyFavoritesOrder() {
 
 /**
  * Create favorites section in modules view
+ * BEST PRACTICE: Sezione principale sempre visibile se ci sono preferiti
  */
 export function createFavoritesSection() {
   const modulesView = document.getElementById("modules-view");
@@ -208,17 +209,15 @@ export function createFavoritesSection() {
     return;
   }
 
-  // Check if favorites section already exists
-  if (document.getElementById("favorites-section")) {
-    return;
+  // Rimuovi sezione esistente per ricrearla
+  const existingSection = document.getElementById("favorites-section");
+  if (existingSection) {
+    existingSection.remove();
   }
 
   const favorites = getFavorites();
-  if (favorites.length === 0) {
-    return;
-  }
 
-  // Create favorites section
+  // BEST PRACTICE: Mostra sempre la sezione, anche se vuota (con messaggio)
   const favoritesSection = document.createElement("div");
   favoritesSection.id = "favorites-section";
   favoritesSection.className = "module-category favorites-category";
@@ -236,23 +235,42 @@ export function createFavoritesSection() {
   const favoritesGrid = document.createElement("div");
   favoritesGrid.className = "modules-grid favorites-grid";
 
-  // Move favorited cards to favorites section
-  favorites.forEach((moduleId) => {
-    const card = document.querySelector(`.module-card[data-module="${moduleId}"]`);
-    if (card) {
-      const clonedCard = card.cloneNode(true);
-      favoritesGrid.appendChild(clonedCard);
-    }
-  });
+  if (favorites.length === 0) {
+    // Mostra messaggio se non ci sono preferiti
+    favoritesGrid.innerHTML = `
+      <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: var(--spacing-xl); color: var(--dash-text-muted);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="48" height="48" style="margin: 0 auto var(--spacing-md); opacity: 0.5;">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+        <p style="margin: 0; font-size: var(--fs-14, 14px);">Nessun modulo nei preferiti. Clicca sulla stella su un modulo per aggiungerlo.</p>
+      </div>
+    `;
+  } else {
+    // Mostra moduli preferiti
+    favorites.forEach((moduleId) => {
+      const card = document.querySelector(`.module-card[data-module="${moduleId}"]`);
+      if (card) {
+        // Clona la card e aggiungi event listener
+        const clonedCard = card.cloneNode(true);
+        // Rimuovi il clone dalla griglia originale se presente
+        const originalCard = document.querySelector(`.module-card[data-module="${moduleId}"]`);
+        if (originalCard && originalCard.parentElement) {
+          originalCard.style.display = "none"; // Nascondi dalla griglia principale
+        }
+        favoritesGrid.appendChild(clonedCard);
+      }
+    });
+  }
 
   favoritesSection.appendChild(categoryTitle);
   favoritesSection.appendChild(favoritesGrid);
 
-  // Insert before first category
-  const firstCategory = modulesView.querySelector(".module-category");
+  // BEST PRACTICE: Inserisci sempre in cima, prima di tutte le altre categorie
+  const firstCategory = modulesView.querySelector(".module-category:not(.favorites-category)");
   if (firstCategory) {
     modulesView.insertBefore(favoritesSection, firstCategory);
   } else {
-    modulesView.appendChild(favoritesSection);
+    // Se non ci sono altre categorie, inserisci all'inizio
+    modulesView.insertBefore(favoritesSection, modulesView.firstChild);
   }
 }

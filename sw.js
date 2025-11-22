@@ -47,8 +47,23 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => cache.addAll(STATIC_CACHE))
+      .then((cache) => {
+        // BEST PRACTICE: Gestisci errori individuali invece di fallire tutto
+        return Promise.allSettled(
+          STATIC_CACHE.map((url) =>
+            cache.add(url).catch((err) => {
+              console.warn(`[SW] Failed to cache ${url}:`, err);
+              return null; // Continua anche se una risorsa fallisce
+            })
+          )
+        );
+      })
       .then(() => self.skipWaiting())
+      .catch((err) => {
+        console.error("[SW] Install error:", err);
+        // Non bloccare l'installazione se la cache fallisce
+        return self.skipWaiting();
+      })
   );
 });
 

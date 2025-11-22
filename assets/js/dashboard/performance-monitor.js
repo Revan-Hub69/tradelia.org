@@ -254,13 +254,17 @@ function logVital(name, value, thresholds) {
     });
   }
 
-  // Show warning if poor
+  // BEST PRACTICE: Mostra warning solo se poor E non è già stato mostrato
   if (status === "poor" && window.showToast) {
-    window.showToast(
-      `Performance ${name}: ${status === "poor" ? "Da migliorare" : "Buona"}`,
-      status === "poor" ? "warning" : "info",
-      5000
-    );
+    const warningKey = `performance-warning-${name}`;
+    const lastWarning = sessionStorage.getItem(warningKey);
+    const now = Date.now();
+
+    // Mostra warning solo una volta per sessione o ogni 5 minuti
+    if (!lastWarning || now - parseInt(lastWarning) > 5 * 60 * 1000) {
+      window.showToast(`Performance ${name}: Da migliorare`, "warning", 5000);
+      sessionStorage.setItem(warningKey, now.toString());
+    }
   }
 }
 

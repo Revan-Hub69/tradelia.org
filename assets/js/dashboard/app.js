@@ -77,9 +77,15 @@ export async function initDashboard() {
   const { initModuleFavorites, createFavoritesSection } = await import("./module-favorites.js");
   initModuleFavorites();
 
-  // Create favorites section if there are favorites
+  // BEST PRACTICE: Crea sezione preferiti sempre (anche se vuota)
   setTimeout(() => {
     createFavoritesSection();
+    // Aggiorna quando i preferiti cambiano
+    window.addEventListener("storage", (e) => {
+      if (e.key === "dashboard-module-favorites") {
+        createFavoritesSection();
+      }
+    });
   }, 100);
 
   // BEST PRACTICE: Initialize accessibility enhancements (WCAG 2.2 Compliance)

@@ -1689,7 +1689,7 @@ a[role="button"]:focus-visible {
   padding-top: env(safe-area-inset-top, 0px);
 }
 
-/* BEST PRACTICE: Nascondi sidebar su mobile */
+/* BEST PRACTICE: Nascondi sidebar su mobile, mostra solo bottom nav */
 @media (max-width: 768px) {
   .desktop-sidebar {
     display: none !important;
@@ -1697,6 +1697,22 @@ a[role="button"]:focus-visible {
 
   .dashboard-container {
     margin-left: 0 !important;
+  }
+
+  /* Assicura che bottom nav sia visibile su mobile */
+  .bottom-nav {
+    display: flex !important;
+  }
+}
+
+/* BEST PRACTICE: Nascondi bottom nav su desktop, mostra solo sidebar */
+@media (min-width: 769px) {
+  .bottom-nav {
+    display: none !important;
+  }
+
+  .desktop-sidebar {
+    display: flex !important;
   }
 }
 
