@@ -43,7 +43,7 @@ function renderBanner(container, role, planData) {
           <div class="account-banner-actions">
             <div class="toggle-switch-wrapper">
               <label class="toggle-switch" title="Notifiche Browser" id="toggle-notifications-label">
-                <input type="checkbox" id="toggle-notifications">
+                <input type="checkbox" id="toggle-notifications" ${getNotificationPermissionState() ? "checked" : ""}>
                 <span class="toggle-slider"></span>
                 <span class="toggle-label">Notifiche</span>
               </label>
