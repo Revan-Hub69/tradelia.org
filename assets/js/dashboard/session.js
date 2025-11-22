@@ -20,7 +20,7 @@ export async function checkTokenValidity() {
   }
 
   try {
-    const response = await fetch("/api/user.js?action=validate", {
+    const response = await fetch("/api/auth?action=validate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token }),

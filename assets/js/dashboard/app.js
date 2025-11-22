@@ -37,13 +37,20 @@ export async function initDashboard() {
   // BEST PRACTICE: Verifica autenticazione PRIMA di inizializzare dashboard
   const authCheck = await checkAuthentication();
   if (!authCheck.authenticated) {
-    // Reindirizza a accesso.html con motivo
-    const reason = authCheck.reason || "missing_token";
-    const redirectUrl =
-      authCheck.redirectTo ||
-      `/accesso.html?reason=${reason}&redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
-    window.location.href = redirectUrl;
-    return;
+    // BEST PRACTICE: Se è un errore di rete, permettere accesso guest temporaneo
+    // Reindirizza solo se è un problema di autenticazione reale
+    if (authCheck.reason === "network_error") {
+      console.warn("[Dashboard] Errore di rete durante verifica autenticazione, accesso guest temporaneo");
+      // Continua con accesso guest
+    } else {
+      // Reindirizza a accesso.html con motivo
+      const reason = authCheck.reason || "missing_token";
+      const redirectUrl =
+        authCheck.redirectTo ||
+        `/accesso.html?reason=${reason}&redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+      window.location.href = redirectUrl;
+      return;
+    }
   }
 
   // Initialize account banner (shows user status, plan, usage)

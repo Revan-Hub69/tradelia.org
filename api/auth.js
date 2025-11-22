@@ -10,8 +10,6 @@ import crypto from "crypto";
 
 const supabase = getServiceSupabase();
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const ADMIN_EMAIL = "amministrazione@tradelia.org";
-const SUPPORT_EMAIL = "support@tradelia.org";
 
 // ===== UTILITY FUNCTIONS =====
 function generateToken() {
@@ -95,10 +93,23 @@ async function handleValidate(req, res) {
   }
 
   let reason = null;
+  let isValid = true;
+  
   if (daysLeft === 0 && expiryDate < now) {
     reason = "expired_token";
+    isValid = false;
   } else if (context.tokenRecord.revoked) {
     reason = "revoked_token";
+    isValid = false;
+  }
+
+  // Se il token non è valido, restituisci errore
+  if (!isValid) {
+    return sendJSON(res, 200, {
+      ok: false,
+      reason,
+      error: reason === "expired_token" ? "Token scaduto" : "Token revocato",
+    });
   }
 
   return sendJSON(res, 200, {
@@ -111,7 +122,7 @@ async function handleValidate(req, res) {
     daysLeft,
     canCancel,
     isAdmin: context.isAdmin,
-    reason,
+    reason: null,
   });
 }
 
@@ -121,7 +132,7 @@ async function handleRequestToken(req, res) {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  const { email, type = "dashboard" } = req.body;
+  const { email } = req.body;
 
   if (!email || typeof email !== "string" || !email.includes("@")) {
     return res.status(400).json({ ok: false, error: "Email non valida" });
@@ -396,7 +407,7 @@ async function handleFreeToken(req, res) {
   if (BREVO_API_KEY) {
     try {
       await sendFreeTokenEmail({ email: sanitizedEmail, nome, token: newToken, profilo, uso, organizzazione });
-    } catch (emailError) {
+    } catch {
       return res.status(500).json({
         ok: false,
         error: "Token creato ma errore invio email. Contatta support@tradelia.org",
@@ -411,7 +422,7 @@ async function handleFreeToken(req, res) {
 }
 
 // ===== EMAIL HELPERS =====
-async function sendTokenEmail(email, token, planRole) {
+async function sendTokenEmail(email, token, _planRole) {
   if (!BREVO_API_KEY) return;
 
   const emailHTML = `
