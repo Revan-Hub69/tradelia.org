@@ -7,14 +7,16 @@
 import { showSkeletons, hideSkeleton } from "./loading-skeleton.js";
 import { showToast } from "./toast.js";
 import { createErrorBoundary, retryWithBackoff } from "./error-handler.js";
-import { createWatchlistButton, isInWatchlist } from "./watchlist.js";
+import { isInWatchlist } from "./watchlist.js";
 import { applyFilters } from "./advanced-filters.js";
 
 const errorBoundary = createErrorBoundary("Reports", "#reports-container");
 
 export async function loadReports() {
-  const container = document.getElementById('reports-container');
-  if (!container) return;
+  const container = document.getElementById("reports-container");
+  if (!container) {
+    return;
+  }
 
   // BEST PRACTICE: Show skeleton loading
   container.innerHTML = "";
@@ -30,9 +32,7 @@ export async function loadReports() {
         }
         const manifest = await manifestResponse.json();
         if (Array.isArray(manifest.reports)) {
-          return manifest.reports
-            .map((r) => (typeof r === 'string' ? r : r.id))
-            .filter(Boolean);
+          return manifest.reports.map((r) => (typeof r === "string" ? r : r.id)).filter(Boolean);
         } else if (Array.isArray(manifest.dirs)) {
           return manifest.dirs;
         }
@@ -42,28 +42,13 @@ export async function loadReports() {
         maxRetries: 3,
         initialDelay: 1000,
         onRetry: (attempt) => {
+          // eslint-disable-next-line no-console
           console.log(`[Reports] Retry ${attempt}...`);
         },
       }
     );
 
     // Hide skeleton
-    hideSkeleton(container);
-
-    let reportDirs = [];
-    try {
-      const manifestResponse = await fetch(`/archivio/manifest.json?t=${Date.now()}`);
-      if (manifestResponse.ok) {
-        const manifest = await manifestResponse.json();
-        if (Array.isArray(manifest.reports)) {
-          reportDirs = manifest.reports
-            .map((r) => (typeof r === 'string' ? r : r.id))
-            .filter(Boolean);
-        } else if (Array.isArray(manifest.dirs)) {
-          reportDirs = manifest.dirs;
-        }
-      }
-    // Hide skeleton before rendering
     hideSkeleton(container);
 
     if (reportDirs.length === 0) {
@@ -91,11 +76,11 @@ export async function loadReports() {
           const header = await headerResponse.json();
           reports.push({
             id: dir,
-            ticker: header.ticker || header.asset || '',
-            company: header.company || header.asset_name || '',
-            date: header.date || header.timestamp || '',
-            exchange: header.exchange || '',
-            sector: header.sector || '',
+            ticker: header.ticker || header.asset || "",
+            company: header.company || header.asset_name || "",
+            date: header.date || header.timestamp || "",
+            exchange: header.exchange || "",
+            sector: header.sector || "",
           });
         }
       } catch (e) {
@@ -110,31 +95,38 @@ export async function loadReports() {
       return dateB - dateA;
     });
 
+    // Store original reports for filtering
+    const originalReports = [...reports];
+
     // Apply advanced filters if any
-    const filteredReports = applyFilters(reports) || reports;
-    
+    let filteredReports = applyFilters(originalReports);
+    if (!filteredReports || !Array.isArray(filteredReports)) {
+      filteredReports = originalReports;
+    }
+
     renderReports(filteredReports);
     setupSearch(filteredReports);
     updateStats(filteredReports);
     setupWatchlistButtons(filteredReports);
-    
-    // Listen for advanced filter events
-    document.addEventListener('advanced-filter-apply', (e) => {
-      const filtered = applyFilters(reports);
-      if (filtered) {
+
+    // Listen for advanced filter events (store reports in closure)
+    const filterHandler = () => {
+      const filtered = applyFilters(originalReports);
+      if (filtered && Array.isArray(filtered)) {
         renderReports(filtered);
         updateStats(filtered);
       }
-    });
+    };
+    document.addEventListener("advanced-filter-apply", filterHandler);
   } catch (err) {
-    console.error('[Reports] Errore:', err);
-    
+    console.error("[Reports] Errore:", err);
+
     // BEST PRACTICE: Hide skeleton and show error state
     hideSkeleton(container);
-    
+
     // BEST PRACTICE: Show error toast
     showToast("Errore nel caricamento dei report. Riprova più tardi.", "error");
-    
+
     // BEST PRACTICE: Render error state with error boundary
     errorBoundary.renderErrorState(err, {
       retryable: true,
@@ -142,7 +134,7 @@ export async function loadReports() {
         await loadReports();
       },
     });
-    
+
     container.innerHTML = `
       <div class="reports-empty">
         <div class="reports-empty-title">Errore caricamento</div>
@@ -153,8 +145,10 @@ export async function loadReports() {
 }
 
 function renderReports(reports) {
-  const container = document.getElementById('reports-container');
-  if (!container) return;
+  const container = document.getElementById("reports-container");
+  if (!container) {
+    return;
+  }
 
   if (reports.length === 0) {
     container.innerHTML = `
@@ -173,7 +167,7 @@ function renderReports(reports) {
       <div class="report-card-header">
         <div class="report-card-main">
           <h3 class="report-ticker">${report.ticker || report.id}</h3>
-          <p class="report-company">${report.company || 'Nome non disponibile'}</p>
+          <p class="report-company">${report.company || "Nome non disponibile"}</p>
           <div class="report-meta">
             ${
               report.date
@@ -182,9 +176,9 @@ function renderReports(reports) {
                 <circle cx="12" cy="12" r="10"/>
                 <polyline points="12 6 12 12 16 14"/>
               </svg>
-              ${new Date(report.date).toLocaleDateString('it-IT')}
+              ${new Date(report.date).toLocaleDateString("it-IT")}
             </div>`
-                : ''
+                : ""
             }
             ${
               report.exchange
@@ -195,7 +189,7 @@ function renderReports(reports) {
               </svg>
               ${report.exchange}
             </div>`
-                : ''
+                : ""
             }
             ${
               report.sector
@@ -205,13 +199,13 @@ function renderReports(reports) {
               </svg>
               ${report.sector}
             </div>`
-                : ''
+                : ""
             }
           </div>
         </div>
         <div class="report-card-actions">
-          <button class="watchlist-button" data-report-id="${report.id}" data-favorite="${isInWatchlist(report.id) ? 'true' : 'false'}" aria-label="${isInWatchlist(report.id) ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}" title="${isInWatchlist(report.id) ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}">
-            <svg viewBox="0 0 24 24" fill="${isInWatchlist(report.id) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+          <button class="watchlist-button" data-report-id="${report.id}" data-favorite="${isInWatchlist(report.id) ? "true" : "false"}" aria-label="${isInWatchlist(report.id) ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}" title="${isInWatchlist(report.id) ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}">
+            <svg viewBox="0 0 24 24" fill="${isInWatchlist(report.id) ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
             </svg>
           </button>
@@ -228,22 +222,24 @@ function renderReports(reports) {
     </div>
   `
     )
-    .join('');
+    .join("");
 
   // Salva report visualizzati per attività recente
   const recentReports = reports
     .slice(0, 5)
     .map((r) => ({ id: r.id, ticker: r.ticker, date: r.date }));
-  localStorage.setItem('tradelia-recent-reports', JSON.stringify(recentReports));
+  localStorage.setItem("tradelia-recent-reports", JSON.stringify(recentReports));
 }
 
 function setupSearch(reports) {
-  const searchInput = document.getElementById('reports-search');
-  if (!searchInput) return;
+  const searchInput = document.getElementById("reports-search");
+  if (!searchInput) {
+    return;
+  }
 
   let filteredReports = [...reports];
 
-  searchInput.addEventListener('input', (e) => {
+  searchInput.addEventListener("input", (e) => {
     const query = e.target.value.toLowerCase().trim();
 
     if (!query) {
@@ -258,7 +254,7 @@ function setupSearch(reports) {
           report.sector,
         ]
           .filter(Boolean)
-          .join(' ')
+          .join(" ")
           .toLowerCase();
 
         return searchable.includes(query);
@@ -271,29 +267,32 @@ function setupSearch(reports) {
 }
 
 function updateStats(reports) {
-  const statsEl = document.getElementById('reports-stats');
+  const statsEl = document.getElementById("reports-stats");
   if (statsEl) {
-    statsEl.textContent = `${reports.length} report${reports.length !== 1 ? '' : ''}`;
+    statsEl.textContent = `${reports.length} report${reports.length !== 1 ? "" : ""}`;
   }
 }
 
 function setupWatchlistButtons(reports) {
-  document.querySelectorAll('.watchlist-button').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
+  document.querySelectorAll(".watchlist-button").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
       const reportId = btn.dataset.reportId;
       const report = reports.find((r) => r.id === reportId);
       if (report) {
-        import('./watchlist.js').then(({ toggleWatchlist }) => {
+        import("./watchlist.js").then(({ toggleWatchlist }) => {
           const isFavorite = toggleWatchlist(report);
-          btn.dataset.favorite = isFavorite ? 'true' : 'false';
-          btn.setAttribute('aria-label', isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti');
-          const svg = btn.querySelector('svg');
+          btn.dataset.favorite = isFavorite ? "true" : "false";
+          btn.setAttribute(
+            "aria-label",
+            isFavorite ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"
+          );
+          const svg = btn.querySelector("svg");
           if (svg) {
-            svg.setAttribute('fill', isFavorite ? 'currentColor' : 'none');
+            svg.setAttribute("fill", isFavorite ? "currentColor" : "none");
           }
-          btn.style.color = isFavorite ? 'var(--dash-accent)' : '';
+          btn.style.color = isFavorite ? "var(--dash-accent)" : "";
         });
       }
     });
