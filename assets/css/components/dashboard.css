@@ -2658,7 +2658,8 @@
 }
 
 @keyframes skeleton-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -3630,7 +3631,9 @@
   justify-content: center;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
   pointer-events: none;
   padding-top: 5vh;
 }
@@ -3880,7 +3883,7 @@
   border: 1px solid var(--dash-border);
   border-radius: 4px;
   font-size: 11px;
-  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-family: "Monaco", "Menlo", "Courier New", monospace;
   color: var(--dash-text-soft);
 }
 
@@ -3911,7 +3914,7 @@
   border: 1px solid var(--dash-border);
   border-radius: 4px;
   font-size: 11px;
-  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-family: "Monaco", "Menlo", "Courier New", monospace;
   color: var(--dash-text-soft);
 }
 
@@ -3946,7 +3949,7 @@
   border: 1px solid var(--dash-border);
   border-radius: 4px;
   font-size: 11px;
-  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-family: "Monaco", "Menlo", "Courier New", monospace;
   color: var(--dash-text-muted);
 }
 
@@ -4007,7 +4010,7 @@ textarea:focus-visible,
 }
 
 .focus-trap-active::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: -2px;
   border: 2px dashed var(--dash-blue-line, #3b82f6);
@@ -4567,7 +4570,9 @@ textarea:focus-visible,
   justify-content: center;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
   pointer-events: none;
 }
 
@@ -4677,7 +4682,7 @@ textarea:focus-visible,
   border: 1px solid var(--dash-border);
   border-radius: 4px;
   font-size: 12px;
-  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-family: "Monaco", "Menlo", "Courier New", monospace;
   color: var(--dash-text-soft);
   min-width: 24px;
   text-align: center;
@@ -4708,7 +4713,7 @@ textarea:focus-visible,
   border: 1px solid var(--dash-border);
   border-radius: 4px;
   font-size: 11px;
-  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-family: "Monaco", "Menlo", "Courier New", monospace;
   color: var(--dash-text-soft);
 }
 
@@ -4881,11 +4886,40 @@ textarea:focus-visible,
   font-size: var(--fs-15, 15px);
   color: var(--dash-text);
   font-weight: 600;
-  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-family: "Monaco", "Menlo", "Courier New", monospace;
 }
 
 @media (max-width: 768px) {
   .stat-card-chart {
     grid-column: span 1;
   }
+}
+
+/* ===== SCROLLBAR COHERENCE ===== */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+  background-clip: padding-box;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) rgba(255, 255, 255, 0.02);
 }

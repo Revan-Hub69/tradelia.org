@@ -597,7 +597,7 @@ async function sendFreeTokenEmail({ email, nome, token, profilo, uso, organizzaz
       <h2 style="margin: 0;">Codice di accesso gratuito Tradelia</h2>
       <p style="margin: 8px 0 0 0;">Ciao ${nome || "utente"}, ecco il codice di accesso personale richiesto.</p>
     </div>
-    <p>Il codice di accesso è valido 30 giorni e funziona sulla dashboard PWA installata.</p>
+    <p>Il codice di accesso è valido 30 giorni e funziona sulla dashboard installata.</p>
     <div class="token-box">
       <div style="margin-bottom: 10px; color: #94a3b8;">Codice di accesso personale</div>
       <div class="token">${token}</div>

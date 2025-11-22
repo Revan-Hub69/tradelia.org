@@ -158,7 +158,7 @@ function createModal() {
             aria-labelledby="auth-tab-code-btn"
           >
             <p class="auth-modal-intro">
-              Inserisci il codice di accesso ricevuto via email. Puoi richiederlo gratuitamente dal modulo Richiedilo direttamente nella dashboard PWA installabile.
+              Inserisci il codice di accesso ricevuto via email. Puoi richiederlo gratuitamente dal modulo Richiedilo direttamente nella dashboard.
             </p>
             <form id="auth-code-form" class="auth-modal-form" novalidate>
               <div class="auth-form-group">
