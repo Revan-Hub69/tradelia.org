@@ -40,6 +40,11 @@ export async function initDashboard() {
   // BEST PRACTICE: Accesso libero alla dashboard (guest mode)
   // La verifica autenticazione è opzionale e non blocca l'accesso
   // L'utente può accedere alla pagina di accesso tramite il pulsante dedicato
+
+  // CRITICAL: NON fare MAI redirect automatico a accesso.html
+  // La dashboard deve essere sempre accessibile in guest mode
+  // Il redirect deve avvenire SOLO quando l'utente clicca esplicitamente su "Accedi"
+
   const authCheck = await checkAuthentication();
 
   // Log per debug (non blocca l'accesso)
@@ -49,7 +54,8 @@ export async function initDashboard() {
   }
 
   // NON fare redirect automatico - accesso libero sempre consentito
-  // Se c'è un redirectTo, viene ignorato per permettere accesso guest
+  // Se c'è un redirectTo, viene IGNORATO per permettere accesso guest
+  // L'utente può accedere alla pagina di accesso tramite il pulsante "Accedi" nel banner
 
   // Initialize account banner (shows user status, plan, usage)
   await initAccountBanner();
@@ -274,14 +280,17 @@ async function checkAuthentication() {
       }
     }
 
-    // BEST PRACTICE: Reindirizza a accesso.html se serve gestione pagamento/account
-    // Verifica se ci sono problemi che richiedono modale account
+    // BEST PRACTICE: NON reindirizzare automaticamente
+    // Se c'è un problema di pagamento, viene mostrato un warning nel banner
+    // L'utente può cliccare su "Gestisci Pagamento" per andare a accesso.html
+    // MA non facciamo redirect automatico - accesso guest sempre consentito
     if (data.status === "pending_payment" || data.status === "pending_manual") {
-      // Pagamento in attesa: reindirizza a accesso.html con modale
+      // Pagamento in attesa: mostra warning ma NON reindirizza
+      // L'utente può cliccare su "Gestisci Pagamento" nel banner se vuole
       return {
-        authenticated: false,
+        authenticated: true, // Permetti accesso anche con pagamento in attesa
         reason: "payment_required",
-        redirectTo: `/accesso.html?reason=payment_required&modal=payment&token=${encodeURIComponent(token)}`,
+        // redirectTo rimosso - non fare redirect automatico
       };
     }
 
