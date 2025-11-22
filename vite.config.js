@@ -8,14 +8,15 @@ import { resolve } from "path";
 import { copyFileSync, mkdirSync, readdirSync, statSync } from "fs";
 import { join } from "path";
 
-// Plugin per copiare file statici necessari (icons, favicons, etc.)
+// Plugin per copiare file statici necessari (icons, favicons, sw.js, etc.)
 function copyStaticFiles() {
   return {
     name: "copy-static-files",
     closeBundle() {
-      const staticDirs = ["icons", "favicons"];
       const outDir = resolve(__dirname, "dist");
 
+      // Copia cartelle statiche
+      const staticDirs = ["icons", "favicons"];
       staticDirs.forEach((dir) => {
         const srcDir = resolve(__dirname, dir);
         const destDir = join(outDir, dir);
@@ -41,6 +42,33 @@ function copyStaticFiles() {
         } catch (error) {
           if (error.code !== "ENOENT") {
             console.warn(`⚠️  Impossibile copiare ${dir}/:`, error.message);
+          }
+        }
+      });
+
+      // Copia file statici nella root
+      const staticFiles = [
+        "sw.js",
+        "firebase-messaging-sw.js",
+        "dashboard.webmanifest",
+        "manifest.json",
+        "favicon.ico",
+        "favicon.png",
+        "apple-touch-icon.png",
+      ];
+
+      staticFiles.forEach((file) => {
+        const srcPath = resolve(__dirname, file);
+        const destPath = join(outDir, file);
+
+        try {
+          if (statSync(srcPath).isFile()) {
+            copyFileSync(srcPath, destPath);
+            console.log(`✅ Copiato file: ${file}`);
+          }
+        } catch (error) {
+          if (error.code !== "ENOENT") {
+            console.warn(`⚠️  Impossibile copiare ${file}:`, error.message);
           }
         }
       });
