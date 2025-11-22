@@ -224,12 +224,6 @@ function renderOverviewStructure() {
       <div class="stat-value" id="stat-last-update">—</div>
       <div class="stat-change">Data ultimo report</div>
     </div>
-    <div class="stat-card stat-card-chart">
-      <div class="stat-label">Visualizzazione Trend</div>
-      <div class="stat-chart-container">
-        <canvas id="overview-trend-chart" width="400" height="200"></canvas>
-      </div>
-    </div>
   `;
 
   // Check if activity section already exists
