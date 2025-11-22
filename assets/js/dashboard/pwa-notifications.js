@@ -330,14 +330,29 @@ export async function disablePushNotifications() {
 }
 
 /**
- * Ottiene VAPID public key
- * Usa la key hardcoded (già configurata nel progetto)
- * In futuro può essere esposta via meta tag o config statico
+ * Ottiene VAPID public key dal server
+ * Fallback a key hardcoded se l'API non è disponibile
  */
 async function getVAPIDPublicKey() {
-  // Usa la key hardcoded già presente nel progetto (archivio/assets/js/fcm-config.js)
-  // Questa è la stessa key usata in archivio e già configurata
-  return "BGUfdP2IYXrvOwDYEqmRwhZqodiQB1CKeaLd1-oILrVCfgTW7n_mjCe3WQYzYXQw1dqgOtIRTOEfBHu6gj22Uc0";
+  try {
+    const response = await fetch("/api/notifications?action=vapid-key");
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data.ok && data.publicKey) {
+      return data.publicKey;
+    }
+
+    throw new Error("VAPID key non disponibile nella risposta");
+  } catch (error) {
+    console.warn("[Notifications] Errore recupero VAPID key dal server, uso fallback:", error);
+    // Fallback a key hardcoded (già configurata nel progetto)
+    return "BGUfdP2IYXrvOwDYEqmRwhZqodiQB1CKeaLd1-oILrVCfgTW7n_mjCe3WQYzYXQw1dqgOtIRTOEfBHu6gj22Uc0";
+  }
 }
 
 /**
@@ -383,9 +398,16 @@ async function subscribeToPush() {
     console.warn("[Notifications] Sottoscritto con successo:", subscription);
 
     // Invia subscription al server
-    console.warn("[Notifications] Invio subscription al server...");
-    await sendSubscriptionToServer(subscription);
-    console.warn("[Notifications] Subscription inviata al server con successo");
+    console.log("[Notifications] Invio subscription al server...");
+    try {
+      await sendSubscriptionToServer(subscription);
+      console.log("[Notifications] Subscription inviata al server con successo");
+    } catch (serverError) {
+      console.error("[Notifications] Errore salvataggio subscription sul server:", serverError);
+      // Non blocchiamo la sottoscrizione se il salvataggio fallisce
+      // L'utente può riprovare più tardi
+      throw new Error(`Sottoscrizione completata ma salvataggio fallito: ${serverError.message}`);
+    }
   } catch (error) {
     console.error("[Notifications] Errore sottoscrizione:", error);
     console.error("[Notifications] Dettagli errore:", {
@@ -419,28 +441,38 @@ async function sendSubscriptionToServer(subscription) {
   try {
     const token = localStorage.getItem("tradelia-access-token-v1");
     if (!token) {
-      console.warn("[Notifications] Token non disponibile");
-      return;
+      console.warn("[Notifications] Token non disponibile - subscription non salvata");
+      // Per guest users, proviamo comunque senza token
+      // L'API gestirà l'autenticazione
+    }
+
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
     }
 
     const response = await fetch("/api/notifications?action=save-subscription", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers,
       body: JSON.stringify({
         subscription: subscription.toJSON(),
       }),
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorData = await response.json().catch(() => ({}));
+      const errorMessage = errorData.error || `HTTP error! status: ${response.status}`;
+      throw new Error(errorMessage);
     }
 
-    console.warn("[Notifications] Subscription salvata sul server");
+    const data = await response.json();
+    console.log("[Notifications] Subscription salvata sul server:", data);
   } catch (error) {
     console.error("[Notifications] Errore invio subscription:", error);
+    throw error; // Rilancia per permettere gestione errore nel chiamante
   }
 }
 

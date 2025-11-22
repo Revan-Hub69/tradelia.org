@@ -5,10 +5,53 @@
 
 import { defineConfig } from "vite";
 import { resolve } from "path";
+import { copyFileSync, mkdirSync, readdirSync, statSync } from "fs";
+import { join } from "path";
+
+// Plugin per copiare file statici necessari (icons, favicons, etc.)
+function copyStaticFiles() {
+  return {
+    name: "copy-static-files",
+    closeBundle() {
+      const staticDirs = ["icons", "favicons"];
+      const outDir = resolve(__dirname, "dist");
+
+      staticDirs.forEach((dir) => {
+        const srcDir = resolve(__dirname, dir);
+        const destDir = join(outDir, dir);
+
+        try {
+          if (!statSync(srcDir).isDirectory()) {
+            return;
+          }
+
+          mkdirSync(destDir, { recursive: true });
+
+          const files = readdirSync(srcDir);
+          files.forEach((file) => {
+            const srcPath = join(srcDir, file);
+            const destPath = join(destDir, file);
+
+            if (statSync(srcPath).isFile()) {
+              copyFileSync(srcPath, destPath);
+            }
+          });
+
+          console.log(`✅ Copiata cartella: ${dir}/`);
+        } catch (error) {
+          if (error.code !== "ENOENT") {
+            console.warn(`⚠️  Impossibile copiare ${dir}/:`, error.message);
+          }
+        }
+      });
+    },
+  };
+}
 
 export default defineConfig({
   root: ".",
   publicDir: false, // Non usare publicDir, tutti i file statici sono nella root
+  plugins: [copyStaticFiles()],
   build: {
     outDir: "dist",
     emptyOutDir: true,
