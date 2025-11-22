@@ -27,7 +27,7 @@ export async function getUserRole() {
   }
 
   try {
-    const response = await fetch(`${API_BASE}/get-user-plan.js`, {
+    const response = await fetch(`${API_BASE}/user?action=plan`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
