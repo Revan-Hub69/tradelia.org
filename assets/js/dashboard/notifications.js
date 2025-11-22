@@ -5,7 +5,7 @@
  */
 
 import { initSupabase } from "./supabase-client.js";
-import { showToast } from "./toast.js";
+// showToast usato tramite window.showToast
 
 export async function loadNotifications() {
   const notificationsList = document.getElementById("notifications-list");
@@ -65,6 +65,13 @@ async function loadNotificationsData() {
         const { data, error } = await query;
 
         if (error) {
+          // BEST PRACTICE: Gestione errori 401 (Unauthorized) - fallback silenzioso
+          if (error.code === "PGRST301" || error.status === 401 || error.message?.includes("401")) {
+            // Errore di autorizzazione - fallback silenzioso
+            // BEST PRACTICE: Fallback silenzioso per 401 - non loggare come errore
+            // console.debug("[Notifications] Accesso non autorizzato (401) - fallback silenzioso");
+            return [];
+          }
           throw error;
         }
 
@@ -170,11 +177,11 @@ function renderNotifications(notifications) {
       </div>
     `;
     })
-      .join("");
-  
+    .join("");
+
   // Add mark as read functionality
-  document.querySelectorAll('[data-notification-id]').forEach((card) => {
-    card.addEventListener('click', () => {
+  document.querySelectorAll("[data-notification-id]").forEach((card) => {
+    card.addEventListener("click", () => {
       const notificationId = card.dataset.notificationId;
       if (notificationId) {
         markAsRead(notificationId);
@@ -187,12 +194,16 @@ function renderNotifications(notifications) {
  * Setup notifications filters
  */
 function setupNotificationsFilters() {
-  const toolbar = document.querySelector('.panel-content #notifications-list')?.closest('.panel-content');
-  if (!toolbar || document.getElementById('notifications-filters')) return;
+  const toolbar = document
+    .querySelector(".panel-content #notifications-list")
+    ?.closest(".panel-content");
+  if (!toolbar || document.getElementById("notifications-filters")) {
+    return;
+  }
 
-  const filtersContainer = document.createElement('div');
-  filtersContainer.id = 'notifications-filters';
-  filtersContainer.className = 'notifications-filters';
+  const filtersContainer = document.createElement("div");
+  filtersContainer.id = "notifications-filters";
+  filtersContainer.className = "notifications-filters";
   filtersContainer.innerHTML = `
     <div class="notifications-filter-group">
       <label class="notifications-filter-label">Tipo</label>
@@ -216,19 +227,19 @@ function setupNotificationsFilters() {
     <button class="btn btn-secondary" id="notifications-mark-all-read">Segna tutte come lette</button>
   `;
 
-  const panelContent = document.querySelector('#panel-notifications .panel-content');
+  const panelContent = document.querySelector("#panel-notifications .panel-content");
   if (panelContent) {
     panelContent.insertBefore(filtersContainer, panelContent.firstChild);
   }
 
   // Filter listeners
-  document.getElementById('notifications-filter-type')?.addEventListener('change', () => {
+  document.getElementById("notifications-filter-type")?.addEventListener("change", () => {
     applyNotificationsFilters();
   });
-  document.getElementById('notifications-filter-date')?.addEventListener('change', () => {
+  document.getElementById("notifications-filter-date")?.addEventListener("change", () => {
     applyNotificationsFilters();
   });
-  document.getElementById('notifications-mark-all-read')?.addEventListener('click', () => {
+  document.getElementById("notifications-mark-all-read")?.addEventListener("click", () => {
     markAllAsRead();
   });
 }
@@ -237,9 +248,10 @@ function setupNotificationsFilters() {
  * Apply notifications filters
  */
 function applyNotificationsFilters() {
-  const typeFilter = document.getElementById('notifications-filter-type')?.value || '';
-  const dateFilter = document.getElementById('notifications-filter-date')?.value || 'all';
-  
+  // BEST PRACTICE: Filtri da implementare in futuro
+  // const typeFilter = document.getElementById('notifications-filter-type')?.value || '';
+  // const dateFilter = document.getElementById('notifications-filter-date')?.value || 'all';
+
   // Reload notifications with filters
   loadNotificationsData();
 }
@@ -258,13 +270,27 @@ async function markAsRead(notificationId) {
   try {
     const supabase = await initSupabase();
     if (supabase) {
-      await supabase
-        .from('notifications')
-        .update({ read: true, read_at: new Date().toISOString() })
-        .eq('id', notificationId);
+      const { error } = await supabase
+        .from("notifications")
+        .update({ is_read: true, read_at: new Date().toISOString() })
+        .eq("id", notificationId);
+
+      // BEST PRACTICE: Gestione errori 401 (Unauthorized) - fallback silenzioso
+      if (error) {
+        if (error.code === "PGRST301" || error.status === 401 || error.message?.includes("401")) {
+          console.debug(
+            "[Notifications] Accesso non autorizzato per marcatura letta (401) - fallback silenzioso"
+          );
+          return;
+        }
+        throw error;
+      }
     }
   } catch (e) {
-    console.error('[Notifications] Errore marcatura letta:', e);
+    // BEST PRACTICE: Non loggare errori 401 come errori critici
+    if (e.status !== 401 && e.code !== "PGRST301") {
+      console.error("[Notifications] Errore marcatura letta:", e);
+    }
   }
 }
 
@@ -275,23 +301,33 @@ async function markAllAsRead() {
   try {
     const supabase = await initSupabase();
     if (supabase) {
-      const token = localStorage.getItem('tradelia-access-token-v1');
+      const token = localStorage.getItem("tradelia-access-token-v1");
       if (token) {
         const { error } = await supabase
-          .from('notifications')
-          .update({ read: true, read_at: new Date().toISOString() })
-          .eq('user_token', token)
-          .eq('read', false);
+          .from("notifications")
+          .update({ is_read: true, read_at: new Date().toISOString() })
+          .eq("user_token", token)
+          .eq("is_read", false);
 
-        if (!error) {
-          loadNotificationsData();
-          if (window.showToast) {
-            window.showToast('Tutte le notifiche segnate come lette', 'success');
+        if (error) {
+          // BEST PRACTICE: Gestione errori 401 (Unauthorized) - fallback silenzioso
+          if (error.code === "PGRST301" || error.status === 401 || error.message?.includes("401")) {
+            console.debug(
+              "[Notifications] Accesso non autorizzato per marcatura tutte (401) - fallback silenzioso"
+            );
+            return;
           }
+          console.warn("[Notifications] Errore marcatura tutte:", error);
+          return;
+        }
+
+        loadNotificationsData();
+        if (window.showToast) {
+          window.showToast("Tutte le notifiche segnate come lette", "success");
         }
       }
     }
   } catch (e) {
-    console.error('[Notifications] Errore marcatura tutte lette:', e);
+    console.error("[Notifications] Errore marcatura tutte lette:", e);
   }
 }

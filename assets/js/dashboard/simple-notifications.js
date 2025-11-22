@@ -144,6 +144,9 @@ async function checkForNewNotifications() {
       return;
     }
 
+    // BEST PRACTICE: Verifica se Supabase è disponibile prima di fare query
+    // Se non disponibile, fallback silenzioso
+
     const token = localStorage.getItem("tradelia-access-token-v1");
     // Guest users possono ricevere notifiche usando un device ID
 
@@ -182,6 +185,14 @@ async function checkForNewNotifications() {
     const { data, error } = await query;
 
     if (error) {
+      // BEST PRACTICE: Gestione errori 401 (Unauthorized) - fallback silenzioso
+      if (error.code === "PGRST301" || error.status === 401 || error.message?.includes("401")) {
+        // Errore di autorizzazione - probabilmente RLS policy o token non valido
+        // Fallback silenzioso: non mostrare errore all'utente, semplicemente non caricare notifiche
+        // BEST PRACTICE: Fallback silenzioso per 401 - non loggare come errore
+        // console.debug("[Simple Notifications] Accesso non autorizzato alle notifiche (401) - fallback silenzioso");
+        return;
+      }
       console.warn("[Simple Notifications] Errore controllo notifiche:", error);
       return;
     }
@@ -316,6 +327,11 @@ async function updateNotificationBadge() {
   try {
     const supabase = await initSupabase();
     if (!supabase) {
+      // Fallback: nascondi badge se Supabase non disponibile
+      const badge = document.querySelector("[data-notification-badge]");
+      if (badge) {
+        badge.style.display = "none";
+      }
       return;
     }
 
@@ -346,6 +362,19 @@ async function updateNotificationBadge() {
     const { count, error } = await query;
 
     if (error) {
+      // BEST PRACTICE: Gestione errori 401 (Unauthorized) - fallback silenzioso
+      if (error.code === "PGRST301" || error.status === 401 || error.message?.includes("401")) {
+        // Errore di autorizzazione - fallback silenzioso
+        // BEST PRACTICE: Fallback silenzioso per 401 - non loggare come errore
+        // console.debug("[Simple Notifications] Accesso non autorizzato al conteggio (401) - fallback silenzioso");
+        // Imposta count a 0 per evitare badge errato
+        unreadCount = 0;
+        const badge = document.querySelector("[data-notification-badge]");
+        if (badge) {
+          badge.style.display = "none";
+        }
+        return;
+      }
       console.warn("[Simple Notifications] Errore conteggio:", error);
       return;
     }
