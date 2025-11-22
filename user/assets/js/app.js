@@ -1247,7 +1247,7 @@ async function onProfileSubmit(event) {
     // Send email if there are changes
     if (changes.length > 0) {
       try {
-        await fetch('/api/send-email', {
+        await fetch('/api/email?action=send', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

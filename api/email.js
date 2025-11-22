@@ -3,10 +3,9 @@
 // Ex: send-email.js → email.js
 
 import { runtimeFetch as fetch } from "./_lib/fetch.js";
-import { HttpError, handleRouteError } from "./_lib/http.js";
+import { handleRouteError } from "./_lib/http.js";
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const ADMIN_EMAIL = "amministrazione@tradelia.org";
 
 if (!BREVO_API_KEY) {
   console.warn("[Email] BREVO_API_KEY non configurato - invio email disabilitato");
@@ -26,13 +25,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { action = "send", ...data } = req.body;
+    const { action = "send" } = req.body;
 
     if (action === "send") {
       return await handleSendEmail(req, res);
     }
+    if (action === "sms") {
+      return await handleSendSMS(req, res);
+    }
+    if (action === "whatsapp") {
+      return await handleSendWhatsApp(req, res);
+    }
 
-    return res.status(400).json({ ok: false, error: "Azione non valida. Usa: send" });
+    return res.status(400).json({ ok: false, error: "Azione non valida. Usa: send, sms, whatsapp" });
   } catch (error) {
     return handleRouteError(res, error);
   }
@@ -83,5 +88,114 @@ function processEmailContent(type, data, htmlContent, textContent) {
     html: htmlContent || "",
     text: textContent || "",
   };
+}
+
+// ===== SEND SMS =====
+async function handleSendSMS(req, res) {
+  const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
+  const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
+  const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER;
+
+  if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_PHONE_NUMBER) {
+    return res.status(500).json({ ok: false, error: "Servizio SMS non configurato" });
+  }
+
+  const { to, message } = req.body;
+  if (!to || !message) {
+    return res.status(400).json({ ok: false, error: "to e message sono obbligatori" });
+  }
+
+  if (!to.startsWith("+")) {
+    return res.status(400).json({ ok: false, error: "Numero telefono deve essere in formato internazionale" });
+  }
+
+  const auth = Buffer.from(`${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`).toString("base64");
+
+  try {
+    const response = await fetch(
+      `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${auth}`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          From: TWILIO_PHONE_NUMBER,
+          To: to,
+          Body: message,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("[Email] Errore Twilio SMS:", errorText);
+      return res.status(502).json({ ok: false, error: "Errore invio SMS" });
+    }
+
+    return res.status(200).json({ ok: true, message: "SMS inviato con successo" });
+  } catch (error) {
+    console.error("[Email] Errore SMS:", error);
+    return res.status(500).json({ ok: false, error: "Errore interno invio SMS" });
+  }
+}
+
+// ===== SEND WHATSAPP =====
+async function handleSendWhatsApp(req, res) {
+  const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
+  const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
+  const TWILIO_WHATSAPP_NUMBER =
+    process.env.TWILIO_WHATSAPP_NUMBER ||
+    (process.env.TWILIO_PHONE_NUMBER ? `whatsapp:${process.env.TWILIO_PHONE_NUMBER}` : null);
+
+  if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_WHATSAPP_NUMBER) {
+    return res.status(500).json({ ok: false, error: "Servizio WhatsApp non configurato" });
+  }
+
+  if (!TWILIO_WHATSAPP_NUMBER.startsWith("whatsapp:")) {
+    return res.status(500).json({ ok: false, error: "TWILIO_WHATSAPP_NUMBER deve iniziare con 'whatsapp:'" });
+  }
+
+  const { to, message } = req.body;
+  if (!to || !message) {
+    return res.status(400).json({ ok: false, error: "to e message sono obbligatori" });
+  }
+
+  if (!to.startsWith("+")) {
+    return res.status(400).json({ ok: false, error: "Numero telefono deve essere in formato internazionale" });
+  }
+
+  const whatsappTo = to.startsWith("whatsapp:") ? to : `whatsapp:${to}`;
+  const auth = Buffer.from(`${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`).toString("base64");
+
+  try {
+    const response = await fetch(
+      `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${auth}`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          From: TWILIO_WHATSAPP_NUMBER,
+          To: whatsappTo,
+          Body: message,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("[Email] Errore Twilio WhatsApp:", errorText);
+      return res.status(502).json({ ok: false, error: "Errore invio WhatsApp" });
+    }
+
+    return res.status(200).json({ ok: true, message: "WhatsApp inviato con successo" });
+  } catch (error) {
+    console.error("[Email] Errore WhatsApp:", error);
+    return res.status(500).json({ ok: false, error: "Errore interno invio WhatsApp" });
+  }
 }
 

@@ -98,7 +98,7 @@ async function sendFCMTokenToServer(token) {
       return false;
     }
 
-    const response = await fetch("/api/save-push-subscription.js", {
+    const response = await fetch("/api/notifications?action=save-subscription", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

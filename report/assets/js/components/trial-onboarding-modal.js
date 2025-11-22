@@ -700,7 +700,7 @@ async function handleAccountFormSubmit(e) {
     // 5. Send notification email to amministrazione@tradelia.org (non-blocking)
     // Invia sempre per avere un record completo, con dettagli business se disponibili
     try {
-      const emailResponse = await fetch('/api/send-email', {
+      const emailResponse = await fetch('/api/email?action=send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
