@@ -500,6 +500,38 @@ ACQUISTO SERVIZIO:
 
 I modali devono seguire standard rigorosi per accessibilità, usabilità e sicurezza.
 
+#### **📚 Note Accademiche di Riferimento**
+
+**Standard e Linee Guida**:
+
+1. **WCAG 2.2 (2023)**:
+   - **2.1.1 Keyboard**: Tutti i controlli accessibili da tastiera
+   - **2.4.3 Focus Order**: Ordine logico del focus
+   - **2.4.7 Focus Visible**: Focus visibile (outline 2.5px minimo)
+   - **3.3.1 Error Identification**: Errori identificati e descritti
+   - **4.1.3 Status Messages**: Annunci appropriati per screen reader
+
+2. **WAI-ARIA 1.2 (2023)**:
+   - **role="dialog"**: Identifica finestra modale
+   - **aria-modal="true"**: Indica che il dialogo è modale
+   - **aria-label/aria-labelledby**: Etichetta accessibile
+   - **aria-describedby**: Descrizione opzionale
+
+3. **ISO 9241-110 (2020)**:
+   - **Adeguatezza al compito**: Modale supporta compito utente
+   - **Tolleranza agli errori**: Prevenzione e recupero errori
+   - **Autoconsistenza**: Comportamento prevedibile
+
+4. **Nielsen Norman Group (2024)**:
+   - **Modal Dialog Guidelines**: Focus trap obbligatorio
+   - **Keyboard Shortcuts**: Escape per chiudere
+   - **Visual Feedback**: Animazioni entrance/exit
+
+5. **Paper Accademici**:
+   - **"Keyboard Navigation Patterns" (2023)**: Focus trap implementation
+   - **"Accessible Modal Dialogs" (2022)**: ARIA best practices
+   - **"Screen Reader Support for Modals" (2024)**: Annunci appropriati
+
 #### **Struttura Modale (WCAG 2.2 + ARIA)**
 
 ```
@@ -622,37 +654,7 @@ keyboardNav.deactivateFocusTrap();
 modal.close();
 ```
 
-**Note Accademiche**:
-
-1. **WCAG 2.2 (2023)**:
-   - **2.1.1 Keyboard**: Tutti i controlli accessibili da tastiera
-   - **2.4.3 Focus Order**: Ordine logico del focus
-   - **2.4.7 Focus Visible**: Focus visibile (outline 2.5px minimo)
-   - **3.3.1 Error Identification**: Errori identificati e descritti
-   - **4.1.3 Status Messages**: Annunci appropriati per screen reader
-
-2. **WAI-ARIA 1.2 (2023)**:
-   - **role="dialog"**: Identifica finestra modale
-   - **aria-modal="true"**: Indica che il dialogo è modale
-   - **aria-label/aria-labelledby**: Etichetta accessibile
-   - **aria-describedby**: Descrizione opzionale
-
-3. **ISO 9241-110 (2020)**:
-   - **Adeguatezza al compito**: Modale supporta compito utente
-   - **Tolleranza agli errori**: Prevenzione e recupero errori
-   - **Autoconsistenza**: Comportamento prevedibile
-
-4. **Nielsen Norman Group (2024)**:
-   - **Modal Dialog Guidelines**: Focus trap obbligatorio
-   - **Keyboard Shortcuts**: Escape per chiudere
-   - **Visual Feedback**: Animazioni entrance/exit
-
-5. **Paper Accademici**:
-   - **"Keyboard Navigation Patterns" (2023)**: Focus trap implementation
-   - **"Accessible Modal Dialogs" (2022)**: ARIA best practices
-   - **"Screen Reader Support for Modals" (2024)**: Annunci appropriati
-
-**Lacune Identificate (da Implementare)**:
+#### **⚠️ Lacune Identificate (da Implementare)**
 
 - ⚠️ `billing-form.js`: Manca focus trap, manca `role="dialog"`, manca `aria-modal`
 - ⚠️ `global-search.js`: Manca focus trap (ha ARIA corretto)
