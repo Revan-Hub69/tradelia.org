@@ -25,7 +25,13 @@ export async function initSimpleNotifications() {
   if (isPWA) {
     // PWA installata: richiedi permesso notifiche browser per funzionare in background
     await requestNotificationPermission();
-    console.log("[Simple Notifications] PWA installata - notifiche abilitate anche in background");
+
+    // Registra periodic background sync per funzionare anche quando PWA è chiusa
+    await registerPeriodicBackgroundSync();
+
+    console.log(
+      "[Simple Notifications] PWA installata - notifiche abilitate anche in background e quando chiusa"
+    );
   } else {
     // Browser normale: solo notifiche quando la pagina è aperta
     console.log("[Simple Notifications] Browser normale - notifiche solo quando pagina aperta");
@@ -43,6 +49,34 @@ export async function initSimpleNotifications() {
 
   // Controlla subito all'avvio
   await checkForNewNotifications();
+}
+
+/**
+ * Registra periodic background sync per controllare notifiche anche quando PWA è chiusa
+ */
+async function registerPeriodicBackgroundSync() {
+  if (!("serviceWorker" in navigator) || !("PeriodicBackgroundSync" in window)) {
+    console.log("[Simple Notifications] Periodic Background Sync non supportato");
+    return;
+  }
+
+  try {
+    const registration = await navigator.serviceWorker.ready;
+
+    // Registra sync periodico ogni 2 ore (quando PWA è chiusa)
+    // Nota: il browser può decidere l'intervallo effettivo (minimo 1 ora)
+    const status = await registration.periodicSync.register("check-notifications", {
+      minInterval: 2 * 60 * 60 * 1000, // 2 ore in millisecondi
+    });
+
+    if (status === "granted") {
+      console.log("[Simple Notifications] Periodic Background Sync registrato");
+    } else {
+      console.log("[Simple Notifications] Periodic Background Sync non permesso:", status);
+    }
+  } catch (error) {
+    console.warn("[Simple Notifications] Errore registrazione Periodic Background Sync:", error);
+  }
 }
 
 /**

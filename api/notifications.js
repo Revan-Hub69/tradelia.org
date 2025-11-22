@@ -56,11 +56,13 @@ export default async function handler(req, res) {
         return await handleSavePreferences(req, res);
       case "vapid-key":
         return await handleGetVapidKey(req, res);
+      case "check-background":
+        return await handleCheckBackground(req, res);
       default:
         return res.status(400).json({
           ok: false,
           error:
-            "Azione non valida. Usa: push, subscribe, save-subscription, preferences, vapid-key",
+            "Azione non valida. Usa: push, subscribe, save-subscription, preferences, vapid-key, check-background",
         });
     }
   } catch (error) {
@@ -266,4 +268,21 @@ async function handleGetVapidKey(req, res) {
   }
 
   return res.status(200).json({ ok: true, publicKey: VAPID_PUBLIC_KEY });
+}
+
+// ===== CHECK BACKGROUND (per Periodic Background Sync) =====
+async function handleCheckBackground(req, res) {
+  if (req.method !== "GET") {
+    return res.status(405).json({ ok: false, error: "Method not allowed" });
+  }
+
+  // Questo endpoint è chiamato dal Service Worker in background
+  // Per semplicità, restituiamo un array vuoto
+  // In futuro, possiamo implementare logica per controllare notifiche non lette
+  // usando un token salvato in IndexedDB o un identificatore univoco
+
+  return res.status(200).json({
+    ok: true,
+    notifications: [], // Per ora vuoto, da implementare con logica di controllo
+  });
 }

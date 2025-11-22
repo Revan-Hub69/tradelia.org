@@ -16,34 +16,34 @@
  */
 
 // Version number - increment this to force cache update
-const VERSION = '2.0.2';
+const VERSION = "2.0.2";
 const CACHE_NAME = `tradelia-ai-v${VERSION}`;
 const STATIC_CACHE = [
-  '/',
-  '/dashboard.html',
-  '/dashboard.webmanifest',
-  '/archivio/index.html',
-  '/archivio/dashboard.html',
-  '/admin/index.html',
-  '/admin/tokens.html',
-  '/admin/requests.html',
-  '/admin/reports.html',
-  '/admin/users.html',
-  '/accesso.html',
-  '/report/assets/css/tokens.css',
-  '/assets/css/global-header.css',
-  '/archivio/assets/css/archive.css',
-  '/archivio/assets/css/dashboard.css',
-  '/icons/icon-192.svg',
-  '/icons/icon-512.svg',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
-  '/favicon.png',
+  "/",
+  "/dashboard.html",
+  "/dashboard.webmanifest",
+  "/archivio/index.html",
+  "/archivio/dashboard.html",
+  "/admin/index.html",
+  "/admin/tokens.html",
+  "/admin/requests.html",
+  "/admin/reports.html",
+  "/admin/users.html",
+  "/accesso.html",
+  "/report/assets/css/tokens.css",
+  "/assets/css/global-header.css",
+  "/archivio/assets/css/archive.css",
+  "/archivio/assets/css/dashboard.css",
+  "/icons/icon-192.svg",
+  "/icons/icon-512.svg",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png",
+  "/favicon.png",
 ];
 
 // ===== INSTALL =====
-self.addEventListener('install', (event) => {
-  console.log('[SW] Install');
+self.addEventListener("install", (event) => {
+  console.log("[SW] Install");
   event.waitUntil(
     caches
       .open(CACHE_NAME)
@@ -53,8 +53,8 @@ self.addEventListener('install', (event) => {
 });
 
 // ===== ACTIVATE =====
-self.addEventListener('activate', (event) => {
-  console.log('[SW] Activate');
+self.addEventListener("activate", (event) => {
+  console.log("[SW] Activate");
   event.waitUntil(
     caches
       .keys()
@@ -69,7 +69,7 @@ self.addEventListener('activate', (event) => {
         return self.clients.matchAll().then((clients) => {
           clients.forEach((client) => {
             client.postMessage({
-              type: 'SW_UPDATED',
+              type: "SW_UPDATED",
               version: VERSION,
             });
           });
@@ -79,21 +79,21 @@ self.addEventListener('activate', (event) => {
 });
 
 // ===== MESSAGE HANDLER =====
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
 });
 
 // ===== FETCH =====
-self.addEventListener('fetch', (event) => {
+self.addEventListener("fetch", (event) => {
   // Solo cache per risorse statiche, non per API
-  if (event.request.url.includes('/api/')) {
+  if (event.request.url.includes("/api/")) {
     return; // Non cache API
   }
 
   // Network-first strategy for HTML pages to ensure fresh content
-  if (event.request.headers.get('accept').includes('text/html')) {
+  if (event.request.headers.get("accept").includes("text/html")) {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
@@ -119,34 +119,34 @@ self.addEventListener('fetch', (event) => {
 });
 
 // ===== PUSH NOTIFICATIONS =====
-self.addEventListener('push', (event) => {
-  console.log('[SW] Push notification received');
+self.addEventListener("push", (event) => {
+  console.log("[SW] Push notification received");
 
   let data = {};
   if (event.data) {
     try {
       data = event.data.json();
     } catch {
-      data = { title: 'Tradelia AI', body: event.data.text() };
+      data = { title: "Tradelia AI", body: event.data.text() };
     }
   }
 
-  const title = data.title || 'Tradelia AI';
+  const title = data.title || "Tradelia AI";
   const options = {
-    body: data.body || 'Nuovo report disponibile',
-    icon: '/icons/icon-192.png',
-    badge: '/icons/icon-192.png',
-    data: data.url || '/archivio/dashboard.html',
-    tag: data.tag || 'tradelia-notification',
+    body: data.body || "Nuovo report disponibile",
+    icon: "/icons/icon-192.png",
+    badge: "/icons/icon-192.png",
+    data: data.url || "/archivio/dashboard.html",
+    tag: data.tag || "tradelia-notification",
     requireInteraction: false,
     actions: [
       {
-        action: 'open',
-        title: 'Apri Dashboard',
+        action: "open",
+        title: "Apri Dashboard",
       },
       {
-        action: 'close',
-        title: 'Chiudi',
+        action: "close",
+        title: "Chiudi",
       },
     ],
   };
@@ -155,19 +155,72 @@ self.addEventListener('push', (event) => {
 });
 
 // ===== NOTIFICATION CLICK =====
-self.addEventListener('notificationclick', (event) => {
-  console.log('[SW] Notification click');
+self.addEventListener("notificationclick", (event) => {
+  console.log("[SW] Notification click");
 
   event.notification.close();
 
-  if (event.action === 'open' || !event.action) {
-    const url = event.notification.data || '/dashboard.html';
-    // eslint-disable-next-line no-undef
+  if (event.action === "open" || !event.action) {
+    const url = event.notification.data || "/dashboard.html";
+
     event.waitUntil(self.clients.openWindow(url));
   }
 });
 
 // ===== NOTIFICATION CLOSE =====
-self.addEventListener('notificationclose', () => {
-  console.log('[SW] Notification closed');
+self.addEventListener("notificationclose", () => {
+  console.log("[SW] Notification closed");
 });
+
+// ===== PERIODIC BACKGROUND SYNC =====
+// Permette al Service Worker di controllare notifiche anche quando la PWA è chiusa
+self.addEventListener("periodicsync", (event) => {
+  if (event.tag === "check-notifications") {
+    console.log("[SW] Periodic sync: checking notifications");
+    event.waitUntil(checkNotificationsInBackground());
+  }
+});
+
+/**
+ * Controlla notifiche in background (chiamato periodicamente dal Service Worker)
+ */
+async function checkNotificationsInBackground() {
+  try {
+    // Ottieni token dall'IndexedDB o da un messaggio dal client
+    // Per semplicità, usiamo un endpoint API che non richiede token
+    // (o possiamo salvare il token in IndexedDB quando l'utente si autentica)
+
+    const response = await fetch("/api/notifications?action=check-background", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      console.warn("[SW] Errore controllo notifiche:", response.status);
+      return;
+    }
+
+    const data = await response.json();
+
+    if (data.notifications && data.notifications.length > 0) {
+      // Mostra notifiche per ogni nuova notifica
+      data.notifications.forEach((notification) => {
+        const title = notification.title || "Tradelia";
+        const options = {
+          body: notification.message || notification.body || "Nuova notifica",
+          icon: "/icons/icon-192.png",
+          badge: "/icons/icon-192.png",
+          data: "/dashboard.html#notifications",
+          tag: `notification-${notification.id}`,
+          requireInteraction: false,
+        };
+
+        self.registration.showNotification(title, options);
+      });
+    }
+  } catch (error) {
+    console.warn("[SW] Errore controllo notifiche background:", error);
+  }
+}
