@@ -71,10 +71,11 @@ function setupFavoriteButtons() {
         updateFavoriteButton(favoriteBtn, moduleId);
         applyFavoritesOrder();
 
-        // BEST PRACTICE: Aggiorna sezione preferiti dopo toggle
-        setTimeout(() => {
+        // BEST PRACTICE: Aggiorna sezione preferiti dopo toggle con debounce per evitare multiple chiamate
+        clearTimeout(window.favoritesUpdateTimeout);
+        window.favoritesUpdateTimeout = setTimeout(() => {
           createFavoritesSection();
-        }, 100);
+        }, 150);
 
         // Haptic feedback
         if (window.triggerHapticFeedback) {
