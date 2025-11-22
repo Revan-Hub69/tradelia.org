@@ -22,6 +22,12 @@ export function initAuthModal() {
 export function showAuthModal(tab = "code") {
   const modal = document.getElementById(MODAL_ID);
   if (!modal) {
+    // Se modale non esiste, crealo
+    createModal();
+    // Riprova dopo un breve delay
+    setTimeout(() => {
+      showAuthModal(tab);
+    }, 100);
     return;
   }
 
@@ -483,10 +489,104 @@ async function handleLoginSubmit(e) {
  */
 async function handleSignupSubmit(e) {
   e.preventDefault();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const form = e.target;
-  if (window.showToast) {
-    window.showToast("Funzionalità registrazione in arrivo", "info");
+  const emailInput = document.getElementById("signup-email");
+  const passwordInput = document.getElementById("signup-password");
+  const passwordConfirmInput = document.getElementById("signup-password-confirm");
+  const privacyCheckbox = document.getElementById("signup-privacy");
+
+  const email = emailInput?.value?.trim() || "";
+  const password = passwordInput?.value || "";
+  const passwordConfirm = passwordConfirmInput?.value || "";
+  const privacyAccepted = privacyCheckbox?.checked || false;
+
+  // Validation
+  if (!email) {
+    if (window.showToast) {
+      window.showToast("Inserisci un'email", "error");
+    }
+    emailInput?.focus();
+    return;
   }
-  // TODO: Implementare registrazione email/password
+
+  if (!password || password.length < 12) {
+    if (window.showToast) {
+      window.showToast("Password deve essere di almeno 12 caratteri", "error");
+    }
+    passwordInput?.focus();
+    return;
+  }
+
+  if (password !== passwordConfirm) {
+    if (window.showToast) {
+      window.showToast("Le password non corrispondono", "error");
+    }
+    passwordConfirmInput?.focus();
+    return;
+  }
+
+  if (!privacyAccepted) {
+    if (window.showToast) {
+      window.showToast("Devi accettare la privacy policy", "error");
+    }
+    privacyCheckbox?.focus();
+    return;
+  }
+
+  // Disable form
+  const submitBtn = form.querySelector('button[type="submit"]');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Registrazione in corso...";
+  }
+
+  try {
+    const response = await fetch("/api/auth-signup-login?action=signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        password,
+        passwordConfirm,
+        privacyAccepted,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "Errore durante la registrazione");
+    }
+
+    // Save token
+    if (data.token) {
+      localStorage.setItem("tradelia-access-token-v1", data.token);
+      if (window.showToast) {
+        window.showToast("Registrazione completata! Accesso in corso...", "success");
+      }
+      hideAuthModal();
+      // Reload page to update banner
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } else {
+      if (window.showToast) {
+        window.showToast(
+          data.message || "Registrazione completata. Controlla la tua email.",
+          "success"
+        );
+      }
+      hideAuthModal();
+    }
+  } catch (error) {
+    console.error("[AuthModal] Errore registrazione:", error);
+    if (window.showToast) {
+      window.showToast(error.message || "Errore durante la registrazione", "error");
+    }
+    // Re-enable form
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Registrati";
+    }
+  }
 }
