@@ -14,13 +14,24 @@ const STORAGE_KEY = "dashboard-module-favorites";
 export function initModuleFavorites() {
   setupFavoriteButtons();
   applyFavoritesOrder();
+  createFavoritesSection();
+
+  // BEST PRACTICE: Aggiorna sezione preferiti quando cambia localStorage (cross-tab sync)
+  window.addEventListener("storage", (e) => {
+    if (e.key === STORAGE_KEY) {
+      createFavoritesSection();
+      applyFavoritesOrder();
+      // Re-inizializza pulsanti preferiti
+      setupFavoriteButtons();
+    }
+  });
 }
 
 /**
  * Setup favorite buttons on module cards
  */
 function setupFavoriteButtons() {
-  const cards = document.querySelectorAll(".module-card");
+  const cards = document.querySelectorAll(".module-card:not(.favorites-grid .module-card)");
   cards.forEach((card) => {
     const moduleId = card.dataset.module;
     if (!moduleId) {
@@ -176,6 +187,9 @@ export function getFavorites() {
  */
 function saveFavorites(favorites) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
+
+  // BEST PRACTICE: Trigger custom event per cross-tab sync
+  window.dispatchEvent(new CustomEvent("favorites-changed", { detail: favorites }));
 }
 
 /**
@@ -185,14 +199,14 @@ function applyFavoritesOrder() {
   const favorites = getFavorites();
   if (favorites.length === 0) {
     // No favorites, show all modules normally
-    document.querySelectorAll(".module-card").forEach((card) => {
+    document.querySelectorAll(".module-card:not(.favorites-grid .module-card)").forEach((card) => {
       card.style.display = "";
       card.dataset.favorited = "false";
     });
     return;
   }
 
-  const modulesGrid = document.querySelector(".modules-grid");
+  const modulesGrid = document.querySelector(".modules-grid:not(.favorites-grid)");
   if (!modulesGrid) {
     return;
   }
@@ -220,6 +234,7 @@ function applyFavoritesOrder() {
 /**
  * Create favorites section in modules view
  * BEST PRACTICE: Sezione principale sempre visibile se ci sono preferiti
+ * Migliorato: Aggiorna senza rimuovere, transizioni fluide
  */
 export function createFavoritesSection() {
   const modulesView = document.getElementById("modules-view");
@@ -227,119 +242,185 @@ export function createFavoritesSection() {
     return;
   }
 
-  // Rimuovi sezione esistente per ricrearla
-  const existingSection = document.getElementById("favorites-section");
-  if (existingSection) {
-    existingSection.remove();
-  }
-
   const favorites = getFavorites();
 
-  // BEST PRACTICE: Mostra sempre la sezione, anche se vuota (con messaggio)
-  const favoritesSection = document.createElement("div");
-  favoritesSection.id = "favorites-section";
-  favoritesSection.className = "module-category favorites-category";
+  // BEST PRACTICE: Non rimuovere la sezione, aggiorna solo il contenuto per evitare flash
+  let favoritesSection = document.getElementById("favorites-section");
+  let favoritesGrid = null;
 
-  const categoryTitle = document.createElement("div");
-  categoryTitle.className = "category-title";
-  const favoritesLabel = window.t ? window.t("favorites.section") : "Preferiti";
-  categoryTitle.innerHTML = `
-    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-    </svg>
-    <span>${favoritesLabel}</span>
-  `;
+  if (!favoritesSection) {
+    // Crea sezione solo se non esiste
+    favoritesSection = document.createElement("div");
+    favoritesSection.id = "favorites-section";
+    favoritesSection.className = "module-category favorites-category";
 
-  const favoritesGrid = document.createElement("div");
-  favoritesGrid.className = "modules-grid favorites-grid";
-
-  if (favorites.length === 0) {
-    // Mostra messaggio se non ci sono preferiti
-    favoritesGrid.innerHTML = `
-      <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: var(--spacing-xl); color: var(--dash-text-muted);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="48" height="48" style="margin: 0 auto var(--spacing-md); opacity: 0.5;">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-        </svg>
-        <p style="margin: 0; font-size: var(--fs-14, 14px);">Nessun modulo nei preferiti. Clicca sulla stella su un modulo per aggiungerlo.</p>
-      </div>
+    const categoryTitle = document.createElement("div");
+    categoryTitle.className = "category-title";
+    const favoritesLabel = window.t ? window.t("favorites.section") : "Preferiti";
+    categoryTitle.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span>${favoritesLabel}</span>
     `;
+    favoritesSection.appendChild(categoryTitle);
+
+    // Inserisci sezione in cima
+    const firstCategory = modulesView.querySelector(".module-category:not(.favorites-category)");
+    if (firstCategory) {
+      modulesView.insertBefore(favoritesSection, firstCategory);
+    } else {
+      modulesView.insertBefore(favoritesSection, modulesView.firstChild);
+    }
   } else {
-    // Mostra moduli preferiti
-    favorites.forEach((moduleId) => {
-      const card = document.querySelector(
-        `.module-card[data-module="${moduleId}"]:not(.favorites-grid .module-card)`
-      );
-      if (card) {
-        // BEST PRACTICE: Non clonare, sposta la card nella sezione preferiti
-        // Questo mantiene tutti gli event listener e il pulsante preferiti funzionante
-        const cardToMove = card.cloneNode(true);
+    // Se esiste, trova la griglia esistente
+    favoritesGrid = favoritesSection.querySelector(".favorites-grid");
+  }
 
-        // Rimuovi il pulsante preferiti dal clone (sarà gestito dalla card originale)
-        const favoriteBtnInClone = cardToMove.querySelector(".module-favorite-btn");
-        if (favoriteBtnInClone) {
-          favoriteBtnInClone.remove();
-        }
+  // Crea o aggiorna la griglia
+  if (!favoritesGrid) {
+    favoritesGrid = document.createElement("div");
+    favoritesGrid.className = "modules-grid favorites-grid";
+    favoritesSection.appendChild(favoritesGrid);
+  }
 
-        // Aggiungi il clone alla griglia preferiti
-        favoritesGrid.appendChild(cardToMove);
+  // BEST PRACTICE: Aggiorna contenuto senza rimuovere completamente
+  // Usa requestAnimationFrame per transizione fluida
+  requestAnimationFrame(() => {
+    // Rimuovi solo le card esistenti dalla griglia preferiti con animazione
+    const existingCards = Array.from(favoritesGrid.querySelectorAll(".module-card"));
 
-        // BEST PRACTICE: Nascondi la card originale dalla griglia principale
-        // ma mantienila nel DOM per gli event listener
-        if (card.parentElement && card.parentElement.classList.contains("modules-grid")) {
-          card.style.display = "none";
-        }
-      }
-    });
+    if (existingCards.length > 0) {
+      existingCards.forEach((card, index) => {
+        // Animazione fade out
+        card.style.transition = "opacity 0.2s ease, transform 0.2s ease";
+        card.style.opacity = "0";
+        card.style.transform = "scale(0.95)";
 
-    // BEST PRACTICE: Re-inizializza i pulsanti preferiti sulle card clonate
-    setTimeout(() => {
-      favoritesGrid.querySelectorAll(".module-card").forEach((clonedCard) => {
-        const moduleId = clonedCard.dataset.module;
-        if (moduleId) {
-          // Trova la card originale per copiare lo stato del pulsante preferiti
-          const originalCard = document.querySelector(
-            `.module-card[data-module="${moduleId}"]:not(.favorites-grid .module-card)`
-          );
-          if (originalCard) {
-            const originalBtn = originalCard.querySelector(".module-favorite-btn");
-            if (originalBtn && !clonedCard.querySelector(".module-favorite-btn")) {
-              // Clona il pulsante preferiti dalla card originale
-              const favoriteBtn = originalBtn.cloneNode(true);
-              clonedCard.style.position = "relative";
-              clonedCard.appendChild(favoriteBtn);
-
-              // Aggiungi event listener al pulsante clonato
-              favoriteBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                toggleFavorite(moduleId);
-                updateFavoriteButton(favoriteBtn, moduleId);
-                applyFavoritesOrder();
-                setTimeout(() => {
-                  createFavoritesSection();
-                }, 100);
-                if (window.triggerHapticFeedback) {
-                  window.triggerHapticFeedback("light");
-                }
-                return false;
-              });
+        setTimeout(
+          () => {
+            if (card.parentElement === favoritesGrid) {
+              card.remove();
             }
-          }
-        }
+          },
+          200 + index * 30
+        );
       });
-    }, 50);
-  }
+    }
 
-  favoritesSection.appendChild(categoryTitle);
-  favoritesSection.appendChild(favoritesGrid);
+    // Dopo la rimozione, aggiungi le nuove card
+    setTimeout(
+      () => {
+        // Pulisci completamente la griglia
+        favoritesGrid.innerHTML = "";
 
-  // BEST PRACTICE: Inserisci sempre in cima, prima di tutte le altre categorie
-  const firstCategory = modulesView.querySelector(".module-category:not(.favorites-category)");
-  if (firstCategory) {
-    modulesView.insertBefore(favoritesSection, firstCategory);
-  } else {
-    // Se non ci sono altre categorie, inserisci all'inizio
-    modulesView.insertBefore(favoritesSection, modulesView.firstChild);
-  }
+        if (favorites.length === 0) {
+          // Mostra messaggio se non ci sono preferiti
+          const emptyState = document.createElement("div");
+          emptyState.className = "empty-state";
+          emptyState.style.cssText =
+            "grid-column: 1 / -1; text-align: center; padding: var(--spacing-xl); color: var(--dash-text-muted); opacity: 0;";
+          emptyState.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="48" height="48" style="margin: 0 auto var(--spacing-md); opacity: 0.5;">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          <p style="margin: 0; font-size: var(--fs-14, 14px);">Nessun modulo nei preferiti. Clicca sulla stella su un modulo per aggiungerlo.</p>
+        `;
+          favoritesGrid.appendChild(emptyState);
+
+          // Anima fade in
+          requestAnimationFrame(() => {
+            emptyState.style.transition = "opacity 0.3s ease";
+            emptyState.style.opacity = "1";
+          });
+        } else {
+          // Mostra moduli preferiti - usa le card originali, non cloni
+          favorites.forEach((moduleId, index) => {
+            const originalCard = document.querySelector(
+              `.module-card[data-module="${moduleId}"]:not(.favorites-grid .module-card)`
+            );
+
+            if (originalCard) {
+              // BEST PRACTICE: Clona la card per la sezione preferiti
+              const cardClone = originalCard.cloneNode(true);
+
+              // Assicura che il pulsante preferiti sia presente e funzionante
+              let favoriteBtn = cardClone.querySelector(".module-favorite-btn");
+              if (!favoriteBtn) {
+                // Se non c'è, crealo
+                favoriteBtn = document.createElement("button");
+                favoriteBtn.className = "module-favorite-btn favorited";
+                favoriteBtn.setAttribute(
+                  "aria-label",
+                  window.t ? window.t("favorites.remove") : "Rimuovi dai preferiti"
+                );
+                favoriteBtn.setAttribute("type", "button");
+                favoriteBtn.innerHTML = `
+                <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              `;
+                cardClone.style.position = "relative";
+                cardClone.appendChild(favoriteBtn);
+              }
+
+              // Aggiungi event listener al pulsante preferiti
+              favoriteBtn.addEventListener(
+                "click",
+                (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  e.stopImmediatePropagation();
+
+                  // Microinterazione
+                  favoriteBtn.style.transform = "scale(0.9)";
+                  setTimeout(() => {
+                    favoriteBtn.style.transform = "";
+                  }, 150);
+
+                  toggleFavorite(moduleId);
+                  updateFavoriteButton(favoriteBtn, moduleId);
+                  applyFavoritesOrder();
+
+                  // Aggiorna sezione preferiti
+                  clearTimeout(window.favoritesUpdateTimeout);
+                  window.favoritesUpdateTimeout = setTimeout(() => {
+                    createFavoritesSection();
+                  }, 150);
+
+                  if (window.triggerHapticFeedback) {
+                    window.triggerHapticFeedback("light");
+                  }
+                  return false;
+                },
+                true
+              );
+
+              // Animazione fade in
+              cardClone.style.opacity = "0";
+              cardClone.style.transform = "scale(0.95)";
+              favoritesGrid.appendChild(cardClone);
+
+              // Anima l'entrata con delay progressivo
+              setTimeout(() => {
+                cardClone.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+                cardClone.style.opacity = "1";
+                cardClone.style.transform = "scale(1)";
+              }, index * 50);
+
+              // Nascondi la card originale dalla griglia principale
+              if (
+                originalCard.parentElement &&
+                originalCard.parentElement.classList.contains("modules-grid") &&
+                !originalCard.parentElement.classList.contains("favorites-grid")
+              ) {
+                originalCard.style.display = "none";
+              }
+            }
+          });
+        }
+      },
+      existingCards.length > 0 ? 250 : 0
+    );
+  });
 }
