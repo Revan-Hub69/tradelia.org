@@ -1,6 +1,2 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 # Auto-version: commit automatico bump versione dopo ogni commit
 node scripts/auto-version-post-commit.js
-
