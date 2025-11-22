@@ -215,15 +215,29 @@ function createModal() {
                 <label for="auth-password" class="auth-form-label">
                   Password
                 </label>
-                <input
-                  type="password"
-                  id="auth-password"
-                  name="password"
-                  class="auth-form-input"
-                  placeholder="Inserisci la password"
-                  autocomplete="current-password"
-                  required
-                />
+                <div class="auth-password-wrapper">
+                  <input
+                    type="password"
+                    id="auth-password"
+                    name="password"
+                    class="auth-form-input"
+                    placeholder="Inserisci la password"
+                    autocomplete="current-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="auth-password-toggle"
+                    aria-label="Mostra password"
+                    data-target="auth-password"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  </button>
+                </div>
+                <div id="auth-rate-limit" class="auth-rate-limit" aria-live="polite"></div>
               </div>
               <div class="auth-form-actions">
                 <button type="submit" class="btn btn-primary">
@@ -260,35 +274,69 @@ function createModal() {
                   autocomplete="email"
                   required
                 />
+                <div id="signup-email-validation" class="auth-email-validation" aria-live="polite"></div>
               </div>
               <div class="auth-form-group">
                 <label for="signup-password" class="auth-form-label">
                   Password
                 </label>
-                <input
-                  type="password"
-                  id="signup-password"
-                  name="password"
-                  class="auth-form-input"
-                  placeholder="Minimo 12 caratteri"
-                  autocomplete="new-password"
-                  required
-                  minlength="12"
-                />
+                <div class="auth-password-wrapper">
+                  <input
+                    type="password"
+                    id="signup-password"
+                    name="password"
+                    class="auth-form-input"
+                    placeholder="Minimo 12 caratteri"
+                    autocomplete="new-password"
+                    required
+                    minlength="12"
+                  />
+                  <button
+                    type="button"
+                    class="auth-password-toggle"
+                    aria-label="Mostra password"
+                    data-target="signup-password"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  </button>
+                </div>
+                <div id="signup-password-strength" class="auth-password-strength" aria-live="polite">
+                  <div class="auth-password-strength-bar">
+                    <div class="auth-password-strength-fill" style="width: 0%"></div>
+                  </div>
+                  <div class="auth-password-strength-text">Inserisci almeno 12 caratteri</div>
+                </div>
               </div>
               <div class="auth-form-group">
                 <label for="signup-password-confirm" class="auth-form-label">
                   Conferma Password
                 </label>
-                <input
-                  type="password"
-                  id="signup-password-confirm"
-                  name="password-confirm"
-                  class="auth-form-input"
-                  placeholder="Ripeti la password"
-                  autocomplete="new-password"
-                  required
-                />
+                <div class="auth-password-wrapper">
+                  <input
+                    type="password"
+                    id="signup-password-confirm"
+                    name="password-confirm"
+                    class="auth-form-input"
+                    placeholder="Ripeti la password"
+                    autocomplete="new-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="auth-password-toggle"
+                    aria-label="Mostra password"
+                    data-target="signup-password-confirm"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  </button>
+                </div>
+                <div id="signup-password-match" class="auth-password-match" aria-live="polite"></div>
               </div>
               <div class="auth-form-group">
                 <label class="auth-form-checkbox">
@@ -383,6 +431,12 @@ function setupModalEvents() {
       }
     });
   }
+
+  // Real-time validation (deferred to ensure DOM is ready)
+  setTimeout(() => {
+    setupRealTimeValidation();
+    setupPasswordToggles();
+  }, 100);
 }
 
 /**
@@ -476,12 +530,104 @@ async function handleCodeSubmit(e) {
  */
 async function handleLoginSubmit(e) {
   e.preventDefault();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const form = e.target;
-  if (window.showToast) {
-    window.showToast("Funzionalità login in arrivo", "info");
+  const emailInput = document.getElementById("auth-email");
+  const passwordInput = document.getElementById("auth-password");
+  const rateLimitDiv = document.getElementById("auth-rate-limit");
+
+  const email = emailInput?.value?.trim() || "";
+  const password = passwordInput?.value || "";
+
+  // Validation
+  if (!email) {
+    if (window.showToast) {
+      window.showToast("Inserisci un'email", "error");
+    }
+    emailInput?.focus();
+    return;
   }
-  // TODO: Implementare login email/password
+
+  if (!password) {
+    if (window.showToast) {
+      window.showToast("Inserisci la password", "error");
+    }
+    passwordInput?.focus();
+    return;
+  }
+
+  // Disable form
+  const submitBtn = form.querySelector('button[type="submit"]');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Accesso in corso...";
+  }
+
+  try {
+    const response = await fetch("/api/auth?action=login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      // Update rate limit display
+      if (data.remaining !== undefined && rateLimitDiv) {
+        if (data.locked) {
+          rateLimitDiv.className = "auth-rate-limit error";
+          rateLimitDiv.textContent = `Account bloccato. Riprova tra ${data.minutesRemaining || 15} minuti.`;
+        } else {
+          rateLimitDiv.className = "auth-rate-limit warning";
+          rateLimitDiv.textContent = `Tentativi rimanenti: ${data.remaining || 0}/5`;
+        }
+      }
+
+      // Handle email not verified
+      if (data.emailNotVerified) {
+        if (window.showToast) {
+          window.showToast(
+            "Verifica la tua email prima di accedere. Controlla la casella email.",
+            "error"
+          );
+        }
+      } else {
+        if (window.showToast) {
+          window.showToast(data.error || "Email o password non corretti", "error");
+        }
+      }
+      passwordInput?.focus();
+      // Re-enable form
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Accedi";
+      }
+      return;
+    }
+
+    // Save token
+    if (data.token) {
+      localStorage.setItem("tradelia-access-token-v1", data.token);
+      if (window.showToast) {
+        window.showToast("Accesso riuscito!", "success");
+      }
+      hideAuthModal();
+      // Reload page to update banner
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+  } catch (error) {
+    console.error("[AuthModal] Errore login:", error);
+    if (window.showToast) {
+      window.showToast("Errore di connessione. Riprova.", "error");
+    }
+    // Re-enable form
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Accedi";
+    }
+  }
 }
 
 /**
@@ -541,7 +687,7 @@ async function handleSignupSubmit(e) {
   }
 
   try {
-    const response = await fetch("/api/auth-signup-login?action=signup", {
+    const response = await fetch("/api/auth?action=signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -558,14 +704,28 @@ async function handleSignupSubmit(e) {
       throw new Error(data.error || "Errore durante la registrazione");
     }
 
-    // Save token
-    if (data.token) {
+    // BEST PRACTICE: Email verification required
+    if (data.emailSent && !data.token) {
+      if (window.showToast) {
+        window.showToast(
+          "Registrazione completata! Verifica la tua email per attivare l'account.",
+          "success"
+        );
+      }
+      hideAuthModal();
+      // Mostra messaggio informativo
+      setTimeout(() => {
+        if (window.showToast) {
+          window.showToast("Controlla la tua casella email per il link di verifica", "info");
+        }
+      }, 2000);
+    } else if (data.token) {
+      // Token restituito direttamente (fallback)
       localStorage.setItem("tradelia-access-token-v1", data.token);
       if (window.showToast) {
         window.showToast("Registrazione completata! Accesso in corso...", "success");
       }
       hideAuthModal();
-      // Reload page to update banner
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -587,6 +747,256 @@ async function handleSignupSubmit(e) {
     if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.textContent = "Registrati";
+    }
+  }
+}
+
+// ===== REAL-TIME VALIDATION =====
+function setupRealTimeValidation() {
+  // Email validation (signup)
+  const signupEmailInput = document.getElementById("signup-email");
+  const signupEmailValidation = document.getElementById("signup-email-validation");
+  if (signupEmailInput && signupEmailValidation) {
+    let emailCheckTimeout;
+    signupEmailInput.addEventListener("input", () => {
+      clearTimeout(emailCheckTimeout);
+      const email = signupEmailInput.value.trim();
+
+      if (!email) {
+        signupEmailValidation.textContent = "";
+        signupEmailValidation.className = "auth-email-validation";
+        return;
+      }
+
+      // Basic email format validation
+      if (!validateEmail(email)) {
+        signupEmailValidation.textContent = "Formato email non valido";
+        signupEmailValidation.className = "auth-email-validation error";
+        return;
+      }
+
+      // Debounce email availability check
+      emailCheckTimeout = setTimeout(async () => {
+        const available = await checkEmailAvailability(email);
+        if (available === true) {
+          signupEmailValidation.textContent = "✓ Email disponibile";
+          signupEmailValidation.className = "auth-email-validation success";
+        } else if (available === false) {
+          signupEmailValidation.textContent = "Email già registrata";
+          signupEmailValidation.className = "auth-email-validation error";
+        }
+      }, 500);
+    });
+  }
+
+  // Password strength (signup)
+  const signupPasswordInput = document.getElementById("signup-password");
+  const passwordStrengthDiv = document.getElementById("signup-password-strength");
+  if (signupPasswordInput && passwordStrengthDiv) {
+    signupPasswordInput.addEventListener("input", () => {
+      updatePasswordStrength(signupPasswordInput.value, passwordStrengthDiv);
+    });
+  }
+
+  // Password match (signup)
+  const signupPasswordConfirmInput = document.getElementById("signup-password-confirm");
+  const passwordMatchDiv = document.getElementById("signup-password-match");
+  if (signupPasswordInput && signupPasswordConfirmInput && passwordMatchDiv) {
+    signupPasswordConfirmInput.addEventListener("input", () => {
+      updatePasswordMatch(
+        signupPasswordInput.value,
+        signupPasswordConfirmInput.value,
+        passwordMatchDiv
+      );
+    });
+    signupPasswordInput.addEventListener("input", () => {
+      updatePasswordMatch(
+        signupPasswordInput.value,
+        signupPasswordConfirmInput.value,
+        passwordMatchDiv
+      );
+    });
+  }
+
+  // Forgot password handler
+  const forgotPasswordBtn = document.getElementById("auth-forgot-password");
+  if (forgotPasswordBtn) {
+    forgotPasswordBtn.addEventListener("click", handleResetPasswordRequest);
+  }
+}
+
+// ===== PASSWORD TOGGLES =====
+function setupPasswordToggles() {
+  const toggles = document.querySelectorAll(".auth-password-toggle");
+  toggles.forEach((toggle) => {
+    toggle.addEventListener("click", () => {
+      const targetId = toggle.getAttribute("data-target");
+      const targetInput = document.getElementById(targetId);
+      if (targetInput) {
+        togglePasswordVisibility(targetInput, toggle);
+      }
+    });
+  });
+}
+
+// ===== VALIDATION HELPERS =====
+function validateEmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}
+
+async function checkEmailAvailability(email) {
+  try {
+    const response = await fetch("/api/auth?action=check-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+    if (data.ok) {
+      return data.available;
+    }
+    return null;
+  } catch (error) {
+    console.error("[AuthModal] Errore check email:", error);
+    return null;
+  }
+}
+
+function updatePasswordStrength(password, container) {
+  const fill = container.querySelector(".auth-password-strength-fill");
+  const text = container.querySelector(".auth-password-strength-text");
+
+  if (!password) {
+    fill.style.width = "0%";
+    text.textContent = "Inserisci almeno 12 caratteri";
+    container.className = "auth-password-strength";
+    return;
+  }
+
+  let strength = 0;
+  let strengthText = "";
+  let strengthClass = "";
+
+  if (password.length >= 12) {
+    strength += 25;
+  }
+  if (password.length >= 16) {
+    strength += 10;
+  }
+  if (/[a-z]/.test(password)) {
+    strength += 15;
+  }
+  if (/[A-Z]/.test(password)) {
+    strength += 15;
+  }
+  if (/[0-9]/.test(password)) {
+    strength += 15;
+  }
+  if (/[^a-zA-Z0-9]/.test(password)) {
+    strength += 20;
+  }
+
+  if (strength < 40) {
+    strengthText = "Debole";
+    strengthClass = "weak";
+  } else if (strength < 70) {
+    strengthText = "Media";
+    strengthClass = "medium";
+  } else {
+    strengthText = "Forte";
+    strengthClass = "strong";
+  }
+
+  fill.style.width = `${Math.min(strength, 100)}%`;
+  text.textContent = strengthText;
+  container.className = `auth-password-strength ${strengthClass}`;
+}
+
+function updatePasswordMatch(password, passwordConfirm, container) {
+  if (!passwordConfirm) {
+    container.textContent = "";
+    container.className = "auth-password-match";
+    return;
+  }
+
+  if (password === passwordConfirm) {
+    container.textContent = "✓ Le password corrispondono";
+    container.className = "auth-password-match success";
+  } else {
+    container.textContent = "Le password non corrispondono";
+    container.className = "auth-password-match error";
+  }
+}
+
+function togglePasswordVisibility(input, toggle) {
+  const isPassword = input.type === "password";
+  input.type = isPassword ? "text" : "password";
+  toggle.setAttribute("aria-label", isPassword ? "Nascondi password" : "Mostra password");
+
+  // Update icon (simple toggle - you might want to use different icons)
+  const svg = toggle.querySelector("svg");
+  if (svg) {
+    if (isPassword) {
+      // Show eye-off icon (simplified - you might want to use a proper icon)
+      svg.innerHTML = `
+        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+        <line x1="1" y1="1" x2="23" y2="23" />
+      `;
+    } else {
+      // Show eye icon
+      svg.innerHTML = `
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+        <circle cx="12" cy="12" r="3" />
+      `;
+    }
+  }
+}
+
+// ===== RESET PASSWORD REQUEST =====
+async function handleResetPasswordRequest() {
+  const emailInput = document.getElementById("auth-email");
+  const email = emailInput?.value?.trim() || "";
+
+  if (!email) {
+    if (window.showToast) {
+      window.showToast("Inserisci la tua email per reimpostare la password", "error");
+    }
+    emailInput?.focus();
+    return;
+  }
+
+  if (!validateEmail(email)) {
+    if (window.showToast) {
+      window.showToast("Formato email non valido", "error");
+    }
+    emailInput?.focus();
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/auth?action=reset-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+
+    if (data.ok) {
+      if (window.showToast) {
+        window.showToast(data.message || "Controlla la tua email per le istruzioni", "success");
+      }
+    } else {
+      if (window.showToast) {
+        window.showToast(data.error || "Errore durante la richiesta", "error");
+      }
+    }
+  } catch (error) {
+    console.error("[AuthModal] Errore reset password:", error);
+    if (window.showToast) {
+      window.showToast("Errore di connessione. Riprova.", "error");
     }
   }
 }

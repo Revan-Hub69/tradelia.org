@@ -272,6 +272,136 @@
   text-decoration: underline;
 }
 
+/* Password Wrapper */
+.auth-password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-password-wrapper .auth-form-input {
+  padding-right: 3rem;
+}
+
+.auth-password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  background: transparent;
+  border: none;
+  color: var(--ink-soft, #9ca3af);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.auth-password-toggle:hover {
+  color: var(--ink, #e5e7eb);
+}
+
+.auth-password-toggle:focus-visible {
+  outline: 2px solid var(--brand-500, #3b82f6);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Password Strength Indicator */
+.auth-password-strength {
+  margin-top: 0.5rem;
+}
+
+.auth-password-strength-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--br-card, #1f2937);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.auth-password-strength-fill {
+  height: 100%;
+  background: var(--brand-500, #3b82f6);
+  transition:
+    width 0.3s ease,
+    background-color 0.3s ease;
+  border-radius: 2px;
+}
+
+.auth-password-strength.weak .auth-password-strength-fill {
+  background: #ef4444; /* Red */
+}
+
+.auth-password-strength.medium .auth-password-strength-fill {
+  background: #f59e0b; /* Yellow */
+}
+
+.auth-password-strength.strong .auth-password-strength-fill {
+  background: #10b981; /* Green */
+}
+
+.auth-password-strength-text {
+  font-size: 0.8rem;
+  color: var(--ink-soft, #9ca3af);
+}
+
+.auth-password-strength.weak .auth-password-strength-text {
+  color: #ef4444;
+}
+
+.auth-password-strength.medium .auth-password-strength-text {
+  color: #f59e0b;
+}
+
+.auth-password-strength.strong .auth-password-strength-text {
+  color: #10b981;
+}
+
+/* Password Match Indicator */
+.auth-password-match {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.auth-password-match.success {
+  color: #10b981;
+}
+
+.auth-password-match.error {
+  color: #ef4444;
+}
+
+/* Email Validation */
+.auth-email-validation {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.auth-email-validation.success {
+  color: #10b981;
+}
+
+.auth-email-validation.error {
+  color: #ef4444;
+}
+
+/* Rate Limit Display */
+.auth-rate-limit {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.auth-rate-limit.warning {
+  color: #f59e0b;
+}
+
+.auth-rate-limit.error {
+  color: #ef4444;
+}
+
 @media (max-width: 640px) {
   .auth-modal-content {
     width: 95%;
