@@ -197,12 +197,20 @@ function saveFavorites(favorites) {
  */
 function applyFavoritesOrder() {
   const favorites = getFavorites();
+
+  // BEST PRACTICE: Assicurati che TUTTI i moduli siano visibili
+  document.querySelectorAll(".module-card:not(.favorites-grid .module-card)").forEach((card) => {
+    card.style.display = "";
+    const moduleId = card.dataset.module;
+    if (favorites.includes(moduleId)) {
+      card.dataset.favorited = "true";
+    } else {
+      card.dataset.favorited = "false";
+    }
+  });
+
   if (favorites.length === 0) {
     // No favorites, show all modules normally
-    document.querySelectorAll(".module-card:not(.favorites-grid .module-card)").forEach((card) => {
-      card.style.display = "";
-      card.dataset.favorited = "false";
-    });
     return;
   }
 
