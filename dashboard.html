@@ -2,7 +2,10 @@
 <html lang="it" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes"
+    />
     <title>Tradelia AI &middot; Dashboard</title>
 
     <meta
@@ -13,6 +16,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="#050910" />
+    <meta name="dashboard-version" content="2.0.0" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -1194,6 +1198,94 @@
       aria-live="polite"
       aria-atomic="true"
     ></div>
+
+    <!-- BEST PRACTICE: Screen Reader Announcements (WCAG 2.2 SC 4.1.3) -->
+    <div
+      id="sr-announcements"
+      class="sr-only"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
+
+    <!-- BEST PRACTICE: Critical Announcements (WCAG 2.2 SC 4.1.3) -->
+    <div
+      id="sr-critical"
+      class="sr-only"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    ></div>
+
+    <!-- Bottom Navigation (Mobile Only) - BEST PRACTICE: Thumb Zone Navigation -->
+    <nav class="bottom-nav" role="navigation" aria-label="Navigazione principale">
+      <a href="#overview" class="bottom-nav-item" aria-label="Panoramica" data-module="overview">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Home</span>
+      </a>
+      <a href="#reports" class="bottom-nav-item" aria-label="Report" data-module="reports">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <span>Report</span>
+      </a>
+      <a
+        href="#notifications"
+        class="bottom-nav-item"
+        aria-label="Notifiche"
+        data-module="notifications"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span>Notifiche</span>
+      </a>
+      <a href="#settings" class="bottom-nav-item" aria-label="Impostazioni" data-module="settings">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="3"></circle>
+          <path
+            d="M12 1v6m0 6v6m9-9h-6m-6 0H3m15.364 6.364l-4.243-4.243m-4.242 0L5.636 18.364m12.728 0l-4.243-4.243m-4.242 0L5.636 5.636"
+          ></path>
+        </svg>
+        <span>Impostazioni</span>
+      </a>
+    </nav>
 
     <!-- JavaScript - FASE 2: Modulare e Separato (Best Practice) -->
     <script type="module">

@@ -3,6 +3,7 @@
  * Dashboard Application Entry Point
  * FASE 2: TypeScript Migration - Gradual
  * Best Practice: Separazione concerns - logica navigazione separata da HTML
+ * Version: 2.0.0
  */
 
 import { loadModule } from "./index.js";
@@ -69,8 +70,55 @@ export async function initDashboard() {
   // Show/hide admin module based on permissions
   await toggleAdminModule();
 
-  // Initialize module manager (drag & drop, visibility, hierarchy)
+  // Initialize module manager (visibility, hierarchy)
   initModuleManager();
+
+  // BEST PRACTICE: Initialize module favorites system (prioritario rispetto a drag-and-drop)
+  const { initModuleFavorites, createFavoritesSection } = await import("./module-favorites.js");
+  initModuleFavorites();
+
+  // Create favorites section if there are favorites
+  setTimeout(() => {
+    createFavoritesSection();
+  }, 100);
+
+  // BEST PRACTICE: Initialize accessibility enhancements (WCAG 2.2 Compliance)
+  const { initAccessibility } = await import("./accessibility.js");
+  initAccessibility();
+
+  // BEST PRACTICE: Initialize security indicators (Financial Services UX)
+  const { initSecurityIndicators } = await import("./security-indicators.js");
+  initSecurityIndicators();
+
+  // BEST PRACTICE: Initialize desktop sidebar (Coerenza Desktop vs Mobile)
+  const { initDesktopSidebar } = await import("./desktop-sidebar.js");
+  initDesktopSidebar();
+
+  // BEST PRACTICE: Initialize theme toggle (Dark Mode Best Practices)
+  const { initThemeToggle } = await import("./theme-toggle.js");
+  initThemeToggle();
+
+  // BEST PRACTICE: Initialize i18n system (Global UX)
+  const { initI18n } = await import("./i18n.js");
+  initI18n();
+
+  // Export feedback functions globally for use in other modules
+  const {
+    showLoadingState,
+    hideLoadingState,
+    showSuccessFeedback,
+    showErrorFeedback,
+    showSaveState,
+  } = await import("./feedback-system.js");
+  window.showLoadingState = showLoadingState;
+  window.hideLoadingState = hideLoadingState;
+  window.showSuccessFeedback = showSuccessFeedback;
+  window.showErrorFeedback = showErrorFeedback;
+  window.showSaveState = showSaveState;
+
+  // Export accessibility functions globally
+  const { announceToScreenReader } = await import("./accessibility.js");
+  window.announceToScreenReader = announceToScreenReader;
 
   // Initialize global search (Ctrl+K shortcut)
   initGlobalSearch();
@@ -110,7 +158,23 @@ export async function initDashboard() {
   const { initSimpleNotifications } = await import("./simple-notifications.js");
   await initSimpleNotifications();
 
-  // Handle hash navigation
+  // BEST PRACTICE: Initialize network state handling (offline/slow connection)
+  const { initNetworkState } = await import("./network-state.js");
+  initNetworkState();
+
+  // BEST PRACTICE: Initialize pull-to-refresh (Mobile UX Patterns)
+  const { initPullToRefresh } = await import("./pull-to-refresh.js");
+  initPullToRefresh();
+
+  // BEST PRACTICE: Initialize battery optimization (Energy-Efficient Web Design)
+  const { initBatteryOptimization } = await import("./battery-optimization.js");
+  initBatteryOptimization();
+
+  // BEST PRACTICE: Initialize haptic feedback (Mobile UX Patterns)
+  const { setupHapticFeedback } = await import("./haptic-feedback.js");
+  setupHapticFeedback();
+
+  // BEST PRACTICE: Handle hash navigation with History API for back button support
   const hash = window.location.hash.slice(1);
   if (hash) {
     showModule(hash);
@@ -122,12 +186,80 @@ export async function initDashboard() {
     showModule(newHash || null);
   });
 
-  // Handle module card clicks
+  // BEST PRACTICE: Handle browser back button with History API (Mobile UX Patterns)
+  window.addEventListener("popstate", (e) => {
+    if (e.state && e.state.module) {
+      showModule(e.state.module);
+    } else {
+      const hash = window.location.hash.slice(1);
+      if (hash) {
+        showModule(hash);
+      } else {
+        // Chiudi modulo se presente
+        if (STATE.currentModule) {
+          closeModule();
+        }
+      }
+    }
+  });
+
+  // BEST PRACTICE: Bottom navigation handling (Mobile UX Patterns)
+  setupBottomNavigation();
+
+  // Handle module card clicks (con supporto mobile per distinguere tap da scroll)
   document.querySelectorAll(".module-card").forEach((card) => {
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchMoved = false;
+
+    // Rileva movimento durante touch (scroll)
+    card.addEventListener("touchstart", (e) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchMoved = false;
+    });
+
+    card.addEventListener("touchmove", (e) => {
+      if (!touchMoved) {
+        const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+        const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+        // Se movimento > 10px, è uno scroll, non un tap
+        touchMoved = deltaX > 10 || deltaY > 10;
+      }
+    });
+
+    // Gestisci click/tap
     card.addEventListener("click", (e) => {
-      e.preventDefault();
+      // Su mobile, se c'è stato movimento durante il touch, non aprire il modulo
+      if (touchMoved) {
+        return;
+      }
+
+      // BEST PRACTICE: Su mobile, tap singolo espande card, tap doppio apre modulo
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        const isExpanded = card.dataset.expanded === "true";
+        if (!isExpanded) {
+          // Primo tap: espandi card per mostrare descrizione
+          e.preventDefault();
+          card.dataset.expanded = "true";
+          // Secondo tap (dopo 300ms) apre il modulo
+          setTimeout(() => {
+            if (card.dataset.expanded === "true") {
+              const moduleId = card.dataset.module;
+              if (moduleId) {
+                window.location.hash = moduleId;
+              }
+            }
+          }, 300);
+          return;
+        }
+      }
+
+      // Su desktop o tap su card già espansa, apri il modulo
       const moduleId = card.dataset.module;
       if (moduleId) {
+        e.preventDefault();
         window.location.hash = moduleId;
       }
     });
@@ -147,10 +279,81 @@ export async function initDashboard() {
   // Keyboard navigation - ESC to close panel
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && STATE.currentModule) {
-      window.location.hash = "";
-      keyboardNav.deactivateFocusTrap();
+      closeModule();
     }
   });
+
+  // BEST PRACTICE: Bottom navigation handling (Mobile UX Patterns)
+  setupBottomNavigation();
+}
+
+/**
+ * BEST PRACTICE: Setup bottom navigation (Mobile UX Patterns, Thumb Zone)
+ */
+function setupBottomNavigation() {
+  if (window.innerWidth > 768) {
+    return;
+  } // Solo su mobile
+
+  const bottomNavItems = document.querySelectorAll(".bottom-nav-item");
+  bottomNavItems.forEach((item) => {
+    item.addEventListener("click", (e) => {
+      e.preventDefault();
+      const moduleId = item.dataset.module || item.getAttribute("href")?.slice(1);
+      if (moduleId) {
+        showModule(moduleId);
+        // Update active state
+        bottomNavItems.forEach((nav) => nav.classList.remove("active"));
+        item.classList.add("active");
+        item.setAttribute("aria-current", "page");
+      }
+    });
+  });
+
+  // Update active state based on current module
+  window.addEventListener("hashchange", () => {
+    const hash = window.location.hash.slice(1);
+    bottomNavItems.forEach((item) => {
+      const moduleId = item.dataset.module || item.getAttribute("href")?.slice(1);
+      if (moduleId === hash || (!hash && moduleId === "overview")) {
+        item.classList.add("active");
+        item.setAttribute("aria-current", "page");
+      } else {
+        item.classList.remove("active");
+        item.removeAttribute("aria-current");
+      }
+    });
+  });
+}
+
+/**
+ * Close current module and return to modules view
+ * BEST PRACTICE: Support back button with History API
+ */
+function closeModule() {
+  // BEST PRACTICE: Push state per tornare alla home
+  history.pushState({ module: null }, "", window.location.pathname);
+
+  window.location.hash = "";
+  STATE.currentModule = null;
+  keyboardNav.deactivateFocusTrap();
+
+  // Show modules view
+  const modulesView = document.getElementById("modules-view");
+  if (modulesView) {
+    modulesView.classList.add("active");
+  }
+
+  // Hide all panels
+  document.querySelectorAll(".panel-view").forEach((panel) => {
+    panel.classList.remove("active");
+  });
+
+  // Show account banner
+  const accountBannerSlot = document.getElementById("account-banner-slot");
+  if (accountBannerSlot) {
+    accountBannerSlot.style.display = "";
+  }
 }
 
 /**
@@ -190,8 +393,16 @@ async function toggleAdminModule() {
 
 /**
  * Show module panel
+ * BEST PRACTICE: Usa History API per supporto back button mobile
  */
 function showModule(moduleId) {
+  // BEST PRACTICE: Push state invece di solo hash per back button support
+  if (moduleId) {
+    history.pushState({ module: moduleId }, "", `#${moduleId}`);
+  } else {
+    history.pushState({ module: null }, "", window.location.pathname);
+  }
+
   // Hide all views
   const modulesView = document.getElementById("modules-view");
   if (modulesView) {

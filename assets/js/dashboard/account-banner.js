@@ -1,7 +1,7 @@
 /* eslint-env browser */
 /**
  * Dashboard Account Status Banner
- * Mostra stato account, saldo, toggle PWA e notifiche
+ * Mostra stato account, saldo, toggle Progressive App e notifiche
  */
 
 import { getUserRole, logout, getPlanData } from "./auth.js";
@@ -43,17 +43,17 @@ function renderBanner(container, role, planData) {
           </div>
           <div class="account-banner-actions">
             <div class="toggle-switch-wrapper">
-              <label class="toggle-switch" title="Notifiche Browser" id="toggle-notifications-label">
+              <label class="toggle-switch" title="Ricevi notifiche push sul browser quando ci sono nuovi contenuti" id="toggle-notifications-label">
                 <input type="checkbox" id="toggle-notifications" ${getNotificationPermissionState() ? "checked" : ""}>
                 <span class="toggle-slider"></span>
-                <span class="toggle-label">Notifiche</span>
+                <span class="toggle-label">Notifiche Browser</span>
               </label>
             </div>
             <div class="toggle-switch-wrapper">
-              <label class="toggle-switch" title="Installa PWA">
+              <label class="toggle-switch" title="Installa l'app sul dispositivo per accesso rapido e funzionalità offline">
                 <input type="checkbox" id="toggle-pwa">
                 <span class="toggle-slider"></span>
-                <span class="toggle-label">PWA</span>
+                <span class="toggle-label">App Installabile</span>
               </label>
             </div>
             <button type="button" class="btn btn-elegant btn-sm" id="btn-open-auth-modal">Accedi</button>
@@ -104,10 +104,10 @@ function renderBanner(container, role, planData) {
               <span class="toggle-slider"></span>
               <span class="toggle-label">Notifiche</span>
             </label>
-            <label class="toggle-switch" title="Installa PWA">
+            <label class="toggle-switch" title="Installa Progressive App (app installabile)">
               <input type="checkbox" id="toggle-pwa" ${getPWAPreference() ? "checked" : ""}>
               <span class="toggle-slider"></span>
-              <span class="toggle-label">PWA</span>
+              <span class="toggle-label">App</span>
             </label>
             ${
               plan.status === "pending_manual" || plan.status === "pending_payment"
@@ -148,17 +148,17 @@ function renderBanner(container, role, planData) {
           </div>
           <div class="account-banner-actions">
             <div class="toggle-switch-wrapper">
-              <label class="toggle-switch" title="Notifiche Browser" id="toggle-notifications-label">
+              <label class="toggle-switch" title="Ricevi notifiche push sul browser quando ci sono nuovi contenuti" id="toggle-notifications-label">
                 <input type="checkbox" id="toggle-notifications" ${getNotificationPermissionState() ? "checked" : ""}>
                 <span class="toggle-slider"></span>
-                <span class="toggle-label">Notifiche</span>
+                <span class="toggle-label">Notifiche Browser</span>
               </label>
             </div>
             <div class="toggle-switch-wrapper">
-              <label class="toggle-switch" title="Installa PWA">
+              <label class="toggle-switch" title="Installa l'app sul dispositivo per accesso rapido e funzionalità offline">
                 <input type="checkbox" id="toggle-pwa">
                 <span class="toggle-slider"></span>
-                <span class="toggle-label">PWA</span>
+                <span class="toggle-label">App Installabile</span>
               </label>
             </div>
             <button class="btn btn-secondary btn-sm" id="btn-logout">Esci</button>
@@ -226,10 +226,10 @@ function bindBannerEvents(container, role) {
     });
   }
 
-  // Toggle PWA (tutti gli utenti, anche guest)
+  // Toggle Progressive App (tutti gli utenti, anche guest)
   const pwaToggle = container.querySelector("#toggle-pwa");
   if (pwaToggle) {
-    // Verifica stato iniziale PWA
+    // Verifica stato iniziale Progressive App
     checkPWAState(pwaToggle);
 
     pwaToggle.addEventListener("change", async (e) => {
@@ -244,13 +244,13 @@ function bindBannerEvents(container, role) {
           setPWAPreference(false);
           if (window.showToast) {
             window.showToast(
-              "Installazione PWA non disponibile. Verifica che il browser supporti l'installazione.",
+              "Installazione app non disponibile. Verifica che il browser supporti l'installazione di Progressive App.",
               "error"
             );
           }
         } else {
           if (window.showToast) {
-            window.showToast("PWA installata con successo!", "success");
+            window.showToast("Progressive App installata con successo!", "success");
           }
           // Aggiorna stato toggle dopo installazione
           setTimeout(() => {
@@ -258,12 +258,12 @@ function bindBannerEvents(container, role) {
           }, 1000);
         }
       } else {
-        // PWA non può essere "disinstallata" via toggle
+        // Progressive App non può essere "disinstallata" via toggle
         // Il toggle serve solo per installare
         if (window.showToast) {
-          window.showToast("Per disinstallare la PWA, usa le impostazioni del browser.", "info");
+          window.showToast("Per disinstallare l'app, usa le impostazioni del browser.", "info");
         }
-        // Ripristina toggle se PWA è installata
+        // Ripristina toggle se Progressive App è installata
         if (isPWAInstalled()) {
           e.target.checked = true;
           setPWAPreference(true);
@@ -342,7 +342,7 @@ function updateNotificationToggleState(toggle) {
 }
 
 /**
- * Ottiene preferenza PWA da localStorage
+ * Ottiene preferenza Progressive App da localStorage
  */
 function getPWAPreference() {
   const pref = localStorage.getItem("tradelia-pwa-enabled");
@@ -350,7 +350,7 @@ function getPWAPreference() {
 }
 
 /**
- * Salva preferenza PWA in localStorage
+ * Salva preferenza Progressive App in localStorage
  */
 function setPWAPreference(enabled) {
   localStorage.setItem("tradelia-pwa-enabled", enabled ? "true" : "false");
@@ -359,7 +359,7 @@ function setPWAPreference(enabled) {
 // Funzione checkNotificationState - DISABILITATA
 
 /**
- * Verifica stato iniziale PWA e aggiorna toggle
+ * Verifica stato iniziale Progressive App e aggiorna toggle
  */
 function checkPWAState(toggle) {
   const installed = isPWAInstalled();
