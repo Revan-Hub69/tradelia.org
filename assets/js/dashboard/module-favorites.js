@@ -416,14 +416,9 @@ export function createFavoritesSection() {
                 cardClone.style.transform = "scale(1)";
               }, index * 50);
 
-              // Nascondi la card originale dalla griglia principale
-              if (
-                originalCard.parentElement &&
-                originalCard.parentElement.classList.contains("modules-grid") &&
-                !originalCard.parentElement.classList.contains("favorites-grid")
-              ) {
-                originalCard.style.display = "none";
-              }
+              // BEST PRACTICE: NON nascondere la card originale - mostra sia nella sezione preferiti che nella griglia principale
+              // Questo permette all'utente di vedere i moduli preferiti in entrambi i posti
+              // Rimuoviamo il codice che nasconde la card per evitare problemi
             }
           });
         }
