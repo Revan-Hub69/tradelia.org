@@ -1280,9 +1280,41 @@ a[role="button"]:focus-visible {
 .footer-left {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-sm);
   flex: 1;
   min-width: 0;
+}
+
+/* Logo footer - Stile accademico 2025 */
+.footer-logo-link {
+  display: inline-block;
+  margin-bottom: var(--spacing-sm);
+  transition: opacity var(--transition-smooth);
+  text-decoration: none;
+}
+
+.footer-logo-link:hover {
+  opacity: 0.85;
+}
+
+.footer-logo-img {
+  height: 32px;
+  width: auto;
+  display: block;
+  filter: brightness(0.95);
+  transition: filter var(--transition-smooth);
+}
+
+.footer-logo-link:hover .footer-logo-img {
+  filter: brightness(1);
+}
+
+.footer-logo-fallback {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
 }
 
 .footer-right {
@@ -1295,7 +1327,9 @@ a[role="button"]:focus-visible {
   font-size: var(--fs-13, 13px);
   color: var(--dash-text-muted);
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 .footer-brand {
@@ -1335,16 +1369,19 @@ a[role="button"]:focus-visible {
 .footer-disclaimer {
   font-size: var(--fs-11, 11px);
   color: var(--dash-text-muted);
-  opacity: 0.7;
+  opacity: 0.75;
   margin: 0;
-  font-style: italic;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
 }
 
 .footer-links-inline {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
   flex-wrap: wrap;
+  font-size: var(--fs-12, 12px);
 }
 
 .footer-link {
@@ -1354,6 +1391,9 @@ a[role="button"]:focus-visible {
   position: relative;
   transition: var(--transition-smooth);
   display: inline-block;
+  padding: var(--spacing-xs) 0;
+  font-weight: 500;
+  letter-spacing: 0.01em;
 }
 
 .footer-link::after {
@@ -1660,9 +1700,12 @@ a[role="button"]:focus-visible {
 }
 
 .footer-tech {
-  font-size: var(--fs-12, 12px);
   color: var(--dash-text-muted);
-  font-family: "Monaco", "Menlo", "Courier New", monospace;
+  opacity: 0.6;
+  font-size: var(--fs-11, 11px);
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', monospace;
+  letter-spacing: 0.05em;
+  font-weight: 500;
 }
 
 .footer-tech strong {
