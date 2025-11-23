@@ -8,6 +8,7 @@ let Chart = null;
 
 /**
  * Load Chart.js library
+ * BEST PRACTICE: Usa import ES module invece di CDN per evitare CSP violations
  */
 async function loadChartLibrary() {
   if (typeof Chart !== 'undefined' && Chart !== null) {
@@ -15,11 +16,20 @@ async function loadChartLibrary() {
   }
 
   try {
-    // Load Chart.js from CDN
+    // Prova import ES module (bundle da Vite)
+    const chartModule = await import('chart.js');
+    Chart = chartModule.Chart || chartModule.default?.Chart || chartModule.default || chartModule;
+    return Chart;
+  } catch (importError) {
+    // Fallback a CDN solo se import fallisce (per compatibilità)
+    console.warn('[Charts] Import fallito, uso CDN fallback:', importError);
+    
+    // Load Chart.js from CDN (fallback)
     await new Promise((resolve, reject) => {
       const script = document.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
       script.async = true;
+      script.crossOrigin = 'anonymous';
       script.onload = () => {
         Chart = window.Chart;
         resolve(Chart);
