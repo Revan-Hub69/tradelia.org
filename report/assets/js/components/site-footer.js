@@ -174,12 +174,29 @@ function mount(containerEl) {
   // (verranno mostrati solo quando update() viene chiamata con dati reali)
   setTimeout(() => {
     update({});
-    // Force logo visibility after mount
+    // Force logo visibility after mount - Best Practice 2025
     const logo = node.querySelector('.ftr-logo');
+    const logoLink = node.querySelector('.ftr-logo-link');
     if (logo) {
       logo.style.display = 'block';
       logo.style.visibility = 'visible';
       logo.style.opacity = '1';
+      logo.style.height = '44px';
+      logo.style.width = 'auto';
+      logo.style.maxWidth = '260px';
+      logo.style.objectFit = 'contain';
+      // Force reload if not loaded
+      if (!logo.complete || logo.naturalHeight === 0) {
+        const src = logo.src;
+        logo.src = '';
+        setTimeout(() => {
+          logo.src = src + '?v=' + Date.now();
+        }, 100);
+      }
+    }
+    if (logoLink) {
+      logoLink.style.display = 'inline-block';
+      logoLink.style.textDecoration = 'none';
     }
   }, 0);
 
