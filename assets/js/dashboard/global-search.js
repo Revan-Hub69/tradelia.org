@@ -510,10 +510,8 @@ function renderResults(results) {
       const iconSVG = getIconSVG(result.icon || result.type);
       const date = result.date ? new Date(result.date).toLocaleDateString("it-IT") : "";
 
-      // SECURITY: Escape HTML nei dati dinamici
-      const safeTitle = (result.title || "").replace(/[<>]/g, "");
-      const safeDescription = (result.description || "").replace(/[<>]/g, "");
-      const safeUrl = (result.url || "#").replace(/[<>"]/g, "");
+      // SECURITY: Escape HTML nei dati dinamici usando funzione esistente
+      const safeUrl = escapeHtml(result.url || "#");
       
       return `
         <div
