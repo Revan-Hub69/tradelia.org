@@ -5,10 +5,33 @@
 import Logger from '../utils/logger.js';
 
 // BEST PRACTICE: Import statico invece di dinamico per permettere a Rollup di risolvere correttamente
-import { Chart, registerables } from 'chart.js';
+import {
+  Chart,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from 'chart.js';
 
-// Registra tutti i componenti di Chart.js
-Chart.register(...registerables);
+// Registra tutti i componenti di Chart.js necessari
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 
 // Alias per compatibilità con codice esistente
 const ChartJS = Chart;
