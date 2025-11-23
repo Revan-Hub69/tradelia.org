@@ -963,6 +963,13 @@ a[role="button"]:focus-visible {
   min-width: 80px;
 }
 
+/* BEST PRACTICE: Toggle nel banner sempre in riga orizzontale */
+.account-banner-actions .toggle-switch-wrapper {
+  flex-direction: row !important;
+  min-width: 0 !important;
+  gap: 4px !important;
+}
+
 .toggle-switch {
   display: flex;
   flex-direction: column;
@@ -975,6 +982,14 @@ a[role="button"]:focus-visible {
   transition: var(--transition);
   position: relative;
   width: 100%;
+}
+
+/* BEST PRACTICE: Toggle nel banner sempre in riga orizzontale */
+.account-banner-actions .toggle-switch {
+  flex-direction: row !important;
+  width: auto !important;
+  padding: 0 !important;
+  gap: 4px !important;
 }
 
 .toggle-switch:hover:not(.toggle-switch-disabled) {
@@ -1036,6 +1051,14 @@ a[role="button"]:focus-visible {
   letter-spacing: 0.05em;
   order: 2;
   margin-top: 2px;
+}
+
+/* BEST PRACTICE: Toggle nel banner - label affiancata allo switch */
+.account-banner-actions .toggle-label {
+  order: 2 !important;
+  margin-top: 0 !important;
+  margin-left: 4px !important;
+  font-size: var(--fs-9, 9px) !important;
 }
 
 /* Toggle disabilitato */
