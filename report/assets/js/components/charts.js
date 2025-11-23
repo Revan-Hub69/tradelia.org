@@ -4,7 +4,8 @@
 
 import Logger from '../utils/logger.js';
 
-// Lazy load Chart.js
+// BEST PRACTICE: Usa import ES module invece di CDN per evitare CSP violations
+// Chart.js sarà bundle da Vite se presente in node_modules
 let ChartJS = null;
 let ChartLoaded = false;
 
@@ -14,16 +15,27 @@ async function loadChartJS() {
   }
 
   try {
-    // Usa CDN per Chart.js
+    // Prova import ES module (bundle da Vite)
+    const chartModule = await import('chart.js');
+    ChartJS = chartModule.Chart || chartModule.default?.Chart || chartModule.default || chartModule;
+    ChartLoaded = true;
+    Logger.debug('Charts', 'Chart.js caricato da bundle');
+    return ChartJS;
+  } catch (importError) {
+    // Fallback a CDN solo se import fallisce (per compatibilità)
+    Logger.warn('Charts', 'Import fallito, uso CDN fallback:', importError);
+    
+    // Usa CDN per Chart.js (fallback)
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
     script.async = true;
+    script.crossOrigin = 'anonymous';
 
     await new Promise((resolve, reject) => {
       script.onload = () => {
         ChartJS = window.Chart;
         ChartLoaded = true;
-        Logger.debug('Charts', 'Chart.js caricato');
+        Logger.debug('Charts', 'Chart.js caricato da CDN');
         resolve(ChartJS);
       };
       script.onerror = () => {

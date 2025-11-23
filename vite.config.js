@@ -150,7 +150,7 @@ export default defineConfig({
   },
   // Ottimizzazioni dipendenze
   optimizeDeps: {
-    include: ["@supabase/supabase-js"],
+    include: ["@supabase/supabase-js", "chart.js"],
     exclude: [], // Aggiungi moduli che non devono essere pre-bundlati
   },
   // Performance: Pre-bundling e minificazione
