@@ -16,25 +16,20 @@
   </defs>
   
   <!-- Icon/Mark - T innovativa con design moderno -->
-  <!-- Basato su principi: Simplicity, Memorability, Scalability (Aaker 1991, Keller 1993) -->
   <g transform="translate(0, 12)" filter="url(#softGlow)">
-    <!-- T letter - Design geometrico moderno con angoli leggermente arrotondati -->
-    <!-- Proporzioni auree approssimate per equilibrio visivo -->
+    <!-- T letter - Design geometrico moderno -->
     <rect x="0" y="0" width="32" height="5" rx="2.5" fill="url(#logoGradient)" />
     <rect x="13.5" y="5" width="5" height="28" rx="2.5" fill="url(#logoGradient)" />
-    
-    <!-- Elemento decorativo minimale - suggerisce analisi/dati -->
-    <!-- Basato su principio "Less is More" (Mies van der Rohe) -->
-    <circle cx="38" cy="20" r="2" fill="url(#logoGradient)" opacity="0.6" />
   </g>
   
-  <!-- Text - Tipografia professionale senza ripetere T -->
-  <!-- Basato su: Legibility Hierarchy (Bringhurst 2004), Type Design Principles -->
-  <g transform="translate(48, 12)">
+  <!-- Text - Tradelia come parola unica, AI come superscript -->
+  <g transform="translate(36, 12)">
+    <!-- Tradelia - Avvicinato alla T per formare parola unica -->
     <text x="0" y="32" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="32" font-weight="600" fill="#ffffff" letter-spacing="-0.4">
       radelia
     </text>
-    <text x="110" y="32" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="14" font-weight="500" fill="#60a5fa" letter-spacing="1.5">
+    <!-- AI - Posizionato come superscript (tipo ™ o ®) in alto a destra -->
+    <text x="118" y="18" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="11" font-weight="500" fill="#60a5fa" letter-spacing="1">
       AI
     </text>
   </g>
