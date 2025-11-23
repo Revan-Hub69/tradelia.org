@@ -267,13 +267,17 @@
 }
 
 .mail-link {
-  color: var(--brand-400, #60a5fa);
+  color: var(--ink-soft, #e5e7eb); /* Colore neutro e professionale */
   text-decoration: none;
+  border-bottom: 1px solid transparent; /* Preparazione per hover elegante */
+  transition: all 0.2s ease;
+  font-weight: 400;
 }
 
 .mail-link:hover {
-  color: var(--brand-300, #93c5fd);
-  text-decoration: underline;
+  color: var(--ink, #ffffff); /* Bianco su hover per contrasto */
+  border-bottom-color: rgba(255, 255, 255, 0.4); /* Sottolineatura sottile e discreta */
+  text-decoration: none; /* Nessuna sottolineatura standard */
 }
 
 /* ===== RESPONSIVE ===== */
