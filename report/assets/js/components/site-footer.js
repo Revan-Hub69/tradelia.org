@@ -172,6 +172,13 @@ function mount(containerEl) {
   // (verranno mostrati solo quando update() viene chiamata con dati reali)
   setTimeout(() => {
     update({});
+    // Force logo visibility after mount
+    const logo = node.querySelector('.ftr-logo');
+    if (logo) {
+      logo.style.display = 'block';
+      logo.style.visibility = 'visible';
+      logo.style.opacity = '1';
+    }
   }, 0);
 
   Logger.debug('SiteFooter', 'Footer montato');
