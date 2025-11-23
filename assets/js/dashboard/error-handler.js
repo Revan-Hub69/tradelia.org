@@ -142,7 +142,7 @@ export class ErrorBoundary {
         <div class="error-state-title">Errore nel caricamento</div>
         <div class="error-state-message">${error.message || "Si è verificato un errore imprevisto"}</div>
         ${retryable && onRetry
-      ? `<button class="btn btn-primary" onclick="(() => { ${onRetry.toString()}() })()">Riprova</button>`
+      ? `<div class="error-state-action"><button class="btn btn-primary" onclick="(() => { ${onRetry.toString()}() })()">Riprova</button></div>`
       : ""
     }
       </div>

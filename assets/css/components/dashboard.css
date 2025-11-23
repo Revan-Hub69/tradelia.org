@@ -416,9 +416,10 @@ a[role="button"]:active {
 .btn:focus-visible,
 button:focus-visible,
 a[role="button"]:focus-visible {
-  outline: 3px solid var(--dash-accent);
-  outline-offset: 2px;
+  outline: 4px solid var(--dash-accent);
+  outline-offset: 3px;
   border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 2px var(--dash-bg), 0 0 0 6px var(--dash-accent);
 }
 
 /* Icone devono avere label testuale o aria-label */
@@ -2244,8 +2245,9 @@ a[role="button"]:focus-visible {
 
 /* BEST PRACTICE: Focus su keyboard navigation */
 .module-card:focus:not(:hover) {
-  outline: 2.5px solid var(--dash-accent);
-  outline-offset: 3px;
+  outline: 3px solid var(--dash-accent);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 2px var(--dash-bg), 0 0 0 6px var(--dash-accent);
 }
 
 .module-card:hover::before {
