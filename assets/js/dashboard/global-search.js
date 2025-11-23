@@ -481,31 +481,45 @@ function renderResults(results) {
   }
 
   if (results.length === 0) {
-    container.innerHTML = `
-      <div class="global-search-empty">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="48" height="48">
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.35-4.35" />
-          <line x1="11" y1="8" x2="11" y2="12" />
-          <line x1="11" y1="16" x2="11.01" y2="16" />
-        </svg>
-        <div class="global-search-empty-text">Nessun risultato per "${SEARCH_STATE.query}"</div>
-        <div class="global-search-empty-hint">Prova con termini diversi</div>
-      </div>
+    // SECURITY: Usa textContent per evitare XSS
+    const emptyDiv = document.createElement("div");
+    emptyDiv.className = "global-search-empty";
+    emptyDiv.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="48" height="48">
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.35-4.35" />
+        <line x1="11" y1="8" x2="11" y2="12" />
+        <line x1="11" y1="16" x2="11.01" y2="16" />
+      </svg>
     `;
+    const textDiv = document.createElement("div");
+    textDiv.className = "global-search-empty-text";
+    textDiv.textContent = `Nessun risultato per "${SEARCH_STATE.query}"`;
+    const hintDiv = document.createElement("div");
+    hintDiv.className = "global-search-empty-hint";
+    hintDiv.textContent = "Prova con termini diversi";
+    emptyDiv.appendChild(textDiv);
+    emptyDiv.appendChild(hintDiv);
+    container.appendChild(emptyDiv);
     return;
   }
 
+  // SECURITY: Sanitizza risultati prima di inserirli
   container.innerHTML = results
     .map((result, index) => {
       const iconSVG = getIconSVG(result.icon || result.type);
       const date = result.date ? new Date(result.date).toLocaleDateString("it-IT") : "";
 
+      // SECURITY: Escape HTML nei dati dinamici
+      const safeTitle = (result.title || "").replace(/[<>]/g, "");
+      const safeDescription = (result.description || "").replace(/[<>]/g, "");
+      const safeUrl = (result.url || "#").replace(/[<>"]/g, "");
+      
       return `
         <div
           class="global-search-result ${index === SEARCH_STATE.selectedIndex ? "selected" : ""}"
           data-index="${index}"
-          data-url="${result.url || "#"}"
+          data-url="${safeUrl}"
           role="option"
           aria-selected="${index === SEARCH_STATE.selectedIndex}"
         >
