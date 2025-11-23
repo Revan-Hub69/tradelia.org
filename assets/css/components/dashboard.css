@@ -419,12 +419,17 @@ button:hover,
 a[role="button"]:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: 
+    background var(--transition-hover),
+    transform var(--transition-spring),
+    box-shadow var(--transition-hover);
 }
 
 .btn:active,
 button:active,
 a[role="button"]:active {
   transform: translateY(0);
+  transition: transform var(--transition-fast);
 }
 
 .btn:focus-visible,
@@ -2184,7 +2189,6 @@ a[role="button"]:focus-visible {
   border-left: 2px solid transparent;
   border-radius: var(--radius-md);
   padding: var(--spacing-xl);
-  transition: var(--transition-smooth);
   cursor: pointer;
   text-decoration: none;
   color: inherit;
@@ -2198,6 +2202,12 @@ a[role="button"]:focus-visible {
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
   /* BEST PRACTICE: CSS Containment per isolare rendering (Performance Optimization) */
   contain: layout style paint;
+  /* BEST PRACTICE: Transitions separate per ogni proprietà (micro-interactions raffinate) */
+  transition: 
+    background var(--transition-hover),
+    border-color var(--transition-hover),
+    transform var(--transition-transform),
+    box-shadow var(--transition-smooth);
 }
 
 /* BEST PRACTICE: will-change solo quando necessario (Performance Optimization) */
