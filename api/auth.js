@@ -780,15 +780,6 @@ async function handleLogin(req, res) {
     return res.status(400).json({ ok: false, error: "Password richiesta" });
   }
 
-  // BEST PRACTICE: Sanitizzazione email coerente
-  const sanitizedEmail = email.trim().toLowerCase();
-  
-  // Validazione formato email
-  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
-    return res.status(400).json({ ok: false, error: "Formato email non valido" });
-  }
-
   // Rate limiting
   const rateLimit = checkRateLimit(`login:${sanitizedEmail}`);
   if (!rateLimit.allowed) {
