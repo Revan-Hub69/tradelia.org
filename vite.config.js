@@ -120,9 +120,6 @@ export default defineConfig({
             if (id.includes("@supabase")) {
               return "vendor-supabase";
             }
-            if (id.includes("chart.js")) {
-              return "vendor-chartjs";
-            }
             return "vendor";
           }
         },
@@ -153,7 +150,7 @@ export default defineConfig({
   },
   // Ottimizzazioni dipendenze
   optimizeDeps: {
-    include: ["@supabase/supabase-js", "chart.js"],
+    include: ["@supabase/supabase-js"],
     exclude: [], // Aggiungi moduli che non devono essere pre-bundlati
   },
   // Performance: Pre-bundling e minificazione
