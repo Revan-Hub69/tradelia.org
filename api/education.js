@@ -5,7 +5,13 @@
  */
 
 import { getServiceSupabase } from "./_lib/supabase.js";
-import { safeLog } from "../assets/js/dashboard/security-utils.js";
+
+// Safe log function (avoid circular dependency)
+function safeLog(level, ...args) {
+  if (process.env.NODE_ENV !== "production") {
+    console[level](...args);
+  }
+}
 
 const supabase = getServiceSupabase();
 
@@ -63,6 +69,15 @@ export async function getModule(req, res) {
 
     if (lessonsError) throw lessonsError;
 
+    // Get tests for this module
+    const { data: tests, error: testsError } = await supabase
+      .from("education_tests")
+      .select("id, title, description, passing_score, max_attempts, time_limit_minutes")
+      .eq("module_id", moduleId)
+      .eq("is_active", true);
+
+    if (testsError) throw testsError;
+
     // Get user progress if authenticated
     let userProgress = null;
     if (req.user?.id) {
@@ -74,6 +89,22 @@ export async function getModule(req, res) {
         .single();
 
       userProgress = progress;
+
+      // Get user attempts for tests
+      if (tests && tests.length > 0) {
+        const testIds = tests.map(t => t.id);
+        const { data: attempts } = await supabase
+          .from("education_user_test_attempts")
+          .select("*")
+          .eq("user_id", req.user.id)
+          .in("test_id", testIds)
+          .order("attempt_number", { ascending: false });
+
+        // Map attempts to tests
+        tests.forEach(test => {
+          test.userAttempts = attempts?.filter(a => a.test_id === test.id) || [];
+        });
+      }
     }
 
     res.json({
@@ -81,6 +112,7 @@ export async function getModule(req, res) {
       module: {
         ...module,
         lessons: lessons || [],
+        tests: tests || [],
         userProgress,
       },
     });
@@ -279,12 +311,20 @@ export async function getTest(req, res) {
       userAttempts = attempts || [];
     }
 
+    // Get module info for navigation
+    const { data: moduleInfo } = await supabase
+      .from("education_tests")
+      .select("education_modules(id, slug)")
+      .eq("id", testId)
+      .single();
+
     res.json({
       success: true,
       test: {
         ...test,
         questions: questions || [],
         userAttempts,
+        education_modules: moduleInfo?.education_modules,
       },
     });
   } catch (error) {
@@ -403,18 +443,20 @@ export async function submitTest(req, res) {
 
     // If passed, unlock next module (if applicable)
     if (passed) {
-      const { data: module } = await supabase
+      const { data: testWithModule } = await supabase
         .from("education_tests")
-        .select("education_modules(*)")
+        .select("module_id, education_modules(*)")
         .eq("id", testId)
         .single();
 
-      if (module?.education_modules) {
+      const module = testWithModule?.education_modules;
+
+      if (module) {
         // Check if this is the final test of the module
         const { data: allTests } = await supabase
           .from("education_tests")
           .select("id")
-          .eq("module_id", module.education_modules.id)
+          .eq("module_id", module.id)
           .eq("is_active", true);
 
         const { data: passedTests } = await supabase
@@ -430,7 +472,7 @@ export async function submitTest(req, res) {
             .from("education_user_progress")
             .upsert({
               user_id: req.user.id,
-              module_id: module.education_modules.id,
+              module_id: module.id,
               status: "completed",
               progress_percentage: 100,
               completed_at: new Date().toISOString(),
@@ -592,9 +634,18 @@ export async function getPathways(req, res) {
 }
 
 /**
- * Main handler
+ * Main handler (Vercel serverless function)
  */
 export default async function handler(req, res) {
+  // CORS headers
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
   const { action } = req.query;
 
   // Get user from token (if authenticated)
@@ -602,33 +653,41 @@ export default async function handler(req, res) {
   if (req.headers.authorization) {
     try {
       const token = req.headers.authorization.replace("Bearer ", "");
-      const { data: { user: authUser } } = await supabase.auth.getUser(token);
-      user = authUser;
+      const { data: { user: authUser }, error } = await supabase.auth.getUser(token);
+      if (!error && authUser) {
+        user = authUser;
+      }
     } catch (e) {
       // Not authenticated, continue as guest
+      safeLog("warn", "[Education] Auth error:", e);
     }
   }
 
   req.user = user;
 
-  switch (action) {
-    case "modules":
-      return getModules(req, res);
-    case "module":
-      return getModule(req, res);
-    case "lesson":
-      return getLesson(req, res);
-    case "update-lesson-progress":
-      return updateLessonProgress(req, res);
-    case "test":
-      return getTest(req, res);
-    case "submit-test":
-      return submitTest(req, res);
-    case "user-progress":
-      return getUserProgress(req, res);
-    case "pathways":
-      return getPathways(req, res);
-    default:
-      return res.status(400).json({ success: false, error: "Azione non valida" });
+  try {
+    switch (action) {
+      case "modules":
+        return await getModules(req, res);
+      case "module":
+        return await getModule(req, res);
+      case "lesson":
+        return await getLesson(req, res);
+      case "update-lesson-progress":
+        return await updateLessonProgress(req, res);
+      case "test":
+        return await getTest(req, res);
+      case "submit-test":
+        return await submitTest(req, res);
+      case "user-progress":
+        return await getUserProgress(req, res);
+      case "pathways":
+        return await getPathways(req, res);
+      default:
+        return res.status(400).json({ success: false, error: "Azione non valida" });
+    }
+  } catch (error) {
+    safeLog("error", "[Education] Handler error:", error);
+    return res.status(500).json({ success: false, error: "Errore interno del server" });
   }
 }

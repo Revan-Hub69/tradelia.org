@@ -11,8 +11,7 @@
  * - Cognitive Load Theory (Sweller, 1988)
  */
 
-import { safeLog } from "./security-utils.js";
-import { escapeHtml } from "./security-utils.js";
+import { safeLog, escapeHtml } from "./security-utils.js";
 
 const API_BASE = "/api/education";
 
@@ -281,7 +280,7 @@ function renderModuleView(module) {
         </div>
       </div>
 
-      ${module.userProgress?.status === "completed" && module.tests?.length > 0 ? `
+      ${module.tests && module.tests.length > 0 ? `
         <div class="module-tests">
           <h2>Test di Verifica</h2>
           <div class="tests-list">
@@ -303,6 +302,14 @@ function renderModuleView(module) {
       e.preventDefault();
       const lessonId = btn.dataset.lessonId;
       await openLesson(lessonId);
+    });
+  });
+
+  container.querySelectorAll("[data-action='start-test']").forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const testId = btn.dataset.testId;
+      await openTest(testId);
     });
   });
 }
@@ -522,6 +529,55 @@ async function getAuthToken() {
 }
 
 /**
+ * Handle SPA navigation for education
+ */
+export async function handleEducationNavigation(hash) {
+  // Format: #education, #education/module/{slug}, #education/test/{testId}
+  const parts = hash.replace("#education", "").split("/").filter(Boolean);
+  
+  if (parts.length === 0) {
+    // Dashboard
+    await initEducation();
+  } else if (parts[0] === "module" && parts[1]) {
+    // Module view - get module by slug
+    try {
+      const response = await fetch(`${API_BASE}?action=modules`, {
+        headers: {
+          Authorization: `Bearer ${await getAuthToken()}`,
+        },
+      });
+      if (response.ok) {
+        const { modules } = await response.json();
+        const module = modules.find(m => m.slug === parts[1]);
+        if (module) {
+          await openModule(module.id);
+        } else {
+          await initEducation();
+        }
+      } else {
+        await initEducation();
+      }
+    } catch (e) {
+      await initEducation();
+    }
+  } else if (parts[0] === "test" && parts[1]) {
+    // Test view
+    const testId = parts[1];
+    await openTest(testId);
+  } else {
+    await initEducation();
+  }
+}
+
+/**
+ * Open test view
+ */
+export async function openTest(testId) {
+  const { initTest } = await import("./education-test.js");
+  await initTest(testId);
+}
+
+/**
  * Export functions
  */
-export { initEducation, openModule, openLesson };
+export { initEducation, openModule, openLesson, openTest };
