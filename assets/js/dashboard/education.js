@@ -166,6 +166,14 @@ function renderEducationDashboard(container, progress) {
             </svg>
             I Miei Obiettivi
           </button>
+          <button class="btn btn-secondary" data-action="open-learning-analytics">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="18" height="18">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+            Learning Analytics
+          </button>
         </div>
       </div>
 
@@ -303,6 +311,12 @@ function bindEducationEvents(container) {
   container.querySelector("[data-action='open-learning-goals']")?.addEventListener("click", async () => {
     const { showLearningGoalsModal } = await import("./education-metacognition.js");
     showLearningGoalsModal();
+  });
+
+  // Learning Analytics
+  container.querySelector("[data-action='open-learning-analytics']")?.addEventListener("click", async () => {
+    const { initLearningAnalytics } = await import("./education-analytics.js");
+    await initLearningAnalytics();
   });
 }
 
@@ -722,6 +736,15 @@ export async function handleEducationNavigation(hash) {
     // Spaced repetition dashboard
     const { initSpacedRepetition } = await import("./education-spaced-repetition.js");
     await initSpacedRepetition();
+  } else if (parts[0] === "analytics") {
+    // Learning analytics dashboard
+    const { initLearningAnalytics } = await import("./education-analytics.js");
+    await initLearningAnalytics();
+  } else if (parts[0] === "interleaved" && parts[1]) {
+    // Interleaved practice session
+    const moduleIds = parts[1].split(",").filter(Boolean);
+    const { initInterleavedPractice } = await import("./education-interleaving.js");
+    await initInterleavedPractice(moduleIds);
   } else {
     await initEducation();
   }

@@ -1,0 +1,223 @@
+/**
+ * Interleaving Styles
+ * Paper: Rohrer & Taylor (2007)
+ */
+
+/* ===== INTERLEAVED PRACTICE SESSION ===== */
+.interleaved-practice-session {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--edu-spacing-lg);
+}
+
+.ip-header {
+  margin-bottom: var(--edu-spacing-xl);
+}
+
+.ip-header-content {
+  margin-top: var(--edu-spacing-md);
+}
+
+.ip-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--edu-text);
+  margin-bottom: var(--edu-spacing-sm);
+}
+
+.ip-description {
+  font-size: 1rem;
+  color: var(--edu-text-muted);
+  line-height: 1.6;
+  margin-bottom: var(--edu-spacing-md);
+}
+
+.ip-info {
+  display: flex;
+  align-items: center;
+  gap: var(--edu-spacing-sm);
+  font-size: 0.875rem;
+  color: var(--edu-text-muted);
+}
+
+.ip-questions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--edu-spacing-xl);
+  margin-bottom: var(--edu-spacing-xl);
+}
+
+.ip-question {
+  background: var(--edu-card-bg);
+  border: 1px solid var(--edu-border);
+  border-radius: 12px;
+  padding: var(--edu-spacing-lg);
+  transition: all var(--edu-transition-base);
+}
+
+.ip-question.correct {
+  border-color: var(--edu-success);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.ip-question.incorrect {
+  border-color: var(--edu-error);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.ip-question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--edu-spacing-md);
+  flex-wrap: wrap;
+  gap: var(--edu-spacing-sm);
+}
+
+.ip-question-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--edu-spacing-sm);
+  flex-wrap: wrap;
+}
+
+.ip-question-number {
+  font-weight: 600;
+  color: var(--edu-text);
+  font-size: 1rem;
+}
+
+.ip-topic-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--edu-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ip-question-text {
+  font-size: 1.125rem;
+  color: var(--edu-text);
+  line-height: 1.6;
+  margin-bottom: var(--edu-spacing-md);
+}
+
+.ip-question-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--edu-spacing-sm);
+  margin-bottom: var(--edu-spacing-md);
+}
+
+.ip-option {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--edu-spacing-md);
+  padding: var(--edu-spacing-md);
+  background: var(--edu-bg);
+  border: 2px solid var(--edu-border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--edu-transition-base);
+}
+
+.ip-option:hover {
+  border-color: var(--edu-primary);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.ip-option.selected {
+  border-color: var(--edu-primary);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.ip-option.correct-answer {
+  border-color: var(--edu-success);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.ip-option.incorrect-answer {
+  border-color: var(--edu-error);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.ip-option input[type="radio"],
+.ip-option input[type="checkbox"] {
+  margin-top: 0.25rem;
+  cursor: pointer;
+}
+
+.ip-option-label {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--edu-spacing-sm);
+}
+
+.ip-question-explanation {
+  margin-top: var(--edu-spacing-md);
+  padding: var(--edu-spacing-md);
+  background: var(--edu-bg);
+  border-left: 4px solid var(--edu-primary);
+  border-radius: 4px;
+}
+
+.ip-explanation-content {
+  font-size: 0.9375rem;
+  color: var(--edu-text);
+  line-height: 1.6;
+}
+
+.ip-explanation-content strong {
+  color: var(--edu-primary);
+  font-weight: 600;
+}
+
+.ip-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--edu-spacing-md);
+  padding-top: var(--edu-spacing-lg);
+  border-top: 1px solid var(--edu-border);
+}
+
+.interleaving-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--edu-spacing-xl);
+  min-height: 400px;
+}
+
+.interleaving-loading .spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--edu-border);
+  border-top-color: var(--edu-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: var(--edu-spacing-md);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .ip-actions {
+    flex-direction: column;
+  }
+  
+  .ip-actions .btn {
+    width: 100%;
+  }
+}

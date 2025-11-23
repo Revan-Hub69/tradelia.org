@@ -947,6 +947,259 @@ export async function getRecentQuestionsForPractice(req, res) {
 }
 
 /**
+ * Get learning analytics data
+ * Paper: Siemens & Long (2011) - Learning Analytics
+ */
+export async function getLearningAnalytics(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const userId = req.user.id;
+
+    // Get user stats
+    const { data: userStats } = await supabase
+      .from("education_user_stats")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    // Get module progress
+    const { data: moduleProgress } = await supabase
+      .from("education_user_progress")
+      .select(`
+        *,
+        education_modules (id, title, slug)
+      `)
+      .eq("user_id", userId);
+
+    // Get lesson progress
+    const { data: lessonProgress } = await supabase
+      .from("education_user_lesson_progress")
+      .select("*")
+      .eq("user_id", userId);
+
+    // Get test attempts
+    const { data: testAttempts } = await supabase
+      .from("education_user_test_attempts")
+      .select(`
+        *,
+        education_tests (id, title, education_modules (title))
+      `)
+      .eq("user_id", userId)
+      .order("completed_at", { ascending: false })
+      .limit(20);
+
+    // Calculate overview
+    const totalModules = await supabase
+      .from("education_modules")
+      .select("id", { count: "exact", head: true })
+      .eq("is_active", true);
+
+    const totalLessons = await supabase
+      .from("education_lessons")
+      .select("id", { count: "exact", head: true })
+      .eq("is_active", true);
+
+    const totalTests = await supabase
+      .from("education_tests")
+      .select("id", { count: "exact", head: true })
+      .eq("is_active", true);
+
+    const modulesCompleted = moduleProgress?.filter(m => m.status === "completed").length || 0;
+    const lessonsCompleted = lessonProgress?.filter(l => l.status === "completed").length || 0;
+    const testsPassed = testAttempts?.filter(t => t.passed).length || 0;
+
+    // Calculate progress by module
+    const progress = (moduleProgress || []).map(mp => ({
+      name: mp.education_modules?.title || "Modulo",
+      percentage: mp.progress_percentage || 0,
+      status: mp.status,
+    }));
+
+    // Calculate test performance
+    const testPerformance = {
+      averageScore: testAttempts && testAttempts.length > 0
+        ? Math.round(testAttempts.reduce((sum, t) => sum + (t.score || 0), 0) / testAttempts.length)
+        : 0,
+      tests: (testAttempts || []).map(ta => ({
+        name: ta.education_tests?.title || "Test",
+        score: ta.score || 0,
+        date: ta.completed_at,
+        module: ta.education_tests?.education_modules?.title,
+      })),
+    };
+
+    // Calculate time spent
+    const totalTime = userStats?.total_study_time_minutes || 0;
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    // Get time spent from lesson progress (simplified - would need proper time tracking)
+    const timeSpent = {
+      today: 0, // Would calculate from lesson progress with started_at today
+      thisWeek: 0,
+      thisMonth: 0,
+      total: totalTime,
+    };
+
+    // Calculate retention rate (simplified - would need spaced repetition data)
+    const retentionRate = {
+      day1: 85, // Placeholder
+      day7: 70,
+      day30: 50,
+    };
+
+    // Calculate learning velocity
+    const learningVelocity = {
+      lessonsPerWeek: lessonsCompleted > 0 ? Math.round(lessonsCompleted / 4) : 0, // Simplified
+      avgTimePerLesson: lessonsCompleted > 0 ? Math.round(totalTime / lessonsCompleted) : 0,
+      testsPerWeek: testsPassed > 0 ? Math.round(testsPassed / 4) : 0,
+    };
+
+    // Identify weak areas (modules with low scores)
+    const weakAreas = (moduleProgress || [])
+      .filter(mp => mp.progress_percentage < 50)
+      .map(mp => ({
+        id: mp.module_id,
+        name: mp.education_modules?.title || "Modulo",
+        score: mp.progress_percentage,
+        description: "Completa più lezioni in quest'area per migliorare",
+      }));
+
+    // Recent activity
+    const recentActivity = [];
+    
+    // Add recent lesson completions
+    (lessonProgress || [])
+      .filter(lp => lp.completed_at)
+      .sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at))
+      .slice(0, 5)
+      .forEach(lp => {
+        recentActivity.push({
+          type: "lesson_completed",
+          title: "Lezione completata",
+          timestamp: lp.completed_at,
+        });
+      });
+
+    // Add recent test completions
+    (testAttempts || [])
+      .filter(ta => ta.completed_at)
+      .slice(0, 5)
+      .forEach(ta => {
+        recentActivity.push({
+          type: "test_completed",
+          title: `Test completato: ${ta.education_tests?.title || "Test"}`,
+          timestamp: ta.completed_at,
+          module: ta.education_tests?.education_modules?.title,
+        });
+      });
+
+    recentActivity.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    res.json({
+      success: true,
+      overview: {
+        modulesCompleted,
+        totalModules: totalModules.count || 0,
+        lessonsCompleted,
+        totalLessons: totalLessons.count || 0,
+        testsPassed,
+        totalTests: totalTests.count || 0,
+        totalPoints: userStats?.total_points || 0,
+        currentLevel: userStats?.current_level || 1,
+      },
+      progress: {
+        modules: progress,
+      },
+      testPerformance,
+      timeSpent,
+      retentionRate,
+      learningVelocity,
+      weakAreas,
+      streaks: {
+        current: userStats?.current_streak_days || 0,
+        longest: userStats?.longest_streak_days || 0,
+      },
+      recentActivity: recentActivity.slice(0, 10),
+    });
+  } catch (error) {
+    safeLog("error", "[Education] Errore getLearningAnalytics:", error);
+    res.status(500).json({ success: false, error: "Errore caricamento analytics" });
+  }
+}
+
+/**
+ * Get interleaved questions from multiple modules
+ * Paper: Rohrer & Taylor (2007) - Interleaving
+ */
+export async function getInterleavedQuestions(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const { moduleIds, count = 20, difficulty } = req.query;
+    
+    if (!moduleIds) {
+      return res.status(400).json({ success: false, error: "moduleIds richiesto" });
+    }
+
+    const ids = moduleIds.split(",").filter(Boolean);
+    const limit = parseInt(count) || 20;
+
+    // Get questions from multiple modules
+    let query = supabase
+      .from("education_questions")
+      .select(`
+        id,
+        question_text,
+        question_type,
+        bloom_level,
+        explanation,
+        topic,
+        education_tests!inner (
+          id,
+          title,
+          education_modules!inner (
+            id,
+            title,
+            slug
+          )
+        ),
+        education_question_options (
+          id,
+          option_text,
+          order_index
+        )
+      `)
+      .in("education_tests.education_modules.id", ids)
+      .eq("is_active", true)
+      .limit(limit * 2); // Get more to allow for filtering
+
+    if (difficulty) {
+      query = query.eq("difficulty", difficulty);
+    }
+
+    const { data: questions, error } = await query;
+
+    if (error) throw error;
+
+    // Shuffle and limit
+    const shuffled = (questions || []).sort(() => Math.random() - 0.5).slice(0, limit);
+
+    res.json({ success: true, questions: shuffled });
+  } catch (error) {
+    safeLog("error", "[Education] Errore getInterleavedQuestions:", error);
+    res.status(500).json({ success: false, error: "Errore caricamento domande interleaved" });
+  }
+}
+
+/**
  * Main handler (Vercel serverless function)
  */
 export default async function handler(req, res) {
@@ -1014,6 +1267,10 @@ export default async function handler(req, res) {
         return await saveLearningGoals(req, res);
       case "recent-questions-for-practice":
         return await getRecentQuestionsForPractice(req, res);
+      case "learning-analytics":
+        return await getLearningAnalytics(req, res);
+      case "interleaved-questions":
+        return await getInterleavedQuestions(req, res);
       default:
         return res.status(400).json({ success: false, error: "Azione non valida" });
     }
