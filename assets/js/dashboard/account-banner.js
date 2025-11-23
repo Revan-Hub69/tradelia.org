@@ -55,20 +55,16 @@ function renderBanner(container, role, planData) {
                 ${themeIcon}
               </svg>
             </button>
-            <div class="toggle-switch-wrapper">
-              <label class="toggle-switch" title="Ricevi notifiche push sul browser quando ci sono nuovi contenuti" id="toggle-notifications-label">
-                <input type="checkbox" id="toggle-notifications" ${getNotificationPermissionState() ? "checked" : ""}>
-                <span class="toggle-slider"></span>
-                <span class="toggle-label">Notifiche</span>
-              </label>
-            </div>
-            <div class="toggle-switch-wrapper">
-              <label class="toggle-switch" title="Installa l'app sul dispositivo per accesso rapido e funzionalità offline">
-                <input type="checkbox" id="toggle-pwa">
-                <span class="toggle-slider"></span>
-                <span class="toggle-label">App</span>
-              </label>
-            </div>
+            <label class="banner-toggle-compact" title="Ricevi notifiche push sul browser quando ci sono nuovi contenuti" id="toggle-notifications-label">
+              <input type="checkbox" id="toggle-notifications" ${getNotificationPermissionState() ? "checked" : ""}>
+              <span class="banner-toggle-slider"></span>
+              <span class="banner-toggle-label">Notifiche</span>
+            </label>
+            <label class="banner-toggle-compact" title="Installa l'app sul dispositivo per accesso rapido e funzionalità offline">
+              <input type="checkbox" id="toggle-pwa">
+              <span class="banner-toggle-slider"></span>
+              <span class="banner-toggle-label">App</span>
+            </label>
             <button type="button" class="btn btn-elegant btn-sm" id="btn-open-auth-modal">Accedi</button>
           </div>
         </div>
@@ -170,20 +166,16 @@ function renderBanner(container, role, planData) {
                 ${themeIcon}
               </svg>
             </button>
-            <div class="toggle-switch-wrapper">
-              <label class="toggle-switch" title="Ricevi notifiche push sul browser quando ci sono nuovi contenuti" id="toggle-notifications-label">
-                <input type="checkbox" id="toggle-notifications" ${getNotificationPermissionState() ? "checked" : ""}>
-                <span class="toggle-slider"></span>
-                <span class="toggle-label">Notifiche</span>
-              </label>
-            </div>
-            <div class="toggle-switch-wrapper">
-              <label class="toggle-switch" title="Installa l'app sul dispositivo per accesso rapido e funzionalità offline">
-                <input type="checkbox" id="toggle-pwa">
-                <span class="toggle-slider"></span>
-                <span class="toggle-label">App</span>
-              </label>
-            </div>
+            <label class="banner-toggle-compact" title="Ricevi notifiche push sul browser quando ci sono nuovi contenuti" id="toggle-notifications-label">
+              <input type="checkbox" id="toggle-notifications" ${getNotificationPermissionState() ? "checked" : ""}>
+              <span class="banner-toggle-slider"></span>
+              <span class="banner-toggle-label">Notifiche</span>
+            </label>
+            <label class="banner-toggle-compact" title="Installa l'app sul dispositivo per accesso rapido e funzionalità offline">
+              <input type="checkbox" id="toggle-pwa">
+              <span class="banner-toggle-slider"></span>
+              <span class="banner-toggle-label">App</span>
+            </label>
             <button class="btn btn-secondary btn-sm" id="btn-logout">Esci</button>
           </div>
         </div>
