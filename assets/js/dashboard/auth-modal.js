@@ -434,14 +434,12 @@ function setupModalEvents() {
     signupForm.addEventListener("submit", handleSignupSubmit);
   }
 
-  // Request code button
+  // Request code button - BEST PRACTICE: Implementazione completa
   const requestCodeBtn = document.getElementById("auth-code-request");
   if (requestCodeBtn) {
-    requestCodeBtn.addEventListener("click", () => {
-      // TODO: Aprire modale richiesta codice o reindirizzare
-      if (window.showToast) {
-        window.showToast("Funzionalità in arrivo", "info");
-      }
+    requestCodeBtn.addEventListener("click", async () => {
+      // Mostra modale richiesta codice
+      showRequestCodeModal();
     });
   }
 
@@ -621,11 +619,27 @@ async function handleLoginSubmit(e) {
     return;
   }
 
-  // Disable form
+  // Disable form and show loading
   const submitBtn = form.querySelector('button[type="submit"]');
+  const emailErrorEl = document.getElementById("auth-email-error");
+  const passwordErrorEl = document.getElementById("auth-password-error");
+  
+  // Clear previous errors
+  if (emailErrorEl) {
+    emailErrorEl.textContent = "";
+    emailErrorEl.hidden = true;
+  }
+  if (passwordErrorEl) {
+    passwordErrorEl.textContent = "";
+    passwordErrorEl.hidden = true;
+  }
+  emailInput?.setAttribute("aria-invalid", "false");
+  passwordInput?.setAttribute("aria-invalid", "false");
+  
   if (submitBtn) {
     submitBtn.disabled = true;
     submitBtn.textContent = "Accesso in corso...";
+    submitBtn.setAttribute("aria-busy", "true");
   }
 
   try {
@@ -668,6 +682,7 @@ async function handleLoginSubmit(e) {
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = "Accedi";
+        submitBtn.removeAttribute("aria-busy");
       }
       return;
     }
@@ -746,11 +761,28 @@ async function handleSignupSubmit(e) {
     return;
   }
 
-  // Disable form
+  // Disable form and show loading
   const submitBtn = form.querySelector('button[type="submit"]');
+  
+  // Clear previous errors
+  const emailErrorEl = document.getElementById("signup-email-validation");
+  const passwordErrorEl = document.getElementById("signup-password-confirm-error");
+  if (emailErrorEl) {
+    emailErrorEl.className = "auth-email-validation";
+    emailErrorEl.textContent = "";
+  }
+  if (passwordErrorEl) {
+    passwordErrorEl.textContent = "";
+    passwordErrorEl.hidden = true;
+  }
+  emailInput?.setAttribute("aria-invalid", "false");
+  passwordInput?.setAttribute("aria-invalid", "false");
+  passwordConfirmInput?.setAttribute("aria-invalid", "false");
+  
   if (submitBtn) {
     submitBtn.disabled = true;
     submitBtn.textContent = "Registrazione in corso...";
+    submitBtn.setAttribute("aria-busy", "true");
   }
 
   try {
@@ -814,6 +846,7 @@ async function handleSignupSubmit(e) {
     if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.textContent = "Registrati";
+      submitBtn.removeAttribute("aria-busy");
     }
   }
 }
@@ -907,9 +940,30 @@ function setupPasswordToggles() {
 }
 
 // ===== VALIDATION HELPERS =====
+/**
+ * Valida formato email (RFC 5322 compliant - semplificato)
+ * BEST PRACTICE: Validazione robusta ma non eccessivamente restrittiva
+ */
 function validateEmail(email) {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(email);
+  if (!email || typeof email !== "string") {
+    return false;
+  }
+  
+  // Trim e lowercase
+  const trimmed = email.trim().toLowerCase();
+  
+  // Regex migliorata (RFC 5322 compliant semplificato)
+  // Permette caratteri validi ma evita pattern pericolosi
+  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+  
+  // Validazioni aggiuntive
+  if (trimmed.length > 254) return false; // RFC 5321 limit
+  if (trimmed.length < 5) return false; // Min: a@b.c
+  if (trimmed.includes("..")) return false; // No consecutive dots
+  if (trimmed.startsWith(".") || trimmed.endsWith(".")) return false; // No leading/trailing dot
+  if (trimmed.startsWith("@") || trimmed.endsWith("@")) return false; // No leading/trailing @
+  
+  return emailRegex.test(trimmed);
 }
 
 async function checkEmailAvailability(email) {
@@ -931,6 +985,10 @@ async function checkEmailAvailability(email) {
   }
 }
 
+/**
+ * Aggiorna indicatore password strength con feedback dettagliato
+ * BEST PRACTICE: Feedback informativo per migliorare UX (NIST 800-63B)
+ */
 function updatePasswordStrength(password, container) {
   const fill = container.querySelector(".auth-password-strength-fill");
   const text = container.querySelector(".auth-password-strength-text");
@@ -945,26 +1003,63 @@ function updatePasswordStrength(password, container) {
   let strength = 0;
   let strengthText = "";
   let strengthClass = "";
+  const suggestions = [];
 
+  // Length checks
   if (password.length >= 12) {
     strength += 25;
+  } else {
+    suggestions.push(`Aggiungi ${12 - password.length} caratteri`);
   }
+  
   if (password.length >= 16) {
     strength += 10;
   }
-  if (/[a-z]/.test(password)) {
-    strength += 15;
-  }
-  if (/[A-Z]/.test(password)) {
-    strength += 15;
-  }
-  if (/[0-9]/.test(password)) {
-    strength += 15;
-  }
-  if (/[^a-zA-Z0-9]/.test(password)) {
-    strength += 20;
+  
+  if (password.length >= 20) {
+    strength += 5;
   }
 
+  // Character variety checks
+  if (/[a-z]/.test(password)) {
+    strength += 15;
+  } else {
+    suggestions.push("Aggiungi lettere minuscole");
+  }
+  
+  if (/[A-Z]/.test(password)) {
+    strength += 15;
+  } else {
+    suggestions.push("Aggiungi lettere maiuscole");
+  }
+  
+  if (/[0-9]/.test(password)) {
+    strength += 15;
+  } else {
+    suggestions.push("Aggiungi numeri");
+  }
+  
+  if (/[^a-zA-Z0-9]/.test(password)) {
+    strength += 20;
+  } else {
+    suggestions.push("Aggiungi simboli (!@#$%...)");
+  }
+
+  // Common patterns check (reduce strength)
+  const commonPatterns = [
+    /12345/,
+    /password/i,
+    /qwerty/i,
+    /abcde/i,
+    /(.)\1{3,}/, // Repeated characters
+  ];
+  
+  if (commonPatterns.some(pattern => pattern.test(password))) {
+    strength = Math.max(0, strength - 20);
+    suggestions.push("Evita pattern comuni");
+  }
+
+  // Determine strength level
   if (strength < 40) {
     strengthText = "Debole";
     strengthClass = "weak";
@@ -974,6 +1069,11 @@ function updatePasswordStrength(password, container) {
   } else {
     strengthText = "Forte";
     strengthClass = "strong";
+  }
+
+  // Add suggestions to text if weak/medium
+  if (strength < 70 && suggestions.length > 0) {
+    strengthText += ` • ${suggestions[0]}`;
   }
 
   fill.style.width = `${Math.min(strength, 100)}%`;
@@ -1042,6 +1142,13 @@ async function handleResetPasswordRequest() {
     return;
   }
 
+  // Disable button during request
+  const forgotPasswordBtn = document.getElementById("auth-forgot-password");
+  if (forgotPasswordBtn) {
+    forgotPasswordBtn.disabled = true;
+    forgotPasswordBtn.textContent = "Invio in corso...";
+  }
+
   try {
     const response = await fetch("/api/auth?action=reset-password", {
       method: "POST",
@@ -1053,7 +1160,14 @@ async function handleResetPasswordRequest() {
 
     if (data.ok) {
       if (window.showToast) {
-        window.showToast(data.message || "Controlla la tua email per le istruzioni", "success");
+        window.showToast(
+          data.message || "Se l'email esiste, ti abbiamo inviato le istruzioni per reimpostare la password. Controlla la tua casella email.",
+          "success"
+        );
+      }
+      // Clear email field for security
+      if (emailInput) {
+        emailInput.value = "";
       }
     } else {
       if (window.showToast) {
@@ -1065,5 +1179,232 @@ async function handleResetPasswordRequest() {
     if (window.showToast) {
       window.showToast("Errore di connessione. Riprova.", "error");
     }
+  } finally {
+    if (forgotPasswordBtn) {
+      forgotPasswordBtn.disabled = false;
+      forgotPasswordBtn.textContent = "Password dimenticata?";
+    }
   }
 }
+
+// ===== REQUEST CODE MODAL =====
+function showRequestCodeModal() {
+  // Crea modale richiesta codice se non esiste
+  let modal = document.getElementById("request-code-modal");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "request-code-modal";
+    modal.className = "auth-modal";
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-label", "Richiedi codice di accesso");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-hidden", "true");
+    
+    modal.innerHTML = `
+      <div class="auth-modal-overlay" aria-hidden="true"></div>
+      <div class="auth-modal-content">
+        <div class="auth-modal-header">
+          <h2 class="auth-modal-title">Richiedi Codice di Accesso</h2>
+          <button type="button" class="auth-modal-close" aria-label="Chiudi">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="auth-modal-body">
+          <p class="auth-modal-intro">
+            Richiedi un codice di accesso gratuito valido 30 giorni. Il codice funziona sulla dashboard PWA installabile.
+          </p>
+          <form id="request-code-form" class="auth-modal-form" novalidate>
+            <div class="auth-form-group">
+              <label for="request-code-email" class="auth-form-label">Email</label>
+              <input
+                type="email"
+                id="request-code-email"
+                name="email"
+                class="auth-form-input"
+                placeholder="nome@esempio.com"
+                autocomplete="email"
+                required
+                aria-invalid="false"
+                aria-describedby="request-code-email-error"
+              />
+              <span class="auth-form-error" id="request-code-email-error" role="alert" hidden></span>
+            </div>
+            <div class="auth-form-actions">
+              <button type="submit" class="btn btn-primary">Richiedi Codice</button>
+              <button type="button" class="btn btn-secondary" onclick="closeRequestCodeModal()">Annulla</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Bind events
+    const closeBtn = modal.querySelector(".auth-modal-close");
+    const overlay = modal.querySelector(".auth-modal-overlay");
+    const form = modal.querySelector("#request-code-form");
+    
+    if (closeBtn) {
+      closeBtn.addEventListener("click", closeRequestCodeModal);
+    }
+    if (overlay) {
+      overlay.addEventListener("click", closeRequestCodeModal);
+    }
+    if (form) {
+      form.addEventListener("submit", handleRequestCodeSubmit);
+    }
+    
+    // Escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !modal.hasAttribute("aria-hidden")) {
+        closeRequestCodeModal();
+      }
+    });
+  }
+  
+  // Mostra modale
+  modal.removeAttribute("aria-hidden");
+  modal.classList.add("active");
+  document.body.style.overflow = "hidden";
+  
+  // Focus first input
+  const emailInput = modal.querySelector("#request-code-email");
+  if (emailInput) {
+    setTimeout(() => emailInput.focus(), 100);
+  }
+}
+
+function closeRequestCodeModal() {
+  const modal = document.getElementById("request-code-modal");
+  if (modal) {
+    modal.setAttribute("aria-hidden", "true");
+    modal.classList.remove("active");
+    document.body.style.overflow = "";
+  }
+}
+
+async function handleRequestCodeSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const emailInput = document.getElementById("request-code-email");
+  const email = emailInput?.value?.trim() || "";
+  const errorEl = document.getElementById("request-code-email-error");
+  const submitBtn = form.querySelector('button[type="submit"]');
+  
+  // Validation
+  if (!email) {
+    if (errorEl) {
+      errorEl.textContent = "Inserisci un'email";
+      errorEl.hidden = false;
+    }
+    emailInput?.setAttribute("aria-invalid", "true");
+    emailInput?.focus();
+    return;
+  }
+  
+  if (!validateEmail(email)) {
+    if (errorEl) {
+      errorEl.textContent = "Formato email non valido";
+      errorEl.hidden = false;
+    }
+    emailInput?.setAttribute("aria-invalid", "true");
+    emailInput?.focus();
+    return;
+  }
+  
+  // Clear error
+  if (errorEl) {
+    errorEl.textContent = "";
+    errorEl.hidden = true;
+  }
+  emailInput?.setAttribute("aria-invalid", "false");
+  
+  // Disable form
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Invio in corso...";
+  }
+  
+  try {
+    // Prova prima con free-token (codice gratuito)
+    const response = await fetch("/api/auth?action=free-token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        nome: email.split("@")[0], // Nome da email
+        profilo: "privato",
+        uso: "Accesso alla dashboard Tradelia per analisi finanziarie",
+      }),
+    });
+    
+    const data = await response.json();
+    
+    if (data.ok) {
+      if (window.showToast) {
+        window.showToast(
+          data.message || "Codice generato. Controlla la tua email.",
+          "success"
+        );
+      }
+      closeRequestCodeModal();
+      // Switch to code tab
+      setTimeout(() => {
+        switchTab("code");
+        const codeInput = document.getElementById("auth-code-input");
+        if (codeInput) {
+          codeInput.focus();
+        }
+      }, 500);
+    } else {
+      // Se free-token fallisce, prova con token normale (per utenti con piano)
+      const response2 = await fetch("/api/auth?action=token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      
+      const data2 = await response2.json();
+      
+      if (data2.ok) {
+        if (window.showToast) {
+          window.showToast(
+            data2.message || "Se esiste un piano attivo, ti abbiamo inviato un nuovo codice.",
+            "success"
+          );
+        }
+        closeRequestCodeModal();
+      } else {
+        if (errorEl) {
+          errorEl.textContent = data2.error || data.error || "Errore durante la richiesta";
+          errorEl.hidden = false;
+        }
+        emailInput?.setAttribute("aria-invalid", "true");
+        if (window.showToast) {
+          window.showToast(data2.error || data.error || "Errore durante la richiesta", "error");
+        }
+      }
+    }
+  } catch (error) {
+    safeLog("error", "[AuthModal] Errore richiesta codice:", error);
+    if (errorEl) {
+      errorEl.textContent = "Errore di connessione. Riprova.";
+      errorEl.hidden = false;
+    }
+    if (window.showToast) {
+      window.showToast("Errore di connessione. Riprova.", "error");
+    }
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Richiedi Codice";
+    }
+  }
+}
+
+// Expose globally
+window.closeRequestCodeModal = closeRequestCodeModal;

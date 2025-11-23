@@ -209,7 +209,14 @@ async function handleRequestToken(req, res) {
     return res.status(400).json({ ok: false, error: "Email non valida" });
   }
 
+  // BEST PRACTICE: Sanitizzazione email coerente
   const sanitizedEmail = email.trim().toLowerCase();
+  
+  // Validazione formato email
+  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
+    return res.status(400).json({ ok: false, error: "Formato email non valido" });
+  }
 
   // Verifica utente e piano attivo
   const { data: subscriber } = await supabase
@@ -458,7 +465,14 @@ async function handleFreeToken(req, res) {
       .json({ ok: false, error: "Descrivi come userai il token (minimo 10 caratteri)" });
   }
 
+  // BEST PRACTICE: Sanitizzazione email coerente
   const sanitizedEmail = email.trim().toLowerCase();
+  
+  // Validazione formato email
+  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
+    return res.status(400).json({ ok: false, error: "Formato email non valido" });
+  }
   const newToken = generateToken();
   const tokenHash = hashToken(newToken);
   const valid_until = new Date(
@@ -635,9 +649,23 @@ async function handleSignup(req, res) {
 
   const { email, password, passwordConfirm, privacyAccepted } = req.body;
 
-  // Validation
-  if (!email || typeof email !== "string" || !email.includes("@")) {
-    return res.status(400).json({ ok: false, error: "Email non valida" });
+  // Validation - BEST PRACTICE: Validazione robusta email
+  if (!email || typeof email !== "string") {
+    return res.status(400).json({ ok: false, error: "Email richiesta" });
+  }
+  
+  // BEST PRACTICE: Sanitizzazione email coerente
+  const sanitizedEmail = email.trim().toLowerCase();
+  
+  // Validazione formato email
+  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
+    return res.status(400).json({ ok: false, error: "Formato email non valido" });
+  }
+  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+  
+  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
+    return res.status(400).json({ ok: false, error: "Formato email non valido" });
   }
 
   if (!password || typeof password !== "string" || password.length < 12) {
@@ -654,7 +682,14 @@ async function handleSignup(req, res) {
     return res.status(400).json({ ok: false, error: "Devi accettare la privacy policy" });
   }
 
+  // BEST PRACTICE: Sanitizzazione email coerente
   const sanitizedEmail = email.trim().toLowerCase();
+  
+  // Validazione formato email
+  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
+    return res.status(400).json({ ok: false, error: "Formato email non valido" });
+  }
 
   // Rate limiting
   const rateLimit = checkRateLimit(`signup:${sanitizedEmail}`);
@@ -729,15 +764,30 @@ async function handleLogin(req, res) {
 
   const { email, password } = req.body;
 
-  if (!email || typeof email !== "string" || !email.includes("@")) {
-    return res.status(400).json({ ok: false, error: "Email non valida" });
+  // BEST PRACTICE: Validazione email robusta
+  if (!email || typeof email !== "string") {
+    return res.status(400).json({ ok: false, error: "Email richiesta" });
+  }
+  
+  const sanitizedEmail = email.trim().toLowerCase();
+  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+  
+  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
+    return res.status(400).json({ ok: false, error: "Formato email non valido" });
   }
 
   if (!password || typeof password !== "string") {
     return res.status(400).json({ ok: false, error: "Password richiesta" });
   }
 
+  // BEST PRACTICE: Sanitizzazione email coerente
   const sanitizedEmail = email.trim().toLowerCase();
+  
+  // Validazione formato email
+  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
+    return res.status(400).json({ ok: false, error: "Formato email non valido" });
+  }
 
   // Rate limiting
   const rateLimit = checkRateLimit(`login:${sanitizedEmail}`);
@@ -870,7 +920,14 @@ async function handleCheckEmail(req, res) {
     return res.status(400).json({ ok: false, error: "Email non valida" });
   }
 
+  // BEST PRACTICE: Sanitizzazione email coerente
   const sanitizedEmail = email.trim().toLowerCase();
+  
+  // Validazione formato email
+  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
+    return res.status(400).json({ ok: false, error: "Formato email non valido" });
+  }
 
   try {
     // Check Supabase Auth
@@ -909,7 +966,14 @@ async function handleResetPassword(req, res) {
     return res.status(400).json({ ok: false, error: "Email non valida" });
   }
 
+  // BEST PRACTICE: Sanitizzazione email coerente
   const sanitizedEmail = email.trim().toLowerCase();
+  
+  // Validazione formato email
+  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
+    return res.status(400).json({ ok: false, error: "Formato email non valido" });
+  }
 
   // Rate limiting
   const rateLimit = checkRateLimit(`reset:${sanitizedEmail}`);
