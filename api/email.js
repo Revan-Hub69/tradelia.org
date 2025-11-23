@@ -11,7 +11,10 @@ if (!BREVO_API_KEY) {
   console.warn("[Email] BREVO_API_KEY non configurato - invio email disabilitato");
 }
 
-export default async function handler(req, res) {
+// NOTA: Funzione disabilitata per rispettare limite Vercel Hobby (12 funzioni)
+// Consolidata in api/auth.js?action=email-*
+// export default async function handler(req, res) {
+async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");

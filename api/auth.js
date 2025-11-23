@@ -78,6 +78,10 @@ function hashToken(token) {
 }
 
 // ===== HANDLER PRINCIPALE =====
+/**
+ * Main handler (Vercel serverless function)
+ * Consolidates: auth, user, email endpoints
+ */
 export default async function handler(req, res) {
   // CORS headers
   try {

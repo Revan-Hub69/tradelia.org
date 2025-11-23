@@ -13,7 +13,10 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-export default async function handler(req, res) {
+// NOTA: Funzione disabilitata per rispettare limite Vercel Hobby (12 funzioni)
+// Consolidata in api/admin.js?action=community-*
+// export default async function handler(req, res) {
+async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');

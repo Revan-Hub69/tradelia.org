@@ -1,8 +1,10 @@
 // /api/health.js
 // API Vercel - Health Check
-// Nuovo endpoint per monitoring e status
+// NOTA: Funzione disabilitata per rispettare limite Vercel Hobby (12 funzioni)
+// Consolidata in api/admin.js?action=health
 
-export default async function handler(req, res) {
+// export default async function handler(req, res) {
+async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ ok: false, error: 'Method not allowed' });
   }
