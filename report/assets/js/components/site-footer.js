@@ -46,12 +46,15 @@ function render(data = {}) {
     <div class="container">
       <section class="ftr-grid">
         <div class="ftr-col">
-          <h3 class="ftr-head">
-            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 3h16v18H4z"/><path d="M8 7h8M8 11h8M8 15h6"/>
-            </svg>
-            <span>Tradelia AI</span>
-          </h3>
+          <div class="ftr-head">
+            <img src="/logos/tradelia-logo.svg" alt="Tradelia AI" class="ftr-logo" width="240" height="60" />
+            <span class="ftr-logo-fallback" style="display: none;">
+              <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 3h16v18H4z"/><path d="M8 7h8M8 11h8M8 15h6"/>
+              </svg>
+              <span>Tradelia AI</span>
+            </span>
+          </div>
           <p>
             Tradelia AI è un progetto indipendente che pubblica analisi sui mercati basate su framework AI proprietari e documentazione trasparente.
           </p>

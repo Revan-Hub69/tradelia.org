@@ -24,7 +24,7 @@ function render(options = {}) {
   return `
     <div class="container">
       <a href="/index.html" class="brand" aria-label="Tradelia.org - Homepage">
-        <img src="/logos/tradelia-logo.svg" alt="Tradelia AI" class="brand-logo" width="160" height="40" style="height: 32px; width: auto;" />
+        <img src="/logos/tradelia-logo.svg" alt="Tradelia AI" class="brand-logo" width="200" height="50" style="height: 36px; width: auto;" />
         <span class="brand-text-fallback" style="display: none;">
           <span class="brand-word">TRADELIA</span>
           <span class="brand-dot" aria-hidden="true"></span>

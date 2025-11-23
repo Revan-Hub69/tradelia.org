@@ -2203,13 +2203,35 @@ main#app-root.container {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  flex-direction: column;
   gap: var(--sp-3);
   color: var(--ink);
   margin-bottom: var(--sp-4);
   padding-bottom: var(--sp-3);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   position: relative;
+}
+
+/* ===== FOOTER LOGO (SVG) ===== */
+.ftr-logo {
+  display: block;
+  height: 44px;
+  width: auto;
+  max-width: 260px;
+  object-fit: contain;
+  transition: opacity 0.2s, transform 0.2s;
+  filter: brightness(1);
+  margin-bottom: var(--sp-2);
+}
+
+.ftr-logo-fallback {
+  display: none;
+}
+
+.ftr-head:hover .ftr-logo {
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 .ftr-head::after {

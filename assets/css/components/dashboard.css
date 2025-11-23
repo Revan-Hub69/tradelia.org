@@ -551,11 +551,12 @@ a[role="button"]:focus-visible {
 /* ===== DASHBOARD BRAND LOGO (SVG) ===== */
 .dashboard-brand-logo {
   display: inline-block;
-  height: 32px;
+  height: 36px;
   width: auto;
-  max-width: 200px;
+  max-width: 220px;
   object-fit: contain;
   transition: opacity 0.2s, transform 0.2s;
+  filter: brightness(1);
 }
 
 .dashboard-brand:hover .dashboard-brand-logo {

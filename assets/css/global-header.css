@@ -89,11 +89,12 @@ header.hdr .container {
 .brand-logo,
 .hdr .brand-logo {
   display: inline-block !important;
-  height: 32px !important;
+  height: 36px !important;
   width: auto !important;
-  max-width: 200px !important;
+  max-width: 220px !important;
   object-fit: contain !important;
   transition: opacity 0.2s, transform 0.2s !important;
+  filter: brightness(1) !important;
 }
 
 .brand:hover .brand-logo,
