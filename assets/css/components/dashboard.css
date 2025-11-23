@@ -162,7 +162,9 @@
 }
 
 /* ===== DASHBOARD VARIABLES ===== */
-:root {
+/* ===== DARK MODE (Default) ===== */
+:root,
+[data-theme="dark"] {
   /* Nero/Grigio Lucido Elegante */
   --dash-bg: #0a0a0a;
   --dash-bg-soft: #111111;
