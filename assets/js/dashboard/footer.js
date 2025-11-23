@@ -20,10 +20,9 @@ export async function initFooter() {
  */
 function renderFooter(container) {
   const year = new Date().getFullYear();
-  // BEST PRACTICE: Usa percorso relativo alla root del sito (funziona sempre)
-  // Non usare window.location.origin perché può causare problemi con CORS o base path
-  // Aggiungi versione per evitare cache del browser
-  const logoPath = '/logos/tradelia-logo.svg?v=3';
+  // BEST PRACTICE: Costruisci URL assoluto per evitare problemi con percorsi relativi
+  // Usa new URL() per costruire il percorso corretto dalla root del sito
+  const logoPath = new URL('/logos/tradelia-logo.svg?v=3', window.location.origin).href;
 
   container.innerHTML = `
     <div class="footer-content">
