@@ -46,7 +46,10 @@ function render(data = {}) {
     <div class="container">
       <section class="ftr-grid">
         <div class="ftr-col">
-          <h3 class="ftr-head">
+          <a href="/index.html" class="ftr-brand" aria-label="Tradelia.org - Homepage" style="display: inline-block; margin-bottom: var(--sp-4);">
+            <img src="/logos/tradelia-logo.svg" alt="Tradelia AI" style="height: 28px; width: auto;" />
+          </a>
+          <h3 class="ftr-head" style="display: none;">
             <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M4 3h16v18H4z"/><path d="M8 7h8M8 11h8M8 15h6"/>
             </svg>
