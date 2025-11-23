@@ -3,9 +3,10 @@
 # Vercel Hobby: max 12 funzioni - manteniamo solo quelle pubbliche essenziali
 
 # ===== PAGES/API - TUTTE LE FUNZIONI IGNORATE =====
-# Vercel conta anche pages/api/ come serverless functions
-# Ignoriamo tutto pages/api/ per rispettare il limite
+# Vercel conta anche pages/api/ e _internal/pages-api/ come serverless functions
+# Ignoriamo tutto pages/api/ e _internal/pages-api/ per rispettare il limite
 pages/api/
+_internal/pages-api/
 
 # ===== EMAIL FUNCTIONS (Private) =====
 api/send-email-backup.js
