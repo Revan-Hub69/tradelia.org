@@ -262,3 +262,44 @@ export async function hasToken() {
   const token = await getToken();
   return !!token;
 }
+
+/**
+ * Sync token to IndexedDB for Service Worker access
+ * Used by PWA notifications system
+ */
+export async function syncTokenToIndexedDB() {
+  try {
+    const token = await getToken();
+    const refreshToken = await getRefreshToken();
+    
+    if (token) {
+      // Token already saved via saveToken, but ensure it's synced
+      const database = await initDB();
+      if (database) {
+        const encrypted = encryptToken(token);
+        const encryptedRefresh = refreshToken ? encryptToken(refreshToken) : null;
+        
+        const transaction = database.transaction([STORE_NAME], "readwrite");
+        const store = transaction.objectStore(STORE_NAME);
+        
+        await store.put({ key: TOKEN_KEY, value: encrypted });
+        if (encryptedRefresh) {
+          await store.put({ key: REFRESH_TOKEN_KEY, value: encryptedRefresh });
+        }
+      }
+    }
+    
+    // Also sync device ID if exists
+    const deviceId = localStorage.getItem("tradelia-device-id");
+    if (deviceId) {
+      const database = await initDB();
+      if (database) {
+        const transaction = database.transaction([STORE_NAME], "readwrite");
+        const store = transaction.objectStore(STORE_NAME);
+        await store.put({ key: "device-id", value: deviceId });
+      }
+    }
+  } catch (error) {
+    console.warn("[TokenStorage] Errore syncTokenToIndexedDB:", error);
+  }
+}
