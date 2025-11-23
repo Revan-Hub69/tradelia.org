@@ -16,7 +16,7 @@ function copyStaticFiles() {
       const outDir = resolve(__dirname, "dist");
 
       // Copia cartelle statiche
-      const staticDirs = ["icons", "favicons"];
+      const staticDirs = ["icons", "favicons", "logos"];
       staticDirs.forEach((dir) => {
         const srcDir = resolve(__dirname, dir);
         const destDir = join(outDir, dir);
@@ -54,7 +54,9 @@ function copyStaticFiles() {
         "manifest.json",
         "favicon.ico",
         "favicon.png",
+        "favicon.svg",
         "apple-touch-icon.png",
+        "apple-touch-icon.svg",
       ];
 
       staticFiles.forEach((file) => {
