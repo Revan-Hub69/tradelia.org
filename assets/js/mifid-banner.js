@@ -272,7 +272,7 @@ function renderLegalOverlay() {
         Address: Via dei Fiori 2, 86078 Sesto Campano (IS), Italy<br />
         Email: <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a></p>
         <h4>Service Description</h4>
-        <p>Tradelia AI provides data analysis tools and reporting through academic methodology. The Service includes interactive dashboards and visualization tools.</p>
+        <p>Tradelia AI provides data analysis tools and reporting through AI with academic method. The Service includes interactive dashboards and visualization tools.</p>
         <p><strong>IMPORTANT:</strong> The Service does not constitute financial advice, investment or buy/sell recommendations.</p>
         <h4>Paid Services</h4>
         <p>On-demand services: you pay only for what you request, without recurring subscriptions. Invoicing via Xolo Go. Right of withdrawal within 14 days of delivery.</p>
