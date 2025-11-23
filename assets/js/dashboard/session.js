@@ -5,8 +5,8 @@
  */
 
 import { safeLog } from "./security-utils.js";
+import { getToken, removeToken } from "./token-storage.js";
 
-const TOKEN_KEY = "tradelia-access-token-v1";
 const CHECK_INTERVAL = 5 * 60 * 1000; // 5 minuti
 
 let checkInterval = null;
@@ -16,7 +16,7 @@ let warningShown = false;
  * Verifica validità token e gestisce scadenza
  */
 export async function checkTokenValidity() {
-  const token = localStorage.getItem(TOKEN_KEY);
+  const token = await getToken();
   if (!token) {
     return { valid: false, reason: "missing_token" };
   }
@@ -31,8 +31,8 @@ export async function checkTokenValidity() {
     const data = await response.json();
 
     if (!data.ok) {
-      // Token non valido o scaduto
-      localStorage.removeItem(TOKEN_KEY);
+      // Token non valido o scaduto - BEST PRACTICE: Use secure token storage
+      await removeToken();
       return { valid: false, reason: data.reason || "invalid_token" };
     }
 
@@ -47,9 +47,9 @@ export async function checkTokenValidity() {
       warningShown = true;
     }
 
-    // Auto-logout se scaduto
+    // Auto-logout se scaduto - BEST PRACTICE: Use secure token storage
     if (expiryDate <= now) {
-      localStorage.removeItem(TOKEN_KEY);
+      await removeToken();
       return { valid: false, reason: "expired_token" };
     }
 

@@ -21,7 +21,9 @@ export async function getUserRole() {
     return { ...userRoleCache, ...userPlanDataCache };
   }
 
-  const token = localStorage.getItem("tradelia-access-token-v1");
+  // BEST PRACTICE: Use secure token storage
+  const { getToken } = await import("./token-storage.js");
+  const token = await getToken();
   if (!token) {
     userRoleCache = { role: "guest", user: null, isAdmin: false };
     userPlanDataCache = { plan: null, usage: null };
@@ -87,10 +89,6 @@ export async function logout() {
     const { removeToken } = await import("./token-storage.js");
     await removeToken();
 
-    // Rimuovi token anche da IndexedDB per Service Worker
-    const { removeTokenFromIndexedDB } = await import("./token-storage.js");
-    await removeTokenFromIndexedDB();
-
     userRoleCache = { role: "guest", user: null, isAdmin: false };
     userPlanDataCache = { plan: null, usage: null };
     window.location.href = "/accesso.html?reason=logout";
@@ -116,8 +114,10 @@ export async function getPlanData() {
 /**
  * Reindirizza a login se non autenticato
  */
-export function requireAuth() {
-  const token = localStorage.getItem("tradelia-access-token-v1");
+export async function requireAuth() {
+  // BEST PRACTICE: Use secure token storage
+  const { getToken } = await import("./token-storage.js");
+  const token = await getToken();
   if (!token) {
     window.location.href = "/accesso.html?reason=login_required";
     return false;
