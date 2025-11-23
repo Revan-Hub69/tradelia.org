@@ -109,9 +109,10 @@ export async function initDashboard() {
   // BEST PRACTICE: Initialize desktop sidebar (Coerenza Desktop vs Mobile)
   // Desktop sidebar rimosso - non più utilizzato
 
-  // BEST PRACTICE: Initialize theme toggle (Dark Mode Best Practices)
-  const { initThemeToggle } = await import("./theme-toggle.js");
-  initThemeToggle();
+  // BEST PRACTICE 2025: Solo tema dark - nessun toggle
+  // Forza sempre tema dark per coerenza istituzionale
+  document.documentElement.setAttribute('data-theme', 'dark');
+  document.documentElement.setAttribute('data-theme-manual', 'true');
 
   // BEST PRACTICE: Initialize i18n system (Global UX)
   const { initI18n } = await import("./i18n.js");
@@ -189,16 +190,38 @@ export async function initDashboard() {
   const { setupHapticFeedback } = await import("./haptic-feedback.js");
   setupHapticFeedback();
 
+  // BEST PRACTICE: Inizializza history state per supporto back button mobile
+  // Crea uno stato iniziale nella history per evitare che il back button chiuda la pagina
+  const initialHash = window.location.hash.slice(1);
+  const initialModule = initialHash || null;
+  
+  if (!history.state) {
+    // Crea stato iniziale nella history (usa replaceState per non aggiungere entry)
+    const url = initialHash 
+      ? `${window.location.pathname}#${initialHash}` 
+      : window.location.pathname;
+    history.replaceState({ module: initialModule, isInitial: true }, "", url);
+  }
+
   // BEST PRACTICE: Su mobile, pannelli chiusi di default
   const isMobile = window.innerWidth <= 768;
-  const hash = window.location.hash.slice(1);
 
-  if (hash && !isMobile) {
-    // Desktop: apri se c'è hash
-    showModule(hash);
+  if (initialHash && !isMobile) {
+    // Desktop: apri se c'è hash (ma non fare pushState, è già stato fatto sopra)
+    showModule(initialHash, false);
+  } else if (initialHash && isMobile) {
+    // Mobile: se c'è hash, apri comunque (utente potrebbe aver salvato un link)
+    showModule(initialHash, false);
   } else {
-    // Mobile: chiudi tutto e mostra solo moduli view
-    closeModule();
+    // Nessun hash: mostra solo moduli view
+    const modulesView = document.getElementById("modules-view");
+    if (modulesView) {
+      modulesView.classList.add("active");
+    }
+    document.querySelectorAll(".panel-view").forEach((panel) => {
+      panel.classList.remove("active");
+    });
+    STATE.currentModule = null;
   }
 
   // Handle hash changes
@@ -212,17 +235,31 @@ export async function initDashboard() {
   });
 
   // BEST PRACTICE: Handle browser back button with History API (Mobile UX Patterns)
+  // CRITICAL: Previene chiusura pagina su mobile quando si preme indietro
   window.addEventListener("popstate", (e) => {
+    // Se è lo stato iniziale, non fare nulla (evita chiusura pagina)
+    if (e.state && e.state.isInitial) {
+      // Mantieni la vista corrente senza cambiare nulla
+      return;
+    }
+
     if (e.state && e.state.module) {
-      showModule(e.state.module);
+      showModule(e.state.module, false); // false = non fare pushState (siamo già in popstate)
     } else {
       const hash = window.location.hash.slice(1);
       if (hash) {
-        showModule(hash);
+        showModule(hash, false);
       } else {
-        // Chiudi modulo se presente
+        // Chiudi modulo se presente, ma non chiudere la pagina
         if (STATE.currentModule) {
-          closeModule();
+          closeModule(false); // false = non fare pushState
+        } else {
+          // Se siamo già nella home, non fare nulla (evita chiusura)
+          const modulesView = document.getElementById("modules-view");
+          if (modulesView && modulesView.classList.contains("active")) {
+            // Già nella home, non fare nulla
+            return;
+          }
         }
       }
     }
@@ -291,7 +328,13 @@ export async function initDashboard() {
   document.querySelectorAll(".panel-back").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
-      window.location.hash = "";
+      // Usa history.back() invece di hash vuoto per supporto mobile migliore
+      if (history.length > 1) {
+        history.back();
+      } else {
+        // Se non c'è history, chiudi il modulo normalmente
+        window.location.hash = "";
+      }
     });
   });
 
@@ -313,10 +356,13 @@ export async function initDashboard() {
 /**
  * Close current module and return to modules view
  * BEST PRACTICE: Support back button with History API
+ * @param {boolean} pushState - Se true, fa pushState (default: true). Se false, non modifica history (utile in popstate)
  */
-function closeModule() {
-  // BEST PRACTICE: Push state per tornare alla home
-  history.pushState({ module: null }, "", window.location.pathname);
+function closeModule(pushState = true) {
+  // BEST PRACTICE: Push state per tornare alla home (solo se non siamo in popstate)
+  if (pushState) {
+    history.pushState({ module: null }, "", window.location.pathname);
+  }
 
   window.location.hash = "";
   STATE.currentModule = null;
@@ -383,13 +429,17 @@ async function toggleAdminModule() {
 /**
  * Show module panel
  * BEST PRACTICE: Usa History API per supporto back button mobile
+ * @param {string|null} moduleId - ID del modulo da mostrare
+ * @param {boolean} pushState - Se true, fa pushState (default: true). Se false, non modifica history (utile in popstate)
  */
-function showModule(moduleId) {
-  // BEST PRACTICE: Push state invece di solo hash per back button support
-  if (moduleId) {
-    history.pushState({ module: moduleId }, "", `#${moduleId}`);
-  } else {
-    history.pushState({ module: null }, "", window.location.pathname);
+function showModule(moduleId, pushState = true) {
+  // BEST PRACTICE: Push state invece di solo hash per back button support (solo se non siamo in popstate)
+  if (pushState) {
+    if (moduleId) {
+      history.pushState({ module: moduleId }, "", `#${moduleId}`);
+    } else {
+      history.pushState({ module: null }, "", window.location.pathname);
+    }
   }
 
   // Hide all views

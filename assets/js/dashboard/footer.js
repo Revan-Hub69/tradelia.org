@@ -20,18 +20,23 @@ export async function initFooter() {
  */
 function renderFooter(container) {
   const year = new Date().getFullYear();
+  // BEST PRACTICE: Usa percorso relativo alla root del sito (funziona sempre)
+  // Non usare window.location.origin perché può causare problemi con CORS o base path
+  const logoPath = '/logos/tradelia-logo.svg';
 
   container.innerHTML = `
     <div class="footer-content">
       <div class="footer-left">
-        <p class="footer-copyright">
-          &copy; ${year} 
-          <span class="footer-brand">
+        <a href="/index.html" class="footer-logo-link" aria-label="Tradelia.org - Homepage">
+          <img src="${logoPath}" alt="Tradelia AI" class="footer-logo-img" onerror="this.onerror=null; this.style.display='none'; const fallback=this.nextElementSibling; if(fallback) fallback.classList.add('show');" />
+          <span class="footer-logo-fallback">
             <span class="footer-brand-word">TRADELIA</span>
             <span class="footer-brand-dot"></span>
             <span class="footer-brand-suffix">AI</span>
           </span>
-          · Tutti i diritti riservati
+        </a>
+        <p class="footer-copyright">
+          &copy; ${year} Tradelia AI · Tutti i diritti riservati
         </p>
         <p class="footer-disclaimer">
           Le informazioni fornite sono a scopo educativo e non costituiscono consulenza finanziaria.
@@ -39,21 +44,25 @@ function renderFooter(container) {
       </div>
       
       <div class="footer-right">
-        <div class="footer-links-inline">
+        <nav class="footer-links-inline" role="navigation" aria-label="Link legali e supporto">
           <button type="button" class="footer-link footer-link-btn" id="btn-support-open" aria-label="Apri popup contatti supporto">Supporto</button>
-          <span class="footer-separator">·</span>
+          <span class="footer-separator" aria-hidden="true">·</span>
           <button type="button" class="footer-link footer-link-btn" id="btn-status-open" aria-label="Apri popup contatti status">Status</button>
-          <span class="footer-separator">·</span>
-          <button type="button" class="footer-link footer-link-btn" id="btn-privacy-open" aria-label="Apri informativa privacy">Privacy</button>
-          <span class="footer-separator">·</span>
+          <span class="footer-separator" aria-hidden="true">·</span>
           <button type="button" class="footer-link footer-link-btn" id="btn-mifid-open" aria-label="Apri informativa MiFID">MiFID</button>
-          <span class="footer-separator">·</span>
-          <span class="footer-tech">
+          <span class="footer-separator" aria-hidden="true">·</span>
+          <button type="button" class="footer-link footer-link-btn" id="btn-privacy-open" aria-label="Apri informativa privacy">Privacy</button>
+          <span class="footer-separator" aria-hidden="true">·</span>
+          <button type="button" class="footer-link footer-link-btn" id="btn-cookie-open" aria-label="Apri informativa cookie">Cookie</button>
+          <span class="footer-separator" aria-hidden="true">·</span>
+          <button type="button" class="footer-link footer-link-btn" id="btn-terms-open" aria-label="Apri termini e condizioni">Termini</button>
+          <span class="footer-separator" aria-hidden="true">·</span>
+          <span class="footer-tech" aria-label="Versione e build">
             v<span id="footer-version">—</span>
-            <span class="footer-separator">·</span>
+            <span class="footer-separator" aria-hidden="true">·</span>
             <span id="footer-build">—</span>
           </span>
-        </div>
+        </nav>
       </div>
     </div>
   `;
@@ -99,36 +108,51 @@ function bindLegalButtons(container) {
   setTimeout(() => {
     const btnPrivacy = container.querySelector("#btn-privacy-open");
     const btnMifid = container.querySelector("#btn-mifid-open");
+    const btnCookie = container.querySelector("#btn-cookie-open");
+    const btnTerms = container.querySelector("#btn-terms-open");
     const btnSupport = container.querySelector("#btn-support-open");
     const btnStatus = container.querySelector("#btn-status-open");
+
+    // Helper per aprire overlay legale
+    const openLegal = (tab) => {
+      if (window.openLegalOverlay) {
+        window.openLegalOverlay(tab, false);
+      } else {
+        setTimeout(() => {
+          if (window.openLegalOverlay) {
+            window.openLegalOverlay(tab, false);
+          } else {
+            console.warn("[Footer] openLegalOverlay non disponibile");
+          }
+        }, 400);
+      }
+    };
 
     if (btnPrivacy) {
       btnPrivacy.addEventListener("click", (e) => {
         e.preventDefault();
-        if (window.openLegalOverlay) {
-          window.openLegalOverlay("privacy", false);
-        } else {
-          setTimeout(() => {
-            if (window.openLegalOverlay) {
-              window.openLegalOverlay("privacy", false);
-            }
-          }, 400);
-        }
+        openLegal("privacy");
       });
     }
 
     if (btnMifid) {
       btnMifid.addEventListener("click", (e) => {
         e.preventDefault();
-        if (window.openLegalOverlay) {
-          window.openLegalOverlay("mifid", false);
-        } else {
-          setTimeout(() => {
-            if (window.openLegalOverlay) {
-              window.openLegalOverlay("mifid", false);
-            }
-          }, 400);
-        }
+        openLegal("mifid");
+      });
+    }
+
+    if (btnCookie) {
+      btnCookie.addEventListener("click", (e) => {
+        e.preventDefault();
+        openLegal("cookie");
+      });
+    }
+
+    if (btnTerms) {
+      btnTerms.addEventListener("click", (e) => {
+        e.preventDefault();
+        openLegal("terms");
       });
     }
 
