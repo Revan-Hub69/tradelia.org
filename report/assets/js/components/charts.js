@@ -4,51 +4,20 @@
 
 import Logger from '../utils/logger.js';
 
-// BEST PRACTICE: Usa import ES module invece di CDN per evitare CSP violations
-// Chart.js sarà bundle da Vite se presente in node_modules
-let ChartJS = null;
-let ChartLoaded = false;
+// BEST PRACTICE: Import statico invece di dinamico per permettere a Rollup di risolvere correttamente
+import { Chart, registerables } from 'chart.js';
+
+// Registra tutti i componenti di Chart.js
+Chart.register(...registerables);
+
+// Alias per compatibilità con codice esistente
+const ChartJS = Chart;
+let ChartLoaded = true;
 
 async function loadChartJS() {
-  if (ChartLoaded && ChartJS) {
-    return ChartJS;
-  }
-
-  try {
-    // Import ES module (bundle da Vite)
-    // Vite/Rollup risolverà questo import durante il build
-    const chartModule = await import('chart.js/auto');
-    ChartJS = chartModule.Chart || chartModule.default?.Chart || chartModule.default || chartModule;
-    ChartLoaded = true;
-    Logger.debug('Charts', 'Chart.js caricato da bundle');
-    return ChartJS;
-  } catch (importError) {
-    // Fallback a CDN solo se import fallisce (per compatibilità)
-    Logger.warn('Charts', 'Import fallito, uso CDN fallback:', importError);
-    
-    // Usa CDN per Chart.js (fallback)
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
-    script.async = true;
-    script.crossOrigin = 'anonymous';
-
-    await new Promise((resolve, reject) => {
-      script.onload = () => {
-        ChartJS = window.Chart;
-        ChartLoaded = true;
-        Logger.debug('Charts', 'Chart.js caricato da CDN');
-        resolve(ChartJS);
-      };
-      script.onerror = () => {
-        Logger.error('Charts', 'Errore caricamento Chart.js');
-        reject(new Error('Errore caricamento Chart.js'));
-      };
-      document.head.appendChild(script);
-    });
-
-    return ChartJS;
-  } catch (err) {
-    Logger.error('Charts', 'Errore caricamento Chart.js', err);
+  // Chart è già disponibile grazie all'import statico
+  Logger.debug('Charts', 'Chart.js caricato da bundle');
+  return ChartJS;
     throw err;
   }
 }

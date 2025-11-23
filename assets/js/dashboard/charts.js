@@ -4,44 +4,19 @@
  * Paper Accademico: "Information Dashboard Design" - Stephen Few (2014-2024)
  */
 
-let Chart = null;
+// BEST PRACTICE: Import statico invece di dinamico per permettere a Rollup di risolvere correttamente
+import { Chart, registerables } from 'chart.js';
+
+// Registra tutti i componenti di Chart.js
+Chart.register(...registerables);
 
 /**
  * Load Chart.js library
- * BEST PRACTICE: Usa import ES module invece di CDN per evitare CSP violations
+ * BEST PRACTICE: Usa import statico invece di CDN per evitare CSP violations
  */
 async function loadChartLibrary() {
-  if (typeof Chart !== 'undefined' && Chart !== null) {
-    return Chart;
-  }
-
-  try {
-    // Import ES module (bundle da Vite)
-    // Vite/Rollup risolverà questo import durante il build
-    const chartModule = await import('chart.js/auto');
-    Chart = chartModule.Chart || chartModule.default?.Chart || chartModule.default || chartModule;
-    return Chart;
-  } catch (importError) {
-    // Fallback a CDN solo se import fallisce (per compatibilità)
-    console.warn('[Charts] Import fallito, uso CDN fallback:', importError);
-    
-    // Load Chart.js from CDN (fallback)
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
-      script.async = true;
-      script.crossOrigin = 'anonymous';
-      script.onload = () => {
-        Chart = window.Chart;
-        resolve(Chart);
-      };
-      script.onerror = () => {
-        console.error('[Charts] Error loading Chart.js from CDN');
-        reject(new Error('Failed to load Chart.js'));
-      };
-      document.head.appendChild(script);
-    });
-  }
+  // Chart è già disponibile grazie all'import statico
+  return Chart;
 }
 
 /**
