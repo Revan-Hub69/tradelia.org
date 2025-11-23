@@ -66,10 +66,12 @@
     <meta name="twitter:creator" content="@tradelia_ai" />
     <meta name="twitter:site" content="@tradelia_ai" />
 
-    <!-- Favicons -->
-    <link rel="icon" href="/favicon.ico?v=1" />
-    <link rel="icon" type="image/png" href="/favicon.png?v=1" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1" />
+    <!-- Favicons - Best Practice 2025: SVG first, PNG fallback -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+    <link rel="icon" type="image/png" href="/favicon.png?v=2" />
+    <link rel="icon" href="/favicon.ico?v=2" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.svg?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.svg?v=2" />
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="/dashboard.webmanifest" />
@@ -108,9 +110,9 @@
             "url": "https://tradelia.org",
             "logo": {
               "@type": "ImageObject",
-              "url": "https://tradelia.org/img/tradelia_og_vC_white_clean.png",
-              "width": 1200,
-              "height": 630
+              "url": "https://tradelia.org/logos/tradelia-logo.svg",
+              "width": 240,
+              "height": 60
             },
             "description": "Progetto indipendente di analisi sui mercati basato su framework AI proprietari e metodo verificabile"
           },

@@ -24,9 +24,12 @@ function render(options = {}) {
   return `
     <div class="container">
       <a href="/index.html" class="brand" aria-label="Tradelia.org - Homepage">
-        <span class="brand-word">TRADELIA</span>
-        <span class="brand-dot" aria-hidden="true"></span>
-        <span class="brand-suffix">AI</span>
+        <img src="/logos/tradelia-logo.svg" alt="Tradelia AI" class="brand-logo" width="160" height="40" style="height: 32px; width: auto;" />
+        <span class="brand-text-fallback" style="display: none;">
+          <span class="brand-word">TRADELIA</span>
+          <span class="brand-dot" aria-hidden="true"></span>
+          <span class="brand-suffix">AI</span>
+        </span>
       </a>
       <div class="header-actions">
         <a href="#" class="header-dashboard-link" aria-label="Dashboard" data-dashboard-handler="true">
