@@ -20,23 +20,9 @@ let currentLesson = null;
 let currentTest = null;
 
 /**
- * Initialize education system
- * Export function per compatibilità con index.js (SPA navigation)
- */
-export async function loadEducation() {
-  // Handle hash-based navigation
-  const hash = window.location.hash;
-  if (hash.startsWith("#education")) {
-    await handleEducationNavigation(hash);
-  } else {
-    await initEducation();
-  }
-}
-
-/**
  * Initialize education system (dashboard view)
  */
-export async function initEducation() {
+async function initEducation() {
   // Try to find container in main content area (SPA)
   let container = document.getElementById("education-container");
   
@@ -601,6 +587,19 @@ export async function handleEducationNavigation(hash) {
 export async function openTest(testId) {
   const { initTest } = await import("./education-test.js");
   await initTest(testId);
+}
+
+/**
+ * Export function per compatibilità con index.js (SPA navigation)
+ */
+export async function loadEducation() {
+  // Handle hash-based navigation
+  const hash = window.location.hash;
+  if (hash.startsWith("#education")) {
+    await handleEducationNavigation(hash);
+  } else {
+    await initEducation();
+  }
 }
 
 /**
