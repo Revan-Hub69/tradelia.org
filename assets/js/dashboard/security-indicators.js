@@ -48,48 +48,13 @@ function createSecurityBadge() {
 
 /**
  * Add privacy and terms links to footer
+ * REMOVED: Questa funzione creava link duplicati nel footer.
+ * I link legali sono già gestiti da footer.js che li include nel footer tecnico.
  */
 function addPrivacyLinks() {
-  const footer = document.querySelector("footer, .dashboard-footer");
-  if (!footer) {
-    return;
-  }
-
-  // Check if already exists
-  if (footer.querySelector(".legal-links")) {
-    return;
-  }
-
-  const legalLinks = document.createElement("div");
-  legalLinks.className = "legal-links";
-  legalLinks.setAttribute("role", "contentinfo");
-
-  legalLinks.innerHTML = `
-    <button type="button" class="legal-link legal-link-btn" data-legal-tab="privacy" aria-label="Apri informativa privacy">Privacy</button>
-    <span class="legal-separator">·</span>
-    <button type="button" class="legal-link legal-link-btn" data-legal-tab="terms" aria-label="Apri termini e condizioni">Termini</button>
-    <span class="legal-separator">·</span>
-    <button type="button" class="legal-link legal-link-btn" data-legal-tab="cookie" aria-label="Apri informativa cookie">Cookie</button>
-  `;
-
-  // Bind event listeners per aprire modali
-  legalLinks.querySelectorAll('.legal-link-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const tab = btn.dataset.legalTab;
-      if (window.openLegalOverlay) {
-        window.openLegalOverlay(tab, false);
-      } else {
-        setTimeout(() => {
-          if (window.openLegalOverlay) {
-            window.openLegalOverlay(tab, false);
-          }
-        }, 400);
-      }
-    });
-  });
-
-  footer.appendChild(legalLinks);
+  // DISABLED: I link legali sono già gestiti da footer.js
+  // Non aggiungere link duplicati al footer
+  return;
 }
 
 /**
