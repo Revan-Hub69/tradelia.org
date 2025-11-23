@@ -569,8 +569,9 @@ async function handleCodeSubmit(e) {
     const data = await response.json();
 
     if (data.ok) {
-      // Save token
-      localStorage.setItem("tradelia-access-token-v1", code);
+      // Save token - BEST PRACTICE: Use secure token storage
+      const { saveToken } = await import("./token-storage.js");
+      await saveToken(code);
       if (window.showToast) {
         window.showToast("Accesso riuscito!", "success");
       }
@@ -687,9 +688,10 @@ async function handleLoginSubmit(e) {
       return;
     }
 
-    // Save token
+    // Save token - BEST PRACTICE: Use secure token storage
     if (data.token) {
-      localStorage.setItem("tradelia-access-token-v1", data.token);
+      const { saveToken } = await import("./token-storage.js");
+      await saveToken(data.token, data.refreshToken || null);
       if (window.showToast) {
         window.showToast("Accesso riuscito!", "success");
       }
@@ -819,8 +821,9 @@ async function handleSignupSubmit(e) {
         }
       }, 2000);
     } else if (data.token) {
-      // Token restituito direttamente (fallback)
-      localStorage.setItem("tradelia-access-token-v1", data.token);
+      // Token restituito direttamente (fallback) - BEST PRACTICE: Use secure token storage
+      const { saveToken } = await import("./token-storage.js");
+      await saveToken(data.token, data.refreshToken || null);
       if (window.showToast) {
         window.showToast("Registrazione completata! Accesso in corso...", "success");
       }

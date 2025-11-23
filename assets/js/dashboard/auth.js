@@ -63,7 +63,9 @@ export async function getUserRole() {
     } else {
       // Token non valido o scaduto, trattiamo come guest
       safeLog("warn", "[Auth] Token non valido o scaduto, utente trattato come guest.");
-      localStorage.removeItem("tradelia-access-token-v1");
+      // BEST PRACTICE: Use secure token storage
+      const { removeToken } = await import("./token-storage.js");
+      await removeToken();
       userRoleCache = { role: "guest", user: null, isAdmin: false };
       userPlanDataCache = { plan: null, usage: null };
     }
@@ -81,7 +83,9 @@ export async function getUserRole() {
  */
 export async function logout() {
   try {
-    localStorage.removeItem("tradelia-access-token-v1");
+    // BEST PRACTICE: Use secure token storage
+    const { removeToken } = await import("./token-storage.js");
+    await removeToken();
 
     // Rimuovi token anche da IndexedDB per Service Worker
     const { removeTokenFromIndexedDB } = await import("./token-storage.js");
