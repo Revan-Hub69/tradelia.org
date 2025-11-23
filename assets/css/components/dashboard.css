@@ -3,39 +3,9 @@
  * FASE 1: Design System Consolidato - Production Ready
  */
 
-/* ===== LIGHT MODE SUPPORT (Dark Mode Best Practices) ===== */
-/* BEST PRACTICE: Tema chiaro impeccabile con contrasti WCAG 2.1 AA+ */
-[data-theme="light"] {
-  --dash-bg: #ffffff;
-  --dash-bg-soft: #f8f9fa;
-  --dash-surface: #ffffff;
-  --dash-surface-elev: #f1f3f5;
-  --dash-surface-shiny: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  --dash-border: rgba(0, 0, 0, 0.12);
-  --dash-border-strong: rgba(0, 0, 0, 0.18);
-  --dash-border-shiny: rgba(0, 0, 0, 0.24);
-  --dash-text: #0d1117; /* WCAG AA+ contrasto 16.5:1 su bianco */
-  --dash-text-soft: #21262d; /* WCAG AA+ contrasto 12.8:1 su bianco */
-  --dash-text-muted: #656d76; /* WCAG AA contrasto 4.8:1 su bianco */
-  --dash-accent: #0969da; /* Blue migliorato per tema chiaro */
-  --dash-accent-hover: #0860ca;
-  --dash-accent-bg: rgba(9, 105, 218, 0.1);
-  --dash-blue-line: #0969da;
-  --dash-accent-glow: rgba(9, 105, 218, 0.3);
-}
-
-/* Support prefers-color-scheme (se utente non ha scelto manualmente) */
-@media (prefers-color-scheme: light) {
-  html:not([data-theme-manual="true"]) {
-    --dash-bg: #ffffff;
-    --dash-bg-soft: #f9fafb;
-    --dash-surface: #ffffff;
-    --dash-surface-elev: #f3f4f6;
-    --dash-text: #111827;
-    --dash-text-soft: #374151;
-    --dash-text-muted: #6b7280;
-  }
-}
+/* ===== DARK MODE ONLY (Best Practice 2025) ===== */
+/* BEST PRACTICE: Solo tema dark per coerenza istituzionale */
+/* Rimosso supporto tema chiaro - sempre dark mode */
 
 /* ===== SESSION MANAGEMENT ===== */
 .token-expiry-warning {
@@ -576,6 +546,26 @@ a[role="button"]:focus-visible {
 .dashboard-brand-suffix {
   color: var(--dash-text-soft);
   font-weight: 700;
+}
+
+/* ===== DASHBOARD BRAND LOGO (SVG) ===== */
+.dashboard-brand-logo {
+  display: inline-block;
+  height: 32px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.dashboard-brand:hover .dashboard-brand-logo {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Fallback text (hidden when logo loads) */
+.dashboard-brand-text-fallback {
+  display: none;
 }
 
 .dashboard-brand:hover {
