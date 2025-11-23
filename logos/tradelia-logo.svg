@@ -1,41 +1,55 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 60" width="280" height="60">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 60" width="300" height="60">
   <defs>
+    <!-- Gradient più sofisticato per look accademico -->
     <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:1" />
     </linearGradient>
     <linearGradient id="logoGradientDark" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
     </linearGradient>
+    <!-- Glow effect per sofisticazione -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
   
-  <!-- Icon/Mark - Larger and more visible -->
-  <g transform="translate(0, 8)">
-    <!-- T letter - Larger and clearer -->
-    <rect x="4" y="0" width="24" height="6" rx="2" fill="url(#logoGradient)" />
-    <rect x="12" y="6" width="8" height="28" rx="2" fill="url(#logoGradient)" />
+  <!-- Icon/Mark - Design più raffinato e accademico -->
+  <g transform="translate(0, 10)">
+    <!-- T letter - Proporzioni più eleganti -->
+    <rect x="6" y="0" width="22" height="5" rx="2.5" fill="url(#logoGradient)" />
+    <rect x="13" y="5" width="8" height="26" rx="2.5" fill="url(#logoGradient)" />
     
-    <!-- Data visualization elements - More visible -->
-    <circle cx="36" cy="20" r="4" fill="url(#logoGradient)" opacity="0.9" />
-    <circle cx="44" cy="12" r="3.5" fill="url(#logoGradient)" opacity="0.8" />
-    <circle cx="52" cy="24" r="3.5" fill="url(#logoGradient)" opacity="0.85" />
-    
-    <!-- Connecting lines - More visible -->
-    <line x1="36" y1="20" x2="44" y2="12" stroke="url(#logoGradient)" stroke-width="1.5" opacity="0.6" />
-    <line x1="44" y1="12" x2="52" y2="24" stroke="url(#logoGradient)" stroke-width="1.5" opacity="0.6" />
+    <!-- Data visualization elements - Più sofisticati e organizzati -->
+    <g opacity="0.85">
+      <circle cx="38" cy="18" r="3.5" fill="url(#logoGradient)" />
+      <circle cx="46" cy="10" r="3" fill="url(#logoGradient)" />
+      <circle cx="54" cy="22" r="3" fill="url(#logoGradient)" />
+      
+      <!-- Connecting lines - Più eleganti -->
+      <line x1="38" y1="18" x2="46" y2="10" stroke="url(#logoGradient)" stroke-width="1.2" opacity="0.5" />
+      <line x1="46" y1="10" x2="54" y2="22" stroke="url(#logoGradient)" stroke-width="1.2" opacity="0.5" />
+    </g>
   </g>
   
-  <!-- Text - Better spacing and visibility -->
-  <g transform="translate(62, 8)">
-    <!-- Tradelia -->
-    <text x="0" y="24" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="26" font-weight="700" fill="#ffffff" letter-spacing="-0.6">
+  <!-- Text - Tipografia più elegante e professionale -->
+  <g transform="translate(68, 10)">
+    <!-- Tradelia - Font weight più leggero per eleganza, spacing migliore -->
+    <text x="0" y="26" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="28" font-weight="600" fill="#ffffff" letter-spacing="-0.4">
       Tradelia
     </text>
-    <!-- AI badge - Larger and more visible -->
-    <rect x="108" y="8" width="32" height="18" rx="4" fill="url(#logoGradientDark)" />
-    <text x="114" y="21" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#ffffff" letter-spacing="0.8">
+    <!-- AI badge - Design più raffinato e integrato -->
+    <rect x="118" y="6" width="30" height="20" rx="5" fill="url(#logoGradientDark)" opacity="0.95" />
+    <text x="123" y="21" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="10" font-weight="600" fill="#ffffff" letter-spacing="1.2">
       AI
     </text>
+    <!-- Sottile linea decorativa per eleganza accademica -->
+    <line x1="0" y1="32" x2="148" y2="32" stroke="url(#logoGradient)" stroke-width="0.8" opacity="0.3" />
   </g>
 </svg>
