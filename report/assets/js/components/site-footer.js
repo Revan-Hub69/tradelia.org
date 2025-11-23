@@ -87,9 +87,11 @@ function render(data = {}) {
             <a href="/terms.html" aria-label="Vai ai termini e condizioni" data-i18n="nav.terms">Termini e Condizioni</a>
             <a href="/refund.html" aria-label="Vai alla policy di rimborso" data-i18n="nav.refund">Policy di Rimborso</a>
           </div>
-          <div style="margin-top: var(--sp-3);">
+          <div style="margin-top: var(--sp-3); display: flex; flex-wrap: wrap; gap: var(--sp-2);">
+            <button id="btn-mifid-open" class="btn btn-sm" type="button" aria-label="Apri informativa MiFID" data-i18n="mifid.banner.mifid">MiFID</button>
             <button id="btn-privacy-open" class="btn btn-sm" type="button" aria-label="Apri informativa privacy" data-i18n="nav.privacy">Privacy</button>
-            <button id="btn-mifid-open" class="btn btn-sm" type="button" aria-label="Apri informativa MiFID" data-i18n="mifid.banner.mifid">Informativa MiFID</button>
+            <button id="btn-cookie-open" class="btn btn-sm" type="button" aria-label="Apri informativa cookie">Cookie</button>
+            <button id="btn-terms-open" class="btn btn-sm" type="button" aria-label="Apri termini e condizioni" data-i18n="nav.terms">Termini</button>
           </div>
         </div>
 
@@ -202,8 +204,13 @@ function bindLegalButtons() {
       });
     };
 
-    attachHandler(btnPrivacy, 'privacy');
+    const btnCookie = document.getElementById('btn-cookie-open');
+    const btnTerms = document.getElementById('btn-terms-open');
+
     attachHandler(btnMifid, 'mifid');
+    attachHandler(btnPrivacy, 'privacy');
+    attachHandler(btnCookie, 'cookie');
+    attachHandler(btnTerms, 'terms');
 
     Logger.debug('SiteFooter', 'Pulsanti legali collegati via openLegalOverlay');
   }, 150);

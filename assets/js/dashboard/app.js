@@ -109,9 +109,10 @@ export async function initDashboard() {
   // BEST PRACTICE: Initialize desktop sidebar (Coerenza Desktop vs Mobile)
   // Desktop sidebar rimosso - non più utilizzato
 
-  // BEST PRACTICE: Initialize theme toggle (Dark Mode Best Practices)
-  const { initThemeToggle } = await import("./theme-toggle.js");
-  initThemeToggle();
+  // BEST PRACTICE 2025: Solo tema dark - nessun toggle
+  // Forza sempre tema dark per coerenza istituzionale
+  document.documentElement.setAttribute('data-theme', 'dark');
+  document.documentElement.setAttribute('data-theme-manual', 'true');
 
   // BEST PRACTICE: Initialize i18n system (Global UX)
   const { initI18n } = await import("./i18n.js");

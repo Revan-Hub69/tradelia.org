@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="faviconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="url(#faviconGradient)" />
+  
+  <!-- T letter -->
+  <g transform="translate(16, 16)">
+    <rect x="-6" y="-8" width="12" height="3" rx="1" fill="#ffffff" />
+    <rect x="-2" y="-5" width="4" height="10" rx="1" fill="#ffffff" />
+    
+    <!-- Small data points -->
+    <circle cx="-8" cy="-2" r="1.5" fill="#ffffff" opacity="0.8" />
+    <circle cx="0" cy="0" r="1" fill="#ffffff" opacity="0.6" />
+    <circle cx="8" cy="-4" r="1.5" fill="#ffffff" opacity="0.8" />
+  </g>
+</svg>
