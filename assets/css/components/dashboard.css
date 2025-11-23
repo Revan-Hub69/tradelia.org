@@ -243,15 +243,39 @@
   color: var(--dash-text-muted);
 }
 
-.legal-link {
+.legal-link,
+.legal-link-btn {
   color: var(--dash-text-soft);
   text-decoration: none;
   transition: var(--transition);
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
 }
 
-.legal-link:hover {
+.legal-link:hover,
+.legal-link-btn:hover {
   color: var(--dash-text);
   text-decoration: underline;
+}
+
+/* Link button (pulsante che sembra un link) */
+.link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+  transition: opacity var(--transition-smooth);
+}
+
+.link-button:hover {
+  opacity: 0.8;
 }
 
 .legal-separator {
@@ -1310,11 +1334,15 @@ a[role="button"]:focus-visible {
 }
 
 .footer-logo-fallback {
-  display: inline-flex;
+  display: none !important; /* Nascosto di default, mostrato solo se logo non carica */
   align-items: center;
   gap: 0.35rem;
   font-weight: 900;
   letter-spacing: -0.03em;
+}
+
+.footer-logo-fallback.show {
+  display: inline-flex !important;
 }
 
 .footer-right {

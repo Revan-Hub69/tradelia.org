@@ -65,12 +65,29 @@ function addPrivacyLinks() {
   legalLinks.setAttribute("role", "contentinfo");
 
   legalLinks.innerHTML = `
-    <a href="/privacy" class="legal-link">Privacy Policy</a>
+    <button type="button" class="legal-link legal-link-btn" data-legal-tab="privacy" aria-label="Apri informativa privacy">Privacy</button>
     <span class="legal-separator">·</span>
-    <a href="/terms" class="legal-link">Termini di Servizio</a>
+    <button type="button" class="legal-link legal-link-btn" data-legal-tab="terms" aria-label="Apri termini e condizioni">Termini</button>
     <span class="legal-separator">·</span>
-    <a href="/cookie" class="legal-link">Cookie Policy</a>
+    <button type="button" class="legal-link legal-link-btn" data-legal-tab="cookie" aria-label="Apri informativa cookie">Cookie</button>
   `;
+
+  // Bind event listeners per aprire modali
+  legalLinks.querySelectorAll('.legal-link-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const tab = btn.dataset.legalTab;
+      if (window.openLegalOverlay) {
+        window.openLegalOverlay(tab, false);
+      } else {
+        setTimeout(() => {
+          if (window.openLegalOverlay) {
+            window.openLegalOverlay(tab, false);
+          }
+        }, 400);
+      }
+    });
+  });
 
   footer.appendChild(legalLinks);
 }

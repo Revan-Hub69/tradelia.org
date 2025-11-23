@@ -20,15 +20,16 @@ export async function initFooter() {
  */
 function renderFooter(container) {
   const year = new Date().getFullYear();
-  // Usa percorso assoluto per il logo (funziona sia da root che da sottocartelle)
-  const logoPath = window.location.origin + '/logos/tradelia-logo.svg';
+  // BEST PRACTICE: Usa percorso relativo alla root del sito (funziona sempre)
+  // Non usare window.location.origin perché può causare problemi con CORS o base path
+  const logoPath = '/logos/tradelia-logo.svg';
 
   container.innerHTML = `
     <div class="footer-content">
       <div class="footer-left">
         <a href="/index.html" class="footer-logo-link" aria-label="Tradelia.org - Homepage">
-          <img src="${logoPath}" alt="Tradelia AI" class="footer-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" />
-          <span class="footer-logo-fallback" style="display: none;">
+          <img src="${logoPath}" alt="Tradelia AI" class="footer-logo-img" onerror="this.onerror=null; this.style.display='none'; const fallback=this.nextElementSibling; if(fallback) fallback.classList.add('show');" />
+          <span class="footer-logo-fallback">
             <span class="footer-brand-word">TRADELIA</span>
             <span class="footer-brand-dot"></span>
             <span class="footer-brand-suffix">AI</span>
