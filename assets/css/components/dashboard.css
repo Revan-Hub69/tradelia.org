@@ -855,15 +855,15 @@ a[role="button"]:focus-visible {
     min-width: 0;
     flex: 0 0 auto;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 2px;
+    gap: 4px;
   }
 
   .account-banner-actions .toggle-switch {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 2px;
+    gap: 4px;
     padding: 0;
     margin: 0;
     width: auto;
