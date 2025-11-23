@@ -1,44 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" width="320" height="64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 60" width="280" height="60">
   <defs>
-    <!-- Gradient più sofisticato e professionale -->
     <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="logoGradientSubtle" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:0.9" />
-      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0.9" />
+      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
     </linearGradient>
   </defs>
   
-  <!-- Icon/Mark - Design minimalista e professionale -->
-  <g transform="translate(4, 12)">
-    <!-- T letter - Proporzioni più equilibrate e moderne -->
-    <rect x="0" y="0" width="20" height="4.5" rx="2" fill="url(#logoGradient)" />
-    <rect x="8" y="4.5" width="6" height="24" rx="2" fill="url(#logoGradient)" />
-    
-    <!-- Data visualization - Design più pulito e minimale -->
-    <g opacity="0.75">
-      <circle cx="32" cy="16" r="3" fill="url(#logoGradient)" />
-      <circle cx="40" cy="8" r="2.5" fill="url(#logoGradient)" />
-      <circle cx="48" cy="20" r="2.5" fill="url(#logoGradient)" />
-      
-      <!-- Linee più sottili e eleganti -->
-      <line x1="32" y1="16" x2="40" y2="8" stroke="url(#logoGradient)" stroke-width="1" opacity="0.4" />
-      <line x1="40" y1="8" x2="48" y2="20" stroke="url(#logoGradient)" stroke-width="1" opacity="0.4" />
-    </g>
+  <!-- Icon/Mark - Design pulito e moderno -->
+  <g transform="translate(0, 15)">
+    <!-- T letter - Design geometrico pulito -->
+    <rect x="0" y="0" width="28" height="6" rx="3" fill="url(#logoGradient)" />
+    <rect x="11" y="6" width="6" height="24" rx="3" fill="url(#logoGradient)" />
   </g>
   
-  <!-- Text - Tipografia più raffinata e moderna -->
-  <g transform="translate(64, 12)">
-    <!-- Tradelia - Font più elegante, spacing ottimizzato -->
-    <text x="0" y="30" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="30" font-weight="600" fill="#ffffff" letter-spacing="-0.3">
+  <!-- Text - Tipografia classica e professionale -->
+  <g transform="translate(42, 15)">
+    <text x="0" y="28" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="32" font-weight="700" fill="#ffffff" letter-spacing="-0.5">
       Tradelia
     </text>
-    <!-- AI badge - Design più integrato e moderno -->
-    <rect x="122" y="4" width="28" height="22" rx="5.5" fill="url(#logoGradientSubtle)" />
-    <text x="127" y="20" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="9.5" font-weight="700" fill="#ffffff" letter-spacing="1.5">
+    <text x="118" y="28" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="#60a5fa" letter-spacing="2">
       AI
     </text>
   </g>
