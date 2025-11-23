@@ -255,13 +255,22 @@ function logVital(name, value, thresholds) {
   }
 
   // BEST PRACTICE: Mostra warning solo se poor E non è già stato mostrato
+  // CLS può essere volatile durante caricamento dinamico - disabilitato toast per CLS
+  // CLS è più utile per sviluppo, non per utenti finali
   if (status === "poor" && window.showToast) {
+    // CLS: disabilitato toast (troppo invasivo, CLS può fluttuare durante caricamento)
+    // Solo log in console per debugging
+    if (name === "CLS") {
+      console.warn(`[PerformanceMonitor] ${name}: ${value.toFixed(3)} - Monitoraggio continuo (toast disabilitato)`);
+      return;
+    }
+
     const warningKey = `performance-warning-${name}`;
     const lastWarning = sessionStorage.getItem(warningKey);
     const now = Date.now();
 
-    // Mostra warning solo una volta per sessione o ogni 5 minuti
-    if (!lastWarning || now - parseInt(lastWarning) > 5 * 60 * 1000) {
+    // Mostra warning solo una volta per sessione o ogni 10 minuti (aumentato da 5)
+    if (!lastWarning || now - parseInt(lastWarning) > 10 * 60 * 1000) {
       window.showToast(`Performance ${name}: Da migliorare`, "warning", 5000);
       sessionStorage.setItem(warningKey, now.toString());
     }
