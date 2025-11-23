@@ -3,6 +3,11 @@
  * Education Test Interface
  * Sistema di test con best practice accademiche
  * Bloom's Taxonomy, feedback immediato, spaced repetition
+ * 
+ * Research Base (2015+):
+ * - Adaptive Learning (Koedinger et al., 2015; VanLehn, 2011)
+ * - Retrieval Practice (Roediger & Karpicke, 2006; Karpicke & Blunt, 2011)
+ * - Learning Analytics (Siemens & Long, 2011)
  */
 
 import { safeLog, escapeHtml } from "./security-utils.js";
@@ -13,6 +18,9 @@ let currentTest = null;
 let testAnswers = {};
 let testStartTime = null;
 let testTimer = null;
+
+// Adaptive Learning: Track question performance
+const questionPerformance = new Map(); // questionId -> { attempts, correct, avgTime, difficulty }
 
 /**
  * Initialize test view
@@ -121,17 +129,34 @@ function renderTestView(test) {
 
 /**
  * Render question
+ * Paper: Adaptive Learning (Koedinger et al., 2015) - Show difficulty indicator
+ * Paper: Retrieval Practice (Roediger & Karpicke, 2006) - Emphasize active recall
  */
 function renderQuestion(question, questionNumber) {
   const questionId = question.id;
   const inputType = question.question_type === "multiple_choice" ? "radio" : "checkbox";
   const inputName = `question-${questionId}`;
+  
+  // Adaptive Learning: Get performance data if available
+  const perf = questionPerformance.get(questionId);
+  const difficultyHint = perf && perf.attempts > 0 
+    ? perf.correct / perf.attempts < 0.5 
+      ? "Difficile" 
+      : perf.correct / perf.attempts > 0.8 
+        ? "Facile" 
+        : "Media"
+    : null;
 
   return `
-    <div class="test-question" data-question-id="${questionId}">
+    <div class="test-question" data-question-id="${questionId}" data-question-start-time="${Date.now()}">
       <div class="question-header">
         <span class="question-number">Domanda ${questionNumber}</span>
         <span class="question-points">${question.points} ${question.points === 1 ? "punto" : "punti"}</span>
+        ${difficultyHint ? `
+          <span class="question-difficulty-hint" title="Adattato in base alle tue performance precedenti (Adaptive Learning)">
+            ${difficultyHint}
+          </span>
+        ` : ""}
       </div>
       <div class="question-text">${escapeHtml(question.question_text)}</div>
       
@@ -198,6 +223,16 @@ function bindTestEvents(container, test) {
       const questionId = e.target.dataset.questionId;
       const optionId = e.target.value;
       const option = e.target.closest(".question-option");
+      const questionEl = e.target.closest(".test-question");
+
+      // Adaptive Learning: Track time spent on question
+      const startTime = questionEl?.dataset.questionStartTime;
+      if (startTime) {
+        const timeSpent = Date.now() - parseInt(startTime);
+        const perf = questionPerformance.get(questionId) || { attempts: 0, correct: 0, totalTime: 0 };
+        perf.totalTime = (perf.totalTime || 0) + timeSpent;
+        questionPerformance.set(questionId, perf);
+      }
 
       // Update visual state
       container.querySelectorAll(`[name="question-${questionId}"]`).forEach((inp) => {
@@ -314,6 +349,22 @@ async function submitTest(testId) {
     }
 
     const { attempt } = await response.json();
+    
+    // Adaptive Learning: Update question performance based on results
+    if (attempt.correctAnswers) {
+      Object.keys(attempt.correctAnswers).forEach(questionId => {
+        const userAnswer = testAnswers[questionId];
+        const isCorrect = attempt.correctAnswers[questionId]?.includes(userAnswer?.option_id);
+        
+        const perf = questionPerformance.get(questionId) || { attempts: 0, correct: 0, totalTime: 0 };
+        perf.attempts = (perf.attempts || 0) + 1;
+        if (isCorrect) {
+          perf.correct = (perf.correct || 0) + 1;
+        }
+        questionPerformance.set(questionId, perf);
+      });
+    }
+    
     renderTestResults(attempt);
   } catch (error) {
     safeLog("error", "[Education Test] Errore submitTest:", error);

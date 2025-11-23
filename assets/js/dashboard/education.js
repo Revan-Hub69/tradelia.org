@@ -4,11 +4,19 @@
  * Sistema formativo con gamification per retail
  * Best Practice Accademica 2025
  * 
- * Research Base:
+ * Research Base (Pre-2015):
  * - Bloom's Taxonomy (1956, revised 2001)
  * - Spaced Repetition (Ebbinghaus, 1885)
  * - Gamification in Education (Deterding et al., 2011)
  * - Cognitive Load Theory (Sweller, 1988)
+ * 
+ * Research Base (2015+):
+ * - Adaptive Learning (Koedinger et al., 2015; VanLehn, 2011)
+ * - Microlearning (Hug, 2005/2016; Bruck et al., 2012)
+ * - Learning Analytics (Siemens & Long, 2011; Gašević et al., 2015)
+ * - Personalized Learning Paths (Walkington, 2013; Pardo & Siemens, 2014)
+ * - Retrieval Practice (Roediger & Karpicke, 2006; Karpicke & Blunt, 2011)
+ * - Interleaving (Rohrer & Taylor, 2007; Birnbaum et al., 2013)
  */
 
 import { safeLog, escapeHtml } from "./security-utils.js";
@@ -18,6 +26,13 @@ const API_BASE = "/api/education";
 let currentModule = null;
 let currentLesson = null;
 let currentTest = null;
+
+// Adaptive Learning: Track performance per question
+const questionPerformance = new Map(); // questionId -> { attempts, correct, difficulty }
+
+// Microlearning: Track session time
+let lessonStartTime = null;
+const MICROLEARNING_MAX_MINUTES = 10; // Paper: Hug (2016) - optimal 5-10 min chunks
 
 /**
  * Initialize education system (dashboard view)
@@ -328,10 +343,24 @@ function renderModuleView(module) {
 
 /**
  * Render lesson item
+ * Paper: Microlearning (Hug, 2016) - Lezioni brevi 5-10 minuti
  */
 function renderLessonItem(lesson, index) {
   const { userProgress } = lesson;
   const status = userProgress?.status || "not_started";
+  const estimatedMinutes = lesson.estimated_minutes || 0;
+  
+  // Microlearning indicator: verde se < 10 min (optimal chunk size)
+  const isMicrolearning = estimatedMinutes > 0 && estimatedMinutes <= MICROLEARNING_MAX_MINUTES;
+  const microlearningBadge = isMicrolearning ? `
+    <span class="microlearning-badge" title="Microlearning: lezione ottimale 5-10 minuti (Hug, 2016)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="12" height="12">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+      Micro
+    </span>
+  ` : "";
 
   const statusIcons = {
     not_started: "○",
@@ -340,13 +369,14 @@ function renderLessonItem(lesson, index) {
   };
 
   return `
-    <div class="lesson-item ${status}" data-lesson-id="${lesson.id}">
+    <div class="lesson-item ${status} ${isMicrolearning ? 'microlearning' : ''}" data-lesson-id="${lesson.id}">
       <div class="lesson-number">${index + 1}</div>
       <div class="lesson-content">
         <h3 class="lesson-title">${escapeHtml(lesson.title)}</h3>
         <div class="lesson-meta">
-          <span>${lesson.estimated_minutes || 0} min</span>
+          <span>${estimatedMinutes} min</span>
           <span class="lesson-type">${lesson.content_type}</span>
+          ${microlearningBadge}
         </div>
       </div>
       <div class="lesson-status">${statusIcons[status]}</div>
@@ -359,6 +389,8 @@ function renderLessonItem(lesson, index) {
 
 /**
  * Open lesson view
+ * Paper: Microlearning (Hug, 2016) - Track session time
+ * Paper: Learning Analytics (Siemens & Long, 2011) - Track engagement
  */
 async function openLesson(lessonId) {
   try {
@@ -374,6 +406,9 @@ async function openLesson(lessonId) {
 
     const { lesson } = await response.json();
     currentLesson = lesson;
+
+    // Microlearning: Start session timer
+    lessonStartTime = Date.now();
 
     // Mark as started
     await updateLessonProgress(lessonId, "in_progress");
@@ -444,10 +479,25 @@ function renderLessonView(lesson) {
 
   container.querySelector("[data-action='complete-lesson']")?.addEventListener("click", async () => {
     const lessonId = container.querySelector("[data-action='complete-lesson']").dataset.lessonId;
-    await updateLessonProgress(lessonId, "completed");
+    
+    // Microlearning: Calculate time spent
+    const timeSpentMinutes = lessonStartTime 
+      ? Math.round((Date.now() - lessonStartTime) / 60000)
+      : 0;
+    
+    // Learning Analytics: Track completion time
+    if (timeSpentMinutes > 0) {
+      safeLog("info", `[Education] Lesson completed in ${timeSpentMinutes} minutes`);
+    }
+    
+    await updateLessonProgress(lessonId, "completed", timeSpentMinutes);
     if (window.showToast) {
       window.showToast("Lezione completata!", "success");
     }
+    
+    // Reset timer
+    lessonStartTime = null;
+    
     // Reload module view
     if (currentModule) {
       await openModule(currentModule.id);

@@ -475,6 +475,8 @@
   gap: var(--edu-spacing-md);
   font-size: 0.875rem;
   color: var(--edu-text-muted);
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .lesson-type {
@@ -482,6 +484,33 @@
   padding: 2px 8px;
   background: var(--edu-bg);
   border-radius: 4px;
+}
+
+/* Microlearning badge (Paper: Hug, 2016) - Lezioni ottimali 5-10 minuti */
+.microlearning-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--edu-success);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.microlearning-badge svg {
+  width: 12px;
+  height: 12px;
+  stroke: currentColor;
+}
+
+.lesson-item.microlearning {
+  border-left: 3px solid var(--edu-success);
+  padding-left: calc(var(--edu-spacing-md) - 3px);
 }
 
 .lesson-status {
