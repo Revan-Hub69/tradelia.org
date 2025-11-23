@@ -370,5 +370,3 @@ async function getAuthToken() {
     return null;
   }
 }
-
-export { initRetrievalPractice };
