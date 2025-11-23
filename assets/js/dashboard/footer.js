@@ -24,9 +24,12 @@ function renderFooter(container) {
   container.innerHTML = `
     <div class="footer-content">
       <div class="footer-left">
+        <a href="/index.html" class="footer-logo-link" aria-label="Tradelia.org - Homepage" style="display: inline-block; margin-bottom: var(--sp-3);">
+          <img src="/logos/tradelia-logo.svg" alt="Tradelia AI" style="height: 28px; width: auto;" />
+        </a>
         <p class="footer-copyright">
           &copy; ${year} 
-          <span class="footer-brand">
+          <span class="footer-brand" style="display: none;">
             <span class="footer-brand-word">TRADELIA</span>
             <span class="footer-brand-dot"></span>
             <span class="footer-brand-suffix">AI</span>
