@@ -174,6 +174,14 @@ function renderEducationDashboard(container, progress) {
             </svg>
             Learning Analytics
           </button>
+          <button class="btn btn-secondary" data-action="open-personalized-path">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="18" height="18">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+            Percorso Personalizzato
+          </button>
         </div>
       </div>
 
@@ -317,6 +325,12 @@ function bindEducationEvents(container) {
   container.querySelector("[data-action='open-learning-analytics']")?.addEventListener("click", async () => {
     const { initLearningAnalytics } = await import("./education-analytics.js");
     await initLearningAnalytics();
+  });
+
+  // Personalized Path
+  container.querySelector("[data-action='open-personalized-path']")?.addEventListener("click", async () => {
+    const { initPersonalizedPathSelector } = await import("./education-personalized-paths.js");
+    await initPersonalizedPathSelector();
   });
 }
 
@@ -745,6 +759,10 @@ export async function handleEducationNavigation(hash) {
     const moduleIds = parts[1].split(",").filter(Boolean);
     const { initInterleavedPractice } = await import("./education-interleaving.js");
     await initInterleavedPractice(moduleIds);
+  } else if (parts[0] === "personalized-paths") {
+    // Personalized learning path
+    const { initPersonalizedPathSelector } = await import("./education-personalized-paths.js");
+    await initPersonalizedPathSelector();
   } else {
     await initEducation();
   }

@@ -1200,6 +1200,181 @@ export async function getInterleavedQuestions(req, res) {
 }
 
 /**
+ * Get personalized learning path
+ * Paper: Koedinger et al. (2013) - Personalized learning paths
+ */
+export async function getPersonalizedPath(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const { goal, focusArea, difficulty } = req.query;
+    
+    if (!goal) {
+      return res.status(400).json({ success: false, error: "Obiettivo richiesto" });
+    }
+
+    const userId = req.user.id;
+
+    // Get user progress and stats
+    const { data: userStats } = await supabase
+      .from("education_user_stats")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    const { data: moduleProgress } = await supabase
+      .from("education_user_progress")
+      .select(`
+        *,
+        education_modules (id, title, slug, description, order_index)
+      `)
+      .eq("user_id", userId);
+
+    // Get all modules
+    const { data: allModules } = await supabase
+      .from("education_modules")
+      .select(`
+        id,
+        title,
+        slug,
+        description,
+        order_index,
+        estimated_hours,
+        education_lessons!inner (id)
+      `)
+      .eq("is_active", true)
+      .order("order_index", { ascending: true });
+
+    // Calculate module stats
+    const modulesWithStats = (allModules || []).map(module => {
+      const progress = moduleProgress?.find(mp => mp.module_id === module.id);
+      const lessonsCount = module.education_lessons?.length || 0;
+      
+      return {
+        ...module,
+        lessons_count: lessonsCount,
+        userProgress: progress || {
+          status: "not_started",
+          progress_percentage: 0,
+        },
+      };
+    });
+
+    // Filter and sort based on goal
+    let recommendedModules = [];
+    let pathDescription = "";
+
+    switch (goal) {
+      case "foundations":
+        recommendedModules = modulesWithStats
+          .filter(m => m.order_index <= 4) // First 4 modules
+          .sort((a, b) => a.order_index - b.order_index);
+        pathDescription = "Percorso completo per i fondamenti della finanza personale e degli investimenti.";
+        break;
+      
+      case "trading":
+        recommendedModules = modulesWithStats
+          .filter(m => m.title.toLowerCase().includes("trading") || m.title.toLowerCase().includes("mercato"))
+          .sort((a, b) => a.order_index - b.order_index);
+        if (recommendedModules.length === 0) {
+          recommendedModules = modulesWithStats.slice(0, 3);
+        }
+        pathDescription = "Percorso specializzato per il trading e l'analisi dei mercati finanziari.";
+        break;
+      
+      case "analysis":
+        recommendedModules = modulesWithStats
+          .filter(m => m.title.toLowerCase().includes("analisi") || m.title.toLowerCase().includes("tecnica"))
+          .sort((a, b) => a.order_index - b.order_index);
+        if (recommendedModules.length === 0) {
+          recommendedModules = modulesWithStats.slice(0, 3);
+        }
+        pathDescription = "Percorso focalizzato sull'analisi tecnica e fondamentale.";
+        break;
+      
+      case "risk":
+        recommendedModules = modulesWithStats
+          .filter(m => m.title.toLowerCase().includes("rischio") || m.title.toLowerCase().includes("gestione"))
+          .sort((a, b) => a.order_index - b.order_index);
+        if (recommendedModules.length === 0) {
+          recommendedModules = modulesWithStats.slice(0, 3);
+        }
+        pathDescription = "Percorso per la gestione del rischio e la protezione del capitale.";
+        break;
+      
+      case "portfolio":
+        recommendedModules = modulesWithStats
+          .filter(m => m.title.toLowerCase().includes("portafoglio") || m.title.toLowerCase().includes("diversificazione"))
+          .sort((a, b) => a.order_index - b.order_index);
+        if (recommendedModules.length === 0) {
+          recommendedModules = modulesWithStats.slice(0, 3);
+        }
+        pathDescription = "Percorso per la costruzione e gestione di un portafoglio diversificato.";
+        break;
+      
+      default:
+        recommendedModules = modulesWithStats.slice(0, 4);
+        pathDescription = "Percorso formativo personalizzato.";
+    }
+
+    // Apply focus area filter
+    if (focusArea === "weak") {
+      // Prioritize modules with low progress
+      recommendedModules = recommendedModules
+        .sort((a, b) => (a.userProgress.progress_percentage || 0) - (b.userProgress.progress_percentage || 0));
+    } else if (focusArea === "strong") {
+      // Prioritize modules with high progress
+      recommendedModules = recommendedModules
+        .sort((a, b) => (b.userProgress.progress_percentage || 0) - (a.userProgress.progress_percentage || 0));
+    } else if (focusArea === "new") {
+      // Prioritize not started modules
+      recommendedModules = recommendedModules
+        .sort((a, b) => {
+          const aStarted = a.userProgress.status !== "not_started" ? 1 : 0;
+          const bStarted = b.userProgress.status !== "not_started" ? 1 : 0;
+          return aStarted - bStarted;
+        });
+    }
+
+    // Limit to 5-6 modules for optimal path
+    recommendedModules = recommendedModules.slice(0, 6);
+
+    // Add reasons for each module
+    recommendedModules = recommendedModules.map((module, index) => {
+      let reason = "";
+      if (index === 0) {
+        reason = "Punto di partenza";
+      } else if (module.userProgress.progress_percentage < 50) {
+        reason = "Da completare";
+      } else if (focusArea === "weak" && module.userProgress.progress_percentage < 30) {
+        reason = "Area di debolezza";
+      } else {
+        reason = "Prossimo passo";
+      }
+      return { ...module, reason };
+    });
+
+    // Calculate estimated time
+    const estimatedTime = recommendedModules.reduce((sum, m) => sum + (m.estimated_hours || 0), 0);
+
+    res.json({
+      success: true,
+      path: {
+        modules: recommendedModules,
+        estimatedTime: estimatedTime > 0 ? `${estimatedTime}` : "Variabile",
+        difficulty: difficulty || "adattivo",
+        description: pathDescription,
+      },
+    });
+  } catch (error) {
+    safeLog("error", "[Education] Errore getPersonalizedPath:", error);
+    res.status(500).json({ success: false, error: "Errore generazione percorso" });
+  }
+}
+
+/**
  * Main handler (Vercel serverless function)
  */
 export default async function handler(req, res) {
@@ -1271,6 +1446,8 @@ export default async function handler(req, res) {
         return await getLearningAnalytics(req, res);
       case "interleaved-questions":
         return await getInterleavedQuestions(req, res);
+      case "personalized-path":
+        return await getPersonalizedPath(req, res);
       default:
         return res.status(400).json({ success: false, error: "Azione non valida" });
     }
