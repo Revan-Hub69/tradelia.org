@@ -3,6 +3,19 @@
  * FASE 1: Design System Consolidato - Production Ready
  */
 
+/* ===== REDUCED MOTION SUPPORT (WCAG 2.2 SC 2.3.3) ===== */
+/* BEST PRACTICE: Rispetta preferenze utente per riduzione movimento */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ===== DARK MODE ONLY (Best Practice 2025) ===== */
 /* BEST PRACTICE: Solo tema dark per coerenza istituzionale */
 /* Rimosso supporto tema chiaro - sempre dark mode */
@@ -3463,6 +3476,48 @@ a[role="button"]:focus-visible {
   gap: var(--spacing-lg);
 }
 
+/* BEST PRACTICE: Error states standardizzati */
+.error-state {
+  padding: var(--spacing-2xl);
+  text-align: center;
+  background: var(--dash-surface);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-md);
+  color: var(--dash-text-soft);
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+}
+
+.error-state-icon {
+  width: 64px;
+  height: 64px;
+  color: rgba(239, 68, 68, 0.8);
+  margin-bottom: var(--spacing-md);
+}
+
+.error-state-title {
+  font-size: var(--fs-18, 1.125rem);
+  font-weight: 600;
+  color: var(--dash-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.error-state-message {
+  font-size: var(--fs-14, 0.875rem);
+  line-height: var(--lh-16, 1.6);
+  color: var(--dash-text-muted);
+  max-width: 500px;
+  margin-bottom: var(--spacing-lg);
+}
+
+.error-state-action {
+  margin-top: var(--spacing-md);
+}
+
 .empty-state-icon {
   width: 64px;
   height: 64px;
@@ -3484,6 +3539,14 @@ a[role="button"]:focus-visible {
   line-height: var(--lh-16, 1.6);
   color: var(--dash-text-muted);
   max-width: 500px;
+}
+
+.empty-state-action {
+  margin-top: var(--spacing-md);
+}
+
+.empty-state-action .btn {
+  margin-top: var(--spacing-sm);
 }
 
 /* ===== SKIP LINK ===== */
