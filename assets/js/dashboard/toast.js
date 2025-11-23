@@ -1,10 +1,11 @@
+/* eslint-env browser */
 /**
  * Toast Notification System
  * FASE 2: TypeScript Migration - Gradual
  * Best Practice: Sistema notifiche separato e riutilizzabile
  */
 
-/* global window, document, setTimeout */
+import { escapeHtml } from "./security-utils.js";
 
 /**
  * Show toast notification
@@ -15,6 +16,9 @@
 export function showToast(message, variant = 'info', duration = 4000) {
   const toast = document.getElementById('dashboard-toast');
   if (!toast) return;
+
+  // SECURITY: Sanitizza messaggio per prevenire XSS
+  const safeMessage = escapeHtml(String(message));
 
   const icons = {
     success: '<svg class="dashboard-toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
@@ -28,7 +32,7 @@ export function showToast(message, variant = 'info', duration = 4000) {
   toast.innerHTML = `
     <div class="dashboard-toast-content">
       ${icons[variant] || icons.info}
-      <div class="dashboard-toast-message">${message}</div>
+      <div class="dashboard-toast-message">${safeMessage}</div>
     </div>
   `;
 

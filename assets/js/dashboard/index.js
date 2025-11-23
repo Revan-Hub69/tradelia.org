@@ -1,9 +1,11 @@
+/* eslint-env browser */
 /**
  * Dashboard Main Module Loader
  * Carica moduli dashboard in base al panel attivo
  */
 
 import { loadOverview } from "./overview.js";
+import { safeLog } from "./security-utils.js";
 import { loadReports } from "./reports.js";
 import { loadFrameworks } from "./frameworks.js";
 import { loadRequestsHistory } from "./requests-history.js";
@@ -39,9 +41,9 @@ export async function loadModule(moduleId) {
     try {
       await loader();
     } catch (error) {
-      console.error(`[Dashboard] Errore caricamento modulo ${moduleId}:`, error);
+      safeLog("error", `[Dashboard] Errore caricamento modulo ${moduleId}:`, error);
     }
   } else {
-    console.warn(`[Dashboard] Modulo ${moduleId} non trovato`);
+    safeLog("warn", `[Dashboard] Modulo ${moduleId} non trovato`);
   }
 }

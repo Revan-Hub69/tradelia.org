@@ -1,3 +1,4 @@
+/* eslint-env browser */
 /**
  * Dashboard Module: Overview
  * Panoramica dashboard con statistiche, attività recente e quick actions

@@ -1,3 +1,4 @@
+/* eslint-env browser */
 /**
  * Dashboard Module: Reports
  * Lista report ufficiali con ricerca e filtri
