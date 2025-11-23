@@ -21,11 +21,37 @@ let currentTest = null;
 
 /**
  * Initialize education system
+ * Export function per compatibilità con index.js (SPA navigation)
+ */
+export async function loadEducation() {
+  // Handle hash-based navigation
+  const hash = window.location.hash;
+  if (hash.startsWith("#education")) {
+    await handleEducationNavigation(hash);
+  } else {
+    await initEducation();
+  }
+}
+
+/**
+ * Initialize education system (dashboard view)
  */
 export async function initEducation() {
-  const container = document.getElementById("education-container");
+  // Try to find container in main content area (SPA)
+  let container = document.getElementById("education-container");
+  
   if (!container) {
-    return;
+    // Se siamo in modalità SPA, cerca il container principale
+    const mainContent = document.getElementById("main-content");
+    if (mainContent) {
+      // Crea container se non esiste
+      container = document.createElement("div");
+      container.id = "education-container";
+      mainContent.appendChild(container);
+    } else {
+      safeLog("warn", "[Education] Container non trovato");
+      return;
+    }
   }
 
   // Load user progress and modules
