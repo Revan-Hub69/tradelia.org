@@ -28,16 +28,27 @@ export function initCategoryAccordion() {
     if (isFirstCategory) {
       // Prima categoria: non applicare accordion, sempre visibile
       category.removeAttribute("data-expanded");
+      // Rimuovi eventuali listener precedenti
+      const newTitle = title.cloneNode(true);
+      title.parentNode.replaceChild(newTitle, title);
       return; // Skip accordion per prima categoria
     }
 
     // Altre categorie: accordion normale
-    // Espandi prime 2 altre categorie (dopo la prima)
-    const shouldExpand = index < 3; // Prime 3 categorie totali sempre visibili (1 Principale + 2 altre)
+    // BEST PRACTICE: Solo prima categoria (Principale) sempre aperta, altre chiuse di default
+    // Ridotto da 3 a 1 per evitare troppe categorie aperte su mobile
+    const shouldExpand = false; // Tutte le categorie (tranne la prima) chiuse di default
     category.setAttribute("data-expanded", shouldExpand ? "true" : "false");
 
-    // Aggiungi event listener
-    title.addEventListener("click", () => {
+    // Rimuovi listener precedenti per evitare duplicati
+    const newTitle = title.cloneNode(true);
+    title.parentNode.replaceChild(newTitle, title);
+    const freshTitle = category.querySelector(".category-title");
+
+    // Aggiungi event listener al nuovo elemento
+    freshTitle.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       const isExpanded = category.getAttribute("data-expanded") === "true";
       category.setAttribute("data-expanded", isExpanded ? "false" : "true");
 
@@ -48,7 +59,7 @@ export function initCategoryAccordion() {
 
       // Screen reader announcement
       if (window.announceToScreenReader) {
-        const categoryName = title.textContent.trim();
+        const categoryName = freshTitle.textContent.trim();
         window.announceToScreenReader(
           isExpanded ? `${categoryName} chiusa` : `${categoryName} aperta`
         );
@@ -56,18 +67,18 @@ export function initCategoryAccordion() {
     });
 
     // Keyboard support
-    title.setAttribute("tabindex", "0");
-    title.setAttribute("role", "button");
-    title.setAttribute("aria-expanded", shouldExpand ? "true" : "false");
-    title.setAttribute(
+    freshTitle.setAttribute("tabindex", "0");
+    freshTitle.setAttribute("role", "button");
+    freshTitle.setAttribute("aria-expanded", shouldExpand ? "true" : "false");
+    freshTitle.setAttribute(
       "aria-controls",
       `category-${category.dataset.categoryId || Math.random().toString(36).substr(2, 9)}`
     );
 
-    title.addEventListener("keydown", (e) => {
+    freshTitle.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        title.click();
+        freshTitle.click();
       }
     });
   });
@@ -78,7 +89,8 @@ export function initCategoryAccordion() {
       if (mutation.type === "attributes" && mutation.attributeName === "data-expanded") {
         const category = mutation.target;
         const title = category.querySelector(".category-title");
-        if (title) {
+        if (title && title.hasAttribute("role")) {
+          // Solo aggiorna se ha role="button" (non la prima categoria)
           title.setAttribute(
             "aria-expanded",
             category.getAttribute("data-expanded") === "true" ? "true" : "false"
