@@ -3335,15 +3335,21 @@ a[role="button"]:focus-visible {
   color: var(--dash-text);
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: 
+    background var(--transition-hover),
+    transform var(--transition-spring),
+    box-shadow var(--transition-hover);
 }
 
 .btn:hover::after {
   width: 100%;
+  transition: width var(--transition-smooth);
 }
 
 .btn:active {
   transform: translateY(0);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: transform var(--transition-fast);
 }
 
 /* BEST PRACTICE: Focus indicators visibili per accessibilità (WCAG 2.2 SC 2.4.7) */
