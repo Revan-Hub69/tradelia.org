@@ -2249,10 +2249,29 @@ h3.ftr-head,
 
 /* Assicura che il logo sia visibile anche se .ftr-head ha h3 */
 .ftr-head img.ftr-logo,
-.site-footer .ftr-head img.ftr-logo {
+.site-footer .ftr-head img.ftr-logo,
+.ftr-head .ftr-logo,
+.site-footer .ftr-head .ftr-logo {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
+  height: 44px !important;
+  width: auto !important;
+  max-width: 260px !important;
+}
+
+/* Link wrapper per logo footer */
+.ftr-logo-link,
+.site-footer .ftr-logo-link {
+  display: inline-block !important;
+  text-decoration: none !important;
+  transition: opacity 0.2s, transform 0.2s !important;
+}
+
+.ftr-logo-link:hover,
+.site-footer .ftr-logo-link:hover {
+  opacity: 0.9 !important;
+  transform: translateY(-1px) !important;
 }
 
 .ftr-head::after {
