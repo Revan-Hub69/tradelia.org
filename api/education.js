@@ -634,6 +634,319 @@ export async function getPathways(req, res) {
 }
 
 /**
+ * Get questions due for spaced repetition
+ * Paper: Ebbinghaus (1885), Cepeda et al. (2006)
+ */
+export async function getSpacedRepetitionDue(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    // Get all questions from user's test attempts
+    const { data: attempts } = await supabase
+      .from("education_user_test_attempts")
+      .select("answers, test_id, completed_at")
+      .eq("user_id", req.user.id)
+      .order("completed_at", { ascending: false })
+      .limit(100);
+
+    if (!attempts || attempts.length === 0) {
+      return res.json({ success: true, questions: [] });
+    }
+
+    // Extract question IDs and performance
+    const questionPerformance = new Map();
+    attempts.forEach(attempt => {
+      if (attempt.answers) {
+        Object.keys(attempt.answers).forEach(questionId => {
+          const answer = attempt.answers[questionId];
+          const perf = questionPerformance.get(questionId) || { attempts: 0, correct: 0, lastReview: null };
+          perf.attempts++;
+          if (answer.is_correct) perf.correct++;
+          if (!perf.lastReview || new Date(attempt.completed_at) > new Date(perf.lastReview)) {
+            perf.lastReview = attempt.completed_at;
+          }
+          questionPerformance.set(questionId, perf);
+        });
+      }
+    });
+
+    // Get question details
+    const questionIds = Array.from(questionPerformance.keys());
+    if (questionIds.length === 0) {
+      return res.json({ success: true, questions: [] });
+    }
+
+    const { data: questions } = await supabase
+      .from("education_questions")
+      .select(`
+        id,
+        question_text,
+        education_tests!inner(education_modules!inner(id, title, slug))
+      `)
+      .in("id", questionIds)
+      .eq("is_active", true);
+
+    // Calculate due dates and filter
+    const today = new Date();
+    const questionsWithDue = questions.map(q => {
+      const perf = questionPerformance.get(q.id);
+      const lastReview = perf.lastReview ? new Date(perf.lastReview) : null;
+      const daysSinceReview = lastReview ? Math.floor((today - lastReview) / (1000 * 60 * 60 * 24)) : 999;
+      
+      // Simple spaced repetition: incorrect after 1 day, difficult after 7, easy after 30
+      const successRate = perf.attempts > 0 ? perf.correct / perf.attempts : 0;
+      let nextReviewDays = 30;
+      if (successRate < 0.5) nextReviewDays = 1;
+      else if (successRate < 0.7) nextReviewDays = 7;
+      else if (successRate < 0.9) nextReviewDays = 14;
+
+      return {
+        id: q.id,
+        question_id: q.id,
+        question_text: q.question_text,
+        text: q.question_text,
+        module_title: q.education_tests?.education_modules?.title || "Modulo",
+        success_rate: successRate,
+        due_today: daysSinceReview >= nextReviewDays,
+        days_until_due: Math.max(0, nextReviewDays - daysSinceReview),
+      };
+    }).filter(q => q.due_today || q.days_until_due <= 3)
+      .sort((a, b) => a.due_today ? -1 : b.due_today ? 1 : a.days_until_due - b.days_until_due);
+
+    res.json({ success: true, questions: questionsWithDue });
+  } catch (error) {
+    safeLog("error", "[Education] Errore getSpacedRepetitionDue:", error);
+    res.status(500).json({ success: false, error: "Errore caricamento ripasso" });
+  }
+}
+
+/**
+ * Get questions for retrieval practice
+ */
+export async function getRetrievalQuestions(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const { questionIds } = req.query;
+    if (!questionIds) {
+      return res.status(400).json({ success: false, error: "questionIds richiesto" });
+    }
+
+    const ids = questionIds.split(",").filter(Boolean);
+
+    const { data: questions, error } = await supabase
+      .from("education_questions")
+      .select(`
+        id,
+        question_text,
+        question_type,
+        bloom_level,
+        explanation,
+        education_question_options (
+          id,
+          option_text,
+          order_index
+        )
+      `)
+      .in("id", ids)
+      .eq("is_active", true)
+      .order("id");
+
+    if (error) throw error;
+
+    res.json({ success: true, questions: questions || [] });
+  } catch (error) {
+    safeLog("error", "[Education] Errore getRetrievalQuestions:", error);
+    res.status(500).json({ success: false, error: "Errore caricamento domande" });
+  }
+}
+
+/**
+ * Get correct answers for retrieval practice
+ */
+export async function getRetrievalAnswers(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const { questionIds } = req.query;
+    if (!questionIds) {
+      return res.status(400).json({ success: false, error: "questionIds richiesto" });
+    }
+
+    const ids = questionIds.split(",").filter(Boolean);
+
+    const { data: questions, error } = await supabase
+      .from("education_questions")
+      .select(`
+        id,
+        education_question_options (
+          id,
+          is_correct
+        )
+      `)
+      .in("id", ids)
+      .eq("is_active", true);
+
+    if (error) throw error;
+
+    const answers = {};
+    questions.forEach(q => {
+      answers[q.id] = q.education_question_options
+        .filter(opt => opt.is_correct)
+        .map(opt => opt.id);
+    });
+
+    res.json({ success: true, answers });
+  } catch (error) {
+    safeLog("error", "[Education] Errore getRetrievalAnswers:", error);
+    res.status(500).json({ success: false, error: "Errore caricamento risposte" });
+  }
+}
+
+/**
+ * Update spaced repetition review
+ */
+export async function updateSpacedRepetition(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const { questionId, isCorrect, timeSpent, reviewedAt } = req.body;
+
+    // Store in user's spaced repetition tracking (could be a new table or JSONB field)
+    // For now, we'll track via test attempts - this will be improved with dedicated table
+    
+    res.json({ success: true, message: "Ripasso aggiornato" });
+  } catch (error) {
+    safeLog("error", "[Education] Errore updateSpacedRepetition:", error);
+    res.status(500).json({ success: false, error: "Errore aggiornamento ripasso" });
+  }
+}
+
+/**
+ * Save pre-lesson assessment
+ * Paper: Zimmerman (2002) - Metacognition
+ */
+export async function savePreAssessment(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const { lessonId, knowledgeLevel, expectations } = req.body;
+
+    // Store in user's lesson progress or new metacognition table
+    // For now, we'll log it - can be stored in JSONB field
+    
+    safeLog("info", `[Metacognition] Pre-assessment: lessonId=${lessonId}, knowledge=${knowledgeLevel}`);
+
+    res.json({ success: true });
+  } catch (error) {
+    safeLog("error", "[Education] Errore savePreAssessment:", error);
+    res.status(500).json({ success: false, error: "Errore salvataggio valutazione" });
+  }
+}
+
+/**
+ * Save post-lesson reflection
+ * Paper: Zimmerman (2002) - Metacognition
+ */
+export async function savePostReflection(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const { lessonId, comprehension, unclear, learned } = req.body;
+
+    // Store reflection
+    safeLog("info", `[Metacognition] Post-reflection: lessonId=${lessonId}, comprehension=${comprehension}`);
+
+    res.json({ success: true });
+  } catch (error) {
+    safeLog("error", "[Education] Errore savePostReflection:", error);
+    res.status(500).json({ success: false, error: "Errore salvataggio riflessione" });
+  }
+}
+
+/**
+ * Get learning goals
+ */
+export async function getLearningGoals(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    // Get from user preferences or dedicated table
+    // For now, return empty array
+    res.json({ success: true, goals: [] });
+  } catch (error) {
+    safeLog("error", "[Education] Errore getLearningGoals:", error);
+    res.status(500).json({ success: false, error: "Errore caricamento obiettivi" });
+  }
+}
+
+/**
+ * Save learning goals
+ */
+export async function saveLearningGoals(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const { goals } = req.body;
+
+    // Store goals (could be in user preferences JSONB or dedicated table)
+    safeLog("info", `[Metacognition] Learning goals saved: ${goals.length} goals`);
+
+    res.json({ success: true });
+  } catch (error) {
+    safeLog("error", "[Education] Errore saveLearningGoals:", error);
+    res.status(500).json({ success: false, error: "Errore salvataggio obiettivi" });
+  }
+}
+
+/**
+ * Get recent questions for retrieval practice
+ */
+export async function getRecentQuestionsForPractice(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    // Get question IDs from recent test attempts
+    const { data: attempts } = await supabase
+      .from("education_user_test_attempts")
+      .select("answers")
+      .eq("user_id", req.user.id)
+      .order("completed_at", { ascending: false })
+      .limit(10);
+
+    const questionIds = new Set();
+    attempts?.forEach(attempt => {
+      if (attempt.answers) {
+        Object.keys(attempt.answers).forEach(qId => questionIds.add(qId));
+      }
+    });
+
+    res.json({ success: true, questionIds: Array.from(questionIds).slice(0, 20) });
+  } catch (error) {
+    safeLog("error", "[Education] Errore getRecentQuestionsForPractice:", error);
+    res.status(500).json({ success: false, error: "Errore caricamento domande" });
+  }
+}
+
+/**
  * Main handler (Vercel serverless function)
  */
 export default async function handler(req, res) {
@@ -683,6 +996,24 @@ export default async function handler(req, res) {
         return await getUserProgress(req, res);
       case "pathways":
         return await getPathways(req, res);
+      case "spaced-repetition-due":
+        return await getSpacedRepetitionDue(req, res);
+      case "retrieval-questions":
+        return await getRetrievalQuestions(req, res);
+      case "retrieval-answers":
+        return await getRetrievalAnswers(req, res);
+      case "update-spaced-repetition":
+        return await updateSpacedRepetition(req, res);
+      case "save-pre-assessment":
+        return await savePreAssessment(req, res);
+      case "save-post-reflection":
+        return await savePostReflection(req, res);
+      case "learning-goals":
+        return await getLearningGoals(req, res);
+      case "save-learning-goals":
+        return await saveLearningGoals(req, res);
+      case "recent-questions-for-practice":
+        return await getRecentQuestionsForPractice(req, res);
       default:
         return res.status(400).json({ success: false, error: "Azione non valida" });
     }

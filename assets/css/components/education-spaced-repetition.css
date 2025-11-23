@@ -1,0 +1,214 @@
+/**
+ * Spaced Repetition Styles
+ * Paper: Ebbinghaus (1885), Cepeda et al. (2006)
+ */
+
+/* ===== SPACED REPETITION DASHBOARD ===== */
+.spaced-repetition-dashboard {
+  padding: var(--edu-spacing-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sr-header {
+  margin-bottom: var(--edu-spacing-xl);
+  padding: var(--edu-spacing-lg);
+  background: var(--edu-card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--edu-border);
+}
+
+.sr-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--edu-text);
+  margin-bottom: var(--edu-spacing-sm);
+}
+
+.sr-description {
+  font-size: 0.9375rem;
+  color: var(--edu-text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.sr-section {
+  margin-bottom: var(--edu-spacing-xl);
+}
+
+.sr-section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--edu-spacing-sm);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--edu-text);
+  margin-bottom: var(--edu-spacing-md);
+}
+
+.sr-questions-list {
+  display: grid;
+  gap: var(--edu-spacing-md);
+}
+
+.sr-question-card {
+  background: var(--edu-card-bg);
+  border: 1px solid var(--edu-border);
+  border-radius: 12px;
+  padding: var(--edu-spacing-lg);
+  transition: all var(--edu-transition-base);
+}
+
+.sr-question-card.due-today {
+  border-color: var(--edu-warning);
+  background: rgba(245, 158, 11, 0.05);
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.1);
+}
+
+.sr-question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--edu-spacing-md);
+  flex-wrap: wrap;
+  gap: var(--edu-spacing-sm);
+}
+
+.sr-question-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--edu-spacing-xs);
+}
+
+.sr-question-module {
+  font-size: 0.875rem;
+  color: var(--edu-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sr-due-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background: var(--edu-warning);
+  color: #000;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sr-due-soon {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--edu-primary);
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.sr-question-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--edu-spacing-sm);
+}
+
+.sr-success-rate {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.sr-question-text {
+  font-size: 1rem;
+  color: var(--edu-text);
+  line-height: 1.6;
+  margin-bottom: var(--edu-spacing-md);
+}
+
+.sr-question-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sr-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--edu-spacing-md);
+  margin-top: var(--edu-spacing-xl);
+}
+
+.sr-stat-card {
+  text-align: center;
+  padding: var(--edu-spacing-lg);
+  background: var(--edu-card-bg);
+  border: 1px solid var(--edu-border);
+  border-radius: 12px;
+}
+
+.sr-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--edu-primary);
+  margin-bottom: var(--edu-spacing-xs);
+}
+
+.sr-stat-label {
+  font-size: 0.875rem;
+  color: var(--edu-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sr-empty-state {
+  text-align: center;
+  padding: var(--edu-spacing-xl);
+  background: var(--edu-card-bg);
+  border: 1px solid var(--edu-border);
+  border-radius: 12px;
+}
+
+.sr-empty-state svg {
+  stroke: var(--edu-success);
+  margin-bottom: var(--edu-spacing-md);
+}
+
+.sr-empty-state h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--edu-text);
+  margin-bottom: var(--edu-spacing-sm);
+}
+
+.sr-empty-state p {
+  font-size: 1rem;
+  color: var(--edu-text-muted);
+}
+
+/* Quick access buttons */
+.sr-quick-access {
+  display: flex;
+  gap: var(--edu-spacing-md);
+  margin-bottom: var(--edu-spacing-xl);
+  flex-wrap: wrap;
+}
+
+.sr-quick-access .btn {
+  display: flex;
+  align-items: center;
+  gap: var(--edu-spacing-sm);
+}
+
+@media (max-width: 768px) {
+  .sr-quick-access {
+    flex-direction: column;
+  }
+  
+  .sr-quick-access .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -513,6 +513,47 @@
   padding-left: calc(var(--edu-spacing-md) - 3px);
 }
 
+/* ===== SPACED REPETITION QUICK ACCESS ===== */
+.education-spaced-repetition {
+  margin-bottom: var(--edu-spacing-xl);
+  padding: var(--edu-spacing-lg);
+  background: var(--edu-card-bg);
+  border: 1px solid var(--edu-border);
+  border-radius: 12px;
+}
+
+.sr-quick-access {
+  display: flex;
+  gap: var(--edu-spacing-md);
+  flex-wrap: wrap;
+}
+
+.sr-quick-access .btn {
+  display: flex;
+  align-items: center;
+  gap: var(--edu-spacing-sm);
+  flex: 1;
+  min-width: 200px;
+  justify-content: center;
+}
+
+.sr-quick-access .btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+
+@media (max-width: 768px) {
+  .sr-quick-access {
+    flex-direction: column;
+  }
+  
+  .sr-quick-access .btn {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
 .lesson-status {
   font-size: 1.5rem;
   color: var(--edu-text-muted);

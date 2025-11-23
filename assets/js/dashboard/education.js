@@ -140,6 +140,35 @@ function renderEducationDashboard(container, progress) {
         ` : ""}
       </div>
 
+      <!-- Spaced Repetition Section -->
+      <div class="education-spaced-repetition">
+        <div class="sr-quick-access">
+          <button class="btn btn-secondary" data-action="open-spaced-repetition">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="18" height="18">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+            Ripasso Distribuito
+          </button>
+          <button class="btn btn-secondary" data-action="open-retrieval-practice">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="18" height="18">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            Ripasso Attivo
+          </button>
+          <button class="btn btn-secondary" data-action="open-learning-goals">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="18" height="18">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+            I Miei Obiettivi
+          </button>
+        </div>
+      </div>
+
       <!-- Moduli -->
       <div class="education-modules">
         <h2 class="education-section-title">Percorso Formativo</h2>
@@ -249,6 +278,55 @@ function bindEducationEvents(container) {
       await openModule(moduleId);
     });
   });
+
+  // Spaced Repetition
+  container.querySelector("[data-action='open-spaced-repetition']")?.addEventListener("click", async () => {
+    const { initSpacedRepetition } = await import("./education-spaced-repetition.js");
+    await initSpacedRepetition();
+  });
+
+  // Retrieval Practice
+  container.querySelector("[data-action='open-retrieval-practice']")?.addEventListener("click", async () => {
+    const { initRetrievalPractice } = await import("./education-retrieval-practice.js");
+    // Get questions from recent tests
+    const questions = await getRecentQuestionsForPractice();
+    if (questions.length > 0) {
+      await initRetrievalPractice(questions);
+    } else {
+      if (window.showToast) {
+        window.showToast("Completa almeno un test per attivare il ripasso", "info");
+      }
+    }
+  });
+
+  // Learning Goals
+  container.querySelector("[data-action='open-learning-goals']")?.addEventListener("click", async () => {
+    const { showLearningGoalsModal } = await import("./education-metacognition.js");
+    showLearningGoalsModal();
+  });
+}
+
+/**
+ * Get recent questions for retrieval practice
+ */
+async function getRecentQuestionsForPractice() {
+  try {
+    const token = await getAuthToken();
+    const response = await fetch(`${API_BASE}?action=recent-questions-for-practice`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      const { questionIds } = await response.json();
+      return questionIds || [];
+    }
+    return [];
+  } catch (error) {
+    safeLog("error", "[Education] Errore getRecentQuestionsForPractice:", error);
+    return [];
+  }
 }
 
 /**
@@ -391,6 +469,7 @@ function renderLessonItem(lesson, index) {
  * Open lesson view
  * Paper: Microlearning (Hug, 2016) - Track session time
  * Paper: Learning Analytics (Siemens & Long, 2011) - Track engagement
+ * Paper: Metacognition (Zimmerman, 2002) - Pre-lesson assessment
  */
 async function openLesson(lessonId) {
   try {
@@ -406,6 +485,10 @@ async function openLesson(lessonId) {
 
     const { lesson } = await response.json();
     currentLesson = lesson;
+
+    // Metacognition: Show pre-lesson assessment (Zimmerman, 2002)
+    const { showPreLessonAssessment } = await import("./education-metacognition.js");
+    await showPreLessonAssessment(lessonId, lesson.title);
 
     // Microlearning: Start session timer
     lessonStartTime = Date.now();
@@ -489,6 +572,10 @@ function renderLessonView(lesson) {
     if (timeSpentMinutes > 0) {
       safeLog("info", `[Education] Lesson completed in ${timeSpentMinutes} minutes`);
     }
+    
+    // Metacognition: Show post-lesson reflection (Zimmerman, 2002)
+    const { showPostLessonReflection } = await import("./education-metacognition.js");
+    await showPostLessonReflection(lessonId, currentLesson?.title || "Lezione");
     
     await updateLessonProgress(lessonId, "completed", timeSpentMinutes);
     if (window.showToast) {
@@ -594,7 +681,7 @@ async function getAuthToken() {
  * Handle SPA navigation for education
  */
 export async function handleEducationNavigation(hash) {
-  // Format: #education, #education/module/{slug}, #education/test/{testId}
+  // Format: #education, #education/module/{slug}, #education/test/{testId}, #education/review/{questionId}, #education/spaced-repetition
   const parts = hash.replace("#education", "").split("/").filter(Boolean);
   
   if (parts.length === 0) {
@@ -626,6 +713,15 @@ export async function handleEducationNavigation(hash) {
     // Test view
     const testId = parts[1];
     await openTest(testId);
+  } else if (parts[0] === "review" && parts[1]) {
+    // Retrieval practice / Spaced repetition review
+    const questionId = parts[1];
+    const { initRetrievalPractice } = await import("./education-retrieval-practice.js");
+    await initRetrievalPractice(questionId, { spacedRepetition: true });
+  } else if (parts[0] === "spaced-repetition") {
+    // Spaced repetition dashboard
+    const { initSpacedRepetition } = await import("./education-spaced-repetition.js");
+    await initSpacedRepetition();
   } else {
     await initEducation();
   }

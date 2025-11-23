@@ -1,0 +1,197 @@
+/**
+ * Retrieval Practice Styles
+ * Paper: Roediger & Karpicke (2006)
+ */
+
+/* ===== RETRIEVAL PRACTICE SESSION ===== */
+.retrieval-practice-session {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--edu-spacing-lg);
+}
+
+.rp-header {
+  margin-bottom: var(--edu-spacing-xl);
+}
+
+.rp-header-content {
+  margin-top: var(--edu-spacing-md);
+}
+
+.rp-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--edu-text);
+  margin-bottom: var(--edu-spacing-sm);
+}
+
+.rp-description {
+  font-size: 1rem;
+  color: var(--edu-text-muted);
+  line-height: 1.6;
+  margin-bottom: var(--edu-spacing-md);
+}
+
+.rp-info {
+  display: flex;
+  align-items: center;
+  gap: var(--edu-spacing-sm);
+  font-size: 0.875rem;
+  color: var(--edu-text-muted);
+}
+
+.rp-questions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--edu-spacing-xl);
+  margin-bottom: var(--edu-spacing-xl);
+}
+
+.rp-question {
+  background: var(--edu-card-bg);
+  border: 1px solid var(--edu-border);
+  border-radius: 12px;
+  padding: var(--edu-spacing-lg);
+}
+
+.rp-question.correct {
+  border-color: var(--edu-success);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.rp-question.incorrect {
+  border-color: var(--edu-error);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.rp-question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--edu-spacing-md);
+  flex-wrap: wrap;
+  gap: var(--edu-spacing-sm);
+}
+
+.rp-question-number {
+  font-weight: 600;
+  color: var(--edu-text);
+  font-size: 1rem;
+}
+
+.rp-practice-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--edu-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rp-practice-badge svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+}
+
+.rp-question-text {
+  font-size: 1.125rem;
+  color: var(--edu-text);
+  line-height: 1.6;
+  margin-bottom: var(--edu-spacing-md);
+}
+
+.rp-question-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--edu-spacing-sm);
+  margin-bottom: var(--edu-spacing-md);
+}
+
+.rp-option {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--edu-spacing-md);
+  padding: var(--edu-spacing-md);
+  background: var(--edu-bg);
+  border: 2px solid var(--edu-border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--edu-transition-base);
+}
+
+.rp-option:hover {
+  border-color: var(--edu-primary);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.rp-option.selected {
+  border-color: var(--edu-primary);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.rp-option.correct-answer {
+  border-color: var(--edu-success);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.rp-option.incorrect-answer {
+  border-color: var(--edu-error);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.rp-option input[type="radio"],
+.rp-option input[type="checkbox"] {
+  margin-top: 0.25rem;
+  cursor: pointer;
+}
+
+.rp-option-label {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--edu-spacing-sm);
+}
+
+.rp-question-explanation {
+  margin-top: var(--edu-spacing-md);
+  padding: var(--edu-spacing-md);
+  background: var(--edu-bg);
+  border-left: 4px solid var(--edu-primary);
+  border-radius: 4px;
+}
+
+.rp-explanation-content {
+  font-size: 0.9375rem;
+  color: var(--edu-text);
+  line-height: 1.6;
+}
+
+.rp-explanation-content strong {
+  color: var(--edu-primary);
+  font-weight: 600;
+}
+
+.rp-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--edu-spacing-md);
+  padding-top: var(--edu-spacing-lg);
+  border-top: 1px solid var(--edu-border);
+}
+
+@media (max-width: 768px) {
+  .rp-actions {
+    flex-direction: column;
+  }
+  
+  .rp-actions .btn {
+    width: 100%;
+  }
+}

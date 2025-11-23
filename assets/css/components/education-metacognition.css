@@ -1,0 +1,293 @@
+/**
+ * Metacognition & Self-Regulated Learning Styles
+ * Paper: Zimmerman (2002)
+ */
+
+/* ===== METACOGNITION MODAL ===== */
+.metacognition-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--edu-spacing-lg);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.meta-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+}
+
+.meta-modal-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  background: var(--edu-card-bg);
+  border: 1px solid var(--edu-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.meta-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--edu-spacing-lg);
+  border-bottom: 1px solid var(--edu-border);
+}
+
+.meta-modal-header h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--edu-text);
+  margin: 0;
+}
+
+.meta-modal-close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--edu-text-muted);
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all var(--edu-transition-fast);
+}
+
+.meta-modal-close:hover {
+  background: var(--edu-bg);
+  color: var(--edu-text);
+}
+
+.meta-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--edu-spacing-lg);
+}
+
+.meta-prompt {
+  font-size: 1.125rem;
+  color: var(--edu-text);
+  margin-bottom: var(--edu-spacing-lg);
+  line-height: 1.6;
+}
+
+.meta-prompt strong {
+  color: var(--edu-primary);
+  font-weight: 600;
+}
+
+.meta-question {
+  font-size: 1rem;
+  color: var(--edu-text);
+  margin-bottom: var(--edu-spacing-md);
+  font-weight: 500;
+}
+
+.meta-question-group {
+  margin-bottom: var(--edu-spacing-xl);
+}
+
+/* Rating Scale */
+.meta-rating-scale {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--edu-spacing-sm);
+  margin-bottom: var(--edu-spacing-lg);
+}
+
+.meta-rating-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.meta-rating-option input[type="radio"] {
+  display: none;
+}
+
+.meta-rating-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--edu-spacing-xs);
+  padding: var(--edu-spacing-md);
+  background: var(--edu-bg);
+  border: 2px solid var(--edu-border);
+  border-radius: 8px;
+  width: 100%;
+  transition: all var(--edu-transition-base);
+}
+
+.meta-rating-option input[type="radio"]:checked + .meta-rating-label {
+  border-color: var(--edu-primary);
+  background: rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.meta-rating-option:hover .meta-rating-label {
+  border-color: var(--edu-primary);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.meta-rating-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--edu-primary);
+}
+
+.meta-rating-text {
+  font-size: 0.75rem;
+  color: var(--edu-text-muted);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.meta-optional {
+  margin-bottom: var(--edu-spacing-lg);
+}
+
+.meta-optional label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--edu-spacing-sm);
+  font-size: 0.9375rem;
+  color: var(--edu-text);
+}
+
+.meta-textarea {
+  width: 100%;
+  padding: var(--edu-spacing-md);
+  background: var(--edu-bg);
+  border: 1px solid var(--edu-border);
+  border-radius: 8px;
+  color: var(--edu-text);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.meta-textarea:focus {
+  outline: none;
+  border-color: var(--edu-primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.meta-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--edu-spacing-md);
+  padding: var(--edu-spacing-lg);
+  border-top: 1px solid var(--edu-border);
+  background: var(--edu-bg);
+}
+
+/* Learning Goals */
+.meta-goals-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--edu-spacing-md);
+  margin-bottom: var(--edu-spacing-md);
+}
+
+.meta-goal-item {
+  display: flex;
+  gap: var(--edu-spacing-sm);
+  align-items: center;
+}
+
+.meta-goal-input {
+  flex: 1;
+  padding: var(--edu-spacing-sm) var(--edu-spacing-md);
+  background: var(--edu-bg);
+  border: 1px solid var(--edu-border);
+  border-radius: 8px;
+  color: var(--edu-text);
+  font-family: inherit;
+  font-size: 0.9375rem;
+}
+
+.meta-goal-input:focus {
+  outline: none;
+  border-color: var(--edu-primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.meta-goal-deadline {
+  padding: var(--edu-spacing-sm) var(--edu-spacing-md);
+  background: var(--edu-bg);
+  border: 1px solid var(--edu-border);
+  border-radius: 8px;
+  color: var(--edu-text);
+  font-family: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.meta-goal-deadline:focus {
+  outline: none;
+  border-color: var(--edu-primary);
+}
+
+.meta-description {
+  font-size: 0.9375rem;
+  color: var(--edu-text-muted);
+  line-height: 1.6;
+  margin-bottom: var(--edu-spacing-lg);
+}
+
+@media (max-width: 768px) {
+  .meta-rating-scale {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .meta-modal-content {
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  
+  .meta-goal-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
