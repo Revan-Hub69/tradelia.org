@@ -120,6 +120,9 @@ export default defineConfig({
             if (id.includes("@supabase")) {
               return "vendor-supabase";
             }
+            if (id.includes("chart.js")) {
+              return "vendor-chartjs";
+            }
             return "vendor";
           }
         },

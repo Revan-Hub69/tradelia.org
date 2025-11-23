@@ -16,8 +16,9 @@ async function loadChartLibrary() {
   }
 
   try {
-    // Prova import ES module (bundle da Vite)
-    const chartModule = await import('chart.js');
+    // Import ES module (bundle da Vite)
+    // Vite/Rollup risolverà questo import durante il build
+    const chartModule = await import('chart.js/auto');
     Chart = chartModule.Chart || chartModule.default?.Chart || chartModule.default || chartModule;
     return Chart;
   } catch (importError) {
