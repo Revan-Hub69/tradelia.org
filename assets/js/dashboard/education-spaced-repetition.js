@@ -344,4 +344,3 @@ async function loadSpacedRepetition(container) {
 }
 
 
-export { loadSpacedRepetition };
