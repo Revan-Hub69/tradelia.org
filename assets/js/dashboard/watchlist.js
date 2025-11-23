@@ -14,6 +14,8 @@ const WATCHLIST_STATE = {
  */
 export function initWatchlist() {
   loadWatchlist();
+  // Aggiorna badge all'inizializzazione
+  updateWatchlistBadge();
 }
 
 /**
@@ -143,6 +145,9 @@ function updateWatchlistIndicators(itemId, isFavorite) {
   if (watchlistPanel) {
     loadWatchlistContent();
   }
+
+  // BEST PRACTICE: Aggiorna badge contatore preferiti/watchlist
+  updateWatchlistBadge();
 }
 
 /**
@@ -280,6 +285,50 @@ export async function loadWatchlistContent() {
       removeFromWatchlist(itemId);
     });
   });
+}
+
+/**
+ * Update watchlist badge count in UI
+ */
+function updateWatchlistBadge() {
+  const count = WATCHLIST_STATE.items.length;
+  
+  // Aggiorna badge nel menu/navbar se presente
+  const badgeElements = document.querySelectorAll('[data-watchlist-badge], .watchlist-badge, .badge-count');
+  badgeElements.forEach((badge) => {
+    if (count > 0) {
+      badge.textContent = count;
+      badge.style.display = count > 0 ? 'inline-flex' : 'none';
+      badge.setAttribute('aria-label', `${count} preferiti`);
+    } else {
+      badge.style.display = 'none';
+      badge.textContent = '';
+    }
+  });
+
+  // Aggiorna anche eventuali indicatori nel titolo sezione preferiti
+  const favoritesTitle = document.querySelector('#favorites-section .category-title, .favorites-category .category-title');
+  if (favoritesTitle) {
+    const existingBadge = favoritesTitle.querySelector('.category-badge');
+    if (count > 0) {
+      if (!existingBadge) {
+        const badge = document.createElement('span');
+        badge.className = 'category-badge';
+        badge.textContent = count;
+        badge.setAttribute('aria-label', `${count} preferiti`);
+        favoritesTitle.appendChild(badge);
+      } else {
+        existingBadge.textContent = count;
+      }
+    } else if (existingBadge) {
+      existingBadge.remove();
+    }
+  }
+
+  // Trigger custom event per altri componenti che potrebbero ascoltare
+  window.dispatchEvent(new CustomEvent('watchlist-count-changed', { 
+    detail: { count } 
+  }));
 }
 
 /**

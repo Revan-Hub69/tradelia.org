@@ -50,7 +50,23 @@ export function initCategoryAccordion() {
       e.preventDefault();
       e.stopPropagation();
       const isExpanded = category.getAttribute("data-expanded") === "true";
-      category.setAttribute("data-expanded", isExpanded ? "false" : "true");
+      const willExpand = !isExpanded;
+
+      // BEST PRACTICE: Se stiamo aprendo questa categoria, chiudi tutte le altre
+      if (willExpand) {
+        categories.forEach((otherCategory, otherIndex) => {
+          // Non chiudere la prima categoria (sempre visibile) e non chiudere questa
+          if (otherIndex !== 0 && otherCategory !== category) {
+            otherCategory.setAttribute("data-expanded", "false");
+            const otherTitle = otherCategory.querySelector(".category-title");
+            if (otherTitle && otherTitle.hasAttribute("role")) {
+              otherTitle.setAttribute("aria-expanded", "false");
+            }
+          }
+        });
+      }
+
+      category.setAttribute("data-expanded", willExpand ? "true" : "false");
 
       // Haptic feedback
       if (window.triggerHapticFeedback) {
@@ -61,7 +77,7 @@ export function initCategoryAccordion() {
       if (window.announceToScreenReader) {
         const categoryName = freshTitle.textContent.trim();
         window.announceToScreenReader(
-          isExpanded ? `${categoryName} chiusa` : `${categoryName} aperta`
+          willExpand ? `${categoryName} aperta` : `${categoryName} chiusa`
         );
       }
     });
