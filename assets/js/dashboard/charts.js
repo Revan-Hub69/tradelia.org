@@ -25,7 +25,7 @@ async function loadChartLibrary() {
     console.warn('[Charts] Import fallito, uso CDN fallback:', importError);
     
     // Load Chart.js from CDN (fallback)
-    await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const script = document.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
       script.async = true;
@@ -34,14 +34,12 @@ async function loadChartLibrary() {
         Chart = window.Chart;
         resolve(Chart);
       };
-      script.onerror = () => reject(new Error('Failed to load Chart.js'));
+      script.onerror = () => {
+        console.error('[Charts] Error loading Chart.js from CDN');
+        reject(new Error('Failed to load Chart.js'));
+      };
       document.head.appendChild(script);
     });
-
-    return Chart;
-  } catch (error) {
-    console.error('[Charts] Error loading Chart.js:', error);
-    return null;
   }
 }
 
