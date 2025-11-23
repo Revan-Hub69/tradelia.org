@@ -110,12 +110,12 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: min(90rem, 90vw);
+  max-width: min(65rem, 90vw); /* Ridotto da 90rem per migliore leggibilità accademica */
   max-height: 90vh;
   background: var(--surface-card, #1a1a1a);
   border: 1px solid var(--br-card, rgba(255, 255, 255, 0.08));
-  border-radius: var(--radius-xl, 12px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border-radius: var(--radius-lg, 8px); /* Più sobrio, meno arrotondato */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); /* Ombra più sottile e professionale */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -125,34 +125,38 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--sp-5) var(--sp-6);
+  padding: var(--sp-6) var(--sp-6); /* Aumentato padding per respiro accademico */
   border-bottom: 1px solid var(--br-card, rgba(255, 255, 255, 0.08));
+  background: var(--surface-card, #1a1a1a);
 }
 
 .legal-title {
-  font-size: var(--fs-18, 1.125rem);
-  font-weight: 700;
+  font-size: var(--fs-20, 1.25rem); /* Aumentato per gerarchia visiva */
+  font-weight: 600; /* Ridotto da 700 per eleganza */
   color: var(--ink, #ffffff);
+  letter-spacing: -0.02em; /* Tipografia più raffinata */
 }
 
 .legal-tabs {
   display: flex;
-  gap: var(--sp-2);
-  padding: var(--sp-3) var(--sp-6);
+  gap: var(--sp-3); /* Aumentato gap per respiro */
+  padding: var(--sp-4) var(--sp-6); /* Aumentato padding verticale */
   border-bottom: 1px solid var(--br-card, rgba(255, 255, 255, 0.08));
   background: var(--surface-elev, #222222);
+  flex-wrap: wrap; /* Wrap su mobile */
 }
 
 .legal-tab {
-  padding: var(--sp-2) var(--sp-4);
-  font-size: var(--fs-13, 0.8125rem);
-  font-weight: 600;
-  color: var(--muted, #888888);
+  padding: var(--sp-2) var(--sp-5); /* Aumentato padding orizzontale */
+  font-size: var(--fs-14, 0.875rem); /* Aumentato da 13px per leggibilità */
+  font-weight: 500; /* Ridotto da 600 per coerenza */
+  color: var(--muted, #9ca3af); /* Grigio più chiaro per contrasto */
   background: transparent;
   border: 1px solid transparent;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-md, 6px); /* Meno arrotondato, più sobrio */
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  letter-spacing: 0.01em; /* Leggero spacing per leggibilità */
 }
 
 .legal-tab:hover {
@@ -170,7 +174,23 @@
 .legal-body {
   flex: 1;
   overflow-y: auto;
-  padding: var(--sp-6);
+  padding: var(--sp-6) var(--sp-8); /* Aumentato padding orizzontale per leggibilità */
+  /* Scrollbar styling per coerenza accademica */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.legal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.legal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.legal-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
 }
 
 .legal-body section[hidden] {
@@ -178,11 +198,13 @@
 }
 
 .legal-body h4 {
-  font-size: var(--fs-16, 1rem);
-  font-weight: 700;
+  font-size: var(--fs-17, 1.0625rem); /* Aumentato per gerarchia */
+  font-weight: 600; /* Ridotto da 700 per eleganza */
   color: var(--ink, #ffffff);
-  margin-top: var(--sp-6);
-  margin-bottom: var(--sp-3);
+  margin-top: var(--sp-8); /* Aumentato spacing per respiro accademico */
+  margin-bottom: var(--sp-4);
+  letter-spacing: -0.01em;
+  line-height: 1.4;
 }
 
 .legal-body h4:first-child {
@@ -191,32 +213,49 @@
 
 .legal-body p,
 .legal-body ul {
-  font-size: var(--fs-14, 0.875rem);
-  line-height: var(--lh-15, 1.5);
-  color: var(--ink-soft, #e0e0e0);
-  margin-bottom: var(--sp-4);
+  font-size: var(--fs-15, 0.9375rem); /* Aumentato da 14px per leggibilità */
+  line-height: var(--lh-16, 1.6); /* Aumentato line-height per leggibilità accademica */
+  color: var(--ink-soft, #e5e7eb); /* Più chiaro per contrasto */
+  margin-bottom: var(--sp-5); /* Aumentato spacing tra paragrafi */
+  font-weight: 400;
 }
 
 .legal-body ul {
-  padding-left: var(--sp-6);
+  padding-left: var(--sp-8); /* Aumentato padding per indentazione chiara */
+  list-style-type: disc;
+}
+
+.legal-body ul li {
+  margin-bottom: var(--sp-3); /* Spacing tra elementi lista */
+  line-height: 1.7; /* Line-height maggiore per liste */
 }
 
 .legal-body code {
   font-family: var(--ff-mono, 'Courier New', monospace);
   font-size: var(--fs-13, 0.8125rem);
   background: var(--surface-elev, #222222);
-  padding: 0.2rem 0.4rem;
+  padding: 0.25rem 0.5rem; /* Aumentato padding per leggibilità */
   border-radius: var(--radius-sm, 4px);
   border: 1px solid var(--br-card, rgba(255, 255, 255, 0.08));
+  color: var(--ink-soft, #e5e7eb);
+  font-weight: 400;
 }
 
 .legal-ftr {
   display: flex;
   flex-direction: column;
   gap: var(--sp-4);
-  padding: var(--sp-5) var(--sp-6);
+  padding: var(--sp-6) var(--sp-6); /* Aumentato padding per respiro */
   border-top: 1px solid var(--br-card, rgba(255, 255, 255, 0.08));
   background: var(--surface-elev, #222222);
+}
+
+.legal-ftr small {
+  font-size: var(--fs-13, 0.8125rem);
+  line-height: 1.5;
+  color: var(--muted, #9ca3af);
+  font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
 @media (min-width: 768px) {
