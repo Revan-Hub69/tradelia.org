@@ -852,31 +852,32 @@ a[role="button"]:focus-visible {
   }
 
   .account-banner-actions .toggle-switch-wrapper {
-    min-width: 0;
-    flex: 0 0 auto;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 4px;
+    min-width: 0 !important;
+    flex: 0 0 auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 4px !important;
   }
 
   .account-banner-actions .toggle-switch {
-    flex-direction: row;
-    align-items: center;
-    gap: 4px;
-    padding: 0;
-    margin: 0;
-    width: auto;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 4px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: auto !important;
   }
 
   .account-banner-actions .toggle-label {
-    font-size: var(--fs-9, 9px);
-    white-space: nowrap;
-    order: 2;
-    margin: 0;
-    line-height: 1;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
+    font-size: var(--fs-9, 9px) !important;
+    white-space: nowrap !important;
+    order: 2 !important;
+    margin: 0 !important;
+    margin-left: 4px !important;
+    line-height: 1 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.03em !important;
   }
 
   .account-banner-actions .toggle-slider {
