@@ -1,8 +1,17 @@
-// BEST PRACTICE: Usa import locale se disponibile (bundle da Vite), altrimenti CDN
+// BEST PRACTICE: Usa CDN per compatibilità con Cloudflare e Vercel
 // Nota: Questo file è usato in /report, non nella dashboard principale
-// Per la dashboard, usa @supabase/supabase-js da node_modules
 
-import { createClient } from '@supabase/supabase-js';
+// Carica Supabase da CDN (compatibile con Cloudflare e Vercel)
+let createClient;
+try {
+  // Prova prima import ES module (se bundle da Vite)
+  const supabaseModule = await import('@supabase/supabase-js');
+  createClient = supabaseModule.createClient;
+} catch (e) {
+  // Fallback a CDN (per Cloudflare o altri ambienti senza build)
+  const supabaseModule = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+  createClient = supabaseModule.createClient;
+}
 
 export const SUPABASE_URL = 'https://higkhlfjfhlecbtfnznx.supabase.co';
 export const SUPABASE_ANON_KEY =
