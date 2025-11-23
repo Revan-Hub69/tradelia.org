@@ -792,4 +792,4 @@ export async function loadEducation() {
 /**
  * Export functions
  */
-export { initEducation, openModule, openLesson, openTest };
+export { initEducation, openModule, openLesson };
