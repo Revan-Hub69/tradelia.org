@@ -4,42 +4,34 @@
  * Paper Accademico: "Information Dashboard Design" - Stephen Few (2014-2024)
  */
 
-// BEST PRACTICE: Import statico invece di dinamico per permettere a Rollup di risolvere correttamente
-import {
-  Chart,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-} from 'chart.js';
-
-// Registra tutti i componenti di Chart.js necessari
-Chart.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
+let Chart = null;
 
 /**
  * Load Chart.js library
- * BEST PRACTICE: Usa import statico invece di CDN per evitare CSP violations
+ * BEST PRACTICE: Usa CDN (CSP già configurato in vercel.json)
+ * Import statico causa problemi con Rollup durante il build
  */
 async function loadChartLibrary() {
-  // Chart è già disponibile grazie all'import statico
-  return Chart;
+  if (typeof Chart !== 'undefined' && Chart !== null) {
+    return Chart;
+  }
+
+  // Load Chart.js from CDN (CSP permette cdn.jsdelivr.net)
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+    script.async = true;
+    script.crossOrigin = 'anonymous';
+    script.onload = () => {
+      Chart = window.Chart;
+      resolve(Chart);
+    };
+    script.onerror = () => {
+      console.error('[Charts] Error loading Chart.js from CDN');
+      reject(new Error('Failed to load Chart.js'));
+    };
+    document.head.appendChild(script);
+  });
 }
 
 /**

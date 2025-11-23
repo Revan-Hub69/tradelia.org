@@ -4,43 +4,35 @@
 
 import Logger from '../utils/logger.js';
 
-// BEST PRACTICE: Import statico invece di dinamico per permettere a Rollup di risolvere correttamente
-import {
-  Chart,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-} from 'chart.js';
-
-// Registra tutti i componenti di Chart.js necessari
-Chart.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
-
-// Alias per compatibilità con codice esistente
-const ChartJS = Chart;
-let ChartLoaded = true;
+// BEST PRACTICE: Usa CDN (CSP già configurato in vercel.json)
+// Import statico causa problemi con Rollup durante il build
+let ChartJS = null;
+let ChartLoaded = false;
 
 async function loadChartJS() {
-  // Chart è già disponibile grazie all'import statico
-  Logger.debug('Charts', 'Chart.js caricato da bundle');
-  return ChartJS;
+  if (ChartLoaded && ChartJS) {
+    return ChartJS;
+  }
+
+  // Load Chart.js from CDN (CSP permette cdn.jsdelivr.net)
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+  script.async = true;
+  script.crossOrigin = 'anonymous';
+
+  return new Promise((resolve, reject) => {
+    script.onload = () => {
+      ChartJS = window.Chart;
+      ChartLoaded = true;
+      Logger.debug('Charts', 'Chart.js caricato da CDN');
+      resolve(ChartJS);
+    };
+    script.onerror = () => {
+      Logger.error('Charts', 'Errore caricamento Chart.js');
+      reject(new Error('Errore caricamento Chart.js'));
+    };
+    document.head.appendChild(script);
+  });
 }
 
 // ===== CONFIGURAZIONE GLOBALE CHART.JS =====
