@@ -1,6 +1,13 @@
 <!doctype html>
 <html lang="it" data-theme="dark">
   <head>
+    <!-- BEST PRACTICE 2025: Forza tema dark immediatamente per evitare flash -->
+    <script>
+      (function() {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.setAttribute('data-theme-manual', 'true');
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta
       name="viewport"

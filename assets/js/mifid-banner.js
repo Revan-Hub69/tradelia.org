@@ -104,6 +104,8 @@ function renderLegalOverlay() {
       close: 'Chiudi',
       mifidTab: 'Informativa MiFID',
       privacyTab: 'Privacy',
+      cookieTab: 'Cookie',
+      termsTab: 'Termini',
       continue: 'Continuando dichiari di aver letto e compreso le informative.',
       accept: 'Accetto e chiudi',
       mifidContent: `
@@ -153,12 +155,49 @@ function renderLegalOverlay() {
           <li>Il titolare potrà aggiornare questa informativa: controlla periodicamente le revisioni.</li>
         </ul>
       `,
+      cookieContent: `
+        <h4>Tipi di cookie utilizzati</h4>
+        <p>Utilizziamo solo cookie tecnici necessari per il funzionamento del sito. Non utilizziamo cookie di profilazione o pubblicitari.</p>
+        <h4>Cookie tecnici</h4>
+        <ul>
+          <li><strong>Preferenze tema:</strong> Memorizziamo la preferenza del tema (dark mode) in <code>localStorage</code> per migliorare l'esperienza utente.</li>
+          <li><strong>Consenso legale:</strong> Memorizziamo il consenso alle informative legali per non richiederlo ad ogni visita.</li>
+          <li><strong>Preferenze dashboard:</strong> Memorizziamo le preferenze dell'utente nella dashboard (moduli preferiti, layout) in <code>localStorage</code>.</li>
+        </ul>
+        <h4>Cookie di terze parti</h4>
+        <p>Non utilizziamo cookie di terze parti per tracciamento o pubblicità. Eventuali servizi esterni (es. font Google) sono configurati per rispettare la privacy.</p>
+        <h4>Gestione cookie</h4>
+        <p>Puoi gestire o eliminare i cookie attraverso le impostazioni del tuo browser. Nota che disabilitare i cookie tecnici potrebbe compromettere alcune funzionalità del sito.</p>
+        <h4>Contatti</h4>
+        <p>Per domande sui cookie, contatta <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</p>
+      `,
+      termsContent: `
+        <h4>Identità del Fornitore</h4>
+        <p><strong>Tradelia AI</strong> è un progetto indipendente che fornisce servizi di analisi finanziaria attraverso piattaforma SaaS.</p>
+        <p><strong>Dati del Fornitore:</strong><br />
+        Nome commerciale: Tradelia AI<br />
+        Proprietario unico: Massimo Rodi<br />
+        Indirizzo: Via dei Fiori 2, 86078 Sesto Campano (IS), Italia<br />
+        Email: <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a></p>
+        <h4>Descrizione del Servizio</h4>
+        <p>Tradelia AI fornisce strumenti di analisi dati e reportistica attraverso metodologia accademica. Il Servizio include dashboard interattive e strumenti di visualizzazione.</p>
+        <p><strong>IMPORTANTE:</strong> Il Servizio non costituisce consulenza finanziaria, investimento o raccomandazione di acquisto/vendita.</p>
+        <h4>Servizi a Pagamento</h4>
+        <p>Servizi on-demand: paghi solo per ciò che richiedi, senza abbonamenti ricorrenti. Fatturazione tramite Xolo Go. Diritto di recesso entro 14 giorni dalla consegna.</p>
+        <h4>Limitazioni di Responsabilità</h4>
+        <p>I dati e le analisi sono forniti "così come sono" senza garanzie di accuratezza o completezza. Tradelia AI non è responsabile per decisioni di investimento basate sul materiale fornito.</p>
+        <h4>Legge Applicabile</h4>
+        <p>Questi termini sono governati dalla legge italiana. Per controversie, competente è il foro di Isernia (IS), Italia.</p>
+        <p><a href="/terms.html" target="_blank" class="mail-link">Leggi i termini completi →</a></p>
+      `,
     },
     en: {
       title: 'Legal information',
       close: 'Close',
       mifidTab: 'MiFID Information',
       privacyTab: 'Privacy',
+      cookieTab: 'Cookies',
+      termsTab: 'Terms',
       continue: 'By continuing you declare that you have read and understood the information.',
       accept: 'Accept and close',
       mifidContent: `
@@ -208,6 +247,41 @@ function renderLegalOverlay() {
           <li>The owner may update this information: check for revisions periodically.</li>
         </ul>
       `,
+      cookieContent: `
+        <h4>Types of cookies used</h4>
+        <p>We only use technical cookies necessary for the site to function. We do not use profiling or advertising cookies.</p>
+        <h4>Technical cookies</h4>
+        <ul>
+          <li><strong>Theme preferences:</strong> We store theme preference (dark mode) in <code>localStorage</code> to improve user experience.</li>
+          <li><strong>Legal consent:</strong> We store consent to legal information to avoid requesting it on every visit.</li>
+          <li><strong>Dashboard preferences:</strong> We store user preferences in the dashboard (favorite modules, layout) in <code>localStorage</code>.</li>
+        </ul>
+        <h4>Third-party cookies</h4>
+        <p>We do not use third-party cookies for tracking or advertising. Any external services (e.g. Google fonts) are configured to respect privacy.</p>
+        <h4>Cookie management</h4>
+        <p>You can manage or delete cookies through your browser settings. Note that disabling technical cookies may compromise some site functionality.</p>
+        <h4>Contacts</h4>
+        <p>For questions about cookies, contact <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>.</p>
+      `,
+      termsContent: `
+        <h4>Provider Identity</h4>
+        <p><strong>Tradelia AI</strong> is an independent project that provides financial analysis services through a SaaS platform.</p>
+        <p><strong>Provider Data:</strong><br />
+        Commercial name: Tradelia AI<br />
+        Sole proprietor: Massimo Rodi<br />
+        Address: Via dei Fiori 2, 86078 Sesto Campano (IS), Italy<br />
+        Email: <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a></p>
+        <h4>Service Description</h4>
+        <p>Tradelia AI provides data analysis tools and reporting through academic methodology. The Service includes interactive dashboards and visualization tools.</p>
+        <p><strong>IMPORTANT:</strong> The Service does not constitute financial advice, investment or buy/sell recommendations.</p>
+        <h4>Paid Services</h4>
+        <p>On-demand services: you pay only for what you request, without recurring subscriptions. Invoicing via Xolo Go. Right of withdrawal within 14 days of delivery.</p>
+        <h4>Limitations of Liability</h4>
+        <p>Data and analyses are provided "as is" without warranties of accuracy or completeness. Tradelia AI is not responsible for investment decisions based on the material provided.</p>
+        <h4>Applicable Law</h4>
+        <p>These terms are governed by Italian law. For disputes, the competent court is Isernia (IS), Italy.</p>
+        <p><a href="/terms.html" target="_blank" class="mail-link">Read full terms →</a></p>
+      `,
     },
   };
 
@@ -224,6 +298,8 @@ function renderLegalOverlay() {
         <nav class="legal-tabs" role="tablist" aria-label="Sezioni legali">
           <button class="legal-tab" role="tab" id="tab-mifid" aria-controls="panel-mifid" aria-selected="true">${t.mifidTab}</button>
           <button class="legal-tab" role="tab" id="tab-privacy" aria-controls="panel-privacy" aria-selected="false">${t.privacyTab}</button>
+          <button class="legal-tab" role="tab" id="tab-cookie" aria-controls="panel-cookie" aria-selected="false">${t.cookieTab}</button>
+          <button class="legal-tab" role="tab" id="tab-terms" aria-controls="panel-terms" aria-selected="false">${t.termsTab}</button>
         </nav>
         <div class="legal-body">
           <section id="panel-mifid" role="tabpanel" aria-labelledby="tab-mifid">
@@ -231,6 +307,12 @@ function renderLegalOverlay() {
           </section>
           <section id="panel-privacy" role="tabpanel" aria-labelledby="tab-privacy" hidden>
             ${t.privacyContent}
+          </section>
+          <section id="panel-cookie" role="tabpanel" aria-labelledby="tab-cookie" hidden>
+            ${t.cookieContent}
+          </section>
+          <section id="panel-terms" role="tabpanel" aria-labelledby="tab-terms" hidden>
+            ${t.termsContent}
           </section>
         </div>
         <footer class="legal-ftr">
@@ -265,15 +347,31 @@ function createLegalOverlay() {
   const btnAccept = overlayEl.querySelector('#btn-accept-legal');
   const tabM = overlayEl.querySelector('#tab-mifid');
   const tabP = overlayEl.querySelector('#tab-privacy');
+  const tabC = overlayEl.querySelector('#tab-cookie');
+  const tabT = overlayEl.querySelector('#tab-terms');
   const panelM = overlayEl.querySelector('#panel-mifid');
   const panelP = overlayEl.querySelector('#panel-privacy');
+  const panelC = overlayEl.querySelector('#panel-cookie');
+  const panelT = overlayEl.querySelector('#panel-terms');
 
   function showTab(which) {
-    const mifid = which === 'mifid';
-    if (tabM) tabM.setAttribute('aria-selected', mifid ? 'true' : 'false');
-    if (tabP) tabP.setAttribute('aria-selected', mifid ? 'false' : 'true');
-    if (panelM) panelM.hidden = !mifid;
-    if (panelP) panelP.hidden = mifid;
+    // Reset all tabs
+    [tabM, tabP, tabC, tabT].forEach(tab => {
+      if (tab) tab.setAttribute('aria-selected', 'false');
+    });
+    [panelM, panelP, panelC, panelT].forEach(panel => {
+      if (panel) panel.hidden = true;
+    });
+
+    // Show selected tab
+    const tabs = { mifid: tabM, privacy: tabP, cookie: tabC, terms: tabT };
+    const panels = { mifid: panelM, privacy: panelP, cookie: panelC, terms: panelT };
+    
+    const selectedTab = tabs[which];
+    const selectedPanel = panels[which];
+    
+    if (selectedTab) selectedTab.setAttribute('aria-selected', 'true');
+    if (selectedPanel) selectedPanel.hidden = false;
   }
 
   function openLegal(which = 'mifid', blocking = true) {
@@ -283,7 +381,8 @@ function createLegalOverlay() {
     if (blocking) overlayEl.setAttribute('data-blocking', 'true');
     else overlayEl.removeAttribute('data-blocking');
     setTimeout(() => {
-      const targetTab = which === 'privacy' ? tabP : tabM;
+      const tabs = { mifid: tabM, privacy: tabP, cookie: tabC, terms: tabT };
+      const targetTab = tabs[which];
       if (targetTab) targetTab.focus();
     }, 0);
   }
@@ -295,6 +394,8 @@ function createLegalOverlay() {
 
   if (tabM) tabM.addEventListener('click', () => showTab('mifid'));
   if (tabP) tabP.addEventListener('click', () => showTab('privacy'));
+  if (tabC) tabC.addEventListener('click', () => showTab('cookie'));
+  if (tabT) tabT.addEventListener('click', () => showTab('terms'));
 
   if (btnAccept) {
     btnAccept.addEventListener('click', () => {

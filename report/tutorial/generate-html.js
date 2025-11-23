@@ -10,7 +10,7 @@ const __dirname = dirname(__filename);
 
 function getTemplateBase(tutorialName) {
   return `<!DOCTYPE html>
-<html lang="it" data-theme="light">
+<html lang="it" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -46,7 +46,7 @@ function getTemplateBase(tutorialName) {
   <link rel="stylesheet" href="/report/assets/css/report-layout.css" />
   <link rel="stylesheet" href="/report/assets/css/glossary-drawer.css" />
   <link rel="stylesheet" href="/report/assets/css/glossary-popup.css" />
-  <link rel="stylesheet" href="/report/tutorial-light.css" />
+  <!-- tutorial-light.css rimosso - Best Practice 2025: solo tema dark -->
 </head>
 <body>
   <!-- HEADER SLOT -->
