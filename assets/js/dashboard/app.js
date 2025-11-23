@@ -266,31 +266,12 @@ export async function initDashboard() {
         return;
       }
 
-      // BEST PRACTICE: Su mobile, tap singolo espande card, tap doppio apre modulo
-      const isMobile = window.innerWidth <= 768;
-      if (isMobile) {
-        const isExpanded = card.dataset.expanded === "true";
-        if (!isExpanded) {
-          // Primo tap: espandi card per mostrare descrizione
-          e.preventDefault();
-          card.dataset.expanded = "true";
-          // Secondo tap (dopo 300ms) apre il modulo
-          setTimeout(() => {
-            if (card.dataset.expanded === "true") {
-              const moduleId = card.dataset.module;
-              if (moduleId) {
-                window.location.hash = moduleId;
-              }
-            }
-          }, 300);
-          return;
-        }
-      }
-
-      // Su desktop o tap su card già espansa, apri il modulo
+      // BEST PRACTICE: Su mobile, tap singolo apre direttamente il modulo (più semplice)
+      // Rimossa logica doppio tap che confondeva gli utenti
       const moduleId = card.dataset.module;
       if (moduleId) {
         e.preventDefault();
+        e.stopPropagation();
         window.location.hash = moduleId;
       }
     });
