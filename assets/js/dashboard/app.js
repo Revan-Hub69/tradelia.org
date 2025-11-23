@@ -189,16 +189,26 @@ export async function initDashboard() {
   const { setupHapticFeedback } = await import("./haptic-feedback.js");
   setupHapticFeedback();
 
-  // BEST PRACTICE: Handle hash navigation with History API for back button support
+  // BEST PRACTICE: Su mobile, pannelli chiusi di default
+  const isMobile = window.innerWidth <= 768;
   const hash = window.location.hash.slice(1);
-  if (hash) {
+
+  if (hash && !isMobile) {
+    // Desktop: apri se c'è hash
     showModule(hash);
+  } else {
+    // Mobile: chiudi tutto e mostra solo moduli view
+    closeModule();
   }
 
   // Handle hash changes
   window.addEventListener("hashchange", () => {
     const newHash = window.location.hash.slice(1);
-    showModule(newHash || null);
+    if (newHash) {
+      showModule(newHash);
+    } else {
+      closeModule();
+    }
   });
 
   // BEST PRACTICE: Handle browser back button with History API (Mobile UX Patterns)
