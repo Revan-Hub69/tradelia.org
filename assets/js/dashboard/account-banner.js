@@ -189,6 +189,42 @@ function renderBanner(container, role, planData) {
  * Bind event listeners al banner
  */
 function bindBannerEvents(container, role) {
+  // FORZA STILI INLINE PER TOGGLE SU MOBILE
+  if (window.innerWidth <= 768) {
+    const toggles = container.querySelectorAll(".banner-toggle-compact");
+    toggles.forEach((toggle) => {
+      toggle.style.display = "flex";
+      toggle.style.flexDirection = "row";
+      toggle.style.alignItems = "center";
+      toggle.style.gap = "6px";
+      toggle.style.flexShrink = "0";
+      toggle.style.whiteSpace = "nowrap";
+
+      const slider = toggle.querySelector(".banner-toggle-slider");
+      if (slider) {
+        slider.style.order = "1";
+        slider.style.flexShrink = "0";
+      }
+
+      const label = toggle.querySelector(".banner-toggle-label");
+      if (label) {
+        label.style.order = "2";
+        label.style.marginLeft = "6px";
+        label.style.marginTop = "0";
+      }
+    });
+
+    // Forza anche account-banner-actions in riga
+    const actions = container.querySelector(".account-banner-actions");
+    if (actions) {
+      actions.style.display = "flex";
+      actions.style.flexDirection = "row";
+      actions.style.alignItems = "center";
+      actions.style.gap = "4px";
+      actions.style.flexWrap = "nowrap";
+    }
+  }
+
   // Auth modal button (guest users)
   const authModalBtn = container.querySelector("#btn-open-auth-modal");
   if (authModalBtn) {
@@ -427,6 +463,38 @@ export async function refreshAccountBanner() {
   if (bannerContainer) {
     renderBanner(bannerContainer, currentRole, currentPlanData);
     bindBannerEvents(bannerContainer, currentRole);
+
+    // Forza stili anche dopo resize
+    window.addEventListener("resize", () => {
+      if (window.innerWidth <= 768) {
+        const toggles = bannerContainer.querySelectorAll(".banner-toggle-compact");
+        toggles.forEach((toggle) => {
+          toggle.style.display = "flex";
+          toggle.style.flexDirection = "row";
+          toggle.style.alignItems = "center";
+          toggle.style.gap = "6px";
+
+          const slider = toggle.querySelector(".banner-toggle-slider");
+          if (slider) {
+            slider.style.order = "1";
+          }
+
+          const label = toggle.querySelector(".banner-toggle-label");
+          if (label) {
+            label.style.order = "2";
+            label.style.marginLeft = "6px";
+            label.style.marginTop = "0";
+          }
+        });
+
+        const actions = bannerContainer.querySelector(".account-banner-actions");
+        if (actions) {
+          actions.style.display = "flex";
+          actions.style.flexDirection = "row";
+          actions.style.flexWrap = "nowrap";
+        }
+      }
+    });
   }
 }
 
