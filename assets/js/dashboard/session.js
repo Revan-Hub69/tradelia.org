@@ -4,6 +4,8 @@
  * Gestisce validità token, periodic check, auto-logout
  */
 
+import { safeLog } from "./security-utils.js";
+
 const TOKEN_KEY = "tradelia-access-token-v1";
 const CHECK_INTERVAL = 5 * 60 * 1000; // 5 minuti
 
@@ -53,7 +55,7 @@ export async function checkTokenValidity() {
 
     return { valid: true, data };
   } catch (error) {
-    console.error("[Session] Errore verifica token:", error);
+    safeLog("error", "[Session] Errore verifica token:", error);
     // In caso di errore, non facciamo logout (potrebbe essere problema temporaneo)
     return { valid: true, error: true };
   }
@@ -111,7 +113,7 @@ export function startSessionCheck() {
   checkTokenValidity().then((result) => {
     // Log per debug (non reindirizza)
     if (!result.valid && result.reason !== "error" && result.reason !== "missing_token") {
-      console.log("[Session] Token non valido:", result.reason);
+      safeLog("log", "[Session] Token non valido:", result.reason);
       // Mostra warning se necessario, ma non reindirizza
     }
   });
@@ -125,7 +127,7 @@ export function startSessionCheck() {
     const result = await checkTokenValidity();
     // Log per debug (non reindirizza)
     if (!result.valid && result.reason !== "error" && result.reason !== "missing_token") {
-      console.log("[Session] Token non valido:", result.reason);
+      safeLog("log", "[Session] Token non valido:", result.reason);
       // Mostra warning se necessario, ma non reindirizza
     }
   }, CHECK_INTERVAL);

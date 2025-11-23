@@ -54,8 +54,10 @@ export async function initDashboard() {
 
   // Log per debug (non blocca l'accesso)
   if (!authCheck.authenticated) {
-    // eslint-disable-next-line no-console
-    console.log("[Dashboard] Accesso guest - token non presente o non valido");
+    // Import dinamico per evitare circolarità
+    import("./security-utils.js").then(({ safeLog }) => {
+      safeLog("log", "[Dashboard] Accesso guest - token non presente o non valido");
+    });
   }
 
   // NON fare redirect automatico - accesso libero sempre consentito

@@ -5,6 +5,7 @@
  */
 
 import { keyboardNav } from "./keyboard-nav.js";
+import { safeLog } from "./security-utils.js";
 
 const MODAL_ID = "auth-modal";
 
@@ -583,7 +584,7 @@ async function handleCodeSubmit(e) {
       codeInput?.focus();
     }
   } catch (error) {
-    console.error("[AuthModal] Errore validazione codice:", error);
+    safeLog("error", "[AuthModal] Errore validazione codice:", error);
     if (window.showToast) {
       window.showToast("Errore di connessione. Riprova.", "error");
     }
@@ -648,7 +649,7 @@ async function handleLoginSubmit(e) {
         }
       }
 
-      // Handle email not verified
+      // SECURITY: Messaggi di errore generici (non rivelare se email esiste)
       if (data.emailNotVerified) {
         if (window.showToast) {
           window.showToast(
@@ -657,8 +658,9 @@ async function handleLoginSubmit(e) {
           );
         }
       } else {
+        // Messaggio generico per non rivelare informazioni
         if (window.showToast) {
-          window.showToast(data.error || "Email o password non corretti", "error");
+          window.showToast("Credenziali non valide. Riprova.", "error");
         }
       }
       passwordInput?.focus();
@@ -683,7 +685,7 @@ async function handleLoginSubmit(e) {
       }, 1000);
     }
   } catch (error) {
-    console.error("[AuthModal] Errore login:", error);
+    safeLog("error", "[AuthModal] Errore login:", error);
     if (window.showToast) {
       window.showToast("Errore di connessione. Riprova.", "error");
     }
@@ -804,7 +806,7 @@ async function handleSignupSubmit(e) {
       hideAuthModal();
     }
   } catch (error) {
-    console.error("[AuthModal] Errore registrazione:", error);
+    safeLog("error", "[AuthModal] Errore registrazione:", error);
     if (window.showToast) {
       window.showToast(error.message || "Errore durante la registrazione", "error");
     }
@@ -924,7 +926,7 @@ async function checkEmailAvailability(email) {
     }
     return null;
   } catch (error) {
-    console.error("[AuthModal] Errore check email:", error);
+    safeLog("error", "[AuthModal] Errore check email:", error);
     return null;
   }
 }
@@ -1059,7 +1061,7 @@ async function handleResetPasswordRequest() {
       }
     }
   } catch (error) {
-    console.error("[AuthModal] Errore reset password:", error);
+    safeLog("error", "[AuthModal] Errore reset password:", error);
     if (window.showToast) {
       window.showToast("Errore di connessione. Riprova.", "error");
     }

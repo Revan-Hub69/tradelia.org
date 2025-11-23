@@ -5,6 +5,8 @@
  * Usa API get-user-plan.js per stato plan e usage
  */
 
+import { safeLog } from "./security-utils.js";
+
 const API_BASE = "/api";
 
 let userRoleCache = null;
@@ -45,7 +47,7 @@ export async function getUserRole() {
 
       // Verifica che il ruolo sia valido
       if (!["guest", "pro", "desk"].includes(role)) {
-        console.warn("[Auth] Ruolo non valido dal piano:", role, "- default a guest");
+        safeLog("warn", "[Auth] Ruolo non valido dal piano:", role, "- default a guest");
         role = "guest";
       }
 
@@ -60,13 +62,13 @@ export async function getUserRole() {
       };
     } else {
       // Token non valido o scaduto, trattiamo come guest
-      console.warn("[Auth] Token non valido o scaduto, utente trattato come guest.");
+      safeLog("warn", "[Auth] Token non valido o scaduto, utente trattato come guest.");
       localStorage.removeItem("tradelia-access-token-v1");
       userRoleCache = { role: "guest", user: null, isAdmin: false };
       userPlanDataCache = { plan: null, usage: null };
     }
   } catch (error) {
-    console.error("[Auth] Errore durante la verifica del ruolo utente:", error);
+    safeLog("error", "[Auth] Errore durante la verifica del ruolo utente:", error);
     userRoleCache = { role: "guest", user: null, isAdmin: false };
     userPlanDataCache = { plan: null, usage: null };
   }
@@ -89,7 +91,7 @@ export async function logout() {
     userPlanDataCache = { plan: null, usage: null };
     window.location.href = "/accesso.html?reason=logout";
   } catch (error) {
-    console.error("[Auth] Errore durante il logout:", error);
+    safeLog("error", "[Auth] Errore durante il logout:", error);
     alert("Errore durante il logout. Riprova.");
   }
 }

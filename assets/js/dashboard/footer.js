@@ -4,10 +4,12 @@
  * Footer tecnico con social, contatti, legale e info tecniche
  */
 
+import { escapeHtml, safeLog } from "./security-utils.js";
+
 export async function initFooter() {
   const footerContainer = document.getElementById("dashboard-footer");
   if (!footerContainer) {
-    console.warn("[Footer] Container non trovato");
+    safeLog("warn", "[Footer] Container non trovato");
     return;
   }
 
@@ -96,7 +98,7 @@ async function loadTechnicalInfo(container) {
       buildEl.textContent = new Date().toISOString().split("T")[0];
     }
   } catch (e) {
-    console.error("[Footer] Errore caricamento info tecniche:", e);
+    safeLog("error", "[Footer] Errore caricamento info tecniche:", e);
   }
 }
 
@@ -122,7 +124,7 @@ function bindLegalButtons(container) {
           if (window.openLegalOverlay) {
             window.openLegalOverlay(tab, false);
           } else {
-            console.warn("[Footer] openLegalOverlay non disponibile");
+            safeLog("warn", "[Footer] openLegalOverlay non disponibile");
           }
         }, 400);
       }
@@ -222,7 +224,7 @@ function openContactsModal(type) {
   const bodyEl = modal.querySelector("#contacts-modal-body");
 
   if (!titleEl || !bodyEl) {
-    console.error("[Footer] Elementi modale non trovati");
+    safeLog("error", "[Footer] Elementi modale non trovati");
     return;
   }
 
@@ -276,14 +278,18 @@ function openContactsModal(type) {
       down: "#f44336",
     };
 
+    // SECURITY: Sanitizza dati dinamici
     const servicesHTML = services
       .map((service) => {
+        const safeName = escapeHtml(service.name);
+        const safeStatus = escapeHtml(statusLabels[service.status] || service.status);
+        const safeColor = escapeHtml(statusColors[service.status] || "#999");
         return `
           <div class="status-service-item">
-            <div class="status-service-name">${service.name}</div>
+            <div class="status-service-name">${safeName}</div>
             <div class="status-service-status">
-              <span class="status-indicator" style="background: ${statusColors[service.status]}; box-shadow: 0 0 8px ${statusColors[service.status]}80;"></span>
-              <span>${statusLabels[service.status]}</span>
+              <span class="status-indicator" style="background: ${safeColor}; box-shadow: 0 0 8px ${safeColor}80;"></span>
+              <span>${safeStatus}</span>
             </div>
           </div>
         `;
