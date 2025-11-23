@@ -1,7 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { listReportFiles, requireAdminAuth, trimString } from "./_utils";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+// NOTA: Funzione disabilitata per rispettare limite Vercel Hobby (12 funzioni)
+// export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!requireAdminAuth(req, res)) return;
 
   if (req.method !== "GET") {

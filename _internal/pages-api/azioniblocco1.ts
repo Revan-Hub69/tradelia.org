@@ -4,7 +4,9 @@ import axios from "axios";
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY!;
 const TWELVE_API_KEY = process.env.TWELVE_API_KEY!;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+// NOTA: Funzione disabilitata per rispettare limite Vercel Hobby (12 funzioni)
+// export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const symbol = req.query.symbol as string;
   if (!symbol) return res.status(400).json({ error: "Missing symbol parameter" });
 

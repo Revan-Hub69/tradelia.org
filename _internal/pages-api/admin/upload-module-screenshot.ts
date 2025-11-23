@@ -14,7 +14,9 @@ export const config = {
   },
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+// NOTA: Funzione disabilitata per rispettare limite Vercel Hobby (12 funzioni)
+// export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!requireAdminAuth(req, res)) return;
 
   if (req.method !== "POST") {
