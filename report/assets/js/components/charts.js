@@ -18,8 +18,6 @@ async function loadChartJS() {
   // Chart è già disponibile grazie all'import statico
   Logger.debug('Charts', 'Chart.js caricato da bundle');
   return ChartJS;
-    throw err;
-  }
 }
 
 // ===== CONFIGURAZIONE GLOBALE CHART.JS =====
