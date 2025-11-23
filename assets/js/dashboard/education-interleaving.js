@@ -392,4 +392,3 @@ async function getAuthToken() {
   }
 }
 
-export { applyInterleaving, getInterleavedPracticeSession, initInterleavedPractice };

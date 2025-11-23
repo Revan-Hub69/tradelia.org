@@ -486,4 +486,3 @@ async function getAuthToken() {
   }
 }
 
-export { initLearningAnalytics };

@@ -338,4 +338,3 @@ async function getAuthToken() {
   }
 }
 
-export { initPersonalizedPathSelector, getPersonalizedPath };

@@ -456,4 +456,3 @@ async function getAuthToken() {
   }
 }
 
-export { showPreLessonAssessment, showPostLessonReflection, showLearningGoalsModal };
