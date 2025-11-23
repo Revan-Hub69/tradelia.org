@@ -813,8 +813,26 @@ async function handleLogin(req, res) {
   }
 
   try {
-    // Sign in with Supabase
-    const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
+    // Sign in with Supabase Auth
+    // BEST PRACTICE: Usa service role per signInWithPassword (richiede client anonimo per utente)
+    // Creiamo un client anonimo per l'autenticazione utente
+    const { createClient } = await import("@supabase/supabase-js");
+    const SUPABASE_URL = process.env.SUPABASE_URL;
+    const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      console.error("[Auth] Variabili ambiente Supabase mancanti");
+      throw new HttpError(500, "Configurazione server non valida");
+    }
+    
+    const anonClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    });
+    
+    const { data: authData, error: signInError } = await anonClient.auth.signInWithPassword({
       email: sanitizedEmail,
       password,
     });
