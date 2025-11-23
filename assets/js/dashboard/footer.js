@@ -22,7 +22,8 @@ function renderFooter(container) {
   const year = new Date().getFullYear();
   // BEST PRACTICE: Usa percorso relativo alla root del sito (funziona sempre)
   // Non usare window.location.origin perché può causare problemi con CORS o base path
-  const logoPath = '/logos/tradelia-logo.svg';
+  // Aggiungi versione per evitare cache del browser
+  const logoPath = '/logos/tradelia-logo.svg?v=3';
 
   container.innerHTML = `
     <div class="footer-content">
