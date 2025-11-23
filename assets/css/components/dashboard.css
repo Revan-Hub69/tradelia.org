@@ -239,11 +239,24 @@
 }
 
 .security-badge-text {
-  display: none;
+  display: inline;
 }
 
-@media (min-width: 768px) {
+/* BEST PRACTICE: Security badge sempre visibile su mobile */
+@media (max-width: 768px) {
+  .security-badge {
+    padding: 4px var(--spacing-xs);
+    font-size: var(--fs-10, 10px);
+    gap: 4px;
+  }
+
+  .security-badge svg {
+    width: 14px;
+    height: 14px;
+  }
+
   .security-badge-text {
+    font-size: var(--fs-10, 10px);
     display: inline;
   }
 }
