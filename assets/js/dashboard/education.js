@@ -61,26 +61,88 @@ async function initEducation() {
 
 /**
  * Load education dashboard
+ * Supporta sia utenti autenticati (Supabase) che guest (localStorage)
  */
 async function loadEducationDashboard(container) {
   try {
-    // Get user progress
-    const progressResponse = await fetch(`${API_BASE}?action=user-progress`, {
-      headers: {
-        Authorization: `Bearer ${await getAuthToken()}`,
-      },
-    });
+    const token = await getAuthToken();
+    let progress;
 
-    if (!progressResponse.ok) {
-      throw new Error("Errore caricamento progresso");
+    if (token) {
+      // Utente autenticato: carica da API
+      try {
+        const progressResponse = await fetch(`${API_BASE}?action=user-progress`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (progressResponse.ok) {
+          const data = await progressResponse.json();
+          progress = data.progress;
+        } else {
+          // Fallback a localStorage se API fallisce
+          progress = loadProgressFromLocalStorage();
+        }
+      } catch (error) {
+        safeLog("warn", "[Education] API fallita, uso localStorage:", error);
+        progress = loadProgressFromLocalStorage();
+      }
+    } else {
+      // Utente guest: carica da localStorage
+      progress = loadProgressFromLocalStorage();
     }
 
-    const { progress } = await progressResponse.json();
+    // Se non c'è progresso, inizializza struttura base
+    if (!progress) {
+      progress = {
+        modules: [],
+        stats: {
+          current_level: "Foundation",
+          total_points: 0,
+          completed_modules: 0,
+          completed_lessons: 0,
+          modules_completed: 0,
+          current_streak_days: 0,
+        },
+        badges: [],
+      };
+    }
+
+    // Carica moduli se non presenti (anche senza auth)
+    if (!progress.modules || progress.modules.length === 0) {
+      try {
+        const modulesResponse = await fetch(`${API_BASE}?action=modules`);
+        if (modulesResponse.ok) {
+          const { modules } = await modulesResponse.json();
+          if (modules && modules.length > 0) {
+            progress.modules = modules;
+            // Per guest users, aggiungi canAccess a tutti i moduli
+            progress.modules.forEach(module => {
+              module.canAccess = true;
+            });
+          }
+        }
+      } catch (e) {
+        safeLog("warn", "[Education] Errore caricamento moduli:", e);
+      }
+    }
 
     // Render dashboard
     renderEducationDashboard(container, progress);
   } catch (error) {
     safeLog("error", "[Education] Errore loadEducationDashboard:", error);
+    // Fallback: carica da localStorage
+    try {
+      const progress = loadProgressFromLocalStorage();
+      if (progress) {
+        renderEducationDashboard(container, progress);
+        return;
+      }
+    } catch (e) {
+      safeLog("error", "[Education] Errore anche su localStorage:", e);
+    }
+
     container.innerHTML = `
       <div class="error-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="48" height="48">
@@ -90,16 +152,70 @@ async function loadEducationDashboard(container) {
         </svg>
         <h3>Errore caricamento</h3>
         <p>Impossibile caricare il percorso formativo. Riprova più tardi.</p>
+        <p style="margin-top: var(--sp-3); font-size: var(--fs-13); color: var(--muted)">
+          Il percorso formativo funziona anche senza registrazione. Il progresso viene salvato localmente nel browser.
+        </p>
       </div>
     `;
   }
 }
 
 /**
+ * Load progress from localStorage (guest users)
+ */
+function loadProgressFromLocalStorage() {
+  try {
+    const stored = localStorage.getItem("tradelia_education_progress");
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch (e) {
+    safeLog("warn", "[Education] Errore lettura localStorage:", e);
+  }
+  return null;
+}
+
+/**
+ * Save progress to localStorage (guest users)
+ */
+function saveProgressToLocalStorage(progress) {
+  try {
+    localStorage.setItem("tradelia_education_progress", JSON.stringify(progress));
+  } catch (e) {
+    safeLog("warn", "[Education] Errore scrittura localStorage:", e);
+  }
+}
+
+/**
  * Render education dashboard
  */
-function renderEducationDashboard(container, progress) {
+async function renderEducationDashboard(container, progress) {
   const { modules, stats, badges } = progress;
+  
+  // Aggiungi progresso da localStorage ai moduli se non presente (guest users)
+  const token = await getAuthToken();
+  if (!token && progress.lesson_progress) {
+    modules.forEach(module => {
+      if (!module.userProgress) {
+        // Calcola progresso modulo da lesson_progress
+        const moduleLessons = module.lessons || [];
+        const completedLessons = moduleLessons.filter(lesson => {
+          const lessonProgress = progress.lesson_progress[lesson.id];
+          return lessonProgress?.status === "completed";
+        }).length;
+        
+        const progressPct = moduleLessons.length > 0 
+          ? Math.round((completedLessons / moduleLessons.length) * 100)
+          : 0;
+        
+        module.userProgress = {
+          progress_percentage: progressPct,
+          status: progressPct === 100 ? "completed" : progressPct > 0 ? "in_progress" : "not_started",
+        };
+        module.canAccess = true; // Guest può accedere a tutti i moduli
+      }
+    });
+  }
 
   container.innerHTML = `
     <div class="education-dashboard">
@@ -359,16 +475,45 @@ async function getRecentQuestionsForPractice() {
 
 /**
  * Open module view
+ * Supporta sia utenti autenticati che guest
  */
 async function openModule(moduleId) {
   try {
+    const token = await getAuthToken();
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    
     const response = await fetch(`${API_BASE}?action=module&moduleId=${moduleId}`, {
-      headers: {
-        Authorization: `Bearer ${await getAuthToken()}`,
-      },
+      headers,
     });
 
     if (!response.ok) {
+      // Se non autenticato, prova a caricare modulo pubblico (senza auth header)
+      if (!token) {
+        const publicResponse = await fetch(`${API_BASE}?action=module&moduleId=${moduleId}`);
+        if (publicResponse.ok) {
+          const { module } = await publicResponse.json();
+          // Aggiungi progresso da localStorage
+          const progress = loadProgressFromLocalStorage();
+          const moduleProgress = progress?.lesson_progress || {};
+          
+          if (module.lessons) {
+            module.lessons = module.lessons.map(lesson => ({
+              ...lesson,
+              userProgress: moduleProgress[lesson.id] || { status: "not_started" },
+            }));
+          }
+          
+          module.userProgress = module.userProgress || {
+            progress_percentage: 0,
+            status: "not_started",
+          };
+          module.canAccess = true;
+          
+          currentModule = module;
+          renderModuleView(module);
+          return;
+        }
+      }
       throw new Error("Errore caricamento modulo");
     }
 
@@ -498,16 +643,33 @@ function renderLessonItem(lesson, index) {
  * Paper: Microlearning (Hug, 2016) - Track session time
  * Paper: Learning Analytics (Siemens & Long, 2011) - Track engagement
  * Paper: Metacognition (Zimmerman, 2002) - Pre-lesson assessment
+ * Supporta sia utenti autenticati che guest
  */
 async function openLesson(lessonId) {
   try {
+    const token = await getAuthToken();
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    
     const response = await fetch(`${API_BASE}?action=lesson&lessonId=${lessonId}`, {
-      headers: {
-        Authorization: `Bearer ${await getAuthToken()}`,
-      },
+      headers,
     });
 
     if (!response.ok) {
+      // Se non autenticato, prova comunque (l'API dovrebbe restituire la lezione pubblica)
+      if (!token && response.status === 401) {
+        // Prova senza auth header
+        const publicResponse = await fetch(`${API_BASE}?action=lesson&lessonId=${lessonId}`);
+        if (publicResponse.ok) {
+          const { lesson } = await publicResponse.json();
+          // Aggiungi progresso da localStorage
+          const progress = loadProgressFromLocalStorage();
+          const lessonProgress = progress?.lesson_progress?.[lessonId] || { status: "not_started" };
+          lesson.userProgress = lessonProgress;
+          currentLesson = lesson;
+          renderLessonView(lesson);
+          return;
+        }
+      }
       throw new Error("Errore caricamento lezione");
     }
 
@@ -622,31 +784,104 @@ function renderLessonView(lesson) {
 
 /**
  * Update lesson progress
+ * Supporta sia utenti autenticati (API) che guest (localStorage)
  */
 async function updateLessonProgress(lessonId, status, timeSpentMinutes = 0) {
-  try {
-    const response = await fetch(`${API_BASE}?action=update-lesson-progress`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${await getAuthToken()}`,
-      },
-      body: JSON.stringify({
+  const token = await getAuthToken();
+  
+  // Se autenticato, salva su API
+  if (token) {
+    try {
+      const response = await fetch(`${API_BASE}?action=update-lesson-progress`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
         lessonId,
         status,
         timeSpentMinutes,
       }),
     });
 
-    if (!response.ok) {
-      throw new Error("Errore aggiornamento progresso");
+      if (!response.ok) {
+        throw new Error("Errore aggiornamento progresso");
+      }
+
+      const { progress } = await response.json();
+      return progress;
+    } catch (error) {
+      safeLog("warn", "[Education] API fallita, salvo in localStorage:", error);
+      // Fallback a localStorage
+      return updateProgressInLocalStorage(lessonId, status, timeSpentMinutes);
+    }
+  } else {
+    // Utente guest: salva solo in localStorage
+    return updateProgressInLocalStorage(lessonId, status, timeSpentMinutes);
+  }
+}
+
+/**
+ * Update progress in localStorage (guest users)
+ */
+function updateProgressInLocalStorage(lessonId, status, timeSpentMinutes = 0) {
+  try {
+    let progress = loadProgressFromLocalStorage();
+    
+    if (!progress) {
+      progress = {
+        modules: [],
+        stats: {
+          current_level: "Foundation",
+          total_points: 0,
+          completed_modules: 0,
+          completed_lessons: 0,
+          modules_completed: 0,
+          current_streak_days: 0,
+        },
+        badges: [],
+        lesson_progress: {},
+      };
     }
 
-    const { progress } = await response.json();
-    return progress;
-  } catch (error) {
-    safeLog("error", "[Education] Errore updateLessonProgress:", error);
-    throw error;
+    // Inizializza lesson_progress se non esiste
+    if (!progress.lesson_progress) {
+      progress.lesson_progress = {};
+    }
+
+    // Aggiorna progresso lezione
+    const lessonProgress = progress.lesson_progress[lessonId] || {};
+    lessonProgress.status = status;
+    lessonProgress.last_accessed_at = new Date().toISOString();
+    
+    if (status === "in_progress" && !lessonProgress.started_at) {
+      lessonProgress.started_at = new Date().toISOString();
+    }
+    
+    if (status === "completed") {
+      lessonProgress.completed_at = new Date().toISOString();
+      if (!progress.stats.completed_lessons) {
+        progress.stats.completed_lessons = 0;
+      }
+      if (lessonProgress.status !== "completed") {
+        progress.stats.completed_lessons += 1;
+      }
+    }
+    
+    if (timeSpentMinutes) {
+      lessonProgress.time_spent_minutes = timeSpentMinutes;
+    }
+
+    progress.lesson_progress[lessonId] = lessonProgress;
+
+    // Salva in localStorage
+    saveProgressToLocalStorage(progress);
+
+    return lessonProgress;
+  } catch (e) {
+    safeLog("error", "[Education] Errore updateProgressInLocalStorage:", e);
+    throw e;
   }
 }
 
