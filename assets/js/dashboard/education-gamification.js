@@ -6,10 +6,9 @@
  */
 
 import { safeLog, escapeHtml } from "./security-utils.js";
-import { getClientSupabase } from "./supabase-client.js";
+import { getSupabaseClient } from "./supabase-client.js";
 
 const API_BASE = "/api/education";
-const supabase = getClientSupabase();
 
 /**
  * XP System
@@ -200,6 +199,10 @@ export class XPSystem {
 
   async getAuthToken() {
     try {
+      const supabase = await getSupabaseClient();
+      if (!supabase) {
+        return null;
+      }
       const {
         data: { session },
       } = await supabase.auth.getSession();
@@ -459,7 +462,18 @@ export class StreakSystem {
   }
 
   async getAuthToken() {
-    return null;
+    try {
+      const supabase = await getSupabaseClient();
+      if (!supabase) {
+        return null;
+      }
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      return session?.access_token || null;
+    } catch {
+      return null;
+    }
   }
 
   loadProgress() {
@@ -556,7 +570,18 @@ export class QuestSystem {
   }
 
   async getAuthToken() {
-    return null;
+    try {
+      const supabase = await getSupabaseClient();
+      if (!supabase) {
+        return null;
+      }
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      return session?.access_token || null;
+    } catch {
+      return null;
+    }
   }
 }
 
