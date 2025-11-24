@@ -12,11 +12,11 @@ const supabase = getServiceSupabase();
 // Consolidata in api/admin.js?action=export-*
 // export default async function handler(req, res) {
 async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
@@ -24,12 +24,14 @@ async function handler(req, res) {
     const { type } = req.query;
 
     switch (type) {
-      case 'data':
+      case "data":
         return await handleExportData(req, res);
-      case 'reports':
+      case "reports":
         return await handleExportReports(req, res);
       default:
-        return res.status(400).json({ ok: false, error: 'Tipo export non valido. Usa: data, reports' });
+        return res
+          .status(400)
+          .json({ ok: false, error: "Tipo export non valido. Usa: data, reports" });
     }
   } catch (error) {
     return handleRouteError(res, error);
@@ -37,20 +39,20 @@ async function handler(req, res) {
 }
 
 async function handleExportData(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ ok: false, error: 'Method not allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
 
   const { token } = req.body;
-  if (!token || typeof token !== 'string') {
-    throw new HttpError(401, 'Token mancante');
+  if (!token || typeof token !== "string") {
+    throw new HttpError(401, "Token mancante");
   }
 
   const context = await getAdminContextFromToken(token, { enforceAdmin: false });
   const userId = context.userId;
 
   if (!userId) {
-    throw new HttpError(401, 'Utente non autenticato');
+    throw new HttpError(401, "Utente non autenticato");
   }
 
   // Esporta dati utente
@@ -58,7 +60,7 @@ async function handleExportData(req, res) {
     timestamp: new Date().toISOString(),
     userId: userId,
     email: context.email || null,
-    plan: context.planRole || 'guest',
+    plan: context.planRole || "guest",
     // TODO: Aggiungere altri dati da esportare
   };
 
@@ -69,20 +71,20 @@ async function handleExportData(req, res) {
 }
 
 async function handleExportReports(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ ok: false, error: 'Method not allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
 
   const { token } = req.body;
-  if (!token || typeof token !== 'string') {
-    throw new HttpError(401, 'Token mancante');
+  if (!token || typeof token !== "string") {
+    throw new HttpError(401, "Token mancante");
   }
 
   const context = await getAdminContextFromToken(token, { enforceAdmin: false });
   const userId = context.userId;
 
   if (!userId) {
-    throw new HttpError(401, 'Utente non autenticato');
+    throw new HttpError(401, "Utente non autenticato");
   }
 
   // Esporta report preferiti
@@ -93,4 +95,3 @@ async function handleExportReports(req, res) {
     reports: [],
   });
 }
-

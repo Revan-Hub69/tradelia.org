@@ -2,17 +2,17 @@
 // Richiede: npm install sharp
 // Eseguire con: node scripts/generate-hero-image.js
 
-const sharp = require('sharp');
-const fs = require('fs');
-const path = require('path');
+const sharp = require("sharp");
+const fs = require("fs");
+const path = require("path");
 
-const imgDir = path.join(__dirname, '..', 'img');
-const svgPath = path.join(imgDir, 'hero-homepage.svg');
-const pngPath = path.join(imgDir, 'hero-homepage.png');
-const jpgPath = path.join(imgDir, 'hero-homepage.jpg');
+const imgDir = path.join(__dirname, "..", "img");
+const svgPath = path.join(imgDir, "hero-homepage.svg");
+const pngPath = path.join(imgDir, "hero-homepage.png");
+const jpgPath = path.join(imgDir, "hero-homepage.jpg");
 
 async function generateHeroImage() {
-  console.log('🎨 Generazione immagine hero...\n');
+  console.log("🎨 Generazione immagine hero...\n");
 
   // Verifica che la directory img esista
   if (!fs.existsSync(imgDir)) {
@@ -35,10 +35,10 @@ async function generateHeroImage() {
 
     console.log(`✅ Generato: hero-homepage.jpg (1920x1080, ottimizzato)`);
 
-    console.log('\n✅ Generazione immagine hero completata!');
-    console.log('\n📋 Prossimi step:');
+    console.log("\n✅ Generazione immagine hero completata!");
+    console.log("\n📋 Prossimi step:");
     console.log("1. Verifica che l'immagine sia stata generata in /img/");
-    console.log('2. Aggiorna index.html per usare hero-homepage.jpg');
+    console.log("2. Aggiorna index.html per usare hero-homepage.jpg");
   } catch (err) {
     console.error(`❌ Errore generazione immagine hero:`, err.message);
   }

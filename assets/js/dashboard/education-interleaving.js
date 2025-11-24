@@ -3,7 +3,7 @@
  * Interleaving Implementation
  * Paper: Rohrer & Taylor (2007), Birnbaum et al. (2013)
  * "The Shuffling of Mathematics Problems Improves Learning"
- * 
+ *
  * Interleaving: mescolare problemi di tipi diversi invece di raggrupparli.
  * Migliora il transfer learning e la capacità di distinguere tra tipi di problemi.
  */
@@ -15,7 +15,7 @@ const API_BASE = "/api/education";
 /**
  * Apply interleaving to questions in a test
  * Paper: Rohrer & Taylor (2007) - Interleaving improves learning
- * 
+ *
  * @param {Array} questions - Original questions array
  * @param {string} strategy - 'interleaved' or 'blocked' (default: 'interleaved')
  * @returns {Array} - Reordered questions
@@ -37,7 +37,7 @@ export function applyInterleaving(questions, strategy = "interleaved") {
   // Interleaved: mix different types/topics
   // Paper: Birnbaum et al. (2013) - Optimal interleaving pattern
   const questionsByTopic = {};
-  
+
   questions.forEach((q, index) => {
     const topic = q.topic || q.bloom_level || "other";
     if (!questionsByTopic[topic]) {
@@ -48,11 +48,11 @@ export function applyInterleaving(questions, strategy = "interleaved") {
 
   const topics = Object.keys(questionsByTopic);
   const interleaved = [];
-  const maxLength = Math.max(...Object.values(questionsByTopic).map(arr => arr.length));
+  const maxLength = Math.max(...Object.values(questionsByTopic).map((arr) => arr.length));
 
   // Round-robin interleaving
   for (let i = 0; i < maxLength; i++) {
-    topics.forEach(topic => {
+    topics.forEach((topic) => {
       if (questionsByTopic[topic][i]) {
         interleaved.push(questionsByTopic[topic][i]);
       }
@@ -66,10 +66,10 @@ export function applyInterleaving(questions, strategy = "interleaved") {
  * Get interleaved practice session
  * Paper: Rohrer & Taylor (2007) - Interleaved practice sessions
  */
-export async function getInterleavedPracticeSession(moduleIds, options = {}) {
+export async function getInterleavedPracticeSession(moduleIds, _options = {}) {
   try {
     const token = await getAuthToken();
-    const { difficulty, count = 20 } = options;
+    const { difficulty, count = 20 } = _options || {};
 
     // Fetch questions from multiple modules/topics
     const response = await fetch(
@@ -86,10 +86,10 @@ export async function getInterleavedPracticeSession(moduleIds, options = {}) {
     }
 
     const { questions } = await response.json();
-    
+
     // Apply interleaving
     const interleavedQuestions = applyInterleaving(questions, "interleaved");
-    
+
     return interleavedQuestions;
   } catch (error) {
     safeLog("error", "[Interleaving] Errore getInterleavedPracticeSession:", error);
@@ -100,7 +100,7 @@ export async function getInterleavedPracticeSession(moduleIds, options = {}) {
 /**
  * Initialize interleaved practice session
  */
-export async function initInterleavedPractice(moduleIds, options = {}) {
+export async function initInterleavedPractice(moduleIds, _options = {}) {
   try {
     const container = document.getElementById("education-container");
     if (!container) {
@@ -117,7 +117,7 @@ export async function initInterleavedPractice(moduleIds, options = {}) {
     `;
 
     // Get interleaved questions
-    const questions = await getInterleavedPracticeSession(moduleIds, options);
+    const questions = await getInterleavedPracticeSession(moduleIds, _options);
 
     if (!questions || questions.length === 0) {
       container.innerHTML = `
@@ -137,7 +137,7 @@ export async function initInterleavedPractice(moduleIds, options = {}) {
     );
 
     // Render interleaved practice session
-    renderInterleavedPractice(container, questions, options);
+    renderInterleavedPractice(container, questions, _options);
   } catch (error) {
     safeLog("error", "[Interleaving] Errore initInterleavedPractice:", error);
     if (window.showToast) {
@@ -184,11 +184,15 @@ function renderInterleavedPractice(container, questions, options) {
         <button class="btn btn-primary" data-action="check-interleaved-answers">
           Verifica Risposte
         </button>
-        ${showExplanations ? `
+        ${
+          showExplanations
+            ? `
           <button class="btn btn-secondary" data-action="show-explanations" style="display: none;">
             Mostra Spiegazioni
           </button>
-        ` : ""}
+        `
+            : ""
+        }
       </div>
     </div>
   `;
@@ -217,17 +221,25 @@ function renderInterleavedQuestion(question, questionNumber) {
       </div>
       <div class="ip-question-text">${escapeHtml(question.question_text)}</div>
       
-      ${question.bloom_level ? `
+      ${
+        question.bloom_level
+          ? `
         <div class="ip-question-bloom">
           <span class="bloom-badge bloom-${question.bloom_level}">${getBloomLabel(question.bloom_level)}</span>
         </div>
-      ` : ""}
+      `
+          : ""
+      }
 
       <div class="ip-question-options">
-        ${question.education_question_options?.map((option, optIndex) => `
+        ${
+          question.education_question_options
+            ?.map(
+              (option, optIndex) => `
           <label class="ip-option" data-option-id="${option.id}">
             <input 
               type="${inputType}" 
+              id="ip-option-${questionId}-${option.id}"
               name="${inputName}" 
               value="${option.id}"
               data-question-id="${questionId}"
@@ -237,16 +249,23 @@ function renderInterleavedQuestion(question, questionNumber) {
               ${escapeHtml(option.option_text)}
             </span>
           </label>
-        `).join("") || ""}
+        `
+            )
+            .join("") || ""
+        }
       </div>
 
       <div class="ip-question-explanation" style="display: none;" data-explanation>
-        ${question.explanation ? `
+        ${
+          question.explanation
+            ? `
           <div class="ip-explanation-content">
             <strong>Spiegazione:</strong>
             <p>${escapeHtml(question.explanation)}</p>
           </div>
-        ` : ""}
+        `
+            : ""
+        }
       </div>
     </div>
   `;
@@ -269,7 +288,7 @@ function bindInterleavedEvents(container, questions, options) {
     input.addEventListener("change", (e) => {
       const questionId = e.target.dataset.questionId;
       const optionId = e.target.value;
-      
+
       answers[questionId] = {
         option_id: optionId,
         selectedAt: Date.now(),
@@ -285,9 +304,11 @@ function bindInterleavedEvents(container, questions, options) {
   });
 
   // Check answers
-  container.querySelector("[data-action='check-interleaved-answers']")?.addEventListener("click", async () => {
-    await checkInterleavedAnswers(container, questions, answers);
-  });
+  container
+    .querySelector("[data-action='check-interleaved-answers']")
+    ?.addEventListener("click", async () => {
+      await checkInterleavedAnswers(container, questions, answers);
+    });
 
   // Show explanations
   container.querySelector("[data-action='show-explanations']")?.addEventListener("click", () => {
@@ -303,9 +324,9 @@ function bindInterleavedEvents(container, questions, options) {
  */
 async function checkInterleavedAnswers(container, questions, userAnswers) {
   try {
-    const questionIds = questions.map(q => q.id);
+    const questionIds = questions.map((q) => q.id);
     const token = await getAuthToken();
-    
+
     const response = await fetch(
       `${API_BASE}?action=retrieval-answers&questionIds=${questionIds.join(",")}`,
       {
@@ -333,7 +354,7 @@ async function checkInterleavedAnswers(container, questions, userAnswers) {
       }
 
       questionEl.classList.add(isCorrect ? "correct" : "incorrect");
-      
+
       questionEl.querySelectorAll(".ip-option").forEach((optionEl) => {
         const optionId = optionEl.dataset.optionId;
         if (correctOptionIds.includes(optionId)) {
@@ -387,8 +408,7 @@ async function getAuthToken() {
   try {
     const { getToken } = await import("./token-storage.js");
     return await getToken();
-  } catch (e) {
+  } catch {
     return null;
   }
 }
-

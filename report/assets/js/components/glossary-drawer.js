@@ -17,13 +17,13 @@ const GLOSSARY_DRAWER = {
 // ===== UTILITIES =====
 function createEl(tag, className, text = null) {
   const el = document.createElement(tag);
-  if (className) el.className = className;
-  if (text !== null) el.textContent = text;
+  if (className) {el.className = className;}
+  if (text !== null) {el.textContent = text;}
   return el;
 }
 
 function escapeHtml(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -34,7 +34,7 @@ function escapeHtml(str) {
 
 // ===== DATA LOADING =====
 async function loadGlossaryData() {
-  if (GLOSSARY_DRAWER._data) return GLOSSARY_DRAWER._data;
+  if (GLOSSARY_DRAWER._data) {return GLOSSARY_DRAWER._data;}
 
   try {
     let res = await fetch('/glossario.json', { cache: 'no-store' });
@@ -57,7 +57,7 @@ async function loadGlossaryData() {
 
 // ===== RENDERING =====
 function renderGlossary() {
-  if (!GLOSSARY_DRAWER._panel || !GLOSSARY_DRAWER._data) return;
+  if (!GLOSSARY_DRAWER._panel || !GLOSSARY_DRAWER._data) {return;}
 
   const data = GLOSSARY_DRAWER._data;
   const terms = Object.entries(data).filter(([key]) => !key.startsWith('_'));
@@ -69,7 +69,7 @@ function renderGlossary() {
   const difficolta = [...new Set(terms.map(([, term]) => term.difficolta).filter(Boolean))];
 
   const contentWrapper = GLOSSARY_DRAWER._panel.querySelector('.glossary-drawer-content');
-  if (!contentWrapper) return;
+  if (!contentWrapper) {return;}
 
   contentWrapper.innerHTML = `
     <!-- Search -->
@@ -166,7 +166,7 @@ function renderTermsList(terms) {
 }
 
 function setupEventListeners() {
-  if (!GLOSSARY_DRAWER._panel) return;
+  if (!GLOSSARY_DRAWER._panel) {return;}
 
   // Search
   const searchInput = GLOSSARY_DRAWER._panel.querySelector('#glossary-drawer-search-input');
@@ -198,7 +198,7 @@ function setupEventListeners() {
 }
 
 function filterTerms() {
-  if (!GLOSSARY_DRAWER._data || !GLOSSARY_DRAWER._panel) return;
+  if (!GLOSSARY_DRAWER._data || !GLOSSARY_DRAWER._panel) {return;}
 
   const searchQuery =
     GLOSSARY_DRAWER._panel
@@ -215,15 +215,15 @@ function filterTerms() {
     )?.dataset.value || 'all';
 
   const terms = Object.entries(GLOSSARY_DRAWER._data).filter(([key, term]) => {
-    if (key.startsWith('_')) return false;
+    if (key.startsWith('_')) {return false;}
 
     if (universoFilter !== 'all') {
       const termUniverso = term.universo || term.category;
-      if (termUniverso !== universoFilter) return false;
+      if (termUniverso !== universoFilter) {return false;}
     }
 
     if (difficoltaFilter !== 'all') {
-      if (term.difficolta !== difficoltaFilter) return false;
+      if (term.difficolta !== difficoltaFilter) {return false;}
     }
 
     if (searchQuery) {
@@ -236,7 +236,7 @@ function filterTerms() {
         term.difficolta?.toLowerCase() || '',
       ].join(' ');
 
-      if (!searchable.includes(searchQuery)) return false;
+      if (!searchable.includes(searchQuery)) {return false;}
     }
 
     return true;
@@ -271,10 +271,10 @@ function filterTerms() {
 }
 
 async function openTermDetail(key) {
-  if (!GLOSSARY_DRAWER._data || !key) return;
+  if (!GLOSSARY_DRAWER._data || !key) {return;}
 
   const term = GLOSSARY_DRAWER._data[key];
-  if (!term) return;
+  if (!term) {return;}
 
   // Apri drawer glossario (stesso sistema di glossario.html)
   try {
@@ -289,7 +289,7 @@ async function openTermDetail(key) {
 
 // ===== MOUNT =====
 function mount() {
-  if (GLOSSARY_DRAWER._overlay) return;
+  if (GLOSSARY_DRAWER._overlay) {return;}
 
   // Create overlay
   GLOSSARY_DRAWER._overlay = createEl('div', 'glossary-drawer-overlay');
@@ -323,7 +323,7 @@ function mount() {
     .querySelector('.glossary-drawer-close')
     .addEventListener('click', () => GLOSSARY_DRAWER.close());
   GLOSSARY_DRAWER._overlay.addEventListener('click', (e) => {
-    if (e.target === GLOSSARY_DRAWER._overlay) GLOSSARY_DRAWER.close();
+    if (e.target === GLOSSARY_DRAWER._overlay) {GLOSSARY_DRAWER.close();}
   });
 
   // Listener per close request dall'overlay manager (ESC key)
@@ -341,7 +341,7 @@ function mount() {
 
 // ===== PUBLIC API =====
 async function open() {
-  if (!GLOSSARY_DRAWER._overlay) mount();
+  if (!GLOSSARY_DRAWER._overlay) {mount();}
 
   // Load glossary
   await loadGlossaryData();
@@ -372,7 +372,7 @@ async function open() {
 }
 
 function close() {
-  if (!GLOSSARY_DRAWER._overlay || !GLOSSARY_DRAWER._isOpen) return;
+  if (!GLOSSARY_DRAWER._overlay || !GLOSSARY_DRAWER._isOpen) {return;}
 
   GLOSSARY_DRAWER._overlay.hidden = true;
   GLOSSARY_DRAWER._overlay.setAttribute('aria-hidden', 'true');

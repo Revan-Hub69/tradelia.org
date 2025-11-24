@@ -113,8 +113,8 @@ export async function initDashboard() {
 
   // BEST PRACTICE 2025: Solo tema dark - nessun toggle
   // Forza sempre tema dark per coerenza istituzionale
-  document.documentElement.setAttribute('data-theme', 'dark');
-  document.documentElement.setAttribute('data-theme-manual', 'true');
+  document.documentElement.setAttribute("data-theme", "dark");
+  document.documentElement.setAttribute("data-theme-manual", "true");
 
   // BEST PRACTICE: Initialize i18n system (Global UX)
   const { initI18n } = await import("./i18n.js");
@@ -196,11 +196,11 @@ export async function initDashboard() {
   // Crea uno stato iniziale nella history per evitare che il back button chiuda la pagina
   const initialHash = window.location.hash.slice(1);
   const initialModule = initialHash || null;
-  
+
   if (!history.state) {
     // Crea stato iniziale nella history (usa replaceState per non aggiungere entry)
-    const url = initialHash 
-      ? `${window.location.pathname}#${initialHash}` 
+    const url = initialHash
+      ? `${window.location.pathname}#${initialHash}`
       : window.location.pathname;
     history.replaceState({ module: initialModule, isInitial: true }, "", url);
   }

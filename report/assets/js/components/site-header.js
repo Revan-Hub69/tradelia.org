@@ -13,7 +13,7 @@ const HEADER = {
 // ===== UTILITIES =====
 function createEl(tag, className) {
   const el = document.createElement(tag);
-  if (className) el.className = className;
+  if (className) {el.className = className;}
   return el;
 }
 

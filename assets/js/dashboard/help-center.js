@@ -7,29 +7,34 @@
 const HELP_CONTENT = {
   faq: [
     {
-      question: 'Come posso cercare un report?',
-      answer: 'Usa la ricerca globale con Ctrl+K (o Cmd+K su Mac) oppure vai alla sezione Report e usa la barra di ricerca.',
+      question: "Come posso cercare un report?",
+      answer:
+        "Usa la ricerca globale con Ctrl+K (o Cmd+K su Mac) oppure vai alla sezione Report e usa la barra di ricerca.",
     },
     {
-      question: 'Come aggiungo un report ai preferiti?',
-      answer: 'Clicca sull\'icona stella accanto a qualsiasi report nella lista. I preferiti sono salvati localmente nel tuo browser.',
+      question: "Come aggiungo un report ai preferiti?",
+      answer:
+        "Clicca sull'icona stella accanto a qualsiasi report nella lista. I preferiti sono salvati localmente nel tuo browser.",
     },
     {
-      question: 'Come posso esportare i dati?',
-      answer: 'Vai alle Impostazioni e usa la funzione Export Dati per scaricare le tue preferenze e dati salvati.',
+      question: "Come posso esportare i dati?",
+      answer:
+        "Vai alle Impostazioni e usa la funzione Export Dati per scaricare le tue preferenze e dati salvati.",
     },
     {
-      question: 'Cosa sono i Framework Documentation?',
-      answer: 'I Framework Documentation contengono le metodologie di analisi (SRD, MTB, PAC) utilizzate da Tradelia.',
+      question: "Cosa sono i Framework Documentation?",
+      answer:
+        "I Framework Documentation contengono le metodologie di analisi (SRD, MTB, PAC) utilizzate da Tradelia.",
     },
     {
-      question: 'Come funzionano le Community Proposals?',
-      answer: 'Gli utenti Pro possono proporre e votare analisi da aggiungere alla piattaforma. Vai alla sezione Community per vedere le proposte attive.',
+      question: "Come funzionano le Community Proposals?",
+      answer:
+        "Gli utenti Pro possono proporre e votare analisi da aggiungere alla piattaforma. Vai alla sezione Community per vedere le proposte attive.",
     },
   ],
   guides: [
     {
-      title: 'Guida Rapida Dashboard',
+      title: "Guida Rapida Dashboard",
       content: `
         <h4>Navigazione</h4>
         <p>Usa i moduli nella griglia principale per navigare tra le sezioni della dashboard.</p>
@@ -50,8 +55,10 @@ const HELP_CONTENT = {
 };
 
 export async function loadHelpCenter() {
-  const container = document.getElementById('help-center-container');
-  if (!container) return;
+  const container = document.getElementById("help-center-container");
+  if (!container) {
+    return;
+  }
 
   renderHelpCenter(container);
 }
@@ -72,7 +79,9 @@ function renderHelpCenter(container) {
       <div class="help-center-section">
         <h3 class="help-center-section-title">Domande Frequenti</h3>
         <div class="help-center-faq">
-          ${HELP_CONTENT.faq.map((item, index) => `
+          ${HELP_CONTENT.faq
+            .map(
+              (item, index) => `
             <div class="help-center-faq-item" data-index="${index}">
               <button class="help-center-faq-question" aria-expanded="false">
                 <span>${escapeHtml(item.question)}</span>
@@ -84,39 +93,45 @@ function renderHelpCenter(container) {
                 <p>${escapeHtml(item.answer)}</p>
               </div>
             </div>
-          `).join('')}
+          `
+            )
+            .join("")}
         </div>
       </div>
 
       <div class="help-center-section">
         <h3 class="help-center-section-title">Guide</h3>
         <div class="help-center-guides">
-          ${HELP_CONTENT.guides.map((guide) => `
+          ${HELP_CONTENT.guides
+            .map(
+              (guide) => `
             <div class="help-center-guide-item">
               <h4 class="help-center-guide-title">${escapeHtml(guide.title)}</h4>
               <div class="help-center-guide-content">${guide.content}</div>
             </div>
-          `).join('')}
+          `
+            )
+            .join("")}
         </div>
       </div>
     </div>
   `;
 
   // Setup FAQ accordion
-  container.querySelectorAll('.help-center-faq-question').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const item = btn.closest('.help-center-faq-item');
-      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-      
-      btn.setAttribute('aria-expanded', !isExpanded);
-      item.classList.toggle('expanded');
+  container.querySelectorAll(".help-center-faq-question").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const item = btn.closest(".help-center-faq-item");
+      const isExpanded = btn.getAttribute("aria-expanded") === "true";
+
+      btn.setAttribute("aria-expanded", !isExpanded);
+      item.classList.toggle("expanded");
     });
   });
 
   // Setup search
-  const searchInput = document.getElementById('help-search-input');
+  const searchInput = document.getElementById("help-search-input");
   if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
+    searchInput.addEventListener("input", (e) => {
       const query = e.target.value.toLowerCase().trim();
       filterHelpContent(query);
     });
@@ -125,28 +140,27 @@ function renderHelpCenter(container) {
 
 function filterHelpContent(query) {
   if (!query) {
-    document.querySelectorAll('.help-center-faq-item, .help-center-guide-item').forEach((el) => {
-      el.style.display = '';
+    document.querySelectorAll(".help-center-faq-item, .help-center-guide-item").forEach((el) => {
+      el.style.display = "";
     });
     return;
   }
 
-  document.querySelectorAll('.help-center-faq-item').forEach((item) => {
-    const question = item.querySelector('.help-center-faq-question').textContent.toLowerCase();
-    const answer = item.querySelector('.help-center-faq-answer').textContent.toLowerCase();
+  document.querySelectorAll(".help-center-faq-item").forEach((item) => {
+    const question = item.querySelector(".help-center-faq-question").textContent.toLowerCase();
+    const answer = item.querySelector(".help-center-faq-answer").textContent.toLowerCase();
     const matches = question.includes(query) || answer.includes(query);
-    item.style.display = matches ? '' : 'none';
+    item.style.display = matches ? "" : "none";
   });
 
-  document.querySelectorAll('.help-center-guide-item').forEach((item) => {
+  document.querySelectorAll(".help-center-guide-item").forEach((item) => {
     const content = item.textContent.toLowerCase();
-    item.style.display = content.includes(query) ? '' : 'none';
+    item.style.display = content.includes(query) ? "" : "none";
   });
 }
 
 function escapeHtml(text) {
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
 }
-

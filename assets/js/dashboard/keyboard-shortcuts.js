@@ -5,13 +5,60 @@
  */
 
 const SHORTCUTS = {
-  search: { key: 'ctrl+k', mac: 'meta+k', description: 'Apri ricerca globale', action: () => import('./global-search.js').then(m => m.openSearch()) },
-  help: { key: '?', mac: '?', description: 'Mostra aiuto shortcuts', action: () => openShortcutsHelp() },
-  overview: { key: 'g o', mac: 'g o', description: 'Vai a Panoramica', action: () => { window.location.hash = 'overview'; } },
-  reports: { key: 'g r', mac: 'g r', description: 'Vai a Report', action: () => { window.location.hash = 'reports'; } },
-  settings: { key: 'g s', mac: 'g s', description: 'Vai a Impostazioni', action: () => { window.location.hash = 'settings'; } },
-  watchlist: { key: 'g w', mac: 'g w', description: 'Vai a Preferiti', action: () => { window.location.hash = 'watchlist'; } },
-  close: { key: 'escape', mac: 'escape', description: 'Chiudi modal/panel', action: () => { if (window.location.hash) window.location.hash = ''; } },
+  search: {
+    key: "ctrl+k",
+    mac: "meta+k",
+    description: "Apri ricerca globale",
+    action: () => import("./global-search.js").then((m) => m.openSearch()),
+  },
+  help: {
+    key: "?",
+    mac: "?",
+    description: "Mostra aiuto shortcuts",
+    action: () => openShortcutsHelp(),
+  },
+  overview: {
+    key: "g o",
+    mac: "g o",
+    description: "Vai a Panoramica",
+    action: () => {
+      window.location.hash = "overview";
+    },
+  },
+  reports: {
+    key: "g r",
+    mac: "g r",
+    description: "Vai a Report",
+    action: () => {
+      window.location.hash = "reports";
+    },
+  },
+  settings: {
+    key: "g s",
+    mac: "g s",
+    description: "Vai a Impostazioni",
+    action: () => {
+      window.location.hash = "settings";
+    },
+  },
+  watchlist: {
+    key: "g w",
+    mac: "g w",
+    description: "Vai a Preferiti",
+    action: () => {
+      window.location.hash = "watchlist";
+    },
+  },
+  close: {
+    key: "escape",
+    mac: "escape",
+    description: "Chiudi modal/panel",
+    action: () => {
+      if (window.location.hash) {
+        window.location.hash = "";
+      }
+    },
+  },
 };
 
 let keySequence = [];
@@ -21,7 +68,7 @@ let sequenceTimeout = null;
  * Initialize keyboard shortcuts
  */
 export function initKeyboardShortcuts() {
-  document.addEventListener('keydown', handleKeyPress);
+  document.addEventListener("keydown", handleKeyPress);
 }
 
 /**
@@ -30,20 +77,17 @@ export function initKeyboardShortcuts() {
 function handleKeyPress(e) {
   // Don't trigger shortcuts when typing in inputs
   if (
-    e.target.tagName === 'INPUT' ||
-    e.target.tagName === 'TEXTAREA' ||
+    e.target.tagName === "INPUT" ||
+    e.target.tagName === "TEXTAREA" ||
     e.target.isContentEditable
   ) {
     // Allow Ctrl+K / Cmd+K even when typing
-    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-    if (
-      ((!isMac && e.ctrlKey) || (isMac && e.metaKey)) &&
-      e.key.toLowerCase() === 'k'
-    ) {
+    const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+    if (((!isMac && e.ctrlKey) || (isMac && e.metaKey)) && e.key.toLowerCase() === "k") {
       e.preventDefault();
       SHORTCUTS.search.action();
     }
-    if (e.key === '?') {
+    if (e.key === "?") {
       e.preventDefault();
       SHORTCUTS.help.action();
     }
@@ -51,20 +95,20 @@ function handleKeyPress(e) {
   }
 
   // Check single key shortcuts
-  if (e.key === '?') {
+  if (e.key === "?") {
     e.preventDefault();
     SHORTCUTS.help.action();
     return;
   }
 
-  if (e.key === 'Escape') {
+  if (e.key === "Escape") {
     SHORTCUTS.close.action();
     return;
   }
 
   // Handle g+key sequences
-  if (e.key.toLowerCase() === 'g') {
-    keySequence = ['g'];
+  if (e.key.toLowerCase() === "g") {
+    keySequence = ["g"];
     clearTimeout(sequenceTimeout);
     sequenceTimeout = setTimeout(() => {
       keySequence = [];
@@ -72,8 +116,8 @@ function handleKeyPress(e) {
     return;
   }
 
-  if (keySequence.length === 1 && keySequence[0] === 'g') {
-    const shortcut = SHORTCUTS[`${keySequence[0]} ${e.key.toLowerCase()}`.replace(' ', '')];
+  if (keySequence.length === 1 && keySequence[0] === "g") {
+    const shortcut = SHORTCUTS[`${keySequence[0]} ${e.key.toLowerCase()}`.replace(" ", "")];
     if (shortcut) {
       e.preventDefault();
       shortcut.action();
@@ -87,10 +131,10 @@ function handleKeyPress(e) {
   }
 
   // Check Ctrl/Cmd combinations
-  const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+  const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
   const modKey = isMac ? e.metaKey : e.ctrlKey;
 
-  if (modKey && e.key.toLowerCase() === 'k') {
+  if (modKey && e.key.toLowerCase() === "k") {
     e.preventDefault();
     SHORTCUTS.search.action();
     return;
@@ -102,27 +146,27 @@ function handleKeyPress(e) {
  */
 function openShortcutsHelp() {
   // Create or show modal
-  let modal = document.getElementById('shortcuts-help-modal');
+  let modal = document.getElementById("shortcuts-help-modal");
   if (!modal) {
     modal = createShortcutsModal();
   }
 
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
+  modal.classList.add("active");
+  document.body.style.overflow = "hidden";
 }
 
 /**
  * Create shortcuts help modal
  */
 function createShortcutsModal() {
-  const modal = document.createElement('div');
-  modal.id = 'shortcuts-help-modal';
-  modal.className = 'shortcuts-help-modal';
-  modal.setAttribute('role', 'dialog');
-  modal.setAttribute('aria-label', 'Keyboard Shortcuts');
-  modal.setAttribute('aria-modal', 'true');
+  const modal = document.createElement("div");
+  modal.id = "shortcuts-help-modal";
+  modal.className = "shortcuts-help-modal";
+  modal.setAttribute("role", "dialog");
+  modal.setAttribute("aria-label", "Keyboard Shortcuts");
+  modal.setAttribute("aria-modal", "true");
 
-  const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+  const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
 
   modal.innerHTML = `
     <div class="shortcuts-help-overlay" aria-hidden="true"></div>
@@ -144,15 +188,18 @@ function createShortcutsModal() {
               <div class="shortcut-item">
                 <div class="shortcut-keys">
                   ${keyDisplay
-                    .split(' ')
-                    .map((k) => `<kbd>${k === 'ctrl' ? 'Ctrl' : k === 'meta' ? 'Cmd' : k.toUpperCase()}</kbd>`)
-                    .join(' ')}
+                    .split(" ")
+                    .map(
+                      (k) =>
+                        `<kbd>${k === "ctrl" ? "Ctrl" : k === "meta" ? "Cmd" : k.toUpperCase()}</kbd>`
+                    )
+                    .join(" ")}
                 </div>
                 <div class="shortcut-description">${shortcut.description}</div>
               </div>
             `;
           })
-          .join('')}
+          .join("")}
       </div>
       <div class="shortcuts-help-footer">
         <div class="shortcuts-help-hint">
@@ -165,10 +212,14 @@ function createShortcutsModal() {
   document.body.appendChild(modal);
 
   // Event listeners
-  modal.querySelector('.shortcuts-help-overlay').addEventListener('click', () => closeShortcutsHelp());
-  modal.querySelector('.shortcuts-help-close').addEventListener('click', () => closeShortcutsHelp());
-  modal.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
+  modal
+    .querySelector(".shortcuts-help-overlay")
+    .addEventListener("click", () => closeShortcutsHelp());
+  modal
+    .querySelector(".shortcuts-help-close")
+    .addEventListener("click", () => closeShortcutsHelp());
+  modal.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
       closeShortcutsHelp();
     }
   });
@@ -180,10 +231,9 @@ function createShortcutsModal() {
  * Close shortcuts help modal
  */
 function closeShortcutsHelp() {
-  const modal = document.getElementById('shortcuts-help-modal');
+  const modal = document.getElementById("shortcuts-help-modal");
   if (modal) {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
+    modal.classList.remove("active");
+    document.body.style.overflow = "";
   }
 }
-

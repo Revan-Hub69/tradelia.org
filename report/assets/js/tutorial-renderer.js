@@ -10,14 +10,14 @@ import Logger from './utils/logger.js';
 
 // ===== UTILITIES =====
 function escapeHtml(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   const div = document.createElement('div');
   div.textContent = String(str);
   return div.innerHTML;
 }
 
 function processText(text, glossaryTerms = {}) {
-  if (!text) return '';
+  if (!text) {return '';}
 
   // Converti in stringa per sicurezza
   let processed = String(text);
@@ -103,7 +103,7 @@ function renderHeader(data) {
 
 // ===== RENDER TOC =====
 function renderTOC(sections) {
-  if (!sections || sections.length === 0) return '';
+  if (!sections || sections.length === 0) {return '';}
 
   return `
     <nav class="tutorial-toc" aria-label="Indice del tutorial">
@@ -170,7 +170,7 @@ function renderSection(section, index, glossaryTerms = {}) {
 
 // ===== RENDER TABLE =====
 function renderTable(tableData, glossaryTerms = {}) {
-  if (!tableData.headers || !tableData.rows) return '';
+  if (!tableData.headers || !tableData.rows) {return '';}
 
   let html = `
     <table class="tutorial-table">
@@ -320,7 +320,7 @@ function updateSEOMetaTags(data) {
       const firstParagraph = firstSection.content.find((item) => item.type === 'paragraph');
       if (firstParagraph && firstParagraph.text) {
         // Rimuovi markdown e tag HTML, estrai solo testo pulito
-        let cleanText = firstParagraph.text
+        const cleanText = firstParagraph.text
           .replace(/\*\*(.+?)\*\*/g, '$1') // Rimuovi **bold**
           .replace(/\*(.+?)\*/g, '$1') // Rimuovi *italic*
           .replace(/__(.+?)__/g, '$1') // Rimuovi __underline__

@@ -3,7 +3,7 @@
  * Retrieval Practice Sessions
  * Paper: Roediger & Karpicke (2006), Karpicke & Blunt (2011)
  * "Test-Enhanced Learning" - "Retrieval Practice Produces More Learning"
- * 
+ *
  * Sessioni di ripasso attivo senza punteggio, solo per apprendere.
  * Low-stakes quizzing per consolidare conoscenza.
  */
@@ -15,7 +15,7 @@ const API_BASE = "/api/education";
 
 let currentSession = null;
 let sessionAnswers = {};
-let sessionStartTime = null;
+// let sessionStartTime = null; // TODO: Usare per analytics
 
 /**
  * Initialize retrieval practice session
@@ -32,7 +32,7 @@ export async function initRetrievalPractice(questionIds, options = {}) {
 
     // Convert single ID to array
     const ids = Array.isArray(questionIds) ? questionIds : [questionIds];
-    
+
     // Get questions
     const questions = await fetchQuestions(ids);
     if (!questions || questions.length === 0) {
@@ -53,7 +53,7 @@ export async function initRetrievalPractice(questionIds, options = {}) {
     };
 
     sessionAnswers = {};
-    sessionStartTime = Date.now();
+    // sessionStartTime = Date.now(); // TODO: Usare per analytics
 
     renderRetrievalPracticeSession(container, currentSession);
   } catch (error) {
@@ -70,11 +70,14 @@ export async function initRetrievalPractice(questionIds, options = {}) {
 async function fetchQuestions(questionIds) {
   try {
     const token = await getAuthToken();
-    const response = await fetch(`${API_BASE}?action=retrieval-questions&questionIds=${questionIds.join(",")}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(
+      `${API_BASE}?action=retrieval-questions&questionIds=${questionIds.join(",")}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Errore caricamento domande");
@@ -109,9 +112,11 @@ function renderRetrievalPracticeSession(container, session) {
             ${isSpacedRepetition ? "Ripasso Distribuito" : "Ripasso Attivo"}
           </h1>
           <p class="rp-description">
-            ${isSpacedRepetition 
-              ? "Ripassa questa domanda per consolidare la memoria a lungo termine (Ebbinghaus, 1885)"
-              : "Ripasso attivo senza punteggio - solo per apprendere (Roediger & Karpicke, 2006)"}
+            ${
+              isSpacedRepetition
+                ? "Ripassa questa domanda per consolidare la memoria a lungo termine (Ebbinghaus, 1885)"
+                : "Ripasso attivo senza punteggio - solo per apprendere (Roediger & Karpicke, 2006)"
+            }
           </p>
           <div class="rp-info">
             <span>${questions.length} ${questions.length === 1 ? "domanda" : "domande"}</span>
@@ -162,17 +167,25 @@ function renderPracticeQuestion(question, questionNumber) {
       </div>
       <div class="rp-question-text">${escapeHtml(question.question_text)}</div>
       
-      ${question.bloom_level ? `
+      ${
+        question.bloom_level
+          ? `
         <div class="rp-question-bloom">
           <span class="bloom-badge bloom-${question.bloom_level}">${getBloomLabel(question.bloom_level)}</span>
         </div>
-      ` : ""}
+      `
+          : ""
+      }
 
       <div class="rp-question-options">
-        ${question.education_question_options?.map((option, optIndex) => `
+        ${
+          question.education_question_options
+            ?.map(
+              (option, optIndex) => `
           <label class="rp-option" data-option-id="${option.id}">
             <input 
               type="${inputType}" 
+              id="rp-option-${questionId}-${option.id}"
               name="${inputName}" 
               value="${option.id}"
               data-question-id="${questionId}"
@@ -182,16 +195,23 @@ function renderPracticeQuestion(question, questionNumber) {
               ${escapeHtml(option.option_text)}
             </span>
           </label>
-        `).join("") || ""}
+        `
+            )
+            .join("") || ""
+        }
       </div>
 
       <div class="rp-question-explanation" style="display: none;" data-explanation>
-        ${question.explanation ? `
+        ${
+          question.explanation
+            ? `
           <div class="rp-explanation-content">
             <strong>Spiegazione:</strong>
             <p>${escapeHtml(question.explanation)}</p>
           </div>
-        ` : ""}
+        `
+            : ""
+        }
       </div>
     </div>
   `;
@@ -212,7 +232,7 @@ function bindRetrievalPracticeEvents(container, session) {
     input.addEventListener("change", (e) => {
       const questionId = e.target.dataset.questionId;
       const optionId = e.target.value;
-      
+
       // Store answer
       sessionAnswers[questionId] = {
         option_id: optionId,
@@ -248,7 +268,7 @@ async function checkAnswers(container, session) {
   let totalTime = 0;
 
   // Get correct answers from server
-  const questionIds = questions.map(q => q.id);
+  const questionIds = questions.map((q) => q.id);
   const correctAnswers = await fetchCorrectAnswers(questionIds);
 
   // Check each answer
@@ -264,7 +284,7 @@ async function checkAnswers(container, session) {
 
     // Update visual state
     questionEl.classList.add(isCorrect ? "correct" : "incorrect");
-    
+
     // Highlight correct/incorrect options
     questionEl.querySelectorAll(".rp-option").forEach((optionEl) => {
       const optionId = optionEl.dataset.optionId;
@@ -291,7 +311,7 @@ async function checkAnswers(container, session) {
     const question = questions[0];
     const isCorrect = correctCount > 0;
     const timeSpent = totalTime;
-    
+
     try {
       await updateQuestionReview(question.id, isCorrect, timeSpent);
     } catch (error) {
@@ -326,11 +346,14 @@ function showExplanations(container) {
 async function fetchCorrectAnswers(questionIds) {
   try {
     const token = await getAuthToken();
-    const response = await fetch(`${API_BASE}?action=retrieval-answers&questionIds=${questionIds.join(",")}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(
+      `${API_BASE}?action=retrieval-answers&questionIds=${questionIds.join(",")}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Errore caricamento risposte corrette");
@@ -366,7 +389,7 @@ async function getAuthToken() {
   try {
     const { getToken } = await import("./token-storage.js");
     return await getToken();
-  } catch (e) {
+  } catch {
     return null;
   }
 }

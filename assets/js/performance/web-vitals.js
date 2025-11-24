@@ -11,8 +11,8 @@
 export function initWebVitals() {
   // Solo in production o se esplicitamente abilitato
   if (
-    typeof window === 'undefined' ||
-    (window.location.hostname === 'localhost' && !window.location.search.includes('vitals=true'))
+    typeof window === "undefined" ||
+    (window.location.hostname === "localhost" && !window.location.search.includes("vitals=true"))
   ) {
     return;
   }
@@ -44,17 +44,17 @@ function trackLCP() {
     const observer = new PerformanceObserver((list) => {
       const entries = list.getEntries();
       const lastEntry = entries[entries.length - 1];
-      
+
       // Log to console in dev, send to analytics in prod
-      if (window.location.hostname === 'localhost') {
-        console.log('[Web Vitals] LCP:', lastEntry.renderTime || lastEntry.loadTime);
+      if (window.location.hostname === "localhost") {
+        console.log("[Web Vitals] LCP:", lastEntry.renderTime || lastEntry.loadTime);
       } else {
         // Invia a analytics (es. Google Analytics, custom endpoint)
-        sendToAnalytics('LCP', lastEntry.renderTime || lastEntry.loadTime);
+        sendToAnalytics("LCP", lastEntry.renderTime || lastEntry.loadTime);
       }
     });
 
-    observer.observe({ entryTypes: ['largest-contentful-paint'] });
+    observer.observe({ entryTypes: ["largest-contentful-paint"] });
   } catch (e) {
     // PerformanceObserver non supportato
   }
@@ -68,16 +68,16 @@ function trackFID() {
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
         const fid = entry.processingStart - entry.startTime;
-        
-        if (window.location.hostname === 'localhost') {
-          console.log('[Web Vitals] FID:', fid);
+
+        if (window.location.hostname === "localhost") {
+          console.log("[Web Vitals] FID:", fid);
         } else {
-          sendToAnalytics('FID', fid);
+          sendToAnalytics("FID", fid);
         }
       }
     });
 
-    observer.observe({ entryTypes: ['first-input'] });
+    observer.observe({ entryTypes: ["first-input"] });
   } catch (e) {
     // PerformanceObserver non supportato
   }
@@ -100,16 +100,16 @@ function trackCLS() {
       }
 
       // Log quando la pagina è completamente caricata
-      if (document.readyState === 'complete') {
-        if (window.location.hostname === 'localhost') {
-          console.log('[Web Vitals] CLS:', clsValue);
+      if (document.readyState === "complete") {
+        if (window.location.hostname === "localhost") {
+          console.log("[Web Vitals] CLS:", clsValue);
         } else {
-          sendToAnalytics('CLS', clsValue);
+          sendToAnalytics("CLS", clsValue);
         }
       }
     });
 
-    observer.observe({ entryTypes: ['layout-shift'] });
+    observer.observe({ entryTypes: ["layout-shift"] });
   } catch (e) {
     // PerformanceObserver non supportato
   }
@@ -122,19 +122,19 @@ function trackFCP() {
   try {
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
-        if (entry.name === 'first-contentful-paint') {
+        if (entry.name === "first-contentful-paint") {
           const fcp = entry.startTime;
-          
-          if (window.location.hostname === 'localhost') {
-            console.log('[Web Vitals] FCP:', fcp);
+
+          if (window.location.hostname === "localhost") {
+            console.log("[Web Vitals] FCP:", fcp);
           } else {
-            sendToAnalytics('FCP', fcp);
+            sendToAnalytics("FCP", fcp);
           }
         }
       }
     });
 
-    observer.observe({ entryTypes: ['paint'] });
+    observer.observe({ entryTypes: ["paint"] });
   } catch (e) {
     // PerformanceObserver non supportato
   }
@@ -144,27 +144,27 @@ function trackFCP() {
  * Track Time to Interactive (approssimato)
  */
 function trackTTI() {
-  if (document.readyState === 'complete') {
-    const perfData = performance.getEntriesByType('navigation')[0];
+  if (document.readyState === "complete") {
+    const perfData = performance.getEntriesByType("navigation")[0];
     if (perfData) {
       const tti = perfData.domInteractive - perfData.fetchStart;
-      
-      if (window.location.hostname === 'localhost') {
-        console.log('[Web Vitals] TTI (approx):', tti);
+
+      if (window.location.hostname === "localhost") {
+        console.log("[Web Vitals] TTI (approx):", tti);
       } else {
-        sendToAnalytics('TTI', tti);
+        sendToAnalytics("TTI", tti);
       }
     }
   } else {
-    window.addEventListener('load', () => {
-      const perfData = performance.getEntriesByType('navigation')[0];
+    window.addEventListener("load", () => {
+      const perfData = performance.getEntriesByType("navigation")[0];
       if (perfData) {
         const tti = perfData.domInteractive - perfData.fetchStart;
-        
-        if (window.location.hostname === 'localhost') {
-          console.log('[Web Vitals] TTI (approx):', tti);
+
+        if (window.location.hostname === "localhost") {
+          console.log("[Web Vitals] TTI (approx):", tti);
         } else {
-          sendToAnalytics('TTI', tti);
+          sendToAnalytics("TTI", tti);
         }
       }
     });
@@ -179,13 +179,13 @@ function trackTTI() {
 function sendToAnalytics(metric, value) {
   // Placeholder per integrazione analytics
   // Esempio: Google Analytics, custom endpoint, etc.
-  
+
   // Per ora log in console (in production si invia a endpoint)
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', metric, {
-      event_category: 'Web Vitals',
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", metric, {
+      event_category: "Web Vitals",
       value: Math.round(value),
-      non_interaction: true
+      non_interaction: true,
     });
   }
 
@@ -198,11 +198,10 @@ function sendToAnalytics(metric, value) {
 }
 
 // Auto-initialize se script è caricato
-if (typeof window !== 'undefined') {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initWebVitals);
+if (typeof window !== "undefined") {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initWebVitals);
   } else {
     initWebVitals();
   }
 }
-

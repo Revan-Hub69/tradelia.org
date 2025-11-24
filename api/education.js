@@ -26,7 +26,9 @@ export async function getModules(req, res) {
       .eq("is_active", true)
       .order("order_index", { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     res.json({ success: true, modules: data || [] });
   } catch (error) {
@@ -54,7 +56,9 @@ export async function getModule(req, res) {
       .eq("is_active", true)
       .single();
 
-    if (moduleError) throw moduleError;
+    if (moduleError) {
+      throw moduleError;
+    }
     if (!module) {
       return res.status(404).json({ success: false, error: "Modulo non trovato" });
     }
@@ -67,7 +71,9 @@ export async function getModule(req, res) {
       .eq("is_active", true)
       .order("order_index", { ascending: true });
 
-    if (lessonsError) throw lessonsError;
+    if (lessonsError) {
+      throw lessonsError;
+    }
 
     // Get tests for this module
     const { data: tests, error: testsError } = await supabase
@@ -76,7 +82,9 @@ export async function getModule(req, res) {
       .eq("module_id", moduleId)
       .eq("is_active", true);
 
-    if (testsError) throw testsError;
+    if (testsError) {
+      throw testsError;
+    }
 
     // Get user progress if authenticated
     let userProgress = null;
@@ -92,7 +100,7 @@ export async function getModule(req, res) {
 
       // Get user attempts for tests
       if (tests && tests.length > 0) {
-        const testIds = tests.map(t => t.id);
+        const testIds = tests.map((t) => t.id);
         const { data: attempts } = await supabase
           .from("education_user_test_attempts")
           .select("*")
@@ -101,8 +109,8 @@ export async function getModule(req, res) {
           .order("attempt_number", { ascending: false });
 
         // Map attempts to tests
-        tests.forEach(test => {
-          test.userAttempts = attempts?.filter(a => a.test_id === test.id) || [];
+        tests.forEach((test) => {
+          test.userAttempts = attempts?.filter((a) => a.test_id === test.id) || [];
         });
       }
     }
@@ -140,7 +148,9 @@ export async function getLesson(req, res) {
       .eq("is_active", true)
       .single();
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
     if (!lesson) {
       return res.status(404).json({ success: false, error: "Lezione non trovata" });
     }
@@ -211,7 +221,9 @@ export async function updateLessonProgress(req, res) {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     // Update module progress
     const { data: lesson } = await supabase
@@ -228,19 +240,17 @@ export async function updateLessonProgress(req, res) {
       });
 
       // Update module progress
-      await supabase
-        .from("education_user_progress")
-        .upsert(
-          {
-            user_id: req.user.id,
-            module_id: lesson.module_id,
-            progress_percentage: progressPct || 0,
-            status: progressPct === 100 ? "completed" : "in_progress",
-            last_accessed_at: new Date().toISOString(),
-            ...(progressPct === 100 && { completed_at: new Date().toISOString() }),
-          },
-          { onConflict: "user_id,module_id" }
-        );
+      await supabase.from("education_user_progress").upsert(
+        {
+          user_id: req.user.id,
+          module_id: lesson.module_id,
+          progress_percentage: progressPct || 0,
+          status: progressPct === 100 ? "completed" : "in_progress",
+          last_accessed_at: new Date().toISOString(),
+          ...(progressPct === 100 && { completed_at: new Date().toISOString() }),
+        },
+        { onConflict: "user_id,module_id" }
+      );
 
       // Update user stats
       await supabase.rpc("update_user_education_stats", { p_user_id: req.user.id });
@@ -271,7 +281,9 @@ export async function getTest(req, res) {
       .eq("is_active", true)
       .single();
 
-    if (testError) throw testError;
+    if (testError) {
+      throw testError;
+    }
     if (!test) {
       return res.status(404).json({ success: false, error: "Test non trovato" });
     }
@@ -279,7 +291,8 @@ export async function getTest(req, res) {
     // Get questions with options (but hide is_correct in response)
     const { data: questions, error: questionsError } = await supabase
       .from("education_questions")
-      .select(`
+      .select(
+        `
         id,
         question_text,
         question_type,
@@ -291,12 +304,15 @@ export async function getTest(req, res) {
           option_text,
           order_index
         )
-      `)
+      `
+      )
       .eq("test_id", testId)
       .eq("is_active", true)
       .order("order_index", { ascending: true });
 
-    if (questionsError) throw questionsError;
+    if (questionsError) {
+      throw questionsError;
+    }
 
     // Get user attempts if authenticated
     let userAttempts = [];
@@ -355,7 +371,9 @@ export async function submitTest(req, res) {
       .eq("id", testId)
       .single();
 
-    if (testError) throw testError;
+    if (testError) {
+      throw testError;
+    }
 
     // Get user's previous attempts
     const { data: previousAttempts } = await supabase
@@ -365,29 +383,30 @@ export async function submitTest(req, res) {
       .eq("test_id", testId)
       .order("attempt_number", { ascending: false });
 
-    const nextAttemptNumber = previousAttempts?.length > 0 
-      ? previousAttempts[0].attempt_number + 1 
-      : 1;
+    const nextAttemptNumber =
+      previousAttempts?.length > 0 ? previousAttempts[0].attempt_number + 1 : 1;
 
     // Check max attempts
     if (test.max_attempts && nextAttemptNumber > test.max_attempts) {
-      return res.status(400).json({ 
-        success: false, 
-        error: `Hai raggiunto il numero massimo di tentativi (${test.max_attempts})` 
+      return res.status(400).json({
+        success: false,
+        error: `Hai raggiunto il numero massimo di tentativi (${test.max_attempts})`,
       });
     }
 
     // Get correct answers
     const { data: questions } = await supabase
       .from("education_questions")
-      .select(`
+      .select(
+        `
         id,
         points,
         education_question_options (
           id,
           is_correct
         )
-      `)
+      `
+      )
       .eq("test_id", testId)
       .eq("is_active", true);
 
@@ -399,13 +418,15 @@ export async function submitTest(req, res) {
     questions.forEach((question) => {
       totalPoints += question.points;
       const userAnswer = answers[question.id];
-      const correctOptions = question.education_question_options.filter(opt => opt.is_correct);
+      const correctOptions = question.education_question_options.filter((opt) => opt.is_correct);
 
       if (userAnswer) {
         // Check if answer is correct
         let isCorrect = false;
-        if (question.education_question_options.some(opt => opt.id === userAnswer.option_id)) {
-          const selectedOption = question.education_question_options.find(opt => opt.id === userAnswer.option_id);
+        if (question.education_question_options.some((opt) => opt.id === userAnswer.option_id)) {
+          const selectedOption = question.education_question_options.find(
+            (opt) => opt.id === userAnswer.option_id
+          );
           isCorrect = selectedOption.is_correct;
         }
 
@@ -439,7 +460,9 @@ export async function submitTest(req, res) {
       .select()
       .single();
 
-    if (attemptError) throw attemptError;
+    if (attemptError) {
+      throw attemptError;
+    }
 
     // If passed, unlock next module (if applicable)
     if (passed) {
@@ -464,25 +487,29 @@ export async function submitTest(req, res) {
           .select("test_id")
           .eq("user_id", req.user.id)
           .eq("passed", true)
-          .in("test_id", allTests.map(t => t.id));
+          .in(
+            "test_id",
+            allTests.map((t) => t.id)
+          );
 
         // If all tests passed, mark module as completed
         if (passedTests?.length === allTests?.length) {
-          await supabase
-            .from("education_user_progress")
-            .upsert({
+          await supabase.from("education_user_progress").upsert(
+            {
               user_id: req.user.id,
               module_id: module.id,
               status: "completed",
               progress_percentage: 100,
               completed_at: new Date().toISOString(),
-            }, { onConflict: "user_id,module_id" });
+            },
+            { onConflict: "user_id,module_id" }
+          );
         }
       }
 
       // Award badges and update stats
       await supabase.rpc("update_user_education_stats", { p_user_id: req.user.id });
-      
+
       // Check for perfect score badge
       if (score === 100) {
         // Award "Perfetto" badge if not already earned
@@ -512,8 +539,8 @@ export async function submitTest(req, res) {
         // Include correct answers for review
         correctAnswers: questions.reduce((acc, q) => {
           acc[q.id] = q.education_question_options
-            .filter(opt => opt.is_correct)
-            .map(opt => opt.id);
+            .filter((opt) => opt.is_correct)
+            .map((opt) => opt.id);
           return acc;
         }, {}),
       },
@@ -567,9 +594,12 @@ export async function getUserProgress(req, res) {
           status: "not_started",
           progress_percentage: 0,
         },
-        canAccess: !module.requires_previous_module || 
-          (progress?.status === "completed") ||
-          (userProgress?.some(p => p.module_id === module.previous_module_id && p.status === "completed")),
+        canAccess:
+          !module.requires_previous_module ||
+          progress?.status === "completed" ||
+          userProgress?.some(
+            (p) => p.module_id === module.previous_module_id && p.status === "completed"
+          ),
       };
     });
 
@@ -582,7 +612,7 @@ export async function getUserProgress(req, res) {
           current_level: 1,
           modules_completed: 0,
         },
-        badges: userBadges?.map(ub => ub.education_badges) || [],
+        badges: userBadges?.map((ub) => ub.education_badges) || [],
       },
     });
   } catch (error) {
@@ -602,7 +632,9 @@ export async function getPathways(req, res) {
       .eq("is_active", true)
       .order("title", { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     // Get user progress if authenticated
     let userPathwayProgress = [];
@@ -657,13 +689,19 @@ export async function getSpacedRepetitionDue(req, res) {
 
     // Extract question IDs and performance
     const questionPerformance = new Map();
-    attempts.forEach(attempt => {
+    attempts.forEach((attempt) => {
       if (attempt.answers) {
-        Object.keys(attempt.answers).forEach(questionId => {
+        Object.keys(attempt.answers).forEach((questionId) => {
           const answer = attempt.answers[questionId];
-          const perf = questionPerformance.get(questionId) || { attempts: 0, correct: 0, lastReview: null };
+          const perf = questionPerformance.get(questionId) || {
+            attempts: 0,
+            correct: 0,
+            lastReview: null,
+          };
           perf.attempts++;
-          if (answer.is_correct) perf.correct++;
+          if (answer.is_correct) {
+            perf.correct++;
+          }
           if (!perf.lastReview || new Date(attempt.completed_at) > new Date(perf.lastReview)) {
             perf.lastReview = attempt.completed_at;
           }
@@ -680,40 +718,50 @@ export async function getSpacedRepetitionDue(req, res) {
 
     const { data: questions } = await supabase
       .from("education_questions")
-      .select(`
+      .select(
+        `
         id,
         question_text,
         education_tests!inner(education_modules!inner(id, title, slug))
-      `)
+      `
+      )
       .in("id", questionIds)
       .eq("is_active", true);
 
     // Calculate due dates and filter
     const today = new Date();
-    const questionsWithDue = questions.map(q => {
-      const perf = questionPerformance.get(q.id);
-      const lastReview = perf.lastReview ? new Date(perf.lastReview) : null;
-      const daysSinceReview = lastReview ? Math.floor((today - lastReview) / (1000 * 60 * 60 * 24)) : 999;
-      
-      // Simple spaced repetition: incorrect after 1 day, difficult after 7, easy after 30
-      const successRate = perf.attempts > 0 ? perf.correct / perf.attempts : 0;
-      let nextReviewDays = 30;
-      if (successRate < 0.5) nextReviewDays = 1;
-      else if (successRate < 0.7) nextReviewDays = 7;
-      else if (successRate < 0.9) nextReviewDays = 14;
+    const questionsWithDue = questions
+      .map((q) => {
+        const perf = questionPerformance.get(q.id);
+        const lastReview = perf.lastReview ? new Date(perf.lastReview) : null;
+        const daysSinceReview = lastReview
+          ? Math.floor((today - lastReview) / (1000 * 60 * 60 * 24))
+          : 999;
 
-      return {
-        id: q.id,
-        question_id: q.id,
-        question_text: q.question_text,
-        text: q.question_text,
-        module_title: q.education_tests?.education_modules?.title || "Modulo",
-        success_rate: successRate,
-        due_today: daysSinceReview >= nextReviewDays,
-        days_until_due: Math.max(0, nextReviewDays - daysSinceReview),
-      };
-    }).filter(q => q.due_today || q.days_until_due <= 3)
-      .sort((a, b) => a.due_today ? -1 : b.due_today ? 1 : a.days_until_due - b.days_until_due);
+        // Simple spaced repetition: incorrect after 1 day, difficult after 7, easy after 30
+        const successRate = perf.attempts > 0 ? perf.correct / perf.attempts : 0;
+        let nextReviewDays = 30;
+        if (successRate < 0.5) {
+          nextReviewDays = 1;
+        } else if (successRate < 0.7) {
+          nextReviewDays = 7;
+        } else if (successRate < 0.9) {
+          nextReviewDays = 14;
+        }
+
+        return {
+          id: q.id,
+          question_id: q.id,
+          question_text: q.question_text,
+          text: q.question_text,
+          module_title: q.education_tests?.education_modules?.title || "Modulo",
+          success_rate: successRate,
+          due_today: daysSinceReview >= nextReviewDays,
+          days_until_due: Math.max(0, nextReviewDays - daysSinceReview),
+        };
+      })
+      .filter((q) => q.due_today || q.days_until_due <= 3)
+      .sort((a, b) => (a.due_today ? -1 : b.due_today ? 1 : a.days_until_due - b.days_until_due));
 
     res.json({ success: true, questions: questionsWithDue });
   } catch (error) {
@@ -740,7 +788,8 @@ export async function getRetrievalQuestions(req, res) {
 
     const { data: questions, error } = await supabase
       .from("education_questions")
-      .select(`
+      .select(
+        `
         id,
         question_text,
         question_type,
@@ -751,12 +800,15 @@ export async function getRetrievalQuestions(req, res) {
           option_text,
           order_index
         )
-      `)
+      `
+      )
       .in("id", ids)
       .eq("is_active", true)
       .order("id");
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     res.json({ success: true, questions: questions || [] });
   } catch (error) {
@@ -783,23 +835,27 @@ export async function getRetrievalAnswers(req, res) {
 
     const { data: questions, error } = await supabase
       .from("education_questions")
-      .select(`
+      .select(
+        `
         id,
         education_question_options (
           id,
           is_correct
         )
-      `)
+      `
+      )
       .in("id", ids)
       .eq("is_active", true);
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     const answers = {};
-    questions.forEach(q => {
+    questions.forEach((q) => {
       answers[q.id] = q.education_question_options
-        .filter(opt => opt.is_correct)
-        .map(opt => opt.id);
+        .filter((opt) => opt.is_correct)
+        .map((opt) => opt.id);
     });
 
     res.json({ success: true, answers });
@@ -822,7 +878,7 @@ export async function updateSpacedRepetition(req, res) {
 
     // Store in user's spaced repetition tracking (could be a new table or JSONB field)
     // For now, we'll track via test attempts - this will be improved with dedicated table
-    
+
     res.json({ success: true, message: "Ripasso aggiornato" });
   } catch (error) {
     safeLog("error", "[Education] Errore updateSpacedRepetition:", error);
@@ -844,8 +900,11 @@ export async function savePreAssessment(req, res) {
 
     // Store in user's lesson progress or new metacognition table
     // For now, we'll log it - can be stored in JSONB field
-    
-    safeLog("info", `[Metacognition] Pre-assessment: lessonId=${lessonId}, knowledge=${knowledgeLevel}`);
+
+    safeLog(
+      "info",
+      `[Metacognition] Pre-assessment: lessonId=${lessonId}, knowledge=${knowledgeLevel}`
+    );
 
     res.json({ success: true });
   } catch (error) {
@@ -867,7 +926,10 @@ export async function savePostReflection(req, res) {
     const { lessonId, comprehension, unclear, learned } = req.body;
 
     // Store reflection
-    safeLog("info", `[Metacognition] Post-reflection: lessonId=${lessonId}, comprehension=${comprehension}`);
+    safeLog(
+      "info",
+      `[Metacognition] Post-reflection: lessonId=${lessonId}, comprehension=${comprehension}`
+    );
 
     res.json({ success: true });
   } catch (error) {
@@ -933,9 +995,9 @@ export async function getRecentQuestionsForPractice(req, res) {
       .limit(10);
 
     const questionIds = new Set();
-    attempts?.forEach(attempt => {
+    attempts?.forEach((attempt) => {
       if (attempt.answers) {
-        Object.keys(attempt.answers).forEach(qId => questionIds.add(qId));
+        Object.keys(attempt.answers).forEach((qId) => questionIds.add(qId));
       }
     });
 
@@ -968,10 +1030,12 @@ export async function getLearningAnalytics(req, res) {
     // Get module progress
     const { data: moduleProgress } = await supabase
       .from("education_user_progress")
-      .select(`
+      .select(
+        `
         *,
         education_modules (id, title, slug)
-      `)
+      `
+      )
       .eq("user_id", userId);
 
     // Get lesson progress
@@ -983,10 +1047,12 @@ export async function getLearningAnalytics(req, res) {
     // Get test attempts
     const { data: testAttempts } = await supabase
       .from("education_user_test_attempts")
-      .select(`
+      .select(
+        `
         *,
         education_tests (id, title, education_modules (title))
-      `)
+      `
+      )
       .eq("user_id", userId)
       .order("completed_at", { ascending: false })
       .limit(20);
@@ -1007,12 +1073,12 @@ export async function getLearningAnalytics(req, res) {
       .select("id", { count: "exact", head: true })
       .eq("is_active", true);
 
-    const modulesCompleted = moduleProgress?.filter(m => m.status === "completed").length || 0;
-    const lessonsCompleted = lessonProgress?.filter(l => l.status === "completed").length || 0;
-    const testsPassed = testAttempts?.filter(t => t.passed).length || 0;
+    const modulesCompleted = moduleProgress?.filter((m) => m.status === "completed").length || 0;
+    const lessonsCompleted = lessonProgress?.filter((l) => l.status === "completed").length || 0;
+    const testsPassed = testAttempts?.filter((t) => t.passed).length || 0;
 
     // Calculate progress by module
-    const progress = (moduleProgress || []).map(mp => ({
+    const progress = (moduleProgress || []).map((mp) => ({
       name: mp.education_modules?.title || "Modulo",
       percentage: mp.progress_percentage || 0,
       status: mp.status,
@@ -1020,10 +1086,13 @@ export async function getLearningAnalytics(req, res) {
 
     // Calculate test performance
     const testPerformance = {
-      averageScore: testAttempts && testAttempts.length > 0
-        ? Math.round(testAttempts.reduce((sum, t) => sum + (t.score || 0), 0) / testAttempts.length)
-        : 0,
-      tests: (testAttempts || []).map(ta => ({
+      averageScore:
+        testAttempts && testAttempts.length > 0
+          ? Math.round(
+              testAttempts.reduce((sum, t) => sum + (t.score || 0), 0) / testAttempts.length
+            )
+          : 0,
+      tests: (testAttempts || []).map((ta) => ({
         name: ta.education_tests?.title || "Test",
         score: ta.score || 0,
         date: ta.completed_at,
@@ -1062,8 +1131,8 @@ export async function getLearningAnalytics(req, res) {
 
     // Identify weak areas (modules with low scores)
     const weakAreas = (moduleProgress || [])
-      .filter(mp => mp.progress_percentage < 50)
-      .map(mp => ({
+      .filter((mp) => mp.progress_percentage < 50)
+      .map((mp) => ({
         id: mp.module_id,
         name: mp.education_modules?.title || "Modulo",
         score: mp.progress_percentage,
@@ -1072,13 +1141,13 @@ export async function getLearningAnalytics(req, res) {
 
     // Recent activity
     const recentActivity = [];
-    
+
     // Add recent lesson completions
     (lessonProgress || [])
-      .filter(lp => lp.completed_at)
+      .filter((lp) => lp.completed_at)
       .sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at))
       .slice(0, 5)
-      .forEach(lp => {
+      .forEach((lp) => {
         recentActivity.push({
           type: "lesson_completed",
           title: "Lezione completata",
@@ -1088,9 +1157,9 @@ export async function getLearningAnalytics(req, res) {
 
     // Add recent test completions
     (testAttempts || [])
-      .filter(ta => ta.completed_at)
+      .filter((ta) => ta.completed_at)
       .slice(0, 5)
-      .forEach(ta => {
+      .forEach((ta) => {
         recentActivity.push({
           type: "test_completed",
           title: `Test completato: ${ta.education_tests?.title || "Test"}`,
@@ -1144,7 +1213,7 @@ export async function getInterleavedQuestions(req, res) {
     }
 
     const { moduleIds, count = 20, difficulty } = req.query;
-    
+
     if (!moduleIds) {
       return res.status(400).json({ success: false, error: "moduleIds richiesto" });
     }
@@ -1155,7 +1224,8 @@ export async function getInterleavedQuestions(req, res) {
     // Get questions from multiple modules
     let query = supabase
       .from("education_questions")
-      .select(`
+      .select(
+        `
         id,
         question_text,
         question_type,
@@ -1176,7 +1246,8 @@ export async function getInterleavedQuestions(req, res) {
           option_text,
           order_index
         )
-      `)
+      `
+      )
       .in("education_tests.education_modules.id", ids)
       .eq("is_active", true)
       .limit(limit * 2); // Get more to allow for filtering
@@ -1187,7 +1258,9 @@ export async function getInterleavedQuestions(req, res) {
 
     const { data: questions, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     // Shuffle and limit
     const shuffled = (questions || []).sort(() => Math.random() - 0.5).slice(0, limit);
@@ -1210,7 +1283,7 @@ export async function getPersonalizedPath(req, res) {
     }
 
     const { goal, focusArea, difficulty } = req.query;
-    
+
     if (!goal) {
       return res.status(400).json({ success: false, error: "Obiettivo richiesto" });
     }
@@ -1226,16 +1299,19 @@ export async function getPersonalizedPath(req, res) {
 
     const { data: moduleProgress } = await supabase
       .from("education_user_progress")
-      .select(`
+      .select(
+        `
         *,
         education_modules (id, title, slug, description, order_index)
-      `)
+      `
+      )
       .eq("user_id", userId);
 
     // Get all modules
     const { data: allModules } = await supabase
       .from("education_modules")
-      .select(`
+      .select(
+        `
         id,
         title,
         slug,
@@ -1243,15 +1319,16 @@ export async function getPersonalizedPath(req, res) {
         order_index,
         estimated_hours,
         education_lessons!inner (id)
-      `)
+      `
+      )
       .eq("is_active", true)
       .order("order_index", { ascending: true });
 
     // Calculate module stats
-    const modulesWithStats = (allModules || []).map(module => {
-      const progress = moduleProgress?.find(mp => mp.module_id === module.id);
+    const modulesWithStats = (allModules || []).map((module) => {
+      const progress = moduleProgress?.find((mp) => mp.module_id === module.id);
       const lessonsCount = module.education_lessons?.length || 0;
-      
+
       return {
         ...module,
         lessons_count: lessonsCount,
@@ -1269,51 +1346,67 @@ export async function getPersonalizedPath(req, res) {
     switch (goal) {
       case "foundations":
         recommendedModules = modulesWithStats
-          .filter(m => m.order_index <= 4) // First 4 modules
+          .filter((m) => m.order_index <= 4) // First 4 modules
           .sort((a, b) => a.order_index - b.order_index);
-        pathDescription = "Percorso completo per i fondamenti della finanza personale e degli investimenti.";
+        pathDescription =
+          "Percorso completo per i fondamenti della finanza personale e degli investimenti.";
         break;
-      
+
       case "trading":
         recommendedModules = modulesWithStats
-          .filter(m => m.title.toLowerCase().includes("trading") || m.title.toLowerCase().includes("mercato"))
+          .filter(
+            (m) =>
+              m.title.toLowerCase().includes("trading") || m.title.toLowerCase().includes("mercato")
+          )
           .sort((a, b) => a.order_index - b.order_index);
         if (recommendedModules.length === 0) {
           recommendedModules = modulesWithStats.slice(0, 3);
         }
-        pathDescription = "Percorso specializzato per il trading e l'analisi dei mercati finanziari.";
+        pathDescription =
+          "Percorso specializzato per il trading e l'analisi dei mercati finanziari.";
         break;
-      
+
       case "analysis":
         recommendedModules = modulesWithStats
-          .filter(m => m.title.toLowerCase().includes("analisi") || m.title.toLowerCase().includes("tecnica"))
+          .filter(
+            (m) =>
+              m.title.toLowerCase().includes("analisi") || m.title.toLowerCase().includes("tecnica")
+          )
           .sort((a, b) => a.order_index - b.order_index);
         if (recommendedModules.length === 0) {
           recommendedModules = modulesWithStats.slice(0, 3);
         }
         pathDescription = "Percorso focalizzato sull'analisi tecnica e fondamentale.";
         break;
-      
+
       case "risk":
         recommendedModules = modulesWithStats
-          .filter(m => m.title.toLowerCase().includes("rischio") || m.title.toLowerCase().includes("gestione"))
+          .filter(
+            (m) =>
+              m.title.toLowerCase().includes("rischio") ||
+              m.title.toLowerCase().includes("gestione")
+          )
           .sort((a, b) => a.order_index - b.order_index);
         if (recommendedModules.length === 0) {
           recommendedModules = modulesWithStats.slice(0, 3);
         }
         pathDescription = "Percorso per la gestione del rischio e la protezione del capitale.";
         break;
-      
+
       case "portfolio":
         recommendedModules = modulesWithStats
-          .filter(m => m.title.toLowerCase().includes("portafoglio") || m.title.toLowerCase().includes("diversificazione"))
+          .filter(
+            (m) =>
+              m.title.toLowerCase().includes("portafoglio") ||
+              m.title.toLowerCase().includes("diversificazione")
+          )
           .sort((a, b) => a.order_index - b.order_index);
         if (recommendedModules.length === 0) {
           recommendedModules = modulesWithStats.slice(0, 3);
         }
         pathDescription = "Percorso per la costruzione e gestione di un portafoglio diversificato.";
         break;
-      
+
       default:
         recommendedModules = modulesWithStats.slice(0, 4);
         pathDescription = "Percorso formativo personalizzato.";
@@ -1322,20 +1415,23 @@ export async function getPersonalizedPath(req, res) {
     // Apply focus area filter
     if (focusArea === "weak") {
       // Prioritize modules with low progress
-      recommendedModules = recommendedModules
-        .sort((a, b) => (a.userProgress.progress_percentage || 0) - (b.userProgress.progress_percentage || 0));
+      recommendedModules = recommendedModules.sort(
+        (a, b) =>
+          (a.userProgress.progress_percentage || 0) - (b.userProgress.progress_percentage || 0)
+      );
     } else if (focusArea === "strong") {
       // Prioritize modules with high progress
-      recommendedModules = recommendedModules
-        .sort((a, b) => (b.userProgress.progress_percentage || 0) - (a.userProgress.progress_percentage || 0));
+      recommendedModules = recommendedModules.sort(
+        (a, b) =>
+          (b.userProgress.progress_percentage || 0) - (a.userProgress.progress_percentage || 0)
+      );
     } else if (focusArea === "new") {
       // Prioritize not started modules
-      recommendedModules = recommendedModules
-        .sort((a, b) => {
-          const aStarted = a.userProgress.status !== "not_started" ? 1 : 0;
-          const bStarted = b.userProgress.status !== "not_started" ? 1 : 0;
-          return aStarted - bStarted;
-        });
+      recommendedModules = recommendedModules.sort((a, b) => {
+        const aStarted = a.userProgress.status !== "not_started" ? 1 : 0;
+        const bStarted = b.userProgress.status !== "not_started" ? 1 : 0;
+        return aStarted - bStarted;
+      });
     }
 
     // Limit to 5-6 modules for optimal path
@@ -1394,7 +1490,10 @@ export default async function handler(req, res) {
   if (req.headers.authorization) {
     try {
       const token = req.headers.authorization.replace("Bearer ", "");
-      const { data: { user: authUser }, error } = await supabase.auth.getUser(token);
+      const {
+        data: { user: authUser },
+        error,
+      } = await supabase.auth.getUser(token);
       if (!error && authUser) {
         user = authUser;
       }

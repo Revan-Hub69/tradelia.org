@@ -3,10 +3,10 @@
 // Mostra solo al primo accesso e salva preferenza
 // -----------------------------------------------------------
 
-import { i18n } from '/report/assets/js/utils/i18n.js';
+import { i18n } from "/report/assets/js/utils/i18n.js";
 
-const STORAGE_KEY = 'tradelia-legal-ack-v2025-11';
-const FIRST_PAGE_KEY = 'tradelia-first-page';
+const STORAGE_KEY = "tradelia-legal-ack-v2025-11";
+const FIRST_PAGE_KEY = "tradelia-first-page";
 
 // ===== UTILITIES =====
 function getFirstPage() {
@@ -40,7 +40,7 @@ function saveBannerAck() {
       STORAGE_KEY,
       JSON.stringify({
         acceptedAt: new Date().toISOString(),
-        v: '2025-11',
+        v: "2025-11",
       })
     );
   } catch (e) {
@@ -54,20 +54,20 @@ function renderBanner() {
 
   const translations = {
     it: {
-      title: 'Informativa legale',
+      title: "Informativa legale",
       message:
-        'Questo sito ha finalità esclusivamente educativa e informativa. Non costituisce consulenza in materia di investimenti (MiFID II).',
-      accept: 'Accetto e chiudi',
-      mifid: 'Informativa MiFID',
-      privacy: 'Privacy',
+        "Questo sito ha finalità esclusivamente educativa e informativa. Non costituisce consulenza in materia di investimenti (MiFID II).",
+      accept: "Accetto e chiudi",
+      mifid: "Informativa MiFID",
+      privacy: "Privacy",
     },
     en: {
-      title: 'Legal information',
+      title: "Legal information",
       message:
-        'This site is for educational and informational purposes only. It does not constitute investment advice (MiFID II).',
-      accept: 'Accept and close',
-      mifid: 'MiFID Information',
-      privacy: 'Privacy',
+        "This site is for educational and informational purposes only. It does not constitute investment advice (MiFID II).",
+      accept: "Accept and close",
+      mifid: "MiFID Information",
+      privacy: "Privacy",
     },
   };
 
@@ -100,14 +100,14 @@ function renderLegalOverlay() {
 
   const translations = {
     it: {
-      title: 'Informativa legale',
-      close: 'Chiudi',
-      mifidTab: 'Informativa MiFID',
-      privacyTab: 'Privacy',
-      cookieTab: 'Cookie',
-      termsTab: 'Termini',
-      continue: 'Continuando dichiari di aver letto e compreso le informative.',
-      accept: 'Accetto e chiudi',
+      title: "Informativa legale",
+      close: "Chiudi",
+      mifidTab: "Informativa MiFID",
+      privacyTab: "Privacy",
+      cookieTab: "Cookie",
+      termsTab: "Termini",
+      continue: "Continuando dichiari di aver letto e compreso le informative.",
+      accept: "Accetto e chiudi",
       mifidContent: `
         <h4>Finalità del materiale</h4>
         <p>Il presente contenuto ha esclusiva finalità informativa e didattica. Non costituisce consulenza in materia di investimenti, raccomandazione personalizzata, sollecitazione al pubblico risparmio o ricerca in investimento ai sensi della normativa MiFID II / ESMA.</p>
@@ -192,14 +192,14 @@ function renderLegalOverlay() {
       `,
     },
     en: {
-      title: 'Legal information',
-      close: 'Close',
-      mifidTab: 'MiFID Information',
-      privacyTab: 'Privacy',
-      cookieTab: 'Cookies',
-      termsTab: 'Terms',
-      continue: 'By continuing you declare that you have read and understood the information.',
-      accept: 'Accept and close',
+      title: "Legal information",
+      close: "Close",
+      mifidTab: "MiFID Information",
+      privacyTab: "Privacy",
+      cookieTab: "Cookies",
+      termsTab: "Terms",
+      continue: "By continuing you declare that you have read and understood the information.",
+      accept: "Accept and close",
       mifidContent: `
         <h4>Purpose of the material</h4>
         <p>This content is for informational and educational purposes only. It does not constitute investment advice, personalized recommendations, solicitation of public savings or investment research under MiFID II / ESMA regulations.</p>
@@ -332,91 +332,116 @@ let legalOverlayInstance = null;
 
 function createLegalOverlay() {
   // Se overlay già esiste, non ricrearlo
-  if (document.getElementById('legal-consent-overlay')) {
-    return document.getElementById('legal-consent-overlay');
+  if (document.getElementById("legal-consent-overlay")) {
+    return document.getElementById("legal-consent-overlay");
   }
 
   // Crea overlay
-  const overlay = document.createElement('div');
+  const overlay = document.createElement("div");
   overlay.innerHTML = renderLegalOverlay();
   document.body.appendChild(overlay.firstElementChild);
 
-  const overlayEl = document.getElementById('legal-consent-overlay');
-  if (!overlayEl) return null;
+  const overlayEl = document.getElementById("legal-consent-overlay");
+  if (!overlayEl) {
+    return null;
+  }
 
-  const btnAccept = overlayEl.querySelector('#btn-accept-legal');
-  const tabM = overlayEl.querySelector('#tab-mifid');
-  const tabP = overlayEl.querySelector('#tab-privacy');
-  const tabC = overlayEl.querySelector('#tab-cookie');
-  const tabT = overlayEl.querySelector('#tab-terms');
-  const panelM = overlayEl.querySelector('#panel-mifid');
-  const panelP = overlayEl.querySelector('#panel-privacy');
-  const panelC = overlayEl.querySelector('#panel-cookie');
-  const panelT = overlayEl.querySelector('#panel-terms');
+  const btnAccept = overlayEl.querySelector("#btn-accept-legal");
+  const tabM = overlayEl.querySelector("#tab-mifid");
+  const tabP = overlayEl.querySelector("#tab-privacy");
+  const tabC = overlayEl.querySelector("#tab-cookie");
+  const tabT = overlayEl.querySelector("#tab-terms");
+  const panelM = overlayEl.querySelector("#panel-mifid");
+  const panelP = overlayEl.querySelector("#panel-privacy");
+  const panelC = overlayEl.querySelector("#panel-cookie");
+  const panelT = overlayEl.querySelector("#panel-terms");
 
   function showTab(which) {
     // Reset all tabs
-    [tabM, tabP, tabC, tabT].forEach(tab => {
-      if (tab) tab.setAttribute('aria-selected', 'false');
+    [tabM, tabP, tabC, tabT].forEach((tab) => {
+      if (tab) {
+        tab.setAttribute("aria-selected", "false");
+      }
     });
-    [panelM, panelP, panelC, panelT].forEach(panel => {
-      if (panel) panel.hidden = true;
+    [panelM, panelP, panelC, panelT].forEach((panel) => {
+      if (panel) {
+        panel.hidden = true;
+      }
     });
 
     // Show selected tab
     const tabs = { mifid: tabM, privacy: tabP, cookie: tabC, terms: tabT };
     const panels = { mifid: panelM, privacy: panelP, cookie: panelC, terms: panelT };
-    
+
     const selectedTab = tabs[which];
     const selectedPanel = panels[which];
-    
-    if (selectedTab) selectedTab.setAttribute('aria-selected', 'true');
-    if (selectedPanel) selectedPanel.hidden = false;
+
+    if (selectedTab) {
+      selectedTab.setAttribute("aria-selected", "true");
+    }
+    if (selectedPanel) {
+      selectedPanel.hidden = false;
+    }
   }
 
-  function openLegal(which = 'mifid', blocking = true) {
+  function openLegal(which = "mifid", blocking = true) {
     showTab(which);
     overlayEl.hidden = false;
-    document.body.style.overflow = 'hidden';
-    if (blocking) overlayEl.setAttribute('data-blocking', 'true');
-    else overlayEl.removeAttribute('data-blocking');
+    document.body.style.overflow = "hidden";
+    if (blocking) {
+      overlayEl.setAttribute("data-blocking", "true");
+    } else {
+      overlayEl.removeAttribute("data-blocking");
+    }
     setTimeout(() => {
       const tabs = { mifid: tabM, privacy: tabP, cookie: tabC, terms: tabT };
       const targetTab = tabs[which];
-      if (targetTab) targetTab.focus();
+      if (targetTab) {
+        targetTab.focus();
+      }
     }, 0);
   }
 
   function closeLegal() {
     overlayEl.hidden = true;
-    document.body.style.overflow = '';
+    document.body.style.overflow = "";
   }
 
-  if (tabM) tabM.addEventListener('click', () => showTab('mifid'));
-  if (tabP) tabP.addEventListener('click', () => showTab('privacy'));
-  if (tabC) tabC.addEventListener('click', () => showTab('cookie'));
-  if (tabT) tabT.addEventListener('click', () => showTab('terms'));
+  if (tabM) {
+    tabM.addEventListener("click", () => showTab("mifid"));
+  }
+  if (tabP) {
+    tabP.addEventListener("click", () => showTab("privacy"));
+  }
+  if (tabC) {
+    tabC.addEventListener("click", () => showTab("cookie"));
+  }
+  if (tabT) {
+    tabT.addEventListener("click", () => showTab("terms"));
+  }
 
   if (btnAccept) {
-    btnAccept.addEventListener('click', () => {
+    btnAccept.addEventListener("click", () => {
       saveBannerAck();
       closeLegal();
       // Rimuovi anche banner se presente
-      const bannerEl = document.getElementById('mifid-banner');
+      const bannerEl = document.getElementById("mifid-banner");
       if (bannerEl) {
         bannerEl.remove();
       }
     });
   }
 
-  overlayEl.addEventListener('click', (e) => {
-    if (e.target.matches('[data-legal-dismiss]') || e.target.closest('[data-legal-dismiss]')) {
-      if (!overlayEl.hasAttribute('data-blocking')) closeLegal();
+  overlayEl.addEventListener("click", (e) => {
+    if (e.target.matches("[data-legal-dismiss]") || e.target.closest("[data-legal-dismiss]")) {
+      if (!overlayEl.hasAttribute("data-blocking")) {
+        closeLegal();
+      }
     }
   });
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !overlayEl.hasAttribute('data-blocking') && !overlayEl.hidden) {
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !overlayEl.hasAttribute("data-blocking") && !overlayEl.hidden) {
       closeLegal();
     }
   });
@@ -431,7 +456,7 @@ function createLegalOverlay() {
 function setupLegalOverlay() {
   // Controlla se è homepage
   const isHomepage =
-    window.location.pathname === '/' || window.location.pathname.endsWith('index.html');
+    window.location.pathname === "/" || window.location.pathname.endsWith("index.html");
 
   // Salva prima pagina visitata
   const currentPage = window.location.pathname;
@@ -457,7 +482,7 @@ function setupLegalOverlay() {
     // Piccolo delay per assicurarsi che tutto sia caricato
     setTimeout(() => {
       if (legalOverlayInstance) {
-        legalOverlayInstance.openLegal('mifid', true);
+        legalOverlayInstance.openLegal("mifid", true);
       }
     }, 300);
   }
@@ -472,14 +497,14 @@ export function initMifidBanner() {
 // Expose function for version check to call
 window.checkLegalConsent = function () {
   if (legalOverlayInstance && !hasSeenBanner()) {
-    legalOverlayInstance.openLegal('mifid', true);
+    legalOverlayInstance.openLegal("mifid", true);
   }
 };
 
 // Auto-init se DOM è pronto
-if (typeof document !== 'undefined') {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
+if (typeof document !== "undefined") {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
       // Aspetta che i18n sia inizializzato
       setTimeout(() => {
         initMifidBanner();

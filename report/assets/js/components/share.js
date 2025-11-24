@@ -98,7 +98,7 @@ function initShareSystem() {
           shareUrl = '';
       }
 
-      if (!shareUrl) return;
+      if (!shareUrl) {return;}
 
       const w = 600;
       const h = 500;
@@ -116,7 +116,7 @@ function initShareSystem() {
     // 4. Copia negli appunti + feedback
     // ---------------------------------
     async function copyToClipboard() {
-      if (!fullUrl) return;
+      if (!fullUrl) {return;}
       try {
         await navigator.clipboard.writeText(fullUrl);
         flashCopied(copyBtn, linkField);
@@ -179,7 +179,7 @@ function initShareSystem() {
         const mobile = window.matchMedia('(max-width: 640px)').matches;
         if (mobile) {
           const didNative = await tryNativeShare();
-          if (didNative) return;
+          if (didNative) {return;}
         }
 
         openSocial(svc === 'twitter' ? 'twitter' : svc);

@@ -261,7 +261,9 @@ function logVital(name, value, thresholds) {
     // CLS: disabilitato toast (troppo invasivo, CLS può fluttuare durante caricamento)
     // Solo log in console per debugging
     if (name === "CLS") {
-      console.warn(`[PerformanceMonitor] ${name}: ${value.toFixed(3)} - Monitoraggio continuo (toast disabilitato)`);
+      console.warn(
+        `[PerformanceMonitor] ${name}: ${value.toFixed(3)} - Monitoraggio continuo (toast disabilitato)`
+      );
       return;
     }
 

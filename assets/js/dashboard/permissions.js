@@ -3,7 +3,7 @@
  * Autorizzazioni centralizzate per Guest/Pro/Desk
  */
 
-import { getCurrentRole } from './account-banner.js';
+import { getCurrentRole } from "./account-banner.js";
 
 /**
  * Mappa autorizzazioni per ruolo
@@ -49,48 +49,54 @@ export function canAccessFeature(feature, role = null, planData = null) {
   if (!role) {
     role = getCurrentRole();
   }
-  if (!role || !role.role) return false;
+  if (!role || !role.role) {
+    return false;
+  }
 
   const permissions = PERMISSIONS[role.role];
-  if (!permissions) return false;
+  if (!permissions) {
+    return false;
+  }
 
   // Check base permissions
   switch (feature) {
-    case 'pdf':
+    case "pdf":
       return permissions.canDownloadPdf;
-    
-    case 'analysis':
-    case 'request_analysis':
-      if (!permissions.canRequestAnalysis) return false;
+
+    case "analysis":
+    case "request_analysis":
+      if (!permissions.canRequestAnalysis) {
+        return false;
+      }
       // Check usage se planData disponibile
       if (planData && planData.usage) {
         const usage = planData.usage;
-        if (role.role === 'pro') {
+        if (role.role === "pro") {
           // Pro: può richiedere se ha analisi incluse o extra disponibili
-          return (usage.proIncludedRemaining > 0) || (usage.proExtraRemaining > 0);
-        } else if (role.role === 'desk') {
+          return usage.proIncludedRemaining > 0 || usage.proExtraRemaining > 0;
+        } else if (role.role === "desk") {
           // Desk: può richiedere se ha analisi incluse o sempre (extra disponibili)
-          return (usage.deskIncludedRemaining > 0) || true; // Extra sempre disponibili
+          return usage.deskIncludedRemaining > 0 || true; // Extra sempre disponibili
         }
       }
       return true;
-    
-    case 'community':
-    case 'vote':
+
+    case "community":
+    case "vote":
       return permissions.canVote;
-    
-    case 'propose':
+
+    case "propose":
       return permissions.canPropose;
-    
-    case 'notifications':
+
+    case "notifications":
       return permissions.canAccessNotifications;
-    
-    case 'education':
+
+    case "education":
       return permissions.canViewEducation;
-    
-    case 'reports':
+
+    case "reports":
       return permissions.canViewReports;
-    
+
     default:
       return false;
   }
@@ -107,37 +113,49 @@ export function getFeaturePrice(feature, role = null, planData = null) {
   if (!role) {
     role = getCurrentRole();
   }
-  if (!role || !role.role) return null;
+  if (!role || !role.role) {
+    return null;
+  }
 
   switch (feature) {
-    case 'pdf':
-      if (role.role === 'desk') return null; // Incluso
-      if (role.role === 'pro') return 10; // 10€
+    case "pdf":
+      if (role.role === "desk") {
+        return null;
+      } // Incluso
+      if (role.role === "pro") {
+        return 10;
+      } // 10€
       return null; // Guest: non disponibile
-    
-    case 'analysis':
-      if (role.role === 'pro') {
+
+    case "analysis":
+      if (role.role === "pro") {
         if (planData && planData.usage) {
           const usage = planData.usage;
           // Se ha analisi inclusa disponibile: 0€
-          if (usage.proIncludedRemaining > 0) return null;
+          if (usage.proIncludedRemaining > 0) {
+            return null;
+          }
           // Se ha slot extra disponibili: 29€
-          if (usage.proExtraRemaining > 0) return 29;
+          if (usage.proExtraRemaining > 0) {
+            return 29;
+          }
         }
         // Default: 49€ (standalone)
         return 49;
       }
-      if (role.role === 'desk') {
+      if (role.role === "desk") {
         if (planData && planData.usage) {
           const usage = planData.usage;
           // Se ha analisi incluse disponibili: 0€
-          if (usage.deskIncludedRemaining > 0) return null;
+          if (usage.deskIncludedRemaining > 0) {
+            return null;
+          }
         }
         // Extra: 49€
         return 49;
       }
       return null; // Guest: non disponibile
-    
+
     default:
       return null;
   }
@@ -152,7 +170,9 @@ export function isAdmin(role = null) {
   if (!role) {
     role = getCurrentRole();
   }
-  if (!role) return false;
+  if (!role) {
+    return false;
+  }
   return role.isAdmin === true;
 }
 
@@ -167,7 +187,7 @@ export function getPaywallMessage(feature, role = null) {
     role = getCurrentRole();
   }
   if (!role || !role.role) {
-    return 'Accedi per accedere a questa funzionalità.';
+    return "Accedi per accedere a questa funzionalità.";
   }
 
   if (canAccessFeature(feature, role)) {
@@ -175,20 +195,19 @@ export function getPaywallMessage(feature, role = null) {
   }
 
   switch (feature) {
-    case 'pdf':
-      return 'Attiva Pro o Desk per scaricare PDF.';
-    
-    case 'analysis':
-      return 'Attiva Pro o Desk per richiedere analisi on-demand.';
-    
-    case 'vote':
-      return 'Accedi per votare nelle proposte della community.';
-    
-    case 'propose':
-      return 'Attiva Desk per proporre nuovi asset da analizzare.';
-    
+    case "pdf":
+      return "Attiva Pro o Desk per scaricare PDF.";
+
+    case "analysis":
+      return "Attiva Pro o Desk per richiedere analisi on-demand.";
+
+    case "vote":
+      return "Accedi per votare nelle proposte della community.";
+
+    case "propose":
+      return "Attiva Desk per proporre nuovi asset da analizzare.";
+
     default:
-      return 'Accesso negato.';
+      return "Accesso negato.";
   }
 }
-

@@ -70,7 +70,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
   }
 
   function escapeHtml(str) {
-    if (str == null) return '';
+    if (str == null) {return '';}
     const div = document.createElement('div');
     div.textContent = String(str);
     return div.innerHTML;
@@ -91,7 +91,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
         throw new Error(`HTTP ${res.status}: ${path}`);
       }
       const data = await res.json();
-      if (!data || typeof data !== 'object') throw new Error(`Invalid JSON: ${path}`);
+      if (!data || typeof data !== 'object') {throw new Error(`Invalid JSON: ${path}`);}
       return data;
     } catch (err) {
       // Log come errore solo se non è silenzioso (moduli opzionali)
@@ -115,11 +115,11 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
 
   function setText(id, val) {
     const el = document.getElementById(id);
-    if (el) el.textContent = val ?? '—';
+    if (el) {el.textContent = val ?? '—';}
   }
 
   function fmtDate(str) {
-    if (!str) return '—';
+    if (!str) {return '—';}
     try {
       return new Date(str).toLocaleDateString('it-IT');
     } catch {
@@ -145,8 +145,8 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
     document.title = title;
 
     // Update meta description (ottimizzato per AI)
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.content = description;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {metaDesc.content = description;}
 
     // Update keywords
     updateMetaName(
@@ -248,7 +248,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
   // ===== STRUCTURED DATA DINAMICO =====
   function updateStructuredData(ticker, companyName, version, start, end, frameworkType) {
     const structuredDataScript = document.getElementById('structured-data');
-    if (!structuredDataScript) return;
+    if (!structuredDataScript) {return;}
 
     const structuredData = {
       '@context': 'https://schema.org',
@@ -540,9 +540,9 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
     Logger.debug('App', `Inizializzazione: ${reportId}`);
 
     // Pulisci TUTTI i container prima di iniziare (evita duplicati)
-    if (TICKER_SLOT) TICKER_SLOT.innerHTML = '';
-    if (MARKET_CONTEXT_SNAPSHOT_SLOT) MARKET_CONTEXT_SNAPSHOT_SLOT.innerHTML = '';
-    if (CHART_SLOT) CHART_SLOT.innerHTML = '';
+    if (TICKER_SLOT) {TICKER_SLOT.innerHTML = '';}
+    if (MARKET_CONTEXT_SNAPSHOT_SLOT) {MARKET_CONTEXT_SNAPSHOT_SLOT.innerHTML = '';}
+    if (CHART_SLOT) {CHART_SLOT.innerHTML = '';}
     if (MODULES_CONTAINER) {
       MODULES_CONTAINER.innerHTML = '';
     } else if (ROOT) {
@@ -634,7 +634,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
               break;
             }
           }
-          if (symbol) break;
+          if (symbol) {break;}
         }
       } else {
         Logger.warn('App', 'headerData o headerData.rows non disponibile');
@@ -716,7 +716,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
     if (error || !report) {
       Logger.warn('App', `Report ${slug} non trovato su Supabase, provo fallback legacy`);
       const legacy = await fetchLegacyBundle(slug);
-      if (legacy) return legacy;
+      if (legacy) {return legacy;}
       throw new Error('Report non trovato o non pubblicato');
     }
 
@@ -763,7 +763,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
           const jsonData = await fetchJSON(`/report/reports/${slug}/${jsonName}.json`, {
             silent: true,
           });
-          if (!jsonData || Object.keys(jsonData).length === 0) continue;
+          if (!jsonData || Object.keys(jsonData).length === 0) {continue;}
           modules.push({
             module_key: moduleKey,
             order_index: (index + 1) * 10,
@@ -799,7 +799,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
   }
 
   function normalizeModuleRecord(record) {
-    if (!record || !record.module_key) return null;
+    if (!record || !record.module_key) {return null;}
     const moduleKey = String(record.module_key).toLowerCase();
     let content = record.content ?? {};
     if (typeof content === 'string') {
@@ -822,7 +822,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
     const map = {};
     for (const rec of records) {
       const norm = normalizeModuleRecord(rec);
-      if (!norm) continue;
+      if (!norm) {continue;}
       normalized.push(norm);
       map[norm.module_key] = norm.content;
     }
@@ -830,7 +830,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
   }
 
   function getModuleContent(moduleKey) {
-    if (!moduleKey) return null;
+    if (!moduleKey) {return null;}
     return __moduleMap[moduleKey.toLowerCase()] || null;
   }
 
@@ -954,7 +954,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
     },
     bindMetricInfoButtons: (container) => {
       // Trova tutti i pulsanti info-btn con data-metric e collega al glossario
-      if (!container) return;
+      if (!container) {return;}
 
       const infoButtons = container.querySelectorAll('.info-btn[data-metric]');
       infoButtons.forEach((btn) => {
@@ -967,7 +967,7 @@ import { supabase, getSignedChartUrl } from './supabase-client.js';
           e.stopPropagation();
 
           const metricKey = newBtn.getAttribute('data-metric');
-          if (!metricKey) return;
+          if (!metricKey) {return;}
 
           // Rimuovi suffisso "_info" se presente
           const cleanKey = metricKey.replace(/_info$/, '');

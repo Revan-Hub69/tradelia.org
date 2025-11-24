@@ -34,7 +34,9 @@ async function handler(req, res) {
       case "status":
         return await handleGetStatus(req, res);
       default:
-        return res.status(400).json({ ok: false, error: "Azione non valida. Usa: request, status" });
+        return res
+          .status(400)
+          .json({ ok: false, error: "Azione non valida. Usa: request, status" });
     }
   } catch (error) {
     return handleRouteError(res, error);
@@ -121,7 +123,9 @@ async function handleGetStatus(req, res) {
 }
 
 async function sendAdminNotificationEmail(requestData) {
-  if (!BREVO_API_KEY) return;
+  if (!BREVO_API_KEY) {
+    return;
+  }
 
   const emailHTML = `
 <!DOCTYPE html>
@@ -142,9 +146,9 @@ async function sendAdminNotificationEmail(requestData) {
     </div>
     <div class="content">
       <p><strong>Ticker:</strong> ${requestData.ticker}</p>
-      <p><strong>Email:</strong> ${requestData.email || 'N/A'}</p>
-      <p><strong>Timeframe:</strong> ${requestData.timeframe || 'N/A'}</p>
-      ${requestData.notes ? `<p><strong>Note:</strong> ${requestData.notes}</p>` : ''}
+      <p><strong>Email:</strong> ${requestData.email || "N/A"}</p>
+      <p><strong>Timeframe:</strong> ${requestData.timeframe || "N/A"}</p>
+      ${requestData.notes ? `<p><strong>Note:</strong> ${requestData.notes}</p>` : ""}
       <p><strong>ID Richiesta:</strong> ${requestData.id}</p>
     </div>
   </div>
@@ -166,4 +170,3 @@ async function sendAdminNotificationEmail(requestData) {
     }),
   });
 }
-

@@ -13,7 +13,9 @@ declare const STATE: DashboardState;
  */
 export async function loadReports(): Promise<void> {
   const container = document.getElementById("reports-container");
-  if (!container) return;
+  if (!container) {
+    return;
+  }
 
   try {
     container.innerHTML = `
@@ -49,7 +51,9 @@ export async function loadReports(): Promise<void> {
     for (const reportID of reportDirs) {
       try {
         const headerResponse = await fetch(`/report/reports/${reportID}/header.json`);
-        if (!headerResponse.ok) continue;
+        if (!headerResponse.ok) {
+          continue;
+        }
 
         const header = await headerResponse.json();
         let ticker: string | null = null;
@@ -62,13 +66,21 @@ export async function loadReports(): Promise<void> {
             const companyPart = companyRow.parts.find(
               (p: { key: string }) => p.key === "CompanyName"
             );
-            if (tickerPart) ticker = tickerPart.value;
-            if (companyPart) companyName = companyPart.value;
+            if (tickerPart) {
+              ticker = tickerPart.value;
+            }
+            if (companyPart) {
+              companyName = companyPart.value;
+            }
           }
         }
 
-        if (!ticker && header?.Ticker) ticker = header.Ticker;
-        if (!companyName && header?.CompanyName) companyName = header.CompanyName;
+        if (!ticker && header?.Ticker) {
+          ticker = header.Ticker;
+        }
+        if (!companyName && header?.CompanyName) {
+          companyName = header.CompanyName;
+        }
 
         reports.push({
           id: reportID,
@@ -118,7 +130,9 @@ export async function loadReports(): Promise<void> {
 export function renderReports(): void {
   const container = document.getElementById("reports-container");
   const statsEl = document.getElementById("reports-stats");
-  if (!container) return;
+  if (!container) {
+    return;
+  }
 
   // Update stats
   if (statsEl) {
@@ -147,26 +161,27 @@ export function renderReports(): void {
     return;
   }
 
-  const html = STATE.filteredReports.map((report: Report) => {
-    const date = new Date(report.timestamp);
-    const formattedDate = isNaN(date.getTime())
-      ? "N/A"
-      : date.toLocaleDateString("it-IT", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        });
+  const html = STATE.filteredReports
+    .map((report: Report) => {
+      const date = new Date(report.timestamp);
+      const formattedDate = isNaN(date.getTime())
+        ? "N/A"
+        : date.toLocaleDateString("it-IT", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
 
-    // Extract report type from ID if possible
-    const reportType = report.id.includes("SRD")
-      ? "SRD"
-      : report.id.includes("MTB")
-        ? "MTB"
-        : "Report";
+      // Extract report type from ID if possible
+      const reportType = report.id.includes("SRD")
+        ? "SRD"
+        : report.id.includes("MTB")
+          ? "MTB"
+          : "Report";
 
-    return `
+      return `
       <div class="report-card">
         <div class="report-card-header">
           <div class="report-card-main">
@@ -205,7 +220,8 @@ export function renderReports(): void {
         </div>
       </div>
     `;
-  }).join("");
+    })
+    .join("");
 
   container.innerHTML = html;
 }

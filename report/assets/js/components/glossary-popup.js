@@ -16,7 +16,7 @@ const GLOSSARY_POPUP = {
 
 // ===== UTILITIES =====
 function escapeHtml(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   const div = document.createElement('div');
   div.textContent = String(str);
   return div.innerHTML;
@@ -24,7 +24,7 @@ function escapeHtml(str) {
 
 // ===== CARICAMENTO GLOSSARIO =====
 async function loadGlossaryData() {
-  if (GLOSSARY_POPUP._data) return GLOSSARY_POPUP._data;
+  if (GLOSSARY_POPUP._data) {return GLOSSARY_POPUP._data;}
 
   try {
     // Stesso sistema di glossario.html: prima prova /glossario.json, poi fallback
@@ -59,7 +59,7 @@ async function loadGlossaryData() {
 
 // ===== MOUNT =====
 function mount() {
-  if (GLOSSARY_POPUP._overlay) return;
+  if (GLOSSARY_POPUP._overlay) {return;}
 
   // Crea overlay (stessa struttura di glossario.html)
   GLOSSARY_POPUP._overlay = document.createElement('div');
@@ -81,7 +81,7 @@ function mount() {
 
 // ===== APERTURA TERMINE (DRAWER) =====
 async function openTerm(key) {
-  if (!GLOSSARY_POPUP._overlay) mount();
+  if (!GLOSSARY_POPUP._overlay) {mount();}
 
   // Carica glossario se necessario
   await loadGlossaryData();
@@ -122,7 +122,7 @@ async function openTerm(key) {
     }
 
     overlay.addEventListener('click', (e) => {
-      if (e.target === overlay) GLOSSARY_POPUP.close();
+      if (e.target === overlay) {GLOSSARY_POPUP.close();}
     });
 
     overlay.addEventListener('overlay-close-request', (e) => {
@@ -230,7 +230,7 @@ async function openTerm(key) {
   }
 
   overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) GLOSSARY_POPUP.close();
+    if (e.target === overlay) {GLOSSARY_POPUP.close();}
   });
 
   // Listener per close request dall'overlay manager (ESC key)
@@ -253,7 +253,7 @@ async function openTerm(key) {
 
 // ===== CHIUSURA =====
 function close() {
-  if (!GLOSSARY_POPUP._overlay || !GLOSSARY_POPUP._isOpen) return;
+  if (!GLOSSARY_POPUP._overlay || !GLOSSARY_POPUP._isOpen) {return;}
 
   GLOSSARY_POPUP._overlay.hidden = true;
   // NOTA: overflow gestito da overlay-manager.js (non impostare qui)

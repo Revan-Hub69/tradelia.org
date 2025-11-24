@@ -46,7 +46,11 @@ export default async function handler(req, res) {
       case "request-refund":
         return await handleRequestRefund(req, res);
       default:
-        return res.status(400).json({ ok: false, error: "Azione non valida. Usa: checkout, subscription, data, order, start-trial, convert-trial, request-refund" });
+        return res.status(400).json({
+          ok: false,
+          error:
+            "Azione non valida. Usa: checkout, subscription, data, order, start-trial, convert-trial, request-refund",
+        });
     }
   } catch (error) {
     return handleRouteError(res, error);
@@ -147,7 +151,7 @@ async function handleCreateOrder(req, res) {
   // Importa logica da orders.js
   const { getServicePrice } = await import("./_lib/xolo.js");
   const { sendEmail } = await import("./email.js");
-  
+
   const body = req.body || {};
   const { order_type, token, metadata = {} } = body;
 
@@ -255,7 +259,7 @@ async function handleCreateOrder(req, res) {
 // ===== ACTIVATE ORDER =====
 async function handleActivateOrder(req, res) {
   const { checkXoloPayment } = await import("./_lib/xolo.js");
-  
+
   const body = req.body || {};
   const { order_id, token, invoice_id, verify_payment = false } = body;
 
@@ -372,7 +376,8 @@ async function handleStartTrial(req, res) {
     if (existingTrials && existingTrials.length > 0) {
       return res.status(400).json({
         ok: false,
-        error: "Hai già usato il periodo di prova gratuito. Il trial è disponibile solo per la prima volta.",
+        error:
+          "Hai già usato il periodo di prova gratuito. Il trial è disponibile solo per la prima volta.",
       });
     }
 
@@ -433,17 +438,15 @@ async function handleStartTrial(req, res) {
     });
 
     // Aggiorna user_role per dare accesso Pro durante trial
-    await supabase
-      .from("user_roles")
-      .upsert(
-        {
-          user_id: userId,
-          email: email.toLowerCase(),
-          role: "pro",
-          valid_until: trialEndsAt.toISOString(),
-        },
-        { onConflict: "user_id" }
-      );
+    await supabase.from("user_roles").upsert(
+      {
+        user_id: userId,
+        email: email.toLowerCase(),
+        role: "pro",
+        valid_until: trialEndsAt.toISOString(),
+      },
+      { onConflict: "user_id" }
+    );
 
     return sendJSON(res, 200, {
       ok: true,
@@ -651,7 +654,8 @@ async function handleRequestRefund(req, res) {
     if (daysSincePayment > 14) {
       return res.status(400).json({
         ok: false,
-        error: "Il periodo di rimborso di 14 giorni è scaduto. Il rimborso è disponibile solo entro 14 giorni dal pagamento.",
+        error:
+          "Il periodo di rimborso di 14 giorni è scaduto. Il rimborso è disponibile solo entro 14 giorni dal pagamento.",
         days_since_payment: daysSincePayment,
       });
     }
@@ -733,7 +737,8 @@ async function handleRequestRefund(req, res) {
       order_id: order.id,
       amount: order.amount,
       days_since_payment: daysSincePayment,
-      message: "Richiesta rimborso ricevuta. Il rimborso verrà processato entro 5-10 giorni lavorativi.",
+      message:
+        "Richiesta rimborso ricevuta. Il rimborso verrà processato entro 5-10 giorni lavorativi.",
     });
   } catch (error) {
     if (error instanceof HttpError) {
@@ -743,4 +748,3 @@ async function handleRequestRefund(req, res) {
     throw new HttpError(500, "Errore richiesta rimborso", error.message);
   }
 }
-

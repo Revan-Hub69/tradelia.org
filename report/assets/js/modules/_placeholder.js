@@ -31,7 +31,7 @@ const MODULE_DESCRIPTIONS = {
 };
 
 function escapeHtml(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   const div = document.createElement('div');
   div.textContent = String(str);
   return div.innerHTML;

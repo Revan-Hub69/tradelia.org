@@ -164,7 +164,7 @@ const templateRegistry = (() => {
   const templatesBySlug = new Map();
 
   const selectVersion = (template) => {
-    if (!template?.versions?.length) return null;
+    if (!template?.versions?.length) {return null;}
     return (
       template.versions.find((version) => version.id === template.defaultVersionId) ||
       template.versions[0]
@@ -179,7 +179,7 @@ const templateRegistry = (() => {
   };
 
   const populateTemplateSelect = () => {
-    if (!reportTypeEl || !templates.length) return;
+    if (!reportTypeEl || !templates.length) {return;}
     const previousValue = reportTypeEl.value;
     reportTypeEl.innerHTML = templates
       .map(
@@ -200,7 +200,7 @@ const templateRegistry = (() => {
 
   return {
     async ensureLoaded() {
-      if (loaded) return templates;
+      if (loaded) {return templates;}
       const response = await callAdminAPI({ resource: 'templates' });
       templates = response.templates || [];
       rebuildIndex();
@@ -220,7 +220,7 @@ const templateRegistry = (() => {
     },
     getDefaultModules(slug) {
       const version = selectVersion(templatesBySlug.get(slug));
-      if (!version?.modules?.length) return [];
+      if (!version?.modules?.length) {return [];}
       return version.modules.map((module, index) => ({
         module_key: module.module_key,
         order_index: module.order_index ?? index,
@@ -229,7 +229,7 @@ const templateRegistry = (() => {
     },
     getRequiredKeys(slug) {
       const version = selectVersion(templatesBySlug.get(slug));
-      if (!version?.modules?.length) return new Set();
+      if (!version?.modules?.length) {return new Set();}
       return new Set(
         version.modules.filter((module) => module.required).map((module) => module.module_key)
       );
@@ -239,7 +239,7 @@ const templateRegistry = (() => {
     },
     getDefaultVersionId(slug) {
       const template = templatesBySlug.get(slug);
-      if (!template) return null;
+      if (!template) {return null;}
       const version = selectVersion(template);
       return version?.id || null;
     },
@@ -301,7 +301,7 @@ const AUTH_CARD_MESSAGES = {
 };
 
 const setStatusBannerMessage = (tone = 'info', title = '', message = '') => {
-  if (!statusBanner) return;
+  if (!statusBanner) {return;}
   Object.values(STATUS_BANNER_CLASSES).forEach((cls) => statusBanner.classList.remove(cls));
   const appliedClass = STATUS_BANNER_CLASSES[tone] || STATUS_BANNER_CLASSES.info;
   statusBanner.classList.add(appliedClass);
@@ -342,7 +342,7 @@ const formatStatusTime = (date) => {
 };
 
 const toggleButtonLoading = (button, loading, loadingLabel) => {
-  if (!button) return;
+  if (!button) {return;}
   const baseLabel = button.getAttribute('data-label') || button.textContent.trim();
   if (loading) {
     button.textContent = loadingLabel;
@@ -375,7 +375,7 @@ const setSavingState = (saving, mode) => {
 };
 
 const updateStatusAfterDirtyChange = () => {
-  if (isSaving) return;
+  if (isSaving) {return;}
   if (isDirty) {
     setStatusBannerMessage(
       'warning',
@@ -462,12 +462,12 @@ const setDirty = (state) => {
 const resetDirty = () => setDirty(false);
 
 const formatDateTimeLocal = (iso) => {
-  if (!iso) return '';
+  if (!iso) {return '';}
   return new Date(iso).toISOString().slice(0, 16);
 };
 
 const formatDateTimeHuman = (iso) => {
-  if (!iso) return 'ÔÇö';
+  if (!iso) {return 'ÔÇö';}
   try {
     return new Date(iso).toLocaleString('it-IT', {
       dateStyle: 'short',
@@ -496,7 +496,7 @@ const applyTemplateToModules = (type, { skipConfirm = false, markDirty = true } 
   if (!templateModules.length) {
     renderModulesEmptyState();
     syncTemplateControls(type);
-    if (markDirty) setDirty(true);
+    if (markDirty) {setDirty(true);}
     return true;
   }
 
@@ -521,7 +521,7 @@ const applyTemplateToModules = (type, { skipConfirm = false, markDirty = true } 
     );
   });
   syncTemplateControls(type);
-  if (markDirty) setDirty(true);
+  if (markDirty) {setDirty(true);}
   return true;
 };
 
@@ -559,7 +559,7 @@ const appendModuleCard = (module = {}, options = {}) => {
 
   contentArea.addEventListener('paste', (event) => {
     const text = event.clipboardData?.getData('text');
-    if (!text) return;
+    if (!text) {return;}
     try {
       const parsed = JSON.parse(text);
       event.preventDefault();
@@ -574,7 +574,7 @@ const appendModuleCard = (module = {}, options = {}) => {
   card.querySelector('.module-import').addEventListener('click', () => fileInput.click());
   fileInput.addEventListener('change', (event) => {
     const file = event.target.files?.[0];
-    if (!file) return;
+    if (!file) {return;}
     const reader = new FileReader();
     reader.onload = (ev) => {
       contentArea.value = ev.target?.result ?? '';
@@ -634,7 +634,7 @@ const appendModuleCard = (module = {}, options = {}) => {
 
 const collectModules = () => {
   const cards = modulesContainer.querySelectorAll('.module-card');
-  if (!cards.length) return [];
+  if (!cards.length) {return [];}
 
   const modules = [];
   const seenKeys = new Set();
@@ -699,7 +699,7 @@ const collectModules = () => {
 
 const validateModulesForType = (modules, type, options = {}) => {
   const requiredKeys = templateRegistry.getRequiredKeys(type);
-  if (!requiredKeys.size) return true;
+  if (!requiredKeys.size) {return true;}
 
   const missingKeys = Array.from(requiredKeys).filter(
     (key) => !modules.some((module) => module.module_key === key)
@@ -775,7 +775,7 @@ const renderReportsList = () => {
       </div>
     `;
     card.addEventListener('click', async () => {
-      if (isDirty && !confirm('Ci sono modifiche non salvate. Procedere comunque?')) return;
+      if (isDirty && !confirm('Ci sono modifiche non salvate. Procedere comunque?')) {return;}
       try {
         await selectReport(report.id);
       } catch (error) {
@@ -788,16 +788,16 @@ const renderReportsList = () => {
 };
 
 const loadReports = async () => {
-  if (!currentUser) return;
+  if (!currentUser) {return;}
   const requestId = ++reportsRequestSeq;
   try {
     const response = await callAdminAPI({ resource: 'reports' });
-    if (requestId !== reportsRequestSeq) return;
+    if (requestId !== reportsRequestSeq) {return;}
     reports = response.reports || [];
     filteredReports = reports;
     renderReportsList();
   } catch (error) {
-    if (requestId !== reportsRequestSeq) return;
+    if (requestId !== reportsRequestSeq) {return;}
     console.error('[Report Admin] loadReports error', error);
     reports = [];
     filteredReports = [];
@@ -852,7 +852,7 @@ const selectReport = async (id) => {
       resource: 'reports',
       params: { id },
     });
-    if (requestId !== reportDetailsRequestSeq) return;
+    if (requestId !== reportDetailsRequestSeq) {return;}
 
     const report = response.report;
     const modules = Array.isArray(response.modules) ? response.modules : [];
@@ -889,14 +889,14 @@ const selectReport = async (id) => {
     resetDirty();
     renderReportsList();
   } catch (error) {
-    if (requestId !== reportDetailsRequestSeq) return;
+    if (requestId !== reportDetailsRequestSeq) {return;}
     console.error('[Report Admin] selectReport error', error);
     showToast('Errore nel recupero del report', 'error');
   }
 };
 
 const sanitizeFilename = (filename, fallback = 'chart.png') => {
-  if (!filename) return fallback;
+  if (!filename) {return fallback;}
   return filename.replace(/[^a-zA-Z0-9._-]/g, '-');
 };
 
@@ -913,7 +913,7 @@ const uploadChartFile = async (file) => {
     const { error } = await supabase.storage
       .from(REPORTS_BUCKET)
       .upload(path, file, { upsert: true, cacheControl: '3600' });
-    if (error) throw error;
+    if (error) {throw error;}
     chartPathEl.value = path;
     await updateChartPreview(path);
     setDirty(true);
@@ -939,7 +939,7 @@ const uploadChart = async () => {
 
 const handleChartPaste = async (event) => {
   const clipboard = event.clipboardData;
-  if (!clipboard) return;
+  if (!clipboard) {return;}
 
   const imageItem = Array.from(clipboard.items || []).find((item) =>
     item.type?.startsWith('image/')
@@ -1113,8 +1113,8 @@ const saveReport = async ({ publish }) => {
 };
 
 const deleteReport = async () => {
-  if (!activeReport) return;
-  if (!confirm('Eliminare definitivamente il report?')) return;
+  if (!activeReport) {return;}
+  if (!confirm('Eliminare definitivamente il report?')) {return;}
 
   try {
     await callAdminAPI({
@@ -1132,7 +1132,7 @@ const deleteReport = async () => {
 };
 
 const duplicateReport = () => {
-  if (!activeReport) return;
+  if (!activeReport) {return;}
   reportSlugEl.value = `${activeReport.slug}-copy`;
   reportTitleEl.value = `${(activeReport.title || '').trim()} (copia)`.trim();
   reportStatusEl.value = 'draft';
@@ -1241,7 +1241,7 @@ refreshSessionBtn.addEventListener('click', updateAuthUI);
 
 refreshBtn.addEventListener('click', loadReports);
 newReportBtn.addEventListener('click', () => {
-  if (isDirty && !confirm('Ci sono modifiche non salvate. Procedere comunque?')) return;
+  if (isDirty && !confirm('Ci sono modifiche non salvate. Procedere comunque?')) {return;}
   clearEditor();
   setDirty(false);
 });
@@ -1283,7 +1283,7 @@ reportTypeEl.addEventListener('change', () => {
     return;
   }
   const applied = applyTemplateToModules(nextType, { skipConfirm: false });
-  if (applied) syncTemplateControls(nextType);
+  if (applied) {syncTemplateControls(nextType);}
 });
 
 chartPathEl.addEventListener('input', () => setDirty(true));
@@ -1352,10 +1352,10 @@ document.addEventListener('paste', async (event) => {
   const isEditableTarget =
     target &&
     (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
-  if (isEditableTarget) return; // i campi gestiscono gi├á la loro logica
+  if (isEditableTarget) {return;} // i campi gestiscono gi├á la loro logica
 
   const clipboard = event.clipboardData;
-  if (!clipboard) return;
+  if (!clipboard) {return;}
 
   const imageItem = Array.from(clipboard.items || []).find((item) =>
     item.type?.startsWith('image/')
@@ -1372,7 +1372,7 @@ document.addEventListener('paste', async (event) => {
   }
 
   const text = clipboard.getData('text');
-  if (!text) return;
+  if (!text) {return;}
 
   if (lastFocusedModuleArea) {
     try {

@@ -4,7 +4,12 @@
  * Paper Accademico: "Performance Budgets & Web Vitals" - Google (2024)
  */
 
-import { getPerformanceSummary, getPerformanceVitals, getPerformanceMetrics, getPerformanceResources } from "./performance-monitor.js";
+import {
+  getPerformanceSummary,
+  getPerformanceVitals,
+  getPerformanceMetrics,
+  getPerformanceResources,
+} from "./performance-monitor.js";
 import { createLineChart, createBarChart, createDoughnutChart } from "./charts.js";
 
 /**
@@ -12,7 +17,7 @@ import { createLineChart, createBarChart, createDoughnutChart } from "./charts.j
  */
 export function initRUMDashboard() {
   // Check if RUM dashboard panel exists
-  const rumPanel = document.getElementById('panel-performance');
+  const rumPanel = document.getElementById("panel-performance");
   if (rumPanel) {
     loadRUMDashboard();
   }
@@ -22,8 +27,10 @@ export function initRUMDashboard() {
  * Load RUM Dashboard content
  */
 export async function loadRUMDashboard() {
-  const container = document.getElementById('performance-container');
-  if (!container) return;
+  const container = document.getElementById("performance-container");
+  if (!container) {
+    return;
+  }
 
   // Get performance data
   const summary = getPerformanceSummary();
@@ -50,9 +57,9 @@ function renderRUMDashboard(container, summary, vitals, metrics, resources) {
       <div class="rum-section">
         <h3 class="rum-section-title">Core Web Vitals</h3>
         <div class="rum-vitals-grid">
-          ${renderVitalCard('LCP', vitals.lcp, 'Largest Contentful Paint', { good: 2500, needsImprovement: 4000, unit: 'ms' })}
-          ${renderVitalCard('FID', vitals.fid, 'First Input Delay', { good: 100, needsImprovement: 300, unit: 'ms' })}
-          ${renderVitalCard('CLS', vitals.cls, 'Cumulative Layout Shift', { good: 0.1, needsImprovement: 0.25, unit: '' })}
+          ${renderVitalCard("LCP", vitals.lcp, "Largest Contentful Paint", { good: 2500, needsImprovement: 4000, unit: "ms" })}
+          ${renderVitalCard("FID", vitals.fid, "First Input Delay", { good: 100, needsImprovement: 300, unit: "ms" })}
+          ${renderVitalCard("CLS", vitals.cls, "Cumulative Layout Shift", { good: 0.1, needsImprovement: 0.25, unit: "" })}
         </div>
       </div>
 
@@ -60,10 +67,10 @@ function renderRUMDashboard(container, summary, vitals, metrics, resources) {
       <div class="rum-section">
         <h3 class="rum-section-title">Performance Metrics</h3>
         <div class="rum-metrics-grid">
-          ${renderMetricCard('TTFB', metrics.ttfb, 'Time to First Byte', 'ms')}
-          ${renderMetricCard('FCP', metrics.fcp, 'First Contentful Paint', 'ms')}
-          ${renderMetricCard('DOM Content Loaded', metrics.domContentLoaded, 'DOM Content Loaded', 'ms')}
-          ${renderMetricCard('Load Complete', metrics.loadComplete, 'Load Complete', 'ms')}
+          ${renderMetricCard("TTFB", metrics.ttfb, "Time to First Byte", "ms")}
+          ${renderMetricCard("FCP", metrics.fcp, "First Contentful Paint", "ms")}
+          ${renderMetricCard("DOM Content Loaded", metrics.domContentLoaded, "DOM Content Loaded", "ms")}
+          ${renderMetricCard("Load Complete", metrics.loadComplete, "Load Complete", "ms")}
         </div>
       </div>
 
@@ -87,14 +94,18 @@ function renderRUMDashboard(container, summary, vitals, metrics, resources) {
       </div>
 
       <!-- Resources Section -->
-      ${resources && resources.length > 0 ? `
+      ${
+        resources && resources.length > 0
+          ? `
       <div class="rum-section">
         <h3 class="rum-section-title">Resource Timing</h3>
         <div class="rum-resources-list">
           ${renderResourcesList(resources)}
         </div>
       </div>
-      ` : ''}
+      `
+          : ""
+      }
 
       <!-- Refresh Button -->
       <div class="rum-dashboard-footer">
@@ -109,9 +120,9 @@ function renderRUMDashboard(container, summary, vitals, metrics, resources) {
   }, 500);
 
   // Add refresh button listener
-  const refreshBtn = document.getElementById('rum-refresh-btn');
+  const refreshBtn = document.getElementById("rum-refresh-btn");
   if (refreshBtn) {
-    refreshBtn.addEventListener('click', () => {
+    refreshBtn.addEventListener("click", () => {
       loadRUMDashboard();
     });
   }
@@ -134,16 +145,17 @@ function renderVitalCard(name, value, description, thresholds) {
     `;
   }
 
-  const displayValue = thresholds.unit === 'ms' ? `${(value / 1000).toFixed(2)}s` : value.toFixed(3);
-  let status = 'good';
-  let statusText = 'Buono';
+  const displayValue =
+    thresholds.unit === "ms" ? `${(value / 1000).toFixed(2)}s` : value.toFixed(3);
+  let status = "good";
+  let statusText = "Buono";
 
   if (value > thresholds.needsImprovement) {
-    status = 'poor';
-    statusText = 'Da migliorare';
+    status = "poor";
+    statusText = "Da migliorare";
   } else if (value > thresholds.good) {
-    status = 'needs-improvement';
-    statusText = 'Migliorabile';
+    status = "needs-improvement";
+    statusText = "Migliorabile";
   }
 
   return `
@@ -155,8 +167,8 @@ function renderVitalCard(name, value, description, thresholds) {
       <div class="rum-vital-description">${description}</div>
       <div class="rum-vital-value">${displayValue}</div>
       <div class="rum-vital-thresholds">
-        <span class="rum-vital-threshold">Buono: &lt;${thresholds.unit === 'ms' ? (thresholds.good / 1000).toFixed(1) + 's' : thresholds.good}</span>
-        <span class="rum-vital-threshold">Da migliorare: &gt;${thresholds.unit === 'ms' ? (thresholds.needsImprovement / 1000).toFixed(1) + 's' : thresholds.needsImprovement}</span>
+        <span class="rum-vital-threshold">Buono: &lt;${thresholds.unit === "ms" ? (thresholds.good / 1000).toFixed(1) + "s" : thresholds.good}</span>
+        <span class="rum-vital-threshold">Da migliorare: &gt;${thresholds.unit === "ms" ? (thresholds.needsImprovement / 1000).toFixed(1) + "s" : thresholds.needsImprovement}</span>
       </div>
     </div>
   `;
@@ -166,8 +178,8 @@ function renderVitalCard(name, value, description, thresholds) {
  * Render metric card
  */
 function renderMetricCard(name, value, description, unit) {
-  const displayValue = value !== null && value !== undefined ? `${value.toFixed(0)}${unit}` : '—';
-  
+  const displayValue = value !== null && value !== undefined ? `${value.toFixed(0)}${unit}` : "—";
+
   return `
     <div class="rum-metric-card">
       <div class="rum-metric-header">
@@ -193,7 +205,7 @@ function renderResourcesList(resources) {
       return `
         <div class="rum-resource-item">
           <div class="rum-resource-info">
-            <div class="rum-resource-name">${resource.name.split('/').pop()}</div>
+            <div class="rum-resource-name">${resource.name.split("/").pop()}</div>
             <div class="rum-resource-type">${resource.type}</div>
           </div>
           <div class="rum-resource-metrics">
@@ -203,7 +215,7 @@ function renderResourcesList(resources) {
         </div>
       `;
     })
-    .join('');
+    .join("");
 }
 
 /**
@@ -211,50 +223,46 @@ function renderResourcesList(resources) {
  */
 function renderRUMCharts(vitals, metrics) {
   // Wait for Chart.js to load
-  if (typeof Chart === 'undefined') {
+  if (typeof Chart === "undefined") {
     setTimeout(() => renderRUMCharts(vitals, metrics), 500);
     return;
   }
 
   // Vitals chart
-  const vitalsCanvas = document.getElementById('rum-vitals-chart');
+  const vitalsCanvas = document.getElementById("rum-vitals-chart");
   if (vitalsCanvas) {
     const vitalsData = {
-      labels: ['LCP', 'FID', 'CLS'],
+      labels: ["LCP", "FID", "CLS"],
       datasets: [
         {
-          label: 'Web Vitals',
+          label: "Web Vitals",
           data: [
             vitals.lcp ? vitals.lcp / 1000 : 0,
             vitals.fid ? vitals.fid : 0,
             vitals.cls ? vitals.cls * 1000 : 0,
           ],
           backgroundColor: [
-            'rgba(59, 130, 246, 0.8)',
-            'rgba(16, 185, 129, 0.8)',
-            'rgba(245, 158, 11, 0.8)',
+            "rgba(59, 130, 246, 0.8)",
+            "rgba(16, 185, 129, 0.8)",
+            "rgba(245, 158, 11, 0.8)",
           ],
-          borderColor: [
-            'rgba(59, 130, 246, 1)',
-            'rgba(16, 185, 129, 1)',
-            'rgba(245, 158, 11, 1)',
-          ],
+          borderColor: ["rgba(59, 130, 246, 1)", "rgba(16, 185, 129, 1)", "rgba(245, 158, 11, 1)"],
           borderWidth: 2,
         },
       ],
     };
 
-    createBarChart('rum-vitals-chart', vitalsData);
+    createBarChart("rum-vitals-chart", vitalsData);
   }
 
   // Metrics chart
-  const metricsCanvas = document.getElementById('rum-metrics-chart');
+  const metricsCanvas = document.getElementById("rum-metrics-chart");
   if (metricsCanvas && metrics) {
     const metricsData = {
-      labels: ['TTFB', 'FCP', 'DOM Ready', 'Load Complete'],
+      labels: ["TTFB", "FCP", "DOM Ready", "Load Complete"],
       datasets: [
         {
-          label: 'Performance Metrics (ms)',
+          label: "Performance Metrics (ms)",
           data: [
             metrics.ttfb || 0,
             metrics.fcp || 0,
@@ -262,23 +270,22 @@ function renderRUMCharts(vitals, metrics) {
             metrics.loadComplete || 0,
           ],
           backgroundColor: [
-            'rgba(139, 92, 246, 0.8)',
-            'rgba(59, 130, 246, 0.8)',
-            'rgba(16, 185, 129, 0.8)',
-            'rgba(245, 158, 11, 0.8)',
+            "rgba(139, 92, 246, 0.8)",
+            "rgba(59, 130, 246, 0.8)",
+            "rgba(16, 185, 129, 0.8)",
+            "rgba(245, 158, 11, 0.8)",
           ],
           borderColor: [
-            'rgba(139, 92, 246, 1)',
-            'rgba(59, 130, 246, 1)',
-            'rgba(16, 185, 129, 1)',
-            'rgba(245, 158, 11, 1)',
+            "rgba(139, 92, 246, 1)",
+            "rgba(59, 130, 246, 1)",
+            "rgba(16, 185, 129, 1)",
+            "rgba(245, 158, 11, 1)",
           ],
           borderWidth: 2,
         },
       ],
     };
 
-    createBarChart('rum-metrics-chart', metricsData);
+    createBarChart("rum-metrics-chart", metricsData);
   }
 }
-

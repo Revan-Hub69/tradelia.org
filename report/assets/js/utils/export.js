@@ -22,7 +22,7 @@ function exportToCSV(data, filename = 'report') {
       return headers
         .map((header) => {
           const value = row[header];
-          if (value == null) return '""';
+          if (value == null) {return '""';}
           const str = String(value).replace(/"/g, '""');
           return `"${str}"`;
         })
@@ -109,7 +109,7 @@ function exportToPDF(filename = 'report') {
 
 // ===== ESTRAI DATI DA MODULI =====
 function extractModuleData(moduleElement) {
-  if (!moduleElement) return null;
+  if (!moduleElement) {return null;}
 
   const moduleId = moduleElement.id || '';
   const moduleTitle = moduleElement.querySelector('.module-title')?.textContent || '';

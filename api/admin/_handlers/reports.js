@@ -1,12 +1,12 @@
-import { getServiceSupabase } from '../../_lib/supabase.js';
-import { HttpError, methodNotAllowed, sendJSON } from '../../_lib/http.js';
+import { getServiceSupabase } from "../../_lib/supabase.js";
+import { HttpError, methodNotAllowed, sendJSON } from "../../_lib/http.js";
 
 const supabase = getServiceSupabase();
 
 const sanitizeReportPayload = (payload = {}) => ({
   slug: payload.slug?.trim(),
   title: payload.title?.trim(),
-  status: payload.status || 'draft',
+  status: payload.status || "draft",
   report_type: payload.report_type || payload.reportType || null,
   template_version_id: payload.template_version_id || payload.templateVersionId || null,
   chart_path: payload.chart_path || payload.chartPath || null,
@@ -15,14 +15,16 @@ const sanitizeReportPayload = (payload = {}) => ({
 });
 
 const replaceReportModules = async (reportId, modules = []) => {
-  await supabase.from('report_modules').delete().eq('report_id', reportId);
-  if (!modules.length) return [];
+  await supabase.from("report_modules").delete().eq("report_id", reportId);
+  if (!modules.length) {
+    return [];
+  }
 
   const normalized = modules.map((module, index) => ({
     report_id: reportId,
     module_key: module.module_key,
     order_index:
-      typeof module.order_index === 'number'
+      typeof module.order_index === "number"
         ? module.order_index
         : module.order_index === null
           ? null
@@ -30,15 +32,15 @@ const replaceReportModules = async (reportId, modules = []) => {
     content: module.content || {},
   }));
 
-  const { data, error } = await supabase.from('report_modules').insert(normalized).select();
+  const { data, error } = await supabase.from("report_modules").insert(normalized).select();
   if (error) {
-    throw new HttpError(500, 'Errore nel salvataggio dei moduli', error.message);
+    throw new HttpError(500, "Errore nel salvataggio dei moduli", error.message);
   }
   return data;
 };
 
 const logAudit = async (reportId, action, performedBy, payload = {}) => {
-  await supabase.from('report_audit_log').insert({
+  await supabase.from("report_audit_log").insert({
     report_id: reportId,
     action,
     performed_by: performedBy,
@@ -47,18 +49,18 @@ const logAudit = async (reportId, action, performedBy, payload = {}) => {
 };
 
 const handleListReports = async (req, res) => {
-  const search = (req.query?.search || '').trim();
-  const statusFilter = (req.query?.status || '').trim();
+  const search = (req.query?.search || "").trim();
+  const statusFilter = (req.query?.status || "").trim();
 
   let query = supabase
-    .from('reports')
+    .from("reports")
     .select(
-      'id, slug, title, status, report_type, template_version_id, chart_path, published_at, updated_at, metadata, report_modules(count)'
+      "id, slug, title, status, report_type, template_version_id, chart_path, published_at, updated_at, metadata, report_modules(count)"
     )
-    .order('updated_at', { ascending: false });
+    .order("updated_at", { ascending: false });
 
   if (statusFilter) {
-    query = query.eq('status', statusFilter);
+    query = query.eq("status", statusFilter);
   }
 
   if (search) {
@@ -69,7 +71,7 @@ const handleListReports = async (req, res) => {
 
   const { data, error } = await query.limit(200);
   if (error) {
-    throw new HttpError(500, 'Errore durante il caricamento dei report', error.message);
+    throw new HttpError(500, "Errore durante il caricamento dei report", error.message);
   }
 
   const normalized =
@@ -87,39 +89,39 @@ const handleListReports = async (req, res) => {
 const handleGetReport = async (req, res) => {
   const id = req.query?.id;
   if (!id) {
-    throw new HttpError(400, 'ID report mancante');
+    throw new HttpError(400, "ID report mancante");
   }
 
   const { data: report, error } = await supabase
-    .from('reports')
-    .select('*')
-    .eq('id', id)
+    .from("reports")
+    .select("*")
+    .eq("id", id)
     .maybeSingle();
 
   if (error) {
-    throw new HttpError(500, 'Errore durante il recupero del report', error.message);
+    throw new HttpError(500, "Errore durante il recupero del report", error.message);
   }
 
   if (!report) {
-    throw new HttpError(404, 'Report non trovato');
+    throw new HttpError(404, "Report non trovato");
   }
 
   const [{ data: modules }, { data: assets }, { data: audit }] = await Promise.all([
     supabase
-      .from('report_modules')
-      .select('id, module_key, order_index, content, locked')
-      .eq('report_id', id)
-      .order('order_index', { ascending: true, nullsFirst: true }),
+      .from("report_modules")
+      .select("id, module_key, order_index, content, locked")
+      .eq("report_id", id)
+      .order("order_index", { ascending: true, nullsFirst: true }),
     supabase
-      .from('report_assets')
-      .select('id, asset_type, storage_path, metadata, created_at')
-      .eq('report_id', id)
-      .order('created_at', { ascending: false }),
+      .from("report_assets")
+      .select("id, asset_type, storage_path, metadata, created_at")
+      .eq("report_id", id)
+      .order("created_at", { ascending: false }),
     supabase
-      .from('report_audit_log')
-      .select('id, action, payload, created_at, performed_by')
-      .eq('report_id', id)
-      .order('created_at', { ascending: false })
+      .from("report_audit_log")
+      .select("id, action, payload, created_at, performed_by")
+      .eq("report_id", id)
+      .order("created_at", { ascending: false })
       .limit(20),
   ]);
 
@@ -137,32 +139,32 @@ const handleCreateReport = async (req, res, ctx) => {
   const modules = req.body?.modules || [];
 
   if (!payload.slug || !payload.title) {
-    throw new HttpError(400, 'Slug e titolo sono obbligatori');
+    throw new HttpError(400, "Slug e titolo sono obbligatori");
   }
 
   if (!payload.template_version_id) {
-    throw new HttpError(400, 'Template version ID mancante');
+    throw new HttpError(400, "Template version ID mancante");
   }
 
   const now = new Date().toISOString();
-  if (payload.status === 'active' && !payload.published_at) {
+  if (payload.status === "active" && !payload.published_at) {
     payload.published_at = now;
   }
 
   payload.created_by = ctx.userId;
 
   const { data: inserted, error } = await supabase
-    .from('reports')
+    .from("reports")
     .insert(payload)
-    .select('*')
+    .select("*")
     .single();
 
   if (error) {
-    throw new HttpError(500, 'Errore durante la creazione del report', error.message);
+    throw new HttpError(500, "Errore durante la creazione del report", error.message);
   }
 
   const savedModules = await replaceReportModules(inserted.id, modules);
-  await logAudit(inserted.id, 'create', ctx.userId, { report: inserted });
+  await logAudit(inserted.id, "create", ctx.userId, { report: inserted });
 
   return sendJSON(res, 201, {
     ok: true,
@@ -177,26 +179,26 @@ const handleUpdateReport = async (req, res, ctx) => {
   const reportId = req.body?.report?.id || req.body?.id || payload.id;
 
   if (!reportId) {
-    throw new HttpError(400, 'ID report mancante');
+    throw new HttpError(400, "ID report mancante");
   }
 
   if (!payload.slug || !payload.title) {
-    throw new HttpError(400, 'Slug e titolo sono obbligatori');
+    throw new HttpError(400, "Slug e titolo sono obbligatori");
   }
 
   if (!payload.template_version_id) {
-    throw new HttpError(400, 'Template version ID mancante');
+    throw new HttpError(400, "Template version ID mancante");
   }
 
-  if (payload.status === 'active' && !payload.published_at) {
+  if (payload.status === "active" && !payload.published_at) {
     payload.published_at = new Date().toISOString();
   }
 
   const { data: updated, error } = await supabase
-    .from('reports')
+    .from("reports")
     .update(payload)
-    .eq('id', reportId)
-    .select('*')
+    .eq("id", reportId)
+    .select("*")
     .single();
 
   if (error) {
@@ -204,7 +206,7 @@ const handleUpdateReport = async (req, res, ctx) => {
   }
 
   const savedModules = await replaceReportModules(reportId, modules);
-  await logAudit(reportId, 'update', ctx.userId, { report: updated });
+  await logAudit(reportId, "update", ctx.userId, { report: updated });
 
   return sendJSON(res, 200, {
     ok: true,
@@ -216,21 +218,21 @@ const handleUpdateReport = async (req, res, ctx) => {
 const handleArchiveReport = async (req, res, ctx) => {
   const reportId = req.body?.id;
   if (!reportId) {
-    throw new HttpError(400, 'ID report mancante');
+    throw new HttpError(400, "ID report mancante");
   }
 
   const { data: updated, error } = await supabase
-    .from('reports')
-    .update({ status: 'archived' })
-    .eq('id', reportId)
-    .select('*')
+    .from("reports")
+    .update({ status: "archived" })
+    .eq("id", reportId)
+    .select("*")
     .single();
 
   if (error) {
     throw new HttpError(500, "Errore durante l'archiviazione del report", error.message);
   }
 
-  await logAudit(reportId, 'archive', ctx.userId, {});
+  await logAudit(reportId, "archive", ctx.userId, {});
 
   return sendJSON(res, 200, {
     ok: true,
@@ -239,24 +241,24 @@ const handleArchiveReport = async (req, res, ctx) => {
 };
 
 export const handleReportsRequest = async (req, res, ctx) => {
-  if (req.method === 'GET') {
+  if (req.method === "GET") {
     if (req.query?.id) {
       return handleGetReport(req, res);
     }
     return handleListReports(req, res);
   }
 
-  if (req.method === 'POST') {
+  if (req.method === "POST") {
     return handleCreateReport(req, res, ctx);
   }
 
-  if (req.method === 'PUT') {
+  if (req.method === "PUT") {
     return handleUpdateReport(req, res, ctx);
   }
 
-  if (req.method === 'DELETE') {
+  if (req.method === "DELETE") {
     return handleArchiveReport(req, res, ctx);
   }
 
-  return methodNotAllowed(res, ['GET', 'POST', 'PUT', 'DELETE']);
+  return methodNotAllowed(res, ["GET", "POST", "PUT", "DELETE"]);
 };

@@ -512,7 +512,7 @@ function renderResults(results) {
 
       // SECURITY: Escape HTML nei dati dinamici usando funzione esistente
       const safeUrl = escapeHtml(result.url || "#");
-      
+
       return `
         <div
           class="global-search-result ${index === SEARCH_STATE.selectedIndex ? "selected" : ""}"

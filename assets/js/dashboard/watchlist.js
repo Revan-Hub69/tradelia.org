@@ -23,12 +23,12 @@ export function initWatchlist() {
  */
 function loadWatchlist() {
   try {
-    const saved = localStorage.getItem('dashboard-watchlist');
+    const saved = localStorage.getItem("dashboard-watchlist");
     if (saved) {
       WATCHLIST_STATE.items = JSON.parse(saved);
     }
   } catch (e) {
-    console.error('[Watchlist] Errore caricamento:', e);
+    console.error("[Watchlist] Errore caricamento:", e);
     WATCHLIST_STATE.items = [];
   }
 }
@@ -38,11 +38,11 @@ function loadWatchlist() {
  */
 function saveWatchlist() {
   try {
-    localStorage.setItem('dashboard-watchlist', JSON.stringify(WATCHLIST_STATE.items));
+    localStorage.setItem("dashboard-watchlist", JSON.stringify(WATCHLIST_STATE.items));
   } catch (e) {
-    console.error('[Watchlist] Errore salvataggio:', e);
+    console.error("[Watchlist] Errore salvataggio:", e);
     if (window.showToast) {
-      window.showToast('Errore nel salvataggio dei preferiti', 'error');
+      window.showToast("Errore nel salvataggio dei preferiti", "error");
     }
   }
 }
@@ -60,7 +60,7 @@ export function isInWatchlist(itemId) {
 export function addToWatchlist(item) {
   if (isInWatchlist(item.id)) {
     if (window.showToast) {
-      window.showToast('Già presente nei preferiti', 'info');
+      window.showToast("Già presente nei preferiti", "info");
     }
     return false;
   }
@@ -68,7 +68,7 @@ export function addToWatchlist(item) {
   WATCHLIST_STATE.items.push({
     id: item.id,
     ticker: item.ticker || item.id,
-    company: item.company || '',
+    company: item.company || "",
     date: item.date || new Date().toISOString(),
     url: item.url || `#reports`,
     addedAt: new Date().toISOString(),
@@ -80,7 +80,7 @@ export function addToWatchlist(item) {
   updateWatchlistIndicators(item.id, true);
 
   if (window.showToast) {
-    window.showToast('Aggiunto ai preferiti', 'success');
+    window.showToast("Aggiunto ai preferiti", "success");
   }
 
   return true;
@@ -102,7 +102,7 @@ export function removeFromWatchlist(itemId) {
   updateWatchlistIndicators(itemId, false);
 
   if (window.showToast) {
-    window.showToast('Rimosso dai preferiti', 'success');
+    window.showToast("Rimosso dai preferiti", "success");
   }
 
   return true;
@@ -132,16 +132,19 @@ export function getWatchlistItems() {
 function updateWatchlistIndicators(itemId, isFavorite) {
   // Update all report cards with this ID
   document.querySelectorAll(`[data-report-id="${itemId}"]`).forEach((card) => {
-    const favoriteBtn = card.querySelector('.watchlist-button');
+    const favoriteBtn = card.querySelector(".watchlist-button");
     if (favoriteBtn) {
-      favoriteBtn.dataset.favorite = isFavorite ? 'true' : 'false';
-      favoriteBtn.setAttribute('aria-label', isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti');
+      favoriteBtn.dataset.favorite = isFavorite ? "true" : "false";
+      favoriteBtn.setAttribute(
+        "aria-label",
+        isFavorite ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"
+      );
       updateFavoriteButtonIcon(favoriteBtn, isFavorite);
     }
   });
 
   // Update watchlist panel if open
-  const watchlistPanel = document.getElementById('watchlist-container');
+  const watchlistPanel = document.getElementById("watchlist-container");
   if (watchlistPanel) {
     loadWatchlistContent();
   }
@@ -154,19 +157,21 @@ function updateWatchlistIndicators(itemId, isFavorite) {
  * Update favorite button icon
  */
 function updateFavoriteButtonIcon(button, isFavorite) {
-  const svg = button.querySelector('svg');
-  if (!svg) return;
+  const svg = button.querySelector("svg");
+  if (!svg) {
+    return;
+  }
 
   if (isFavorite) {
     svg.innerHTML = `
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor" stroke="none"/>
     `;
-    button.style.color = 'var(--dash-accent)';
+    button.style.color = "var(--dash-accent)";
   } else {
     svg.innerHTML = `
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     `;
-    button.style.color = '';
+    button.style.color = "";
   }
 }
 
@@ -174,22 +179,25 @@ function updateFavoriteButtonIcon(button, isFavorite) {
  * Create watchlist button for report card
  */
 export function createWatchlistButton(item) {
-  const button = document.createElement('button');
-  button.className = 'watchlist-button';
-  button.type = 'button';
-  button.setAttribute('aria-label', isInWatchlist(item.id) ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti');
-  button.dataset.favorite = isInWatchlist(item.id) ? 'true' : 'false';
+  const button = document.createElement("button");
+  button.className = "watchlist-button";
+  button.type = "button";
+  button.setAttribute(
+    "aria-label",
+    isInWatchlist(item.id) ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"
+  );
+  button.dataset.favorite = isInWatchlist(item.id) ? "true" : "false";
   button.innerHTML = `
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
-      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="${isInWatchlist(item.id) ? 'currentColor' : 'none'}" stroke="currentColor"/>
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="${isInWatchlist(item.id) ? "currentColor" : "none"}" stroke="currentColor"/>
     </svg>
   `;
 
   if (isInWatchlist(item.id)) {
-    button.style.color = 'var(--dash-accent)';
+    button.style.color = "var(--dash-accent)";
   }
 
-  button.addEventListener('click', (e) => {
+  button.addEventListener("click", (e) => {
     e.stopPropagation();
     toggleWatchlist(item);
   });
@@ -201,8 +209,10 @@ export function createWatchlistButton(item) {
  * Load watchlist content for panel
  */
 export async function loadWatchlistContent() {
-  const container = document.getElementById('watchlist-container');
-  if (!container) return;
+  const container = document.getElementById("watchlist-container");
+  if (!container) {
+    return;
+  }
 
   const items = getWatchlistItems();
 
@@ -223,7 +233,9 @@ export async function loadWatchlistContent() {
   const watchlistItems = [];
   for (const item of items) {
     try {
-      const headerResponse = await fetch(`/archivio/reports/${item.id}/header.json?t=${Date.now()}`);
+      const headerResponse = await fetch(
+        `/archivio/reports/${item.id}/header.json?t=${Date.now()}`
+      );
       if (headerResponse.ok) {
         const header = await headerResponse.json();
         watchlistItems.push({
@@ -242,7 +254,7 @@ export async function loadWatchlistContent() {
 
   container.innerHTML = watchlistItems
     .map((item) => {
-      const date = item.date ? new Date(item.date).toLocaleDateString('it-IT') : '';
+      const date = item.date ? new Date(item.date).toLocaleDateString("it-IT") : "";
 
       return `
         <div class="watchlist-item" data-report-id="${item.id}">
@@ -257,7 +269,7 @@ export async function loadWatchlistContent() {
             </div>
             <div class="watchlist-item-content">
               <div class="watchlist-item-title">${escapeHtml(item.ticker)}</div>
-              <div class="watchlist-item-subtitle">${escapeHtml(item.company || '')}${date ? ` · ${date}` : ''}</div>
+              <div class="watchlist-item-subtitle">${escapeHtml(item.company || "")}${date ? ` · ${date}` : ""}</div>
             </div>
             <div class="watchlist-item-arrow">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
@@ -274,11 +286,11 @@ export async function loadWatchlistContent() {
         </div>
       `;
     })
-    .join('');
+    .join("");
 
   // Add remove button listeners
-  container.querySelectorAll('.watchlist-item-remove').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
+  container.querySelectorAll(".watchlist-item-remove").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
       const itemId = btn.dataset.reportId;
@@ -292,30 +304,34 @@ export async function loadWatchlistContent() {
  */
 function updateWatchlistBadge() {
   const count = WATCHLIST_STATE.items.length;
-  
+
   // Aggiorna badge nel menu/navbar se presente
-  const badgeElements = document.querySelectorAll('[data-watchlist-badge], .watchlist-badge, .badge-count');
+  const badgeElements = document.querySelectorAll(
+    "[data-watchlist-badge], .watchlist-badge, .badge-count"
+  );
   badgeElements.forEach((badge) => {
     if (count > 0) {
       badge.textContent = count;
-      badge.style.display = count > 0 ? 'inline-flex' : 'none';
-      badge.setAttribute('aria-label', `${count} preferiti`);
+      badge.style.display = count > 0 ? "inline-flex" : "none";
+      badge.setAttribute("aria-label", `${count} preferiti`);
     } else {
-      badge.style.display = 'none';
-      badge.textContent = '';
+      badge.style.display = "none";
+      badge.textContent = "";
     }
   });
 
   // Aggiorna anche eventuali indicatori nel titolo sezione preferiti
-  const favoritesTitle = document.querySelector('#favorites-section .category-title, .favorites-category .category-title');
+  const favoritesTitle = document.querySelector(
+    "#favorites-section .category-title, .favorites-category .category-title"
+  );
   if (favoritesTitle) {
-    const existingBadge = favoritesTitle.querySelector('.category-badge');
+    const existingBadge = favoritesTitle.querySelector(".category-badge");
     if (count > 0) {
       if (!existingBadge) {
-        const badge = document.createElement('span');
-        badge.className = 'category-badge';
+        const badge = document.createElement("span");
+        badge.className = "category-badge";
         badge.textContent = count;
-        badge.setAttribute('aria-label', `${count} preferiti`);
+        badge.setAttribute("aria-label", `${count} preferiti`);
         favoritesTitle.appendChild(badge);
       } else {
         existingBadge.textContent = count;
@@ -326,17 +342,18 @@ function updateWatchlistBadge() {
   }
 
   // Trigger custom event per altri componenti che potrebbero ascoltare
-  window.dispatchEvent(new CustomEvent('watchlist-count-changed', { 
-    detail: { count } 
-  }));
+  window.dispatchEvent(
+    new CustomEvent("watchlist-count-changed", {
+      detail: { count },
+    })
+  );
 }
 
 /**
  * Escape HTML
  */
 function escapeHtml(text) {
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
 }
-

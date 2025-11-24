@@ -122,11 +122,14 @@ export class ErrorBoundary {
    * @param {Object} options - Options
    */
   renderErrorState(error, options = {}) {
-    const container = typeof this.containerSelector === "string"
-      ? document.querySelector(this.containerSelector)
-      : this.containerSelector;
+    const container =
+      typeof this.containerSelector === "string"
+        ? document.querySelector(this.containerSelector)
+        : this.containerSelector;
 
-    if (!container) return;
+    if (!container) {
+      return;
+    }
 
     const { retryable = false, onRetry = null } = options;
 
@@ -141,10 +144,11 @@ export class ErrorBoundary {
         </div>
         <div class="error-state-title">Errore nel caricamento</div>
         <div class="error-state-message">${error.message || "Si è verificato un errore imprevisto"}</div>
-        ${retryable && onRetry
-      ? `<div class="error-state-action"><button class="btn btn-primary" onclick="(() => { ${onRetry.toString()}() })()">Riprova</button></div>`
-      : ""
-    }
+        ${
+          retryable && onRetry
+            ? `<div class="error-state-action"><button class="btn btn-primary" onclick="(() => { ${onRetry.toString()}() })()">Riprova</button></div>`
+            : ""
+        }
       </div>
     `;
   }
@@ -181,7 +185,11 @@ export function isOffline() {
  */
 export function handleOffline() {
   if (isOffline()) {
-    showToast("Connessione internet assente. Alcune funzionalità potrebbero non essere disponibili.", "warning", 6000);
+    showToast(
+      "Connessione internet assente. Alcune funzionalità potrebbero non essere disponibili.",
+      "warning",
+      6000
+    );
   }
 }
 
@@ -192,4 +200,3 @@ if (typeof window !== "undefined") {
     showToast("Connessione internet ripristinata.", "success");
   });
 }
-

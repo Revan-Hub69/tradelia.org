@@ -2,15 +2,15 @@
 // Richiede: npm install sharp
 // Eseguire con: node scripts/generate-pwa-icons.js
 
-const sharp = require('sharp');
-const fs = require('fs');
-const path = require('path');
+const sharp = require("sharp");
+const fs = require("fs");
+const path = require("path");
 
-const iconsDir = path.join(__dirname, '..', 'icons');
+const iconsDir = path.join(__dirname, "..", "icons");
 const sizes = [192, 512];
 
 async function generateIcons() {
-  console.log('🎨 Generazione icone PWA...\n');
+  console.log("🎨 Generazione icone PWA...\n");
 
   // Verifica che la directory icons esista
   if (!fs.existsSync(iconsDir)) {
@@ -35,9 +35,9 @@ async function generateIcons() {
     }
   }
 
-  console.log('\n✅ Generazione icone completata!');
-  console.log('\n📋 Prossimi step:');
-  console.log('1. Verifica che le icone siano state generate in /icons/');
+  console.log("\n✅ Generazione icone completata!");
+  console.log("\n📋 Prossimi step:");
+  console.log("1. Verifica che le icone siano state generate in /icons/");
   console.log("2. Testa l'installazione PWA nella dashboard");
 }
 

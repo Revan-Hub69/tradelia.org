@@ -17,7 +17,7 @@ export async function getSupabaseClient() {
   }
 
   // Lazy load Supabase (bundle da Vite)
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return null;
   }
 
@@ -25,21 +25,22 @@ export async function getSupabaseClient() {
   if (!supabaseModule) {
     try {
       // Prova prima import ES module (se bundle da Vite)
-      supabaseModule = await import('@supabase/supabase-js');
+      supabaseModule = await import("@supabase/supabase-js");
     } catch (e) {
       // Fallback a CDN (per Cloudflare o altri ambienti senza build)
-      supabaseModule = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+      supabaseModule = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm");
     }
   }
 
   const { createClient } = supabaseModule;
-  const SUPABASE_URL = 'https://higkhlfjfhlecbtfnznx.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZ2tobGZqZmhsZWNidGZuem54Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0NTc5OTksImV4cCI6MjA3ODAzMzk5OX0.qlhVhGkfc0rU7-tUg9Fu40D67HQzHjZhkEdP4mAPqTw';
+  const SUPABASE_URL = "https://higkhlfjfhlecbtfnznx.supabase.co";
+  const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZ2tobGZqZmhsZWNidGZuem54Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0NTc5OTksImV4cCI6MjA3ODAzMzk5OX0.qlhVhGkfc0rU7-tUg9Fu40D67HQzHjZhkEdP4mAPqTw";
 
   supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: {
       persistSession: true,
-      storageKey: 'tradelia-user-session',
+      storageKey: "tradelia-user-session",
     },
   });
 
@@ -52,4 +53,3 @@ export async function getSupabaseClient() {
 export async function initSupabase() {
   return getSupabaseClient();
 }
-

@@ -5,8 +5,10 @@
  */
 
 export async function loadExportManager() {
-  const container = document.getElementById('export-manager-container');
-  if (!container) return;
+  const container = document.getElementById("export-manager-container");
+  if (!container) {
+    return;
+  }
 
   const exportHistory = loadExportHistory();
   renderExportManager(container, exportHistory);
@@ -14,7 +16,7 @@ export async function loadExportManager() {
 
 function loadExportHistory() {
   try {
-    return JSON.parse(localStorage.getItem('dashboard-export-history') || '[]');
+    return JSON.parse(localStorage.getItem("dashboard-export-history") || "[]");
   } catch (e) {
     return [];
   }
@@ -22,9 +24,9 @@ function loadExportHistory() {
 
 function saveExportHistory(history) {
   try {
-    localStorage.setItem('dashboard-export-history', JSON.stringify(history));
+    localStorage.setItem("dashboard-export-history", JSON.stringify(history));
   } catch (e) {
-    console.error('[ExportManager] Errore salvataggio history:', e);
+    console.error("[ExportManager] Errore salvataggio history:", e);
   }
 }
 
@@ -46,7 +48,10 @@ function renderExportManager(container, history) {
 
   container.innerHTML = `
     <div class="export-history-list">
-      ${history.slice(0, 20).map((item) => `
+      ${history
+        .slice(0, 20)
+        .map(
+          (item) => `
         <div class="export-history-item">
           <div class="export-history-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
@@ -55,11 +60,11 @@ function renderExportManager(container, history) {
             </svg>
           </div>
           <div class="export-history-content">
-            <div class="export-history-title">${escapeHtml(item.name || 'Export')}</div>
-            <div class="export-history-meta">${new Date(item.timestamp).toLocaleString('it-IT')}</div>
+            <div class="export-history-title">${escapeHtml(item.name || "Export")}</div>
+            <div class="export-history-meta">${new Date(item.timestamp).toLocaleString("it-IT")}</div>
           </div>
           <div class="export-history-actions">
-            <button class="export-history-download" data-url="${item.url || ''}" aria-label="Scarica di nuovo">
+            <button class="export-history-download" data-url="${item.url || ""}" aria-label="Scarica di nuovo">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
@@ -68,16 +73,18 @@ function renderExportManager(container, history) {
             </button>
           </div>
         </div>
-      `).join('')}
+      `
+        )
+        .join("")}
     </div>
   `;
 
   // Add download listeners
-  container.querySelectorAll('.export-history-download').forEach((btn) => {
-    btn.addEventListener('click', () => {
+  container.querySelectorAll(".export-history-download").forEach((btn) => {
+    btn.addEventListener("click", () => {
       const url = btn.dataset.url;
       if (url) {
-        window.open(url, '_blank');
+        window.open(url, "_blank");
       }
     });
   });
@@ -97,8 +104,7 @@ export function recordExport(name, url) {
 }
 
 function escapeHtml(text) {
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
 }
-

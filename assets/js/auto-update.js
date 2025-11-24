@@ -21,11 +21,11 @@
  */
 
 (function () {
-  'use strict';
+  "use strict";
 
-  const VERSION = '2.0.0'; // Must match sw.js version
+  const VERSION = "2.0.0"; // Must match sw.js version
   const CHECK_INTERVAL = 5 * 60 * 1000; // Check every 5 minutes
-  const VERSION_CHECK_URL = '/version.json'; // Version manifest
+  const VERSION_CHECK_URL = "/version.json"; // Version manifest
 
   let updateCheckInterval = null;
   let updateNotification = null;
@@ -37,17 +37,17 @@
   async function checkForUpdates() {
     try {
       // Check service worker update
-      if ('serviceWorker' in navigator) {
+      if ("serviceWorker" in navigator) {
         const registration = await navigator.serviceWorker.getRegistration();
         if (registration) {
           await registration.update();
 
           // Listen for new service worker
-          registration.addEventListener('updatefound', () => {
+          registration.addEventListener("updatefound", () => {
             const newWorker = registration.installing;
             if (newWorker) {
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              newWorker.addEventListener("statechange", () => {
+                if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
                   showUpdateNotification();
                 }
               });
@@ -59,9 +59,9 @@
       // Check version manifest
       try {
         const response = await fetch(`${VERSION_CHECK_URL}?t=${Date.now()}`, {
-          cache: 'no-store',
+          cache: "no-store",
           headers: {
-            'Cache-Control': 'no-cache',
+            "Cache-Control": "no-cache",
           },
         });
 
@@ -73,10 +73,10 @@
         }
       } catch (e) {
         // Version file might not exist, that's ok
-        console.log('[Auto-Update] Version check skipped:', e);
+        console.log("[Auto-Update] Version check skipped:", e);
       }
     } catch (error) {
-      console.error('[Auto-Update] Error checking updates:', error);
+      console.error("[Auto-Update] Error checking updates:", error);
     }
   }
 
@@ -88,12 +88,12 @@
     }
 
     // Create notification banner with full accessibility
-    const banner = document.createElement('div');
-    banner.id = 'update-notification';
-    banner.setAttribute('role', 'alert');
-    banner.setAttribute('aria-live', 'polite');
-    banner.setAttribute('aria-atomic', 'true');
-    banner.setAttribute('aria-label', 'Notifica aggiornamento disponibile');
+    const banner = document.createElement("div");
+    banner.id = "update-notification";
+    banner.setAttribute("role", "alert");
+    banner.setAttribute("aria-live", "polite");
+    banner.setAttribute("aria-atomic", "true");
+    banner.setAttribute("aria-label", "Notifica aggiornamento disponibile");
     banner.style.cssText = `
       position: fixed;
       top: 80px;
@@ -167,7 +167,7 @@
     `;
 
     // Add animation with reduced motion support (WCAG 2.2)
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       @keyframes slideDown {
         from {
@@ -199,18 +199,18 @@
     updateNotification = banner;
 
     // Update button with accessibility
-    const updateBtn = banner.querySelector('#update-now-btn');
+    const updateBtn = banner.querySelector("#update-now-btn");
     updateBtn.onclick = async () => {
-      updateBtn.textContent = 'Aggiornamento...';
-      updateBtn.setAttribute('aria-busy', 'true');
+      updateBtn.textContent = "Aggiornamento...";
+      updateBtn.setAttribute("aria-busy", "true");
       updateBtn.disabled = true;
-      banner.setAttribute('aria-live', 'assertive');
-      banner.querySelector('#update-description').textContent = 'Aggiornamento in corso...';
+      banner.setAttribute("aria-live", "assertive");
+      banner.querySelector("#update-description").textContent = "Aggiornamento in corso...";
       await performUpdate();
     };
 
     // Dismiss button
-    const dismissBtn = banner.querySelector('#update-dismiss-btn');
+    const dismissBtn = banner.querySelector("#update-dismiss-btn");
     dismissBtn.onclick = () => {
       banner.remove();
       updateNotification = null;
@@ -229,18 +229,18 @@
   async function performUpdate() {
     try {
       // Clear all caches
-      if ('caches' in window) {
+      if ("caches" in window) {
         const cacheNames = await caches.keys();
         await Promise.all(cacheNames.map((name) => caches.delete(name)));
       }
 
       // Update service worker
-      if ('serviceWorker' in navigator) {
+      if ("serviceWorker" in navigator) {
         const registration = await navigator.serviceWorker.getRegistration();
         if (registration) {
           // Send skip waiting message
           if (registration.waiting) {
-            registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            registration.waiting.postMessage({ type: "SKIP_WAITING" });
           }
 
           // Unregister and re-register
@@ -248,13 +248,13 @@
         }
 
         // Re-register service worker
-        await navigator.serviceWorker.register('/sw.js');
+        await navigator.serviceWorker.register("/sw.js");
       }
 
       // Hard reload
       window.location.reload(true);
     } catch (error) {
-      console.error('[Auto-Update] Error performing update:', error);
+      console.error("[Auto-Update] Error performing update:", error);
       alert("Errore durante l'aggiornamento. Ricarica manualmente la pagina.");
     }
   }
@@ -268,14 +268,14 @@
     updateCheckInterval = setInterval(checkForUpdates, CHECK_INTERVAL);
 
     // Check when page becomes visible (user returns to tab)
-    document.addEventListener('visibilitychange', () => {
+    document.addEventListener("visibilitychange", () => {
       if (!document.hidden) {
         checkForUpdates();
       }
     });
 
     // Check on focus
-    window.addEventListener('focus', checkForUpdates);
+    window.addEventListener("focus", checkForUpdates);
   }
 
   // Start when DOM is ready - DISABILITATO (Progetto abbandonato)

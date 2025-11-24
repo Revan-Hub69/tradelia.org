@@ -21,14 +21,14 @@ import { formatF1AToRows } from './f1a-formatter.js';
 
 // Helper functions
 function escapeHtml(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   const div = document.createElement('div');
   div.textContent = String(str);
   return div.innerHTML;
 }
 
 function escapeAttr(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
@@ -115,7 +115,7 @@ export function renderCard(rawData, ctx = {}) {
  * Bind eventi e monta header-ticker per F1A
  */
 export function bindCard(node, rawData, ctx = {}) {
-  if (!node || !rawData) return;
+  if (!node || !rawData) {return;}
   const data = normalizeDataPublicF1A(rawData);
 
   // Genera rows formattate se non presenti

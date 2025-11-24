@@ -5,13 +5,12 @@
 /* eslint-env serviceworker */
 /* global importScripts, firebase */
 
-// eslint-disable-next-line no-undef
 importScripts("https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js");
-// eslint-disable-next-line no-undef
+
 importScripts("https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js");
 
 // Firebase config (deve corrispondere a fcm-config.js)
-// eslint-disable-next-line no-undef
+
 firebase.initializeApp({
   apiKey: "AIzaSyAC2x_9fjPBGdr8glort5EUXLQ40vIAQjg",
   projectId: "tradelia-push",
@@ -19,7 +18,6 @@ firebase.initializeApp({
   appId: "1:904705785437:web:c9da853c7d900a62c017b4",
 });
 
-// eslint-disable-next-line no-undef
 const messaging = firebase.messaging();
 
 // Gestisci messaggi in background
@@ -57,8 +55,7 @@ self.addEventListener("notificationclick", (event) => {
 
   if (event.action === "open" || !event.action) {
     const url = event.notification.data || "/dashboard.html";
-    // eslint-disable-next-line no-undef
+
     event.waitUntil(self.clients.openWindow(url));
   }
 });
-

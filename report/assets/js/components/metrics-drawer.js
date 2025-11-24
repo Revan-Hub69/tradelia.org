@@ -28,13 +28,13 @@ const DRAWER = {
 // ===== UTILITIES =====
 function createEl(tag, className, text = null) {
   const el = document.createElement(tag);
-  if (className) el.className = className;
-  if (text !== null) el.textContent = text;
+  if (className) {el.className = className;}
+  if (text !== null) {el.textContent = text;}
   return el;
 }
 
 function escapeHtml(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -57,7 +57,7 @@ function getToneClass(tone) {
 }
 
 function formatValue(value) {
-  if (value == null || value === '') return '—';
+  if (value == null || value === '') {return '—';}
   if (typeof value === 'number') {
     return Number.isInteger(value)
       ? String(value)
@@ -71,7 +71,7 @@ function formatValue(value) {
 
 // ===== GLOSSARY =====
 async function loadGlossary() {
-  if (DRAWER._glossary) return DRAWER._glossary;
+  if (DRAWER._glossary) {return DRAWER._glossary;}
 
   try {
     const res = await fetch('/report/assets/glossary.json', { cache: 'no-store' });
@@ -89,13 +89,13 @@ async function loadGlossary() {
 }
 
 function getGlossaryEntry(key) {
-  if (!DRAWER._glossary) return null;
+  if (!DRAWER._glossary) {return null;}
   return DRAWER._glossary[key] || null;
 }
 
 function enrichMetricWithGlossary(metric) {
   const entry = getGlossaryEntry(metric.key);
-  if (!entry) return metric;
+  if (!entry) {return metric;}
 
   return {
     ...metric,
@@ -130,7 +130,7 @@ function organizeMetrics(metrics) {
 }
 
 function filterMetrics(metrics, searchQuery, toneFilter) {
-  if (!searchQuery && !toneFilter) return metrics;
+  if (!searchQuery && !toneFilter) {return metrics;}
 
   return metrics.filter((metric) => {
     const matchesSearch =
@@ -377,7 +377,7 @@ function renderMetric(metric) {
 
 function renderView() {
   const body = DRAWER._panel.querySelector('.drawer-body');
-  if (!body) return;
+  if (!body) {return;}
 
   const organized = organizeMetrics(DRAWER._filteredMetrics);
   const breadcrumb = DRAWER._panel.querySelector('.drawer-breadcrumb');
@@ -448,7 +448,7 @@ function applyFilters() {
 
 // ===== PUBLIC API =====
 function mount() {
-  if (DRAWER._overlay) return;
+  if (DRAWER._overlay) {return;}
 
   // Create overlay
   DRAWER._overlay = createEl('div', 'metrics-drawer-overlay');
@@ -491,7 +491,7 @@ function mount() {
   // Close handlers
   header.querySelector('.drawer-close').addEventListener('click', () => DRAWER.close());
   DRAWER._overlay.addEventListener('click', (e) => {
-    if (e.target === DRAWER._overlay) DRAWER.close();
+    if (e.target === DRAWER._overlay) {DRAWER.close();}
   });
 
   // Listener per close request dall'overlay manager (ESC key)
@@ -510,7 +510,7 @@ function mount() {
 }
 
 async function open(metricsData) {
-  if (!DRAWER._overlay) DRAWER.mount();
+  if (!DRAWER._overlay) {DRAWER.mount();}
 
   // Load glossary
   await loadGlossary();
@@ -560,7 +560,7 @@ async function openFromMetric(metricKey, metricsData) {
 }
 
 function close() {
-  if (!DRAWER._overlay || !DRAWER._isOpen) return;
+  if (!DRAWER._overlay || !DRAWER._isOpen) {return;}
 
   DRAWER._overlay.hidden = true;
   DRAWER._overlay.setAttribute('aria-hidden', 'true');

@@ -81,7 +81,7 @@ export function registerOverlay(id, type, overlayEl, drawerEl = null) {
  */
 export function unregisterOverlay(id) {
   const index = OVERLAY_STACK.findIndex((entry) => entry.id === id);
-  if (index === -1) return;
+  if (index === -1) {return;}
 
   OVERLAY_STACK.splice(index, 1);
 
@@ -126,7 +126,7 @@ export function getTopOverlay() {
  */
 export function closeTopOverlay() {
   const top = getTopOverlay();
-  if (!top) return;
+  if (!top) {return;}
 
   // Trigger evento custom per chiudere (ogni overlay gestisce la propria chiusura)
   const event = new CustomEvent('overlay-close-request', {
@@ -152,7 +152,7 @@ function updateBodyOverflow() {
 let escListenerAttached = false;
 
 export function initEscHandler() {
-  if (escListenerAttached) return;
+  if (escListenerAttached) {return;}
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && OVERLAY_STACK.length > 0) {

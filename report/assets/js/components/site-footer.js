@@ -13,19 +13,19 @@ const FOOTER = {
 // ===== UTILITIES =====
 function createEl(tag, className) {
   const el = document.createElement(tag);
-  if (className) el.className = className;
+  if (className) {el.className = className;}
   return el;
 }
 
 function escapeHtml(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   const div = document.createElement('div');
   div.textContent = String(str);
   return div.innerHTML;
 }
 
 function fmtDate(str) {
-  if (!str) return '—';
+  if (!str) {return '—';}
   try {
     return new Date(str).toLocaleDateString('it-IT');
   } catch {
@@ -35,7 +35,7 @@ function fmtDate(str) {
 
 function setText(id, val) {
   const el = document.getElementById(id);
-  if (el) el.textContent = val ?? '—';
+  if (el) {el.textContent = val ?? '—';}
 }
 
 // ===== RENDER =====
@@ -212,7 +212,7 @@ function bindLegalButtons() {
     const btnMifid = document.getElementById('btn-mifid-open');
 
     const attachHandler = (btn, targetTab) => {
-      if (!btn) return;
+      if (!btn) {return;}
       const cloned = btn.cloneNode(true);
       btn.parentNode?.replaceChild(cloned, btn);
       cloned.addEventListener('click', (e) => {
@@ -254,7 +254,7 @@ function update(data = {}) {
 
   // Estrai dati da header.json (se disponibili)
   const extractMetric = (key) => {
-    if (!data?.rows) return null;
+    if (!data?.rows) {return null;}
     for (const row of data.rows || []) {
       for (const part of row.parts || []) {
         if (part.kind === 'metric' && part.key === key) {

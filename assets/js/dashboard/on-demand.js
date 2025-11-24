@@ -5,12 +5,14 @@
  */
 
 export async function loadOnDemand() {
-  const container = document.getElementById('on-demand-container');
-  if (!container) return;
+  const container = document.getElementById("on-demand-container");
+  if (!container) {
+    return;
+  }
 
   // Verifica token
-  const token = localStorage.getItem('tradelia-access-token-v1');
-  
+  const token = localStorage.getItem("tradelia-access-token-v1");
+
   if (!token) {
     container.innerHTML = `
       <div class="reports-empty">
@@ -96,37 +98,37 @@ function setupOnDemandForm(container) {
   `;
 
   // Setup form handler
-  const form = document.getElementById('on-demand-form');
+  const form = document.getElementById("on-demand-form");
   if (form) {
-    form.addEventListener('submit', handleOnDemandSubmit);
+    form.addEventListener("submit", handleOnDemandSubmit);
   }
 }
 
 async function handleOnDemandSubmit(e) {
   e.preventDefault();
-  
-  const submitBtn = document.getElementById('on-demand-submit');
-  const token = localStorage.getItem('tradelia-access-token-v1');
-  
+
+  const submitBtn = document.getElementById("on-demand-submit");
+  const token = localStorage.getItem("tradelia-access-token-v1");
+
   if (!token) {
     if (window.showToast) {
-      window.showToast('Token di accesso mancante. Effettua l\'accesso.', 'error');
+      window.showToast("Token di accesso mancante. Effettua l'accesso.", "error");
     }
     return;
   }
 
   const formData = {
     dashboardToken: token,
-    ticker: document.getElementById('on-demand-ticker').value.trim().toUpperCase(),
-    tipo: document.getElementById('on-demand-tipo').value,
-    dettagli: document.getElementById('on-demand-dettagli').value.trim(),
-    timestamp: new Date().toISOString()
+    ticker: document.getElementById("on-demand-ticker").value.trim().toUpperCase(),
+    tipo: document.getElementById("on-demand-tipo").value,
+    dettagli: document.getElementById("on-demand-dettagli").value.trim(),
+    timestamp: new Date().toISOString(),
   };
 
   // Validazione
   if (!formData.ticker || formData.ticker.length < 1) {
     if (window.showToast) {
-      window.showToast('Inserisci un ticker valido', 'error');
+      window.showToast("Inserisci un ticker valido", "error");
     }
     return;
   }
@@ -144,33 +146,33 @@ async function handleOnDemandSubmit(e) {
   }
 
   try {
-    const response = await fetch('/api/analysis?action=request', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
+    const response = await fetch("/api/analysis?action=request", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
     });
 
     const data = await response.json();
 
     if (data.ok) {
       if (window.showToast) {
-        window.showToast('Richiesta inviata con successo!', 'success');
+        window.showToast("Richiesta inviata con successo!", "success");
       }
-      
+
       // Reset form
-      document.getElementById('on-demand-form').reset();
-      
+      document.getElementById("on-demand-form").reset();
+
       // Redirect a requests history dopo 1s
       setTimeout(() => {
-        window.location.hash = 'requests-history';
+        window.location.hash = "requests-history";
       }, 1000);
     } else {
-      throw new Error(data.error || 'Errore durante l\'invio della richiesta');
+      throw new Error(data.error || "Errore durante l'invio della richiesta");
     }
   } catch (err) {
-    console.error('[On-Demand] Errore:', err);
+    console.error("[On-Demand] Errore:", err);
     if (window.showToast) {
-      window.showToast(err.message || 'Errore durante l\'invio della richiesta', 'error');
+      window.showToast(err.message || "Errore durante l'invio della richiesta", "error");
     }
   } finally {
     if (submitBtn) {
@@ -185,4 +187,3 @@ async function handleOnDemandSubmit(e) {
     }
   }
 }
-

@@ -14,30 +14,30 @@
  * - W3C (2023). Service Workers. W3C Working Draft
  */
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const VERSION_FILES = {
-  'sw.js': {
+  "sw.js": {
     pattern: /const VERSION = ['"]([\d.]+)['"];?/,
     replace: (version) => `const VERSION = '${version}';`,
   },
-  'version.json': {
+  "version.json": {
     pattern: /"version":\s*"([\d.]+)"/,
     replace: (version) => `"version": "${version}"`,
   },
-  'assets/js/version-check.js': {
+  "assets/js/version-check.js": {
     pattern: /const CURRENT_VERSION = ['"]([\d.]+)['"];?/,
     replace: (version) => `const CURRENT_VERSION = '${version}';`,
   },
 };
 
 function parseVersion(versionString) {
-  const parts = versionString.split('.').map(Number);
+  const parts = versionString.split(".").map(Number);
   return {
     major: parts[0] || 0,
     minor: parts[1] || 0,
@@ -52,16 +52,16 @@ function incrementVersion(currentVersion, type) {
   const version = parseVersion(currentVersion);
 
   switch (type) {
-    case 'major':
+    case "major":
       version.major++;
       version.minor = 0;
       version.patch = 0;
       break;
-    case 'minor':
+    case "minor":
       version.minor++;
       version.patch = 0;
       break;
-    case 'patch':
+    case "patch":
       version.patch++;
       break;
     default:
@@ -72,25 +72,25 @@ function incrementVersion(currentVersion, type) {
 }
 
 function getCurrentVersion() {
-  const versionFile = path.join(__dirname, '..', 'version.json');
+  const versionFile = path.join(__dirname, "..", "version.json");
   if (!fs.existsSync(versionFile)) {
-    return '2.0.0'; // Default
+    return "2.0.0"; // Default
   }
 
-  const content = fs.readFileSync(versionFile, 'utf8');
+  const content = fs.readFileSync(versionFile, "utf8");
   const match = content.match(/"version":\s*"([\d.]+)"/);
-  return match ? match[1] : '2.0.0';
+  return match ? match[1] : "2.0.0";
 }
 
 function updateVersionInFile(filePath, newVersion, config) {
-  const fullPath = path.join(__dirname, '..', filePath);
+  const fullPath = path.join(__dirname, "..", filePath);
 
   if (!fs.existsSync(fullPath)) {
     console.warn(`⚠️  File not found: ${filePath}`);
     return false;
   }
 
-  let content = fs.readFileSync(fullPath, 'utf8');
+  let content = fs.readFileSync(fullPath, "utf8");
   const match = content.match(config.pattern);
 
   if (!match) {
@@ -100,33 +100,33 @@ function updateVersionInFile(filePath, newVersion, config) {
 
   const oldVersion = match[1];
   content = content.replace(config.pattern, config.replace(newVersion));
-  fs.writeFileSync(fullPath, content, 'utf8');
+  fs.writeFileSync(fullPath, content, "utf8");
 
   console.log(`✅ ${filePath}: ${oldVersion} → ${newVersion}`);
   return true;
 }
 
 function updateVersionTimestamp(version) {
-  const versionFile = path.join(__dirname, '..', 'version.json');
+  const versionFile = path.join(__dirname, "..", "version.json");
   if (!fs.existsSync(versionFile)) {
     return;
   }
 
-  let content = fs.readFileSync(versionFile, 'utf8');
+  let content = fs.readFileSync(versionFile, "utf8");
   const timestamp = new Date().toISOString();
 
   // Update timestamp
   content = content.replace(/"timestamp":\s*"[^"]*"/, `"timestamp": "${timestamp}"`);
 
-  fs.writeFileSync(versionFile, content, 'utf8');
+  fs.writeFileSync(versionFile, content, "utf8");
   console.log(`✅ Updated timestamp: ${timestamp}`);
 }
 
 function main() {
   const type = process.argv[2];
 
-  if (!type || !['major', 'minor', 'patch'].includes(type)) {
-    console.error('❌ Usage: node scripts/update-version.js [major|minor|patch]');
+  if (!type || !["major", "minor", "patch"].includes(type)) {
+    console.error("❌ Usage: node scripts/update-version.js [major|minor|patch]");
     process.exit(1);
   }
 

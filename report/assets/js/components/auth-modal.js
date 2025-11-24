@@ -12,7 +12,7 @@ const state = {
 };
 
 function init() {
-  if (state.initialized) return;
+  if (state.initialized) {return;}
   state.root = document.createElement('div');
   state.root.id = 'auth-overlay';
   state.root.className = 'auth-overlay';
@@ -167,7 +167,7 @@ function registerEvents() {
 
     tabsContainer._clickHandler = (e) => {
       const btn = e.target.closest('[data-auth-switch]');
-      if (!btn) return;
+      if (!btn) {return;}
       e.preventDefault();
       e.stopPropagation();
       const mode = btn.getAttribute('data-auth-switch');
@@ -214,13 +214,13 @@ function handleEscape(event) {
 
 // Focus trap: mantiene il focus dentro il modale
 function setupFocusTrap() {
-  if (!state.modal) return;
+  if (!state.modal) {return;}
 
   state.modal.addEventListener('keydown', (e) => {
-    if (e.key !== 'Tab') return;
+    if (e.key !== 'Tab') {return;}
 
     const focusableElements = getFocusableElements();
-    if (focusableElements.length === 0) return;
+    if (focusableElements.length === 0) {return;}
 
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
@@ -242,7 +242,7 @@ function setupFocusTrap() {
 }
 
 function getFocusableElements() {
-  if (!state.modal) return [];
+  if (!state.modal) {return [];}
   return Array.from(
     state.modal.querySelectorAll(
       'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -256,7 +256,7 @@ function getFocusableElements() {
 // Keyboard navigation per tab (frecce sinistra/destra)
 function setupKeyboardNavigation() {
   const tabsContainer = state.root.querySelector('.auth-tabs');
-  if (!tabsContainer) return;
+  if (!tabsContainer) {return;}
 
   const tabs = Array.from(tabsContainer.querySelectorAll('[role="tab"]'));
 
@@ -342,10 +342,10 @@ function validateField(input) {
     .getAttribute('aria-describedby')
     ?.split(' ')
     .find((id) => id.includes('error'));
-  if (!errorEl) return;
+  if (!errorEl) {return;}
 
   const errorElement = document.getElementById(errorEl);
-  if (!errorElement) return;
+  if (!errorElement) {return;}
 
   if (!input.validity.valid) {
     let message = '';
@@ -370,7 +370,7 @@ function showFieldError(input, message) {
     .getAttribute('aria-describedby')
     ?.split(' ')
     .find((id) => id.includes('error'));
-  if (!errorId) return;
+  if (!errorId) {return;}
 
   const errorEl = document.getElementById(errorId);
   if (errorEl) {
@@ -386,7 +386,7 @@ function clearFieldError(input) {
     .getAttribute('aria-describedby')
     ?.split(' ')
     .find((id) => id.includes('error'));
-  if (!errorId) return;
+  if (!errorId) {return;}
 
   const errorEl = document.getElementById(errorId);
   if (errorEl) {
@@ -399,7 +399,7 @@ function clearFieldError(input) {
 
 // Password strength calculator
 function calculatePasswordStrength(password) {
-  if (!password) return { strength: 'none', score: 0 };
+  if (!password) {return { strength: 'none', score: 0 };}
 
   let score = 0;
   const checks = {
@@ -411,16 +411,16 @@ function calculatePasswordStrength(password) {
   };
 
   Object.values(checks).forEach((check) => {
-    if (check) score++;
+    if (check) {score++;}
   });
 
   // Bonus per lunghezza
-  if (password.length >= 12) score += 0.5;
-  if (password.length >= 16) score += 0.5;
+  if (password.length >= 12) {score += 0.5;}
+  if (password.length >= 16) {score += 0.5;}
 
   let strength = 'weak';
-  if (score >= 4.5) strength = 'strong';
-  else if (score >= 3) strength = 'medium';
+  if (score >= 4.5) {strength = 'strong';}
+  else if (score >= 3) {strength = 'medium';}
 
   return { strength, score, checks };
 }
@@ -433,7 +433,7 @@ function updatePasswordStrength(input) {
   if (!strengthContainer) {
     // Crea container se non esiste
     const field = input.closest('.auth-field');
-    if (!field || !input.id.includes('register')) return;
+    if (!field || !input.id.includes('register')) {return;}
 
     const container = document.createElement('div');
     container.className = 'auth-password-strength';
@@ -479,7 +479,7 @@ function handlePasswordToggle(e) {
   const toggle = e.currentTarget;
   const inputId = toggle.getAttribute('data-password-toggle');
   const input = document.getElementById(inputId);
-  if (!input) return;
+  if (!input) {return;}
 
   const isPassword = input.type === 'password';
   input.type = isPassword ? 'text' : 'password';
@@ -502,7 +502,7 @@ function handlePasswordToggle(e) {
 
 async function handleLogin(event) {
   event.preventDefault();
-  if (state.busy) return;
+  if (state.busy) {return;}
   const form = event.currentTarget;
   // Best practice: sanitize inputs (trim, lowercase email)
   const email = form.email.value.trim().toLowerCase();
@@ -536,7 +536,7 @@ async function handleLogin(event) {
     // Supabase gestisce automaticamente persistSession (default: true)
     // Il checkbox "remember" è principalmente per UX
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
+    if (error) {throw error;}
     showToast('Accesso effettuato.', 'success');
     // Chiudi il modal e reindirizza all'area utente
     closeAfterDelay();
@@ -578,15 +578,15 @@ async function handleLogin(event) {
 
 async function handleSignup(event) {
   event.preventDefault();
-  if (state.busy) return;
+  if (state.busy) {return;}
   const form = event.currentTarget;
   const email = form.email.value.trim();
   const password = form.password.value;
 
   if (!email || !password) {
-    if (!email) showFieldError(form.querySelector('#auth-email-register'), 'Campo obbligatorio');
+    if (!email) {showFieldError(form.querySelector('#auth-email-register'), 'Campo obbligatorio');}
     if (!password)
-      showFieldError(form.querySelector('#auth-password-register'), 'Campo obbligatorio');
+      {showFieldError(form.querySelector('#auth-password-register'), 'Campo obbligatorio');}
     return;
   }
 
@@ -892,7 +892,7 @@ async function handleSignup(event) {
 
 async function handleReset(event) {
   event.preventDefault();
-  if (state.busy) return;
+  if (state.busy) {return;}
   const form = event.currentTarget;
 
   // Best practice: sanitize and validate email
@@ -1004,7 +1004,7 @@ async function handleReset(event) {
 }
 
 function updateForms() {
-  if (!state.root) return;
+  if (!state.root) {return;}
 
   // NASCONDI TUTTI i form PRIMA di mostrare quello attivo
   const forms = state.root.querySelectorAll('[data-auth-form]');
@@ -1029,7 +1029,7 @@ function updateForms() {
 }
 
 function open(mode = 'login') {
-  if (!state.initialized) init();
+  if (!state.initialized) {init();}
 
   // Salva elemento attivo prima di aprire
   state.previousActiveElement = document.activeElement;
@@ -1065,7 +1065,7 @@ function open(mode = 'login') {
 }
 
 function close() {
-  if (!state.root) return;
+  if (!state.root) {return;}
 
   // NASCONDI TUTTI i form prima di chiudere
   const allForms = state.root.querySelectorAll('[data-auth-form]');
@@ -1112,9 +1112,9 @@ function closeAfterDelay() {
 }
 
 function showToast(message, variant = 'info') {
-  if (!state.initialized) init();
+  if (!state.initialized) {init();}
   const toast = state.root.querySelector('#auth-toast');
-  if (!toast) return;
+  if (!toast) {return;}
 
   toast.textContent = message;
   toast.setAttribute('data-variant', variant);

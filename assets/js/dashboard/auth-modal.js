@@ -13,9 +13,12 @@ const QUICK_ASSIST_SLA_MINUTES = 15;
 
 // ===== DEBUG SYSTEM =====
 const DEBUG = {
-  enabled: window.location.search.includes("debug=auth") || localStorage.getItem("auth-debug") === "true",
-  log: function(level, component, message, data = null) {
-    if (!this.enabled) return;
+  enabled:
+    window.location.search.includes("debug=auth") || localStorage.getItem("auth-debug") === "true",
+  log: function (level, component, message, data = null) {
+    if (!this.enabled) {
+      return;
+    }
     const timestamp = new Date().toISOString();
     const logEntry = {
       timestamp,
@@ -33,26 +36,28 @@ const DEBUG = {
       const logs = JSON.parse(sessionStorage.getItem("auth-debug-logs") || "[]");
       logs.push(logEntry);
       // Keep only last 50 logs
-      if (logs.length > 50) logs.shift();
+      if (logs.length > 50) {
+        logs.shift();
+      }
       sessionStorage.setItem("auth-debug-logs", JSON.stringify(logs));
     }
   },
-  error: function(component, message, data) {
+  error: function (component, message, data) {
     this.log("error", component, message, data);
   },
-  warn: function(component, message, data) {
+  warn: function (component, message, data) {
     this.log("warn", component, message, data);
   },
-  info: function(component, message, data) {
+  info: function (component, message, data) {
     this.log("info", component, message, data);
   },
-  getLogs: function() {
+  getLogs: function () {
     if (typeof sessionStorage !== "undefined") {
       return JSON.parse(sessionStorage.getItem("auth-debug-logs") || "[]");
     }
     return [];
   },
-  clearLogs: function() {
+  clearLogs: function () {
     if (typeof sessionStorage !== "undefined") {
       sessionStorage.removeItem("auth-debug-logs");
     }
@@ -77,7 +82,7 @@ export function initAuthModal() {
  */
 export function showAuthModal(tab = "login") {
   DEBUG.info("showAuthModal", `Opening modal with tab: ${tab}`);
-  
+
   const modal = document.getElementById(MODAL_ID);
   if (!modal) {
     DEBUG.warn("showAuthModal", "Modal not found, creating...");
@@ -101,7 +106,7 @@ export function showAuthModal(tab = "login") {
   modal.removeAttribute("aria-hidden");
   modal.classList.add("active");
   document.body.style.overflow = "hidden";
-  
+
   DEBUG.info("showAuthModal", "Modal opened successfully");
 
   // WCAG 2.2: Screen reader announcement
@@ -467,12 +472,22 @@ function setupModalEvents() {
 
   // Debug: Check if all elements exist
   const missingElements = [];
-  if (!overlay) missingElements.push("overlay");
-  if (!closeBtn) missingElements.push("closeBtn");
-  if (tabs.length === 0) missingElements.push("tabs");
-  if (!loginForm) missingElements.push("loginForm");
-  if (!signupForm) missingElements.push("signupForm");
-  
+  if (!overlay) {
+    missingElements.push("overlay");
+  }
+  if (!closeBtn) {
+    missingElements.push("closeBtn");
+  }
+  if (tabs.length === 0) {
+    missingElements.push("tabs");
+  }
+  if (!loginForm) {
+    missingElements.push("loginForm");
+  }
+  if (!signupForm) {
+    missingElements.push("signupForm");
+  }
+
   if (missingElements.length > 0) {
     DEBUG.warn("setupModalEvents", `Missing elements: ${missingElements.join(", ")}`);
   }
@@ -684,7 +699,7 @@ async function handleLoginSubmit(e) {
   const submitBtn = form.querySelector('button[type="submit"]');
   const emailErrorEl = document.getElementById("auth-email-error");
   const passwordErrorEl = document.getElementById("auth-password-error");
-  
+
   // Clear previous errors
   if (emailErrorEl) {
     emailErrorEl.textContent = "";
@@ -696,7 +711,7 @@ async function handleLoginSubmit(e) {
   }
   emailInput?.setAttribute("aria-invalid", "false");
   passwordInput?.setAttribute("aria-invalid", "false");
-  
+
   if (submitBtn) {
     submitBtn.disabled = true;
     submitBtn.textContent = "Accesso in corso...";
@@ -788,15 +803,15 @@ let signupInProgress = false;
  */
 async function handleSignupSubmit(e) {
   e.preventDefault();
-  
+
   // Prevent double submission
   if (signupInProgress) {
     DEBUG.warn("handleSignupSubmit", "Signup already in progress, ignoring duplicate submit");
     return;
   }
-  
+
   DEBUG.info("handleSignupSubmit", "Signup form submitted");
-  
+
   const form = e.target;
   const emailInput = document.getElementById("signup-email");
   const passwordInput = document.getElementById("signup-password");
@@ -806,14 +821,26 @@ async function handleSignupSubmit(e) {
 
   // Debug: Check if all inputs exist
   const missingInputs = [];
-  if (!emailInput) missingInputs.push("emailInput");
-  if (!passwordInput) missingInputs.push("passwordInput");
-  if (!passwordConfirmInput) missingInputs.push("passwordConfirmInput");
-  if (!privacyCheckbox) missingInputs.push("privacyCheckbox");
-  
+  if (!emailInput) {
+    missingInputs.push("emailInput");
+  }
+  if (!passwordInput) {
+    missingInputs.push("passwordInput");
+  }
+  if (!passwordConfirmInput) {
+    missingInputs.push("passwordConfirmInput");
+  }
+  if (!privacyCheckbox) {
+    missingInputs.push("privacyCheckbox");
+  }
+
   if (missingInputs.length > 0) {
     DEBUG.error("handleSignupSubmit", `Missing inputs: ${missingInputs.join(", ")}`);
-    setStatusMessage(statusId, "Errore: elementi del form non trovati. Ricarica la pagina.", "error");
+    setStatusMessage(
+      statusId,
+      "Errore: elementi del form non trovati. Ricarica la pagina.",
+      "error"
+    );
     return;
   }
 
@@ -821,7 +848,7 @@ async function handleSignupSubmit(e) {
   const password = passwordInput?.value || "";
   const passwordConfirm = passwordConfirmInput?.value || "";
   const privacyAccepted = privacyCheckbox?.checked || false;
-  
+
   DEBUG.info("handleSignupSubmit", "Form data collected", {
     emailLength: email.length,
     passwordLength: password.length,
@@ -849,7 +876,10 @@ async function handleSignupSubmit(e) {
   }
 
   if (!password || password.length < 12) {
-    DEBUG.warn("handleSignupSubmit", `Validation failed: password too short (${password.length} chars)`);
+    DEBUG.warn(
+      "handleSignupSubmit",
+      `Validation failed: password too short (${password.length} chars)`
+    );
     if (window.showToast) {
       window.showToast("Password deve essere di almeno 12 caratteri", "error");
     }
@@ -877,12 +907,12 @@ async function handleSignupSubmit(e) {
     privacyCheckbox?.focus();
     return;
   }
-  
+
   DEBUG.info("handleSignupSubmit", "Validation passed, proceeding with signup");
 
   // Disable form and show loading
   const submitBtn = form.querySelector('button[type="submit"]');
-  
+
   // Clear previous errors
   const emailErrorEl = document.getElementById("signup-email-validation");
   const passwordErrorEl = document.getElementById("signup-password-confirm-error");
@@ -897,9 +927,9 @@ async function handleSignupSubmit(e) {
   emailInput?.setAttribute("aria-invalid", "false");
   passwordInput?.setAttribute("aria-invalid", "false");
   passwordConfirmInput?.setAttribute("aria-invalid", "false");
-  
+
   signupInProgress = true;
-  
+
   if (submitBtn) {
     submitBtn.disabled = true;
     submitBtn.textContent = "Registrazione in corso...";
@@ -910,7 +940,7 @@ async function handleSignupSubmit(e) {
 
   try {
     DEBUG.info("handleSignupSubmit", "Sending signup request to API");
-    
+
     const response = await fetch("/api/auth?action=signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -923,9 +953,9 @@ async function handleSignupSubmit(e) {
     });
 
     DEBUG.info("handleSignupSubmit", `API response status: ${response.status}`);
-    
+
     const data = await response.json();
-    
+
     DEBUG.info("handleSignupSubmit", "API response data", {
       ok: data.ok,
       hasError: !!data.error,
@@ -999,11 +1029,15 @@ async function handleSignupSubmit(e) {
       stack: error.stack,
       name: error.name,
     });
-    
+
     if (window.showToast) {
       window.showToast(error.message || "Errore durante la registrazione", "error");
     }
-    setStatusMessage(statusId, error.message || "Impossibile completare la registrazione.", "error");
+    setStatusMessage(
+      statusId,
+      error.message || "Impossibile completare la registrazione.",
+      "error"
+    );
     // Re-enable form
     if (submitBtn) {
       submitBtn.disabled = false;
@@ -1110,21 +1144,32 @@ function validateEmail(email) {
   if (!email || typeof email !== "string") {
     return false;
   }
-  
+
   // Trim e lowercase
   const trimmed = email.trim().toLowerCase();
-  
+
   // Regex migliorata (RFC 5322 compliant semplificato)
   // Permette caratteri validi ma evita pattern pericolosi
-  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-  
+  const emailRegex =
+    /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+
   // Validazioni aggiuntive
-  if (trimmed.length > 254) return false; // RFC 5321 limit
-  if (trimmed.length < 5) return false; // Min: a@b.c
-  if (trimmed.includes("..")) return false; // No consecutive dots
-  if (trimmed.startsWith(".") || trimmed.endsWith(".")) return false; // No leading/trailing dot
-  if (trimmed.startsWith("@") || trimmed.endsWith("@")) return false; // No leading/trailing @
-  
+  if (trimmed.length > 254) {
+    return false;
+  } // RFC 5321 limit
+  if (trimmed.length < 5) {
+    return false;
+  } // Min: a@b.c
+  if (trimmed.includes("..")) {
+    return false;
+  } // No consecutive dots
+  if (trimmed.startsWith(".") || trimmed.endsWith(".")) {
+    return false;
+  } // No leading/trailing dot
+  if (trimmed.startsWith("@") || trimmed.endsWith("@")) {
+    return false;
+  } // No leading/trailing @
+
   return emailRegex.test(trimmed);
 }
 
@@ -1173,11 +1218,11 @@ function updatePasswordStrength(password, container) {
   } else {
     suggestions.push(`Aggiungi ${12 - password.length} caratteri`);
   }
-  
+
   if (password.length >= 16) {
     strength += 10;
   }
-  
+
   if (password.length >= 20) {
     strength += 5;
   }
@@ -1188,19 +1233,19 @@ function updatePasswordStrength(password, container) {
   } else {
     suggestions.push("Aggiungi lettere minuscole");
   }
-  
+
   if (/[A-Z]/.test(password)) {
     strength += 15;
   } else {
     suggestions.push("Aggiungi lettere maiuscole");
   }
-  
+
   if (/[0-9]/.test(password)) {
     strength += 15;
   } else {
     suggestions.push("Aggiungi numeri");
   }
-  
+
   if (/[^a-zA-Z0-9]/.test(password)) {
     strength += 20;
   } else {
@@ -1215,8 +1260,8 @@ function updatePasswordStrength(password, container) {
     /abcde/i,
     /(.)\1{3,}/, // Repeated characters
   ];
-  
-  if (commonPatterns.some(pattern => pattern.test(password))) {
+
+  if (commonPatterns.some((pattern) => pattern.test(password))) {
     strength = Math.max(0, strength - 20);
     suggestions.push("Evita pattern comuni");
   }
@@ -1328,7 +1373,8 @@ async function handleResetPasswordRequest() {
     if (data.ok) {
       if (window.showToast) {
         window.showToast(
-          data.message || "Se l'email esiste, ti abbiamo inviato le istruzioni per reimpostare la password. Controlla la tua casella email.",
+          data.message ||
+            "Se l'email esiste, ti abbiamo inviato le istruzioni per reimpostare la password. Controlla la tua casella email.",
           "success"
         );
       }
@@ -1345,7 +1391,11 @@ async function handleResetPasswordRequest() {
       if (window.showToast) {
         window.showToast(data.error || "Errore durante la richiesta", "error");
       }
-      setStatusMessage(statusId, data.error || "Non siamo riusciti a inviare l'email di reset.", "error");
+      setStatusMessage(
+        statusId,
+        data.error || "Non siamo riusciti a inviare l'email di reset.",
+        "error"
+      );
     }
   } catch (error) {
     safeLog("error", "[AuthModal] Errore reset password:", error);
@@ -1512,12 +1562,7 @@ function triggerAssistEmail(form) {
     form?.querySelector("#assist-summary")?.value?.trim() ||
     "Scrivi qui il problema per accelerare il supporto.";
 
-  const bodyLines = [
-    `Email utente: ${email}`,
-    `Preferenza contatto: ${channel}`,
-    "",
-    summary,
-  ];
+  const bodyLines = [`Email utente: ${email}`, `Preferenza contatto: ${channel}`, "", summary];
 
   const mailto = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(
     "Assistenza rapida dashboard"
@@ -1541,4 +1586,3 @@ function handleAssistSubmit(event) {
 }
 
 window.closeAssistModal = closeAssistModal;
-

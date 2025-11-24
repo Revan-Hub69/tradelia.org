@@ -14,22 +14,22 @@ import Logger from '../utils/logger.js';
 // ---------------------------------------------------------------------------
 
 function escapeHtml(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   const div = document.createElement('div');
   div.textContent = String(str);
   return div.innerHTML;
 }
 
 function escapeAttr(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 function coalesce(...values) {
   for (const val of values) {
-    if (val === 0) return 0;
-    if (val === false) return false;
-    if (val === true) return true;
+    if (val === 0) {return 0;}
+    if (val === false) {return false;}
+    if (val === true) {return true;}
     if (
       val !== undefined &&
       val !== null &&
@@ -43,56 +43,56 @@ function coalesce(...values) {
 }
 
 function toNumber(value, fallback = 0) {
-  if (value == null) return fallback;
-  if (typeof value === 'number') return value;
-  if (typeof value === 'boolean') return value ? 1 : 0;
+  if (value == null) {return fallback;}
+  if (typeof value === 'number') {return value;}
+  if (typeof value === 'boolean') {return value ? 1 : 0;}
   const parsed = parseFloat(String(value).replace(/[^0-9+-.]/g, ''));
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
 function toPercent(value, opts = {}) {
   const { decimals = 0, fallback = '—', suffix = '%' } = opts;
-  if (value == null || value === '—' || value === '') return fallback;
+  if (value == null || value === '—' || value === '') {return fallback;}
   const num = typeof value === 'number' ? value : toNumber(value, Number.NaN);
-  if (!Number.isFinite(num)) return fallback;
+  if (!Number.isFinite(num)) {return fallback;}
   const pct = opts.asFraction ? num : num * 100;
   return `${pct.toFixed(decimals)}${suffix}`;
 }
 
 function formatSigned(value, decimals = 2) {
-  if (value == null || value === '—') return '—';
+  if (value == null || value === '—') {return '—';}
   const num = typeof value === 'number' ? value : toNumber(value, Number.NaN);
-  if (!Number.isFinite(num)) return String(value);
+  if (!Number.isFinite(num)) {return String(value);}
   const fixed = num.toFixed(decimals);
   return num > 0 ? `+${fixed}` : fixed;
 }
 
 function boolLabel(value, { trueLabel = 'Yes', falseLabel = 'No' } = {}) {
-  if (value === true) return trueLabel;
-  if (value === false) return falseLabel;
+  if (value === true) {return trueLabel;}
+  if (value === false) {return falseLabel;}
   return '—';
 }
 
 function determineTone({ type, value }) {
-  if (value == null || value === '—' || value === '') return 'neutral';
+  if (value == null || value === '—' || value === '') {return 'neutral';}
   if (type === 'strategy') {
     const str = String(value).toLowerCase();
-    if (str.includes('momentum')) return 'ok';
-    if (str.includes('pullback') || str.includes('risk-off')) return 'err';
+    if (str.includes('momentum')) {return 'ok';}
+    if (str.includes('pullback') || str.includes('risk-off')) {return 'err';}
     return 'neutral';
   }
   if (type === 'score') {
     const num = toNumber(value, 0);
-    if (num > 0.3) return 'ok';
-    if (num < -0.3) return 'err';
+    if (num > 0.3) {return 'ok';}
+    if (num < -0.3) {return 'err';}
     return 'neutral';
   }
   if (type === 'breadth') {
     const num = toNumber(value, Number.NaN);
     if (Number.isFinite(num)) {
       const pct = num > 1 ? num : num * 100;
-      if (pct >= 60) return 'ok';
-      if (pct <= 40) return 'err';
+      if (pct >= 60) {return 'ok';}
+      if (pct <= 40) {return 'err';}
     }
     return 'neutral';
   }
@@ -103,18 +103,18 @@ function determineTone({ type, value }) {
 }
 
 function safeArray(value) {
-  if (Array.isArray(value)) return value;
+  if (Array.isArray(value)) {return value;}
   if (typeof value === 'string' && value.trim())
-    return value
+    {return value
       .split(',')
       .map((s) => s.trim())
-      .filter(Boolean);
+      .filter(Boolean);}
   return [];
 }
 
 function firstNonEmptyString(...values) {
   for (const value of values) {
-    if (typeof value === 'string' && value.trim()) return value.trim();
+    if (typeof value === 'string' && value.trim()) {return value.trim();}
   }
   return '';
 }
@@ -927,7 +927,7 @@ function renderSummaryHTML(summary) {
 }
 
 function renderPrimaryChartsHTML(primaryCharts) {
-  if (!Array.isArray(primaryCharts) || primaryCharts.length === 0) return '';
+  if (!Array.isArray(primaryCharts) || primaryCharts.length === 0) {return '';}
   return `
     <section class="f1b-primary-charts">
       ${primaryCharts
@@ -948,7 +948,7 @@ function renderPrimaryChartsHTML(primaryCharts) {
 }
 
 function buildTabs(sections) {
-  if (!Array.isArray(sections) || sections.length === 0) return [];
+  if (!Array.isArray(sections) || sections.length === 0) {return [];}
   return sections.map((section) => ({
     id: section.id,
     title: section.title,
@@ -960,7 +960,7 @@ function buildTabs(sections) {
 }
 
 function renderExtraBlocks(extraBlocks) {
-  if (!Array.isArray(extraBlocks) || extraBlocks.length === 0) return '';
+  if (!Array.isArray(extraBlocks) || extraBlocks.length === 0) {return '';}
   return extraBlocks
     .map((block) => {
       if (block.type === 'code') {
@@ -987,8 +987,8 @@ function renderExtraBlocks(extraBlocks) {
 }
 
 function renderSectionContent(container, section, normalized) {
-  if (!container || !section) return;
-  if (container.dataset.rendered === 'true') return;
+  if (!container || !section) {return;}
+  if (container.dataset.rendered === 'true') {return;}
 
   container.innerHTML = `
     <div class="f1b-drawer-section-inner">
@@ -1020,7 +1020,7 @@ function renderSectionContent(container, section, normalized) {
     import('../components/f1b-charts.js')
       .then(async ({ renderF1BSectionChart }) => {
         const chartNode = container.querySelector('[data-section-chart]');
-        if (!chartNode) return;
+        if (!chartNode) {return;}
         try {
           await renderF1BSectionChart(section.chart.type, chartNode, normalized.chartContext);
         } catch (err) {
@@ -1084,7 +1084,7 @@ export function renderCard(rawData, ctx = {}) {
 }
 
 export function bindCard(node, rawData, ctx = {}) {
-  if (!node || !rawData) return;
+  if (!node || !rawData) {return;}
 
   const normalized = normalizeDataPublicF1B(rawData);
   node.__f1bNormalized = normalized;
@@ -1095,9 +1095,9 @@ export function bindCard(node, rawData, ctx = {}) {
     bindModuleTabs(tabsWrapper);
     tabsWrapper.addEventListener('drawer-tab-opened', (event) => {
       const { tabId, container } = event.detail || {};
-      if (!tabId || !container) return;
+      if (!tabId || !container) {return;}
       const section = normalized.sectionsMap[tabId];
-      if (!section) return;
+      if (!section) {return;}
       renderSectionContent(container, section, normalized);
     });
   }
@@ -1109,7 +1109,7 @@ export function bindCard(node, rawData, ctx = {}) {
       .then(({ renderF1BPrimaryChart }) => {
         chartNodes.forEach((chartNode) => {
           const chartId = chartNode.dataset.primaryChart;
-          if (!chartId) return;
+          if (!chartId) {return;}
           renderF1BPrimaryChart(chartId, chartNode, normalized.chartContext);
         });
       })

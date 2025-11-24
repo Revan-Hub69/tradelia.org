@@ -42,7 +42,7 @@ function initialize() {
 }
 
 async function bootstrap() {
-  if (!state.report) return;
+  if (!state.report) {return;}
   state.hasBootstraped = true;
   renderSkeleton();
   await restoreSession();
@@ -54,19 +54,19 @@ async function bootstrap() {
     synchronizeUserContext()
       .then(() => {
         render();
-        if (state.report) loadComments();
+        if (state.report) {loadComments();}
       })
       .catch((err) => Logger.warn('Comments', 'auth change sync error', err));
   });
 }
 
 function renderSkeleton() {
-  if (!PANEL) return;
+  if (!PANEL) {return;}
   PANEL.setAttribute('data-state', 'loading');
 }
 
 function render() {
-  if (!PANEL) return;
+  if (!PANEL) {return;}
   PANEL.removeAttribute('data-state');
   renderAuthCard();
   renderForm();
@@ -74,7 +74,7 @@ function render() {
 }
 
 function renderAuthCard() {
-  if (!AUTH_CARD) return;
+  if (!AUTH_CARD) {return;}
 
   if (state.user) {
     AUTH_CARD.hidden = true;
@@ -120,7 +120,7 @@ function renderAuthCard() {
 }
 
 function renderForm() {
-  if (!FORM_WRAPPER) return;
+  if (!FORM_WRAPPER) {return;}
 
   if (!state.user) {
     FORM_WRAPPER.hidden = true;
@@ -160,7 +160,7 @@ function renderForm() {
 }
 
 function renderComments() {
-  if (!LIST || !EMPTY || !ERROR_BOX) return;
+  if (!LIST || !EMPTY || !ERROR_BOX) {return;}
 
   if (!state.comments.length) {
     EMPTY.hidden = false;
@@ -229,11 +229,11 @@ async function handleAuthSubmit(event) {
     form.querySelector('button[type="submit"]').disabled = true;
     if (state.authMode === 'login') {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
+      if (error) {throw error;}
       showToast('Accesso effettuato.', 'success');
     } else {
       const { error } = await supabase.auth.signUp({ email, password });
-      if (error) throw error;
+      if (error) {throw error;}
       showToast('Controlla la mail per confermare il tuo account.', 'success');
     }
   } catch (err) {
@@ -246,7 +246,7 @@ async function handleAuthSubmit(event) {
 
 async function handleCommentSubmit(event) {
   event.preventDefault();
-  if (state.isSubmitting) return;
+  if (state.isSubmitting) {return;}
 
   const textarea = event.currentTarget.querySelector('#report-comment-text');
   const body = textarea.value.trim();
@@ -275,7 +275,7 @@ async function handleCommentSubmit(event) {
       .insert(payload)
       .select()
       .single();
-    if (error) throw error;
+    if (error) {throw error;}
     textarea.value = '';
     state.comments.unshift(data);
     renderComments();
@@ -291,15 +291,15 @@ async function handleCommentSubmit(event) {
 
 async function handleDeleteComment(event) {
   const commentId = event.currentTarget.getAttribute('data-comment-delete');
-  if (!commentId) return;
-  if (!confirm('Eliminare definitivamente il commento?')) return;
+  if (!commentId) {return;}
+  if (!confirm('Eliminare definitivamente il commento?')) {return;}
 
   try {
     const { error } = await supabase
       .from('report_comments')
       .update({ is_deleted: true })
       .eq('id', commentId);
-    if (error) throw error;
+    if (error) {throw error;}
     state.comments = state.comments.filter((comment) => comment.id !== commentId);
     renderComments();
     showToast('Commento eliminato.', 'success');
@@ -339,7 +339,7 @@ async function synchronizeUserContext() {
 }
 
 async function loadComments() {
-  if (!state.report) return;
+  if (!state.report) {return;}
   try {
     state.loading = true;
     const { data, error } = await supabase
@@ -363,7 +363,7 @@ async function loadComments() {
       .eq('report_id', state.report.id)
       .eq('is_deleted', false)
       .order('created_at', { ascending: false });
-    if (error) throw error;
+    if (error) {throw error;}
 
     // Fetch desk links for Desk users
     const deskUserIds = (data || [])
@@ -380,7 +380,7 @@ async function loadComments() {
 
       if (linksData) {
         deskLinksMap = linksData.reduce((acc, link) => {
-          if (!acc[link.user_id]) acc[link.user_id] = [];
+          if (!acc[link.user_id]) {acc[link.user_id] = [];}
           acc[link.user_id].push(link);
           return acc;
         }, {});
@@ -405,13 +405,13 @@ async function loadComments() {
 }
 
 function showError(message) {
-  if (!ERROR_BOX) return;
+  if (!ERROR_BOX) {return;}
   ERROR_BOX.hidden = false;
   ERROR_BOX.textContent = message;
 }
 
 function showToast(message, variant = 'info') {
-  if (!TOAST) return;
+  if (!TOAST) {return;}
   TOAST.textContent = message;
   TOAST.setAttribute('data-variant', variant);
   TOAST.setAttribute('data-visible', 'true');
@@ -421,13 +421,13 @@ function showToast(message, variant = 'info') {
 }
 
 function getDisplayName() {
-  if (state.profile?.display_name) return state.profile.display_name;
+  if (state.profile?.display_name) {return state.profile.display_name;}
   const email = state.user?.email || '';
   return email ? email.split('@')[0] : 'Utente Tradelia';
 }
 
 function deriveInitials(name) {
-  if (!name) return 'T';
+  if (!name) {return 'T';}
   return (
     name
       .split(' ')
@@ -443,12 +443,12 @@ function formatRelativeTime(dateString) {
     const date = new Date(dateString);
     const diffMs = Date.now() - date.getTime();
     const diffMinutes = Math.round(diffMs / 60000);
-    if (diffMinutes < 1) return 'Adesso';
-    if (diffMinutes < 60) return `${diffMinutes} min fa`;
+    if (diffMinutes < 1) {return 'Adesso';}
+    if (diffMinutes < 60) {return `${diffMinutes} min fa`;}
     const diffHours = Math.round(diffMinutes / 60);
-    if (diffHours < 24) return `${diffHours} h fa`;
+    if (diffHours < 24) {return `${diffHours} h fa`;}
     const diffDays = Math.round(diffHours / 24);
-    if (diffDays < 7) return `${diffDays} g fa`;
+    if (diffDays < 7) {return `${diffDays} g fa`;}
     return date.toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' });
   } catch {
     return dateString;
@@ -469,7 +469,7 @@ function roleLabelMap(role) {
 }
 
 function escapeHtml(value) {
-  if (value == null) return '';
+  if (value == null) {return '';}
   const div = document.createElement('div');
   div.textContent = String(value);
   return div.innerHTML;
@@ -481,7 +481,7 @@ function isAdmin() {
 }
 
 async function handleShowProfile(userId, userName) {
-  if (!userId) return;
+  if (!userId) {return;}
 
   try {
     // Fetch profile data
@@ -525,7 +525,7 @@ async function handleShowProfile(userId, userName) {
 function showProfileModal(profile) {
   // Remove existing modal if present
   const existing = document.getElementById('profile-modal');
-  if (existing) existing.remove();
+  if (existing) {existing.remove();}
 
   const initials = deriveInitials(profile.displayName);
   const roleLabel = profile.role ? roleLabelMap(profile.role) : null;
@@ -591,7 +591,7 @@ function showProfileModal(profile) {
   // Close handlers
   modal.querySelector('.profile-modal-close').addEventListener('click', () => modal.remove());
   modal.addEventListener('click', (e) => {
-    if (e.target === modal) modal.remove();
+    if (e.target === modal) {modal.remove();}
   });
 
   // ESC key
@@ -605,5 +605,5 @@ function showProfileModal(profile) {
 
   // Focus trap
   const firstFocusable = modal.querySelector('button, a');
-  if (firstFocusable) firstFocusable.focus();
+  if (firstFocusable) {firstFocusable.focus();}
 }

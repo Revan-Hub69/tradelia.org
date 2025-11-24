@@ -5,19 +5,21 @@
  */
 
 export async function loadAccess() {
-  const container = document.getElementById('access-container');
-  if (!container) return;
+  const container = document.getElementById("access-container");
+  if (!container) {
+    return;
+  }
 
   // Carica info token
-  const token = localStorage.getItem('tradelia-access-token-v1');
-  
+  const token = localStorage.getItem("tradelia-access-token-v1");
+
   if (token) {
     try {
       // Valida token e mostra info
-      const response = await fetch('/api/auth?action=validate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token })
+      const response = await fetch("/api/auth?action=validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
       });
 
       if (response.ok) {
@@ -27,7 +29,7 @@ export async function loadAccess() {
         renderNoToken(container);
       }
     } catch (err) {
-      console.error('[Access] Errore validazione token:', err);
+      console.error("[Access] Errore validazione token:", err);
       renderNoToken(container);
     }
   } else {
@@ -37,44 +39,44 @@ export async function loadAccess() {
 
 function renderTokenInfo(data, container) {
   const { email, planRole, validUntil, daysLeft, status } = data;
-  
+
   const planLabels = {
-    guest: 'Guest',
-    pro: 'Pro',
-    desk: 'Desk',
-    trial: 'Trial'
+    guest: "Guest",
+    pro: "Pro",
+    desk: "Desk",
+    trial: "Trial",
   };
 
   const statusLabels = {
-    active: 'Attivo',
-    inactive: 'Inattivo',
-    expired: 'Scaduto'
+    active: "Attivo",
+    inactive: "Inattivo",
+    expired: "Scaduto",
   };
 
   container.innerHTML = `
     <div class="access-card">
       <div class="access-card-header">
         <h3 class="access-card-title">Token di Accesso</h3>
-        <span class="access-badge" style="background: ${status === 'active' ? 'var(--success)' : 'var(--warning)'}">
+        <span class="access-badge" style="background: ${status === "active" ? "var(--success)" : "var(--warning)"}">
           ${statusLabels[status] || status}
         </span>
       </div>
       <div class="access-card-content">
         <div class="access-info-item">
           <div class="access-info-label">Email</div>
-          <div class="access-info-value">${email || 'N/A'}</div>
+          <div class="access-info-value">${email || "N/A"}</div>
         </div>
         <div class="access-info-item">
           <div class="access-info-label">Piano</div>
-          <div class="access-info-value">${planLabels[planRole] || planRole || 'N/A'}</div>
+          <div class="access-info-value">${planLabels[planRole] || planRole || "N/A"}</div>
         </div>
         <div class="access-info-item">
           <div class="access-info-label">Scadenza</div>
-          <div class="access-info-value">${validUntil ? new Date(validUntil).toLocaleDateString('it-IT') : 'N/A'}</div>
+          <div class="access-info-value">${validUntil ? new Date(validUntil).toLocaleDateString("it-IT") : "N/A"}</div>
         </div>
         <div class="access-info-item">
           <div class="access-info-label">Giorni rimanenti</div>
-          <div class="access-info-value">${daysLeft !== undefined ? `${daysLeft} giorni` : 'N/A'}</div>
+          <div class="access-info-value">${daysLeft !== undefined ? `${daysLeft} giorni` : "N/A"}</div>
         </div>
       </div>
       <div class="access-card-actions">
@@ -111,4 +113,3 @@ function renderNoToken(container) {
     </div>
   `;
 }
-

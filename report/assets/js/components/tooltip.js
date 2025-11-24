@@ -15,13 +15,13 @@ const TOOLTIP = {
 // ===== UTILITIES =====
 function createEl(tag, className, text = null) {
   const el = document.createElement(tag);
-  if (className) el.className = className;
-  if (text !== null) el.textContent = text;
+  if (className) {el.className = className;}
+  if (text !== null) {el.textContent = text;}
   return el;
 }
 
 function escapeHtml(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   const div = document.createElement('div');
   div.textContent = String(str);
   return div.innerHTML;
@@ -155,7 +155,7 @@ function actuallyShowTooltip(trigger, content, options = {}) {
 
 function hideTooltip(trigger) {
   const instance = TOOLTIP._instances.get(trigger);
-  if (!instance) return;
+  if (!instance) {return;}
 
   const { tooltip } = instance;
 
@@ -202,7 +202,7 @@ function setupTooltip(trigger, content, options = {}) {
       (e) => {
         if (eventType === 'mouseenter' && e.type === 'mouseenter') {
           // Solo su mouse, non su touch
-          if ('ontouchstart' in window) return;
+          if ('ontouchstart' in window) {return;}
         }
 
         if (TOOLTIP._showTimeout) {
@@ -273,7 +273,7 @@ export const tooltip = {
    * @param {Object} options - Opzioni tooltip
    */
   show(trigger, content, options = {}) {
-    if (!trigger) return;
+    if (!trigger) {return;}
     showTooltip(trigger, content, options);
   },
 
@@ -282,7 +282,7 @@ export const tooltip = {
    * @param {HTMLElement} trigger - Elemento trigger
    */
   hide(trigger) {
-    if (!trigger) return;
+    if (!trigger) {return;}
     hideTooltip(trigger);
   },
 
@@ -330,7 +330,7 @@ let scrollTimeout;
 window.addEventListener(
   'scroll',
   () => {
-    if (scrollTimeout) clearTimeout(scrollTimeout);
+    if (scrollTimeout) {clearTimeout(scrollTimeout);}
     scrollTimeout = setTimeout(() => {
       tooltip.hideAll();
     }, 100);
@@ -343,7 +343,7 @@ let resizeTimeout;
 window.addEventListener(
   'resize',
   () => {
-    if (resizeTimeout) clearTimeout(resizeTimeout);
+    if (resizeTimeout) {clearTimeout(resizeTimeout);}
     resizeTimeout = setTimeout(() => {
       tooltip.hideAll();
     }, 100);

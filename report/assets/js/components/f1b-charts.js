@@ -21,8 +21,8 @@ const COLORS = {
 let chartJsPromise = null;
 
 function ensureChartJs() {
-  if (window.Chart) return Promise.resolve();
-  if (chartJsPromise) return chartJsPromise;
+  if (window.Chart) {return Promise.resolve();}
+  if (chartJsPromise) {return chartJsPromise;}
   chartJsPromise = new Promise((resolve, reject) => {
     const existing = document.querySelector(`script[src="${CHART_JS_SRC}"]`);
     if (existing) {
@@ -48,29 +48,29 @@ function uniqueId(prefix) {
 }
 
 function parseNumber(value, fallback = 0) {
-  if (value == null || value === '' || value === '—') return fallback;
-  if (typeof value === 'number') return value;
-  if (typeof value === 'boolean') return value ? 1 : 0;
+  if (value == null || value === '' || value === '—') {return fallback;}
+  if (typeof value === 'number') {return value;}
+  if (typeof value === 'boolean') {return value ? 1 : 0;}
   const parsed = parseFloat(String(value).replace(/[^0-9+-.]/g, ''));
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
 function parsePercentString(value) {
-  if (typeof value === 'number') return value;
-  if (typeof value !== 'string') return null;
+  if (typeof value === 'number') {return value;}
+  if (typeof value !== 'string') {return null;}
   if (value.includes('%')) {
     const parsed = parseFloat(value.replace(/[^0-9+-.]/g, ''));
     return Number.isFinite(parsed) ? parsed : null;
   }
   const parsed = parseFloat(value);
-  if (!Number.isFinite(parsed)) return null;
+  if (!Number.isFinite(parsed)) {return null;}
   return parsed > 1 ? parsed : parsed * 100;
 }
 
 function computeToneColor(value) {
-  if (value > 0.3) return COLORS.ok;
-  if (value < -0.3) return COLORS.err;
-  if (Math.abs(value) < 0.15) return COLORS.warn;
+  if (value > 0.3) {return COLORS.ok;}
+  if (value < -0.3) {return COLORS.err;}
+  if (Math.abs(value) < 0.15) {return COLORS.warn;}
   return COLORS.neutral;
 }
 
@@ -92,7 +92,7 @@ async function renderRegimePrimary(chartNode, data) {
   `;
 
   const ctx = document.getElementById(canvasId);
-  if (!ctx) return;
+  if (!ctx) {return;}
 
   new window.Chart(ctx, {
     type: 'bar',
@@ -119,9 +119,9 @@ async function renderRegimePrimary(chartNode, data) {
           ticks: {
             color: COLORS.textMuted,
             callback: (value) => {
-              if (value === -1) return 'Risk-off (-1)';
-              if (value === 0) return 'Neutro (0)';
-              if (value === 1) return 'Risk-on (+1)';
+              if (value === -1) {return 'Risk-off (-1)';}
+              if (value === 0) {return 'Neutro (0)';}
+              if (value === 1) {return 'Risk-on (+1)';}
               return value.toFixed(2);
             },
           },
@@ -171,7 +171,7 @@ async function renderBreadthPrimary(chartNode, data) {
   `;
 
   const ctx = document.getElementById(canvasId);
-  if (!ctx) return;
+  if (!ctx) {return;}
 
   new window.Chart(ctx, {
     type: 'doughnut',
@@ -253,7 +253,7 @@ async function renderBreadthSection(chartNode, data) {
 
   chartNode.innerHTML = `<canvas id="${canvasId}" role="img"></canvas>`;
   const ctx = document.getElementById(canvasId);
-  if (!ctx) return;
+  if (!ctx) {return;}
 
   new window.Chart(ctx, {
     type: 'bar',
@@ -282,8 +282,8 @@ async function renderBreadthSection(chartNode, data) {
           ticks: {
             color: COLORS.textMuted,
             callback: (value) => {
-              if (value > 0) return 'Leader';
-              if (value < 0) return 'Lagging';
+              if (value > 0) {return 'Leader';}
+              if (value < 0) {return 'Lagging';}
               return 'Neutro';
             },
           },
@@ -314,7 +314,7 @@ async function renderVolatilitySection(chartNode, data) {
 
   chartNode.innerHTML = `<canvas id="${canvasId}" role="img"></canvas>`;
   const ctx = document.getElementById(canvasId);
-  if (!ctx) return;
+  if (!ctx) {return;}
 
   new window.Chart(ctx, {
     type: 'bar',
@@ -383,7 +383,7 @@ async function renderSizeSection(chartNode, data) {
 
   chartNode.innerHTML = `<canvas id="${canvasId}" role="img"></canvas>`;
   const ctx = document.getElementById(canvasId);
-  if (!ctx) return;
+  if (!ctx) {return;}
 
   new window.Chart(ctx, {
     type: 'radar',
@@ -450,7 +450,7 @@ async function renderRiskWindowSection(chartNode, data) {
 
   chartNode.innerHTML = `<canvas id="${canvasId}" role="img"></canvas>`;
   const ctx = document.getElementById(canvasId);
-  if (!ctx) return;
+  if (!ctx) {return;}
 
   new window.Chart(ctx, {
     type: 'line',
@@ -500,12 +500,12 @@ async function renderStreetSection(chartNode, data) {
   const toneRaw = data?.analysis_headlines?.T1_ConsensusTone || '';
   const toneLower = toneRaw.toLowerCase();
   let toneScore = 0;
-  if (toneLower.includes('pos')) toneScore = 1;
-  if (toneLower.includes('neg')) toneScore = -1;
+  if (toneLower.includes('pos')) {toneScore = 1;}
+  if (toneLower.includes('neg')) {toneScore = -1;}
 
   chartNode.innerHTML = `<canvas id="${canvasId}" role="img"></canvas>`;
   const ctx = document.getElementById(canvasId);
-  if (!ctx) return;
+  if (!ctx) {return;}
 
   new window.Chart(ctx, {
     type: 'bar',
@@ -532,9 +532,9 @@ async function renderStreetSection(chartNode, data) {
           ticks: {
             color: COLORS.textMuted,
             callback: (value) => {
-              if (value === -1) return 'Negativo';
-              if (value === 0) return 'Neutro';
-              if (value === 1) return 'Positivo';
+              if (value === -1) {return 'Negativo';}
+              if (value === 0) {return 'Neutro';}
+              if (value === 1) {return 'Positivo';}
               return value;
             },
           },
@@ -574,7 +574,7 @@ async function renderFinvizSection(chartNode, data) {
 
   chartNode.innerHTML = `<canvas id="${canvasId}" role="img"></canvas>`;
   const ctx = document.getElementById(canvasId);
-  if (!ctx) return;
+  if (!ctx) {return;}
 
   new window.Chart(ctx, {
     type: 'polarArea',
@@ -627,7 +627,7 @@ async function renderBridgeSection(chartNode, data) {
 
   chartNode.innerHTML = `<canvas id="${canvasId}" role="img"></canvas>`;
   const ctx = document.getElementById(canvasId);
-  if (!ctx) return;
+  if (!ctx) {return;}
 
   new window.Chart(ctx, {
     type: 'bar',
@@ -676,7 +676,7 @@ async function renderBridgeSection(chartNode, data) {
 // ---------------------------------------------------------------------------
 
 export async function renderF1BPrimaryChart(chartId, container, chartContext) {
-  if (!container) return;
+  if (!container) {return;}
   try {
     await ensureChartJs();
     switch (chartId) {
@@ -699,7 +699,7 @@ export async function renderF1BPrimaryChart(chartId, container, chartContext) {
 }
 
 export async function renderF1BSectionChart(chartType, container, chartContext) {
-  if (!container) return;
+  if (!container) {return;}
   try {
     await ensureChartJs();
     switch (chartType) {
@@ -754,29 +754,29 @@ const CHART_COLORS = {
 
 // ===== HELPER FUNCTIONS =====
 function escapeHtml(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   const div = document.createElement('div');
   div.textContent = String(str);
   return div.innerHTML;
 }
 
 function parseRegimeScore(score) {
-  if (typeof score === 'number') return score;
+  if (typeof score === 'number') {return score;}
   if (typeof score === 'string') {
     const parsed = parseFloat(score.replace(/[+\s]/g, ''));
     return isNaN(parsed) ? 0 : parsed;
   }
-  if (score?.raw) return parseRegimeScore(score.raw);
+  if (score?.raw) {return parseRegimeScore(score.raw);}
   return 0;
 }
 
 function parseNumber(value, fallback = 0) {
-  if (typeof value === 'number') return value;
+  if (typeof value === 'number') {return value;}
   if (typeof value === 'string') {
     const parsed = parseFloat(value.replace(/[^0-9.-]/g, ''));
     return isNaN(parsed) ? fallback : parsed;
   }
-  if (value?.raw) return parseNumber(value.raw, fallback);
+  if (value?.raw) {return parseNumber(value.raw, fallback);}
   return fallback;
 }
 
@@ -794,9 +794,9 @@ function getAINote(data, path, fallback = '') {
 }
 
 function getToneColor(tone) {
-  if (tone === 'green' || tone === 'ok') return CHART_COLORS.ok;
-  if (tone === 'red' || tone === 'err') return CHART_COLORS.err;
-  if (tone === 'yellow' || tone === 'warn') return CHART_COLORS.warn;
+  if (tone === 'green' || tone === 'ok') {return CHART_COLORS.ok;}
+  if (tone === 'red' || tone === 'err') {return CHART_COLORS.err;}
+  if (tone === 'yellow' || tone === 'warn') {return CHART_COLORS.warn;}
   return CHART_COLORS.neutral;
 }
 
@@ -874,15 +874,15 @@ async function renderRegimeScoreGauge(container, f1bData) {
             ticks: {
               color: CHART_COLORS.textMuted,
               callback: function (value) {
-                if (value === -1) return 'Risk-off (-1)';
-                if (value === 0) return 'Neutro (0)';
-                if (value === 1) return 'Risk-on (+1)';
+                if (value === -1) {return 'Risk-off (-1)';}
+                if (value === 0) {return 'Neutro (0)';}
+                if (value === 1) {return 'Risk-on (+1)';}
                 return value.toFixed(2);
               },
             },
             grid: {
               color: function (context) {
-                if (context.tick.value === 0) return CHART_COLORS.neutral;
+                if (context.tick.value === 0) {return CHART_COLORS.neutral;}
                 return CHART_COLORS.grid;
               },
             },
@@ -1113,8 +1113,8 @@ async function renderLeadershipChart(container, f1bData) {
             ticks: {
               color: CHART_COLORS.textMuted,
               callback: function (value) {
-                if (value > 0) return 'Leader';
-                if (value < 0) return 'Lagging';
+                if (value > 0) {return 'Leader';}
+                if (value < 0) {return 'Lagging';}
                 return 'Neutro';
               },
             },
@@ -1502,9 +1502,9 @@ async function renderRiskTiltVsVolRegime(container, f1bData) {
             ticks: {
               color: CHART_COLORS.textMuted,
               callback: function (value) {
-                if (value === -1) return 'Risk-off';
-                if (value === 0) return 'Neutro';
-                if (value === 1) return 'Risk-on';
+                if (value === -1) {return 'Risk-off';}
+                if (value === 0) {return 'Neutro';}
+                if (value === 1) {return 'Risk-on';}
                 return '';
               },
             },
@@ -1523,9 +1523,9 @@ async function renderRiskTiltVsVolRegime(container, f1bData) {
             ticks: {
               color: CHART_COLORS.textMuted,
               callback: function (value) {
-                if (value === -1) return 'Alta Vol';
-                if (value === 0) return 'Neutro';
-                if (value === 1) return 'Bassa Vol';
+                if (value === -1) {return 'Alta Vol';}
+                if (value === 0) {return 'Neutro';}
+                if (value === 1) {return 'Bassa Vol';}
                 return '';
               },
             },

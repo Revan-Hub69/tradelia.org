@@ -1,5 +1,5 @@
-import { getServiceSupabase } from '../../_lib/supabase.js';
-import { methodNotAllowed, sendJSON } from '../../_lib/http.js';
+import { getServiceSupabase } from "../../_lib/supabase.js";
+import { methodNotAllowed, sendJSON } from "../../_lib/http.js";
 
 const supabase = getServiceSupabase();
 
@@ -28,12 +28,12 @@ const normalizeTemplate = (raw) => ({
 });
 
 export const handleTemplatesRequest = async (req, res) => {
-  if (req.method !== 'GET') {
-    return methodNotAllowed(res, ['GET']);
+  if (req.method !== "GET") {
+    return methodNotAllowed(res, ["GET"]);
   }
 
   const { data, error } = await supabase
-    .from('report_templates')
+    .from("report_templates")
     .select(
       `
         id,
@@ -59,7 +59,7 @@ export const handleTemplatesRequest = async (req, res) => {
         )
       `
     )
-    .order('label', { ascending: true });
+    .order("label", { ascending: true });
 
   if (error) {
     throw error;

@@ -5,8 +5,10 @@
  */
 
 export async function loadAnalytics() {
-  const container = document.getElementById('analytics-container');
-  if (!container) return;
+  const container = document.getElementById("analytics-container");
+  if (!container) {
+    return;
+  }
 
   const analytics = calculateAnalytics();
   renderAnalytics(container, analytics);
@@ -14,9 +16,9 @@ export async function loadAnalytics() {
 
 function calculateAnalytics() {
   // Carica dati da localStorage
-  const recentReports = JSON.parse(localStorage.getItem('tradelia-recent-reports') || '[]');
-  const watchlist = JSON.parse(localStorage.getItem('dashboard-watchlist') || '[]');
-  const searchHistory = JSON.parse(localStorage.getItem('dashboard-search-history') || '[]');
+  const recentReports = JSON.parse(localStorage.getItem("tradelia-recent-reports") || "[]");
+  const watchlist = JSON.parse(localStorage.getItem("dashboard-watchlist") || "[]");
+  const searchHistory = JSON.parse(localStorage.getItem("dashboard-search-history") || "[]");
 
   // Calcola statistiche
   const totalReportsViewed = recentReports.length;
@@ -88,11 +90,15 @@ function renderAnalytics(container, analytics) {
       </div>
     </div>
 
-    ${analytics.topReports.length > 0 ? `
+    ${
+      analytics.topReports.length > 0
+        ? `
       <div class="analytics-section">
         <h3 class="analytics-section-title">Report Più Visualizzati</h3>
         <div class="analytics-list">
-          ${analytics.topReports.map((report, index) => `
+          ${analytics.topReports
+            .map(
+              (report, index) => `
             <div class="analytics-item">
               <div class="analytics-item-rank">${index + 1}</div>
               <div class="analytics-item-content">
@@ -100,16 +106,19 @@ function renderAnalytics(container, analytics) {
                 <div class="analytics-item-meta">${report.views} visualizzazioni</div>
               </div>
             </div>
-          `).join('')}
+          `
+            )
+            .join("")}
         </div>
       </div>
-    ` : ''}
+    `
+        : ""
+    }
   `;
 }
 
 function escapeHtml(text) {
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
 }
-

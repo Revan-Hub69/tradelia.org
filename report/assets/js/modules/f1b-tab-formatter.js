@@ -6,7 +6,7 @@
  */
 export function formatRegimeTabToRows(regimeData) {
   const rows = [];
-  if (!regimeData || Object.keys(regimeData).length === 0) return rows;
+  if (!regimeData || Object.keys(regimeData).length === 0) {return rows;}
 
   // ROW 1: StrategyMode + RegimeScore
   rows.push({
@@ -102,7 +102,7 @@ export function formatRegimeTabToRows(regimeData) {
  */
 export function formatBreadthTabToRows(breadthData) {
   const rows = [];
-  if (!breadthData || Object.keys(breadthData).length === 0) return rows;
+  if (!breadthData || Object.keys(breadthData).length === 0) {return rows;}
 
   // ROW 1: Breadth + RiskTilt
   rows.push({
@@ -202,7 +202,7 @@ export function formatBreadthTabToRows(breadthData) {
  */
 export function formatStreetTabToRows(streetData) {
   const rows = [];
-  if (!streetData || Object.keys(streetData).length === 0) return rows;
+  if (!streetData || Object.keys(streetData).length === 0) {return rows;}
 
   // ROW 1: Macro News (troncato se troppo lungo)
   if (streetData.T1_MacroNews) {
@@ -256,29 +256,29 @@ export function formatStreetTabToRows(streetData) {
 
 // Helper functions (riutilizzate da f1b-formatter.js)
 function getToneForStrategyMode(mode) {
-  if (typeof mode !== 'string') return 'neutral';
-  if (mode.includes('Momentum')) return 'green';
-  if (mode.includes('Pullback')) return 'red';
+  if (typeof mode !== 'string') {return 'neutral';}
+  if (mode.includes('Momentum')) {return 'green';}
+  if (mode.includes('Pullback')) {return 'red';}
   return 'neutral';
 }
 
 function getToneForRegimeScore(score) {
   if (typeof score === 'string') {
     const num = parseFloat(score.replace(/[^0-9.-]/g, ''));
-    if (num > 0.3) return 'green';
-    if (num < -0.3) return 'red';
+    if (num > 0.3) {return 'green';}
+    if (num < -0.3) {return 'red';}
     return 'neutral';
   }
   if (typeof score === 'number') {
-    if (score > 0.3) return 'green';
-    if (score < -0.3) return 'red';
+    if (score > 0.3) {return 'green';}
+    if (score < -0.3) {return 'red';}
     return 'neutral';
   }
   return 'neutral';
 }
 
 function formatRegimeScore(score) {
-  if (score === null || score === undefined || score === '—') return '—';
+  if (score === null || score === undefined || score === '—') {return '—';}
   if (typeof score === 'number') {
     return score > 0 ? `+${score.toFixed(2)}` : score.toFixed(2);
   }
@@ -289,7 +289,7 @@ function formatRegimeScore(score) {
 }
 
 function formatBreadth(breadth) {
-  if (breadth === null || breadth === undefined || breadth === '—') return '—';
+  if (breadth === null || breadth === undefined || breadth === '—') {return '—';}
   if (typeof breadth === 'number') {
     return (breadth * 100).toFixed(0) + '%';
   }
@@ -301,30 +301,30 @@ function formatBreadth(breadth) {
 
 function getToneForBreadth(breadth) {
   if (typeof breadth === 'number') {
-    if (breadth > 0.6) return 'green';
-    if (breadth < 0.4) return 'red';
+    if (breadth > 0.6) {return 'green';}
+    if (breadth < 0.4) {return 'red';}
     return 'neutral';
   }
   return 'neutral';
 }
 
 function getToneForRiskTilt(tilt) {
-  if (typeof tilt !== 'string') return 'neutral';
-  if (tilt.includes('Pro-rischio') || tilt.includes('risk-on')) return 'green';
-  if (tilt.includes('Difensivo') || tilt.includes('risk-off')) return 'red';
+  if (typeof tilt !== 'string') {return 'neutral';}
+  if (tilt.includes('Pro-rischio') || tilt.includes('risk-on')) {return 'green';}
+  if (tilt.includes('Difensivo') || tilt.includes('risk-off')) {return 'red';}
   return 'neutral';
 }
 
 function formatSmallCapPressure(pressure) {
-  if (pressure === null || pressure === undefined || pressure === '—') return '—';
+  if (pressure === null || pressure === undefined || pressure === '—') {return '—';}
   return String(pressure);
 }
 
 function getToneForSmallCap(pressure) {
   if (typeof pressure === 'string') {
     const num = parseFloat(pressure.replace(/[^0-9.-]/g, ''));
-    if (num < -0.1) return 'red';
-    if (num > 0.1) return 'green';
+    if (num < -0.1) {return 'red';}
+    if (num > 0.1) {return 'green';}
     return 'neutral';
   }
   return 'neutral';

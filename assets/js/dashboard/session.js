@@ -5,7 +5,13 @@
  */
 
 import { safeLog } from "./security-utils.js";
-import { getToken, getRefreshToken, removeToken, saveToken, syncTokenToIndexedDB } from "./token-storage.js";
+import {
+  getToken,
+  getRefreshToken,
+  removeToken,
+  saveToken,
+  syncTokenToIndexedDB,
+} from "./token-storage.js";
 
 const CHECK_INTERVAL = 5 * 60 * 1000; // 5 minuti
 const SESSION_REFRESH_THRESHOLD_MINUTES = 10;
@@ -60,7 +66,9 @@ export async function checkTokenValidity(options = { retryOnRefresh: true }) {
       typeof data.sessionMinutesLeft === "number" &&
       data.sessionMinutesLeft <= SESSION_REFRESH_THRESHOLD_MINUTES
     ) {
-      refreshSession().catch((error) => safeLog("warn", "[Session] Refresh background fallito", error));
+      refreshSession().catch((error) =>
+        safeLog("warn", "[Session] Refresh background fallito", error)
+      );
     }
 
     // Auto-logout se scaduto - BEST PRACTICE: Use secure token storage

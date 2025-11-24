@@ -9,13 +9,13 @@ import Logger from '../utils/logger.js';
 // ===== UTILITIES =====
 function createEl(tag, className, text = null) {
   const el = document.createElement(tag);
-  if (className) el.className = className;
-  if (text !== null) el.textContent = text;
+  if (className) {el.className = className;}
+  if (text !== null) {el.textContent = text;}
   return el;
 }
 
 function escapeHtml(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -91,8 +91,8 @@ function renderMetricPart(part) {
 }
 
 function renderPart(part) {
-  if (part.kind === 'text') return renderTextPart(part);
-  if (part.kind === 'metric') return renderMetricPart(part);
+  if (part.kind === 'text') {return renderTextPart(part);}
+  if (part.kind === 'metric') {return renderMetricPart(part);}
   return createEl('span', 'header-ticker-text', '');
 }
 
@@ -169,7 +169,7 @@ function renderRow(row) {
 
 function renderFooter(node, data) {
   const footer = node._footer;
-  if (!footer) return;
+  if (!footer) {return;}
 
   // Footer vuoto - pulsante "Scopri tutte le metriche" rimosso
   footer.innerHTML = '';
@@ -253,9 +253,9 @@ function update(node, data) {
     'header-ticker--state-err'
   );
   const st = data.meta?.state || data.State?.raw || data.State;
-  if (st === 'ACTIVE') node.classList.add('header-ticker--state-ok');
-  else if (st === 'HOLD') node.classList.add('header-ticker--state-warn');
-  else if (st === 'REVIEW') node.classList.add('header-ticker--state-err');
+  if (st === 'ACTIVE') {node.classList.add('header-ticker--state-ok');}
+  else if (st === 'HOLD') {node.classList.add('header-ticker--state-warn');}
+  else if (st === 'REVIEW') {node.classList.add('header-ticker--state-err');}
 
   const body = node._body;
   if (!body) {
@@ -359,7 +359,7 @@ function update(node, data) {
     [intro, quality, windowLine].forEach((r) => {
       try {
         const rowEl = renderRow(r);
-        if (rowEl) body.appendChild(rowEl);
+        if (rowEl) {body.appendChild(rowEl);}
       } catch (err) {
         Logger.error('HeaderTicker', 'Errore rendering riga legacy', err);
       }

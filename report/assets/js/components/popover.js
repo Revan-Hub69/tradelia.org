@@ -14,13 +14,13 @@ const POPOVER = {
 // ===== UTILITIES =====
 function createEl(tag, className, text = null) {
   const el = document.createElement(tag);
-  if (className) el.className = className;
-  if (text !== null) el.textContent = text;
+  if (className) {el.className = className;}
+  if (text !== null) {el.textContent = text;}
   return el;
 }
 
 function escapeHtml(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   const div = document.createElement('div');
   div.textContent = String(str);
   return div.innerHTML;
@@ -59,11 +59,11 @@ function calculatePopoverPosition(trigger, popover, placement = 'bottom') {
   }
 
   // Boundary detection
-  if (left < 8) left = 8;
+  if (left < 8) {left = 8;}
   if (left + popoverRect.width > viewport.width - 8) {
     left = viewport.width - popoverRect.width - 8;
   }
-  if (top < 8) top = 8;
+  if (top < 8) {top = 8;}
   if (top + popoverRect.height > viewport.height - 8) {
     top = viewport.height - popoverRect.height - 8;
   }
@@ -159,7 +159,7 @@ function showPopover(trigger, content, options = {}) {
 
 function hidePopover(trigger) {
   const instance = POPOVER._instances.get(trigger);
-  if (!instance) return;
+  if (!instance) {return;}
 
   const { popover, handleClickOutside } = instance;
 
@@ -220,12 +220,12 @@ export const popover = {
   },
 
   show(trigger, content, options = {}) {
-    if (!trigger) return;
+    if (!trigger) {return;}
     showPopover(trigger, content, options);
   },
 
   hide(trigger) {
-    if (!trigger) return;
+    if (!trigger) {return;}
     hidePopover(trigger);
   },
 

@@ -286,7 +286,7 @@ function parseMultipart(buffer, boundary) {
   let start = 0;
   while (true) {
     const index = buffer.indexOf(boundaryBuffer, start);
-    if (index === -1) break;
+    if (index === -1) {break;}
 
     if (start < index) {
       sections.push(buffer.slice(start, index));
@@ -300,17 +300,17 @@ function parseMultipart(buffer, boundary) {
   }
 
   for (const section of sections) {
-    if (section.length < 10) continue;
+    if (section.length < 10) {continue;}
 
     const headerEnd = section.indexOf(Buffer.from('\r\n\r\n'));
-    if (headerEnd === -1) continue;
+    if (headerEnd === -1) {continue;}
 
     const headers = section.slice(0, headerEnd).toString();
     const body = section.slice(headerEnd + 4);
 
     // Parse headers
     const nameMatch = headers.match(/name="([^"]+)"/);
-    if (!nameMatch) continue;
+    if (!nameMatch) {continue;}
 
     const name = nameMatch[1];
 
@@ -425,7 +425,7 @@ async function handleListReports(req, res) {
     const entries = await fs.readdir(REPORTS_DIR, { withFileTypes: true });
 
     for (const entry of entries) {
-      if (!entry.isDirectory()) continue;
+      if (!entry.isDirectory()) {continue;}
 
       const reportId = entry.name;
       const reportDir = path.join(REPORTS_DIR, reportId);
@@ -460,7 +460,7 @@ async function handleListReports(req, res) {
                 }
               }
             }
-            if (ticker) break;
+            if (ticker) {break;}
           }
         }
       } catch {

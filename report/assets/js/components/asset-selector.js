@@ -224,7 +224,7 @@ const ASSET_SELECTOR = {
 
   // ===== STATUS =====
   _showStatus(statusEl, message, type = 'info') {
-    if (!statusEl) return;
+    if (!statusEl) {return;}
 
     statusEl.textContent = message;
     statusEl.className = `asset-selector-status asset-selector-status--${type}`;

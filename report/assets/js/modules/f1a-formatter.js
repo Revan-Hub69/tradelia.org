@@ -23,7 +23,7 @@ export function formatF1AToRows(f1aData) {
           break;
         }
       }
-      if (val !== null && val !== undefined && val !== '') return val;
+      if (val !== null && val !== undefined && val !== '') {return val;}
     }
     return fallback;
   };
@@ -155,7 +155,7 @@ export function formatF1AToRows(f1aData) {
 
 // Helper functions
 function formatPrice(price) {
-  if (price === null || price === undefined || price === '—') return '—';
+  if (price === null || price === undefined || price === '—') {return '—';}
   if (typeof price === 'number') {
     return '$' + price.toFixed(2);
   }
@@ -163,7 +163,7 @@ function formatPrice(price) {
 }
 
 function formatChangePct(change) {
-  if (change === null || change === undefined || change === '—') return '—';
+  if (change === null || change === undefined || change === '—') {return '—';}
   if (typeof change === 'number') {
     return (change > 0 ? '+' : '') + change.toFixed(2) + '%';
   }
@@ -175,45 +175,45 @@ function formatChangePct(change) {
 
 function getToneForChange(change) {
   if (typeof change === 'string') {
-    if (change.includes('+') || parseFloat(change) > 0) return 'green';
-    if (change.includes('-') || parseFloat(change) < 0) return 'red';
+    if (change.includes('+') || parseFloat(change) > 0) {return 'green';}
+    if (change.includes('-') || parseFloat(change) < 0) {return 'red';}
     return 'neutral';
   }
   if (typeof change === 'number') {
-    if (change > 0) return 'green';
-    if (change < 0) return 'red';
+    if (change > 0) {return 'green';}
+    if (change < 0) {return 'red';}
     return 'neutral';
   }
   return 'neutral';
 }
 
 function formatVolume(volume) {
-  if (volume === null || volume === undefined || volume === '—') return '—';
+  if (volume === null || volume === undefined || volume === '—') {return '—';}
   if (typeof volume === 'number') {
-    if (volume >= 1e9) return (volume / 1e9).toFixed(2) + 'B';
-    if (volume >= 1e6) return (volume / 1e6).toFixed(2) + 'M';
-    if (volume >= 1e3) return (volume / 1e3).toFixed(2) + 'K';
+    if (volume >= 1e9) {return (volume / 1e9).toFixed(2) + 'B';}
+    if (volume >= 1e6) {return (volume / 1e6).toFixed(2) + 'M';}
+    if (volume >= 1e3) {return (volume / 1e3).toFixed(2) + 'K';}
     return volume.toString();
   }
   return String(volume);
 }
 
 function formatMarketCap(marketCap) {
-  if (marketCap === null || marketCap === undefined || marketCap === '—') return '—';
+  if (marketCap === null || marketCap === undefined || marketCap === '—') {return '—';}
   if (typeof marketCap === 'string') {
     return marketCap;
   }
   if (typeof marketCap === 'number') {
-    if (marketCap >= 1e12) return '$' + (marketCap / 1e12).toFixed(2) + 'T';
-    if (marketCap >= 1e9) return '$' + (marketCap / 1e9).toFixed(2) + 'B';
-    if (marketCap >= 1e6) return '$' + (marketCap / 1e6).toFixed(2) + 'M';
+    if (marketCap >= 1e12) {return '$' + (marketCap / 1e12).toFixed(2) + 'T';}
+    if (marketCap >= 1e9) {return '$' + (marketCap / 1e9).toFixed(2) + 'B';}
+    if (marketCap >= 1e6) {return '$' + (marketCap / 1e6).toFixed(2) + 'M';}
     return '$' + marketCap.toFixed(2);
   }
   return String(marketCap);
 }
 
 function formatBeta(beta) {
-  if (beta === null || beta === undefined || beta === '—') return '—';
+  if (beta === null || beta === undefined || beta === '—') {return '—';}
   if (typeof beta === 'number') {
     return beta.toFixed(2);
   }
@@ -221,7 +221,7 @@ function formatBeta(beta) {
 }
 
 function formatPercentage(value) {
-  if (value === null || value === undefined || value === '—') return '—';
+  if (value === null || value === undefined || value === '—') {return '—';}
   if (typeof value === 'number') {
     return (value > 0 ? '+' : '') + (value * 100).toFixed(2) + '%';
   }
@@ -233,15 +233,15 @@ function formatPercentage(value) {
 
 function getToneForPercentage(value) {
   if (typeof value === 'number') {
-    if (value > 0.05) return 'green';
-    if (value < -0.05) return 'red';
+    if (value > 0.05) {return 'green';}
+    if (value < -0.05) {return 'red';}
     return 'neutral';
   }
   return 'neutral';
 }
 
 function formatRelativeStrength(strength) {
-  if (strength === null || strength === undefined || strength === '—') return '—';
+  if (strength === null || strength === undefined || strength === '—') {return '—';}
   if (typeof strength === 'number') {
     return strength.toFixed(2);
   }
@@ -250,8 +250,8 @@ function formatRelativeStrength(strength) {
 
 function getToneForRelativeStrength(strength) {
   if (typeof strength === 'number') {
-    if (strength > 1.0) return 'green';
-    if (strength < 1.0) return 'red';
+    if (strength > 1.0) {return 'green';}
+    if (strength < 1.0) {return 'red';}
     return 'neutral';
   }
   return 'neutral';

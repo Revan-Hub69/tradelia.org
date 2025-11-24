@@ -111,7 +111,7 @@ export const userPreferences = {
    * @returns {boolean} Successo
    */
   addSearchHistory(term, maxHistory = 10) {
-    if (!term || term.trim().length < 2) return false;
+    if (!term || term.trim().length < 2) {return false;}
 
     const prefs = getPreferences();
     const history = prefs.searchHistory || [];

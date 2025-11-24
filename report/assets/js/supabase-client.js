@@ -51,7 +51,7 @@ export const supabase = new Proxy({}, {
 });
 
 export async function getSignedChartUrl(path, { expiresIn = 3600 } = {}) {
-  if (!path) return null;
+  if (!path) {return null;}
   const { data, error } = await supabase.storage
     .from(REPORTS_BUCKET)
     .createSignedUrl(path, expiresIn);

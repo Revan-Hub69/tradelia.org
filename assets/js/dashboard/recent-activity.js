@@ -22,12 +22,12 @@ export function initRecentActivity() {
  */
 function loadHistory() {
   try {
-    const saved = localStorage.getItem('dashboard-navigation-history');
+    const saved = localStorage.getItem("dashboard-navigation-history");
     if (saved) {
       HISTORY_STATE.items = JSON.parse(saved);
     }
   } catch (e) {
-    console.error('[RecentActivity] Errore caricamento history:', e);
+    console.error("[RecentActivity] Errore caricamento history:", e);
     HISTORY_STATE.items = [];
   }
 }
@@ -37,9 +37,9 @@ function loadHistory() {
  */
 function saveHistory() {
   try {
-    localStorage.setItem('dashboard-navigation-history', JSON.stringify(HISTORY_STATE.items));
+    localStorage.setItem("dashboard-navigation-history", JSON.stringify(HISTORY_STATE.items));
   } catch (e) {
-    console.error('[RecentActivity] Errore salvataggio history:', e);
+    console.error("[RecentActivity] Errore salvataggio history:", e);
   }
 }
 
@@ -48,7 +48,7 @@ function saveHistory() {
  */
 function setupHistoryTracking() {
   // Track hash changes
-  window.addEventListener('hashchange', () => {
+  window.addEventListener("hashchange", () => {
     recordNavigation(window.location.hash);
   });
 
@@ -58,8 +58,8 @@ function setupHistoryTracking() {
   }
 
   // Track module clicks
-  document.querySelectorAll('.module-card').forEach((card) => {
-    card.addEventListener('click', () => {
+  document.querySelectorAll(".module-card").forEach((card) => {
+    card.addEventListener("click", () => {
       const moduleId = card.dataset.module;
       if (moduleId) {
         recordNavigation(`#${moduleId}`);
@@ -72,23 +72,25 @@ function setupHistoryTracking() {
  * Record navigation event
  */
 function recordNavigation(hash) {
-  const moduleId = hash.replace('#', '');
-  if (!moduleId) return;
+  const moduleId = hash.replace("#", "");
+  if (!moduleId) {
+    return;
+  }
 
   const moduleNames = {
-    overview: 'Panoramica',
-    reports: 'Report Ufficiali',
-    settings: 'Impostazioni',
-    education: 'Formazione',
-    frameworks: 'Framework Documentation',
-    'on-demand': 'Analisi On-Demand',
-    'requests-history': 'Storico Richieste',
-    community: 'Community Proposals',
-    resources: 'Risorse',
-    access: 'Accesso',
-    notifications: 'Notifiche',
-    brokers: 'Broker Regolamentati',
-    admin: 'Amministrazione',
+    overview: "Panoramica",
+    reports: "Report Ufficiali",
+    settings: "Impostazioni",
+    education: "Formazione",
+    frameworks: "Framework Documentation",
+    "on-demand": "Analisi On-Demand",
+    "requests-history": "Storico Richieste",
+    community: "Community Proposals",
+    resources: "Risorse",
+    access: "Accesso",
+    notifications: "Notifiche",
+    brokers: "Broker Regolamentati",
+    admin: "Amministrazione",
   };
 
   const item = {
@@ -118,8 +120,10 @@ function recordNavigation(hash) {
  * Load recent activity content
  */
 export async function loadRecentActivityContent() {
-  const container = document.getElementById('recent-activity-container');
-  if (!container) return;
+  const container = document.getElementById("recent-activity-container");
+  if (!container) {
+    return;
+  }
 
   const items = HISTORY_STATE.items.slice(0, 10);
 
@@ -164,7 +168,7 @@ export async function loadRecentActivityContent() {
         </div>
       `;
         })
-        .join('')}
+        .join("")}
     </div>
     <div class="recent-activity-footer">
       <button class="btn btn-secondary" id="clear-activity-history">Cancella Storico</button>
@@ -172,10 +176,10 @@ export async function loadRecentActivityContent() {
   `;
 
   // Clear button
-  const clearBtn = document.getElementById('clear-activity-history');
+  const clearBtn = document.getElementById("clear-activity-history");
   if (clearBtn) {
-    clearBtn.addEventListener('click', () => {
-      if (confirm('Vuoi cancellare tutto lo storico delle attività?')) {
+    clearBtn.addEventListener("click", () => {
+      if (confirm("Vuoi cancellare tutto lo storico delle attività?")) {
         clearHistory();
       }
     });
@@ -186,8 +190,8 @@ export async function loadRecentActivityContent() {
  * Update recent activity UI
  */
 function updateRecentActivityUI() {
-  const container = document.getElementById('recent-activity-container');
-  if (container && container.querySelector('.recent-activity-list')) {
+  const container = document.getElementById("recent-activity-container");
+  if (container && container.querySelector(".recent-activity-list")) {
     loadRecentActivityContent();
   }
 }
@@ -203,7 +207,7 @@ function getTimeAgo(date) {
   const diffDays = Math.floor(diffMs / 86400000);
 
   if (diffMins < 1) {
-    return 'Ora';
+    return "Ora";
   } else if (diffMins < 60) {
     return `${diffMins} minuti fa`;
   } else if (diffHours < 24) {
@@ -211,7 +215,7 @@ function getTimeAgo(date) {
   } else if (diffDays < 7) {
     return `${diffDays} giorni fa`;
   } else {
-    return date.toLocaleDateString('it-IT');
+    return date.toLocaleDateString("it-IT");
   }
 }
 
@@ -224,7 +228,7 @@ function clearHistory() {
   loadRecentActivityContent();
 
   if (window.showToast) {
-    window.showToast('Storico attività cancellato', 'success');
+    window.showToast("Storico attività cancellato", "success");
   }
 }
 
@@ -242,8 +246,7 @@ export function getRecentActivity() {
 window.getRecentActivity = getRecentActivity;
 
 function escapeHtml(text) {
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
 }
-

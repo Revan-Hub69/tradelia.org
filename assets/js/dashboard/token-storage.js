@@ -49,15 +49,15 @@ async function initDB() {
  * BEST PRACTICE: In production, use Web Crypto API or server-side encryption
  */
 function encryptToken(token) {
-  if (!token) return null;
-  
+  if (!token) {
+    return null;
+  }
+
   // Simple obfuscation - in production use Web Crypto API
   const key = "tradelia-secure-key-2025";
   let encrypted = "";
   for (let i = 0; i < token.length; i++) {
-    encrypted += String.fromCharCode(
-      token.charCodeAt(i) ^ key.charCodeAt(i % key.length)
-    );
+    encrypted += String.fromCharCode(token.charCodeAt(i) ^ key.charCodeAt(i % key.length));
   }
   return btoa(encrypted); // Base64 encode
 }
@@ -66,16 +66,16 @@ function encryptToken(token) {
  * Decrypt token
  */
 function decryptToken(encrypted) {
-  if (!encrypted) return null;
-  
+  if (!encrypted) {
+    return null;
+  }
+
   try {
     const decoded = atob(encrypted);
     const key = "tradelia-secure-key-2025";
     let decrypted = "";
     for (let i = 0; i < decoded.length; i++) {
-      decrypted += String.fromCharCode(
-        decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length)
-      );
+      decrypted += String.fromCharCode(decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length));
     }
     return decrypted;
   } catch (error) {
@@ -94,28 +94,34 @@ export async function saveToken(token, refreshToken = null) {
 
   try {
     const database = await initDB();
-    
+
     if (database) {
       // Use IndexedDB with encryption
       const encrypted = encryptToken(token);
       const encryptedRefresh = refreshToken ? encryptToken(refreshToken) : null;
-      
+
       const transaction = database.transaction([STORE_NAME], "readwrite");
       const store = transaction.objectStore(STORE_NAME);
-      
+
       await Promise.all([
         new Promise((resolve, reject) => {
           const request = store.put({ key: TOKEN_KEY, value: encrypted, type: "access" });
           request.onsuccess = () => resolve();
           request.onerror = () => reject(request.error);
         }),
-        refreshToken ? new Promise((resolve, reject) => {
-          const request = store.put({ key: REFRESH_TOKEN_KEY, value: encryptedRefresh, type: "refresh" });
-          request.onsuccess = () => resolve();
-          request.onerror = () => reject(request.error);
-        }) : Promise.resolve(),
+        refreshToken
+          ? new Promise((resolve, reject) => {
+              const request = store.put({
+                key: REFRESH_TOKEN_KEY,
+                value: encryptedRefresh,
+                type: "refresh",
+              });
+              request.onsuccess = () => resolve();
+              request.onerror = () => reject(request.error);
+            })
+          : Promise.resolve(),
       ]);
-      
+
       return true;
     } else {
       // Fallback to localStorage (less secure but better than nothing)
@@ -151,12 +157,12 @@ export async function saveToken(token, refreshToken = null) {
 export async function getToken() {
   try {
     const database = await initDB();
-    
+
     if (database) {
       // Get from IndexedDB
       const transaction = database.transaction([STORE_NAME], "readonly");
       const store = transaction.objectStore(STORE_NAME);
-      
+
       return new Promise((resolve) => {
         const request = store.get(TOKEN_KEY);
         request.onsuccess = () => {
@@ -190,11 +196,11 @@ export async function getToken() {
 export async function getRefreshToken() {
   try {
     const database = await initDB();
-    
+
     if (database) {
       const transaction = database.transaction([STORE_NAME], "readonly");
       const store = transaction.objectStore(STORE_NAME);
-      
+
       return new Promise((resolve) => {
         const request = store.get(REFRESH_TOKEN_KEY);
         request.onsuccess = () => {
@@ -223,11 +229,11 @@ export async function getRefreshToken() {
 export async function removeToken() {
   try {
     const database = await initDB();
-    
+
     if (database) {
       const transaction = database.transaction([STORE_NAME], "readwrite");
       const store = transaction.objectStore(STORE_NAME);
-      
+
       await Promise.all([
         new Promise((resolve, reject) => {
           const request = store.delete(TOKEN_KEY);
@@ -241,11 +247,11 @@ export async function removeToken() {
         }),
       ]);
     }
-    
+
     // Also remove from localStorage
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
-    
+
     return true;
   } catch (error) {
     console.error("[TokenStorage] Errore rimozione token:", error);
@@ -271,24 +277,24 @@ export async function syncTokenToIndexedDB() {
   try {
     const token = await getToken();
     const refreshToken = await getRefreshToken();
-    
+
     if (token) {
       // Token already saved via saveToken, but ensure it's synced
       const database = await initDB();
       if (database) {
         const encrypted = encryptToken(token);
         const encryptedRefresh = refreshToken ? encryptToken(refreshToken) : null;
-        
+
         const transaction = database.transaction([STORE_NAME], "readwrite");
         const store = transaction.objectStore(STORE_NAME);
-        
+
         await store.put({ key: TOKEN_KEY, value: encrypted });
         if (encryptedRefresh) {
           await store.put({ key: REFRESH_TOKEN_KEY, value: encryptedRefresh });
         }
       }
     }
-    
+
     // Also sync device ID if exists
     const deviceId = localStorage.getItem("tradelia-device-id");
     if (deviceId) {

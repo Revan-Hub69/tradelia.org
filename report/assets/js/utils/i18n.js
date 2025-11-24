@@ -1054,7 +1054,7 @@ export const i18n = {
    * @returns {void}
    */
   translateElement(element, key, params = {}) {
-    if (!element) return;
+    if (!element) {return;}
 
     const translation = this.t(key, params);
 

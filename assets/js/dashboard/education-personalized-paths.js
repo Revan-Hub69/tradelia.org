@@ -3,7 +3,7 @@
  * Personalized Learning Paths
  * Paper: Koedinger et al. (2013), Pardo & Siemens (2014)
  * "Personalized Learning: A Review of Literature"
- * 
+ *
  * Percorsi formativi personalizzati basati su:
  * - Performance passate
  * - Obiettivi utente
@@ -25,18 +25,21 @@ export async function getPersonalizedPath(userId, options = {}) {
     const { goal, focusArea, difficulty } = options;
 
     const params = new URLSearchParams();
-    if (goal) params.append("goal", goal);
-    if (focusArea) params.append("focusArea", focusArea);
-    if (difficulty) params.append("difficulty", difficulty);
+    if (goal) {
+      params.append("goal", goal);
+    }
+    if (focusArea) {
+      params.append("focusArea", focusArea);
+    }
+    if (difficulty) {
+      params.append("difficulty", difficulty);
+    }
 
-    const response = await fetch(
-      `${API_BASE}?action=personalized-path&${params.toString()}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await fetch(`${API_BASE}?action=personalized-path&${params.toString()}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (!response.ok) {
       throw new Error("Errore caricamento percorso personalizzato");
@@ -73,7 +76,7 @@ async function loadPersonalizedPathSelector(container) {
   try {
     // Show path configuration modal
     const pathConfig = await showPathConfigurationModal();
-    
+
     if (!pathConfig) {
       // User cancelled
       window.history.pushState({ view: "dashboard" }, "", "#education");
@@ -90,7 +93,7 @@ async function loadPersonalizedPathSelector(container) {
     `;
 
     const path = await getPersonalizedPath(null, pathConfig);
-    
+
     // Render personalized path
     renderPersonalizedPath(container, path, pathConfig);
   } catch (error) {
@@ -102,7 +105,7 @@ async function loadPersonalizedPathSelector(container) {
         <button class="btn btn-primary" data-action="back-to-education">Torna alla Formazione</button>
       </div>
     `;
-    
+
     container.querySelector("[data-action='back-to-education']")?.addEventListener("click", () => {
       window.history.pushState({ view: "dashboard" }, "", "#education");
       import("./education.js").then(({ initEducation }) => initEducation());
@@ -197,7 +200,7 @@ function showPathConfigurationModal() {
       }
     });
 
-    modal.querySelectorAll("[data-dismiss]").forEach(btn => {
+    modal.querySelectorAll("[data-dismiss]").forEach((btn) => {
       btn.addEventListener("click", () => {
         closeModal(modal);
         resolve(null);
@@ -261,8 +264,8 @@ function renderPersonalizedPath(container, path, config) {
       await openModule(firstModule.id);
     }
   });
-  
-  container.querySelectorAll("[data-action='open-module']").forEach(btn => {
+
+  container.querySelectorAll("[data-action='open-module']").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const moduleId = btn.dataset.moduleId;
       const { openModule } = await import("./education.js");
@@ -270,9 +273,11 @@ function renderPersonalizedPath(container, path, config) {
     });
   });
 
-  container.querySelector("[data-action='regenerate-path']")?.addEventListener("click", async () => {
-    await loadPersonalizedPathSelector(container);
-  });
+  container
+    .querySelector("[data-action='regenerate-path']")
+    ?.addEventListener("click", async () => {
+      await loadPersonalizedPathSelector(container);
+    });
 }
 
 /**
@@ -288,11 +293,15 @@ function renderPathModule(module, order) {
       <div class="pp-module-content">
         <div class="pp-module-header">
           <h3 class="pp-module-title">${escapeHtml(module.title)}</h3>
-          ${module.reason ? `
+          ${
+            module.reason
+              ? `
             <span class="pp-module-reason" title="Perché questo modulo">
               ${escapeHtml(module.reason)}
             </span>
-          ` : ""}
+          `
+              : ""
+          }
         </div>
         <p class="pp-module-description">${escapeHtml(module.description || "")}</p>
         <div class="pp-module-progress">
@@ -337,4 +346,3 @@ async function getAuthToken() {
     return null;
   }
 }
-

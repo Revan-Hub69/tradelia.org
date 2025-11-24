@@ -24,7 +24,7 @@ function renderFooter(container) {
   const year = new Date().getFullYear();
   // BEST PRACTICE: Costruisci URL assoluto per evitare problemi con percorsi relativi
   // Usa new URL() per costruire il percorso corretto dalla root del sito
-  const logoPath = new URL('/logos/tradelia-logo.svg?v=4', window.location.origin).href;
+  const logoPath = new URL("/logos/tradelia-logo.svg?v=4", window.location.origin).href;
 
   container.innerHTML = `
     <div class="footer-content">

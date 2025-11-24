@@ -46,13 +46,13 @@ const CHART_WIDGET = {
     const body = root.querySelector('#chart-widget-body');
     const subtitle = root.querySelector('#chart-widget-subtitle');
 
-    if (!body) return;
+    if (!body) {return;}
 
     const { reportId = null, symbol = null, timestamp = null, chartImageUrl = null } = options;
 
     // Priorità 1: Screenshot statico se fornito esplicitamente
     if (chartImageUrl) {
-      if (subtitle) subtitle.textContent = 'Snapshot al momento del report';
+      if (subtitle) {subtitle.textContent = 'Snapshot al momento del report';}
       this._showStaticChart(body, chartImageUrl, timestamp);
       return;
     }
@@ -64,7 +64,7 @@ const CHART_WIDGET = {
       const imageExists = await this._checkImageExists(imageUrl);
 
       if (imageExists) {
-        if (subtitle) subtitle.textContent = 'Snapshot al momento del report';
+        if (subtitle) {subtitle.textContent = 'Snapshot al momento del report';}
         this._showStaticChart(body, imageUrl, timestamp);
         return;
       }
@@ -226,7 +226,7 @@ const CHART_WIDGET = {
 
   // ===== NORMALIZE SYMBOL =====
   _normalizeSymbol(symbol) {
-    if (!symbol) return symbol;
+    if (!symbol) {return symbol;}
 
     const upperSymbol = symbol.toUpperCase();
 
@@ -331,7 +331,7 @@ const CHART_WIDGET = {
     }
 
     const body = node.querySelector('#chart-widget-body');
-    if (!body) return;
+    if (!body) {return;}
 
     this._loadChart(node, options);
   },

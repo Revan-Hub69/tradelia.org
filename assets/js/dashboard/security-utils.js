@@ -9,7 +9,9 @@
  * @returns {string} Testo sanitizzato
  */
 export function escapeHtml(text) {
-  if (text == null) return "";
+  if (text == null) {
+    return "";
+  }
   const div = document.createElement("div");
   div.textContent = String(text);
   return div.innerHTML;
@@ -21,7 +23,9 @@ export function escapeHtml(text) {
  * @returns {string} Valore sanitizzato
  */
 export function sanitizeAttribute(value) {
-  if (!value) return "";
+  if (!value) {
+    return "";
+  }
   // Rimuovi caratteri pericolosi
   return String(value)
     .replace(/[<>"']/g, "")
@@ -34,7 +38,9 @@ export function sanitizeAttribute(value) {
  * @returns {string} URL sanitizzato o "#" se non valido
  */
 export function sanitizeUrl(url) {
-  if (!url) return "#";
+  if (!url) {
+    return "#";
+  }
   const str = String(url).trim();
   // Blocca javascript: e data: URLs
   if (str.match(/^(javascript|data|vbscript):/i)) {
@@ -99,8 +105,7 @@ export function createSafeElement(tag, attributes = {}, text = "") {
  */
 export function isProduction() {
   return (
-    window.location.hostname === "tradelia.org" ||
-    window.location.hostname === "www.tradelia.org"
+    window.location.hostname === "tradelia.org" || window.location.hostname === "www.tradelia.org"
   );
 }
 

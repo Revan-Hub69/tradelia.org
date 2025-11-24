@@ -40,7 +40,9 @@ async function handler(req, res) {
       return await handleSendWhatsApp(req, res);
     }
 
-    return res.status(400).json({ ok: false, error: "Azione non valida. Usa: send, sms, whatsapp" });
+    return res
+      .status(400)
+      .json({ ok: false, error: "Azione non valida. Usa: send, sms, whatsapp" });
   } catch (error) {
     return handleRouteError(res, error);
   }
@@ -68,7 +70,7 @@ async function handleSendEmail(req, res) {
     },
     body: JSON.stringify({
       sender: { email: "noreply@tradelia.org", name: "Tradelia AI" },
-      to: Array.isArray(to) ? to.map(email => ({ email })) : [{ email: to }],
+      to: Array.isArray(to) ? to.map((email) => ({ email })) : [{ email: to }],
       subject,
       htmlContent: processedContent.html,
       textContent: processedContent.text,
@@ -109,7 +111,9 @@ async function handleSendSMS(req, res) {
   }
 
   if (!to.startsWith("+")) {
-    return res.status(400).json({ ok: false, error: "Numero telefono deve essere in formato internazionale" });
+    return res
+      .status(400)
+      .json({ ok: false, error: "Numero telefono deve essere in formato internazionale" });
   }
 
   const auth = Buffer.from(`${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`).toString("base64");
@@ -157,7 +161,9 @@ async function handleSendWhatsApp(req, res) {
   }
 
   if (!TWILIO_WHATSAPP_NUMBER.startsWith("whatsapp:")) {
-    return res.status(500).json({ ok: false, error: "TWILIO_WHATSAPP_NUMBER deve iniziare con 'whatsapp:'" });
+    return res
+      .status(500)
+      .json({ ok: false, error: "TWILIO_WHATSAPP_NUMBER deve iniziare con 'whatsapp:'" });
   }
 
   const { to, message } = req.body;
@@ -166,7 +172,9 @@ async function handleSendWhatsApp(req, res) {
   }
 
   if (!to.startsWith("+")) {
-    return res.status(400).json({ ok: false, error: "Numero telefono deve essere in formato internazionale" });
+    return res
+      .status(400)
+      .json({ ok: false, error: "Numero telefono deve essere in formato internazionale" });
   }
 
   const whatsappTo = to.startsWith("whatsapp:") ? to : `whatsapp:${to}`;
@@ -201,4 +209,3 @@ async function handleSendWhatsApp(req, res) {
     return res.status(500).json({ ok: false, error: "Errore interno invio WhatsApp" });
   }
 }
-

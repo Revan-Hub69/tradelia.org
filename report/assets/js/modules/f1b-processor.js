@@ -157,8 +157,8 @@ function calculateRegimeMetrics(rawData) {
 
   // VolRegime: -1 (stress), 0 (neutro), +1 (calma)
   let volRegime = 0;
-  if (vix < 20) volRegime = +1;
-  else if (vix > 30) volRegime = -1;
+  if (vix < 20) {volRegime = +1;}
+  else if (vix > 30) {volRegime = -1;}
 
   // RegimeScore: sintetico [-1..+1]
   const volComponent = vix < 20 ? 0.3 : vix > 30 ? -0.3 : 0;
@@ -179,8 +179,8 @@ function calculateRegimeMetrics(rawData) {
 
   // FX_Regime
   let fxRegime = 'neutro';
-  if (usd1w > 0.5) fxRegime = 'USD moderatamente forte';
-  else if (usd1w < -0.5) fxRegime = 'USD debole';
+  if (usd1w > 0.5) {fxRegime = 'USD moderatamente forte';}
+  else if (usd1w < -0.5) {fxRegime = 'USD debole';}
 
   // RiskWindow
   const riskWindowScore = regimeScore;
@@ -243,8 +243,8 @@ function calculateBreadthMetrics(rawData) {
     }, 0) / defensiveSectors.length;
 
   let riskTilt = 'Neutro';
-  if (growthAvg > defensiveAvg + 0.02) riskTilt = 'Pro-rischio';
-  else if (defensiveAvg > growthAvg + 0.02) riskTilt = 'Difensivo';
+  if (growthAvg > defensiveAvg + 0.02) {riskTilt = 'Pro-rischio';}
+  else if (defensiveAvg > growthAvg + 0.02) {riskTilt = 'Difensivo';}
 
   // LeadersMultiTF: settori con performance migliore
   const sectorPerformance = Object.entries(sectors1M)
@@ -264,8 +264,8 @@ function calculateBreadthMetrics(rawData) {
   const microCap = sizeData.microCap?.performance || 0;
 
   let sizeBias = 'Mixed';
-  if (megaCap > smallCap + 0.05 && megaCap > microCap + 0.1) sizeBias = 'MegaCap';
-  else if (smallCap > megaCap + 0.05) sizeBias = 'SmallCap';
+  if (megaCap > smallCap + 0.05 && megaCap > microCap + 0.1) {sizeBias = 'MegaCap';}
+  else if (smallCap > megaCap + 0.05) {sizeBias = 'SmallCap';}
 
   const stressMicroCap = microCap < -0.15 || microCap < smallCap - 0.1;
 
@@ -378,15 +378,15 @@ export function generateFinvizFilters(
     .map((s) => sectorMap[s] || s)
     .filter(Boolean);
 
-  let queryParts = [];
+  const queryParts = [];
   let filterType = 'Momentum';
   let marketCapFilter = [];
   let performanceFilter = '';
   let rsiFilter = '';
   let betaFilter = '';
-  let volumeFilter = 'avgvolume>800000';
-  let priceFilter = 'price>10';
-  let countryFilter = 'country:USA';
+  const volumeFilter = 'avgvolume>800000';
+  const priceFilter = 'price>10';
+  const countryFilter = 'country:USA';
 
   // Logica dinamica per StrategyMode
   switch (strategyMode) {
@@ -445,9 +445,9 @@ export function generateFinvizFilters(
   }
 
   // Aggiungi altri filtri
-  if (performanceFilter) queryParts.push(performanceFilter);
-  if (rsiFilter) queryParts.push(rsiFilter);
-  if (betaFilter) queryParts.push(betaFilter);
+  if (performanceFilter) {queryParts.push(performanceFilter);}
+  if (rsiFilter) {queryParts.push(rsiFilter);}
+  if (betaFilter) {queryParts.push(betaFilter);}
   queryParts.push(volumeFilter);
   queryParts.push(priceFilter);
   queryParts.push(countryFilter);
@@ -514,9 +514,9 @@ function buildBridgeF2(breadthMetrics, finvizFilters, regimeMetrics, strategyMod
 
 function buildRiskWindowSummary(regimeMetrics) {
   const parts = [];
-  if (regimeMetrics.RiskWindowCommodities) parts.push(regimeMetrics.RiskWindowCommodities);
-  if (regimeMetrics.RiskWindowRates) parts.push(regimeMetrics.RiskWindowRates);
-  if (regimeMetrics.RiskWindowVol) parts.push(`VIX ${regimeMetrics.RiskWindowVol}`);
+  if (regimeMetrics.RiskWindowCommodities) {parts.push(regimeMetrics.RiskWindowCommodities);}
+  if (regimeMetrics.RiskWindowRates) {parts.push(regimeMetrics.RiskWindowRates);}
+  if (regimeMetrics.RiskWindowVol) {parts.push(`VIX ${regimeMetrics.RiskWindowVol}`);}
   parts.push('Credit benigno');
   return parts.join(', ');
 }
@@ -547,21 +547,21 @@ function generateAuditPathID(timestamp) {
 
 function determineModuleStatus(rawData) {
   const freshness = determineDataLag(rawData);
-  if (freshness === '> T-1') return 'HOLD';
+  if (freshness === '> T-1') {return 'HOLD';}
   return 'ACTIVE';
 }
 
 function determineDataLag(rawData) {
   // Logica semplificata: assumi T-1 se dati recenti
   const lastUpdate = rawData.lastUpdate || rawData.timestamp;
-  if (!lastUpdate) return '≤ T-1';
+  if (!lastUpdate) {return '≤ T-1';}
 
   const now = Date.now();
   const last = new Date(lastUpdate).getTime();
   const hoursDiff = (now - last) / (1000 * 60 * 60);
 
-  if (hoursDiff > 48) return '> T-1';
-  if (hoursDiff > 24) return 'T-1';
+  if (hoursDiff > 48) {return '> T-1';}
+  if (hoursDiff > 24) {return 'T-1';}
   return 'intraday';
 }
 
@@ -578,13 +578,13 @@ function extractSources(rawData) {
 function calculateIntegrity(rawData, regimeMetrics, breadthMetrics) {
   // Calcolo semplificato di confidence e integrity
   let confidence = 0.9;
-  let dataIntegrity = 0.9;
-  let feedSync = 0.9;
+  const dataIntegrity = 0.9;
+  const feedSync = 0.9;
 
   // Se mancano dati critici, riduci confidence
-  if (!rawData.VIX && !rawData.vix) confidence -= 0.1;
-  if (!rawData.sectors_1M && !rawData.sectors) confidence -= 0.1;
-  if (!rawData.credit_OAS && !rawData.creditOAS) confidence -= 0.1;
+  if (!rawData.VIX && !rawData.vix) {confidence -= 0.1;}
+  if (!rawData.sectors_1M && !rawData.sectors) {confidence -= 0.1;}
+  if (!rawData.credit_OAS && !rawData.creditOAS) {confidence -= 0.1;}
 
   return {
     confidenceFinal: Math.max(0, Math.min(1, confidence)),

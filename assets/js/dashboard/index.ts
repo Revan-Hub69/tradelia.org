@@ -11,10 +11,7 @@ const modules: Record<string, () => Promise<void> | void> = {};
 /**
  * Register a dashboard module
  */
-export function registerModule(
-  moduleId: ModuleId,
-  loader: () => Promise<void> | void
-): void {
+export function registerModule(moduleId: ModuleId, loader: () => Promise<void> | void): void {
   modules[moduleId] = loader;
 }
 
@@ -25,7 +22,7 @@ export async function loadModule(moduleId: ModuleId): Promise<void> {
   const loader = modules[moduleId];
   if (loader) {
     await loader();
-  return;
+    return;
   }
 
   // Dynamic import fallback

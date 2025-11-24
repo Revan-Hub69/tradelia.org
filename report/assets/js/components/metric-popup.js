@@ -18,13 +18,13 @@ const POPUP = {
 // ===== UTILITIES =====
 function createEl(tag, className, text = null) {
   const el = document.createElement(tag);
-  if (className) el.className = className;
-  if (text !== null) el.textContent = text;
+  if (className) {el.className = className;}
+  if (text !== null) {el.textContent = text;}
   return el;
 }
 
 function escapeHtml(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -34,7 +34,7 @@ function escapeHtml(str) {
 }
 
 function formatValue(value) {
-  if (value == null || value === '') return '—';
+  if (value == null || value === '') {return '—';}
   if (typeof value === 'number') {
     return Number.isInteger(value)
       ? String(value)
@@ -48,7 +48,7 @@ function formatValue(value) {
 
 // ===== GLOSSARY =====
 async function loadGlossary() {
-  if (POPUP._glossary) return POPUP._glossary;
+  if (POPUP._glossary) {return POPUP._glossary;}
 
   try {
     // Prova prima il glossario unificato nella root, poi fallback a report/assets
@@ -70,13 +70,13 @@ async function loadGlossary() {
 }
 
 function getGlossaryEntry(key) {
-  if (!POPUP._glossary) return null;
+  if (!POPUP._glossary) {return null;}
   return POPUP._glossary[key] || null;
 }
 
 // ===== RENDERING =====
 function renderPopup(metric) {
-  if (!POPUP._overlay) mount();
+  if (!POPUP._overlay) {mount();}
 
   const entry = getGlossaryEntry(metric.key);
 
@@ -164,7 +164,7 @@ function renderPopup(metric) {
 
 // ===== MOUNT =====
 function mount() {
-  if (POPUP._overlay) return;
+  if (POPUP._overlay) {return;}
 
   // Overlay
   POPUP._overlay = createEl('div', 'metric-popup-overlay');
@@ -182,7 +182,7 @@ function mount() {
 
   // Click outside to close
   POPUP._overlay.addEventListener('click', (e) => {
-    if (e.target === POPUP._overlay) POPUP.close();
+    if (e.target === POPUP._overlay) {POPUP.close();}
   });
 
   // Listener per close request dall'overlay manager (ESC key)
@@ -199,7 +199,7 @@ function mount() {
 
 // ===== PUBLIC API =====
 async function open(metric, allMetrics = []) {
-  if (!POPUP._overlay) mount();
+  if (!POPUP._overlay) {mount();}
 
   // Load glossary
   await loadGlossary();
@@ -239,7 +239,7 @@ function openGlossary() {
 }
 
 async function close() {
-  if (!POPUP._overlay || !POPUP._isOpen) return;
+  if (!POPUP._overlay || !POPUP._isOpen) {return;}
 
   POPUP._overlay.hidden = true;
   POPUP._overlay.setAttribute('aria-hidden', 'true');

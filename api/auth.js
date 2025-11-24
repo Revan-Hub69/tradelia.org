@@ -329,10 +329,15 @@ async function handleRequestToken(req, res) {
 
   // BEST PRACTICE: Sanitizzazione email coerente
   const sanitizedEmail = email.trim().toLowerCase();
-  
+
   // Validazione formato email
-  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
+  const emailRegex =
+    /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+  if (
+    !emailRegex.test(sanitizedEmail) ||
+    sanitizedEmail.length > 254 ||
+    sanitizedEmail.length < 5
+  ) {
     return res.status(400).json({ ok: false, error: "Formato email non valido" });
   }
 
@@ -585,10 +590,15 @@ async function handleFreeToken(req, res) {
 
   // BEST PRACTICE: Sanitizzazione email coerente
   const sanitizedEmail = email.trim().toLowerCase();
-  
+
   // Validazione formato email
-  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
+  const emailRegex =
+    /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+  if (
+    !emailRegex.test(sanitizedEmail) ||
+    sanitizedEmail.length > 254 ||
+    sanitizedEmail.length < 5
+  ) {
     return res.status(400).json({ ok: false, error: "Formato email non valido" });
   }
   const newToken = generateToken();
@@ -771,13 +781,18 @@ async function handleSignup(req, res) {
   if (!email || typeof email !== "string") {
     return res.status(400).json({ ok: false, error: "Email richiesta" });
   }
-  
+
   // BEST PRACTICE: Sanitizzazione email coerente
   const sanitizedEmail = email.trim().toLowerCase();
-  
+
   // Validazione formato email
-  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
+  const emailRegex =
+    /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+  if (
+    !emailRegex.test(sanitizedEmail) ||
+    sanitizedEmail.length > 254 ||
+    sanitizedEmail.length < 5
+  ) {
     return res.status(400).json({ ok: false, error: "Formato email non valido" });
   }
 
@@ -874,11 +889,16 @@ async function handleLogin(req, res) {
   if (!email || typeof email !== "string") {
     return res.status(400).json({ ok: false, error: "Email richiesta" });
   }
-  
+
   const sanitizedEmail = email.trim().toLowerCase();
-  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-  
-  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
+  const emailRegex =
+    /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+
+  if (
+    !emailRegex.test(sanitizedEmail) ||
+    sanitizedEmail.length > 254 ||
+    sanitizedEmail.length < 5
+  ) {
     return res.status(400).json({ ok: false, error: "Formato email non valido" });
   }
 
@@ -915,20 +935,21 @@ async function handleLogin(req, res) {
     // Creiamo un client anonimo per l'autenticazione utente
     const { createClient } = await import("@supabase/supabase-js");
     const SUPABASE_URL = process.env.SUPABASE_URL;
-    const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
-    
+    const SUPABASE_ANON_KEY =
+      process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
       console.error("[Auth] Variabili ambiente Supabase mancanti");
       throw new HttpError(500, "Configurazione server non valida");
     }
-    
+
     const anonClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: {
         autoRefreshToken: false,
         persistSession: false,
       },
     });
-    
+
     const { data: authData, error: signInError } = await anonClient.auth.signInWithPassword({
       email: sanitizedEmail,
       password,
@@ -1024,7 +1045,9 @@ async function handleRefreshSession(req, res) {
 
   const { refreshToken } = req.body || {};
   if (!refreshToken || typeof refreshToken !== "string") {
-    return res.status(400).json({ ok: false, error: "Refresh token mancante", reason: "missing_refresh" });
+    return res
+      .status(400)
+      .json({ ok: false, error: "Refresh token mancante", reason: "missing_refresh" });
   }
 
   const refreshHash = hashToken(refreshToken.trim());
@@ -1116,15 +1139,13 @@ async function handleRefreshSession(req, res) {
     const rotatedRefreshHash = hashToken(rotatedRefreshToken);
     const rotatedRefreshExpiresAt = new Date(Date.now() + REFRESH_TOKEN_DURATION_MS).toISOString();
 
-    const { error: insertRefreshError } = await supabase
-      .from("dashboard_refresh_tokens")
-      .insert({
-        access_token_id: accessTokenRecord.id,
-        user_id: accessTokenRecord.user_id,
-        token_hash: rotatedRefreshHash,
-        expires_at: rotatedRefreshExpiresAt,
-        metadata: { session_expires_at: newSessionExpiresAt },
-      });
+    const { error: insertRefreshError } = await supabase.from("dashboard_refresh_tokens").insert({
+      access_token_id: accessTokenRecord.id,
+      user_id: accessTokenRecord.user_id,
+      token_hash: rotatedRefreshHash,
+      expires_at: rotatedRefreshExpiresAt,
+      metadata: { session_expires_at: newSessionExpiresAt },
+    });
 
     if (insertRefreshError) {
       console.error("[Auth] Errore rotazione refresh token:", insertRefreshError);
@@ -1151,7 +1172,7 @@ async function handleRefreshSession(req, res) {
 async function getNotificationTarget({ token, deviceId }) {
   let userId = null;
   let tokenHash = null;
-  let rawToken = token && typeof token === "string" ? token.trim() : null;
+  const rawToken = token && typeof token === "string" ? token.trim() : null;
 
   if (token && typeof token === "string" && token.trim().length > 0) {
     try {
@@ -1304,10 +1325,15 @@ async function handleCheckEmail(req, res) {
 
   // BEST PRACTICE: Sanitizzazione email coerente
   const sanitizedEmail = email.trim().toLowerCase();
-  
+
   // Validazione formato email
-  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
+  const emailRegex =
+    /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+  if (
+    !emailRegex.test(sanitizedEmail) ||
+    sanitizedEmail.length > 254 ||
+    sanitizedEmail.length < 5
+  ) {
     return res.status(400).json({ ok: false, error: "Formato email non valido" });
   }
 
@@ -1350,10 +1376,15 @@ async function handleResetPassword(req, res) {
 
   // BEST PRACTICE: Sanitizzazione email coerente
   const sanitizedEmail = email.trim().toLowerCase();
-  
+
   // Validazione formato email
-  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
+  const emailRegex =
+    /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+  if (
+    !emailRegex.test(sanitizedEmail) ||
+    sanitizedEmail.length > 254 ||
+    sanitizedEmail.length < 5
+  ) {
     return res.status(400).json({ ok: false, error: "Formato email non valido" });
   }
 

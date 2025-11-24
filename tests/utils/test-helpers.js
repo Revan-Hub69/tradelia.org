@@ -7,12 +7,12 @@
 /**
  * Crea un elemento DOM mock
  */
-export function createMockElement(tag = 'div', attributes = {}) {
+export function createMockElement(tag = "div", attributes = {}) {
   const element = document.createElement(tag);
   Object.entries(attributes).forEach(([key, value]) => {
-    if (key === 'textContent') {
+    if (key === "textContent") {
       element.textContent = value;
-    } else if (key === 'innerHTML') {
+    } else if (key === "innerHTML") {
       element.innerHTML = value;
     } else {
       element.setAttribute(key, value);
@@ -29,7 +29,7 @@ export function createMockState(overrides = {}) {
     currentModule: null,
     reports: [],
     filteredReports: [],
-    ...overrides
+    ...overrides,
   };
 }
 
@@ -62,7 +62,6 @@ export function createMockFetchResponse(data, status = 200) {
     status,
     json: () => Promise.resolve(data),
     text: () => Promise.resolve(JSON.stringify(data)),
-    headers: new Headers()
+    headers: new Headers(),
   });
 }
-

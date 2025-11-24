@@ -3,7 +3,7 @@
  * Learning Analytics Dashboard
  * Paper: Siemens & Long (2011), Ferguson (2012)
  * "Penetrating the Fog: Analytics in Learning and Education"
- * 
+ *
  * Dashboard completo per tracciare:
  * - Progresso moduli/lezioni
  * - Performance test
@@ -190,14 +190,18 @@ function renderAnalyticsDashboard(container, data) {
       </div>
 
       <!-- Weak Areas -->
-      ${weakAreas && weakAreas.length > 0 ? `
+      ${
+        weakAreas && weakAreas.length > 0
+          ? `
         <div class="analytics-section">
           <h2 class="analytics-section-title">Aree da Migliorare</h2>
           <div class="analytics-weak-areas">
-            ${weakAreas.map(area => renderWeakArea(area)).join("")}
+            ${weakAreas.map((area) => renderWeakArea(area)).join("")}
           </div>
         </div>
-      ` : ""}
+      `
+          : ""
+      }
 
       <!-- Recent Activity -->
       <div class="analytics-section">
@@ -229,14 +233,18 @@ function renderOverviewCard(title, value, max, type) {
       <div class="overview-content">
         <div class="overview-value">${value}${max ? ` / ${max}` : ""}</div>
         <div class="overview-label">${escapeHtml(title)}</div>
-        ${percentage !== null ? `
+        ${
+          percentage !== null
+            ? `
           <div class="overview-progress">
             <div class="overview-progress-bar">
               <div class="overview-progress-fill" style="width: ${percentage}%"></div>
             </div>
             <span class="overview-percentage">${percentage}%</span>
           </div>
-        ` : ""}
+        `
+            : ""
+        }
       </div>
     </div>
   `;
@@ -252,7 +260,9 @@ function renderProgressChart(progress) {
 
   return `
     <div class="progress-chart">
-      ${progress.modules.map(module => `
+      ${progress.modules
+        .map(
+          (module) => `
         <div class="progress-item">
           <div class="progress-header">
             <span class="progress-module-name">${escapeHtml(module.name)}</span>
@@ -262,7 +272,9 @@ function renderProgressChart(progress) {
             <div class="progress-fill" style="width: ${module.percentage || 0}%"></div>
           </div>
         </div>
-      `).join("")}
+      `
+        )
+        .join("")}
     </div>
   `;
 }
@@ -284,7 +296,9 @@ function renderTestPerformanceChart(testPerformance) {
         <span class="avg-value">${avgScore}%</span>
       </div>
       <div class="test-performance-list">
-        ${testPerformance.tests.map(test => `
+        ${testPerformance.tests
+          .map(
+            (test) => `
           <div class="test-performance-item">
             <div class="test-info">
               <span class="test-name">${escapeHtml(test.name)}</span>
@@ -297,7 +311,9 @@ function renderTestPerformanceChart(testPerformance) {
               </div>
             </div>
           </div>
-        `).join("")}
+        `
+          )
+          .join("")}
       </div>
     </div>
   `;
@@ -362,7 +378,9 @@ function renderRecentActivity(activities) {
 
   return `
     <div class="activity-list">
-      ${activities.map(activity => `
+      ${activities
+        .map(
+          (activity) => `
         <div class="activity-item">
           <div class="activity-icon">${getActivityIcon(activity.type)}</div>
           <div class="activity-content">
@@ -373,7 +391,9 @@ function renderRecentActivity(activities) {
             </div>
           </div>
         </div>
-      `).join("")}
+      `
+        )
+        .join("")}
     </div>
   `;
 }
@@ -417,27 +437,39 @@ function getOverviewIcon(type) {
 }
 
 function getScoreClass(score) {
-  if (score >= 80) return "score-excellent";
-  if (score >= 60) return "score-good";
-  if (score >= 40) return "score-fair";
+  if (score >= 80) {
+    return "score-excellent";
+  }
+  if (score >= 60) {
+    return "score-good";
+  }
+  if (score >= 40) {
+    return "score-fair";
+  }
   return "score-poor";
 }
 
 function formatMinutes(minutes) {
-  if (minutes < 60) return `${minutes} min`;
+  if (minutes < 60) {
+    return `${minutes} min`;
+  }
   const hours = Math.floor(minutes / 60);
   const mins = minutes % 60;
   return mins > 0 ? `${hours}h ${mins}min` : `${hours}h`;
 }
 
 function formatDate(dateString) {
-  if (!dateString) return "";
+  if (!dateString) {
+    return "";
+  }
   const date = new Date(dateString);
   return date.toLocaleDateString("it-IT", { day: "2-digit", month: "2-digit", year: "numeric" });
 }
 
 function formatRelativeTime(timestamp) {
-  if (!timestamp) return "";
+  if (!timestamp) {
+    return "";
+  }
   const date = new Date(timestamp);
   const now = new Date();
   const diffMs = now - date;
@@ -445,10 +477,18 @@ function formatRelativeTime(timestamp) {
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
 
-  if (diffMins < 1) return "Ora";
-  if (diffMins < 60) return `${diffMins} min fa`;
-  if (diffHours < 24) return `${diffHours} ore fa`;
-  if (diffDays < 7) return `${diffDays} giorni fa`;
+  if (diffMins < 1) {
+    return "Ora";
+  }
+  if (diffMins < 60) {
+    return `${diffMins} min fa`;
+  }
+  if (diffHours < 24) {
+    return `${diffHours} ore fa`;
+  }
+  if (diffDays < 7) {
+    return `${diffDays} giorni fa`;
+  }
   return formatDate(timestamp);
 }
 
@@ -485,4 +525,3 @@ async function getAuthToken() {
     return null;
   }
 }
-

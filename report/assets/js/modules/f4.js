@@ -12,14 +12,14 @@ import Logger from '../utils/logger.js';
 
 // Helper functions
 function escapeHtml(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   const div = document.createElement('div');
   div.textContent = String(str);
   return div.innerHTML;
 }
 
 function escapeAttr(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
@@ -261,7 +261,7 @@ export function renderCard(rawData, ctx = {}) {
 }
 
 export function bindCard(node, rawData, ctx = {}) {
-  if (!node || !rawData) return;
+  if (!node || !rawData) {return;}
   const data = normalizeDataPublicF4(rawData);
 
   // Bind tabs menu + drawer
@@ -272,7 +272,7 @@ export function bindCard(node, rawData, ctx = {}) {
     // Listener per quando si apre una tab nel drawer
     tabsWrapper.addEventListener('drawer-tab-opened', (e) => {
       const { tabId, container } = e.detail;
-      if (!container) return;
+      if (!container) {return;}
 
       // Monta header-ticker nel drawer
       import('../components/header-ticker.js')

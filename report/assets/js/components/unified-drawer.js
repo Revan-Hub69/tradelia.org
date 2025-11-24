@@ -18,14 +18,14 @@ const UNIFIED_DRAWER = {
 // ===== UTILITIES =====
 function createEl(tag, className, text = null) {
   const el = document.createElement(tag);
-  if (className) el.className = className;
-  if (text !== null) el.textContent = text;
+  if (className) {el.className = className;}
+  if (text !== null) {el.textContent = text;}
   return el;
 }
 
 // ===== MOUNT =====
 function mount() {
-  if (UNIFIED_DRAWER._overlay) return;
+  if (UNIFIED_DRAWER._overlay) {return;}
 
   // Create overlay (stessa struttura del glossary-drawer)
   UNIFIED_DRAWER._overlay = createEl('div', 'glossary-drawer-overlay');
@@ -58,7 +58,7 @@ function mount() {
     .querySelector('.glossary-drawer-close')
     .addEventListener('click', () => UNIFIED_DRAWER.close());
   UNIFIED_DRAWER._overlay.addEventListener('click', (e) => {
-    if (e.target === UNIFIED_DRAWER._overlay) UNIFIED_DRAWER.close();
+    if (e.target === UNIFIED_DRAWER._overlay) {UNIFIED_DRAWER.close();}
   });
 
   // Listener per close request dall'overlay manager (ESC key)
@@ -77,7 +77,7 @@ function mount() {
 
 // ===== PUBLIC API =====
 function open(config) {
-  if (!UNIFIED_DRAWER._overlay) mount();
+  if (!UNIFIED_DRAWER._overlay) {mount();}
 
   const { title, breadcrumb, content, id } = config || {};
 
@@ -167,7 +167,7 @@ function open(config) {
 }
 
 function close() {
-  if (!UNIFIED_DRAWER._overlay || !UNIFIED_DRAWER._isOpen) return;
+  if (!UNIFIED_DRAWER._overlay || !UNIFIED_DRAWER._isOpen) {return;}
 
   UNIFIED_DRAWER._overlay.hidden = true;
   UNIFIED_DRAWER._overlay.setAttribute('aria-hidden', 'true');

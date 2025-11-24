@@ -3,7 +3,7 @@
  * Metacognition & Self-Regulated Learning Tools
  * Paper: Zimmerman (2002), Winne & Hadwin (2008)
  * "Becoming a Self-Regulated Learner"
- * 
+ *
  * Strumenti per:
  * - Pre-test self-assessment
  * - Post-lesson reflection
@@ -38,15 +38,19 @@ export async function showPreLessonAssessment(lessonId, lessonTitle) {
             Quanto conosci già questo argomento?
           </p>
           <div class="meta-rating-scale">
-            ${[1, 2, 3, 4, 5].map(num => `
+            ${[1, 2, 3, 4, 5]
+              .map(
+                (num) => `
               <label class="meta-rating-option">
-                <input type="radio" name="pre-knowledge" value="${num}" />
+                <input type="radio" name="pre-knowledge" id="pre-knowledge-${num}" value="${num}" />
                 <span class="meta-rating-label">
                   <span class="meta-rating-number">${num}</span>
                   <span class="meta-rating-text">${getKnowledgeLabel(num)}</span>
                 </span>
               </label>
-            `).join("")}
+            `
+              )
+              .join("")}
           </div>
           <div class="meta-optional">
             <label>
@@ -76,7 +80,7 @@ export async function showPreLessonAssessment(lessonId, lessonTitle) {
 
     submitBtn.disabled = !rating;
 
-    modal.querySelectorAll('input[name="pre-knowledge"]').forEach(input => {
+    modal.querySelectorAll('input[name="pre-knowledge"]').forEach((input) => {
       input.addEventListener("change", () => {
         submitBtn.disabled = false;
       });
@@ -97,7 +101,7 @@ export async function showPreLessonAssessment(lessonId, lessonTitle) {
       resolve();
     });
 
-    modal.querySelectorAll("[data-dismiss]").forEach(btn => {
+    modal.querySelectorAll("[data-dismiss]").forEach((btn) => {
       btn.addEventListener("click", () => {
         closeModal(modal);
         resolve();
@@ -127,19 +131,23 @@ export async function showPostLessonReflection(lessonId, lessonTitle) {
           </p>
           
           <div class="meta-question-group">
-            <label class="meta-question">
+            <div class="meta-question">
               Quanto hai capito questa lezione?
-            </label>
+            </div>
             <div class="meta-rating-scale">
-              ${[1, 2, 3, 4, 5].map(num => `
+              ${[1, 2, 3, 4, 5]
+                .map(
+                  (num) => `
                 <label class="meta-rating-option">
-                  <input type="radio" name="comprehension" value="${num}" />
+                  <input type="radio" name="comprehension" id="comprehension-${num}" value="${num}" />
                   <span class="meta-rating-label">
                     <span class="meta-rating-number">${num}</span>
                     <span class="meta-rating-text">${getComprehensionLabel(num)}</span>
                   </span>
                 </label>
-              `).join("")}
+              `
+                )
+                .join("")}
             </div>
           </div>
 
@@ -184,7 +192,7 @@ export async function showPostLessonReflection(lessonId, lessonTitle) {
 
     submitBtn.disabled = !comprehension;
 
-    modal.querySelectorAll('input[name="comprehension"]').forEach(input => {
+    modal.querySelectorAll('input[name="comprehension"]').forEach((input) => {
       input.addEventListener("change", () => {
         submitBtn.disabled = false;
       });
@@ -207,7 +215,7 @@ export async function showPostLessonReflection(lessonId, lessonTitle) {
       resolve();
     });
 
-    modal.querySelectorAll("[data-dismiss]").forEach(btn => {
+    modal.querySelectorAll("[data-dismiss]").forEach((btn) => {
       btn.addEventListener("click", () => {
         closeModal(modal);
         resolve();
@@ -264,7 +272,7 @@ export function showLearningGoalsModal() {
     closeModal(modal);
   });
 
-  modal.querySelectorAll("[data-dismiss]").forEach(btn => {
+  modal.querySelectorAll("[data-dismiss]").forEach((btn) => {
     btn.addEventListener("click", () => {
       closeModal(modal);
     });
@@ -451,8 +459,7 @@ async function getAuthToken() {
   try {
     const { getToken } = await import("./token-storage.js");
     return await getToken();
-  } catch (e) {
+  } catch {
     return null;
   }
 }
-

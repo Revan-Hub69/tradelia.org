@@ -137,4 +137,3 @@ export function getFCMToken() {
 export async function isFCMEnabled() {
   return Notification.permission === "granted" && fcmToken !== null;
 }
-

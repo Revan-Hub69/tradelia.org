@@ -15,7 +15,7 @@ const GLOSSARY = {
 
 // ===== UTILITIES =====
 function escapeHtml(str) {
-  if (str == null) return '';
+  if (str == null) {return '';}
   return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -26,7 +26,7 @@ function escapeHtml(str) {
 
 // ===== DATA LOADING =====
 async function loadGlossaryData() {
-  if (GLOSSARY._data) return GLOSSARY._data;
+  if (GLOSSARY._data) {return GLOSSARY._data;}
 
   try {
     // Prova prima il glossario completo, poi fallback a quello report
@@ -50,7 +50,7 @@ async function loadGlossaryData() {
 
 // ===== RENDERING =====
 function renderGlossary() {
-  if (!GLOSSARY._container || !GLOSSARY._data) return;
+  if (!GLOSSARY._container || !GLOSSARY._data) {return;}
 
   const data = GLOSSARY._data;
   const terms = Object.entries(data).filter(([key]) => !key.startsWith('_'));
@@ -196,7 +196,7 @@ function setupEventListeners() {
   const backBtn = GLOSSARY._container.querySelector('.glossary-embedded-back');
   if (backBtn) {
     backBtn.addEventListener('click', () => {
-      if (GLOSSARY._backCallback) GLOSSARY._backCallback();
+      if (GLOSSARY._backCallback) {GLOSSARY._backCallback();}
     });
   }
 
@@ -230,7 +230,7 @@ function setupEventListeners() {
 }
 
 function filterTerms() {
-  if (!GLOSSARY._data || !GLOSSARY._container) return;
+  if (!GLOSSARY._data || !GLOSSARY._container) {return;}
 
   const searchQuery =
     GLOSSARY._container
@@ -248,17 +248,17 @@ function filterTerms() {
     )?.dataset.value || 'all';
 
   const terms = Object.entries(GLOSSARY._data).filter(([key, term]) => {
-    if (key.startsWith('_')) return false;
+    if (key.startsWith('_')) {return false;}
 
     // Filtro universo
     if (universoFilter !== 'all') {
       const termUniverso = term.universo || term.category;
-      if (termUniverso !== universoFilter) return false;
+      if (termUniverso !== universoFilter) {return false;}
     }
 
     // Filtro difficoltà
     if (difficoltaFilter !== 'all') {
-      if (term.difficolta !== difficoltaFilter) return false;
+      if (term.difficolta !== difficoltaFilter) {return false;}
     }
 
     // Filtro ricerca
@@ -272,7 +272,7 @@ function filterTerms() {
         term.difficolta?.toLowerCase() || '',
       ].join(' ');
 
-      if (!searchable.includes(searchQuery)) return false;
+      if (!searchable.includes(searchQuery)) {return false;}
     }
 
     return true;
@@ -309,15 +309,15 @@ function filterTerms() {
 }
 
 function openTermPopup(key) {
-  if (!GLOSSARY._data || !key) return;
+  if (!GLOSSARY._data || !key) {return;}
 
   const term = GLOSSARY._data[key];
-  if (!term) return;
+  if (!term) {return;}
 
   const overlay = GLOSSARY._container.querySelector('#glossary-embedded-popup-overlay');
   const panel = overlay.querySelector('.glossary-popup-panel');
 
-  if (!overlay || !panel) return;
+  if (!overlay || !panel) {return;}
 
   const title = term.nomeTecnico || term.title || key;
   const universo = term.universo || term.category;
@@ -397,11 +397,11 @@ function openTermPopup(key) {
     overlay.hidden = true;
   };
 
-  if (closeBtn) closeBtn.addEventListener('click', closePopup);
-  if (closeBtnBottom) closeBtnBottom.addEventListener('click', closePopup);
+  if (closeBtn) {closeBtn.addEventListener('click', closePopup);}
+  if (closeBtnBottom) {closeBtnBottom.addEventListener('click', closePopup);}
 
   overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) closePopup();
+    if (e.target === overlay) {closePopup();}
   });
 
   // ESC gestito dal popup parent (overlay-manager), non gestire qui per evitare conflitti
@@ -438,7 +438,7 @@ async function mount(panel, backCallback) {
 }
 
 function unmount() {
-  if (!GLOSSARY._isMounted) return;
+  if (!GLOSSARY._isMounted) {return;}
 
   if (GLOSSARY._container) {
     GLOSSARY._container.remove();

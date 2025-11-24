@@ -12,23 +12,23 @@ let Chart = null;
  * Import statico causa problemi con Rollup durante il build
  */
 async function loadChartLibrary() {
-  if (typeof Chart !== 'undefined' && Chart !== null) {
+  if (typeof Chart !== "undefined" && Chart !== null) {
     return Chart;
   }
 
   // Load Chart.js from CDN (CSP permette cdn.jsdelivr.net)
   return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+    const script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js";
     script.async = true;
-    script.crossOrigin = 'anonymous';
+    script.crossOrigin = "anonymous";
     script.onload = () => {
       Chart = window.Chart;
       resolve(Chart);
     };
     script.onerror = () => {
-      console.error('[Charts] Error loading Chart.js from CDN');
-      reject(new Error('Failed to load Chart.js'));
+      console.error("[Charts] Error loading Chart.js from CDN");
+      reject(new Error("Failed to load Chart.js"));
     };
     document.head.appendChild(script);
   });
@@ -46,7 +46,7 @@ export async function initCharts() {
  */
 export function createLineChart(canvasId, data, options = {}) {
   if (!Chart) {
-    console.error('[Charts] Chart.js not loaded');
+    console.error("[Charts] Chart.js not loaded");
     return null;
   }
 
@@ -56,7 +56,7 @@ export function createLineChart(canvasId, data, options = {}) {
     return null;
   }
 
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
 
   const defaultOptions = {
     responsive: true,
@@ -64,9 +64,9 @@ export function createLineChart(canvasId, data, options = {}) {
     plugins: {
       legend: {
         display: true,
-        position: 'top',
+        position: "top",
         labels: {
-          color: '#a8a8a8',
+          color: "#a8a8a8",
           font: {
             size: 12,
           },
@@ -74,35 +74,35 @@ export function createLineChart(canvasId, data, options = {}) {
       },
       tooltip: {
         enabled: true,
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        titleColor: '#fff',
-        bodyColor: '#fff',
-        borderColor: '#333',
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        titleColor: "#fff",
+        bodyColor: "#fff",
+        borderColor: "#333",
         borderWidth: 1,
       },
     },
     scales: {
       x: {
         grid: {
-          color: 'rgba(168, 168, 168, 0.1)',
+          color: "rgba(168, 168, 168, 0.1)",
         },
         ticks: {
-          color: '#a8a8a8',
+          color: "#a8a8a8",
         },
       },
       y: {
         grid: {
-          color: 'rgba(168, 168, 168, 0.1)',
+          color: "rgba(168, 168, 168, 0.1)",
         },
         ticks: {
-          color: '#a8a8a8',
+          color: "#a8a8a8",
         },
       },
     },
   };
 
   const config = {
-    type: 'line',
+    type: "line",
     data,
     options: { ...defaultOptions, ...options },
   };
@@ -115,7 +115,7 @@ export function createLineChart(canvasId, data, options = {}) {
  */
 export function createBarChart(canvasId, data, options = {}) {
   if (!Chart) {
-    console.error('[Charts] Chart.js not loaded');
+    console.error("[Charts] Chart.js not loaded");
     return null;
   }
 
@@ -125,7 +125,7 @@ export function createBarChart(canvasId, data, options = {}) {
     return null;
   }
 
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
 
   const defaultOptions = {
     responsive: true,
@@ -133,9 +133,9 @@ export function createBarChart(canvasId, data, options = {}) {
     plugins: {
       legend: {
         display: true,
-        position: 'top',
+        position: "top",
         labels: {
-          color: '#a8a8a8',
+          color: "#a8a8a8",
           font: {
             size: 12,
           },
@@ -143,28 +143,28 @@ export function createBarChart(canvasId, data, options = {}) {
       },
       tooltip: {
         enabled: true,
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        titleColor: '#fff',
-        bodyColor: '#fff',
-        borderColor: '#333',
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        titleColor: "#fff",
+        bodyColor: "#fff",
+        borderColor: "#333",
         borderWidth: 1,
       },
     },
     scales: {
       x: {
         grid: {
-          color: 'rgba(168, 168, 168, 0.1)',
+          color: "rgba(168, 168, 168, 0.1)",
         },
         ticks: {
-          color: '#a8a8a8',
+          color: "#a8a8a8",
         },
       },
       y: {
         grid: {
-          color: 'rgba(168, 168, 168, 0.1)',
+          color: "rgba(168, 168, 168, 0.1)",
         },
         ticks: {
-          color: '#a8a8a8',
+          color: "#a8a8a8",
         },
         beginAtZero: true,
       },
@@ -172,7 +172,7 @@ export function createBarChart(canvasId, data, options = {}) {
   };
 
   const config = {
-    type: 'bar',
+    type: "bar",
     data,
     options: { ...defaultOptions, ...options },
   };
@@ -185,7 +185,7 @@ export function createBarChart(canvasId, data, options = {}) {
  */
 export function createPieChart(canvasId, data, options = {}) {
   if (!Chart) {
-    console.error('[Charts] Chart.js not loaded');
+    console.error("[Charts] Chart.js not loaded");
     return null;
   }
 
@@ -195,7 +195,7 @@ export function createPieChart(canvasId, data, options = {}) {
     return null;
   }
 
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
 
   const defaultOptions = {
     responsive: true,
@@ -203,9 +203,9 @@ export function createPieChart(canvasId, data, options = {}) {
     plugins: {
       legend: {
         display: true,
-        position: 'right',
+        position: "right",
         labels: {
-          color: '#a8a8a8',
+          color: "#a8a8a8",
           font: {
             size: 12,
           },
@@ -213,17 +213,17 @@ export function createPieChart(canvasId, data, options = {}) {
       },
       tooltip: {
         enabled: true,
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        titleColor: '#fff',
-        bodyColor: '#fff',
-        borderColor: '#333',
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        titleColor: "#fff",
+        bodyColor: "#fff",
+        borderColor: "#333",
         borderWidth: 1,
       },
     },
   };
 
   const config = {
-    type: 'pie',
+    type: "pie",
     data,
     options: { ...defaultOptions, ...options },
   };
@@ -236,7 +236,7 @@ export function createPieChart(canvasId, data, options = {}) {
  */
 export function createDoughnutChart(canvasId, data, options = {}) {
   if (!Chart) {
-    console.error('[Charts] Chart.js not loaded');
+    console.error("[Charts] Chart.js not loaded");
     return null;
   }
 
@@ -246,7 +246,7 @@ export function createDoughnutChart(canvasId, data, options = {}) {
     return null;
   }
 
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
 
   const defaultOptions = {
     responsive: true,
@@ -254,9 +254,9 @@ export function createDoughnutChart(canvasId, data, options = {}) {
     plugins: {
       legend: {
         display: true,
-        position: 'right',
+        position: "right",
         labels: {
-          color: '#a8a8a8',
+          color: "#a8a8a8",
           font: {
             size: 12,
           },
@@ -264,17 +264,17 @@ export function createDoughnutChart(canvasId, data, options = {}) {
       },
       tooltip: {
         enabled: true,
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        titleColor: '#fff',
-        bodyColor: '#fff',
-        borderColor: '#333',
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        titleColor: "#fff",
+        bodyColor: "#fff",
+        borderColor: "#333",
         borderWidth: 1,
       },
     },
   };
 
   const config = {
-    type: 'doughnut',
+    type: "doughnut",
     data,
     options: { ...defaultOptions, ...options },
   };
@@ -290,21 +290,21 @@ export function createStatsChart(canvasId, statsData) {
   const values = statsData.map((item) => item.value);
 
   const colors = [
-    'rgba(59, 130, 246, 0.8)', // blue
-    'rgba(16, 185, 129, 0.8)', // green
-    'rgba(245, 158, 11, 0.8)', // yellow
-    'rgba(239, 68, 68, 0.8)', // red
-    'rgba(139, 92, 246, 0.8)', // purple
+    "rgba(59, 130, 246, 0.8)", // blue
+    "rgba(16, 185, 129, 0.8)", // green
+    "rgba(245, 158, 11, 0.8)", // yellow
+    "rgba(239, 68, 68, 0.8)", // red
+    "rgba(139, 92, 246, 0.8)", // purple
   ];
 
   const data = {
     labels,
     datasets: [
       {
-        label: 'Statistiche',
+        label: "Statistiche",
         data: values,
         backgroundColor: colors.slice(0, values.length),
-        borderColor: colors.slice(0, values.length).map((c) => c.replace('0.8', '1')),
+        borderColor: colors.slice(0, values.length).map((c) => c.replace("0.8", "1")),
         borderWidth: 2,
       },
     ],
@@ -324,25 +324,26 @@ export function createStatsChart(canvasId, statsData) {
  */
 export function createTrendChart(canvasId, timeSeriesData) {
   const labels = timeSeriesData.map((item) => item.date || item.label);
-  const datasets = timeSeriesData[0]?.series?.map((series, index) => ({
-    label: series.label,
-    data: timeSeriesData.map((item) => item.series[index].value),
-    borderColor: [
-      'rgba(59, 130, 246, 1)',
-      'rgba(16, 185, 129, 1)',
-      'rgba(245, 158, 11, 1)',
-      'rgba(239, 68, 68, 1)',
-    ][index % 4],
-    backgroundColor: [
-      'rgba(59, 130, 246, 0.1)',
-      'rgba(16, 185, 129, 0.1)',
-      'rgba(245, 158, 11, 0.1)',
-      'rgba(239, 68, 68, 0.1)',
-    ][index % 4],
-    borderWidth: 2,
-    fill: true,
-    tension: 0.4,
-  })) || [];
+  const datasets =
+    timeSeriesData[0]?.series?.map((series, index) => ({
+      label: series.label,
+      data: timeSeriesData.map((item) => item.series[index].value),
+      borderColor: [
+        "rgba(59, 130, 246, 1)",
+        "rgba(16, 185, 129, 1)",
+        "rgba(245, 158, 11, 1)",
+        "rgba(239, 68, 68, 1)",
+      ][index % 4],
+      backgroundColor: [
+        "rgba(59, 130, 246, 0.1)",
+        "rgba(16, 185, 129, 0.1)",
+        "rgba(245, 158, 11, 0.1)",
+        "rgba(239, 68, 68, 0.1)",
+      ][index % 4],
+      borderWidth: 2,
+      fill: true,
+      tension: 0.4,
+    })) || [];
 
   const data = {
     labels,
@@ -356,7 +357,7 @@ export function createTrendChart(canvasId, timeSeriesData) {
  * Destroy chart
  */
 export function destroyChart(chartInstance) {
-  if (chartInstance && typeof chartInstance.destroy === 'function') {
+  if (chartInstance && typeof chartInstance.destroy === "function") {
     chartInstance.destroy();
   }
 }
@@ -365,9 +366,10 @@ export function destroyChart(chartInstance) {
  * Update chart data
  */
 export function updateChart(chartInstance, newData) {
-  if (!chartInstance) return;
+  if (!chartInstance) {
+    return;
+  }
 
   chartInstance.data = newData;
   chartInstance.update();
 }
-

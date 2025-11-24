@@ -23,7 +23,7 @@ export function formatF1BToRows(f1bData) {
           break;
         }
       }
-      if (val !== null && val !== undefined && val !== '') return val;
+      if (val !== null && val !== undefined && val !== '') {return val;}
     }
     return fallback;
   };
@@ -281,29 +281,29 @@ export function formatF1BToRows(f1bData) {
 
 // Helper functions
 function getToneForStrategyMode(mode) {
-  if (typeof mode !== 'string') return 'neutral';
-  if (mode.includes('Momentum')) return 'ok'; // green -> ok
-  if (mode.includes('Pullback')) return 'err'; // red -> err
+  if (typeof mode !== 'string') {return 'neutral';}
+  if (mode.includes('Momentum')) {return 'ok';} // green -> ok
+  if (mode.includes('Pullback')) {return 'err';} // red -> err
   return 'neutral';
 }
 
 function getToneForRegimeScore(score) {
   if (typeof score === 'string') {
     const num = parseFloat(score.replace(/[^0-9.-]/g, ''));
-    if (num > 0.3) return 'ok'; // green -> ok
-    if (num < -0.3) return 'err'; // red -> err
+    if (num > 0.3) {return 'ok';} // green -> ok
+    if (num < -0.3) {return 'err';} // red -> err
     return 'neutral';
   }
   if (typeof score === 'number') {
-    if (score > 0.3) return 'ok'; // green -> ok
-    if (score < -0.3) return 'err'; // red -> err
+    if (score > 0.3) {return 'ok';} // green -> ok
+    if (score < -0.3) {return 'err';} // red -> err
     return 'neutral';
   }
   return 'neutral';
 }
 
 function formatRegimeScore(score) {
-  if (score === null || score === undefined || score === '—') return '—';
+  if (score === null || score === undefined || score === '—') {return '—';}
   if (typeof score === 'number') {
     return score > 0 ? `+${score.toFixed(2)}` : score.toFixed(2);
   }
@@ -314,7 +314,7 @@ function formatRegimeScore(score) {
 }
 
 function formatBreadth(breadth) {
-  if (breadth === null || breadth === undefined || breadth === '—') return '—';
+  if (breadth === null || breadth === undefined || breadth === '—') {return '—';}
   if (typeof breadth === 'number') {
     return (breadth * 100).toFixed(0) + '%';
   }
@@ -326,30 +326,30 @@ function formatBreadth(breadth) {
 
 function getToneForBreadth(breadth) {
   if (typeof breadth === 'number') {
-    if (breadth > 0.6) return 'ok'; // green -> ok
-    if (breadth < 0.4) return 'err'; // red -> err
+    if (breadth > 0.6) {return 'ok';} // green -> ok
+    if (breadth < 0.4) {return 'err';} // red -> err
     return 'neutral';
   }
   return 'neutral';
 }
 
 function getToneForRiskTilt(tilt) {
-  if (typeof tilt !== 'string') return 'neutral';
-  if (tilt.includes('Pro-rischio') || tilt.includes('risk-on')) return 'ok'; // green -> ok
-  if (tilt.includes('Difensivo') || tilt.includes('risk-off')) return 'err'; // red -> err
+  if (typeof tilt !== 'string') {return 'neutral';}
+  if (tilt.includes('Pro-rischio') || tilt.includes('risk-on')) {return 'ok';} // green -> ok
+  if (tilt.includes('Difensivo') || tilt.includes('risk-off')) {return 'err';} // red -> err
   return 'neutral';
 }
 
 function formatSmallCapPressure(pressure) {
-  if (pressure === null || pressure === undefined || pressure === '—') return '—';
+  if (pressure === null || pressure === undefined || pressure === '—') {return '—';}
   return String(pressure);
 }
 
 function getToneForSmallCap(pressure) {
   if (typeof pressure === 'string') {
     const num = parseFloat(pressure.replace(/[^0-9.-]/g, ''));
-    if (num < -0.1) return 'err'; // red -> err
-    if (num > 0.1) return 'ok'; // green -> ok
+    if (num < -0.1) {return 'err';} // red -> err
+    if (num > 0.1) {return 'ok';} // green -> ok
     return 'neutral';
   }
   return 'neutral';

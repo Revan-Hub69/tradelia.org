@@ -6,14 +6,14 @@
 
 const FILTER_STATE = {
   filters: {
-    ticker: '',
-    company: '',
-    exchange: '',
-    sector: '',
-    dateFrom: '',
-    dateTo: '',
-    sortBy: 'date',
-    sortOrder: 'desc',
+    ticker: "",
+    company: "",
+    exchange: "",
+    sector: "",
+    dateFrom: "",
+    dateTo: "",
+    sortBy: "date",
+    sortOrder: "desc",
   },
   savedFilters: [],
 };
@@ -31,27 +31,29 @@ export function initAdvancedFilters() {
  * Create filter UI
  */
 function createFilterUI() {
-  const reportsToolbar = document.querySelector('.reports-toolbar');
-  if (!reportsToolbar || document.getElementById('advanced-filters-toggle')) return;
+  const reportsToolbar = document.querySelector(".reports-toolbar");
+  if (!reportsToolbar || document.getElementById("advanced-filters-toggle")) {
+    return;
+  }
 
-  const filtersToggle = document.createElement('button');
-  filtersToggle.id = 'advanced-filters-toggle';
-  filtersToggle.className = 'btn btn-secondary';
+  const filtersToggle = document.createElement("button");
+  filtersToggle.id = "advanced-filters-toggle";
+  filtersToggle.className = "btn btn-secondary";
   filtersToggle.innerHTML = `
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
       <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
     </svg>
     Filtri Avanzati
   `;
-  filtersToggle.addEventListener('click', () => toggleFiltersPanel());
+  filtersToggle.addEventListener("click", () => toggleFiltersPanel());
 
   reportsToolbar.appendChild(filtersToggle);
 
   // Create filters panel
-  const filtersPanel = document.createElement('div');
-  filtersPanel.id = 'advanced-filters-panel';
-  filtersPanel.className = 'advanced-filters-panel';
-  filtersPanel.style.display = 'none';
+  const filtersPanel = document.createElement("div");
+  filtersPanel.id = "advanced-filters-panel";
+  filtersPanel.className = "advanced-filters-panel";
+  filtersPanel.style.display = "none";
   filtersPanel.innerHTML = `
     <div class="advanced-filters-content">
       <div class="advanced-filters-header">
@@ -124,34 +126,45 @@ function createFilterUI() {
   document.body.appendChild(filtersPanel);
 
   // Close button
-  filtersPanel.querySelector('.advanced-filters-close').addEventListener('click', () => toggleFiltersPanel());
+  filtersPanel
+    .querySelector(".advanced-filters-close")
+    .addEventListener("click", () => toggleFiltersPanel());
 }
 
 /**
  * Setup filter listeners
  */
 function setupFilterListeners() {
-  const applyBtn = document.getElementById('apply-filters');
-  const resetBtn = document.getElementById('reset-filters');
-  const saveBtn = document.getElementById('save-filter');
+  const applyBtn = document.getElementById("apply-filters");
+  const resetBtn = document.getElementById("reset-filters");
+  const saveBtn = document.getElementById("save-filter");
 
   if (applyBtn) {
-    applyBtn.addEventListener('click', () => applyFilters());
+    applyBtn.addEventListener("click", () => applyFilters());
   }
 
   if (resetBtn) {
-    resetBtn.addEventListener('click', () => resetFilters());
+    resetBtn.addEventListener("click", () => resetFilters());
   }
 
   if (saveBtn) {
-    saveBtn.addEventListener('click', () => saveCurrentFilter());
+    saveBtn.addEventListener("click", () => saveCurrentFilter());
   }
 
   // Real-time filter updates
-  ['ticker', 'company', 'exchange', 'sector', 'date-from', 'date-to', 'sort-by', 'sort-order'].forEach((id) => {
+  [
+    "ticker",
+    "company",
+    "exchange",
+    "sector",
+    "date-from",
+    "date-to",
+    "sort-by",
+    "sort-order",
+  ].forEach((id) => {
     const input = document.getElementById(`filter-${id}`);
     if (input) {
-      input.addEventListener('change', () => {
+      input.addEventListener("change", () => {
         updateFilterState();
       });
     }
@@ -162,11 +175,13 @@ function setupFilterListeners() {
  * Toggle filters panel
  */
 function toggleFiltersPanel() {
-  const panel = document.getElementById('advanced-filters-panel');
-  if (!panel) return;
+  const panel = document.getElementById("advanced-filters-panel");
+  if (!panel) {
+    return;
+  }
 
-  const isVisible = panel.style.display !== 'none';
-  panel.style.display = isVisible ? 'none' : 'block';
+  const isVisible = panel.style.display !== "none";
+  panel.style.display = isVisible ? "none" : "block";
 
   if (!isVisible) {
     loadFilterState();
@@ -179,14 +194,14 @@ function toggleFiltersPanel() {
  */
 function updateFilterState() {
   FILTER_STATE.filters = {
-    ticker: document.getElementById('filter-ticker')?.value || '',
-    company: document.getElementById('filter-company')?.value || '',
-    exchange: document.getElementById('filter-exchange')?.value || '',
-    sector: document.getElementById('filter-sector')?.value || '',
-    dateFrom: document.getElementById('filter-date-from')?.value || '',
-    dateTo: document.getElementById('filter-date-to')?.value || '',
-    sortBy: document.getElementById('filter-sort-by')?.value || 'date',
-    sortOrder: document.getElementById('filter-sort-order')?.value || 'desc',
+    ticker: document.getElementById("filter-ticker")?.value || "",
+    company: document.getElementById("filter-company")?.value || "",
+    exchange: document.getElementById("filter-exchange")?.value || "",
+    sector: document.getElementById("filter-sector")?.value || "",
+    dateFrom: document.getElementById("filter-date-from")?.value || "",
+    dateTo: document.getElementById("filter-date-to")?.value || "",
+    sortBy: document.getElementById("filter-sort-by")?.value || "date",
+    sortOrder: document.getElementById("filter-sort-order")?.value || "desc",
   };
 }
 
@@ -194,14 +209,20 @@ function updateFilterState() {
  * Load filter state from inputs
  */
 function loadFilterState() {
-  FILTER_STATE.filters.ticker && (document.getElementById('filter-ticker').value = FILTER_STATE.filters.ticker);
-  FILTER_STATE.filters.company && (document.getElementById('filter-company').value = FILTER_STATE.filters.company);
-  FILTER_STATE.filters.exchange && (document.getElementById('filter-exchange').value = FILTER_STATE.filters.exchange);
-  FILTER_STATE.filters.sector && (document.getElementById('filter-sector').value = FILTER_STATE.filters.sector);
-  FILTER_STATE.filters.dateFrom && (document.getElementById('filter-date-from').value = FILTER_STATE.filters.dateFrom);
-  FILTER_STATE.filters.dateTo && (document.getElementById('filter-date-to').value = FILTER_STATE.filters.dateTo);
-  document.getElementById('filter-sort-by').value = FILTER_STATE.filters.sortBy;
-  document.getElementById('filter-sort-order').value = FILTER_STATE.filters.sortOrder;
+  FILTER_STATE.filters.ticker &&
+    (document.getElementById("filter-ticker").value = FILTER_STATE.filters.ticker);
+  FILTER_STATE.filters.company &&
+    (document.getElementById("filter-company").value = FILTER_STATE.filters.company);
+  FILTER_STATE.filters.exchange &&
+    (document.getElementById("filter-exchange").value = FILTER_STATE.filters.exchange);
+  FILTER_STATE.filters.sector &&
+    (document.getElementById("filter-sector").value = FILTER_STATE.filters.sector);
+  FILTER_STATE.filters.dateFrom &&
+    (document.getElementById("filter-date-from").value = FILTER_STATE.filters.dateFrom);
+  FILTER_STATE.filters.dateTo &&
+    (document.getElementById("filter-date-to").value = FILTER_STATE.filters.dateTo);
+  document.getElementById("filter-sort-by").value = FILTER_STATE.filters.sortBy;
+  document.getElementById("filter-sort-order").value = FILTER_STATE.filters.sortOrder;
 }
 
 /**
@@ -210,7 +231,7 @@ function loadFilterState() {
 export function applyFilters(reports) {
   if (!reports) {
     // Trigger filter event for reports module
-    const event = new CustomEvent('advanced-filter-apply', {
+    const event = new CustomEvent("advanced-filter-apply", {
       detail: { filters: FILTER_STATE.filters },
     });
     document.dispatchEvent(event);
@@ -220,7 +241,7 @@ export function applyFilters(reports) {
   updateFilterState();
   const filters = FILTER_STATE.filters;
 
-  let filtered = reports.filter((report) => {
+  const filtered = reports.filter((report) => {
     if (filters.ticker && !report.ticker?.toLowerCase().includes(filters.ticker.toLowerCase())) {
       return false;
     }
@@ -245,18 +266,18 @@ export function applyFilters(reports) {
   // Sort
   filtered.sort((a, b) => {
     let aVal, bVal;
-    if (filters.sortBy === 'date') {
+    if (filters.sortBy === "date") {
       aVal = a.date ? new Date(a.date).getTime() : 0;
       bVal = b.date ? new Date(b.date).getTime() : 0;
-    } else if (filters.sortBy === 'ticker') {
-      aVal = (a.ticker || '').toLowerCase();
-      bVal = (b.ticker || '').toLowerCase();
+    } else if (filters.sortBy === "ticker") {
+      aVal = (a.ticker || "").toLowerCase();
+      bVal = (b.ticker || "").toLowerCase();
     } else {
-      aVal = (a.company || '').toLowerCase();
-      bVal = (b.company || '').toLowerCase();
+      aVal = (a.company || "").toLowerCase();
+      bVal = (b.company || "").toLowerCase();
     }
 
-    if (filters.sortOrder === 'asc') {
+    if (filters.sortOrder === "asc") {
       return aVal > bVal ? 1 : -1;
     } else {
       return aVal < bVal ? 1 : -1;
@@ -271,14 +292,14 @@ export function applyFilters(reports) {
  */
 function resetFilters() {
   FILTER_STATE.filters = {
-    ticker: '',
-    company: '',
-    exchange: '',
-    sector: '',
-    dateFrom: '',
-    dateTo: '',
-    sortBy: 'date',
-    sortOrder: 'desc',
+    ticker: "",
+    company: "",
+    exchange: "",
+    sector: "",
+    dateFrom: "",
+    dateTo: "",
+    sortBy: "date",
+    sortOrder: "desc",
   };
 
   loadFilterState();
@@ -290,8 +311,10 @@ function resetFilters() {
  */
 function saveCurrentFilter() {
   updateFilterState();
-  const name = prompt('Nome per questo filtro salvato:');
-  if (!name) return;
+  const name = prompt("Nome per questo filtro salvato:");
+  if (!name) {
+    return;
+  }
 
   const saved = {
     id: Date.now().toString(),
@@ -306,7 +329,7 @@ function saveCurrentFilter() {
   renderSavedFilters();
 
   if (window.showToast) {
-    window.showToast('Filtro salvato con successo', 'success');
+    window.showToast("Filtro salvato con successo", "success");
   }
 }
 
@@ -315,12 +338,12 @@ function saveCurrentFilter() {
  */
 function loadSavedFilters() {
   try {
-    const saved = localStorage.getItem('dashboard-saved-filters');
+    const saved = localStorage.getItem("dashboard-saved-filters");
     if (saved) {
       FILTER_STATE.savedFilters = JSON.parse(saved);
     }
   } catch (e) {
-    console.error('[AdvancedFilters] Errore caricamento filtri salvati:', e);
+    console.error("[AdvancedFilters] Errore caricamento filtri salvati:", e);
   }
 }
 
@@ -329,9 +352,9 @@ function loadSavedFilters() {
  */
 function saveSavedFilters() {
   try {
-    localStorage.setItem('dashboard-saved-filters', JSON.stringify(FILTER_STATE.savedFilters));
+    localStorage.setItem("dashboard-saved-filters", JSON.stringify(FILTER_STATE.savedFilters));
   } catch (e) {
-    console.error('[AdvancedFilters] Errore salvataggio filtri:', e);
+    console.error("[AdvancedFilters] Errore salvataggio filtri:", e);
   }
 }
 
@@ -339,8 +362,10 @@ function saveSavedFilters() {
  * Render saved filters
  */
 function renderSavedFilters() {
-  const container = document.getElementById('saved-filters-list');
-  if (!container) return;
+  const container = document.getElementById("saved-filters-list");
+  if (!container) {
+    return;
+  }
 
   if (FILTER_STATE.savedFilters.length === 0) {
     container.innerHTML = '<div class="saved-filters-empty">Nessun filtro salvato</div>';
@@ -368,11 +393,11 @@ function renderSavedFilters() {
     </div>
   `
     )
-    .join('');
+    .join("");
 
   // Add listeners
-  container.querySelectorAll('.saved-filter-apply').forEach((btn) => {
-    btn.addEventListener('click', () => {
+  container.querySelectorAll(".saved-filter-apply").forEach((btn) => {
+    btn.addEventListener("click", () => {
       const id = btn.dataset.id;
       const saved = FILTER_STATE.savedFilters.find((f) => f.id === id);
       if (saved) {
@@ -383,8 +408,8 @@ function renderSavedFilters() {
     });
   });
 
-  container.querySelectorAll('.saved-filter-delete').forEach((btn) => {
-    btn.addEventListener('click', () => {
+  container.querySelectorAll(".saved-filter-delete").forEach((btn) => {
+    btn.addEventListener("click", () => {
       const id = btn.dataset.id;
       FILTER_STATE.savedFilters = FILTER_STATE.savedFilters.filter((f) => f.id !== id);
       saveSavedFilters();
@@ -401,8 +426,7 @@ export function getCurrentFilters() {
 }
 
 function escapeHtml(text) {
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
 }
-

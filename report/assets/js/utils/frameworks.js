@@ -37,7 +37,7 @@ export const FRAMEWORKS = {
 };
 
 export function getFrameworkInfo(type) {
-  if (!type) return FRAMEWORKS.legacy;
+  if (!type) {return FRAMEWORKS.legacy;}
   return FRAMEWORKS[type] || FRAMEWORKS.legacy;
 }
 

@@ -3,13 +3,13 @@
  * Education System Module
  * Sistema formativo con gamification per retail
  * Best Practice Accademica 2025
- * 
+ *
  * Research Base (Pre-2015):
  * - Bloom's Taxonomy (1956, revised 2001)
  * - Spaced Repetition (Ebbinghaus, 1885)
  * - Gamification in Education (Deterding et al., 2011)
  * - Cognitive Load Theory (Sweller, 1988)
- * 
+ *
  * Research Base (2015+):
  * - Adaptive Learning (Koedinger et al., 2015; VanLehn, 2011)
  * - Microlearning (Hug, 2005/2016; Bruck et al., 2012)
@@ -25,7 +25,7 @@ const API_BASE = "/api/education";
 
 let currentModule = null;
 let currentLesson = null;
-let currentTest = null;
+const currentTest = null;
 
 // Adaptive Learning: Track performance per question
 const questionPerformance = new Map(); // questionId -> { attempts, correct, difficulty }
@@ -40,7 +40,7 @@ const MICROLEARNING_MAX_MINUTES = 10; // Paper: Hug (2016) - optimal 5-10 min ch
 async function initEducation() {
   // Try to find container in main content area (SPA)
   let container = document.getElementById("education-container");
-  
+
   if (!container) {
     // Se siamo in modalità SPA, cerca il container principale
     const mainContent = document.getElementById("main-content");
@@ -118,7 +118,7 @@ async function loadEducationDashboard(container) {
           if (modules && modules.length > 0) {
             progress.modules = modules;
             // Per guest users, aggiungi canAccess a tutti i moduli
-            progress.modules.forEach(module => {
+            progress.modules.forEach((module) => {
               module.canAccess = true;
             });
           }
@@ -191,26 +191,28 @@ function saveProgressToLocalStorage(progress) {
  */
 async function renderEducationDashboard(container, progress) {
   const { modules, stats, badges } = progress;
-  
+
   // Aggiungi progresso da localStorage ai moduli se non presente (guest users)
   const token = await getAuthToken();
   if (!token && progress.lesson_progress) {
-    modules.forEach(module => {
+    modules.forEach((module) => {
       if (!module.userProgress) {
         // Calcola progresso modulo da lesson_progress
         const moduleLessons = module.lessons || [];
-        const completedLessons = moduleLessons.filter(lesson => {
+        const completedLessons = moduleLessons.filter((lesson) => {
           const lessonProgress = progress.lesson_progress[lesson.id];
           return lessonProgress?.status === "completed";
         }).length;
-        
-        const progressPct = moduleLessons.length > 0 
-          ? Math.round((completedLessons / moduleLessons.length) * 100)
-          : 0;
-        
+
+        const progressPct =
+          moduleLessons.length > 0
+            ? Math.round((completedLessons / moduleLessons.length) * 100)
+            : 0;
+
         module.userProgress = {
           progress_percentage: progressPct,
-          status: progressPct === 100 ? "completed" : progressPct > 0 ? "in_progress" : "not_started",
+          status:
+            progressPct === 100 ? "completed" : progressPct > 0 ? "in_progress" : "not_started",
         };
         module.canAccess = true; // Guest può accedere a tutti i moduli
       }
@@ -241,19 +243,28 @@ async function renderEducationDashboard(container, progress) {
         </div>
 
         <!-- Badge recenti -->
-        ${badges.length > 0 ? `
+        ${
+          badges.length > 0
+            ? `
           <div class="education-badges-preview">
             <h4>Badge Ottenuti</h4>
             <div class="badges-list">
-              ${badges.slice(0, 5).map(badge => `
+              ${badges
+                .slice(0, 5)
+                .map(
+                  (badge) => `
                 <div class="badge-item" title="${escapeHtml(badge.description || badge.name)}">
                   <span class="badge-icon">🏆</span>
                   <span class="badge-name">${escapeHtml(badge.name)}</span>
                 </div>
-              `).join("")}
+              `
+                )
+                .join("")}
             </div>
           </div>
-        ` : ""}
+        `
+            : ""
+        }
       </div>
 
       <!-- Spaced Repetition Section -->
@@ -352,14 +363,18 @@ function renderModuleCard(module, index) {
         <h3 class="module-title">${escapeHtml(module.title)}</h3>
         <p class="module-description">${escapeHtml(module.description || "")}</p>
         
-        ${status === "in_progress" || status === "completed" ? `
+        ${
+          status === "in_progress" || status === "completed"
+            ? `
           <div class="module-progress">
             <div class="progress-bar">
               <div class="progress-fill" style="width: ${progressPct}%"></div>
             </div>
             <span class="progress-text">${progressPct}% completato</span>
           </div>
-        ` : ""}
+        `
+            : ""
+        }
 
         <div class="module-meta">
           <span class="meta-item">
@@ -380,7 +395,9 @@ function renderModuleCard(module, index) {
         </div>
       </div>
       <div class="module-card-actions">
-        ${isLocked ? `
+        ${
+          isLocked
+            ? `
           <button class="btn btn-secondary" disabled>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
@@ -388,11 +405,13 @@ function renderModuleCard(module, index) {
             </svg>
             Bloccato
           </button>
-        ` : `
+        `
+            : `
           <button class="btn btn-primary" data-action="open-module" data-module-id="${module.id}">
             ${status === "completed" ? "Rivedi" : status === "in_progress" ? "Continua" : "Inizia"}
           </button>
-        `}
+        `
+        }
       </div>
     </div>
   `;
@@ -412,42 +431,52 @@ function bindEducationEvents(container) {
   });
 
   // Spaced Repetition
-  container.querySelector("[data-action='open-spaced-repetition']")?.addEventListener("click", async () => {
-    const { initSpacedRepetition } = await import("./education-spaced-repetition.js");
-    await initSpacedRepetition();
-  });
+  container
+    .querySelector("[data-action='open-spaced-repetition']")
+    ?.addEventListener("click", async () => {
+      const { initSpacedRepetition } = await import("./education-spaced-repetition.js");
+      await initSpacedRepetition();
+    });
 
   // Retrieval Practice
-  container.querySelector("[data-action='open-retrieval-practice']")?.addEventListener("click", async () => {
-    const { initRetrievalPractice } = await import("./education-retrieval-practice.js");
-    // Get questions from recent tests
-    const questions = await getRecentQuestionsForPractice();
-    if (questions.length > 0) {
-      await initRetrievalPractice(questions);
-    } else {
-      if (window.showToast) {
-        window.showToast("Completa almeno un test per attivare il ripasso", "info");
+  container
+    .querySelector("[data-action='open-retrieval-practice']")
+    ?.addEventListener("click", async () => {
+      const { initRetrievalPractice } = await import("./education-retrieval-practice.js");
+      // Get questions from recent tests
+      const questions = await getRecentQuestionsForPractice();
+      if (questions.length > 0) {
+        await initRetrievalPractice(questions);
+      } else {
+        if (window.showToast) {
+          window.showToast("Completa almeno un test per attivare il ripasso", "info");
+        }
       }
-    }
-  });
+    });
 
   // Learning Goals
-  container.querySelector("[data-action='open-learning-goals']")?.addEventListener("click", async () => {
-    const { showLearningGoalsModal } = await import("./education-metacognition.js");
-    showLearningGoalsModal();
-  });
+  container
+    .querySelector("[data-action='open-learning-goals']")
+    ?.addEventListener("click", async () => {
+      const { showLearningGoalsModal } = await import("./education-metacognition.js");
+      showLearningGoalsModal();
+    });
 
   // Learning Analytics
-  container.querySelector("[data-action='open-learning-analytics']")?.addEventListener("click", async () => {
-    const { initLearningAnalytics } = await import("./education-analytics.js");
-    await initLearningAnalytics();
-  });
+  container
+    .querySelector("[data-action='open-learning-analytics']")
+    ?.addEventListener("click", async () => {
+      const { initLearningAnalytics } = await import("./education-analytics.js");
+      await initLearningAnalytics();
+    });
 
   // Personalized Path
-  container.querySelector("[data-action='open-personalized-path']")?.addEventListener("click", async () => {
-    const { initPersonalizedPathSelector } = await import("./education-personalized-paths.js");
-    await initPersonalizedPathSelector();
-  });
+  container
+    .querySelector("[data-action='open-personalized-path']")
+    ?.addEventListener("click", async () => {
+      const { initPersonalizedPathSelector } = await import("./education-personalized-paths.js");
+      await initPersonalizedPathSelector();
+    });
 }
 
 /**
@@ -481,7 +510,7 @@ async function openModule(moduleId) {
   try {
     const token = await getAuthToken();
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    
+
     const response = await fetch(`${API_BASE}?action=module&moduleId=${moduleId}`, {
       headers,
     });
@@ -495,20 +524,20 @@ async function openModule(moduleId) {
           // Aggiungi progresso da localStorage
           const progress = loadProgressFromLocalStorage();
           const moduleProgress = progress?.lesson_progress || {};
-          
+
           if (module.lessons) {
-            module.lessons = module.lessons.map(lesson => ({
+            module.lessons = module.lessons.map((lesson) => ({
               ...lesson,
               userProgress: moduleProgress[lesson.id] || { status: "not_started" },
             }));
           }
-          
+
           module.userProgress = module.userProgress || {
             progress_percentage: 0,
             status: "not_started",
           };
           module.canAccess = true;
-          
+
           currentModule = module;
           renderModuleView(module);
           return;
@@ -536,7 +565,9 @@ async function openModule(moduleId) {
  */
 function renderModuleView(module) {
   const container = document.getElementById("education-container");
-  if (!container) return;
+  if (!container) {
+    return;
+  }
 
   container.innerHTML = `
     <div class="education-module-view">
@@ -558,14 +589,18 @@ function renderModuleView(module) {
         </div>
       </div>
 
-      ${module.tests && module.tests.length > 0 ? `
+      ${
+        module.tests && module.tests.length > 0
+          ? `
         <div class="module-tests">
           <h2>Test di Verifica</h2>
           <div class="tests-list">
-            ${module.tests.map(test => renderTestItem(test)).join("")}
+            ${module.tests.map((test) => renderTestItem(test)).join("")}
           </div>
         </div>
-      ` : ""}
+      `
+          : ""
+      }
     </div>
   `;
 
@@ -600,10 +635,11 @@ function renderLessonItem(lesson, index) {
   const { userProgress } = lesson;
   const status = userProgress?.status || "not_started";
   const estimatedMinutes = lesson.estimated_minutes || 0;
-  
+
   // Microlearning indicator: verde se < 10 min (optimal chunk size)
   const isMicrolearning = estimatedMinutes > 0 && estimatedMinutes <= MICROLEARNING_MAX_MINUTES;
-  const microlearningBadge = isMicrolearning ? `
+  const microlearningBadge = isMicrolearning
+    ? `
     <span class="microlearning-badge" title="Microlearning: lezione ottimale 5-10 minuti (Hug, 2016)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="12" height="12">
         <circle cx="12" cy="12" r="10"/>
@@ -611,7 +647,8 @@ function renderLessonItem(lesson, index) {
       </svg>
       Micro
     </span>
-  ` : "";
+  `
+    : "";
 
   const statusIcons = {
     not_started: "○",
@@ -620,7 +657,7 @@ function renderLessonItem(lesson, index) {
   };
 
   return `
-    <div class="lesson-item ${status} ${isMicrolearning ? 'microlearning' : ''}" data-lesson-id="${lesson.id}">
+    <div class="lesson-item ${status} ${isMicrolearning ? "microlearning" : ""}" data-lesson-id="${lesson.id}">
       <div class="lesson-number">${index + 1}</div>
       <div class="lesson-content">
         <h3 class="lesson-title">${escapeHtml(lesson.title)}</h3>
@@ -649,7 +686,7 @@ async function openLesson(lessonId) {
   try {
     const token = await getAuthToken();
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    
+
     const response = await fetch(`${API_BASE}?action=lesson&lessonId=${lessonId}`, {
       headers,
     });
@@ -701,7 +738,9 @@ async function openLesson(lessonId) {
  */
 function renderLessonView(lesson) {
   const container = document.getElementById("education-container");
-  if (!container) return;
+  if (!container) {
+    return;
+  }
 
   container.innerHTML = `
     <div class="education-lesson-view">
@@ -716,23 +755,35 @@ function renderLessonView(lesson) {
       </div>
 
       <div class="lesson-view-content">
-        ${lesson.content_type === "video" && lesson.video_url ? `
+        ${
+          lesson.content_type === "video" && lesson.video_url
+            ? `
           <div class="lesson-video">
             <iframe src="${escapeHtml(lesson.video_url)}" frameborder="0" allowfullscreen></iframe>
           </div>
-        ` : ""}
+        `
+            : ""
+        }
         
-        ${lesson.content ? `
+        ${
+          lesson.content
+            ? `
           <div class="lesson-text-content">
             ${renderMarkdown(lesson.content)}
           </div>
-        ` : ""}
+        `
+            : ""
+        }
 
-        ${lesson.content_type === "pdf" && lesson.pdf_url ? `
+        ${
+          lesson.content_type === "pdf" && lesson.pdf_url
+            ? `
           <div class="lesson-pdf">
             <iframe src="${escapeHtml(lesson.pdf_url)}" frameborder="0"></iframe>
           </div>
-        ` : ""}
+        `
+            : ""
+        }
       </div>
 
       <div class="lesson-view-actions">
@@ -750,36 +801,38 @@ function renderLessonView(lesson) {
     }
   });
 
-  container.querySelector("[data-action='complete-lesson']")?.addEventListener("click", async () => {
-    const lessonId = container.querySelector("[data-action='complete-lesson']").dataset.lessonId;
-    
-    // Microlearning: Calculate time spent
-    const timeSpentMinutes = lessonStartTime 
-      ? Math.round((Date.now() - lessonStartTime) / 60000)
-      : 0;
-    
-    // Learning Analytics: Track completion time
-    if (timeSpentMinutes > 0) {
-      safeLog("info", `[Education] Lesson completed in ${timeSpentMinutes} minutes`);
-    }
-    
-    // Metacognition: Show post-lesson reflection (Zimmerman, 2002)
-    const { showPostLessonReflection } = await import("./education-metacognition.js");
-    await showPostLessonReflection(lessonId, currentLesson?.title || "Lezione");
-    
-    await updateLessonProgress(lessonId, "completed", timeSpentMinutes);
-    if (window.showToast) {
-      window.showToast("Lezione completata!", "success");
-    }
-    
-    // Reset timer
-    lessonStartTime = null;
-    
-    // Reload module view
-    if (currentModule) {
-      await openModule(currentModule.id);
-    }
-  });
+  container
+    .querySelector("[data-action='complete-lesson']")
+    ?.addEventListener("click", async () => {
+      const lessonId = container.querySelector("[data-action='complete-lesson']").dataset.lessonId;
+
+      // Microlearning: Calculate time spent
+      const timeSpentMinutes = lessonStartTime
+        ? Math.round((Date.now() - lessonStartTime) / 60000)
+        : 0;
+
+      // Learning Analytics: Track completion time
+      if (timeSpentMinutes > 0) {
+        safeLog("info", `[Education] Lesson completed in ${timeSpentMinutes} minutes`);
+      }
+
+      // Metacognition: Show post-lesson reflection (Zimmerman, 2002)
+      const { showPostLessonReflection } = await import("./education-metacognition.js");
+      await showPostLessonReflection(lessonId, currentLesson?.title || "Lezione");
+
+      await updateLessonProgress(lessonId, "completed", timeSpentMinutes);
+      if (window.showToast) {
+        window.showToast("Lezione completata!", "success");
+      }
+
+      // Reset timer
+      lessonStartTime = null;
+
+      // Reload module view
+      if (currentModule) {
+        await openModule(currentModule.id);
+      }
+    });
 }
 
 /**
@@ -788,7 +841,7 @@ function renderLessonView(lesson) {
  */
 async function updateLessonProgress(lessonId, status, timeSpentMinutes = 0) {
   const token = await getAuthToken();
-  
+
   // Se autenticato, salva su API
   if (token) {
     try {
@@ -799,11 +852,11 @@ async function updateLessonProgress(lessonId, status, timeSpentMinutes = 0) {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-        lessonId,
-        status,
-        timeSpentMinutes,
-      }),
-    });
+          lessonId,
+          status,
+          timeSpentMinutes,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Errore aggiornamento progresso");
@@ -828,7 +881,7 @@ async function updateLessonProgress(lessonId, status, timeSpentMinutes = 0) {
 function updateProgressInLocalStorage(lessonId, status, timeSpentMinutes = 0) {
   try {
     let progress = loadProgressFromLocalStorage();
-    
+
     if (!progress) {
       progress = {
         modules: [],
@@ -854,11 +907,11 @@ function updateProgressInLocalStorage(lessonId, status, timeSpentMinutes = 0) {
     const lessonProgress = progress.lesson_progress[lessonId] || {};
     lessonProgress.status = status;
     lessonProgress.last_accessed_at = new Date().toISOString();
-    
+
     if (status === "in_progress" && !lessonProgress.started_at) {
       lessonProgress.started_at = new Date().toISOString();
     }
-    
+
     if (status === "completed") {
       lessonProgress.completed_at = new Date().toISOString();
       if (!progress.stats.completed_lessons) {
@@ -868,7 +921,7 @@ function updateProgressInLocalStorage(lessonId, status, timeSpentMinutes = 0) {
         progress.stats.completed_lessons += 1;
       }
     }
-    
+
     if (timeSpentMinutes) {
       lessonProgress.time_spent_minutes = timeSpentMinutes;
     }
@@ -946,7 +999,7 @@ async function getAuthToken() {
 export async function handleEducationNavigation(hash) {
   // Format: #education, #education/module/{slug}, #education/test/{testId}, #education/review/{questionId}, #education/spaced-repetition
   const parts = hash.replace("#education", "").split("/").filter(Boolean);
-  
+
   if (parts.length === 0) {
     // Dashboard
     await initEducation();
@@ -960,7 +1013,7 @@ export async function handleEducationNavigation(hash) {
       });
       if (response.ok) {
         const { modules } = await response.json();
-        const module = modules.find(m => m.slug === parts[1]);
+        const module = modules.find((m) => m.slug === parts[1]);
         if (module) {
           await openModule(module.id);
         } else {

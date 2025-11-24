@@ -59,7 +59,7 @@ function setupEventHandlers(container) {
   const dropdown = container.querySelector('.export-menu-dropdown');
   const options = container.querySelectorAll('.export-menu-option');
 
-  if (!btn || !dropdown) return;
+  if (!btn || !dropdown) {return;}
 
   EXPORT_MENU._button = btn;
   EXPORT_MENU._dropdown = dropdown;

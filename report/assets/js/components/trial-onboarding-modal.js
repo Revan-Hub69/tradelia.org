@@ -25,7 +25,7 @@ const STEPS = {
 };
 
 function init() {
-  if (state.initialized) return;
+  if (state.initialized) {return;}
   state.root = document.createElement('div');
   state.root.id = 'trial-onboarding-overlay';
   state.root.className = 'auth-overlay';
@@ -337,7 +337,7 @@ function getAccountCreationMessage() {
 
 function registerEvents() {
   const root = state.root;
-  if (!root) return;
+  if (!root) {return;}
 
   // Close buttons
   root.querySelectorAll('[data-trial-close], [data-trial-dismiss]').forEach((btn) => {
@@ -477,13 +477,13 @@ function handleBusinessFormSubmit(e) {
     hasError = true;
   }
 
-  if (hasError) return;
+  if (hasError) {return;}
 
   goToStep(STEPS.ACCOUNT_CREATION);
 }
 
 function clearFieldError(field) {
-  if (!field) return;
+  if (!field) {return;}
   const errorEl = field.parentElement?.querySelector('.auth-field-error');
   if (errorEl) {
     errorEl.textContent = '';
@@ -618,29 +618,29 @@ async function handleAccountFormSubmit(e) {
     if (state.userType === 'business' && state.businessData) {
       // Add all Xolo business fields (solo se presenti)
       if (state.businessData.businessName)
-        profileData.business_name = state.businessData.businessName;
+        {profileData.business_name = state.businessData.businessName;}
       if (state.businessData.businessCountry)
-        profileData.business_country = state.businessData.businessCountry;
+        {profileData.business_country = state.businessData.businessCountry;}
       if (state.businessData.businessLanguage)
-        profileData.business_language = state.businessData.businessLanguage;
+        {profileData.business_language = state.businessData.businessLanguage;}
       if (state.businessData.businessAddress)
-        profileData.business_address = state.businessData.businessAddress;
+        {profileData.business_address = state.businessData.businessAddress;}
       if (state.businessData.businessCity)
-        profileData.business_city = state.businessData.businessCity;
-      if (state.businessData.businessZip) profileData.business_zip = state.businessData.businessZip;
-      if (state.businessData.businessVat) profileData.business_vat = state.businessData.businessVat;
+        {profileData.business_city = state.businessData.businessCity;}
+      if (state.businessData.businessZip) {profileData.business_zip = state.businessData.businessZip;}
+      if (state.businessData.businessVat) {profileData.business_vat = state.businessData.businessVat;}
       if (state.businessData.businessTaxId)
-        profileData.business_tax_id = state.businessData.businessTaxId;
+        {profileData.business_tax_id = state.businessData.businessTaxId;}
       if (state.businessData.businessInvoiceDays !== undefined)
-        profileData.business_invoice_days = state.businessData.businessInvoiceDays;
+        {profileData.business_invoice_days = state.businessData.businessInvoiceDays;}
       if (state.businessData.businessContactFirstname)
-        profileData.business_contact_firstname = state.businessData.businessContactFirstname;
+        {profileData.business_contact_firstname = state.businessData.businessContactFirstname;}
       if (state.businessData.businessContactLastname)
-        profileData.business_contact_lastname = state.businessData.businessContactLastname;
+        {profileData.business_contact_lastname = state.businessData.businessContactLastname;}
       if (state.businessData.businessContactEmail)
-        profileData.business_contact_email = state.businessData.businessContactEmail;
+        {profileData.business_contact_email = state.businessData.businessContactEmail;}
       if (state.businessData.businessComments)
-        profileData.business_comments = state.businessData.businessComments;
+        {profileData.business_comments = state.businessData.businessComments;}
     }
 
     // Try to save profile, but don't block on error
@@ -852,7 +852,7 @@ function updateProgress() {
 }
 
 function showFieldError(field, message) {
-  if (!field) return;
+  if (!field) {return;}
   const errorEl = field.parentElement?.querySelector('.auth-field-error');
   if (errorEl) {
     errorEl.textContent = message;
@@ -879,7 +879,7 @@ function setupKeyboardNavigation() {
 }
 
 async function open(planType = 'trial', provider = 'xolo') {
-  if (!state.initialized) init();
+  if (!state.initialized) {init();}
 
   // Close auth modal if open to avoid conflicts
   if (typeof window.authModal !== 'undefined' && window.authModal) {
@@ -961,7 +961,7 @@ async function open(planType = 'trial', provider = 'xolo') {
         { onConflict: 'user_id' }
       );
 
-      if (roleError) throw roleError;
+      if (roleError) {throw roleError;}
 
       showToast(`Prova gratuita ${targetRole === 'pro' ? 'Pro' : 'Trial'} attivata!`, 'success');
 
@@ -1000,12 +1000,12 @@ async function open(planType = 'trial', provider = 'xolo') {
   // Focus first interactive element
   setTimeout(() => {
     const firstButton = state.root.querySelector('[data-user-type]');
-    if (firstButton) firstButton.focus();
+    if (firstButton) {firstButton.focus();}
   }, 100);
 }
 
 function close() {
-  if (!state.root) return;
+  if (!state.root) {return;}
 
   state.root.hidden = true;
   state.root.setAttribute('aria-hidden', 'true');

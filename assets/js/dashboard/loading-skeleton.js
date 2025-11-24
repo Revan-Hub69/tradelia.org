@@ -10,20 +10,20 @@
  * @param {Object} options - Options for skeleton
  * @returns {HTMLElement} Skeleton element
  */
-export function createSkeleton(type = 'card', options = {}) {
-  const skeleton = document.createElement('div');
+export function createSkeleton(type = "card", options = {}) {
+  const skeleton = document.createElement("div");
   skeleton.className = `loading-skeleton loading-skeleton-${type}`;
-  skeleton.setAttribute('aria-hidden', 'true');
-  skeleton.setAttribute('role', 'presentation');
+  skeleton.setAttribute("aria-hidden", "true");
+  skeleton.setAttribute("role", "presentation");
 
   switch (type) {
-    case 'text':
+    case "text":
       skeleton.innerHTML = `
-        <div class="skeleton-line" style="width: ${options.width || '100%'}; height: ${options.height || '1rem'};"></div>
+        <div class="skeleton-line" style="width: ${options.width || "100%"}; height: ${options.height || "1rem"};"></div>
       `;
       break;
 
-    case 'card':
+    case "card":
       skeleton.innerHTML = `
         <div class="skeleton-header">
           <div class="skeleton-line skeleton-avatar" style="width: 40px; height: 40px; border-radius: 50%;"></div>
@@ -39,9 +39,11 @@ export function createSkeleton(type = 'card', options = {}) {
       `;
       break;
 
-    case 'list':
+    case "list":
       const items = options.items || 3;
-      skeleton.innerHTML = Array.from({ length: items }, () => `
+      skeleton.innerHTML = Array.from(
+        { length: items },
+        () => `
         <div class="skeleton-list-item">
           <div class="skeleton-line skeleton-icon" style="width: 24px; height: 24px; border-radius: 4px;"></div>
           <div class="skeleton-content">
@@ -49,10 +51,11 @@ export function createSkeleton(type = 'card', options = {}) {
             <div class="skeleton-line" style="width: 50%; height: 0.75rem;"></div>
           </div>
         </div>
-      `).join('');
+      `
+      ).join("");
       break;
 
-    case 'stat':
+    case "stat":
       skeleton.innerHTML = `
         <div class="skeleton-stat-label" style="width: 60%; height: 0.875rem; margin-bottom: 0.75rem;"></div>
         <div class="skeleton-stat-value" style="width: 80%; height: 2rem; margin-bottom: 0.5rem;"></div>
@@ -74,13 +77,11 @@ export function createSkeleton(type = 'card', options = {}) {
  * @param {Object} options - Options
  * @returns {HTMLElement} Skeleton element
  */
-export function showSkeleton(container, type = 'card', options = {}) {
-  const containerEl = typeof container === 'string' 
-    ? document.querySelector(container)
-    : container;
+export function showSkeleton(container, type = "card", options = {}) {
+  const containerEl = typeof container === "string" ? document.querySelector(container) : container;
 
   if (!containerEl) {
-    console.warn('[LoadingSkeleton] Container not found:', container);
+    console.warn("[LoadingSkeleton] Container not found:", container);
     return null;
   }
 
@@ -100,13 +101,11 @@ export function showSkeleton(container, type = 'card', options = {}) {
  * @param {number} count - Number of skeletons
  * @param {Object} options - Options
  */
-export function showSkeletons(container, type = 'card', count = 3, options = {}) {
-  const containerEl = typeof container === 'string'
-    ? document.querySelector(container)
-    : container;
+export function showSkeletons(container, type = "card", count = 3, options = {}) {
+  const containerEl = typeof container === "string" ? document.querySelector(container) : container;
 
   if (!containerEl) {
-    console.warn('[LoadingSkeleton] Container not found:', container);
+    console.warn("[LoadingSkeleton] Container not found:", container);
     return;
   }
 
@@ -120,13 +119,12 @@ export function showSkeletons(container, type = 'card', count = 3, options = {})
  * @param {HTMLElement|string} container - Container element or selector
  */
 export function hideSkeleton(container) {
-  const containerEl = typeof container === 'string'
-    ? document.querySelector(container)
-    : container;
+  const containerEl = typeof container === "string" ? document.querySelector(container) : container;
 
-  if (!containerEl) return;
+  if (!containerEl) {
+    return;
+  }
 
-  const skeletons = containerEl.querySelectorAll('.loading-skeleton');
+  const skeletons = containerEl.querySelectorAll(".loading-skeleton");
   skeletons.forEach((skeleton) => skeleton.remove());
 }
-

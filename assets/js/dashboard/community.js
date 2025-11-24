@@ -5,12 +5,14 @@
  */
 
 export async function loadCommunity() {
-  const container = document.getElementById('community-container');
-  if (!container) return;
+  const container = document.getElementById("community-container");
+  if (!container) {
+    return;
+  }
 
   // Verifica token e ruolo
-  const token = localStorage.getItem('tradelia-access-token-v1');
-  
+  const token = localStorage.getItem("tradelia-access-token-v1");
+
   if (!token) {
     container.innerHTML = `
       <div class="reports-empty">
@@ -47,4 +49,3 @@ export async function loadCommunity() {
     </div>
   `;
 }
-
