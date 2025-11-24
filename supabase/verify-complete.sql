@@ -106,7 +106,14 @@ WHERE routine_schema = 'public'
 ORDER BY routine_name;
 
 -- ===== 5. VERIFICA DATI ESEMPIO =====
--- Moduli educativi attivi
+-- Moduli educativi attivi (solo se la tabella esiste)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'education_modules') THEN
+    PERFORM 1; -- Table exists, query will run below
+  END IF;
+END $$;
+
 SELECT 
   '📊 DATI: Moduli Educativi' as sezione,
   COUNT(*)::text as moduli_attivi,
@@ -115,31 +122,45 @@ SELECT
     ELSE '⚠️ NESSUN MODULO'
   END as status
 FROM education_modules
-WHERE is_active = true;
+WHERE EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'education_modules')
+  AND is_active = true;
 
--- Ruoli utente
+-- Ruoli utente (solo se la tabella esiste)
 SELECT 
   '📊 DATI: Ruoli Utente' as sezione,
-  COUNT(*)::text as ruoli_totali,
   CASE 
-    WHEN COUNT(*) > 0 THEN '✅ PRESENTI'
+    WHEN EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'user_roles')
+    THEN (SELECT COUNT(*)::text FROM user_roles)
+    ELSE '0'
+  END as ruoli_totali,
+  CASE 
+    WHEN NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'user_roles')
+    THEN '❌ TABELLA NON ESISTE'
+    WHEN EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'user_roles')
+      AND (SELECT COUNT(*) FROM user_roles) > 0
+    THEN '✅ PRESENTI'
     ELSE 'ℹ️ NESSUN RUOLO (normale se non ci sono utenti)'
-  END as status
-FROM user_roles;
+  END as status;
 
--- Token attivi
+-- Token attivi (solo se la tabella esiste)
 SELECT 
   '📊 DATI: Token Attivi' as sezione,
-  COUNT(*)::text as token_attivi,
   CASE 
-    WHEN COUNT(*) > 0 THEN '✅ PRESENTI'
+    WHEN EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'dashboard_access_tokens')
+    THEN (SELECT COUNT(*)::text FROM dashboard_access_tokens WHERE revoked = false AND (valid_until IS NULL OR valid_until > NOW()))
+    ELSE '0'
+  END as token_attivi,
+  CASE 
+    WHEN NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'dashboard_access_tokens')
+    THEN '❌ TABELLA NON ESISTE'
+    WHEN EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'dashboard_access_tokens')
+      AND (SELECT COUNT(*) FROM dashboard_access_tokens WHERE revoked = false AND (valid_until IS NULL OR valid_until > NOW())) > 0
+    THEN '✅ PRESENTI'
     ELSE 'ℹ️ NESSUN TOKEN (normale se non ci sono token)'
-  END as status
-FROM dashboard_access_tokens
-WHERE revoked = false
-  AND (valid_until IS NULL OR valid_until > NOW());
+  END as status;
 
 -- ===== 6. VERIFICA INDICI =====
+-- Solo per tabelle che esistono
 SELECT 
   '📇 INDICI' as sezione,
   tablename as tabella,
@@ -148,14 +169,20 @@ SELECT
 FROM pg_indexes
 WHERE schemaname = 'public'
   AND tablename IN (
-    'dashboard_access_tokens',
-    'education_modules',
-    'education_user_progress',
-    'asset_proposals'
+    SELECT table_name 
+    FROM information_schema.tables 
+    WHERE table_schema = 'public' 
+      AND table_name IN (
+        'dashboard_access_tokens',
+        'education_modules',
+        'education_user_progress',
+        'asset_proposals'
+      )
   )
 ORDER BY tablename, indexname;
 
 -- ===== 7. VERIFICA TRIGGER =====
+-- Solo per tabelle che esistono
 SELECT 
   '🔄 TRIGGER' as sezione,
   event_object_table as tabella,
@@ -165,13 +192,19 @@ SELECT
 FROM information_schema.triggers
 WHERE trigger_schema = 'public'
   AND event_object_table IN (
-    'dashboard_access_tokens',
-    'education_modules',
-    'user_roles'
+    SELECT table_name 
+    FROM information_schema.tables 
+    WHERE table_schema = 'public' 
+      AND table_name IN (
+        'dashboard_access_tokens',
+        'education_modules',
+        'user_roles'
+      )
   )
 ORDER BY event_object_table, trigger_name;
 
 -- ===== 8. VERIFICA CONSTRAINTS =====
+-- Solo per tabelle che esistono
 SELECT 
   '🔗 CONSTRAINTS' as sezione,
   table_name as tabella,
@@ -180,9 +213,14 @@ SELECT
 FROM information_schema.table_constraints
 WHERE table_schema = 'public'
   AND table_name IN (
-    'dashboard_access_tokens',
-    'user_roles',
-    'education_modules'
+    SELECT table_name 
+    FROM information_schema.tables 
+    WHERE table_schema = 'public' 
+      AND table_name IN (
+        'dashboard_access_tokens',
+        'user_roles',
+        'education_modules'
+      )
   )
   AND constraint_type IN ('PRIMARY KEY', 'FOREIGN KEY', 'CHECK', 'UNIQUE')
 ORDER BY table_name, constraint_type;
