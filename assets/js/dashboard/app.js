@@ -238,10 +238,23 @@ export async function initDashboard() {
 
   // BEST PRACTICE: Handle browser back button with History API (Mobile UX Patterns)
   // CRITICAL: Previene chiusura pagina su mobile quando si preme indietro
-  window.addEventListener("popstate", (e) => {
+  window.addEventListener("popstate", async (e) => {
     // Se è lo stato iniziale, non fare nulla (evita chiusura pagina)
     if (e.state && e.state.isInitial) {
       // Mantieni la vista corrente senza cambiare nulla
+      return;
+    }
+
+    // Gestione navigazione Education
+    if (e.state && e.state.view === "education-dashboard") {
+      const { initEducation } = await import("./education.js");
+      await initEducation();
+      return;
+    }
+
+    if (e.state && e.state.view === "module" && e.state.moduleId) {
+      const { openModule } = await import("./education.js");
+      await openModule(e.state.moduleId);
       return;
     }
 
@@ -249,7 +262,11 @@ export async function initDashboard() {
       showModule(e.state.module, false); // false = non fare pushState (siamo già in popstate)
     } else {
       const hash = window.location.hash.slice(1);
-      if (hash) {
+      if (hash && hash.startsWith("education")) {
+        // Gestione hash education
+        const { handleEducationNavigation } = await import("./education.js");
+        await handleEducationNavigation(`#${hash}`);
+      } else if (hash) {
         showModule(hash, false);
       } else {
         // Chiudi modulo se presente, ma non chiudere la pagina

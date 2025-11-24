@@ -615,10 +615,13 @@ function renderModuleView(module) {
   `;
 
   // Bind events
-  container.querySelector("[data-action='back-to-dashboard']")?.addEventListener("click", () => {
-    window.history.pushState({ view: "dashboard" }, "", "#education");
-    initEducation();
-  });
+  container
+    .querySelector("[data-action='back-to-dashboard']")
+    ?.addEventListener("click", async () => {
+      // BEST PRACTICE: Usa History API per supporto back button
+      window.history.pushState({ view: "education-dashboard" }, "", "#education");
+      await initEducation();
+    });
 
   container.querySelectorAll("[data-action='open-lesson']").forEach((btn) => {
     btn.addEventListener("click", async (e) => {
@@ -805,9 +808,19 @@ function renderLessonView(lesson) {
   `;
 
   // Bind events
-  container.querySelector("[data-action='back-to-module']")?.addEventListener("click", () => {
+  container.querySelector("[data-action='back-to-module']")?.addEventListener("click", async () => {
     if (currentModule) {
-      openModule(currentModule.id);
+      // BEST PRACTICE: Usa History API per supporto back button
+      window.history.pushState(
+        { view: "module", moduleId: currentModule.id },
+        "",
+        `#education/module/${currentModule.slug}`
+      );
+      await openModule(currentModule.id);
+    } else {
+      // Fallback: torna alla dashboard
+      window.history.pushState({ view: "education-dashboard" }, "", "#education");
+      await initEducation();
     }
   });
 
