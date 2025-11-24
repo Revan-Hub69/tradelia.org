@@ -3,13 +3,15 @@
 // Consolida: webhook-stripe.js, webhook-role-sync.js
 
 import { getServiceSupabase } from "./_lib/supabase.js";
-import { handleRouteError, HttpError } from "./_lib/http.js";
+import { handleRouteError } from "./_lib/http.js";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const supabase = getServiceSupabase();
 
 // NOTA: Funzione disabilitata per rispettare limite Vercel Hobby (12 funzioni)
 // Consolidata in api/billing.js?action=webhook-*
 // export default async function handler(req, res) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
@@ -29,7 +31,7 @@ async function handler(req, res) {
           .json({ ok: false, error: "Tipo webhook non valido. Usa: stripe, role-sync" });
     }
   } catch (error) {
-    return handleRouteError(res, error);
+    return handleRouteError(res, error, req);
   }
 }
 

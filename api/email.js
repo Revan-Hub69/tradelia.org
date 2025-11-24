@@ -14,6 +14,7 @@ if (!BREVO_API_KEY) {
 // NOTA: Funzione disabilitata per rispettare limite Vercel Hobby (12 funzioni)
 // Consolidata in api/auth.js?action=email-*
 // export default async function handler(req, res) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -44,7 +45,7 @@ async function handler(req, res) {
       .status(400)
       .json({ ok: false, error: "Azione non valida. Usa: send, sms, whatsapp" });
   } catch (error) {
-    return handleRouteError(res, error);
+    return handleRouteError(res, error, req);
   }
 }
 

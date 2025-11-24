@@ -1548,9 +1548,34 @@ export default async function handler(req, res) {
       case "personalized-path":
         return await getPersonalizedPath(req, res);
       default:
+        // Log 400 per azione non valida
+        // eslint-disable-next-line no-console
+        console.error("[400 Bad Request]", {
+          timestamp: new Date().toISOString(),
+          method: req.method,
+          url: req.url,
+          path: "/api/education",
+          action: req.query?.action,
+          error: "Azione non valida",
+          query: req.query,
+        });
         return res.status(400).json({ success: false, error: "Azione non valida" });
     }
   } catch (error) {
+    // Log 400 se è un errore di validazione
+    if (error.status === 400 || (error.message && error.message.includes("richiesto"))) {
+      // eslint-disable-next-line no-console
+      console.error("[400 Bad Request]", {
+        timestamp: new Date().toISOString(),
+        method: req.method,
+        url: req.url,
+        path: "/api/education",
+        action: req.query?.action,
+        error: error.message || error,
+        query: req.query,
+      });
+      return res.status(400).json({ success: false, error: error.message || "Richiesta non valida" });
+    }
     safeLog("error", "[Education] Handler error:", error);
     return res.status(500).json({ success: false, error: "Errore interno del server" });
   }

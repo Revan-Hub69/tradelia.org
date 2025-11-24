@@ -233,7 +233,7 @@ export default async function handler(req, res) {
         });
     }
   } catch (error) {
-    return handleRouteError(res, error);
+    return handleRouteError(res, error, req);
   }
 }
 
