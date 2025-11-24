@@ -628,3 +628,12 @@ label {
   font-size: var(--fs-13) !important;
   padding: var(--sp-2) calc(var(--sp-4) + 0.8rem) var(--sp-2) calc(var(--sp-4) + 1rem) !important;
 }
+
+/* ===== VALUE CARD ICONS ===== */
+.value-card-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--brand-500);
+  margin-bottom: var(--sp-3);
+  flex-shrink: 0;
+}
