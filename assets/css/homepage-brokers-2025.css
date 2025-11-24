@@ -30,6 +30,12 @@
   text-align: center;
 }
 
+@media (max-width: 768px) {
+  .hero-content {
+    text-align: left;
+  }
+}
+
 .hero-badge {
   display: inline-block;
   padding: var(--sp-2_5) var(--sp-5);
@@ -85,6 +91,128 @@
 .hero-description strong {
   color: var(--ink);
   font-weight: 600;
+}
+
+/* ===== HERO PLAN GRID - PRICING CARDS ===== */
+.hero-plan-grid {
+  margin-top: var(--sp-10);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-6);
+}
+
+@media (min-width: 768px) {
+  .hero-plan-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-plan-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-6);
+  }
+}
+
+.hero-plan-card {
+  background: var(--surface-elev);
+  border: 1px solid var(--br-card);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-6);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-plan-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-color: var(--brand-500);
+}
+
+.hero-plan-card strong {
+  display: block;
+  font-size: var(--fs-18);
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: var(--sp-3);
+  line-height: 1.3;
+}
+
+.hero-plan-card ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  color: var(--ink-soft);
+  font-size: var(--fs-14);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.hero-plan-card ul li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+}
+
+.hero-plan-card ul li::before {
+  content: '✓';
+  color: var(--brand-500);
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-size: 0.875rem;
+}
+
+.hero-plan-card .plan-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--sp-1) var(--sp-3);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--br-soft);
+  font-size: var(--fs-11);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: var(--sp-3);
+  align-self: flex-start;
+}
+
+.hero-plan-card--free .plan-badge {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: var(--ok);
+}
+
+.hero-plan-card--free {
+  border-color: rgba(16, 185, 129, 0.2);
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, rgba(15, 23, 42, 0.02) 100%);
+}
+
+.hero-plan-card--paid .plan-badge {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: var(--brand-400);
+}
+
+.hero-plan-card--paid {
+  border-color: rgba(59, 130, 246, 0.2);
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.08) 0%, rgba(15, 23, 42, 0.02) 100%);
+}
+
+.hero-plan-card .btn {
+  margin-top: auto;
+  align-self: stretch;
+  justify-content: center;
 }
 
 /* ===== HERO FEATURES - GRID ISTITUZIONALE ===== */
@@ -390,6 +518,14 @@
 
   .hero-description {
     font-size: var(--fs-16);
+  }
+
+  .hero-plan-grid {
+    gap: var(--sp-4);
+  }
+
+  .hero-plan-card {
+    padding: var(--sp-5);
   }
 
   .hero-features {
