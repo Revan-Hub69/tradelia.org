@@ -11,7 +11,7 @@
     <!-- SEO Meta Tags -->
     <meta
       name="description"
-      content="Tradelia AI: dashboard PWA gratuita installabile, analisi su richiesta a €49, piano Desk una tantum mensile a €149. Framework AI per analisi educative sui mercati."
+      content="Tradelia AI: percorso formativo gratuito, piano Pro €29/mese con accesso report e 1 report incluso, analisi on-demand €49. Framework AI per analisi educative sui mercati."
     />
     <meta
       name="keywords"
@@ -28,7 +28,7 @@
     <meta property="og:title" content="Pricing · Tradelia AI" />
     <meta
       property="og:description"
-      content="Accesso gratuito, analisi su richiesta e piano Desk per report brandizzati. Framework AI per analisi educative sui mercati."
+      content="Percorso formativo gratuito, piano Pro €29/mese con accesso report e 1 report incluso, analisi on-demand €49. Framework AI per analisi educative sui mercati."
     />
     <meta property="og:image" content="https://tradelia.org/img/tradelia_og_vC_white_clean.png" />
 
@@ -37,7 +37,7 @@
     <meta name="twitter:title" content="Pricing · Tradelia AI" />
     <meta
       name="twitter:description"
-      content="Accesso gratuito, analisi su richiesta e piano Desk per report brandizzati."
+      content="Percorso formativo gratuito, piano Pro €29/mese, analisi on-demand €49."
     />
 
     <!-- Favicons - Best Practice 2025: SVG first, PNG fallback -->
@@ -63,7 +63,7 @@
         "@context": "https://schema.org",
         "@type": "WebPage",
         "name": "Pricing · Tradelia AI",
-        "description": "Accesso gratuito, analisi su richiesta e piano Desk per report brandizzati",
+          "description": "Percorso formativo gratuito, piano Pro €29/mese con accesso report e 1 report incluso, analisi on-demand €49",
         "url": "https://tradelia.org/pricing.html",
         "mainEntity": {
           "@type": "OfferCatalog",
@@ -74,25 +74,31 @@
               "name": "Gratuito",
               "price": "0",
               "priceCurrency": "EUR",
-              "description": "Accesso completo alla dashboard PWA con framework FDM, MLT, PAC",
+              "description": "Percorso formativo completo con framework FDM, MLT, PAC, obbligatorio per sbloccare report e analisi",
               "availability": "https://schema.org/InStock",
               "category": "Educational Service"
             },
             {
               "@type": "Offer",
-              "name": "Analisi su Richiesta",
+              "name": "Piano Pro",
+              "price": "29",
+              "priceCurrency": "EUR",
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "price": "29",
+                "priceCurrency": "EUR",
+                "billingIncrement": "P1M"
+              },
+              "description": "Accesso illimitato ai report pubblici dopo completamento foundation, 1 report on-demand incluso al mese, partecipazione community proposals",
+              "availability": "https://schema.org/InStock",
+              "category": "Educational Service"
+            },
+            {
+              "@type": "Offer",
+              "name": "Analisi On-Demand",
               "price": "49",
               "priceCurrency": "EUR",
-              "description": "Analisi personalizzate on demand, circa 1 ora di lavoro, massimo 4 al giorno",
-              "availability": "https://schema.org/InStock",
-              "category": "Educational Service"
-            },
-            {
-              "@type": "Offer",
-              "name": "Piano Desk",
-              "price": "149",
-              "priceCurrency": "EUR",
-              "description": "Accesso mensile una tantum a report brandizzati white-label, 30 giorni dalla data di pagamento",
+              "description": "Analisi personalizzate su richiesta, disponibile solo per utenti Pro, consegna entro 24 ore",
               "availability": "https://schema.org/InStock",
               "category": "Educational Service"
             }
@@ -856,9 +862,9 @@
               line-height: var(--lh-17);
             "
           >
-            Tutti i servizi seguono un approccio on-demand: paghi solo per ciò che richiedi, senza
-            abbonamenti ricorrenti. Le analisi su richiesta sono disponibili per tutti, anche per
-            utenti gratuiti.
+            Il percorso formativo è sempre gratuito e obbligatorio. Le analisi on-demand (€49) sono
+            disponibili solo per utenti Pro. Il piano Pro (€29/mese) include 1 report on-demand ogni
+            mese.
           </p>
           <div
             style="
@@ -900,81 +906,83 @@
           <div class="pricing-row pricing-row--duo">
             <!-- Gratuito -->
             <article class="plan-card plan-card--compact" aria-labelledby="plan-gratuito-heading">
-              <span class="plan-badge">Accesso pubblico</span>
+              <span class="plan-badge">Foundation obbligatorio</span>
               <div class="plan-heading">
-                <h2 class="plan-title" id="plan-gratuito-heading">Gratuito</h2>
+                <h2 class="plan-title" id="plan-gratuito-heading">Percorso formativo</h2>
                 <div class="plan-price-row">
                   <span class="plan-price">€0</span>
-                  <span class="plan-period">sempre</span>
+                  <span class="plan-period">sempre gratuito</span>
                 </div>
                 <p class="plan-description">
-                  Dashboard PWA completa: framework FDM, MLT, PAC. Report giornalieri e
-                  documentazione metodologica.
+                  Campus formativo completo con percorsi gamificati (Foundation, Intermarket,
+                  Advanced). Obbligatorio per sbloccare report, analisi on-demand e community.
                 </p>
               </div>
               <ul class="plan-list">
-                <li>Framework FDM, MLT, PAC completi</li>
-                <li>Report giornalieri e documentazione</li>
-                <li>Accesso storico e archivio</li>
+                <li>Assessment guidato e percorsi gamificati</li>
+                <li>Tutorial interattivi, quiz, laboratori e badge</li>
+                <li>Framework FDM, MLT, PAC con documentazione</li>
+                <li>Accesso alla dashboard PWA aggiornata ogni giorno</li>
+                <li>Obbligatorio per sbloccare funzionalità avanzate</li>
               </ul>
               <div class="plan-actions">
                 <a
-                  href="#"
+                  href="/dashboard.html#education"
                   class="btn btn-primary btn-sm"
-                  aria-label="Installa la dashboard PWA Tradelia"
-                  data-dashboard-handler="true"
+                  aria-label="Inizia il percorso formativo gratuito"
                 >
-                  Installa la dashboard PWA
+                  Inizia il percorso gratuito
                 </a>
                 <p class="plan-meta" style="text-align: left">
-                  Tutte le richieste (codice di accesso, analisi, piano Desk) si gestiscono
-                  direttamente nella dashboard PWA installabile.
+                  Completa il foundation per sbloccare accesso ai report pubblici, analisi
+                  on-demand e community proposals.
                 </p>
               </div>
             </article>
 
-            <!-- Desk -->
-            <article class="plan-card plan-card--panorama" aria-labelledby="plan-desk-heading">
-              <span class="plan-badge">Desk professionali</span>
+            <!-- Pro -->
+            <article class="plan-card plan-card--panorama" id="pro" aria-labelledby="plan-pro-heading">
+              <span class="plan-badge">Dopo completamento foundation</span>
               <div class="plan-heading">
-                <h2 class="plan-title" id="plan-desk-heading">Desk</h2>
+                <h2 class="plan-title" id="plan-pro-heading">Pro</h2>
                 <div class="plan-price-row">
-                  <span class="plan-price">€149</span>
-                  <span class="plan-period">una tantum</span>
+                  <span class="plan-price">€29</span>
+                  <span class="plan-period">al mese</span>
                 </div>
                 <p class="plan-description">
-                  Accesso mensile a report brandizzati white-label. Download illimitato di PDF con
-                  logo e intestazione personalizzata per newsletter e canali.
+                  Accesso completo ai report pubblici, 1 report on-demand incluso ogni mese (valore
+                  €49, risparmio €20), partecipazione alle community proposals.
                 </p>
               </div>
               <ul class="plan-list">
-                <li>Tutti i report in formato white-label</li>
-                <li>PDF con logo e intestazione personalizzata</li>
-                <li>Accesso valido 30 giorni dalla data di pagamento</li>
-                <li>Download illimitato durante il periodo di accesso</li>
-                <li>Fatturazione B2B professionale</li>
+                <li>Accesso illimitato a tutti i report pubblici</li>
+                <li>1 report on-demand incluso ogni mese (valore €49)</li>
+                <li>Partecipazione alle community proposals (vota e richiedi)</li>
+                <li>Report aggiuntivi on-demand a €49 ciascuno</li>
+                <li>Disponibile solo dopo completamento foundation</li>
               </ul>
               <div class="plan-actions">
                 <a
                   href="#"
                   class="btn btn-primary btn-sm"
-                  aria-label="Installa la dashboard PWA"
+                  aria-label="Upgrade a Pro (dopo completamento foundation)"
                   data-dashboard-handler="true"
                 >
-                  Installa la dashboard PWA
+                  Upgrade a Pro
                 </a>
                 <p class="plan-meta">
-                  Tutte le richieste (Desk, analisi, codice di accesso) si gestiscono direttamente
-                  nella dashboard PWA installabile.
+                  Richiede completamento del percorso formativo foundation. Fatturazione mensile
+                  ricorrente, cancellabile in qualsiasi momento.
                 </p>
               </div>
             </article>
           </div>
         </div>
 
-        <!-- Analisi su richiesta -->
+        <!-- Analisi on-demand -->
         <section
           class="analysis-section"
+          id="on-demand"
           aria-labelledby="analisi-heading"
           style="margin-top: calc(var(--sp-10) * 2); margin-bottom: calc(var(--sp-10) * 2)"
         >
@@ -985,15 +993,15 @@
                 id="analisi-heading"
                 style="font-size: var(--fs-24); margin-bottom: var(--sp-3)"
               >
-                Analisi su richiesta
+                Analisi on-demand
               </h2>
               <p
                 class="plan-description"
                 style="font-size: var(--fs-15); max-width: 600px; margin: 0 auto; line-height: 1.5"
               >
-                Disponibili per tutti, anche per utenti gratuiti. Ogni analisi richiede circa 1 ora
-                di lavoro e include fonti, ipotesi e controlli documentati. Approccio on-demand:
-                paghi solo per ciò che richiedi.
+                Analisi personalizzate su richiesta, disponibile solo per utenti Pro. Ogni analisi
+                richiede circa 1 ora di lavoro e include fonti, ipotesi e controlli documentati.
+                Consegna entro 24 ore.
               </p>
             </div>
 
@@ -1043,8 +1051,8 @@
                     line-height: 1.5;
                   "
                 >
-                  <strong>Disponibile per tutti:</strong> €49 per qualsiasi analisi. Nessun
-                  abbonamento richiesto.
+                  <strong>Disponibile solo per utenti Pro:</strong> €49 per qualsiasi analisi. Gli
+                  utenti Pro hanno 1 report incluso ogni mese nel piano.
                 </p>
                 <p
                   style="
@@ -1070,8 +1078,8 @@
                 Installa la dashboard PWA
               </a>
               <p class="plan-meta" style="margin-top: var(--sp-3)">
-                Tutte le richieste (analisi, Desk, codice di accesso) si gestiscono direttamente
-                nella dashboard PWA installabile.
+                Tutte le richieste (analisi on-demand, upgrade Pro, codice di accesso) si gestiscono
+                direttamente nella dashboard PWA installabile.
               </p>
             </div>
           </div>
@@ -1104,16 +1112,16 @@
 
           <div>
             <details>
-              <summary>Come funziona il piano Desk una tantum?</summary>
+              <summary>Come funziona il piano Pro?</summary>
               <p>
-                Il piano Desk costa €149 una tantum e ti dà accesso per 30 giorni dalla data di
-                pagamento. Durante questo periodo puoi scaricare tutti i report pubblicati nella
-                dashboard in formato white-label (PDF con logo e intestazione personalizzata). Non è
-                un abbonamento ricorrente: paghi solo quando richiedi un nuovo accesso mensile.
+                Il piano Pro costa €29 al mese e include accesso illimitato a tutti i report pubblici
+                (dopo completamento foundation), 1 report on-demand incluso ogni mese (valore €49,
+                risparmio €20), e partecipazione alle community proposals. È un abbonamento mensile
+                ricorrente, cancellabile in qualsiasi momento.
               </p>
               <p style="margin-top: var(--sp-2)">
-                Tutte le informazioni sul Piano Desk sono disponibili nella dashboard PWA
-                installabile.
+                Per accedere al piano Pro devi prima completare il percorso formativo foundation
+                gratuito. Tutte le informazioni sono disponibili nella dashboard PWA installabile.
               </p>
             </details>
 
@@ -1151,10 +1159,10 @@
             <details>
               <summary>Quali metodi di pagamento accettate?</summary>
               <p>
-                <strong>Analisi su richiesta:</strong> Xolo Go (bonifico o carta di credito).
-                Fatturazione automatica tramite Xolo Go.<br />
-                <strong>Piano Desk:</strong> Xolo Go (bonifico o carta). Fatturazione B2B automatica
-                con gestione IVA.
+                <strong>Piano Pro:</strong> Pagamento ricorrente mensile tramite Stripe (carta di
+                credito o debito). Fatturazione automatica ogni mese.<br />
+                <strong>Analisi on-demand:</strong> Xolo Go (bonifico o carta di credito).
+                Fatturazione automatica tramite Xolo Go al momento della richiesta.
               </p>
             </details>
 
@@ -1171,15 +1179,14 @@
             </details>
 
             <details>
-              <summary>Cosa include il white-label per Desk?</summary>
+              <summary>Cosa sono le community proposals?</summary>
               <p>
-                Tutti i report pubblicati nella dashboard possono essere scaricati in versione PDF
-                con logo, intestazione e contatti del partner. Manteniamo metodo, fonti e disclosure
-                standard Tradelia. I report white-label sono identici nella sostanza, cambiano solo
-                logo e contatti. Accesso valido 30 giorni dalla data di pagamento.
+                Le community proposals permettono agli utenti Pro di votare e richiedere analisi su
+                asset specifici. Le proposte più votate vengono prioritarie nella pipeline di
+                analisi. Solo gli utenti Pro possono proporre e votare asset per nuove analisi.
               </p>
               <p style="margin-top: var(--sp-2)">
-                Tutte le informazioni sul Piano Desk sono disponibili nella dashboard PWA
+                Tutte le informazioni sulle community proposals sono disponibili nella dashboard PWA
                 installabile.
               </p>
             </details>
@@ -1196,26 +1203,26 @@
             <details>
               <summary>Offrite garanzie o rimborsi?</summary>
               <p>
-                <strong>Analisi su richiesta:</strong> Hai diritto di recedere dal contratto entro
-                14 giorni dalla data di consegna del servizio, indipendentemente dalla fatturazione
-                o dal pagamento. Una volta ricevuta la comunicazione, emettiamo il rimborso entro 14
-                giorni sullo stesso metodo di pagamento. Se l'analisi non rispetta le specifiche
-                concordate, provvediamo a revisione o rimborso anche dopo la consegna.<br /><br />
-                <strong>Piano Desk:</strong> Il diritto di recesso è di 14 giorni dalla data di
-                attivazione dell'accesso (consegna del servizio). Rimborso entro 14 giorni dalla
-                richiesta, sullo stesso metodo di pagamento. L'accesso è valido 30 giorni dalla data
-                di pagamento. Se riscontri problemi tecnici durante il periodo di accesso,
-                contattaci per assistenza.
+                <strong>Piano Pro:</strong> Puoi cancellare l'abbonamento in qualsiasi momento dalla
+                dashboard. Il rimborso per il mese corrente è disponibile entro 14 giorni dalla
+                cancellazione se richiesto entro i primi 7 giorni del ciclo di fatturazione. Rimborso
+                sullo stesso metodo di pagamento entro 14 giorni dalla richiesta.<br /><br />
+                <strong>Analisi on-demand:</strong> Hai diritto di recedere dal contratto entro 14
+                giorni dalla data di consegna del servizio, indipendentemente dalla fatturazione o dal
+                pagamento. Una volta ricevuta la comunicazione, emettiamo il rimborso entro 14 giorni
+                sullo stesso metodo di pagamento. Se l'analisi non rispetta le specifiche concordate,
+                provvediamo a revisione o rimborso anche dopo la consegna.
               </p>
             </details>
 
             <details>
-              <summary>Perché avete scelto un approccio on-demand invece di abbonamenti?</summary>
+              <summary>Perché il percorso formativo è obbligatorio per accedere ai report?</summary>
               <p>
-                L'approccio on-demand si allinea meglio a modelli accademici consolidati (Article
-                Processing Charge, consulting services, research contracts). Ogni servizio è
-                tracciabile, trasparente e indipendente. Non dipendiamo da abbonamenti ricorrenti,
-                garantendo maggiore integrità e trasparenza metodologica.
+                Il percorso formativo foundation garantisce che tutti gli utenti abbiano le basi
+                necessarie per comprendere e utilizzare correttamente i report e le analisi. Questo
+                approccio educativo-first si allinea a modelli accademici consolidati e garantisce
+                che il materiale sia utilizzato in modo consapevole e informato, rispettando le
+                normative MiFID II.
               </p>
             </details>
           </div>
