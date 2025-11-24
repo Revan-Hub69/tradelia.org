@@ -66,8 +66,10 @@
     <meta name="twitter:creator" content="@tradelia_ai" />
     <meta name="twitter:site" content="@tradelia_ai" />
 
-    <!-- Preload Logo for better performance -->
+    <!-- Preload critical resources -->
     <link rel="preload" href="/logos/tradelia-logo.svg?v=4" as="image" type="image/svg+xml" />
+    <link rel="preload" href="/assets/css/homepage-brokers-2025.css" as="style" />
+    <link rel="preload" href="/assets/css/global-header.css" as="style" />
     
     <!-- Favicons - Best Practice 2025: Multiple formats for compatibility -->
     <!-- Versione 4 per forzare refresh cache browser -->
@@ -166,10 +168,29 @@
     <link rel="stylesheet" href="/assets/css/global-header.css" />
     <link rel="stylesheet" href="/assets/css/homepage-brokers-2025.css" />
     <link rel="stylesheet" href="/report/assets/css/design-system-academico-2025.css" />
+    <!-- Fonts with async loading -->
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+      crossorigin
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
 
     <style>
       html {
@@ -2325,7 +2346,7 @@
             </article>
           </div>
 
-          <div style="text-align: center; margin-top: var(--sp-8)">
+          <div class="section-cta">
             <a
               href="/dashboard.html#education"
               class="btn btn-primary btn-with-icon"

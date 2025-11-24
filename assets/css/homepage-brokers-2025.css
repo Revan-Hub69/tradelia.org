@@ -82,10 +82,8 @@
   line-height: 1.75;
   letter-spacing: -0.008em;
   color: var(--ink-soft);
-  margin: 0 0 var(--sp-14);
+  margin: 0 auto var(--sp-12);
   max-width: 50rem;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .hero-description strong {
@@ -95,10 +93,11 @@
 
 /* ===== HERO PLAN GRID - PRICING CARDS ===== */
 .hero-plan-grid {
-  margin-top: var(--sp-10);
+  margin-top: var(--sp-12);
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--sp-6);
+  margin-bottom: var(--sp-8);
 }
 
 @media (min-width: 768px) {
@@ -298,15 +297,15 @@
 .hero-cta {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--sp-5);
-  margin-top: var(--sp-16);
+  gap: var(--sp-4);
+  margin-top: var(--sp-12);
   justify-content: center;
   align-items: center;
 }
 
 /* ===== DISCLAIMER - ISTITUZIONALE ===== */
 .hero-disclaimer {
-  margin-top: var(--sp-20);
+  margin-top: var(--sp-16);
   padding: var(--sp-6) 0;
   border-top: 1px solid var(--br-card);
 }
@@ -552,6 +551,13 @@
   .brokers-grid {
     gap: var(--sp-4);
   }
+}
+
+/* ===== SECTION CTA ===== */
+.section-cta {
+  text-align: center;
+  margin-top: var(--sp-10);
+  padding-top: var(--sp-8);
 }
 
 /* ===== ACCESSIBILITÀ ===== */
