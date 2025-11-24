@@ -667,7 +667,6 @@ async function handleLoginSubmit(e) {
         submitBtn.textContent = "Accedi";
         submitBtn.removeAttribute("aria-busy");
       }
-    setStatusMessage(statusId, "Si è verificato un errore di connessione. Riprova.", "error");
       return;
     }
 
@@ -675,7 +674,7 @@ async function handleLoginSubmit(e) {
     if (data.token) {
       const { saveToken } = await import("./token-storage.js");
       await saveToken(data.token, data.refreshToken || null);
-    setStatusMessage(statusId, "Accesso eseguito con successo. Reindirizzamento…", "success");
+      setStatusMessage(statusId, "Accesso eseguito con successo. Reindirizzamento…", "success");
       if (window.showToast) {
         window.showToast("Accesso riuscito!", "success");
       }
