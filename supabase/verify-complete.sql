@@ -107,23 +107,25 @@ ORDER BY routine_name;
 
 -- ===== 5. VERIFICA DATI ESEMPIO =====
 -- Moduli educativi attivi (solo se la tabella esiste)
-DO $$
-BEGIN
-  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'education_modules') THEN
-    PERFORM 1; -- Table exists, query will run below
-  END IF;
-END $$;
-
 SELECT 
   '📊 DATI: Moduli Educativi' as sezione,
-  COUNT(*)::text as moduli_attivi,
   CASE 
-    WHEN COUNT(*) > 0 THEN '✅ PRESENTI'
+    WHEN EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'education_modules')
+    THEN (
+      SELECT COUNT(*)::text 
+      FROM education_modules 
+      WHERE is_active = true
+    )
+    ELSE '0'
+  END as moduli_attivi,
+  CASE 
+    WHEN NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'education_modules')
+    THEN '❌ TABELLA NON ESISTE'
+    WHEN EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'education_modules')
+      AND (SELECT COUNT(*) FROM education_modules WHERE is_active = true) > 0
+    THEN '✅ PRESENTI'
     ELSE '⚠️ NESSUN MODULO'
-  END as status
-FROM education_modules
-WHERE EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'education_modules')
-  AND is_active = true;
+  END as status;
 
 -- Ruoli utente (solo se la tabella esiste)
 SELECT 
