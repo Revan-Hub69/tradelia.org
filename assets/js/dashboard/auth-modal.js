@@ -11,6 +11,59 @@ const MODAL_ID = "auth-modal";
 const SUPPORT_EMAIL = "support@tradelia.org";
 const QUICK_ASSIST_SLA_MINUTES = 15;
 
+// ===== DEBUG SYSTEM =====
+const DEBUG = {
+  enabled: window.location.search.includes("debug=auth") || localStorage.getItem("auth-debug") === "true",
+  log: function(level, component, message, data = null) {
+    if (!this.enabled) return;
+    const timestamp = new Date().toISOString();
+    const logEntry = {
+      timestamp,
+      level,
+      component: `[AuthModal:${component}]`,
+      message,
+      data,
+    };
+    console[level === "error" ? "error" : level === "warn" ? "warn" : "log"](
+      `${logEntry.component} ${message}`,
+      data || ""
+    );
+    // Store in session for debugging
+    if (typeof sessionStorage !== "undefined") {
+      const logs = JSON.parse(sessionStorage.getItem("auth-debug-logs") || "[]");
+      logs.push(logEntry);
+      // Keep only last 50 logs
+      if (logs.length > 50) logs.shift();
+      sessionStorage.setItem("auth-debug-logs", JSON.stringify(logs));
+    }
+  },
+  error: function(component, message, data) {
+    this.log("error", component, message, data);
+  },
+  warn: function(component, message, data) {
+    this.log("warn", component, message, data);
+  },
+  info: function(component, message, data) {
+    this.log("info", component, message, data);
+  },
+  getLogs: function() {
+    if (typeof sessionStorage !== "undefined") {
+      return JSON.parse(sessionStorage.getItem("auth-debug-logs") || "[]");
+    }
+    return [];
+  },
+  clearLogs: function() {
+    if (typeof sessionStorage !== "undefined") {
+      sessionStorage.removeItem("auth-debug-logs");
+    }
+  },
+};
+
+// Expose debug globally for console access
+if (typeof window !== "undefined") {
+  window.authModalDebug = DEBUG;
+}
+
 /**
  * Initialize auth modal
  */
@@ -23,8 +76,11 @@ export function initAuthModal() {
  * @param {string} tab - 'login' | 'signup'
  */
 export function showAuthModal(tab = "login") {
+  DEBUG.info("showAuthModal", `Opening modal with tab: ${tab}`);
+  
   const modal = document.getElementById(MODAL_ID);
   if (!modal) {
+    DEBUG.warn("showAuthModal", "Modal not found, creating...");
     // Se modale non esiste, crealo
     createModal();
     // Riprova dopo un breve delay
@@ -34,12 +90,19 @@ export function showAuthModal(tab = "login") {
     return;
   }
 
+  // Check if already open
+  if (!modal.hasAttribute("aria-hidden") || modal.classList.contains("active")) {
+    DEBUG.warn("showAuthModal", "Modal already open, switching tab");
+  }
+
   updateModalTab(tab);
   resetStatusMessages();
 
   modal.removeAttribute("aria-hidden");
   modal.classList.add("active");
   document.body.style.overflow = "hidden";
+  
+  DEBUG.info("showAuthModal", "Modal opened successfully");
 
   // WCAG 2.2: Screen reader announcement
   const announcement = document.createElement("div");
@@ -389,8 +452,11 @@ function createModal() {
 function setupModalEvents() {
   const modal = document.getElementById(MODAL_ID);
   if (!modal) {
+    DEBUG.error("setupModalEvents", "Modal not found");
     return;
   }
+
+  DEBUG.info("setupModalEvents", "Setting up event listeners");
 
   const overlay = modal.querySelector(".auth-modal-overlay");
   const closeBtn = modal.querySelector(".auth-modal-close");
@@ -398,6 +464,18 @@ function setupModalEvents() {
   const loginForm = document.getElementById("auth-login-form");
   const signupForm = document.getElementById("auth-signup-form");
   const quickAssistBtn = document.getElementById("auth-quick-assist");
+
+  // Debug: Check if all elements exist
+  const missingElements = [];
+  if (!overlay) missingElements.push("overlay");
+  if (!closeBtn) missingElements.push("closeBtn");
+  if (tabs.length === 0) missingElements.push("tabs");
+  if (!loginForm) missingElements.push("loginForm");
+  if (!signupForm) missingElements.push("signupForm");
+  
+  if (missingElements.length > 0) {
+    DEBUG.warn("setupModalEvents", `Missing elements: ${missingElements.join(", ")}`);
+  }
 
   // Close handlers
   const closeModal = () => {
@@ -411,12 +489,16 @@ function setupModalEvents() {
     closeBtn.addEventListener("click", closeModal);
   }
 
-  // Escape key
-  document.addEventListener("keydown", (e) => {
+  // Escape key - use named function to allow removal
+  const escapeHandler = (e) => {
     if (e.key === "Escape" && !modal.hasAttribute("aria-hidden")) {
+      DEBUG.info("setupModalEvents", "Escape key pressed, closing modal");
       closeModal();
     }
-  });
+  };
+  document.addEventListener("keydown", escapeHandler);
+  // Store handler for potential cleanup
+  modal._escapeHandler = escapeHandler;
 
   // Tab switching
   tabs.forEach((tab) => {
@@ -698,11 +780,23 @@ async function handleLoginSubmit(e) {
   }
 }
 
+// Prevent double submission
+let signupInProgress = false;
+
 /**
  * Handle signup form submit
  */
 async function handleSignupSubmit(e) {
   e.preventDefault();
+  
+  // Prevent double submission
+  if (signupInProgress) {
+    DEBUG.warn("handleSignupSubmit", "Signup already in progress, ignoring duplicate submit");
+    return;
+  }
+  
+  DEBUG.info("handleSignupSubmit", "Signup form submitted");
+  
   const form = e.target;
   const emailInput = document.getElementById("signup-email");
   const passwordInput = document.getElementById("signup-password");
@@ -710,13 +804,34 @@ async function handleSignupSubmit(e) {
   const privacyCheckbox = document.getElementById("signup-privacy");
   const statusId = "signup-status-message";
 
+  // Debug: Check if all inputs exist
+  const missingInputs = [];
+  if (!emailInput) missingInputs.push("emailInput");
+  if (!passwordInput) missingInputs.push("passwordInput");
+  if (!passwordConfirmInput) missingInputs.push("passwordConfirmInput");
+  if (!privacyCheckbox) missingInputs.push("privacyCheckbox");
+  
+  if (missingInputs.length > 0) {
+    DEBUG.error("handleSignupSubmit", `Missing inputs: ${missingInputs.join(", ")}`);
+    setStatusMessage(statusId, "Errore: elementi del form non trovati. Ricarica la pagina.", "error");
+    return;
+  }
+
   const email = emailInput?.value?.trim() || "";
   const password = passwordInput?.value || "";
   const passwordConfirm = passwordConfirmInput?.value || "";
   const privacyAccepted = privacyCheckbox?.checked || false;
+  
+  DEBUG.info("handleSignupSubmit", "Form data collected", {
+    emailLength: email.length,
+    passwordLength: password.length,
+    passwordConfirmLength: passwordConfirm.length,
+    privacyAccepted,
+  });
 
   // Validation
   if (!email) {
+    DEBUG.warn("handleSignupSubmit", "Validation failed: email empty");
     if (window.showToast) {
       window.showToast("Inserisci un'email", "error");
     }
@@ -725,7 +840,17 @@ async function handleSignupSubmit(e) {
     return;
   }
 
+  // Email format validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    DEBUG.warn("handleSignupSubmit", "Validation failed: invalid email format");
+    setStatusMessage(statusId, "Formato email non valido.", "error");
+    emailInput?.focus();
+    return;
+  }
+
   if (!password || password.length < 12) {
+    DEBUG.warn("handleSignupSubmit", `Validation failed: password too short (${password.length} chars)`);
     if (window.showToast) {
       window.showToast("Password deve essere di almeno 12 caratteri", "error");
     }
@@ -735,6 +860,7 @@ async function handleSignupSubmit(e) {
   }
 
   if (password !== passwordConfirm) {
+    DEBUG.warn("handleSignupSubmit", "Validation failed: passwords don't match");
     if (window.showToast) {
       window.showToast("Le password non corrispondono", "error");
     }
@@ -744,6 +870,7 @@ async function handleSignupSubmit(e) {
   }
 
   if (!privacyAccepted) {
+    DEBUG.warn("handleSignupSubmit", "Validation failed: privacy not accepted");
     if (window.showToast) {
       window.showToast("Devi accettare la privacy policy", "error");
     }
@@ -751,6 +878,8 @@ async function handleSignupSubmit(e) {
     privacyCheckbox?.focus();
     return;
   }
+  
+  DEBUG.info("handleSignupSubmit", "Validation passed, proceeding with signup");
 
   // Disable form and show loading
   const submitBtn = form.querySelector('button[type="submit"]');
@@ -770,6 +899,8 @@ async function handleSignupSubmit(e) {
   passwordInput?.setAttribute("aria-invalid", "false");
   passwordConfirmInput?.setAttribute("aria-invalid", "false");
   
+  signupInProgress = true;
+  
   if (submitBtn) {
     submitBtn.disabled = true;
     submitBtn.textContent = "Registrazione in corso...";
@@ -779,6 +910,8 @@ async function handleSignupSubmit(e) {
   setStatusMessage(statusId, "Creazione dell'account in corso…", "info");
 
   try {
+    DEBUG.info("handleSignupSubmit", "Sending signup request to API");
+    
     const response = await fetch("/api/auth?action=signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -790,10 +923,25 @@ async function handleSignupSubmit(e) {
       }),
     });
 
+    DEBUG.info("handleSignupSubmit", `API response status: ${response.status}`);
+    
     const data = await response.json();
+    
+    DEBUG.info("handleSignupSubmit", "API response data", {
+      ok: data.ok,
+      hasError: !!data.error,
+      hasToken: !!data.token,
+      emailSent: data.emailSent,
+    });
 
     if (!response.ok || !data.ok) {
-      throw new Error(data.error || "Errore durante la registrazione");
+      const errorMsg = data.error || "Errore durante la registrazione";
+      DEBUG.error("handleSignupSubmit", `API error: ${errorMsg}`, {
+        status: response.status,
+        statusText: response.statusText,
+        data,
+      });
+      throw new Error(errorMsg);
     }
 
     // BEST PRACTICE: Email verification required
@@ -839,7 +987,14 @@ async function handleSignupSubmit(e) {
       hideAuthModal();
     }
   } catch (error) {
+    signupInProgress = false;
     safeLog("error", "[AuthModal] Errore registrazione:", error);
+    DEBUG.error("handleSignupSubmit", "Signup failed", {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+    });
+    
     if (window.showToast) {
       window.showToast(error.message || "Errore durante la registrazione", "error");
     }
