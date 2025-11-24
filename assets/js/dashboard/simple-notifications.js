@@ -6,7 +6,6 @@
  */
 
 import { showToast } from "./toast.js";
-import { initSupabase } from "./supabase-client.js";
 import { isPWAInstalled } from "./pwa-notifications.js";
 import { syncTokenToIndexedDB } from "./token-storage.js";
 
@@ -27,6 +26,38 @@ function getOrCreateDeviceId() {
     localStorage.setItem("tradelia-device-id", deviceId);
   }
   return deviceId;
+}
+
+function getStoredToken() {
+  return localStorage.getItem("tradelia-access-token-v1") || null;
+}
+
+async function fetchNotificationsFromApi({
+  token,
+  deviceId,
+  onlyUnread = true,
+  since = null,
+  limit = 10,
+} = {}) {
+  const response = await fetch("/api/auth?action=notifications", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      token: token || getStoredToken(),
+      deviceId: deviceId || getOrCreateDeviceId(),
+      onlyUnread,
+      since,
+      limit,
+    }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || !data.ok) {
+    throw new Error(data.error || "Errore recupero notifiche");
+  }
+  return data.notifications || [];
 }
 
 /**
@@ -139,80 +170,24 @@ export function stopPolling() {
  */
 async function checkForNewNotifications() {
   try {
-    const supabase = await initSupabase();
-    if (!supabase) {
-      return;
-    }
+    const notifications = await fetchNotificationsFromApi({
+      token: getStoredToken(),
+      deviceId: getOrCreateDeviceId(),
+      onlyUnread: true,
+      since: lastCheckTime,
+      limit: 10,
+    });
 
-    // BEST PRACTICE: Verifica se Supabase è disponibile prima di fare query
-    // Se non disponibile, fallback silenzioso
-
-    const token = localStorage.getItem("tradelia-access-token-v1");
-    // Guest users possono ricevere notifiche usando un device ID
-
-    // Query per notifiche non lette
-    // Nota: "read" è parola riservata in PostgREST, potrebbe essere necessario usare "is_read" o fare escape
-    let query = supabase
-      .from("notifications")
-      .select("id, title, message, type, created_at")
-      .eq("is_read", false) // Prova con is_read invece di read
-      .order("created_at", { ascending: false })
-      .limit(10);
-
-    // Filtra per user_id, user_token, o device_id (per guest)
-    if (token) {
-      try {
-        const tokenData = JSON.parse(atob(token.split(".")[1]));
-        if (tokenData?.user_id) {
-          query = query.eq("user_id", tokenData.user_id);
-        } else {
-          query = query.eq("user_token", token);
-        }
-      } catch {
-        query = query.eq("user_token", token);
-      }
-    } else {
-      // Guest user: usa device ID
-      const deviceId = getOrCreateDeviceId();
-      query = query.eq("user_token", deviceId);
-    }
-
-    // Se abbiamo un timestamp dell'ultimo controllo, filtra solo notifiche più recenti
-    if (lastCheckTime) {
-      query = query.gt("created_at", lastCheckTime);
-    }
-
-    const { data, error } = await query;
-
-    if (error) {
-      // BEST PRACTICE: Gestione errori 401 (Unauthorized) - fallback silenzioso
-      if (error.code === "PGRST301" || error.status === 401 || error.message?.includes("401")) {
-        // Errore di autorizzazione - probabilmente RLS policy o token non valido
-        // Fallback silenzioso: non mostrare errore all'utente, semplicemente non caricare notifiche
-        // BEST PRACTICE: Fallback silenzioso per 401 - non loggare come errore
-        // console.debug("[Simple Notifications] Accesso non autorizzato alle notifiche (401) - fallback silenzioso");
-        return;
-      }
-      console.warn("[Simple Notifications] Errore controllo notifiche:", error);
-      return;
-    }
-
-    // Aggiorna timestamp
     lastCheckTime = new Date().toISOString();
 
-    // Se ci sono nuove notifiche
-    if (data && data.length > 0) {
-      data.forEach((notification) => {
-        // Sempre mostra toast (quando pagina aperta)
+    if (notifications && notifications.length > 0) {
+      notifications.forEach((notification) => {
         showNotificationToast(notification);
-
-        // Notifiche browser native solo se PWA installata
         if (isPWA) {
           showBrowserNotification(notification);
         }
       });
 
-      // Aggiorna badge contatore
       updateNotificationBadge();
     }
   } catch (error) {
@@ -325,61 +300,14 @@ export async function requestNotificationPermissionExplicit() {
  */
 async function updateNotificationBadge() {
   try {
-    const supabase = await initSupabase();
-    if (!supabase) {
-      // Fallback: nascondi badge se Supabase non disponibile
-      const badge = document.querySelector("[data-notification-badge]");
-      if (badge) {
-        badge.style.display = "none";
-      }
-      return;
-    }
+    const notifications = await fetchNotificationsFromApi({
+      token: getStoredToken(),
+      deviceId: getOrCreateDeviceId(),
+      onlyUnread: true,
+      limit: 100,
+    });
 
-    const token = localStorage.getItem("tradelia-access-token-v1");
-
-    let query = supabase
-      .from("notifications")
-      .select("id", { count: "exact", head: true })
-      .eq("is_read", false);
-
-    if (token) {
-      try {
-        const tokenData = JSON.parse(atob(token.split(".")[1]));
-        if (tokenData?.user_id) {
-          query = query.eq("user_id", tokenData.user_id);
-        } else {
-          query = query.eq("user_token", token);
-        }
-      } catch {
-        query = query.eq("user_token", token);
-      }
-    } else {
-      // Guest user: usa device ID
-      const deviceId = getOrCreateDeviceId();
-      query = query.eq("user_token", deviceId);
-    }
-
-    const { count, error } = await query;
-
-    if (error) {
-      // BEST PRACTICE: Gestione errori 401 (Unauthorized) - fallback silenzioso
-      if (error.code === "PGRST301" || error.status === 401 || error.message?.includes("401")) {
-        // Errore di autorizzazione - fallback silenzioso
-        // BEST PRACTICE: Fallback silenzioso per 401 - non loggare come errore
-        // console.debug("[Simple Notifications] Accesso non autorizzato al conteggio (401) - fallback silenzioso");
-        // Imposta count a 0 per evitare badge errato
-        unreadCount = 0;
-        const badge = document.querySelector("[data-notification-badge]");
-        if (badge) {
-          badge.style.display = "none";
-        }
-        return;
-      }
-      console.warn("[Simple Notifications] Errore conteggio:", error);
-      return;
-    }
-
-    unreadCount = count || 0;
+    unreadCount = notifications.length;
 
     // Aggiorna badge nell'UI
     const badge = document.querySelector("[data-notification-badge]");
@@ -393,6 +321,10 @@ async function updateNotificationBadge() {
     }
   } catch (error) {
     console.warn("[Simple Notifications] Errore aggiornamento badge:", error);
+    const badge = document.querySelector("[data-notification-badge]");
+    if (badge) {
+      badge.style.display = "none";
+    }
   }
 }
 

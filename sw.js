@@ -205,22 +205,22 @@ async function checkNotificationsInBackground() {
     const token = await getTokenFromIndexedDB();
     const deviceId = await getDeviceIdFromIndexedDB();
 
-    const headers = {
-      "Content-Type": "application/json",
-    };
-
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-    } else if (deviceId) {
-      headers["X-Device-ID"] = deviceId;
-    } else {
+    if (!token && !deviceId) {
       console.log("[SW] Nessun token o device ID disponibile, skip controllo notifiche");
       return;
     }
 
-    const response = await fetch("/api/notifications?action=check-background", {
-      method: "GET",
-      headers,
+    const response = await fetch("/api/auth?action=notifications", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token,
+        deviceId,
+        onlyUnread: true,
+        limit: 10,
+      }),
     });
 
     if (!response.ok) {

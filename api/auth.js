@@ -213,6 +213,12 @@ export default async function handler(req, res) {
         return await handleLogin(req, res);
       case "refresh-session":
         return await handleRefreshSession(req, res);
+      case "notifications":
+        return await handleGetNotifications(req, res);
+      case "notification-mark-read":
+        return await handleMarkNotificationRead(req, res);
+      case "notification-mark-all-read":
+        return await handleMarkAllNotificationsRead(req, res);
       case "check-email":
         return await handleCheckEmail(req, res);
       case "reset-password":
@@ -1152,6 +1158,148 @@ async function handleRefreshSession(req, res) {
     }
     return res.status(500).json({ ok: false, error: "Errore durante la rotazione della sessione" });
   }
+}
+
+async function getNotificationTarget({ token, deviceId }) {
+  let userId = null;
+  let tokenHash = null;
+  let rawToken = token && typeof token === "string" ? token.trim() : null;
+
+  if (token && typeof token === "string" && token.trim().length > 0) {
+    try {
+      const context = await getAdminContextFromToken(token, { enforceAdmin: false });
+      userId = context.userId || null;
+      tokenHash = context.tokenRecord?.token_hash || hashToken(token);
+    } catch (error) {
+      console.warn("[Auth] Token notifiche non valido:", error.message);
+    }
+  }
+
+  if (!tokenHash && deviceId && typeof deviceId === "string") {
+    tokenHash = deviceId.trim();
+  }
+
+  return { userId, tokenHash, rawToken };
+}
+
+async function handleGetNotifications(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  const { token, deviceId, limit = 20, onlyUnread = false, since = null } = req.body || {};
+  const { userId, tokenHash, rawToken } = await getNotificationTarget({ token, deviceId });
+
+  if (!userId && !tokenHash) {
+    return res.status(401).json({ ok: false, error: "Token di accesso o deviceId richiesto" });
+  }
+
+  const cappedLimit = Math.max(1, Math.min(parseInt(limit, 10) || 20, 100));
+
+  let query = supabase
+    .from("notifications")
+    .select("id, title, message, type, is_read, created_at")
+    .order("created_at", { ascending: false })
+    .limit(cappedLimit);
+
+  if (onlyUnread) {
+    query = query.eq("is_read", false);
+  }
+
+  if (since) {
+    query = query.gt("created_at", since);
+  }
+
+  if (userId) {
+    query = query.eq("user_id", userId);
+  } else if (tokenHash && rawToken && rawToken !== tokenHash) {
+    query = query.in("user_token", [tokenHash, rawToken]);
+  } else if (tokenHash) {
+    query = query.eq("user_token", tokenHash);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error("[Auth] Errore recupero notifiche:", error);
+    return res.status(500).json({ ok: false, error: "Errore recupero notifiche" });
+  }
+
+  return res.status(200).json({
+    ok: true,
+    notifications: data || [],
+  });
+}
+
+async function handleMarkNotificationRead(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  const { notificationId, token, deviceId } = req.body || {};
+  if (!notificationId) {
+    return res.status(400).json({ ok: false, error: "notificationId richiesto" });
+  }
+
+  const { userId, tokenHash, rawToken } = await getNotificationTarget({ token, deviceId });
+  if (!userId && !tokenHash) {
+    return res.status(401).json({ ok: false, error: "Token di accesso o deviceId richiesto" });
+  }
+
+  let query = supabase
+    .from("notifications")
+    .update({ is_read: true, updated_at: new Date().toISOString() })
+    .eq("id", notificationId);
+
+  if (userId) {
+    query = query.eq("user_id", userId);
+  } else if (tokenHash && rawToken && rawToken !== tokenHash) {
+    query = query.in("user_token", [tokenHash, rawToken]);
+  } else if (tokenHash) {
+    query = query.eq("user_token", tokenHash);
+  }
+
+  const { error } = await query;
+  if (error) {
+    console.error("[Auth] Errore mark read:", error);
+    return res.status(500).json({ ok: false, error: "Errore aggiornamento notifica" });
+  }
+
+  return res.status(200).json({ ok: true });
+}
+
+async function handleMarkAllNotificationsRead(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  const { token, deviceId } = req.body || {};
+  const { userId, tokenHash, rawToken } = await getNotificationTarget({ token, deviceId });
+
+  if (!userId && !tokenHash) {
+    return res.status(401).json({ ok: false, error: "Token di accesso o deviceId richiesto" });
+  }
+
+  let query = supabase
+    .from("notifications")
+    .update({ is_read: true, updated_at: new Date().toISOString() })
+    .eq("is_read", false);
+
+  if (userId) {
+    query = query.eq("user_id", userId);
+  } else if (tokenHash && rawToken && rawToken !== tokenHash) {
+    query = query.in("user_token", [tokenHash, rawToken]);
+  } else if (tokenHash) {
+    query = query.eq("user_token", tokenHash);
+  }
+
+  const { error } = await query;
+  if (error) {
+    console.error("[Auth] Errore mark all read:", error);
+    return res.status(500).json({ ok: false, error: "Errore aggiornamento notifiche" });
+  }
+
+  return res.status(200).json({ ok: true });
 }
 
 // ===== CHECK EMAIL =====

@@ -4,7 +4,6 @@
  * Notifiche sistema, avvisi, comunicazioni con integrazione Supabase
  */
 
-import { initSupabase } from "./supabase-client.js";
 // showToast usato tramite window.showToast
 
 export async function loadNotifications() {
@@ -16,6 +15,35 @@ export async function loadNotifications() {
   await loadNotificationsData();
   setupNotificationsFilters();
   setupNotificationActions();
+}
+
+function getStoredToken() {
+  return localStorage.getItem("tradelia-access-token-v1") || null;
+}
+
+function getDeviceId() {
+  let deviceId = localStorage.getItem("tradelia-device-id");
+  if (!deviceId) {
+    deviceId = `device-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem("tradelia-device-id", deviceId);
+  }
+  return deviceId;
+}
+
+async function callNotificationsApi(action, payload) {
+  const response = await fetch(`/api/auth?action=${action}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || !data.ok) {
+    throw new Error(data.error || "Errore comunicazione server");
+  }
+  return data;
 }
 
 async function loadNotificationsData() {
@@ -36,66 +64,16 @@ async function loadNotificationsData() {
   `;
 
   try {
-    // Prova Supabase
-    const supabase = await initSupabase();
-    if (supabase) {
-      const token = localStorage.getItem("tradelia-access-token-v1");
-      if (token) {
-        // Query notifiche
-        // Prima prova con user_id (se autenticato)
-        let query = supabase
-          .from("notifications")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(50);
-
-        // Se abbiamo user_id dal token, usa quello, altrimenti usa user_token
-        try {
-          const tokenData = JSON.parse(atob(token.split(".")[1])); // Decodifica JWT se possibile
-          if (tokenData?.user_id) {
-            query = query.eq("user_id", tokenData.user_id);
-          } else {
-            query = query.eq("user_token", token);
-          }
-        } catch {
-          // Fallback: usa user_token
-          query = query.eq("user_token", token);
-        }
-
-        const { data, error } = await query;
-
-        if (error) {
-          // BEST PRACTICE: Gestione errori 401 (Unauthorized) - fallback silenzioso
-          if (error.code === "PGRST301" || error.status === 401 || error.message?.includes("401")) {
-            // Errore di autorizzazione - fallback silenzioso
-            // BEST PRACTICE: Fallback silenzioso per 401 - non loggare come errore
-            // console.debug("[Notifications] Accesso non autorizzato (401) - fallback silenzioso");
-            return [];
-          }
-          throw error;
-        }
-
-        renderNotifications(data || []);
-        return;
-      }
-    }
-
-    // Fallback: API endpoint
-    const response = await fetch("/api/user?action=notifications", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("tradelia-access-token-v1") || ""}`,
-      },
+    const { notifications } = await callNotificationsApi("notifications", {
+      token: getStoredToken(),
+      deviceId: getDeviceId(),
+      limit: 50,
+      onlyUnread: false,
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      renderNotifications(data.notifications || []);
-    } else {
-      throw new Error("Errore caricamento notifiche");
-    }
+    renderNotifications(notifications || []);
   } catch (err) {
     console.error("[Notifications] Errore:", err);
-    // Mostra empty state (già presente in HTML)
     notificationsList.innerHTML = `
       <div class="reports-empty">
         <svg class="reports-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -267,28 +245,18 @@ function setupNotificationActions() {
  * Mark notification as read
  */
 async function markAsRead(notificationId) {
-  try {
-    const supabase = await initSupabase();
-    if (supabase) {
-      const { error } = await supabase
-        .from("notifications")
-        .update({ is_read: true, read_at: new Date().toISOString() })
-        .eq("id", notificationId);
+  if (!notificationId) {
+    return;
+  }
 
-      // BEST PRACTICE: Gestione errori 401 (Unauthorized) - fallback silenzioso
-      if (error) {
-        if (error.code === "PGRST301" || error.status === 401 || error.message?.includes("401")) {
-          // BEST PRACTICE: Fallback silenzioso per 401 - non loggare come errore
-          return;
-        }
-        throw error;
-      }
-    }
-  } catch (e) {
-    // BEST PRACTICE: Non loggare errori 401 come errori critici
-    if (e.status !== 401 && e.code !== "PGRST301") {
-      console.error("[Notifications] Errore marcatura letta:", e);
-    }
+  try {
+    await callNotificationsApi("notification-mark-read", {
+      notificationId,
+      token: getStoredToken(),
+      deviceId: getDeviceId(),
+    });
+  } catch (error) {
+    console.error("[Notifications] Errore marcatura letta:", error);
   }
 }
 
@@ -297,33 +265,15 @@ async function markAsRead(notificationId) {
  */
 async function markAllAsRead() {
   try {
-    const supabase = await initSupabase();
-    if (supabase) {
-      const token = localStorage.getItem("tradelia-access-token-v1");
-      if (token) {
-        const { error } = await supabase
-          .from("notifications")
-          .update({ is_read: true, read_at: new Date().toISOString() })
-          .eq("user_token", token)
-          .eq("is_read", false);
-
-        if (error) {
-          // BEST PRACTICE: Gestione errori 401 (Unauthorized) - fallback silenzioso
-          if (error.code === "PGRST301" || error.status === 401 || error.message?.includes("401")) {
-            // BEST PRACTICE: Fallback silenzioso per 401 - non loggare come errore
-            return;
-          }
-          console.warn("[Notifications] Errore marcatura tutte:", error);
-          return;
-        }
-
-        loadNotificationsData();
-        if (window.showToast) {
-          window.showToast("Tutte le notifiche segnate come lette", "success");
-        }
-      }
+    await callNotificationsApi("notification-mark-all-read", {
+      token: getStoredToken(),
+      deviceId: getDeviceId(),
+    });
+    await loadNotificationsData();
+    if (window.showToast) {
+      window.showToast("Tutte le notifiche segnate come lette", "success");
     }
-  } catch (e) {
-    console.error("[Notifications] Errore marcatura tutte lette:", e);
+  } catch (error) {
+    console.error("[Notifications] Errore marcatura tutte lette:", error);
   }
 }
