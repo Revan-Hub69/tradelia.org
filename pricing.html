@@ -52,10 +52,29 @@
     <link rel="stylesheet" href="/assets/css/global-header.css" />
     <link rel="stylesheet" href="/assets/css/site-coherence-2025.css" />
     <link rel="stylesheet" href="/report/assets/css/design-system-academico-2025.css" />
+    <!-- Fonts with async loading -->
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+      crossorigin
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -849,9 +868,9 @@
               line-height: var(--lh-16);
             "
           >
-            <strong>Tradelia AI</strong> è un campus formativo AI gratuito sui mercati finanziari.
-            Completa il percorso foundation per sbloccare accesso ai report, analisi on-demand e
-            community proposals. Il piano Pro offre accesso completo con 1 report incluso ogni mese.
+            <strong>Tradelia AI</strong> offre un percorso formativo gratuito sui mercati finanziari.
+            Completa il foundation per sbloccare accesso ai report Pro, analisi on-demand e community proposals.
+            Il piano Pro (€29/mese) include 1 report on-demand ogni mese.
           </p>
           <p
             style="
@@ -876,13 +895,12 @@
             "
           >
             <a
-              href="#"
+              href="/dashboard.html#education"
               class="btn btn-outline btn-sm"
-              data-dashboard-handler="true"
               style="display: inline-flex; align-items: center; gap: var(--sp-2)"
-              aria-label="Installa la dashboard PWA"
+              aria-label="Inizia il percorso formativo gratuito"
             >
-              <span>Installa la dashboard PWA</span>
+              <span>Inizia il percorso gratuito</span>
               <svg
                 class="ico"
                 viewBox="0 0 24 24"
@@ -963,16 +981,15 @@
               </ul>
               <div class="plan-actions">
                 <a
-                  href="#"
+                  href="/dashboard.html#education"
                   class="btn btn-primary btn-sm"
-                  aria-label="Upgrade a Pro (dopo completamento foundation)"
-                  data-dashboard-handler="true"
+                  aria-label="Completa il foundation per sbloccare il piano Pro"
                 >
-                  Upgrade a Pro
+                  Completa il foundation
                 </a>
                 <p class="plan-meta">
-                  Richiede completamento del percorso formativo foundation. Fatturazione mensile
-                  ricorrente, cancellabile in qualsiasi momento.
+                  Richiede completamento del percorso formativo foundation gratuito. Fatturazione mensile
+                  ricorrente tramite Stripe, cancellabile in qualsiasi momento.
                 </p>
               </div>
             </article>
@@ -1069,18 +1086,17 @@
             </div>
 
             <div style="text-align: center">
-              <a
-                href="#"
-                class="btn btn-primary"
-                aria-label="Installa la dashboard PWA"
-                data-dashboard-handler="true"
-              >
-                Installa la dashboard PWA
-              </a>
-              <p class="plan-meta" style="margin-top: var(--sp-3)">
-                Tutte le richieste (analisi, Desk, codice di accesso) si gestiscono direttamente
-                nella dashboard PWA installabile.
-              </p>
+            <a
+              href="/dashboard.html#education"
+              class="btn btn-primary"
+              aria-label="Accedi alla dashboard per richiedere analisi on-demand"
+            >
+              Accedi alla dashboard
+            </a>
+            <p class="plan-meta" style="margin-top: var(--sp-3)">
+              Tutte le richieste di analisi on-demand si gestiscono direttamente nella dashboard.
+              Disponibile solo per utenti Pro dopo completamento foundation.
+            </p>
             </div>
           </div>
         </section>
@@ -1121,7 +1137,7 @@
               </p>
               <p style="margin-top: var(--sp-2)">
                 Per accedere al piano Pro devi prima completare il percorso formativo foundation
-                gratuito. Tutte le informazioni sono disponibili nella dashboard PWA installabile.
+                gratuito. <a href="/dashboard.html#education" style="color: var(--brand-400); text-decoration: underline;">Inizia subito il percorso formativo</a> - nessun login richiesto.
               </p>
             </details>
 
