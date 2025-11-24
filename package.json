@@ -7,7 +7,6 @@
     "generate-manifest": "node archivio/generate-manifest.js",
     "generate-tokens": "node scripts/generate-tokens.js",
     "setup-hooks": "node scripts/setup-hooks.js",
-    "verify-supabase": "node scripts/verify-supabase.js",
     "precommit": "node archivio/generate-manifest.js && npm run generate-tokens",
     "version:patch": "node scripts/update-version.js patch",
     "version:minor": "node scripts/update-version.js minor",
