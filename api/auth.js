@@ -780,11 +780,6 @@ async function handleSignup(req, res) {
   if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
     return res.status(400).json({ ok: false, error: "Formato email non valido" });
   }
-  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-  
-  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
-    return res.status(400).json({ ok: false, error: "Formato email non valido" });
-  }
 
   if (!password || typeof password !== "string" || password.length < 12) {
     return res
@@ -800,14 +795,7 @@ async function handleSignup(req, res) {
     return res.status(400).json({ ok: false, error: "Devi accettare la privacy policy" });
   }
 
-  // BEST PRACTICE: Sanitizzazione email coerente
-  const sanitizedEmail = email.trim().toLowerCase();
-  
-  // Validazione formato email
-  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-  if (!emailRegex.test(sanitizedEmail) || sanitizedEmail.length > 254 || sanitizedEmail.length < 5) {
-    return res.status(400).json({ ok: false, error: "Formato email non valido" });
-  }
+  // sanitizedEmail e emailRegex già dichiarati sopra (righe 776, 779)
 
   // Rate limiting
   const rateLimit = checkRateLimit(`signup:${sanitizedEmail}`);

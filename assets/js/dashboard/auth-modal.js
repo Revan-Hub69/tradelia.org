@@ -840,9 +840,8 @@ async function handleSignupSubmit(e) {
     return;
   }
 
-  // Email format validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
+  // Email format validation - use existing validateEmail function
+  if (!validateEmail(email)) {
     DEBUG.warn("handleSignupSubmit", "Validation failed: invalid email format");
     setStatusMessage(statusId, "Formato email non valido.", "error");
     emailInput?.focus();
