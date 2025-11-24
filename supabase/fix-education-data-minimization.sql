@@ -16,7 +16,7 @@ ADD COLUMN IF NOT EXISTS wrong_question_ids UUID[] DEFAULT '{}';
 -- Estrae solo question_id delle risposte sbagliate da answers JSONB
 UPDATE education_user_test_attempts
 SET wrong_question_ids = (
-  SELECT ARRAY_AGG(question_id::UUID)
+  SELECT ARRAY_AGG(key::UUID)
   FROM jsonb_each(answers)
   WHERE (value->>'is_correct')::boolean = false
 )
