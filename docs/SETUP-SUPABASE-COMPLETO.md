@@ -1,5 +1,37 @@
 # 🚀 Setup Completo Supabase - Sistema Educativo Tradelia
 
+## 📌 Come Eseguire gli Script
+
+### Opzione 1: SQL Editor (Attuale - OK per Sviluppo)
+
+1. Vai su [Supabase Dashboard](https://app.supabase.com)
+2. Seleziona il tuo progetto
+3. Vai a **SQL Editor**
+4. Copia e incolla ogni script nell'ordine indicato
+5. Clicca **Run**
+
+### Opzione 2: Supabase CLI (Best Practice - Raccomandato per Produzione)
+
+```bash
+# Installa Supabase CLI
+npm install -g supabase
+
+# Inizializza (se non fatto)
+supabase init
+
+# Link progetto
+supabase link --project-ref your-project-ref
+
+# Converti script in migrations e push
+supabase migration new add_education_system
+# (copia contenuto script nella migration)
+supabase db push
+```
+
+**Vedi**: `docs/supabase-deployment-strategies.md` per dettagli completi
+
+---
+
 ## ⚠️ IMPORTANTE: Ordine di Esecuzione
 
 **Esegui gli script IN QUESTO ORDINE ESATTO** per evitare errori di dipendenze.
