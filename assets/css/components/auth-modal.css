@@ -122,7 +122,16 @@
   flex: 1;
 }
 
-.auth-modal :is(button, .btn, .auth-modal-tab, .auth-form-input, textarea, select, .link-button):focus-visible {
+.auth-modal
+  :is(
+    button,
+    .btn,
+    .auth-modal-tab,
+    .auth-form-input,
+    textarea,
+    select,
+    .link-button
+  ):focus-visible {
   outline: 3px solid rgba(96, 165, 250, 0.9);
   outline-offset: 2px;
   box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.25);
@@ -670,57 +679,233 @@
 
 @media (max-width: 640px) {
   .auth-modal {
-    align-items: flex-start;
+    align-items: flex-end;
+    padding: 0;
   }
 
   .auth-modal-content {
     width: 100%;
     max-width: none;
-    max-height: none;
-    min-height: 100vh;
-    border-radius: 0;
+    max-height: 90vh;
+    min-height: auto;
+    border-radius: 1.25rem 1.25rem 0 0;
+    margin-top: auto;
+    /* Safe area per notch/barre navigazione */
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    /* Gestione viewport con tastiera */
+    max-height: calc(100vh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
+  }
+
+  .auth-modal-overlay {
+    /* Migliora contrasto su mobile */
+    background: rgba(0, 0, 0, 0.9);
   }
 
   .auth-modal-context {
-    padding: 1rem 1.25rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
   }
 
   .auth-context-top {
     flex-direction: column;
+    gap: 0.75rem;
   }
 
   .auth-context-top .auth-modal-intro {
     width: 100%;
+    font-size: 0.85rem;
   }
 
   .auth-plan-overview {
     flex-direction: column;
+    gap: 0.5rem;
   }
 
-  .auth-modal-header,
+  .auth-plan-pill {
+    min-width: auto;
+    padding: 0.65rem 0.85rem;
+  }
+
+  .auth-modal-header {
+    padding: 1rem 1rem;
+    position: sticky;
+    top: 0;
+    background: var(--surface-card, #020617);
+    z-index: 10;
+    border-bottom: 1px solid var(--br-card, #1f2937);
+  }
+
+  .auth-modal-title {
+    font-size: 1.2rem;
+  }
+
+  .auth-modal-close {
+    width: 32px;
+    height: 32px;
+  }
+
   .auth-modal-body {
-    padding: 1.25rem 1.25rem;
+    padding: 1rem;
+    /* Scroll fluido su mobile */
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+    /* Spazio per evitare che il contenuto vada sotto la tastiera */
+    padding-bottom: max(1rem, env(safe-area-inset-bottom, 0) + 1rem);
+  }
+
+  .auth-modal-intro {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
   }
 
   .auth-modal-tabs {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .auth-modal-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .auth-modal-tab {
+    padding: 0.65rem 1rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    /* Touch target minimo 44x44px (WCAG 2.1) */
+    min-height: 44px;
+  }
+
+  .auth-modal-form {
+    gap: 1rem;
+  }
+
+  .auth-form-group {
+    gap: 0.4rem;
+  }
+
+  .auth-form-label {
+    font-size: 0.8rem;
+  }
+
+  .auth-form-input {
+    padding: 0.85rem 1rem;
+    /* Touch target minimo */
+    min-height: 44px;
+    font-size: max(16px, 0.9rem);
   }
 
   .auth-form-actions {
     flex-direction: column;
+    gap: 0.65rem;
+    margin-top: 1rem;
   }
 
   .auth-form-actions .btn {
     width: 100%;
+    min-height: 44px;
+    padding: 0.85rem 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  .auth-form-checkbox {
+    font-size: 0.8rem;
+    gap: 0.65rem;
+  }
+
+  .auth-form-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    /* Touch target minimo */
+    min-width: 44px;
+    min-height: 44px;
+    margin: 0;
+    margin-right: -12px; /* Compensa per touch target */
   }
 
   .auth-support-actions {
-    padding: 0.75rem;
+    padding: 0.85rem;
+    margin-top: 0.75rem;
+  }
+
+  .auth-support-text {
+    font-size: 0.8rem;
+  }
+
+  .btn-ghost {
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+  }
+
+  /* Migliora password toggle su mobile */
+  .auth-password-toggle {
+    width: 44px;
+    height: 44px;
+    right: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  /* Status message più compatto */
+  .auth-status-message {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
+    margin-bottom: 0.65rem;
+  }
+
+  /* Context tags più piccoli */
+  .auth-context-tags {
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .auth-context-tag {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.55rem;
+  }
+
+  /* Value list più compatto */
+  .auth-value-list {
+    gap: 0.3rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Gestione viewport height dinamica con tastiera (iOS Safari, Android Chrome) */
+@supports (height: 100dvh) {
+  @media (max-width: 640px) {
+    .auth-modal-content {
+      max-height: calc(100dvh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
+    }
+  }
+}
+
+/* Miglioramenti per schermi molto piccoli */
+@media (max-width: 375px) {
+  .auth-modal-header,
+  .auth-modal-body {
+    padding: 0.85rem;
+  }
+
+  .auth-modal-title {
+    font-size: 1.1rem;
+  }
+
+  .auth-modal-context {
+    padding: 0.85rem;
+  }
+
+  .auth-form-input {
+    padding: 0.75rem 0.9rem;
   }
 }
 
 @media (pointer: coarse) {
-  .auth-modal :is(button, .btn, .auth-modal-tab, .auth-form-input, textarea, select, .link-button):focus {
+  .auth-modal
+    :is(button, .btn, .auth-modal-tab, .auth-form-input, textarea, select, .link-button):focus {
     outline-width: 4px;
   }
 }
