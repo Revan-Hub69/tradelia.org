@@ -51,6 +51,7 @@
     <link rel="stylesheet" href="/report/assets/css/tokens.css" />
     <link rel="stylesheet" href="/assets/css/global-header.css" />
     <link rel="stylesheet" href="/assets/css/site-coherence-2025.css" />
+    <link rel="stylesheet" href="/assets/css/homepage-brokers-2025.css" />
     <link rel="stylesheet" href="/report/assets/css/design-system-academico-2025.css" />
     <!-- Fonts with async loading -->
     <link
@@ -134,73 +135,28 @@
     </script>
 
     <style>
-      html {
-        scroll-behavior: smooth;
-      }
-      html,
+      /* ===== PRICING PAGE SPECIFIC STYLES ===== */
+      /* Base styles are in site-coherence-2025.css */
+      
       body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
         padding-top: 64px;
-        background: var(--surface-page);
-        color: var(--ink);
-        font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
       }
-      #site-header-slot {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-      }
-
-      /* Skip link */
-      .skip-link {
-        position: absolute;
-        top: -100px;
-        left: 0;
-        z-index: 10000;
-        padding: var(--sp-3) var(--sp-4);
-        background: var(--brand-600);
-        color: var(--ink-invert);
-        text-decoration: none;
-        font-weight: 600;
-        border-radius: 0 0 var(--radius-md) 0;
-        transition: top 0.2s ease;
-      }
-      .skip-link:focus {
-        top: 0;
-        outline: 2px solid var(--brand-400);
-        outline-offset: 2px;
-      }
-
-      .container {
-        max-width: 90rem;
-        margin-inline: auto;
-        padding-inline: 1rem;
-      }
-      main {
-        flex: 1;
-        padding-top: 2rem;
-        padding-bottom: 8rem;
-      }
-
+      
       @media (max-width: 768px) {
         body {
           padding-top: 56px;
         }
+      }
+      
+      main {
+        padding-top: 2rem;
+        padding-bottom: 8rem;
+      }
+      
+      @media (max-width: 768px) {
         main {
           padding-top: 1rem;
           padding-bottom: 4rem;
-        }
-        .container {
-          padding-inline: 0.75rem;
         }
       }
 
@@ -463,120 +419,9 @@
         line-height: var(--lh-17);
       }
 
-      /* ===== BUTTONS (aligned to MiFID/Homepage) ===== */
-      .btn,
-      .btn:link,
-      .btn:visited,
-      .btn-sm {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--sp-3);
-        padding: calc(var(--sp-4) + 2px) calc(var(--sp-7) + 6px);
-        font-size: var(--fs-13);
-        font-weight: 600;
-        letter-spacing: 0.01em;
-        text-decoration: none;
-        cursor: pointer;
-        color: color-mix(in srgb, var(--ink) 78%, #ffffff 22%);
-        background: color-mix(in srgb, var(--surface-card) 88%, rgba(37, 99, 235, 0.12));
-        border: 1px solid color-mix(in srgb, var(--br-card) 72%, rgba(37, 99, 235, 0.24) 28%);
-        border-radius: var(--radius-pill);
-        box-shadow:
-          0 12px 28px rgba(0, 0, 0, 0.32),
-          inset 0 1px 0 rgba(255, 255, 255, 0.04);
-        backdrop-filter: blur(10px);
-        overflow: hidden;
-        min-height: 46px;
-        transition:
-          transform var(--transition-fast),
-          box-shadow var(--transition-fast),
-          background var(--transition-base),
-          border-color var(--transition-base),
-          color var(--transition-base);
-      }
-
-      .btn-sm {
-        padding: var(--sp-2) var(--sp-4);
-        font-size: var(--fs-12);
-        min-height: 34px;
-        box-shadow:
-          0 6px 16px rgba(0, 0, 0, 0.24),
-          inset 0 1px 0 rgba(255, 255, 255, 0.03);
-      }
-
-      .btn::before,
-      .btn-sm::before {
-        content: '';
-        position: absolute;
-        inset: 1px 1px auto 1px;
-        height: 46%;
-        border-radius: calc(var(--radius-pill) - 4px);
-        background: linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.08) 0%,
-          rgba(255, 255, 255, 0.02) 100%
-        );
-        pointer-events: none;
-      }
-
-      .btn:hover,
-      .btn-sm:hover {
-        background: color-mix(in srgb, var(--surface-card) 92%, rgba(37, 99, 235, 0.18));
-        border-color: color-mix(in srgb, var(--br-card) 60%, rgba(37, 99, 235, 0.32) 40%);
-        box-shadow:
-          0 18px 36px rgba(0, 0, 0, 0.4),
-          inset 0 1px 0 rgba(255, 255, 255, 0.06);
-        transform: translateY(-1px);
-      }
-
-      .btn:active,
-      .btn-sm:active {
-        transform: translateY(0) scale(0.98);
-        transition: transform 0.08s ease;
-      }
-
-      .btn:focus-visible,
-      .btn-sm:focus-visible {
-        outline: 2px solid var(--brand-500);
-        outline-offset: 2px;
-        box-shadow:
-          0 0 0 4px rgba(37, 99, 235, 0.12),
-          0 12px 28px rgba(0, 0, 0, 0.32);
-      }
-
-      .btn-primary {
-        color: var(--ink-invert);
-        background: linear-gradient(120deg, #2563eb 0%, #3b82f6 60%, #60a5fa 100%);
-        border-color: rgba(59, 130, 246, 0.8);
-        box-shadow:
-          0 14px 40px rgba(37, 99, 235, 0.45),
-          inset 0 1px 0 rgba(255, 255, 255, 0.18);
-      }
-
-      .btn-primary:hover {
-        background: linear-gradient(120deg, #1d4ed8 0%, #2563eb 65%, #60a5fa 100%);
-        border-color: rgba(147, 197, 253, 0.9);
-      }
-
-      .btn-outline {
-        color: var(--ink);
-        background: color-mix(in srgb, var(--surface-card) 92%, transparent);
-        border-color: var(--br-soft);
-        box-shadow:
-          0 6px 16px rgba(0, 0, 0, 0.16),
-          inset 0 1px 0 rgba(255, 255, 255, 0.03);
-      }
-
-      .btn-outline:hover {
-        border-color: color-mix(in srgb, var(--br-soft) 70%, rgba(59, 130, 246, 0.4));
-      }
-
-      .btn-block {
-        width: 100%;
-        justify-content: center;
-      }
+      /* ===== BUTTONS ===== */
+      /* Button styles are defined in site-coherence-2025.css and homepage-brokers-2025.css */
+      /* Only pricing-specific overrides below if needed */
 
       /* ===== MODAL ===== */
       .modal-overlay {
