@@ -486,26 +486,32 @@ CREATE POLICY "Public can view active community goals"
   USING (is_active = true);
 
 -- User-specific per transactions, progress, achievements
+DROP POLICY IF EXISTS "Users can view own XP transactions" ON education_xp_transactions;
 CREATE POLICY "Users can view own XP transactions"
   ON education_xp_transactions FOR SELECT
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can view own badge progress" ON education_badge_progress;
 CREATE POLICY "Users can view own badge progress"
   ON education_badge_progress FOR SELECT
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can manage own streaks" ON education_user_streaks;
 CREATE POLICY "Users can manage own streaks"
   ON education_user_streaks FOR ALL
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can view own achievements" ON education_user_achievements;
 CREATE POLICY "Users can view own achievements"
   ON education_user_achievements FOR SELECT
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can manage own quests" ON education_user_quests;
 CREATE POLICY "Users can manage own quests"
   ON education_user_quests FOR ALL
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can view own community contributions" ON education_user_community_contributions;
 CREATE POLICY "Users can view own community contributions"
   ON education_user_community_contributions FOR SELECT
   USING (auth.uid() = user_id);

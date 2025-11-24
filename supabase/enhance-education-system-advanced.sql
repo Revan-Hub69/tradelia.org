@@ -401,27 +401,33 @@ CREATE POLICY "Public can view reflection prompts"
   USING (is_active = true);
 
 -- User-specific per spaced repetition, attempts, reflections
+DROP POLICY IF EXISTS "Users can manage own spaced repetition" ON education_spaced_repetition;
 CREATE POLICY "Users can manage own spaced repetition"
   ON education_spaced_repetition FOR ALL
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can manage own spaced repetition sessions" ON education_spaced_repetition_sessions;
 CREATE POLICY "Users can manage own spaced repetition sessions"
   ON education_spaced_repetition_sessions FOR ALL
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can manage own lesson quiz attempts" ON education_user_lesson_quiz_attempts;
 CREATE POLICY "Users can manage own lesson quiz attempts"
   ON education_user_lesson_quiz_attempts FOR ALL
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can manage own reflections" ON education_user_reflections;
 CREATE POLICY "Users can manage own reflections"
   ON education_user_reflections FOR ALL
   USING (auth.uid() = user_id);
 
 -- Question performance: users can view global, manage own
+DROP POLICY IF EXISTS "Public can view global question performance" ON education_question_performance;
 CREATE POLICY "Public can view global question performance"
   ON education_question_performance FOR SELECT
   USING (user_id IS NULL);
 
+DROP POLICY IF EXISTS "Users can manage own question performance" ON education_question_performance;
 CREATE POLICY "Users can manage own question performance"
   ON education_question_performance FOR ALL
   USING (auth.uid() = user_id OR user_id IS NULL);

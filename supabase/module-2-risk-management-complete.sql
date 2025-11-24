@@ -36,7 +36,8 @@ BEGIN
   ) ON CONFLICT (slug) DO UPDATE SET
     title = EXCLUDED.title,
     description = EXCLUDED.description,
-    estimated_hours = EXCLUDED.estimated_hours
+    estimated_hours = EXCLUDED.estimated_hours,
+    prerequisites = EXCLUDED.prerequisites
   RETURNING id INTO v_module_2_id;
 
   IF v_module_2_id IS NULL THEN
