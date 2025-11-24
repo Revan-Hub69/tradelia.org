@@ -208,7 +208,7 @@ function bindBannerEvents(container, role) {
   const authModalBtn = container.querySelector("#btn-open-auth-modal");
   if (authModalBtn) {
     authModalBtn.addEventListener("click", () => {
-      showAuthModal("code");
+      showAuthModal("login");
     });
   }
 

@@ -18,9 +18,9 @@ export function initAuthModal() {
 
 /**
  * Show auth modal
- * @param {string} tab - 'code' | 'login' | 'signup'
+ * @param {string} tab - 'login' | 'signup'
  */
-export function showAuthModal(tab = "code") {
+export function showAuthModal(tab = "login") {
   const modal = document.getElementById(MODAL_ID);
   if (!modal) {
     // Se modale non esiste, crealo
@@ -53,8 +53,7 @@ export function showAuthModal(tab = "code") {
   const content = modal.querySelector(".auth-modal-content");
   if (content) {
     keyboardNav.activateFocusTrap(content, {
-      initialFocus:
-        tab === "code" ? "#auth-code-input" : tab === "login" ? "#auth-email" : "#signup-email",
+      initialFocus: tab === "signup" ? "#signup-email" : "#auth-email",
       returnFocus: true,
     });
   }
@@ -112,25 +111,39 @@ function createModal() {
       </div>
 
       <div class="auth-modal-body">
+        <div class="auth-modal-context">
+          <p class="auth-modal-intro">
+            Tradelia usa AI con metodo accademico per percorsi finanziari chiari, verificabili e adatti al retail. Non gestiamo capitali: offriamo studio guidato, analisi automatizzate e verifiche digitali.
+          </p>
+          <ul class="auth-value-list">
+            <li>Esami automatizzati e feedback immediato.</li>
+            <li>Dashboard educativa certificabile MiFID-ready.</li>
+            <li>Linguaggio semplice, metodo rigoroso.</li>
+          </ul>
+          <div class="auth-plan-overview" aria-label="Panoramica servizi">
+            <div class="auth-plan-pill">
+              <strong>Base</strong>
+              <span>Accesso gratuito, percorsi introduttivi, alert educativi.</span>
+            </div>
+            <div class="auth-plan-pill">
+              <strong>Pro</strong>
+              <span>Analisi avanzate, community moderata, tutor AI.</span>
+            </div>
+            <div class="auth-plan-pill">
+              <strong>Desk</strong>
+              <span>Servizi istituzionali, checklist MiFID, audit completo.</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Tab Switcher -->
         <div class="auth-modal-tabs" role="tablist">
           <button
             type="button"
             class="auth-modal-tab active"
-            data-tab="code"
-            role="tab"
-            aria-selected="true"
-            aria-controls="auth-tab-code"
-            id="auth-tab-code-btn"
-          >
-            Codice Accesso
-          </button>
-          <button
-            type="button"
-            class="auth-modal-tab"
             data-tab="login"
             role="tab"
-            aria-selected="false"
+            aria-selected="true"
             aria-controls="auth-tab-login"
             id="auth-tab-login-btn"
           >
@@ -145,60 +158,21 @@ function createModal() {
             aria-controls="auth-tab-signup"
             id="auth-tab-signup-btn"
           >
-            Registrati
+            Crea account
           </button>
         </div>
 
         <!-- Tab Panels -->
         <div class="auth-modal-panels">
-          <!-- Code Tab -->
-          <div
-            id="auth-tab-code"
-            class="auth-modal-panel active"
-            role="tabpanel"
-            aria-labelledby="auth-tab-code-btn"
-          >
-            <p class="auth-modal-intro">
-              Inserisci il codice di accesso ricevuto via email. Puoi richiederlo gratuitamente dal modulo Richiedilo direttamente nella dashboard installabile (Progressive App).
-            </p>
-            <form id="auth-code-form" class="auth-modal-form" novalidate>
-              <div class="auth-form-group">
-                <label for="auth-code-input" class="auth-form-label">
-                  Codice di accesso
-                </label>
-                <input
-                  type="password"
-                  id="auth-code-input"
-                  name="code"
-                  class="auth-form-input"
-                  placeholder="Incolla qui il codice Tradelia"
-                  autocomplete="off"
-                  required
-                  aria-invalid="false"
-                  aria-describedby="auth-code-error"
-                />
-                <span class="auth-form-error" id="auth-code-error" role="alert" hidden></span>
-              </div>
-              <div class="auth-form-actions">
-                <button type="submit" class="btn btn-primary">
-                  Accedi
-                </button>
-                <button type="button" class="btn btn-secondary" id="auth-code-request">
-                  Richiedi codice
-                </button>
-              </div>
-            </form>
-          </div>
-
           <!-- Login Tab -->
           <div
             id="auth-tab-login"
-            class="auth-modal-panel"
+            class="auth-modal-panel active"
             role="tabpanel"
             aria-labelledby="auth-tab-login-btn"
           >
             <p class="auth-modal-intro">
-              Accedi con email e password.
+              Accedi con email e password per proseguire i tuoi percorsi.
             </p>
             <form id="auth-login-form" class="auth-modal-form" novalidate>
               <div class="auth-form-group">
@@ -266,7 +240,7 @@ function createModal() {
             aria-labelledby="auth-tab-signup-btn"
           >
             <p class="auth-modal-intro">
-              Crea un account per accedere a tutte le funzionalità.
+              Crea un account gratuito. Potrai attivare in seguito i servizi Pro o Desk.
             </p>
             <form id="auth-signup-form" class="auth-modal-form" novalidate>
               <div class="auth-form-group">
@@ -392,7 +366,6 @@ function setupModalEvents() {
   const overlay = modal.querySelector(".auth-modal-overlay");
   const closeBtn = modal.querySelector(".auth-modal-close");
   const tabs = modal.querySelectorAll(".auth-modal-tab");
-  const codeForm = document.getElementById("auth-code-form");
   const loginForm = document.getElementById("auth-login-form");
   const signupForm = document.getElementById("auth-signup-form");
 
@@ -424,23 +397,11 @@ function setupModalEvents() {
   });
 
   // Form submissions
-  if (codeForm) {
-    codeForm.addEventListener("submit", handleCodeSubmit);
-  }
   if (loginForm) {
     loginForm.addEventListener("submit", handleLoginSubmit);
   }
   if (signupForm) {
     signupForm.addEventListener("submit", handleSignupSubmit);
-  }
-
-  // Request code button - BEST PRACTICE: Implementazione completa
-  const requestCodeBtn = document.getElementById("auth-code-request");
-  if (requestCodeBtn) {
-    requestCodeBtn.addEventListener("click", async () => {
-      // Mostra modale richiesta codice
-      showRequestCodeModal();
-    });
   }
 
   // Real-time validation (deferred to ensure DOM is ready)
@@ -541,53 +502,6 @@ function switchTab(tabName) {
  */
 function updateModalTab(tabName) {
   switchTab(tabName);
-}
-
-/**
- * Handle code form submit
- */
-async function handleCodeSubmit(e) {
-  e.preventDefault();
-  const codeInput = document.getElementById("auth-code-input");
-  const code = codeInput?.value?.trim();
-
-  if (!code) {
-    showFieldError("auth-code-input", "auth-code-error", "Inserisci un codice di accesso");
-    codeInput?.focus();
-    return;
-  }
-
-  clearFieldError("auth-code-input", "auth-code-error");
-
-  try {
-    const response = await fetch("/api/auth?action=validate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: code }),
-    });
-
-    const data = await response.json();
-
-    if (data.ok) {
-      // Save token - BEST PRACTICE: Use secure token storage
-      const { saveToken } = await import("./token-storage.js");
-      await saveToken(code);
-      if (window.showToast) {
-        window.showToast("Accesso riuscito!", "success");
-      }
-      hideAuthModal();
-      // Reload page to update banner
-      window.location.reload();
-    } else {
-      showFieldError("auth-code-input", "auth-code-error", data.error || "Codice non valido");
-      codeInput?.focus();
-    }
-  } catch (error) {
-    safeLog("error", "[AuthModal] Errore validazione codice:", error);
-    if (window.showToast) {
-      window.showToast("Errore di connessione. Riprova.", "error");
-    }
-  }
 }
 
 /**
@@ -1190,224 +1104,3 @@ async function handleResetPasswordRequest() {
   }
 }
 
-// ===== REQUEST CODE MODAL =====
-function showRequestCodeModal() {
-  // Crea modale richiesta codice se non esiste
-  let modal = document.getElementById("request-code-modal");
-  if (!modal) {
-    modal = document.createElement("div");
-    modal.id = "request-code-modal";
-    modal.className = "auth-modal";
-    modal.setAttribute("role", "dialog");
-    modal.setAttribute("aria-label", "Richiedi codice di accesso");
-    modal.setAttribute("aria-modal", "true");
-    modal.setAttribute("aria-hidden", "true");
-    
-    modal.innerHTML = `
-      <div class="auth-modal-overlay" aria-hidden="true"></div>
-      <div class="auth-modal-content">
-        <div class="auth-modal-header">
-          <h2 class="auth-modal-title">Richiedi Codice di Accesso</h2>
-          <button type="button" class="auth-modal-close" aria-label="Chiudi">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        </div>
-        <div class="auth-modal-body">
-          <p class="auth-modal-intro">
-            Richiedi un codice di accesso gratuito valido 30 giorni. Il codice funziona sulla dashboard PWA installabile.
-          </p>
-          <form id="request-code-form" class="auth-modal-form" novalidate>
-            <div class="auth-form-group">
-              <label for="request-code-email" class="auth-form-label">Email</label>
-              <input
-                type="email"
-                id="request-code-email"
-                name="email"
-                class="auth-form-input"
-                placeholder="nome@esempio.com"
-                autocomplete="email"
-                required
-                aria-invalid="false"
-                aria-describedby="request-code-email-error"
-              />
-              <span class="auth-form-error" id="request-code-email-error" role="alert" hidden></span>
-            </div>
-            <div class="auth-form-actions">
-              <button type="submit" class="btn btn-primary">Richiedi Codice</button>
-              <button type="button" class="btn btn-secondary" onclick="closeRequestCodeModal()">Annulla</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    `;
-    
-    document.body.appendChild(modal);
-    
-    // Bind events
-    const closeBtn = modal.querySelector(".auth-modal-close");
-    const overlay = modal.querySelector(".auth-modal-overlay");
-    const form = modal.querySelector("#request-code-form");
-    
-    if (closeBtn) {
-      closeBtn.addEventListener("click", closeRequestCodeModal);
-    }
-    if (overlay) {
-      overlay.addEventListener("click", closeRequestCodeModal);
-    }
-    if (form) {
-      form.addEventListener("submit", handleRequestCodeSubmit);
-    }
-    
-    // Escape key
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !modal.hasAttribute("aria-hidden")) {
-        closeRequestCodeModal();
-      }
-    });
-  }
-  
-  // Mostra modale
-  modal.removeAttribute("aria-hidden");
-  modal.classList.add("active");
-  document.body.style.overflow = "hidden";
-  
-  // Focus first input
-  const emailInput = modal.querySelector("#request-code-email");
-  if (emailInput) {
-    setTimeout(() => emailInput.focus(), 100);
-  }
-}
-
-function closeRequestCodeModal() {
-  const modal = document.getElementById("request-code-modal");
-  if (modal) {
-    modal.setAttribute("aria-hidden", "true");
-    modal.classList.remove("active");
-    document.body.style.overflow = "";
-  }
-}
-
-async function handleRequestCodeSubmit(e) {
-  e.preventDefault();
-  const form = e.target;
-  const emailInput = document.getElementById("request-code-email");
-  const email = emailInput?.value?.trim() || "";
-  const errorEl = document.getElementById("request-code-email-error");
-  const submitBtn = form.querySelector('button[type="submit"]');
-  
-  // Validation
-  if (!email) {
-    if (errorEl) {
-      errorEl.textContent = "Inserisci un'email";
-      errorEl.hidden = false;
-    }
-    emailInput?.setAttribute("aria-invalid", "true");
-    emailInput?.focus();
-    return;
-  }
-  
-  if (!validateEmail(email)) {
-    if (errorEl) {
-      errorEl.textContent = "Formato email non valido";
-      errorEl.hidden = false;
-    }
-    emailInput?.setAttribute("aria-invalid", "true");
-    emailInput?.focus();
-    return;
-  }
-  
-  // Clear error
-  if (errorEl) {
-    errorEl.textContent = "";
-    errorEl.hidden = true;
-  }
-  emailInput?.setAttribute("aria-invalid", "false");
-  
-  // Disable form
-  if (submitBtn) {
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Invio in corso...";
-  }
-  
-  try {
-    // Prova prima con free-token (codice gratuito)
-    const response = await fetch("/api/auth?action=free-token", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        nome: email.split("@")[0], // Nome da email
-        profilo: "privato",
-        uso: "Accesso alla dashboard Tradelia per analisi finanziarie",
-      }),
-    });
-    
-    const data = await response.json();
-    
-    if (data.ok) {
-      if (window.showToast) {
-        window.showToast(
-          data.message || "Codice generato. Controlla la tua email.",
-          "success"
-        );
-      }
-      closeRequestCodeModal();
-      // Switch to code tab
-      setTimeout(() => {
-        switchTab("code");
-        const codeInput = document.getElementById("auth-code-input");
-        if (codeInput) {
-          codeInput.focus();
-        }
-      }, 500);
-    } else {
-      // Se free-token fallisce, prova con token normale (per utenti con piano)
-      const response2 = await fetch("/api/auth?action=token", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      
-      const data2 = await response2.json();
-      
-      if (data2.ok) {
-        if (window.showToast) {
-          window.showToast(
-            data2.message || "Se esiste un piano attivo, ti abbiamo inviato un nuovo codice.",
-            "success"
-          );
-        }
-        closeRequestCodeModal();
-      } else {
-        if (errorEl) {
-          errorEl.textContent = data2.error || data.error || "Errore durante la richiesta";
-          errorEl.hidden = false;
-        }
-        emailInput?.setAttribute("aria-invalid", "true");
-        if (window.showToast) {
-          window.showToast(data2.error || data.error || "Errore durante la richiesta", "error");
-        }
-      }
-    }
-  } catch (error) {
-    safeLog("error", "[AuthModal] Errore richiesta codice:", error);
-    if (errorEl) {
-      errorEl.textContent = "Errore di connessione. Riprova.";
-      errorEl.hidden = false;
-    }
-    if (window.showToast) {
-      window.showToast("Errore di connessione. Riprova.", "error");
-    }
-  } finally {
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Richiedi Codice";
-    }
-  }
-}
-
-// Expose globally
-window.closeRequestCodeModal = closeRequestCodeModal;
