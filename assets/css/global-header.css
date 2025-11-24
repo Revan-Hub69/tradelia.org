@@ -85,6 +85,29 @@ header.hdr .container {
   font-weight: 700 !important;
 }
 
+/* ===== BRAND LOGO (SVG) ===== */
+.brand-logo,
+.hdr .brand-logo {
+  display: inline-block !important;
+  height: 36px !important;
+  width: auto !important;
+  max-width: 220px !important;
+  object-fit: contain !important;
+  transition: opacity 0.2s, transform 0.2s !important;
+  filter: brightness(1) !important;
+}
+
+.brand:hover .brand-logo,
+.hdr .brand:hover .brand-logo {
+  opacity: 0.9 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Fallback text (hidden when logo loads) */
+.brand-text-fallback {
+  display: none !important;
+}
+
 /* ===== HEADER ACTIONS ===== */
 .header-actions,
 .hdr .header-actions {

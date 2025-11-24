@@ -3,39 +3,9 @@
  * FASE 1: Design System Consolidato - Production Ready
  */
 
-/* ===== LIGHT MODE SUPPORT (Dark Mode Best Practices) ===== */
-/* BEST PRACTICE: Tema chiaro impeccabile con contrasti WCAG 2.1 AA+ */
-[data-theme="light"] {
-  --dash-bg: #ffffff;
-  --dash-bg-soft: #f8f9fa;
-  --dash-surface: #ffffff;
-  --dash-surface-elev: #f1f3f5;
-  --dash-surface-shiny: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  --dash-border: rgba(0, 0, 0, 0.12);
-  --dash-border-strong: rgba(0, 0, 0, 0.18);
-  --dash-border-shiny: rgba(0, 0, 0, 0.24);
-  --dash-text: #0d1117; /* WCAG AA+ contrasto 16.5:1 su bianco */
-  --dash-text-soft: #21262d; /* WCAG AA+ contrasto 12.8:1 su bianco */
-  --dash-text-muted: #656d76; /* WCAG AA contrasto 4.8:1 su bianco */
-  --dash-accent: #0969da; /* Blue migliorato per tema chiaro */
-  --dash-accent-hover: #0860ca;
-  --dash-accent-bg: rgba(9, 105, 218, 0.1);
-  --dash-blue-line: #0969da;
-  --dash-accent-glow: rgba(9, 105, 218, 0.3);
-}
-
-/* Support prefers-color-scheme (se utente non ha scelto manualmente) */
-@media (prefers-color-scheme: light) {
-  html:not([data-theme-manual="true"]) {
-    --dash-bg: #ffffff;
-    --dash-bg-soft: #f9fafb;
-    --dash-surface: #ffffff;
-    --dash-surface-elev: #f3f4f6;
-    --dash-text: #111827;
-    --dash-text-soft: #374151;
-    --dash-text-muted: #6b7280;
-  }
-}
+/* ===== DARK MODE ONLY (Best Practice 2025) ===== */
+/* BEST PRACTICE: Solo tema dark per coerenza istituzionale */
+/* Rimosso supporto tema chiaro - sempre dark mode */
 
 /* ===== SESSION MANAGEMENT ===== */
 .token-expiry-warning {
@@ -273,15 +243,39 @@
   color: var(--dash-text-muted);
 }
 
-.legal-link {
+.legal-link,
+.legal-link-btn {
   color: var(--dash-text-soft);
   text-decoration: none;
   transition: var(--transition);
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
 }
 
-.legal-link:hover {
+.legal-link:hover,
+.legal-link-btn:hover {
   color: var(--dash-text);
   text-decoration: underline;
+}
+
+/* Link button (pulsante che sembra un link) */
+.link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+  transition: opacity var(--transition-smooth);
+}
+
+.link-button:hover {
+  opacity: 0.8;
 }
 
 .legal-separator {
@@ -576,6 +570,27 @@ a[role="button"]:focus-visible {
 .dashboard-brand-suffix {
   color: var(--dash-text-soft);
   font-weight: 700;
+}
+
+/* ===== DASHBOARD BRAND LOGO (SVG) ===== */
+.dashboard-brand-logo {
+  display: inline-block;
+  height: 36px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
+  transition: opacity 0.2s, transform 0.2s;
+  filter: brightness(1);
+}
+
+.dashboard-brand:hover .dashboard-brand-logo {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Fallback text (hidden when logo loads) */
+.dashboard-brand-text-fallback {
+  display: none;
 }
 
 .dashboard-brand:hover {
@@ -1289,9 +1304,45 @@ a[role="button"]:focus-visible {
 .footer-left {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-sm);
   flex: 1;
   min-width: 0;
+}
+
+/* Logo footer - Stile accademico 2025 */
+.footer-logo-link {
+  display: inline-block;
+  margin-bottom: var(--spacing-sm);
+  transition: opacity var(--transition-smooth);
+  text-decoration: none;
+}
+
+.footer-logo-link:hover {
+  opacity: 0.85;
+}
+
+.footer-logo-img {
+  height: 32px;
+  width: auto;
+  display: block;
+  filter: brightness(0.95);
+  transition: filter var(--transition-smooth);
+}
+
+.footer-logo-link:hover .footer-logo-img {
+  filter: brightness(1);
+}
+
+.footer-logo-fallback {
+  display: none !important; /* Nascosto di default, mostrato solo se logo non carica */
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.footer-logo-fallback.show {
+  display: inline-flex !important;
 }
 
 .footer-right {
@@ -1304,7 +1355,9 @@ a[role="button"]:focus-visible {
   font-size: var(--fs-13, 13px);
   color: var(--dash-text-muted);
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 .footer-brand {
@@ -1344,16 +1397,19 @@ a[role="button"]:focus-visible {
 .footer-disclaimer {
   font-size: var(--fs-11, 11px);
   color: var(--dash-text-muted);
-  opacity: 0.7;
+  opacity: 0.75;
   margin: 0;
-  font-style: italic;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
 }
 
 .footer-links-inline {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
   flex-wrap: wrap;
+  font-size: var(--fs-12, 12px);
 }
 
 .footer-link {
@@ -1363,6 +1419,9 @@ a[role="button"]:focus-visible {
   position: relative;
   transition: var(--transition-smooth);
   display: inline-block;
+  padding: var(--spacing-xs) 0;
+  font-weight: 500;
+  letter-spacing: 0.01em;
 }
 
 .footer-link::after {
@@ -1669,9 +1728,12 @@ a[role="button"]:focus-visible {
 }
 
 .footer-tech {
-  font-size: var(--fs-12, 12px);
   color: var(--dash-text-muted);
-  font-family: "Monaco", "Menlo", "Courier New", monospace;
+  opacity: 0.6;
+  font-size: var(--fs-11, 11px);
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', monospace;
+  letter-spacing: 0.05em;
+  font-weight: 500;
 }
 
 .footer-tech strong {
