@@ -284,11 +284,11 @@ DO $$
 BEGIN
   IF EXISTS (
     SELECT 1 FROM pg_proc 
-    WHERE pronamespace = ''public''::regnamespace 
+    WHERE pronamespace = 'public'::regnamespace 
       AND proname = 'get_active_access_grant'
   ) AND EXISTS (
     SELECT 1 FROM pg_proc 
-    WHERE pronamespace = ''public''::regnamespace 
+    WHERE pronamespace = 'public'::regnamespace 
       AND proname = 'get_usage_count'
   ) THEN
     DROP FUNCTION IF EXISTS public.can_use_included_analysis(uuid, text) CASCADE;
@@ -332,11 +332,11 @@ DO $$
 BEGIN
   IF EXISTS (
     SELECT 1 FROM pg_proc 
-    WHERE pronamespace = ''public''::regnamespace 
+    WHERE pronamespace = 'public'::regnamespace 
       AND proname = 'get_active_access_grant'
   ) AND EXISTS (
     SELECT 1 FROM pg_proc 
-    WHERE pronamespace = ''public''::regnamespace 
+    WHERE pronamespace = 'public'::regnamespace 
       AND proname = 'get_usage_count'
   ) THEN
     DROP FUNCTION IF EXISTS public.can_use_extra_analysis(uuid, text) CASCADE;
