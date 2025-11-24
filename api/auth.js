@@ -775,7 +775,7 @@ async function handleSignup(req, res) {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  const { email, password, passwordConfirm, privacyAccepted } = req.body;
+  const { email, password, passwordConfirm, privacyAccepted, educationTrackingAccepted } = req.body;
 
   // Validation - BEST PRACTICE: Validazione robusta email
   if (!email || typeof email !== "string") {
@@ -859,6 +859,21 @@ async function handleSignup(req, res) {
 
     if (!newUser?.user) {
       return res.status(500).json({ ok: false, error: "Errore durante la registrazione" });
+    }
+
+    // Save education tracking consent (GDPR compliance)
+    if (educationTrackingAccepted !== undefined) {
+      await supabase.from("education_user_tracking_preferences").upsert(
+        {
+          user_id: newUser.user.id,
+          track_detailed_progress: educationTrackingAccepted,
+          track_test_scores: educationTrackingAccepted,
+          track_test_answers: false, // Default: NO (minimizzazione GDPR)
+          share_anonymous_analytics: educationTrackingAccepted,
+          consent_given_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id" }
+      );
     }
 
     // Send verification email

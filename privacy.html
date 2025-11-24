@@ -145,7 +145,7 @@
         background: var(--surface-card);
       }
 
-      .legal-tab[aria-selected='true'] {
+      .legal-tab[aria-selected="true"] {
         color: var(--ink);
         background: var(--surface-card);
         border-color: var(--br-card);
@@ -293,6 +293,14 @@
                   log di accesso, azioni principali nella dashboard (es. richieste analisi, uso
                   crediti), preferenze interne al profilo. Queste informazioni sono usate per
                   garantire sicurezza, prevenire abusi e migliorare il Servizio.
+                </li>
+                <li data-i18n="privacy.section2.item4">
+                  <strong>Dati progresso formativo (opzionale, con consenso esplicito):</strong>
+                  punteggi test (solo percentuale, non risposte dettagliate), progress lezioni
+                  (completato/non completato), tempo speso aggregato, XP e livelli per gamification.
+                  <strong>Non salviamo risposte dettagliate ai test</strong> per minimizzazione dati
+                  (GDPR Art. 5). Puoi disattivare questo tracking in qualsiasi momento nelle
+                  impostazioni.
                 </li>
                 <li data-i18n="privacy.section2.item3">
                   <strong>Dati tecnici:</strong>
@@ -1056,13 +1064,13 @@
     <!-- ===== MOUNT FOOTER ===== -->
     <script type="module">
       // Imposta tema dark
-      document.documentElement.setAttribute('data-theme', 'dark');
+      document.documentElement.setAttribute("data-theme", "dark");
 
       // Importa footer (header gestito da global-header.js)
-      import { siteFooter } from '/report/assets/js/components/site-footer.js';
+      import { siteFooter } from "/report/assets/js/components/site-footer.js";
 
       // Monta footer
-      const footerSlot = document.getElementById('site-footer-slot');
+      const footerSlot = document.getElementById("site-footer-slot");
       if (footerSlot) {
         siteFooter.mount(footerSlot);
       }
@@ -1074,93 +1082,93 @@
     <!-- ===== LEGAL OVERLAY SCRIPT ===== -->
     <script>
       (function () {
-        const KEY = 'tradelia-legal-ack-v2025-11';
-        const overlay = document.getElementById('legal-consent-overlay');
-        const btnAccept = document.getElementById('btn-accept-legal');
-        const tabM = document.getElementById('tab-mifid');
-        const tabP = document.getElementById('tab-privacy');
-        const panelM = document.getElementById('panel-mifid');
-        const panelP = document.getElementById('panel-privacy');
+        const KEY = "tradelia-legal-ack-v2025-11";
+        const overlay = document.getElementById("legal-consent-overlay");
+        const btnAccept = document.getElementById("btn-accept-legal");
+        const tabM = document.getElementById("tab-mifid");
+        const tabP = document.getElementById("tab-privacy");
+        const panelM = document.getElementById("panel-mifid");
+        const panelP = document.getElementById("panel-privacy");
 
         if (!overlay || !btnAccept || !tabM || !tabP || !panelM || !panelP) return;
 
         function showTab(which) {
-          const mifid = which === 'mifid';
-          tabM.setAttribute('aria-selected', mifid ? 'true' : 'false');
-          tabP.setAttribute('aria-selected', mifid ? 'false' : 'true');
+          const mifid = which === "mifid";
+          tabM.setAttribute("aria-selected", mifid ? "true" : "false");
+          tabP.setAttribute("aria-selected", mifid ? "false" : "true");
           panelM.hidden = !mifid;
           panelP.hidden = mifid;
         }
 
-        function openLegal(which = 'mifid', blocking = true) {
+        function openLegal(which = "mifid", blocking = true) {
           showTab(which);
           overlay.hidden = false;
-          document.body.style.overflow = 'hidden';
-          if (blocking) overlay.setAttribute('data-blocking', 'true');
-          else overlay.removeAttribute('data-blocking');
-          setTimeout(() => (which === 'privacy' ? tabP : tabM).focus(), 0);
+          document.body.style.overflow = "hidden";
+          if (blocking) overlay.setAttribute("data-blocking", "true");
+          else overlay.removeAttribute("data-blocking");
+          setTimeout(() => (which === "privacy" ? tabP : tabM).focus(), 0);
         }
 
         function closeLegal() {
           overlay.hidden = true;
-          document.body.style.overflow = '';
+          document.body.style.overflow = "";
         }
 
-        tabM.addEventListener('click', () => showTab('mifid'));
-        tabP.addEventListener('click', () => showTab('privacy'));
+        tabM.addEventListener("click", () => showTab("mifid"));
+        tabP.addEventListener("click", () => showTab("privacy"));
 
-        btnAccept.addEventListener('click', () => {
+        btnAccept.addEventListener("click", () => {
           try {
             localStorage.setItem(
               KEY,
-              JSON.stringify({ acceptedAt: new Date().toISOString(), v: '2025-11' })
+              JSON.stringify({ acceptedAt: new Date().toISOString(), v: "2025-11" })
             );
           } catch (e) {}
           closeLegal();
         });
 
-        overlay.addEventListener('click', (e) => {
+        overlay.addEventListener("click", (e) => {
           if (
-            e.target.matches('[data-legal-dismiss]') ||
-            e.target.closest('[data-legal-dismiss]')
+            e.target.matches("[data-legal-dismiss]") ||
+            e.target.closest("[data-legal-dismiss]")
           ) {
-            if (!overlay.hasAttribute('data-blocking')) closeLegal();
+            if (!overlay.hasAttribute("data-blocking")) closeLegal();
           }
         });
 
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && !overlay.hasAttribute('data-blocking')) closeLegal();
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && !overlay.hasAttribute("data-blocking")) closeLegal();
         });
 
         // Bind pulsanti footer quando sono disponibili
         setTimeout(() => {
           document
-            .getElementById('btn-privacy-open')
-            ?.addEventListener('click', () => openLegal('privacy', false));
+            .getElementById("btn-privacy-open")
+            ?.addEventListener("click", () => openLegal("privacy", false));
           document
-            .getElementById('btn-mifid-open')
-            ?.addEventListener('click', () => openLegal('mifid', false));
+            .getElementById("btn-mifid-open")
+            ?.addEventListener("click", () => openLegal("mifid", false));
         }, 500);
 
         // Primo accesso → OBBLIGO accettazione
         let ack = null;
         try {
-          ack = JSON.parse(localStorage.getItem(KEY) || 'null');
+          ack = JSON.parse(localStorage.getItem(KEY) || "null");
         } catch (e) {}
         if (!ack) {
           // Mostra il disclaimer al primo accesso (bloccante)
-          openLegal('mifid', true);
+          openLegal("mifid", true);
         }
       })();
     </script>
 
     <script>
-      const lastUpdated = document.getElementById('last-updated');
+      const lastUpdated = document.getElementById("last-updated");
       if (lastUpdated) {
-        lastUpdated.textContent = new Date().toLocaleDateString('it-IT', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
+        lastUpdated.textContent = new Date().toLocaleDateString("it-IT", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
         });
       }
     </script>

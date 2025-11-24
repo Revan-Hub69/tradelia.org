@@ -27,6 +27,7 @@ const DEBUG = {
       message,
       data,
     };
+    // eslint-disable-next-line no-console
     console[level === "error" ? "error" : level === "warn" ? "warn" : "log"](
       `${logEntry.component} ${message}`,
       data || ""
@@ -435,6 +436,23 @@ function createModal() {
                   </span>
                 </label>
               </div>
+              <div class="auth-form-group">
+                <label class="auth-form-checkbox">
+                  <input
+                    type="checkbox"
+                    id="signup-education-tracking"
+                    name="education-tracking"
+                    checked
+                  />
+                  <span style="font-size: 0.875rem; color: var(--text-muted);">
+                    Consento al tracking del mio progresso formativo (punteggi test, progress lezioni, XP)
+                    <button type="button" class="link-button" onclick="if(window.openLegalOverlay){window.openLegalOverlay('privacy',false);}else{setTimeout(()=>{if(window.openLegalOverlay)window.openLegalOverlay('privacy',false);},400);}" style="background:none;border:none;padding:0;color:inherit;text-decoration:underline;cursor:pointer;font:inherit;font-size:inherit;">(Dettagli)</button>
+                  </span>
+                </label>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; margin-left: 1.5rem;">
+                  Opzionale. Tracciamo solo dati aggregati (score, progress, tempo). Non salviamo risposte dettagliate ai test.
+                </p>
+              </div>
               <div class="auth-form-actions">
                 <button type="submit" class="btn btn-primary">
                   Registrati
@@ -499,8 +517,10 @@ function setupModalEvents() {
 
   // BEST PRACTICE: Su mobile, disabilita chiusura con click overlay per evitare chiusure accidentali
   // Solo il pulsante di chiusura e Escape possono chiudere la modale su mobile
-  const isMobile = window.innerWidth <= 640 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  
+  const isMobile =
+    window.innerWidth <= 640 ||
+    /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
   if (overlay) {
     if (!isMobile) {
       // Desktop: click overlay chiude la modale
@@ -510,27 +530,35 @@ function setupModalEvents() {
       // Solo swipe down intenzionale o pulsante close
       let touchStartY = 0;
       let touchStartTime = 0;
-      
-      overlay.addEventListener("touchstart", (e) => {
-        touchStartY = e.touches[0].clientY;
-        touchStartTime = Date.now();
-      }, { passive: true });
-      
-      overlay.addEventListener("touchend", (e) => {
-        const touchEndY = e.changedTouches[0].clientY;
-        const touchEndTime = Date.now();
-        const deltaY = touchEndY - touchStartY;
-        const deltaTime = touchEndTime - touchStartTime;
-        
-        // Swipe down veloce e significativo (> 100px in < 300ms) = chiusura intenzionale
-        if (deltaY > 100 && deltaTime < 300 && touchStartY < 100) {
-          // Swipe dall'alto verso il basso = chiusura intenzionale
-          closeModal();
-        }
-      }, { passive: true });
+
+      overlay.addEventListener(
+        "touchstart",
+        (e) => {
+          touchStartY = e.touches[0].clientY;
+          touchStartTime = Date.now();
+        },
+        { passive: true }
+      );
+
+      overlay.addEventListener(
+        "touchend",
+        (e) => {
+          const touchEndY = e.changedTouches[0].clientY;
+          const touchEndTime = Date.now();
+          const deltaY = touchEndY - touchStartY;
+          const deltaTime = touchEndTime - touchStartTime;
+
+          // Swipe down veloce e significativo (> 100px in < 300ms) = chiusura intenzionale
+          if (deltaY > 100 && deltaTime < 300 && touchStartY < 100) {
+            // Swipe dall'alto verso il basso = chiusura intenzionale
+            closeModal();
+          }
+        },
+        { passive: true }
+      );
     }
   }
-  
+
   if (closeBtn) {
     closeBtn.addEventListener("click", closeModal);
   }
@@ -597,6 +625,7 @@ function setupKeyboardAdjustment() {
 /**
  * Show field error
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function showFieldError(inputId, errorId, message) {
   const input = document.getElementById(inputId);
   const errorEl = document.getElementById(errorId);
@@ -615,6 +644,7 @@ function showFieldError(inputId, errorId, message) {
 /**
  * Clear field error
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function clearFieldError(inputId, errorId) {
   const input = document.getElementById(inputId);
   const errorEl = document.getElementById(errorId);
@@ -848,6 +878,7 @@ async function handleSignupSubmit(e) {
   const passwordInput = document.getElementById("signup-password");
   const passwordConfirmInput = document.getElementById("signup-password-confirm");
   const privacyCheckbox = document.getElementById("signup-privacy");
+  const educationTrackingCheckbox = document.getElementById("signup-education-tracking");
   const statusId = "signup-status-message";
 
   // Debug: Check if all inputs exist
@@ -879,6 +910,7 @@ async function handleSignupSubmit(e) {
   const password = passwordInput?.value || "";
   const passwordConfirm = passwordConfirmInput?.value || "";
   const privacyAccepted = privacyCheckbox?.checked || false;
+  const educationTrackingAccepted = educationTrackingCheckbox?.checked || false;
 
   DEBUG.info("handleSignupSubmit", "Form data collected", {
     emailLength: email.length,
@@ -980,6 +1012,7 @@ async function handleSignupSubmit(e) {
         password,
         passwordConfirm,
         privacyAccepted,
+        educationTrackingAccepted,
       }),
     });
 

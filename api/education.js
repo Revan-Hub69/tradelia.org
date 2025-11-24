@@ -1792,6 +1792,94 @@ export async function updateQuest(req, res) {
 }
 
 /**
+ * Update tracking preferences (GDPR compliance)
+ */
+export async function updateTrackingPreferences(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const {
+      track_detailed_progress,
+      track_test_scores,
+      track_test_answers,
+      share_anonymous_analytics,
+    } = req.body;
+
+    // Update preferences
+    const { data, error } = await supabase
+      .from("education_user_tracking_preferences")
+      .upsert(
+        {
+          user_id: req.user.id,
+          track_detailed_progress:
+            track_detailed_progress !== undefined ? track_detailed_progress : true,
+          track_test_scores: track_test_scores !== undefined ? track_test_scores : true,
+          track_test_answers: track_test_answers !== undefined ? track_test_answers : false, // Default: NO
+          share_anonymous_analytics:
+            share_anonymous_analytics !== undefined ? share_anonymous_analytics : true,
+          updated_at: new Date().toISOString(),
+          // Se disattiva tutto, registra withdrawal
+          consent_withdrawn_at:
+            track_detailed_progress === false &&
+            track_test_scores === false &&
+            track_test_answers === false
+              ? new Date().toISOString()
+              : null,
+        },
+        { onConflict: "user_id" }
+      )
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    res.json({ success: true, preferences: data });
+  } catch (error) {
+    safeLog("error", "[Education] Errore updateTrackingPreferences:", error);
+    res.status(500).json({ success: false, error: "Errore aggiornamento preferenze" });
+  }
+}
+
+/**
+ * Get tracking preferences
+ */
+export async function getTrackingPreferences(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const { data, error } = await supabase
+      .from("education_user_tracking_preferences")
+      .select("*")
+      .eq("user_id", req.user.id)
+      .single();
+
+    if (error && error.code !== "PGRST116") {
+      // PGRST116 = no rows returned (OK, usa default)
+      throw error;
+    }
+
+    // Default preferences se non esiste
+    const preferences = data || {
+      track_detailed_progress: true,
+      track_test_scores: true,
+      track_test_answers: false, // Default: NO (minimizzazione)
+      share_anonymous_analytics: true,
+    };
+
+    res.json({ success: true, preferences });
+  } catch (error) {
+    safeLog("error", "[Education] Errore getTrackingPreferences:", error);
+    res.status(500).json({ success: false, error: "Errore caricamento preferenze" });
+  }
+}
+
+/**
  * Main handler (Vercel serverless function)
  */
 export default async function handler(req, res) {
@@ -1878,6 +1966,10 @@ export default async function handler(req, res) {
         return await getQuests(req, res);
       case "update-quest":
         return await updateQuest(req, res);
+      case "update-tracking-preferences":
+        return await updateTrackingPreferences(req, res);
+      case "get-tracking-preferences":
+        return await getTrackingPreferences(req, res);
       default:
         // Log 400 per azione non valida
 
