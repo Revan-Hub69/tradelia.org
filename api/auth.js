@@ -11,6 +11,10 @@ import crypto from "crypto";
 
 const supabase = getServiceSupabase();
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
+const SESSION_DURATION_HOURS = 12;
+const SESSION_DURATION_MS = SESSION_DURATION_HOURS * 60 * 60 * 1000;
+const REFRESH_TOKEN_DURATION_DAYS = 30;
+const REFRESH_TOKEN_DURATION_MS = REFRESH_TOKEN_DURATION_DAYS * 24 * 60 * 60 * 1000;
 
 // Rate limiting per signup/login (in memoria - per produzione usare Redis)
 const rateLimitMap = new Map();
@@ -73,8 +77,103 @@ function generateToken() {
   return crypto.randomBytes(16).toString("hex");
 }
 
+function generateRefreshToken() {
+  return crypto.randomBytes(32).toString("hex");
+}
+
 function hashToken(token) {
   return crypto.createHash("sha256").update(token).digest("hex");
+}
+
+async function createSessionToken({
+  userId = null,
+  email = null,
+  planRole = "trial",
+  validUntil,
+  source = "auth",
+  metadata = {},
+}) {
+  if (!validUntil) {
+    throw new HttpError(500, "validUntil mancante per la sessione");
+  }
+
+  const token = generateToken();
+  const tokenHash = hashToken(token);
+  const sessionIssuedAt = new Date().toISOString();
+  const sessionExpiresAt = new Date(Date.now() + SESSION_DURATION_MS).toISOString();
+
+  const metadataPayload = {
+    ...(metadata && typeof metadata === "object" ? metadata : {}),
+    session_expires_at: sessionExpiresAt,
+    session_issued_at: sessionIssuedAt,
+  };
+
+  const insertPayload = {
+    user_id: userId,
+    email: userId ? null : email?.toLowerCase() || null,
+    token_hash: tokenHash,
+    plan_role: planRole,
+    valid_until: validUntil,
+    source,
+    metadata: metadataPayload,
+  };
+
+  const { data: accessTokenRecord, error: tokenError } = await supabase
+    .from("dashboard_access_tokens")
+    .insert(insertPayload)
+    .select("id, user_id, email, plan_role, valid_until, metadata")
+    .single();
+
+  if (tokenError) {
+    console.error("[Auth] Errore creazione token accesso:", tokenError);
+    throw new HttpError(500, "Errore durante la creazione del token");
+  }
+
+  const refreshToken = generateRefreshToken();
+  const refreshHash = hashToken(refreshToken);
+  const refreshExpiresAt = new Date(Date.now() + REFRESH_TOKEN_DURATION_MS).toISOString();
+
+  const { error: refreshError } = await supabase.from("dashboard_refresh_tokens").insert({
+    access_token_id: accessTokenRecord.id,
+    user_id: userId,
+    token_hash: refreshHash,
+    expires_at: refreshExpiresAt,
+    metadata: {
+      session_expires_at: sessionExpiresAt,
+    },
+  });
+
+  if (refreshError) {
+    console.error("[Auth] Errore creazione refresh token:", refreshError);
+    throw new HttpError(500, "Errore durante la creazione del refresh token");
+  }
+
+  return {
+    token,
+    refreshToken,
+    sessionExpiresAt,
+    refreshExpiresAt,
+    accessTokenId: accessTokenRecord.id,
+    validUntil: accessTokenRecord.valid_until,
+    planRole: accessTokenRecord.plan_role,
+  };
+}
+
+function getSessionStatusFromMetadata(metadata) {
+  if (!metadata || typeof metadata !== "object") {
+    return { sessionExpiresAt: null, sessionMinutesLeft: null };
+  }
+
+  const sessionExpiresAt = metadata.session_expires_at || null;
+  if (!sessionExpiresAt) {
+    return { sessionExpiresAt: null, sessionMinutesLeft: null };
+  }
+
+  const expiresAtDate = new Date(sessionExpiresAt);
+  const diffMs = expiresAtDate - Date.now();
+  const sessionMinutesLeft = Math.floor(diffMs / (60 * 1000));
+
+  return { sessionExpiresAt, sessionMinutesLeft };
 }
 
 // ===== HANDLER PRINCIPALE =====
@@ -112,6 +211,8 @@ export default async function handler(req, res) {
         return await handleSignup(req, res);
       case "login":
         return await handleLogin(req, res);
+      case "refresh-session":
+        return await handleRefreshSession(req, res);
       case "check-email":
         return await handleCheckEmail(req, res);
       case "reset-password":
@@ -143,11 +244,13 @@ async function handleValidate(req, res) {
 
   const context = await getAdminContextFromToken(token, { enforceAdmin: false });
   const validUntil = context.tokenRecord.valid_until;
+  const tokenMetadata = context.tokenRecord.metadata || {};
 
   const now = new Date();
   const expiryDate = new Date(validUntil);
   const msDiff = expiryDate - now;
   const daysLeft = Math.max(0, Math.floor(msDiff / (1000 * 60 * 60 * 24)));
+  const { sessionExpiresAt, sessionMinutesLeft } = getSessionStatusFromMetadata(tokenMetadata);
 
   let canCancel = false;
   let subscriptionStatus = "inactive";
@@ -176,6 +279,9 @@ async function handleValidate(req, res) {
   } else if (context.tokenRecord.revoked) {
     reason = "revoked_token";
     isValid = false;
+  } else if (sessionExpiresAt && sessionMinutesLeft !== null && sessionMinutesLeft <= 0) {
+    reason = "session_expired";
+    isValid = false;
   }
 
   // Se il token non è valido, restituisci errore
@@ -195,6 +301,8 @@ async function handleValidate(req, res) {
     status: subscriptionStatus,
     validUntil,
     daysLeft,
+    sessionExpiresAt,
+    sessionMinutesLeft,
     canCancel,
     isAdmin: context.isAdmin,
     reason: null,
@@ -871,8 +979,6 @@ async function handleLogin(req, res) {
 
     // Generate access token
     const userId = authData.user.id;
-    const newToken = generateToken();
-    const tokenHash = hashToken(newToken);
 
     // Get user role
     const { data: userRole } = await supabase
@@ -892,25 +998,20 @@ async function handleLogin(req, res) {
       .eq("user_id", userId)
       .eq("revoked", false);
 
-    // Create new token
-    const { error: tokenError } = await supabase.from("dashboard_access_tokens").insert({
-      user_id: userId,
-      email: null,
-      token_hash: tokenHash,
-      plan_role: planRole,
-      valid_until: validUntil,
+    const sessionTokens = await createSessionToken({
+      userId,
+      email: sanitizedEmail,
+      planRole,
+      validUntil,
       source: "auth",
       metadata: { created_at: new Date().toISOString() },
     });
 
-    if (tokenError) {
-      console.error("[Auth] Errore creazione token:", tokenError);
-      return res.status(500).json({ ok: false, error: "Errore durante l'accesso" });
-    }
-
     return res.status(200).json({
       ok: true,
-      token: newToken,
+      token: sessionTokens.token,
+      refreshToken: sessionTokens.refreshToken,
+      sessionExpiresAt: sessionTokens.sessionExpiresAt,
       userId,
       email: sanitizedEmail,
       planRole,
@@ -918,6 +1019,138 @@ async function handleLogin(req, res) {
   } catch (error) {
     console.error("[Auth] Errore login:", error);
     return res.status(500).json({ ok: false, error: "Errore durante l'accesso" });
+  }
+}
+
+// ===== REFRESH SESSION =====
+async function handleRefreshSession(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  const { refreshToken } = req.body || {};
+  if (!refreshToken || typeof refreshToken !== "string") {
+    return res.status(400).json({ ok: false, error: "Refresh token mancante", reason: "missing_refresh" });
+  }
+
+  const refreshHash = hashToken(refreshToken.trim());
+  try {
+    const { data: refreshRecord, error: refreshError } = await supabase
+      .from("dashboard_refresh_tokens")
+      .select("*")
+      .eq("token_hash", refreshHash)
+      .eq("revoked", false)
+      .maybeSingle();
+
+    if (refreshError) {
+      console.error("[Auth] Errore lookup refresh token:", refreshError);
+      throw new HttpError(500, "Errore durante la verifica del refresh token");
+    }
+
+    if (!refreshRecord) {
+      return res
+        .status(401)
+        .json({ ok: false, error: "Refresh token non valido", reason: "invalid_refresh" });
+    }
+
+    const now = new Date();
+    if (new Date(refreshRecord.expires_at) < now) {
+      await supabase
+        .from("dashboard_refresh_tokens")
+        .update({ revoked: true, revoked_at: now.toISOString() })
+        .eq("id", refreshRecord.id);
+      return res.status(401).json({
+        ok: false,
+        error: "Refresh token scaduto",
+        reason: "refresh_expired",
+      });
+    }
+
+    const { data: accessTokenRecord, error: accessError } = await supabase
+      .from("dashboard_access_tokens")
+      .select("*")
+      .eq("id", refreshRecord.access_token_id)
+      .eq("revoked", false)
+      .maybeSingle();
+
+    if (accessError) {
+      console.error("[Auth] Errore lookup access token:", accessError);
+      throw new HttpError(500, "Errore durante la verifica dell'access token");
+    }
+
+    if (!accessTokenRecord) {
+      return res.status(401).json({
+        ok: false,
+        error: "Sessione non valida",
+        reason: "access_revoked",
+      });
+    }
+
+    if (new Date(accessTokenRecord.valid_until) < now) {
+      return res.status(401).json({
+        ok: false,
+        error: "Piano scaduto",
+        reason: "plan_expired",
+      });
+    }
+
+    const newToken = generateToken();
+    const newTokenHash = hashToken(newToken);
+    const newSessionExpiresAt = new Date(Date.now() + SESSION_DURATION_MS).toISOString();
+    const updatedMetadata = {
+      ...(accessTokenRecord.metadata || {}),
+      session_expires_at: newSessionExpiresAt,
+      session_refreshed_at: now.toISOString(),
+    };
+
+    await supabase
+      .from("dashboard_access_tokens")
+      .update({
+        token_hash: newTokenHash,
+        metadata: updatedMetadata,
+        revoked: false,
+        revoked_at: null,
+      })
+      .eq("id", accessTokenRecord.id);
+
+    await supabase
+      .from("dashboard_refresh_tokens")
+      .update({ revoked: true, revoked_at: now.toISOString() })
+      .eq("id", refreshRecord.id);
+
+    const rotatedRefreshToken = generateRefreshToken();
+    const rotatedRefreshHash = hashToken(rotatedRefreshToken);
+    const rotatedRefreshExpiresAt = new Date(Date.now() + REFRESH_TOKEN_DURATION_MS).toISOString();
+
+    const { error: insertRefreshError } = await supabase
+      .from("dashboard_refresh_tokens")
+      .insert({
+        access_token_id: accessTokenRecord.id,
+        user_id: accessTokenRecord.user_id,
+        token_hash: rotatedRefreshHash,
+        expires_at: rotatedRefreshExpiresAt,
+        metadata: { session_expires_at: newSessionExpiresAt },
+      });
+
+    if (insertRefreshError) {
+      console.error("[Auth] Errore rotazione refresh token:", insertRefreshError);
+      throw new HttpError(500, "Errore durante la rotazione del refresh token");
+    }
+
+    return res.status(200).json({
+      ok: true,
+      token: newToken,
+      refreshToken: rotatedRefreshToken,
+      sessionExpiresAt: newSessionExpiresAt,
+      planRole: accessTokenRecord.plan_role,
+      validUntil: accessTokenRecord.valid_until,
+    });
+  } catch (error) {
+    console.error("[Auth] Errore refresh session:", error);
+    if (error instanceof HttpError) {
+      return handleRouteError(res, error);
+    }
+    return res.status(500).json({ ok: false, error: "Errore durante la rotazione della sessione" });
   }
 }
 

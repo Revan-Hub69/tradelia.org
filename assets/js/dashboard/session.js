@@ -5,17 +5,19 @@
  */
 
 import { safeLog } from "./security-utils.js";
-import { getToken, removeToken } from "./token-storage.js";
+import { getToken, getRefreshToken, removeToken, saveToken, syncTokenToIndexedDB } from "./token-storage.js";
 
 const CHECK_INTERVAL = 5 * 60 * 1000; // 5 minuti
+const SESSION_REFRESH_THRESHOLD_MINUTES = 10;
 
 let checkInterval = null;
 let warningShown = false;
+let refreshInFlight = null;
 
 /**
  * Verifica validità token e gestisce scadenza
  */
-export async function checkTokenValidity() {
+export async function checkTokenValidity(options = { retryOnRefresh: true }) {
   const token = await getToken();
   if (!token) {
     return { valid: false, reason: "missing_token" };
@@ -31,6 +33,12 @@ export async function checkTokenValidity() {
     const data = await response.json();
 
     if (!data.ok) {
+      if (data.reason === "session_expired" && options.retryOnRefresh) {
+        const refreshResult = await refreshSession(true);
+        if (refreshResult.ok) {
+          return checkTokenValidity({ retryOnRefresh: false });
+        }
+      }
       // Token non valido o scaduto - BEST PRACTICE: Use secure token storage
       await removeToken();
       return { valid: false, reason: data.reason || "invalid_token" };
@@ -41,10 +49,18 @@ export async function checkTokenValidity() {
     const expiryDate = new Date(data.validUntil);
     const daysLeft = data.daysLeft || 0;
 
-    // Mostra warning se scade tra poco (solo una volta)
+    // Mostra warning se piano scade tra poco (solo una volta)
     if (daysLeft <= 7 && daysLeft > 0 && !warningShown) {
       showExpiryWarning(daysLeft);
       warningShown = true;
+    }
+
+    // Refresh automatico se sessione vicina alla scadenza
+    if (
+      typeof data.sessionMinutesLeft === "number" &&
+      data.sessionMinutesLeft <= SESSION_REFRESH_THRESHOLD_MINUTES
+    ) {
+      refreshSession().catch((error) => safeLog("warn", "[Session] Refresh background fallito", error));
     }
 
     // Auto-logout se scaduto - BEST PRACTICE: Use secure token storage
@@ -79,8 +95,8 @@ function showExpiryWarning(daysLeft) {
           <line x1="12" y1="17" x2="12.01" y2="17"></line>
         </svg>
         <span class="token-expiry-warning-text">
-          Il tuo codice di accesso scade tra ${daysLeft} ${daysLeft === 1 ? "giorno" : "giorni"}. 
-          <a href="/accesso.html?reason=expiring_soon" class="token-expiry-warning-link">Richiedi un nuovo codice</a>
+          Il tuo piano scade tra ${daysLeft} ${daysLeft === 1 ? "giorno" : "giorni"}.
+          <a href="/accesso.html?reason=expiring_soon" class="token-expiry-warning-link">Gestisci l’abbonamento</a>
         </span>
         <button type="button" class="token-expiry-warning-close" aria-label="Chiudi">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
@@ -142,4 +158,47 @@ export function stopSessionCheck() {
     checkInterval = null;
   }
   warningShown = false;
+}
+
+/**
+ * Refresh session token via /api/auth?action=refresh-session
+ */
+export async function refreshSession(force = false) {
+  if (refreshInFlight && !force) {
+    return refreshInFlight;
+  }
+
+  refreshInFlight = (async () => {
+    try {
+      const refreshToken = await getRefreshToken();
+      if (!refreshToken) {
+        return { ok: false, reason: "missing_refresh" };
+      }
+
+      const response = await fetch("/api/auth?action=refresh-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken }),
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.ok) {
+        if (data?.reason !== "missing_refresh") {
+          await removeToken();
+        }
+        return { ok: false, reason: data?.reason || "refresh_failed", error: data?.error };
+      }
+
+      await saveToken(data.token, data.refreshToken);
+      await syncTokenToIndexedDB();
+      return { ok: true, data };
+    } catch (error) {
+      safeLog("error", "[Session] Refresh session fallito", error);
+      return { ok: false, reason: "refresh_error", error };
+    } finally {
+      refreshInFlight = null;
+    }
+  })();
+
+  return refreshInFlight;
 }
