@@ -4,6 +4,49 @@
 -- Sistema gamification avanzato con best practice
 -- Non competitivo, focus su self-improvement
 -- ============================================
+-- NOTA: Questo script crea anche le tabelle base se non esistono
+-- ============================================
+
+-- ===== 0. CREATE BASE TABLES IF NOT EXISTS =====
+-- Crea tabelle base se non esistono (per compatibilità)
+
+-- Badge/Achievements
+CREATE TABLE IF NOT EXISTS education_badges (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL UNIQUE,
+  description TEXT,
+  icon_url TEXT,
+  badge_type TEXT CHECK (badge_type IN ('module_completion', 'test_perfect', 'streak', 'milestone', 'special')),
+  criteria JSONB, -- Criteri per ottenere il badge
+  points_reward INTEGER DEFAULT 0,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Badge ottenuti dagli utenti
+CREATE TABLE IF NOT EXISTS education_user_badges (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  badge_id UUID NOT NULL REFERENCES education_badges(id) ON DELETE CASCADE,
+  earned_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, badge_id)
+);
+
+-- Punti e livelli utente
+CREATE TABLE IF NOT EXISTS education_user_stats (
+  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  total_points INTEGER DEFAULT 0,
+  current_level INTEGER DEFAULT 1,
+  current_streak_days INTEGER DEFAULT 0,
+  longest_streak_days INTEGER DEFAULT 0,
+  last_activity_date DATE,
+  modules_completed INTEGER DEFAULT 0,
+  tests_passed INTEGER DEFAULT 0,
+  perfect_tests INTEGER DEFAULT 0,
+  total_study_time_minutes INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
 
 -- ===== 1. ENHANCED LEVEL SYSTEM =====
 -- Sistema livelli più sofisticato
@@ -360,6 +403,8 @@ RETURNS BOOLEAN AS $$
 DECLARE
   v_already_earned BOOLEAN;
   v_criteria JSONB;
+  v_points_reward INTEGER;
+  v_badge_name TEXT;
   v_meets_criteria BOOLEAN := false;
 BEGIN
   -- Check se già ottenuto
@@ -372,13 +417,20 @@ BEGIN
     RETURN false;
   END IF;
 
-  -- Get criteria
-  SELECT criteria INTO v_criteria
+  -- Get badge info
+  SELECT criteria, points_reward, name INTO v_criteria, v_points_reward, v_badge_name
   FROM education_badges
   WHERE id = p_badge_id;
 
-  -- Check criteria (implementazione semplificata, espandere per criteri complessi)
-  -- TODO: Implementare logica specifica per ogni tipo di badge
+  -- Se badge non esiste
+  IF v_badge_name IS NULL THEN
+    RETURN false;
+  END IF;
+
+  -- Check criteria (implementazione semplificata: per ora unlock sempre se badge esiste)
+  -- TODO: Implementare logica specifica per ogni tipo di badge basata su v_criteria
+  -- Per ora, assumiamo che se la funzione viene chiamata, i criteri sono soddisfatti
+  v_meets_criteria := true;
 
   -- Se criteria soddisfatti, unlock
   IF v_meets_criteria THEN
@@ -387,9 +439,8 @@ BEGIN
     ON CONFLICT DO NOTHING;
 
     -- Aggiungi XP se badge ha reward
-    SELECT points_reward INTO v_criteria FROM education_badges WHERE id = p_badge_id;
-    IF v_criteria > 0 THEN
-      PERFORM add_education_xp(p_user_id, v_criteria, 'badge_earned', p_badge_id, 'Badge: ' || (SELECT name FROM education_badges WHERE id = p_badge_id));
+    IF v_points_reward > 0 THEN
+      PERFORM add_education_xp(p_user_id, v_points_reward, 'badge_earned', p_badge_id, 'Badge: ' || v_badge_name);
     END IF;
 
     RETURN true;
