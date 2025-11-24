@@ -21,7 +21,11 @@ CREATE TABLE IF NOT EXISTS education_learning_objectives (
   order_index INTEGER NOT NULL,
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  UNIQUE(COALESCE(module_id, '00000000-0000-0000-0000-000000000000'::UUID), COALESCE(lesson_id, '00000000-0000-0000-0000-000000000000'::UUID), order_index)
+  CONSTRAINT unique_learning_objective UNIQUE (
+    COALESCE(module_id, '00000000-0000-0000-0000-000000000000'::UUID),
+    COALESCE(lesson_id, '00000000-0000-0000-0000-000000000000'::UUID),
+    order_index
+  )
 );
 
 CREATE INDEX IF NOT EXISTS idx_learning_objectives_module ON education_learning_objectives(module_id);
@@ -151,7 +155,10 @@ CREATE TABLE IF NOT EXISTS education_question_performance (
   last_attempt_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
-  UNIQUE(question_id, COALESCE(user_id, '00000000-0000-0000-0000-000000000000'::UUID))
+  CONSTRAINT unique_question_performance UNIQUE (
+    question_id,
+    COALESCE(user_id, '00000000-0000-0000-0000-000000000000'::UUID)
+  )
 );
 
 CREATE INDEX IF NOT EXISTS idx_question_performance_question ON education_question_performance(question_id);
@@ -170,7 +177,12 @@ CREATE TABLE IF NOT EXISTS education_reflection_prompts (
   order_index INTEGER NOT NULL,
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  UNIQUE(COALESCE(module_id, '00000000-0000-0000-0000-000000000000'::UUID), COALESCE(lesson_id, '00000000-0000-0000-0000-000000000000'::UUID), prompt_type, order_index)
+  CONSTRAINT unique_reflection_prompt UNIQUE (
+    COALESCE(module_id, '00000000-0000-0000-0000-000000000000'::UUID),
+    COALESCE(lesson_id, '00000000-0000-0000-0000-000000000000'::UUID),
+    prompt_type,
+    order_index
+  )
 );
 
 -- Risposte utente ai reflection prompts
@@ -363,22 +375,27 @@ ALTER TABLE education_reflection_prompts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE education_user_reflections ENABLE ROW LEVEL SECURITY;
 
 -- Public read per learning objectives, lesson quizzes, reflection prompts
+DROP POLICY IF EXISTS "Public can view learning objectives" ON education_learning_objectives;
 CREATE POLICY "Public can view learning objectives"
   ON education_learning_objectives FOR SELECT
   USING (is_active = true);
 
+DROP POLICY IF EXISTS "Public can view lesson quizzes" ON education_lesson_quizzes;
 CREATE POLICY "Public can view lesson quizzes"
   ON education_lesson_quizzes FOR SELECT
   USING (is_active = true);
 
+DROP POLICY IF EXISTS "Public can view lesson quiz questions" ON education_lesson_quiz_questions;
 CREATE POLICY "Public can view lesson quiz questions"
   ON education_lesson_quiz_questions FOR SELECT
   USING (is_active = true);
 
+DROP POLICY IF EXISTS "Public can view lesson quiz options" ON education_lesson_quiz_options;
 CREATE POLICY "Public can view lesson quiz options"
   ON education_lesson_quiz_options FOR SELECT
   USING (true);
 
+DROP POLICY IF EXISTS "Public can view reflection prompts" ON education_reflection_prompts;
 CREATE POLICY "Public can view reflection prompts"
   ON education_reflection_prompts FOR SELECT
   USING (is_active = true);

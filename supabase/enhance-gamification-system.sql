@@ -465,18 +465,22 @@ ALTER TABLE education_community_goals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE education_user_community_contributions ENABLE ROW LEVEL SECURITY;
 
 -- Public read per levels, badges, quests, community goals
+DROP POLICY IF EXISTS "Public can view levels" ON education_levels;
 CREATE POLICY "Public can view levels"
   ON education_levels FOR SELECT
   USING (true);
 
+DROP POLICY IF EXISTS "Public can view active badges" ON education_badges;
 CREATE POLICY "Public can view active badges"
   ON education_badges FOR SELECT
   USING (is_active = true);
 
+DROP POLICY IF EXISTS "Public can view active quests" ON education_quests;
 CREATE POLICY "Public can view active quests"
   ON education_quests FOR SELECT
   USING (is_active = true);
 
+DROP POLICY IF EXISTS "Public can view active community goals" ON education_community_goals;
 CREATE POLICY "Public can view active community goals"
   ON education_community_goals FOR SELECT
   USING (is_active = true);

@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS education_modules (
   is_active BOOLEAN DEFAULT true,
   requires_previous_module BOOLEAN DEFAULT true,
   previous_module_id UUID REFERENCES education_modules(id) ON DELETE SET NULL,
+  prerequisites JSONB, -- Array di slug dei moduli prerequisiti (es. ["fondamenti-investimento"])
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
