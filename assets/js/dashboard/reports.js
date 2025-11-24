@@ -11,6 +11,7 @@ import { isInWatchlist } from "./watchlist.js";
 import { applyFilters } from "./advanced-filters.js";
 
 const errorBoundary = createErrorBoundary("Reports", "#reports-container");
+const numberFormatter = new Intl.NumberFormat("it-IT");
 
 export async function loadReports() {
   const container = document.getElementById("reports-container");
@@ -115,17 +116,18 @@ export async function loadReports() {
       filteredReports = originalReports;
     }
 
-    renderReports(filteredReports);
-    setupSearch(filteredReports);
-    updateStats(filteredReports);
-    setupWatchlistButtons(filteredReports);
+    renderReportsView(filteredReports);
+    const searchController = setupSearch(filteredReports, (results) => {
+      renderReportsView(results);
+    });
 
     // Listen for advanced filter events (store reports in closure)
     const filterHandler = () => {
       const filtered = applyFilters(originalReports);
-      if (filtered && Array.isArray(filtered)) {
-        renderReports(filtered);
-        updateStats(filtered);
+      const dataset = filtered && Array.isArray(filtered) ? filtered : originalReports;
+      renderReportsView(dataset);
+      if (searchController && typeof searchController.updateDataset === "function") {
+        searchController.updateDataset(dataset);
       }
     };
     document.addEventListener("advanced-filter-apply", filterHandler);
@@ -153,6 +155,13 @@ export async function loadReports() {
       </div>
     `;
   }
+}
+
+function renderReportsView(reports) {
+  renderReports(reports);
+  updateStats(reports);
+  updateIntelligencePanel(reports);
+  setupWatchlistButtons(reports);
 }
 
 function renderReports(reports) {
@@ -242,21 +251,21 @@ function renderReports(reports) {
   localStorage.setItem("tradelia-recent-reports", JSON.stringify(recentReports));
 }
 
-function setupSearch(reports) {
+function setupSearch(reports, onResultsChange) {
   const searchInput = document.getElementById("reports-search");
   if (!searchInput) {
-    return;
+    return null;
   }
 
-  let filteredReports = [...reports];
+  let dataset = Array.isArray(reports) ? [...reports] : [];
 
-  searchInput.addEventListener("input", (e) => {
-    const query = e.target.value.toLowerCase().trim();
+  const performSearch = (query) => {
+    let filteredReports = [...dataset];
 
     if (!query) {
-      filteredReports = [...reports];
+      filteredReports = [...dataset];
     } else {
-      filteredReports = reports.filter((report) => {
+      filteredReports = dataset.filter((report) => {
         const searchable = [
           report.ticker,
           report.company,
@@ -272,9 +281,24 @@ function setupSearch(reports) {
       });
     }
 
-    renderReports(filteredReports);
-    updateStats(filteredReports);
+    if (typeof onResultsChange === "function") {
+      onResultsChange(filteredReports);
+    } else {
+      renderReportsView(filteredReports);
+    }
+  };
+
+  searchInput.addEventListener("input", (e) => {
+    const query = e.target.value.toLowerCase().trim();
+    performSearch(query);
   });
+
+  return {
+    updateDataset(newDataset) {
+      dataset = Array.isArray(newDataset) ? [...newDataset] : [];
+      performSearch(searchInput.value.toLowerCase().trim());
+    },
+  };
 }
 
 function updateStats(reports) {
@@ -282,6 +306,74 @@ function updateStats(reports) {
   if (statsEl) {
     statsEl.textContent = `${reports.length} report${reports.length !== 1 ? "" : ""}`;
   }
+}
+
+function updateIntelligencePanel(reports) {
+  const host = document.getElementById("reports-intelligence");
+  if (!host) {
+    return;
+  }
+
+  if (!reports.length) {
+    host.innerHTML = `
+      <div class="reports-intelligence-placeholder">
+        Nessun dataset da sintetizzare. Carica i primi report per ottenere indicatori di coverage.
+      </div>
+    `;
+    return;
+  }
+
+  const sectors = new Set(reports.map((report) => report.sector).filter(Boolean));
+  const exchanges = new Set(reports.map((report) => report.exchange).filter(Boolean));
+  const versions = new Set(reports.map((report) => report.version).filter(Boolean));
+  const latest = getLatestReport(reports);
+
+  const summary = `
+    <p>
+      Sintesi automatica basata sui ${numberFormatter.format(reports.length)} report disponibili.
+      Ultimo aggiornamento ${latest?.date ? formatRelativeDate(latest.date) : "non disponibile"}.
+    </p>
+  `;
+
+  const cards = [
+    {
+      label: "Settori monitorati",
+      value: numberFormatter.format(sectors.size || 0),
+      meta: sectors.size ? `Esempi: ${getPreviewList(sectors)}` : "Assegna il settore nei metadati",
+    },
+    {
+      label: "Mercati coperti",
+      value: numberFormatter.format(exchanges.size || 0),
+      meta: exchanges.size ? `Exchange: ${getPreviewList(exchanges)}` : "Specificare la venue di negoziazione",
+    },
+    {
+      label: "Versioni attive",
+      value: numberFormatter.format(versions.size || 0),
+      meta: versions.size ? `Ultima: ${Array.from(versions)[0]}` : "Versioning non dichiarato",
+    },
+    {
+      label: "Recency",
+      value: latest?.date ? timeAgo(new Date(latest.date)) : "N/D",
+      meta: latest?.date ? `Report più recente del ${formatFullDate(new Date(latest.date))}` : "Importare almeno un report datato",
+    },
+  ];
+
+  host.innerHTML = `
+    ${summary}
+    <div class="reports-intelligence-grid">
+      ${cards
+        .map(
+          (card) => `
+            <div class="reports-intelligence-card">
+              <strong>${card.value}</strong>
+              <span>${card.label}</span>
+              <span>${card.meta}</span>
+            </div>
+          `
+        )
+        .join("")}
+    </div>
+  `;
 }
 
 function setupWatchlistButtons(reports) {
@@ -308,4 +400,49 @@ function setupWatchlistButtons(reports) {
       }
     });
   });
+}
+
+function getLatestReport(reports) {
+  return [...reports]
+    .filter((report) => report.date)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+}
+
+function getPreviewList(values) {
+  const arr = Array.from(values);
+  if (!arr.length) {
+    return "—";
+  }
+  const preview = arr.slice(0, 3).join(", ");
+  return arr.length > 3 ? `${preview} +${arr.length - 3}` : preview;
+}
+
+function formatRelativeDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("it-IT", { day: "2-digit", month: "short" });
+}
+
+function formatFullDate(date) {
+  return date.toLocaleDateString("it-IT", { day: "2-digit", month: "long", year: "numeric" });
+}
+
+function timeAgo(date) {
+  const now = Date.now();
+  const diffMs = now - date.getTime();
+  const diffDays = Math.floor(diffMs / 86400000);
+  if (diffDays < 1) {
+    return "oggi";
+  }
+  if (diffDays === 1) {
+    return "ieri";
+  }
+  if (diffDays < 30) {
+    return `${diffDays}g fa`;
+  }
+  const diffMonths = Math.floor(diffDays / 30);
+  if (diffMonths < 12) {
+    return `${diffMonths}m fa`;
+  }
+  const diffYears = Math.floor(diffMonths / 12);
+  return `${diffYears}a fa`;
 }

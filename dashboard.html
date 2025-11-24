@@ -857,8 +857,41 @@
             <h2 class="panel-title">Panoramica</h2>
             <p class="panel-description">Statistiche e attività recente</p>
           </div>
-          <div class="panel-content" id="overview-container">
-            <!-- Content loaded by overview.js -->
+          <div class="panel-content" id="overview-container" aria-live="polite">
+            <section class="overview-insights" aria-label="Indicatori principali dashboard">
+              <div class="overview-stats-grid" id="overview-stats-grid">
+                <article class="stat-card is-placeholder">
+                  <div class="stat-label">Report totali</div>
+                  <div class="stat-value">—</div>
+                  <div class="stat-meta">Aggiornamento in corso</div>
+                </article>
+                <article class="stat-card is-placeholder">
+                  <div class="stat-label">Copertura settori</div>
+                  <div class="stat-value">—</div>
+                  <div class="stat-meta">Analisi multi-industry</div>
+                </article>
+                <article class="stat-card is-placeholder">
+                  <div class="stat-label">Ultima revisione</div>
+                  <div class="stat-value">—</div>
+                  <div class="stat-meta">Tempo medio di refresh</div>
+                </article>
+              </div>
+              <div class="overview-narrative" id="overview-narrative-block">
+                <div class="narrative-eyebrow">Executive briefing</div>
+                <p id="overview-narrative-text">
+                  Stiamo consolidando insight quantitativi e qualitative per questa vista.
+                </p>
+                <ul class="narrative-actions" id="overview-next-actions">
+                  <li data-placeholder="true">Monitoraggio attività recente</li>
+                </ul>
+              </div>
+            </section>
+            <section class="overview-section" aria-label="Attività recente">
+              <h3 class="overview-section-title">Attività Recente</h3>
+              <div class="recent-activity-list" id="recent-activity">
+                <div class="empty-state">Nessuna attività recente</div>
+              </div>
+            </section>
           </div>
         </div>
 
@@ -905,6 +938,11 @@
                 />
               </div>
               <div class="reports-stats" id="reports-stats">Caricamento...</div>
+            </div>
+            <div class="reports-intelligence" id="reports-intelligence" aria-live="polite">
+              <div class="reports-intelligence-placeholder">
+                Sintesi regolamentare e coverage in caricamento...
+              </div>
             </div>
             <div id="reports-container" class="reports-list">
               <!-- Content loaded by reports.js -->

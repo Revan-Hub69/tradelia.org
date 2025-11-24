@@ -38,6 +38,32 @@ export const STATE = {
   filteredReports: [],
 };
 
+const DEFAULT_IDLE_TIMEOUT = 1600;
+
+function schedulePhase(task, label, timeout = DEFAULT_IDLE_TIMEOUT) {
+  const runner = () => {
+    if (typeof performance !== "undefined" && performance.mark) {
+      performance.mark(`${label}-start`);
+    }
+    Promise.resolve()
+      .then(task)
+      .catch((error) => {
+        console.error(`[Dashboard] Phase ${label} error`, error);
+      })
+      .finally(() => {
+        if (typeof performance !== "undefined" && performance.mark) {
+          performance.mark(`${label}-end`);
+        }
+      });
+  };
+
+  if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+    window.requestIdleCallback(runner, { timeout });
+  } else {
+    setTimeout(runner, timeout);
+  }
+}
+
 /**
  * Initialize dashboard application
  */
@@ -62,63 +88,95 @@ export async function initDashboard() {
   // Se c'è un redirectTo, viene IGNORATO per permettere accesso guest
   // L'utente può accedere alla pagina di accesso tramite il pulsante "Accedi" nel banner
 
-  // Initialize account banner (shows user status, plan, usage)
+  await runCorePhase();
+
+  schedulePhase(runExperiencePhase, "dashboard-phase-experience");
+  schedulePhase(() => runInsightPhase(), "dashboard-phase-insights", 2000);
+  schedulePhase(() => runProgressiveEnhancements(), "dashboard-phase-progressive", 2600);
+}
+
+// Bottom navigation rimosso - non più utilizzato
+
+async function runCorePhase() {
   await initAccountBanner();
-
-  // Initialize footer
   await initFooter();
-
-  // BEST PRACTICE: Avvia session management (periodic token check, auto-logout)
   startSessionCheck();
 
-  // Show/hide admin module based on permissions
   await toggleAdminModule();
-
-  // Initialize module manager (visibility, hierarchy)
   initModuleManager();
-
-  // BEST PRACTICE: Accordion per categorie su mobile
   initCategoryAccordion();
-
-  // Re-inizializza accordion quando cambia dimensione finestra
   window.addEventListener("resize", reinitCategoryAccordion);
 
-  // BEST PRACTICE: Initialize module favorites system (prioritario rispetto a drag-and-drop)
+  enforceDarkTheme();
+  await initializeI18nAndFeedback();
+
+  initHistoryState();
+  bindModuleCardInteractions();
+  bindPanelBackButtons();
+
+  keyboardNav.init();
+  document.addEventListener("keydown", handleEscapeKey);
+}
+
+async function runExperiencePhase() {
   const { initModuleFavorites, createFavoritesSection } = await import("./module-favorites.js");
   initModuleFavorites();
-
-  // BEST PRACTICE: Crea sezione preferiti sempre (anche se vuota)
   setTimeout(() => {
     createFavoritesSection();
-    // Aggiorna quando i preferiti cambiano
     window.addEventListener("storage", (e) => {
       if (e.key === "dashboard-module-favorites") {
         createFavoritesSection();
       }
     });
-  }, 100);
+  }, 120);
 
-  // BEST PRACTICE: Initialize accessibility enhancements (WCAG 2.2 Compliance)
-  const { initAccessibility } = await import("./accessibility.js");
+  const { initAccessibility, announceToScreenReader } = await import("./accessibility.js");
   initAccessibility();
+  window.announceToScreenReader = announceToScreenReader;
 
-  // BEST PRACTICE: Initialize security indicators (Financial Services UX)
   const { initSecurityIndicators } = await import("./security-indicators.js");
   initSecurityIndicators();
 
-  // BEST PRACTICE: Initialize desktop sidebar (Coerenza Desktop vs Mobile)
-  // Desktop sidebar rimosso - non più utilizzato
+  initGlobalSearch();
+  initWatchlist();
+  initKeyboardShortcuts();
+}
 
-  // BEST PRACTICE 2025: Solo tema dark - nessun toggle
-  // Forza sempre tema dark per coerenza istituzionale
-  document.documentElement.setAttribute('data-theme', 'dark');
-  document.documentElement.setAttribute('data-theme-manual', 'true');
+function runInsightPhase() {
+  initAdvancedFilters();
+  initRecentActivity();
+  initDashboardWidgets();
+  initPerformanceMonitoring();
+  initCharts();
+  initRUMDashboard();
+}
 
-  // BEST PRACTICE: Initialize i18n system (Global UX)
+async function runProgressiveEnhancements() {
+  initCommunicationPreferences();
+
+  const { initAuthModal } = await import("./auth-modal.js");
+  initAuthModal();
+
+  const { initSimpleNotifications } = await import("./simple-notifications.js");
+  await initSimpleNotifications();
+
+  const { initNetworkState } = await import("./network-state.js");
+  initNetworkState();
+
+  const { initPullToRefresh } = await import("./pull-to-refresh.js");
+  initPullToRefresh();
+
+  const { initBatteryOptimization } = await import("./battery-optimization.js");
+  initBatteryOptimization();
+
+  const { setupHapticFeedback } = await import("./haptic-feedback.js");
+  setupHapticFeedback();
+}
+
+async function initializeI18nAndFeedback() {
   const { initI18n } = await import("./i18n.js");
   initI18n();
 
-  // Export feedback functions globally for use in other modules
   const {
     showLoadingState,
     hideLoadingState,
@@ -131,149 +189,81 @@ export async function initDashboard() {
   window.showSuccessFeedback = showSuccessFeedback;
   window.showErrorFeedback = showErrorFeedback;
   window.showSaveState = showSaveState;
+}
 
-  // Export accessibility functions globally
-  const { announceToScreenReader } = await import("./accessibility.js");
-  window.announceToScreenReader = announceToScreenReader;
+function enforceDarkTheme() {
+  document.documentElement.setAttribute("data-theme", "dark");
+  document.documentElement.setAttribute("data-theme-manual", "true");
+}
 
-  // Initialize global search (Ctrl+K shortcut)
-  initGlobalSearch();
-
-  // Initialize watchlist/favorites
-  initWatchlist();
-
-  // Initialize keyboard shortcuts
-  initKeyboardShortcuts();
-
-  // Initialize advanced filters
-  initAdvancedFilters();
-
-  // Initialize recent activity/history tracking
-  initRecentActivity();
-
-  // Initialize dashboard widgets
-  initDashboardWidgets();
-
-  // Initialize performance monitoring
-  initPerformanceMonitoring();
-
-  // Initialize charts library
-  initCharts();
-
-  // Initialize RUM dashboard
-  initRUMDashboard();
-
-  // Initialize communication preferences modal (newsletter, SMS, WhatsApp)
-  initCommunicationPreferences();
-
-  // Initialize auth modal (login/accesso direttamente nella dashboard)
-  const { initAuthModal } = await import("./auth-modal.js");
-  initAuthModal();
-
-  // Initialize simple notifications (polling-based, no push)
-  const { initSimpleNotifications } = await import("./simple-notifications.js");
-  await initSimpleNotifications();
-
-  // BEST PRACTICE: Initialize network state handling (offline/slow connection)
-  const { initNetworkState } = await import("./network-state.js");
-  initNetworkState();
-
-  // BEST PRACTICE: Initialize pull-to-refresh (Mobile UX Patterns)
-  const { initPullToRefresh } = await import("./pull-to-refresh.js");
-  initPullToRefresh();
-
-  // BEST PRACTICE: Initialize battery optimization (Energy-Efficient Web Design)
-  const { initBatteryOptimization } = await import("./battery-optimization.js");
-  initBatteryOptimization();
-
-  // BEST PRACTICE: Initialize haptic feedback (Mobile UX Patterns)
-  const { setupHapticFeedback } = await import("./haptic-feedback.js");
-  setupHapticFeedback();
-
-  // BEST PRACTICE: Inizializza history state per supporto back button mobile
-  // Crea uno stato iniziale nella history per evitare che il back button chiuda la pagina
+function initHistoryState() {
   const initialHash = window.location.hash.slice(1);
   const initialModule = initialHash || null;
-  
+
   if (!history.state) {
-    // Crea stato iniziale nella history (usa replaceState per non aggiungere entry)
-    const url = initialHash 
-      ? `${window.location.pathname}#${initialHash}` 
-      : window.location.pathname;
+    const url = initialHash ? `${window.location.pathname}#${initialHash}` : window.location.pathname;
     history.replaceState({ module: initialModule, isInitial: true }, "", url);
   }
 
-  // BEST PRACTICE: Su mobile, pannelli chiusi di default
   const isMobile = window.innerWidth <= 768;
 
-  if (initialHash && !isMobile) {
-    // Desktop: apri se c'è hash (ma non fare pushState, è già stato fatto sopra)
+  if (initialHash) {
     showModule(initialHash, false);
-  } else if (initialHash && isMobile) {
-    // Mobile: se c'è hash, apri comunque (utente potrebbe aver salvato un link)
-    showModule(initialHash, false);
+  } else if (!isMobile) {
+    showModulesGrid();
   } else {
-    // Nessun hash: mostra solo moduli view
-    const modulesView = document.getElementById("modules-view");
-    if (modulesView) {
-      modulesView.classList.add("active");
-    }
-    document.querySelectorAll(".panel-view").forEach((panel) => {
-      panel.classList.remove("active");
-    });
-    STATE.currentModule = null;
+    showModulesGrid();
   }
 
-  // Handle hash changes
-  window.addEventListener("hashchange", () => {
-    const newHash = window.location.hash.slice(1);
-    if (newHash) {
-      showModule(newHash);
-    } else {
-      closeModule();
-    }
+  window.addEventListener("hashchange", handleHashChange);
+  window.addEventListener("popstate", handlePopState);
+}
+
+function showModulesGrid() {
+  const modulesView = document.getElementById("modules-view");
+  if (modulesView) {
+    modulesView.classList.add("active");
+  }
+  document.querySelectorAll(".panel-view").forEach((panel) => {
+    panel.classList.remove("active");
   });
+  STATE.currentModule = null;
+}
 
-  // BEST PRACTICE: Handle browser back button with History API (Mobile UX Patterns)
-  // CRITICAL: Previene chiusura pagina su mobile quando si preme indietro
-  window.addEventListener("popstate", (e) => {
-    // Se è lo stato iniziale, non fare nulla (evita chiusura pagina)
-    if (e.state && e.state.isInitial) {
-      // Mantieni la vista corrente senza cambiare nulla
-      return;
-    }
+function handleHashChange() {
+  const newHash = window.location.hash.slice(1);
+  if (newHash) {
+    showModule(newHash);
+  } else {
+    closeModule();
+  }
+}
 
-    if (e.state && e.state.module) {
-      showModule(e.state.module, false); // false = non fare pushState (siamo già in popstate)
+function handlePopState(e) {
+  if (e.state && e.state.isInitial) {
+    return;
+  }
+
+  if (e.state && e.state.module) {
+    showModule(e.state.module, false);
+  } else {
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+      showModule(hash, false);
+    } else if (STATE.currentModule) {
+      closeModule(false);
     } else {
-      const hash = window.location.hash.slice(1);
-      if (hash) {
-        showModule(hash, false);
-      } else {
-        // Chiudi modulo se presente, ma non chiudere la pagina
-        if (STATE.currentModule) {
-          closeModule(false); // false = non fare pushState
-        } else {
-          // Se siamo già nella home, non fare nulla (evita chiusura)
-          const modulesView = document.getElementById("modules-view");
-          if (modulesView && modulesView.classList.contains("active")) {
-            // Già nella home, non fare nulla
-            return;
-          }
-        }
-      }
+      showModulesGrid();
     }
-  });
+  }
+}
 
-  // Bottom navigation rimosso - non più utilizzato
-
-  // Handle module card clicks (con supporto mobile per distinguere tap da scroll)
+function bindModuleCardInteractions() {
   document.querySelectorAll(".module-card").forEach((card) => {
     let touchStartX = 0;
     let touchStartY = 0;
     let touchMoved = false;
 
-    // Rileva movimento durante touch (scroll)
     card.addEventListener("touchstart", (e) => {
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
@@ -284,37 +274,24 @@ export async function initDashboard() {
       if (!touchMoved) {
         const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
         const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
-        // Se movimento > 10px, è uno scroll, non un tap
         touchMoved = deltaX > 10 || deltaY > 10;
       }
     });
 
-    // Gestisci click/tap
     card.addEventListener("click", (e) => {
-      // BEST PRACTICE: Ignora click se è sul pulsante preferiti o altri elementi interattivi
       const target = e.target;
       const isFavoriteBtn = target.closest(".module-favorite-btn");
       const isInteractiveElement = target.closest("button, a, input, select, textarea");
 
       if (isFavoriteBtn || isInteractiveElement) {
-        // Il click è su un elemento interattivo, non aprire il modulo
         e.stopPropagation();
         return;
       }
 
-      // BEST PRACTICE: Verifica se il click è partito dal pulsante preferiti (anche se propagato)
-      if (e.target.closest(".module-favorite-btn")) {
-        e.stopPropagation();
-        return;
-      }
-
-      // Su mobile, se c'è stato movimento durante il touch, non aprire il modulo
       if (touchMoved) {
         return;
       }
 
-      // BEST PRACTICE: Su mobile, tap singolo apre direttamente il modulo (più semplice)
-      // Rimossa logica doppio tap che confondeva gli utenti
       const moduleId = card.dataset.module;
       if (moduleId) {
         e.preventDefault();
@@ -323,35 +300,26 @@ export async function initDashboard() {
       }
     });
   });
+}
 
-  // Handle back buttons
+function bindPanelBackButtons() {
   document.querySelectorAll(".panel-back").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
-      // Usa history.back() invece di hash vuoto per supporto mobile migliore
       if (history.length > 1) {
         history.back();
       } else {
-        // Se non c'è history, chiudi il modulo normalmente
         window.location.hash = "";
       }
     });
   });
-
-  // Initialize keyboard navigation (focus trap, arrow keys)
-  keyboardNav.init();
-
-  // Keyboard navigation - ESC to close panel
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && STATE.currentModule) {
-      closeModule();
-    }
-  });
-
-  // Bottom navigation rimosso - non più utilizzato
 }
 
-// Bottom navigation rimosso - non più utilizzato
+function handleEscapeKey(e) {
+  if (e.key === "Escape" && STATE.currentModule) {
+    closeModule();
+  }
+}
 
 /**
  * Close current module and return to modules view
