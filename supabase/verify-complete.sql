@@ -107,59 +107,64 @@ ORDER BY routine_name;
 
 -- ===== 5. VERIFICA DATI ESEMPIO =====
 -- Moduli educativi attivi (solo se la tabella esiste)
-SELECT 
-  '📊 DATI: Moduli Educativi' as sezione,
-  CASE 
-    WHEN EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'education_modules')
-    THEN (
-      SELECT COUNT(*)::text 
-      FROM education_modules 
-      WHERE is_active = true
-    )
-    ELSE '0'
-  END as moduli_attivi,
-  CASE 
-    WHEN NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'education_modules')
-    THEN '❌ TABELLA NON ESISTE'
-    WHEN EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'education_modules')
-      AND (SELECT COUNT(*) FROM education_modules WHERE is_active = true) > 0
-    THEN '✅ PRESENTI'
-    ELSE '⚠️ NESSUN MODULO'
-  END as status;
+DO $$
+DECLARE
+  moduli_count INTEGER := 0;
+  table_exists BOOLEAN;
+BEGIN
+  SELECT EXISTS (
+    SELECT 1 FROM information_schema.tables 
+    WHERE table_schema = 'public' AND table_name = 'education_modules'
+  ) INTO table_exists;
+  
+  IF table_exists THEN
+    EXECUTE 'SELECT COUNT(*) FROM education_modules WHERE is_active = true' INTO moduli_count;
+  END IF;
+  
+  RAISE NOTICE '📊 DATI: Moduli Educativi - Tabella: % - Moduli attivi: %', 
+    CASE WHEN table_exists THEN 'ESISTE' ELSE 'NON ESISTE' END,
+    moduli_count;
+END $$;
 
 -- Ruoli utente (solo se la tabella esiste)
-SELECT 
-  '📊 DATI: Ruoli Utente' as sezione,
-  CASE 
-    WHEN EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'user_roles')
-    THEN (SELECT COUNT(*)::text FROM user_roles)
-    ELSE '0'
-  END as ruoli_totali,
-  CASE 
-    WHEN NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'user_roles')
-    THEN '❌ TABELLA NON ESISTE'
-    WHEN EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'user_roles')
-      AND (SELECT COUNT(*) FROM user_roles) > 0
-    THEN '✅ PRESENTI'
-    ELSE 'ℹ️ NESSUN RUOLO (normale se non ci sono utenti)'
-  END as status;
+DO $$
+DECLARE
+  ruoli_count INTEGER := 0;
+  table_exists BOOLEAN;
+BEGIN
+  SELECT EXISTS (
+    SELECT 1 FROM information_schema.tables 
+    WHERE table_schema = 'public' AND table_name = 'user_roles'
+  ) INTO table_exists;
+  
+  IF table_exists THEN
+    EXECUTE 'SELECT COUNT(*) FROM user_roles' INTO ruoli_count;
+  END IF;
+  
+  RAISE NOTICE '📊 DATI: Ruoli Utente - Tabella: % - Ruoli totali: %', 
+    CASE WHEN table_exists THEN 'ESISTE' ELSE 'NON ESISTE' END,
+    ruoli_count;
+END $$;
 
 -- Token attivi (solo se la tabella esiste)
-SELECT 
-  '📊 DATI: Token Attivi' as sezione,
-  CASE 
-    WHEN EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'dashboard_access_tokens')
-    THEN (SELECT COUNT(*)::text FROM dashboard_access_tokens WHERE revoked = false AND (valid_until IS NULL OR valid_until > NOW()))
-    ELSE '0'
-  END as token_attivi,
-  CASE 
-    WHEN NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'dashboard_access_tokens')
-    THEN '❌ TABELLA NON ESISTE'
-    WHEN EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'dashboard_access_tokens')
-      AND (SELECT COUNT(*) FROM dashboard_access_tokens WHERE revoked = false AND (valid_until IS NULL OR valid_until > NOW())) > 0
-    THEN '✅ PRESENTI'
-    ELSE 'ℹ️ NESSUN TOKEN (normale se non ci sono token)'
-  END as status;
+DO $$
+DECLARE
+  token_count INTEGER := 0;
+  table_exists BOOLEAN;
+BEGIN
+  SELECT EXISTS (
+    SELECT 1 FROM information_schema.tables 
+    WHERE table_schema = 'public' AND table_name = 'dashboard_access_tokens'
+  ) INTO table_exists;
+  
+  IF table_exists THEN
+    EXECUTE 'SELECT COUNT(*) FROM dashboard_access_tokens WHERE revoked = false AND (valid_until IS NULL OR valid_until > NOW())' INTO token_count;
+  END IF;
+  
+  RAISE NOTICE '📊 DATI: Token Attivi - Tabella: % - Token attivi: %', 
+    CASE WHEN table_exists THEN 'ESISTE' ELSE 'NON ESISTE' END,
+    token_count;
+END $$;
 
 -- ===== 6. VERIFICA INDICI =====
 -- Solo per tabelle che esistono
