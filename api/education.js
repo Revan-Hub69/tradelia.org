@@ -445,19 +445,46 @@ export async function submitTest(req, res) {
     const score = totalPoints > 0 ? Math.round((earnedPoints / totalPoints) * 100) : 0;
     const passed = score >= test.passing_score;
 
+    // Check tracking consent (GDPR compliance)
+    const { data: preferences } = await supabase
+      .from("education_user_tracking_preferences")
+      .select("track_test_scores, track_test_answers")
+      .eq("user_id", req.user.id)
+      .single();
+
+    const trackScores = preferences?.track_test_scores !== false; // Default: true
+    const trackAnswers = preferences?.track_test_answers === true; // Default: false (minimizzazione)
+
+    // Prepare data (minimizzazione GDPR)
+    const attemptData = {
+      user_id: req.user.id,
+      test_id: testId,
+      attempt_number: nextAttemptNumber,
+      completed_at: new Date().toISOString(),
+    };
+
+    // Solo se consenso per punteggi
+    if (trackScores) {
+      attemptData.score = score;
+      attemptData.passed = passed;
+      attemptData.time_spent_seconds = timeSpentSeconds;
+    }
+
+    // Solo se consenso esplicito per risposte dettagliate (default: NO)
+    if (trackAnswers) {
+      attemptData.answers = detailedAnswers;
+    } else {
+      // Minimizzazione: salva solo question IDs sbagliate (array semplice)
+      const wrongQuestionIds = Object.keys(detailedAnswers)
+        .filter((qId) => !detailedAnswers[qId].is_correct)
+        .map((qId) => qId);
+      attemptData.wrong_question_ids = wrongQuestionIds.length > 0 ? wrongQuestionIds : null;
+    }
+
     // Save attempt
     const { data: attempt, error: attemptError } = await supabase
       .from("education_user_test_attempts")
-      .insert({
-        user_id: req.user.id,
-        test_id: testId,
-        attempt_number: nextAttemptNumber,
-        score,
-        passed,
-        time_spent_seconds: timeSpentSeconds,
-        answers: detailedAnswers,
-        completed_at: new Date().toISOString(),
-      })
+      .insert(attemptData)
       .select()
       .single();
 
