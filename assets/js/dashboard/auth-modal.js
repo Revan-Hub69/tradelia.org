@@ -946,6 +946,8 @@ async function handleSignupSubmit(e) {
 
     // BEST PRACTICE: Email verification required
     if (data.emailSent && !data.token) {
+      DEBUG.info("handleSignupSubmit", "Signup successful, email verification required");
+      signupInProgress = false;
       if (window.showToast) {
         window.showToast(
           "Registrazione completata! Verifica la tua email per attivare l'account.",
@@ -965,6 +967,8 @@ async function handleSignupSubmit(e) {
         }
       }, 2000);
     } else if (data.token) {
+      DEBUG.info("handleSignupSubmit", "Signup successful, token received, auto-login");
+      signupInProgress = false;
       // Token restituito direttamente (fallback) - BEST PRACTICE: Use secure token storage
       const { saveToken } = await import("./token-storage.js");
       await saveToken(data.token, data.refreshToken || null);
@@ -977,6 +981,8 @@ async function handleSignupSubmit(e) {
         window.location.reload();
       }, 1000);
     } else {
+      DEBUG.info("handleSignupSubmit", "Signup successful, no token (email verification flow)");
+      signupInProgress = false;
       if (window.showToast) {
         window.showToast(
           data.message || "Registrazione completata. Controlla la tua email.",
