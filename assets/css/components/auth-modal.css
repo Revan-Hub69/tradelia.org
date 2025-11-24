@@ -122,6 +122,12 @@
   flex: 1;
 }
 
+.auth-modal :is(button, .btn, .auth-modal-tab, .auth-form-input, textarea, select, .link-button):focus-visible {
+  outline: 3px solid rgba(96, 165, 250, 0.9);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.25);
+}
+
 .auth-modal-context {
   background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.95));
   border: 1px solid rgba(99, 102, 241, 0.2);
@@ -129,6 +135,24 @@
   padding: 1.25rem 1.5rem;
   margin-bottom: 1.5rem;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.45);
+}
+
+.auth-context-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 1rem;
+}
+
+.auth-context-tag {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(96, 165, 250, 0.1);
+  border: 1px solid rgba(96, 165, 250, 0.4);
+  color: var(--brand-200, #bfdbfe);
 }
 
 .auth-value-list {
@@ -176,6 +200,13 @@
 
 .auth-plan-pill span {
   font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.auth-compliance-note {
+  font-size: 0.78rem;
+  color: var(--ink-soft, #94a3b8);
+  margin-top: 1rem;
   line-height: 1.4;
 }
 
@@ -380,6 +411,47 @@
   text-decoration: underline;
 }
 
+.auth-support-actions {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 0.9rem;
+  background: rgba(15, 23, 42, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.auth-support-text {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--ink-soft, #cbd5f5);
+}
+
+.btn-ghost {
+  border: 1.5px solid rgba(96, 165, 250, 0.4);
+  background: transparent;
+  color: var(--brand-400, #60a5fa);
+  border-radius: 0.75rem;
+  padding: 0.65rem 1.1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.btn-ghost:hover {
+  background: rgba(96, 165, 250, 0.1);
+  border-color: rgba(96, 165, 250, 0.8);
+}
+
+.btn-ghost:focus-visible {
+  outline: 3px solid rgba(96, 165, 250, 0.5);
+  outline-offset: 3px;
+}
+
 /* Password Wrapper */
 .auth-password-wrapper {
   position: relative;
@@ -510,10 +582,28 @@
   color: #ef4444;
 }
 
+.assist-hint {
+  font-size: 0.8rem;
+  color: var(--ink-soft, #a5b4fc);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.auth-modal-secondary .auth-modal-content {
+  max-width: 480px;
+}
+
 @media (max-width: 640px) {
+  .auth-modal {
+    align-items: flex-start;
+  }
+
   .auth-modal-content {
-    width: 95%;
-    max-height: 95vh;
+    width: 100%;
+    max-width: none;
+    max-height: none;
+    min-height: 100vh;
+    border-radius: 0;
   }
 
   .auth-modal-context {
@@ -526,7 +616,7 @@
 
   .auth-modal-header,
   .auth-modal-body {
-    padding: 1.25rem 1.5rem;
+    padding: 1.25rem 1.25rem;
   }
 
   .auth-modal-tabs {
@@ -539,5 +629,15 @@
 
   .auth-form-actions .btn {
     width: 100%;
+  }
+
+  .auth-support-actions {
+    padding: 0.75rem;
+  }
+}
+
+@media (pointer: coarse) {
+  .auth-modal :is(button, .btn, .auth-modal-tab, .auth-form-input, textarea, select, .link-button):focus {
+    outline-width: 4px;
   }
 }

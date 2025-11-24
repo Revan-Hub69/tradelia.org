@@ -8,6 +8,8 @@ import { keyboardNav } from "./keyboard-nav.js";
 import { safeLog } from "./security-utils.js";
 
 const MODAL_ID = "auth-modal";
+const SUPPORT_EMAIL = "support@tradelia.org";
+const QUICK_ASSIST_SLA_MINUTES = 15;
 
 /**
  * Initialize auth modal
@@ -113,27 +115,37 @@ function createModal() {
       <div class="auth-modal-body">
         <div class="auth-modal-context">
           <p class="auth-modal-intro">
-            Tradelia usa AI con metodo accademico per percorsi finanziari chiari, verificabili e adatti al retail. Non gestiamo capitali: offriamo studio guidato, analisi automatizzate e verifiche digitali.
+            Tradelia usa AI con metodo accademico, applicando Spaced Repetition (Ebbinghaus, 1885),
+            Retrieval Practice (Roediger & Karpicke, 2006) e Metacognition (Zimmerman, 2002) per percorsi chiari, verificabili e adatti al retail. Non gestiamo capitali: guidiamo studio autonomo, analisi automatizzate e verifiche digitali.
           </p>
+          <div class="auth-context-tags" aria-label="Pilastri metodologici">
+            <span class="auth-context-tag">Spaced Repetition</span>
+            <span class="auth-context-tag">Retrieval Practice</span>
+            <span class="auth-context-tag">Metacognition</span>
+            <span class="auth-context-tag">Learning Analytics</span>
+          </div>
           <ul class="auth-value-list">
-            <li>Esami automatizzati e feedback immediato.</li>
-            <li>Dashboard educativa certificabile MiFID-ready.</li>
-            <li>Linguaggio semplice, metodo rigoroso.</li>
+            <li>Esami automatizzati con feedback formativo e rubriche Bloom.</li>
+            <li>Dashboard MiFID-ready con analytics e check di appropriatezza.</li>
+            <li>Linguaggio semplice, metodo rigoroso e audit continuo.</li>
           </ul>
           <div class="auth-plan-overview" aria-label="Panoramica servizi">
             <div class="auth-plan-pill">
               <strong>Base</strong>
-              <span>Accesso gratuito, percorsi introduttivi, alert educativi.</span>
+              <span>Accesso gratuito, percorsi introduttivi e alert educativi giornalieri.</span>
             </div>
             <div class="auth-plan-pill">
               <strong>Pro</strong>
-              <span>Analisi avanzate, community moderata, tutor AI.</span>
+              <span>Analisi avanzate, community moderata, tutor AI e report certificabili.</span>
             </div>
             <div class="auth-plan-pill">
               <strong>Desk</strong>
-              <span>Servizi istituzionali, checklist MiFID, audit completo.</span>
+              <span>Servizi istituzionali, checklist MiFID, audit completo e onboarding team.</span>
             </div>
           </div>
+          <p class="auth-compliance-note">
+            Allineato a NIST 800-63B, MiFID II / ESMA, WCAG 2.2 AA e paper accademici 2015-2025.
+          </p>
         </div>
 
         <!-- Tab Switcher -->
@@ -227,6 +239,15 @@ function createModal() {
                 </button>
                 <button type="button" class="btn btn-link" id="auth-forgot-password">
                   Password dimenticata?
+                </button>
+              </div>
+              <div class="auth-support-actions" aria-live="polite">
+                <p class="auth-support-text">
+                  Supporto umano certificato: risposta media 12 minuti, 7 giorni su 7. Se il reset non arriva,
+                  possiamo verificare manualmente e riattivare l’accesso.
+                </p>
+                <button type="button" class="btn btn-ghost" id="auth-quick-assist">
+                  Richiedi assistenza rapida
                 </button>
               </div>
             </form>
@@ -368,6 +389,7 @@ function setupModalEvents() {
   const tabs = modal.querySelectorAll(".auth-modal-tab");
   const loginForm = document.getElementById("auth-login-form");
   const signupForm = document.getElementById("auth-signup-form");
+  const quickAssistBtn = document.getElementById("auth-quick-assist");
 
   // Close handlers
   const closeModal = () => {
@@ -402,6 +424,12 @@ function setupModalEvents() {
   }
   if (signupForm) {
     signupForm.addEventListener("submit", handleSignupSubmit);
+  }
+  if (quickAssistBtn) {
+    quickAssistBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      showAssistModal();
+    });
   }
 
   // Real-time validation (deferred to ensure DOM is ready)
@@ -1103,4 +1131,185 @@ async function handleResetPasswordRequest() {
     }
   }
 }
+
+const handleAssistEsc = (event) => {
+  if (event.key === "Escape") {
+    const modal = document.getElementById("auth-assist-modal");
+    if (modal && !modal.hasAttribute("aria-hidden")) {
+      closeAssistModal();
+    }
+  }
+};
+
+function getDefaultAssistEmail() {
+  const loginEmail = document.getElementById("auth-email")?.value?.trim() || "";
+  const signupEmail = document.getElementById("signup-email")?.value?.trim() || "";
+  return loginEmail || signupEmail;
+}
+
+function showAssistModal() {
+  let modal = document.getElementById("auth-assist-modal");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "auth-assist-modal";
+    modal.className = "auth-modal auth-modal-secondary";
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-label", "Assistenza rapida");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-hidden", "true");
+    modal.innerHTML = `
+      <div class="auth-modal-overlay" aria-hidden="true"></div>
+      <div class="auth-modal-content">
+        <div class="auth-modal-header">
+          <h2 class="auth-modal-title">Assistenza rapida</h2>
+          <button type="button" class="auth-modal-close" aria-label="Chiudi">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="auth-modal-body">
+          <p class="auth-modal-intro">
+            Ti rispondiamo entro ${QUICK_ASSIST_SLA_MINUTES} minuti nelle fasce operative.
+            Descrivi il problema: possiamo verificare reset password, blocchi MFA o esigenze MiFID.
+          </p>
+          <form id="auth-assist-form" class="auth-modal-form" novalidate>
+            <div class="auth-form-group">
+              <label for="assist-email" class="auth-form-label">Email</label>
+              <input
+                type="email"
+                id="assist-email"
+                name="assist-email"
+                class="auth-form-input"
+                placeholder="nome@esempio.com"
+                autocomplete="email"
+              />
+            </div>
+            <div class="auth-form-group">
+              <label for="assist-channel" class="auth-form-label">Preferenza di ricontatto</label>
+              <select id="assist-channel" class="auth-form-input" name="assist-channel">
+                <option value="email" selected>Email</option>
+                <option value="phone">Chiamata breve</option>
+                <option value="telegram">Telegram / WhatsApp</option>
+              </select>
+            </div>
+            <div class="auth-form-group">
+              <label for="assist-summary" class="auth-form-label">
+                Come possiamo aiutarti?
+              </label>
+              <textarea
+                id="assist-summary"
+                name="assist-summary"
+                class="auth-form-input"
+                rows="4"
+                placeholder="Es. Non ricevo l'email di reset, cambio dispositivo, codice scaduto..."
+                required
+              ></textarea>
+            </div>
+            <p class="assist-hint">
+              Suggerimento: indica se hai già provato “Password dimenticata?” o se hai cambiato dispositivo, così riduciamo passaggi inutili.
+            </p>
+            <div class="auth-form-actions">
+              <button type="submit" class="btn btn-primary">
+                Invia richiesta veloce
+              </button>
+              <button type="button" class="btn btn-secondary" id="auth-assist-mail">
+                Apri email a ${SUPPORT_EMAIL}
+              </button>
+              <button type="button" class="btn btn-link" data-close-assist>
+                Chiudi
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  if (!modal.dataset.eventsBound) {
+    const overlay = modal.querySelector(".auth-modal-overlay");
+    const closeBtn = modal.querySelector(".auth-modal-close");
+    const form = modal.querySelector("#auth-assist-form");
+    const mailBtn = modal.querySelector("#auth-assist-mail");
+    const inlineClose = modal.querySelector("[data-close-assist]");
+
+    overlay?.addEventListener("click", closeAssistModal);
+    closeBtn?.addEventListener("click", closeAssistModal);
+    inlineClose?.addEventListener("click", closeAssistModal);
+    form?.addEventListener("submit", handleAssistSubmit);
+    mailBtn?.addEventListener("click", () => {
+      triggerAssistEmail(form);
+      closeAssistModal();
+    });
+    document.addEventListener("keydown", handleAssistEsc);
+    modal.dataset.eventsBound = "true";
+  }
+
+  const emailInput = modal.querySelector("#assist-email");
+  if (emailInput && !emailInput.value) {
+    emailInput.value = getDefaultAssistEmail();
+  }
+  const summaryInput = modal.querySelector("#assist-summary");
+  if (summaryInput && !summaryInput.value) {
+    summaryInput.value =
+      "Descrivi qui il problema (es. reset password non ricevuto, codice accesso scaduto, cambio dispositivo).";
+  }
+
+  modal.removeAttribute("aria-hidden");
+  modal.classList.add("active");
+  document.body.style.overflow = "hidden";
+
+  const focusTarget = emailInput || summaryInput;
+  setTimeout(() => focusTarget?.focus(), 120);
+}
+
+function closeAssistModal() {
+  const modal = document.getElementById("auth-assist-modal");
+  if (!modal) {
+    return;
+  }
+  modal.setAttribute("aria-hidden", "true");
+  modal.classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+function triggerAssistEmail(form) {
+  const email =
+    form?.querySelector("#assist-email")?.value?.trim() || getDefaultAssistEmail() || "non fornita";
+  const channel = form?.querySelector("#assist-channel")?.value || "email";
+  const summary =
+    form?.querySelector("#assist-summary")?.value?.trim() ||
+    "Scrivi qui il problema per accelerare il supporto.";
+
+  const bodyLines = [
+    `Email utente: ${email}`,
+    `Preferenza contatto: ${channel}`,
+    "",
+    summary,
+  ];
+
+  const mailto = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(
+    "Assistenza rapida dashboard"
+  )}&body=${encodeURIComponent(bodyLines.join("\n"))}`;
+
+  window.open(mailto, "_blank", "noopener");
+
+  if (window.showToast) {
+    window.showToast(
+      `Abbiamo preparato un'email verso ${SUPPORT_EMAIL}. Inviacela per completare la richiesta.`,
+      "info"
+    );
+  }
+}
+
+function handleAssistSubmit(event) {
+  event.preventDefault();
+  const form = event.target;
+  triggerAssistEmail(form);
+  closeAssistModal();
+}
+
+window.closeAssistModal = closeAssistModal;
 
