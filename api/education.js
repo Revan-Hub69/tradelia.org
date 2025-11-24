@@ -418,6 +418,7 @@ export async function submitTest(req, res) {
     questions.forEach((question) => {
       totalPoints += question.points;
       const userAnswer = answers[question.id];
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const correctOptions = question.education_question_options.filter((opt) => opt.is_correct);
 
       if (userAnswer) {
@@ -874,6 +875,7 @@ export async function updateSpacedRepetition(req, res) {
       return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { questionId, isCorrect, timeSpent, reviewedAt } = req.body;
 
     // Store in user's spaced repetition tracking (could be a new table or JSONB field)
@@ -896,6 +898,7 @@ export async function savePreAssessment(req, res) {
       return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { lessonId, knowledgeLevel, expectations } = req.body;
 
     // Store in user's lesson progress or new metacognition table
@@ -923,6 +926,7 @@ export async function savePostReflection(req, res) {
       return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { lessonId, comprehension, unclear, learned } = req.body;
 
     // Store reflection
@@ -1103,8 +1107,11 @@ export async function getLearningAnalytics(req, res) {
     // Calculate time spent
     const totalTime = userStats?.total_study_time_minutes || 0;
     const today = new Date();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
     // Get time spent from lesson progress (simplified - would need proper time tracking)
@@ -1291,6 +1298,7 @@ export async function getPersonalizedPath(req, res) {
     const userId = req.user.id;
 
     // Get user progress and stats
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { data: userStats } = await supabase
       .from("education_user_stats")
       .select("*")
@@ -1471,6 +1479,292 @@ export async function getPersonalizedPath(req, res) {
 }
 
 /**
+ * Add XP to user
+ */
+export async function addXP(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const { xp_amount, source_type, source_id, description } = req.body;
+
+    if (!xp_amount || !source_type) {
+      return res.status(400).json({ success: false, error: "xp_amount e source_type richiesti" });
+    }
+
+    // Call database function
+    const { data, error } = await supabase.rpc("add_education_xp", {
+      p_user_id: req.user.id,
+      p_xp_amount: xp_amount,
+      p_source_type: source_type,
+      p_source_id: source_id || null,
+      p_description: description || null,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    res.json({ success: true, ...data });
+  } catch (error) {
+    safeLog("error", "[Education] Errore addXP:", error);
+    res.status(500).json({ success: false, error: "Errore aggiunta XP" });
+  }
+}
+
+/**
+ * Unlock badge for user
+ */
+export async function unlockBadge(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const { badge_id } = req.body;
+
+    if (!badge_id) {
+      return res.status(400).json({ success: false, error: "badge_id richiesto" });
+    }
+
+    // Check and unlock badge
+    const { data, error } = await supabase.rpc("check_and_unlock_badge", {
+      p_user_id: req.user.id,
+      p_badge_id: badge_id,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    if (data) {
+      // Get badge details
+      const { data: badge } = await supabase
+        .from("education_badges")
+        .select("*")
+        .eq("id", badge_id)
+        .single();
+
+      res.json({ success: true, unlocked: true, badge });
+    } else {
+      res.json({ success: true, unlocked: false });
+    }
+  } catch (error) {
+    safeLog("error", "[Education] Errore unlockBadge:", error);
+    res.status(500).json({ success: false, error: "Errore unlock badge" });
+  }
+}
+
+/**
+ * Update learning streak
+ */
+export async function updateStreak(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const { streak_type = "daily" } = req.body;
+
+    // Call database function
+    const { data, error } = await supabase.rpc("update_learning_streak", {
+      p_user_id: req.user.id,
+      p_streak_type: streak_type,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    // Check streak rewards
+    if (data.current_streak > 0) {
+      const { data: rewards } = await supabase
+        .from("education_streak_rewards")
+        .select("*")
+        .eq("streak_days", data.current_streak)
+        .single();
+
+      if (rewards && !data.streak_rewards_claimed?.includes(data.current_streak)) {
+        // Add XP reward
+        await supabase.rpc("add_education_xp", {
+          p_user_id: req.user.id,
+          p_xp_amount: rewards.xp_reward,
+          p_source_type: "streak_bonus",
+          p_source_id: null,
+          p_description: rewards.description,
+        });
+
+        // Mark reward as claimed
+        const { data: stats } = await supabase
+          .from("education_user_stats")
+          .select("streak_rewards_claimed")
+          .eq("user_id", req.user.id)
+          .single();
+
+        const claimed = stats?.streak_rewards_claimed || [];
+        claimed.push(data.current_streak);
+
+        await supabase
+          .from("education_user_stats")
+          .update({ streak_rewards_claimed: claimed })
+          .eq("user_id", req.user.id);
+      }
+    }
+
+    res.json({ success: true, ...data });
+  } catch (error) {
+    safeLog("error", "[Education] Errore updateStreak:", error);
+    res.status(500).json({ success: false, error: "Errore update streak" });
+  }
+}
+
+/**
+ * Get active quests for user
+ */
+export async function getQuests(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const today = new Date().toISOString().split("T")[0];
+
+    // Get active quests
+    const { data: activeQuests, error: questsError } = await supabase
+      .from("education_quests")
+      .select("*")
+      .eq("is_active", true)
+      .or(`start_date.is.null,start_date.lte.${today}`)
+      .or(`end_date.is.null,end_date.gte.${today}`)
+      .order("quest_type", { ascending: true });
+
+    if (questsError) {
+      throw questsError;
+    }
+
+    // Get user quest progress
+    const { data: userQuests, error: userQuestsError } = await supabase
+      .from("education_user_quests")
+      .select("*")
+      .eq("user_id", req.user.id)
+      .in("quest_id", activeQuests?.map((q) => q.id) || []);
+
+    if (userQuestsError) {
+      throw userQuestsError;
+    }
+
+    // Merge quests with user progress
+    const questsWithProgress = (activeQuests || []).map((quest) => {
+      const userQuest = userQuests?.find((uq) => uq.quest_id === quest.id);
+      return {
+        ...quest,
+        progress: userQuest?.progress || {},
+        status: userQuest?.status || "in_progress",
+        started_at: userQuest?.started_at,
+        completed_at: userQuest?.completed_at,
+      };
+    });
+
+    res.json({ success: true, quests: questsWithProgress });
+  } catch (error) {
+    safeLog("error", "[Education] Errore getQuests:", error);
+    res.status(500).json({ success: false, error: "Errore caricamento quest" });
+  }
+}
+
+/**
+ * Update quest progress
+ */
+export async function updateQuest(req, res) {
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const { quest_id, objective_index } = req.body;
+
+    if (!quest_id || objective_index === undefined) {
+      return res
+        .status(400)
+        .json({ success: false, error: "quest_id e objective_index richiesti" });
+    }
+
+    // Get quest
+    const { data: quest, error: questError } = await supabase
+      .from("education_quests")
+      .select("*")
+      .eq("id", quest_id)
+      .single();
+
+    if (questError || !quest) {
+      return res.status(404).json({ success: false, error: "Quest non trovata" });
+    }
+
+    // Get or create user quest
+    const { data: userQuest } = await supabase
+      .from("education_user_quests")
+      .select("*")
+      .eq("user_id", req.user.id)
+      .eq("quest_id", quest_id)
+      .single();
+
+    let progress = {};
+    if (userQuest) {
+      progress = userQuest.progress || {};
+    }
+
+    // Update objective progress
+    progress[objective_index] = true;
+
+    // Check if all objectives completed
+    const objectives = quest.objectives || [];
+    const allCompleted = objectives.every((_, index) => progress[index] === true);
+
+    // Upsert user quest
+    const { data: updatedQuest, error: updateError } = await supabase
+      .from("education_user_quests")
+      .upsert(
+        {
+          user_id: req.user.id,
+          quest_id: quest_id,
+          progress: progress,
+          status: allCompleted ? "completed" : "in_progress",
+          completed_at: allCompleted ? new Date().toISOString() : null,
+        },
+        { onConflict: "user_id,quest_id" }
+      )
+      .select()
+      .single();
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    // If completed, add XP
+    if (allCompleted && !userQuest?.completed_at) {
+      await supabase.rpc("add_education_xp", {
+        p_user_id: req.user.id,
+        p_xp_amount: quest.xp_reward,
+        p_source_type: "quest",
+        p_source_id: quest_id,
+        p_description: `Quest completata: ${quest.title}`,
+      });
+    }
+
+    res.json({
+      success: true,
+      quest: updatedQuest,
+      completed: allCompleted,
+      xp_reward: allCompleted ? quest.xp_reward : 0,
+    });
+  } catch (error) {
+    safeLog("error", "[Education] Errore updateQuest:", error);
+    res.status(500).json({ success: false, error: "Errore update quest" });
+  }
+}
+
+/**
  * Main handler (Vercel serverless function)
  */
 export default async function handler(req, res) {
@@ -1547,9 +1841,19 @@ export default async function handler(req, res) {
         return await getInterleavedQuestions(req, res);
       case "personalized-path":
         return await getPersonalizedPath(req, res);
+      case "add-xp":
+        return await addXP(req, res);
+      case "unlock-badge":
+        return await unlockBadge(req, res);
+      case "update-streak":
+        return await updateStreak(req, res);
+      case "quests":
+        return await getQuests(req, res);
+      case "update-quest":
+        return await updateQuest(req, res);
       default:
         // Log 400 per azione non valida
-        // eslint-disable-next-line no-console
+
         console.error("[400 Bad Request]", {
           timestamp: new Date().toISOString(),
           method: req.method,
@@ -1564,7 +1868,6 @@ export default async function handler(req, res) {
   } catch (error) {
     // Log 400 se è un errore di validazione
     if (error.status === 400 || (error.message && error.message.includes("richiesto"))) {
-      // eslint-disable-next-line no-console
       console.error("[400 Bad Request]", {
         timestamp: new Date().toISOString(),
         method: req.method,
@@ -1574,7 +1877,9 @@ export default async function handler(req, res) {
         error: error.message || error,
         query: req.query,
       });
-      return res.status(400).json({ success: false, error: error.message || "Richiesta non valida" });
+      return res
+        .status(400)
+        .json({ success: false, error: error.message || "Richiesta non valida" });
     }
     safeLog("error", "[Education] Handler error:", error);
     return res.status(500).json({ success: false, error: "Errore interno del server" });

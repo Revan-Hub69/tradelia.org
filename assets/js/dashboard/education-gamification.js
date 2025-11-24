@@ -6,8 +6,10 @@
  */
 
 import { safeLog, escapeHtml } from "./security-utils.js";
+import { getClientSupabase } from "./supabase-client.js";
 
 const API_BASE = "/api/education";
+const supabase = getClientSupabase();
 
 /**
  * XP System
@@ -197,8 +199,14 @@ export class XPSystem {
   }
 
   async getAuthToken() {
-    // Implementazione esistente
-    return null;
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      return session?.access_token || null;
+    } catch {
+      return null;
+    }
   }
 
   loadProgress() {

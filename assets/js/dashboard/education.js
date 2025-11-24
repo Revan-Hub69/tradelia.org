@@ -25,9 +25,11 @@ const API_BASE = "/api/education";
 
 let currentModule = null;
 let currentLesson = null;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const currentTest = null;
 
 // Adaptive Learning: Track performance per question
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const questionPerformance = new Map(); // questionId -> { attempts, correct, difficulty }
 
 // Microlearning: Track session time
@@ -38,6 +40,14 @@ const MICROLEARNING_MAX_MINUTES = 10; // Paper: Hug (2016) - optimal 5-10 min ch
  * Initialize education system (dashboard view)
  */
 async function initEducation() {
+  // Initialize gamification system
+  try {
+    const { initGamification } = await import("./education-gamification.js");
+    initGamification();
+  } catch (error) {
+    safeLog("warn", "[Education] Errore initGamification:", error);
+  }
+
   // Try to find container in main content area (SPA)
   let container = document.getElementById("education-container");
 
@@ -988,7 +998,7 @@ async function getAuthToken() {
   try {
     const { getToken } = await import("./token-storage.js");
     return await getToken();
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -1022,7 +1032,7 @@ export async function handleEducationNavigation(hash) {
       } else {
         await initEducation();
       }
-    } catch (e) {
+    } catch {
       await initEducation();
     }
   } else if (parts[0] === "test" && parts[1]) {
