@@ -234,16 +234,17 @@ ORDER BY event_object_table, trigger_name;
 
 SELECT 
   '🔢 SEQUENZE' as verifica,
-  sequence_name as sequenza,
-  last_value as ultimo_valore,
+  schemaname || '.' || sequencename as sequenza,
+  last_value::text as ultimo_valore,
+  start_value::text as valore_iniziale,
   CASE 
-    WHEN sequence_name IS NOT NULL THEN '✅ CONFIGURATA'
+    WHEN sequencename IS NOT NULL THEN '✅ CONFIGURATA'
     ELSE '⚠️ NON TROVATA'
   END as status
-FROM information_schema.sequences
-WHERE sequence_schema = 'public'
-  AND sequence_name LIKE '%_id_seq'
-ORDER BY sequence_name;
+FROM pg_sequences
+WHERE schemaname = 'public'
+  AND sequencename LIKE '%_id_seq'
+ORDER BY sequencename;
 
 -- ===== 9. RIEPILOGO CONFIGURAZIONE =====
 -- Riepilogo completo dello stato
