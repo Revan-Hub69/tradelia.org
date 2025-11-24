@@ -35,6 +35,7 @@ export function showAuthModal(tab = "login") {
   }
 
   updateModalTab(tab);
+  resetStatusMessages();
 
   modal.removeAttribute("aria-hidden");
   modal.classList.add("active");
@@ -74,6 +75,7 @@ export function hideAuthModal() {
   modal.classList.remove("active");
   document.body.style.overflow = "";
 
+  resetStatusMessages();
   // Deactivate focus trap
   keyboardNav.deactivateFocusTrap();
 }
@@ -114,37 +116,41 @@ function createModal() {
 
       <div class="auth-modal-body">
         <div class="auth-modal-context">
-          <p class="auth-modal-intro">
-            Tradelia usa AI con metodo accademico, applicando Spaced Repetition (Ebbinghaus, 1885),
-            Retrieval Practice (Roediger & Karpicke, 2006) e Metacognition (Zimmerman, 2002) per percorsi chiari, verificabili e adatti al retail. Non gestiamo capitali: guidiamo studio autonomo, analisi automatizzate e verifiche digitali.
-          </p>
-          <div class="auth-context-tags" aria-label="Pilastri metodologici">
-            <span class="auth-context-tag">Spaced Repetition</span>
-            <span class="auth-context-tag">Retrieval Practice</span>
-            <span class="auth-context-tag">Metacognition</span>
-            <span class="auth-context-tag">Learning Analytics</span>
+          <div class="auth-context-top">
+            <p class="auth-modal-intro">
+              Tradelia usa AI con metodo accademico per spiegarti i mercati con linguaggio semplice e verificabile.
+            </p>
+            <div class="auth-context-tags" aria-label="Pilastri metodologici">
+              <span class="auth-context-tag">Spaced Repetition</span>
+              <span class="auth-context-tag">Retrieval Practice</span>
+              <span class="auth-context-tag">Metacognition</span>
+              <span class="auth-context-tag">Learning Analytics</span>
+            </div>
           </div>
           <ul class="auth-value-list">
-            <li>Esami automatizzati con feedback formativo e rubriche Bloom.</li>
-            <li>Dashboard MiFID-ready con analytics e check di appropriatezza.</li>
-            <li>Linguaggio semplice, metodo rigoroso e audit continuo.</li>
+            <li>Esami automatizzati con rubriche Bloom + feedback immediato.</li>
+            <li>Dashboard MiFID-ready con analytics personali e check di appropriatezza.</li>
+            <li>Supporto umano certificato con SLA medio 12 minuti.</li>
           </ul>
-          <div class="auth-plan-overview" aria-label="Panoramica servizi">
-            <div class="auth-plan-pill">
-              <strong>Base</strong>
-              <span>Accesso gratuito, percorsi introduttivi e alert educativi giornalieri.</span>
+          <details class="auth-plan-details">
+            <summary>Vedi cosa include Base / Pro / Desk</summary>
+            <div class="auth-plan-overview" aria-label="Panoramica servizi">
+              <div class="auth-plan-pill">
+                <strong>Base</strong>
+                <span>Accesso gratuito, percorsi introduttivi, alert educativi quotidiani.</span>
+              </div>
+              <div class="auth-plan-pill">
+                <strong>Pro</strong>
+                <span>Analisi avanzate, community moderata, tutor AI, report certificabili.</span>
+              </div>
+              <div class="auth-plan-pill">
+                <strong>Desk</strong>
+                <span>Servizi istituzionali, checklist MiFID, audit completo, onboarding team.</span>
+              </div>
             </div>
-            <div class="auth-plan-pill">
-              <strong>Pro</strong>
-              <span>Analisi avanzate, community moderata, tutor AI e report certificabili.</span>
-            </div>
-            <div class="auth-plan-pill">
-              <strong>Desk</strong>
-              <span>Servizi istituzionali, checklist MiFID, audit completo e onboarding team.</span>
-            </div>
-          </div>
+          </details>
           <p class="auth-compliance-note">
-            Allineato a NIST 800-63B, MiFID II / ESMA, WCAG 2.2 AA e paper accademici 2015-2025.
+            Allineato a NIST 800-63B, MiFID II / ESMA, WCAG 2.2 AA e letteratura 2015-2025 su formazione finanziaria.
           </p>
         </div>
 
@@ -187,6 +193,7 @@ function createModal() {
               Accedi con email e password per proseguire i tuoi percorsi.
             </p>
             <form id="auth-login-form" class="auth-modal-form" novalidate>
+              <div class="auth-status-message" id="login-status-message" aria-live="assertive"></div>
               <div class="auth-form-group">
                 <label for="auth-email" class="auth-form-label">
                   Email
@@ -264,6 +271,7 @@ function createModal() {
               Crea un account gratuito. Potrai attivare in seguito i servizi Pro o Desk.
             </p>
             <form id="auth-signup-form" class="auth-modal-form" novalidate>
+              <div class="auth-status-message" id="signup-status-message" aria-live="assertive"></div>
               <div class="auth-form-group">
                 <label for="signup-email" class="auth-form-label">
                   Email
@@ -494,6 +502,24 @@ function clearFieldError(inputId, errorId) {
   }
 }
 
+function setStatusMessage(targetId, message = "", state = "info") {
+  const el = document.getElementById(targetId);
+  if (!el) {
+    return;
+  }
+
+  if (!message) {
+    el.textContent = "";
+    el.classList.remove("is-visible", "is-success", "is-error", "is-info");
+    return;
+  }
+
+  el.textContent = message;
+  el.classList.add("is-visible");
+  el.classList.remove("is-success", "is-error", "is-info");
+  el.classList.add(`is-${state}`);
+}
+
 /**
  * Switch tab
  */
@@ -530,6 +556,13 @@ function switchTab(tabName) {
  */
 function updateModalTab(tabName) {
   switchTab(tabName);
+  resetStatusMessages();
+}
+
+function resetStatusMessages() {
+  ["login-status-message", "signup-status-message"].forEach((id) => {
+    setStatusMessage(id, "");
+  });
 }
 
 /**
@@ -541,6 +574,7 @@ async function handleLoginSubmit(e) {
   const emailInput = document.getElementById("auth-email");
   const passwordInput = document.getElementById("auth-password");
   const rateLimitDiv = document.getElementById("auth-rate-limit");
+  const statusId = "login-status-message";
 
   const email = emailInput?.value?.trim() || "";
   const password = passwordInput?.value || "";
@@ -550,6 +584,7 @@ async function handleLoginSubmit(e) {
     if (window.showToast) {
       window.showToast("Inserisci un'email", "error");
     }
+    setStatusMessage(statusId, "Inserisci il tuo indirizzo email.", "error");
     emailInput?.focus();
     return;
   }
@@ -558,6 +593,7 @@ async function handleLoginSubmit(e) {
     if (window.showToast) {
       window.showToast("Inserisci la password", "error");
     }
+    setStatusMessage(statusId, "Inserisci la tua password.", "error");
     passwordInput?.focus();
     return;
   }
@@ -585,6 +621,8 @@ async function handleLoginSubmit(e) {
     submitBtn.setAttribute("aria-busy", "true");
   }
 
+  setStatusMessage(statusId, "Stiamo verificando le credenziali…", "info");
+
   try {
     const response = await fetch("/api/auth?action=login", {
       method: "POST",
@@ -608,6 +646,7 @@ async function handleLoginSubmit(e) {
 
       // SECURITY: Messaggi di errore generici (non rivelare se email esiste)
       if (data.emailNotVerified) {
+        setStatusMessage(statusId, "Verifica la tua email prima di accedere.", "info");
         if (window.showToast) {
           window.showToast(
             "Verifica la tua email prima di accedere. Controlla la casella email.",
@@ -619,6 +658,7 @@ async function handleLoginSubmit(e) {
         if (window.showToast) {
           window.showToast("Credenziali non valide. Riprova.", "error");
         }
+        setStatusMessage(statusId, "Credenziali non valide. Controlla email e password.", "error");
       }
       passwordInput?.focus();
       // Re-enable form
@@ -627,6 +667,7 @@ async function handleLoginSubmit(e) {
         submitBtn.textContent = "Accedi";
         submitBtn.removeAttribute("aria-busy");
       }
+    setStatusMessage(statusId, "Si è verificato un errore di connessione. Riprova.", "error");
       return;
     }
 
@@ -634,6 +675,7 @@ async function handleLoginSubmit(e) {
     if (data.token) {
       const { saveToken } = await import("./token-storage.js");
       await saveToken(data.token, data.refreshToken || null);
+    setStatusMessage(statusId, "Accesso eseguito con successo. Reindirizzamento…", "success");
       if (window.showToast) {
         window.showToast("Accesso riuscito!", "success");
       }
@@ -648,6 +690,7 @@ async function handleLoginSubmit(e) {
     if (window.showToast) {
       window.showToast("Errore di connessione. Riprova.", "error");
     }
+    setStatusMessage(statusId, "Errore di rete, controlla la connessione e riprova.", "error");
     // Re-enable form
     if (submitBtn) {
       submitBtn.disabled = false;
@@ -666,6 +709,7 @@ async function handleSignupSubmit(e) {
   const passwordInput = document.getElementById("signup-password");
   const passwordConfirmInput = document.getElementById("signup-password-confirm");
   const privacyCheckbox = document.getElementById("signup-privacy");
+  const statusId = "signup-status-message";
 
   const email = emailInput?.value?.trim() || "";
   const password = passwordInput?.value || "";
@@ -677,6 +721,7 @@ async function handleSignupSubmit(e) {
     if (window.showToast) {
       window.showToast("Inserisci un'email", "error");
     }
+    setStatusMessage(statusId, "Inserisci un indirizzo email valido.", "error");
     emailInput?.focus();
     return;
   }
@@ -685,6 +730,7 @@ async function handleSignupSubmit(e) {
     if (window.showToast) {
       window.showToast("Password deve essere di almeno 12 caratteri", "error");
     }
+    setStatusMessage(statusId, "La password deve contenere almeno 12 caratteri.", "error");
     passwordInput?.focus();
     return;
   }
@@ -693,6 +739,7 @@ async function handleSignupSubmit(e) {
     if (window.showToast) {
       window.showToast("Le password non corrispondono", "error");
     }
+    setStatusMessage(statusId, "Le password non coincidono.", "error");
     passwordConfirmInput?.focus();
     return;
   }
@@ -701,6 +748,7 @@ async function handleSignupSubmit(e) {
     if (window.showToast) {
       window.showToast("Devi accettare la privacy policy", "error");
     }
+    setStatusMessage(statusId, "Accetta la privacy policy per procedere.", "error");
     privacyCheckbox?.focus();
     return;
   }
@@ -729,6 +777,8 @@ async function handleSignupSubmit(e) {
     submitBtn.setAttribute("aria-busy", "true");
   }
 
+  setStatusMessage(statusId, "Creazione dell'account in corso…", "info");
+
   try {
     const response = await fetch("/api/auth?action=signup", {
       method: "POST",
@@ -755,6 +805,11 @@ async function handleSignupSubmit(e) {
           "success"
         );
       }
+      setStatusMessage(
+        statusId,
+        "Registrazione completata! Controlla la tua email per attivare l'account.",
+        "success"
+      );
       hideAuthModal();
       // Mostra messaggio informativo
       setTimeout(() => {
@@ -769,6 +824,7 @@ async function handleSignupSubmit(e) {
       if (window.showToast) {
         window.showToast("Registrazione completata! Accesso in corso...", "success");
       }
+      setStatusMessage(statusId, "Account creato. Ti reindirizziamo alla dashboard…", "success");
       hideAuthModal();
       setTimeout(() => {
         window.location.reload();
@@ -780,6 +836,7 @@ async function handleSignupSubmit(e) {
           "success"
         );
       }
+      setStatusMessage(statusId, data.message || "Registrazione completata!", "success");
       hideAuthModal();
     }
   } catch (error) {
@@ -787,6 +844,7 @@ async function handleSignupSubmit(e) {
     if (window.showToast) {
       window.showToast(error.message || "Errore durante la registrazione", "error");
     }
+    setStatusMessage(statusId, error.message || "Impossibile completare la registrazione.", "error");
     // Re-enable form
     if (submitBtn) {
       submitBtn.disabled = false;
@@ -1070,11 +1128,13 @@ function togglePasswordVisibility(input, toggle) {
 async function handleResetPasswordRequest() {
   const emailInput = document.getElementById("auth-email");
   const email = emailInput?.value?.trim() || "";
+  const statusId = "login-status-message";
 
   if (!email) {
     if (window.showToast) {
       window.showToast("Inserisci la tua email per reimpostare la password", "error");
     }
+    setStatusMessage(statusId, "Inserisci la tua email per ricevere il link di reset.", "error");
     emailInput?.focus();
     return;
   }
@@ -1083,6 +1143,7 @@ async function handleResetPasswordRequest() {
     if (window.showToast) {
       window.showToast("Formato email non valido", "error");
     }
+    setStatusMessage(statusId, "Email non valida. Controlla e riprova.", "error");
     emailInput?.focus();
     return;
   }
@@ -1093,6 +1154,8 @@ async function handleResetPasswordRequest() {
     forgotPasswordBtn.disabled = true;
     forgotPasswordBtn.textContent = "Invio in corso...";
   }
+
+  setStatusMessage(statusId, "Stiamo inviando il link di ripristino…", "info");
 
   try {
     const response = await fetch("/api/auth?action=reset-password", {
@@ -1110,6 +1173,11 @@ async function handleResetPasswordRequest() {
           "success"
         );
       }
+      setStatusMessage(
+        statusId,
+        data.message || "Se l'email esiste, riceverai un link entro pochi minuti.",
+        "success"
+      );
       // Clear email field for security
       if (emailInput) {
         emailInput.value = "";
@@ -1118,12 +1186,14 @@ async function handleResetPasswordRequest() {
       if (window.showToast) {
         window.showToast(data.error || "Errore durante la richiesta", "error");
       }
+      setStatusMessage(statusId, data.error || "Non siamo riusciti a inviare l'email di reset.", "error");
     }
   } catch (error) {
     safeLog("error", "[AuthModal] Errore reset password:", error);
     if (window.showToast) {
       window.showToast("Errore di connessione. Riprova.", "error");
     }
+    setStatusMessage(statusId, "Errore di rete, riprova più tardi.", "error");
   } finally {
     if (forgotPasswordBtn) {
       forgotPasswordBtn.disabled = false;

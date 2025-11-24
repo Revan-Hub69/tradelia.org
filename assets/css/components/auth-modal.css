@@ -137,6 +137,17 @@
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.45);
 }
 
+.auth-context-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.auth-context-top .auth-modal-intro {
+  flex: 1 1 240px;
+}
+
 .auth-context-tags {
   display: flex;
   flex-wrap: wrap;
@@ -176,6 +187,39 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+}
+
+.auth-plan-details {
+  margin-top: 0.5rem;
+}
+
+.auth-plan-details summary {
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+  color: var(--ink, #e5e7eb);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.auth-plan-details summary::marker {
+  display: none;
+}
+
+.auth-plan-details summary::after {
+  content: "›";
+  font-size: 0.9rem;
+  transform: rotate(90deg);
+  transition: transform 0.2s ease;
+}
+
+.auth-plan-details[open] summary::after {
+  transform: rotate(-90deg);
+}
+
+.auth-plan-details > div {
+  margin-top: 0.75rem;
 }
 
 .auth-plan-pill {
@@ -390,6 +434,37 @@
   gap: 0.75rem;
   margin-top: 0.5rem;
   flex-wrap: wrap;
+}
+
+.auth-status-message {
+  display: none;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.4;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid transparent;
+  margin-bottom: 0.75rem;
+}
+
+.auth-status-message.is-visible {
+  display: block;
+}
+
+.auth-status-message.is-info {
+  border-color: rgba(59, 130, 246, 0.4);
+  color: #93c5fd;
+}
+
+.auth-status-message.is-success {
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.auth-status-message.is-error {
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
 }
 
 .auth-form-actions .btn {
@@ -608,6 +683,14 @@
 
   .auth-modal-context {
     padding: 1rem 1.25rem;
+  }
+
+  .auth-context-top {
+    flex-direction: column;
+  }
+
+  .auth-context-top .auth-modal-intro {
+    width: 100%;
   }
 
   .auth-plan-overview {
