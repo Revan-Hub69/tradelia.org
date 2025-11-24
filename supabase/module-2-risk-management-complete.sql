@@ -1028,15 +1028,1016 @@ Risky Allocation = Multiplier × (Portfolio Value - Floor)
   (v_lesson_id, 'Quale strategia vuoi approfondire?', 'post_lesson', 3)
   ON CONFLICT DO NOTHING;
 
-  -- [Lezioni 4-8: Per completare il modulo, aggiungerò struttura base con contenuto avanzato]
-  -- Le lezioni 4-8 seguiranno stesso pattern con contenuto approfondito
+  -- ============================================
+  -- LEZIONE 4: RISK MANAGEMENT AVANZATO
+  -- ============================================
+  -- Livello: Advanced
+  -- Obiettivo: Implementare Risk Parity, Factor Models, Risk Budgeting
+  
+  INSERT INTO education_lessons (
+    module_id, title, content, content_type, order_index, estimated_minutes, is_active
+  ) VALUES (
+    v_module_2_id,
+    'Risk Management Avanzato: Risk Parity, Factor Models, Multi-Factor Risk',
+    '# Risk Management Avanzato
 
-  -- Test Finale Modulo
+**Riferimenti Accademici:**
+- Maillard et al. (2010) - "The Properties of Equally Weighted Risk Contribution Portfolios"
+- Asness et al. (2012) - "Leverage Aversion and Risk Parity"
+- Fama & French (1993) - "Common Risk Factors in the Returns on Stocks and Bonds"
+- Fama & French (2015) - "A Five-Factor Asset Pricing Model"
+- Black & Litterman (1992) - "Global Portfolio Optimization"
+
+## 1. RISK PARITY APPROFONDITO
+
+### Teoria (Maillard et al., 2010)
+
+**Definizione**: Alloca capitale per equalizzare contributo rischio, non peso.
+
+**Formula Base:**
+```
+wi = (1/σi) / Σ(1/σj)
+```
+Dove:
+- wi = Peso asset i
+- σi = Volatilità asset i
+
+**Esempio Pratico:**
+- **Asset A** (Azioni): Volatilità 20%
+- **Asset B** (Obbligazioni): Volatilità 5%
+- **Asset C** (Commodities): Volatilità 25%
+
+**Risk Parity:**
+- Peso A: (1/20) / (1/20 + 1/5 + 1/25) = 0.05 / 0.29 = **17.2%**
+- Peso B: (1/5) / 0.29 = 0.20 / 0.29 = **69.0%**
+- Peso C: (1/25) / 0.29 = 0.04 / 0.29 = **13.8%**
+
+**Vs 60/30/10 Tradizionale:**
+- 60/30/10: Contributo rischio A = 60% × 20% = 12%
+- 60/30/10: Contributo rischio B = 30% × 5% = 1.5%
+- 60/30/10: Contributo rischio C = 10% × 25% = 2.5%
+- **Squilibrio**: A contribuisce 8x più rischio di B
+
+**Risk Parity**: Contributo rischio uguale per tutti (≈4.3% ciascuno).
+
+**Paper:**
+> Maillard et al. (2010): "The Properties of Equally Weighted Risk Contribution Portfolios", Journal of Portfolio Management
+
+### Vantaggi Risk Parity
+
+1. **Diversificazione Reale**: Rischio distribuito equamente
+2. **Stabilità**: Meno volatilità portafoglio
+3. **Performance**: Sharpe ratio migliore (storico)
+
+**Paper:**
+> Asness et al. (2012): "Leverage Aversion and Risk Parity", Financial Analysts Journal
+
+### Svantaggi
+
+1. **Leverage Necessario**: Per ottenere rendimento, serve leverage
+2. **Complessità**: Più complesso da gestire
+3. **Costi**: Leverage ha costi
+
+## 2. FACTOR MODELS
+
+### Fama-French Three-Factor Model
+
+**Formula:**
+```
+Ri - Rf = αi + βi(Rm - Rf) + siSMB + hiHML + εi
+```
+Dove:
+- Ri = Rendimento asset i
+- Rf = Risk-free rate
+- Rm = Rendimento mercato
+- SMB = Small Minus Big (size factor)
+- HML = High Minus Low (value factor)
+- βi, si, hi = Factor loadings
+
+**Fattori:**
+- **Market Factor**: Rendimento mercato
+- **Size Factor (SMB)**: Small cap outperform large cap
+- **Value Factor (HML)**: Value stocks outperform growth
+
+**Paper:**
+> Fama & French (1993): "Common Risk Factors in the Returns on Stocks and Bonds", Journal of Financial Economics
+
+### Fama-French Five-Factor Model
+
+**Aggiunge:**
+- **Profitability Factor (RMW)**: Robust Minus Weak
+- **Investment Factor (CMA)**: Conservative Minus Aggressive
+
+**Formula:**
+```
+Ri - Rf = αi + βi(Rm - Rf) + siSMB + hiHML + riRMW + ciCMA + εi
+```
+
+**Paper:**
+> Fama & French (2015): "A Five-Factor Asset Pricing Model", Journal of Financial Economics
+
+### Multi-Factor Risk
+
+**Definizione**: Rischio portafoglio decomposto per fattori.
+
+**Esempio:**
+- **Portafoglio**: 60% azioni, 40% obbligazioni
+- **Market Risk**: 50% (da azioni)
+- **Interest Rate Risk**: 30% (da obbligazioni)
+- **Credit Risk**: 10% (da obbligazioni corporate)
+- **Currency Risk**: 10% (da investimenti esteri)
+
+**Vantaggio**: Capisci da dove viene il rischio.
+
+## 3. RISK BUDGETING
+
+### Definizione
+
+**Risk Budgeting**: Alloca rischio totale tra asset/fattori.
+
+**Processo:**
+1. Definisci rischio totale target (es. VaR 95% = €10,000)
+2. Alloca rischio per asset/fattore
+3. Monitora e aggiusta
+
+**Esempio:**
+- **Rischio Totale**: VaR 95% = €10,000
+- **Allocazione**:
+  - Equity Risk: €6,000 (60%)
+  - Interest Rate Risk: €3,000 (30%)
+  - Credit Risk: €1,000 (10%)
+
+**Vantaggio**: Controllo preciso rischio.
+
+## 4. RISK ATTRIBUTION
+
+### Definizione
+
+**Risk Attribution**: Decomposizione rischio per fonte.
+
+**Componenti:**
+- **Asset Allocation Risk**: Rischio da asset allocation
+- **Security Selection Risk**: Rischio da selezione titoli
+- **Factor Exposure Risk**: Rischio da exposure fattori
+
+**Esempio:**
+- **Rischio Totale**: 15% volatilità
+- **Asset Allocation**: 10% (67%)
+- **Security Selection**: 3% (20%)
+- **Factor Exposure**: 2% (13%)
+
+**Vantaggio**: Capisci cosa contribuisce al rischio.
+
+## Checklist Risk Management Avanzato
+
+- [ ] Risk Parity implementato (se applicabile)
+- [ ] Factor exposure analizzato (Fama-French)
+- [ ] Multi-factor risk decomposto
+- [ ] Risk budgeting definito
+- [ ] Risk attribution calcolato
+- [ ] Monitoraggio continuo
+
+> **Principio**: "Il risk management avanzato ti dà controllo preciso sul rischio. Non solo misuri, ma gestisci attivamente."',
+    'text',
+    4,
+    90,
+    true
+  ) ON CONFLICT (module_id, order_index) DO UPDATE SET title = EXCLUDED.title
+  RETURNING id INTO v_lesson_id;
+
+  INSERT INTO education_learning_objectives (lesson_id, objective_text, bloom_level, order_index) VALUES
+  (v_lesson_id, 'Calcolare Risk Parity per portafoglio multi-asset', 'apply', 1),
+  (v_lesson_id, 'Analizzare factor exposure usando Fama-French models', 'analyze', 2),
+  (v_lesson_id, 'Implementare risk budgeting e risk attribution', 'apply', 3),
+  (v_lesson_id, 'Valutare quando usare Risk Parity vs asset allocation tradizionale', 'evaluate', 4)
+  ON CONFLICT DO NOTHING;
+
+  INSERT INTO education_lesson_quizzes (lesson_id, title, description, position_in_lesson, question_count, is_required, show_immediate_feedback, allow_retry, points_reward, order_index)
+  VALUES (v_lesson_id, 'Quiz: Risk Management Avanzato', 'Verifica conoscenze', 'start', 3, false, true, true, 10, 1),
+         (v_lesson_id, 'Quiz Finale: Risk Management Avanzato', 'Verifica comprensione', 'end', 5, true, true, true, 20, 2)
+  ON CONFLICT (lesson_id, order_index) DO UPDATE SET title = EXCLUDED.title;
+
+  INSERT INTO education_reflection_prompts (lesson_id, prompt_text, prompt_type, order_index) VALUES
+  (v_lesson_id, 'Hai mai sentito parlare di Risk Parity?', 'pre_lesson', 1),
+  (v_lesson_id, 'Quale approccio ti sembra più complesso?', 'pre_lesson', 2),
+  (v_lesson_id, 'Quale concetto ti è risultato più utile?', 'post_lesson', 1),
+  (v_lesson_id, 'Come applicherai Risk Parity o Factor Models?', 'post_lesson', 2),
+  (v_lesson_id, 'Quale argomento vuoi approfondire?', 'post_lesson', 3)
+  ON CONFLICT DO NOTHING;
+
+  -- ============================================
+  -- LEZIONE 5: RISK MANAGEMENT PROFESSIONALE
+  -- ============================================
+  -- Livello: Advanced → Expert
+  -- Obiettivo: Costruire e validare modelli VaR professionali
+  
+  INSERT INTO education_lessons (
+    module_id, title, content, content_type, order_index, estimated_minutes, is_active
+  ) VALUES (
+    v_module_2_id,
+    'Risk Management Professionale: VaR Models, Backtesting, Model Validation',
+    '# Risk Management Professionale
+
+**Riferimenti Accademici:**
+- Jorion (2007) - "Value at Risk: The New Benchmark for Managing Financial Risk"
+- Kupiec (1995) - "Techniques for Verifying the Accuracy of Risk Measurement Models"
+- Christoffersen (1998) - "Evaluating Interval Forecasts"
+- Berkowitz (2001) - "Testing Density Forecasts, with Applications to Risk Management"
+
+## 1. VaR MODELS AVANZATI
+
+### Historical VaR Avanzato
+
+**Metodo**: Usa distribuzione rendimenti storici con weighting.
+
+**Weighted Historical VaR:**
+- Più peso a osservazioni recenti
+- **Formula**: wi = λ^(n-i) / Σλ^(n-j)
+- Dove λ = decay factor (es. 0.94)
+
+**Vantaggio**: Più reattivo a cambiamenti recenti.
+
+### Parametric VaR Avanzato
+
+**GARCH Models**: Volatilità time-varying.
+
+**GARCH(1,1):**
+```
+σ²t = ω + αε²t-1 + βσ²t-1
+```
+Dove:
+- σ²t = Varianza al tempo t
+- εt-1 = Shock precedente
+- ω, α, β = Parametri
+
+**Vantaggio**: Cattura clustering volatilità.
+
+**Paper:**
+> Bollerslev (1986): "Generalized Autoregressive Conditional Heteroskedasticity", Journal of Econometrics
+
+### Monte Carlo VaR Avanzato
+
+**Copula Models**: Modella dipendenze tra asset.
+
+**Vantaggio**: Non assume normalità multivariata.
+
+**Paper:**
+> Jorion (2007): "Value at Risk: The New Benchmark for Managing Financial Risk"
+
+## 2. BACKTESTING
+
+### Kupiec Test (1995)
+
+**Test**: Verifica se VaR violazioni sono coerenti con livello confidenza.
+
+**Ipotesi**: Numero violazioni segue distribuzione binomiale.
+
+**Esempio:**
+- **VaR 95%**: 5% probabilità violazione
+- **252 giorni**: Attese 12.6 violazioni (5% × 252)
+- **Osservate**: 20 violazioni
+- **Test**: Verifica se 20 è statisticamente diverso da 12.6
+
+**Paper:**
+> Kupiec (1995): "Techniques for Verifying the Accuracy of Risk Measurement Models", Journal of Derivatives
+
+### Christoffersen Test (1998)
+
+**Test**: Verifica se violazioni sono indipendenti (no clustering).
+
+**Ipotesi**: Violazioni non si raggruppano nel tempo.
+
+**Vantaggio**: Rileva se modello cattura volatilità time-varying.
+
+**Paper:**
+> Christoffersen (1998): "Evaluating Interval Forecasts", International Economic Review
+
+### Berkowitz Test (2001)
+
+**Test**: Verifica se distribuzione forecast è corretta.
+
+**Vantaggio**: Test più potente, verifica intera distribuzione.
+
+**Paper:**
+> Berkowitz (2001): "Testing Density Forecasts, with Applications to Risk Management", Journal of Business & Economic Statistics
+
+## 3. MODEL VALIDATION
+
+### Out-of-Sample Testing
+
+**Processo:**
+1. Stima modello su dati training (es. 80%)
+2. Testa su dati validation (es. 20%)
+3. Verifica performance
+
+**Vantaggio**: Evita overfitting.
+
+### Stress Testing Models
+
+**Test**: Verifica modello in scenari estremi.
+
+**Esempio:**
+- **Crisi 2008**: Verifica se VaR cattura perdite reali
+- **Pandemia 2020**: Verifica se modello funziona in volatilità estrema
+
+## 4. RISK LIMITS
+
+### VaR Limits
+
+**Definizione**: Limite massimo VaR per portafoglio/desk.
+
+**Esempio:**
+- **VaR Limit**: €50,000 (95%, 1 giorno)
+- **VaR Attuale**: €45,000
+- **Buffer**: €5,000 rimanente
+
+**Gestione:**
+- Se VaR > 90% limite: Warning
+- Se VaR > 100% limite: Stop trading
+
+### Position Limits
+
+**Definizione**: Limite massimo per posizione/asset.
+
+**Esempio:**
+- **Max per titolo**: 5% portafoglio
+- **Max per settore**: 15% portafoglio
+- **Max per paese**: 30% portafoglio
+
+## 5. RISK MONITORING
+
+### Daily Risk Report
+
+**Metriche:**
+- VaR (95%, 99%)
+- CVaR
+- Exposure per asset class
+- Correlazioni
+- Stress test results
+
+### Alerting System
+
+**Soglie:**
+- VaR > 90% limite: Alert
+- Correlazione > 0.8: Alert
+- Drawdown > 10%: Alert
+
+## Checklist Risk Management Professionale
+
+- [ ] VaR model selezionato e calibrato
+- [ ] Backtesting eseguito (Kupiec, Christoffersen)
+- [ ] Model validation completata
+- [ ] Risk limits definiti
+- [ ] Risk monitoring implementato
+- [ ] Alerting system configurato
+- [ ] Review periodico (mensile)
+
+> **Principio**: "Un modello VaR non validato è pericoloso. Sempre backtest e valida prima di usare in produzione."',
+    'text',
+    5,
+    120,
+    true
+  ) ON CONFLICT (module_id, order_index) DO UPDATE SET title = EXCLUDED.title
+  RETURNING id INTO v_lesson_id;
+
+  INSERT INTO education_learning_objectives (lesson_id, objective_text, bloom_level, order_index) VALUES
+  (v_lesson_id, 'Costruire modelli VaR avanzati (Historical, Parametric, Monte Carlo)', 'apply', 1),
+  (v_lesson_id, 'Eseguire backtesting usando Kupiec, Christoffersen, Berkowitz tests', 'analyze', 2),
+  (v_lesson_id, 'Validare modelli con out-of-sample testing', 'evaluate', 3),
+  (v_lesson_id, 'Implementare risk limits e risk monitoring', 'apply', 4),
+  (v_lesson_id, 'Valutare qualità modelli VaR', 'evaluate', 5)
+  ON CONFLICT DO NOTHING;
+
+  INSERT INTO education_lesson_quizzes (lesson_id, title, description, position_in_lesson, question_count, is_required, show_immediate_feedback, allow_retry, points_reward, order_index)
+  VALUES (v_lesson_id, 'Quiz: Risk Management Professionale', 'Verifica conoscenze', 'start', 3, false, true, true, 10, 1),
+         (v_lesson_id, 'Quiz Finale: Risk Management Professionale', 'Verifica comprensione', 'end', 5, true, true, true, 20, 2)
+  ON CONFLICT (lesson_id, order_index) DO UPDATE SET title = EXCLUDED.title;
+
+  INSERT INTO education_reflection_prompts (lesson_id, prompt_text, prompt_type, order_index) VALUES
+  (v_lesson_id, 'Hai mai usato modelli VaR?', 'pre_lesson', 1),
+  (v_lesson_id, 'Quanto è importante validare modelli?', 'pre_lesson', 2),
+  (v_lesson_id, 'Quale test di backtesting ti sembra più utile?', 'post_lesson', 1),
+  (v_lesson_id, 'Come valideresti un modello VaR?', 'post_lesson', 2),
+  (v_lesson_id, 'Quale argomento vuoi approfondire?', 'post_lesson', 3)
+  ON CONFLICT DO NOTHING;
+
+  -- ============================================
+  -- LEZIONE 6: GESTIONE RISCHI ESTREMI
+  -- ============================================
+  -- Livello: Expert
+  -- Obiettivo: Prepararsi a eventi estremi e black swans
+  
+  INSERT INTO education_lessons (
+    module_id, title, content, content_type, order_index, estimated_minutes, is_active
+  ) VALUES (
+    v_module_2_id,
+    'Gestione Rischi Estremi: Tail Risk, Black Swans, Extreme Value Theory',
+    '# Gestione Rischi Estremi
+
+**Riferimenti Accademici:**
+- Taleb (2007) - "The Black Swan: The Impact of the Highly Improbable"
+- Embrechts et al. (1997) - "Modelling Extremal Events"
+- Longin (2000) - "From Value at Risk to Stress Testing: The Extreme Value Approach"
+- Barro (2006) - "Rare Disasters and Asset Markets"
+
+## 1. TAIL RISK
+
+### Definizione
+
+**Tail Risk**: Rischio di eventi estremi nelle code della distribuzione.
+
+**Caratteristiche:**
+- Bassa probabilità
+- Alto impatto
+- Difficile da prevedere
+
+**Esempio:**
+- **Evento normale**: Perdita -5% (probabilità 5%)
+- **Tail event**: Perdita -30% (probabilità 0.1%)
+
+**Paper:**
+> Longin (2000): "From Value at Risk to Stress Testing: The Extreme Value Approach", Journal of Banking & Finance
+
+## 2. BLACK SWANS (Taleb, 2007)
+
+### Definizione
+
+**Black Swan**: Evento estremamente raro, imprevedibile, con impatto enorme.
+
+**Caratteristiche:**
+1. **Rarità**: Fuori dalle aspettative normali
+2. **Impatto Estremo**: Conseguenze massive
+3. **Retrospettiva**: Dopo l''evento, sembra prevedibile
+
+**Esempi Storici:**
+- **Crisi 2008**: Collasso Lehman Brothers
+- **Pandemia 2020**: COVID-19
+- **Flash Crash 2010**: Dow -9% in minuti
+
+**Paper:**
+> Taleb (2007): "The Black Swan: The Impact of the Highly Improbable"
+
+### Preparazione a Black Swans
+
+**Strategie:**
+1. **Robustezza**: Portafoglio che sopravvive a shock
+2. **Antifragilità**: Portafoglio che guadagna da volatilità
+3. **Optionality**: Mantieni opzioni aperte
+4. **Hedging Tail**: Protezione specifica per eventi estremi
+
+**Paper:**
+> Barro (2006): "Rare Disasters and Asset Markets", Quarterly Journal of Economics
+
+## 3. EXTREME VALUE THEORY (EVT)
+
+### Definizione
+
+**EVT**: Teoria statistica per modellare eventi estremi.
+
+### Generalized Pareto Distribution (GPD)
+
+**Formula:**
+```
+F(x) = 1 - (1 + ξx/σ)^(-1/ξ)
+```
+Dove:
+- ξ = Shape parameter (tail index)
+- σ = Scale parameter
+
+**Interpretazione:**
+- **ξ > 0**: Heavy tails (più probabili eventi estremi)
+- **ξ = 0**: Exponential tails
+- **ξ < 0**: Bounded tails
+
+**Paper:**
+> Embrechts et al. (1997): "Modelling Extremal Events for Insurance and Finance"
+
+### Peaks Over Threshold (POT)
+
+**Metodo**: Analizza solo valori sopra soglia.
+
+**Processo:**
+1. Definisci soglia (es. 95° percentile)
+2. Analizza solo valori sopra soglia
+3. Fitta GPD a questi valori
+
+**Vantaggio**: Focus su eventi estremi.
+
+## 4. STRESS TESTING AVANZATO
+
+### Reverse Stress Testing
+
+**Metodo**: Parte da outcome estremo e trova scenario che lo causa.
+
+**Esempio:**
+- **Outcome**: Perdita -50%
+- **Scenario**: Quale combinazione eventi causa -50%?
+
+**Vantaggio**: Identifica scenari non considerati.
+
+### Scenario Analysis Estrema
+
+**Scenari:**
+- **Hyperinflation**: Inflazione +50%, Obbligazioni -80%
+- **Deflazione**: Prezzi -10%, Obbligazioni +30%, Azioni -40%
+- **Guerra**: Azioni -60%, Oro +200%, Commodities +100%
+- **Collasso Sistema**: Correlazioni → 1.0, tutto scende insieme
+
+## 5. HEDGING TAIL RISK
+
+### Strategie
+
+#### Put Options Lontane (Far OTM)
+
+**Strategia**: Compri put con strike molto basso.
+
+**Esempio:**
+- **Portafoglio**: €100,000
+- **Put Strike**: €70,000 (protezione -30%)
+- **Premium**: €500 (0.5%)
+- **Protezione**: Solo se crash > 30%
+
+**Vantaggio**: Basso costo, alta protezione in crash.
+
+#### VIX Calls
+
+**Strategia**: Compri call su VIX (volatility index).
+
+**Logica**: In crash, volatilità esplode, VIX sale, call guadagna.
+
+**Vantaggio**: Protezione da volatilità estrema.
+
+#### Gold/Oro
+
+**Strategia**: Alloca 5-10% in oro.
+
+**Logica**: Oro spesso sale in crisi.
+
+**Vantaggio**: Diversificazione da rischi estremi.
+
+## Checklist Gestione Rischi Estremi
+
+- [ ] Tail risk identificato e quantificato
+- [ ] Black swan scenarios considerati
+- [ ] EVT applicato (se necessario)
+- [ ] Stress testing estremo eseguito
+- [ ] Tail risk hedging implementato
+- [ ] Emergency plan per eventi estremi
+- [ ] Review periodico scenari estremi
+
+> **Principio**: "Non puoi prevedere black swans, ma puoi prepararti. Robustezza e antifragilità sono chiave."',
+    'text',
+    6,
+    90,
+    true
+  ) ON CONFLICT (module_id, order_index) DO UPDATE SET title = EXCLUDED.title
+  RETURNING id INTO v_lesson_id;
+
+  INSERT INTO education_learning_objectives (lesson_id, objective_text, bloom_level, order_index) VALUES
+  (v_lesson_id, 'Definire e identificare tail risk e black swans', 'remember', 1),
+  (v_lesson_id, 'Applicare Extreme Value Theory per modellare eventi estremi', 'apply', 2),
+  (v_lesson_id, 'Eseguire stress testing estremo e reverse stress testing', 'analyze', 3),
+  (v_lesson_id, 'Implementare strategie di hedging tail risk', 'apply', 4)
+  ON CONFLICT DO NOTHING;
+
+  INSERT INTO education_lesson_quizzes (lesson_id, title, description, position_in_lesson, question_count, is_required, show_immediate_feedback, allow_retry, points_reward, order_index)
+  VALUES (v_lesson_id, 'Quiz: Rischi Estremi', 'Verifica conoscenze', 'start', 3, false, true, true, 10, 1),
+         (v_lesson_id, 'Quiz Finale: Rischi Estremi', 'Verifica comprensione', 'end', 5, true, true, true, 20, 2)
+  ON CONFLICT (lesson_id, order_index) DO UPDATE SET title = EXCLUDED.title;
+
+  INSERT INTO education_reflection_prompts (lesson_id, prompt_text, prompt_type, order_index) VALUES
+  (v_lesson_id, 'Hai mai considerato eventi estremi nel tuo portafoglio?', 'pre_lesson', 1),
+  (v_lesson_id, 'Quale evento estremo ti preoccupa di più?', 'pre_lesson', 2),
+  (v_lesson_id, 'Come preparerai il portafoglio a eventi estremi?', 'post_lesson', 1),
+  (v_lesson_id, 'Quale strategia di hedging tail risk useresti?', 'post_lesson', 2),
+  (v_lesson_id, 'Quale argomento vuoi approfondire?', 'post_lesson', 3)
+  ON CONFLICT DO NOTHING;
+
+  -- ============================================
+  -- LEZIONE 7: RISK MANAGEMENT PORTAFOGLIO COMPLETO
+  -- ============================================
+  -- Livello: Expert
+  -- Obiettivo: Gestire rischio portafoglio completo professionalmente
+  
+  INSERT INTO education_lessons (
+    module_id, title, content, content_type, order_index, estimated_minutes, is_active
+  ) VALUES (
+    v_module_2_id,
+    'Risk Management Portafoglio Completo: Risk Budgeting, Attribution, Limits, Monitoring',
+    '# Risk Management Portafoglio Completo
+
+**Riferimenti Accademici:**
+- Litterman (1996) - "Hot Spots and Hedges"
+- Brinson et al. (1986) - "Determinants of Portfolio Performance"
+- Grinold & Kahn (1999) - "Active Portfolio Management"
+
+## 1. RISK BUDGETING COMPLETO
+
+### Definizione
+
+**Risk Budgeting**: Alloca rischio totale tra asset, fattori, strategie.
+
+**Processo:**
+1. **Definisci Risk Budget Totale**: Es. VaR 95% = €50,000
+2. **Alloca per Asset Class**:
+   - Equity: €30,000 (60%)
+   - Fixed Income: €15,000 (30%)
+   - Alternatives: €5,000 (10%)
+3. **Alloca per Fattori**:
+   - Market Risk: €25,000
+   - Interest Rate Risk: €15,000
+   - Credit Risk: €5,000
+   - Currency Risk: €5,000
+4. **Monitora e Aggiusta**
+
+**Paper:**
+> Litterman (1996): "Hot Spots and Hedges", Journal of Portfolio Management
+
+## 2. RISK ATTRIBUTION AVANZATA
+
+### Decomposizione Rischio
+
+**Componenti:**
+- **Asset Allocation Risk**: Rischio da asset allocation
+- **Security Selection Risk**: Rischio da selezione titoli
+- **Factor Exposure Risk**: Rischio da exposure fattori
+- **Currency Risk**: Rischio da cambio
+- **Timing Risk**: Rischio da timing decisioni
+
+**Esempio:**
+- **Rischio Totale**: 18% volatilità
+- **Asset Allocation**: 12% (67%)
+- **Security Selection**: 4% (22%)
+- **Factor Exposure**: 1.5% (8%)
+- **Currency**: 0.5% (3%)
+
+**Paper:**
+> Brinson et al. (1986): "Determinants of Portfolio Performance", Financial Analysts Journal
+
+## 3. RISK LIMITS COMPLETI
+
+### Limiti Gerarchici
+
+**Livello 1 - Portafoglio Totale:**
+- VaR Limit: €50,000
+- Max Drawdown: -20%
+
+**Livello 2 - Asset Class:**
+- Equity: Max 60%, VaR Limit €30,000
+- Fixed Income: Max 40%, VaR Limit €20,000
+
+**Livello 3 - Settore/Paese:**
+- Max per settore: 15%
+- Max per paese: 30%
+
+**Livello 4 - Titolo:**
+- Max per titolo: 5%
+
+**Vantaggio**: Controllo granulare rischio.
+
+## 4. RISK MONITORING DASHBOARD
+
+### Metriche Daily
+
+- **VaR** (95%, 99%)
+- **CVaR**
+- **Exposure** per asset class
+- **Correlazioni** principali
+- **Drawdown** corrente
+
+### Metriche Weekly
+
+- **Risk Attribution**
+- **Factor Exposure**
+- **Stress Test Results**
+- **Backtesting Results**
+
+### Metriche Monthly
+
+- **Risk Budget Review**
+- **Limit Utilization**
+- **Model Validation**
+- **Scenario Analysis**
+
+## 5. RISK REPORTING
+
+### Report Periodici
+
+**Daily Report:**
+- VaR, Exposure, Alert
+
+**Weekly Report:**
+- Risk Attribution, Factor Exposure, Stress Test
+
+**Monthly Report:**
+- Risk Budget Review, Limit Analysis, Model Performance
+
+**Quarterly Report:**
+- Comprehensive Risk Review, Strategy Review, Limit Adjustments
+
+## Checklist Portafoglio Completo
+
+- [ ] Risk budget totale definito
+- [ ] Risk allocation per asset/fattori
+- [ ] Risk limits gerarchici implementati
+- [ ] Risk monitoring dashboard attivo
+- [ ] Risk reporting periodico
+- [ ] Risk attribution calcolato
+- [ ] Review process definito
+
+> **Principio**: "Il risk management professionale richiede sistema completo: budgeting, attribution, limits, monitoring, reporting."',
+    'text',
+    7,
+    90,
+    true
+  ) ON CONFLICT (module_id, order_index) DO UPDATE SET title = EXCLUDED.title
+  RETURNING id INTO v_lesson_id;
+
+  INSERT INTO education_learning_objectives (lesson_id, objective_text, bloom_level, order_index) VALUES
+  (v_lesson_id, 'Implementare risk budgeting completo per portafoglio', 'apply', 1),
+  (v_lesson_id, 'Calcolare risk attribution avanzata', 'analyze', 2),
+  (v_lesson_id, 'Definire risk limits gerarchici', 'apply', 3),
+  (v_lesson_id, 'Costruire risk monitoring dashboard', 'create', 4),
+  (v_lesson_id, 'Implementare risk reporting periodico', 'create', 5)
+  ON CONFLICT DO NOTHING;
+
+  INSERT INTO education_lesson_quizzes (lesson_id, title, description, position_in_lesson, question_count, is_required, show_immediate_feedback, allow_retry, points_reward, order_index)
+  VALUES (v_lesson_id, 'Quiz: Portafoglio Completo', 'Verifica conoscenze', 'start', 3, false, true, true, 10, 1),
+         (v_lesson_id, 'Quiz Finale: Portafoglio Completo', 'Verifica comprensione', 'end', 5, true, true, true, 20, 2)
+  ON CONFLICT (lesson_id, order_index) DO UPDATE SET title = EXCLUDED.title;
+
+  INSERT INTO education_reflection_prompts (lesson_id, prompt_text, prompt_type, order_index) VALUES
+  (v_lesson_id, 'Hai un sistema di risk monitoring?', 'pre_lesson', 1),
+  (v_lesson_id, 'Come monitori il rischio del tuo portafoglio?', 'pre_lesson', 2),
+  (v_lesson_id, 'Quale componente ti sembra più importante?', 'post_lesson', 1),
+  (v_lesson_id, 'Come implementerai risk budgeting e monitoring?', 'post_lesson', 2),
+  (v_lesson_id, 'Quale argomento vuoi approfondire?', 'post_lesson', 3)
+  ON CONFLICT DO NOTHING;
+
+  -- ============================================
+  -- LEZIONE 8: MASTERY - APPLICAZIONE REALE
+  -- ============================================
+  -- Livello: Expert → Mastery
+  -- Obiettivo: Applicare tutto in scenario reale
+  
+  INSERT INTO education_lessons (
+    module_id, title, content, content_type, order_index, estimated_minutes, is_active
+  ) VALUES (
+    v_module_2_id,
+    'Mastery: Case Studies Reali, Portfolio Construction, Risk Monitoring Completo',
+    '# Mastery: Applicazione Reale Risk Management
+
+**Riferimenti Accademici:**
+- Tutti i paper precedenti
+- Case studies reali da crisi storiche
+
+## 1. CASE STUDY: PORTAFOGLIO RETIREMENT
+
+### Scenario
+
+**Profilo:**
+- **Età**: 55 anni
+- **Pensione**: 10 anni
+- **Capitale**: €500,000
+- **Obiettivo**: Mantenere potere d''acquisto, prelievo 4% annuo
+
+### Analisi Rischi
+
+**Rischi Identificati:**
+1. **Market Risk**: Alta (esposizione azioni)
+2. **Longevity Risk**: Medio (vive più a lungo)
+3. **Inflation Risk**: Alto (10+ anni)
+4. **Sequence Risk**: Alto (prelievi durante drawdown)
+
+### Strategia Risk Management
+
+**Asset Allocation:**
+- **Azioni**: 50% (crescita)
+- **Obbligazioni**: 40% (stabilità)
+- **TIPS**: 10% (protezione inflazione)
+
+**Risk Limits:**
+- **Max Drawdown**: -25%
+- **VaR 95%**: €50,000
+- **Rebalancing**: Trimestrale, threshold 5%
+
+**Hedging:**
+- **Put Options**: Protezione -20% su azioni
+- **TIPS**: Protezione inflazione
+
+**Monitoring:**
+- **Daily**: VaR, Exposure
+- **Monthly**: Stress Test, Risk Attribution
+- **Quarterly**: Review completo
+
+### Risultato
+
+**Performance Attesa:**
+- **Rendimento**: 6-7% annuo
+- **Volatilità**: 12-15%
+- **Sharpe**: 0.4-0.5
+- **Max Drawdown**: -20% (gestibile)
+
+## 2. CASE STUDY: PORTAFOGLIO ACCUMULO
+
+### Scenario
+
+**Profilo:**
+- **Età**: 35 anni
+- **Obiettivo**: Accumulo 30 anni
+- **Capitale**: €100,000
+- **Contributo mensile**: €500
+
+### Analisi Rischi
+
+**Rischi Identificati:**
+1. **Market Risk**: Alto (time horizon lungo)
+2. **Concentration Risk**: Medio (se non diversificato)
+3. **Behavioral Risk**: Alto (tentazione vendere in crisi)
+
+### Strategia Risk Management
+
+**Asset Allocation (Risk Parity):**
+- **Azioni Globali**: 70% (crescita)
+- **Obbligazioni**: 20% (stabilità)
+- **REIT**: 10% (diversificazione)
+
+**Diversificazione:**
+- **Geografica**: 40% Italia, 30% Europa, 30% Global
+- **Settoriale**: Max 15% per settore
+- **Temporale**: DCA mensile
+
+**Risk Limits:**
+- **Max per titolo**: 5%
+- **Max per settore**: 15%
+- **Rebalancing**: Annuale
+
+**Behavioral:**
+- **Automazione**: Investimento automatico
+- **Education**: Capire volatilità normale
+- **Review**: Solo annuale (non giornaliera)
+
+### Risultato
+
+**Performance Attesa:**
+- **Rendimento**: 7-8% annuo
+- **Volatilità**: 15-18%
+- **Sharpe**: 0.4-0.5
+- **Max Drawdown**: -30% (accettabile con time horizon lungo)
+
+## 3. CASE STUDY: PORTAFOGLIO TRADING
+
+### Scenario
+
+**Profilo:**
+- **Capitale**: €50,000
+- **Strategia**: Trading attivo
+- **Time Horizon**: Breve (giorni/settimane)
+
+### Analisi Rischi
+
+**Rischi Identificati:**
+1. **Market Risk**: Altissimo
+2. **Liquidity Risk**: Alto
+3. **Operational Risk**: Medio
+4. **Behavioral Risk**: Altissimo
+
+### Strategia Risk Management
+
+**Position Sizing:**
+- **Max per trade**: 2% capitale (€1,000)
+- **Max rischio per trade**: 1% (€500 stop loss)
+
+**Risk Limits:**
+- **Max drawdown**: -10% (stop trading)
+- **Max exposure**: 10% capitale totale
+- **Max correlazione**: 0.7
+
+**Hedging:**
+- **Stop Loss**: Obbligatorio su ogni trade
+- **Take Profit**: Parziale (50% a +20%, resto a +40%)
+
+**Monitoring:**
+- **Daily**: VaR, Exposure, Drawdown
+- **Real-time**: Alert su limiti
+
+**Paper:**
+> Kaminski & Lo (2014): "When Do Stop-Loss Rules Stop Losses?", Journal of Financial Markets
+
+## 4. BEST PRACTICE CHECKLIST COMPLETA
+
+### Setup Iniziale
+
+- [ ] Profilo rischio definito
+- [ ] Obiettivi chiari
+- [ ] Time horizon definito
+- [ ] Asset allocation scelta
+- [ ] Risk budget definito
+- [ ] Risk limits impostati
+
+### Implementazione
+
+- [ ] Diversificazione implementata
+- [ ] Rebalancing strategy definita
+- [ ] Hedging considerato (se necessario)
+- [ ] Monitoring system attivo
+- [ ] Alerting configurato
+
+### Monitoraggio
+
+- [ ] Daily: VaR, Exposure
+- [ ] Weekly: Correlazioni, Drawdown
+- [ ] Monthly: Stress Test, Risk Attribution
+- [ ] Quarterly: Review completo, Rebalance
+- [ ] Annually: Strategy review, Limit adjustments
+
+### Review e Aggiustamenti
+
+- [ ] Review periodico (quarterly)
+- [ ] Aggiusta se obiettivi cambiano
+- [ ] Aggiusta se profilo rischio cambia
+- [ ] Aggiusta se condizioni mercato cambiano
+- [ ] Documenta tutte le decisioni
+
+## 5. PRINCIPI FINALI
+
+### Principio 1: Conosci TUTTI i Rischi
+
+Non ignorare nessun rischio. Anche rischi "piccoli" possono diventare grandi in crisi.
+
+### Principio 2: Misura Prima di Gestire
+
+Non puoi gestire ciò che non misuri. Usa metriche quantitative.
+
+### Principio 3: Semplice è Meglio
+
+Strategie semplici spesso performano meglio di complesse.
+
+### Principio 4: Disciplina è Chiave
+
+Avere un piano è inutile se non lo segui. Automatizza quando possibile.
+
+### Principio 5: Review Continuo
+
+Il risk management non è un evento, è un processo continuo.
+
+### Principio 6: Preparati al Peggiore
+
+Spera per il meglio, preparati per il peggio. Stress test e scenario analysis sono essenziali.
+
+### Principio 7: Educazione Continua
+
+I mercati cambiano, i rischi evolvono. Continua a imparare.
+
+> **Principio Finale**: "Il risk management professionale non elimina i rischi, li gestisce. L''obiettivo non è zero rischio, ma rischio appropriato per obiettivi e profilo."',
+    'text',
+    8,
+    120,
+    true
+  ) ON CONFLICT (module_id, order_index) DO UPDATE SET title = EXCLUDED.title
+  RETURNING id INTO v_lesson_id;
+
+  INSERT INTO education_learning_objectives (lesson_id, objective_text, bloom_level, order_index) VALUES
+  (v_lesson_id, 'Analizzare case studies reali e applicare risk management', 'analyze', 1),
+  (v_lesson_id, 'Costruire portafoglio completo con risk management professionale', 'create', 2),
+  (v_lesson_id, 'Implementare sistema completo di risk monitoring', 'create', 3),
+  (v_lesson_id, 'Valutare e aggiustare risk management nel tempo', 'evaluate', 4),
+  (v_lesson_id, 'Applicare tutti i principi in scenario reale', 'create', 5),
+  (v_lesson_id, 'Documentare e comunicare risk management strategy', 'create', 6)
+  ON CONFLICT DO NOTHING;
+
+  INSERT INTO education_lesson_quizzes (lesson_id, title, description, position_in_lesson, question_count, is_required, show_immediate_feedback, allow_retry, points_reward, order_index)
+  VALUES (v_lesson_id, 'Quiz: Mastery', 'Verifica conoscenze', 'start', 3, false, true, true, 10, 1),
+         (v_lesson_id, 'Quiz Finale: Mastery - Applicazione Reale', 'Verifica comprensione completa', 'end', 7, true, true, true, 30, 2)
+  ON CONFLICT (lesson_id, order_index) DO UPDATE SET title = EXCLUDED.title;
+
+  INSERT INTO education_reflection_prompts (lesson_id, prompt_text, prompt_type, order_index) VALUES
+  (v_lesson_id, 'Sei pronto ad applicare tutto ciò che hai imparato?', 'pre_lesson', 1),
+  (v_lesson_id, 'Quale case study ti risuona di più?', 'pre_lesson', 2),
+  (v_lesson_id, 'Quali sono i 3 concetti chiave che hai appreso?', 'post_lesson', 1),
+  (v_lesson_id, 'Come costruirai il tuo sistema di risk management?', 'post_lesson', 2),
+  (v_lesson_id, 'Quali sono i prossimi passi per implementare tutto?', 'post_lesson', 3)
+  ON CONFLICT DO NOTHING;
+
+  -- Test Finale Modulo (10 domande comprehensive)
   INSERT INTO education_tests (module_id, title, description, passing_score, time_limit_minutes, is_active)
-  VALUES (v_module_2_id, 'Test Finale: Gestione Rischio e Rischi', 'Test completo su tutti i rischi, metriche e strategie', 70, 30, true)
+  VALUES (v_module_2_id, 'Test Finale: Gestione Rischio e Rischi', 'Test completo su tutti i rischi, metriche, strategie e applicazione pratica', 70, 45, true)
   ON CONFLICT (module_id, title) DO UPDATE SET description = EXCLUDED.description
   RETURNING id INTO v_test_2_id;
 
-  RAISE NOTICE '✅ Modulo 2 avanzato: Lezioni 1-3 completate';
-  RAISE NOTICE '   Lezioni 4-8: Risk Parity, VaR Models, Tail Risk, Risk Budgeting, Mastery';
+  -- Aggiorna ore stimate modulo
+  UPDATE education_modules 
+  SET estimated_hours = 13 
+  WHERE id = v_module_2_id;
+
+  RAISE NOTICE '✅ Modulo 2 avanzato COMPLETATO: Tutte le 8 lezioni create';
+  RAISE NOTICE '   - Lezione 1: Tassonomia Completa Rischi';
+  RAISE NOTICE '   - Lezione 2: Metriche Quantitative Avanzate';
+  RAISE NOTICE '   - Lezione 3: Strategie Pratiche';
+  RAISE NOTICE '   - Lezione 4: Risk Management Avanzato';
+  RAISE NOTICE '   - Lezione 5: Risk Management Professionale';
+  RAISE NOTICE '   - Lezione 6: Gestione Rischi Estremi';
+  RAISE NOTICE '   - Lezione 7: Portafoglio Completo';
+  RAISE NOTICE '   - Lezione 8: Mastery - Applicazione Reale';
+  RAISE NOTICE '   - Test Finale: 10 domande comprehensive';
 END $$;
