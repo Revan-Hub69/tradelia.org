@@ -497,9 +497,40 @@ function setupModalEvents() {
     hideAuthModal();
   };
 
+  // BEST PRACTICE: Su mobile, disabilita chiusura con click overlay per evitare chiusure accidentali
+  // Solo il pulsante di chiusura e Escape possono chiudere la modale su mobile
+  const isMobile = window.innerWidth <= 640 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
   if (overlay) {
-    overlay.addEventListener("click", closeModal);
+    if (!isMobile) {
+      // Desktop: click overlay chiude la modale
+      overlay.addEventListener("click", closeModal);
+    } else {
+      // Mobile: click overlay NON chiude (previene chiusure accidentali)
+      // Solo swipe down intenzionale o pulsante close
+      let touchStartY = 0;
+      let touchStartTime = 0;
+      
+      overlay.addEventListener("touchstart", (e) => {
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+      }, { passive: true });
+      
+      overlay.addEventListener("touchend", (e) => {
+        const touchEndY = e.changedTouches[0].clientY;
+        const touchEndTime = Date.now();
+        const deltaY = touchEndY - touchStartY;
+        const deltaTime = touchEndTime - touchStartTime;
+        
+        // Swipe down veloce e significativo (> 100px in < 300ms) = chiusura intenzionale
+        if (deltaY > 100 && deltaTime < 300 && touchStartY < 100) {
+          // Swipe dall'alto verso il basso = chiusura intenzionale
+          closeModal();
+        }
+      }, { passive: true });
+    }
   }
+  
   if (closeBtn) {
     closeBtn.addEventListener("click", closeModal);
   }

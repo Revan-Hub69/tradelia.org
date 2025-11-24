@@ -47,6 +47,8 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(4px);
+  /* Su mobile, previeni chiusure accidentali - non è cliccabile direttamente */
+  touch-action: pan-y;
 }
 
 .auth-modal-content {
