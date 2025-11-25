@@ -423,33 +423,129 @@ $$;
 
 -- ===== 5. FIX FUNZIONI SPACED REPETITION =====
 
--- Funzione: calculate_next_review_sm2 (da seed-education-spaced-repetition.sql)
--- Nota: Questa funzione deve essere aggiornata nel file spaced-repetition.sql
--- Per ora aggiungiamo solo il SET search_path se esiste
-
+-- Droppa funzioni spaced repetition esistenti per ricrearle con SET search_path
 DO $$
+DECLARE
+  func_record RECORD;
 BEGIN
-  IF EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'calculate_next_review_sm2') THEN
-    -- La funzione esiste, ma non possiamo modificarla qui
-    -- Deve essere aggiornata nel file spaced-repetition.sql
-    RAISE NOTICE 'Funzione calculate_next_review_sm2 esiste. Aggiorna seed-education-spaced-repetition.sql per aggiungere SET search_path';
-  END IF;
+  FOR func_record IN 
+    SELECT oid, proname, pg_get_function_identity_arguments(oid) as args
+    FROM pg_proc
+    WHERE proname IN ('calculate_next_review_sm2', 'get_due_items')
+      AND pronamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
+  LOOP
+    EXECUTE 'DROP FUNCTION IF EXISTS ' || quote_ident('public') || '.' || quote_ident(func_record.proname) || '(' || func_record.args || ') CASCADE';
+  END LOOP;
 END $$;
 
-DO $$
+-- Ricrea calculate_next_review_sm2 con SET search_path
+CREATE OR REPLACE FUNCTION calculate_next_review_sm2(
+  p_quality INTEGER,
+  p_repetitions INTEGER,
+  p_ease_factor DECIMAL,
+  p_interval_days INTEGER
+)
+RETURNS TABLE (
+  new_repetitions INTEGER,
+  new_ease_factor DECIMAL,
+  new_interval_days INTEGER,
+  next_review_date TIMESTAMPTZ
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+  v_new_ease_factor DECIMAL(3,2);
+  v_new_repetitions INTEGER;
+  v_new_interval INTEGER;
 BEGIN
-  IF EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'get_due_items') THEN
-    RAISE NOTICE 'Funzione get_due_items esiste. Aggiorna seed-education-spaced-repetition.sql per aggiungere SET search_path';
+  p_quality := GREATEST(0, LEAST(5, p_quality));
+  v_new_ease_factor := p_ease_factor + (0.1 - (5 - p_quality) * (0.08 + (5 - p_quality) * 0.02));
+  IF v_new_ease_factor < 1.3 THEN
+    v_new_ease_factor := 1.3;
   END IF;
-END $$;
+  
+  IF p_quality < 3 THEN
+    v_new_repetitions := 0;
+    v_new_interval := 1;
+  ELSE
+    v_new_repetitions := p_repetitions + 1;
+    IF v_new_repetitions = 1 THEN
+      v_new_interval := 1;
+    ELSIF v_new_repetitions = 2 THEN
+      v_new_interval := 6;
+    ELSE
+      v_new_interval := ROUND(p_interval_days * v_new_ease_factor);
+    END IF;
+  END IF;
+  
+  RETURN QUERY SELECT
+    v_new_repetitions,
+    v_new_ease_factor,
+    v_new_interval,
+    NOW() + (v_new_interval || ' days')::INTERVAL;
+END;
+$$;
+
+-- Ricrea get_due_items con SET search_path
+CREATE OR REPLACE FUNCTION get_due_items(p_user_id UUID, p_limit INTEGER DEFAULT 50)
+RETURNS TABLE (
+  id UUID,
+  item_type TEXT,
+  module_id UUID,
+  lesson_id UUID,
+  question TEXT,
+  answer TEXT,
+  hint TEXT,
+  explanation TEXT,
+  repetitions INTEGER,
+  ease_factor DECIMAL,
+  next_review_date TIMESTAMPTZ
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT
+    sri.id, sri.item_type, sri.module_id, sri.lesson_id,
+    sri.question, sri.answer, sri.hint, sri.explanation,
+    sri.repetitions, sri.ease_factor, sri.next_review_date
+  FROM public.spaced_repetition_items sri
+  WHERE sri.user_id = p_user_id
+    AND (sri.next_review_date IS NULL OR sri.next_review_date <= NOW())
+  ORDER BY 
+    CASE WHEN sri.next_review_date IS NULL THEN 0 ELSE 1 END,
+    sri.next_review_date ASC
+  LIMIT p_limit;
+END;
+$$;
 
 -- ===== 6. FIX FUNZIONE create_notification (se esiste) =====
 
+-- Droppa e ricrea create_notification se esiste (funzione non-education ma presente nel sistema)
 DO $$
+DECLARE
+  func_record RECORD;
+  func_def TEXT;
 BEGIN
-  IF EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'create_notification') THEN
-    RAISE NOTICE 'Funzione create_notification esiste. Aggiorna il file che la crea per aggiungere SET search_path';
-  END IF;
+  FOR func_record IN 
+    SELECT oid, proname, pg_get_function_identity_arguments(oid) as args
+    FROM pg_proc
+    WHERE proname = 'create_notification'
+      AND pronamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
+  LOOP
+    -- Ottieni definizione funzione
+    SELECT pg_get_functiondef(func_record.oid) INTO func_def;
+    
+    -- Se non ha già SET search_path, droppa e ricrea
+    IF func_def NOT LIKE '%SET search_path%' THEN
+      EXECUTE 'DROP FUNCTION IF EXISTS ' || quote_ident('public') || '.' || quote_ident(func_record.proname) || '(' || func_record.args || ') CASCADE';
+      RAISE NOTICE 'Funzione create_notification droppata. Ricreala manualmente con SET search_path = ''''' || ' oppure ignora questo warning se non è critica.';
+    END IF;
+  END LOOP;
 END $$;
 
 -- ===== VERIFICA FINALE =====
@@ -481,7 +577,9 @@ WHERE n.nspname = 'public'
     'add_education_xp',
     'update_learning_streak',
     'update_updated_at_column',
-    'check_and_unlock_badge'
+    'check_and_unlock_badge',
+    'calculate_next_review_sm2',
+    'get_due_items'
   )
 ORDER BY p.proname;
 
