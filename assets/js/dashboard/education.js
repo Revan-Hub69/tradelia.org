@@ -374,9 +374,10 @@ function renderHero(stats) {
 }
 
 function renderPathCard(path, completed = []) {
+  const lessons = Array.isArray(path.tutorials) ? path.tutorials : [];
   const completedSet = new Set(completed);
-  const totalSteps = path.tutorials.length;
-  const validCompleted = path.tutorials.filter((lesson) => completedSet.has(lesson.id)).length;
+  const totalSteps = lessons.length;
+  const validCompleted = lessons.filter((lesson) => completedSet.has(lesson.id)).length;
   const completionPercent = totalSteps ? Math.round((validCompleted / totalSteps) * 100) : 0;
 
   return `
@@ -412,7 +413,7 @@ function renderPathCard(path, completed = []) {
         </span>
       </div>
       <ul class="education-lesson-list">
-        ${path.tutorials.map((lesson) => renderLesson(path.id, lesson, completedSet.has(lesson.id))).join("")}
+        ${lessons.map((lesson) => renderLesson(path.id, lesson, completedSet.has(lesson.id))).join("")}
       </ul>
     </article>
   `;
@@ -546,10 +547,11 @@ function updatePathProgressUI(container, pathId, progress) {
   const path = EDUCATION_PATHS.find((item) => item.id === pathId);
   if (!path) return;
 
+  const lessons = Array.isArray(path.tutorials) ? path.tutorials : [];
   const completedSteps = (progress[pathId] || []).filter((stepId) =>
-    path.tutorials.some((lesson) => lesson.id === stepId)
+    lessons.some((lesson) => lesson.id === stepId)
   ).length;
-  const totalSteps = path.tutorials.length;
+  const totalSteps = lessons.length;
   const percent = totalSteps ? Math.round((completedSteps / totalSteps) * 100) : 0;
 
   const progressFill = container.querySelector(`[data-education-progress-bar="${pathId}"]`);
@@ -615,13 +617,17 @@ function saveProgress(progress) {
 }
 
 function computeEducationStats(progress) {
-  const totalLessons = EDUCATION_PATHS.reduce((sum, path) => sum + path.tutorials.length, 0);
+  const totalLessons = EDUCATION_PATHS.reduce((sum, path) => {
+    const lessons = Array.isArray(path.tutorials) ? path.tutorials : [];
+    return sum + lessons.length;
+  }, 0);
 
   const completedLessons = Object.entries(progress).reduce((sum, [pathId, steps]) => {
     const path = EDUCATION_PATHS.find((item) => item.id === pathId);
     if (!path) return sum;
 
-    const validCount = steps.filter((stepId) => path.tutorials.some((lesson) => lesson.id === stepId)).length;
+    const lessons = Array.isArray(path.tutorials) ? path.tutorials : [];
+    const validCount = steps.filter((stepId) => lessons.some((lesson) => lesson.id === stepId)).length;
     return sum + validCount;
   }, 0);
 
