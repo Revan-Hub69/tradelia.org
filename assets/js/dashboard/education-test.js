@@ -69,15 +69,29 @@ function renderTestView(test) {
   const lastAttempt = userAttempts?.[0];
   const canRetake = !test.max_attempts || (userAttempts?.length || 0) < test.max_attempts;
 
+  // Breadcrumb navigation (Best Practice: sempre visibile)
+  const moduleTitle = test.education_modules?.title || "Modulo";
+  const moduleSlug = test.education_modules?.slug || "";
+  const breadcrumb = `
+    <nav class="education-breadcrumb" aria-label="Breadcrumb">
+      <ol class="breadcrumb-list">
+        <li class="breadcrumb-item">
+          <a href="#education" data-action="back-to-dashboard">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="#education/module/${moduleSlug}" data-action="back-to-module">${escapeHtml(moduleTitle)}</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+          ${escapeHtml(test.title)}
+        </li>
+      </ol>
+    </nav>
+  `;
+
   container.innerHTML = `
     <div class="education-test-view">
+      ${breadcrumb}
       <div class="test-view-header">
-        <button class="btn btn-secondary btn-sm" data-action="back-to-module">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-          Indietro
-        </button>
         <h1 class="test-view-title">${escapeHtml(test.title)}</h1>
         <p class="test-view-description">${escapeHtml(test.description || "")}</p>
         
@@ -230,19 +244,33 @@ function getBloomLabel(level) {
  * Bind test events
  */
 function bindTestEvents(container, test) {
-  // Back button
-  container.querySelector("[data-action='back-to-module']")?.addEventListener("click", () => {
-    if (currentTest?.education_modules) {
-      window.history.pushState(
-        { view: "module" },
-        "",
-        `#education/module/${currentTest.education_modules.slug}`
-      );
-      // Reload module view
-      import("./education.js").then(({ openModule }) => {
-        openModule(currentTest.education_modules.id);
-      });
-    }
+  // Breadcrumb navigation
+  container.querySelectorAll("[data-action='back-to-module']").forEach((link) => {
+    link.addEventListener("click", async (e) => {
+      e.preventDefault();
+      if (currentTest?.education_modules) {
+        window.history.pushState(
+          { view: "module" },
+          "",
+          `#education/module/${currentTest.education_modules.slug}`
+        );
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        // Reload module view
+        const { openModule } = await import("./education.js");
+        await openModule(currentTest.education_modules.id);
+      }
+    });
+  });
+
+  container.querySelectorAll("[data-action='back-to-dashboard']").forEach((link) => {
+    link.addEventListener("click", async (e) => {
+      e.preventDefault();
+      window.history.pushState({ view: "education-dashboard" }, "", "#education");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      const { initEducation } = await import("./education.js");
+      await initEducation();
+    });
   });
 
   // Option selection

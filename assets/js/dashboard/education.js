@@ -742,15 +742,24 @@ function renderModuleView(module) {
     return;
   }
 
+  // Breadcrumb navigation (Best Practice: sempre visibile)
+  const breadcrumb = `
+    <nav class="education-breadcrumb" aria-label="Breadcrumb">
+      <ol class="breadcrumb-list">
+        <li class="breadcrumb-item">
+          <a href="#education" data-action="back-to-dashboard">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+          ${escapeHtml(module.title)}
+        </li>
+      </ol>
+    </nav>
+  `;
+
   container.innerHTML = `
     <div class="education-module-view">
+      ${breadcrumb}
       <div class="module-view-header">
-        <button class="btn btn-secondary btn-sm" data-action="back-to-dashboard">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-          Indietro
-        </button>
         <h1 class="module-view-title">${escapeHtml(module.title)}</h1>
         <p class="module-view-description">${escapeHtml(module.description || "")}</p>
       </div>
@@ -1015,15 +1024,29 @@ function renderLessonView(lesson) {
     return;
   }
 
+  // Breadcrumb navigation (Best Practice: sempre visibile)
+  const moduleTitle = currentModule?.title || "Modulo";
+  const moduleSlug = currentModule?.slug || "";
+  const breadcrumb = `
+    <nav class="education-breadcrumb" aria-label="Breadcrumb">
+      <ol class="breadcrumb-list">
+        <li class="breadcrumb-item">
+          <a href="#education" data-action="back-to-dashboard">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="#education/module/${moduleSlug}" data-action="back-to-module">${escapeHtml(moduleTitle)}</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+          ${escapeHtml(lesson.title)}
+        </li>
+      </ol>
+    </nav>
+  `;
+
   container.innerHTML = `
     <div class="education-lesson-view">
+      ${breadcrumb}
       <div class="lesson-view-header">
-        <button class="btn btn-secondary btn-sm" data-action="back-to-module">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-          Indietro
-        </button>
         <h1 class="lesson-view-title">${escapeHtml(lesson.title)}</h1>
       </div>
 
