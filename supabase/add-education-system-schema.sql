@@ -418,6 +418,13 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Rimuovi trigger esistenti se presenti (per rendere script idempotente)
+DROP TRIGGER IF EXISTS update_education_modules_updated_at ON education_modules;
+DROP TRIGGER IF EXISTS update_education_lessons_updated_at ON education_lessons;
+DROP TRIGGER IF EXISTS update_education_tests_updated_at ON education_tests;
+DROP TRIGGER IF EXISTS update_education_user_progress_updated_at ON education_user_progress;
+DROP TRIGGER IF EXISTS update_education_user_pathway_progress_updated_at ON education_user_pathway_progress;
+
 CREATE TRIGGER update_education_modules_updated_at
   BEFORE UPDATE ON education_modules
   FOR EACH ROW
