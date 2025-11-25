@@ -136,46 +136,6 @@ export function getRateLimitIdentifier(req) {
 }
 
 /**
- * Middleware rate limiting
- * @param {string} type - Tipo rate limit
- * @returns {Function} Middleware function
- */
-export function rateLimitMiddleware(type = "default") {
-  return (req, res, next) => {
-    const identifier = getRateLimitIdentifier(req);
-    const rateLimit = checkRateLimit(identifier, type);
-
-    // Set rate limit headers
-    res.setHeader(
-      "X-RateLimit-Limit",
-      RATE_LIMIT_CONFIG[type]?.maxAttempts || RATE_LIMIT_CONFIG.default.maxAttempts
-    );
-    res.setHeader("X-RateLimit-Remaining", rateLimit.remaining);
-    if (rateLimit.resetAt) {
-      res.setHeader("X-RateLimit-Reset", new Date(rateLimit.resetAt).toISOString());
-    }
-
-    if (!rateLimit.allowed) {
-      if (rateLimit.locked) {
-        return res.status(429).json({
-          success: false,
-          error: "Troppe richieste. Account temporaneamente bloccato.",
-          retryAfter: rateLimit.minutesRemaining || 15,
-        });
-      }
-
-      return res.status(429).json({
-        success: false,
-        error: "Troppe richieste. Riprova più tardi.",
-        retryAfter: Math.ceil((rateLimit.resetAt - Date.now()) / 1000),
-      });
-    }
-
-    next();
-  };
-}
-
-/**
  * Cleanup old rate limit records (chiamare periodicamente)
  */
 export function cleanupRateLimit() {

@@ -92,24 +92,30 @@ export async function getModule(req, res) {
       return res.status(404).json({ success: false, error: "Modulo non trovato" });
     }
 
-    // Get lessons (usa UUID validato)
-    const { data: lessons, error: lessonsError } = await supabase
-      .from("education_lessons")
-      .select("*")
-      .eq("module_id", validatedModuleId)
-      .eq("is_active", true)
-      .order("order_index", { ascending: true });
+    // Get lessons and tests in parallel (ottimizzazione N+1 query)
+    const [lessonsResult, testsResult] = await Promise.all([
+      supabase
+        .from("education_lessons")
+        .select("*")
+        .eq("module_id", validatedModuleId)
+        .eq("is_active", true)
+        .order("order_index", { ascending: true }),
+      supabase
+        .from("education_tests")
+        .select("id, title, description, passing_score, max_attempts, time_limit_minutes")
+        .eq("module_id", validatedModuleId)
+        .eq("is_active", true),
+    ]);
+
+    const { data: lessons, error: lessonsError } = lessonsResult;
+    const { data: tests, error: testsError } = testsResult;
 
     if (lessonsError) {
       throw lessonsError;
     }
-
-    // Get tests for this module (usa UUID validato)
-    const { data: tests, error: testsError } = await supabase
-      .from("education_tests")
-      .select("id, title, description, passing_score, max_attempts, time_limit_minutes")
-      .eq("module_id", validatedModuleId)
-      .eq("is_active", true);
+    if (testsError) {
+      throw testsError;
+    }
 
     if (testsError) {
       throw testsError;
@@ -127,7 +133,7 @@ export async function getModule(req, res) {
 
       userProgress = progress;
 
-      // Get user attempts for tests
+      // Get user attempts for tests (ottimizzazione: una query invece di N)
       if (tests && tests.length > 0) {
         const testIds = tests.map((t) => t.id);
         const { data: attempts } = await supabase
@@ -137,9 +143,17 @@ export async function getModule(req, res) {
           .in("test_id", testIds)
           .order("attempt_number", { ascending: false });
 
-        // Map attempts to tests
+        // Map attempts to tests (in memoria, più veloce)
+        const attemptsMap = new Map();
+        attempts?.forEach((attempt) => {
+          if (!attemptsMap.has(attempt.test_id)) {
+            attemptsMap.set(attempt.test_id, []);
+          }
+          attemptsMap.get(attempt.test_id).push(attempt);
+        });
+
         tests.forEach((test) => {
-          test.userAttempts = attempts?.filter((a) => a.test_id === test.id) || [];
+          test.userAttempts = attemptsMap.get(test.id) || [];
         });
       }
     }
