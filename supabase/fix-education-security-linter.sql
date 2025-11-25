@@ -372,14 +372,15 @@ ORDER BY tablename;
 
 -- Verifica funzioni con search_path
 SELECT 
-  routine_name,
+  p.proname as routine_name,
   CASE 
-    WHEN pg_get_functiondef(oid) LIKE '%SET search_path%' THEN 'OK'
+    WHEN pg_get_functiondef(p.oid) LIKE '%SET search_path%' THEN 'OK'
     ELSE 'MISSING search_path'
   END as search_path_status
-FROM information_schema.routines
-WHERE routine_schema = 'public'
-  AND routine_name IN (
+FROM pg_proc p
+JOIN pg_namespace n ON p.pronamespace = n.oid
+WHERE n.nspname = 'public'
+  AND p.proname IN (
     'calculate_module_progress',
     'can_access_module',
     'update_user_education_stats',
@@ -389,5 +390,5 @@ WHERE routine_schema = 'public'
     'update_updated_at_column',
     'check_and_unlock_badge'
   )
-ORDER BY routine_name;
+ORDER BY p.proname;
 
