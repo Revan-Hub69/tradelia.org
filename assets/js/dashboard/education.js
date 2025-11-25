@@ -97,8 +97,43 @@ async function initEducation() {
     }
   }
 
+  // Show loading state
+  showLoadingState(container);
+
   // Load user progress and modules
   await loadEducationDashboard(container);
+}
+
+/**
+ * Show loading state (skeleton loaders)
+ * Best Practice 2025: Skeleton screens for perceived performance
+ */
+function showLoadingState(container) {
+  container.innerHTML = `
+    <div class="education-dashboard">
+      <div class="education-header">
+        <div class="education-stats">
+          ${Array.from(
+            { length: 4 },
+            () => `
+            <div class="stat-card education-skeleton" style="height: 100px;"></div>
+          `
+          ).join("")}
+        </div>
+      </div>
+      <div class="education-modules">
+        <div class="education-section-title education-skeleton skeleton-text" style="width: 300px; height: 32px; margin-bottom: var(--edu-spacing-xl);"></div>
+        <div class="modules-grid">
+          ${Array.from(
+            { length: 6 },
+            () => `
+            <div class="education-module-card education-skeleton skeleton-card"></div>
+          `
+          ).join("")}
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 /**

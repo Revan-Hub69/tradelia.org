@@ -541,10 +541,44 @@ function renderQuestionReview(question, questionNumber, userAnswer, correctAnswe
         question.explanation
           ? `
         <div class="question-explanation">
-          <strong>Spiegazione:</strong> ${escapeHtml(question.explanation)}
+          <div class="explanation-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <strong>Spiegazione Tradelia AI:</strong>
+          </div>
+          <div class="explanation-content">${escapeHtml(question.explanation)}</div>
+          ${
+            !isCorrect
+              ? `
+            <div class="explanation-tip">
+              <strong>💡 Suggerimento:</strong> Rivedi questo concetto nella lezione correlata per consolidare la comprensione.
+            </div>
+          `
+              : ""
+          }
         </div>
       `
-          : ""
+          : !isCorrect
+            ? `
+        <div class="question-explanation">
+          <div class="explanation-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <strong>Perché questa risposta?</strong>
+          </div>
+          <div class="explanation-content">
+            La risposta corretta è quella che meglio riflette i concetti spiegati nella lezione. 
+            Ti consigliamo di rivedere il materiale per consolidare la comprensione.
+          </div>
+        </div>
+      `
+            : ""
       }
     </div>
   `;
