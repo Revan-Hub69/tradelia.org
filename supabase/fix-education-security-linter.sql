@@ -34,6 +34,13 @@ CREATE POLICY "Public can view pathway modules"
 
 -- ===== 4. FIX SEARCH_PATH PER TUTTE LE FUNZIONI =====
 
+-- Rimuovi trigger che dipendono da update_updated_at_column prima
+DROP TRIGGER IF EXISTS update_education_modules_updated_at ON education_modules;
+DROP TRIGGER IF EXISTS update_education_lessons_updated_at ON education_lessons;
+DROP TRIGGER IF EXISTS update_education_tests_updated_at ON education_tests;
+DROP TRIGGER IF EXISTS update_education_user_progress_updated_at ON education_user_progress;
+DROP TRIGGER IF EXISTS update_education_user_pathway_progress_updated_at ON education_user_pathway_progress;
+
 -- Rimuovi funzioni esistenti se presenti (per permettere cambio signature)
 DROP FUNCTION IF EXISTS calculate_module_progress(UUID, UUID);
 DROP FUNCTION IF EXISTS can_access_module(UUID, UUID);
@@ -244,6 +251,32 @@ BEGIN
   RETURN NEW;
 END;
 $$;
+
+-- Ricrea trigger che usano update_updated_at_column
+CREATE TRIGGER update_education_modules_updated_at
+  BEFORE UPDATE ON education_modules
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_education_lessons_updated_at
+  BEFORE UPDATE ON education_lessons
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_education_tests_updated_at
+  BEFORE UPDATE ON education_tests
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_education_user_progress_updated_at
+  BEFORE UPDATE ON education_user_progress
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_education_user_pathway_progress_updated_at
+  BEFORE UPDATE ON education_user_pathway_progress
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
 
 -- Funzione: check_and_unlock_badge
 CREATE OR REPLACE FUNCTION check_and_unlock_badge(p_user_id UUID, p_badge_criteria JSONB)
