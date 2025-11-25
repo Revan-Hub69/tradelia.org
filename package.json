@@ -23,7 +23,13 @@
     "build": "vite build",
     "build:analyze": "vite build --mode analyze",
     "preview": "vite preview",
-    "prepare": "husky || true"
+    "prepare": "husky || true",
+    "supabase:push": "node scripts/supabase-push.js",
+    "supabase:push:list": "node scripts/supabase-push.js list",
+    "supabase:push:all": "node scripts/supabase-push.js all",
+    "supabase:cli:push": "node scripts/supabase-cli-push.js",
+    "supabase:cli:push:all": "node scripts/supabase-cli-push.js all",
+    "supabase:cli:list": "node scripts/supabase-cli-push.js list"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
