@@ -328,13 +328,9 @@ export async function initDashboard() {
   document.querySelectorAll(".panel-back").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
-      // Usa history.back() invece di hash vuoto per supporto mobile migliore
-      if (history.length > 1) {
-        history.back();
-      } else {
-        // Se non c'è history, chiudi il modulo normalmente
-        window.location.hash = "";
-      }
+      // Chiudi immediatamente il modulo per evitare doppio tap percepito
+      closeModule(false);
+      window.location.hash = "";
     });
   });
 
