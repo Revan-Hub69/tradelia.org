@@ -42,14 +42,58 @@ DROP TRIGGER IF EXISTS update_education_user_progress_updated_at ON education_us
 DROP TRIGGER IF EXISTS update_education_user_pathway_progress_updated_at ON education_user_pathway_progress;
 
 -- Rimuovi funzioni esistenti se presenti (per permettere cambio signature)
-DROP FUNCTION IF EXISTS calculate_module_progress(UUID, UUID);
-DROP FUNCTION IF EXISTS can_access_module(UUID, UUID);
-DROP FUNCTION IF EXISTS update_user_education_stats(UUID);
-DROP FUNCTION IF EXISTS calculate_user_level(INTEGER);
-DROP FUNCTION IF EXISTS add_education_xp(UUID, INTEGER, TEXT, UUID, TEXT);
-DROP FUNCTION IF EXISTS update_learning_streak(UUID);
-DROP FUNCTION IF EXISTS update_updated_at_column();
-DROP FUNCTION IF EXISTS check_and_unlock_badge(UUID, JSONB);
+-- Usa CASCADE per droppare tutte le versioni (overload) delle funzioni
+DROP FUNCTION IF EXISTS calculate_module_progress(UUID, UUID) CASCADE;
+DROP FUNCTION IF EXISTS can_access_module(UUID, UUID) CASCADE;
+DROP FUNCTION IF EXISTS update_user_education_stats(UUID) CASCADE;
+DROP FUNCTION IF EXISTS calculate_user_level(INTEGER) CASCADE;
+-- add_education_xp potrebbe avere signature diverse, droppa tutte
+DROP FUNCTION IF EXISTS add_education_xp(UUID, INTEGER, TEXT, UUID, TEXT) CASCADE;
+DROP FUNCTION IF EXISTS add_education_xp(UUID, INTEGER, TEXT) CASCADE;
+DROP FUNCTION IF EXISTS add_education_xp(UUID, INTEGER, TEXT, UUID) CASCADE;
+-- Droppa tutte le versioni di add_education_xp usando query dinamica
+DO $$
+DECLARE
+  func_record RECORD;
+BEGIN
+  FOR func_record IN 
+    SELECT oid, proname, pg_get_function_identity_arguments(oid) as args
+    FROM pg_proc
+    WHERE proname = 'add_education_xp'
+      AND pronamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
+  LOOP
+    EXECUTE 'DROP FUNCTION IF EXISTS ' || quote_ident('public') || '.' || quote_ident(func_record.proname) || '(' || func_record.args || ') CASCADE';
+  END LOOP;
+END $$;
+-- Droppa tutte le versioni di update_learning_streak
+DO $$
+DECLARE
+  func_record RECORD;
+BEGIN
+  FOR func_record IN 
+    SELECT oid, proname, pg_get_function_identity_arguments(oid) as args
+    FROM pg_proc
+    WHERE proname = 'update_learning_streak'
+      AND pronamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
+  LOOP
+    EXECUTE 'DROP FUNCTION IF EXISTS ' || quote_ident('public') || '.' || quote_ident(func_record.proname) || '(' || func_record.args || ') CASCADE';
+  END LOOP;
+END $$;
+DROP FUNCTION IF EXISTS update_updated_at_column() CASCADE;
+-- Droppa tutte le versioni di check_and_unlock_badge
+DO $$
+DECLARE
+  func_record RECORD;
+BEGIN
+  FOR func_record IN 
+    SELECT oid, proname, pg_get_function_identity_arguments(oid) as args
+    FROM pg_proc
+    WHERE proname = 'check_and_unlock_badge'
+      AND pronamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
+  LOOP
+    EXECUTE 'DROP FUNCTION IF EXISTS ' || quote_ident('public') || '.' || quote_ident(func_record.proname) || '(' || func_record.args || ') CASCADE';
+  END LOOP;
+END $$;
 
 -- Funzione: calculate_module_progress
 CREATE OR REPLACE FUNCTION calculate_module_progress(p_user_id UUID, p_module_id UUID)
@@ -152,7 +196,7 @@ BEGIN
 END;
 $$;
 
--- Funzione: add_education_xp
+-- Funzione: add_education_xp (versione che ritorna JSONB - compatibile con enhance-gamification-system.sql)
 CREATE OR REPLACE FUNCTION add_education_xp(
   p_user_id UUID,
   p_xp_amount INTEGER,
@@ -160,82 +204,131 @@ CREATE OR REPLACE FUNCTION add_education_xp(
   p_source_id UUID DEFAULT NULL,
   p_description TEXT DEFAULT NULL
 )
-RETURNS VOID
+RETURNS JSONB
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = ''
 AS $$
 DECLARE
-  new_total_xp INTEGER;
-  new_level INTEGER;
+  v_new_total_xp INTEGER;
+  v_old_level INTEGER;
+  v_new_level INTEGER;
+  v_level_up BOOLEAN := false;
+  v_result JSONB;
 BEGIN
-  -- Aggiungi XP
+  -- Aggiungi XP transaction
+  INSERT INTO public.education_xp_transactions (user_id, xp_amount, source_type, source_id, description)
+  VALUES (p_user_id, p_xp_amount, p_source_type, p_source_id, p_description);
+
+  -- Aggiorna total XP
   INSERT INTO public.education_user_stats (user_id, total_points, updated_at)
   VALUES (p_user_id, p_xp_amount, NOW())
   ON CONFLICT (user_id) DO UPDATE SET
     total_points = public.education_user_stats.total_points + p_xp_amount,
-    updated_at = NOW();
+    updated_at = NOW()
+  RETURNING total_points INTO v_new_total_xp;
 
-  -- Registra transazione
-  INSERT INTO public.education_xp_transactions (user_id, xp_amount, source_type, source_id, description)
-  VALUES (p_user_id, p_xp_amount, p_source_type, p_source_id, p_description);
-
-  -- Calcola nuovo livello
-  SELECT total_points INTO new_total_xp
+  -- Calcola livelli
+  SELECT current_level INTO v_old_level
   FROM public.education_user_stats
   WHERE user_id = p_user_id;
 
-  new_level := calculate_user_level(new_total_xp);
+  v_new_level := calculate_user_level(v_new_total_xp);
 
-  -- Aggiorna livello se cambiato
-  UPDATE public.education_user_stats
-  SET current_level = new_level
-  WHERE user_id = p_user_id AND current_level != new_level;
+  -- Check level up
+  IF v_new_level > COALESCE(v_old_level, 1) THEN
+    v_level_up := true;
+    UPDATE public.education_user_stats
+    SET current_level = v_new_level
+    WHERE user_id = p_user_id;
+  END IF;
+
+  v_result := jsonb_build_object(
+    'new_total_xp', v_new_total_xp,
+    'old_level', COALESCE(v_old_level, 1),
+    'new_level', v_new_level,
+    'level_up', v_level_up,
+    'xp_added', p_xp_amount
+  );
+
+  RETURN v_result;
 END;
 $$;
 
--- Funzione: update_learning_streak
-CREATE OR REPLACE FUNCTION update_learning_streak(p_user_id UUID)
-RETURNS VOID
+-- Funzione: update_learning_streak (versione compatibile con enhance-gamification-system.sql)
+CREATE OR REPLACE FUNCTION update_learning_streak(p_user_id UUID, p_streak_type TEXT DEFAULT 'daily')
+RETURNS JSONB
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = ''
 AS $$
 DECLARE
-  last_activity DATE;
-  current_streak INTEGER;
-  longest_streak INTEGER;
-  today_date DATE := CURRENT_DATE;
+  v_current_streak INTEGER;
+  v_longest_streak INTEGER;
+  v_last_activity DATE;
+  v_today DATE := CURRENT_DATE;
+  v_streak_broken BOOLEAN := false;
+  v_result JSONB;
 BEGIN
-  SELECT last_activity_date, current_streak_days, longest_streak_days
-  INTO last_activity, current_streak, longest_streak
-  FROM public.education_user_stats
-  WHERE user_id = p_user_id;
+  -- Get current streak da education_user_streaks se esiste, altrimenti da education_user_stats
+  SELECT current_streak, longest_streak, last_activity_date
+  INTO v_current_streak, v_longest_streak, v_last_activity
+  FROM public.education_user_streaks
+  WHERE user_id = p_user_id AND streak_type = p_streak_type;
 
-  IF last_activity IS NULL OR last_activity < today_date - INTERVAL '1 day' THEN
-    -- Streak rotto, resetta
-    current_streak := 1;
-  ELSIF last_activity = today_date THEN
-    -- Già aggiornato oggi, non fare nulla
-    RETURN;
+  -- Se non esiste in education_user_streaks, usa education_user_stats
+  IF NOT FOUND THEN
+    SELECT current_streak_days, longest_streak_days, last_activity_date
+    INTO v_current_streak, v_longest_streak, v_last_activity
+    FROM public.education_user_stats
+    WHERE user_id = p_user_id;
+  END IF;
+
+  -- Se non esiste, crea
+  IF v_current_streak IS NULL THEN
+    INSERT INTO public.education_user_stats (user_id, current_streak_days, longest_streak_days, last_activity_date, updated_at)
+    VALUES (p_user_id, 1, 1, v_today, NOW())
+    ON CONFLICT (user_id) DO UPDATE SET
+      current_streak_days = 1,
+      longest_streak_days = 1,
+      last_activity_date = v_today,
+      updated_at = NOW();
+    v_current_streak := 1;
+    v_longest_streak := 1;
   ELSE
-    -- Continua streak
-    current_streak := COALESCE(current_streak, 0) + 1;
+    -- Se attività oggi, non fare nulla (già contato)
+    IF v_last_activity = v_today THEN
+      -- Nessun cambiamento
+    ELSIF v_last_activity = v_today - 1 THEN
+      -- Continua streak
+      v_current_streak := v_current_streak + 1;
+      IF v_current_streak > COALESCE(v_longest_streak, 0) THEN
+        v_longest_streak := v_current_streak;
+      END IF;
+    ELSE
+      -- Streak rotto
+      v_streak_broken := true;
+      v_current_streak := 1;
+    END IF;
+
+    -- Aggiorna stats
+    UPDATE public.education_user_stats
+    SET 
+      current_streak_days = v_current_streak,
+      longest_streak_days = GREATEST(longest_streak_days, v_longest_streak),
+      last_activity_date = v_today,
+      updated_at = NOW()
+    WHERE user_id = p_user_id;
   END IF;
 
-  -- Aggiorna longest streak se necessario
-  IF current_streak > COALESCE(longest_streak, 0) THEN
-    longest_streak := current_streak;
-  END IF;
+  v_result := jsonb_build_object(
+    'current_streak', v_current_streak,
+    'longest_streak', v_longest_streak,
+    'streak_broken', v_streak_broken,
+    'last_activity', v_today
+  );
 
-  -- Aggiorna stats
-  UPDATE public.education_user_stats
-  SET 
-    current_streak_days = current_streak,
-    longest_streak_days = longest_streak,
-    last_activity_date = today_date,
-    updated_at = NOW()
-  WHERE user_id = p_user_id;
+  RETURN v_result;
 END;
 $$;
 
