@@ -592,11 +592,56 @@
   transform: translateY(0);
 }
 
+/* ===== FORZA ZERO BLU - Regole Globali ===== */
+.education-dashboard a,
+.education-module-view a,
+.education-lesson-view a,
+.education-test-view a,
+.education-breadcrumb a,
+.lesson-view-content a,
+.test-view-content a {
+  color: var(--edu-text-secondary) !important; /* MAI blu */
+  text-decoration: none;
+}
+
+.education-dashboard a:hover,
+.education-module-view a:hover,
+.education-lesson-view a:hover,
+.education-test-view a:hover,
+.education-breadcrumb a:hover,
+.lesson-view-content a:hover,
+.test-view-content a:hover {
+  color: var(--edu-text-primary) !important; /* Bianco su hover, MAI blu */
+  text-decoration: underline;
+}
+
+.education-dashboard a:visited,
+.education-module-view a:visited,
+.education-lesson-view a:visited,
+.education-test-view a:visited {
+  color: var(--edu-text-secondary) !important; /* MAI blu/viola */
+}
+
+.education-dashboard a:focus-visible,
+.education-module-view a:focus-visible,
+.education-lesson-view a:focus-visible,
+.education-test-view a:focus-visible {
+  outline: 2px solid var(--edu-border-focus) !important; /* Grigio, MAI blu */
+  outline-offset: 2px;
+  border-radius: var(--edu-radius-xs);
+}
+
 /* ===== BREADCRUMB NAVIGATION (Best Practice Istituzionale) ===== */
 .education-breadcrumb {
-  margin-bottom: var(--edu-spacing-lg);
-  padding-bottom: var(--edu-spacing-md);
-  border-bottom: 1px solid var(--edu-border-subtle);
+  margin: 0 0 var(--edu-spacing-xl) 0;
+  padding: var(--edu-spacing-md) var(--edu-spacing-lg);
+  background: var(--edu-surface-elevated);
+  border: 1px solid var(--edu-border-base);
+  border-radius: var(--edu-radius-md);
+  box-shadow: var(--edu-shadow-sm);
+  position: sticky;
+  top: var(--edu-spacing-md);
+  z-index: 10;
 }
 
 .breadcrumb-list {
@@ -623,10 +668,17 @@
 }
 
 .breadcrumb-item a {
-  color: var(--edu-text-secondary);
+  color: var(--edu-text-secondary) !important; /* MAI blu */
   text-decoration: none;
   transition: color var(--edu-transition-fast);
-  padding: var(--edu-spacing-xs) 0;
+  padding: var(--edu-spacing-xs) var(--edu-spacing-sm);
+  border-radius: var(--edu-radius-sm);
+  display: inline-block;
+}
+
+.breadcrumb-item a:hover {
+  background: var(--edu-surface-hover);
+  color: var(--edu-text-primary) !important; /* Bianco, MAI blu */
 }
 
 .breadcrumb-item a:hover {
@@ -659,7 +711,7 @@
 
 .module-view-header {
   margin-bottom: var(--edu-spacing-xl);
-  padding-top: var(--edu-spacing-lg);
+  padding-top: 0;
   position: relative;
 }
 
@@ -971,7 +1023,7 @@
   flex-direction: column;
   gap: var(--edu-spacing-md);
   margin-bottom: var(--edu-spacing-xl);
-  padding-top: var(--edu-spacing-lg);
+  padding-top: 0;
   position: relative;
 }
 
@@ -1003,12 +1055,27 @@
 /* NO BLU - Evidenziazione termini: solo grassetto */
 .lesson-view-content strong {
   font-weight: 700;
-  color: var(--edu-text-primary); /* Bianco, NON blu */
+  color: var(--edu-text-primary) !important; /* Bianco, MAI blu */
 }
 
 .lesson-view-content em {
   font-style: italic;
-  color: var(--edu-text-secondary);
+  color: var(--edu-text-secondary) !important;
+}
+
+/* Forza TUTTI i link nel contenuto a non essere blu */
+.lesson-view-content a,
+.lesson-view-content a:link,
+.lesson-view-content a:visited,
+.lesson-view-content a:active {
+  color: var(--edu-text-secondary) !important; /* MAI blu */
+  text-decoration: underline;
+  text-decoration-color: var(--edu-border-subtle);
+}
+
+.lesson-view-content a:hover {
+  color: var(--edu-text-primary) !important; /* Bianco, MAI blu */
+  text-decoration-color: var(--edu-text-primary);
 }
 
 .lesson-view-content p {

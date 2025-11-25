@@ -761,7 +761,7 @@ function renderModuleView(module) {
       ${breadcrumb}
       <div class="module-view-header">
         <h1 class="module-view-title">${escapeHtml(module.title)}</h1>
-        <p class="module-view-description">${escapeHtml(module.description || "")}</p>
+        ${module.description ? `<p class="module-view-description">${escapeHtml(module.description)}</p>` : ""}
       </div>
 
       <div class="module-lessons">
@@ -1282,16 +1282,27 @@ function renderTestItem(test) {
 
 /**
  * Render markdown content (simplified)
+ * IMPORTANTE: MAI colori blu, solo grassetto/corsivo
  */
 function renderMarkdown(content) {
   // Simple markdown renderer (in production, use a proper library)
-  return content
+  // Rimuovi qualsiasi link markdown [text](url) e converti in testo normale
+  let html = content
+    .replace(/\[([^\]]+)\]\([^)]+\)/gim, "$1") // Rimuovi link markdown, mantieni solo testo
     .replace(/^# (.*$)/gim, "<h1>$1</h1>")
     .replace(/^## (.*$)/gim, "<h2>$1</h2>")
     .replace(/^### (.*$)/gim, "<h3>$1</h3>")
     .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>")
     .replace(/\*(.*?)\*/gim, "<em>$1</em>")
     .replace(/\n/gim, "<br>");
+
+  // Forza tutti i tag <a> eventuali a non essere blu
+  html = html.replace(
+    /<a\s+([^>]*)>/gim,
+    '<a $1 style="color: var(--edu-text-secondary) !important;">'
+  );
+
+  return html;
 }
 
 /**
