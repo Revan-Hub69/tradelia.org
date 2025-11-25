@@ -167,12 +167,17 @@ async function loadEducationDashboard(container) {
     }
 
     // Carica moduli se non presenti (anche senza auth)
-    if (!progress.modules || progress.modules.length === 0) {
+    if (!progress.modules || !Array.isArray(progress.modules) || progress.modules.length === 0) {
       try {
         const modulesResponse = await fetch(`${API_BASE}?action=modules`);
         if (modulesResponse.ok) {
-          const { modules } = await modulesResponse.json();
-          if (modules && modules.length > 0) {
+          const data = await modulesResponse.json();
+          const modules = Array.isArray(data.modules)
+            ? data.modules
+            : Array.isArray(data)
+              ? data
+              : [];
+          if (modules.length > 0) {
             progress.modules = modules;
             // Per guest users, aggiungi canAccess a tutti i moduli
             progress.modules.forEach((module) => {
