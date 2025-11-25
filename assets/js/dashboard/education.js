@@ -121,7 +121,22 @@ async function loadEducationDashboard(container) {
 
         if (progressResponse.ok) {
           const data = await progressResponse.json();
-          progress = data.progress;
+          progress = data.progress || data; // Supporta sia {progress: {...}} che direttamente progress
+          // Assicura struttura corretta
+          if (progress && !Array.isArray(progress.modules)) {
+            progress.modules = progress.modules || [];
+          }
+          if (progress && !progress.stats) {
+            progress.stats = {
+              current_level: "Foundation",
+              total_points: 0,
+              modules_completed: 0,
+              current_streak_days: 0,
+            };
+          }
+          if (progress && !Array.isArray(progress.badges)) {
+            progress.badges = progress.badges || [];
+          }
         } else {
           // Fallback a localStorage se API fallisce
           progress = loadProgressFromLocalStorage();
@@ -232,11 +247,30 @@ function saveProgressToLocalStorage(progress) {
  * Render education dashboard
  */
 async function renderEducationDashboard(container, progress) {
-  const { modules, stats, badges } = progress;
+  // Verifica che progress esista
+  if (!progress) {
+    safeLog("error", "[Education] Progress è undefined");
+    container.innerHTML = `
+      <div class="error-state">
+        <p>Errore: dati non disponibili. Ricarica la pagina.</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Assicura che modules, stats, badges siano sempre definiti e array
+  const modules = Array.isArray(progress.modules) ? progress.modules : [];
+  const stats = progress.stats || {
+    current_level: "Foundation",
+    total_points: 0,
+    modules_completed: 0,
+    current_streak_days: 0,
+  };
+  const badges = Array.isArray(progress.badges) ? progress.badges : [];
 
   // Aggiungi progresso da localStorage ai moduli se non presente (guest users)
   const token = await getAuthToken();
-  if (!token && progress.lesson_progress) {
+  if (!token && progress.lesson_progress && Array.isArray(modules)) {
     modules.forEach((module) => {
       if (!module.userProgress) {
         // Calcola progresso modulo da lesson_progress
@@ -358,7 +392,11 @@ async function renderEducationDashboard(container, progress) {
       <div class="education-modules">
         <h2 class="education-section-title">Percorso Formativo</h2>
         <div class="modules-grid">
-          ${modules.map((module, index) => renderModuleCard(module, index)).join("")}
+          ${
+            Array.isArray(modules) && modules.length > 0
+              ? modules.map((module, index) => renderModuleCard(module, index)).join("")
+              : '<div class="empty-state"><p>Nessun modulo disponibile al momento.</p></div>'
+          }
         </div>
       </div>
     </div>
@@ -627,12 +665,16 @@ function renderModuleView(module) {
       <div class="module-lessons">
         <h2>Lezioni</h2>
         <div class="lessons-list">
-          ${module.lessons.map((lesson, index) => renderLessonItem(lesson, index)).join("")}
+          ${
+            Array.isArray(module.lessons) && module.lessons.length > 0
+              ? module.lessons.map((lesson, index) => renderLessonItem(lesson, index)).join("")
+              : '<div class="empty-state"><p>Nessuna lezione disponibile per questo modulo.</p></div>'
+          }
         </div>
       </div>
 
       ${
-        module.tests && module.tests.length > 0
+        Array.isArray(module.tests) && module.tests.length > 0
           ? `
         <div class="module-tests">
           <h2>Test di Verifica</h2>
