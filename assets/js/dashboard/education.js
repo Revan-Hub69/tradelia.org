@@ -102,6 +102,9 @@ async function initEducation() {
 
   // Load user progress and modules
   await loadEducationDashboard(container);
+
+  // Scroll to top when initializing dashboard
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 /**
@@ -541,9 +544,55 @@ function bindEducationEvents(container) {
   container.querySelectorAll("[data-action='open-module']").forEach((btn) => {
     btn.addEventListener("click", async (e) => {
       e.preventDefault();
+      e.stopPropagation();
       const moduleId = btn.dataset.moduleId;
+
+      // Scroll to top when opening module
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
       await openModule(moduleId);
     });
+  });
+
+  // Module card click (entire card)
+  container.querySelectorAll(".education-module-card").forEach((card) => {
+    if (!card.classList.contains("locked")) {
+      card.addEventListener("click", async (e) => {
+        // Don't trigger if clicking on button
+        if (e.target.closest("button")) {
+          return;
+        }
+
+        e.preventDefault();
+        const moduleId = card.dataset.moduleId;
+
+        if (moduleId) {
+          // Scroll to top when opening module
+          window.scrollTo({ top: 0, behavior: "smooth" });
+
+          await openModule(moduleId);
+        }
+      });
+
+      // Keyboard support
+      card.addEventListener("keydown", async (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          const moduleId = card.dataset.moduleId;
+
+          if (moduleId) {
+            // Scroll to top when opening module
+            window.scrollTo({ top: 0, behavior: "smooth" });
+
+            await openModule(moduleId);
+          }
+        }
+      });
+
+      // Make card focusable
+      card.setAttribute("tabindex", "0");
+      card.setAttribute("role", "button");
+    }
   });
 
   // Spaced Repetition
@@ -655,6 +704,10 @@ async function openModule(moduleId) {
           module.canAccess = true;
 
           currentModule = module;
+
+          // Scroll to top when opening module
+          window.scrollTo({ top: 0, behavior: "smooth" });
+
           renderModuleView(module);
           return;
         }
@@ -667,6 +720,10 @@ async function openModule(moduleId) {
 
     // Navigate to module view (SPA navigation)
     window.history.pushState({ view: "module", moduleId }, "", `#education/module/${module.slug}`);
+
+    // Scroll to top when opening module
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     renderModuleView(module);
   } catch (error) {
     safeLog("error", "[Education] Errore openModule:", error);
@@ -736,17 +793,103 @@ function renderModuleView(module) {
   container.querySelectorAll("[data-action='open-lesson']").forEach((btn) => {
     btn.addEventListener("click", async (e) => {
       e.preventDefault();
+      e.stopPropagation();
       const lessonId = btn.dataset.lessonId;
+
+      // Scroll to top when opening lesson
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
       await openLesson(lessonId);
     });
+  });
+
+  // Lesson item click (entire item)
+  container.querySelectorAll(".lesson-item").forEach((item) => {
+    item.addEventListener("click", async (e) => {
+      // Don't trigger if clicking on button
+      if (e.target.closest("button")) {
+        return;
+      }
+
+      e.preventDefault();
+      const lessonId = item.dataset.lessonId;
+
+      // Scroll to top when opening lesson
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      await openLesson(lessonId);
+    });
+
+    // Keyboard support
+    item.addEventListener("keydown", async (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        const lessonId = item.dataset.lessonId;
+
+        // Scroll to top when opening lesson
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        await openLesson(lessonId);
+      }
+    });
+
+    // Make item focusable
+    item.setAttribute("tabindex", "0");
+    item.setAttribute("role", "button");
   });
 
   container.querySelectorAll("[data-action='start-test']").forEach((btn) => {
     btn.addEventListener("click", async (e) => {
       e.preventDefault();
+      e.stopPropagation();
       const testId = btn.dataset.testId;
+
+      // Scroll to top when opening test
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
       await openTest(testId);
     });
+  });
+
+  // Test item click (entire item)
+  container.querySelectorAll(".test-item").forEach((item) => {
+    item.addEventListener("click", async (e) => {
+      // Don't trigger if clicking on button
+      if (e.target.closest("button")) {
+        return;
+      }
+
+      e.preventDefault();
+      const testId =
+        item.dataset.testId || item.querySelector("[data-action='start-test']")?.dataset.testId;
+
+      if (testId) {
+        // Scroll to top when opening test
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        await openTest(testId);
+      }
+    });
+
+    // Keyboard support
+    item.addEventListener("keydown", async (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        const testId =
+          item.dataset.testId || item.querySelector("[data-action='start-test']")?.dataset.testId;
+
+        if (testId) {
+          // Scroll to top when opening test
+          window.scrollTo({ top: 0, behavior: "smooth" });
+
+          await openTest(testId);
+        }
+      }
+    });
+
+    // Make item focusable
+    item.setAttribute("tabindex", "0");
+    item.setAttribute("role", "button");
   });
 }
 
@@ -826,6 +969,10 @@ async function openLesson(lessonId) {
           const lessonProgress = progress?.lesson_progress?.[lessonId] || { status: "not_started" };
           lesson.userProgress = lessonProgress;
           currentLesson = lesson;
+
+          // Scroll to top when opening lesson
+          window.scrollTo({ top: 0, behavior: "smooth" });
+
           renderLessonView(lesson);
           return;
         }
@@ -845,6 +992,9 @@ async function openLesson(lessonId) {
 
     // Mark as started
     await updateLessonProgress(lessonId, "in_progress");
+
+    // Scroll to top when opening lesson
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
     // Render lesson view
     renderLessonView(lesson);
@@ -926,10 +1076,17 @@ function renderLessonView(lesson) {
         "",
         `#education/module/${currentModule.slug}`
       );
+      // Scroll to top when going back to module
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
       await openModule(currentModule.id);
     } else {
       // Fallback: torna alla dashboard
       window.history.pushState({ view: "education-dashboard" }, "", "#education");
+
+      // Scroll to top when going back to dashboard
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
       await initEducation();
     }
   });
