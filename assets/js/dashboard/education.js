@@ -48,6 +48,38 @@ async function initEducation() {
     safeLog("warn", "[Education] Errore initGamification:", error);
   }
 
+  // Initialize spaced repetition system
+  try {
+    const { initSpacedRepetition } = await import("./education-spaced-repetition.js");
+    initSpacedRepetition();
+  } catch (error) {
+    safeLog("warn", "[Education] Errore initSpacedRepetition:", error);
+  }
+
+  // Initialize retrieval practice system
+  try {
+    const { initRetrievalPractice } = await import("./education-retrieval-practice.js");
+    initRetrievalPractice();
+  } catch (error) {
+    safeLog("warn", "[Education] Errore initRetrievalPractice:", error);
+  }
+
+  // Initialize adaptive learning system
+  try {
+    const { initAdaptiveLearning } = await import("./education-adaptive-learning.js");
+    initAdaptiveLearning();
+  } catch (error) {
+    safeLog("warn", "[Education] Errore initAdaptiveLearning:", error);
+  }
+
+  // Initialize interactive tools
+  try {
+    const { initInteractiveTools } = await import("./education-interactive-tools.js");
+    initInteractiveTools();
+  } catch (error) {
+    safeLog("warn", "[Education] Errore initInteractiveTools:", error);
+  }
+
   // Try to find container in main content area (SPA)
   let container = document.getElementById("education-container");
 

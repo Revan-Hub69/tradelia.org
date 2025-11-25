@@ -60,40 +60,67 @@ BEGIN
     'Cos''è un investimento?',
     '# Cos''è un investimento?
 
-Un **investimento** è l''allocazione di denaro con l''obiettivo di ottenere un rendimento nel tempo.
+**Questa lezione Tradelia AI esplora** i fondamenti degli investimenti per aiutarti a comprendere cosa sono, come funzionano e come iniziare in modo consapevole. **L''obiettivo è** fornirti le basi teoriche e pratiche per distinguere risparmio da investimento e identificare gli strumenti più adatti al tuo profilo.
+
+**Pillola Educativa:** Secondo lo studio di Markowitz (1952) sulla Modern Portfolio Theory, pubblicato sul *Journal of Finance*, la diversificazione è l''unico "free lunch" negli investimenti. La ricerca dimostra che combinare asset diversi riduce il rischio senza sacrificare il rendimento atteso, confermando l''importanza di comprendere i diversi tipi di investimenti.
 
 ## Differenza tra Risparmio e Investimento
 
-- **Risparmio**: Denaro messo da parte, solitamente in conto corrente o libretto. Basso rischio, basso rendimento.
-- **Investimento**: Denaro utilizzato per acquistare asset che possono aumentare di valore. Rischio variabile, potenziale rendimento maggiore.
+**Metodo Tradelia AI** per distinguere risparmio da investimento:
 
-## Tipi di Investimenti
+- **Risparmio**: Denaro messo da parte, solitamente in conto corrente o libretto. Basso rischio, basso rendimento. **Obiettivo**: Preservare capitale nel breve termine.
+- **Investimento**: Denaro utilizzato per acquistare asset che possono aumentare di valore. Rischio variabile, potenziale rendimento maggiore. **Obiettivo**: Crescita capitale nel medio-lungo termine.
+
+**Esempio Pratico:**
+- **Scenario**: Hai 10.000€ da parte
+- **Risparmio**: Conto deposito al 2% annuo = 200€/anno, rischio minimo
+- **Investimento**: ETF azionario globale al 7% annuo = 700€/anno, rischio medio-alto
+- **Risultato**: Scelta dipende da orizzonte temporale e tolleranza al rischio
+
+## Tipi di Investimenti: Il Metodo Tradelia AI
 
 ### 1. Azioni (Equity)
-- Acquisto di una quota di una società
-- Rendimento: dividendi + crescita del valore
-- Rischio: medio-alto
+- **Cosa sono**: Acquisto di una quota di una società
+- **Rendimento**: Dividend yield + crescita del valore (capital gain)
+- **Rischio**: Medio-alto (volatilità tipica 15-25% annua)
+- **Quando usare**: Orizzonte lungo termine (5+ anni), tolleranza rischio alta
+
+**Paper di Riferimento:**
+> Fama & French (1992): "The Cross-Section of Expected Stock Returns", Journal of Finance
 
 ### 2. Obbligazioni (Bond)
-- Prestito a un''azienda o stato
-- Rendimento: interessi periodici
-- Rischio: medio-basso
+- **Cosa sono**: Prestito a un''azienda o stato
+- **Rendimento**: Interessi periodici (cedole) + rimborso capitale
+- **Rischio**: Medio-basso (volatilità tipica 3-8% annua)
+- **Quando usare**: Orizzonte medio (3-10 anni), tolleranza rischio moderata
+
+**Paper di Riferimento:**
+> Fama (1984): "The Information in the Term Structure", Journal of Financial Economics
 
 ### 3. Fondi Comuni / ETF
-- Investimento diversificato in più asset
-- Gestito da professionisti
-- Rischio: variabile in base al fondo
+- **Cosa sono**: Investimento diversificato in più asset, gestito da professionisti o passivo (ETF)
+- **Rendimento**: Proporzionale alla performance del paniere sottostante
+- **Rischio**: Variabile in base al fondo (ETF indicizzati: rischio medio)
+- **Quando usare**: Diversificazione automatica, costi contenuti (ETF), gestione professionale (fondi)
+
+**Paper di Riferimento:**
+> Sharpe (1991): "The Arithmetic of Active Management", Financial Analysts Journal
 
 ### 4. Immobiliare
-- Acquisto di proprietà
-- Rendimento: affitti + crescita valore
-- Rischio: medio
+- **Cosa sono**: Acquisto di proprietà (diretta o tramite REIT)
+- **Rendimento**: Affitti (yield 3-6%) + crescita valore
+- **Rischio**: Medio (illiquidità, concentrazione geografica)
+- **Quando usare**: Diversificazione portafoglio, protezione inflazione
 
-## Principio Fondamentale
+## Principio Tradelia AI
 
-> **Maggiore il potenziale rendimento, maggiore il rischio**
+> **Principio Tradelia AI**: Maggiore il potenziale rendimento, maggiore il rischio. Non esiste investimento senza rischio. L''importante è comprendere, misurare e gestire il rischio in base alle proprie esigenze, orizzonte temporale e obiettivi finanziari.
 
-Non esiste un investimento senza rischio. L''importante è comprendere e gestire il rischio in base alle proprie esigenze.',
+**Metodo Tradelia AI per iniziare:**
+1. **Definisci obiettivo**: Breve/medio/lungo termine
+2. **Valuta tolleranza rischio**: Conservatore/Moderato/Aggressivo
+3. **Scegli strumenti**: In base a obiettivo + rischio
+4. **Diversifica**: Non mettere tutte le uova in un paniere',
     'text',
     1,
     15,
@@ -114,47 +141,76 @@ Non esiste un investimento senza rischio. L''importante è comprendere e gestire
     'Diversificazione: Non mettere tutte le uova in un paniere',
     '# Diversificazione del Portafoglio
 
-La **diversificazione** è una strategia fondamentale per ridurre il rischio senza sacrificare troppo il rendimento.
+**Questa lezione Tradelia AI esplora** la diversificazione del portafoglio, strategia fondamentale per ridurre il rischio senza sacrificare il rendimento. **L''obiettivo è** fornirti il metodo Tradelia AI per costruire un portafoglio diversificato efficace.
 
-## Cosa significa Diversificare?
+**Pillola Educativa:** Lo studio di Markowitz (1952) sulla Modern Portfolio Theory, pubblicato sul *Journal of Finance*, dimostra matematicamente che la diversificazione riduce il rischio portafoglio senza necessariamente ridurre il rendimento atteso. La ricerca evidenzia che combinare asset con correlazione < 1.0 genera benefici di diversificazione misurabili.
 
-Distribuire i propri investimenti su:
-- **Più asset** (azioni, obbligazioni, immobili)
-- **Più settori** (tecnologia, sanità, energia, ecc.)
-- **Più aree geografiche** (Italia, Europa, USA, Asia)
-- **Più società** (non solo una o poche)
+La **diversificazione** è una strategia fondamentale per ridurre il rischio senza sacrificare troppo il rendimento. **Metodo Tradelia AI**: distribuire investimenti su più dimensioni.
 
-## Perché Diversificare?
+## Cosa significa Diversificare: Metodo Tradelia AI
 
-### Riduce il Rischio Specifico
-Se investi tutto in una sola azienda e quella azienda fallisce, perdi tutto. Con la diversificazione, un fallimento ha un impatto limitato.
+**Metodo Tradelia AI** per diversificazione efficace: distribuire investimenti su **4 dimensioni**:
 
-### Esempio Pratico
+1. **Più asset** (azioni, obbligazioni, immobili, commodities)
+2. **Più settori** (tecnologia, sanità, energia, consumer, ecc.)
+3. **Più aree geografiche** (Italia, Europa, USA, Asia, emergenti)
+4. **Più società** (non concentrare su singoli titoli)
+
+**Paper di Riferimento:**
+> Markowitz (1952): "Portfolio Selection", Journal of Finance
+
+## Perché Diversificare: Evidenze Accademiche
+
+### Riduce il Rischio Specifico (Idiosincratico)
+
+**Teoria**: Il rischio specifico (legato a singola azienda/settore) è eliminabile con diversificazione. Il rischio sistematico (di mercato) no.
+
+**Esempio Pratico Tradelia AI:**
 
 **Portafoglio NON diversificato:**
 - 100% in azioni Tech Company A
+- Volatilità: 30% annua
 - Se Tech Company A crolla: -100% del portafoglio
 
-**Portafoglio diversificato:**
-- 30% azioni tecnologia
-- 30% obbligazioni
-- 20% ETF internazionali
-- 20% immobiliare
-- Se un settore crolla: impatto limitato
+**Portafoglio diversificato (Metodo Tradelia AI):**
+- 30% azioni tecnologia (ETF)
+- 30% obbligazioni governative
+- 20% ETF internazionali (MSCI World)
+- 20% REIT (immobiliare)
+- Volatilità: ~12% annua
+- Se un settore crolla: impatto limitato (~30% max)
 
-## Regola del 5-10-15
+**Risultato**: Diversificazione riduce volatilità da 30% a 12% mantenendo rendimento atteso simile.
 
-- **Massimo 5%** in un singolo titolo
-- **Massimo 10%** in un singolo settore
-- **Massimo 15%** in un singolo paese
+**Paper di Riferimento:**
+> Elton & Gruber (1977): "Risk Reduction and Portfolio Size: An Analytical Solution", Journal of Business
 
-## Come Diversificare
+## Regola Tradelia AI: 5-10-15
 
-1. **ETF Diversificati**: Investi in fondi che contengono centinaia di asset
-2. **Asset Allocation**: Bilanciamento tra azioni, obbligazioni, e altri asset
-3. **Rebalancing Periodico**: Riequilibra il portafoglio ogni 6-12 mesi
+**Metodo Tradelia AI** per limiti di concentrazione:
 
-> **Ricorda**: La diversificazione non elimina il rischio, ma lo distribuisce meglio.',
+- **Massimo 5%** in un singolo titolo (riduce rischio idiosincratico)
+- **Massimo 10%** in un singolo settore (riduce rischio settoriale)
+- **Massimo 15%** in un singolo paese (riduce rischio geografico)
+
+**Esempio Pratico:**
+- Portafoglio: 50.000€
+- Massimo per titolo: 2.500€ (5%)
+- Massimo per settore: 5.000€ (10%)
+- Massimo per paese: 7.500€ (15%)
+
+## Come Diversificare: Metodo Tradelia AI
+
+**Approccio Tradelia AI** in 3 step:
+
+1. **ETF Diversificati**: Investi in fondi che contengono centinaia di asset (es. MSCI World, S&P 500)
+2. **Asset Allocation**: Bilanciamento tra azioni, obbligazioni, e altri asset (60/40, 70/30, ecc.)
+3. **Rebalancing Periodico**: Riequilibra il portafoglio ogni 6-12 mesi (metodo Tradelia AI)
+
+**Paper di Riferimento:**
+> DeMiguel et al. (2009): "Optimal Versus Naive Diversification: How Inefficient is the 1/N Portfolio Strategy?", Review of Financial Studies
+
+> **Principio Tradelia AI**: La diversificazione non elimina il rischio, ma lo distribuisce meglio. È l''unico "free lunch" negli investimenti (Markowitz, 1952).',
     'text',
     2,
     20,

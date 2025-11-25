@@ -1,395 +1,441 @@
 /* eslint-env browser */
 /**
- * Retrieval Practice Sessions
- * Paper: Roediger & Karpicke (2006), Karpicke & Blunt (2011)
- * "Test-Enhanced Learning" - "Retrieval Practice Produces More Learning"
- *
- * Sessioni di ripasso attivo senza punteggio, solo per apprendere.
- * Low-stakes quizzing per consolidare conoscenza.
+ * Retrieval Practice System - Frontend
+ * Active Recall through Frequent Quizzes
+ * Research: Roediger & Karpicke (2006), Karpicke & Blunt (2011)
+ * Best Practice 2025
  */
 
-import { safeLog, escapeHtml } from "./security-utils.js";
-import { updateQuestionReview } from "./education-spaced-repetition.js";
+import { safeLog } from "./security-utils.js";
+import { getSupabaseClient } from "./supabase-client.js";
+import { SpacedRepetitionUI } from "./education-spaced-repetition.js";
 
 const API_BASE = "/api/education";
 
-let currentSession = null;
-let sessionAnswers = {};
-// let sessionStartTime = null; // TODO: Usare per analytics
-
 /**
- * Initialize retrieval practice session
- * @param {string|Array} questionIds - Single question ID or array of question IDs
- * @param {Object} options - Session options
+ * Retrieval Practice System - Frontend Component
  */
-export async function initRetrievalPractice(questionIds, options = {}) {
-  try {
-    const container = document.getElementById("education-container");
-    if (!container) {
-      safeLog("warn", "[Retrieval Practice] Container non trovato");
+export class RetrievalPracticeUI {
+  constructor() {
+    this.currentQuiz = null;
+    this.quizStartTime = null;
+    this.spacedRepetition = new SpacedRepetitionUI();
+  }
+
+  /**
+   * Show quiz in lesson (frequent quizzes, not just end of module)
+   */
+  async showQuizInLesson(questions, container, moduleId, lessonId) {
+    if (!container || !questions || questions.length === 0) {
       return;
     }
 
-    // Convert single ID to array
-    const ids = Array.isArray(questionIds) ? questionIds : [questionIds];
-
-    // Get questions
-    const questions = await fetchQuestions(ids);
-    if (!questions || questions.length === 0) {
-      if (window.showToast) {
-        window.showToast("Nessuna domanda disponibile per il ripasso", "warning");
-      }
-      return;
-    }
-
-    currentSession = {
-      questions,
-      options: {
-        showScore: false, // No score in practice mode
-        showExplanations: true,
-        allowRetry: true,
-        ...options,
-      },
+    this.currentQuiz = {
+      questions: questions,
+      currentIndex: 0,
+      answers: [],
+      score: 0,
+      moduleId: moduleId,
+      lessonId: lessonId,
     };
 
-    sessionAnswers = {};
-    // sessionStartTime = Date.now(); // TODO: Usare per analytics
-
-    renderRetrievalPracticeSession(container, currentSession);
-  } catch (error) {
-    safeLog("error", "[Retrieval Practice] Errore initRetrievalPractice:", error);
-    if (window.showToast) {
-      window.showToast("Errore avvio ripasso attivo", "error");
-    }
+    this.quizStartTime = Date.now();
+    this.renderQuestion(0, container);
   }
-}
 
-/**
- * Fetch questions for retrieval practice
- */
-async function fetchQuestions(questionIds) {
-  try {
-    const token = await getAuthToken();
-    const response = await fetch(
-      `${API_BASE}?action=retrieval-questions&questionIds=${questionIds.join(",")}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Errore caricamento domande");
+  /**
+   * Render question
+   */
+  renderQuestion(index, container) {
+    if (index >= this.currentQuiz.questions.length) {
+      // Quiz complete
+      this.showQuizResults(container);
+      return;
     }
 
-    const { questions } = await response.json();
-    return questions || [];
-  } catch (error) {
-    safeLog("error", "[Retrieval Practice] Errore fetchQuestions:", error);
-    return [];
+    const question = this.currentQuiz.questions[index];
+    const totalQuestions = this.currentQuiz.questions.length;
+
+    container.innerHTML = `
+      <div class="retrieval-quiz-container">
+        <div class="rq-progress">
+          <span>Domanda ${index + 1} di ${totalQuestions}</span>
+          <div class="rq-progress-bar">
+            <div class="rq-progress-fill" style="width: ${((index + 1) / totalQuestions) * 100}%"></div>
+          </div>
+        </div>
+        
+        <div class="rq-question" data-question-index="${index}">
+          <h3>${this.escapeHtml(question.question)}</h3>
+          ${question.hint ? `<p class="rq-hint">💡 ${this.escapeHtml(question.hint)}</p>` : ""}
+        </div>
+        
+        <div class="rq-options">
+          ${question.options.map((option, i) => `
+            <button class="rq-option-btn" 
+                    data-option-index="${i}" 
+                    data-correct="${i === question.correctAnswer}"
+                    onclick="window.RetrievalPracticeUI.selectAnswer(${i}, ${index})">
+              ${this.escapeHtml(option)}
+            </button>
+          `).join("")}
+        </div>
+      </div>
+    `;
+
+    this.addQuizStyles();
   }
-}
 
-/**
- * Render retrieval practice session
- */
-function renderRetrievalPracticeSession(container, session) {
-  const { questions, options } = session;
-  const isSpacedRepetition = options.spacedRepetition;
+  /**
+   * Select answer
+   */
+  selectAnswer(optionIndex, questionIndex) {
+    const question = this.currentQuiz.questions[questionIndex];
+    const isCorrect = optionIndex === question.correctAnswer;
 
-  container.innerHTML = `
-    <div class="retrieval-practice-session">
-      <div class="rp-header">
-        <button class="btn btn-secondary btn-sm" data-action="back-to-dashboard">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-          Indietro
-        </button>
-        <div class="rp-header-content">
-          <h1 class="rp-title">
-            ${isSpacedRepetition ? "Ripasso Distribuito" : "Ripasso Attivo"}
-          </h1>
-          <p class="rp-description">
-            ${
-              isSpacedRepetition
-                ? "Ripassa questa domanda per consolidare la memoria a lungo termine (Ebbinghaus, 1885)"
-                : "Ripasso attivo senza punteggio - solo per apprendere (Roediger & Karpicke, 2006)"
-            }
-          </p>
-          <div class="rp-info">
-            <span>${questions.length} ${questions.length === 1 ? "domanda" : "domande"}</span>
-            <span>•</span>
-            <span>Nessun punteggio - solo apprendimento</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="rp-questions">
-        ${questions.map((question, index) => renderPracticeQuestion(question, index + 1)).join("")}
-      </div>
-
-      <div class="rp-actions">
-        <button class="btn btn-secondary" data-action="check-answers">
-          Verifica Risposte
-        </button>
-        <button class="btn btn-primary" data-action="show-explanations" style="display: none;">
-          Mostra Spiegazioni
-        </button>
-      </div>
-    </div>
-  `;
-
-  bindRetrievalPracticeEvents(container, session);
-}
-
-/**
- * Render practice question (no score, just learning)
- */
-function renderPracticeQuestion(question, questionNumber) {
-  const questionId = question.id;
-  const inputType = question.question_type === "multiple_choice" ? "radio" : "checkbox";
-  const inputName = `rp-question-${questionId}`;
-
-  return `
-    <div class="rp-question" data-question-id="${questionId}">
-      <div class="rp-question-header">
-        <span class="rp-question-number">Domanda ${questionNumber}</span>
-        <span class="rp-practice-badge" title="Ripasso attivo - nessun punteggio">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="14" height="14">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-            <path d="M2 17l10 5 10-5"/>
-            <path d="M2 12l10 5 10-5"/>
-          </svg>
-          Practice Mode
-        </span>
-      </div>
-      <div class="rp-question-text">${escapeHtml(question.question_text)}</div>
-      
-      ${
-        question.bloom_level
-          ? `
-        <div class="rp-question-bloom">
-          <span class="bloom-badge bloom-${question.bloom_level}">${getBloomLabel(question.bloom_level)}</span>
-        </div>
-      `
-          : ""
-      }
-
-      <div class="rp-question-options">
-        ${
-          question.education_question_options
-            ?.map(
-              (option, optIndex) => `
-          <label class="rp-option" data-option-id="${option.id}">
-            <input 
-              type="${inputType}" 
-              id="rp-option-${questionId}-${option.id}"
-              name="${inputName}" 
-              value="${option.id}"
-              data-question-id="${questionId}"
-            />
-            <span class="rp-option-label">
-              <span class="option-letter">${String.fromCharCode(65 + optIndex)}.</span>
-              ${escapeHtml(option.option_text)}
-            </span>
-          </label>
-        `
-            )
-            .join("") || ""
-        }
-      </div>
-
-      <div class="rp-question-explanation" style="display: none;" data-explanation>
-        ${
-          question.explanation
-            ? `
-          <div class="rp-explanation-content">
-            <strong>Spiegazione:</strong>
-            <p>${escapeHtml(question.explanation)}</p>
-          </div>
-        `
-            : ""
-        }
-      </div>
-    </div>
-  `;
-}
-
-/**
- * Bind retrieval practice events
- */
-function bindRetrievalPracticeEvents(container, session) {
-  // Back button
-  container.querySelector("[data-action='back-to-dashboard']")?.addEventListener("click", () => {
-    window.history.pushState({ view: "dashboard" }, "", "#education");
-    import("./education.js").then(({ initEducation }) => initEducation());
-  });
-
-  // Option selection
-  container.querySelectorAll(".rp-option input").forEach((input) => {
-    input.addEventListener("change", (e) => {
-      const questionId = e.target.dataset.questionId;
-      const optionId = e.target.value;
-
-      // Store answer
-      sessionAnswers[questionId] = {
-        option_id: optionId,
-        selectedAt: Date.now(),
-      };
-
-      // Visual feedback
-      const option = e.target.closest(".rp-option");
-      container.querySelectorAll(`[name="rp-question-${questionId}"]`).forEach((inp) => {
-        inp.closest(".rp-option").classList.remove("selected");
-      });
-      option.classList.add("selected");
-    });
-  });
-
-  // Check answers button
-  container.querySelector("[data-action='check-answers']")?.addEventListener("click", async () => {
-    await checkAnswers(container, session);
-  });
-
-  // Show explanations button
-  container.querySelector("[data-action='show-explanations']")?.addEventListener("click", () => {
-    showExplanations(container);
-  });
-}
-
-/**
- * Check answers and show feedback
- */
-async function checkAnswers(container, session) {
-  const { questions, options } = session;
-  let correctCount = 0;
-  let totalTime = 0;
-
-  // Get correct answers from server
-  const questionIds = questions.map((q) => q.id);
-  const correctAnswers = await fetchCorrectAnswers(questionIds);
-
-  // Check each answer
-  questions.forEach((question) => {
-    const questionEl = container.querySelector(`[data-question-id="${question.id}"]`);
-    const userAnswer = sessionAnswers[question.id];
-    const correctOptionIds = correctAnswers[question.id] || [];
-    const isCorrect = userAnswer && correctOptionIds.includes(userAnswer.option_id);
-
+    // Update score
     if (isCorrect) {
-      correctCount++;
+      this.currentQuiz.score++;
     }
 
-    // Update visual state
-    questionEl.classList.add(isCorrect ? "correct" : "incorrect");
-
-    // Highlight correct/incorrect options
-    questionEl.querySelectorAll(".rp-option").forEach((optionEl) => {
-      const optionId = optionEl.dataset.optionId;
-      if (correctOptionIds.includes(optionId)) {
-        optionEl.classList.add("correct-answer");
-      }
-      if (userAnswer && userAnswer.option_id === optionId && !isCorrect) {
-        optionEl.classList.add("incorrect-answer");
-      }
+    // Store answer
+    this.currentQuiz.answers.push({
+      questionIndex: questionIndex,
+      selectedAnswer: optionIndex,
+      correctAnswer: question.correctAnswer,
+      isCorrect: isCorrect,
     });
 
-    // Calculate time spent
-    if (userAnswer && userAnswer.selectedAt) {
-      totalTime += Date.now() - userAnswer.selectedAt;
+    // Show feedback
+    const container = document.querySelector(".rq-question");
+    if (container) {
+      const feedback = document.createElement("div");
+      feedback.className = `rq-feedback ${isCorrect ? "correct" : "incorrect"}`;
+      feedback.innerHTML = `
+        <p>${isCorrect ? "✅ Corretto!" : "❌ Sbagliato"}</p>
+        ${question.explanation ? `<p class="rq-explanation">${this.escapeHtml(question.explanation)}</p>` : ""}
+      `;
+      container.appendChild(feedback);
+
+      // Disable buttons
+      const buttons = container.parentElement.querySelectorAll(".rq-option-btn");
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        if (parseInt(btn.dataset.optionIndex) === question.correctAnswer) {
+          btn.classList.add("correct-answer");
+        }
+        if (parseInt(btn.dataset.optionIndex) === optionIndex && !isCorrect) {
+          btn.classList.add("incorrect-answer");
+        }
+      });
+
+      // Move to next question after delay
+      setTimeout(() => {
+        this.renderQuestion(questionIndex + 1, container.parentElement);
+      }, 2000);
     }
-  });
+  }
 
-  // Show explanations button
-  container.querySelector("[data-action='show-explanations']").style.display = "block";
-  container.querySelector("[data-action='check-answers']").style.display = "none";
+  /**
+   * Show quiz results
+   */
+  async showQuizResults(container) {
+    const totalQuestions = this.currentQuiz.questions.length;
+    const score = this.currentQuiz.score;
+    const percentage = Math.round((score / totalQuestions) * 100);
+    const duration = Math.floor((Date.now() - this.quizStartTime) / 1000);
 
-  // Update spaced repetition if applicable
-  if (options.spacedRepetition && questions.length === 1) {
-    const question = questions[0];
-    const isCorrect = correctCount > 0;
-    const timeSpent = totalTime;
+    // Update mastery if authenticated
+    if (this.currentQuiz.moduleId && this.currentQuiz.lessonId) {
+      await this.updateMasteryAfterQuiz(percentage, totalQuestions, score, duration);
+    }
 
+    container.innerHTML = `
+      <div class="rq-results">
+        <h3>Quiz Completato!</h3>
+        <div class="rq-score">
+          <p class="rq-score-value">${score} / ${totalQuestions}</p>
+          <p class="rq-score-percentage">${percentage}%</p>
+        </div>
+        <div class="rq-feedback-message">
+          ${percentage >= 80 
+            ? "<p>🎉 Eccellente! Hai padroneggiato questo argomento.</p>"
+            : percentage >= 60
+            ? "<p>👍 Buono! Ripassa i concetti e riprova.</p>"
+            : "<p>📚 Continua a studiare! Ripassa la lezione e riprova.</p>"
+          }
+        </div>
+        <div class="rq-actions">
+          <button class="rq-retry-btn" onclick="location.reload()">Riprova</button>
+          <button class="rq-continue-btn" onclick="window.RetrievalPracticeUI.continueLesson()">Continua Lezione</button>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Update mastery after quiz
+   */
+  async updateMasteryAfterQuiz(score, totalQuestions, correctAnswers, duration) {
     try {
-      await updateQuestionReview(question.id, isCorrect, timeSpent);
+      const token = await this.getAuthToken();
+      if (!token) return;
+
+      const { AdaptiveLearningUI } = await import("./education-adaptive-learning.js");
+      await AdaptiveLearningUI.updateMastery(
+        this.currentQuiz.moduleId,
+        this.currentQuiz.lessonId,
+        score,
+        totalQuestions,
+        correctAnswers,
+        duration
+      );
     } catch (error) {
-      safeLog("error", "[Retrieval Practice] Errore updateQuestionReview:", error);
+      safeLog("error", "[RetrievalPractice] Error updating mastery:", error);
     }
   }
 
-  // Show feedback
-  if (window.showToast) {
-    const accuracy = Math.round((correctCount / questions.length) * 100);
-    window.showToast(
-      `${correctCount}/${questions.length} corrette (${accuracy}%) - Ottimo ripasso!`,
-      correctCount === questions.length ? "success" : "info"
-    );
+  /**
+   * Continue lesson
+   */
+  continueLesson() {
+    // Trigger lesson continue event
+    const event = new CustomEvent("retrieval-practice-continue");
+    window.dispatchEvent(event);
   }
-}
 
-/**
- * Show explanations for all questions
- */
-function showExplanations(container) {
-  container.querySelectorAll("[data-explanation]").forEach((explanationEl) => {
-    explanationEl.style.display = "block";
-  });
+  /**
+   * Create flashcard from lesson content
+   */
+  async createFlashcardFromContent(content, question, answer, moduleId, lessonId, itemType = "concept") {
+    try {
+      const token = await this.getAuthToken();
+      if (!token) {
+        // Guest: save to localStorage
+        this.saveFlashcardToLocalStorage(content, question, answer, moduleId, lessonId, itemType);
+        return;
+      }
 
-  container.querySelector("[data-action='show-explanations']").style.display = "none";
-}
-
-/**
- * Fetch correct answers
- */
-async function fetchCorrectAnswers(questionIds) {
-  try {
-    const token = await getAuthToken();
-    const response = await fetch(
-      `${API_BASE}?action=retrieval-answers&questionIds=${questionIds.join(",")}`,
-      {
+      const response = await fetch(`${API_BASE}?action=create-spaced-repetition-item`, {
+        method: "POST",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      }
-    );
+        body: JSON.stringify({
+          content: content,
+          item_type: itemType,
+          module_id: moduleId,
+          lesson_id: lessonId,
+          question: question || content,
+          answer: answer || content,
+        }),
+      });
 
-    if (!response.ok) {
-      throw new Error("Errore caricamento risposte corrette");
+      if (response.ok) {
+        safeLog("info", "[RetrievalPractice] Flashcard created");
+      }
+    } catch (error) {
+      safeLog("error", "[RetrievalPractice] Error creating flashcard:", error);
+    }
+  }
+
+  /**
+   * Save flashcard to localStorage (guest users)
+   */
+  saveFlashcardToLocalStorage(content, question, answer, moduleId, lessonId, itemType) {
+    try {
+      const key = `flashcard_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const flashcard = {
+        content: content,
+        question: question || content,
+        answer: answer || content,
+        module_id: moduleId,
+        lesson_id: lessonId,
+        item_type: itemType,
+        created_at: new Date().toISOString(),
+      };
+      localStorage.setItem(key, JSON.stringify(flashcard));
+    } catch (error) {
+      safeLog("error", "[RetrievalPractice] Error saving to localStorage:", error);
+    }
+  }
+
+  /**
+   * Add quiz styles
+   */
+  addQuizStyles() {
+    if (document.getElementById("retrieval-quiz-styles")) {
+      return;
     }
 
-    const { answers } = await response.json();
-    return answers || {};
-  } catch (error) {
-    safeLog("error", "[Retrieval Practice] Errore fetchCorrectAnswers:", error);
-    return {};
+    const style = document.createElement("style");
+    style.id = "retrieval-quiz-styles";
+    style.textContent = `
+      .retrieval-quiz-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+      }
+      .rq-progress {
+        margin-bottom: 2rem;
+      }
+      .rq-progress-bar {
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 0.5rem;
+      }
+      .rq-progress-fill {
+        height: 100%;
+        background: #00C76A;
+        transition: width 0.3s;
+      }
+      .rq-question h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #1f2937;
+      }
+      .rq-hint {
+        color: #666;
+        font-style: italic;
+        margin-top: 0.5rem;
+      }
+      .rq-options {
+        display: grid;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+      .rq-option-btn {
+        padding: 1rem;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        background: white;
+        cursor: pointer;
+        text-align: left;
+        transition: all 0.2s;
+        font-size: 1rem;
+      }
+      .rq-option-btn:hover:not(:disabled) {
+        border-color: #00C76A;
+        background: #f0fdf4;
+      }
+      .rq-option-btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+      .rq-option-btn.correct-answer {
+        border-color: #00C76A;
+        background: #f0fdf4;
+        color: #00C76A;
+        font-weight: 500;
+      }
+      .rq-option-btn.incorrect-answer {
+        border-color: #ef4444;
+        background: #fef2f2;
+        color: #ef4444;
+      }
+      .rq-feedback {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 8px;
+      }
+      .rq-feedback.correct {
+        background: #f0fdf4;
+        color: #00C76A;
+      }
+      .rq-feedback.incorrect {
+        background: #fef2f2;
+        color: #ef4444;
+      }
+      .rq-explanation {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+      }
+      .rq-results {
+        text-align: center;
+        padding: 2rem;
+      }
+      .rq-score-value {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #00C76A;
+        margin: 0;
+      }
+      .rq-score-percentage {
+        font-size: 1.5rem;
+        color: #666;
+        margin: 0.5rem 0;
+      }
+      .rq-feedback-message {
+        margin: 1.5rem 0;
+        font-size: 1.1rem;
+      }
+      .rq-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+      }
+      .rq-retry-btn, .rq-continue-btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.2s;
+      }
+      .rq-retry-btn {
+        background: #e5e7eb;
+        color: #1f2937;
+      }
+      .rq-retry-btn:hover {
+        background: #d1d5db;
+      }
+      .rq-continue-btn {
+        background: #00C76A;
+        color: white;
+      }
+      .rq-continue-btn:hover {
+        background: #00A855;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  /**
+   * Escape HTML
+   */
+  escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  /**
+   * Get auth token
+   */
+  async getAuthToken() {
+    try {
+      const supabase = getSupabaseClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      return session?.access_token || null;
+    } catch (error) {
+      return null;
+    }
   }
 }
 
 /**
- * Get Bloom Taxonomy label
+ * Initialize retrieval practice system
  */
-function getBloomLabel(level) {
-  const labels = {
-    remember: "Ricorda",
-    understand: "Comprendi",
-    apply: "Applica",
-    analyze: "Analizza",
-    evaluate: "Valuta",
-    create: "Crea",
-  };
-  return labels[level] || level;
-}
-
-/**
- * Helper: Get auth token
- */
-async function getAuthToken() {
-  try {
-    const { getToken } = await import("./token-storage.js");
-    return await getToken();
-  } catch {
-    return null;
-  }
+export function initRetrievalPractice() {
+  const rps = new RetrievalPracticeUI();
+  window.RetrievalPracticeUI = rps;
+  safeLog("info", "[RetrievalPractice] System initialized");
+  return rps;
 }

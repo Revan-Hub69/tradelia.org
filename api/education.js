@@ -1880,6 +1880,301 @@ export async function getTrackingPreferences(req, res) {
 }
 
 /**
+ * Save spaced repetition review (SM-2 algorithm)
+ */
+async function saveSpacedRepetitionReview(req, res) {
+  try {
+    const { item_id, quality, review_duration_seconds } = req.body;
+    const user_id = req.user?.id;
+
+    if (!user_id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    if (!item_id || quality === undefined) {
+      return res.status(400).json({ success: false, error: "item_id e quality richiesti" });
+    }
+
+    // Get current item
+    const { data: item, error: itemError } = await supabase
+      .from("spaced_repetition_items")
+      .select("*")
+      .eq("id", item_id)
+      .eq("user_id", user_id)
+      .single();
+
+    if (itemError || !item) {
+      return res.status(404).json({ success: false, error: "Item non trovato" });
+    }
+
+    // Calculate next review using SM-2
+    const { data: sm2Result, error: sm2Error } = await supabase.rpc("calculate_next_review_sm2", {
+      p_quality: quality,
+      p_repetitions: item.repetitions || 0,
+      p_ease_factor: item.ease_factor || 2.5,
+      p_interval_days: item.interval_days || 0,
+    });
+
+    if (sm2Error || !sm2Result || sm2Result.length === 0) {
+      safeLog("error", "[Education] SM-2 error:", sm2Error);
+      return res.status(500).json({ success: false, error: "Errore calcolo prossima revisione" });
+    }
+
+    const nextReview = sm2Result[0];
+
+    // Update item
+    const updateData = {
+      repetitions: nextReview.new_repetitions,
+      ease_factor: nextReview.new_ease_factor,
+      interval_days: nextReview.new_interval_days,
+      next_review_date: nextReview.next_review_date,
+      last_review_date: new Date().toISOString(),
+      total_reviews: (item.total_reviews || 0) + 1,
+      correct_reviews: quality >= 3 ? (item.correct_reviews || 0) + 1 : (item.correct_reviews || 0),
+      average_quality: item.total_reviews
+        ? ((item.average_quality || 0) * item.total_reviews + quality) / (item.total_reviews + 1)
+        : quality,
+    };
+
+    const { error: updateError } = await supabase
+      .from("spaced_repetition_items")
+      .update(updateData)
+      .eq("id", item_id)
+      .eq("user_id", user_id);
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    // Save review record
+    await supabase.from("spaced_repetition_reviews").insert({
+      item_id: item_id,
+      user_id: user_id,
+      quality: quality,
+      review_duration_seconds: review_duration_seconds || null,
+      new_repetitions: nextReview.new_repetitions,
+      new_ease_factor: nextReview.new_ease_factor,
+      new_interval_days: nextReview.new_interval_days,
+      new_next_review_date: nextReview.next_review_date,
+    });
+
+    res.json({ success: true, item: { id: item_id, ...updateData }, next_review: nextReview.next_review_date });
+  } catch (error) {
+    safeLog("error", "[Education] Errore saveSpacedRepetitionReview:", error);
+    res.status(500).json({ success: false, error: "Errore salvataggio revisione" });
+  }
+}
+
+/**
+ * Get flashcards due for review
+ */
+async function getDueFlashcards(req, res) {
+  try {
+    const user_id = req.user?.id;
+    const limit = parseInt(req.query.limit) || 50;
+
+    if (!user_id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    const { data: items, error } = await supabase.rpc("get_due_items", {
+      p_user_id: user_id,
+      p_limit: limit,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    res.json({ success: true, items: items || [], count: items?.length || 0 });
+  } catch (error) {
+    safeLog("error", "[Education] Errore getDueFlashcards:", error);
+    res.status(500).json({ success: false, error: "Errore caricamento flashcards" });
+  }
+}
+
+/**
+ * Create spaced repetition item
+ */
+async function createSpacedRepetitionItem(req, res) {
+  try {
+    const { content, item_type, module_id, lesson_id, question, answer, hint, explanation } = req.body;
+    const user_id = req.user?.id;
+
+    if (!user_id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    if (!content || !item_type || !module_id || !lesson_id) {
+      return res.status(400).json({ success: false, error: "Campi richiesti mancanti" });
+    }
+
+    const { data: item, error } = await supabase
+      .from("spaced_repetition_items")
+      .insert({
+        user_id: user_id,
+        item_type: item_type,
+        module_id: module_id,
+        lesson_id: lesson_id,
+        content: content,
+        question: question || content,
+        answer: answer || content,
+        hint: hint || null,
+        explanation: explanation || null,
+        next_review_date: new Date().toISOString(),
+      })
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    res.json({ success: true, item });
+  } catch (error) {
+    safeLog("error", "[Education] Errore createSpacedRepetitionItem:", error);
+    res.status(500).json({ success: false, error: "Errore creazione item" });
+  }
+}
+
+/**
+ * Update mastery score (adaptive learning)
+ */
+async function updateMastery(req, res) {
+  try {
+    const { module_id, lesson_id, score, total_questions, correct_answers } = req.body;
+    const user_id = req.user?.id;
+
+    if (!user_id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    if (!module_id || !lesson_id || score === undefined) {
+      return res.status(400).json({ success: false, error: "Campi richiesti mancanti" });
+    }
+
+    // Get or create progress
+    const { data: existing } = await supabase
+      .from("adaptive_learning_progress")
+      .select("*")
+      .eq("user_id", user_id)
+      .eq("lesson_id", lesson_id)
+      .single();
+
+    let progressData;
+    if (existing) {
+      const newTotalAttempts = (existing.total_attempts || 0) + 1;
+      const newCorrect = (existing.correct_answers || 0) + (correct_answers || 0);
+      const newIncorrect = (existing.incorrect_answers || 0) + ((total_questions || 0) - (correct_answers || 0));
+      const masteryScore = existing.total_attempts
+        ? ((existing.mastery_score || 0) * existing.total_attempts + score) / (existing.total_attempts + 1)
+        : score;
+
+      let newDifficulty = existing.difficulty_level || 1;
+      if (score >= 90 && existing.difficulty_level < 5) {
+        newDifficulty = Math.min(5, existing.difficulty_level + 1);
+      } else if (score < 60 && existing.difficulty_level > 1) {
+        newDifficulty = Math.max(1, existing.difficulty_level - 1);
+      }
+
+      progressData = {
+        mastery_score: masteryScore,
+        difficulty_level: newDifficulty,
+        total_attempts: newTotalAttempts,
+        correct_answers: newCorrect,
+        incorrect_answers: newIncorrect,
+        last_attempt_date: new Date().toISOString(),
+        mastery_achieved_date:
+          masteryScore >= (existing.mastery_threshold || 80) && !existing.mastery_achieved_date
+            ? new Date().toISOString()
+            : existing.mastery_achieved_date,
+      };
+
+      const { data: updated, error: updateError } = await supabase
+        .from("adaptive_learning_progress")
+        .update(progressData)
+        .eq("id", existing.id)
+        .select()
+        .single();
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      res.json({ success: true, progress: updated, mastery_achieved: masteryScore >= 80 });
+    } else {
+      progressData = {
+        user_id: user_id,
+        module_id: module_id,
+        lesson_id: lesson_id,
+        mastery_score: score,
+        difficulty_level: 1,
+        total_attempts: 1,
+        correct_answers: correct_answers || 0,
+        incorrect_answers: (total_questions || 0) - (correct_answers || 0),
+        first_attempt_date: new Date().toISOString(),
+        last_attempt_date: new Date().toISOString(),
+        mastery_achieved_date: score >= 80 ? new Date().toISOString() : null,
+      };
+
+      const { data: created, error: createError } = await supabase
+        .from("adaptive_learning_progress")
+        .insert(progressData)
+        .select()
+        .single();
+
+      if (createError) {
+        throw createError;
+      }
+
+      res.json({ success: true, progress: created, mastery_achieved: score >= 80 });
+    }
+  } catch (error) {
+    safeLog("error", "[Education] Errore updateMastery:", error);
+    res.status(500).json({ success: false, error: "Errore aggiornamento mastery" });
+  }
+}
+
+/**
+ * Get adaptive difficulty for lesson
+ */
+async function getAdaptiveDifficulty(req, res) {
+  try {
+    const { module_id, lesson_id } = req.query;
+    const user_id = req.user?.id;
+
+    if (!user_id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    if (!module_id || !lesson_id) {
+      return res.status(400).json({ success: false, error: "module_id e lesson_id richiesti" });
+    }
+
+    const { data: progress } = await supabase
+      .from("adaptive_learning_progress")
+      .select("*")
+      .eq("user_id", user_id)
+      .eq("module_id", module_id)
+      .eq("lesson_id", lesson_id)
+      .single();
+
+    res.json({
+      success: true,
+      progress: progress || {
+        mastery_score: 0,
+        difficulty_level: 1,
+        mastery_threshold: 80,
+        total_attempts: 0,
+      },
+    });
+  } catch (error) {
+    safeLog("error", "[Education] Errore getAdaptiveDifficulty:", error);
+    res.status(500).json({ success: false, error: "Errore caricamento difficoltà" });
+  }
+}
+
+/**
  * Main handler (Vercel serverless function)
  */
 export default async function handler(req, res) {
@@ -1970,6 +2265,16 @@ export default async function handler(req, res) {
         return await updateTrackingPreferences(req, res);
       case "get-tracking-preferences":
         return await getTrackingPreferences(req, res);
+      case "save-spaced-repetition":
+        return await saveSpacedRepetitionReview(req, res);
+      case "get-due-flashcards":
+        return await getDueFlashcards(req, res);
+      case "create-spaced-repetition-item":
+        return await createSpacedRepetitionItem(req, res);
+      case "update-mastery":
+        return await updateMastery(req, res);
+      case "get-adaptive-difficulty":
+        return await getAdaptiveDifficulty(req, res);
       default:
         // Log 400 per azione non valida
 

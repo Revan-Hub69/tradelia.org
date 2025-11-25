@@ -1,370 +1,377 @@
 /* eslint-env browser */
 /**
- * Spaced Repetition System
- * Paper: Ebbinghaus (1885), Cepeda et al. (2006)
- * "The Critical Importance of Retrieval for Learning"
- *
- * Implementa curva dell'oblio con ripasso distribuito:
- * - Domande sbagliate: 1, 3, 7, 14, 30 giorni
- * - Domande difficili: 7, 14, 30, 60 giorni
- * - Domande facili: 30, 60, 90 giorni
+ * Spaced Repetition System - Frontend
+ * SM-2 Algorithm Implementation
+ * Best Practice 2025
  */
 
-import { safeLog, escapeHtml } from "./security-utils.js";
+import { safeLog } from "./security-utils.js";
+import { getSupabaseClient } from "./supabase-client.js";
 
 const API_BASE = "/api/education";
 
-// Spaced repetition intervals (giorni) - basato su curva dell'oblio
-const SPACED_INTERVALS = {
-  incorrect: [1, 3, 7, 14, 30], // Domande sbagliate
-  difficult: [7, 14, 30, 60], // Domande difficili (corrette ma > 2 minuti)
-  medium: [14, 30, 60], // Domande medie
-  easy: [30, 60, 90], // Domande facili (< 30 secondi, corrette)
-};
-
 /**
- * Calculate next review date based on performance
- * Paper: Cepeda et al. (2006) - Optimal spacing intervals
+ * Spaced Repetition System - Frontend Component
  */
-export function calculateNextReviewDate(questionId, performance) {
-  const { attempts, correct, avgTime, lastReviewDate } = performance;
-
-  if (!lastReviewDate) {
-    // Prima volta: ripasso dopo 1 giorno se sbagliata, 7 se corretta
-    return correct === 0
-      ? addDays(new Date(), SPACED_INTERVALS.incorrect[0])
-      : addDays(new Date(), SPACED_INTERVALS.difficult[0]);
+export class SpacedRepetitionUI {
+  constructor() {
+    this.currentItem = null;
+    this.reviewStartTime = null;
   }
 
-  const lastReview = new Date(lastReviewDate);
-  const daysSinceLastReview = Math.floor(
-    (Date.now() - lastReview.getTime()) / (1000 * 60 * 60 * 24)
-  );
-  const successRate = attempts > 0 ? correct / attempts : 0;
-
-  // Determina categoria difficoltà
-  let category = "easy";
-  if (successRate < 0.5) {
-    category = "incorrect";
-  } else if (successRate < 0.7 || avgTime > 120000) {
-    // > 2 minuti
-    category = "difficult";
-  } else if (successRate < 0.9) {
-    category = "medium";
-  }
-
-  // Trova intervallo appropriato
-  const intervals = SPACED_INTERVALS[category];
-  const currentIntervalIndex = intervals.findIndex((interval) => daysSinceLastReview < interval);
-
-  if (currentIntervalIndex === -1) {
-    // Superato ultimo intervallo: usa l'ultimo
-    return addDays(new Date(), intervals[intervals.length - 1]);
-  }
-
-  return addDays(new Date(), intervals[currentIntervalIndex]);
-}
-
-/**
- * Get questions due for review today
- */
-export async function getQuestionsDueForReview() {
-  try {
-    const token = await getAuthToken();
-    if (!token) {
-      return [];
-    }
-
-    const response = await fetch(`${API_BASE}?action=spaced-repetition-due`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Errore caricamento ripasso");
-    }
-
-    const { questions } = await response.json();
-    return questions || [];
-  } catch (error) {
-    safeLog("error", "[Spaced Repetition] Errore getQuestionsDueForReview:", error);
-    return [];
-  }
-}
-
-/**
- * Render spaced repetition dashboard HTML (internal)
- */
-function renderSpacedRepetitionDashboardHTML(questions) {
-  const dueToday = questions.filter((q) => q.due_today);
-  const dueSoon = questions.filter((q) => !q.due_today && q.days_until_due <= 3);
-
-  return `
-    <div class="spaced-repetition-dashboard">
-      <div class="sr-header">
-        <h2>Ripasso Distribuito</h2>
-        <p class="sr-description">
-          Sistema di ripasso basato sulla curva dell'oblio (Ebbinghaus, 1885).
-          Il ripasso distribuito aumenta la retention del 40-60% rispetto al ripasso concentrato.
-        </p>
-      </div>
-
-      ${
-        dueToday.length > 0
-          ? `
-        <div class="sr-section">
-          <h3 class="sr-section-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
-            </svg>
-            Da Ripassare Oggi (${dueToday.length})
-          </h3>
-          <div class="sr-questions-list">
-            ${dueToday.map((q) => renderQuestionCard(q, true)).join("")}
-          </div>
-        </div>
-      `
-          : `
-        <div class="sr-empty-state">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="48" height="48">
-            <circle cx="12" cy="12" r="10"/>
-            <polyline points="9 12 11 14 15 10"/>
-          </svg>
-          <h3>Nessun ripasso previsto oggi!</h3>
-          <p>Ottimo lavoro, sei in pari con il ripasso distribuito.</p>
-        </div>
-      `
-      }
-
-      ${
-        dueSoon.length > 0
-          ? `
-        <div class="sr-section">
-          <h3 class="sr-section-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
-            </svg>
-            In Arrivo (${dueSoon.length} - prossimi 3 giorni)
-          </h3>
-          <div class="sr-questions-list">
-            ${dueSoon.map((q) => renderQuestionCard(q, false)).join("")}
-          </div>
-        </div>
-      `
-          : ""
-      }
-
-      <div class="sr-stats">
-        <div class="sr-stat-card">
-          <div class="sr-stat-value">${questions.length}</div>
-          <div class="sr-stat-label">Domande in Ripasso</div>
-        </div>
-        <div class="sr-stat-card">
-          <div class="sr-stat-value">${dueToday.length}</div>
-          <div class="sr-stat-label">Da Ripassare Oggi</div>
-        </div>
-        <div class="sr-stat-card">
-          <div class="sr-stat-value">${questions.filter((q) => q.success_rate >= 0.8).length}</div>
-          <div class="sr-stat-label">Domande Padroneggiate</div>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-/**
- * Render question card for spaced repetition
- */
-function renderQuestionCard(question, isDueToday) {
-  const successRate = question.success_rate || 0;
-  const successRatePct = Math.round(successRate * 100);
-  const difficultyColor =
-    successRate < 0.5
-      ? "var(--edu-error)"
-      : successRate < 0.7
-        ? "var(--edu-warning)"
-        : "var(--edu-success)";
-
-  return `
-    <div class="sr-question-card ${isDueToday ? "due-today" : ""}">
-      <div class="sr-question-header">
-        <div class="sr-question-meta">
-          <span class="sr-question-module">${escapeHtml(question.module_title || "Modulo")}</span>
-          ${
-            isDueToday
-              ? `
-            <span class="sr-due-badge">Da ripassare oggi</span>
-          `
-              : `
-            <span class="sr-due-soon">Tra ${question.days_until_due} giorni</span>
-          `
-          }
-        </div>
-        <div class="sr-question-stats">
-          <span class="sr-success-rate" style="color: ${difficultyColor}">
-            ${successRatePct}% successo
-          </span>
-        </div>
-      </div>
-      <div class="sr-question-text">
-        ${escapeHtml(question.question_text || question.text || "")}
-      </div>
-      <div class="sr-question-actions">
-        <button class="btn btn-primary btn-sm" 
-                data-action="start-review" 
-                data-question-id="${question.id || question.question_id}">
-          ${isDueToday ? "Inizia Ripasso" : "Anticipa Ripasso"}
-        </button>
-      </div>
-    </div>
-  `;
-}
-
-/**
- * Start review session for a question
- */
-async function startReviewSession(questionId) {
-  try {
-    const container = document.getElementById("education-container");
+  /**
+   * Initialize spaced repetition UI
+   */
+  async init(container) {
     if (!container) {
-      safeLog("warn", "[Spaced Repetition] Container non trovato");
+      safeLog("warn", "[SpacedRepetition] Container not found");
       return;
     }
 
-    // Navigate to retrieval practice session
-    window.history.pushState(
-      { view: "retrieval-practice", questionId },
-      "",
-      `#education/review/${questionId}`
-    );
+    // Load due items
+    await this.loadDueItems(container);
+  }
 
-    // Import and init retrieval practice
-    const { initRetrievalPractice } = await import("./education-retrieval-practice.js");
-    await initRetrievalPractice(questionId, { spacedRepetition: true });
-  } catch (error) {
-    safeLog("error", "[Spaced Repetition] Errore startReviewSession:", error);
-    if (window.showToast) {
-      window.showToast("Errore avvio ripasso", "error");
+  /**
+   * Load items due for review
+   */
+  async loadDueItems(container) {
+    try {
+      const token = await this.getAuthToken();
+      
+      if (!token) {
+        container.innerHTML = `
+          <div class="education-message">
+            <p>Accedi per utilizzare il sistema di spaced repetition</p>
+          </div>
+        `;
+        return;
+      }
+
+      const response = await fetch(`${API_BASE}?action=get-due-flashcards&limit=50`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to load flashcards");
+      }
+
+      const data = await response.json();
+      const items = data.items || [];
+
+      if (items.length === 0) {
+        container.innerHTML = `
+          <div class="education-message">
+            <h3>🎉 Ottimo lavoro!</h3>
+            <p>Non hai item da rivedere oggi.</p>
+            <p>Ritorneremo domani per nuove revisioni.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Show first item
+      this.currentItem = items[0];
+      this.showFlashcard(this.currentItem, container, items.length);
+    } catch (error) {
+      safeLog("error", "[SpacedRepetition] Error loading items:", error);
+      container.innerHTML = `
+        <div class="education-error">
+          <p>Errore nel caricamento delle flashcard. Riprova più tardi.</p>
+        </div>
+      `;
     }
   }
-}
 
-/**
- * Update question performance after review
- */
-export async function updateQuestionReview(questionId, isCorrect, timeSpent) {
-  try {
-    const token = await getAuthToken();
-    if (!token) {
+  /**
+   * Show flashcard
+   */
+  showFlashcard(item, container, totalItems = 1) {
+    this.reviewStartTime = Date.now();
+    const currentIndex = 1; // Simplified for now
+
+    container.innerHTML = `
+      <div class="spaced-repetition-container">
+        <div class="sr-progress">
+          <span>Item ${currentIndex} di ${totalItems}</span>
+        </div>
+        
+        <div class="sr-flashcard" data-item-id="${item.id}">
+          <div class="sr-flashcard-front">
+            <div class="sr-question">
+              <h3>${this.escapeHtml(item.question)}</h3>
+              ${item.hint ? `<p class="sr-hint">💡 ${this.escapeHtml(item.hint)}</p>` : ""}
+            </div>
+            <button class="sr-reveal-btn" onclick="window.SpacedRepetitionUI.revealAnswer()">
+              Mostra Risposta
+            </button>
+          </div>
+          
+          <div class="sr-flashcard-back" style="display: none;">
+            <div class="sr-answer">
+              <h3>Risposta:</h3>
+              <p>${this.escapeHtml(item.answer)}</p>
+              ${item.explanation ? `<div class="sr-explanation"><p>${this.escapeHtml(item.explanation)}</p></div>` : ""}
+            </div>
+            
+            <div class="sr-rating">
+              <p><strong>Quanto bene ricordavi?</strong></p>
+              <div class="sr-rating-buttons">
+                <button class="sr-rating-btn" data-quality="0" onclick="window.SpacedRepetitionUI.rateRecall(0)">
+                  ❌ Niente
+                </button>
+                <button class="sr-rating-btn" data-quality="1" onclick="window.SpacedRepetitionUI.rateRecall(1)">
+                  🟥 Difficile
+                </button>
+                <button class="sr-rating-btn" data-quality="2" onclick="window.SpacedRepetitionUI.rateRecall(2)">
+                  🟨 Parziale
+                </button>
+                <button class="sr-rating-btn" data-quality="3" onclick="window.SpacedRepetitionUI.rateRecall(3)">
+                  🟩 Corretto
+                </button>
+                <button class="sr-rating-btn" data-quality="4" onclick="window.SpacedRepetitionUI.rateRecall(4)">
+                  🟦 Facile
+                </button>
+                <button class="sr-rating-btn" data-quality="5" onclick="window.SpacedRepetitionUI.rateRecall(5)">
+                  ⭐ Perfetto
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    this.addStyles();
+  }
+
+  /**
+   * Reveal answer
+   */
+  revealAnswer() {
+    const flashcard = document.querySelector(".sr-flashcard");
+    if (!flashcard) return;
+
+    const front = flashcard.querySelector(".sr-flashcard-front");
+    const back = flashcard.querySelector(".sr-flashcard-back");
+
+    if (front && back) {
+      front.style.display = "none";
+      back.style.display = "block";
+    }
+  }
+
+  /**
+   * Rate recall quality (0-5)
+   */
+  async rateRecall(quality) {
+    if (!this.currentItem) {
+      safeLog("error", "[SpacedRepetition] No current item");
       return;
     }
 
-    const response = await fetch(`${API_BASE}?action=update-spaced-repetition`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        questionId,
-        isCorrect,
-        timeSpent,
-        reviewedAt: new Date().toISOString(),
-      }),
-    });
+    const reviewDuration = Math.floor((Date.now() - this.reviewStartTime) / 1000);
 
-    if (!response.ok) {
-      throw new Error("Errore aggiornamento ripasso");
+    try {
+      const token = await this.getAuthToken();
+      if (!token) {
+        safeLog("warn", "[SpacedRepetition] Not authenticated");
+        return;
+      }
+
+      const response = await fetch(`${API_BASE}?action=save-spaced-repetition`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          item_id: this.currentItem.id,
+          item_type: this.currentItem.item_type,
+          module_id: this.currentItem.module_id,
+          lesson_id: this.currentItem.lesson_id,
+          quality: quality,
+          review_duration_seconds: reviewDuration,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save review");
+      }
+
+      // Show feedback
+      this.showFeedback(quality);
+
+      // Load next item after delay
+      setTimeout(() => {
+        const container = document.getElementById("spaced-repetition-container") || 
+                         document.querySelector(".spaced-repetition-container")?.parentElement;
+        if (container) {
+          this.loadDueItems(container);
+        }
+      }, 2000);
+    } catch (error) {
+      safeLog("error", "[SpacedRepetition] Error rating recall:", error);
+      alert("Errore nel salvataggio. Riprova.");
+    }
+  }
+
+  /**
+   * Show feedback
+   */
+  showFeedback(quality) {
+    const flashcard = document.querySelector(".sr-flashcard");
+    if (!flashcard) return;
+
+    const feedbackMessages = {
+      0: "Nessun problema! Ripasseremo presto.",
+      1: "Difficile, ma ci siamo! Ripasseremo tra poco.",
+      2: "Quasi! Ripasseremo tra qualche giorno.",
+      3: "Ottimo! Ripasseremo tra una settimana.",
+      4: "Perfetto! Ripasseremo tra due settimane.",
+      5: "Eccellente! Ripasseremo tra un mese.",
+    };
+
+    const feedback = document.createElement("div");
+    feedback.className = "sr-feedback";
+    feedback.innerHTML = `<p>${feedbackMessages[quality]}</p>`;
+    flashcard.appendChild(feedback);
+  }
+
+  /**
+   * Add styles
+   */
+  addStyles() {
+    if (document.getElementById("spaced-repetition-styles")) {
+      return;
     }
 
-    return await response.json();
-  } catch (error) {
-    safeLog("error", "[Spaced Repetition] Errore updateQuestionReview:", error);
-    throw error;
+    const style = document.createElement("style");
+    style.id = "spaced-repetition-styles";
+    style.textContent = `
+      .spaced-repetition-container {
+        max-width: 700px;
+        margin: 2rem auto;
+      }
+      .sr-progress {
+        text-align: center;
+        color: #666;
+        margin-bottom: 1rem;
+      }
+      .sr-flashcard {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        min-height: 300px;
+      }
+      .sr-question h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #1f2937;
+      }
+      .sr-hint {
+        color: #666;
+        font-style: italic;
+        margin-top: 0.5rem;
+      }
+      .sr-reveal-btn {
+        background: #00C76A;
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        margin-top: 1.5rem;
+        width: 100%;
+        transition: background 0.2s;
+      }
+      .sr-reveal-btn:hover {
+        background: #00A855;
+      }
+      .sr-answer {
+        margin-bottom: 2rem;
+      }
+      .sr-answer h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: #1f2937;
+      }
+      .sr-explanation {
+        background: #f5f5f5;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+      }
+      .sr-rating {
+        margin-top: 2rem;
+      }
+      .sr-rating p {
+        margin-bottom: 1rem;
+        font-weight: 500;
+      }
+      .sr-rating-buttons {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+      }
+      .sr-rating-btn {
+        padding: 0.75rem;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        background: white;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+      }
+      .sr-rating-btn:hover {
+        border-color: #00C76A;
+        background: #f0fdf4;
+      }
+      .sr-feedback {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f0fdf4;
+        border-radius: 8px;
+        text-align: center;
+        color: #00C76A;
+      }
+    `;
+    document.head.appendChild(style);
   }
-}
 
-/**
- * Helper: Add days to date
- */
-function addDays(date, days) {
-  const result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
-}
+  /**
+   * Escape HTML
+   */
+  escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
 
-/**
- * Helper: Get auth token
- */
-async function getAuthToken() {
-  try {
-    const { getToken } = await import("./token-storage.js");
-    return await getToken();
-  } catch (e) {
-    return null;
+  /**
+   * Get auth token
+   */
+  async getAuthToken() {
+    try {
+      const supabase = getSupabaseClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      return session?.access_token || null;
+    } catch (error) {
+      return null;
+    }
   }
 }
 
 /**
  * Initialize spaced repetition system
  */
-export async function initSpacedRepetition() {
-  // Use education container for SPA navigation
-  const container = document.getElementById("education-container");
-  if (!container) {
-    safeLog("warn", "[Spaced Repetition] Container non trovato");
-    return;
-  }
-
-  // Navigate to spaced repetition view
-  window.history.pushState({ view: "spaced-repetition" }, "", "#education/spaced-repetition");
-
-  await loadSpacedRepetition(container);
-}
-
-/**
- * Load spaced repetition dashboard
- */
-async function loadSpacedRepetition(container) {
-  try {
-    const questions = await getQuestionsDueForReview();
-
-    // Add back button
-    const backButton = `
-      <button class="btn btn-secondary btn-sm" data-action="back-to-education" style="margin-bottom: var(--edu-spacing-lg);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
-          <polyline points="15 18 9 12 15 6"/>
-        </svg>
-        Torna alla Formazione
-      </button>
-    `;
-
-    const questionsHtml = renderSpacedRepetitionDashboardHTML(questions);
-    container.innerHTML = backButton + questionsHtml;
-
-    // Bind review buttons
-    container.querySelectorAll("[data-action='start-review']").forEach((btn) => {
-      btn.addEventListener("click", async (e) => {
-        const questionId = btn.dataset.questionId;
-        await startReviewSession(questionId);
-      });
-    });
-
-    // Bind back button
-    container.querySelector("[data-action='back-to-education']")?.addEventListener("click", () => {
-      window.history.pushState({ view: "dashboard" }, "", "#education");
-      import("./education.js").then(({ initEducation }) => initEducation());
-    });
-  } catch (error) {
-    safeLog("error", "[Spaced Repetition] Errore loadSpacedRepetition:", error);
-    container.innerHTML = `
-      <div class="error-state">
-        <h3>Errore caricamento ripasso</h3>
-        <p>Riprova più tardi.</p>
-      </div>
-    `;
-  }
+export function initSpacedRepetition() {
+  const srs = new SpacedRepetitionUI();
+  window.SpacedRepetitionUI = srs;
+  safeLog("info", "[SpacedRepetition] System initialized");
+  return srs;
 }
