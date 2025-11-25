@@ -359,7 +359,7 @@ function createModal() {
                     required
                   />
                   <span>
-                    Accetto la <a href="/privacy.html" target="_blank" rel="noopener noreferrer">privacy policy</a>
+                    Accetto la <button type="button" class="link-button" onclick="if(window.openLegalOverlay){window.openLegalOverlay('privacy',false);}else{setTimeout(()=>{if(window.openLegalOverlay)window.openLegalOverlay('privacy',false);},400);}" style="background:none;border:none;padding:0;color:inherit;text-decoration:underline;cursor:pointer;font:inherit;">privacy policy</button>
                   </span>
                 </label>
               </div>

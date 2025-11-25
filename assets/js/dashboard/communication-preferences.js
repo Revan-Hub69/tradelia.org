@@ -169,7 +169,7 @@ function createModal() {
               <strong>Privacy e Consenso (GDPR)</strong><br />
               I tuoi dati sono utilizzati esclusivamente per inviare le comunicazioni selezionate.
               Puoi revocare il consenso in qualsiasi momento da questa pagina.
-              <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Leggi la privacy policy</a>.
+              <button type="button" class="link-button" onclick="if(window.openLegalOverlay){window.openLegalOverlay('privacy',false);}else{setTimeout(()=>{if(window.openLegalOverlay)window.openLegalOverlay('privacy',false);},400);}" style="background:none;border:none;padding:0;color:inherit;text-decoration:underline;cursor:pointer;font:inherit;">Leggi la privacy policy</button>.
             </p>
           </div>
         </form>

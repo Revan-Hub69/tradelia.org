@@ -46,12 +46,17 @@ function render(data = {}) {
     <div class="container">
       <section class="ftr-grid">
         <div class="ftr-col">
-          <h3 class="ftr-head">
-            <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 3h16v18H4z"/><path d="M8 7h8M8 11h8M8 15h6"/>
-            </svg>
-            <span>Tradelia AI</span>
-          </h3>
+          <div class="ftr-head">
+            <a href="/index.html" class="ftr-logo-link" aria-label="Tradelia AI - Homepage">
+              <img src="/logos/tradelia-logo.svg" alt="Tradelia AI" class="ftr-logo" width="240" height="60" style="display: block; height: 44px; width: auto; max-width: 260px; object-fit: contain;" />
+            </a>
+            <span class="ftr-logo-fallback" style="display: none !important;">
+              <svg class="ico ico-lg" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 3h16v18H4z"/><path d="M8 7h8M8 11h8M8 15h6"/>
+              </svg>
+              <span>Tradelia AI</span>
+            </span>
+          </div>
           <p>
             Tradelia AI è un progetto indipendente che pubblica analisi sui mercati basate su framework AI proprietari e documentazione trasparente.
           </p>
@@ -87,9 +92,11 @@ function render(data = {}) {
             <a href="/terms.html" aria-label="Vai ai termini e condizioni" data-i18n="nav.terms">Termini e Condizioni</a>
             <a href="/refund.html" aria-label="Vai alla policy di rimborso" data-i18n="nav.refund">Policy di Rimborso</a>
           </div>
-          <div style="margin-top: var(--sp-3);">
+          <div style="margin-top: var(--sp-3); display: flex; flex-wrap: wrap; gap: var(--sp-2);">
+            <button id="btn-mifid-open" class="btn btn-sm" type="button" aria-label="Apri informativa MiFID" data-i18n="mifid.banner.mifid">MiFID</button>
             <button id="btn-privacy-open" class="btn btn-sm" type="button" aria-label="Apri informativa privacy" data-i18n="nav.privacy">Privacy</button>
-            <button id="btn-mifid-open" class="btn btn-sm" type="button" aria-label="Apri informativa MiFID" data-i18n="mifid.banner.mifid">Informativa MiFID</button>
+            <button id="btn-cookie-open" class="btn btn-sm" type="button" aria-label="Apri informativa cookie">Cookie</button>
+            <button id="btn-terms-open" class="btn btn-sm" type="button" aria-label="Apri termini e condizioni" data-i18n="nav.terms">Termini</button>
           </div>
         </div>
 
@@ -167,6 +174,30 @@ function mount(containerEl) {
   // (verranno mostrati solo quando update() viene chiamata con dati reali)
   setTimeout(() => {
     update({});
+    // Force logo visibility after mount - Best Practice 2025
+    const logo = node.querySelector('.ftr-logo');
+    const logoLink = node.querySelector('.ftr-logo-link');
+    if (logo) {
+      logo.style.display = 'block';
+      logo.style.visibility = 'visible';
+      logo.style.opacity = '1';
+      logo.style.height = '44px';
+      logo.style.width = 'auto';
+      logo.style.maxWidth = '260px';
+      logo.style.objectFit = 'contain';
+      // Force reload if not loaded
+      if (!logo.complete || logo.naturalHeight === 0) {
+        const src = logo.src;
+        logo.src = '';
+        setTimeout(() => {
+          logo.src = src + '?v=' + Date.now();
+        }, 100);
+      }
+    }
+    if (logoLink) {
+      logoLink.style.display = 'inline-block';
+      logoLink.style.textDecoration = 'none';
+    }
   }, 0);
 
   Logger.debug('SiteFooter', 'Footer montato');
@@ -202,8 +233,13 @@ function bindLegalButtons() {
       });
     };
 
-    attachHandler(btnPrivacy, 'privacy');
+    const btnCookie = document.getElementById('btn-cookie-open');
+    const btnTerms = document.getElementById('btn-terms-open');
+
     attachHandler(btnMifid, 'mifid');
+    attachHandler(btnPrivacy, 'privacy');
+    attachHandler(btnCookie, 'cookie');
+    attachHandler(btnTerms, 'terms');
 
     Logger.debug('SiteFooter', 'Pulsanti legali collegati via openLegalOverlay');
   }, 150);

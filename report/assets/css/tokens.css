@@ -2202,14 +2202,76 @@ main#app-root.container {
   font-size: var(--fs-14);
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: var(--sp-3);
+  display: flex !important;
+  align-items: flex-start !important;
+  flex-direction: column !important;
+  gap: var(--sp-3) !important;
   color: var(--ink);
   margin-bottom: var(--sp-4);
   padding-bottom: var(--sp-3);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   position: relative;
+}
+
+/* Override per h3.ftr-head (se presente in altri file) */
+h3.ftr-head,
+.site-footer h3.ftr-head {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+}
+
+/* ===== FOOTER LOGO (SVG) ===== */
+.ftr-logo,
+.site-footer .ftr-logo {
+  display: block !important;
+  height: 44px !important;
+  width: auto !important;
+  max-width: 260px !important;
+  object-fit: contain !important;
+  transition: opacity 0.2s, transform 0.2s !important;
+  filter: brightness(1) !important;
+  margin-bottom: var(--sp-3) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.ftr-logo-fallback,
+.site-footer .ftr-logo-fallback {
+  display: none !important;
+}
+
+.ftr-head:hover .ftr-logo,
+.site-footer .ftr-head:hover .ftr-logo {
+  opacity: 0.9 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Assicura che il logo sia visibile anche se .ftr-head ha h3 */
+.ftr-head img.ftr-logo,
+.site-footer .ftr-head img.ftr-logo,
+.ftr-head .ftr-logo,
+.site-footer .ftr-head .ftr-logo {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: 44px !important;
+  width: auto !important;
+  max-width: 260px !important;
+}
+
+/* Link wrapper per logo footer */
+.ftr-logo-link,
+.site-footer .ftr-logo-link {
+  display: inline-block !important;
+  text-decoration: none !important;
+  transition: opacity 0.2s, transform 0.2s !important;
+}
+
+.ftr-logo-link:hover,
+.site-footer .ftr-logo-link:hover {
+  opacity: 0.9 !important;
+  transform: translateY(-1px) !important;
 }
 
 .ftr-head::after {
