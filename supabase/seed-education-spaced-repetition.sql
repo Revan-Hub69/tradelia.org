@@ -85,7 +85,11 @@ RETURNS TABLE (
   new_ease_factor DECIMAL,
   new_interval_days INTEGER,
   next_review_date TIMESTAMPTZ
-) AS $$
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
 DECLARE
   v_new_ease_factor DECIMAL(3,2);
   v_new_repetitions INTEGER;
@@ -117,7 +121,7 @@ BEGIN
     v_new_interval,
     NOW() + (v_new_interval || ' days')::INTERVAL;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- Function: Get due items
 CREATE OR REPLACE FUNCTION get_due_items(p_user_id UUID, p_limit INTEGER DEFAULT 50)
@@ -133,14 +137,18 @@ RETURNS TABLE (
   repetitions INTEGER,
   ease_factor DECIMAL,
   next_review_date TIMESTAMPTZ
-) AS $$
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
 BEGIN
   RETURN QUERY
   SELECT
     sri.id, sri.item_type, sri.module_id, sri.lesson_id,
     sri.question, sri.answer, sri.hint, sri.explanation,
     sri.repetitions, sri.ease_factor, sri.next_review_date
-  FROM spaced_repetition_items sri
+  FROM public.spaced_repetition_items sri
   WHERE sri.user_id = p_user_id
     AND (sri.next_review_date IS NULL OR sri.next_review_date <= NOW())
   ORDER BY 
@@ -148,7 +156,7 @@ BEGIN
     sri.next_review_date ASC
   LIMIT p_limit;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- RLS Policies
 ALTER TABLE spaced_repetition_items ENABLE ROW LEVEL SECURITY;
