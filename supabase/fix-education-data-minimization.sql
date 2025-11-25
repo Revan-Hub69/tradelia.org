@@ -106,67 +106,95 @@ CREATE POLICY "Users can manage own tracking preferences"
 CREATE OR REPLACE FUNCTION delete_user_education_data(p_user_id UUID)
 RETURNS JSONB AS $$
 DECLARE
-  v_deleted JSONB := '{}'::jsonb;
+  v_test_attempts INTEGER;
+  v_lesson_progress INTEGER;
+  v_module_progress INTEGER;
+  v_xp_transactions INTEGER;
+  v_badges INTEGER;
+  v_stats INTEGER;
+  v_streaks INTEGER;
+  v_achievements INTEGER;
+  v_quests INTEGER;
+  v_reflections INTEGER;
+  v_spaced_rep INTEGER;
+  v_quiz_attempts INTEGER;
+  v_question_perf INTEGER;
+  v_tracking_prefs INTEGER;
 BEGIN
   -- Elimina test attempts
   DELETE FROM education_user_test_attempts WHERE user_id = p_user_id;
-  GET DIAGNOSTICS v_deleted = jsonb_build_object('test_attempts', ROW_COUNT);
+  GET DIAGNOSTICS v_test_attempts = ROW_COUNT;
 
   -- Elimina lesson progress
   DELETE FROM education_user_lesson_progress WHERE user_id = p_user_id;
-  v_deleted := v_deleted || jsonb_build_object('lesson_progress', ROW_COUNT);
+  GET DIAGNOSTICS v_lesson_progress = ROW_COUNT;
 
   -- Elimina module progress
   DELETE FROM education_user_progress WHERE user_id = p_user_id;
-  v_deleted := v_deleted || jsonb_build_object('module_progress', ROW_COUNT);
+  GET DIAGNOSTICS v_module_progress = ROW_COUNT;
 
   -- Elimina XP transactions
   DELETE FROM education_xp_transactions WHERE user_id = p_user_id;
-  v_deleted := v_deleted || jsonb_build_object('xp_transactions', ROW_COUNT);
+  GET DIAGNOSTICS v_xp_transactions = ROW_COUNT;
 
   -- Elimina badges
   DELETE FROM education_user_badges WHERE user_id = p_user_id;
-  v_deleted := v_deleted || jsonb_build_object('badges', ROW_COUNT);
+  GET DIAGNOSTICS v_badges = ROW_COUNT;
 
   -- Elimina stats
   DELETE FROM education_user_stats WHERE user_id = p_user_id;
-  v_deleted := v_deleted || jsonb_build_object('stats', ROW_COUNT);
+  GET DIAGNOSTICS v_stats = ROW_COUNT;
 
   -- Elimina streaks
   DELETE FROM education_user_streaks WHERE user_id = p_user_id;
-  v_deleted := v_deleted || jsonb_build_object('streaks', ROW_COUNT);
+  GET DIAGNOSTICS v_streaks = ROW_COUNT;
 
   -- Elimina achievements
   DELETE FROM education_user_achievements WHERE user_id = p_user_id;
-  v_deleted := v_deleted || jsonb_build_object('achievements', ROW_COUNT);
+  GET DIAGNOSTICS v_achievements = ROW_COUNT;
 
   -- Elimina quests
   DELETE FROM education_user_quests WHERE user_id = p_user_id;
-  v_deleted := v_deleted || jsonb_build_object('quests', ROW_COUNT);
+  GET DIAGNOSTICS v_quests = ROW_COUNT;
 
   -- Elimina reflections
   DELETE FROM education_user_reflections WHERE user_id = p_user_id;
-  v_deleted := v_deleted || jsonb_build_object('reflections', ROW_COUNT);
+  GET DIAGNOSTICS v_reflections = ROW_COUNT;
 
   -- Elimina spaced repetition
   DELETE FROM education_spaced_repetition WHERE user_id = p_user_id;
-  v_deleted := v_deleted || jsonb_build_object('spaced_repetition', ROW_COUNT);
+  GET DIAGNOSTICS v_spaced_rep = ROW_COUNT;
 
   -- Elimina lesson quiz attempts
   DELETE FROM education_user_lesson_quiz_attempts WHERE user_id = p_user_id;
-  v_deleted := v_deleted || jsonb_build_object('lesson_quiz_attempts', ROW_COUNT);
+  GET DIAGNOSTICS v_quiz_attempts = ROW_COUNT;
 
   -- Elimina question performance
   DELETE FROM education_question_performance WHERE user_id = p_user_id;
-  v_deleted := v_deleted || jsonb_build_object('question_performance', ROW_COUNT);
+  GET DIAGNOSTICS v_question_perf = ROW_COUNT;
 
   -- Elimina tracking preferences
   DELETE FROM education_user_tracking_preferences WHERE user_id = p_user_id;
-  v_deleted := v_deleted || jsonb_build_object('tracking_preferences', ROW_COUNT);
+  GET DIAGNOSTICS v_tracking_prefs = ROW_COUNT;
 
   RETURN jsonb_build_object(
     'success', true,
-    'deleted', v_deleted,
+    'deleted', jsonb_build_object(
+      'test_attempts', v_test_attempts,
+      'lesson_progress', v_lesson_progress,
+      'module_progress', v_module_progress,
+      'xp_transactions', v_xp_transactions,
+      'badges', v_badges,
+      'stats', v_stats,
+      'streaks', v_streaks,
+      'achievements', v_achievements,
+      'quests', v_quests,
+      'reflections', v_reflections,
+      'spaced_repetition', v_spaced_rep,
+      'lesson_quiz_attempts', v_quiz_attempts,
+      'question_performance', v_question_perf,
+      'tracking_preferences', v_tracking_prefs
+    ),
     'message', 'Tutti i dati educativi sono stati eliminati'
   );
 END;
