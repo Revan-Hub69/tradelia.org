@@ -228,9 +228,9 @@ export async function initDashboard() {
   window.addEventListener("hashchange", () => {
     const newHash = window.location.hash.slice(1);
     if (newHash) {
-      showModule(newHash);
+      showModule(newHash, false);
     } else {
-      closeModule();
+      closeModule(false);
     }
   });
 
