@@ -97,6 +97,24 @@ async function initEducation() {
     }
   }
 
+  // Skip link per accessibilità (WCAG 2.1 Level A)
+  if (!document.getElementById("skip-to-main")) {
+    const skipLink = document.createElement("a");
+    skipLink.id = "skip-to-main";
+    skipLink.href = "#education-container";
+    skipLink.className = "skip-link";
+    skipLink.textContent = "Salta alla navigazione principale";
+    skipLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      const target = document.getElementById("education-container");
+      if (target) {
+        target.focus();
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+    document.body.insertBefore(skipLink, document.body.firstChild);
+  }
+
   // Show loading state
   showLoadingState(container);
 
@@ -342,21 +360,21 @@ async function renderEducationDashboard(container, progress) {
     <div class="education-dashboard">
       <!-- Header con stats -->
       <div class="education-header">
-        <div class="education-stats">
-          <div class="stat-card">
-            <div class="stat-value">${stats.current_level}</div>
+        <div class="education-stats" role="region" aria-label="Statistiche apprendimento">
+          <div class="stat-card" role="article" aria-label="Livello corrente: ${stats.current_level}">
+            <div class="stat-value" aria-live="polite" aria-atomic="true">${stats.current_level}</div>
             <div class="stat-label">Livello</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-value">${stats.total_points || 0}</div>
+          <div class="stat-card" role="article" aria-label="Punti totali: ${stats.total_points || 0}">
+            <div class="stat-value" aria-live="polite" aria-atomic="true">${stats.total_points || 0}</div>
             <div class="stat-label">Punti</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-value">${stats.modules_completed || 0}/4</div>
+          <div class="stat-card" role="article" aria-label="Moduli completati: ${stats.modules_completed || 0} su 4">
+            <div class="stat-value" aria-live="polite" aria-atomic="true">${stats.modules_completed || 0}/4</div>
             <div class="stat-label">Moduli</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-value">${stats.current_streak_days || 0}</div>
+          <div class="stat-card" role="article" aria-label="Giorni di streak: ${stats.current_streak_days || 0}">
+            <div class="stat-value" aria-live="polite" aria-atomic="true">${stats.current_streak_days || 0}</div>
             <div class="stat-label">Giorni Streak</div>
           </div>
         </div>
@@ -480,7 +498,7 @@ function renderModuleCard(module, index) {
       </div>
       <div class="module-card-content">
         <h3 class="module-title">${escapeHtml(module.title)}</h3>
-        <p class="module-description">${escapeHtml(module.description || "")}</p>
+        <p class="module-description" id="module-${module.id}-description">${escapeHtml(module.description || "")}</p>
         
         ${
           status === "in_progress" || status === "completed"
@@ -744,13 +762,21 @@ function renderModuleView(module) {
 
   // Breadcrumb navigation (Best Practice: sempre visibile)
   const breadcrumb = `
-    <nav class="education-breadcrumb" aria-label="Breadcrumb">
-      <ol class="breadcrumb-list">
-        <li class="breadcrumb-item">
-          <a href="#education" data-action="back-to-dashboard">Dashboard</a>
+    <nav class="education-breadcrumb" aria-label="Breadcrumb navigation">
+      <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="#education" data-action="back-to-dashboard" itemprop="item">
+            <span itemprop="name">Dashboard</span>
+          </a>
+          <meta itemprop="position" content="1" />
         </li>
-        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
-          ${escapeHtml(module.title)}
+        <li class="breadcrumb-item breadcrumb-current" 
+            aria-current="page"
+            itemprop="itemListElement" 
+            itemscope 
+            itemtype="https://schema.org/ListItem">
+          <span itemprop="name">${escapeHtml(module.title)}</span>
+          <meta itemprop="position" content="2" />
         </li>
       </ol>
     </nav>
