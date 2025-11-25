@@ -427,20 +427,16 @@ function renderModuleCard(module, index) {
     locked: "Bloccato",
   };
 
-  const statusColors = {
-    not_started: "var(--dash-text-muted)",
-    in_progress: "var(--brand-500)",
-    completed: "var(--success)",
-    locked: "var(--dash-text-muted)",
-  };
-
   return `
     <div class="module-card education-module-card ${isLocked ? "locked" : ""}" 
          data-module-id="${module.id}" 
-         data-module-slug="${module.slug}">
+         data-module-slug="${module.slug}"
+         data-status="${status}"
+         role="article"
+         aria-label="Modulo ${index + 1}: ${escapeHtml(module.title)}">
       <div class="module-card-header">
-        <div class="module-number">${index + 1}</div>
-        <div class="module-status-badge" style="background: ${statusColors[status]}">
+        <div class="module-number" aria-hidden="true">${index + 1}</div>
+        <div class="module-status-badge" aria-label="Stato: ${statusLabels[status]}">
           ${statusLabels[status]}
         </div>
       </div>

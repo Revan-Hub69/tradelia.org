@@ -3,9 +3,9 @@
   <head>
     <!-- BEST PRACTICE 2025: Forza tema dark immediatamente per evitare flash -->
     <script>
-      (function() {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        document.documentElement.setAttribute('data-theme-manual', 'true');
+      (function () {
+        document.documentElement.setAttribute("data-theme", "dark");
+        document.documentElement.setAttribute("data-theme-manual", "true");
       })();
     </script>
     <meta charset="UTF-8" />
@@ -70,7 +70,7 @@
     <link rel="preload" href="/logos/tradelia-logo.svg?v=4" as="image" type="image/svg+xml" />
     <link rel="preload" href="/assets/css/homepage-brokers-2025.css" as="style" />
     <link rel="preload" href="/assets/css/global-header.css" as="style" />
-    
+
     <!-- Favicons - Best Practice 2025: Multiple formats for compatibility -->
     <!-- Versione 4 per forzare refresh cache browser -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=4" />
@@ -169,16 +169,8 @@
     <link rel="stylesheet" href="/assets/css/homepage-brokers-2025.css" />
     <link rel="stylesheet" href="/report/assets/css/design-system-academico-2025.css" />
     <!-- Fonts with async loading -->
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-      crossorigin
-    />
-    <link
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
       rel="stylesheet"
@@ -208,7 +200,7 @@
         min-height: 100vh;
         background: var(--surface-page);
         color: var(--ink);
-        font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
+        font-family: var(--ff-sans, "Inter", system-ui, sans-serif);
         padding-top: 64px; /* Spazio per header fixed */
       }
 
@@ -390,7 +382,7 @@
       }
 
       .method-card-list li::before {
-        content: '▸';
+        content: "▸";
         position: absolute;
         left: 0;
         color: var(--brand-500);
@@ -715,7 +707,7 @@
       }
 
       .limit-card ul li::before {
-        content: '';
+        content: "";
         position: absolute;
         left: 0;
         top: 0.55em;
@@ -1084,7 +1076,7 @@
       }
 
       .security-guide-list li::before {
-        content: '•';
+        content: "•";
         position: absolute;
         left: 0;
         color: var(--warn, #ea580c);
@@ -1325,7 +1317,7 @@
       }
       body {
         font-family:
-          'Inter',
+          "Inter",
           system-ui,
           -apple-system,
           Segoe UI,
@@ -1480,10 +1472,10 @@
       }
 
       /* ===== LINK INTERNI (ANCHOR) ===== */
-      a[href^='#'] {
+      a[href^="#"] {
         transition: opacity 0.15s ease;
       }
-      a[href^='#']:active {
+      a[href^="#"]:active {
         opacity: 0.7;
       }
 
@@ -1560,7 +1552,7 @@
         background: var(--surface-card);
       }
 
-      .legal-tab[aria-selected='true'] {
+      .legal-tab[aria-selected="true"] {
         color: var(--ink);
         background: var(--surface-card);
         border-color: var(--br-card);
@@ -2088,8 +2080,9 @@
             </h1>
 
             <p class="hero-description">
-              Percorso formativo gratuito sui mercati finanziari. Impara con tutorial interattivi, quiz e badge.
-              Nessun login richiesto. Completa il foundation per sbloccare i report Pro.
+              Percorso formativo gratuito sui mercati finanziari. Impara con tutorial interattivi,
+              quiz e badge. Nessun login richiesto. Completa il foundation per sbloccare i report
+              Pro.
             </p>
 
             <div class="hero-plan-grid" aria-label="Panoramica servizi Tradelia">
@@ -2211,8 +2204,9 @@
           <div class="section-header">
             <h2 class="section-title" id="chi-siamo-heading">Chi siamo e cosa facciamo</h2>
             <p class="section-description">
-              Tradelia AI offre percorsi formativi sui mercati finanziari basati su metodologie riconosciute (FDM, MLT, PAC).
-              Ogni contenuto ha fonti verificabili e documentazione completa. Ispirato ai principi accademici, pensato per essere accessibile.
+              Tradelia AI offre percorsi formativi sui mercati finanziari basati su metodologie
+              riconosciute (FDM, MLT, PAC). Ogni contenuto ha fonti verificabili e documentazione
+              completa. Ispirato ai principi accademici, pensato per essere accessibile.
             </p>
           </div>
           <div class="value-grid" style="max-width: 900px; margin: 0 auto">
@@ -2220,24 +2214,25 @@
               <span class="badge">Metodo</span>
               <strong>Framework AI documentati</strong>
               <span
-                >Percorsi formativi basati su metodologie riconosciute (FDM, MLT, PAC). Ogni modulo include
-                tutorial interattivi, materiali verificabili e riferimenti alle fonti.</span
+                >Percorsi formativi basati su metodologie riconosciute (FDM, MLT, PAC). Ogni modulo
+                include tutorial interattivi, materiali verificabili e riferimenti alle fonti.</span
               >
             </article>
             <article class="value-card">
               <span class="badge">Trasparenza</span>
               <strong>Fonti verificabili</strong>
               <span
-                >Tutti i materiali si basano su dati pubblici verificabili. Ogni contenuto indica le fonti utilizzate
-                e documenta i limiti di ogni metodologia.</span
+                >Tutti i materiali si basano su dati pubblici verificabili. Ogni contenuto indica le
+                fonti utilizzate e documenta i limiti di ogni metodologia.</span
               >
             </article>
             <article class="value-card">
               <span class="badge">Educativo</span>
               <strong>Nessun segnale operativo</strong>
               <span
-                >Materiale informativo e didattico, conforme MiFID II. Non è consulenza finanziaria né ricerca certificata.
-                Ogni analisi include i limiti della metodologia utilizzata.</span
+                >Materiale informativo e didattico, conforme MiFID II. Non è consulenza finanziaria
+                né ricerca certificata. Ogni analisi include i limiti della metodologia
+                utilizzata.</span
               >
             </article>
           </div>
@@ -2254,18 +2249,15 @@
           <div class="section-header">
             <h2 class="section-title" id="percorsi-heading">Percorsi formativi</h2>
             <p class="section-description">
-              Percorsi formativi organizzati per un apprendimento progressivo. Ogni modulo include tutorial interattivi,
-              esercizi pratici e documentazione completa. Parti dalle basi e avanza gradualmente.
+              Percorsi formativi organizzati per un apprendimento progressivo. Ogni modulo include
+              tutorial interattivi, esercizi pratici e documentazione completa. Parti dalle basi e
+              avanza gradualmente.
             </p>
           </div>
 
           <div class="value-grid" style="max-width: 1000px; margin: 0 auto">
             <article class="value-card">
-              <svg
-                class="ico value-card-icon"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
+              <svg class="ico value-card-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   d="M12 2L2 7l10 5 10-5-10-5z"
                   stroke="currentColor"
@@ -2281,17 +2273,13 @@
               </svg>
               <strong>Tutorial interattivi</strong>
               <span
-                >Guide passo-passo con esempi pratici e esercizi. Impara facendo, con esercitazioni che ti aiutano
-                ad applicare le metodologie nella pratica.</span
+                >Guide passo-passo con esempi pratici e esercizi. Impara facendo, con esercitazioni
+                che ti aiutano ad applicare le metodologie nella pratica.</span
               >
             </article>
 
             <article class="value-card">
-              <svg
-                class="ico value-card-icon"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
+              <svg class="ico value-card-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"
                   stroke="currentColor"
@@ -2313,17 +2301,13 @@
               </svg>
               <strong>Documentazione completa</strong>
               <span
-                >Riferimenti selezionati e documentazione completa per ogni argomento. Trovi sempre le fonti utilizzate
-                e puoi approfondire con i riferimenti forniti.</span
+                >Riferimenti selezionati e documentazione completa per ogni argomento. Trovi sempre
+                le fonti utilizzate e puoi approfondire con i riferimenti forniti.</span
               >
             </article>
 
             <article class="value-card">
-              <svg
-                class="ico value-card-icon"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
+              <svg class="ico value-card-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   d="M12 2L2 7l10 5 10-5-10-5z"
                   stroke="currentColor"
@@ -2340,17 +2324,15 @@
               </svg>
               <strong>Metodo strutturato</strong>
               <span
-                >Approfondisci FDM, MLT e PAC con percorsi tematici che ti guidano dall'introduzione teorica
-                all'applicazione pratica. Ogni percorso parte dalle basi e ti accompagna gradualmente verso argomenti più avanzati.</span
+                >Approfondisci FDM, MLT e PAC con percorsi tematici che ti guidano dall'introduzione
+                teorica all'applicazione pratica. Ogni percorso parte dalle basi e ti accompagna
+                gradualmente verso argomenti più avanzati.</span
               >
             </article>
           </div>
 
           <div class="section-cta">
-            <a
-              href="/dashboard.html#education"
-              class="btn btn-primary btn-with-icon"
-            >
+            <a href="/dashboard.html#education" class="btn btn-primary btn-with-icon">
               <span>Inizia il percorso formativo gratuito</span>
               <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
                 <path
@@ -2366,7 +2348,6 @@
           </div>
         </div>
       </section>
-
     </main>
 
     <!-- Back to top (mobile-first) -->
@@ -2452,16 +2433,16 @@
 
     <script>
       (function cardReveal() {
-        if (!('IntersectionObserver' in window)) return;
+        if (!("IntersectionObserver" in window)) return;
         const reduceMotion =
-          window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         if (reduceMotion) return; // Skip animations se l'utente preferisce motion ridotto
 
         // Cards con stagger effect
         const cards = document.querySelectorAll(
-          '.hero-feature, .audience-card, .value-card, .service-card, .testimonial-card, .plan-card'
+          ".hero-feature, .audience-card, .value-card, .service-card, .testimonial-card, .plan-card"
         );
-        const sectionHeaders = document.querySelectorAll('.section-header');
+        const sectionHeaders = document.querySelectorAll(".section-header");
 
         // Observer per cards con stagger
         const cardObserver = new IntersectionObserver(
@@ -2470,7 +2451,7 @@
               if (entry.isIntersecting) {
                 setTimeout(
                   () => {
-                    entry.target.classList.add('has-entered');
+                    entry.target.classList.add("has-entered");
                     cardObserver.unobserve(entry.target);
                   },
                   (index % 3) * 50
@@ -2478,7 +2459,7 @@
               }
             });
           },
-          { threshold: 0.1, rootMargin: '0px 0px -10% 0px' }
+          { threshold: 0.1, rootMargin: "0px 0px -10% 0px" }
         );
 
         cards.forEach((card) => cardObserver.observe(card));
@@ -2488,12 +2469,12 @@
           (entries) => {
             entries.forEach((entry) => {
               if (entry.isIntersecting) {
-                entry.target.classList.add('has-entered');
+                entry.target.classList.add("has-entered");
                 headerObserver.unobserve(entry.target);
               }
             });
           },
-          { threshold: 0.2, rootMargin: '0px 0px -15% 0px' }
+          { threshold: 0.2, rootMargin: "0px 0px -15% 0px" }
         );
 
         sectionHeaders.forEach((header) => headerObserver.observe(header));
@@ -2501,7 +2482,7 @@
         // Parallax leggero per sezioni (solo desktop, molto discreto)
         if (window.innerWidth >= 768) {
           let ticking = false;
-          const parallaxSections = document.querySelectorAll('.section-alt, .section-contrast');
+          const parallaxSections = document.querySelectorAll(".section-alt, .section-contrast");
 
           const updateParallax = () => {
             const scrollY = window.scrollY;
@@ -2517,7 +2498,7 @@
           };
 
           window.addEventListener(
-            'scroll',
+            "scroll",
             () => {
               if (!ticking) {
                 window.requestAnimationFrame(updateParallax);
@@ -2530,12 +2511,12 @@
       })();
 
       (function scrollProgress() {
-        const progressBar = document.getElementById('scroll-progress');
+        const progressBar = document.getElementById("scroll-progress");
         if (!progressBar) return;
         const reduceMotion =
-          window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         if (reduceMotion) {
-          progressBar.style.display = 'none';
+          progressBar.style.display = "none";
           return;
         }
 
@@ -2547,15 +2528,15 @@
           const scrollableHeight = documentHeight - windowHeight;
 
           if (scrollableHeight <= 0) {
-            progressBar.style.width = '0%';
-            progressBar.setAttribute('aria-valuenow', 0);
+            progressBar.style.width = "0%";
+            progressBar.setAttribute("aria-valuenow", 0);
             return;
           }
 
           const progress = (scrollTop / scrollableHeight) * 100;
           const clampedProgress = Math.min(100, Math.max(0, progress));
-          progressBar.style.width = clampedProgress + '%';
-          progressBar.setAttribute('aria-valuenow', Math.round(clampedProgress));
+          progressBar.style.width = clampedProgress + "%";
+          progressBar.setAttribute("aria-valuenow", Math.round(clampedProgress));
         };
 
         let ticking = false;
@@ -2569,30 +2550,30 @@
           }
         };
 
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        window.addEventListener('resize', updateProgress, { passive: true });
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        window.addEventListener("resize", updateProgress, { passive: true });
 
         // Initial state e dopo load completo
-        if (document.readyState === 'complete') {
+        if (document.readyState === "complete") {
           updateProgress();
         } else {
-          window.addEventListener('load', updateProgress, { once: true });
+          window.addEventListener("load", updateProgress, { once: true });
           updateProgress(); // Fallback immediato
         }
       })();
 
       (function backToTop() {
-        const btn = document.getElementById('back-to-top');
+        const btn = document.getElementById("back-to-top");
         if (!btn) return;
         const handleScroll = () => {
-          if (window.scrollY > 480) btn.classList.add('is-visible');
-          else btn.classList.remove('is-visible');
+          if (window.scrollY > 480) btn.classList.add("is-visible");
+          else btn.classList.remove("is-visible");
         };
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        btn.addEventListener('click', () => {
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        btn.addEventListener("click", () => {
           const reduceMotion =
-            window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+            window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
         });
       })();
     </script>
@@ -2602,16 +2583,16 @@
     <!-- Cookie & Legal helpers (fix: racchiusi in <script>) -->
     <script>
       function chiudiPopupCookie() {
-        localStorage.setItem('tradelia_cookie_consent', 'true');
-        const popup = document.getElementById('cookie-popup');
-        if (popup) popup.style.display = 'none';
+        localStorage.setItem("tradelia_cookie_consent", "true");
+        const popup = document.getElementById("cookie-popup");
+        if (popup) popup.style.display = "none";
       }
 
-      document.addEventListener('DOMContentLoaded', () => {
-        const consento = localStorage.getItem('tradelia_cookie_consent');
-        if (consento === 'true') {
-          const popup = document.getElementById('cookie-popup');
-          if (popup) popup.style.display = 'none';
+      document.addEventListener("DOMContentLoaded", () => {
+        const consento = localStorage.getItem("tradelia_cookie_consent");
+        if (consento === "true") {
+          const popup = document.getElementById("cookie-popup");
+          if (popup) popup.style.display = "none";
         }
       });
 
@@ -2619,14 +2600,14 @@
       function apriSezioneLegale(id) {
         const el = document.getElementById(id);
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
           return;
         }
         const map = {
-          'section-tc': '/legal/termini.html#section-tc',
-          'section-privacy': '/legal/privacy.html#section-privacy',
+          "section-tc": "/legal/termini.html#section-tc",
+          "section-privacy": "/legal/privacy.html#section-privacy",
         };
-        window.location.href = map[id] || '/legal/';
+        window.location.href = map[id] || "/legal/";
       }
     </script>
 
@@ -2639,19 +2620,22 @@
     <!-- ===== MOUNT FOOTER ===== -->
     <script type="module">
       // Imposta tema dark
-      document.documentElement.setAttribute('data-theme', 'dark');
+      document.documentElement.setAttribute("data-theme", "dark");
 
       // Importa footer (header gestito da global-header.js)
-      import { siteFooter } from '/report/assets/js/components/site-footer.js';
+      import { siteFooter } from "/report/assets/js/components/site-footer.js";
 
       // Monta footer
-      const footerSlot = document.getElementById('site-footer-slot');
+      const footerSlot = document.getElementById("site-footer-slot");
       if (footerSlot) {
         siteFooter.mount(footerSlot);
       }
     </script>
 
     <!-- Version Check - MUST BE BEFORE MIFID BANNER -->
+
+    <!-- ===== EDUCATION DASHBOARD CSS (BEST PRACTICE 2025) ===== -->
+    <link rel="stylesheet" href="/assets/css/education-dashboard.css" />
 
     <!-- ===== MIFID BANNER (overlay legale unificato) ===== -->
     <link rel="stylesheet" href="/assets/css/mifid-banner.css" />
