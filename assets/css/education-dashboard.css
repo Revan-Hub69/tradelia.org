@@ -256,12 +256,12 @@
 }
 
 .sr-quick-access .btn:focus-visible {
-  outline: 2px solid var(--edu-border-focus);
-  outline-offset: var(--edu-focus-ring-offset);
+  outline: 3px solid var(--edu-border-focus);
+  outline-offset: 3px;
 }
 
 .sr-quick-access .btn:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.98);
 }
 
 .sr-quick-access .btn svg {
@@ -464,7 +464,7 @@
 }
 
 .module-description {
-  font-size: var(--fs-14);
+  font-size: clamp(0.875rem, 2vw, 0.9375rem); /* Responsive: 14px-15px */
   line-height: 1.6;
   color: var(--edu-text-secondary);
   margin: 0;
@@ -713,22 +713,13 @@
   background: var(--edu-surface-hover);
   color: var(--edu-text-primary) !important; /* Bianco, MAI blu */
   transform: translateX(2px); /* Microinterazione */
+  text-decoration: underline;
 }
 
 .breadcrumb-item a:focus-visible {
   outline: 3px solid var(--edu-border-focus);
   outline-offset: 2px;
   background: var(--edu-surface-hover);
-}
-
-.breadcrumb-item a:hover {
-  color: var(--edu-text-primary);
-  text-decoration: underline;
-}
-
-.breadcrumb-item a:focus-visible {
-  outline: 2px solid var(--edu-border-focus);
-  outline-offset: 2px;
   border-radius: var(--edu-radius-xs);
 }
 
@@ -815,8 +806,8 @@
 }
 
 .lesson-item:focus-visible {
-  outline: 2px solid var(--edu-border-focus);
-  outline-offset: var(--edu-focus-ring-offset);
+  outline: 3px solid var(--edu-border-focus);
+  outline-offset: 3px;
 }
 
 .lesson-item.completed {
@@ -1070,8 +1061,8 @@
 }
 
 .test-item .btn:focus-visible {
-  outline: 2px solid var(--edu-border-focus);
-  outline-offset: var(--edu-focus-ring-offset);
+  outline: 3px solid var(--edu-border-focus);
+  outline-offset: 3px;
 }
 
 .test-item .btn:disabled {
@@ -1110,7 +1101,11 @@
   letter-spacing: -0.02em;
 }
 
+/* Line length ottimale per leggibilità (65-75 caratteri) */
 .lesson-view-content {
+  max-width: 65ch; /* Ottimale per leggibilità */
+  margin-left: auto;
+  margin-right: auto;
   line-height: 1.8;
   color: var(--edu-text-primary);
   margin-bottom: var(--edu-spacing-xl);
@@ -1124,13 +1119,6 @@
   margin-bottom: var(--edu-spacing-md);
   line-height: 1.4; /* Migliorato da 1.3 per leggibilità */
   font-weight: 700; /* Grassetto, MAI colori */
-}
-
-/* Line length ottimale per leggibilità (65-75 caratteri) */
-.lesson-view-content {
-  max-width: 65ch; /* Ottimale per leggibilità */
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .lesson-view-content p {
@@ -1424,8 +1412,8 @@
 }
 
 .rq-option-btn:focus-visible {
-  outline: 2px solid var(--edu-border-focus);
-  outline-offset: var(--edu-focus-ring-offset);
+  outline: 3px solid var(--edu-border-focus);
+  outline-offset: 3px;
 }
 
 .rq-option-btn[data-correct="true"] {
@@ -1740,8 +1728,8 @@
 }
 
 .test-results-actions .btn:focus-visible {
-  outline: 2px solid var(--edu-border-focus);
-  outline-offset: var(--edu-focus-ring-offset);
+  outline: 3px solid var(--edu-border-focus);
+  outline-offset: 3px;
 }
 
 .test-results-actions .btn-secondary {
@@ -1853,8 +1841,8 @@
 
 .question-option:focus-within {
   border-color: var(--edu-border-focus);
-  outline: 2px solid var(--edu-border-focus);
-  outline-offset: 2px;
+  outline: 3px solid var(--edu-border-focus);
+  outline-offset: 3px;
 }
 
 .question-option.selected {
@@ -1913,8 +1901,8 @@
 }
 
 .test-actions .btn:focus-visible {
-  outline: 2px solid var(--edu-border-focus);
-  outline-offset: var(--edu-focus-ring-offset);
+  outline: 3px solid var(--edu-border-focus);
+  outline-offset: 3px;
 }
 
 .test-actions .btn-secondary {
