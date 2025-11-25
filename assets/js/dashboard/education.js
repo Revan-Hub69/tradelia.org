@@ -1054,16 +1054,27 @@ function renderLessonView(lesson) {
   const moduleTitle = currentModule?.title || "Modulo";
   const moduleSlug = currentModule?.slug || "";
   const breadcrumb = `
-    <nav class="education-breadcrumb" aria-label="Breadcrumb">
-      <ol class="breadcrumb-list">
-        <li class="breadcrumb-item">
-          <a href="#education" data-action="back-to-dashboard">Dashboard</a>
+    <nav class="education-breadcrumb" aria-label="Breadcrumb navigation">
+      <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="#education" data-action="back-to-dashboard" itemprop="item">
+            <span itemprop="name">Dashboard</span>
+          </a>
+          <meta itemprop="position" content="1" />
         </li>
-        <li class="breadcrumb-item">
-          <a href="#education/module/${moduleSlug}" data-action="back-to-module">${escapeHtml(moduleTitle)}</a>
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="#education/module/${moduleSlug}" data-action="back-to-module" itemprop="item">
+            <span itemprop="name">${escapeHtml(moduleTitle)}</span>
+          </a>
+          <meta itemprop="position" content="2" />
         </li>
-        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
-          ${escapeHtml(lesson.title)}
+        <li class="breadcrumb-item breadcrumb-current" 
+            aria-current="page"
+            itemprop="itemListElement" 
+            itemscope 
+            itemtype="https://schema.org/ListItem">
+          <span itemprop="name">${escapeHtml(lesson.title)}</span>
+          <meta itemprop="position" content="3" />
         </li>
       </ol>
     </nav>
