@@ -230,7 +230,9 @@ export async function initDashboard() {
   window.addEventListener("hashchange", () => {
     const newHash = window.location.hash.slice(1);
     if (newHash) {
-      showModule(newHash);
+      // Lo stato history è già stato aggiornato dal cambio hash,
+      // evitiamo un ulteriore pushState che causerebbe doppio back.
+      showModule(newHash, false);
     } else {
       closeModule();
     }

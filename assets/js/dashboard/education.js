@@ -23,6 +23,247 @@ import { safeLog, escapeHtml } from "./security-utils.js";
 
 const API_BASE = "/api/education";
 
+const DEFAULT_STATS = {
+  current_level: "Foundation",
+  total_points: 0,
+  completed_modules: 0,
+  completed_lessons: 0,
+  modules_completed: 0,
+  current_streak_days: 0,
+};
+
+const FALLBACK_MODULES = [
+  {
+    id: "module-foundations",
+    slug: "foundations-microstructure",
+    title: "Foundations & Market Microstructure",
+    description:
+      "Percorso istituzionale sulle dinamiche microstrutturali, price discovery e governance del rischio. Include framework ESG e criteri MiFID II.",
+    estimated_hours: 6,
+    difficulty_level: "Advanced",
+    requires_previous_module: false,
+    canAccess: true,
+    lessons: [
+      {
+        id: "lesson-found-01",
+        title: "Price Discovery & Liquidity Stack",
+        content_type: "video",
+        estimated_minutes: 12,
+      },
+      {
+        id: "lesson-found-02",
+        title: "Microstructure Pattern Library",
+        content_type: "article",
+        estimated_minutes: 15,
+      },
+      {
+        id: "lesson-found-03",
+        title: "Regulatory Compass & MiFID II",
+        content_type: "pdf",
+        estimated_minutes: 10,
+      },
+    ],
+    tests: [
+      {
+        id: "test-foundations",
+        title: "Foundations Certification",
+        description: "Valida la comprensione sui pilastri istituzionali e sulla governance del rischio.",
+        passing_score: 80,
+        max_attempts: 3,
+      },
+    ],
+  },
+  {
+    id: "module-risk-architecture",
+    slug: "risk-architecture",
+    title: "Risk Architecture & Capital Allocation",
+    description:
+      "Costruzione di portafogli pro-level con scenari multi-regime, stress testing dinamico e metriche di resilienza.",
+    estimated_hours: 8,
+    difficulty_level: "Pro",
+    requires_previous_module: true,
+    canAccess: true,
+    lessons: [
+      {
+        id: "lesson-risk-01",
+        title: "Holistic Risk Matrix",
+        content_type: "article",
+        estimated_minutes: 18,
+      },
+      {
+        id: "lesson-risk-02",
+        title: "Capital Allocation Playbook",
+        content_type: "video",
+        estimated_minutes: 14,
+      },
+      {
+        id: "lesson-risk-03",
+        title: "Scenario Planning Lab",
+        content_type: "interactive",
+        estimated_minutes: 20,
+      },
+    ],
+    tests: [
+      {
+        id: "test-risk",
+        title: "Risk Architecture Assessment",
+        description: "Stress test avanzato su limiti di rischio, VaR dinamico e gestione del capitale.",
+        passing_score: 85,
+        max_attempts: 2,
+      },
+    ],
+  },
+  {
+    id: "module-strategy-lab",
+    slug: "multi-asset-strategy-lab",
+    title: "Multi-Asset Strategy Lab",
+    description:
+      "Workshop guidato per progettare strategie liquid alternative con interleaving e decision intelligence.",
+    estimated_hours: 7,
+    difficulty_level: "Advanced",
+    requires_previous_module: true,
+    canAccess: true,
+    lessons: [
+      {
+        id: "lesson-strategy-01",
+        title: "Institutional Edge Canvas",
+        content_type: "article",
+        estimated_minutes: 16,
+      },
+      {
+        id: "lesson-strategy-02",
+        title: "Alpha Stream Blueprint",
+        content_type: "video",
+        estimated_minutes: 11,
+      },
+      {
+        id: "lesson-strategy-03",
+        title: "Strategy Metrics & Governance",
+        content_type: "pdf",
+        estimated_minutes: 13,
+      },
+    ],
+    tests: [
+      {
+        id: "test-strategy",
+        title: "Strategy Validation Lab",
+        description: "Simula un Investment Committee e valida KPI, risk budget e narrativa alpha.",
+        passing_score: 80,
+        max_attempts: 3,
+      },
+    ],
+  },
+  {
+    id: "module-macro-ai",
+    slug: "macro-ai-intelligence",
+    title: "Macro Intelligence Augmented by AI",
+    description:
+      "Percorso immersivo su modelli macro multi-order, sentiment AI, nowcasting e indicatori proprietari.",
+    estimated_hours: 9,
+    difficulty_level: "Elite",
+    requires_previous_module: true,
+    canAccess: true,
+    lessons: [
+      {
+        id: "lesson-macro-01",
+        title: "Data Fusion & Nowcasting",
+        content_type: "article",
+        estimated_minutes: 17,
+      },
+      {
+        id: "lesson-macro-02",
+        title: "Sentiment Stack con AI Generativa",
+        content_type: "video",
+        estimated_minutes: 13,
+      },
+      {
+        id: "lesson-macro-03",
+        title: "Playbook Macro Regime Shift",
+        content_type: "interactive",
+        estimated_minutes: 19,
+      },
+    ],
+    tests: [
+      {
+        id: "test-macro",
+        title: "Macro Intelligence Challenge",
+        description: "Case study in tempo reale su regimi macro, leading indicator e segnali contrarian.",
+        passing_score: 88,
+        max_attempts: 2,
+      },
+    ],
+  },
+  {
+    id: "module-execution",
+    slug: "execution-pro-behavioural",
+    title: "Execution Pro & Behavioural Mastery",
+    description:
+      "Modulo finale su esecuzione avanzata, behavioural finance applicata e protocolli anti-bias per squadre pro.",
+    estimated_hours: 7,
+    difficulty_level: "Pro",
+    requires_previous_module: true,
+    canAccess: true,
+    lessons: [
+      {
+        id: "lesson-exec-01",
+        title: "Execution Neural Loop",
+        content_type: "video",
+        estimated_minutes: 10,
+      },
+      {
+        id: "lesson-exec-02",
+        title: "Behavioural Risk Kill-Switch",
+        content_type: "article",
+        estimated_minutes: 14,
+      },
+      {
+        id: "lesson-exec-03",
+        title: "Post-Trade Intelligence Hub",
+        content_type: "pdf",
+        estimated_minutes: 15,
+      },
+    ],
+    tests: [
+      {
+        id: "test-execution",
+        title: "Execution & Mindset Certification",
+        description: "Valuta protocolli di esecuzione, gestione bias e readiness operativa.",
+        passing_score: 90,
+        max_attempts: 2,
+      },
+    ],
+  },
+];
+
+function cloneFallbackModules() {
+  return FALLBACK_MODULES.map((module) => ({
+    ...module,
+    lessons: module.lessons?.map((lesson) => ({ ...lesson })) || [],
+    tests: module.tests?.map((test) => ({ ...test, userAttempts: test.userAttempts ? [...test.userAttempts] : [] })) || [],
+  }));
+}
+
+function ensureProgressShape(progress) {
+  const normalized = progress && typeof progress === "object" ? { ...progress } : {};
+
+  normalized.stats = normalized.stats ? { ...DEFAULT_STATS, ...normalized.stats } : { ...DEFAULT_STATS };
+  normalized.badges = Array.isArray(normalized.badges) ? normalized.badges : [];
+  normalized.lesson_progress = normalized.lesson_progress || {};
+
+  if (!Array.isArray(normalized.modules) || normalized.modules.length === 0) {
+    normalized.modules = cloneFallbackModules();
+  } else {
+    normalized.modules = normalized.modules.map((module) => ({
+      ...module,
+      canAccess: module.canAccess !== false,
+      lessons: module.lessons?.map((lesson) => ({ ...lesson })) || [],
+      tests: module.tests?.map((test) => ({ ...test })) || [],
+    }));
+  }
+
+  return normalized;
+}
+
 let currentModule = null;
 let currentLesson = null;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -107,15 +348,9 @@ async function loadEducationDashboard(container) {
     if (!progress) {
       progress = {
         modules: [],
-        stats: {
-          current_level: "Foundation",
-          total_points: 0,
-          completed_modules: 0,
-          completed_lessons: 0,
-          modules_completed: 0,
-          current_streak_days: 0,
-        },
+        stats: { ...DEFAULT_STATS },
         badges: [],
+        lesson_progress: {},
       };
     }
 
@@ -131,12 +366,17 @@ async function loadEducationDashboard(container) {
             progress.modules.forEach((module) => {
               module.canAccess = true;
             });
+          } else {
+            progress.modules = cloneFallbackModules();
           }
         }
       } catch (e) {
         safeLog("warn", "[Education] Errore caricamento moduli:", e);
+        progress.modules = cloneFallbackModules();
       }
     }
+
+    progress = ensureProgressShape(progress);
 
     // Render dashboard
     renderEducationDashboard(container, progress);
@@ -201,11 +441,14 @@ function saveProgressToLocalStorage(progress) {
  */
 async function renderEducationDashboard(container, progress) {
   const { modules, stats, badges } = progress;
+  const modulesList = Array.isArray(modules) && modules.length > 0 ? modules : cloneFallbackModules();
+  const statsData = stats ? { ...DEFAULT_STATS, ...stats } : { ...DEFAULT_STATS };
+  const badgesList = Array.isArray(badges) ? badges : [];
 
   // Aggiungi progresso da localStorage ai moduli se non presente (guest users)
   const token = await getAuthToken();
   if (!token && progress.lesson_progress) {
-    modules.forEach((module) => {
+    modulesList.forEach((module) => {
       if (!module.userProgress) {
         // Calcola progresso modulo da lesson_progress
         const moduleLessons = module.lessons || [];
@@ -235,31 +478,31 @@ async function renderEducationDashboard(container, progress) {
       <div class="education-header">
         <div class="education-stats">
           <div class="stat-card">
-            <div class="stat-value">${stats.current_level}</div>
+            <div class="stat-value">${statsData.current_level}</div>
             <div class="stat-label">Livello</div>
           </div>
           <div class="stat-card">
-            <div class="stat-value">${stats.total_points || 0}</div>
+            <div class="stat-value">${statsData.total_points || 0}</div>
             <div class="stat-label">Punti</div>
           </div>
           <div class="stat-card">
-            <div class="stat-value">${stats.modules_completed || 0}/4</div>
+            <div class="stat-value">${statsData.modules_completed || 0}/5</div>
             <div class="stat-label">Moduli</div>
           </div>
           <div class="stat-card">
-            <div class="stat-value">${stats.current_streak_days || 0}</div>
+            <div class="stat-value">${statsData.current_streak_days || 0}</div>
             <div class="stat-label">Giorni Streak</div>
           </div>
         </div>
 
         <!-- Badge recenti -->
         ${
-          badges.length > 0
+          badgesList.length > 0
             ? `
           <div class="education-badges-preview">
             <h4>Badge Ottenuti</h4>
             <div class="badges-list">
-              ${badges
+              ${badgesList
                 .slice(0, 5)
                 .map(
                   (badge) => `
@@ -326,7 +569,7 @@ async function renderEducationDashboard(container, progress) {
       <div class="education-modules">
         <h2 class="education-section-title">Percorso Formativo</h2>
         <div class="modules-grid">
-          ${modules.map((module, index) => renderModuleCard(module, index)).join("")}
+          ${modulesList.map((module, index) => renderModuleCard(module, index)).join("")}
         </div>
       </div>
     </div>
@@ -907,18 +1150,16 @@ function updateProgressInLocalStorage(lessonId, status, timeSpentMinutes = 0) {
 
     if (!progress) {
       progress = {
-        modules: [],
-        stats: {
-          current_level: "Foundation",
-          total_points: 0,
-          completed_modules: 0,
-          completed_lessons: 0,
-          modules_completed: 0,
-          current_streak_days: 0,
-        },
+        modules: cloneFallbackModules(),
+        stats: { ...DEFAULT_STATS },
         badges: [],
         lesson_progress: {},
       };
+    } else {
+      progress.modules = progress.modules && progress.modules.length > 0 ? progress.modules : cloneFallbackModules();
+      progress.stats = progress.stats ? { ...DEFAULT_STATS, ...progress.stats } : { ...DEFAULT_STATS };
+      progress.badges = Array.isArray(progress.badges) ? progress.badges : [];
+      progress.lesson_progress = progress.lesson_progress || {};
     }
 
     // Inizializza lesson_progress se non esiste
