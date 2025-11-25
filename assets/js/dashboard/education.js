@@ -80,6 +80,41 @@ async function initEducation() {
     safeLog("warn", "[Education] Errore initInteractiveTools:", error);
   }
 
+  // Initialize onboarding
+  try {
+    const { initOnboarding } = await import("./education-onboarding.js");
+    await initOnboarding();
+  } catch (error) {
+    safeLog("warn", "[Education] Errore initOnboarding:", error);
+  }
+
+  // Initialize toolbar
+  try {
+    const { initToolbar } = await import("./education-toolbar.js");
+    initToolbar();
+  } catch (error) {
+    safeLog("warn", "[Education] Errore initToolbar:", error);
+  }
+
+  // Initialize achievements
+  try {
+    const { initAchievements, checkAndShowAchievements } = await import(
+      "./education-achievements.js"
+    );
+    initAchievements();
+    await checkAndShowAchievements();
+  } catch (error) {
+    safeLog("warn", "[Education] Errore initAchievements:", error);
+  }
+
+  // Initialize progress visualizations
+  try {
+    const { initProgressVisualizations } = await import("./education-progress-viz.js");
+    initProgressVisualizations();
+  } catch (error) {
+    safeLog("warn", "[Education] Errore initProgressVisualizations:", error);
+  }
+
   // Try to find container in main content area (SPA)
   let container = document.getElementById("education-container");
 
