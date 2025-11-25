@@ -2,14 +2,19 @@
  * Education System API
  * Sistema formativo con gamification per retail
  * Best Practice Accademica 2025
+ * Security: OWASP, NIST
  */
 
 import { getServiceSupabase } from "./_lib/supabase.js";
+import { validateUUID, validateArray } from "./_lib/validation.js";
+import { checkRateLimit, getRateLimitIdentifier } from "./_lib/rateLimit.js";
 
 // Safe log function (avoid circular dependency)
 function safeLog(level, ...args) {
   if (process.env.NODE_ENV !== "production") {
-    console[level](...args);
+    if (level === "warn" || level === "error") {
+      console[level](...args);
+    }
   }
 }
 
@@ -20,6 +25,26 @@ const supabase = getServiceSupabase();
  */
 export async function getModules(req, res) {
   try {
+    // Rate limiting
+    const identifier = getRateLimitIdentifier(req);
+    const rateLimit = checkRateLimit(identifier, "education");
+
+    res.setHeader("X-RateLimit-Limit", "100");
+    res.setHeader("X-RateLimit-Remaining", rateLimit.remaining);
+    if (rateLimit.resetAt) {
+      res.setHeader("X-RateLimit-Reset", new Date(rateLimit.resetAt).toISOString());
+    }
+
+    if (!rateLimit.allowed) {
+      return res.status(429).json({
+        success: false,
+        error: rateLimit.locked
+          ? "Troppe richieste. Account temporaneamente bloccato."
+          : "Troppe richieste. Riprova più tardi.",
+        retryAfter: rateLimit.locked ? 15 : Math.ceil((rateLimit.resetAt - Date.now()) / 1000),
+      });
+    }
+
     const { data, error } = await supabase
       .from("education_modules")
       .select("*")
@@ -44,15 +69,19 @@ export async function getModule(req, res) {
   try {
     const { moduleId } = req.query;
 
-    if (!moduleId) {
-      return res.status(400).json({ success: false, error: "moduleId richiesto" });
+    // Validazione UUID (previene SQL injection)
+    let validatedModuleId;
+    try {
+      validatedModuleId = validateUUID(moduleId, "moduleId");
+    } catch (error) {
+      return res.status(400).json({ success: false, error: error.message });
     }
 
-    // Get module
+    // Get module (usa UUID validato)
     const { data: module, error: moduleError } = await supabase
       .from("education_modules")
       .select("*")
-      .eq("id", moduleId)
+      .eq("id", validatedModuleId)
       .eq("is_active", true)
       .single();
 
@@ -63,11 +92,11 @@ export async function getModule(req, res) {
       return res.status(404).json({ success: false, error: "Modulo non trovato" });
     }
 
-    // Get lessons
+    // Get lessons (usa UUID validato)
     const { data: lessons, error: lessonsError } = await supabase
       .from("education_lessons")
       .select("*")
-      .eq("module_id", moduleId)
+      .eq("module_id", validatedModuleId)
       .eq("is_active", true)
       .order("order_index", { ascending: true });
 
@@ -75,11 +104,11 @@ export async function getModule(req, res) {
       throw lessonsError;
     }
 
-    // Get tests for this module
+    // Get tests for this module (usa UUID validato)
     const { data: tests, error: testsError } = await supabase
       .from("education_tests")
       .select("id, title, description, passing_score, max_attempts, time_limit_minutes")
-      .eq("module_id", moduleId)
+      .eq("module_id", validatedModuleId)
       .eq("is_active", true);
 
     if (testsError) {
@@ -93,7 +122,7 @@ export async function getModule(req, res) {
         .from("education_user_progress")
         .select("*")
         .eq("user_id", req.user.id)
-        .eq("module_id", moduleId)
+        .eq("module_id", validatedModuleId)
         .single();
 
       userProgress = progress;
@@ -137,14 +166,18 @@ export async function getLesson(req, res) {
   try {
     const { lessonId } = req.query;
 
-    if (!lessonId) {
-      return res.status(400).json({ success: false, error: "lessonId richiesto" });
+    // Validazione UUID (previene SQL injection)
+    let validatedLessonId;
+    try {
+      validatedLessonId = validateUUID(lessonId, "lessonId");
+    } catch (error) {
+      return res.status(400).json({ success: false, error: error.message });
     }
 
     const { data: lesson, error } = await supabase
       .from("education_lessons")
       .select("*, education_modules(*)")
-      .eq("id", lessonId)
+      .eq("id", validatedLessonId)
       .eq("is_active", true)
       .single();
 
@@ -162,7 +195,7 @@ export async function getLesson(req, res) {
         .from("education_user_lesson_progress")
         .select("*")
         .eq("user_id", req.user.id)
-        .eq("lesson_id", lessonId)
+        .eq("lesson_id", validatedLessonId)
         .single();
 
       userProgress = progress;
@@ -270,14 +303,18 @@ export async function getTest(req, res) {
   try {
     const { testId } = req.query;
 
-    if (!testId) {
-      return res.status(400).json({ success: false, error: "testId richiesto" });
+    // Validazione UUID (previene SQL injection)
+    let validatedTestId;
+    try {
+      validatedTestId = validateUUID(testId, "testId");
+    } catch (error) {
+      return res.status(400).json({ success: false, error: error.message });
     }
 
     const { data: test, error: testError } = await supabase
       .from("education_tests")
       .select("*")
-      .eq("id", testId)
+      .eq("id", validatedTestId)
       .eq("is_active", true)
       .single();
 
@@ -306,7 +343,7 @@ export async function getTest(req, res) {
         )
       `
       )
-      .eq("test_id", testId)
+      .eq("test_id", validatedTestId)
       .eq("is_active", true)
       .order("order_index", { ascending: true });
 
@@ -321,7 +358,7 @@ export async function getTest(req, res) {
         .from("education_user_test_attempts")
         .select("*")
         .eq("user_id", req.user.id)
-        .eq("test_id", testId)
+        .eq("test_id", validatedTestId)
         .order("attempt_number", { ascending: false });
 
       userAttempts = attempts || [];
@@ -331,7 +368,7 @@ export async function getTest(req, res) {
     const { data: moduleInfo } = await supabase
       .from("education_tests")
       .select("education_modules(id, slug)")
-      .eq("id", testId)
+      .eq("id", validatedTestId)
       .single();
 
     res.json({
@@ -360,15 +397,34 @@ export async function submitTest(req, res) {
 
     const { testId, answers, timeSpentSeconds } = req.body;
 
-    if (!testId || !answers) {
-      return res.status(400).json({ success: false, error: "testId e answers richiesti" });
+    // Validazione UUID (previene SQL injection)
+    let validatedTestId;
+    try {
+      validatedTestId = validateUUID(testId, "testId");
+    } catch (error) {
+      return res.status(400).json({ success: false, error: error.message });
     }
+
+    // Validazione answers (deve essere oggetto)
+    if (!answers || typeof answers !== "object" || Array.isArray(answers)) {
+      return res.status(400).json({ success: false, error: "answers deve essere un oggetto" });
+    }
+
+    // Sanitizza answers JSONB (prima di usarlo)
+    let sanitizedAnswers;
+    // validateJSONB sanitizza l'oggetto
+    sanitizedAnswers = typeof answers === "object" && !Array.isArray(answers) ? answers : {};
+    // Rimuovi proprietà pericolose
+    const sanitized = { ...sanitizedAnswers };
+    delete sanitized.__proto__;
+    delete sanitized.constructor;
+    sanitizedAnswers = sanitized;
 
     // Get test details
     const { data: test, error: testError } = await supabase
       .from("education_tests")
       .select("*")
-      .eq("id", testId)
+      .eq("id", validatedTestId)
       .single();
 
     if (testError) {
@@ -380,7 +436,7 @@ export async function submitTest(req, res) {
       .from("education_user_test_attempts")
       .select("attempt_number")
       .eq("user_id", req.user.id)
-      .eq("test_id", testId)
+      .eq("test_id", validatedTestId)
       .order("attempt_number", { ascending: false });
 
     const nextAttemptNumber =
@@ -407,7 +463,7 @@ export async function submitTest(req, res) {
         )
       `
       )
-      .eq("test_id", testId)
+      .eq("test_id", validatedTestId)
       .eq("is_active", true);
 
     // Calculate score
@@ -417,7 +473,7 @@ export async function submitTest(req, res) {
 
     questions.forEach((question) => {
       totalPoints += question.points;
-      const userAnswer = answers[question.id];
+      const userAnswer = sanitizedAnswers[question.id];
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const correctOptions = question.education_question_options.filter((opt) => opt.is_correct);
 
@@ -458,7 +514,6 @@ export async function submitTest(req, res) {
     // Prepare data (minimizzazione GDPR)
     const attemptData = {
       user_id: req.user.id,
-      test_id: testId,
       attempt_number: nextAttemptNumber,
       completed_at: new Date().toISOString(),
     };
@@ -472,7 +527,7 @@ export async function submitTest(req, res) {
 
     // Solo se consenso esplicito per risposte dettagliate (default: NO)
     if (trackAnswers) {
-      attemptData.answers = detailedAnswers;
+      // answers sarà aggiunto dopo con sanitizedAnswers
     } else {
       // Minimizzazione: salva solo question IDs sbagliate (array semplice)
       const wrongQuestionIds = Object.keys(detailedAnswers)
@@ -481,7 +536,12 @@ export async function submitTest(req, res) {
       attemptData.wrong_question_ids = wrongQuestionIds.length > 0 ? wrongQuestionIds : null;
     }
 
-    // Save attempt
+    // Save attempt (usa UUID e answers validati)
+    attemptData.test_id = validatedTestId;
+    if (trackAnswers) {
+      attemptData.answers = sanitizedAnswers;
+    }
+
     const { data: attempt, error: attemptError } = await supabase
       .from("education_user_test_attempts")
       .insert(attemptData)
@@ -855,11 +915,24 @@ export async function getRetrievalAnswers(req, res) {
     }
 
     const { questionIds } = req.query;
+
+    // Validazione questionIds (array di UUID)
     if (!questionIds) {
       return res.status(400).json({ success: false, error: "questionIds richiesto" });
     }
 
-    const ids = questionIds.split(",").filter(Boolean);
+    let questionIdsArray;
+    try {
+      questionIdsArray = Array.isArray(questionIds)
+        ? questionIds
+        : questionIds.split(",").filter(Boolean);
+      questionIdsArray = validateArray(questionIdsArray, "questionIds", 1);
+
+      // Valida ogni UUID
+      questionIdsArray = questionIdsArray.map((id) => validateUUID(id.trim(), "questionId"));
+    } catch (error) {
+      return res.status(400).json({ success: false, error: error.message });
+    }
 
     const { data: questions, error } = await supabase
       .from("education_questions")
@@ -872,7 +945,7 @@ export async function getRetrievalAnswers(req, res) {
         )
       `
       )
-      .in("id", ids)
+      .in("id", questionIdsArray)
       .eq("is_active", true);
 
     if (error) {
@@ -1930,7 +2003,7 @@ async function saveSpacedRepetitionReview(req, res) {
       next_review_date: nextReview.next_review_date,
       last_review_date: new Date().toISOString(),
       total_reviews: (item.total_reviews || 0) + 1,
-      correct_reviews: quality >= 3 ? (item.correct_reviews || 0) + 1 : (item.correct_reviews || 0),
+      correct_reviews: quality >= 3 ? (item.correct_reviews || 0) + 1 : item.correct_reviews || 0,
       average_quality: item.total_reviews
         ? ((item.average_quality || 0) * item.total_reviews + quality) / (item.total_reviews + 1)
         : quality,
@@ -1958,7 +2031,11 @@ async function saveSpacedRepetitionReview(req, res) {
       new_next_review_date: nextReview.next_review_date,
     });
 
-    res.json({ success: true, item: { id: item_id, ...updateData }, next_review: nextReview.next_review_date });
+    res.json({
+      success: true,
+      item: { id: item_id, ...updateData },
+      next_review: nextReview.next_review_date,
+    });
   } catch (error) {
     safeLog("error", "[Education] Errore saveSpacedRepetitionReview:", error);
     res.status(500).json({ success: false, error: "Errore salvataggio revisione" });
@@ -1998,7 +2075,8 @@ async function getDueFlashcards(req, res) {
  */
 async function createSpacedRepetitionItem(req, res) {
   try {
-    const { content, item_type, module_id, lesson_id, question, answer, hint, explanation } = req.body;
+    const { content, item_type, module_id, lesson_id, question, answer, hint, explanation } =
+      req.body;
     const user_id = req.user?.id;
 
     if (!user_id) {
@@ -2065,9 +2143,11 @@ async function updateMastery(req, res) {
     if (existing) {
       const newTotalAttempts = (existing.total_attempts || 0) + 1;
       const newCorrect = (existing.correct_answers || 0) + (correct_answers || 0);
-      const newIncorrect = (existing.incorrect_answers || 0) + ((total_questions || 0) - (correct_answers || 0));
+      const newIncorrect =
+        (existing.incorrect_answers || 0) + ((total_questions || 0) - (correct_answers || 0));
       const masteryScore = existing.total_attempts
-        ? ((existing.mastery_score || 0) * existing.total_attempts + score) / (existing.total_attempts + 1)
+        ? ((existing.mastery_score || 0) * existing.total_attempts + score) /
+          (existing.total_attempts + 1)
         : score;
 
       let newDifficulty = existing.difficulty_level || 1;
