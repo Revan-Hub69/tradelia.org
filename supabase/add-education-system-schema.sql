@@ -327,6 +327,23 @@ ALTER TABLE education_pathways ENABLE ROW LEVEL SECURITY;
 ALTER TABLE education_user_pathway_progress ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Tutti possono leggere moduli/lezioni/test attivi (gratuito ma verificato)
+-- Rimuovi policy esistenti se presenti (per rendere script idempotente)
+DROP POLICY IF EXISTS "Public can view active education content" ON education_modules;
+DROP POLICY IF EXISTS "Public can view active lessons" ON education_lessons;
+DROP POLICY IF EXISTS "Public can view active tests" ON education_tests;
+DROP POLICY IF EXISTS "Public can view active questions" ON education_questions;
+DROP POLICY IF EXISTS "Public can view question options" ON education_question_options;
+DROP POLICY IF EXISTS "Users can view own progress" ON education_user_progress;
+DROP POLICY IF EXISTS "Users can insert own progress" ON education_user_progress;
+DROP POLICY IF EXISTS "Users can update own progress" ON education_user_progress;
+DROP POLICY IF EXISTS "Users can manage own lesson progress" ON education_user_lesson_progress;
+DROP POLICY IF EXISTS "Users can manage own test attempts" ON education_user_test_attempts;
+DROP POLICY IF EXISTS "Users can view own badges" ON education_user_badges;
+DROP POLICY IF EXISTS "Users can view own stats" ON education_user_stats;
+DROP POLICY IF EXISTS "Users can view own certificates" ON education_certificates;
+DROP POLICY IF EXISTS "Users can manage own pathway progress" ON education_user_pathway_progress;
+DROP POLICY IF EXISTS "Public can view active pathways" ON education_pathways;
+
 CREATE POLICY "Public can view active education content"
   ON education_modules FOR SELECT
   USING (is_active = true);
