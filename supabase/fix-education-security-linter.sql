@@ -34,6 +34,16 @@ CREATE POLICY "Public can view pathway modules"
 
 -- ===== 4. FIX SEARCH_PATH PER TUTTE LE FUNZIONI =====
 
+-- Rimuovi funzioni esistenti se presenti (per permettere cambio signature)
+DROP FUNCTION IF EXISTS calculate_module_progress(UUID, UUID);
+DROP FUNCTION IF EXISTS can_access_module(UUID, UUID);
+DROP FUNCTION IF EXISTS update_user_education_stats(UUID);
+DROP FUNCTION IF EXISTS calculate_user_level(INTEGER);
+DROP FUNCTION IF EXISTS add_education_xp(UUID, INTEGER, TEXT, UUID, TEXT);
+DROP FUNCTION IF EXISTS update_learning_streak(UUID);
+DROP FUNCTION IF EXISTS update_updated_at_column();
+DROP FUNCTION IF EXISTS check_and_unlock_badge(UUID, JSONB);
+
 -- Funzione: calculate_module_progress
 CREATE OR REPLACE FUNCTION calculate_module_progress(p_user_id UUID, p_module_id UUID)
 RETURNS INTEGER
