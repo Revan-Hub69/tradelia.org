@@ -2338,6 +2338,9 @@ export default async function handler(req, res) {
 
   const { action } = req.query;
 
+  // Debug log
+  console.warn("[Education] Action received:", action, "Query:", req.query);
+
   // Get user from token (if authenticated)
   let user = null;
   if (req.headers.authorization) {
@@ -2425,10 +2428,11 @@ export default async function handler(req, res) {
       case "get-adaptive-difficulty":
         return await getAdaptiveDifficulty(req, res);
       case "badges":
+        console.warn("[Education] Badges case matched");
         return await getBadges(req, res);
       default:
         // Log 400 per azione non valida
-
+        console.error("[Education] Action not matched:", action, "Type:", typeof action);
         console.error("[400 Bad Request]", {
           timestamp: new Date().toISOString(),
           method: req.method,
