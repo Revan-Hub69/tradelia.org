@@ -2338,8 +2338,11 @@ export default async function handler(req, res) {
 
   const { action } = req.query;
 
-  // Debug log
-  console.warn("[Education] Action received:", action, "Query:", req.query);
+  // Debug log - VERSIONE AGGIORNATA CON BADGES
+  console.error("=== EDUCATION HANDLER DEBUG ===");
+  console.error("Action:", action);
+  console.error("Query:", JSON.stringify(req.query));
+  console.error("URL:", req.url);
 
   // Get user from token (if authenticated)
   let user = null;
@@ -2428,7 +2431,7 @@ export default async function handler(req, res) {
       case "get-adaptive-difficulty":
         return await getAdaptiveDifficulty(req, res);
       case "badges":
-        console.warn("[Education] Badges case matched");
+        console.error("=== BADGES CASE MATCHED ===");
         return await getBadges(req, res);
       default:
         // Log 400 per azione non valida
