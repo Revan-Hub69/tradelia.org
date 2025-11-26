@@ -169,8 +169,21 @@ function createOnboardingOverlay() {
   state.root.hidden = true;
 
   // Il template già crea auth-modal, quindi non serve un wrapper
-  state.root.innerHTML = template();
+  const templateHTML = template();
+  safeLog("log", "[Education Onboarding] Template length:", templateHTML.length);
+  state.root.innerHTML = templateHTML;
   state.modal = state.root.querySelector(".auth-modal");
+
+  if (!state.modal) {
+    safeLog("error", "[Education Onboarding] auth-modal not found in template!");
+  } else {
+    safeLog(
+      "log",
+      "[Education Onboarding] auth-modal found, children:",
+      state.modal.children.length
+    );
+  }
+
   document.body.appendChild(state.root);
 }
 
