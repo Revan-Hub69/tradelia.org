@@ -23,6 +23,14 @@ import { safeLog, escapeHtml } from "./security-utils.js";
 
 const API_BASE = "/api/education";
 
+const LEVEL_LABELS = {
+  0: "Foundation",
+  1: "Foundation",
+  2: "Operativo",
+  3: "Stratega",
+  4: "Maestro",
+};
+
 let currentModule = null;
 let currentLesson = null;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -270,10 +278,6 @@ async function loadEducationDashboard(container) {
               : [];
           if (modules.length > 0) {
             progress.modules = modules;
-            // Per guest users, aggiungi canAccess a tutti i moduli
-            progress.modules.forEach((module) => {
-              module.canAccess = true;
-            });
           }
         }
       } catch (e) {
@@ -340,6 +344,254 @@ function saveProgressToLocalStorage(progress) {
 }
 
 /**
+ * Convert any value to a safe integer (default fallback)
+ */
+function toSafeNumber(value, fallback = 0) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+/**
+ * Format level value using LEVEL_LABELS map
+ */
+function formatLevelValue(value) {
+  if (value === null || value === undefined) {
+    return LEVEL_LABELS[0];
+  }
+
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return LEVEL_LABELS[value] || `Livello ${value}`;
+  }
+
+  const stringValue = String(value).trim();
+  if (stringValue.length === 0) {
+    return LEVEL_LABELS[0];
+  }
+
+  const numeric = Number(stringValue);
+  if (Number.isFinite(numeric)) {
+    return LEVEL_LABELS[numeric] || stringValue;
+  }
+
+  return stringValue;
+}
+
+/**
+ * Build safe stats object enriched with computed fields
+ */
+function buildStats(rawStats = {}, modules = []) {
+  const stats = {
+    current_level_raw: rawStats?.current_level ?? rawStats?.level ?? "Foundation",
+    total_points: toSafeNumber(rawStats?.total_points ?? rawStats?.points, 0),
+    modules_completed: toSafeNumber(rawStats?.modules_completed ?? rawStats?.completed_modules, 0),
+    current_streak_days: toSafeNumber(rawStats?.current_streak_days ?? rawStats?.streak_days, 0),
+  };
+
+  stats.total_modules = Array.isArray(modules) ? modules.length : 0;
+  if (stats.total_modules > 0 && stats.modules_completed > stats.total_modules) {
+    stats.modules_completed = stats.total_modules;
+  }
+
+  stats.current_level_label = formatLevelValue(stats.current_level_raw);
+  stats.current_level = stats.current_level_label;
+
+  return stats;
+}
+
+/**
+ * Normalize lessons order, progress and locking logic
+ */
+function normalizeLessons(lessons = [], { lessonProgress = {} } = {}) {
+  if (!Array.isArray(lessons)) {
+    return [];
+  }
+
+  const sortedLessons = [...lessons].filter(Boolean).sort((a, b) => {
+    const orderA = Number.isFinite(a?.order_index) ? a.order_index : 0;
+    const orderB = Number.isFinite(b?.order_index) ? b.order_index : 0;
+    if (orderA === orderB) {
+      return (a?.title || "").localeCompare(b?.title || "");
+    }
+    return orderA - orderB;
+  });
+
+  let previousMandatoryCompleted = true;
+
+  return sortedLessons.map((lesson, index) => {
+    const storedProgress = lessonProgress?.[lesson.id] || {};
+    const status = storedProgress.status || lesson.userProgress?.status || "not_started";
+
+    const progressPercentage =
+      storedProgress.progress_percentage ??
+      lesson.userProgress?.progress_percentage ??
+      (status === "completed" ? 100 : 0);
+
+    const isOptional = lesson.is_optional === true;
+    const canAccess = isOptional ? true : index === 0 || previousMandatoryCompleted;
+
+    if (!isOptional) {
+      previousMandatoryCompleted = status === "completed";
+    }
+
+    return {
+      ...lesson,
+      userProgress: {
+        status,
+        progress_percentage: progressPercentage,
+      },
+      canAccess,
+      lockReason: canAccess ? "" : "Completa la lezione precedente per continuare.",
+    };
+  });
+}
+
+function normalizeModuleProgress(module) {
+  const defaultProgress = module.userProgress || {
+    progress_percentage: 0,
+    status: "not_started",
+  };
+
+  const totalLessons = Array.isArray(module.lessons) ? module.lessons.length : 0;
+  if (totalLessons === 0) {
+    return {
+      progress_percentage: toSafeNumber(defaultProgress.progress_percentage, 0),
+      status:
+        defaultProgress.status ||
+        (defaultProgress.progress_percentage > 0 ? "in_progress" : "not_started"),
+    };
+  }
+
+  const completedLessons = module.lessons.filter(
+    (lesson) => lesson.userProgress?.status === "completed"
+  ).length;
+  const computedPct = Math.round((completedLessons / totalLessons) * 100);
+
+  if (defaultProgress.status === "completed") {
+    return {
+      progress_percentage: Math.max(computedPct, 100),
+      status: "completed",
+    };
+  }
+
+  if (defaultProgress.progress_percentage && defaultProgress.progress_percentage > computedPct) {
+    return {
+      progress_percentage: defaultProgress.progress_percentage,
+      status:
+        defaultProgress.status ||
+        (defaultProgress.progress_percentage > 0 ? "in_progress" : "not_started"),
+    };
+  }
+
+  return {
+    progress_percentage: computedPct,
+    status: computedPct === 100 ? "completed" : computedPct > 0 ? "in_progress" : "not_started",
+  };
+}
+
+/**
+ * Normalize modules: ordering, locking, lessons
+ */
+function normalizeModules(modules = [], { lessonProgress = {} } = {}) {
+  if (!Array.isArray(modules)) {
+    return [];
+  }
+
+  const preparedModules = modules
+    .filter(Boolean)
+    .map((module) => {
+      const normalized = {
+        ...module,
+        lessons: normalizeLessons(module.lessons || [], { lessonProgress }),
+        tests: Array.isArray(module.tests) ? module.tests : [],
+      };
+      normalized.userProgress = normalizeModuleProgress(normalized);
+      return normalized;
+    })
+    .sort((a, b) => {
+      const orderA = Number.isFinite(a?.order_index) ? a.order_index : 0;
+      const orderB = Number.isFinite(b?.order_index) ? b.order_index : 0;
+      if (orderA === orderB) {
+        return (a?.title || "").localeCompare(b?.title || "");
+      }
+      return orderA - orderB;
+    });
+
+  const moduleById = new Map();
+  const moduleBySlug = new Map();
+  const completionMap = new Map();
+
+  preparedModules.forEach((module) => {
+    moduleById.set(module.id, module);
+    if (module.slug) {
+      moduleBySlug.set(module.slug, module);
+    }
+    completionMap.set(module.id, module.userProgress?.status === "completed");
+  });
+
+  return preparedModules.map((module, index) => {
+    let canAccess = typeof module.canAccess === "boolean" ? module.canAccess : true;
+    let lockReason = module.lockReason || "";
+
+    const requiresPrevious = Boolean(module.requires_previous_module);
+    if (requiresPrevious && index > 0) {
+      const previousModule = preparedModules[index - 1];
+      if (!completionMap.get(previousModule.id)) {
+        canAccess = false;
+        lockReason = "Completa il modulo precedente per sbloccarlo.";
+      }
+    }
+
+    const prerequisites = Array.isArray(module.prerequisites) ? module.prerequisites : [];
+    if (prerequisites.length > 0) {
+      const unmet = prerequisites.some((requirement) => {
+        if (!requirement) {
+          return true;
+        }
+        const prereqModule = moduleById.get(requirement) || moduleBySlug.get(requirement);
+        if (!prereqModule) {
+          return true;
+        }
+        return !completionMap.get(prereqModule.id);
+      });
+
+      if (unmet) {
+        canAccess = false;
+        lockReason = "Completa i prerequisiti indicati per continuare.";
+      }
+    }
+
+    module.canAccess = canAccess;
+    module.lockReason = lockReason;
+
+    if (!canAccess) {
+      module.userProgress = {
+        ...module.userProgress,
+        status: "locked",
+      };
+    }
+
+    return module;
+  });
+}
+
+/**
+ * Render favorites section dynamically
+ */
+async function mountEducationFavorites(modules) {
+  const favoritesContainer = document.getElementById("education-favorites-container");
+  if (!favoritesContainer) {
+    return;
+  }
+
+  try {
+    const { renderFavoritesSection } = await import("./education-favorites.js");
+    favoritesContainer.innerHTML = renderFavoritesSection(modules, modules);
+  } catch (error) {
+    safeLog("warn", "[Education] Errore render favorites:", error);
+  }
+}
+
+/**
  * Render education dashboard
  */
 async function renderEducationDashboard(container, progress) {
@@ -354,62 +606,52 @@ async function renderEducationDashboard(container, progress) {
     return;
   }
 
-  // Assicura che modules, stats, badges siano sempre definiti e array
-  const modules = Array.isArray(progress.modules) ? progress.modules : [];
-  const stats = progress.stats || {
-    current_level: "Foundation",
-    total_points: 0,
-    modules_completed: 0,
-    current_streak_days: 0,
-  };
+  // Assicura che lesson_progress esista sempre
+  if (!progress.lesson_progress || typeof progress.lesson_progress !== "object") {
+    progress.lesson_progress = {};
+  }
+
+  // Normalizza moduli, lezioni e statistiche
+  let modules = Array.isArray(progress.modules) ? progress.modules : [];
+  modules = normalizeModules(modules, { lessonProgress: progress.lesson_progress });
+  progress.modules = modules;
+  window.educationModules = modules;
+
+  const stats = buildStats(progress.stats, modules);
+  progress.stats = stats;
   const badges = Array.isArray(progress.badges) ? progress.badges : [];
 
-  // Aggiungi progresso da localStorage ai moduli se non presente (guest users)
-  const token = await getAuthToken();
-  if (!token && progress.lesson_progress && Array.isArray(modules)) {
-    modules.forEach((module) => {
-      if (!module.userProgress) {
-        // Calcola progresso modulo da lesson_progress
-        const moduleLessons = module.lessons || [];
-        const completedLessons = moduleLessons.filter((lesson) => {
-          const lessonProgress = progress.lesson_progress[lesson.id];
-          return lessonProgress?.status === "completed";
-        }).length;
-
-        const progressPct =
-          moduleLessons.length > 0
-            ? Math.round((completedLessons / moduleLessons.length) * 100)
-            : 0;
-
-        module.userProgress = {
-          progress_percentage: progressPct,
-          status:
-            progressPct === 100 ? "completed" : progressPct > 0 ? "in_progress" : "not_started",
-        };
-        module.canAccess = true; // Guest può accedere a tutti i moduli
-      }
-    });
-  }
+  const levelLabel = stats.current_level;
+  const totalPoints = stats.total_points || 0;
+  const modulesValue =
+    stats.total_modules > 0
+      ? `${stats.modules_completed}/${stats.total_modules}`
+      : String(stats.modules_completed);
+  const modulesAriaLabel =
+    stats.total_modules > 0
+      ? `${stats.modules_completed} su ${stats.total_modules}`
+      : `${stats.modules_completed}`;
+  const streakDays = stats.current_streak_days || 0;
 
   container.innerHTML = `
     <div class="education-dashboard">
       <!-- Header con stats -->
       <div class="education-header">
         <div class="education-stats" role="region" aria-label="Statistiche apprendimento">
-          <div class="stat-card" role="article" aria-label="Livello corrente: ${stats.current_level}">
-            <div class="stat-value" aria-live="polite" aria-atomic="true">${stats.current_level}</div>
+          <div class="stat-card" role="article" aria-label="Livello corrente: ${levelLabel}">
+            <div class="stat-value" aria-live="polite" aria-atomic="true">${levelLabel}</div>
             <div class="stat-label">Livello</div>
           </div>
-          <div class="stat-card" role="article" aria-label="Punti totali: ${stats.total_points || 0}">
-            <div class="stat-value" aria-live="polite" aria-atomic="true">${stats.total_points || 0}</div>
+          <div class="stat-card" role="article" aria-label="Punti totali: ${totalPoints}">
+            <div class="stat-value" aria-live="polite" aria-atomic="true">${totalPoints}</div>
             <div class="stat-label">Punti</div>
           </div>
-          <div class="stat-card" role="article" aria-label="Moduli completati: ${stats.modules_completed || 0} su 4">
-            <div class="stat-value" aria-live="polite" aria-atomic="true">${stats.modules_completed || 0}/4</div>
+          <div class="stat-card" role="article" aria-label="Moduli completati: ${modulesAriaLabel}">
+            <div class="stat-value" aria-live="polite" aria-atomic="true">${modulesValue}</div>
             <div class="stat-label">Moduli</div>
           </div>
-          <div class="stat-card" role="article" aria-label="Giorni di streak: ${stats.current_streak_days || 0}">
-            <div class="stat-value" aria-live="polite" aria-atomic="true">${stats.current_streak_days || 0}</div>
+          <div class="stat-card" role="article" aria-label="Giorni di streak: ${streakDays}">
+            <div class="stat-value" aria-live="polite" aria-atomic="true">${streakDays}</div>
             <div class="stat-label">Giorni Streak</div>
           </div>
         </div>
@@ -519,6 +761,20 @@ async function renderEducationDashboard(container, progress) {
     </div>
   `;
 
+  await mountEducationFavorites(modules);
+
+  if (window.__educationFavoritesHandler) {
+    window.removeEventListener("education-favorites-changed", window.__educationFavoritesHandler);
+  }
+  window.__educationFavoritesHandler = async () => {
+    await mountEducationFavorites(window.educationModules || modules);
+    const favoritesContainer = document.getElementById("education-favorites-container");
+    if (favoritesContainer) {
+      bindEducationEvents(favoritesContainer);
+    }
+  };
+  window.addEventListener("education-favorites-changed", window.__educationFavoritesHandler);
+
   // Bind events
   bindEducationEvents(container);
 }
@@ -528,9 +784,11 @@ async function renderEducationDashboard(container, progress) {
  */
 function renderModuleCard(module, index) {
   const { userProgress, canAccess } = module;
-  const isLocked = !canAccess && module.requires_previous_module;
+  const isLocked = !canAccess;
   const progressPct = userProgress?.progress_percentage || 0;
   const status = userProgress?.status || "not_started";
+  const lockHint =
+    module.lockReason || "Completa i requisiti richiesti per sbloccare questo modulo.";
 
   const statusLabels = {
     not_started: "Non iniziato",
@@ -556,6 +814,7 @@ function renderModuleCard(module, index) {
          data-module-id="${module.id}" 
          data-module-slug="${module.slug}"
          data-status="${status}"
+         ${isLocked ? 'aria-disabled="true"' : ""}
          role="article"
          aria-label="Modulo ${index + 1}: ${escapeHtml(module.title)}">
       <div class="module-card-header">
@@ -614,13 +873,14 @@ function renderModuleCard(module, index) {
         ${
           isLocked
             ? `
-          <button class="btn btn-secondary" disabled>
+          <button class="btn btn-secondary" disabled aria-disabled="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
             </svg>
             Bloccato
           </button>
+          <p class="module-lock-hint">${escapeHtml(lockHint)}</p>
         `
             : `
           <button class="btn btn-primary" data-action="open-module" data-module-id="${module.id}">
@@ -639,6 +899,10 @@ function renderModuleCard(module, index) {
 function bindEducationEvents(container) {
   // Module card clicks
   container.querySelectorAll("[data-action='open-module']").forEach((btn) => {
+    if (btn.dataset.listenerAttached === "true") {
+      return;
+    }
+    btn.dataset.listenerAttached = "true";
     btn.addEventListener("click", async (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -653,13 +917,35 @@ function bindEducationEvents(container) {
 
   // Module card click (entire card)
   container.querySelectorAll(".education-module-card").forEach((card) => {
-    if (!card.classList.contains("locked")) {
-      card.addEventListener("click", async (e) => {
-        // Don't trigger if clicking on button or favorite button
-        if (e.target.closest("button") || e.target.closest(".education-favorite-btn")) {
-          return;
-        }
+    if (card.classList.contains("locked")) {
+      card.setAttribute("aria-disabled", "true");
+      return;
+    }
+    if (card.dataset.listenerAttached === "true") {
+      return;
+    }
+    card.dataset.listenerAttached = "true";
 
+    card.addEventListener("click", async (e) => {
+      // Don't trigger if clicking on button or favorite button
+      if (e.target.closest("button") || e.target.closest(".education-favorite-btn")) {
+        return;
+      }
+
+      e.preventDefault();
+      const moduleId = card.dataset.moduleId;
+
+      if (moduleId) {
+        // Scroll to top when opening module
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        await openModule(moduleId);
+      }
+    });
+
+    // Keyboard support
+    card.addEventListener("keydown", async (e) => {
+      if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         const moduleId = card.dataset.moduleId;
 
@@ -669,27 +955,43 @@ function bindEducationEvents(container) {
 
           await openModule(moduleId);
         }
-      });
+      }
+    });
 
-      // Keyboard support
-      card.addEventListener("keydown", async (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          const moduleId = card.dataset.moduleId;
+    // Make card focusable
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("role", "button");
+  });
 
-          if (moduleId) {
-            // Scroll to top when opening module
-            window.scrollTo({ top: 0, behavior: "smooth" });
-
-            await openModule(moduleId);
-          }
-        }
-      });
-
-      // Make card focusable
-      card.setAttribute("tabindex", "0");
-      card.setAttribute("role", "button");
+  // Favorite buttons
+  container.querySelectorAll(".education-favorite-btn").forEach((btn) => {
+    if (btn.dataset.listenerAttached === "true") {
+      return;
     }
+    btn.dataset.listenerAttached = "true";
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const moduleId = btn.dataset.moduleId;
+      if (!moduleId) {
+        return;
+      }
+      try {
+        const { toggleEducationFavorite } = await import("./education-favorites.js");
+        const isFavorited = toggleEducationFavorite(moduleId);
+        btn.classList.toggle("favorited", isFavorited);
+        btn.setAttribute(
+          "aria-label",
+          isFavorited ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"
+        );
+        const icon = btn.querySelector("svg");
+        if (icon) {
+          icon.setAttribute("fill", isFavorited ? "currentColor" : "none");
+        }
+      } catch (error) {
+        safeLog("warn", "[Education] Errore toggle preferito:", error);
+      }
+    });
   });
 
   // Spaced Repetition
@@ -788,17 +1090,13 @@ async function openModule(moduleId) {
           const moduleProgress = progress?.lesson_progress || {};
 
           if (module.lessons) {
-            module.lessons = module.lessons.map((lesson) => ({
-              ...lesson,
-              userProgress: moduleProgress[lesson.id] || { status: "not_started" },
-            }));
+            module.lessons = normalizeLessons(module.lessons, { lessonProgress: moduleProgress });
           }
 
           module.userProgress = module.userProgress || {
             progress_percentage: 0,
             status: "not_started",
           };
-          module.canAccess = true;
 
           currentModule = module;
 
@@ -813,6 +1111,7 @@ async function openModule(moduleId) {
     }
 
     const { module } = await response.json();
+    module.lessons = normalizeLessons(module.lessons || [], { lessonProgress: {} });
     currentModule = module;
 
     // Navigate to module view (SPA navigation)
@@ -919,6 +1218,10 @@ function renderModuleView(module) {
 
   // Lesson item click (entire item)
   container.querySelectorAll(".lesson-item").forEach((item) => {
+    if (item.classList.contains("locked")) {
+      item.setAttribute("aria-disabled", "true");
+      return;
+    }
     item.addEventListener("click", async (e) => {
       // Don't trigger if clicking on button
       if (e.target.closest("button")) {
@@ -1015,6 +1318,8 @@ function renderLessonItem(lesson, index) {
   const { userProgress } = lesson;
   const status = userProgress?.status || "not_started";
   const estimatedMinutes = lesson.estimated_minutes || 0;
+  const canAccess = lesson.canAccess !== false;
+  const lockReason = lesson.lockReason || "Completa le lezioni precedenti per procedere.";
 
   // Microlearning indicator: verde se < 10 min (optimal chunk size)
   const isMicrolearning = estimatedMinutes > 0 && estimatedMinutes <= MICROLEARNING_MAX_MINUTES;
@@ -1037,7 +1342,9 @@ function renderLessonItem(lesson, index) {
   };
 
   return `
-    <div class="lesson-item ${status} ${isMicrolearning ? "microlearning" : ""}" data-lesson-id="${lesson.id}">
+    <div class="lesson-item ${status} ${isMicrolearning ? "microlearning" : ""} ${
+      canAccess ? "" : "locked"
+    }" data-lesson-id="${lesson.id}" ${canAccess ? "" : 'data-locked="true" aria-disabled="true"'}>
       <div class="lesson-number">${index + 1}</div>
       <div class="lesson-content">
         <h3 class="lesson-title">${escapeHtml(lesson.title)}</h3>
@@ -1048,9 +1355,20 @@ function renderLessonItem(lesson, index) {
         </div>
       </div>
       <div class="lesson-status">${statusIcons[status]}</div>
-      <button class="btn btn-primary btn-sm" data-action="open-lesson" data-lesson-id="${lesson.id}">
-        ${status === "completed" ? "Rivedi" : status === "in_progress" ? "Continua" : "Inizia"}
+      <button class="btn btn-primary btn-sm" data-action="open-lesson" data-lesson-id="${lesson.id}" ${
+        canAccess ? "" : 'disabled aria-disabled="true"'
+      }>
+        ${
+          canAccess
+            ? status === "completed"
+              ? "Rivedi"
+              : status === "in_progress"
+                ? "Continua"
+                : "Inizia"
+            : "Bloccata"
+        }
       </button>
+      ${canAccess ? "" : `<div class="lesson-lock-hint">${escapeHtml(lockReason)}</div>`}
     </div>
   `;
 }

@@ -634,6 +634,20 @@
   transform: translateY(0);
 }
 
+.module-lock-hint {
+  margin-top: var(--edu-spacing-sm);
+  font-size: var(--fs-12);
+  color: var(--edu-warning);
+  display: flex;
+  gap: var(--edu-spacing-xs);
+  align-items: center;
+}
+
+.module-lock-hint::before {
+  content: "!";
+  font-weight: 700;
+}
+
 /* ===== FORZA ZERO BLU - Regole Globali ===== */
 .education-dashboard a,
 .education-module-view a,
@@ -981,6 +995,36 @@
 
 .lesson-item .btn:active {
   transform: translateY(0);
+}
+
+.lesson-item.locked {
+  opacity: 0.6;
+  cursor: not-allowed;
+  border-color: var(--edu-border-base);
+  box-shadow: none;
+}
+
+.lesson-item.locked:hover {
+  transform: none;
+  background: var(--edu-surface-elevated);
+  box-shadow: none;
+}
+
+.lesson-item.locked .btn {
+  background: var(--edu-surface-base);
+  border-color: var(--edu-border-subtle);
+  color: var(--edu-text-muted);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.lesson-lock-hint {
+  width: 100%;
+  font-size: var(--fs-12);
+  color: var(--edu-warning);
+  margin-top: var(--edu-spacing-xs);
+  text-align: left;
+  padding-left: calc(36px + var(--edu-spacing-md));
 }
 
 /* ===== TESTS LIST ===== */
