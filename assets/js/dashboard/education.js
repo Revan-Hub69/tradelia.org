@@ -907,35 +907,6 @@ function bindEducationEvents(container) {
   });
 
   // Favorite buttons
-  container.querySelectorAll(".education-favorite-btn").forEach((btn) => {
-    if (btn.dataset.listenerAttached === "true") {
-      return;
-    }
-    btn.dataset.listenerAttached = "true";
-    btn.addEventListener("click", async (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const moduleId = btn.dataset.moduleId;
-      if (!moduleId) {
-        return;
-      }
-      try {
-        const { toggleEducationFavorite } = await import("./education-favorites.js");
-        const isFavorited = toggleEducationFavorite(moduleId);
-        btn.classList.toggle("favorited", isFavorited);
-        btn.setAttribute(
-          "aria-label",
-          isFavorited ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"
-        );
-        const icon = btn.querySelector("svg");
-        if (icon) {
-          icon.setAttribute("fill", isFavorited ? "currentColor" : "none");
-        }
-      } catch (error) {
-        safeLog("warn", "[Education] Errore toggle preferito:", error);
-      }
-    });
-  });
 
   // Spaced Repetition
   container
