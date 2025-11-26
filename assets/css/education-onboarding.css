@@ -306,40 +306,7 @@
   width: 24px;
 }
 
-.onboarding-btn {
-  padding: var(--edu-spacing-md) var(--edu-spacing-xl);
-  border-radius: var(--edu-radius-md);
-  font-size: var(--fs-14);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--edu-transition-base);
-  border: none;
-  min-height: 44px;
-}
-
-.onboarding-btn-primary {
-  background: var(--tradelia-gradient);
-  color: var(--edu-text-primary);
-  box-shadow: var(--edu-shadow-sm);
-}
-
-.onboarding-btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--edu-shadow-md);
-  filter: brightness(1.1);
-}
-
-.onboarding-btn-secondary {
-  background: var(--edu-surface-base);
-  border: 1px solid var(--edu-border-subtle);
-  color: var(--edu-text-secondary);
-}
-
-.onboarding-btn-secondary:hover {
-  background: var(--edu-surface-hover);
-  border-color: var(--edu-border-base);
-  color: var(--edu-text-primary);
-}
+/* Usa pulsanti standard del sito - nessuno stile custom */
 
 @media (max-width: 640px) {
   .onboarding-modal {

@@ -575,18 +575,7 @@
   min-width: 44px; /* Touch target size - WCAG 2.1 */
 }
 
-.module-card-actions .btn-primary {
-  background: var(--edu-accent);
-  border-color: var(--edu-accent);
-  color: var(--edu-text-primary);
-}
-
-.module-card-actions .btn-primary:hover {
-  background: var(--edu-accent-hover);
-  border-color: var(--edu-accent-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px var(--edu-accent-glow);
-}
+/* Usa pulsanti standard del sito - nessuno stile custom */
 
 .module-card-actions .btn-secondary {
   background: var(--edu-surface-elevated);
@@ -963,30 +952,7 @@
   vertical-align: middle;
 }
 
-.lesson-item .btn {
-  flex-shrink: 0;
-  min-width: 100px;
-  min-height: 44px; /* Touch target size - WCAG 2.1 (aumentato da 36px) */
-  padding: var(--edu-spacing-sm) var(--edu-spacing-md);
-  background: var(--edu-accent);
-  border: 1px solid var(--edu-accent);
-  color: var(--edu-text-primary);
-  font-size: var(--fs-13);
-  font-weight: 600;
-  border-radius: var(--edu-radius-md);
-  transition: all var(--edu-transition-base);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.lesson-item .btn:hover {
-  background: var(--edu-accent-hover);
-  border-color: var(--edu-accent-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px var(--edu-accent-glow);
-}
+/* Usa pulsanti standard del sito - nessuno stile custom */
 
 .lesson-item .btn:focus-visible {
   outline: 2px solid var(--edu-border-focus);
