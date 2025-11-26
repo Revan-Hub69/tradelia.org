@@ -11,6 +11,12 @@ import { safeLog } from "./security-utils.js";
  */
 export async function initOnboarding() {
   try {
+    // Crea overlay se non esiste
+    let overlay = document.getElementById("onboarding-overlay");
+    if (!overlay) {
+      overlay = createOnboardingOverlay();
+    }
+
     // Verifica se l'utente ha già completato l'onboarding
     const onboardingCompleted = localStorage.getItem("education-onboarding-completed");
 
@@ -20,14 +26,15 @@ export async function initOnboarding() {
       return;
     }
 
-    // Crea overlay se non esiste
-    let overlay = document.getElementById("onboarding-overlay");
-    if (!overlay) {
-      overlay = createOnboardingOverlay();
+    // Mostra onboarding automaticamente ai nuovi utenti
+    // Aspetta che il DOM sia pronto
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => showOnboarding(overlay), 500);
+      });
+    } else {
+      setTimeout(() => showOnboarding(overlay), 500);
     }
-
-    // Mostra onboarding ai nuovi utenti
-    showOnboarding(overlay);
   } catch (error) {
     safeLog("error", "[Education Onboarding] Errore inizializzazione:", error);
     // Fallback: nascondi sempre l'overlay in caso di errore
@@ -45,7 +52,9 @@ function createOnboardingOverlay() {
   overlay.setAttribute("role", "dialog");
   overlay.setAttribute("aria-modal", "true");
   overlay.setAttribute("aria-labelledby", "onboarding-title");
+  // Inizialmente nascosto, verrà mostrato da showOnboarding()
   overlay.hidden = true;
+  overlay.style.display = "none";
 
   const modal = document.createElement("div");
   modal.className = "onboarding-modal";
