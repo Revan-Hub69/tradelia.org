@@ -644,8 +644,8 @@ function bindEducationEvents(container) {
   container.querySelectorAll(".education-module-card").forEach((card) => {
     if (!card.classList.contains("locked")) {
       card.addEventListener("click", async (e) => {
-        // Don't trigger if clicking on button
-        if (e.target.closest("button")) {
+        // Don't trigger if clicking on button or favorite button
+        if (e.target.closest("button") || e.target.closest(".education-favorite-btn")) {
           return;
         }
 
