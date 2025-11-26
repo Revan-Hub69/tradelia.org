@@ -249,17 +249,17 @@ async function showQuickStartStep(modal) {
           <div class="path-card" data-path="pac">
             <div class="path-icon">${EducationIcons.pac.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="48" height="48"')}</div>
             <div class="path-title">Piano di Accumulo</div>
-            <div class="path-description">Per chi vuole investire gradualmente</div>
+            <div class="path-description">Per chi vuole iniziare a investire i risparmi</div>
           </div>
           <div class="path-card" data-path="wealth">
             <div class="path-icon">${EducationIcons.wealth.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="48" height="48"')}</div>
             <div class="path-title">Wealth Management</div>
-            <div class="path-description">Per chi ha già un patrimonio</div>
+            <div class="path-description">Per chi ha un gruzzoletto da gestire</div>
           </div>
-          <div class="path-card" data-path="crypto">
+          <div class="path-card" data-path="trading">
             <div class="path-icon">${EducationIcons.crypto.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="48" height="48"')}</div>
-            <div class="path-title">Crypto Investing</div>
-            <div class="path-description">Per chi vuole investire in criptovalute</div>
+            <div class="path-title">Trading & Speculazione</div>
+            <div class="path-description">Per chi vuole speculare (include crypto)</div>
           </div>
         </div>
       </div>
