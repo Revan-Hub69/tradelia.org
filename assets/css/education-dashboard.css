@@ -255,17 +255,7 @@
   gap: var(--edu-spacing-xs);
 }
 
-.sr-quick-access .btn:hover {
-  background: var(--edu-surface-hover);
-  border-color: var(--edu-accent);
-  color: var(--edu-accent);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px var(--edu-accent-glow);
-}
-
-.sr-quick-access .btn:hover svg {
-  stroke: var(--edu-accent);
-}
+/* Usa pulsanti standard del sito - nessuno stile custom */
 
 .sr-quick-access .btn:focus-visible {
   outline: 3px solid var(--edu-border-focus);
@@ -510,11 +500,10 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--edu-accent) 0%, var(--edu-accent-light) 100%);
+  background: var(--edu-primary);
   border-radius: var(--edu-radius-full);
   transition: width var(--edu-transition-slow) cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  box-shadow: 0 0 8px var(--edu-accent-glow);
 }
 
 .progress-text {
@@ -824,9 +813,9 @@
 
 .lesson-item:hover {
   background: var(--edu-surface-hover);
-  border-color: var(--edu-accent);
+  border-color: var(--edu-border-base);
   transform: translateX(4px);
-  box-shadow: 0 2px 8px var(--edu-accent-glow);
+  box-shadow: var(--edu-shadow-sm);
 }
 
 .lesson-item:focus-visible {
@@ -839,7 +828,7 @@
 }
 
 .lesson-item.in_progress {
-  border-left: 4px solid var(--edu-accent);
+  border-left: 4px solid var(--edu-primary);
 }
 
 .lesson-item.microlearning {
@@ -1066,30 +1055,7 @@
   align-items: center;
 }
 
-.test-item .btn {
-  flex-shrink: 0;
-  min-width: 120px;
-  min-height: 44px; /* Touch target size - WCAG 2.1 (aumentato da 36px) */
-  padding: var(--edu-spacing-sm) var(--edu-spacing-md);
-  background: var(--edu-accent);
-  border: 1px solid var(--edu-accent);
-  color: var(--edu-text-primary);
-  font-size: var(--fs-13);
-  font-weight: 600;
-  border-radius: var(--edu-radius-md);
-  transition: all var(--edu-transition-base);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.test-item .btn:hover {
-  background: var(--edu-accent-hover);
-  border-color: var(--edu-accent-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px var(--edu-accent-glow);
-}
+/* Usa pulsanti standard del sito - nessuno stile custom */
 
 .test-item .btn:focus-visible {
   outline: 3px solid var(--edu-border-focus);
