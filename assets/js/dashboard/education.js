@@ -88,13 +88,29 @@ async function initEducation() {
     safeLog("warn", "[Education] Errore initInteractiveTools:", error);
   }
 
-  // Initialize onboarding
-  try {
-    const { initOnboarding } = await import("./education-onboarding.js");
-    await initOnboarding();
-  } catch (error) {
-    safeLog("warn", "[Education] Errore initOnboarding:", error);
-  }
+  // Initialize onboarding - DISABILITATO
+  // try {
+  //   const { initOnboarding } = await import("./education-onboarding.js");
+  //   await initOnboarding();
+  // } catch (error) {
+  //   safeLog("warn", "[Education] Errore initOnboarding:", error);
+  // }
+
+  // FORZA NASCONDI OVERLAY IMMEDIATAMENTE
+  (function () {
+    function forceHideOverlay() {
+      const overlay = document.getElementById("onboarding-overlay");
+      if (overlay) {
+        overlay.style.display = "none";
+        overlay.style.opacity = "0";
+        overlay.style.visibility = "hidden";
+        overlay.remove();
+      }
+    }
+    forceHideOverlay();
+    setTimeout(forceHideOverlay, 100);
+    setTimeout(forceHideOverlay, 500);
+  })();
 
   // Initialize toolbar
   try {

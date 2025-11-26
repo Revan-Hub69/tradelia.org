@@ -10,12 +10,21 @@
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   z-index: 10000;
-  display: flex;
+  display: none !important; /* FORZATO: nascondi sempre */
   align-items: center;
   justify-content: center;
   padding: var(--edu-spacing-xl);
-  opacity: 1;
+  opacity: 0 !important; /* FORZATO: opacità 0 */
+  visibility: hidden !important; /* FORZATO: nascosto */
   transition: opacity 0.3s ease;
+}
+
+/* FORZA NASCONDI OVERLAY CON ID */
+#onboarding-overlay {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 .onboarding-modal {
