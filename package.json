@@ -29,7 +29,9 @@
     "supabase:push:all": "node scripts/supabase-push.js all",
     "supabase:cli:push": "node scripts/supabase-cli-push.js",
     "supabase:cli:push:all": "node scripts/supabase-cli-push.js all",
-    "supabase:cli:list": "node scripts/supabase-cli-push.js list"
+    "supabase:cli:list": "node scripts/supabase-cli-push.js list",
+    "deploy": "node scripts/deploy-vercel.js",
+    "deploy:vercel": "vercel --prod"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
