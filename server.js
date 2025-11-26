@@ -136,19 +136,34 @@ app.get("*", (req, res, next) => {
     return next();
   }
 
+  console.warn(`[Static] Serving request for: ${req.path}`);
+
   // Serve specific HTML files if they exist
   const htmlFile = join(distPath, req.path === "/" ? "index.html" : req.path);
 
   try {
     if (statSync(htmlFile).isFile()) {
+      console.warn(`[Static] Found file: ${htmlFile}`);
       return res.sendFile(htmlFile);
     }
   } catch {
-    // File doesn't exist, fallback to index.html
+    console.warn(`[Static] File not found: ${htmlFile}, falling back to index.html`);
   }
 
   // Default fallback to index.html for SPA
-  res.sendFile(join(distPath, "index.html"));
+  const indexPath = join(distPath, "index.html");
+  console.warn(`[Static] Serving index.html from: ${indexPath}`);
+  try {
+    if (statSync(indexPath).isFile()) {
+      return res.sendFile(indexPath);
+    } else {
+      console.error(`[Static] ERROR: index.html not found at ${indexPath}`);
+      return res.status(404).send("index.html not found. Build may have failed.");
+    }
+  } catch (err) {
+    console.error(`[Static] ERROR serving index.html:`, err);
+    return res.status(500).send("Error serving index.html");
+  }
 });
 
 // Error handler
