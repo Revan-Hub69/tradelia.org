@@ -118,7 +118,13 @@ export class AdaptiveLearningUI {
         <div class="mastery-status">
           ${
             isMastered
-              ? '<span class="mastery-achieved">✅ Mastery Raggiunto!</span>'
+              ? `<span class="mastery-achieved">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                Mastery Raggiunto!
+              </span>`
               : `<span class="mastery-pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Continua a studiare (${masteryThreshold}% per passare)</span>`
           }
         </div>

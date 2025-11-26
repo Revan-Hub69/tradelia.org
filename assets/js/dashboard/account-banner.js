@@ -38,7 +38,12 @@ function renderBanner(container, role, planData) {
     container.innerHTML = `
       <div class="account-banner account-banner-guest">
         <div class="account-banner-content">
-          <div class="account-banner-icon">👤</div>
+          <div class="account-banner-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
           <div class="account-banner-info">
             <div class="account-banner-title">Accesso Libero</div>
             <div class="account-banner-subtitle">Accedi per sbloccare PDF e analisi</div>
@@ -84,7 +89,12 @@ function renderBanner(container, role, planData) {
     container.innerHTML = `
       <div class="account-banner account-banner-authenticated">
         <div class="account-banner-content">
-          <div class="account-banner-icon">👤</div>
+          <div class="account-banner-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
           <div class="account-banner-info">
             <div class="account-banner-title">
               ${escapeHtml(email)} • Pro
@@ -136,7 +146,12 @@ function renderBanner(container, role, planData) {
     container.innerHTML = `
       <div class="account-banner account-banner-desk">
         <div class="account-banner-content">
-          <div class="account-banner-icon">💼</div>
+          <div class="account-banner-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            </svg>
+          </div>
           <div class="account-banner-info">
             <div class="account-banner-title">${escapeHtml(email)} • Desk Attivo</div>
             <div class="account-banner-subtitle">

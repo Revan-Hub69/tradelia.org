@@ -483,7 +483,16 @@ function renderTestResults(attempt) {
         <h1 class="results-title">${passed ? "Test Superato!" : "Test Non Superato"}</h1>
         <div class="results-score">
           <span class="score-value">${score}%</span>
-          ${isPerfect ? `<span class="perfect-badge">Perfetto! 🎉</span>` : ""}
+          ${
+            isPerfect
+              ? `<span class="perfect-badge">
+            Perfetto!
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" style="display: inline-block; vertical-align: middle; margin-left: 4px;">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </span>`
+              : ""
+          }
         </div>
         <p class="results-message">
           ${
@@ -593,7 +602,13 @@ function renderQuestionReview(question, questionNumber, userAnswer, correctAnswe
             !isCorrect
               ? `
             <div class="explanation-tip">
-              <strong>💡 Suggerimento:</strong> Rivedi questo concetto nella lezione correlata per consolidare la comprensione.
+              <strong>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                  <path d="M9 21h6"/>
+                  <path d="M12 3a6 6 0 0 0 6 6c0 2.22-1.21 4.16-3 5.2V19a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-4.8c-1.79-1.04-3-3-3-5.2a6 6 0 0 0 6-6z"/>
+                </svg>
+                Suggerimento:
+              </strong> Rivedi questo concetto nella lezione correlata per consolidare la comprensione.
             </div>
           `
               : ""

@@ -67,7 +67,17 @@ export class RetrievalPracticeUI {
         
         <div class="rq-question" data-question-index="${index}">
           <h3>${this.escapeHtml(question.question)}</h3>
-          ${question.hint ? `<p class="rq-hint">💡 ${this.escapeHtml(question.hint)}</p>` : ""}
+          ${
+            question.hint
+              ? `<p class="rq-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+              <path d="M9 21h6"/>
+              <path d="M12 3a6 6 0 0 0 6 6c0 2.22-1.21 4.16-3 5.2V19a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-4.8c-1.79-1.04-3-3-3-5.2a6 6 0 0 0 6-6z"/>
+            </svg>
+            ${this.escapeHtml(question.hint)}
+          </p>`
+              : ""
+          }
         </div>
         
         <div class="rq-options">
@@ -116,7 +126,21 @@ export class RetrievalPracticeUI {
       const feedback = document.createElement("div");
       feedback.className = `rq-feedback ${isCorrect ? "correct" : "incorrect"}`;
       feedback.innerHTML = `
-        <p>${isCorrect ? "✅ Corretto!" : "❌ Sbagliato"}</p>
+        <p>
+          ${
+            isCorrect
+              ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+              Corretto!`
+              : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+              Sbagliato`
+          }
+        </p>
         ${question.explanation ? `<p class="rq-explanation">${this.escapeHtml(question.explanation)}</p>` : ""}
       `;
       container.appendChild(feedback);

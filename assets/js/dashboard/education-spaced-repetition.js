@@ -38,7 +38,7 @@ export class SpacedRepetitionUI {
   async loadDueItems(container) {
     try {
       const token = await this.getAuthToken();
-      
+
       if (!token) {
         container.innerHTML = `
           <div class="education-message">
@@ -64,7 +64,12 @@ export class SpacedRepetitionUI {
       if (items.length === 0) {
         container.innerHTML = `
           <div class="education-message">
-            <h3>🎉 Ottimo lavoro!</h3>
+            <h3>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+              Ottimo lavoro!
+            </h3>
             <p>Non hai item da rivedere oggi.</p>
             <p>Ritorneremo domani per nuove revisioni.</p>
           </div>
@@ -102,7 +107,17 @@ export class SpacedRepetitionUI {
           <div class="sr-flashcard-front">
             <div class="sr-question">
               <h3>${this.escapeHtml(item.question)}</h3>
-              ${item.hint ? `<p class="sr-hint">💡 ${this.escapeHtml(item.hint)}</p>` : ""}
+              ${
+                item.hint
+                  ? `<p class="sr-hint">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                  <path d="M9 21h6"/>
+                  <path d="M12 3a6 6 0 0 0 6 6c0 2.22-1.21 4.16-3 5.2V19a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-4.8c-1.79-1.04-3-3-3-5.2a6 6 0 0 0 6-6z"/>
+                </svg>
+                ${this.escapeHtml(item.hint)}
+              </p>`
+                  : ""
+              }
             </div>
             <button class="sr-reveal-btn" onclick="window.SpacedRepetitionUI.revealAnswer()">
               Mostra Risposta
@@ -120,22 +135,28 @@ export class SpacedRepetitionUI {
               <p><strong>Quanto bene ricordavi?</strong></p>
               <div class="sr-rating-buttons">
                 <button class="sr-rating-btn" data-quality="0" onclick="window.SpacedRepetitionUI.rateRecall(0)">
-                  ❌ Niente
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  Niente
                 </button>
                 <button class="sr-rating-btn" data-quality="1" onclick="window.SpacedRepetitionUI.rateRecall(1)">
-                  🟥 Difficile
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="display: inline-block; vertical-align: middle; margin-right: 4px; color: #dc2626;"><circle cx="12" cy="12" r="10"/></svg>
+                  Difficile
                 </button>
                 <button class="sr-rating-btn" data-quality="2" onclick="window.SpacedRepetitionUI.rateRecall(2)">
-                  🟨 Parziale
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="display: inline-block; vertical-align: middle; margin-right: 4px; color: #ea580c;"><circle cx="12" cy="12" r="10"/><path d="M12 2v20" stroke-width="2"/></svg>
+                  Parziale
                 </button>
                 <button class="sr-rating-btn" data-quality="3" onclick="window.SpacedRepetitionUI.rateRecall(3)">
-                  🟩 Corretto
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="display: inline-block; vertical-align: middle; margin-right: 4px; color: #16a34a;"><circle cx="12" cy="12" r="10"/></svg>
+                  Corretto
                 </button>
                 <button class="sr-rating-btn" data-quality="4" onclick="window.SpacedRepetitionUI.rateRecall(4)">
-                  🟦 Facile
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="display: inline-block; vertical-align: middle; margin-right: 4px; color: #3b82f6;"><circle cx="12" cy="12" r="10"/></svg>
+                  Facile
                 </button>
                 <button class="sr-rating-btn" data-quality="5" onclick="window.SpacedRepetitionUI.rateRecall(5)">
-                  ⭐ Perfetto
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="display: inline-block; vertical-align: middle; margin-right: 4px; color: #fbbf24;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  Perfetto
                 </button>
               </div>
             </div>
@@ -152,7 +173,9 @@ export class SpacedRepetitionUI {
    */
   revealAnswer() {
     const flashcard = document.querySelector(".sr-flashcard");
-    if (!flashcard) return;
+    if (!flashcard) {
+      return;
+    }
 
     const front = flashcard.querySelector(".sr-flashcard-front");
     const back = flashcard.querySelector(".sr-flashcard-back");
@@ -206,8 +229,9 @@ export class SpacedRepetitionUI {
 
       // Load next item after delay
       setTimeout(() => {
-        const container = document.getElementById("spaced-repetition-container") || 
-                         document.querySelector(".spaced-repetition-container")?.parentElement;
+        const container =
+          document.getElementById("spaced-repetition-container") ||
+          document.querySelector(".spaced-repetition-container")?.parentElement;
         if (container) {
           this.loadDueItems(container);
         }
@@ -223,7 +247,9 @@ export class SpacedRepetitionUI {
    */
   showFeedback(quality) {
     const flashcard = document.querySelector(".sr-flashcard");
-    if (!flashcard) return;
+    if (!flashcard) {
+      return;
+    }
 
     const feedbackMessages = {
       0: "Nessun problema! Ripasseremo presto.",
@@ -358,9 +384,11 @@ export class SpacedRepetitionUI {
   async getAuthToken() {
     try {
       const supabase = getSupabaseClient();
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       return session?.access_token || null;
-    } catch (error) {
+    } catch {
       return null;
     }
   }

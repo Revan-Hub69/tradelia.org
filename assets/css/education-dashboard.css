@@ -1986,11 +1986,14 @@
   gap: var(--edu-spacing-md);
 }
 
-.empty-state::before {
-  content: "📚";
-  font-size: 3rem;
-  opacity: 0.5;
-  margin-bottom: var(--edu-spacing-sm);
+.empty-state-icon {
+  margin-bottom: var(--edu-spacing-md);
+  opacity: 0.4;
+  color: var(--edu-text-muted);
+}
+
+.empty-state-icon svg {
+  display: block;
 }
 
 .empty-state p {
@@ -1998,6 +2001,7 @@
   margin: 0;
   line-height: 1.6;
   max-width: 500px;
+  color: var(--edu-text-secondary);
 }
 
 .empty-state .btn {
