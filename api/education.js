@@ -2236,8 +2236,10 @@ async function getBadges(req, res) {
   try {
     const user_id = req.user?.id;
 
+    // Se l'utente non è autenticato, restituisci array vuoto invece di 401
+    // (per permettere al frontend di mostrare la sezione badge anche per guest)
     if (!user_id) {
-      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+      return res.json({ success: true, badges: [] });
     }
 
     // Get user badges from education_user_badges table
