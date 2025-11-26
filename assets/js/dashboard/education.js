@@ -24,11 +24,11 @@ import { safeLog, escapeHtml } from "./security-utils.js";
 const API_BASE = "/api/education";
 
 const LEVEL_LABELS = {
-  0: "Foundation",
-  1: "Foundation",
-  2: "Operativo",
-  3: "Stratega",
-  4: "Maestro",
+  0: "Principi Base",
+  1: "Principi Base",
+  2: "Applicazione",
+  3: "Analisi Avanzata",
+  4: "Sintesi Critica",
 };
 
 let currentModule = null;
@@ -227,7 +227,7 @@ async function loadEducationDashboard(container) {
           }
           if (progress && !progress.stats) {
             progress.stats = {
-              current_level: "Foundation",
+              current_level: "Principi Base",
               total_points: 0,
               modules_completed: 0,
               current_streak_days: 0,
@@ -254,7 +254,7 @@ async function loadEducationDashboard(container) {
       progress = {
         modules: [],
         stats: {
-          current_level: "Foundation",
+          current_level: "Principi Base",
           total_points: 0,
           completed_modules: 0,
           completed_lessons: 0,
@@ -1547,7 +1547,7 @@ function updateProgressInLocalStorage(lessonId, status, timeSpentMinutes = 0) {
       progress = {
         modules: [],
         stats: {
-          current_level: "Foundation",
+          current_level: "Principi Base",
           total_points: 0,
           completed_modules: 0,
           completed_lessons: 0,

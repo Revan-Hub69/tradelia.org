@@ -342,7 +342,6 @@
         background: var(--surface-hover);
         border-color: var(--brand-600);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-        transform: translateY(-4px);
       }
 
       .method-card-icon {
@@ -425,7 +424,6 @@
       .audience-card:hover {
         border-color: var(--brand-500);
         background: var(--surface-elev);
-        transform: translateY(-2px);
         box-shadow: 0 18px 40px rgba(15, 23, 42, 0.6);
       }
 
@@ -576,13 +574,7 @@
         }
       }
 
-      /* Parallax leggero per sezioni */
-      @media (prefers-reduced-motion: no-preference) {
-        .section-alt,
-        .section-contrast {
-          transition: transform 0.3s ease-out;
-        }
-      }
+      /* Parallax rimosso - design statico e professionale */
 
       /* Scroll progress indicator (discreto) */
       .scroll-progress {
@@ -611,7 +603,6 @@
       .value-card:hover {
         border-color: var(--brand-500);
         box-shadow: 0 10px 28px rgba(37, 99, 235, 0.15);
-        transform: translateY(-2px);
       }
       .value-card:hover .badge {
         background: rgba(59, 130, 246, 0.18);
@@ -763,7 +754,6 @@
         background: var(--surface-elev);
         border-color: var(--brand-600);
         box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-        transform: translateY(-6px);
       }
 
       .service-card-header {
@@ -791,12 +781,7 @@
           background 0.2s ease;
       }
       .service-card:hover .service-card-icon {
-        transform: scale(1.05);
         background: linear-gradient(135deg, rgba(37, 99, 235, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%);
-      }
-      .service-card:hover .service-card-icon svg {
-        transform: rotate(2deg);
-        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .service-card-title {
@@ -859,7 +844,6 @@
 
       .testimonial-card:hover {
         border-color: var(--brand-600);
-        transform: translateY(-4px);
         box-shadow: 0 12px 32px rgba(37, 99, 235, 0.15);
       }
 
@@ -975,7 +959,6 @@
 
       .collaborator-card:hover {
         border-color: var(--brand-600);
-        transform: translateY(-2px);
         box-shadow: 0 8px 24px rgba(37, 99, 235, 0.1);
       }
 
@@ -2072,17 +2055,20 @@
       <section class="hero-section">
         <div class="container">
           <div class="hero-content">
-            <div class="hero-badge">Campus formativo gratuito · Nessun login richiesto</div>
+            <div class="hero-badge">
+              Progetto indipendente · Formazione gratuita · Basato su ricerca accademica
+            </div>
 
             <h1 class="hero-title">
-              <span class="hero-title-line">Campus formativo AI gratuito</span>
-              <span class="hero-title-line">con upgrade Pro per report e analisi avanzate</span>
+              <span class="hero-title-line">Percorso formativo gratuito</span>
+              <span class="hero-title-line">basato su fondamenta accademiche verificate</span>
             </h1>
 
             <p class="hero-description">
-              Percorso formativo gratuito sui mercati finanziari. Impara con tutorial interattivi,
-              quiz e badge. Nessun login richiesto. Completa il foundation per sbloccare i report
-              Pro.
+              Progetto indipendente che offre un sistema formativo completo sui mercati finanziari.
+              Contenuti basati su ricerca accademica, metodologie verificate e framework
+              documentati. Accesso gratuito senza registrazione. Upgrade Pro disponibile per analisi
+              avanzate e report AI.
             </p>
 
             <div class="hero-plan-grid" aria-label="Panoramica servizi Tradelia">
@@ -2090,10 +2076,12 @@
                 <span class="plan-badge">Gratuito</span>
                 <strong>Percorso formativo completo</strong>
                 <ul>
-                  <li>Percorsi formativi (Foundation, Intermarket, Advanced)</li>
-                  <li>Tutorial, quiz e badge per tracciare il progresso</li>
+                  <li>
+                    Percorsi formativi modulari (Principi Base, Applicazione, Analisi Avanzata)
+                  </li>
+                  <li>Contenuti basati su ricerca accademica verificata</li>
                   <li>Dashboard installabile, funziona offline</li>
-                  <li>Completa il foundation per sbloccare i report Pro</li>
+                  <li>Completa i moduli base per accedere ai report Pro</li>
                 </ul>
                 <a
                   href="/dashboard.html#education"
@@ -2107,7 +2095,7 @@
                 <span class="plan-badge">Pro €29/mese</span>
                 <strong>Accesso completo ai report + 1 report incluso</strong>
                 <ul>
-                  <li>Accesso a tutti i report dopo completamento foundation</li>
+                  <li>Accesso completo ai report Tradelia AI dopo completamento moduli base</li>
                   <li>1 report on-demand incluso al mese (valore €49)</li>
                   <li>Community proposals (vota e richiedi analisi)</li>
                   <li>Report aggiuntivi a €49</li>
@@ -2204,9 +2192,11 @@
           <div class="section-header">
             <h2 class="section-title" id="chi-siamo-heading">Chi siamo e cosa facciamo</h2>
             <p class="section-description">
-              Tradelia AI offre percorsi formativi sui mercati finanziari basati su metodologie
-              riconosciute (FDM, MLT, PAC). Ogni contenuto ha fonti verificabili e documentazione
-              completa. Ispirato ai principi accademici, pensato per essere accessibile.
+              Tradelia è un progetto indipendente che offre percorsi formativi sui mercati
+              finanziari basati su fondamenta accademiche verificate. Ogni contenuto include
+              riferimenti a ricerca peer-reviewed, metodologie documentate e framework teorici
+              riconosciuti. Approccio rigoroso e accessibile, senza compromessi sulla qualità
+              accademica.
             </p>
           </div>
           <div class="value-grid" style="max-width: 900px; margin: 0 auto">
@@ -2479,35 +2469,7 @@
 
         sectionHeaders.forEach((header) => headerObserver.observe(header));
 
-        // Parallax leggero per sezioni (solo desktop, molto discreto)
-        if (window.innerWidth >= 768) {
-          let ticking = false;
-          const parallaxSections = document.querySelectorAll(".section-alt, .section-contrast");
-
-          const updateParallax = () => {
-            const scrollY = window.scrollY;
-            parallaxSections.forEach((section, index) => {
-              const rect = section.getBoundingClientRect();
-              const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-              if (isVisible) {
-                const offset = (rect.top - window.innerHeight / 2) * 0.02;
-                section.style.transform = `translateY(${offset}px)`;
-              }
-            });
-            ticking = false;
-          };
-
-          window.addEventListener(
-            "scroll",
-            () => {
-              if (!ticking) {
-                window.requestAnimationFrame(updateParallax);
-                ticking = true;
-              }
-            },
-            { passive: true }
-          );
-        }
+        // Parallax rimosso - design statico e professionale
       })();
 
       (function scrollProgress() {
