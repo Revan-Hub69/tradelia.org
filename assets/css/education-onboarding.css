@@ -10,21 +10,19 @@
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   z-index: 10000;
-  display: none !important; /* FORZATO: nascondi sempre */
+  display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--edu-spacing-xl);
-  opacity: 0 !important; /* FORZATO: opacità 0 */
-  visibility: hidden !important; /* FORZATO: nascosto */
+  opacity: 1;
+  visibility: visible;
   transition: opacity 0.3s ease;
 }
 
-/* FORZA NASCONDI OVERLAY CON ID */
-#onboarding-overlay {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
+.onboarding-overlay[hidden] {
+  display: none;
+  opacity: 0;
+  visibility: hidden;
 }
 
 .onboarding-modal {

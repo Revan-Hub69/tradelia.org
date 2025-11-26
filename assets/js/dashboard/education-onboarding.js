@@ -20,13 +20,17 @@ export async function initOnboarding() {
       return;
     }
 
-    // Mostra onboarding solo se non è stato completato
-    // Per ora, nascondiamo sempre l'overlay per non bloccare l'accesso
-    // (l'onboarding può essere mostrato in futuro quando implementato)
-    hideOnboardingOverlay();
+    // Crea overlay se non esiste
+    let overlay = document.getElementById("onboarding-overlay");
+    if (!overlay) {
+      overlay = createOnboardingOverlay();
+    }
 
-    // Se in futuro vuoi mostrare l'onboarding, decommenta:
-    // showOnboarding();
+    // Mostra onboarding solo se non è stato completato
+    // Per ora nascondiamo per default (l'onboarding può essere mostrato quando implementato)
+    // Se vuoi mostrarlo, decommenta la riga seguente:
+    // showOnboarding(overlay);
+    hideOnboardingOverlay();
   } catch (error) {
     safeLog("error", "[Education Onboarding] Errore inizializzazione:", error);
     // Fallback: nascondi sempre l'overlay in caso di errore
@@ -35,11 +39,72 @@ export async function initOnboarding() {
 }
 
 /**
+ * Create onboarding overlay element
+ */
+function createOnboardingOverlay() {
+  const overlay = document.createElement("div");
+  overlay.id = "onboarding-overlay";
+  overlay.className = "onboarding-overlay";
+  overlay.setAttribute("role", "dialog");
+  overlay.setAttribute("aria-modal", "true");
+  overlay.setAttribute("aria-labelledby", "onboarding-title");
+  overlay.hidden = true;
+
+  const modal = document.createElement("div");
+  modal.className = "onboarding-modal";
+
+  const step = document.createElement("div");
+  step.className = "onboarding-step";
+
+  step.innerHTML = `
+    <h2 id="onboarding-title" class="onboarding-title">Benvenuto nel Sistema Formativo</h2>
+    <p class="onboarding-description">
+      Scopri come utilizzare i percorsi formativi, i test e le certificazioni disponibili.
+    </p>
+    <div class="onboarding-actions">
+      <button class="btn btn-primary" id="onboarding-skip">Salta</button>
+      <button class="btn btn-secondary" id="onboarding-start">Inizia tour</button>
+    </div>
+  `;
+
+  modal.appendChild(step);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  // Bind event listeners
+  const skipBtn = overlay.querySelector("#onboarding-skip");
+  const startBtn = overlay.querySelector("#onboarding-start");
+
+  if (skipBtn) {
+    skipBtn.addEventListener("click", () => {
+      completeOnboarding();
+    });
+  }
+
+  if (startBtn) {
+    startBtn.addEventListener("click", () => {
+      // TODO: Implementa tour guidato
+      completeOnboarding();
+    });
+  }
+
+  // Chiudi cliccando fuori
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) {
+      completeOnboarding();
+    }
+  });
+
+  return overlay;
+}
+
+/**
  * Hide onboarding overlay
  */
-function hideOnboardingOverlay() {
+export function hideOnboardingOverlay() {
   const overlay = document.getElementById("onboarding-overlay");
   if (overlay) {
+    overlay.hidden = true;
     overlay.style.display = "none";
     overlay.style.opacity = "0";
     overlay.style.visibility = "hidden";
@@ -49,19 +114,19 @@ function hideOnboardingOverlay() {
 }
 
 /**
- * Show onboarding overlay (per implementazione futura)
- * @param {HTMLElement} overlay - Overlay element
+ * Show onboarding overlay
+ * @param {HTMLElement} overlay - Overlay element (opzionale)
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function showOnboarding(overlay) {
-  // Implementazione futura per mostrare onboarding
-  // const overlayEl = overlay || document.getElementById("onboarding-overlay");
-  // if (overlayEl) {
-  //   overlayEl.style.display = "flex";
-  //   overlayEl.style.opacity = "1";
-  //   overlayEl.style.visibility = "visible";
-  //   overlayEl.setAttribute("aria-hidden", "false");
-  // }
+export function showOnboarding(overlay) {
+  const overlayEl = overlay || document.getElementById("onboarding-overlay");
+  if (overlayEl) {
+    overlayEl.hidden = false;
+    overlayEl.style.display = "flex";
+    overlayEl.style.opacity = "1";
+    overlayEl.style.visibility = "visible";
+    overlayEl.setAttribute("aria-hidden", "false");
+    safeLog("log", "[Education Onboarding] Overlay mostrato");
+  }
 }
 
 /**
