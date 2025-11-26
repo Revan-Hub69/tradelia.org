@@ -13,8 +13,8 @@ const supabase = getServiceSupabase();
 
 // NOTA: Funzione disabilitata per rispettare limite Vercel Hobby (12 funzioni)
 // Consolidata in api/auth.js?action=user-*
-// export default async function handler(req, res) {
-async function handler(req, res) {
+// Esportata per essere usata dai wrapper Cloudflare in functions/api/user.js
+export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -283,10 +283,72 @@ async function handleGetUserPlan(req, res) {
 
 // ===== REQUEST TOKEN =====
 async function handleRequestToken(req, res) {
-  // Reindirizza alla funzione originale (per compatibilità)
-  // In futuro possiamo spostare la logica qui
-  const originalHandler = await import("./request-dashboard-token.js");
-  return originalHandler.default(req, res);
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  const { email } = req.body;
+
+  if (!email || typeof email !== "string" || !email.includes("@")) {
+    return res.status(400).json({ ok: false, error: "Email non valida" });
+  }
+
+  // BEST PRACTICE: Sanitizzazione email coerente
+  const sanitizedEmail = email.trim().toLowerCase();
+
+  // Validazione formato email
+  const emailRegex =
+    /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+  if (
+    !emailRegex.test(sanitizedEmail) ||
+    sanitizedEmail.length > 254 ||
+    sanitizedEmail.length < 5
+  ) {
+    return res.status(400).json({ ok: false, error: "Formato email non valido" });
+  }
+
+  // Verifica utente e piano attivo
+  const { data: subscriber } = await supabase
+    .from("subscribers")
+    .select("auth_user_id, status, current_period_end")
+    .eq("email", sanitizedEmail)
+    .eq("status", "active")
+    .single();
+
+  let userId = subscriber?.auth_user_id || null;
+  let validUntil = subscriber?.current_period_end || null;
+
+  if (!userId) {
+    const { data: authUsers } = await supabase.auth.admin.listUsers();
+    const user = authUsers?.users?.find((u) => u.email?.toLowerCase() === sanitizedEmail);
+    userId = user?.id || null;
+
+    if (userId) {
+      const { data: userRole } = await supabase
+        .from("user_roles")
+        .select("role, valid_until")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (userRole?.valid_until) {
+        validUntil = userRole.valid_until;
+      }
+    }
+  }
+
+  if (!userId) {
+    return res.status(404).json({ ok: false, error: "Utente non trovato o piano non attivo" });
+  }
+
+  // Genera token JWT
+  const token = await getAdminContextFromToken(userId, validUntil);
+
+  return sendJSON(res, 200, {
+    ok: true,
+    token,
+    email: sanitizedEmail,
+    userId,
+  });
 }
 
 // ===== GET NOTIFICATION PREFERENCES =====

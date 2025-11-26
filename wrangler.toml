@@ -27,3 +27,6 @@ cwd = "."
 
 # Pages output directory
 pages_build_output_dir = "dist"
+
+# Note: firebase-admin is loaded dynamically and excluded from bundle
+# See api/notifications.js for implementation details
