@@ -26,15 +26,9 @@ export async function initOnboarding() {
       return;
     }
 
-    // Mostra onboarding automaticamente ai nuovi utenti
-    // Aspetta che il DOM sia pronto
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", () => {
-        setTimeout(() => showOnboarding(overlay), 500);
-      });
-    } else {
-      setTimeout(() => showOnboarding(overlay), 500);
-    }
+    // Non mostrare onboarding automaticamente - solo se esplicitamente richiesto
+    // L'onboarding può essere mostrato manualmente chiamando showOnboarding()
+    hideOnboardingOverlay();
   } catch (error) {
     safeLog("error", "[Education Onboarding] Errore inizializzazione:", error);
     // Fallback: nascondi sempre l'overlay in caso di errore

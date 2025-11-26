@@ -575,23 +575,6 @@ function normalizeModules(modules = [], { lessonProgress = {} } = {}) {
 }
 
 /**
- * Render favorites section dynamically
- */
-async function mountEducationFavorites(modules) {
-  const favoritesContainer = document.getElementById("education-favorites-container");
-  if (!favoritesContainer) {
-    return;
-  }
-
-  try {
-    const { renderFavoritesSection } = await import("./education-favorites.js");
-    favoritesContainer.innerHTML = renderFavoritesSection(modules, modules);
-  } catch (error) {
-    safeLog("warn", "[Education] Errore render favorites:", error);
-  }
-}
-
-/**
  * Render education dashboard
  */
 async function renderEducationDashboard(container, progress) {
@@ -733,9 +716,6 @@ async function renderEducationDashboard(container, progress) {
         </div>
       </div>
 
-      <!-- Preferiti -->
-      <div id="education-favorites-container"></div>
-
       <!-- Moduli -->
       <div class="education-modules">
         <h2 class="education-section-title">Percorso Formativo</h2>
@@ -761,20 +741,6 @@ async function renderEducationDashboard(container, progress) {
     </div>
   `;
 
-  await mountEducationFavorites(modules);
-
-  if (window.__educationFavoritesHandler) {
-    window.removeEventListener("education-favorites-changed", window.__educationFavoritesHandler);
-  }
-  window.__educationFavoritesHandler = async () => {
-    await mountEducationFavorites(window.educationModules || modules);
-    const favoritesContainer = document.getElementById("education-favorites-container");
-    if (favoritesContainer) {
-      bindEducationEvents(favoritesContainer);
-    }
-  };
-  window.addEventListener("education-favorites-changed", window.__educationFavoritesHandler);
-
   // Bind events
   bindEducationEvents(container);
 }
@@ -797,18 +763,6 @@ function renderModuleCard(module, index) {
     locked: "Bloccato",
   };
 
-  // Check if favorited (synchronous check)
-  let isFavorited = false;
-  try {
-    const stored = localStorage.getItem("tradelia_education_favorites");
-    if (stored) {
-      const favorites = JSON.parse(stored);
-      isFavorited = favorites.includes(module.id);
-    }
-  } catch {
-    // Ignore
-  }
-
   return `
     <div class="module-card education-module-card ${isLocked ? "locked" : ""}" 
          data-module-id="${module.id}" 
@@ -822,17 +776,6 @@ function renderModuleCard(module, index) {
         <div class="module-status-badge" aria-label="Stato: ${statusLabels[status]}">
           ${statusLabels[status]}
         </div>
-        <button 
-          class="education-favorite-btn ${isFavorited ? "favorited" : ""}" 
-          data-module-id="${module.id}"
-          aria-label="${isFavorited ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}"
-          title="${isFavorited ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}"
-          type="button"
-        >
-          <svg viewBox="0 0 24 24" fill="${isFavorited ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-          </svg>
-        </button>
       </div>
       <div class="module-card-content">
         <h3 class="module-title">${escapeHtml(module.title)}</h3>
@@ -883,7 +826,7 @@ function renderModuleCard(module, index) {
           <p class="module-lock-hint">${escapeHtml(lockHint)}</p>
         `
             : `
-          <button class="btn btn-education" data-action="open-module" data-module-id="${module.id}">
+          <button class="btn btn-primary" data-action="open-module" data-module-id="${module.id}">
             ${status === "completed" ? "Rivedi" : status === "in_progress" ? "Continua" : "Inizia"}
           </button>
         `
@@ -928,7 +871,7 @@ function bindEducationEvents(container) {
 
     card.addEventListener("click", async (e) => {
       // Don't trigger if clicking on button or favorite button
-      if (e.target.closest("button") || e.target.closest(".education-favorite-btn")) {
+      if (e.target.closest("button")) {
         return;
       }
 

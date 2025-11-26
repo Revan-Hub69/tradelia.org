@@ -575,19 +575,17 @@
   min-width: 44px; /* Touch target size - WCAG 2.1 */
 }
 
-.module-card-actions .btn-primary,
-.module-card-actions .btn-education {
-  background: var(--edu-primary);
-  border-color: var(--edu-primary);
+.module-card-actions .btn-primary {
+  background: var(--edu-accent);
+  border-color: var(--edu-accent);
   color: var(--edu-text-primary);
 }
 
-.module-card-actions .btn-primary:hover,
-.module-card-actions .btn-education:hover {
-  background: var(--edu-primary-hover);
-  border-color: var(--edu-primary-hover);
+.module-card-actions .btn-primary:hover {
+  background: var(--edu-accent-hover);
+  border-color: var(--edu-accent-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+  box-shadow: 0 4px 12px var(--edu-accent-glow);
 }
 
 .module-card-actions .btn-secondary {
@@ -970,8 +968,8 @@
   min-width: 100px;
   min-height: 44px; /* Touch target size - WCAG 2.1 (aumentato da 36px) */
   padding: var(--edu-spacing-sm) var(--edu-spacing-md);
-  background: var(--edu-primary);
-  border: 1px solid var(--edu-primary);
+  background: var(--edu-accent);
+  border: 1px solid var(--edu-accent);
   color: var(--edu-text-primary);
   font-size: var(--fs-13);
   font-weight: 600;
@@ -984,10 +982,10 @@
 }
 
 .lesson-item .btn:hover {
-  background: var(--edu-primary-hover);
-  border-color: var(--edu-primary-hover);
+  background: var(--edu-accent-hover);
+  border-color: var(--edu-accent-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+  box-shadow: 0 4px 12px var(--edu-accent-glow);
 }
 
 .lesson-item .btn:focus-visible {
