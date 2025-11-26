@@ -349,9 +349,29 @@ function template() {
             </p>
           </div>
           
-          <div style="display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-3); background: var(--surface-card); border: 1px solid var(--br-card); border-radius: var(--radius-md); margin-bottom: var(--sp-6);">
-            <input type="checkbox" id="onboarding-dont-show" style="width: 18px; height: 18px; cursor: pointer;">
-            <label for="onboarding-dont-show" style="font-size: var(--fs-13); color: var(--ink-soft); cursor: pointer; margin: 0;">
+          <div style="display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-4); background: var(--surface-elev); border: 1px solid var(--br-card); border-radius: var(--radius-md); margin-bottom: var(--sp-6);">
+            <input 
+              type="checkbox" 
+              id="onboarding-dont-show" 
+              style="
+                width: 20px; 
+                height: 20px; 
+                cursor: pointer; 
+                accent-color: var(--brand-500, #3b82f6);
+                flex-shrink: 0;
+              "
+            >
+            <label 
+              for="onboarding-dont-show" 
+              style="
+                font-size: var(--fs-14); 
+                color: var(--ink); 
+                cursor: pointer; 
+                margin: 0; 
+                line-height: 1.5;
+                user-select: none;
+              "
+            >
               Non mostrare più questo messaggio
             </label>
           </div>
@@ -528,10 +548,17 @@ function updateProgress() {
  * Complete onboarding
  */
 async function completeOnboarding() {
-  const dontShow = state.root.querySelector("#onboarding-dont-show")?.checked;
+  const dontShowCheckbox = state.root.querySelector("#onboarding-dont-show");
+  const dontShow = dontShowCheckbox?.checked;
+
+  safeLog("log", "[Education Onboarding] Completing onboarding, dontShow:", dontShow);
+
   if (dontShow) {
+    safeLog("log", "[Education Onboarding] Saving preference to IndexedDB...");
     await markOnboardingCompleted();
+    safeLog("log", "[Education Onboarding] Preference saved");
   }
+
   close();
 }
 
