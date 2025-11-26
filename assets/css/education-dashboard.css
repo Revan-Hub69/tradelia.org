@@ -968,8 +968,8 @@
   min-width: 100px;
   min-height: 44px; /* Touch target size - WCAG 2.1 (aumentato da 36px) */
   padding: var(--edu-spacing-sm) var(--edu-spacing-md);
-  background: var(--edu-accent);
-  border: 1px solid var(--edu-accent);
+  background: var(--edu-primary);
+  border: 1px solid var(--edu-primary);
   color: var(--edu-text-primary);
   font-size: var(--fs-13);
   font-weight: 600;
@@ -982,10 +982,10 @@
 }
 
 .lesson-item .btn:hover {
-  background: var(--edu-accent-hover);
-  border-color: var(--edu-accent-hover);
+  background: var(--edu-primary-hover);
+  border-color: var(--edu-primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px var(--edu-accent-glow);
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
 }
 
 .lesson-item .btn:focus-visible {

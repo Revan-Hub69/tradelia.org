@@ -1203,61 +1203,6 @@
       aria-atomic="true"
     ></div>
 
-    <!-- Fallback: Nascondi onboarding overlay immediatamente -->
-    <script>
-      // Nascondi overlay immediatamente se esiste
-      (function () {
-        function hideOverlay() {
-          const overlay = document.getElementById("onboarding-overlay");
-          if (overlay) {
-            overlay.style.display = "none";
-            overlay.style.opacity = "0";
-            overlay.style.visibility = "hidden";
-            overlay.setAttribute("aria-hidden", "true");
-            overlay.remove(); // Rimuovi completamente dal DOM
-            console.warn("[Fallback] Onboarding overlay rimosso");
-          }
-        }
-
-        // Nascondi immediatamente se DOM è già caricato
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", hideOverlay);
-        } else {
-          hideOverlay();
-        }
-
-        // Fallback: nascondi anche dopo un breve delay (per overlay creati dinamicamente)
-        setTimeout(hideOverlay, 100);
-        setTimeout(hideOverlay, 500);
-        setTimeout(hideOverlay, 1000);
-        setTimeout(hideOverlay, 2000);
-
-        // Observer per nascondere overlay creati dinamicamente
-        const observer = new MutationObserver(function (mutations) {
-          mutations.forEach(function (mutation) {
-            mutation.addedNodes.forEach(function (node) {
-              if (node.nodeType === 1) {
-                // Controlla se il nodo aggiunto è l'overlay
-                if (node.id === "onboarding-overlay") {
-                  hideOverlay();
-                }
-                // Controlla anche i figli
-                const overlay = node.querySelector && node.querySelector("#onboarding-overlay");
-                if (overlay) {
-                  hideOverlay();
-                }
-              }
-            });
-          });
-        });
-
-        observer.observe(document.body, {
-          childList: true,
-          subtree: true,
-        });
-      })();
-    </script>
-
     <!-- JavaScript - FASE 2: Modulare e Separato (Best Practice) -->
     <script type="module">
       // Import moduli separati (Best Practice: separazione concerns)

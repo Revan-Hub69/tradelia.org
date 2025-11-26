@@ -883,7 +883,7 @@ function renderModuleCard(module, index) {
           <p class="module-lock-hint">${escapeHtml(lockHint)}</p>
         `
             : `
-          <button class="btn btn-primary" data-action="open-module" data-module-id="${module.id}">
+          <button class="btn btn-education" data-action="open-module" data-module-id="${module.id}">
             ${status === "completed" ? "Rivedi" : status === "in_progress" ? "Continua" : "Inizia"}
           </button>
         `
