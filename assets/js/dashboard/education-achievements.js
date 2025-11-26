@@ -6,6 +6,7 @@
  */
 
 import { safeLog } from "./security-utils.js";
+import { EducationIcons } from "./education-icons.js";
 
 let achievementsInstance = null;
 
@@ -57,7 +58,7 @@ class AchievementSystem {
     toast.className = "achievement-toast";
     toast.innerHTML = `
       <div class="achievement-toast-content">
-        <div class="achievement-icon">${badge.icon || "🏆"}</div>
+        <div class="achievement-icon">${badge.icon ? badge.icon.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="48" height="48"') : EducationIcons.badge.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="48" height="48"')}</div>
         <div class="achievement-text">
           <div class="achievement-title">Badge Sbloccato!</div>
           <div class="achievement-name">${badge.name}</div>
@@ -108,7 +109,7 @@ class AchievementSystem {
           .map(
             (badge) => `
           <div class="badge-card ${badge.earned ? "earned" : "locked"}" data-badge-id="${badge.id}">
-            <div class="badge-icon-large">${badge.icon || "🏆"}</div>
+            <div class="badge-icon-large">${badge.icon ? badge.icon.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="64" height="64"') : EducationIcons.badge.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="64" height="64"')}</div>
             <div class="badge-name">${badge.name}</div>
             ${badge.description ? `<div class="badge-desc">${badge.description}</div>` : ""}
             ${badge.earned ? `<div class="badge-date">Sbloccato il ${new Date(badge.earned_at).toLocaleDateString("it-IT")}</div>` : ""}
@@ -149,7 +150,7 @@ class AchievementSystem {
     tooltip.className = "badge-tooltip";
     tooltip.innerHTML = `
       <div class="tooltip-header">
-        <span class="tooltip-icon">${badge.icon || "🏆"}</span>
+        <span class="tooltip-icon">${badge.icon ? badge.icon.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="24" height="24"') : EducationIcons.badge.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="24" height="24"')}</span>
         <strong>${badge.name}</strong>
       </div>
       ${badge.description ? `<div class="tooltip-desc">${badge.description}</div>` : ""}

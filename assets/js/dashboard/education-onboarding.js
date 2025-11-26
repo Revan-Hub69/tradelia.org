@@ -6,6 +6,7 @@
  */
 
 import { safeLog } from "./security-utils.js";
+import { EducationIcons } from "./education-icons.js";
 
 const ONBOARDING_STORAGE_KEY = "tradelia_education_onboarding_completed";
 const ONBOARDING_VERSION = 1; // Incrementa per forzare re-onboarding
@@ -78,28 +79,28 @@ async function showWelcomeStep(modal) {
       <div class="onboarding-content">
         <div class="onboarding-features">
           <div class="feature-item">
-            <div class="feature-icon">📚</div>
+            <div class="feature-icon">${EducationIcons.modules.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="32" height="32"')}</div>
             <div class="feature-text">
               <strong>Moduli Interattivi</strong>
               <span>Lezioni pratiche con esempi reali</span>
             </div>
           </div>
           <div class="feature-item">
-            <div class="feature-icon">🎯</div>
+            <div class="feature-icon">${EducationIcons.target.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="32" height="32"')}</div>
             <div class="feature-text">
               <strong>Percorsi Personalizzati</strong>
               <span>Adattati al tuo livello e obiettivi</span>
             </div>
           </div>
           <div class="feature-item">
-            <div class="feature-icon">🏆</div>
+            <div class="feature-icon">${EducationIcons.badge.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="32" height="32"')}</div>
             <div class="feature-text">
               <strong>Gamification</strong>
               <span>Badge, punti e achievement</span>
             </div>
           </div>
           <div class="feature-item">
-            <div class="feature-icon">📊</strong>
+            <div class="feature-icon">${EducationIcons.simulator.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="32" height="32"')}</div>
             <div class="feature-text">
               <strong>Strumenti Pratici</strong>
               <span>Calcolatori e simulatori</span>
@@ -196,15 +197,15 @@ async function showToolsStep(modal) {
         </div>
         <div class="onboarding-tool-preview">
           <div class="tool-item">
-            <div class="tool-icon">🧮</div>
+            <div class="tool-icon">${EducationIcons.calculator.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="40" height="40"')}</div>
             <div class="tool-name">Calcolatore</div>
           </div>
           <div class="tool-item">
-            <div class="tool-icon">📊</div>
+            <div class="tool-icon">${EducationIcons.simulator.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="40" height="40"')}</div>
             <div class="tool-name">Simulatore</div>
           </div>
           <div class="tool-item">
-            <div class="tool-icon">📖</div>
+            <div class="tool-icon">${EducationIcons.glossary.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="40" height="40"')}</div>
             <div class="tool-name">Glossario</div>
           </div>
         </div>
@@ -246,17 +247,17 @@ async function showQuickStartStep(modal) {
       <div class="onboarding-content">
         <div class="onboarding-paths">
           <div class="path-card" data-path="pac">
-            <div class="path-icon">💰</div>
+            <div class="path-icon">${EducationIcons.pac.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="48" height="48"')}</div>
             <div class="path-title">Piano di Accumulo</div>
             <div class="path-description">Per chi vuole investire gradualmente</div>
           </div>
           <div class="path-card" data-path="wealth">
-            <div class="path-icon">🏦</div>
+            <div class="path-icon">${EducationIcons.wealth.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="48" height="48"')}</div>
             <div class="path-title">Wealth Management</div>
             <div class="path-description">Per chi ha già un patrimonio</div>
           </div>
           <div class="path-card" data-path="crypto">
-            <div class="path-icon">₿</div>
+            <div class="path-icon">${EducationIcons.crypto.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="48" height="48"')}</div>
             <div class="path-title">Crypto Investing</div>
             <div class="path-description">Per chi vuole investire in criptovalute</div>
           </div>

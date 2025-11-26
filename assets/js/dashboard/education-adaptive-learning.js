@@ -52,7 +52,14 @@ export class AdaptiveLearningUI {
   /**
    * Update mastery after quiz/test
    */
-  async updateMastery(moduleId, lessonId, score, totalQuestions, correctAnswers, responseTimeSeconds) {
+  async updateMastery(
+    moduleId,
+    lessonId,
+    score,
+    totalQuestions,
+    correctAnswers,
+    responseTimeSeconds
+  ) {
     try {
       const token = await this.getAuthToken();
       if (!token) {
@@ -82,8 +89,8 @@ export class AdaptiveLearningUI {
 
       const data = await response.json();
       return data;
-    } catch (error) {
-      safeLog("error", "[AdaptiveLearning] Error updating mastery:", error);
+    } catch (err) {
+      safeLog("error", "[AdaptiveLearning] Error updating mastery:", err);
       return null;
     }
   }
@@ -92,7 +99,9 @@ export class AdaptiveLearningUI {
    * Show mastery indicator
    */
   showMasteryIndicator(container, masteryScore, masteryThreshold = 80) {
-    if (!container) return;
+    if (!container) {
+      return;
+    }
 
     const percentage = Math.round(masteryScore);
     const isMastered = percentage >= masteryThreshold;
@@ -107,9 +116,10 @@ export class AdaptiveLearningUI {
           <div class="mastery-progress-fill" style="width: ${percentage}%"></div>
         </div>
         <div class="mastery-status">
-          ${isMastered 
-            ? '<span class="mastery-achieved">✅ Mastery Raggiunto!</span>'
-            : `<span class="mastery-pending">📚 Continua a studiare (${masteryThreshold}% per passare)</span>`
+          ${
+            isMastered
+              ? '<span class="mastery-achieved">✅ Mastery Raggiunto!</span>'
+              : `<span class="mastery-pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Continua a studiare (${masteryThreshold}% per passare)</span>`
           }
         </div>
       </div>
@@ -206,9 +216,11 @@ export class AdaptiveLearningUI {
   async getAuthToken() {
     try {
       const supabase = getSupabaseClient();
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       return session?.access_token || null;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
@@ -223,4 +235,3 @@ export function initAdaptiveLearning() {
   safeLog("info", "[AdaptiveLearning] System initialized");
   return als;
 }
-

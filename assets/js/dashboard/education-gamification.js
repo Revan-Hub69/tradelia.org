@@ -285,7 +285,14 @@ export class BadgeSystem {
     modal.innerHTML = `
       <div class="badge-unlock-overlay"></div>
       <div class="badge-unlock-content">
-        <div class="badge-unlock-icon education-badge-unlock">🏆</div>
+        <div class="badge-unlock-icon education-badge-unlock">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+            <circle cx="12" cy="12" r="3" fill="currentColor"/>
+          </svg>
+        </div>
         <h3>Badge Sbloccato!</h3>
         <p>${escapeHtml(badgeName)}</p>
         <button class="btn btn-primary" data-dismiss>Fantastico!</button>

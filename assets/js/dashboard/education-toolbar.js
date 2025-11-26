@@ -6,6 +6,8 @@
  */
 
 import { safeLog } from "./security-utils.js";
+import { EducationIcons } from "./education-icons.js";
+import { openGlossary } from "./education-glossary.js";
 
 let toolbarInstance = null;
 
@@ -30,31 +32,31 @@ class EducationToolbar {
     this.tools = [
       {
         id: "calculator",
-        icon: "🧮",
+        icon: EducationIcons.calculator,
         label: "Calcolatore",
         action: () => this.openCalculator(),
       },
       {
         id: "simulator",
-        icon: "📊",
+        icon: EducationIcons.simulator,
         label: "Simulatore",
         action: () => this.openSimulator(),
       },
       {
         id: "glossary",
-        icon: "📖",
+        icon: EducationIcons.glossary,
         label: "Glossario",
-        action: () => this.openGlossary(),
+        action: () => openGlossary(),
       },
       {
         id: "notes",
-        icon: "📝",
+        icon: EducationIcons.notes,
         label: "Note",
         action: () => this.openNotes(),
       },
       {
         id: "bookmark",
-        icon: "🔖",
+        icon: EducationIcons.bookmark,
         label: "Segnalibri",
         action: () => this.openBookmarks(),
       },
@@ -90,7 +92,7 @@ class EducationToolbar {
             aria-label="${tool.label}"
             title="${tool.label}"
           >
-            <span class="tool-icon">${tool.icon}</span>
+            <span class="tool-icon">${tool.icon.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" width="20" height="20"')}</span>
             <span class="tool-label">${tool.label}</span>
           </button>
         `

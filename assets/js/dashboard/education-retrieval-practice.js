@@ -71,14 +71,18 @@ export class RetrievalPracticeUI {
         </div>
         
         <div class="rq-options">
-          ${question.options.map((option, i) => `
+          ${question.options
+            .map(
+              (option, i) => `
             <button class="rq-option-btn" 
                     data-option-index="${i}" 
                     data-correct="${i === question.correctAnswer}"
                     onclick="window.RetrievalPracticeUI.selectAnswer(${i}, ${index})">
               ${this.escapeHtml(option)}
             </button>
-          `).join("")}
+          `
+            )
+            .join("")}
         </div>
       </div>
     `;
@@ -119,7 +123,7 @@ export class RetrievalPracticeUI {
 
       // Disable buttons
       const buttons = container.parentElement.querySelectorAll(".rq-option-btn");
-      buttons.forEach(btn => {
+      buttons.forEach((btn) => {
         btn.disabled = true;
         if (parseInt(btn.dataset.optionIndex) === question.correctAnswer) {
           btn.classList.add("correct-answer");
@@ -158,11 +162,12 @@ export class RetrievalPracticeUI {
           <p class="rq-score-percentage">${percentage}%</p>
         </div>
         <div class="rq-feedback-message">
-          ${percentage >= 80 
-            ? "<p>🎉 Eccellente! Hai padroneggiato questo argomento.</p>"
-            : percentage >= 60
-            ? "<p>👍 Buono! Ripassa i concetti e riprova.</p>"
-            : "<p>📚 Continua a studiare! Ripassa la lezione e riprova.</p>"
+          ${
+            percentage >= 80
+              ? "<p>🎉 Eccellente! Hai padroneggiato questo argomento.</p>"
+              : percentage >= 60
+                ? "<p>👍 Buono! Ripassa i concetti e riprova.</p>"
+                : `<p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Continua a studiare! Ripassa la lezione e riprova.</p>`
           }
         </div>
         <div class="rq-actions">
@@ -179,7 +184,9 @@ export class RetrievalPracticeUI {
   async updateMasteryAfterQuiz(score, totalQuestions, correctAnswers, duration) {
     try {
       const token = await this.getAuthToken();
-      if (!token) return;
+      if (!token) {
+        return;
+      }
 
       const { AdaptiveLearningUI } = await import("./education-adaptive-learning.js");
       await AdaptiveLearningUI.updateMastery(
@@ -207,7 +214,14 @@ export class RetrievalPracticeUI {
   /**
    * Create flashcard from lesson content
    */
-  async createFlashcardFromContent(content, question, answer, moduleId, lessonId, itemType = "concept") {
+  async createFlashcardFromContent(
+    content,
+    question,
+    answer,
+    moduleId,
+    lessonId,
+    itemType = "concept"
+  ) {
     try {
       const token = await this.getAuthToken();
       if (!token) {
@@ -422,9 +436,11 @@ export class RetrievalPracticeUI {
   async getAuthToken() {
     try {
       const supabase = getSupabaseClient();
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       return session?.access_token || null;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
