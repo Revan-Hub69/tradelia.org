@@ -49,6 +49,9 @@ async function loadAPIHandlers() {
             const routeName = file.replace(".js", "");
             apiHandlers.set(routeName, handler);
             console.warn(`✅ Loaded API handler: /api/${routeName}`);
+            if (routeName === "education") {
+              console.error("=== EDUCATION HANDLER LOADED - VERSION WITH BADGES ===");
+            }
           }
         }
       } catch (error) {
