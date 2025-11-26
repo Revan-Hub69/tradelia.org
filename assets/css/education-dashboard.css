@@ -1727,8 +1727,8 @@
 .test-results-actions .btn {
   min-width: 140px;
   padding: var(--edu-spacing-md) var(--edu-spacing-lg);
-  background: var(--edu-primary);
-  border: 1px solid var(--edu-primary);
+  background: var(--edu-accent);
+  border: 1px solid var(--edu-accent);
   color: var(--edu-text-primary);
   font-size: var(--fs-14);
   font-weight: 600;
@@ -1742,10 +1742,10 @@
 }
 
 .test-results-actions .btn:hover {
-  background: var(--edu-primary-hover);
-  border-color: var(--edu-primary-hover);
+  background: var(--edu-accent-hover);
+  border-color: var(--edu-accent-hover);
   transform: translateY(-1px);
-  box-shadow: var(--edu-shadow-sm);
+  box-shadow: 0 4px 12px var(--edu-accent-glow);
 }
 
 .test-results-actions .btn:focus-visible {
