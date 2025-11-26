@@ -2230,6 +2230,61 @@ async function updateMastery(req, res) {
 }
 
 /**
+ * Get user badges
+ */
+async function getBadges(req, res) {
+  try {
+    const user_id = req.user?.id;
+
+    if (!user_id) {
+      return res.status(401).json({ success: false, error: "Autenticazione richiesta" });
+    }
+
+    // Get user badges from education_user_badges table
+    const { data: userBadges, error: badgesError } = await supabase
+      .from("education_user_badges")
+      .select(
+        `
+        *,
+        education_badges (
+          id,
+          name,
+          description,
+          icon,
+          category,
+          rarity
+        )
+      `
+      )
+      .eq("user_id", user_id)
+      .order("unlocked_at", { ascending: false });
+
+    if (badgesError) {
+      safeLog("error", "[Education] Errore getBadges:", badgesError);
+      // Return empty array if table doesn't exist yet
+      return res.json({ success: true, badges: [] });
+    }
+
+    // Format badges
+    const formattedBadges = (userBadges || []).map((ub) => ({
+      id: ub.education_badges?.id || ub.badge_id,
+      name: ub.education_badges?.name || "Badge",
+      description: ub.education_badges?.description || "",
+      icon: ub.education_badges?.icon || "🏆",
+      category: ub.education_badges?.category || "general",
+      rarity: ub.education_badges?.rarity || "common",
+      unlocked_at: ub.unlocked_at,
+      progress: ub.progress || null,
+    }));
+
+    res.json({ success: true, badges: formattedBadges });
+  } catch (error) {
+    safeLog("error", "[Education] Errore getBadges:", error);
+    res.status(500).json({ success: false, error: "Errore caricamento badge" });
+  }
+}
+
+/**
  * Get adaptive difficulty for lesson
  */
 async function getAdaptiveDifficulty(req, res) {
@@ -2369,6 +2424,8 @@ export default async function handler(req, res) {
         return await updateMastery(req, res);
       case "get-adaptive-difficulty":
         return await getAdaptiveDifficulty(req, res);
+      case "badges":
+        return await getBadges(req, res);
       default:
         // Log 400 per azione non valida
 
