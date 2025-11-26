@@ -308,6 +308,138 @@
 
 /* Usa pulsanti standard del sito - nessuno stile custom */
 
+/* Stili per auth-modal, auth-header, auth-body, etc. (usati nel template) */
+.onboarding-overlay .auth-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.onboarding-overlay .auth-modal {
+  position: relative;
+  background: var(--surface-card, #181818);
+  border: 1px solid var(--br-card, #323232);
+  border-radius: var(--radius-lg, 16px);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.7);
+  z-index: 1;
+}
+
+.onboarding-overlay .auth-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-5, 1.5rem) var(--sp-6, 2rem);
+  border-bottom: 1px solid var(--br-card, #323232);
+  flex-shrink: 0;
+}
+
+.onboarding-overlay .auth-header-text {
+  flex: 1;
+}
+
+.onboarding-overlay .auth-title {
+  font-size: var(--fs-18, 1.125rem);
+  font-weight: 700;
+  color: var(--ink, #ffffff);
+  margin: 0 0 var(--sp-2, 0.5rem) 0;
+  line-height: 1.2;
+}
+
+.onboarding-overlay .auth-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid var(--br-card, #323232);
+  background: var(--surface-elev, #202020);
+  color: var(--ink-soft, #d0d0d0);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s;
+  flex-shrink: 0;
+}
+
+.onboarding-overlay .auth-close:hover {
+  background: var(--surface-hover, #282828);
+  border-color: var(--br-strong, #3e3e3e);
+  color: var(--ink, #ffffff);
+}
+
+.onboarding-overlay .auth-close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.onboarding-overlay .auth-body {
+  padding: var(--sp-6, 2rem);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.onboarding-overlay .auth-footer {
+  padding: var(--sp-4, 1rem) var(--sp-6, 2rem);
+  border-top: 1px solid var(--br-card, #323232);
+  flex-shrink: 0;
+}
+
+.onboarding-overlay .trial-progress {
+  margin-top: var(--sp-3, 0.75rem);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3, 0.75rem);
+}
+
+.onboarding-overlay .trial-progress-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--br-card, #323232);
+  border-radius: var(--radius-pill, 9999px);
+  overflow: hidden;
+}
+
+.onboarding-overlay .trial-progress-fill {
+  height: 100%;
+  width: var(--progress, 0%);
+  background: var(--brand-500, #3b82f6);
+  transition: width 0.3s ease;
+  border-radius: var(--radius-pill, 9999px);
+}
+
+.onboarding-overlay .trial-progress-text {
+  font-size: var(--fs-12, 0.75rem);
+  color: var(--muted, #909090);
+  white-space: nowrap;
+}
+
+.onboarding-overlay .trial-step {
+  animation: fadeIn 0.3s ease;
+}
+
+.onboarding-overlay .trial-step[hidden] {
+  display: none !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 640px) {
   .onboarding-modal {
     max-width: 100%;
