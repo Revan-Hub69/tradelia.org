@@ -1203,6 +1203,22 @@
       aria-atomic="true"
     ></div>
 
+    <!-- Fallback: Nascondi onboarding overlay se JavaScript non lo gestisce -->
+    <script>
+      // Fallback per onboarding overlay - nascondi dopo 5 secondi se ancora visibile
+      (function () {
+        setTimeout(function () {
+          const overlay = document.getElementById("onboarding-overlay");
+          if (overlay && overlay.style.display !== "none") {
+            console.warn("[Fallback] Nascondo onboarding overlay dopo timeout");
+            overlay.style.display = "none";
+            overlay.style.opacity = "0";
+            overlay.style.visibility = "hidden";
+          }
+        }, 5000);
+      })();
+    </script>
+
     <!-- JavaScript - FASE 2: Modulare e Separato (Best Practice) -->
     <script type="module">
       // Import moduli separati (Best Practice: separazione concerns)
@@ -1215,7 +1231,14 @@
       import { monitorBundleSizes } from "/assets/js/performance/bundle-monitor.js";
 
       // Initialize dashboard
-      initDashboard();
+      initDashboard().catch(function (error) {
+        console.error("[Dashboard] Errore inizializzazione:", error);
+        // Fallback: nascondi overlay se initDashboard fallisce
+        const overlay = document.getElementById("onboarding-overlay");
+        if (overlay) {
+          overlay.style.display = "none";
+        }
+      });
 
       // Inizializza MIFID overlay (non bloccante in dashboard, solo per pulsanti footer)
       initMifidBanner();
