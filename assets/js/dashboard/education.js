@@ -491,6 +491,9 @@ async function renderEducationDashboard(container, progress) {
         </div>
       </div>
 
+      <!-- Preferiti -->
+      <div id="education-favorites-container"></div>
+
       <!-- Moduli -->
       <div class="education-modules">
         <h2 class="education-section-title">Percorso Formativo</h2>
@@ -525,6 +528,18 @@ function renderModuleCard(module, index) {
     locked: "Bloccato",
   };
 
+  // Check if favorited (synchronous check)
+  let isFavorited = false;
+  try {
+    const stored = localStorage.getItem("tradelia_education_favorites");
+    if (stored) {
+      const favorites = JSON.parse(stored);
+      isFavorited = favorites.includes(module.id);
+    }
+  } catch {
+    // Ignore
+  }
+
   return `
     <div class="module-card education-module-card ${isLocked ? "locked" : ""}" 
          data-module-id="${module.id}" 
@@ -537,6 +552,17 @@ function renderModuleCard(module, index) {
         <div class="module-status-badge" aria-label="Stato: ${statusLabels[status]}">
           ${statusLabels[status]}
         </div>
+        <button 
+          class="education-favorite-btn ${isFavorited ? "favorited" : ""}" 
+          data-module-id="${module.id}"
+          aria-label="${isFavorited ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}"
+          title="${isFavorited ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}"
+          type="button"
+        >
+          <svg viewBox="0 0 24 24" fill="${isFavorited ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </button>
       </div>
       <div class="module-card-content">
         <h3 class="module-title">${escapeHtml(module.title)}</h3>
