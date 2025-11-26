@@ -192,13 +192,13 @@
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Per feedback interattivi */
   --transition-spring: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* Per micro-interactions eleganti */
-  
+
   /* Transitions specifiche per tipo di interazione */
   --transition-hover: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-focus: all 0.15s cubic-bezier(0.4, 0, 1, 1); /* Più veloce per feedback immediato */
   --transition-transform: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-opacity: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  
+
   /* Legacy support */
   --transition: var(--transition-fast);
 }
@@ -419,7 +419,7 @@ button:hover,
 a[role="button"]:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: 
+  transition:
     background var(--transition-hover),
     transform var(--transition-spring),
     box-shadow var(--transition-hover);
@@ -438,7 +438,9 @@ a[role="button"]:focus-visible {
   outline: 4px solid var(--dash-accent);
   outline-offset: 3px;
   border-radius: var(--radius-sm);
-  box-shadow: 0 0 0 2px var(--dash-bg), 0 0 0 6px var(--dash-accent);
+  box-shadow:
+    0 0 0 2px var(--dash-bg),
+    0 0 0 6px var(--dash-accent);
 }
 
 /* Icone devono avere label testuale o aria-label */
@@ -612,7 +614,9 @@ a[role="button"]:focus-visible {
   width: auto;
   max-width: 220px;
   object-fit: contain;
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
   filter: brightness(1);
 }
 
@@ -1764,7 +1768,8 @@ a[role="button"]:focus-visible {
   color: var(--dash-text-muted);
   opacity: 0.6;
   font-size: var(--fs-11, 11px);
-  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', monospace;
+  font-family:
+    "SF Mono", "Monaco", "Inconsolata", "Fira Code", "Droid Sans Mono", "Source Code Pro", monospace;
   letter-spacing: 0.05em;
   font-weight: 500;
 }
@@ -2203,7 +2208,7 @@ a[role="button"]:focus-visible {
   /* BEST PRACTICE: CSS Containment per isolare rendering (Performance Optimization) */
   contain: layout style paint;
   /* BEST PRACTICE: Transitions separate per ogni proprietà (micro-interactions raffinate) */
-  transition: 
+  transition:
     background var(--transition-hover),
     border-color var(--transition-hover),
     transform var(--transition-transform),
@@ -2271,7 +2276,9 @@ a[role="button"]:focus-visible {
 .module-card:focus:not(:hover) {
   outline: 3px solid var(--dash-accent);
   outline-offset: 4px;
-  box-shadow: 0 0 0 2px var(--dash-bg), 0 0 0 6px var(--dash-accent);
+  box-shadow:
+    0 0 0 2px var(--dash-bg),
+    0 0 0 6px var(--dash-accent);
 }
 
 .module-card:hover::before {
@@ -3345,7 +3352,7 @@ a[role="button"]:focus-visible {
   color: var(--dash-text);
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  transition: 
+  transition:
     background var(--transition-hover),
     transform var(--transition-spring),
     box-shadow var(--transition-hover);
@@ -3596,10 +3603,16 @@ a[role="button"]:focus-visible {
   font-size: var(--fs-14, 14px);
   border-radius: 0 0 var(--radius-md) 0;
   transition: top var(--transition-fast);
+  opacity: 0;
+  pointer-events: none;
+  clip: rect(0, 0, 0, 0);
 }
 
 .skip-link:focus {
   top: 0;
+  opacity: 1;
+  pointer-events: auto;
+  clip: auto;
   outline: 3px solid var(--dash-text-muted);
   outline-offset: 2px;
 }

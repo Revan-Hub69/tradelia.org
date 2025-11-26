@@ -228,9 +228,15 @@
         font-weight: 600;
         border-radius: 0 0 var(--radius-md) 0;
         transition: top 0.2s ease;
+        opacity: 0;
+        pointer-events: none;
+        clip: rect(0, 0, 0, 0);
       }
       .skip-link:focus {
         top: 0;
+        opacity: 1;
+        pointer-events: auto;
+        clip: auto;
         outline: 2px solid var(--brand-400);
         outline-offset: 2px;
       }
