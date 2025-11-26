@@ -330,7 +330,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: var(--edu-spacing-xl);
+  padding: var(--edu-spacing-lg);
   background: var(--edu-surface-base);
   border: 1px solid var(--edu-border-base);
   border-radius: var(--edu-radius-lg);
@@ -412,7 +412,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: var(--edu-spacing-md);
+  margin-bottom: var(--edu-spacing-sm);
   gap: var(--edu-spacing-sm);
 }
 
@@ -460,7 +460,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--edu-spacing-md);
+  gap: var(--edu-spacing-sm);
   min-height: 0;
 }
 
@@ -480,6 +480,9 @@
   margin: 0;
   flex: 1;
   overflow: hidden;
+  padding-right: var(--edu-spacing-xs);
+  /* Più spazio per il testo */
+  min-height: 3.2em; /* ~2 righe di testo */
 }
 
 .module-progress {
@@ -538,8 +541,8 @@
 }
 
 .module-card-actions {
-  margin-top: var(--edu-spacing-md);
-  padding-top: var(--edu-spacing-md);
+  margin-top: var(--edu-spacing-sm);
+  padding-top: var(--edu-spacing-sm);
   border-top: 1px solid var(--edu-border-subtle);
   display: flex;
   gap: var(--edu-spacing-sm);
@@ -667,12 +670,12 @@
 
 /* ===== BREADCRUMB NAVIGATION (Best Practice Istituzionale) ===== */
 .education-breadcrumb {
-  margin: 0 0 var(--edu-spacing-xl) 0;
-  padding: var(--edu-spacing-lg) var(--edu-spacing-xl);
+  margin: 0 0 var(--edu-spacing-md) 0;
+  padding: var(--edu-spacing-sm) var(--edu-spacing-md);
   background: var(--edu-surface-elevated);
   border: 1px solid var(--edu-border-strong);
   border-radius: var(--edu-radius-md);
-  box-shadow: var(--edu-shadow-md);
+  box-shadow: var(--edu-shadow-sm);
   position: sticky;
   top: var(--edu-spacing-md);
   z-index: 100;
@@ -694,7 +697,7 @@
 .breadcrumb-item {
   display: flex;
   align-items: center;
-  font-size: var(--fs-13);
+  font-size: var(--fs-12);
   color: var(--edu-text-muted);
 }
 
