@@ -1023,8 +1023,8 @@
 
 .test-item:hover {
   background: var(--edu-surface-hover);
-  border-color: var(--edu-border-base);
-  box-shadow: var(--edu-shadow-sm);
+  border-color: var(--edu-accent);
+  box-shadow: 0 2px 8px var(--edu-accent-glow);
 }
 
 .test-content {
@@ -1061,8 +1061,8 @@
   min-width: 120px;
   min-height: 44px; /* Touch target size - WCAG 2.1 (aumentato da 36px) */
   padding: var(--edu-spacing-sm) var(--edu-spacing-md);
-  background: var(--edu-primary);
-  border: 1px solid var(--edu-primary);
+  background: var(--edu-accent);
+  border: 1px solid var(--edu-accent);
   color: var(--edu-text-primary);
   font-size: var(--fs-13);
   font-weight: 600;
@@ -1075,10 +1075,10 @@
 }
 
 .test-item .btn:hover {
-  background: var(--edu-primary-hover);
-  border-color: var(--edu-primary-hover);
+  background: var(--edu-accent-hover);
+  border-color: var(--edu-accent-hover);
   transform: translateY(-1px);
-  box-shadow: var(--edu-shadow-sm);
+  box-shadow: 0 4px 12px var(--edu-accent-glow);
 }
 
 .test-item .btn:focus-visible {
@@ -1211,8 +1211,8 @@
 .lesson-view-actions .btn {
   min-width: 140px;
   padding: var(--edu-spacing-md) var(--edu-spacing-lg);
-  background: var(--edu-primary);
-  border: 1px solid var(--edu-primary);
+  background: var(--edu-accent);
+  border: 1px solid var(--edu-accent);
   color: var(--edu-text-primary);
   font-size: var(--fs-14);
   font-weight: 600;
@@ -1226,10 +1226,10 @@
 }
 
 .lesson-view-actions .btn:hover {
-  background: var(--edu-primary-hover);
-  border-color: var(--edu-primary-hover);
+  background: var(--edu-accent-hover);
+  border-color: var(--edu-accent-hover);
   transform: translateY(-1px);
-  box-shadow: var(--edu-shadow-sm);
+  box-shadow: 0 4px 12px var(--edu-accent-glow);
 }
 
 .lesson-view-actions .btn:focus-visible {
@@ -1900,8 +1900,8 @@
 .test-actions .btn {
   min-width: 120px;
   padding: var(--edu-spacing-md) var(--edu-spacing-lg);
-  background: var(--edu-primary);
-  border: 1px solid var(--edu-primary);
+  background: var(--edu-accent);
+  border: 1px solid var(--edu-accent);
   color: var(--edu-text-primary);
   font-size: var(--fs-14);
   font-weight: 600;
@@ -1915,10 +1915,10 @@
 }
 
 .test-actions .btn:hover {
-  background: var(--edu-primary-hover);
-  border-color: var(--edu-primary-hover);
+  background: var(--edu-accent-hover);
+  border-color: var(--edu-accent-hover);
   transform: translateY(-1px);
-  box-shadow: var(--edu-shadow-sm);
+  box-shadow: 0 4px 12px var(--edu-accent-glow);
 }
 
 .test-actions .btn:focus-visible {
