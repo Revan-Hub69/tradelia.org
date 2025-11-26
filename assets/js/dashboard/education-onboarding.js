@@ -548,6 +548,13 @@ function updateProgress() {
  * Complete onboarding
  */
 async function completeOnboarding() {
+  safeLog("log", "[Education Onboarding] Starting completion process...");
+
+  if (!state.root) {
+    safeLog("error", "[Education Onboarding] Cannot complete: root not found");
+    return;
+  }
+
   const dontShowCheckbox = state.root.querySelector("#onboarding-dont-show");
   const dontShow = dontShowCheckbox?.checked;
 
@@ -555,11 +562,18 @@ async function completeOnboarding() {
 
   if (dontShow) {
     safeLog("log", "[Education Onboarding] Saving preference to IndexedDB...");
-    await markOnboardingCompleted();
-    safeLog("log", "[Education Onboarding] Preference saved");
+    try {
+      await markOnboardingCompleted();
+      safeLog("log", "[Education Onboarding] Preference saved successfully");
+    } catch (error) {
+      safeLog("error", "[Education Onboarding] Error saving preference:", error);
+    }
   }
 
+  // Close modal
   close();
+
+  safeLog("log", "[Education Onboarding] Onboarding completed and closed");
 }
 
 /**
@@ -629,11 +643,20 @@ function open() {
  */
 function close() {
   if (!state.root) {
+    safeLog("warn", "[Education Onboarding] Cannot close: root not found");
     return;
   }
 
+  safeLog("log", "[Education Onboarding] Closing onboarding modal...");
+
+  // Hide modal
   state.root.hidden = true;
+  state.root.style.display = "none";
+  state.root.style.opacity = "0";
+  state.root.style.visibility = "hidden";
   state.root.setAttribute("aria-hidden", "true");
+
+  // Restore body overflow
   document.body.style.overflow = "";
 
   // Restore focus
@@ -641,6 +664,8 @@ function close() {
     state.previousActiveElement.focus();
     state.previousActiveElement = null;
   }
+
+  safeLog("log", "[Education Onboarding] Modal closed");
 }
 
 /**
