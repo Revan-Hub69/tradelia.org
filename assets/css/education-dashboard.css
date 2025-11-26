@@ -368,6 +368,12 @@
 
 .education-module-card:hover::before {
   width: 6px;
+  background: linear-gradient(
+    180deg,
+    var(--edu-accent-light) 0%,
+    var(--edu-accent) 50%,
+    var(--edu-accent-dark) 100%
+  );
 }
 
 /* Status colors (grigio per default, verde per completato) */
@@ -389,8 +395,10 @@
 
 .education-module-card:hover {
   transform: translateY(-4px);
-  box-shadow: var(--edu-shadow-xl);
-  border-color: var(--edu-border-strong);
+  box-shadow:
+    0 8px 24px var(--edu-accent-glow),
+    var(--edu-shadow-xl);
+  border-color: var(--edu-accent);
   background: var(--edu-surface-hover);
 }
 
