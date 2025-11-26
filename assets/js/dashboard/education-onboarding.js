@@ -375,12 +375,17 @@ function template() {
 function registerEvents() {
   const root = state.root;
   if (!root) {
+    safeLog("error", "[Education Onboarding] Cannot register events: root not found");
     return;
   }
 
+  safeLog("log", "[Education Onboarding] Registering event listeners...");
+
   // Close buttons
   root.querySelectorAll("[data-onboarding-close], [data-onboarding-dismiss]").forEach((btn) => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      safeLog("log", "[Education Onboarding] Close button clicked");
       const dontShow = root.querySelector("#onboarding-dont-show")?.checked;
       if (dontShow) {
         markOnboardingCompleted();
@@ -392,19 +397,29 @@ function registerEvents() {
   // Skip button
   const skipBtn = root.querySelector("[data-onboarding-skip]");
   if (skipBtn) {
-    skipBtn.addEventListener("click", async () => {
+    skipBtn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      safeLog("log", "[Education Onboarding] Skip button clicked");
       const dontShow = root.querySelector("#onboarding-dont-show")?.checked;
       if (dontShow) {
         await markOnboardingCompleted();
       }
       close();
     });
+  } else {
+    safeLog("warn", "[Education Onboarding] Skip button not found");
   }
 
   // Next button
   const nextBtn = root.querySelector("[data-onboarding-next]");
   if (nextBtn) {
-    nextBtn.addEventListener("click", () => {
+    nextBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      safeLog(
+        "log",
+        "[Education Onboarding] Next button clicked, current step:",
+        state.currentStep
+      );
       if (state.currentStep < state.totalSteps) {
         goToStep(state.currentStep + 1);
       } else {
@@ -412,17 +427,47 @@ function registerEvents() {
         completeOnboarding();
       }
     });
+  } else {
+    safeLog("warn", "[Education Onboarding] Next button not found");
   }
 
   // Back button
   const backBtn = root.querySelector("[data-onboarding-back]");
   if (backBtn) {
-    backBtn.addEventListener("click", () => {
+    backBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      safeLog("log", "[Education Onboarding] Back button clicked");
       if (state.currentStep > 1) {
         goToStep(state.currentStep - 1);
       }
     });
   }
+
+  // Prevent backdrop from blocking clicks on modal
+  const backdrop = root.querySelector(".auth-backdrop");
+  if (backdrop) {
+    backdrop.addEventListener("click", (e) => {
+      // Only close if clicking directly on backdrop, not on modal
+      if (e.target === backdrop) {
+        safeLog("log", "[Education Onboarding] Backdrop clicked");
+        const dontShow = root.querySelector("#onboarding-dont-show")?.checked;
+        if (dontShow) {
+          markOnboardingCompleted();
+        }
+        close();
+      }
+    });
+  }
+
+  // Prevent clicks on modal from closing
+  const modal = root.querySelector(".auth-modal");
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+  }
+
+  safeLog("log", "[Education Onboarding] Event listeners registered");
 }
 
 /**

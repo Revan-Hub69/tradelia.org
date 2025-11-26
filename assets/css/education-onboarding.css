@@ -315,8 +315,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
   cursor: pointer;
+  z-index: 0;
 }
 
 .onboarding-overlay .auth-modal {
@@ -333,6 +335,9 @@
   z-index: 1;
   opacity: 1;
   visibility: visible;
+  pointer-events: all;
+  overflow: hidden;
+  margin: var(--sp-4, 1rem);
 }
 
 .onboarding-overlay .auth-header {
@@ -385,7 +390,29 @@
 .onboarding-overlay .auth-body {
   padding: var(--sp-6, 2rem);
   overflow-y: auto;
+  overflow-x: hidden;
   flex: 1;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--br-card, #323232) transparent;
+}
+
+.onboarding-overlay .auth-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.onboarding-overlay .auth-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.onboarding-overlay .auth-body::-webkit-scrollbar-thumb {
+  background: var(--br-card, #323232);
+  border-radius: 4px;
+}
+
+.onboarding-overlay .auth-body::-webkit-scrollbar-thumb:hover {
+  background: var(--br-strong, #3e3e3e);
 }
 
 .onboarding-overlay .auth-footer {
