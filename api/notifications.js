@@ -2,48 +2,12 @@
 // API Vercel - Notifiche Push (CONSOLIDATO)
 // Consolida: push.js
 
-// Firebase Admin SDK - opzionale su Cloudflare (usa REST API invece)
-// Import dinamico per evitare errori di bundle su Cloudflare Workers
-let admin = null;
-let firebaseAdminLoadAttempted = false;
-
-async function loadFirebaseAdmin() {
-  if (firebaseAdminLoadAttempted) {
-    return admin;
-  }
-  firebaseAdminLoadAttempted = true;
-
-  try {
-    // Solo su Vercel o ambienti Node.js completi (non Cloudflare)
-    // Usa import dinamico con stringa costruita per evitare che Cloudflare lo risolva a build time
-    if (typeof process !== "undefined" && process.env && !process.env.CF_PAGES && !process.env.CF) {
-      // Costruisci il nome del modulo dinamicamente per evitare risoluzione a build time
-      const moduleName = "firebase" + "-admin";
-      const firebaseAdminModule = await import(moduleName);
-      admin = firebaseAdminModule.default;
-    }
-  } catch {
-    // firebase-admin non disponibile (es. Cloudflare Workers)
-    console.warn("[Notifications] firebase-admin non disponibile, useremo REST API");
-    admin = null;
-  }
-
-  return admin;
-}
+import admin from "firebase-admin";
 
 let firebaseAdminInitialized = false;
 
-async function initializeFirebaseAdmin() {
+function initializeFirebaseAdmin() {
   if (firebaseAdminInitialized) {
-    return;
-  }
-
-  // Carica firebase-admin se disponibile
-  await loadFirebaseAdmin();
-
-  // Se firebase-admin non è disponibile (Cloudflare), usa REST API
-  if (!admin) {
-    firebaseAdminInitialized = true; // Mark as initialized to avoid retries
     return;
   }
 
@@ -56,7 +20,7 @@ async function initializeFirebaseAdmin() {
     const serviceAccountJson =
       typeof serviceAccount === "string" ? JSON.parse(serviceAccount) : serviceAccount;
 
-    if (admin && !admin.apps.length) {
+    if (!admin.apps.length) {
       admin.initializeApp({
         credential: admin.credential.cert(serviceAccountJson),
       });
@@ -71,8 +35,9 @@ async function initializeFirebaseAdmin() {
 
 // NOTA: Funzione disabilitata per rispettare limite Vercel Hobby (12 funzioni)
 // Consolidata in api/admin.js?action=notifications-*
-// Esportata per essere usata dai wrapper Cloudflare in functions/api/notifications.js
-export default async function handler(req, res) {
+// export default async function handler(req, res) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -117,7 +82,7 @@ async function handlePush(req, res) {
 
   // TODO: Implementare logica push.js qui
   // Inizializza Firebase Admin se necessario
-  await initializeFirebaseAdmin();
+  initializeFirebaseAdmin();
 
   return res.status(200).json({ ok: true, message: "Push notification sent" });
 }

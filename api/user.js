@@ -13,8 +13,9 @@ const supabase = getServiceSupabase();
 
 // NOTA: Funzione disabilitata per rispettare limite Vercel Hobby (12 funzioni)
 // Consolidata in api/auth.js?action=user-*
-// Esportata per essere usata dai wrapper Cloudflare in functions/api/user.js
-export default async function handler(req, res) {
+// export default async function handler(req, res) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
