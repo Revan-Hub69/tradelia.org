@@ -26,11 +26,8 @@ export async function initOnboarding() {
       overlay = createOnboardingOverlay();
     }
 
-    // Mostra onboarding solo se non è stato completato
-    // Per ora nascondiamo per default (l'onboarding può essere mostrato quando implementato)
-    // Se vuoi mostrarlo, decommenta la riga seguente:
-    // showOnboarding(overlay);
-    hideOnboardingOverlay();
+    // Mostra onboarding ai nuovi utenti
+    showOnboarding(overlay);
   } catch (error) {
     safeLog("error", "[Education Onboarding] Errore inizializzazione:", error);
     // Fallback: nascondi sempre l'overlay in caso di errore
