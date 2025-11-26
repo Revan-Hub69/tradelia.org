@@ -3,7 +3,7 @@
 // Legge dati dinamici da header.json
 
 import Logger from '../utils/logger.js';
-import { i18n } from '../utils/i18n.js';
+// import { i18n } from '../utils/i18n.js'; // Sistema traduzione disabilitato - sempre italiano
 
 const FOOTER = {
   _node: null,
@@ -17,12 +17,12 @@ function createEl(tag, className) {
   return el;
 }
 
-function escapeHtml(str) {
-  if (str == null) {return '';}
-  const div = document.createElement('div');
-  div.textContent = String(str);
-  return div.innerHTML;
-}
+// function escapeHtml(str) {
+//   if (str === null || str === undefined) {return '';}
+//   const div = document.createElement('div');
+//   div.textContent = String(str);
+//   return div.innerHTML;
+// }
 
 function fmtDate(str) {
   if (!str) {return '—';}
@@ -39,7 +39,7 @@ function setText(id, val) {
 }
 
 // ===== RENDER =====
-function render(data = {}) {
+function render(_data = {}) {
   const year = new Date().getFullYear();
 
   return `
@@ -66,13 +66,6 @@ function render(data = {}) {
             <a href="/pricing.html" aria-label="Vai alla pagina prezzi" data-i18n="nav.pricing">Pricing</a>
             <a href="/brokers.html" aria-label="Vai alla pagina brokers" data-i18n="nav.brokers">Brokers</a>
           </div>
-          <div style="margin-top: var(--sp-4); font-size: var(--fs-13); color: rgba(226, 232, 240, 0.85);">
-            <strong style="display: block; font-size: var(--fs-14); color: #fff;">Contatti</strong>
-            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-              <span><a href="mailto:support@tradelia.org">support@tradelia.org</a></span>
-              <span><a href="mailto:info@tradelia.org">info@tradelia.org</a></span>
-            </div>
-          </div>
         </div>
 
         <div class="ftr-col">
@@ -92,7 +85,7 @@ function render(data = {}) {
             <a href="/terms.html" aria-label="Vai ai termini e condizioni" data-i18n="nav.terms">Termini e Condizioni</a>
             <a href="/refund.html" aria-label="Vai alla policy di rimborso" data-i18n="nav.refund">Policy di Rimborso</a>
           </div>
-          <div style="margin-top: var(--sp-3); display: flex; flex-wrap: wrap; gap: var(--sp-2);">
+          <div style="margin-top: var(--sp-4); display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-2); max-width: 300px;">
             <button id="btn-mifid-open" class="btn btn-sm" type="button" aria-label="Apri informativa MiFID" data-i18n="mifid.banner.mifid">MiFID</button>
             <button id="btn-privacy-open" class="btn btn-sm" type="button" aria-label="Apri informativa privacy" data-i18n="nav.privacy">Privacy</button>
             <button id="btn-cookie-open" class="btn btn-sm" type="button" aria-label="Apri informativa cookie">Cookie</button>
@@ -128,8 +121,12 @@ function render(data = {}) {
             </span>
             · <span data-i18n="footer.copyright">Tutti i diritti riservati</span>
           </p>
-          <p style="margin: var(--sp-2) 0 0 0;">
+          <p style="margin: var(--sp-2) 0 0 0; display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: center;">
             <a href="mailto:info@tradelia.org" class="mail-link">info@tradelia.org</a>
+            <span style="color: var(--muted);">·</span>
+            <a href="mailto:amministrazione@tradelia.org" class="mail-link">amministrazione@tradelia.org</a>
+            <span style="color: var(--muted);">·</span>
+            <a href="mailto:support@tradelia.org" class="mail-link">support@tradelia.org</a>
           </p>
         </div>
         <div>
