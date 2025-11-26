@@ -353,6 +353,7 @@ function toSafeNumber(value, fallback = 0) {
 
 /**
  * Format level value using LEVEL_LABELS map
+ * Supporta sia numeri che stringhe (es. "Foundation" -> "Principi Base")
  */
 function formatLevelValue(value) {
   if (value === null || value === undefined) {
@@ -368,12 +369,28 @@ function formatLevelValue(value) {
     return LEVEL_LABELS[0];
   }
 
+  // Mapping stringhe legacy a nuovi label
+  const stringMapping = {
+    foundation: LEVEL_LABELS[0],
+    "principi base": LEVEL_LABELS[0],
+    application: LEVEL_LABELS[2],
+    applicazione: LEVEL_LABELS[2],
+    "analisi avanzata": LEVEL_LABELS[3],
+    "sintesi critica": LEVEL_LABELS[4],
+  };
+
+  const normalized = stringValue.toLowerCase();
+  if (stringMapping[normalized]) {
+    return stringMapping[normalized];
+  }
+
   const numeric = Number(stringValue);
   if (Number.isFinite(numeric)) {
     return LEVEL_LABELS[numeric] || stringValue;
   }
 
-  return stringValue;
+  // Se è una stringa sconosciuta, prova a mapparla numericamente
+  return LEVEL_LABELS[0]; // Default a "Principi Base"
 }
 
 /**
@@ -381,7 +398,7 @@ function formatLevelValue(value) {
  */
 function buildStats(rawStats = {}, modules = []) {
   const stats = {
-    current_level_raw: rawStats?.current_level ?? rawStats?.level ?? "Foundation",
+    current_level_raw: rawStats?.current_level ?? rawStats?.level ?? 0, // Default a 0 (Principi Base)
     total_points: toSafeNumber(rawStats?.total_points ?? rawStats?.points, 0),
     modules_completed: toSafeNumber(rawStats?.modules_completed ?? rawStats?.completed_modules, 0),
     current_streak_days: toSafeNumber(rawStats?.current_streak_days ?? rawStats?.streak_days, 0),
