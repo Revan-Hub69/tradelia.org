@@ -331,6 +331,8 @@
   flex-direction: column;
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.7);
   z-index: 1;
+  opacity: 1;
+  visibility: visible;
 }
 
 .onboarding-overlay .auth-header {

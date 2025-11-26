@@ -168,11 +168,9 @@ function createOnboardingOverlay() {
   state.root.setAttribute("aria-labelledby", "onboarding-title");
   state.root.hidden = true;
 
-  state.modal = document.createElement("div");
-  state.modal.className = "onboarding-modal";
-
-  state.modal.innerHTML = template();
-  state.root.appendChild(state.modal);
+  // Il template già crea auth-modal, quindi non serve un wrapper
+  state.root.innerHTML = template();
+  state.modal = state.root.querySelector(".auth-modal");
   document.body.appendChild(state.root);
 }
 
@@ -505,16 +503,26 @@ function setupKeyboardNavigation() {
  */
 function open() {
   if (!state.root) {
+    safeLog("error", "[Education Onboarding] Cannot open: root element not found");
     return;
   }
+
+  safeLog("log", "[Education Onboarding] Opening onboarding modal...");
 
   // Reset to first step
   goToStep(STEPS.WELCOME);
 
   // Show modal
   state.root.hidden = false;
+  state.root.style.display = "flex";
+  state.root.style.opacity = "1";
+  state.root.style.visibility = "visible";
   state.root.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
+
+  safeLog("log", "[Education Onboarding] Modal shown, hidden:", state.root.hidden);
+  safeLog("log", "[Education Onboarding] Modal display:", state.root.style.display);
+  safeLog("log", "[Education Onboarding] Modal innerHTML length:", state.root.innerHTML.length);
 
   // Save previous active element
   state.previousActiveElement = document.activeElement;
@@ -524,6 +532,9 @@ function open() {
     const firstButton = state.root.querySelector("[data-onboarding-next]");
     if (firstButton) {
       firstButton.focus();
+      safeLog("log", "[Education Onboarding] Focus set on first button");
+    } else {
+      safeLog("warn", "[Education Onboarding] First button not found");
     }
   }, 100);
 }
