@@ -119,11 +119,16 @@ async function markOnboardingCompleted() {
  */
 export async function initOnboarding() {
   try {
+    safeLog("log", "[Education Onboarding] Starting initialization...");
+
     // Initialize IndexedDB
     await initDB();
+    safeLog("log", "[Education Onboarding] IndexedDB initialized");
 
     // Check if already completed
     const completed = await isOnboardingCompleted();
+    safeLog("log", "[Education Onboarding] Completion status:", completed);
+
     if (completed) {
       safeLog("log", "[Education Onboarding] Already completed, skipping");
       return;
@@ -131,18 +136,23 @@ export async function initOnboarding() {
 
     // Create overlay if not exists
     if (!state.initialized) {
+      safeLog("log", "[Education Onboarding] Creating overlay...");
       createOnboardingOverlay();
       registerEvents();
       setupKeyboardNavigation();
       state.initialized = true;
+      safeLog("log", "[Education Onboarding] Overlay created and initialized");
     }
 
     // Show onboarding automatically after a short delay
+    safeLog("log", "[Education Onboarding] Scheduling show in 1 second...");
     setTimeout(() => {
+      safeLog("log", "[Education Onboarding] Opening onboarding now...");
       open();
     }, 1000);
   } catch (error) {
     safeLog("error", "[Education Onboarding] Errore inizializzazione:", error);
+    console.error("[Education Onboarding] Full error:", error);
   }
 }
 
