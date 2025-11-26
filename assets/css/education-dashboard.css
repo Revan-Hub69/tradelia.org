@@ -101,6 +101,64 @@
     gap: var(--edu-spacing-lg);
     min-height: calc(100vh - 64px);
   }
+
+  .lesson-item {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: var(--edu-spacing-md);
+    gap: var(--edu-spacing-sm);
+    flex-wrap: wrap;
+  }
+
+  .lesson-number {
+    width: 32px;
+    height: 32px;
+    font-size: var(--fs-13);
+    flex-shrink: 0;
+  }
+
+  .lesson-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .lesson-title {
+    font-size: var(--fs-15);
+    line-height: 1.3;
+    margin-bottom: var(--edu-spacing-xs);
+  }
+
+  .lesson-meta {
+    font-size: var(--fs-11);
+    gap: var(--edu-spacing-sm);
+    flex-wrap: wrap;
+  }
+
+  .lesson-status {
+    font-size: var(--fs-16);
+    flex-shrink: 0;
+  }
+
+  .lesson-item .btn {
+    min-width: 90px;
+    flex-shrink: 0;
+    font-size: var(--fs-13);
+    padding: var(--edu-spacing-sm) var(--edu-spacing-md);
+    min-height: 36px;
+  }
+
+  .lesson-lock-hint {
+    margin-top: var(--edu-spacing-sm);
+    padding: var(--edu-spacing-xs) 0;
+    font-size: var(--fs-11);
+    line-height: 1.4;
+    order: 10;
+    flex-basis: 100%;
+  }
+
+  .lesson-item.locked {
+    padding-bottom: var(--edu-spacing-md);
+  }
 }
 
 /* ===== EDUCATION HEADER ===== */
