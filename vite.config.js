@@ -78,15 +78,36 @@ function copyStaticFiles() {
   };
 }
 
-export default defineConfig({
+export default defineConfig(async ({ mode }) => {
+  const plugins = [copyStaticFiles()];
+  
+  // Bundle analyzer solo in modalità analyze
+  if (mode === "analyze") {
+    try {
+      const { visualizer } = await import("rollup-plugin-visualizer");
+      plugins.push(
+        visualizer({
+          open: true,
+          filename: "dist/stats.html",
+          gzipSize: true,
+          brotliSize: true,
+          template: "treemap", // o "sunburst", "network"
+        })
+      );
+    } catch (error) {
+      console.warn("⚠️  rollup-plugin-visualizer non installato. Esegui: npm install -D rollup-plugin-visualizer");
+    }
+  }
+  
+  return {
   root: ".",
   publicDir: false, // Non usare publicDir, tutti i file statici sono nella root
-  plugins: [copyStaticFiles()],
+  plugins,
   build: {
     outDir: "dist",
     emptyOutDir: true,
-    // Performance: Chunk size warnings
-    chunkSizeWarningLimit: 1000,
+    // Performance: Chunk size warnings (aumentato per chunk ottimizzati)
+    chunkSizeWarningLimit: 500, // 500KB per chunk (target: 200-300KB)
     rollupOptions: {
       input: {
         main: resolve(__dirname, "index.html"),
@@ -108,19 +129,40 @@ export default defineConfig({
           }
           return "assets/[name]-[hash][extname]";
         },
-        // Code splitting manuale per moduli dashboard
+        // Code splitting ottimizzato per performance
         manualChunks: (id) => {
-          // Dashboard modules in chunk separato
-          if (id.includes("assets/js/dashboard/")) {
-            const moduleName = id.split("/").pop().replace(".js", "");
-            return `dashboard-${moduleName}`;
-          }
-          // Vendor chunks
+          // Vendor chunks separati per cache optimization
           if (id.includes("node_modules")) {
+            // Supabase in chunk separato (usato frequentemente)
             if (id.includes("@supabase")) {
               return "vendor-supabase";
             }
+            // Firebase in chunk separato (usato solo per notifiche)
+            if (id.includes("firebase")) {
+              return "vendor-firebase";
+            }
+            // Altri vendor in chunk comune
             return "vendor";
+          }
+          
+          // Dashboard modules - chunk separati per lazy loading
+          if (id.includes("assets/js/dashboard/")) {
+            // Education modules in chunk separato (grande, caricato on-demand)
+            if (id.includes("education")) {
+              // Separare moduli education critici da non critici
+              if (id.includes("education-onboarding") || id.includes("education-toolbar")) {
+                return "dashboard-education-core";
+              }
+              return "dashboard-education";
+            }
+            // Altri moduli dashboard
+            const moduleName = id.split("/").pop().replace(".js", "");
+            return `dashboard-${moduleName}`;
+          }
+          
+          // Common utilities in chunk separato
+          if (id.includes("assets/js/utils/") || id.includes("assets/js/dashboard/security-utils")) {
+            return "common-utils";
           }
         },
       },
@@ -171,4 +213,5 @@ export default defineConfig({
       "@styles": resolve(__dirname, "./assets/css"),
     },
   },
+  };
 });

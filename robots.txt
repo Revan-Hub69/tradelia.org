@@ -1,0 +1,33 @@
+# robots.txt per tradelia.org
+# Best Practice 2025: Configurazione SEO e crawling
+
+User-agent: *
+Allow: /
+
+# Blocca cartelle non necessarie per SEO
+Disallow: /api/
+Disallow: /dist/
+Disallow: /node_modules/
+Disallow: /archivio/
+Disallow: /scripts/
+Disallow: /supabase/
+Disallow: /.git/
+Disallow: /.vscode/
+Disallow: /docs/
+
+# Permetti file importanti
+Allow: /index.html
+Allow: /dashboard.html
+Allow: /accesso.html
+Allow: /pricing.html
+Allow: /brokers.html
+Allow: /assets/
+Allow: /logos/
+Allow: /report/
+
+# Sitemap (se disponibile)
+# Sitemap: https://tradelia.org/sitemap.xml
+
+# Crawl-delay (opzionale, solo se necessario)
+# Crawl-delay: 1
+

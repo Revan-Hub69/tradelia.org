@@ -144,6 +144,17 @@ export async function initDashboard() {
   // Initialize watchlist/favorites
   initWatchlist();
 
+  // BEST PRACTICE 2025: Initialize intelligent preload strategy
+  try {
+    const { initPreloadStrategy } = await import("../utils/preload-strategy.js");
+    initPreloadStrategy();
+  } catch (error) {
+    // Import dinamico per evitare circolarità
+    import("./security-utils.js").then(({ safeLog }) => {
+      safeLog("warn", "[Dashboard] Errore init preload strategy:", error);
+    });
+  }
+
   // Initialize keyboard shortcuts
   initKeyboardShortcuts();
 

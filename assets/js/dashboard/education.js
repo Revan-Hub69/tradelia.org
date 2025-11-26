@@ -19,7 +19,7 @@
  * - Interleaving (Rohrer & Taylor, 2007; Birnbaum et al., 2013)
  */
 
-import { safeLog, escapeHtml } from "./security-utils.js";
+import { safeLog, escapeHtml, validateIframeUrl } from "./security-utils.js";
 
 const API_BASE = "/api/education";
 
@@ -47,81 +47,53 @@ const MICROLEARNING_MAX_MINUTES = 10; // Paper: Hug (2016) - optimal 5-10 min ch
 /**
  * Initialize education system (dashboard view)
  */
+/**
+ * Initialize education system with lazy loading
+ * Best Practice 2025: Load modules only when needed, in parallel where possible
+ */
 async function initEducation() {
-  // Initialize gamification system
-  try {
-    const { initGamification } = await import("./education-gamification.js");
-    initGamification();
-  } catch (error) {
-    safeLog("warn", "[Education] Errore initGamification:", error);
+  // Critical modules - load immediately
+  const criticalModules = [
+    { path: "./education-onboarding.js", init: async (m) => await m.initOnboarding() },
+    { path: "./education-toolbar.js", init: async (m) => m.initToolbar() },
+  ];
+
+  // Non-critical modules - can be loaded in parallel
+  const nonCriticalModules = [
+    { path: "./education-gamification.js", init: async (m) => m.initGamification() },
+    { path: "./education-spaced-repetition.js", init: async (m) => m.initSpacedRepetition() },
+    { path: "./education-retrieval-practice.js", init: async (m) => m.initRetrievalPractice() },
+    { path: "./education-adaptive-learning.js", init: async (m) => m.initAdaptiveLearning() },
+    { path: "./education-interactive-tools.js", init: async (m) => m.initInteractiveTools() },
+    { path: "./education-achievements.js", init: async (m) => {
+      m.initAchievements();
+      await m.checkAndShowAchievements();
+    }},
+    { path: "./education-progress-viz.js", init: async (m) => m.initProgressVisualizations() },
+  ];
+
+  // Load critical modules first
+  for (const module of criticalModules) {
+    try {
+      const mod = await import(module.path);
+      await module.init(mod);
+    } catch (error) {
+      safeLog("warn", `[Education] Errore caricamento ${module.path}:`, error);
+    }
   }
 
-  // Initialize spaced repetition system
-  try {
-    const { initSpacedRepetition } = await import("./education-spaced-repetition.js");
-    initSpacedRepetition();
-  } catch (error) {
-    safeLog("warn", "[Education] Errore initSpacedRepetition:", error);
-  }
+  // Load non-critical modules in parallel
+  const nonCriticalPromises = nonCriticalModules.map(async (module) => {
+    try {
+      const mod = await import(module.path);
+      await module.init(mod);
+    } catch (error) {
+      safeLog("warn", `[Education] Errore caricamento ${module.path}:`, error);
+    }
+  });
 
-  // Initialize retrieval practice system
-  try {
-    const { initRetrievalPractice } = await import("./education-retrieval-practice.js");
-    initRetrievalPractice();
-  } catch (error) {
-    safeLog("warn", "[Education] Errore initRetrievalPractice:", error);
-  }
-
-  // Initialize adaptive learning system
-  try {
-    const { initAdaptiveLearning } = await import("./education-adaptive-learning.js");
-    initAdaptiveLearning();
-  } catch (error) {
-    safeLog("warn", "[Education] Errore initAdaptiveLearning:", error);
-  }
-
-  // Initialize interactive tools
-  try {
-    const { initInteractiveTools } = await import("./education-interactive-tools.js");
-    initInteractiveTools();
-  } catch (error) {
-    safeLog("warn", "[Education] Errore initInteractiveTools:", error);
-  }
-
-  // Initialize onboarding
-  try {
-    const { initOnboarding } = await import("./education-onboarding.js");
-    await initOnboarding();
-  } catch (error) {
-    safeLog("warn", "[Education] Errore initOnboarding:", error);
-  }
-
-  // Initialize toolbar
-  try {
-    const { initToolbar } = await import("./education-toolbar.js");
-    initToolbar();
-  } catch (error) {
-    safeLog("warn", "[Education] Errore initToolbar:", error);
-  }
-
-  // Initialize achievements
-  try {
-    const { initAchievements, checkAndShowAchievements } = await import(
-      "./education-achievements.js"
-    );
-    initAchievements();
-    await checkAndShowAchievements();
-  } catch (error) {
-    safeLog("warn", "[Education] Errore initAchievements:", error);
-  }
-
-  // Initialize progress visualizations
-  try {
-    const { initProgressVisualizations } = await import("./education-progress-viz.js");
-    initProgressVisualizations();
-  } catch (error) {
-    safeLog("warn", "[Education] Errore initProgressVisualizations:", error);
-  }
+  // Wait for all non-critical modules (non-blocking)
+  await Promise.allSettled(nonCriticalPromises);
 
   // Try to find container in main content area (SPA)
   let container = document.getElementById("education-container");
@@ -1418,11 +1390,20 @@ function renderLessonView(lesson) {
       <div class="lesson-view-content">
         ${
           lesson.content_type === "video" && lesson.video_url
-            ? `
+            ? (() => {
+                const safeUrl = validateIframeUrl(lesson.video_url);
+                return safeUrl
+                  ? `
           <div class="lesson-video">
-            <iframe src="${escapeHtml(lesson.video_url)}" frameborder="0" allowfullscreen></iframe>
+            <iframe src="${safeUrl}" frameborder="0" allowfullscreen title="Video lezione"></iframe>
           </div>
         `
+                  : `
+          <div class="lesson-video-error">
+            <p>URL video non valido o non sicuro.</p>
+          </div>
+        `;
+              })()
             : ""
         }
         
@@ -1438,11 +1419,20 @@ function renderLessonView(lesson) {
 
         ${
           lesson.content_type === "pdf" && lesson.pdf_url
-            ? `
+            ? (() => {
+                const safeUrl = validateIframeUrl(lesson.pdf_url);
+                return safeUrl
+                  ? `
           <div class="lesson-pdf">
-            <iframe src="${escapeHtml(lesson.pdf_url)}" frameborder="0"></iframe>
+            <iframe src="${safeUrl}" frameborder="0" title="PDF lezione"></iframe>
           </div>
         `
+                  : `
+          <div class="lesson-pdf-error">
+            <p>URL PDF non valido o non sicuro.</p>
+          </div>
+        `;
+              })()
             : ""
         }
       </div>

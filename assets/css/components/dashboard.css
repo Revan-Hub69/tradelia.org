@@ -1358,12 +1358,16 @@ a[role="button"]:focus-visible {
   opacity: 0.85;
 }
 
+/* Dimensioni esplicite per prevenire layout shift */
 .footer-logo-img {
   height: 32px;
-  width: auto;
+  width: 200px; /* Dimensione esplicita basata su aspect-ratio 200/50 */
+  max-width: 200px;
   display: block;
   filter: brightness(0.95);
   transition: filter var(--transition-smooth);
+  aspect-ratio: 200 / 50;
+  object-fit: contain;
 }
 
 .footer-logo-link:hover .footer-logo-img {
@@ -1434,7 +1438,8 @@ a[role="button"]:focus-visible {
 .footer-disclaimer {
   font-size: var(--fs-11, 11px);
   color: var(--dash-text-muted);
-  opacity: 0.75;
+  /* WCAG AA: Contrasto minimo 4.5:1 per testo piccolo */
+  opacity: 1;
   margin: 0;
   font-style: normal;
   line-height: 1.5;
@@ -1866,9 +1871,11 @@ a[role="button"]:focus-visible {
 }
 
 /* ===== MODULE CATEGORIES ===== */
+/* Prevenzione CLS: riserva spazio minimo per sezioni dinamiche */
 .module-category {
   margin-bottom: var(--spacing-2xl);
   scroll-margin-top: var(--spacing-xl);
+  min-height: 150px; /* Altezza minima per evitare layout shift iniziale */
 }
 
 .module-category:last-child {

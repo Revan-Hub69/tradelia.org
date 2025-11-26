@@ -30,7 +30,7 @@ function renderFooter(container) {
     <div class="footer-content">
       <div class="footer-left">
         <a href="/index.html" class="footer-logo-link" aria-label="Tradelia.org - Homepage">
-          <img src="${logoPath}" alt="Tradelia AI" class="footer-logo-img" onerror="this.onerror=null; this.style.display='none'; const fallback=this.nextElementSibling; if(fallback) fallback.classList.add('show');" />
+          <img src="${logoPath}" alt="Tradelia AI" class="footer-logo-img" width="200" height="50" onerror="this.onerror=null; this.style.display='none'; const fallback=this.nextElementSibling; if(fallback) fallback.classList.add('show');" />
           <span class="footer-logo-fallback">
             <span class="footer-brand-word">TRADELIA</span>
             <span class="footer-brand-dot"></span>

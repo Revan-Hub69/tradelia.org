@@ -1,8 +1,11 @@
 /* ===== EDUCATION FAVORITES CSS ===== */
 
+/* Prevenzione CLS: riserva spazio per sezione favorites */
 .education-favorites-section {
+  min-height: 250px; /* Altezza minima aumentata per evitare layout shift */
   width: 100%;
   margin-bottom: var(--edu-spacing-xl);
+  contain: layout style; /* Ottimizzazione rendering - isola layout e stili */
 }
 
 .education-favorites-section .education-section-title {

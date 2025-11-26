@@ -9,7 +9,7 @@
  * @returns {string} Testo sanitizzato
  */
 export function escapeHtml(text) {
-  if (text == null) {
+  if (text === null || text === undefined) {
     return "";
   }
   const div = document.createElement("div");
@@ -51,6 +51,56 @@ export function sanitizeUrl(url) {
     return escapeHtml(str);
   }
   return "#";
+}
+
+/**
+ * Valida e sanitizza URL per iframe (video, PDF, etc.)
+ * Permette solo URL https/http validi o percorsi relativi sicuri
+ * @param {string} url - URL da validare
+ * @returns {string|null} URL validato e sanitizzato, o null se non valido
+ */
+export function validateIframeUrl(url) {
+  if (!url || typeof url !== "string") {
+    return null;
+  }
+
+  const trimmed = url.trim();
+  if (trimmed.length === 0) {
+    return null;
+  }
+
+  // Blocca protocolli pericolosi
+  if (trimmed.match(/^(javascript|data|vbscript|file|about):/i)) {
+    return null;
+  }
+
+  try {
+    // Se è un URL assoluto, verifica che sia https o http
+    if (trimmed.match(/^https?:\/\//i)) {
+      const urlObj = new URL(trimmed);
+      // Permetti solo https e http
+      if (urlObj.protocol !== "https:" && urlObj.protocol !== "http:") {
+        return null;
+      }
+      // Sanitizza e ritorna
+      return escapeHtml(trimmed);
+    }
+
+    // Se è un percorso relativo, verifica che non contenga caratteri pericolosi
+    if (trimmed.startsWith("/") || trimmed.startsWith("./") || trimmed.startsWith("../")) {
+      // Blocca tentativi di path traversal
+      if (trimmed.includes("..") || trimmed.includes("//")) {
+        return null;
+      }
+      return escapeHtml(trimmed);
+    }
+
+    // Altri formati non supportati
+    return null;
+  } catch {
+    // URL non valido
+    return null;
+  }
 }
 
 /**

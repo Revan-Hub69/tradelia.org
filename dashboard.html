@@ -76,7 +76,20 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.svg?v=4" />
     <link rel="manifest" href="/dashboard.webmanifest" />
 
+    <!-- Preconnect per domini esterni (riduce latenza) -->
+    <link rel="preconnect" href="https://tradelia-org.onrender.com" crossorigin />
+    <link rel="dns-prefetch" href="https://tradelia-org.onrender.com" />
+    
+    <!-- Preload risorse critiche -->
+    <link rel="preload" href="/logos/tradelia-logo.svg?v=4" as="image" type="image/svg+xml" />
+    <link rel="preload" href="/assets/css/settings/tokens.css" as="style" />
+    <link rel="preload" href="/assets/css/components/dashboard.css" as="style" />
+    <link rel="preload" href="/assets/css/education-dashboard.css" as="style" />
+    <link rel="modulepreload" href="/assets/js/dashboard/app.js" />
+    <link rel="modulepreload" href="/assets/js/dashboard/index.js" />
+
     <!-- FASE 1: Design System Consolidato - ITCSS Architecture -->
+    <!-- Critical CSS - Caricati immediatamente -->
     <link rel="stylesheet" href="/assets/css/settings/tokens.css" />
     <link rel="stylesheet" href="/assets/css/generic/reset.css" />
     <link rel="stylesheet" href="/assets/css/elements/typography.css" />
@@ -86,23 +99,45 @@
     <link rel="stylesheet" href="/assets/css/components/dashboard-theme-overrides.css" />
     <link rel="stylesheet" href="/assets/css/components/communication-preferences.css" />
     <link rel="stylesheet" href="/assets/css/components/auth-modal.css" />
-    <link rel="stylesheet" href="/assets/css/components/education.css" />
-    <link rel="stylesheet" href="/assets/css/components/education-test.css" />
-    <link rel="stylesheet" href="/assets/css/education-dashboard.css" />
-    <link rel="stylesheet" href="/assets/css/education-onboarding.css" />
-    <link rel="stylesheet" href="/assets/css/education-toolbar.css" />
-    <link rel="stylesheet" href="/assets/css/education-achievements.css" />
-    <link rel="stylesheet" href="/assets/css/education-favorites.css" />
-    <link rel="stylesheet" href="/assets/css/education-glossary.css" />
-    <link rel="stylesheet" href="/assets/css/components/education-spaced-repetition.css" />
-    <link rel="stylesheet" href="/assets/css/components/education-retrieval-practice.css" />
-    <link rel="stylesheet" href="/assets/css/components/education-metacognition.css" />
-    <link rel="stylesheet" href="/assets/css/components/education-analytics.css" />
-    <link rel="stylesheet" href="/assets/css/components/education-interleaving.css" />
-    <link rel="stylesheet" href="/assets/css/components/education-personalized-paths.css" />
-    <link rel="stylesheet" href="/assets/css/components/education-gamification.css" />
-    <link rel="stylesheet" href="/assets/css/components/education-ui-enhancements.css" />
-    <link rel="stylesheet" href="/assets/css/mifid-banner.css" />
+    
+    <!-- Non-critical CSS - Caricati asincronamente per non bloccare rendering -->
+    <link rel="stylesheet" href="/assets/css/components/education.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/assets/css/components/education-test.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/assets/css/education-dashboard.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/assets/css/education-onboarding.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/assets/css/education-toolbar.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/assets/css/education-achievements.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/assets/css/education-favorites.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/assets/css/education-glossary.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/assets/css/components/education-spaced-repetition.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/assets/css/components/education-retrieval-practice.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/assets/css/components/education-metacognition.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/assets/css/components/education-analytics.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/assets/css/components/education-interleaving.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/assets/css/components/education-personalized-paths.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/assets/css/components/education-gamification.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/assets/css/components/education-ui-enhancements.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/assets/css/mifid-banner.css" media="print" onload="this.media='all'" />
+    <noscript>
+      <!-- Fallback per browser senza JavaScript -->
+      <link rel="stylesheet" href="/assets/css/components/education.css" />
+      <link rel="stylesheet" href="/assets/css/components/education-test.css" />
+      <link rel="stylesheet" href="/assets/css/education-dashboard.css" />
+      <link rel="stylesheet" href="/assets/css/education-onboarding.css" />
+      <link rel="stylesheet" href="/assets/css/education-toolbar.css" />
+      <link rel="stylesheet" href="/assets/css/education-achievements.css" />
+      <link rel="stylesheet" href="/assets/css/education-favorites.css" />
+      <link rel="stylesheet" href="/assets/css/education-glossary.css" />
+      <link rel="stylesheet" href="/assets/css/components/education-spaced-repetition.css" />
+      <link rel="stylesheet" href="/assets/css/components/education-retrieval-practice.css" />
+      <link rel="stylesheet" href="/assets/css/components/education-metacognition.css" />
+      <link rel="stylesheet" href="/assets/css/components/education-analytics.css" />
+      <link rel="stylesheet" href="/assets/css/components/education-interleaving.css" />
+      <link rel="stylesheet" href="/assets/css/components/education-personalized-paths.css" />
+      <link rel="stylesheet" href="/assets/css/components/education-gamification.css" />
+      <link rel="stylesheet" href="/assets/css/components/education-ui-enhancements.css" />
+      <link rel="stylesheet" href="/assets/css/mifid-banner.css" />
+    </noscript>
   </head>
   <body>
     <a href="#main-content" class="skip-link">Salta al contenuto principale</a>
@@ -119,7 +154,9 @@
                 class="dashboard-brand-logo"
                 width="200"
                 height="50"
-                style="height: 36px; width: auto"
+                style="height: 36px; width: auto; min-height: 36px; aspect-ratio: 200/50; display: block;"
+                loading="eager"
+                fetchpriority="high"
               />
               <span class="dashboard-brand-text-fallback" style="display: none">
                 <span class="dashboard-brand-word">TRADELIA</span>
