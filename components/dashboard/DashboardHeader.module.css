@@ -1,0 +1,126 @@
+.dashboardHeaderModern {
+  background: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--dash-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dashboardHeaderContent {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.dashboardTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.dashboardBrand {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--dash-text);
+  transition: opacity 0.2s;
+  position: relative;
+}
+
+.dashboardBrand:hover {
+  opacity: 0.9;
+}
+
+.dashboardLogoWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.dashboardBrandLogo {
+  height: 36px;
+  width: auto;
+  display: block;
+  filter: brightness(0.95);
+  transition: filter 0.3s;
+}
+
+.dashboardBrand:hover .dashboardBrandLogo {
+  filter: brightness(1);
+}
+
+/* Linea blu 15% del logo - WOW effect */
+.dashboardLogoBlueLine {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 15%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--dash-accent) 0%, var(--dash-accent-hover) 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 12px rgba(74, 144, 226, 0.6);
+  animation: logo-line-pulse 3s ease-in-out infinite;
+}
+
+@keyframes logo-line-pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scaleX(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+.dashboardTitleSeparator {
+  color: var(--dash-text-muted);
+  opacity: 0.5;
+}
+
+.dashboardTitleText {
+  color: var(--dash-text-soft);
+  font-weight: 500;
+}
+
+.dashboardBrandTextFallback {
+  display: none;
+}
+
+.dashboardBrandWord {
+  color: var(--dash-text);
+}
+
+.dashboardBrandDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--dash-text-muted);
+  display: inline-block;
+  opacity: 0.6;
+  transition: all 0.3s;
+}
+
+.dashboardBrandSuffix {
+  color: var(--dash-text);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .dashboardHeaderModern {
+    padding: 0.75rem 1rem;
+  }
+
+  .dashboardTitle {
+    font-size: 1rem;
+  }
+
+  .dashboardBrandLogo {
+    height: 28px;
+  }
+}

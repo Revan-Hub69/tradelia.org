@@ -1,0 +1,213 @@
+.dashboardFooterModern {
+  margin-top: auto;
+  padding: 3rem 1.5rem;
+  background: var(--dash-bg-soft);
+  border-top: 1px solid var(--dash-border);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Pattern chiaro per footer - WOW effect */
+.footerPatternOverlay {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    /* Pattern gradient più chiaro e visibile */
+    radial-gradient(circle at 20% 50%, rgba(74, 144, 226, 0.12) 0%, transparent 60%),
+    radial-gradient(circle at 80% 50%, rgba(74, 144, 226, 0.1) 0%, transparent 60%),
+    radial-gradient(circle at 50% 20%, rgba(74, 144, 226, 0.08) 0%, transparent 50%),
+    /* Pattern texture sottile */
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 2px,
+        rgba(74, 144, 226, 0.02) 2px,
+        rgba(74, 144, 226, 0.02) 4px
+      ),
+    /* Base gradient */ linear-gradient(135deg, rgba(74, 144, 226, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.8;
+}
+
+.footerContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 2rem;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.footerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.footerLogoLink {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  transition: opacity 0.3s;
+  text-decoration: none;
+  position: relative;
+}
+
+.footerLogoLink:hover {
+  opacity: 0.9;
+}
+
+.footerLogoWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.footerLogoImg {
+  height: 32px;
+  width: auto;
+  max-width: 200px;
+  display: block;
+  filter: brightness(0.95);
+  transition: filter 0.3s;
+  aspect-ratio: 200 / 50;
+  object-fit: contain;
+}
+
+.footerLogoLink:hover .footerLogoImg {
+  filter: brightness(1);
+}
+
+/* Linea blu 15% del logo nel footer */
+.footerLogoBlueLine {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 15%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--dash-accent) 0%, var(--dash-accent-hover) 100%);
+  border-radius: 1px;
+  box-shadow: 0 0 8px rgba(74, 144, 226, 0.5);
+  animation: footer-logo-line-pulse 3s ease-in-out infinite;
+}
+
+@keyframes footer-logo-line-pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scaleX(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+.footerLogoFallback {
+  display: none;
+}
+
+.footerBrandWord {
+  color: var(--dash-text);
+}
+
+.footerBrandDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--dash-text-muted);
+  display: inline-block;
+  opacity: 0.6;
+  transition: all 0.3s;
+}
+
+.footerLogoLink:hover .footerBrandDot {
+  background: var(--dash-accent);
+  opacity: 1;
+  box-shadow: 0 0 8px rgba(74, 144, 226, 0.5);
+}
+
+.footerBrandSuffix {
+  color: var(--dash-text);
+  font-weight: 600;
+}
+
+.footerCopyright {
+  font-size: 0.8125rem;
+  color: var(--dash-text-muted);
+  margin: 0;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.footerDisclaimer {
+  font-size: 0.75rem;
+  color: var(--dash-text-muted);
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+.footerRight {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.footerLinksInline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.footerLink {
+  background: none;
+  border: none;
+  color: var(--dash-text-soft);
+  text-decoration: none;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0.25rem 0;
+  font-family: inherit;
+}
+
+.footerLink:hover {
+  color: var(--dash-accent);
+}
+
+.footerSeparator {
+  color: var(--dash-text-muted);
+  opacity: 0.4;
+}
+
+.footerTech {
+  font-size: 0.75rem;
+  color: var(--dash-text-muted);
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .dashboardFooterModern {
+    padding: 2rem 1rem;
+  }
+
+  .footerContent {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .footerRight {
+    width: 100%;
+  }
+
+  .footerLinksInline {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

@@ -1,38 +1,44 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "ES2022",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "moduleResolution": "node",
-    "rootDir": "./",
-    "outDir": "./dist",
-    "strict": true,
-    "esModuleInterop": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "allowJs": true,
-    "checkJs": false,
-    "declaration": false,
-    "declarationMap": false,
-    "sourceMap": true,
+    "jsx": "preserve",
     "incremental": true,
-    "types": ["node"]
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": [
-    "assets/js/**/*",
-    "scripts/**/*",
-    "api/**/*"
+    "next-env.d.ts",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "components/**/*.ts",
+    "components/**/*.tsx",
+    "lib/**/*.ts",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "dist",
-    "build",
+    "_internal",
+    "api",
     "archivio",
     "report",
-    "docs",
-    "*.min.js"
+    "scripts",
+    "supabase",
+    "tests"
   ]
 }

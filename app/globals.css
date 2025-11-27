@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design System Variables */
+:root {
+  /* Sfondo più chiaro (come richiesto) */
+  --dash-bg: #1a1a1a;
+  --dash-bg-soft: #222222;
+  --dash-surface: #2a2a2a;
+  --dash-surface-elev: #333333;
+
+  /* Testo */
+  --dash-text: #ffffff;
+  --dash-text-soft: #e8e8e8;
+  --dash-text-muted: #b0b0b0;
+
+  /* Bordi */
+  --dash-border: rgba(255, 255, 255, 0.12);
+  --dash-border-strong: rgba(255, 255, 255, 0.18);
+
+  /* Accenti */
+  --dash-accent: #4a90e2;
+  --dash-accent-hover: #5ba0f2;
+  --dash-blue-line: #4a90e2;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--dash-bg);
+  color: var(--dash-text);
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  min-height: 100vh;
+}
+
+.dashboard-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#main-content {
+  flex: 1;
+}

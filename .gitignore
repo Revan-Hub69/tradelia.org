@@ -1,50 +1,37 @@
-# Environment variables
-.env
-.env.local
-.env.production
-.env.*.local
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Firebase Service Account (NON committare mai!)
-*-firebase-adminsdk-*.json
-firebase-adminsdk-*.json
-service-account*.json
-*-service-account*.json
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
 
-# API keys private
-*-private-key.json
-*-secret.json
-secrets/
-*.key
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+/dist
+
+# misc
+.DS_Store
 *.pem
 
-# Firebase private config (locale)
-firebase-private-config.local.js
-*-private-config.local.js
-
-# Node modules
-node_modules
-dist/
-design-tokens/tokens.css
-*.log
-.DS_Store/
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Build output
-dist/
-build/
+# local env files
+.env*.local
+.env
+
+# vercel
 .vercel
-.vercel/
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
+# typescript
+*.tsbuildinfo
+next-env.d.ts
