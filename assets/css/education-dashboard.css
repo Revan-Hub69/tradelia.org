@@ -546,16 +546,58 @@
 }
 
 .education-module-card.locked .module-status-badge {
-  background: var(--edu-surface-base);
-  border-color: var(--edu-border-subtle);
-  color: var(--edu-text-disabled);
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  font-size: 0.75rem; /* BEST PRACTICE: 12px minimo per leggibilità */
+  font-weight: 500;
+  padding: var(--edu-spacing-xs) var(--edu-spacing-sm);
+  line-height: 1.4;
+  min-height: 24px; /* BEST PRACTICE: Altezza minima per touch */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--edu-radius-sm);
+  white-space: nowrap;
+  text-transform: none; /* BEST PRACTICE: No uppercase per leggibilità */
+  letter-spacing: normal;
+}
+
+/* BEST PRACTICE ACCADEMICO: Badge bloccato su mobile */
+@media (max-width: 768px) {
+  .education-module-card.locked .module-status-badge {
+    font-size: 0.8125rem; /* BEST PRACTICE: 13px su mobile per leggibilità */
+    padding: var(--edu-spacing-xs) var(--edu-spacing-sm);
+    min-height: 28px; /* BEST PRACTICE: Altezza aumentata su mobile */
+    line-height: 1.5;
+  }
 }
 
 .education-module-card.locked .module-card-actions .btn {
-  background: var(--edu-surface-base);
-  border-color: var(--edu-border-subtle);
-  color: var(--edu-text-disabled);
-  opacity: 0.5;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  opacity: 0.8;
+  cursor: not-allowed;
+  font-size: 0.875rem; /* BEST PRACTICE: 14px per leggibilità */
+  font-weight: 500;
+  padding: var(--edu-spacing-sm) var(--edu-spacing-md);
+  min-height: 44px; /* BEST PRACTICE: Touch target minimo */
+  line-height: 1.5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--edu-spacing-xs);
+}
+
+/* BEST PRACTICE ACCADEMICO: Pulsante bloccato su mobile */
+@media (max-width: 768px) {
+  .education-module-card.locked .module-card-actions .btn {
+    font-size: 0.9375rem; /* BEST PRACTICE: 15px su mobile */
+    padding: var(--edu-spacing-md) var(--edu-spacing-lg);
+    min-height: 44px;
+    width: 100%; /* BEST PRACTICE: Full width su mobile */
+  }
 }
 
 @media (max-width: calc(var(--breakpoint-md) - 1px)) {
@@ -592,9 +634,11 @@
   }
 
   .education-module-card.locked .module-card-actions .btn {
-    min-height: 40px;
-    font-size: var(--fs-13);
-    padding: var(--edu-spacing-sm) var(--edu-spacing-md);
+    min-height: 44px; /* BEST PRACTICE: Touch target minimo */
+    font-size: 0.9375rem; /* BEST PRACTICE: 15px su mobile */
+    padding: var(--edu-spacing-md) var(--edu-spacing-lg);
+    width: 100%; /* BEST PRACTICE: Full width su mobile */
+    line-height: 1.5;
   }
 }
 
@@ -625,13 +669,28 @@
   padding: var(--edu-spacing-xs) var(--edu-spacing-sm);
   background: var(--edu-surface-elevated);
   border: 1px solid var(--edu-border-subtle);
-  border-radius: var(--edu-radius-full);
-  font-size: var(--fs-11);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  border-radius: var(--edu-radius-sm); /* BEST PRACTICE: Border-radius ridotto (non full) */
+  font-size: 0.75rem; /* BEST PRACTICE: 12px minimo per leggibilità */
+  font-weight: 500; /* BEST PRACTICE: Peso ridotto */
+  text-transform: none; /* BEST PRACTICE: No uppercase per leggibilità accademica */
+  letter-spacing: normal; /* BEST PRACTICE: Letter spacing normale */
   color: var(--edu-text-secondary);
   white-space: nowrap;
+  min-height: 24px; /* BEST PRACTICE: Altezza minima per touch */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.4;
+}
+
+/* BEST PRACTICE ACCADEMICO: Badge status su mobile */
+@media (max-width: 768px) {
+  .module-status-badge {
+    font-size: 0.8125rem; /* BEST PRACTICE: 13px su mobile */
+    padding: var(--edu-spacing-xs) var(--edu-spacing-sm);
+    min-height: 28px; /* BEST PRACTICE: Altezza aumentata su mobile */
+    line-height: 1.5;
+  }
 }
 
 .education-module-card[data-status="completed"] .module-status-badge {
