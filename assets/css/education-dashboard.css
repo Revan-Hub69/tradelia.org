@@ -117,22 +117,7 @@
   }
 
   /* BEST PRACTICE ACCADEMICO: Lesson item mobile completamente ridisegnato */
-  .lesson-item {
-    grid-template-columns: 1fr; /* BEST PRACTICE: Grid a colonna singola su mobile */
-    gap: var(--edu-spacing-md);
-    padding: var(--edu-spacing-lg);
-    align-items: stretch;
-  }
-
-  .lesson-number {
-    width: 40px; /* BEST PRACTICE: Dimensione ridotta ma touch-friendly */
-    height: 40px;
-    min-width: 40px;
-    min-height: 40px;
-    font-size: var(--fs-15, 15px);
-    margin-bottom: var(--edu-spacing-sm);
-    align-self: flex-start;
-  }
+  /* BEST PRACTICE: CSS duplicato rimosso - vedi definizione principale .lesson-item */
 
   .lesson-content {
     width: 100%;
@@ -196,22 +181,7 @@
   /* Migliora la leggibilità su schermi piccoli */
   @media (max-width: 480px) {
     /* Extra small - mantenuto per compatibilità */
-    .lesson-item {
-      padding: var(--edu-spacing-md);
-      gap: var(--edu-spacing-sm);
-    }
-
-    .lesson-title {
-      font-size: var(--fs-16);
-      line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Min 1.4 per leggibilità */
-    }
-
-    .lesson-meta {
-      font-size: var(--fs-12);
-    }
-
     .lesson-item .btn {
-      font-size: var(--fs-14);
       padding: var(--edu-spacing-sm) var(--edu-spacing-md);
       min-height: 44px;
     }

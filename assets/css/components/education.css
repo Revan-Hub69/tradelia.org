@@ -497,23 +497,7 @@
   gap: var(--edu-spacing-md);
 }
 
-.lesson-item {
-  display: flex;
-  align-items: center;
-  gap: var(--edu-spacing-md);
-  padding: var(--edu-spacing-lg);
-  background: var(--edu-card-bg);
-  border: 1px solid var(--edu-border);
-  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Max 8px, non 12px */
-  transition:
-    transform var(--edu-transition-fast),
-    border-color var(--edu-transition-fast);
-}
-
-.lesson-item:hover {
-  transform: translateX(4px);
-  border-color: var(--edu-primary);
-}
+/* BEST PRACTICE: CSS duplicato rimosso - vedi education-dashboard.css per definizione completa */
 
 .lesson-item.completed {
   border-color: var(--edu-success);
@@ -831,9 +815,7 @@
     grid-template-columns: 1fr;
   }
 
-  .lesson-item {
-    flex-wrap: wrap;
-  }
+  /* BEST PRACTICE: CSS duplicato rimosso - vedi education-dashboard.css per definizione completa */
 
   .lesson-view-content {
     padding: var(--edu-spacing-md);

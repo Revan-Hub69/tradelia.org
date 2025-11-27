@@ -18,22 +18,12 @@
 // Version number - increment this to force cache update
 const VERSION = "2.3.20";
 const CACHE_NAME = `tradelia-ai-v${VERSION}`;
+// BEST PRACTICE: Solo file che esistono realmente - rimossi file inesistenti che causavano errori
 const STATIC_CACHE = [
   "/",
   "/dashboard.html",
   "/dashboard.webmanifest",
-  "/archivio/index.html",
-  "/archivio/dashboard.html",
-  "/admin/index.html",
-  "/admin/tokens.html",
-  "/admin/requests.html",
-  "/admin/reports.html",
-  "/admin/users.html",
   "/accesso.html",
-  "/report/assets/css/tokens.css",
-  "/assets/css/global-header.css",
-  "/archivio/assets/css/archive.css",
-  "/archivio/assets/css/dashboard.css",
   "/icons/icon-192.svg",
   "/icons/icon-512.svg",
   "/icons/icon-192.png",
