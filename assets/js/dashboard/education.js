@@ -564,6 +564,277 @@ function normalizeModules(modules = [], { lessonProgress = {} } = {}) {
 }
 
 /**
+ * Initialize search and filters functionality
+ */
+function initSearchAndFilters(container) {
+  const searchInput = container.querySelector("#education-search");
+  const filterLevel = container.querySelector("#education-filter-level");
+  const filterStatus = container.querySelector("#education-filter-status");
+  const sortSelect = container.querySelector("#education-sort");
+  const modulesGrid = container.querySelector("#education-modules-grid") || container.querySelector(".modules-grid");
+  
+  if (!searchInput || !modulesGrid) return;
+  
+  let allModules = Array.from(modulesGrid.children);
+  
+  function filterAndSort() {
+    const searchTerm = (searchInput.value || "").toLowerCase().trim();
+    const levelFilter = filterLevel?.value || "";
+    const statusFilter = filterStatus?.value || "";
+    const sortBy = sortSelect?.value || "order";
+    
+    let filtered = allModules.filter((card) => {
+      const module = window.educationModules?.find(m => m.id === card.dataset.moduleId);
+      if (!module) return false;
+      
+      if (searchTerm) {
+        const matchesTitle = module.title?.toLowerCase().includes(searchTerm);
+        const matchesDescription = module.description?.toLowerCase().includes(searchTerm);
+        const matchesLessons = module.lessons?.some(l => l.title?.toLowerCase().includes(searchTerm));
+        if (!matchesTitle && !matchesDescription && !matchesLessons) {
+          return false;
+        }
+      }
+      
+      if (levelFilter) {
+        const moduleLevel = module.level ?? 0;
+        if (String(moduleLevel) !== levelFilter) {
+          return false;
+        }
+      }
+      
+      if (statusFilter) {
+        const moduleStatus = module.userProgress?.status || "not_started";
+        if (moduleStatus !== statusFilter) {
+          return false;
+        }
+      }
+      
+      return true;
+    });
+    
+    if (sortBy === "name") {
+      filtered.sort((a, b) => {
+        const moduleA = window.educationModules?.find(m => m.id === a.dataset.moduleId);
+        const moduleB = window.educationModules?.find(m => m.id === b.dataset.moduleId);
+        return (moduleA?.title || "").localeCompare(moduleB?.title || "");
+      });
+    } else if (sortBy === "progress") {
+      filtered.sort((a, b) => {
+        const moduleA = window.educationModules?.find(m => m.id === a.dataset.moduleId);
+        const moduleB = window.educationModules?.find(m => m.id === b.dataset.moduleId);
+        const progressA = moduleA?.userProgress?.progress_percentage || 0;
+        const progressB = moduleB?.userProgress?.progress_percentage || 0;
+        return progressB - progressA;
+      });
+    }
+    
+    allModules.forEach(card => {
+      card.style.display = filtered.includes(card) ? "" : "none";
+    });
+    
+    let emptyState = modulesGrid.querySelector(".empty-state-search");
+    if (filtered.length === 0 && allModules.length > 0) {
+      if (!emptyState) {
+        emptyState = document.createElement("div");
+        emptyState.className = "empty-state empty-state-search";
+        emptyState.innerHTML = `
+          <div class="empty-state-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="64" height="64" style="opacity: 0.4;">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+          </div>
+          <h3 class="empty-state-title">Nessun risultato trovato</h3>
+          <p class="empty-state-message">Prova a modificare i filtri o la ricerca per trovare altri contenuti.</p>
+          <button class="btn btn-secondary empty-state-action" onclick="document.getElementById('education-search').value=''; document.getElementById('education-filter-level').value=''; document.getElementById('education-filter-status').value=''; document.getElementById('education-sort').value='order'; this.closest('.education-filters').querySelector('input').dispatchEvent(new Event('input'));" aria-label="Rimuovi filtri">
+            Rimuovi filtri
+          </button>
+        `;
+        modulesGrid.appendChild(emptyState);
+      }
+      emptyState.style.display = "flex";
+    } else if (emptyState) {
+      emptyState.style.display = "none";
+    }
+  }
+  
+  if (searchInput) {
+    searchInput.addEventListener("input", filterAndSort);
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        searchInput.value = "";
+        filterAndSort();
+      }
+    });
+  }
+  
+  if (filterLevel) filterLevel.addEventListener("change", filterAndSort);
+  if (filterStatus) filterStatus.addEventListener("change", filterAndSort);
+  if (sortSelect) sortSelect.addEventListener("change", filterAndSort);
+}
+
+/**
+ * Initialize quick actions
+ */
+function initQuickActions(container) {
+  const continueBtn = container.querySelector('[data-action="continue-lesson"]');
+  const viewTestsBtn = container.querySelector('[data-action="view-tests"]');
+  
+  if (continueBtn) {
+    continueBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const moduleId = continueBtn.dataset.moduleId;
+      const lessonId = continueBtn.dataset.lessonId;
+      if (moduleId && lessonId) {
+        await openModule(moduleId);
+        setTimeout(() => {
+          const lessonElement = document.querySelector(`[data-lesson-id="${lessonId}"]`);
+          if (lessonElement) {
+            lessonElement.scrollIntoView({ behavior: "smooth", block: "center" });
+            lessonElement.focus();
+          }
+        }, 500);
+      }
+    });
+  }
+  
+  if (viewTestsBtn) {
+    viewTestsBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const modulesSection = container.querySelector(".education-modules");
+      if (modulesSection) {
+        modulesSection.scrollIntoView({ behavior: "smooth" });
+        const modulesWithTests = container.querySelectorAll('[data-has-pending-tests="true"]');
+        modulesWithTests.forEach(module => {
+          module.style.outline = "2px solid var(--edu-accent)";
+          setTimeout(() => {
+            module.style.outline = "";
+          }, 3000);
+        });
+      }
+    });
+  }
+}
+
+/**
+ * Initialize accessibility improvements
+ */
+function initAccessibility(container) {
+  if (!document.querySelector(".skip-to-content")) {
+    const skipLink = document.createElement("a");
+    skipLink.href = "#education-modules-grid";
+    skipLink.className = "skip-to-content";
+    skipLink.textContent = "Salta al contenuto principale";
+    skipLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      const target = document.getElementById("education-modules-grid") || container.querySelector(".modules-grid");
+      if (target) {
+        target.focus();
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+    container.insertBefore(skipLink, container.firstChild);
+  }
+  
+  document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+      e.preventDefault();
+      const searchInput = container.querySelector("#education-search");
+      if (searchInput) {
+        searchInput.focus();
+      }
+    }
+    
+    if (e.key === "Escape") {
+      const searchInput = container.querySelector("#education-search");
+      if (searchInput && document.activeElement === searchInput) {
+        searchInput.value = "";
+        searchInput.blur();
+        searchInput.dispatchEvent(new Event("input"));
+      }
+    }
+    
+    if (e.key === "?" && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      const shortcuts = document.querySelector(".keyboard-shortcuts");
+      if (shortcuts) {
+        shortcuts.classList.toggle("show");
+      }
+    }
+  });
+  
+  if (!document.querySelector(".keyboard-shortcuts")) {
+    const shortcutsWidget = document.createElement("div");
+    shortcutsWidget.className = "keyboard-shortcuts";
+    shortcutsWidget.innerHTML = `
+      <div class="keyboard-shortcuts-title">Scorciatoie da Tastiera</div>
+      <div class="keyboard-shortcut-item">
+        <span>Ricerca</span>
+        <kbd class="keyboard-shortcut-key">Ctrl</kbd> + <kbd class="keyboard-shortcut-key">K</kbd>
+      </div>
+      <div class="keyboard-shortcut-item">
+        <span>Chiudi ricerca</span>
+        <kbd class="keyboard-shortcut-key">Esc</kbd>
+      </div>
+      <div class="keyboard-shortcut-item">
+        <span>Mostra scorciatoie</span>
+        <kbd class="keyboard-shortcut-key">?</kbd>
+      </div>
+      <div class="keyboard-shortcut-item">
+        <span>Naviga moduli</span>
+        <kbd class="keyboard-shortcut-key">Tab</kbd>
+      </div>
+    `;
+    document.body.appendChild(shortcutsWidget);
+    
+    document.addEventListener("click", (e) => {
+      if (!shortcutsWidget.contains(e.target) && e.target !== shortcutsWidget) {
+        shortcutsWidget.classList.remove("show");
+      }
+    });
+  }
+  
+  const statCards = container.querySelectorAll(".stat-card");
+  statCards.forEach((card) => {
+    if (!card.getAttribute("aria-label")) {
+      const label = card.querySelector(".stat-label")?.textContent || "Statistica";
+      const value = card.querySelector(".stat-value")?.textContent || "";
+      card.setAttribute("aria-label", `${label}: ${value}`);
+    }
+  });
+  
+  if (!container.querySelector("[aria-live='polite']")) {
+    const liveRegion = document.createElement("div");
+    liveRegion.setAttribute("aria-live", "polite");
+    liveRegion.setAttribute("aria-atomic", "true");
+    liveRegion.className = "sr-only";
+    liveRegion.id = "education-live-region";
+    container.appendChild(liveRegion);
+  }
+  
+  const liveRegion = container.querySelector("#education-live-region");
+  if (liveRegion) {
+    const stats = container.querySelector(".education-stats");
+    if (stats) {
+      const observer = new MutationObserver(() => {
+        const statsText = Array.from(stats.querySelectorAll(".stat-card"))
+          .map(card => {
+            const label = card.querySelector(".stat-label")?.textContent;
+            const value = card.querySelector(".stat-value")?.textContent;
+            return label && value ? `${label}: ${value}` : "";
+          })
+          .filter(Boolean)
+          .join(", ");
+        if (statsText) {
+          liveRegion.textContent = `Statistiche aggiornate: ${statsText}`;
+        }
+      });
+      observer.observe(stats, { childList: true, subtree: true, characterData: true });
+    }
+  }
+}
+
+/**
  * Render education dashboard
  */
 async function renderEducationDashboard(container, progress) {
@@ -730,8 +1001,20 @@ async function renderEducationDashboard(container, progress) {
     </div>
   `;
 
+  // Remove loading class
+  container.classList.remove("loading");
+  
   // Bind events
   bindEducationEvents(container);
+  
+  // Initialize search and filters
+  initSearchAndFilters(container);
+  
+  // Initialize quick actions
+  initQuickActions(container);
+  
+  // Initialize accessibility improvements
+  initAccessibility(container);
 }
 
 /**
