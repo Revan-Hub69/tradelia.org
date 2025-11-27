@@ -9,14 +9,14 @@ export function MethodSection() {
       id: 'fdm',
       title: 'FDM',
       subtitle: 'Framework Dinamico dei Mercati',
-      description: 'Analisi contesto macro con controlli incrociati multiformato e aggiornamenti dinamici in tempo reale.',
+      description: 'Analisi contesto macro con controlli incrociati multiformato e aggiornamenti dinamici in tempo reale. Metodologia verificabile e documentata.',
       features: [
         'Analisi contesto macro',
         'Controlli incrociati multiformato',
         'Aggiornamenti dinamici',
       ],
       icon: (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 3v18h18" />
           <path d="M7 12l4-4 4 4 6-6" />
         </svg>
@@ -26,14 +26,14 @@ export function MethodSection() {
       id: 'mlt',
       title: 'MLT',
       subtitle: 'Matrice delle Letture Tattiche',
-      description: 'Analisi intermarket con correlazioni cross-asset e segnali tattici per decisioni informate.',
+      description: 'Analisi intermarket con correlazioni cross-asset e segnali tattici per decisioni informate. Framework documentato con fonti verificabili.',
       features: [
         'Analisi intermarket',
         'Correlazioni cross-asset',
         'Segnali tattici',
       ],
       icon: (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="3" y="3" width="7" height="7" />
           <rect x="14" y="3" width="7" height="7" />
           <rect x="3" y="14" width="7" height="7" />
@@ -45,14 +45,14 @@ export function MethodSection() {
       id: 'pac',
       title: 'PAC',
       subtitle: 'Protocollo di Allerta Criptovalute',
-      description: 'Monitoraggio cripto con alert automatizzati e analisi rischio per gestione consapevole.',
+      description: 'Monitoraggio cripto con alert automatizzati e analisi rischio per gestione consapevole. Metodologia trasparente e verificabile.',
       features: [
         'Monitoraggio cripto',
         'Alert automatizzati',
         'Analisi rischio',
       ],
       icon: (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="10" />
           <path d="M12 6v6l4 2" />
         </svg>
@@ -65,16 +65,16 @@ export function MethodSection() {
       <div className={styles.methodContainer}>
         <div className={styles.sectionHeader}>
           <div className={styles.sectionBadge}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2L2 7l10 5 10-5-10-5z" />
               <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
             </svg>
             <span>Framework AI Proprietari</span>
           </div>
-          <h2 className={styles.sectionTitle}>Metodologie Verificabili</h2>
+          <h2 className={styles.sectionTitle}>Metodologie Verificabili e Documentate</h2>
           <p className={styles.sectionDescription}>
             Framework AI proprietari per approfondimenti multiformato su contesto macro, intermarket e tecnico con{' '}
-            <strong>controlli incrociati verificabili</strong>.
+            <strong>controlli incrociati verificabili</strong> e documentazione completa delle fonti, ipotesi e limiti metodologici.
           </p>
         </div>
         <div className={styles.methodGrid}>
@@ -91,7 +91,7 @@ export function MethodSection() {
               <ul className={styles.methodCardList}>
                 {method.features.map((feature, idx) => (
                   <li key={idx}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                     <span>{feature}</span>
@@ -100,7 +100,7 @@ export function MethodSection() {
               </ul>
               <Link href="/dashboard#education" className={styles.methodCardLink}>
                 <span>Esplora Framework</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="9 18 15 12 9 6" />
                 </svg>
               </Link>
