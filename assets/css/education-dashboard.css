@@ -1439,23 +1439,27 @@
 }
 
 /* ===== LESSON VIEW ===== */
-/* BEST PRACTICE ACCADEMICO: Lesson view completamente ridisegnato - utilizza tutto lo spazio */
+/* BEST PRACTICE ACCADEMICO: Lesson view completamente ridisegnato - LARGHEZZA PIENA */
 .education-lesson-view {
   width: 100%;
-  max-width: 100%; /* BEST PRACTICE: Full-width, non limitato a 900px */
-  margin: 0;
+  max-width: 100% !important; /* BEST PRACTICE: Forza full-width */
+  margin: 0 !important;
   padding: var(--edu-spacing-md); /* BEST PRACTICE: Padding ridotto su mobile */
-  background: var(--edu-surface-base);
-  border-radius: var(--edu-radius-md); /* BEST PRACTICE ACCADEMICO: Border-radius ridotto */
+  background: transparent; /* BEST PRACTICE: No background per utilizzare tutto lo spazio */
+  border-radius: 0; /* BEST PRACTICE: No border-radius per full-width */
   position: relative;
-  min-height: auto; /* BEST PRACTICE: Rimuove min-height forzato */
+  min-height: auto;
+  box-sizing: border-box;
+  cursor: default; /* BEST PRACTICE: Cursor default, non pointer */
+  pointer-events: auto; /* BEST PRACTICE: Permetti interazioni normali */
 }
 
-/* BEST PRACTICE ACCADEMICO: Desktop - utilizza tutto lo spazio */
+/* BEST PRACTICE ACCADEMICO: Desktop - LARGHEZZA PIENA */
 @media (min-width: var(--breakpoint-lg, 1024px)) {
   .education-lesson-view {
-    padding: var(--edu-spacing-xl);
-    max-width: 100%; /* BEST PRACTICE: Full-width su desktop */
+    padding: var(--edu-spacing-xl) var(--edu-spacing-2xl); /* BEST PRACTICE: Padding laterale aumentato */
+    max-width: 100% !important; /* BEST PRACTICE: Forza full-width */
+    width: 100% !important;
   }
 }
 
@@ -1484,42 +1488,102 @@
   overflow-wrap: break-word;
 }
 
-/* BEST PRACTICE ACCADEMICO: Lesson view content completamente ridisegnato - utilizza tutto lo spazio */
+/* BEST PRACTICE ACCADEMICO: Lesson view content - LARGHEZZA PIENA con max-width ottimale per leggibilità */
 .lesson-view-content {
-  max-width: 100%; /* BEST PRACTICE: Full-width, non limitato a 65ch */
-  margin-left: 0; /* BEST PRACTICE: Rimuove margin auto che centrava */
+  max-width: 100%; /* BEST PRACTICE: Full-width container */
+  margin-left: 0;
   margin-right: 0;
-  padding: var(--edu-spacing-xl); /* BEST PRACTICE: Padding per contenuto */
-  background: var(--edu-surface-base);
-  border: 1px solid var(--edu-border-subtle);
-  border-radius: var(--edu-radius-md); /* BEST PRACTICE: Border-radius ridotto */
-  line-height: 1.8;
+  padding: var(--edu-spacing-lg); /* BEST PRACTICE: Padding ridotto */
+  background: transparent; /* BEST PRACTICE: No background per full-width */
+  border: none; /* BEST PRACTICE: No border per full-width */
+  border-radius: 0; /* BEST PRACTICE: No border-radius */
+  line-height: 1.75; /* BEST PRACTICE ACCADEMICO: Line-height ottimale per leggibilità */
   color: var(--edu-text-primary);
   margin-bottom: var(--edu-spacing-xl);
+  box-sizing: border-box;
 }
 
-/* BEST PRACTICE ACCADEMICO: Desktop - padding aumentato */
+/* BEST PRACTICE ACCADEMICO: Desktop - LARGHEZZA PIENA con contenuto centrato per leggibilità */
 @media (min-width: var(--breakpoint-lg, 1024px)) {
   .lesson-view-content {
-    padding: var(--edu-spacing-2xl);
-    max-width: 100%; /* BEST PRACTICE: Full-width su desktop */
+    padding: var(--edu-spacing-xl) 0; /* BEST PRACTICE: Solo padding verticale */
+    max-width: 100%;
+    /* BEST PRACTICE: Contenuto interno centrato con max-width ottimale (70ch) */
+  }
+
+  /* BEST PRACTICE: Paragrafi e contenuto testuale con max-width ottimale per leggibilità */
+  .lesson-view-content > *,
+  .lesson-view-content p,
+  .lesson-view-content ul,
+  .lesson-view-content ol {
+    max-width: 70ch; /* BEST PRACTICE: Lunghezza riga ottimale per leggibilità */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* BEST PRACTICE: Titoli full-width per gerarchia visiva */
+  .lesson-view-content h1,
+  .lesson-view-content h2,
+  .lesson-view-content h3 {
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
   }
 }
 
-.lesson-view-content h1,
-.lesson-view-content h2,
-.lesson-view-content h3 {
+/* BEST PRACTICE ACCADEMICO: Design tipografico migliorato per lezioni */
+.lesson-view-content h1 {
+  font-size: 2rem; /* 32px */
+  font-weight: 600;
+  line-height: 1.3;
   color: var(--edu-text-primary);
-  margin-top: var(--edu-spacing-xl);
-  margin-bottom: var(--edu-spacing-md);
-  line-height: 1.4; /* Migliorato da 1.3 per leggibilità */
-  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 - Grassetto, MAI colori */
+  margin-top: 0; /* BEST PRACTICE: Prima sezione senza margin-top */
+  margin-bottom: 1.5rem; /* 24px */
+  hyphens: none !important;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
+.lesson-view-content h2 {
+  font-size: 1.5rem; /* 24px */
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--edu-text-primary);
+  margin-top: 2rem; /* 32px - Spaziatura maggiore tra sezioni */
+  margin-bottom: 1rem; /* 16px */
+  hyphens: none !important;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.lesson-view-content h3 {
+  font-size: 1.25rem; /* 20px */
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--edu-text-primary);
+  margin-top: 1.5rem; /* 24px */
+  margin-bottom: 0.75rem; /* 12px */
+  hyphens: none !important;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+/* BEST PRACTICE ACCADEMICO: Paragrafi con design tipografico migliorato */
 .lesson-view-content p {
-  margin-bottom: var(--edu-spacing-md);
-  color: var(--edu-text-secondary); /* WCAG AA+ compliant */
-  line-height: 1.7; /* Migliorato per leggibilità */
+  font-size: 1rem; /* 16px mobile */
+  line-height: 1.75; /* BEST PRACTICE: Line-height ottimale per leggibilità */
+  color: #e5e7eb; /* BEST PRACTICE: Testo secondario con contrasto migliore */
+  margin-bottom: 1.25rem; /* 20px - Spaziatura ottimale tra paragrafi */
+  hyphens: manual;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+/* BEST PRACTICE ACCADEMICO: Desktop - font-size aumentato */
+@media (min-width: var(--breakpoint-lg, 1024px)) {
+  .lesson-view-content p {
+    font-size: 1.125rem; /* 18px desktop */
+  }
 }
 
 /* NO BLU - Evidenziazione termini: solo grassetto */
@@ -1548,11 +1612,7 @@
   text-decoration-color: var(--edu-text-primary);
 }
 
-.lesson-view-content p {
-  margin-bottom: var(--edu-spacing-md);
-  color: var(--edu-text-secondary);
-  line-height: 1.7;
-}
+/* BEST PRACTICE: Duplicato rimosso - vedi regola sopra */
 
 .lesson-view-content code {
   padding: 0.2em 0.4em;

@@ -306,18 +306,20 @@
 }
 
 /* ===== LESSON VIEW ===== */
-/* BEST PRACTICE ACCADEMICO: Lesson view completamente ridisegnato - utilizza tutto lo spazio */
+/* BEST PRACTICE ACCADEMICO: Lesson view - LARGHEZZA PIENA */
 .education-lesson-view {
-  max-width: 100%; /* BEST PRACTICE: Full-width, non limitato a 900px */
-  margin: 0;
-  padding: var(--edu-spacing-md); /* BEST PRACTICE: Padding ridotto su mobile */
+  max-width: 100% !important; /* BEST PRACTICE: Forza full-width */
+  margin: 0 !important;
+  padding: var(--edu-spacing-md);
+  width: 100% !important;
 }
 
-/* BEST PRACTICE ACCADEMICO: Desktop - utilizza tutto lo spazio */
-@media (min-width: 1024px) {
+/* BEST PRACTICE ACCADEMICO: Desktop - LARGHEZZA PIENA */
+@media (min-width: var(--breakpoint-lg, 1024px)) {
   .education-lesson-view {
-    padding: var(--edu-spacing-xl);
-    max-width: 100%; /* BEST PRACTICE: Full-width su desktop */
+    padding: var(--edu-spacing-xl) var(--edu-spacing-2xl);
+    max-width: 100% !important;
+    width: 100% !important;
   }
 }
 
@@ -373,10 +375,18 @@
   border-radius: 8px;
 }
 
+/* BEST PRACTICE ACCADEMICO: Lesson text content con design tipografico migliorato */
 .lesson-text-content {
-  font-size: 1.0625rem;
-  line-height: 1.8;
-  color: var(--edu-text);
+  font-size: 1rem; /* 16px mobile */
+  line-height: 1.75; /* BEST PRACTICE: Line-height ottimale */
+  color: #e5e7eb; /* BEST PRACTICE: Testo con contrasto migliore */
+  margin-bottom: 1.25rem; /* BEST PRACTICE: Spaziatura ottimale */
+}
+
+@media (min-width: var(--breakpoint-lg, 1024px)) {
+  .lesson-text-content {
+    font-size: 1.125rem; /* 18px desktop */
+  }
 }
 
 .lesson-text-content h1,

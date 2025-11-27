@@ -3150,9 +3150,9 @@ a[role="button"]:focus-visible {
 .panel-content .education-container,
 .panel-content .education-module-view,
 .panel-content .education-dashboard {
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
+  width: 100% !important;
+  max-width: 100% !important; /* BEST PRACTICE: Forza full-width */
+  margin: 0 !important;
   padding: var(--spacing-sm);
 }
 
@@ -3161,10 +3161,10 @@ a[role="button"]:focus-visible {
   .panel-content .education-container,
   .panel-content .education-module-view,
   .panel-content .education-dashboard {
-    max-width: 100%; /* BEST PRACTICE: Full-width su desktop */
-    margin: 0;
-    padding: var(--spacing-lg);
-    width: 100%; /* BEST PRACTICE: Utilizza tutto lo spazio disponibile */
+    max-width: 100% !important; /* BEST PRACTICE: Forza full-width su desktop */
+    margin: 0 !important;
+    padding: 0; /* BEST PRACTICE: No padding per full-width */
+    width: 100% !important;
   }
 }
 
@@ -5084,6 +5084,12 @@ a[role="button"]:focus-visible {
   pointer-events: all;
 }
 
+/* BEST PRACTICE: Overlay nascosto quando modal non è attivo per evitare bug manina */
+.global-search-modal:not(.active) .global-search-overlay {
+  pointer-events: none !important; /* BEST PRACTICE: Disabilita click quando modal chiuso */
+  display: none !important; /* BEST PRACTICE: Nascondi completamente quando chiuso */
+}
+
 .global-search-overlay {
   position: absolute;
   top: 0;
@@ -5092,6 +5098,8 @@ a[role="button"]:focus-visible {
   bottom: 0;
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(8px);
+  pointer-events: auto; /* BEST PRACTICE: Abilita click solo quando modal attivo */
+  z-index: -1; /* BEST PRACTICE: Dietro al contenuto del modal */
 }
 
 .global-search-content {

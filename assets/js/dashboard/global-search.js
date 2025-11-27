@@ -281,6 +281,13 @@ function openSearch() {
   document.body.style.overflow = "hidden";
   SEARCH_STATE.isOpen = true;
 
+  // BEST PRACTICE: Abilita overlay quando modal è aperto
+  const overlay = modal.querySelector(".global-search-overlay");
+  if (overlay) {
+    overlay.style.pointerEvents = "auto";
+    overlay.style.display = "block";
+  }
+
   // BEST PRACTICE: Rimuovi aria-hidden PRIMA di dare focus per evitare errori accessibilità
   modal.removeAttribute("aria-hidden");
   modal.setAttribute("aria-hidden", "false");
@@ -326,6 +333,13 @@ function closeSearch() {
 
   // BEST PRACTICE: Imposta aria-hidden DOPO aver rimosso focus
   modal.setAttribute("aria-hidden", "true");
+
+  // BEST PRACTICE: Assicura che overlay sia completamente disabilitato quando chiuso
+  const overlay = modal.querySelector(".global-search-overlay");
+  if (overlay) {
+    overlay.style.pointerEvents = "none";
+    overlay.style.display = "none";
+  }
 }
 
 /**
