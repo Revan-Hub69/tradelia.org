@@ -806,10 +806,20 @@ function initAccessibility(container) {
     const shortcutsWidget = document.createElement("div");
     shortcutsWidget.className = "keyboard-shortcuts";
     shortcutsWidget.innerHTML = `
-      <div class="keyboard-shortcuts-title">Scorciatoie da Tastiera</div>
+      <div class="keyboard-shortcuts-title">
+        Scorciatoie da Tastiera
+        <button class="keyboard-shortcuts-close" aria-label="Chiudi scorciatoie" title="Chiudi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
       <div class="keyboard-shortcut-item">
         <span>Ricerca</span>
-        <kbd class="keyboard-shortcut-key">Ctrl</kbd> + <kbd class="keyboard-shortcut-key">K</kbd>
+        <div style="display: flex; gap: 0.25rem; align-items: center;">
+          <kbd class="keyboard-shortcut-key">Ctrl</kbd> + <kbd class="keyboard-shortcut-key">K</kbd>
+        </div>
       </div>
       <div class="keyboard-shortcut-item">
         <span>Chiudi ricerca</span>
@@ -826,8 +836,25 @@ function initAccessibility(container) {
     `;
     document.body.appendChild(shortcutsWidget);
 
+    // Chiudi widget quando si clicca il pulsante close
+    const closeBtn = shortcutsWidget.querySelector(".keyboard-shortcuts-close");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        shortcutsWidget.classList.remove("show");
+      });
+    }
+
+    // Chiudi widget quando si clicca fuori
     document.addEventListener("click", (e) => {
       if (!shortcutsWidget.contains(e.target) && e.target !== shortcutsWidget) {
+        shortcutsWidget.classList.remove("show");
+      }
+    });
+
+    // Chiudi con Escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && shortcutsWidget.classList.contains("show")) {
         shortcutsWidget.classList.remove("show");
       }
     });
