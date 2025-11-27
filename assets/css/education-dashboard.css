@@ -85,13 +85,13 @@
 /* ===== EDUCATION DASHBOARD CONTAINER ===== */
 .education-dashboard {
   width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: var(--edu-spacing-xl);
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--edu-spacing-xl);
-  min-height: calc(100vh - 64px); /* Sottrai header height */
+  gap: var(--edu-spacing-lg);
+  min-height: calc(100vh - 64px);
   background: var(--surface-page);
   color: var(--edu-text-primary);
   position: relative;
@@ -99,9 +99,18 @@
 
 @media (max-width: calc(var(--breakpoint-md) - 1px)) {
   .education-dashboard {
-    padding: var(--edu-spacing-md);
-    gap: var(--edu-spacing-lg);
+    padding: 0;
+    gap: var(--edu-spacing-md);
     min-height: calc(100vh - 64px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .education-dashboard {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--edu-spacing-xl);
+    gap: var(--edu-spacing-xl);
   }
 
   .lesson-item {
@@ -187,7 +196,8 @@
   }
 
   /* Migliora la leggibilità su schermi piccoli */
-  @media (max-width: 480px) { /* Extra small - mantenuto per compatibilità */
+  @media (max-width: 480px) {
+    /* Extra small - mantenuto per compatibilità */
     .lesson-item {
       padding: var(--edu-spacing-md);
       gap: var(--edu-spacing-sm);
@@ -872,12 +882,18 @@
     position: sticky;
     top: 0;
     z-index: 99;
+    left: 0;
+    right: 0;
   }
-  
-  /* Compensa padding container su mobile */
-  #education-container .education-breadcrumb {
-    margin: 0 calc(-1 * var(--spacing-md));
-    width: calc(100% + 2 * var(--spacing-md));
+
+  /* Compensa padding container su mobile per full width */
+  #education-container .education-breadcrumb,
+  .panel-content .education-breadcrumb {
+    margin-left: calc(-1 * var(--spacing-sm));
+    margin-right: calc(-1 * var(--spacing-sm));
+    width: calc(100% + 2 * var(--spacing-sm));
+    padding-left: var(--spacing-sm);
+    padding-right: var(--spacing-sm);
   }
 }
 
@@ -946,15 +962,15 @@
   width: 100%;
   max-width: 100%;
   margin: 0;
-  padding: var(--edu-spacing-md);
+  padding: var(--edu-spacing-sm);
   position: relative;
 }
 
 @media (min-width: 1024px) {
   .education-module-view {
+    padding: var(--edu-spacing-lg);
     max-width: 1200px;
     margin: 0 auto;
-    padding: var(--edu-spacing-lg);
   }
 }
 
