@@ -16,7 +16,7 @@
  */
 
 // Version number - increment this to force cache update
-const VERSION = "2.9.0";
+const VERSION = "2.10.0";
 const CACHE_NAME = `tradelia-ai-v${VERSION}`;
 // BEST PRACTICE: Solo file che esistono realmente - rimossi file inesistenti che causavano errori
 const STATIC_CACHE = [
