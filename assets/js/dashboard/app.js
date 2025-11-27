@@ -234,8 +234,13 @@ export async function initDashboard() {
     STATE.currentModule = null;
   }
 
-  // Handle hash changes
+  // Handle hash changes - BEST PRACTICE: Ignora se siamo in lesson view
   window.addEventListener("hashchange", () => {
+    // BEST PRACTICE: Non gestire hashchange se siamo in lesson view per evitare bug manina
+    const lessonView = document.querySelector(".education-lesson-view");
+    if (lessonView) {
+      return; // BEST PRACTICE: Ignora hashchange quando lesson view è attiva
+    }
     const newHash = window.location.hash.slice(1);
     if (newHash) {
       showModule(newHash);
@@ -246,7 +251,13 @@ export async function initDashboard() {
 
   // BEST PRACTICE: Handle browser back button with History API (Mobile UX Patterns)
   // CRITICAL: Previene chiusura pagina su mobile quando si preme indietro
+  // BEST PRACTICE: Ignora popstate se siamo in lesson view per evitare bug manina
   window.addEventListener("popstate", async (e) => {
+    // BEST PRACTICE: Non gestire popstate se siamo in lesson view per evitare bug manina
+    const lessonView = document.querySelector(".education-lesson-view");
+    if (lessonView) {
+      return; // BEST PRACTICE: Ignora popstate quando lesson view è attiva
+    }
     // Se è lo stato iniziale, non fare nulla (evita chiusura pagina)
     if (e.state && e.state.isInitial) {
       // Mantieni la vista corrente senza cambiare nulla

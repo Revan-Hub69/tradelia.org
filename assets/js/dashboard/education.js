@@ -846,7 +846,13 @@ function initAccessibility(container) {
     }
 
     // Chiudi widget quando si clicca fuori
+    // BEST PRACTICE: Event listener click solo per shortcuts widget, NON interferisce con lesson view
     document.addEventListener("click", (e) => {
+      // BEST PRACTICE: Ignora click dentro lesson view per evitare bug manina
+      const lessonView = document.querySelector(".education-lesson-view");
+      if (lessonView && lessonView.contains(e.target)) {
+        return; // BEST PRACTICE: Non gestire click dentro lesson view
+      }
       if (!shortcutsWidget.contains(e.target) && e.target !== shortcutsWidget) {
         shortcutsWidget.classList.remove("show");
       }

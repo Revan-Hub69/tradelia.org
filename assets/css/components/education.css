@@ -340,21 +340,22 @@
 }
 
 .lesson-view-content {
-  background: var(--edu-card-bg);
-  border: 1px solid var(--edu-border);
-  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Border-radius ridotto */
-  padding: var(--edu-spacing-xl);
+  background: transparent !important; /* BEST PRACTICE: No background per full-width */
+  border: none !important; /* BEST PRACTICE: No border per full-width */
+  border-radius: 0 !important; /* BEST PRACTICE: No border-radius */
+  padding: var(--edu-spacing-lg) 0; /* BEST PRACTICE: Solo padding verticale */
   margin-bottom: var(--edu-spacing-lg);
-  min-height: auto; /* BEST PRACTICE: Rimuove min-height forzato */
-  max-width: 100%; /* BEST PRACTICE: Full-width */
-  width: 100%;
+  min-height: auto;
+  max-width: 100% !important; /* BEST PRACTICE: LARGHEZZA PIENA */
+  width: 100% !important;
 }
 
-/* BEST PRACTICE ACCADEMICO: Desktop - padding aumentato */
-@media (min-width: 1024px) {
+/* BEST PRACTICE ACCADEMICO: Desktop - LARGHEZZA PIENA */
+@media (min-width: var(--breakpoint-lg, 1024px)) {
   .lesson-view-content {
-    padding: var(--edu-spacing-2xl);
-    max-width: 100%; /* BEST PRACTICE: Full-width su desktop */
+    padding: var(--edu-spacing-xl) 0; /* BEST PRACTICE: Solo padding verticale */
+    max-width: 100% !important; /* BEST PRACTICE: LARGHEZZA PIENA */
+    width: 100% !important;
   }
 }
 
@@ -450,7 +451,7 @@
 
 @media (min-width: 1024px) {
   .education-module-view {
-    max-width: 1200px;
+    max-width: 100% !important; /* BEST PRACTICE: LARGHEZZA PIENA */
     margin: 0 auto;
     padding: 0 var(--edu-spacing-lg);
   }
@@ -664,7 +665,7 @@
 
 /* ===== TEST VIEW ===== */
 .education-test-view {
-  max-width: 800px;
+  max-width: 100% !important; /* BEST PRACTICE: LARGHEZZA PIENA */
   margin: 0 auto;
   padding: var(--edu-spacing-lg);
 }

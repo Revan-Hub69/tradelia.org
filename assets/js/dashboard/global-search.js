@@ -142,8 +142,14 @@ function setupSearchModalListeners() {
   const clearBtn = document.getElementById("global-search-clear");
   const input = document.getElementById("global-search-input");
 
-  // Close on overlay click
-  overlay.addEventListener("click", () => closeSearch());
+  // Close on overlay click - BEST PRACTICE: Solo se modal è attivo
+  overlay.addEventListener("click", (e) => {
+    // BEST PRACTICE: Verifica che modal sia attivo prima di chiudere
+    if (modal.classList.contains("active")) {
+      e.stopPropagation(); // BEST PRACTICE: Evita propagazione
+      closeSearch();
+    }
+  });
 
   // Close on close button
   closeBtn.addEventListener("click", () => closeSearch());
