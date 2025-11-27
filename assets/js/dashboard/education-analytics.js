@@ -67,7 +67,7 @@ async function loadAnalyticsDashboard(container) {
             </svg>
           </div>
           <h3>Accesso riservato</h3>
-          <p>Le Learning Analytics sono disponibili solo dopo l'accesso con il tuo account istituzionale.</p>
+          <p>Le Learning Analytics sono disponibili solo dopo l'accesso con il tuo account registrato.</p>
           <button class="btn btn-primary" data-action="open-auth-modal">Accedi per continuare</button>
         </div>
       `;
