@@ -306,10 +306,19 @@
 }
 
 /* ===== LESSON VIEW ===== */
+/* BEST PRACTICE ACCADEMICO: Lesson view completamente ridisegnato - utilizza tutto lo spazio */
 .education-lesson-view {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: var(--edu-spacing-lg);
+  max-width: 100%; /* BEST PRACTICE: Full-width, non limitato a 900px */
+  margin: 0;
+  padding: var(--edu-spacing-md); /* BEST PRACTICE: Padding ridotto su mobile */
+}
+
+/* BEST PRACTICE ACCADEMICO: Desktop - utilizza tutto lo spazio */
+@media (min-width: 1024px) {
+  .education-lesson-view {
+    padding: var(--edu-spacing-xl);
+    max-width: 100%; /* BEST PRACTICE: Full-width su desktop */
+  }
 }
 
 .lesson-view-header {
@@ -317,20 +326,34 @@
 }
 
 .lesson-view-title {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: clamp(1.5rem, 4vw, 2rem); /* BEST PRACTICE: Font size ottimizzato */
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--edu-text);
   margin-top: var(--edu-spacing-md);
-  line-height: 1.3;
+  line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
+  /* BEST PRACTICE: Disabilita hyphenation per evitare spezzature errate */
+  hyphens: none !important;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .lesson-view-content {
   background: var(--edu-card-bg);
   border: 1px solid var(--edu-border);
-  border-radius: 12px;
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Border-radius ridotto */
   padding: var(--edu-spacing-xl);
   margin-bottom: var(--edu-spacing-lg);
-  min-height: 400px;
+  min-height: auto; /* BEST PRACTICE: Rimuove min-height forzato */
+  max-width: 100%; /* BEST PRACTICE: Full-width */
+  width: 100%;
+}
+
+/* BEST PRACTICE ACCADEMICO: Desktop - padding aumentato */
+@media (min-width: 1024px) {
+  .lesson-view-content {
+    padding: var(--edu-spacing-2xl);
+    max-width: 100%; /* BEST PRACTICE: Full-width su desktop */
+  }
 }
 
 .lesson-video {

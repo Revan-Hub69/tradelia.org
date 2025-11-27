@@ -1736,9 +1736,10 @@ function renderLessonView(lesson) {
     return;
   }
 
-  // Breadcrumb navigation (Best Practice: sempre visibile)
+  // Breadcrumb navigation (Best Practice: sempre visibile, NO duplicazione titolo)
   const moduleTitle = currentModule?.title || "Modulo";
   const moduleSlug = currentModule?.slug || "";
+  // BEST PRACTICE: Breadcrumb si ferma al modulo, non include titolo lezione (evita duplicazione)
   const breadcrumb = `
     <nav class="education-breadcrumb" aria-label="Breadcrumb navigation">
       <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
@@ -1754,19 +1755,15 @@ function renderLessonView(lesson) {
           </a>
           <meta itemprop="position" content="2" />
         </li>
-        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-          <a href="#education/module/${moduleSlug}" data-action="back-to-module" itemprop="item">
-            <span itemprop="name">${escapeHtml(moduleTitle)}</span>
-          </a>
-          <meta itemprop="position" content="3" />
-        </li>
         <li class="breadcrumb-item breadcrumb-current" 
             aria-current="page"
             itemprop="itemListElement" 
             itemscope 
             itemtype="https://schema.org/ListItem">
-          <span itemprop="name">${escapeHtml(lesson.title)}</span>
-          <meta itemprop="position" content="4" />
+          <a href="#education/module/${moduleSlug}" data-action="back-to-module" itemprop="item">
+            <span itemprop="name">${escapeHtml(moduleTitle)}</span>
+          </a>
+          <meta itemprop="position" content="3" />
         </li>
       </ol>
     </nav>
