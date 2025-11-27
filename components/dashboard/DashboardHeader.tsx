@@ -8,7 +8,7 @@ export function DashboardHeader() {
   return (
     <header className={styles.dashboardHeaderModern}>
       <div className={styles.dashboardHeaderContent}>
-        <h1 className={styles.dashboardTitle}>
+        <div className={styles.dashboardTitle}>
           <Link href="/" className={styles.dashboardBrand}>
             <div className={styles.dashboardLogoWrapper}>
               <Image
@@ -28,9 +28,15 @@ export function DashboardHeader() {
               <span className={styles.dashboardBrandSuffix}>AI</span>
             </span>
           </Link>
-          <span className={styles.dashboardTitleSeparator}>·</span>
-          <span className={styles.dashboardTitleText}>Dashboard</span>
-        </h1>
+          <Link href="/dashboard" className={styles.dashboardLink}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <line x1="3" y1="9" x2="21" y2="9" />
+              <line x1="9" y1="21" x2="9" y2="9" />
+            </svg>
+            <span>Dashboard</span>
+          </Link>
+        </div>
       </div>
     </header>
   );

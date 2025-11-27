@@ -7,50 +7,50 @@ export function HomeHero() {
   return (
     <section className={styles.heroSection}>
       <div className={styles.heroContainer}>
-        <div className={styles.heroBadge}>Campus Formativo Gratuito</div>
+        <div className={styles.heroBadge}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+            <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
+          </svg>
+          <span>Formazione Finanziaria Gratuita</span>
+        </div>
         <h1 className={styles.heroTitle}>
-          Framework AI proprietari per{' '}
-          <span className={styles.heroTitleHighlight}>analisi sui mercati</span>
+          La piattaforma di <span className={styles.heroTitleHighlight}>formazione finanziaria</span> più avanzata al mondo
         </h1>
         <p className={styles.heroDescription}>
-          Percorsi formativi gamificati basati su framework AI proprietari (FDM, MLT, PAC).
-          Dashboard PWA installabile, nessun login richiesto.
+          Framework AI proprietari, metodologie verificabili e percorsi formativi completi.
+          <br />
+          <strong>Gratuito, accessibile, accademico.</strong>
         </p>
-        <div className={styles.heroFeatures}>
-          <div className={styles.heroFeature}>
-            <span className={styles.heroFeatureIcon}>✓</span>
-            <div>
-              <strong>Gratuito</strong>
-              <span>Nessun costo nascosto</span>
-            </div>
+        <div className={styles.heroStats}>
+          <div className={styles.heroStat}>
+            <div className={styles.heroStatValue}>100%</div>
+            <div className={styles.heroStatLabel}>Gratuito</div>
           </div>
-          <div className={styles.heroFeature}>
-            <span className={styles.heroFeatureIcon}>✓</span>
-            <div>
-              <strong>PWA Installabile</strong>
-              <span>Funziona offline</span>
-            </div>
+          <div className={styles.heroStat}>
+            <div className={styles.heroStatValue}>3</div>
+            <div className={styles.heroStatLabel}>Framework AI</div>
           </div>
-          <div className={styles.heroFeature}>
-            <span className={styles.heroFeatureIcon}>✓</span>
-            <div>
-              <strong>Nessun Login</strong>
-              <span>Inizia subito</span>
-            </div>
+          <div className={styles.heroStat}>
+            <div className={styles.heroStatValue}>∞</div>
+            <div className={styles.heroStatLabel}>Accesso Ilimitato</div>
           </div>
         </div>
         <div className={styles.heroCta}>
-          <Link href="/dashboard" className={styles.btnPrimary}>
-            Accedi alla Dashboard
+          <Link href="/dashboard#education" className={styles.btnPrimary}>
+            <span>Inizia la Formazione</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
           </Link>
-          <Link href="#method" className={styles.btnSecondary}>
-            Scopri i Framework
+          <Link href="/dashboard" className={styles.btnSecondary}>
+            <span>Accedi alla Dashboard</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <line x1="3" y1="9" x2="21" y2="9" />
+              <line x1="9" y1="21" x2="9" y2="9" />
+            </svg>
           </Link>
-        </div>
-        <div className={styles.heroDisclaimer}>
-          <p>
-            Le informazioni fornite sono a scopo educativo e non costituiscono consulenza finanziaria.
-          </p>
         </div>
       </div>
     </section>

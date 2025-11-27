@@ -1,25 +1,21 @@
-import Link from 'next/link';
-import Image from 'next/image';
 import { HomeHero } from '@/components/home/HomeHero';
+import { EducationSection } from '@/components/home/EducationSection';
 import { MethodSection } from '@/components/home/MethodSection';
-import { AudienceSection } from '@/components/home/AudienceSection';
 import { ValueSection } from '@/components/home/ValueSection';
-import { ServicesSection } from '@/components/home/ServicesSection';
 
 export const metadata = {
-  title: 'Tradelia AI · progetto indipendente di analisi sui mercati',
+  title: 'Tradelia AI · La Piattaforma di Formazione Finanziaria più Avanzata al Mondo',
   description:
-    'Tradelia AI offre un campus formativo gratuito sui mercati finanziari con percorsi gamificati basati su framework AI proprietari (FDM, MLT, PAC). Dashboard PWA installabile, nessun login richiesto.',
+    'Formazione finanziaria gratuita basata su framework AI proprietari verificabili. Percorsi gamificati, materiale didattico completo, conforme MiFID-Safe. Nessun login richiesto.',
 };
 
 export default function HomePage() {
   return (
     <>
       <HomeHero />
+      <EducationSection />
       <MethodSection />
-      <AudienceSection />
       <ValueSection />
-      <ServicesSection />
     </>
   );
 }
