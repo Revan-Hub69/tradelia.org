@@ -377,11 +377,15 @@ export async function initDashboard() {
   // Bottom navigation rimosso - non più utilizzato
 
   // Segnala che la dashboard è stata idratata e rimuovi lo scheletro
-  document.body.classList.add("dashboard-ready");
+  // BEST PRACTICE: Rimuovi skeleton immediatamente per migliorare LCP su mobile
   const skeleton = document.getElementById("dashboard-skeleton");
   if (skeleton) {
-    skeleton.remove();
+    skeleton.style.display = "none";
+    requestAnimationFrame(() => {
+      skeleton.remove();
+    });
   }
+  document.body.classList.add("dashboard-ready");
 }
 
 // Bottom navigation rimosso - non più utilizzato
