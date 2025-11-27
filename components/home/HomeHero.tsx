@@ -6,9 +6,6 @@ import styles from './HomeHero.module.css';
 export function HomeHero() {
   return (
     <section className={styles.heroSection}>
-      {/* Pattern geometrico raffinato */}
-      <div className="geometric-pattern" />
-      
       <div className={styles.heroContainer}>
         <div className={styles.heroBadge}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

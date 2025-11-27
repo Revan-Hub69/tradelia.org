@@ -9,9 +9,6 @@ export function DashboardFooter() {
 
   return (
     <footer className={styles.dashboardFooter}>
-      {/* Pattern geometrico raffinato */}
-      <div className="geometric-pattern" />
-      
       <div className={styles.footerContent}>
         <div className={styles.footerLeft}>
           <Link href="/" className={styles.footerLogoLink}>
