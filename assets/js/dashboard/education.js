@@ -54,41 +54,65 @@ const MICROLEARNING_MAX_MINUTES = 10; // Paper: Hug (2016) - optimal 5-10 min ch
 async function initEducation() {
   // Critical modules - load immediately
   const criticalModules = [
-    { path: "./education-onboarding.js", init: async (m) => await m.initOnboarding() },
-    { path: "./education-toolbar.js", init: async (m) => m.initToolbar() },
+    {
+      loader: () => import("./education-onboarding.js"),
+      init: async (m) => await m.initOnboarding(),
+    },
+    { loader: () => import("./education-toolbar.js"), init: async (m) => m.initToolbar() },
   ];
 
   // Non-critical modules - can be loaded in parallel
   const nonCriticalModules = [
-    { path: "./education-gamification.js", init: async (m) => m.initGamification() },
-    { path: "./education-spaced-repetition.js", init: async (m) => m.initSpacedRepetition() },
-    { path: "./education-retrieval-practice.js", init: async (m) => m.initRetrievalPractice() },
-    { path: "./education-adaptive-learning.js", init: async (m) => m.initAdaptiveLearning() },
-    { path: "./education-interactive-tools.js", init: async (m) => m.initInteractiveTools() },
-    { path: "./education-achievements.js", init: async (m) => {
-      m.initAchievements();
-      await m.checkAndShowAchievements();
-    }},
-    { path: "./education-progress-viz.js", init: async (m) => m.initProgressVisualizations() },
+    {
+      loader: () => import("./education-gamification.js"),
+      init: async (m) => m.initGamification(),
+    },
+    {
+      loader: () => import("./education-spaced-repetition.js"),
+      init: async (m) => m.initSpacedRepetition(),
+    },
+    {
+      loader: () => import("./education-retrieval-practice.js"),
+      init: async (m) => m.initRetrievalPractice(),
+    },
+    {
+      loader: () => import("./education-adaptive-learning.js"),
+      init: async (m) => m.initAdaptiveLearning(),
+    },
+    {
+      loader: () => import("./education-interactive-tools.js"),
+      init: async (m) => m.initInteractiveTools(),
+    },
+    {
+      loader: () => import("./education-achievements.js"),
+      init: async (m) => {
+        m.initAchievements();
+        await m.checkAndShowAchievements();
+      },
+    },
+    {
+      loader: () => import("./education-progress-viz.js"),
+      init: async (m) => m.initProgressVisualizations(),
+    },
   ];
 
   // Load critical modules first
   for (const module of criticalModules) {
     try {
-      const mod = await import(module.path);
+      const mod = await module.loader();
       await module.init(mod);
     } catch (error) {
-      safeLog("warn", `[Education] Errore caricamento ${module.path}:`, error);
+      safeLog("warn", "[Education] Errore caricamento modulo critico:", error);
     }
   }
 
   // Load non-critical modules in parallel
   const nonCriticalPromises = nonCriticalModules.map(async (module) => {
     try {
-      const mod = await import(module.path);
+      const mod = await module.loader();
       await module.init(mod);
     } catch (error) {
-      safeLog("warn", `[Education] Errore caricamento ${module.path}:`, error);
+      safeLog("warn", "[Education] Errore caricamento modulo secondario:", error);
     }
   });
 
@@ -571,68 +595,75 @@ function initSearchAndFilters(container) {
   const filterLevel = container.querySelector("#education-filter-level");
   const filterStatus = container.querySelector("#education-filter-status");
   const sortSelect = container.querySelector("#education-sort");
-  const modulesGrid = container.querySelector("#education-modules-grid") || container.querySelector(".modules-grid");
-  
-  if (!searchInput || !modulesGrid) return;
-  
-  let allModules = Array.from(modulesGrid.children);
-  
+  const modulesGrid =
+    container.querySelector("#education-modules-grid") || container.querySelector(".modules-grid");
+
+  if (!searchInput || !modulesGrid) {
+    return;
+  }
+
+  const allModules = Array.from(modulesGrid.children);
+
   function filterAndSort() {
     const searchTerm = (searchInput.value || "").toLowerCase().trim();
     const levelFilter = filterLevel?.value || "";
     const statusFilter = filterStatus?.value || "";
     const sortBy = sortSelect?.value || "order";
-    
-    let filtered = allModules.filter((card) => {
-      const module = window.educationModules?.find(m => m.id === card.dataset.moduleId);
-      if (!module) return false;
-      
+
+    const filtered = allModules.filter((card) => {
+      const module = window.educationModules?.find((m) => m.id === card.dataset.moduleId);
+      if (!module) {
+        return false;
+      }
+
       if (searchTerm) {
         const matchesTitle = module.title?.toLowerCase().includes(searchTerm);
         const matchesDescription = module.description?.toLowerCase().includes(searchTerm);
-        const matchesLessons = module.lessons?.some(l => l.title?.toLowerCase().includes(searchTerm));
+        const matchesLessons = module.lessons?.some((l) =>
+          l.title?.toLowerCase().includes(searchTerm)
+        );
         if (!matchesTitle && !matchesDescription && !matchesLessons) {
           return false;
         }
       }
-      
+
       if (levelFilter) {
         const moduleLevel = module.level ?? 0;
         if (String(moduleLevel) !== levelFilter) {
           return false;
         }
       }
-      
+
       if (statusFilter) {
         const moduleStatus = module.userProgress?.status || "not_started";
         if (moduleStatus !== statusFilter) {
           return false;
         }
       }
-      
+
       return true;
     });
-    
+
     if (sortBy === "name") {
       filtered.sort((a, b) => {
-        const moduleA = window.educationModules?.find(m => m.id === a.dataset.moduleId);
-        const moduleB = window.educationModules?.find(m => m.id === b.dataset.moduleId);
+        const moduleA = window.educationModules?.find((m) => m.id === a.dataset.moduleId);
+        const moduleB = window.educationModules?.find((m) => m.id === b.dataset.moduleId);
         return (moduleA?.title || "").localeCompare(moduleB?.title || "");
       });
     } else if (sortBy === "progress") {
       filtered.sort((a, b) => {
-        const moduleA = window.educationModules?.find(m => m.id === a.dataset.moduleId);
-        const moduleB = window.educationModules?.find(m => m.id === b.dataset.moduleId);
+        const moduleA = window.educationModules?.find((m) => m.id === a.dataset.moduleId);
+        const moduleB = window.educationModules?.find((m) => m.id === b.dataset.moduleId);
         const progressA = moduleA?.userProgress?.progress_percentage || 0;
         const progressB = moduleB?.userProgress?.progress_percentage || 0;
         return progressB - progressA;
       });
     }
-    
-    allModules.forEach(card => {
+
+    allModules.forEach((card) => {
       card.style.display = filtered.includes(card) ? "" : "none";
     });
-    
+
     let emptyState = modulesGrid.querySelector(".empty-state-search");
     if (filtered.length === 0 && allModules.length > 0) {
       if (!emptyState) {
@@ -658,7 +689,7 @@ function initSearchAndFilters(container) {
       emptyState.style.display = "none";
     }
   }
-  
+
   if (searchInput) {
     searchInput.addEventListener("input", filterAndSort);
     searchInput.addEventListener("keydown", (e) => {
@@ -668,10 +699,16 @@ function initSearchAndFilters(container) {
       }
     });
   }
-  
-  if (filterLevel) filterLevel.addEventListener("change", filterAndSort);
-  if (filterStatus) filterStatus.addEventListener("change", filterAndSort);
-  if (sortSelect) sortSelect.addEventListener("change", filterAndSort);
+
+  if (filterLevel) {
+    filterLevel.addEventListener("change", filterAndSort);
+  }
+  if (filterStatus) {
+    filterStatus.addEventListener("change", filterAndSort);
+  }
+  if (sortSelect) {
+    sortSelect.addEventListener("change", filterAndSort);
+  }
 }
 
 /**
@@ -680,7 +717,7 @@ function initSearchAndFilters(container) {
 function initQuickActions(container) {
   const continueBtn = container.querySelector('[data-action="continue-lesson"]');
   const viewTestsBtn = container.querySelector('[data-action="view-tests"]');
-  
+
   if (continueBtn) {
     continueBtn.addEventListener("click", async (e) => {
       e.preventDefault();
@@ -698,7 +735,7 @@ function initQuickActions(container) {
       }
     });
   }
-  
+
   if (viewTestsBtn) {
     viewTestsBtn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -706,7 +743,7 @@ function initQuickActions(container) {
       if (modulesSection) {
         modulesSection.scrollIntoView({ behavior: "smooth" });
         const modulesWithTests = container.querySelectorAll('[data-has-pending-tests="true"]');
-        modulesWithTests.forEach(module => {
+        modulesWithTests.forEach((module) => {
           module.style.outline = "2px solid var(--edu-accent)";
           setTimeout(() => {
             module.style.outline = "";
@@ -728,7 +765,9 @@ function initAccessibility(container) {
     skipLink.textContent = "Salta al contenuto principale";
     skipLink.addEventListener("click", (e) => {
       e.preventDefault();
-      const target = document.getElementById("education-modules-grid") || container.querySelector(".modules-grid");
+      const target =
+        document.getElementById("education-modules-grid") ||
+        container.querySelector(".modules-grid");
       if (target) {
         target.focus();
         target.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -736,7 +775,7 @@ function initAccessibility(container) {
     });
     container.insertBefore(skipLink, container.firstChild);
   }
-  
+
   document.addEventListener("keydown", (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === "k") {
       e.preventDefault();
@@ -745,7 +784,7 @@ function initAccessibility(container) {
         searchInput.focus();
       }
     }
-    
+
     if (e.key === "Escape") {
       const searchInput = container.querySelector("#education-search");
       if (searchInput && document.activeElement === searchInput) {
@@ -754,7 +793,7 @@ function initAccessibility(container) {
         searchInput.dispatchEvent(new Event("input"));
       }
     }
-    
+
     if (e.key === "?" && !e.ctrlKey && !e.metaKey && !e.altKey) {
       const shortcuts = document.querySelector(".keyboard-shortcuts");
       if (shortcuts) {
@@ -762,7 +801,7 @@ function initAccessibility(container) {
       }
     }
   });
-  
+
   if (!document.querySelector(".keyboard-shortcuts")) {
     const shortcutsWidget = document.createElement("div");
     shortcutsWidget.className = "keyboard-shortcuts";
@@ -786,14 +825,14 @@ function initAccessibility(container) {
       </div>
     `;
     document.body.appendChild(shortcutsWidget);
-    
+
     document.addEventListener("click", (e) => {
       if (!shortcutsWidget.contains(e.target) && e.target !== shortcutsWidget) {
         shortcutsWidget.classList.remove("show");
       }
     });
   }
-  
+
   const statCards = container.querySelectorAll(".stat-card");
   statCards.forEach((card) => {
     if (!card.getAttribute("aria-label")) {
@@ -802,7 +841,7 @@ function initAccessibility(container) {
       card.setAttribute("aria-label", `${label}: ${value}`);
     }
   });
-  
+
   if (!container.querySelector("[aria-live='polite']")) {
     const liveRegion = document.createElement("div");
     liveRegion.setAttribute("aria-live", "polite");
@@ -811,14 +850,14 @@ function initAccessibility(container) {
     liveRegion.id = "education-live-region";
     container.appendChild(liveRegion);
   }
-  
+
   const liveRegion = container.querySelector("#education-live-region");
   if (liveRegion) {
     const stats = container.querySelector(".education-stats");
     if (stats) {
       const observer = new MutationObserver(() => {
         const statsText = Array.from(stats.querySelectorAll(".stat-card"))
-          .map(card => {
+          .map((card) => {
             const label = card.querySelector(".stat-label")?.textContent;
             const value = card.querySelector(".stat-value")?.textContent;
             return label && value ? `${label}: ${value}` : "";
@@ -1003,16 +1042,16 @@ async function renderEducationDashboard(container, progress) {
 
   // Remove loading class
   container.classList.remove("loading");
-  
+
   // Bind events
   bindEducationEvents(container);
-  
+
   // Initialize search and filters
   initSearchAndFilters(container);
-  
+
   // Initialize quick actions
   initQuickActions(container);
-  
+
   // Initialize accessibility improvements
   initAccessibility(container);
 }
@@ -1394,7 +1433,7 @@ function renderModuleView(module) {
       window.history.pushState({ view: "education-dashboard" }, "", "#education");
       await initEducation();
     });
-  
+
   container
     .querySelector("[data-action='back-to-dashboard']")
     ?.addEventListener("click", async () => {

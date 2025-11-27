@@ -19,6 +19,7 @@ function safeLog(level, ...args) {
 }
 
 const supabase = getServiceSupabase();
+const DEBUG_EDUCATION = process.env.EDUCATION_DEBUG === "true";
 
 /**
  * Get all active education modules
@@ -2341,10 +2342,12 @@ export default async function handler(req, res) {
   const { action } = req.query;
 
   // Debug log - VERSIONE AGGIORNATA CON BADGES
-  console.error("=== EDUCATION HANDLER DEBUG ===");
-  console.error("Action:", action);
-  console.error("Query:", JSON.stringify(req.query));
-  console.error("URL:", req.url);
+  if (DEBUG_EDUCATION) {
+    console.info("=== EDUCATION HANDLER DEBUG ===");
+    console.info("Action:", action);
+    console.info("Query:", JSON.stringify(req.query));
+    console.info("URL:", req.url);
+  }
 
   // Get user from token (if authenticated)
   let user = null;

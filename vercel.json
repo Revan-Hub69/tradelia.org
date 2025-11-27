@@ -120,7 +120,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src \u0027self\u0027; script-src \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://cdn.jsdelivr.net https://unpkg.com; script-src-elem \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://cdn.jsdelivr.net https://unpkg.com; style-src \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://fonts.googleapis.com; img-src \u0027self\u0027 data: https:; font-src \u0027self\u0027 https://fonts.gstatic.com; connect-src \u0027self\u0027 https://*.supabase.co https://api.brevo.com; frame-ancestors \u0027self\u0027; base-uri \u0027self\u0027; form-action \u0027self\u0027;"
+          "value": "default-src \u0027self\u0027; script-src \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://cdn.jsdelivr.net https://unpkg.com; script-src-elem \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://cdn.jsdelivr.net https://unpkg.com; style-src \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://fonts.googleapis.com; img-src \u0027self\u0027 data: https:; font-src \u0027self\u0027 https://fonts.gstatic.com; connect-src \u0027self\u0027 https://*.supabase.co https://api.brevo.com https://cdn.jsdelivr.net; frame-ancestors \u0027self\u0027; base-uri \u0027self\u0027; form-action \u0027self\u0027;"
         }
       ]
     },
@@ -145,7 +145,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src \u0027self\u0027; script-src \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://cdn.jsdelivr.net; style-src \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://fonts.googleapis.com; img-src \u0027self\u0027 data: https:; font-src \u0027self\u0027 https://fonts.gstatic.com; connect-src \u0027self\u0027; frame-ancestors \u0027self\u0027; base-uri \u0027self\u0027;"
+          "value": "default-src \u0027self\u0027; script-src \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://cdn.jsdelivr.net; style-src \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://fonts.googleapis.com; img-src \u0027self\u0027 data: https:; font-src \u0027self\u0027 https://fonts.gstatic.com; connect-src \u0027self\u0027 https://cdn.jsdelivr.net; frame-ancestors \u0027self\u0027; base-uri \u0027self\u0027;"
         }
       ]
     },
@@ -170,7 +170,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src \u0027self\u0027; script-src \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://cdn.jsdelivr.net; style-src \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://fonts.googleapis.com; img-src \u0027self\u0027 data:; font-src \u0027self\u0027 https://fonts.gstatic.com; connect-src \u0027self\u0027 https://*.supabase.co; frame-ancestors \u0027none\u0027; base-uri \u0027self\u0027; form-action \u0027self\u0027;"
+          "value": "default-src \u0027self\u0027; script-src \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://cdn.jsdelivr.net; style-src \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://fonts.googleapis.com; img-src \u0027self\u0027 data:; font-src \u0027self\u0027 https://fonts.gstatic.com; connect-src \u0027self\u0027 https://*.supabase.co https://cdn.jsdelivr.net; frame-ancestors \u0027none\u0027; base-uri \u0027self\u0027; form-action \u0027self\u0027;"
         }
       ]
     },
@@ -195,7 +195,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src \u0027self\u0027; script-src \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://cdn.jsdelivr.net; style-src \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://fonts.googleapis.com; img-src \u0027self\u0027 data: https:; font-src \u0027self\u0027 https://fonts.gstatic.com; connect-src \u0027self\u0027; frame-ancestors \u0027self\u0027; base-uri \u0027self\u0027;"
+          "value": "default-src \u0027self\u0027; script-src \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://cdn.jsdelivr.net; style-src \u0027self\u0027 \u0027unsafe-inline\u0027 data: https://fonts.googleapis.com; img-src \u0027self\u0027 data: https:; font-src \u0027self\u0027 https://fonts.gstatic.com; connect-src \u0027self\u0027 https://cdn.jsdelivr.net; frame-ancestors \u0027self\u0027; base-uri \u0027self\u0027;"
         }
       ]
     },

@@ -1,4 +1,11 @@
-# Auto-version update basato sui commit messages
-# Analizza i commit e aggiorna version.json automaticamente
-node scripts/auto-version.js
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
 
+SCRIPT_PATH="scripts/auto-version.js"
+
+if [ -f "$SCRIPT_PATH" ]; then
+  echo "[husky] eseguo auto-version"
+  node "$SCRIPT_PATH"
+else
+  echo "[husky] auto-version non trovato, push consentito"
+fi
