@@ -20,7 +20,7 @@
   const VERSION_CHECK_KEY = "tradelia-version-checked";
   const VERSION_URL = "/version.json";
   // Get current version from sw.js or default
-  const CURRENT_VERSION = "2.3.12"; // Must match sw.js and version.json
+  const CURRENT_VERSION = "2.3.14"; // Must match sw.js and version.json
 
   let updateInProgress = false;
 

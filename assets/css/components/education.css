@@ -63,7 +63,9 @@
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: var(--edu-spacing-md);
   margin-bottom: var(--edu-spacing-lg); /* BEST PRACTICE: Spaziatura sotto stats */
-  padding-right: var(--edu-spacing-md); /* BEST PRACTICE: Padding per evitare troncamento vicino scrollbar */
+  padding-right: var(
+    --edu-spacing-md
+  ); /* BEST PRACTICE: Padding per evitare troncamento vicino scrollbar */
 }
 
 .stat-card {
@@ -151,6 +153,10 @@
   margin-top: 0; /* BEST PRACTICE: Spaziatura superiore */
   padding-bottom: var(--edu-spacing-sm); /* BEST PRACTICE: Separazione visiva */
   border-bottom: 1px solid var(--edu-border); /* BEST PRACTICE: Separazione visiva */
+  /* BEST PRACTICE: Disabilita hyphenation per evitare spezzature errate */
+  hyphens: none !important;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 /* BEST PRACTICE ACCADEMICO: Layout desktop ottimizzato per utilizzo spazio */
@@ -577,7 +583,9 @@
   gap: var(--edu-spacing-md);
   flex-wrap: wrap;
   margin-bottom: var(--edu-spacing-lg); /* BEST PRACTICE: Spaziatura sotto */
-  padding-right: var(--edu-spacing-md); /* BEST PRACTICE: Padding per evitare troncamento vicino scrollbar */
+  padding-right: var(
+    --edu-spacing-md
+  ); /* BEST PRACTICE: Padding per evitare troncamento vicino scrollbar */
 }
 
 .sr-quick-access .btn {

@@ -12,9 +12,12 @@ body {
   text-rendering: optimizeLegibility; /* BEST PRACTICE ACCADEMICO: Rendering ottimizzato */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: "kern" 1, "liga" 1; /* BEST PRACTICE ACCADEMICO: Kerning e legature */
-  hyphens: auto; /* BEST PRACTICE ACCADEMICO: Sillabazione automatica */
-  word-break: break-word; /* BEST PRACTICE ACCADEMICO: Word breaking intelligente */
+  font-feature-settings:
+    "kern" 1,
+    "liga" 1; /* BEST PRACTICE ACCADEMICO: Kerning e legature */
+  hyphens: manual; /* BEST PRACTICE ACCADEMICO: Hyphenation solo manuale (evita errori) */
+  word-break: normal; /* BEST PRACTICE ACCADEMICO: Word breaking normale */
+  overflow-wrap: break-word; /* BEST PRACTICE ACCADEMICO: Break solo se necessario */
 }
 
 /* BEST PRACTICE ACCADEMICO: Line-height ottimale per contenuti accademici */
@@ -24,6 +27,9 @@ p,
 .panel-description {
   line-height: 1.7; /* BEST PRACTICE ACCADEMICO: Line-height aumentato per leggibilità accademica */
   text-align: left; /* BEST PRACTICE ACCADEMICO: Allineamento a sinistra (standard accademico) */
+  hyphens: manual; /* BEST PRACTICE: Hyphenation solo manuale per evitare errori */
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 /* BEST PRACTICE ACCADEMICO: Spaziatura verticale ritmica (vertical rhythm) */
@@ -37,7 +43,9 @@ p,
   .module-category,
   .panel-view,
   .overview-section {
-    margin-bottom: var(--spacing-2xl); /* BEST PRACTICE ACCADEMICO: Spaziatura maggiore su desktop */
+    margin-bottom: var(
+      --spacing-2xl
+    ); /* BEST PRACTICE ACCADEMICO: Spaziatura maggiore su desktop */
   }
 }
 
@@ -900,7 +908,9 @@ a[role="button"]:focus-visible {
 }
 
 .account-banner-desk {
-  background: var(--dash-surface-elev); /* BEST PRACTICE ACCADEMICO: Background solido, no gradient */
+  background: var(
+    --dash-surface-elev
+  ); /* BEST PRACTICE ACCADEMICO: Background solido, no gradient */
   border-color: var(--dash-border-strong);
   border-left: 2px solid var(--dash-border-strong); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* BEST PRACTICE ACCADEMICO: Shadow minimale, no glow */
@@ -922,7 +932,9 @@ a[role="button"]:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--dash-surface-elev); /* BEST PRACTICE ACCADEMICO: Background solido, no gradient */
+  background: var(
+    --dash-surface-elev
+  ); /* BEST PRACTICE ACCADEMICO: Background solido, no gradient */
   border: 1px solid var(--dash-border);
   border-radius: 6px; /* BEST PRACTICE ACCADEMICO: Border-radius ridotto */
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* BEST PRACTICE ACCADEMICO: Shadow minimale */
@@ -2081,7 +2093,9 @@ a[role="button"]:focus-visible {
 /* Prevenzione CLS: riserva spazio minimo per sezioni dinamiche */
 .module-category {
   margin-bottom: var(--spacing-xl); /* BEST PRACTICE ACCADEMICO: Spaziatura ritmica verticale */
-  scroll-margin-top: var(--spacing-lg); /* BEST PRACTICE ACCADEMICO: Scroll margin per navigazione */
+  scroll-margin-top: var(
+    --spacing-lg
+  ); /* BEST PRACTICE ACCADEMICO: Scroll margin per navigazione */
   min-height: 120px; /* Altezza minima ridotta */
   /* BEST PRACTICE ACCADEMICO: Separazione visiva chiara */
   border-top: 1px solid transparent; /* BEST PRACTICE ACCADEMICO: Separazione sottile */
@@ -2100,7 +2114,9 @@ a[role="button"]:focus-visible {
 /* BEST PRACTICE ACCADEMICO: Desktop - spaziatura maggiore per migliore leggibilità */
 @media (min-width: 1024px) {
   .module-category {
-    margin-bottom: var(--spacing-2xl); /* BEST PRACTICE ACCADEMICO: Spaziatura maggiore su desktop */
+    margin-bottom: var(
+      --spacing-2xl
+    ); /* BEST PRACTICE ACCADEMICO: Spaziatura maggiore su desktop */
     padding-top: var(--spacing-lg); /* BEST PRACTICE ACCADEMICO: Padding aumentato su desktop */
   }
 }
@@ -2110,7 +2126,11 @@ a[role="button"]:focus-visible {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  font-size: clamp(var(--fs-16, 16px), 2vw, var(--fs-20, 20px)); /* Font size aumentato per chiarezza */
+  font-size: clamp(
+    var(--fs-16, 16px),
+    2vw,
+    var(--fs-20, 20px)
+  ); /* Font size aumentato per chiarezza */
   font-weight: 600; /* BEST PRACTICE ACCADEMICO: Peso ridotto per aspetto più pulito */
   color: var(--dash-text);
   margin-bottom: var(--spacing-md); /* Margin ridotto per navigazione più compatta */
@@ -2122,6 +2142,10 @@ a[role="button"]:focus-visible {
   text-shadow: none; /* BEST PRACTICE ACCADEMICO: Rimossa ombra per aspetto più pulito */
   text-rendering: optimizeLegibility; /* BEST PRACTICE ACCADEMICO: Rendering ottimizzato */
   line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Line-height ottimale */
+  /* BEST PRACTICE: Disabilita hyphenation per evitare spezzature errate */
+  hyphens: none !important;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 /* Desktop: Titoli più grandi e spaziati per migliore gerarchia accademica */
@@ -2206,7 +2230,9 @@ a[role="button"]:focus-visible {
 @media (min-width: 1200px) {
   .modules-grid {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: var(--spacing-xl); /* BEST PRACTICE ACCADEMICO: Gap maggiore su desktop per migliore respirazione */
+    gap: var(
+      --spacing-xl
+    ); /* BEST PRACTICE ACCADEMICO: Gap maggiore su desktop per migliore respirazione */
     max-width: 1400px; /* BEST PRACTICE ACCADEMICO: Max-width per leggibilità ottimale */
     margin: 0 auto; /* BEST PRACTICE ACCADEMICO: Centratura per focus visivo */
   }
@@ -2339,7 +2365,9 @@ a[role="button"]:focus-visible {
   }
 
   .module-category {
-    margin-bottom: var(--spacing-lg); /* BEST PRACTICE: Separazione ridotta per navigazione più compatta */
+    margin-bottom: var(
+      --spacing-lg
+    ); /* BEST PRACTICE: Separazione ridotta per navigazione più compatta */
   }
 
   .modules-grid {
@@ -2408,7 +2436,9 @@ a[role="button"]:focus-visible {
 /* BEST PRACTICE ACCADEMICO: Desktop - card identiche (consistenza) */
 @media (min-width: 1024px) {
   .module-card {
-    background: var(--dash-surface); /* BEST PRACTICE ACCADEMICO: Background solido anche su desktop */
+    background: var(
+      --dash-surface
+    ); /* BEST PRACTICE ACCADEMICO: Background solido anche su desktop */
     border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Border-radius ridotto anche su desktop */
     padding: var(--spacing-lg); /* BEST PRACTICE ACCADEMICO: Padding consistente */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); /* BEST PRACTICE ACCADEMICO: Shadow minimale anche su desktop */
@@ -2436,7 +2466,9 @@ a[role="button"]:focus-visible {
 .module-card:hover {
   background: var(--dash-surface-elev);
   border-color: var(--dash-border-strong);
-  border-left-color: var(--dash-border-strong); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
+  border-left-color: var(
+    --dash-border-strong
+  ); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* BEST PRACTICE ACCADEMICO: Shadow minimale */
 }
 
@@ -2458,11 +2490,11 @@ a[role="button"]:focus-visible {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     /* BEST PRACTICE ACCADEMICO: No transform anche su desktop */
   }
-  
+
   .module-card:hover .module-title {
     color: var(--dash-text);
   }
-  
+
   .module-card:hover .module-description {
     opacity: 1;
     color: var(--dash-text-soft);
@@ -2557,6 +2589,10 @@ a[role="button"]:focus-visible {
   /* BEST PRACTICE ACCADEMICO: No text-shadow */
   transition: color var(--transition-hover);
   text-rendering: optimizeLegibility; /* BEST PRACTICE ACCADEMICO: Rendering ottimizzato */
+  /* BEST PRACTICE: Disabilita hyphenation per evitare spezzature errate */
+  hyphens: none !important;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 /* BEST PRACTICE ACCADEMICO: Desktop - tipografia identica (consistenza) */
@@ -2713,7 +2749,9 @@ a[role="button"]:focus-visible {
 }
 
 .module-card[data-favorited="true"] {
-  border-left-color: var(--dash-border-strong); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
+  border-left-color: var(
+    --dash-border-strong
+  ); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
   border-left-width: 2px; /* BEST PRACTICE ACCADEMICO: Width ridotto */
 }
 
@@ -2737,7 +2775,9 @@ a[role="button"]:focus-visible {
 }
 
 .module-card.drag-over {
-  border-color: var(--dash-border-strong) !important; /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
+  border-color: var(
+    --dash-border-strong
+  ) !important; /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
   border-left-color: var(--dash-border-strong) !important;
   background: var(--dash-surface-elev) !important;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important; /* BEST PRACTICE ACCADEMICO: Shadow minimale, no glow */
@@ -3047,7 +3087,11 @@ a[role="button"]:focus-visible {
 /* BEST PRACTICE: Typography hierarchy migliorata (Design System Accademico 2025) */
 /* BEST PRACTICE ACCADEMICO: Panel title completamente ridisegnato */
 .panel-title {
-  font-size: clamp(var(--fs-20, 20px), 3vw, var(--fs-24, 24px)); /* BEST PRACTICE: Font size aumentato */
+  font-size: clamp(
+    var(--fs-20, 20px),
+    3vw,
+    var(--fs-24, 24px)
+  ); /* BEST PRACTICE: Font size aumentato */
   font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   letter-spacing: -0.01em; /* BEST PRACTICE ACCADEMICO: Letter spacing ridotto */
   margin: 0; /* BEST PRACTICE: Margin gestito dal gap del parent */
@@ -3055,6 +3099,10 @@ a[role="button"]:focus-visible {
   color: var(--dash-text);
   line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
   /* BEST PRACTICE ACCADEMICO: No text-shadow */
+  /* BEST PRACTICE: Disabilita hyphenation per evitare spezzature errate */
+  hyphens: none !important;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 /* BEST PRACTICE ACCADEMICO: Panel description completamente ridisegnato */
@@ -4473,12 +4521,6 @@ a[role="button"]:focus-visible {
     font-size: 0.8125rem; /* BEST PRACTICE: Minimo 13px su mobile */
   }
 }
-  border: 1px solid var(--dash-border);
-  border-radius: var(--radius-sm);
-  color: var(--dash-text-soft);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
 
 .framework-description {
   font-size: var(--fs-14, 14px);
@@ -4759,7 +4801,9 @@ a[role="button"]:focus-visible {
 /* BEST PRACTICE ACCADEMICO: Hover states sobri - no transform, no glow */
 .admin-card:hover {
   border-color: var(--dash-border-strong);
-  border-left-color: var(--dash-border-strong); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
+  border-left-color: var(
+    --dash-border-strong
+  ); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
   /* BEST PRACTICE ACCADEMICO: No transform translateY */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* BEST PRACTICE ACCADEMICO: Shadow minimale */
 }
@@ -5425,7 +5469,9 @@ h5:focus-visible,
 h6:focus-visible,
 p:focus-visible,
 span:focus-visible,
-div:focus-visible:not([tabindex]):not([role="button"]):not([role="link"]):not([role="tab"]):not([role="menuitem"]) {
+div:focus-visible:not([tabindex]):not([role="button"]):not([role="link"]):not([role="tab"]):not(
+    [role="menuitem"]
+  ) {
   outline: none !important; /* BEST PRACTICE: No outline su testo statico */
 }
 

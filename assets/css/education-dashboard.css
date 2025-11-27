@@ -248,7 +248,9 @@
   gap: var(--edu-spacing-md);
   width: 100%;
   margin-bottom: var(--edu-spacing-lg); /* BEST PRACTICE: Spaziatura sotto stats */
-  padding-right: var(--edu-spacing-md); /* BEST PRACTICE: Padding per evitare troncamento vicino scrollbar */
+  padding-right: var(
+    --edu-spacing-md
+  ); /* BEST PRACTICE: Padding per evitare troncamento vicino scrollbar */
 }
 
 @media (max-width: calc(var(--breakpoint-sm) - 1px)) {
@@ -266,7 +268,9 @@
   border: 1px solid var(--edu-border-subtle);
   border-radius: var(--edu-radius-md); /* BEST PRACTICE: Border-radius 8px */
   text-align: center;
-  transition: background var(--edu-transition-base), border-color var(--edu-transition-base);
+  transition:
+    background var(--edu-transition-base),
+    border-color var(--edu-transition-base);
   cursor: default;
   /* BEST PRACTICE ACCADEMICO: No transform hover */
 }
@@ -368,7 +372,9 @@
   justify-content: flex-start;
   align-items: stretch;
   margin-bottom: var(--edu-spacing-lg); /* BEST PRACTICE: Spaziatura sotto */
-  padding-right: var(--edu-spacing-md); /* BEST PRACTICE: Padding per evitare troncamento vicino scrollbar */
+  padding-right: var(
+    --edu-spacing-md
+  ); /* BEST PRACTICE: Padding per evitare troncamento vicino scrollbar */
 }
 
 .sr-quick-access .btn {
@@ -1114,7 +1120,9 @@
   background: var(--edu-surface-elevated);
   border: 1px solid var(--edu-border-subtle);
   border-radius: var(--edu-radius-md); /* BEST PRACTICE: Border-radius 8px */
-  transition: background var(--edu-transition-base), border-color var(--edu-transition-base);
+  transition:
+    background var(--edu-transition-base),
+    border-color var(--edu-transition-base);
   cursor: pointer;
   position: relative;
   width: 100%;
@@ -1173,6 +1181,7 @@
   gap: var(--edu-spacing-sm); /* BEST PRACTICE: Gap aumentato */
 }
 
+/* BEST PRACTICE ACCADEMICO: Lesson title completamente ridisegnato */
 .lesson-title {
   font-size: var(--fs-18, 18px); /* BEST PRACTICE: Font size aumentato da 16px */
   font-weight: 600;
@@ -1180,6 +1189,11 @@
   margin: 0;
   line-height: 1.5; /* BEST PRACTICE: Line-height aumentato */
   margin-bottom: var(--edu-spacing-xs); /* BEST PRACTICE: Margin bottom per separazione */
+  /* BEST PRACTICE: Disabilita hyphenation per evitare spezzature errate */
+  hyphens: none !important; /* BEST PRACTICE: No hyphenation automatica */
+  word-break: normal; /* BEST PRACTICE: Word breaking normale */
+  overflow-wrap: break-word; /* BEST PRACTICE: Break solo se necessario */
+  white-space: normal; /* BEST PRACTICE: Permette wrapping normale */
 }
 
 .lesson-meta {
