@@ -843,6 +843,14 @@
   border-color: var(--edu-border-subtle);
   color: var(--edu-text-disabled);
   position: relative;
+  /* BEST PRACTICE: Assicura testo orizzontale normale */
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  white-space: nowrap; /* BEST PRACTICE: Testo su una sola riga */
+  display: inline-flex !important; /* BEST PRACTICE: Flex per allineamento corretto */
+  flex-direction: row !important; /* BEST PRACTICE: Direzione orizzontale */
+  align-items: center !important; /* BEST PRACTICE: Centra verticalmente */
+  justify-content: center !important; /* BEST PRACTICE: Centra orizzontalmente */
 }
 
 /* Disabled state più chiaro con pattern */

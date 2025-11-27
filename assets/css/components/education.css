@@ -38,11 +38,12 @@
   margin: 0;
 }
 
+/* BEST PRACTICE ACCADEMICO: Desktop - migliore utilizzo spazio */
 @media (min-width: 1024px) {
   .education-dashboard {
-    max-width: 1400px;
+    max-width: 1600px; /* BEST PRACTICE: Max-width aumentato per desktop */
     margin: 0 auto;
-    padding: var(--spacing-lg);
+    padding: var(--spacing-xl); /* BEST PRACTICE: Padding aumentato */
   }
 }
 
@@ -147,10 +148,29 @@
   margin-bottom: var(--edu-spacing-lg);
 }
 
+/* BEST PRACTICE ACCADEMICO: Layout desktop ottimizzato per utilizzo spazio */
 .modules-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: var(--edu-spacing-lg);
+  max-width: 100%;
+}
+
+/* BEST PRACTICE ACCADEMICO: Desktop - migliore utilizzo spazio */
+@media (min-width: 1024px) {
+  .modules-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: var(--edu-spacing-xl);
+    max-width: 1600px; /* BEST PRACTICE: Max-width aumentato per desktop */
+    margin: 0 auto; /* BEST PRACTICE: Centratura */
+  }
+}
+
+@media (min-width: 1400px) {
+  .modules-grid {
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: var(--edu-spacing-xl);
+  }
 }
 
 .education-module-card {

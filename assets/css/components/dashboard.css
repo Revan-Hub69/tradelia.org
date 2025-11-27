@@ -267,6 +267,9 @@ p,
   color: #16a34a;
   font-size: var(--fs-12, 12px);
   font-weight: 500;
+  white-space: nowrap; /* BEST PRACTICE: Evita spezzamento testo */
+  flex-shrink: 0; /* BEST PRACTICE: Non comprimere il badge */
+  max-width: fit-content; /* BEST PRACTICE: Larghezza basata sul contenuto */
 }
 
 .security-badge svg {
@@ -277,16 +280,32 @@ p,
 
 .security-badge-text {
   display: inline;
+  white-space: nowrap; /* BEST PRACTICE: Testo su una sola riga */
+  overflow: hidden;
+  text-overflow: ellipsis; /* BEST PRACTICE: Ellipsis se troppo lungo */
 }
 
-/* BEST PRACTICE: Security badge sempre visibile su mobile */
+/* BEST PRACTICE: Security badge su mobile - posizionamento corretto */
 @media (max-width: 768px) {
+  .dashboard-header-minimal {
+    position: relative; /* BEST PRACTICE: Assicura posizionamento corretto */
+  }
+
+  .dashboard-header-content {
+    flex-wrap: wrap; /* BEST PRACTICE: Permette wrap se necessario */
+    gap: var(--spacing-sm);
+  }
+
   .security-badge {
-    padding: var(--spacing-xs) var(--spacing-sm); /* BEST PRACTICE: Padding adeguato per touch */
-    font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.75rem;
     gap: var(--spacing-xs);
-    line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
-    min-height: 24px; /* BEST PRACTICE: Altezza minima per leggibilità */
+    line-height: 1.4;
+    min-height: 24px;
+    order: 3; /* BEST PRACTICE: Sposta badge dopo logo e search */
+    width: 100%; /* BEST PRACTICE: Full width su mobile per evitare sovrapposizioni */
+    margin-top: var(--spacing-xs); /* BEST PRACTICE: Spazio sopra per separazione */
+    justify-content: center; /* BEST PRACTICE: Centrato su mobile */
   }
 
   .security-badge svg {
@@ -296,9 +315,10 @@ p,
   }
 
   .security-badge-text {
-    font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px */
+    font-size: 0.75rem;
     display: inline;
     line-height: 1.4;
+    white-space: nowrap; /* BEST PRACTICE: Testo sempre su una riga */
   }
 }
 
