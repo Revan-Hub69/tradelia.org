@@ -91,26 +91,29 @@
   display: flex;
   flex-direction: column;
   gap: var(--edu-spacing-lg);
-  min-height: calc(100vh - 64px);
+  min-height: auto; /* BEST PRACTICE: Altezza basata su contenuto, no scrollbar inutile */
   background: var(--surface-page);
   color: var(--edu-text-primary);
   position: relative;
+  overflow: visible; /* BEST PRACTICE: No overflow nascosto */
 }
 
 @media (max-width: calc(var(--breakpoint-md) - 1px)) {
   .education-dashboard {
     padding: 0;
     gap: var(--edu-spacing-md);
-    min-height: calc(100vh - 64px);
+    min-height: auto; /* BEST PRACTICE: Altezza basata su contenuto, no scrollbar inutile */
+    overflow: visible; /* BEST PRACTICE: No overflow nascosto */
   }
 }
 
 @media (min-width: 1024px) {
   .education-dashboard {
-    max-width: 1400px;
-    margin: 0 auto;
+    max-width: 100%; /* BEST PRACTICE: Full-width su desktop */
+    margin: 0;
     padding: var(--edu-spacing-xl);
     gap: var(--edu-spacing-xl);
+    width: 100%; /* BEST PRACTICE: Utilizza tutto lo spazio disponibile */
   }
 
   .lesson-item {
@@ -238,6 +241,8 @@
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: var(--edu-spacing-md);
   width: 100%;
+  margin-bottom: var(--edu-spacing-lg); /* BEST PRACTICE: Spaziatura sotto stats */
+  padding-right: var(--edu-spacing-md); /* BEST PRACTICE: Padding per evitare troncamento vicino scrollbar */
 }
 
 @media (max-width: calc(var(--breakpoint-sm) - 1px)) {
@@ -344,12 +349,15 @@
   position: relative;
 }
 
+/* BEST PRACTICE: Spaziatura corretta per quick access buttons */
 .sr-quick-access {
   display: flex;
   flex-wrap: wrap;
   gap: var(--edu-spacing-sm);
   justify-content: flex-start;
   align-items: stretch;
+  margin-bottom: var(--edu-spacing-lg); /* BEST PRACTICE: Spaziatura sotto */
+  padding-right: var(--edu-spacing-md); /* BEST PRACTICE: Padding per evitare troncamento vicino scrollbar */
 }
 
 .sr-quick-access .btn {
@@ -1036,8 +1044,9 @@
 @media (min-width: 1024px) {
   .education-module-view {
     padding: var(--edu-spacing-lg);
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 100%; /* BEST PRACTICE: Full-width su desktop */
+    margin: 0;
+    width: 100%; /* BEST PRACTICE: Utilizza tutto lo spazio disponibile */
   }
 }
 

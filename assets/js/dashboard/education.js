@@ -972,7 +972,7 @@ async function renderEducationDashboard(container, progress) {
         <div class="education-stats" role="region" aria-label="Statistiche apprendimento">
           <div class="stat-card" role="article" aria-label="Livello corrente: ${levelLabel}">
             <div class="stat-value" aria-live="polite" aria-atomic="true">${levelLabel}</div>
-            <div class="stat-label">Livello</div>
+            <div class="stat-label">Livello Attuale</div>
           </div>
           <div class="stat-card" role="article" aria-label="Punti totali: ${totalPoints}">
             <div class="stat-value" aria-live="polite" aria-atomic="true">${totalPoints}</div>
@@ -1055,10 +1055,9 @@ async function renderEducationDashboard(container, progress) {
           </button>
           <button class="btn btn-secondary" data-action="open-personalized-path">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" style="vertical-align: middle; margin-right: 4px;">
-              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-              <path d="M2 17l10 5 10-5"/>
-              <path d="M2 12l10 5 10-5"/>
-              <circle cx="12" cy="12" r="2" fill="currentColor"/>
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
             </svg>
             Percorso Personalizzato
           </button>

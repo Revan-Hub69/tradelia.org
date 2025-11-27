@@ -31,13 +31,26 @@ function createSecurityBadge() {
   badge.setAttribute("role", "status");
   badge.setAttribute("aria-label", "Connessione sicura");
 
+  // BEST PRACTICE: Testo abbreviato su mobile per evitare troncamento
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
+  const badgeText = isMobile ? "Sicura" : "Connessione sicura";
+  
   badge.innerHTML = `
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
       <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
       <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
     </svg>
-    <span class="security-badge-text">Connessione sicura</span>
+    <span class="security-badge-text">${badgeText}</span>
   `;
+  
+  // BEST PRACTICE: Aggiorna testo su resize
+  window.addEventListener("resize", () => {
+    const isMobileNow = window.matchMedia("(max-width: 768px)").matches;
+    const textSpan = badge.querySelector(".security-badge-text");
+    if (textSpan) {
+      textSpan.textContent = isMobileNow ? "Sicura" : "Connessione sicura";
+    }
+  });
 
   // Add to header or footer
   const header = document.querySelector(".dashboard-header-minimal");

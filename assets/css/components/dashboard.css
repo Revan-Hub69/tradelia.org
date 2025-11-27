@@ -3037,11 +3037,13 @@ a[role="button"]:focus-visible {
 }
 
 /* BEST PRACTICE: Typography hierarchy migliorata (Design System Accademico 2025) */
+/* BEST PRACTICE: Spaziatura corretta tra titolo e descrizione */
 .panel-title {
   font-size: clamp(var(--fs-18, 18px), 2.5vw, 24px);
   font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   letter-spacing: -0.01em; /* BEST PRACTICE ACCADEMICO: Letter spacing ridotto */
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm); /* BEST PRACTICE: Spaziatura aumentata per gerarchia visiva */
+  margin-top: 0;
   color: var(--dash-text);
   /* BEST PRACTICE ACCADEMICO: No text-shadow */
 }
@@ -3054,12 +3056,20 @@ a[role="button"]:focus-visible {
   opacity: 0.85;
   /* BEST PRACTICE: Optimal contrast ratio */
   margin-top: var(--spacing-xs);
+  /* BEST PRACTICE: Text wrapping corretto per evitare troncamento */
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
 }
 
 .panel-content {
   width: 100%;
   max-width: 100%;
   padding: 0;
+  overflow: visible; /* BEST PRACTICE: No scrollbar doppia */
+  min-height: auto; /* BEST PRACTICE: Altezza basata su contenuto */
   /* BEST PRACTICE: Rimuovi contenitori multipli - tutto dentro è già gestito */
 }
 
@@ -3086,9 +3096,10 @@ a[role="button"]:focus-visible {
   .panel-content .education-container,
   .panel-content .education-module-view,
   .panel-content .education-dashboard {
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 100%; /* BEST PRACTICE: Full-width su desktop */
+    margin: 0;
     padding: var(--spacing-lg);
+    width: 100%; /* BEST PRACTICE: Utilizza tutto lo spazio disponibile */
   }
 }
 
@@ -5358,10 +5369,24 @@ a[role="button"]:focus-visible {
 }
 
 /* ===== FOCUS INDICATORS (WCAG 2.2 AA - 2.4.7 Focus Visible) ===== */
+/* BEST PRACTICE: Solo elementi interattivi hanno outline focus */
 *:focus-visible {
   outline: 2.5px solid var(--dash-blue-line, #3b82f6);
   outline-offset: 2px;
   border-radius: var(--radius-sm, 4px);
+}
+
+/* BEST PRACTICE: Rimuovi outline da elementi non interattivi */
+h1:focus-visible,
+h2:focus-visible,
+h3:focus-visible,
+h4:focus-visible,
+h5:focus-visible,
+h6:focus-visible,
+p:focus-visible,
+span:focus-visible,
+div:focus-visible:not([tabindex]):not([role="button"]):not([role="link"]):not([role="tab"]):not([role="menuitem"]) {
+  outline: none !important; /* BEST PRACTICE: No outline su testo statico */
 }
 
 /* Remove default outline for mouse users */
