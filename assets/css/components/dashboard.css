@@ -1988,85 +1988,89 @@ a[role="button"]:focus-visible {
 }
 
 /* ===== MODULE CATEGORIES ===== */
+/* BEST PRACTICE: Navigazione semplificata - tutte le categorie sempre visibili */
 /* Prevenzione CLS: riserva spazio minimo per sezioni dinamiche */
 .module-category {
-  margin-bottom: var(--spacing-2xl);
-  scroll-margin-top: var(--spacing-xl);
-  min-height: 150px; /* Altezza minima per evitare layout shift iniziale */
+  margin-bottom: var(--spacing-xl); /* Spaziatura ridotta per navigazione più compatta */
+  scroll-margin-top: var(--spacing-lg); /* Scroll margin ridotto */
+  min-height: 120px; /* Altezza minima ridotta */
 }
 
 .module-category:last-child {
   margin-bottom: 0;
 }
 
-/* BEST PRACTICE: Category titles migliorati (Design System Accademico 2025) */
+@media (min-width: 1024px) {
+  .module-category {
+    margin-bottom: var(--spacing-2xl); /* Spaziatura maggiore su desktop */
+  }
+}
+
+/* BEST PRACTICE: Category titles semplificati - navigazione più diretta */
 .category-title {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  font-size: clamp(var(--fs-15, 15px), 2vw, var(--fs-18, 18px));
-  font-weight: 700;
+  font-size: clamp(var(--fs-16, 16px), 2vw, var(--fs-20, 20px)); /* Font size aumentato per chiarezza */
+  font-weight: 600; /* Peso ridotto per aspetto più pulito */
   color: var(--dash-text);
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md); /* Margin ridotto per navigazione più compatta */
   padding-bottom: var(--spacing-sm);
-  border-bottom: 2px solid var(--dash-border);
-  letter-spacing: -0.02em;
+  border-bottom: 1px solid var(--dash-border); /* Bordo più sottile */
+  letter-spacing: -0.01em; /* Letter spacing ridotto */
   position: relative;
-  /* BEST PRACTICE: Better visual hierarchy */
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  /* BEST PRACTICE: Visual hierarchy più pulita */
+  text-shadow: none; /* Rimossa ombra per aspetto più pulito */
 }
 
-/* BEST PRACTICE: Accordion per categorie su mobile (non preferiti) */
-.module-category:not(.favorites-category) {
+/* Desktop: Titoli più grandi e spaziati per migliore gerarchia */
+@media (min-width: 1024px) {
+  .category-title {
+    font-size: clamp(var(--fs-18, 18px), 2.5vw, var(--fs-22, 22px));
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .category-title {
+    font-size: 0.9375rem; /* BEST PRACTICE: Minimo 15px su mobile */
+    margin-bottom: var(--spacing-sm);
+  }
+}
+
+/* BEST PRACTICE: Navigazione semplificata - tutte le categorie sempre visibili */
+/* Rimosso accordion per semplificare navigazione */
+.module-category {
   position: relative;
 }
 
-.module-category:not(.favorites-category) .category-title {
-  cursor: pointer;
+.module-category .category-title {
+  cursor: default; /* Non più cliccabile - sempre visibile */
   user-select: none;
   transition: var(--transition-hover);
 }
 
-.module-category:not(.favorites-category) .category-title:hover {
-  color: var(--dash-accent);
+.module-category .category-title:hover {
+  color: var(--dash-text); /* Hover più sottile */
 }
 
-.module-category:not(.favorites-category) .category-title::before {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 0;
-  height: 0;
-  border-left: 6px solid var(--dash-text-soft);
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
-  transition: var(--transition-transform);
-  opacity: 0.6;
-}
-
-.module-category:not(.favorites-category)[data-expanded="true"] .category-title::before {
-  transform: translateY(-50%) rotate(90deg);
-}
-
-.module-category:not(.favorites-category) .modules-grid {
-  transition:
-    max-height 0.3s ease,
-    opacity 0.3s ease;
-  overflow: hidden;
+/* Rimuovi freccia accordion */
+.module-category .category-title::before {
+  display: none; /* Rimossa freccia accordion */
 }
 
 .category-title::after {
   content: "";
   position: absolute;
-  bottom: -2px;
+  bottom: -1px; /* Allineato con bordo più sottile */
   left: 0;
-  width: 50px;
-  height: 2px;
+  width: 40px; /* Larghezza ridotta per aspetto più pulito */
+  height: 1px; /* Altezza ridotta */
   background: linear-gradient(90deg, var(--dash-blue-line), transparent);
-  border-radius: 2px;
-  box-shadow: 0 0 8px var(--dash-accent-glow);
+  border-radius: 1px;
+  box-shadow: 0 0 4px var(--dash-accent-glow); /* Ombra ridotta */
+  opacity: 0.6; /* Opacità ridotta per aspetto più sottile */
 }
 
 .category-title svg {
@@ -2082,12 +2086,12 @@ a[role="button"]:focus-visible {
 }
 
 /* ===== MODULES GRID ===== */
-/* BEST PRACTICE: Modules grid migliorato (Design System Accademico 2025) */
+/* BEST PRACTICE: Modules grid semplificato - navigazione più diretta */
 .modules-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--spacing-xl);
-  /* BEST PRACTICE: Better spacing rhythm */
+  gap: var(--spacing-lg); /* Gap ridotto per navigazione più compatta */
+  /* BEST PRACTICE: Spacing più compatto per migliore overview */
 }
 
 /* BEST PRACTICE: Grid items spacing migliorato */
@@ -2103,82 +2107,44 @@ a[role="button"]:focus-visible {
   }
 }
 
+/* Desktop: Grid più compatto per migliore overview */
+@media (min-width: 1200px) {
+  .modules-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-xl); /* Gap maggiore su desktop per migliore respirazione */
+  }
+}
+
 /* Responsive: Mobile */
 @media (max-width: 768px) {
-  /* BEST PRACTICE: Accordion per categorie (non preferiti) su mobile */
-  /* IMPORTANTE: Solo se data-expanded è impostato (accordion attivo) */
-  /* Categoria "Principale" sempre visibile (non accordion) */
-  .module-category:not(.favorites-category)[data-expanded] {
-    margin-bottom: var(--spacing-md);
+  /* BEST PRACTICE: Navigazione semplificata - tutte le categorie sempre visibili */
+  /* Rimosso accordion - tutto sempre visibile per navigazione più semplice */
+  .module-category {
+    margin-bottom: var(--spacing-xl); /* Spaziatura uniforme */
   }
 
-  /* Categoria Principale: se contiene "Principale" nel titolo, non applicare accordion */
-  .module-category:not(.favorites-category)[data-expanded="true"]:first-of-type .category-title {
-    cursor: default;
-  }
-
-  .module-category:not(.favorites-category)[data-expanded] .category-title {
+  .module-category .category-title {
     font-size: 0.9375rem; /* BEST PRACTICE: Minimo 15px */
-    margin-bottom: 0;
-    padding: var(--spacing-sm) var(--spacing-md); /* BEST PRACTICE: Padding adeguato per touch */
-    padding-right: calc(var(--spacing-md) + 24px); /* BEST PRACTICE: Spazio per icona */
-    background: var(--dash-surface-elev);
-    border: 1px solid var(--dash-border);
-    border-radius: var(--radius-md);
-    border-bottom: none;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
     line-height: 1.5; /* BEST PRACTICE: Line-height ottimale */
-    min-height: 44px; /* BEST PRACTICE: Touch target minimo */
+    cursor: default; /* Non cliccabile - sempre visibile */
+    background: transparent; /* Nessun background */
+    border: none; /* Nessun bordo */
+    padding: var(--spacing-sm) 0; /* Padding semplice */
   }
 
-  .module-category:not(.favorites-category)[data-expanded] .category-title::after {
-    display: none;
+  .module-category .category-title::before {
+    display: none; /* Rimossa freccia accordion */
   }
 
-  .module-category:not(.favorites-category)[data-expanded] .category-title::before {
-    opacity: 1;
-  }
-
-  /* IMPORTANTE: Categoria Principale non deve mai essere nascosta */
-  .module-category:not(.favorites-category)[data-expanded="false"]:not(:first-of-type)
-    .modules-grid {
-    max-height: 0;
-    opacity: 0;
-    margin-bottom: 0;
-    padding: 0;
-  }
-
-  /* Prima categoria (Principale) sempre visibile */
-  .module-category:not(.favorites-category):first-of-type .modules-grid {
-    max-height: none !important;
+  .module-category .modules-grid {
+    max-height: none !important; /* Sempre visibile */
     opacity: 1 !important;
     margin-bottom: var(--spacing-md) !important;
     padding: 0 !important;
-  }
-
-  .module-category:not(.favorites-category):first-of-type .category-title {
-    cursor: default !important;
     background: transparent !important;
     border: none !important;
-    padding: var(--spacing-sm) 0 !important;
-  }
-
-  .module-category:not(.favorites-category):first-of-type .category-title::before {
-    display: none !important;
-  }
-
-  .module-category:not(.favorites-category)[data-expanded="true"] .modules-grid {
-    max-height: 5000px;
-    opacity: 1;
-    margin-bottom: var(--spacing-md);
-    padding: var(--spacing-md);
-    background: var(--dash-surface);
-    border: 1px solid var(--dash-border);
-    border-top: none;
-    border-radius: var(--radius-md);
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
   }
 
   /* Preferiti sempre visibili */
@@ -2189,7 +2155,7 @@ a[role="button"]:focus-visible {
   .favorites-category .category-title {
     font-size: 0.9375rem; /* BEST PRACTICE: Minimo 15px */
     margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-sm); /* BEST PRACTICE: Padding aumentato */
+    padding-bottom: var(--spacing-sm);
     line-height: 1.5; /* BEST PRACTICE: Line-height ottimale */
   }
 
@@ -2279,7 +2245,7 @@ a[role="button"]:focus-visible {
   }
 
   .module-category {
-    margin-bottom: var(--spacing-xl); /* BEST PRACTICE: Separazione ridotta ma leggibile */
+    margin-bottom: var(--spacing-lg); /* BEST PRACTICE: Separazione ridotta per navigazione più compatta */
   }
 
   .modules-grid {
