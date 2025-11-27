@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="faviconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background with rounded corners for better visibility -->
+  <rect width="64" height="64" rx="14" fill="url(#faviconGradient)" />
+  
+  <!-- T letter - Larger, clearer, more visible -->
+  <g transform="translate(32, 32)">
+    <!-- Main T shape - Increased size for better visibility -->
+    <rect x="-14" y="-18" width="28" height="7" rx="2.5" fill="#ffffff" />
+    <rect x="-5" y="-11" width="10" height="22" rx="2.5" fill="#ffffff" />
+    
+    <!-- Data points - More visible and larger -->
+    <circle cx="-22" cy="-6" r="4" fill="#ffffff" opacity="0.95" />
+    <circle cx="0" cy="0" r="3.5" fill="#ffffff" opacity="0.9" />
+    <circle cx="22" cy="-10" r="4" fill="#ffffff" opacity="0.95" />
+    
+    <!-- Connecting lines - Thicker and more visible -->
+    <line x1="-22" y1="-6" x2="0" y2="0" stroke="#ffffff" stroke-width="2" opacity="0.7" />
+    <line x1="0" y1="0" x2="22" y2="-10" stroke="#ffffff" stroke-width="2" opacity="0.7" />
+  </g>
+</svg>
