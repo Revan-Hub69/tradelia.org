@@ -136,16 +136,39 @@ function renderAnalyticsDashboard(container, data) {
     streaks,
   } = data;
 
+  // Breadcrumb sticky sempre presente
+  const breadcrumb = `
+    <nav class="education-breadcrumb" aria-label="Breadcrumb navigation">
+      <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="#overview" data-action="back-to-dashboard" itemprop="item">
+            <span itemprop="name">Dashboard</span>
+          </a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="#education" data-action="back-to-education" itemprop="item">
+            <span itemprop="name">Formazione</span>
+          </a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" 
+            aria-current="page"
+            itemprop="itemListElement" 
+            itemscope 
+            itemtype="https://schema.org/ListItem">
+          <span itemprop="name">Learning Analytics</span>
+          <meta itemprop="position" content="3" />
+        </li>
+      </ol>
+    </nav>
+  `;
+
   container.innerHTML = `
+    ${breadcrumb}
     <div class="learning-analytics-dashboard">
       <!-- Header -->
       <div class="analytics-header">
-        <button class="btn btn-secondary btn-sm" data-action="back-to-education">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-          Torna alla Formazione
-        </button>
         <div class="analytics-header-content">
           <h1 class="analytics-title">Learning Analytics</h1>
           <p class="analytics-description">
@@ -245,10 +268,16 @@ function renderAnalyticsDashboard(container, data) {
     </div>
   `;
 
-  // Bind events
+  // Bind breadcrumb events
   container.querySelector("[data-action='back-to-education']")?.addEventListener("click", () => {
     window.history.pushState({ view: "dashboard" }, "", "#education");
     import("./education.js").then(({ initEducation }) => initEducation());
+  });
+  
+  container.querySelector("[data-action='back-to-dashboard']")?.addEventListener("click", () => {
+    window.history.pushState({ view: "dashboard-overview" }, "", "#overview");
+    const event = new CustomEvent("dashboard-navigate", { detail: { module: "overview" } });
+    window.dispatchEvent(event);
   });
 }
 

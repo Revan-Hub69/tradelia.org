@@ -530,7 +530,17 @@ a[role="button"]:focus-visible {
 
 @media (max-width: 768px) {
   .dashboard-container {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm) 5%;
+    max-width: 100%;
+    width: 90%;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: var(--spacing-xs) 5%;
+    width: 90%;
   }
 }
 
@@ -654,35 +664,46 @@ a[role="button"]:focus-visible {
 /* Responsive: Dashboard Header */
 @media (max-width: 768px) {
   .dashboard-header-minimal {
-    margin-bottom: var(--spacing-md);
-    padding: var(--spacing-md) 0;
+    margin-bottom: var(--spacing-sm);
+    padding: var(--spacing-xs) 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--dash-bg);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--dash-border);
   }
 
   .dashboard-header-minimal::after {
-    width: 40px;
+    display: none; /* Rimuovi decorazione su mobile */
   }
 
   .dashboard-title {
-    font-size: clamp(1.125rem, 4vw, 1.25rem);
+    font-size: 1rem;
+    gap: var(--spacing-xs);
+  }
+
+  .dashboard-brand-logo {
+    height: 28px !important;
+    width: auto !important;
   }
 }
 
 @media (max-width: 480px) {
   .dashboard-header-minimal {
-    padding: var(--spacing-sm) 0;
-    margin-bottom: var(--spacing-sm);
-    /* BEST PRACTICE: Header ridotto su mobile (Mobile UX Patterns) */
-    min-height: 48px; /* Ridotto da 64px */
-    padding-top: calc(var(--spacing-sm) + env(safe-area-inset-top, 0px));
-  }
-
-  .dashboard-header-minimal::after {
-    width: 30px;
+    padding: var(--spacing-xs) 0;
+    margin-bottom: var(--spacing-xs);
+    min-height: 44px;
+    padding-top: calc(var(--spacing-xs) + env(safe-area-inset-top, 0px));
   }
 
   .dashboard-title {
-    flex-wrap: wrap;
-    font-size: var(--fs-16, 16px); /* Ridotto per mobile */
+    font-size: 0.9375rem;
+    gap: 0.25rem;
+  }
+
+  .dashboard-brand-logo {
+    height: 24px !important;
   }
 }
 
@@ -2869,6 +2890,37 @@ a[role="button"]:focus-visible {
 }
 
 .panel-content {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+}
+
+@media (min-width: 1024px) {
+  .panel-content {
+    padding: var(--spacing-lg);
+  }
+}
+
+/* Rimuovi contenitori multipli - best practice */
+.panel-content .education-container,
+.panel-content .education-module-view {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: var(--spacing-md);
+}
+
+@media (min-width: 1024px) {
+  .panel-content .education-container,
+  .panel-content .education-module-view {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+  }
+}
+
+/* Legacy - da rimuovere */
+.panel-content-old {
   padding-top: var(--spacing-lg);
 }
 

@@ -152,15 +152,38 @@ export async function initInterleavedPractice(moduleIds, _options = {}) {
 function renderInterleavedPractice(container, questions, options) {
   const { showExplanations = true, timed = false } = options;
 
+  // Breadcrumb sticky sempre presente
+  const breadcrumb = `
+    <nav class="education-breadcrumb" aria-label="Breadcrumb navigation">
+      <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="#overview" data-action="back-to-dashboard" itemprop="item">
+            <span itemprop="name">Dashboard</span>
+          </a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="#education" data-action="back-to-education" itemprop="item">
+            <span itemprop="name">Formazione</span>
+          </a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" 
+            aria-current="page"
+            itemprop="itemListElement" 
+            itemscope 
+            itemtype="https://schema.org/ListItem">
+          <span itemprop="name">Pratica Interleaved</span>
+          <meta itemprop="position" content="3" />
+        </li>
+      </ol>
+    </nav>
+  `;
+
   container.innerHTML = `
+    ${breadcrumb}
     <div class="interleaved-practice-session">
       <div class="ip-header">
-        <button class="btn btn-secondary btn-sm" data-action="back-to-education">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-          Indietro
-        </button>
         <div class="ip-header-content">
           <h1 class="ip-title">Pratica Interleaved</h1>
           <p class="ip-description">
@@ -277,10 +300,18 @@ function renderInterleavedQuestion(question, questionNumber) {
 function bindInterleavedEvents(container, questions, options) {
   const answers = {};
 
-  // Back button
-  container.querySelector("[data-action='back-to-education']")?.addEventListener("click", () => {
+  // Bind breadcrumb events
+  container.querySelector("[data-action='back-to-education']")?.addEventListener("click", (e) => {
+    e.preventDefault();
     window.history.pushState({ view: "dashboard" }, "", "#education");
     import("./education.js").then(({ initEducation }) => initEducation());
+  });
+  
+  container.querySelector("[data-action='back-to-dashboard']")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    window.history.pushState({ view: "dashboard-overview" }, "", "#overview");
+    const event = new CustomEvent("dashboard-navigate", { detail: { module: "overview" } });
+    window.dispatchEvent(event);
   });
 
   // Option selection

@@ -365,9 +365,18 @@
 
 /* ===== MODULE VIEW ===== */
 .education-module-view {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: var(--edu-spacing-lg);
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 1024px) {
+  .education-module-view {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--edu-spacing-lg);
+  }
 }
 
 .module-view-header {

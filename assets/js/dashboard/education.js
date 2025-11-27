@@ -915,7 +915,30 @@ async function renderEducationDashboard(container, progress) {
       : `${stats.modules_completed}`;
   const streakDays = stats.current_streak_days || 0;
 
+  // Breadcrumb sempre presente e sticky
+  const breadcrumb = `
+    <nav class="education-breadcrumb" aria-label="Breadcrumb navigation">
+      <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="#overview" data-action="back-to-dashboard" itemprop="item">
+            <span itemprop="name">Dashboard</span>
+          </a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" 
+            aria-current="page"
+            itemprop="itemListElement" 
+            itemscope 
+            itemtype="https://schema.org/ListItem">
+          <span itemprop="name">Formazione</span>
+          <meta itemprop="position" content="2" />
+        </li>
+      </ol>
+    </nav>
+  `;
+
   container.innerHTML = `
+    ${breadcrumb}
     <div class="education-dashboard">
       <!-- Header con stats -->
       <div class="education-header">
@@ -1363,7 +1386,7 @@ function renderModuleView(module) {
     return;
   }
 
-  // Breadcrumb navigation (Best Practice: sempre visibile)
+  // Breadcrumb navigation (Best Practice: sempre visibile, sticky)
   const breadcrumb = `
     <nav class="education-breadcrumb" aria-label="Breadcrumb navigation">
       <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
@@ -1392,8 +1415,8 @@ function renderModuleView(module) {
   `;
 
   container.innerHTML = `
+    ${breadcrumb}
     <div class="education-module-view">
-      ${breadcrumb}
       <div class="module-view-header">
         <h1 class="module-view-title">${escapeHtml(module.title)}</h1>
         ${module.description ? `<p class="module-view-description">${escapeHtml(module.description)}</p>` : ""}
@@ -1425,21 +1448,20 @@ function renderModuleView(module) {
     </div>
   `;
 
-  // Bind events
+  // Bind breadcrumb events (sostituisce pulsanti "torna")
   container
     .querySelector("[data-action='back-to-education']")
-    ?.addEventListener("click", async () => {
-      // BEST PRACTICE: Usa History API per supporto back button
+    ?.addEventListener("click", async (e) => {
+      e.preventDefault();
       window.history.pushState({ view: "education-dashboard" }, "", "#education");
       await initEducation();
     });
 
   container
     .querySelector("[data-action='back-to-dashboard']")
-    ?.addEventListener("click", async () => {
-      // BEST PRACTICE: Usa History API per supporto back button
+    ?.addEventListener("click", async (e) => {
+      e.preventDefault();
       window.history.pushState({ view: "dashboard-overview" }, "", "#overview");
-      // Trigger dashboard navigation
       const event = new CustomEvent("dashboard-navigate", { detail: { module: "overview" } });
       window.dispatchEvent(event);
     });
