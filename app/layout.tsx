@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     template: '%s · Tradelia AI',
   },
   description:
-    'Formazione finanziaria gratuita basata su framework AI proprietari verificabili. Percorsi formativi completi, materiale didattico conforme MiFID II, nessun login richiesto.',
+    'Formazione finanziaria gratuita basata su framework AI proprietari verificabili. Percorsi formativi completi, materiale didattico conforme agli standard accademici internazionali e alle normative MiFID II.',
   keywords: [
     'formazione finanziaria',
     'educazione finanziaria',
@@ -22,6 +22,7 @@ export const metadata: Metadata = {
     'analisi mercati',
     'trading education',
     'financial education',
+    'formazione gratuita',
   ],
   authors: [{ name: 'Tradelia AI' }],
   creator: 'Tradelia AI',
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
     siteName: 'Tradelia AI',
     title: 'Tradelia AI · Formazione Finanziaria Gratuita',
     description:
-      'Formazione finanziaria gratuita basata su framework AI proprietari verificabili. Percorsi formativi completi, materiale didattico conforme MiFID II.',
+      'Formazione finanziaria gratuita basata su framework AI proprietari verificabili. Percorsi formativi completi, materiale didattico conforme agli standard accademici internazionali e alle normative MiFID II.',
     images: [
       {
         url: 'https://tradelia.org/img/tradelia_og_vC_white_clean.png',
@@ -52,7 +53,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Tradelia AI · Formazione Finanziaria Gratuita',
     description:
-      'Formazione finanziaria gratuita basata su framework AI proprietari verificabili. Percorsi formativi completi, materiale didattico conforme MiFID II.',
+      'Formazione finanziaria gratuita basata su framework AI proprietari verificabili. Percorsi formativi completi, materiale didattico conforme agli standard accademici internazionali e alle normative MiFID II.',
     images: ['https://tradelia.org/img/tradelia_og_vC_white_clean.png'],
     creator: '@tradelia_ai',
     site: '@tradelia_ai',
@@ -75,8 +76,22 @@ export const metadata: Metadata = {
       'en-US': 'https://tradelia.org/en',
     },
   },
-  verification: {
-    // Aggiungi verification codes se disponibili
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.svg', sizes: '180x180', type: 'image/svg+xml' },
+    ],
+    shortcut: '/favicon.ico',
+  },
+  manifest: '/dashboard.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Tradelia AI',
   },
 };
 
@@ -95,17 +110,7 @@ export default function RootLayout({
   return (
     <html lang="it" data-theme="dark">
       <head>
-        {/* Favicons */}
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.svg" />
-        
-        {/* PWA Manifest */}
-        <link rel="manifest" href="/dashboard.webmanifest" />
-        
-        {/* Structured Data */}
+        {/* Structured Data - EducationalOrganization */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
