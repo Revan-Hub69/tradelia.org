@@ -16,7 +16,7 @@
  */
 
 // Version number - increment this to force cache update
-const VERSION = "2.3.2";
+const VERSION = "2.3.3";
 const CACHE_NAME = `tradelia-ai-v${VERSION}`;
 const STATIC_CACHE = [
   "/",
