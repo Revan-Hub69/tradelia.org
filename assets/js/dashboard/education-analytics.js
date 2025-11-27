@@ -14,6 +14,7 @@
  */
 
 import { safeLog, escapeHtml } from "./security-utils.js";
+import { showAuthModal } from "./auth-modal.js";
 
 const API_BASE = "/api/education";
 
@@ -55,6 +56,27 @@ async function loadAnalyticsDashboard(container) {
     // Render dashboard
     renderAnalyticsDashboard(container, data);
   } catch (error) {
+    const isAuthError = error?.code === "AUTH_REQUIRED" || error?.message === "AUTH_REQUIRED";
+    if (isAuthError) {
+      container.innerHTML = `
+        <div class="restricted-state">
+          <div class="restricted-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="9"></circle>
+              <line x1="4.9" y1="4.9" x2="19.1" y2="19.1"></line>
+            </svg>
+          </div>
+          <h3>Accesso riservato</h3>
+          <p>Le Learning Analytics sono disponibili solo dopo l'accesso con il tuo account istituzionale.</p>
+          <button class="btn btn-primary" data-action="open-auth-modal">Accedi per continuare</button>
+        </div>
+      `;
+      container.querySelector("[data-action='open-auth-modal']")?.addEventListener("click", () => {
+        showAuthModal("login");
+      });
+      return;
+    }
+
     safeLog("error", "[Learning Analytics] Errore loadAnalyticsDashboard:", error);
     container.innerHTML = `
       <div class="error-state">
@@ -72,6 +94,11 @@ async function loadAnalyticsDashboard(container) {
 async function fetchAnalyticsData() {
   try {
     const token = await getAuthToken();
+    if (!token) {
+      const error = new Error("AUTH_REQUIRED");
+      error.code = "AUTH_REQUIRED";
+      throw error;
+    }
     const response = await fetch(`${API_BASE}?action=learning-analytics`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -79,6 +106,11 @@ async function fetchAnalyticsData() {
     });
 
     if (!response.ok) {
+      if (response.status === 401) {
+        const error = new Error("AUTH_REQUIRED");
+        error.code = "AUTH_REQUIRED";
+        throw error;
+      }
       throw new Error("Errore caricamento analytics");
     }
 
