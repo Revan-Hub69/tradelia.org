@@ -893,9 +893,9 @@ async function renderEducationDashboard(container, progress) {
             <div class="stat-value" aria-live="polite" aria-atomic="true">${modulesValue}</div>
             <div class="stat-label">Moduli</div>
           </div>
-          <div class="stat-card" role="article" aria-label="Giorni di streak: ${streakDays}">
+          <div class="stat-card" role="article" aria-label="Giorni consecutivi di studio: ${streakDays}">
             <div class="stat-value" aria-live="polite" aria-atomic="true">${streakDays}</div>
-            <div class="stat-label">Giorni Streak</div>
+            <div class="stat-label">Giorni Consecutivi</div>
           </div>
         </div>
 
@@ -1330,7 +1330,7 @@ function renderModuleView(module) {
       <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
         <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
           <a href="#education" data-action="back-to-dashboard" itemprop="item">
-            <span itemprop="name">Dashboard</span>
+            <span itemprop="name">Formazione</span>
           </a>
           <meta itemprop="position" content="1" />
         </li>
