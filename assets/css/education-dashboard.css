@@ -609,19 +609,36 @@
   padding: var(--edu-spacing-sm) var(--edu-spacing-md);
   min-height: 44px; /* BEST PRACTICE: Touch target minimo */
   line-height: 1.5;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-flex !important; /* BEST PRACTICE: Flex orizzontale */
+  flex-direction: row !important; /* BEST PRACTICE: Direzione orizzontale */
+  align-items: center !important; /* BEST PRACTICE: Centrato verticalmente */
+  justify-content: center !important; /* BEST PRACTICE: Centrato orizzontalmente */
   gap: var(--edu-spacing-xs);
+  writing-mode: horizontal-tb !important; /* BEST PRACTICE: Forza orizzontale */
+  text-orientation: mixed !important; /* BEST PRACTICE: Orientamento normale */
+  white-space: nowrap !important; /* BEST PRACTICE: No wrap */
+  text-transform: none !important; /* BEST PRACTICE: No uppercase */
+  letter-spacing: normal !important; /* BEST PRACTICE: Spaziatura normale */
+  word-spacing: normal !important; /* BEST PRACTICE: Spaziatura parole normale */
 }
 
-/* BEST PRACTICE ACCADEMICO: Pulsante bloccato su mobile */
+/* BEST PRACTICE ACCADEMICO: Pulsante bloccato su mobile - FIX TESTO VERTICALE */
 @media (max-width: calc(var(--breakpoint-md, 768px) - 1px)) {
   .education-module-card.locked .module-card-actions .btn {
-    font-size: 0.9375rem; /* BEST PRACTICE: 15px su mobile */
-    padding: var(--edu-spacing-md) var(--edu-spacing-lg);
-    min-height: 44px;
-    width: 100%; /* BEST PRACTICE: Full width su mobile */
+    font-size: 0.9375rem !important; /* BEST PRACTICE: 15px su mobile */
+    padding: var(--edu-spacing-md) var(--edu-spacing-lg) !important;
+    min-height: 44px !important;
+    width: 100% !important; /* BEST PRACTICE: Full width su mobile */
+    writing-mode: horizontal-tb !important; /* BEST PRACTICE: FIX TESTO VERTICALE */
+    text-orientation: mixed !important; /* BEST PRACTICE: FIX TESTO VERTICALE */
+    white-space: nowrap !important; /* BEST PRACTICE: FIX TESTO VERTICALE */
+    display: inline-flex !important; /* BEST PRACTICE: FIX TESTO VERTICALE */
+    flex-direction: row !important; /* BEST PRACTICE: FIX TESTO VERTICALE */
+    align-items: center !important; /* BEST PRACTICE: FIX TESTO VERTICALE */
+    justify-content: center !important; /* BEST PRACTICE: FIX TESTO VERTICALE */
+    text-transform: none !important; /* BEST PRACTICE: FIX TESTO VERTICALE */
+    letter-spacing: normal !important; /* BEST PRACTICE: FIX TESTO VERTICALE */
+    word-spacing: normal !important; /* BEST PRACTICE: FIX TESTO VERTICALE */
   }
 }
 
@@ -1552,61 +1569,91 @@
   }
 }
 
-/* BEST PRACTICE ACCADEMICO: Design tipografico con gerarchia visiva chiara - COLORI VARIATI */
+/* BEST PRACTICE ACCADEMICO: Design tipografico DESKTOP - LEGGIBILITÀ OTTIMALE */
 .lesson-view-content h1 {
-  font-size: clamp(1.75rem, 5vw, 2.25rem); /* Responsive: 28px-36px */
+  font-size: clamp(1.75rem, 5vw, 2.5rem); /* Responsive: 28px mobile, 40px desktop */
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.4; /* BEST PRACTICE: Line-height aumentato per leggibilità */
   color: #ffffff; /* BEST PRACTICE: Bianco per titoli principali */
   margin-top: 0;
-  margin-bottom: 1.5rem; /* 24px */
+  margin-bottom: 2rem; /* 32px - AUMENTATO */
   hyphens: none !important;
   word-break: normal;
   overflow-wrap: break-word;
 }
 
+/* BEST PRACTICE ACCADEMICO: Desktop - font-size aumentato */
+@media (min-width: var(--breakpoint-lg, 1024px)) {
+  .lesson-view-content h1 {
+    font-size: 2.5rem; /* 40px desktop - MOLTO più grande */
+    line-height: 1.35;
+    margin-bottom: 2.5rem; /* 40px */
+  }
+}
+
 .lesson-view-content h2 {
-  font-size: clamp(1.5rem, 4vw, 1.75rem); /* Responsive: 24px-28px */
+  font-size: clamp(1.5rem, 4vw, 2rem); /* Responsive: 24px mobile, 32px desktop */
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1.5; /* BEST PRACTICE: Line-height aumentato */
   color: #f3f4f6; /* BEST PRACTICE: Grigio molto chiaro per sottotitoli */
-  margin-top: 2rem; /* 32px */
+  margin-top: 2.5rem; /* 40px - AUMENTATO */
+  margin-bottom: 1.25rem; /* 20px - AUMENTATO */
+  hyphens: none !important;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+/* BEST PRACTICE ACCADEMICO: Desktop - font-size aumentato */
+@media (min-width: var(--breakpoint-lg, 1024px)) {
+  .lesson-view-content h2 {
+    font-size: 2rem; /* 32px desktop */
+    line-height: 1.5;
+    margin-top: 3rem; /* 48px */
+    margin-bottom: 1.5rem; /* 24px */
+  }
+}
+
+.lesson-view-content h3 {
+  font-size: clamp(1.25rem, 3vw, 1.5rem); /* Responsive: 20px mobile, 24px desktop */
+  font-weight: 600;
+  line-height: 1.5; /* BEST PRACTICE: Line-height aumentato */
+  color: #e5e7eb; /* BEST PRACTICE: Grigio chiaro per sottosezioni */
+  margin-top: 2rem; /* 32px - AUMENTATO */
   margin-bottom: 1rem; /* 16px */
   hyphens: none !important;
   word-break: normal;
   overflow-wrap: break-word;
 }
 
-.lesson-view-content h3 {
-  font-size: clamp(1.25rem, 3vw, 1.375rem); /* Responsive: 20px-22px */
-  font-weight: 600;
-  line-height: 1.4;
-  color: #e5e7eb; /* BEST PRACTICE: Grigio chiaro per sottosezioni */
-  margin-top: 1.5rem; /* 24px */
-  margin-bottom: 0.75rem; /* 12px */
-  hyphens: none !important;
-  word-break: normal;
-  overflow-wrap: break-word;
+/* BEST PRACTICE ACCADEMICO: Desktop - font-size aumentato */
+@media (min-width: var(--breakpoint-lg, 1024px)) {
+  .lesson-view-content h3 {
+    font-size: 1.5rem; /* 24px desktop */
+    line-height: 1.5;
+    margin-top: 2.5rem; /* 40px */
+    margin-bottom: 1.25rem; /* 20px */
+  }
 }
 
-/* BEST PRACTICE ACCADEMICO: Paragrafi con gerarchia visiva - COLORI VARIATI per leggibilità */
+/* BEST PRACTICE ACCADEMICO: Paragrafi DESKTOP - LEGGIBILITÀ OTTIMALE */
 .lesson-view-content p {
-  font-size: clamp(1rem, 2.5vw, 1.125rem); /* Responsive: 16px-18px mobile */
-  line-height: 1.75; /* BEST PRACTICE: Line-height ottimale */
-  color: #d1d5db; /* BEST PRACTICE: Grigio medio-chiaro per paragrafi (leggibile ma distinto) */
-  margin-bottom: 1.25rem; /* 20px */
+  font-size: clamp(1rem, 2.5vw, 1.125rem); /* Responsive: 16px mobile, 18px desktop */
+  line-height: 1.8; /* BEST PRACTICE: Line-height aumentato per leggibilità */
+  color: #d1d5db; /* BEST PRACTICE: Grigio medio-chiaro per paragrafi */
+  margin-bottom: 1.5rem; /* 24px - AUMENTATO */
   hyphens: manual;
   word-break: normal;
   overflow-wrap: break-word;
   font-weight: 400;
 }
 
-/* BEST PRACTICE ACCADEMICO: Desktop - font-size aumentato, colore leggermente più chiaro */
+/* BEST PRACTICE ACCADEMICO: Desktop - font-size MOLTO aumentato per leggibilità */
 @media (min-width: var(--breakpoint-lg, 1024px)) {
   .lesson-view-content p {
-    font-size: 1.125rem; /* 18px desktop */
-    line-height: 1.8;
-    color: #e5e7eb; /* BEST PRACTICE: Grigio chiaro per desktop (più leggibile) */
+    font-size: 1.25rem; /* 20px desktop - MOLTO più grande */
+    line-height: 1.9; /* BEST PRACTICE: Line-height ancora maggiore */
+    color: #e5e7eb; /* BEST PRACTICE: Grigio chiaro per desktop */
+    margin-bottom: 2rem; /* 32px - AUMENTATO */
   }
 }
 
