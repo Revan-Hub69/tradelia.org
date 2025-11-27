@@ -10,13 +10,11 @@ const nextConfig = {
         source: "/dashboard.html",
         destination: "/dashboard",
       },
-      // Se vuoi servire index.html statico invece di redirect, decommenta:
-      // {
-      //   source: "/",
-      //   destination: "/index.html",
-      // },
     ];
   },
+
+  // Priorità Next.js su file statici
+  // Next.js routes hanno priorità su index.html statico
 
   // Headers per sicurezza (stesso di vercel.json)
   async headers() {
