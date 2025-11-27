@@ -244,19 +244,23 @@
 /* BEST PRACTICE: Security badge sempre visibile su mobile */
 @media (max-width: 768px) {
   .security-badge {
-    padding: 4px var(--spacing-xs);
-    font-size: var(--fs-10, 10px);
-    gap: 4px;
+    padding: var(--spacing-xs) var(--spacing-sm); /* BEST PRACTICE: Padding adeguato per touch */
+    font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
+    gap: var(--spacing-xs);
+    line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
+    min-height: 24px; /* BEST PRACTICE: Altezza minima per leggibilità */
   }
 
   .security-badge svg {
     width: 14px;
     height: 14px;
+    flex-shrink: 0;
   }
 
   .security-badge-text {
-    font-size: var(--fs-10, 10px);
+    font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px */
     display: inline;
+    line-height: 1.4;
   }
 }
 
@@ -266,8 +270,26 @@
   align-items: center;
   gap: var(--spacing-sm);
   margin-top: var(--spacing-md);
-  font-size: var(--fs-12, 12px);
+  font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px */
   color: var(--dash-text-muted);
+  line-height: 1.5; /* BEST PRACTICE: Line-height ottimale */
+}
+
+@media (max-width: 768px) {
+  .legal-links {
+    font-size: 0.8125rem; /* BEST PRACTICE: Minimo 13px su mobile */
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+    line-height: 1.6;
+  }
+
+  .legal-link,
+  .legal-link-btn {
+    min-height: 44px; /* BEST PRACTICE: Touch target minimo */
+    padding: var(--spacing-xs) var(--spacing-sm);
+    display: inline-flex;
+    align-items: center;
+  }
 }
 
 .legal-link,
@@ -670,7 +692,7 @@ a[role="button"]:focus-visible {
 @media (max-width: 768px) {
   .dashboard-header-minimal {
     margin-bottom: 0;
-    padding: var(--spacing-xs) 5%;
+    padding: var(--spacing-sm) 5%;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -692,14 +714,15 @@ a[role="button"]:focus-visible {
   }
 
   .dashboard-title {
-    font-size: 0.9375rem;
-    gap: 0.375rem;
+    font-size: 1rem; /* BEST PRACTICE: Minimo 16px per leggibilità mobile */
+    gap: 0.5rem;
     flex-wrap: nowrap;
     overflow: hidden;
+    line-height: 1.4;
   }
 
   .dashboard-brand-logo {
-    height: 24px !important;
+    height: 28px !important; /* BEST PRACTICE: Touch target minimo 44px area totale */
     width: auto !important;
     flex-shrink: 0;
   }
@@ -712,18 +735,19 @@ a[role="button"]:focus-visible {
 
 @media (max-width: 480px) {
   .dashboard-header-minimal {
-    padding: var(--spacing-xs) 5%;
-    min-height: 40px;
-    padding-top: calc(var(--spacing-xs) + env(safe-area-inset-top, 0px));
+    padding: var(--spacing-sm) 5%;
+    min-height: 44px; /* BEST PRACTICE: Touch target minimo */
+    padding-top: calc(var(--spacing-sm) + env(safe-area-inset-top, 0px));
   }
 
   .dashboard-title {
-    font-size: 0.875rem;
-    gap: 0.25rem;
+    font-size: 0.9375rem; /* BEST PRACTICE: Minimo 15px su mobile piccolo */
+    gap: 0.375rem;
+    line-height: 1.4;
   }
 
   .dashboard-brand-logo {
-    height: 20px !important;
+    height: 24px !important;
   }
 }
 
@@ -854,8 +878,10 @@ a[role="button"]:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px; /* BEST PRACTICE: Touch target minimo 44x44px (WCAG 2.1, iOS HIG) */
+  height: 44px;
+  min-width: 44px; /* BEST PRACTICE: Garantisce dimensione minima */
+  min-height: 44px;
   padding: 0;
   background: transparent;
   border: 1px solid var(--dash-border);
@@ -885,39 +911,39 @@ a[role="button"]:focus-visible {
 @media (max-width: 768px) {
   /* BEST PRACTICE: Account banner più compatto e pulito su mobile */
   .account-banner {
-    padding: var(--spacing-sm);
+    padding: var(--spacing-md); /* BEST PRACTICE: Padding adeguato per touch */
     margin-bottom: var(--spacing-md);
   }
 
   .account-banner-content {
-    gap: var(--spacing-xs);
+    gap: var(--spacing-sm); /* BEST PRACTICE: Gap adeguato per leggibilità */
     flex-direction: row;
     align-items: flex-start;
   }
 
   .account-banner-icon {
-    width: 32px;
-    height: 32px;
-    font-size: 18px;
+    width: 40px; /* BEST PRACTICE: Icona più grande per visibilità */
+    height: 40px;
+    font-size: 20px;
     flex-shrink: 0;
   }
 
   .account-banner-info {
     flex: 1;
     min-width: 0;
-    padding-right: var(--spacing-xs);
+    padding-right: var(--spacing-sm); /* BEST PRACTICE: Padding aumentato */
   }
 
   .account-banner-title {
-    font-size: var(--fs-12, 12px);
-    margin-bottom: 1px;
-    line-height: 1.2;
+    font-size: 0.9375rem; /* BEST PRACTICE: Minimo 15px per leggibilità */
+    line-height: 1.5; /* BEST PRACTICE: Line-height ottimale per mobile */
+    margin-bottom: var(--spacing-xs);
     font-weight: 600;
   }
 
   .account-banner-subtitle {
-    font-size: var(--fs-10, 10px);
-    line-height: 1.2;
+    font-size: 0.8125rem; /* BEST PRACTICE: Minimo 13px per leggibilità */
+    line-height: 1.6; /* BEST PRACTICE: Line-height aumentato per testo piccolo */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -1813,11 +1839,19 @@ a[role="button"]:focus-visible {
 .footer-tech {
   color: var(--dash-text-muted);
   opacity: 0.6;
-  font-size: var(--fs-11, 11px);
+  font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
   font-family:
     "SF Mono", "Monaco", "Inconsolata", "Fira Code", "Droid Sans Mono", "Source Code Pro", monospace;
   letter-spacing: 0.05em;
   font-weight: 500;
+  line-height: 1.5; /* BEST PRACTICE: Line-height ottimale */
+}
+
+@media (max-width: 768px) {
+  .footer-tech {
+    font-size: 0.8125rem; /* BEST PRACTICE: Minimo 13px su mobile */
+    line-height: 1.6;
+  }
 }
 
 .footer-tech strong {
@@ -1857,17 +1891,19 @@ a[role="button"]:focus-visible {
   }
 
   .account-banner-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 24px;
+    width: 44px; /* BEST PRACTICE: Touch target minimo */
+    height: 44px;
+    font-size: 22px;
   }
 
   .account-banner-title {
-    font-size: var(--fs-14, 14px);
+    font-size: 0.9375rem; /* BEST PRACTICE: Minimo 15px */
+    line-height: 1.5;
   }
 
   .account-banner-subtitle {
-    font-size: var(--fs-12, 12px);
+    font-size: 0.8125rem; /* BEST PRACTICE: Minimo 13px */
+    line-height: 1.6;
   }
 
   .account-banner-actions {
@@ -2042,16 +2078,18 @@ a[role="button"]:focus-visible {
   }
 
   .module-category:not(.favorites-category)[data-expanded] .category-title {
-    font-size: var(--fs-15, 15px);
+    font-size: 0.9375rem; /* BEST PRACTICE: Minimo 15px */
     margin-bottom: 0;
-    padding: var(--spacing-sm) var(--spacing-md);
-    padding-right: calc(var(--spacing-md) + 20px);
+    padding: var(--spacing-sm) var(--spacing-md); /* BEST PRACTICE: Padding adeguato per touch */
+    padding-right: calc(var(--spacing-md) + 24px); /* BEST PRACTICE: Spazio per icona */
     background: var(--dash-surface-elev);
     border: 1px solid var(--dash-border);
     border-radius: var(--radius-md);
     border-bottom: none;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+    line-height: 1.5; /* BEST PRACTICE: Line-height ottimale */
+    min-height: 44px; /* BEST PRACTICE: Touch target minimo */
   }
 
   .module-category:not(.favorites-category)[data-expanded] .category-title::after {
@@ -2109,9 +2147,10 @@ a[role="button"]:focus-visible {
   }
 
   .favorites-category .category-title {
-    font-size: var(--fs-15, 15px);
+    font-size: 0.9375rem; /* BEST PRACTICE: Minimo 15px */
     margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-xs);
+    padding-bottom: var(--spacing-sm); /* BEST PRACTICE: Padding aumentato */
+    line-height: 1.5; /* BEST PRACTICE: Line-height ottimale */
   }
 
   .favorites-category .category-title::after {
@@ -2120,7 +2159,7 @@ a[role="button"]:focus-visible {
 
   .modules-grid {
     grid-template-columns: 1fr;
-    gap: var(--spacing-md);
+    gap: var(--spacing-md); /* BEST PRACTICE: Gap adeguato per separazione visiva */
   }
 
   /* BEST PRACTICE: Font size minimo 16px per input su mobile (WCAG 2.1, iOS Safari) */
@@ -2151,7 +2190,8 @@ a[role="button"]:focus-visible {
 
   /* BEST PRACTICE: Ridurre information density su mobile (Cognitive Load Theory) */
   .module-card {
-    padding: var(--spacing-md); /* Ridotto da xl */
+    padding: var(--spacing-md); /* BEST PRACTICE: Padding adeguato per touch */
+    gap: var(--spacing-sm); /* BEST PRACTICE: Gap ridotto ma leggibile */
   }
 
   .module-description {
@@ -2164,8 +2204,10 @@ a[role="button"]:focus-visible {
   }
 
   .category-title {
-    font-size: var(--fs-14, 14px); /* Più compatto */
-    margin-bottom: var(--spacing-sm);
+    font-size: 0.9375rem; /* BEST PRACTICE: Minimo 15px per leggibilità */
+    margin-bottom: var(--spacing-md); /* BEST PRACTICE: Spaziatura adeguata */
+    padding-bottom: var(--spacing-sm);
+    line-height: 1.5; /* BEST PRACTICE: Line-height ottimale */
   }
 
   /* BEST PRACTICE: Line height ottimale per leggibilità mobile (WCAG 2.1 SC 1.4.12) */
@@ -2183,20 +2225,21 @@ a[role="button"]:focus-visible {
 
   /* BEST PRACTICE: Visual hierarchy migliorata su mobile (F-Pattern/Z-Pattern, Gestalt Principles) */
   .module-title {
-    font-size: var(--fs-16, 16px);
+    font-size: 1rem; /* BEST PRACTICE: Minimo 16px per leggibilità mobile */
     font-weight: 700;
     color: var(--dash-text);
     margin-bottom: var(--spacing-xs);
+    line-height: 1.5; /* BEST PRACTICE: Line-height ottimale */
   }
 
   .module-description {
-    font-size: var(--fs-13, 13px);
+    font-size: 0.875rem; /* BEST PRACTICE: Minimo 14px per leggibilità */
     color: var(--dash-text-soft);
-    line-height: 1.6;
+    line-height: 1.6; /* BEST PRACTICE: Line-height aumentato per leggibilità */
   }
 
   .module-category {
-    margin-bottom: var(--spacing-2xl); /* Separazione tra categorie */
+    margin-bottom: var(--spacing-xl); /* BEST PRACTICE: Separazione ridotta ma leggibile */
   }
 
   .modules-grid {
@@ -3405,17 +3448,27 @@ a[role="button"]:focus-visible {
   border: 1px solid var(--dash-border);
   border-radius: var(--radius-md);
   color: var(--dash-text);
-  font-size: var(--fs-13, 13px);
+  font-size: 0.875rem; /* BEST PRACTICE: Minimo 14px per leggibilità */
   font-weight: 500;
   letter-spacing: 0.01em;
   cursor: pointer;
   transition: var(--transition-fast);
   text-decoration: none;
-  min-height: 40px;
+  min-height: 44px; /* BEST PRACTICE: Touch target minimo 44px (WCAG 2.1, iOS HIG) */
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
   overflow: hidden;
+  line-height: 1.5; /* BEST PRACTICE: Line-height ottimale */
+}
+
+@media (max-width: 768px) {
+  .btn {
+    font-size: 0.9375rem; /* BEST PRACTICE: Minimo 15px su mobile */
+    padding: var(--spacing-md) var(--spacing-lg); /* BEST PRACTICE: Padding adeguato per touch */
+    min-height: 44px; /* BEST PRACTICE: Touch target minimo */
+    line-height: 1.5;
+  }
 }
 
 .btn::after {
@@ -3528,15 +3581,18 @@ a[role="button"]:focus-visible {
 
 .btn-sm {
   padding: calc(var(--spacing-sm) + 2px) calc(var(--spacing-md) + 2px);
-  font-size: var(--fs-12, 12px);
-  min-height: 32px;
+  font-size: 0.8125rem; /* BEST PRACTICE: Minimo 13px */
+  min-height: 36px;
+  line-height: 1.5;
 }
 
 /* BEST PRACTICE: Touch targets minimi 44x44px su mobile (Apple HIG, Material Design) */
 @media (max-width: 768px) {
   .btn-sm {
-    min-height: 44px;
-    padding: calc(var(--spacing-sm) + 4px) calc(var(--spacing-md) + 4px);
+    min-height: 44px; /* BEST PRACTICE: Touch target minimo */
+    padding: var(--spacing-sm) var(--spacing-md); /* BEST PRACTICE: Padding adeguato */
+    font-size: 0.875rem; /* BEST PRACTICE: Minimo 14px su mobile */
+    line-height: 1.5;
   }
 
   /* Assicura che i toggle switch abbiano area cliccabile minima 44x44px */
@@ -3586,7 +3642,7 @@ a[role="button"]:focus-visible {
 
 /* BEST PRACTICE: Empty states generici migliorati */
 .empty-state {
-  padding: var(--spacing-2xl);
+  padding: var(--spacing-xl);
   text-align: center;
   background: var(--dash-surface);
   border: 1px dashed var(--dash-border);
@@ -3597,12 +3653,24 @@ a[role="button"]:focus-visible {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
+  font-size: 0.875rem; /* BEST PRACTICE: Minimo 14px */
+  line-height: 1.6; /* BEST PRACTICE: Line-height ottimale */
+}
+
+@media (max-width: 768px) {
+  .empty-state {
+    padding: var(--spacing-lg); /* BEST PRACTICE: Padding ridotto su mobile */
+    min-height: 150px;
+    gap: var(--spacing-md);
+    font-size: 0.9375rem; /* BEST PRACTICE: Minimo 15px su mobile */
+    line-height: 1.6;
+  }
 }
 
 /* BEST PRACTICE: Error states standardizzati */
 .error-state {
-  padding: var(--spacing-2xl);
+  padding: var(--spacing-xl);
   text-align: center;
   background: var(--dash-surface);
   border: 1px solid rgba(239, 68, 68, 0.3);
@@ -3613,7 +3681,19 @@ a[role="button"]:focus-visible {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
+  font-size: 0.875rem; /* BEST PRACTICE: Minimo 14px */
+  line-height: 1.6; /* BEST PRACTICE: Line-height ottimale */
+}
+
+@media (max-width: 768px) {
+  .error-state {
+    padding: var(--spacing-lg); /* BEST PRACTICE: Padding ridotto su mobile */
+    min-height: 150px;
+    gap: var(--spacing-md);
+    font-size: 0.9375rem; /* BEST PRACTICE: Minimo 15px su mobile */
+    line-height: 1.6;
+  }
 }
 
 .error-state-icon {
