@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
-. "$(dirname "$0")/_/husky.sh"
+
+HUSKY_INTERNAL="$(dirname "$0")/_/husky.sh"
+if [ -f "$HUSKY_INTERNAL" ]; then
+  . "$HUSKY_INTERNAL"
+fi
 
 SCRIPT_PATH="scripts/auto-version.js"
 
