@@ -252,7 +252,7 @@ function setupSearchInput() {
     trigger.className = "global-search-trigger";
     trigger.setAttribute("aria-label", "Apri ricerca (Ctrl+K)");
     trigger.innerHTML = `
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" class="global-search-trigger-icon">
         <circle cx="11" cy="11" r="8" />
         <path d="m21 21-4.35-4.35" />
       </svg>

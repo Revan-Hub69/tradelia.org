@@ -224,16 +224,27 @@
 }
 
 /* ===== EDUCATION HEADER ===== */
+/* BEST PRACTICE ACCADEMICO: Education header completamente ridisegnato */
 .education-header {
   display: flex;
   flex-direction: column;
-  gap: var(--edu-spacing-lg);
-  padding: var(--edu-spacing-xl);
+  gap: var(--edu-spacing-xl); /* BEST PRACTICE: Gap aumentato per respirazione */
+  padding: var(--edu-spacing-xl); /* BEST PRACTICE: Padding consistente */
   background: var(--edu-surface-base);
   border: 1px solid var(--edu-border-base);
-  border-radius: var(--edu-radius-lg);
-  box-shadow: var(--edu-shadow-md);
+  border-radius: var(--edu-radius-md); /* BEST PRACTICE: Border-radius ridotto (8px) */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* BEST PRACTICE: Shadow minimale, no glow */
   position: relative;
+  margin-bottom: var(--edu-spacing-xl); /* BEST PRACTICE: Margin bottom per separazione */
+}
+
+/* BEST PRACTICE ACCADEMICO: Mobile - padding ridotto */
+@media (max-width: 768px) {
+  .education-header {
+    padding: var(--edu-spacing-lg); /* BEST PRACTICE: Padding ridotto su mobile */
+    gap: var(--edu-spacing-lg);
+    margin-bottom: var(--edu-spacing-lg);
+  }
 }
 
 .education-stats {
@@ -252,20 +263,22 @@
   }
 }
 
+/* BEST PRACTICE ACCADEMICO: Stat card completamente ridisegnato */
 .stat-card {
   position: relative;
   padding: var(--edu-spacing-lg);
   background: var(--edu-surface-elevated);
   border: 1px solid var(--edu-border-subtle);
-  border-radius: var(--edu-radius-md);
+  border-radius: var(--edu-radius-md); /* BEST PRACTICE: Border-radius 8px */
   text-align: center;
-  transition: all var(--edu-transition-base);
+  transition: background var(--edu-transition-base), border-color var(--edu-transition-base);
   cursor: default;
+  /* BEST PRACTICE ACCADEMICO: No transform hover */
 }
 
 .stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--edu-shadow-lg);
+  /* BEST PRACTICE ACCADEMICO: No transform, solo cambio colore */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* BEST PRACTICE: Shadow minimale */
   border-color: var(--edu-border-base);
   background: var(--edu-surface-hover);
 }
@@ -275,21 +288,24 @@
   outline-offset: var(--edu-focus-ring-offset);
 }
 
+/* BEST PRACTICE ACCADEMICO: Stat value completamente ridisegnato */
 .stat-value {
   font-size: clamp(1.5rem, 4vw, 2rem);
-  font-weight: 700;
-  line-height: 1.2;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
+  line-height: 1.3; /* BEST PRACTICE: Line-height aumentato */
+  margin-bottom: var(--edu-spacing-sm); /* BEST PRACTICE: Margin bottom aumentato per separazione */
   color: var(--edu-text-primary);
-  margin-bottom: var(--edu-spacing-xs);
   display: block;
 }
 
+/* BEST PRACTICE ACCADEMICO: Stat label completamente ridisegnato */
 .stat-label {
-  font-size: var(--fs-13);
+  font-size: var(--fs-13, 13px); /* BEST PRACTICE: Font size esplicito */
   font-weight: 500;
   color: var(--edu-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  text-transform: none; /* BEST PRACTICE ACCADEMICO: No uppercase per leggibilità */
+  letter-spacing: normal; /* BEST PRACTICE ACCADEMICO: Letter spacing normale */
+  line-height: 1.5; /* BEST PRACTICE: Line-height ottimale */
 }
 
 /* ===== BADGES PREVIEW ===== */

@@ -643,11 +643,14 @@ a[role="button"]:focus-visible {
   display: none; /* BEST PRACTICE ACCADEMICO: Rimossa decorazione gradient */
 }
 
+/* BEST PRACTICE ACCADEMICO: Header content con layout ottimizzato */
 .dashboard-header-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-md);
+  width: 100%;
+  max-width: 100%;
 }
 
 .dashboard-title {
@@ -2983,11 +2986,15 @@ a[role="button"]:focus-visible {
   }
 }
 
+/* BEST PRACTICE ACCADEMICO: Panel header completamente ridisegnato */
 .panel-header {
-  margin-bottom: var(--spacing-lg);
-  padding-bottom: var(--spacing-md);
-  border-bottom: 2px solid var(--dash-border);
+  margin-bottom: var(--spacing-xl); /* BEST PRACTICE: Spaziatura aumentata */
+  padding-bottom: var(--spacing-lg); /* BEST PRACTICE: Padding aumentato */
+  border-bottom: 1px solid var(--dash-border); /* BEST PRACTICE: Bordo sottile, no 2px */
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm); /* BEST PRACTICE: Gap tra titolo e descrizione */
 }
 
 .panel-header::after {
@@ -3037,31 +3044,40 @@ a[role="button"]:focus-visible {
 }
 
 /* BEST PRACTICE: Typography hierarchy migliorata (Design System Accademico 2025) */
-/* BEST PRACTICE: Spaziatura corretta tra titolo e descrizione */
+/* BEST PRACTICE ACCADEMICO: Panel title completamente ridisegnato */
 .panel-title {
-  font-size: clamp(var(--fs-18, 18px), 2.5vw, 24px);
+  font-size: clamp(var(--fs-20, 20px), 3vw, var(--fs-24, 24px)); /* BEST PRACTICE: Font size aumentato */
   font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   letter-spacing: -0.01em; /* BEST PRACTICE ACCADEMICO: Letter spacing ridotto */
-  margin-bottom: var(--spacing-sm); /* BEST PRACTICE: Spaziatura aumentata per gerarchia visiva */
-  margin-top: 0;
+  margin: 0; /* BEST PRACTICE: Margin gestito dal gap del parent */
+  padding: 0;
   color: var(--dash-text);
+  line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
   /* BEST PRACTICE ACCADEMICO: No text-shadow */
 }
 
-/* BEST PRACTICE: Leggibilità migliorata (WCAG AA) */
+/* BEST PRACTICE ACCADEMICO: Panel description completamente ridisegnato */
 .panel-description {
-  font-size: var(--fs-13, 13px);
+  font-size: var(--fs-14, 14px); /* BEST PRACTICE: Font size aumentato da 13px */
   color: var(--dash-text-soft);
-  line-height: var(--lh-16, 1.6);
-  opacity: 0.85;
-  /* BEST PRACTICE: Optimal contrast ratio */
-  margin-top: var(--spacing-xs);
+  line-height: 1.6; /* BEST PRACTICE: Line-height ottimale */
+  opacity: 0.9; /* BEST PRACTICE: Opacità aumentata per leggibilità */
+  margin: 0; /* BEST PRACTICE: Margin gestito dal gap del parent */
+  padding: 0;
   /* BEST PRACTICE: Text wrapping corretto per evitare troncamento */
   white-space: normal;
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
   max-width: 100%;
+}
+
+/* BEST PRACTICE ACCADEMICO: Desktop - descrizione più grande */
+@media (min-width: 1024px) {
+  .panel-description {
+    font-size: var(--fs-15, 15px); /* BEST PRACTICE: Font size aumentato su desktop */
+    line-height: 1.7; /* BEST PRACTICE: Line-height aumentato su desktop */
+  }
 }
 
 .panel-content {
@@ -5304,11 +5320,13 @@ a[role="button"]:focus-visible {
   min-height: 24px; /* BEST PRACTICE: Altezza minima per leggibilità */
 }
 
+/* BEST PRACTICE ACCADEMICO: Search trigger - solo icona su mobile */
 .global-search-trigger {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-sm);
   background: var(--dash-surface-elev);
   border: 1px solid var(--dash-border);
   border-radius: var(--radius-sm);
@@ -5317,6 +5335,11 @@ a[role="button"]:focus-visible {
   transition: var(--transition);
   font-size: var(--fs-13, 13px);
   font-family: inherit;
+  /* BEST PRACTICE: Solo icona su mobile */
+  min-width: 44px; /* BEST PRACTICE: Touch target minimo */
+  min-height: 44px; /* BEST PRACTICE: Touch target minimo */
+  width: 44px; /* BEST PRACTICE: Quadrato su mobile */
+  height: 44px;
 }
 
 .global-search-trigger:hover {
@@ -5325,30 +5348,46 @@ a[role="button"]:focus-visible {
   color: var(--dash-text);
 }
 
+.global-search-trigger-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
 .global-search-trigger-text {
-  display: none;
+  display: none; /* BEST PRACTICE: Nascosto su mobile */
 }
 
 .global-search-trigger-kbd {
-  padding: var(--spacing-xs) var(--spacing-sm); /* BEST PRACTICE: Padding adeguato */
+  display: none; /* BEST PRACTICE: Nascosto su mobile */
+  padding: var(--spacing-xs) var(--spacing-sm);
   background: var(--dash-surface);
   border: 1px solid var(--dash-border);
   border-radius: 4px;
-  font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
+  font-size: 0.75rem;
   font-family: "Monaco", "Menlo", "Courier New", monospace;
   color: var(--dash-text-muted);
-  line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
-  min-height: 24px; /* BEST PRACTICE: Altezza minima per leggibilità */
+  line-height: 1.4;
+  min-height: 24px;
 }
 
+/* BEST PRACTICE: Desktop - mostra testo e kbd */
 @media (min-width: 768px) {
+  .global-search-trigger {
+    padding: var(--spacing-sm) var(--spacing-md);
+    min-width: 200px;
+    width: auto;
+    height: auto;
+    min-height: 44px;
+    justify-content: space-between;
+  }
+
   .global-search-trigger-text {
     display: inline;
   }
 
-  .global-search-trigger {
-    min-width: 200px;
-    justify-content: space-between;
+  .global-search-trigger-kbd {
+    display: inline-flex;
   }
 }
 
