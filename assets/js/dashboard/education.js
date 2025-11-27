@@ -1641,7 +1641,7 @@ function renderLessonView(lesson) {
       <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
         <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
           <a href="#education" data-action="back-to-dashboard" itemprop="item">
-            <span itemprop="name">Dashboard</span>
+            <span itemprop="name">Formazione</span>
           </a>
           <meta itemprop="position" content="1" />
         </li>
