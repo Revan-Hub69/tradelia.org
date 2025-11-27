@@ -3,40 +3,42 @@
  * Best Practice 2025: Intelligent preloading based on user behavior
  */
 
-import { safeLog } from '../dashboard/security-utils.js';
+import { safeLog } from "../dashboard/security-utils.js";
+
+// Resolve module URLs through bundler to get hashed filenames in production
+const MODULE_URLS = {
+  securityUtils: new URL("../dashboard/security-utils.js", import.meta.url).href,
+  app: new URL("../dashboard/app.js", import.meta.url).href,
+  overview: new URL("../dashboard/overview.js", import.meta.url).href,
+  reports: new URL("../dashboard/reports.js", import.meta.url).href,
+  education: new URL("../dashboard/education.js", import.meta.url).href,
+  educationOnboarding: new URL("../dashboard/education-onboarding.js", import.meta.url).href,
+  educationToolbar: new URL("../dashboard/education-toolbar.js", import.meta.url).href,
+  frameworks: new URL("../dashboard/frameworks.js", import.meta.url).href,
+  educationGamification: new URL("../dashboard/education-gamification.js", import.meta.url).href,
+  educationAnalytics: new URL("../dashboard/education-analytics.js", import.meta.url).href,
+};
 
 /**
  * Preload configuration
  */
 const PRELOAD_CONFIG = {
   // Moduli da preloadare sempre (critici)
-  critical: [
-    '/assets/js/dashboard/security-utils.js',
-    '/assets/js/dashboard/app.js',
-  ],
-  
+  critical: [MODULE_URLS.securityUtils, MODULE_URLS.app],
+
   // Moduli da preloadare in base alla route
   routeBased: {
-    dashboard: [
-      '/assets/js/dashboard/overview.js',
-      '/assets/js/dashboard/reports.js',
-    ],
+    dashboard: [MODULE_URLS.overview, MODULE_URLS.reports],
     education: [
-      '/assets/js/dashboard/education.js',
-      '/assets/js/dashboard/education-onboarding.js',
-      '/assets/js/dashboard/education-toolbar.js',
+      MODULE_URLS.education,
+      MODULE_URLS.educationOnboarding,
+      MODULE_URLS.educationToolbar,
     ],
-    reports: [
-      '/assets/js/dashboard/reports.js',
-      '/assets/js/dashboard/frameworks.js',
-    ],
+    reports: [MODULE_URLS.reports, MODULE_URLS.frameworks],
   },
-  
+
   // Moduli da preloadare dopo idle (non critici)
-  idle: [
-    '/assets/js/dashboard/education-gamification.js',
-    '/assets/js/dashboard/education-analytics.js',
-  ],
+  idle: [MODULE_URLS.educationGamification, MODULE_URLS.educationAnalytics],
 };
 
 /**
@@ -45,10 +47,16 @@ const PRELOAD_CONFIG = {
  */
 function getCurrentRoute() {
   const path = window.location.pathname;
-  if (path.includes('dashboard')) return 'dashboard';
-  if (path.includes('education') || path.includes('formazione')) return 'education';
-  if (path.includes('report')) return 'reports';
-  return 'home';
+  if (path.includes("dashboard")) {
+    return "dashboard";
+  }
+  if (path.includes("education") || path.includes("formazione")) {
+    return "education";
+  }
+  if (path.includes("report")) {
+    return "reports";
+  }
+  return "home";
 }
 
 /**
@@ -56,24 +64,27 @@ function getCurrentRoute() {
  * @param {string} modulePath - Path to module
  */
 function preloadModuleLink(modulePath) {
+  if (!modulePath) {
+    return;
+  }
   if (document.querySelector(`link[rel="modulepreload"][href="${modulePath}"]`)) {
     return; // Already preloaded
   }
 
-  const link = document.createElement('link');
-  link.rel = 'modulepreload';
+  const link = document.createElement("link");
+  link.rel = "modulepreload";
   link.href = modulePath;
-  link.crossOrigin = 'anonymous';
+  link.crossOrigin = "anonymous";
   document.head.appendChild(link);
-  
-  safeLog('log', `[PreloadStrategy] Preloaded: ${modulePath}`);
+
+  safeLog("log", `[PreloadStrategy] Preloaded: ${modulePath}`);
 }
 
 /**
  * Preload critical modules
  */
 export function preloadCritical() {
-  PRELOAD_CONFIG.critical.forEach(module => {
+  PRELOAD_CONFIG.critical.forEach((module) => {
     preloadModuleLink(module);
   });
 }
@@ -84,12 +95,12 @@ export function preloadCritical() {
 export function preloadRouteBased() {
   const route = getCurrentRoute();
   const modules = PRELOAD_CONFIG.routeBased[route] || [];
-  
-  modules.forEach(module => {
+
+  modules.forEach((module) => {
     preloadModuleLink(module);
   });
-  
-  safeLog('log', `[PreloadStrategy] Preloaded ${modules.length} modules for route: ${route}`);
+
+  safeLog("log", `[PreloadStrategy] Preloaded ${modules.length} modules for route: ${route}`);
 }
 
 /**
@@ -97,22 +108,25 @@ export function preloadRouteBased() {
  * @param {number} idleTime - Idle time in ms before preload (default: 2000)
  */
 export function preloadOnIdle(idleTime = 2000) {
-  if (!('requestIdleCallback' in window)) {
+  if (!("requestIdleCallback" in window)) {
     // Fallback per browser senza requestIdleCallback
     setTimeout(() => {
-      PRELOAD_CONFIG.idle.forEach(module => {
+      PRELOAD_CONFIG.idle.forEach((module) => {
         preloadModuleLink(module);
       });
     }, idleTime);
     return;
   }
 
-  requestIdleCallback(() => {
-    PRELOAD_CONFIG.idle.forEach(module => {
-      preloadModuleLink(module);
-    });
-    safeLog('log', `[PreloadStrategy] Preloaded ${PRELOAD_CONFIG.idle.length} idle modules`);
-  }, { timeout: idleTime });
+  requestIdleCallback(
+    () => {
+      PRELOAD_CONFIG.idle.forEach((module) => {
+        preloadModuleLink(module);
+      });
+      safeLog("log", `[PreloadStrategy] Preloaded ${PRELOAD_CONFIG.idle.length} idle modules`);
+    },
+    { timeout: idleTime }
+  );
 }
 
 /**
@@ -121,16 +135,18 @@ export function preloadOnIdle(idleTime = 2000) {
  * @param {string} modulePath - Module to preload
  */
 export function preloadOnHover(element, modulePath) {
-  if (!element) return;
+  if (!element) {
+    return;
+  }
 
   let timeout;
-  element.addEventListener('mouseenter', () => {
+  element.addEventListener("mouseenter", () => {
     timeout = setTimeout(() => {
       preloadModuleLink(modulePath);
     }, 100); // Preload dopo 100ms di hover
   });
 
-  element.addEventListener('mouseleave', () => {
+  element.addEventListener("mouseleave", () => {
     if (timeout) {
       clearTimeout(timeout);
     }
@@ -145,22 +161,22 @@ export function initPreloadStrategy() {
   preloadCritical();
 
   // Preload route-based modules after DOM ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', preloadRouteBased);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", preloadRouteBased);
   } else {
     preloadRouteBased();
   }
 
   // Preload idle modules after page load
-  if (document.readyState === 'complete') {
+  if (document.readyState === "complete") {
     preloadOnIdle();
   } else {
-    window.addEventListener('load', () => {
+    window.addEventListener("load", () => {
       preloadOnIdle();
     });
   }
 
-  safeLog('log', '[PreloadStrategy] Initialized');
+  safeLog("log", "[PreloadStrategy] Initialized");
 }
 
 /**
@@ -169,10 +185,10 @@ export function initPreloadStrategy() {
  * @param {string} category - Category (critical, routeBased, idle)
  * @param {string} route - Route name (for routeBased)
  */
-export function addToPreloadList(modulePath, category = 'idle', route = null) {
-  if (category === 'critical') {
+export function addToPreloadList(modulePath, category = "idle", route = null) {
+  if (category === "critical") {
     PRELOAD_CONFIG.critical.push(modulePath);
-  } else if (category === 'routeBased' && route) {
+  } else if (category === "routeBased" && route) {
     if (!PRELOAD_CONFIG.routeBased[route]) {
       PRELOAD_CONFIG.routeBased[route] = [];
     }
@@ -181,4 +197,3 @@ export function addToPreloadList(modulePath, category = 'idle', route = null) {
     PRELOAD_CONFIG.idle.push(modulePath);
   }
 }
-
