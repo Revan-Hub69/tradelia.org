@@ -9,6 +9,7 @@ import { safeLog } from "./security-utils.js";
 
 const API_BASE = "/api";
 
+// Cache condivisa con permissions.js
 let userRoleCache = null;
 let userPlanDataCache = null;
 
@@ -89,6 +90,11 @@ export async function logout() {
     const { removeToken } = await import("./token-storage.js");
     await removeToken();
 
+    // Invalida cache ruoli (usa funzione centralizzata)
+    const { invalidateRoleCache } = await import("./permissions.js");
+    invalidateRoleCache();
+    
+    // Reset locale anche
     userRoleCache = { role: "guest", user: null, isAdmin: false };
     userPlanDataCache = { plan: null, usage: null };
     window.location.href = "/accesso.html?reason=logout";

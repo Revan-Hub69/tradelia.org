@@ -1,10 +1,27 @@
 // /api/health.js
 // API Vercel - Health Check
-// NOTA: Funzione disabilitata per rispettare limite Vercel Hobby (12 funzioni)
-// Consolidata in api/admin.js?action=health
+// Consolidata con Supabase health check
 
-// export default async function handler(req, res) {
+import { healthCheck, verifySchema, verifyRPCFunctions, getEducationStats } from "./supabase-health.js";
+
 async function handler(req, res) {
+  const { action } = req.query;
+
+  // Route to specific health check
+  if (action === "supabase-health") {
+    return await healthCheck(req, res);
+  }
+  if (action === "verify-schema") {
+    return await verifySchema(req, res);
+  }
+  if (action === "verify-rpc") {
+    return await verifyRPCFunctions(req, res);
+  }
+  if (action === "education-stats") {
+    return await getEducationStats(req, res);
+  }
+
+  // Default health check
   if (req.method !== "GET") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
@@ -55,3 +72,5 @@ function checkEnvironment() {
       missing.length === 0 ? "All environment variables set" : `Missing: ${missing.join(", ")}`,
   };
 }
+
+export default handler;

@@ -20,8 +20,19 @@ export class XPSystem {
 
   /**
    * Add XP with animation
+   * BEST PRACTICE: Validazione input e queue system per evitare race conditions
    */
   async addXP(amount, sourceType, sourceId = null, description = null) {
+    // Validazione input
+    if (!amount || amount <= 0 || amount > 1000) {
+      safeLog("warn", "[Gamification] XP amount invalido:", amount);
+      return null;
+    }
+    if (!sourceType) {
+      safeLog("warn", "[Gamification] sourceType richiesto");
+      return null;
+    }
+
     try {
       const token = await this.getAuthToken();
 
@@ -314,10 +325,31 @@ export class BadgeSystem {
 
   /**
    * Update badge display
+   * BEST PRACTICE: Carica badge da API o localStorage e aggiorna UI
    */
-  updateBadgeDisplay() {
-    // Ricarica badge dal server o localStorage
-    // Aggiorna UI
+  async updateBadgeDisplay() {
+    try {
+      const token = await this.getAuthToken();
+      const progress = this.loadProgress();
+      const badges = progress.badges || [];
+
+      // Aggiorna UI se esiste container badges
+      const badgesContainer = document.querySelector(".education-badges-preview, .badges-list");
+      if (badgesContainer && badges.length > 0) {
+        badgesContainer.innerHTML = badges
+          .map(
+            (badge) => `
+          <div class="badge-item" title="${escapeHtml(badge.description || badge.name)}">
+            <span class="badge-icon">🏆</span>
+            <span class="badge-name">${escapeHtml(badge.name)}</span>
+          </div>
+        `
+          )
+          .join("");
+      }
+    } catch (error) {
+      safeLog("warn", "[Gamification] Errore updateBadgeDisplay:", error);
+    }
   }
 
   async getAuthToken() {

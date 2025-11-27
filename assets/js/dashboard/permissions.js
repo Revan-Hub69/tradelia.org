@@ -5,6 +5,17 @@
 
 import { getCurrentRole } from "./account-banner.js";
 
+let userRoleCache = null;
+let userPlanDataCache = null;
+
+/**
+ * Invalida cache ruoli (chiamare su logout/login)
+ */
+export function invalidateRoleCache() {
+  userRoleCache = null;
+  userPlanDataCache = null;
+}
+
 /**
  * Mappa autorizzazioni per ruolo
  */
