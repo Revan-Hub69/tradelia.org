@@ -63,7 +63,7 @@
 
 .glossary-modal-header h2 {
   font-size: var(--fs-20);
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   background: var(--tradelia-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -166,7 +166,7 @@
 
 .glossary-letter {
   font-size: var(--fs-18);
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--tradelia-primary);
   margin: 0;
   padding-bottom: var(--edu-spacing-xs);
@@ -207,7 +207,7 @@
 
 .glossary-term-title {
   font-size: var(--fs-18);
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--edu-text-primary);
   margin: 0;
   line-height: 1.3;

@@ -14,7 +14,7 @@
   margin-bottom: var(--edu-spacing-xl);
   padding: var(--edu-spacing-lg);
   background: var(--edu-card-bg);
-  border-radius: 12px;
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Max 8px, non 12px */
   border: 1px solid var(--edu-border);
 }
 
@@ -54,7 +54,7 @@
 .sr-question-card {
   background: var(--edu-card-bg);
   border: 1px solid var(--edu-border);
-  border-radius: 12px;
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Max 8px, non 12px */
   padding: var(--edu-spacing-lg);
   transition: all var(--edu-transition-base);
 }
@@ -93,7 +93,7 @@
   padding: 0.25rem 0.75rem;
   background: var(--edu-warning);
   color: #000;
-  border-radius: 12px;
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Max 8px, non 12px */
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -106,7 +106,7 @@
   padding: 0.25rem 0.75rem;
   background: rgba(59, 130, 246, 0.15);
   color: var(--edu-primary);
-  border-radius: 12px;
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Max 8px, non 12px */
   font-size: 0.75rem;
   font-weight: 600;
 }
@@ -146,7 +146,7 @@
   padding: var(--edu-spacing-lg);
   background: var(--edu-card-bg);
   border: 1px solid var(--edu-border);
-  border-radius: 12px;
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Max 8px, non 12px */
 }
 
 .sr-stat-value {
@@ -168,7 +168,7 @@
   padding: var(--edu-spacing-xl);
   background: var(--edu-card-bg);
   border: 1px solid var(--edu-border);
-  border-radius: 12px;
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Max 8px, non 12px */
 }
 
 .sr-empty-state svg {
@@ -206,7 +206,7 @@
   .sr-quick-access {
     flex-direction: column;
   }
-  
+
   .sr-quick-access .btn {
     width: 100%;
     justify-content: center;

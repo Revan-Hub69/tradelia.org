@@ -12,7 +12,7 @@
 }
 
 .hero-section::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -60,7 +60,7 @@
 .hero-title {
   font-family: var(--ff-sans);
   font-size: clamp(2.5rem, 5vw, 4.25rem);
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   line-height: 1.2;
   letter-spacing: -0.03em;
   color: var(--ink);
@@ -163,7 +163,7 @@
 }
 
 .hero-plan-card ul li::before {
-  content: '✓';
+  content: "✓";
   color: var(--brand-500);
   font-weight: 600;
   flex-shrink: 0;
@@ -241,7 +241,7 @@
 }
 
 .hero-feature::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -355,7 +355,7 @@
 .brokers-title {
   font-family: var(--ff-sans);
   font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: var(--ink);
@@ -403,7 +403,7 @@
 }
 
 .broker-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -484,7 +484,7 @@
 }
 
 .broker-card-features li::before {
-  content: '✓';
+  content: "✓";
   color: var(--ok);
   font-weight: 600;
   flex-shrink: 0;
@@ -595,7 +595,7 @@
 }
 
 .hero-cta .btn-primary::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;

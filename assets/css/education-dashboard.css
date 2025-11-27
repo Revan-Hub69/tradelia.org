@@ -434,11 +434,11 @@
 
 .education-section-title {
   font-size: clamp(1.5rem, 4vw, 2rem);
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--edu-text-primary);
   margin: 0 0 var(--edu-spacing-xl) 0;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+  letter-spacing: -0.01em; /* BEST PRACTICE ACCADEMICO: Max -0.01em */
+  line-height: 1.4; /* BEST PRACTICE: Line-height aumentato */
 }
 
 .modules-grid {
@@ -685,7 +685,7 @@
   border: 2px solid var(--edu-border-base);
   border-radius: var(--edu-radius-full);
   font-size: var(--fs-16);
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--edu-text-primary); /* Bianco, NON grigio/blu */
   flex-shrink: 0;
 }
@@ -740,8 +740,8 @@
 
 .module-title {
   font-size: var(--fs-18);
-  font-weight: 700;
-  line-height: 1.3;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
+  line-height: 1.4; /* BEST PRACTICE: Line-height aumentato */
   color: var(--edu-text-primary);
   margin: 0;
   letter-spacing: -0.01em;
@@ -908,7 +908,7 @@
 
 .module-lock-hint::before {
   content: "!";
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
 }
 
 /* ===== FORZA ZERO BLU - Regole Globali ===== */
@@ -1075,11 +1075,11 @@
 
 .module-view-title {
   font-size: clamp(1.75rem, 5vw, 2.5rem);
-  font-weight: 700;
-  line-height: 1.2;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
+  line-height: 1.4; /* BEST PRACTICE: Line-height aumentato */
   color: var(--edu-text-primary);
   margin: var(--edu-spacing-md) 0 var(--edu-spacing-sm) 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em; /* BEST PRACTICE ACCADEMICO: Max -0.01em */
 }
 
 .module-view-description {
@@ -1097,10 +1097,10 @@
 
 .module-lessons h2 {
   font-size: var(--fs-20);
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--edu-text-primary);
   margin: 0 0 var(--edu-spacing-lg) 0;
-  line-height: 1.2;
+  line-height: 1.4; /* BEST PRACTICE: Line-height aumentato */
 }
 
 .lessons-list {
@@ -1362,10 +1362,10 @@
 
 .module-tests h2 {
   font-size: var(--fs-20);
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--edu-text-primary);
   margin: 0 0 var(--edu-spacing-lg) 0;
-  line-height: 1.2;
+  line-height: 1.4; /* BEST PRACTICE: Line-height aumentato */
 }
 
 .tests-list {
@@ -1513,7 +1513,7 @@
   margin-top: var(--edu-spacing-xl);
   margin-bottom: var(--edu-spacing-md);
   line-height: 1.4; /* Migliorato da 1.3 per leggibilità */
-  font-weight: 700; /* Grassetto, MAI colori */
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 - Grassetto, MAI colori */
 }
 
 .lesson-view-content p {
@@ -1524,7 +1524,7 @@
 
 /* NO BLU - Evidenziazione termini: solo grassetto */
 .lesson-view-content strong {
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--edu-text-primary) !important; /* Bianco, MAI blu */
 }
 
@@ -1860,8 +1860,8 @@
 
 .score-value {
   font-size: clamp(3rem, 8vw, 5rem);
-  font-weight: 800;
-  line-height: 1;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 800 */
+  line-height: 1.2; /* BEST PRACTICE: Line-height aumentato */
   color: var(--edu-text-primary);
 }
 
@@ -1895,10 +1895,10 @@
 
 .test-review h2 {
   font-size: var(--fs-20);
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--edu-text-primary);
   margin: 0 0 var(--edu-spacing-lg) 0;
-  line-height: 1.2;
+  line-height: 1.4; /* BEST PRACTICE: Line-height aumentato */
 }
 
 .review-questions {
@@ -1991,7 +1991,7 @@
 }
 
 .option-letter {
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--edu-text-primary); /* Bianco, NON grigio/blu */
   flex-shrink: 0;
   min-width: 24px;
@@ -2455,7 +2455,7 @@
   border-radius: var(--edu-radius-md);
   box-shadow: var(--edu-shadow-lg);
   font-size: var(--fs-16);
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--edu-text-primary);
   display: flex;
   flex-direction: column;

@@ -144,7 +144,7 @@ p,
   height: 1.5px;
   background: var(--dash-blue-line);
   transition: width var(--transition-smooth);
-  box-shadow: 0 0 4px var(--dash-accent-glow);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* BEST PRACTICE ACCADEMICO: Shadow minimale, no glow */
 }
 
 .dashboard-container
@@ -199,7 +199,7 @@ p,
   --dash-bg-soft: #111111;
   --dash-surface: #1a1a1a;
   --dash-surface-elev: #252525;
-  --dash-surface-shiny: linear-gradient(135deg, #1f1f1f 0%, #1a1a1a 100%);
+  --dash-surface-shiny: #1a1a1a; /* BEST PRACTICE ACCADEMICO: Colore solido, no gradienti */
   --dash-border: rgba(255, 255, 255, 0.08);
   --dash-border-strong: rgba(255, 255, 255, 0.12);
   --dash-border-shiny: rgba(255, 255, 255, 0.15);
@@ -609,7 +609,7 @@ a[role="button"]:focus-visible {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--dash-blue-line), transparent);
+  background: transparent; /* BEST PRACTICE ACCADEMICO: No gradienti decorativi */
   opacity: 0.3;
   z-index: 1000;
   pointer-events: none;
@@ -1383,7 +1383,7 @@ a[role="button"]:focus-visible {
   height: 28px;
   background: var(--dash-surface-elev);
   border: 1px solid var(--dash-border);
-  border-radius: 14px;
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Max 8px, non 14px */
   transition: var(--transition-smooth);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
   flex-shrink: 0;
@@ -1404,11 +1404,11 @@ a[role="button"]:focus-visible {
 }
 
 .toggle-switch input[type="checkbox"]:checked + .toggle-slider {
-  background: linear-gradient(135deg, var(--dash-blue-line), var(--dash-accent));
+  background: var(--dash-blue-line); /* BEST PRACTICE ACCADEMICO: Colore solido, no gradienti */
   border-color: var(--dash-blue-line);
   box-shadow:
-    0 0 12px var(--dash-accent-glow),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    /* BEST PRACTICE ACCADEMICO: No glow effect */ inset 0 1px 0
+    rgba(255, 255, 255, 0.1);
 }
 
 .toggle-switch input[type="checkbox"]:checked + .toggle-slider::before {
@@ -1521,7 +1521,7 @@ a[role="button"]:focus-visible {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--dash-blue-line), transparent);
+  background: transparent; /* BEST PRACTICE ACCADEMICO: No gradienti decorativi */
   opacity: 0.3;
 }
 
@@ -1679,7 +1679,7 @@ a[role="button"]:focus-visible {
   height: 1.5px;
   background: var(--dash-blue-line);
   transition: width var(--transition-smooth);
-  box-shadow: 0 0 4px var(--dash-accent-glow);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* BEST PRACTICE ACCADEMICO: Shadow minimale, no glow */
 }
 
 .footer-link:hover {
@@ -1857,7 +1857,7 @@ a[role="button"]:focus-visible {
   height: 1.5px;
   background: var(--dash-blue-line);
   transition: width var(--transition-smooth);
-  box-shadow: 0 0 4px var(--dash-accent-glow);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* BEST PRACTICE ACCADEMICO: Shadow minimale, no glow */
 }
 
 .contacts-link:hover {
@@ -2545,7 +2545,7 @@ a[role="button"]:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+  background: rgba(59, 130, 246, 0.08); /* BEST PRACTICE ACCADEMICO: Colore solido, no gradienti */
   border: 1px solid rgba(59, 130, 246, 0.15);
   border-radius: var(--radius-md);
   color: var(--dash-text);
@@ -3064,7 +3064,7 @@ a[role="button"]:focus-visible {
   height: 1.5px;
   background: var(--dash-blue-line);
   transition: width var(--transition-smooth);
-  box-shadow: 0 0 4px var(--dash-accent-glow);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* BEST PRACTICE ACCADEMICO: Shadow minimale, no glow */
 }
 
 .panel-back:hover {
@@ -3414,12 +3414,12 @@ a[role="button"]:focus-visible {
 
 .reports-empty:hover .reports-empty-icon {
   opacity: 0.6;
-  transform: scale(1.05);
+  /* BEST PRACTICE ACCADEMICO: No transform scale */
 }
 
 .reports-empty-title {
   font-size: clamp(var(--fs-16, 16px), 2vw, var(--fs-20, 20px));
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   margin-bottom: var(--spacing-xs);
   color: var(--dash-text-soft);
   letter-spacing: -0.01em;
@@ -3662,7 +3662,7 @@ a[role="button"]:focus-visible {
   height: 2px;
   background: var(--dash-blue-line);
   transition: width var(--transition-smooth);
-  box-shadow: 0 0 8px var(--dash-accent-glow);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* BEST PRACTICE ACCADEMICO: Shadow minimale, no glow */
   z-index: 1;
 }
 
@@ -3914,7 +3914,7 @@ a[role="button"]:focus-visible {
 
 .empty-state-title {
   font-size: clamp(var(--fs-16, 16px), 2vw, var(--fs-18, 18px));
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   margin-bottom: var(--spacing-xs);
   color: var(--dash-text-soft);
   letter-spacing: -0.01em;
@@ -3973,7 +3973,7 @@ a[role="button"]:focus-visible {
   max-width: 400px;
   min-width: 280px;
   opacity: 0;
-  transform: translateY(20px) scale(0.95);
+  transform: translateY(20px); /* BEST PRACTICE ACCADEMICO: No transform scale */
   transition:
     opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -3982,7 +3982,7 @@ a[role="button"]:focus-visible {
 
 .dashboard-toast[data-visible="true"] {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translateY(0); /* BEST PRACTICE ACCADEMICO: No transform scale */
   pointer-events: auto;
 }
 
@@ -4063,13 +4063,7 @@ a[role="button"]:focus-visible {
 }
 
 .skeleton-line {
-  background: linear-gradient(
-    90deg,
-    var(--dash-surface-elev) 0%,
-    var(--dash-surface) 50%,
-    var(--dash-surface-elev) 100%
-  );
-  background-size: 200% 100%;
+  background: var(--dash-surface-elev); /* BEST PRACTICE ACCADEMICO: Colore solido, no gradienti */
   border-radius: var(--radius-sm);
   height: 1rem;
 }
@@ -4153,10 +4147,10 @@ a[role="button"]:focus-visible {
 /* BEST PRACTICE: Typography hierarchy per error states */
 .error-state-title {
   font-size: clamp(var(--fs-18, 18px), 2.5vw, var(--fs-24, 24px));
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--dash-text);
   margin-bottom: var(--spacing-xs);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em; /* BEST PRACTICE ACCADEMICO: Max -0.01em */
 }
 
 .error-state-message {
@@ -4452,7 +4446,7 @@ a[role="button"]:focus-visible {
 
 .quick-action-card:hover .quick-action-icon {
   opacity: 1;
-  transform: scale(1.05);
+  /* BEST PRACTICE ACCADEMICO: No transform scale */
 }
 
 .quick-action-icon {
@@ -4739,7 +4733,7 @@ a[role="button"]:focus-visible {
   height: 1.5px;
   background: var(--dash-blue-line);
   transition: width var(--transition-smooth);
-  box-shadow: 0 0 4px var(--dash-accent-glow);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* BEST PRACTICE ACCADEMICO: Shadow minimale, no glow */
 }
 
 .resource-link:hover {
@@ -4850,7 +4844,7 @@ a[role="button"]:focus-visible {
 }
 
 .admin-card:hover .admin-card-icon {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(59, 130, 246, 0.15));
+  background: rgba(59, 130, 246, 0.2); /* BEST PRACTICE ACCADEMICO: Colore solido, no gradienti */
   border-color: rgba(59, 130, 246, 0.4);
   box-shadow:
     0 4px 8px rgba(0, 0, 0, 0.3),
@@ -4864,11 +4858,11 @@ a[role="button"]:focus-visible {
 }
 
 .admin-card:hover .admin-card-icon svg {
-  filter: drop-shadow(0 0 4px var(--dash-accent-glow));
+  /* BEST PRACTICE ACCADEMICO: No glow effect */
 }
 
 .admin-card-primary .admin-card-icon {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(59, 130, 246, 0.15));
+  background: rgba(59, 130, 246, 0.2); /* BEST PRACTICE ACCADEMICO: Colore solido, no gradienti */
   border-color: rgba(59, 130, 246, 0.3);
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.2),
@@ -4964,7 +4958,7 @@ a[role="button"]:focus-visible {
   top: 0;
   bottom: 0;
   width: 2px;
-  background: linear-gradient(180deg, var(--dash-blue-line), transparent);
+  background: transparent; /* BEST PRACTICE ACCADEMICO: No gradienti decorativi */
   opacity: 0;
   transition: var(--transition-smooth);
   /* BEST PRACTICE ACCADEMICO: No glow effect */

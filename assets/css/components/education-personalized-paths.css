@@ -30,7 +30,7 @@
   max-width: 600px;
   background: var(--edu-card-bg);
   border: 1px solid var(--edu-border);
-  border-radius: 12px;
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Max 8px, non 12px */
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
@@ -174,7 +174,7 @@
   padding: var(--edu-spacing-lg);
   background: var(--edu-card-bg);
   border: 1px solid var(--edu-border);
-  border-radius: 12px;
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Max 8px, non 12px */
   transition: all var(--edu-transition-base);
 }
 
@@ -234,7 +234,7 @@
   padding: 0.25rem 0.75rem;
   background: rgba(59, 130, 246, 0.15);
   border: 1px solid rgba(59, 130, 246, 0.3);
-  border-radius: 12px;
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Max 8px, non 12px */
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--edu-primary);
@@ -330,15 +330,15 @@
   .pp-module-card {
     flex-direction: column;
   }
-  
+
   .pp-module-order {
     align-self: flex-start;
   }
-  
+
   .pp-actions {
     flex-direction: column;
   }
-  
+
   .pp-actions .btn {
     width: 100%;
   }

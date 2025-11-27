@@ -50,7 +50,7 @@
 .rp-question {
   background: var(--edu-card-bg);
   border: 1px solid var(--edu-border);
-  border-radius: 12px;
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Max 8px, non 12px */
   padding: var(--edu-spacing-lg);
 }
 
@@ -190,7 +190,7 @@
   .rp-actions {
     flex-direction: column;
   }
-  
+
   .rp-actions .btn {
     width: 100%;
   }
