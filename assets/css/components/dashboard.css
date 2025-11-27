@@ -439,19 +439,18 @@ a[role="button"] {
 .btn:hover,
 button:hover,
 a[role="button"]:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  /* BEST PRACTICE ACCADEMICO: No transform - hover sobrio */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* BEST PRACTICE ACCADEMICO: Shadow minimale */
   transition:
     background var(--transition-hover),
-    transform var(--transition-spring),
     box-shadow var(--transition-hover);
 }
 
 .btn:active,
 button:active,
 a[role="button"]:active {
-  transform: translateY(0);
-  transition: transform var(--transition-fast);
+  /* BEST PRACTICE ACCADEMICO: No transform */
+  transition: background var(--transition-fast);
 }
 
 .btn:focus-visible,
@@ -602,10 +601,10 @@ a[role="button"]:focus-visible {
 .dashboard-title {
   color: var(--dash-text);
   font-size: clamp(1.25rem, 3vw, 1.5rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
+  letter-spacing: -0.01em; /* BEST PRACTICE ACCADEMICO: Letter spacing ridotto */
   margin: 0;
-  line-height: 1.2;
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Line-height ottimale */
   font-family: var(--ff-sans, -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif);
   display: flex;
   align-items: center;
@@ -616,8 +615,8 @@ a[role="button"]:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-weight: 900;
-  letter-spacing: -0.03em;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 900 */
+  letter-spacing: -0.01em; /* BEST PRACTICE ACCADEMICO: Letter spacing ridotto */
   text-decoration: none;
   color: var(--dash-text);
   position: relative;
@@ -626,7 +625,7 @@ a[role="button"]:focus-visible {
 
 .dashboard-brand-word {
   color: var(--dash-text);
-  font-weight: 900;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 900 */
 }
 
 .dashboard-brand-dot {
@@ -641,7 +640,7 @@ a[role="button"]:focus-visible {
 
 .dashboard-brand-suffix {
   color: var(--dash-text-soft);
-  font-weight: 700;
+  font-weight: 500; /* BEST PRACTICE ACCADEMICO: Peso ridotto */
 }
 
 /* ===== DASHBOARD BRAND LOGO (SVG) ===== */
@@ -674,7 +673,7 @@ a[role="button"]:focus-visible {
 .dashboard-brand:hover .dashboard-brand-dot {
   background: var(--dash-blue-line);
   opacity: 1;
-  box-shadow: 0 0 8px var(--dash-accent-glow);
+  /* BEST PRACTICE ACCADEMICO: No glow effect */
 }
 
 .dashboard-title-separator {
@@ -776,40 +775,29 @@ a[role="button"]:focus-visible {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--dash-blue-line), transparent);
-  box-shadow: 0 0 12px var(--dash-accent-glow);
+  display: none; /* BEST PRACTICE ACCADEMICO: Rimossi gradienti decorativi */
 }
 
 .account-banner::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1px;
-  height: 100%;
-  background: linear-gradient(180deg, var(--dash-blue-line), transparent);
-  opacity: 0.4;
+  display: none; /* BEST PRACTICE ACCADEMICO: Rimossi gradienti decorativi */
 }
 
 .account-banner-guest {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.03), var(--dash-surface));
+  background: var(--dash-surface); /* BEST PRACTICE ACCADEMICO: Background solido, no gradient */
   border-color: var(--dash-border);
 }
 
 .account-banner-authenticated {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), var(--dash-surface));
+  background: var(--dash-surface); /* BEST PRACTICE ACCADEMICO: Background solido, no gradient */
   border-color: var(--dash-border-strong);
-  border-left: 2px solid var(--dash-blue-line);
+  border-left: 2px solid var(--dash-border-strong); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
 }
 
 .account-banner-desk {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), var(--dash-surface));
-  border-color: var(--dash-border-shiny);
-  border-left: 2px solid var(--dash-blue-line);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(59, 130, 246, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: var(--dash-surface-elev); /* BEST PRACTICE ACCADEMICO: Background solido, no gradient */
+  border-color: var(--dash-border-strong);
+  border-left: 2px solid var(--dash-border-strong); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* BEST PRACTICE ACCADEMICO: Shadow minimale, no glow */
 }
 
 .account-banner-content {
@@ -828,12 +816,10 @@ a[role="button"]:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  border-radius: var(--radius-md);
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  background: var(--dash-surface-elev); /* BEST PRACTICE ACCADEMICO: Background solido, no gradient */
+  border: 1px solid var(--dash-border);
+  border-radius: 6px; /* BEST PRACTICE ACCADEMICO: Border-radius ridotto */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* BEST PRACTICE ACCADEMICO: Shadow minimale */
 }
 
 .account-banner-info {
@@ -896,11 +882,11 @@ a[role="button"]:focus-visible {
   background: var(--dash-surface-elev);
   border-color: var(--dash-border-strong);
   color: var(--dash-text);
-  transform: scale(1.05);
+  /* BEST PRACTICE ACCADEMICO: No transform scale */
 }
 
 .btn-icon:active {
-  transform: scale(0.95);
+  /* BEST PRACTICE ACCADEMICO: No transform */
 }
 
 .btn-icon svg {
@@ -1471,8 +1457,8 @@ a[role="button"]:focus-visible {
   display: none !important; /* Nascosto di default, mostrato solo se logo non carica */
   align-items: center;
   gap: 0.35rem;
-  font-weight: 900;
-  letter-spacing: -0.03em;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 900 */
+  letter-spacing: -0.01em; /* BEST PRACTICE ACCADEMICO: Letter spacing ridotto */
 }
 
 .footer-logo-fallback.show {
@@ -1498,8 +1484,8 @@ a[role="button"]:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-weight: 900;
-  letter-spacing: -0.03em;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 900 */
+  letter-spacing: -0.01em; /* BEST PRACTICE ACCADEMICO: Letter spacing ridotto */
   transition: var(--transition-smooth);
 }
 
@@ -1518,14 +1504,14 @@ a[role="button"]:focus-visible {
 }
 
 .footer-brand:hover .footer-brand-dot {
-  background: var(--dash-blue-line);
+  background: var(--dash-text-soft); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
   opacity: 1;
-  box-shadow: 0 0 8px var(--dash-accent-glow);
+  /* BEST PRACTICE ACCADEMICO: No glow effect */
 }
 
 .footer-brand-suffix {
   color: var(--dash-text);
-  font-weight: 900;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 900 */
 }
 
 .footer-disclaimer {
@@ -1644,18 +1630,15 @@ a[role="button"]:focus-visible {
   position: relative;
   background: var(--dash-surface);
   border: 1px solid var(--dash-border-strong);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-xl);
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Border-radius ridotto (8px max) */
+  padding: var(--spacing-lg); /* BEST PRACTICE ACCADEMICO: Padding ridotto */
   max-width: 600px;
   width: 90%;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.5),
-    0 0 40px rgba(59, 130, 246, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transform: scale(0.95) translateY(20px);
-  transition: var(--transition-transform);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3); /* BEST PRACTICE ACCADEMICO: Shadow minimale, no glow */
+  /* BEST PRACTICE ACCADEMICO: No transform scale/translateY */
+  transition: opacity var(--transition-hover);
 }
 
 /* Status modal più grande */
@@ -1801,10 +1784,10 @@ a[role="button"]:focus-visible {
 
 .status-card-value {
   font-size: var(--fs-24, 24px);
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--dash-text);
   margin: 0;
-  line-height: 1.2;
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Line-height ottimale */
 }
 
 .status-services-section {
@@ -2061,16 +2044,7 @@ a[role="button"]:focus-visible {
 }
 
 .category-title::after {
-  content: "";
-  position: absolute;
-  bottom: -1px; /* Allineato con bordo più sottile */
-  left: 0;
-  width: 40px; /* Larghezza ridotta per aspetto più pulito */
-  height: 1px; /* Altezza ridotta */
-  background: linear-gradient(90deg, var(--dash-blue-line), transparent);
-  border-radius: 1px;
-  box-shadow: 0 0 4px var(--dash-accent-glow); /* Ombra ridotta */
-  opacity: 0.6; /* Opacità ridotta per aspetto più sottile */
+  display: none; /* BEST PRACTICE ACCADEMICO: Rimossi gradienti decorativi */
 }
 
 .category-title svg {
@@ -2175,23 +2149,20 @@ a[role="button"]:focus-visible {
     font-size: max(16px, var(--fs-14, 14px)) !important;
   }
 
-  /* BEST PRACTICE: Visual feedback per stati interattivi (Nielsen Norman Group, Material Design) */
+  /* BEST PRACTICE ACCADEMICO: Visual feedback sobrio - no transform */
   .module-card:active {
-    transform: scale(0.98);
     opacity: 0.9;
-    transition:
-      transform 0.1s ease,
-      opacity 0.1s ease;
+    transition: opacity 0.1s ease;
   }
 
   .btn:active,
   button:active {
-    transform: scale(0.95);
-    opacity: 0.8;
+    opacity: 0.85;
+    /* BEST PRACTICE ACCADEMICO: No transform scale */
   }
 
   .toggle-switch:active .toggle-slider {
-    transform: scale(0.9);
+    /* BEST PRACTICE ACCADEMICO: No transform scale */
   }
 
   /* BEST PRACTICE: Ridurre information density su mobile (Cognitive Load Theory) */
@@ -2232,7 +2203,7 @@ a[role="button"]:focus-visible {
   /* BEST PRACTICE: Visual hierarchy migliorata su mobile (F-Pattern/Z-Pattern, Gestalt Principles) */
   .module-title {
     font-size: 1rem; /* BEST PRACTICE: Minimo 16px per leggibilità mobile */
-    font-weight: 700;
+    font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
     color: var(--dash-text);
     margin-bottom: var(--spacing-xs);
     line-height: 1.5; /* BEST PRACTICE: Line-height ottimale */
@@ -2286,11 +2257,11 @@ a[role="button"]:focus-visible {
 
 /* ===== MODULE CARD ===== */
 .module-card {
-  background: var(--dash-surface-shiny);
+  background: var(--dash-surface); /* BEST PRACTICE ACCADEMICO: Background solido, no gradient */
   border: 1px solid var(--dash-border);
   border-left: 2px solid transparent;
-  border-radius: var(--radius-md);
-  padding: var(--spacing-xl);
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Border-radius ridotto (8px max) */
+  padding: var(--spacing-lg); /* BEST PRACTICE ACCADEMICO: Padding ridotto */
   cursor: pointer;
   text-decoration: none;
   color: inherit;
@@ -2299,74 +2270,39 @@ a[role="button"]:focus-visible {
   gap: var(--spacing-md);
   position: relative;
   overflow: hidden;
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); /* BEST PRACTICE ACCADEMICO: Shadow minimale */
   /* BEST PRACTICE: CSS Containment per isolare rendering (Performance Optimization) */
   contain: layout style paint;
-  /* BEST PRACTICE: Transitions separate per ogni proprietà (micro-interactions raffinate) */
+  /* BEST PRACTICE ACCADEMICO: Transitions minimali */
   transition:
     background var(--transition-hover),
-    border-color var(--transition-hover),
-    transform var(--transition-transform),
-    box-shadow var(--transition-smooth);
+    border-color var(--transition-hover);
 }
 
-/* BEST PRACTICE: will-change solo quando necessario (Performance Optimization) */
-.module-card:hover {
-  will-change: transform;
-}
-
-.module-card:not(:hover) {
-  will-change: auto;
-}
-
+/* BEST PRACTICE ACCADEMICO: Hover states minimali e sobri */
 .module-card::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: linear-gradient(180deg, var(--dash-blue-line), transparent);
-  opacity: 0;
-  transition: var(--transition-smooth);
-  box-shadow: 0 0 8px var(--dash-accent-glow);
+  display: none; /* BEST PRACTICE ACCADEMICO: Rimossi gradienti decorativi */
 }
 
 .module-card::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
-  opacity: 0;
-  transition: var(--transition-smooth);
+  display: none; /* BEST PRACTICE ACCADEMICO: Rimossi gradienti decorativi */
 }
 
-/* BEST PRACTICE: Hover states chiari e accessibili con microinterazioni */
+/* BEST PRACTICE ACCADEMICO: Hover states sobri - no transform, no glow */
 .module-card:hover {
   background: var(--dash-surface-elev);
   border-color: var(--dash-border-strong);
-  border-left-color: var(--dash-blue-line);
-  transform: translateY(-2px);
-  box-shadow:
-    0 8px 16px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(59, 130, 246, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  /* BEST PRACTICE: Microinterazione - migliora gerarchia al hover */
+  border-left-color: var(--dash-border-strong); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* BEST PRACTICE ACCADEMICO: Shadow minimale */
 }
 
 .module-card:hover .module-title {
-  color: var(--dash-accent);
-  text-shadow: 0 1px 3px rgba(59, 130, 246, 0.2);
+  color: var(--dash-text); /* BEST PRACTICE ACCADEMICO: No cambio colore, no text-shadow */
 }
 
 .module-card:hover .module-description {
   opacity: 1;
-  color: var(--dash-text);
+  color: var(--dash-text-soft); /* BEST PRACTICE ACCADEMICO: Colore neutro */
 }
 
 /* BEST PRACTICE: Focus su keyboard navigation */
@@ -2424,44 +2360,38 @@ a[role="button"]:focus-visible {
 }
 
 .module-card:hover .module-icon {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1));
-  border-color: rgba(59, 130, 246, 0.3);
-  box-shadow:
-    0 4px 8px rgba(0, 0, 0, 0.3),
-    0 0 12px rgba(59, 130, 246, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  background: var(--dash-surface); /* BEST PRACTICE ACCADEMICO: Background neutro */
+  border-color: var(--dash-border-strong);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* BEST PRACTICE ACCADEMICO: Shadow minimale */
 }
 
 .module-icon svg {
   width: 24px;
   height: 24px;
   stroke-width: 1.5;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  /* BEST PRACTICE ACCADEMICO: No filter drop-shadow */
   transition: var(--transition-smooth);
 }
 
 .module-card:hover .module-icon svg {
   stroke: var(--dash-text);
+  /* BEST PRACTICE ACCADEMICO: No transform, no glow */
 }
 
 .module-info {
   flex: 1;
 }
 
-/* BEST PRACTICE: Typography hierarchy migliorata */
+/* BEST PRACTICE ACCADEMICO: Typography sobria e professionale */
 .module-title {
   font-size: clamp(var(--fs-16, 16px), 2vw, var(--fs-20, 20px));
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   margin-bottom: var(--spacing-xs);
   color: var(--dash-text);
-  letter-spacing: -0.02em;
-  line-height: var(--lh-13, 1.3);
-  /* BEST PRACTICE: Better visual hierarchy */
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  /* BEST PRACTICE: Microinterazione - transizione fluida */
-  transition:
-    color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    text-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: -0.01em; /* BEST PRACTICE ACCADEMICO: Letter spacing ridotto */
+  line-height: 1.5; /* BEST PRACTICE ACCADEMICO: Line-height ottimale */
+  /* BEST PRACTICE ACCADEMICO: No text-shadow */
+  transition: color var(--transition-hover);
 }
 
 /* BEST PRACTICE: Leggibilità migliorata (WCAG AA) */
@@ -2488,11 +2418,11 @@ a[role="button"]:focus-visible {
 
 .module-card:hover .module-arrow {
   color: var(--dash-text);
-  transform: translateX(4px);
+  /* BEST PRACTICE ACCADEMICO: No transform */
 }
 
 .module-arrow svg {
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  /* BEST PRACTICE ACCADEMICO: No filter drop-shadow */
 }
 
 /* ===== MODULE FAVORITES SYSTEM (BEST PRACTICE: Prioritario rispetto a drag-and-drop) ===== */
@@ -2522,32 +2452,31 @@ a[role="button"]:focus-visible {
 }
 
 .module-favorite-btn:hover {
-  background: rgba(0, 0, 0, 0.5);
-  border-color: var(--dash-accent);
-  color: var(--dash-accent);
-  transform: scale(1.15);
-  /* BEST PRACTICE: Microinterazione - feedback hover più evidente */
-  box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--dash-surface-elev); /* BEST PRACTICE ACCADEMICO: Background neutro */
+  border-color: var(--dash-border-strong); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
+  color: var(--dash-text);
+  /* BEST PRACTICE ACCADEMICO: No transform scale */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15); /* BEST PRACTICE ACCADEMICO: Shadow minimale, no glow */
+  transition: all var(--transition-hover);
 }
 
 .module-favorite-btn:active {
-  transform: scale(0.85);
-  /* BEST PRACTICE: Microinterazione - feedback tattile più pronunciato */
-  transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  /* BEST PRACTICE ACCADEMICO: No transform scale */
+  opacity: 0.8;
+  transition: opacity var(--transition-fast);
 }
 
 .module-favorite-btn.favorited {
   opacity: 1;
-  background: var(--dash-accent-bg);
-  border-color: var(--dash-accent);
-  color: var(--dash-accent);
+  background: var(--dash-surface-elev); /* BEST PRACTICE ACCADEMICO: Background neutro */
+  border-color: var(--dash-border-strong);
+  color: var(--dash-text-soft); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
 }
 
 .module-favorite-btn.favorited:hover {
-  background: var(--dash-accent-bg);
-  border-color: var(--dash-accent-hover);
-  color: var(--dash-accent-hover);
+  background: var(--dash-surface);
+  border-color: var(--dash-border-strong);
+  color: var(--dash-text);
 }
 
 .module-favorite-btn svg {
@@ -2577,11 +2506,11 @@ a[role="button"]:focus-visible {
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    /* BEST PRACTICE ACCADEMICO: No transform translateY */
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    /* BEST PRACTICE ACCADEMICO: No transform */
   }
 }
 
@@ -2590,16 +2519,16 @@ a[role="button"]:focus-visible {
 }
 
 .favorites-category .category-title {
-  color: var(--dash-accent);
+  color: var(--dash-text); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
 }
 
 .favorites-category .category-title svg {
-  color: var(--dash-accent);
+  color: var(--dash-text-soft); /* BEST PRACTICE ACCADEMICO: Colore neutro */
 }
 
 .module-card[data-favorited="true"] {
-  border-left-color: var(--dash-accent);
-  border-left-width: 3px;
+  border-left-color: var(--dash-border-strong); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
+  border-left-width: 2px; /* BEST PRACTICE ACCADEMICO: Width ridotto */
 }
 
 /* ===== DRAG & DROP STYLES (DEPRECATED - Non più prioritario) ===== */
@@ -2615,21 +2544,17 @@ a[role="button"]:focus-visible {
 
 .module-card.dragging {
   opacity: 0.5;
-  transform: rotate(2deg) scale(0.95);
+  /* BEST PRACTICE ACCADEMICO: No transform rotate/scale */
   z-index: 1000;
   cursor: grabbing !important;
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.4),
-    0 0 30px rgba(59, 130, 246, 0.3) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important; /* BEST PRACTICE ACCADEMICO: Shadow minimale */
 }
 
 .module-card.drag-over {
-  border-color: var(--dash-blue-line) !important;
-  border-left-color: var(--dash-blue-line) !important;
+  border-color: var(--dash-border-strong) !important; /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
+  border-left-color: var(--dash-border-strong) !important;
   background: var(--dash-surface-elev) !important;
-  box-shadow:
-    0 0 0 2px rgba(59, 130, 246, 0.2),
-    0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important; /* BEST PRACTICE ACCADEMICO: Shadow minimale, no glow */
 }
 
 .module-drag-handle {
@@ -2759,7 +2684,7 @@ a[role="button"]:focus-visible {
   appearance: none;
   background: var(--dash-surface);
   border: 1px solid var(--dash-border-strong);
-  border-radius: 12px;
+  border-radius: 6px; /* BEST PRACTICE ACCADEMICO: Border-radius ridotto */
   position: relative;
   cursor: pointer;
   transition: var(--transition-smooth);
@@ -2826,8 +2751,7 @@ a[role="button"]:focus-visible {
   left: 0;
   width: 60px;
   height: 2px;
-  background: linear-gradient(90deg, var(--dash-blue-line), transparent);
-  box-shadow: 0 0 8px var(--dash-accent-glow);
+  display: none; /* BEST PRACTICE ACCADEMICO: Rimossi gradienti decorativi */
 }
 
 .settings-actions {
@@ -2869,11 +2793,11 @@ a[role="button"]:focus-visible {
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    /* BEST PRACTICE ACCADEMICO: No transform translateY */
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    /* BEST PRACTICE ACCADEMICO: No transform */
   }
 }
 
@@ -2885,14 +2809,7 @@ a[role="button"]:focus-visible {
 }
 
 .panel-header::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 60px;
-  height: 2px;
-  background: linear-gradient(90deg, var(--dash-blue-line), transparent);
-  box-shadow: 0 0 8px var(--dash-accent-glow);
+  display: none; /* BEST PRACTICE ACCADEMICO: Rimossi gradienti decorativi */
 }
 
 .panel-back {
@@ -2940,12 +2857,11 @@ a[role="button"]:focus-visible {
 /* BEST PRACTICE: Typography hierarchy migliorata (Design System Accademico 2025) */
 .panel-title {
   font-size: clamp(var(--fs-18, 18px), 2.5vw, 24px);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
+  letter-spacing: -0.01em; /* BEST PRACTICE ACCADEMICO: Letter spacing ridotto */
   margin-bottom: var(--spacing-xs);
   color: var(--dash-text);
-  /* BEST PRACTICE: Better visual hierarchy */
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  /* BEST PRACTICE ACCADEMICO: No text-shadow */
 }
 
 /* BEST PRACTICE: Leggibilità migliorata (WCAG AA) */
@@ -3261,10 +3177,10 @@ a[role="button"]:focus-visible {
 
 /* ===== ON-DEMAND PANEL ===== */
 .on-demand-card {
-  padding: var(--spacing-xl);
+  padding: var(--spacing-lg); /* BEST PRACTICE ACCADEMICO: Padding ridotto */
   background: var(--dash-surface);
   border: 1px solid var(--dash-border);
-  border-radius: var(--radius-lg);
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Border-radius ridotto (8px max) */
   max-width: 600px;
 }
 
@@ -3301,10 +3217,10 @@ a[role="button"]:focus-visible {
 
 /* ===== ACCESS PANEL ===== */
 .access-card {
-  padding: var(--spacing-xl);
+  padding: var(--spacing-lg); /* BEST PRACTICE ACCADEMICO: Padding ridotto */
   background: var(--dash-surface);
   border: 1px solid var(--dash-border);
-  border-radius: var(--radius-lg);
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Border-radius ridotto (8px max) */
   max-width: 600px;
 }
 
@@ -4080,13 +3996,12 @@ a[role="button"]:focus-visible {
 /* BEST PRACTICE: Typography hierarchy migliorata (Design System Accademico 2025) */
 .stat-value {
   font-size: clamp(24px, 4vw, 36px);
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--dash-text);
   margin-bottom: var(--spacing-xs);
-  line-height: 1.2;
-  letter-spacing: -0.03em;
-  /* BEST PRACTICE: Better contrast for numbers */
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Line-height ottimale */
+  letter-spacing: -0.01em; /* BEST PRACTICE ACCADEMICO: Letter spacing ridotto */
+  /* BEST PRACTICE ACCADEMICO: No text-shadow */
 }
 
 .stat-change {
@@ -4109,13 +4024,12 @@ a[role="button"]:focus-visible {
 /* BEST PRACTICE: Typography hierarchy per section titles */
 .overview-section-title {
   font-size: clamp(var(--fs-16, 16px), 2vw, var(--fs-20, 20px));
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--dash-text);
   margin-bottom: var(--spacing-lg);
   letter-spacing: -0.01em;
   line-height: var(--lh-14, 1.4);
-  /* BEST PRACTICE: Better visual hierarchy */
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  /* BEST PRACTICE ACCADEMICO: No text-shadow */
 }
 
 .recent-activity-list {
@@ -4541,7 +4455,7 @@ a[role="button"]:focus-visible {
 /* BEST PRACTICE: Typography hierarchy per resource cards */
 .resource-title {
   font-size: clamp(var(--fs-16, 16px), 2vw, var(--fs-20, 20px));
-  font-weight: 700;
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--dash-text);
   margin-bottom: var(--spacing-md);
   letter-spacing: -0.01em;
@@ -4624,32 +4538,20 @@ a[role="button"]:focus-visible {
   height: 2px;
   background: var(--dash-blue-line);
   transition: width var(--transition-smooth);
-  box-shadow: 0 0 8px var(--dash-accent-glow);
+  /* BEST PRACTICE ACCADEMICO: No glow effect */
   z-index: 1;
 }
 
 .admin-card::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: linear-gradient(180deg, var(--dash-blue-line), transparent);
-  opacity: 0;
-  transition: var(--transition-smooth);
-  box-shadow: 0 0 8px var(--dash-accent-glow);
+  display: none; /* BEST PRACTICE ACCADEMICO: Rimossi gradienti decorativi */
 }
 
-/* BEST PRACTICE: Hover states migliorati per admin cards */
+/* BEST PRACTICE ACCADEMICO: Hover states sobri - no transform, no glow */
 .admin-card:hover {
   border-color: var(--dash-border-strong);
-  border-left-color: var(--dash-blue-line);
-  transform: translateY(-2px);
-  box-shadow:
-    0 8px 16px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(59, 130, 246, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-left-color: var(--dash-border-strong); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
+  /* BEST PRACTICE ACCADEMICO: No transform translateY */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* BEST PRACTICE ACCADEMICO: Shadow minimale */
 }
 
 /* BEST PRACTICE: Focus indicators per admin cards */
@@ -4811,7 +4713,7 @@ a[role="button"]:focus-visible {
   background: linear-gradient(180deg, var(--dash-blue-line), transparent);
   opacity: 0;
   transition: var(--transition-smooth);
-  box-shadow: 0 0 8px var(--dash-accent-glow);
+  /* BEST PRACTICE ACCADEMICO: No glow effect */
 }
 
 .broker-card::after {
@@ -4823,15 +4725,15 @@ a[role="button"]:focus-visible {
   height: 2px;
   background: var(--dash-blue-line);
   transition: width var(--transition-smooth);
-  box-shadow: 0 0 8px var(--dash-accent-glow);
+  /* BEST PRACTICE ACCADEMICO: No glow effect */
   z-index: 1;
 }
 
 .broker-card:hover {
   background: var(--dash-surface-elev);
   border-color: var(--dash-border-strong);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  /* BEST PRACTICE ACCADEMICO: No transform translateY */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* BEST PRACTICE ACCADEMICO: Shadow minimale */
 }
 
 .broker-card:hover::before {
@@ -4948,23 +4850,20 @@ a[role="button"]:focus-visible {
   position: relative;
   background: var(--dash-surface);
   border: 1px solid var(--dash-border-strong);
-  border-radius: var(--radius-lg);
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Border-radius ridotto (8px max) */
   width: 90%;
   max-width: 600px;
   max-height: 80vh;
   overflow: hidden;
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 40px rgba(59, 130, 246, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transform: scale(0.95) translateY(-20px);
-  transition: var(--transition-transform);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3); /* BEST PRACTICE ACCADEMICO: Shadow minimale, no glow */
+  /* BEST PRACTICE ACCADEMICO: No transform scale/translateY */
+  transition: opacity var(--transition-hover);
   display: flex;
   flex-direction: column;
 }
 
 .global-search-modal.active .global-search-content {
-  transform: scale(1) translateY(0);
+  /* BEST PRACTICE ACCADEMICO: No transform */
 }
 
 .global-search-header {
@@ -5898,23 +5797,20 @@ textarea:focus-visible,
   position: relative;
   background: var(--dash-surface);
   border: 1px solid var(--dash-border-strong);
-  border-radius: var(--radius-lg);
+  border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Border-radius ridotto (8px max) */
   width: 90%;
   max-width: 600px;
   max-height: 80vh;
   overflow: hidden;
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 40px rgba(59, 130, 246, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transform: scale(0.95) translateY(-20px);
-  transition: var(--transition-transform);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3); /* BEST PRACTICE ACCADEMICO: Shadow minimale, no glow */
+  /* BEST PRACTICE ACCADEMICO: No transform scale/translateY */
+  transition: opacity var(--transition-hover);
   display: flex;
   flex-direction: column;
 }
 
 .shortcuts-help-modal.active .shortcuts-help-content {
-  transform: scale(1) translateY(0);
+  /* BEST PRACTICE ACCADEMICO: No transform */
 }
 
 .shortcuts-help-header {
@@ -6190,7 +6086,7 @@ textarea:focus-visible,
   z-index: 10001;
   padding: var(--spacing-md);
   background: var(--dash-surface-elev);
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  border-radius: 0 0 8px 8px; /* BEST PRACTICE ACCADEMICO: Border-radius ridotto (8px max) */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transition:
     transform 0.2s ease,
