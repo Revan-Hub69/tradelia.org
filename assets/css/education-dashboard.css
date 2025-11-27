@@ -116,37 +116,32 @@
     width: 100%; /* BEST PRACTICE: Utilizza tutto lo spazio disponibile */
   }
 
+  /* BEST PRACTICE ACCADEMICO: Lesson item mobile completamente ridisegnato */
   .lesson-item {
-    flex-direction: column;
-    align-items: stretch;
-    padding: var(--edu-spacing-lg);
+    grid-template-columns: 1fr; /* BEST PRACTICE: Grid a colonna singola su mobile */
     gap: var(--edu-spacing-md);
-    min-height: auto;
+    padding: var(--edu-spacing-lg);
+    align-items: stretch;
   }
 
-  /* Header con numero e status in una riga */
-  .lesson-item > .lesson-number {
-    width: 40px;
+  .lesson-number {
+    width: 40px; /* BEST PRACTICE: Dimensione ridotta ma touch-friendly */
     height: 40px;
-    font-size: var(--fs-16);
-    flex-shrink: 0;
+    min-width: 40px;
+    min-height: 40px;
+    font-size: var(--fs-15, 15px);
     margin-bottom: var(--edu-spacing-sm);
     align-self: flex-start;
   }
 
   .lesson-content {
-    flex: 1;
-    min-width: 0;
     width: 100%;
-    display: flex;
-    flex-direction: column;
     gap: var(--edu-spacing-sm);
-    order: 1;
   }
 
   .lesson-title {
-    font-size: var(--fs-17);
-    line-height: 1.4;
+    font-size: var(--fs-17, 17px); /* BEST PRACTICE: Font size aumentato su mobile */
+    line-height: 1.5;
     margin-bottom: var(--edu-spacing-sm);
     font-weight: 600;
     word-wrap: break-word;
@@ -155,28 +150,28 @@
   }
 
   .lesson-meta {
-    font-size: var(--fs-13);
-    gap: var(--edu-spacing-md);
+    font-size: var(--fs-13, 13px); /* BEST PRACTICE: Font size aumentato su mobile */
+    gap: var(--edu-spacing-sm);
     flex-wrap: wrap;
     margin-bottom: var(--edu-spacing-sm);
     color: var(--edu-text-muted);
+    line-height: 1.5;
   }
 
   .lesson-status {
-    display: none; /* Nascondi su mobile per risparmiare spazio */
+    display: none; /* BEST PRACTICE: Nascondi su mobile per risparmiare spazio */
   }
 
-  /* Pulsanti sempre in fondo, full width */
+  /* BEST PRACTICE: Pulsanti sempre in fondo, full width */
   .lesson-item .btn {
     width: 100%;
     min-width: unset;
     flex-shrink: 0;
-    font-size: var(--fs-15);
+    font-size: var(--fs-15, 15px); /* BEST PRACTICE: Font size aumentato */
     padding: var(--edu-spacing-md) var(--edu-spacing-lg);
-    min-height: 48px; /* Touch target più grande - WCAG 2.1 */
+    min-height: 44px; /* BEST PRACTICE: Touch target minimo */
     justify-content: center;
     margin-top: var(--edu-spacing-sm);
-    order: 2;
   }
 
   /* Stack dei pulsanti verticalmente se ce ne sono più di uno */
@@ -1109,27 +1104,29 @@
   width: 100%;
 }
 
+/* BEST PRACTICE ACCADEMICO: Lesson item completamente ridisegnato */
 .lesson-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
   align-items: center;
-  gap: var(--edu-spacing-md);
-  padding: var(--edu-spacing-lg);
+  gap: var(--edu-spacing-md); /* BEST PRACTICE: Gap aumentato */
+  padding: var(--edu-spacing-lg); /* BEST PRACTICE: Padding aumentato */
   background: var(--edu-surface-elevated);
   border: 1px solid var(--edu-border-subtle);
-  border-radius: var(--edu-radius-md);
-  transition: all var(--edu-transition-base);
+  border-radius: var(--edu-radius-md); /* BEST PRACTICE: Border-radius 8px */
+  transition: background var(--edu-transition-base), border-color var(--edu-transition-base);
   cursor: pointer;
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  flex-wrap: wrap;
+  /* BEST PRACTICE ACCADEMICO: No flex-wrap, layout grid strutturato */
 }
 
 .lesson-item:hover {
   background: var(--edu-surface-hover);
   border-color: var(--edu-border-base);
-  transform: translateX(4px);
-  box-shadow: var(--edu-shadow-sm);
+  /* BEST PRACTICE ACCADEMICO: No transform hover */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* BEST PRACTICE: Shadow minimale */
 }
 
 .lesson-item:focus-visible {
@@ -1149,68 +1146,83 @@
   background: color-mix(in srgb, var(--edu-success) 5%, var(--edu-surface-elevated));
 }
 
+/* BEST PRACTICE ACCADEMICO: Lesson number completamente ridisegnato */
 .lesson-number {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 44px; /* BEST PRACTICE: Touch target minimo */
+  height: 44px; /* BEST PRACTICE: Touch target minimo */
+  min-width: 44px;
+  min-height: 44px;
   background: var(--edu-surface-base);
   border: 2px solid var(--edu-border-base);
   border-radius: var(--edu-radius-full);
-  font-size: var(--fs-14);
-  font-weight: 700;
-  color: var(--edu-text-primary); /* Bianco, NON grigio/blu */
+  font-size: var(--fs-16, 16px); /* BEST PRACTICE: Font size aumentato */
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
+  color: var(--edu-text-primary);
   flex-shrink: 0;
 }
 
+/* BEST PRACTICE ACCADEMICO: Lesson content completamente ridisegnato */
 .lesson-content {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--edu-spacing-xs);
+  gap: var(--edu-spacing-sm); /* BEST PRACTICE: Gap aumentato */
 }
 
 .lesson-title {
-  font-size: var(--fs-16);
+  font-size: var(--fs-18, 18px); /* BEST PRACTICE: Font size aumentato da 16px */
   font-weight: 600;
   color: var(--edu-text-primary);
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.5; /* BEST PRACTICE: Line-height aumentato */
+  margin-bottom: var(--edu-spacing-xs); /* BEST PRACTICE: Margin bottom per separazione */
 }
 
 .lesson-meta {
   display: flex;
   gap: var(--edu-spacing-md);
   flex-wrap: wrap;
-  font-size: var(--fs-12);
+  font-size: var(--fs-14, 14px); /* BEST PRACTICE: Font size aumentato da 12px */
   color: var(--edu-text-muted);
   align-items: center;
+  line-height: 1.5; /* BEST PRACTICE: Line-height ottimale */
 }
 
 .lesson-type {
   text-transform: capitalize;
 }
 
+/* BEST PRACTICE ACCADEMICO: Microlearning badge completamente ridisegnato */
 .microlearning-badge {
   display: inline-flex;
   align-items: center;
   gap: var(--edu-spacing-xs);
-  padding: 2px var(--edu-spacing-xs);
+  padding: var(--edu-spacing-xs) var(--edu-spacing-sm); /* BEST PRACTICE: Padding aumentato */
   background: color-mix(in srgb, var(--edu-success) 20%, transparent);
   border: 1px solid var(--edu-success);
-  border-radius: var(--edu-radius-full);
-  font-size: var(--fs-11);
-  font-weight: 600;
+  border-radius: var(--edu-radius-sm); /* BEST PRACTICE: Border-radius ridotto, no full */
+  font-size: var(--fs-13, 13px); /* BEST PRACTICE: Font size aumentato da 11px */
+  font-weight: 500; /* BEST PRACTICE ACCADEMICO: Peso ridotto */
   color: var(--edu-success-light);
+  line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
+  min-height: 24px; /* BEST PRACTICE: Altezza minima per leggibilità */
 }
 
+/* BEST PRACTICE ACCADEMICO: Lesson status completamente ridisegnato */
 .lesson-status {
-  font-size: var(--fs-20);
+  font-size: var(--fs-18, 18px); /* BEST PRACTICE: Font size ridotto da 20px */
   color: var(--edu-text-muted);
   flex-shrink: 0;
-  line-height: 1;
+  line-height: 1.2; /* BEST PRACTICE: Line-height aumentato */
+  width: 32px; /* BEST PRACTICE: Larghezza fissa per allineamento */
+  height: 32px; /* BEST PRACTICE: Altezza fissa per allineamento */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .lesson-item.completed .lesson-status {

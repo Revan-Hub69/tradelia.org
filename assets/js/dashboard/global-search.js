@@ -48,6 +48,8 @@ function createSearchModal() {
   modal.setAttribute("role", "dialog");
   modal.setAttribute("aria-label", "Ricerca globale");
   modal.setAttribute("aria-modal", "true");
+  // BEST PRACTICE: aria-hidden inizialmente true (modal chiuso)
+  modal.setAttribute("aria-hidden", "true");
   modal.innerHTML = `
     <div class="global-search-overlay" aria-hidden="true"></div>
     <div class="global-search-content">
@@ -277,16 +279,20 @@ function openSearch() {
   document.body.style.overflow = "hidden";
   SEARCH_STATE.isOpen = true;
 
+  // BEST PRACTICE: Rimuovi aria-hidden PRIMA di dare focus per evitare errori accessibilità
+  modal.removeAttribute("aria-hidden");
+  modal.setAttribute("aria-hidden", "false");
+
   const input = document.getElementById("global-search-input");
   if (input) {
-    input.focus();
-    if (SEARCH_STATE.query) {
-      input.value = SEARCH_STATE.query;
-    }
+    // BEST PRACTICE: Focus dopo aver rimosso aria-hidden
+    setTimeout(() => {
+      input.focus();
+      if (SEARCH_STATE.query) {
+        input.value = SEARCH_STATE.query;
+      }
+    }, 0);
   }
-
-  // Update ARIA
-  modal.setAttribute("aria-hidden", "false");
 }
 
 /**
@@ -296,6 +302,12 @@ function closeSearch() {
   const modal = document.getElementById("global-search-modal");
   if (!modal) {
     return;
+  }
+
+  // BEST PRACTICE: Rimuovi focus da elementi dentro modal PRIMA di nasconderlo
+  const focusedElement = document.activeElement;
+  if (modal.contains(focusedElement)) {
+    focusedElement.blur();
   }
 
   modal.classList.remove("active");
@@ -310,7 +322,7 @@ function closeSearch() {
     SEARCH_STATE.selectedIndex = -1;
   }
 
-  // Update ARIA
+  // BEST PRACTICE: Imposta aria-hidden DOPO aver rimosso focus
   modal.setAttribute("aria-hidden", "true");
 }
 
