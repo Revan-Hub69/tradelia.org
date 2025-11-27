@@ -184,7 +184,8 @@ function renderModuleVisibilityToggles() {
 
 function applyDensity(density) {
   document.body.setAttribute("data-density", density);
-  // TODO: Applicare stili CSS per densità
+  // BEST PRACTICE: Stili CSS applicati tramite attributo data-density
+  // Gli stili sono definiti in dashboard.css con selettori [data-density="compact"] etc.
 }
 
 async function handleExportData() {

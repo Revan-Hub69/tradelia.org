@@ -210,7 +210,7 @@
   font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
   color: var(--edu-text-primary);
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Min 1.4 per leggibilità */
   flex: 1;
 }
 

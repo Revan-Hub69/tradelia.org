@@ -39,7 +39,7 @@ p,
   margin-bottom: var(--spacing-xl); /* BEST PRACTICE ACCADEMICO: Spaziatura ritmica */
 }
 
-@media (min-width: 1024px) {
+@media (min-width: var(--breakpoint-lg, 1024px)) {
   .module-category,
   .panel-view,
   .overview-section {
@@ -2112,7 +2112,7 @@ a[role="button"]:focus-visible {
 }
 
 /* BEST PRACTICE ACCADEMICO: Desktop - spaziatura maggiore per migliore leggibilità */
-@media (min-width: 1024px) {
+@media (min-width: var(--breakpoint-lg, 1024px)) {
   .module-category {
     margin-bottom: var(
       --spacing-2xl
@@ -2149,7 +2149,7 @@ a[role="button"]:focus-visible {
 }
 
 /* Desktop: Titoli più grandi e spaziati per migliore gerarchia accademica */
-@media (min-width: 1024px) {
+@media (min-width: var(--breakpoint-lg, 1024px)) {
   .category-title {
     font-size: clamp(var(--fs-18, 18px), 2.5vw, var(--fs-22, 22px));
     margin-bottom: var(--spacing-lg);
@@ -2434,7 +2434,7 @@ a[role="button"]:focus-visible {
 }
 
 /* BEST PRACTICE ACCADEMICO: Desktop - card identiche (consistenza) */
-@media (min-width: 1024px) {
+@media (min-width: var(--breakpoint-lg, 1024px)) {
   .module-card {
     background: var(
       --dash-surface
@@ -2455,7 +2455,7 @@ a[role="button"]:focus-visible {
 }
 
 /* BEST PRACTICE ACCADEMICO: Desktop - nessun pseudo-elemento decorativo (consistenza mobile/desktop) */
-@media (min-width: 1024px) {
+@media (min-width: var(--breakpoint-lg, 1024px)) {
   .module-card::before,
   .module-card::after {
     display: none; /* BEST PRACTICE ACCADEMICO: Consistenza mobile/desktop */
@@ -2482,7 +2482,7 @@ a[role="button"]:focus-visible {
 }
 
 /* BEST PRACTICE ACCADEMICO: Desktop - hover states identici (consistenza mobile/desktop) */
-@media (min-width: 1024px) {
+@media (min-width: var(--breakpoint-lg, 1024px)) {
   .module-card:hover {
     background: var(--dash-surface-elev);
     border-color: var(--dash-border-strong);
@@ -2596,7 +2596,7 @@ a[role="button"]:focus-visible {
 }
 
 /* BEST PRACTICE ACCADEMICO: Desktop - tipografia identica (consistenza) */
-@media (min-width: 1024px) {
+@media (min-width: var(--breakpoint-lg, 1024px)) {
   .module-title {
     font-size: clamp(var(--fs-18, 18px), 2.5vw, var(--fs-22, 22px));
     font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600 anche su desktop */
@@ -2624,7 +2624,7 @@ a[role="button"]:focus-visible {
 }
 
 /* BEST PRACTICE ACCADEMICO: Desktop - descrizioni identiche (consistenza) */
-@media (min-width: 1024px) {
+@media (min-width: var(--breakpoint-lg, 1024px)) {
   .module-description {
     font-size: var(--fs-14, 14px); /* BEST PRACTICE ACCADEMICO: Font size aumentato su desktop */
     line-height: 1.7;
@@ -3122,7 +3122,7 @@ a[role="button"]:focus-visible {
 }
 
 /* BEST PRACTICE ACCADEMICO: Desktop - descrizione più grande */
-@media (min-width: 1024px) {
+@media (min-width: var(--breakpoint-lg, 1024px)) {
   .panel-description {
     font-size: var(--fs-15, 15px); /* BEST PRACTICE: Font size aumentato su desktop */
     line-height: 1.7; /* BEST PRACTICE: Line-height aumentato su desktop */
@@ -3138,7 +3138,7 @@ a[role="button"]:focus-visible {
   /* BEST PRACTICE: Rimuovi contenitori multipli - tutto dentro è già gestito */
 }
 
-@media (min-width: 1024px) {
+@media (min-width: var(--breakpoint-lg, 1024px)) {
   .panel-content {
     padding: var(--spacing-lg);
   }
@@ -3156,7 +3156,7 @@ a[role="button"]:focus-visible {
   padding: var(--spacing-sm);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: var(--breakpoint-lg, 1024px)) {
   .panel-content #education-container,
   .panel-content .education-container,
   .panel-content .education-module-view,
@@ -6140,7 +6140,7 @@ textarea:focus-visible,
 }
 
 /* BEST PRACTICE ACCADEMICO: Desktop - widget flottante visibile */
-@media (min-width: 1024px) {
+@media (min-width: var(--breakpoint-lg, 1024px)) {
   .keyboard-shortcuts {
     display: block; /* BEST PRACTICE: Visibile solo su desktop */
   }

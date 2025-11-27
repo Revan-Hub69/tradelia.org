@@ -30,7 +30,7 @@
   text-align: center;
 }
 
-@media (max-width: 768px) {
+@media (max-width: calc(var(--breakpoint-md, 768px) - 1px)) {
   .hero-content {
     text-align: left;
   }
@@ -100,14 +100,14 @@
   margin-bottom: var(--sp-8);
 }
 
-@media (min-width: 768px) {
+@media (min-width: var(--breakpoint-md, 768px)) {
   .hero-plan-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--sp-6);
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: var(--breakpoint-lg, 1024px)) {
   .hero-plan-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: var(--sp-6);
@@ -140,7 +140,7 @@
   font-weight: 600;
   color: var(--ink);
   margin-bottom: var(--sp-3);
-  line-height: 1.3;
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Min 1.4 per leggibilità */
 }
 
 .hero-plan-card ul {
@@ -222,7 +222,7 @@
   margin: var(--sp-16) 0;
 }
 
-@media (min-width: 768px) {
+@media (min-width: var(--breakpoint-md, 768px)) {
   .hero-features {
     grid-template-columns: repeat(3, 1fr);
     gap: var(--sp-8);
@@ -379,14 +379,14 @@
   margin-top: var(--sp-12);
 }
 
-@media (min-width: 768px) {
+@media (min-width: var(--breakpoint-md, 768px)) {
   .brokers-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--sp-8);
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: var(--breakpoint-lg, 1024px)) {
   .brokers-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -506,7 +506,7 @@
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
+@media (max-width: calc(var(--breakpoint-md, 768px) - 1px)) {
   .hero-section {
     padding: 6rem 0 4rem;
   }
