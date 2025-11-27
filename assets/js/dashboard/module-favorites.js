@@ -252,8 +252,20 @@ export function createFavoritesSection() {
 
   const favorites = getFavorites();
 
+  // BEST PRACTICE: Rimuovi tutte le sezioni preferiti duplicate prima di creare/aggiornare
+  const existingSections = modulesView.querySelectorAll("#favorites-section, .favorites-category");
+  let favoritesSection = null;
+
+  if (existingSections.length > 0) {
+    // Usa la prima sezione esistente
+    favoritesSection = existingSections[0];
+    // Rimuovi tutte le altre sezioni duplicate
+    for (let i = 1; i < existingSections.length; i++) {
+      existingSections[i].remove();
+    }
+  }
+
   // BEST PRACTICE: Non rimuovere la sezione, aggiorna solo il contenuto per evitare flash
-  let favoritesSection = document.getElementById("favorites-section");
   let favoritesGrid = null;
 
   if (!favoritesSection) {
@@ -286,10 +298,10 @@ export function createFavoritesSection() {
     } else {
       modulesView.insertBefore(favoritesSection, modulesView.firstChild);
     }
-  } else {
-    // Se esiste, trova la griglia esistente
-    favoritesGrid = favoritesSection.querySelector(".favorites-grid");
   }
+
+  // Trova la griglia esistente (sia se la sezione esisteva già che se è stata appena creata)
+  favoritesGrid = favoritesSection.querySelector(".favorites-grid");
 
   // Crea o aggiorna la griglia
   if (!favoritesGrid) {
