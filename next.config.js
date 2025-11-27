@@ -10,6 +10,11 @@ const nextConfig = {
         source: "/dashboard.html",
         destination: "/dashboard",
       },
+      // Se vuoi servire index.html statico invece di redirect, decommenta:
+      // {
+      //   source: "/",
+      //   destination: "/index.html",
+      // },
     ];
   },
 
