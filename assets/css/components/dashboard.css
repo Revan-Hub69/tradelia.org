@@ -991,12 +991,12 @@ a[role="button"]:focus-visible {
   }
 
   .account-banner-actions .toggle-label {
-    font-size: var(--fs-9, 9px) !important;
+    font-size: 0.75rem !important; /* BEST PRACTICE: Minimo 12px per leggibilità */
     white-space: nowrap !important;
     order: 2 !important;
     margin: 0 !important;
-    margin-left: 4px !important;
-    line-height: 1 !important;
+    margin-left: var(--spacing-xs) !important;
+    line-height: 1.4 !important; /* BEST PRACTICE: Line-height ottimale */
     text-transform: uppercase !important;
     letter-spacing: 0.03em !important;
   }
@@ -1018,16 +1018,19 @@ a[role="button"]:focus-visible {
   }
 
   .account-banner-actions .btn {
-    font-size: var(--fs-10, 10px);
-    padding: 4px var(--spacing-xs);
-    min-height: 28px;
+    font-size: 0.8125rem; /* BEST PRACTICE: Minimo 13px per leggibilità */
+    padding: var(--spacing-xs) var(--spacing-sm); /* BEST PRACTICE: Padding adeguato per touch */
+    min-height: 44px; /* BEST PRACTICE: Touch target minimo */
     white-space: nowrap;
     flex-shrink: 0;
+    line-height: 1.5;
   }
 
   .account-banner-actions .btn-icon {
-    width: 28px;
-    height: 28px;
+    width: 44px; /* BEST PRACTICE: Touch target minimo */
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
   }
 
   .account-banner-actions .btn-icon svg {
@@ -1094,14 +1097,14 @@ a[role="button"]:focus-visible {
   }
 
   .banner-toggle-label {
-    font-size: var(--fs-10, 10px);
+    font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
     color: var(--dash-text-soft);
     font-weight: 600;
     white-space: nowrap;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     order: 2;
-    line-height: 1;
+    line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
   }
 }
 
@@ -1110,14 +1113,22 @@ a[role="button"]:focus-visible {
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  gap: 6px !important;
+  gap: var(--spacing-xs) !important; /* BEST PRACTICE: Gap adeguato */
   cursor: pointer;
   user-select: none;
-  padding: 4px 8px;
+  padding: var(--spacing-xs) var(--spacing-sm); /* BEST PRACTICE: Padding adeguato per touch */
   border-radius: var(--radius-sm);
   transition: var(--transition-hover);
   flex-shrink: 0;
   white-space: nowrap;
+  min-height: 44px; /* BEST PRACTICE: Touch target minimo */
+}
+
+@media (max-width: 768px) {
+  .banner-toggle-compact {
+    min-height: 44px; /* BEST PRACTICE: Touch target minimo su mobile */
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
 }
 
 .banner-toggle-compact:hover {
@@ -1199,12 +1210,14 @@ a[role="button"]:focus-visible {
 .account-banner-badge {
   display: inline-flex;
   align-items: center;
-  padding: 2px var(--spacing-sm);
-  font-size: var(--fs-11, 11px);
+  padding: var(--spacing-xs) var(--spacing-sm); /* BEST PRACTICE: Padding adeguato */
+  font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
   font-weight: 600;
   border-radius: var(--radius-sm);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
+  min-height: 24px; /* BEST PRACTICE: Altezza minima per leggibilità */
 }
 
 .badge-pending {
@@ -1301,16 +1314,22 @@ a[role="button"]:focus-visible {
 }
 
 .toggle-label {
-  font-size: var(--fs-11, 11px);
+  font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
   color: var(--dash-text-soft);
   font-weight: 600;
   white-space: nowrap;
-  line-height: 1.2;
+  line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   order: 2;
-  margin-top: 2px;
+  margin-top: var(--spacing-xs);
+}
+
+@media (max-width: 768px) {
+  .toggle-label {
+    font-size: 0.8125rem; /* BEST PRACTICE: Minimo 13px su mobile */
+  }
 }
 
 /* BEST PRACTICE: Toggle nel banner - label affiancata allo switch */
@@ -1354,7 +1373,7 @@ a[role="button"]:focus-visible {
   border: 1px solid var(--dash-border-strong);
   border-radius: var(--radius-sm);
   padding: var(--spacing-xs) var(--spacing-sm);
-  font-size: var(--fs-11, 11px);
+  font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
   color: var(--dash-text-soft);
   white-space: nowrap;
   opacity: 0;
@@ -1363,6 +1382,13 @@ a[role="button"]:focus-visible {
   pointer-events: none;
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
+}
+
+@media (max-width: 768px) {
+  .popover-tooltip {
+    font-size: 0.8125rem; /* BEST PRACTICE: Minimo 13px su mobile */
+  }
 }
 
 .popover-tooltip::after {
@@ -1503,14 +1529,21 @@ a[role="button"]:focus-visible {
 }
 
 .footer-disclaimer {
-  font-size: var(--fs-11, 11px);
+  font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
   color: var(--dash-text-muted);
   /* WCAG AA: Contrasto minimo 4.5:1 per testo piccolo */
   opacity: 1;
   margin: 0;
   font-style: normal;
-  line-height: 1.5;
+  line-height: 1.6; /* BEST PRACTICE: Line-height aumentato per leggibilità */
   letter-spacing: 0.01em;
+}
+
+@media (max-width: 768px) {
+  .footer-disclaimer {
+    font-size: 0.8125rem; /* BEST PRACTICE: Minimo 13px su mobile */
+    line-height: 1.6;
+  }
 }
 
 .footer-links-inline {
@@ -1751,12 +1784,19 @@ a[role="button"]:focus-visible {
 }
 
 .status-card-label {
-  font-size: var(--fs-11, 11px);
+  font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--dash-text-muted);
   margin: 0 0 var(--spacing-xs) 0;
   font-weight: 600;
+  line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
+}
+
+@media (max-width: 768px) {
+  .status-card-label {
+    font-size: 0.8125rem; /* BEST PRACTICE: Minimo 13px su mobile */
+  }
 }
 
 .status-card-value {
@@ -3163,16 +3203,18 @@ a[role="button"]:focus-visible {
 .report-badge {
   display: inline-flex;
   align-items: center;
-  padding: 2px 8px;
+  padding: var(--spacing-xs) var(--spacing-sm); /* BEST PRACTICE: Padding adeguato */
   background: var(--dash-surface);
   border: 1px solid var(--dash-border);
   border-radius: var(--radius-sm);
-  font-size: 11px;
+  font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
   font-weight: 500;
   color: var(--dash-text-soft);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-left: var(--spacing-xs);
+  line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
+  min-height: 24px; /* BEST PRACTICE: Altezza minima per leggibilità */
 }
 
 .reports-list {
@@ -4082,9 +4124,16 @@ a[role="button"]:focus-visible {
 }
 
 .stat-change {
-  font-size: var(--fs-11, 11px);
+  font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
   color: var(--dash-text-muted);
   opacity: 0.8;
+  line-height: 1.5; /* BEST PRACTICE: Line-height ottimale */
+}
+
+@media (max-width: 768px) {
+  .stat-change {
+    font-size: 0.8125rem; /* BEST PRACTICE: Minimo 13px su mobile */
+  }
 }
 
 .overview-section {
@@ -4322,9 +4371,18 @@ a[role="button"]:focus-visible {
 }
 
 .framework-badge {
-  font-size: var(--fs-11, 11px);
-  padding: 2px 8px;
+  font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
+  padding: var(--spacing-xs) var(--spacing-sm); /* BEST PRACTICE: Padding adeguato */
   background: var(--dash-surface);
+  line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
+  min-height: 24px; /* BEST PRACTICE: Altezza minima per leggibilità */
+}
+
+@media (max-width: 768px) {
+  .framework-badge {
+    font-size: 0.8125rem; /* BEST PRACTICE: Minimo 13px su mobile */
+  }
+}
   border: 1px solid var(--dash-border);
   border-radius: var(--radius-sm);
   color: var(--dash-text-soft);
@@ -5144,13 +5202,15 @@ a[role="button"]:focus-visible {
 }
 
 .global-search-hint kbd {
-  padding: 2px 6px;
+  padding: var(--spacing-xs) var(--spacing-sm); /* BEST PRACTICE: Padding adeguato */
   background: var(--dash-surface-elev);
   border: 1px solid var(--dash-border);
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
   font-family: "Monaco", "Menlo", "Courier New", monospace;
   color: var(--dash-text-soft);
+  line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
+  min-height: 24px; /* BEST PRACTICE: Altezza minima per leggibilità */
 }
 
 .global-search-footer {
@@ -5175,13 +5235,15 @@ a[role="button"]:focus-visible {
 }
 
 .global-search-hint-item kbd {
-  padding: 2px 6px;
+  padding: var(--spacing-xs) var(--spacing-sm); /* BEST PRACTICE: Padding adeguato */
   background: var(--dash-surface-elev);
   border: 1px solid var(--dash-border);
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
   font-family: "Monaco", "Menlo", "Courier New", monospace;
   color: var(--dash-text-soft);
+  line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
+  min-height: 24px; /* BEST PRACTICE: Altezza minima per leggibilità */
 }
 
 .global-search-trigger {
@@ -5210,13 +5272,15 @@ a[role="button"]:focus-visible {
 }
 
 .global-search-trigger-kbd {
-  padding: 2px 6px;
+  padding: var(--spacing-xs) var(--spacing-sm); /* BEST PRACTICE: Padding adeguato */
   background: var(--dash-surface);
   border: 1px solid var(--dash-border);
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
   font-family: "Monaco", "Menlo", "Courier New", monospace;
   color: var(--dash-text-muted);
+  line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
+  min-height: 24px; /* BEST PRACTICE: Altezza minima per leggibilità */
 }
 
 @media (min-width: 768px) {
@@ -5980,13 +6044,15 @@ textarea:focus-visible,
 }
 
 .shortcuts-help-hint kbd {
-  padding: 2px 6px;
+  padding: var(--spacing-xs) var(--spacing-sm); /* BEST PRACTICE: Padding adeguato */
   background: var(--dash-surface-elev);
   border: 1px solid var(--dash-border);
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 0.75rem; /* BEST PRACTICE: Minimo 12px per leggibilità */
   font-family: "Monaco", "Menlo", "Courier New", monospace;
   color: var(--dash-text-soft);
+  line-height: 1.4; /* BEST PRACTICE: Line-height ottimale */
+  min-height: 24px; /* BEST PRACTICE: Altezza minima per leggibilità */
 }
 
 /* ===== DASHBOARD WIDGETS ===== */
