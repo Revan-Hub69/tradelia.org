@@ -1,8 +1,0 @@
-{
-  "id": "example-complete",
-  "title": "Tradelia · Report FLNC",
-  "order": ["F1B"],
-  "modules": {
-    "F1B": "f1b.json"
-  }
-}

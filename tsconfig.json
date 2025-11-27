@@ -29,16 +29,13 @@
     "components/**/*.ts",
     "components/**/*.tsx",
     "lib/**/*.ts",
+    "hooks/**/*.ts",
+    "types/**/*.ts",
     ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "_internal",
-    "api",
-    "archivio",
-    "report",
-    "scripts",
-    "supabase",
-    "tests"
+    ".next",
+    "supabase"
   ]
 }

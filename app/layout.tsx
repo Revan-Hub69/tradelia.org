@@ -87,7 +87,7 @@ export const metadata: Metadata = {
     ],
     shortcut: '/favicon.ico',
   },
-  manifest: '/dashboard.webmanifest',
+  manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',

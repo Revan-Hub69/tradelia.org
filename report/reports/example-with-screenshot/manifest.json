@@ -1,8 +1,0 @@
-{
-  "id": "example-with-screenshot",
-  "title": "Tradelia · Report AAPL",
-  "order": ["F1B"],
-  "modules": {
-    "F1B": "f1b.json"
-  }
-}

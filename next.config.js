@@ -3,24 +3,11 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
 
-  // Mantieni compatibilità con file statici esistenti
-  async rewrites() {
-    return [
-      {
-        source: "/dashboard.html",
-        destination: "/dashboard",
-      },
-    ];
-  },
-
-  // Priorità Next.js su file statici
-  // Next.js routes hanno priorità su index.html statico
-
-  // Headers per sicurezza (stesso di vercel.json)
+  // Headers per sicurezza
   async headers() {
     return [
       {
-        source: "/dashboard",
+        source: "/:path*",
         headers: [
           {
             key: "X-Content-Type-Options",
@@ -31,8 +18,16 @@ const nextConfig = {
             value: "DENY",
           },
           {
+            key: "X-XSS-Protection",
+            value: "1; mode=block",
+          },
+          {
             key: "Referrer-Policy",
             value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
           },
         ],
       },
@@ -47,21 +42,13 @@ const nextConfig = {
     // remotePatterns: [{ protocol: 'https', hostname: 'tradelia.org' }]
   },
 
-  // Escludi file che non devono essere compilati
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-    };
-    return config;
-  },
-
-  // Escludi directory da TypeScript
+  // TypeScript e ESLint
   typescript: {
     ignoreBuildErrors: false,
   },
 
   eslint: {
-    ignoreDuringBuilds: true, // ESLint config vecchio causa errori, fix dopo
+    ignoreDuringBuilds: false,
   },
 };
 
