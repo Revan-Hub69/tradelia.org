@@ -2616,7 +2616,7 @@ a[role="button"]:focus-visible {
   font-weight: 400;
   opacity: 0.9;
   text-align: left; /* BEST PRACTICE ACCADEMICO: Allineamento a sinistra */
-  hyphens: auto; /* BEST PRACTICE ACCADEMICO: Sillabazione automatica */
+  hyphens: manual; /* BEST PRACTICE ACCADEMICO: Hyphenation solo manuale */
   /* BEST PRACTICE ACCADEMICO: Transizione fluida */
   transition:
     opacity var(--transition-smooth),
@@ -3117,7 +3117,7 @@ a[role="button"]:focus-visible {
   white-space: normal;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  hyphens: auto;
+  hyphens: manual; /* BEST PRACTICE ACCADEMICO: Hyphenation solo manuale */
   max-width: 100%;
 }
 

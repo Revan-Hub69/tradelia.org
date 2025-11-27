@@ -146,7 +146,7 @@
     font-weight: 600;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    hyphens: auto;
+    hyphens: manual; /* BEST PRACTICE ACCADEMICO: Hyphenation solo manuale */
   }
 
   .lesson-meta {
@@ -203,7 +203,7 @@
 
     .lesson-title {
       font-size: var(--fs-16);
-      line-height: 1.3;
+      line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Min 1.4 per leggibilità */
     }
 
     .lesson-meta {
@@ -291,7 +291,7 @@
 .stat-value {
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
-  line-height: 1.3; /* BEST PRACTICE: Line-height aumentato */
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Min 1.4 per leggibilità */
   margin-bottom: var(--edu-spacing-sm); /* BEST PRACTICE: Margin bottom aumentato per separazione */
   color: var(--edu-text-primary);
   display: block;
@@ -644,7 +644,7 @@
 
   .education-module-card.locked .module-title {
     font-size: var(--fs-16);
-    line-height: 1.3;
+    line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Min 1.4 per leggibilità */
   }
 
   .education-module-card.locked .module-description {
@@ -1231,7 +1231,7 @@
   font-size: var(--fs-18, 18px); /* BEST PRACTICE: Font size ridotto da 20px */
   color: var(--edu-text-muted);
   flex-shrink: 0;
-  line-height: 1.2; /* BEST PRACTICE: Line-height aumentato */
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Min 1.4 per leggibilità */
   width: 32px; /* BEST PRACTICE: Larghezza fissa per allineamento */
   height: 32px; /* BEST PRACTICE: Altezza fissa per allineamento */
   display: flex;
@@ -1406,7 +1406,7 @@
   font-weight: 600;
   color: var(--edu-text-primary);
   margin: 0 0 var(--edu-spacing-xs) 0;
-  line-height: 1.3;
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Min 1.4 per leggibilità */
 }
 
 .test-description {
@@ -1615,7 +1615,7 @@
   font-weight: 700;
   color: var(--edu-text-primary);
   margin: 0 0 var(--edu-spacing-sm) 0;
-  line-height: 1.2;
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Min 1.4 per leggibilità */
 }
 
 .test-view-description {
@@ -1846,7 +1846,7 @@
   font-weight: 700;
   color: var(--edu-text-primary);
   margin: 0 0 var(--edu-spacing-md) 0;
-  line-height: 1.2;
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Min 1.4 per leggibilità */
 }
 
 .results-score {
@@ -1861,7 +1861,7 @@
 .score-value {
   font-size: clamp(3rem, 8vw, 5rem);
   font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 800 */
-  line-height: 1.2; /* BEST PRACTICE: Line-height aumentato */
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Min 1.4 per leggibilità */
   color: var(--edu-text-primary);
 }
 

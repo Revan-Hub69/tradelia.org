@@ -290,7 +290,7 @@ label {
   padding: var(--sp-1) var(--sp-2);
   font-size: var(--fs-11);
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Min 1.4 per leggibilità */
   border-radius: var(--radius-sm);
   border: 1px solid;
 }

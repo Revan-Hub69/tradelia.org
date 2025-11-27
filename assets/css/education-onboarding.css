@@ -86,7 +86,7 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin: 0 0 var(--edu-spacing-md) 0;
-  line-height: 1.2;
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Min 1.4 per leggibilità */
 }
 
 .onboarding-description {
@@ -358,7 +358,7 @@
   font-weight: 700;
   color: var(--ink, #ffffff);
   margin: 0 0 var(--sp-2, 0.5rem) 0;
-  line-height: 1.2;
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Min 1.4 per leggibilità */
 }
 
 .onboarding-overlay .auth-close {

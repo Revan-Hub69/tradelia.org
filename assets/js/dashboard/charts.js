@@ -4,6 +4,8 @@
  * Paper Accademico: "Information Dashboard Design" - Stephen Few (2014-2024)
  */
 
+import { safeLog } from "./security-utils.js";
+
 let Chart = null;
 let chartLoadingPromise = null;
 
@@ -40,7 +42,7 @@ async function loadChartLibrary() {
       resolve(Chart);
     };
     script.onerror = () => {
-      console.error("[Charts] Error loading Chart.js from CDN");
+      safeLog("error", "[Charts] Error loading Chart.js from CDN");
       reject(new Error("Failed to load Chart.js"));
     };
     if (!existingScript) {
@@ -69,13 +71,13 @@ export async function initCharts() {
  */
 export function createLineChart(canvasId, data, options = {}) {
   if (!Chart) {
-    console.error("[Charts] Chart.js not loaded");
+    safeLog("error", "[Charts] Chart.js not loaded");
     return null;
   }
 
   const canvas = document.getElementById(canvasId);
   if (!canvas) {
-    console.error(`[Charts] Canvas not found: ${canvasId}`);
+    safeLog("error", `[Charts] Canvas not found: ${canvasId}`);
     return null;
   }
 
@@ -138,13 +140,13 @@ export function createLineChart(canvasId, data, options = {}) {
  */
 export function createBarChart(canvasId, data, options = {}) {
   if (!Chart) {
-    console.error("[Charts] Chart.js not loaded");
+    safeLog("error", "[Charts] Chart.js not loaded");
     return null;
   }
 
   const canvas = document.getElementById(canvasId);
   if (!canvas) {
-    console.error(`[Charts] Canvas not found: ${canvasId}`);
+    safeLog("error", `[Charts] Canvas not found: ${canvasId}`);
     return null;
   }
 
@@ -208,13 +210,13 @@ export function createBarChart(canvasId, data, options = {}) {
  */
 export function createPieChart(canvasId, data, options = {}) {
   if (!Chart) {
-    console.error("[Charts] Chart.js not loaded");
+    safeLog("error", "[Charts] Chart.js not loaded");
     return null;
   }
 
   const canvas = document.getElementById(canvasId);
   if (!canvas) {
-    console.error(`[Charts] Canvas not found: ${canvasId}`);
+    safeLog("error", `[Charts] Canvas not found: ${canvasId}`);
     return null;
   }
 
@@ -259,13 +261,13 @@ export function createPieChart(canvasId, data, options = {}) {
  */
 export function createDoughnutChart(canvasId, data, options = {}) {
   if (!Chart) {
-    console.error("[Charts] Chart.js not loaded");
+    safeLog("error", "[Charts] Chart.js not loaded");
     return null;
   }
 
   const canvas = document.getElementById(canvasId);
   if (!canvas) {
-    console.error(`[Charts] Canvas not found: ${canvasId}`);
+    safeLog("error", `[Charts] Canvas not found: ${canvasId}`);
     return null;
   }
 

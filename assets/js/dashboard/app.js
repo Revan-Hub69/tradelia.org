@@ -27,6 +27,7 @@ import { initDashboardWidgets } from "./dashboard-widgets.js";
 import { initPerformanceMonitoring } from "./performance-monitor.js";
 import { initRUMDashboard } from "./rum-dashboard.js";
 import { initCommunicationPreferences } from "./communication-preferences.js";
+import { safeLog } from "./security-utils.js";
 // Notifiche push - DISABILITATE
 // import { initPWANotifications } from "./pwa-notifications.js";
 
@@ -453,7 +454,7 @@ async function toggleAdminModule() {
       }
     }
   } catch (error) {
-    console.error("[Dashboard] Errore verifica permessi admin:", error);
+    safeLog("error", "[Dashboard] Errore verifica permessi admin:", error);
     if (adminCard) {
       adminCard.style.display = "none";
     }
@@ -594,7 +595,7 @@ async function checkAuthentication() {
     // Token valido
     return { authenticated: true };
   } catch (error) {
-    console.error("[Dashboard] Errore verifica autenticazione:", error);
+    safeLog("error", "[Dashboard] Errore verifica autenticazione:", error);
     // In caso di errore, permettere accesso guest (fallback)
     // Ma loggare per debug
     return { authenticated: false, reason: "auth_error" };

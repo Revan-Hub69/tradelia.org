@@ -9,6 +9,7 @@ import {
   getModuleVisibility,
   getModuleOrder,
 } from "./module-manager.js";
+import { safeLog } from "./security-utils.js";
 
 export async function loadSettings() {
   // Carica preferenze salvate
@@ -216,7 +217,7 @@ async function handleExportData() {
       window.showToast("Dati esportati con successo", "success");
     }
   } catch (err) {
-    console.error("[Settings] Errore export:", err);
+    safeLog("error", "[Settings] Errore export:", err);
     if (window.showToast) {
       window.showToast("Errore durante l'export dei dati", "error");
     }

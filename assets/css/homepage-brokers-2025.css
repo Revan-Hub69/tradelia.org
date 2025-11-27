@@ -61,7 +61,7 @@
   font-family: var(--ff-sans);
   font-size: clamp(2.5rem, 5vw, 4.25rem);
   font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
-  line-height: 1.2;
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Min 1.4 per leggibilità */
   letter-spacing: -0.03em;
   color: var(--ink);
   margin: 0 0 var(--sp-10);
@@ -356,7 +356,7 @@
   font-family: var(--ff-sans);
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
-  line-height: 1.2;
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Min 1.4 per leggibilità */
   letter-spacing: -0.02em;
   color: var(--ink);
   margin: 0 0 var(--sp-4);

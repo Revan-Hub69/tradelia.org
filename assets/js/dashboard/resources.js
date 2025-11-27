@@ -4,6 +4,8 @@
  * FAQ, guide, documentazione, supporto
  */
 
+import { safeLog } from "./security-utils.js";
+
 const RESOURCE_LINKS = {
   faq: "/docs/guides/FAQ.md",
   guides: "/docs/guides/",
@@ -36,7 +38,7 @@ export async function loadResources() {
         if (url.startsWith("http") || url.startsWith("/")) {
           window.open(url, "_blank");
         } else {
-          console.warn("[Resources] URL non valido:", url);
+          safeLog("warn", "[Resources] URL non valido:", url);
         }
       }
     });
@@ -52,10 +54,10 @@ async function loadFAQ() {
     const response = await fetch("/docs/guides/FAQ.md");
     if (response.ok) {
       // FAQ disponibile, link funzionante
-      console.log("[Resources] FAQ disponibile");
+      safeLog("log", "[Resources] FAQ disponibile");
     }
   } catch (err) {
     // FAQ non disponibile, normale
-    console.debug("[Resources] FAQ non disponibile (normale)");
+    safeLog("log", "[Resources] FAQ non disponibile (normale)");
   }
 }

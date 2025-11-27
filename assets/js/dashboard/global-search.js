@@ -4,6 +4,8 @@
  * Best Practice: Separazione concerns - ricerca separata da navigazione
  */
 
+import { safeLog } from "./security-utils.js";
+
 // Global search state
 const SEARCH_STATE = {
   isOpen: false,
@@ -366,11 +368,11 @@ async function searchReports(query) {
     try {
       manifestResponse = await fetch(`/archivio/manifest.json?t=${Date.now()}`);
       if (!manifestResponse.ok) {
-        console.warn("[GlobalSearch] manifest.json non trovato");
+        safeLog("warn", "[GlobalSearch] manifest.json non trovato");
         return [];
       }
     } catch (error) {
-      console.warn("[GlobalSearch] Errore caricamento manifest.json:", error);
+      safeLog("warn", "[GlobalSearch] Errore caricamento manifest.json:", error);
       return [];
     }
     if (!manifestResponse.ok) {
@@ -414,7 +416,7 @@ async function searchReports(query) {
       }
     }
   } catch (e) {
-    console.error("[GlobalSearch] Errore ricerca report:", e);
+    safeLog("error", "[GlobalSearch] Errore ricerca report:", e);
   }
 
   return results.slice(0, 10);
@@ -677,7 +679,7 @@ function loadSearchHistory() {
       SEARCH_STATE.searchHistory = JSON.parse(history);
     }
   } catch (e) {
-    console.error("[GlobalSearch] Errore caricamento history:", e);
+    safeLog("error", "[GlobalSearch] Errore caricamento history:", e);
   }
 }
 
@@ -702,7 +704,7 @@ function saveToHistory(query) {
   try {
     localStorage.setItem("dashboard-search-history", JSON.stringify(SEARCH_STATE.searchHistory));
   } catch (e) {
-    console.error("[GlobalSearch] Errore salvataggio history:", e);
+    safeLog("error", "[GlobalSearch] Errore salvataggio history:", e);
   }
 }
 
