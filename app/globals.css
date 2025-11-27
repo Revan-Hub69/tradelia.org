@@ -1,29 +1,24 @@
-/* Tailwind non usato - usiamo CSS Modules invece */
-/* @tailwind base; */
-/* @tailwind components; */
-/* @tailwind utilities; */
-
-/* Design System Variables */
+/* Design System - Palette Sobria e Accademica */
 :root {
-  /* Sfondo più chiaro (come richiesto) */
+  /* Sfondo - Sobrio e professionale */
   --dash-bg: #1a1a1a;
   --dash-bg-soft: #222222;
   --dash-surface: #2a2a2a;
   --dash-surface-elev: #333333;
 
-  /* Testo */
+  /* Testo - Leggibilità accademica */
   --dash-text: #ffffff;
   --dash-text-soft: #e8e8e8;
   --dash-text-muted: #b0b0b0;
 
-  /* Bordi */
-  --dash-border: rgba(255, 255, 255, 0.12);
-  --dash-border-strong: rgba(255, 255, 255, 0.18);
+  /* Bordi - Sottili e discreti */
+  --dash-border: rgba(255, 255, 255, 0.1);
+  --dash-border-strong: rgba(255, 255, 255, 0.15);
 
-  /* Accenti */
+  /* Accenti - Sobri e professionali */
   --dash-accent: #4a90e2;
   --dash-accent-hover: #5ba0f2;
-  --dash-blue-line: #4a90e2;
+  --dash-accent-muted: rgba(74, 144, 226, 0.15);
 }
 
 * {
@@ -41,6 +36,8 @@ body {
     -apple-system,
     sans-serif;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .dashboard-container {
@@ -51,4 +48,43 @@ body {
 
 #main-content {
   flex: 1;
+}
+
+/* Pattern geometrici raffinati - Sottili e discreti */
+.geometric-pattern {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  z-index: 0;
+}
+
+.geometric-pattern::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.02) 2px,
+      rgba(255, 255, 255, 0.02) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.02) 2px,
+      rgba(255, 255, 255, 0.02) 4px
+    );
+}
+
+.geometric-pattern::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(74, 144, 226, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(74, 144, 226, 0.015) 0%, transparent 50%);
 }

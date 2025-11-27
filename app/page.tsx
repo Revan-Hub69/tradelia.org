@@ -4,9 +4,9 @@ import { MethodSection } from '@/components/home/MethodSection';
 import { ValueSection } from '@/components/home/ValueSection';
 
 export const metadata = {
-  title: 'Tradelia AI · La Piattaforma di Formazione Finanziaria più Avanzata al Mondo',
+  title: 'Tradelia AI · Formazione Finanziaria Gratuita',
   description:
-    'Formazione finanziaria gratuita basata su framework AI proprietari verificabili. Percorsi gamificati, materiale didattico completo, conforme MiFID-Safe. Nessun login richiesto.',
+    'Formazione finanziaria gratuita basata su framework AI proprietari verificabili. Percorsi formativi completi, materiale didattico conforme agli standard accademici internazionali e alle normative MiFID II.',
 };
 
 export default function HomePage() {
