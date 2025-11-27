@@ -3,6 +3,44 @@
  * FASE 1: Design System Consolidato - Production Ready
  */
 
+/* ===== BEST PRACTICE ACCADEMICO MODERNO 2025 ===== */
+/* Design System Accademico: Sobrio, Professionale, Accessibile */
+
+/* ===== TYPOGRAPHY ACCADEMICA ===== */
+/* BEST PRACTICE ACCADEMICO: Tipografia ottimizzata per leggibilità */
+body {
+  text-rendering: optimizeLegibility; /* BEST PRACTICE ACCADEMICO: Rendering ottimizzato */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "kern" 1, "liga" 1; /* BEST PRACTICE ACCADEMICO: Kerning e legature */
+  hyphens: auto; /* BEST PRACTICE ACCADEMICO: Sillabazione automatica */
+  word-break: break-word; /* BEST PRACTICE ACCADEMICO: Word breaking intelligente */
+}
+
+/* BEST PRACTICE ACCADEMICO: Line-height ottimale per contenuti accademici */
+p,
+.module-description,
+.account-banner-subtitle,
+.panel-description {
+  line-height: 1.7; /* BEST PRACTICE ACCADEMICO: Line-height aumentato per leggibilità accademica */
+  text-align: left; /* BEST PRACTICE ACCADEMICO: Allineamento a sinistra (standard accademico) */
+}
+
+/* BEST PRACTICE ACCADEMICO: Spaziatura verticale ritmica (vertical rhythm) */
+.module-category,
+.panel-view,
+.overview-section {
+  margin-bottom: var(--spacing-xl); /* BEST PRACTICE ACCADEMICO: Spaziatura ritmica */
+}
+
+@media (min-width: 1024px) {
+  .module-category,
+  .panel-view,
+  .overview-section {
+    margin-bottom: var(--spacing-2xl); /* BEST PRACTICE ACCADEMICO: Spaziatura maggiore su desktop */
+  }
+}
+
 /* ===== REDUCED MOTION SUPPORT (WCAG 2.2 SC 2.3.3) ===== */
 /* BEST PRACTICE: Rispetta preferenze utente per riduzione movimento */
 @media (prefers-reduced-motion: reduce) {
@@ -580,15 +618,9 @@ a[role="button"]:focus-visible {
   padding-top: calc(var(--spacing-lg) + env(safe-area-inset-top, 0px));
 }
 
+/* BEST PRACTICE ACCADEMICO: Rimossa decorazione gradient - design sobrio */
 .dashboard-header-minimal::after {
-  content: "";
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 60px;
-  height: 1px;
-  background: linear-gradient(90deg, var(--dash-blue-line), transparent);
-  opacity: 0.6;
+  display: none; /* BEST PRACTICE ACCADEMICO: Rimossa decorazione gradient */
 }
 
 .dashboard-header-content {
@@ -606,6 +638,10 @@ a[role="button"]:focus-visible {
   margin: 0;
   line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Line-height ottimale */
   font-family: var(--ff-sans, -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif);
+  /* BEST PRACTICE ACCADEMICO: Font rendering ottimizzato per leggibilità */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
@@ -656,9 +692,10 @@ a[role="button"]:focus-visible {
   filter: brightness(1);
 }
 
+/* BEST PRACTICE ACCADEMICO: Hover sobrio - no transform */
 .dashboard-brand:hover .dashboard-brand-logo {
   opacity: 0.9;
-  transform: translateY(-1px);
+  /* BEST PRACTICE ACCADEMICO: No transform per design sobrio */
 }
 
 /* Fallback text (hidden when logo loads) */
@@ -670,8 +707,9 @@ a[role="button"]:focus-visible {
   color: var(--dash-text);
 }
 
+/* BEST PRACTICE ACCADEMICO: Hover sobrio - colore neutro */
 .dashboard-brand:hover .dashboard-brand-dot {
-  background: var(--dash-blue-line);
+  background: var(--dash-text-soft); /* BEST PRACTICE ACCADEMICO: Colore neutro, no blu */
   opacity: 1;
   /* BEST PRACTICE ACCADEMICO: No glow effect */
 }
@@ -1971,47 +2009,62 @@ a[role="button"]:focus-visible {
 }
 
 /* ===== MODULE CATEGORIES ===== */
-/* BEST PRACTICE: Navigazione semplificata - tutte le categorie sempre visibili */
+/* BEST PRACTICE ACCADEMICO: Navigazione semplificata - tutte le categorie sempre visibili */
 /* Prevenzione CLS: riserva spazio minimo per sezioni dinamiche */
 .module-category {
-  margin-bottom: var(--spacing-xl); /* Spaziatura ridotta per navigazione più compatta */
-  scroll-margin-top: var(--spacing-lg); /* Scroll margin ridotto */
+  margin-bottom: var(--spacing-xl); /* BEST PRACTICE ACCADEMICO: Spaziatura ritmica verticale */
+  scroll-margin-top: var(--spacing-lg); /* BEST PRACTICE ACCADEMICO: Scroll margin per navigazione */
   min-height: 120px; /* Altezza minima ridotta */
+  /* BEST PRACTICE ACCADEMICO: Separazione visiva chiara */
+  border-top: 1px solid transparent; /* BEST PRACTICE ACCADEMICO: Separazione sottile */
+  padding-top: var(--spacing-md); /* BEST PRACTICE ACCADEMICO: Padding top per respirazione */
+}
+
+.module-category:first-child {
+  border-top: none; /* BEST PRACTICE ACCADEMICO: Prima categoria senza bordo top */
+  padding-top: 0;
 }
 
 .module-category:last-child {
   margin-bottom: 0;
 }
 
+/* BEST PRACTICE ACCADEMICO: Desktop - spaziatura maggiore per migliore leggibilità */
 @media (min-width: 1024px) {
   .module-category {
-    margin-bottom: var(--spacing-2xl); /* Spaziatura maggiore su desktop */
+    margin-bottom: var(--spacing-2xl); /* BEST PRACTICE ACCADEMICO: Spaziatura maggiore su desktop */
+    padding-top: var(--spacing-lg); /* BEST PRACTICE ACCADEMICO: Padding aumentato su desktop */
   }
 }
 
-/* BEST PRACTICE: Category titles semplificati - navigazione più diretta */
+/* BEST PRACTICE ACCADEMICO: Category titles semplificati - navigazione più diretta */
 .category-title {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
   font-size: clamp(var(--fs-16, 16px), 2vw, var(--fs-20, 20px)); /* Font size aumentato per chiarezza */
-  font-weight: 600; /* Peso ridotto per aspetto più pulito */
+  font-weight: 600; /* BEST PRACTICE ACCADEMICO: Peso ridotto per aspetto più pulito */
   color: var(--dash-text);
   margin-bottom: var(--spacing-md); /* Margin ridotto per navigazione più compatta */
   padding-bottom: var(--spacing-sm);
-  border-bottom: 1px solid var(--dash-border); /* Bordo più sottile */
-  letter-spacing: -0.01em; /* Letter spacing ridotto */
+  border-bottom: 1px solid var(--dash-border); /* BEST PRACTICE ACCADEMICO: Bordo più sottile */
+  letter-spacing: -0.01em; /* BEST PRACTICE ACCADEMICO: Letter spacing ridotto */
   position: relative;
-  /* BEST PRACTICE: Visual hierarchy più pulita */
-  text-shadow: none; /* Rimossa ombra per aspetto più pulito */
+  /* BEST PRACTICE ACCADEMICO: Visual hierarchy più pulita */
+  text-shadow: none; /* BEST PRACTICE ACCADEMICO: Rimossa ombra per aspetto più pulito */
+  text-rendering: optimizeLegibility; /* BEST PRACTICE ACCADEMICO: Rendering ottimizzato */
+  line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Line-height ottimale */
 }
 
-/* Desktop: Titoli più grandi e spaziati per migliore gerarchia */
+/* Desktop: Titoli più grandi e spaziati per migliore gerarchia accademica */
 @media (min-width: 1024px) {
   .category-title {
     font-size: clamp(var(--fs-18, 18px), 2.5vw, var(--fs-22, 22px));
     margin-bottom: var(--spacing-lg);
     padding-bottom: var(--spacing-md);
+    font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600, non 700 */
+    letter-spacing: -0.01em; /* BEST PRACTICE ACCADEMICO: Letter spacing ridotto */
+    line-height: 1.4; /* BEST PRACTICE ACCADEMICO: Line-height ottimale */
   }
 }
 
@@ -2081,11 +2134,13 @@ a[role="button"]:focus-visible {
   }
 }
 
-/* Desktop: Grid più compatto per migliore overview */
+/* BEST PRACTICE ACCADEMICO: Desktop - Grid ottimizzato per leggibilità */
 @media (min-width: 1200px) {
   .modules-grid {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: var(--spacing-xl); /* Gap maggiore su desktop per migliore respirazione */
+    gap: var(--spacing-xl); /* BEST PRACTICE ACCADEMICO: Gap maggiore su desktop per migliore respirazione */
+    max-width: 1400px; /* BEST PRACTICE ACCADEMICO: Max-width per leggibilità ottimale */
+    margin: 0 auto; /* BEST PRACTICE ACCADEMICO: Centratura per focus visivo */
   }
 }
 
@@ -2277,6 +2332,19 @@ a[role="button"]:focus-visible {
   transition:
     background var(--transition-hover),
     border-color var(--transition-hover);
+  /* BEST PRACTICE ACCADEMICO: Accessibilità - focus visible sempre */
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+/* BEST PRACTICE ACCADEMICO: Desktop - card identiche (consistenza) */
+@media (min-width: 1024px) {
+  .module-card {
+    background: var(--dash-surface); /* BEST PRACTICE ACCADEMICO: Background solido anche su desktop */
+    border-radius: 8px; /* BEST PRACTICE ACCADEMICO: Border-radius ridotto anche su desktop */
+    padding: var(--spacing-lg); /* BEST PRACTICE ACCADEMICO: Padding consistente */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); /* BEST PRACTICE ACCADEMICO: Shadow minimale anche su desktop */
+  }
 }
 
 /* BEST PRACTICE ACCADEMICO: Hover states minimali e sobri */
@@ -2286,6 +2354,14 @@ a[role="button"]:focus-visible {
 
 .module-card::after {
   display: none; /* BEST PRACTICE ACCADEMICO: Rimossi gradienti decorativi */
+}
+
+/* BEST PRACTICE ACCADEMICO: Desktop - nessun pseudo-elemento decorativo (consistenza mobile/desktop) */
+@media (min-width: 1024px) {
+  .module-card::before,
+  .module-card::after {
+    display: none; /* BEST PRACTICE ACCADEMICO: Consistenza mobile/desktop */
+  }
 }
 
 /* BEST PRACTICE ACCADEMICO: Hover states sobri - no transform, no glow */
@@ -2303,6 +2379,26 @@ a[role="button"]:focus-visible {
 .module-card:hover .module-description {
   opacity: 1;
   color: var(--dash-text-soft); /* BEST PRACTICE ACCADEMICO: Colore neutro */
+}
+
+/* BEST PRACTICE ACCADEMICO: Desktop - hover states identici (consistenza mobile/desktop) */
+@media (min-width: 1024px) {
+  .module-card:hover {
+    background: var(--dash-surface-elev);
+    border-color: var(--dash-border-strong);
+    border-left-color: var(--dash-border-strong);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    /* BEST PRACTICE ACCADEMICO: No transform anche su desktop */
+  }
+  
+  .module-card:hover .module-title {
+    color: var(--dash-text);
+  }
+  
+  .module-card:hover .module-description {
+    opacity: 1;
+    color: var(--dash-text-soft);
+  }
 }
 
 /* BEST PRACTICE: Focus su keyboard navigation */
@@ -2392,22 +2488,44 @@ a[role="button"]:focus-visible {
   line-height: 1.5; /* BEST PRACTICE ACCADEMICO: Line-height ottimale */
   /* BEST PRACTICE ACCADEMICO: No text-shadow */
   transition: color var(--transition-hover);
+  text-rendering: optimizeLegibility; /* BEST PRACTICE ACCADEMICO: Rendering ottimizzato */
 }
 
-/* BEST PRACTICE: Leggibilità migliorata (WCAG AA) */
+/* BEST PRACTICE ACCADEMICO: Desktop - tipografia identica (consistenza) */
+@media (min-width: 1024px) {
+  .module-title {
+    font-size: clamp(var(--fs-18, 18px), 2.5vw, var(--fs-22, 22px));
+    font-weight: 600; /* BEST PRACTICE ACCADEMICO: Max 600 anche su desktop */
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* BEST PRACTICE ACCADEMICO: Leggibilità migliorata (WCAG AA) */
 .module-description {
   font-size: var(--fs-13, 13px);
   color: var(--dash-text-soft);
-  line-height: var(--lh-16, 1.6);
-  /* BEST PRACTICE: Optimal line height for readability */
-  max-width: 65ch;
-  /* BEST PRACTICE: Gerarchia visiva - descrizione secondaria */
+  line-height: 1.7; /* BEST PRACTICE ACCADEMICO: Line-height aumentato per leggibilità accademica */
+  /* BEST PRACTICE ACCADEMICO: Optimal line height for readability */
+  max-width: 65ch; /* BEST PRACTICE ACCADEMICO: Larghezza ottimale per leggibilità (65 caratteri) */
+  /* BEST PRACTICE ACCADEMICO: Gerarchia visiva - descrizione secondaria */
   font-weight: 400;
   opacity: 0.9;
-  /* BEST PRACTICE: Microinterazione - transizione fluida */
+  text-align: left; /* BEST PRACTICE ACCADEMICO: Allineamento a sinistra */
+  hyphens: auto; /* BEST PRACTICE ACCADEMICO: Sillabazione automatica */
+  /* BEST PRACTICE ACCADEMICO: Transizione fluida */
   transition:
     opacity var(--transition-smooth),
     color var(--transition-smooth);
+}
+
+/* BEST PRACTICE ACCADEMICO: Desktop - descrizioni identiche (consistenza) */
+@media (min-width: 1024px) {
+  .module-description {
+    font-size: var(--fs-14, 14px); /* BEST PRACTICE ACCADEMICO: Font size aumentato su desktop */
+    line-height: 1.7;
+    max-width: 70ch; /* BEST PRACTICE ACCADEMICO: Larghezza maggiore su desktop */
+  }
 }
 
 .module-arrow {
