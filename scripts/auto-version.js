@@ -124,15 +124,21 @@ function main() {
       // eslint-disable-next-line no-console
       console.log(`   Based on commit messages: ${commitMessages.length} commit(s)\n`);
 
-      // Stage version files (l'utente farà il commit manualmente)
+      // Stage e commit automatico dei file di versione per evitare doppio push
       try {
         execSync("git add sw.js version.json assets/js/version-check.js", { stdio: "inherit" });
-        // eslint-disable-next-line no-console
-        console.log(
-          `\n💡 Version files staged. Remember to commit: git commit -m "chore: bump version to ${newVersion}"`
-        );
-      } catch {
-        // Ignore if git add fails (not in git repo or files not changed)
+        // Verifica se ci sono file staged
+        const stagedFiles = execSync("git diff --cached --name-only", { encoding: "utf8" }).trim();
+        if (stagedFiles) {
+          // Commit automatico per evitare doppio push
+          execSync(`git commit -m "chore: bump version to ${newVersion}"`, { stdio: "inherit" });
+          // eslint-disable-next-line no-console
+          console.log(`\n✅ Version bumped and committed: ${newVersion}`);
+        }
+      } catch (error) {
+        // Ignore if git commands fail (not in git repo or files not changed)
+
+        console.warn("⚠️  Could not auto-commit version bump:", error.message);
       }
     }
 
