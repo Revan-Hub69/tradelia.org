@@ -1329,10 +1329,16 @@ function renderModuleView(module) {
     <nav class="education-breadcrumb" aria-label="Breadcrumb navigation">
       <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
         <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-          <a href="#education" data-action="back-to-dashboard" itemprop="item">
-            <span itemprop="name">Formazione</span>
+          <a href="#overview" data-action="back-to-dashboard" itemprop="item">
+            <span itemprop="name">Dashboard</span>
           </a>
           <meta itemprop="position" content="1" />
+        </li>
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="#education" data-action="back-to-education" itemprop="item">
+            <span itemprop="name">Formazione</span>
+          </a>
+          <meta itemprop="position" content="2" />
         </li>
         <li class="breadcrumb-item breadcrumb-current" 
             aria-current="page"
@@ -1340,7 +1346,7 @@ function renderModuleView(module) {
             itemscope 
             itemtype="https://schema.org/ListItem">
           <span itemprop="name">${escapeHtml(module.title)}</span>
-          <meta itemprop="position" content="2" />
+          <meta itemprop="position" content="3" />
         </li>
       </ol>
     </nav>
@@ -1382,11 +1388,21 @@ function renderModuleView(module) {
 
   // Bind events
   container
-    .querySelector("[data-action='back-to-dashboard']")
+    .querySelector("[data-action='back-to-education']")
     ?.addEventListener("click", async () => {
       // BEST PRACTICE: Usa History API per supporto back button
       window.history.pushState({ view: "education-dashboard" }, "", "#education");
       await initEducation();
+    });
+  
+  container
+    .querySelector("[data-action='back-to-dashboard']")
+    ?.addEventListener("click", async () => {
+      // BEST PRACTICE: Usa History API per supporto back button
+      window.history.pushState({ view: "dashboard-overview" }, "", "#overview");
+      // Trigger dashboard navigation
+      const event = new CustomEvent("dashboard-navigate", { detail: { module: "overview" } });
+      window.dispatchEvent(event);
     });
 
   container.querySelectorAll("[data-action='open-lesson']").forEach((btn) => {
@@ -1640,16 +1656,22 @@ function renderLessonView(lesson) {
     <nav class="education-breadcrumb" aria-label="Breadcrumb navigation">
       <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
         <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-          <a href="#education" data-action="back-to-dashboard" itemprop="item">
-            <span itemprop="name">Formazione</span>
+          <a href="#overview" data-action="back-to-dashboard" itemprop="item">
+            <span itemprop="name">Dashboard</span>
           </a>
           <meta itemprop="position" content="1" />
+        </li>
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="#education" data-action="back-to-education" itemprop="item">
+            <span itemprop="name">Formazione</span>
+          </a>
+          <meta itemprop="position" content="2" />
         </li>
         <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
           <a href="#education/module/${moduleSlug}" data-action="back-to-module" itemprop="item">
             <span itemprop="name">${escapeHtml(moduleTitle)}</span>
           </a>
-          <meta itemprop="position" content="2" />
+          <meta itemprop="position" content="3" />
         </li>
         <li class="breadcrumb-item breadcrumb-current" 
             aria-current="page"
@@ -1657,7 +1679,7 @@ function renderLessonView(lesson) {
             itemscope 
             itemtype="https://schema.org/ListItem">
           <span itemprop="name">${escapeHtml(lesson.title)}</span>
-          <meta itemprop="position" content="3" />
+          <meta itemprop="position" content="4" />
         </li>
       </ol>
     </nav>
