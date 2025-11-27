@@ -82,11 +82,188 @@
     
     <!-- Preload risorse critiche -->
     <link rel="preload" href="/logos/tradelia-logo.svg?v=4" as="image" type="image/svg+xml" />
-    <link rel="preload" href="/assets/css/settings/tokens.css" as="style" />
-    <link rel="preload" href="/assets/css/components/dashboard.css" as="style" />
     <link rel="preload" href="/assets/css/education-dashboard.css" as="style" />
     <link rel="modulepreload" href="/assets/js/dashboard/app.js" />
     <link rel="modulepreload" href="/assets/js/dashboard/index.js" />
+
+    <style id="dashboard-critical-style">
+      :root {
+        --dash-bg: #050910;
+        --dash-surface: rgba(9, 14, 23, 0.9);
+        --dash-border: rgba(255, 255, 255, 0.08);
+        --dash-border-strong: rgba(82, 124, 255, 0.7);
+        --dash-text: #f6f8ff;
+        --dash-text-muted: #a9b5ca;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background-color: var(--dash-bg);
+        color: var(--dash-text);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .dashboard-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 32px 16px 72px;
+      }
+
+      @media (min-width: 768px) {
+        .dashboard-container {
+          padding: 48px 32px 96px;
+        }
+      }
+
+      .dashboard-header-minimal {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 32px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding-bottom: 16px;
+      }
+
+      .dashboard-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: clamp(1.5rem, 2vw, 2rem);
+        margin: 0;
+        color: var(--dash-text);
+      }
+
+      #main-content {
+        display: block;
+      }
+
+      .modules-view {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        min-height: 420px;
+      }
+
+      .module-category {
+        min-height: 220px;
+      }
+
+      .category-title {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 16px;
+        font-size: 1.125rem;
+        color: var(--dash-text);
+      }
+
+      .modules-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+      }
+
+      @media (min-width: 1200px) {
+        .modules-grid {
+          gap: 20px;
+        }
+      }
+
+      .module-card {
+        border-radius: 20px;
+        border: 1px solid var(--dash-border);
+        background: var(--dash-surface);
+        padding: 20px;
+        min-height: 180px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      }
+
+      .module-card:hover {
+        border-color: var(--dash-border-strong);
+        transform: translateY(-3px);
+        box-shadow: 0 18px 45px rgba(5, 15, 35, 0.5);
+      }
+
+      .module-card-header {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+      }
+
+      .module-info {
+        flex: 1;
+      }
+
+      .module-title {
+        margin: 0;
+        font-size: 1.125rem;
+        color: var(--dash-text);
+      }
+
+      .module-description {
+        margin: 4px 0 0;
+        color: var(--dash-text-muted);
+        font-size: 0.95rem;
+      }
+
+      #favorites-section .modules-grid {
+        min-height: 190px;
+      }
+
+      .layout-skeleton {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .skeleton-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        min-height: 180px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .skeleton-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        transform: translateX(-100%);
+        background: linear-gradient(
+          120deg,
+          rgba(255, 255, 255, 0),
+          rgba(255, 255, 255, 0.18),
+          rgba(255, 255, 255, 0)
+        );
+        animation: skeleton-shimmer 1.2s ease-in-out infinite;
+      }
+
+      @keyframes skeleton-shimmer {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .skeleton-card::after {
+          animation: none;
+        }
+      }
+
+      body.dashboard-ready .layout-skeleton {
+        display: none;
+      }
+    </style>
 
     <!-- FASE 1: Design System Consolidato - ITCSS Architecture -->
     <!-- Critical CSS - Caricati immediatamente -->
@@ -95,10 +272,24 @@
     <link rel="stylesheet" href="/assets/css/elements/typography.css" />
     <link rel="stylesheet" href="/assets/css/elements/links.css" />
     <link rel="stylesheet" href="/assets/css/objects/container.css" />
-    <link rel="stylesheet" href="/assets/css/components/dashboard.css" />
-    <link rel="stylesheet" href="/assets/css/components/dashboard-theme-overrides.css" />
-    <link rel="stylesheet" href="/assets/css/components/communication-preferences.css" />
-    <link rel="stylesheet" href="/assets/css/components/auth-modal.css" />
+    <link rel="preload" href="/assets/css/components/dashboard.css" as="style" onload="this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="/assets/css/components/dashboard.css" /></noscript>
+    <link
+      rel="preload"
+      href="/assets/css/components/dashboard-theme-overrides.css"
+      as="style"
+      onload="this.rel='stylesheet'"
+    />
+    <noscript><link rel="stylesheet" href="/assets/css/components/dashboard-theme-overrides.css" /></noscript>
+    <link
+      rel="preload"
+      href="/assets/css/components/communication-preferences.css"
+      as="style"
+      onload="this.rel='stylesheet'"
+    />
+    <noscript><link rel="stylesheet" href="/assets/css/components/communication-preferences.css" /></noscript>
+    <link rel="preload" href="/assets/css/components/auth-modal.css" as="style" onload="this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="/assets/css/components/auth-modal.css" /></noscript>
     
     <!-- Non-critical CSS - Caricati asincronamente per non bloccare rendering -->
     <link rel="stylesheet" href="/assets/css/components/education.css" media="print" onload="this.media='all'" />
@@ -120,6 +311,10 @@
     <link rel="stylesheet" href="/assets/css/mifid-banner.css" media="print" onload="this.media='all'" />
     <noscript>
       <!-- Fallback per browser senza JavaScript -->
+      <link rel="stylesheet" href="/assets/css/components/dashboard.css" />
+      <link rel="stylesheet" href="/assets/css/components/dashboard-theme-overrides.css" />
+      <link rel="stylesheet" href="/assets/css/components/communication-preferences.css" />
+      <link rel="stylesheet" href="/assets/css/components/auth-modal.css" />
       <link rel="stylesheet" href="/assets/css/components/education.css" />
       <link rel="stylesheet" href="/assets/css/components/education-test.css" />
       <link rel="stylesheet" href="/assets/css/education-dashboard.css" />
@@ -175,6 +370,13 @@
 
       <!-- Main Content -->
       <main id="main-content">
+        <!-- Skeleton loader per prevenire CLS -->
+        <div id="dashboard-skeleton" class="layout-skeleton">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
         <!-- Modules Grid View (Default) -->
         <div id="modules-view" class="modules-view active">
           <!-- Categoria: Principale -->

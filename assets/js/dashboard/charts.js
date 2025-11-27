@@ -5,6 +5,7 @@
  */
 
 let Chart = null;
+let chartLoadingPromise = null;
 
 /**
  * Load Chart.js library
@@ -16,13 +17,25 @@ async function loadChartLibrary() {
     return Chart;
   }
 
-  // Load Chart.js from CDN (CSP permette cdn.jsdelivr.net)
-  return new Promise((resolve, reject) => {
-    const script = document.createElement("script");
+  if (chartLoadingPromise) {
+    return chartLoadingPromise;
+  }
+
+  chartLoadingPromise = new Promise((resolve, reject) => {
+    const existingScript = document.querySelector('script[data-chartjs]');
+    if (existingScript && existingScript.dataset.loaded === "true") {
+      Chart = window.Chart;
+      resolve(Chart);
+      return;
+    }
+
+    const script = existingScript || document.createElement("script");
     script.src = "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js";
     script.async = true;
     script.crossOrigin = "anonymous";
+    script.dataset.chartjs = "true";
     script.onload = () => {
+      script.dataset.loaded = "true";
       Chart = window.Chart;
       resolve(Chart);
     };
@@ -30,15 +43,25 @@ async function loadChartLibrary() {
       console.error("[Charts] Error loading Chart.js from CDN");
       reject(new Error("Failed to load Chart.js"));
     };
-    document.head.appendChild(script);
+    if (!existingScript) {
+      document.head.appendChild(script);
+    }
+  }).finally(() => {
+    chartLoadingPromise = null;
   });
+
+  return chartLoadingPromise;
+}
+
+export async function ensureChartsReady() {
+  return loadChartLibrary();
 }
 
 /**
  * Initialize charts module
  */
 export async function initCharts() {
-  await loadChartLibrary();
+  await ensureChartsReady();
 }
 
 /**

@@ -10,7 +10,7 @@ import {
   getPerformanceMetrics,
   getPerformanceResources,
 } from "./performance-monitor.js";
-import { createLineChart, createBarChart, createDoughnutChart } from "./charts.js";
+import { ensureChartsReady, createLineChart, createBarChart, createDoughnutChart } from "./charts.js";
 
 /**
  * Initialize RUM Dashboard
@@ -115,9 +115,10 @@ function renderRUMDashboard(container, summary, vitals, metrics, resources) {
   `;
 
   // Render charts
-  setTimeout(() => {
+  setTimeout(async () => {
+    await ensureChartsReady();
     renderRUMCharts(vitals, metrics);
-  }, 500);
+  }, 0);
 
   // Add refresh button listener
   const refreshBtn = document.getElementById("rum-refresh-btn");
@@ -222,12 +223,6 @@ function renderResourcesList(resources) {
  * Render RUM charts
  */
 function renderRUMCharts(vitals, metrics) {
-  // Wait for Chart.js to load
-  if (typeof Chart === "undefined") {
-    setTimeout(() => renderRUMCharts(vitals, metrics), 500);
-    return;
-  }
-
   // Vitals chart
   const vitalsCanvas = document.getElementById("rum-vitals-chart");
   if (vitalsCanvas) {

@@ -25,7 +25,6 @@ import { initAdvancedFilters } from "./advanced-filters.js";
 import { initRecentActivity } from "./recent-activity.js";
 import { initDashboardWidgets } from "./dashboard-widgets.js";
 import { initPerformanceMonitoring } from "./performance-monitor.js";
-import { initCharts } from "./charts.js";
 import { initRUMDashboard } from "./rum-dashboard.js";
 import { initCommunicationPreferences } from "./communication-preferences.js";
 // Notifiche push - DISABILITATE
@@ -169,9 +168,6 @@ export async function initDashboard() {
 
   // Initialize performance monitoring
   initPerformanceMonitoring();
-
-  // Initialize charts library
-  initCharts();
 
   // Initialize RUM dashboard
   initRUMDashboard();
@@ -379,6 +375,13 @@ export async function initDashboard() {
   });
 
   // Bottom navigation rimosso - non più utilizzato
+
+  // Segnala che la dashboard è stata idratata e rimuovi lo scheletro
+  document.body.classList.add("dashboard-ready");
+  const skeleton = document.getElementById("dashboard-skeleton");
+  if (skeleton) {
+    skeleton.remove();
+  }
 }
 
 // Bottom navigation rimosso - non più utilizzato

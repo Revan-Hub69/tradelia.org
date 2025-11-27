@@ -273,6 +273,12 @@ export function createFavoritesSection() {
     `;
     favoritesSection.appendChild(categoryTitle);
 
+    // Aggiungi placeholder skeleton per prevenire CLS
+    const skeletonGrid = document.createElement("div");
+    skeletonGrid.className = "modules-grid favorites-grid";
+    skeletonGrid.style.minHeight = "190px";
+    favoritesSection.appendChild(skeletonGrid);
+
     // Inserisci sezione in cima
     const firstCategory = modulesView.querySelector(".module-category:not(.favorites-category)");
     if (firstCategory) {
@@ -289,6 +295,7 @@ export function createFavoritesSection() {
   if (!favoritesGrid) {
     favoritesGrid = document.createElement("div");
     favoritesGrid.className = "modules-grid favorites-grid";
+    favoritesGrid.style.minHeight = "190px";
     favoritesSection.appendChild(favoritesGrid);
   }
 
@@ -327,7 +334,7 @@ export function createFavoritesSection() {
           const emptyState = document.createElement("div");
           emptyState.className = "empty-state";
           emptyState.style.cssText =
-            "grid-column: 1 / -1; text-align: center; padding: var(--spacing-xl); color: var(--dash-text-muted); opacity: 0;";
+            "grid-column: 1 / -1; text-align: center; padding: var(--spacing-xl); color: var(--dash-text-muted); min-height: 190px; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0;";
           emptyState.innerHTML = `
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="48" height="48" style="margin: 0 auto var(--spacing-md); opacity: 0.5;">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
