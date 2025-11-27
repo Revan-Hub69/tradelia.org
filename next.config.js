@@ -36,10 +36,12 @@ const nextConfig = {
     ];
   },
 
-  // Immagini
+  // Immagini - configurazione per immagini locali
   images: {
-    domains: ["tradelia.org"],
     formats: ["image/avif", "image/webp"],
+    // Non serve domains per immagini locali (/logos/...)
+    // Se in futuro servono immagini remote, aggiungere:
+    // remotePatterns: [{ protocol: 'https', hostname: 'tradelia.org' }]
   },
 
   // Escludi file che non devono essere compilati
