@@ -1,15 +1,12 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
 import { Globe, Check, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
 import { locales, type Locale, localeNames } from '@/lib/i18n/config';
 
 export function LanguageToggle() {
-  const pathname = usePathname();
-  const router = useRouter();
   const [currentLocale, setCurrentLocale] = useState<Locale>('it');
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -25,13 +22,20 @@ export function LanguageToggle() {
     }
   }, []);
 
+  // Update locale on navigation
   useEffect(() => {
     if (!mounted) return;
     
-    // Detect current locale from pathname
-    const detectedLocale = pathname?.startsWith('/en') ? 'en' : 'it';
-    setCurrentLocale(detectedLocale);
-  }, [pathname, mounted]);
+    const handleLocationChange = () => {
+      if (typeof window !== 'undefined') {
+        const detectedLocale = window.location.pathname.startsWith('/en') ? 'en' : 'it';
+        setCurrentLocale(detectedLocale);
+      }
+    };
+
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, [mounted]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -71,8 +75,10 @@ export function LanguageToggle() {
     setIsOpen(false);
     if (locale === currentLocale) return;
 
+    if (typeof window === 'undefined') return;
+
     // Simple locale switching - replace /en prefix or add it
-    let newPath = pathname || '/';
+    let newPath = window.location.pathname || '/';
     
     // Remove /en prefix if present
     newPath = newPath.replace(/^\/en/, '') || '/';
