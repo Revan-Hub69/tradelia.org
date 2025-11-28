@@ -4,18 +4,18 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils/cn';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold btn-hover gpu-accelerated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base disabled:pointer-events-none disabled:opacity-40 disabled:cursor-not-allowed relative',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium btn-hover gpu-accelerated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed',
   {
     variants: {
       variant: {
         default:
-          'bg-gradient-primary text-white shadow-lg shadow-accent/20 hover:shadow-xl hover:shadow-accent/30 border border-accent/20 hover:border-accent/40 transition-all duration-300 relative overflow-hidden group',
+          'bg-accent text-white shadow-md hover:bg-accent-hover hover:shadow-lg border border-accent/30 hover:border-accent/50 transition-all duration-200 font-medium',
         secondary:
-          'glass text-text-primary border border-border-subtle hover:border-accent/40 hover:bg-bg-elevated/80 backdrop-blur-xl transition-all duration-300 shadow-sm hover:shadow-md',
+          'bg-bg-surface text-text-primary border border-border-subtle hover:bg-bg-elevated hover:border-border-default transition-all duration-200 shadow-sm',
         ghost:
-          'bg-transparent text-text-secondary hover:text-text-primary hover:bg-bg-surface/60 transition-all duration-200 border border-transparent hover:border-border-subtle',
+          'bg-transparent text-text-secondary hover:text-text-primary hover:bg-bg-surface/40 transition-colors duration-200 border border-transparent',
         outline:
-          'border-2 border-border-subtle bg-transparent hover:border-accent hover:text-text-primary hover:bg-accent/5 transition-all duration-300 shadow-sm hover:shadow-md',
+          'border border-border-subtle bg-transparent text-text-primary hover:bg-bg-surface hover:border-border-default transition-all duration-200',
       },
       size: {
         default: 'h-11 px-4 py-2 min-h-[44px]', // WCAG 2.5.5: minimum 44x44px touch target
