@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -22,8 +22,6 @@ export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const pathname = usePathname();
-  const menuRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -42,7 +40,6 @@ export function Navigation() {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && mobileMenuOpen) {
         setMobileMenuOpen(false);
-        buttonRef.current?.focus();
       }
     };
 
@@ -64,11 +61,11 @@ export function Navigation() {
 
   return (
     <>
-      {/* Desktop Navigation - Best Practice with Elegant Effects */}
+      {/* Desktop Navigation */}
       <nav 
-        className="hidden md:flex items-center gap-1" 
-        aria-label="Main navigation"
+        className="hidden md:flex items-center gap-1"
         role="navigation"
+        aria-label="Main navigation"
       >
         {navKeys.map((item) => {
           const isActive = pathname === item.href ||
@@ -79,7 +76,6 @@ export function Navigation() {
               key={item.key}
               whileHover={{ y: -1 }}
               whileTap={{ y: 0, scale: 0.98 }}
-              transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
             >
               <Link
                 href={item.href}
@@ -99,11 +95,8 @@ export function Navigation() {
                   <motion.span
                     className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-primary"
                     layoutId="activeTab"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    aria-hidden="true"
                   />
                 )}
-                {/* Hover underline effect */}
                 <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent/30 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" aria-hidden="true" />
               </Link>
             </motion.div>
@@ -111,16 +104,14 @@ export function Navigation() {
         })}
       </nav>
 
-      {/* Mobile Menu Button - Best Practice: 44x44px touch target */}
+      {/* Mobile Menu Button */}
       <Button
-        ref={buttonRef}
         variant="ghost"
         size="icon"
         className="md:hidden min-w-[44px] min-h-[44px]"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
         aria-expanded={mobileMenuOpen}
-        aria-controls="mobile-menu"
       >
         {mobileMenuOpen ? (
           <X className="w-5 h-5" aria-hidden="true" />
@@ -129,49 +120,43 @@ export function Navigation() {
         )}
       </Button>
 
-      {/* Mobile Menu - Simple dropdown under header - Best Practice */}
-      <div
-        className={cn(
-          'md:hidden fixed top-16 left-0 right-0 bg-bg-surface border-b border-border-subtle shadow-xl z-40',
-          'transition-all duration-300 ease-in-out overflow-hidden',
-          mobileMenuOpen 
-            ? 'max-h-screen opacity-100' 
-            : 'max-h-0 opacity-0 pointer-events-none'
-        )}
-        id="mobile-menu"
-        ref={menuRef}
-        aria-hidden={!mobileMenuOpen}
-      >
-        <nav 
-          className="px-4 py-4 space-y-1"
-          role="navigation"
-          aria-label="Main navigation"
+      {/* Mobile Menu - Horizontal Scrollable */}
+      {mobileMenuOpen && (
+        <div
+          className="md:hidden fixed top-16 left-0 right-0 bg-bg-surface border-b border-border-subtle shadow-lg z-40 overflow-x-auto"
+          style={{ WebkitOverflowScrolling: 'touch' }}
         >
-          {navKeys.map((item) => {
-            const isActive = pathname === item.href ||
-              (item.href !== '/' && pathname?.startsWith(item.href));
+          <nav 
+            className="flex items-center gap-2 px-4 py-3 min-w-max"
+            role="navigation"
+            aria-label="Main navigation"
+          >
+            {navKeys.map((item) => {
+              const isActive = pathname === item.href ||
+                (item.href !== '/' && pathname?.startsWith(item.href));
 
-            return (
-              <Link
-                key={item.key}
-                href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={cn(
-                  'block px-4 py-3 text-base font-medium rounded-lg transition-all duration-200',
-                  'min-h-[44px] flex items-center',
-                  'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-surface',
-                  isActive
-                    ? 'text-text-primary bg-bg-elevated'
-                    : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
-                )}
-                aria-current={isActive ? 'page' : undefined}
-              >
-                {t(`nav.${item.key}`)}
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
+              return (
+                <Link
+                  key={item.key}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    'px-4 py-2 text-sm font-semibold whitespace-nowrap rounded-lg transition-all duration-200',
+                    'min-h-[44px] flex items-center justify-center',
+                    'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
+                    isActive
+                      ? 'text-text-primary bg-bg-elevated shadow-sm'
+                      : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
+                  )}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  {t(`nav.${item.key}`)}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+      )}
     </>
   );
 }
