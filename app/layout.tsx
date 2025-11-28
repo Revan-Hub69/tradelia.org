@@ -70,12 +70,46 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
         
-        {/* Critical CSS inline to prevent render blocking */}
+        {/* Critical CSS inline to prevent render blocking - Expanded for LCP optimization */}
         <style dangerouslySetInnerHTML={{
           __html: `
-            :root{--bg-base:#0a0e1a;--text-primary:#e8edf3;--text-secondary:#b8c5d1}
+            :root{
+              --bg-base:#0a0e1a;--bg-surface:#1a1f2e;--bg-elevated:#1f2533;
+              --text-primary:#e8edf3;--text-secondary:#b8c5d1;--text-muted:#a8b0bc;
+              --accent:#3b82f6;--accent-hover:#2563eb;
+              --border-subtle:rgba(255,255,255,0.05);--border-default:rgba(255,255,255,0.08)
+            }
             html{background-color:var(--bg-base);scroll-behavior:smooth;overflow-y:auto}
-            body{background-color:var(--bg-base);color:var(--text-primary);margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif;overflow-y:auto}
+            body{
+              background-color:var(--bg-base);color:var(--text-primary);margin:0;padding:0;
+              font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+              overflow-y:auto;line-height:1.75;-webkit-font-smoothing:antialiased;
+              -moz-osx-font-smoothing:grayscale
+            }
+            #hero-title{
+              color:var(--text-primary);font-weight:800;line-height:1.1;
+              margin:0 0 1.5rem;max-width:80rem;margin-left:auto;margin-right:auto;
+              text-align:center;letter-spacing:-0.025em;font-size:2.25rem
+            }
+            #hero-title+p{
+              color:var(--text-secondary);font-size:1.125rem;line-height:1.75rem;
+              margin:0 0 2.5rem;max-width:48rem;margin-left:auto;margin-right:auto;
+              text-align:center;font-weight:300;letter-spacing:-0.01em
+            }
+            .text-lg{font-size:1.125rem;line-height:1.75rem}
+            .text-xl{font-size:1.25rem;line-height:1.75rem}
+            .text-2xl{font-size:1.5rem;line-height:2rem}
+            @media(min-width:768px){
+              #hero-title{font-size:3.75rem}
+              #hero-title+p{font-size:1.5rem}
+              .text-xl{font-size:1.5rem}
+              .text-2xl{font-size:1.875rem}
+            }
+            @media(min-width:1024px){
+              #hero-title{font-size:4.5rem}
+              #hero-title+p{font-size:2.25rem}
+              .text-2xl{font-size:2.25rem}
+            }
           `
         }} />
         
