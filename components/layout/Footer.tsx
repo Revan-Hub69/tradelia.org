@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
-import { ChevronDown } from 'lucide-react';
 import {
   useReducedMotion,
   createContainerVariants,
@@ -19,11 +18,6 @@ export function Footer() {
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = createContainerVariants(prefersReducedMotion);
   const itemVariants = createItemVariants(prefersReducedMotion);
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    support: false,
-    legal: false,
-    resources: false,
-  });
   const [mounted, setMounted] = useState(false);
   const [year, setYear] = useState(2024);
 
@@ -53,14 +47,6 @@ export function Footer() {
     ],
   };
 
-  const toggleSection = (section: string) => {
-    if (!mounted) return;
-    setExpandedSections((prev) => ({
-      ...prev,
-      [section]: !prev[section],
-    }));
-  };
-
   const FooterSection = ({ 
     title, 
     links, 
@@ -72,7 +58,6 @@ export function Footer() {
     sectionKey: string;
     delay: number;
   }) => {
-    const isExpanded = mounted ? expandedSections[sectionKey] : false;
 
     return (
       <motion.div
@@ -102,54 +87,26 @@ export function Footer() {
           </ul>
         </div>
 
-        {/* Mobile: Collapsible - Best Practice Accordion */}
+        {/* Mobile: Always visible - Simple list */}
         <div className="md:hidden">
-          <button
-            type="button"
-            onClick={() => {
-              if (mounted) {
-                toggleSection(sectionKey);
-              }
-            }}
-            disabled={!mounted}
-            className="w-full flex items-center justify-between py-4 text-xs font-semibold text-text-primary uppercase tracking-wider border-b border-border-subtle hover:text-accent transition-colors duration-200 disabled:opacity-50"
-            aria-expanded={isExpanded}
-            aria-controls={`footer-${sectionKey}`}
-          >
-            <span>{title}</span>
-            <ChevronDown
-              className={cn(
-                'w-4 h-4 transition-transform duration-200 text-text-tertiary',
-                isExpanded && 'rotate-180'
-              )}
-              aria-hidden="true"
-            />
-          </button>
-          {mounted && (
-            <div
-              id={`footer-${sectionKey}`}
-              className={cn(
-                'overflow-hidden transition-all duration-300 ease-in-out',
-                isExpanded ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-              )}
-            >
-              <ul className="space-y-3 pt-4 pb-4">
-                {links.map((link) => (
-                  <li key={link.key}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-text-secondary hover:text-text-primary hover:translate-x-1 transition-all duration-200 block pl-2 group relative"
-                    >
-                      <span className="relative">
-                        {t(`footer.${sectionKey}Links.${link.key}`)}
-                        <span className="absolute -bottom-0.5 left-2 w-0 h-px bg-accent transition-all duration-200 group-hover:w-[calc(100%-0.5rem)]" />
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <h3 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-4 pt-4 border-t border-border-subtle first:border-t-0 first:pt-0">
+            {title}
+          </h3>
+          <ul className="space-y-3">
+            {links.map((link) => (
+              <li key={link.key}>
+                <Link
+                  href={link.href}
+                  className="text-sm text-text-secondary hover:text-text-primary hover:translate-x-1 transition-all duration-200 block pl-2 group relative"
+                >
+                  <span className="relative">
+                    {t(`footer.${sectionKey}Links.${link.key}`)}
+                    <span className="absolute -bottom-0.5 left-2 w-0 h-px bg-accent transition-all duration-200 group-hover:w-[calc(100%-0.5rem)]" />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </motion.div>
     );
