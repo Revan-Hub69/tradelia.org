@@ -62,24 +62,31 @@ export function LanguageToggle() {
     return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen, mounted]);
 
-  const handleLocaleChange = (locale: Locale) => {
+  const handleLocaleChange = async (locale: Locale) => {
     setIsOpen(false);
     if (locale === currentLocale) return;
 
     // Simple locale switching - replace /en prefix or add it
     let newPath = pathname || '/';
     
-    if (locale === 'it') {
-      // Remove /en prefix if present
-      newPath = newPath.replace(/^\/en/, '') || '/';
-    } else {
-      // Add /en prefix if not present
-      if (!newPath.startsWith('/en')) {
-        newPath = `/en${newPath === '/' ? '' : newPath}`;
-      }
-    }
+    // Remove /en prefix if present
+    newPath = newPath.replace(/^\/en/, '') || '/';
     
-    router.push(newPath);
+    if (locale === 'en') {
+      // Add /en prefix
+      newPath = `/en${newPath === '/' ? '' : newPath}`;
+    }
+    // If locale is 'it', newPath is already correct (without /en)
+    
+    // Use replace to avoid adding to history and ensure proper navigation
+    try {
+      await router.replace(newPath);
+      // Force refresh to ensure page loads correctly
+      router.refresh();
+    } catch (error) {
+      // Fallback to window.location if router fails
+      window.location.href = newPath;
+    }
   };
 
   if (!mounted) {
