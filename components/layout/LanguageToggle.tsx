@@ -99,7 +99,7 @@ export function LanguageToggle() {
       <Button
         variant="ghost"
         size="sm"
-        className="gap-2 min-w-[44px] min-h-[44px]"
+        className="gap-2"
         aria-label="Change language"
         disabled
       >

@@ -51,7 +51,7 @@ export function Header() {
             asChild 
             variant="secondary" 
             size="sm" 
-            className="group min-w-[44px] min-h-[44px]"
+            className="group"
           >
             <Link 
               href="/dashboard"

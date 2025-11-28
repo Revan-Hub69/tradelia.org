@@ -232,6 +232,20 @@
 }
 
 @layer components {
+  /* Button Hover Effects - Professional and subtle */
+  .btn-hover {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateZ(0); /* GPU acceleration */
+  }
+
+  .btn-hover:hover:not(:disabled) {
+    transform: translateY(-1px) translateZ(0);
+  }
+
+  .btn-hover:active:not(:disabled) {
+    transform: translateY(0) translateZ(0);
+  }
+
   /* Glassmorphism Effect */
   .glass {
     background: var(--bg-glass);
