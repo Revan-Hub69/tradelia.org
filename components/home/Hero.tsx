@@ -108,28 +108,35 @@ export function Hero() {
         </motion.div>
 
         {/* Title - Enhanced typography and animation - LCP element */}
-        <motion.h1
+        {/* Render immediately without animation delay for LCP optimization */}
+        <h1
           id="hero-title"
-          variants={itemVariants}
           className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tighter text-text-primary mb-6 max-w-5xl mx-auto"
           style={{ 
             // Prevent layout shift during font load
             minHeight: '1.1em',
+            // Ensure immediate visibility for LCP
+            opacity: 1,
+            transform: 'none',
           }}
         >
           {t('hero.title')}{' '}
           <span className="gradient-text relative inline-block">
             {t('hero.titleHighlight')}
           </span>
-        </motion.h1>
+        </h1>
 
         {/* Description - Enhanced readability */}
-        <motion.p
-          variants={itemVariants}
+        {/* Render immediately without animation delay for LCP optimization */}
+        <p
           className="text-lg md:text-xl lg:text-2xl leading-relaxed text-text-secondary mb-10 max-w-3xl mx-auto tracking-tight font-light"
+          style={{
+            opacity: 1,
+            transform: 'none',
+          }}
         >
           {t('hero.description')}
-        </motion.p>
+        </p>
 
         {/* Stats - Enhanced with icons and better layout */}
         <motion.div
