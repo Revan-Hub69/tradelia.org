@@ -4,28 +4,12 @@ import { motion } from 'framer-motion';
 import { DollarSign, CheckCircle2, Smartphone, Shield } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};
+import {
+  useReducedMotion,
+  createContainerVariants,
+  createItemVariants,
+  createHoverVariants,
+} from '@/lib/animations';
 
 const values = [
   {
@@ -55,25 +39,37 @@ const values = [
 ];
 
 export function Values() {
+  const prefersReducedMotion = useReducedMotion();
+  const containerVariants = createContainerVariants(prefersReducedMotion);
+  const itemVariants = createItemVariants(prefersReducedMotion);
+  const hoverVariants = createHoverVariants(prefersReducedMotion);
+
   return (
     <section className="relative py-24 md:py-32 bg-bg-surface border-t border-border overflow-hidden">
       {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-[0.02]">
-        <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_60px,rgba(255,255,255,0.008)_60px,rgba(255,255,255,0.008)_61px),repeating-linear-gradient(90deg,transparent,transparent_60px,rgba(255,255,255,0.008)_60px,rgba(255,255,255,0.008)_61px)] animate-pattern-shift" />
-      </div>
+      <div className="geometric-pattern" aria-hidden="true" />
 
       {/* Subtle gradient accent */}
       <motion.div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-accent/4 to-transparent rounded-full blur-[80px]"
-        animate={{
-          scale: [1, 1.1, 1],
-          opacity: [0.5, 0.7, 0.5],
-        }}
-        transition={{
-          duration: 15,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
+        animate={
+          prefersReducedMotion
+            ? {}
+            : {
+                scale: [1, 1.1, 1],
+                opacity: [0.5, 0.7, 0.5],
+              }
+        }
+        transition={
+          prefersReducedMotion
+            ? {}
+            : {
+                duration: 15,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }
+        }
+        aria-hidden="true"
       />
 
       <motion.div
@@ -110,21 +106,43 @@ export function Values() {
             const Icon = value.icon;
             return (
               <motion.div key={idx} variants={itemVariants}>
-                <Card className="h-full text-center group">
-                  <CardHeader>
-                    <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-accent border border-border-accent flex items-center justify-center mb-6 transition-all duration-300 group-hover:bg-gradient-primary group-hover:border-accent group-hover:scale-115 group-hover:rotate-12 group-hover:shadow-glow">
-                      <Icon className="w-10 h-10 text-accent transition-colors duration-300 group-hover:text-white" />
-                    </div>
-                    <CardTitle className="text-xl font-bold text-text-primary">
-                      {value.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-base text-text-secondary leading-relaxed font-light">
-                      {value.description}
-                    </CardDescription>
-                  </CardContent>
-                </Card>
+                <motion.div
+                  variants={hoverVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  <Card className="h-full text-center group">
+                    <CardHeader>
+                      <motion.div
+                        className="w-20 h-20 mx-auto rounded-2xl bg-gradient-accent border border-border-accent flex items-center justify-center mb-6 transition-all duration-300 group-hover:bg-gradient-primary group-hover:border-accent group-hover:shadow-glow"
+                        animate={
+                          prefersReducedMotion
+                            ? {}
+                            : {
+                                scale: [1, 1.08, 1],
+                                rotate: [0, 5, -5, 0],
+                              }
+                        }
+                        transition={{
+                          duration: 3,
+                          delay: idx * 0.2,
+                          repeat: Infinity,
+                          repeatDelay: 4,
+                        }}
+                      >
+                        <Icon className="w-10 h-10 text-accent transition-colors duration-300 group-hover:text-white" />
+                      </motion.div>
+                      <CardTitle className="text-xl font-bold text-text-primary">
+                        {value.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <CardDescription className="text-base text-text-secondary leading-relaxed font-light">
+                        {value.description}
+                      </CardDescription>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               </motion.div>
             );
           })}

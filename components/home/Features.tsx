@@ -6,28 +6,12 @@ import { CheckCircle2, BookOpen, Shield, Zap, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};
+import {
+  useReducedMotion,
+  createContainerVariants,
+  createItemVariants,
+  createHoverVariants,
+} from '@/lib/animations';
 
 const features = [
   {
@@ -57,15 +41,38 @@ const features = [
 ];
 
 export function Features() {
+  const prefersReducedMotion = useReducedMotion();
+  const containerVariants = createContainerVariants(prefersReducedMotion);
+  const itemVariants = createItemVariants(prefersReducedMotion);
+  const hoverVariants = createHoverVariants(prefersReducedMotion);
+
   return (
     <section className="relative py-24 md:py-32 bg-bg-surface overflow-hidden">
       {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-[0.02]">
-        <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_40px,rgba(255,255,255,0.008)_40px,rgba(255,255,255,0.008)_41px)] animate-pattern-shift" />
-      </div>
+      <div className="geometric-pattern" aria-hidden="true" />
 
       {/* Subtle gradient accent */}
-      <div className="absolute top-20 right-[-10%] w-[500px] h-[500px] bg-gradient-to-br from-accent/6 to-transparent rounded-full blur-[60px]" />
+      <motion.div
+        className="absolute top-20 right-[-10%] w-[500px] h-[500px] bg-gradient-to-br from-accent/6 to-transparent rounded-full blur-[60px]"
+        animate={
+          prefersReducedMotion
+            ? {}
+            : {
+                scale: [1, 1.05, 1],
+                opacity: [0.4, 0.5, 0.4],
+              }
+        }
+        transition={
+          prefersReducedMotion
+            ? {}
+            : {
+                duration: 20,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }
+        }
+        aria-hidden="true"
+      />
 
       <motion.div
         className="relative z-10 max-w-7xl mx-auto px-8"
@@ -105,21 +112,43 @@ export function Features() {
             const Icon = feature.icon;
             return (
               <motion.div key={idx} variants={itemVariants}>
-                <Card className="h-full group">
-                  <CardHeader>
-                    <div className="w-16 h-16 rounded-xl bg-gradient-accent border border-border-accent flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-gradient-primary group-hover:border-accent group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-glow">
-                      <Icon className="w-8 h-8 text-accent transition-colors duration-300 group-hover:text-white" />
-                    </div>
-                    <CardTitle className="text-xl font-bold text-text-primary">
-                      {feature.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-base text-text-secondary leading-relaxed font-light">
-                      {feature.description}
-                    </CardDescription>
-                  </CardContent>
-                </Card>
+                <motion.div
+                  variants={hoverVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  <Card className="h-full group">
+                    <CardHeader>
+                      <motion.div
+                        className="w-16 h-16 rounded-xl bg-gradient-accent border border-border-accent flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-gradient-primary group-hover:border-accent"
+                        animate={
+                          prefersReducedMotion
+                            ? {}
+                            : {
+                                scale: [1, 1.05, 1],
+                                rotate: [0, 2, -2, 0],
+                              }
+                        }
+                        transition={{
+                          duration: 3,
+                          delay: idx * 0.2,
+                          repeat: Infinity,
+                          repeatDelay: 5,
+                        }}
+                      >
+                        <Icon className="w-8 h-8 text-accent transition-colors duration-300 group-hover:text-white" />
+                      </motion.div>
+                      <CardTitle className="text-xl font-bold text-text-primary">
+                        {feature.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <CardDescription className="text-base text-text-secondary leading-relaxed font-light">
+                        {feature.description}
+                      </CardDescription>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               </motion.div>
             );
           })}
@@ -127,12 +156,14 @@ export function Features() {
 
         {/* CTA */}
         <motion.div variants={itemVariants} className="text-center">
-          <Button asChild variant="default" size="lg" className="group">
-            <Link href="/dashboard#education">
-              <span>Esplora i Percorsi Formativi</span>
-              <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
-          </Button>
+          <motion.div variants={hoverVariants} whileHover="hover" whileTap="tap">
+            <Button asChild variant="default" size="lg" className="group">
+              <Link href="/dashboard#education">
+                <span>Esplora i Percorsi Formativi</span>
+                <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </Button>
+          </motion.div>
         </motion.div>
       </motion.div>
     </section>

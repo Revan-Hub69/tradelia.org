@@ -6,19 +6,27 @@ import Link from 'next/link';
 import { Navigation } from './Navigation';
 import { Button } from '@/components/ui/button';
 import { LayoutDashboard } from 'lucide-react';
+import { useReducedMotion, createSlideInVariants } from '@/lib/animations';
 
 export function Header() {
+  const prefersReducedMotion = useReducedMotion();
+  const slideVariants = createSlideInVariants(prefersReducedMotion);
+
   return (
     <motion.header
       className="sticky top-0 z-50 w-full border-b border-border-subtle glass-strong supports-[backdrop-filter]:bg-bg-glass"
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      initial={prefersReducedMotion ? { opacity: 0 } : { y: -100, opacity: 0 }}
+      animate={prefersReducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
+      transition={
+        prefersReducedMotion
+          ? { duration: 0.01 }
+          : { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+      }
     >
       <div className="container flex h-16 items-center justify-between px-8">
         <Link
           href="/"
-          className="flex items-center gap-3 group transition-transform duration-300 hover:-translate-y-0.5"
+          className="flex items-center gap-3 group transition-smooth hover:-translate-y-0.5"
           aria-label="Tradelia AI - Home"
         >
           <div className="relative">
@@ -27,7 +35,7 @@ export function Header() {
               alt="Tradelia AI"
               width={200}
               height={50}
-              className="h-10 w-auto brightness-95 drop-shadow-[0_0_10px_rgba(99,102,241,0.15)] transition-smooth group-hover:brightness-100 group-hover:drop-shadow-[0_0_15px_rgba(99,102,241,0.25)] group-hover:scale-105"
+              className="h-10 w-auto brightness-95 drop-shadow-[0_0_10px_rgba(88,166,255,0.15)] transition-smooth group-hover:brightness-100 group-hover:drop-shadow-[0_0_15px_rgba(88,166,255,0.25)] group-hover:scale-105"
               priority
             />
             <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-primary transition-all duration-300 group-hover:w-full" />

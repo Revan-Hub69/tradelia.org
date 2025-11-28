@@ -6,28 +6,12 @@ import { TrendingUp, Grid3x3, CircleDot, ArrowRight, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.7,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};
+import {
+  useReducedMotion,
+  createContainerVariants,
+  createItemVariants,
+  createHoverVariants,
+} from '@/lib/animations';
 
 const methods = [
   {
@@ -75,13 +59,38 @@ const methods = [
 ];
 
 export function Methods() {
+  const prefersReducedMotion = useReducedMotion();
+  const containerVariants = createContainerVariants(prefersReducedMotion);
+  const itemVariants = createItemVariants(prefersReducedMotion);
+  const hoverVariants = createHoverVariants(prefersReducedMotion);
+
   return (
     <section className="relative py-24 md:py-32 bg-bg-base overflow-hidden">
       {/* Subtle background pattern */}
-      <div className="geometric-pattern" />
+      <div className="geometric-pattern" aria-hidden="true" />
 
       {/* Subtle gradient accent */}
-      <div className="absolute bottom-10 left-[-10%] w-[600px] h-[600px] bg-gradient-to-br from-accent/5 to-transparent rounded-full blur-[70px]" />
+      <motion.div
+        className="absolute bottom-10 left-[-10%] w-[600px] h-[600px] bg-gradient-to-br from-accent/5 to-transparent rounded-full blur-[70px]"
+        animate={
+          prefersReducedMotion
+            ? {}
+            : {
+                scale: [1, 1.08, 1],
+                opacity: [0.3, 0.4, 0.3],
+              }
+        }
+        transition={
+          prefersReducedMotion
+            ? {}
+            : {
+                duration: 25,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }
+        }
+        aria-hidden="true"
+      />
 
       <motion.div
         className="relative z-10 max-w-7xl mx-auto px-8"
@@ -118,48 +127,72 @@ export function Methods() {
             const Icon = method.icon;
             return (
               <motion.div key={method.id} variants={itemVariants}>
-                <Card className="h-full group">
-                  <CardHeader>
-                    <div className="flex items-start gap-4 mb-4">
-                      <div
-                        className={`w-16 h-16 rounded-xl bg-gradient-to-br ${method.color} border border-border-accent flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-glow`}
-                      >
-                        <Icon className="w-8 h-8 text-white" />
-                      </div>
-                      <div>
-                        <div className="text-xs font-extrabold gradient-text uppercase tracking-widest mb-1">
-                          {method.acronym}
-                        </div>
-                        <CardTitle className="text-xl font-bold text-text-primary leading-tight">
-                          {method.title}
-                        </CardTitle>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-base text-text-secondary leading-relaxed mb-6 font-light">
-                      {method.description}
-                    </CardDescription>
-                    <ul className="space-y-3 mb-6">
-                      {method.features.map((feature, featureIdx) => (
-                        <li
-                          key={featureIdx}
-                          className="flex items-center gap-3 text-sm text-text-secondary group-hover:text-text-primary transition-colors duration-300"
+                <motion.div
+                  variants={hoverVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  <Card className="h-full group">
+                    <CardHeader>
+                      <div className="flex items-start gap-4 mb-4">
+                        <motion.div
+                          className={`w-16 h-16 rounded-xl bg-gradient-to-br ${method.color} border border-border-accent flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:shadow-glow`}
+                          animate={
+                            prefersReducedMotion
+                              ? {}
+                              : {
+                                  scale: [1, 1.05, 1],
+                                  rotate: [0, 3, -3, 0],
+                                }
+                          }
+                          transition={{
+                            duration: 4,
+                            delay: idx * 0.3,
+                            repeat: Infinity,
+                            repeatDelay: 6,
+                          }}
                         >
-                          <Check className="w-4 h-4 text-accent flex-shrink-0" />
-                          <span className="font-light">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <Link
-                      href="/dashboard#education"
-                      className="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent-hover transition-colors duration-300 group/link"
-                    >
-                      <span>Esplora Framework</span>
-                      <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" />
-                    </Link>
-                  </CardContent>
-                </Card>
+                          <Icon className="w-8 h-8 text-white" />
+                        </motion.div>
+                        <div>
+                          <div className="text-xs font-extrabold gradient-text uppercase tracking-widest mb-1">
+                            {method.acronym}
+                          </div>
+                          <CardTitle className="text-xl font-bold text-text-primary leading-tight">
+                            {method.title}
+                          </CardTitle>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <CardDescription className="text-base text-text-secondary leading-relaxed mb-6 font-light">
+                        {method.description}
+                      </CardDescription>
+                      <ul className="space-y-3 mb-6">
+                        {method.features.map((feature, featureIdx) => (
+                          <motion.li
+                            key={featureIdx}
+                            className="flex items-center gap-3 text-sm text-text-secondary group-hover:text-text-primary transition-colors duration-300"
+                            initial={{ opacity: 0, x: -10 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: featureIdx * 0.1 }}
+                          >
+                            <Check className="w-4 h-4 text-accent flex-shrink-0" />
+                            <span className="font-light">{feature}</span>
+                          </motion.li>
+                        ))}
+                      </ul>
+                      <Link
+                        href="/dashboard#education"
+                        className="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent-hover transition-colors duration-300 group/link"
+                      >
+                        <span>Esplora Framework</span>
+                        <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" />
+                      </Link>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               </motion.div>
             );
           })}
