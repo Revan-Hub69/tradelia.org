@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -16,7 +16,6 @@ import { cn } from '@/lib/utils/cn';
 
 export function Footer() {
   const { t } = useTranslations();
-  const year = new Date().getFullYear();
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = createContainerVariants(prefersReducedMotion);
   const itemVariants = createItemVariants(prefersReducedMotion);
@@ -25,6 +24,13 @@ export function Footer() {
     legal: false,
     resources: false,
   });
+  const [mounted, setMounted] = useState(false);
+  const [year, setYear] = useState(2024);
+
+  useEffect(() => {
+    setMounted(true);
+    setYear(new Date().getFullYear());
+  }, []);
 
   const footerLinks = {
     support: [
@@ -182,7 +188,7 @@ export function Footer() {
                 </div>
               </Link>
               <p className="text-sm text-text-muted leading-relaxed">
-                &copy; {year} Tradelia · {t('footer.copyright')}
+                &copy; {mounted ? year : 2024} Tradelia · {t('footer.copyright')}
               </p>
               <p className="text-sm text-text-secondary leading-relaxed max-w-sm transition-colors duration-200">
                 {t('footer.description')}
@@ -227,7 +233,9 @@ export function Footer() {
                   v2.0.1
                 </Badge>
                 <span className="opacity-50">·</span>
-                <span className="text-text-tertiary">{new Date().toISOString().split('T')[0]}</span>
+                {mounted && (
+                  <span className="text-text-tertiary">{new Date().toISOString().split('T')[0]}</span>
+                )}
               </div>
               <nav className="flex items-center gap-4" aria-label="Legal links">
                 <Link
