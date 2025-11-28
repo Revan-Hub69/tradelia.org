@@ -68,11 +68,11 @@
 }
 
 .stat-value {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 700;
-  color: var(--dash-accent);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-size: clamp(2rem, 5vw, 3rem) !important;
+  font-weight: 700 !important;
+  color: #1e40af !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.02em !important;
 }
 
 .stat-trend {
