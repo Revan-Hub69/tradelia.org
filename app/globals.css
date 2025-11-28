@@ -78,11 +78,12 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0.12;
+    opacity: 0.25;
+    z-index: 1;
     background-image:
-      radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.4), transparent 50%),
-      radial-gradient(circle at 80% 30%, rgba(37, 99, 235, 0.35), transparent 45%),
-      conic-gradient(from 90deg, rgba(59, 130, 246, 0.15), transparent 50%);
+      radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.6), transparent 50%),
+      radial-gradient(circle at 80% 30%, rgba(37, 99, 235, 0.5), transparent 45%),
+      conic-gradient(from 90deg, rgba(59, 130, 246, 0.3), transparent 50%);
     mix-blend-mode: screen;
   }
 
@@ -94,20 +95,20 @@
       repeating-linear-gradient(
         135deg,
         transparent,
-        transparent 120px,
-        rgba(59, 130, 246, 0.15) 121px,
-        rgba(59, 130, 246, 0.15) 122px,
-        transparent 123px
+        transparent 80px,
+        rgba(59, 130, 246, 0.3) 81px,
+        rgba(59, 130, 246, 0.3) 82px,
+        transparent 83px
       ),
       repeating-linear-gradient(
         45deg,
         transparent,
-        transparent 100px,
-        rgba(37, 99, 235, 0.12) 101px,
-        rgba(37, 99, 235, 0.12) 102px,
-        transparent 103px
+        transparent 70px,
+        rgba(37, 99, 235, 0.25) 71px,
+        rgba(37, 99, 235, 0.25) 72px,
+        transparent 73px
       );
-    mask-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.6), transparent 70%);
+    mask-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.8), transparent 70%);
   }
 
   /* Motion Sensitivity - WCAG 2.3.3 */
@@ -255,7 +256,8 @@
 @layer utilities {
   /* Premium Geometric Patterns - Visible and Elegant */
   .geometric-pattern {
-    @apply absolute inset-0 opacity-[0.08] pointer-events-none overflow-hidden;
+    @apply absolute inset-0 opacity-[0.15] pointer-events-none overflow-hidden;
+    z-index: 1;
   }
 
   .geometric-pattern::before {
@@ -266,17 +268,17 @@
         0deg,
         transparent,
         transparent 2px,
-        rgba(59, 130, 246, 0.12) 2px,
-        rgba(59, 130, 246, 0.12) 3px
+        rgba(59, 130, 246, 0.25) 2px,
+        rgba(59, 130, 246, 0.25) 3px
       ),
       repeating-linear-gradient(
         90deg,
         transparent,
         transparent 2px,
-        rgba(37, 99, 235, 0.1) 2px,
-        rgba(37, 99, 235, 0.1) 3px
+        rgba(37, 99, 235, 0.2) 2px,
+        rgba(37, 99, 235, 0.2) 3px
       );
-    background-size: 50px 50px;
+    background-size: 40px 40px;
     animation: patternShift 40s linear infinite;
   }
 

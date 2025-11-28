@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Navigation } from './Navigation';
+import { LanguageToggle } from './LanguageToggle';
 import { Button } from '@/components/ui/button';
 import { LayoutDashboard } from 'lucide-react';
 import { useReducedMotion, createSlideInVariants } from '@/lib/animations';
@@ -45,17 +46,22 @@ export function Header() {
           </div>
         </Link>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <motion.div variants={slideVariants} initial="hidden" animate="visible" className="flex items-center">
             <Navigation />
           </motion.div>
-          <Button asChild variant="secondary" size="sm" className="hidden md:flex group">
+          
+          {/* Language Toggle */}
+          <LanguageToggle />
+          
+          {/* CTA Buttons */}
+          <Button asChild variant="secondary" size="sm" className="hidden md:flex group min-w-[44px] min-h-[44px]">
             <Link href="/dashboard" aria-label={t('header.dashboardAria')}>
               <LayoutDashboard className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
               <span className="hidden sm:inline">{t('header.dashboard')}</span>
             </Link>
           </Button>
-          <Button asChild variant="default" size="sm" className="hidden lg:inline-flex">
+          <Button asChild variant="default" size="sm" className="hidden lg:inline-flex min-w-[44px] min-h-[44px]">
             <Link href="/contact" aria-label={t('header.contattiAria')}>
               {t('header.contatti')}
             </Link>

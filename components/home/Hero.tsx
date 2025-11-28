@@ -60,34 +60,34 @@ export function Hero() {
       
       {/* Additional geometric accents for depth - Enhanced and Visible */}
       <motion.div
-        className="absolute top-1/4 right-1/4 w-64 h-64 opacity-[0.15] pointer-events-none"
+        className="absolute top-1/4 right-1/4 w-64 h-64 opacity-[0.3] pointer-events-none z-[1]"
         aria-hidden="true"
         animate={floatVariants.animate}
       >
-        <div className="absolute inset-0 border-2 border-accent/50 rounded-full" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
+        <div className="absolute inset-0 border-2 border-accent/60 rounded-full" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
       </motion.div>
       <motion.div
-        className="absolute bottom-1/4 left-1/4 w-52 h-52 opacity-[0.12] pointer-events-none"
+        className="absolute bottom-1/4 left-1/4 w-52 h-52 opacity-[0.25] pointer-events-none z-[1]"
         aria-hidden="true"
         animate={floatVariants.animate}
         transition={{ ...floatVariants.animate?.transition, delay: 2 }}
       >
-        <div className="absolute inset-0 border-2 border-accent/40" style={{ clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)' }} />
+        <div className="absolute inset-0 border-2 border-accent/50" style={{ clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)' }} />
       </motion.div>
       {/* Additional geometric lines for structure */}
-      <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" aria-hidden="true" />
-      <div className="absolute top-0 bottom-0 left-1/2 w-px bg-gradient-to-b from-transparent via-accent/15 to-transparent" aria-hidden="true" />
+      <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent z-[1]" aria-hidden="true" />
+      <div className="absolute top-0 bottom-0 left-1/2 w-px bg-gradient-to-b from-transparent via-accent/25 to-transparent z-[1]" aria-hidden="true" />
 
       {/* Grid pattern overlay - Visible academic texture */}
-      <div className="absolute inset-0 opacity-[0.06] pointer-events-none" aria-hidden="true">
+      <div className="absolute inset-0 opacity-[0.12] pointer-events-none z-[1]" aria-hidden="true">
         <div
           className="absolute inset-0"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(59, 130, 246, 0.2) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(37, 99, 235, 0.18) 1px, transparent 1px)
+              linear-gradient(rgba(59, 130, 246, 0.35) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(37, 99, 235, 0.3) 1px, transparent 1px)
             `,
-            backgroundSize: '50px 50px',
+            backgroundSize: '40px 40px',
           }}
         />
       </div>
@@ -97,6 +97,7 @@ export function Hero() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
+        style={{ position: 'relative', zIndex: 10 }}
       >
         {/* Badge */}
         <motion.div variants={itemVariants}>
