@@ -75,10 +75,14 @@ export default function RootLayout({
         <style dangerouslySetInnerHTML={{
           __html: `
             :root{
-              --bg-base:#0a0e1a;--bg-surface:#1a1f2e;--bg-elevated:#1f2533;--bg-hover:#242a38;
+              --bg-base:#0a0e1a;--bg-soft:#131720;--bg-surface:#1a1f2e;--bg-elevated:#1f2533;--bg-hover:#242a38;
               --text-primary:#e8edf3;--text-secondary:#b8c5d1;--text-tertiary:#8b95a5;--text-muted:#a8b0bc;
-              --accent:#3b82f6;--accent-hover:#2563eb;--accent-active:#1d4ed8;
-              --border-subtle:rgba(255,255,255,0.05);--border-default:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.12)
+              --accent:#1e40af;--accent-hover:#1e3a8a;--accent-active:#1e3a8a;
+              --border-subtle:rgba(255,255,255,0.05);--border-default:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.12);--border-accent:rgba(59,130,246,0.2);
+              --dash-bg-soft:#131720;--dash-surface:#1a1f2e;--dash-surface-elev:#1f2533;
+              --dash-text:#e8edf3;--dash-text-soft:#b8c5d1;--dash-text-muted:#a8b0bc;
+              --dash-accent:#1e40af;--dash-accent-hover:#1e3a8a;
+              --dash-border:rgba(255,255,255,0.08);--dash-border-strong:rgba(255,255,255,0.12);--dash-border-accent:rgba(59,130,246,0.2);--dash-border-soft:rgba(255,255,255,0.05)
             }
             *{box-sizing:border-box;margin:0;padding:0}
             html{background-color:var(--bg-base);scroll-behavior:smooth;overflow-y:auto;font-size:16px}
