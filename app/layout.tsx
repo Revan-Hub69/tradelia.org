@@ -29,6 +29,8 @@ const inter = Inter({
   variable: '--font-inter',
   fallback: ['system-ui', '-apple-system', 'sans-serif'],
   adjustFontFallback: true,
+  // Optimize font loading for LCP
+  weight: ['400', '500', '600', '700'],
 });
 
 export async function generateMetadata() {
@@ -62,12 +64,19 @@ export default function RootLayout({
   return (
     <html lang={defaultLocale} data-theme="dark">
       <head>
+        {/* Preconnect to external domains for faster resource loading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        
         {/* Favicon */}
         <link rel="icon" type="image/svg+xml" href="/logos/tradelia-icon.svg" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
         <link rel="shortcut icon" href="/logos/tradelia-icon.svg" />
+        
+        {/* Preload critical resources */}
+        <link rel="preload" href="/logos/tradelia-logo.svg" as="image" type="image/svg+xml" />
         
         {/* Structured Data - EducationalOrganization + AI Search Optimization */}
         <script

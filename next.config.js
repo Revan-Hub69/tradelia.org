@@ -58,6 +58,16 @@ const nextConfig = {
               "upgrade-insecure-requests",
             ].join("; "),
           },
+          // Cross-Origin-Opener-Policy for security
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin",
+          },
+          // Cross-Origin-Embedder-Policy (optional, can break some integrations)
+          // {
+          //   key: "Cross-Origin-Embedder-Policy",
+          //   value: "require-corp",
+          // },
         ],
       },
     ];
@@ -73,8 +83,22 @@ const nextConfig = {
 
   // Performance - Target modern browsers (ES2022+)
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
+    removeConsole: process.env.NODE_ENV === "production",
   },
+
+  // Optimize for modern browsers - reduce polyfills
+  experimental: {
+    optimizePackageImports: ["lucide-react", "framer-motion"],
+  },
+
+  // Optimize CSS loading
+  optimizeFonts: true,
+
+  // Compress output
+  compress: true,
+
+  // Production source maps (optional, can disable for smaller bundles)
+  productionBrowserSourceMaps: false,
 
   // TypeScript e ESLint
   typescript: {

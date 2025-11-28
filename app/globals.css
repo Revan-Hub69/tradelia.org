@@ -24,9 +24,9 @@
     --text-primary: #e8edf3; /* Warm white - Professional */
     --text-secondary: #b8c5d1; /* Elegant blue-gray */
     --text-tertiary: #8b95a5; /* Neutral gray */
-    --text-muted: #6b7480; /* Dark gray */
+    --text-muted: #9ca3af; /* Improved contrast for WCAG AA compliance (was #6b7480) */
     --text-accent: #3b82f6; /* Professional blue */
-    --text-subtle: #4b5563; /* Subtle gray */
+    --text-subtle: #6b7480; /* Subtle gray (moved from muted) */
 
     /* Accent Colors - Professional Blue (Institutional) */
     --accent: #3b82f6; /* Blue 500 - Professional, not too vibrant */

@@ -107,11 +107,15 @@ export function Hero() {
           </Badge>
         </motion.div>
 
-        {/* Title - Enhanced typography and animation */}
+        {/* Title - Enhanced typography and animation - LCP element */}
         <motion.h1
           id="hero-title"
           variants={itemVariants}
           className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tighter text-text-primary mb-6 max-w-5xl mx-auto"
+          style={{ 
+            // Prevent layout shift during font load
+            minHeight: '1.1em',
+          }}
         >
           {t('hero.title')}{' '}
           <span className="gradient-text relative inline-block">
