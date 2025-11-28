@@ -9,15 +9,16 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
 
 const navItems = [
-  { label: 'Home', href: '/', key: 'home' },
-  { label: 'Dashboard', href: '/dashboard', key: 'dashboard' },
+  { label: 'Home', href: '/', key: 'home', description: 'Hub istituzionale' },
+  { label: 'Dashboard', href: '/dashboard', key: 'dashboard', description: 'Accesso AI' },
   {
     label: 'Formazione',
     href: '/dashboard#education',
     key: 'education',
+    description: 'Percorso completo',
   },
-  { label: 'Chi Siamo', href: '/about', key: 'about' },
-  { label: 'Contatti', href: '/contact', key: 'contact' },
+  { label: 'Ricerca', href: '/docs', key: 'research', description: 'Paper & metriche' },
+  { label: 'Contatti', href: '/contact', key: 'contact', description: 'Supporto dedicato' },
 ];
 
 export function Navigation() {
@@ -76,30 +77,34 @@ export function Navigation() {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
+      <nav className="hidden md:flex items-center gap-2" aria-label="Main navigation">
         {navItems.map((item) => {
           const isActive = pathname === item.href || 
             (item.href !== '/' && pathname?.startsWith(item.href));
           
           return (
-            <Link
-              key={item.key}
-              href={item.href}
-              className={cn(
-                'px-4 py-2 text-sm font-medium text-text-secondary rounded-lg transition-smooth relative group',
-                isActive && 'text-text-primary',
-                'hover:text-text-primary hover:bg-bg-surface/50'
-              )}
-            >
-              {item.label}
-              {isActive && (
-                <motion.div
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-primary"
-                  layoutId="activeTab"
-                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                />
-              )}
-            </Link>
+            <motion.div key={item.key} whileHover={{ y: -2 }}>
+              <Link
+                href={item.href}
+                aria-current={isActive ? 'page' : undefined}
+                className={cn(
+                  'px-4 py-2 text-sm font-semibold text-text-secondary rounded-xl transition-colors duration-200 relative group flex flex-col items-start',
+                  isActive && 'text-text-primary bg-bg-surface/70'
+                )}
+              >
+                <span>{item.label}</span>
+                <span className="text-[10px] font-normal uppercase tracking-[0.2em] text-text-muted">
+                  {item.description}
+                </span>
+                {isActive && (
+                  <motion.span
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-primary"
+                    layoutId="activeTab"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </Link>
+            </motion.div>
           );
         })}
       </nav>

@@ -9,6 +9,7 @@ import {
   useReducedMotion,
   createContainerVariants,
   createItemVariants,
+  createHoverVariants,
 } from '@/lib/animations';
 
 const methods = [
@@ -60,6 +61,7 @@ export function Methods() {
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = createContainerVariants(prefersReducedMotion);
   const itemVariants = createItemVariants(prefersReducedMotion);
+  const hoverVariants = createHoverVariants(prefersReducedMotion);
 
   return (
     <section className="relative py-24 md:py-32" aria-labelledby="methods-title">
@@ -118,7 +120,8 @@ export function Methods() {
             const Icon = method.icon;
             return (
               <motion.div key={method.id} variants={itemVariants}>
-                <Card className="h-full">
+                <motion.div variants={hoverVariants} whileHover="hover" whileTap="tap">
+                <Card className="h-full hover:border-border-accent group">
                   <CardHeader>
                     <div className="flex items-start gap-4 mb-4">
                       <div className="flex flex-col items-center gap-2">
@@ -168,6 +171,7 @@ export function Methods() {
                     </Link>
                   </CardContent>
                 </Card>
+                </motion.div>
               </motion.div>
             );
           })}

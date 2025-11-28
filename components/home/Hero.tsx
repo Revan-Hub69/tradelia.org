@@ -26,6 +26,9 @@ export function Hero() {
   const containerVariants = createContainerVariants(prefersReducedMotion);
   const itemVariants = createItemVariants(prefersReducedMotion);
   const hoverVariants = createHoverVariants(prefersReducedMotion);
+  const floatVariants = createFloatVariants(prefersReducedMotion);
+  const gradientPulsePrimary = createGradientPulse(prefersReducedMotion);
+  const gradientPulseSecondary = createGradientPulse(prefersReducedMotion);
 
   return (
     <section 
@@ -34,25 +37,41 @@ export function Hero() {
     >
       {/* Animated background gradients - Research-based */}
       {/* Subtle static background gradients */}
-      <div
-        className="absolute -top-1/2 -right-1/4 w-[800px] h-[800px] bg-gradient-to-br from-accent/4 to-transparent rounded-full blur-[80px]"
+      <motion.div
+        className="absolute -top-1/2 -right-1/4 w-[800px] h-[800px] bg-gradient-to-br from-accent/20 via-accent/5 to-transparent rounded-full blur-[90px]"
+        animate={gradientPulsePrimary}
         aria-hidden="true"
       />
-      <div
-        className="absolute -bottom-1/3 -left-1/10 w-[600px] h-[600px] bg-gradient-to-br from-accent/3 to-transparent rounded-full blur-[70px]"
+      <motion.div
+        className="absolute -bottom-1/3 -left-1/10 w-[650px] h-[650px] bg-gradient-to-br from-accent/10 via-transparent to-transparent rounded-full blur-[80px]"
+        animate={{
+          ...gradientPulseSecondary,
+          scale: prefersReducedMotion ? [1] : [1, 1.15, 1],
+          opacity: prefersReducedMotion ? [0.25] : [0.25, 0.45, 0.25],
+        }}
         aria-hidden="true"
       />
 
       {/* Geometric pattern - Academic and refined */}
       <div className="geometric-pattern" aria-hidden="true" />
+      <div className="hero-geometric" aria-hidden="true" />
       
       {/* Additional geometric accents for depth - Enhanced */}
-      <div className="absolute top-1/4 right-1/4 w-64 h-64 opacity-[0.03] pointer-events-none" aria-hidden="true">
-        <div className="absolute inset-0 border border-border-subtle rounded-full" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
-      </div>
-      <div className="absolute bottom-1/4 left-1/4 w-48 h-48 opacity-[0.02] pointer-events-none" aria-hidden="true">
-        <div className="absolute inset-0 border border-border-subtle" style={{ clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)' }} />
-      </div>
+      <motion.div
+        className="absolute top-1/4 right-1/4 w-64 h-64 opacity-[0.05] pointer-events-none"
+        aria-hidden="true"
+        animate={floatVariants.animate}
+      >
+        <div className="absolute inset-0 border border-border-accent/40 rounded-full" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
+      </motion.div>
+      <motion.div
+        className="absolute bottom-1/4 left-1/4 w-52 h-52 opacity-[0.04] pointer-events-none"
+        aria-hidden="true"
+        animate={floatVariants.animate}
+        transition={{ ...floatVariants.animate?.transition, delay: 2 }}
+      >
+        <div className="absolute inset-0 border border-border-accent/30" style={{ clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)' }} />
+      </motion.div>
 
       {/* Grid pattern overlay - Subtle academic texture */}
       <div className="absolute inset-0 opacity-[0.015] pointer-events-none" aria-hidden="true">
@@ -117,6 +136,9 @@ export function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: stat.delay, duration: 0.6 }}
+                variants={hoverVariants}
+                whileHover="hover"
+                whileTap="tap"
               >
                 <div className="flex items-center justify-center gap-3 mb-2">
                   <div className="w-10 h-10 rounded-full bg-accent-muted flex items-center justify-center">
@@ -139,18 +161,22 @@ export function Hero() {
           variants={itemVariants}
           className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
         >
-          <Button asChild variant="default" size="lg">
-            <Link href="/dashboard#education">
-              <span>Inizia la Formazione</span>
-              <ArrowRight className="w-5 h-5" aria-hidden="true" />
-            </Link>
-          </Button>
-          <Button asChild variant="secondary" size="lg">
-            <Link href="/dashboard">
-              <span>Dashboard</span>
-              <LayoutDashboard className="w-5 h-5" aria-hidden="true" />
-            </Link>
-          </Button>
+          <motion.div variants={hoverVariants} whileHover="hover" whileTap="tap">
+            <Button asChild variant="default" size="lg">
+              <Link href="/dashboard#education">
+                <span>Inizia la Formazione</span>
+                <ArrowRight className="w-5 h-5" aria-hidden="true" />
+              </Link>
+            </Button>
+          </motion.div>
+          <motion.div variants={hoverVariants} whileHover="hover" whileTap="tap">
+            <Button asChild variant="secondary" size="lg">
+              <Link href="/dashboard">
+                <span>Dashboard</span>
+                <LayoutDashboard className="w-5 h-5" aria-hidden="true" />
+              </Link>
+            </Button>
+          </motion.div>
         </motion.div>
 
         {/* Disclaimer - Enhanced card design */}

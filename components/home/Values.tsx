@@ -110,7 +110,12 @@ export function Values() {
             const Icon = value.icon;
             return (
               <motion.div key={idx} variants={itemVariants}>
-                  <Card className="h-full text-center">
+                <motion.div
+                  variants={hoverVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  <Card className="h-full text-center group hover:border-border-accent">
                     <CardHeader>
                       <div className="flex flex-col items-center gap-3 mb-6">
                         <div
@@ -140,6 +145,7 @@ export function Values() {
                       </CardDescription>
                     </CardContent>
                   </Card>
+                </motion.div>
               </motion.div>
             );
           })}

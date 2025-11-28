@@ -5,37 +5,37 @@
 @layer base {
   :root {
     /* Primary Background - Institutional/Professional (Bloomberg-inspired) */
-    --bg-base: #0A0E1A; /* Navy dark - Elegant and professional */
+    --bg-base: #0a0e1a; /* Navy dark - Elegant and professional */
     --bg-soft: #131720; /* Slightly lighter navy */
-    --bg-surface: #1A1F2E; /* Card background - Refined */
-    --bg-elevated: #1F2533; /* Hover states */
-    --bg-hover: #242A38; /* Active hover */
+    --bg-surface: #1a1f2e; /* Card background - Refined */
+    --bg-elevated: #1f2533; /* Hover states */
+    --bg-hover: #242a38; /* Active hover */
     --bg-glass: rgba(26, 31, 46, 0.6); /* Glassmorphism base */
 
     /* Text - Professional Contrast (WCAG AA/AAA Compliant) */
-    --text-primary: #E8EDF3; /* Warm white - Professional */
-    --text-secondary: #B8C5D1; /* Elegant blue-gray */
-    --text-tertiary: #8B95A5; /* Neutral gray */
-    --text-muted: #6B7480; /* Dark gray */
-    --text-accent: #3B82F6; /* Professional blue */
-    --text-subtle: #4B5563; /* Subtle gray */
+    --text-primary: #e8edf3; /* Warm white - Professional */
+    --text-secondary: #b8c5d1; /* Elegant blue-gray */
+    --text-tertiary: #8b95a5; /* Neutral gray */
+    --text-muted: #6b7480; /* Dark gray */
+    --text-accent: #3b82f6; /* Professional blue */
+    --text-subtle: #4b5563; /* Subtle gray */
 
     /* Accent Colors - Professional Blue (Institutional) */
-    --accent: #3B82F6; /* Blue 500 - Professional, not too vibrant */
-    --accent-hover: #2563EB; /* Blue 600 - Darker on hover */
-    --accent-active: #1D4ED8; /* Blue 700 - Active state */
+    --accent: #3b82f6; /* Blue 500 - Professional, not too vibrant */
+    --accent-hover: #2563eb; /* Blue 600 - Darker on hover */
+    --accent-active: #1d4ed8; /* Blue 700 - Active state */
     --accent-muted: rgba(59, 130, 246, 0.1); /* Muted accent */
     --accent-glow: rgba(59, 130, 246, 0.15); /* Glow effect - more subtle */
-    
+
     /* Secondary Accent - Professional */
-    --accent-gold: #F59E0B; /* Amber - professional */
-    --accent-gold-hover: #D97706; /* Darker amber */
+    --accent-gold: #f59e0b; /* Amber - professional */
+    --accent-gold-hover: #d97706; /* Darker amber */
     --accent-gold-muted: rgba(245, 158, 11, 0.1); /* Muted amber */
-    
+
     /* Success/Error States - Professional */
-    --accent-success: #10B981; /* Green 500 - Professional */
-    --accent-warning: #F59E0B; /* Amber 500 - Professional */
-    --accent-error: #EF4444; /* Red 500 - Professional */
+    --accent-success: #10b981; /* Green 500 - Professional */
+    --accent-warning: #f59e0b; /* Amber 500 - Professional */
+    --accent-error: #ef4444; /* Red 500 - Professional */
 
     /* Borders - Professional and Subtle */
     --border-subtle: rgba(255, 255, 255, 0.05);
@@ -64,11 +64,48 @@
 
   body {
     @apply bg-bg-base text-text-primary font-sans antialiased;
-    font-feature-settings: 'rlig' 1, 'calt' 1, 'ss01' 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1,
+      "ss01" 1;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.75; /* Research: 1.75-1.8 optimal for dark mode */
+  }
+
+  .hero-geometric {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.25), transparent 45%),
+      radial-gradient(circle at 80% 30%, rgba(37, 99, 235, 0.2), transparent 40%),
+      conic-gradient(from 90deg, rgba(59, 130, 246, 0.08), transparent 45%);
+    mix-blend-mode: screen;
+  }
+
+  .hero-geometric::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        135deg,
+        transparent,
+        transparent 220px,
+        rgba(59, 130, 246, 0.08) 221px,
+        transparent 222px
+      ),
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 180px,
+        rgba(37, 99, 235, 0.06) 181px,
+        transparent 182px
+      );
+    mask-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.4), transparent 65%);
   }
 
   /* Motion Sensitivity - WCAG 2.3.3 */
@@ -193,14 +230,14 @@
 
   /* Refined Gradient Text */
   .gradient-text {
-    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A78BFA 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bfa 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .gradient-text-gold {
-    background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+    background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -214,7 +251,7 @@
   }
 
   .geometric-pattern::before {
-    content: '';
+    content: "";
     @apply absolute inset-0;
     background-image:
       repeating-linear-gradient(
@@ -236,7 +273,7 @@
   }
 
   .geometric-pattern::after {
-    content: '';
+    content: "";
     @apply absolute inset-0;
     background-image:
       radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.015) 0%, transparent 50%),
@@ -267,7 +304,9 @@
 
   /* Subtle hover effects - Professional and institutional */
   .hover-lift {
-    transition: border-color 200ms ease, box-shadow 200ms ease;
+    transition:
+      border-color 200ms ease,
+      box-shadow 200ms ease;
   }
 
   .hover-lift:hover {
@@ -295,7 +334,8 @@
 }
 
 @keyframes patternPulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }

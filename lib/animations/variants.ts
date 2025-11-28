@@ -1,11 +1,11 @@
 /**
  * Centralized Animation Variants
  * Based on Material Design, Framer Motion Research, and Academic Studies
- * 
+ *
  * All animations respect prefers-reduced-motion
  */
 
-import type { Variants } from 'framer-motion';
+import type { Variants } from "framer-motion";
 
 /**
  * Container variants for staggered animations
@@ -85,7 +85,7 @@ export const createFloatVariants = (prefersReducedMotion: boolean) => ({
         transition: {
           duration: 6,
           repeat: Infinity,
-          ease: 'easeInOut',
+          ease: "easeInOut",
         },
       },
 });
@@ -101,7 +101,7 @@ export const createGradientPulse = (prefersReducedMotion: boolean) => ({
     : {
         duration: 25,
         repeat: Infinity,
-        ease: 'easeInOut',
+        ease: "easeInOut",
       },
 });
 
@@ -109,8 +109,26 @@ export const createGradientPulse = (prefersReducedMotion: boolean) => ({
  * Hover variants for interactive elements - Minimal and professional
  */
 export const createHoverVariants = (prefersReducedMotion: boolean): Variants => ({
-  hover: prefersReducedMotion ? {} : {},
-  tap: prefersReducedMotion ? {} : {},
+  hover: prefersReducedMotion
+    ? {}
+    : {
+        y: -6,
+        scale: 1.015,
+        transition: {
+          duration: 0.25,
+          ease: [0.4, 0, 0.2, 1],
+        },
+      },
+  tap: prefersReducedMotion
+    ? {}
+    : {
+        scale: 0.985,
+        y: 0,
+        transition: {
+          duration: 0.15,
+          ease: [0.4, 0, 0.2, 1],
+        },
+      },
 });
 
 /**
