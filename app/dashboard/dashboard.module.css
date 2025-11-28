@@ -3,6 +3,9 @@
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  /* Force CSS to load - test */
+  background-color: var(--bg-base, #0a0e1a);
+  color: var(--text-primary, #e8edf3);
 }
 
 /* Dashboard Section - Premium spacing and hierarchy */

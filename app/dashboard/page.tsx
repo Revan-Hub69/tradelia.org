@@ -13,18 +13,7 @@ import styles from './dashboard.module.css';
  */
 export default function DashboardPage() {
   return (
-    <>
-      {/* Skip Link - Accessibility (WCAG 2.4.1) */}
-      <a href="#main-content" className="skip-link">
-        Skip to main content
-      </a>
-      
-      <main 
-        id="main-content"
-        role="main" 
-        aria-label="Dashboard principale"
-        className={styles.dashboardMain}
-      >
+    <div className={styles.dashboardMain}>
         {/* Account Banner Slot */}
         <div id="account-banner-slot" />
         
@@ -51,7 +40,6 @@ export default function DashboardPage() {
         >
           <ModuleGrid priority="secondary" />
         </section>
-      </main>
-    </>
+    </div>
   );
 }
