@@ -103,24 +103,29 @@ export function Footer() {
         </div>
 
         {/* Mobile: Collapsible - Best Practice Accordion */}
-        {mounted && (
-          <div className="md:hidden">
-            <button
-              type="button"
-              onClick={() => toggleSection(sectionKey)}
-              className="w-full flex items-center justify-between py-4 text-xs font-semibold text-text-primary uppercase tracking-wider border-b border-border-subtle hover:text-accent transition-colors duration-200"
-              aria-expanded={isExpanded}
-              aria-controls={`footer-${sectionKey}`}
-            >
-              <span>{title}</span>
-              <ChevronDown
-                className={cn(
-                  'w-4 h-4 transition-transform duration-200 text-text-tertiary',
-                  isExpanded && 'rotate-180'
-                )}
-                aria-hidden="true"
-              />
-            </button>
+        <div className="md:hidden">
+          <button
+            type="button"
+            onClick={() => {
+              if (mounted) {
+                toggleSection(sectionKey);
+              }
+            }}
+            disabled={!mounted}
+            className="w-full flex items-center justify-between py-4 text-xs font-semibold text-text-primary uppercase tracking-wider border-b border-border-subtle hover:text-accent transition-colors duration-200 disabled:opacity-50"
+            aria-expanded={isExpanded}
+            aria-controls={`footer-${sectionKey}`}
+          >
+            <span>{title}</span>
+            <ChevronDown
+              className={cn(
+                'w-4 h-4 transition-transform duration-200 text-text-tertiary',
+                isExpanded && 'rotate-180'
+              )}
+              aria-hidden="true"
+            />
+          </button>
+          {mounted && (
             <div
               id={`footer-${sectionKey}`}
               className={cn(
@@ -144,8 +149,8 @@ export function Footer() {
                 ))}
               </ul>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </motion.div>
     );
   };
