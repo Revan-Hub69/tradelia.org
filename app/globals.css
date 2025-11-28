@@ -68,6 +68,7 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 2rem;
+    overflow-y: auto;
   }
 
   body {
@@ -80,6 +81,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.75; /* Research: 1.75-1.8 optimal for dark mode */
+    overflow-y: auto;
   }
 
   /* Mobile Menu - SOLID BACKGROUND - NO TRANSPARENCY */
@@ -145,34 +147,39 @@
 
   /* Custom Scrollbar - Elegant & Academic */
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-bg-base;
+    background: var(--bg-base);
     border-left: 1px solid var(--border-subtle);
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-bg-surface;
+    background: var(--bg-surface);
     border: 2px solid var(--bg-base);
     border-radius: 6px;
     transition: all 0.3s ease;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-bg-elevated;
+    background: var(--bg-elevated);
     border-color: var(--border-accent);
     box-shadow: 0 0 8px rgba(99, 102, 241, 0.3);
   }
 
   ::-webkit-scrollbar-thumb:active {
-    @apply bg-accent;
+    background: var(--accent);
   }
 
   /* Firefox Scrollbar */
   * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-surface) var(--bg-base);
+  }
+
+  html {
     scrollbar-width: thin;
     scrollbar-color: var(--bg-surface) var(--bg-base);
   }
