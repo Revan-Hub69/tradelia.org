@@ -4,18 +4,18 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils/cn';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold transition-smooth gpu-accelerated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base disabled:pointer-events-none disabled:opacity-40 disabled:cursor-not-allowed',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold btn-hover gpu-accelerated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base disabled:pointer-events-none disabled:opacity-40 disabled:cursor-not-allowed',
   {
     variants: {
       variant: {
         default:
-          'bg-gradient-primary text-white shadow-glow hover:shadow-glow-lg hover:-translate-y-1 active:translate-y-0 active:scale-[0.98]',
+          'bg-gradient-primary text-white shadow-glow hover:shadow-hover hover:scale-[1.01] active:scale-[0.99]',
         secondary:
-          'glass text-text-primary border border-border hover:glass-strong hover:border-border-accent hover:-translate-y-1 active:translate-y-0',
+          'glass text-text-primary border border-border hover:glass-strong hover:border-border-accent hover:shadow-hover hover:scale-[1.01] active:scale-[0.99]',
         ghost:
-          'bg-transparent text-text-secondary hover:text-text-primary hover:bg-bg-surface/50 active:bg-bg-surface',
+          'bg-transparent text-text-secondary hover:text-text-primary hover:bg-bg-surface/50 hover:scale-[1.02] active:scale-[0.98]',
         outline:
-          'border border-border bg-transparent hover:glass hover:text-text-primary active:bg-bg-surface',
+          'border border-border bg-transparent hover:glass hover:text-text-primary hover:shadow-hover hover:scale-[1.01] active:scale-[0.99]',
       },
       size: {
         default: 'h-10 px-4 py-2',

@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils/cn';
 
 const cardVariants = cva(
-  'relative overflow-hidden rounded-xl transition-smooth gpu-accelerated',
+  'relative overflow-hidden rounded-xl micro-interaction gpu-accelerated',
   {
     variants: {
       variant: {
