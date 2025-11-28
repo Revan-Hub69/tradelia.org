@@ -11,9 +11,19 @@ import { buildLocalePath } from '@/lib/i18n/paths';
  * Primary modules: 4-5 main modules (high priority)
  * Secondary modules: 3-4 secondary modules (progressive disclosure)
  */
+type ModuleIconName =
+  | 'dashboard'
+  | 'file'
+  | 'book'
+  | 'book-open'
+  | 'history'
+  | 'bell'
+  | 'settings'
+  | 'help-circle';
+
 type ModuleDefinition = {
   id: string;
-  icon: keyof typeof icons;
+  icon: ModuleIconName;
   href: string;
   priority: 'primary' | 'secondary';
   badge?: number;
@@ -156,8 +166,8 @@ function ModuleCard({ module }: { module: LocalizedModule }) {
   );
 }
 
-function ModuleIcon({ name }: { name: string }) {
-  const icons: Record<string, JSX.Element> = {
+function ModuleIcon({ name }: { name: ModuleIconName }) {
+  const icons: Record<ModuleIconName, JSX.Element> = {
     dashboard: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <rect x="3" y="3" width="18" height="18" rx="2" />
