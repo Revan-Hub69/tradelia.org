@@ -12,11 +12,11 @@
     --bg-hover: #1F2A42;
     --bg-glass: rgba(20, 31, 53, 0.7);
 
-    /* Text - Academic Readability */
+    /* Text - Academic Readability (WCAG AA Compliant) */
     --text-primary: #FAFAFA;
     --text-secondary: #E5E7EB;
-    --text-tertiary: #9CA3AF;
-    --text-muted: #6B7280;
+    --text-tertiary: #B0B0B0; /* Improved from #9CA3AF for better readability */
+    --text-muted: #9CA3AF; /* Improved from #6B7280 - WCAG AA 4.5:1+ */
     --text-accent: #6366F1;
     --text-subtle: #4B5563;
 
@@ -32,10 +32,10 @@
     --accent-gold-hover: #FBBF24;
     --accent-gold-muted: rgba(245, 158, 11, 0.1);
 
-    /* Borders - Refined & Subtle */
-    --border-subtle: rgba(255, 255, 255, 0.04);
-    --border-default: rgba(255, 255, 255, 0.08);
-    --border-strong: rgba(255, 255, 255, 0.12);
+    /* Borders - Refined & Subtle (Improved Visibility) */
+    --border-subtle: rgba(255, 255, 255, 0.08); /* Improved from 0.04 */
+    --border-default: rgba(255, 255, 255, 0.12); /* Improved from 0.08 */
+    --border-strong: rgba(255, 255, 255, 0.15); /* Improved from 0.12 */
     --border-accent: rgba(99, 102, 241, 0.25);
     --border-gold: rgba(245, 158, 11, 0.2);
 
@@ -63,6 +63,18 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Motion Sensitivity - WCAG 2.3.3 */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 
   /* Custom Scrollbar - Elegant & Academic */
@@ -123,6 +135,25 @@
   button:focus-visible,
   [role="button"]:focus-visible {
     @apply ring-2 ring-accent ring-offset-2 ring-offset-bg-base;
+  }
+
+  /* Skip Link - Accessibility */
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    z-index: 100;
+    padding: 8px 16px;
+    background: var(--accent);
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+    transition: top 0.3s;
+  }
+
+  .skip-link:focus {
+    top: 0;
   }
 }
 

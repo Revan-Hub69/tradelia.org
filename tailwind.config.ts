@@ -40,20 +40,20 @@ const config: Config = {
           hover: '#FBBF24',
           muted: 'rgba(245, 158, 11, 0.1)',
         },
-        // Text Colors - Academic Readability
+        // Text Colors - Academic Readability (WCAG AA Compliant)
         text: {
           primary: '#FAFAFA',
           secondary: '#E5E7EB',
-          tertiary: '#9CA3AF',
-          muted: '#6B7280',
+          tertiary: '#B0B0B0', // Improved for better readability
+          muted: '#9CA3AF', // WCAG AA 4.5:1+ compliant
           accent: '#6366F1',
           subtle: '#4B5563',
         },
-        // Border Colors - Refined
+        // Border Colors - Refined (Improved Visibility)
         border: {
-          subtle: 'rgba(255, 255, 255, 0.04)',
-          DEFAULT: 'rgba(255, 255, 255, 0.08)',
-          strong: 'rgba(255, 255, 255, 0.12)',
+          subtle: 'rgba(255, 255, 255, 0.08)', // Improved from 0.04
+          DEFAULT: 'rgba(255, 255, 255, 0.12)', // Improved from 0.08
+          strong: 'rgba(255, 255, 255, 0.15)', // Improved from 0.12
           accent: 'rgba(99, 102, 241, 0.25)',
           gold: 'rgba(245, 158, 11, 0.2)',
         },

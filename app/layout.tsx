@@ -50,9 +50,17 @@ export default function RootLayout({
         <link rel="alternate" hrefLang="x-default" href="https://tradelia.org" />
       </head>
       <body className={inter.className}>
+        {/* Skip Link - Accessibility WCAG 2.4.1 */}
+        <a
+          href="#main-content"
+          className="skip-link"
+          aria-label="Skip to main content"
+        >
+          Skip to main content
+        </a>
         <div className="min-h-screen flex flex-col">
           <Header />
-          <main id="main-content" className="flex-1">{children}</main>
+          <main id="main-content" className="flex-1" tabIndex={-1}>{children}</main>
           <Footer />
         </div>
       </body>
