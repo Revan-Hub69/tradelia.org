@@ -181,12 +181,13 @@ export function Navigation() {
               className="fixed top-0 right-0 bottom-0 w-full max-w-sm z-[101] md:hidden shadow-2xl"
               style={{
                 backgroundColor: '#1A1F2E',
-                background: 'linear-gradient(180deg, #1A1F2E 0%, #131720 100%)',
+                background: '#1A1F2E',
                 borderLeft: '1px solid rgba(59, 130, 246, 0.1)',
+                opacity: 1,
               }}
-              initial={prefersReducedMotion ? { x: '100%', opacity: 0 } : { x: '100%', opacity: 0 }}
-              animate={prefersReducedMotion ? { x: 0, opacity: 1 } : { x: 0, opacity: 1 }}
-              exit={prefersReducedMotion ? { x: '100%', opacity: 0 } : { x: '100%', opacity: 0 }}
+              initial={prefersReducedMotion ? { x: '100%' } : { x: '100%' }}
+              animate={prefersReducedMotion ? { x: 0 } : { x: 0 }}
+              exit={prefersReducedMotion ? { x: '100%' } : { x: '100%' }}
               transition={
                 prefersReducedMotion
                   ? { duration: 0.2 }

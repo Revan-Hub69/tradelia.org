@@ -170,7 +170,7 @@ export function Hero() {
           <motion.div variants={hoverVariants} whileHover="hover" whileTap="tap">
             <Button asChild variant="default" size="lg">
               <Link href="/dashboard#education">
-                <span>Inizia la Formazione</span>
+                <span>{t('hero.ctaPrimary')}</span>
                 <ArrowRight className="w-5 h-5" aria-hidden="true" />
               </Link>
             </Button>
