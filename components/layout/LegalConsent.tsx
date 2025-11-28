@@ -79,36 +79,59 @@ export function LegalConsent() {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          className="fixed inset-0 z-[201] flex items-center justify-center p-4 md:p-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="legal-consent-title"
-          aria-describedby="legal-consent-description"
-          onClick={(e) => {
-            // Close on backdrop click
-            if (e.target === e.currentTarget) {
-              handleAccept();
-            }
-          }}
-        >
+        <>
+          {/* Backdrop - SOLID AND OPAQUE */}
           <motion.div
-            className="w-full max-w-[560px]"
-            initial={prefersReducedMotion ? { opacity: 0, scale: 0.95 } : { y: 20, opacity: 0, scale: 0.95 }}
-            animate={prefersReducedMotion ? { opacity: 1, scale: 1 } : { y: 0, opacity: 1, scale: 1 }}
-            exit={prefersReducedMotion ? { opacity: 0, scale: 0.95 } : { y: 20, opacity: 0, scale: 0.95 }}
-            transition={
-              prefersReducedMotion
-                ? { duration: 0.2 }
-                : { type: 'spring', damping: 25, stiffness: 200 }
-            }
-            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-0 z-[200]"
+            style={{
+              backgroundColor: 'rgba(10, 14, 26, 0.95)',
+              backdropFilter: 'blur(8px)',
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={handleAccept}
+            aria-hidden="true"
+          />
+          
+          {/* Modal Container */}
+          <motion.div
+            className="fixed inset-0 z-[201] flex items-center justify-center p-4 md:p-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="legal-consent-title"
+            aria-describedby="legal-consent-description"
+            onClick={(e) => {
+              // Close on backdrop click
+              if (e.target === e.currentTarget) {
+                handleAccept();
+              }
+            }}
           >
-            <Card className="border-border-strong shadow-2xl w-full">
+            <motion.div
+              className="w-full max-w-[560px]"
+              initial={prefersReducedMotion ? { opacity: 0, scale: 0.95 } : { y: 20, opacity: 0, scale: 0.95 }}
+              animate={prefersReducedMotion ? { opacity: 1, scale: 1 } : { y: 0, opacity: 1, scale: 1 }}
+              exit={prefersReducedMotion ? { opacity: 0, scale: 0.95 } : { y: 20, opacity: 0, scale: 0.95 }}
+              transition={
+                prefersReducedMotion
+                  ? { duration: 0.2 }
+                  : { type: 'spring', damping: 25, stiffness: 200 }
+              }
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Card 
+                className="border-border-strong shadow-2xl w-full"
+                style={{
+                  backgroundColor: '#1A1F2E',
+                  background: '#1A1F2E',
+                }}
+              >
               <div className="p-6 md:p-10">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-6">
@@ -193,6 +216,7 @@ export function LegalConsent() {
             </Card>
           </motion.div>
         </motion.div>
+        </>
       )}
     </AnimatePresence>
   );
