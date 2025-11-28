@@ -81,13 +81,26 @@ export function generateStructuredData(locale: Locale = "it") {
 
   return {
     "@context": "https://schema.org",
-    "@type": "EducationalOrganization",
+    "@type": "Organization",
+    "@id": `${baseUrl}#organization`,
     name: "Tradelia AI",
     url: baseUrl,
     description:
       locale === "it"
         ? "Formazione finanziaria gratuita basata su framework AI proprietari verificabili"
         : "Free financial education based on verifiable proprietary AI frameworks",
+    // Organization type - Educational platform
+    additionalType: "https://schema.org/EducationalPlatform",
+    // What the organization knows about / specializes in
+    knowsAbout: [
+      "Financial Markets",
+      "AI Frameworks",
+      "MiFID II Compliance",
+      "Risk Management",
+      "Market Analysis",
+      "Financial Education",
+    ],
+    // Educational offerings
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: locale === "it" ? "Percorsi Formativi" : "Training Paths",
@@ -101,26 +114,20 @@ export function generateStructuredData(locale: Locale = "it") {
               locale === "it"
                 ? "Percorsi formativi completi sui mercati finanziari"
                 : "Complete training paths on financial markets",
+            provider: {
+              "@type": "Organization",
+              name: "Tradelia AI",
+              url: baseUrl,
+            },
           },
         },
       ],
     },
-    // AI Search specific - valid properties for EducationalOrganization
-    knowsAbout: [
-      "Financial Markets",
-      "AI Frameworks",
-      "MiFID II Compliance",
-      "Risk Management",
-      "Market Analysis",
+    // Website information
+    sameAs: [
+      // Add social media profiles if available
+      // "https://twitter.com/tradelia_ai",
+      // "https://linkedin.com/company/tradelia",
     ],
-    // Use hasCredential instead of accreditation (valid property)
-    hasCredential: {
-      "@type": "EducationalOccupationalCredential",
-      credentialCategory: "Professional Certification",
-      name:
-        locale === "it"
-          ? "Certificato di Formazione Finanziaria"
-          : "Financial Education Certificate",
-    },
   };
 }
