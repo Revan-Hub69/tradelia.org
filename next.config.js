@@ -91,6 +91,9 @@ const nextConfig = {
     optimizePackageImports: ["lucide-react", "framer-motion"],
   },
 
+  // Note: Next.js SWC automatically uses browserslist from .browserslistrc
+  // Polyfills are added by dependencies, not by Next.js itself
+
   // Optimize CSS loading
   optimizeFonts: true,
 

@@ -68,6 +68,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         
+        {/* DNS prefetch for faster connections */}
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        
         {/* Favicon */}
         <link rel="icon" type="image/svg+xml" href="/logos/tradelia-icon.svg" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
@@ -76,7 +80,7 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/logos/tradelia-icon.svg" />
         
         {/* Preload critical resources */}
-        <link rel="preload" href="/logos/tradelia-logo.svg" as="image" type="image/svg+xml" />
+        <link rel="preload" href="/logos/tradelia-logo.svg" as="image" type="image/svg+xml" fetchPriority="high" />
         
         {/* Structured Data - EducationalOrganization + AI Search Optimization */}
         <script

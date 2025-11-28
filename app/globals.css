@@ -24,7 +24,7 @@
     --text-primary: #e8edf3; /* Warm white - Professional */
     --text-secondary: #b8c5d1; /* Elegant blue-gray */
     --text-tertiary: #8b95a5; /* Neutral gray */
-    --text-muted: #9ca3af; /* Improved contrast for WCAG AA compliance (was #6b7480) */
+    --text-muted: #a8b0bc; /* Further improved contrast for WCAG AA compliance (was #9ca3af) */
     --text-accent: #3b82f6; /* Professional blue */
     --text-subtle: #6b7480; /* Subtle gray (moved from muted) */
 
@@ -173,12 +173,7 @@
     background: var(--accent);
   }
 
-  /* Firefox Scrollbar */
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--bg-surface) var(--bg-base);
-  }
-
+  /* Firefox Scrollbar - Only apply to html to avoid warnings */
   html {
     scrollbar-width: thin;
     scrollbar-color: var(--bg-surface) var(--bg-base);
@@ -332,10 +327,13 @@
   .gpu-accelerated {
     transform: translateZ(0);
     will-change: transform;
+    /* Force GPU acceleration for animations */
+    backface-visibility: hidden;
+    perspective: 1000px;
   }
 
   /* Remove will-change when not animating (performance) */
-  .gpu-accelerated:not(:hover):not(:focus) {
+  .gpu-accelerated:not(:hover):not(:focus):not(:active) {
     will-change: auto;
   }
 
