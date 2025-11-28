@@ -71,44 +71,50 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
         
         {/* Critical CSS inline to prevent render blocking - Expanded for LCP optimization */}
+        {/* This CSS is loaded immediately to prevent render blocking from external CSS */}
         <style dangerouslySetInnerHTML={{
           __html: `
             :root{
-              --bg-base:#0a0e1a;--bg-surface:#1a1f2e;--bg-elevated:#1f2533;
-              --text-primary:#e8edf3;--text-secondary:#b8c5d1;--text-muted:#a8b0bc;
-              --accent:#3b82f6;--accent-hover:#2563eb;
-              --border-subtle:rgba(255,255,255,0.05);--border-default:rgba(255,255,255,0.08)
+              --bg-base:#0a0e1a;--bg-surface:#1a1f2e;--bg-elevated:#1f2533;--bg-hover:#242a38;
+              --text-primary:#e8edf3;--text-secondary:#b8c5d1;--text-tertiary:#8b95a5;--text-muted:#a8b0bc;
+              --accent:#3b82f6;--accent-hover:#2563eb;--accent-active:#1d4ed8;
+              --border-subtle:rgba(255,255,255,0.05);--border-default:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.12)
             }
-            html{background-color:var(--bg-base);scroll-behavior:smooth;overflow-y:auto}
+            *{box-sizing:border-box;margin:0;padding:0}
+            html{background-color:var(--bg-base);scroll-behavior:smooth;overflow-y:auto;font-size:16px}
             body{
               background-color:var(--bg-base);color:var(--text-primary);margin:0;padding:0;
-              font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+              font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
               overflow-y:auto;line-height:1.75;-webkit-font-smoothing:antialiased;
-              -moz-osx-font-smoothing:grayscale
+              -moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility
             }
+            section{display:block}
+            .relative{position:relative}
+            .min-h-\[90vh\]{min-height:90vh}
+            .flex{display:flex}
+            .items-center{align-items:center}
+            .overflow-hidden{overflow:hidden}
+            .py-24{padding-top:6rem;padding-bottom:6rem}
             #hero-title{
-              color:var(--text-primary);font-weight:800;line-height:1.1;
-              margin:0 0 1.5rem;max-width:80rem;margin-left:auto;margin-right:auto;
-              text-align:center;letter-spacing:-0.025em;font-size:2.25rem
+              color:var(--text-primary);font-weight:800;line-height:1.1;margin:0 0 1.5rem;
+              max-width:80rem;margin-left:auto;margin-right:auto;text-align:center;
+              letter-spacing:-0.025em;font-size:2.25rem;opacity:1;transform:none
             }
             #hero-title+p{
               color:var(--text-secondary);font-size:1.125rem;line-height:1.75rem;
               margin:0 0 2.5rem;max-width:48rem;margin-left:auto;margin-right:auto;
-              text-align:center;font-weight:300;letter-spacing:-0.01em
+              text-align:center;font-weight:300;letter-spacing:-0.01em;opacity:1;transform:none
             }
-            .text-lg{font-size:1.125rem;line-height:1.75rem}
-            .text-xl{font-size:1.25rem;line-height:1.75rem}
-            .text-2xl{font-size:1.5rem;line-height:2rem}
+            .gradient-text{background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a78bfa 100%);
+              -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
             @media(min-width:768px){
+              .py-24{padding-top:8rem;padding-bottom:8rem}
               #hero-title{font-size:3.75rem}
               #hero-title+p{font-size:1.5rem}
-              .text-xl{font-size:1.5rem}
-              .text-2xl{font-size:1.875rem}
             }
             @media(min-width:1024px){
               #hero-title{font-size:4.5rem}
               #hero-title+p{font-size:2.25rem}
-              .text-2xl{font-size:2.25rem}
             }
           `
         }} />
