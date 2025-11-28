@@ -3,17 +3,15 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Navigation } from './Navigation';
 import { LanguageToggle } from './LanguageToggle';
 import { Button } from '@/components/ui/button';
 import { LayoutDashboard } from 'lucide-react';
-import { useReducedMotion, createSlideInVariants } from '@/lib/animations';
+import { useReducedMotion } from '@/lib/animations';
 import { useTranslations } from '@/lib/i18n/use-translations';
 
 export function Header() {
   const { t } = useTranslations();
   const prefersReducedMotion = useReducedMotion();
-  const slideVariants = createSlideInVariants(prefersReducedMotion);
 
   return (
     <motion.header
@@ -29,7 +27,7 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between px-8">
         <Link
           href="/"
-          className="flex items-center gap-3 group transition-smooth hover:-translate-y-0.5"
+          className="flex items-center gap-3 group transition-all duration-300 hover:-translate-y-0.5"
           aria-label="Tradelia AI - Home"
         >
           <div className="relative">
@@ -38,34 +36,30 @@ export function Header() {
               alt="Tradelia AI"
               width={200}
               height={50}
-              className="h-10 w-auto brightness-95 drop-shadow-[0_0_10px_rgba(88,166,255,0.15)] transition-smooth group-hover:brightness-100 group-hover:drop-shadow-[0_0_15px_rgba(88,166,255,0.25)] group-hover:scale-105"
+              className="h-10 w-auto brightness-95 drop-shadow-[0_0_10px_rgba(59,130,246,0.15)] transition-all duration-300 group-hover:brightness-100 group-hover:drop-shadow-[0_0_15px_rgba(59,130,246,0.25)] group-hover:scale-105"
               priority
               loading="eager"
             />
-            <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-primary transition-all duration-300 group-hover:w-full" />
+            <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-accent to-accent-hover transition-all duration-300 group-hover:w-full" />
           </div>
         </Link>
 
-        <div className="flex items-center gap-3">
-          <motion.div variants={slideVariants} initial="hidden" animate="visible" className="flex items-center">
-            <Navigation />
-          </motion.div>
-          
-          {/* Language Toggle */}
-          <LanguageToggle />
-          
-          {/* CTA Buttons */}
-          <Button asChild variant="secondary" size="sm" className="hidden md:flex group min-w-[44px] min-h-[44px]">
+        <div className="flex items-center gap-4">
+          {/* Dashboard Button */}
+          <Button 
+            asChild 
+            variant="secondary" 
+            size="sm" 
+            className="group min-w-[44px] min-h-[44px]"
+          >
             <Link href="/dashboard" aria-label={t('header.dashboardAria')}>
               <LayoutDashboard className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
               <span className="hidden sm:inline">{t('header.dashboard')}</span>
             </Link>
           </Button>
-          <Button asChild variant="default" size="sm" className="hidden lg:inline-flex min-w-[44px] min-h-[44px]">
-            <Link href="/contact" aria-label={t('header.contattiAria')}>
-              {t('header.contatti')}
-            </Link>
-          </Button>
+          
+          {/* Language Toggle */}
+          <LanguageToggle />
         </div>
       </div>
     </motion.header>
