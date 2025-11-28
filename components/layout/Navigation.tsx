@@ -174,8 +174,11 @@ export function Navigation() {
             <motion.nav
               ref={menuRef}
               id="mobile-menu"
-              className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-bg-surface border-l border-border z-[101] md:hidden shadow-xl backdrop-blur-sm"
-              style={{ backgroundColor: 'rgba(26, 31, 46, 0.98)' }}
+              className="fixed top-0 right-0 bottom-0 w-full max-w-sm border-l border-border z-[101] md:hidden shadow-xl"
+              style={{ 
+                backgroundColor: 'rgb(26, 31, 46)',
+                backdropFilter: 'blur(12px)',
+              }}
               initial={prefersReducedMotion ? { x: '100%' } : { x: '100%', opacity: 0 }}
               animate={prefersReducedMotion ? { x: 0 } : { x: 0, opacity: 1 }}
               exit={prefersReducedMotion ? { x: '100%' } : { x: '100%', opacity: 0 }}

@@ -66,42 +66,37 @@ export function Footer() {
     delay: number;
   }) => {
     const isExpanded = expandedSections[sectionKey];
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
     return (
       <motion.div
         variants={itemVariants}
         transition={{ delay }}
+        className="flex flex-col"
       >
-        {/* Desktop: Always visible */}
+        {/* Desktop: Always visible - Best Practice Layout */}
         <div className="hidden md:block">
-          <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4 relative pb-2">
+          <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4">
             {title}
-            <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-primary" />
           </h3>
-          <ul className="space-y-3">
+          <ul className="space-y-2.5">
             {links.map((link) => (
               <li key={link.key}>
                 <Link
                   href={link.href}
-                  className="text-sm text-text-secondary hover:text-text-primary transition-smooth inline-flex items-center gap-2 group"
+                  className="text-sm text-text-secondary hover:text-text-primary transition-colors duration-200 inline-block"
                 >
-                  <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-smooth group-hover:opacity-100 group-hover:scale-100" />
-                  <span className="relative">
-                    {t(`footer.${sectionKey}Links.${link.key}`)}
-                    <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-smooth group-hover:w-full" />
-                  </span>
+                  {t(`footer.${sectionKey}Links.${link.key}`)}
                 </Link>
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Mobile: Collapsible */}
+        {/* Mobile: Collapsible - Best Practice Accordion */}
         <div className="md:hidden">
           <button
             onClick={() => toggleSection(sectionKey)}
-            className="w-full flex items-center justify-between py-3 text-xs font-bold text-text-primary uppercase tracking-widest"
+            className="w-full flex items-center justify-between py-3 text-xs font-bold text-text-primary uppercase tracking-widest border-b border-border-subtle"
             aria-expanded={isExpanded}
             aria-controls={`footer-${sectionKey}`}
           >
@@ -122,19 +117,15 @@ export function Footer() {
                 animate={prefersReducedMotion ? {} : { height: 'auto', opacity: 1 }}
                 exit={prefersReducedMotion ? {} : { height: 0, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="overflow-hidden space-y-3 pb-4"
+                className="overflow-hidden space-y-2.5 pt-3 pb-4"
               >
                 {links.map((link) => (
                   <li key={link.key}>
                     <Link
                       href={link.href}
-                      className="text-sm text-text-secondary hover:text-text-primary transition-smooth inline-flex items-center gap-2 group pl-4"
+                      className="text-sm text-text-secondary hover:text-text-primary transition-colors duration-200 block pl-4"
                     >
-                      <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-smooth group-hover:opacity-100 group-hover:scale-100" />
-                      <span className="relative">
-                        {t(`footer.${sectionKey}Links.${link.key}`)}
-                        <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-smooth group-hover:w-full" />
-                      </span>
+                      {t(`footer.${sectionKey}Links.${link.key}`)}
                     </Link>
                   </li>
                 ))}
@@ -147,29 +138,27 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative border-t border-border-subtle glass overflow-hidden" role="contentinfo">
-      {/* Subtle pattern */}
-      <div className="geometric-pattern" aria-hidden="true" />
-
+    <footer className="relative border-t border-border-subtle bg-bg-surface" role="contentinfo">
       {/* Top gradient line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-primary opacity-20" />
 
       <motion.div
-        className="relative z-10 container py-16 px-8"
+        className="relative z-10 container py-16 md:py-20 px-8"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-50px' }}
         variants={containerVariants}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          {/* Left Column - Brand */}
+        {/* Main Footer Content - Best Practice: 4-column grid desktop, stacked mobile */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 mb-12">
+          {/* Brand Column - Spans 5 columns on desktop */}
           <motion.div
             variants={itemVariants}
-            className="lg:col-span-2 flex flex-col gap-6"
+            className="md:col-span-5 flex flex-col gap-4"
           >
             <Link
               href="/"
-              className="inline-block group transition-smooth hover:-translate-y-0.5"
+              className="inline-block group transition-smooth hover:-translate-y-0.5 w-fit"
               aria-label="Tradelia AI - Home"
             >
               <div className="relative">
@@ -195,7 +184,7 @@ export function Footer() {
             </p>
           </motion.div>
 
-          {/* Footer Sections */}
+          {/* Footer Sections - Best Practice: Equal width columns */}
           <FooterSection
             title={t('footer.support')}
             links={footerLinks.support}
@@ -218,11 +207,11 @@ export function Footer() {
           />
         </div>
 
-        {/* Bottom Bar */}
+        {/* Bottom Bar - Best Practice: Horizontal layout with proper spacing */}
         <motion.div
           variants={itemVariants}
           transition={{ delay: 0.4 }}
-          className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-muted"
+          className="pt-8 border-t border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-muted"
         >
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-xs">
@@ -234,21 +223,21 @@ export function Footer() {
           <div className="flex items-center gap-4">
             <Link
               href="/privacy"
-              className="hover:text-text-primary transition-smooth"
+              className="hover:text-text-primary transition-colors duration-200"
             >
               Privacy
             </Link>
             <span className="opacity-40">·</span>
             <Link
               href="/terms"
-              className="hover:text-text-primary transition-smooth"
+              className="hover:text-text-primary transition-colors duration-200"
             >
               Termini
             </Link>
             <span className="opacity-40">·</span>
             <Link
               href="/cookie"
-              className="hover:text-text-primary transition-smooth"
+              className="hover:text-text-primary transition-colors duration-200"
             >
               Cookie
             </Link>
