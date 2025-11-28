@@ -18,6 +18,11 @@ export function LanguageToggle() {
 
   useEffect(() => {
     setMounted(true);
+    // Set initial locale immediately after mount
+    if (typeof window !== 'undefined') {
+      const detectedLocale = window.location.pathname.startsWith('/en') ? 'en' : 'it';
+      setCurrentLocale(detectedLocale);
+    }
   }, []);
 
   useEffect(() => {
