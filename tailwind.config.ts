@@ -26,13 +26,13 @@ const config: Config = {
           hover: "#242A38", // Active hover
           glass: "rgba(26, 31, 46, 0.6)", // Glassmorphism
         },
-        // Accent Colors - Professional Blue (Institutional)
+        // Accent Colors - Professional Blue (Institutional) - Darker, more serious
         accent: {
-          DEFAULT: "#3B82F6", // Blue 500 - Professional, not too vibrant
-          hover: "#2563EB", // Blue 600 - Darker on hover
-          active: "#1D4ED8", // Blue 700 - Active state
-          muted: "rgba(59, 130, 246, 0.1)",
-          glow: "rgba(59, 130, 246, 0.15)",
+          DEFAULT: "#1E40AF", // Blue 800 - Darker, more institutional
+          hover: "#1E3A8A", // Blue 900 - Even darker on hover
+          active: "#1E3A8A", // Blue 900 - Active state
+          muted: "rgba(30, 64, 175, 0.1)",
+          glow: "rgba(30, 64, 175, 0.15)",
         },
         // Success/Error States - Professional
         success: {

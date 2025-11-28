@@ -25,15 +25,15 @@
     --text-secondary: #b8c5d1; /* Elegant blue-gray */
     --text-tertiary: #8b95a5; /* Neutral gray */
     --text-muted: #a8b0bc; /* Further improved contrast for WCAG AA compliance (was #9ca3af) */
-    --text-accent: #3b82f6; /* Professional blue */
+    --text-accent: #1e40af; /* Professional blue - darker, more institutional */
     --text-subtle: #6b7480; /* Subtle gray (moved from muted) */
 
-    /* Accent Colors - Professional Blue (Institutional) */
-    --accent: #3b82f6; /* Blue 500 - Professional, not too vibrant */
-    --accent-hover: #2563eb; /* Blue 600 - Darker on hover */
-    --accent-active: #1d4ed8; /* Blue 700 - Active state */
-    --accent-muted: rgba(59, 130, 246, 0.1); /* Muted accent */
-    --accent-glow: rgba(59, 130, 246, 0.15); /* Glow effect - more subtle */
+    /* Accent Colors - Professional Blue (Institutional) - Darker, more serious */
+    --accent: #1e40af; /* Blue 800 - Darker, more institutional */
+    --accent-hover: #1e3a8a; /* Blue 900 - Even darker on hover */
+    --accent-active: #1e3a8a; /* Blue 900 - Active state */
+    --accent-muted: rgba(30, 64, 175, 0.1); /* Muted accent */
+    --accent-glow: rgba(30, 64, 175, 0.15); /* Glow effect - more subtle */
 
     /* Secondary Accent - Professional */
     --accent-gold: #f59e0b; /* Amber - professional */
