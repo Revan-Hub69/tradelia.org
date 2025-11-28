@@ -110,34 +110,15 @@ export function Values() {
             const Icon = value.icon;
             return (
               <motion.div key={idx} variants={itemVariants}>
-                <motion.div
-                  variants={hoverVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  <Card className="h-full text-center group">
+                  <Card className="h-full text-center">
                     <CardHeader>
                       <div className="flex flex-col items-center gap-3 mb-6">
-                        <motion.div
-                          className="w-20 h-20 rounded-2xl bg-gradient-accent border border-border-accent flex items-center justify-center transition-all duration-300 group-hover:bg-gradient-primary group-hover:border-accent group-hover:shadow-glow"
-                          animate={
-                            prefersReducedMotion
-                              ? {}
-                              : {
-                                  scale: [1, 1.08, 1],
-                                  rotate: [0, 5, -5, 0],
-                                }
-                          }
-                          transition={{
-                            duration: 3,
-                            delay: idx * 0.2,
-                            repeat: Infinity,
-                            repeatDelay: 4,
-                          }}
+                        <div
+                          className="w-20 h-20 rounded-2xl bg-gradient-accent border border-border-accent flex items-center justify-center"
                           aria-hidden="true"
                         >
-                          <Icon className="w-10 h-10 text-accent transition-colors duration-300 group-hover:text-white" aria-hidden="true" />
-                        </motion.div>
+                          <Icon className="w-10 h-10 text-accent" aria-hidden="true" />
+                        </div>
                         {/* Non-chromatic indicator - different shapes for each value */}
                         <div 
                           className={cn(
@@ -159,7 +140,6 @@ export function Values() {
                       </CardDescription>
                     </CardContent>
                   </Card>
-                </motion.div>
               </motion.div>
             );
           })}

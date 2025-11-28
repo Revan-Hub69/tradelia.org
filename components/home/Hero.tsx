@@ -25,9 +25,6 @@ export function Hero() {
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = createContainerVariants(prefersReducedMotion);
   const itemVariants = createItemVariants(prefersReducedMotion);
-  const floatVariants = createFloatVariants(prefersReducedMotion);
-  const gradientPulse1 = createGradientPulse(prefersReducedMotion);
-  const gradientPulse2 = createGradientPulse(prefersReducedMotion);
   const hoverVariants = createHoverVariants(prefersReducedMotion);
 
   return (
@@ -36,23 +33,13 @@ export function Hero() {
       aria-labelledby="hero-title"
     >
       {/* Animated background gradients - Research-based */}
-      <motion.div
-        className="absolute -top-1/2 -right-1/4 w-[800px] h-[800px] bg-gradient-to-br from-accent/8 via-accent/5 to-transparent rounded-full blur-[80px]"
-        animate={gradientPulse1}
+      {/* Subtle static background gradients */}
+      <div
+        className="absolute -top-1/2 -right-1/4 w-[800px] h-[800px] bg-gradient-to-br from-accent/4 to-transparent rounded-full blur-[80px]"
         aria-hidden="true"
       />
-      <motion.div
-        className="absolute -bottom-1/3 -left-1/10 w-[600px] h-[600px] bg-gradient-to-br from-accent/6 via-accent-muted/4 to-transparent rounded-full blur-[70px]"
-        animate={{
-          ...gradientPulse2,
-          scale: prefersReducedMotion ? [1] : [1, 1.12, 1],
-          opacity: prefersReducedMotion ? [0.35] : [0.35, 0.55, 0.35],
-        }}
-        transition={{
-          ...gradientPulse2.transition,
-          delay: 0.5,
-          duration: 20,
-        }}
+      <div
+        className="absolute -bottom-1/3 -left-1/10 w-[600px] h-[600px] bg-gradient-to-br from-accent/3 to-transparent rounded-full blur-[70px]"
         aria-hidden="true"
       />
 
@@ -87,16 +74,10 @@ export function Hero() {
         initial="hidden"
         animate="visible"
       >
-        {/* Badge - Enhanced with icon animation */}
+        {/* Badge */}
         <motion.div variants={itemVariants}>
-          <Badge variant="default" className="mb-8 group">
-            <motion.div
-              animate={prefersReducedMotion ? {} : { rotate: [0, 6, -6, 0] }}
-              transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-              aria-hidden="true"
-            >
-              <BookOpen className="w-4 h-4" aria-hidden="true" />
-            </motion.div>
+          <Badge variant="default" className="mb-8">
+            <BookOpen className="w-4 h-4" aria-hidden="true" />
             <span>Formazione Finanziaria</span>
           </Badge>
         </motion.div>
@@ -110,14 +91,6 @@ export function Hero() {
           Formazione finanziaria gratuita basata su{' '}
           <span className="gradient-text relative inline-block">
             framework verificabili
-            {!prefersReducedMotion && (
-              <motion.span
-                className="absolute bottom-0.1 left-0 h-[0.15em] bg-gradient-primary opacity-20 rounded-sm"
-                initial={{ width: 0 }}
-                animate={{ width: '100%' }}
-                transition={{ duration: 1, delay: 1.2, ease: 'easeOut' }}
-              />
-            )}
           </span>
         </motion.h1>
 
@@ -144,23 +117,16 @@ export function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: stat.delay, duration: 0.6 }}
-                variants={hoverVariants}
-                whileHover="hover"
-                whileTap="tap"
               >
                 <div className="flex items-center justify-center gap-3 mb-2">
-                  <motion.div
-                    className="w-10 h-10 rounded-full bg-accent-muted flex items-center justify-center"
-                    animate={prefersReducedMotion ? {} : { scale: [1, 1.1, 1] }}
-                    transition={{ duration: 2, delay: stat.delay + 1, repeat: Infinity, repeatDelay: 2 }}
-                  >
+                  <div className="w-10 h-10 rounded-full bg-accent-muted flex items-center justify-center">
                     <Icon className="w-5 h-5 text-accent" aria-hidden="true" />
-                  </motion.div>
+                  </div>
                 </div>
-                <div className="text-4xl md:text-5xl lg:text-6xl font-extrabold gradient-text leading-none tracking-tighter transition-smooth group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(88,166,255,0.3)]">
+                <div className="text-4xl md:text-5xl lg:text-6xl font-extrabold gradient-text leading-none tracking-tighter">
                   {stat.value}
                 </div>
-                <div className="text-xs font-semibold text-text-muted uppercase tracking-widest transition-smooth group-hover:text-text-secondary">
+                <div className="text-xs font-semibold text-text-muted uppercase tracking-widest">
                   {stat.label}
                 </div>
               </motion.div>
@@ -173,36 +139,29 @@ export function Hero() {
           variants={itemVariants}
           className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
         >
-          <motion.div variants={hoverVariants} whileHover="hover" whileTap="tap">
-            <Button asChild variant="default" size="lg" className="group">
-              <Link href="/dashboard#education">
-                <span>Inizia la Formazione</span>
-                <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
-              </Link>
-            </Button>
-          </motion.div>
-          <motion.div variants={hoverVariants} whileHover="hover" whileTap="tap">
-            <Button asChild variant="secondary" size="lg" className="group">
-              <Link href="/dashboard">
-                <span>Dashboard</span>
-                <LayoutDashboard className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" aria-hidden="true" />
-              </Link>
-            </Button>
-          </motion.div>
+          <Button asChild variant="default" size="lg">
+            <Link href="/dashboard#education">
+              <span>Inizia la Formazione</span>
+              <ArrowRight className="w-5 h-5" aria-hidden="true" />
+            </Link>
+          </Button>
+          <Button asChild variant="secondary" size="lg">
+            <Link href="/dashboard">
+              <span>Dashboard</span>
+              <LayoutDashboard className="w-5 h-5" aria-hidden="true" />
+            </Link>
+          </Button>
         </motion.div>
 
         {/* Disclaimer - Enhanced card design */}
         <motion.div variants={itemVariants}>
           <Card variant="academic" className="max-w-4xl mx-auto text-left">
             <div className="flex items-start gap-5 p-6 md:p-8">
-              <motion.div
-                className="flex-shrink-0 mt-0.5"
-                animate={floatVariants.animate}
-              >
+              <div className="flex-shrink-0 mt-0.5">
                 <div className="w-5 h-5 rounded-full bg-accent-muted flex items-center justify-center ring-2 ring-accent/20">
-                  <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-accent" />
                 </div>
-              </motion.div>
+              </div>
               <p className="text-sm md:text-base text-text-secondary leading-relaxed tracking-tight m-0 font-light">
                 Le informazioni fornite sono a scopo educativo e non costituiscono consulenza finanziaria.
                 Materiale conforme alle regole <strong className="text-text-primary font-medium">MiFID II</strong> e agli standard accademici internazionali.

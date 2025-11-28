@@ -115,34 +115,12 @@ export function Features() {
             const Icon = feature.icon;
             return (
               <motion.div key={idx} variants={itemVariants}>
-                <motion.div
-                  variants={hoverVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  <Card className="h-full group">
+                  <Card className="h-full">
                     <CardHeader>
                       <div className="flex items-center gap-3 mb-4">
-                        <motion.div
-                          className="w-16 h-16 rounded-xl bg-gradient-accent border border-border-accent flex items-center justify-center transition-all duration-300 group-hover:bg-gradient-primary group-hover:border-accent"
-                          animate={
-                            prefersReducedMotion
-                              ? {}
-                              : {
-                                  scale: [1, 1.05, 1],
-                                  rotate: [0, 2, -2, 0],
-                                }
-                          }
-                          transition={{
-                            duration: 3,
-                            delay: idx * 0.2,
-                            repeat: Infinity,
-                            repeatDelay: 5,
-                          }}
-                          aria-hidden="true"
-                        >
-                          <Icon className="w-8 h-8 text-accent transition-colors duration-300 group-hover:text-white" aria-hidden="true" />
-                        </motion.div>
+                        <div className="w-16 h-16 rounded-xl bg-gradient-accent border border-border-accent flex items-center justify-center">
+                          <Icon className="w-8 h-8 text-accent" aria-hidden="true" />
+                        </div>
                         {/* Non-chromatic indicator for colorblind accessibility */}
                         <div className="w-2 h-2 rounded-full bg-accent border border-accent" aria-hidden="true" />
                       </div>
@@ -156,7 +134,6 @@ export function Features() {
                       </CardDescription>
                     </CardContent>
                   </Card>
-                </motion.div>
               </motion.div>
             );
           })}
@@ -164,14 +141,12 @@ export function Features() {
 
         {/* CTA */}
         <motion.div variants={itemVariants} className="text-center">
-          <motion.div variants={hoverVariants} whileHover="hover" whileTap="tap">
-            <Button asChild variant="default" size="lg" className="group">
-              <Link href="/dashboard#education">
-                <span>Esplora i Percorsi Formativi</span>
-                <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
-              </Link>
-            </Button>
-          </motion.div>
+          <Button asChild variant="default" size="lg">
+            <Link href="/dashboard#education">
+              <span>Esplora i Percorsi Formativi</span>
+              <ArrowRight className="w-5 h-5" aria-hidden="true" />
+            </Link>
+          </Button>
         </motion.div>
       </motion.div>
     </section>

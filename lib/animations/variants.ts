@@ -106,28 +106,11 @@ export const createGradientPulse = (prefersReducedMotion: boolean) => ({
 });
 
 /**
- * Hover variants for interactive elements
+ * Hover variants for interactive elements - Minimal and professional
  */
-export const createHoverVariants = (prefersReducedMotion: boolean) => ({
-  rest: {},
-  hover: prefersReducedMotion
-    ? {}
-    : {
-        y: -2,
-        scale: 1.02,
-        transition: {
-          duration: 0.15,
-          ease: [0.4, 0, 0.2, 1],
-        },
-      },
-  tap: prefersReducedMotion
-    ? {}
-    : {
-        scale: 0.98,
-        transition: {
-          duration: 0.1,
-        },
-      },
+export const createHoverVariants = (prefersReducedMotion: boolean): Variants => ({
+  hover: prefersReducedMotion ? {} : {},
+  tap: prefersReducedMotion ? {} : {},
 });
 
 /**

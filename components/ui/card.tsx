@@ -13,7 +13,7 @@ const cardVariants = cva(
         academic: 'card-academic',
       },
       hover: {
-        true: 'hover-lift hover:border-border-accent',
+        true: 'hover:border-border-accent transition-colors duration-200',
         false: '',
       },
     },

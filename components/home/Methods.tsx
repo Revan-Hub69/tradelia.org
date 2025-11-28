@@ -131,35 +131,16 @@ export function Methods() {
             const Icon = method.icon;
             return (
               <motion.div key={method.id} variants={itemVariants}>
-                <motion.div
-                  variants={hoverVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  <Card className="h-full group">
+                  <Card className="h-full">
                     <CardHeader>
                       <div className="flex items-start gap-4 mb-4">
                         <div className="flex flex-col items-center gap-2">
-                          <motion.div
-                            className={`w-16 h-16 rounded-xl bg-gradient-to-br ${method.color} border border-border-accent flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:shadow-glow`}
-                            animate={
-                              prefersReducedMotion
-                                ? {}
-                                : {
-                                    scale: [1, 1.05, 1],
-                                    rotate: [0, 3, -3, 0],
-                                  }
-                            }
-                            transition={{
-                              duration: 4,
-                              delay: idx * 0.3,
-                              repeat: Infinity,
-                              repeatDelay: 6,
-                            }}
+                          <div
+                            className={`w-16 h-16 rounded-xl bg-gradient-to-br ${method.color} border border-border-accent flex items-center justify-center flex-shrink-0`}
                             aria-hidden="true"
                           >
                             <Icon className="w-8 h-8 text-white" aria-hidden="true" />
-                          </motion.div>
+                          </div>
                           {/* Non-chromatic indicator - shape varies by method */}
                           <div 
                             className={cn(
@@ -186,25 +167,21 @@ export function Methods() {
                       </CardDescription>
                       <ul className="space-y-3 mb-6">
                         {method.features.map((feature, featureIdx) => (
-                          <motion.li
+                          <li
                             key={featureIdx}
-                            className="flex items-center gap-3 text-sm text-text-secondary group-hover:text-text-primary transition-colors duration-300"
-                            initial={{ opacity: 0, x: -10 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: featureIdx * 0.1 }}
+                            className="flex items-center gap-3 text-sm text-text-secondary"
                           >
                             <Check className="w-4 h-4 text-accent flex-shrink-0" aria-hidden="true" />
                             <span className="font-light">{feature}</span>
-                          </motion.li>
+                          </li>
                         ))}
                       </ul>
                       <Link
                         href="/dashboard#education"
-                        className="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent-hover transition-colors duration-300 group/link"
+                        className="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent-hover transition-colors duration-200"
                       >
                         <span>Esplora Framework</span>
-                        <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" aria-hidden="true" />
+                        <ArrowRight className="w-4 h-4" aria-hidden="true" />
                       </Link>
                     </CardContent>
                   </Card>
