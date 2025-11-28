@@ -12,6 +12,23 @@
     "dashboardAria": "Vai alla dashboard gratuita",
     "contattiAria": "Parla con il team indipendente"
   },
+  "legal": {
+    "title": "Informativa Legale",
+    "subtitle": "Conformità GDPR e MiFID II",
+    "cookies": "Questo sito utilizza cookie tecnici necessari per il funzionamento e cookie di analisi per migliorare l'esperienza utente.",
+    "educational": "Le informazioni fornite sono a scopo",
+    "educationalHighlight": "esclusivamente educativo",
+    "educationalEnd": "e non costituiscono consulenza finanziaria. Materiale conforme alle normative",
+    "mifid": "MiFID II",
+    "mifidEnd": "e agli standard accademici internazionali.",
+    "readMore": "Consulta la nostra",
+    "privacy": "Privacy Policy",
+    "and": "e i",
+    "terms": "Termini e Condizioni",
+    "accept": "Accetta e continua",
+    "reject": "Rifiuta",
+    "close": "Chiudi"
+  },
   "hero": {
     "badge": "Progetto indipendente",
     "title": "Ricerca finanziaria gratuita e",

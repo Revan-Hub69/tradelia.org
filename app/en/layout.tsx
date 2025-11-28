@@ -29,6 +29,7 @@ export const viewport = {
 
 export const icons = {
   icon: [
+    { url: '/logos/tradelia-icon.svg', type: 'image/svg+xml' },
     { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
     { url: '/favicon.png', sizes: '16x16', type: 'image/png' },
   ],
@@ -46,10 +47,11 @@ export default function EnLayout({
     <html lang="en" data-theme="dark">
       <head>
         {/* Favicon */}
+        <link rel="icon" type="image/svg+xml" href="/logos/tradelia-icon.svg" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
-        <link rel="shortcut icon" href="/favicon.png" />
+        <link rel="shortcut icon" href="/logos/tradelia-icon.svg" />
         
         <script
           type="application/ld+json"

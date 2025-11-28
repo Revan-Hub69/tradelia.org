@@ -69,9 +69,11 @@ const nextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
-    // Non serve domains per immagini locali (/logos/...)
-    // Se in futuro servono immagini remote, aggiungere:
-    // remotePatterns: [{ protocol: 'https', hostname: 'tradelia.org' }]
+  },
+
+  // Performance - Target modern browsers (ES2022+)
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
   },
 
   // TypeScript e ESLint

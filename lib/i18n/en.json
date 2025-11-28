@@ -12,6 +12,23 @@
     "dashboardAria": "Go to free dashboard",
     "contattiAria": "Talk to the independent team"
   },
+  "legal": {
+    "title": "Legal Information",
+    "subtitle": "GDPR and MiFID II Compliance",
+    "cookies": "This site uses technical cookies necessary for functionality and analytics cookies to improve user experience.",
+    "educational": "The information provided is for",
+    "educationalHighlight": "educational purposes only",
+    "educationalEnd": "and does not constitute financial advice. Material compliant with",
+    "mifid": "MiFID II",
+    "mifidEnd": "regulations and international academic standards.",
+    "readMore": "Read our",
+    "privacy": "Privacy Policy",
+    "and": "and",
+    "terms": "Terms & Conditions",
+    "accept": "Accept and continue",
+    "reject": "Reject",
+    "close": "Close"
+  },
   "hero": {
     "badge": "Independent project",
     "title": "Free and",

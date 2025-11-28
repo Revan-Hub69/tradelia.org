@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Critical CSS - Inline for LCP optimization */
+@layer base {
+  /* Prevent FOUC */
+  html {
+    background-color: var(--bg-base);
+  }
+}
+
 @layer base {
   :root {
     /* Primary Background - Institutional/Professional (Bloomberg-inspired) */

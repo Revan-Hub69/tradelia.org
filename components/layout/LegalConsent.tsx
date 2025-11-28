@@ -59,7 +59,7 @@ export function LegalConsent() {
 
           {/* Consent Modal */}
           <motion.div
-            className="fixed bottom-0 left-0 right-0 md:bottom-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:right-auto z-[201] max-w-2xl w-full md:max-w-lg"
+            className="fixed bottom-0 left-0 right-0 md:bottom-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:right-auto z-[201] w-full md:w-auto md:max-w-xl"
             initial={prefersReducedMotion ? { opacity: 0 } : { y: 100, opacity: 0 }}
             animate={prefersReducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { y: 100, opacity: 0 }}
@@ -73,8 +73,8 @@ export function LegalConsent() {
             aria-labelledby="legal-consent-title"
             aria-describedby="legal-consent-description"
           >
-            <Card className="m-4 md:m-0 border-border-strong shadow-2xl">
-              <div className="p-6 md:p-8">
+            <Card className="m-4 md:m-0 border-border-strong shadow-2xl md:min-w-[500px]">
+              <div className="p-6 md:p-10">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-6">
                   <div className="flex items-center gap-3">
@@ -82,11 +82,11 @@ export function LegalConsent() {
                       <Shield className="w-6 h-6 text-accent" aria-hidden="true" />
                     </div>
                     <div>
-                      <h2 id="legal-consent-title" className="text-xl font-bold text-text-primary">
-                        {locale === 'en' ? 'Legal Information' : 'Informativa Legale'}
+                      <h2 id="legal-consent-title" className="text-xl md:text-2xl font-bold text-text-primary">
+                        {t('legal.title')}
                       </h2>
                       <p className="text-sm text-text-muted">
-                        {locale === 'en' ? 'GDPR and MiFID II Compliance' : 'Conformità GDPR e MiFID II'}
+                        {t('legal.subtitle')}
                       </p>
                     </div>
                   </div>
@@ -95,7 +95,7 @@ export function LegalConsent() {
                     size="icon"
                     className="min-w-[44px] min-h-[44px]"
                     onClick={handleAccept}
-                    aria-label="Close"
+                    aria-label={t('legal.close')}
                   >
                     <X className="w-5 h-5" aria-hidden="true" />
                   </Button>
@@ -103,41 +103,29 @@ export function LegalConsent() {
 
                 {/* Content */}
                 <div id="legal-consent-description" className="space-y-4 mb-6">
-                  <p className="text-sm text-text-secondary leading-relaxed">
-                    {locale === 'en' 
-                      ? 'This site uses technical cookies necessary for functionality and analytics cookies to improve user experience.'
-                      : 'Questo sito utilizza cookie tecnici necessari per il funzionamento e cookie di analisi per migliorare l\'esperienza utente.'}
+                  <p className="text-sm md:text-base text-text-secondary leading-relaxed">
+                    {t('legal.cookies')}
                   </p>
-                  <p className="text-sm text-text-secondary leading-relaxed">
-                    {locale === 'en'
-                      ? <>The information provided is for <strong className="text-text-primary">educational purposes only</strong> and does not constitute financial advice. Material compliant with <strong className="text-text-primary">MiFID II</strong> regulations and international academic standards.</>
-                      : <>Le informazioni fornite sono a scopo <strong className="text-text-primary">esclusivamente educativo</strong> e non costituiscono consulenza finanziaria. Materiale conforme alle normative <strong className="text-text-primary">MiFID II</strong> e agli standard accademici internazionali.</>}
+                  <p className="text-sm md:text-base text-text-secondary leading-relaxed">
+                    {t('legal.educational')}{' '}
+                    <strong className="text-text-primary">{t('legal.educationalHighlight')}</strong>{' '}
+                    {t('legal.educationalEnd')}{' '}
+                    <strong className="text-text-primary">{t('legal.mifid')}</strong>{' '}
+                    {t('legal.mifidEnd')}
                   </p>
                   <div className="flex items-start gap-3 p-4 bg-bg-elevated rounded-lg border border-border">
                     <FileText className="w-5 h-5 text-accent flex-shrink-0 mt-1" aria-hidden="true" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-text-secondary leading-relaxed">
-                        {locale === 'en' ? (
-                          <>Read our{' '}
-                            <Link href="/privacy" className="text-accent hover:text-accent-hover underline">
-                              Privacy Policy
+                      <p className="text-xs md:text-sm text-text-secondary leading-relaxed">
+                        {t('legal.readMore')}{' '}
+                            <Link href="/privacy" className="text-accent hover:text-accent-hover underline font-medium" style={{ color: '#3B82F6' }}>
+                              {t('legal.privacy')}
                             </Link>
-                            {' '}and{' '}
-                            <Link href="/terms" className="text-accent hover:text-accent-hover underline">
-                              Terms & Conditions
-                            </Link>
-                            .</>
-                        ) : (
-                          <>Consulta la nostra{' '}
-                            <Link href="/privacy" className="text-accent hover:text-accent-hover underline">
-                              Privacy Policy
-                            </Link>
-                            {' '}e i{' '}
-                            <Link href="/terms" className="text-accent hover:text-accent-hover underline">
-                              Termini e Condizioni
-                            </Link>
-                            .</>
-                        )}
+                        {' '}{t('legal.and')}{' '}
+                        <Link href="/terms" className="text-accent hover:text-accent-hover underline font-medium" style={{ color: '#3B82F6' }}>
+                          {t('legal.terms')}
+                        </Link>
+                        .
                       </p>
                     </div>
                   </div>
@@ -151,14 +139,14 @@ export function LegalConsent() {
                     className="flex-1 min-h-[44px]"
                   >
                     <Cookie className="w-4 h-4" aria-hidden="true" />
-                    <span>{locale === 'en' ? 'Accept and continue' : 'Accetta e continua'}</span>
+                    <span>{t('legal.accept')}</span>
                   </Button>
                   <Button
                     variant="secondary"
                     onClick={handleReject}
                     className="flex-1 min-h-[44px]"
                   >
-                    <span>{locale === 'en' ? 'Reject' : 'Rifiuta'}</span>
+                    <span>{t('legal.reject')}</span>
                   </Button>
                 </div>
               </div>
