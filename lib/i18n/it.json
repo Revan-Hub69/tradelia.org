@@ -92,7 +92,7 @@
       "title": "Hub operativo e formazione avanzata",
       "description": "Report ufficiali, percorsi formativi e richieste on demand restano sincronizzati con i paper metodologici e con le policy MiFID II.",
       "ctaPrimary": "Vai alla formazione",
-      "ctaSecondary": "Area Admin",
+      "supportingText": "Materiale verificabile conforme MiFID II",
       "chips": [
         "Research open source",
         "Compliance MiFID II",
@@ -135,8 +135,14 @@
     },
     "modules": {
       "primaryTitle": "Moduli principali",
+      "primaryDescription": "Accesso rapido ai moduli core: report ufficiali, percorsi formativi e richieste on demand.",
       "secondaryTitle": "Moduli secondari",
+      "secondaryDescription": "Risorse avanzate, notifiche e strumenti di configurazione.",
       "genericTitle": "Moduli",
+      "genericDescription": "",
+      "primaryAria": "Moduli principali della dashboard",
+      "secondaryAria": "Moduli secondari della dashboard",
+      "genericAria": "Moduli della dashboard",
       "items": {
         "reports": {
           "title": "Report ufficiali",

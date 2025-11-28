@@ -121,8 +121,7 @@ export function Footer() {
         <motion.div
           className="py-12 md:py-16 lg:py-20"
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
+          animate="visible"
           variants={containerVariants}
         >
           {/* Main Footer Content - Best Practice: Responsive Grid */}

@@ -92,7 +92,7 @@
       "title": "Operational hub & advanced training",
       "description": "Official reports, learning paths and on-demand requests stay aligned with our methodological papers and MiFID II compliance notes.",
       "ctaPrimary": "Go to training",
-      "ctaSecondary": "Admin area",
+      "supportingText": "Academic-grade material, MiFID II compliant",
       "chips": [
         "Open research",
         "MiFID II ready",
@@ -135,8 +135,14 @@
     },
     "modules": {
       "primaryTitle": "Primary modules",
+      "primaryDescription": "Quick access to the core experience: reports, learning paths and on-demand requests.",
       "secondaryTitle": "Secondary modules",
+      "secondaryDescription": "Advanced resources, notifications and configuration tools.",
       "genericTitle": "Modules",
+      "genericDescription": "",
+      "primaryAria": "Primary dashboard modules",
+      "secondaryAria": "Secondary dashboard modules",
+      "genericAria": "Dashboard modules",
       "items": {
         "reports": {
           "title": "Official reports",

@@ -104,13 +104,30 @@ export function ModuleGrid({ priority }: ModuleGridProps) {
     ? t('dashboard.modules.secondaryTitle')
     : t('dashboard.modules.genericTitle');
 
+  const description = priority === 'primary'
+    ? t('dashboard.modules.primaryDescription')
+    : priority === 'secondary'
+    ? t('dashboard.modules.secondaryDescription')
+    : t('dashboard.modules.genericDescription');
+
   return (
-    <div className={styles.moduleCategory}>
-      <h2 className={styles.categoryTitle}>{title}</h2>
+    <div className={styles.moduleCategory} data-priority={priority ?? 'all'}>
+      <div className={styles.categoryTitleWrap}>
+        <h2 className={styles.categoryTitle}>{title}</h2>
+        {description && (
+          <p className={styles.categoryDescription}>{description}</p>
+        )}
+      </div>
       <div 
         className={styles.modulesGrid}
         role="list"
-        aria-label={priority === 'primary' ? 'Moduli principali della dashboard' : 'Moduli secondari della dashboard'}
+        aria-label={
+          priority === 'primary'
+            ? t('dashboard.modules.primaryAria')
+            : priority === 'secondary'
+            ? t('dashboard.modules.secondaryAria')
+            : t('dashboard.modules.genericAria')
+        }
       >
         {filteredModules.map((module) => (
           <ModuleCard key={module.id} module={module} />

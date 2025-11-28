@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Sparkles, ShieldCheck, Target, ArrowRight } from 'lucide-react';
+import { Sparkles, ShieldCheck, Target, ArrowRight, BookOpen } from 'lucide-react';
 import styles from './dashboard.module.css';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -28,16 +28,14 @@ export function DashboardHero() {
         <div className={styles.dashboardHeroActions}>
           <Button asChild size="lg">
             <Link href={buildLocalePath(locale, '/dashboard#education')}>
-              {t('dashboard.hero.ctaPrimary')}
+              <span>{t('dashboard.hero.ctaPrimary')}</span>
               <ArrowRight className={styles.dashboardHeroActionIcon} aria-hidden="true" />
             </Link>
           </Button>
-          <Button asChild variant="secondary" size="lg" className={styles.dashboardHeroSecondary}>
-            <Link href={buildLocalePath(locale, '/dashboard/admin')}>
-              {t('dashboard.hero.ctaSecondary')}
-              <ShieldCheck className={styles.dashboardHeroActionIcon} aria-hidden="true" />
-            </Link>
-          </Button>
+          <div className={styles.dashboardHeroSupportText}>
+            <BookOpen className={styles.dashboardHeroSupportIcon} aria-hidden="true" />
+            <span>{t('dashboard.hero.supportingText')}</span>
+          </div>
         </div>
         {chips.length > 0 && (
           <ul className={styles.dashboardHeroChips}>

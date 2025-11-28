@@ -5,6 +5,7 @@ import { Globe, Check, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
 import { locales, type Locale, localeNames } from '@/lib/i18n/config';
+import { usePathname, useRouter } from 'next/navigation';
 
 export function LanguageToggle() {
   const [currentLocale, setCurrentLocale] = useState<Locale>('it');
@@ -12,30 +13,17 @@ export function LanguageToggle() {
   const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
-    // Set initial locale immediately after mount
-    if (typeof window !== 'undefined') {
-      const detectedLocale = window.location.pathname.startsWith('/en') ? 'en' : 'it';
-      setCurrentLocale(detectedLocale);
-    }
   }, []);
 
-  // Update locale on navigation
   useEffect(() => {
-    if (!mounted) return;
-    
-    const handleLocationChange = () => {
-      if (typeof window !== 'undefined') {
-        const detectedLocale = window.location.pathname.startsWith('/en') ? 'en' : 'it';
-        setCurrentLocale(detectedLocale);
-      }
-    };
-
-    window.addEventListener('popstate', handleLocationChange);
-    return () => window.removeEventListener('popstate', handleLocationChange);
-  }, [mounted]);
+    if (!mounted || !pathname) return;
+    setCurrentLocale(pathname.startsWith('/en') ? 'en' : 'it');
+  }, [mounted, pathname]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -75,22 +63,13 @@ export function LanguageToggle() {
     setIsOpen(false);
     if (locale === currentLocale) return;
 
-    if (typeof window === 'undefined') return;
+    const normalizedPath = (pathname || '/').replace(/^\/en/, '') || '/';
+    const destination =
+      locale === 'en'
+        ? `/en${normalizedPath === '/' ? '' : normalizedPath}`
+        : normalizedPath || '/';
 
-    // Simple locale switching - replace /en prefix or add it
-    let newPath = window.location.pathname || '/';
-    
-    // Remove /en prefix if present
-    newPath = newPath.replace(/^\/en/, '') || '/';
-    
-    if (locale === 'en') {
-      // Add /en prefix
-      newPath = `/en${newPath === '/' ? '' : newPath}`;
-    }
-    // If locale is 'it', newPath is already correct (without /en)
-    
-    // Use window.location for reliable navigation
-    window.location.href = newPath;
+    router.push(destination);
   };
 
   // Return static version during SSR to avoid hydration mismatch
