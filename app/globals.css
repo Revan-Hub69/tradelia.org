@@ -1,122 +1,105 @@
-/* Design System - Premium Professional Palette (Bloomberg-inspired but better) */
-:root {
-  /* Primary Background - Deep professional dark */
-  --dash-bg: #0A0E27;
-  --dash-bg-soft: #0F1429;
-  --dash-surface: #141B2D;
-  --dash-surface-elev: #1A2332;
-  --dash-surface-hover: #1F2A3A;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  /* Text - Premium readability */
-  --dash-text: #FFFFFF;
-  --dash-text-soft: #E8E8E8;
-  --dash-text-muted: #B0B0B0;
-  --dash-text-subtle: #6B7280;
+@layer base {
+  :root {
+    /* Primary Background - Deep professional dark */
+    --bg-base: #0A0E27;
+    --bg-soft: #0F1429;
+    --bg-surface: #141B2D;
+    --bg-elevated: #1A2332;
+    --bg-hover: #1F2A3A;
 
-  /* Accent Colors - Professional blue/cyan gradient */
-  --dash-accent: #00BCD4;
-  --dash-accent-hover: #26C6DA;
-  --dash-accent-active: #4DD0E1;
-  --dash-accent-blue: #0073E6;
-  --dash-accent-blue-hover: #1A8CFF;
-  --dash-accent-muted: rgba(0, 188, 212, 0.15);
-  --dash-accent-glow: rgba(0, 188, 212, 0.3);
+    /* Text - Premium readability */
+    --text-primary: #FFFFFF;
+    --text-secondary: #E8E8E8;
+    --text-tertiary: #B0B0B0;
+    --text-muted: #6B7280;
+    --text-accent: #00BCD4;
 
-  /* Borders - Subtle and refined */
-  --dash-border: rgba(255, 255, 255, 0.05);
-  --dash-border-soft: rgba(255, 255, 255, 0.1);
-  --dash-border-strong: rgba(255, 255, 255, 0.15);
-  --dash-border-accent: rgba(0, 188, 212, 0.3);
+    /* Accent Colors - Professional blue/cyan gradient */
+    --accent: #00BCD4;
+    --accent-hover: #26C6DA;
+    --accent-active: #4DD0E1;
+    --accent-blue: #0073E6;
+    --accent-blue-hover: #1A8CFF;
+    --accent-muted: rgba(0, 188, 212, 0.15);
+    --accent-glow: rgba(0, 188, 212, 0.3);
 
-  /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #0073E6 0%, #00BCD4 100%);
-  --gradient-surface: linear-gradient(180deg, rgba(20, 27, 45, 0.8) 0%, rgba(10, 14, 39, 0.9) 100%);
-  --gradient-accent: linear-gradient(135deg, rgba(0, 115, 230, 0.1) 0%, rgba(0, 188, 212, 0.1) 100%);
-  
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px rgba(0, 188, 212, 0.3);
-  
-  /* Animation */
-  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-spring: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    /* Borders - Subtle and refined */
+    --border-subtle: rgba(255, 255, 255, 0.05);
+    --border-default: rgba(255, 255, 255, 0.1);
+    --border-strong: rgba(255, 255, 255, 0.15);
+    --border-accent: rgba(0, 188, 212, 0.3);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-bg-base text-text-primary font-sans antialiased;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+
+  /* Smooth scroll */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-accent/30 text-text-primary;
+  }
+
+  ::-moz-selection {
+    @apply bg-accent/30 text-text-primary;
+  }
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@layer utilities {
+  /* Premium Geometric Patterns */
+  .geometric-pattern {
+    @apply absolute inset-0 opacity-[0.04] pointer-events-none overflow-hidden;
+  }
 
-body {
-  background: var(--dash-bg);
-  color: var(--dash-text);
-  font-family:
-    "Inter",
-    system-ui,
-    -apple-system,
-    sans-serif;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  .geometric-pattern::before {
+    content: '';
+    @apply absolute inset-0;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 1px,
+        rgba(255, 255, 255, 0.015) 1px,
+        rgba(255, 255, 255, 0.015) 2px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 1px,
+        rgba(255, 255, 255, 0.015) 1px,
+        rgba(255, 255, 255, 0.015) 2px
+      );
+    background-size: 40px 40px;
+    animation: patternShift 20s linear infinite;
+  }
 
-.dashboard-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+  .geometric-pattern::after {
+    content: '';
+    @apply absolute inset-0;
+    background-image:
+      radial-gradient(circle at 15% 25%, rgba(0, 188, 212, 0.03) 0%, transparent 40%),
+      radial-gradient(circle at 85% 75%, rgba(0, 115, 230, 0.025) 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(0, 188, 212, 0.015) 0%, transparent 60%);
+    animation: patternPulse 15s ease-in-out infinite;
+  }
 
-#main-content {
-  flex: 1;
-}
-
-/* Premium Geometric Patterns - Bloomberg-inspired but refined */
-.geometric-pattern {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.04;
-  z-index: 0;
-  overflow: hidden;
-}
-
-.geometric-pattern::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 1px,
-      rgba(255, 255, 255, 0.015) 1px,
-      rgba(255, 255, 255, 0.015) 2px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 1px,
-      rgba(255, 255, 255, 0.015) 1px,
-      rgba(255, 255, 255, 0.015) 2px
-    );
-  background-size: 40px 40px;
-  animation: patternShift 20s linear infinite;
-}
-
-.geometric-pattern::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(circle at 15% 25%, rgba(0, 188, 212, 0.03) 0%, transparent 40%),
-    radial-gradient(circle at 85% 75%, rgba(0, 115, 230, 0.025) 0%, transparent 40%),
-    radial-gradient(circle at 50% 50%, rgba(0, 188, 212, 0.015) 0%, transparent 60%);
-  animation: patternPulse 15s ease-in-out infinite;
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-primary bg-clip-text text-transparent;
+  }
 }
 
 @keyframes patternShift {
@@ -137,32 +120,4 @@ body {
     opacity: 0.8;
     transform: scale(1.05);
   }
-}
-
-/* Additional geometric elements */
-.geometric-grid {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.02;
-  background-image: 
-    linear-gradient(rgba(0, 188, 212, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 188, 212, 0.1) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-
-/* Smooth scroll */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Selection */
-::selection {
-  background: rgba(0, 188, 212, 0.3);
-  color: var(--dash-text);
-}
-
-::-moz-selection {
-  background: rgba(0, 188, 212, 0.3);
-  color: var(--dash-text);
 }
