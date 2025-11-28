@@ -1,4 +1,4 @@
-.dashboard-main {
+.dashboardMain {
   padding: 2rem 1.5rem;
   max-width: 1400px;
   margin: 0 auto;
@@ -6,7 +6,7 @@
 }
 
 /* Overview Section */
-.overview-section {
+.overviewSection {
   margin-bottom: 3rem;
   padding: 2rem;
   background: var(--dash-surface);
@@ -15,7 +15,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.section-title {
+.sectionTitle {
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 600;
   color: var(--dash-text);
@@ -23,13 +23,13 @@
   letter-spacing: -0.01em;
 }
 
-.overview-stats-grid {
+.overviewStatsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
 }
 
-.stat-card {
+.statCard {
   background: var(--dash-surface-elev);
   border: 1px solid var(--dash-border);
   border-radius: 12px;
@@ -38,14 +38,14 @@
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.stat-card:hover {
+.statCard:hover {
   background: var(--dash-surface);
   border-color: var(--dash-border-strong);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   transform: translateY(-2px);
 }
 
-.stat-value {
+.statValue {
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 600;
   color: var(--dash-accent);
@@ -53,18 +53,18 @@
   margin-bottom: 0.5rem;
 }
 
-.stat-label {
+.statLabel {
   font-size: 0.875rem;
   color: var(--dash-text-muted);
   line-height: 1.4;
 }
 
 /* Module Category */
-.module-category {
+.moduleCategory {
   margin-bottom: 3rem;
 }
 
-.category-title {
+.categoryTitle {
   font-size: clamp(1.25rem, 3vw, 1.75rem);
   font-weight: 600;
   color: var(--dash-text);
@@ -74,7 +74,7 @@
   padding-bottom: 1rem;
 }
 
-.category-title::after {
+.categoryTitle::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -86,14 +86,14 @@
   opacity: 0.8;
 }
 
-.modules-grid {
+.modulesGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
 }
 
 /* Module Card - Solidità migliorata con effetti WOW */
-.module-card {
+.moduleCard {
   background: var(--dash-surface);
   border: 1px solid var(--dash-border);
   border-left: 3px solid transparent;
@@ -113,7 +113,7 @@
 }
 
 /* Glow effect sottile su hover - WOW */
-.module-card::after {
+.moduleCard::after {
   content: "";
   position: absolute;
   inset: -2px;
@@ -125,7 +125,7 @@
   z-index: -1;
 }
 
-.module-card::before {
+.moduleCard::before {
   content: "";
   position: absolute;
   top: 0;
@@ -138,7 +138,7 @@
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.module-card:hover {
+.moduleCard:hover {
   background: var(--dash-surface-elev);
   border-color: var(--dash-border-strong);
   border-left-color: var(--dash-accent);
@@ -149,15 +149,15 @@
   transform: translateY(-2px);
 }
 
-.module-card:hover::before {
+.moduleCard:hover::before {
   transform: scaleY(1);
 }
 
-.module-card:hover::after {
+.moduleCard:hover::after {
   opacity: 1;
 }
 
-.module-card-header {
+.moduleCardHeader {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
@@ -165,7 +165,7 @@
   z-index: 1;
 }
 
-.module-icon {
+.moduleIcon {
   width: 48px;
   height: 48px;
   flex-shrink: 0;
@@ -182,7 +182,7 @@
   transition: all 0.25s;
 }
 
-.module-card:hover .module-icon {
+.moduleCard:hover .moduleIcon {
   background: rgba(74, 144, 226, 0.18);
   border-color: rgba(74, 144, 226, 0.3);
   box-shadow:
@@ -190,18 +190,18 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-.module-icon svg {
+.moduleIcon svg {
   width: 24px;
   height: 24px;
   stroke-width: 1.5;
 }
 
-.module-info {
+.moduleInfo {
   flex: 1;
   min-width: 0;
 }
 
-.module-title {
+.moduleTitle {
   font-size: clamp(1rem, 2vw, 1.25rem);
   font-weight: 600;
   color: var(--dash-text);
@@ -209,35 +209,35 @@
   line-height: 1.4;
 }
 
-.module-description {
+.moduleDescription {
   font-size: 0.875rem;
   color: var(--dash-text-soft);
   line-height: 1.6;
   margin: 0;
 }
 
-.module-arrow {
+.moduleArrow {
   flex-shrink: 0;
   color: var(--dash-text-muted);
   transition: all 0.25s;
 }
 
-.module-card:hover .module-arrow {
+.moduleCard:hover .moduleArrow {
   color: var(--dash-accent);
   transform: translateX(4px);
 }
 
 @media (max-width: 768px) {
-  .dashboard-main {
+  .dashboardMain {
     padding: 1.5rem 1rem;
   }
 
-  .modules-grid {
+  .modulesGrid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 
-  .overview-stats-grid {
+  .overviewStatsGrid {
     grid-template-columns: 1fr;
   }
 }

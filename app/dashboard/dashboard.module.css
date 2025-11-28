@@ -1,4 +1,4 @@
-.dashboard-main {
+.dashboardMain {
   padding: 2rem 1.5rem !important;
   max-width: 1400px;
   margin: 0 auto;
@@ -9,16 +9,16 @@
 }
 
 /* Dashboard Section - Premium spacing and hierarchy */
-.dashboard-section {
+.dashboardSection {
   margin-bottom: 3rem;
 }
 
-.dashboard-section:last-child {
+.dashboardSection:last-child {
   margin-bottom: 0;
 }
 
 /* Overview Section */
-.overview-section {
+.overviewSection {
   padding: 2rem !important;
   background: #1a1f2e !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
@@ -26,7 +26,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
 }
 
-.section-title {
+.sectionTitle {
   font-size: clamp(1.5rem, 4vw, 2rem) !important;
   font-weight: 600 !important;
   color: #e8edf3 !important;
@@ -34,13 +34,13 @@
   letter-spacing: -0.01em !important;
 }
 
-.overview-stats-grid {
+.overviewStatsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
 }
 
-.stat-card {
+.statCard {
   background: #1f2533 !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 12px !important;
@@ -53,21 +53,21 @@
   overflow: hidden !important;
 }
 
-.stat-card:hover {
+.statCard:hover {
   background: var(--dash-surface);
   border-color: var(--dash-border-strong);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   transform: translateY(-2px);
 }
 
-.stat-header {
+.statHeader {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
 }
 
-.stat-value {
+.statValue {
   font-size: clamp(2rem, 5vw, 3rem) !important;
   font-weight: 700 !important;
   color: #1e40af !important;
@@ -75,7 +75,7 @@
   letter-spacing: -0.02em !important;
 }
 
-.stat-trend {
+.statTrend {
   flex-shrink: 0;
   width: 32px;
   height: 32px;
@@ -86,27 +86,27 @@
   transition: all 0.15s;
 }
 
-.stat-trend-up {
+.statTrendUp {
   background: rgba(16, 185, 129, 0.1);
   color: var(--accent-success);
 }
 
-.stat-trend-down {
+.statTrendDown {
   background: rgba(239, 68, 68, 0.1);
   color: var(--accent-error);
 }
 
-.stat-trend-neutral {
+.statTrendNeutral {
   background: rgba(168, 176, 188, 0.1);
   color: var(--dash-text-muted);
 }
 
-.stat-trend-icon {
+.statTrendIcon {
   width: 16px;
   height: 16px;
 }
 
-.stat-label {
+.statLabel {
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--dash-text);
@@ -114,13 +114,13 @@
   margin-top: 0.25rem;
 }
 
-.stat-context {
+.statContext {
   font-size: 0.75rem;
   color: var(--dash-text-muted);
   line-height: 1.5;
 }
 
-.stat-action {
+.statAction {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -134,25 +134,25 @@
   transition: all 0.15s;
 }
 
-.stat-action:hover {
+.statAction:hover {
   color: var(--dash-accent-hover);
   gap: 0.75rem;
 }
 
-.stat-action svg {
+.statAction svg {
   transition: transform 0.15s;
 }
 
-.stat-action:hover svg {
+.statAction:hover svg {
   transform: translateX(2px);
 }
 
 /* Module Category */
-.module-category {
+.moduleCategory {
   margin-bottom: 3rem;
 }
 
-.category-title {
+.categoryTitle {
   font-size: clamp(1.25rem, 3vw, 1.75rem);
   font-weight: 600;
   color: var(--dash-text);
@@ -162,7 +162,7 @@
   padding-bottom: 1rem;
 }
 
-.category-title::after {
+.categoryTitle::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -174,25 +174,25 @@
   opacity: 0.8;
 }
 
-.modules-grid {
+.modulesGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
 }
 
 /* Primary modules - Larger, more prominent (Visual Hierarchy) */
-.module-category:has(.modules-grid:first-child) .modules-grid {
+.moduleCategory:has(.modulesGrid:first-child) .modulesGrid {
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 }
 
 /* Secondary modules - More compact */
-.module-category:has(.modules-grid:last-child) .modules-grid {
+.moduleCategory:has(.modulesGrid:last-child) .modulesGrid {
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
 }
 
 /* Module Card - Solidità migliorata con effetti WOW */
-.module-card {
+.moduleCard {
   background: var(--dash-surface);
   border: 1px solid var(--dash-border);
   border-left: 3px solid transparent;
@@ -212,7 +212,7 @@
 }
 
 /* Glow effect sottile su hover - WOW */
-.module-card::after {
+.moduleCard::after {
   content: "";
   position: absolute;
   inset: -2px;
@@ -224,7 +224,7 @@
   z-index: -1;
 }
 
-.module-card::before {
+.moduleCard::before {
   content: "";
   position: absolute;
   top: 0;
@@ -237,7 +237,7 @@
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.module-card:hover {
+.moduleCard:hover {
   background: var(--dash-surface-elev);
   border-color: var(--dash-border-strong);
   border-left-color: var(--dash-accent);
@@ -248,15 +248,15 @@
   transform: translateY(-2px);
 }
 
-.module-card:hover::before {
+.moduleCard:hover::before {
   transform: scaleY(1);
 }
 
-.module-card:hover::after {
+.moduleCard:hover::after {
   opacity: 1;
 }
 
-.module-card-header {
+.moduleCardHeader {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
@@ -264,7 +264,7 @@
   z-index: 1;
 }
 
-.module-badge {
+.moduleBadge {
   position: absolute;
   top: -8px;
   right: -8px;
@@ -285,7 +285,7 @@
   border: 2px solid var(--dash-surface);
 }
 
-.module-icon {
+.moduleIcon {
   width: 48px;
   height: 48px;
   flex-shrink: 0;
@@ -302,7 +302,7 @@
   transition: all 0.25s;
 }
 
-.module-card:hover .module-icon {
+.moduleCard:hover .moduleIcon {
   background: rgba(74, 144, 226, 0.18);
   border-color: rgba(74, 144, 226, 0.3);
   box-shadow:
@@ -310,18 +310,18 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-.module-icon svg {
+.moduleIcon svg {
   width: 24px;
   height: 24px;
   stroke-width: 1.5;
 }
 
-.module-info {
+.moduleInfo {
   flex: 1;
   min-width: 0;
 }
 
-.module-title {
+.moduleTitle {
   font-size: clamp(1rem, 2vw, 1.25rem);
   font-weight: 600;
   color: var(--dash-text);
@@ -329,35 +329,35 @@
   line-height: 1.4;
 }
 
-.module-description {
+.moduleDescription {
   font-size: 0.875rem;
   color: var(--dash-text-soft);
   line-height: 1.6;
   margin: 0;
 }
 
-.module-arrow {
+.moduleArrow {
   flex-shrink: 0;
   color: var(--dash-text-muted);
   transition: all 0.25s;
 }
 
-.module-card:hover .module-arrow {
+.moduleCard:hover .moduleArrow {
   color: var(--dash-accent);
   transform: translateX(4px);
 }
 
 @media (max-width: 768px) {
-  .dashboard-main {
+  .dashboardMain {
     padding: 1.5rem 1rem;
   }
 
-  .modules-grid {
+  .modulesGrid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 
-  .overview-stats-grid {
+  .overviewStatsGrid {
     grid-template-columns: 1fr;
   }
 }

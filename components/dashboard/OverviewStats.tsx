@@ -99,6 +99,13 @@ function StatCard({ stat }: StatCardProps) {
     stat.trend === 'down' ? ArrowDownRight :
     Minus;
 
+  const trendClass =
+    stat.trend === 'up'
+      ? styles.statTrendUp
+      : stat.trend === 'down'
+      ? styles.statTrendDown
+      : styles.statTrendNeutral;
+
   return (
     <div 
       className={styles.statCard}
@@ -108,7 +115,7 @@ function StatCard({ stat }: StatCardProps) {
       <div className={styles.statHeader}>
         <div className={styles.statValue}>{stat.value}</div>
         <div 
-          className={`${styles.statTrend} ${styles[`statTrend-${stat.trend}`]}`}
+          className={`${styles.statTrend} ${trendClass}`}
           aria-label={`Trend: ${stat.trend === 'up' ? 'in aumento' : stat.trend === 'down' ? 'in diminuzione' : 'neutrale'}`}
         >
           <TrendIcon className={styles.statTrendIcon} aria-hidden="true" />
