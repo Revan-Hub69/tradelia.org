@@ -4,6 +4,7 @@ import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { LegalConsent } from '@/components/layout/LegalConsent';
+import { UnregisterServiceWorker } from './unregister-sw';
 import { generateStructuredData, generateMetadata as genMetadata } from '@/lib/seo/metadata';
 
 const inter = Inter({ 
@@ -20,10 +21,20 @@ export async function generateMetadata() {
 }
 
 export const viewport = {
-  themeColor: '#1a1a1a',
+  themeColor: '#0A0E1A',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
+};
+
+export const icons = {
+  icon: [
+    { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
+    { url: '/favicon.png', sizes: '16x16', type: 'image/png' },
+  ],
+  apple: [
+    { url: '/favicon.png', sizes: '180x180', type: 'image/png' },
+  ],
 };
 
 export default function RootLayout({
@@ -34,6 +45,12 @@ export default function RootLayout({
   return (
     <html lang="it" data-theme="dark">
       <head>
+        {/* Favicon */}
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
+        <link rel="shortcut icon" href="/favicon.png" />
+        
         {/* Structured Data - EducationalOrganization + AI Search Optimization */}
         <script
           type="application/ld+json"
@@ -60,6 +77,7 @@ export default function RootLayout({
           Skip to main content
         </a>
         <div className="min-h-screen flex flex-col">
+          <UnregisterServiceWorker />
           <Header />
           <main id="main-content" className="flex-1" tabIndex={-1}>{children}</main>
           <Footer />
