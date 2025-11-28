@@ -59,6 +59,20 @@
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.7);
     --shadow-glow: 0 0 15px rgba(99, 102, 241, 0.2);
     --shadow-glow-gold: 0 0 20px rgba(245, 158, 11, 0.15);
+
+    /* Dashboard-specific variables - Premium Academic Design */
+    --dash-bg-soft: var(--bg-soft);
+    --dash-surface: var(--bg-surface);
+    --dash-surface-elev: var(--bg-elevated);
+    --dash-text: var(--text-primary);
+    --dash-text-soft: var(--text-secondary);
+    --dash-text-muted: var(--text-muted);
+    --dash-accent: var(--accent);
+    --dash-accent-hover: var(--accent-hover);
+    --dash-border: var(--border-default);
+    --dash-border-strong: var(--border-strong);
+    --dash-border-accent: var(--border-accent);
+    --dash-border-soft: var(--border-subtle);
   }
 
   * {

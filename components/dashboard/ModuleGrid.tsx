@@ -3,20 +3,20 @@
 import Link from 'next/link';
 import styles from '../../app/dashboard/dashboard.module.css';
 
+/**
+ * Module definitions with priority levels
+ * Based on Cognitive Load Theory (Miller's Law: 7±2)
+ * Primary modules: 4-5 main modules (high priority)
+ * Secondary modules: 3-4 secondary modules (progressive disclosure)
+ */
 const modules = [
-  {
-    id: 'overview',
-    title: 'Panoramica',
-    description: 'Statistiche, attività recente e accesso rapido',
-    icon: 'dashboard',
-    href: '/dashboard#overview',
-  },
   {
     id: 'reports',
     title: 'Report Ufficiali',
     description: 'Consulta i report pubblici e le analisi disponibili',
     icon: 'file',
     href: '/dashboard#reports',
+    priority: 'primary' as const,
   },
   {
     id: 'education',
@@ -24,6 +24,7 @@ const modules = [
     description: 'Tutorial e corsi educativi',
     icon: 'book',
     href: '/dashboard#education',
+    priority: 'primary' as const,
   },
   {
     id: 'frameworks',
@@ -31,6 +32,7 @@ const modules = [
     description: 'Metodologie e framework di analisi',
     icon: 'book-open',
     href: '/dashboard#frameworks',
+    priority: 'primary' as const,
   },
   {
     id: 'requests-history',
@@ -38,6 +40,7 @@ const modules = [
     description: 'Le tue richieste di analisi on-demand',
     icon: 'history',
     href: '/dashboard#requests-history',
+    priority: 'primary' as const,
   },
   {
     id: 'notifications',
@@ -45,6 +48,8 @@ const modules = [
     description: 'Notifiche di sistema e aggiornamenti',
     icon: 'bell',
     href: '/dashboard#notifications',
+    priority: 'secondary' as const,
+    badge: 0, // Will be populated from API
   },
   {
     id: 'settings',
@@ -52,6 +57,7 @@ const modules = [
     description: 'Preferenze utente e configurazioni',
     icon: 'settings',
     href: '/dashboard#settings',
+    priority: 'secondary' as const,
   },
   {
     id: 'resources',
@@ -59,34 +65,63 @@ const modules = [
     description: 'FAQ, guide e contatti',
     icon: 'help-circle',
     href: '/dashboard#resources',
+    priority: 'secondary' as const,
   },
 ];
 
-export function ModuleGrid() {
+interface ModuleGridProps {
+  priority?: 'primary' | 'secondary';
+}
+
+export function ModuleGrid({ priority }: ModuleGridProps) {
+  const filteredModules = priority 
+    ? modules.filter(m => m.priority === priority)
+    : modules;
+
+  const title = priority === 'primary' 
+    ? 'Moduli Principali' 
+    : priority === 'secondary'
+    ? 'Moduli Secondari'
+    : 'Moduli';
+
   return (
-    <section className={styles.moduleCategory}>
-      <h2 className={styles.categoryTitle}>Moduli Principali</h2>
-      <div className={styles.modulesGrid}>
-        {modules.map((module) => (
+    <div className={styles.moduleCategory}>
+      <h2 className={styles.categoryTitle}>{title}</h2>
+      <div 
+        className={styles.modulesGrid}
+        role="list"
+        aria-label={priority === 'primary' ? 'Moduli principali della dashboard' : 'Moduli secondari della dashboard'}
+      >
+        {filteredModules.map((module) => (
           <ModuleCard key={module.id} module={module} />
         ))}
       </div>
-    </section>
+    </div>
   );
 }
 
 function ModuleCard({ module }: { module: typeof modules[0] }) {
   return (
-    <Link href={module.href} className={styles.moduleCard}>
+    <Link 
+      href={module.href} 
+      className={styles.moduleCard}
+      role="listitem"
+      aria-label={`Accedi a ${module.title}: ${module.description}`}
+    >
       <div className={styles.moduleCardHeader}>
-        <div className={styles.moduleIcon}>
+        <div className={styles.moduleIcon} aria-hidden="true">
           <ModuleIcon name={module.icon} />
         </div>
         <div className={styles.moduleInfo}>
           <h3 className={styles.moduleTitle}>{module.title}</h3>
           <p className={styles.moduleDescription}>{module.description}</p>
         </div>
-        <div className={styles.moduleArrow}>
+        {module.badge !== undefined && module.badge > 0 && (
+          <span className={styles.moduleBadge} aria-label={`${module.badge} nuove notifiche`}>
+            {module.badge}
+          </span>
+        )}
+        <div className={styles.moduleArrow} aria-hidden="true">
           <svg
             viewBox="0 0 24 24"
             fill="none"
