@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
 import styles from './dashboard.module.css';
+import { useTranslations } from '@/lib/i18n/use-translations';
+import { buildLocalePath } from '@/lib/i18n/paths';
 
 /**
  * OverviewStats Component - Premium Academic Design
@@ -15,61 +17,67 @@ import styles from './dashboard.module.css';
  * - Action link (optional)
  */
 export function OverviewStats() {
-  // TODO: Caricare dati reali da API
+  const { t, locale } = useTranslations();
   const stats = [
     {
       id: 'total-reports',
-      value: 0,
-      label: 'Report Totali',
+      value: t('dashboard.overview.stats.totalReports.value', '0'),
+      label: t('dashboard.overview.stats.totalReports.label'),
       trend: 'neutral' as const,
-      context: 'Ultimo aggiornamento: —',
+      context: t('dashboard.overview.stats.totalReports.context'),
       action: {
-        label: 'Vedi tutti i report',
-        href: '/dashboard#reports',
+        label: t('dashboard.overview.stats.totalReports.action'),
+        href: buildLocalePath(locale, '/dashboard#reports'),
       },
     },
     {
       id: 'active-courses',
-      value: 0,
-      label: 'Corsi Attivi',
+      value: t('dashboard.overview.stats.activeCourses.value', '0'),
+      label: t('dashboard.overview.stats.activeCourses.label'),
       trend: 'neutral' as const,
-      context: 'Completati: 0/0',
+      context: t('dashboard.overview.stats.activeCourses.context'),
       action: {
-        label: 'Continua a studiare',
-        href: '/dashboard#education',
+        label: t('dashboard.overview.stats.activeCourses.action'),
+        href: buildLocalePath(locale, '/dashboard#education'),
       },
     },
     {
       id: 'pending-requests',
-      value: 0,
-      label: 'Richieste in Attesa',
+      value: t('dashboard.overview.stats.pendingRequests.value', '0'),
+      label: t('dashboard.overview.stats.pendingRequests.label'),
       trend: 'neutral' as const,
-      context: 'In attesa: 0',
+      context: t('dashboard.overview.stats.pendingRequests.context'),
       action: {
-        label: 'Vedi richieste',
-        href: '/dashboard#requests-history',
+        label: t('dashboard.overview.stats.pendingRequests.action'),
+        href: buildLocalePath(locale, '/dashboard#requests-history'),
       },
     },
     {
       id: 'recent-activity',
-      value: '—',
-      label: 'Attività Recente',
+      value: t('dashboard.overview.stats.recentActivity.value', '—'),
+      label: t('dashboard.overview.stats.recentActivity.label'),
       trend: 'neutral' as const,
-      context: 'Nessuna attività recente',
+      context: t('dashboard.overview.stats.recentActivity.context'),
       action: {
-        label: 'Vedi tutte le attività',
-        href: '/dashboard#activity',
+        label: t('dashboard.overview.stats.recentActivity.action'),
+        href: buildLocalePath(locale, '/dashboard#activity'),
       },
     },
   ];
 
   return (
     <div className={styles.overviewSection}>
-      <h2 className={styles.sectionTitle}>Panoramica</h2>
+      <div className={styles.sectionHeader}>
+        <span className={styles.sectionEyebrow}>{t('dashboard.overview.eyebrow')}</span>
+        <div>
+          <h2 className={styles.sectionTitle}>{t('dashboard.overview.title')}</h2>
+          <p className={styles.sectionDescription}>{t('dashboard.overview.description')}</p>
+        </div>
+      </div>
       <div 
         className={styles.overviewStatsGrid}
         role="list"
-        aria-label="Statistiche principali della dashboard"
+        aria-label={t('dashboard.overview.ariaLabel')}
       >
         {stats.map((stat) => (
           <StatCard key={stat.id} stat={stat} />

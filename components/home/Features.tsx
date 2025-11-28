@@ -13,12 +13,13 @@ import {
   createHoverVariants,
 } from '@/lib/animations';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { buildLocalePath } from '@/lib/i18n/paths';
 
 const featureKeys = ['methodo', 'percorso', 'trasparenza', 'servizi'];
 const featureIcons = [CheckCircle2, BookOpen, Shield, Zap];
 
 export function Features() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = createContainerVariants(prefersReducedMotion);
   const itemVariants = createItemVariants(prefersReducedMotion);
@@ -123,7 +124,7 @@ export function Features() {
                 <motion.div variants={itemVariants} className="text-center">
                   <motion.div variants={hoverVariants} whileHover="hover" whileTap="tap">
                     <Button asChild variant="default" size="lg">
-                      <Link href="/dashboard#education">
+                      <Link href={buildLocalePath(locale, '/dashboard#education')}>
                         <span>{t('home.features.cta')}</span>
                         <ArrowRight className="w-5 h-5" aria-hidden="true" />
                       </Link>

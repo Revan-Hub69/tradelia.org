@@ -6,6 +6,8 @@ import { ReportsManagement } from '@/components/admin/ReportsManagement';
 import { UsersManagement } from '@/components/admin/UsersManagement';
 import { FileText, Users, Settings, BarChart3 } from 'lucide-react';
 import styles from './admin.module.css';
+import { useTranslations } from '@/lib/i18n/use-translations';
+import { buildLocalePath } from '@/lib/i18n/paths';
 
 /**
  * Admin Dashboard Page
@@ -13,6 +15,8 @@ import styles from './admin.module.css';
  */
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState<'reports' | 'users' | 'settings'>('reports');
+  const { locale } = useTranslations();
+  const dashboardHref = buildLocalePath(locale, '/dashboard');
 
   return (
     <div className={styles.adminContainer}>
@@ -56,7 +60,7 @@ export default function AdminDashboardPage() {
             </button>
           </nav>
         </div>
-        <Link href="/dashboard" className={styles.backToDashboard}>
+        <Link href={dashboardHref} className={styles.backToDashboard}>
           ← Torna alla Dashboard
         </Link>
       </header>

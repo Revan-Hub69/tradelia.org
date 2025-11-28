@@ -12,12 +12,13 @@ import {
   createHoverVariants,
 } from '@/lib/animations';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { buildLocalePath } from '@/lib/i18n/paths';
 
 const methodKeys = ['fdm', 'mlt', 'pac'];
 const methodIcons = [TrendingUp, Grid3x3, CircleDot];
 
 export function Methods() {
-  const { t, tArray } = useTranslations();
+  const { t, tArray, locale } = useTranslations();
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = createContainerVariants(prefersReducedMotion);
   const itemVariants = createItemVariants(prefersReducedMotion);
@@ -127,7 +128,7 @@ export function Methods() {
                         ))}
                       </ul>
                       <Link
-                        href="/dashboard#education"
+                        href={buildLocalePath(locale, '/dashboard#education')}
                         className="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent-hover transition-colors duration-200"
                       >
                         <span>{t('home.methods.cta')}</span>

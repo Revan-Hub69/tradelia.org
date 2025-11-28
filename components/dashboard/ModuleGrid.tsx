@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import styles from './dashboard.module.css';
+import { useTranslations } from '@/lib/i18n/use-translations';
+import { buildLocalePath } from '@/lib/i18n/paths';
 
 /**
  * Module definitions with priority levels
@@ -9,68 +11,52 @@ import styles from './dashboard.module.css';
  * Primary modules: 4-5 main modules (high priority)
  * Secondary modules: 3-4 secondary modules (progressive disclosure)
  */
-const modules = [
+const moduleDefinitions = [
   {
     id: 'reports',
-    title: 'Report Ufficiali',
-    description: 'Consulta i report pubblici e le analisi disponibili',
     icon: 'file',
     href: '/dashboard#reports',
     priority: 'primary' as const,
   },
   {
     id: 'education',
-    title: 'Percorsi Formativi',
-    description: 'Tutorial e corsi educativi',
     icon: 'book',
     href: '/dashboard#education',
     priority: 'primary' as const,
   },
   {
     id: 'frameworks',
-    title: 'Framework Documentation',
-    description: 'Metodologie e framework di analisi',
     icon: 'book-open',
     href: '/dashboard#frameworks',
     priority: 'primary' as const,
   },
   {
     id: 'requests-history',
-    title: 'Storico Richieste',
-    description: 'Le tue richieste di analisi on-demand',
     icon: 'history',
     href: '/dashboard#requests-history',
     priority: 'primary' as const,
   },
   {
     id: 'notifications',
-    title: 'Notifiche',
-    description: 'Notifiche di sistema e aggiornamenti',
     icon: 'bell',
     href: '/dashboard#notifications',
     priority: 'secondary' as const,
-    badge: 0, // Will be populated from API
+    badge: 0,
   },
   {
     id: 'settings',
-    title: 'Impostazioni',
-    description: 'Preferenze utente e configurazioni',
     icon: 'settings',
     href: '/dashboard#settings',
     priority: 'secondary' as const,
   },
   {
     id: 'resources',
-    title: 'Risorse & Supporto',
-    description: 'FAQ, guide e contatti',
     icon: 'help-circle',
     href: '/dashboard#resources',
     priority: 'secondary' as const,
   },
   {
     id: 'admin',
-    title: 'Admin',
-    description: 'Gestione report e utenti',
     icon: 'settings',
     href: '/dashboard/admin',
     priority: 'secondary' as const,
@@ -82,15 +68,23 @@ interface ModuleGridProps {
 }
 
 export function ModuleGrid({ priority }: ModuleGridProps) {
+  const { t, locale } = useTranslations();
+  const localizedModules = moduleDefinitions.map((module) => ({
+    ...module,
+    title: t(`dashboard.modules.items.${module.id}.title`),
+    description: t(`dashboard.modules.items.${module.id}.description`),
+    href: buildLocalePath(locale, module.href),
+  }));
+
   const filteredModules = priority 
-    ? modules.filter(m => m.priority === priority)
-    : modules;
+    ? localizedModules.filter((m) => m.priority === priority)
+    : localizedModules;
 
   const title = priority === 'primary' 
-    ? 'Moduli Principali' 
+    ? t('dashboard.modules.primaryTitle')
     : priority === 'secondary'
-    ? 'Moduli Secondari'
-    : 'Moduli';
+    ? t('dashboard.modules.secondaryTitle')
+    : t('dashboard.modules.genericTitle');
 
   return (
     <div className={styles.moduleCategory}>

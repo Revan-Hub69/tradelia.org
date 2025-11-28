@@ -85,6 +85,94 @@
     "disclaimer": "Le informazioni fornite sono a scopo educativo e non costituiscono consulenza finanziaria.",
     "copyright": "Tutti i diritti riservati"
   },
+  "dashboard": {
+    "hero": {
+      "badge": "Dashboard accademica",
+      "subtitle": "Framework verificabili",
+      "title": "Hub operativo e formazione avanzata",
+      "description": "Report ufficiali, percorsi formativi e richieste on demand restano sincronizzati con i paper metodologici e con le policy MiFID II.",
+      "ctaPrimary": "Vai alla formazione",
+      "ctaSecondary": "Area Admin",
+      "chips": [
+        "Research open source",
+        "Compliance MiFID II",
+        "Framework AI verificabili"
+      ],
+      "calloutTitle": "Coerenza MiFID II",
+      "calloutText": "Metriche e policy allineate ai paper interni e alle evidenze citate."
+    },
+    "overview": {
+      "eyebrow": "Metriche in tempo reale",
+      "title": "Panoramica operativa",
+      "description": "Indicatori guida per report, percorsi educativi e richieste di analisi on demand.",
+      "ariaLabel": "Statistiche principali della dashboard",
+      "stats": {
+        "totalReports": {
+          "value": "0",
+          "label": "Report Totali",
+          "context": "Ultimo aggiornamento: —",
+          "action": "Vedi tutti i report"
+        },
+        "activeCourses": {
+          "value": "0",
+          "label": "Corsi Attivi",
+          "context": "Completati: 0/0",
+          "action": "Continua a studiare"
+        },
+        "pendingRequests": {
+          "value": "0",
+          "label": "Richieste in attesa",
+          "context": "In lavorazione: 0",
+          "action": "Vedi richieste"
+        },
+        "recentActivity": {
+          "value": "—",
+          "label": "Attività recente",
+          "context": "Nessuna attività registrata",
+          "action": "Vedi tutte le attività"
+        }
+      }
+    },
+    "modules": {
+      "primaryTitle": "Moduli principali",
+      "secondaryTitle": "Moduli secondari",
+      "genericTitle": "Moduli",
+      "items": {
+        "reports": {
+          "title": "Report ufficiali",
+          "description": "Consulta i report pubblici e le analisi disponibili"
+        },
+        "education": {
+          "title": "Percorsi formativi",
+          "description": "Tutorial e corsi educativi basati su framework AI"
+        },
+        "frameworks": {
+          "title": "Framework documentation",
+          "description": "Metodologie e paper per replicare i modelli"
+        },
+        "requests-history": {
+          "title": "Storico richieste",
+          "description": "Le tue richieste di analisi on demand"
+        },
+        "notifications": {
+          "title": "Notifiche",
+          "description": "Aggiornamenti di sistema e compliance"
+        },
+        "settings": {
+          "title": "Impostazioni",
+          "description": "Preferenze utente e configurazioni"
+        },
+        "resources": {
+          "title": "Risorse & supporto",
+          "description": "FAQ, guide e contatti ufficiali"
+        },
+        "admin": {
+          "title": "Area admin",
+          "description": "Gestione report e utenti"
+        }
+      }
+    }
+  },
   "seo": {
     "title": "Tradelia AI · Formazione Finanziaria Gratuita",
     "description": "Formazione finanziaria gratuita basata su framework AI proprietari verificabili. Percorsi formativi completi, materiale didattico conforme agli standard accademici internazionali e alle normative MiFID II.",

@@ -85,6 +85,94 @@
     "disclaimer": "The information provided is for educational purposes and does not constitute financial advice.",
     "copyright": "All rights reserved"
   },
+  "dashboard": {
+    "hero": {
+      "badge": "Academic dashboard",
+      "subtitle": "Verifiable frameworks",
+      "title": "Operational hub & advanced training",
+      "description": "Official reports, learning paths and on-demand requests stay aligned with our methodological papers and MiFID II compliance notes.",
+      "ctaPrimary": "Go to training",
+      "ctaSecondary": "Admin area",
+      "chips": [
+        "Open research",
+        "MiFID II ready",
+        "Auditable AI frameworks"
+      ],
+      "calloutTitle": "MiFID II alignment",
+      "calloutText": "Metrics and policies documented inside every internal paper."
+    },
+    "overview": {
+      "eyebrow": "Live monitoring",
+      "title": "Operational overview",
+      "description": "Key indicators for reports, education modules and on-demand analytics.",
+      "ariaLabel": "Primary dashboard statistics",
+      "stats": {
+        "totalReports": {
+          "value": "0",
+          "label": "Total reports",
+          "context": "Last update: —",
+          "action": "View all reports"
+        },
+        "activeCourses": {
+          "value": "0",
+          "label": "Active courses",
+          "context": "Completed: 0/0",
+          "action": "Continue learning"
+        },
+        "pendingRequests": {
+          "value": "0",
+          "label": "Pending requests",
+          "context": "In progress: 0",
+          "action": "View requests"
+        },
+        "recentActivity": {
+          "value": "—",
+          "label": "Recent activity",
+          "context": "No activity logged",
+          "action": "View activity"
+        }
+      }
+    },
+    "modules": {
+      "primaryTitle": "Primary modules",
+      "secondaryTitle": "Secondary modules",
+      "genericTitle": "Modules",
+      "items": {
+        "reports": {
+          "title": "Official reports",
+          "description": "Browse public reports and published analyses"
+        },
+        "education": {
+          "title": "Training paths",
+          "description": "Tutorials and courses backed by AI frameworks"
+        },
+        "frameworks": {
+          "title": "Framework documentation",
+          "description": "Methodologies and papers to replicate models"
+        },
+        "requests-history": {
+          "title": "Requests history",
+          "description": "Your on-demand analysis pipeline"
+        },
+        "notifications": {
+          "title": "Notifications",
+          "description": "System updates and compliance alerts"
+        },
+        "settings": {
+          "title": "Settings",
+          "description": "User preferences and configuration"
+        },
+        "resources": {
+          "title": "Resources & support",
+          "description": "FAQ, guides and official contacts"
+        },
+        "admin": {
+          "title": "Admin area",
+          "description": "Manage reports and users"
+        }
+      }
+    }
+  },
   "seo": {
     "title": "Tradelia AI · Free Financial Education",
     "description": "Free financial education based on verifiable proprietary AI frameworks. Complete training paths, educational material compliant with international academic standards and MiFID II regulations.",
