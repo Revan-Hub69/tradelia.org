@@ -8,8 +8,10 @@ import { useState, useEffect } from 'react';
 
 export function useReducedMotion(): boolean {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     // Check if window is available (SSR)
     if (typeof window === 'undefined') return;
 
@@ -32,5 +34,6 @@ export function useReducedMotion(): boolean {
     }
   }, []);
 
-  return prefersReducedMotion;
+  // Always return false during SSR to avoid hydration mismatch
+  return mounted ? prefersReducedMotion : false;
 }
