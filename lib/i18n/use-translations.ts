@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import { defaultLocale, type Locale } from "./config";
 import itDict from "./it.json";
 import enDict from "./en.json";
@@ -13,22 +12,34 @@ const dictionaries = {
 };
 
 export function useTranslations() {
-  const pathname = usePathname();
   const [locale, setLocale] = useState<Locale>(defaultLocale);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    // Detect locale from window.location only on client
+    if (typeof window !== "undefined") {
+      const detectedLocale = window.location.pathname.startsWith("/en") ? "en" : "it";
+      setLocale(detectedLocale);
+    }
   }, []);
 
+  // Update locale on navigation
   useEffect(() => {
     if (!mounted) {
       return;
     }
-    // Detect locale from pathname only after mount
-    const detectedLocale = pathname?.startsWith("/en") ? "en" : "it";
-    setLocale(detectedLocale);
-  }, [pathname, mounted]);
+
+    const handleLocationChange = () => {
+      if (typeof window !== "undefined") {
+        const detectedLocale = window.location.pathname.startsWith("/en") ? "en" : "it";
+        setLocale(detectedLocale);
+      }
+    };
+
+    window.addEventListener("popstate", handleLocationChange);
+    return () => window.removeEventListener("popstate", handleLocationChange);
+  }, [mounted]);
 
   return useMemo(() => {
     // Use default locale during SSR to avoid hydration mismatch
