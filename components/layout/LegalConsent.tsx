@@ -16,8 +16,17 @@ export function LegalConsent() {
   const prefersReducedMotion = useReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
   const [hasConsented, setHasConsented] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // Mark as mounted to avoid hydration mismatch
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    // Only check localStorage after mount to avoid hydration issues
+    if (!mounted) return;
+    
     // Check if user has already consented
     const consent = localStorage.getItem(CONSENT_KEY);
     if (!consent) {
@@ -27,7 +36,7 @@ export function LegalConsent() {
     } else {
       setHasConsented(true);
     }
-  }, []);
+  }, [mounted]);
 
   const handleAccept = () => {
     localStorage.setItem(CONSENT_KEY, 'accepted');
@@ -59,10 +68,10 @@ export function LegalConsent() {
 
           {/* Consent Modal */}
           <motion.div
-            className="fixed bottom-0 left-0 right-0 md:bottom-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:right-auto z-[201] w-full md:w-auto md:max-w-xl"
-            initial={prefersReducedMotion ? { opacity: 0 } : { y: 100, opacity: 0 }}
-            animate={prefersReducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
-            exit={prefersReducedMotion ? { opacity: 0 } : { y: 100, opacity: 0 }}
+            className="fixed bottom-0 left-0 right-0 md:bottom-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:right-auto z-[201] w-full md:w-auto"
+            initial={prefersReducedMotion ? { opacity: 0, scale: 0.95 } : { y: 100, opacity: 0, scale: 0.95 }}
+            animate={prefersReducedMotion ? { opacity: 1, scale: 1 } : { y: 0, opacity: 1, scale: 1 }}
+            exit={prefersReducedMotion ? { opacity: 0, scale: 0.95 } : { y: 100, opacity: 0, scale: 0.95 }}
             transition={
               prefersReducedMotion
                 ? { duration: 0.2 }
@@ -73,7 +82,7 @@ export function LegalConsent() {
             aria-labelledby="legal-consent-title"
             aria-describedby="legal-consent-description"
           >
-            <Card className="m-4 md:m-0 border-border-strong shadow-2xl md:min-w-[500px]">
+            <Card className="m-4 md:m-0 border-border-strong shadow-2xl md:min-w-[520px] md:max-w-[560px]">
               <div className="p-6 md:p-10">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-6">
@@ -106,6 +115,11 @@ export function LegalConsent() {
                   <p className="text-sm md:text-base text-text-secondary leading-relaxed">
                     {t('legal.cookies')}
                   </p>
+                  <div className="p-4 bg-accent-muted/30 rounded-lg border border-accent/20">
+                    <p className="text-sm md:text-base text-text-primary leading-relaxed font-medium">
+                      {t('legal.noDataSale')}
+                    </p>
+                  </div>
                   <p className="text-sm md:text-base text-text-secondary leading-relaxed">
                     {t('legal.educational')}{' '}
                     <strong className="text-text-primary">{t('legal.educationalHighlight')}</strong>{' '}

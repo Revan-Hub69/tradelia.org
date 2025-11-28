@@ -12,12 +12,21 @@ export function LanguageToggle() {
   const router = useRouter();
   const [currentLocale, setCurrentLocale] = useState<Locale>('it');
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // Mark as mounted to avoid hydration mismatch
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    // Only detect locale after mount to avoid hydration issues
+    if (!mounted) return;
+    
     // Detect current locale from pathname
     const detectedLocale = pathname?.startsWith('/en') ? 'en' : 'it';
     setCurrentLocale(detectedLocale);
-  }, [pathname]);
+  }, [pathname, mounted]);
 
   const handleLocaleChange = (locale: Locale) => {
     setIsOpen(false);
