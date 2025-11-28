@@ -1,11 +1,11 @@
 .dashboard-main {
-  padding: 2rem 1.5rem;
+  padding: 2rem 1.5rem !important;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
-  /* Force CSS to load - test */
-  background-color: var(--bg-base, #0a0e1a);
-  color: var(--text-primary, #e8edf3);
+  background-color: #0a0e1a !important;
+  color: #e8edf3 !important;
+  min-height: 100vh;
 }
 
 /* Dashboard Section - Premium spacing and hierarchy */
@@ -19,19 +19,19 @@
 
 /* Overview Section */
 .overview-section {
-  padding: 2rem;
-  background: var(--dash-surface);
-  border: 1px solid var(--dash-border);
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 2rem !important;
+  background: #1a1f2e !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
 }
 
 .section-title {
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  font-weight: 600;
-  color: var(--dash-text);
-  margin: 0 0 1.5rem 0;
-  letter-spacing: -0.01em;
+  font-size: clamp(1.5rem, 4vw, 2rem) !important;
+  font-weight: 600 !important;
+  color: #e8edf3 !important;
+  margin: 0 0 1.5rem 0 !important;
+  letter-spacing: -0.01em !important;
 }
 
 .overview-stats-grid {
@@ -41,16 +41,16 @@
 }
 
 .stat-card {
-  background: var(--dash-surface-elev);
-  border: 1px solid var(--dash-border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+  background: #1f2533 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  padding: 1.5rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.75rem !important;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
 }
 
 .stat-card:hover {
