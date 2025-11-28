@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
@@ -22,7 +22,7 @@ export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const pathname = usePathname();
-  const menuRef = useRef<HTMLElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -50,41 +50,14 @@ export function Navigation() {
     return () => document.removeEventListener('keydown', handleEscape);
   }, [mobileMenuOpen]);
 
-  // Focus trap for mobile menu - Best Practice
+  // Prevent body scroll when menu is open
   useEffect(() => {
-    if (!mobileMenuOpen || !menuRef.current) return;
-
-    const menu = menuRef.current;
-    const focusableElements = menu.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    );
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
-
-    const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return;
-
-      if (e.shiftKey) {
-        if (document.activeElement === firstElement) {
-          e.preventDefault();
-          lastElement?.focus();
-        }
-      } else {
-        if (document.activeElement === lastElement) {
-          e.preventDefault();
-          firstElement?.focus();
-        }
-      }
-    };
-
-    menu.addEventListener('keydown', handleTabKey);
-    firstElement?.focus();
-
-    // Prevent body scroll when menu is open
-    document.body.style.overflow = 'hidden';
-
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
     return () => {
-      menu.removeEventListener('keydown', handleTabKey);
       document.body.style.overflow = '';
     };
   }, [mobileMenuOpen]);
@@ -156,105 +129,49 @@ export function Navigation() {
         )}
       </Button>
 
-      {/* Mobile Menu - Best Practice: Full-screen overlay, proper z-index, focus management */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              className="fixed inset-0 z-[9998] md:hidden"
-              style={{
-                backgroundColor: 'rgba(10, 14, 26, 0.85)',
-                backdropFilter: 'blur(4px)',
-                pointerEvents: 'auto',
-              }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileMenuOpen(false)}
-              aria-hidden="true"
-            />
-            
-            {/* Menu Panel */}
-            <motion.nav
-              ref={menuRef}
-              id="mobile-menu"
-              className="fixed top-0 right-0 bottom-0 w-full max-w-sm z-[9999] md:hidden"
-              style={{ pointerEvents: 'auto' }}
-              initial={prefersReducedMotion ? { x: '100%' } : { x: '100%' }}
-              animate={prefersReducedMotion ? { x: 0 } : { x: 0 }}
-              exit={prefersReducedMotion ? { x: '100%' } : { x: '100%' }}
-              transition={
-                prefersReducedMotion
-                  ? { duration: 0.2 }
-                  : { type: 'spring', damping: 25, stiffness: 200 }
-              }
-              aria-label="Main navigation"
-              role="navigation"
-            >
-              {/* Solid Background Wrapper - NO TRANSPARENCY */}
-              <div 
-                className="absolute inset-0 bg-bg-surface shadow-2xl"
-                style={{
-                  backgroundColor: '#1A1F2E',
-                  background: '#1A1F2E',
-                  borderLeft: '1px solid rgba(59, 130, 246, 0.1)',
-                }}
-              />
-              
-              {/* Content Container */}
-              <div className="relative z-10 h-full flex flex-col">
-                {/* Mobile Menu Header */}
-                <div className="flex items-center justify-between p-6 border-b border-border">
-                  <h2 className="text-lg font-bold text-text-primary">Menu</h2>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="min-w-[44px] min-h-[44px]"
-                    onClick={() => setMobileMenuOpen(false)}
-                    aria-label="Close menu"
-                  >
-                    <X className="w-5 h-5" aria-hidden="true" />
-                  </Button>
-                </div>
-
-                {/* Mobile Menu Items */}
-                <div className="px-6 py-4 space-y-2 overflow-y-auto max-h-[calc(100vh-80px)] flex-1">
-                {navKeys.map((item, idx) => {
-                  const isActive = pathname === item.href ||
-                    (item.href !== '/' && pathname?.startsWith(item.href));
-
-                  return (
-                    <motion.div
-                      key={item.key}
-                      initial={prefersReducedMotion ? {} : { opacity: 0, x: 20 }}
-                      animate={prefersReducedMotion ? {} : { opacity: 1, x: 0 }}
-                      transition={prefersReducedMotion ? {} : { delay: idx * 0.05 }}
-                    >
-                      <Link
-                        href={item.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={cn(
-                          'block px-4 py-3 text-base font-medium rounded-lg transition-all duration-200',
-                          'min-h-[44px] flex items-center',
-                          'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-surface',
-                          isActive
-                            ? 'text-text-primary bg-bg-elevated'
-                            : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
-                        )}
-                        aria-current={isActive ? 'page' : undefined}
-                      >
-                        {t(`nav.${item.key}`)}
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-                </div>
-              </div>
-            </motion.nav>
-          </>
+      {/* Mobile Menu - Simple dropdown under header - Best Practice */}
+      <div
+        className={cn(
+          'md:hidden fixed top-16 left-0 right-0 bg-bg-surface border-b border-border-subtle shadow-xl z-40',
+          'transition-all duration-300 ease-in-out overflow-hidden',
+          mobileMenuOpen 
+            ? 'max-h-screen opacity-100' 
+            : 'max-h-0 opacity-0 pointer-events-none'
         )}
-      </AnimatePresence>
+        id="mobile-menu"
+        ref={menuRef}
+        aria-hidden={!mobileMenuOpen}
+      >
+        <nav 
+          className="px-4 py-4 space-y-1"
+          role="navigation"
+          aria-label="Main navigation"
+        >
+          {navKeys.map((item) => {
+            const isActive = pathname === item.href ||
+              (item.href !== '/' && pathname?.startsWith(item.href));
+
+            return (
+              <Link
+                key={item.key}
+                href={item.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={cn(
+                  'block px-4 py-3 text-base font-medium rounded-lg transition-all duration-200',
+                  'min-h-[44px] flex items-center',
+                  'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-surface',
+                  isActive
+                    ? 'text-text-primary bg-bg-elevated'
+                    : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
+                )}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                {t(`nav.${item.key}`)}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
     </>
   );
 }
