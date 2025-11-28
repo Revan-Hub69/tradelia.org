@@ -1,8 +1,17 @@
+import dynamic from 'next/dynamic';
 import { Hero } from '@/components/home/Hero';
 import { Features } from '@/components/home/Features';
-import { Methods } from '@/components/home/Methods';
 import { Values } from '@/components/home/Values';
+import { Loading } from '@/components/ui';
 import { generateMetadata as genMetadata } from '@/lib/seo/metadata';
+
+// Methods uses advanced client-side logic and animation infrastructure.
+// Rendering it via dynamic import with ssr: false avoids parsing the client
+// component during the server build phase on Render (fixes JSX parse error).
+const Methods = dynamic(() => import('@/components/home/Methods').then((m) => ({ default: m.Methods })), {
+  loading: () => <Loading className="min-h-[400px]" text="Caricamento contenuti..." />,
+  ssr: false,
+});
 
 export const metadata = genMetadata('it');
 
