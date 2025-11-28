@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
@@ -104,7 +104,11 @@ export function Footer() {
         {/* Mobile: Collapsible - Best Practice Accordion */}
         <div className="md:hidden">
           <button
-            onClick={() => toggleSection(sectionKey)}
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              toggleSection(sectionKey);
+            }}
             className="w-full flex items-center justify-between py-4 text-xs font-semibold text-text-primary uppercase tracking-wider border-b border-border-subtle hover:text-accent transition-colors duration-200"
             aria-expanded={isExpanded}
             aria-controls={`footer-${sectionKey}`}
@@ -118,33 +122,29 @@ export function Footer() {
               aria-hidden="true"
             />
           </button>
-          <AnimatePresence>
-            {isExpanded && (
-              <motion.ul
-                id={`footer-${sectionKey}`}
-                initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, maxHeight: 0 }}
-                animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, maxHeight: 500 }}
-                exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, maxHeight: 0 }}
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
-                className="overflow-hidden space-y-3 pt-4 pb-4"
-              >
-                {links.map((link) => (
-                  <li key={link.key}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-text-secondary hover:text-text-primary hover:translate-x-1 transition-all duration-200 block pl-2 group relative"
-                      onClick={() => toggleSection(sectionKey)}
-                    >
-                      <span className="relative">
-                        {t(`footer.${sectionKey}Links.${link.key}`)}
-                        <span className="absolute -bottom-0.5 left-2 w-0 h-px bg-accent transition-all duration-200 group-hover:w-[calc(100%-0.5rem)]" />
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </motion.ul>
+          <div
+            id={`footer-${sectionKey}`}
+            className={cn(
+              'overflow-hidden transition-all duration-300 ease-in-out',
+              isExpanded ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
             )}
-          </AnimatePresence>
+          >
+            <ul className="space-y-3 pt-4 pb-4">
+              {links.map((link) => (
+                <li key={link.key}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-text-secondary hover:text-text-primary hover:translate-x-1 transition-all duration-200 block pl-2 group relative"
+                  >
+                    <span className="relative">
+                      {t(`footer.${sectionKey}Links.${link.key}`)}
+                      <span className="absolute -bottom-0.5 left-2 w-0 h-px bg-accent transition-all duration-200 group-hover:w-[calc(100%-0.5rem)]" />
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </motion.div>
     );

@@ -62,7 +62,7 @@ export function LanguageToggle() {
     return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen, mounted]);
 
-  const handleLocaleChange = async (locale: Locale) => {
+  const handleLocaleChange = (locale: Locale) => {
     setIsOpen(false);
     if (locale === currentLocale) return;
 
@@ -78,15 +78,8 @@ export function LanguageToggle() {
     }
     // If locale is 'it', newPath is already correct (without /en)
     
-    // Use replace to avoid adding to history and ensure proper navigation
-    try {
-      await router.replace(newPath);
-      // Force refresh to ensure page loads correctly
-      router.refresh();
-    } catch (error) {
-      // Fallback to window.location if router fails
-      window.location.href = newPath;
-    }
+    // Use window.location for reliable navigation
+    window.location.href = newPath;
   };
 
   if (!mounted) {
