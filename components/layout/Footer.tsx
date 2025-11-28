@@ -113,7 +113,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative border-t border-border-subtle bg-bg-surface" role="contentinfo">
+    <footer className="relative border-t border-border-subtle bg-bg-surface" role="contentinfo" suppressHydrationWarning>
       {/* Top gradient line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-primary opacity-20" />
 

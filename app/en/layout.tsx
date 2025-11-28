@@ -1,10 +1,20 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import '../globals.css';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { LegalConsent } from '@/components/layout/LegalConsent';
+import dynamic from 'next/dynamic';
 import { UnregisterServiceWorker } from '../unregister-sw';
+
+const Header = dynamic(() => import('@/components/layout/Header').then(m => ({ default: m.Header })), {
+  ssr: false,
+});
+
+const Footer = dynamic(() => import('@/components/layout/Footer').then(m => ({ default: m.Footer })), {
+  ssr: false,
+});
+
+const LegalConsent = dynamic(() => import('@/components/layout/LegalConsent').then(m => ({ default: m.LegalConsent })), {
+  ssr: false,
+});
 import { generateStructuredData, generateMetadata as genMetadata } from '@/lib/seo/metadata';
 
 const inter = Inter({ 
@@ -67,7 +77,7 @@ export default function EnLayout({
         <link rel="alternate" hrefLang="en" href="https://tradelia.org/en" />
         <link rel="alternate" hrefLang="x-default" href="https://tradelia.org" />
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <a
           href="#main-content"
           className="skip-link"
@@ -75,7 +85,7 @@ export default function EnLayout({
         >
           Skip to main content
         </a>
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col" suppressHydrationWarning>
           <UnregisterServiceWorker />
           <Header />
           <main id="main-content" className="flex-1" tabIndex={-1}>{children}</main>

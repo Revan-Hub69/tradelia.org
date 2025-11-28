@@ -23,6 +23,7 @@ export function Header() {
           ? { duration: 0.01 }
           : { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
       }
+      suppressHydrationWarning
     >
       <div className="container flex h-16 items-center justify-between px-8">
         <Link
