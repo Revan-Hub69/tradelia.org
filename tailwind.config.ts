@@ -17,77 +17,77 @@ const config: Config = {
     },
     extend: {
       colors: {
-        // Primary Background - Research-Based Dark Mode (GitHub-inspired)
+        // Primary Background - Institutional/Professional (Bloomberg-inspired)
         bg: {
-          base: '#0D1117', // GitHub base - reduces glare
-          soft: '#161B22', // Surface depth
-          surface: '#1E293B', // Elevated surfaces
-          elevated: '#21262D', // Hover states
-          hover: '#262B32', // Active hover
-          glass: 'rgba(22, 27, 34, 0.7)', // Glassmorphism
+          base: '#0A0E1A', // Navy dark - Elegant and professional
+          soft: '#131720', // Slightly lighter navy
+          surface: '#1A1F2E', // Card background - Refined
+          elevated: '#1F2533', // Hover states
+          hover: '#242A38', // Active hover
+          glass: 'rgba(26, 31, 46, 0.6)', // Glassmorphism
         },
-        // Accent Colors - Research-Based (GitHub Blue - Optimal Visibility)
+        // Accent Colors - Professional Blue (Institutional)
         accent: {
-          DEFAULT: '#58A6FF', // GitHub blue - best visibility in dark
-          hover: '#79C0FF', // Light blue
-          active: '#A5D6FF', // Lighter blue
-          muted: 'rgba(88, 166, 255, 0.12)',
-          glow: 'rgba(88, 166, 255, 0.2)',
+          DEFAULT: '#3B82F6', // Blue 500 - Professional, not too vibrant
+          hover: '#2563EB', // Blue 600 - Darker on hover
+          active: '#1D4ED8', // Blue 700 - Active state
+          muted: 'rgba(59, 130, 246, 0.1)',
+          glow: 'rgba(59, 130, 246, 0.15)',
         },
-        // Success/Error States - Research-Based
+        // Success/Error States - Professional
         success: {
-          DEFAULT: '#3FB950', // GitHub green
-          hover: '#56D364',
+          DEFAULT: '#10B981', // Green 500 - Professional
+          hover: '#059669',
         },
         warning: {
-          DEFAULT: '#D29922', // GitHub yellow
-          hover: '#E3B341',
+          DEFAULT: '#F59E0B', // Amber 500 - Professional
+          hover: '#D97706',
         },
         error: {
-          DEFAULT: '#F85149', // GitHub red
-          hover: '#FF6B6B',
+          DEFAULT: '#EF4444', // Red 500 - Professional
+          hover: '#DC2626',
         },
-        // Warm Accent - Research-Based
+        // Warm Accent - Professional
         gold: {
           DEFAULT: '#F59E0B',
-          hover: '#FBBF24',
+          hover: '#D97706',
           muted: 'rgba(245, 158, 11, 0.1)',
         },
-        // Text Colors - Research-Based Contrast (WCAG AA/AAA)
+        // Text Colors - Professional Contrast (WCAG AA/AAA)
         text: {
-          primary: '#F0F6FC', // 15.2:1 contrast
-          secondary: '#C9D1D9', // 8.5:1 contrast
-          tertiary: '#8B949E', // 5.2:1 contrast (WCAG AA)
-          muted: '#6E7681', // 4.8:1 contrast (WCAG AA)
-          accent: '#58A6FF', // GitHub blue
-          subtle: '#484F58', // 3.5:1 contrast
+          primary: '#E8EDF3', // Warm white - Professional
+          secondary: '#B8C5D1', // Elegant blue-gray
+          tertiary: '#8B95A5', // Neutral gray
+          muted: '#6B7480', // Dark gray
+          accent: '#3B82F6', // Professional blue
+          subtle: '#4B5563', // Subtle gray
         },
-        // Border Colors - Refined (Improved Visibility)
+        // Border Colors - Professional and Subtle
         border: {
-          subtle: 'rgba(255, 255, 255, 0.08)', // Improved from 0.04
-          DEFAULT: 'rgba(255, 255, 255, 0.12)', // Improved from 0.08
-          strong: 'rgba(255, 255, 255, 0.15)', // Improved from 0.12
-          accent: 'rgba(88, 166, 255, 0.25)', // GitHub blue accent
+          subtle: 'rgba(255, 255, 255, 0.05)',
+          DEFAULT: 'rgba(255, 255, 255, 0.08)',
+          strong: 'rgba(255, 255, 255, 0.12)',
+          accent: 'rgba(59, 130, 246, 0.2)', // More discrete professional blue
           gold: 'rgba(245, 158, 11, 0.2)',
         },
       },
       backgroundImage: {
-        'gradient-primary': 'linear-gradient(135deg, #58A6FF 0%, #79C0FF 50%, #A5D6FF 100%)', // GitHub blue gradient
-        'gradient-gold': 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)',
+        'gradient-primary': 'linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1D4ED8 100%)', // Professional blue gradient
+        'gradient-gold': 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
         'gradient-surface':
-          'linear-gradient(180deg, rgba(30, 41, 59, 0.85) 0%, rgba(13, 17, 23, 0.95) 100%)',
+          'linear-gradient(180deg, rgba(26, 31, 46, 0.85) 0%, rgba(10, 14, 26, 0.95) 100%)',
         'gradient-accent':
-          'linear-gradient(135deg, rgba(88, 166, 255, 0.08) 0%, rgba(121, 192, 255, 0.06) 100%)',
+          'linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(37, 99, 235, 0.06) 100%)',
       },
       boxShadow: {
         sm: '0 1px 2px 0 rgba(0, 0, 0, 0.5)',
         md: '0 4px 6px -1px rgba(0, 0, 0, 0.6)',
         lg: '0 10px 15px -3px rgba(0, 0, 0, 0.7)',
         xl: '0 20px 25px -5px rgba(0, 0, 0, 0.8)',
-        glow: '0 0 15px rgba(88, 166, 255, 0.2)', // GitHub blue glow
-        'glow-lg': '0 0 25px rgba(88, 166, 255, 0.3)',
-        'glow-gold': '0 0 20px rgba(245, 158, 11, 0.15)',
-        'hover': '0 4px 12px rgba(88, 166, 255, 0.15)', // Research-based hover glow
+        glow: '0 0 15px rgba(59, 130, 246, 0.15)', // Professional blue glow - more subtle
+        'glow-lg': '0 0 25px rgba(59, 130, 246, 0.2)',
+        'glow-gold': '0 0 20px rgba(245, 158, 11, 0.12)',
+        'hover': '0 2px 8px rgba(0, 0, 0, 0.15)', // Subtle professional shadow
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],

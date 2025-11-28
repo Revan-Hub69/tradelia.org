@@ -4,44 +4,44 @@
 
 @layer base {
   :root {
-    /* Primary Background - Research-Based Dark Mode (GitHub-inspired, reduces glare) */
-    --bg-base: #0D1117; /* GitHub base - proven to reduce eye strain */
-    --bg-soft: #161B22; /* Surface depth - optimal for hierarchy */
-    --bg-surface: #1E293B; /* Elevated surfaces - Tailwind slate-800 */
-    --bg-elevated: #21262D; /* Hover states - GitHub elevated */
-    --bg-hover: #262B32; /* Active hover - subtle elevation */
-    --bg-glass: rgba(22, 27, 34, 0.7); /* Glassmorphism base */
+    /* Primary Background - Institutional/Professional (Bloomberg-inspired) */
+    --bg-base: #0A0E1A; /* Navy dark - Elegant and professional */
+    --bg-soft: #131720; /* Slightly lighter navy */
+    --bg-surface: #1A1F2E; /* Card background - Refined */
+    --bg-elevated: #1F2533; /* Hover states */
+    --bg-hover: #242A38; /* Active hover */
+    --bg-glass: rgba(26, 31, 46, 0.6); /* Glassmorphism base */
 
-    /* Text - Research-Based Contrast (WCAG AA/AAA Compliant) */
-    --text-primary: #F0F6FC; /* GitHub primary - 15.2:1 contrast */
-    --text-secondary: #C9D1D9; /* GitHub secondary - 8.5:1 contrast */
-    --text-tertiary: #8B949E; /* GitHub tertiary - 5.2:1 contrast (WCAG AA) */
-    --text-muted: #6E7681; /* GitHub muted - 4.8:1 contrast (WCAG AA) */
-    --text-accent: #58A6FF; /* GitHub blue - optimal visibility in dark */
-    --text-subtle: #484F58; /* Subtle text - 3.5:1 contrast */
+    /* Text - Professional Contrast (WCAG AA/AAA Compliant) */
+    --text-primary: #E8EDF3; /* Warm white - Professional */
+    --text-secondary: #B8C5D1; /* Elegant blue-gray */
+    --text-tertiary: #8B95A5; /* Neutral gray */
+    --text-muted: #6B7480; /* Dark gray */
+    --text-accent: #3B82F6; /* Professional blue */
+    --text-subtle: #4B5563; /* Subtle gray */
 
-    /* Accent Colors - Research-Based (GitHub Blue - Optimal Visibility) */
-    --accent: #58A6FF; /* GitHub blue - best visibility in dark mode */
-    --accent-hover: #79C0FF; /* Light blue - hover state */
-    --accent-active: #A5D6FF; /* Lighter blue - active state */
-    --accent-muted: rgba(88, 166, 255, 0.12); /* Muted accent */
-    --accent-glow: rgba(88, 166, 255, 0.2); /* Glow effect */
+    /* Accent Colors - Professional Blue (Institutional) */
+    --accent: #3B82F6; /* Blue 500 - Professional, not too vibrant */
+    --accent-hover: #2563EB; /* Blue 600 - Darker on hover */
+    --accent-active: #1D4ED8; /* Blue 700 - Active state */
+    --accent-muted: rgba(59, 130, 246, 0.1); /* Muted accent */
+    --accent-glow: rgba(59, 130, 246, 0.15); /* Glow effect - more subtle */
     
-    /* Secondary Accent - Research-Based Warm Contrast */
-    --accent-gold: #F59E0B; /* Amber - warm contrast, good for highlights */
-    --accent-gold-hover: #FBBF24; /* Light amber */
+    /* Secondary Accent - Professional */
+    --accent-gold: #F59E0B; /* Amber - professional */
+    --accent-gold-hover: #D97706; /* Darker amber */
     --accent-gold-muted: rgba(245, 158, 11, 0.1); /* Muted amber */
     
-    /* Success/Error States - Research-Based */
-    --accent-success: #3FB950; /* GitHub green - optimal in dark */
-    --accent-warning: #D29922; /* GitHub yellow - warm warning */
-    --accent-error: #F85149; /* GitHub red - visible but not harsh */
+    /* Success/Error States - Professional */
+    --accent-success: #10B981; /* Green 500 - Professional */
+    --accent-warning: #F59E0B; /* Amber 500 - Professional */
+    --accent-error: #EF4444; /* Red 500 - Professional */
 
-    /* Borders - Refined & Subtle (Improved Visibility) */
-    --border-subtle: rgba(255, 255, 255, 0.08); /* Improved from 0.04 */
-    --border-default: rgba(255, 255, 255, 0.12); /* Improved from 0.08 */
-    --border-strong: rgba(255, 255, 255, 0.15); /* Improved from 0.12 */
-    --border-accent: rgba(88, 166, 255, 0.25); /* GitHub blue accent */
+    /* Borders - Professional and Subtle */
+    --border-subtle: rgba(255, 255, 255, 0.05);
+    --border-default: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.12);
+    --border-accent: rgba(59, 130, 246, 0.2); /* More discrete professional blue */
     --border-gold: rgba(245, 158, 11, 0.2);
 
     /* Shadows - Academic Depth */
@@ -272,7 +272,7 @@
 
   .hover-lift:hover {
     border-color: var(--border-accent);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 
   /* Microinteraction - Subtle and professional */
