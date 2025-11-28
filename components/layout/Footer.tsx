@@ -82,14 +82,14 @@ export function Footer() {
               </div>
             </Link>
             <p className="text-sm text-text-muted leading-relaxed">
-              &copy; {year} Tradelia AI · Tutti i diritti riservati
+              &copy; {year} Tradelia · progetto indipendente
             </p>
             <p className="text-base text-text-secondary leading-relaxed max-w-md font-light">
-              Formazione finanziaria gratuita basata su framework AI proprietari verificabili.
-              Materiale conforme agli standard accademici internazionali e alle normative MiFID II.
+              Ricerca finanziaria aperta: framework AI, dataset e note metodologiche condivise per la community.
+              I servizi professionali sono opzionali e finanziano l’accesso gratuito.
             </p>
             <p className="text-xs text-text-muted leading-relaxed max-w-md opacity-90 font-light">
-              Le informazioni fornite sono a scopo educativo e non costituiscono consulenza finanziaria.
+              Solo materiale educativo. Nessuna consulenza o sollecitazione di investimento; rispettiamo MiFID II e le best practice etiche.
             </p>
           </motion.div>
 

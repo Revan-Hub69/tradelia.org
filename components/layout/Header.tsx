@@ -14,7 +14,7 @@ export function Header() {
 
   return (
     <motion.header
-      className="sticky top-0 z-50 w-full border-b border-border-subtle glass-strong supports-[backdrop-filter]:bg-bg-glass"
+      className="sticky top-0 z-50 w-full border-b border-border-subtle glass supports-[backdrop-filter]:bg-bg-glass"
       initial={prefersReducedMotion ? { opacity: 0 } : { y: -100, opacity: 0 }}
       animate={prefersReducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
       transition={
@@ -23,23 +23,6 @@ export function Header() {
           : { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
       }
     >
-      <div className="hidden lg:flex items-center justify-between px-8 py-2 border-b border-border-subtle bg-bg-soft/80 text-xs text-text-secondary">
-        <span className="tracking-wide uppercase">
-          Aggiornamento ricerca {new Date().getFullYear()} · Framework proprietari certificati
-        </span>
-        <div className="flex items-center gap-5">
-          <span className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-accent animate-pulse" aria-hidden="true" />
-            Accesso istituzionale live
-          </span>
-          <Link href="/docs" className="text-accent hover:text-accent-hover transition-colors">
-            Documentazione
-          </Link>
-          <Link href="mailto:research@tradelia.org" className="text-text-secondary hover:text-text-primary transition-colors">
-            research@tradelia.org
-          </Link>
-        </div>
-      </div>
       <div className="container flex h-16 items-center justify-between px-8">
         <Link
           href="/"
@@ -64,15 +47,15 @@ export function Header() {
           <motion.div variants={slideVariants} initial="hidden" animate="visible" className="flex items-center">
             <Navigation />
           </motion.div>
-          <Button asChild variant="secondary" size="sm" className="group hidden md:flex">
-            <Link href="/dashboard" aria-label="Vai alla Dashboard">
+          <Button asChild variant="secondary" size="sm" className="hidden md:flex group">
+            <Link href="/dashboard" aria-label="Vai alla dashboard gratuita">
               <LayoutDashboard className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
               <span className="hidden sm:inline">Dashboard</span>
             </Link>
           </Button>
           <Button asChild variant="default" size="sm" className="hidden lg:inline-flex">
-            <Link href="/contact" aria-label="Prenota una demo con il team">
-              Prenota demo
+            <Link href="/contact" aria-label="Parla con il team indipendente">
+              Contatti
             </Link>
           </Button>
         </div>

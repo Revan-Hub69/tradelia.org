@@ -15,27 +15,27 @@ import {
 const values = [
   {
     icon: DollarSign,
-    title: 'Gratuito',
+    title: 'Accesso libero',
     description:
-      'Nessun costo nascosto, completamente gratuito e accessibile a tutti. Formazione di qualità senza barriere economiche.',
+      'Il progetto resta gratuito per sempre. I servizi pro finanziano ricerca e infrastruttura, senza paywall sul percorso base.',
   },
   {
     icon: CheckCircle2,
-    title: 'Verificabile',
+    title: 'Metodo verificabile',
     description:
-      'Metodologie documentate con fonti accademiche, ipotesi esplicitate e limiti metodologici completamente trasparenti.',
+      'Ogni ipotesi, limite e fonte è pubblica. Gli utenti possono replicare i nostri risultati o proporre miglioramenti.',
   },
   {
     icon: Smartphone,
-    title: 'PWA Installabile',
+    title: 'Tecnologia aperta',
     description:
-      'Dashboard installabile, funziona offline, accesso immediato da qualsiasi dispositivo. Tecnologia all\'avanguardia.',
+      'Dashboard PWA installabile, API documentate e componenti riusabili per integrare i modelli nel proprio stack.',
   },
   {
     icon: Shield,
-    title: 'MiFID-Safe',
+    title: 'Etica e compliance',
     description:
-      'Materiale educativo conforme alle regole MiFID II e agli standard accademici internazionali per formazione professionale certificata.',
+      'Materiale educativo conforme alle normative europee e audit continuo su bias, privacy e responsabilità dell’AI.',
   },
 ];
 

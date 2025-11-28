@@ -18,11 +18,11 @@ const methods = [
     acronym: 'FDM',
     title: 'Framework Dinamico dei Mercati',
     description:
-      'Analisi contesto macro con controlli incrociati multiformato e aggiornamenti dinamici in tempo reale. Metodologia verificabile e documentata.',
+      'Raccoglie segnali macro, dati macroprudenziali e sentiment news per creare scenari di mercato apertamente documentati.',
     features: [
-      'Analisi contesto macro',
-      'Controlli incrociati multiformato',
-      'Aggiornamenti dinamici',
+      'Stress test macro in tempo reale',
+      'Dataset e fonti citati',
+      'Versioning pubblico del modello',
     ],
     icon: TrendingUp,
     color: 'from-accent to-accent-hover',
@@ -32,11 +32,11 @@ const methods = [
     acronym: 'MLT',
     title: 'Matrice delle Letture Tattiche',
     description:
-      'Analisi intermarket con correlazioni cross-asset e segnali tattici per decisioni informate. Framework documentato con fonti verificabili.',
+      'Matrix che unisce intermarket, spread e fattori di rischio per identificare segnali tattici replicabili.',
     features: [
-      'Analisi intermarket',
       'Correlazioni cross-asset',
-      'Segnali tattici',
+      'Alert tattici spiegati',
+      'Soglie e limiti dichiarati',
     ],
     icon: Grid3x3,
     color: 'from-accent-hover to-accent-active',
@@ -46,11 +46,11 @@ const methods = [
     acronym: 'PAC',
     title: 'Protocollo di Allerta Criptovalute',
     description:
-      'Monitoraggio cripto con alert automatizzati e analisi rischio per gestione consapevole. Metodologia trasparente e verificabile.',
+      'Modulo cripto open-source: monitora on-chain, volatilità e liquidità per alert trasparenti sul rischio.',
     features: [
-      'Monitoraggio cripto',
-      'Alert automatizzati',
-      'Analisi rischio',
+      'Indicatori on-chain documentati',
+      'Alert configurabili',
+      'Log pubblico degli aggiornamenti',
     ],
     icon: CircleDot,
     color: 'from-accent to-accent-active',
@@ -101,18 +101,15 @@ export function Methods() {
         >
           <Badge variant="default" className="mb-6">
             <Grid3x3 className="w-4 h-4" aria-hidden="true" />
-            <span>Framework AI Proprietari</span>
+            <span>Framework AI + accademia</span>
           </Badge>
           <h2 id="methods-title" className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tighter text-text-primary mb-6">
             Metodologie{' '}
-            <span className="gradient-text">Verificabili e Documentate</span>
+            <span className="gradient-text">aperte e replicabili</span>
           </h2>
           <p className="text-lg md:text-xl text-text-secondary leading-relaxed tracking-tight font-light">
-            Framework AI proprietari per approfondimenti multiformato su contesto macro, intermarket e tecnico con{' '}
-            <strong className="text-text-primary font-medium">
-              controlli incrociati verificabili
-            </strong>{' '}
-            e documentazione completa delle fonti, ipotesi e limiti metodologici.
+            Ogni modulo è gratuito, versionato e corredato da note metodologiche.
+            Puoi usarlo così com’è oppure espanderlo con servizi professionali opzionali.
           </p>
         </motion.div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">

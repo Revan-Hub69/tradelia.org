@@ -16,27 +16,27 @@ import {
 const features = [
   {
     icon: CheckCircle2,
-    title: 'Percorsi Gamificati',
+    title: 'Metodo documentato',
     description:
-      'Assessment strutturati, tutorial interattivi, quiz di verifica e sistema di badge per un apprendimento coinvolgente e progressivo.',
+      'Ogni framework AI è accompagnato da note metodologiche, dataset citati e soglie di affidabilità dichiarate.',
   },
   {
     icon: BookOpen,
-    title: 'Materiale Didattico Completo',
+    title: 'Percorso indipendente',
     description:
-      'Documentazione accademica completa con fonti verificabili, ipotesi esplicitate e limiti metodologici documentati per trasparenza totale.',
+      'Laboratorio aperto, gratuito e modulare: aggiorniamo i contenuti seguendo paper, norme e feedback della community.',
   },
   {
     icon: Shield,
-    title: 'Conforme MiFID II',
+    title: 'Trasparenza legale',
     description:
-      'Materiale educativo conforme alle regole MiFID II e agli standard accademici internazionali per formazione professionale certificata.',
+      'Materiale educativo conforme alle normative europee; nessuna consulenza, solo ricerca e strumenti didattici.',
   },
   {
     icon: Zap,
-    title: 'Accesso Immediato',
+    title: 'Servizi pro opzionali',
     description:
-      'Nessuna registrazione richiesta, accesso immediato a tutti i contenuti formativi. Inizia la tua formazione in pochi secondi.',
+      'Report, analisi on demand e dashboard premium per chi vuole integrare i nostri modelli nel proprio lavoro.',
   },
 ];
 

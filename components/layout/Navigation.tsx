@@ -9,16 +9,11 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
 
 const navItems = [
-  { label: 'Home', href: '/', key: 'home', description: 'Hub istituzionale' },
-  { label: 'Dashboard', href: '/dashboard', key: 'dashboard', description: 'Accesso AI' },
-  {
-    label: 'Formazione',
-    href: '/dashboard#education',
-    key: 'education',
-    description: 'Percorso completo',
-  },
-  { label: 'Ricerca', href: '/docs', key: 'research', description: 'Paper & metriche' },
-  { label: 'Contatti', href: '/contact', key: 'contact', description: 'Supporto dedicato' },
+  { label: 'Manifesto', href: '/about', key: 'about' },
+  { label: 'Percorso', href: '/dashboard#education', key: 'education' },
+  { label: 'Servizi Pro', href: '/services', key: 'services' },
+  { label: 'Documentazione', href: '/docs', key: 'docs' },
+  { label: 'Community', href: '/community', key: 'community' },
 ];
 
 export function Navigation() {
@@ -88,14 +83,11 @@ export function Navigation() {
                 href={item.href}
                 aria-current={isActive ? 'page' : undefined}
                 className={cn(
-                  'px-4 py-2 text-sm font-semibold text-text-secondary rounded-xl transition-colors duration-200 relative group flex flex-col items-start',
+                  'px-4 py-2 text-sm font-semibold text-text-secondary rounded-xl transition-colors duration-200 relative group',
                   isActive && 'text-text-primary bg-bg-surface/70'
                 )}
               >
-                <span>{item.label}</span>
-                <span className="text-[10px] font-normal uppercase tracking-[0.2em] text-text-muted">
-                  {item.description}
-                </span>
+                {item.label}
                 {isActive && (
                   <motion.span
                     className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-primary"

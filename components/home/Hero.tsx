@@ -16,9 +16,9 @@ import {
 } from '@/lib/animations';
 
 const stats = [
-  { value: '100%', label: 'Gratuito', delay: 0.4, icon: Sparkles },
-  { value: '3', label: 'Framework AI', delay: 0.5, icon: TrendingUp },
-  { value: '∞', label: 'Accesso Ilimitato', delay: 0.6, icon: BookOpen },
+  { value: '0€', label: 'Accesso permanente', delay: 0.35, icon: Sparkles },
+  { value: 'AI + Ricerca', label: 'Metodo accademico', delay: 0.45, icon: TrendingUp },
+  { value: 'Servizi Pro', label: 'On demand', delay: 0.55, icon: BookOpen },
 ];
 
 export function Hero() {
@@ -97,7 +97,7 @@ export function Hero() {
         <motion.div variants={itemVariants}>
           <Badge variant="default" className="mb-8">
             <BookOpen className="w-4 h-4" aria-hidden="true" />
-            <span>Formazione Finanziaria</span>
+            <span>Progetto indipendente</span>
           </Badge>
         </motion.div>
 
@@ -107,9 +107,9 @@ export function Hero() {
           variants={itemVariants}
           className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tighter text-text-primary mb-6 max-w-5xl mx-auto"
         >
-          Formazione finanziaria gratuita basata su{' '}
+          Ricerca finanziaria gratuita e{' '}
           <span className="gradient-text relative inline-block">
-            framework verificabili
+            verificabile
           </span>
         </motion.h1>
 
@@ -118,7 +118,8 @@ export function Hero() {
           variants={itemVariants}
           className="text-lg md:text-xl lg:text-2xl leading-relaxed text-text-secondary mb-10 max-w-3xl mx-auto tracking-tight font-light"
         >
-          Percorsi formativi completi, metodologie documentate e materiale didattico conforme agli standard accademici internazionali.
+          Tradelia è un laboratorio indipendente che unisce framework AI proprietari e metodo accademico.
+          Accesso gratuito per tutti, servizi professionali on demand per studi e reportistica avanzata.
         </motion.p>
 
         {/* Stats - Enhanced with icons and better layout */}
