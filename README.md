@@ -10,9 +10,12 @@ Progetto moderno basato su **Next.js 14** con App Router, TypeScript, Tailwind C
 
 - **Framework**: Next.js 14 (App Router)
 - **Linguaggio**: TypeScript
-- **Styling**: Tailwind CSS + CSS Modules
+- **Styling**: Tailwind CSS + Design Tokens
+- **Componenti UI**: shadcn/ui style (modulari)
+- **Animazioni**: Framer Motion
 - **Database**: Supabase (PostgreSQL)
 - **Autenticazione**: Supabase Auth
+- **Forms**: React Hook Form + Zod
 - **Deploy**: Vercel
 
 ## 📁 Struttura del Progetto
@@ -21,13 +24,16 @@ Progetto moderno basato su **Next.js 14** con App Router, TypeScript, Tailwind C
 /
 ├── app/                    # Next.js App Router
 │   ├── dashboard/         # Dashboard utente
-│   ├── layout.tsx         # Layout principale
-│   └── page.tsx           # Homepage
+│   ├── layout.tsx        # Layout principale
+│   └── page.tsx          # Homepage
 ├── components/            # Componenti React riutilizzabili
-│   ├── dashboard/        # Componenti dashboard
+│   ├── ui/               # Componenti base (Button, Card, Badge)
+│   ├── layout/           # Header, Footer, Navigation
 │   └── home/             # Componenti homepage
 ├── lib/                  # Librerie e utilities
 │   ├── supabase/         # Client Supabase (client/server)
+│   ├── seo/              # SEO e metadata
+│   ├── i18n/             # Multilingua
 │   └── utils/            # Utility functions
 ├── hooks/                # React hooks personalizzati
 ├── types/                # TypeScript type definitions
@@ -105,25 +111,42 @@ npm run test:coverage
 
 Il progetto implementa best practices di sicurezza:
 
-- Headers di sicurezza HTTP configurati in `next.config.js`
-- Autenticazione gestita da Supabase
-- Row Level Security (RLS) nel database
-- Validazione input lato server
-- TypeScript per type safety
+- **Security Headers**: CSP, HSTS, X-Frame-Options, etc.
+- **Content Security Policy**: Configurato per Supabase
+- **Autenticazione**: Gestita da Supabase
+- **Row Level Security (RLS)**: Nel database
+- **Validazione input**: Zod schemas
+- **TypeScript**: Type safety completo
 
 ## 🎨 Design System
 
 Il design system utilizza:
 
 - **Tailwind CSS** per utility classes
-- **CSS Modules** per componenti specifici
-- **Design tokens** in `design-tokens/` per consistenza
+- **Design Tokens** centralizzati in `tailwind.config.ts`
+- **Componenti modulari** (shadcn/ui style)
+- **Varianti** con class-variance-authority
+
+## 🌍 Multilingua
+
+- **Lingue supportate**: Italiano (IT), English (EN)
+- **Routing**: `/` per IT, `/en` per EN
+- **Dictionaries**: JSON modulari in `lib/i18n/`
+
+## 🔍 SEO & AI Search
+
+- **Structured Data**: Schema.org EducationalOrganization
+- **AI Search Optimization**: ChatGPT, Perplexity, Claude
+- **Sitemap**: Dinamico con Next.js
+- **Robots.txt**: Ottimizzato per AI crawlers
+- **Open Graph**: Completo per social sharing
 
 ## 📚 Documentazione
 
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Supabase Documentation](https://supabase.com/docs)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Framer Motion Documentation](https://www.framer.com/motion/)
 
 ## 📄 Licenza
 
