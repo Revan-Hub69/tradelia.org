@@ -67,6 +67,14 @@ const modules = [
     href: '/dashboard#resources',
     priority: 'secondary' as const,
   },
+  {
+    id: 'admin',
+    title: 'Admin',
+    description: 'Gestione report e utenti',
+    icon: 'settings',
+    href: '/dashboard/admin',
+    priority: 'secondary' as const,
+  },
 ];
 
 interface ModuleGridProps {
