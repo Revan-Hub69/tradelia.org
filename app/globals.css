@@ -84,6 +84,11 @@
 
   /* Mobile Menu - SOLID BACKGROUND - NO TRANSPARENCY */
   #mobile-menu {
+    background-color: transparent !important;
+    background: transparent !important;
+  }
+
+  #mobile-menu > div:first-child {
     background-color: #1a1f2e !important;
     background: #1a1f2e !important;
     opacity: 1 !important;

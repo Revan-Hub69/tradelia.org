@@ -178,13 +178,7 @@ export function Navigation() {
             <motion.nav
               ref={menuRef}
               id="mobile-menu"
-              className="fixed top-0 right-0 bottom-0 w-full max-w-sm z-[101] md:hidden shadow-2xl"
-              style={{
-                backgroundColor: '#1A1F2E',
-                background: '#1A1F2E',
-                borderLeft: '1px solid rgba(59, 130, 246, 0.1)',
-                opacity: 1,
-              }}
+              className="fixed top-0 right-0 bottom-0 w-full max-w-sm z-[101] md:hidden"
               initial={prefersReducedMotion ? { x: '100%' } : { x: '100%' }}
               animate={prefersReducedMotion ? { x: 0 } : { x: 0 }}
               exit={prefersReducedMotion ? { x: '100%' } : { x: '100%' }}
@@ -196,22 +190,34 @@ export function Navigation() {
               aria-label="Main navigation"
               role="navigation"
             >
-              {/* Mobile Menu Header */}
-              <div className="flex items-center justify-between p-6 border-b border-border">
-                <h2 className="text-lg font-bold text-text-primary">Menu</h2>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="min-w-[44px] min-h-[44px]"
-                  onClick={() => setMobileMenuOpen(false)}
-                  aria-label="Close menu"
-                >
-                  <X className="w-5 h-5" aria-hidden="true" />
-                </Button>
-              </div>
+              {/* Solid Background Wrapper - NO TRANSPARENCY */}
+              <div 
+                className="absolute inset-0 bg-bg-surface shadow-2xl"
+                style={{
+                  backgroundColor: '#1A1F2E',
+                  background: '#1A1F2E',
+                  borderLeft: '1px solid rgba(59, 130, 246, 0.1)',
+                }}
+              />
+              
+              {/* Content Container */}
+              <div className="relative z-10 h-full flex flex-col">
+                {/* Mobile Menu Header */}
+                <div className="flex items-center justify-between p-6 border-b border-border">
+                  <h2 className="text-lg font-bold text-text-primary">Menu</h2>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="min-w-[44px] min-h-[44px]"
+                    onClick={() => setMobileMenuOpen(false)}
+                    aria-label="Close menu"
+                  >
+                    <X className="w-5 h-5" aria-hidden="true" />
+                  </Button>
+                </div>
 
-              {/* Mobile Menu Items */}
-              <div className="px-6 py-4 space-y-2 overflow-y-auto max-h-[calc(100vh-80px)]">
+                {/* Mobile Menu Items */}
+                <div className="px-6 py-4 space-y-2 overflow-y-auto max-h-[calc(100vh-80px)] flex-1">
                 {navKeys.map((item, idx) => {
                   const isActive = pathname === item.href ||
                     (item.href !== '/' && pathname?.startsWith(item.href));
@@ -241,6 +247,7 @@ export function Navigation() {
                     </motion.div>
                   );
                 })}
+                </div>
               </div>
             </motion.nav>
           </>
