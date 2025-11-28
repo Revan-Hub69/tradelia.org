@@ -3,6 +3,8 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import dynamic from 'next/dynamic';
 import { UnregisterServiceWorker } from './unregister-sw';
+import { generateStructuredData, generateMetadata as genMetadata } from '@/lib/seo/metadata';
+import { defaultLocale } from '@/lib/i18n/config';
 
 const Header = dynamic(() => import('@/components/layout/Header').then(m => ({ default: m.Header })), {
   ssr: false,
@@ -15,7 +17,10 @@ const Footer = dynamic(() => import('@/components/layout/Footer').then(m => ({ d
 const LegalConsent = dynamic(() => import('@/components/layout/LegalConsent').then(m => ({ default: m.LegalConsent })), {
   ssr: false,
 });
-import { generateStructuredData, generateMetadata as genMetadata } from '@/lib/seo/metadata';
+
+const HtmlLang = dynamic(() => import('@/components/layout/HtmlLang').then(m => ({ default: m.HtmlLang })), {
+  ssr: false,
+});
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -27,7 +32,8 @@ const inter = Inter({
 });
 
 export async function generateMetadata() {
-  return genMetadata('it');
+  // Default to Italian, but this will be overridden by nested layouts
+  return genMetadata(defaultLocale);
 }
 
 export const viewport = {
@@ -54,7 +60,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="it" data-theme="dark">
+    <html lang={defaultLocale} data-theme="dark">
       <head>
         {/* Favicon */}
         <link rel="icon" type="image/svg+xml" href="/logos/tradelia-icon.svg" />
@@ -67,7 +73,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(generateStructuredData('it')),
+            __html: JSON.stringify(generateStructuredData(defaultLocale)),
           }}
         />
         {/* AI Search Meta Tags */}
@@ -89,6 +95,7 @@ export default function RootLayout({
           Skip to main content
         </a>
         <div className="min-h-screen flex flex-col" suppressHydrationWarning>
+          <HtmlLang />
           <UnregisterServiceWorker />
           <Header />
           <main id="main-content" className="flex-1" tabIndex={-1}>{children}</main>
