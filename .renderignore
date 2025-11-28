@@ -1,0 +1,11 @@
+# Render ignore file
+node_modules
+.next
+.git
+.vercel
+*.log
+.DS_Store
+.env*.local
+coverage
+dist
+build
