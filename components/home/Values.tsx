@@ -11,6 +11,10 @@ import {
   createItemVariants,
   createHoverVariants,
 } from '@/lib/animations';
+import { useTranslations } from '@/lib/i18n/use-translations';
+
+const valueKeys = ['libero', 'verificabile', 'aperta', 'etica'];
+const valueIcons = [DollarSign, CheckCircle2, Smartphone, Shield];
 
 const values = [
   {
@@ -40,6 +44,7 @@ const values = [
 ];
 
 export function Values() {
+  const { t } = useTranslations();
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = createContainerVariants(prefersReducedMotion);
   const itemVariants = createItemVariants(prefersReducedMotion);
@@ -90,66 +95,67 @@ export function Values() {
         >
           <Badge variant="default" className="mb-6">
             <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
-            <span>Valori</span>
+            <span>{t('home.values.badge')}</span>
           </Badge>
           <h2 id="values-title" className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tighter text-text-primary mb-6">
-            Perché <span className="gradient-text">Tradelia AI</span>
+            {t('home.values.title')}{' '}
+            <span className="gradient-text">{t('home.values.titleHighlight')}</span>
           </h2>
           <p className="text-lg md:text-xl text-text-secondary leading-relaxed tracking-tight font-light">
-            La piattaforma di formazione finanziaria più{' '}
+            {t('home.values.description')}{' '}
             <strong className="text-text-primary font-medium">
-              avanzata, accessibile e trasparente
+              {t('home.values.descriptionHighlight')}
             </strong>{' '}
-            al mondo. Conforme agli standard accademici internazionali.
+            {t('home.values.descriptionEnd')}
           </p>
         </motion.div>
 
-        {/* Values Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {values.map((value, idx) => {
-            const Icon = value.icon;
-            return (
-              <motion.div key={idx} variants={itemVariants}>
-                <motion.div
-                  variants={hoverVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  <Card className="h-full text-center group hover:border-border-accent">
-                    <CardHeader>
-                      <div className="flex flex-col items-center gap-3 mb-6">
-                        <div
-                          className="w-20 h-20 rounded-2xl bg-gradient-accent border border-border-accent flex items-center justify-center"
-                          aria-hidden="true"
+                {/* Values Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {valueKeys.map((key, idx) => {
+                    const Icon = valueIcons[idx];
+                    return (
+                      <motion.div key={key} variants={itemVariants}>
+                        <motion.div
+                          variants={hoverVariants}
+                          whileHover="hover"
+                          whileTap="tap"
                         >
-                          <Icon className="w-10 h-10 text-accent" aria-hidden="true" />
-                        </div>
-                        {/* Non-chromatic indicator - different shapes for each value */}
-                        <div 
-                          className={cn(
-                            idx === 0 && 'w-3 h-3 rounded-full border-2 border-accent bg-accent',
-                            idx === 1 && 'w-3 h-3 border-2 border-accent bg-accent',
-                            idx === 2 && 'w-3 h-3 rotate-45 border-2 border-accent bg-accent',
-                            idx === 3 && 'w-0 h-0 border-l-[6px] border-r-[6px] border-b-[10px] border-l-transparent border-r-transparent border-b-accent'
-                          )}
-                          aria-hidden="true"
-                        />
-                      </div>
-                      <CardTitle className="text-xl font-bold text-text-primary" id={`value-title-${idx}`}>
-                        {value.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <CardDescription className="text-base text-text-secondary leading-relaxed font-light" aria-describedby={`value-title-${idx}`}>
-                        {value.description}
-                      </CardDescription>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </motion.div>
-            );
-          })}
-        </div>
+                          <Card className="h-full text-center group hover:border-border-accent">
+                            <CardHeader>
+                              <div className="flex flex-col items-center gap-3 mb-6">
+                                <div
+                                  className="w-20 h-20 rounded-2xl bg-gradient-accent border border-border-accent flex items-center justify-center"
+                                  aria-hidden="true"
+                                >
+                                  <Icon className="w-10 h-10 text-accent" aria-hidden="true" />
+                                </div>
+                                {/* Non-chromatic indicator - different shapes for each value */}
+                                <div
+                                  className={cn(
+                                    idx === 0 && 'w-3 h-3 rounded-full border-2 border-accent bg-accent',
+                                    idx === 1 && 'w-3 h-3 border-2 border-accent bg-accent',
+                                    idx === 2 && 'w-3 h-3 rotate-45 border-2 border-accent bg-accent',
+                                    idx === 3 && 'w-0 h-0 border-l-[6px] border-r-[6px] border-b-[10px] border-l-transparent border-r-transparent border-b-accent'
+                                  )}
+                                  aria-hidden="true"
+                                />
+                              </div>
+                              <CardTitle className="text-xl font-bold text-text-primary" id={`value-title-${idx}`}>
+                                {t(`home.values.items.${key}.title`)}
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <CardDescription className="text-base text-text-secondary leading-relaxed font-light" aria-describedby={`value-title-${idx}`}>
+                                {t(`home.values.items.${key}.description`)}
+                              </CardDescription>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
       </motion.div>
     </section>
   );

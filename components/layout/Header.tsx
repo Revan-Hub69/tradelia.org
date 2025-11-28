@@ -7,8 +7,10 @@ import { Navigation } from './Navigation';
 import { Button } from '@/components/ui/button';
 import { LayoutDashboard } from 'lucide-react';
 import { useReducedMotion, createSlideInVariants } from '@/lib/animations';
+import { useTranslations } from '@/lib/i18n/use-translations';
 
 export function Header() {
+  const { t } = useTranslations();
   const prefersReducedMotion = useReducedMotion();
   const slideVariants = createSlideInVariants(prefersReducedMotion);
 
@@ -48,14 +50,14 @@ export function Header() {
             <Navigation />
           </motion.div>
           <Button asChild variant="secondary" size="sm" className="hidden md:flex group">
-            <Link href="/dashboard" aria-label="Vai alla dashboard gratuita">
+            <Link href="/dashboard" aria-label={t('header.dashboardAria')}>
               <LayoutDashboard className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
-              <span className="hidden sm:inline">Dashboard</span>
+              <span className="hidden sm:inline">{t('header.dashboard')}</span>
             </Link>
           </Button>
           <Button asChild variant="default" size="sm" className="hidden lg:inline-flex">
-            <Link href="/contact" aria-label="Parla con il team indipendente">
-              Contatti
+            <Link href="/contact" aria-label={t('header.contattiAria')}>
+              {t('header.contatti')}
             </Link>
           </Button>
         </div>

@@ -9,39 +9,41 @@ import {
   createContainerVariants,
   createItemVariants,
 } from '@/lib/animations';
-
-const footerLinks = {
-  support: [
-    { label: 'Supporto', href: '/support', key: 'support' },
-    { label: 'Status', href: '/status', key: 'status' },
-    { label: 'Documentazione', href: '/docs', key: 'docs' },
-    { label: 'FAQ', href: '/faq', key: 'faq' },
-  ],
-  legal: [
-    { label: 'MiFID II', href: '/mifid', key: 'mifid' },
-    { label: 'Privacy', href: '/privacy', key: 'privacy' },
-    { label: 'Cookie', href: '/cookie', key: 'cookie' },
-    { label: 'Termini e Condizioni', href: '/terms', key: 'terms' },
-  ],
-  resources: [
-    { label: 'Blog', href: '/blog', key: 'blog' },
-    { label: 'Guide', href: '/guides', key: 'guides' },
-    { label: 'API', href: '/api', key: 'api' },
-    { label: 'Changelog', href: '/changelog', key: 'changelog' },
-  ],
-  company: [
-    { label: 'Chi Siamo', href: '/about', key: 'about' },
-    { label: 'Carriere', href: '/careers', key: 'careers' },
-    { label: 'Stampa', href: '/press', key: 'press' },
-    { label: 'Contatti', href: '/contact', key: 'contact' },
-  ],
-};
+import { useTranslations } from '@/lib/i18n/use-translations';
 
 export function Footer() {
+  const { t } = useTranslations();
   const year = new Date().getFullYear();
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = createContainerVariants(prefersReducedMotion);
   const itemVariants = createItemVariants(prefersReducedMotion);
+
+  const footerLinks = {
+    support: [
+      { key: 'support', href: '/support' },
+      { key: 'status', href: '/status' },
+      { key: 'documentation', href: '/docs' },
+      { key: 'faq', href: '/faq' },
+    ],
+    legal: [
+      { key: 'mifid', href: '/mifid' },
+      { key: 'privacy', href: '/privacy' },
+      { key: 'cookie', href: '/cookie' },
+      { key: 'terms', href: '/terms' },
+    ],
+    resources: [
+      { key: 'blog', href: '/blog' },
+      { key: 'guides', href: '/guides' },
+      { key: 'api', href: '/api' },
+      { key: 'changelog', href: '/changelog' },
+    ],
+    company: [
+      { key: 'about', href: '/about' },
+      { key: 'careers', href: '/careers' },
+      { key: 'press', href: '/press' },
+      { key: 'contact', href: '/contact' },
+    ],
+  };
 
   return (
     <footer className="relative border-t border-border-subtle glass overflow-hidden" role="contentinfo">
@@ -99,7 +101,7 @@ export function Footer() {
             transition={{ delay: 0.1 }}
           >
             <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4 relative pb-2">
-              Supporto
+              {t('footer.support')}
               <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-primary" />
             </h3>
             <ul className="space-y-3">
@@ -111,7 +113,7 @@ export function Footer() {
                   >
                     <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-smooth group-hover:opacity-100 group-hover:scale-100" />
                     <span className="relative">
-                      {link.label}
+                      {t(`footer.supportLinks.${link.key}`)}
                       <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-smooth group-hover:w-full" />
                     </span>
                   </Link>
@@ -126,7 +128,7 @@ export function Footer() {
             transition={{ delay: 0.2 }}
           >
             <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4 relative pb-2">
-              Legale
+              {t('footer.legal')}
               <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-primary" />
             </h3>
             <ul className="space-y-3">
@@ -138,7 +140,7 @@ export function Footer() {
                   >
                     <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-smooth group-hover:opacity-100 group-hover:scale-100" />
                     <span className="relative">
-                      {link.label}
+                      {t(`footer.legalLinks.${link.key}`)}
                       <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-smooth group-hover:w-full" />
                     </span>
                   </Link>
@@ -155,7 +157,7 @@ export function Footer() {
           >
             <div>
               <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4 relative pb-2">
-                Risorse
+                {t('footer.resources')}
                 <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-primary" />
               </h3>
               <ul className="space-y-3">
@@ -167,7 +169,7 @@ export function Footer() {
                     >
                       <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-smooth group-hover:opacity-100 group-hover:scale-100" />
                       <span className="relative">
-                        {link.label}
+                        {t(`footer.resourcesLinks.${link.key}`)}
                         <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-smooth group-hover:w-full" />
                       </span>
                     </Link>
@@ -177,7 +179,7 @@ export function Footer() {
             </div>
             <div>
               <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4 relative pb-2">
-                Azienda
+                {t('footer.company')}
                 <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-primary" />
               </h3>
               <ul className="space-y-3">
@@ -189,7 +191,7 @@ export function Footer() {
                     >
                       <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-smooth group-hover:opacity-100 group-hover:scale-100" />
                       <span className="relative">
-                        {link.label}
+                        {t(`footer.companyLinks.${link.key}`)}
                         <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-smooth group-hover:w-full" />
                       </span>
                     </Link>

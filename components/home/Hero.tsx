@@ -14,14 +14,10 @@ import {
   createGradientPulse,
   createHoverVariants,
 } from '@/lib/animations';
-
-const stats = [
-  { value: '0€', label: 'Accesso permanente', delay: 0.35, icon: Sparkles },
-  { value: 'AI + Ricerca', label: 'Metodo accademico', delay: 0.45, icon: TrendingUp },
-  { value: 'Servizi Pro', label: 'On demand', delay: 0.55, icon: BookOpen },
-];
+import { useTranslations } from '@/lib/i18n/use-translations';
 
 export function Hero() {
+  const { t } = useTranslations();
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = createContainerVariants(prefersReducedMotion);
   const itemVariants = createItemVariants(prefersReducedMotion);
@@ -29,6 +25,12 @@ export function Hero() {
   const floatVariants = createFloatVariants(prefersReducedMotion);
   const gradientPulsePrimary = createGradientPulse(prefersReducedMotion);
   const gradientPulseSecondary = createGradientPulse(prefersReducedMotion);
+
+  const stats = [
+    { value: t('hero.stat1'), label: t('hero.stat1Label'), delay: 0.35, icon: Sparkles },
+    { value: t('hero.stat2'), label: t('hero.stat2Label'), delay: 0.45, icon: TrendingUp },
+    { value: t('hero.stat3'), label: t('hero.stat3Label'), delay: 0.55, icon: BookOpen },
+  ];
 
   return (
     <section 
@@ -56,33 +58,36 @@ export function Hero() {
       <div className="geometric-pattern" aria-hidden="true" />
       <div className="hero-geometric" aria-hidden="true" />
       
-      {/* Additional geometric accents for depth - Enhanced */}
+      {/* Additional geometric accents for depth - Enhanced and Visible */}
       <motion.div
-        className="absolute top-1/4 right-1/4 w-64 h-64 opacity-[0.05] pointer-events-none"
+        className="absolute top-1/4 right-1/4 w-64 h-64 opacity-[0.15] pointer-events-none"
         aria-hidden="true"
         animate={floatVariants.animate}
       >
-        <div className="absolute inset-0 border border-border-accent/40 rounded-full" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
+        <div className="absolute inset-0 border-2 border-accent/50 rounded-full" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
       </motion.div>
       <motion.div
-        className="absolute bottom-1/4 left-1/4 w-52 h-52 opacity-[0.04] pointer-events-none"
+        className="absolute bottom-1/4 left-1/4 w-52 h-52 opacity-[0.12] pointer-events-none"
         aria-hidden="true"
         animate={floatVariants.animate}
         transition={{ ...floatVariants.animate?.transition, delay: 2 }}
       >
-        <div className="absolute inset-0 border border-border-accent/30" style={{ clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)' }} />
+        <div className="absolute inset-0 border-2 border-accent/40" style={{ clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)' }} />
       </motion.div>
+      {/* Additional geometric lines for structure */}
+      <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" aria-hidden="true" />
+      <div className="absolute top-0 bottom-0 left-1/2 w-px bg-gradient-to-b from-transparent via-accent/15 to-transparent" aria-hidden="true" />
 
-      {/* Grid pattern overlay - Subtle academic texture */}
-      <div className="absolute inset-0 opacity-[0.015] pointer-events-none" aria-hidden="true">
+      {/* Grid pattern overlay - Visible academic texture */}
+      <div className="absolute inset-0 opacity-[0.06] pointer-events-none" aria-hidden="true">
         <div
           className="absolute inset-0"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(88, 166, 255, 0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(88, 166, 255, 0.1) 1px, transparent 1px)
+              linear-gradient(rgba(59, 130, 246, 0.2) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(37, 99, 235, 0.18) 1px, transparent 1px)
             `,
-            backgroundSize: '60px 60px',
+            backgroundSize: '50px 50px',
           }}
         />
       </div>
@@ -97,7 +102,7 @@ export function Hero() {
         <motion.div variants={itemVariants}>
           <Badge variant="default" className="mb-8">
             <BookOpen className="w-4 h-4" aria-hidden="true" />
-            <span>Progetto indipendente</span>
+            <span>{t('hero.badge')}</span>
           </Badge>
         </motion.div>
 
@@ -107,9 +112,9 @@ export function Hero() {
           variants={itemVariants}
           className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tighter text-text-primary mb-6 max-w-5xl mx-auto"
         >
-          Ricerca finanziaria gratuita e{' '}
+          {t('hero.title')}{' '}
           <span className="gradient-text relative inline-block">
-            verificabile
+            {t('hero.titleHighlight')}
           </span>
         </motion.h1>
 
@@ -118,8 +123,7 @@ export function Hero() {
           variants={itemVariants}
           className="text-lg md:text-xl lg:text-2xl leading-relaxed text-text-secondary mb-10 max-w-3xl mx-auto tracking-tight font-light"
         >
-          Tradelia è un laboratorio indipendente che unisce framework AI proprietari e metodo accademico.
-          Accesso gratuito per tutti, servizi professionali on demand per studi e reportistica avanzata.
+          {t('hero.description')}
         </motion.p>
 
         {/* Stats - Enhanced with icons and better layout */}
@@ -189,10 +193,11 @@ export function Hero() {
                   <div className="w-2 h-2 rounded-full bg-accent" />
                 </div>
               </div>
-              <p className="text-sm md:text-base text-text-secondary leading-relaxed tracking-tight m-0 font-light">
-                Le informazioni fornite sono a scopo educativo e non costituiscono consulenza finanziaria.
-                Materiale conforme alle regole <strong className="text-text-primary font-medium">MiFID II</strong> e agli standard accademici internazionali.
-                </p>
+                      <p className="text-sm md:text-base text-text-secondary leading-relaxed tracking-tight m-0 font-light">
+                        {t('hero.disclaimer')}{' '}
+                        <strong className="text-text-primary font-medium">{t('hero.mifid')}</strong>{' '}
+                        {t('hero.disclaimerEnd')}
+                      </p>
             </div>
           </Card>
         </motion.div>

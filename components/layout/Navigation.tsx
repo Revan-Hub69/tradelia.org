@@ -7,16 +7,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
+import { useTranslations } from '@/lib/i18n/use-translations';
 
-const navItems = [
-  { label: 'Manifesto', href: '/about', key: 'about' },
-  { label: 'Percorso', href: '/dashboard#education', key: 'education' },
-  { label: 'Servizi Pro', href: '/services', key: 'services' },
-  { label: 'Documentazione', href: '/docs', key: 'docs' },
-  { label: 'Community', href: '/community', key: 'community' },
+const navKeys = [
+  { key: 'manifesto', href: '/about' },
+  { key: 'percorso', href: '/dashboard#education' },
+  { key: 'serviziPro', href: '/services' },
+  { key: 'documentazione', href: '/docs' },
+  { key: 'community', href: '/community' },
 ];
 
 export function Navigation() {
+  const { t } = useTranslations();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const pathname = usePathname();
@@ -71,35 +73,35 @@ export function Navigation() {
 
   return (
     <>
-      {/* Desktop Navigation */}
-      <nav className="hidden md:flex items-center gap-2" aria-label="Main navigation">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href || 
-            (item.href !== '/' && pathname?.startsWith(item.href));
-          
-          return (
-            <motion.div key={item.key} whileHover={{ y: -2 }}>
-              <Link
-                href={item.href}
-                aria-current={isActive ? 'page' : undefined}
-                className={cn(
-                  'px-4 py-2 text-sm font-semibold text-text-secondary rounded-xl transition-colors duration-200 relative group',
-                  isActive && 'text-text-primary bg-bg-surface/70'
-                )}
-              >
-                {item.label}
-                {isActive && (
-                  <motion.span
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-primary"
-                    layoutId="activeTab"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  />
-                )}
-              </Link>
-            </motion.div>
-          );
-        })}
-      </nav>
+              {/* Desktop Navigation */}
+              <nav className="hidden md:flex items-center gap-2" aria-label="Main navigation">
+                {navKeys.map((item) => {
+                  const isActive = pathname === item.href ||
+                    (item.href !== '/' && pathname?.startsWith(item.href));
+
+                  return (
+                    <motion.div key={item.key} whileHover={{ y: -2 }}>
+                      <Link
+                        href={item.href}
+                        aria-current={isActive ? 'page' : undefined}
+                        className={cn(
+                          'px-4 py-2 text-sm font-semibold text-text-secondary rounded-xl transition-colors duration-200 relative group',
+                          isActive && 'text-text-primary bg-bg-surface/70'
+                        )}
+                      >
+                        {t(`nav.${item.key}`)}
+                        {isActive && (
+                          <motion.span
+                            className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-primary"
+                            layoutId="activeTab"
+                            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                          />
+                        )}
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+              </nav>
 
       {/* Mobile Menu Button */}
       <Button
@@ -140,33 +142,33 @@ export function Navigation() {
               }
               aria-label="Main navigation"
             >
-              <div className="container px-8 py-6 space-y-4">
-                {navItems.map((item, idx) => {
-                  const isActive = pathname === item.href;
-                  
-                  return (
-                    <motion.div
-                      key={item.key}
-                      initial={prefersReducedMotion ? {} : { opacity: 0, x: -20 }}
-                      animate={prefersReducedMotion ? {} : { opacity: 1, x: 0 }}
-                      transition={prefersReducedMotion ? {} : { delay: idx * 0.1 }}
-                    >
-                      <Link
-                        href={item.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={cn(
-                          'block px-4 py-3 text-base font-medium rounded-lg transition-all duration-300',
-                          isActive
-                            ? 'text-text-primary bg-bg-elevated'
-                            : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
-                        )}
-                      >
-                        {item.label}
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-              </div>
+                      <div className="container px-8 py-6 space-y-4">
+                        {navKeys.map((item, idx) => {
+                          const isActive = pathname === item.href;
+
+                          return (
+                            <motion.div
+                              key={item.key}
+                              initial={prefersReducedMotion ? {} : { opacity: 0, x: -20 }}
+                              animate={prefersReducedMotion ? {} : { opacity: 1, x: 0 }}
+                              transition={prefersReducedMotion ? {} : { delay: idx * 0.1 }}
+                            >
+                              <Link
+                                href={item.href}
+                                onClick={() => setMobileMenuOpen(false)}
+                                className={cn(
+                                  'block px-4 py-3 text-base font-medium rounded-lg transition-all duration-300',
+                                  isActive
+                                    ? 'text-text-primary bg-bg-elevated'
+                                    : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
+                                )}
+                              >
+                                {t(`nav.${item.key}`)}
+                              </Link>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
             </motion.nav>
           </>
         )}

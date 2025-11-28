@@ -40,12 +40,12 @@ const nextConfig = {
             key: "X-DNS-Prefetch-Control",
             value: "on",
           },
-          // Content Security Policy
+          // Content Security Policy - Enhanced Security
           {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live",
+              "script-src 'self' 'unsafe-inline' https://vercel.live",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com data:",
               "img-src 'self' data: https: blob:",
@@ -56,6 +56,7 @@ const nextConfig = {
               "frame-src 'none'",
               "object-src 'none'",
               "upgrade-insecure-requests",
+              "require-trusted-types-for 'script'",
             ].join("; "),
           },
         ],

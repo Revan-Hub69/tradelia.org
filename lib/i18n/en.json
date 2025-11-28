@@ -1,12 +1,38 @@
 {
   "nav": {
-    "home": "Home",
+    "manifesto": "Manifesto",
+    "percorso": "Pathway",
+    "serviziPro": "Pro Services",
+    "documentazione": "Documentation",
+    "community": "Community"
+  },
+  "header": {
     "dashboard": "Dashboard",
-    "education": "Education",
-    "about": "About",
-    "contact": "Contact"
+    "contatti": "Contact",
+    "dashboardAria": "Go to free dashboard",
+    "contattiAria": "Talk to the independent team"
+  },
+  "hero": {
+    "badge": "Independent project",
+    "title": "Free and",
+    "titleHighlight": "verifiable financial research",
+    "description": "Tradelia is an independent lab combining proprietary AI frameworks and academic methodology. Free access for everyone, professional on-demand services for studies and advanced reporting.",
+    "stat1": "$0",
+    "stat1Label": "Permanent access",
+    "stat2": "AI + Research",
+    "stat2Label": "Academic method",
+    "stat3": "Pro Services",
+    "stat3Label": "On demand",
+    "ctaPrimary": "Start Learning",
+    "ctaSecondary": "Dashboard",
+    "disclaimer": "Information provided is for educational purposes and does not constitute financial advice. Material compliant with",
+    "mifid": "MiFID II",
+    "disclaimerEnd": "and international academic standards."
   },
   "footer": {
+    "copyright": "independent project",
+    "description": "Open financial research: AI frameworks, datasets and methodological notes shared with the community. Professional services are optional and fund free access.",
+    "disclaimer": "Educational material only. No advice or investment solicitation; we comply with MiFID II and ethical best practices.",
     "support": "Support",
     "legal": "Legal",
     "resources": "Resources",
