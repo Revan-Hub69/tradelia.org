@@ -11,7 +11,15 @@ import { buildLocalePath } from '@/lib/i18n/paths';
  * Primary modules: 4-5 main modules (high priority)
  * Secondary modules: 3-4 secondary modules (progressive disclosure)
  */
-const moduleDefinitions = [
+type ModuleDefinition = {
+  id: string;
+  icon: keyof typeof icons;
+  href: string;
+  priority: 'primary' | 'secondary';
+  badge?: number;
+};
+
+const moduleDefinitions: ModuleDefinition[] = [
   {
     id: 'reports',
     icon: 'file',
@@ -102,7 +110,13 @@ export function ModuleGrid({ priority }: ModuleGridProps) {
   );
 }
 
-function ModuleCard({ module }: { module: typeof modules[0] }) {
+type LocalizedModule = ModuleDefinition & {
+  title: string;
+  description: string;
+  href: string;
+};
+
+function ModuleCard({ module }: { module: LocalizedModule }) {
   return (
     <Link 
       href={module.href} 
