@@ -52,7 +52,10 @@ export function Header() {
             size="sm" 
             className="group min-w-[44px] min-h-[44px]"
           >
-            <Link href="/dashboard" aria-label={t('header.dashboardAria')}>
+            <Link 
+              href="/dashboard"
+              aria-label={t('header.dashboardAria')}
+            >
               <LayoutDashboard className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
               <span className="hidden sm:inline">{t('header.dashboard')}</span>
             </Link>

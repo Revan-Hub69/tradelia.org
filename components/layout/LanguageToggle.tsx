@@ -87,14 +87,15 @@ export function LanguageToggle() {
     window.location.href = newPath;
   };
 
+  // Return static version during SSR to avoid hydration mismatch
   if (!mounted) {
-    // Static version for SSR
     return (
       <Button
         variant="ghost"
         size="sm"
         className="gap-2 min-w-[44px] min-h-[44px]"
         aria-label="Change language"
+        disabled
       >
         <Globe className="w-4 h-4" aria-hidden="true" />
         <span className="hidden sm:inline text-xs font-semibold uppercase">it</span>
