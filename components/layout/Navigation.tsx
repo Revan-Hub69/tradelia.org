@@ -162,10 +162,11 @@ export function Navigation() {
           <>
             {/* Backdrop */}
             <motion.div
-              className="fixed inset-0 z-[100] md:hidden"
+              className="fixed inset-0 z-[9998] md:hidden"
               style={{
                 backgroundColor: 'rgba(10, 14, 26, 0.85)',
                 backdropFilter: 'blur(4px)',
+                pointerEvents: 'auto',
               }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -178,7 +179,8 @@ export function Navigation() {
             <motion.nav
               ref={menuRef}
               id="mobile-menu"
-              className="fixed top-0 right-0 bottom-0 w-full max-w-sm z-[101] md:hidden"
+              className="fixed top-0 right-0 bottom-0 w-full max-w-sm z-[9999] md:hidden"
+              style={{ pointerEvents: 'auto' }}
               initial={prefersReducedMotion ? { x: '100%' } : { x: '100%' }}
               animate={prefersReducedMotion ? { x: 0 } : { x: 0 }}
               exit={prefersReducedMotion ? { x: '100%' } : { x: '100%' }}
