@@ -76,7 +76,7 @@ export function Navigation() {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:flex items-center gap-1">
+      <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
         {navItems.map((item) => {
           const isActive = pathname === item.href || 
             (item.href !== '/' && pathname?.startsWith(item.href));
@@ -113,9 +113,9 @@ export function Navigation() {
         aria-label="Toggle menu"
       >
         {mobileMenuOpen ? (
-          <X className="w-5 h-5" />
+          <X className="w-5 h-5" aria-hidden="true" />
         ) : (
-          <Menu className="w-5 h-5" />
+          <Menu className="w-5 h-5" aria-hidden="true" />
         )}
       </Button>
 

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { DollarSign, CheckCircle2, Smartphone, Shield } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils/cn';
 import {
   useReducedMotion,
   createContainerVariants,
@@ -45,7 +46,10 @@ export function Values() {
   const hoverVariants = createHoverVariants(prefersReducedMotion);
 
   return (
-    <section className="relative py-24 md:py-32 bg-bg-surface border-t border-border overflow-hidden">
+    <section 
+      className="relative py-24 md:py-32 bg-bg-surface border-t border-border overflow-hidden"
+      aria-labelledby="values-title"
+    >
       {/* Subtle background pattern */}
       <div className="geometric-pattern" aria-hidden="true" />
 
@@ -85,10 +89,10 @@ export function Values() {
           className="text-center max-w-3xl mx-auto mb-16"
         >
           <Badge variant="default" className="mb-6">
-            <CheckCircle2 className="w-4 h-4" />
+            <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
             <span>Valori</span>
           </Badge>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tighter text-text-primary mb-6">
+          <h2 id="values-title" className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tighter text-text-primary mb-6">
             Perché <span className="gradient-text">Tradelia AI</span>
           </h2>
           <p className="text-lg md:text-xl text-text-secondary leading-relaxed tracking-tight font-light">
@@ -113,31 +117,44 @@ export function Values() {
                 >
                   <Card className="h-full text-center group">
                     <CardHeader>
-                      <motion.div
-                        className="w-20 h-20 mx-auto rounded-2xl bg-gradient-accent border border-border-accent flex items-center justify-center mb-6 transition-all duration-300 group-hover:bg-gradient-primary group-hover:border-accent group-hover:shadow-glow"
-                        animate={
-                          prefersReducedMotion
-                            ? {}
-                            : {
-                                scale: [1, 1.08, 1],
-                                rotate: [0, 5, -5, 0],
-                              }
-                        }
-                        transition={{
-                          duration: 3,
-                          delay: idx * 0.2,
-                          repeat: Infinity,
-                          repeatDelay: 4,
-                        }}
-                      >
-                        <Icon className="w-10 h-10 text-accent transition-colors duration-300 group-hover:text-white" />
-                      </motion.div>
-                      <CardTitle className="text-xl font-bold text-text-primary">
+                      <div className="flex flex-col items-center gap-3 mb-6">
+                        <motion.div
+                          className="w-20 h-20 rounded-2xl bg-gradient-accent border border-border-accent flex items-center justify-center transition-all duration-300 group-hover:bg-gradient-primary group-hover:border-accent group-hover:shadow-glow"
+                          animate={
+                            prefersReducedMotion
+                              ? {}
+                              : {
+                                  scale: [1, 1.08, 1],
+                                  rotate: [0, 5, -5, 0],
+                                }
+                          }
+                          transition={{
+                            duration: 3,
+                            delay: idx * 0.2,
+                            repeat: Infinity,
+                            repeatDelay: 4,
+                          }}
+                          aria-hidden="true"
+                        >
+                          <Icon className="w-10 h-10 text-accent transition-colors duration-300 group-hover:text-white" aria-hidden="true" />
+                        </motion.div>
+                        {/* Non-chromatic indicator - different shapes for each value */}
+                        <div 
+                          className={cn(
+                            idx === 0 && 'w-3 h-3 rounded-full border-2 border-accent bg-accent',
+                            idx === 1 && 'w-3 h-3 border-2 border-accent bg-accent',
+                            idx === 2 && 'w-3 h-3 rotate-45 border-2 border-accent bg-accent',
+                            idx === 3 && 'w-0 h-0 border-l-[6px] border-r-[6px] border-b-[10px] border-l-transparent border-r-transparent border-b-accent'
+                          )}
+                          aria-hidden="true"
+                        />
+                      </div>
+                      <CardTitle className="text-xl font-bold text-text-primary" id={`value-title-${idx}`}>
                         {value.title}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <CardDescription className="text-base text-text-secondary leading-relaxed font-light">
+                      <CardDescription className="text-base text-text-secondary leading-relaxed font-light" aria-describedby={`value-title-${idx}`}>
                         {value.description}
                       </CardDescription>
                     </CardContent>

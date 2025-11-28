@@ -31,7 +31,10 @@ export function Hero() {
   const hoverVariants = createHoverVariants(prefersReducedMotion);
 
   return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-bg-base py-24 md:py-32">
+    <section 
+      className="relative min-h-[90vh] flex items-center overflow-hidden bg-bg-base py-24 md:py-32"
+      aria-labelledby="hero-title"
+    >
       {/* Animated background gradients - Research-based */}
       <motion.div
         className="absolute -top-1/2 -right-1/4 w-[800px] h-[800px] bg-gradient-to-br from-accent/8 via-accent/5 to-transparent rounded-full blur-[80px]"
@@ -90,8 +93,9 @@ export function Hero() {
             <motion.div
               animate={prefersReducedMotion ? {} : { rotate: [0, 6, -6, 0] }}
               transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+              aria-hidden="true"
             >
-              <BookOpen className="w-4 h-4" />
+              <BookOpen className="w-4 h-4" aria-hidden="true" />
             </motion.div>
             <span>Formazione Finanziaria</span>
           </Badge>
@@ -99,6 +103,7 @@ export function Hero() {
 
         {/* Title - Enhanced typography and animation */}
         <motion.h1
+          id="hero-title"
           variants={itemVariants}
           className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tighter text-text-primary mb-6 max-w-5xl mx-auto"
         >
@@ -149,7 +154,7 @@ export function Hero() {
                     animate={prefersReducedMotion ? {} : { scale: [1, 1.1, 1] }}
                     transition={{ duration: 2, delay: stat.delay + 1, repeat: Infinity, repeatDelay: 2 }}
                   >
-                    <Icon className="w-5 h-5 text-accent" />
+                    <Icon className="w-5 h-5 text-accent" aria-hidden="true" />
                   </motion.div>
                 </div>
                 <div className="text-4xl md:text-5xl lg:text-6xl font-extrabold gradient-text leading-none tracking-tighter transition-smooth group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(88,166,255,0.3)]">
@@ -172,7 +177,7 @@ export function Hero() {
             <Button asChild variant="default" size="lg" className="group">
               <Link href="/dashboard#education">
                 <span>Inizia la Formazione</span>
-                <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
               </Link>
             </Button>
           </motion.div>
@@ -180,7 +185,7 @@ export function Hero() {
             <Button asChild variant="secondary" size="lg" className="group">
               <Link href="/dashboard">
                 <span>Dashboard</span>
-                <LayoutDashboard className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
+                <LayoutDashboard className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" aria-hidden="true" />
               </Link>
             </Button>
           </motion.div>

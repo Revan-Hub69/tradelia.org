@@ -94,17 +94,17 @@ const config: Config = {
         display: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       fontSize: {
-        xs: ['0.75rem', { lineHeight: '1.6', letterSpacing: '0.01em' }],
-        sm: ['0.875rem', { lineHeight: '1.6', letterSpacing: '0.005em' }],
-        base: ['1rem', { lineHeight: '1.7', letterSpacing: '0' }],
-        lg: ['1.125rem', { lineHeight: '1.7', letterSpacing: '-0.005em' }],
-        xl: ['1.25rem', { lineHeight: '1.6', letterSpacing: '-0.01em' }],
-        '2xl': ['1.5rem', { lineHeight: '1.5', letterSpacing: '-0.015em' }],
-        '3xl': ['1.875rem', { lineHeight: '1.4', letterSpacing: '-0.02em' }],
-        '4xl': ['2.25rem', { lineHeight: '1.3', letterSpacing: '-0.025em' }],
-        '5xl': ['3rem', { lineHeight: '1.2', letterSpacing: '-0.03em' }],
-        '6xl': ['3.75rem', { lineHeight: '1.15', letterSpacing: '-0.035em' }],
-        '7xl': ['4.5rem', { lineHeight: '1.1', letterSpacing: '-0.04em' }],
+        xs: ['0.75rem', { lineHeight: '1.75', letterSpacing: '0.01em' }], // Research: +0.15 for dark mode
+        sm: ['0.875rem', { lineHeight: '1.75', letterSpacing: '0.005em' }],
+        base: ['1rem', { lineHeight: '1.8', letterSpacing: '0' }], // Research: 1.75-1.8 optimal
+        lg: ['1.125rem', { lineHeight: '1.8', letterSpacing: '-0.005em' }],
+        xl: ['1.25rem', { lineHeight: '1.75', letterSpacing: '-0.01em' }],
+        '2xl': ['1.5rem', { lineHeight: '1.6', letterSpacing: '-0.015em' }],
+        '3xl': ['1.875rem', { lineHeight: '1.5', letterSpacing: '-0.02em' }],
+        '4xl': ['2.25rem', { lineHeight: '1.4', letterSpacing: '-0.025em' }],
+        '5xl': ['3rem', { lineHeight: '1.3', letterSpacing: '-0.03em' }],
+        '6xl': ['3.75rem', { lineHeight: '1.25', letterSpacing: '-0.035em' }],
+        '7xl': ['4.5rem', { lineHeight: '1.2', letterSpacing: '-0.04em' }],
       },
       letterSpacing: {
         tighter: '-0.03em',
@@ -112,7 +112,7 @@ const config: Config = {
         normal: '0',
         wide: '0.025em',
         wider: '0.05em',
-        widest: '0.1em',
+        widest: '0.12em', // Research: 0.12-0.15em for uppercase in dark mode
       },
       animation: {
         'fade-in-up': 'fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1)', // Research: 300-500ms optimal

@@ -76,6 +76,7 @@ export function Footer() {
                   width={200}
                   height={50}
                   className="h-9 w-auto brightness-95 drop-shadow-[0_0_10px_rgba(88,166,255,0.2)] transition-smooth group-hover:brightness-100 group-hover:drop-shadow-[0_0_15px_rgba(88,166,255,0.4)] group-hover:scale-105"
+                  loading="lazy"
                 />
                 <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-primary transition-all duration-300 group-hover:w-full" />
               </div>

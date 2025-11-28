@@ -27,9 +27,14 @@ export interface BadgeProps
 
 function Badge({ className, variant, children, ...props }: BadgeProps) {
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props}>
+    <div 
+      className={cn(badgeVariants({ variant }), className)} 
+      role="status"
+      aria-label={typeof children === 'string' ? children : 'Badge'}
+      {...props}
+    >
       {/* Gradient overlay on hover */}
-      <div className="absolute inset-0 bg-gradient-primary opacity-0 transition-opacity duration-300 hover:opacity-10 -z-0" />
+      <div className="absolute inset-0 bg-gradient-primary opacity-0 transition-opacity duration-300 hover:opacity-10 -z-0" aria-hidden="true" />
       <span className="relative z-10">{children}</span>
     </div>
   );

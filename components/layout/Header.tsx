@@ -37,6 +37,7 @@ export function Header() {
               height={50}
               className="h-10 w-auto brightness-95 drop-shadow-[0_0_10px_rgba(88,166,255,0.15)] transition-smooth group-hover:brightness-100 group-hover:drop-shadow-[0_0_15px_rgba(88,166,255,0.25)] group-hover:scale-105"
               priority
+              loading="eager"
             />
             <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-primary transition-all duration-300 group-hover:w-full" />
           </div>
@@ -46,7 +47,7 @@ export function Header() {
           <Navigation />
           <Button asChild variant="secondary" size="sm" className="group">
             <Link href="/dashboard" aria-label="Vai alla Dashboard">
-              <LayoutDashboard className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+              <LayoutDashboard className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
               <span className="hidden sm:inline">Dashboard</span>
             </Link>
           </Button>

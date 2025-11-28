@@ -6,6 +6,7 @@ import { TrendingUp, Grid3x3, CircleDot, ArrowRight, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils/cn';
 import {
   useReducedMotion,
   createContainerVariants,
@@ -65,7 +66,10 @@ export function Methods() {
   const hoverVariants = createHoverVariants(prefersReducedMotion);
 
   return (
-    <section className="relative py-24 md:py-32 bg-bg-base overflow-hidden">
+    <section 
+      className="relative py-24 md:py-32 bg-bg-base overflow-hidden"
+      aria-labelledby="methods-title"
+    >
       {/* Subtle background pattern */}
       <div className="geometric-pattern" aria-hidden="true" />
 
@@ -105,10 +109,10 @@ export function Methods() {
           className="text-center max-w-3xl mx-auto mb-16"
         >
           <Badge variant="default" className="mb-6">
-            <Grid3x3 className="w-4 h-4" />
+            <Grid3x3 className="w-4 h-4" aria-hidden="true" />
             <span>Framework AI Proprietari</span>
           </Badge>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tighter text-text-primary mb-6">
+          <h2 id="methods-title" className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tighter text-text-primary mb-6">
             Metodologie{' '}
             <span className="gradient-text">Verificabili e Documentate</span>
           </h2>
@@ -135,37 +139,49 @@ export function Methods() {
                   <Card className="h-full group">
                     <CardHeader>
                       <div className="flex items-start gap-4 mb-4">
-                        <motion.div
-                          className={`w-16 h-16 rounded-xl bg-gradient-to-br ${method.color} border border-border-accent flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:shadow-glow`}
-                          animate={
-                            prefersReducedMotion
-                              ? {}
-                              : {
-                                  scale: [1, 1.05, 1],
-                                  rotate: [0, 3, -3, 0],
-                                }
-                          }
-                          transition={{
-                            duration: 4,
-                            delay: idx * 0.3,
-                            repeat: Infinity,
-                            repeatDelay: 6,
-                          }}
-                        >
-                          <Icon className="w-8 h-8 text-white" />
-                        </motion.div>
+                        <div className="flex flex-col items-center gap-2">
+                          <motion.div
+                            className={`w-16 h-16 rounded-xl bg-gradient-to-br ${method.color} border border-border-accent flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:shadow-glow`}
+                            animate={
+                              prefersReducedMotion
+                                ? {}
+                                : {
+                                    scale: [1, 1.05, 1],
+                                    rotate: [0, 3, -3, 0],
+                                  }
+                            }
+                            transition={{
+                              duration: 4,
+                              delay: idx * 0.3,
+                              repeat: Infinity,
+                              repeatDelay: 6,
+                            }}
+                            aria-hidden="true"
+                          >
+                            <Icon className="w-8 h-8 text-white" aria-hidden="true" />
+                          </motion.div>
+                          {/* Non-chromatic indicator - shape varies by method */}
+                          <div 
+                            className={cn(
+                              idx === 0 && 'w-3 h-3 rounded-full border-2 border-accent bg-accent',
+                              idx === 1 && 'w-3 h-3 rotate-45 border-2 border-accent bg-accent',
+                              idx === 2 && 'w-0 h-0 border-l-[6px] border-r-[6px] border-b-[10px] border-l-transparent border-r-transparent border-b-accent'
+                            )}
+                            aria-hidden="true"
+                          />
+                        </div>
                         <div>
                           <div className="text-xs font-extrabold gradient-text uppercase tracking-widest mb-1">
                             {method.acronym}
                           </div>
-                          <CardTitle className="text-xl font-bold text-text-primary leading-tight">
+                          <CardTitle className="text-xl font-bold text-text-primary leading-tight" id={`method-title-${method.id}`}>
                             {method.title}
                           </CardTitle>
                         </div>
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <CardDescription className="text-base text-text-secondary leading-relaxed mb-6 font-light">
+                      <CardDescription className="text-base text-text-secondary leading-relaxed mb-6 font-light" aria-describedby={`method-title-${method.id}`}>
                         {method.description}
                       </CardDescription>
                       <ul className="space-y-3 mb-6">
@@ -178,7 +194,7 @@ export function Methods() {
                             viewport={{ once: true }}
                             transition={{ delay: featureIdx * 0.1 }}
                           >
-                            <Check className="w-4 h-4 text-accent flex-shrink-0" />
+                            <Check className="w-4 h-4 text-accent flex-shrink-0" aria-hidden="true" />
                             <span className="font-light">{feature}</span>
                           </motion.li>
                         ))}
@@ -188,7 +204,7 @@ export function Methods() {
                         className="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent-hover transition-colors duration-300 group/link"
                       >
                         <span>Esplora Framework</span>
-                        <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" />
+                        <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" aria-hidden="true" />
                       </Link>
                     </CardContent>
                   </Card>
