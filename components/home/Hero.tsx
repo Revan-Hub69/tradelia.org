@@ -50,27 +50,27 @@ export function Hero() {
 
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-bg-base py-24 md:py-32">
-      {/* Animated background gradients - Elegant and subtle */}
+      {/* Animated background gradients - Academic and refined */}
       <motion.div
-        className="absolute -top-1/2 -right-1/4 w-[800px] h-[800px] bg-gradient-to-br from-accent/10 via-accent-blue/8 to-transparent rounded-full blur-[60px]"
+        className="absolute -top-1/2 -right-1/4 w-[800px] h-[800px] bg-gradient-to-br from-accent/8 via-accent/5 to-transparent rounded-full blur-[80px]"
         animate={{
-          scale: [1, 1.1, 1],
-          opacity: [0.6, 0.8, 0.6],
+          scale: [1, 1.08, 1],
+          opacity: [0.4, 0.6, 0.4],
         }}
         transition={{
-          duration: 20,
+          duration: 25,
           repeat: Infinity,
           ease: 'easeInOut',
         }}
       />
       <motion.div
-        className="absolute -bottom-1/3 -left-1/10 w-[600px] h-[600px] bg-gradient-to-br from-accent-blue/8 via-accent/6 to-transparent rounded-full blur-[50px]"
+        className="absolute -bottom-1/3 -left-1/10 w-[600px] h-[600px] bg-gradient-to-br from-accent/6 via-accent-muted/4 to-transparent rounded-full blur-[70px]"
         animate={{
-          scale: [1, 1.15, 1],
-          opacity: [0.5, 0.7, 0.5],
+          scale: [1, 1.12, 1],
+          opacity: [0.35, 0.55, 0.35],
         }}
         transition={{
-          duration: 15,
+          duration: 20,
           repeat: Infinity,
           ease: 'easeInOut',
           delay: 0.5,
@@ -122,9 +122,9 @@ export function Hero() {
         {/* Stats - Data-driven and elegant */}
         <motion.div
           variants={itemVariants}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 mb-12 max-w-3xl mx-auto py-12 border-y border-border relative"
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 mb-12 max-w-3xl mx-auto py-12 border-y border-border-subtle relative"
         >
-          <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-primary opacity-10 -translate-y-1/2" />
+          <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-primary opacity-5 -translate-y-1/2" />
           {stats.map((stat, idx) => (
             <motion.div
               key={idx}
@@ -134,10 +134,10 @@ export function Hero() {
               transition={{ delay: stat.delay, duration: 0.6 }}
               whileHover={{ y: -4 }}
             >
-              <div className="text-4xl md:text-5xl lg:text-6xl font-extrabold gradient-text leading-none tracking-tighter transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(0,188,212,0.4)]">
+              <div className="text-4xl md:text-5xl lg:text-6xl font-extrabold gradient-text leading-none tracking-tighter transition-smooth group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(99,102,241,0.3)]">
                 {stat.value}
               </div>
-              <div className="text-xs font-semibold text-text-muted uppercase tracking-widest transition-colors duration-300 group-hover:text-text-secondary">
+              <div className="text-xs font-semibold text-text-muted uppercase tracking-widest transition-smooth group-hover:text-text-secondary">
                 {stat.label}
               </div>
             </motion.div>
@@ -165,13 +165,13 @@ export function Hero() {
 
         {/* Disclaimer - Academic and compliant */}
         <motion.div variants={itemVariants}>
-          <Card variant="gradient" className="max-w-4xl mx-auto text-left">
+          <Card variant="academic" className="max-w-4xl mx-auto text-left">
             <div className="flex items-start gap-5 p-6 md:p-8">
               <motion.div
                 className="flex-shrink-0 mt-0.5"
                 animate={floatVariants.animate}
               >
-                <div className="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center">
+                <div className="w-5 h-5 rounded-full bg-accent-muted flex items-center justify-center ring-2 ring-accent/20">
                   <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
                 </div>
               </motion.div>

@@ -42,7 +42,7 @@ const methods = [
       'Aggiornamenti dinamici',
     ],
     icon: TrendingUp,
-    color: 'from-accent-blue to-accent',
+    color: 'from-accent to-accent-hover',
   },
   {
     id: 'mlt',
@@ -56,7 +56,7 @@ const methods = [
       'Segnali tattici',
     ],
     icon: Grid3x3,
-    color: 'from-accent to-accent-hover',
+    color: 'from-accent-hover to-accent-active',
   },
   {
     id: 'pac',
@@ -70,7 +70,7 @@ const methods = [
       'Analisi rischio',
     ],
     icon: CircleDot,
-    color: 'from-accent-blue to-accent-blue-hover',
+    color: 'from-accent to-accent-active',
   },
 ];
 
@@ -78,12 +78,10 @@ export function Methods() {
   return (
     <section className="relative py-24 md:py-32 bg-bg-base overflow-hidden">
       {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-[0.02]">
-        <div className="absolute inset-0 bg-[repeating-linear-gradient(-45deg,transparent,transparent_40px,rgba(255,255,255,0.008)_40px,rgba(255,255,255,0.008)_41px)] animate-pattern-shift [animation-direction:reverse]" />
-      </div>
+      <div className="geometric-pattern" />
 
       {/* Subtle gradient accent */}
-      <div className="absolute bottom-10 left-[-10%] w-[600px] h-[600px] bg-gradient-to-br from-accent-blue/6 to-transparent rounded-full blur-[70px]" />
+      <div className="absolute bottom-10 left-[-10%] w-[600px] h-[600px] bg-gradient-to-br from-accent/5 to-transparent rounded-full blur-[70px]" />
 
       <motion.div
         className="relative z-10 max-w-7xl mx-auto px-8"

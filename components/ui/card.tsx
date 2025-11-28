@@ -3,16 +3,17 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils/cn';
 
 const cardVariants = cva(
-  'relative overflow-hidden rounded-2xl backdrop-blur-sm transition-all duration-300',
+  'relative overflow-hidden rounded-xl transition-smooth gpu-accelerated',
   {
     variants: {
       variant: {
-        default: 'bg-gradient-surface border border-border',
-        elevated: 'bg-bg-elevated border border-border shadow-lg',
-        gradient: 'bg-gradient-surface border border-border',
+        default: 'glass border border-border shadow-md',
+        elevated: 'glass-strong border border-border-strong shadow-lg',
+        gradient: 'glass border border-border shadow-md',
+        academic: 'card-academic',
       },
       hover: {
-        true: 'hover:bg-bg-elevated hover:border-border-accent hover:-translate-y-2 hover:shadow-xl hover:shadow-accent-glow/20',
+        true: 'hover-lift hover:border-border-accent',
         false: '',
       },
     },
@@ -35,13 +36,13 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         className={cn(cardVariants({ variant, hover }), className)}
         {...props}
       >
-        {/* Gradient overlay on hover */}
+        {/* Subtle gradient overlay on hover */}
         {hover && (
-          <div className="absolute inset-0 bg-gradient-accent opacity-0 transition-opacity duration-300 hover:opacity-5 -z-0" />
+          <div className="absolute inset-0 bg-gradient-accent opacity-0 transition-opacity duration-500 hover:opacity-10 -z-0" />
         )}
-        {/* Top border accent on hover */}
+        {/* Top border accent on hover - Academic */}
         {hover && (
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-primary scale-x-0 origin-left transition-transform duration-300 hover:scale-x-100" />
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-primary scale-x-0 origin-left transition-transform duration-500 hover:scale-x-100 rounded-full" />
         )}
         <div className="relative z-10">{children}</div>
       </div>

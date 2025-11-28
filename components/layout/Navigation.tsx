@@ -37,9 +37,9 @@ export function Navigation() {
               key={item.key}
               href={item.href}
               className={cn(
-                'px-4 py-2 text-sm font-medium text-text-secondary rounded-lg transition-all duration-300 relative group',
+                'px-4 py-2 text-sm font-medium text-text-secondary rounded-lg transition-smooth relative group',
                 isActive && 'text-text-primary',
-                'hover:text-text-primary hover:bg-bg-surface'
+                'hover:text-text-primary hover:bg-bg-surface/50'
               )}
             >
               {item.label}

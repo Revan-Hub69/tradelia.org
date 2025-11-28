@@ -8,9 +8,9 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-gradient-accent border border-border-accent text-accent shadow-md shadow-accent-glow/10 hover:-translate-y-0.5 hover:shadow-lg',
+          'bg-gradient-accent border border-border-accent text-accent shadow-md shadow-glow/10 hover:-translate-y-0.5 hover:shadow-lg transition-smooth',
         accent:
-          'bg-gradient-primary text-white border-transparent shadow-glow hover:-translate-y-0.5',
+          'bg-gradient-primary text-white border-transparent shadow-glow hover:-translate-y-0.5 transition-smooth',
         outline:
           'bg-transparent border border-border text-text-secondary hover:border-border-accent',
       },

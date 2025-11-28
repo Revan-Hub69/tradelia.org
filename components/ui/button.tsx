@@ -4,18 +4,18 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils/cn';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold transition-smooth gpu-accelerated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base disabled:pointer-events-none disabled:opacity-40 disabled:cursor-not-allowed',
   {
     variants: {
       variant: {
         default:
-          'bg-gradient-primary text-white shadow-glow hover:shadow-glow-lg hover:-translate-y-0.5 active:translate-y-0',
+          'bg-gradient-primary text-white shadow-glow hover:shadow-glow-lg hover:-translate-y-1 active:translate-y-0 active:scale-[0.98]',
         secondary:
-          'bg-transparent text-text-primary border border-border hover:bg-bg-surface hover:border-border-accent hover:-translate-y-0.5',
+          'glass text-text-primary border border-border hover:glass-strong hover:border-border-accent hover:-translate-y-1 active:translate-y-0',
         ghost:
-          'bg-transparent text-text-secondary hover:text-text-primary hover:bg-bg-surface',
+          'bg-transparent text-text-secondary hover:text-text-primary hover:bg-bg-surface/50 active:bg-bg-surface',
         outline:
-          'border border-border bg-transparent hover:bg-bg-surface hover:text-text-primary',
+          'border border-border bg-transparent hover:glass hover:text-text-primary active:bg-bg-surface',
       },
       size: {
         default: 'h-10 px-4 py-2',

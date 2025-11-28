@@ -36,14 +36,12 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative border-t border-border bg-bg-soft overflow-hidden" role="contentinfo">
+    <footer className="relative border-t border-border-subtle glass overflow-hidden" role="contentinfo">
       {/* Subtle pattern */}
-      <div className="absolute inset-0 opacity-[0.02]">
-        <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_40px,rgba(255,255,255,0.008)_40px,rgba(255,255,255,0.008)_41px)]" />
-      </div>
+      <div className="geometric-pattern" />
 
       {/* Top gradient line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-primary opacity-30" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-primary opacity-20" />
 
       <div className="relative z-10 container py-16 px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
