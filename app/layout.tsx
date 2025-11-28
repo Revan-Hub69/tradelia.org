@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { generateMetadata as genMetadata, generateStructuredData } from '@/lib/seo/metadata';
+import { generateStructuredData, generateMetadata as genMetadata } from '@/lib/seo/metadata';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -12,7 +12,9 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
-export const metadata: Metadata = genMetadata('it');
+export async function generateMetadata() {
+  return genMetadata('it');
+}
 
 export const viewport = {
   themeColor: '#1a1a1a',
