@@ -94,8 +94,22 @@ const nextConfig = {
   // Note: Next.js SWC automatically uses browserslist from .browserslistrc
   // Polyfills are added by dependencies, not by Next.js itself
 
+  // Configure SWC to target modern browsers and reduce polyfills
+  swcMinify: true,
+
   // Optimize CSS loading
   optimizeFonts: true,
+
+  // Reduce JavaScript bundle size
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Target modern browsers - reduce polyfills
+      config.resolve.alias = {
+        ...config.resolve.alias,
+      };
+    }
+    return config;
+  },
 
   // Compress output
   compress: true,

@@ -64,13 +64,20 @@ export default function RootLayout({
   return (
     <html lang={defaultLocale} data-theme="dark">
       <head>
-        {/* Preconnect to external domains for faster resource loading */}
+        {/* Preconnect EARLY - before CSS to establish connections */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
-        {/* DNS prefetch for faster connections */}
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        
+        {/* Critical CSS inline to prevent render blocking */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            :root{--bg-base:#0a0e1a;--text-primary:#e8edf3;--text-secondary:#b8c5d1}
+            html{background-color:var(--bg-base);scroll-behavior:smooth;overflow-y:auto}
+            body{background-color:var(--bg-base);color:var(--text-primary);margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif;overflow-y:auto}
+          `
+        }} />
         
         {/* Favicon */}
         <link rel="icon" type="image/svg+xml" href="/logos/tradelia-icon.svg" />
