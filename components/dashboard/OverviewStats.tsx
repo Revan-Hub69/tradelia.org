@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
-import styles from '@/app/dashboard/dashboard.module.css';
+import styles from './dashboard.module.css';
 
 /**
  * OverviewStats Component - Premium Academic Design

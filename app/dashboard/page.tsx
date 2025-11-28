@@ -1,6 +1,6 @@
 import { OverviewStats } from '@/components/dashboard/OverviewStats';
 import { ModuleGrid } from '@/components/dashboard/ModuleGrid';
-import styles from './dashboard.module.css';
+import styles from '@/components/dashboard/dashboard.module.css';
 
 /**
  * Dashboard Page - Premium Academic Design

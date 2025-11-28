@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import styles from '@/app/dashboard/dashboard.module.css';
+import styles from './dashboard.module.css';
 
 /**
  * Module definitions with priority levels
