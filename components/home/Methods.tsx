@@ -17,7 +17,7 @@ const methodKeys = ['fdm', 'mlt', 'pac'];
 const methodIcons = [TrendingUp, Grid3x3, CircleDot];
 
 export function Methods() {
-  const { t } = useTranslations();
+  const { t, tArray } = useTranslations();
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = createContainerVariants(prefersReducedMotion);
   const itemVariants = createItemVariants(prefersReducedMotion);
@@ -114,9 +114,9 @@ export function Methods() {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <CardDescription>{t(`home.methods.items.${key}.description`)}</CardDescription>
-                      <ul className="space-y-3 mb-6">
-                        {(t(`home.methods.items.${key}.features`) as string[]).map((feature: string, fIdx: number) => (
+                              <CardDescription>{t(`home.methods.items.${key}.description`)}</CardDescription>
+                              <ul className="space-y-3 mb-6">
+                                {tArray(`home.methods.items.${key}.features`).map((feature: string, fIdx: number) => (
                           <li
                             key={fIdx}
                             className="flex items-center gap-3 text-sm text-text-secondary"
