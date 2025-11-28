@@ -113,10 +113,10 @@ export function Footer() {
             {isExpanded && (
               <motion.ul
                 id={`footer-${sectionKey}`}
-                initial={prefersReducedMotion ? {} : { height: 0, opacity: 0 }}
-                animate={prefersReducedMotion ? {} : { height: 'auto', opacity: 1 }}
-                exit={prefersReducedMotion ? {} : { height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
+                initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, maxHeight: 0 }}
+                animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, maxHeight: 500 }}
+                exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, maxHeight: 0 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
                 className="overflow-hidden space-y-2.5 pt-3 pb-4"
               >
                 {links.map((link) => (

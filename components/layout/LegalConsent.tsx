@@ -38,6 +38,30 @@ export function LegalConsent() {
     }
   }, [mounted]);
 
+  // Lock body scroll when popup is open
+  useEffect(() => {
+    if (!isOpen) return;
+    
+    // Save original overflow value
+    const originalOverflow = document.body.style.overflow;
+    const originalPaddingRight = document.body.style.paddingRight;
+    
+    // Calculate scrollbar width to prevent layout shift
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    
+    // Lock body scroll
+    document.body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+    
+    return () => {
+      // Restore original values
+      document.body.style.overflow = originalOverflow;
+      document.body.style.paddingRight = originalPaddingRight;
+    };
+  }, [isOpen]);
+
   const handleAccept = () => {
     localStorage.setItem(CONSENT_KEY, 'accepted');
     setHasConsented(true);
@@ -50,39 +74,41 @@ export function LegalConsent() {
     setIsOpen(false);
   };
 
-  if (hasConsented || !isOpen) return null;
+  if (hasConsented) return null;
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
-          {/* Backdrop */}
+        <motion.div
+          className="fixed inset-0 z-[201] flex items-center justify-center p-4 md:p-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="legal-consent-title"
+          aria-describedby="legal-consent-description"
+          onClick={(e) => {
+            // Close on backdrop click
+            if (e.target === e.currentTarget) {
+              handleAccept();
+            }
+          }}
+        >
           <motion.div
-            className="fixed inset-0 bg-bg-base/80 backdrop-blur-sm z-[200]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={handleAccept}
-            aria-hidden="true"
-          />
-
-          {/* Consent Modal */}
-          <motion.div
-            className="fixed bottom-0 left-0 right-0 md:bottom-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:right-auto z-[201] w-full md:w-auto"
-            initial={prefersReducedMotion ? { opacity: 0, scale: 0.95 } : { y: 100, opacity: 0, scale: 0.95 }}
+            className="w-full max-w-[560px]"
+            initial={prefersReducedMotion ? { opacity: 0, scale: 0.95 } : { y: 20, opacity: 0, scale: 0.95 }}
             animate={prefersReducedMotion ? { opacity: 1, scale: 1 } : { y: 0, opacity: 1, scale: 1 }}
-            exit={prefersReducedMotion ? { opacity: 0, scale: 0.95 } : { y: 100, opacity: 0, scale: 0.95 }}
+            exit={prefersReducedMotion ? { opacity: 0, scale: 0.95 } : { y: 20, opacity: 0, scale: 0.95 }}
             transition={
               prefersReducedMotion
                 ? { duration: 0.2 }
                 : { type: 'spring', damping: 25, stiffness: 200 }
             }
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="legal-consent-title"
-            aria-describedby="legal-consent-description"
+            onClick={(e) => e.stopPropagation()}
           >
-            <Card className="m-4 md:m-0 border-border-strong shadow-2xl md:min-w-[520px] md:max-w-[560px]">
+            <Card className="border-border-strong shadow-2xl w-full">
               <div className="p-6 md:p-10">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-6">
@@ -132,9 +158,9 @@ export function LegalConsent() {
                     <div className="flex-1 min-w-0">
                       <p className="text-xs md:text-sm text-text-secondary leading-relaxed">
                         {t('legal.readMore')}{' '}
-                            <Link href="/privacy" className="text-accent hover:text-accent-hover underline font-medium" style={{ color: '#3B82F6' }}>
-                              {t('legal.privacy')}
-                            </Link>
+                        <Link href="/privacy" className="text-accent hover:text-accent-hover underline font-medium" style={{ color: '#3B82F6' }}>
+                          {t('legal.privacy')}
+                        </Link>
                         {' '}{t('legal.and')}{' '}
                         <Link href="/terms" className="text-accent hover:text-accent-hover underline font-medium" style={{ color: '#3B82F6' }}>
                           {t('legal.terms')}
@@ -166,7 +192,7 @@ export function LegalConsent() {
               </div>
             </Card>
           </motion.div>
-        </>
+        </motion.div>
       )}
     </AnimatePresence>
   );

@@ -162,7 +162,11 @@ export function Navigation() {
           <>
             {/* Backdrop */}
             <motion.div
-              className="fixed inset-0 bg-bg-base/90 backdrop-blur-sm z-[100] md:hidden"
+              className="fixed inset-0 z-[100] md:hidden"
+              style={{
+                backgroundColor: 'rgba(10, 14, 26, 0.85)',
+                backdropFilter: 'blur(4px)',
+              }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -174,14 +178,15 @@ export function Navigation() {
             <motion.nav
               ref={menuRef}
               id="mobile-menu"
-              className="fixed top-0 right-0 bottom-0 w-full max-w-sm border-l border-border z-[101] md:hidden shadow-xl"
+              className="fixed top-0 right-0 bottom-0 w-full max-w-sm z-[101] md:hidden shadow-2xl"
               style={{
                 backgroundColor: '#1A1F2E',
                 background: 'linear-gradient(180deg, #1A1F2E 0%, #131720 100%)',
+                borderLeft: '1px solid rgba(59, 130, 246, 0.1)',
               }}
-              initial={prefersReducedMotion ? { x: '100%' } : { x: '100%', opacity: 0 }}
-              animate={prefersReducedMotion ? { x: 0 } : { x: 0, opacity: 1 }}
-              exit={prefersReducedMotion ? { x: '100%' } : { x: '100%', opacity: 0 }}
+              initial={prefersReducedMotion ? { x: '100%', opacity: 0 } : { x: '100%', opacity: 0 }}
+              animate={prefersReducedMotion ? { x: 0, opacity: 1 } : { x: 0, opacity: 1 }}
+              exit={prefersReducedMotion ? { x: '100%', opacity: 0 } : { x: '100%', opacity: 0 }}
               transition={
                 prefersReducedMotion
                   ? { duration: 0.2 }
