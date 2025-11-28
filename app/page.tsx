@@ -1,7 +1,4 @@
-import { HomeHero } from '@/components/home/HomeHero';
-import { EducationSection } from '@/components/home/EducationSection';
-import { MethodSection } from '@/components/home/MethodSection';
-import { ValueSection } from '@/components/home/ValueSection';
+import { Hero, Features, Methods, Values } from '@/components/home';
 
 export const metadata = {
   title: 'Tradelia AI · Formazione Finanziaria Gratuita',
@@ -12,10 +9,10 @@ export const metadata = {
 export default function HomePage() {
   return (
     <>
-      <HomeHero />
-      <EducationSection />
-      <MethodSection />
-      <ValueSection />
+      <Hero />
+      <Features />
+      <Methods />
+      <Values />
     </>
   );
 }
