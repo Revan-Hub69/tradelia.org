@@ -91,7 +91,7 @@ export function Navigation() {
 
   return (
     <>
-      {/* Desktop Navigation - Best Practice */}
+      {/* Desktop Navigation - Best Practice with Elegant Effects */}
       <nav 
         className="hidden md:flex items-center gap-1" 
         aria-label="Main navigation"
@@ -102,27 +102,38 @@ export function Navigation() {
             (item.href !== '/' && pathname?.startsWith(item.href));
 
           return (
-            <Link
+            <motion.div
               key={item.key}
-              href={item.href}
-              aria-current={isActive ? 'page' : undefined}
-              className={cn(
-                'px-4 py-2 text-sm font-semibold text-text-secondary rounded-lg transition-all duration-200 relative',
-                'hover:text-text-primary hover:bg-bg-surface/50 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-base',
-                'min-w-[44px] min-h-[44px] flex items-center justify-center',
-                isActive && 'text-text-primary bg-bg-surface/70'
-              )}
+              whileHover={{ y: -1 }}
+              whileTap={{ y: 0, scale: 0.98 }}
+              transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
             >
-              {t(`nav.${item.key}`)}
-              {isActive && (
-                <motion.span
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-primary"
-                  layoutId="activeTab"
-                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  aria-hidden="true"
-                />
-              )}
-            </Link>
+              <Link
+                href={item.href}
+                aria-current={isActive ? 'page' : undefined}
+                className={cn(
+                  'px-4 py-2 text-sm font-semibold text-text-secondary rounded-lg transition-all duration-200 relative',
+                  'hover:text-text-primary hover:bg-bg-surface/60 hover:shadow-sm',
+                  'active:scale-[0.98] active:bg-bg-surface/80',
+                  'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-base',
+                  'min-w-[44px] min-h-[44px] flex items-center justify-center',
+                  'group',
+                  isActive && 'text-text-primary bg-bg-surface/70 shadow-sm'
+                )}
+              >
+                <span className="relative z-10">{t(`nav.${item.key}`)}</span>
+                {isActive && (
+                  <motion.span
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-primary"
+                    layoutId="activeTab"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    aria-hidden="true"
+                  />
+                )}
+                {/* Hover underline effect */}
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent/30 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" aria-hidden="true" />
+              </Link>
+            </motion.div>
           );
         })}
       </nav>
@@ -163,7 +174,8 @@ export function Navigation() {
             <motion.nav
               ref={menuRef}
               id="mobile-menu"
-              className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-bg-surface border-l border-border z-[101] md:hidden shadow-xl"
+              className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-bg-surface border-l border-border z-[101] md:hidden shadow-xl backdrop-blur-sm"
+              style={{ backgroundColor: 'rgba(26, 31, 46, 0.98)' }}
               initial={prefersReducedMotion ? { x: '100%' } : { x: '100%', opacity: 0 }}
               animate={prefersReducedMotion ? { x: 0 } : { x: 0, opacity: 1 }}
               exit={prefersReducedMotion ? { x: '100%' } : { x: '100%', opacity: 0 }}

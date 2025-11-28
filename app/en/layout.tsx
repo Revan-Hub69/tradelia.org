@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css';
+import '../globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { LegalConsent } from '@/components/layout/LegalConsent';
@@ -16,7 +16,7 @@ const inter = Inter({
 });
 
 export async function generateMetadata() {
-  return genMetadata('it');
+  return genMetadata('en');
 }
 
 export const viewport = {
@@ -26,32 +26,29 @@ export const viewport = {
   maximumScale: 5,
 };
 
-export default function RootLayout({
+export default function EnLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="it" data-theme="dark">
+    <html lang="en" data-theme="dark">
       <head>
-        {/* Structured Data - EducationalOrganization + AI Search Optimization */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(generateStructuredData('it')),
+            __html: JSON.stringify(generateStructuredData('en')),
           }}
         />
-        {/* AI Search Meta Tags */}
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="googlebot" content="index, follow" />
         <meta name="bingbot" content="index, follow" />
-        <link rel="canonical" href="https://tradelia.org" />
+        <link rel="canonical" href="https://tradelia.org/en" />
         <link rel="alternate" hrefLang="it" href="https://tradelia.org" />
         <link rel="alternate" hrefLang="en" href="https://tradelia.org/en" />
         <link rel="alternate" hrefLang="x-default" href="https://tradelia.org" />
       </head>
       <body className={inter.className}>
-        {/* Skip Link - Accessibility WCAG 2.4.1 */}
         <a
           href="#main-content"
           className="skip-link"

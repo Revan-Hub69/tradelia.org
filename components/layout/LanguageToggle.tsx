@@ -37,8 +37,6 @@ export function LanguageToggle() {
     }
     
     router.push(newPath);
-    // Force page reload to ensure locale context updates
-    setTimeout(() => window.location.reload(), 100);
   };
 
   return (

@@ -1,15 +1,18 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
+import { ChevronDown } from 'lucide-react';
 import {
   useReducedMotion,
   createContainerVariants,
   createItemVariants,
 } from '@/lib/animations';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { cn } from '@/lib/utils/cn';
 
 export function Footer() {
   const { t } = useTranslations();
@@ -17,6 +20,11 @@ export function Footer() {
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = createContainerVariants(prefersReducedMotion);
   const itemVariants = createItemVariants(prefersReducedMotion);
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    support: false,
+    legal: false,
+    resources: false,
+  });
 
   const footerLinks = {
     support: [
@@ -37,12 +45,105 @@ export function Footer() {
       { key: 'api', href: '/api' },
       { key: 'changelog', href: '/changelog' },
     ],
-    company: [
-      { key: 'about', href: '/about' },
-      { key: 'careers', href: '/careers' },
-      { key: 'press', href: '/press' },
-      { key: 'contact', href: '/contact' },
-    ],
+  };
+
+  const toggleSection = (section: string) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
+  const FooterSection = ({ 
+    title, 
+    links, 
+    sectionKey, 
+    delay 
+  }: { 
+    title: string; 
+    links: typeof footerLinks.support; 
+    sectionKey: string;
+    delay: number;
+  }) => {
+    const isExpanded = expandedSections[sectionKey];
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+    return (
+      <motion.div
+        variants={itemVariants}
+        transition={{ delay }}
+      >
+        {/* Desktop: Always visible */}
+        <div className="hidden md:block">
+          <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4 relative pb-2">
+            {title}
+            <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-primary" />
+          </h3>
+          <ul className="space-y-3">
+            {links.map((link) => (
+              <li key={link.key}>
+                <Link
+                  href={link.href}
+                  className="text-sm text-text-secondary hover:text-text-primary transition-smooth inline-flex items-center gap-2 group"
+                >
+                  <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-smooth group-hover:opacity-100 group-hover:scale-100" />
+                  <span className="relative">
+                    {t(`footer.${sectionKey}Links.${link.key}`)}
+                    <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-smooth group-hover:w-full" />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Mobile: Collapsible */}
+        <div className="md:hidden">
+          <button
+            onClick={() => toggleSection(sectionKey)}
+            className="w-full flex items-center justify-between py-3 text-xs font-bold text-text-primary uppercase tracking-widest"
+            aria-expanded={isExpanded}
+            aria-controls={`footer-${sectionKey}`}
+          >
+            <span>{title}</span>
+            <ChevronDown
+              className={cn(
+                'w-4 h-4 transition-transform duration-200',
+                isExpanded && 'rotate-180'
+              )}
+              aria-hidden="true"
+            />
+          </button>
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.ul
+                id={`footer-${sectionKey}`}
+                initial={prefersReducedMotion ? {} : { height: 0, opacity: 0 }}
+                animate={prefersReducedMotion ? {} : { height: 'auto', opacity: 1 }}
+                exit={prefersReducedMotion ? {} : { height: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden space-y-3 pb-4"
+              >
+                {links.map((link) => (
+                  <li key={link.key}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-text-secondary hover:text-text-primary transition-smooth inline-flex items-center gap-2 group pl-4"
+                    >
+                      <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-smooth group-hover:opacity-100 group-hover:scale-100" />
+                      <span className="relative">
+                        {t(`footer.${sectionKey}Links.${link.key}`)}
+                        <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-smooth group-hover:w-full" />
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </motion.ul>
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.div>
+    );
   };
 
   return (
@@ -60,7 +161,7 @@ export function Footer() {
         viewport={{ once: true, margin: '-50px' }}
         variants={containerVariants}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Left Column - Brand */}
           <motion.div
             variants={itemVariants}
@@ -84,122 +185,37 @@ export function Footer() {
               </div>
             </Link>
             <p className="text-sm text-text-muted leading-relaxed">
-              &copy; {year} Tradelia · progetto indipendente
+              &copy; {year} Tradelia · {t('footer.copyright')}
             </p>
             <p className="text-base text-text-secondary leading-relaxed max-w-md font-light">
-              Ricerca finanziaria aperta: framework AI, dataset e note metodologiche condivise per la community.
-              I servizi professionali sono opzionali e finanziano l’accesso gratuito.
+              {t('footer.description')}
             </p>
             <p className="text-xs text-text-muted leading-relaxed max-w-md opacity-90 font-light">
-              Solo materiale educativo. Nessuna consulenza o sollecitazione di investimento; rispettiamo MiFID II e le best practice etiche.
+              {t('footer.disclaimer')}
             </p>
           </motion.div>
 
-          {/* Support Column */}
-          <motion.div
-            variants={itemVariants}
-            transition={{ delay: 0.1 }}
-          >
-            <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4 relative pb-2">
-              {t('footer.support')}
-              <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-primary" />
-            </h3>
-            <ul className="space-y-3">
-              {footerLinks.support.map((link) => (
-                <li key={link.key}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-text-secondary hover:text-text-primary transition-smooth inline-flex items-center gap-2 group"
-                  >
-                    <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-smooth group-hover:opacity-100 group-hover:scale-100" />
-                    <span className="relative">
-                      {t(`footer.supportLinks.${link.key}`)}
-                      <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-smooth group-hover:w-full" />
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+          {/* Footer Sections */}
+          <FooterSection
+            title={t('footer.support')}
+            links={footerLinks.support}
+            sectionKey="support"
+            delay={0.1}
+          />
 
-          {/* Legal Column */}
-          <motion.div
-            variants={itemVariants}
-            transition={{ delay: 0.2 }}
-          >
-            <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4 relative pb-2">
-              {t('footer.legal')}
-              <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-primary" />
-            </h3>
-            <ul className="space-y-3">
-              {footerLinks.legal.map((link) => (
-                <li key={link.key}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-text-secondary hover:text-text-primary transition-smooth inline-flex items-center gap-2 group"
-                  >
-                    <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-smooth group-hover:opacity-100 group-hover:scale-100" />
-                    <span className="relative">
-                      {t(`footer.legalLinks.${link.key}`)}
-                      <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-smooth group-hover:w-full" />
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+          <FooterSection
+            title={t('footer.legal')}
+            links={footerLinks.legal}
+            sectionKey="legal"
+            delay={0.2}
+          />
 
-          {/* Resources & Company Column */}
-          <motion.div
-            variants={itemVariants}
-            transition={{ delay: 0.3 }}
-            className="space-y-8"
-          >
-            <div>
-              <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4 relative pb-2">
-                {t('footer.resources')}
-                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-primary" />
-              </h3>
-              <ul className="space-y-3">
-                {footerLinks.resources.map((link) => (
-                  <li key={link.key}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-text-secondary hover:text-text-primary transition-smooth inline-flex items-center gap-2 group"
-                    >
-                      <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-smooth group-hover:opacity-100 group-hover:scale-100" />
-                      <span className="relative">
-                        {t(`footer.resourcesLinks.${link.key}`)}
-                        <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-smooth group-hover:w-full" />
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4 relative pb-2">
-                {t('footer.company')}
-                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-primary" />
-              </h3>
-              <ul className="space-y-3">
-                {footerLinks.company.map((link) => (
-                  <li key={link.key}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-text-secondary hover:text-text-primary transition-smooth inline-flex items-center gap-2 group"
-                    >
-                      <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-smooth group-hover:opacity-100 group-hover:scale-100" />
-                      <span className="relative">
-                        {t(`footer.companyLinks.${link.key}`)}
-                        <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-smooth group-hover:w-full" />
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
+          <FooterSection
+            title={t('footer.resources')}
+            links={footerLinks.resources}
+            sectionKey="resources"
+            delay={0.3}
+          />
         </div>
 
         {/* Bottom Bar */}
