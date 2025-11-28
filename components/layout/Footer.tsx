@@ -83,9 +83,12 @@ export function Footer() {
               <li key={link.key}>
                 <Link
                   href={link.href}
-                  className="text-sm text-text-secondary hover:text-text-primary transition-colors duration-200 inline-block"
+                  className="text-sm text-text-secondary hover:text-text-primary hover:translate-x-1 transition-all duration-200 inline-block group relative"
                 >
-                  {t(`footer.${sectionKey}Links.${link.key}`)}
+                  <span className="relative">
+                    {t(`footer.${sectionKey}Links.${link.key}`)}
+                    <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-accent transition-all duration-200 group-hover:w-full" />
+                  </span>
                 </Link>
               </li>
             ))}
@@ -123,10 +126,13 @@ export function Footer() {
                   <li key={link.key}>
                     <Link
                       href={link.href}
-                      className="text-sm text-text-secondary hover:text-text-primary transition-colors duration-200 block pl-2"
+                      className="text-sm text-text-secondary hover:text-text-primary hover:translate-x-1 transition-all duration-200 block pl-2 group relative"
                       onClick={() => toggleSection(sectionKey)}
                     >
-                      {t(`footer.${sectionKey}Links.${link.key}`)}
+                      <span className="relative">
+                        {t(`footer.${sectionKey}Links.${link.key}`)}
+                        <span className="absolute -bottom-0.5 left-2 w-0 h-px bg-accent transition-all duration-200 group-hover:w-[calc(100%-0.5rem)]" />
+                      </span>
                     </Link>
                   </li>
                 ))}
@@ -160,7 +166,7 @@ export function Footer() {
             >
               <Link
                 href="/"
-                className="inline-block group transition-smooth hover:-translate-y-0.5 w-fit mb-2"
+                className="inline-block group transition-all duration-300 hover:-translate-y-0.5 w-fit mb-2"
                 aria-label="Tradelia AI - Home"
               >
                 <div className="relative">
@@ -169,19 +175,19 @@ export function Footer() {
                     alt="Tradelia AI"
                     width={200}
                     height={50}
-                    className="h-9 w-auto brightness-95 drop-shadow-[0_0_10px_rgba(88,166,255,0.2)] transition-smooth group-hover:brightness-100 group-hover:drop-shadow-[0_0_15px_rgba(88,166,255,0.4)] group-hover:scale-105"
+                    className="h-9 w-auto brightness-95 drop-shadow-[0_0_10px_rgba(59,130,246,0.2)] transition-all duration-300 group-hover:brightness-100 group-hover:drop-shadow-[0_0_15px_rgba(59,130,246,0.4)] group-hover:scale-105"
                     loading="lazy"
                   />
-                  <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-primary transition-all duration-300 group-hover:w-full" />
+                  <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-accent to-accent-hover transition-all duration-300 group-hover:w-full" />
                 </div>
               </Link>
               <p className="text-sm text-text-muted leading-relaxed">
                 &copy; {year} Tradelia · {t('footer.copyright')}
               </p>
-              <p className="text-sm text-text-secondary leading-relaxed max-w-sm">
+              <p className="text-sm text-text-secondary leading-relaxed max-w-sm transition-colors duration-200">
                 {t('footer.description')}
               </p>
-              <p className="text-xs text-text-muted leading-relaxed max-w-sm mt-2">
+              <p className="text-xs text-text-muted leading-relaxed max-w-sm mt-2 opacity-90">
                 {t('footer.disclaimer')}
               </p>
             </motion.div>
@@ -217,7 +223,7 @@ export function Footer() {
           >
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-muted">
               <div className="flex items-center gap-3">
-                <Badge variant="outline" className="text-xs font-medium">
+                <Badge variant="outline" className="text-xs font-medium hover:border-accent hover:text-accent transition-all duration-200">
                   v2.0.1
                 </Badge>
                 <span className="opacity-50">·</span>
@@ -226,21 +232,21 @@ export function Footer() {
               <nav className="flex items-center gap-4" aria-label="Legal links">
                 <Link
                   href="/privacy"
-                  className="hover:text-text-primary transition-colors duration-200"
+                  className="hover:text-text-primary hover:scale-105 transition-all duration-200 inline-block"
                 >
                   {t('footer.legalLinks.privacy')}
                 </Link>
                 <span className="opacity-50">·</span>
                 <Link
                   href="/terms"
-                  className="hover:text-text-primary transition-colors duration-200"
+                  className="hover:text-text-primary hover:scale-105 transition-all duration-200 inline-block"
                 >
                   {t('footer.legalLinks.terms')}
                 </Link>
                 <span className="opacity-50">·</span>
                 <Link
                   href="/cookie"
-                  className="hover:text-text-primary transition-colors duration-200"
+                  className="hover:text-text-primary hover:scale-105 transition-all duration-200 inline-block"
                 >
                   {t('footer.legalLinks.cookie')}
                 </Link>
