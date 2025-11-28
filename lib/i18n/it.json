@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "education": "Formazione",
+    "about": "Chi Siamo",
+    "contact": "Contatti"
+  },
+  "footer": {
+    "support": "Supporto",
+    "legal": "Legale",
+    "resources": "Risorse",
+    "company": "Azienda",
+    "supportLinks": {
+      "support": "Supporto",
+      "status": "Status",
+      "documentation": "Documentazione",
+      "faq": "FAQ"
+    },
+    "legalLinks": {
+      "mifid": "MiFID II",
+      "privacy": "Privacy",
+      "cookie": "Cookie",
+      "terms": "Termini e Condizioni"
+    },
+    "resourcesLinks": {
+      "blog": "Blog",
+      "guides": "Guide",
+      "api": "API",
+      "changelog": "Changelog"
+    },
+    "companyLinks": {
+      "about": "Chi Siamo",
+      "careers": "Carriere",
+      "press": "Stampa",
+      "contact": "Contatti"
+    },
+    "description": "Formazione finanziaria gratuita basata su framework AI proprietari verificabili. Materiale conforme agli standard accademici internazionali e alle normative MiFID II.",
+    "disclaimer": "Le informazioni fornite sono a scopo educativo e non costituiscono consulenza finanziaria.",
+    "copyright": "Tutti i diritti riservati"
+  },
+  "seo": {
+    "title": "Tradelia AI · Formazione Finanziaria Gratuita",
+    "description": "Formazione finanziaria gratuita basata su framework AI proprietari verificabili. Percorsi formativi completi, materiale didattico conforme agli standard accademici internazionali e alle normative MiFID II.",
+    "keywords": "formazione finanziaria, educazione finanziaria, framework AI, MiFID II, analisi mercati, trading education"
+  }
+}

@@ -7,14 +7,28 @@ import { Badge } from '@/components/ui/badge';
 
 const footerLinks = {
   support: [
-    { label: 'Supporto', href: '#support' },
-    { label: 'Status', href: '#status' },
+    { label: 'Supporto', href: '/support', key: 'support' },
+    { label: 'Status', href: '/status', key: 'status' },
+    { label: 'Documentazione', href: '/docs', key: 'docs' },
+    { label: 'FAQ', href: '/faq', key: 'faq' },
   ],
   legal: [
-    { label: 'MiFID', href: '#mifid' },
-    { label: 'Privacy', href: '#privacy' },
-    { label: 'Cookie', href: '#cookie' },
-    { label: 'Termini', href: '#terms' },
+    { label: 'MiFID II', href: '/mifid', key: 'mifid' },
+    { label: 'Privacy', href: '/privacy', key: 'privacy' },
+    { label: 'Cookie', href: '/cookie', key: 'cookie' },
+    { label: 'Termini e Condizioni', href: '/terms', key: 'terms' },
+  ],
+  resources: [
+    { label: 'Blog', href: '/blog', key: 'blog' },
+    { label: 'Guide', href: '/guides', key: 'guides' },
+    { label: 'API', href: '/api', key: 'api' },
+    { label: 'Changelog', href: '/changelog', key: 'changelog' },
+  ],
+  company: [
+    { label: 'Chi Siamo', href: '/about', key: 'about' },
+    { label: 'Carriere', href: '/careers', key: 'careers' },
+    { label: 'Stampa', href: '/press', key: 'press' },
+    { label: 'Contatti', href: '/contact', key: 'contact' },
   ],
 };
 
@@ -22,7 +36,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative border-t border-border bg-bg-soft overflow-hidden">
+    <footer className="relative border-t border-border bg-bg-soft overflow-hidden" role="contentinfo">
       {/* Subtle pattern */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_40px,rgba(255,255,255,0.008)_40px,rgba(255,255,255,0.008)_41px)]" />
@@ -32,18 +46,19 @@ export function Footer() {
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-primary opacity-30" />
 
       <div className="relative z-10 container py-16 px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
-          {/* Left Column */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
+          {/* Left Column - Brand */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="flex flex-col gap-6"
+            className="lg:col-span-2 flex flex-col gap-6"
           >
             <Link
               href="/"
               className="inline-block group transition-transform duration-300 hover:-translate-y-0.5"
+              aria-label="Tradelia AI - Home"
             >
               <div className="relative">
                 <Image
@@ -56,7 +71,7 @@ export function Footer() {
                 <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-primary transition-all duration-300 group-hover:w-full" />
               </div>
             </Link>
-            <p className="text-sm text-text-muted leading-relaxed max-w-md">
+            <p className="text-sm text-text-muted leading-relaxed">
               &copy; {year} Tradelia AI · Tutti i diritti riservati
             </p>
             <p className="text-base text-text-secondary leading-relaxed max-w-md font-light">
@@ -68,69 +83,157 @@ export function Footer() {
             </p>
           </motion.div>
 
-          {/* Right Column */}
+          {/* Support Column */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="flex flex-col gap-8"
           >
-            <nav className="grid grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4 relative pb-2">
-                  Supporto
-                  <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-primary" />
-                </h3>
-                <ul className="space-y-3">
-                  {footerLinks.support.map((link) => (
-                    <li key={link.label}>
-                      <Link
-                        href={link.href}
-                        className="text-sm text-text-secondary hover:text-text-primary transition-all duration-300 inline-flex items-center gap-2 group"
-                      >
-                        <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
-                        <span className="relative">
-                          {link.label}
-                          <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-all duration-300 group-hover:w-full" />
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4 relative pb-2">
-                  Legale
-                  <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-primary" />
-                </h3>
-                <ul className="space-y-3">
-                  {footerLinks.legal.map((link) => (
-                    <li key={link.label}>
-                      <Link
-                        href={link.href}
-                        className="text-sm text-text-secondary hover:text-text-primary transition-all duration-300 inline-flex items-center gap-2 group"
-                      >
-                        <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
-                        <span className="relative">
-                          {link.label}
-                          <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-all duration-300 group-hover:w-full" />
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </nav>
-            <div className="flex items-center gap-2 text-xs text-text-muted font-medium">
-              <Badge variant="outline" className="text-xs">
-                v2.0.1
-              </Badge>
-              <span className="opacity-40">·</span>
-              <span>{new Date().toISOString().split('T')[0]}</span>
+            <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4 relative pb-2">
+              Supporto
+              <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-primary" />
+            </h3>
+            <ul className="space-y-3">
+              {footerLinks.support.map((link) => (
+                <li key={link.key}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-text-secondary hover:text-text-primary transition-all duration-300 inline-flex items-center gap-2 group"
+                  >
+                    <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
+                    <span className="relative">
+                      {link.label}
+                      <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-all duration-300 group-hover:w-full" />
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* Legal Column */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4 relative pb-2">
+              Legale
+              <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-primary" />
+            </h3>
+            <ul className="space-y-3">
+              {footerLinks.legal.map((link) => (
+                <li key={link.key}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-text-secondary hover:text-text-primary transition-all duration-300 inline-flex items-center gap-2 group"
+                  >
+                    <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
+                    <span className="relative">
+                      {link.label}
+                      <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-all duration-300 group-hover:w-full" />
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* Resources & Company Column */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="space-y-8"
+          >
+            <div>
+              <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4 relative pb-2">
+                Risorse
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-primary" />
+              </h3>
+              <ul className="space-y-3">
+                {footerLinks.resources.map((link) => (
+                  <li key={link.key}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-text-secondary hover:text-text-primary transition-all duration-300 inline-flex items-center gap-2 group"
+                    >
+                      <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
+                      <span className="relative">
+                        {link.label}
+                        <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-all duration-300 group-hover:w-full" />
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-xs font-bold text-text-primary uppercase tracking-widest mb-4 relative pb-2">
+                Azienda
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gradient-primary" />
+              </h3>
+              <ul className="space-y-3">
+                {footerLinks.company.map((link) => (
+                  <li key={link.key}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-text-secondary hover:text-text-primary transition-all duration-300 inline-flex items-center gap-2 group"
+                    >
+                      <span className="w-1 h-1 rounded-full bg-accent opacity-0 scale-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
+                      <span className="relative">
+                        {link.label}
+                        <span className="absolute bottom-0 left-0 w-0 h-px bg-gradient-primary transition-all duration-300 group-hover:w-full" />
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           </motion.div>
         </div>
+
+        {/* Bottom Bar */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-muted"
+        >
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-xs">
+              v2.0.1
+            </Badge>
+            <span className="opacity-40">·</span>
+            <span>{new Date().toISOString().split('T')[0]}</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/privacy"
+              className="hover:text-text-primary transition-colors duration-300"
+            >
+              Privacy
+            </Link>
+            <span className="opacity-40">·</span>
+            <Link
+              href="/terms"
+              className="hover:text-text-primary transition-colors duration-300"
+            >
+              Termini
+            </Link>
+            <span className="opacity-40">·</span>
+            <Link
+              href="/cookie"
+              className="hover:text-text-primary transition-colors duration-300"
+            >
+              Cookie
+            </Link>
+          </div>
+        </motion.div>
       </div>
     </footer>
   );

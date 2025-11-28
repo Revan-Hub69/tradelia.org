@@ -3,8 +3,9 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { LayoutDashboard } from 'lucide-react';
+import { Navigation } from './Navigation';
 import { Button } from '@/components/ui/button';
+import { LayoutDashboard } from 'lucide-react';
 
 export function Header() {
   return (
@@ -18,6 +19,7 @@ export function Header() {
         <Link
           href="/"
           className="flex items-center gap-3 group transition-transform duration-300 hover:-translate-y-0.5"
+          aria-label="Tradelia AI - Home"
         >
           <div className="relative">
             <Image
@@ -32,14 +34,15 @@ export function Header() {
           </div>
         </Link>
 
-        <nav className="flex items-center gap-4">
+        <div className="flex items-center gap-4">
+          <Navigation />
           <Button asChild variant="secondary" size="sm" className="group">
-            <Link href="/dashboard">
+            <Link href="/dashboard" aria-label="Vai alla Dashboard">
               <LayoutDashboard className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" />
               <span className="hidden sm:inline">Dashboard</span>
             </Link>
           </Button>
-        </nav>
+        </div>
       </div>
     </motion.header>
   );

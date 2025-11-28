@@ -3,10 +3,16 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { generateMetadata as genMetadata, generateStructuredData } from '@/lib/seo/metadata';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true,
+  variable: '--font-inter',
+});
 
-export const metadata: Metadata = {
+export const metadata: Metadata = genMetadata('it');
   metadataBase: new URL('https://tradelia.org'),
   title: {
     default: 'Tradelia AI · Formazione Finanziaria Gratuita',
@@ -110,35 +116,21 @@ export default function RootLayout({
   return (
     <html lang="it" data-theme="dark">
       <head>
-        {/* Structured Data - EducationalOrganization */}
+        {/* Structured Data - EducationalOrganization + AI Search Optimization */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'EducationalOrganization',
-              name: 'Tradelia AI',
-              url: 'https://tradelia.org',
-              description:
-                'Formazione finanziaria gratuita basata su framework AI proprietari verificabili',
-              educationalCredentialAwarded: 'Certificate',
-              hasOfferCatalog: {
-                '@type': 'OfferCatalog',
-                name: 'Percorsi Formativi',
-                itemListElement: [
-                  {
-                    '@type': 'Offer',
-                    itemOffered: {
-                      '@type': 'Course',
-                      name: 'Formazione Finanziaria',
-                      description: 'Percorsi formativi completi sui mercati finanziari',
-                    },
-                  },
-                ],
-              },
-            }),
+            __html: JSON.stringify(generateStructuredData('it')),
           }}
         />
+        {/* AI Search Meta Tags */}
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta name="googlebot" content="index, follow" />
+        <meta name="bingbot" content="index, follow" />
+        <link rel="canonical" href="https://tradelia.org" />
+        <link rel="alternate" hrefLang="it" href="https://tradelia.org" />
+        <link rel="alternate" hrefLang="en" href="https://tradelia.org/en" />
+        <link rel="alternate" hrefLang="x-default" href="https://tradelia.org" />
       </head>
       <body className={inter.className}>
         <div className="min-h-screen flex flex-col">

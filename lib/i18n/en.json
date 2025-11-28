@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "education": "Education",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "footer": {
+    "support": "Support",
+    "legal": "Legal",
+    "resources": "Resources",
+    "company": "Company",
+    "supportLinks": {
+      "support": "Support",
+      "status": "Status",
+      "documentation": "Documentation",
+      "faq": "FAQ"
+    },
+    "legalLinks": {
+      "mifid": "MiFID II",
+      "privacy": "Privacy",
+      "cookie": "Cookies",
+      "terms": "Terms & Conditions"
+    },
+    "resourcesLinks": {
+      "blog": "Blog",
+      "guides": "Guides",
+      "api": "API",
+      "changelog": "Changelog"
+    },
+    "companyLinks": {
+      "about": "About",
+      "careers": "Careers",
+      "press": "Press",
+      "contact": "Contact"
+    },
+    "description": "Free financial education based on verifiable proprietary AI frameworks. Material compliant with international academic standards and MiFID II regulations.",
+    "disclaimer": "The information provided is for educational purposes and does not constitute financial advice.",
+    "copyright": "All rights reserved"
+  },
+  "seo": {
+    "title": "Tradelia AI · Free Financial Education",
+    "description": "Free financial education based on verifiable proprietary AI frameworks. Complete training paths, educational material compliant with international academic standards and MiFID II regulations.",
+    "keywords": "financial education, financial training, AI frameworks, MiFID II, market analysis, trading education"
+  }
+}
