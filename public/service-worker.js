@@ -16,7 +16,26 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(
+    // Prima elimina le cache vecchie
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames
+          .filter((cacheName) => cacheName !== 'tradelia-cache-v1')
+          .map((cacheName) => caches.delete(cacheName))
+      );
+    }).then(() => {
+      // Dopo aver pulito le cache, prova a claim clients solo se il service worker è attivo
+      // clients.claim() è opzionale e può essere omesso se non necessario
+      if (self.registration.active) {
+        return self.clients.claim().catch((error) => {
+          // Se claim fallisce (es. service worker non ancora attivo), ignora l'errore
+          // Il service worker funzionerà comunque, solo che non controllerà immediatamente i client
+          console.warn('Could not claim clients (this is normal on first install):', error);
+        });
+      }
+    })
+  );
 });
 
 self.addEventListener('fetch', (event) => {
