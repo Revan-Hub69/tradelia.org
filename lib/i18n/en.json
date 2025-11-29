@@ -293,6 +293,7 @@
     "countryHint": "Helps personalize content and regulations. 2-letter ISO code (e.g.: IT, FR, DE, US)",
     "notifications": "I would like to receive updates on new research, educational content, and platform improvements.",
     "submit": "Start exploring",
+    "skip": "Skip",
     "saving": "Saving…",
     "loading": "Checking profile…",
     "footer": "Information is processed according to GDPR and MiFID II regulations. We do not share your data with third parties.",

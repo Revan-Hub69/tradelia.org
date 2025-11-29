@@ -104,12 +104,12 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const completeOnboarding = async (skip: boolean = false) => {
     setError(null);
     setValidationErrors({});
 
-    // Validazione client-side
-    if (!validateForm()) {
+    // Se non è skip, valida il form
+    if (!skip && !validateForm()) {
       return;
     }
 
@@ -130,9 +130,9 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
         },
         body: JSON.stringify({
           userId: session.user.id,
-          country: formState.country.trim() ? formState.country.toUpperCase().trim() : null,
+          country: skip ? null : (formState.country.trim() ? formState.country.toUpperCase().trim() : null),
           role: 'trial',
-          acceptsResearch: formState.acceptsResearch,
+          acceptsResearch: skip ? true : formState.acceptsResearch, // Default true se skip
         }),
       });
 
@@ -144,6 +144,14 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
 
       setNeedsOnboarding(false);
     });
+  };
+
+  const handleSubmit = () => {
+    void completeOnboarding(false);
+  };
+
+  const handleSkip = () => {
+    void completeOnboarding(true);
   };
 
   if (loading) {
@@ -272,27 +280,41 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
           )}
 
           {/* Submit button */}
-          <button
-            type="submit"
-            disabled={isPending || Object.keys(validationErrors).length > 0}
-            className={cn(
-              'w-full rounded-2xl bg-accent hover:bg-accent-hover text-white font-semibold py-3.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-h-[44px]',
-              isPending && 'opacity-70'
-            )}
-            aria-label={t('onboarding.submit')}
-          >
-            {isPending ? (
-              <>
-                <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" aria-hidden="true" />
-                <span>{t('onboarding.saving')}</span>
-              </>
-            ) : (
-              <>
-                <BookOpen className="w-4 h-4" aria-hidden="true" />
-                <span>{t('onboarding.submit')}</span>
-              </>
-            )}
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              type="submit"
+              disabled={isPending || Object.keys(validationErrors).length > 0}
+              className={cn(
+                'flex-1 rounded-2xl bg-accent hover:bg-accent-hover text-white font-semibold py-3.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-h-[44px]',
+                isPending && 'opacity-70'
+              )}
+              aria-label={t('onboarding.submit')}
+            >
+              {isPending ? (
+                <>
+                  <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" aria-hidden="true" />
+                  <span>{t('onboarding.saving')}</span>
+                </>
+              ) : (
+                <>
+                  <BookOpen className="w-4 h-4" aria-hidden="true" />
+                  <span>{t('onboarding.submit')}</span>
+                </>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={handleSkip}
+              disabled={isPending}
+              className={cn(
+                'flex-1 rounded-2xl border border-border-subtle bg-bg-soft hover:bg-bg-surface text-text-secondary font-semibold py-3.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-h-[44px]',
+                isPending && 'opacity-70'
+              )}
+              aria-label={t('onboarding.skip')}
+            >
+              {t('onboarding.skip')}
+            </button>
+          </div>
         </form>
 
         {/* Footer note */}
