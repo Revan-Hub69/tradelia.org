@@ -22,21 +22,37 @@ export function NotificationBell() {
   useEffect(() => {
     const loadUnreadCount = async () => {
       try {
-        const res = await fetch('/api/notifications/list?limit=1&unreadOnly=true');
-        const data = await res.json();
-        if (res.ok) {
-          setUnreadCount(data.unreadCount || 0);
+        const res = await fetch('/api/notifications/list?limit=1&unreadOnly=true', {
+          credentials: 'include', // Include cookies per la sessione
+        });
+        
+        // Se 401, l'utente non è autenticato - non fare nulla, evita redirect
+        if (res.status === 401) {
+          setUnreadCount(0);
+          return;
         }
+        
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const data = await res.json();
+        setUnreadCount(data.unreadCount || 0);
       } catch (err) {
+        // Ignora errori silenziosamente per non interrompere l'esperienza utente
         console.error('Errore caricamento conteggio notifiche:', err);
+        setUnreadCount(0);
       }
     };
 
-    loadUnreadCount();
-    // Polling ogni 30 secondi
-    const interval = setInterval(loadUnreadCount, 30000);
-    return () => clearInterval(interval);
-  }, []);
+    // Solo se siamo nella dashboard
+    if (isDashboard) {
+      loadUnreadCount();
+      // Polling ogni 30 secondi
+      const interval = setInterval(loadUnreadCount, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [isDashboard]);
 
   const hasActiveSubscription = !!subscription;
   const showBadge = unreadCount > 0;
