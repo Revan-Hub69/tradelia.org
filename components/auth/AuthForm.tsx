@@ -308,14 +308,14 @@ export function AuthForm() {
     });
   };
 
-  const strengthColors = {
+  const strengthColors: Record<string, string> = {
     weak: 'bg-red-500',
     fair: 'bg-yellow-500',
     good: 'bg-blue-500',
     strong: 'bg-green-500',
   };
 
-  const strengthLabels = {
+  const strengthLabels: Record<string, string> = {
     weak: t('auth.form.passwordStrength.weak'),
     fair: t('auth.form.passwordStrength.fair'),
     good: t('auth.form.passwordStrength.good'),
