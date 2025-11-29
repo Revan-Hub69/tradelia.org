@@ -2,7 +2,7 @@ import { DashboardHero } from './DashboardHero';
 import { OverviewStats } from './OverviewStats';
 import { ModuleGrid } from './ModuleGrid';
 import styles from './dashboard.module.css';
-import { OnboardingGate } from './onboarding/OnboardingGate';
+import { OnboardingGate } from '@/app/dashboard/onboarding/OnboardingGate';
 
 export function DashboardShell() {
   return (
