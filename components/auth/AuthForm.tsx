@@ -255,17 +255,34 @@ export function AuthForm() {
           return;
         }
 
-        // Verifica che la sessione sia disponibile prima di reindirizzare
+        // Verifica che la sessione sia disponibile
         if (data?.session) {
-          // Aspetta un momento per assicurarsi che i cookie siano salvati
-          await new Promise((resolve) => setTimeout(resolve, 100));
-          
-          // Verifica nuovamente la sessione
-          const { data: { session: verifiedSession } } = await supabase.auth.getSession();
-          
-          if (verifiedSession) {
-            // Forza un reload completo per assicurarsi che la sessione sia disponibile lato server
+          // Sincronizza la sessione lato server chiamando l'API route
+          try {
+            const syncResponse = await fetch('/api/auth/sync-session', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                access_token: data.session.access_token,
+                refresh_token: data.session.refresh_token,
+              }),
+            });
+
+            if (!syncResponse.ok) {
+              throw new Error('Failed to sync session');
+            }
+
+            // Attendi un momento per assicurarsi che i cookie siano impostati
+            await new Promise((resolve) => setTimeout(resolve, 200));
+            
+            // Reindirizza alla dashboard
             window.location.href = '/dashboard';
+            return;
+          } catch (syncError) {
+            console.error('Error syncing session:', syncError);
+            setError('Errore durante la sincronizzazione della sessione. Riprova.');
             return;
           }
         }
