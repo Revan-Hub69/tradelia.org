@@ -132,28 +132,29 @@ export async function POST(request: NextRequest) {
           pushResults.push({ endpoint: subscription.endpoint, status: 'sent' });
         } catch (error) {
           console.error('Errore invio push:', error);
+          
+          // Estrai la subscription per usarla nel catch
+          const subscription = sub.subscription as {
+            endpoint: string;
+            keys: {
+              p256dh: string;
+              auth: string;
+            };
+          } | null;
+          
           pushResults.push({
-            endpoint: sub.subscription?.endpoint || 'unknown',
+            endpoint: subscription?.endpoint || 'unknown',
             status: 'error',
             error: error instanceof Error ? error.message : 'Errore sconosciuto',
           });
 
           // Se la subscription è invalida, rimuovila
-          if (error instanceof Error && error.message.includes('410')) {
-            const subscription = sub.subscription as {
-              endpoint: string;
-              keys: {
-                p256dh: string;
-                auth: string;
-              };
-            } | null;
-            if (subscription?.endpoint) {
-              await supabaseAdmin
-                .from('push_subscriptions')
-                .delete()
-                .eq('user_id', targetUserId)
-                .eq('endpoint', subscription.endpoint);
-            }
+          if (error instanceof Error && error.message.includes('410') && subscription?.endpoint) {
+            await supabaseAdmin
+              .from('push_subscriptions')
+              .delete()
+              .eq('user_id', targetUserId)
+              .eq('endpoint', subscription.endpoint);
           }
         }
       }
