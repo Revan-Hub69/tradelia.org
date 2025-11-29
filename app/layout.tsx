@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { UnregisterServiceWorker } from './unregister-sw';
 import { generateStructuredData, generateMetadata as genMetadata } from '@/lib/seo/metadata';
