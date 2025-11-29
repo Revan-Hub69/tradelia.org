@@ -1,0 +1,72 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
+
+export async function GET(request: NextRequest) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return NextResponse.json({ error: 'Non autorizzato' }, { status: 401 });
+  }
+
+  const { searchParams } = new URL(request.url);
+  const limit = Number(searchParams.get('limit') ?? 20);
+  const page = Number(searchParams.get('page') ?? 1);
+  const offset = (page - 1) * limit;
+
+  const { data, error } = await supabase
+    .from('invoices')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('issued_at', { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ data });
+}
+
+export async function POST(request: NextRequest) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return NextResponse.json({ error: 'Non autorizzato' }, { status: 401 });
+  }
+
+  const body = await request.json();
+  const { payment_id, amount, currency, status, due_date, metadata } = body;
+
+  if (!payment_id || typeof amount !== 'number' || !currency) {
+    return NextResponse.json({ error: 'Dati non validi' }, { status: 400 });
+  }
+
+  const { data, error } = await supabaseAdmin
+    .from('invoices')
+    .insert({
+      user_id: user.id,
+      payment_id,
+      amount,
+      currency,
+      status: status ?? 'draft',
+      due_date: due_date ?? null,
+      metadata: metadata ?? {},
+    })
+    .select('*')
+    .single();
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ data });
+}
