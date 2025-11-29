@@ -239,8 +239,8 @@ export function AuthForm() {
         }
 
         // Verifica riuscita - reindirizza alla dashboard
-        router.replace('/dashboard');
-        router.refresh();
+        // Forza un reload completo per assicurarsi che la sessione sia disponibile
+        window.location.href = '/dashboard';
         return;
       }
 
@@ -255,8 +255,8 @@ export function AuthForm() {
           return;
         }
 
-        router.replace('/dashboard');
-        router.refresh();
+        // Forza un reload completo per assicurarsi che la sessione sia disponibile
+        window.location.href = '/dashboard';
         return;
       }
 
