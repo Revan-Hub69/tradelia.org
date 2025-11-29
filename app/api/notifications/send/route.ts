@@ -140,11 +140,20 @@ export async function POST(request: NextRequest) {
 
           // Se la subscription è invalida, rimuovila
           if (error instanceof Error && error.message.includes('410')) {
-            await supabaseAdmin
-              .from('push_subscriptions')
-              .delete()
-              .eq('user_id', targetUserId)
-              .eq('endpoint', subscription.endpoint);
+            const subscription = sub.subscription as {
+              endpoint: string;
+              keys: {
+                p256dh: string;
+                auth: string;
+              };
+            } | null;
+            if (subscription?.endpoint) {
+              await supabaseAdmin
+                .from('push_subscriptions')
+                .delete()
+                .eq('user_id', targetUserId)
+                .eq('endpoint', subscription.endpoint);
+            }
           }
         }
       }
