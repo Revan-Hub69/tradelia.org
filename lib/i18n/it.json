@@ -298,6 +298,14 @@
     "submit": "Inizia l'esplorazione",
     "saving": "Salvataggio in corso…",
     "loading": "Verifica profilo…",
-    "footer": "Le informazioni sono trattate secondo le normative GDPR e MiFID II. Non condividiamo i tuoi dati con terze parti."
+    "footer": "Le informazioni sono trattate secondo le normative GDPR e MiFID II. Non condividiamo i tuoi dati con terze parti.",
+    "errors": {
+      "companyRequired": "L'affiliazione è richiesta.",
+      "companyTooLong": "L'affiliazione non può superare i 100 caratteri.",
+      "countryRequired": "Il paese è richiesto.",
+      "countryInvalid": "Inserisci un codice paese valido a 2 lettere (es: IT, FR, DE, US).",
+      "invalidSession": "Sessione non valida. Ricarica la pagina e riprova.",
+      "saveFailed": "Impossibile salvare i dati. Riprova più tardi."
+    }
   }
 }

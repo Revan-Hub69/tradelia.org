@@ -23,6 +23,15 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
   });
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [validationErrors, setValidationErrors] = useState<{
+    company?: string;
+    country?: string;
+  }>({});
+
+  // Validazione formato paese ISO 2 lettere
+  const validateCountry = (country: string): boolean => {
+    return /^[A-Z]{2}$/.test(country.toUpperCase());
+  };
 
   useEffect(() => {
     async function loadProfile() {
@@ -71,19 +80,63 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
   const handleChange = (field: string) => (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const value = event.target.type === 'checkbox' ? (event.target as HTMLInputElement).checked : event.target.value;
+    let value: string | boolean = event.target.type === 'checkbox' 
+      ? (event.target as HTMLInputElement).checked 
+      : event.target.value;
+
+    // Converti il paese in maiuscolo e limita a 2 caratteri
+    if (field === 'country' && typeof value === 'string') {
+      value = value.toUpperCase().slice(0, 2);
+      // Rimuovi errori di validazione quando l'utente inizia a digitare
+      if (validationErrors.country) {
+        setValidationErrors((prev) => ({ ...prev, country: undefined }));
+      }
+    }
+
+    // Rimuovi errori di validazione quando l'utente inizia a digitare
+    if (field === 'company' && validationErrors.company) {
+      setValidationErrors((prev) => ({ ...prev, company: undefined }));
+    }
+
     setFormState((prev) => ({ ...prev, [field]: value }));
+    setError(null);
+  };
+
+  const validateForm = (): boolean => {
+    const errors: { company?: string; country?: string } = {};
+
+    if (!formState.company.trim()) {
+      errors.company = t('onboarding.errors.companyRequired');
+    } else if (formState.company.trim().length > 100) {
+      errors.company = t('onboarding.errors.companyTooLong');
+    }
+
+    if (!formState.country.trim()) {
+      errors.country = t('onboarding.errors.countryRequired');
+    } else if (!validateCountry(formState.country)) {
+      errors.country = t('onboarding.errors.countryInvalid');
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = () => {
     setError(null);
+    setValidationErrors({});
+
+    // Validazione client-side
+    if (!validateForm()) {
+      return;
+    }
+
     startTransition(async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
 
       if (!session?.user?.id) {
-        setError('Sessione non valida.');
+        setError(t('onboarding.errors.invalidSession'));
         return;
       }
 
@@ -94,13 +147,16 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
         },
         body: JSON.stringify({
           userId: session.user.id,
-          ...formState,
+          company: formState.company.trim(),
+          country: formState.country.toUpperCase().trim(),
+          role: formState.role,
+          acceptsResearch: formState.acceptsResearch,
         }),
       });
 
       if (!response.ok) {
         const payload = await response.json();
-        setError(payload.error ?? 'Impossibile completare l’onboarding');
+        setError(payload.error ?? t('onboarding.errors.saveFailed'));
         return;
       }
 
@@ -149,42 +205,96 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
         </div>
 
         {/* Form */}
-        <div className="space-y-6 mb-8">
+        <form
+          id="onboarding-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+          noValidate
+          className="space-y-6 mb-8"
+        >
           <div className="flex flex-col gap-2">
-            <label className="text-xs uppercase tracking-[0.3em] text-text-tertiary flex items-center gap-2">
-              <User className="w-4 h-4" />
+            <label
+              htmlFor="onboarding-company"
+              className="text-xs uppercase tracking-[0.3em] text-text-tertiary flex items-center gap-2"
+            >
+              <User className="w-4 h-4" aria-hidden="true" />
               {t('onboarding.affiliation')}
             </label>
             <input
+              id="onboarding-company"
               type="text"
               value={formState.company}
               onChange={handleChange('company')}
-              className="rounded-2xl bg-bg-soft border border-border-subtle px-4 py-3 text-sm text-text-primary focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/30 transition-all"
+              className={cn(
+                'rounded-2xl bg-bg-soft border px-4 py-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent/30 transition-all min-h-[44px]',
+                validationErrors.company
+                  ? 'border-red-400/40 focus:border-red-400'
+                  : 'border-border-subtle focus:border-accent'
+              )}
               placeholder={t('onboarding.affiliationPlaceholder')}
               disabled={isPending}
+              autoComplete="organization"
+              aria-required="true"
+              aria-invalid={validationErrors.company ? 'true' : 'false'}
+              aria-describedby="onboarding-company-hint onboarding-company-error"
+              maxLength={100}
             />
-            <p className="text-xs text-text-tertiary mt-1">
+            <p id="onboarding-company-hint" className="text-xs text-text-tertiary mt-1">
               {t('onboarding.affiliationHint')}
             </p>
+            {validationErrors.company && (
+              <p
+                id="onboarding-company-error"
+                role="alert"
+                className="text-xs text-red-400 mt-1"
+              >
+                {validationErrors.company}
+              </p>
+            )}
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="text-xs uppercase tracking-[0.3em] text-text-tertiary flex items-center gap-2">
-              <MapPin className="w-4 h-4" />
+            <label
+              htmlFor="onboarding-country"
+              className="text-xs uppercase tracking-[0.3em] text-text-tertiary flex items-center gap-2"
+            >
+              <MapPin className="w-4 h-4" aria-hidden="true" />
               {t('onboarding.country')}
             </label>
             <input
+              id="onboarding-country"
               type="text"
               value={formState.country}
               onChange={handleChange('country')}
-              className="rounded-2xl bg-bg-soft border border-border-subtle px-4 py-3 text-sm text-text-primary focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/30 transition-all"
+              className={cn(
+                'rounded-2xl bg-bg-soft border px-4 py-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent/30 transition-all min-h-[44px] uppercase',
+                validationErrors.country
+                  ? 'border-red-400/40 focus:border-red-400'
+                  : 'border-border-subtle focus:border-accent'
+              )}
               placeholder={t('onboarding.countryPlaceholder')}
               disabled={isPending}
+              autoComplete="country-code"
+              aria-required="true"
+              aria-invalid={validationErrors.country ? 'true' : 'false'}
+              aria-describedby="onboarding-country-hint onboarding-country-error"
               maxLength={2}
+              pattern="[A-Z]{2}"
             />
-            <p className="text-xs text-text-tertiary mt-1">
+            <p id="onboarding-country-hint" className="text-xs text-text-tertiary mt-1">
               {t('onboarding.countryHint')}
             </p>
+            {validationErrors.country && (
+              <p
+                id="onboarding-country-error"
+                role="alert"
+                className="text-xs text-red-400 mt-1"
+              >
+                {validationErrors.country}
+              </p>
+            )}
           </div>
 
           <div className="flex items-start gap-3 pt-2">
@@ -193,50 +303,56 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
               type="checkbox"
               checked={formState.acceptsResearch}
               onChange={handleChange('acceptsResearch')}
-              className="w-5 h-5 accent-accent mt-0.5 flex-shrink-0"
+              className="w-5 h-5 accent-accent mt-0.5 flex-shrink-0 min-h-[44px] min-w-[44px]"
               disabled={isPending}
+              aria-describedby="accepts-research-label"
             />
-            <label htmlFor="accepts-research" className="text-sm text-text-secondary leading-relaxed flex items-start gap-2">
-              <Bell className="w-4 h-4 mt-0.5 flex-shrink-0 text-text-tertiary" />
+            <label
+              id="accepts-research-label"
+              htmlFor="accepts-research"
+              className="text-sm text-text-secondary leading-relaxed flex items-start gap-2 cursor-pointer"
+            >
+              <Bell className="w-4 h-4 mt-0.5 flex-shrink-0 text-text-tertiary" aria-hidden="true" />
               <span>{t('onboarding.notifications')}</span>
             </label>
           </div>
-        </div>
 
-        {/* Error message */}
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-sm text-red-400 bg-red-400/10 border border-red-400/40 rounded-2xl px-4 py-3 mb-6"
+          {/* Error message */}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              role="alert"
+              aria-live="assertive"
+              className="text-sm text-red-400 bg-red-400/10 border border-red-400/40 rounded-2xl px-4 py-3"
+            >
+              {error}
+            </motion.div>
+          )}
+
+          {/* Submit button */}
+          <button
+            type="submit"
+            disabled={isPending || !formState.company.trim() || !formState.country.trim() || Object.keys(validationErrors).length > 0}
+            className={cn(
+              'w-full rounded-2xl bg-accent hover:bg-accent-hover text-white font-semibold py-3.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-h-[44px]',
+              isPending && 'opacity-70'
+            )}
+            aria-label={t('onboarding.submit')}
           >
-            {error}
-          </motion.div>
-        )}
-
-        {/* Submit button */}
-        <button
-          type="button"
-          disabled={isPending || !formState.company.trim() || !formState.country.trim()}
-          onClick={handleSubmit}
-          className={cn(
-            'w-full rounded-2xl bg-accent hover:bg-accent-hover text-white font-semibold py-3.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2',
-            isPending && 'opacity-70',
-            !isPending && !formState.company.trim() && !formState.country.trim() && 'opacity-50'
-          )}
-        >
-          {isPending ? (
-            <>
-              <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
-              {t('onboarding.saving')}
-            </>
-          ) : (
-            <>
-              <BookOpen className="w-4 h-4" />
-              {t('onboarding.submit')}
-            </>
-          )}
-        </button>
+            {isPending ? (
+              <>
+                <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" aria-hidden="true" />
+                <span>{t('onboarding.saving')}</span>
+              </>
+            ) : (
+              <>
+                <BookOpen className="w-4 h-4" aria-hidden="true" />
+                <span>{t('onboarding.submit')}</span>
+              </>
+            )}
+          </button>
+        </form>
 
         {/* Footer note */}
         <p className="text-xs text-text-tertiary text-center mt-6 leading-relaxed">

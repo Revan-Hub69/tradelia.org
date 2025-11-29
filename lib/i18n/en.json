@@ -298,6 +298,14 @@
     "submit": "Start exploring",
     "saving": "Saving…",
     "loading": "Checking profile…",
-    "footer": "Information is processed according to GDPR and MiFID II regulations. We do not share your data with third parties."
+    "footer": "Information is processed according to GDPR and MiFID II regulations. We do not share your data with third parties.",
+    "errors": {
+      "companyRequired": "Affiliation is required.",
+      "companyTooLong": "Affiliation cannot exceed 100 characters.",
+      "countryRequired": "Country is required.",
+      "countryInvalid": "Please enter a valid 2-letter country code (e.g.: IT, FR, DE, US).",
+      "invalidSession": "Invalid session. Please reload the page and try again.",
+      "saveFailed": "Unable to save data. Please try again later."
+    }
   }
 }
