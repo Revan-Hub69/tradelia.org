@@ -8,23 +8,6 @@ function getSupabaseClient(): SupabaseClient {
     return supabaseInstance;
   }
 
-<<<<<<< HEAD
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error(
-      'Missing Supabase environment variables. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY'
-=======
-  // Supporta sia NEXT_PUBLIC_ che senza prefisso (per compatibilità)
-  // Nota: lato client, NEXT_PUBLIC_ è necessario, ma usiamo il fallback per evitare errori durante il build
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error(
-      'Missing Supabase environment variables. Please set NEXT_PUBLIC_SUPABASE_URL (or SUPABASE_URL) and NEXT_PUBLIC_SUPABASE_ANON_KEY (or SUPABASE_ANON_KEY)'
->>>>>>> e442b9f (feat: miglioramenti login - best practice accademiche, sicurezza, UX e accessibilità WCAG 2.1)
     );
   }
 
@@ -42,14 +25,6 @@ function getSupabaseClient(): SupabaseClient {
 // Crea il client solo se le variabili d'ambiente sono disponibili
 // Durante il build, se le variabili non ci sono, non creare il client
 // Verrà creato a runtime quando necessario
-<<<<<<< HEAD
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-=======
-// Supporta sia NEXT_PUBLIC_ che senza prefisso
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
->>>>>>> e442b9f (feat: miglioramenti login - best practice accademiche, sicurezza, UX e accessibilità WCAG 2.1)
 
 if (supabaseUrl && supabaseAnonKey) {
   // Variabili disponibili: crea il client immediatamente
