@@ -14,24 +14,23 @@ export default function LoginPage() {
     <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 bg-bg-surface/80 border border-border-subtle rounded-[32px] shadow-[0_35px_120px_rgba(8,10,18,0.65)] overflow-hidden">
       <div className="p-8 lg:p-12 flex flex-col justify-between bg-gradient-to-br from-bg-base via-bg-soft to-bg-base">
         <div className="space-y-6">
-          <p className="text-xs uppercase tracking-[0.45em] text-text-tertiary">Secure Area</p>
+          <p className="text-xs uppercase tracking-[0.45em] text-text-tertiary">Formazione Finanziaria</p>
           <h2 className="text-4xl font-semibold text-white tracking-tight">
-            Accesso protetto
+            Accedi alla tua dashboard
           </h2>
           <p className="text-base text-text-secondary/90 leading-relaxed max-w-xl">
-            La dashboard istituzionale Tradelia integra controlli accademici, audit log e connessione diretta
-            con Supabase per consentire la gestione completa di report, richieste di analisi, percorsi educativi
-            e notifiche regolamentate MiFID II.
+            Accedi ai percorsi formativi completi, consulta i report pubblici, esplora i framework AI verificabili
+            e gestisci le tue richieste di analisi. Tutto gratuito, aperto e conforme agli standard accademici.
           </p>
         </div>
         <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 mt-10">
           <div className="rounded-2xl border border-border-subtle/60 bg-bg-base/60 p-4">
-            <dt className="text-xs uppercase tracking-[0.4em] text-text-tertiary mb-2">Audit continuo</dt>
-            <dd className="text-text-primary text-lg font-semibold">Log amministrativi e verifiche RLS automatiche</dd>
+            <dt className="text-xs uppercase tracking-[0.4em] text-text-tertiary mb-2">Metodo verificabile</dt>
+            <dd className="text-text-primary text-lg font-semibold">Ogni framework è documentato con note metodologiche e dataset pubblici</dd>
           </div>
           <div className="rounded-2xl border border-border-subtle/60 bg-bg-base/60 p-4">
-            <dt className="text-xs uppercase tracking-[0.4em] text-text-tertiary mb-2">PWA + Push</dt>
-            <dd className="text-text-primary text-lg font-semibold">Installabile, notifiche cifrate e caching avanzato</dd>
+            <dt className="text-xs uppercase tracking-[0.4em] text-text-tertiary mb-2">Accesso libero</dt>
+            <dd className="text-text-primary text-lg font-semibold">Percorsi formativi e report sempre gratuiti, servizi pro opzionali</dd>
           </div>
         </dl>
       </div>

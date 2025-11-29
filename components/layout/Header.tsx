@@ -9,12 +9,10 @@ import { Button } from '@/components/ui/button';
 import { LayoutDashboard } from 'lucide-react';
 import { useReducedMotion } from '@/lib/animations';
 import { useTranslations } from '@/lib/i18n/use-translations';
-import { buildLocalePath } from '@/lib/i18n/paths';
 
 export function Header() {
-  const { t, locale } = useTranslations();
+  const { t } = useTranslations();
   const prefersReducedMotion = useReducedMotion();
-  const dashboardHref = buildLocalePath(locale, '/dashboard');
 
   return (
     <motion.header
@@ -57,7 +55,7 @@ export function Header() {
             className="group"
           >
             <Link 
-              href={dashboardHref}
+              href="/dashboard"
               aria-label={t('header.dashboardAria')}
             >
               <LayoutDashboard className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />

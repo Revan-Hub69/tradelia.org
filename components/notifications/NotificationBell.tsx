@@ -18,15 +18,24 @@ export function NotificationBell() {
   // Mostra solo nella dashboard
   const isDashboard = pathname?.includes('/dashboard');
 
-  // TODO: Caricare conteggio notifiche non lette da API
+  // Carica conteggio notifiche non lette
   useEffect(() => {
-    // Placeholder - da implementare quando avremo il sistema di notifiche completo
-    // const loadUnreadCount = async () => {
-    //   const res = await fetch('/api/notifications/unread-count');
-    //   const data = await res.json();
-    //   setUnreadCount(data.count || 0);
-    // };
-    // loadUnreadCount();
+    const loadUnreadCount = async () => {
+      try {
+        const res = await fetch('/api/notifications/list?limit=1&unreadOnly=true');
+        const data = await res.json();
+        if (res.ok) {
+          setUnreadCount(data.unreadCount || 0);
+        }
+      } catch (err) {
+        console.error('Errore caricamento conteggio notifiche:', err);
+      }
+    };
+
+    loadUnreadCount();
+    // Polling ogni 30 secondi
+    const interval = setInterval(loadUnreadCount, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const hasActiveSubscription = !!subscription;

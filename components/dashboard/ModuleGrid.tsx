@@ -2,8 +2,6 @@
 
 import Link from 'next/link';
 import styles from './dashboard.module.css';
-import { useTranslations } from '@/lib/i18n/use-translations';
-import { buildLocalePath } from '@/lib/i18n/paths';
 
 /**
  * Module definitions with priority levels
@@ -11,70 +9,68 @@ import { buildLocalePath } from '@/lib/i18n/paths';
  * Primary modules: 4-5 main modules (high priority)
  * Secondary modules: 3-4 secondary modules (progressive disclosure)
  */
-type ModuleIconName =
-  | 'dashboard'
-  | 'file'
-  | 'book'
-  | 'book-open'
-  | 'history'
-  | 'bell'
-  | 'settings'
-  | 'help-circle';
-
-type ModuleDefinition = {
-  id: string;
-  icon: ModuleIconName;
-  href: string;
-  priority: 'primary' | 'secondary';
-  badge?: number;
-};
-
-const moduleDefinitions: ModuleDefinition[] = [
+const modules = [
   {
     id: 'reports',
+    title: 'Report Ufficiali',
+    description: 'Consulta i report pubblici e le analisi disponibili',
     icon: 'file',
     href: '/dashboard#reports',
     priority: 'primary' as const,
   },
   {
     id: 'education',
+    title: 'Percorsi Formativi',
+    description: 'Tutorial e corsi educativi',
     icon: 'book',
     href: '/dashboard#education',
     priority: 'primary' as const,
   },
   {
     id: 'frameworks',
+    title: 'Framework Documentation',
+    description: 'Metodologie e framework di analisi',
     icon: 'book-open',
     href: '/dashboard#frameworks',
     priority: 'primary' as const,
   },
   {
     id: 'requests-history',
+    title: 'Storico Richieste',
+    description: 'Le tue richieste di analisi on-demand',
     icon: 'history',
     href: '/dashboard#requests-history',
     priority: 'primary' as const,
   },
   {
     id: 'notifications',
+    title: 'Notifiche',
+    description: 'Notifiche di sistema e aggiornamenti',
     icon: 'bell',
     href: '/dashboard/notifications',
     priority: 'secondary' as const,
-    badge: 0,
+    badge: 0, // Will be populated from API
   },
   {
     id: 'settings',
+    title: 'Impostazioni',
+    description: 'Preferenze utente e configurazioni',
     icon: 'settings',
     href: '/dashboard#settings',
     priority: 'secondary' as const,
   },
   {
     id: 'resources',
+    title: 'Risorse & Supporto',
+    description: 'FAQ, guide e contatti',
     icon: 'help-circle',
     href: '/dashboard#resources',
     priority: 'secondary' as const,
   },
   {
     id: 'admin',
+    title: 'Admin',
+    description: 'Gestione report e utenti',
     icon: 'settings',
     href: '/dashboard/admin',
     priority: 'secondary' as const,
@@ -86,48 +82,23 @@ interface ModuleGridProps {
 }
 
 export function ModuleGrid({ priority }: ModuleGridProps) {
-  const { t, locale } = useTranslations();
-  const localizedModules = moduleDefinitions.map((module) => ({
-    ...module,
-    title: t(`dashboard.modules.items.${module.id}.title`),
-    description: t(`dashboard.modules.items.${module.id}.description`),
-    href: buildLocalePath(locale, module.href),
-  }));
-
   const filteredModules = priority 
-    ? localizedModules.filter((m) => m.priority === priority)
-    : localizedModules;
+    ? modules.filter(m => m.priority === priority)
+    : modules;
 
   const title = priority === 'primary' 
-    ? t('dashboard.modules.primaryTitle')
+    ? 'Moduli Principali' 
     : priority === 'secondary'
-    ? t('dashboard.modules.secondaryTitle')
-    : t('dashboard.modules.genericTitle');
-
-  const description = priority === 'primary'
-    ? t('dashboard.modules.primaryDescription')
-    : priority === 'secondary'
-    ? t('dashboard.modules.secondaryDescription')
-    : t('dashboard.modules.genericDescription');
+    ? 'Moduli Secondari'
+    : 'Moduli';
 
   return (
-    <div className={styles.moduleCategory} data-priority={priority ?? 'all'}>
-      <div className={styles.categoryTitleWrap}>
-        <h2 className={styles.categoryTitle}>{title}</h2>
-        {description && (
-          <p className={styles.categoryDescription}>{description}</p>
-        )}
-      </div>
+    <div className={styles.moduleCategory}>
+      <h2 className={styles.categoryTitle}>{title}</h2>
       <div 
         className={styles.modulesGrid}
         role="list"
-        aria-label={
-          priority === 'primary'
-            ? t('dashboard.modules.primaryAria')
-            : priority === 'secondary'
-            ? t('dashboard.modules.secondaryAria')
-            : t('dashboard.modules.genericAria')
-        }
+        aria-label={priority === 'primary' ? 'Moduli principali della dashboard' : 'Moduli secondari della dashboard'}
       >
         {filteredModules.map((module) => (
           <ModuleCard key={module.id} module={module} />
@@ -137,13 +108,7 @@ export function ModuleGrid({ priority }: ModuleGridProps) {
   );
 }
 
-type LocalizedModule = ModuleDefinition & {
-  title: string;
-  description: string;
-  href: string;
-};
-
-function ModuleCard({ module }: { module: LocalizedModule }) {
+function ModuleCard({ module }: { module: typeof modules[0] }) {
   return (
     <Link 
       href={module.href} 
@@ -183,8 +148,8 @@ function ModuleCard({ module }: { module: LocalizedModule }) {
   );
 }
 
-function ModuleIcon({ name }: { name: ModuleIconName }) {
-  const icons: Record<ModuleIconName, JSX.Element> = {
+function ModuleIcon({ name }: { name: string }) {
+  const icons: Record<string, JSX.Element> = {
     dashboard: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <rect x="3" y="3" width="18" height="18" rx="2" />
