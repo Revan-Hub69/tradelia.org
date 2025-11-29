@@ -4,7 +4,7 @@ import { useEffect, useState, useTransition } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils/cn';
 import { useTranslations } from '@/lib/i18n/use-translations';
-import { BookOpen, User, MapPin, Bell } from 'lucide-react';
+import { BookOpen, MapPin, Bell } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface OnboardingGateProps {
