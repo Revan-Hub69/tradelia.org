@@ -16,6 +16,23 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+  
+  // Non intercettare richieste di autenticazione, API, o reset password
+  if (
+    url.pathname.startsWith('/api/') ||
+    url.pathname.startsWith('/auth/') ||
+    url.pathname.includes('/reset-password') ||
+    url.pathname.includes('/forgot-password') ||
+    url.pathname.includes('/login') ||
+    url.pathname.includes('/signup') ||
+    url.searchParams.has('token_hash') ||
+    url.searchParams.has('type')
+  ) {
+    // Passa direttamente alla rete senza cache per queste route
+    return fetch(event.request);
+  }
+  
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
