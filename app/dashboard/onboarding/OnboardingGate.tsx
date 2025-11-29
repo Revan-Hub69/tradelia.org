@@ -16,15 +16,12 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
   const [needsOnboarding, setNeedsOnboarding] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const [formState, setFormState] = useState({
-    company: '',
     country: '',
-    role: 'trial',
     acceptsResearch: true,
   });
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [validationErrors, setValidationErrors] = useState<{
-    company?: string;
     country?: string;
   }>({});
 
@@ -49,7 +46,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
 
       const { data: profile } = await supabase
         .from('user_profiles')
-        .select('company, country')
+        .select('country')
         .eq('user_id', session.user.id)
         .maybeSingle();
 
@@ -62,12 +59,10 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
       const onboardingDone = Boolean(role?.onboarding_completed_at);
       setNeedsOnboarding(!onboardingDone);
 
-      if (profile) {
+      if (profile?.country) {
         setFormState((prev) => ({
           ...prev,
-          company: profile.company || '',
           country: profile.country || '',
-          role: role?.role || 'trial',
         }));
       }
 
@@ -93,27 +88,15 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
       }
     }
 
-    // Rimuovi errori di validazione quando l'utente inizia a digitare
-    if (field === 'company' && validationErrors.company) {
-      setValidationErrors((prev) => ({ ...prev, company: undefined }));
-    }
-
     setFormState((prev) => ({ ...prev, [field]: value }));
     setError(null);
   };
 
   const validateForm = (): boolean => {
-    const errors: { company?: string; country?: string } = {};
+    const errors: { country?: string } = {};
 
-    if (!formState.company.trim()) {
-      errors.company = t('onboarding.errors.companyRequired');
-    } else if (formState.company.trim().length > 100) {
-      errors.company = t('onboarding.errors.companyTooLong');
-    }
-
-    if (!formState.country.trim()) {
-      errors.country = t('onboarding.errors.countryRequired');
-    } else if (!validateCountry(formState.country)) {
+    // Paese è opzionale, ma se inserito deve essere valido
+    if (formState.country.trim() && !validateCountry(formState.country)) {
       errors.country = t('onboarding.errors.countryInvalid');
     }
 
@@ -147,9 +130,8 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
         },
         body: JSON.stringify({
           userId: session.user.id,
-          company: formState.company.trim(),
-          country: formState.country.toUpperCase().trim(),
-          role: formState.role,
+          country: formState.country.trim() ? formState.country.toUpperCase().trim() : null,
+          role: 'trial',
           acceptsResearch: formState.acceptsResearch,
         }),
       });
@@ -216,47 +198,6 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
         >
           <div className="flex flex-col gap-2">
             <label
-              htmlFor="onboarding-company"
-              className="text-xs uppercase tracking-[0.3em] text-text-tertiary flex items-center gap-2"
-            >
-              <User className="w-4 h-4" aria-hidden="true" />
-              {t('onboarding.affiliation')}
-            </label>
-            <input
-              id="onboarding-company"
-              type="text"
-              value={formState.company}
-              onChange={handleChange('company')}
-              className={cn(
-                'rounded-2xl bg-bg-soft border px-4 py-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent/30 transition-all min-h-[44px]',
-                validationErrors.company
-                  ? 'border-red-400/40 focus:border-red-400'
-                  : 'border-border-subtle focus:border-accent'
-              )}
-              placeholder={t('onboarding.affiliationPlaceholder')}
-              disabled={isPending}
-              autoComplete="organization"
-              aria-required="true"
-              aria-invalid={validationErrors.company ? 'true' : 'false'}
-              aria-describedby="onboarding-company-hint onboarding-company-error"
-              maxLength={100}
-            />
-            <p id="onboarding-company-hint" className="text-xs text-text-tertiary mt-1">
-              {t('onboarding.affiliationHint')}
-            </p>
-            {validationErrors.company && (
-              <p
-                id="onboarding-company-error"
-                role="alert"
-                className="text-xs text-red-400 mt-1"
-              >
-                {validationErrors.company}
-              </p>
-            )}
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <label
               htmlFor="onboarding-country"
               className="text-xs uppercase tracking-[0.3em] text-text-tertiary flex items-center gap-2"
             >
@@ -277,7 +218,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
               placeholder={t('onboarding.countryPlaceholder')}
               disabled={isPending}
               autoComplete="country-code"
-              aria-required="true"
+              aria-required="false"
               aria-invalid={validationErrors.country ? 'true' : 'false'}
               aria-describedby="onboarding-country-hint onboarding-country-error"
               maxLength={2}
@@ -333,7 +274,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
           {/* Submit button */}
           <button
             type="submit"
-            disabled={isPending || !formState.company.trim() || !formState.country.trim() || Object.keys(validationErrors).length > 0}
+            disabled={isPending || Object.keys(validationErrors).length > 0}
             className={cn(
               'w-full rounded-2xl bg-accent hover:bg-accent-hover text-white font-semibold py-3.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-h-[44px]',
               isPending && 'opacity-70'

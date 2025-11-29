@@ -19,7 +19,6 @@ export async function POST(request: Request) {
     }
 
     const profileUpdates = {
-      company: body.company?.trim() || null,
       country: body.country?.trim() || null,
       updated_at: new Date().toISOString(),
     };
