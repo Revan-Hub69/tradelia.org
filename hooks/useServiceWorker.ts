@@ -103,7 +103,7 @@ export function useServiceWorker() {
       const subscription = await state.registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: vapidPublicKey
-          ? urlBase64ToUint8Array(vapidPublicKey)
+          ? (urlBase64ToUint8Array(vapidPublicKey) as BufferSource)
           : undefined,
       });
 
