@@ -252,6 +252,36 @@
       "success": {
         "signup": "Registration complete! Check your email to confirm your account."
       }
+    },
+    "forgotPassword": {
+      "title": "Forgot password",
+      "description": "Enter your email address and we'll send you a link to reset your password.",
+      "submit": "Send reset link",
+      "backToLogin": "Back to login",
+      "success": "Email sent! Check your inbox for the password reset link.",
+      "errors": {
+        "emailRequired": "Please enter your email address.",
+        "invalidEmail": "Please enter a valid email address."
+      }
+    },
+    "resetPassword": {
+      "title": "Reset password",
+      "description": "Enter your new password. Make sure it's secure and different from your previous one.",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "Repeat your new password",
+      "submit": "Reset password",
+      "loading": "Verifying...",
+      "success": "Password reset successfully! Redirecting to login...",
+      "requestNewLink": "Request a new link",
+      "errors": {
+        "fillAll": "Please fill in all fields.",
+        "passwordTooShort": "Password must be at least 8 characters long.",
+        "passwordsDontMatch": "Passwords don't match.",
+        "invalidToken": "Invalid or expired link",
+        "noSession": "Invalid session. Please request a new reset link.",
+        "tokenExpired": "The password reset link has expired or is invalid. Please request a new link."
+      }
     }
   }
 }
