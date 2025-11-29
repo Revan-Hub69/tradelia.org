@@ -57,7 +57,7 @@ const moduleDefinitions: ModuleDefinition[] = [
   {
     id: 'notifications',
     icon: 'bell',
-    href: '/dashboard#notifications',
+    href: '/dashboard/notifications',
     priority: 'secondary' as const,
     badge: 0,
   },

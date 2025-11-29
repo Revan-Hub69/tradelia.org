@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { LanguageToggle } from './LanguageToggle';
+import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { Button } from '@/components/ui/button';
 import { LayoutDashboard } from 'lucide-react';
 import { useReducedMotion } from '@/lib/animations';
@@ -63,6 +64,9 @@ export function Header() {
               <span className="hidden sm:inline">{t('header.dashboard')}</span>
             </Link>
           </Button>
+          
+          {/* Notification Bell - solo se siamo nella dashboard */}
+          <NotificationBell />
           
           {/* Language Toggle */}
           <LanguageToggle />
