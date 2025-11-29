@@ -1,12 +1,16 @@
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open('tradelia-cache-v1').then((cache) => {
-      return cache.addAll([
-        '/',
-        '/manifest.json',
-        '/icon-192.png',
-        '/icon-512.png',
-      ]);
+      // Usa addAll con gestione errori - se un file fallisce, continua con gli altri
+      return Promise.allSettled([
+        cache.add('/').catch(() => {}),
+        cache.add('/manifest.json').catch(() => {}),
+        cache.add('/icon-192.png').catch(() => {}),
+        cache.add('/icon-512.png').catch(() => {}),
+      ]).then(() => {
+        // Anche se alcuni file falliscono, il service worker si installa comunque
+        return self.skipWaiting();
+      });
     })
   );
 });
@@ -30,7 +34,11 @@ self.addEventListener('fetch', (event) => {
     url.searchParams.has('type')
   ) {
     // Passa direttamente alla rete senza cache per queste route
-    return fetch(event.request);
+    event.respondWith(fetch(event.request).catch(() => {
+      // Se il fetch fallisce, restituisci una risposta vuota invece di far fallire tutto
+      return new Response('Network error', { status: 408 });
+    }));
+    return;
   }
   
   event.respondWith(
@@ -38,7 +46,11 @@ self.addEventListener('fetch', (event) => {
       if (cachedResponse) {
         return cachedResponse;
       }
-      return fetch(event.request);
+      return fetch(event.request).catch((error) => {
+        // Se il fetch fallisce e non c'è cache, restituisci una risposta di errore
+        console.error('Fetch failed:', error);
+        return new Response('Network error', { status: 408 });
+      });
     })
   );
 });
