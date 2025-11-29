@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   description: 'Accedi alla console istituzionale Tradelia per gestire report, richieste e formazione.',
 };
 
+// Forza rendering dinamico per evitare errori durante build statico
+export const dynamic = 'force-dynamic';
+
 export default function LoginPage() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 bg-bg-surface/80 border border-border-subtle rounded-[32px] shadow-[0_35px_120px_rgba(8,10,18,0.65)] overflow-hidden">
