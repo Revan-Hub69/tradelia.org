@@ -176,29 +176,41 @@ export function AuthForm() {
     setError(null);
     setInfo(null);
 
-    // Validation
-    if (!form.email || !form.password || (mode === 'signup' && !form.name.trim())) {
-      setError(t('auth.form.errors.fillAll'));
-      return;
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(form.email)) {
-      setError(t('auth.form.errors.invalidEmail'));
-      return;
-    }
-
-    // Password strength validation for signup
-    if (mode === 'signup' && passwordStrength.strength === 'weak') {
-      setError(t('auth.form.errors.weakPassword'));
-      return;
-    }
-
-    // Password breach check for signup
-    if (mode === 'signup' && isPasswordBreached) {
-      setError(t('auth.form.errors.breachedPassword'));
-      return;
+    // Validation - diversa per ogni modalità
+    if (mode === 'verify-email') {
+      // Validazione per verify-email viene gestita dentro startTransition
+    } else if (mode === 'login') {
+      if (!form.email || !form.password) {
+        setError(t('auth.form.errors.fillAll'));
+        return;
+      }
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(form.email)) {
+        setError(t('auth.form.errors.invalidEmail'));
+        return;
+      }
+    } else if (mode === 'signup') {
+      if (!form.email || !form.password || !form.name.trim()) {
+        setError(t('auth.form.errors.fillAll'));
+        return;
+      }
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(form.email)) {
+        setError(t('auth.form.errors.invalidEmail'));
+        return;
+      }
+      // Password strength validation for signup
+      if (passwordStrength.strength === 'weak') {
+        setError(t('auth.form.errors.weakPassword'));
+        return;
+      }
+      // Password breach check for signup
+      if (isPasswordBreached) {
+        setError(t('auth.form.errors.breachedPassword'));
+        return;
+      }
     }
 
     startTransition(async () => {
