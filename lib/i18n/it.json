@@ -219,10 +219,19 @@
       },
       "submit": {
         "login": "Accedi",
-        "signup": "Crea account"
+        "signup": "Crea account",
+        "verify": "Verifica codice"
       },
       "submitting": "Attendere...",
       "forgotPassword": "Password dimenticata?",
+      "otp": {
+        "label": "Codice di verifica",
+        "description": "Inserisci il codice a 6 cifre inviato a {email}",
+        "title": "Verifica la tua email",
+        "instructions": "Abbiamo inviato un codice di verifica a {email}. Inseriscilo qui sotto per completare la registrazione.",
+        "resend": "Non hai ricevuto il codice? Richiedi un nuovo codice",
+        "resendSuccess": "Nuovo codice inviato! Controlla la tua email."
+      },
       "footer": {
         "text": "Proseguendo, accetti la nostra",
         "privacy": "Privacy Policy",
@@ -236,7 +245,9 @@
         "weakPassword": "La password è troppo debole. Scegli una password più sicura.",
         "breachedPassword": "Questa password è stata compromessa. Scegli una password diversa.",
         "emailExists": "Esiste già un account con questa email. Prova ad accedere.",
-        "emailVerificationFailed": "Conferma email fallita. Il link potrebbe essere scaduto o non valido. Prova a registrarti di nuovo."
+        "emailVerificationFailed": "Conferma email fallita. Il link potrebbe essere scaduto o non valido. Prova a registrarti di nuovo.",
+        "invalidOtp": "Inserisci un codice di verifica valido (6 cifre).",
+        "emailRequired": "Email richiesta per la verifica."
       },
       "success": {
         "signup": "Registrazione completata! Controlla la tua email per confermare l'account."

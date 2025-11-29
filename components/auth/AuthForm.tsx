@@ -8,18 +8,20 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { Eye, EyeOff, CheckCircle2, XCircle, AlertCircle, Lock, Mail, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-type AuthMode = 'login' | 'signup';
+type AuthMode = 'login' | 'signup' | 'verify-email';
 
 interface FormState {
   email: string;
   password: string;
   name: string;
+  otp: string;
 }
 
 const INITIAL_STATE: FormState = {
   email: '',
   password: '',
   name: '',
+  otp: '',
 };
 
 // Password strength calculation
@@ -106,6 +108,7 @@ export function AuthForm() {
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null); // Email in attesa di conferma
 
   // Gestisci errori dalla URL (es. callback conferma email fallita)
   useEffect(() => {
@@ -199,6 +202,35 @@ export function AuthForm() {
     }
 
     startTransition(async () => {
+      if (mode === 'verify-email') {
+        // Verifica codice OTP
+        if (!form.otp || form.otp.length < 6) {
+          setError(t('auth.form.errors.invalidOtp'));
+          return;
+        }
+
+        if (!pendingEmail) {
+          setError(t('auth.form.errors.emailRequired'));
+          return;
+        }
+
+        const { error: verifyError } = await supabase.auth.verifyOtp({
+          email: pendingEmail,
+          token: form.otp,
+          type: 'signup',
+        });
+
+        if (verifyError) {
+          setError(verifyError.message);
+          return;
+        }
+
+        // Verifica riuscita - reindirizza alla dashboard
+        router.replace('/dashboard');
+        router.refresh();
+        return;
+      }
+
       if (mode === 'login') {
         const { error: signInError } = await supabase.auth.signInWithPassword({
           email: form.email,
@@ -255,9 +287,11 @@ export function AuthForm() {
         }
       }
 
-      setInfo(t('auth.form.success.signup'));
-      setForm(INITIAL_STATE);
-      setMode('login');
+      // Mostra il form di verifica email invece di tornare al login
+      setPendingEmail(form.email);
+      setInfo(null);
+      setMode('verify-email');
+      setForm((prev) => ({ ...prev, password: '', name: '', otp: '' }));
     });
   };
 
@@ -298,47 +332,63 @@ export function AuthForm() {
           </p>
         </div>
 
-        {/* Mode Toggle */}
-        <div className="flex items-center gap-2 mb-8 p-1 bg-bg-soft rounded-2xl border border-border-subtle">
-          <button
-            type="button"
-            className={cn(
-              'flex-1 text-sm font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 min-h-[44px]',
-              mode === 'login'
-                ? 'bg-accent text-white shadow-md'
-                : 'text-text-secondary hover:text-text-primary'
-            )}
-            onClick={() => {
-              setMode('login');
-              setError(null);
-              setForm(INITIAL_STATE);
-            }}
-            disabled={isPending}
-            aria-pressed={mode === 'login'}
-            aria-label={t('auth.mode.login')}
-          >
-            {t('auth.mode.login')}
-          </button>
-          <button
-            type="button"
-            className={cn(
-              'flex-1 text-sm font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 min-h-[44px]',
-              mode === 'signup'
-                ? 'bg-accent text-white shadow-md'
-                : 'text-text-secondary hover:text-text-primary'
-            )}
-            onClick={() => {
-              setMode('signup');
-              setError(null);
-              setForm(INITIAL_STATE);
-            }}
-            disabled={isPending}
-            aria-pressed={mode === 'signup'}
-            aria-label={t('auth.mode.signup')}
-          >
-            {t('auth.mode.signup')}
-          </button>
-        </div>
+        {/* Mode Toggle - solo se non in verify-email */}
+        {mode !== 'verify-email' && (
+          <div className="flex items-center gap-2 mb-8 p-1 bg-bg-soft rounded-2xl border border-border-subtle">
+            <button
+              type="button"
+              className={cn(
+                'flex-1 text-sm font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 min-h-[44px]',
+                mode === 'login'
+                  ? 'bg-accent text-white shadow-md'
+                  : 'text-text-secondary hover:text-text-primary'
+              )}
+              onClick={() => {
+                setMode('login');
+                setError(null);
+                setForm(INITIAL_STATE);
+                setPendingEmail(null);
+              }}
+              disabled={isPending}
+              aria-pressed={mode === 'login'}
+              aria-label={t('auth.mode.login')}
+            >
+              {t('auth.mode.login')}
+            </button>
+            <button
+              type="button"
+              className={cn(
+                'flex-1 text-sm font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 min-h-[44px]',
+                mode === 'signup'
+                  ? 'bg-accent text-white shadow-md'
+                  : 'text-text-secondary hover:text-text-primary'
+              )}
+              onClick={() => {
+                setMode('signup');
+                setError(null);
+                setForm(INITIAL_STATE);
+                setPendingEmail(null);
+              }}
+              disabled={isPending}
+              aria-pressed={mode === 'signup'}
+              aria-label={t('auth.mode.signup')}
+            >
+              {t('auth.mode.signup')}
+            </button>
+          </div>
+        )}
+
+        {/* Info per verify-email */}
+        {mode === 'verify-email' && (
+          <div className="mb-8 p-4 bg-accent/10 border border-accent/30 rounded-xl">
+            <p className="text-sm text-text-primary font-medium mb-2">
+              {t('auth.form.otp.title')}
+            </p>
+            <p className="text-xs text-text-secondary">
+              {t('auth.form.otp.instructions').replace('{email}', pendingEmail || form.email)}
+            </p>
+          </div>
+        )}
 
         {/* Form */}
         <form className="space-y-5" onSubmit={handleSubmit} noValidate>
@@ -401,15 +451,80 @@ export function AuthForm() {
             />
           </div>
 
+          {/* OTP field (verify-email mode) */}
+          <AnimatePresence>
+            {mode === 'verify-email' && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+                className="flex flex-col gap-2"
+              >
+                <label
+                  htmlFor="otp"
+                  className="text-xs font-semibold uppercase tracking-wider text-text-tertiary flex items-center gap-2"
+                >
+                  <Mail className="w-3.5 h-3.5" aria-hidden="true" />
+                  {t('auth.form.otp.label')}
+                </label>
+                <input
+                  id="otp"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={6}
+                  autoComplete="one-time-code"
+                  className="rounded-xl bg-bg-soft border border-border-subtle px-4 py-3 text-sm text-text-primary focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/30 transition-all min-h-[44px] text-center text-2xl tracking-widest font-mono"
+                  placeholder="000000"
+                  value={form.otp}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                    setForm((prev) => ({ ...prev, otp: value }));
+                    setError(null);
+                  }}
+                  disabled={isPending}
+                  required
+                  aria-required="true"
+                  aria-label={t('auth.form.otp.label')}
+                />
+                <p className="text-xs text-text-secondary text-center">
+                  {t('auth.form.otp.description').replace('{email}', pendingEmail || form.email)}
+                </p>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if (!pendingEmail) return;
+                    setError(null);
+                    const { error: resendError } = await supabase.auth.resend({
+                      type: 'signup',
+                      email: pendingEmail,
+                    });
+                    if (resendError) {
+                      setError(resendError.message);
+                    } else {
+                      setInfo(t('auth.form.otp.resendSuccess'));
+                    }
+                  }}
+                  className="text-xs text-accent hover:text-accent-hover underline underline-offset-4 transition-colors text-center"
+                  disabled={isPending}
+                >
+                  {t('auth.form.otp.resend')}
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* Password field */}
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="password"
-              className="text-xs font-semibold uppercase tracking-wider text-text-tertiary flex items-center gap-2"
-            >
-              <Lock className="w-3.5 h-3.5" aria-hidden="true" />
-              {t('auth.form.password.label')}
-            </label>
+          {mode !== 'verify-email' && (
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="password"
+                className="text-xs font-semibold uppercase tracking-wider text-text-tertiary flex items-center gap-2"
+              >
+                <Lock className="w-3.5 h-3.5" aria-hidden="true" />
+                {t('auth.form.password.label')}
+              </label>
             <div className="relative">
               <input
                 id="password"
@@ -578,11 +693,21 @@ export function AuthForm() {
           {/* Submit button */}
           <button
             type="submit"
-            disabled={isPending || (mode === 'signup' && passwordStrength.strength === 'weak')}
+            disabled={
+              isPending ||
+              (mode === 'signup' && passwordStrength.strength === 'weak') ||
+              (mode === 'verify-email' && form.otp.length < 6)
+            }
             className="w-full rounded-xl bg-accent hover:bg-accent-hover text-white font-semibold py-3.5 px-6 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed min-h-[48px] shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-base"
             aria-busy={isPending}
           >
-            {isPending ? t('auth.form.submitting') : mode === 'login' ? t('auth.form.submit.login') : t('auth.form.submit.signup')}
+            {isPending
+              ? t('auth.form.submitting')
+              : mode === 'verify-email'
+                ? t('auth.form.submit.verify')
+                : mode === 'login'
+                  ? t('auth.form.submit.login')
+                  : t('auth.form.submit.signup')}
           </button>
         </form>
 

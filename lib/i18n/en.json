@@ -219,10 +219,19 @@
       },
       "submit": {
         "login": "Sign in",
-        "signup": "Create account"
+        "signup": "Create account",
+        "verify": "Verify code"
       },
       "submitting": "Please wait...",
       "forgotPassword": "Forgot password?",
+      "otp": {
+        "label": "Verification code",
+        "description": "Enter the 6-digit code sent to {email}",
+        "title": "Verify your email",
+        "instructions": "We've sent a verification code to {email}. Enter it below to complete your registration.",
+        "resend": "Didn't receive the code? Request a new code",
+        "resendSuccess": "New code sent! Check your email."
+      },
       "footer": {
         "text": "By continuing, you agree to our",
         "privacy": "Privacy Policy",
@@ -236,7 +245,9 @@
         "weakPassword": "Password is too weak. Please choose a stronger password.",
         "breachedPassword": "This password has been compromised. Please choose a different password.",
         "emailExists": "An account with this email already exists. Try signing in instead.",
-        "emailVerificationFailed": "Email verification failed. The link may have expired or is invalid. Please try signing up again."
+        "emailVerificationFailed": "Email verification failed. The link may have expired or is invalid. Please try signing up again.",
+        "invalidOtp": "Please enter a valid verification code (6 digits).",
+        "emailRequired": "Email required for verification."
       },
       "success": {
         "signup": "Registration complete! Check your email to confirm your account."
