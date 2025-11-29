@@ -79,6 +79,24 @@ export function AuthForm() {
         return;
       }
 
+      if (data?.user?.id) {
+        try {
+          await fetch('/api/auth/bootstrap', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              userId: data.user.id,
+              email: form.email,
+              name: form.name,
+            }),
+          });
+        } catch (bootstrapError) {
+          console.error('Errore bootstrap utente', bootstrapError);
+        }
+      }
+
       setInfo('Registrazione completata. Controlla la tua casella email per confermare l’account.');
       setForm(INITIAL_STATE);
       setMode('login');
