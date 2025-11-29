@@ -1,4 +1,27 @@
-# 🎯 Piano di Implementazione - Correzioni Accademiche
+# 🎯 Piano di Implementazione - Correzioni Accademiche & Legacy
+
+## Fase 0: LEGACY & INFRASTRUTTURA (Blueprint)
+
+### 0.1 Inventario funzionalità storiche
+- [ ] Autenticazione Supabase (login/email, ruoli `trial/pro/institutional`, tabella `admin_users`)
+  - **Riferimenti:** `supabase/schema.sql`, `supabase/README.md` §4
+- [ ] Gestione crediti, piani e fatture
+  - **Riferimenti:** `supabase/add-credits-log-table.sql`, `supabase/add-payments-invoices-tables.sql`
+- [ ] Dashboard on-demand analysis & richieste
+  - **Riferimenti:** `supabase/create-on-demand-analysis-table.sql`, `supabase/migration-analysis-requests*.sql`
+- [ ] Sistema education + gamification (progressi, spaced repetition)
+  - **Riferimenti:** `supabase/setup-education-system-simple.sql`, `supabase/enhance-gamification-system.sql`
+- [ ] PWA + Service Worker + Push notifications
+  - **Riferimenti:** `push-subscriptions-schema.sql`, `user-notification-preferences-schema.sql`, vecchio `sw.js`
+- [ ] Storage report & template SRD/MTB
+  - **Riferimenti:** `supabase/README.md` §6-7, bucket `report-charts`
+
+### 0.2 Documentazione tecnica
+- [ ] Mappa file SQL ↔ feature applicativa
+- [ ] Definizione entità/core services (Auth, Billing, Requests, Notifications, Education, Reporting)
+- [ ] Sequenza migrazione verso nuovo stack (Next.js app router + Supabase SSR)
+
+---
 
 ## Fase 1: CRITICO (WCAG Violations) - 1-2 giorni
 
@@ -217,6 +240,53 @@ export function Navigation() {
 
 ---
 
+## Fase 4: RIPRISTINO FEATURE LEGACY
+
+### 4.1 Autenticazione & Onboarding
+- [ ] UI login/signup con Supabase Auth
+- [ ] Gestione ruoli (`user_roles`, `admin_users`, `user_profiles`)
+- [ ] Onboarding dati business (campi da `add-business-fields.sql`)
+
+### 4.2 Billing & Crediti
+- [ ] API Next per `payments`, `invoices`, `credits_log`
+- [ ] Dashboard “Billing” con cronologia e stato piano
+- [ ] Automazioni per trial/expiration (`migration-add-expiration.sql`)
+
+### 4.3 Richieste on-demand & Reporting avanzato
+- [ ] UI modulo richieste (#requests-history)
+- [ ] Stato richieste con filtri (waiting, in progress, completed)
+- [ ] Workflow admin (approva/nega) + notifiche
+
+### 4.4 Education & Gamification
+- [ ] Sezione percorsi con progressi reali (data da `education_*` tables)
+- [ ] Badge, punteggi, spaced repetition (script `enhance-gamification-system.sql`)
+
+### 4.5 Notifications & Trust
+- [ ] Registrazione `push_subscriptions`
+- [ ] Centro notifiche con preferenze (`user-notification-preferences`)
+- [ ] Alert di compliance / audit log visibili in dashboard
+
+---
+
+## Fase 5: PWA & PUSH
+
+- [ ] Reintrodurre `sw.js` con caching strategico (static + API fallback)
+- [ ] Aggiornare manifest (icons, shortcuts) e `app/manifest.ts`
+- [ ] Endpoint per Web Push (subscribe/unsubscribe, invio via Supabase Edge Function)
+- [ ] Prompt installazione e badge PWA nella dashboard
+
+---
+
+## Fase 6: ADMIN CONTROL SERVER (Supabase)
+
+- [ ] JWT-based admin auth + middleware
+- [ ] Endpoint `GET /api/admin-control/verify` → esegue `verify-*.sql`
+- [ ] Endpoint `POST /api/admin-control/operations` → mutate safe (report, policy, storage)
+- [ ] Log centralizzato (`admin_audit_log`) + UI in `/dashboard/admin`
+- [ ] Cron/Edge Function per verifiche programmate + alert
+
+---
+
 ## Testing Checklist
 
 ### Accessibilità
@@ -241,9 +311,13 @@ export function Navigation() {
 
 ## Timeline Stimata
 
+- **Fase 0 (Blueprint):** 1-2 giorni
 - **Fase 1 (Critico):** 1-2 giorni
 - **Fase 2 (Alto):** 2-3 giorni
 - **Fase 3 (Medio):** 3-5 giorni
+- **Fase 4 (Legacy feature):** 5-8 giorni
+- **Fase 5 (PWA & Push):** 3-4 giorni
+- **Fase 6 (Admin control server):** 4-6 giorni
 - **Testing:** 2-3 giorni
 
-**Totale:** 8-13 giorni lavorativi
+**Totale stimato:** 21-33 giorni lavorativi
