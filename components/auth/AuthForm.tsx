@@ -669,7 +669,8 @@ export function AuthForm() {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+            </div>
+          )}
 
           {/* Error message */}
           <AnimatePresence>
