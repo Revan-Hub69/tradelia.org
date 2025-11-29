@@ -177,39 +177,40 @@ export function AuthForm() {
     setInfo(null);
 
     // Validation - diversa per ogni modalità
-    if (mode === 'verify-email') {
-      // Validazione per verify-email viene gestita dentro startTransition
-    } else if (mode === 'login') {
-      if (!form.email || !form.password) {
-        setError(t('auth.form.errors.fillAll'));
-        return;
-      }
-      // Email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(form.email)) {
-        setError(t('auth.form.errors.invalidEmail'));
-        return;
-      }
-    } else if (mode === 'signup') {
-      if (!form.email || !form.password || !form.name.trim()) {
-        setError(t('auth.form.errors.fillAll'));
-        return;
-      }
-      // Email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(form.email)) {
-        setError(t('auth.form.errors.invalidEmail'));
-        return;
-      }
-      // Password strength validation for signup
-      if (passwordStrength.strength === 'weak') {
-        setError(t('auth.form.errors.weakPassword'));
-        return;
-      }
-      // Password breach check for signup
-      if (isPasswordBreached) {
-        setError(t('auth.form.errors.breachedPassword'));
-        return;
+    // Per verify-email, la validazione viene gestita dentro startTransition
+    if (mode !== 'verify-email') {
+      if (mode === 'login') {
+        if (!form.email || !form.password) {
+          setError(t('auth.form.errors.fillAll'));
+          return;
+        }
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(form.email)) {
+          setError(t('auth.form.errors.invalidEmail'));
+          return;
+        }
+      } else if (mode === 'signup') {
+        if (!form.email || !form.password || !form.name.trim()) {
+          setError(t('auth.form.errors.fillAll'));
+          return;
+        }
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(form.email)) {
+          setError(t('auth.form.errors.invalidEmail'));
+          return;
+        }
+        // Password strength validation for signup
+        if (passwordStrength.strength === 'weak') {
+          setError(t('auth.form.errors.weakPassword'));
+          return;
+        }
+        // Password breach check for signup
+        if (isPasswordBreached) {
+          setError(t('auth.form.errors.breachedPassword'));
+          return;
+        }
       }
     }
 
