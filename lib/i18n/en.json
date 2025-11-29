@@ -183,5 +183,63 @@
     "title": "Tradelia AI · Free Financial Education",
     "description": "Free financial education based on verifiable proprietary AI frameworks. Complete training paths, educational material compliant with international academic standards and MiFID II regulations.",
     "keywords": "financial education, financial training, AI frameworks, MiFID II, market analysis, trading education"
+  },
+  "auth": {
+    "title": "Sign in to Tradelia",
+    "description": "Access your dashboard to explore training paths, verifiable reports, and documented AI frameworks.",
+    "mode": {
+      "login": "Sign in",
+      "signup": "Sign up"
+    },
+    "form": {
+      "name": {
+        "label": "Full name",
+        "placeholder": "Your name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "name@example.com"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Your password",
+        "show": "Show password",
+        "hide": "Hide password"
+      },
+      "passwordStrength": {
+        "label": "Strength",
+        "weak": "Weak",
+        "fair": "Fair",
+        "good": "Good",
+        "strong": "Strong",
+        "needs": "Needs",
+        "checking": "Checking...",
+        "breached": "This password was found in a data breach. Please choose a different password.",
+        "safe": "Password not found in known breaches."
+      },
+      "submit": {
+        "login": "Sign in",
+        "signup": "Create account"
+      },
+      "submitting": "Please wait...",
+      "forgotPassword": "Forgot password?",
+      "footer": {
+        "text": "By continuing, you agree to our",
+        "privacy": "Privacy Policy",
+        "and": "and",
+        "terms": "Terms & Conditions",
+        "backHome": "← Back to homepage"
+      },
+      "errors": {
+        "fillAll": "Please fill in all required fields.",
+        "invalidEmail": "Please enter a valid email address.",
+        "weakPassword": "Password is too weak. Please choose a stronger password.",
+        "breachedPassword": "This password has been compromised. Please choose a different password.",
+        "emailExists": "An account with this email already exists. Try signing in instead."
+      },
+      "success": {
+        "signup": "Registration complete! Check your email to confirm your account."
+      }
+    }
   }
 }

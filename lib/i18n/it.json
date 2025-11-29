@@ -183,5 +183,63 @@
     "title": "Tradelia AI · Formazione Finanziaria Gratuita",
     "description": "Formazione finanziaria gratuita basata su framework AI proprietari verificabili. Percorsi formativi completi, materiale didattico conforme agli standard accademici internazionali e alle normative MiFID II.",
     "keywords": "formazione finanziaria, educazione finanziaria, framework AI, MiFID II, analisi mercati, trading education"
+  },
+  "auth": {
+    "title": "Accedi a Tradelia",
+    "description": "Accedi alla dashboard per esplorare percorsi formativi, report verificabili e framework AI documentati.",
+    "mode": {
+      "login": "Accedi",
+      "signup": "Registrati"
+    },
+    "form": {
+      "name": {
+        "label": "Nome completo",
+        "placeholder": "Il tuo nome"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "nome@esempio.com"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "La tua password",
+        "show": "Mostra password",
+        "hide": "Nascondi password"
+      },
+      "passwordStrength": {
+        "label": "Sicurezza",
+        "weak": "Debole",
+        "fair": "Discreta",
+        "good": "Buona",
+        "strong": "Forte",
+        "needs": "Richiede",
+        "checking": "Verifica in corso...",
+        "breached": "Questa password è stata compromessa in una violazione di dati. Scegli una password diversa.",
+        "safe": "Password non trovata in violazioni note."
+      },
+      "submit": {
+        "login": "Accedi",
+        "signup": "Crea account"
+      },
+      "submitting": "Attendere...",
+      "forgotPassword": "Password dimenticata?",
+      "footer": {
+        "text": "Proseguendo, accetti la nostra",
+        "privacy": "Privacy Policy",
+        "and": "e i",
+        "terms": "Termini e Condizioni",
+        "backHome": "← Torna alla homepage"
+      },
+      "errors": {
+        "fillAll": "Compila tutti i campi richiesti.",
+        "invalidEmail": "Inserisci un indirizzo email valido.",
+        "weakPassword": "La password è troppo debole. Scegli una password più sicura.",
+        "breachedPassword": "Questa password è stata compromessa. Scegli una password diversa.",
+        "emailExists": "Esiste già un account con questa email. Prova ad accedere."
+      },
+      "success": {
+        "signup": "Registrazione completata! Controlla la tua email per confermare l'account."
+      }
+    }
   }
 }
