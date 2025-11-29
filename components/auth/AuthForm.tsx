@@ -245,7 +245,7 @@ export function AuthForm() {
       }
 
       if (mode === 'login') {
-        const { error: signInError } = await supabase.auth.signInWithPassword({
+        const { error: signInError, data } = await supabase.auth.signInWithPassword({
           email: form.email,
           password: form.password,
         });
@@ -255,8 +255,23 @@ export function AuthForm() {
           return;
         }
 
-        // Forza un reload completo per assicurarsi che la sessione sia disponibile
-        window.location.href = '/dashboard';
+        // Verifica che la sessione sia disponibile prima di reindirizzare
+        if (data?.session) {
+          // Aspetta un momento per assicurarsi che i cookie siano salvati
+          await new Promise((resolve) => setTimeout(resolve, 100));
+          
+          // Verifica nuovamente la sessione
+          const { data: { session: verifiedSession } } = await supabase.auth.getSession();
+          
+          if (verifiedSession) {
+            // Forza un reload completo per assicurarsi che la sessione sia disponibile lato server
+            window.location.href = '/dashboard';
+            return;
+          }
+        }
+        
+        // Se non c'è sessione, mostra errore
+        setError('Errore durante il login. Riprova.');
         return;
       }
 
