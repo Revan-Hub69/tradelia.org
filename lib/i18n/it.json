@@ -283,5 +283,21 @@
         "tokenExpired": "Il link di reset password è scaduto o non è valido. Richiedi un nuovo link."
       }
     }
+  },
+  "onboarding": {
+    "badge": "Configurazione iniziale",
+    "title": "Completa il tuo profilo",
+    "description": "Condividi alcune informazioni per personalizzare la tua esperienza su Tradelia. I dati sono utilizzati esclusivamente per migliorare i contenuti educativi e le funzionalità della piattaforma.",
+    "affiliation": "Affiliazione (opzionale)",
+    "affiliationPlaceholder": "Es: Università, Istituto di ricerca, Studio professionale...",
+    "affiliationHint": "Aiuta a personalizzare i contenuti in base al tuo contesto",
+    "country": "Paese",
+    "countryPlaceholder": "IT",
+    "countryHint": "Codice ISO a 2 lettere (es: IT, FR, DE, US)",
+    "notifications": "Desidero ricevere aggiornamenti su nuove ricerche, contenuti educativi e miglioramenti della piattaforma.",
+    "submit": "Inizia l'esplorazione",
+    "saving": "Salvataggio in corso…",
+    "loading": "Verifica profilo…",
+    "footer": "Le informazioni sono trattate secondo le normative GDPR e MiFID II. Non condividiamo i tuoi dati con terze parti."
   }
 }
