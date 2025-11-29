@@ -92,7 +92,8 @@ async function checkPasswordBreach(password: string): Promise<boolean> {
       body: JSON.stringify({ password }),
     });
     const data = await response.json();
-    return data.isBreached || false;
+    // L'API ritorna 'pwned', non 'isBreached'
+    return data.pwned === true;
   } catch {
     return false;
   }
@@ -105,6 +106,19 @@ export function AuthForm() {
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+
+  // Gestisci errori dalla URL (es. callback conferma email fallita)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const errorParam = params.get('error');
+      if (errorParam === 'email_verification_failed') {
+        setError(t('auth.form.errors.emailVerificationFailed'));
+        // Rimuovi il parametro dalla URL
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+    }
+  }, [t]);
   const [isPending, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState<ReturnType<typeof calculatePasswordStrength>>({
@@ -208,7 +222,8 @@ export function AuthForm() {
           data: {
             full_name: form.name.trim(),
           },
-          emailRedirectTo: `${window.location.origin}/dashboard`,
+          // Redirect alla callback route che gestisce la conferma email
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
         },
       });
 

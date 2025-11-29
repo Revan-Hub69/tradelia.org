@@ -235,7 +235,8 @@
         "invalidEmail": "Inserisci un indirizzo email valido.",
         "weakPassword": "La password è troppo debole. Scegli una password più sicura.",
         "breachedPassword": "Questa password è stata compromessa. Scegli una password diversa.",
-        "emailExists": "Esiste già un account con questa email. Prova ad accedere."
+        "emailExists": "Esiste già un account con questa email. Prova ad accedere.",
+        "emailVerificationFailed": "Conferma email fallita. Il link potrebbe essere scaduto o non valido. Prova a registrarti di nuovo."
       },
       "success": {
         "signup": "Registrazione completata! Controlla la tua email per confermare l'account."

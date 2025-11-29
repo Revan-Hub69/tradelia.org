@@ -235,7 +235,8 @@
         "invalidEmail": "Please enter a valid email address.",
         "weakPassword": "Password is too weak. Please choose a stronger password.",
         "breachedPassword": "This password has been compromised. Please choose a different password.",
-        "emailExists": "An account with this email already exists. Try signing in instead."
+        "emailExists": "An account with this email already exists. Try signing in instead.",
+        "emailVerificationFailed": "Email verification failed. The link may have expired or is invalid. Please try signing up again."
       },
       "success": {
         "signup": "Registration complete! Check your email to confirm your account."
