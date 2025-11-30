@@ -310,5 +310,165 @@
         "tokenExpired": "Il link di reset password è scaduto o non è valido. Richiedi un nuovo link."
       }
     }
+  },
+  "proUtilities": {
+    "title": "Utilities Pro",
+    "subtitle": "Strumenti avanzati per utenti Pro",
+    "open": "Apri utilities Pro",
+    "close": "Chiudi",
+    "back": "Indietro",
+    "comingSoon": "Prossimamente",
+    "footer": "Funzionalità esclusive per utenti Pro",
+    "portfolio": {
+      "label": "Gestione Portafoglio",
+      "description": "Monitora e gestisci le tue posizioni",
+      "title": "Portafoglio",
+      "subtitle": "Gestisci le tue posizioni",
+      "add": "Aggiungi posizione",
+      "symbol": "Simbolo",
+      "quantity": "Quantità",
+      "price": "Prezzo",
+      "total": "Totale",
+      "change": "Variazione",
+      "totalValue": "Valore Totale",
+      "totalChange": "Variazione",
+      "cancel": "Annulla",
+      "empty": "Nessuna posizione. Aggiungi la prima posizione.",
+      "delete": "Elimina"
+    },
+    "calculator": {
+      "label": "Calcolatrice Finanziaria",
+      "description": "Calcoli avanzati per investimenti",
+      "title": "Calcolatrice Finanziaria",
+      "subtitle": "Calcoli finanziari avanzati",
+      "principal": "Capitale Iniziale (€)",
+      "rate": "Tasso Annuo (%)",
+      "time": "Anni",
+      "payment": "Pagamento Periodico (€)",
+      "futureValue": "Valore Futuro (€)",
+      "calculate": "Calcola",
+      "result": "Risultato",
+      "types": {
+        "compound": "Interesse Composto",
+        "compoundDesc": "Calcola il valore futuro con interesse composto",
+        "present": "Valore Attuale",
+        "presentDesc": "Calcola il valore attuale di un importo futuro",
+        "future": "Valore Futuro",
+        "futureDesc": "Calcola il valore futuro di un investimento",
+        "annuity": "Rendita",
+        "annuityDesc": "Calcola il valore futuro di una rendita"
+      }
+    },
+    "alerts": {
+      "label": "Sistema di Alert",
+      "description": "Notifiche personalizzate per i tuoi asset",
+      "title": "Sistema di Alert",
+      "subtitle": "Notifiche personalizzate per i tuoi asset",
+      "add": "Aggiungi alert",
+      "name": "Nome Alert",
+      "namePlaceholder": "Es: AAPL sopra €200",
+      "type": "Tipo",
+      "typePrice": "Prezzo",
+      "typeVolume": "Volume",
+      "typeCustom": "Personalizzato",
+      "symbol": "Simbolo",
+      "condition": "Condizione",
+      "value": "Valore",
+      "above": "Sopra",
+      "below": "Sotto",
+      "equals": "Uguale a",
+      "cancel": "Annulla",
+      "empty": "Nessun alert configurato. Aggiungi il primo alert.",
+      "active": "Attivo",
+      "inactive": "Inattivo",
+      "activate": "Attiva",
+      "deactivate": "Disattiva",
+      "delete": "Elimina"
+    },
+    "export": {
+      "label": "Esporta Dati",
+      "description": "Scarica i tuoi dati in formato CSV o JSON"
+    },
+    "analytics": {
+      "label": "Analisi Avanzate",
+      "description": "Statistiche dettagliate e insights"
+    },
+    "community": {
+      "label": "Community Proposals",
+      "description": "Proponi e vota analisi della community"
+    },
+    "api": {
+      "label": "API Keys",
+      "description": "Gestisci le tue chiavi API"
+    },
+    "backup": {
+      "label": "Backup & Restore",
+      "description": "Backup e ripristino dei tuoi dati"
+    },
+    "templates": {
+      "label": "Template Personalizzati",
+      "description": "Crea e gestisci template personalizzati"
+    }
+  },
+  "glossary": {
+    "title": "Glossario",
+    "subtitle": "Definizioni e termini finanziari",
+    "searchPlaceholder": "Cerca un termine...",
+    "noResults": "Nessun termine trovato",
+    "relatedTerms": "Termini correlati",
+    "stats": "{count} termini disponibili"
+  },
+  "widgets": {
+    "title": "Widget",
+    "subtitle": "Personalizza la tua dashboard con widget interattivi",
+    "all": "Tutti",
+    "enabled": "Abilitato",
+    "disabled": "Disabilitato",
+    "noWidgets": "Nessun widget disponibile in questa categoria"
+  },
+  "admin": {
+    "notifications": {
+      "title": "Gestione Notifiche",
+      "subtitle": "Crea e gestisci notifiche per gli utenti",
+      "create": "Crea Notifica",
+      "newNotification": "Nuova Notifica",
+      "titlePlaceholder": "Es: Nuovo report disponibile",
+      "message": "Messaggio",
+      "messagePlaceholder": "Contenuto della notifica...",
+      "type": "Tipo",
+      "typePush": "Push",
+      "typeEmail": "Email",
+      "typeSMS": "SMS",
+      "typeWhatsApp": "WhatsApp",
+      "target": "Destinatari",
+      "targetAll": "Tutti",
+      "targetPro": "Solo Pro",
+      "targetTrial": "Solo Trial",
+      "targetCustom": "Personalizzato",
+      "autoOnReport": "Invia automaticamente ad ogni nuovo report",
+      "cancel": "Annulla",
+      "empty": "Nessuna notifica creata",
+      "auto": "Auto",
+      "confirmDelete": "Eliminare questa notifica?"
+    },
+    "social": {
+      "title": "Social Media Auto-Posting",
+      "subtitle": "Gestisci post automatici sui social con AI",
+      "config": "Configura",
+      "create": "Crea Post",
+      "platformConfig": "Configurazione Piattaforme",
+      "autoPostOnReport": "Post automatico ad ogni report",
+      "save": "Salva Configurazione",
+      "newPost": "Nuovo Post",
+      "platform": "Piattaforma",
+      "link": "Link (opzionale)",
+      "content": "Contenuto",
+      "generateAI": "Genera con AI",
+      "contentPlaceholder": "Scrivi il contenuto del post...",
+      "cancel": "Annulla",
+      "empty": "Nessun post creato",
+      "postNow": "Posta ora",
+      "confirmDelete": "Eliminare questo post?"
+    }
   }
 }

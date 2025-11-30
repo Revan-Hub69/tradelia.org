@@ -1,0 +1,296 @@
+'use client';
+
+import { useState } from 'react';
+import { useIsPro } from '@/lib/hooks/useUserRole';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Sparkles, 
+  X, 
+  FileDown, 
+  BarChart3, 
+  Users, 
+  Key, 
+  Database,
+  TrendingUp,
+  Zap,
+  PieChart,
+  Calculator,
+  Bell,
+  ArrowLeft
+} from 'lucide-react';
+import { useTranslations } from '@/lib/i18n/use-translations';
+import { cn } from '@/lib/utils/cn';
+import { PortfolioManager } from './utilities/PortfolioManager';
+import { FinancialCalculator } from './utilities/FinancialCalculator';
+import { AlertSystem } from './utilities/AlertSystem';
+
+interface Utility {
+  id: string;
+  icon: React.ReactNode;
+  label: string;
+  description: string;
+  component?: React.ReactNode;
+  action?: () => void;
+  comingSoon?: boolean;
+}
+
+export function ProUtilities() {
+  const isPro = useIsPro();
+  const { t } = useTranslations();
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedUtility, setSelectedUtility] = useState<string | null>(null);
+
+  // Non mostrare se non è Pro
+  if (!isPro) {
+    return null;
+  }
+
+  const utilities: Utility[] = [
+    {
+      id: 'portfolio',
+      icon: <PieChart className="w-5 h-5" />,
+      label: t('proUtilities.portfolio.label') || 'Gestione Portafoglio',
+      description: t('proUtilities.portfolio.description') || 'Monitora e gestisci le tue posizioni',
+      component: <PortfolioManager />,
+    },
+    {
+      id: 'calculator',
+      icon: <Calculator className="w-5 h-5" />,
+      label: t('proUtilities.calculator.label') || 'Calcolatrice Finanziaria',
+      description: t('proUtilities.calculator.description') || 'Calcoli avanzati per investimenti',
+      component: <FinancialCalculator />,
+    },
+    {
+      id: 'alerts',
+      icon: <Bell className="w-5 h-5" />,
+      label: t('proUtilities.alerts.label') || 'Sistema di Alert',
+      description: t('proUtilities.alerts.description') || 'Notifiche personalizzate per i tuoi asset',
+      component: <AlertSystem />,
+    },
+    {
+      id: 'export',
+      icon: <FileDown className="w-5 h-5" />,
+      label: t('proUtilities.export.label') || 'Esporta Dati',
+      description: t('proUtilities.export.description') || 'Scarica i tuoi dati in formato CSV o JSON',
+      action: () => {
+        // TODO: Implementare export
+        console.log('Export data');
+      },
+    },
+    {
+      id: 'analytics',
+      icon: <BarChart3 className="w-5 h-5" />,
+      label: t('proUtilities.analytics.label') || 'Analisi Avanzate',
+      description: t('proUtilities.analytics.description') || 'Statistiche dettagliate e insights',
+      action: () => {
+        // TODO: Implementare analytics
+        console.log('Advanced analytics');
+      },
+    },
+    {
+      id: 'community',
+      icon: <Users className="w-5 h-5" />,
+      label: t('proUtilities.community.label') || 'Community Proposals',
+      description: t('proUtilities.community.description') || 'Proponi e vota analisi della community',
+      action: () => {
+        // TODO: Navigare a community proposals
+        console.log('Community proposals');
+      },
+    },
+    {
+      id: 'api',
+      icon: <Key className="w-5 h-5" />,
+      label: t('proUtilities.api.label') || 'API Keys',
+      description: t('proUtilities.api.description') || 'Gestisci le tue chiavi API',
+      action: () => {
+        // TODO: Navigare a API keys
+        console.log('API keys');
+      },
+      comingSoon: true,
+    },
+    {
+      id: 'backup',
+      icon: <Database className="w-5 h-5" />,
+      label: t('proUtilities.backup.label') || 'Backup & Restore',
+      description: t('proUtilities.backup.description') || 'Backup e ripristino dei tuoi dati',
+      action: () => {
+        // TODO: Implementare backup
+        console.log('Backup & restore');
+      },
+      comingSoon: true,
+    },
+    {
+      id: 'templates',
+      icon: <Zap className="w-5 h-5" />,
+      label: t('proUtilities.templates.label') || 'Template Personalizzati',
+      description: t('proUtilities.templates.description') || 'Crea e gestisci template personalizzati',
+      action: () => {
+        // TODO: Implementare templates
+        console.log('Custom templates');
+      },
+      comingSoon: true,
+    },
+  ];
+
+  const currentUtility = selectedUtility ? utilities.find(u => u.id === selectedUtility) : null;
+
+  return (
+    <>
+      {/* Floating Button */}
+      <motion.button
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-accent via-accent to-accent-hover shadow-lg hover:shadow-xl border border-accent/30 flex items-center justify-center text-white transition-all duration-200 group"
+        aria-label={t('proUtilities.open') || 'Apri utilities Pro'}
+      >
+        <Sparkles className="w-6 h-6 group-hover:rotate-12 transition-transform duration-200" />
+        <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-400 rounded-full border-2 border-bg-base animate-pulse" />
+      </motion.button>
+
+      {/* Drawer */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => {
+                setIsOpen(false);
+                setSelectedUtility(null);
+              }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+            />
+
+            {/* Drawer Panel */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-bg-surface border-l border-border-subtle shadow-2xl z-50 flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-border-subtle bg-gradient-to-r from-accent/10 via-transparent to-accent/10">
+                <div className="flex items-center gap-3">
+                  {selectedUtility && (
+                    <button
+                      onClick={() => setSelectedUtility(null)}
+                      className="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors"
+                      aria-label={t('proUtilities.back') || 'Indietro'}
+                    >
+                      <ArrowLeft className="w-5 h-5" />
+                    </button>
+                  )}
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center">
+                    <Sparkles className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-text-primary">
+                      {currentUtility ? currentUtility.label : (t('proUtilities.title') || 'Utilities Pro')}
+                    </h2>
+                    <p className="text-xs text-text-tertiary">
+                      {currentUtility ? currentUtility.description : (t('proUtilities.subtitle') || 'Strumenti avanzati per utenti Pro')}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    setSelectedUtility(null);
+                  }}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors"
+                  aria-label={t('proUtilities.close') || 'Chiudi'}
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 overflow-y-auto">
+                {selectedUtility && currentUtility?.component ? (
+                  <div className="p-6">
+                    {currentUtility.component}
+                  </div>
+                ) : (
+                  <div className="p-6 space-y-3">
+                    {utilities.map((utility, index) => (
+                      <motion.button
+                        key={utility.id}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        onClick={() => {
+                          if (!utility.comingSoon) {
+                            if (utility.component) {
+                              setSelectedUtility(utility.id);
+                            } else if (utility.action) {
+                              utility.action();
+                            }
+                          }
+                        }}
+                        disabled={utility.comingSoon}
+                        className={cn(
+                          'w-full p-4 rounded-xl border transition-all duration-200 text-left group',
+                          'bg-bg-soft hover:bg-bg-surface border-border-subtle hover:border-accent/40',
+                          'hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed',
+                          utility.comingSoon && 'relative overflow-hidden'
+                        )}
+                      >
+                        {utility.comingSoon && (
+                          <div className="absolute top-2 right-2 px-2 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-md text-xs text-amber-300 font-medium">
+                            {t('proUtilities.comingSoon') || 'Prossimamente'}
+                          </div>
+                        )}
+                        <div className="flex items-start gap-4">
+                          <div className={cn(
+                            'w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors',
+                            utility.comingSoon
+                              ? 'bg-bg-surface text-text-tertiary'
+                              : 'bg-accent/20 text-accent group-hover:bg-accent/30'
+                          )}>
+                            {utility.icon}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-sm font-semibold text-text-primary mb-1">
+                              {utility.label}
+                            </h3>
+                            <p className="text-xs text-text-secondary leading-relaxed">
+                              {utility.description}
+                            </p>
+                          </div>
+                          {!utility.comingSoon && (
+                            <div className="flex-shrink-0 text-text-tertiary group-hover:text-accent transition-colors">
+                              <TrendingUp className="w-4 h-4" />
+                            </div>
+                          )}
+                        </div>
+                      </motion.button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Footer */}
+              {!selectedUtility && (
+                <div className="p-6 border-t border-border-subtle bg-bg-soft/50">
+                  <div className="flex items-center gap-2 text-xs text-text-tertiary">
+                    <Sparkles className="w-4 h-4 text-accent" />
+                    <span>
+                      {t('proUtilities.footer') || 'Funzionalità esclusive per utenti Pro'}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}

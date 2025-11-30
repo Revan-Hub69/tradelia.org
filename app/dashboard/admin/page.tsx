@@ -4,7 +4,9 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ReportsManagement } from '@/components/admin/ReportsManagement';
 import { UsersManagement } from '@/components/admin/UsersManagement';
-import { FileText, Users, Settings, BarChart3 } from 'lucide-react';
+import { NotificationManagement } from '@/components/admin/NotificationManagement';
+import { SocialMediaManagement } from '@/components/admin/SocialMediaManagement';
+import { FileText, Users, Settings, BarChart3, Bell, Share2 } from 'lucide-react';
 import styles from './admin.module.css';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
@@ -14,7 +16,7 @@ import { buildLocalePath } from '@/lib/i18n/paths';
  * Manages reports creation and user management
  */
 export default function AdminDashboardPage() {
-  const [activeTab, setActiveTab] = useState<'reports' | 'users' | 'settings'>('reports');
+  const [activeTab, setActiveTab] = useState<'reports' | 'users' | 'notifications' | 'social' | 'settings'>('reports');
   const { locale } = useTranslations();
   const dashboardHref = buildLocalePath(locale, '/dashboard');
 
@@ -47,6 +49,26 @@ export default function AdminDashboardPage() {
             >
               <Users className={styles.adminNavIcon} aria-hidden="true" />
               <span>Utenti</span>
+            </button>
+            <button
+              role="tab"
+              aria-selected={activeTab === 'notifications'}
+              aria-controls="notifications-panel"
+              className={`${styles.adminNavButton} ${activeTab === 'notifications' ? styles.active : ''}`}
+              onClick={() => setActiveTab('notifications')}
+            >
+              <Bell className={styles.adminNavIcon} aria-hidden="true" />
+              <span>Notifiche</span>
+            </button>
+            <button
+              role="tab"
+              aria-selected={activeTab === 'social'}
+              aria-controls="social-panel"
+              className={`${styles.adminNavButton} ${activeTab === 'social' ? styles.active : ''}`}
+              onClick={() => setActiveTab('social')}
+            >
+              <Share2 className={styles.adminNavIcon} aria-hidden="true" />
+              <span>Social</span>
             </button>
             <button
               role="tab"
@@ -85,6 +107,26 @@ export default function AdminDashboardPage() {
           hidden={activeTab !== 'users'}
         >
           <UsersManagement />
+        </div>
+
+        <div
+          id="notifications-panel"
+          role="tabpanel"
+          aria-labelledby="notifications-tab"
+          className={styles.adminPanel}
+          hidden={activeTab !== 'notifications'}
+        >
+          <NotificationManagement />
+        </div>
+
+        <div
+          id="social-panel"
+          role="tabpanel"
+          aria-labelledby="social-tab"
+          className={styles.adminPanel}
+          hidden={activeTab !== 'social'}
+        >
+          <SocialMediaManagement />
         </div>
 
         <div

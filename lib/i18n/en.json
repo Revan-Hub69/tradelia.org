@@ -310,5 +310,165 @@
         "tokenExpired": "The password reset link has expired or is invalid. Please request a new link."
       }
     }
+  },
+  "proUtilities": {
+    "title": "Pro Utilities",
+    "subtitle": "Advanced tools for Pro users",
+    "open": "Open Pro utilities",
+    "close": "Close",
+    "back": "Back",
+    "comingSoon": "Coming soon",
+    "footer": "Exclusive features for Pro users",
+    "portfolio": {
+      "label": "Portfolio Management",
+      "description": "Monitor and manage your positions",
+      "title": "Portfolio",
+      "subtitle": "Manage your positions",
+      "add": "Add position",
+      "symbol": "Symbol",
+      "quantity": "Quantity",
+      "price": "Price",
+      "total": "Total",
+      "change": "Change",
+      "totalValue": "Total Value",
+      "totalChange": "Total Change",
+      "cancel": "Cancel",
+      "empty": "No positions. Add your first position.",
+      "delete": "Delete"
+    },
+    "calculator": {
+      "label": "Financial Calculator",
+      "description": "Advanced calculations for investments",
+      "title": "Financial Calculator",
+      "subtitle": "Advanced financial calculations",
+      "principal": "Principal (€)",
+      "rate": "Annual Rate (%)",
+      "time": "Years",
+      "payment": "Periodic Payment (€)",
+      "futureValue": "Future Value (€)",
+      "calculate": "Calculate",
+      "result": "Result",
+      "types": {
+        "compound": "Compound Interest",
+        "compoundDesc": "Calculate future value with compound interest",
+        "present": "Present Value",
+        "presentDesc": "Calculate the present value of a future amount",
+        "future": "Future Value",
+        "futureDesc": "Calculate the future value of an investment",
+        "annuity": "Annuity",
+        "annuityDesc": "Calculate the future value of an annuity"
+      }
+    },
+    "alerts": {
+      "label": "Alert System",
+      "description": "Custom notifications for your assets",
+      "title": "Alert System",
+      "subtitle": "Custom notifications for your assets",
+      "add": "Add alert",
+      "name": "Alert Name",
+      "namePlaceholder": "E.g.: AAPL above €200",
+      "type": "Type",
+      "typePrice": "Price",
+      "typeVolume": "Volume",
+      "typeCustom": "Custom",
+      "symbol": "Symbol",
+      "condition": "Condition",
+      "value": "Value",
+      "above": "Above",
+      "below": "Below",
+      "equals": "Equals",
+      "cancel": "Cancel",
+      "empty": "No alerts configured. Add your first alert.",
+      "active": "Active",
+      "inactive": "Inactive",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "delete": "Delete"
+    },
+    "export": {
+      "label": "Export Data",
+      "description": "Download your data in CSV or JSON format"
+    },
+    "analytics": {
+      "label": "Advanced Analytics",
+      "description": "Detailed statistics and insights"
+    },
+    "community": {
+      "label": "Community Proposals",
+      "description": "Propose and vote on community analyses"
+    },
+    "api": {
+      "label": "API Keys",
+      "description": "Manage your API keys"
+    },
+    "backup": {
+      "label": "Backup & Restore",
+      "description": "Backup and restore your data"
+    },
+    "templates": {
+      "label": "Custom Templates",
+      "description": "Create and manage custom templates"
+    }
+  },
+  "glossary": {
+    "title": "Glossary",
+    "subtitle": "Financial terms and definitions",
+    "searchPlaceholder": "Search for a term...",
+    "noResults": "No terms found",
+    "relatedTerms": "Related terms",
+    "stats": "{count} terms available"
+  },
+  "widgets": {
+    "title": "Widgets",
+    "subtitle": "Customize your dashboard with interactive widgets",
+    "all": "All",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "noWidgets": "No widgets available in this category"
+  },
+  "admin": {
+    "notifications": {
+      "title": "Notification Management",
+      "subtitle": "Create and manage notifications for users",
+      "create": "Create Notification",
+      "newNotification": "New Notification",
+      "titlePlaceholder": "E.g.: New report available",
+      "message": "Message",
+      "messagePlaceholder": "Notification content...",
+      "type": "Type",
+      "typePush": "Push",
+      "typeEmail": "Email",
+      "typeSMS": "SMS",
+      "typeWhatsApp": "WhatsApp",
+      "target": "Recipients",
+      "targetAll": "All",
+      "targetPro": "Pro only",
+      "targetTrial": "Trial only",
+      "targetCustom": "Custom",
+      "autoOnReport": "Send automatically on every new report",
+      "cancel": "Cancel",
+      "empty": "No notifications created",
+      "auto": "Auto",
+      "confirmDelete": "Delete this notification?"
+    },
+    "social": {
+      "title": "Social Media Auto-Posting",
+      "subtitle": "Manage automatic social posts with AI",
+      "config": "Configure",
+      "create": "Create Post",
+      "platformConfig": "Platform Configuration",
+      "autoPostOnReport": "Auto post on every report",
+      "save": "Save Configuration",
+      "newPost": "New Post",
+      "platform": "Platform",
+      "link": "Link (optional)",
+      "content": "Content",
+      "generateAI": "Generate with AI",
+      "contentPlaceholder": "Write post content...",
+      "cancel": "Cancel",
+      "empty": "No posts created",
+      "postNow": "Post now",
+      "confirmDelete": "Delete this post?"
+    }
   }
 }

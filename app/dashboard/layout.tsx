@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { ServiceWorkerProvider } from '@/components/notifications/ServiceWorkerProvider';
 import { InstallPrompt } from '@/components/pwa/InstallPrompt';
+import { ProUtilities } from '@/components/dashboard/ProUtilities';
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   try {
@@ -19,6 +20,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
       <>
         <ServiceWorkerProvider />
         <InstallPrompt />
+        <ProUtilities />
         {children}
       </>
     );
@@ -30,6 +32,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
       <>
         <ServiceWorkerProvider />
         <InstallPrompt />
+        <ProUtilities />
         {children}
       </>
     );
