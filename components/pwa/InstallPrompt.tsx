@@ -16,44 +16,44 @@ export function InstallPrompt() {
 
   useEffect(() => {
     // Verifica se l'app è già installata
-    if (typeof window !== 'undefined') {
-      // Controlla se è in standalone mode (PWA installata)
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-      // Oppure se è stata aggiunta alla home screen
-      const isInStandaloneMode = (window.navigator as any).standalone === true;
-      
-      if (isStandalone || isInStandaloneMode) {
-        setIsInstalled(true);
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    // Controlla se è in standalone mode (PWA installata)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    // Oppure se è stata aggiunta alla home screen
+    const isInStandaloneMode = (window.navigator as any).standalone === true;
+    
+    if (isStandalone || isInStandaloneMode) {
+      setIsInstalled(true);
+      return;
+    }
+
+    // Controlla se l'utente ha già rifiutato (localStorage)
+    const dismissed = localStorage.getItem('pwa-install-dismissed');
+    if (dismissed) {
+      const dismissedTime = parseInt(dismissed, 10);
+      const daysSinceDismissed = (Date.now() - dismissedTime) / (1000 * 60 * 60 * 24);
+      // Mostra di nuovo dopo 7 giorni
+      if (daysSinceDismissed < 7) {
         return;
       }
-
-      // Controlla se l'utente ha già rifiutato (localStorage)
-      const dismissed = localStorage.getItem('pwa-install-dismissed');
-      if (dismissed) {
-        const dismissedTime = parseInt(dismissed, 10);
-        const daysSinceDismissed = (Date.now() - dismissedTime) / (1000 * 60 * 60 * 24);
-        // Mostra di nuovo dopo 7 giorni
-        if (daysSinceDismissed < 7) {
-          return;
-        }
-      }
-
-      // Mostra banner anche se il prompt non è ancora disponibile
-      // (per dispositivi che supportano PWA ma non hanno ancora triggerato beforeinstallprompt)
-      // Attendi 3 secondi dopo il load per non essere invasivo
-      const timer = setTimeout(() => {
-        // Verifica se è un dispositivo mobile o desktop che supporta PWA
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-        
-        if (!isStandalone && !isInstalled) {
-          // Mostra banner anche senza prompt (l'utente può installare manualmente)
-          setShowBanner(true);
-        }
-      }, 3000);
-
-      return () => clearTimeout(timer);
     }
+
+    // Mostra banner anche se il prompt non è ancora disponibile
+    // (per dispositivi che supportano PWA ma non hanno ancora triggerato beforeinstallprompt)
+    // Attendi 3 secondi dopo il load per non essere invasivo
+    const timer = setTimeout(() => {
+      // Verifica se è un dispositivo mobile o desktop che supporta PWA
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isStandaloneCheck = window.matchMedia('(display-mode: standalone)').matches;
+      
+      if (!isStandaloneCheck && !isInstalled) {
+        // Mostra banner anche senza prompt (l'utente può installare manualmente)
+        setShowBanner(true);
+      }
+    }, 3000);
 
     const handleBeforeInstallPrompt = (e: Event) => {
       // Previeni il prompt automatico del browser
@@ -74,10 +74,11 @@ export function InstallPrompt() {
     window.addEventListener('appinstalled', handleAppInstalled);
 
     return () => {
+      clearTimeout(timer);
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
-  }, []);
+  }, [isInstalled]);
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
