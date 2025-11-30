@@ -194,5 +194,5 @@ export const QuickActions = memo(function QuickActions() {
       </div>
     </section>
   );
-}
+});
 
