@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -57,28 +57,28 @@ export function AccountBanner() {
     };
   }, [checkUserStatus]);
 
-  // Non mostrare se verificato o se dismissato
-  if (bannerState === 'verified' || bannerState === 'loading' || dismissed) {
-    return null;
-  }
+  // Controlla se è stato dismissato in precedenza (deve essere prima di qualsiasi return)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const wasDismissed = localStorage.getItem('account-banner-dismissed') === 'true';
+      if (wasDismissed) {
+        setDismissed(true);
+      }
+    }
+  }, []);
 
   const handleDismiss = () => {
     setDismissed(true);
     // Salva in localStorage per non mostrare di nuovo in questa sessione
-    localStorage.setItem('account-banner-dismissed', 'true');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('account-banner-dismissed', 'true');
+    }
   };
 
-  // Controlla se è stato dismissato in precedenza (memoizzato)
-  const wasDismissed = useMemo(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.getItem('account-banner-dismissed') === 'true';
-  }, []);
-
-  useEffect(() => {
-    if (wasDismissed) {
-      setDismissed(true);
-    }
-  }, [wasDismissed]);
+  // Non mostrare se verificato o se dismissato
+  if (bannerState === 'verified' || bannerState === 'loading' || dismissed) {
+    return null;
+  }
 
   return (
     <AnimatePresence>
