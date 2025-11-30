@@ -42,7 +42,6 @@ export function SupabaseManagement() {
     selectedTable ? `/api/admin/supabase/data?table=${selectedTable}&limit=${limit}&offset=${page * limit}` : null,
     {
       cacheTime: 0, // No cache for data
-      revalidateOnFocus: true,
     }
   );
 
