@@ -93,11 +93,7 @@
       "description": "Report ufficiali, percorsi formativi e richieste on demand restano sincronizzati con i paper metodologici e con le policy MiFID II.",
       "ctaPrimary": "Vai alla formazione",
       "supportingText": "Materiale verificabile conforme MiFID II",
-      "chips": [
-        "Research open source",
-        "Compliance MiFID II",
-        "Framework AI verificabili"
-      ],
+      "chips": ["Research open source", "Compliance MiFID II", "Framework AI verificabili"],
       "calloutTitle": "Coerenza MiFID II",
       "calloutText": "Metriche e policy allineate ai paper interni e alle evidenze citate."
     },
@@ -282,28 +278,6 @@
         "noSession": "Sessione non valida. Richiedi un nuovo link di reset.",
         "tokenExpired": "Il link di reset password è scaduto o non è valido. Richiedi un nuovo link."
       }
-    }
-  },
-  "onboarding": {
-    "badge": "Configurazione iniziale",
-    "title": "Completa il tuo profilo",
-    "description": "Condividi alcune informazioni per personalizzare la tua esperienza su Tradelia. I dati sono utilizzati esclusivamente per migliorare i contenuti educativi e le funzionalità della piattaforma.",
-    "emailNotifications": {
-      "title": "Notifiche email",
-      "description": "Ricevi aggiornamenti su nuove ricerche, contenuti educativi e miglioramenti della piattaforma."
-    },
-    "pushNotifications": {
-      "title": "Notifiche push",
-      "description": "Ricevi notifiche in tempo reale sul tuo dispositivo anche quando il browser è chiuso."
-    },
-    "submit": "Inizia l'esplorazione",
-    "skip": "Salta",
-    "saving": "Salvataggio in corso…",
-    "loading": "Verifica profilo…",
-    "footer": "Le informazioni sono trattate secondo le normative GDPR e MiFID II. Non condividiamo i tuoi dati con terze parti.",
-    "errors": {
-      "invalidSession": "Sessione non valida. Ricarica la pagina e riprova.",
-      "saveFailed": "Impossibile salvare i dati. Riprova più tardi."
     }
   }
 }

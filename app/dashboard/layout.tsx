@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { ServiceWorkerProvider } from '@/components/notifications/ServiceWorkerProvider';
+import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   try {
@@ -17,6 +18,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     return (
       <>
         <ServiceWorkerProvider />
+        <InstallPrompt />
         {children}
       </>
     );

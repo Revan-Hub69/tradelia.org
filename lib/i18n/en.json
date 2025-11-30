@@ -93,11 +93,7 @@
       "description": "Official reports, learning paths and on-demand requests stay aligned with our methodological papers and MiFID II compliance notes.",
       "ctaPrimary": "Go to training",
       "supportingText": "Academic-grade material, MiFID II compliant",
-      "chips": [
-        "Open research",
-        "MiFID II ready",
-        "Auditable AI frameworks"
-      ],
+      "chips": ["Open research", "MiFID II ready", "Auditable AI frameworks"],
       "calloutTitle": "MiFID II alignment",
       "calloutText": "Metrics and policies documented inside every internal paper."
     },
@@ -282,28 +278,6 @@
         "noSession": "Invalid session. Please request a new reset link.",
         "tokenExpired": "The password reset link has expired or is invalid. Please request a new link."
       }
-    }
-  },
-  "onboarding": {
-    "badge": "Initial setup",
-    "title": "Complete your profile",
-    "description": "Share some information to personalize your experience on Tradelia. Data is used exclusively to improve educational content and platform features.",
-    "emailNotifications": {
-      "title": "Email notifications",
-      "description": "Receive updates on new research, educational content, and platform improvements."
-    },
-    "pushNotifications": {
-      "title": "Push notifications",
-      "description": "Receive real-time notifications on your device even when the browser is closed."
-    },
-    "submit": "Start exploring",
-    "skip": "Skip",
-    "saving": "Saving…",
-    "loading": "Checking profile…",
-    "footer": "Information is processed according to GDPR and MiFID II regulations. We do not share your data with third parties.",
-    "errors": {
-      "invalidSession": "Invalid session. Please reload the page and try again.",
-      "saveFailed": "Unable to save data. Please try again later."
     }
   }
 }

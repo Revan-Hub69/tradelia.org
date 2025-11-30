@@ -124,6 +124,9 @@ export default function RootLayout({
           `
         }} />
         
+        {/* PWA Manifest */}
+        <link rel="manifest" href="/manifest.json" />
+        
         {/* Favicon */}
         <link rel="icon" type="image/svg+xml" href="/logos/tradelia-icon.svg" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
