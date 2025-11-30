@@ -202,6 +202,58 @@ export function NotificationSettings() {
         </div>
       )}
 
+      {/* PWA Installation */}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {isInstalled ? (
+              <Smartphone className="w-5 h-5 text-green-400" />
+            ) : (
+              <Download className="w-5 h-5 text-dash-text-muted" />
+            )}
+            <div>
+              <h3 className="font-medium text-dash-text">App Installata</h3>
+              <p className="text-sm text-dash-text-muted">
+                {isInstalled 
+                  ? 'L\'app è installata sul tuo dispositivo'
+                  : 'Installa l\'app per accesso rapido e notifiche offline'}
+              </p>
+            </div>
+          </div>
+          {!isInstalled && (
+            <button
+              onClick={async () => {
+                setInstalling(true);
+                const result = await install();
+                setInstalling(false);
+                if (result.success) {
+                  toast.success('App installata con successo!');
+                } else if (result.error) {
+                  toast.info(result.error);
+                }
+              }}
+              disabled={!isInstallable || installing}
+              className="px-4 py-2 bg-dash-accent hover:bg-dash-accent-hover rounded text-sm text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              {installing ? 'Installazione...' : 'Installa App'}
+            </button>
+          )}
+        </div>
+
+        {isInstalled && (
+          <p className="text-xs text-green-400">
+            ✓ App installata e pronta all'uso
+          </p>
+        )}
+
+        {!isInstalled && !isInstallable && (
+          <p className="text-xs text-dash-text-muted">
+            L'installazione non è disponibile. Usa il menu del browser (⋮ o ⋯) e seleziona "Installa app" o "Aggiungi alla schermata home".
+          </p>
+        )}
+      </section>
+
       {/* Push Notifications */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
