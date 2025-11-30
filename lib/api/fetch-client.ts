@@ -28,6 +28,22 @@ export async function resetAuthState() {
 }
 
 /**
+ * Reset redirect flag when on login page (prevents loops)
+ */
+export function resetRedirectFlag() {
+  if (typeof window !== "undefined") {
+    const currentPath = window.location.pathname;
+    const isOnLoginPage =
+      currentPath === "/login" ||
+      currentPath.startsWith("/login/") ||
+      currentPath.startsWith("/en/login");
+    if (isOnLoginPage) {
+      isRedirectingToLogin = false;
+    }
+  }
+}
+
+/**
  * Authenticated fetch wrapper with 401 handling
  *
  * @param url - Request URL
@@ -40,6 +56,24 @@ export async function authenticatedFetch(url: string, options?: RequestInit): Pr
 
   // Handle 401 Unauthorized globally
   if (response.status === 401) {
+    // Don't redirect if we're already on the login page to avoid loops
+    if (typeof window !== "undefined") {
+      const currentPath = window.location.pathname;
+      const isOnLoginPage =
+        currentPath === "/login" ||
+        currentPath.startsWith("/login/") ||
+        currentPath.startsWith("/en/login") ||
+        currentPath === "/en/login/";
+
+      // If already on login page, reset flag and just throw error without redirect
+      if (isOnLoginPage) {
+        isRedirectingToLogin = false; // Reset flag to prevent loops
+        const error = new Error("Unauthorized");
+        (error as Error & { status?: number }).status = 401;
+        throw error;
+      }
+    }
+
     // Only redirect once to avoid multiple redirects
     if (!isRedirectingToLogin) {
       isRedirectingToLogin = true;
