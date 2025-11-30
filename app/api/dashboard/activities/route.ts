@@ -26,7 +26,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ 
       data,
-      unlockedAchievements: unlockedAchievements || [],
     });
   } catch (error) {
     console.error('Error in activities API:', error);
