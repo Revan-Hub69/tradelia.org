@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useApi } from '@/lib/hooks/useApi';
+import { authenticatedFetch } from '@/lib/api/fetch-client';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { toast } from '@/components/ui/Toast';
 
@@ -91,12 +92,19 @@ export const Favorites = memo(function Favorites() {
 
   const removeFavorite = async (id: string) => {
     try {
-      const response = await fetch(`/api/dashboard/favorites?id=${id}`, {
+      // Sanitize ID to prevent XSS
+      const sanitizedId = encodeURIComponent(id);
+      if (!sanitizedId || sanitizedId !== id) {
+        throw new Error('ID non valido');
+      }
+
+      const response = await authenticatedFetch(`/api/dashboard/favorites?id=${sanitizedId}`, {
         method: 'DELETE',
       });
 
       if (!response.ok) {
-        throw new Error('Errore rimozione preferito');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Errore rimozione preferito');
       }
 
       toast.success('Rimosso dai preferiti');
@@ -104,8 +112,10 @@ export const Favorites = memo(function Favorites() {
       // Retry to refresh list
       retry();
     } catch (error) {
-      console.error('Error removing favorite:', error);
-      toast.error('Errore nella rimozione del preferito');
+      // Error is already handled by authenticatedFetch for 401
+      if (error instanceof Error && (error as any).status !== 401) {
+        toast.error('Errore nella rimozione del preferito');
+      }
     }
   };
 
@@ -240,7 +250,12 @@ export function useFavorites() {
     icon?: string;
   }): Promise<boolean> => {
     try {
-      const response = await fetch('/api/dashboard/favorites', {
+      // Validate and sanitize input
+      if (!favorite.id || !favorite.type || !favorite.title || !favorite.href) {
+        throw new Error('Dati mancanti');
+      }
+
+      const response = await authenticatedFetch('/api/dashboard/favorites', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -256,22 +271,31 @@ export function useFavorites() {
       });
 
       if (!response.ok) {
-        throw new Error('Errore aggiunta preferito');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Errore aggiunta preferito');
       }
 
       toast.success('Aggiunto ai preferiti');
       return true;
     } catch (error) {
-      console.error('Error adding favorite:', error);
-      toast.error('Errore nell\'aggiunta del preferito');
+      // Error is already handled by authenticatedFetch for 401
+      if (error instanceof Error && (error as any).status !== 401) {
+        toast.error('Errore nell\'aggiunta del preferito');
+      }
       return false;
     }
   };
 
   const removeFavorite = async (itemId: string, itemType?: 'report' | 'course' | 'module'): Promise<boolean> => {
     try {
+      // Sanitize input
+      const sanitizedItemId = encodeURIComponent(itemId);
+      if (!sanitizedItemId || sanitizedItemId !== itemId) {
+        throw new Error('ID non valido');
+      }
+
       // Get all favorites to find the one with matching item_id
-      const listResponse = await fetch('/api/dashboard/favorites');
+      const listResponse = await authenticatedFetch('/api/dashboard/favorites');
       if (!listResponse.ok) {
         throw new Error('Errore nel caricamento preferiti');
       }
@@ -286,19 +310,24 @@ export function useFavorites() {
         return false;
       }
 
-      const response = await fetch(`/api/dashboard/favorites?id=${favorite.id}`, {
+      // Sanitize favorite ID
+      const sanitizedFavoriteId = encodeURIComponent(favorite.id);
+      const response = await authenticatedFetch(`/api/dashboard/favorites?id=${sanitizedFavoriteId}`, {
         method: 'DELETE',
       });
 
       if (!response.ok) {
-        throw new Error('Errore rimozione preferito');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Errore rimozione preferito');
       }
 
       toast.success('Rimosso dai preferiti');
       return true;
     } catch (error) {
-      console.error('Error removing favorite:', error);
-      toast.error('Errore nella rimozione del preferito');
+      // Error is already handled by authenticatedFetch for 401
+      if (error instanceof Error && (error as any).status !== 401) {
+        toast.error('Errore nella rimozione del preferito');
+      }
       return false;
     }
   };
@@ -308,8 +337,12 @@ export function useFavorites() {
     itemType: 'report' | 'course' | 'module'
   ): Promise<boolean> => {
     try {
-      const response = await fetch(
-        `/api/dashboard/favorites?check=${itemId}&type=${itemType}`
+      // Sanitize input
+      const sanitizedItemId = encodeURIComponent(itemId);
+      const sanitizedType = encodeURIComponent(itemType);
+      
+      const response = await authenticatedFetch(
+        `/api/dashboard/favorites?check=${sanitizedItemId}&type=${sanitizedType}`
       );
       
       if (!response.ok) return false;

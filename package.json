@@ -1,6 +1,6 @@
 {
   "name": "tradelia",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "type": "module",
   "description": "Tradelia AI Dashboard - Next.js Application",
   "main": "server.js",

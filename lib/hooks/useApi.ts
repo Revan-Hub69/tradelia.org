@@ -1,10 +1,17 @@
 /**
  * Custom hook for API calls with retry, caching, and error handling
  * Based on React Query patterns
+ *
+ * Features:
+ * - Centralized 401 handling with automatic redirect to login
+ * - Automatic retry after authentication
+ * - Integration with global auth state
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { retryWithBackoff, isRetryableError } from './useRetry';
+import { useState, useEffect, useCallback, useRef } from "react";
+import { retryWithBackoff, isRetryableError } from "./useRetry";
+import { authenticatedFetch, registerAuthRetry } from "@/lib/api/fetch-client";
+import { useAuthState } from "./useAuthState";
 
 export interface UseApiOptions<T> {
   enabled?: boolean;
@@ -16,6 +23,7 @@ export interface UseApiOptions<T> {
   onSuccess?: (data: T) => void;
   onError?: (error: Error) => void;
   cacheTime?: number; // milliseconds
+  requireAuth?: boolean; // If false, allows requests even when not authenticated (default: true)
 }
 
 export interface UseApiResult<T> {
@@ -27,7 +35,7 @@ export interface UseApiResult<T> {
 }
 
 // Simple in-memory cache
-const cache = new Map<string, { data: any; timestamp: number; cacheTime: number }>();
+const cache = new Map<string, { data: unknown; timestamp: number; cacheTime: number }>();
 
 function getCacheKey(url: string, options?: RequestInit): string {
   return `${url}:${JSON.stringify(options)}`;
@@ -35,7 +43,9 @@ function getCacheKey(url: string, options?: RequestInit): string {
 
 function getCachedData<T>(key: string, cacheTime: number): T | null {
   const cached = cache.get(key);
-  if (!cached) return null;
+  if (!cached) {
+    return null;
+  }
 
   const age = Date.now() - cached.timestamp;
   if (age > cacheTime) {
@@ -65,6 +75,7 @@ export function useApi<T>(
     onSuccess,
     onError,
     cacheTime = 5 * 60 * 1000, // 5 minutes default
+    requireAuth = true, // Default: require authentication
     ...fetchOptions
   } = options || {};
 
@@ -72,9 +83,58 @@ export function useApi<T>(
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const lastUrlRef = useRef<string | null>(null); // Track URL changes
+  const hasFailedRef = useRef<boolean>(false); // Track if request failed due to 401
+
+  // Get global auth state (only if requireAuth is true)
+  const authState = requireAuth ? useAuthState() : { isAuthenticated: true, isLoading: false };
+  const { isAuthenticated, isLoading: authLoading } = authState;
+
+  // Use refs to avoid dependency issues
+  const isAuthenticatedRef = useRef(isAuthenticated);
+  const authLoadingRef = useRef(authLoading);
+
+  // Update refs when state changes
+  useEffect(() => {
+    isAuthenticatedRef.current = isAuthenticated;
+    authLoadingRef.current = authLoading;
+  }, [isAuthenticated, authLoading]);
+
+  // Reset failed flag when URL changes
+  useEffect(() => {
+    if (url !== lastUrlRef.current) {
+      hasFailedRef.current = false;
+      lastUrlRef.current = url;
+    }
+  }, [url]);
+
+  // Automatic retry after authentication
+  useEffect(() => {
+    // If user just authenticated and we had a failed request, retry
+    if (requireAuth && isAuthenticated && !authLoading && hasFailedRef.current && url) {
+      hasFailedRef.current = false;
+      // Small delay to ensure auth state is fully propagated
+      const timer = setTimeout(() => {
+        // Use ref to get latest fetchData
+        if (isAuthenticatedRef.current && !authLoadingRef.current) {
+          fetchData();
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthenticated, authLoading, url, requireAuth]);
 
   const fetchData = useCallback(async () => {
-    if (!url || !enabled) return;
+    // Don't make requests if disabled or no URL
+    if (!url || !enabled) {
+      return;
+    }
+
+    // Don't block requests based on auth state
+    // Let authenticatedFetch handle 401 errors and redirect
+    // This allows retry mechanism to work properly
+    // If requireAuth is false, we make the request anyway
+    // If requireAuth is true, authenticatedFetch will handle 401
 
     // Check cache
     const cacheKey = getCacheKey(url, fetchOptions);
@@ -96,14 +156,18 @@ export function useApi<T>(
 
     try {
       const fetchFn = async () => {
-        const response = await fetch(url, {
+        // Use authenticated fetch only if auth is required
+        // For public APIs, use regular fetch
+        const fetchFunction = requireAuth ? authenticatedFetch : fetch;
+
+        const response = await fetchFunction(url, {
           ...fetchOptions,
           signal: abortControllerRef.current?.signal,
         });
 
         if (!response.ok) {
           const error = new Error(`HTTP ${response.status}: ${response.statusText}`);
-          (error as any).status = response.status;
+          (error as Error & { status?: number }).status = response.status;
           throw error;
         }
 
@@ -124,13 +188,26 @@ export function useApi<T>(
       if (onSuccess) {
         onSuccess(result);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Ignore abort errors
-      if (err.name === 'AbortError') {
+      if (err instanceof Error && err.name === "AbortError") {
         return;
       }
 
       const error = err instanceof Error ? err : new Error(String(err));
+
+      // Track 401 errors for automatic retry after login
+      // Only if auth is required (public APIs don't need retry)
+      const errorWithStatus = err as Error & { status?: number };
+      if (errorWithStatus?.status === 401 && requireAuth) {
+        hasFailedRef.current = true;
+        // Register retry callback for automatic retry after authentication
+        registerAuthRetry(() => {
+          hasFailedRef.current = false;
+          fetchData();
+        });
+      }
+
       setError(error);
 
       if (onError) {
@@ -139,7 +216,16 @@ export function useApi<T>(
     } finally {
       setLoading(false);
     }
-  }, [url, enabled, shouldRetry, cacheTime, JSON.stringify(fetchOptions), onSuccess, onError]);
+  }, [
+    url,
+    enabled,
+    shouldRetry,
+    cacheTime,
+    requireAuth,
+    JSON.stringify(fetchOptions),
+    onSuccess,
+    onError,
+  ]);
 
   useEffect(() => {
     fetchData();
@@ -152,6 +238,8 @@ export function useApi<T>(
   }, [fetchData]);
 
   const refetch = useCallback(async () => {
+    // Reset failed flag on manual refetch
+    hasFailedRef.current = false;
     // Clear cache
     if (url) {
       const cacheKey = getCacheKey(url, fetchOptions);
@@ -161,6 +249,8 @@ export function useApi<T>(
   }, [url, fetchData, JSON.stringify(fetchOptions)]);
 
   const retry = useCallback(async () => {
+    // Reset failed flag on manual retry
+    hasFailedRef.current = false;
     setError(null);
     await fetchData();
   }, [fetchData]);
@@ -173,4 +263,3 @@ export function useApi<T>(
     retry,
   };
 }
-

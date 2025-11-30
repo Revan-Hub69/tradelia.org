@@ -30,7 +30,7 @@ const ToastContainer = dynamic(() => import('@/components/ui/Toast').then(m => (
 const inter = Inter({ 
   subsets: ['latin'],
   display: 'swap',
-  preload: true,
+  preload: false, // Disabled to avoid preload warnings when font isn't used immediately
   variable: '--font-inter',
   fallback: ['system-ui', '-apple-system', 'sans-serif'],
   adjustFontFallback: true,

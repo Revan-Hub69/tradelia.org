@@ -29,7 +29,15 @@ export const RecentActivity = memo(function RecentActivity() {
   const { t, locale } = useTranslations();
   const [filter, setFilter] = useState<string>('all');
 
-  const { data: activitiesData, loading, error, retry } = useApi<any[]>(
+  interface ActivityData {
+    id: string;
+    type: 'report_viewed' | 'course_started' | 'course_completed' | 'analysis_requested';
+    title: string;
+    description: string | null;
+    created_at: string;
+  }
+
+  const { data: activitiesData, loading, error, retry } = useApi<ActivityData[]>(
     `/api/dashboard/activities?limit=10&filter=${filter}`,
     {
       cacheTime: 1 * 60 * 1000, // 1 minute
@@ -48,7 +56,7 @@ export const RecentActivity = memo(function RecentActivity() {
   const activities = useMemo<Activity[]>(() => {
     if (!activitiesData) return [];
 
-    return activitiesData.map((item: any) => {
+    return activitiesData.map((item: ActivityData) => {
       let icon = <FileText className="w-4 h-4" />;
       let href = '/dashboard';
 

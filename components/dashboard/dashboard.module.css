@@ -13,7 +13,11 @@
   position: relative;
   margin-bottom: 3rem;
   padding: 2.5rem !important;
-  background: radial-gradient(140% 140% at 0% 0%, rgba(30, 64, 175, 0.35), rgba(10, 14, 26, 0.9)) !important;
+  background: radial-gradient(
+    140% 140% at 0% 0%,
+    rgba(30, 64, 175, 0.35),
+    rgba(10, 14, 26, 0.9)
+  ) !important;
   border: 1px solid rgba(59, 130, 246, 0.25) !important;
   border-radius: 24px !important;
   box-shadow: 0 30px 80px rgba(15, 23, 42, 0.35);
@@ -202,7 +206,8 @@
   font-size: 0.75rem;
   letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: rgba(148, 163, 184, 0.8);
+  /* Improved contrast for WCAG AA: was rgba(148, 163, 184, 0.8) */
+  color: rgba(184, 197, 209, 0.9); /* Higher contrast: #b8c5d1 with 0.9 opacity */
 }
 
 .sectionDescription {
@@ -232,8 +237,23 @@
 
 .overviewStatsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  /* Mobile-first: 1 column on small screens, 2 on tablet, 4 on desktop */
+  grid-template-columns: 1fr;
   gap: 1.5rem;
+}
+
+/* Tablet and up */
+@media (min-width: 640px) {
+  .overviewStatsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop and up */
+@media (min-width: 1024px) {
+  .overviewStatsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
 }
 
 .statCard {
@@ -254,6 +274,14 @@
   border-color: var(--dash-border-strong);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   transform: translateY(-2px);
+  will-change: transform; /* Performance optimization */
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .statCard:hover {
+    transform: none;
+  }
 }
 
 .statHeader {
@@ -337,10 +365,23 @@
   border-color: rgba(59, 130, 246, 0.4);
   background: rgba(59, 130, 246, 0.15);
   transform: translateY(-1px);
+  will-change: transform; /* Performance optimization */
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .statAction:hover {
+    transform: none;
+  }
+  .statAction:hover svg {
+    transform: none;
+  }
 }
 
 .statAction svg {
-  transition: transform 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
   color: rgba(226, 232, 240, 0.7);
 }
 
@@ -359,7 +400,7 @@
   box-shadow: 0 30px 80px rgba(8, 10, 18, 0.35);
 }
 
-.moduleCategory[data-priority='secondary'] {
+.moduleCategory[data-priority="secondary"] {
   background: rgba(15, 18, 26, 0.75);
   border-color: rgba(255, 255, 255, 0.04);
 }

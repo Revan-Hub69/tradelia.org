@@ -19,10 +19,12 @@ import {
   Wallet
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { lazy, Suspense } from 'react';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { toast } from '@/components/ui/Toast';
 
 // Lazy load heavy utilities
 const PortfolioManager = lazy(() => 
@@ -57,6 +59,7 @@ interface Utility {
 export function ProUtilities() {
   const isPro = useIsPro();
   const { t } = useTranslations();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedUtility, setSelectedUtility] = useState<string | null>(null);
 
@@ -143,7 +146,7 @@ export function ProUtilities() {
           return;
         }
         // TODO: Implementare download PDF
-        console.log('Download PDF');
+        toast.info('Funzionalità in arrivo');
       },
       // requiresPro: true
     },
@@ -158,7 +161,7 @@ export function ProUtilities() {
           return;
         }
         // TODO: Implementare richiesta analisi
-        console.log('Request analysis');
+        toast.info('Funzionalità in arrivo');
       },
       // requiresPro: true
     },
@@ -173,7 +176,7 @@ export function ProUtilities() {
           return;
         }
         // TODO: Navigare a community proposals
-        console.log('Community proposals');
+        router.push('/dashboard/voting');
       },
       // requiresPro: true
     },
