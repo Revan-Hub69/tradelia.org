@@ -304,6 +304,7 @@ export function AuthForm() {
         return;
       }
 
+      // Registrazione senza conferma email obbligatoria
       const { error: signUpError, data } = await supabase.auth.signUp({
         email: form.email,
         password: form.password,
@@ -311,7 +312,7 @@ export function AuthForm() {
           data: {
             full_name: form.name.trim(),
           },
-          // Redirect alla callback route che gestisce la conferma email
+          // Email redirect opzionale (per quando l'utente decide di verificare)
           emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
         },
       });
@@ -326,8 +327,31 @@ export function AuthForm() {
         return;
       }
 
-      // Assicurati che bootstrap sia fatto (idempotente)
+      // Se c'è già una sessione dopo signup, vai direttamente alla dashboard
+      if (data?.session) {
+        // Assicurati che bootstrap sia fatto
+        if (data.user?.id) {
+          const bootstrapResult = await ensureUserBootstrap(
+            data.user.id,
+            form.email,
+            form.name || undefined
+          );
+          
+          if (!bootstrapResult.success) {
+            console.error('Bootstrap error during signup:', bootstrapResult.error);
+          }
+        }
+        
+        toast.success(t('auth.form.signupSuccess') || 'Registrazione completata!');
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 500);
+        return;
+      }
+
+      // Se non c'è sessione (conferma email richiesta da Supabase), prova login automatico
       if (data?.user?.id) {
+        // Assicurati che bootstrap sia fatto
         const bootstrapResult = await ensureUserBootstrap(
           data.user.id,
           form.email,
@@ -336,16 +360,38 @@ export function AuthForm() {
         
         if (!bootstrapResult.success) {
           console.error('Bootstrap error during signup:', bootstrapResult.error);
-          // Non bloccare il flusso, ma logga l'errore
+        }
+
+        // Prova a fare login automatico con le credenziali appena create
+        const { error: signInError, data: signInData } = await supabase.auth.signInWithPassword({
+          email: form.email,
+          password: form.password,
+        });
+
+        if (signInError) {
+          // Se il login fallisce (es. email non confermata), mostra info ma non errore
+          toast.info(t('auth.form.signupSuccess') || 'Registrazione completata! Verifica la tua email per sbloccare tutte le funzionalità.');
+          setTimeout(() => {
+            window.location.href = '/dashboard';
+          }, 1000);
+          return;
+        }
+
+        // Login automatico riuscito
+        if (signInData?.session) {
+          toast.success(t('auth.form.signupSuccess') || 'Registrazione completata!');
+          setTimeout(() => {
+            window.location.href = '/dashboard';
+          }, 500);
+          return;
         }
       }
 
-      // Verifica email è opzionale - vai direttamente alla dashboard
-      // L'utente può verificare l'email in un secondo momento
-      if (data?.session) {
+      // Fallback: vai comunque alla dashboard (guest o parziale)
+      toast.info(t('auth.form.signupSuccess') || 'Registrazione completata!');
+      setTimeout(() => {
         window.location.href = '/dashboard';
-        return;
-      }
+      }, 1000);
 
       // Se non c'è sessione ma c'è user, mostra info e vai a dashboard comunque
       if (data?.user?.id) {
