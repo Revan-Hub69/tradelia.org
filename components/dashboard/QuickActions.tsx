@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, memo } from 'react';
+import { useState, useEffect, useMemo, memo } from 'react';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Plus, FileText, TrendingUp, BookOpen, PieChart, Sparkles } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';

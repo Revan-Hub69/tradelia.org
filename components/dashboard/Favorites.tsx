@@ -110,7 +110,7 @@ export const Favorites = memo(function Favorites() {
     }
   };
 
-  const getTypeIcon = (type: Favorite['type']) => {
+  const getTypeIcon = (type: Favorite['item_type']) => {
     switch (type) {
       case 'report':
         return <FileText className="w-4 h-4" />;
@@ -121,7 +121,7 @@ export const Favorites = memo(function Favorites() {
     }
   };
 
-  const getTypeLabel = (type: Favorite['type']) => {
+  const getTypeLabel = (type: Favorite['item_type']) => {
     switch (type) {
       case 'report':
         return t('dashboard.favorites.types.report') || 'Report';
@@ -228,7 +228,7 @@ export const Favorites = memo(function Favorites() {
       </div>
     </section>
   );
-}
+});
 
 // Hook per aggiungere/rimuovere preferiti da altri componenti
 export function useFavorites() {
