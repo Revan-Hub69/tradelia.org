@@ -23,6 +23,10 @@ const HtmlLang = dynamic(() => import('@/components/layout/HtmlLang').then(m => 
   ssr: false,
 });
 
+const ToastContainer = dynamic(() => import('@/components/ui/Toast').then(m => ({ default: m.ToastContainer })), {
+  ssr: false,
+});
+
 const inter = Inter({ 
   subsets: ['latin'],
   display: 'swap',
