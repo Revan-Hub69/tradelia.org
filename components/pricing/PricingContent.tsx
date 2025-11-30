@@ -24,7 +24,7 @@ interface Plan {
 
 export function PricingContent() {
   const { t } = useTranslations();
-  const { isPro } = useIsPro();
+  const isPro = useIsPro();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
