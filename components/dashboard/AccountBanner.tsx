@@ -86,101 +86,117 @@ export function AccountBanner() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.3 }}
-        className="w-full"
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+        className="w-full mb-6"
       >
         <div
           className={`
-            relative rounded-xl border px-4 py-3 mb-6
+            relative rounded-2xl border backdrop-blur-sm shadow-xl overflow-hidden
             ${
               bannerState === 'not-logged-in'
-                ? 'bg-accent/10 border-accent/30 text-accent'
-                : 'bg-yellow-500/10 border-yellow-500/30 text-yellow-400'
+                ? 'bg-gradient-to-br from-accent/20 via-accent/10 to-accent/5 border-accent/30 shadow-accent/10'
+                : 'bg-gradient-to-br from-amber-500/20 via-amber-500/10 to-amber-500/5 border-amber-500/30 shadow-amber-500/10'
             }
           `}
           role="alert"
         >
-          <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 mt-0.5">
-              {bannerState === 'not-logged-in' ? (
-                <AlertCircle className="w-5 h-5" aria-hidden="true" />
-              ) : (
-                <Mail className="w-5 h-5" aria-hidden="true" />
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              {bannerState === 'not-logged-in' ? (
-                <div>
-                  <p className="text-sm font-medium mb-1">
-                    {t('dashboard.banner.notLoggedIn.title')}
-                  </p>
-                  <p className="text-xs opacity-90 mb-2">
-                    {t('dashboard.banner.notLoggedIn.description')}
-                  </p>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <Link
-                      href="/login"
-                      className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-accent/20 hover:bg-accent/30 border border-accent/40 transition-colors"
-                    >
-                      {t('dashboard.banner.notLoggedIn.login')}
-                    </Link>
-                    <Link
-                      href="/login"
-                      className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-accent hover:bg-accent-hover text-white transition-colors"
-                    >
-                      {t('dashboard.banner.notLoggedIn.signup')}
-                    </Link>
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" />
+          
+          <div className="relative px-6 py-5">
+            <div className="flex items-start gap-4">
+              {/* Icon container */}
+              <div className={`
+                flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center
+                ${
+                  bannerState === 'not-logged-in'
+                    ? 'bg-accent/20 border border-accent/30'
+                    : 'bg-amber-500/20 border border-amber-500/30'
+                }
+              `}>
+                {bannerState === 'not-logged-in' ? (
+                  <AlertCircle className={`w-6 h-6 ${bannerState === 'not-logged-in' ? 'text-accent' : 'text-amber-400'}`} aria-hidden="true" />
+                ) : (
+                  <Mail className="w-6 h-6 text-amber-400" aria-hidden="true" />
+                )}
+              </div>
+              
+              {/* Content */}
+              <div className="flex-1 min-w-0">
+                {bannerState === 'not-logged-in' ? (
+                  <div>
+                    <h3 className="text-base font-semibold text-text-primary mb-1.5">
+                      {t('dashboard.banner.notLoggedIn.title')}
+                    </h3>
+                    <p className="text-sm text-text-secondary mb-4 leading-relaxed">
+                      {t('dashboard.banner.notLoggedIn.description')}
+                    </p>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <Link
+                        href="/login"
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-bg-soft hover:bg-bg-surface border border-border-subtle text-text-primary font-medium text-sm transition-all duration-200 hover:border-accent/40 hover:shadow-md"
+                      >
+                        {t('dashboard.banner.notLoggedIn.login')}
+                      </Link>
+                      <Link
+                        href="/login"
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-accent hover:bg-accent-hover text-white font-semibold text-sm transition-all duration-200 shadow-md hover:shadow-lg"
+                      >
+                        {t('dashboard.banner.notLoggedIn.signup')}
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div>
-                  <p className="text-sm font-medium mb-1">
-                    {t('dashboard.banner.emailNotVerified.title')}
-                  </p>
-                  <p className="text-xs opacity-90 mb-2">
-                    {t('dashboard.banner.emailNotVerified.description').replace(
-                      '{email}',
-                      userEmail || ''
-                    )}
-                  </p>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <Link
-                      href="/login?mode=verify-email"
-                      className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-yellow-500/20 hover:bg-yellow-500/30 border border-yellow-500/40 transition-colors"
-                    >
-                      {t('dashboard.banner.emailNotVerified.verify')}
-                    </Link>
-                    <button
-                      onClick={async () => {
-                        // Resend verification email
-                        if (userEmail) {
-                          const { error } = await supabase.auth.resend({
-                            type: 'signup',
-                            email: userEmail,
-                          });
-                          if (error) {
-                            console.error('Error resending verification:', error);
-                          } else {
-                            // Mostra messaggio di successo temporaneo
-                            alert(t('dashboard.banner.emailNotVerified.resendSuccess'));
+                ) : (
+                  <div>
+                    <h3 className="text-base font-semibold text-text-primary mb-1.5">
+                      {t('dashboard.banner.emailNotVerified.title')}
+                    </h3>
+                    <p className="text-sm text-text-secondary mb-4 leading-relaxed">
+                      {t('dashboard.banner.emailNotVerified.description').replace(
+                        '{email}',
+                        userEmail || ''
+                      )}
+                    </p>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <Link
+                        href="/login?mode=verify-email"
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 font-medium text-sm transition-all duration-200 hover:shadow-md"
+                      >
+                        {t('dashboard.banner.emailNotVerified.verify')}
+                      </Link>
+                      <button
+                        onClick={async () => {
+                          if (userEmail) {
+                            const { error } = await supabase.auth.resend({
+                              type: 'signup',
+                              email: userEmail,
+                            });
+                            if (error) {
+                              console.error('Error resending verification:', error);
+                            } else {
+                              const { toast } = await import('@/components/ui/Toast');
+                              toast.success(t('dashboard.banner.emailNotVerified.resendSuccess'));
+                            }
                           }
-                        }
-                      }}
-                      className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-bg-soft hover:bg-bg-surface border border-border-subtle transition-colors"
-                    >
-                      {t('dashboard.banner.emailNotVerified.resend')}
-                    </button>
+                        }}
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-bg-soft hover:bg-bg-surface border border-border-subtle text-text-secondary hover:text-text-primary font-medium text-sm transition-all duration-200 hover:border-border-default"
+                      >
+                        {t('dashboard.banner.emailNotVerified.resend')}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+              
+              {/* Dismiss button */}
+              <button
+                onClick={handleDismiss}
+                className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-all duration-200"
+                aria-label={t('dashboard.banner.dismiss')}
+              >
+                <X className="w-4 h-4" aria-hidden="true" />
+              </button>
             </div>
-            <button
-              onClick={handleDismiss}
-              className="flex-shrink-0 text-current opacity-60 hover:opacity-100 transition-opacity p-1"
-              aria-label={t('dashboard.banner.dismiss')}
-            >
-              <X className="w-4 h-4" aria-hidden="true" />
-            </button>
           </div>
         </div>
       </motion.div>
