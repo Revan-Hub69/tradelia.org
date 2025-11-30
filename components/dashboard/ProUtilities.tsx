@@ -15,7 +15,8 @@ import {
   Calculator,
   Bell,
   ArrowLeft,
-  ArrowRight
+  ArrowRight,
+  Wallet
 } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from '@/lib/i18n/use-translations';
