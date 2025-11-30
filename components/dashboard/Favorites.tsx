@@ -9,7 +9,6 @@ import Link from 'next/link';
 import { useApi } from '@/lib/hooks/useApi';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { toast } from '@/components/ui/Toast';
-import { createClient } from '@/lib/supabase/client';
 
 interface Favorite {
   id: string;
