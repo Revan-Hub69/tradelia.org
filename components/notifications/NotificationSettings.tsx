@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Bell, BellOff, Mail, MessageSquare, Phone } from 'lucide-react';
+import { Bell, BellOff, Mail, MessageSquare, Phone, Download, Smartphone } from 'lucide-react';
 import { useServiceWorker } from '@/hooks/useServiceWorker';
 import { normalizePhoneNumber, validatePhoneNumber } from '@/lib/sms/twilio';
 import { toast } from '@/components/ui/Toast';
+import { usePWAInstall } from '@/components/pwa/usePWAInstall';
 
 interface NotificationPreferences {
   id?: string;
@@ -26,12 +27,15 @@ export function NotificationSettings() {
     error: swError,
   } = useServiceWorker();
 
+  const { isInstalled, isInstallable, install } = usePWAInstall();
+
   const [preferences, setPreferences] = useState<NotificationPreferences | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+  const [installing, setInstalling] = useState(false);
 
   // Carica preferences al mount
   useEffect(() => {
