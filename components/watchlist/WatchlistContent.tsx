@@ -64,7 +64,6 @@ export function WatchlistContent() {
     '/api/watchlist?includeAlerts=true&activeOnly=true',
     {
       cacheTime: 1 * 60 * 1000, // 1 minute
-      revalidateOnFocus: true,
     }
   );
 

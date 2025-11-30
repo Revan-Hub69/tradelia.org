@@ -22,7 +22,6 @@ export const UserStats = memo(function UserStats() {
     '/api/gamification/stats',
     {
       cacheTime: 1 * 60 * 1000, // 1 minute
-      revalidateOnFocus: true,
     }
   );
 
