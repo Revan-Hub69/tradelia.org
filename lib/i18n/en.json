@@ -271,6 +271,10 @@
           "title": "Settings",
           "description": "User preferences and configuration"
         },
+        "brokers": {
+          "title": "Brokers",
+          "description": "Compare and manage your brokers"
+        },
         "resources": {
           "title": "Resources & support",
           "description": "FAQ, guides and official contacts"

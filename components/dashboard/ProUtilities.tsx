@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useIsPro } from '@/lib/hooks/useUserRole';
+import { useBodyScrollLock } from '@/lib/hooks/useBodyScrollLock';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Sparkles, 
@@ -37,6 +38,9 @@ export function ProUtilities() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedUtility, setSelectedUtility] = useState<string | null>(null);
 
+  // Blocca scroll quando drawer è aperto
+  useBodyScrollLock(isOpen);
+
   // Ascolta evento per aprire da QuickLinks/QuickActions
   useEffect(() => {
     const handleOpen = () => {
@@ -64,13 +68,16 @@ export function ProUtilities() {
   //   return null;
   // }
 
+  // Utilities disponibili - logica Pro vs Gratuito
   const utilities: Utility[] = [
+    // PRO ONLY - Utilities complete
     {
       id: 'portfolio',
       icon: <PieChart className="w-5 h-5" />,
       label: t('proUtilities.portfolio.label') || 'Gestione Portafoglio',
       description: t('proUtilities.portfolio.description') || 'Monitora e gestisci le tue posizioni',
       component: <PortfolioManager />,
+      // requiresPro: true (implicito, controllato in onClick)
     },
     {
       id: 'calculator',
@@ -78,6 +85,7 @@ export function ProUtilities() {
       label: t('proUtilities.calculator.label') || 'Calcolatrice Finanziaria',
       description: t('proUtilities.calculator.description') || 'Calcoli avanzati per investimenti',
       component: <FinancialCalculator />,
+      // requiresPro: true
     },
     {
       id: 'alerts',
@@ -85,16 +93,23 @@ export function ProUtilities() {
       label: t('proUtilities.alerts.label') || 'Sistema di Alert',
       description: t('proUtilities.alerts.description') || 'Notifiche personalizzate per i tuoi asset',
       component: <AlertSystem />,
+      // requiresPro: true
     },
+    // PRO ONLY - Azioni
     {
       id: 'download-pdf',
       icon: <FileText className="w-5 h-5" />,
       label: t('proUtilities.downloadPdf.label') || 'Scarica PDF',
       description: t('proUtilities.downloadPdf.description') || 'Scarica report e documenti in formato PDF',
       action: () => {
+        if (!isPro) {
+          // Mostra messaggio upgrade
+          return;
+        }
         // TODO: Implementare download PDF
         console.log('Download PDF');
       },
+      // requiresPro: true
     },
     {
       id: 'request-analysis',
@@ -102,9 +117,14 @@ export function ProUtilities() {
       label: t('proUtilities.requestAnalysis.label') || 'Richiedi Analisi',
       description: t('proUtilities.requestAnalysis.description') || 'Richiedi analisi personalizzate su misura',
       action: () => {
+        if (!isPro) {
+          // Mostra messaggio upgrade
+          return;
+        }
         // TODO: Implementare richiesta analisi
         console.log('Request analysis');
       },
+      // requiresPro: true
     },
     {
       id: 'community',
@@ -112,9 +132,14 @@ export function ProUtilities() {
       label: t('proUtilities.community.label') || 'Community Proposals',
       description: t('proUtilities.community.description') || 'Proponi e vota analisi della community',
       action: () => {
+        if (!isPro) {
+          // Mostra messaggio upgrade
+          return;
+        }
         // TODO: Navigare a community proposals
         console.log('Community proposals');
       },
+      // requiresPro: true
     },
   ];
 
@@ -232,10 +257,9 @@ export function ProUtilities() {
                         transition={{ delay: index * 0.05 }}
                         onClick={() => {
                           if (!utility.comingSoon) {
-                            // Controlla se l'utility richiede Pro
-                            const requiresPro = ['portfolio', 'calculator', 'alerts'].includes(utility.id);
-                            if (requiresPro && !isPro) {
-                              // Mostra messaggio o reindirizza a upgrade
+                            // Tutte le utilities richiedono Pro (tranne quelle future)
+                            if (!isPro) {
+                              // Banner già mostrato sopra, non fare nulla
                               return;
                             }
                             if (utility.component) {
@@ -245,7 +269,7 @@ export function ProUtilities() {
                             }
                           }
                         }}
-                        disabled={utility.comingSoon || (!isPro && ['portfolio', 'calculator', 'alerts'].includes(utility.id))}
+                        disabled={utility.comingSoon || !isPro}
                         className={cn(
                           'w-full p-4 rounded-xl border transition-all duration-200 text-left group',
                           'bg-bg-soft hover:bg-bg-surface border-border-subtle hover:border-accent/40',

@@ -6,6 +6,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { useBodyScrollLock } from '@/lib/hooks/useBodyScrollLock';
 
 interface HelpItem {
   id: string;
@@ -19,6 +20,9 @@ interface HelpItem {
 export function HelpSupport() {
   const { t } = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
+
+  // Blocca scroll quando modal è aperto
+  useBodyScrollLock(isOpen);
 
   const helpItems: HelpItem[] = [
     {

@@ -46,17 +46,31 @@ export function PortfolioManager() {
   const totalChangePercent = totalValue > 0 ? (totalChange / (totalValue - totalChange)) * 100 : 0;
 
   const handleAdd = () => {
+    // Validazione input
     if (!newPosition.symbol || !newPosition.quantity || !newPosition.price) return;
-
+    
+    // Sanitizzazione: simbolo solo lettere maiuscole, max 10 caratteri
+    const symbol = newPosition.symbol.trim().toUpperCase().slice(0, 10);
+    if (!/^[A-Z]{1,10}$/.test(symbol)) {
+      // TODO: Mostra errore
+      return;
+    }
+    
+    // Validazione numeri
     const quantity = parseFloat(newPosition.quantity);
     const price = parseFloat(newPosition.price);
-    const total = quantity * price;
+    if (isNaN(quantity) || isNaN(price) || quantity <= 0 || price <= 0) {
+      // TODO: Mostra errore
+      return;
+    }
+    
+    const total = Math.round(quantity * price * 100) / 100; // Arrotonda a 2 decimali
 
     const position: Position = {
       id: Date.now().toString(),
-      symbol: newPosition.symbol.toUpperCase(),
-      quantity,
-      price,
+      symbol,
+      quantity: Math.round(quantity * 100) / 100,
+      price: Math.round(price * 100) / 100,
       total,
       change: 0,
       changePercent: 0,

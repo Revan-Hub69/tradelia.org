@@ -53,7 +53,31 @@ export function AlertSystem() {
   }, [alerts]);
 
   const handleAdd = () => {
+    // Validazione input
     if (!newAlert.name || !newAlert.value) return;
+    
+    // Sanitizzazione nome: max 100 caratteri, rimuovi HTML
+    const name = newAlert.name.trim().slice(0, 100).replace(/<[^>]*>/g, '');
+    if (name.length < 3) {
+      // TODO: Mostra errore - nome troppo corto
+      return;
+    }
+    
+    // Validazione simbolo se presente
+    if (newAlert.symbol) {
+      const symbol = newAlert.symbol.trim().toUpperCase().slice(0, 10);
+      if (!/^[A-Z]{1,10}$/.test(symbol)) {
+        // TODO: Mostra errore - simbolo non valido
+        return;
+      }
+    }
+    
+    // Validazione valore numerico
+    const value = parseFloat(newAlert.value);
+    if (isNaN(value) || value <= 0) {
+      // TODO: Mostra errore - valore non valido
+      return;
+    }
     if (newAlert.type !== 'custom' && !newAlert.symbol) return;
 
     const alert: Alert = {

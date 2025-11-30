@@ -60,6 +60,14 @@ const modules = [
     priority: 'secondary' as const,
   },
   {
+    id: 'brokers',
+    title: 'Brokers',
+    description: 'Confronta e gestisci i tuoi broker',
+    icon: 'building',
+    href: '/brokers',
+    priority: 'secondary' as const,
+  },
+  {
     id: 'resources',
     title: 'Risorse & Supporto',
     description: 'FAQ, guide e contatti',
@@ -200,6 +208,17 @@ function ModuleIcon({ name }: { name: string }) {
         <circle cx="12" cy="12" r="10" />
         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
         <line x1="12" y1="17" x2="12.01" y2="17" />
+      </svg>
+    ),
+    building: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M3 21h18" />
+        <path d="M5 21V7l8-4v18" />
+        <path d="M19 21V11l-6-4" />
+        <line x1="9" y1="9" x2="9" y2="9.01" />
+        <line x1="9" y1="12" x2="9" y2="12.01" />
+        <line x1="9" y1="15" x2="9" y2="15.01" />
+        <line x1="9" y1="18" x2="9" y2="18.01" />
       </svg>
     ),
   };

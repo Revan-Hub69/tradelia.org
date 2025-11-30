@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useIsPro } from '@/lib/hooks/useUserRole';
+import { useBodyScrollLock } from '@/lib/hooks/useBodyScrollLock';
 import Link from 'next/link';
 
 interface MenuItem {
@@ -28,6 +29,9 @@ export function UserMenu() {
   const [unreadCount, setUnreadCount] = useState(0);
   const menuRef = useRef<HTMLDivElement>(null);
   const isPro = useIsPro();
+
+  // Blocca scroll quando menu è aperto
+  useBodyScrollLock(isOpen);
 
   useEffect(() => {
     const fetchUser = async () => {

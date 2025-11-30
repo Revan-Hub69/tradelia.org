@@ -6,6 +6,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { useBodyScrollLock } from '@/lib/hooks/useBodyScrollLock';
 
 interface SearchResult {
   id: string;
@@ -25,6 +26,9 @@ export function GlobalSearch() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
+
+  // Blocca scroll quando modal è aperto
+  useBodyScrollLock(isOpen);
 
   // Mock search results - in futuro integreremo con API
   const searchContent = useCallback((searchQuery: string): SearchResult[] => {
