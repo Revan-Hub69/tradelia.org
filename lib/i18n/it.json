@@ -288,17 +288,20 @@
     "badge": "Configurazione iniziale",
     "title": "Completa il tuo profilo",
     "description": "Condividi alcune informazioni per personalizzare la tua esperienza su Tradelia. I dati sono utilizzati esclusivamente per migliorare i contenuti educativi e le funzionalità della piattaforma.",
-    "country": "Paese (opzionale)",
-    "countryPlaceholder": "IT",
-    "countryHint": "Aiuta a personalizzare contenuti e regolamentazioni. Codice ISO a 2 lettere (es: IT, FR, DE, US)",
-    "notifications": "Desidero ricevere aggiornamenti su nuove ricerche, contenuti educativi e miglioramenti della piattaforma.",
+    "emailNotifications": {
+      "title": "Notifiche email",
+      "description": "Ricevi aggiornamenti su nuove ricerche, contenuti educativi e miglioramenti della piattaforma."
+    },
+    "pushNotifications": {
+      "title": "Notifiche push",
+      "description": "Ricevi notifiche in tempo reale sul tuo dispositivo anche quando il browser è chiuso."
+    },
     "submit": "Inizia l'esplorazione",
     "skip": "Salta",
     "saving": "Salvataggio in corso…",
     "loading": "Verifica profilo…",
     "footer": "Le informazioni sono trattate secondo le normative GDPR e MiFID II. Non condividiamo i tuoi dati con terze parti.",
     "errors": {
-      "countryInvalid": "Inserisci un codice paese valido a 2 lettere (es: IT, FR, DE, US).",
       "invalidSession": "Sessione non valida. Ricarica la pagina e riprova.",
       "saveFailed": "Impossibile salvare i dati. Riprova più tardi."
     }

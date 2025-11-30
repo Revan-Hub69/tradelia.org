@@ -4,8 +4,9 @@ import { useEffect, useState, useTransition } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils/cn';
 import { useTranslations } from '@/lib/i18n/use-translations';
-import { BookOpen, MapPin, Bell } from 'lucide-react';
+import { BookOpen, Bell, Smartphone } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useServiceWorker } from '@/hooks/useServiceWorker';
 
 interface OnboardingGateProps {
   children: React.ReactNode;
@@ -13,22 +14,15 @@ interface OnboardingGateProps {
 
 export function OnboardingGate({ children }: OnboardingGateProps) {
   const { t } = useTranslations();
+  const { requestPushPermission, isSupported: isPushSupported } = useServiceWorker();
   const [needsOnboarding, setNeedsOnboarding] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const [formState, setFormState] = useState({
-    country: '',
     acceptsResearch: true,
+    enablePush: false,
   });
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const [validationErrors, setValidationErrors] = useState<{
-    country?: string;
-  }>({});
-
-  // Validazione formato paese ISO 2 lettere
-  const validateCountry = (country: string): boolean => {
-    return /^[A-Z]{2}$/.test(country.toUpperCase());
-  };
 
   useEffect(() => {
     async function loadProfile() {
@@ -44,12 +38,6 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
         return;
       }
 
-      const { data: profile } = await supabase
-        .from('user_profiles')
-        .select('country')
-        .eq('user_id', session.user.id)
-        .maybeSingle();
-
       const { data: role } = await supabase
         .from('user_roles')
         .select('role, onboarding_completed_at')
@@ -59,13 +47,6 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
       const onboardingDone = Boolean(role?.onboarding_completed_at);
       setNeedsOnboarding(!onboardingDone);
 
-      if (profile?.country) {
-        setFormState((prev) => ({
-          ...prev,
-          country: profile.country || '',
-        }));
-      }
-
       setLoading(false);
     }
 
@@ -73,45 +54,15 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
   }, []);
 
   const handleChange = (field: string) => (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    let value: string | boolean = event.target.type === 'checkbox' 
-      ? (event.target as HTMLInputElement).checked 
-      : event.target.value;
-
-    // Converti il paese in maiuscolo e limita a 2 caratteri
-    if (field === 'country' && typeof value === 'string') {
-      value = value.toUpperCase().slice(0, 2);
-      // Rimuovi errori di validazione quando l'utente inizia a digitare
-      if (validationErrors.country) {
-        setValidationErrors((prev) => ({ ...prev, country: undefined }));
-      }
-    }
-
+    const value = event.target.checked;
     setFormState((prev) => ({ ...prev, [field]: value }));
     setError(null);
   };
 
-  const validateForm = (): boolean => {
-    const errors: { country?: string } = {};
-
-    // Paese è opzionale, ma se inserito deve essere valido
-    if (formState.country.trim() && !validateCountry(formState.country)) {
-      errors.country = t('onboarding.errors.countryInvalid');
-    }
-
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
   const completeOnboarding = async (skip: boolean = false) => {
     setError(null);
-    setValidationErrors({});
-
-    // Se non è skip, valida il form
-    if (!skip && !validateForm()) {
-      return;
-    }
 
     startTransition(async () => {
       const {
@@ -123,6 +74,35 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
         return;
       }
 
+      // Se push è abilitato, richiedi permesso e salva subscription
+      if (!skip && formState.enablePush && isPushSupported) {
+        try {
+          const subscription = await requestPushPermission();
+          if (subscription) {
+            const subscriptionData = {
+              endpoint: subscription.endpoint,
+              keys: {
+                p256dh: arrayBufferToBase64(subscription.getKey('p256dh')!),
+                auth: arrayBufferToBase64(subscription.getKey('auth')!),
+              },
+            };
+
+            const pushRes = await fetch('/api/notifications?action=subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ subscription: subscriptionData }),
+            });
+
+            if (!pushRes.ok) {
+              console.warn('Errore salvataggio push subscription, continuo comunque');
+            }
+          }
+        } catch (err) {
+          console.warn('Errore abilitazione push durante onboarding:', err);
+          // Non blocchiamo l'onboarding se le push falliscono
+        }
+      }
+
       const response = await fetch('/api/auth/onboarding', {
         method: 'POST',
         headers: {
@@ -130,9 +110,9 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
         },
         body: JSON.stringify({
           userId: session.user.id,
-          country: skip ? null : (formState.country.trim() ? formState.country.toUpperCase().trim() : null),
+          country: null,
           role: 'trial',
-          acceptsResearch: skip ? true : formState.acceptsResearch, // Default true se skip
+          acceptsResearch: skip ? true : formState.acceptsResearch,
         }),
       });
 
@@ -204,66 +184,64 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
           noValidate
           className="space-y-6 mb-8"
         >
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="onboarding-country"
-              className="text-xs uppercase tracking-[0.3em] text-text-tertiary flex items-center gap-2"
-            >
-              <MapPin className="w-4 h-4" aria-hidden="true" />
-              {t('onboarding.country')}
-            </label>
-            <input
-              id="onboarding-country"
-              type="text"
-              value={formState.country}
-              onChange={handleChange('country')}
-              className={cn(
-                'rounded-2xl bg-bg-soft border px-4 py-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent/30 transition-all min-h-[44px] uppercase',
-                validationErrors.country
-                  ? 'border-red-400/40 focus:border-red-400'
-                  : 'border-border-subtle focus:border-accent'
-              )}
-              placeholder={t('onboarding.countryPlaceholder')}
-              disabled={isPending}
-              autoComplete="country-code"
-              aria-required="false"
-              aria-invalid={validationErrors.country ? 'true' : 'false'}
-              aria-describedby="onboarding-country-hint onboarding-country-error"
-              maxLength={2}
-              pattern="[A-Z]{2}"
-            />
-            <p id="onboarding-country-hint" className="text-xs text-text-tertiary mt-1">
-              {t('onboarding.countryHint')}
-            </p>
-            {validationErrors.country && (
-              <p
-                id="onboarding-country-error"
-                role="alert"
-                className="text-xs text-red-400 mt-1"
+          <div className="space-y-4">
+            {/* Email Notifications */}
+            <div className="flex items-start gap-3 p-4 rounded-2xl bg-bg-soft border border-border-subtle">
+              <input
+                id="accepts-research"
+                type="checkbox"
+                checked={formState.acceptsResearch}
+                onChange={handleChange('acceptsResearch')}
+                className="w-5 h-5 accent-accent mt-0.5 flex-shrink-0 min-h-[44px] min-w-[44px]"
+                disabled={isPending}
+                aria-describedby="accepts-research-label"
+              />
+              <label
+                id="accepts-research-label"
+                htmlFor="accepts-research"
+                className="text-sm text-text-secondary leading-relaxed flex items-start gap-3 cursor-pointer flex-1"
               >
-                {validationErrors.country}
-              </p>
-            )}
-          </div>
+                <Bell className="w-5 h-5 mt-0.5 flex-shrink-0 text-accent" aria-hidden="true" />
+                <div>
+                  <div className="font-semibold text-text-primary mb-1">
+                    {t('onboarding.emailNotifications.title')}
+                  </div>
+                  <div className="text-xs text-text-tertiary">
+                    {t('onboarding.emailNotifications.description')}
+                  </div>
+                </div>
+              </label>
+            </div>
 
-          <div className="flex items-start gap-3 pt-2">
-            <input
-              id="accepts-research"
-              type="checkbox"
-              checked={formState.acceptsResearch}
-              onChange={handleChange('acceptsResearch')}
-              className="w-5 h-5 accent-accent mt-0.5 flex-shrink-0 min-h-[44px] min-w-[44px]"
-              disabled={isPending}
-              aria-describedby="accepts-research-label"
-            />
-            <label
-              id="accepts-research-label"
-              htmlFor="accepts-research"
-              className="text-sm text-text-secondary leading-relaxed flex items-start gap-2 cursor-pointer"
-            >
-              <Bell className="w-4 h-4 mt-0.5 flex-shrink-0 text-text-tertiary" aria-hidden="true" />
-              <span>{t('onboarding.notifications')}</span>
-            </label>
+            {/* Push Notifications */}
+            {isPushSupported && (
+              <div className="flex items-start gap-3 p-4 rounded-2xl bg-bg-soft border border-border-subtle">
+                <input
+                  id="enable-push"
+                  type="checkbox"
+                  checked={formState.enablePush}
+                  onChange={handleChange('enablePush')}
+                  className="w-5 h-5 accent-accent mt-0.5 flex-shrink-0 min-h-[44px] min-w-[44px]"
+                  disabled={isPending}
+                  aria-describedby="enable-push-label"
+                />
+                <label
+                  id="enable-push-label"
+                  htmlFor="enable-push"
+                  className="text-sm text-text-secondary leading-relaxed flex items-start gap-3 cursor-pointer flex-1"
+                >
+                  <Smartphone className="w-5 h-5 mt-0.5 flex-shrink-0 text-accent" aria-hidden="true" />
+                  <div>
+                    <div className="font-semibold text-text-primary mb-1">
+                      {t('onboarding.pushNotifications.title')}
+                    </div>
+                    <div className="text-xs text-text-tertiary">
+                      {t('onboarding.pushNotifications.description')}
+                    </div>
+                  </div>
+                </label>
+              </div>
+            )}
           </div>
 
           {/* Error message */}
@@ -324,4 +302,14 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
       </motion.div>
     </div>
   );
+}
+
+// Helper per convertire ArrayBuffer a base64
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return window.btoa(binary);
 }
