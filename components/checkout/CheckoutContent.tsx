@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Building2, User, CreditCard, FileText, ArrowLeft, Loader2 } from 'lucide-react';
+import { Building2, User, CreditCard, FileText, ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion } from 'framer-motion';
