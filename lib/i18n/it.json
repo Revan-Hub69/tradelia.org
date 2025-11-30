@@ -258,6 +258,7 @@
       "signupSuccess": "Registrazione completata!",
       "loginSuccess": "Login effettuato con successo!",
       "verifySuccess": "Email verificata con successo!",
+      "emailNotVerifiedInfo": "La tua email non è ancora verificata. Puoi accedere comunque, ma alcune funzionalità saranno limitate. Verifica la tua email per sbloccare tutto.",
       "footer": {
         "text": "Proseguendo, accetti la nostra",
         "privacy": "Privacy Policy",

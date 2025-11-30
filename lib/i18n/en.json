@@ -258,6 +258,7 @@
       "signupSuccess": "Registration completed!",
       "loginSuccess": "Login successful!",
       "verifySuccess": "Email verified successfully!",
+      "emailNotVerifiedInfo": "Your email is not yet verified. You can still access, but some features will be limited. Verify your email to unlock everything.",
       "footer": {
         "text": "By continuing, you agree to our",
         "privacy": "Privacy Policy",

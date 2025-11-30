@@ -286,11 +286,6 @@ export function AuthForm() {
           password: form.password,
         });
 
-        if (signInError) {
-          setError(signInError.message);
-          return;
-        }
-
         // Verifica che la sessione sia disponibile
         if (data?.session) {
           // Il middleware sincronizza automaticamente i cookie
@@ -298,8 +293,42 @@ export function AuthForm() {
           window.location.href = '/dashboard';
           return;
         }
+
+        // Se c'è un errore, controlla se è relativo alla verifica email
+        if (signInError) {
+          const errorMessage = signInError.message.toLowerCase();
+          const isEmailNotConfirmed = 
+            errorMessage.includes('email not confirmed') ||
+            errorMessage.includes('email not verified') ||
+            errorMessage.includes('email confirmation') ||
+            errorMessage.includes('email not confirmed') ||
+            errorMessage.includes('conferma email') ||
+            errorMessage.includes('email non confermata') ||
+            errorMessage.includes('email non verificata');
+
+          if (isEmailNotConfirmed) {
+            // Email non verificata: Supabase potrebbe non creare una sessione
+            // Mostra un messaggio informativo e permette l'accesso come guest
+            // L'utente può comunque accedere alla dashboard, ma con funzionalità limitate
+            toast.info(
+              t('auth.form.emailNotVerifiedInfo') || 
+              'La tua email non è ancora verificata. Puoi accedere comunque, ma alcune funzionalità saranno limitate. Verifica la tua email per sbloccare tutto.'
+            );
+            
+            // Prova comunque a reindirizzare alla dashboard (come guest o con sessione parziale)
+            // Se Supabase ha creato un utente anche senza sessione completa, sarà disponibile
+            setTimeout(() => {
+              window.location.href = '/dashboard';
+            }, 1000);
+            return;
+          }
+          
+          // Per altri errori, mostra il messaggio di errore
+          setError(signInError.message);
+          return;
+        }
         
-        // Se non c'è sessione, mostra errore
+        // Se non c'è sessione e non c'è errore, mostra errore generico
         setError('Errore durante il login. Riprova.');
         return;
       }
