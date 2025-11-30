@@ -804,21 +804,6 @@ export function AuthForm() {
               </button>
             )}
             
-            {/* Guest access button (login/signup mode) */}
-            {mode !== 'verify-email' && (
-              <button
-                type="button"
-                onClick={() => {
-                  // Accesso guest - vai direttamente a dashboard senza autenticazione
-                  // Il dashboard gestirà l'accesso guest
-                  window.location.href = '/dashboard';
-                }}
-                disabled={isPending}
-                className="w-full rounded-xl bg-bg-soft hover:bg-bg-surface border border-border-subtle text-text-secondary hover:text-text-primary font-medium py-3 px-6 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed min-h-[48px]"
-              >
-                {t('auth.form.guest')}
-              </button>
-            )}
           </div>
         </form>
 

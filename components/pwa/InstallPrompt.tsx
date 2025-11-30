@@ -37,6 +37,22 @@ export function InstallPrompt() {
           return;
         }
       }
+
+      // Mostra banner anche se il prompt non è ancora disponibile
+      // (per dispositivi che supportano PWA ma non hanno ancora triggerato beforeinstallprompt)
+      // Attendi 3 secondi dopo il load per non essere invasivo
+      const timer = setTimeout(() => {
+        // Verifica se è un dispositivo mobile o desktop che supporta PWA
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+        
+        if (!isStandalone && !isInstalled) {
+          // Mostra banner anche senza prompt (l'utente può installare manualmente)
+          setShowBanner(true);
+        }
+      }, 3000);
+
+      return () => clearTimeout(timer);
     }
 
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -87,8 +103,14 @@ export function InstallPrompt() {
     localStorage.setItem('pwa-install-dismissed', Date.now().toString());
   };
 
-  // Non mostrare se già installata o se non c'è il prompt
-  if (isInstalled || !showBanner || !deferredPrompt) {
+  // Non mostrare se già installata
+  if (isInstalled) {
+    return null;
+  }
+
+  // Mostra banner anche se non c'è ancora il prompt (per dispositivi che lo supportano)
+  // Il prompt verrà mostrato quando disponibile
+  if (!showBanner && !deferredPrompt) {
     return null;
   }
 
@@ -99,22 +121,31 @@ export function InstallPrompt() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-          className="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-md w-full mx-4"
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+          className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 max-w-md w-full mx-4"
         >
-          <div className="bg-bg-surface border border-border-subtle rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] p-4 backdrop-blur-sm">
-            <div className="flex items-start gap-3">
-              <div className="flex-1">
-                <h3 className="text-sm font-semibold text-text-primary mb-1">
+          <div className="relative bg-gradient-to-br from-bg-surface via-bg-surface to-bg-soft border border-border-subtle rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] p-5 backdrop-blur-sm overflow-hidden">
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-accent/5 via-transparent to-accent/5 pointer-events-none" />
+            
+            <div className="relative flex items-start gap-4">
+              {/* Icon */}
+              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-accent/20 border border-accent/30 flex items-center justify-center">
+                <Download className="w-6 h-6 text-accent" aria-hidden="true" />
+              </div>
+              
+              <div className="flex-1 min-w-0">
+                <h3 className="text-base font-semibold text-text-primary mb-1.5">
                   Installa Tradelia
                 </h3>
-                <p className="text-xs text-text-secondary mb-3">
+                <p className="text-sm text-text-secondary mb-4 leading-relaxed">
                   Installa l'app per accedere rapidamente e ricevere notifiche anche quando il browser è chiuso.
                 </p>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <button
                     onClick={handleInstallClick}
-                    className="px-4 py-2 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2 min-h-[44px]"
+                    disabled={!deferredPrompt}
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-accent hover:bg-accent-hover text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
                     aria-label="Installa app"
                   >
                     <Download className="w-4 h-4" aria-hidden="true" />
@@ -122,16 +153,17 @@ export function InstallPrompt() {
                   </button>
                   <button
                     onClick={handleDismiss}
-                    className="px-3 py-2 text-text-tertiary hover:text-text-secondary text-sm transition-colors min-h-[44px]"
+                    className="px-4 py-2.5 text-text-tertiary hover:text-text-secondary text-sm font-medium transition-colors min-h-[44px]"
                     aria-label="Chiudi"
                   >
                     Più tardi
                   </button>
                 </div>
               </div>
+              
               <button
                 onClick={handleDismiss}
-                className="text-text-tertiary hover:text-text-secondary transition-colors p-1 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-all duration-200 min-h-[44px] min-w-[44px]"
                 aria-label="Chiudi banner"
               >
                 <X className="w-4 h-4" aria-hidden="true" />
