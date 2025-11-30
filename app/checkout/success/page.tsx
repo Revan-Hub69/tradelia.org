@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { CheckoutSuccess } from '@/components/checkout/CheckoutSuccess';
 
 export const metadata: Metadata = {
@@ -7,6 +8,10 @@ export const metadata: Metadata = {
 };
 
 export default function CheckoutSuccessPage() {
-  return <CheckoutSuccess />;
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Caricamento...</div>}>
+      <CheckoutSuccess />
+    </Suspense>
+  );
 }
 
