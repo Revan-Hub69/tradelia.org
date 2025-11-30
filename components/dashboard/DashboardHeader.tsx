@@ -5,6 +5,8 @@ import Link from 'next/link';
 import styles from './DashboardHeader.module.css';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
+import { GlobalSearch } from './GlobalSearch';
+import { UserMenu } from './UserMenu';
 
 export function DashboardHeader() {
   const { locale } = useTranslations();
@@ -32,14 +34,10 @@ export function DashboardHeader() {
           <span className={styles.dashboardTitleSeparator}>·</span>
           <span className={styles.dashboardTitleText}>Dashboard</span>
         </h1>
-        <Link href={dashboardHref} className={styles.dashboardLink}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-            <line x1="3" y1="9" x2="21" y2="9" />
-            <line x1="9" y1="21" x2="9" y2="9" />
-          </svg>
-          <span>Dashboard</span>
-        </Link>
+        <div className="flex items-center gap-3">
+          <GlobalSearch />
+          <UserMenu />
+        </div>
       </div>
     </header>
   );

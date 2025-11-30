@@ -86,6 +86,97 @@
     "copyright": "Tutti i diritti riservati"
   },
   "dashboard": {
+    "search": {
+      "open": "Apri ricerca",
+      "placeholder": "Cerca report, corsi, moduli...",
+      "inputLabel": "Campo di ricerca",
+      "clear": "Pulisci ricerca",
+      "noResults": "Nessun risultato trovato",
+      "startTyping": "Inizia a digitare per cercare..."
+    },
+    "userMenu": {
+      "open": "Menu utente",
+      "login": "Accedi",
+      "profile": "Profilo",
+      "notifications": "Notifiche",
+      "settings": "Impostazioni",
+      "admin": "Admin",
+      "logout": "Esci"
+    },
+    "activity": {
+      "title": "Attività Recenti",
+      "empty": "Nessuna attività recente",
+      "filterAll": "Tutte",
+      "filterReports": "Report",
+      "filterCourses": "Corsi",
+      "filterAnalysis": "Analisi",
+      "viewAll": "Vedi tutte le attività",
+      "types": {
+        "reportViewed": "Report visualizzato",
+        "courseStarted": "Corso iniziato",
+        "courseCompleted": "Corso completato",
+        "analysisRequested": "Analisi richiesta"
+      }
+    },
+    "breadcrumbs": {
+      "home": "Dashboard",
+      "ariaLabel": "Breadcrumb"
+    },
+    "quickActions": {
+      "title": "Azioni Rapide",
+      "showMore": "Mostra altre ({count})",
+      "showLess": "Mostra meno",
+      "requestAnalysis": "Richiedi Analisi",
+      "requestAnalysisDesc": "Richiedi un analisi personalizzata",
+      "addPosition": "Aggiungi Posizione",
+      "addPositionDesc": "Aggiungi una posizione al portafoglio",
+      "startCourse": "Inizia Corso",
+      "startCourseDesc": "Inizia un nuovo percorso formativo"
+    },
+    "favorites": {
+      "title": "Preferiti",
+      "empty": "Nessun contenuto salvato nei preferiti",
+      "emptyDesc": "Clicca sulla stella per salvare i contenuti che usi più spesso",
+      "count": "preferiti",
+      "remove": "Rimuovi dai preferiti",
+      "types": {
+        "report": "Report",
+        "course": "Corso",
+        "module": "Modulo"
+      }
+    },
+    "progress": {
+      "title": "Il Tuo Progresso",
+      "complete": "completato",
+      "courses": "Corsi",
+      "lessons": "lezioni",
+      "achievements": "Achievement",
+      "noCourses": "Nessun corso in corso",
+      "noAchievements": "Nessun achievement sbloccato",
+      "unlocked": "Sbloccato"
+    },
+    "help": {
+      "title": "Aiuto & Supporto",
+      "subtitle": "Trova risposte e risorse",
+      "open": "Apri aiuto e supporto",
+      "close": "Chiudi",
+      "footer": "Hai bisogno di più aiuto? Contattaci",
+      "faq": "FAQ",
+      "faqDesc": "Domande frequenti e risposte",
+      "guides": "Guide",
+      "guidesDesc": "Guide passo-passo e tutorial",
+      "documentation": "Documentazione",
+      "documentationDesc": "Documentazione completa della piattaforma"
+    },
+    "quickLinks": {
+      "title": "Risorse",
+      "glossary": "Glossario",
+      "glossaryDesc": "Termini finanziari e definizioni",
+      "widgets": "Widget",
+      "widgetsDesc": "Personalizza la tua dashboard",
+      "utilities": "Utilities Pro",
+      "utilitiesDesc": "Strumenti avanzati per utenti Pro"
+    },
     "banner": {
       "notLoggedIn": {
         "title": "Accedi o registrati per sbloccare funzionalità aggiuntive",
@@ -319,6 +410,8 @@
     "back": "Indietro",
     "comingSoon": "Prossimamente",
     "footer": "Funzionalità esclusive per utenti Pro",
+    "proRequired": "Account Pro Richiesto",
+    "proRequiredDesc": "Alcune utilities sono disponibili solo per utenti Pro. Aggiorna il tuo account per sbloccare tutte le funzionalità.",
     "portfolio": {
       "label": "Gestione Portafoglio",
       "description": "Monitora e gestisci le tue posizioni",
@@ -385,29 +478,17 @@
       "deactivate": "Disattiva",
       "delete": "Elimina"
     },
-    "export": {
-      "label": "Esporta Dati",
-      "description": "Scarica i tuoi dati in formato CSV o JSON"
+    "downloadPdf": {
+      "label": "Scarica PDF",
+      "description": "Scarica report e documenti in formato PDF"
     },
-    "analytics": {
-      "label": "Analisi Avanzate",
-      "description": "Statistiche dettagliate e insights"
+    "requestAnalysis": {
+      "label": "Richiedi Analisi",
+      "description": "Richiedi analisi personalizzate su misura"
     },
     "community": {
       "label": "Community Proposals",
       "description": "Proponi e vota analisi della community"
-    },
-    "api": {
-      "label": "API Keys",
-      "description": "Gestisci le tue chiavi API"
-    },
-    "backup": {
-      "label": "Backup & Restore",
-      "description": "Backup e ripristino dei tuoi dati"
-    },
-    "templates": {
-      "label": "Template Personalizzati",
-      "description": "Crea e gestisci template personalizzati"
     }
   },
   "glossary": {

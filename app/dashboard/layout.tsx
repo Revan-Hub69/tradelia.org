@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { ServiceWorkerProvider } from '@/components/notifications/ServiceWorkerProvider';
 import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 import { ProUtilities } from '@/components/dashboard/ProUtilities';
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   try {
@@ -18,6 +19,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
 
     return (
       <>
+        <DashboardHeader />
         <ServiceWorkerProvider />
         <InstallPrompt />
         <ProUtilities />
@@ -30,6 +32,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     // Non reindirizziamo, permettiamo comunque l'accesso
     return (
       <>
+        <DashboardHeader />
         <ServiceWorkerProvider />
         <InstallPrompt />
         <ProUtilities />

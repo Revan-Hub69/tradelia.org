@@ -1,18 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Sparkles, 
   X, 
-  FileDown, 
+  FileText, 
   BarChart3, 
   Users, 
-  Key, 
-  Database,
   TrendingUp,
-  Zap,
   PieChart,
   Calculator,
   Bell,
@@ -40,10 +37,32 @@ export function ProUtilities() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedUtility, setSelectedUtility] = useState<string | null>(null);
 
-  // Non mostrare se non è Pro
-  if (!isPro) {
-    return null;
-  }
+  // Ascolta evento per aprire da QuickLinks/QuickActions
+  useEffect(() => {
+    const handleOpen = () => {
+      setIsOpen(true);
+    };
+    
+    const handleSelectUtility = (e: CustomEvent) => {
+      setIsOpen(true);
+      setTimeout(() => {
+        setSelectedUtility(e.detail);
+      }, 300);
+    };
+
+    window.addEventListener('open-pro-utilities', handleOpen);
+    window.addEventListener('select-utility', handleSelectUtility as EventListener);
+    
+    return () => {
+      window.removeEventListener('open-pro-utilities', handleOpen);
+      window.removeEventListener('select-utility', handleSelectUtility as EventListener);
+    };
+  }, []);
+
+  // Mostra sempre il pulsante, ma alcune utilities saranno limitate ai Pro
+  // if (!isPro) {
+  //   return null;
+  // }
 
   const utilities: Utility[] = [
     {
@@ -68,23 +87,23 @@ export function ProUtilities() {
       component: <AlertSystem />,
     },
     {
-      id: 'export',
-      icon: <FileDown className="w-5 h-5" />,
-      label: t('proUtilities.export.label') || 'Esporta Dati',
-      description: t('proUtilities.export.description') || 'Scarica i tuoi dati in formato CSV o JSON',
+      id: 'download-pdf',
+      icon: <FileText className="w-5 h-5" />,
+      label: t('proUtilities.downloadPdf.label') || 'Scarica PDF',
+      description: t('proUtilities.downloadPdf.description') || 'Scarica report e documenti in formato PDF',
       action: () => {
-        // TODO: Implementare export
-        console.log('Export data');
+        // TODO: Implementare download PDF
+        console.log('Download PDF');
       },
     },
     {
-      id: 'analytics',
+      id: 'request-analysis',
       icon: <BarChart3 className="w-5 h-5" />,
-      label: t('proUtilities.analytics.label') || 'Analisi Avanzate',
-      description: t('proUtilities.analytics.description') || 'Statistiche dettagliate e insights',
+      label: t('proUtilities.requestAnalysis.label') || 'Richiedi Analisi',
+      description: t('proUtilities.requestAnalysis.description') || 'Richiedi analisi personalizzate su misura',
       action: () => {
-        // TODO: Implementare analytics
-        console.log('Advanced analytics');
+        // TODO: Implementare richiesta analisi
+        console.log('Request analysis');
       },
     },
     {
@@ -97,46 +116,13 @@ export function ProUtilities() {
         console.log('Community proposals');
       },
     },
-    {
-      id: 'api',
-      icon: <Key className="w-5 h-5" />,
-      label: t('proUtilities.api.label') || 'API Keys',
-      description: t('proUtilities.api.description') || 'Gestisci le tue chiavi API',
-      action: () => {
-        // TODO: Navigare a API keys
-        console.log('API keys');
-      },
-      comingSoon: true,
-    },
-    {
-      id: 'backup',
-      icon: <Database className="w-5 h-5" />,
-      label: t('proUtilities.backup.label') || 'Backup & Restore',
-      description: t('proUtilities.backup.description') || 'Backup e ripristino dei tuoi dati',
-      action: () => {
-        // TODO: Implementare backup
-        console.log('Backup & restore');
-      },
-      comingSoon: true,
-    },
-    {
-      id: 'templates',
-      icon: <Zap className="w-5 h-5" />,
-      label: t('proUtilities.templates.label') || 'Template Personalizzati',
-      description: t('proUtilities.templates.description') || 'Crea e gestisci template personalizzati',
-      action: () => {
-        // TODO: Implementare templates
-        console.log('Custom templates');
-      },
-      comingSoon: true,
-    },
   ];
 
   const currentUtility = selectedUtility ? utilities.find(u => u.id === selectedUtility) : null;
 
   return (
     <>
-      {/* Floating Button */}
+      {/* Floating Button - sempre visibile */}
       <motion.button
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -147,7 +133,11 @@ export function ProUtilities() {
         aria-label={t('proUtilities.open') || 'Apri utilities Pro'}
       >
         <Sparkles className="w-6 h-6 group-hover:rotate-12 transition-transform duration-200" />
-        <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-400 rounded-full border-2 border-bg-base animate-pulse" />
+        {isPro ? (
+          <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-400 rounded-full border-2 border-bg-base animate-pulse" />
+        ) : (
+          <div className="absolute -top-1 -right-1 w-4 h-4 bg-gray-400 rounded-full border-2 border-bg-base" />
+        )}
       </motion.button>
 
       {/* Drawer */}
@@ -213,6 +203,21 @@ export function ProUtilities() {
 
               {/* Content */}
               <div className="flex-1 overflow-y-auto">
+                {!isPro && (
+                  <div className="p-6 mb-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
+                    <div className="flex items-start gap-3">
+                      <Sparkles className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <h3 className="font-semibold text-text-primary mb-1">
+                          {t('proUtilities.proRequired') || 'Account Pro Richiesto'}
+                        </h3>
+                        <p className="text-sm text-text-secondary">
+                          {t('proUtilities.proRequiredDesc') || 'Alcune utilities sono disponibili solo per utenti Pro. Aggiorna il tuo account per sbloccare tutte le funzionalità.'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 {selectedUtility && currentUtility?.component ? (
                   <div className="p-6">
                     {currentUtility.component}
@@ -227,6 +232,12 @@ export function ProUtilities() {
                         transition={{ delay: index * 0.05 }}
                         onClick={() => {
                           if (!utility.comingSoon) {
+                            // Controlla se l'utility richiede Pro
+                            const requiresPro = ['portfolio', 'calculator', 'alerts'].includes(utility.id);
+                            if (requiresPro && !isPro) {
+                              // Mostra messaggio o reindirizza a upgrade
+                              return;
+                            }
                             if (utility.component) {
                               setSelectedUtility(utility.id);
                             } else if (utility.action) {
@@ -234,7 +245,7 @@ export function ProUtilities() {
                             }
                           }
                         }}
-                        disabled={utility.comingSoon}
+                        disabled={utility.comingSoon || (!isPro && ['portfolio', 'calculator', 'alerts'].includes(utility.id))}
                         className={cn(
                           'w-full p-4 rounded-xl border transition-all duration-200 text-left group',
                           'bg-bg-soft hover:bg-bg-surface border-border-subtle hover:border-accent/40',

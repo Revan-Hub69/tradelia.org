@@ -86,6 +86,97 @@
     "copyright": "All rights reserved"
   },
   "dashboard": {
+    "search": {
+      "open": "Open search",
+      "placeholder": "Search reports, courses, modules...",
+      "inputLabel": "Search field",
+      "clear": "Clear search",
+      "noResults": "No results found",
+      "startTyping": "Start typing to search..."
+    },
+    "userMenu": {
+      "open": "User menu",
+      "login": "Sign in",
+      "profile": "Profile",
+      "notifications": "Notifications",
+      "settings": "Settings",
+      "admin": "Admin",
+      "logout": "Sign out"
+    },
+    "activity": {
+      "title": "Recent Activity",
+      "empty": "No recent activity",
+      "filterAll": "All",
+      "filterReports": "Reports",
+      "filterCourses": "Courses",
+      "filterAnalysis": "Analysis",
+      "viewAll": "View all activities",
+      "types": {
+        "reportViewed": "Report viewed",
+        "courseStarted": "Course started",
+        "courseCompleted": "Course completed",
+        "analysisRequested": "Analysis requested"
+      }
+    },
+    "breadcrumbs": {
+      "home": "Dashboard",
+      "ariaLabel": "Breadcrumb"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "showMore": "Show more ({count})",
+      "showLess": "Show less",
+      "requestAnalysis": "Request Analysis",
+      "requestAnalysisDesc": "Request a personalized analysis",
+      "addPosition": "Add Position",
+      "addPositionDesc": "Add a position to your portfolio",
+      "startCourse": "Start Course",
+      "startCourseDesc": "Start a new learning path"
+    },
+    "favorites": {
+      "title": "Favorites",
+      "empty": "No content saved to favorites",
+      "emptyDesc": "Click the star to save content you use most often",
+      "count": "favorites",
+      "remove": "Remove from favorites",
+      "types": {
+        "report": "Report",
+        "course": "Course",
+        "module": "Module"
+      }
+    },
+    "progress": {
+      "title": "Your Progress",
+      "complete": "complete",
+      "courses": "Courses",
+      "lessons": "lessons",
+      "achievements": "Achievements",
+      "noCourses": "No courses in progress",
+      "noAchievements": "No achievements unlocked",
+      "unlocked": "Unlocked"
+    },
+    "help": {
+      "title": "Help & Support",
+      "subtitle": "Find answers and resources",
+      "open": "Open help and support",
+      "close": "Close",
+      "footer": "Need more help? Contact us",
+      "faq": "FAQ",
+      "faqDesc": "Frequently asked questions and answers",
+      "guides": "Guides",
+      "guidesDesc": "Step-by-step guides and tutorials",
+      "documentation": "Documentation",
+      "documentationDesc": "Complete platform documentation"
+    },
+    "quickLinks": {
+      "title": "Resources",
+      "glossary": "Glossary",
+      "glossaryDesc": "Financial terms and definitions",
+      "widgets": "Widgets",
+      "widgetsDesc": "Customize your dashboard",
+      "utilities": "Pro Utilities",
+      "utilitiesDesc": "Advanced tools for Pro users"
+    },
     "banner": {
       "notLoggedIn": {
         "title": "Sign in or register to unlock additional features",
@@ -319,6 +410,8 @@
     "back": "Back",
     "comingSoon": "Coming soon",
     "footer": "Exclusive features for Pro users",
+    "proRequired": "Pro Account Required",
+    "proRequiredDesc": "Some utilities are only available for Pro users. Upgrade your account to unlock all features.",
     "portfolio": {
       "label": "Portfolio Management",
       "description": "Monitor and manage your positions",
@@ -385,29 +478,17 @@
       "deactivate": "Deactivate",
       "delete": "Delete"
     },
-    "export": {
-      "label": "Export Data",
-      "description": "Download your data in CSV or JSON format"
+    "downloadPdf": {
+      "label": "Download PDF",
+      "description": "Download reports and documents in PDF format"
     },
-    "analytics": {
-      "label": "Advanced Analytics",
-      "description": "Detailed statistics and insights"
+    "requestAnalysis": {
+      "label": "Request Analysis",
+      "description": "Request personalized custom analyses"
     },
     "community": {
       "label": "Community Proposals",
       "description": "Propose and vote on community analyses"
-    },
-    "api": {
-      "label": "API Keys",
-      "description": "Manage your API keys"
-    },
-    "backup": {
-      "label": "Backup & Restore",
-      "description": "Backup and restore your data"
-    },
-    "templates": {
-      "label": "Custom Templates",
-      "description": "Create and manage custom templates"
     }
   },
   "glossary": {
