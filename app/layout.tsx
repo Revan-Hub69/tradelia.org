@@ -169,6 +169,7 @@ export default function RootLayout({
           <main id="main-content" className="flex-1" tabIndex={-1}>{children}</main>
           <Footer />
           <LegalConsent />
+          <ToastContainer />
         </div>
       </body>
     </html>

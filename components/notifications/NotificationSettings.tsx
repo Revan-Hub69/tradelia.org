@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Bell, BellOff, Mail, MessageSquare, Phone } from 'lucide-react';
 import { useServiceWorker } from '@/hooks/useServiceWorker';
+import { normalizePhoneNumber, validatePhoneNumber } from '@/lib/sms/twilio';
 
 interface NotificationPreferences {
   id?: string;
@@ -168,9 +169,13 @@ export function NotificationSettings() {
     <div className="p-6 bg-dash-surface rounded-lg border border-dash-border space-y-6">
       <div>
         <h2 className="text-xl font-semibold text-dash-text mb-2">Notifiche</h2>
-        <p className="text-sm text-dash-text-muted">
+        <p className="text-sm text-dash-text-muted mb-2">
           Gestisci come ricevere aggiornamenti e comunicazioni importanti
         </p>
+        <div className="p-3 bg-accent/10 border border-accent/30 rounded-lg text-xs text-text-secondary">
+          <strong className="text-accent">Modalità Gratuita:</strong> Push e Email sono sempre disponibili (€0/mese). 
+          SMS/WhatsApp richiedono configurazione aggiuntiva e hanno costi per messaggio.
+        </div>
       </div>
 
       {error && (
@@ -236,7 +241,12 @@ export function NotificationSettings() {
       {/* Notification Method */}
       <section className="space-y-4">
         <h3 className="font-medium text-dash-text">Metodo di notifica preferito</h3>
+        <p className="text-xs text-dash-text-muted mb-3">
+          Push e Email sono sempre disponibili (gratuiti). SMS/WhatsApp richiedono configurazione aggiuntiva.
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {/* Mostra solo Email di default (gratuito) */}
+          {/* SMS/WhatsApp sono nascosti se non configurati - il backend li ignora comunque */}
           {(['email', 'sms', 'whatsapp'] as const).map((method) => {
             const icons = {
               email: Mail,
@@ -251,16 +261,28 @@ export function NotificationSettings() {
             const Icon = icons[method];
             const isSelected = preferences?.notification_method === method;
 
+            // SMS/WhatsApp mostrano badge "Premium" se non configurati
+            const isPremium = (method === 'sms' || method === 'whatsapp');
+            const isDisabled = isPremium && saving; // SMS/WhatsApp funzionano solo se Twilio configurato (backend lo gestisce)
+            
             return (
               <button
                 key={method}
-                onClick={() => handleUpdatePreferences({ notification_method: method })}
-                disabled={saving}
-                className={`p-4 rounded-lg border-2 transition-all ${
+                onClick={() => {
+                  if (isPremium) {
+                    // Mostra info che SMS/WhatsApp richiedono configurazione
+                    setInfo('SMS/WhatsApp richiedono configurazione Twilio. Attualmente disponibili solo Push ed Email (gratuiti).');
+                    return;
+                  }
+                  handleUpdatePreferences({ notification_method: method });
+                }}
+                disabled={isDisabled}
+                className={`p-4 rounded-lg border-2 transition-all relative ${
                   isSelected
                     ? 'border-dash-accent bg-dash-accent/10'
                     : 'border-dash-border hover:border-dash-border-strong'
-                } disabled:opacity-50`}
+                } ${isPremium ? 'opacity-60' : ''} disabled:opacity-50`}
+                title={isPremium ? 'SMS/WhatsApp richiedono configurazione Twilio (non disponibile in modalità gratuita)' : undefined}
               >
                 <Icon
                   className={`w-6 h-6 mb-2 ${
@@ -268,6 +290,11 @@ export function NotificationSettings() {
                   }`}
                 />
                 <div className="text-sm font-medium text-dash-text">{labels[method]}</div>
+                {isPremium && (
+                  <div className="absolute top-1 right-1 text-[10px] bg-yellow-500/20 text-yellow-400 px-1.5 py-0.5 rounded">
+                    Premium
+                  </div>
+                )}
               </button>
             );
           })}
@@ -284,17 +311,27 @@ export function NotificationSettings() {
           <input
             type="tel"
             value={preferences.phone_number || ''}
-            onChange={(e) =>
-              setPreferences({ ...preferences, phone_number: e.target.value })
-            }
-            onBlur={() =>
-              handleUpdatePreferences({ phone_number: preferences.phone_number || null })
-            }
+            onChange={(e) => {
+              const value = e.target.value;
+              setPreferences({ ...preferences, phone_number: value });
+            }}
+            onBlur={() => {
+              if (preferences.phone_number) {
+                const normalized = normalizePhoneNumber(preferences.phone_number);
+                if (validatePhoneNumber(normalized)) {
+                  handleUpdatePreferences({ phone_number: normalized });
+                } else {
+                  setError('Numero telefono non valido. Usa formato internazionale (es. +39 123 456 7890)');
+                }
+              } else {
+                handleUpdatePreferences({ phone_number: null });
+              }
+            }}
             placeholder="+39 123 456 7890"
             className="w-full px-4 py-2 bg-dash-surface-elev border border-dash-border rounded text-dash-text placeholder:text-dash-text-muted focus:outline-none focus:ring-2 focus:ring-dash-accent"
           />
           <p className="text-xs text-dash-text-muted">
-            Formato internazionale richiesto (es. +39...)
+            Formato internazionale richiesto (es. +39 123 456 7890). Il numero verrà normalizzato automaticamente.
           </p>
         </section>
       )}

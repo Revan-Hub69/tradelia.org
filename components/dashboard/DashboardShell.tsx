@@ -1,12 +1,15 @@
 import { DashboardHero } from './DashboardHero';
 import { OverviewStats } from './OverviewStats';
 import { ModuleGrid } from './ModuleGrid';
+import { AccountBanner } from './AccountBanner';
 import styles from './dashboard.module.css';
 
 export function DashboardShell() {
   return (
     <div className={styles.dashboardMain}>
-      <div id="account-banner-slot" />
+      <div id="account-banner-slot">
+        <AccountBanner />
+      </div>
       <div id="modules-view" className="modules-view active">
         <DashboardHero />
         <section aria-label="Academic overview" className={styles.dashboardSection}>

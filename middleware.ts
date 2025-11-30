@@ -10,9 +10,13 @@ export async function middleware(request: NextRequest) {
     },
   });
 
+  // Security headers sono già gestiti da next.config.js
+  // Qui aggiungiamo solo header aggiuntivi se necessario
+
   // Crea un client Supabase per sincronizzare i cookie
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+  const supabaseAnonKey =
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
 
   if (supabaseUrl && supabaseAnonKey) {
     const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
@@ -20,7 +24,11 @@ export async function middleware(request: NextRequest) {
         get(name: string) {
           return request.cookies.get(name)?.value;
         },
-        set(name: string, value: string, options: any) {
+        set(
+          name: string,
+          value: string,
+          options: { name?: string; value?: string; [key: string]: unknown }
+        ) {
           request.cookies.set({
             name,
             value,
@@ -37,7 +45,7 @@ export async function middleware(request: NextRequest) {
             ...options,
           });
         },
-        remove(name: string, options: any) {
+        remove(name: string, options: { name?: string; value?: string; [key: string]: unknown }) {
           request.cookies.set({
             name,
             value: "",

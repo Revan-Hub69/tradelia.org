@@ -86,6 +86,22 @@
     "copyright": "Tutti i diritti riservati"
   },
   "dashboard": {
+    "banner": {
+      "notLoggedIn": {
+        "title": "Accedi o registrati per sbloccare funzionalità aggiuntive",
+        "description": "Crea un account gratuito per accedere a contenuti esclusivi, salvare i tuoi progressi e personalizzare la tua esperienza.",
+        "login": "Accedi",
+        "signup": "Registrati"
+      },
+      "emailNotVerified": {
+        "title": "Verifica la tua email",
+        "description": "Abbiamo inviato un'email di verifica a {email}. Verifica il tuo account per sbloccare tutte le funzionalità.",
+        "verify": "Verifica email",
+        "resend": "Invia di nuovo",
+        "resendSuccess": "Email di verifica inviata! Controlla la tua casella di posta."
+      },
+      "dismiss": "Chiudi"
+    },
     "hero": {
       "badge": "Dashboard accademica",
       "subtitle": "Framework verificabili",
@@ -187,6 +203,11 @@
       "login": "Accedi",
       "signup": "Registrati"
     },
+    "method": {
+      "email": "Email",
+      "phone": "SMS/WhatsApp",
+      "phone.requiresConfig": "SMS/WhatsApp richiedono configurazione Twilio (non disponibile in modalità gratuita). Usa Email per login gratuito."
+    },
     "form": {
       "name": {
         "label": "Nome completo",
@@ -195,6 +216,10 @@
       "email": {
         "label": "Email",
         "placeholder": "nome@esempio.com"
+      },
+      "phone": {
+        "label": "Numero telefono",
+        "placeholder": "+39 123 456 7890"
       },
       "password": {
         "label": "Password",
@@ -228,6 +253,11 @@
         "resend": "Non hai ricevuto il codice? Richiedi un nuovo codice",
         "resendSuccess": "Nuovo codice inviato! Controlla la tua email."
       },
+      "skipVerification": "Salta e continua (verifica opzionale)",
+      "guest": "Continua come ospite",
+      "signupSuccess": "Registrazione completata!",
+      "loginSuccess": "Login effettuato con successo!",
+      "verifySuccess": "Email verificata con successo!",
       "footer": {
         "text": "Proseguendo, accetti la nostra",
         "privacy": "Privacy Policy",

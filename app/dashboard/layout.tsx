@@ -11,9 +11,9 @@ export default async function DashboardLayout({ children }: { children: ReactNod
       data: { session },
     } = await supabase.auth.getSession();
 
-    if (!session) {
-      redirect('/login');
-    }
+    // Permetti accesso anche senza sessione (guest access)
+    // Il componente dashboard gestirà cosa mostrare in base alla sessione
+    // Non blocchiamo l'accesso, ma permettiamo guest
 
     return (
       <>
@@ -23,8 +23,15 @@ export default async function DashboardLayout({ children }: { children: ReactNod
       </>
     );
   } catch (error) {
-    // Se c'è un errore (es. variabili d'ambiente mancanti), reindirizza al login
+    // Se c'è un errore (es. variabili d'ambiente mancanti), logga ma non blocca
     console.error('Error in dashboard layout:', error);
-    redirect('/login');
+    // Non reindirizziamo, permettiamo comunque l'accesso
+    return (
+      <>
+        <ServiceWorkerProvider />
+        <InstallPrompt />
+        {children}
+      </>
+    );
   }
 }

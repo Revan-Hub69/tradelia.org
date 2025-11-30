@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useTransition, useRef, useEffect } from 'react';
+import { useState, useTransition, useRef, useEffect, useMemo, useCallback } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils/cn';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { ensureUserBootstrap } from '@/lib/auth/ensure-user-bootstrap';
+import { toast } from '@/components/ui/Toast';
 import { Eye, EyeOff, CheckCircle2, XCircle, AlertCircle, Lock, Mail, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -110,15 +112,31 @@ export function AuthForm() {
   const [info, setInfo] = useState<string | null>(null);
   const [pendingEmail, setPendingEmail] = useState<string | null>(null); // Email in attesa di conferma
 
-  // Gestisci errori dalla URL (es. callback conferma email fallita)
+  // Gestisci errori e parametri dalla URL
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
+      
+      // Gestisci errori
       const errorParam = params.get('error');
       if (errorParam === 'email_verification_failed') {
         setError(t('auth.form.errors.emailVerificationFailed'));
         // Rimuovi il parametro dalla URL
         window.history.replaceState({}, '', window.location.pathname);
+      }
+      
+      // Gestisci mode dalla URL (es. /login?mode=verify-email)
+      const modeParam = params.get('mode');
+      if (modeParam === 'verify-email') {
+        // Ottieni email dall'utente corrente
+        supabase.auth.getUser().then(({ data: { user } }) => {
+          if (user?.email) {
+            setPendingEmail(user.email);
+            setMode('verify-email');
+            // Rimuovi il parametro dalla URL
+            window.history.replaceState({}, '', window.location.pathname);
+          }
+        });
       }
     }
   }, [t]);
@@ -170,6 +188,7 @@ export function AuthForm() {
     setForm((prev) => ({ ...prev, [field]: event.target.value }));
     setError(null);
   };
+
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -227,7 +246,7 @@ export function AuthForm() {
           return;
         }
 
-        const { error: verifyError } = await supabase.auth.verifyOtp({
+        const { error: verifyError, data: verifyData } = await supabase.auth.verifyOtp({
           email: pendingEmail,
           token: form.otp,
           type: 'signup',
@@ -238,9 +257,26 @@ export function AuthForm() {
           return;
         }
 
-        // Verifica riuscita - reindirizza alla dashboard
-        // Forza un reload completo per assicurarsi che la sessione sia disponibile
-        window.location.href = '/dashboard';
+        // Verifica riuscita - assicurati che bootstrap sia fatto
+        if (verifyData?.user?.id) {
+          const bootstrapResult = await ensureUserBootstrap(
+            verifyData.user.id,
+            pendingEmail || form.email,
+            form.name || undefined
+          );
+          
+          if (!bootstrapResult.success) {
+            console.error('Bootstrap error after verification:', bootstrapResult.error);
+            // Non bloccare il flusso, ma logga l'errore
+          } else {
+            toast.success(t('auth.form.verifySuccess') || 'Email verificata con successo!');
+          }
+        }
+
+        // Reindirizza alla dashboard
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 1000);
         return;
       }
 
@@ -257,34 +293,10 @@ export function AuthForm() {
 
         // Verifica che la sessione sia disponibile
         if (data?.session) {
-          // Sincronizza la sessione lato server chiamando l'API route
-          try {
-            const syncResponse = await fetch('/api/auth/sync-session', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                access_token: data.session.access_token,
-                refresh_token: data.session.refresh_token,
-              }),
-            });
-
-            if (!syncResponse.ok) {
-              throw new Error('Failed to sync session');
-            }
-
-            // Attendi un momento per assicurarsi che i cookie siano impostati
-            await new Promise((resolve) => setTimeout(resolve, 200));
-            
-            // Reindirizza alla dashboard
-            window.location.href = '/dashboard';
-            return;
-          } catch (syncError) {
-            console.error('Error syncing session:', syncError);
-            setError('Errore durante la sincronizzazione della sessione. Riprova.');
-            return;
-          }
+          // Il middleware sincronizza automaticamente i cookie
+          // Reindirizza alla dashboard
+          window.location.href = '/dashboard';
+          return;
         }
         
         // Se non c'è sessione, mostra errore
@@ -314,29 +326,36 @@ export function AuthForm() {
         return;
       }
 
+      // Assicurati che bootstrap sia fatto (idempotente)
       if (data?.user?.id) {
-        try {
-          await fetch('/api/auth/bootstrap', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              userId: data.user.id,
-              email: form.email,
-              name: form.name,
-            }),
-          });
-        } catch (bootstrapError) {
-          console.error('Errore bootstrap utente', bootstrapError);
+        const bootstrapResult = await ensureUserBootstrap(
+          data.user.id,
+          form.email,
+          form.name || undefined
+        );
+        
+        if (!bootstrapResult.success) {
+          console.error('Bootstrap error during signup:', bootstrapResult.error);
+          // Non bloccare il flusso, ma logga l'errore
         }
       }
 
-      // Mostra il form di verifica email invece di tornare al login
-      setPendingEmail(form.email);
-      setInfo(null);
-      setMode('verify-email');
-      setForm((prev) => ({ ...prev, password: '', name: '', otp: '' }));
+      // Verifica email è opzionale - vai direttamente alla dashboard
+      // L'utente può verificare l'email in un secondo momento
+      if (data?.session) {
+        window.location.href = '/dashboard';
+        return;
+      }
+
+      // Se non c'è sessione ma c'è user, mostra info e vai a dashboard comunque
+      if (data?.user?.id) {
+        setInfo(t('auth.form.signupSuccess'));
+        // Piccolo delay per mostrare il messaggio
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 1000);
+        return;
+      }
     });
   };
 
@@ -434,6 +453,7 @@ export function AuthForm() {
             </p>
           </div>
         )}
+
 
         {/* Form */}
         <form className="space-y-5" onSubmit={handleSubmit} noValidate>
@@ -737,24 +757,69 @@ export function AuthForm() {
           </AnimatePresence>
 
           {/* Submit button */}
-          <button
-            type="submit"
-            disabled={
-              isPending ||
-              (mode === 'signup' && passwordStrength.strength === 'weak') ||
-              (mode === 'verify-email' && form.otp.length < 6)
-            }
-            className="w-full rounded-xl bg-accent hover:bg-accent-hover text-white font-semibold py-3.5 px-6 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed min-h-[48px] shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-base"
-            aria-busy={isPending}
-          >
-            {isPending
-              ? t('auth.form.submitting')
-              : mode === 'verify-email'
-                ? t('auth.form.submit.verify')
-                : mode === 'login'
-                  ? t('auth.form.submit.login')
-                  : t('auth.form.submit.signup')}
-          </button>
+          <div className="space-y-3">
+            <button
+              type="submit"
+              disabled={
+                isPending ||
+                (mode === 'signup' && passwordStrength.strength === 'weak') ||
+                (mode === 'verify-email' && form.otp.length < 6)
+              }
+              className="w-full rounded-xl bg-accent hover:bg-accent-hover text-white font-semibold py-3.5 px-6 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed min-h-[48px] shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-base"
+              aria-busy={isPending}
+            >
+              {isPending
+                ? t('auth.form.submitting')
+                : mode === 'verify-email'
+                  ? t('auth.form.submit.verify')
+                  : mode === 'login'
+                    ? t('auth.form.submit.login')
+                    : t('auth.form.submit.signup')}
+            </button>
+            
+            {/* Skip verification button (verify-email mode) */}
+            {mode === 'verify-email' && (
+              <button
+                type="button"
+                onClick={async () => {
+                  // Ottieni l'utente corrente per fare bootstrap
+                  const { data: { user } } = await supabase.auth.getUser();
+                  
+                  if (user?.id) {
+                    // Assicurati che bootstrap sia fatto prima di redirect
+                    await ensureUserBootstrap(
+                      user.id,
+                      pendingEmail || form.email,
+                      form.name || undefined
+                    );
+                  }
+                  
+                  // Salta la verifica e vai direttamente alla dashboard
+                  window.location.href = '/dashboard';
+                }}
+                disabled={isPending}
+                className="w-full rounded-xl bg-bg-soft hover:bg-bg-surface border border-border-subtle text-text-secondary hover:text-text-primary font-medium py-3 px-6 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed min-h-[48px]"
+              >
+                {t('auth.form.skipVerification')}
+              </button>
+            )}
+            
+            {/* Guest access button (login/signup mode) */}
+            {mode !== 'verify-email' && (
+              <button
+                type="button"
+                onClick={() => {
+                  // Accesso guest - vai direttamente a dashboard senza autenticazione
+                  // Il dashboard gestirà l'accesso guest
+                  window.location.href = '/dashboard';
+                }}
+                disabled={isPending}
+                className="w-full rounded-xl bg-bg-soft hover:bg-bg-surface border border-border-subtle text-text-secondary hover:text-text-primary font-medium py-3 px-6 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed min-h-[48px]"
+              >
+                {t('auth.form.guest')}
+              </button>
+            )}
+          </div>
         </form>
 
         {/* Footer links */}

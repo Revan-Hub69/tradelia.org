@@ -86,6 +86,22 @@
     "copyright": "All rights reserved"
   },
   "dashboard": {
+    "banner": {
+      "notLoggedIn": {
+        "title": "Sign in or register to unlock additional features",
+        "description": "Create a free account to access exclusive content, save your progress, and customize your experience.",
+        "login": "Sign in",
+        "signup": "Sign up"
+      },
+      "emailNotVerified": {
+        "title": "Verify your email",
+        "description": "We sent a verification email to {email}. Verify your account to unlock all features.",
+        "verify": "Verify email",
+        "resend": "Resend",
+        "resendSuccess": "Verification email sent! Check your inbox."
+      },
+      "dismiss": "Dismiss"
+    },
     "hero": {
       "badge": "Academic dashboard",
       "subtitle": "Verifiable frameworks",
@@ -187,6 +203,11 @@
       "login": "Sign in",
       "signup": "Sign up"
     },
+    "method": {
+      "email": "Email",
+      "phone": "SMS/WhatsApp",
+      "phone.requiresConfig": "SMS/WhatsApp require Twilio configuration (not available in free mode). Use Email for free login."
+    },
     "form": {
       "name": {
         "label": "Full name",
@@ -195,6 +216,10 @@
       "email": {
         "label": "Email",
         "placeholder": "name@example.com"
+      },
+      "phone": {
+        "label": "Phone number",
+        "placeholder": "+1 234 567 8900"
       },
       "password": {
         "label": "Password",
@@ -228,6 +253,11 @@
         "resend": "Didn't receive the code? Request a new code",
         "resendSuccess": "New code sent! Check your email."
       },
+      "skipVerification": "Skip and continue (verification optional)",
+      "guest": "Continue as guest",
+      "signupSuccess": "Registration completed!",
+      "loginSuccess": "Login successful!",
+      "verifySuccess": "Email verified successfully!",
       "footer": {
         "text": "By continuing, you agree to our",
         "privacy": "Privacy Policy",
