@@ -44,20 +44,21 @@ export const toast = {
 
 function addToast(toastData: Omit<Toast, 'id'>) {
   const id = Math.random().toString(36).substring(2, 9);
+  const duration = toastData.duration ?? 5000;
   const newToast: Toast = {
     id,
     ...toastData,
-    duration: toastData.duration ?? 5000,
+    duration,
   };
 
   toasts = [...toasts, newToast];
   notifyListeners();
 
   // Auto remove after duration
-  if (newToast.duration > 0) {
+  if (duration > 0) {
     setTimeout(() => {
       removeToast(id);
-    }, newToast.duration);
+    }, duration);
   }
 }
 
