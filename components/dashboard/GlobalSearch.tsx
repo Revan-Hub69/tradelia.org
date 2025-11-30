@@ -29,7 +29,7 @@ export function GlobalSearch() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const searchRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
 
   // Keyboard navigation
@@ -225,7 +225,7 @@ export function GlobalSearch() {
             />
             <motion.div
               ref={(node) => {
-                searchRef.current = node;
+                (searchRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
                 if (focusRef && node) {
                   (focusRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
                 }
