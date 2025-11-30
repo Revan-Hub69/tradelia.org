@@ -20,15 +20,28 @@ export function NotificationBell() {
 
   // Carica conteggio notifiche non lette
   useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    let isAuthenticated = true;
+
     const loadUnreadCount = async () => {
+      // Se non autenticato, non fare richieste
+      if (!isAuthenticated) {
+        return;
+      }
+
       try {
         const res = await fetch('/api/notifications/list?limit=1&unreadOnly=true', {
           credentials: 'include', // Include cookies per la sessione
         });
         
-        // Se 401, l'utente non è autenticato - non fare nulla, evita redirect
+        // Se 401, l'utente non è autenticato - ferma il polling
         if (res.status === 401) {
           setUnreadCount(0);
+          isAuthenticated = false;
+          if (interval) {
+            clearInterval(interval);
+            interval = null;
+          }
           return;
         }
         
@@ -48,10 +61,15 @@ export function NotificationBell() {
     // Solo se siamo nella dashboard
     if (isDashboard) {
       loadUnreadCount();
-      // Polling ogni 30 secondi
-      const interval = setInterval(loadUnreadCount, 30000);
-      return () => clearInterval(interval);
+      // Polling ogni 30 secondi solo se autenticato
+      interval = setInterval(loadUnreadCount, 30000);
     }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
   }, [isDashboard]);
 
   const hasActiveSubscription = !!subscription;

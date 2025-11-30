@@ -58,12 +58,18 @@ export function UserMenu() {
     const fetchUnreadCount = async () => {
       try {
         const response = await fetch('/api/notifications/list?limit=1&unreadOnly=true');
+        // Se 401, l'utente non è autenticato - non fare nulla
+        if (response.status === 401) {
+          setUnreadCount(0);
+          return;
+        }
         if (response.ok) {
           const data = await response.json();
           setUnreadCount(data.unreadCount || 0);
         }
       } catch (error) {
         console.error('Error fetching unread count:', error);
+        setUnreadCount(0);
       }
     };
 

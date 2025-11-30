@@ -26,20 +26,6 @@ export function HelpSupport() {
 
   const helpItems: HelpItem[] = [
     {
-      id: 'faq',
-      title: t('dashboard.help.faq') || 'FAQ',
-      description: t('dashboard.help.faqDesc') || 'Domande frequenti e risposte',
-      icon: <HelpCircle className="w-5 h-5" />,
-      href: '/help/faq',
-    },
-    {
-      id: 'guides',
-      title: t('dashboard.help.guides') || 'Guide',
-      description: t('dashboard.help.guidesDesc') || 'Guide passo-passo e tutorial',
-      icon: <BookOpen className="w-5 h-5" />,
-      href: '/help/guides',
-    },
-    {
       id: 'documentation',
       title: t('dashboard.help.documentation') || 'Documentazione',
       description: t('dashboard.help.documentationDesc') || 'Documentazione completa della piattaforma',
