@@ -103,8 +103,8 @@ export function AccountBanner() {
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" />
           
-          <div className="relative px-6 py-5">
-            <div className="flex items-start gap-4">
+          <div className="relative px-4 py-4 md:px-6 md:py-5">
+            <div className="flex items-start gap-3 md:gap-4">
               {/* Icon container */}
               <div className={`
                 flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center

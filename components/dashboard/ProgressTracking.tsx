@@ -202,7 +202,7 @@ export function ProgressTracking() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {achievements.map((achievement, index) => (
                 <motion.div
                   key={achievement.id}

@@ -53,7 +53,7 @@ export function HelpSupport() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-24 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg hover:shadow-xl border border-blue-400/30 flex items-center justify-center text-white transition-all duration-200 group"
+        className="fixed bottom-20 right-4 md:bottom-24 md:right-6 z-40 w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg hover:shadow-xl border border-blue-400/30 flex items-center justify-center text-white transition-all duration-200 group"
         aria-label={t('dashboard.help.open') || 'Apri aiuto e supporto'}
       >
         <HelpCircle className="w-6 h-6 group-hover:rotate-12 transition-transform duration-200" />
@@ -75,7 +75,7 @@ export function HelpSupport() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="fixed bottom-24 right-6 w-full max-w-sm z-50"
+              className="fixed bottom-20 right-4 md:bottom-24 md:right-6 w-[calc(100%-2rem)] max-w-sm z-50"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="bg-bg-surface border border-border-subtle rounded-2xl shadow-2xl overflow-hidden">

@@ -4,12 +4,18 @@
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--dash-border);
-  padding: 1.25rem 2rem;
+  padding: 1rem 1.25rem;
   position: sticky;
   top: 0;
   z-index: 1000;
   transition: all var(--transition-normal);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 768px) {
+  .dashboardHeaderMinimal {
+    padding: 1.25rem 2rem;
+  }
 }
 
 .dashboardHeaderMinimal::before {
@@ -32,9 +38,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 1rem;
   position: relative;
   z-index: 1;
+}
+
+@media (min-width: 768px) {
+  .dashboardHeaderContent {
+    gap: 2rem;
+  }
 }
 
 .dashboardTitle {
@@ -112,7 +124,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
@@ -177,7 +190,9 @@
   border-radius: 8px;
   background: var(--gradient-primary);
   background-clip: padding-box;
-  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   opacity: 0;

@@ -10,6 +10,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import Link from 'next/link';
 
+interface MenuItem {
+  id: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  href?: string;
+  badge?: number;
+  onClick?: () => void;
+  danger?: boolean;
+}
+
 export function UserMenu() {
   const { t } = useTranslations();
   const router = useRouter();
@@ -76,7 +86,7 @@ export function UserMenu() {
     router.refresh();
   };
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     {
       id: 'profile',
       label: t('dashboard.userMenu.profile') || 'Profilo',
@@ -164,7 +174,7 @@ export function UserMenu() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute right-0 top-full mt-2 w-64 bg-bg-surface border border-border-subtle rounded-xl shadow-2xl overflow-hidden z-50"
+            className="absolute right-0 top-full mt-2 w-64 max-w-[calc(100vw-2rem)] bg-bg-surface border border-border-subtle rounded-xl shadow-2xl overflow-hidden z-50"
             role="menu"
             aria-orientation="vertical"
           >

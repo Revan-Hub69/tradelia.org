@@ -129,10 +129,10 @@ export function ProUtilities() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-accent via-accent to-accent-hover shadow-lg hover:shadow-xl border border-accent/30 flex items-center justify-center text-white transition-all duration-200 group"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40 w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-accent via-accent to-accent-hover shadow-lg hover:shadow-xl border border-accent/30 flex items-center justify-center text-white transition-all duration-200 group"
         aria-label={t('proUtilities.open') || 'Apri utilities Pro'}
       >
-        <Sparkles className="w-6 h-6 group-hover:rotate-12 transition-transform duration-200" />
+        <Sparkles className="w-5 h-5 md:w-6 md:h-6 group-hover:rotate-12 transition-transform duration-200" />
         {isPro ? (
           <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-400 rounded-full border-2 border-bg-base animate-pulse" />
         ) : (
@@ -162,7 +162,7 @@ export function ProUtilities() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-bg-surface border-l border-border-subtle shadow-2xl z-50 flex flex-col"
+              className="fixed right-0 top-0 bottom-0 w-full max-w-md sm:w-96 bg-bg-surface border-l border-border-subtle shadow-2xl z-50 flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}

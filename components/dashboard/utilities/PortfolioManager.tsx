@@ -98,7 +98,7 @@ export function PortfolioManager() {
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <p className="text-xs text-text-tertiary mb-1">
               {t('proUtilities.portfolio.totalValue') || 'Valore Totale'}
@@ -142,7 +142,7 @@ export function PortfolioManager() {
           exit={{ opacity: 0, height: 0 }}
           className="bg-bg-soft border border-border-subtle rounded-xl p-4 space-y-3"
         >
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <input
               type="text"
               placeholder={t('proUtilities.portfolio.symbol') || 'Simbolo'}

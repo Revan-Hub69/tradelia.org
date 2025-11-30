@@ -34,7 +34,7 @@ export function DashboardHeader() {
           <span className={styles.dashboardTitleSeparator}>·</span>
           <span className={styles.dashboardTitleText}>Dashboard</span>
         </h1>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3">
           <GlobalSearch />
           <UserMenu />
         </div>
