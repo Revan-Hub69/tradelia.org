@@ -234,6 +234,14 @@ export function UserMenu() {
                   );
                 }
 
+                if (!item.href || item.href === '#') {
+                  return (
+                    <div key={item.id} className="block" role="menuitem">
+                      {content}
+                    </div>
+                  );
+                }
+
                 return (
                   <Link
                     key={item.id}
