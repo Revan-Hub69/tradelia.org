@@ -91,9 +91,24 @@ self.addEventListener("push", (event) => {
   const title = data.title || "Tradelia";
   const options = {
     body: data.body || "Nuovo aggiornamento disponibile.",
-    icon: "/icon-192.png",
-    badge: "/icon-192.png",
-    data: data.url ? { url: data.url } : {},
+    icon: data.icon || "/favicon.png",
+    badge: data.badge || "/favicon-32x32.png",
+    image: data.image || undefined,
+    tag: data.tag || undefined,
+    data: {
+      url: data.url || "/dashboard",
+      id: data.id || undefined,
+      type: data.type || undefined,
+      ...(data.data || {}),
+    },
+    actions: data.actions || [],
+    vibrate: data.vibrate || undefined,
+    timestamp: data.timestamp || Date.now(),
+    requireInteraction: data.requireInteraction || false,
+    renotify: data.renotify || false,
+    silent: data.silent || false,
+    dir: data.dir || "ltr",
+    lang: data.lang || "it",
   };
 
   event.waitUntil(self.registration.showNotification(title, options));
@@ -101,20 +116,40 @@ self.addEventListener("push", (event) => {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  if (event.notification.data && event.notification.data.url) {
-    event.waitUntil(
-      clients.matchAll({ type: "window" }).then((windowClients) => {
-        for (const client of windowClients) {
-          if ("focus" in client) {
-            client.focus();
-            client.navigate(event.notification.data.url);
-            return;
-          }
-        }
-        if (clients.openWindow) {
-          return clients.openWindow(event.notification.data.url);
-        }
-      })
-    );
+
+  // Gestisci azioni rapide
+  if (event.action === "dismiss") {
+    // Utente ha cliccato "Ignora" - non fare nulla
+    return;
   }
+
+  // Azione di default o "open" - apri/focusa finestra
+  const url = event.notification.data?.url || "/dashboard";
+  
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((windowClients) => {
+      // Cerca finestra esistente
+      for (const client of windowClients) {
+        if (client.url.includes(url) && "focus" in client) {
+          return client.focus();
+        }
+      }
+      
+      // Se non c'è finestra, cerca qualsiasi finestra aperta
+      for (const client of windowClients) {
+        if ("focus" in client) {
+          client.focus();
+          if ("navigate" in client) {
+            client.navigate(url);
+          }
+          return;
+        }
+      }
+      
+      // Se non ci sono finestre, aprine una nuova
+      if (clients.openWindow) {
+        return clients.openWindow(url);
+      }
+    })
+  );
 });

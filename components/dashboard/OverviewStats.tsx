@@ -1,10 +1,17 @@
 'use client';
 
+import { useState, useEffect, memo } from 'react';
 import Link from 'next/link';
 import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
 import styles from './dashboard.module.css';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
+import { formatDistanceToNow } from 'date-fns';
+import { it as itLocale } from 'date-fns/locale';
+import { useApi } from '@/lib/hooks/useApi';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { toast } from '@/components/ui/Toast';
+import { ContextualHelp } from './ContextualHelp';
 
 /**
  * OverviewStats Component - Premium Academic Design
@@ -18,10 +25,10 @@ import { buildLocalePath } from '@/lib/i18n/paths';
  */
 export function OverviewStats() {
   const { t, locale } = useTranslations();
-  const stats = [
+  const [stats, setStats] = useState([
     {
       id: 'total-reports',
-      value: t('dashboard.overview.stats.totalReports.value', '0'),
+      value: '0',
       label: t('dashboard.overview.stats.totalReports.label'),
       trend: 'neutral' as const,
       context: t('dashboard.overview.stats.totalReports.context'),
@@ -32,7 +39,7 @@ export function OverviewStats() {
     },
     {
       id: 'active-courses',
-      value: t('dashboard.overview.stats.activeCourses.value', '0'),
+      value: '0',
       label: t('dashboard.overview.stats.activeCourses.label'),
       trend: 'neutral' as const,
       context: t('dashboard.overview.stats.activeCourses.context'),
@@ -43,7 +50,7 @@ export function OverviewStats() {
     },
     {
       id: 'pending-requests',
-      value: t('dashboard.overview.stats.pendingRequests.value', '0'),
+      value: '0',
       label: t('dashboard.overview.stats.pendingRequests.label'),
       trend: 'neutral' as const,
       context: t('dashboard.overview.stats.pendingRequests.context'),
@@ -54,7 +61,7 @@ export function OverviewStats() {
     },
     {
       id: 'recent-activity',
-      value: t('dashboard.overview.stats.recentActivity.value', '—'),
+      value: '—',
       label: t('dashboard.overview.stats.recentActivity.label'),
       trend: 'neutral' as const,
       context: t('dashboard.overview.stats.recentActivity.context'),
@@ -63,14 +70,95 @@ export function OverviewStats() {
         href: buildLocalePath(locale, '/dashboard#activity'),
       },
     },
-  ];
+  ]);
+
+  const { data: statsData, loading, error, retry } = useApi<{
+    totalReports: number;
+    activeCourses: number;
+    pendingRequests: number;
+    recentActivity: { created_at: string } | null;
+  }>('/api/dashboard/stats', {
+    cacheTime: 2 * 60 * 1000, // 2 minutes
+    onError: (err) => {
+      toast.error('Errore nel caricamento delle statistiche', {
+        action: {
+          label: 'Riprova',
+          onClick: retry,
+        },
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (statsData) {
+      setStats(prev => prev.map(stat => {
+        if (stat.id === 'total-reports') {
+          return { ...stat, value: String(statsData.totalReports || 0) };
+        }
+        if (stat.id === 'active-courses') {
+          return { ...stat, value: String(statsData.activeCourses || 0) };
+        }
+        if (stat.id === 'pending-requests') {
+          return { ...stat, value: String(statsData.pendingRequests || 0) };
+        }
+        if (stat.id === 'recent-activity' && statsData.recentActivity) {
+          const timeAgo = formatDistanceToNow(new Date(statsData.recentActivity.created_at), {
+            addSuffix: true,
+            locale: locale === 'it' ? itLocale : undefined,
+          });
+          return { ...stat, value: timeAgo };
+        }
+        return stat;
+      }));
+    }
+  }, [statsData, locale]);
+
+  if (loading) {
+    return (
+      <div className={styles.overviewSection}>
+        <div className={styles.sectionHeader}>
+          <span className={styles.sectionEyebrow}>{t('dashboard.overview.eyebrow')}</span>
+          <div>
+            <h2 className={styles.sectionTitle}>{t('dashboard.overview.title')}</h2>
+            <p className={styles.sectionDescription}>{t('dashboard.overview.description')}</p>
+          </div>
+        </div>
+        <LoadingState message={t('dashboard.overview.loading') || 'Caricamento statistiche...'} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.overviewSection}>
+        <div className={styles.sectionHeader}>
+          <span className={styles.sectionEyebrow}>{t('dashboard.overview.eyebrow')}</span>
+          <div>
+            <h2 className={styles.sectionTitle}>{t('dashboard.overview.title')}</h2>
+            <p className={styles.sectionDescription}>{t('dashboard.overview.description')}</p>
+          </div>
+        </div>
+        <ErrorState
+          title={t('dashboard.overview.errorTitle') || 'Errore nel caricamento'}
+          message={t('dashboard.overview.errorMessage') || 'Impossibile caricare le statistiche. Riprova più tardi.'}
+          onRetry={retry}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.overviewSection}>
       <div className={styles.sectionHeader}>
         <span className={styles.sectionEyebrow}>{t('dashboard.overview.eyebrow')}</span>
         <div>
-          <h2 className={styles.sectionTitle}>{t('dashboard.overview.title')}</h2>
+          <div className="flex items-center gap-2">
+            <h2 className={styles.sectionTitle}>{t('dashboard.overview.title')}</h2>
+            <ContextualHelp
+              content={t('dashboard.overview.help') || 'Le statistiche mostrano un riepilogo delle tue attività principali. Clicca su una statistica per vedere i dettagli.'}
+              aria-label="Informazioni sulle statistiche"
+            />
+          </div>
           <p className={styles.sectionDescription}>{t('dashboard.overview.description')}</p>
         </div>
       </div>
@@ -87,6 +175,8 @@ export function OverviewStats() {
   );
 }
 
+export default memo(OverviewStats);
+
 interface StatCardProps {
   stat: {
     id: string;
@@ -101,7 +191,7 @@ interface StatCardProps {
   };
 }
 
-function StatCard({ stat }: StatCardProps) {
+const StatCard = memo(function StatCard({ stat }: StatCardProps) {
   const TrendIcon = 
     stat.trend === 'up' ? ArrowUpRight :
     stat.trend === 'down' ? ArrowDownRight :
@@ -155,4 +245,4 @@ function StatCard({ stat }: StatCardProps) {
       )}
     </div>
   );
-}
+});

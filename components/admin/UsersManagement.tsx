@@ -145,7 +145,6 @@ export function UsersManagement({ adminToken }: UsersManagementProps) {
             <option value="all">Tutti i ruoli</option>
             <option value="trial">Trial</option>
             <option value="pro">Pro</option>
-            <option value="institutional">Institutional</option>
             <option value="desk">Desk</option>
             <option value="admin">Admin</option>
           </select>

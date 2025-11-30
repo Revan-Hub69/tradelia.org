@@ -1,0 +1,96 @@
+{
+  "oslo": {
+    "common": {
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "create": "Crear",
+      "loading": "Cargando...",
+      "error": "Error",
+      "success": "Éxito",
+      "confirm": "Confirmar",
+      "close": "Cerrar"
+    },
+    "events": {
+      "title": "Eventos",
+      "create": "Nuevo Evento",
+      "edit": "Editar Evento",
+      "delete": "Eliminar Evento",
+      "name": "Nombre del Evento",
+      "description": "Descripción",
+      "type": "Tipo de Evento",
+      "startTime": "Fecha y Hora de Inicio",
+      "endTime": "Fecha y Hora de Fin",
+      "recurring": "Evento Recurrente",
+      "recurrencePattern": "Patrón de Recurrencia",
+      "recurrenceEnd": "Fecha de Fin de Recurrencia",
+      "types": {
+        "raid": "Raid",
+        "war": "Guerra",
+        "donation": "Donación",
+        "meeting": "Reunión",
+        "general": "General",
+        "other": "Otro"
+      },
+      "patterns": {
+        "daily": "Diario",
+        "weekly": "Semanal",
+        "monthly": "Mensual"
+      },
+      "noEvents": "No hay eventos programados",
+      "scheduled": "Eventos Programados",
+      "today": "Hoy",
+      "upcoming": "Próximos",
+      "past": "Pasados"
+    },
+    "notifications": {
+      "pushAll": "Enviar a Todos",
+      "sending": "Enviando...",
+      "title": "Título de la Notificación",
+      "message": "Mensaje de la Notificación",
+      "sent": "¡Notificación enviada a {count} miembros!",
+      "dailySummary": "Resumen Diario",
+      "preEvent": "Evento en 40 minutos",
+      "eventStarted": "Evento Iniciado",
+      "eventEnded": "Evento Finalizado"
+    },
+    "alliance": {
+      "title": "Alianza",
+      "members": "Miembros",
+      "events": "Eventos",
+      "admin": "Administración",
+      "role": {
+        "admin": "Administrador",
+        "officer": "Oficial",
+        "member": "Miembro"
+      }
+    },
+    "dashboard": {
+      "title": "Panel",
+      "welcome": "Bienvenido",
+      "todayEvents": "Eventos de Hoy",
+      "upcomingEvents": "Próximos Eventos",
+      "myEvents": "Mis Eventos"
+    },
+    "gaming": {
+      "raid": "Raid",
+      "war": "Guerra",
+      "battle": "Batalla",
+      "donation": "Donación",
+      "alliance": "Alianza",
+      "member": "Miembro",
+      "level": "Nivel",
+      "power": "Poder",
+      "contribution": "Contribución",
+      "participation": "Participación",
+      "victory": "Victoria",
+      "defeat": "Derrota",
+      "join": "Unirse",
+      "leave": "Salir",
+      "confirm": "Confirmar Participación",
+      "decline": "Rechazar"
+    }
+  }
+}
+

@@ -154,12 +154,54 @@ export async function POST(request: NextRequest) {
     // 5. Invia push notification a tutte le subscriptions
     const pushResults = [];
     if (subscriptions && subscriptions.length > 0 && vapidPublicKey && vapidPrivateKey) {
+      // Mappa type a tag per raggruppare notifiche simili
+      const tagMap: Record<string, string> = {
+        analysis_completed: `analysis-${notification.id}`,
+        plan_expiring: `plan-expiring-${targetUserId}`,
+        credits_low: `credits-low-${targetUserId}`,
+        system: `system-${notification.id}`,
+      };
+      const tag = tagMap[type] || `notification-${notification.id}`;
+
+      // Azioni basate sul tipo
+      const actionsMap: Record<string, Array<{ action: string; title: string }>> = {
+        analysis_completed: [
+          { action: "open", title: "Vedi Analisi" },
+          { action: "dismiss", title: "Ignora" },
+        ],
+        plan_expiring: [
+          { action: "open", title: "Rinnova" },
+          { action: "dismiss", title: "Più Tardi" },
+        ],
+        credits_low: [
+          { action: "open", title: "Ricarica" },
+          { action: "dismiss", title: "Ignora" },
+        ],
+      };
+      const actions = actionsMap[type] || [{ action: "open", title: "Apri" }];
+
+      // Pattern vibrazione per mobile (opzionale, solo per notifiche importanti)
+      const vibrate = type === "analysis_completed" || type === "plan_expiring" 
+        ? [200, 100, 200] 
+        : undefined;
+
       const payload = JSON.stringify({
         title,
         body: message,
         url: link || "/dashboard",
-        icon: "/icon-192.png",
-        badge: "/icon-192.png",
+        icon: "/favicon.png",
+        badge: "/favicon-32x32.png",
+        tag,
+        id: notification.id,
+        type,
+        actions,
+        vibrate,
+        timestamp: Date.now(),
+        requireInteraction: type === "plan_expiring" || type === "credits_low",
+        renotify: type === "plan_expiring",
+        silent: type === "info",
+        dir: "ltr",
+        lang: "it",
       });
 
       for (const sub of subscriptions) {

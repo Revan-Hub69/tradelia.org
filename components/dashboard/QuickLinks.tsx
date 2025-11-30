@@ -1,19 +1,30 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useState, useEffect } from 'react';
+import { Skeleton } from '@/components/ui/Skeleton';
 import Link from 'next/link';
-import { BookOpen, Layout, Sparkles, ArrowRight } from 'lucide-react';
+import { BookOpen, Layout, Sparkles, ArrowRight, TrendingUp } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
 import { motion } from 'framer-motion';
 
-export function QuickLinks() {
+export const QuickLinks = memo(function QuickLinks() {
   const { t, locale } = useTranslations();
   const isPro = useIsPro();
 
   const links = [
+    {
+      id: 'watchlist',
+      href: buildLocalePath(locale, '/dashboard/watchlist'),
+      icon: TrendingUp,
+      label: t('dashboard.quickLinks.watchlist') || 'Watchlist',
+      description: t('dashboard.quickLinks.watchlistDesc') || 'Monitora asset con alert personalizzati',
+      color: 'text-green-400',
+      bgColor: 'bg-green-400/20',
+      borderColor: 'border-green-400/30',
+    },
     {
       id: 'glossary',
       href: '/glossary',
@@ -144,5 +155,5 @@ export function QuickLinks() {
       </div>
     </section>
   );
-}
+});
 

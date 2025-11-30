@@ -7,11 +7,17 @@ import { cn } from '@/lib/utils/cn';
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info';
 
+export interface ToastAction {
+  label: string;
+  onClick: () => void;
+}
+
 export interface Toast {
   id: string;
   type: ToastType;
   message: string;
   duration?: number;
+  action?: ToastAction;
 }
 
 interface ToastContextType {
@@ -29,17 +35,17 @@ function notifyListeners() {
 }
 
 export const toast = {
-  success: (message: string, duration?: number) => {
-    addToast({ type: 'success', message, duration });
+  success: (message: string, options?: { duration?: number; action?: ToastAction }) => {
+    addToast({ type: 'success', message, duration: options?.duration, action: options?.action });
   },
-  error: (message: string, duration?: number) => {
-    addToast({ type: 'error', message, duration });
+  error: (message: string, options?: { duration?: number; action?: ToastAction }) => {
+    addToast({ type: 'error', message, duration: options?.duration, action: options?.action });
   },
-  warning: (message: string, duration?: number) => {
-    addToast({ type: 'warning', message, duration });
+  warning: (message: string, options?: { duration?: number; action?: ToastAction }) => {
+    addToast({ type: 'warning', message, duration: options?.duration, action: options?.action });
   },
-  info: (message: string, duration?: number) => {
-    addToast({ type: 'info', message, duration });
+  info: (message: string, options?: { duration?: number; action?: ToastAction }) => {
+    addToast({ type: 'info', message, duration: options?.duration, action: options?.action });
   },
 };
 
@@ -116,7 +122,20 @@ export function ToastContainer() {
               role="alert"
             >
               <Icon className="w-5 h-5 flex-shrink-0 mt-0.5" aria-hidden="true" />
-              <p className="flex-1 text-sm font-medium">{toast.message}</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium">{toast.message}</p>
+                {toast.action && (
+                  <button
+                    onClick={() => {
+                      toast.action?.onClick();
+                      removeToast(toast.id);
+                    }}
+                    className="mt-2 text-xs font-semibold underline hover:no-underline transition-all"
+                  >
+                    {toast.action.label}
+                  </button>
+                )}
+              </div>
               <button
                 onClick={() => removeToast(toast.id)}
                 className="flex-shrink-0 opacity-60 hover:opacity-100 transition-opacity"

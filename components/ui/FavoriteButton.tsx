@@ -17,32 +17,58 @@ interface FavoriteButtonProps {
 export function FavoriteButton({ id, type, title, description, href, className }: FavoriteButtonProps) {
   const { isFavorite, addFavorite, removeFavorite } = useFavorites();
   const [favorited, setFavorited] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setFavorited(isFavorite(id));
-  }, [id, isFavorite]);
+    const checkFavorite = async () => {
+      const result = await isFavorite(id, type);
+      setFavorited(result);
+    };
+    checkFavorite();
+  }, [id, type, isFavorite]);
 
-  const getTypeIcon = () => {
+  const getTypeIcon = (): string => {
     switch (type) {
       case 'report':
-        return <FileText className="w-4 h-4" />;
+        return 'file';
       case 'course':
-        return <BookOpen className="w-4 h-4" />;
+        return 'book';
       case 'module':
-        return <TrendingUp className="w-4 h-4" />;
+        return 'trending';
+      default:
+        return 'file';
     }
   };
 
-  const handleToggle = (e: React.MouseEvent) => {
+  const handleToggle = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    if (favorited) {
-      removeFavorite(id);
-      setFavorited(false);
-    } else {
-      addFavorite({ id, type, title, description, href, icon: getTypeIcon() });
-      setFavorited(true);
+    if (loading) return;
+    
+    setLoading(true);
+    
+    try {
+      if (favorited) {
+        const success = await removeFavorite(id, type);
+        if (success) {
+          setFavorited(false);
+        }
+      } else {
+        const success = await addFavorite({ 
+          id, 
+          type, 
+          title, 
+          description, 
+          href,
+          icon: getTypeIcon(),
+        });
+        if (success) {
+          setFavorited(true);
+        }
+      }
+    } finally {
+      setLoading(false);
     }
   };
 

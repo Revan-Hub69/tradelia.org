@@ -3,6 +3,25 @@ import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const paymentId = searchParams.get('paymentId');
+  
+  // Se c'è un paymentId specifico, permette accesso anche senza auth (per success page)
+  if (paymentId) {
+    const { data, error } = await supabaseAdmin
+      .from('payments')
+      .select('*')
+      .eq('id', paymentId)
+      .single();
+    
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    
+    return NextResponse.json(data);
+  }
+
+  // Per lista pagamenti, richiede autenticazione
   const supabase = await createClient();
   const {
     data: { user },
@@ -13,12 +32,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Non autorizzato' }, { status: 401 });
   }
 
-  const { searchParams } = new URL(request.url);
   const limit = Number(searchParams.get('limit') ?? 20);
   const page = Number(searchParams.get('page') ?? 1);
   const offset = (page - 1) * limit;
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('payments')
     .select('*')
     .eq('user_id', user.id)

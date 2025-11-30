@@ -1,0 +1,119 @@
+{
+  "oslo": {
+    "common": {
+      "save": "Salva",
+      "cancel": "Annulla",
+      "delete": "Elimina",
+      "edit": "Modifica",
+      "create": "Crea",
+      "loading": "Caricamento...",
+      "error": "Ops! Errore",
+      "success": "Fatto! ✅",
+      "confirm": "Conferma",
+      "close": "Chiudi"
+    },
+    "events": {
+      "title": "Eventi",
+      "create": "Nuovo Evento",
+      "edit": "Modifica Evento",
+      "delete": "Elimina Evento",
+      "name": "Nome Evento",
+      "description": "Descrizione",
+      "type": "Tipo Evento",
+      "startTime": "Data e Ora Inizio",
+      "endTime": "Data e Ora Fine",
+      "recurring": "Evento Ricorrente",
+      "recurrencePattern": "Frequenza",
+      "recurrenceEnd": "Data Fine Ricorrenza",
+      "types": {
+        "raid": "Raid",
+        "war": "Guerra",
+        "donation": "Donazione",
+        "meeting": "Riunione",
+        "general": "Generale",
+        "other": "Altro"
+      },
+      "patterns": {
+        "daily": "Giornaliero",
+        "weekly": "Settimanale",
+        "monthly": "Mensile"
+      },
+      "noEvents": "Nessun evento programmato",
+      "scheduled": "Eventi Programmati",
+      "today": "Oggi",
+      "upcoming": "Prossimi",
+      "past": "Passati"
+    },
+    "notifications": {
+      "pushAll": "Notifica a Tutti",
+      "sending": "Invio in corso...",
+      "title": "Titolo Notifica",
+      "message": "Messaggio Notifica",
+      "sent": "✅ Notifica inviata a {count} membri!",
+      "dailySummary": "Riepilogo Giornaliero",
+      "preEvent": "Evento tra 40 minuti",
+      "eventStarted": "Evento Iniziato",
+      "eventEnded": "Evento Terminato",
+      "templates": {
+        "dailySummary": "📊 Riepilogo Eventi di Oggi\n• {events}\nApri per dettagli",
+        "preEvent40min": "⚔️ {eventName} tra 40 minuti!\nInizia alle {time}\nUnisciti ora!",
+        "eventStarted": "🎮 {eventName} è iniziato!\nUnisciti subito!",
+        "eventEnded": "✅ {eventName} completato!\nGrazie per la partecipazione!"
+      }
+    },
+    "alliance": {
+      "title": "Alleanza",
+      "members": "Membri",
+      "events": "Eventi",
+      "admin": "Amministrazione",
+      "role": {
+        "admin": "Amministratore",
+        "officer": "Officer",
+        "member": "Membro"
+      }
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "welcome": "Benvenuto",
+      "todayEvents": "Eventi di Oggi",
+      "upcomingEvents": "Prossimi Eventi",
+      "myEvents": "I Miei Eventi"
+    },
+    "gaming": {
+      "raid": "Raid",
+      "war": "Guerra",
+      "battle": "Battaglia",
+      "donation": "Donazione",
+      "alliance": "Alleanza",
+      "member": "Membro",
+      "level": "Livello",
+      "power": "Potenza",
+      "contribution": "Contributo",
+      "participation": "Partecipazione",
+      "victory": "Vittoria",
+      "defeat": "Sconfitta",
+      "join": "Unisciti",
+      "leave": "Lascia",
+      "confirm": "Conferma Partecipazione",
+      "decline": "Rifiuta"
+    },
+    "messages": {
+      "eventCreated": "🎮 Evento creato!",
+      "eventUpdated": "✅ Evento aggiornato!",
+      "eventDeleted": "🗑️ Evento eliminato!",
+      "deleteConfirm": "Sei sicuro di voler eliminare questo evento?",
+      "loadingEvents": "Caricamento eventi...",
+      "saveError": "Ops! Errore durante il salvataggio",
+      "deleteError": "Ops! Errore durante l'eliminazione",
+      "sendError": "Ops! Errore durante l'invio",
+      "notMember": "❌ Non sei membro di questa alleanza",
+      "noPermission": "🔒 Non hai i permessi per questa azione",
+      "eventNotFound": "❌ Evento non trovato"
+    },
+    "placeholders": {
+      "eventName": "Es: Raid Serale alle 20:00",
+      "eventDescription": "Dettagli sull'evento, obiettivi, strategia..."
+    }
+  }
+}
+

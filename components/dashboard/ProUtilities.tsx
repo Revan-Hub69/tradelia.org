@@ -14,20 +14,41 @@ import {
   PieChart,
   Calculator,
   Bell,
-  ArrowLeft
+  ArrowLeft,
+  ArrowRight
 } from 'lucide-react';
+import Link from 'next/link';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
-import { PortfolioManager } from './utilities/PortfolioManager';
-import { FinancialCalculator } from './utilities/FinancialCalculator';
-import { AlertSystem } from './utilities/AlertSystem';
+import { lazy, Suspense } from 'react';
+import { Skeleton } from '@/components/ui/Skeleton';
+
+// Lazy load heavy utilities
+const PortfolioManager = lazy(() => 
+  import('./utilities/PortfolioManager').then(module => ({ default: module.PortfolioManager }))
+);
+
+        const FinancialCalculator = lazy(() => 
+          import('./utilities/FinancialCalculator').then(module => ({ default: module.FinancialCalculator }))
+        );
+
+        const AlertSystem = lazy(() => 
+          import('./utilities/AlertSystem').then(module => ({ default: module.AlertSystem }))
+        );
+
+        const PACSimulator = lazy(() => 
+          import('./utilities/PACSimulator').then(module => ({ default: module.PACSimulator }))
+        );
+
+        const ExpenseTracker = lazy(() => 
+          import('./utilities/ExpenseTracker').then(module => ({ default: module.ExpenseTracker }))
+        );
 
 interface Utility {
   id: string;
   icon: React.ReactNode;
   label: string;
   description: string;
-  component?: React.ReactNode;
   action?: () => void;
   comingSoon?: boolean;
 }
@@ -76,7 +97,7 @@ export function ProUtilities() {
       icon: <PieChart className="w-5 h-5" />,
       label: t('proUtilities.portfolio.label') || 'Gestione Portafoglio',
       description: t('proUtilities.portfolio.description') || 'Monitora e gestisci le tue posizioni',
-      component: <PortfolioManager />,
+      // Component rendered conditionally with Suspense
       // requiresPro: true (implicito, controllato in onClick)
     },
     {
@@ -84,17 +105,31 @@ export function ProUtilities() {
       icon: <Calculator className="w-5 h-5" />,
       label: t('proUtilities.calculator.label') || 'Calcolatrice Finanziaria',
       description: t('proUtilities.calculator.description') || 'Calcoli avanzati per investimenti',
-      component: <FinancialCalculator />,
+      // Component rendered conditionally with Suspense
       // requiresPro: true
     },
-    {
-      id: 'alerts',
-      icon: <Bell className="w-5 h-5" />,
-      label: t('proUtilities.alerts.label') || 'Sistema di Alert',
-      description: t('proUtilities.alerts.description') || 'Notifiche personalizzate per i tuoi asset',
-      component: <AlertSystem />,
-      // requiresPro: true
-    },
+            {
+              id: 'alerts',
+              icon: <Bell className="w-5 h-5" />,
+              label: t('proUtilities.alerts.label') || 'Sistema di Alert',
+              description: t('proUtilities.alerts.description') || 'Notifiche personalizzate per i tuoi asset',
+              // Component rendered conditionally with Suspense
+              // requiresPro: true
+            },
+            {
+              id: 'pac-simulator',
+              icon: <TrendingUp className="w-5 h-5" />,
+              label: t('proUtilities.pacSimulator.label') || 'Simulatore PAC',
+              description: t('proUtilities.pacSimulator.description') || 'Simula investimenti periodici con interesse composto',
+              // Component rendered conditionally with Suspense
+            },
+            {
+              id: 'expense-tracker',
+              icon: <Wallet className="w-5 h-5" />,
+              label: t('proUtilities.expenseTracker.label') || 'Gestione Spese',
+              description: t('proUtilities.expenseTracker.description') || 'Traccia le tue spese e analizza i consumi',
+              // Component rendered conditionally with Suspense
+            },
     // PRO ONLY - Azioni
     {
       id: 'download-pdf',
@@ -239,13 +274,31 @@ export function ProUtilities() {
                         <p className="text-sm text-text-secondary">
                           {t('proUtilities.proRequiredDesc') || 'Alcune utilities sono disponibili solo per utenti Pro. Aggiorna il tuo account per sbloccare tutte le funzionalità.'}
                         </p>
+                        <Link
+                          href="/pricing"
+                          className="mt-3 inline-flex items-center gap-2 text-amber-200 hover:text-amber-100 underline text-xs font-medium"
+                        >
+                          {t('proUtilities.upgradeCta') || 'Vedi piani e prezzi'}
+                          <ArrowRight className="w-3 h-3" />
+                        </Link>
                       </div>
                     </div>
                   </div>
                 )}
-                {selectedUtility && currentUtility?.component ? (
+                {selectedUtility && currentUtility ? (
                   <div className="p-6">
-                    {currentUtility.component}
+                    <Suspense fallback={
+                      <div className="space-y-4">
+                        <Skeleton variant="rectangular" height={200} />
+                        <Skeleton variant="rectangular" height={100} />
+                      </div>
+                    }>
+                      {selectedUtility === 'portfolio' && <PortfolioManager />}
+                      {selectedUtility === 'calculator' && <FinancialCalculator />}
+                      {selectedUtility === 'alerts' && <AlertSystem />}
+                      {selectedUtility === 'pac-simulator' && <PACSimulator />}
+                      {selectedUtility === 'expense-tracker' && <ExpenseTracker />}
+                    </Suspense>
                   </div>
                 ) : (
                   <div className="p-6 space-y-3">
@@ -262,7 +315,8 @@ export function ProUtilities() {
                               // Banner già mostrato sopra, non fare nulla
                               return;
                             }
-                            if (utility.component) {
+                            // All utilities with id have components (portfolio, calculator, alerts, pac-simulator, expense-tracker)
+                            if (['portfolio', 'calculator', 'alerts', 'pac-simulator', 'expense-tracker'].includes(utility.id)) {
                               setSelectedUtility(utility.id);
                             } else if (utility.action) {
                               utility.action();

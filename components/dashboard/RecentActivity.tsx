@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo, useMemo } from 'react';
 import { Clock, FileText, BookOpen, TrendingUp, ArrowRight, Filter } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
@@ -8,6 +8,12 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import { it as itLocale } from 'date-fns/locale';
+import { useApi } from '@/lib/hooks/useApi';
+import { toast } from '@/components/ui/Toast';
+import { SkeletonList } from '@/components/ui/Skeleton';
+import { VirtualizedList } from './VirtualizedList';
+import { LoadingState } from './LoadingState';
+import { ErrorState } from './ErrorState';
 
 interface Activity {
   id: string;
@@ -19,86 +25,88 @@ interface Activity {
   icon: React.ReactNode;
 }
 
-export function RecentActivity() {
+export const RecentActivity = memo(function RecentActivity() {
   const { t, locale } = useTranslations();
-  const [activities, setActivities] = useState<Activity[]>([]);
-  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
 
-  useEffect(() => {
-    fetchActivities();
-  }, [filter]);
-
-  const fetchActivities = async () => {
-    try {
-      setLoading(true);
-      // TODO: Integrare con API reale
-      // Per ora usiamo dati mock
-      const mockActivities: Activity[] = [
-        {
-          id: '1',
-          type: 'report_viewed',
-          title: 'Report Analisi Mercato',
-          description: 'Hai visualizzato questo report',
-          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-          href: '/dashboard#reports',
-          icon: <FileText className="w-4 h-4" />,
-        },
-        {
-          id: '2',
-          type: 'course_started',
-          title: 'Corso Fondamenti Trading',
-          description: 'Hai iniziato questo corso',
-          timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
-          href: '/dashboard#education',
-          icon: <BookOpen className="w-4 h-4" />,
-        },
-        {
-          id: '3',
-          type: 'analysis_requested',
-          title: 'Analisi Personalizzata',
-          description: 'Hai richiesto un analisi',
-          timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-          href: '/dashboard#requests-history',
-          icon: <TrendingUp className="w-4 h-4" />,
-        },
-      ];
-
-      const filtered = filter === 'all' 
-        ? mockActivities 
-        : mockActivities.filter(a => a.type === filter);
-      
-      setActivities(filtered);
-    } catch (error) {
-      console.error('Error fetching activities:', error);
-    } finally {
-      setLoading(false);
+  const { data: activitiesData, loading, error, retry } = useApi<any[]>(
+    `/api/dashboard/activities?limit=10&filter=${filter}`,
+    {
+      cacheTime: 1 * 60 * 1000, // 1 minute
+      onError: (err) => {
+        toast.error('Errore nel caricamento delle attività', {
+          action: {
+            label: 'Riprova',
+            onClick: retry,
+          },
+        });
+      },
     }
-  };
+  );
 
-  const getActivityTypeLabel = (type: Activity['type']) => {
-    switch (type) {
-      case 'report_viewed':
-        return t('dashboard.activity.types.reportViewed') || 'Report visualizzato';
-      case 'course_started':
-        return t('dashboard.activity.types.courseStarted') || 'Corso iniziato';
-      case 'course_completed':
-        return t('dashboard.activity.types.courseCompleted') || 'Corso completato';
-      case 'analysis_requested':
-        return t('dashboard.activity.types.analysisRequested') || 'Analisi richiesta';
-    }
-  };
+  // Map Supabase data to Activity format (memoized)
+  const activities = useMemo<Activity[]>(() => {
+    if (!activitiesData) return [];
 
-  const formatTime = (timestamp: string) => {
-    try {
-      return formatDistanceToNow(new Date(timestamp), {
-        addSuffix: true,
-        locale: locale === 'it' ? itLocale : undefined,
-      });
-    } catch {
-      return timestamp;
-    }
-  };
+    return activitiesData.map((item: any) => {
+      let icon = <FileText className="w-4 h-4" />;
+      let href = '/dashboard';
+
+      switch (item.type) {
+        case 'report_viewed':
+          icon = <FileText className="w-4 h-4" />;
+          href = `/dashboard#reports`;
+          break;
+        case 'course_started':
+        case 'course_completed':
+          icon = <BookOpen className="w-4 h-4" />;
+          href = `/dashboard#education`;
+          break;
+        case 'analysis_requested':
+          icon = <TrendingUp className="w-4 h-4" />;
+          href = `/dashboard#requests-history`;
+          break;
+      }
+
+      return {
+        id: item.id,
+        type: item.type,
+        title: item.title,
+        description: item.description || '',
+        timestamp: item.created_at,
+        href,
+        icon,
+      };
+    });
+  }, [activitiesData]);
+
+  const getActivityTypeLabel = useMemo(() => {
+    return (type: Activity['type']) => {
+      switch (type) {
+        case 'report_viewed':
+          return t('dashboard.activity.types.reportViewed') || 'Report visualizzato';
+        case 'course_started':
+          return t('dashboard.activity.types.courseStarted') || 'Corso iniziato';
+        case 'course_completed':
+          return t('dashboard.activity.types.courseCompleted') || 'Corso completato';
+        case 'analysis_requested':
+          return t('dashboard.activity.types.analysisRequested') || 'Analisi richiesta';
+      }
+    };
+  }, [t]);
+
+  const formatTime = useMemo(() => {
+    return (timestamp: string) => {
+      try {
+        return formatDistanceToNow(new Date(timestamp), {
+          addSuffix: true,
+          locale: locale === 'it' ? itLocale : undefined,
+        });
+      } catch {
+        return timestamp;
+      }
+    };
+  }, [locale]);
 
   if (loading) {
     return (
@@ -108,11 +116,24 @@ export function RecentActivity() {
             {t('dashboard.activity.title') || 'Attività Recenti'}
           </h2>
         </div>
-        <div className="space-y-3">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-16 bg-bg-soft rounded-xl animate-pulse" />
-          ))}
+        <LoadingState message={t('dashboard.activity.loading') || 'Caricamento attività...'} />
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="mb-8" aria-label={t('dashboard.activity.title') || 'Attività recenti'}>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-text-primary">
+            {t('dashboard.activity.title') || 'Attività Recenti'}
+          </h2>
         </div>
+        <ErrorState
+          title={t('dashboard.activity.errorTitle') || 'Errore nel caricamento'}
+          message={t('dashboard.activity.errorMessage') || 'Impossibile caricare le attività. Riprova più tardi.'}
+          onRetry={retry}
+        />
       </section>
     );
   }
@@ -156,42 +177,84 @@ export function RecentActivity() {
           </select>
         </div>
       </div>
-      <div className="space-y-2">
-        {activities.map((activity, index) => (
-          <motion.div
-            key={activity.id}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.05 }}
-          >
-            <Link
-              href={activity.href}
-              className="block p-4 bg-bg-soft border border-border-subtle rounded-xl hover:border-accent/40 transition-all duration-200 group"
-              aria-label={`${activity.title} - ${activity.description}`}
+      {activities.length > 10 ? (
+        <VirtualizedList
+          items={activities}
+          renderItem={(activity, index) => (
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
             >
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-lg bg-accent/20 text-accent flex items-center justify-center flex-shrink-0">
-                  {activity.icon}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-semibold text-text-primary text-sm">{activity.title}</h3>
-                    <span className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded text-xs text-text-tertiary">
-                      {getActivityTypeLabel(activity.type)}
-                    </span>
+              <Link
+                href={activity.href}
+                className="block p-4 bg-bg-soft border border-border-subtle rounded-xl hover:border-accent/40 transition-all duration-200 group"
+                aria-label={`${activity.title} - ${activity.description}`}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-accent/20 text-accent flex items-center justify-center flex-shrink-0">
+                    {activity.icon}
                   </div>
-                  <p className="text-xs text-text-secondary mb-2">{activity.description}</p>
-                  <div className="flex items-center gap-2 text-xs text-text-tertiary">
-                    <Clock className="w-3 h-3" />
-                    <span>{formatTime(activity.timestamp)}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-semibold text-text-primary text-sm">{activity.title}</h3>
+                      <span className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded text-xs text-text-tertiary">
+                        {getActivityTypeLabel(activity.type)}
+                      </span>
+                    </div>
+                    <p className="text-xs text-text-secondary mb-2">{activity.description}</p>
+                    <div className="flex items-center gap-2 text-xs text-text-tertiary">
+                      <Clock className="w-3 h-3" />
+                      <span>{formatTime(activity.timestamp)}</span>
+                    </div>
                   </div>
+                  <ArrowRight className="w-4 h-4 text-text-tertiary group-hover:text-accent group-hover:translate-x-1 transition-all flex-shrink-0" />
                 </div>
-                <ArrowRight className="w-4 h-4 text-text-tertiary group-hover:text-accent group-hover:translate-x-1 transition-all flex-shrink-0" />
-              </div>
-            </Link>
-          </motion.div>
-        ))}
-      </div>
+              </Link>
+            </motion.div>
+          )}
+          itemHeight={80}
+          className="max-h-96"
+          aria-label={t('dashboard.activity.title') || 'Lista attività recenti'}
+        />
+      ) : (
+        <div className="space-y-2">
+          {activities.map((activity, index) => (
+            <motion.div
+              key={activity.id}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
+            >
+              <Link
+                href={activity.href}
+                className="block p-4 bg-bg-soft border border-border-subtle rounded-xl hover:border-accent/40 transition-all duration-200 group"
+                aria-label={`${activity.title} - ${activity.description}`}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-accent/20 text-accent flex items-center justify-center flex-shrink-0">
+                    {activity.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-semibold text-text-primary text-sm">{activity.title}</h3>
+                      <span className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded text-xs text-text-tertiary">
+                        {getActivityTypeLabel(activity.type)}
+                      </span>
+                    </div>
+                    <p className="text-xs text-text-secondary mb-2">{activity.description}</p>
+                    <div className="flex items-center gap-2 text-xs text-text-tertiary">
+                      <Clock className="w-3 h-3" />
+                      <span>{formatTime(activity.timestamp)}</span>
+                    </div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-text-tertiary group-hover:text-accent group-hover:translate-x-1 transition-all flex-shrink-0" />
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      )}
       {activities.length >= 3 && (
         <div className="mt-4 text-center">
           <Link
@@ -205,5 +268,5 @@ export function RecentActivity() {
       )}
     </section>
   );
-}
+});
 

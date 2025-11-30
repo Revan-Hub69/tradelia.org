@@ -1,98 +1,49 @@
 'use client';
 
+import { useState, useEffect, useMemo, memo } from 'react';
 import Link from 'next/link';
 import styles from './dashboard.module.css';
+import { useApi } from '@/lib/hooks/useApi';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { toast } from '@/components/ui/Toast';
+import { ContextualHelp } from './ContextualHelp';
 
-/**
- * Module definitions with priority levels
- * Based on Cognitive Load Theory (Miller's Law: 7±2)
- * Primary modules: 4-5 main modules (high priority)
- * Secondary modules: 3-4 secondary modules (progressive disclosure)
- */
-const modules = [
-  {
-    id: 'reports',
-    title: 'Report Ufficiali',
-    description: 'Consulta i report pubblici e le analisi disponibili',
-    icon: 'file',
-    href: '/dashboard#reports',
-    priority: 'primary' as const,
-  },
-  {
-    id: 'education',
-    title: 'Percorsi Formativi',
-    description: 'Tutorial e corsi educativi',
-    icon: 'book',
-    href: '/dashboard#education',
-    priority: 'primary' as const,
-  },
-  {
-    id: 'frameworks',
-    title: 'Framework Documentation',
-    description: 'Metodologie e framework di analisi',
-    icon: 'book-open',
-    href: '/dashboard#frameworks',
-    priority: 'primary' as const,
-  },
-  {
-    id: 'requests-history',
-    title: 'Storico Richieste',
-    description: 'Le tue richieste di analisi on-demand',
-    icon: 'history',
-    href: '/dashboard#requests-history',
-    priority: 'primary' as const,
-  },
-  {
-    id: 'notifications',
-    title: 'Notifiche',
-    description: 'Notifiche di sistema e aggiornamenti',
-    icon: 'bell',
-    href: '/dashboard/notifications',
-    priority: 'secondary' as const,
-    badge: 0, // Will be populated from API
-  },
-  {
-    id: 'settings',
-    title: 'Impostazioni',
-    description: 'Preferenze utente e configurazioni',
-    icon: 'settings',
-    href: '/dashboard#settings',
-    priority: 'secondary' as const,
-  },
-  {
-    id: 'brokers',
-    title: 'Brokers',
-    description: 'Confronta e gestisci i tuoi broker',
-    icon: 'building',
-    href: '/brokers',
-    priority: 'secondary' as const,
-  },
-  {
-    id: 'resources',
-    title: 'Risorse & Supporto',
-    description: 'FAQ, guide e contatti',
-    icon: 'help-circle',
-    href: '/dashboard#resources',
-    priority: 'secondary' as const,
-  },
-  {
-    id: 'admin',
-    title: 'Admin',
-    description: 'Gestione report e utenti',
-    icon: 'settings',
-    href: '/dashboard/admin',
-    priority: 'secondary' as const,
-  },
-];
+interface Module {
+  id: string;
+  title: string;
+  description: string | null;
+  href: string;
+  icon: string | null;
+  priority: 'primary' | 'secondary';
+  badge_count: number;
+}
 
 interface ModuleGridProps {
   priority?: 'primary' | 'secondary';
 }
 
-export function ModuleGrid({ priority }: ModuleGridProps) {
-  const filteredModules = priority 
-    ? modules.filter(m => m.priority === priority)
-    : modules;
+export const ModuleGrid = memo(function ModuleGrid({ priority }: ModuleGridProps) {
+  const { data: modulesData, loading, error, retry } = useApi<Module[]>(
+    `/api/dashboard/modules${priority ? `?priority=${priority}` : ''}`,
+    {
+      cacheTime: 5 * 60 * 1000, // 5 minutes (modules don't change often)
+      onError: (err) => {
+        toast.error('Errore nel caricamento dei moduli', {
+          action: {
+            label: 'Riprova',
+            onClick: retry,
+          },
+        });
+      },
+    }
+  );
+
+  const filteredModules = useMemo(() => {
+    if (!modulesData) return [];
+    return priority 
+      ? modulesData.filter(m => m.priority === priority)
+      : modulesData;
+  }, [modulesData, priority]);
 
   const title = priority === 'primary' 
     ? 'Moduli Principali' 
@@ -100,9 +51,55 @@ export function ModuleGrid({ priority }: ModuleGridProps) {
     ? 'Moduli Secondari'
     : 'Moduli';
 
+  if (loading) {
+    return (
+      <div className={styles.moduleCategory}>
+        <h2 className={styles.categoryTitle}>{title}</h2>
+        <div className={styles.modulesGrid}>
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className={styles.moduleCard}>
+              <Skeleton variant="rectangular" height={80} />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.moduleCategory}>
+        <h2 className={styles.categoryTitle}>{title}</h2>
+        <div className="p-6 bg-error/10 border border-error/30 rounded-xl">
+          <p className="text-sm text-error mb-3">
+            Errore nel caricamento dei moduli
+          </p>
+          <button
+            onClick={retry}
+            className="px-4 py-2 rounded-lg bg-error/20 hover:bg-error/30 border border-error/40 text-error text-sm font-medium transition-colors"
+          >
+            Riprova
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (filteredModules.length === 0) {
+    return null;
+  }
+
   return (
     <div className={styles.moduleCategory}>
-      <h2 className={styles.categoryTitle}>{title}</h2>
+      <div className="flex items-center gap-2 mb-4">
+        <h2 className={styles.categoryTitle}>{title}</h2>
+        <ContextualHelp
+          content={priority === 'primary' 
+            ? 'I moduli principali contengono le funzionalità più utilizzate. Clicca su un modulo per accedere.'
+            : 'I moduli secondari contengono funzionalità aggiuntive e avanzate.'}
+          aria-label="Informazioni sui moduli"
+        />
+      </div>
       <div 
         className={styles.modulesGrid}
         role="list"
@@ -114,27 +111,29 @@ export function ModuleGrid({ priority }: ModuleGridProps) {
       </div>
     </div>
   );
-}
+});
 
-function ModuleCard({ module }: { module: typeof modules[0] }) {
+function ModuleCard({ module }: { module: Module }) {
   return (
     <Link 
       href={module.href} 
       className={styles.moduleCard}
       role="listitem"
-      aria-label={`Accedi a ${module.title}: ${module.description}`}
+      aria-label={`Accedi a ${module.title}: ${module.description || ''}`}
     >
       <div className={styles.moduleCardHeader}>
         <div className={styles.moduleIcon} aria-hidden="true">
-          <ModuleIcon name={module.icon} />
+          <ModuleIcon name={module.icon || 'dashboard'} />
         </div>
         <div className={styles.moduleInfo}>
           <h3 className={styles.moduleTitle}>{module.title}</h3>
-          <p className={styles.moduleDescription}>{module.description}</p>
+          {module.description && (
+            <p className={styles.moduleDescription}>{module.description}</p>
+          )}
         </div>
-        {module.badge !== undefined && module.badge > 0 && (
-          <span className={styles.moduleBadge} aria-label={`${module.badge} nuove notifiche`}>
-            {module.badge}
+        {module.badge_count > 0 && (
+          <span className={styles.moduleBadge} aria-label={`${module.badge_count} nuove notifiche`}>
+            {module.badge_count}
           </span>
         )}
         <div className={styles.moduleArrow} aria-hidden="true">

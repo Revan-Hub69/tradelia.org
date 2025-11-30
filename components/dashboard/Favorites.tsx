@@ -1,56 +1,113 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, memo } from 'react';
 import { Star, FileText, BookOpen, TrendingUp, X, Heart } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { useApi } from '@/lib/hooks/useApi';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { toast } from '@/components/ui/Toast';
+import { createClient } from '@/lib/supabase/client';
 
 interface Favorite {
   id: string;
-  type: 'report' | 'course' | 'module';
+  item_id: string;
+  item_type: 'report' | 'course' | 'module';
   title: string;
-  description: string;
+  description: string | null;
   href: string;
-  icon: React.ReactNode;
-  addedAt: string;
+  icon: string | null;
+  added_at: string;
 }
 
-export function Favorites() {
+export const Favorites = memo(function Favorites() {
   const { t } = useTranslations();
-  const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadFavorites();
-  }, []);
+  const { data: favoritesData, loading: apiLoading, error, retry } = useApi<Favorite[]>(
+    '/api/dashboard/favorites',
+    {
+      cacheTime: 2 * 60 * 1000, // 2 minutes
+      onError: (err) => {
+        toast.error('Errore nel caricamento dei preferiti', {
+          action: {
+            label: 'Riprova',
+            onClick: retry,
+          },
+        });
+      },
+    }
+  );
 
-  const loadFavorites = () => {
-    try {
-      const saved = localStorage.getItem('dashboard-favorites');
-      if (saved) {
-        setFavorites(JSON.parse(saved));
+  // Map Supabase data to component format
+  const favorites = useMemo(() => {
+    if (!favoritesData) return [];
+
+    return favoritesData.map((item) => {
+      let iconNode: React.ReactNode = <FileText className="w-4 h-4" />;
+      
+      if (item.icon) {
+        // Map icon string to React node
+        switch (item.icon) {
+          case 'file':
+            iconNode = <FileText className="w-4 h-4" />;
+            break;
+          case 'book':
+            iconNode = <BookOpen className="w-4 h-4" />;
+            break;
+          case 'trending':
+            iconNode = <TrendingUp className="w-4 h-4" />;
+            break;
+          default:
+            iconNode = <FileText className="w-4 h-4" />;
+        }
+      } else {
+        // Default icon based on type
+        switch (item.item_type) {
+          case 'report':
+            iconNode = <FileText className="w-4 h-4" />;
+            break;
+          case 'course':
+            iconNode = <BookOpen className="w-4 h-4" />;
+            break;
+          case 'module':
+            iconNode = <TrendingUp className="w-4 h-4" />;
+            break;
+        }
       }
-    } catch (error) {
-      console.error('Error loading favorites:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const saveFavorites = (newFavorites: Favorite[]) => {
+      return {
+        id: item.id,
+        type: item.item_type,
+        title: item.title,
+        description: item.description || '',
+        href: item.href,
+        icon: iconNode,
+        addedAt: item.added_at,
+      };
+    });
+  }, [favoritesData]);
+
+  const removeFavorite = async (id: string) => {
     try {
-      localStorage.setItem('dashboard-favorites', JSON.stringify(newFavorites));
-      setFavorites(newFavorites);
-    } catch (error) {
-      console.error('Error saving favorites:', error);
-    }
-  };
+      const response = await fetch(`/api/dashboard/favorites?id=${id}`, {
+        method: 'DELETE',
+      });
 
-  const removeFavorite = (id: string) => {
-    const updated = favorites.filter(f => f.id !== id);
-    saveFavorites(updated);
+      if (!response.ok) {
+        throw new Error('Errore rimozione preferito');
+      }
+
+      toast.success('Rimosso dai preferiti');
+      
+      // Retry to refresh list
+      retry();
+    } catch (error) {
+      console.error('Error removing favorite:', error);
+      toast.error('Errore nella rimozione del preferito');
+    }
   };
 
   const getTypeIcon = (type: Favorite['type']) => {
@@ -75,7 +132,7 @@ export function Favorites() {
     }
   };
 
-  if (loading) {
+  if (apiLoading) {
     return (
       <section className="mb-8" aria-label={t('dashboard.favorites.title') || 'Preferiti'}>
         <div className="flex items-center justify-between mb-4">
@@ -175,47 +232,91 @@ export function Favorites() {
 
 // Hook per aggiungere/rimuovere preferiti da altri componenti
 export function useFavorites() {
-  const addFavorite = (favorite: Omit<Favorite, 'addedAt'>) => {
+  const addFavorite = async (favorite: {
+    id: string;
+    type: 'report' | 'course' | 'module';
+    title: string;
+    description: string;
+    href: string;
+    icon?: string;
+  }): Promise<boolean> => {
     try {
-      const saved = localStorage.getItem('dashboard-favorites');
-      const favorites: Favorite[] = saved ? JSON.parse(saved) : [];
-      
-      // Evita duplicati
-      if (favorites.some(f => f.id === favorite.id)) {
-        return;
+      const response = await fetch('/api/dashboard/favorites', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          item_id: favorite.id,
+          item_type: favorite.type,
+          title: favorite.title,
+          description: favorite.description,
+          href: favorite.href,
+          icon: favorite.icon || null,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Errore aggiunta preferito');
       }
 
-      const newFavorite: Favorite = {
-        ...favorite,
-        addedAt: new Date().toISOString(),
-      };
-
-      favorites.unshift(newFavorite);
-      localStorage.setItem('dashboard-favorites', JSON.stringify(favorites));
+      toast.success('Aggiunto ai preferiti');
+      return true;
     } catch (error) {
       console.error('Error adding favorite:', error);
+      toast.error('Errore nell\'aggiunta del preferito');
+      return false;
     }
   };
 
-  const removeFavorite = (id: string) => {
+  const removeFavorite = async (itemId: string, itemType?: 'report' | 'course' | 'module'): Promise<boolean> => {
     try {
-      const saved = localStorage.getItem('dashboard-favorites');
-      if (!saved) return;
+      // Get all favorites to find the one with matching item_id
+      const listResponse = await fetch('/api/dashboard/favorites');
+      if (!listResponse.ok) {
+        throw new Error('Errore nel caricamento preferiti');
+      }
 
-      const favorites: Favorite[] = JSON.parse(saved);
-      const updated = favorites.filter(f => f.id !== id);
-      localStorage.setItem('dashboard-favorites', JSON.stringify(updated));
+      const { data: favorites } = await listResponse.json();
+      const favorite = favorites.find((f: Favorite) => 
+        f.item_id === itemId && 
+        (!itemType || f.item_type === itemType)
+      );
+
+      if (!favorite) {
+        return false;
+      }
+
+      const response = await fetch(`/api/dashboard/favorites?id=${favorite.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Errore rimozione preferito');
+      }
+
+      toast.success('Rimosso dai preferiti');
+      return true;
     } catch (error) {
       console.error('Error removing favorite:', error);
+      toast.error('Errore nella rimozione del preferito');
+      return false;
     }
   };
 
-  const isFavorite = (id: string): boolean => {
+  const isFavorite = async (
+    itemId: string,
+    itemType: 'report' | 'course' | 'module'
+  ): Promise<boolean> => {
     try {
-      const saved = localStorage.getItem('dashboard-favorites');
-      if (!saved) return false;
-      const favorites: Favorite[] = JSON.parse(saved);
-      return favorites.some(f => f.id === id);
+      const response = await fetch(
+        `/api/dashboard/favorites?check=${itemId}&type=${itemType}`
+      );
+      
+      if (!response.ok) return false;
+      
+      const { isFavorite: result } = await response.json();
+      return result || false;
     } catch {
       return false;
     }

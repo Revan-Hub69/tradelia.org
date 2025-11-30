@@ -5,8 +5,20 @@ import Link from 'next/link';
 import styles from './DashboardHeader.module.css';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
-import { GlobalSearch } from './GlobalSearch';
-import { UserMenu } from './UserMenu';
+import dynamic from 'next/dynamic';
+
+// Lazy load non-critical header components
+const GlobalSearch = dynamic(() => import('./GlobalSearch').then(mod => ({ default: mod.GlobalSearch })), {
+  ssr: false,
+});
+
+const UserMenu = dynamic(() => import('./UserMenu').then(mod => ({ default: mod.UserMenu })), {
+  ssr: false,
+});
+
+const UserStats = dynamic(() => import('@/components/gamification/UserStats').then(mod => ({ default: mod.UserStats })), {
+  ssr: false,
+});
 
 export function DashboardHeader() {
   const { locale } = useTranslations();
@@ -35,6 +47,7 @@ export function DashboardHeader() {
           <span className={styles.dashboardTitleText}>Dashboard</span>
         </h1>
         <div className="flex items-center gap-2 md:gap-3">
+          <UserStats />
           <GlobalSearch />
           <UserMenu />
         </div>

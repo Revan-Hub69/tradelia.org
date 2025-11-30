@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 
-export type UserRole = "trial" | "pro" | "institutional" | "desk" | "admin" | null;
+export type UserRole = "trial" | "pro" | "desk" | "admin" | null;
 
 interface UserRoleData {
   role: UserRole;
@@ -78,5 +78,5 @@ export function useUserRole(): UserRoleData {
 
 export function useIsPro(): boolean {
   const { role } = useUserRole();
-  return role === "pro" || role === "institutional" || role === "admin";
+  return role === "pro" || role === "admin";
 }

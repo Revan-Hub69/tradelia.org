@@ -1,0 +1,96 @@
+{
+  "oslo": {
+    "common": {
+      "save": "保存",
+      "cancel": "取消",
+      "delete": "删除",
+      "edit": "编辑",
+      "create": "创建",
+      "loading": "加载中...",
+      "error": "错误",
+      "success": "成功",
+      "confirm": "确认",
+      "close": "关闭"
+    },
+    "events": {
+      "title": "事件",
+      "create": "新事件",
+      "edit": "编辑事件",
+      "delete": "删除事件",
+      "name": "事件名称",
+      "description": "描述",
+      "type": "事件类型",
+      "startTime": "开始日期和时间",
+      "endTime": "结束日期和时间",
+      "recurring": "重复事件",
+      "recurrencePattern": "重复模式",
+      "recurrenceEnd": "重复结束日期",
+      "types": {
+        "raid": "突袭",
+        "war": "战争",
+        "donation": "捐赠",
+        "meeting": "会议",
+        "general": "一般",
+        "other": "其他"
+      },
+      "patterns": {
+        "daily": "每日",
+        "weekly": "每周",
+        "monthly": "每月"
+      },
+      "noEvents": "没有预定事件",
+      "scheduled": "预定事件",
+      "today": "今天",
+      "upcoming": "即将到来",
+      "past": "过去"
+    },
+    "notifications": {
+      "pushAll": "发送给所有人",
+      "sending": "发送中...",
+      "title": "通知标题",
+      "message": "通知消息",
+      "sent": "通知已发送给 {count} 名成员！",
+      "dailySummary": "每日摘要",
+      "preEvent": "40分钟后的事件",
+      "eventStarted": "事件已开始",
+      "eventEnded": "事件已结束"
+    },
+    "alliance": {
+      "title": "联盟",
+      "members": "成员",
+      "events": "事件",
+      "admin": "管理",
+      "role": {
+        "admin": "管理员",
+        "officer": "官员",
+        "member": "成员"
+      }
+    },
+    "dashboard": {
+      "title": "仪表板",
+      "welcome": "欢迎",
+      "todayEvents": "今天的事件",
+      "upcomingEvents": "即将到来的事件",
+      "myEvents": "我的事件"
+    },
+    "gaming": {
+      "raid": "突袭",
+      "war": "战争",
+      "battle": "战斗",
+      "donation": "捐赠",
+      "alliance": "联盟",
+      "member": "成员",
+      "level": "等级",
+      "power": "力量",
+      "contribution": "贡献",
+      "participation": "参与",
+      "victory": "胜利",
+      "defeat": "失败",
+      "join": "加入",
+      "leave": "离开",
+      "confirm": "确认参与",
+      "decline": "拒绝"
+    }
+  }
+}
+

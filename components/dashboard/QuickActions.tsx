@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, memo } from 'react';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { Plus, FileText, TrendingUp, BookOpen, PieChart, Sparkles } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
@@ -22,7 +23,28 @@ interface QuickAction {
   proOnly?: boolean;
 }
 
-export function QuickActions() {
+export const QuickActions = memo(function QuickActions() {
+  const [loading, setLoading] = useState(true);
+
+  // Simulate loading for future API integration
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="mb-8" aria-label="Azioni rapide">
+        <div className="flex flex-wrap gap-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex-1 min-w-[120px]">
+              <Skeleton variant="rectangular" height={48} />
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
   const { t } = useTranslations();
   const router = useRouter();
   const isPro = useIsPro();

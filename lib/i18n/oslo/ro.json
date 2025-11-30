@@ -1,0 +1,96 @@
+{
+  "oslo": {
+    "common": {
+      "save": "Salvează",
+      "cancel": "Anulează",
+      "delete": "Șterge",
+      "edit": "Editează",
+      "create": "Creează",
+      "loading": "Se încarcă...",
+      "error": "Eroare",
+      "success": "Succes",
+      "confirm": "Confirmă",
+      "close": "Închide"
+    },
+    "events": {
+      "title": "Evenimente",
+      "create": "Eveniment Nou",
+      "edit": "Editează Eveniment",
+      "delete": "Șterge Eveniment",
+      "name": "Numele Evenimentului",
+      "description": "Descriere",
+      "type": "Tipul Evenimentului",
+      "startTime": "Data și Ora de Început",
+      "endTime": "Data și Ora de Sfârșit",
+      "recurring": "Eveniment Recurent",
+      "recurrencePattern": "Modelul de Recurență",
+      "recurrenceEnd": "Data de Sfârșit a Recurenței",
+      "types": {
+        "raid": "Raid",
+        "war": "Război",
+        "donation": "Donatie",
+        "meeting": "Întâlnire",
+        "general": "General",
+        "other": "Altul"
+      },
+      "patterns": {
+        "daily": "Zilnic",
+        "weekly": "Săptămânal",
+        "monthly": "Lunar"
+      },
+      "noEvents": "Nu există evenimente programate",
+      "scheduled": "Evenimente Programate",
+      "today": "Astăzi",
+      "upcoming": "Viitoare",
+      "past": "Trecute"
+    },
+    "notifications": {
+      "pushAll": "Trimite Tuturor",
+      "sending": "Se trimite...",
+      "title": "Titlul Notificării",
+      "message": "Mesajul Notificării",
+      "sent": "Notificare trimisă la {count} membri!",
+      "dailySummary": "Rezumat Zilnic",
+      "preEvent": "Eveniment în 40 de minute",
+      "eventStarted": "Eveniment Început",
+      "eventEnded": "Eveniment Terminat"
+    },
+    "alliance": {
+      "title": "Alianță",
+      "members": "Membri",
+      "events": "Evenimente",
+      "admin": "Administrare",
+      "role": {
+        "admin": "Administrator",
+        "officer": "Ofițer",
+        "member": "Membru"
+      }
+    },
+    "dashboard": {
+      "title": "Tablou de Bord",
+      "welcome": "Bun venit",
+      "todayEvents": "Evenimente de Astăzi",
+      "upcomingEvents": "Evenimente Viitoare",
+      "myEvents": "Evenimentele Mele"
+    },
+    "gaming": {
+      "raid": "Raid",
+      "war": "Război",
+      "battle": "Bătălie",
+      "donation": "Donatie",
+      "alliance": "Alianță",
+      "member": "Membru",
+      "level": "Nivel",
+      "power": "Putere",
+      "contribution": "Contribuție",
+      "participation": "Participare",
+      "victory": "Victorie",
+      "defeat": "Înfrângere",
+      "join": "Alătură-te",
+      "leave": "Părăsește",
+      "confirm": "Confirmă Participarea",
+      "decline": "Refuză"
+    }
+  }
+}
+

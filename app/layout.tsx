@@ -52,9 +52,9 @@ export const viewport = {
 
 export const icons = {
   icon: [
-    { url: '/logos/tradelia-icon.svg', type: 'image/svg+xml' },
-    { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
-    { url: '/favicon.png', sizes: '16x16', type: 'image/png' },
+    { url: '/favicon.svg', type: 'image/svg+xml' },
+    { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
   ],
   apple: [
     { url: '/favicon.png', sizes: '180x180', type: 'image/png' },
@@ -131,12 +131,12 @@ export default function RootLayout({
         {/* PWA Manifest */}
         <link rel="manifest" href="/manifest.json" />
         
-        {/* Favicon */}
-        <link rel="icon" type="image/svg+xml" href="/logos/tradelia-icon.svg" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
+        {/* Favicon - Standardizzato per coerenza */}
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
-        <link rel="shortcut icon" href="/logos/tradelia-icon.svg" />
+        <link rel="shortcut icon" href="/favicon.svg" />
         
         {/* Preload critical resources */}
         <link rel="preload" href="/logos/tradelia-logo.svg" as="image" type="image/svg+xml" fetchPriority="high" />

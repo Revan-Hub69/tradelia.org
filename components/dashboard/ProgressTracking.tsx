@@ -1,11 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo, useMemo } from 'react';
 import { TrendingUp, BookOpen, CheckCircle2, Circle, Award, Target } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useApi } from '@/lib/hooks/useApi';
+import { toast } from '@/components/ui/Toast';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 interface CourseProgress {
   id: string;
@@ -27,85 +30,123 @@ interface Achievement {
   unlockedAt?: string;
 }
 
-export function ProgressTracking() {
+export const ProgressTracking = memo(function ProgressTracking() {
   const { t } = useTranslations();
-  const [courses, setCourses] = useState<CourseProgress[]>([]);
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchProgress();
-  }, []);
+  const { data: progressData, loading, error, retry } = useApi<{
+    courses: any[];
+    achievements: any[];
+  }>('/api/dashboard/progress', {
+    cacheTime: 2 * 60 * 1000, // 2 minutes
+    onError: (err) => {
+      toast.error('Errore nel caricamento del progresso', {
+        action: {
+          label: 'Riprova',
+          onClick: retry,
+        },
+      });
+    },
+  });
 
-  const fetchProgress = async () => {
-    try {
-      // TODO: Integrare con API reale
-      // Mock data per ora
-      const mockCourses: CourseProgress[] = [
-        {
-          id: '1',
-          title: 'Corso Fondamenti Trading',
-          description: 'Introduzione ai concetti base',
-          progress: 65,
-          totalLessons: 10,
-          completedLessons: 6.5,
-          href: '/dashboard#education',
-          badge: 'In Corso',
-        },
-        {
-          id: '2',
-          title: 'Analisi Tecnica Avanzata',
-          description: 'Pattern e indicatori tecnici',
-          progress: 30,
-          totalLessons: 8,
-          completedLessons: 2.4,
-          href: '/dashboard#education',
-        },
-      ];
+  // Map courses (memoized)
+  const courses = useMemo<CourseProgress[]>(() => {
+    if (!progressData?.courses) return [];
 
-      const mockAchievements: Achievement[] = [
-        {
-          id: '1',
-          title: 'Primo Passo',
-          description: 'Completa la tua prima lezione',
-          icon: <CheckCircle2 className="w-5 h-5" />,
-          unlocked: true,
-          unlockedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-        },
-        {
-          id: '2',
-          title: 'Studioso',
-          description: 'Completa 5 lezioni',
-          icon: <BookOpen className="w-5 h-5" />,
-          unlocked: true,
-          unlockedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-        },
-        {
-          id: '3',
-          title: 'Esperto',
-          description: 'Completa un intero corso',
-          icon: <Award className="w-5 h-5" />,
-          unlocked: false,
-        },
-      ];
+    return progressData.courses.map((item: any) => {
+      const course = item.courses || {};
+      const progress = item.progress || 0;
+      const totalLessons = course.total_lessons || 0;
+      const completedLessons = item.completed_lessons || 0;
 
-      setCourses(mockCourses);
-      setAchievements(mockAchievements);
-    } catch (error) {
-      console.error('Error fetching progress:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+      return {
+        id: item.id,
+        title: course.title || 'Corso',
+        description: course.description || '',
+        progress: Math.round(progress),
+        totalLessons,
+        completedLessons,
+        href: course.slug ? `/courses/${course.slug}` : '/dashboard#education',
+        badge: progress > 0 && progress < 100 ? 'In Corso' : undefined,
+      };
+    });
+  }, [progressData?.courses]);
 
-  const overallProgress = courses.length > 0
-    ? Math.round(courses.reduce((sum, c) => sum + c.progress, 0) / courses.length)
-    : 0;
+  // Map achievements (memoized)
+  const iconMap: Record<string, React.ReactNode> = useMemo(() => ({
+    check: <CheckCircle2 className="w-5 h-5" />,
+    book: <BookOpen className="w-5 h-5" />,
+    award: <Award className="w-5 h-5" />,
+  }), []);
+
+  const achievements = useMemo<Achievement[]>(() => {
+    if (!progressData?.achievements) return [];
+
+    return progressData.achievements.map((item: any) => {
+      const achievement = item.achievements || {};
+      const iconType = achievement.icon_type || 'award';
+      
+      return {
+        id: item.id,
+        title: achievement.title || 'Achievement',
+        description: achievement.description || '',
+        icon: iconMap[iconType] || <Award className="w-5 h-5" />,
+        unlocked: item.unlocked || false,
+        unlockedAt: item.unlocked_at || undefined,
+      };
+    });
+  }, [progressData?.achievements, iconMap]);
+
+  const overallProgress = useMemo(() => {
+    return courses.length > 0
+      ? Math.round(courses.reduce((sum, c) => sum + c.progress, 0) / courses.length)
+      : 0;
+  }, [courses]);
 
   if (loading) {
     return (
       <section className="mb-8" aria-label={t('dashboard.progress.title') || 'Progresso'}>
-        <div className="h-48 bg-bg-soft rounded-xl animate-pulse" />
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-text-primary">
+            {t('dashboard.progress.title') || 'Il Tuo Progresso'}
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <Skeleton variant="rectangular" height={24} width="40%" />
+            <Skeleton variant="rectangular" height={100} />
+            <Skeleton variant="rectangular" height={100} />
+          </div>
+          <div className="space-y-4">
+            <Skeleton variant="rectangular" height={24} width="40%" />
+            <div className="grid grid-cols-2 gap-3">
+              <Skeleton variant="rectangular" height={120} />
+              <Skeleton variant="rectangular" height={120} />
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="mb-8" aria-label={t('dashboard.progress.title') || 'Progresso'}>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-text-primary">
+            {t('dashboard.progress.title') || 'Il Tuo Progresso'}
+          </h2>
+        </div>
+        <div className="p-6 bg-error/10 border border-error/30 rounded-xl">
+          <p className="text-sm text-error mb-3">
+            Errore nel caricamento del progresso
+          </p>
+          <button
+            onClick={retry}
+            className="px-4 py-2 rounded-lg bg-error/20 hover:bg-error/30 border border-error/40 text-error text-sm font-medium transition-colors"
+          >
+            Riprova
+          </button>
+        </div>
       </section>
     );
   }
@@ -246,5 +287,5 @@ export function ProgressTracking() {
       </div>
     </section>
   );
-}
+});
 

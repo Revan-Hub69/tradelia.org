@@ -412,6 +412,7 @@
     "open": "Apri utilities Pro",
     "close": "Chiudi",
     "back": "Indietro",
+    "upgradeCta": "Vedi piani e prezzi",
     "comingSoon": "Prossimamente",
     "footer": "Funzionalità esclusive per utenti Pro",
     "proRequired": "Account Pro Richiesto",
@@ -554,6 +555,216 @@
       "empty": "Nessun post creato",
       "postNow": "Posta ora",
       "confirmDelete": "Eliminare questo post?"
+    }
+  },
+  "admin": {
+    "payments": {
+      "title": "Gestione Pagamenti",
+      "description": "Gestisci i pagamenti manuali e conferma i pagamenti completati",
+      "search": "Cerca per ID, email, nome...",
+      "empty": "Nessun pagamento trovato",
+      "confirm": "Conferma",
+      "filters": {
+        "all": "Tutti",
+        "pending": "In attesa",
+        "completed": "Completati",
+        "failed": "Falliti"
+      },
+      "status": {
+        "pending": "In attesa",
+        "completed": "Completato",
+        "failed": "Fallito"
+      },
+      "table": {
+        "id": "ID",
+        "customer": "Cliente",
+        "amount": "Importo",
+        "status": "Stato",
+        "date": "Data",
+        "actions": "Azioni"
+      }
+    }
+  },
+  "pricing": {
+    "title": "Scegli il Tuo Piano",
+    "subtitle": "Piani flessibili per ogni esigenza, con fatturazione B2B disponibile per aziende",
+    "billing": {
+      "monthly": "Mensile",
+      "yearly": "Annuale",
+      "save": "-17%"
+    },
+    "perMonth": "mese",
+    "perYear": "anno",
+    "equivalent": "Equivalente a",
+    "currentPlan": "Piano Attuale",
+    "sections": {
+      "individual": "Piani Individuali",
+      "business": "Piani Business"
+    },
+    "plans": {
+      "trial": {
+        "name": "Trial",
+        "description": "Prova gratuita",
+        "features": {
+          "1": "Accesso base alla dashboard",
+          "2": "Report pubblici",
+          "3": "Corsi base",
+          "4": "Supporto community"
+        },
+        "cta": "Inizia Gratis"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Per professionisti",
+        "badge": "Più Popolare",
+        "features": {
+          "1": "Tutto del Trial",
+          "2": "Portfolio Manager",
+          "3": "Calcolatrice Finanziaria",
+          "4": "Sistema Alert Avanzato",
+          "5": "Download PDF Report",
+          "6": "Richiesta Analisi Personalizzate",
+          "7": "Supporto prioritario"
+        },
+        "cta": "Scegli Pro"
+      }
+    },
+    "comparison": {
+      "title": "Confronta le Funzionalità",
+      "feature": "Funzionalità",
+      "features": {
+        "dashboard": "Dashboard Completa",
+        "reports": "Report Pubblici",
+        "courses": "Corsi Base",
+        "portfolio": "Portfolio Manager",
+        "calculator": "Calcolatrice Finanziaria",
+        "alerts": "Sistema Alert",
+        "pdf": "Download PDF",
+        "analysis": "Analisi Personalizzate",
+        "api": "API Access",
+        "b2b": "Fatturazione B2B",
+        "support": "Supporto 24/7"
+      }
+    }
+  },
+  "checkout": {
+    "title": "Checkout",
+    "subtitle": "Completa i tuoi dati e procedi al pagamento",
+    "backToPricing": "Torna ai piani",
+    "steps": {
+      "data": "Dati",
+      "payment": "Pagamento"
+    },
+    "processing": "Elaborazione pagamento in corso...",
+    "data": {
+      "individual": {
+        "title": "Dati Personali",
+        "firstName": "Nome",
+        "lastName": "Cognome",
+        "email": "Email",
+        "phone": "Telefono",
+        "address": "Indirizzo",
+        "city": "Città",
+        "zipCode": "CAP",
+        "country": "Paese",
+        "taxCode": "Codice Fiscale"
+      },
+      "business": {
+        "title": "Dati Aziendali",
+        "companyName": "Ragione Sociale",
+        "vatNumber": "Partita IVA",
+        "companyAddress": "Indirizzo Aziendale",
+        "companyCity": "Città",
+        "companyZipCode": "CAP",
+        "companyCountry": "Paese",
+        "contactPerson": "Persona di Contatto",
+        "contactEmail": "Email Contatto",
+        "contactPhone": "Telefono Contatto",
+        "requireInvoice": "Richiedi fattura B2B (verrà generata automaticamente dopo il pagamento)"
+      },
+      "selectCountry": "Seleziona...",
+      "continue": "Continua al Pagamento"
+    },
+    "payment": {
+      "title": "Metodo di Pagamento",
+      "xolo": {
+        "description": "Pagamento sicuro tramite Xolo Go",
+        "info": "Il pagamento verrà processato in modo sicuro tramite Xolo Go. Riceverai una conferma via email."
+      },
+      "proceed": "Procedi al Pagamento"
+    },
+    "summary": {
+      "title": "Riepilogo Ordine",
+      "billing": {
+        "monthly": "Fatturazione mensile",
+        "yearly": "Fatturazione annuale"
+      },
+      "total": "Totale",
+      "vat": "IVA inclusa dove applicabile"
+    },
+    "errors": {
+      "firstName": "Nome richiesto",
+      "lastName": "Cognome richiesto",
+      "email": "Email richiesta",
+      "country": "Paese richiesto",
+      "taxCode": "Codice fiscale richiesto per l'Italia",
+      "companyName": "Ragione sociale richiesta",
+      "vatNumber": "P.IVA richiesta",
+      "companyAddress": "Indirizzo aziendale richiesto",
+      "contactEmail": "Email contatto richiesta",
+      "companyCountry": "Paese richiesto",
+      "payment": "Errore durante il pagamento"
+    },
+    "success": {
+      "title": "Pagamento Completato!",
+      "description": "Il tuo pagamento è stato processato con successo. Riceverai una conferma via email.",
+      "invoice": "Fattura B2B",
+      "invoiceDescription": "La tua fattura verrà generata e inviata via email entro 24 ore.",
+      "downloadInvoice": "Scarica Fattura",
+      "goToDashboard": "Vai alla Dashboard",
+      "viewBilling": "Vedi Fatture"
+    },
+    "instructions": {
+      "title": "Completa il Pagamento",
+      "subtitle": "Segui le istruzioni per completare il pagamento tramite Xolo Go",
+      "orderSummary": "Riepilogo Ordine",
+      "paymentMethods": "Metodi di Pagamento",
+      "xoloLink": {
+        "title": "Pagamento tramite Xolo Go",
+        "description": "Clicca sul link per completare il pagamento in modo sicuro tramite Xolo Go",
+        "button": "Vai a Xolo Go"
+      },
+      "iban": {
+        "title": "Bonifico Bancario",
+        "description": "Effettua un bonifico all'IBAN indicato. Includi il Payment ID come causale.",
+        "label": "IBAN",
+        "causale": "Causale (obbligatoria)"
+      },
+      "info": "Dopo aver completato il pagamento, riceverai una conferma via email. Il tuo account verrà aggiornato automaticamente entro 24-48 ore.",
+      "backToDashboard": "Torna alla Dashboard",
+      "alreadyPaid": "Ho già pagato",
+      "copy": "Copia"
+    }
+  },
+  "watchlist": {
+    "title": "Watchlist",
+    "description": "Monitora i tuoi asset preferiti con alert personalizzati",
+    "addAsset": "Aggiungi Asset",
+    "addAlert": "Crea Alert",
+    "empty": "Nessun asset in watchlist",
+    "emptyDesc": "Aggiungi asset per iniziare a monitorarli",
+    "limitReached": "Limite raggiunto",
+    "limitMessage": "Hai raggiunto il limite di 5 asset. Aggiorna a Pro per watchlist illimitata.",
+    "alertTypes": {
+      "price_above": "Prezzo sopra target",
+      "price_below": "Prezzo sotto target",
+      "price_change_pct": "Variazione percentuale",
+      "volume_above": "Volume sopra soglia"
+    },
+    "notifications": {
+      "push": "Push Notification",
+      "email": "Email",
+      "sms": "SMS (Pro)"
     }
   }
 }

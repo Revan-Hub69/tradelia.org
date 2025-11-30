@@ -7,6 +7,9 @@ import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useBodyScrollLock } from '@/lib/hooks/useBodyScrollLock';
+import { toast } from '@/components/ui/Toast';
+import { useKeyboardNavigation } from '@/lib/hooks/useKeyboardNavigation';
+import { useFocusManagement } from '@/lib/hooks/useFocusManagement';
 
 interface SearchResult {
   id: string;
@@ -24,49 +27,108 @@ export function GlobalSearch() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Keyboard navigation
+  const { containerRef: keyboardNavRef } = useKeyboardNavigation({
+    itemCount: results.length,
+    onSelect: (index) => {
+      if (results[index]) {
+        handleSelectResult(results[index]);
+      }
+    },
+    enabled: isOpen && results.length > 0,
+  });
+
+  // Focus management
+  const { containerRef: focusRef } = useFocusManagement({
+    enabled: isOpen,
+    initialFocus: inputRef,
+  });
+
+  // Merge refs for results container
+  useEffect(() => {
+    if (keyboardNavRef && resultsRef.current) {
+      (keyboardNavRef as React.MutableRefObject<HTMLDivElement | null>).current = resultsRef.current;
+    }
+  }, [keyboardNavRef, results.length]);
 
   // Blocca scroll quando modal è aperto
   useBodyScrollLock(isOpen);
 
-  // Mock search results - in futuro integreremo con API
-  const searchContent = useCallback((searchQuery: string): SearchResult[] => {
-    if (!searchQuery.trim()) return [];
+  // Search with API (with caching)
+  const searchContent = useCallback(async (searchQuery: string) => {
+    if (!searchQuery.trim()) {
+      setResults([]);
+      setLoading(false);
+      return;
+    }
 
-    const query = searchQuery.toLowerCase();
-    const mockResults: SearchResult[] = [
-      {
-        id: '1',
-        type: 'report',
-        title: 'Report Analisi Mercato',
-        description: 'Analisi completa del mercato finanziario',
-        href: '/dashboard#reports',
-        icon: <FileText className="w-4 h-4" />,
-      },
-      {
-        id: '2',
-        type: 'course',
-        title: 'Corso Fondamenti Trading',
-        description: 'Introduzione ai concetti base del trading',
-        href: '/dashboard#education',
-        icon: <BookOpen className="w-4 h-4" />,
-      },
-      {
-        id: '3',
-        type: 'glossary',
-        title: 'MiFID II',
-        description: 'Markets in Financial Instruments Directive II',
-        href: '/glossary',
-        icon: <TrendingUp className="w-4 h-4" />,
-      },
-    ];
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/dashboard/search?q=${encodeURIComponent(searchQuery)}`);
+      
+      if (!response.ok) {
+        throw new Error('Errore ricerca');
+      }
 
-    return mockResults.filter(
-      (item) =>
-        item.title.toLowerCase().includes(query) ||
-        item.description.toLowerCase().includes(query)
-    );
+      const { data } = await response.json();
+      
+      // Map API results to SearchResult format
+      const mappedResults: SearchResult[] = [];
+
+      // Reports
+      (data.reports || []).forEach((item: any) => {
+        mappedResults.push({
+          id: `report-${item.id}`,
+          type: 'report',
+          title: item.title,
+          description: item.description || '',
+          href: `/dashboard#reports`,
+          icon: <FileText className="w-4 h-4" />,
+        });
+      });
+
+      // Courses
+      (data.courses || []).forEach((item: any) => {
+        mappedResults.push({
+          id: `course-${item.id}`,
+          type: 'course',
+          title: item.title,
+          description: item.description || '',
+          href: item.slug ? `/courses/${item.slug}` : '/dashboard#education',
+          icon: <BookOpen className="w-4 h-4" />,
+        });
+      });
+
+      // Modules
+      (data.modules || []).forEach((item: any) => {
+        mappedResults.push({
+          id: `module-${item.id}`,
+          type: 'module',
+          title: item.title,
+          description: item.description || '',
+          href: item.href || '/dashboard',
+          icon: <TrendingUp className="w-4 h-4" />,
+        });
+      });
+
+      setResults(mappedResults);
+    } catch (error) {
+      console.error('Error searching:', error);
+      setResults([]);
+      toast.error('Errore durante la ricerca', {
+        action: {
+          label: 'Riprova',
+          onClick: () => searchContent(searchQuery),
+        },
+      });
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   // Keyboard shortcut Ctrl+K / Cmd+K
@@ -93,37 +155,22 @@ export function GlobalSearch() {
     }
   }, [isOpen]);
 
-  // Cerca quando cambia la query
+  // Cerca quando cambia la query (debounced)
   useEffect(() => {
-    if (query.trim()) {
-      const searchResults = searchContent(query);
-      setResults(searchResults);
-      setSelectedIndex(0);
-    } else {
-      setResults([]);
-    }
+    const timeoutId = setTimeout(() => {
+      if (query.trim()) {
+        searchContent(query);
+        setSelectedIndex(0);
+      } else {
+        setResults([]);
+      }
+    }, 300); // Debounce 300ms
+
+    return () => clearTimeout(timeoutId);
   }, [query, searchContent]);
 
-  // Navigazione da tastiera
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        setSelectedIndex((prev) => (prev < results.length - 1 ? prev + 1 : prev));
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : 0));
-      } else if (e.key === 'Enter' && results[selectedIndex]) {
-        e.preventDefault();
-        handleSelectResult(results[selectedIndex]);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, results, selectedIndex]);
+  // Keyboard navigation is now handled by useKeyboardNavigation hook
+  // The hook manages arrow keys, Enter, Home, End automatically
 
   // Click outside per chiudere
   useEffect(() => {
@@ -177,12 +224,20 @@ export function GlobalSearch() {
               }}
             />
             <motion.div
-              ref={searchRef}
+              ref={(node) => {
+                searchRef.current = node;
+                if (focusRef && node) {
+                  (focusRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+                }
+              }}
               initial={{ opacity: 0, scale: 0.95, y: -20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               className="fixed top-4 left-4 right-4 md:top-20 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-2xl z-50"
+              role="dialog"
+              aria-modal="true"
+              aria-label={t('dashboard.search.title') || 'Ricerca globale'}
             >
               <div className="bg-bg-surface border border-border-subtle rounded-2xl shadow-2xl overflow-hidden">
                 {/* Search Input */}
@@ -219,18 +274,21 @@ export function GlobalSearch() {
                       </p>
                     </div>
                   ) : query.trim() && results.length > 0 ? (
-                    <div className="p-2">
+                    <div className="p-2" ref={resultsRef}>
                       {results.map((result, index) => (
                         <button
                           key={result.id}
+                          data-keyboard-nav-item
+                          tabIndex={selectedIndex === index ? 0 : -1}
                           onClick={() => handleSelectResult(result)}
+                          onMouseEnter={() => setSelectedIndex(index)}
                           className={cn(
-                            'w-full p-3 rounded-lg text-left transition-colors flex items-start gap-3',
+                            'w-full p-3 rounded-lg text-left transition-colors flex items-start gap-3 focus:outline-none focus:ring-2 focus:ring-accent',
                             index === selectedIndex
                               ? 'bg-accent/20 border border-accent/40'
                               : 'hover:bg-bg-soft border border-transparent'
                           )}
-                          onMouseEnter={() => setSelectedIndex(index)}
+                          aria-label={`${result.title}: ${result.description}`}
                         >
                           <div className="w-8 h-8 rounded-lg bg-accent/20 text-accent flex items-center justify-center flex-shrink-0">
                             {result.icon}

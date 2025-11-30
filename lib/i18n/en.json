@@ -412,6 +412,7 @@
     "open": "Open Pro utilities",
     "close": "Close",
     "back": "Back",
+    "upgradeCta": "View plans and pricing",
     "comingSoon": "Coming soon",
     "footer": "Exclusive features for Pro users",
     "proRequired": "Pro Account Required",
@@ -554,6 +555,216 @@
       "empty": "No posts created",
       "postNow": "Post now",
       "confirmDelete": "Delete this post?"
+    }
+  },
+  "admin": {
+    "payments": {
+      "title": "Payments Management",
+      "description": "Manage manual payments and confirm completed payments",
+      "search": "Search by ID, email, name...",
+      "empty": "No payments found",
+      "confirm": "Confirm",
+      "filters": {
+        "all": "All",
+        "pending": "Pending",
+        "completed": "Completed",
+        "failed": "Failed"
+      },
+      "status": {
+        "pending": "Pending",
+        "completed": "Completed",
+        "failed": "Failed"
+      },
+      "table": {
+        "id": "ID",
+        "customer": "Customer",
+        "amount": "Amount",
+        "status": "Status",
+        "date": "Date",
+        "actions": "Actions"
+      }
+    }
+  },
+  "pricing": {
+    "title": "Choose Your Plan",
+    "subtitle": "Flexible plans for every need, with B2B invoicing available for businesses",
+    "billing": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "save": "-17%"
+    },
+    "perMonth": "month",
+    "perYear": "year",
+    "equivalent": "Equivalent to",
+    "currentPlan": "Current Plan",
+    "sections": {
+      "individual": "Individual Plans",
+      "business": "Business Plans"
+    },
+    "plans": {
+      "trial": {
+        "name": "Trial",
+        "description": "Free trial",
+        "features": {
+          "1": "Basic dashboard access",
+          "2": "Public reports",
+          "3": "Basic courses",
+          "4": "Community support"
+        },
+        "cta": "Start Free"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "For professionals",
+        "badge": "Most Popular",
+        "features": {
+          "1": "Everything in Trial",
+          "2": "Portfolio Manager",
+          "3": "Financial Calculator",
+          "4": "Advanced Alert System",
+          "5": "PDF Report Download",
+          "6": "Custom Analysis Requests",
+          "7": "Priority support"
+        },
+        "cta": "Choose Pro"
+      }
+    },
+    "comparison": {
+      "title": "Compare Features",
+      "feature": "Feature",
+      "features": {
+        "dashboard": "Full Dashboard",
+        "reports": "Public Reports",
+        "courses": "Basic Courses",
+        "portfolio": "Portfolio Manager",
+        "calculator": "Financial Calculator",
+        "alerts": "Alert System",
+        "pdf": "PDF Download",
+        "analysis": "Custom Analysis",
+        "api": "API Access",
+        "b2b": "B2B Invoicing",
+        "support": "24/7 Support"
+      }
+    }
+  },
+  "checkout": {
+    "title": "Checkout",
+    "subtitle": "Complete your information and proceed to payment",
+    "backToPricing": "Back to plans",
+    "steps": {
+      "data": "Data",
+      "payment": "Payment"
+    },
+    "processing": "Processing payment...",
+    "data": {
+      "individual": {
+        "title": "Personal Information",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "phone": "Phone",
+        "address": "Address",
+        "city": "City",
+        "zipCode": "ZIP Code",
+        "country": "Country",
+        "taxCode": "Tax Code"
+      },
+      "business": {
+        "title": "Company Information",
+        "companyName": "Company Name",
+        "vatNumber": "VAT Number",
+        "companyAddress": "Company Address",
+        "companyCity": "City",
+        "companyZipCode": "ZIP Code",
+        "companyCountry": "Country",
+        "contactPerson": "Contact Person",
+        "contactEmail": "Contact Email",
+        "contactPhone": "Contact Phone",
+        "requireInvoice": "Request B2B invoice (will be generated automatically after payment)"
+      },
+      "selectCountry": "Select...",
+      "continue": "Continue to Payment"
+    },
+    "payment": {
+      "title": "Payment Method",
+      "xolo": {
+        "description": "Secure payment via Xolo Go",
+        "info": "Payment will be processed securely via Xolo Go. You will receive a confirmation email."
+      },
+      "proceed": "Proceed to Payment"
+    },
+    "summary": {
+      "title": "Order Summary",
+      "billing": {
+        "monthly": "Monthly billing",
+        "yearly": "Yearly billing"
+      },
+      "total": "Total",
+      "vat": "VAT included where applicable"
+    },
+    "errors": {
+      "firstName": "First name required",
+      "lastName": "Last name required",
+      "email": "Email required",
+      "country": "Country required",
+      "taxCode": "Tax code required for Italy",
+      "companyName": "Company name required",
+      "vatNumber": "VAT number required",
+      "companyAddress": "Company address required",
+      "contactEmail": "Contact email required",
+      "companyCountry": "Country required",
+      "payment": "Payment error"
+    },
+    "success": {
+      "title": "Payment Completed!",
+      "description": "Your payment has been processed successfully. You will receive a confirmation email.",
+      "invoice": "B2B Invoice",
+      "invoiceDescription": "Your invoice will be generated and sent via email within 24 hours.",
+      "downloadInvoice": "Download Invoice",
+      "goToDashboard": "Go to Dashboard",
+      "viewBilling": "View Billing"
+    },
+    "instructions": {
+      "title": "Complete Payment",
+      "subtitle": "Follow the instructions to complete payment via Xolo Go",
+      "orderSummary": "Order Summary",
+      "paymentMethods": "Payment Methods",
+      "xoloLink": {
+        "title": "Payment via Xolo Go",
+        "description": "Click the link to complete payment securely via Xolo Go",
+        "button": "Go to Xolo Go"
+      },
+      "iban": {
+        "title": "Bank Transfer",
+        "description": "Make a bank transfer to the indicated IBAN. Include the Payment ID as reference.",
+        "label": "IBAN",
+        "causale": "Reference (required)"
+      },
+      "info": "After completing the payment, you will receive a confirmation email. Your account will be updated automatically within 24-48 hours.",
+      "backToDashboard": "Back to Dashboard",
+      "alreadyPaid": "I already paid",
+      "copy": "Copy"
+    }
+  },
+  "watchlist": {
+    "title": "Watchlist",
+    "description": "Monitor your favorite assets with custom alerts",
+    "addAsset": "Add Asset",
+    "addAlert": "Create Alert",
+    "empty": "No assets in watchlist",
+    "emptyDesc": "Add assets to start monitoring them",
+    "limitReached": "Limit reached",
+    "limitMessage": "You've reached the limit of 5 assets. Upgrade to Pro for unlimited watchlist.",
+    "alertTypes": {
+      "price_above": "Price above target",
+      "price_below": "Price below target",
+      "price_change_pct": "Percentage change",
+      "volume_above": "Volume above threshold"
+    },
+    "notifications": {
+      "push": "Push Notification",
+      "email": "Email",
+      "sms": "SMS (Pro)"
     }
   }
 }

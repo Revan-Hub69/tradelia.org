@@ -6,7 +6,9 @@ import { ReportsManagement } from '@/components/admin/ReportsManagement';
 import { UsersManagement } from '@/components/admin/UsersManagement';
 import { NotificationManagement } from '@/components/admin/NotificationManagement';
 import { SocialMediaManagement } from '@/components/admin/SocialMediaManagement';
-import { FileText, Users, Settings, BarChart3, Bell, Share2 } from 'lucide-react';
+import { PaymentsManagement } from '@/components/admin/PaymentsManagement';
+import { SupabaseManagement } from '@/components/admin/SupabaseManagement';
+import { FileText, Users, Settings, BarChart3, Bell, Share2, CreditCard, Database } from 'lucide-react';
 import styles from './admin.module.css';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
@@ -16,7 +18,7 @@ import { buildLocalePath } from '@/lib/i18n/paths';
  * Manages reports creation and user management
  */
 export default function AdminDashboardPage() {
-  const [activeTab, setActiveTab] = useState<'reports' | 'users' | 'notifications' | 'social' | 'settings'>('reports');
+  const [activeTab, setActiveTab] = useState<'reports' | 'users' | 'notifications' | 'social' | 'payments' | 'supabase' | 'settings'>('reports');
   const { locale } = useTranslations();
   const dashboardHref = buildLocalePath(locale, '/dashboard');
 
@@ -69,6 +71,26 @@ export default function AdminDashboardPage() {
             >
               <Share2 className={styles.adminNavIcon} aria-hidden="true" />
               <span>Social</span>
+            </button>
+            <button
+              role="tab"
+              aria-selected={activeTab === 'payments'}
+              aria-controls="payments-panel"
+              className={`${styles.adminNavButton} ${activeTab === 'payments' ? styles.active : ''}`}
+              onClick={() => setActiveTab('payments')}
+            >
+              <CreditCard className={styles.adminNavIcon} aria-hidden="true" />
+              <span>Pagamenti</span>
+            </button>
+            <button
+              role="tab"
+              aria-selected={activeTab === 'supabase'}
+              aria-controls="supabase-panel"
+              className={`${styles.adminNavButton} ${activeTab === 'supabase' ? styles.active : ''}`}
+              onClick={() => setActiveTab('supabase')}
+            >
+              <Database className={styles.adminNavIcon} aria-hidden="true" />
+              <span>Supabase</span>
             </button>
             <button
               role="tab"
@@ -127,6 +149,26 @@ export default function AdminDashboardPage() {
           hidden={activeTab !== 'social'}
         >
           <SocialMediaManagement />
+        </div>
+
+        <div
+          id="payments-panel"
+          role="tabpanel"
+          aria-labelledby="payments-tab"
+          className={styles.adminPanel}
+          hidden={activeTab !== 'payments'}
+        >
+          <PaymentsManagement />
+        </div>
+
+        <div
+          id="supabase-panel"
+          role="tabpanel"
+          aria-labelledby="supabase-tab"
+          className={styles.adminPanel}
+          hidden={activeTab !== 'supabase'}
+        >
+          <SupabaseManagement />
         </div>
 
         <div
