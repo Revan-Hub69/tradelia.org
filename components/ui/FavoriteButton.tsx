@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Star } from 'lucide-react';
+import { Star, FileText, BookOpen, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { useFavorites } from '@/components/dashboard/Favorites';
 
@@ -22,6 +22,17 @@ export function FavoriteButton({ id, type, title, description, href, className }
     setFavorited(isFavorite(id));
   }, [id, isFavorite]);
 
+  const getTypeIcon = () => {
+    switch (type) {
+      case 'report':
+        return <FileText className="w-4 h-4" />;
+      case 'course':
+        return <BookOpen className="w-4 h-4" />;
+      case 'module':
+        return <TrendingUp className="w-4 h-4" />;
+    }
+  };
+
   const handleToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -30,7 +41,7 @@ export function FavoriteButton({ id, type, title, description, href, className }
       removeFavorite(id);
       setFavorited(false);
     } else {
-      addFavorite({ id, type, title, description, href });
+      addFavorite({ id, type, title, description, href, icon: getTypeIcon() });
       setFavorited(true);
     }
   };
