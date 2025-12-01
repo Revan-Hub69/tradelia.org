@@ -1,6 +1,7 @@
 /**
  * Centralized HTTP client with 401 interceptor
- * Handles authentication errors globally and redirects to login
+ * Handles authentication errors globally WITHOUT redirecting to login
+ * Allows guest access - components handle what to show based on session
  */
 
 let isRedirectingToLogin = false;
@@ -55,47 +56,35 @@ export async function authenticatedFetch(url: string, options?: RequestInit): Pr
   const response = await fetch(url, options);
 
   // Handle 401 Unauthorized globally
+  // NON fare redirect al login - permettere accesso guest
+  // I componenti gestiranno cosa mostrare in base alla sessione
   if (response.status === 401) {
-    // Don't redirect if we're already on the login page to avoid loops
+    // Log l'errore ma NON fare redirect
     if (typeof window !== "undefined") {
-      const currentPath = window.location.pathname;
-      const isOnLoginPage =
-        currentPath === "/login" ||
-        currentPath.startsWith("/login/") ||
-        currentPath.startsWith("/en/login") ||
-        currentPath === "/en/login/";
-
-      // If already on login page, reset flag and just throw error without redirect
-      if (isOnLoginPage) {
-        isRedirectingToLogin = false; // Reset flag to prevent loops
-        const error = new Error("Unauthorized");
-        (error as Error & { status?: number }).status = 401;
-        throw error;
-      }
+      const { logError } = require('@/lib/monitoring/error-logger');
+      logError('401 Unauthorized - No redirect to login', undefined, {
+        path: window.location.pathname,
+        metadata: {
+          url: response.url,
+          status: response.status,
+        },
+      });
     }
-
-    // Only redirect once to avoid multiple redirects
-    if (!isRedirectingToLogin) {
-      isRedirectingToLogin = true;
-
-      // Get current path for redirect after login
-      const currentPath = window.location.pathname;
-      const redirectUrl = `/login?redirect=${encodeURIComponent(currentPath)}`;
-
-      // Dispatch event for components to handle
+    
+    // Dispatch event per i componenti (senza redirect)
+    if (typeof window !== "undefined") {
       window.dispatchEvent(
         new CustomEvent("auth:unauthorized", {
-          detail: { redirectUrl, currentPath },
+          detail: { 
+            currentPath: window.location.pathname,
+            // NON includere redirectUrl per evitare redirect
+          },
         })
       );
-
-      // Redirect to login
-      if (typeof window !== "undefined") {
-        window.location.href = redirectUrl;
-      }
     }
-
-    // Throw error to stop request processing
+    
+    // NON fare redirect, solo lancia errore
+    // I componenti gestiranno l'errore mostrando contenuto guest
     const error = new Error("Unauthorized");
     (error as Error & { status?: number }).status = 401;
     throw error;
