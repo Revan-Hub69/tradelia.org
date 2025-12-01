@@ -74,13 +74,18 @@ export function ReportsManagement({ adminToken }: ReportsManagementProps) {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch reports');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP ${response.status}: Failed to fetch reports`);
       }
 
       const data = await response.json();
-      setReports(data.data || []);
+      setReports(Array.isArray(data.data) ? data.data : []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load reports');
+      console.error('Error fetching reports:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load reports';
+      setError(errorMessage);
+      // Non bloccare l'UI - mostra array vuoto invece di errore fatale
+      setReports([]);
     } finally {
       setLoading(false);
     }

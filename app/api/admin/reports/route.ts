@@ -4,37 +4,49 @@
  * POST: Create new report
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin, isAdminEmail } from '@/lib/supabase/admin';
-import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from "next/server";
+import { supabaseAdmin, isAdminEmail } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 
 // GET /api/admin/reports - List all reports
 export async function GET(request: NextRequest) {
   try {
-    // Check admin authorization - usa sessione Supabase
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
     let email: string | null = null;
     let isAdmin = false;
 
-    if (user?.email) {
-      email = user.email;
-      isAdmin = await isAdminEmail(email);
-    } else {
-      // Fallback a authorization header se disponibile
-      const authHeader = request.headers.get('authorization');
-      if (authHeader?.startsWith('Bearer ')) {
-        const token = authHeader.replace('Bearer ', '');
-        email = token;
+    // Try to get user from Supabase session (if configured)
+    try {
+      const supabase = await createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user?.email) {
+        email = user.email;
         isAdmin = await isAdminEmail(email);
+      }
+    } catch (supabaseError) {
+      // Supabase non configurato o errore - usa fallback
+      console.warn("Supabase client error, using fallback auth:", supabaseError);
+    }
+
+    // Fallback a authorization header se Supabase non disponibile o non autenticato
+    if (!isAdmin) {
+      const authHeader = request.headers.get("authorization");
+      if (authHeader?.startsWith("Bearer ")) {
+        const token = authHeader.replace("Bearer ", "");
+        email = token;
+        try {
+          isAdmin = await isAdminEmail(email);
+        } catch (error) {
+          console.warn("Error checking admin email:", error);
+          // Se anche isAdminEmail fallisce, restituisci dati vuoti
+        }
       }
     }
 
     if (!isAdmin) {
-      // Restituisci dati vuoti invece di 401/403
+      // Restituisci dati vuoti invece di 401/403 - permette accesso guest
       return NextResponse.json({
         data: [],
         pagination: {
@@ -48,15 +60,16 @@ export async function GET(request: NextRequest) {
 
     // Get query parameters
     const searchParams = request.nextUrl.searchParams;
-    const status = searchParams.get('status');
-    const reportType = searchParams.get('report_type');
-    const limit = parseInt(searchParams.get('limit') || '50');
-    const offset = parseInt(searchParams.get('offset') || '0');
+    const status = searchParams.get("status");
+    const reportType = searchParams.get("report_type");
+    const limit = parseInt(searchParams.get("limit") || "50");
+    const offset = parseInt(searchParams.get("offset") || "0");
 
     // Build query
     let query = supabaseAdmin
-      .from('reports')
-      .select(`
+      .from("reports")
+      .select(
+        `
         *,
         report_modules (*),
         report_template_versions (
@@ -73,37 +86,62 @@ export async function GET(request: NextRequest) {
           user_id,
           email
         )
-      `)
-      .order('created_at', { ascending: false })
+      `
+      )
+      .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
 
     if (status) {
-      query = query.eq('status', status);
+      query = query.eq("status", status);
     }
 
     if (reportType) {
-      query = query.eq('report_type', reportType);
+      query = query.eq("report_type", reportType);
     }
 
-    const { data, error, count } = await query;
+    const { data, error } = await query;
 
     if (error) {
-      console.error('Error fetching reports:', error);
+      console.error("Error fetching reports:", error);
+      // Se la tabella non esiste o c'è un errore di configurazione, restituisci array vuoto
+      if (
+        error.code === "PGRST116" ||
+        error.code === "42P01" ||
+        error.message?.includes("relation") ||
+        error.message?.includes("does not exist")
+      ) {
+        return NextResponse.json({
+          data: [],
+          pagination: {
+            total: 0,
+            limit: 50,
+            offset: 0,
+            hasMore: false,
+          },
+        });
+      }
       return NextResponse.json(
-        { error: 'Failed to fetch reports', details: error.message },
+        { error: "Failed to fetch reports", details: error.message },
         { status: 500 }
       );
     }
 
-    // Get total count
-    let countQuery = supabaseAdmin.from('reports').select('*', { count: 'exact', head: true });
-    if (status) {
-      countQuery = countQuery.eq('status', status);
+    // Get total count (with error handling)
+    let totalCount = 0;
+    try {
+      let countQuery = supabaseAdmin.from("reports").select("*", { count: "exact", head: true });
+      if (status) {
+        countQuery = countQuery.eq("status", status);
+      }
+      if (reportType) {
+        countQuery = countQuery.eq("report_type", reportType);
+      }
+      const { count } = await countQuery;
+      totalCount = count || 0;
+    } catch (countError) {
+      console.warn("Error getting count, using data length:", countError);
+      totalCount = data?.length || 0;
     }
-    if (reportType) {
-      countQuery = countQuery.eq('report_type', reportType);
-    }
-    const { count: totalCount } = await countQuery;
 
     return NextResponse.json({
       data: data || [],
@@ -115,11 +153,8 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Unexpected error in GET /api/admin/reports:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error("Unexpected error in GET /api/admin/reports:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
@@ -127,22 +162,19 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Check admin authorization
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
+    const authHeader = request.headers.get("authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
-        { error: 'Unauthorized - Missing or invalid authorization header' },
+        { error: "Unauthorized - Missing or invalid authorization header" },
         { status: 401 }
       );
     }
 
-    const token = authHeader.replace('Bearer ', '');
+    const token = authHeader.replace("Bearer ", "");
     const email = token; // Temporary - should decode JWT
     const isAdmin = await isAdminEmail(email);
     if (!isAdmin) {
-      return NextResponse.json(
-        { error: 'Forbidden - Admin access required' },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Forbidden - Admin access required" }, { status: 403 });
     }
 
     const body = await request.json();
@@ -151,7 +183,7 @@ export async function POST(request: NextRequest) {
       template_version_id,
       slug,
       title,
-      status = 'draft',
+      status = "draft",
       notes,
       chart_path,
       metadata = {},
@@ -161,21 +193,21 @@ export async function POST(request: NextRequest) {
     // Validation
     if (!report_type || !slug || !title) {
       return NextResponse.json(
-        { error: 'Missing required fields: report_type, slug, title' },
+        { error: "Missing required fields: report_type, slug, title" },
         { status: 400 }
       );
     }
 
     // Get admin user ID
     const adminUser = await supabaseAdmin
-      .from('admin_users')
-      .select('user_id')
-      .eq('email', email.toLowerCase())
+      .from("admin_users")
+      .select("user_id")
+      .eq("email", email.toLowerCase())
       .single();
 
     // Create report
     const { data: report, error: reportError } = await supabaseAdmin
-      .from('reports')
+      .from("reports")
       .insert({
         report_type,
         template_version_id,
@@ -191,9 +223,9 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (reportError) {
-      console.error('Error creating report:', reportError);
+      console.error("Error creating report:", reportError);
       return NextResponse.json(
-        { error: 'Failed to create report', details: reportError.message },
+        { error: "Failed to create report", details: reportError.message },
         { status: 500 }
       );
     }
@@ -209,29 +241,26 @@ export async function POST(request: NextRequest) {
       }));
 
       const { error: modulesError } = await supabaseAdmin
-        .from('report_modules')
+        .from("report_modules")
         .insert(modulesToInsert);
 
       if (modulesError) {
-        console.error('Error creating report modules:', modulesError);
+        console.error("Error creating report modules:", modulesError);
         // Report created but modules failed - return partial success
       }
     }
 
     // Create audit log entry
-    await supabaseAdmin.from('report_audit_log').insert({
+    await supabaseAdmin.from("report_audit_log").insert({
       report_id: report.id,
-      action: 'created',
+      action: "created",
       performed_by: adminUser?.data?.user_id || null,
       payload: { report_type, slug, title },
     });
 
     return NextResponse.json({ data: report }, { status: 201 });
   } catch (error) {
-    console.error('Unexpected error in POST /api/admin/reports:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error("Unexpected error in POST /api/admin/reports:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

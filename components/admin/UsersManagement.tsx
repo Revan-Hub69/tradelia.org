@@ -86,14 +86,19 @@ export function UsersManagement({ adminToken }: UsersManagementProps) {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch users');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP ${response.status}: Failed to fetch users`);
       }
 
       const data = await response.json();
       // Assicurati che data.data sia sempre un array
       setUsers(Array.isArray(data.data) ? data.data : []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load users');
+      console.error('Error fetching users:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load users';
+      setError(errorMessage);
+      // Non bloccare l'UI - mostra array vuoto invece di errore fatale
+      setUsers([]);
     } finally {
       setLoading(false);
     }
