@@ -27,7 +27,7 @@ export default function PortfolioWidgetPage() {
   const { t, locale } = useTranslations();
   const [refreshing, setRefreshing] = useState(false);
   
-  const { data: positions, loading, mutate } = useApi<PortfolioPosition[]>(
+  const { data: positions, loading, refetch } = useApi<PortfolioPosition[]>(
     '/api/portfolio',
     {
       cacheTime: 5 * 60 * 1000, // 5 minutes
@@ -41,7 +41,7 @@ export default function PortfolioWidgetPage() {
   useEffect(() => {
     const interval = setInterval(() => {
       if (document.visibilityState === 'visible') {
-        mutate();
+        refetch();
       }
     }, 5 * 60 * 1000);
 
@@ -64,7 +64,7 @@ export default function PortfolioWidgetPage() {
       // Swipe down per refresh (minimo 100px)
       if (swipeDistance < -100 && window.scrollY === 0) {
         setRefreshing(true);
-        mutate().finally(() => {
+        refetch().finally(() => {
           setTimeout(() => setRefreshing(false), 500);
         });
       }

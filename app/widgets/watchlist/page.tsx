@@ -22,7 +22,7 @@ export default function WatchlistWidgetPage() {
   const { t, locale } = useTranslations();
   const [refreshing, setRefreshing] = useState(false);
   
-  const { data: watchlist, loading, mutate } = useApi<WatchlistItem[]>(
+  const { data: watchlist, loading, refetch } = useApi<WatchlistItem[]>(
     '/api/watchlist',
     {
       cacheTime: 5 * 60 * 1000,
@@ -34,7 +34,7 @@ export default function WatchlistWidgetPage() {
   useEffect(() => {
     const interval = setInterval(() => {
       if (document.visibilityState === 'visible') {
-        mutate();
+        refetch();
       }
     }, 5 * 60 * 1000);
 
@@ -56,7 +56,7 @@ export default function WatchlistWidgetPage() {
       
       if (swipeDistance < -100 && window.scrollY === 0) {
         setRefreshing(true);
-        mutate().finally(() => {
+        refetch().finally(() => {
           setTimeout(() => setRefreshing(false), 500);
         });
       }

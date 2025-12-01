@@ -26,7 +26,7 @@ export default function AlertsWidgetPage() {
   const { t, locale } = useTranslations();
   const [refreshing, setRefreshing] = useState(false);
   
-  const { data: alerts, loading, mutate } = useApi<Alert[]>(
+  const { data: alerts, loading, refetch } = useApi<Alert[]>(
     '/api/watchlist/alerts',
     {
       cacheTime: 5 * 60 * 1000,
@@ -40,7 +40,7 @@ export default function AlertsWidgetPage() {
   useEffect(() => {
     const interval = setInterval(() => {
       if (document.visibilityState === 'visible') {
-        mutate();
+        refetch();
       }
     }, 5 * 60 * 1000);
 
@@ -62,7 +62,7 @@ export default function AlertsWidgetPage() {
       
       if (swipeDistance < -100 && window.scrollY === 0) {
         setRefreshing(true);
-        mutate().finally(() => {
+        refetch().finally(() => {
           setTimeout(() => setRefreshing(false), 500);
         });
       }
