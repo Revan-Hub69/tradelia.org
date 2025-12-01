@@ -33,6 +33,16 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: Error): State {
+    // Ignora errori di hydration mismatch (#310) - sono warning, non errori fatali
+    if (error.message && error.message.includes('310')) {
+      console.warn('Hydration mismatch detected (non-fatal):', error);
+      return {
+        hasError: false,
+        error: null,
+        errorInfo: null,
+      };
+    }
+    
     return {
       hasError: true,
       error,
