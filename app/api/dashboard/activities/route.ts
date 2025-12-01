@@ -10,29 +10,36 @@ export async function GET(request: NextRequest) {
       error: authError,
     } = await supabase.auth.getUser();
 
+    // Permetti accesso guest - restituisci array vuoto invece di 401
     if (authError || !user) {
-      return NextResponse.json({ error: 'Non autorizzato' }, { status: 401 });
+      return NextResponse.json({ data: [] });
     }
 
-    const { searchParams } = new URL(request.url);
-    const limit = Number(searchParams.get('limit') ?? 10);
-    const filter = searchParams.get('filter') || undefined;
+    try {
+      const { searchParams } = new URL(request.url);
+      const limit = Number(searchParams.get('limit') ?? 10);
+      const filter = searchParams.get('filter') || undefined;
 
-    const { data, error } = await getUserActivities(user.id, limit, filter);
+      const { data, error } = await getUserActivities(user.id, limit, filter);
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      if (error) {
+        // Se c'è un errore (es. tabella non esiste), restituisci array vuoto
+        console.error('Error getting activities (might be missing table):', error);
+        return NextResponse.json({ data: [] });
+      }
+
+      return NextResponse.json({ 
+        data: data || [],
+      });
+    } catch (dbError) {
+      // Se c'è un errore del database (tabella mancante), restituisci array vuoto
+      console.error('Database error in activities GET (table might not exist):', dbError);
+      return NextResponse.json({ data: [] });
     }
-
-    return NextResponse.json({ 
-      data,
-    });
   } catch (error) {
     console.error('Error in activities API:', error);
-    return NextResponse.json(
-      { error: 'Errore interno del server' },
-      { status: 500 }
-    );
+    // Restituisci array vuoto invece di errore
+    return NextResponse.json({ data: [] });
   }
 }
 

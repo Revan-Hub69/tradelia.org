@@ -15,26 +15,30 @@ export async function GET(request: NextRequest) {
       error: authError,
     } = await supabase.auth.getUser();
 
+    // Permetti accesso guest - restituisci array vuoto invece di 401
     if (authError || !user) {
-      return NextResponse.json({ error: 'Non autorizzato' }, { status: 401 });
+      return NextResponse.json({ data: [] });
     }
 
-    const { data, error } = await getUserFavorites(user.id);
+    try {
+      const { data, error } = await getUserFavorites(user.id);
 
-    if (error) {
-      return NextResponse.json(
-        { error: 'Errore nel caricamento dei preferiti' },
-        { status: 500 }
-      );
+      if (error) {
+        // Se c'è un errore (es. tabella non esiste), restituisci array vuoto
+        console.error('Error getting favorites (might be missing table):', error);
+        return NextResponse.json({ data: [] });
+      }
+
+      return NextResponse.json({ data: data || [] });
+    } catch (dbError) {
+      // Se c'è un errore del database (tabella mancante), restituisci array vuoto
+      console.error('Database error in favorites GET (table might not exist):', dbError);
+      return NextResponse.json({ data: [] });
     }
-
-    return NextResponse.json({ data });
   } catch (error) {
     console.error('Error in favorites GET API:', error);
-    return NextResponse.json(
-      { error: 'Errore interno del server' },
-      { status: 500 }
-    );
+    // Restituisci array vuoto invece di errore
+    return NextResponse.json({ data: [] });
   }
 }
 

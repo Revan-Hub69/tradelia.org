@@ -30,7 +30,12 @@ export const Favorites = memo(function Favorites() {
     '/api/dashboard/favorites',
     {
       cacheTime: 2 * 60 * 1000, // 2 minutes
+      requireAuth: false, // Permetti accesso guest
       onError: (err) => {
+        // Non mostrare errore per 401 - è normale per guest
+        if (err instanceof Error && (err as any).status === 401) {
+          return;
+        }
         toast.error('Errore nel caricamento dei preferiti', {
           action: {
             label: 'Riprova',
