@@ -89,7 +89,7 @@ export const RecentActivity = memo(function RecentActivity() {
         icon,
       };
     });
-  }, [activitiesData]);
+  }, [activitiesData, locale, isClient]);
 
   const getActivityTypeLabel = useMemo(() => {
     return (type: Activity['type']) => {
