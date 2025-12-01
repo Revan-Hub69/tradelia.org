@@ -211,7 +211,7 @@ export function AlertSystem() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm(t('proUtilities.alerts.confirmDelete') || 'Sei sicuro di voler eliminare questo alert?'))) {
+    if (typeof window !== 'undefined' && !window.confirm(t('proUtilities.alerts.confirmDelete') || 'Sei sicuro di voler eliminare questo alert?')) {
       return;
     }
 

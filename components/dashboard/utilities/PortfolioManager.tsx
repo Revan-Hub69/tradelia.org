@@ -132,7 +132,7 @@ export function PortfolioManager() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm(t('proUtilities.portfolio.confirmDelete') || 'Sei sicuro di voler eliminare questa posizione?'))) {
+    if (typeof window !== 'undefined' && !window.confirm(t('proUtilities.portfolio.confirmDelete') || 'Sei sicuro di voler eliminare questa posizione?')) {
       return;
     }
 

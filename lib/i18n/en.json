@@ -849,9 +849,7 @@
       "empty": "No posts created",
       "postNow": "Post now",
       "confirmDelete": "Delete this post?"
-    }
-  },
-  "admin": {
+    },
     "payments": {
       "title": "Payments Management",
       "description": "Manage manual payments and confirm completed payments",
@@ -877,6 +875,17 @@
         "date": "Date",
         "actions": "Actions"
       }
+    },
+    "metrics": {
+      "title": "Business Metrics",
+      "users": "Users",
+      "revenue": "Revenue",
+      "courses": "Courses",
+      "reports": "Reports",
+      "userGrowth": "User Growth",
+      "engagement": "Engagement",
+      "revenueChart": "Revenue Trend",
+      "completionRate": "Course Completion Rate"
     }
   },
   "settings": {

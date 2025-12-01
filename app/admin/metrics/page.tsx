@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useApi } from '@/lib/hooks/useApi';
 import { useTranslations } from '@/lib/i18n/use-translations';
-import { Card } from '@/components/ui/Card';
+import { Card } from '@/components/ui/card';
 import { LineChart, BarChart, PieChart } from '@/components/charts';
 import { TrendingUp, Users, DollarSign, BookOpen, FileText, Activity } from 'lucide-react';
 
@@ -158,7 +158,9 @@ export default function BusinessMetricsPage() {
               {t('admin.metrics.userGrowth') || 'Crescita Utenti'}
             </h3>
             <LineChart
-              data={timeSeriesData.users.map((d) => ({ date: d.date, value: d.count }))}
+              data={timeSeriesData.users.map((d) => ({ name: d.date, value: d.count }))}
+              lines={[{ key: 'value', label: 'Utenti' }]}
+              xAxisKey="name"
               height={300}
             />
           </Card>
@@ -172,6 +174,8 @@ export default function BusinessMetricsPage() {
             </h3>
             <BarChart
               data={timeSeriesData.engagement.map((d) => ({ name: d.date, value: d.value }))}
+              bars={[{ key: 'value', label: 'Engagement' }]}
+              xAxisKey="name"
               height={300}
             />
           </Card>
@@ -184,7 +188,9 @@ export default function BusinessMetricsPage() {
               {t('admin.metrics.revenueChart') || 'Revenue Trend'}
             </h3>
             <LineChart
-              data={timeSeriesData.revenue.map((d) => ({ date: d.date, value: d.amount }))}
+              data={timeSeriesData.revenue.map((d) => ({ name: d.date, value: d.amount }))}
+              lines={[{ key: 'value', label: 'Revenue' }]}
+              xAxisKey="name"
               height={300}
             />
           </Card>
