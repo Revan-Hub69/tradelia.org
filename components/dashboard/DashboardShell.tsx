@@ -43,13 +43,19 @@ export function DashboardShell() {
   const router = useRouter();
 
   // Gestisci errori globali con logging migliorato
+  // IMPORTANTE: Tutto questo codice viene eseguito SOLO sul client per evitare hydration mismatch
   useEffect(() => {
+    // Verifica che siamo sul client prima di accedere a window/document
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     const { logError, logRedirect } = require('@/lib/monitoring/error-logger');
 
     const handleError = (event: ErrorEvent) => {
       logError('Global JavaScript error', event.error, {
         component: 'DashboardShell',
-        path: window.location.pathname,
+        path: typeof window !== 'undefined' ? window.location.pathname : '/',
         metadata: {
           filename: event.filename,
           lineno: event.lineno,
@@ -65,7 +71,7 @@ export function DashboardShell() {
         : new Error(String(event.reason));
       logError('Unhandled promise rejection', error, {
         component: 'DashboardShell',
-        path: window.location.pathname,
+        path: typeof window !== 'undefined' ? window.location.pathname : '/',
         metadata: {
           reason: event.reason,
         },
@@ -73,9 +79,10 @@ export function DashboardShell() {
       setHasError(true);
     };
 
-    // Intercetta window.location per logging redirect
-    const originalLocation = window.location;
     const handleLocationChange = () => {
+      if (typeof window === 'undefined' || typeof document === 'undefined') {
+        return;
+      }
       const currentPath = window.location.pathname;
       if (currentPath === '/login' && document.referrer.includes('/dashboard')) {
         const shouldRedirect = logRedirect(document.referrer, currentPath, 'Automatic redirect to login');
@@ -91,9 +98,12 @@ export function DashboardShell() {
     window.addEventListener('error', handleError);
     window.addEventListener('unhandledrejection', handleUnhandledRejection);
     
-    // Controlla se siamo stati redirectati al login
-    if (window.location.pathname === '/login' && document.referrer.includes('/dashboard')) {
-      handleLocationChange();
+    // Controlla se siamo stati redirectati al login (solo sul client)
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      if (window.location.pathname === '/login' && document.referrer.includes('/dashboard')) {
+        // Usa setTimeout per evitare problemi durante l'hydration
+        setTimeout(handleLocationChange, 0);
+      }
     }
 
     return () => {

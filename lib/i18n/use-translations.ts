@@ -18,12 +18,19 @@ export function useTranslations() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Aggiorna mounted PRIMA di cambiare locale per evitare mismatch
-    setMounted(true);
-    
-    // Detect locale from window.location only on client
-    // Usa requestAnimationFrame per assicurarsi che il DOM sia pronto
-    if (typeof window !== "undefined") {
+    // IMPORTANTE: Aggiorna mounted SOLO dopo che il componente è montato sul client
+    // Questo garantisce che il rendering iniziale sia identico tra server e client
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    // Usa setTimeout per assicurarsi che l'hydration sia completata
+    // prima di aggiornare lo stato
+    const timeoutId = setTimeout(() => {
+      setMounted(true);
+      
+      // Detect locale from window.location only on client
+      // Usa requestAnimationFrame per assicurarsi che il DOM sia pronto
       requestAnimationFrame(() => {
         const detectedLocale = window.location.pathname.startsWith("/en") ? "en" : "it";
         // Solo aggiorna se diverso per evitare re-render inutili
@@ -31,7 +38,9 @@ export function useTranslations() {
           setLocale(detectedLocale);
         }
       });
-    }
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   // Update locale on navigation

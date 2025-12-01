@@ -64,14 +64,17 @@ export function UserMenu() {
       }
     };
 
-    // Piccolo delay per permettere sincronizzazione cookie dopo login
-    // Usa requestAnimationFrame per evitare hydration mismatch
+    // IMPORTANTE: Esegui fetchUser SOLO sul client e dopo l'hydration
+    // Questo evita hydration mismatch
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    // Usa setTimeout per assicurarsi che l'hydration sia completata
     const timeoutId = setTimeout(() => {
-      if (typeof window !== 'undefined') {
-        requestAnimationFrame(() => {
-          fetchUser();
-        });
-      }
+      requestAnimationFrame(() => {
+        fetchUser();
+      });
     }, 100);
 
     // Ascolta cambiamenti auth
