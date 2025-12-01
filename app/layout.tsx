@@ -8,7 +8,7 @@ import { defaultLocale } from '@/lib/i18n/config';
 // Importa il suppressor degli errori di hydration PRIMA di tutto
 import '@/lib/utils/suppress-hydration-errors';
 
-const Header = dynamic(() => import('@/components/layout/Header').then(m => ({ default: m.Header })), {
+const ConditionalHeader = dynamic(() => import('@/components/layout/ConditionalHeader').then(m => ({ default: m.ConditionalHeader })), {
   ssr: false,
 });
 
@@ -199,7 +199,8 @@ export default function RootLayout({
           <HtmlLang />
           <UnregisterServiceWorker />
           <div suppressHydrationWarning>
-            <Header />
+            {/* Header solo per pagine non-dashboard - le pagine dashboard hanno il loro DashboardHeader */}
+            <ConditionalHeader />
           </div>
           {/* IMPORTANTE: Per route dashboard, children è già completamente client-side */}
           {/* Non c'è bisogno di wrapper aggiuntivi - il layout dashboard gestisce tutto */}

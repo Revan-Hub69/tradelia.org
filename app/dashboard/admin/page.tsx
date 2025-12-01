@@ -62,18 +62,12 @@ function AdminDashboardContent() {
       return;
     }
     
-    // Single RAF + timeout minimo per permettere il funzionamento immediato
-    const rafId = requestAnimationFrame(() => {
-      setTimeout(() => {
-        setMounted(true);
-      }, 10); // Delay minimo solo per evitare hydration mismatch
-    });
-    
-    return () => cancelAnimationFrame(rafId);
+    // Imposta mounted immediatamente - NoSSR già gestisce l'hydration
+    setMounted(true);
   }, [isClient]);
 
-  // Renderizza loading solo se non siamo ancora montati
-  if (!isClient || !mounted) {
+  // Renderizza loading solo se non siamo ancora sul client
+  if (!isClient) {
     return (
       <div className={styles.adminContainer} suppressHydrationWarning>
         <div className="p-8 text-center text-text-secondary">
