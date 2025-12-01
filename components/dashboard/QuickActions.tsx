@@ -7,7 +7,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
 import Link from 'next/link';
 
 interface QuickAction {
@@ -46,7 +46,7 @@ export const QuickActions = memo(function QuickActions() {
     );
   }
   const { t } = useTranslations();
-  const router = useRouter();
+  const router = useSafeRouter();
   const isPro = useIsPro();
   const [isExpanded, setIsExpanded] = useState(false);
 

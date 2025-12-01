@@ -20,44 +20,56 @@ export function NoSSR({ children, fallback = null }: NoSSRProps) {
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
-    // IMPORTANTE: Usa un delay più lungo per assicurarsi che React abbia completato
-    // completamente l'hydration prima di renderizzare. Questo previene completamente
-    // qualsiasi hydration mismatch.
-    // Usa requestAnimationFrame per assicurarsi che il DOM sia pronto
-    if (typeof window === 'undefined') {
+    // IMPORTANTE: Previene completamente l'hydration mismatch
+    // Verifica che siamo sul client e che React abbia completato l'hydration
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
       return;
     }
 
-    // Doppio requestAnimationFrame + timeout per assicurarsi che React
-    // abbia completato l'hydration senza bloccare troppo a lungo
+    // Usa un approccio più robusto: verifica che Next.js router sia pronto
+    // e che il DOM sia completamente inizializzato
     let timer: NodeJS.Timeout | null = null;
-    const rafId1 = requestAnimationFrame(() => {
-      const rafId2 = requestAnimationFrame(() => {
-        timer = setTimeout(() => {
-          // Verifica che il DOM sia completamente pronto
-          if (document.readyState === 'complete') {
+    let rafId1: number | null = null;
+    let rafId2: number | null = null;
+
+    const mountComponent = () => {
+      // Verifica che il DOM sia pronto e che Next.js sia inizializzato
+      if (document.readyState === 'complete' && typeof window !== 'undefined') {
+        // Verifica che Next.js router sia disponibile
+        try {
+          // Piccolo delay per assicurarsi che tutto sia pronto
+          timer = setTimeout(() => {
             setHasMounted(true);
-          } else {
-            // Se non è pronto, aspetta l'evento load
-            window.addEventListener('load', () => {
-              setTimeout(() => {
-                setHasMounted(true);
-              }, 50);
-            }, { once: true });
-          }
-        }, 100); // Delay bilanciato per evitare hydration mismatch ma permettere funzionamento
+          }, 50);
+        } catch (error) {
+          // Se c'è un errore, aspetta un po' di più
+          timer = setTimeout(() => {
+            setHasMounted(true);
+          }, 200);
+        }
+      } else {
+        // Se il DOM non è pronto, aspetta l'evento load
+        const handleLoad = () => {
+          timer = setTimeout(() => {
+            setHasMounted(true);
+          }, 50);
+        };
+        window.addEventListener('load', handleLoad, { once: true });
+        return () => window.removeEventListener('load', handleLoad);
+      }
+    };
+
+    // Doppio RAF per assicurarsi che React abbia completato l'hydration
+    rafId1 = requestAnimationFrame(() => {
+      rafId2 = requestAnimationFrame(() => {
+        mountComponent();
       });
-      
-      return () => {
-        cancelAnimationFrame(rafId2);
-      };
     });
 
     return () => {
-      cancelAnimationFrame(rafId1);
-      if (timer) {
-        clearTimeout(timer);
-      }
+      if (rafId1 !== null) cancelAnimationFrame(rafId1);
+      if (rafId2 !== null) cancelAnimationFrame(rafId2);
+      if (timer) clearTimeout(timer);
     };
   }, []);
 

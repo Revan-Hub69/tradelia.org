@@ -5,7 +5,7 @@ import { Search, X, FileText, BookOpen, TrendingUp, ArrowRight, Command } from '
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
 import { useBodyScrollLock } from '@/lib/hooks/useBodyScrollLock';
 import { toast } from '@/components/ui/Toast';
 import { useKeyboardNavigation } from '@/lib/hooks/useKeyboardNavigation';
@@ -22,7 +22,7 @@ interface SearchResult {
 
 export function GlobalSearch() {
   const { t } = useTranslations();
-  const router = useRouter();
+  const router = useSafeRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);

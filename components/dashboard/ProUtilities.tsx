@@ -19,7 +19,7 @@ import {
   Wallet
 } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { lazy, Suspense } from 'react';
@@ -59,7 +59,7 @@ interface Utility {
 export function ProUtilities() {
   const isPro = useIsPro();
   const { t } = useTranslations();
-  const router = useRouter();
+  const router = useSafeRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedUtility, setSelectedUtility] = useState<string | null>(null);
 

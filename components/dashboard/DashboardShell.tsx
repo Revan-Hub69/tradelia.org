@@ -20,7 +20,7 @@ import { ARIALiveRegion } from '@/components/ui/ARIALiveRegion';
 import { AchievementNotification } from '@/components/gamification/AchievementNotification';
 import { KeyboardShortcuts } from './KeyboardShortcuts';
 import { useKeyboardShortcuts } from '@/lib/hooks/useKeyboardShortcuts';
-import { useRouter } from 'next/navigation';
+import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
 import { WelcomeTour } from '@/components/onboarding/WelcomeTour';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import styles from './dashboard.module.css';
@@ -43,7 +43,7 @@ export function DashboardShell() {
   const [liveMessage, setLiveMessage] = useState('');
   const [unlockedAchievement, setUnlockedAchievement] = useState<any>(null);
   const [hasError, setHasError] = useState(false);
-  const router = useRouter();
+  const router = useSafeRouter();
 
   // Gestisci errori globali con logging migliorato
   // IMPORTANTE: Tutto questo codice viene eseguito SOLO sul client per evitare hydration mismatch
@@ -93,7 +93,9 @@ export function DashboardShell() {
           console.warn('[DashboardShell] Redirect loop detected, preventing redirect to login');
           // Torna alla dashboard invece del login
           window.history.replaceState({}, '', '/dashboard');
-          router.refresh();
+          if (router && typeof router.refresh === 'function') {
+            router.refresh();
+          }
         }
       }
     };

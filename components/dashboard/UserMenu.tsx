@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { User, Settings, LogOut, Bell, ChevronDown, Mail, Shield } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { supabase } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
+import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useIsPro } from '@/lib/hooks/useUserRole';
@@ -23,7 +23,7 @@ interface MenuItem {
 
 export function UserMenu() {
   const { t } = useTranslations();
-  const router = useRouter();
+  const router = useSafeRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<{ email?: string; name?: string } | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
