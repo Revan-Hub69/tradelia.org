@@ -19,18 +19,26 @@ app.prepare().then(() => {
     try {
       // Use WHATWG URL API instead of deprecated url.parse()
       const url = new URL(req.url || "/", `http://${req.headers.host || "localhost"}`);
+      
+      // Ensure proper handling of static files and API routes
       const parsedUrl = {
         pathname: url.pathname,
         query: Object.fromEntries(url.searchParams),
         path: url.pathname + url.search,
       };
+      
+      // Set proper headers for static assets
+      if (url.pathname.startsWith('/_next/static/')) {
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      }
+      
       await handle(req, res, parsedUrl);
     } catch (err) {
       console.error("Error occurred handling", req.url, err);
       res.statusCode = 500;
       res.end("internal server error");
     }
-  }).listen(port, (err) => {
+  }).listen(port, hostname, (err) => {
     if (err) {
       throw err;
     }

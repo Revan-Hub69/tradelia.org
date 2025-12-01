@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { UnregisterServiceWorker } from './unregister-sw';
 import { generateStructuredData, generateMetadata as genMetadata } from '@/lib/seo/metadata';
@@ -138,8 +137,8 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
         <link rel="shortcut icon" href="/favicon.svg" />
         
-        {/* Preload critical resources */}
-        <link rel="preload" href="/logos/tradelia-logo.svg" as="image" type="image/svg+xml" fetchPriority="high" />
+        {/* Preload critical resources - only if used immediately */}
+        {/* Logo preload removed - will be loaded when needed to avoid unused preload warning */}
         
         {/* Structured Data - EducationalOrganization + AI Search Optimization */}
         <script
