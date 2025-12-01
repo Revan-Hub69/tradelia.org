@@ -197,7 +197,10 @@ export function SelectAdvanced({
                 <span className="text-text-tertiary">{placeholder}</span>
               )
             ) : (
-              getSelectedLabels() || <span className="text-text-tertiary">{placeholder}</span>
+              (() => {
+                const label = getSelectedLabels();
+                return typeof label === 'string' ? label : <span className="text-text-tertiary">{placeholder}</span>;
+              })()
             )}
           </span>
           <ChevronDown
