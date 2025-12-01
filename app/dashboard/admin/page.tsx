@@ -226,14 +226,14 @@ export default function AdminDashboardPage() {
   return (
     <ErrorBoundary>
       <NoSSR fallback={
-        <div className={styles.adminContainer} suppressHydrationWarning>
+        <div className={styles.adminContainer} suppressHydrationWarning style={{ minHeight: '100vh', width: '100%', overflow: 'hidden' }}>
           <div className="p-8 text-center text-text-secondary">
-            <BarChart3 className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
             <p>Caricamento area admin...</p>
           </div>
         </div>
       }>
-        <div suppressHydrationWarning>
+        <div suppressHydrationWarning style={{ width: '100%', overflowX: 'hidden' }}>
           <AdminDashboardContent />
         </div>
       </NoSSR>

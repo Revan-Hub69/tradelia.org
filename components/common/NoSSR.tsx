@@ -28,30 +28,43 @@ export function NoSSR({ children, fallback = null }: NoSSRProps) {
       return;
     }
 
+    // Doppio requestAnimationFrame per assicurarsi che il DOM sia completamente pronto
+    // e che tutti gli stili CSS siano caricati
     let timer: NodeJS.Timeout | null = null;
-    const rafId = requestAnimationFrame(() => {
-      timer = setTimeout(() => {
-        setHasMounted(true);
-      }, 100); // Delay più lungo per sicurezza
+    const rafId1 = requestAnimationFrame(() => {
+      const rafId2 = requestAnimationFrame(() => {
+        timer = setTimeout(() => {
+          setHasMounted(true);
+        }, 50); // Delay ridotto ma con doppio RAF per evitare sfarfallio
+      });
+      
+      return () => {
+        cancelAnimationFrame(rafId2);
+      };
     });
 
     return () => {
-      cancelAnimationFrame(rafId);
+      cancelAnimationFrame(rafId1);
       if (timer) {
         clearTimeout(timer);
       }
     };
   }, []);
 
-  // Non renderizzare NULLA sul server o durante l'hydration
+  // IMPORTANTE: Renderizza sempre il fallback sul server per evitare sfarfallio
+  // Solo sul client, dopo l'hydration, renderizza il contenuto reale
   if (!hasMounted) {
-    return <>{fallback}</>;
+    return (
+      <div suppressHydrationWarning style={{ width: '100%', overflowX: 'hidden' }}>
+        {fallback}
+      </div>
+    );
   }
 
   // Renderizza solo dopo che il componente è completamente montato
   // Usa un div wrapper con suppressHydrationWarning per sicurezza
   return (
-    <div suppressHydrationWarning style={{ minHeight: '100%' }}>
+    <div suppressHydrationWarning style={{ minHeight: '100%', width: '100%', overflowX: 'hidden' }}>
       {children}
     </div>
   );

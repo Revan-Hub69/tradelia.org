@@ -10,6 +10,10 @@
   z-index: 1000;
   transition: all var(--transition-normal);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 @media (min-width: 768px) {
@@ -34,6 +38,7 @@
 
 .dashboardHeaderContent {
   max-width: 100%;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -41,6 +46,8 @@
   gap: 1rem;
   position: relative;
   z-index: 1;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 @media (min-width: 768px) {

@@ -48,14 +48,14 @@ const LayoutFallback = () => (
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <NoSSR fallback={<LayoutFallback />}>
-      <div suppressHydrationWarning style={{ minHeight: '100vh' }}>
+      <div suppressHydrationWarning style={{ minHeight: '100vh', width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
         <DashboardHeader />
         <ServiceWorkerProvider />
         <InstallPrompt />
         <DailyLoginCheck />
         <ProUtilities />
         <ModalProviders />
-        <div suppressHydrationWarning>
+        <div suppressHydrationWarning style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
           {children}
         </div>
       </div>

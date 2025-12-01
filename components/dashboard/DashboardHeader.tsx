@@ -25,9 +25,9 @@ export function DashboardHeader() {
   const dashboardHref = buildLocalePath(locale, '/dashboard');
 
   return (
-    <header className={styles.dashboardHeaderMinimal} suppressHydrationWarning>
+    <header className={styles.dashboardHeaderMinimal} suppressHydrationWarning style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
       <div className={styles.dashboardHeaderContent}>
-        <h1 className={styles.dashboardTitle}>
+        <h1 className={styles.dashboardTitle} style={{ minWidth: 0, flexShrink: 1 }}>
           <Link href="/" className={styles.dashboardBrand}>
             <Image
               src="/logos/tradelia-logo.svg"
@@ -46,7 +46,7 @@ export function DashboardHeader() {
           <span className={styles.dashboardTitleSeparator}>·</span>
           <span className={styles.dashboardTitleText}>Dashboard</span>
         </h1>
-        <div className="flex items-center gap-2 md:gap-3">
+        <div className="flex items-center gap-2 md:gap-3" style={{ flexShrink: 0 }}>
           <UserStats />
           <GlobalSearch />
           <UserMenu />
