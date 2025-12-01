@@ -49,6 +49,13 @@ export function SupabaseManagement() {
     }
   );
 
+  const { data: sqlFiles } = useApi<{ files: string[] }>(
+    '/api/admin/supabase/sql-files',
+    {
+      cacheTime: 10 * 60 * 1000, // 10 minutes
+    }
+  );
+
   const handleDelete = async (id: string) => {
     if (!selectedTable || !confirm(`Sei sicuro di voler eliminare questo record?`)) {
       return;
