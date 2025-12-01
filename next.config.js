@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false, // Disabilita strict mode per evitare doppio rendering che causa hydration mismatch
   swcMinify: true,
 
   // Security Headers - Enterprise Grade

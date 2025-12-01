@@ -12,9 +12,16 @@ const dictionaries = {
 };
 
 export function useTranslations() {
-  // Usa sempre defaultLocale durante SSR per evitare hydration mismatch
-  // Il locale verrà aggiornato solo dopo il mount sul client
-  const [locale, setLocale] = useState<Locale>(defaultLocale);
+  // IMPORTANTE: Inizializza sempre con defaultLocale e mounted=false
+  // Questo garantisce che server e client abbiano lo stesso stato iniziale
+  const [locale, setLocale] = useState<Locale>(() => {
+    // Durante SSR, sempre defaultLocale
+    if (typeof window === 'undefined') {
+      return defaultLocale;
+    }
+    // Sul client, usa defaultLocale inizialmente
+    return defaultLocale;
+  });
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
