@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { trackPageView, setAnalyticsUser, isAnalyticsEnabled } from '@/lib/analytics/tracker';
-import { useUserRole } from '@/lib/hooks/useUserRole';
+import { useUserRole, useIsPro } from '@/lib/hooks/useUserRole';
 
 /**
  * Hook per automatic page view tracking
@@ -18,7 +18,8 @@ import { useUserRole } from '@/lib/hooks/useUserRole';
  */
 export function useAnalytics() {
   const pathname = usePathname();
-  const { role, isPro } = useUserRole();
+  const { role } = useUserRole();
+  const isPro = useIsPro();
 
   useEffect(() => {
     if (!isAnalyticsEnabled()) return;
