@@ -262,7 +262,7 @@ export function SelectAdvanced({
                       </button>
                     ))}
                   </div>
-                ))}
+                ))
               </div>
             )}
           </div>
