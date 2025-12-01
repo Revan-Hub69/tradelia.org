@@ -3,8 +3,8 @@
  * Utilities per comunicare con Supabase dal server
  */
 
-import { createClient } from '@/lib/supabase/server';
-import { supabaseAdmin } from '@/lib/supabase/admin';
+import { createClient } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export interface Module {
   id: string;
@@ -12,7 +12,7 @@ export interface Module {
   description: string | null;
   href: string;
   icon: string | null;
-  priority: 'primary' | 'secondary';
+  priority: "primary" | "secondary";
   is_active: boolean;
   order_index: number;
   badge_count: number;
@@ -21,7 +21,7 @@ export interface Module {
 export interface Favorite {
   id: string;
   item_id: string;
-  item_type: 'report' | 'course' | 'module';
+  item_type: "report" | "course" | "module";
   title: string;
   description: string | null;
   href: string;
@@ -34,22 +34,22 @@ export interface Favorite {
  */
 export async function getUserActivities(userId: string, limit = 10, filter?: string) {
   const supabase = await createClient();
-  
+
   let query = supabase
-    .from('user_activities')
-    .select('*')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
+    .from("user_activities")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
     .limit(limit);
 
-  if (filter && filter !== 'all') {
-    query = query.eq('type', filter);
+  if (filter && filter !== "all") {
+    query = query.eq("type", filter);
   }
 
   const { data, error } = await query;
 
   if (error) {
-    console.error('Error fetching activities:', error);
+    console.error("Error fetching activities:", error);
     return { data: [], error };
   }
 
@@ -61,10 +61,11 @@ export async function getUserActivities(userId: string, limit = 10, filter?: str
  */
 export async function getUserCourseProgress(userId: string) {
   const supabase = await createClient();
-  
+
   const { data, error } = await supabase
-    .from('course_progress')
-    .select(`
+    .from("course_progress")
+    .select(
+      `
       *,
       courses (
         id,
@@ -73,12 +74,13 @@ export async function getUserCourseProgress(userId: string) {
         total_lessons,
         slug
       )
-    `)
-    .eq('user_id', userId)
-    .order('updated_at', { ascending: false });
+    `
+    )
+    .eq("user_id", userId)
+    .order("updated_at", { ascending: false });
 
   if (error) {
-    console.error('Error fetching course progress:', error);
+    console.error("Error fetching course progress:", error);
     return { data: [], error };
   }
 
@@ -90,10 +92,11 @@ export async function getUserCourseProgress(userId: string) {
  */
 export async function getUserAchievements(userId: string) {
   const supabase = await createClient();
-  
+
   const { data, error } = await supabase
-    .from('user_achievements')
-    .select(`
+    .from("user_achievements")
+    .select(
+      `
       *,
       achievements (
         id,
@@ -101,12 +104,13 @@ export async function getUserAchievements(userId: string) {
         description,
         icon_type
       )
-    `)
-    .eq('user_id', userId)
-    .order('unlocked_at', { ascending: false });
+    `
+    )
+    .eq("user_id", userId)
+    .order("unlocked_at", { ascending: false });
 
   if (error) {
-    console.error('Error fetching achievements:', error);
+    console.error("Error fetching achievements:", error);
     return { data: [], error };
   }
 
@@ -118,33 +122,33 @@ export async function getUserAchievements(userId: string) {
  */
 export async function getDashboardStats(userId: string) {
   const supabase = await createClient();
-  
+
   // Get reports count
   const { count: reportsCount } = await supabase
-    .from('reports')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', userId);
+    .from("reports")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", userId);
 
   // Get active courses count
   const { count: activeCoursesCount } = await supabase
-    .from('course_progress')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', userId)
-    .neq('progress', 100);
+    .from("course_progress")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .neq("progress", 100);
 
   // Get pending requests count
   const { count: pendingRequestsCount } = await supabase
-    .from('analysis_requests')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', userId)
-    .eq('status', 'pending');
+    .from("analysis_requests")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .eq("status", "pending");
 
   // Get recent activity
   const { data: recentActivity } = await supabase
-    .from('user_activities')
-    .select('*')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
+    .from("user_activities")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
     .limit(1)
     .single();
 
@@ -161,28 +165,28 @@ export async function getDashboardStats(userId: string) {
  */
 export async function searchDashboardContent(userId: string, query: string) {
   const supabase = await createClient();
-  
+
   const searchTerm = `%${query}%`;
 
   // Search reports
   const { data: reports } = await supabase
-    .from('reports')
-    .select('id, title, description, created_at, type')
-    .eq('user_id', userId)
+    .from("reports")
+    .select("id, title, description, created_at, type")
+    .eq("user_id", userId)
     .or(`title.ilike.${searchTerm},description.ilike.${searchTerm}`)
     .limit(5);
 
   // Search courses
   const { data: courses } = await supabase
-    .from('courses')
-    .select('id, title, description, created_at, slug')
+    .from("courses")
+    .select("id, title, description, created_at, slug")
     .or(`title.ilike.${searchTerm},description.ilike.${searchTerm}`)
     .limit(5);
 
   // Search modules
   const { data: modules } = await supabase
-    .from('modules')
-    .select('id, title, description, href, icon')
+    .from("modules")
+    .select("id, title, description, href, icon")
     .or(`title.ilike.${searchTerm},description.ilike.${searchTerm}`)
     .limit(5);
 
@@ -198,25 +202,27 @@ export async function searchDashboardContent(userId: string, query: string) {
  */
 export async function getAllActivities(limit = 50, offset = 0, filter?: string) {
   let query = supabaseAdmin
-    .from('user_activities')
-    .select(`
+    .from("user_activities")
+    .select(
+      `
       *,
       profiles!user_activities_user_id_fkey (
         display_name,
         email
       )
-    `)
-    .order('created_at', { ascending: false })
+    `
+    )
+    .order("created_at", { ascending: false })
     .range(offset, offset + limit - 1);
 
-  if (filter && filter !== 'all') {
-    query = query.eq('type', filter);
+  if (filter && filter !== "all") {
+    query = query.eq("type", filter);
   }
 
   const { data, error } = await query;
 
   if (error) {
-    console.error('Error fetching all activities:', error);
+    console.error("Error fetching all activities:", error);
     return { data: [], error };
   }
 
@@ -228,8 +234,9 @@ export async function getAllActivities(limit = 50, offset = 0, filter?: string) 
  */
 export async function getAllCourseProgress(limit = 50, offset = 0) {
   const { data, error } = await supabaseAdmin
-    .from('course_progress')
-    .select(`
+    .from("course_progress")
+    .select(
+      `
       *,
       courses (
         id,
@@ -240,12 +247,13 @@ export async function getAllCourseProgress(limit = 50, offset = 0) {
         display_name,
         email
       )
-    `)
-    .order('updated_at', { ascending: false })
+    `
+    )
+    .order("updated_at", { ascending: false })
     .range(offset, offset + limit - 1);
 
   if (error) {
-    console.error('Error fetching all course progress:', error);
+    console.error("Error fetching all course progress:", error);
     return { data: [], error };
   }
 
@@ -257,9 +265,9 @@ export async function getAllCourseProgress(limit = 50, offset = 0) {
  */
 export async function getAllUsersWithStats(limit = 50, offset = 0) {
   const { data: users, error: usersError } = await supabaseAdmin
-    .from('profiles')
-    .select('*')
-    .order('created_at', { ascending: false })
+    .from("profiles")
+    .select("*")
+    .order("created_at", { ascending: false })
     .range(offset, offset + limit - 1);
 
   if (usersError) {
@@ -268,20 +276,20 @@ export async function getAllUsersWithStats(limit = 50, offset = 0) {
 
   // Get stats for each user
   const usersWithStats = await Promise.all(
-    (users || []).map(async (user) => {
+    (users || []).map(async (user: { id: string; [key: string]: any }) => {
       const [reportsCount, coursesCount, activitiesCount] = await Promise.all([
         supabaseAdmin
-          .from('reports')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', user.id),
+          .from("reports")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", user.id),
         supabaseAdmin
-          .from('course_progress')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', user.id),
+          .from("course_progress")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", user.id),
         supabaseAdmin
-          .from('user_activities')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', user.id),
+          .from("user_activities")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", user.id),
       ]);
 
       return {
@@ -301,45 +309,53 @@ export async function getAllUsersWithStats(limit = 50, offset = 0) {
 /**
  * Create activity (user or admin)
  */
-export async function createActivity(activityData: {
-  user_id: string;
-  type: string;
-  title: string;
-  description: string;
-  metadata?: any;
-}, isAdmin = false) {
+export async function createActivity(
+  activityData: {
+    user_id: string;
+    type: string;
+    title: string;
+    description: string;
+    metadata?: any;
+  },
+  isAdmin = false
+) {
   const supabase = isAdmin ? supabaseAdmin : await createClient();
-  
+
   const { data, error } = await supabase
-    .from('user_activities')
+    .from("user_activities")
     .insert(activityData)
     .select()
     .single();
 
   if (error) {
-    console.error('Error creating activity:', error);
+    console.error("Error creating activity:", error);
     return { data: null, error };
   }
 
   // Trigger gamification check if applicable
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     // Server-side: import and call directly
-    const { checkAndUnlockAchievements, awardXP } = await import('@/lib/gamification/achievement-engine');
-    
+    const { checkAndUnlockAchievements, awardXP } = await import(
+      "@/lib/gamification/achievement-engine"
+    );
+
     // Map activity type to action type
-    const actionTypeMap: Record<string, 'lesson_completed' | 'course_completed' | 'report_viewed' | 'daily_login'> = {
-      'course_completed': 'course_completed',
-      'lesson_completed': 'lesson_completed',
-      'report_viewed': 'report_viewed',
+    const actionTypeMap: Record<
+      string,
+      "lesson_completed" | "course_completed" | "report_viewed" | "daily_login"
+    > = {
+      course_completed: "course_completed",
+      lesson_completed: "lesson_completed",
+      report_viewed: "report_viewed",
     };
 
     const actionType = actionTypeMap[activityData.type];
     if (actionType) {
       // Award XP based on action type
       const xpAmounts: Record<string, number> = {
-        'lesson_completed': 10,
-        'course_completed': 100,
-        'report_viewed': 5,
+        lesson_completed: 10,
+        course_completed: 100,
+        report_viewed: 5,
       };
 
       const xpAmount = xpAmounts[actionType];
@@ -365,21 +381,24 @@ export async function updateCourseProgress(
   completedLessons: number
 ) {
   const { data, error } = await supabaseAdmin
-    .from('course_progress')
-    .upsert({
-      user_id: userId,
-      course_id: courseId,
-      progress,
-      completed_lessons: completedLessons,
-      updated_at: new Date().toISOString(),
-    }, {
-      onConflict: 'user_id,course_id',
-    })
+    .from("course_progress")
+    .upsert(
+      {
+        user_id: userId,
+        course_id: courseId,
+        progress,
+        completed_lessons: completedLessons,
+        updated_at: new Date().toISOString(),
+      },
+      {
+        onConflict: "user_id,course_id",
+      }
+    )
     .select()
     .single();
 
   if (error) {
-    console.error('Error updating course progress:', error);
+    console.error("Error updating course progress:", error);
     return { data: null, error };
   }
 
@@ -389,23 +408,23 @@ export async function updateCourseProgress(
 /**
  * Get modules
  */
-export async function getModules(priority?: 'primary' | 'secondary') {
+export async function getModules(priority?: "primary" | "secondary") {
   const supabase = await createClient();
-  
+
   let query = supabase
-    .from('modules')
-    .select('*')
-    .eq('is_active', true)
-    .order('order_index', { ascending: true });
+    .from("modules")
+    .select("*")
+    .eq("is_active", true)
+    .order("order_index", { ascending: true });
 
   if (priority) {
-    query = query.eq('priority', priority);
+    query = query.eq("priority", priority);
   }
 
   const { data, error } = await query;
 
   if (error) {
-    console.error('Error fetching modules:', error);
+    console.error("Error fetching modules:", error);
     return { data: [], error };
   }
 
@@ -417,15 +436,15 @@ export async function getModules(priority?: 'primary' | 'secondary') {
  */
 export async function getUserFavorites(userId: string) {
   const supabase = await createClient();
-  
+
   const { data, error } = await supabase
-    .from('favorites')
-    .select('*')
-    .eq('user_id', userId)
-    .order('added_at', { ascending: false });
+    .from("favorites")
+    .select("*")
+    .eq("user_id", userId)
+    .order("added_at", { ascending: false });
 
   if (error) {
-    console.error('Error fetching favorites:', error);
+    console.error("Error fetching favorites:", error);
     return { data: [], error };
   }
 
@@ -435,14 +454,11 @@ export async function getUserFavorites(userId: string) {
 /**
  * Add favorite
  */
-export async function addFavorite(
-  userId: string,
-  favorite: Omit<Favorite, 'id' | 'added_at'>
-) {
+export async function addFavorite(userId: string, favorite: Omit<Favorite, "id" | "added_at">) {
   const supabase = await createClient();
-  
+
   const { data, error } = await supabase
-    .from('favorites')
+    .from("favorites")
     .insert({
       user_id: userId,
       item_id: favorite.item_id,
@@ -456,7 +472,7 @@ export async function addFavorite(
     .single();
 
   if (error) {
-    console.error('Error adding favorite:', error);
+    console.error("Error adding favorite:", error);
     return { data: null, error };
   }
 
@@ -468,17 +484,17 @@ export async function addFavorite(
  */
 export async function removeFavorite(userId: string, favoriteId: string) {
   const supabase = await createClient();
-  
+
   const { data, error } = await supabase
-    .from('favorites')
+    .from("favorites")
     .delete()
-    .eq('id', favoriteId)
-    .eq('user_id', userId)
+    .eq("id", favoriteId)
+    .eq("user_id", userId)
     .select()
     .single();
 
   if (error) {
-    console.error('Error removing favorite:', error);
+    console.error("Error removing favorite:", error);
     return { data: null, error };
   }
 
@@ -491,23 +507,23 @@ export async function removeFavorite(userId: string, favoriteId: string) {
 export async function isFavorite(
   userId: string,
   itemId: string,
-  itemType: 'report' | 'course' | 'module'
+  itemType: "report" | "course" | "module"
 ) {
   const supabase = await createClient();
-  
+
   const { data, error } = await supabase
-    .from('favorites')
-    .select('id')
-    .eq('user_id', userId)
-    .eq('item_id', itemId)
-    .eq('item_type', itemType)
+    .from("favorites")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("item_id", itemId)
+    .eq("item_type", itemType)
     .single();
 
-  if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
-    console.error('Error checking favorite:', error);
+  if (error && error.code !== "PGRST116") {
+    // PGRST116 = no rows returned
+    console.error("Error checking favorite:", error);
     return { isFavorite: false, error };
   }
 
   return { isFavorite: !!data, error: null };
 }
-
