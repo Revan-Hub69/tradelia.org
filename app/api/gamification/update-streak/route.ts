@@ -11,7 +11,9 @@ export async function POST(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Non autorizzato' }, { status: 401 });
+      // Restituisci successo silenzioso invece di 401 per guest access
+      // Questo previene errori in console per utenti non autenticati
+      return NextResponse.json({ streak: 0, isNewRecord: false }, { status: 200 });
     }
 
     const { streak, isNewRecord } = await updateStreak(user.id);

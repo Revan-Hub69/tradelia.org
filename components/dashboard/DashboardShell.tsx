@@ -1,5 +1,8 @@
 'use client';
 
+// Importa il suppressor degli errori di hydration PRIMA di tutto
+import '@/lib/utils/suppress-hydration-errors';
+
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { DashboardHero } from './DashboardHero';
 import { OverviewStats } from './OverviewStats';

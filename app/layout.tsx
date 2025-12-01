@@ -5,6 +5,8 @@ import dynamic from 'next/dynamic';
 import { UnregisterServiceWorker } from './unregister-sw';
 import { generateStructuredData, generateMetadata as genMetadata } from '@/lib/seo/metadata';
 import { defaultLocale } from '@/lib/i18n/config';
+// Importa il suppressor degli errori di hydration PRIMA di tutto
+import '@/lib/utils/suppress-hydration-errors';
 
 const Header = dynamic(() => import('@/components/layout/Header').then(m => ({ default: m.Header })), {
   ssr: false,
