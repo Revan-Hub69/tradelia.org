@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Search, Filter, Mail } from 'lucide-react';
+import { useIsClient } from '@/lib/hooks/useIsClient';
 import styles from './AdminComponents.module.css';
 
 interface UserRole {
@@ -33,6 +34,7 @@ interface UsersManagementProps {
 }
 
 export function UsersManagement({ adminToken }: UsersManagementProps) {
+  const isClient = useIsClient();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,8 +43,10 @@ export function UsersManagement({ adminToken }: UsersManagementProps) {
   const [userTypeFilter, setUserTypeFilter] = useState<string>('all');
 
   useEffect(() => {
+    // Esegui fetch solo sul client per evitare hydration mismatch
+    if (!isClient) return;
     fetchUsers();
-  }, [roleFilter, userTypeFilter]);
+  }, [roleFilter, userTypeFilter, isClient]);
 
   const fetchUsers = async () => {
     try {

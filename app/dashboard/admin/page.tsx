@@ -1,23 +1,51 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { ReportsManagement } from '@/components/admin/ReportsManagement';
-import { UsersManagement } from '@/components/admin/UsersManagement';
-import { NotificationManagement } from '@/components/admin/NotificationManagement';
-import { SocialMediaManagement } from '@/components/admin/SocialMediaManagement';
-import { PaymentsManagement } from '@/components/admin/PaymentsManagement';
-import { SupabaseManagement } from '@/components/admin/SupabaseManagement';
 import { FileText, Users, Settings, BarChart3, Bell, Share2, CreditCard, Database } from 'lucide-react';
 import styles from './admin.module.css';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
+import { ClientOnly } from '@/components/common/ClientOnly';
+
+// Dynamic imports con ssr: false per evitare hydration mismatch
+const ReportsManagement = dynamic(() => import('@/components/admin/ReportsManagement').then(m => ({ default: m.ReportsManagement })), {
+  ssr: false,
+  loading: () => <div className="p-4 text-text-secondary">Caricamento...</div>,
+});
+
+const UsersManagement = dynamic(() => import('@/components/admin/UsersManagement').then(m => ({ default: m.UsersManagement })), {
+  ssr: false,
+  loading: () => <div className="p-4 text-text-secondary">Caricamento...</div>,
+});
+
+const NotificationManagement = dynamic(() => import('@/components/admin/NotificationManagement').then(m => ({ default: m.NotificationManagement })), {
+  ssr: false,
+  loading: () => <div className="p-4 text-text-secondary">Caricamento...</div>,
+});
+
+const SocialMediaManagement = dynamic(() => import('@/components/admin/SocialMediaManagement').then(m => ({ default: m.SocialMediaManagement })), {
+  ssr: false,
+  loading: () => <div className="p-4 text-text-secondary">Caricamento...</div>,
+});
+
+const PaymentsManagement = dynamic(() => import('@/components/admin/PaymentsManagement').then(m => ({ default: m.PaymentsManagement })), {
+  ssr: false,
+  loading: () => <div className="p-4 text-text-secondary">Caricamento...</div>,
+});
+
+const SupabaseManagement = dynamic(() => import('@/components/admin/SupabaseManagement').then(m => ({ default: m.SupabaseManagement })), {
+  ssr: false,
+  loading: () => <div className="p-4 text-text-secondary">Caricamento...</div>,
+});
 
 /**
  * Admin Dashboard Page
  * Manages reports creation and user management
+ * COMPLETELY CLIENT-SIDE to prevent hydration mismatch
  */
-export default function AdminDashboardPage() {
+function AdminDashboardContent() {
   const [activeTab, setActiveTab] = useState<'reports' | 'users' | 'notifications' | 'social' | 'payments' | 'supabase' | 'settings'>('reports');
   const { locale } = useTranslations();
   const dashboardHref = buildLocalePath(locale, '/dashboard');
@@ -186,5 +214,23 @@ export default function AdminDashboardPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+/**
+ * Admin Dashboard Page - Wrapped in ClientOnly to prevent hydration mismatch
+ */
+export default function AdminDashboardPage() {
+  return (
+    <ClientOnly fallback={
+      <div className={styles.adminContainer}>
+        <div className="p-8 text-center text-text-secondary">
+          <BarChart3 className="w-12 h-12 mx-auto mb-4 opacity-50" />
+          <p>Caricamento area admin...</p>
+        </div>
+      </div>
+    }>
+      <AdminDashboardContent />
+    </ClientOnly>
   );
 }

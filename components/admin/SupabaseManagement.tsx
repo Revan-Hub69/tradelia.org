@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Database, Trash2, Plus, Edit, Search, RefreshCw, AlertTriangle, CheckCircle2, FileCode, Play, Loader2 } from 'lucide-react';
 import { useApi } from '@/lib/hooks/useApi';
+import { useIsClient } from '@/lib/hooks/useIsClient';
 import { toast } from '@/components/ui/Toast';
 import { LoadingState } from '@/components/dashboard/LoadingState';
 import { ErrorState } from '@/components/dashboard/ErrorState';
@@ -17,6 +18,7 @@ interface TableData {
  * Permette agli admin di vedere, modificare e cancellare dati in Supabase
  */
 export function SupabaseManagement() {
+  const isClient = useIsClient();
   const [selectedTable, setSelectedTable] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(0);
@@ -29,6 +31,11 @@ export function SupabaseManagement() {
   const [sqlQuery, setSqlQuery] = useState('');
   const [executingSql, setExecutingSql] = useState(false);
   const [selectedSqlFile, setSelectedSqlFile] = useState<string | null>(null);
+
+  // Non renderizzare nulla fino a quando non siamo sul client
+  if (!isClient) {
+    return <LoadingState message="Caricamento..." />;
+  }
 
   const { data: tablesData, loading: tablesLoading, error: tablesError, retry: retryTables } = useApi<string[]>(
     '/api/admin/supabase/tables',
