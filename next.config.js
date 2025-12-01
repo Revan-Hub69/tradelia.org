@@ -125,9 +125,6 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true, // Temporaneo per fix config
   },
-
-  // Output configuration for Render deployment
-  output: 'standalone',
 };
 
 export default nextConfig;
