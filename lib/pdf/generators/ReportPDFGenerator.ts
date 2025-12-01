@@ -45,7 +45,7 @@ export async function generateReportPDF(
   const parsedSections = parseReportContent(reportData.content);
 
   // Converti parsed sections in ReportSection per template
-  const sections: ReportSection[] = await Promise.all(
+  const sections: (ReportSection | null)[] = await Promise.all(
     parsedSections.map(async (parsed) => {
       // Se è un chart e includeCharts è true, converti immagine
       if (parsed.type === 'chart' && options.includeCharts && parsed.data?.imageUrl) {
