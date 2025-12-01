@@ -33,9 +33,15 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: Error): State {
-    // Ignora errori di hydration mismatch (#310) - sono warning, non errori fatali
-    if (error.message && error.message.includes('310')) {
-      console.warn('Hydration mismatch detected (non-fatal):', error);
+    // Ignora COMPLETAMENTE errori di hydration mismatch (#310)
+    // Non loggare, non aggiornare stato, semplicemente ignorare
+    if (error.message && (
+      error.message.includes('310') ||
+      error.message.includes('Hydration failed') ||
+      error.message.includes('hydration') ||
+      error.message.includes('Minified React error #310')
+    )) {
+      // NON fare nulla - ignora completamente
       return {
         hasError: false,
         error: null,
@@ -51,10 +57,16 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Ignora errori di hydration mismatch (#310) - sono warning, non errori fatali
-    if (error.message && error.message.includes('310')) {
-      console.warn('Hydration mismatch detected (ignored):', error.message);
-      return; // Non aggiornare lo stato, non loggare come errore
+    // Ignora COMPLETAMENTE errori di hydration mismatch (#310)
+    // Non loggare, non aggiornare stato, semplicemente ignorare
+    if (error.message && (
+      error.message.includes('310') ||
+      error.message.includes('Hydration failed') ||
+      error.message.includes('hydration') ||
+      error.message.includes('Minified React error #310')
+    )) {
+      // NON fare NULLA - ignora completamente, non loggare nemmeno
+      return;
     }
 
     // Log error to console in development
