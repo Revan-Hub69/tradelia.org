@@ -274,9 +274,9 @@ export function AuthForm() {
         }
 
         // Reindirizza alla dashboard
-        setTimeout(() => {
-          window.location.href = '/dashboard';
-        }, 1000);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        router.push('/dashboard');
+        router.refresh();
         return;
       }
 
@@ -288,10 +288,17 @@ export function AuthForm() {
 
         // Verifica che la sessione sia disponibile
         if (data?.session) {
-          // Il middleware sincronizza automaticamente i cookie
-          // Reindirizza alla dashboard
-          window.location.href = '/dashboard';
-          return;
+          // Attendi che la sessione sia sincronizzata
+          // Verifica che l'utente sia disponibile prima di redirect
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            // Piccolo delay per assicurare sincronizzazione cookie
+            await new Promise(resolve => setTimeout(resolve, 100));
+            // Usa router.push invece di window.location per migliore gestione
+            router.push('/dashboard');
+            router.refresh();
+            return;
+          }
         }
 
         // Se c'è un errore, controlla se è relativo alla verifica email
@@ -317,9 +324,9 @@ export function AuthForm() {
             
             // Prova comunque a reindirizzare alla dashboard (come guest o con sessione parziale)
             // Se Supabase ha creato un utente anche senza sessione completa, sarà disponibile
-            setTimeout(() => {
-              window.location.href = '/dashboard';
-            }, 1000);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            router.push('/dashboard');
+            router.refresh();
             return;
           }
           
@@ -372,9 +379,9 @@ export function AuthForm() {
         }
         
         toast.success(t('auth.form.signupSuccess') || 'Registrazione completata!');
-        setTimeout(() => {
-          window.location.href = '/dashboard';
-        }, 500);
+        await new Promise(resolve => setTimeout(resolve, 500));
+        router.push('/dashboard');
+        router.refresh();
         return;
       }
 
@@ -397,38 +404,38 @@ export function AuthForm() {
           password: form.password,
         });
 
-        if (signInError) {
-          // Se il login fallisce (es. email non confermata), mostra info ma non errore
-          toast.info(t('auth.form.signupSuccess') || 'Registrazione completata! Verifica la tua email per sbloccare tutte le funzionalità.');
-          setTimeout(() => {
-            window.location.href = '/dashboard';
-          }, 1000);
-          return;
-        }
+          if (signInError) {
+            // Se il login fallisce (es. email non confermata), mostra info ma non errore
+            toast.info(t('auth.form.signupSuccess') || 'Registrazione completata! Verifica la tua email per sbloccare tutte le funzionalità.');
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            router.push('/dashboard');
+            router.refresh();
+            return;
+          }
 
         // Login automatico riuscito
         if (signInData?.session) {
           toast.success(t('auth.form.signupSuccess') || 'Registrazione completata!');
-          setTimeout(() => {
-            window.location.href = '/dashboard';
-          }, 500);
+          await new Promise(resolve => setTimeout(resolve, 500));
+          router.push('/dashboard');
+          router.refresh();
           return;
         }
       }
 
-      // Fallback: vai comunque alla dashboard (guest o parziale)
+          // Fallback: vai comunque alla dashboard (guest o parziale)
       toast.info(t('auth.form.signupSuccess') || 'Registrazione completata!');
-      setTimeout(() => {
-        window.location.href = '/dashboard';
-      }, 1000);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      router.push('/dashboard');
+      router.refresh();
 
       // Se non c'è sessione ma c'è user, mostra info e vai a dashboard comunque
       if (data?.user?.id) {
         setInfo(t('auth.form.signupSuccess'));
         // Piccolo delay per mostrare il messaggio
-        setTimeout(() => {
-          window.location.href = '/dashboard';
-        }, 1000);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        router.push('/dashboard');
+        router.refresh();
         return;
       }
     });
@@ -870,7 +877,8 @@ export function AuthForm() {
                   }
                   
                   // Salta la verifica e vai direttamente alla dashboard
-                  window.location.href = '/dashboard';
+                  router.push('/dashboard');
+                  router.refresh();
                 }}
                 disabled={isPending}
                 className="w-full rounded-xl bg-bg-soft hover:bg-bg-surface border border-border-subtle text-text-secondary hover:text-text-primary font-medium py-3 px-6 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed min-h-[48px]"
