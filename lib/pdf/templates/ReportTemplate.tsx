@@ -275,7 +275,7 @@ export function ReportPDF({
       subject={reportType}
       creator="Tradelia Platform"
       producer="Tradelia PDF Generator"
-      keywords={[reportType, 'report', 'analisi', 'tradelia']}
+      keywords={`${reportType}, report, analisi, tradelia`}
     >
       {/* Cover Page */}
       <Page size="A4" style={styles.page}>
