@@ -173,7 +173,11 @@ export default function RootLayout({
           <div suppressHydrationWarning>
             <Header />
           </div>
-          <main id="main-content" className="flex-1" tabIndex={-1} suppressHydrationWarning>{children}</main>
+          {/* IMPORTANTE: Per route dashboard, children è già completamente client-side */}
+          {/* Non c'è bisogno di wrapper aggiuntivi - il layout dashboard gestisce tutto */}
+          <main id="main-content" className="flex-1" tabIndex={-1} suppressHydrationWarning>
+            {children}
+          </main>
           <div suppressHydrationWarning>
             <Footer />
             <LegalConsent />

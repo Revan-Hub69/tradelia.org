@@ -7,6 +7,9 @@ import { useEffect, useState, type ReactNode } from 'react';
  * e l'hydration. Renderizza solo dopo che il componente è montato sul client.
  * 
  * Questo è più aggressivo di ClientOnly - previene completamente l'hydration mismatch.
+ * 
+ * IMPORTANTE: Usa un delay più lungo per assicurarsi che React abbia completato
+ * completamente l'hydration prima di renderizzare qualsiasi cosa.
  */
 interface NoSSRProps {
   children: ReactNode;
@@ -17,10 +20,14 @@ export function NoSSR({ children, fallback = null }: NoSSRProps) {
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
-    // Usa un timeout per assicurarsi che l'hydration sia completamente completata
-    // prima di renderizzare il contenuto
+    // IMPORTANTE: Usa un delay più lungo per assicurarsi che React abbia completato
+    // completamente l'hydration prima di renderizzare. Questo previene completamente
+    // qualsiasi hydration mismatch.
     const timer = setTimeout(() => {
-      setHasMounted(true);
+      // Doppio setTimeout per essere sicuri che l'hydration sia completata
+      setTimeout(() => {
+        setHasMounted(true);
+      }, 50);
     }, 0);
 
     return () => clearTimeout(timer);
@@ -32,6 +39,11 @@ export function NoSSR({ children, fallback = null }: NoSSRProps) {
   }
 
   // Renderizza solo dopo che il componente è completamente montato
-  return <div suppressHydrationWarning>{children}</div>;
+  // Usa un div wrapper con suppressHydrationWarning per sicurezza
+  return (
+    <div suppressHydrationWarning style={{ minHeight: '100%' }}>
+      {children}
+    </div>
+  );
 }
 
