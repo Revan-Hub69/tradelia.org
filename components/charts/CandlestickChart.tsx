@@ -39,6 +39,7 @@ export function CandlestickChart({
       low: d.low,
       close: d.close,
       isUp,
+      closeColor: isUp ? '#10b981' : '#ef4444',
       volume: d.volume || 0,
     };
   });
@@ -107,9 +108,22 @@ export function CandlestickChart({
             yAxisId="price"
             type="monotone"
             dataKey="close"
-            stroke={(entry: any) => (entry.isUp ? '#10b981' : '#ef4444')}
+            stroke="#888"
             strokeWidth={2}
-            dot={{ r: 4, fill: (entry: any) => (entry.isUp ? '#10b981' : '#ef4444') }}
+            dot={(props: any) => {
+              const { cx, cy, payload } = props;
+              const color = payload?.closeColor || '#888';
+              return (
+                <circle
+                  cx={cx}
+                  cy={cy}
+                  r={4}
+                  fill={color}
+                  stroke={color}
+                  strokeWidth={2}
+                />
+              );
+            }}
             connectNulls
           />
           {showVolume && (
