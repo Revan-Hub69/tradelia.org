@@ -158,8 +158,11 @@ export async function GET(
       console.error('Error logging download:', err);
     }
 
+    const responseBody: BodyInit =
+      typeof content === 'string' ? content : new Uint8Array(content);
+
     // Return file with proper headers
-    return new NextResponse(content, {
+    return new NextResponse(responseBody, {
       headers: {
         'Content-Type': contentType,
         'Content-Disposition': `attachment; filename="${encodeURIComponent(filename)}"`,
