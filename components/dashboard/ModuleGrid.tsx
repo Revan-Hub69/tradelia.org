@@ -27,7 +27,12 @@ export const ModuleGrid = memo(function ModuleGrid({ priority }: ModuleGridProps
     `/api/dashboard/modules${priority ? `?priority=${priority}` : ''}`,
     {
       cacheTime: 5 * 60 * 1000, // 5 minutes (modules don't change often)
+      requireAuth: false, // Permetti accesso guest
       onError: (err) => {
+        // Non mostrare errore per 401/500 - è normale se le tabelle non esistono ancora
+        if (err instanceof Error && ((err as any).status === 401 || (err as any).status === 500)) {
+          return;
+        }
         toast.error('Errore nel caricamento dei moduli', {
           action: {
             label: 'Riprova',
@@ -66,7 +71,9 @@ export const ModuleGrid = memo(function ModuleGrid({ priority }: ModuleGridProps
     );
   }
 
-  if (error) {
+  // Non mostrare errore per 401/500 - è normale se le tabelle non esistono ancora
+  // Mostra semplicemente una griglia vuota
+  if (error && !(error instanceof Error && ((error as any).status === 401 || (error as any).status === 500))) {
     return (
       <div className={styles.moduleCategory}>
         <h2 className={styles.categoryTitle}>{title}</h2>

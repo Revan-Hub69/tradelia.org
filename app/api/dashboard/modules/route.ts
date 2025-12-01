@@ -5,33 +5,32 @@ import { getModules } from '@/lib/supabase/server-services';
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
+    
     // Modules are public (visible to all, including guests)
-    // But we still check auth for user-specific badge counts if needed
+    // Non richiediamo autenticazione per i moduli
 
     const { searchParams } = new URL(request.url);
     const priority = searchParams.get('priority') as 'primary' | 'secondary' | null;
 
-    const { data, error } = await getModules(priority || undefined);
+    try {
+      const { data, error } = await getModules(priority || undefined);
 
-    if (error) {
-      return NextResponse.json(
-        { error: 'Errore nel caricamento dei moduli' },
-        { status: 500 }
-      );
+      if (error) {
+        // Se c'è un errore (es. tabella non esiste), restituisci array vuoto
+        console.error('Error getting modules (table might not exist):', error);
+        return NextResponse.json({ data: [] });
+      }
+
+      return NextResponse.json({ data: data || [] });
+    } catch (dbError) {
+      // Se c'è un errore del database (tabella mancante), restituisci array vuoto
+      console.error('Database error in modules GET (table might not exist):', dbError);
+      return NextResponse.json({ data: [] });
     }
-
-    return NextResponse.json({ data });
   } catch (error) {
     console.error('Error in modules API:', error);
-    return NextResponse.json(
-      { error: 'Errore interno del server' },
-      { status: 500 }
-    );
+    // Restituisci array vuoto invece di errore 500
+    return NextResponse.json({ data: [] });
   }
 }
 
