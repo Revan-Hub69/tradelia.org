@@ -558,6 +558,7 @@ export function AuthForm() {
                 </label>
                 <input
                   id="name"
+                  name="name"
                   ref={nameInputRef}
                   type="text"
                   autoComplete="name"
@@ -584,6 +585,7 @@ export function AuthForm() {
             </label>
             <input
               id="email"
+              name="email"
               ref={emailInputRef}
               type="email"
               autoComplete="email"
@@ -617,6 +619,7 @@ export function AuthForm() {
                 </label>
                 <input
                   id="otp"
+                  name="otp"
                   type="text"
                   inputMode="numeric"
                   pattern="[0-9]*"
@@ -675,6 +678,7 @@ export function AuthForm() {
             <div className="relative">
               <input
                 id="password"
+                name="password"
                 ref={passwordInputRef}
                 type={showPassword ? 'text' : 'password'}
                 autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}

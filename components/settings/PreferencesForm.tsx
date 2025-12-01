@@ -123,6 +123,7 @@ export function PreferencesForm() {
         </Label>
         <Select
           id="language"
+          name="language"
           value={formData.language}
           onChange={(e) => setFormData({ ...formData, language: e.target.value })}
           className="mt-1"
@@ -141,6 +142,7 @@ export function PreferencesForm() {
         </Label>
         <Select
           id="timezone"
+          name="timezone"
           value={formData.timezone}
           onChange={(e) => setFormData({ ...formData, timezone: e.target.value })}
           className="mt-1"
@@ -172,6 +174,7 @@ export function PreferencesForm() {
           </div>
           <input
             id="email_notifications"
+            name="email_notifications"
             type="checkbox"
             checked={formData.email_notifications}
             onChange={(e) => setFormData({ ...formData, email_notifications: e.target.checked })}
@@ -190,6 +193,7 @@ export function PreferencesForm() {
           </div>
           <input
             id="push_notifications"
+            name="push_notifications"
             type="checkbox"
             checked={formData.push_notifications}
             onChange={(e) => setFormData({ ...formData, push_notifications: e.target.checked })}

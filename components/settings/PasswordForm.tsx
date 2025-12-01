@@ -102,6 +102,7 @@ export function PasswordForm() {
         <div className="relative mt-1">
           <Input
             id="currentPassword"
+            name="currentPassword"
             type={showCurrentPassword ? 'text' : 'password'}
             value={formData.currentPassword}
             onChange={(e) => setFormData({ ...formData, currentPassword: e.target.value })}
@@ -128,6 +129,7 @@ export function PasswordForm() {
         <div className="relative mt-1">
           <Input
             id="newPassword"
+            name="newPassword"
             type={showNewPassword ? 'text' : 'password'}
             value={formData.newPassword}
             onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
@@ -158,6 +160,7 @@ export function PasswordForm() {
         <div className="relative mt-1">
           <Input
             id="confirmPassword"
+            name="confirmPassword"
             type={showConfirmPassword ? 'text' : 'password'}
             value={formData.confirmPassword}
             onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}

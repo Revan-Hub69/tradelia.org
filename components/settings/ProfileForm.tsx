@@ -96,6 +96,7 @@ export function ProfileForm() {
         </Label>
         <Input
           id="display_name"
+          name="display_name"
           type="text"
           value={formData.display_name || ''}
           onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
@@ -114,6 +115,7 @@ export function ProfileForm() {
         </Label>
         <Input
           id="email"
+          name="email"
           type="email"
           value={formData.email || ''}
           disabled
@@ -130,6 +132,7 @@ export function ProfileForm() {
         </Label>
         <Textarea
           id="bio"
+          name="bio"
           value={formData.bio || ''}
           onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
           placeholder={t('dashboard.settings.profile.bioPlaceholder') || 'Racconta qualcosa di te...'}
