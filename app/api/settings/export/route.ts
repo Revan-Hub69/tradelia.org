@@ -17,15 +17,18 @@ export async function GET(request: NextRequest) {
     }
 
     // Raccogli tutti i dati utente
-    const [profile, portfolio, trades, alerts, expenses, courses, notes] = await Promise.all([
+    const [profile, portfolio, trades, alerts, expenses, courses, notesResult] = await Promise.all([
       supabase.from('profiles').select('*').eq('id', user.id).single(),
       supabase.from('portfolio_positions').select('*').eq('user_id', user.id),
       supabase.from('trading_journal').select('*').eq('user_id', user.id),
       supabase.from('watchlist_alerts').select('*').eq('user_id', user.id),
       supabase.from('expenses').select('*').eq('user_id', user.id),
       supabase.from('education_user_progress').select('*').eq('user_id', user.id),
-      supabase.from('lesson_notes').select('*').eq('user_id', user.id).catch(() => ({ data: null })),
+      supabase.from('lesson_notes').select('*').eq('user_id', user.id),
     ]);
+
+    // Gestisci errori per lesson_notes (potrebbe non esistere)
+    const notes = notesResult.error ? { data: null } : notesResult;
 
     const exportData = {
       export_date: new Date().toISOString(),
