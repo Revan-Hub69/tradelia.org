@@ -100,7 +100,7 @@ export async function GET(_request: NextRequest) {
 
         tables = data?.map((t: { table_name: string }) => t.table_name) || null;
       } catch (queryError) {
-        error = queryError;
+        error = queryError instanceof Error ? queryError : new Error(String(queryError));
       }
     }
 
