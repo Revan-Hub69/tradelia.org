@@ -296,7 +296,7 @@ export function PortfolioManager() {
             <button
               onClick={() => {
                 setIsAdding(false);
-                setNewPosition({ symbol: '', quantity: '', price: '' });
+                setNewPosition({ symbol: '', quantity: '', price: '', notes: '' });
               }}
               className="px-4 py-2 rounded-lg bg-bg-surface border border-border-subtle text-text-secondary hover:text-text-primary text-sm transition-colors"
             >
