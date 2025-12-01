@@ -14,12 +14,64 @@ export async function GET(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (!user?.email) {
-      return NextResponse.json({ error: 'Non autenticato' }, { status: 401 });
+      // Restituisci lista hardcoded invece di 401 per guest access
+      const knownTables = [
+        'user_profiles',
+        'user_roles',
+        'reports',
+        'report_modules',
+        'courses',
+        'course_progress',
+        'notifications',
+        'push_subscriptions',
+        'user_notification_preferences',
+        'favorites',
+        'user_activities',
+        'achievements',
+        'user_achievements',
+        'gamification_xp',
+        'gamification_streaks',
+        'modules',
+        'admin_emails',
+        'payments',
+        'invoices',
+        'one_time_services',
+        'analysis_requests',
+        'asset_proposals',
+        'asset_votes',
+      ];
+      return NextResponse.json({ tables: knownTables });
     }
 
     const admin = await isAdminEmail(user.email);
     if (!admin) {
-      return NextResponse.json({ error: 'Non autorizzato' }, { status: 403 });
+      // Restituisci lista hardcoded invece di 403 per non-admin
+      const knownTables = [
+        'user_profiles',
+        'user_roles',
+        'reports',
+        'report_modules',
+        'courses',
+        'course_progress',
+        'notifications',
+        'push_subscriptions',
+        'user_notification_preferences',
+        'favorites',
+        'user_activities',
+        'achievements',
+        'user_achievements',
+        'gamification_xp',
+        'gamification_streaks',
+        'modules',
+        'admin_emails',
+        'payments',
+        'invoices',
+        'one_time_services',
+        'analysis_requests',
+        'asset_proposals',
+        'asset_votes',
+      ];
+      return NextResponse.json({ tables: knownTables });
     }
 
     // Query per ottenere tutte le tabelle dal sistema PostgreSQL
