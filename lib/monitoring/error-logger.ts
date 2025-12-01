@@ -75,7 +75,7 @@ class ErrorLogger {
     from: string,
     to: string,
     reason?: string
-  ): void {
+  ): boolean {
     const key = `${from}->${to}`;
     const attempts = (this.redirectAttempts.get(key) || 0) + 1;
     this.redirectAttempts.set(key, attempts);
