@@ -140,17 +140,23 @@ export async function GET(
         );
     }
 
-    // Log download per analytics
-    await supabase.from('report_downloads').insert({
-      user_id: session.user.id,
-      report_id: params.id,
-      format,
-      quality: format === 'pdf' ? quality : null,
-      include_charts: format === 'pdf' ? includeCharts : null,
-    }).catch((err) => {
+    // Log download per analytics (non bloccare se fallisce)
+    try {
+      const { error: logError } = await supabase.from('report_downloads').insert({
+        user_id: session.user.id,
+        report_id: params.id,
+        format,
+        quality: format === 'pdf' ? quality : null,
+        include_charts: format === 'pdf' ? includeCharts : null,
+      });
+      
+      if (logError) {
+        console.error('Error logging download:', logError);
+      }
+    } catch (err) {
       // Non bloccare se il log fallisce
       console.error('Error logging download:', err);
-    });
+    }
 
     // Return file with proper headers
     return new NextResponse(content, {
