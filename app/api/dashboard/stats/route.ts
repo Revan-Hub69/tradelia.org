@@ -10,8 +10,14 @@ export async function GET(request: NextRequest) {
       error: authError,
     } = await supabase.auth.getUser();
 
+    // Permetti accesso guest - restituisci statistiche vuote invece di 401
     if (authError || !user) {
-      return NextResponse.json({ error: 'Non autorizzato' }, { status: 401 });
+      return NextResponse.json({
+        totalReports: 0,
+        activeCourses: 0,
+        pendingRequests: 0,
+        recentActivity: null,
+      });
     }
 
     const stats = await getDashboardStats(user.id);
@@ -19,10 +25,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(stats);
   } catch (error) {
     console.error('Error in stats API:', error);
-    return NextResponse.json(
-      { error: 'Errore interno del server' },
-      { status: 500 }
-    );
+    // In caso di errore, restituisci statistiche vuote invece di 500
+    return NextResponse.json({
+      totalReports: 0,
+      activeCourses: 0,
+      pendingRequests: 0,
+      recentActivity: null,
+    });
   }
 }
 

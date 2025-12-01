@@ -81,7 +81,12 @@ export function OverviewStats() {
     recentActivity: { created_at: string } | null;
   }>('/api/dashboard/stats', {
     cacheTime: 2 * 60 * 1000, // 2 minutes
+    requireAuth: false, // Permetti accesso guest
     onError: (err) => {
+      // Non mostrare errore per 401 - è normale per guest
+      if (err instanceof Error && (err as any).status === 401) {
+        return;
+      }
       toast.error('Errore nel caricamento delle statistiche', {
         action: {
           label: 'Riprova',
@@ -130,7 +135,9 @@ export function OverviewStats() {
     );
   }
 
-  if (error) {
+  // Non mostrare errore per 401 - è normale per guest access
+  // L'API ora restituisce dati vuoti invece di 401, ma gestiamo comunque il caso
+  if (error && !(error instanceof Error && (error as any).status === 401)) {
     return (
       <div className={styles.overviewSection}>
         <div className={styles.sectionHeader}>
