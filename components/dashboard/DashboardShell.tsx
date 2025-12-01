@@ -42,26 +42,65 @@ export function DashboardShell() {
   const [hasError, setHasError] = useState(false);
   const router = useRouter();
 
-  // Gestisci errori globali
+  // Gestisci errori globali con logging migliorato
   useEffect(() => {
+    const { logError, logRedirect } = require('@/lib/monitoring/error-logger');
+
     const handleError = (event: ErrorEvent) => {
-      console.error('Global error caught:', event.error);
+      logError('Global JavaScript error', event.error, {
+        component: 'DashboardShell',
+        path: window.location.pathname,
+        metadata: {
+          filename: event.filename,
+          lineno: event.lineno,
+          colno: event.colno,
+        },
+      });
       setHasError(true);
     };
 
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      console.error('Unhandled promise rejection:', event.reason);
+      const error = event.reason instanceof Error 
+        ? event.reason 
+        : new Error(String(event.reason));
+      logError('Unhandled promise rejection', error, {
+        component: 'DashboardShell',
+        path: window.location.pathname,
+        metadata: {
+          reason: event.reason,
+        },
+      });
       setHasError(true);
+    };
+
+    // Intercetta window.location per logging redirect
+    const originalLocation = window.location;
+    const handleLocationChange = () => {
+      const currentPath = window.location.pathname;
+      if (currentPath === '/login' && document.referrer.includes('/dashboard')) {
+        const shouldRedirect = logRedirect(document.referrer, currentPath, 'Automatic redirect to login');
+        if (!shouldRedirect) {
+          console.warn('[DashboardShell] Redirect loop detected, preventing redirect to login');
+          // Torna alla dashboard invece del login
+          window.history.replaceState({}, '', '/dashboard');
+          router.refresh();
+        }
+      }
     };
 
     window.addEventListener('error', handleError);
     window.addEventListener('unhandledrejection', handleUnhandledRejection);
+    
+    // Controlla se siamo stati redirectati al login
+    if (window.location.pathname === '/login' && document.referrer.includes('/dashboard')) {
+      handleLocationChange();
+    }
 
     return () => {
       window.removeEventListener('error', handleError);
       window.removeEventListener('unhandledrejection', handleUnhandledRejection);
     };
-  }, []);
+  }, [router]);
 
   // Keyboard shortcuts (WCAG 2.1 SC 2.1.1 - Keyboard)
   useKeyboardShortcuts([
