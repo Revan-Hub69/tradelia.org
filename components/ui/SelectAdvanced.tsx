@@ -260,6 +260,7 @@ export function SelectAdvanced({
                           <Check className="w-4 h-4 text-accent" aria-hidden="true" />
                         )}
                       </button>
+                    ))}
                   </div>
                 ))}
               </div>
