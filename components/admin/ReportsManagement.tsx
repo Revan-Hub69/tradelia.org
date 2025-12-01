@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Eye, Search, Filter } from 'lucide-react';
 import styles from './AdminComponents.module.css';
+import { useIsClient } from '@/lib/hooks/useIsClient';
 
 interface Report {
   id: string;
@@ -24,6 +25,7 @@ interface ReportsManagementProps {
 }
 
 export function ReportsManagement({ adminToken }: ReportsManagementProps) {
+  const isClient = useIsClient();
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,8 +34,28 @@ export function ReportsManagement({ adminToken }: ReportsManagementProps) {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
-    fetchReports();
-  }, [statusFilter]);
+    // IMPORTANTE: Esegui fetch solo sul client e dopo che l'hydration è completata
+    if (!isClient || typeof window === 'undefined') return;
+    
+    // Usa un piccolo delay per assicurarsi che l'hydration sia completata
+    const timer = setTimeout(() => {
+      fetchReports();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [statusFilter, isClient]);
+
+  // Non renderizzare nulla fino a quando non siamo sul client
+  if (!isClient) {
+    return (
+      <div suppressHydrationWarning>
+        <div className={styles.loadingState}>
+          <div className={styles.spinner} aria-label="Loading reports" />
+          <p>Caricamento report...</p>
+        </div>
+      </div>
+    );
+  }
 
   const fetchReports = async () => {
     try {
