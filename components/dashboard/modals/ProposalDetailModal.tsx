@@ -47,7 +47,7 @@ export function ProposalDetailModal({
   const isPro = useIsPro();
   const [voting, setVoting] = useState(false);
 
-  const { data: proposal, loading, error, retry, mutate } = useApi<AssetProposal>(
+  const { data: proposal, loading, error, retry, refetch } = useApi<AssetProposal>(
     proposalId ? `/api/dashboard/voting/${proposalId}` : null,
     {
       cacheTime: 2 * 60 * 1000,
@@ -109,7 +109,7 @@ export function ProposalDetailModal({
       }
 
       toast.success(t('dashboard.voting.voteSuccess') || 'Voto registrato con successo');
-      mutate();
+      refetch();
       if (onVoteSuccess) {
         onVoteSuccess();
       }
