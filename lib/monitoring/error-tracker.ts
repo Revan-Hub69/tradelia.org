@@ -96,28 +96,46 @@ class SentryErrorTracker implements ErrorTracker {
   private async initSentry() {
     if (this.initialized) return;
 
+    // Se Sentry DSN non è configurato, non tentare di inizializzare
+    if (!process.env.NEXT_PUBLIC_SENTRY_DSN) {
+      this.initialized = false;
+      return;
+    }
+
     try {
-      // Dynamic import per ridurre bundle size
-      const Sentry = await import('@sentry/nextjs');
+      // Dynamic import con stringa dinamica per evitare che webpack risolva l'import
+      // Usa Function constructor per evitare che webpack analizzi l'import
+      const importSentry = new Function('return import("@sentry/nextjs")');
+      const SentryModule = await importSentry().catch(() => null);
+      
+      if (!SentryModule) {
+        console.warn('Sentry package not installed - using console logger');
+        this.initialized = false;
+        return;
+      }
+
+      const Sentry = SentryModule;
       this.Sentry = Sentry;
       this.initialized = true;
 
       // Configura Sentry
-      Sentry.init({
-        dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-        environment: process.env.NODE_ENV,
-        tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
-        beforeSend(event, hint) {
-          // Filtra errori non critici in produzione
-          if (process.env.NODE_ENV === 'production') {
-            // Ignora errori di rete comuni
-            if (event.exception?.values?.[0]?.value?.includes('NetworkError')) {
-              return null;
+      if (Sentry.init) {
+        Sentry.init({
+          dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+          environment: process.env.NODE_ENV,
+          tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+          beforeSend(event: any, hint: any) {
+            // Filtra errori non critici in produzione
+            if (process.env.NODE_ENV === 'production') {
+              // Ignora errori di rete comuni
+              if (event.exception?.values?.[0]?.value?.includes('NetworkError')) {
+                return null;
+              }
             }
-          }
-          return event;
-        },
-      });
+            return event;
+          },
+        });
+      }
     } catch (error) {
       console.warn('Failed to initialize Sentry:', error);
       this.initialized = false;
