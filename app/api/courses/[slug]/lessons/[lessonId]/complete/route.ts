@@ -72,6 +72,14 @@ export async function POST(
     const completedCount = completedLessons?.length || 0;
     const progress = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
 
+    // Verifica se il modulo è già stato completato
+    const { data: existingProgress } = await supabase
+      .from('education_user_progress')
+      .select('completed_at')
+      .eq('user_id', user.id)
+      .eq('module_id', lesson.module_id)
+      .single();
+
     // Aggiorna module progress (education_user_progress)
     const status = progress === 100 ? 'completed' : progress > 0 ? 'in_progress' : 'not_started';
     await supabase
@@ -83,7 +91,7 @@ export async function POST(
         progress_percentage: progress,
         updated_at: new Date().toISOString(),
         last_accessed_at: new Date().toISOString(),
-        ...(progress === 100 && !completedAt ? { completed_at: new Date().toISOString() } : {}),
+        ...(progress === 100 && !existingProgress?.completed_at ? { completed_at: new Date().toISOString() } : {}),
       }, {
         onConflict: 'user_id,module_id',
       });
