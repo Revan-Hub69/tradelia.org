@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
 /**
- * GET /api/reports/[slug]
- * Recupera report per slug
+ * GET /api/reports/[id]
+ * Recupera report per id o slug
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
     const supabase = await createClient();
@@ -18,11 +18,20 @@ export async function GET(
     // Permetti accesso anche senza sessione (guest access)
     // Guest vede solo report pubblici/attivi
 
-    const { data: report, error } = await supabase
+    // Verifica se params.id è un UUID (id) o uno slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(params.id);
+    
+    let query = supabase
       .from('reports')
-      .select('*')
-      .eq('slug', params.slug)
-      .maybeSingle();
+      .select('*');
+    
+    if (isUUID) {
+      query = query.eq('id', params.id);
+    } else {
+      query = query.eq('slug', params.id);
+    }
+    
+    const { data: report, error } = await query.maybeSingle();
 
     if (error) {
       console.error('Error fetching report:', error);
@@ -40,7 +49,7 @@ export async function GET(
 
     return NextResponse.json(report);
   } catch (error) {
-    console.error('Error in GET /api/reports/[slug]:', error);
+    console.error('Error in GET /api/reports/[id]:', error);
     return NextResponse.json(
       { error: 'Errore interno', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
