@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin, isAdminEmail } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 
 // GET /api/admin/reports - List all reports
 export async function GET(request: NextRequest) {

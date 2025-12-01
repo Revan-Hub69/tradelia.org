@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin, isAdminEmail } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 
 // GET /api/admin/users - List all users
 export async function GET(request: NextRequest) {
@@ -104,14 +105,28 @@ export async function GET(request: NextRequest) {
 // POST /api/admin/users - Create or update user
 export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Prova prima con la sessione Supabase
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    let email: string | null = null;
+    let isAdmin = false;
+
+    if (user?.email) {
+      email = user.email;
+      isAdmin = await isAdminEmail(email);
+    } else {
+      // Fallback a authorization header se disponibile
+      const authHeader = request.headers.get('authorization');
+      if (authHeader?.startsWith('Bearer ')) {
+        const token = authHeader.replace('Bearer ', '');
+        email = token;
+        isAdmin = await isAdminEmail(email);
+      }
     }
 
-    const token = authHeader.replace('Bearer ', '');
-    const email = token;
-    const isAdmin = await isAdminEmail(email);
     if (!isAdmin) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
