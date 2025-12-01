@@ -68,7 +68,8 @@ export function UsersManagement({ adminToken }: UsersManagementProps) {
       }
 
       const data = await response.json();
-      setUsers(data.data || []);
+      // Assicurati che data.data sia sempre un array
+      setUsers(Array.isArray(data.data) ? data.data : []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load users');
     } finally {
@@ -76,7 +77,7 @@ export function UsersManagement({ adminToken }: UsersManagementProps) {
     }
   };
 
-  const filteredUsers = users.filter((user) => {
+  const filteredUsers = Array.isArray(users) ? users.filter((user) => {
     const email = user.auth_users?.email || '';
     const displayName = user.display_name || '';
     const company = user.company || '';
@@ -85,7 +86,7 @@ export function UsersManagement({ adminToken }: UsersManagementProps) {
       displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       company.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesSearch;
-  });
+  }) : [];
 
   if (loading) {
     return (
