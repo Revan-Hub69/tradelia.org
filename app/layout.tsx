@@ -195,14 +195,6 @@ export default function RootLayout({
         <link rel="alternate" hrefLang="x-default" href="https://tradelia.org" />
       </head>
       <body className={inter.className} suppressHydrationWarning>
-        {/* Skip Link - Accessibility WCAG 2.4.1 */}
-        <a
-          href="#main-content"
-          className="skip-link"
-          aria-label="Skip to main content"
-        >
-          Skip to main content
-        </a>
         <div className="min-h-screen flex flex-col" suppressHydrationWarning>
           <HtmlLang />
           <UnregisterServiceWorker />

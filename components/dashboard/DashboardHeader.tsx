@@ -6,6 +6,7 @@ import styles from './DashboardHeader.module.css';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
 import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 
 // Lazy load non-critical header components
 const GlobalSearch = dynamic(() => import('./GlobalSearch').then(mod => ({ default: mod.GlobalSearch })), {
@@ -23,30 +24,32 @@ const UserStats = dynamic(() => import('@/components/gamification/UserStats').th
 export function DashboardHeader() {
   const { locale } = useTranslations();
   const dashboardHref = buildLocalePath(locale, '/dashboard');
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <header className={styles.dashboardHeaderMinimal} suppressHydrationWarning style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
       <div className={styles.dashboardHeaderContent}>
-        <h1 className={styles.dashboardTitle} style={{ minWidth: 0, flexShrink: 1 }}>
+        <div className={styles.dashboardTitle}>
           <Link href="/" className={styles.dashboardBrand}>
-            <Image
-              src="/logos/tradelia-logo.svg"
-              alt="Tradelia AI"
-              width={200}
-              height={50}
-              className={styles.dashboardBrandLogo}
-              priority
-            />
-            <span className={styles.dashboardBrandTextFallback}>
-              <span className={styles.dashboardBrandWord}>TRADELIA</span>
-              <span className={styles.dashboardBrandDot} />
-              <span className={styles.dashboardBrandSuffix}>AI</span>
-            </span>
+            {isClient && (
+              <Image
+                src="/logos/tradelia-logo.svg"
+                alt="Tradelia AI"
+                width={140}
+                height={35}
+                className={styles.dashboardBrandLogo}
+                priority
+              />
+            )}
           </Link>
           <span className={styles.dashboardTitleSeparator}>·</span>
           <span className={styles.dashboardTitleText}>Dashboard</span>
-        </h1>
-        <div className="flex items-center gap-2 md:gap-3" style={{ flexShrink: 0 }}>
+        </div>
+        <div className={styles.dashboardActions}>
           <UserStats />
           <GlobalSearch />
           <UserMenu />

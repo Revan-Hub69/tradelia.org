@@ -233,7 +233,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
       }>
-        <div suppressHydrationWarning style={{ width: '100%', overflowX: 'hidden' }}>
+        <div suppressHydrationWarning style={{ width: '100%', overflowX: 'hidden', minHeight: '100vh' }}>
           <AdminDashboardContent />
         </div>
       </NoSSR>
