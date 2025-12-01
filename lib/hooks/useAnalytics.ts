@@ -29,7 +29,7 @@ export function useAnalytics() {
 
     // Update user properties
     setAnalyticsUser({
-      userRole: role,
+      userRole: role || undefined,
       isPro,
       subscriptionTier: isPro ? 'pro' : 'base',
     });
