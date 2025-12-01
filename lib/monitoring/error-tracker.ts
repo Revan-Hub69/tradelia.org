@@ -102,112 +102,30 @@ class SentryErrorTracker implements ErrorTracker {
       return;
     }
 
-    try {
-      // Dynamic import con stringa dinamica per evitare che webpack risolva l'import
-      // Usa Function constructor per evitare che webpack analizzi l'import
-      const importSentry = new Function('return import("@sentry/nextjs")');
-      const SentryModule = await importSentry().catch(() => null);
-      
-      if (!SentryModule) {
-        console.warn('Sentry package not installed - using console logger');
-        this.initialized = false;
-        return;
-      }
-
-      const Sentry = SentryModule;
-      this.Sentry = Sentry;
-      this.initialized = true;
-
-      // Configura Sentry
-      if (Sentry.init) {
-        Sentry.init({
-          dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-          environment: process.env.NODE_ENV,
-          tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
-          beforeSend(event: any, hint: any) {
-            // Filtra errori non critici in produzione
-            if (process.env.NODE_ENV === 'production') {
-              // Ignora errori di rete comuni
-              if (event.exception?.values?.[0]?.value?.includes('NetworkError')) {
-                return null;
-              }
-            }
-            return event;
-          },
-        });
-      }
-    } catch (error) {
-      console.warn('Failed to initialize Sentry:', error);
-      this.initialized = false;
-    }
+    // Nota: Sentry è opzionale. Se il pacchetto @sentry/nextjs non è installato,
+    // questo tracker funzionerà come ConsoleErrorTracker
+    // Per usare Sentry, installare: npm install @sentry/nextjs
+    this.initialized = false;
+    console.info('Sentry not configured - using console logger. Install @sentry/nextjs to enable Sentry tracking.');
   }
 
   captureException(error: Error, context?: ErrorContext): void {
-    if (!this.initialized || !this.Sentry) {
-      console.error('[Error Tracker] Exception (Sentry not initialized):', error, context);
-      return;
-    }
-
-    this.Sentry.withScope((scope: any) => {
-      if (context?.userId) {
-        scope.setUser({ id: context.userId, email: context.userEmail });
-      }
-      if (context?.path) {
-        scope.setTag('path', context.path);
-      }
-      if (context?.component) {
-        scope.setTag('component', context.component);
-      }
-      if (context?.action) {
-        scope.setTag('action', context.action);
-      }
-      if (context?.metadata) {
-        scope.setContext('metadata', context.metadata);
-      }
-
-      this.Sentry.captureException(error);
-    });
+    // Sentry non disponibile - usa console logger
+    console.error('[Error Tracker] Exception (Sentry not available):', error, context);
   }
 
   captureMessage(message: string, level: 'info' | 'warning' | 'error' = 'info', context?: ErrorContext): void {
-    if (!this.initialized || !this.Sentry) {
-      const logMethod = level === 'error' ? console.error : level === 'warning' ? console.warn : console.info;
-      logMethod(`[Error Tracker] ${level.toUpperCase()}:`, message, context);
-      return;
-    }
-
-    this.Sentry.withScope((scope: any) => {
-      if (context?.userId) {
-        scope.setUser({ id: context.userId, email: context.userEmail });
-      }
-      if (context?.path) {
-        scope.setTag('path', context.path);
-      }
-      if (context?.component) {
-        scope.setTag('component', context.component);
-      }
-      if (context?.action) {
-        scope.setTag('action', context.action);
-      }
-      if (context?.metadata) {
-        scope.setContext('metadata', context.metadata);
-      }
-
-      const sentryLevel = level === 'error' ? 'error' : level === 'warning' ? 'warning' : 'info';
-      this.Sentry.captureMessage(message, sentryLevel);
-    });
+    // Sentry non disponibile - usa console logger
+    const logMethod = level === 'error' ? console.error : level === 'warning' ? console.warn : console.info;
+    logMethod(`[Error Tracker] ${level.toUpperCase()}:`, message, context);
   }
 
   setUser(userId: string, email?: string): void {
-    if (this.initialized && this.Sentry) {
-      this.Sentry.setUser({ id: userId, email });
-    }
+    // Sentry non disponibile - nessuna azione necessaria
   }
 
   clearUser(): void {
-    if (this.initialized && this.Sentry) {
-      this.Sentry.setUser(null);
-    }
+    // Sentry non disponibile - nessuna azione necessaria
   }
 }
 
