@@ -191,7 +191,9 @@ export async function POST(request: NextRequest) {
     if (!userId) {
       // Check if user exists by listing users with email filter
       const { data: users } = await supabaseAdmin.auth.admin.listUsers();
-      const existingUser = users?.users?.find((u) => u.email === userEmail.toLowerCase());
+      const existingUser = users?.users?.find(
+        (u: { email?: string }) => u.email === userEmail.toLowerCase()
+      );
 
       if (existingUser) {
         userId = existingUser.id;
