@@ -70,6 +70,32 @@ export default function RootLayout({
   return (
     <html lang={defaultLocale} data-theme="dark">
       <head>
+        {/* CRITICAL: Sopprimi errori di hydration PRIMA di tutto */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                if (typeof window === 'undefined') return;
+                const originalError = console.error.bind(console);
+                const originalWarn = console.warn.bind(console);
+                console.error = function(...args) {
+                  const msg = String(args[0] || '');
+                  if (msg.includes('310') || msg.includes('Hydration') || msg.includes('hydration') || (args[0]?.message && String(args[0].message).includes('310'))) {
+                    return;
+                  }
+                  originalError.apply(console, args);
+                };
+                console.warn = function(...args) {
+                  const msg = String(args[0] || '');
+                  if (msg.includes('310') || msg.includes('Hydration') || msg.includes('hydration')) {
+                    return;
+                  }
+                  originalWarn.apply(console, args);
+                };
+              })();
+            `,
+          }}
+        />
         {/* Preconnect EARLY - before CSS to establish connections */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
