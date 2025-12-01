@@ -175,7 +175,7 @@ export default function AlertsWidgetPage() {
           ))}
           {alerts.length > 10 && (
             <div className="text-center py-2 text-xs text-text-tertiary">
-              {t('widgets.alerts.more', { count: alerts.length - 10 }) || 
+              {t('widgets.alerts.more')?.replace('{count}', String(alerts.length - 10)) || 
                 `+${alerts.length - 10} altri alert`}
             </div>
           )}

@@ -177,7 +177,7 @@ export default function PortfolioWidgetPage() {
           ))}
           {positions.length > 10 && (
             <div className="text-center py-2 text-xs text-text-tertiary">
-              {t('widgets.portfolio.more', { count: positions.length - 10 }) || 
+              {t('widgets.portfolio.more')?.replace('{count}', String(positions.length - 10)) || 
                 `+${positions.length - 10} altre posizioni`}
             </div>
           )}

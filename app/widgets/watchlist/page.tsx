@@ -143,7 +143,7 @@ export default function WatchlistWidgetPage() {
           ))}
           {watchlistWithPrices.length > 10 && (
             <div className="text-center py-2 text-xs text-text-tertiary">
-              {t('widgets.watchlist.more', { count: watchlistWithPrices.length - 10 }) || 
+              {t('widgets.watchlist.more')?.replace('{count}', String(watchlistWithPrices.length - 10)) || 
                 `+${watchlistWithPrices.length - 10} altri asset`}
             </div>
           )}
