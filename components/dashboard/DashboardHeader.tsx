@@ -25,7 +25,7 @@ export function DashboardHeader() {
   const dashboardHref = buildLocalePath(locale, '/dashboard');
 
   return (
-    <header className={styles.dashboardHeaderMinimal}>
+    <header className={styles.dashboardHeaderMinimal} suppressHydrationWarning>
       <div className={styles.dashboardHeaderContent}>
         <h1 className={styles.dashboardTitle}>
           <Link href="/" className={styles.dashboardBrand}>

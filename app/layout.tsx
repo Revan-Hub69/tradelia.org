@@ -168,11 +168,15 @@ export default function RootLayout({
         <div className="min-h-screen flex flex-col" suppressHydrationWarning>
           <HtmlLang />
           <UnregisterServiceWorker />
-          <Header />
-          <main id="main-content" className="flex-1" tabIndex={-1}>{children}</main>
-          <Footer />
-          <LegalConsent />
-          <ToastContainer />
+          <div suppressHydrationWarning>
+            <Header />
+          </div>
+          <main id="main-content" className="flex-1" tabIndex={-1} suppressHydrationWarning>{children}</main>
+          <div suppressHydrationWarning>
+            <Footer />
+            <LegalConsent />
+            <ToastContainer />
+          </div>
         </div>
       </body>
     </html>
