@@ -84,7 +84,7 @@ export function NotesSystem({ courseId, courseSlug, notes, onUpdate }: NotesSyst
   };
 
   const handleDelete = async (noteId: string, lessonId: string) => {
-    if (!confirm(t('notes.deleteConfirm') || 'Sei sicuro di voler eliminare queste note?'))) {
+    if (typeof window !== 'undefined' && !window.confirm(t('notes.deleteConfirm') || 'Sei sicuro di voler eliminare queste note?')) {
       return;
     }
 
