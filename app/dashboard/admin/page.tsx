@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { FileText, Users, Settings, BarChart3, Bell, Share2, CreditCard, Database } from 'lucide-react';
@@ -9,6 +9,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
 import { NoSSR } from '@/components/common/NoSSR';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
+import { useIsClient } from '@/lib/hooks/useIsClient';
 
 // Dynamic imports con ssr: false per evitare hydration mismatch
 const ReportsManagement = dynamic(() => import('@/components/admin/ReportsManagement').then(m => ({ default: m.ReportsManagement })), {
@@ -47,9 +48,47 @@ const SupabaseManagement = dynamic(() => import('@/components/admin/SupabaseMana
  * COMPLETELY CLIENT-SIDE to prevent hydration mismatch
  */
 function AdminDashboardContent() {
+  const isClient = useIsClient();
   const [activeTab, setActiveTab] = useState<'reports' | 'users' | 'notifications' | 'social' | 'payments' | 'supabase' | 'settings'>('reports');
+  const [mounted, setMounted] = useState(false);
+  
+  // useTranslations deve essere chiamato sempre (regole degli hooks)
+  // ma non useremo il valore fino a quando non siamo montati
   const { locale } = useTranslations();
-  const dashboardHref = buildLocalePath(locale, '/dashboard');
+  const dashboardHref = mounted ? buildLocalePath(locale, '/dashboard') : '/dashboard';
+
+  useEffect(() => {
+    if (!isClient || typeof window === 'undefined') {
+      return;
+    }
+    
+    // Triplo RAF + timeout per assicurarsi che React abbia completato completamente l'hydration
+    const rafId1 = requestAnimationFrame(() => {
+      const rafId2 = requestAnimationFrame(() => {
+        const rafId3 = requestAnimationFrame(() => {
+          setTimeout(() => {
+            setMounted(true);
+          }, 200); // Delay più lungo per essere sicuri
+        });
+        return () => cancelAnimationFrame(rafId3);
+      });
+      return () => cancelAnimationFrame(rafId2);
+    });
+    
+    return () => cancelAnimationFrame(rafId1);
+  }, [isClient]);
+
+  // Non renderizzare nulla fino a quando non siamo completamente montati
+  if (!isClient || !mounted) {
+    return (
+      <div className={styles.adminContainer} suppressHydrationWarning>
+        <div className="p-8 text-center text-text-secondary">
+          <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p>Caricamento area admin...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.adminContainer}>
