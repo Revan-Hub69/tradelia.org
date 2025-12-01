@@ -167,25 +167,28 @@ export function SelectAdvanced({
             {multiSelect && Array.isArray(value) ? (
               value.length > 0 ? (
                 <span className="flex items-center gap-1 flex-wrap">
-                  {(getSelectedLabels() || []).slice(0, 2).map((label, idx) => {
-                    const val = Array.isArray(value) ? value[idx] : '';
-                    return (
-                      <span
-                        key={val}
-                        className="inline-flex items-center gap-1 px-2 py-0.5 bg-accent/20 border border-accent/40 rounded text-xs"
-                      >
-                        {label}
-                        <button
-                          type="button"
-                          onClick={(e) => handleRemove(val, e)}
-                          className="hover:text-red-400"
-                          aria-label={`Rimuovi ${label}`}
+                  {(() => {
+                    const labels = getSelectedLabels();
+                    return Array.isArray(labels) ? labels.slice(0, 2).map((label, idx) => {
+                      const val = Array.isArray(value) ? value[idx] : '';
+                      return (
+                        <span
+                          key={val}
+                          className="inline-flex items-center gap-1 px-2 py-0.5 bg-accent/20 border border-accent/40 rounded text-xs"
                         >
-                          <X className="w-3 h-3" />
-                        </button>
-                      </span>
-                    );
-                  })}
+                          {label}
+                          <button
+                            type="button"
+                            onClick={(e) => handleRemove(val, e)}
+                            className="hover:text-red-400"
+                            aria-label={`Rimuovi ${label}`}
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </span>
+                      );
+                    }) : [];
+                  })()}
                   {value.length > 2 && (
                     <span className="text-text-tertiary text-xs">+{value.length - 2}</span>
                   )}
