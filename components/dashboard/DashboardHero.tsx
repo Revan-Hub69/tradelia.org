@@ -11,15 +11,19 @@ import { buildLocalePath } from '@/lib/i18n/paths';
 import { TooltipGlossary } from '@/components/glossary/TooltipGlossary';
 import { useState, useEffect } from 'react';
 import { getGlossaryTerm } from '@/lib/glossary/terms';
+import { useIsClient } from '@/lib/hooks/useIsClient';
 
 export function DashboardHero() {
   const { t, tArray, locale } = useTranslations();
+  const isClient = useIsClient();
   const chips = tArray('dashboard.hero.chips', []);
   const [mifidTerm, setMifidTerm] = useState<any>(null);
   const [frameworkTerm, setFrameworkTerm] = useState<any>(null);
 
-  // Carica termini per tooltip
+  // Carica termini per tooltip SOLO sul client per evitare hydration mismatch
   useEffect(() => {
+    if (!isClient) return;
+    
     Promise.all([
       getGlossaryTerm('HeroDisclaimer').then(term => {
         if (term) setMifidTerm(term);
@@ -28,7 +32,7 @@ export function DashboardHero() {
         if (term) setFrameworkTerm(term);
       }),
     ]);
-  }, []);
+  }, [isClient]);
 
   return (
     <section className={styles.dashboardHero} aria-labelledby="dashboard-hero-title">

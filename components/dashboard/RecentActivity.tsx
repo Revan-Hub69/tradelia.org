@@ -3,6 +3,7 @@
 import { useState, useEffect, memo, useMemo } from 'react';
 import { Clock, FileText, BookOpen, TrendingUp, ArrowRight, Filter } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { useIsClient } from '@/lib/hooks/useIsClient';
 import { cn } from '@/lib/utils/cn';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -27,6 +28,7 @@ interface Activity {
 
 export const RecentActivity = memo(function RecentActivity() {
   const { t, locale } = useTranslations();
+  const isClient = useIsClient();
   const [filter, setFilter] = useState<string>('all');
 
   interface ActivityData {
@@ -53,8 +55,9 @@ export const RecentActivity = memo(function RecentActivity() {
   );
 
   // Map Supabase data to Activity format (memoized)
+  // IMPORTANTE: Non eseguire sul server per evitare hydration mismatch
   const activities = useMemo<Activity[]>(() => {
-    if (!activitiesData) return [];
+    if (!isClient || !activitiesData) return [];
 
     return activitiesData.map((item: ActivityData) => {
       let icon = <FileText className="w-4 h-4" />;

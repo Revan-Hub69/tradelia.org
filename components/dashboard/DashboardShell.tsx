@@ -247,6 +247,7 @@ export function DashboardShell() {
           <section 
             aria-label="Panoramica accademica" 
             className={styles.dashboardSection}
+            suppressHydrationWarning
             id="overview"
           >
             <ErrorBoundary>
