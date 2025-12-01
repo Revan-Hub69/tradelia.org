@@ -44,7 +44,7 @@ export default function AlertsWidgetPage() {
     }, 5 * 60 * 1000);
 
     return () => clearInterval(interval);
-  }, [mutate]);
+  }, [refetch]);
 
   // Pull-to-refresh
   useEffect(() => {
