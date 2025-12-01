@@ -24,8 +24,11 @@ export function logApiRequest(
     ...context,
     path,
     requestId,
-    method,
-    query: Object.fromEntries(request.nextUrl.searchParams),
+    metadata: {
+      ...context?.metadata,
+      method,
+      query: Object.fromEntries(request.nextUrl.searchParams),
+    },
   });
 }
 
@@ -46,8 +49,9 @@ export function logApiResponse(
   const logContext: LogContext = {
     ...context,
     path,
-    method,
     metadata: {
+      ...context?.metadata,
+      method,
       status,
       duration: duration ? `${duration}ms` : undefined,
     },
