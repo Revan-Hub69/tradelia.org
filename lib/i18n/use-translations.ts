@@ -12,15 +12,25 @@ const dictionaries = {
 };
 
 export function useTranslations() {
+  // Usa sempre defaultLocale durante SSR per evitare hydration mismatch
+  // Il locale verrà aggiornato solo dopo il mount sul client
   const [locale, setLocale] = useState<Locale>(defaultLocale);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // Aggiorna mounted PRIMA di cambiare locale per evitare mismatch
     setMounted(true);
+    
     // Detect locale from window.location only on client
+    // Usa requestAnimationFrame per assicurarsi che il DOM sia pronto
     if (typeof window !== "undefined") {
-      const detectedLocale = window.location.pathname.startsWith("/en") ? "en" : "it";
-      setLocale(detectedLocale);
+      requestAnimationFrame(() => {
+        const detectedLocale = window.location.pathname.startsWith("/en") ? "en" : "it";
+        // Solo aggiorna se diverso per evitare re-render inutili
+        if (detectedLocale !== locale) {
+          setLocale(detectedLocale);
+        }
+      });
     }
   }, []);
 
@@ -42,7 +52,8 @@ export function useTranslations() {
   }, [mounted]);
 
   return useMemo(() => {
-    // Use default locale during SSR to avoid hydration mismatch
+    // IMPORTANTE: Usa sempre defaultLocale durante SSR e fino al mount
+    // Questo garantisce che server e client renderizzino lo stesso contenuto iniziale
     const currentLocale = mounted ? locale : defaultLocale;
     const dict = dictionaries[currentLocale] || dictionaries[defaultLocale];
     const getValue = (key: string, fallback?: string): unknown => {

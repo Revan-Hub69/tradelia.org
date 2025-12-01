@@ -35,32 +35,43 @@ export function UserMenu() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      // Prova prima con getSession (più veloce)
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        setUser({
-          email: session.user.email || undefined,
-          name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0],
-        });
-        return;
-      }
-      
-      // Se non c'è sessione, prova con getUser (più lento ma più affidabile)
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setUser({
-          email: user.email || undefined,
-          name: user.user_metadata?.full_name || user.email?.split('@')[0],
-        });
-      } else {
-        // Se non c'è utente, imposta null dopo un breve delay per evitare flash
+      try {
+        // Prova prima con getSession (più veloce)
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          setUser({
+            email: session.user.email || undefined,
+            name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0],
+          });
+          return;
+        }
+        
+        // Se non c'è sessione, prova con getUser (più lento ma più affidabile)
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          setUser({
+            email: user.email || undefined,
+            name: user.user_metadata?.full_name || user.email?.split('@')[0],
+          });
+        } else {
+          // Se non c'è utente, imposta null
+          setUser(null);
+        }
+      } catch (error) {
+        // In caso di errore, imposta null e logga
+        console.error('Error fetching user in UserMenu:', error);
         setUser(null);
       }
     };
 
     // Piccolo delay per permettere sincronizzazione cookie dopo login
+    // Usa requestAnimationFrame per evitare hydration mismatch
     const timeoutId = setTimeout(() => {
-      fetchUser();
+      if (typeof window !== 'undefined') {
+        requestAnimationFrame(() => {
+          fetchUser();
+        });
+      }
     }, 100);
 
     // Ascolta cambiamenti auth
