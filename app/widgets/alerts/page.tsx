@@ -30,7 +30,6 @@ export default function AlertsWidgetPage() {
     '/api/watchlist/alerts',
     {
       cacheTime: 5 * 60 * 1000,
-      revalidateOnFocus: true,
     }
   );
 

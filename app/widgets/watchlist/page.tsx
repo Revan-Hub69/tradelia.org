@@ -26,7 +26,6 @@ export default function WatchlistWidgetPage() {
     '/api/watchlist',
     {
       cacheTime: 5 * 60 * 1000,
-      revalidateOnFocus: true,
     }
   );
 

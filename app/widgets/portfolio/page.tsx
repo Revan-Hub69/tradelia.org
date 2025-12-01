@@ -31,7 +31,6 @@ export default function PortfolioWidgetPage() {
     '/api/portfolio',
     {
       cacheTime: 5 * 60 * 1000, // 5 minutes
-      revalidateOnFocus: true,
     }
   );
 
