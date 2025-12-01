@@ -38,7 +38,7 @@ export default function VotingPage() {
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [selectedProposalId, setSelectedProposalId] = useState<string | null>(null);
 
-  const { data: proposalsData, loading, error, retry, mutate } = useApi<AssetProposal[]>(
+  const { data: proposalsData, loading, error, retry, refetch } = useApi<AssetProposal[]>(
     '/api/dashboard/voting',
     {
       cacheTime: 1 * 60 * 1000, // 1 minute
@@ -48,14 +48,14 @@ export default function VotingPage() {
   // Listen for refresh event
   useEffect(() => {
     const handleRefresh = () => {
-      mutate();
+      refetch();
     };
 
     window.addEventListener('refresh-voting', handleRefresh);
     return () => {
       window.removeEventListener('refresh-voting', handleRefresh);
     };
-  }, [mutate]);
+  }, [refetch]);
 
   const handleVote = async (proposalId: string, vote: 'up' | 'down') => {
     if (!isPro) {
@@ -275,7 +275,7 @@ export default function VotingPage() {
         }}
         proposalId={selectedProposalId || undefined}
         onVoteSuccess={() => {
-          mutate();
+          refetch();
         }}
       />
     </div>
