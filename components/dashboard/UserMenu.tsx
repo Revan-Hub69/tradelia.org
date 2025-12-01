@@ -90,23 +90,38 @@ export function UserMenu() {
   useEffect(() => {
     const fetchUnreadCount = async () => {
       try {
-        const response = await fetch('/api/notifications/list?limit=1&unreadOnly=true');
-        // Se 401, l'utente non è autenticato - non fare nulla
+        const response = await fetch('/api/notifications/list?limit=1&unreadOnly=true', {
+          credentials: 'include',
+        });
+        
+        // Se 401, l'utente non è autenticato - gestisci silenziosamente
         if (response.status === 401) {
           setUnreadCount(0);
           return;
         }
+        
         if (response.ok) {
           const data = await response.json();
           setUnreadCount(data.unreadCount || 0);
+        } else {
+          // Per altri errori, imposta 0 silenziosamente
+          setUnreadCount(0);
         }
       } catch (error) {
-        console.error('Error fetching unread count:', error);
+        // Gestisci errori silenziosamente - non loggare 401 come errore
+        if (error instanceof Error && !error.message.includes('401')) {
+          console.error('Error fetching unread count:', error);
+        }
         setUnreadCount(0);
       }
     };
 
-    fetchUnreadCount();
+    // Aspetta che il componente sia montato prima di fare la richiesta
+    if (typeof window !== 'undefined') {
+      requestAnimationFrame(() => {
+        fetchUnreadCount();
+      });
+    }
   }, []);
 
   // Click outside per chiudere
