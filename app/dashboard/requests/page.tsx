@@ -39,7 +39,7 @@ export default function RequestsPage() {
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null);
 
-  const { data: requestsData, loading, error, retry, mutate } = useApi<AnalysisRequest[]>(
+  const { data: requestsData, loading, error, retry, refetch } = useApi<AnalysisRequest[]>(
     '/api/dashboard/analysis-requests',
     {
       cacheTime: 2 * 60 * 1000, // 2 minutes
@@ -49,14 +49,14 @@ export default function RequestsPage() {
   // Listen for refresh event
   useEffect(() => {
     const handleRefresh = () => {
-      mutate();
+      refetch();
     };
 
     window.addEventListener('refresh-requests', handleRefresh);
     return () => {
       window.removeEventListener('refresh-requests', handleRefresh);
     };
-  }, [mutate]);
+  }, [refetch]);
 
   const filteredRequests = requestsData?.filter((request) => {
     const matchesSearch = searchQuery === '' || 
