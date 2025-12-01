@@ -167,7 +167,7 @@ export function SelectAdvanced({
             {multiSelect && Array.isArray(value) ? (
               value.length > 0 ? (
                 <span className="flex items-center gap-1 flex-wrap">
-                  {getSelectedLabels().slice(0, 2).map((label, idx) => {
+                  {(getSelectedLabels() || []).slice(0, 2).map((label, idx) => {
                     const val = Array.isArray(value) ? value[idx] : '';
                     return (
                       <span
