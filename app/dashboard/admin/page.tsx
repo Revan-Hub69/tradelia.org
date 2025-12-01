@@ -53,29 +53,26 @@ function AdminDashboardContent() {
   const [mounted, setMounted] = useState(false);
   
   // useTranslations deve essere chiamato sempre (regole degli hooks)
-  // ma non useremo il valore fino a quando non siamo montati
   const { locale } = useTranslations();
-  const dashboardHref = mounted ? buildLocalePath(locale, '/dashboard') : '/dashboard';
+  // Usa sempre il locale anche se non montato per evitare errori
+  const dashboardHref = buildLocalePath(locale || 'it', '/dashboard');
 
   useEffect(() => {
     if (!isClient || typeof window === 'undefined') {
       return;
     }
     
-    // Doppio RAF + timeout ridotto per permettere il funzionamento
-    const rafId1 = requestAnimationFrame(() => {
-      const rafId2 = requestAnimationFrame(() => {
-        setTimeout(() => {
-          setMounted(true);
-        }, 50); // Delay ridotto per permettere il funzionamento
-      });
-      return () => cancelAnimationFrame(rafId2);
+    // Single RAF + timeout minimo per permettere il funzionamento immediato
+    const rafId = requestAnimationFrame(() => {
+      setTimeout(() => {
+        setMounted(true);
+      }, 10); // Delay minimo solo per evitare hydration mismatch
     });
     
-    return () => cancelAnimationFrame(rafId1);
+    return () => cancelAnimationFrame(rafId);
   }, [isClient]);
 
-  // Non renderizzare nulla fino a quando non siamo completamente montati
+  // Renderizza loading solo se non siamo ancora montati
   if (!isClient || !mounted) {
     return (
       <div className={styles.adminContainer} suppressHydrationWarning>
@@ -257,10 +254,31 @@ function AdminDashboardContent() {
 /**
  * Admin Dashboard Page - COMPLETELY CLIENT-SIDE, NO HYDRATION
  * Usa NoSSR per prevenire completamente l'hydration mismatch
+ * Best Practices:
+ * - Error boundary per catturare errori client-side
+ * - NoSSR per prevenire hydration mismatch
+ * - Proper error handling
  */
 export default function AdminDashboardPage() {
   return (
-    <ErrorBoundary>
+    <ErrorBoundary
+      fallback={
+        <div className={styles.adminContainer} style={{ minHeight: '100vh', padding: '2rem' }}>
+          <div className="text-center">
+            <h2 className="text-xl font-semibold mb-4 text-text-primary">Errore nel caricamento</h2>
+            <p className="text-text-secondary mb-4">
+              Si è verificato un errore nel caricamento dell'area admin.
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors"
+            >
+              Ricarica la pagina
+            </button>
+          </div>
+        </div>
+      }
+    >
       <NoSSR fallback={
         <div className={styles.adminContainer} suppressHydrationWarning style={{ minHeight: '100vh', width: '100%', overflow: 'hidden' }}>
           <div className="p-8 text-center text-text-secondary">
