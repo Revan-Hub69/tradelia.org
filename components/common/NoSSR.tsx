@@ -28,36 +28,24 @@ export function NoSSR({ children, fallback = null }: NoSSRProps) {
       return;
     }
 
-    // Quadruplo requestAnimationFrame + timeout molto più lungo per assicurarsi che React
-    // abbia completato completamente l'hydration e che tutti gli stili CSS siano caricati
+    // Doppio requestAnimationFrame + timeout per assicurarsi che React
+    // abbia completato l'hydration senza bloccare troppo a lungo
     let timer: NodeJS.Timeout | null = null;
     const rafId1 = requestAnimationFrame(() => {
       const rafId2 = requestAnimationFrame(() => {
-        const rafId3 = requestAnimationFrame(() => {
-          const rafId4 = requestAnimationFrame(() => {
-            timer = setTimeout(() => {
-              // Verifica che il DOM sia completamente pronto
-              if (document.readyState === 'complete') {
+        timer = setTimeout(() => {
+          // Verifica che il DOM sia completamente pronto
+          if (document.readyState === 'complete') {
+            setHasMounted(true);
+          } else {
+            // Se non è pronto, aspetta l'evento load
+            window.addEventListener('load', () => {
+              setTimeout(() => {
                 setHasMounted(true);
-              } else {
-                // Se non è pronto, aspetta l'evento load
-                window.addEventListener('load', () => {
-                  setTimeout(() => {
-                    setHasMounted(true);
-                  }, 300);
-                }, { once: true });
-              }
-            }, 300); // Delay molto più lungo per evitare hydration mismatch
-          });
-          
-          return () => {
-            cancelAnimationFrame(rafId4);
-          };
-        });
-        
-        return () => {
-          cancelAnimationFrame(rafId3);
-        };
+              }, 50);
+            }, { once: true });
+          }
+        }, 100); // Delay bilanciato per evitare hydration mismatch ma permettere funzionamento
       });
       
       return () => {

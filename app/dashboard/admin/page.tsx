@@ -62,15 +62,12 @@ function AdminDashboardContent() {
       return;
     }
     
-    // Triplo RAF + timeout per assicurarsi che React abbia completato completamente l'hydration
+    // Doppio RAF + timeout ridotto per permettere il funzionamento
     const rafId1 = requestAnimationFrame(() => {
       const rafId2 = requestAnimationFrame(() => {
-        const rafId3 = requestAnimationFrame(() => {
-          setTimeout(() => {
-            setMounted(true);
-          }, 200); // Delay più lungo per essere sicuri
-        });
-        return () => cancelAnimationFrame(rafId3);
+        setTimeout(() => {
+          setMounted(true);
+        }, 50); // Delay ridotto per permettere il funzionamento
       });
       return () => cancelAnimationFrame(rafId2);
     });

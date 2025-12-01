@@ -3,6 +3,8 @@
 import type { ReactNode } from 'react';
 import { NoSSR } from '@/components/common/NoSSR';
 import dynamic from 'next/dynamic';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 // Tutti i componenti caricati SOLO sul client - NO SSR, NO HYDRATION
 const DashboardHeader = dynamic(() => import('@/components/dashboard/DashboardHeader').then(mod => ({ default: mod.DashboardHeader })), {
@@ -46,10 +48,18 @@ const LayoutFallback = () => (
  * Usa NoSSR per prevenire completamente l'hydration mismatch
  */
 export default function DashboardLayout({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const [isClient, setIsClient] = useState(false);
+  const isAdminPage = pathname?.includes('/admin');
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
     <NoSSR fallback={<LayoutFallback />}>
       <div suppressHydrationWarning style={{ minHeight: '100vh', width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
-        <DashboardHeader />
+        {!isAdminPage && isClient && <DashboardHeader />}
         <ServiceWorkerProvider />
         <InstallPrompt />
         <DailyLoginCheck />
