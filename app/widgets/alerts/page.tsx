@@ -74,7 +74,7 @@ export default function AlertsWidgetPage() {
       document.removeEventListener('touchstart', handleTouchStart);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [mutate]);
+  }, [refetch]);
 
   const activeAlerts = alerts?.filter(a => a.is_active) || [];
   const triggeredAlerts = alerts?.filter(a => a.is_triggered) || [];

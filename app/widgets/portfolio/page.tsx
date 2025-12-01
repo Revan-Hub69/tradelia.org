@@ -45,7 +45,7 @@ export default function PortfolioWidgetPage() {
     }, 5 * 60 * 1000);
 
     return () => clearInterval(interval);
-  }, [mutate]);
+  }, [refetch]);
 
   // Pull-to-refresh support
   useEffect(() => {
@@ -76,7 +76,7 @@ export default function PortfolioWidgetPage() {
       document.removeEventListener('touchstart', handleTouchStart);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [mutate]);
+  }, [refetch]);
 
   const totalValue = positions?.reduce((sum, p) => sum + (p.total_value || 0), 0) || 0;
   const totalChange = positions?.reduce((sum, p) => sum + (p.change_amount || 0), 0) || 0;

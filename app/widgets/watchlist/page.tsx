@@ -38,7 +38,7 @@ export default function WatchlistWidgetPage() {
     }, 5 * 60 * 1000);
 
     return () => clearInterval(interval);
-  }, [mutate]);
+  }, [refetch]);
 
   // Pull-to-refresh
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function WatchlistWidgetPage() {
       document.removeEventListener('touchstart', handleTouchStart);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [mutate]);
+  }, [refetch]);
 
   return (
     <div className="min-h-screen bg-bg-base p-4">
