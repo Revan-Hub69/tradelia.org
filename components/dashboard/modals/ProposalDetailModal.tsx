@@ -261,7 +261,7 @@ export function ProposalDetailModal({
               {isPro ? (
                 <div className="flex items-center gap-3">
                   <Button
-                    variant={proposal.user_vote === 'up' ? 'primary' : 'outline'}
+                    variant={proposal.user_vote === 'up' ? 'default' : 'outline'}
                     onClick={() => handleVote('up')}
                     disabled={voting || proposal.user_vote === 'up'}
                     className="flex-1 flex items-center justify-center gap-2"
@@ -272,7 +272,7 @@ export function ProposalDetailModal({
                       : t('dashboard.voting.voteUp') || 'Vota Favorevole'}
                   </Button>
                   <Button
-                    variant={proposal.user_vote === 'down' ? 'primary' : 'outline'}
+                    variant={proposal.user_vote === 'down' ? 'default' : 'outline'}
                     onClick={() => handleVote('down')}
                     disabled={voting || proposal.user_vote === 'down'}
                     className="flex-1 flex items-center justify-center gap-2"
