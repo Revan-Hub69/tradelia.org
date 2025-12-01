@@ -23,14 +23,22 @@ export function NoSSR({ children, fallback = null }: NoSSRProps) {
     // IMPORTANTE: Usa un delay più lungo per assicurarsi che React abbia completato
     // completamente l'hydration prima di renderizzare. Questo previene completamente
     // qualsiasi hydration mismatch.
-    const timer = setTimeout(() => {
-      // Doppio setTimeout per essere sicuri che l'hydration sia completata
-      setTimeout(() => {
-        setHasMounted(true);
-      }, 50);
-    }, 0);
+    // Usa requestAnimationFrame per assicurarsi che il DOM sia pronto
+    if (typeof window === 'undefined') {
+      return;
+    }
 
-    return () => clearTimeout(timer);
+    const rafId = requestAnimationFrame(() => {
+      const timer = setTimeout(() => {
+        setHasMounted(true);
+      }, 100); // Delay più lungo per sicurezza
+
+      return () => clearTimeout(timer);
+    });
+
+    return () => {
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   // Non renderizzare NULLA sul server o durante l'hydration

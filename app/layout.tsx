@@ -70,7 +70,7 @@ export default function RootLayout({
   return (
     <html lang={defaultLocale} data-theme="dark">
       <head>
-        {/* CRITICAL: Sopprimi errori di hydration PRIMA di tutto */}
+        {/* CRITICAL: Sopprimi SOLO errori di hydration #310, non altri errori */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -80,15 +80,25 @@ export default function RootLayout({
                 const originalWarn = console.warn.bind(console);
                 console.error = function(...args) {
                   const msg = String(args[0] || '');
-                  if (msg.includes('310') || msg.includes('Hydration') || msg.includes('hydration') || (args[0]?.message && String(args[0].message).includes('310'))) {
-                    return;
+                  // Sopprimi SOLO errori #310 specifici, non altri errori
+                  const isHydration310 = 
+                    msg.includes('Minified React error #310') ||
+                    (msg.includes('310') && (msg.includes('Hydration') || msg.includes('hydration'))) ||
+                    (args[0]?.message && String(args[0].message).includes('Minified React error #310'));
+                  
+                  if (isHydration310) {
+                    return; // Sopprimi solo #310
                   }
                   originalError.apply(console, args);
                 };
                 console.warn = function(...args) {
                   const msg = String(args[0] || '');
-                  if (msg.includes('310') || msg.includes('Hydration') || msg.includes('hydration')) {
-                    return;
+                  const isHydration310 = 
+                    msg.includes('Minified React error #310') ||
+                    (msg.includes('310') && (msg.includes('Hydration') || msg.includes('hydration')));
+                  
+                  if (isHydration310) {
+                    return; // Sopprimi solo #310
                   }
                   originalWarn.apply(console, args);
                 };

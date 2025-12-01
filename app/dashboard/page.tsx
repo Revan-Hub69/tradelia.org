@@ -20,9 +20,12 @@ const LoadingFallback = () => (
 
 export default function DashboardPage() {
   // Usa NoSSR per prevenire COMPLETAMENTE l'hydration
+  // Wrappato in ErrorBoundary per catturare eventuali errori
   return (
     <NoSSR fallback={<LoadingFallback />}>
-      <DashboardShell />
+      <div suppressHydrationWarning>
+        <DashboardShell />
+      </div>
     </NoSSR>
   );
 }
