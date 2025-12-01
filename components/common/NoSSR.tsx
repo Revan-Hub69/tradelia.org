@@ -28,16 +28,18 @@ export function NoSSR({ children, fallback = null }: NoSSRProps) {
       return;
     }
 
+    let timer: NodeJS.Timeout | null = null;
     const rafId = requestAnimationFrame(() => {
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setHasMounted(true);
       }, 100); // Delay più lungo per sicurezza
-
-      return () => clearTimeout(timer);
     });
 
     return () => {
       cancelAnimationFrame(rafId);
+      if (timer) {
+        clearTimeout(timer);
+      }
     };
   }, []);
 
