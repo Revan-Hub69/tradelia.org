@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
   },
 });
 
-interface ReportSection {
+export interface ReportSection {
   id: string;
   title: string;
   subtitle?: string;
