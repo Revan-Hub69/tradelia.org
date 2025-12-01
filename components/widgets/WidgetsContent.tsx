@@ -269,7 +269,7 @@ export function WidgetsContent() {
                   )}
                   {isDesktop && (
                     <Button
-                      variant="primary"
+                      variant="default"
                       size="sm"
                       onClick={() => openWidgetStandalone(widget.url, widget.id)}
                       className="w-full flex items-center justify-center gap-2"

@@ -223,7 +223,7 @@ export function ReportDetailModal({
               className="flex-1"
             >
               <Button
-                variant="primary"
+                variant="default"
                 className="w-full flex items-center justify-center gap-2"
               >
                 <Eye className="w-4 h-4" />

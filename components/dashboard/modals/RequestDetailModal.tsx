@@ -292,7 +292,7 @@ export function RequestDetailModal({
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-border-subtle">
             {request.status === 'completed' && isPro && (
               <Button
-                variant="primary"
+                variant="default"
                 onClick={handleDownload}
                 disabled={downloading}
                 className="flex items-center gap-2"
