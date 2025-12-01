@@ -201,7 +201,12 @@ export function DashboardShell() {
         }}
       />
 
-      <main className={styles.dashboardMain} role="main" aria-label="Dashboard principale">
+      <main 
+        className={styles.dashboardMain} 
+        role="main" 
+        aria-label="Dashboard principale"
+        suppressHydrationWarning
+      >
         <div id="account-banner-slot" role="region" aria-label="Stato account">
           <ErrorBoundary>
             <AccountBanner />
