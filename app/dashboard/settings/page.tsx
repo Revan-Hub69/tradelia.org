@@ -1,12 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { Settings, User, Bell, Shield, CreditCard, Globe } from 'lucide-react';
+import { Settings, User, Bell, Shield, CreditCard, Globe, Building2 } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useApi } from '@/lib/hooks/useApi';
 import { LoadingState } from '@/components/dashboard/LoadingState';
 import { ErrorState } from '@/components/dashboard/ErrorState';
 import { NotificationSettings } from '@/components/notifications/NotificationSettings';
+import { BusinessLogoSettings } from '@/components/settings/BusinessLogoSettings';
+import { ProfileForm } from '@/components/settings/ProfileForm';
+import { PasswordForm } from '@/components/settings/PasswordForm';
+import { PreferencesForm } from '@/components/settings/PreferencesForm';
+import { useIsDesk } from '@/lib/hooks/useUserRole';
 import Link from 'next/link';
 import { buildLocalePath } from '@/lib/i18n/paths';
 
@@ -18,7 +23,8 @@ import { buildLocalePath } from '@/lib/i18n/paths';
  */
 export default function SettingsPage() {
   const { t, locale } = useTranslations();
-  const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'security' | 'billing' | 'preferences'>('profile');
+  const isDesk = useIsDesk();
+  const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'security' | 'billing' | 'preferences' | 'business'>('profile');
 
   const tabs = [
     {
@@ -46,6 +52,12 @@ export default function SettingsPage() {
       label: t('dashboard.settings.tabs.preferences') || 'Preferenze',
       icon: Globe,
     },
+    // Tab Business solo per Desk/Business
+    ...(isDesk ? [{
+      id: 'business' as const,
+      label: t('dashboard.settings.tabs.business') || 'Business',
+      icon: Building2,
+    }] : []),
   ];
 
   return (
@@ -93,10 +105,10 @@ export default function SettingsPage() {
             <h2 className="text-xl font-semibold text-text-primary mb-4">
               {t('dashboard.settings.profile.title') || 'Profilo Utente'}
             </h2>
-            <p className="text-text-secondary">
+            <p className="text-text-secondary mb-6">
               {t('dashboard.settings.profile.description') || 'Gestisci le informazioni del tuo profilo'}
             </p>
-            {/* TODO: Implementare form profilo */}
+            <ProfileForm />
           </div>
         )}
 
@@ -114,10 +126,10 @@ export default function SettingsPage() {
             <h2 className="text-xl font-semibold text-text-primary mb-4">
               {t('dashboard.settings.security.title') || 'Sicurezza'}
             </h2>
-            <p className="text-text-secondary">
+            <p className="text-text-secondary mb-6">
               {t('dashboard.settings.security.description') || 'Gestisci password e sicurezza account'}
             </p>
-            {/* TODO: Implementare gestione password */}
+            <PasswordForm />
           </div>
         )}
 
@@ -140,10 +152,19 @@ export default function SettingsPage() {
             <h2 className="text-xl font-semibold text-text-primary mb-4">
               {t('dashboard.settings.preferences.title') || 'Preferenze'}
             </h2>
-            <p className="text-text-secondary">
+            <p className="text-text-secondary mb-6">
               {t('dashboard.settings.preferences.description') || 'Lingua, tema e altre preferenze'}
             </p>
-            {/* TODO: Implementare preferenze */}
+            <PreferencesForm />
+          </div>
+        )}
+
+        {activeTab === 'business' && isDesk && (
+          <div>
+            <h2 className="text-xl font-semibold text-text-primary mb-4">
+              {t('dashboard.settings.business.title') || 'Impostazioni Business'}
+            </h2>
+            <BusinessLogoSettings />
           </div>
         )}
       </div>

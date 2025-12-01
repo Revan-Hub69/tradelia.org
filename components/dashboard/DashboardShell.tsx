@@ -18,6 +18,8 @@ import { AchievementNotification } from '@/components/gamification/AchievementNo
 import { KeyboardShortcuts } from './KeyboardShortcuts';
 import { useKeyboardShortcuts } from '@/lib/hooks/useKeyboardShortcuts';
 import { useRouter } from 'next/navigation';
+import { WelcomeTour } from '@/components/onboarding/WelcomeTour';
+import { useTranslations } from '@/lib/i18n/use-translations';
 import styles from './dashboard.module.css';
 
 // Lazy load non-critical components
@@ -34,6 +36,7 @@ const HelpSupport = lazy(() =>
  * - Performance optimized with lazy loading
  */
 export function DashboardShell() {
+  const { t } = useTranslations();
   const [liveMessage, setLiveMessage] = useState('');
   const [unlockedAchievement, setUnlockedAchievement] = useState<any>(null);
   const router = useRouter();
@@ -77,10 +80,66 @@ export function DashboardShell() {
     };
   }, []);
 
+  // Welcome Tour steps
+  const tourSteps = [
+    {
+      id: 'dashboard-overview',
+      target: '#modules-view',
+      title: t('onboarding.step1Title') || 'Dashboard Principale',
+      content: t('onboarding.step1Content') || 'Qui puoi vedere tutte le tue attività, report, corsi e statistiche in un unico posto.',
+      position: 'bottom' as const,
+    },
+    {
+      id: 'reports',
+      target: '[href*="/dashboard/reports"], [href*="#reports"]',
+      title: t('onboarding.step2Title') || 'Report Ufficiali',
+      content: t('onboarding.step2Content') || 'Accedi ai report verificabili e alle analisi conformi MiFID II.',
+      position: 'bottom' as const,
+      action: () => {
+        // Scroll to reports section if exists
+        const reportsSection = document.querySelector('[href*="/dashboard/reports"], [href*="#reports"]');
+        if (reportsSection) {
+          reportsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      },
+    },
+    {
+      id: 'education',
+      target: '[href*="/dashboard/education"], [href*="#education"]',
+      title: t('onboarding.step3Title') || 'Corsi Formativi',
+      content: t('onboarding.step3Content') || 'Esplora i percorsi formativi basati su framework AI verificabili.',
+      position: 'bottom' as const,
+    },
+    {
+      id: 'utilities',
+      target: '[data-utility-trigger], [href*="utilities"]',
+      title: t('onboarding.step4Title') || 'Utilities Pro',
+      content: t('onboarding.step4Content') || 'Gestisci portafoglio, alert, trading journal e molto altro (richiede account Pro).',
+      position: 'bottom' as const,
+    },
+    {
+      id: 'settings',
+      target: '[href*="/dashboard/settings"], [href*="#settings"]',
+      title: t('onboarding.step5Title') || 'Impostazioni',
+      content: t('onboarding.step5Content') || 'Personalizza la tua esperienza: profilo, notifiche, preferenze e sicurezza.',
+      position: 'bottom' as const,
+    },
+  ];
+
   return (
     <ErrorBoundary>
       <SkipLink href="#modules-view" />
       <ARIALiveRegion message={liveMessage} />
+      
+      {/* Welcome Tour */}
+      <WelcomeTour
+        steps={tourSteps}
+        storageKey="tradelia-welcome-tour-completed"
+        onComplete={() => {
+          setLiveMessage(t('onboarding.welcome') || 'Tour completato!');
+        }}
+      />
+
       <main className={styles.dashboardMain} role="main" aria-label="Dashboard principale">
         <div id="account-banner-slot" role="region" aria-label="Stato account">
           <ErrorBoundary>

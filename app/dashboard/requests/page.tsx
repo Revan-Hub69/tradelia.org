@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { TrendingUp, Search, Filter, Clock, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { TrendingUp, Search, Filter, Clock, CheckCircle2, XCircle, AlertCircle, Eye, Download } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { useApi } from '@/lib/hooks/useApi';
@@ -9,9 +9,11 @@ import { LoadingState } from '@/components/dashboard/LoadingState';
 import { ErrorState } from '@/components/dashboard/ErrorState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/button';
+import { RequestDetailModal } from '@/components/dashboard/modals/RequestDetailModal';
+import { toast } from '@/components/ui/Toast';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
-import { it as itLocale } from 'date-fns/locale';
+import { it as itLocale, enUS as enLocale } from 'date-fns/locale';
 
 interface AnalysisRequest {
   id: string;
@@ -34,13 +36,27 @@ export default function RequestsPage() {
   const isPro = useIsPro();
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<'all' | 'pending' | 'processing' | 'completed' | 'failed'>('all');
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null);
 
-  const { data: requestsData, loading, error, retry } = useApi<AnalysisRequest[]>(
+  const { data: requestsData, loading, error, retry, mutate } = useApi<AnalysisRequest[]>(
     '/api/dashboard/analysis-requests',
     {
       cacheTime: 2 * 60 * 1000, // 2 minutes
     }
   );
+
+  // Listen for refresh event
+  useEffect(() => {
+    const handleRefresh = () => {
+      mutate();
+    };
+
+    window.addEventListener('refresh-requests', handleRefresh);
+    return () => {
+      window.removeEventListener('refresh-requests', handleRefresh);
+    };
+  }, [mutate]);
 
   const filteredRequests = requestsData?.filter((request) => {
     const matchesSearch = searchQuery === '' || 
@@ -80,12 +96,49 @@ export default function RequestsPage() {
 
   const formatTime = (timestamp: string) => {
     try {
+      const dateLocale = locale === 'it' ? itLocale : enLocale;
       return formatDistanceToNow(new Date(timestamp), {
         addSuffix: true,
-        locale: locale === 'it' ? itLocale : undefined,
+        locale: dateLocale,
       });
     } catch {
       return timestamp;
+    }
+  };
+
+  const handleDownloadResults = async (requestId: string) => {
+    if (!isPro) {
+      toast.error(t('dashboard.requests.proRequired') || 'Account Pro richiesto per il download');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/dashboard/analysis-requests/${requestId}/results`);
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          toast.error(t('dashboard.requests.noResults') || 'Risultati non ancora disponibili');
+        } else {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Errore durante il download');
+        }
+        return;
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `analysis-results-${requestId}-${new Date().toISOString().split('T')[0]}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+
+      toast.success(t('dashboard.requests.downloadSuccess') || 'Download completato con successo!');
+    } catch (error) {
+      console.error('Download error:', error);
+      toast.error(error instanceof Error ? error.message : t('dashboard.requests.downloadError') || 'Errore durante il download');
     }
   };
 
@@ -125,10 +178,7 @@ export default function RequestsPage() {
         {isPro && (
           <Button
             onClick={() => {
-              window.dispatchEvent(new CustomEvent('open-pro-utilities'));
-              setTimeout(() => {
-                window.dispatchEvent(new CustomEvent('select-utility', { detail: 'request-analysis' }));
-              }, 300);
+              window.dispatchEvent(new CustomEvent('open-request-analysis-modal'));
             }}
             className="flex items-center gap-2"
           >
@@ -212,16 +262,44 @@ export default function RequestsPage() {
                     </span>
                   )}
                 </div>
-                {request.status === 'completed' && isPro && (
-                  <button className="text-accent hover:text-accent-hover transition-colors">
-                    {t('dashboard.requests.download') || 'Scarica Risultati'}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setSelectedRequestId(request.id);
+                      setDetailModalOpen(true);
+                    }}
+                    className="flex items-center gap-1 text-accent hover:text-accent-hover transition-colors"
+                    aria-label={t('dashboard.requests.viewDetail') || 'Visualizza dettaglio'}
+                  >
+                    <Eye className="w-4 h-4" />
+                    {t('dashboard.requests.viewDetail') || 'Dettaglio'}
                   </button>
-                )}
+                  {request.status === 'completed' && isPro && (
+                    <button
+                      onClick={() => handleDownloadResults(request.id)}
+                      className="flex items-center gap-1 text-accent hover:text-accent-hover transition-colors"
+                      aria-label={t('dashboard.requests.download') || 'Scarica Risultati'}
+                    >
+                      <Download className="w-4 h-4" />
+                      {t('dashboard.requests.download') || 'Scarica'}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           ))}
         </div>
       )}
+
+      {/* Request Detail Modal */}
+      <RequestDetailModal
+        isOpen={detailModalOpen}
+        onClose={() => {
+          setDetailModalOpen(false);
+          setSelectedRequestId(null);
+        }}
+        requestId={selectedRequestId || undefined}
+      />
     </div>
   );
 }

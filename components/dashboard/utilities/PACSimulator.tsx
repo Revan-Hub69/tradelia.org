@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { TrendingUp, Target, Calendar, DollarSign, BarChart3 } from 'lucide-react';
+import { TrendingUp, Target, Calendar, DollarSign, BarChart3, Save, History, Trash2, X } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { useApi } from '@/lib/hooks/useApi';
+import { toast } from '@/components/ui/Toast';
 import { cn } from '@/lib/utils/cn';
 import { motion } from 'framer-motion';
 
@@ -67,6 +69,17 @@ export function PACSimulator() {
   const [targetAmount, setTargetAmount] = useState('');
   const [targetYears, setTargetYears] = useState('20');
   const [targetReturn, setTargetReturn] = useState('7');
+  const [showHistory, setShowHistory] = useState(false);
+  const [notes, setNotes] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  // Fetch saved simulations
+  const { data: savedSimulations, loading: historyLoading, retry: refreshHistory } = useApi<any[]>(
+    showHistory ? '/api/utilities/pac-simulations' : null,
+    {
+      cacheTime: 5 * 60 * 1000,
+    }
+  );
 
   const requiredInvestment = useMemo(() => {
     const target = parseFloat(targetAmount) || 0;
@@ -329,6 +342,173 @@ export function PACSimulator() {
           </div>
         )}
       </div>
+
+      {/* Save Simulation Button */}
+      {results && (
+        <div className="bg-bg-soft border border-border-subtle rounded-xl p-6 space-y-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-text-secondary block">
+              {t('proUtilities.pacSimulator.notes') || 'Note (opzionale)'}
+            </label>
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder={t('proUtilities.pacSimulator.notesPlaceholder') || 'Aggiungi una nota per questa simulazione...'}
+              className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent resize-none"
+              rows={2}
+            />
+          </div>
+          <button
+            onClick={async () => {
+              setSaving(true);
+              try {
+                const response = await fetch('/api/utilities/pac-simulations', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    monthly_amount: parseFloat(monthlyAmount),
+                    annual_return: parseFloat(annualReturn),
+                    years: parseInt(years),
+                    frequency,
+                    future_value: results.futureValue,
+                    total_invested: results.totalInvested,
+                    total_return: results.totalReturn,
+                    return_percentage: results.returnPercentage,
+                    yearly_data: results.yearlyData,
+                    notes: notes.trim() || null,
+                  }),
+                });
+
+                if (!response.ok) {
+                  throw new Error('Errore salvataggio simulazione');
+                }
+
+                toast.success(t('proUtilities.pacSimulator.saved') || 'Simulazione salvata con successo');
+                setNotes('');
+                if (showHistory) {
+                  refreshHistory();
+                }
+              } catch (error) {
+                console.error('Error saving simulation:', error);
+                toast.error(t('proUtilities.pacSimulator.errors.saveFailed') || 'Errore durante il salvataggio');
+              } finally {
+                setSaving(false);
+              }
+            }}
+            disabled={saving}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors disabled:opacity-50"
+          >
+            <Save className="w-4 h-4" />
+            {saving ? (t('common.saving') || 'Salvataggio...') : (t('proUtilities.pacSimulator.save') || 'Salva Simulazione')}
+          </button>
+        </div>
+      )}
+
+      {/* History Button */}
+      <button
+        onClick={() => setShowHistory(!showHistory)}
+        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-bg-soft border border-border-subtle hover:border-accent/40 text-text-secondary hover:text-text-primary rounded-lg transition-colors"
+      >
+        <History className="w-4 h-4" />
+        {showHistory ? (t('proUtilities.pacSimulator.hideHistory') || 'Nascondi Cronologia') : (t('proUtilities.pacSimulator.showHistory') || 'Mostra Cronologia')}
+      </button>
+
+      {/* History Modal */}
+      {showHistory && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-bg-soft border border-border-subtle rounded-xl p-6 space-y-4"
+        >
+          <div className="flex items-center justify-between">
+            <h4 className="text-lg font-semibold text-text-primary flex items-center gap-2">
+              <History className="w-5 h-5" />
+              {t('proUtilities.pacSimulator.history') || 'Cronologia Simulazioni'}
+            </h4>
+            <button
+              onClick={() => setShowHistory(false)}
+              className="p-1 rounded-lg hover:bg-bg-surface transition-colors"
+            >
+              <X className="w-4 h-4 text-text-tertiary" />
+            </button>
+          </div>
+
+          {historyLoading ? (
+            <div className="text-center py-8 text-text-tertiary">
+              {t('common.loading') || 'Caricamento...'}
+            </div>
+          ) : !savedSimulations || savedSimulations.length === 0 ? (
+            <div className="text-center py-8 text-text-tertiary">
+              <History className="w-12 h-12 mx-auto mb-3 opacity-50" />
+              <p>{t('proUtilities.pacSimulator.noHistory') || 'Nessuna simulazione salvata'}</p>
+            </div>
+          ) : (
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {savedSimulations.map((sim) => (
+                <div
+                  key={sim.id}
+                  className="bg-bg-surface border border-border-subtle rounded-lg p-4 hover:border-accent/40 transition-colors"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex-1">
+                      <div className="text-sm font-medium text-text-primary mb-1">
+                        €{sim.monthly_amount.toLocaleString('it-IT')}/{t('proUtilities.pacSimulator.monthly') || 'mese'} × {sim.years} {t('proUtilities.pacSimulator.years') || 'anni'} @ {sim.annual_return}%
+                      </div>
+                      <div className="text-xs text-text-tertiary">
+                        {new Date(sim.created_at).toLocaleString('it-IT')}
+                      </div>
+                      {sim.notes && (
+                        <div className="text-xs text-text-secondary mt-1 italic">
+                          {sim.notes}
+                        </div>
+                      )}
+                    </div>
+                    <button
+                      onClick={async () => {
+                        if (!confirm(t('proUtilities.pacSimulator.confirmDelete') || 'Eliminare questa simulazione?')) return;
+                        try {
+                          const response = await fetch(`/api/utilities/pac-simulations/${sim.id}`, {
+                            method: 'DELETE',
+                          });
+                          if (!response.ok) throw new Error('Errore eliminazione');
+                          toast.success(t('proUtilities.pacSimulator.deleted') || 'Simulazione eliminata');
+                          refreshHistory();
+                        } catch (error) {
+                          toast.error(t('proUtilities.pacSimulator.errors.deleteFailed') || 'Errore durante l\'eliminazione');
+                        }
+                      }}
+                      className="p-1.5 rounded-lg hover:bg-error/20 text-error transition-colors"
+                      title={t('common.delete') || 'Elimina'}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-sm">
+                    <div>
+                      <div className="text-xs text-text-tertiary">Valore Futuro</div>
+                      <div className="font-bold text-accent">
+                        €{sim.future_value.toLocaleString('it-IT', { maximumFractionDigits: 0 })}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-text-tertiary">Investito</div>
+                      <div className="font-bold text-text-primary">
+                        €{sim.total_invested.toLocaleString('it-IT', { maximumFractionDigits: 0 })}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-text-tertiary">Guadagno</div>
+                      <div className="font-bold text-green-400">
+                        €{sim.total_return.toLocaleString('it-IT', { maximumFractionDigits: 0 })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </motion.div>
+      )}
     </div>
   );
 }

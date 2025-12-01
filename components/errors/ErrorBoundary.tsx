@@ -51,8 +51,20 @@ export class ErrorBoundary extends Component<Props, State> {
       this.props.onError(error, errorInfo);
     }
 
-    // TODO: Send to error tracking service (Sentry, etc.)
-    // logErrorToService(error, errorInfo);
+    // Send to error tracking service
+    if (typeof window !== 'undefined') {
+      import('@/lib/monitoring/error-tracker').then(({ captureException }) => {
+        captureException(error, {
+          component: errorInfo.componentStack?.split('\n')[1]?.trim(),
+          path: window.location.pathname,
+          metadata: {
+            componentStack: errorInfo.componentStack,
+          },
+        });
+      }).catch((err) => {
+        console.warn('Failed to load error tracker:', err);
+      });
+    }
 
     this.setState({
       error,

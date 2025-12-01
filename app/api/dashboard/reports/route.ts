@@ -17,6 +17,27 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status') || 'active';
+    const reportId = searchParams.get('id');
+
+    // Se viene richiesto un report specifico per ID, restituisci quello completo
+    if (reportId) {
+      const { data: report, error } = await supabase
+        .from('reports')
+        .select('*')
+        .eq('id', reportId)
+        .single();
+
+      if (error) {
+        console.error('Error fetching report:', error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+      }
+
+      if (!report) {
+        return NextResponse.json({ error: 'Report not found' }, { status: 404 });
+      }
+
+      return NextResponse.json(report);
+    }
 
     let query = supabase
       .from('reports')

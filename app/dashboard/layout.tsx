@@ -5,6 +5,7 @@ import { ServiceWorkerProvider } from '@/components/notifications/ServiceWorkerP
 import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { DailyLoginCheck } from '@/components/gamification/DailyLoginCheck';
+import { ModalProviders } from '@/components/dashboard/ModalProviders';
 import dynamic from 'next/dynamic';
 
 // Lazy load non-critical components
@@ -30,6 +31,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         <ServiceWorkerProvider />
         <InstallPrompt />
         <ProUtilities />
+        <ModalProviders />
         {children}
       </>
     );
@@ -43,6 +45,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         <ServiceWorkerProvider />
         <InstallPrompt />
         <ProUtilities />
+        <ModalProviders />
         {children}
       </>
     );

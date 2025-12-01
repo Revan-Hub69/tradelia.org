@@ -78,5 +78,10 @@ export function useUserRole(): UserRoleData {
 
 export function useIsPro(): boolean {
   const { role } = useUserRole();
-  return role === "pro" || role === "admin";
+  return role === "pro" || role === "desk" || role === "admin";
+}
+
+export function useIsDesk(): boolean {
+  const { role } = useUserRole();
+  return role === "desk" || role === "admin";
 }

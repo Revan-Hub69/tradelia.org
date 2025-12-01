@@ -1,4 +1,15 @@
 {
+  "common": {
+    "close": "Chiudi",
+    "cancel": "Annulla",
+    "save": "Salva",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "success": "Successo",
+    "sending": "Invio..."
+  },
   "nav": {
     "dashboard": "Dashboard",
     "brokers": "Brokers",
@@ -145,11 +156,27 @@
         "module": "Modulo"
       }
     },
+    "print": {
+      "title": "Stampa e Download",
+      "description": "Stampa e scarica i tuoi report in formato PDF, Excel o CSV",
+      "loading": "Caricamento report...",
+      "errorTitle": "Errore",
+      "errorMessage": "Impossibile caricare i report",
+      "empty": "Nessun report disponibile",
+      "emptyDesc": "Non ci sono report disponibili per la stampa",
+      "proRequired": "Account Pro richiesto per la stampa",
+      "proRequiredDesc": "Account Pro richiesto per stampa e download. Aggiorna il tuo account per sbloccare questa funzionalità.",
+      "print": "Stampa",
+      "download": "Download",
+      "upgrade": "Aggiorna a Pro"
+    },
     "progress": {
       "title": "Il Tuo Progresso",
       "complete": "completato",
       "courses": "Corsi",
       "lessons": "lezioni",
+      "printDownload": "Stampa & Download",
+      "printDownloadDesc": "Stampa o scarica report in vari formati",
       "achievements": "Achievement",
       "noCourses": "Nessun corso in corso",
       "noAchievements": "Nessun achievement sbloccato",
@@ -197,7 +224,8 @@
       "badge": "Dashboard accademica",
       "subtitle": "Framework verificabili",
       "title": "Hub operativo e formazione avanzata",
-      "description": "Report ufficiali, percorsi formativi e richieste on demand restano sincronizzati con i paper metodologici e con le policy MiFID II.",
+      "description": "Report ufficiali, percorsi formativi e richieste on demand restano sincronizzati con i paper metodologici e con le policy",
+      "mifidLink": "conforme MiFID II",
       "ctaPrimary": "Vai alla formazione",
       "supportingText": "Materiale verificabile conforme MiFID II",
       "chips": ["Research open source", "Compliance MiFID II", "Framework AI verificabili"],
@@ -249,7 +277,50 @@
       "items": {
         "reports": {
           "title": "Report ufficiali",
-          "description": "Consulta i report pubblici e le analisi disponibili"
+          "description": "Consulta i report pubblici e le analisi disponibili",
+          "loading": "Caricamento report...",
+          "errorTitle": "Errore",
+          "errorMessage": "Impossibile caricare i report",
+          "search": "Cerca report...",
+          "filterAll": "Tutti",
+          "filterActive": "Attivi",
+          "filterArchived": "Archiviati",
+          "empty": "Nessun report trovato",
+          "emptyDesc": "Non ci sono report disponibili al momento",
+          "view": "Visualizza",
+          "viewFull": "Visualizza Completo",
+          "openFull": "Apri",
+          "download": "PDF",
+          "proRequired": "Account Pro richiesto per il download",
+          "downloadSuccess": "Download completato con successo!",
+          "downloadError": "Errore durante il download",
+          "downloading": "Download...",
+          "share": "Condividi",
+          "shareSuccess": "Condivisione completata!",
+          "linkCopied": "Link copiato negli appunti!",
+          "detailTitle": "Dettaglio Report",
+          "noContent": "Nessun contenuto disponibile",
+          "downloadDescription": "Scegli il formato e le opzioni per il download",
+          "selectReport": "Seleziona Report",
+          "selectPlaceholder": "Seleziona un report...",
+          "selectHint": "Scegli il report che vuoi scaricare",
+          "format": "Formato",
+          "formatHint": "Scegli il formato del file da scaricare",
+          "quality": "Qualità",
+          "qualityStandard": "Standard",
+          "qualityHigh": "Alta",
+          "qualityHint": "Qualità standard per file più piccoli, alta per migliore qualità",
+          "includeCharts": "Includi grafici",
+          "includeChartsHint": "Includi i grafici nel PDF",
+          "downloadProgress": "Download: {progress}%",
+          "downloadComplete": "Download completato!",
+          "downloadForm": "Form download report",
+          "preview": "Anteprima",
+          "noPreview": "Nessuna anteprima disponibile",
+          "togglePreview": "Mostra/Nascondi anteprima",
+          "errors": {
+            "reportRequired": "Seleziona un report da scaricare."
+          }
         },
         "education": {
           "title": "Percorsi formativi",
@@ -283,6 +354,110 @@
           "title": "Area admin",
           "description": "Gestione report e utenti"
         }
+      }
+    },
+    "requests": {
+      "title": "Richieste Analisi",
+      "description": "Visualizza lo stato delle tue richieste di analisi",
+      "loading": "Caricamento richieste...",
+      "errorTitle": "Errore",
+      "errorMessage": "Impossibile caricare le richieste",
+      "search": "Cerca per simbolo o nome asset...",
+      "filterAll": "Tutte",
+      "filterPending": "In Attesa",
+      "filterProcessing": "In Elaborazione",
+      "filterCompleted": "Completate",
+      "filterFailed": "Fallite",
+      "empty": "Nessuna richiesta trovata",
+      "emptyDesc": "Non ci sono richieste di analisi al momento",
+      "newRequest": "Nuova Richiesta",
+      "created": "Creata",
+      "completed": "Completata",
+      "download": "Scarica Risultati",
+      "viewDetail": "Dettaglio",
+      "detailTitle": "Dettaglio Richiesta",
+      "status": {
+        "pending": "In Attesa",
+        "processing": "In Elaborazione",
+        "completed": "Completata",
+        "failed": "Fallita"
+      },
+      "priority": "Priorità",
+      "priorityLow": "Bassa",
+      "priorityNormal": "Normale",
+      "priorityHigh": "Alta",
+      "notes": "Note",
+      "timeline": "Timeline",
+      "timelineCreated": "Richiesta creata",
+      "timelineProcessing": "Elaborazione iniziata",
+      "timelineCompleted": "Elaborazione completata",
+      "modalDescription": "Richiedi un'analisi personalizzata su un asset specifico",
+      "formLabel": "Form richiesta analisi",
+      "symbol": "Simbolo Asset",
+      "symbolHint": "Es: AAPL, MSFT, BTC",
+      "name": "Nome Asset (opzionale)",
+      "notesPlaceholder": "Aggiungi dettagli o contesto per l'analisi...",
+      "submit": "Invia Richiesta",
+      "success": "Richiesta inviata con successo!",
+      "error": "Errore durante l'invio della richiesta",
+      "proRequired": "Account Pro richiesto per il download",
+      "notCompleted": "La richiesta non è ancora completata",
+      "noResults": "Risultati non ancora disponibili",
+      "downloadSuccess": "Download completato con successo!",
+      "downloadError": "Errore durante il download",
+      "downloading": "Download...",
+      "errorOccurred": "Errore durante l'elaborazione",
+      "errors": {
+        "symbolRequired": "Il simbolo asset è obbligatorio.",
+        "invalidSymbol": "Simbolo non valido. Usa solo lettere maiuscole (max 10 caratteri)."
+      }
+    },
+    "voting": {
+      "title": "Votazione Asset",
+      "description": "Vota gli asset che vorresti vedere analizzati dalla community",
+      "loading": "Caricamento proposte...",
+      "errorTitle": "Errore",
+      "errorMessage": "Impossibile caricare le proposte",
+      "search": "Cerca asset...",
+      "empty": "Nessuna proposta trovata",
+      "emptyDesc": "Non ci sono proposte di asset al momento",
+      "propose": "Proponi Asset",
+      "proposeDescription": "Proponi un nuovo asset per l'analisi della community",
+      "formLabel": "Form proposta asset",
+      "symbol": "Simbolo Asset",
+      "symbolHint": "Es: AAPL, MSFT, BTC",
+      "name": "Nome Asset",
+      "description": "Descrizione",
+      "descriptionPlaceholder": "Spiega perché questo asset dovrebbe essere analizzato...",
+      "submit": "Invia Proposta",
+      "proposeSuccess": "Proposta inviata con successo!",
+      "proposeError": "Errore durante l'invio della proposta",
+      "proRequired": "Account Pro richiesto per votare",
+      "proRequiredToVote": "Account Pro richiesto per votare",
+      "voteSuccess": "Voto registrato con successo",
+      "voteError": "Errore durante il voto",
+      "votingClosed": "La votazione è chiusa",
+      "proposalApproved": "Proposta approvata",
+      "votesUp": "Favorevoli",
+      "votesDown": "Contrari",
+      "totalVotes": "Voti Totali",
+      "voteUp": "Vota Favorevole",
+      "voteDown": "Vota Contrario",
+      "votedUp": "Hai votato Favorevole",
+      "votedDown": "Hai votato Contrario",
+      "viewDetail": "Dettaglio",
+      "detailTitle": "Dettaglio Proposta",
+      "created": "Creata",
+      "approvalRate": "Tasso di Approvazione",
+      "status": {
+        "open": "Aperta",
+        "closed": "Chiusa",
+        "approved": "Approvata"
+      },
+      "errors": {
+        "symbolRequired": "Il simbolo asset è obbligatorio.",
+        "invalidSymbol": "Simbolo non valido. Usa solo lettere maiuscole (max 10 caratteri).",
+        "nameRequired": "Il nome asset è obbligatorio."
       }
     }
   },
@@ -446,6 +621,17 @@
       "futureValue": "Valore Futuro (€)",
       "calculate": "Calcola",
       "result": "Risultato",
+      "save": "Salva Calcolo",
+      "notes": "Note",
+      "notesPlaceholder": "Aggiungi una nota per questo calcolo...",
+      "history": "Cronologia Calcoli",
+      "showHistory": "Mostra Cronologia",
+      "hideHistory": "Nascondi Cronologia",
+      "noHistory": "Nessun calcolo salvato",
+      "saved": "Calcolo salvato con successo",
+      "deleted": "Calcolo eliminato",
+      "load": "Carica",
+      "confirmDelete": "Eliminare questo calcolo?",
       "types": {
         "compound": "Interesse Composto",
         "compoundDesc": "Calcola il valore futuro con interesse composto",
@@ -455,7 +641,63 @@
         "futureDesc": "Calcola il valore futuro di un investimento",
         "annuity": "Rendita",
         "annuityDesc": "Calcola il valore futuro di una rendita"
+      },
+      "errors": {
+        "noResult": "Calcola prima un risultato",
+        "saveFailed": "Errore durante il salvataggio",
+        "deleteFailed": "Errore durante l'eliminazione"
       }
+    },
+    "pacSimulator": {
+      "label": "Simulatore PAC",
+      "description": "Simula il tuo Piano di Accumulo Capitale",
+      "title": "Simulatore PAC",
+      "description": "Simula il tuo Piano di Accumulo Capitale e calcola il valore futuro",
+      "simulation": "Simulazione PAC",
+      "monthlyAmount": "Importo Periodico",
+      "frequency": "Frequenza",
+      "monthly": "Mensile",
+      "quarterly": "Trimestrale",
+      "yearly": "Annuale",
+      "annualReturn": "Rendimento Annuo (%)",
+      "years": "Anni",
+      "totalInvested": "Totale Investito",
+      "futureValue": "Valore Futuro",
+      "totalReturn": "Guadagno Totale",
+      "evolution": "Evoluzione nel Tempo",
+      "goalCalculator": "Calcolatore Obiettivo",
+      "goalDescription": "Calcola quanto investire mensilmente per raggiungere un obiettivo",
+      "targetAmount": "Obiettivo (€)",
+      "targetYears": "Anni",
+      "targetReturn": "Rendimento Annuo (%)",
+      "monthlyRequired": "Investimento Mensile",
+      "yearlyRequired": "Investimento Annuo",
+      "totalRequired": "Totale Investito",
+      "save": "Salva Simulazione",
+      "notes": "Note",
+      "notesPlaceholder": "Aggiungi una nota per questa simulazione...",
+      "history": "Cronologia Simulazioni",
+      "showHistory": "Mostra Cronologia",
+      "hideHistory": "Nascondi Cronologia",
+      "noHistory": "Nessuna simulazione salvata",
+      "saved": "Simulazione salvata con successo",
+      "deleted": "Simulazione eliminata",
+      "confirmDelete": "Eliminare questa simulazione?",
+      "errors": {
+        "saveFailed": "Errore durante il salvataggio",
+        "deleteFailed": "Errore durante l'eliminazione"
+      }
+    },
+    "expenseTracker": {
+      "label": "Gestione Spese",
+      "description": "Traccia le tue spese e analizza i consumi",
+      "title": "Gestione Spese",
+      "description": "Traccia le tue spese e analizza i tuoi consumi",
+      "addExpense": "Aggiungi Spesa",
+      "advancedCharts": "Analisi Avanzate",
+      "export": "Esporta CSV",
+      "exportSuccess": "Export completato",
+      "exportError": "Errore durante l'export"
     },
     "alerts": {
       "label": "Sistema di Alert",
@@ -481,7 +723,23 @@
       "inactive": "Inattivo",
       "activate": "Attiva",
       "deactivate": "Disattiva",
-      "delete": "Elimina"
+      "delete": "Elimina",
+      "added": "Alert creato con successo!",
+      "watchlistRequired": "Aggiungi prima l'asset alla watchlist per creare un alert.",
+      "activated": "Alert attivato",
+      "deactivated": "Alert disattivato",
+      "deleted": "Alert eliminato con successo!",
+      "confirmDelete": "Sei sicuro di voler eliminare questo alert?",
+      "errors": {
+        "missingFields": "Compila tutti i campi obbligatori.",
+        "nameTooShort": "Il nome deve contenere almeno 3 caratteri.",
+        "symbolRequired": "Il simbolo è obbligatorio per questo tipo di alert.",
+        "invalidSymbol": "Simbolo non valido. Usa solo lettere maiuscole (max 10 caratteri).",
+        "invalidValue": "Il valore deve essere un numero positivo.",
+        "addError": "Errore durante l'aggiunta dell'alert.",
+        "toggleError": "Errore durante l'aggiornamento dell'alert.",
+        "deleteError": "Errore durante l'eliminazione dell'alert."
+      }
     },
     "downloadPdf": {
       "label": "Scarica PDF",
@@ -502,7 +760,13 @@
     "searchPlaceholder": "Cerca un termine...",
     "noResults": "Nessun termine trovato",
     "relatedTerms": "Termini correlati",
-    "stats": "{count} termini disponibili"
+    "stats": "{count} termini disponibili",
+    "drawer": {
+      "subtitle": "Definizione completa del termine",
+      "academicExplanation": "Spiegazione Accademica",
+      "tradeliaExplanation": "Spiegazione Tradelia AI",
+      "sources": "Fonti Accademiche"
+    }
   },
   "widgets": {
     "title": "Widget",
@@ -510,7 +774,37 @@
     "all": "Tutti",
     "enabled": "Abilitato",
     "disabled": "Disabilitato",
-    "noWidgets": "Nessun widget disponibile in questa categoria"
+    "noWidgets": "Nessun widget disponibile in questa categoria",
+    "mobileWidgets": "Widget Installabili",
+    "mobileWidgetsDesc": "Aggiungi questi widget alla home screen del telefono o apri come finestra standalone su desktop",
+    "dashboardWidgets": "Widget Dashboard",
+    "dashboardWidgetsDesc": "Personalizza i widget nella tua dashboard web",
+    "openForInstall": "Apri per Installare",
+    "openStandalone": "Apri in Finestra Standalone",
+    "openInNewTab": "Apri in Nuova Scheda",
+    "openedStandalone": "Widget aperto in finestra separata",
+    "popupBlocked": "Popup bloccato. Abilita i popup per questo sito.",
+    "installAndroid": "1. Apri il widget in Chrome\n2. Menu (3 punti) → Aggiungi alla schermata home\n3. Seleziona 'Aggiungi widget'",
+    "installIOS": "1. Apri il widget in Safari\n2. Condividi → Aggiungi alla schermata Home\n3. Configura e aggiungi",
+    "installDesktop": "Il widget si aprirà in una finestra standalone. Puoi anche creare un collegamento sul desktop.",
+    "portfolio": {
+      "title": "Portfolio",
+      "empty": "Nessuna posizione nel portafoglio",
+      "more": "+{count} altre posizioni"
+    },
+    "watchlist": {
+      "title": "Watchlist",
+      "empty": "Nessun asset in watchlist",
+      "more": "+{count} altri asset"
+    },
+    "alerts": {
+      "title": "Alert",
+      "active": "attivi",
+      "triggered": "attivati",
+      "empty": "Nessun alert configurato",
+      "more": "+{count} altri alert"
+    },
+    "openDashboard": "Apri Dashboard Completa →"
   },
   "admin": {
     "notifications": {
@@ -583,6 +877,121 @@
         "date": "Data",
         "actions": "Azioni"
       }
+    }
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "description": "Gestisci le tue impostazioni e preferenze",
+    "tabs": {
+      "profile": "Profilo",
+      "notifications": "Notifiche",
+      "security": "Sicurezza",
+      "billing": "Fatturazione",
+      "preferences": "Preferenze",
+      "business": "Business"
+    },
+    "profile": {
+      "title": "Profilo Utente",
+      "description": "Gestisci le informazioni del tuo profilo",
+      "displayName": "Nome Visualizzato",
+      "displayNamePlaceholder": "Il tuo nome pubblico",
+      "displayNameHint": "Questo nome sarà visibile ad altri utenti",
+      "email": "Email",
+      "emailHint": "L'email non può essere modificata qui. Contatta il supporto per cambiarla.",
+      "bio": "Biografia",
+      "bioPlaceholder": "Racconta qualcosa di te...",
+      "characters": "caratteri",
+      "success": "Profilo aggiornato con successo",
+      "error": "Errore durante l'aggiornamento del profilo"
+    },
+    "security": {
+      "title": "Sicurezza",
+      "description": "Gestisci password e sicurezza account",
+      "currentPassword": "Password Attuale",
+      "newPassword": "Nuova Password",
+      "confirmPassword": "Conferma Nuova Password",
+      "passwordHint": "Minimo 8 caratteri",
+      "changePassword": "Cambia Password",
+      "success": "Password cambiata con successo",
+      "error": "Errore durante il cambio password",
+      "errors": {
+        "currentRequired": "Password attuale richiesta",
+        "newRequired": "Nuova password richiesta",
+        "passwordTooShort": "La password deve essere di almeno 8 caratteri",
+        "passwordsDontMatch": "Le password non corrispondono",
+        "samePassword": "La nuova password deve essere diversa dalla corrente"
+      }
+    },
+    "preferences": {
+      "title": "Preferenze",
+      "description": "Lingua, tema e altre preferenze",
+      "language": "Lingua",
+      "languageHint": "Seleziona la lingua dell'interfaccia",
+      "timezone": "Fuso Orario",
+      "timezoneHint": "Seleziona il tuo fuso orario per date e orari corretti",
+      "notifications": "Notifiche",
+      "emailNotifications": "Notifiche Email",
+      "emailNotificationsHint": "Ricevi notifiche via email",
+      "pushNotifications": "Notifiche Push",
+      "pushNotificationsHint": "Ricevi notifiche push sul dispositivo",
+      "success": "Preferenze aggiornate con successo",
+      "error": "Errore durante l'aggiornamento delle preferenze"
+    },
+    "billing": {
+      "title": "Fatturazione",
+      "goToBilling": "Vai alla pagina fatturazione →"
+    },
+    "business": {
+      "title": "Impostazioni Business"
+    },
+      "security": "Sicurezza",
+      "billing": "Fatturazione",
+      "preferences": "Preferenze",
+      "business": "Business"
+    },
+    "profile": {
+      "title": "Profilo Utente",
+      "description": "Gestisci le informazioni del tuo profilo"
+    },
+    "notifications": {
+      "title": "Preferenze Notifiche",
+      "description": "Configura le tue preferenze di notifica"
+    },
+    "security": {
+      "title": "Sicurezza",
+      "description": "Gestisci password e sicurezza account"
+    },
+    "billing": {
+      "title": "Fatturazione",
+      "description": "Gestisci i tuoi metodi di pagamento",
+      "goToBilling": "Vai alla pagina fatturazione →"
+    },
+    "preferences": {
+      "title": "Preferenze",
+      "description": "Lingua, tema e altre preferenze"
+    },
+    "business": {
+      "title": "Impostazioni Business",
+      "description": "Personalizza il tuo account business"
+    },
+    "businessLogo": {
+      "title": "Logo Aziendale Personalizzato",
+      "description": "Carica il tuo logo aziendale per personalizzare i report PDF. Il logo verrà utilizzato al posto del logo Tradelia standard.",
+      "currentLogo": "Logo attuale",
+      "logoHint": "Il logo verrà utilizzato nei report PDF",
+      "remove": "Rimuovi",
+      "uploadLabel": "Carica nuovo logo",
+      "selectFile": "Seleziona File",
+      "upload": "Carica",
+      "uploading": "Caricamento...",
+      "fileHint": "Formati supportati: PNG, JPEG, SVG. Dimensione massima: 2MB",
+      "invalidFile": "File non valido. Carica un'immagine.",
+      "fileTooLarge": "File troppo grande. Massimo 2MB.",
+      "noFile": "Seleziona un file",
+      "uploadSuccess": "Logo caricato con successo!",
+      "uploadError": "Errore durante il caricamento del logo",
+      "removeSuccess": "Logo rimosso con successo",
+      "removeError": "Errore durante la rimozione del logo"
     }
   },
   "pricing": {
@@ -766,5 +1175,147 @@
       "email": "Email",
       "sms": "SMS (Pro)"
     }
+  },
+  "courses": {
+    "detail": {
+      "loading": "Caricamento corso...",
+      "errorTitle": "Errore",
+      "errorMessage": "Corso non trovato",
+      "courseCompleted": "Corso Completato!",
+      "lessons": "Lezioni",
+      "duration": "Durata",
+      "progress": "Progresso",
+      "completed": "Completate",
+      "progressLabel": "Progresso corso",
+      "lessonsTitle": "Lezioni",
+      "minutes": "min",
+      "noLessons": "Nessuna lezione disponibile",
+      "quickActions": "Azioni Rapide",
+      "continueLesson": "Continua Lezione",
+      "startCourse": "Inizia Corso",
+      "downloadMaterials": "Scarica Materiali",
+      "courseInfo": "Informazioni Corso",
+      "difficulty": "Difficoltà",
+      "totalLessons": "Lezioni totali",
+      "estimatedTime": "Tempo stimato",
+      "hours": "ore"
+    }
+  },
+  "lessons": {
+    "loading": "Caricamento lezione...",
+    "errorTitle": "Errore",
+    "errorMessage": "Lezione non trovata",
+    "lesson": "Lezione",
+    "completed": "Completata",
+    "minutes": "min",
+    "timeSpent": "Tempo trascorso",
+    "videoNotSupported": "Il tuo browser non supporta il video",
+    "markComplete": "Segna come Completata",
+    "notes": "Note Personali",
+    "notesPlaceholder": "Aggiungi le tue note personali per questa lezione...",
+    "notesHint": "Le tue note sono private e salvate automaticamente",
+    "saving": "Salvataggio...",
+    "save": "Salva",
+    "navigation": "Navigazione",
+    "noPrevious": "Nessuna lezione precedente",
+    "noNext": "Nessuna lezione successiva",
+    "backToCourse": "Torna al Corso",
+    "lessonInfo": "Informazioni Lezione",
+    "type": "Tipo",
+    "duration": "Durata stimata",
+    "completedAt": "Completata il",
+    "completeSuccess": "Lezione completata!",
+    "completeError": "Errore durante il completamento della lezione",
+    "notesSaved": "Note salvate con successo!",
+    "notesError": "Errore durante il salvataggio delle note"
+  },
+  "onboarding": {
+    "welcome": "Benvenuto in Tradelia!",
+    "welcomeDescription": "Ti guideremo attraverso le funzionalità principali della dashboard",
+    "skip": "Salta tour",
+    "next": "Successivo",
+    "previous": "Precedente",
+    "complete": "Completa",
+    "step1Title": "Dashboard Principale",
+    "step1Content": "Qui puoi vedere tutte le tue attività, report, corsi e statistiche in un unico posto.",
+    "step2Title": "Report Ufficiali",
+    "step2Content": "Accedi ai report verificabili e alle analisi conformi MiFID II.",
+    "step3Title": "Corsi Formativi",
+    "step3Content": "Esplora i percorsi formativi basati su framework AI verificabili.",
+    "step4Title": "Utilities Pro",
+    "step4Content": "Gestisci portafoglio, alert, trading journal e molto altro (richiede account Pro).",
+    "step5Title": "Impostazioni",
+    "step5Content": "Personalizza la tua esperienza: profilo, notifiche, preferenze e sicurezza."
+  },
+  "quiz": {
+    "loading": "Caricamento quiz...",
+    "loadError": "Errore nel caricamento del quiz",
+    "notFound": "Quiz non trovato",
+    "questions": "domande",
+    "passingScore": "Punteggio minimo",
+    "attempt": "Tentativo",
+    "correct": "Corretto",
+    "incorrect": "Non corretto",
+    "submit": "Invia Quiz",
+    "passed": "Superato",
+    "failed": "Non superato",
+    "retry": "Riprova",
+    "submitError": "Errore durante l'invio del quiz"
+  },
+  "courses": {
+    "progress": {
+      "completion": "Completamento",
+      "lessons": "lezioni",
+      "totalTime": "Tempo Totale",
+      "avgPerLesson": "Media",
+      "minutes": "min",
+      "rate": "Velocità",
+      "lessonsPerWeek": "lezioni/settimana",
+      "started": "Iniziato",
+      "completed": "Completato",
+      "progressChart": "Grafico Progresso",
+      "timeline": "Timeline Completamento"
+    }
+  },
+  "materials": {
+    "title": "Materiali Scaricabili",
+    "empty": "Nessun materiale disponibile per questo corso",
+    "download": "Scarica",
+    "downloading": "Download...",
+    "downloadSuccess": "Materiale scaricato con successo!",
+    "downloadError": "Errore durante il download del materiale",
+    "downloaded": "Scaricato"
+  },
+  "notes": {
+    "title": "Le Mie Note",
+    "empty": "Nessuna nota disponibile. Aggiungi note durante le lezioni!",
+    "search": "Cerca nelle note...",
+    "noResults": "Nessuna nota trovata",
+    "export": "Esporta",
+    "updated": "Aggiornato",
+    "saved": "Note salvate con successo!",
+    "saveError": "Errore durante il salvataggio delle note",
+    "deleteConfirm": "Sei sicuro di voler eliminare queste note?",
+    "deleted": "Note eliminate con successo!",
+    "deleteError": "Errore durante l'eliminazione delle note",
+    "exported": "Note esportate con successo!"
+  },
+  "export": {
+    "export": "Esporta",
+    "exporting": "Esportazione...",
+    "success": "Esportazione completata!",
+    "error": "Errore durante l'esportazione",
+    "pdfInfo": "Dati pronti per generazione PDF. Funzionalità in sviluppo.",
+    "portfolio": "Portfolio",
+    "trading-journal": "Trading Journal",
+    "alerts": "Alert"
+  },
+  "table": {
+    "search": "Cerca...",
+    "empty": "Nessun dato disponibile",
+    "showing": "Mostrando",
+    "of": "di",
+    "previous": "Pagina precedente",
+    "next": "Pagina successiva"
   }
 }

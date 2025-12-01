@@ -5,7 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, Plus, X, Edit2, Trash2, CheckCircle2, AlertCircle, Info, AlertTriangle, TrendingUp, BarChart3 } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
-import { supabase } from '@/lib/supabase/client';
+import { toast } from '@/components/ui/Toast';
+import { authenticatedFetch } from '@/lib/api/fetch-client';
+import { useApi } from '@/lib/hooks/useApi';
+import { ExportButton } from './ExportButton';
 
 export type AlertType = 'price' | 'volume' | 'custom';
 export type AlertCondition = 'above' | 'below' | 'equals';
@@ -33,41 +36,61 @@ export function AlertSystem() {
     value: '',
   });
 
-  // Carica alert dal localStorage (per ora, poi possiamo usare Supabase)
-  useEffect(() => {
-    const saved = localStorage.getItem('pro-alerts');
-    if (saved) {
-      try {
-        setAlerts(JSON.parse(saved));
-      } catch {
-        setAlerts([]);
-      }
-    }
-  }, []);
+  // Carica alert da API (usa watchlist_alerts se disponibili, altrimenti fallback a localStorage per migrazione)
+  const { data: alertsData, loading, error, retry } = useApi<Array<{
+    id: string;
+    name?: string;
+    alert_type: string;
+    target_value: number;
+    comparison_operator: string;
+    is_active: boolean;
+    watchlist?: { asset_symbol: string };
+  }>>('/api/watchlist/alerts', {
+    cacheTime: 30 * 1000,
+  });
 
-  // Salva alert nel localStorage
+  // Converti dati API a formato Alert
   useEffect(() => {
-    if (alerts.length > 0) {
-      localStorage.setItem('pro-alerts', JSON.stringify(alerts));
+    if (alertsData) {
+      const converted: Alert[] = alertsData.map((a) => ({
+        id: a.id,
+        name: a.name || `${a.watchlist?.asset_symbol || 'Asset'} ${a.alert_type}`,
+        type: a.alert_type.includes('price') ? 'price' : a.alert_type.includes('volume') ? 'volume' : 'custom',
+        symbol: a.watchlist?.asset_symbol,
+        condition: a.comparison_operator === '>=' || a.comparison_operator === '>' ? 'above' : 
+                   a.comparison_operator === '<=' || a.comparison_operator === '<' ? 'below' : 'equals',
+        value: a.target_value,
+        active: a.is_active,
+        createdAt: new Date().toISOString(),
+      }));
+      setAlerts(converted);
     }
-  }, [alerts]);
+  }, [alertsData]);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     // Validazione input
-    if (!newAlert.name || !newAlert.value) return;
+    if (!newAlert.name || !newAlert.value) {
+      toast.error(t('proUtilities.alerts.errors.missingFields') || 'Compila tutti i campi obbligatori.');
+      return;
+    }
     
     // Sanitizzazione nome: max 100 caratteri, rimuovi HTML
     const name = newAlert.name.trim().slice(0, 100).replace(/<[^>]*>/g, '');
     if (name.length < 3) {
-      // TODO: Mostra errore - nome troppo corto
+      toast.error(t('proUtilities.alerts.errors.nameTooShort') || 'Il nome deve contenere almeno 3 caratteri.');
       return;
     }
     
     // Validazione simbolo se presente
+    if (newAlert.type !== 'custom' && !newAlert.symbol) {
+      toast.error(t('proUtilities.alerts.errors.symbolRequired') || 'Il simbolo è obbligatorio per questo tipo di alert.');
+      return;
+    }
+
     if (newAlert.symbol) {
       const symbol = newAlert.symbol.trim().toUpperCase().slice(0, 10);
       if (!/^[A-Z]{1,10}$/.test(symbol)) {
-        // TODO: Mostra errore - simbolo non valido
+        toast.error(t('proUtilities.alerts.errors.invalidSymbol') || 'Simbolo non valido. Usa solo lettere maiuscole (max 10 caratteri).');
         return;
       }
     }
@@ -75,33 +98,138 @@ export function AlertSystem() {
     // Validazione valore numerico
     const value = parseFloat(newAlert.value);
     if (isNaN(value) || value <= 0) {
-      // TODO: Mostra errore - valore non valido
+      toast.error(t('proUtilities.alerts.errors.invalidValue') || 'Il valore deve essere un numero positivo.');
       return;
     }
-    if (newAlert.type !== 'custom' && !newAlert.symbol) return;
 
-    const alert: Alert = {
-      id: Date.now().toString(),
-      name: newAlert.name,
-      type: newAlert.type,
-      symbol: newAlert.symbol || undefined,
-      condition: newAlert.condition,
-      value: parseFloat(newAlert.value),
-      active: true,
-      createdAt: new Date().toISOString(),
-    };
+    try {
+      let watchlistId: string | null = null;
 
-    setAlerts([...alerts, alert]);
-    setNewAlert({ name: '', type: 'price', symbol: '', condition: 'above', value: '' });
-    setIsAdding(false);
+      // Se l'alert richiede un simbolo, verifica/crea watchlist entry
+      if (newAlert.type !== 'custom' && newAlert.symbol) {
+        const symbol = newAlert.symbol.trim().toUpperCase();
+
+        // Verifica se esiste già una watchlist entry per questo simbolo
+        const watchlistResponse = await authenticatedFetch('/api/watchlist');
+        if (watchlistResponse.ok) {
+          const watchlistData = await watchlistResponse.json();
+          if (Array.isArray(watchlistData)) {
+            const existingEntry = watchlistData.find((entry: any) => 
+              entry.asset_symbol?.toUpperCase() === symbol
+            );
+            if (existingEntry) {
+              watchlistId = existingEntry.id;
+            }
+          }
+        }
+
+        // Se non esiste, creala
+        if (!watchlistId) {
+          const createWatchlistResponse = await authenticatedFetch('/api/watchlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              asset_symbol: symbol,
+              asset_name: symbol, // Nome di default, può essere aggiornato dopo
+              asset_type: 'stock',
+            }),
+          });
+
+          if (!createWatchlistResponse.ok) {
+            const error = await createWatchlistResponse.json();
+            throw new Error(error.error || 'Errore creazione watchlist entry');
+          }
+
+          const newWatchlist = await createWatchlistResponse.json();
+          watchlistId = newWatchlist.id;
+        }
+      }
+
+      // Converti condition in comparison_operator
+      const comparisonOperator = newAlert.condition === 'above' ? '>=' : 
+                                 newAlert.condition === 'below' ? '<=' : '==';
+
+      // Crea alert
+      const alertResponse = await authenticatedFetch('/api/watchlist/alerts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          watchlist_id: watchlistId || null,
+          alert_type: newAlert.type === 'price' ? 'price_above' : 
+                      newAlert.type === 'volume' ? 'volume_above' : 'custom',
+          target_value: value,
+          comparison_operator: comparisonOperator,
+          notify_via_push: true,
+          notify_via_email: false,
+          notify_via_sms: false,
+          notes: name,
+        }),
+      });
+
+      if (!alertResponse.ok) {
+        const error = await alertResponse.json();
+        throw new Error(error.error || 'Errore creazione alert');
+      }
+
+      toast.success(t('proUtilities.alerts.added') || 'Alert creato con successo!');
+      setNewAlert({ name: '', type: 'price', symbol: '', condition: 'above', value: '' });
+      setIsAdding(false);
+      retry();
+    } catch (error) {
+      console.error('Error adding alert:', error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : t('proUtilities.alerts.errors.addError') || 'Errore durante l\'aggiunta dell\'alert.'
+      );
+    }
   };
 
-  const handleToggle = (id: string) => {
-    setAlerts(alerts.map(a => a.id === id ? { ...a, active: !a.active } : a));
+  const handleToggle = async (id: string) => {
+    try {
+      const alert = alerts.find(a => a.id === id);
+      if (!alert) return;
+
+      const response = await authenticatedFetch(`/api/watchlist/alerts?id=${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ is_active: !alert.active }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Errore durante l\'aggiornamento');
+      }
+
+      toast.success(alert.active 
+        ? (t('proUtilities.alerts.deactivated') || 'Alert disattivato')
+        : (t('proUtilities.alerts.activated') || 'Alert attivato'));
+      retry();
+    } catch (error) {
+      console.error('Error toggling alert:', error);
+      toast.error(t('proUtilities.alerts.errors.toggleError') || 'Errore durante l\'aggiornamento dell\'alert.');
+    }
   };
 
-  const handleDelete = (id: string) => {
-    setAlerts(alerts.filter(a => a.id !== id));
+  const handleDelete = async (id: string) => {
+    if (!confirm(t('proUtilities.alerts.confirmDelete') || 'Sei sicuro di voler eliminare questo alert?'))) {
+      return;
+    }
+
+    try {
+      const response = await authenticatedFetch(`/api/watchlist/alerts?id=${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Errore durante l\'eliminazione');
+      }
+
+      toast.success(t('proUtilities.alerts.deleted') || 'Alert eliminato con successo!');
+      retry();
+    } catch (error) {
+      console.error('Error deleting alert:', error);
+      toast.error(t('proUtilities.alerts.errors.deleteError') || 'Errore durante l\'eliminazione dell\'alert.');
+    }
   };
 
   const getAlertIcon = (type: AlertType) => {
@@ -143,13 +271,16 @@ export function AlertSystem() {
             </p>
           </div>
         </div>
-        <button
-          onClick={() => setIsAdding(!isAdding)}
-          className="w-10 h-10 rounded-xl bg-accent hover:bg-accent-hover text-white flex items-center justify-center transition-colors"
-          aria-label={t('proUtilities.alerts.add') || 'Aggiungi alert'}
-        >
-          <Plus className="w-5 h-5" />
-        </button>
+        <div className="flex items-center gap-2">
+          <ExportButton type="alerts" format="csv" />
+          <button
+            onClick={() => setIsAdding(!isAdding)}
+            className="w-10 h-10 rounded-xl bg-accent hover:bg-accent-hover text-white flex items-center justify-center transition-colors"
+            aria-label={t('proUtilities.alerts.add') || 'Aggiungi alert'}
+          >
+            <Plus className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
       {/* Form aggiunta */}

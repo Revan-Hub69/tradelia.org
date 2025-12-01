@@ -145,8 +145,8 @@ export function ProUtilities() {
           // Mostra messaggio upgrade
           return;
         }
-        // TODO: Implementare download PDF
-        toast.info('Funzionalità in arrivo');
+        // Apri modal download PDF
+        window.dispatchEvent(new CustomEvent('open-download-pdf-modal'));
       },
       // requiresPro: true
     },
@@ -160,8 +160,8 @@ export function ProUtilities() {
           // Mostra messaggio upgrade
           return;
         }
-        // TODO: Implementare richiesta analisi
-        toast.info('Funzionalità in arrivo');
+        // Apri modal richiesta analisi
+        window.dispatchEvent(new CustomEvent('open-request-analysis-modal'));
       },
       // requiresPro: true
     },

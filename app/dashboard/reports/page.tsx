@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FileText, Search, Filter, Download, Eye } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
@@ -8,6 +8,8 @@ import { useApi } from '@/lib/hooks/useApi';
 import { LoadingState } from '@/components/dashboard/LoadingState';
 import { ErrorState } from '@/components/dashboard/ErrorState';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { DownloadPDFModal } from '@/components/dashboard/modals/DownloadPDFModal';
+import { ReportDetailModal } from '@/components/dashboard/modals/ReportDetailModal';
 import Link from 'next/link';
 import { buildLocalePath } from '@/lib/i18n/paths';
 
@@ -33,6 +35,10 @@ export default function ReportsPage() {
   const isPro = useIsPro();
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<'all' | 'active' | 'archived'>('all');
+  const [downloadModalOpen, setDownloadModalOpen] = useState(false);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
+  const [previewReportId, setPreviewReportId] = useState<string | null>(null);
 
   const { data: reportsData, loading, error, retry } = useApi<Report[]>(
     '/api/dashboard/reports',
@@ -50,6 +56,23 @@ export default function ReportsPage() {
 
     return matchesSearch && matchesFilter;
   }) || [];
+
+  // Listen for download PDF modal event
+  useEffect(() => {
+    const handleOpenDownloadModal = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const reportId = customEvent.detail?.reportId;
+      if (reportId) {
+        setSelectedReportId(reportId);
+        setDownloadModalOpen(true);
+      }
+    };
+
+    window.addEventListener('open-download-pdf-modal', handleOpenDownloadModal);
+    return () => {
+      window.removeEventListener('open-download-pdf-modal', handleOpenDownloadModal);
+    };
+  }, []);
 
   if (loading) {
     return (
@@ -122,7 +145,7 @@ export default function ReportsPage() {
           {filteredReports.map((report) => (
             <div
               key={report.id}
-              className="bg-bg-soft border border-border-subtle rounded-xl p-6 hover:border-accent/40 transition-all duration-200"
+              className="bg-bg-soft border border-border-subtle rounded-xl p-6 hover:border-accent/40 transition-all duration-200 group"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
@@ -137,28 +160,93 @@ export default function ReportsPage() {
                   {report.report_type}
                 </span>
               </div>
-              <div className="flex items-center justify-between">
-                <Link
-                  href={`/reports/${report.slug}`}
-                  className="flex items-center gap-2 text-sm text-accent hover:text-accent-hover transition-colors"
-                >
-                  <Eye className="w-4 h-4" />
-                  {t('dashboard.reports.view') || 'Visualizza'}
-                </Link>
-                {isPro && (
+
+              {/* Preview Toggle */}
+              {previewReportId === report.id && (
+                <div className="mb-4 p-4 bg-bg-base border border-border-subtle rounded-lg max-h-48 overflow-y-auto">
+                  <p className="text-xs text-text-tertiary mb-2">
+                    {t('dashboard.reports.preview') || 'Anteprima'}
+                  </p>
+                  <p className="text-sm text-text-secondary line-clamp-4">
+                    {report.description || t('dashboard.reports.noPreview') || 'Nessuna anteprima disponibile'}
+                  </p>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <div className="flex items-center gap-2">
                   <button
-                    className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
-                    aria-label={t('dashboard.reports.download') || 'Scarica PDF'}
+                    onClick={() => {
+                      setSelectedReportId(report.id);
+                      setDetailModalOpen(true);
+                    }}
+                    className="flex items-center gap-2 text-sm text-accent hover:text-accent-hover transition-colors"
+                    aria-label={t('dashboard.reports.view') || 'Visualizza dettaglio'}
                   >
-                    <Download className="w-4 h-4" />
-                    {t('dashboard.reports.download') || 'PDF'}
+                    <Eye className="w-4 h-4" />
+                    {t('dashboard.reports.view') || 'Dettaglio'}
                   </button>
-                )}
+                  <button
+                    onClick={() => {
+                      setPreviewReportId(previewReportId === report.id ? null : report.id);
+                    }}
+                    className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
+                    aria-label={t('dashboard.reports.togglePreview') || 'Mostra/Nascondi anteprima'}
+                  >
+                    {previewReportId === report.id ? '▲' : '▼'}
+                  </button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/reports/${report.slug}`}
+                    className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
+                    aria-label={t('dashboard.reports.openFull') || 'Apri report completo'}
+                  >
+                    {t('dashboard.reports.openFull') || 'Apri'}
+                  </Link>
+                  {isPro && (
+                    <button
+                      onClick={() => {
+                        setSelectedReportId(report.id);
+                        setDownloadModalOpen(true);
+                      }}
+                      className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
+                      aria-label={t('dashboard.reports.download') || 'Scarica PDF'}
+                    >
+                      <Download className="w-4 h-4" />
+                      {t('dashboard.reports.download') || 'PDF'}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           ))}
         </div>
       )}
+
+      {/* Download PDF Modal */}
+      <DownloadPDFModal
+        isOpen={downloadModalOpen}
+        onClose={() => {
+          setDownloadModalOpen(false);
+          setSelectedReportId(null);
+        }}
+        reportId={selectedReportId || undefined}
+        onSuccess={() => {
+          setDownloadModalOpen(false);
+          setSelectedReportId(null);
+        }}
+      />
+
+      {/* Report Detail Modal */}
+      <ReportDetailModal
+        isOpen={detailModalOpen}
+        onClose={() => {
+          setDetailModalOpen(false);
+          setSelectedReportId(null);
+        }}
+        reportId={selectedReportId || undefined}
+      />
     </div>
   );
 }

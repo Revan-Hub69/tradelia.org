@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { Wallet, Plus, Trash2, Edit, Filter, Calendar, TrendingDown, PieChart } from 'lucide-react';
+import { Wallet, Plus, Trash2, Edit, Filter, Calendar, TrendingDown, PieChart, Download, BarChart3 } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useApi } from '@/lib/hooks/useApi';
 import { toast } from '@/components/ui/Toast';
 import { cn } from '@/lib/utils/cn';
 import { format, startOfMonth, endOfMonth, subMonths } from 'date-fns';
 import { it as itLocale } from 'date-fns/locale';
+import { ExpenseCharts } from '@/components/charts/ExpenseCharts';
+import { useIsPro } from '@/lib/hooks/useUserRole';
 
 interface Expense {
   id: string;
@@ -26,7 +28,9 @@ interface Expense {
  */
 export function ExpenseTracker() {
   const { t, locale } = useTranslations();
+  const isPro = useIsPro();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showCharts, setShowCharts] = useState(true);
   const [selectedMonth, setSelectedMonth] = useState(format(new Date(), 'yyyy-MM'));
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [newExpense, setNewExpense] = useState({
@@ -217,7 +221,44 @@ export function ExpenseTracker() {
         </button>
       </div>
 
-      {/* Spese per Categoria (Grafico) */}
+      {/* Advanced Charts (Pro only) */}
+      {isPro && expenses.length > 0 && (
+        <div className="bg-bg-soft border border-border-subtle rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-text-primary flex items-center gap-2">
+              <BarChart3 className="w-5 h-5 text-accent" />
+              {t('proUtilities.expenseTracker.advancedCharts') || 'Analisi Avanzate'}
+            </h3>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={async () => {
+                  try {
+                    const response = await fetch(`/api/expenses/export?month=${selectedMonth}&format=csv`);
+                    if (!response.ok) throw new Error('Errore export');
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `spese_${selectedMonth}.csv`;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    toast.success(t('proUtilities.expenseTracker.exportSuccess') || 'Export completato');
+                  } catch (error) {
+                    toast.error(t('proUtilities.expenseTracker.exportError') || 'Errore durante l\'export');
+                  }
+                }}
+                className="flex items-center gap-2 px-3 py-1.5 text-sm bg-bg-surface border border-border-subtle hover:border-accent/40 rounded-lg transition-colors"
+              >
+                <Download className="w-4 h-4" />
+                {t('proUtilities.expenseTracker.export') || 'Esporta CSV'}
+              </button>
+            </div>
+          </div>
+          {showCharts && <ExpenseCharts expenses={expenses} />}
+        </div>
+      )}
+
+      {/* Simple Category Chart (Base) */}
       {Object.keys(stats.byCategory).length > 0 && (
         <div className="bg-bg-soft border border-border-subtle rounded-xl p-6">
           <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">

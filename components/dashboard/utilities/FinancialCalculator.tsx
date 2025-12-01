@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Calculator, TrendingUp, DollarSign, Percent, Calendar, ArrowRight } from 'lucide-react';
+import { Calculator, TrendingUp, DollarSign, Percent, Calendar, ArrowRight, Save, History, Trash2, X } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { useApi } from '@/lib/hooks/useApi';
+import { toast } from '@/components/ui/Toast';
 import { cn } from '@/lib/utils/cn';
 
 type CalculationType = 'compound' | 'present' | 'future' | 'annuity';
@@ -25,6 +27,17 @@ export function FinancialCalculator() {
     futureValue: '',
   });
   const [result, setResult] = useState<number | null>(null);
+  const [showHistory, setShowHistory] = useState(false);
+  const [notes, setNotes] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  // Fetch saved calculations
+  const { data: savedCalculations, loading: historyLoading, retry: refreshHistory } = useApi<any[]>(
+    showHistory ? `/api/utilities/calculations?type=${calcType}` : null,
+    {
+      cacheTime: 5 * 60 * 1000,
+    }
+  );
 
   const calculateCompoundInterest = () => {
     const P = parseFloat(inputs.principal);
@@ -85,6 +98,81 @@ export function FinancialCalculator() {
         calculateAnnuity();
         break;
     }
+  };
+
+  const handleSaveCalculation = async () => {
+    if (result === null) {
+      toast.error(t('proUtilities.calculator.errors.noResult') || 'Calcola prima un risultato');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const response = await fetch('/api/utilities/calculations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          calculation_type: calcType,
+          inputs: {
+            principal: inputs.principal ? parseFloat(inputs.principal) : null,
+            rate: inputs.rate ? parseFloat(inputs.rate) : null,
+            time: inputs.time ? parseFloat(inputs.time) : null,
+            payment: inputs.payment ? parseFloat(inputs.payment) : null,
+            futureValue: inputs.futureValue ? parseFloat(inputs.futureValue) : null,
+          },
+          result,
+          notes: notes.trim() || null,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Errore salvataggio calcolo');
+      }
+
+      toast.success(t('proUtilities.calculator.saved') || 'Calcolo salvato con successo');
+      setNotes('');
+      if (showHistory) {
+        refreshHistory();
+      }
+    } catch (error) {
+      console.error('Error saving calculation:', error);
+      toast.error(t('proUtilities.calculator.errors.saveFailed') || 'Errore durante il salvataggio');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteCalculation = async (id: string) => {
+    if (!confirm(t('proUtilities.calculator.confirmDelete') || 'Eliminare questo calcolo?')) return;
+
+    try {
+      const response = await fetch(`/api/utilities/calculations/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Errore eliminazione calcolo');
+      }
+
+      toast.success(t('proUtilities.calculator.deleted') || 'Calcolo eliminato');
+      refreshHistory();
+    } catch (error) {
+      console.error('Error deleting calculation:', error);
+      toast.error(t('proUtilities.calculator.errors.deleteFailed') || 'Errore durante l\'eliminazione');
+    }
+  };
+
+  const handleLoadCalculation = (calc: any) => {
+    setInputs({
+      principal: calc.inputs.principal?.toString() || '',
+      rate: calc.inputs.rate?.toString() || '',
+      time: calc.inputs.time?.toString() || '',
+      payment: calc.inputs.payment?.toString() || '',
+      futureValue: calc.inputs.futureValue?.toString() || '',
+    });
+    setResult(calc.result);
+    setNotes(calc.notes || '');
+    setShowHistory(false);
   };
 
   const calcTypes = [
@@ -364,14 +452,124 @@ export function FinancialCalculator() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-accent/20 via-accent/10 to-transparent border border-accent/30 rounded-xl p-6"
+          className="bg-gradient-to-br from-accent/20 via-accent/10 to-transparent border border-accent/30 rounded-xl p-6 space-y-4"
         >
-          <p className="text-xs text-text-tertiary mb-2">
-            {t('proUtilities.calculator.result') || 'Risultato'}
-          </p>
-          <p className="text-3xl font-bold text-text-primary">
-            €{result.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </p>
+          <div>
+            <p className="text-xs text-text-tertiary mb-2">
+              {t('proUtilities.calculator.result') || 'Risultato'}
+            </p>
+            <p className="text-3xl font-bold text-text-primary">
+              €{result.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </p>
+          </div>
+          
+          {/* Save Section */}
+          <div className="space-y-2 pt-4 border-t border-accent/20">
+            <label className="text-xs text-text-tertiary block">
+              {t('proUtilities.calculator.notes') || 'Note (opzionale)'}
+            </label>
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder={t('proUtilities.calculator.notesPlaceholder') || 'Aggiungi una nota per questo calcolo...'}
+              className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent resize-none"
+              rows={2}
+            />
+            <button
+              onClick={handleSaveCalculation}
+              disabled={saving}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors disabled:opacity-50"
+            >
+              <Save className="w-4 h-4" />
+              {saving ? (t('common.saving') || 'Salvataggio...') : (t('proUtilities.calculator.save') || 'Salva Calcolo')}
+            </button>
+          </div>
+        </motion.div>
+      )}
+
+      {/* History Button */}
+      <button
+        onClick={() => setShowHistory(!showHistory)}
+        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-bg-soft border border-border-subtle hover:border-accent/40 text-text-secondary hover:text-text-primary rounded-lg transition-colors"
+      >
+        <History className="w-4 h-4" />
+        {showHistory ? (t('proUtilities.calculator.hideHistory') || 'Nascondi Cronologia') : (t('proUtilities.calculator.showHistory') || 'Mostra Cronologia')}
+      </button>
+
+      {/* History Modal */}
+      {showHistory && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-bg-soft border border-border-subtle rounded-xl p-6 space-y-4"
+        >
+          <div className="flex items-center justify-between">
+            <h4 className="text-lg font-semibold text-text-primary flex items-center gap-2">
+              <History className="w-5 h-5" />
+              {t('proUtilities.calculator.history') || 'Cronologia Calcoli'}
+            </h4>
+            <button
+              onClick={() => setShowHistory(false)}
+              className="p-1 rounded-lg hover:bg-bg-surface transition-colors"
+            >
+              <X className="w-4 h-4 text-text-tertiary" />
+            </button>
+          </div>
+
+          {historyLoading ? (
+            <div className="text-center py-8 text-text-tertiary">
+              {t('common.loading') || 'Caricamento...'}
+            </div>
+          ) : !savedCalculations || savedCalculations.length === 0 ? (
+            <div className="text-center py-8 text-text-tertiary">
+              <History className="w-12 h-12 mx-auto mb-3 opacity-50" />
+              <p>{t('proUtilities.calculator.noHistory') || 'Nessun calcolo salvato'}</p>
+            </div>
+          ) : (
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {savedCalculations.map((calc) => (
+                <div
+                  key={calc.id}
+                  className="bg-bg-surface border border-border-subtle rounded-lg p-4 hover:border-accent/40 transition-colors"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex-1">
+                      <div className="text-sm font-medium text-text-primary mb-1">
+                        {calcTypes.find(t => t.id === calc.calculation_type)?.label || calc.calculation_type}
+                      </div>
+                      <div className="text-xs text-text-tertiary">
+                        {new Date(calc.created_at).toLocaleString('it-IT')}
+                      </div>
+                      {calc.notes && (
+                        <div className="text-xs text-text-secondary mt-1 italic">
+                          {calc.notes}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleLoadCalculation(calc)}
+                        className="p-1.5 rounded-lg hover:bg-accent/20 text-accent transition-colors"
+                        title={t('proUtilities.calculator.load') || 'Carica'}
+                      >
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteCalculation(calc.id)}
+                        className="p-1.5 rounded-lg hover:bg-error/20 text-error transition-colors"
+                        title={t('common.delete') || 'Elimina'}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="text-lg font-bold text-accent">
+                    €{calc.result.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </motion.div>
       )}
     </div>

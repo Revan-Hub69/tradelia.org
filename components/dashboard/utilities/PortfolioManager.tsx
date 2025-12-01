@@ -1,10 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Plus, X, Edit2, Trash2, PieChart } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
+import { toast } from '@/components/ui/Toast';
+import { authenticatedFetch } from '@/lib/api/fetch-client';
+import { useApi } from '@/lib/hooks/useApi';
+import { usePriceUpdates } from '@/lib/hooks/usePriceUpdates';
+import { ExportButton } from './ExportButton';
+import { TooltipGlossary } from '@/components/glossary/TooltipGlossary';
+import { getGlossaryTerm } from '@/lib/glossary/terms';
 
 interface Position {
   id: string;
@@ -18,41 +25,74 @@ interface Position {
 
 export function PortfolioManager() {
   const { t } = useTranslations();
-  const [positions, setPositions] = useState<Position[]>([
-    {
-      id: '1',
-      symbol: 'AAPL',
-      quantity: 10,
-      price: 175.50,
-      total: 1755.00,
-      change: 2.30,
-      changePercent: 1.33,
-    },
-    {
-      id: '2',
-      symbol: 'MSFT',
-      quantity: 5,
-      price: 380.25,
-      total: 1901.25,
-      change: -1.50,
-      changePercent: -0.39,
-    },
-  ]);
   const [isAdding, setIsAdding] = useState(false);
-  const [newPosition, setNewPosition] = useState({ symbol: '', quantity: '', price: '' });
+  const [newPosition, setNewPosition] = useState({ symbol: '', quantity: '', price: '', notes: '' });
+  const [portfolioTerm, setPortfolioTerm] = useState<any>(null);
+
+  // Carica termine Portfolio per tooltip
+  useEffect(() => {
+    getGlossaryTerm('Portfolio').then(term => {
+      if (term) setPortfolioTerm(term);
+    });
+  }, []);
+  
+  // Carica posizioni da API
+  const { data: positionsData, loading, error, retry } = useApi<Array<{
+    id: string;
+    symbol: string;
+    quantity: number;
+    price: number;
+    total_value: number;
+    current_price?: number;
+    current_value?: number;
+    change_amount?: number;
+    change_percent?: number;
+  }>>('/api/portfolio', {
+    cacheTime: 30 * 1000, // 30 secondi
+  });
+
+  // Real-time price updates
+  const symbols = (positionsData || []).map((p) => p.symbol);
+  const { pricesMap } = usePriceUpdates({
+    symbols,
+    interval: 30000, // 30 secondi
+    enabled: symbols.length > 0,
+  });
+
+  // Converti dati API a formato Position con aggiornamenti real-time
+  const positions: Position[] = (positionsData || []).map((p) => {
+    const realTimePrice = pricesMap.get(p.symbol);
+    const currentPrice = realTimePrice?.price || p.current_price || p.price;
+    const currentValue = currentPrice * p.quantity;
+    const change = currentValue - p.total_value;
+    const changePercent = p.total_value > 0 ? (change / p.total_value) * 100 : 0;
+
+    return {
+      id: p.id,
+      symbol: p.symbol,
+      quantity: p.quantity,
+      price: p.price,
+      total: p.total_value,
+      change: realTimePrice?.change ?? change,
+      changePercent: realTimePrice?.changePercent ?? changePercent,
+    };
+  });
 
   const totalValue = positions.reduce((sum, pos) => sum + pos.total, 0);
   const totalChange = positions.reduce((sum, pos) => sum + (pos.change * pos.quantity), 0);
   const totalChangePercent = totalValue > 0 ? (totalChange / (totalValue - totalChange)) * 100 : 0;
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     // Validazione input
-    if (!newPosition.symbol || !newPosition.quantity || !newPosition.price) return;
+    if (!newPosition.symbol || !newPosition.quantity || !newPosition.price) {
+      toast.error(t('proUtilities.portfolio.errors.missingFields') || 'Compila tutti i campi obbligatori.');
+      return;
+    }
     
     // Sanitizzazione: simbolo solo lettere maiuscole, max 10 caratteri
     const symbol = newPosition.symbol.trim().toUpperCase().slice(0, 10);
     if (!/^[A-Z]{1,10}$/.test(symbol)) {
-      // TODO: Mostra errore
+      toast.error(t('proUtilities.portfolio.errors.invalidSymbol') || 'Simbolo non valido. Usa solo lettere maiuscole (max 10 caratteri).');
       return;
     }
     
@@ -60,30 +100,84 @@ export function PortfolioManager() {
     const quantity = parseFloat(newPosition.quantity);
     const price = parseFloat(newPosition.price);
     if (isNaN(quantity) || isNaN(price) || quantity <= 0 || price <= 0) {
-      // TODO: Mostra errore
+      toast.error(t('proUtilities.portfolio.errors.invalidNumbers') || 'Quantità e prezzo devono essere numeri positivi.');
       return;
     }
-    
-    const total = Math.round(quantity * price * 100) / 100; // Arrotonda a 2 decimali
 
-    const position: Position = {
-      id: Date.now().toString(),
-      symbol,
-      quantity: Math.round(quantity * 100) / 100,
-      price: Math.round(price * 100) / 100,
-      total,
-      change: 0,
-      changePercent: 0,
-    };
+    try {
+      const response = await authenticatedFetch('/api/portfolio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          symbol,
+          quantity,
+          price,
+          notes: newPosition.notes || null,
+        }),
+      });
 
-    setPositions([...positions, position]);
-    setNewPosition({ symbol: '', quantity: '', price: '' });
-    setIsAdding(false);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Errore durante la creazione');
+      }
+
+      toast.success(t('proUtilities.portfolio.added') || 'Posizione aggiunta con successo!');
+      setNewPosition({ symbol: '', quantity: '', price: '', notes: '' });
+      setIsAdding(false);
+      retry(); // Ricarica posizioni
+    } catch (error) {
+      console.error('Error adding position:', error);
+      toast.error(t('proUtilities.portfolio.errors.addError') || 'Errore durante l\'aggiunta della posizione.');
+    }
   };
 
-  const handleDelete = (id: string) => {
-    setPositions(positions.filter(p => p.id !== id));
+  const handleDelete = async (id: string) => {
+    if (!confirm(t('proUtilities.portfolio.confirmDelete') || 'Sei sicuro di voler eliminare questa posizione?'))) {
+      return;
+    }
+
+    try {
+      const response = await authenticatedFetch(`/api/portfolio/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Errore durante l\'eliminazione');
+      }
+
+      toast.success(t('proUtilities.portfolio.deleted') || 'Posizione eliminata con successo!');
+      retry(); // Ricarica posizioni
+    } catch (error) {
+      console.error('Error deleting position:', error);
+      toast.error(t('proUtilities.portfolio.errors.deleteError') || 'Errore durante l\'eliminazione della posizione.');
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center py-12 text-text-tertiary">
+          {t('proUtilities.portfolio.loading') || 'Caricamento portfolio...'}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center py-12">
+          <p className="text-red-400 mb-4">{t('proUtilities.portfolio.error') || 'Errore nel caricamento del portfolio'}</p>
+          <button
+            onClick={retry}
+            className="px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg text-sm"
+          >
+            {t('proUtilities.portfolio.retry') || 'Riprova'}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -103,13 +197,16 @@ export function PortfolioManager() {
               </p>
             </div>
           </div>
-          <button
-            onClick={() => setIsAdding(!isAdding)}
-            className="w-10 h-10 rounded-xl bg-accent hover:bg-accent-hover text-white flex items-center justify-center transition-colors"
-            aria-label={t('proUtilities.portfolio.add') || 'Aggiungi posizione'}
-          >
-            <Plus className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <ExportButton type="portfolio" format="csv" />
+            <button
+              onClick={() => setIsAdding(!isAdding)}
+              className="w-10 h-10 rounded-xl bg-accent hover:bg-accent-hover text-white flex items-center justify-center transition-colors"
+              aria-label={t('proUtilities.portfolio.add') || 'Aggiungi posizione'}
+            >
+              <Plus className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -178,6 +275,15 @@ export function PortfolioManager() {
               value={newPosition.price}
               onChange={(e) => setNewPosition({ ...newPosition, price: e.target.value })}
               className="rounded-lg bg-bg-surface border border-border-subtle px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent"
+            />
+          </div>
+          <div>
+            <textarea
+              placeholder={t('proUtilities.portfolio.notes') || 'Note (opzionale)'}
+              value={newPosition.notes}
+              onChange={(e) => setNewPosition({ ...newPosition, notes: e.target.value })}
+              rows={2}
+              className="w-full rounded-lg bg-bg-surface border border-border-subtle px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent"
             />
           </div>
           <div className="flex items-center gap-2">

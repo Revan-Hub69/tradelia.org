@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Database, Trash2, Plus, Edit, Search, RefreshCw, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { Database, Trash2, Plus, Edit, Search, RefreshCw, AlertTriangle, CheckCircle2, FileCode, Play, Loader2 } from 'lucide-react';
 import { useApi } from '@/lib/hooks/useApi';
 import { toast } from '@/components/ui/Toast';
 import { LoadingState } from '@/components/dashboard/LoadingState';
@@ -23,8 +23,12 @@ export function SupabaseManagement() {
   const [limit] = useState(50);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showSqlModal, setShowSqlModal] = useState(false);
   const [editingRecord, setEditingRecord] = useState<any>(null);
   const [newRecord, setNewRecord] = useState<any>({});
+  const [sqlQuery, setSqlQuery] = useState('');
+  const [executingSql, setExecutingSql] = useState(false);
+  const [selectedSqlFile, setSelectedSqlFile] = useState<string | null>(null);
 
   const { data: tablesData, loading: tablesLoading, error: tablesError, retry: retryTables } = useApi<string[]>(
     '/api/admin/supabase/tables',
@@ -131,6 +135,61 @@ export function SupabaseManagement() {
     }
   };
 
+  const handleExecuteSql = async () => {
+    if (!sqlQuery.trim()) {
+      toast.error('Inserisci uno script SQL');
+      return;
+    }
+
+    setExecutingSql(true);
+    try {
+      const response = await fetch('/api/admin/supabase/execute-sql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sql: sqlQuery }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Errore durante l\'esecuzione');
+      }
+
+      toast.success(result.message || 'Script SQL eseguito con successo');
+      setSqlQuery('');
+      setShowSqlModal(false);
+      retryTables();
+      if (selectedTable) {
+        retryData();
+      }
+    } catch (error) {
+      console.error('Error executing SQL:', error);
+      toast.error(error instanceof Error ? error.message : 'Errore durante l\'esecuzione SQL');
+    } finally {
+      setExecutingSql(false);
+    }
+  };
+
+  const handleLoadSqlFile = async (fileName: string) => {
+    try {
+      // Carica file SQL dalla cartella supabase/
+      const response = await fetch(`/supabase/${fileName}`);
+      if (response.ok) {
+        const content = await response.text();
+        setSqlQuery(content);
+        setSelectedSqlFile(fileName);
+      } else {
+        // Fallback: prova a caricare da API se disponibile
+        toast.error('File SQL non trovato. Carica manualmente lo script.');
+      }
+    } catch (error) {
+      console.error('Error loading SQL file:', error);
+      toast.error('Errore durante il caricamento del file SQL');
+    }
+  };
+
   const filteredTables = tablesData?.filter((table) =>
     table.toLowerCase().includes(searchQuery.toLowerCase())
   ) || [];
@@ -158,18 +217,31 @@ export function SupabaseManagement() {
             Visualizza, modifica e gestisci i dati del database Supabase
           </p>
         </div>
-        {selectedTable && (
+        <div className="flex items-center gap-2">
           <button
             onClick={() => {
-              setShowAddModal(true);
-              setNewRecord({});
+              setShowSqlModal(true);
+              setSqlQuery('');
+              setSelectedSqlFile(null);
             }}
-            className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover rounded-lg text-white transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-white transition-colors"
           >
-            <Plus className="w-4 h-4" />
-            Aggiungi Record
+            <FileCode className="w-4 h-4" />
+            Esegui SQL
           </button>
-        )}
+          {selectedTable && (
+            <button
+              onClick={() => {
+                setShowAddModal(true);
+                setNewRecord({});
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover rounded-lg text-white transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Aggiungi Record
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Tables List */}
@@ -447,6 +519,101 @@ export function SupabaseManagement() {
                 className="px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white transition-colors"
               >
                 Salva
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SQL Execution Modal */}
+      {showSqlModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-bg-surface border border-border-subtle rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="p-6 border-b border-border-subtle">
+              <h3 className="text-lg font-semibold text-text-primary flex items-center gap-2">
+                <FileCode className="w-5 h-5 text-purple-400" />
+                Esegui Script SQL
+              </h3>
+              <p className="text-xs text-text-tertiary mt-1">
+                Esegui script SQL su Supabase. Solo comandi sicuri sono permessi.
+              </p>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              {/* SQL Files List */}
+              {sqlFiles?.files && sqlFiles.files.length > 0 && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-text-secondary">
+                    Carica File SQL Disponibili
+                  </label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-40 overflow-y-auto bg-bg-soft rounded-lg p-3">
+                    {sqlFiles.files.map((file) => (
+                      <button
+                        key={file}
+                        onClick={() => handleLoadSqlFile(file)}
+                        className={cn(
+                          'text-left px-3 py-2 rounded text-xs transition-colors',
+                          selectedSqlFile === file
+                            ? 'bg-accent/20 text-accent border border-accent/40'
+                            : 'bg-bg-surface hover:bg-accent/10 text-text-secondary hover:text-text-primary'
+                        )}
+                      >
+                        {file}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* SQL Editor */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-text-secondary">
+                  Script SQL
+                </label>
+                <textarea
+                  value={sqlQuery}
+                  onChange={(e) => setSqlQuery(e.target.value)}
+                  className="w-full h-64 bg-bg-soft border border-border-subtle rounded-lg px-3 py-2 text-sm font-mono text-text-primary focus:outline-none focus:border-accent"
+                  placeholder="-- Inserisci il tuo script SQL qui&#10;-- Esempio: CREATE TABLE test (id UUID PRIMARY KEY);"
+                  spellCheck={false}
+                />
+                <div className="flex items-center gap-2 text-xs text-text-tertiary">
+                  <AlertTriangle className="w-3 h-3" />
+                  <span>
+                    Comandi pericolosi (DROP, TRUNCATE, DELETE, etc.) sono bloccati per sicurezza.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-border-subtle flex items-center justify-end gap-3">
+              <button
+                onClick={() => {
+                  setShowSqlModal(false);
+                  setSqlQuery('');
+                  setSelectedSqlFile(null);
+                }}
+                className="px-4 py-2 rounded-lg bg-bg-soft border border-border-subtle text-text-secondary hover:text-text-primary transition-colors"
+                disabled={executingSql}
+              >
+                Annulla
+              </button>
+              <button
+                onClick={handleExecuteSql}
+                disabled={executingSql || !sqlQuery.trim()}
+                className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                {executingSql ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Esecuzione...
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-4 h-4" />
+                    Esegui
+                  </>
+                )}
               </button>
             </div>
           </div>

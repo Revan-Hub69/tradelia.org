@@ -156,7 +156,7 @@ export default function EducationPage() {
               )}
 
               <Link
-                href={course.slug ? `/courses/${course.slug}` : '#'}
+                href={course.slug ? buildLocalePath(locale, `/courses/${course.slug}`) : '#'}
                 className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors text-sm font-medium"
               >
                 {course.progress === 100 ? (

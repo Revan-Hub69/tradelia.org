@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Vote, Search, TrendingUp, TrendingDown, Users } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Vote, Search, TrendingUp, TrendingDown, Users, Eye } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { useApi } from '@/lib/hooks/useApi';
@@ -9,6 +9,7 @@ import { LoadingState } from '@/components/dashboard/LoadingState';
 import { ErrorState } from '@/components/dashboard/ErrorState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/button';
+import { ProposalDetailModal } from '@/components/dashboard/modals/ProposalDetailModal';
 import { toast } from '@/components/ui/Toast';
 import Link from 'next/link';
 
@@ -34,13 +35,27 @@ export default function VotingPage() {
   const { t, locale } = useTranslations();
   const isPro = useIsPro();
   const [searchQuery, setSearchQuery] = useState('');
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedProposalId, setSelectedProposalId] = useState<string | null>(null);
 
-  const { data: proposalsData, loading, error, retry } = useApi<AssetProposal[]>(
+  const { data: proposalsData, loading, error, retry, mutate } = useApi<AssetProposal[]>(
     '/api/dashboard/voting',
     {
       cacheTime: 1 * 60 * 1000, // 1 minute
     }
   );
+
+  // Listen for refresh event
+  useEffect(() => {
+    const handleRefresh = () => {
+      mutate();
+    };
+
+    window.addEventListener('refresh-voting', handleRefresh);
+    return () => {
+      window.removeEventListener('refresh-voting', handleRefresh);
+    };
+  }, [mutate]);
 
   const handleVote = async (proposalId: string, vote: 'up' | 'down') => {
     if (!isPro) {
@@ -114,8 +129,7 @@ export default function VotingPage() {
         {isPro && (
           <Button
             onClick={() => {
-              // TODO: Apri modal per proporre nuovo asset
-              toast.info(t('dashboard.voting.proposeComingSoon') || 'Funzionalità in arrivo');
+              window.dispatchEvent(new CustomEvent('open-propose-asset-modal'));
             }}
             className="flex items-center gap-2"
           >
@@ -200,44 +214,70 @@ export default function VotingPage() {
                     </span>
                   </div>
                 </div>
-                {isPro && proposal.status === 'open' && (
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleVote(proposal.id, 'up')}
-                      disabled={proposal.user_vote === 'up'}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                        proposal.user_vote === 'up'
-                          ? 'bg-green-500/20 text-green-400 border border-green-500/40'
-                          : 'bg-bg-surface border border-border-subtle text-text-secondary hover:text-text-primary hover:border-green-500/40'
-                      }`}
-                    >
-                      <TrendingUp className="w-4 h-4 inline mr-1" />
-                      {t('dashboard.voting.voteUp') || 'Favorevole'}
-                    </button>
-                    <button
-                      onClick={() => handleVote(proposal.id, 'down')}
-                      disabled={proposal.user_vote === 'down'}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                        proposal.user_vote === 'down'
-                          ? 'bg-red-500/20 text-red-400 border border-red-500/40'
-                          : 'bg-bg-surface border border-border-subtle text-text-secondary hover:text-text-primary hover:border-red-500/40'
-                      }`}
-                    >
-                      <TrendingDown className="w-4 h-4 inline mr-1" />
-                      {t('dashboard.voting.voteDown') || 'Contrario'}
-                    </button>
-                  </div>
-                )}
-                {!isPro && (
-                  <div className="px-3 py-1.5 bg-amber-500/20 border border-amber-500/40 rounded text-xs text-amber-300">
-                    {t('dashboard.voting.proRequired') || 'Pro richiesto'}
-                  </div>
-                )}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setSelectedProposalId(proposal.id);
+                      setDetailModalOpen(true);
+                    }}
+                    className="flex items-center gap-1 text-accent hover:text-accent-hover transition-colors text-sm"
+                    aria-label={t('dashboard.voting.viewDetail') || 'Visualizza dettaglio'}
+                  >
+                    <Eye className="w-4 h-4" />
+                    {t('dashboard.voting.viewDetail') || 'Dettaglio'}
+                  </button>
+                  {isPro && proposal.status === 'open' && (
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleVote(proposal.id, 'up')}
+                        disabled={proposal.user_vote === 'up'}
+                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                          proposal.user_vote === 'up'
+                            ? 'bg-green-500/20 text-green-400 border border-green-500/40'
+                            : 'bg-bg-surface border border-border-subtle text-text-secondary hover:text-text-primary hover:border-green-500/40'
+                        }`}
+                      >
+                        <TrendingUp className="w-4 h-4 inline mr-1" />
+                        {t('dashboard.voting.voteUp') || 'Favorevole'}
+                      </button>
+                      <button
+                        onClick={() => handleVote(proposal.id, 'down')}
+                        disabled={proposal.user_vote === 'down'}
+                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                          proposal.user_vote === 'down'
+                            ? 'bg-red-500/20 text-red-400 border border-red-500/40'
+                            : 'bg-bg-surface border border-border-subtle text-text-secondary hover:text-text-primary hover:border-red-500/40'
+                        }`}
+                      >
+                        <TrendingDown className="w-4 h-4 inline mr-1" />
+                        {t('dashboard.voting.voteDown') || 'Contrario'}
+                      </button>
+                    </div>
+                  )}
+                  {!isPro && (
+                    <div className="px-3 py-1.5 bg-amber-500/20 border border-amber-500/40 rounded text-xs text-amber-300">
+                      {t('dashboard.voting.proRequired') || 'Pro richiesto'}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           ))}
         </div>
       )}
+
+      {/* Proposal Detail Modal */}
+      <ProposalDetailModal
+        isOpen={detailModalOpen}
+        onClose={() => {
+          setDetailModalOpen(false);
+          setSelectedProposalId(null);
+        }}
+        proposalId={selectedProposalId || undefined}
+        onVoteSuccess={() => {
+          mutate();
+        }}
+      />
     </div>
   );
 }

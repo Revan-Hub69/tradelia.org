@@ -62,5 +62,31 @@
       "url": "/dashboard#voting",
       "icons": [{ "src": "/favicon.png", "sizes": "180x180" }]
     }
+  ],
+  "widgets": [
+    {
+      "name": "Portfolio",
+      "short_name": "Portfolio",
+      "description": "Visualizza il tuo portafoglio",
+      "url": "/widgets/portfolio",
+      "icons": [{ "src": "/favicon.png", "sizes": "192x192" }],
+      "screenshots": []
+    },
+    {
+      "name": "Watchlist",
+      "short_name": "Watchlist",
+      "description": "Monitora i tuoi asset preferiti",
+      "url": "/widgets/watchlist",
+      "icons": [{ "src": "/favicon.png", "sizes": "192x192" }],
+      "screenshots": []
+    },
+    {
+      "name": "Alert",
+      "short_name": "Alert",
+      "description": "Vedi i tuoi alert attivi",
+      "url": "/widgets/alerts",
+      "icons": [{ "src": "/favicon.png", "sizes": "192x192" }],
+      "screenshots": []
+    }
   ]
 }
