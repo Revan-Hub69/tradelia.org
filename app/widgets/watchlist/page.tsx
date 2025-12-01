@@ -92,14 +92,14 @@ export default function WatchlistWidgetPage() {
             </div>
           ))}
         </div>
-      ) : !watchlistWithPrices || watchlistWithPrices.length === 0 ? (
+      ) : !watchlist || watchlist.length === 0 ? (
         <div className="text-center py-8 text-text-tertiary">
           <Eye className="w-12 h-12 mx-auto mb-2 opacity-50" />
           <p>{t('widgets.watchlist.empty') || 'Nessun asset in watchlist'}</p>
         </div>
       ) : (
         <div className="space-y-3">
-          {watchlistWithPrices.slice(0, 10).map((item) => (
+          {watchlist.slice(0, 10).map((item) => (
             <div
               key={item.id}
               className="bg-bg-soft border border-border-subtle rounded-lg p-4"
@@ -141,10 +141,10 @@ export default function WatchlistWidgetPage() {
               </div>
             </div>
           ))}
-          {watchlistWithPrices.length > 10 && (
+          {watchlist.length > 10 && (
             <div className="text-center py-2 text-xs text-text-tertiary">
-              {t('widgets.watchlist.more')?.replace('{count}', String(watchlistWithPrices.length - 10)) || 
-                `+${watchlistWithPrices.length - 10} altri asset`}
+              {t('widgets.watchlist.more')?.replace('{count}', String(watchlist.length - 10)) || 
+                `+${watchlist.length - 10} altri asset`}
             </div>
           )}
         </div>
