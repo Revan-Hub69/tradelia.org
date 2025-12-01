@@ -35,23 +35,45 @@ export function UserMenu() {
 
   useEffect(() => {
     const fetchUser = async () => {
+      // Prova prima con getSession (più veloce)
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUser({
+          email: session.user.email || undefined,
+          name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0],
+        });
+        return;
+      }
+      
+      // Se non c'è sessione, prova con getUser (più lento ma più affidabile)
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setUser({
           email: user.email || undefined,
           name: user.user_metadata?.full_name || user.email?.split('@')[0],
         });
+      } else {
+        // Se non c'è utente, imposta null dopo un breve delay per evitare flash
+        setUser(null);
       }
     };
 
-    fetchUser();
+    // Piccolo delay per permettere sincronizzazione cookie dopo login
+    const timeoutId = setTimeout(() => {
+      fetchUser();
+    }, 100);
 
     // Ascolta cambiamenti auth
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
-      fetchUser();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
+        fetchUser();
+      }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      clearTimeout(timeoutId);
+      subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
