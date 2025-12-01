@@ -951,35 +951,6 @@
       "goToBilling": "Go to billing page →"
     },
     "business": {
-      "title": "Business Settings"
-    },
-      "security": "Security",
-      "billing": "Billing",
-      "preferences": "Preferences",
-      "business": "Business"
-    },
-    "profile": {
-      "title": "User Profile",
-      "description": "Manage your profile information"
-    },
-    "notifications": {
-      "title": "Notification Preferences",
-      "description": "Configure your notification preferences"
-    },
-    "security": {
-      "title": "Security",
-      "description": "Manage password and account security"
-    },
-    "billing": {
-      "title": "Billing",
-      "description": "Manage your payment methods",
-      "goToBilling": "Go to billing page →"
-    },
-    "preferences": {
-      "title": "Preferences",
-      "description": "Language, theme and other preferences"
-    },
-    "business": {
       "title": "Business Settings",
       "description": "Customize your business account"
     },

@@ -942,35 +942,6 @@
       "goToBilling": "Vai alla pagina fatturazione →"
     },
     "business": {
-      "title": "Impostazioni Business"
-    },
-      "security": "Sicurezza",
-      "billing": "Fatturazione",
-      "preferences": "Preferenze",
-      "business": "Business"
-    },
-    "profile": {
-      "title": "Profilo Utente",
-      "description": "Gestisci le informazioni del tuo profilo"
-    },
-    "notifications": {
-      "title": "Preferenze Notifiche",
-      "description": "Configura le tue preferenze di notifica"
-    },
-    "security": {
-      "title": "Sicurezza",
-      "description": "Gestisci password e sicurezza account"
-    },
-    "billing": {
-      "title": "Fatturazione",
-      "description": "Gestisci i tuoi metodi di pagamento",
-      "goToBilling": "Vai alla pagina fatturazione →"
-    },
-    "preferences": {
-      "title": "Preferenze",
-      "description": "Lingua, tema e altre preferenze"
-    },
-    "business": {
       "title": "Impostazioni Business",
       "description": "Personalizza il tuo account business"
     },
