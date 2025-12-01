@@ -62,10 +62,10 @@ export function KeyboardShortcuts() {
     },
   ];
 
-  const filteredShortcuts = shortcuts.filter((shortcut) =>
+  const filteredShortcuts = Array.isArray(shortcuts) ? shortcuts.filter((shortcut) =>
     shortcut.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
     shortcut.keys.some((key) => key.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  ) : [];
 
   const shortcutsByCategory = filteredShortcuts.reduce((acc, shortcut) => {
     if (!acc[shortcut.category]) {

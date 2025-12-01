@@ -97,7 +97,7 @@ export const QuickActions = memo(function QuickActions() {
 
   // Filtra azioni in base al ruolo (memoizzato)
   const availableActions = useMemo(
-    () => actions.filter(action => !action.proOnly || isPro),
+    () => Array.isArray(actions) ? actions.filter(action => !action.proOnly || isPro) : [],
     [actions, isPro]
   );
   const visibleActions = useMemo(

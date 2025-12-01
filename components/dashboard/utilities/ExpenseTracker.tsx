@@ -47,10 +47,12 @@ export function ExpenseTracker() {
     }
   );
 
-  const expenses = expensesData || [];
+  // Assicurati che expensesData sia sempre un array
+  const expenses = Array.isArray(expensesData) ? expensesData : [];
 
   // Filtra per categoria
   const filteredExpenses = useMemo(() => {
+    if (!Array.isArray(expenses)) return [];
     if (filterCategory === 'all') return expenses;
     return expenses.filter((e) => e.category === filterCategory);
   }, [expenses, filterCategory]);

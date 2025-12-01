@@ -44,7 +44,8 @@ export const ModuleGrid = memo(function ModuleGrid({ priority }: ModuleGridProps
   );
 
   const filteredModules = useMemo(() => {
-    if (!modulesData) return [];
+    // Assicurati che modulesData sia sempre un array
+    if (!modulesData || !Array.isArray(modulesData)) return [];
     return priority 
       ? modulesData.filter(m => m.priority === priority)
       : modulesData;
