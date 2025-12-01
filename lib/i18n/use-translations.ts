@@ -24,20 +24,23 @@ export function useTranslations() {
       return;
     }
 
-    // Usa setTimeout per assicurarsi che l'hydration sia completata
-    // prima di aggiornare lo stato
+    // Usa un doppio setTimeout per assicurarsi che l'hydration sia completamente completata
+    // prima di aggiornare lo stato - questo previene hydration mismatch
     const timeoutId = setTimeout(() => {
-      setMounted(true);
-      
-      // Detect locale from window.location only on client
-      // Usa requestAnimationFrame per assicurarsi che il DOM sia pronto
-      requestAnimationFrame(() => {
-        const detectedLocale = window.location.pathname.startsWith("/en") ? "en" : "it";
-        // Solo aggiorna se diverso per evitare re-render inutili
-        if (detectedLocale !== locale) {
-          setLocale(detectedLocale);
-        }
-      });
+      // Secondo setTimeout per essere sicuri che React abbia completato l'hydration
+      setTimeout(() => {
+        setMounted(true);
+        
+        // Detect locale from window.location only on client
+        // Usa requestAnimationFrame per assicurarsi che il DOM sia pronto
+        requestAnimationFrame(() => {
+          const detectedLocale = window.location.pathname.startsWith("/en") ? "en" : "it";
+          // Solo aggiorna se diverso per evitare re-render inutili
+          if (detectedLocale !== locale) {
+            setLocale(detectedLocale);
+          }
+        });
+      }, 100); // Delay più lungo per assicurarsi che l'hydration sia completa
     }, 0);
 
     return () => clearTimeout(timeoutId);
