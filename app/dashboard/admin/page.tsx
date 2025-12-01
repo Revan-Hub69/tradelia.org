@@ -7,7 +7,8 @@ import { FileText, Users, Settings, BarChart3, Bell, Share2, CreditCard, Databas
 import styles from './admin.module.css';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
-import { ClientOnly } from '@/components/common/ClientOnly';
+import { NoSSR } from '@/components/common/NoSSR';
+import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
 // Dynamic imports con ssr: false per evitare hydration mismatch
 const ReportsManagement = dynamic(() => import('@/components/admin/ReportsManagement').then(m => ({ default: m.ReportsManagement })), {
@@ -218,19 +219,24 @@ function AdminDashboardContent() {
 }
 
 /**
- * Admin Dashboard Page - Wrapped in ClientOnly to prevent hydration mismatch
+ * Admin Dashboard Page - COMPLETELY CLIENT-SIDE, NO HYDRATION
+ * Usa NoSSR per prevenire completamente l'hydration mismatch
  */
 export default function AdminDashboardPage() {
   return (
-    <ClientOnly fallback={
-      <div className={styles.adminContainer}>
-        <div className="p-8 text-center text-text-secondary">
-          <BarChart3 className="w-12 h-12 mx-auto mb-4 opacity-50" />
-          <p>Caricamento area admin...</p>
+    <ErrorBoundary>
+      <NoSSR fallback={
+        <div className={styles.adminContainer} suppressHydrationWarning>
+          <div className="p-8 text-center text-text-secondary">
+            <BarChart3 className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            <p>Caricamento area admin...</p>
+          </div>
         </div>
-      </div>
-    }>
-      <AdminDashboardContent />
-    </ClientOnly>
+      }>
+        <div suppressHydrationWarning>
+          <AdminDashboardContent />
+        </div>
+      </NoSSR>
+    </ErrorBoundary>
   );
 }

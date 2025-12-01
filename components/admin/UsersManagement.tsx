@@ -43,10 +43,28 @@ export function UsersManagement({ adminToken }: UsersManagementProps) {
   const [userTypeFilter, setUserTypeFilter] = useState<string>('all');
 
   useEffect(() => {
-    // Esegui fetch solo sul client per evitare hydration mismatch
-    if (!isClient) return;
-    fetchUsers();
+    // IMPORTANTE: Esegui fetch solo sul client e dopo che l'hydration è completata
+    if (!isClient || typeof window === 'undefined') return;
+    
+    // Usa un piccolo delay per assicurarsi che l'hydration sia completata
+    const timer = setTimeout(() => {
+      fetchUsers();
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [roleFilter, userTypeFilter, isClient]);
+
+  // Non renderizzare nulla fino a quando non siamo sul client
+  if (!isClient) {
+    return (
+      <div suppressHydrationWarning>
+        <div className={styles.loadingState}>
+          <div className={styles.spinner} aria-label="Loading users" />
+          <p>Caricamento utenti...</p>
+        </div>
+      </div>
+    );
+  }
 
   const fetchUsers = async () => {
     try {

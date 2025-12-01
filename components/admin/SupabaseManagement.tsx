@@ -32,9 +32,14 @@ export function SupabaseManagement() {
   const [executingSql, setExecutingSql] = useState(false);
   const [selectedSqlFile, setSelectedSqlFile] = useState<string | null>(null);
 
-  // Non renderizzare nulla fino a quando non siamo sul client
+  // IMPORTANTE: Non renderizzare nulla fino a quando non siamo completamente sul client
+  // Usa un delay per assicurarsi che l'hydration sia completata
   if (!isClient) {
-    return <LoadingState message="Caricamento..." />;
+    return (
+      <div suppressHydrationWarning>
+        <LoadingState message="Caricamento..." />
+      </div>
+    );
   }
 
   const { data: tablesData, loading: tablesLoading, error: tablesError, retry: retryTables } = useApi<string[]>(
