@@ -66,10 +66,17 @@ export async function middleware(request: NextRequest) {
     });
 
     // Aggiorna la sessione per sincronizzare i cookie
-    await supabase.auth.getUser();
+    // Non bloccare se c'è un errore, solo logga
+    try {
+      await supabase.auth.getUser();
+    } catch (error) {
+      // Non bloccare il flusso se c'è un errore nella sincronizzazione
+      console.error('Error syncing session in middleware:', error);
+    }
   }
 
   // Handle /dashboard routes - redirect to correct locale
+  // NON fare redirect al login, permettere accesso guest
   if (pathname === "/dashboard") {
     // Check if user is on /en path, redirect to /en/dashboard
     const referer = request.headers.get("referer");

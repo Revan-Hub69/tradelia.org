@@ -17,13 +17,21 @@ const ProUtilities = dynamic(() => import('@/components/dashboard/ProUtilities')
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   try {
     const supabase = await createClient();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+    
+    // Prova a ottenere la sessione, ma non bloccare se fallisce
+    let session = null;
+    try {
+      const { data } = await supabase.auth.getSession();
+      session = data?.session || null;
+    } catch (sessionError) {
+      // Non bloccare se c'è un errore nella sessione
+      console.error('Error getting session in dashboard layout:', sessionError);
+    }
 
     // Permetti accesso anche senza sessione (guest access)
     // Il componente dashboard gestirà cosa mostrare in base alla sessione
     // Non blocchiamo l'accesso, ma permettiamo guest
+    // NON fare redirect al login, anche se non c'è sessione
 
     return (
       <>
@@ -39,6 +47,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     // Se c'è un errore (es. variabili d'ambiente mancanti), logga ma non blocca
     console.error('Error in dashboard layout:', error);
     // Non reindirizziamo, permettiamo comunque l'accesso
+    // NON fare redirect al login anche in caso di errore
     return (
       <>
         <DashboardHeader />

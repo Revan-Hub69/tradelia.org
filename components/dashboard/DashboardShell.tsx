@@ -39,7 +39,29 @@ export function DashboardShell() {
   const { t } = useTranslations();
   const [liveMessage, setLiveMessage] = useState('');
   const [unlockedAchievement, setUnlockedAchievement] = useState<any>(null);
+  const [hasError, setHasError] = useState(false);
   const router = useRouter();
+
+  // Gestisci errori globali
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      console.error('Global error caught:', event.error);
+      setHasError(true);
+    };
+
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      console.error('Unhandled promise rejection:', event.reason);
+      setHasError(true);
+    };
+
+    window.addEventListener('error', handleError);
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+
+    return () => {
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
+  }, []);
 
   // Keyboard shortcuts (WCAG 2.1 SC 2.1.1 - Keyboard)
   useKeyboardShortcuts([
