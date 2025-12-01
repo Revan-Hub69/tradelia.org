@@ -267,8 +267,7 @@ export function SelectAdvanced({
                   </div>
                 ))
               )}
-              </div>
-            )}
+            </div>
           </div>
         )}
       </div>
