@@ -225,140 +225,120 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
 
   // Inject print styles dynamically (Best Practice: Compatible with Next.js build)
   useEffect(() => {
-    const printStyles = `
-      @media print {
-        body * {
-          visibility: hidden;
-        }
-        .glossary-print-container,
-        .glossary-print-container * {
-          visibility: visible;
-        }
-        .glossary-print-container {
-          display: block !important;
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-          background: white;
-          color: #000;
-          padding: 0;
-          margin: 0;
-        }
-        .no-print,
-        button,
-        .backdrop,
-        nav,
-        .print-header-actions {
-          display: none !important;
-        }
-        .print-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 1.5cm 2cm 1cm 2cm;
-          border-bottom: 2px solid #e5e7eb;
-          margin-bottom: 1.5cm;
-          page-break-after: avoid;
-        }
-        .print-logo {
-          height: 40px;
-          width: auto;
-        }
-        .print-header-info {
-          text-align: right;
-          font-size: 10pt;
-          color: #6b7280;
-          line-height: 1.5;
-        }
-        .print-content {
-          padding: 0 2cm;
-          font-size: 11pt;
-          line-height: 1.6;
-          color: #111827;
-        }
-        .print-title {
-          font-size: 24pt;
-          font-weight: 700;
-          color: #111827;
-          margin-bottom: 0.5cm;
-          page-break-after: avoid;
-        }
-        .print-meta {
-          font-size: 9pt;
-          color: #6b7280;
-          margin-bottom: 1cm;
-          padding-bottom: 0.5cm;
-          border-bottom: 1px solid #e5e7eb;
-        }
-        .print-section {
-          margin-bottom: 1.5cm;
-          page-break-inside: avoid;
-        }
-        .print-section-title {
-          font-size: 14pt;
-          font-weight: 600;
-          color: #111827;
-          margin-bottom: 0.5cm;
-          padding-bottom: 0.3cm;
-          border-bottom: 1px solid #d1d5db;
-        }
-        .print-section-content {
-          font-size: 11pt;
-          line-height: 1.7;
-          color: #374151;
-          text-align: justify;
-        }
-        .print-sources {
-          margin-top: 1.5cm;
-          padding-top: 1cm;
-          border-top: 1px solid #e5e7eb;
-          page-break-inside: avoid;
-        }
-        .print-source-item {
-          font-size: 9pt;
-          font-family: 'Courier New', monospace;
-          color: #4b5563;
-          margin-bottom: 0.5cm;
-          padding-left: 1em;
-          text-indent: -1em;
-        }
-        .print-footer {
-          position: fixed;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          padding: 0.5cm 2cm;
-          border-top: 1px solid #e5e7eb;
-          font-size: 8pt;
-          color: #9ca3af;
-          text-align: center;
-          background: white;
-        }
-        @page {
-          size: A4;
-          margin: 2cm;
-        }
-        .print-section,
-        .print-source-item {
-          page-break-inside: avoid;
-        }
-        .print-tags {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.3cm;
-          margin-bottom: 0.5cm;
-        }
-        .print-tag {
-          font-size: 8pt;
-          padding: 0.2cm 0.4cm;
-          background: #f3f4f6;
-          border: 1px solid #d1d5db;
-          border-radius: 3px;
-          color: #4b5563;
-        }
-      }
-    `;
+    const printStyles = [
+      '@media print {',
+      '  body * { visibility: hidden; }',
+      '  .glossary-print-container, .glossary-print-container * { visibility: visible; }',
+      '  .glossary-print-container {',
+      '    display: block !important;',
+      '    position: absolute;',
+      '    left: 0;',
+      '    top: 0;',
+      '    width: 100%;',
+      '    background: white;',
+      '    color: #000;',
+      '    padding: 0;',
+      '    margin: 0;',
+      '  }',
+      '  .no-print, button, .backdrop, nav, .print-header-actions { display: none !important; }',
+      '  .print-header {',
+      '    display: flex;',
+      '    justify-content: space-between;',
+      '    align-items: center;',
+      '    padding: 1.5cm 2cm 1cm 2cm;',
+      '    border-bottom: 2px solid #e5e7eb;',
+      '    margin-bottom: 1.5cm;',
+      '    page-break-after: avoid;',
+      '  }',
+      '  .print-logo { height: 40px; width: auto; }',
+      '  .print-header-info {',
+      '    text-align: right;',
+      '    font-size: 10pt;',
+      '    color: #6b7280;',
+      '    line-height: 1.5;',
+      '  }',
+      '  .print-content {',
+      '    padding: 0 2cm;',
+      '    font-size: 11pt;',
+      '    line-height: 1.6;',
+      '    color: #111827;',
+      '  }',
+      '  .print-title {',
+      '    font-size: 24pt;',
+      '    font-weight: 700;',
+      '    color: #111827;',
+      '    margin-bottom: 0.5cm;',
+      '    page-break-after: avoid;',
+      '  }',
+      '  .print-meta {',
+      '    font-size: 9pt;',
+      '    color: #6b7280;',
+      '    margin-bottom: 1cm;',
+      '    padding-bottom: 0.5cm;',
+      '    border-bottom: 1px solid #e5e7eb;',
+      '  }',
+      '  .print-section {',
+      '    margin-bottom: 1.5cm;',
+      '    page-break-inside: avoid;',
+      '  }',
+      '  .print-section-title {',
+      '    font-size: 14pt;',
+      '    font-weight: 600;',
+      '    color: #111827;',
+      '    margin-bottom: 0.5cm;',
+      '    padding-bottom: 0.3cm;',
+      '    border-bottom: 1px solid #d1d5db;',
+      '  }',
+      '  .print-section-content {',
+      '    font-size: 11pt;',
+      '    line-height: 1.7;',
+      '    color: #374151;',
+      '    text-align: justify;',
+      '  }',
+      '  .print-sources {',
+      '    margin-top: 1.5cm;',
+      '    padding-top: 1cm;',
+      '    border-top: 1px solid #e5e7eb;',
+      '    page-break-inside: avoid;',
+      '  }',
+      '  .print-source-item {',
+      '    font-size: 9pt;',
+      '    font-family: "Courier New", monospace;',
+      '    color: #4b5563;',
+      '    margin-bottom: 0.5cm;',
+      '    padding-left: 1em;',
+      '    text-indent: -1em;',
+      '  }',
+      '  .print-footer {',
+      '    position: fixed;',
+      '    bottom: 0;',
+      '    left: 0;',
+      '    right: 0;',
+      '    padding: 0.5cm 2cm;',
+      '    border-top: 1px solid #e5e7eb;',
+      '    font-size: 8pt;',
+      '    color: #9ca3af;',
+      '    text-align: center;',
+      '    background: white;',
+      '  }',
+      '  @page { size: A4; margin: 2cm; }',
+      '  .print-section, .print-source-item { page-break-inside: avoid; }',
+      '  .print-tags {',
+      '    display: flex;',
+      '    flex-wrap: wrap;',
+      '    gap: 0.3cm;',
+      '    margin-bottom: 0.5cm;',
+      '  }',
+      '  .print-tag {',
+      '    font-size: 8pt;',
+      '    padding: 0.2cm 0.4cm;',
+      '    background: #f3f4f6;',
+      '    border: 1px solid #d1d5db;',
+      '    border-radius: 3px;',
+      '    color: #4b5563;',
+      '  }',
+      '}',
+    ].join('\n');
 
     const styleId = 'glossary-print-styles';
     let styleElement = document.getElementById(styleId) as HTMLStyleElement;
