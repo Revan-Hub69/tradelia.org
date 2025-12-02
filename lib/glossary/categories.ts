@@ -127,6 +127,7 @@ export const GLOSSARY_TAGS = {
   MARKET_MICRO: "market-microstructure",
 
   // Sentiment
+  SENTIMENT: "sentiment",
   FEAR: "fear",
   GREED: "greed",
   POSITIONING: "positioning",
