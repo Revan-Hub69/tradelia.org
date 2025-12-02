@@ -7,6 +7,9 @@ import { generateStructuredData, generateMetadata as genMetadata } from '@/lib/s
 import { defaultLocale } from '@/lib/i18n/config';
 // Importa il suppressor degli errori di hydration PRIMA di tutto
 import '@/lib/utils/suppress-hydration-errors';
+// Importa global error handler
+import '@/lib/utils/global-error-handler';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 const ConditionalHeader = dynamic(() => import('@/components/layout/ConditionalHeader').then(m => ({ default: m.ConditionalHeader })), {
   ssr: false,
@@ -195,24 +198,26 @@ export default function RootLayout({
         <link rel="alternate" hrefLang="x-default" href="https://tradelia.org" />
       </head>
       <body className={inter.className} suppressHydrationWarning>
-        <div className="min-h-screen flex flex-col" suppressHydrationWarning>
-          <HtmlLang />
-          <UnregisterServiceWorker />
-          <div suppressHydrationWarning>
-            {/* Header solo per pagine non-dashboard - le pagine dashboard hanno il loro DashboardHeader */}
-            <ConditionalHeader />
+        <ErrorBoundary>
+          <div className="min-h-screen flex flex-col" suppressHydrationWarning>
+            <HtmlLang />
+            <UnregisterServiceWorker />
+            <div suppressHydrationWarning>
+              {/* Header solo per pagine non-dashboard - le pagine dashboard hanno il loro DashboardHeader */}
+              <ConditionalHeader />
+            </div>
+            {/* IMPORTANTE: Per route dashboard, children è già completamente client-side */}
+            {/* Non c'è bisogno di wrapper aggiuntivi - il layout dashboard gestisce tutto */}
+            <main id="main-content" className="flex-1" tabIndex={-1} suppressHydrationWarning>
+              {children}
+            </main>
+            <div suppressHydrationWarning>
+              <Footer />
+              <LegalConsent />
+              <ToastContainer />
+            </div>
           </div>
-          {/* IMPORTANTE: Per route dashboard, children è già completamente client-side */}
-          {/* Non c'è bisogno di wrapper aggiuntivi - il layout dashboard gestisce tutto */}
-          <main id="main-content" className="flex-1" tabIndex={-1} suppressHydrationWarning>
-            {children}
-          </main>
-          <div suppressHydrationWarning>
-            <Footer />
-            <LegalConsent />
-            <ToastContainer />
-          </div>
-        </div>
+        </ErrorBoundary>
       </body>
     </html>
   );

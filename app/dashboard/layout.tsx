@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { NoSSR } from '@/components/common/NoSSR';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import dynamic from 'next/dynamic';
 
 // Tutti i componenti caricati SOLO sul client - NO SSR, NO HYDRATION
@@ -47,18 +48,32 @@ const LayoutFallback = () => (
  */
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
-    <NoSSR fallback={<LayoutFallback />}>
-      <div suppressHydrationWarning style={{ minHeight: '100vh', width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
-        <DashboardHeader />
-        <ServiceWorkerProvider />
-        <InstallPrompt />
-        <DailyLoginCheck />
-        <ProUtilities />
-        <ModalProviders />
-        <div suppressHydrationWarning style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
-          {children}
+    <ErrorBoundary>
+      <NoSSR fallback={<LayoutFallback />}>
+        <div suppressHydrationWarning style={{ minHeight: '100vh', width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
+          <ErrorBoundary>
+            <DashboardHeader />
+          </ErrorBoundary>
+          <ErrorBoundary>
+            <ServiceWorkerProvider />
+          </ErrorBoundary>
+          <ErrorBoundary>
+            <InstallPrompt />
+          </ErrorBoundary>
+          <ErrorBoundary>
+            <DailyLoginCheck />
+          </ErrorBoundary>
+          <ErrorBoundary>
+            <ProUtilities />
+          </ErrorBoundary>
+          <ErrorBoundary>
+            <ModalProviders />
+          </ErrorBoundary>
+          <div suppressHydrationWarning style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
+            {children}
+          </div>
         </div>
-      </div>
-    </NoSSR>
+      </NoSSR>
+    </ErrorBoundary>
   );
 }
