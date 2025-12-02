@@ -55,8 +55,13 @@ CREATE INDEX IF NOT EXISTS idx_asset_votes_proposal_id ON asset_votes(proposal_i
 CREATE INDEX IF NOT EXISTS idx_asset_votes_user_id ON asset_votes(user_id);
 
 -- Function to update votes count
+-- Security: Set search_path to prevent search path attacks
 CREATE OR REPLACE FUNCTION update_proposal_votes_count()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
 BEGIN
   UPDATE asset_proposals
   SET votes_count = (
@@ -69,7 +74,7 @@ BEGIN
   WHERE id = NEW.proposal_id;
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- Trigger to update votes count
 -- Drop existing trigger if it exists (idempotent)

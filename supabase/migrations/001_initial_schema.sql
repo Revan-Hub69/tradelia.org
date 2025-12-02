@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS schema_migrations (
 ALTER TABLE user_roles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admin_emails ENABLE ROW LEVEL SECURITY;
 ALTER TABLE pdf_customizations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE schema_migrations ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies for user_roles
 -- Drop existing policies if they exist (idempotent)
@@ -110,14 +111,33 @@ CREATE POLICY "Admins can read admin emails"
     )
   );
 
+-- RLS Policies for schema_migrations
+-- Drop existing policy if it exists (idempotent)
+DROP POLICY IF EXISTS "Admins can read schema migrations" ON schema_migrations;
+
+-- Only admins can read schema_migrations
+CREATE POLICY "Admins can read schema migrations"
+  ON schema_migrations FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM admin_emails
+      WHERE email = (SELECT email FROM auth.users WHERE id = auth.uid())
+    )
+  );
+
 -- Function to update updated_at timestamp
+-- Security: Set search_path to prevent search path attacks
 CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
 BEGIN
   NEW.updated_at = NOW();
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- Triggers for updated_at
 -- Drop existing triggers if they exist (idempotent)

@@ -10,6 +10,7 @@
     "supabase:migrate": "node scripts/supabase/migrate.mjs",
     "supabase:list-tables": "node scripts/supabase/list-all-tables.mjs",
     "supabase:cleanup": "node scripts/supabase/cleanup-database.mjs",
+    "supabase:check-project": "node scripts/supabase/check-project.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "node server.js",
