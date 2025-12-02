@@ -528,36 +528,48 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               </div>
             {/* Header - Academic Style */}
             <div className="no-print border-b border-border-subtle bg-bg-surface">
-              {/* Breadcrumb Navigation */}
-              <div className="px-6 pt-4 pb-2">
-                <nav className="flex items-center gap-2 text-xs text-text-tertiary" aria-label="Breadcrumb">
-                  <span className="hover:text-text-secondary">Glossario</span>
+              {/* Breadcrumb Navigation - Improved Spacing and Readability */}
+              <div className="px-4 sm:px-6 pt-3 pb-2">
+                <nav 
+                  className="flex items-center gap-1.5 sm:gap-2 text-xs text-text-tertiary overflow-x-auto" 
+                  aria-label="Breadcrumb" 
+                  style={{ 
+                    scrollbarWidth: 'none', 
+                    msOverflowStyle: 'none',
+                    WebkitScrollbar: { display: 'none' }
+                  }}
+                >
+                  <span className="hover:text-text-secondary whitespace-nowrap flex-shrink-0">Glossario</span>
                   {term.category && (
                     <>
-                      <ChevronRight className="w-3 h-3" aria-hidden="true" />
-                      <span className="text-text-secondary">{term.category}</span>
+                      <ChevronRight className="w-3 h-3 flex-shrink-0 text-text-tertiary/60" aria-hidden="true" />
+                      <span className="text-text-secondary truncate max-w-[120px] sm:max-w-[200px]" title={term.category}>
+                        {term.category}
+                      </span>
                     </>
                   )}
-                  <ChevronRight className="w-3 h-3" aria-hidden="true" />
-                  <span className="text-text-primary font-medium">{term.title}</span>
+                  <ChevronRight className="w-3 h-3 flex-shrink-0 text-text-tertiary/60" aria-hidden="true" />
+                  <span className="text-text-primary font-medium truncate max-w-[180px] sm:max-w-[300px] md:max-w-none" title={term.title}>
+                    {term.title}
+                  </span>
                 </nav>
               </div>
               
-              {/* Title Section */}
-              <div className="flex items-start justify-between px-6 pb-6">
-                <div className="flex items-start gap-4 flex-1">
-                  <div className="w-12 h-12 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 flex items-center justify-center flex-shrink-0">
-                    <GraduationCap className="w-6 h-6 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+              {/* Title Section - Improved Spacing */}
+              <div className="flex items-start justify-between px-4 sm:px-6 pb-4 sm:pb-6">
+                <div className="flex items-start gap-3 sm:gap-4 flex-1 min-w-0">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 flex items-center justify-center flex-shrink-0">
+                    <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400" aria-hidden="true" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h2 id="glossary-drawer-title" className="text-xl font-bold text-text-primary mb-1">
+                    <h2 id="glossary-drawer-title" className="text-lg sm:text-xl font-bold text-text-primary mb-1.5 break-words">
                       {term.title}
                     </h2>
-                    <p id="glossary-drawer-description" className="text-sm text-text-secondary">
+                    <p id="glossary-drawer-description" className="text-xs sm:text-sm text-text-secondary">
                       {term.category && (
                         <span className="inline-flex items-center gap-1.5">
-                          <Layers className="w-3.5 h-3.5 text-text-tertiary" aria-hidden="true" />
-                          <span className="text-text-tertiary">{term.category}</span>
+                          <Layers className="w-3.5 h-3.5 text-text-tertiary flex-shrink-0" aria-hidden="true" />
+                          <span className="text-text-tertiary truncate">{term.category}</span>
                         </span>
                       )}
                     </p>
