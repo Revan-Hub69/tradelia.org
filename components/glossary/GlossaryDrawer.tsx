@@ -144,14 +144,14 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     };
   }, [isOpen, onClose]);
 
-  // Focus trap e navigazione con frecce (Best Practice: WCAG 2.1 Level AA)
+  // Focus trap con Tab (Best Practice: WCAG 2.1 Level AA)
   useEffect(() => {
     if (!isOpen || !drawerRef.current) return;
 
     const drawer = drawerRef.current;
     const scrollableElement = drawer.querySelector<HTMLElement>('.overflow-y-auto');
     
-    // Get all focusable elements (escludendo quelli nello scrollable)
+    // Get all focusable elements
     const focusableSelectors = [
       'button:not([disabled])',
       '[href]',
@@ -169,10 +169,6 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
         return false;
       }
-      // Escludi elementi dentro lo scrollable (permetteremo scroll normale lì)
-      if (scrollableElement && scrollableElement.contains(el)) {
-        return false;
-      }
       return true;
     });
 
@@ -186,43 +182,9 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       firstElement?.focus();
     }, 100);
 
-    // Navigazione con frecce: ArrowUp/ArrowDown per cambiare focus tra elementi
-    const handleArrowKeys = (e: KeyboardEvent) => {
-      // Se il focus è nello scrollable, permettere scroll normale
-      if (scrollableElement && scrollableElement.contains(document.activeElement)) {
-        return; // Lascia che le frecce facciano scroll normalmente
-      }
-
-      // Se il focus è fuori dal drawer, riportalo dentro
-      if (!drawer.contains(document.activeElement)) {
-        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-          e.preventDefault();
-          firstElement?.focus();
-        }
-        return;
-      }
-
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        const currentIndex = allFocusableElements.indexOf(document.activeElement as HTMLElement);
-        const nextIndex = currentIndex < allFocusableElements.length - 1 ? currentIndex + 1 : 0;
-        allFocusableElements[nextIndex]?.focus();
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        const currentIndex = allFocusableElements.indexOf(document.activeElement as HTMLElement);
-        const prevIndex = currentIndex > 0 ? currentIndex - 1 : allFocusableElements.length - 1;
-        allFocusableElements[prevIndex]?.focus();
-      }
-    };
-
     // Tab trap (Best Practice: WCAG 2.1 - Focus order)
     const handleTab = (e: KeyboardEvent) => {
       if (e.key !== 'Tab') return;
-
-      // Se il focus è nello scrollable, permettere Tab normale
-      if (scrollableElement && scrollableElement.contains(document.activeElement)) {
-        return;
-      }
 
       // Se il focus è fuori dal drawer, riportalo dentro
       if (!drawer.contains(document.activeElement)) {
@@ -246,13 +208,37 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       }
     };
 
-    window.addEventListener('keydown', handleArrowKeys);
+    // Frecce controllano solo lo scroll (non il focus)
+    const handleArrowKeys = (e: KeyboardEvent) => {
+      // Permetti sempre lo scroll con le frecce nello scrollable
+      if (scrollableElement && scrollableElement.contains(document.activeElement)) {
+        return; // Lascia che le frecce facciano scroll normalmente
+      }
+      
+      // Se il focus è su un elemento focusabile, non interferire con le frecce
+      // (permettere comportamento nativo per elementi come input, textarea, etc.)
+      const activeElement = document.activeElement as HTMLElement;
+      if (activeElement && (
+        activeElement.tagName === 'INPUT' ||
+        activeElement.tagName === 'TEXTAREA' ||
+        activeElement.isContentEditable
+      )) {
+        return; // Lascia comportamento nativo
+      }
+      
+      // Per altri elementi, permettere scroll normale se lo scrollable è visibile
+      if (scrollableElement) {
+        return; // Non prevenire lo scroll
+      }
+    };
+
     window.addEventListener('keydown', handleTab);
+    window.addEventListener('keydown', handleArrowKeys);
     
     return () => {
       clearTimeout(focusTimer);
-      window.removeEventListener('keydown', handleArrowKeys);
       window.removeEventListener('keydown', handleTab);
+      window.removeEventListener('keydown', handleArrowKeys);
     };
   }, [isOpen]);
 
@@ -270,8 +256,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       '    padding: 0 !important;',
       '  }',
       '  /* Hide everything except print content */',
-      '  body * { visibility: hidden; }',
-      '  .glossary-print-container, .glossary-print-container * { visibility: visible !important; }',
+      '  body > *:not(.glossary-print-container) { visibility: hidden !important; display: none !important; }',
       '  .glossary-print-container {',
       '    display: block !important;',
       '    visibility: visible !important;',
@@ -287,6 +272,16 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       '    margin: 0 !important;',
       '    z-index: 99999 !important;',
       '    opacity: 1 !important;',
+      '  }',
+      '  .glossary-print-container * {',
+      '    visibility: visible !important;',
+      '    display: block !important;',
+      '  }',
+      '  .glossary-print-container h1, .glossary-print-container h2, .glossary-print-container h3,',
+      '  .glossary-print-container p, .glossary-print-container div, .glossary-print-container section,',
+      '  .glossary-print-container span, .glossary-print-container img {',
+      '    visibility: visible !important;',
+      '    display: block !important;',
       '  }',
       '  .no-print, button, .backdrop, nav, .print-header-actions, [class*="backdrop"], [class*="bg-black"], [class*="fixed"][class*="inset"] { display: none !important; visibility: hidden !important; }',
       '  /* Hide drawer panel and all dark overlays */',
