@@ -25,10 +25,9 @@ import type { GlossaryTerm as GlossaryTermType } from '@/lib/glossary/terms';
 
 interface GlossaryTerm {
   title: string;
-  what: string; // Spiegazione accademica
-  how: string; // Spiegazione Tradelia AI
-  source: string; // Fonti
-  technical?: string; // Spiegazione tecnica semplificata (opzionale)
+  what: string; // Definizione accademica
+  source: string; // Fonti accademiche
+  technical?: string; // Spiegazione tecnica Tradelia AI (best practice educativa)
   relatedTerms?: string[]; // Termini correlati (opzionale)
   category?: string;
   tags?: string[];
@@ -44,9 +43,9 @@ interface GlossaryDrawerProps {
 /**
  * Glossary Drawer Component
  * Drawer completo per mostrare termini del glossario con:
- * - Spiegazione Accademica (what)
- * - Spiegazione Tecnica Semplificata (technical)
- * - Spiegazione Tradelia AI (how)
+ * - Nome del termine (title)
+ * - Definizione Accademica (what)
+ * - Spiegazione Tecnica Tradelia AI (technical) - best practice educativa ma solida
  * - Fonti Accademiche (source)
  * - Termini Correlati (relatedTerms)
  * 
