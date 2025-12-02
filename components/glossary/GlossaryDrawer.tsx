@@ -144,13 +144,14 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     };
   }, [isOpen, onClose]);
 
-  // Focus trap: mantiene il focus dentro il drawer (Best Practice: WCAG 2.1)
+  // Focus trap e navigazione con frecce (Best Practice: WCAG 2.1)
   useEffect(() => {
     if (!isOpen || !drawerRef.current) return;
 
     const drawer = drawerRef.current;
+    const scrollableElement = drawer.querySelector<HTMLElement>('.overflow-y-auto');
     
-    // Get all focusable elements
+    // Get all focusable elements (escludendo quelli nello scrollable)
     const focusableSelectors = [
       'button:not([disabled])',
       '[href]',
@@ -160,24 +161,62 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       '[tabindex]:not([tabindex="-1"])',
     ].join(', ');
     
-    const focusableElements = Array.from(
+    const allFocusableElements = Array.from(
       drawer.querySelectorAll<HTMLElement>(focusableSelectors)
     ).filter((el) => {
       // Filter out hidden elements
       const style = window.getComputedStyle(el);
-      return style.display !== 'none' && style.visibility !== 'hidden';
+      if (style.display === 'none' || style.visibility === 'hidden') {
+        return false;
+      }
+      // Escludi elementi dentro lo scrollable (permetteremo scroll normale lì)
+      if (scrollableElement && scrollableElement.contains(el)) {
+        return false;
+      }
+      return true;
     });
 
-    if (focusableElements.length === 0) return;
+    if (allFocusableElements.length === 0) return;
 
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
+    const firstElement = allFocusableElements[0];
+    const lastElement = allFocusableElements[allFocusableElements.length - 1];
 
     // Focus first element when drawer opens
     firstElement?.focus();
 
+    // Navigazione con frecce: ArrowUp/ArrowDown per cambiare focus tra elementi
+    const handleArrowKeys = (e: KeyboardEvent) => {
+      // Se il focus è nello scrollable, permettere scroll normale
+      if (scrollableElement && scrollableElement.contains(document.activeElement)) {
+        return; // Lascia che le frecce facciano scroll normalmente
+      }
+
+      // Se il focus è fuori dal drawer, non fare nulla
+      if (!drawer.contains(document.activeElement)) {
+        return;
+      }
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        const currentIndex = allFocusableElements.indexOf(document.activeElement as HTMLElement);
+        const nextIndex = currentIndex < allFocusableElements.length - 1 ? currentIndex + 1 : 0;
+        allFocusableElements[nextIndex]?.focus();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        const currentIndex = allFocusableElements.indexOf(document.activeElement as HTMLElement);
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : allFocusableElements.length - 1;
+        allFocusableElements[prevIndex]?.focus();
+      }
+    };
+
+    // Tab come fallback (mantiene compatibilità)
     const handleTab = (e: KeyboardEvent) => {
       if (e.key !== 'Tab') return;
+
+      // Se il focus è nello scrollable, permettere Tab normale
+      if (scrollableElement && scrollableElement.contains(document.activeElement)) {
+        return;
+      }
 
       // Don't trap if focus is outside drawer
       if (!drawer.contains(document.activeElement)) {
@@ -201,25 +240,12 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       }
     };
 
-    // Prevent scroll on drawer when using arrow keys
-    const handleArrowKeys = (e: KeyboardEvent) => {
-      if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown'].includes(e.key)) {
-        const scrollableElement = drawer.querySelector('.overflow-y-auto');
-        if (scrollableElement && scrollableElement.contains(document.activeElement)) {
-          // Allow arrow keys within scrollable content
-          return;
-        }
-        // Prevent default scroll behavior
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener('keydown', handleTab);
     window.addEventListener('keydown', handleArrowKeys);
+    window.addEventListener('keydown', handleTab);
     
     return () => {
-      window.removeEventListener('keydown', handleTab);
       window.removeEventListener('keydown', handleArrowKeys);
+      window.removeEventListener('keydown', handleTab);
     };
   }, [isOpen]);
 
