@@ -318,3 +318,17 @@ export function isValidTag(tag: string): tag is GlossaryTag {
 export function isValidCategory(category: string): category is GlossaryCategory {
   return Object.values(GLOSSARY_CATEGORIES).includes(category as GlossaryCategory);
 }
+
+/**
+ * Ottieni tutte le categorie disponibili
+ */
+export function getGlossaryCategories(): GlossaryCategory[] {
+  return Object.values(GLOSSARY_CATEGORIES);
+}
+
+/**
+ * Ottieni tutti i tag disponibili
+ */
+export function getGlossaryTags(): GlossaryTag[] {
+  return Object.values(GLOSSARY_TAGS);
+}
