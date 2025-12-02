@@ -17,10 +17,14 @@ import type { GlossaryCategory, GlossaryTag } from "./categories";
 
 export interface GlossaryTerm {
   title: string;
-  what: string; // Spiegazione accademica
-  how: string; // Spiegazione Tradelia AI
+  what: string; // Definizione accademica precisa
   source: string; // Fonti accademiche
-  technical?: string; // Spiegazione tecnica semplificata (opzionale)
+  // Spiegazione Tradelia AI suddivisa in due sezioni
+  whatDoes?: string; // Cosa fa - spiegazione semplice ma esaustiva
+  howToUse?: string; // Come si usa - spiegazione semplice ma esaustiva
+  // Legacy support (deprecated, use whatDoes + howToUse)
+  how?: string; // Deprecated: use whatDoes + howToUse
+  technical?: string; // Deprecated: use whatDoes + howToUse
   relatedTerms?: string[]; // Termini correlati (chiavi nel glossario, opzionale)
   category?: GlossaryCategory; // Categoria principale
   tags?: GlossaryTag[]; // Tag multipli per ricerca e filtraggio

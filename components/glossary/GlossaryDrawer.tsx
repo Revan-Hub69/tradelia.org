@@ -26,9 +26,13 @@ import Image from 'next/image';
 
 interface GlossaryTerm {
   title: string;
-  what: string; // Definizione accademica
+  what: string; // Definizione accademica precisa
   source: string; // Fonti accademiche
-  technical?: string; // Spiegazione tecnica Tradelia AI (best practice educativa)
+  whatDoes?: string; // Cosa fa - spiegazione Tradelia AI semplice ma esaustiva
+  howToUse?: string; // Come si usa - spiegazione Tradelia AI semplice ma esaustiva
+  // Legacy support
+  technical?: string; // Deprecated: use whatDoes + howToUse
+  how?: string; // Deprecated: use whatDoes + howToUse
   relatedTerms?: string[]; // Termini correlati (opzionale)
   category?: string;
   tags?: string[];
@@ -468,7 +472,31 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
   if (!term) return null;
 
   // Handle print - create new window with print content
-  const handlePrint = () => {
+  const handlePrint = async () => {
+    // Load white label customization if available
+    let logoUrl = `${window.location.origin}/logos/tradelia-logo-variant-1-wordmark.svg`;
+    let headerText = 'Glossario Finanziario Tradelia';
+    let footerText = `Glossario Tradelia • ${new Date().getFullYear()} • Fonti accademiche verificate`;
+    
+    try {
+      const response = await fetch('/api/pdf/customization');
+      if (response.ok) {
+        const customization = await response.json();
+        if (customization.logo_url) {
+          logoUrl = customization.logo_url;
+        }
+        if (customization.header_text) {
+          headerText = customization.header_text;
+        }
+        if (customization.footer_text) {
+          footerText = customization.footer_text;
+        }
+      }
+    } catch (error) {
+      // Use default Tradelia branding
+      console.log('Using default Tradelia branding for print');
+    }
+
     const printWindow = window.open('', '_blank', 'width=800,height=600');
     if (!printWindow) return;
 
@@ -521,6 +549,13 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       width: auto;
       max-width: 160px;
       display: block;
+      filter: brightness(0) saturate(100%);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    /* Logo variant for print - black/grayscale */
+    .print-logo[data-print-variant="true"] {
+      filter: brightness(0) saturate(100%) invert(0%);
     }
     .print-header-info {
       text-align: right;
@@ -570,6 +605,20 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     }
     .print-section {
       margin-bottom: 1.2cm;
+      page-break-inside: avoid;
+      orphans: 3;
+      widows: 3;
+    }
+    .print-section-title {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    .print-section-content {
+      page-break-inside: auto;
+      break-inside: auto;
+    }
+    /* Prevent breaking inside important sections */
+    .print-section:has(.print-section-title) {
       page-break-inside: avoid;
     }
     .print-section-title {
@@ -629,10 +678,10 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
 <body>
   <div class="print-header">
     <div class="print-logo-container">
-      <img src="${window.location.origin}/logos/tradelia-logo-variant-1-wordmark.svg" alt="Tradelia" class="print-logo" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTYwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjx0ZXh0IHg9IjgiIHk9IjI0IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiMxZTQwYWYiPlRyYWRlbGlhPC90ZXh0Pjwvc3ZnPg==';">
+      <img src="${logoUrl}" alt="Logo" class="print-logo" data-print-variant="true" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTYwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjx0ZXh0IHg9IjgiIHk9IjI0IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiMwMDAwMDAiPlRyYWRlbGlhPC90ZXh0Pjwvc3ZnPg==';">
     </div>
     <div class="print-header-info">
-      <div style="font-weight: 600; margin-bottom: 0.2cm;">Glossario Finanziario Tradelia</div>
+      <div style="font-weight: 600; margin-bottom: 0.2cm;">${headerText}</div>
       <div>${new Date().toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
     </div>
   </div>
@@ -654,10 +703,24 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       <div class="print-section-content">${term.what}</div>
     </section>
 
-    ${term.technical ? `
+    ${(term.whatDoes || term.howToUse || term.technical || term.how) ? `
       <section class="print-section">
-        <h2 class="print-section-title">Spiegazione Tecnica Tradelia AI</h2>
-        <div class="print-section-content">${term.technical}</div>
+        <h2 class="print-section-title">Spiegazione Tradelia AI</h2>
+        ${term.whatDoes ? `
+          <div style="margin-bottom: 0.8cm;">
+            <h3 style="font-size: 13pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">Cosa fa</h3>
+            <div class="print-section-content">${term.whatDoes}</div>
+          </div>
+        ` : ''}
+        ${term.howToUse ? `
+          <div>
+            <h3 style="font-size: 13pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">Come si usa</h3>
+            <div class="print-section-content">${term.howToUse}</div>
+          </div>
+        ` : ''}
+        ${!term.whatDoes && !term.howToUse && (term.technical || term.how) ? `
+          <div class="print-section-content">${term.technical || term.how}</div>
+        ` : ''}
       </section>
     ` : ''}
 
@@ -684,7 +747,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
 
   <div class="print-footer">
     <div style="text-align: center; width: 100%;">
-      Glossario Tradelia • ${new Date().getFullYear()} • Fonti accademiche verificate
+      ${footerText}
     </div>
   </div>
 
@@ -943,24 +1006,48 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                 </div>
               </section>
 
-              {/* Spiegazione Tecnica Tradelia AI - Academic Style */}
-              {term.technical && (
-                <section className="space-y-3" aria-labelledby="technical-section-title">
+              {/* Spiegazione Tradelia AI - Cosa fa e Come si usa */}
+              {(term.whatDoes || term.howToUse || term.technical || term.how) && (
+                <section className="space-y-3" aria-labelledby="tradelia-ai-section-title">
                   <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border-subtle">
                     <div className="w-10 h-10 rounded-lg bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-900/50 flex items-center justify-center flex-shrink-0">
                       <Code className="w-5 h-5 text-green-600 dark:text-green-400" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 id="technical-section-title" className="text-base font-bold text-text-primary">
-                        {t('glossary.drawer.technicalExplanation') || 'Spiegazione Tecnica Tradelia AI'}
+                      <h3 id="tradelia-ai-section-title" className="text-base font-bold text-text-primary">
+                        {t('glossary.drawer.tradeliaAIExplanation') || 'Spiegazione Tradelia AI'}
                       </h3>
-                      <p className="text-xs text-text-tertiary mt-0.5">Technical Explanation (Educational Best Practice)</p>
+                      <p className="text-xs text-text-tertiary mt-0.5">Spiegazione semplice ma esaustiva</p>
                     </div>
                   </div>
-                  <div className="prose prose-sm dark:prose-invert max-w-none">
-                    <p className="text-sm text-text-primary leading-relaxed whitespace-pre-line font-normal">
-                      {term.technical}
-                    </p>
+                  <div className="space-y-6">
+                    {term.whatDoes && (
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-semibold text-text-primary">Cosa fa</h4>
+                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                          <p className="text-sm text-text-primary leading-relaxed whitespace-pre-line font-normal">
+                            {term.whatDoes}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    {term.howToUse && (
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-semibold text-text-primary">Come si usa</h4>
+                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                          <p className="text-sm text-text-primary leading-relaxed whitespace-pre-line font-normal">
+                            {term.howToUse}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    {!term.whatDoes && !term.howToUse && (term.technical || term.how) && (
+                      <div className="prose prose-sm dark:prose-invert max-w-none">
+                        <p className="text-sm text-text-primary leading-relaxed whitespace-pre-line font-normal">
+                          {term.technical || term.how}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </section>
               )}
