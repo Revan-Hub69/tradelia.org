@@ -257,64 +257,35 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       '    width: 100% !important;',
       '    height: auto !important;',
       '  }',
-      '  /* Hide everything on page */',
-      '  body > * {',
+      '  /* Hide everything except print container */',
+      '  body > *:not(.glossary-print-container) {',
       '    display: none !important;',
       '    visibility: hidden !important;',
       '  }',
-      '  /* Show only print container */',
+      '  /* Show print container */',
       '  .glossary-print-container {',
       '    display: block !important;',
       '    visibility: visible !important;',
-      '    position: static !important;',
-      '    left: auto !important;',
-      '    top: auto !important;',
+      '    position: relative !important;',
+      '    left: 0 !important;',
+      '    top: 0 !important;',
       '    width: 100% !important;',
+      '    max-width: 100% !important;',
       '    height: auto !important;',
       '    min-height: auto !important;',
       '    background: white !important;',
       '    color: #000 !important;',
       '    padding: 0 !important;',
       '    margin: 0 !important;',
-      '    z-index: 1 !important;',
+      '    z-index: 999999 !important;',
       '    opacity: 1 !important;',
       '    page-break-after: auto !important;',
       '  }',
-      '  /* Make all print container children visible */',
-      '  .glossary-print-container,',
-      '  .glossary-print-container *,',
-      '  .glossary-print-container *::before,',
-      '  .glossary-print-container *::after {',
-      '    display: block !important;',
+      '  /* Ensure all children are visible */',
+      '  .glossary-print-container * {',
       '    visibility: visible !important;',
       '    opacity: 1 !important;',
-      '  }',
-      '  /* Specific elements */',
-      '  .glossary-print-container h1,',
-      '  .glossary-print-container h2,',
-      '  .glossary-print-container h3,',
-      '  .glossary-print-container p,',
-      '  .glossary-print-container div,',
-      '  .glossary-print-container section,',
-      '  .glossary-print-container span,',
-      '  .glossary-print-container img,',
-      '  .glossary-print-container strong,',
-      '  .glossary-print-container em {',
-      '    display: block !important;',
-      '    visibility: visible !important;',
-      '    opacity: 1 !important;',
-      '    color: #000 !important;',
-      '  }',
-      '  /* Inline elements */',
-      '  .glossary-print-container span,',
-      '  .glossary-print-container strong,',
-      '  .glossary-print-container em {',
-      '    display: inline !important;',
-      '  }',
-      '  /* Flex containers */',
-      '  .glossary-print-container .print-header,',
-      '  .glossary-print-container .print-tags {',
-      '    display: flex !important;',
+      '    color: inherit !important;',
       '  }',
       '  .no-print, button, .backdrop, nav, .print-header-actions, [class*="backdrop"], [class*="bg-black"], [class*="fixed"][class*="inset"] { display: none !important; visibility: hidden !important; }',
       '  /* Hide drawer panel and all dark overlays */',
@@ -496,10 +467,42 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
 
   if (!term) return null;
 
+  // Handle print - show print content before printing
+  const handlePrint = () => {
+    const printContainer = document.querySelector('.glossary-print-container') as HTMLElement;
+    if (printContainer) {
+      printContainer.style.display = 'block';
+      printContainer.style.position = 'fixed';
+      printContainer.style.left = '-9999px';
+      printContainer.style.top = '0';
+      printContainer.style.width = '210mm'; // A4 width
+      printContainer.style.background = 'white';
+    }
+    
+    // Small delay to ensure styles are applied
+    setTimeout(() => {
+      window.print();
+      
+      // Hide again after print
+      setTimeout(() => {
+        if (printContainer) {
+          printContainer.style.display = 'none';
+        }
+      }, 100);
+    }, 100);
+  };
+
   return (
     <React.Fragment>
-      {/* Print Version - Always in DOM, hidden on screen, visible when printing */}
-      <div className="glossary-print-container" style={{ display: 'none' }} aria-hidden="true">
+      {/* Print Version - Always in DOM, positioned off-screen, visible when printing */}
+      <div className="glossary-print-container" style={{ 
+        position: 'fixed',
+        left: '-9999px',
+        top: '0',
+        width: '210mm',
+        background: 'white',
+        display: 'none'
+      }} aria-hidden="true">
                 {/* Print Header with Logo - Professional Layout */}
                 <div className="print-header">
                   <div className="print-logo-container" style={{ display: 'block', visibility: 'visible' }}>
@@ -670,7 +673,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                 </div>
                 <div className="print-header-actions flex items-center gap-2 ml-4">
                   <button
-                    onClick={() => window.print()}
+                    onClick={handlePrint}
                     className="w-9 h-9 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                     aria-label="Stampa definizione"
                     title="Stampa"
