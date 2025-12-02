@@ -364,7 +364,6 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
 
   return (
     <>
-
       <AnimatePresence>
         {isOpen && (
           <>
