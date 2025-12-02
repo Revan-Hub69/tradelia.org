@@ -10,6 +10,9 @@ import { buildLocalePath } from '@/lib/i18n/paths';
 import { NoSSR } from '@/components/common/NoSSR';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 import { useIsClient } from '@/lib/hooks/useIsClient';
+import { useIsAdmin } from '@/lib/hooks/useIsAdmin';
+import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
+import Link from 'next/link';
 
 // Dynamic imports con ssr: false per evitare hydration mismatch
 const ReportsManagement = dynamic(() => import('@/components/admin/ReportsManagement').then(m => ({ default: m.ReportsManagement })), {
@@ -49,8 +52,11 @@ const SupabaseManagement = dynamic(() => import('@/components/admin/SupabaseMana
  */
 function AdminDashboardContent() {
   const isClient = useIsClient();
+  const isAdmin = useIsAdmin();
+  const router = useSafeRouter();
   const [activeTab, setActiveTab] = useState<'reports' | 'users' | 'notifications' | 'social' | 'payments' | 'supabase' | 'settings'>('reports');
   const [mounted, setMounted] = useState(false);
+  const [checkingAccess, setCheckingAccess] = useState(true);
   
   // useTranslations deve essere chiamato sempre (regole degli hooks)
   const { locale } = useTranslations();
@@ -62,17 +68,46 @@ function AdminDashboardContent() {
       return;
     }
     
-    // Imposta mounted immediatamente - NoSSR già gestisce l'hydration
-    setMounted(true);
-  }, [isClient]);
+    // Verifica accesso admin
+    const checkAccess = async () => {
+      // Aspetta un po' per permettere a useIsAdmin di completare
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      if (!isAdmin) {
+        // Redirect se non è admin
+        router.push('/dashboard');
+        return;
+      }
+      
+      setCheckingAccess(false);
+      setMounted(true);
+    };
+    
+    checkAccess();
+  }, [isClient, isAdmin, router]);
 
-  // Renderizza loading solo se non siamo ancora sul client
-  if (!isClient) {
+  // Renderizza loading durante verifica accesso
+  if (!isClient || checkingAccess) {
     return (
       <div className={styles.adminContainer} suppressHydrationWarning>
         <div className="p-8 text-center text-text-secondary">
           <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p>Caricamento area admin...</p>
+          <p>Verifica accesso...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Se non è admin, mostra messaggio (dovrebbe essere redirectato, ma per sicurezza)
+  if (!isAdmin) {
+    return (
+      <div className={styles.adminContainer} suppressHydrationWarning>
+        <div className="p-8 text-center text-text-secondary">
+          <p className="text-lg font-semibold mb-2">Accesso Negato</p>
+          <p>Non hai i permessi per accedere a questa sezione.</p>
+          <Link href="/dashboard" className="mt-4 inline-block px-4 py-2 bg-accent text-white rounded-lg">
+            Torna alla Dashboard
+          </Link>
         </div>
       </div>
     );

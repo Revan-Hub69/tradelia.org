@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FileText, Search, Filter, Download, Eye } from 'lucide-react';
+import { FileText, Search, Filter, Download, Eye, Settings } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
-import { useIsPro } from '@/lib/hooks/useUserRole';
+import { useIsPro, useIsDesk } from '@/lib/hooks/useUserRole';
+import { useFeatureAccess } from '@/lib/hooks/useFeatureAccess';
 import { useApi } from '@/lib/hooks/useApi';
 import { LoadingState } from '@/components/dashboard/LoadingState';
 import { ErrorState } from '@/components/dashboard/ErrorState';
@@ -33,6 +34,8 @@ interface Report {
 export default function ReportsPage() {
   const { t, locale } = useTranslations();
   const isPro = useIsPro();
+  const isDesk = useIsDesk();
+  const { hasAccess: canCustomizePDF } = useFeatureAccess('reports.pdf.customize');
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<'all' | 'active' | 'archived'>('all');
   const [downloadModalOpen, setDownloadModalOpen] = useState(false);
@@ -98,10 +101,21 @@ export default function ReportsPage() {
     <div className="min-h-screen p-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-text-primary mb-2 flex items-center gap-3">
-          <FileText className="w-8 h-8 text-accent" />
-          {t('dashboard.reports.title') || 'Report'}
-        </h1>
+        <div className="flex items-center justify-between mb-2">
+          <h1 className="text-3xl font-bold text-text-primary flex items-center gap-3">
+            <FileText className="w-8 h-8 text-accent" />
+            {t('dashboard.reports.title') || 'Report'}
+          </h1>
+          {canCustomizePDF && isDesk && (
+            <Link
+              href="/dashboard/reports/pdf-customize"
+              className="flex items-center gap-2 px-4 py-2 bg-accent/10 hover:bg-accent/20 border border-accent/30 rounded-lg text-sm font-medium text-accent transition-colors"
+            >
+              <Settings className="w-4 h-4" />
+              Personalizza PDF
+            </Link>
+          )}
+        </div>
         <p className="text-text-secondary">
           {t('dashboard.reports.description') || 'Visualizza e gestisci tutti i report disponibili'}
         </p>

@@ -8,6 +8,7 @@ import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useIsPro } from '@/lib/hooks/useUserRole';
+import { useIsAdmin } from '@/lib/hooks/useIsAdmin';
 import { useBodyScrollLock } from '@/lib/hooks/useBodyScrollLock';
 import Link from 'next/link';
 
@@ -29,6 +30,7 @@ export function UserMenu() {
   const [unreadCount, setUnreadCount] = useState(0);
   const menuRef = useRef<HTMLDivElement>(null);
   const isPro = useIsPro();
+  const isAdmin = useIsAdmin();
 
   // Blocca scroll quando menu è aperto
   useBodyScrollLock(isOpen);
@@ -169,7 +171,8 @@ export function UserMenu() {
     },
   ];
 
-  if (isPro) {
+  // Admin visibile SOLO agli admin (non a tutti i Pro)
+  if (isAdmin) {
     menuItems.push({
       id: 'admin',
       label: t('dashboard.userMenu.admin') || 'Admin',

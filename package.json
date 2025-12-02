@@ -5,6 +5,9 @@
   "description": "Tradelia AI Dashboard - Next.js Application",
   "main": "server.js",
   "scripts": {
+    "supabase:check": "node scripts/supabase/check-schema.mjs",
+    "supabase:setup": "node scripts/supabase/setup.mjs",
+    "supabase:migrate": "node scripts/supabase/migrate.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "node server.js",
