@@ -488,12 +488,21 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       padding: 0;
       box-sizing: border-box;
     }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
     body {
       font-family: 'Helvetica', 'Arial', sans-serif;
       font-size: 11pt;
       line-height: 1.7;
       color: #000;
       background: white;
+      padding: 0;
+      margin: 0;
+      max-width: 100%;
+      overflow-x: hidden;
     }
     .print-header {
       display: flex;
@@ -502,10 +511,16 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       padding-bottom: 0.6cm;
       margin-bottom: 1cm;
       border-bottom: 1px solid #e5e7eb;
+      page-break-after: avoid;
+    }
+    .print-logo-container {
+      display: block;
     }
     .print-logo {
       height: 40px;
       width: auto;
+      max-width: 160px;
+      display: block;
     }
     .print-header-info {
       text-align: right;
@@ -516,9 +531,13 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     }
     .print-content {
       padding: 0;
+      margin: 0;
       font-size: 11pt;
       line-height: 1.7;
       color: #111827;
+      width: 100%;
+      max-width: 100%;
+      overflow: visible;
     }
     .print-title {
       font-size: 28pt;
@@ -583,23 +602,34 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       text-indent: -1em;
     }
     .print-footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 0.5cm 0;
+      margin-top: 2cm;
+      padding-top: 0.5cm;
       border-top: 1px solid #cbd5e1;
       font-size: 8pt;
       color: #64748b;
       text-align: center;
       background: white;
+      page-break-inside: avoid;
+    }
+    @media print {
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      .print-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 0;
+      }
     }
   </style>
 </head>
 <body>
   <div class="print-header">
     <div class="print-logo-container">
-      <img src="${window.location.origin}/logos/tradelia-logo-variant-1-wordmark.svg" alt="Tradelia" class="print-logo" onerror="this.style.display='none'">
+      <img src="${window.location.origin}/logos/tradelia-logo-variant-1-wordmark.svg" alt="Tradelia" class="print-logo" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTYwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjx0ZXh0IHg9IjgiIHk9IjI0IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiMxZTQwYWYiPlRyYWRlbGlhPC90ZXh0Pjwvc3ZnPg==';">
     </div>
     <div class="print-header-info">
       <div style="font-weight: 600; margin-bottom: 0.2cm;">Glossario Finanziario Tradelia</div>
