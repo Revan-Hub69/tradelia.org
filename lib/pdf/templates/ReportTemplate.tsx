@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image, Font, Link } from '@react-pdf/renderer';
-import type { WhitelabelConfig } from '../utils/WhitelabelLoader';
+import type { PDFCustomization } from '../utils/PDFCustomizationLoader';
 
 // Register fonts (se necessario)
 // Font.register({
@@ -252,7 +252,7 @@ interface ReportPDFProps {
     version?: string;
   };
   logoUrl?: string;
-  whitelabelConfig?: WhitelabelConfig;
+  pdfCustomization?: PDFCustomization;
 }
 
 /**
@@ -267,102 +267,103 @@ export function ReportPDF({
   sections,
   metadata,
   logoUrl = '/logos/tradelia-logo.svg',
-  whitelabelConfig,
+  pdfCustomization,
 }: ReportPDFProps) {
   const currentDate = metadata?.date || new Date().toLocaleDateString('it-IT');
   const author = metadata?.author || 'Tradelia AI';
 
-  // Create dynamic styles based on white label config
-  const dynamicStyles = whitelabelConfig ? StyleSheet.create({
+  // Create dynamic styles based on PDF customization (Best Practice: Professional PDF)
+  const dynamicStyles = pdfCustomization ? StyleSheet.create({
     page: {
       ...styles.page,
-      backgroundColor: whitelabelConfig.background_color,
-      fontFamily: whitelabelConfig.font_family,
-      fontSize: whitelabelConfig.font_size_base,
+      backgroundColor: pdfCustomization.background_color,
+      fontFamily: pdfCustomization.font_family,
+      fontSize: pdfCustomization.font_size_base,
     },
     header: {
       ...styles.header,
-      borderBottomColor: whitelabelConfig.accent_color,
+      borderBottomColor: pdfCustomization.accent_color,
     },
     headerTitle: {
       ...styles.headerTitle,
-      fontSize: whitelabelConfig.font_size_title,
-      fontFamily: whitelabelConfig.heading_font_family,
-      color: whitelabelConfig.text_color,
+      fontSize: pdfCustomization.font_size_title,
+      fontFamily: pdfCustomization.heading_font_family,
+      color: pdfCustomization.text_color,
     },
     sectionTitle: {
       ...styles.sectionTitle,
-      fontSize: whitelabelConfig.font_size_heading,
-      fontFamily: whitelabelConfig.heading_font_family,
-      color: whitelabelConfig.text_color,
-      borderBottomColor: whitelabelConfig.primary_color,
+      fontSize: pdfCustomization.font_size_heading,
+      fontFamily: pdfCustomization.heading_font_family,
+      color: pdfCustomization.text_color,
+      borderBottomColor: pdfCustomization.primary_color,
     },
     paragraph: {
       ...styles.paragraph,
-      fontSize: whitelabelConfig.font_size_base,
-      fontFamily: whitelabelConfig.font_family,
-      color: whitelabelConfig.text_color,
+      fontSize: pdfCustomization.font_size_base,
+      fontFamily: pdfCustomization.font_family,
+      color: pdfCustomization.text_color,
     },
     footer: {
       ...styles.footer,
-      color: whitelabelConfig.text_color,
+      color: pdfCustomization.text_color,
     },
     statValue: {
       ...styles.statValue,
-      color: whitelabelConfig.accent_color,
+      color: pdfCustomization.accent_color,
     },
     highlight: {
       ...styles.highlight,
-      backgroundColor: `${whitelabelConfig.accent_color}20`, // 20% opacity
+      backgroundColor: `${pdfCustomization.accent_color}20`, // 20% opacity
     },
     highlightText: {
       ...styles.highlightText,
-      color: whitelabelConfig.accent_color,
+      color: pdfCustomization.accent_color,
     },
   }) : styles;
 
-  // Get logo dimensions from white label config
-  const logoWidth = whitelabelConfig?.logo_width || 120;
-  const logoHeight = whitelabelConfig?.logo_height || 40;
+  // Get logo dimensions from PDF customization
+  const logoWidth = pdfCustomization?.logo_width || 120;
+  const logoHeight = pdfCustomization?.logo_height || 40;
 
-  // Build footer text from white label config
+  // Build footer text from PDF customization
   const buildFooterText = () => {
-    if (!whitelabelConfig?.footer_enabled) {
-      return author;
+    if (!pdfCustomization?.footer_enabled) {
+      return pdfCustomization?.footer_text || author;
     }
 
     const footerParts: string[] = [];
-    if (whitelabelConfig.footer_text) {
-      footerParts.push(whitelabelConfig.footer_text);
+    if (pdfCustomization.footer_text) {
+      footerParts.push(pdfCustomization.footer_text);
     }
-    if (whitelabelConfig.footer_contact_email) {
-      footerParts.push(`Email: ${whitelabelConfig.footer_contact_email}`);
+    if (pdfCustomization.footer_contact_email) {
+      footerParts.push(`Email: ${pdfCustomization.footer_contact_email}`);
     }
-    if (whitelabelConfig.footer_contact_phone) {
-      footerParts.push(`Tel: ${whitelabelConfig.footer_contact_phone}`);
+    if (pdfCustomization.footer_contact_phone) {
+      footerParts.push(`Tel: ${pdfCustomization.footer_contact_phone}`);
     }
-    if (whitelabelConfig.footer_website) {
-      footerParts.push(whitelabelConfig.footer_website);
+    if (pdfCustomization.footer_website) {
+      footerParts.push(pdfCustomization.footer_website);
     }
-    if (whitelabelConfig.footer_address) {
-      footerParts.push(whitelabelConfig.footer_address);
+    if (pdfCustomization.footer_address) {
+      footerParts.push(pdfCustomization.footer_address);
     }
 
-    return footerParts.length > 0 ? footerParts.join(' • ') : author;
+    return footerParts.length > 0 ? footerParts.join(' • ') : (pdfCustomization?.footer_text || author);
   };
 
   const footerText = buildFooterText();
+  const headerText = pdfCustomization?.header_text || 'Report Analisi Finanziaria';
 
   // Watermark style
-  const watermarkStyle = whitelabelConfig?.watermark_enabled && whitelabelConfig?.watermark_text
+  const watermarkStyle = pdfCustomization?.watermark_enabled && pdfCustomization?.watermark_text
     ? {
         position: 'absolute' as const,
         top: '50%',
         left: '50%',
         transform: 'rotate(-45deg) translate(-50%, -50%)',
         fontSize: 60,
-        color: `${whitelabelConfig.text_color}${Math.round((whitelabelConfig.watermark_opacity || 0.1) * 255).toString(16).padStart(2, '0')}`,
-        opacity: whitelabelConfig.watermark_opacity || 0.1,
+        color: `${pdfCustomization.text_color}${Math.round(0.1 * 255).toString(16).padStart(2, '0')}`,
+        opacity: 0.1,
         zIndex: 0,
       }
     : null;
@@ -401,7 +402,7 @@ export function ReportPDF({
             )}
           </View>
           <View style={styles.headerInfo}>
-            <Text style={styles.headerSubtitle}>Report Analisi</Text>
+            <Text style={styles.headerSubtitle}>{headerText}</Text>
             <Text style={styles.headerMeta}>{currentDate}</Text>
           </View>
         </View>
@@ -415,18 +416,18 @@ export function ReportPDF({
               {description}
             </Text>
           )}
-          <View style={{ marginTop: 40, padding: 20, backgroundColor: whitelabelConfig ? `${whitelabelConfig.accent_color}10` : '#f1f5f9', borderRadius: 8 }}>
-            <Text style={[styles.headerSubtitle, { fontSize: (whitelabelConfig?.font_size_base || 10) + 4, textAlign: 'center', color: whitelabelConfig?.accent_color || '#64748b' }]}>
+          <View style={{ marginTop: 40, padding: 20, backgroundColor: pdfCustomization ? `${pdfCustomization.accent_color}10` : '#f1f5f9', borderRadius: 8 }}>
+            <Text style={[styles.headerSubtitle, { fontSize: (pdfCustomization?.font_size_base || 10) + 4, textAlign: 'center', color: pdfCustomization?.accent_color || '#64748b' }]}>
               {reportType}
             </Text>
           </View>
         </View>
 
         {/* Academic Disclaimer */}
-        {whitelabelConfig?.show_academic_disclaimer && whitelabelConfig?.academic_disclaimer_text && (
+        {pdfCustomization?.show_academic_disclaimer && pdfCustomization?.academic_disclaimer_text && (
           <View style={{ marginTop: 20, padding: 10, backgroundColor: '#f8fafc', borderRadius: 4 }}>
             <Text style={[dynamicStyles.paragraph, { fontSize: 8, fontStyle: 'italic', textAlign: 'center' }]}>
-              {whitelabelConfig.academic_disclaimer_text}
+              {pdfCustomization.academic_disclaimer_text}
             </Text>
           </View>
         )}
@@ -441,8 +442,8 @@ export function ReportPDF({
       {sections.map((section, index) => (
         <Page key={section.id} size="A4" style={dynamicStyles.page} wrap={false}>
           {/* Watermark */}
-          {watermarkStyle && whitelabelConfig?.watermark_text && (
-            <Text style={watermarkStyle}>{whitelabelConfig.watermark_text}</Text>
+          {watermarkStyle && pdfCustomization?.watermark_text && (
+            <Text style={watermarkStyle}>{pdfCustomization.watermark_text}</Text>
           )}
           
           <View style={dynamicStyles.header}>
@@ -463,7 +464,7 @@ export function ReportPDF({
               )}
             </View>
             <View style={styles.headerInfo}>
-              <Text style={styles.headerSubtitle}>{title}</Text>
+              <Text style={styles.headerSubtitle}>{headerText}</Text>
               <Text style={styles.headerMeta}>{currentDate}</Text>
             </View>
           </View>
@@ -471,7 +472,7 @@ export function ReportPDF({
           <View style={styles.section}>
             <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
             {section.subtitle && (
-              <Text style={[styles.sectionSubtitle, { color: whitelabelConfig?.text_color || '#1e293b' }]}>{section.subtitle}</Text>
+              <Text style={[styles.sectionSubtitle, { color: pdfCustomization?.text_color || '#1e293b' }]}>{section.subtitle}</Text>
             )}
 
             {/* Render content based on type */}

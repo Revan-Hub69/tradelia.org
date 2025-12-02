@@ -63,15 +63,37 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [relatedTermsData, setRelatedTermsData] = useState<GlossaryTermType[]>([]);
 
-  // Blocca scroll quando drawer è aperto
+  // Blocca scroll quando drawer è aperto (Best Practice: Prevent body scroll)
   useEffect(() => {
     if (isOpen) {
+      // Salva lo scroll corrente
+      const scrollY = window.scrollY;
+      // Blocca scroll body
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
     } else {
+      // Ripristina scroll body
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
       document.body.style.overflow = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
     }
     return () => {
+      // Cleanup: ripristina sempre
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
       document.body.style.overflow = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
     };
   }, [isOpen]);
 
@@ -122,26 +144,56 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     };
   }, [isOpen, onClose]);
 
-  // Focus trap: mantiene il focus dentro il drawer
+  // Focus trap: mantiene il focus dentro il drawer (Best Practice: WCAG 2.1)
   useEffect(() => {
     if (!isOpen || !drawerRef.current) return;
 
     const drawer = drawerRef.current;
-    const focusableElements = drawer.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-    const firstElement = focusableElements[0] as HTMLElement;
-    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+    
+    // Get all focusable elements
+    const focusableSelectors = [
+      'button:not([disabled])',
+      '[href]',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
+    ].join(', ');
+    
+    const focusableElements = Array.from(
+      drawer.querySelectorAll<HTMLElement>(focusableSelectors)
+    ).filter((el) => {
+      // Filter out hidden elements
+      const style = window.getComputedStyle(el);
+      return style.display !== 'none' && style.visibility !== 'hidden';
+    });
+
+    if (focusableElements.length === 0) return;
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    // Focus first element when drawer opens
+    firstElement?.focus();
 
     const handleTab = (e: KeyboardEvent) => {
       if (e.key !== 'Tab') return;
 
+      // Don't trap if focus is outside drawer
+      if (!drawer.contains(document.activeElement)) {
+        e.preventDefault();
+        firstElement?.focus();
+        return;
+      }
+
       if (e.shiftKey) {
+        // Shift + Tab: go backwards
         if (document.activeElement === firstElement) {
           e.preventDefault();
           lastElement?.focus();
         }
       } else {
+        // Tab: go forwards
         if (document.activeElement === lastElement) {
           e.preventDefault();
           firstElement?.focus();
@@ -149,8 +201,26 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       }
     };
 
-    drawer.addEventListener('keydown', handleTab);
-    return () => drawer.removeEventListener('keydown', handleTab);
+    // Prevent scroll on drawer when using arrow keys
+    const handleArrowKeys = (e: KeyboardEvent) => {
+      if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown'].includes(e.key)) {
+        const scrollableElement = drawer.querySelector('.overflow-y-auto');
+        if (scrollableElement && scrollableElement.contains(document.activeElement)) {
+          // Allow arrow keys within scrollable content
+          return;
+        }
+        // Prevent default scroll behavior
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener('keydown', handleTab);
+    window.addEventListener('keydown', handleArrowKeys);
+    
+    return () => {
+      window.removeEventListener('keydown', handleTab);
+      window.removeEventListener('keydown', handleArrowKeys);
+    };
   }, [isOpen]);
 
   if (!term) return null;
@@ -344,7 +414,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-full max-w-lg bg-bg-surface border-l border-border-subtle shadow-2xl z-[9999] flex flex-col"
+              className="fixed right-0 top-0 bottom-0 w-full max-w-lg bg-bg-surface border-l border-border-subtle shadow-2xl z-[9999] flex flex-col overflow-hidden"
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"
@@ -518,7 +588,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               )}
             </div>
             {/* Content - Academic Layout */}
-            <div className="no-print flex-1 overflow-y-auto p-6 space-y-8">
+            <div className="no-print flex-1 overflow-y-auto overflow-x-hidden p-6 space-y-8" style={{ scrollbarWidth: 'thin' }}>
               {/* Spiegazione Accademica - Academic Style */}
               <section className="space-y-3" aria-labelledby="academic-section-title">
                 <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border-subtle">

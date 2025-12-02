@@ -12,10 +12,10 @@ import { imageUrlToBase64, generateChartPlaceholder } from "../utils/ImageConver
 import { loadTradeliaLogo } from "../utils/LogoLoader";
 import { createClient } from "@/lib/supabase/server";
 import {
-  loadCurrentUserWhitelabelConfig,
-  mergeWhitelabelConfig,
-  type WhitelabelConfig,
-} from "../utils/WhitelabelLoader";
+  loadCurrentUserPDFCustomization,
+  mergePDFCustomization,
+  type PDFCustomization,
+} from "../utils/PDFCustomizationLoader";
 
 interface ReportData {
   id: string;
@@ -109,18 +109,18 @@ export async function generateReportPDF(
     });
   }
 
-  // Carica configurazione white label per partner (Best Practice: Academic white label)
-  let whitelabelConfig: WhitelabelConfig | null = null;
+  // Carica configurazione PDF personalizzata per utente Desk (Best Practice: Professional PDF)
+  let pdfCustomization: PDFCustomization | null = null;
   let logoBase64 = await loadTradeliaLogo(); // Fallback a logo Tradelia
 
   try {
-    // Carica white label config per utente corrente
-    whitelabelConfig = await loadCurrentUserWhitelabelConfig();
+    // Carica PDF customization per utente corrente (Desk plan)
+    pdfCustomization = await loadCurrentUserPDFCustomization();
 
-    if (whitelabelConfig) {
-      // Usa logo da white label config se disponibile
-      if (whitelabelConfig.logo_url) {
-        logoBase64 = whitelabelConfig.logo_url;
+    if (pdfCustomization) {
+      // Usa logo da PDF customization se disponibile
+      if (pdfCustomization.logo_url) {
+        logoBase64 = pdfCustomization.logo_url;
       }
     } else {
       // Fallback: verifica se utente ha business_logo_url (legacy support)
@@ -143,11 +143,11 @@ export async function generateReportPDF(
     }
   } catch (error) {
     // Se errore, usa logo Tradelia standard
-    console.error("Error loading whitelabel config:", error);
+    console.error("Error loading PDF customization:", error);
   }
 
-  // Merge white label config con defaults
-  const finalWhitelabelConfig = mergeWhitelabelConfig(whitelabelConfig);
+  // Merge PDF customization con defaults
+  const finalPDFCustomization = mergePDFCustomization(pdfCustomization);
 
   // Generate PDF con template accademico e white label
   const pdfDocument = React.createElement(ReportPDF, {
@@ -161,7 +161,7 @@ export async function generateReportPDF(
       version: reportData.metadata?.version || "1.0",
     },
     logoUrl: logoBase64, // Logo come base64
-    whitelabelConfig: finalWhitelabelConfig, // White label configuration
+    pdfCustomization: finalPDFCustomization, // PDF customization configuration
   });
 
   // Render to buffer
