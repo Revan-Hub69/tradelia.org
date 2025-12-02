@@ -252,7 +252,7 @@ export function exportToCSV(terms: Record<string, GlossaryTerm>): string {
       escapeCSV(term.title),
       escapeCSV(term.what),
       escapeCSV(term.technical || ""),
-      escapeCSV(term.how),
+      escapeCSV(term.how || ""),
       escapeCSV(term.source),
       term.relatedTerms?.join(";") || "",
     ];
