@@ -235,8 +235,8 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       '    left: 0;',
       '    top: 0;',
       '    width: 100%;',
-      '    background: white;',
-      '    color: #000;',
+      '    background: white !important;',
+      '    color: #000 !important;',
       '    padding: 0;',
       '    margin: 0;',
       '  }',
@@ -248,10 +248,30 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       '    padding: 0 0 1cm 0;',
       '    margin-bottom: 1.2cm;',
       '    padding-bottom: 0.8cm;',
-      '    border-bottom: 1.5px solid #1e293b;',
+      '    border-bottom: 1px solid #e5e7eb !important;',
+      '    background: white !important;',
       '    page-break-after: avoid;',
       '  }',
-      '  .print-logo { height: 40px; width: auto; }',
+      '  .print-logo-container {',
+      '    display: block !important;',
+      '    visibility: visible !important;',
+      '    background: white !important;',
+      '  }',
+      '  .print-logo {',
+      '    height: 40px !important;',
+      '    width: auto !important;',
+      '    display: block !important;',
+      '    visibility: visible !important;',
+      '    opacity: 1 !important;',
+      '    filter: none !important;',
+      '  }',
+      '  .print-logo img, .print-logo svg {',
+      '    display: block !important;',
+      '    visibility: visible !important;',
+      '    opacity: 1 !important;',
+      '    max-width: 160px !important;',
+      '    height: auto !important;',
+      '  }',
       '  .print-header-info {',
       '    text-align: right;',
       '    font-size: 9pt;',
@@ -412,15 +432,18 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               <div className="glossary-print-container" style={{ display: 'none' }}>
                 {/* Print Header with Logo - Professional Layout */}
                 <div className="print-header">
-                  <div className="print-logo-container">
-                    <Image
+                  <div className="print-logo-container" style={{ display: 'block', visibility: 'visible' }}>
+                    <img
                       src="/logos/tradelia-logo-variant-1-wordmark.svg"
                       alt="Tradelia"
-                      width={160}
-                      height={40}
+                      style={{
+                        height: '40px',
+                        width: 'auto',
+                        display: 'block',
+                        visibility: 'visible',
+                        opacity: 1,
+                      }}
                       className="print-logo"
-                      priority
-                      unoptimized
                     />
                   </div>
                   <div className="print-header-info">

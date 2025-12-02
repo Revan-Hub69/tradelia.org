@@ -343,21 +343,21 @@ export function GlossaryContent() {
             </div>
           </div>
 
-          {/* Tags - Always Visible, Scrollable */}
+          {/* Tags - Always Visible, Scrollable - Improved UX */}
           {allTags.length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <Tag className="w-4 h-4 text-accent" />
                 <label className="text-sm font-semibold text-text-primary">
-                  Filtra per argomento
+                  Argomenti e Temi
                 </label>
                 {selectedTags.length > 0 && (
                   <span className="text-xs text-accent font-semibold">
-                    • {selectedTags.length} {selectedTags.length === 1 ? 'argomento selezionato' : 'argomenti selezionati'}
+                    • {selectedTags.length} {selectedTags.length === 1 ? 'tema selezionato' : 'temi selezionati'}
                   </span>
                 )}
               </div>
-              <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin' }}>
+              <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin' }}>
                 {allTags.map((tag) => {
                   // Count terms with this tag (considering search and category filters but not tag filter)
                   const count = terms.filter(t => {
@@ -369,32 +369,40 @@ export function GlossaryContent() {
                     const hasTag = t.tags?.includes(tag as any);
                     return matchesSearch && matchesCategory && hasTag;
                   }).length;
+                  if (count === 0) return null; // Nascondi tag senza risultati
                   return (
                     <button
                       key={tag}
                       onClick={() => toggleTag(tag)}
                       className={cn(
-                        'px-3 py-1.5 rounded-full text-xs font-medium transition-all border flex items-center gap-1.5',
+                        'px-3 py-1.5 rounded-lg text-xs font-medium transition-all border flex items-center gap-1.5',
                         selectedTags.includes(tag)
                           ? 'bg-accent text-white border-accent shadow-sm'
                           : 'bg-bg-surface text-text-secondary border-border-subtle hover:bg-bg-soft hover:border-accent/50'
                       )}
+                      title={`${getTagDisplayName(tag)}: ${count} ${count === 1 ? 'termine' : 'termini'}`}
                     >
                       <span>{getTagDisplayName(tag)}</span>
-                      {count > 0 && (
-                        <span className={cn(
-                          'text-xs px-1 py-0.5 rounded font-semibold',
-                          selectedTags.includes(tag)
-                            ? 'bg-white/20 text-white'
-                            : 'bg-bg-soft text-text-tertiary'
-                        )}>
-                          {count}
-                        </span>
-                      )}
+                      <span className={cn(
+                        'text-xs px-1.5 py-0.5 rounded font-semibold',
+                        selectedTags.includes(tag)
+                          ? 'bg-white/20 text-white'
+                          : 'bg-bg-soft text-text-tertiary'
+                      )}>
+                        {count}
+                      </span>
                     </button>
                   );
                 })}
               </div>
+              {selectedTags.length > 0 && (
+                <button
+                  onClick={() => setSelectedTags([])}
+                  className="mt-2 text-xs text-text-tertiary hover:text-text-primary underline"
+                >
+                  Rimuovi tutti i temi
+                </button>
+              )}
             </div>
           )}
         </div>

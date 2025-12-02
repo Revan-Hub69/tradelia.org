@@ -89,13 +89,16 @@
 .dashboardBrandLogo {
   height: 32px;
   width: auto;
+  max-width: 140px;
   display: block;
   object-fit: contain;
+  object-position: left center;
 }
 
 @media (min-width: 768px) {
   .dashboardBrandLogo {
     height: 36px;
+    max-width: 160px;
   }
 }
 
