@@ -89,7 +89,11 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
           return termData ? { key: termKey, term: termData } : null;
         })
       );
-      setRelatedTermsData(terms.filter((t): t is GlossaryTermType => t !== null));
+      setRelatedTermsData(
+        terms
+          .filter((t): t is { key: string; term: GlossaryTermType } => t !== null)
+          .map((t) => t.term)
+      );
     };
 
     loadRelatedTerms();
