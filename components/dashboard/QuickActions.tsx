@@ -88,9 +88,9 @@ export const QuickActions = memo(function QuickActions() {
       label: t('dashboard.quickActions.startCourse') || 'Inizia Corso',
       description: t('dashboard.quickActions.startCourseDesc') || 'Inizia un nuovo percorso formativo',
       icon: <BookOpen className="w-5 h-5" />,
-      color: 'text-purple-400',
-      bgColor: 'bg-purple-400/20',
-      borderColor: 'border-purple-400/30',
+      color: 'text-indigo-300',
+      bgColor: 'bg-indigo-500/20',
+      borderColor: 'border-indigo-400/30',
       href: '/dashboard#education',
     },
   ];

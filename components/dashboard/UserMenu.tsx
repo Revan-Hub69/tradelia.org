@@ -1,14 +1,13 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { User, Settings, LogOut, Bell, ChevronDown, Mail, Shield } from 'lucide-react';
+import { User, Settings, LogOut, Bell, ChevronDown, Mail } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { supabase } from '@/lib/supabase/client';
 import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useIsPro } from '@/lib/hooks/useUserRole';
-import { useIsAdmin } from '@/lib/hooks/useIsAdmin';
 import { useBodyScrollLock } from '@/lib/hooks/useBodyScrollLock';
 import Link from 'next/link';
 
@@ -30,7 +29,6 @@ export function UserMenu() {
   const [unreadCount, setUnreadCount] = useState(0);
   const menuRef = useRef<HTMLDivElement>(null);
   const isPro = useIsPro();
-  const isAdmin = useIsAdmin();
 
   // Blocca scroll quando menu è aperto
   useBodyScrollLock(isOpen);
@@ -171,15 +169,7 @@ export function UserMenu() {
     },
   ];
 
-  // Admin visibile SOLO agli admin (non a tutti i Pro)
-  if (isAdmin) {
-    menuItems.push({
-      id: 'admin',
-      label: t('dashboard.userMenu.admin') || 'Admin',
-      icon: Shield,
-      href: '/dashboard/admin',
-    });
-  }
+  // Admin area rimossa - non più disponibile
 
   menuItems.push({
     id: 'logout',

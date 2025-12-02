@@ -4,13 +4,13 @@
  * Riferimento: Few (2006), Tufte (2001), WCAG 2.1
  */
 
-import React from 'react';
-import { renderToBuffer } from '@react-pdf/renderer';
-import { ReportPDF, ReportSection } from '../templates/ReportTemplate';
-import { parseReportContent } from '../utils/ReportContentParser';
-import { imageUrlToBase64, generateChartPlaceholder } from '../utils/ImageConverter';
-import { loadTradeliaLogo } from '../utils/LogoLoader';
-import { createClient } from '@/lib/supabase/server';
+import React from "react";
+import { renderToBuffer } from "@react-pdf/renderer";
+import { ReportPDF, ReportSection } from "../templates/ReportTemplate";
+import { parseReportContent } from "../utils/ReportContentParser";
+import { imageUrlToBase64, generateChartPlaceholder } from "../utils/ImageConverter";
+import { loadTradeliaLogo } from "../utils/LogoLoader";
+import { createClient } from "@/lib/supabase/server";
 
 interface ReportData {
   id: string;
@@ -28,9 +28,9 @@ interface ReportData {
 }
 
 interface PDFOptions {
-  quality: 'standard' | 'high';
+  quality: "standard" | "high";
   includeCharts: boolean;
-  format: 'pdf' | 'excel' | 'csv';
+  format: "pdf" | "excel" | "csv";
 }
 
 /**
@@ -48,14 +48,14 @@ export async function generateReportPDF(
   const sections: (ReportSection | null)[] = await Promise.all(
     parsedSections.map(async (parsed) => {
       // Se è un chart e includeCharts è true, converti immagine
-      if (parsed.type === 'chart' && options.includeCharts && parsed.data?.imageUrl) {
+      if (parsed.type === "chart" && options.includeCharts && parsed.data?.imageUrl) {
         let imageUrl = parsed.data.imageUrl;
-        
+
         // Se è URL, converti a base64
-        if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
           imageUrl = await imageUrlToBase64(imageUrl);
         }
-        
+
         // Se conversione fallita, usa placeholder
         if (!imageUrl) {
           imageUrl = generateChartPlaceholder(parsed.title);
@@ -65,8 +65,8 @@ export async function generateReportPDF(
           id: parsed.id,
           title: parsed.title,
           subtitle: parsed.subtitle,
-          content: '',
-          type: 'chart',
+          content: "",
+          type: "chart",
           data: {
             ...parsed.data,
             imageUrl,
@@ -76,7 +76,7 @@ export async function generateReportPDF(
       }
 
       // Se includeCharts è false, salta i chart
-      if (parsed.type === 'chart' && !options.includeCharts) {
+      if (parsed.type === "chart" && !options.includeCharts) {
         return null;
       }
 
@@ -97,16 +97,16 @@ export async function generateReportPDF(
   // Se non ci sono sezioni, crea sezione default
   if (filteredSections.length === 0) {
     filteredSections.push({
-      id: 'content',
-      title: 'Contenuto Report',
-      content: reportData.description || 'Nessun contenuto disponibile.',
-      type: 'text',
+      id: "content",
+      title: "Contenuto Report",
+      content: reportData.description || "Nessun contenuto disponibile.",
+      type: "text",
     });
   }
 
   // Carica logo: personalizzato (Desk/Business) o Tradelia standard
   let logoBase64 = await loadTradeliaLogo();
-  
+
   try {
     // Verifica se utente ha logo personalizzato (solo Desk/Business)
     const supabase = await createClient();
@@ -116,9 +116,9 @@ export async function generateReportPDF(
 
     if (user) {
       const { data: profile } = await supabase
-        .from('user_profiles')
-        .select('business_logo_url')
-        .eq('user_id', user.id)
+        .from("profiles")
+        .select("business_logo_url")
+        .eq("id", user.id)
         .single();
 
       if (profile?.business_logo_url) {
@@ -127,7 +127,7 @@ export async function generateReportPDF(
     }
   } catch (error) {
     // Se errore, usa logo Tradelia standard
-    console.error('Error loading custom logo:', error);
+    console.error("Error loading custom logo:", error);
   }
 
   // Generate PDF con template accademico
@@ -137,9 +137,9 @@ export async function generateReportPDF(
     reportType: reportData.report_type,
     sections: filteredSections,
     metadata: {
-      author: reportData.metadata?.author || 'Tradelia AI',
-      date: reportData.metadata?.date || new Date().toLocaleDateString('it-IT'),
-      version: reportData.metadata?.version || '1.0',
+      author: reportData.metadata?.author || "Tradelia AI",
+      date: reportData.metadata?.date || new Date().toLocaleDateString("it-IT"),
+      version: reportData.metadata?.version || "1.0",
     },
     logoUrl: logoBase64, // Logo come base64
   });
@@ -154,12 +154,12 @@ export async function generateReportPDF(
  * Genera Excel da dati report
  */
 export async function generateReportExcel(
-  reportData: ReportData,
-  options: PDFOptions
+  _reportData: ReportData,
+  _options: PDFOptions
 ): Promise<Buffer> {
   // TODO: Implementare con exceljs
   // Per ora placeholder
-  return Buffer.from('Excel placeholder');
+  return Buffer.from("Excel placeholder");
 }
 
 /**
@@ -167,39 +167,37 @@ export async function generateReportExcel(
  */
 export async function generateReportCSV(
   reportData: ReportData,
-  options: PDFOptions
+  _options: PDFOptions
 ): Promise<string> {
   // Genera CSV semplice
-  let csv = '';
+  let csv = "";
 
   // Header
   csv += `Report: ${reportData.title}\n`;
   csv += `Tipo: ${reportData.report_type}\n`;
-  csv += `Data: ${new Date().toLocaleDateString('it-IT')}\n\n`;
+  csv += `Data: ${new Date().toLocaleDateString("it-IT")}\n\n`;
 
   // Content data
   if (reportData.content) {
-    const contentData = typeof reportData.content === 'string'
-      ? JSON.parse(reportData.content)
-      : reportData.content;
+    const contentData =
+      typeof reportData.content === "string" ? JSON.parse(reportData.content) : reportData.content;
 
     // Tables
     if (contentData.tables && Array.isArray(contentData.tables)) {
       contentData.tables.forEach((table: any) => {
-        csv += `${table.title || 'Tabella'}\n`;
+        csv += `${table.title || "Tabella"}\n`;
         if (table.data && table.data.length > 0) {
           // Headers
-          csv += Object.keys(table.data[0]).join(',') + '\n';
+          csv += Object.keys(table.data[0]).join(",") + "\n";
           // Rows
           table.data.forEach((row: any) => {
-            csv += Object.values(row).join(',') + '\n';
+            csv += Object.values(row).join(",") + "\n";
           });
         }
-        csv += '\n';
+        csv += "\n";
       });
     }
   }
 
   return csv;
 }
-

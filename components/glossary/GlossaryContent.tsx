@@ -1,228 +1,406 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { Search, BookOpen, ChevronDown, ChevronUp } from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
+import { Search, BookOpen, ChevronDown, ChevronUp, Filter, X, Sparkles, GraduationCap, FileText, ExternalLink } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
+import { loadGlossaryTerms, type GlossaryTerm } from '@/lib/glossary/terms';
+import { getGlossaryCategories, getGlossaryTags, type GlossaryCategory } from '@/lib/glossary/categories';
 
-interface GlossaryTerm {
-  id: string;
-  term: string;
-  definition: string;
-  category: string;
-  relatedTerms?: string[];
-}
-
-// Dati del glossario - in futuro possiamo spostarli su Supabase
-const glossaryTerms: GlossaryTerm[] = [
-  {
-    id: '1',
-    term: 'MiFID II',
-    definition: 'Markets in Financial Instruments Directive II - Direttiva europea che regola i mercati degli strumenti finanziari, migliorando la trasparenza e la protezione degli investitori.',
-    category: 'Regolamentazione',
-    relatedTerms: ['Compliance', 'Best Execution'],
-  },
-  {
-    id: '2',
-    term: 'Best Execution',
-    definition: "Obbligo per gli intermediari finanziari di eseguire gli ordini dei clienti alle migliori condizioni possibili, considerando prezzo, costi, velocità e probabilità di esecuzione.",
-    category: 'Regolamentazione',
-    relatedTerms: ['MiFID II', 'Compliance'],
-  },
-  {
-    id: '3',
-    term: 'Compliance',
-    definition: "Conformità alle norme, regolamenti e politiche applicabili. In ambito finanziario, garantisce che le attività rispettino le normative come MiFID II.",
-    category: 'Regolamentazione',
-    relatedTerms: ['MiFID II', 'Best Execution'],
-  },
-  {
-    id: '4',
-    term: 'Asset Allocation',
-    definition: "Strategia di investimento che distribuisce il capitale tra diverse classi di attività (azioni, obbligazioni, liquidità, ecc.) per bilanciare rischio e rendimento.",
-    category: 'Investimenti',
-    relatedTerms: ['Diversificazione', 'Portfolio'],
-  },
-  {
-    id: '5',
-    term: 'Diversificazione',
-    definition: "Strategia di riduzione del rischio investendo in una varietà di asset diversi, settori o aree geografiche per limitare l'impatto di perdite su singoli investimenti.",
-    category: 'Investimenti',
-    relatedTerms: ['Asset Allocation', 'Portfolio'],
-  },
-  {
-    id: '6',
-    term: 'Portfolio',
-    definition: "Insieme di investimenti detenuti da un individuo o istituzione, comprendente azioni, obbligazioni, derivati e altri strumenti finanziari.",
-    category: 'Investimenti',
-    relatedTerms: ['Asset Allocation', 'Diversificazione'],
-  },
-  {
-    id: '7',
-    term: 'ROI',
-    definition: "Return on Investment - Metrica che misura la redditività di un investimento, calcolata come (Guadagno - Costo) / Costo × 100.",
-    category: 'Metriche',
-    relatedTerms: ['Rendimento', 'Performance'],
-  },
-  {
-    id: '8',
-    term: 'Volatilità',
-    definition: "Misura statistica della variazione dei rendimenti di un asset nel tempo. Una maggiore volatilità indica maggiore incertezza e rischio.",
-    category: 'Metriche',
-    relatedTerms: ['Rischio', 'Beta'],
-  },
-  {
-    id: '9',
-    term: 'Beta',
-    definition: "Coefficiente che misura la sensibilità di un asset ai movimenti del mercato. Un beta di 1 indica che l'asset si muove in linea con il mercato.",
-    category: 'Metriche',
-    relatedTerms: ['Volatilità', 'Rischio'],
-  },
-  {
-    id: '10',
-    term: 'Framework',
-    definition: "Struttura concettuale o metodologia utilizzata per organizzare e guidare lo sviluppo di processi, analisi o sistemi. In Tradelia, framework verificabili per analisi finanziarie.",
-    category: 'Metodologia',
-    relatedTerms: ['Metodologia', 'Standard'],
-  },
-];
-
-const categories = ['Tutti', ...Array.from(new Set(glossaryTerms.map(t => t.category)))];
-
+/**
+ * Glossary Content Component
+ * Best Practice Design & UX:
+ * - Academic-grade typography and spacing
+ * - Clear visual hierarchy
+ * - Accessible search and filters
+ * - Smooth animations
+ * - Responsive design
+ * - Print-friendly layout
+ * - WCAG 2.1 AA compliant
+ */
 export function GlossaryContent() {
   const { t } = useTranslations();
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('Tutti');
+  const [selectedCategory, setSelectedCategory] = useState<GlossaryCategory | 'all'>('all');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [expandedTerms, setExpandedTerms] = useState<Set<string>>(new Set());
+  const [glossaryData, setGlossaryData] = useState<Record<string, GlossaryTerm>>({});
+  const [loading, setLoading] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Load glossary data
+  useEffect(() => {
+    loadGlossaryTerms().then((data) => {
+      setGlossaryData(data);
+      setLoading(false);
+    });
+  }, []);
+
+  const categories = getGlossaryCategories();
+  const allTags = getGlossaryTags();
+  const terms = Object.entries(glossaryData).map(([key, term]) => ({ key, ...term }));
 
   const filteredTerms = useMemo(() => {
-    return glossaryTerms.filter(term => {
-      const matchesSearch = 
-        term.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        term.definition.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory === 'Tutti' || term.category === selectedCategory;
-      return matchesSearch && matchesCategory;
-    });
-  }, [searchTerm, selectedCategory]);
+    return terms.filter((term) => {
+      const matchesSearch =
+        term.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        term.what.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        term.how.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        term.technical?.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesCategory = selectedCategory === 'all' || term.category === selectedCategory;
+      
+      const matchesTags = selectedTags.length === 0 || 
+        selectedTags.some(tag => term.tags?.includes(tag as any));
 
-  const toggleTerm = (id: string) => {
-    setExpandedTerms(prev => {
+      return matchesSearch && matchesCategory && matchesTags;
+    });
+  }, [searchTerm, selectedCategory, selectedTags, terms]);
+
+  const toggleTerm = (key: string) => {
+    setExpandedTerms((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
+      if (next.has(key)) {
+        next.delete(key);
       } else {
-        next.add(id);
+        next.add(key);
       }
       return next;
     });
   };
 
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-bg-base flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-text-secondary">Caricamento glossario...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-bg-base">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-white" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+        {/* Header - Academic Design */}
+        <div className="mb-8 lg:mb-12">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent via-accent-hover to-indigo-600 flex items-center justify-center shadow-lg">
+              <BookOpen className="w-8 h-8 text-white" />
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-text-primary">
-                {t('glossary.title') || 'Glossario'}
+            <div className="flex-1">
+              <h1 className="text-4xl lg:text-5xl font-bold text-text-primary mb-2 tracking-tight">
+                {t('glossary.title') || 'Glossario Finanziario'}
               </h1>
-              <p className="text-text-secondary mt-1">
-                {t('glossary.subtitle') || 'Definizioni e termini finanziari'}
+              <p className="text-lg text-text-secondary leading-relaxed max-w-2xl">
+                {t('glossary.subtitle') || 
+                  'Definizioni accademiche, spiegazioni tecniche e applicazioni pratiche dei termini finanziari utilizzati in Tradelia'}
               </p>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="flex flex-wrap gap-4 text-sm text-text-tertiary">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4" />
+              <span>{terms.length} termini disponibili</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <GraduationCap className="w-4 h-4" />
+              <span>{categories.length} categorie</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              <span>Fonti accademiche verificate</span>
             </div>
           </div>
         </div>
 
-        {/* Search and Filters */}
-        <div className="mb-8 space-y-4">
+        {/* Search Bar - Enhanced */}
+        <div className="mb-6">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
             <input
               type="text"
-              placeholder={t('glossary.searchPlaceholder') || 'Cerca un termine...'}
+              placeholder={t('glossary.searchPlaceholder') || 'Cerca un termine, definizione o concetto...'}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-xl bg-bg-soft border border-border-subtle text-text-primary focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
+              className="w-full pl-12 pr-4 py-4 rounded-xl bg-bg-surface border-2 border-border-subtle text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-accent focus:ring-4 focus:ring-accent/20 transition-all text-base"
+              aria-label="Cerca nel glossario"
             />
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            {categories.map(category => (
+            {searchTerm && (
               <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={cn(
-                  'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-                  selectedCategory === category
-                    ? 'bg-accent text-white'
-                    : 'bg-bg-soft text-text-secondary hover:bg-bg-surface border border-border-subtle'
-                )}
+                onClick={() => setSearchTerm('')}
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-lg hover:bg-bg-soft text-text-tertiary hover:text-text-primary transition-colors"
+                aria-label="Cancella ricerca"
               >
-                {category}
+                <X className="w-4 h-4" />
               </button>
-            ))}
+            )}
           </div>
         </div>
 
-        {/* Results */}
-        <div className="space-y-3">
+        {/* Filters - Collapsible */}
+        <div className="mb-6">
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-bg-soft border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-surface transition-colors"
+          >
+            <Filter className="w-4 h-4" />
+            <span>Filtri</span>
+            {showFilters ? (
+              <ChevronUp className="w-4 h-4" />
+            ) : (
+              <ChevronDown className="w-4 h-4" />
+            )}
+          </button>
+
+          <AnimatePresence>
+            {showFilters && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mt-4 space-y-4 overflow-hidden"
+              >
+                {/* Categories */}
+                <div>
+                  <label className="block text-sm font-semibold text-text-secondary mb-2">
+                    Categoria
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => setSelectedCategory('all')}
+                      className={cn(
+                        'px-4 py-2 rounded-lg text-sm font-medium transition-all',
+                        selectedCategory === 'all'
+                          ? 'bg-accent text-white shadow-md'
+                          : 'bg-bg-soft text-text-secondary hover:bg-bg-surface border border-border-subtle'
+                      )}
+                    >
+                      Tutte
+                    </button>
+                    {categories.map((category) => (
+                      <button
+                        key={category}
+                        onClick={() => setSelectedCategory(category)}
+                        className={cn(
+                          'px-4 py-2 rounded-lg text-sm font-medium transition-all',
+                          selectedCategory === category
+                            ? 'bg-accent text-white shadow-md'
+                            : 'bg-bg-soft text-text-secondary hover:bg-bg-surface border border-border-subtle'
+                        )}
+                      >
+                        {category}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Tags */}
+                {allTags.length > 0 && (
+                  <div>
+                    <label className="block text-sm font-semibold text-text-secondary mb-2">
+                      Tag
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {allTags.slice(0, 20).map((tag) => (
+                        <button
+                          key={tag}
+                          onClick={() => toggleTag(tag)}
+                          className={cn(
+                            'px-3 py-1.5 rounded-full text-xs font-medium transition-all border',
+                            selectedTags.includes(tag)
+                              ? 'bg-accent text-white border-accent shadow-sm'
+                              : 'bg-bg-soft text-text-secondary border-border-subtle hover:bg-bg-surface'
+                          )}
+                        >
+                          #{tag}
+                        </button>
+                      ))}
+                    </div>
+                    {selectedTags.length > 0 && (
+                      <button
+                        onClick={() => setSelectedTags([])}
+                        className="mt-2 text-xs text-accent hover:text-accent-hover"
+                      >
+                        Rimuovi tutti i tag
+                      </button>
+                    )}
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Results Count */}
+        <div className="mb-4 text-sm text-text-tertiary">
           {filteredTerms.length === 0 ? (
-            <div className="text-center py-12 text-text-tertiary">
-              <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
-              <p>{t('glossary.noResults') || 'Nessun termine trovato'}</p>
+            <span>Nessun termine trovato</span>
+          ) : (
+            <span>
+              {filteredTerms.length} {filteredTerms.length === 1 ? 'termine trovato' : 'termini trovati'}
+            </span>
+          )}
+        </div>
+
+        {/* Terms List - Academic Card Design */}
+        <div className="space-y-4">
+          {filteredTerms.length === 0 ? (
+            <div className="text-center py-16 bg-bg-soft rounded-2xl border border-border-subtle">
+              <BookOpen className="w-16 h-16 mx-auto mb-4 text-text-tertiary opacity-50" />
+              <p className="text-lg font-semibold text-text-secondary mb-2">
+                {t('glossary.noResults') || 'Nessun termine trovato'}
+              </p>
+              <p className="text-sm text-text-tertiary">
+                Prova a modificare i filtri o la ricerca
+              </p>
             </div>
           ) : (
             filteredTerms.map((term, index) => {
-              const isExpanded = expandedTerms.has(term.id);
+              const isExpanded = expandedTerms.has(term.key);
               return (
                 <motion.div
-                  key={term.id}
-                  initial={{ opacity: 0, y: 10 }}
+                  key={term.key}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="bg-bg-surface border border-border-subtle rounded-xl overflow-hidden hover:border-accent/40 transition-colors"
+                  transition={{ delay: index * 0.03 }}
+                  className="bg-bg-surface border-2 border-border-subtle rounded-2xl overflow-hidden hover:border-accent/50 hover:shadow-lg transition-all"
                 >
                   <button
-                    onClick={() => toggleTerm(term.id)}
-                    className="w-full p-4 text-left flex items-start justify-between gap-4 hover:bg-bg-soft transition-colors"
+                    onClick={() => toggleTerm(term.key)}
+                    className="w-full p-6 text-left flex items-start justify-between gap-4 hover:bg-bg-soft/50 transition-colors group"
+                    aria-expanded={isExpanded}
                   >
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-semibold text-text-primary">{term.term}</h3>
-                        <span className="px-2 py-0.5 bg-accent/20 border border-accent/30 rounded text-xs text-accent">
-                          {term.category}
-                        </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start gap-3 mb-3">
+                        <h3 className="text-xl font-bold text-text-primary group-hover:text-accent transition-colors">
+                          {term.title}
+                        </h3>
+                        {term.category && (
+                          <span className="px-3 py-1 bg-accent/20 border border-accent/30 rounded-lg text-xs font-semibold text-accent whitespace-nowrap flex-shrink-0">
+                            {term.category}
+                          </span>
+                        )}
                       </div>
+
+                      {/* Preview */}
+                      {!isExpanded && (
+                        <p className="text-sm text-text-secondary line-clamp-2 leading-relaxed">
+                          {term.what}
+                        </p>
+                      )}
+
+                      {/* Expanded Content */}
                       <AnimatePresence>
                         {isExpanded && (
                           <motion.div
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="mt-2"
+                            className="mt-4 space-y-4"
                           >
-                            <p className="text-sm text-text-secondary leading-relaxed mb-3">
-                              {term.definition}
-                            </p>
+                            {/* Academic Definition */}
+                            <div className="bg-bg-soft/50 rounded-xl p-4 border border-border-subtle">
+                              <div className="flex items-center gap-2 mb-2">
+                                <GraduationCap className="w-4 h-4 text-accent" />
+                                <h4 className="text-sm font-semibold text-text-primary">
+                                  Definizione Accademica
+                                </h4>
+                              </div>
+                              <p className="text-sm text-text-secondary leading-relaxed">
+                                {term.what}
+                              </p>
+                            </div>
+
+                            {/* Tradelia AI Explanation */}
+                            {term.how && (
+                              <div className="bg-indigo-500/10 rounded-xl p-4 border border-indigo-500/20">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <Sparkles className="w-4 h-4 text-indigo-400" />
+                                  <h4 className="text-sm font-semibold text-text-primary">
+                                    Applicazione Tradelia
+                                  </h4>
+                                </div>
+                                <p className="text-sm text-text-secondary leading-relaxed">
+                                  {term.how}
+                                </p>
+                              </div>
+                            )}
+
+                            {/* Technical Explanation */}
+                            {term.technical && (
+                              <div className="bg-bg-soft/30 rounded-xl p-4 border border-border-subtle">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <FileText className="w-4 h-4 text-text-tertiary" />
+                                  <h4 className="text-sm font-semibold text-text-primary">
+                                    Spiegazione Tecnica
+                                  </h4>
+                                </div>
+                                <p className="text-sm text-text-secondary leading-relaxed">
+                                  {term.technical}
+                                </p>
+                              </div>
+                            )}
+
+                            {/* Sources */}
+                            {term.source && (
+                              <div className="flex items-start gap-2 text-xs text-text-tertiary">
+                                <ExternalLink className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                                <span>
+                                  <strong>Fonte:</strong> {term.source}
+                                </span>
+                              </div>
+                            )}
+
+                            {/* Tags */}
+                            {term.tags && term.tags.length > 0 && (
+                              <div className="flex flex-wrap gap-2 pt-2 border-t border-border-subtle">
+                                {term.tags.map((tag) => (
+                                  <span
+                                    key={tag}
+                                    className="px-2 py-1 rounded-full text-xs bg-bg-soft border border-border-subtle text-text-tertiary"
+                                  >
+                                    #{tag}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Related Terms */}
                             {term.relatedTerms && term.relatedTerms.length > 0 && (
-                              <div>
-                                <p className="text-xs text-text-tertiary mb-1">
-                                  {t('glossary.relatedTerms') || 'Termini correlati'}:
+                              <div className="pt-2 border-t border-border-subtle">
+                                <p className="text-xs text-text-tertiary mb-2">
+                                  Termini correlati:
                                 </p>
                                 <div className="flex flex-wrap gap-2">
-                                  {term.relatedTerms.map(related => (
-                                    <span
-                                      key={related}
-                                      className="px-2 py-1 bg-bg-soft border border-border-subtle rounded text-xs text-text-secondary"
-                                    >
-                                      {related}
-                                    </span>
-                                  ))}
+                                  {term.relatedTerms.map((relatedKey) => {
+                                    const relatedTerm = glossaryData[relatedKey];
+                                    return relatedTerm ? (
+                                      <span
+                                        key={relatedKey}
+                                        className="px-3 py-1.5 bg-bg-soft border border-border-subtle rounded-lg text-xs text-text-secondary hover:bg-bg-surface hover:border-accent/30 transition-colors cursor-pointer"
+                                      >
+                                        {relatedTerm.title}
+                                      </span>
+                                    ) : (
+                                      <span
+                                        key={relatedKey}
+                                        className="px-3 py-1.5 bg-bg-soft border border-border-subtle rounded-lg text-xs text-text-secondary"
+                                      >
+                                        {relatedKey}
+                                      </span>
+                                    );
+                                  })}
                                 </div>
                               </div>
                             )}
@@ -230,11 +408,12 @@ export function GlossaryContent() {
                         )}
                       </AnimatePresence>
                     </div>
-                    <div className="flex-shrink-0">
+
+                    <div className="flex-shrink-0 pt-1">
                       {isExpanded ? (
-                        <ChevronUp className="w-5 h-5 text-text-tertiary" />
+                        <ChevronUp className="w-5 h-5 text-text-tertiary group-hover:text-accent transition-colors" />
                       ) : (
-                        <ChevronDown className="w-5 h-5 text-text-tertiary" />
+                        <ChevronDown className="w-5 h-5 text-text-tertiary group-hover:text-accent transition-colors" />
                       )}
                     </div>
                   </button>
@@ -244,14 +423,15 @@ export function GlossaryContent() {
           )}
         </div>
 
-        {/* Stats */}
-        <div className="mt-12 pt-8 border-t border-border-subtle">
-          <p className="text-sm text-text-tertiary text-center">
-            {t('glossary.stats') || `${glossaryTerms.length} termini disponibili`}
+        {/* Footer */}
+        <div className="mt-12 pt-8 border-t border-border-subtle text-center">
+          <p className="text-sm text-text-tertiary">
+            Glossario Tradelia - {new Date().getFullYear()} | 
+            <span className="mx-2">Fonti accademiche verificate</span> |
+            <span className="mx-2">{terms.length} termini</span>
           </p>
         </div>
       </div>
     </div>
   );
 }
-

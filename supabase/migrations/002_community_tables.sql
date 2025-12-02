@@ -1,202 +1,240 @@
--- Community Tables Migration
--- Creates tables for community proposals and voting (Pro feature)
--- Version: 002
+-- Initial Schema Migration
+-- Creates core tables for Tradelia application
+-- Version: 001
 -- Date: 2025-01-27
 --
 -- IMPORTANT: This migration is idempotent - safe to run multiple times
--- REQUIRES: 001_initial_schema.sql must be run first (creates user_roles table)
+-- Set search_path for security (prevents function hijacking)
+SET search_path = public;
 
--- Check if user_roles table exists (required dependency)
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT FROM information_schema.tables 
-    WHERE table_schema = 'public' 
-    AND table_name = 'user_roles'
-  ) THEN
-    RAISE EXCEPTION 'Migration 001_initial_schema.sql must be run first! Table user_roles does not exist.';
-  END IF;
-END $$;
+-- ============================================================================
+-- SCHEMA MIGRATIONS TABLE
+-- Tracks applied migrations (must be first!)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS schema_migrations (
+    version VARCHAR(255) PRIMARY KEY,
+    applied_at TIMESTAMPTZ DEFAULT NOW()
+);
 
--- Asset Proposals Table (Pro only)
--- Stores community proposals for new assets/features
-CREATE TABLE IF NOT EXISTS asset_proposals (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  title VARCHAR(255) NOT NULL,
-  description TEXT,
-  asset_symbol VARCHAR(20),
-  asset_name VARCHAR(255),
-  category VARCHAR(50),
-  status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'implemented')),
-  votes_count INTEGER DEFAULT 0,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
+-- RLS for schema_migrations
+ALTER TABLE schema_migrations ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public read access to schema_migrations" ON schema_migrations;
+CREATE POLICY "Public read access to schema_migrations"
+    ON schema_migrations FOR SELECT
+    USING (true);
+
+-- ============================================================================
+-- ADMIN EMAILS TABLE
+-- Whitelist of admin email addresses (must be created before user_roles)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS admin_emails (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) NOT NULL UNIQUE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    created_by UUID REFERENCES auth.users(id)
 );
 
 -- Indexes
-CREATE INDEX IF NOT EXISTS idx_asset_proposals_user_id ON asset_proposals(user_id);
-CREATE INDEX IF NOT EXISTS idx_asset_proposals_status ON asset_proposals(status);
-CREATE INDEX IF NOT EXISTS idx_asset_proposals_created_at ON asset_proposals(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_admin_emails_email ON admin_emails(email);
 
--- Asset Votes Table (Pro only)
--- Stores votes on asset proposals
-CREATE TABLE IF NOT EXISTS asset_votes (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  proposal_id UUID NOT NULL REFERENCES asset_proposals(id) ON DELETE CASCADE,
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  vote_type VARCHAR(10) NOT NULL CHECK (vote_type IN ('up', 'down')),
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  UNIQUE(proposal_id, user_id)
+-- RLS (temporarily allow service_role to insert initial data)
+ALTER TABLE admin_emails ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Service role can manage admin emails initially" ON admin_emails;
+DROP POLICY IF EXISTS "Admins can read admin emails" ON admin_emails;
+DROP POLICY IF EXISTS "Admins can manage admin emails" ON admin_emails;
+
+-- Allow service_role to manage admin_emails initially (for migrations)
+CREATE POLICY "Service role can manage admin emails initially"
+    ON admin_emails FOR ALL
+    USING (auth.role() = 'service_role')
+    WITH CHECK (auth.role() = 'service_role');
+
+-- Only admins can read admin_emails
+CREATE POLICY "Admins can read admin emails"
+    ON admin_emails FOR SELECT
+    USING (
+        EXISTS (
+            SELECT 1 FROM admin_emails ae
+            WHERE ae.email = (SELECT email FROM auth.users WHERE id = auth.uid())
+        )
+    );
+
+-- Only admins can manage admin_emails (INSERT/UPDATE/DELETE)
+CREATE POLICY "Admins can manage admin emails"
+    ON admin_emails FOR ALL
+    USING (
+        EXISTS (
+            SELECT 1 FROM admin_emails ae
+            WHERE ae.email = (SELECT email FROM auth.users WHERE id = auth.uid())
+        )
+    )
+    WITH CHECK (
+        EXISTS (
+            SELECT 1 FROM admin_emails ae
+            WHERE ae.email = (SELECT email FROM auth.users WHERE id = auth.uid())
+        )
+    );
+
+-- ============================================================================
+-- USER ROLES TABLE
+-- Stores user subscription roles and validity
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS user_roles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    role VARCHAR(20) NOT NULL CHECK (role IN ('trial', 'pro', 'desk', 'admin')),
+    plan_source VARCHAR(50),
+    valid_until TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id)
 );
 
 -- Indexes
-CREATE INDEX IF NOT EXISTS idx_asset_votes_proposal_id ON asset_votes(proposal_id);
-CREATE INDEX IF NOT EXISTS idx_asset_votes_user_id ON asset_votes(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_roles_user_id ON user_roles(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_roles_role ON user_roles(role);
+CREATE INDEX IF NOT EXISTS idx_user_roles_valid_until ON user_roles(valid_until);
 
--- Function to update votes count
--- Security: Set search_path to prevent search path attacks
-CREATE OR REPLACE FUNCTION update_proposal_votes_count()
+-- RLS
+ALTER TABLE user_roles ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can read own role" ON user_roles;
+DROP POLICY IF EXISTS "Admins can read all roles" ON user_roles;
+
+-- Users can read their own role
+CREATE POLICY "Users can read own role"
+    ON user_roles FOR SELECT
+    USING (auth.uid() = user_id);
+
+-- Admins can read all roles
+CREATE POLICY "Admins can read all roles"
+    ON user_roles FOR SELECT
+    USING (
+        EXISTS (
+            SELECT 1 FROM admin_emails
+            WHERE email = (SELECT email FROM auth.users WHERE id = auth.uid())
+        )
+    );
+
+-- ============================================================================
+-- PROFILES TABLE (Standard Supabase)
+-- User profiles extending auth.users
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    email TEXT,
+    full_name TEXT,
+    display_name TEXT,
+    bio TEXT,
+    avatar_url TEXT,
+    company TEXT,
+    user_type VARCHAR(50) DEFAULT 'individual',
+    language VARCHAR(10) DEFAULT 'it',
+    timezone VARCHAR(50) DEFAULT 'Europe/Rome',
+    email_notifications BOOLEAN DEFAULT true,
+    push_notifications BOOLEAN DEFAULT true,
+    business_logo_url TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_profiles_email ON profiles(email);
+CREATE INDEX IF NOT EXISTS idx_profiles_user_type ON profiles(user_type);
+
+-- RLS
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can read own profile" ON profiles;
+DROP POLICY IF EXISTS "Users can update own profile" ON profiles;
+DROP POLICY IF EXISTS "Public profiles are viewable by everyone" ON profiles;
+
+-- Users can read their own profile
+CREATE POLICY "Users can read own profile"
+    ON profiles FOR SELECT
+    USING (auth.uid() = id);
+
+-- Users can update their own profile
+CREATE POLICY "Users can update own profile"
+    ON profiles FOR UPDATE
+    USING (auth.uid() = id)
+    WITH CHECK (auth.uid() = id);
+
+-- Public profiles are viewable by everyone (for social features)
+CREATE POLICY "Public profiles are viewable by everyone"
+    ON profiles FOR SELECT
+    USING (true);
+
+-- ============================================================================
+-- PDF CUSTOMIZATIONS TABLE (Desk only)
+-- Stores PDF customization settings for Desk users
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS pdf_customizations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    template VARCHAR(50) DEFAULT 'default' CHECK (template IN ('default', 'minimal', 'detailed')),
+    logo_url TEXT,
+    primary_color VARCHAR(7) DEFAULT '#2563eb',
+    secondary_color VARCHAR(7) DEFAULT '#3b82f6',
+    font_family VARCHAR(50) DEFAULT 'Helvetica',
+    header_text VARCHAR(255) DEFAULT 'Tradelia Report',
+    footer_text VARCHAR(255) DEFAULT 'Confidential - Tradelia AI',
+    watermark_enabled BOOLEAN DEFAULT false,
+    watermark_text VARCHAR(255),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id)
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_pdf_customizations_user_id ON pdf_customizations(user_id);
+
+-- RLS
+ALTER TABLE pdf_customizations ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can manage own PDF customizations" ON pdf_customizations;
+
+-- Users can read/write their own customizations
+CREATE POLICY "Users can manage own PDF customizations"
+    ON pdf_customizations FOR ALL
+    USING (auth.uid() = user_id)
+    WITH CHECK (auth.uid() = user_id);
+
+-- ============================================================================
+-- FUNCTION: update_updated_at_column
+-- Automatically updates updated_at timestamp
+-- ============================================================================
+CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = ''
+SET search_path = public
 AS $$
 BEGIN
-  UPDATE asset_proposals
-  SET votes_count = (
-    SELECT COUNT(*) FROM asset_votes
-    WHERE proposal_id = NEW.proposal_id AND vote_type = 'up'
-  ) - (
-    SELECT COUNT(*) FROM asset_votes
-    WHERE proposal_id = NEW.proposal_id AND vote_type = 'down'
-  )
-  WHERE id = NEW.proposal_id;
-  RETURN NEW;
+    NEW.updated_at = NOW();
+    RETURN NEW;
 END;
 $$;
 
--- Trigger to update votes count
--- Drop existing trigger if it exists (idempotent)
-DROP TRIGGER IF EXISTS update_votes_count_on_vote ON asset_votes;
+-- ============================================================================
+-- TRIGGERS
+-- ============================================================================
+DROP TRIGGER IF EXISTS update_user_roles_updated_at ON user_roles;
+CREATE TRIGGER update_user_roles_updated_at
+    BEFORE UPDATE ON user_roles
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_votes_count_on_vote
-  AFTER INSERT OR UPDATE OR DELETE ON asset_votes
-  FOR EACH ROW
-  EXECUTE FUNCTION update_proposal_votes_count();
+DROP TRIGGER IF EXISTS update_pdf_customizations_updated_at ON pdf_customizations;
+CREATE TRIGGER update_pdf_customizations_updated_at
+    BEFORE UPDATE ON pdf_customizations
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
 
--- Enable RLS
-ALTER TABLE asset_proposals ENABLE ROW LEVEL SECURITY;
-ALTER TABLE asset_votes ENABLE ROW LEVEL SECURITY;
-
--- RLS Policies for asset_proposals
--- Drop existing policies if they exist (idempotent)
-DROP POLICY IF EXISTS "Pro users can read proposals" ON asset_proposals;
-DROP POLICY IF EXISTS "Pro users can create proposals" ON asset_proposals;
-DROP POLICY IF EXISTS "Users can update own proposals" ON asset_proposals;
-
--- Pro users can read all proposals
--- Note: This policy requires user_roles table to exist (created in migration 001)
-CREATE POLICY "Pro users can read proposals"
-  ON asset_proposals FOR SELECT
-  USING (
-    -- Allow if user_roles table exists and user has pro/desk/admin role
-    EXISTS (
-      SELECT 1 FROM user_roles
-      WHERE user_id = auth.uid()
-      AND role IN ('pro', 'desk', 'admin')
-      AND (valid_until IS NULL OR valid_until > NOW())
-    )
-    OR
-    -- Fallback: allow if user_roles table doesn't exist yet (shouldn't happen, but safe)
-    NOT EXISTS (
-      SELECT FROM information_schema.tables 
-      WHERE table_schema = 'public' 
-      AND table_name = 'user_roles'
-    )
-  );
-
--- Pro users can create proposals
-CREATE POLICY "Pro users can create proposals"
-  ON asset_proposals FOR INSERT
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM user_roles
-      WHERE user_id = auth.uid()
-      AND role IN ('pro', 'desk', 'admin')
-      AND (valid_until IS NULL OR valid_until > NOW())
-    )
-    OR
-    -- Fallback: allow if user_roles table doesn't exist yet
-    NOT EXISTS (
-      SELECT FROM information_schema.tables 
-      WHERE table_schema = 'public' 
-      AND table_name = 'user_roles'
-    )
-  );
-
--- Users can update their own proposals
-CREATE POLICY "Users can update own proposals"
-  ON asset_proposals FOR UPDATE
-  USING (user_id = auth.uid())
-  WITH CHECK (user_id = auth.uid());
-
--- RLS Policies for asset_votes
--- Drop existing policies if they exist (idempotent)
-DROP POLICY IF EXISTS "Pro users can read votes" ON asset_votes;
-DROP POLICY IF EXISTS "Pro users can vote" ON asset_votes;
-
--- Pro users can read all votes
-CREATE POLICY "Pro users can read votes"
-  ON asset_votes FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM user_roles
-      WHERE user_id = auth.uid()
-      AND role IN ('pro', 'desk', 'admin')
-      AND (valid_until IS NULL OR valid_until > NOW())
-    )
-    OR
-    -- Fallback: allow if user_roles table doesn't exist yet
-    NOT EXISTS (
-      SELECT FROM information_schema.tables 
-      WHERE table_schema = 'public' 
-      AND table_name = 'user_roles'
-    )
-  );
-
--- Pro users can vote
-CREATE POLICY "Pro users can vote"
-  ON asset_votes FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM user_roles
-      WHERE user_id = auth.uid()
-      AND role IN ('pro', 'desk', 'admin')
-      AND (valid_until IS NULL OR valid_until > NOW())
-    )
-    OR
-    -- Fallback: allow if user_roles table doesn't exist yet
-    NOT EXISTS (
-      SELECT FROM information_schema.tables 
-      WHERE table_schema = 'public' 
-      AND table_name = 'user_roles'
-    )
-  )
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM user_roles
-      WHERE user_id = auth.uid()
-      AND role IN ('pro', 'desk', 'admin')
-      AND (valid_until IS NULL OR valid_until > NOW())
-    )
-    OR
-    -- Fallback: allow if user_roles table doesn't exist yet
-    NOT EXISTS (
-      SELECT FROM information_schema.tables 
-      WHERE table_schema = 'public' 
-      AND table_name = 'user_roles'
-    )
-  );
-
-
+DROP TRIGGER IF EXISTS update_profiles_updated_at ON profiles;
+CREATE TRIGGER update_profiles_updated_at
+    BEFORE UPDATE ON profiles
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();

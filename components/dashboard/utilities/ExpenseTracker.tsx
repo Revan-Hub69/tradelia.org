@@ -79,7 +79,7 @@ export function ExpenseTracker() {
   const categories = [
     { id: 'food', label: 'Cibo', color: 'text-orange-400', bgColor: 'bg-orange-400/20' },
     { id: 'transport', label: 'Trasporti', color: 'text-blue-400', bgColor: 'bg-blue-400/20' },
-    { id: 'shopping', label: 'Shopping', color: 'text-purple-400', bgColor: 'bg-purple-400/20' },
+    { id: 'shopping', label: 'Shopping', color: 'text-indigo-300', bgColor: 'bg-indigo-500/20' },
     { id: 'bills', label: 'Bollette', color: 'text-red-400', bgColor: 'bg-red-400/20' },
     { id: 'entertainment', label: 'Intrattenimento', color: 'text-green-400', bgColor: 'bg-green-400/20' },
     { id: 'health', label: 'Salute', color: 'text-pink-400', bgColor: 'bg-pink-400/20' },

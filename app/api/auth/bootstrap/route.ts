@@ -76,12 +76,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Dati mancanti o non validi" }, { status: 400 });
     }
 
-    const profilePromise = supabaseAdmin.from("user_profiles").upsert(
+    const profilePromise = supabaseAdmin.from("profiles").upsert(
       {
-        user_id: userId,
+        id: userId,
         display_name: name,
+        email: email,
       },
-      { onConflict: "user_id" }
+      { onConflict: "id" }
     );
 
     const rolePromise = supabaseAdmin.from("user_roles").upsert(
