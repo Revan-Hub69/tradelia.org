@@ -263,19 +263,31 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       '    padding: 0 !important;',
       '  }',
       '  body * { visibility: hidden; }',
-      '  .glossary-print-container, .glossary-print-container * { visibility: visible; }',
+      '  .glossary-print-container, .glossary-print-container * { visibility: visible !important; }',
       '  .glossary-print-container {',
       '    display: block !important;',
+      '    visibility: visible !important;',
       '    position: absolute !important;',
       '    left: 0 !important;',
       '    top: 0 !important;',
       '    width: 100% !important;',
       '    height: auto !important;',
+      '    min-height: 100vh !important;',
       '    background: white !important;',
       '    color: #000 !important;',
       '    padding: 0 !important;',
       '    margin: 0 !important;',
       '    z-index: 9999 !important;',
+      '    opacity: 1 !important;',
+      '  }',
+      '  .glossary-print-container.hidden {',
+      '    display: none !important;',
+      '  }',
+      '  @media print {',
+      '    .glossary-print-container.hidden {',
+      '      display: block !important;',
+      '      visibility: visible !important;',
+      '    }',
       '  }',
       '  .no-print, button, .backdrop, nav, .print-header-actions, [class*="backdrop"], [class*="bg-black"], [class*="fixed"][class*="inset"] { display: none !important; visibility: hidden !important; }',
       '  /* Hide drawer panel and all dark overlays */',
@@ -487,7 +499,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               aria-describedby="glossary-drawer-description"
             >
               {/* Print Version - Hidden on screen, visible when printing */}
-              <div className="glossary-print-container" style={{ display: 'none' }}>
+              <div className="glossary-print-container hidden print:block">
                 {/* Print Header with Logo - Professional Layout */}
                 <div className="print-header">
                   <div className="print-logo-container" style={{ display: 'block', visibility: 'visible' }}>
