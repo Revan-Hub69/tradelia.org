@@ -51,9 +51,9 @@ export const QuickLinks = memo(function QuickLinks() {
       icon: Layout,
       label: t('dashboard.quickLinks.widgets') || 'Widget',
       description: t('dashboard.quickLinks.widgetsDesc') || 'Personalizza la tua dashboard',
-      color: 'text-indigo-300',
-      bgColor: 'bg-indigo-500/20',
-      borderColor: 'border-indigo-400/30',
+      color: 'text-cyan-300',
+      bgColor: 'bg-cyan-500/20',
+      borderColor: 'border-cyan-400/30',
     },
     {
       id: 'utilities',

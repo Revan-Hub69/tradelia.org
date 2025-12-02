@@ -304,7 +304,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               <section className="space-y-3" aria-labelledby="tradelia-section-title">
                 <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border-subtle">
                   <div className="w-10 h-10 rounded-lg bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-900/50 flex items-center justify-center flex-shrink-0">
-                    <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400" aria-hidden="true" />
+                    <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-300" aria-hidden="true" />
                   </div>
                   <div>
                     <h3 id="tradelia-section-title" className="text-base font-bold text-text-primary">
@@ -325,7 +325,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                 <section className="space-y-3" aria-labelledby="related-terms-section-title">
                   <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border-subtle">
                     <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-900/50 flex items-center justify-center flex-shrink-0">
-                      <Link2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400" aria-hidden="true" />
+                      <Link2 className="w-5 h-5 text-indigo-600 dark:text-cyan-300" aria-hidden="true" />
                     </div>
                     <div>
                       <h3 id="related-terms-section-title" className="text-base font-bold text-text-primary">

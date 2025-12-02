@@ -324,9 +324,9 @@ export function GlossaryContent() {
 
                             {/* Tradelia AI Explanation */}
                             {term.how && (
-                              <div className="bg-indigo-500/10 rounded-xl p-4 border border-indigo-500/20">
+                              <div className="bg-cyan-500/10 rounded-xl p-4 border border-cyan-500/20">
                                 <div className="flex items-center gap-2 mb-2">
-                                  <Sparkles className="w-4 h-4 text-indigo-400" />
+                                  <Sparkles className="w-4 h-4 text-cyan-300" />
                                   <h4 className="text-sm font-semibold text-text-primary">
                                     Applicazione Tradelia
                                   </h4>
