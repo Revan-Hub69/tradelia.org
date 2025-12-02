@@ -8,6 +8,8 @@
     "supabase:check": "node scripts/supabase/check-schema.mjs",
     "supabase:setup": "node scripts/supabase/setup.mjs",
     "supabase:migrate": "node scripts/supabase/migrate.mjs",
+    "supabase:list-tables": "node scripts/supabase/list-all-tables.mjs",
+    "supabase:cleanup": "node scripts/supabase/cleanup-database.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "node server.js",
