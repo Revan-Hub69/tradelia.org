@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
-import { Search, BookOpen, X, GraduationCap, FileText, Keyboard, Layers, Tag } from 'lucide-react';
+import { Search, BookOpen, X, GraduationCap, FileText, Keyboard, Layers, Tag, ChevronDown } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
