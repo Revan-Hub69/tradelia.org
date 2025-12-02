@@ -11,6 +11,11 @@ import { parseReportContent } from "../utils/ReportContentParser";
 import { imageUrlToBase64, generateChartPlaceholder } from "../utils/ImageConverter";
 import { loadTradeliaLogo } from "../utils/LogoLoader";
 import { createClient } from "@/lib/supabase/server";
+import {
+  loadCurrentUserWhitelabelConfig,
+  mergeWhitelabelConfig,
+  type WhitelabelConfig,
+} from "../utils/WhitelabelLoader";
 
 interface ReportData {
   id: string;
@@ -104,33 +109,47 @@ export async function generateReportPDF(
     });
   }
 
-  // Carica logo: personalizzato (Desk/Business) o Tradelia standard
-  let logoBase64 = await loadTradeliaLogo();
+  // Carica configurazione white label per partner (Best Practice: Academic white label)
+  let whitelabelConfig: WhitelabelConfig | null = null;
+  let logoBase64 = await loadTradeliaLogo(); // Fallback a logo Tradelia
 
   try {
-    // Verifica se utente ha logo personalizzato (solo Desk/Business)
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    // Carica white label config per utente corrente
+    whitelabelConfig = await loadCurrentUserWhitelabelConfig();
 
-    if (user) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("business_logo_url")
-        .eq("id", user.id)
-        .single();
+    if (whitelabelConfig) {
+      // Usa logo da white label config se disponibile
+      if (whitelabelConfig.logo_url) {
+        logoBase64 = whitelabelConfig.logo_url;
+      }
+    } else {
+      // Fallback: verifica se utente ha business_logo_url (legacy support)
+      const supabase = await createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-      if (profile?.business_logo_url) {
-        logoBase64 = profile.business_logo_url; // Usa logo personalizzato
+      if (user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("business_logo_url")
+          .eq("id", user.id)
+          .single();
+
+        if (profile?.business_logo_url) {
+          logoBase64 = profile.business_logo_url; // Usa logo personalizzato legacy
+        }
       }
     }
   } catch (error) {
     // Se errore, usa logo Tradelia standard
-    console.error("Error loading custom logo:", error);
+    console.error("Error loading whitelabel config:", error);
   }
 
-  // Generate PDF con template accademico
+  // Merge white label config con defaults
+  const finalWhitelabelConfig = mergeWhitelabelConfig(whitelabelConfig);
+
+  // Generate PDF con template accademico e white label
   const pdfDocument = React.createElement(ReportPDF, {
     title: reportData.title,
     description: reportData.description || undefined,
@@ -142,6 +161,7 @@ export async function generateReportPDF(
       version: reportData.metadata?.version || "1.0",
     },
     logoUrl: logoBase64, // Logo come base64
+    whitelabelConfig: finalWhitelabelConfig, // White label configuration
   });
 
   // Render to buffer

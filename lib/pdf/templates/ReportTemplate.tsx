@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image, Font, Link } from '@react-pdf/renderer';
+import type { WhitelabelConfig } from '../utils/WhitelabelLoader';
 
 // Register fonts (se necessario)
 // Font.register({
@@ -251,11 +252,13 @@ interface ReportPDFProps {
     version?: string;
   };
   logoUrl?: string;
+  whitelabelConfig?: WhitelabelConfig;
 }
 
 /**
  * Report PDF Document
- * Template completo seguendo principi accademici
+ * Template completo seguendo principi accademici con supporto white label
+ * Best Practice: Academic white label maintains professional standards
  */
 export function ReportPDF({
   title,
@@ -264,9 +267,105 @@ export function ReportPDF({
   sections,
   metadata,
   logoUrl = '/logos/tradelia-logo.svg',
+  whitelabelConfig,
 }: ReportPDFProps) {
   const currentDate = metadata?.date || new Date().toLocaleDateString('it-IT');
   const author = metadata?.author || 'Tradelia AI';
+
+  // Create dynamic styles based on white label config
+  const dynamicStyles = whitelabelConfig ? StyleSheet.create({
+    page: {
+      ...styles.page,
+      backgroundColor: whitelabelConfig.background_color,
+      fontFamily: whitelabelConfig.font_family,
+      fontSize: whitelabelConfig.font_size_base,
+    },
+    header: {
+      ...styles.header,
+      borderBottomColor: whitelabelConfig.accent_color,
+    },
+    headerTitle: {
+      ...styles.headerTitle,
+      fontSize: whitelabelConfig.font_size_title,
+      fontFamily: whitelabelConfig.heading_font_family,
+      color: whitelabelConfig.text_color,
+    },
+    sectionTitle: {
+      ...styles.sectionTitle,
+      fontSize: whitelabelConfig.font_size_heading,
+      fontFamily: whitelabelConfig.heading_font_family,
+      color: whitelabelConfig.text_color,
+      borderBottomColor: whitelabelConfig.primary_color,
+    },
+    paragraph: {
+      ...styles.paragraph,
+      fontSize: whitelabelConfig.font_size_base,
+      fontFamily: whitelabelConfig.font_family,
+      color: whitelabelConfig.text_color,
+    },
+    footer: {
+      ...styles.footer,
+      color: whitelabelConfig.text_color,
+    },
+    statValue: {
+      ...styles.statValue,
+      color: whitelabelConfig.accent_color,
+    },
+    highlight: {
+      ...styles.highlight,
+      backgroundColor: `${whitelabelConfig.accent_color}20`, // 20% opacity
+    },
+    highlightText: {
+      ...styles.highlightText,
+      color: whitelabelConfig.accent_color,
+    },
+  }) : styles;
+
+  // Get logo dimensions from white label config
+  const logoWidth = whitelabelConfig?.logo_width || 120;
+  const logoHeight = whitelabelConfig?.logo_height || 40;
+
+  // Build footer text from white label config
+  const buildFooterText = () => {
+    if (!whitelabelConfig?.footer_enabled) {
+      return author;
+    }
+
+    const footerParts: string[] = [];
+    if (whitelabelConfig.footer_text) {
+      footerParts.push(whitelabelConfig.footer_text);
+    }
+    if (whitelabelConfig.footer_contact_email) {
+      footerParts.push(`Email: ${whitelabelConfig.footer_contact_email}`);
+    }
+    if (whitelabelConfig.footer_contact_phone) {
+      footerParts.push(`Tel: ${whitelabelConfig.footer_contact_phone}`);
+    }
+    if (whitelabelConfig.footer_website) {
+      footerParts.push(whitelabelConfig.footer_website);
+    }
+    if (whitelabelConfig.footer_address) {
+      footerParts.push(whitelabelConfig.footer_address);
+    }
+
+    return footerParts.length > 0 ? footerParts.join(' • ') : author;
+  };
+
+  const footerText = buildFooterText();
+
+  // Watermark style
+  const watermarkStyle = whitelabelConfig?.watermark_enabled && whitelabelConfig?.watermark_text
+    ? {
+        position: 'absolute' as const,
+        top: '50%',
+        left: '50%',
+        transform: 'rotate(-45deg) translate(-50%, -50%)',
+        fontSize: 60,
+        color: `${whitelabelConfig.text_color}${Math.round((whitelabelConfig.watermark_opacity || 0.1) * 255).toString(16).padStart(2, '0')}`,
+        opacity: whitelabelConfig.watermark_opacity || 0.1,
+        zIndex: 0,
+      }
+    : null;
 
   return (
     <Document
@@ -278,20 +377,25 @@ export function ReportPDF({
       keywords={`${reportType}, report, analisi, tradelia`}
     >
       {/* Cover Page */}
-      <Page size="A4" style={styles.page}>
-        <View style={styles.header}>
-          <View style={styles.logoContainer}>
-            {/* Logo Tradelia - Riferimento: Brand Guidelines */}
+      <Page size="A4" style={dynamicStyles.page}>
+        {/* Watermark */}
+        {watermarkStyle && whitelabelConfig?.watermark_text && (
+          <Text style={watermarkStyle}>{whitelabelConfig.watermark_text}</Text>
+        )}
+        
+        <View style={dynamicStyles.header}>
+          <View style={[styles.logoContainer, { width: logoWidth, height: logoHeight }]}>
+            {/* Logo - White label or Tradelia default */}
             {logoUrl && logoUrl.startsWith('data:') ? (
               <Image
                 src={logoUrl}
-                style={styles.logo}
+                style={{ width: logoWidth, height: logoHeight, objectFit: 'contain' }}
                 cache={false}
               />
             ) : (
               <Image
                 src={TRADELIA_LOGO_BASE64}
-                style={styles.logo}
+                style={{ width: logoWidth, height: logoHeight, objectFit: 'contain' }}
                 cache={false}
               />
             )}
@@ -303,43 +407,57 @@ export function ReportPDF({
         </View>
 
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 100 }}>
-          <Text style={[styles.headerTitle, { fontSize: 32, marginBottom: 20 }]}>
+          <Text style={[dynamicStyles.headerTitle, { fontSize: whitelabelConfig?.font_size_title ? whitelabelConfig.font_size_title + 8 : 32, marginBottom: 20 }]}>
             {title}
           </Text>
           {description && (
-            <Text style={[styles.paragraph, { fontSize: 12, textAlign: 'center', maxWidth: 400 }]}>
+            <Text style={[dynamicStyles.paragraph, { fontSize: (whitelabelConfig?.font_size_base || 10) + 2, textAlign: 'center', maxWidth: 400 }]}>
               {description}
             </Text>
           )}
-          <View style={{ marginTop: 40, padding: 20, backgroundColor: '#f1f5f9', borderRadius: 8 }}>
-            <Text style={[styles.headerSubtitle, { fontSize: 14, textAlign: 'center' }]}>
+          <View style={{ marginTop: 40, padding: 20, backgroundColor: whitelabelConfig ? `${whitelabelConfig.accent_color}10` : '#f1f5f9', borderRadius: 8 }}>
+            <Text style={[styles.headerSubtitle, { fontSize: (whitelabelConfig?.font_size_base || 10) + 4, textAlign: 'center', color: whitelabelConfig?.accent_color || '#64748b' }]}>
               {reportType}
             </Text>
           </View>
         </View>
 
-        <View style={styles.footer}>
-          <Text>Generato da Tradelia Platform</Text>
+        {/* Academic Disclaimer */}
+        {whitelabelConfig?.show_academic_disclaimer && whitelabelConfig?.academic_disclaimer_text && (
+          <View style={{ marginTop: 20, padding: 10, backgroundColor: '#f8fafc', borderRadius: 4 }}>
+            <Text style={[dynamicStyles.paragraph, { fontSize: 8, fontStyle: 'italic', textAlign: 'center' }]}>
+              {whitelabelConfig.academic_disclaimer_text}
+            </Text>
+          </View>
+        )}
+
+        <View style={dynamicStyles.footer}>
+          <Text>{footerText}</Text>
           <Text>Pagina 1</Text>
         </View>
       </Page>
 
       {/* Content Pages */}
       {sections.map((section, index) => (
-        <Page key={section.id} size="A4" style={styles.page} wrap={false}>
-          <View style={styles.header}>
-            <View style={styles.logoContainer}>
-              {/* Logo Tradelia su ogni pagina */}
+        <Page key={section.id} size="A4" style={dynamicStyles.page} wrap={false}>
+          {/* Watermark */}
+          {watermarkStyle && whitelabelConfig?.watermark_text && (
+            <Text style={watermarkStyle}>{whitelabelConfig.watermark_text}</Text>
+          )}
+          
+          <View style={dynamicStyles.header}>
+            <View style={[styles.logoContainer, { width: logoWidth, height: logoHeight }]}>
+              {/* Logo - White label or Tradelia default */}
               {logoUrl && logoUrl.startsWith('data:') ? (
                 <Image
                   src={logoUrl}
-                  style={styles.logo}
+                  style={{ width: logoWidth, height: logoHeight, objectFit: 'contain' }}
                   cache={false}
                 />
               ) : (
                 <Image
                   src={TRADELIA_LOGO_BASE64}
-                  style={styles.logo}
+                  style={{ width: logoWidth, height: logoHeight, objectFit: 'contain' }}
                   cache={false}
                 />
               )}
@@ -351,14 +469,14 @@ export function ReportPDF({
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{section.title}</Text>
+            <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
             {section.subtitle && (
-              <Text style={styles.sectionSubtitle}>{section.subtitle}</Text>
+              <Text style={[styles.sectionSubtitle, { color: whitelabelConfig?.text_color || '#1e293b' }]}>{section.subtitle}</Text>
             )}
 
             {/* Render content based on type */}
             {section.type === 'text' && (
-              <Text style={styles.paragraph}>
+              <Text style={dynamicStyles.paragraph}>
                 {typeof section.content === 'string' ? section.content : ''}
               </Text>
             )}
@@ -416,7 +534,7 @@ export function ReportPDF({
               <View style={styles.statsContainer}>
                 {section.data.map((stat: { label: string; value: string | number }, i: number) => (
                   <View key={i} style={styles.statItem}>
-                    <Text style={styles.statValue}>{stat.value}</Text>
+                    <Text style={dynamicStyles.statValue}>{stat.value}</Text>
                     <Text style={styles.statLabel}>{stat.label}</Text>
                   </View>
                 ))}
@@ -424,8 +542,8 @@ export function ReportPDF({
             )}
           </View>
 
-          <View style={styles.footer}>
-            <Text>{author}</Text>
+          <View style={dynamicStyles.footer}>
+            <Text>{footerText}</Text>
             <Text>Pagina {index + 2}</Text>
           </View>
         </Page>
