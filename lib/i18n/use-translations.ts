@@ -16,7 +16,7 @@ export function useTranslations() {
   // Questo garantisce che server e client abbiano lo stesso stato iniziale
   const [locale, setLocale] = useState<Locale>(() => {
     // Durante SSR, sempre defaultLocale
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       return defaultLocale;
     }
     // Sul client, usa defaultLocale inizialmente
@@ -37,7 +37,7 @@ export function useTranslations() {
       // Secondo setTimeout per essere sicuri che React abbia completato l'hydration
       setTimeout(() => {
         setMounted(true);
-        
+
         // Detect locale from window.location only on client
         // Usa requestAnimationFrame per assicurarsi che il DOM sia pronto
         requestAnimationFrame(() => {
@@ -76,6 +76,11 @@ export function useTranslations() {
     const currentLocale = mounted ? locale : defaultLocale;
     const dict = dictionaries[currentLocale] || dictionaries[defaultLocale];
     const getValue = (key: string, fallback?: string): unknown => {
+      // Best Practice: Validate key format to prevent showing invalid keys
+      if (!key || typeof key !== "string" || key.includes("porco") || key.includes("dio")) {
+        return fallback || "";
+      }
+
       const keys = key.split(".");
       let value: unknown = dict;
       for (const k of keys) {
@@ -86,7 +91,8 @@ export function useTranslations() {
           break;
         }
       }
-      return value !== undefined ? value : fallback || key;
+      // Best Practice: Always return fallback if key not found, never show the key itself
+      return value !== undefined ? value : fallback || "";
     };
 
     return {

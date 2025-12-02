@@ -197,12 +197,16 @@
     },
     "quickLinks": {
       "title": "Risorse",
+      "watchlist": "Watchlist",
+      "watchlistDesc": "Monitora asset con alert personalizzati",
       "glossary": "Glossario",
       "glossaryDesc": "Termini finanziari e definizioni",
       "widgets": "Widget",
       "widgetsDesc": "Personalizza la tua dashboard",
       "utilities": "Utilities Pro",
-      "utilitiesDesc": "Strumenti avanzati per utenti Pro"
+      "utilitiesDesc": "Strumenti avanzati per utenti Pro",
+      "print": "Stampa e Download",
+      "printDesc": "Stampa e scarica report in PDF, Excel, CSV"
     },
     "banner": {
       "notLoggedIn": {
@@ -763,9 +767,11 @@
     "stats": "{count} termini disponibili",
     "drawer": {
       "subtitle": "Definizione completa del termine",
-      "academicExplanation": "Spiegazione Accademica",
+      "academicExplanation": "Definizione Accademica",
+      "technicalExplanation": "Spiegazione Tecnica Tradelia AI",
       "tradeliaExplanation": "Spiegazione Tradelia AI",
-      "sources": "Fonti Accademiche"
+      "relatedTerms": "Termini Correlati",
+      "sources": "Riferimenti Bibliografici"
     }
   },
   "widgets": {
