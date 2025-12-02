@@ -278,7 +278,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                 </div>
               </section>
 
-              {/* Spiegazione Tecnica Semplificata - Academic Style */}
+              {/* Spiegazione Tecnica Tradelia AI - Academic Style */}
               {term.technical && (
                 <section className="space-y-3" aria-labelledby="technical-section-title">
                   <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border-subtle">
@@ -287,9 +287,9 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     </div>
                     <div>
                       <h3 id="technical-section-title" className="text-base font-bold text-text-primary">
-                        {t('glossary.drawer.technicalExplanation') || 'Spiegazione Tecnica Semplificata'}
+                        {t('glossary.drawer.technicalExplanation') || 'Spiegazione Tecnica Tradelia AI'}
                       </h3>
-                      <p className="text-xs text-text-tertiary mt-0.5">Simplified Technical Explanation</p>
+                      <p className="text-xs text-text-tertiary mt-0.5">Technical Explanation (Educational Best Practice)</p>
                     </div>
                   </div>
                   <div className="prose prose-sm dark:prose-invert max-w-none">
@@ -299,26 +299,6 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   </div>
                 </section>
               )}
-
-              {/* Spiegazione Tradelia AI - Academic Style */}
-              <section className="space-y-3" aria-labelledby="tradelia-section-title">
-                <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border-subtle">
-                  <div className="w-10 h-10 rounded-lg bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-900/50 flex items-center justify-center flex-shrink-0">
-                    <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-300" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <h3 id="tradelia-section-title" className="text-base font-bold text-text-primary">
-                      {t('glossary.drawer.tradeliaExplanation') || 'Applicazione Pratica Tradelia'}
-                    </h3>
-                    <p className="text-xs text-text-tertiary mt-0.5">Tradelia AI Application</p>
-                  </div>
-                </div>
-                <div className="prose prose-sm dark:prose-invert max-w-none">
-                  <p className="text-sm text-text-primary leading-relaxed whitespace-pre-line font-normal">
-                    {term.how}
-                  </p>
-                </div>
-              </section>
 
               {/* Termini Correlati - Academic Style */}
               {relatedTermsData.length > 0 && (
