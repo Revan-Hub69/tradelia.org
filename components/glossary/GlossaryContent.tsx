@@ -310,8 +310,9 @@ export function GlossaryContent() {
                 // Count terms in this category (considering search term but not category filter)
                 const count = terms.filter(t => {
                   const matchesSearch = !searchTerm || 
-                    t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    t.definition?.toLowerCase().includes(searchTerm.toLowerCase());
+                    t.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    t.what.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    t.technical?.toLowerCase().includes(searchTerm.toLowerCase());
                   return matchesSearch && t.category === category;
                 }).length;
                 return (
@@ -361,8 +362,9 @@ export function GlossaryContent() {
                   // Count terms with this tag (considering search and category filters but not tag filter)
                   const count = terms.filter(t => {
                     const matchesSearch = !searchTerm || 
-                      t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                      t.definition?.toLowerCase().includes(searchTerm.toLowerCase());
+                      t.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      t.what.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      t.technical?.toLowerCase().includes(searchTerm.toLowerCase());
                     const matchesCategory = selectedCategory === 'all' || t.category === selectedCategory;
                     const hasTag = t.tags?.includes(tag as any);
                     return matchesSearch && matchesCategory && hasTag;
