@@ -120,9 +120,9 @@ export function hasAccess(
     return true;
   }
 
-  // Se non autenticato, solo guest access
+  // Se non autenticato, non può accedere a funzionalità che richiedono autenticazione
   if (!userRole && !isEmailVerified) {
-    return requiredLevel === "guest";
+    return false;
   }
 
   // Verificato: richiede almeno email verificata
