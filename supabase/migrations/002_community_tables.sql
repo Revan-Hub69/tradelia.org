@@ -6,6 +6,18 @@
 -- IMPORTANT: This migration is idempotent - safe to run multiple times
 -- REQUIRES: 001_initial_schema.sql must be run first (creates user_roles table)
 
+-- Check if user_roles table exists (required dependency)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT FROM information_schema.tables 
+    WHERE table_schema = 'public' 
+    AND table_name = 'user_roles'
+  ) THEN
+    RAISE EXCEPTION 'Migration 001_initial_schema.sql must be run first! Table user_roles does not exist.';
+  END IF;
+END $$;
+
 -- Asset Proposals Table (Pro only)
 -- Stores community proposals for new assets/features
 CREATE TABLE IF NOT EXISTS asset_proposals (
@@ -79,14 +91,23 @@ DROP POLICY IF EXISTS "Pro users can create proposals" ON asset_proposals;
 DROP POLICY IF EXISTS "Users can update own proposals" ON asset_proposals;
 
 -- Pro users can read all proposals
+-- Note: This policy requires user_roles table to exist (created in migration 001)
 CREATE POLICY "Pro users can read proposals"
   ON asset_proposals FOR SELECT
   USING (
+    -- Allow if user_roles table exists and user has pro/desk/admin role
     EXISTS (
       SELECT 1 FROM user_roles
       WHERE user_id = auth.uid()
       AND role IN ('pro', 'desk', 'admin')
       AND (valid_until IS NULL OR valid_until > NOW())
+    )
+    OR
+    -- Fallback: allow if user_roles table doesn't exist yet (shouldn't happen, but safe)
+    NOT EXISTS (
+      SELECT FROM information_schema.tables 
+      WHERE table_schema = 'public' 
+      AND table_name = 'user_roles'
     )
   );
 
@@ -99,6 +120,13 @@ CREATE POLICY "Pro users can create proposals"
       WHERE user_id = auth.uid()
       AND role IN ('pro', 'desk', 'admin')
       AND (valid_until IS NULL OR valid_until > NOW())
+    )
+    OR
+    -- Fallback: allow if user_roles table doesn't exist yet
+    NOT EXISTS (
+      SELECT FROM information_schema.tables 
+      WHERE table_schema = 'public' 
+      AND table_name = 'user_roles'
     )
   );
 
@@ -123,6 +151,13 @@ CREATE POLICY "Pro users can read votes"
       AND role IN ('pro', 'desk', 'admin')
       AND (valid_until IS NULL OR valid_until > NOW())
     )
+    OR
+    -- Fallback: allow if user_roles table doesn't exist yet
+    NOT EXISTS (
+      SELECT FROM information_schema.tables 
+      WHERE table_schema = 'public' 
+      AND table_name = 'user_roles'
+    )
   );
 
 -- Pro users can vote
@@ -135,6 +170,13 @@ CREATE POLICY "Pro users can vote"
       AND role IN ('pro', 'desk', 'admin')
       AND (valid_until IS NULL OR valid_until > NOW())
     )
+    OR
+    -- Fallback: allow if user_roles table doesn't exist yet
+    NOT EXISTS (
+      SELECT FROM information_schema.tables 
+      WHERE table_schema = 'public' 
+      AND table_name = 'user_roles'
+    )
   )
   WITH CHECK (
     EXISTS (
@@ -142,6 +184,13 @@ CREATE POLICY "Pro users can vote"
       WHERE user_id = auth.uid()
       AND role IN ('pro', 'desk', 'admin')
       AND (valid_until IS NULL OR valid_until > NOW())
+    )
+    OR
+    -- Fallback: allow if user_roles table doesn't exist yet
+    NOT EXISTS (
+      SELECT FROM information_schema.tables 
+      WHERE table_schema = 'public' 
+      AND table_name = 'user_roles'
     )
   );
 
