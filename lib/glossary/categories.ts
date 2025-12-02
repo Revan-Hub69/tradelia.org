@@ -333,3 +333,131 @@ export function getGlossaryCategories(): GlossaryCategory[] {
 export function getGlossaryTags(): GlossaryTag[] {
   return Object.values(GLOSSARY_TAGS);
 }
+
+/**
+ * Mappa nomi user-friendly per categorie (italiano)
+ * Best Practice: nomi chiari, descrittivi, non tecnici
+ */
+export const CATEGORY_DISPLAY_NAMES: Record<GlossaryCategory, string> = {
+  [GLOSSARY_CATEGORIES.ASSET_PRICING]: "Prezzi degli Asset",
+  [GLOSSARY_CATEGORIES.PORTFOLIO]: "Portafoglio e Gestione",
+  [GLOSSARY_CATEGORIES.MARKET_EFFICIENCY]: "Efficienza di Mercato",
+  [GLOSSARY_CATEGORIES.BEHAVIORAL]: "Finanza Comportamentale",
+  [GLOSSARY_CATEGORIES.SENTIMENT]: "Sentiment e Psicologia di Mercato",
+  [GLOSSARY_CATEGORIES.QUANTITATIVE]: "Finanza Quantitativa",
+  [GLOSSARY_CATEGORIES.DERIVATIVES]: "Derivati e Opzioni",
+  [GLOSSARY_CATEGORIES.RISK]: "Gestione del Rischio",
+  [GLOSSARY_CATEGORIES.MARKET_MICRO]: "Struttura di Mercato",
+  [GLOSSARY_CATEGORIES.LIQUIDITY]: "Liquidità",
+  [GLOSSARY_CATEGORIES.TRADING]: "Trading ed Esecuzione",
+  [GLOSSARY_CATEGORIES.CORPORATE]: "Finanza Aziendale",
+  [GLOSSARY_CATEGORIES.VALUATION]: "Valutazione",
+  [GLOSSARY_CATEGORIES.FUNDAMENTAL]: "Analisi Fondamentale",
+  [GLOSSARY_CATEGORIES.MACRO]: "Macroeconomia",
+  [GLOSSARY_CATEGORIES.REGIME]: "Regimi di Mercato",
+  [GLOSSARY_CATEGORIES.CREDIT]: "Credito e Obbligazioni",
+  [GLOSSARY_CATEGORIES.TECHNICAL]: "Analisi Tecnica",
+  [GLOSSARY_CATEGORIES.DATA_QUALITY]: "Qualità dei Dati",
+  [GLOSSARY_CATEGORIES.COMPLIANCE]: "Conformità Normativa",
+  [GLOSSARY_CATEGORIES.ML_AI]: "Intelligenza Artificiale",
+  [GLOSSARY_CATEGORIES.CRYPTO]: "Criptovalute",
+};
+
+/**
+ * Mappa nomi user-friendly per tag (italiano)
+ * Best Practice: nomi chiari, descrittivi, non tecnici
+ */
+export const TAG_DISPLAY_NAMES: Record<GlossaryTag, string> = {
+  // Risk & Regime
+  [GLOSSARY_TAGS.RISK_ON]: "Rischio Alto",
+  [GLOSSARY_TAGS.RISK_OFF]: "Rischio Basso",
+  [GLOSSARY_TAGS.REGIME]: "Regime di Mercato",
+  [GLOSSARY_TAGS.VOLATILITY]: "Volatilità",
+  [GLOSSARY_TAGS.HEDGE]: "Copertura del Rischio",
+
+  // Market Structure
+  [GLOSSARY_TAGS.BREADTH]: "Ampiezza di Mercato",
+  [GLOSSARY_TAGS.MOMENTUM]: "Momentum",
+  [GLOSSARY_TAGS.LEADERSHIP]: "Leadership di Mercato",
+  [GLOSSARY_TAGS.ROTATION]: "Rotazione Settoriale",
+
+  // Options
+  [GLOSSARY_TAGS.IV]: "Volatilità Implicita",
+  [GLOSSARY_TAGS.GREEKS]: "Greci delle Opzioni",
+  [GLOSSARY_TAGS.GAMMA]: "Gamma (Opzioni)",
+  [GLOSSARY_TAGS.VEGA]: "Vega (Opzioni)",
+  [GLOSSARY_TAGS.DELTA]: "Delta (Opzioni)",
+  [GLOSSARY_TAGS.THETA]: "Theta (Opzioni)",
+
+  // Credit & Rates
+  [GLOSSARY_TAGS.CREDIT_SPREAD]: "Spread Creditizio",
+  [GLOSSARY_TAGS.YIELD_CURVE]: "Curva dei Rendimenti",
+  [GLOSSARY_TAGS.FUNDING]: "Finanziamento",
+  [GLOSSARY_TAGS.LIQUIDITY]: "Liquidità",
+
+  // Data & Quality
+  [GLOSSARY_TAGS.DATA_QUALITY]: "Qualità dei Dati",
+  [GLOSSARY_TAGS.FRESHNESS]: "Aggiornamento Dati",
+  [GLOSSARY_TAGS.INTEGRITY]: "Integrità Dati",
+  [GLOSSARY_TAGS.GOVERNANCE]: "Governance Dati",
+
+  // Compliance
+  [GLOSSARY_TAGS.MIFID]: "MiFID II",
+  [GLOSSARY_TAGS.BCBS]: "BCBS",
+  [GLOSSARY_TAGS.ESMA]: "ESMA",
+  [GLOSSARY_TAGS.COMPLIANCE]: "Conformità Normativa",
+
+  // Analysis Types
+  [GLOSSARY_TAGS.TECHNICAL]: "Analisi Tecnica",
+  [GLOSSARY_TAGS.FUNDAMENTAL]: "Analisi Fondamentale",
+  [GLOSSARY_TAGS.QUANTITATIVE]: "Analisi Quantitativa",
+  [GLOSSARY_TAGS.BEHAVIORAL]: "Analisi Comportamentale",
+
+  // Timeframes
+  [GLOSSARY_TAGS.INTRADAY]: "Intraday",
+  [GLOSSARY_TAGS.SHORT_TERM]: "Breve Termine",
+  [GLOSSARY_TAGS.MEDIUM_TERM]: "Medio Termine",
+  [GLOSSARY_TAGS.LONG_TERM]: "Lungo Termine",
+
+  // Asset Classes
+  [GLOSSARY_TAGS.EQUITY]: "Azionario",
+  [GLOSSARY_TAGS.FIXED_INCOME]: "Obbligazionario",
+  [GLOSSARY_TAGS.FX]: "Valute (Forex)",
+  [GLOSSARY_TAGS.COMMODITIES]: "Materie Prime",
+  [GLOSSARY_TAGS.CRYPTO]: "Criptovalute",
+
+  // Metrics
+  [GLOSSARY_TAGS.PERFORMANCE]: "Performance",
+  [GLOSSARY_TAGS.VALUATION]: "Valutazione",
+  [GLOSSARY_TAGS.MARGINS]: "Margini",
+  [GLOSSARY_TAGS.EARNINGS]: "Utili",
+  [GLOSSARY_TAGS.CASHFLOW]: "Flussi di Cassa",
+
+  // Market Participants
+  [GLOSSARY_TAGS.INSTITUTIONAL]: "Investitori Istituzionali",
+  [GLOSSARY_TAGS.RETAIL]: "Investitori Retail",
+  [GLOSSARY_TAGS.DEALER]: "Dealer",
+  [GLOSSARY_TAGS.INSIDER]: "Insider Trading",
+  [GLOSSARY_TAGS.MARKET_MICRO]: "Microstruttura di Mercato",
+
+  // Sentiment
+  [GLOSSARY_TAGS.SENTIMENT]: "Sentiment di Mercato",
+  [GLOSSARY_TAGS.FEAR]: "Paura (Fear)",
+  [GLOSSARY_TAGS.GREED]: "Avidità (Greed)",
+  [GLOSSARY_TAGS.POSITIONING]: "Posizionamento",
+  [GLOSSARY_TAGS.FLOWS]: "Flussi di Capitale",
+};
+
+/**
+ * Ottieni il nome user-friendly per una categoria
+ */
+export function getCategoryDisplayName(category: GlossaryCategory): string {
+  return CATEGORY_DISPLAY_NAMES[category] || category;
+}
+
+/**
+ * Ottieni il nome user-friendly per un tag
+ */
+export function getTagDisplayName(tag: GlossaryTag): string {
+  return TAG_DISPLAY_NAMES[tag] || tag;
+}

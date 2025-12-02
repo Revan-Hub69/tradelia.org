@@ -6,7 +6,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import { loadGlossaryTerms, type GlossaryTerm } from '@/lib/glossary/terms';
-import { getGlossaryCategories, getGlossaryTags, type GlossaryCategory } from '@/lib/glossary/categories';
+import { getGlossaryCategories, getGlossaryTags, getCategoryDisplayName, getTagDisplayName, type GlossaryCategory } from '@/lib/glossary/categories';
 import { GlossaryDrawer } from './GlossaryDrawer';
 
 interface GlossaryTermWithKey extends GlossaryTerm {
@@ -243,11 +243,11 @@ export function GlossaryContent() {
               <span className="text-xs font-semibold text-text-primary">Filtri applicati:</span>
               {selectedCategory !== 'all' && (
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-accent text-white border border-accent shadow-sm">
-                  {selectedCategory}
+                  {getCategoryDisplayName(selectedCategory)}
                   <button
                     onClick={() => setSelectedCategory('all')}
                     className="hover:bg-white/20 rounded-full p-0.5 transition-colors"
-                    aria-label={`Rimuovi filtro categoria ${selectedCategory}`}
+                    aria-label={`Rimuovi filtro categoria ${getCategoryDisplayName(selectedCategory)}`}
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -258,11 +258,11 @@ export function GlossaryContent() {
                   key={tag}
                   className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-accent text-white border border-accent shadow-sm"
                 >
-                  #{tag}
+                  {getTagDisplayName(tag)}
                   <button
                     onClick={() => toggleTag(tag)}
                     className="hover:bg-white/20 rounded-full p-0.5 transition-colors"
-                    aria-label={`Rimuovi filtro tag ${tag}`}
+                    aria-label={`Rimuovi filtro argomento ${getTagDisplayName(tag)}`}
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -322,7 +322,7 @@ export function GlossaryContent() {
                         : 'bg-bg-surface text-text-secondary hover:bg-bg-soft border-border-subtle hover:border-accent/50'
                     )}
                   >
-                    <span>{category}</span>
+                    <span>{getCategoryDisplayName(category)}</span>
                     {count > 0 && (
                       <span className={cn(
                         'text-xs px-1.5 py-0.5 rounded font-semibold',
@@ -375,7 +375,7 @@ export function GlossaryContent() {
                           : 'bg-bg-surface text-text-secondary border-border-subtle hover:bg-bg-soft hover:border-accent/50'
                       )}
                     >
-                      <span>#{tag}</span>
+                      <span>{getTagDisplayName(tag)}</span>
                       {count > 0 && (
                         <span className={cn(
                           'text-xs px-1 py-0.5 rounded font-semibold',
