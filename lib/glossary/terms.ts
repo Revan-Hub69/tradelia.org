@@ -197,6 +197,9 @@ export async function searchGlossaryTerms(query: string): Promise<GlossaryTerm[]
     (term) =>
       term.title.toLowerCase().includes(lowerQuery) ||
       term.what.toLowerCase().includes(lowerQuery) ||
-      term.how.toLowerCase().includes(lowerQuery)
+      (term.how && term.how.toLowerCase().includes(lowerQuery)) ||
+      (term.whatDoes && term.whatDoes.toLowerCase().includes(lowerQuery)) ||
+      (term.howToUse && term.howToUse.toLowerCase().includes(lowerQuery)) ||
+      (term.technical && term.technical.toLowerCase().includes(lowerQuery))
   );
 }
