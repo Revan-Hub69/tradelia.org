@@ -563,13 +563,8 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               {/* Breadcrumb Navigation - Improved Spacing and Readability */}
               <div className="px-4 sm:px-6 pt-3 pb-2">
                 <nav 
-                  className="flex items-center gap-1.5 sm:gap-2 text-xs text-text-tertiary overflow-x-auto" 
-                  aria-label="Breadcrumb" 
-                  style={{ 
-                    scrollbarWidth: 'none', 
-                    msOverflowStyle: 'none',
-                    WebkitScrollbar: { display: 'none' }
-                  }}
+                  className="flex items-center gap-1.5 sm:gap-2 text-xs text-text-tertiary overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" 
+                  aria-label="Breadcrumb"
                 >
                   <span className="hover:text-text-secondary whitespace-nowrap flex-shrink-0">Glossario</span>
                   {term.category && (
