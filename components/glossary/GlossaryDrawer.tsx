@@ -22,6 +22,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { getGlossaryTerm } from '@/lib/glossary/terms';
 import type { GlossaryTerm as GlossaryTermType } from '@/lib/glossary/terms';
+import Image from 'next/image';
 
 interface GlossaryTerm {
   title: string;
@@ -155,35 +156,296 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
   if (!term) return null;
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998]"
-            aria-hidden="true"
-          />
+    <>
+      {/* Print Styles - Professional Layout */}
+      <style jsx global>{`
+        @media print {
+          /* Hide everything except print content */
+          body * {
+            visibility: hidden;
+          }
+          
+          /* Show only print container */
+          .glossary-print-container,
+          .glossary-print-container * {
+            visibility: visible;
+          }
+          
+          .glossary-print-container {
+            display: block !important;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            background: white;
+            color: #000;
+            padding: 0;
+            margin: 0;
+          }
+          
+          /* Hide non-printable elements */
+          .no-print,
+          button,
+          .backdrop,
+          nav,
+          .print-header-actions {
+            display: none !important;
+          }
+          
+          /* Print Header with Logo */
+          .print-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5cm 2cm 1cm 2cm;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 1.5cm;
+            page-break-after: avoid;
+          }
+          
+          .print-logo {
+            height: 40px;
+            width: auto;
+          }
+          
+          .print-header-info {
+            text-align: right;
+            font-size: 10pt;
+            color: #6b7280;
+            line-height: 1.5;
+          }
+          
+          /* Print Content */
+          .print-content {
+            padding: 0 2cm;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #111827;
+          }
+          
+          /* Print Title */
+          .print-title {
+            font-size: 24pt;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5cm;
+            page-break-after: avoid;
+          }
+          
+          .print-meta {
+            font-size: 9pt;
+            color: #6b7280;
+            margin-bottom: 1cm;
+            padding-bottom: 0.5cm;
+            border-bottom: 1px solid #e5e7eb;
+          }
+          
+          /* Print Sections */
+          .print-section {
+            margin-bottom: 1.5cm;
+            page-break-inside: avoid;
+          }
+          
+          .print-section-title {
+            font-size: 14pt;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5cm;
+            padding-bottom: 0.3cm;
+            border-bottom: 1px solid #d1d5db;
+          }
+          
+          .print-section-content {
+            font-size: 11pt;
+            line-height: 1.7;
+            color: #374151;
+            text-align: justify;
+          }
+          
+          /* Print Sources */
+          .print-sources {
+            margin-top: 1.5cm;
+            padding-top: 1cm;
+            border-top: 1px solid #e5e7eb;
+            page-break-inside: avoid;
+          }
+          
+          .print-source-item {
+            font-size: 9pt;
+            font-family: 'Courier New', monospace;
+            color: #4b5563;
+            margin-bottom: 0.5cm;
+            padding-left: 1em;
+            text-indent: -1em;
+          }
+          
+          /* Print Footer */
+          .print-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 0.5cm 2cm;
+            border-top: 1px solid #e5e7eb;
+            font-size: 8pt;
+            color: #9ca3af;
+            text-align: center;
+            background: white;
+          }
+          
+          /* Page breaks */
+          @page {
+            size: A4;
+            margin: 2cm;
+          }
+          
+          /* Avoid breaking inside important elements */
+          .print-section,
+          .print-source-item {
+            page-break-inside: avoid;
+          }
+          
+          /* Print tags */
+          .print-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3cm;
+            margin-bottom: 0.5cm;
+          }
+          
+          .print-tag {
+            font-size: 8pt;
+            padding: 0.2cm 0.4cm;
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 3px;
+            color: #4b5563;
+          }
+        }
+      `}</style>
 
-          {/* Drawer Panel */}
-          <motion.div
-            ref={drawerRef}
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 bottom-0 w-full max-w-lg bg-bg-surface border-l border-border-subtle shadow-2xl z-[9999] flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="glossary-drawer-title"
-            aria-describedby="glossary-drawer-description"
-          >
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={onClose}
+              className="backdrop fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998]"
+              aria-hidden="true"
+            />
+
+            {/* Drawer Panel */}
+            <motion.div
+              ref={drawerRef}
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed right-0 top-0 bottom-0 w-full max-w-lg bg-bg-surface border-l border-border-subtle shadow-2xl z-[9999] flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="glossary-drawer-title"
+              aria-describedby="glossary-drawer-description"
+            >
+              {/* Print Version - Hidden on screen, visible when printing */}
+              <div className="glossary-print-container" style={{ display: 'none' }}>
+                {/* Print Header with Logo */}
+                <div className="print-header">
+                  <div className="print-logo-container">
+                    <Image
+                      src="/logos/tradelia-logo-variant-1-wordmark.svg"
+                      alt="Tradelia"
+                      width={160}
+                      height={40}
+                      className="print-logo"
+                      priority
+                      unoptimized
+                    />
+                  </div>
+                  <div className="print-header-info">
+                    <div>Glossario Finanziario Tradelia</div>
+                    <div>{new Date().toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                  </div>
+                </div>
+
+                {/* Print Content */}
+                <div className="print-content">
+                  {/* Print Title */}
+                  <h1 className="print-title">{term.title}</h1>
+                  
+                  {/* Print Meta */}
+                  <div className="print-meta">
+                    {term.category && (
+                      <div style={{ marginBottom: '0.3cm' }}>
+                        <strong>Categoria:</strong> {term.category}
+                      </div>
+                    )}
+                    {term.tags && term.tags.length > 0 && (
+                      <div className="print-tags">
+                        {term.tags.map((tag) => (
+                          <span key={tag} className="print-tag">#{tag}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Definizione Accademica */}
+                  <section className="print-section">
+                    <h2 className="print-section-title">Definizione Accademica</h2>
+                    <div className="print-section-content">
+                      {term.what}
+                    </div>
+                  </section>
+
+                  {/* Spiegazione Tecnica Tradelia AI */}
+                  {term.technical && (
+                    <section className="print-section">
+                      <h2 className="print-section-title">Spiegazione Tecnica Tradelia AI</h2>
+                      <div className="print-section-content" style={{ whiteSpace: 'pre-line' }}>
+                        {term.technical}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* Termini Correlati */}
+                  {relatedTermsData.length > 0 && (
+                    <section className="print-section">
+                      <h2 className="print-section-title">Termini Correlati</h2>
+                      <div className="print-section-content">
+                        {relatedTermsData.map((relatedTerm, index) => (
+                          <div key={index} style={{ marginBottom: '0.3cm' }}>
+                            • {relatedTerm.title}
+                            {relatedTerm.category && ` (${relatedTerm.category})`}
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* Fonti Accademiche */}
+                  <section className="print-sources">
+                    <h2 className="print-section-title">Riferimenti Bibliografici</h2>
+                    <div>
+                      {term.source.split('|').map((source, index) => (
+                        <div key={index} className="print-source-item">
+                          {source.trim()}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                </div>
+
+                {/* Print Footer */}
+                <div className="print-footer">
+                  Glossario Tradelia • {new Date().getFullYear()} • Fonti accademiche verificate
+                </div>
+              </div>
             {/* Header - Academic Style */}
-            <div className="border-b border-border-subtle bg-bg-surface">
+            <div className="no-print border-b border-border-subtle bg-bg-surface">
               {/* Breadcrumb Navigation */}
               <div className="px-6 pt-4 pb-2">
                 <nav className="flex items-center gap-2 text-xs text-text-tertiary" aria-label="Breadcrumb">
@@ -219,7 +481,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 ml-4">
+                <div className="print-header-actions flex items-center gap-2 ml-4">
                   <button
                     onClick={() => window.print()}
                     className="w-9 h-9 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
@@ -256,7 +518,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               )}
             </div>
             {/* Content - Academic Layout */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-8">
+            <div className="no-print flex-1 overflow-y-auto p-6 space-y-8">
               {/* Spiegazione Accademica - Academic Style */}
               <section className="space-y-3" aria-labelledby="academic-section-title">
                 <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border-subtle">
@@ -365,7 +627,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
             </div>
 
             {/* Footer - Academic Style */}
-            <div className="p-6 border-t border-border-subtle bg-bg-surface">
+            <div className="no-print p-6 border-t border-border-subtle bg-bg-surface">
               <div className="flex items-center justify-between gap-3">
                 <p className="text-xs text-text-tertiary">
                   Glossario Tradelia • {new Date().getFullYear()}
