@@ -244,56 +244,63 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       '  .print-header {',
       '    display: flex;',
       '    justify-content: space-between;',
-      '    align-items: center;',
-      '    padding: 1.5cm 2cm 1cm 2cm;',
-      '    border-bottom: 2px solid #e5e7eb;',
-      '    margin-bottom: 1.5cm;',
+      '    align-items: flex-start;',
+      '    padding: 0 0 1cm 0;',
+      '    margin-bottom: 1.2cm;',
+      '    padding-bottom: 0.8cm;',
+      '    border-bottom: 1.5px solid #1e293b;',
       '    page-break-after: avoid;',
       '  }',
       '  .print-logo { height: 40px; width: auto; }',
       '  .print-header-info {',
       '    text-align: right;',
-      '    font-size: 10pt;',
-      '    color: #6b7280;',
-      '    line-height: 1.5;',
+      '    font-size: 9pt;',
+      '    color: #475569;',
+      '    line-height: 1.4;',
+      '    font-weight: 500;',
       '  }',
       '  .print-content {',
-      '    padding: 0 2cm;',
+      '    padding: 0;',
       '    font-size: 11pt;',
-      '    line-height: 1.6;',
+      '    line-height: 1.7;',
       '    color: #111827;',
       '  }',
       '  .print-title {',
-      '    font-size: 24pt;',
+      '    font-size: 28pt;',
       '    font-weight: 700;',
-      '    color: #111827;',
-      '    margin-bottom: 0.5cm;',
+      '    color: #0f172a;',
+      '    margin-bottom: 0.6cm;',
+      '    margin-top: 0;',
+      '    line-height: 1.2;',
       '    page-break-after: avoid;',
       '  }',
       '  .print-meta {',
       '    font-size: 9pt;',
-      '    color: #6b7280;',
-      '    margin-bottom: 1cm;',
-      '    padding-bottom: 0.5cm;',
-      '    border-bottom: 1px solid #e5e7eb;',
+      '    color: #475569;',
+      '    margin-bottom: 1.2cm;',
+      '    padding-bottom: 0.6cm;',
+      '    border-bottom: 1px solid #cbd5e1;',
       '  }',
       '  .print-section {',
       '    margin-bottom: 1.5cm;',
       '    page-break-inside: avoid;',
       '  }',
       '  .print-section-title {',
-      '    font-size: 14pt;',
+      '    font-size: 15pt;',
       '    font-weight: 600;',
-      '    color: #111827;',
-      '    margin-bottom: 0.5cm;',
-      '    padding-bottom: 0.3cm;',
-      '    border-bottom: 1px solid #d1d5db;',
+      '    color: #0f172a;',
+      '    margin-bottom: 0.6cm;',
+      '    margin-top: 0;',
+      '    padding-bottom: 0.4cm;',
+      '    border-bottom: 1px solid #cbd5e1;',
+      '    letter-spacing: -0.01em;',
       '  }',
       '  .print-section-content {',
       '    font-size: 11pt;',
-      '    line-height: 1.7;',
-      '    color: #374151;',
+      '    line-height: 1.75;',
+      '    color: #1e293b;',
       '    text-align: justify;',
+      '    margin-top: 0.4cm;',
       '  }',
       '  .print-sources {',
       '    margin-top: 1.5cm;',
@@ -314,14 +321,24 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       '    bottom: 0;',
       '    left: 0;',
       '    right: 0;',
-      '    padding: 0.5cm 2cm;',
-      '    border-top: 1px solid #e5e7eb;',
+      '    padding: 0.6cm 0;',
+      '    border-top: 1px solid #cbd5e1;',
       '    font-size: 8pt;',
-      '    color: #9ca3af;',
+      '    color: #64748b;',
       '    text-align: center;',
       '    background: white;',
+      '    font-weight: 500;',
       '  }',
-      '  @page { size: A4; margin: 2cm; }',
+      '  /* Professional print layout - A4 format */',
+      '  @page {',
+      '    size: A4;',
+      '    margin: 2cm;',
+      '  }',
+      '  /* Ensure colors print correctly */',
+      '  body {',
+      '    -webkit-print-color-adjust: exact !important;',
+      '    print-color-adjust: exact !important;',
+      '  }',
       '  .print-section, .print-source-item { page-break-inside: avoid; }',
       '  .print-tags {',
       '    display: flex;',
@@ -393,7 +410,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
             >
               {/* Print Version - Hidden on screen, visible when printing */}
               <div className="glossary-print-container" style={{ display: 'none' }}>
-                {/* Print Header with Logo */}
+                {/* Print Header with Logo - Professional Layout */}
                 <div className="print-header">
                   <div className="print-logo-container">
                     <Image
@@ -407,8 +424,8 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     />
                   </div>
                   <div className="print-header-info">
-                    <div>Glossario Finanziario Tradelia</div>
-                    <div>{new Date().toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                    <div style={{ fontWeight: 600, marginBottom: '0.2cm' }}>Glossario Finanziario Tradelia</div>
+                    <div style={{ fontSize: '9pt' }}>{new Date().toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
                   </div>
                 </div>
 
@@ -479,9 +496,11 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   </section>
                 </div>
 
-                {/* Print Footer */}
+                {/* Print Footer - Professional, no URL */}
                 <div className="print-footer">
-                  Glossario Tradelia • {new Date().getFullYear()} • Fonti accademiche verificate
+                  <div style={{ textAlign: 'center', width: '100%' }}>
+                    Glossario Tradelia • {new Date().getFullYear()} • Fonti accademiche verificate
+                  </div>
                 </div>
               </div>
             {/* Header - Academic Style */}
