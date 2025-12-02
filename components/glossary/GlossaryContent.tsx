@@ -217,11 +217,11 @@ export function GlossaryContent() {
             <input
               ref={searchInputRef}
               type="text"
-              placeholder={t('glossary.searchPlaceholder') || 'Cerca un termine...'}
+              placeholder={t('glossary.searchPlaceholder') || 'Cerca per nome, definizione o argomento...'}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-10 py-2.5 rounded-lg bg-bg-surface border border-border-subtle text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all text-sm"
-              aria-label="Cerca nel glossario"
+              aria-label="Cerca nel glossario per nome, definizione o argomento"
             />
             {searchTerm && (
               <button
@@ -239,14 +239,14 @@ export function GlossaryContent() {
         <div className="mb-4 space-y-4">
           {/* Active Filters Summary - Immediate Visual Feedback */}
           {(selectedCategory !== 'all' || selectedTags.length > 0) && (
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-medium text-text-secondary">Filtri attivi:</span>
+            <div className="flex items-center gap-2 flex-wrap p-3 bg-accent/5 border border-accent/20 rounded-lg">
+              <span className="text-xs font-semibold text-text-primary">Filtri applicati:</span>
               {selectedCategory !== 'all' && (
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-accent/20 text-accent border border-accent/30">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-accent text-white border border-accent shadow-sm">
                   {selectedCategory}
                   <button
                     onClick={() => setSelectedCategory('all')}
-                    className="hover:bg-accent/30 rounded-full p-0.5 transition-colors"
+                    className="hover:bg-white/20 rounded-full p-0.5 transition-colors"
                     aria-label={`Rimuovi filtro categoria ${selectedCategory}`}
                   >
                     <X className="w-3 h-3" />
@@ -256,12 +256,12 @@ export function GlossaryContent() {
               {selectedTags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-accent/20 text-accent border border-accent/30"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-accent text-white border border-accent shadow-sm"
                 >
                   #{tag}
                   <button
                     onClick={() => toggleTag(tag)}
-                    className="hover:bg-accent/30 rounded-full p-0.5 transition-colors"
+                    className="hover:bg-white/20 rounded-full p-0.5 transition-colors"
                     aria-label={`Rimuovi filtro tag ${tag}`}
                   >
                     <X className="w-3 h-3" />
@@ -273,22 +273,22 @@ export function GlossaryContent() {
                   setSelectedCategory('all');
                   setSelectedTags([]);
                 }}
-                className="text-xs text-text-tertiary hover:text-text-primary underline"
+                className="ml-auto text-xs text-accent hover:text-accent-hover font-medium underline"
               >
-                Rimuovi tutti
+                Cancella filtri
               </button>
             </div>
           )}
 
           {/* Categories - Always Visible */}
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Layers className="w-4 h-4 text-text-tertiary" />
+            <div className="flex items-center gap-2 mb-3">
+              <Layers className="w-4 h-4 text-accent" />
               <label className="text-sm font-semibold text-text-primary">
-                Categoria
+                Filtra per categoria
               </label>
               <span className="text-xs text-text-tertiary">
-                ({filteredTerms.length} risultati)
+                • {filteredTerms.length} {filteredTerms.length === 1 ? 'termine trovato' : 'termini trovati'}
               </span>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -301,7 +301,7 @@ export function GlossaryContent() {
                     : 'bg-bg-surface text-text-secondary hover:bg-bg-soft border-border-subtle hover:border-accent/50'
                 )}
               >
-                Tutte
+                Mostra tutte
               </button>
               {categories.map((category) => {
                 // Count terms in this category (considering search term but not category filter)
@@ -325,7 +325,7 @@ export function GlossaryContent() {
                     <span>{category}</span>
                     {count > 0 && (
                       <span className={cn(
-                        'text-xs px-1.5 py-0.5 rounded',
+                        'text-xs px-1.5 py-0.5 rounded font-semibold',
                         selectedCategory === category
                           ? 'bg-white/20 text-white'
                           : 'bg-bg-soft text-text-tertiary'
@@ -342,14 +342,14 @@ export function GlossaryContent() {
           {/* Tags - Always Visible, Scrollable */}
           {allTags.length > 0 && (
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Tag className="w-4 h-4 text-text-tertiary" />
+              <div className="flex items-center gap-2 mb-3">
+                <Tag className="w-4 h-4 text-accent" />
                 <label className="text-sm font-semibold text-text-primary">
-                  Tag
+                  Filtra per argomento
                 </label>
                 {selectedTags.length > 0 && (
-                  <span className="text-xs text-accent font-medium">
-                    {selectedTags.length} selezionati
+                  <span className="text-xs text-accent font-semibold">
+                    • {selectedTags.length} {selectedTags.length === 1 ? 'argomento selezionato' : 'argomenti selezionati'}
                   </span>
                 )}
               </div>
@@ -378,7 +378,7 @@ export function GlossaryContent() {
                       <span>#{tag}</span>
                       {count > 0 && (
                         <span className={cn(
-                          'text-xs px-1 py-0.5 rounded',
+                          'text-xs px-1 py-0.5 rounded font-semibold',
                           selectedTags.includes(tag)
                             ? 'bg-white/20 text-white'
                             : 'bg-bg-soft text-text-tertiary'
@@ -394,14 +394,26 @@ export function GlossaryContent() {
           )}
         </div>
 
-        {/* Results Count */}
-        <div className="mb-3 text-xs text-text-tertiary">
+        {/* Results Count - Clear Summary */}
+        <div className="mb-3 flex items-center gap-2">
           {filteredTerms.length === 0 ? (
-            <span>Nessun termine trovato</span>
+            <span className="text-sm text-text-secondary font-medium">Nessun risultato trovato</span>
           ) : (
-            <span>
-              {filteredTerms.length} {filteredTerms.length === 1 ? 'termine' : 'termini'}
+            <span className="text-sm text-text-primary font-semibold">
+              {filteredTerms.length} {filteredTerms.length === 1 ? 'termine disponibile' : 'termini disponibili'}
             </span>
+          )}
+          {(searchTerm || selectedCategory !== 'all' || selectedTags.length > 0) && filteredTerms.length > 0 && (
+            <button
+              onClick={() => {
+                setSearchTerm('');
+                setSelectedCategory('all');
+                setSelectedTags([]);
+              }}
+              className="text-xs text-accent hover:text-accent-hover underline"
+            >
+              Mostra tutti i termini
+            </button>
           )}
         </div>
 
@@ -414,8 +426,20 @@ export function GlossaryContent() {
                 {t('glossary.noResults') || 'Nessun termine trovato'}
               </p>
               <p className="text-xs text-text-tertiary">
-                Prova a modificare i filtri o la ricerca
+                Prova a modificare i filtri o la ricerca per trovare altri termini
               </p>
+              {(searchTerm || selectedCategory !== 'all' || selectedTags.length > 0) && (
+                <button
+                  onClick={() => {
+                    setSearchTerm('');
+                    setSelectedCategory('all');
+                    setSelectedTags([]);
+                  }}
+                  className="mt-3 px-4 py-2 text-sm font-medium text-accent hover:text-accent-hover underline"
+                >
+                  Mostra tutti i {terms.length} termini disponibili
+                </button>
+              )}
             </div>
           ) : (
             filteredTerms.map((term, index) => (
