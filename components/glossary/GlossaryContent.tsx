@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
-import { Search, BookOpen, ChevronDown, ChevronUp, Filter, X, GraduationCap, FileText, Keyboard } from 'lucide-react';
+import { Search, BookOpen, X, GraduationCap, FileText, Keyboard, Layers, Tag } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -30,7 +30,6 @@ export function GlossaryContent() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [glossaryData, setGlossaryData] = useState<Record<string, GlossaryTerm>>({});
   const [loading, setLoading] = useState(true);
-  const [showFilters, setShowFilters] = useState(false);
   const [selectedTerm, setSelectedTerm] = useState<GlossaryTermWithKey | null>(null);
   const [showKeyboardHelp, setShowKeyboardHelp] = useState(true);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -236,98 +235,163 @@ export function GlossaryContent() {
           </div>
         </div>
 
-        {/* Filters - Collapsible Compact */}
-        <div className="mb-4">
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-soft border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-surface transition-colors text-sm"
-          >
-            <Filter className="w-3.5 h-3.5" />
-            <span>Filtri</span>
-            {showFilters ? (
-              <ChevronUp className="w-3.5 h-3.5" />
-            ) : (
-              <ChevronDown className="w-3.5 h-3.5" />
-            )}
-          </button>
-
-          <AnimatePresence>
-            {showFilters && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="mt-3 space-y-3 overflow-hidden"
+        {/* Filters - Always Visible, Immediate Feedback */}
+        <div className="mb-4 space-y-4">
+          {/* Active Filters Summary - Immediate Visual Feedback */}
+          {(selectedCategory !== 'all' || selectedTags.length > 0) && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs font-medium text-text-secondary">Filtri attivi:</span>
+              {selectedCategory !== 'all' && (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-accent/20 text-accent border border-accent/30">
+                  {selectedCategory}
+                  <button
+                    onClick={() => setSelectedCategory('all')}
+                    className="hover:bg-accent/30 rounded-full p-0.5 transition-colors"
+                    aria-label={`Rimuovi filtro categoria ${selectedCategory}`}
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+              {selectedTags.map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-accent/20 text-accent border border-accent/30"
+                >
+                  #{tag}
+                  <button
+                    onClick={() => toggleTag(tag)}
+                    className="hover:bg-accent/30 rounded-full p-0.5 transition-colors"
+                    aria-label={`Rimuovi filtro tag ${tag}`}
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
+              <button
+                onClick={() => {
+                  setSelectedCategory('all');
+                  setSelectedTags([]);
+                }}
+                className="text-xs text-text-tertiary hover:text-text-primary underline"
               >
-                {/* Categories */}
-                <div>
-                  <label className="block text-xs font-semibold text-text-secondary mb-1.5">
-                    Categoria
-                  </label>
-                  <div className="flex flex-wrap gap-1.5">
+                Rimuovi tutti
+              </button>
+            </div>
+          )}
+
+          {/* Categories - Always Visible */}
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Layers className="w-4 h-4 text-text-tertiary" />
+              <label className="text-sm font-semibold text-text-primary">
+                Categoria
+              </label>
+              <span className="text-xs text-text-tertiary">
+                ({filteredTerms.length} risultati)
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setSelectedCategory('all')}
+                className={cn(
+                  'px-4 py-2 rounded-lg text-sm font-medium transition-all border-2',
+                  selectedCategory === 'all'
+                    ? 'bg-accent text-white border-accent shadow-md'
+                    : 'bg-bg-surface text-text-secondary hover:bg-bg-soft border-border-subtle hover:border-accent/50'
+                )}
+              >
+                Tutte
+              </button>
+              {categories.map((category) => {
+                // Count terms in this category (considering search term but not category filter)
+                const count = terms.filter(t => {
+                  const matchesSearch = !searchTerm || 
+                    t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    t.definition?.toLowerCase().includes(searchTerm.toLowerCase());
+                  return matchesSearch && t.category === category;
+                }).length;
+                return (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={cn(
+                      'px-4 py-2 rounded-lg text-sm font-medium transition-all border-2 flex items-center gap-2',
+                      selectedCategory === category
+                        ? 'bg-accent text-white border-accent shadow-md'
+                        : 'bg-bg-surface text-text-secondary hover:bg-bg-soft border-border-subtle hover:border-accent/50'
+                    )}
+                  >
+                    <span>{category}</span>
+                    {count > 0 && (
+                      <span className={cn(
+                        'text-xs px-1.5 py-0.5 rounded',
+                        selectedCategory === category
+                          ? 'bg-white/20 text-white'
+                          : 'bg-bg-soft text-text-tertiary'
+                      )}>
+                        {count}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Tags - Always Visible, Scrollable */}
+          {allTags.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <Tag className="w-4 h-4 text-text-tertiary" />
+                <label className="text-sm font-semibold text-text-primary">
+                  Tag
+                </label>
+                {selectedTags.length > 0 && (
+                  <span className="text-xs text-accent font-medium">
+                    {selectedTags.length} selezionati
+                  </span>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin' }}>
+                {allTags.map((tag) => {
+                  // Count terms with this tag (considering search and category filters but not tag filter)
+                  const count = terms.filter(t => {
+                    const matchesSearch = !searchTerm || 
+                      t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      t.definition?.toLowerCase().includes(searchTerm.toLowerCase());
+                    const matchesCategory = selectedCategory === 'all' || t.category === selectedCategory;
+                    const hasTag = t.tags?.includes(tag as any);
+                    return matchesSearch && matchesCategory && hasTag;
+                  }).length;
+                  return (
                     <button
-                      onClick={() => setSelectedCategory('all')}
+                      key={tag}
+                      onClick={() => toggleTag(tag)}
                       className={cn(
-                        'px-3 py-1 rounded text-xs font-medium transition-all',
-                        selectedCategory === 'all'
-                          ? 'bg-accent text-white shadow-sm'
-                          : 'bg-bg-soft text-text-secondary hover:bg-bg-surface border border-border-subtle'
+                        'px-3 py-1.5 rounded-full text-xs font-medium transition-all border flex items-center gap-1.5',
+                        selectedTags.includes(tag)
+                          ? 'bg-accent text-white border-accent shadow-sm'
+                          : 'bg-bg-surface text-text-secondary border-border-subtle hover:bg-bg-soft hover:border-accent/50'
                       )}
                     >
-                      Tutte
+                      <span>#{tag}</span>
+                      {count > 0 && (
+                        <span className={cn(
+                          'text-xs px-1 py-0.5 rounded',
+                          selectedTags.includes(tag)
+                            ? 'bg-white/20 text-white'
+                            : 'bg-bg-soft text-text-tertiary'
+                        )}>
+                          {count}
+                        </span>
+                      )}
                     </button>
-                    {categories.map((category) => (
-                      <button
-                        key={category}
-                        onClick={() => setSelectedCategory(category)}
-                        className={cn(
-                          'px-3 py-1 rounded text-xs font-medium transition-all',
-                          selectedCategory === category
-                            ? 'bg-accent text-white shadow-sm'
-                            : 'bg-bg-soft text-text-secondary hover:bg-bg-surface border border-border-subtle'
-                        )}
-                      >
-                        {category}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Tags */}
-                {allTags.length > 0 && (
-                  <div>
-                    <label className="block text-xs font-semibold text-text-secondary mb-1.5">
-                      Tag
-                    </label>
-                    <div className="flex flex-wrap gap-1.5">
-                      {allTags.slice(0, 20).map((tag) => (
-                        <button
-                          key={tag}
-                          onClick={() => toggleTag(tag)}
-                          className={cn(
-                            'px-2.5 py-1 rounded-full text-xs font-medium transition-all border',
-                            selectedTags.includes(tag)
-                              ? 'bg-accent text-white border-accent shadow-sm'
-                              : 'bg-bg-soft text-text-secondary border-border-subtle hover:bg-bg-surface'
-                          )}
-                        >
-                          #{tag}
-                        </button>
-                      ))}
-                    </div>
-                    {selectedTags.length > 0 && (
-                      <button
-                        onClick={() => setSelectedTags([])}
-                        className="mt-2 text-xs text-accent hover:text-accent-hover"
-                      >
-                        Rimuovi tutti i tag
-                      </button>
-                    )}
-                  </div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Results Count */}
