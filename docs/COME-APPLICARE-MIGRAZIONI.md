@@ -4,8 +4,11 @@
 
 **DEVI applicare le migrazioni nell'ordine corretto:**
 
-1. **PRIMA** `001_initial_schema.sql`
-2. **POI** `002_community_tables.sql`
+1. **OPZIONALE** `000_verify_prerequisites.sql` - Verifica stato attuale (solo lettura)
+2. **PRIMA** `001_initial_schema.sql` - Crea tabelle base
+3. **POI** `002_community_tables.sql` - Crea tabelle community
+
+**Le migrazioni sono IDEMPOTENTI** - puoi rieseguirle anche se le tabelle esistono già!
 
 Se salti la prima, la seconda fallirà perché fa riferimento alle tabelle create nella prima!
 
@@ -21,6 +24,16 @@ Se salti la prima, la seconda fallirà perché fa riferimento alle tabelle creat
 
 1. Nel menu laterale, clicca su **SQL Editor**
 2. Clicca su **New query**
+
+### Passo 2.5: (OPZIONALE) Verifica Stato Attuale
+
+Se vuoi verificare cosa esiste già prima di applicare le migrazioni:
+
+1. Apri il file `supabase/migrations/000_verify_prerequisites.sql`
+2. Copia TUTTO il contenuto
+3. Incolla nel SQL Editor
+4. Clicca su **Run**
+5. Vedrai quali tabelle esistono già e quali mancano
 
 ### Passo 3: Applica PRIMA Migrazione (001_initial_schema.sql)
 
@@ -106,10 +119,12 @@ Se in futuro vengono aggiunte nuove migrazioni (003*\*.sql, 004*\*.sql, ecc.):
    ```
 3. Se la tabella non esiste, esegui di nuovo `001_initial_schema.sql`
 
-### Errore: "relation already exists"
+### Errore: "relation already exists" o "trigger already exists"
 
-- La tabella esiste già, va bene! Puoi saltare quella parte della migrazione.
-- Le migrazioni usano `CREATE TABLE IF NOT EXISTS`, quindi sono idempotenti.
+- ✅ **Va bene!** Significa che l'oggetto esiste già
+- Le migrazioni sono **IDEMPOTENTI** - puoi rieseguirle senza problemi
+- Usano `CREATE TABLE IF NOT EXISTS`, `DROP TRIGGER IF EXISTS`, ecc.
+- Se vedi questo errore, significa che quella parte è già stata applicata
 
 ### Errore: "permission denied"
 

@@ -2,6 +2,9 @@
 -- Creates tables for community proposals and voting (Pro feature)
 -- Version: 002
 -- Date: 2025-01-27
+--
+-- IMPORTANT: This migration is idempotent - safe to run multiple times
+-- REQUIRES: 001_initial_schema.sql must be run first (creates user_roles table)
 
 -- Asset Proposals Table (Pro only)
 -- Stores community proposals for new assets/features
@@ -57,6 +60,9 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Trigger to update votes count
+-- Drop existing trigger if it exists (idempotent)
+DROP TRIGGER IF EXISTS update_votes_count_on_vote ON asset_votes;
+
 CREATE TRIGGER update_votes_count_on_vote
   AFTER INSERT OR UPDATE OR DELETE ON asset_votes
   FOR EACH ROW

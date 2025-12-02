@@ -120,6 +120,10 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Triggers for updated_at
+-- Drop existing triggers if they exist (idempotent)
+DROP TRIGGER IF EXISTS update_user_roles_updated_at ON user_roles;
+DROP TRIGGER IF EXISTS update_pdf_customizations_updated_at ON pdf_customizations;
+
 CREATE TRIGGER update_user_roles_updated_at
   BEFORE UPDATE ON user_roles
   FOR EACH ROW
