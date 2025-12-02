@@ -2,7 +2,12 @@
 
 import { useMemo } from "react";
 import { useUserRole } from "./useUserRole";
-import { hasAccess, getAvailableFeatures, type AccessLevel } from "@/lib/features/access-control";
+import {
+  hasAccess,
+  getAvailableFeatures,
+  getRequiredAccessLevel,
+  type AccessLevel,
+} from "@/lib/features/access-control";
 import { supabase } from "@/lib/supabase/client";
 import { useState, useEffect } from "react";
 
