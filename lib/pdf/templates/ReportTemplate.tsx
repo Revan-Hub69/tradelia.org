@@ -380,8 +380,8 @@ export function ReportPDF({
       {/* Cover Page */}
       <Page size="A4" style={dynamicStyles.page}>
         {/* Watermark */}
-        {watermarkStyle && whitelabelConfig?.watermark_text && (
-          <Text style={watermarkStyle}>{whitelabelConfig.watermark_text}</Text>
+        {watermarkStyle && pdfCustomization?.watermark_text && (
+          <Text style={watermarkStyle}>{pdfCustomization.watermark_text}</Text>
         )}
         
         <View style={dynamicStyles.header}>
@@ -408,11 +408,11 @@ export function ReportPDF({
         </View>
 
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 100 }}>
-          <Text style={[dynamicStyles.headerTitle, { fontSize: whitelabelConfig?.font_size_title ? whitelabelConfig.font_size_title + 8 : 32, marginBottom: 20 }]}>
+          <Text style={[dynamicStyles.headerTitle, { fontSize: pdfCustomization?.font_size_title ? pdfCustomization.font_size_title + 8 : 32, marginBottom: 20 }]}>
             {title}
           </Text>
           {description && (
-            <Text style={[dynamicStyles.paragraph, { fontSize: (whitelabelConfig?.font_size_base || 10) + 2, textAlign: 'center', maxWidth: 400 }]}>
+            <Text style={[dynamicStyles.paragraph, { fontSize: (pdfCustomization?.font_size_base || 10) + 2, textAlign: 'center', maxWidth: 400 }]}>
               {description}
             </Text>
           )}
