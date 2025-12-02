@@ -228,7 +228,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
   return (
     <>
       {/* Print Styles - Professional Layout */}
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @media print {
           /* Hide everything except print content */
           body * {
@@ -392,7 +392,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
             color: #4b5563;
           }
         }
-      `}</style>
+      `}} />
 
       <AnimatePresence>
         {isOpen && (
