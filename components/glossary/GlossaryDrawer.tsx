@@ -467,29 +467,213 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
 
   if (!term) return null;
 
-  // Handle print - show print content before printing
+  // Handle print - create new window with print content
   const handlePrint = () => {
-    const printContainer = document.querySelector('.glossary-print-container') as HTMLElement;
-    if (printContainer) {
-      printContainer.style.display = 'block';
-      printContainer.style.position = 'fixed';
-      printContainer.style.left = '-9999px';
-      printContainer.style.top = '0';
-      printContainer.style.width = '210mm'; // A4 width
-      printContainer.style.background = 'white';
+    const printWindow = window.open('', '_blank', 'width=800,height=600');
+    if (!printWindow) return;
+
+    const printHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Glossario - ${term.title}</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 1.5cm 2cm;
     }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Helvetica', 'Arial', sans-serif;
+      font-size: 11pt;
+      line-height: 1.7;
+      color: #000;
+      background: white;
+    }
+    .print-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 0.6cm;
+      margin-bottom: 1cm;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .print-logo {
+      height: 40px;
+      width: auto;
+    }
+    .print-header-info {
+      text-align: right;
+      font-size: 9pt;
+      color: #475569;
+      line-height: 1.5;
+      font-weight: 500;
+    }
+    .print-content {
+      padding: 0;
+      font-size: 11pt;
+      line-height: 1.7;
+      color: #111827;
+    }
+    .print-title {
+      font-size: 28pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.5cm;
+      line-height: 1.2;
+    }
+    .print-meta {
+      font-size: 9pt;
+      color: #475569;
+      margin-bottom: 1cm;
+      padding-top: 0.4cm;
+      padding-bottom: 0.5cm;
+      border-bottom: 1px solid #cbd5e1;
+    }
+    .print-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25cm;
+      margin-top: 0.3cm;
+    }
+    .print-tag {
+      font-size: 8pt;
+      padding: 0.15cm 0.35cm;
+      background: #f3f4f6;
+      border: 1px solid #d1d5db;
+      border-radius: 3px;
+      color: #4b5563;
+    }
+    .print-section {
+      margin-bottom: 1.2cm;
+      page-break-inside: avoid;
+    }
+    .print-section-title {
+      font-size: 15pt;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 0.5cm;
+      padding-bottom: 0.3cm;
+      border-bottom: 1px solid #cbd5e1;
+    }
+    .print-section-content {
+      font-size: 11pt;
+      line-height: 1.75;
+      color: #1e293b;
+      text-align: justify;
+      margin-top: 0.3cm;
+      white-space: pre-line;
+    }
+    .print-sources {
+      margin-top: 1.2cm;
+      padding-top: 0.8cm;
+      border-top: 1px solid #e5e7eb;
+    }
+    .print-source-item {
+      font-size: 9pt;
+      font-family: 'Courier New', monospace;
+      color: #4b5563;
+      margin-bottom: 0.4cm;
+      padding-left: 1em;
+      text-indent: -1em;
+    }
+    .print-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0.5cm 0;
+      border-top: 1px solid #cbd5e1;
+      font-size: 8pt;
+      color: #64748b;
+      text-align: center;
+      background: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="print-header">
+    <div class="print-logo-container">
+      <img src="${window.location.origin}/logos/tradelia-logo-variant-1-wordmark.svg" alt="Tradelia" class="print-logo" onerror="this.style.display='none'">
+    </div>
+    <div class="print-header-info">
+      <div style="font-weight: 600; margin-bottom: 0.2cm;">Glossario Finanziario Tradelia</div>
+      <div>${new Date().toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+    </div>
+  </div>
+
+  <div class="print-content">
+    <h1 class="print-title">${term.title}</h1>
     
-    // Small delay to ensure styles are applied
-    setTimeout(() => {
-      window.print();
-      
-      // Hide again after print
-      setTimeout(() => {
-        if (printContainer) {
-          printContainer.style.display = 'none';
-        }
-      }, 100);
-    }, 100);
+    <div class="print-meta">
+      ${term.category ? `<div style="margin-bottom: 0.25cm;"><strong>Categoria:</strong> ${term.category}</div>` : ''}
+      ${term.tags && term.tags.length > 0 ? `
+        <div class="print-tags">
+          ${term.tags.map(tag => `<span class="print-tag">#${tag}</span>`).join('')}
+        </div>
+      ` : ''}
+    </div>
+
+    <section class="print-section">
+      <h2 class="print-section-title">Definizione Accademica</h2>
+      <div class="print-section-content">${term.what}</div>
+    </section>
+
+    ${term.technical ? `
+      <section class="print-section">
+        <h2 class="print-section-title">Spiegazione Tecnica Tradelia AI</h2>
+        <div class="print-section-content">${term.technical}</div>
+      </section>
+    ` : ''}
+
+    ${relatedTermsData.length > 0 ? `
+      <section class="print-section">
+        <h2 class="print-section-title">Termini Correlati</h2>
+        <div class="print-section-content">
+          ${relatedTermsData.map((relatedTerm, index) => 
+            `• ${relatedTerm.title}${relatedTerm.category ? ` (${relatedTerm.category})` : ''}`
+          ).join('<br>')}
+        </div>
+      </section>
+    ` : ''}
+
+    <section class="print-sources">
+      <h2 class="print-section-title">Riferimenti Bibliografici</h2>
+      <div>
+        ${term.source.split('|').map(source => 
+          `<div class="print-source-item">${source.trim()}</div>`
+        ).join('')}
+      </div>
+    </section>
+  </div>
+
+  <div class="print-footer">
+    <div style="text-align: center; width: 100%;">
+      Glossario Tradelia • ${new Date().getFullYear()} • Fonti accademiche verificate
+    </div>
+  </div>
+
+  <script>
+    window.onload = function() {
+      setTimeout(function() {
+        window.print();
+        window.onafterprint = function() {
+          window.close();
+        };
+      }, 250);
+    };
+  </script>
+</body>
+</html>
+    `;
+
+    printWindow.document.write(printHTML);
+    printWindow.document.close();
   };
 
   return (
