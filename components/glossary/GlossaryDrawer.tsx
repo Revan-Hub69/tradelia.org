@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
@@ -363,7 +363,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
   if (!term) return null;
 
   return (
-    <>
+    <React.Fragment>
       <AnimatePresence>
         {isOpen && (
           <>
@@ -684,6 +684,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
         </>
       )}
     </AnimatePresence>
+    </React.Fragment>
   );
 }
 
