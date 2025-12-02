@@ -6,7 +6,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import { loadGlossaryTerms, type GlossaryTerm } from '@/lib/glossary/terms';
-import { getGlossaryCategories, getGlossaryTags, getCategoryDisplayName, getTagDisplayName, type GlossaryCategory } from '@/lib/glossary/categories';
+import { getGlossaryCategories, getGlossaryTags, getCategoryDisplayName, getTagDisplayName, type GlossaryCategory, type GlossaryTag } from '@/lib/glossary/categories';
 import { GlossaryDrawer } from './GlossaryDrawer';
 
 interface GlossaryTermWithKey extends GlossaryTerm {
@@ -253,21 +253,24 @@ export function GlossaryContent() {
                   </button>
                 </span>
               )}
-              {selectedTags.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-accent text-white border border-accent shadow-sm"
-                >
-                  {getTagDisplayName(tag)}
-                  <button
-                    onClick={() => toggleTag(tag)}
-                    className="hover:bg-white/20 rounded-full p-0.5 transition-colors"
-                    aria-label={`Rimuovi filtro argomento ${getTagDisplayName(tag)}`}
+              {selectedTags.map((tag) => {
+                const tagDisplayName = getTagDisplayName(tag as GlossaryTag);
+                return (
+                  <span
+                    key={tag}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-accent text-white border border-accent shadow-sm"
                   >
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              ))}
+                    {tagDisplayName}
+                    <button
+                      onClick={() => toggleTag(tag)}
+                      className="hover:bg-white/20 rounded-full p-0.5 transition-colors"
+                      aria-label={`Rimuovi filtro argomento ${tagDisplayName}`}
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                );
+              })}
               <button
                 onClick={() => {
                   setSelectedCategory('all');
