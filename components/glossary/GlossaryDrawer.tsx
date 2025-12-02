@@ -144,7 +144,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     };
   }, [isOpen, onClose]);
 
-  // Focus trap e navigazione con frecce (Best Practice: WCAG 2.1)
+  // Focus trap e navigazione con frecce (Best Practice: WCAG 2.1 Level AA)
   useEffect(() => {
     if (!isOpen || !drawerRef.current) return;
 
@@ -166,7 +166,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     ).filter((el) => {
       // Filter out hidden elements
       const style = window.getComputedStyle(el);
-      if (style.display === 'none' || style.visibility === 'hidden') {
+      if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
         return false;
       }
       // Escludi elementi dentro lo scrollable (permetteremo scroll normale lì)
@@ -181,8 +181,10 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     const firstElement = allFocusableElements[0];
     const lastElement = allFocusableElements[allFocusableElements.length - 1];
 
-    // Focus first element when drawer opens
-    firstElement?.focus();
+    // Focus first element when drawer opens (Best Practice: Focus management)
+    const focusTimer = setTimeout(() => {
+      firstElement?.focus();
+    }, 100);
 
     // Navigazione con frecce: ArrowUp/ArrowDown per cambiare focus tra elementi
     const handleArrowKeys = (e: KeyboardEvent) => {
@@ -191,8 +193,12 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
         return; // Lascia che le frecce facciano scroll normalmente
       }
 
-      // Se il focus è fuori dal drawer, non fare nulla
+      // Se il focus è fuori dal drawer, riportalo dentro
       if (!drawer.contains(document.activeElement)) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          firstElement?.focus();
+        }
         return;
       }
 
@@ -209,7 +215,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       }
     };
 
-    // Tab come fallback (mantiene compatibilità)
+    // Tab trap (Best Practice: WCAG 2.1 - Focus order)
     const handleTab = (e: KeyboardEvent) => {
       if (e.key !== 'Tab') return;
 
@@ -218,7 +224,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
         return;
       }
 
-      // Don't trap if focus is outside drawer
+      // Se il focus è fuori dal drawer, riportalo dentro
       if (!drawer.contains(document.activeElement)) {
         e.preventDefault();
         firstElement?.focus();
@@ -244,6 +250,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     window.addEventListener('keydown', handleTab);
     
     return () => {
+      clearTimeout(focusTimer);
       window.removeEventListener('keydown', handleArrowKeys);
       window.removeEventListener('keydown', handleTab);
     };
@@ -262,6 +269,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       '    margin: 0 !important;',
       '    padding: 0 !important;',
       '  }',
+      '  /* Hide everything except print content */',
       '  body * { visibility: hidden; }',
       '  .glossary-print-container, .glossary-print-container * { visibility: visible !important; }',
       '  .glossary-print-container {',
@@ -277,17 +285,8 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       '    color: #000 !important;',
       '    padding: 0 !important;',
       '    margin: 0 !important;',
-      '    z-index: 9999 !important;',
+      '    z-index: 99999 !important;',
       '    opacity: 1 !important;',
-      '  }',
-      '  .glossary-print-container.hidden {',
-      '    display: none !important;',
-      '  }',
-      '  @media print {',
-      '    .glossary-print-container.hidden {',
-      '      display: block !important;',
-      '      visibility: visible !important;',
-      '    }',
       '  }',
       '  .no-print, button, .backdrop, nav, .print-header-actions, [class*="backdrop"], [class*="bg-black"], [class*="fixed"][class*="inset"] { display: none !important; visibility: hidden !important; }',
       '  /* Hide drawer panel and all dark overlays */',
@@ -471,35 +470,8 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
 
   return (
     <React.Fragment>
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={onClose}
-              className="backdrop fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998]"
-              aria-hidden="true"
-            />
-
-            {/* Drawer Panel */}
-            <motion.div
-              ref={drawerRef}
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-full max-w-lg bg-bg-surface border-l border-border-subtle shadow-2xl z-[9999] flex flex-col overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="glossary-drawer-title"
-              aria-describedby="glossary-drawer-description"
-            >
-              {/* Print Version - Hidden on screen, visible when printing */}
-              <div className="glossary-print-container hidden print:block">
+      {/* Print Version - Always in DOM, hidden on screen, visible when printing */}
+      <div className="glossary-print-container hidden print:block" aria-hidden="true">
                 {/* Print Header with Logo - Professional Layout */}
                 <div className="print-header">
                   <div className="print-logo-container" style={{ display: 'block', visibility: 'visible' }}>
@@ -596,6 +568,34 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   </div>
                 </div>
               </div>
+      
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={onClose}
+              className="backdrop fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998]"
+              aria-hidden="true"
+            />
+
+            {/* Drawer Panel */}
+            <motion.div
+              ref={drawerRef}
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed right-0 top-0 bottom-0 w-full max-w-lg bg-bg-surface border-l border-border-subtle shadow-2xl z-[9999] flex flex-col overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="glossary-drawer-title"
+              aria-describedby="glossary-drawer-description"
+            >
             {/* Header - Academic Style */}
             <div className="no-print border-b border-border-subtle bg-bg-surface">
               {/* Breadcrumb Navigation - Improved Spacing and Readability */}
