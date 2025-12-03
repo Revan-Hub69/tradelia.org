@@ -23,6 +23,7 @@ import { cn } from '@/lib/utils/cn';
 import { getGlossaryTerm } from '@/lib/glossary/terms';
 import type { GlossaryTerm as GlossaryTermType } from '@/lib/glossary/terms';
 import { formatTextIntoParagraphs } from '@/lib/glossary/text-formatter';
+import type { AcademicSource } from '@/lib/glossary/tradelia-glossary-structure';
 import Image from 'next/image';
 
 interface GlossaryTerm {
@@ -34,7 +35,7 @@ interface GlossaryTerm {
   // Nuova struttura Tradelia (prioritaria se presente)
   academicDefinition?: {
     what: string;
-    source: string;
+    source: string | AcademicSource[];
     academicContext?: string;
   };
   tradeliaExplanation?: {
