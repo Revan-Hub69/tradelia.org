@@ -3927,56 +3927,6 @@
     "version": 1
   },
   "159": {
-    "id": "159",
-    "title": "Information Ratio",
-    "slug": "information-ratio",
-    "academicDefinition": {
-      "what": "L'Information Ratio (IR) misura il rendimento attivo (alpha) per unità di rischio attivo (tracking error), calcolato come (rendimento portfolio - rendimento benchmark) / tracking error. L'Information Ratio valuta l'efficienza di un portfolio manager nel generare alpha rispetto al benchmark: un IR alto indica che il manager genera alpha consistente con rischio attivo controllato, mentre un IR basso indica alpha inconsistente o tracking error eccessivo. L'Information Ratio è particolarmente utile per valutare gestione attiva: un IR superiore a 0.5 è considerato buono, superiore a 1.0 è eccellente.",
-      "source": "Goodwin, T.H. (1998). The Information Ratio. Financial Analysts Journal, 54(4), 34-43. | Grinold, R.C., & Kahn, R.N. (2000). Active Portfolio Management: A Quantitative Approach for Producing Superior Returns and Controlling Risk. McGraw-Hill.",
-      "academicContext": "L'Information Ratio è una metrica fondamentale per valutare l'efficienza di un portfolio manager nel generare alpha. Un IR superiore a 0.5 è considerato buono, superiore a 1.0 è eccellente."
-    },
-    "tradeliaExplanation": {
-      "whatDoes": "L'Information Ratio misura quanto alpha generi per unità di rischio attivo (tracking error). IR = (rendimento portfolio - rendimento benchmark) / tracking error. IR alto = generi alpha consistente con rischio controllato. IR basso = alpha inconsistente o rischio eccessivo. Esempio: Portfolio +12%, Benchmark +10%, Tracking Error 2%. IR = (12% - 10%) / 2% = 1.0 (eccellente). IR > 0.5 = buono, IR > 1.0 = eccellente. Information Ratio valuta efficienza gestione attiva.",
-      "howToUse": "Usa Information Ratio per valutare efficienza gestione attiva. IR > 0.5 = buono, IR > 1.0 = eccellente. IR basso (< 0.3) = gestione attiva inefficiente: meglio ETF passivo. Information Ratio considera sia alpha che rischio: non basta generare alpha, devi farlo con rischio controllato. Monitora Information Ratio nel tempo: IR consistente è migliore di IR volatile. Information Ratio è particolarmente utile per confrontare portfolio manager attivi.",
-      "practicalExample": "Esempio: Portfolio A: +12% rendimento, Benchmark +10%, Tracking Error 2%. IR = (12% - 10%) / 2% = 1.0 (eccellente). Portfolio B: +11% rendimento, Benchmark +10%, Tracking Error 4%. IR = (11% - 10%) / 4% = 0.25 (scarso). Portfolio A genera alpha con rischio controllato (IR 1.0). Portfolio B genera poco alpha con rischio alto (IR 0.25). Information Ratio mostra che Portfolio A è più efficiente.",
-      "commonMistakes": "Errore comune: ignorare Information Ratio quando valuti gestione attiva. 'Rendimento +12%' non considera rischio: se Tracking Error è alto, IR può essere basso. Altro errore: pensare che alpha alto sia sempre meglio. Alpha alto con Tracking Error alto = IR basso = gestione inefficiente. Evita anche di usare Information Ratio su periodi troppo corti: IR richiede tempo per stabilizzarsi."
-    },
-    "category": "PORTFOLIO_CONSTRUCTION",
-    "subcategory": "performance",
-    "tags": ["investing", "portfolio-construction", "quantitative", "moderate"],
-    "learningLevel": "intermediate",
-    "prerequisites": ["Alpha", "Tracking Error", "Benchmark"],
-    "relatedTerms": ["Alpha", "Tracking Error", "Benchmark", "Sharpe Ratio"],
-    "applicationContexts": ["investing", "portfolio-construction"],
-    "userTypes": ["intermediate-trader", "professional"],
-    "version": 1
-  },
-  "160": {
-    "id": "160",
-    "title": "Sortino Ratio",
-    "slug": "sortino-ratio",
-    "academicDefinition": {
-      "what": "Il Sortino Ratio è una metrica di performance aggiustata per il rischio che misura il rendimento in eccesso rispetto al risk-free rate per unità di rischio negativo (downside deviation), invece che per unità di rischio totale (volatilità) come nel Sharpe Ratio. Il Sortino Ratio penalizza solo la volatilità negativa (perdite), non la volatilità positiva (guadagni), ed è quindi più appropriato per investitori che sono principalmente preoccupati del rischio di perdita. Il Sortino Ratio è calcolato come (rendimento portfolio - risk-free rate) / downside deviation.",
-      "source": "Sortino, F.A., & Price, L.N. (1994). Performance Measurement in a Downside Risk Framework. Journal of Investing, 3(3), 59-64. | Sortino, F.A., & van der Meer, R. (1991). Downside Risk. Journal of Portfolio Management, 17(4), 27-31.",
-      "academicContext": "Il Sortino Ratio è una metrica migliorata rispetto al Sharpe Ratio perché considera solo il rischio negativo (downside risk), che è più rilevante per la maggior parte degli investitori."
-    },
-    "tradeliaExplanation": {
-      "whatDoes": "Il Sortino Ratio misura rendimento in eccesso per unità di rischio negativo (downside deviation), invece che rischio totale (volatilità) come Sharpe Ratio. Penalizza solo volatilità negativa (perdite), non positiva (guadagni). Esempio: Portfolio +10% rendimento, Risk-free 2%, Downside deviation 5%. Sortino = (10% - 2%) / 5% = 1.6. Sharpe considera volatilità totale (guadagni + perdite), Sortino solo perdite. Sortino è più appropriato se sei preoccupato principalmente del rischio di perdita.",
-      "howToUse": "Usa Sortino Ratio se sei preoccupato principalmente del rischio di perdita, non della volatilità totale. Sortino penalizza solo perdite, non guadagni: è più appropriato per investitori conservatori. Sortino > 1.0 = buono, Sortino > 2.0 = eccellente. Sortino è generalmente più alto di Sharpe per portfolio con volatilità asimmetrica (più guadagni che perdite). Usa Sortino per confrontare portfolio con profili di rischio simili. Sortino è particolarmente utile per strategie che cercano di limitare perdite.",
-      "practicalExample": "Esempio: Portfolio A: +10% rendimento, Downside deviation 5%, Sortino 1.6. Portfolio B: +10% rendimento, Downside deviation 8%, Sortino 1.0. Portfolio A ha Sortino migliore (1.6 vs 1.0): genera stesso rendimento con meno rischio negativo. Sortino mostra che Portfolio A è migliore per investitori preoccupati del rischio di perdita. Sharpe potrebbe non mostrare questa differenza se volatilità totale è simile.",
-      "commonMistakes": "Errore comune: confondere Sortino con Sharpe. Sortino considera solo rischio negativo, Sharpe rischio totale. Altro errore: usare Sortino per portfolio con volatilità simmetrica: in questo caso, Sharpe e Sortino sono simili. Evita anche di ignorare Sortino quando valuti strategie che limitano perdite: Sortino è più appropriato di Sharpe."
-    },
-    "category": "PORTFOLIO_CONSTRUCTION",
-    "subcategory": "performance",
-    "tags": ["investing", "portfolio-construction", "quantitative", "moderate"],
-    "learningLevel": "intermediate",
-    "prerequisites": ["Sharpe Ratio", "Risk", "Return"],
-    "relatedTerms": ["Sharpe Ratio", "Risk", "Return", "Downside Risk"],
-    "applicationContexts": ["investing", "portfolio-construction"],
-    "userTypes": ["intermediate-trader", "professional"],
-    "version": 1
-  },
-  "161": {
     "id": "161",
     "title": "Factor-Based Optimization",
     "slug": "factor-based-optimization",
