@@ -1115,10 +1115,9 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
             <div 
               ref={contentScrollableRef}
               tabIndex={-1}
-              className="no-print flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 space-y-6 sm:space-y-8 focus:outline-none bg-bg-surface" 
+              className="no-print flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 space-y-6 sm:space-y-8 focus:outline-none bg-bg-surface drawer-scrollable" 
               style={{ 
-                scrollbarWidth: 'thin',
-                fontFamily: "'Helvetica', 'Arial', 'Verdana', sans-serif" // Font ottimale per leggibilità schermo
+                scrollbarWidth: 'thin'
               }}
             >
               {/* Spiegazione Accademica - Academic Style */}
@@ -1194,10 +1193,12 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                           {formatTextIntoParagraphs(whatDoes).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-base text-text-primary leading-[1.8] font-normal"
+                              className="text-base text-text-primary leading-[1.8] font-normal tracking-normal"
                               style={{ 
                                 maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
-                                textAlign: 'left' // WCAG 2.2: allineamento sinistra
+                                textAlign: 'left', // WCAG 2.2: allineamento sinistra
+                                wordSpacing: '0.05em', // WCAG 2.2: migliora leggibilità
+                                letterSpacing: '0.01em' // WCAG 2.2: leggibilità ottimale
                               }}
                             >
                               {paragraph}
@@ -1213,10 +1214,12 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                           {formatTextIntoParagraphs(howToUse).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-base text-text-primary leading-[1.8] font-normal"
+                              className="text-base text-text-primary leading-[1.8] font-normal tracking-normal"
                               style={{ 
                                 maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
-                                textAlign: 'left' // WCAG 2.2: allineamento sinistra
+                                textAlign: 'left', // WCAG 2.2: allineamento sinistra
+                                wordSpacing: '0.05em', // WCAG 2.2: migliora leggibilità
+                                letterSpacing: '0.01em' // WCAG 2.2: leggibilità ottimale
                               }}
                             >
                               {paragraph}
@@ -1235,10 +1238,12 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                           {formatTextIntoParagraphs(practicalExample).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-base text-text-primary leading-[1.8] font-normal"
+                              className="text-base text-text-primary leading-[1.8] font-normal tracking-normal"
                               style={{ 
                                 maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
-                                textAlign: 'left' // WCAG 2.2: allineamento sinistra
+                                textAlign: 'left', // WCAG 2.2: allineamento sinistra
+                                wordSpacing: '0.05em', // WCAG 2.2: migliora leggibilità
+                                letterSpacing: '0.01em' // WCAG 2.2: leggibilità ottimale
                               }}
                             >
                               {paragraph}
@@ -1257,10 +1262,12 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                           {formatTextIntoParagraphs(commonMistakes).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-base text-text-primary leading-[1.8] font-normal"
+                              className="text-base text-text-primary leading-[1.8] font-normal tracking-normal"
                               style={{ 
                                 maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
-                                textAlign: 'left' // WCAG 2.2: allineamento sinistra
+                                textAlign: 'left', // WCAG 2.2: allineamento sinistra
+                                wordSpacing: '0.05em', // WCAG 2.2: migliora leggibilità
+                                letterSpacing: '0.01em' // WCAG 2.2: leggibilità ottimale
                               }}
                             >
                               {paragraph}

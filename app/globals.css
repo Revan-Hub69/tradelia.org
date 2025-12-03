@@ -98,6 +98,48 @@
     overflow-y: auto;
   }
 
+  /* Glossary Drawer Scrollbar - Enhanced Visibility for Readability */
+  .drawer-scrollable {
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.05);
+  }
+
+  .drawer-scrollable::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .drawer-scrollable::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+  }
+
+  .drawer-scrollable::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .drawer-scrollable::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  .drawer-scrollable::-webkit-scrollbar-thumb:active {
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  /* Enhanced Text Selection for Readability */
+  .drawer-scrollable ::selection {
+    background: rgba(30, 64, 175, 0.3);
+    color: var(--text-primary);
+  }
+
+  .drawer-scrollable ::-moz-selection {
+    background: rgba(30, 64, 175, 0.3);
+    color: var(--text-primary);
+  }
+
   /* Mobile Menu - SOLID BACKGROUND - NO TRANSPARENCY */
   #mobile-menu {
     background-color: transparent !important;
