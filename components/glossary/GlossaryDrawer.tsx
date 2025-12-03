@@ -975,11 +975,6 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   
                   {/* Print Meta */}
                   <div className="print-meta">
-                    {categoryDisplayName && (
-                      <div style={{ marginBottom: '0.25cm', marginTop: '0' }}>
-                        <strong>Categoria:</strong> {categoryDisplayName}
-                      </div>
-                    )}
                     {term.tags && term.tags.length > 0 && (
                       <div className="print-tags">
                         {term.tags.map((tag) => (
@@ -1138,14 +1133,6 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   aria-label="Breadcrumb"
                 >
                   <span className="hover:text-text-secondary whitespace-nowrap flex-shrink-0">Glossario</span>
-                  {categoryDisplayName && (
-                    <>
-                      <ChevronRight className="w-3 h-3 flex-shrink-0 text-text-tertiary/60" aria-hidden="true" />
-                      <span className="text-text-secondary truncate max-w-[120px] sm:max-w-[200px]" title={categoryDisplayName}>
-                        {categoryDisplayName}
-                      </span>
-                    </>
-                  )}
                   <ChevronRight className="w-3 h-3 flex-shrink-0 text-text-tertiary/60" aria-hidden="true" />
                   <span className="text-text-primary font-medium truncate max-w-[180px] sm:max-w-[300px] md:max-w-none" title={term.title}>
                     {term.title}
@@ -1163,14 +1150,17 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     <h2 id="glossary-drawer-title" className="text-lg sm:text-xl font-bold text-text-primary mb-1.5 break-words">
                       {term.title}
                     </h2>
-                    <p id="glossary-drawer-description" className="text-xs sm:text-sm text-text-secondary">
-                      {categoryDisplayName && (
-                        <span className="inline-flex items-center gap-1.5">
-                          <Layers className="w-3.5 h-3.5 text-text-tertiary flex-shrink-0" aria-hidden="true" />
-                          <span className="text-text-tertiary truncate">{categoryDisplayName}</span>
+                    {term.tags && term.tags.length > 0 && (
+                      <p id="glossary-drawer-description" className="text-xs sm:text-sm text-text-secondary">
+                        <span className="inline-flex items-center gap-1.5 flex-wrap">
+                          <Tag className="w-3.5 h-3.5 text-text-tertiary flex-shrink-0" aria-hidden="true" />
+                          <span className="text-text-tertiary">
+                            {term.tags.slice(0, 3).join(', ')}
+                            {term.tags.length > 3 && ` +${term.tags.length - 3}`}
+                          </span>
                         </span>
-                      )}
-                    </p>
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="print-header-actions flex items-center gap-2 ml-4">

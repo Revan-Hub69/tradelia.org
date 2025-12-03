@@ -28,7 +28,6 @@ interface GlossaryTermWithKey extends GlossaryTerm {
 export function GlossaryContent() {
   const { t } = useTranslations();
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<GlossaryCategory | TradeliaGlossaryCategory | 'all'>('all');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [glossaryData, setGlossaryData] = useState<Record<string, GlossaryTerm>>({});
   const [loading, setLoading] = useState(true);
@@ -310,11 +309,7 @@ export function GlossaryContent() {
                   </p>
                   <span className="text-text-tertiary">•</span>
                   <p className="text-sm text-text-tertiary">
-                    <span className="font-semibold text-text-primary">{allCategories.length}</span> categorie
-                  </p>
-                  <span className="text-text-tertiary">•</span>
-                  <p className="text-sm text-text-tertiary">
-                    <span className="font-semibold text-text-primary">{allTags.length}</span> argomenti
+                    <span className="font-semibold text-text-primary">{allTags.length}</span> temi
                   </p>
                 </div>
               </div>
@@ -447,23 +442,9 @@ export function GlossaryContent() {
         {/* Filters - Always Visible, Immediate Feedback */}
         <div className="mb-4 space-y-4">
           {/* Active Filters Summary - Immediate Visual Feedback */}
-          {(selectedCategory !== 'all' || selectedTags.length > 0) && (
+          {selectedTags.length > 0 && (
             <div className="flex items-center gap-2 flex-wrap p-3 bg-accent/5 border border-accent/20 rounded-lg">
               <span className="text-xs font-semibold text-text-primary">Filtri applicati:</span>
-              {selectedCategory !== 'all' && (
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-accent text-white border border-accent shadow-sm">
-                  {selectedCategory in TRADELIA_GLOSSARY_CATEGORIES
-                    ? TRADELIA_GLOSSARY_CATEGORIES[selectedCategory as TradeliaGlossaryCategory].displayName
-                    : getCategoryDisplayName(selectedCategory as GlossaryCategory)}
-                  <button
-                    onClick={() => setSelectedCategory('all')}
-                    className="hover:bg-white/20 rounded-full p-0.5 transition-colors"
-                    aria-label={`Rimuovi filtro categoria`}
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              )}
               {selectedTags.map((tag) => {
                 const tagDisplayName = getTagDisplayName(tag as GlossaryTag);
                 return (
@@ -475,7 +456,7 @@ export function GlossaryContent() {
                     <button
                       onClick={() => toggleTag(tag)}
                       className="hover:bg-white/20 rounded-full p-0.5 transition-colors"
-                      aria-label={`Rimuovi filtro argomento ${tagDisplayName}`}
+                      aria-label={`Rimuovi filtro tema ${tagDisplayName}`}
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -483,81 +464,13 @@ export function GlossaryContent() {
                 );
               })}
               <button
-                onClick={() => {
-                  setSelectedCategory('all');
-                  setSelectedTags([]);
-                }}
+                onClick={() => setSelectedTags([])}
                 className="ml-auto text-xs text-accent hover:text-accent-hover font-medium underline"
               >
                 Cancella filtri
               </button>
             </div>
           )}
-
-          {/* Categories - Always Visible */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Layers className="w-4 h-4 text-accent" />
-              <label className="text-sm font-semibold text-text-primary">
-                Filtra per categoria
-              </label>
-              <span className="text-xs text-text-tertiary">
-                • {filteredTerms.length} {filteredTerms.length === 1 ? 'termine trovato' : 'termini trovati'}
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setSelectedCategory('all')}
-                className={cn(
-                  'px-4 py-2 rounded-lg text-sm font-medium transition-all border-2',
-                  selectedCategory === 'all'
-                    ? 'bg-accent text-white border-accent shadow-md'
-                    : 'bg-bg-surface text-text-secondary hover:bg-bg-soft border-border-subtle hover:border-accent/50'
-                )}
-              >
-                Mostra tutte
-              </button>
-              {allCategories.map((category) => {
-                // Get display name for both old and Tradelia categories
-                const displayName = category in TRADELIA_GLOSSARY_CATEGORIES
-                  ? TRADELIA_GLOSSARY_CATEGORIES[category as TradeliaGlossaryCategory].displayName
-                  : getCategoryDisplayName(category as GlossaryCategory);
-                
-                // Count terms in this category (considering search term and tag filters but not category filter)
-                const count = terms.filter(t => {
-                  const searchMatch = matchesSearch(t, searchTerm);
-                  const categoryMatch = matchesCategory(t, category);
-                  const tagMatch = selectedTags.length === 0 || selectedTags.some(tag => matchesTag(t, tag));
-                  return searchMatch && categoryMatch && tagMatch;
-                }).length;
-                
-                if (count === 0) return null; // Hide categories with no terms
-                
-                return (
-                  <button
-                    key={category}
-                    onClick={() => setSelectedCategory(category)}
-                    className={cn(
-                      'px-4 py-2 rounded-lg text-sm font-medium transition-all border-2 flex items-center gap-2',
-                      selectedCategory === category
-                        ? 'bg-accent text-white border-accent shadow-md'
-                        : 'bg-bg-surface text-text-secondary hover:bg-bg-soft border-border-subtle hover:border-accent/50'
-                    )}
-                  >
-                    <span>{displayName}</span>
-                    <span className={cn(
-                      'text-xs px-1.5 py-0.5 rounded font-semibold',
-                      selectedCategory === category
-                        ? 'bg-white/20 text-white'
-                        : 'bg-bg-soft text-text-tertiary'
-                    )}>
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
 
           {/* Tags - Always Visible, Scrollable - Improved UX */}
           {allTags.length > 0 && (
