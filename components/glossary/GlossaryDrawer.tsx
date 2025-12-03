@@ -1154,16 +1154,19 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   {term.academicDefinition?.academicContext && (
                     <div className="mt-6 p-5 bg-gray-50 dark:bg-gray-800 border-l-4 border-blue-900 dark:border-blue-700 rounded-r-lg">
                       <p className="text-[15px] text-gray-800 dark:text-gray-200 italic leading-[1.7] font-normal max-w-[60ch]">
-                        {formatTextIntoParagraphs(term.academicDefinition.academicContext).map((p, idx) => (
-                          <span key={idx}>
-                            {p}
-                            {idx < formatTextIntoParagraphs(term.academicDefinition.academicContext).length - 1 && (
-                              <>
-                                <br /><br />
-                              </>
-                            )}
-                          </span>
-                        ))}
+                        {(() => {
+                          const paragraphs = formatTextIntoParagraphs(term.academicDefinition?.academicContext || '');
+                          return paragraphs.map((p, idx) => (
+                            <span key={idx}>
+                              {p}
+                              {idx < paragraphs.length - 1 && (
+                                <>
+                                  <br /><br />
+                                </>
+                              )}
+                            </span>
+                          ));
+                        })()}
                       </p>
                     </div>
                   )}
