@@ -27,23 +27,16 @@ export function Footer() {
   }, []);
 
   const footerLinks = {
-    support: [
-      { key: 'support', href: '/support' },
-      { key: 'status', href: '/status' },
-      { key: 'documentation', href: '/docs' },
-      { key: 'faq', href: '/faq' },
+    product: [
+      { key: 'pricing', href: '/pricing' },
+      { key: 'glossary', href: '/glossary' },
+      { key: 'courses', href: '/courses' },
+      { key: 'dashboard', href: '/dashboard' },
     ],
     legal: [
-      { key: 'mifid', href: '/mifid' },
       { key: 'privacy', href: '/privacy' },
       { key: 'cookie', href: '/cookie' },
       { key: 'terms', href: '/terms' },
-    ],
-    resources: [
-      { key: 'blog', href: '/blog' },
-      { key: 'guides', href: '/guides' },
-      { key: 'api', href: '/api' },
-      { key: 'changelog', href: '/changelog' },
     ],
   };
 
@@ -54,7 +47,7 @@ export function Footer() {
     delay 
   }: { 
     title: string; 
-    links: typeof footerLinks.support; 
+    links: typeof footerLinks.product; 
     sectionKey: string;
     delay: number;
   }) => {
@@ -125,7 +118,7 @@ export function Footer() {
           variants={containerVariants}
         >
           {/* Main Footer Content - Best Practice: Responsive Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 mb-12">
             {/* Brand Column - Full width on mobile, spans 2 columns on desktop */}
             <motion.div
               variants={itemVariants}
@@ -161,9 +154,9 @@ export function Footer() {
 
             {/* Footer Sections - Equal width columns on desktop */}
             <FooterSection
-              title={t('footer.support')}
-              links={footerLinks.support}
-              sectionKey="support"
+              title={t('footer.product')}
+              links={footerLinks.product}
+              sectionKey="product"
               delay={0.1}
             />
 
@@ -172,13 +165,6 @@ export function Footer() {
               links={footerLinks.legal}
               sectionKey="legal"
               delay={0.2}
-            />
-
-            <FooterSection
-              title={t('footer.resources')}
-              links={footerLinks.resources}
-              sectionKey="resources"
-              delay={0.3}
             />
           </div>
 

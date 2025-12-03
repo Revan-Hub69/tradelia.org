@@ -65,27 +65,19 @@
     "copyright": "independent project",
     "description": "Open financial research: AI frameworks, datasets and methodological notes shared with the community. Professional services are optional and fund free access.",
     "disclaimer": "Educational material only. No advice or investment solicitation; we comply with MiFID II and ethical best practices.",
-    "support": "Support",
+    "product": "Product",
     "legal": "Legal",
-    "resources": "Resources",
     "company": "Company",
-    "supportLinks": {
-      "support": "Support",
-      "status": "Status",
-      "documentation": "Documentation",
-      "faq": "FAQ"
+    "productLinks": {
+      "pricing": "Pricing",
+      "glossary": "Glossary",
+      "courses": "Courses",
+      "dashboard": "Dashboard"
     },
     "legalLinks": {
-      "mifid": "MiFID II",
       "privacy": "Privacy",
       "cookie": "Cookies",
       "terms": "Terms & Conditions"
-    },
-    "resourcesLinks": {
-      "blog": "Blog",
-      "guides": "Guides",
-      "api": "API",
-      "changelog": "Changelog"
     },
     "companyLinks": {
       "about": "About",

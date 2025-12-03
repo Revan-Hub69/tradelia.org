@@ -65,27 +65,19 @@
     "copyright": "progetto indipendente",
     "description": "Ricerca finanziaria aperta: framework AI, dataset e note metodologiche condivise per la community. I servizi professionali sono opzionali e finanziano l'accesso gratuito.",
     "disclaimer": "Solo materiale educativo. Nessuna consulenza o sollecitazione di investimento; rispettiamo MiFID II e le best practice etiche.",
-    "support": "Supporto",
+    "product": "Prodotto",
     "legal": "Legale",
-    "resources": "Risorse",
     "company": "Azienda",
-    "supportLinks": {
-      "support": "Supporto",
-      "status": "Status",
-      "documentation": "Documentazione",
-      "faq": "FAQ"
+    "productLinks": {
+      "pricing": "Prezzi",
+      "glossary": "Glossario",
+      "courses": "Corsi",
+      "dashboard": "Dashboard"
     },
     "legalLinks": {
-      "mifid": "MiFID II",
       "privacy": "Privacy",
       "cookie": "Cookie",
       "terms": "Termini e Condizioni"
-    },
-    "resourcesLinks": {
-      "blog": "Blog",
-      "guides": "Guide",
-      "api": "API",
-      "changelog": "Changelog"
     },
     "companyLinks": {
       "about": "Chi Siamo",
