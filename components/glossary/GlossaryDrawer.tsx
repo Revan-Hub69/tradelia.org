@@ -1207,7 +1207,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     <h2 id="academic-section-title" className="text-lg sm:text-2xl font-bold text-text-primary mb-1.5 sm:mb-2">
                       {t('glossary.drawer.academicExplanation') || 'Definizione Accademica'}
                     </h2>
-                    <p className="text-xs sm:text-sm text-text-tertiary font-medium">Definizione precisa e verificata</p>
+                    <p className="text-xs sm:text-sm text-text-tertiary font-medium">Definizione accademica precisa e verificata</p>
                   </div>
                 </div>
                 {/* Contenuto Sezione */}
@@ -1424,7 +1424,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       <h2 id="sources-section-title" className="text-lg sm:text-2xl font-bold text-text-primary mb-1.5 sm:mb-2">
                         {t('glossary.drawer.sources') || 'Riferimenti Bibliografici'}
                       </h2>
-                      <p className="text-xs sm:text-sm text-text-tertiary font-medium">Fonti accademiche verificate</p>
+                      <p className="text-xs sm:text-sm text-text-tertiary font-medium">Fonti accademiche verificate e citate</p>
                     </div>
                   </div>
                   {/* Lista Riferimenti - Formato Accademico */}
