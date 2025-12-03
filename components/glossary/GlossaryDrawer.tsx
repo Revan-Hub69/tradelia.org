@@ -155,12 +155,32 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
         // Scroll to top
         contentScrollableRef.current.scrollTop = 0;
       }
-    }, 100);
+    }, 150);
+
+    // Handle arrow keys for scrolling when content is focused
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!contentScrollableRef.current) return;
+      
+      // Only handle arrow keys if content is focused
+      if (document.activeElement === contentScrollableRef.current) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          const scrollAmount = 50;
+          if (e.key === 'ArrowDown') {
+            contentScrollableRef.current.scrollTop += scrollAmount;
+          } else {
+            contentScrollableRef.current.scrollTop -= scrollAmount;
+          }
+        }
+      }
+    };
 
     window.addEventListener('keydown', handleEscape);
+    window.addEventListener('keydown', handleKeyDown);
     
     return () => {
       window.removeEventListener('keydown', handleEscape);
+      window.removeEventListener('keydown', handleKeyDown);
       clearTimeout(timer);
     };
   }, [isOpen, onClose]);

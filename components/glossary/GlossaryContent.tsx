@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import { loadGlossaryTerms, type GlossaryTerm } from '@/lib/glossary/terms';
 import { getGlossaryCategories, getGlossaryTags, getCategoryDisplayName, getTagDisplayName, type GlossaryCategory, type GlossaryTag } from '@/lib/glossary/categories';
+import { TRADELIA_GLOSSARY_CATEGORIES, TRADELIA_GLOSSARY_TAGS, type TradeliaGlossaryCategory, type TradeliaGlossaryTag } from '@/lib/glossary/tradelia-glossary-structure';
 import { GlossaryDrawer } from './GlossaryDrawer';
 
 interface GlossaryTermWithKey extends GlossaryTerm {
@@ -26,7 +27,7 @@ interface GlossaryTermWithKey extends GlossaryTerm {
 export function GlossaryContent() {
   const { t } = useTranslations();
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<GlossaryCategory | 'all'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<GlossaryCategory | TradeliaGlossaryCategory | 'all'>('all');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [glossaryData, setGlossaryData] = useState<Record<string, GlossaryTerm>>({});
   const [loading, setLoading] = useState(true);
@@ -44,8 +45,21 @@ export function GlossaryContent() {
     });
   }, []);
 
-  const categories = getGlossaryCategories();
-  const allTags = getGlossaryTags();
+  // Get all categories (both old and Tradelia)
+  const oldCategories = getGlossaryCategories();
+  const tradeliaCategories = Object.keys(TRADELIA_GLOSSARY_CATEGORIES) as TradeliaGlossaryCategory[];
+  const allCategories = [...oldCategories, ...tradeliaCategories];
+  
+  // Get all tags (both old and Tradelia)
+  const oldTags = getGlossaryTags();
+  // Extract all Tradelia tags from nested structure
+  const tradeliaTags: string[] = [];
+  Object.values(TRADELIA_GLOSSARY_TAGS).forEach(group => {
+    Object.values(group).forEach(tag => {
+      tradeliaTags.push(tag);
+    });
+  });
+  const allTags = [...oldTags, ...tradeliaTags];
   const terms = Object.entries(glossaryData).map(([key, term]) => ({ key, ...term }));
 
   const filteredTerms = useMemo(() => {
@@ -55,7 +69,12 @@ export function GlossaryContent() {
         term.what.toLowerCase().includes(searchTerm.toLowerCase()) ||
         term.technical?.toLowerCase().includes(searchTerm.toLowerCase());
       
-      const matchesCategory = selectedCategory === 'all' || term.category === selectedCategory;
+      // Support both old categories and Tradelia categories
+      const matchesCategory = selectedCategory === 'all' || 
+        term.category === selectedCategory ||
+        (term.category && typeof term.category === 'string' && 
+         (term.category === selectedCategory || 
+          (selectedCategory in TRADELIA_GLOSSARY_CATEGORIES && term.category === selectedCategory)));
       
       const matchesTags = selectedTags.length === 0 || 
         selectedTags.some(tag => term.tags?.includes(tag as any));
@@ -306,15 +325,30 @@ export function GlossaryContent() {
               >
                 Mostra tutte
               </button>
-              {categories.map((category) => {
+              {allCategories.map((category) => {
+                // Get display name for both old and Tradelia categories
+                const displayName = category in TRADELIA_GLOSSARY_CATEGORIES
+                  ? TRADELIA_GLOSSARY_CATEGORIES[category as TradeliaGlossaryCategory].displayName
+                  : getCategoryDisplayName(category as GlossaryCategory);
+                
                 // Count terms in this category (considering search term but not category filter)
                 const count = terms.filter(t => {
                   const matchesSearch = !searchTerm || 
                     t.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     t.what.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     t.technical?.toLowerCase().includes(searchTerm.toLowerCase());
-                  return matchesSearch && t.category === category;
+                  // Support both old categories and Tradelia categories
+                  return matchesSearch && (
+                    t.category === category ||
+                    (category in TRADELIA_GLOSSARY_CATEGORIES && 
+                     typeof t.category === 'string' && 
+                     (t.category === category || 
+                      TRADELIA_GLOSSARY_CATEGORIES[category as TradeliaGlossaryCategory].displayName === t.category))
+                  );
                 }).length;
+                
+                if (count === 0) return null; // Hide categories with no terms
+                
                 return (
                   <button
                     key={category}
@@ -326,17 +360,15 @@ export function GlossaryContent() {
                         : 'bg-bg-surface text-text-secondary hover:bg-bg-soft border-border-subtle hover:border-accent/50'
                     )}
                   >
-                    <span>{getCategoryDisplayName(category)}</span>
-                    {count > 0 && (
-                      <span className={cn(
-                        'text-xs px-1.5 py-0.5 rounded font-semibold',
-                        selectedCategory === category
-                          ? 'bg-white/20 text-white'
-                          : 'bg-bg-soft text-text-tertiary'
-                      )}>
-                        {count}
-                      </span>
-                    )}
+                    <span>{displayName}</span>
+                    <span className={cn(
+                      'text-xs px-1.5 py-0.5 rounded font-semibold',
+                      selectedCategory === category
+                        ? 'bg-white/20 text-white'
+                        : 'bg-bg-soft text-text-tertiary'
+                    )}>
+                      {count}
+                    </span>
                   </button>
                 );
               })}
@@ -365,11 +397,25 @@ export function GlossaryContent() {
                       t.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                       t.what.toLowerCase().includes(searchTerm.toLowerCase()) ||
                       t.technical?.toLowerCase().includes(searchTerm.toLowerCase());
-                    const matchesCategory = selectedCategory === 'all' || t.category === selectedCategory;
-                    const hasTag = t.tags?.includes(tag as any);
+                    // Support both old categories and Tradelia categories
+                    const matchesCategory = selectedCategory === 'all' || 
+                      t.category === selectedCategory ||
+                      (selectedCategory in TRADELIA_GLOSSARY_CATEGORIES && 
+                       typeof t.category === 'string' && 
+                       (t.category === selectedCategory || 
+                        TRADELIA_GLOSSARY_CATEGORIES[selectedCategory as TradeliaGlossaryCategory].displayName === t.category));
+                    const hasTag = t.tags?.some(tagItem => 
+                      tagItem === tag || 
+                      (typeof tagItem === 'string' && tagItem.toLowerCase() === tag.toLowerCase())
+                    );
                     return matchesSearch && matchesCategory && hasTag;
                   }).length;
                   if (count === 0) return null; // Nascondi tag senza risultati
+                  // Get display name for tag (both old and Tradelia)
+                  const tagDisplayName = oldTags.includes(tag as GlossaryTag) 
+                    ? getTagDisplayName(tag as GlossaryTag)
+                    : tag.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                  
                   return (
                     <button
                       key={tag}
@@ -380,9 +426,9 @@ export function GlossaryContent() {
                           ? 'bg-accent text-white border-accent shadow-sm'
                           : 'bg-bg-surface text-text-secondary border-border-subtle hover:bg-bg-soft hover:border-accent/50'
                       )}
-                      title={`${getTagDisplayName(tag)}: ${count} ${count === 1 ? 'termine' : 'termini'}`}
+                      title={`${tagDisplayName}: ${count} ${count === 1 ? 'termine' : 'termini'}`}
                     >
-                      <span>{getTagDisplayName(tag)}</span>
+                      <span>{tagDisplayName}</span>
                       <span className={cn(
                         'text-xs px-1.5 py-0.5 rounded font-semibold',
                         selectedTags.includes(tag)
