@@ -138,48 +138,83 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     loadRelatedTerms();
   }, [term?.relatedTerms]);
 
-  // Focus trap e gestione ESC key
+  // Focus trap e gestione tastiera migliorata
   useEffect(() => {
     if (!isOpen) return;
 
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    // Focus sul contenuto scrollabile quando si apre (non sui pulsanti)
-    const timer = setTimeout(() => {
-      if (contentScrollableRef.current) {
-        contentScrollableRef.current.focus();
-        // Scroll to top
-        contentScrollableRef.current.scrollTop = 0;
-      }
-    }, 150);
-
-    // Handle arrow keys for scrolling when content is focused
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!contentScrollableRef.current) return;
-      
-      // Only handle arrow keys if content is focused
+      // ESC: chiudi drawer
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+
+      // Solo se il contenuto è focalizzato
       if (document.activeElement === contentScrollableRef.current) {
-        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        // Frecce: scroll fluido
+        if (e.key === 'ArrowDown') {
           e.preventDefault();
-          const scrollAmount = 50;
-          if (e.key === 'ArrowDown') {
-            contentScrollableRef.current.scrollTop += scrollAmount;
-          } else {
-            contentScrollableRef.current.scrollTop -= scrollAmount;
+          if (contentScrollableRef.current) {
+            contentScrollableRef.current.scrollBy({ top: 80, behavior: 'smooth' });
           }
+          return;
+        }
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (contentScrollableRef.current) {
+            contentScrollableRef.current.scrollBy({ top: -80, behavior: 'smooth' });
+          }
+          return;
+        }
+        
+        // Page Down/Up: scroll pagina
+        if (e.key === 'PageDown') {
+          e.preventDefault();
+          if (contentScrollableRef.current) {
+            const viewportHeight = contentScrollableRef.current.clientHeight;
+            contentScrollableRef.current.scrollBy({ top: viewportHeight * 0.9, behavior: 'smooth' });
+          }
+          return;
+        }
+        if (e.key === 'PageUp') {
+          e.preventDefault();
+          if (contentScrollableRef.current) {
+            const viewportHeight = contentScrollableRef.current.clientHeight;
+            contentScrollableRef.current.scrollBy({ top: -viewportHeight * 0.9, behavior: 'smooth' });
+          }
+          return;
+        }
+        
+        // Home/End: inizio/fine
+        if (e.key === 'Home') {
+          e.preventDefault();
+          if (contentScrollableRef.current) {
+            contentScrollableRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+          return;
+        }
+        if (e.key === 'End') {
+          e.preventDefault();
+          if (contentScrollableRef.current) {
+            contentScrollableRef.current.scrollTo({ top: contentScrollableRef.current.scrollHeight, behavior: 'smooth' });
+          }
+          return;
         }
       }
     };
 
-    window.addEventListener('keydown', handleEscape);
+    // Focus sul contenuto scrollabile quando si apre
+    const timer = setTimeout(() => {
+      if (contentScrollableRef.current) {
+        contentScrollableRef.current.focus();
+        contentScrollableRef.current.scrollTop = 0;
+      }
+    }, 100);
+
     window.addEventListener('keydown', handleKeyDown);
     
     return () => {
-      window.removeEventListener('keydown', handleEscape);
       window.removeEventListener('keydown', handleKeyDown);
       clearTimeout(timer);
     };
@@ -1083,50 +1118,52 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               style={{ scrollbarWidth: 'thin' }}
             >
               {/* Spiegazione Accademica - Academic Style */}
-              <section className="space-y-4" aria-labelledby="academic-section-title">
-                <div className="flex items-center gap-3 mb-5 pb-4 border-b-2 border-border-default">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/50 dark:to-blue-800/50 border-2 border-blue-300 dark:border-blue-700 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <GraduationCap className="w-6 h-6 text-blue-700 dark:text-blue-300" aria-hidden="true" />
+              <section className="space-y-5" aria-labelledby="academic-section-title">
+                <div className="flex items-center gap-4 mb-6 pb-5 border-b border-border-subtle">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/50 dark:to-blue-800/50 border-2 border-blue-300 dark:border-blue-700 flex items-center justify-center flex-shrink-0 shadow-md">
+                    <GraduationCap className="w-7 h-7 text-blue-700 dark:text-blue-300" aria-hidden="true" />
                   </div>
-                  <div>
-                    <h3 id="academic-section-title" className="text-lg font-bold text-text-primary">
+                  <div className="flex-1">
+                    <h3 id="academic-section-title" className="text-xl font-bold text-text-primary mb-1">
                       {t('glossary.drawer.academicExplanation') || 'Definizione Accademica'}
                     </h3>
-                    <p className="text-xs text-text-tertiary mt-1">Academic Definition</p>
+                    <p className="text-xs text-text-tertiary font-medium">Academic Definition</p>
                   </div>
                 </div>
-                <div className="prose prose-sm dark:prose-invert max-w-none">
-                  <p className="text-base text-text-primary leading-relaxed font-normal">
+                <div className="prose prose-base dark:prose-invert max-w-none">
+                  <p className="text-[15px] text-text-primary leading-[1.75] font-normal mb-4">
                     {academicWhat}
                   </p>
                   {term.academicDefinition?.academicContext && (
-                    <p className="text-sm text-text-secondary mt-4 italic leading-relaxed border-l-2 border-border-subtle pl-4">
-                      {term.academicDefinition.academicContext}
-                    </p>
+                    <div className="mt-5 p-4 bg-bg-soft border-l-3 border-accent/40 rounded-r-md">
+                      <p className="text-sm text-text-secondary italic leading-relaxed font-normal">
+                        {term.academicDefinition.academicContext}
+                      </p>
+                    </div>
                   )}
                 </div>
               </section>
 
               {/* Spiegazione Tradelia AI - Cosa fa e Come si usa */}
               {(whatDoes || howToUse || term.technical || term.how) && (
-                <section className="space-y-4" aria-labelledby="tradelia-ai-section-title">
-                  <div className="flex items-center gap-3 mb-5 pb-4 border-b-2 border-border-default">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900/50 dark:to-green-800/50 border-2 border-green-300 dark:border-green-700 flex items-center justify-center flex-shrink-0 shadow-sm">
-                      <Code className="w-6 h-6 text-green-700 dark:text-green-300" aria-hidden="true" />
+                <section className="space-y-5" aria-labelledby="tradelia-ai-section-title">
+                  <div className="flex items-center gap-4 mb-6 pb-5 border-b border-border-subtle">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900/50 dark:to-green-800/50 border-2 border-green-300 dark:border-green-700 flex items-center justify-center flex-shrink-0 shadow-md">
+                      <Code className="w-7 h-7 text-green-700 dark:text-green-300" aria-hidden="true" />
                     </div>
-                    <div>
-                      <h3 id="tradelia-ai-section-title" className="text-lg font-bold text-text-primary">
+                    <div className="flex-1">
+                      <h3 id="tradelia-ai-section-title" className="text-xl font-bold text-text-primary mb-1">
                         {t('glossary.drawer.tradeliaAIExplanation') || 'Spiegazione Tradelia AI'}
                       </h3>
-                      <p className="text-xs text-text-tertiary mt-1">Spiegazione semplice ma esaustiva</p>
+                      <p className="text-xs text-text-tertiary font-medium">Spiegazione semplice ma esaustiva</p>
                     </div>
                   </div>
-                  <div className="space-y-6">
+                  <div className="space-y-7">
                     {whatDoes && (
                       <div className="space-y-3">
-                        <h4 className="text-base font-bold text-text-primary">Cosa fa</h4>
-                        <div className="prose prose-sm dark:prose-invert max-w-none">
-                          <p className="text-base text-text-primary leading-relaxed whitespace-pre-line font-normal">
+                        <h4 className="text-lg font-bold text-text-primary mb-3">Cosa fa</h4>
+                        <div className="prose prose-base dark:prose-invert max-w-none">
+                          <p className="text-[15px] text-text-primary leading-[1.75] whitespace-pre-line font-normal">
                             {whatDoes}
                           </p>
                         </div>
@@ -1134,35 +1171,35 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     )}
                     {howToUse && (
                       <div className="space-y-3">
-                        <h4 className="text-base font-bold text-text-primary">Come si usa</h4>
-                        <div className="prose prose-sm dark:prose-invert max-w-none">
-                          <p className="text-base text-text-primary leading-relaxed whitespace-pre-line font-normal">
+                        <h4 className="text-lg font-bold text-text-primary mb-3">Come si usa</h4>
+                        <div className="prose prose-base dark:prose-invert max-w-none">
+                          <p className="text-[15px] text-text-primary leading-[1.75] whitespace-pre-line font-normal">
                             {howToUse}
                           </p>
                         </div>
                       </div>
                     )}
                     {practicalExample && (
-                      <div className="space-y-3 p-5 bg-blue-100 dark:bg-blue-900/40 border-l-4 border-blue-600 dark:border-blue-500 rounded-r-lg shadow-sm">
-                        <h4 className="text-base font-bold text-blue-900 dark:text-blue-100 flex items-center gap-2.5">
-                          <Sparkles className="w-5 h-5 text-blue-700 dark:text-blue-300" />
+                      <div className="space-y-3 p-6 bg-blue-50 dark:bg-blue-950/50 border-l-4 border-blue-500 dark:border-blue-400 rounded-r-xl shadow-md">
+                        <h4 className="text-lg font-bold text-blue-900 dark:text-blue-100 flex items-center gap-3 mb-3">
+                          <Sparkles className="w-6 h-6 text-blue-700 dark:text-blue-300" />
                           Esempio Pratico
                         </h4>
-                        <div className="prose prose-sm dark:prose-invert max-w-none">
-                          <p className="text-sm text-blue-900 dark:text-blue-50 leading-relaxed whitespace-pre-line font-medium">
+                        <div className="prose prose-base dark:prose-invert max-w-none">
+                          <p className="text-[15px] text-blue-900 dark:text-blue-50 leading-[1.75] whitespace-pre-line font-medium">
                             {practicalExample}
                           </p>
                         </div>
                       </div>
                     )}
                     {commonMistakes && (
-                      <div className="space-y-3 p-5 bg-red-100 dark:bg-red-900/40 border-l-4 border-red-600 dark:border-red-500 rounded-r-lg shadow-sm">
-                        <h4 className="text-base font-bold text-red-900 dark:text-red-100 flex items-center gap-2.5">
-                          <FileText className="w-5 h-5 text-red-700 dark:text-red-300" />
+                      <div className="space-y-3 p-6 bg-red-50 dark:bg-red-950/50 border-l-4 border-red-500 dark:border-red-400 rounded-r-xl shadow-md">
+                        <h4 className="text-lg font-bold text-red-900 dark:text-red-100 flex items-center gap-3 mb-3">
+                          <FileText className="w-6 h-6 text-red-700 dark:text-red-300" />
                           Errori Comuni da Evitare
                         </h4>
-                        <div className="prose prose-sm dark:prose-invert max-w-none">
-                          <p className="text-sm text-red-900 dark:text-red-50 leading-relaxed whitespace-pre-line font-medium">
+                        <div className="prose prose-base dark:prose-invert max-w-none">
+                          <p className="text-[15px] text-red-900 dark:text-red-50 leading-[1.75] whitespace-pre-line font-medium">
                             {commonMistakes}
                           </p>
                         </div>

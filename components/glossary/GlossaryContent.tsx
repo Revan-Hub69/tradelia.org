@@ -65,17 +65,28 @@ export function GlossaryContent() {
   const tradeliaCategories = Object.keys(TRADELIA_GLOSSARY_CATEGORIES) as TradeliaGlossaryCategory[];
   const allCategories = [...oldCategories, ...tradeliaCategories];
   
-  // Get all tags (both old and Tradelia)
-  const oldTags = getGlossaryTags();
-  // Extract all Tradelia tags from nested structure
-  const tradeliaTags: string[] = [];
-  Object.values(TRADELIA_GLOSSARY_TAGS).forEach(group => {
-    Object.values(group).forEach(tag => {
-      tradeliaTags.push(tag);
-    });
-  });
-  const allTags = [...oldTags, ...tradeliaTags];
   const terms = Object.entries(glossaryData).map(([key, term]) => ({ key, ...term }));
+  
+  // Extract unique tags actually used in terms (best practice: show only what exists)
+  const usedTagsSet = new Set<string>();
+  terms.forEach(term => {
+    if (term.tags && term.tags.length > 0) {
+      term.tags.forEach(tag => {
+        if (typeof tag === 'string') {
+          usedTagsSet.add(tag);
+        } else {
+          usedTagsSet.add(tag as string);
+        }
+      });
+    }
+  });
+  
+  // Convert to array and sort by usage frequency (most used first)
+  const allTags = Array.from(usedTagsSet).sort((a, b) => {
+    const countA = terms.filter(t => matchesTag(t, a)).length;
+    const countB = terms.filter(t => matchesTag(t, b)).length;
+    return countB - countA; // Descending order
+  });
 
   // Helper function per normalizzare categoria a stringa per confronti
   const normalizeCategory = (cat: GlossaryCategory | TradeliaGlossaryCategory | string | undefined): string | null => {
@@ -182,17 +193,27 @@ export function GlossaryContent() {
     }
   }, [focusedIndex, filteredTerms]);
 
-  // Keyboard navigation
+  // Keyboard navigation migliorata
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't interfere if user is typing in search
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+      // Don't interfere if user is typing in search or other inputs
+      if (e.target instanceof HTMLInputElement || 
+          e.target instanceof HTMLTextAreaElement ||
+          (e.target instanceof HTMLElement && e.target.isContentEditable)) {
         return;
       }
 
       // Close drawer with Escape
       if (e.key === 'Escape' && selectedTerm) {
+        e.preventDefault();
         closeTerm();
+        return;
+      }
+      
+      // Ctrl/Cmd + K: focus search (best practice)
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
         return;
       }
 
@@ -537,10 +558,22 @@ export function GlossaryContent() {
                     return searchMatch && categoryMatch && tagMatch;
                   }).length;
                   if (count === 0) return null; // Nascondi tag senza risultati
-                  // Get display name for tag (both old and Tradelia)
-                  const tagDisplayName = oldTags.includes(tag as GlossaryTag) 
-                    ? getTagDisplayName(tag as GlossaryTag)
-                    : tag.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                  
+                  // Get display name for tag with proper formatting
+                  const formatTagDisplayName = (tagStr: string): string => {
+                    // Check if it's an old GlossaryTag
+                    const oldTagsList = getGlossaryTags();
+                    if (oldTagsList.includes(tagStr as GlossaryTag)) {
+                      return getTagDisplayName(tagStr as GlossaryTag);
+                    }
+                    // Format Tradelia tags (kebab-case to Title Case)
+                    return tagStr
+                      .split('-')
+                      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                      .join(' ');
+                  };
+                  
+                  const tagDisplayName = formatTagDisplayName(tag);
                   
                   return (
                     <button
