@@ -61,9 +61,24 @@ export function GlossaryContent() {
   }, []);
 
   // Get all categories (both old and Tradelia)
+  // Best Practice: mostra solo categorie che hanno effettivamente termini
   const oldCategories = getGlossaryCategories();
   const tradeliaCategories = Object.keys(TRADELIA_GLOSSARY_CATEGORIES) as TradeliaGlossaryCategory[];
-  const allCategories = [...oldCategories, ...tradeliaCategories];
+  
+  // Filtra categorie: mostra solo quelle che hanno almeno un termine
+  const categoriesWithTerms = new Set<string>();
+  terms.forEach(term => {
+    if (term.category) {
+      categoriesWithTerms.add(term.category);
+    }
+  });
+  
+  // Combina vecchie e Tradelia, ma filtra solo quelle con termini
+  const allCategories = [...oldCategories, ...tradeliaCategories].filter(cat => {
+    // Normalizza per matching
+    const normalized = normalizeCategory(cat);
+    return normalized && categoriesWithTerms.has(normalized);
+  });
   
   const terms = Object.entries(glossaryData).map(([key, term]) => ({ key, ...term }));
 
