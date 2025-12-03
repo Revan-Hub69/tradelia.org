@@ -1024,7 +1024,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-full sm:w-full sm:max-w-lg bg-white dark:bg-gray-950 border-l-2 border-gray-300 dark:border-gray-700 shadow-2xl z-[9999] flex flex-col overflow-hidden"
+              className="fixed right-0 top-0 bottom-0 w-full sm:w-full sm:max-w-lg bg-bg-surface border-l border-border-default shadow-2xl z-[9999] flex flex-col overflow-hidden"
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"
@@ -1115,7 +1115,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
             <div 
               ref={contentScrollableRef}
               tabIndex={-1}
-              className="no-print flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 space-y-6 sm:space-y-8 focus:outline-none bg-white dark:bg-gray-950" 
+              className="no-print flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 space-y-6 sm:space-y-8 focus:outline-none bg-bg-surface" 
               style={{ 
                 scrollbarWidth: 'thin',
                 fontFamily: "'Helvetica', 'Arial', 'Verdana', sans-serif" // Font ottimale per leggibilità schermo
@@ -1123,9 +1123,9 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
             >
               {/* Spiegazione Accademica - Academic Style */}
               <section className="space-y-5" aria-labelledby="academic-section-title">
-                <div className="flex items-center gap-4 mb-6 pb-5 border-b border-gray-200 dark:border-gray-800">
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/50 dark:to-blue-800/50 border-2 border-blue-300 dark:border-blue-700 flex items-center justify-center flex-shrink-0 shadow-md">
-                    <GraduationCap className="w-7 h-7 text-blue-700 dark:text-blue-300" aria-hidden="true" />
+                <div className="flex items-center gap-4 mb-6 pb-5 border-b border-border-default">
+                  <div className="w-14 h-14 rounded-xl bg-bg-soft border border-border-accent flex items-center justify-center flex-shrink-0 shadow-md">
+                    <GraduationCap className="w-7 h-7 text-accent" aria-hidden="true" />
                   </div>
                   <div className="flex-1">
                     <h3 id="academic-section-title" className="text-xl font-bold text-text-primary mb-1">
