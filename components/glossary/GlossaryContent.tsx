@@ -10,6 +10,7 @@ import { getGlossaryTags, getTagDisplayName, type GlossaryTag } from '@/lib/glos
 import { TRADELIA_GLOSSARY_TAGS, type TradeliaGlossaryTag } from '@/lib/glossary/tradelia-glossary-structure';
 import { getTermOfTheDay, formatTermDate } from '@/lib/glossary/term-of-the-day';
 import { GlossaryDrawer } from './GlossaryDrawer';
+import { ShareButtons } from '@/components/ui/ShareButtons';
 
 interface GlossaryTermWithKey extends GlossaryTerm {
   key: string;
@@ -607,6 +608,15 @@ export function GlossaryContent() {
               </motion.button>
             ))
           )}
+        </div>
+
+        {/* Share Buttons */}
+        <div className="mt-8 flex justify-center">
+          <ShareButtons 
+            variant="compact"
+            title={t('glossary.title')}
+            description={t('glossary.subtitle')}
+          />
         </div>
 
         {/* Footer - Compact */}

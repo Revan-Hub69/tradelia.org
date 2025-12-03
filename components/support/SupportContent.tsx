@@ -3,6 +3,7 @@
 import { useTranslations } from '@/lib/i18n/use-translations';
 import Link from 'next/link';
 import { Mail, MessageCircle, BookOpen, HelpCircle } from 'lucide-react';
+import { ShareButtons } from '@/components/ui/ShareButtons';
 
 export function SupportContent() {
   const { t } = useTranslations();
@@ -70,7 +71,7 @@ export function SupportContent() {
             <h2 className="text-2xl font-semibold text-text-primary mb-4">
               {t('support.responseTime.title') || 'Tempi di Risposta'}
             </h2>
-            <ul className="space-y-3 text-text-secondary">
+            <ul className="space-y-3 text-text-secondary mb-6">
               <li>
                 <strong className="text-text-primary">Email:</strong>{' '}
                 {t('support.responseTime.email') || 'Rispondiamo entro 24-48 ore'}
@@ -84,6 +85,11 @@ export function SupportContent() {
                 {t('support.responseTime.urgent') || 'Per problemi urgenti, contattaci direttamente via email'}
               </li>
             </ul>
+            <ShareButtons 
+              variant="compact"
+              title={t('support.title')}
+              description={t('support.subtitle')}
+            />
           </div>
         </div>
       </div>

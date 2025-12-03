@@ -14,6 +14,7 @@ import {
 } from '@/lib/animations';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
+import { ShareButtons } from '@/components/ui/ShareButtons';
 
 const featureKeys = ['methodo', 'percorso', 'trasparenza', 'servizi'];
 const featureIcons = [CheckCircle2, BookOpen, Shield, Zap];
@@ -121,7 +122,7 @@ export function Features() {
                 </motion.div>
 
                 {/* CTA */}
-                <motion.div variants={itemVariants} className="text-center">
+                <motion.div variants={itemVariants} className="text-center space-y-6">
                   <motion.div variants={hoverVariants} whileHover="hover" whileTap="tap">
                     <Button asChild variant="default" size="lg">
                       <Link href={buildLocalePath(locale, '/dashboard#education')}>
@@ -130,6 +131,11 @@ export function Features() {
                       </Link>
                     </Button>
                   </motion.div>
+                  <ShareButtons 
+                    variant="compact"
+                    title={t('home.features.title') + ' ' + t('home.features.titleHighlight')}
+                    description={t('home.features.description')}
+                  />
                 </motion.div>
       </motion.div>
     </section>

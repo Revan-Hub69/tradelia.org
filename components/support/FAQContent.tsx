@@ -2,6 +2,7 @@
 
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { ShareButtons } from '@/components/ui/ShareButtons';
 
 export function FAQContent() {
   const { t } = useTranslations();
@@ -66,10 +67,15 @@ export function FAQContent() {
             </p>
             <a
               href="/contact"
-              className="inline-block px-6 py-3 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors"
+              className="inline-block px-6 py-3 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors mb-6"
             >
               {t('faq.contactButton') || 'Contattaci'}
             </a>
+            <ShareButtons 
+              variant="compact"
+              title={t('faq.title')}
+              description={t('faq.subtitle')}
+            />
           </div>
         </div>
       </div>

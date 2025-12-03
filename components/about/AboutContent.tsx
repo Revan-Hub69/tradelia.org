@@ -2,6 +2,7 @@
 
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { Target, Users, Award, Shield } from 'lucide-react';
+import { ShareButtons } from '@/components/ui/ShareButtons';
 
 export function AboutContent() {
   const { t } = useTranslations();
@@ -80,10 +81,15 @@ export function AboutContent() {
             </p>
             <a
               href="/contact"
-              className="inline-block px-6 py-3 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors"
+              className="inline-block px-6 py-3 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors mb-6"
             >
               {t('about.contact.button') || 'Contattaci'}
             </a>
+            <ShareButtons 
+              variant="compact"
+              title={t('about.title')}
+              description={t('about.description')}
+            />
           </div>
         </div>
       </div>

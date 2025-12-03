@@ -13,6 +13,12 @@ const Methods = dynamic(() => import('@/components/home/Methods').then((m) => ({
   ssr: false,
 });
 
+// Reviews component - solo per utenti loggati
+const Reviews = dynamic(() => import('@/components/home/Reviews').then((m) => ({ default: m.Reviews })), {
+  loading: () => null, // Non mostrare loading, componente si auto-nasconde se non loggato
+  ssr: false,
+});
+
 export const metadata = genMetadata('it');
 
 export default function HomePage() {
@@ -21,6 +27,7 @@ export default function HomePage() {
       <Hero />
       <Features />
       <Methods />
+      <Reviews />
       <Values />
     </>
   );

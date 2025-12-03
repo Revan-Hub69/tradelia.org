@@ -193,6 +193,15 @@ export function PricingContent() {
             <ComparisonTable />
           </div>
         </section>
+
+        {/* Share Buttons */}
+        <div className="mt-12 flex justify-center">
+          <ShareButtons 
+            variant="compact"
+            title={t('pricing.title')}
+            description={t('pricing.subtitle')}
+          />
+        </div>
       </div>
     </div>
   );

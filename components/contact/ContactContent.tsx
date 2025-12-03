@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { Mail, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ShareButtons } from '@/components/ui/ShareButtons';
 
 export function ContactContent() {
   const { t } = useTranslations();
@@ -154,6 +155,14 @@ export function ContactContent() {
               </Button>
             </div>
           </form>
+
+          <div className="mt-8 flex justify-center">
+            <ShareButtons 
+              variant="compact"
+              title={t('contact.title')}
+              description={t('contact.subtitle')}
+            />
+          </div>
         </div>
       </div>
     </div>

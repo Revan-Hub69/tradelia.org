@@ -1607,5 +1607,22 @@
         "content": "Per domande sui Termini e Condizioni, contattaci a support@tradelia.org"
       }
     }
+  },
+  "reviews": {
+    "title": "Cosa Dicono i Nostri Utenti",
+    "subtitle": "Recensioni verificate da utenti reali",
+    "verified": "Verificato",
+    "previous": "Recensione precedente",
+    "next": "Recensione successiva",
+    "goToReview": "Vai alla recensione"
+  },
+  "share": {
+    "title": "Condividi",
+    "native": "Condividi",
+    "facebook": "Condividi su Facebook",
+    "twitter": "Condividi su Twitter",
+    "linkedin": "Condividi su LinkedIn",
+    "copyLink": "Copia link",
+    "copied": "Copiato!"
   }
 }
