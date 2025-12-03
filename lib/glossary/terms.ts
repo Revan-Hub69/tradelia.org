@@ -262,8 +262,8 @@ function normalizeOldTerm(key: string, term: Record<string, unknown>): GlossaryT
     technical: term.technical as string | undefined,
     how: term.how as string | undefined,
     relatedTerms: term.relatedTerms as string[] | undefined,
-    category: term.category as string | undefined,
-    tags: term.tags as string[] | undefined,
+    category: term.category as GlossaryCategory | TradeliaGlossaryCategory | undefined,
+    tags: term.tags as (GlossaryTag | string)[] | undefined,
   };
 }
 
