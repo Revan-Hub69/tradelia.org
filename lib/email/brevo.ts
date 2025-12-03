@@ -164,12 +164,18 @@ export function generateAdminCheckoutEmail(data: {
           </div>
 
           <div class="highlight">
-            <strong>⚠️ Azione Richiesta:</strong><br>
-            1. Verifica i dati del cliente<br>
-            2. Crea l'account utente se non esiste<br>
-            3. Attiva il piano (già attivato automaticamente con 48h di tempo per pagare)<br>
-            4. Invia la fattura da pagare<br>
-            5. Dopo il pagamento, conferma tramite /api/checkout/xolo PUT
+            <strong>⚠️ AZIONE RICHIESTA - Workflow Manuale:</strong><br>
+            <ol style="margin: 10px 0; padding-left: 20px;">
+              <li><strong>Verifica i dati del cliente</strong> (sopra)</li>
+              <li><strong>Inserisci manualmente l'utente in Xolo Go</strong> con i dati forniti</li>
+              <li><strong>Genera e invia la fattura</strong> tramite Xolo Go</li>
+              <li><strong>Dopo che l'utente paga</strong>, conferma il pagamento tramite:<br>
+                <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 3px;">PUT /api/checkout/xolo</code><br>
+                Con body: <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 3px;">{"paymentId": "${data.requestId}", "xoloPaymentId": "..."}</code>
+              </li>
+              <li>Il sistema attiverà automaticamente il piano dopo la conferma</li>
+            </ol>
+            <p style="margin-top: 10px;"><small><strong>Nota:</strong> L'account NON è ancora attivo. Verrà attivato solo dopo conferma pagamento.</small></p>
           </div>
         </div>
         <div class="footer">
@@ -183,7 +189,80 @@ export function generateAdminCheckoutEmail(data: {
 }
 
 /**
+ * Genera template HTML per email utente (richiesta ricevuta, in elaborazione)
+ * BEST PRACTICE: Email immediata di conferma, NON attivazione
+ */
+export function generateUserRequestConfirmationEmail(data: {
+  planId: string;
+  customerType: string;
+  billingCycle: string;
+  price: number;
+  currency: string;
+  requestId: string;
+}): string {
+  const planNames: Record<string, string> = {
+    pro: "Pro",
+    desk: "Desk",
+  };
+
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #2563eb; color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center; }
+        .content { background: #f9fafb; padding: 20px; border: 1px solid #e5e7eb; }
+        .highlight { background: #dbeafe; padding: 15px; border-radius: 4px; margin: 15px 0; border-left: 4px solid #2563eb; }
+        .footer { margin-top: 20px; padding: 15px; background: #f3f4f6; border-radius: 0 0 8px 8px; font-size: 12px; color: #6b7280; text-align: center; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>Richiesta Ricevuta!</h1>
+        </div>
+        <div class="content">
+          <p>Ciao,</p>
+          <p>Grazie per la tua richiesta di sottoscrizione del piano <strong>${planNames[data.planId] || data.planId}</strong>.</p>
+          
+          <div class="highlight">
+            <strong>📋 Cosa succede ora?</strong><br>
+            <ol style="margin: 10px 0; padding-left: 20px;">
+              <li>Il nostro team ha ricevuto la tua richiesta</li>
+              <li>Verificheremo i dati e inseriremo la tua richiesta nel sistema</li>
+              <li>Riceverai la fattura da pagare via email entro 24-48 ore</li>
+              <li>Dopo il pagamento, il tuo account verrà attivato</li>
+            </ol>
+          </div>
+
+          <p><strong>Dettagli Richiesta:</strong></p>
+          <ul>
+            <li>Piano: ${planNames[data.planId] || data.planId}</li>
+            <li>Importo: €${data.price} ${data.currency}</li>
+            <li>Ciclo: ${data.billingCycle === "monthly" ? "Mensile" : "Annuale"}</li>
+          </ul>
+
+          <p>Riceverai una email con la fattura e le istruzioni per il pagamento non appena la richiesta sarà processata.</p>
+
+          <p>Se hai domande, non esitare a contattarci.</p>
+          <p>Grazie per aver scelto Tradelia!</p>
+        </div>
+        <div class="footer">
+          <p>Tradelia - Il tuo partner per l'analisi finanziaria</p>
+          <p>Request ID: ${data.requestId}</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
+/**
  * Genera template HTML per email utente (account attivato, 48h per pagare)
+ * NOTA: Questa email viene inviata DOPO che admin conferma pagamento
  */
 export function generateUserActivationEmail(data: {
   planId: string;
