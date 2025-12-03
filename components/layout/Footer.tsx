@@ -76,6 +76,7 @@ export function Footer() {
                 <Link
                   href={link.href}
                   className="text-sm text-text-secondary hover:text-text-primary hover:translate-x-1 transition-all duration-200 inline-block group relative"
+                  onMouseEnter={() => prefetchOnHover(link.href)}
                 >
                   <span className="relative">
                     {t(`footer.${sectionKey}Links.${link.key}`)}
@@ -203,6 +204,7 @@ export function Footer() {
                 <Link
                   href="/privacy"
                   className="hover:text-text-primary hover:scale-105 transition-all duration-200 inline-block"
+                  onMouseEnter={() => prefetchOnHover('/privacy')}
                 >
                   {t('footer.legalLinks.privacy')}
                 </Link>
@@ -210,6 +212,7 @@ export function Footer() {
                 <Link
                   href="/terms"
                   className="hover:text-text-primary hover:scale-105 transition-all duration-200 inline-block"
+                  onMouseEnter={() => prefetchOnHover('/terms')}
                 >
                   {t('footer.legalLinks.terms')}
                 </Link>
@@ -217,6 +220,7 @@ export function Footer() {
                 <Link
                   href="/cookie"
                   className="hover:text-text-primary hover:scale-105 transition-all duration-200 inline-block"
+                  onMouseEnter={() => prefetchOnHover('/cookie')}
                 >
                   {t('footer.legalLinks.cookie')}
                 </Link>
