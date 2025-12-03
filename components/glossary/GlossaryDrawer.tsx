@@ -1146,29 +1146,29 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
             >
               {/* Spiegazione Accademica - Academic Style */}
               <section className="space-y-5" aria-labelledby="academic-section-title">
-                <div className="flex items-center gap-4 mb-6 pb-5 border-b border-border-default">
-                  <div className="w-14 h-14 rounded-xl bg-bg-soft border border-border-accent flex items-center justify-center flex-shrink-0 shadow-md">
-                    <GraduationCap className="w-7 h-7 text-accent" aria-hidden="true" />
+                <div className="flex items-center gap-3 sm:gap-3 mb-4 sm:mb-4 pb-3 sm:pb-3 border-b border-border-default">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-bg-soft border border-border-accent flex items-center justify-center flex-shrink-0">
+                    <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-accent" aria-hidden="true" />
                   </div>
                   <div className="flex-1">
-                    <h3 id="academic-section-title" className="text-xl font-bold text-text-primary mb-1">
+                    <h3 id="academic-section-title" className="text-base sm:text-xl font-bold text-text-primary mb-0.5">
                       {t('glossary.drawer.academicExplanation') || 'Definizione Accademica'}
                     </h3>
                     <p className="text-xs text-text-tertiary font-medium">Academic Definition</p>
                   </div>
                 </div>
-                <div className="max-w-3xl">
-                  {/* Paragrafi formattati per leggibilità ottimale - Estremo contrasto */}
-                  <div className="space-y-5">
+                <div className="max-w-full sm:max-w-3xl">
+                  {/* Paragrafi formattati per leggibilità ottimale */}
+                  <div className="space-y-4 sm:space-y-4">
                     {formatTextIntoParagraphs(academicWhat).map((paragraph, idx) => (
                       <p 
                         key={idx}
-                        className="text-[16px] text-text-primary leading-[1.75] font-normal tracking-[0.01em]"
+                        className="text-[15px] sm:text-[15px] text-text-primary leading-[1.75] sm:leading-[1.7] font-normal tracking-[0.01em]"
                         style={{ 
-                          maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
+                          maxWidth: '100%', // Mobile: usa tutta la larghezza disponibile
                           textAlign: 'left', // WCAG 2.2: allineamento sinistra raccomandato
                           wordSpacing: '0.05em', // WCAG 2.2: migliora leggibilità
-                          marginBottom: idx < formatTextIntoParagraphs(academicWhat).length - 1 ? '1.25em' : '0' // Spacing ottimale tra paragrafi (1.25em = 20px a 16px)
+                          marginBottom: idx < formatTextIntoParagraphs(academicWhat).length - 1 ? '1em' : '0' // Spacing ottimale mobile
                         }}
                       >
                         {paragraph}
