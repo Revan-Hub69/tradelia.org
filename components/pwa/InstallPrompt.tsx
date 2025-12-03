@@ -131,15 +131,15 @@ export function InstallPrompt() {
             
             <div className="relative flex items-start gap-4">
               {/* Icon */}
-              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-accent/20 border border-accent/30 flex items-center justify-center overflow-hidden">
+              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-accent/20 border border-accent/30 flex items-center justify-center overflow-hidden p-1.5">
                 <img 
-                  src="/favicon.png" 
+                  src="/logos/tradelia-icon.svg" 
                   alt="Tradelia" 
                   className="w-full h-full object-contain"
                   onError={(e) => {
-                    // Fallback a SVG se PNG non disponibile
+                    // Fallback a favicon se SVG non disponibile
                     const target = e.target as HTMLImageElement;
-                    target.src = '/favicon.svg';
+                    target.src = '/favicon.png';
                   }}
                 />
               </div>
