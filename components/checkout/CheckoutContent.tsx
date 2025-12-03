@@ -280,7 +280,7 @@ function DataCollectionForm({
           <button
             type="button"
             onClick={() => {
-              setCheckoutData((prev: CheckoutData | null) => prev ? { ...prev, customerType: 'retail' } : null);
+              setCheckoutData((prev: CheckoutData | null) => prev ? { ...prev, customerType: 'retail' as const } : null);
               setCustomerData({ email: customerData.email || '' }); // Reset dati
             }}
             className={cn(
@@ -297,7 +297,7 @@ function DataCollectionForm({
           <button
             type="button"
             onClick={() => {
-              setCheckoutData((prev: CheckoutData | null) => prev ? { ...prev, customerType: 'professionale' } : null);
+              setCheckoutData((prev: CheckoutData | null) => prev ? { ...prev, customerType: 'professionale' as const } : null);
               setCustomerData({ email: customerData.email || '' }); // Reset dati
             }}
             className={cn(
