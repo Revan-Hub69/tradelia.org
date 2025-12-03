@@ -1074,6 +1074,7 @@
     "payment": {
       "title": "Metodo di Pagamento",
       "xolo": {
+        "title": "Xolo Go",
         "description": "Pagamento sicuro tramite Xolo Go",
         "info": "Il pagamento verrà processato in modo sicuro tramite Xolo Go. Riceverai una conferma via email."
       },
@@ -1089,13 +1090,17 @@
       "vat": "IVA inclusa dove applicabile"
     },
     "errors": {
+      "customerType": "Seleziona tipo cliente",
       "firstName": "Nome richiesto",
       "lastName": "Cognome richiesto",
       "email": "Email richiesta",
+      "invalidEmail": "Email non valida",
       "country": "Paese richiesto",
       "taxCode": "Codice fiscale richiesto per l'Italia",
+      "invalidTaxCode": "Codice fiscale non valido",
       "companyName": "Ragione sociale richiesta",
       "vatNumber": "P.IVA richiesta",
+      "invalidVAT": "P.IVA non valida",
       "companyAddress": "Indirizzo aziendale richiesto",
       "contactEmail": "Email contatto richiesta",
       "companyCountry": "Paese richiesto",

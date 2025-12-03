@@ -1046,6 +1046,16 @@
     },
     "processing": "Processing payment...",
     "data": {
+      "customerType": "Customer Type",
+      "retail": {
+        "label": "Individual (Retail)",
+        "description": "For personal use"
+      },
+      "business": {
+        "label": "Company (Business)",
+        "description": "For professional use",
+        "title": "Company Information"
+      },
       "individual": {
         "title": "Personal Information",
         "firstName": "First Name",
@@ -1058,25 +1068,13 @@
         "country": "Country",
         "taxCode": "Tax Code"
       },
-      "business": {
-        "title": "Company Information",
-        "companyName": "Company Name",
-        "vatNumber": "VAT Number",
-        "companyAddress": "Company Address",
-        "companyCity": "City",
-        "companyZipCode": "ZIP Code",
-        "companyCountry": "Country",
-        "contactPerson": "Contact Person",
-        "contactEmail": "Contact Email",
-        "contactPhone": "Contact Phone",
-        "requireInvoice": "Request B2B invoice (will be generated automatically after payment)"
-      },
       "selectCountry": "Select...",
       "continue": "Continue to Payment"
     },
     "payment": {
       "title": "Payment Method",
       "xolo": {
+        "title": "Xolo Go",
         "description": "Secure payment via Xolo Go",
         "info": "Payment will be processed securely via Xolo Go. You will receive a confirmation email."
       },
@@ -1092,13 +1090,17 @@
       "vat": "VAT included where applicable"
     },
     "errors": {
+      "customerType": "Select customer type",
       "firstName": "First name required",
       "lastName": "Last name required",
       "email": "Email required",
+      "invalidEmail": "Invalid email address",
       "country": "Country required",
       "taxCode": "Tax code required for Italy",
+      "invalidTaxCode": "Invalid tax code",
       "companyName": "Company name required",
       "vatNumber": "VAT number required",
+      "invalidVAT": "Invalid VAT number",
       "companyAddress": "Company address required",
       "contactEmail": "Contact email required",
       "companyCountry": "Country required",
