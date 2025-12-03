@@ -72,7 +72,7 @@ const COUNTRIES = [
 ];
 
 export function CheckoutContent() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [step, setStep] = useState<'data' | 'payment' | 'processing'>('data');
@@ -83,13 +83,16 @@ export function CheckoutContent() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const firstNameRef = useRef<HTMLInputElement>(null);
   const companyNameRef = useRef<HTMLInputElement>(null);
+  
+  // Determina il prefisso della lingua
+  const localePrefix = locale === 'en' ? '/en' : '';
 
   useEffect(() => {
     const planId = searchParams.get('plan') as 'pro' | 'desk' | null;
     const billingCycle = searchParams.get('billing') as 'monthly' | 'yearly';
 
     if (!planId || !billingCycle) {
-      router.push('/pricing');
+      router.push(`${localePrefix}/pricing`);
       return;
     }
 
@@ -239,7 +242,7 @@ export function CheckoutContent() {
         throw new Error(t('checkout.errors.payment') || 'Errore invio richiesta');
       }
 
-      router.push(`/checkout/submitted?request=${requestId}`);
+      router.push(`${localePrefix}/checkout/submitted?request=${requestId}`);
     } catch (error) {
       console.error('Errore checkout:', error);
       setStep('payment');
@@ -262,7 +265,7 @@ export function CheckoutContent() {
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="mb-8">
           <Link
-            href="/pricing"
+            href={`${localePrefix}/pricing`}
             className="inline-flex items-center gap-2 text-text-tertiary hover:text-text-primary transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4" />

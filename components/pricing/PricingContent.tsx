@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { Check, Building2, User, ArrowRight, Sparkles } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
@@ -23,10 +24,15 @@ interface Plan {
 }
 
 export function PricingContent() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
+  const router = useRouter();
+  const pathname = usePathname();
   const isPro = useIsPro();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  
+  // Determina il prefisso della lingua
+  const localePrefix = locale === 'en' ? '/en' : '';
 
   const individualPlans: Plan[] = [
     {
@@ -92,7 +98,7 @@ export function PricingContent() {
   const handleSelectPlan = (planId: string, type: 'individual' | 'business') => {
     setSelectedPlan(planId);
     // Naviga direttamente al checkout - l'utente sceglierà business/retail nel form
-    window.location.href = `/checkout?plan=${planId}&billing=${billingCycle}`;
+    router.push(`${localePrefix}/checkout?plan=${planId}&billing=${billingCycle}`);
   };
 
   return (
