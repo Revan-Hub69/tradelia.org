@@ -3925,5 +3925,155 @@
     "applicationContexts": ["investing", "portfolio-construction"],
     "userTypes": ["intermediate-trader", "professional"],
     "version": 1
+  },
+  "159": {
+    "id": "159",
+    "title": "Information Ratio",
+    "slug": "information-ratio",
+    "academicDefinition": {
+      "what": "L'Information Ratio (IR) misura il rendimento attivo (alpha) per unità di rischio attivo (tracking error), calcolato come (rendimento portfolio - rendimento benchmark) / tracking error. L'Information Ratio valuta l'efficienza di un portfolio manager nel generare alpha rispetto al benchmark: un IR alto indica che il manager genera alpha consistente con rischio attivo controllato, mentre un IR basso indica alpha inconsistente o tracking error eccessivo. L'Information Ratio è particolarmente utile per valutare gestione attiva: un IR superiore a 0.5 è considerato buono, superiore a 1.0 è eccellente.",
+      "source": "Goodwin, T.H. (1998). The Information Ratio. Financial Analysts Journal, 54(4), 34-43. | Grinold, R.C., & Kahn, R.N. (2000). Active Portfolio Management: A Quantitative Approach for Producing Superior Returns and Controlling Risk. McGraw-Hill.",
+      "academicContext": "L'Information Ratio è una metrica fondamentale per valutare l'efficienza di un portfolio manager nel generare alpha. Un IR superiore a 0.5 è considerato buono, superiore a 1.0 è eccellente."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "L'Information Ratio misura quanto alpha generi per unità di rischio attivo (tracking error). IR = (rendimento portfolio - rendimento benchmark) / tracking error. IR alto = generi alpha consistente con rischio controllato. IR basso = alpha inconsistente o rischio eccessivo. Esempio: Portfolio +12%, Benchmark +10%, Tracking Error 2%. IR = (12% - 10%) / 2% = 1.0 (eccellente). IR > 0.5 = buono, IR > 1.0 = eccellente. Information Ratio valuta efficienza gestione attiva.",
+      "howToUse": "Usa Information Ratio per valutare efficienza gestione attiva. IR > 0.5 = buono, IR > 1.0 = eccellente. IR basso (< 0.3) = gestione attiva inefficiente: meglio ETF passivo. Information Ratio considera sia alpha che rischio: non basta generare alpha, devi farlo con rischio controllato. Monitora Information Ratio nel tempo: IR consistente è migliore di IR volatile. Information Ratio è particolarmente utile per confrontare portfolio manager attivi.",
+      "practicalExample": "Esempio: Portfolio A: +12% rendimento, Benchmark +10%, Tracking Error 2%. IR = (12% - 10%) / 2% = 1.0 (eccellente). Portfolio B: +11% rendimento, Benchmark +10%, Tracking Error 4%. IR = (11% - 10%) / 4% = 0.25 (scarso). Portfolio A genera alpha con rischio controllato (IR 1.0). Portfolio B genera poco alpha con rischio alto (IR 0.25). Information Ratio mostra che Portfolio A è più efficiente.",
+      "commonMistakes": "Errore comune: ignorare Information Ratio quando valuti gestione attiva. 'Rendimento +12%' non considera rischio: se Tracking Error è alto, IR può essere basso. Altro errore: pensare che alpha alto sia sempre meglio. Alpha alto con Tracking Error alto = IR basso = gestione inefficiente. Evita anche di usare Information Ratio su periodi troppo corti: IR richiede tempo per stabilizzarsi."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "performance",
+    "tags": ["investing", "portfolio-construction", "quantitative", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Alpha", "Tracking Error", "Benchmark"],
+    "relatedTerms": ["Alpha", "Tracking Error", "Benchmark", "Sharpe Ratio"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "160": {
+    "id": "160",
+    "title": "Sortino Ratio",
+    "slug": "sortino-ratio",
+    "academicDefinition": {
+      "what": "Il Sortino Ratio è una metrica di performance aggiustata per il rischio che misura il rendimento in eccesso rispetto al risk-free rate per unità di rischio negativo (downside deviation), invece che per unità di rischio totale (volatilità) come nel Sharpe Ratio. Il Sortino Ratio penalizza solo la volatilità negativa (perdite), non la volatilità positiva (guadagni), ed è quindi più appropriato per investitori che sono principalmente preoccupati del rischio di perdita. Il Sortino Ratio è calcolato come (rendimento portfolio - risk-free rate) / downside deviation.",
+      "source": "Sortino, F.A., & Price, L.N. (1994). Performance Measurement in a Downside Risk Framework. Journal of Investing, 3(3), 59-64. | Sortino, F.A., & van der Meer, R. (1991). Downside Risk. Journal of Portfolio Management, 17(4), 27-31.",
+      "academicContext": "Il Sortino Ratio è una metrica migliorata rispetto al Sharpe Ratio perché considera solo il rischio negativo (downside risk), che è più rilevante per la maggior parte degli investitori."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "Il Sortino Ratio misura rendimento in eccesso per unità di rischio negativo (downside deviation), invece che rischio totale (volatilità) come Sharpe Ratio. Penalizza solo volatilità negativa (perdite), non positiva (guadagni). Esempio: Portfolio +10% rendimento, Risk-free 2%, Downside deviation 5%. Sortino = (10% - 2%) / 5% = 1.6. Sharpe considera volatilità totale (guadagni + perdite), Sortino solo perdite. Sortino è più appropriato se sei preoccupato principalmente del rischio di perdita.",
+      "howToUse": "Usa Sortino Ratio se sei preoccupato principalmente del rischio di perdita, non della volatilità totale. Sortino penalizza solo perdite, non guadagni: è più appropriato per investitori conservatori. Sortino > 1.0 = buono, Sortino > 2.0 = eccellente. Sortino è generalmente più alto di Sharpe per portfolio con volatilità asimmetrica (più guadagni che perdite). Usa Sortino per confrontare portfolio con profili di rischio simili. Sortino è particolarmente utile per strategie che cercano di limitare perdite.",
+      "practicalExample": "Esempio: Portfolio A: +10% rendimento, Downside deviation 5%, Sortino 1.6. Portfolio B: +10% rendimento, Downside deviation 8%, Sortino 1.0. Portfolio A ha Sortino migliore (1.6 vs 1.0): genera stesso rendimento con meno rischio negativo. Sortino mostra che Portfolio A è migliore per investitori preoccupati del rischio di perdita. Sharpe potrebbe non mostrare questa differenza se volatilità totale è simile.",
+      "commonMistakes": "Errore comune: confondere Sortino con Sharpe. Sortino considera solo rischio negativo, Sharpe rischio totale. Altro errore: usare Sortino per portfolio con volatilità simmetrica: in questo caso, Sharpe e Sortino sono simili. Evita anche di ignorare Sortino quando valuti strategie che limitano perdite: Sortino è più appropriato di Sharpe."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "performance",
+    "tags": ["investing", "portfolio-construction", "quantitative", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Sharpe Ratio", "Risk", "Return"],
+    "relatedTerms": ["Sharpe Ratio", "Risk", "Return", "Downside Risk"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "161": {
+    "id": "161",
+    "title": "Factor-Based Optimization",
+    "slug": "factor-based-optimization",
+    "academicDefinition": {
+      "what": "La Factor-Based Optimization è un approccio alla costruzione portfolio che ottimizza l'esposizione a fattori di rischio (es. market, size, value, momentum, quality) invece che a singoli asset. La Factor-Based Optimization parte da un modello fattoriale (es. Fama-French) che spiega i rendimenti degli asset come combinazione di fattori, e costruisce un portfolio che ottimizza l'esposizione a questi fattori in base a viste o obiettivi. La Factor-Based Optimization permette un controllo più diretto del rischio fattoriale e può portare a portfolio più robusti e diversificati rispetto all'ottimizzazione tradizionale basata su asset.",
+      "source": "Fama, E.F., & French, K.R. (1993). Common Risk Factors in the Returns on Stocks and Bonds. Journal of Financial Economics, 33(1), 3-56. | Ang, A. (2014). Asset Management: A Systematic Approach to Factor Investing. Oxford University Press.",
+      "academicContext": "La Factor-Based Optimization è un approccio moderno alla costruzione portfolio basato sulla teoria dei fattori di rischio, permettendo un controllo più diretto del rischio fattoriale rispetto all'ottimizzazione tradizionale."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "La Factor-Based Optimization ottimizza esposizione a fattori di rischio (market, size, value, momentum, quality) invece che a singoli asset. Parte da modello fattoriale (es. Fama-French) che spiega rendimenti come combinazione di fattori, e costruisce portfolio che ottimizza esposizione fattoriale. Esempio: Vuoi sovraesposizione a fattore value (azioni sottovalutate). Factor-Based Optimization costruisce portfolio con alta esposizione value, indipendentemente da singoli asset. Permette controllo più diretto del rischio fattoriale rispetto all'ottimizzazione tradizionale.",
+      "howToUse": "Usa Factor-Based Optimization se vuoi controllare direttamente esposizione fattoriale invece che singoli asset. Definisci modello fattoriale (es. Fama-French 3 o 5 fattori). Definisci obiettivi di esposizione fattoriale (es. sovraesposizione value, sottopeso momentum). Factor-Based Optimization costruisce portfolio che ottimizza esposizione fattoriale. Permette controllo più diretto del rischio fattoriale e può portare a portfolio più robusti. Richiede competenze quantitative: usa modelli fattoriali standard o sviluppa modelli custom.",
+      "practicalExample": "Esempio: Modello Fama-French 3 fattori: Market, Size, Value. Obiettivo: sovraesposizione value (azioni sottovalutate), sottopeso size (azioni small cap). Factor-Based Optimization costruisce portfolio con alta esposizione value, bassa esposizione size, indipendentemente da singoli asset. Portfolio risultante: tilt value, evitando small cap. Factor-Based Optimization controlla rischio fattoriale direttamente, non attraverso singoli asset.",
+      "commonMistakes": "Errore comune: usare Factor-Based Optimization senza capire i fattori. 'Voglio sovraesposizione value' richiede capire cosa è value. Altro errore: ignorare che fattori possono cambiare nel tempo. Fattori non sono statici: monitora e aggiorna. Evita anche di usare Factor-Based Optimization con modelli fattoriali sbagliati: usa modelli standard (Fama-French) o sviluppa modelli robusti."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "optimization",
+    "tags": ["investing", "portfolio-construction", "quantitative", "complex"],
+    "learningLevel": "advanced",
+    "prerequisites": ["Portfolio", "Factors", "Mean-Variance Optimization"],
+    "relatedTerms": ["Portfolio", "Factors", "Mean-Variance Optimization", "Fama-French"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["professional"],
+    "version": 1
+  },
+  "162": {
+    "id": "162",
+    "title": "Constraints Optimization",
+    "slug": "constraints-optimization",
+    "academicDefinition": {
+      "what": "La Constraints Optimization (ottimizzazione con vincoli) è un approccio alla costruzione portfolio che incorpora vincoli espliciti (es. limiti su pesi massimi/minimi per asset, settori, o regioni, vincoli su turnover, vincoli su concentrazione, vincoli su liquidità) nell'ottimizzazione Mean-Variance o altri modelli. I vincoli possono essere hard (obbligatori) o soft (preferenze), e permettono di incorporare considerazioni pratiche (es. limiti regolamentari, preferenze dell'investitore, limiti operativi) che non sono catturate dal modello di ottimizzazione base. La Constraints Optimization produce portfolio più realistici e implementabili rispetto all'ottimizzazione senza vincoli.",
+      "source": "Jagannathan, R., & Ma, T. (2003). Risk Reduction in Large Portfolios: Why Imposing the Wrong Constraints Helps. Journal of Finance, 58(4), 1651-1683. | DeMiguel, V., Garlappi, L., & Uppal, R. (2009). Optimal Versus Naive Diversification: How Inefficient Is the 1/N Portfolio Strategy? Review of Financial Studies, 22(5), 1915-1953.",
+      "academicContext": "La Constraints Optimization è essenziale nella pratica perché incorpora vincoli reali (regolamentari, operativi, preferenze) che rendono i portfolio più realistici e implementabili rispetto all'ottimizzazione teorica senza vincoli."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "La Constraints Optimization incorpora vincoli espliciti nell'ottimizzazione portfolio. Vincoli: limiti su pesi massimi/minimi (es. max 10% per asset), limiti su settori (es. max 30% tech), limiti su turnover (es. max 50% annuo), limiti su concentrazione. Vincoli possono essere hard (obbligatori) o soft (preferenze). Esempio: Mean-Variance Optimization senza vincoli: 80% azioni tech. Con vincolo 'max 30% tech': 30% tech, 50% altri. Constraints Optimization produce portfolio più realistici e implementabili rispetto all'ottimizzazione senza vincoli.",
+      "howToUse": "Usa Constraints Optimization per incorporare vincoli reali nell'ottimizzazione. Definisci vincoli: limiti su pesi (max 10% per asset), settori (max 30% tech), regioni (max 40% USA), turnover (max 50% annuo), concentrazione (max 5% per asset). Vincoli hard = obbligatori, soft = preferenze. Constraints Optimization produce portfolio più realistici e implementabili. Considera vincoli regolamentari, preferenze investitore, limiti operativi. Constraints Optimization è essenziale nella pratica: ottimizzazione senza vincoli produce portfolio spesso irrealistici.",
+      "practicalExample": "Esempio: Mean-Variance Optimization senza vincoli: 80% azioni tech, 20% obbligazioni. Con vincoli: max 30% tech, max 10% per asset, max 50% USA. Constraints Optimization: 30% tech, 20% healthcare, 20% finance, 10% altri, 20% obbligazioni. Portfolio risultante: più diversificato, realistico, implementabile. Constraints Optimization incorpora vincoli reali che rendono portfolio più pratici.",
+      "commonMistakes": "Errore comune: usare troppi vincoli che rendono ottimizzazione impossibile. 'Max 5% per asset, min 3% per asset, max 30% settore' può essere troppo restrittivo. Altro errore: ignorare vincoli importanti (es. liquidità, regolamentari). Vincoli sono essenziali: incorporali. Evita anche di usare vincoli troppo larghi: 'max 100% per asset' non è un vincolo utile."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "optimization",
+    "tags": ["investing", "portfolio-construction", "quantitative", "complex"],
+    "learningLevel": "advanced",
+    "prerequisites": ["Mean-Variance Optimization", "Portfolio"],
+    "relatedTerms": ["Mean-Variance Optimization", "Portfolio", "Risk Budgeting"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["professional"],
+    "version": 1
+  },
+  "163": {
+    "id": "163",
+    "title": "Equal Weight Portfolio",
+    "slug": "equal-weight-portfolio",
+    "academicDefinition": {
+      "what": "L'Equal Weight Portfolio (portfolio a pesi uguali) è una strategia di costruzione portfolio che alloca lo stesso peso (1/N dove N è il numero di asset) a ogni asset nel portfolio, indipendentemente dalla capitalizzazione di mercato, volatilità, o altre caratteristiche. L'Equal Weight Portfolio è semplice da implementare, evita concentrazione in asset grandi, e può offrire diversificazione migliore rispetto a portfolio market-cap weighted. Tuttavia, l'Equal Weight Portfolio richiede rebalancing frequente (perché i pesi cambiano naturalmente con i rendimenti) e può avere costi di transazione più alti rispetto a portfolio passivi.",
+      "source": "DeMiguel, V., Garlappi, L., & Uppal, R. (2009). Optimal Versus Naive Diversification: How Inefficient Is the 1/N Portfolio Strategy? Review of Financial Studies, 22(5), 1915-1953. | Plyakha, Y., Uppal, R., & Vilkov, G. (2012). Why Does an Equal-Weighted Portfolio Outperform Value- and Price-Weighted Portfolios? SSRN Electronic Journal.",
+      "academicContext": "L'Equal Weight Portfolio è una strategia semplice che può offrire performance competitive rispetto a strategie più sofisticate, specialmente quando le stime di input per ottimizzazione sono incerte."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "L'Equal Weight Portfolio alloca lo stesso peso (1/N) a ogni asset, indipendentemente da capitalizzazione, volatilità, o altre caratteristiche. Esempio: 10 asset, peso 10% ciascuno. È semplice da implementare, evita concentrazione in asset grandi, e può offrire diversificazione migliore rispetto a portfolio market-cap weighted. Richiede rebalancing frequente (i pesi cambiano con i rendimenti) e può avere costi più alti. Equal Weight Portfolio è 'naive' ma può essere efficace quando stime di ottimizzazione sono incerte.",
+      "howToUse": "Usa Equal Weight Portfolio se vuoi semplicità e diversificazione senza concentrazione. Alloca 1/N a ogni asset (es. 10 asset = 10% ciascuno). Ribilanci periodicamente (trimestrale) per mantenere pesi uguali. Equal Weight Portfolio evita concentrazione in asset grandi e può offrire diversificazione migliore. Considera costi di rebalancing: Equal Weight richiede rebalancing più frequente di market-cap weighted. Equal Weight Portfolio è buono quando stime di ottimizzazione sono incerte: è robusto.",
+      "practicalExample": "Esempio: 10 azioni, Equal Weight: 10% ciascuna. Dopo 3 mesi: alcune salgono, altre scendono. Pesi: 12%, 11%, 9%, 8%, etc. Ribilanci: vendi asset saliti, compri asset scesi per tornare a 10% ciascuno. Equal Weight Portfolio evita concentrazione (es. market-cap weighted: 40% in top 3 asset). Diversificazione migliore, ma costi di rebalancing più alti. Equal Weight può offrire performance competitive rispetto a strategie più sofisticate.",
+      "commonMistakes": "Errore comune: non ribilanciare mai, lasciando che pesi si allontanino troppo dall'equal weight. Equal Weight richiede rebalancing frequente. Altro errore: ignorare costi di rebalancing. Equal Weight genera turnover più alto di market-cap weighted: valuta se costi valgono benefici. Evita anche di pensare che Equal Weight sia sempre migliore: dipende da obiettivi e contesto."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "asset-allocation",
+    "tags": ["investing", "portfolio-construction", "simple"],
+    "learningLevel": "foundational",
+    "prerequisites": ["Portfolio", "Asset Allocation"],
+    "relatedTerms": ["Portfolio", "Asset Allocation", "Market-Cap Weighted"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["beginner", "intermediate-trader", "professional"],
+    "version": 1
+  },
+  "164": {
+    "id": "164",
+    "title": "Market-Cap Weighted Portfolio",
+    "slug": "market-cap-weighted-portfolio",
+    "academicDefinition": {
+      "what": "Il Market-Cap Weighted Portfolio (portfolio a capitalizzazione di mercato) è una strategia di costruzione portfolio che alloca pesi proporzionali alla capitalizzazione di mercato di ogni asset. Il peso di un asset è calcolato come la sua capitalizzazione di mercato divisa per la capitalizzazione totale di mercato di tutti gli asset nel portfolio. Il Market-Cap Weighted Portfolio è la strategia più comune per indici passivi (es. S&P 500) perché riflette automaticamente l'importanza relativa degli asset nel mercato, richiede rebalancing minimo (i pesi si aggiustano naturalmente), e ha costi di transazione bassi. Tuttavia, il Market-Cap Weighted Portfolio può essere concentrato in asset grandi e può avere performance inferiori rispetto a strategie alternative in alcuni regimi di mercato.",
+      "source": "Fama, E.F. (1965). The Behavior of Stock-Market Prices. Journal of Business, 38(1), 34-105. | Roll, R. (1992). A Mean/Variance Analysis of Tracking Error. Journal of Portfolio Management, 18(4), 13-22.",
+      "academicContext": "Il Market-Cap Weighted Portfolio è la strategia standard per indici passivi e riflette l'importanza relativa degli asset nel mercato. È efficiente dal punto di vista dei costi ma può essere concentrato."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "Il Market-Cap Weighted Portfolio alloca pesi proporzionali alla capitalizzazione di mercato. Peso asset = capitalizzazione asset / capitalizzazione totale. Esempio: Asset A (cap 100M), Asset B (cap 50M), Totale 150M. Pesi: A 67% (100/150), B 33% (50/150). È la strategia più comune per indici passivi (S&P 500) perché riflette importanza relativa degli asset, richiede rebalancing minimo, e ha costi bassi. Può essere concentrato in asset grandi e avere performance inferiori rispetto a strategie alternative.",
+      "howToUse": "Usa Market-Cap Weighted Portfolio per indici passivi e costi bassi. Pesi si aggiustano automaticamente con capitalizzazione: asset grandi pesano di più, asset piccoli pesano di meno. Richiede rebalancing minimo: pesi si aggiustano naturalmente. Costi di transazione bassi: compri/vendi solo quando asset entrano/escono dall'indice. Market-Cap Weighted è standard per ETF indicizzati (S&P 500, MSCI World). Considera che può essere concentrato: top 10 asset possono pesare 30-40% del portfolio.",
+      "practicalExample": "Esempio: Indice S&P 500, Market-Cap Weighted. Apple (cap 3T) pesa 7%, Microsoft (cap 2.5T) pesa 6%, etc. Top 10 asset pesano 25% del portfolio. Market-Cap Weighted riflette importanza relativa: asset grandi pesano di più. Rebalancing minimo: pesi si aggiustano automaticamente. Costi bassi: ETF S&P 500 ha expense ratio 0.03%. Market-Cap Weighted è standard per indici passivi, ma può essere concentrato.",
+      "commonMistakes": "Errore comune: pensare che Market-Cap Weighted sia sempre ottimale. Market-Cap Weighted può essere concentrato e avere performance inferiori rispetto a strategie alternative. Altro errore: ignorare concentrazione. Top 10 asset possono pesare 30-40%: valuta se questa concentrazione è accettabile. Evita anche di usare Market-Cap Weighted quando vuoi diversificazione migliore: considera Equal Weight o altri approcci."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "asset-allocation",
+    "tags": ["investing", "portfolio-construction", "simple"],
+    "learningLevel": "foundational",
+    "prerequisites": ["Portfolio", "Asset Allocation", "Market Capitalization"],
+    "relatedTerms": ["Portfolio", "Asset Allocation", "Equal Weight Portfolio"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["beginner", "intermediate-trader", "professional"],
+    "version": 1
   }
 }
