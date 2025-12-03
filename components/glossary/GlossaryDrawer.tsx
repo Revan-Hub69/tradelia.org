@@ -471,6 +471,14 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
 
   if (!term) return null;
 
+  // Estrai dati dalla nuova struttura Tradelia o usa struttura vecchia (compatibilità)
+  const academicWhat = term.academicDefinition?.what || term.what;
+  const academicSource = term.academicDefinition?.source || term.source;
+  const whatDoes = term.tradeliaExplanation?.whatDoes || term.whatDoes;
+  const howToUse = term.tradeliaExplanation?.howToUse || term.howToUse;
+  const practicalExample = term.tradeliaExplanation?.practicalExample;
+  const commonMistakes = term.tradeliaExplanation?.commonMistakes;
+
   // Handle print - create new window with print content
   const handlePrint = async () => {
     // Load white label customization if available
@@ -700,25 +708,37 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
 
     <section class="print-section">
       <h2 class="print-section-title">Definizione Accademica</h2>
-      <div class="print-section-content">${term.what}</div>
+      <div class="print-section-content">${academicWhat}</div>
     </section>
 
-    ${(term.whatDoes || term.howToUse || term.technical || term.how) ? `
+    ${(whatDoes || howToUse || term.technical || term.how) ? `
       <section class="print-section">
         <h2 class="print-section-title">Spiegazione Tradelia AI</h2>
-        ${term.whatDoes ? `
+        ${whatDoes ? `
           <div style="margin-bottom: 0.8cm;">
             <h3 style="font-size: 13pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">Cosa fa</h3>
-            <div class="print-section-content">${term.whatDoes}</div>
+            <div class="print-section-content">${whatDoes}</div>
           </div>
         ` : ''}
-        ${term.howToUse ? `
-          <div>
+        ${howToUse ? `
+          <div style="margin-bottom: 0.8cm;">
             <h3 style="font-size: 13pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">Come si usa</h3>
-            <div class="print-section-content">${term.howToUse}</div>
+            <div class="print-section-content">${howToUse}</div>
           </div>
         ` : ''}
-        ${!term.whatDoes && !term.howToUse && (term.technical || term.how) ? `
+        ${practicalExample ? `
+          <div style="margin-bottom: 0.8cm; padding: 0.5cm; background-color: #f9fafb; border-left: 3px solid #3b82f6; border-radius: 4px;">
+            <h3 style="font-size: 12pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">Esempio Pratico</h3>
+            <div class="print-section-content" style="font-size: 10pt;">${practicalExample}</div>
+          </div>
+        ` : ''}
+        ${commonMistakes ? `
+          <div style="margin-bottom: 0.8cm; padding: 0.5cm; background-color: #fef2f2; border-left: 3px solid #ef4444; border-radius: 4px;">
+            <h3 style="font-size: 12pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">Errori Comuni da Evitare</h3>
+            <div class="print-section-content" style="font-size: 10pt;">${commonMistakes}</div>
+          </div>
+        ` : ''}
+        ${!whatDoes && !howToUse && (term.technical || term.how) ? `
           <div class="print-section-content">${term.technical || term.how}</div>
         ` : ''}
       </section>
@@ -738,7 +758,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     <section class="print-sources">
       <h2 class="print-section-title">Riferimenti Bibliografici</h2>
       <div>
-        ${term.source.split('|').map(source => 
+        ${academicSource.split('|').map(source => 
           `<div class="print-source-item">${source.trim()}</div>`
         ).join('')}
       </div>
@@ -827,17 +847,51 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   <section className="print-section">
                     <h2 className="print-section-title">Definizione Accademica</h2>
                     <div className="print-section-content">
-                      {term.what}
+                      {academicWhat}
                     </div>
                   </section>
 
-                  {/* Spiegazione Tecnica Tradelia AI */}
-                  {term.technical && (
+                  {/* Spiegazione Tradelia AI */}
+                  {(whatDoes || howToUse || term.technical || term.how) && (
                     <section className="print-section">
-                      <h2 className="print-section-title">Spiegazione Tecnica Tradelia AI</h2>
-                      <div className="print-section-content" style={{ whiteSpace: 'pre-line' }}>
-                        {term.technical}
-                      </div>
+                      <h2 className="print-section-title">Spiegazione Tradelia AI</h2>
+                      {whatDoes && (
+                        <div style={{ marginBottom: '0.8cm' }}>
+                          <h3 style={{ fontSize: '13pt', fontWeight: 600, color: '#0f172a', marginBottom: '0.3cm' }}>Cosa fa</h3>
+                          <div className="print-section-content" style={{ whiteSpace: 'pre-line' }}>
+                            {whatDoes}
+                          </div>
+                        </div>
+                      )}
+                      {howToUse && (
+                        <div style={{ marginBottom: '0.8cm' }}>
+                          <h3 style={{ fontSize: '13pt', fontWeight: 600, color: '#0f172a', marginBottom: '0.3cm' }}>Come si usa</h3>
+                          <div className="print-section-content" style={{ whiteSpace: 'pre-line' }}>
+                            {howToUse}
+                          </div>
+                        </div>
+                      )}
+                      {practicalExample && (
+                        <div style={{ marginBottom: '0.8cm', padding: '0.5cm', backgroundColor: '#f9fafb', borderLeft: '3px solid #3b82f6', borderRadius: '4px' }}>
+                          <h3 style={{ fontSize: '12pt', fontWeight: 600, color: '#0f172a', marginBottom: '0.3cm' }}>Esempio Pratico</h3>
+                          <div className="print-section-content" style={{ whiteSpace: 'pre-line', fontSize: '10pt' }}>
+                            {practicalExample}
+                          </div>
+                        </div>
+                      )}
+                      {commonMistakes && (
+                        <div style={{ marginBottom: '0.8cm', padding: '0.5cm', backgroundColor: '#fef2f2', borderLeft: '3px solid #ef4444', borderRadius: '4px' }}>
+                          <h3 style={{ fontSize: '12pt', fontWeight: 600, color: '#0f172a', marginBottom: '0.3cm' }}>Errori Comuni da Evitare</h3>
+                          <div className="print-section-content" style={{ whiteSpace: 'pre-line', fontSize: '10pt' }}>
+                            {commonMistakes}
+                          </div>
+                        </div>
+                      )}
+                      {!whatDoes && !howToUse && (term.technical || term.how) && (
+                        <div className="print-section-content" style={{ whiteSpace: 'pre-line' }}>
+                          {term.technical || term.how}
+                        </div>
+                      )}
                     </section>
                   )}
 
@@ -860,7 +914,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   <section className="print-sources">
                     <h2 className="print-section-title">Riferimenti Bibliografici</h2>
                     <div>
-                      {term.source.split('|').map((source, index) => (
+                      {academicSource.split('|').map((source, index) => (
                         <div key={index} className="print-source-item">
                           {source.trim()}
                         </div>
@@ -1001,13 +1055,18 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                 </div>
                 <div className="prose prose-sm dark:prose-invert max-w-none">
                   <p className="text-sm text-text-primary leading-relaxed font-normal">
-                    {term.what}
+                    {academicWhat}
                   </p>
+                  {term.academicDefinition?.academicContext && (
+                    <p className="text-xs text-text-tertiary mt-3 italic leading-relaxed">
+                      {term.academicDefinition.academicContext}
+                    </p>
+                  )}
                 </div>
               </section>
 
               {/* Spiegazione Tradelia AI - Cosa fa e Come si usa */}
-              {(term.whatDoes || term.howToUse || term.technical || term.how) && (
+              {(whatDoes || howToUse || term.technical || term.how) && (
                 <section className="space-y-3" aria-labelledby="tradelia-ai-section-title">
                   <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border-subtle">
                     <div className="w-10 h-10 rounded-lg bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-900/50 flex items-center justify-center flex-shrink-0">
@@ -1021,27 +1080,53 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     </div>
                   </div>
                   <div className="space-y-6">
-                    {term.whatDoes && (
+                    {whatDoes && (
                       <div className="space-y-2">
                         <h4 className="text-sm font-semibold text-text-primary">Cosa fa</h4>
                         <div className="prose prose-sm dark:prose-invert max-w-none">
                           <p className="text-sm text-text-primary leading-relaxed whitespace-pre-line font-normal">
-                            {term.whatDoes}
+                            {whatDoes}
                           </p>
                         </div>
                       </div>
                     )}
-                    {term.howToUse && (
+                    {howToUse && (
                       <div className="space-y-2">
                         <h4 className="text-sm font-semibold text-text-primary">Come si usa</h4>
                         <div className="prose prose-sm dark:prose-invert max-w-none">
                           <p className="text-sm text-text-primary leading-relaxed whitespace-pre-line font-normal">
-                            {term.howToUse}
+                            {howToUse}
                           </p>
                         </div>
                       </div>
                     )}
-                    {!term.whatDoes && !term.howToUse && (term.technical || term.how) && (
+                    {practicalExample && (
+                      <div className="space-y-2 p-4 bg-blue-50 dark:bg-blue-950/20 border-l-4 border-blue-500 dark:border-blue-400 rounded-r-lg">
+                        <h4 className="text-sm font-semibold text-text-primary flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                          Esempio Pratico
+                        </h4>
+                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                          <p className="text-sm text-text-primary leading-relaxed whitespace-pre-line font-normal">
+                            {practicalExample}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    {commonMistakes && (
+                      <div className="space-y-2 p-4 bg-red-50 dark:bg-red-950/20 border-l-4 border-red-500 dark:border-red-400 rounded-r-lg">
+                        <h4 className="text-sm font-semibold text-text-primary flex items-center gap-2">
+                          <FileText className="w-4 h-4 text-red-600 dark:text-red-400" />
+                          Errori Comuni da Evitare
+                        </h4>
+                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                          <p className="text-sm text-text-primary leading-relaxed whitespace-pre-line font-normal">
+                            {commonMistakes}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    {!whatDoes && !howToUse && (term.technical || term.how) && (
                       <div className="prose prose-sm dark:prose-invert max-w-none">
                         <p className="text-sm text-text-primary leading-relaxed whitespace-pre-line font-normal">
                           {term.technical || term.how}

@@ -189,6 +189,17 @@ export const TRADELIA_GLOSSARY_CATEGORIES = {
 } as const;
 
 /**
+ * Type export per categoria Tradelia
+ */
+export type TradeliaGlossaryCategory = keyof typeof TRADELIA_GLOSSARY_CATEGORIES;
+
+/**
+ * Type export per categoria data
+ */
+export type TradeliaGlossaryCategoryData =
+  (typeof TRADELIA_GLOSSARY_CATEGORIES)[TradeliaGlossaryCategory];
+
+/**
  * Tag Tradelia - Organizzati per contesto di applicazione
  */
 export const TRADELIA_GLOSSARY_TAGS = {
@@ -231,6 +242,12 @@ export const TRADELIA_GLOSSARY_TAGS = {
 } as const;
 
 /**
+ * Type export per tag Tradelia
+ */
+export type TradeliaGlossaryTag =
+  (typeof TRADELIA_GLOSSARY_TAGS)[keyof typeof TRADELIA_GLOSSARY_TAGS][keyof (typeof TRADELIA_GLOSSARY_TAGS)[keyof typeof TRADELIA_GLOSSARY_TAGS]];
+
+/**
  * Nuova interfaccia termine glossario Tradelia
  */
 export interface TradeliaGlossaryTerm {
@@ -254,9 +271,9 @@ export interface TradeliaGlossaryTerm {
   };
 
   // Organizzazione Tradelia
-  category: keyof typeof TRADELIA_GLOSSARY_CATEGORIES;
+  category: TradeliaGlossaryCategory;
   subcategory?: string; // Sottocategoria se applicabile
-  tags: string[]; // Tag multipli per ricerca e filtraggio
+  tags: TradeliaGlossaryTag[]; // Tag multipli per ricerca e filtraggio
 
   // Metadati educativi
   learningLevel: GlossaryLearningLevel;
@@ -277,43 +294,47 @@ export interface TradeliaGlossaryTerm {
 /**
  * Mappa categorie vecchie → nuove Tradelia
  */
-export const CATEGORY_MIGRATION_MAP: Record<string, keyof typeof TRADELIA_GLOSSARY_CATEGORIES> = {
-  "Technical Analysis": "market-analysis",
-  Portfolio: "portfolio-construction",
-  Risk: "risk-management",
-  Trading: "trading-execution",
-  Behavioral: "behavioral-finance",
-  Derivatives: "derivatives-options",
-  Macro: "macroeconomics",
-  Regime: "market-regimes",
-  Valuation: "valuation-pricing",
-  "Market Micro": "market-microstructure",
-  Liquidity: "market-microstructure",
-  Compliance: "compliance-regulation",
-  Fundamental: "market-analysis",
-  Sentiment: "market-analysis",
-  Quantitative: "market-analysis",
-  Credit: "valuation-pricing",
-  Corporate: "valuation-pricing",
-  "Data Quality": "compliance-regulation",
-  "ML/AI": "market-analysis",
-  Crypto: "market-analysis",
-};
+export const CATEGORY_MIGRATION_MAP: Record<string, TradeliaGlossaryCategory> = {
+  "Technical Analysis": "MARKET_ANALYSIS",
+  Portfolio: "PORTFOLIO_CONSTRUCTION",
+  Risk: "RISK_MANAGEMENT",
+  Trading: "TRADING_EXECUTION",
+  Behavioral: "BEHAVIORAL_FINANCE",
+  Derivatives: "DERIVATIVES_OPTIONS",
+  Macro: "MACROECONOMICS",
+  Regime: "MARKET_REGIMES",
+  Valuation: "VALUATION_PRICING",
+  "Market Micro": "MARKET_MICROSTRUCTURE",
+  Liquidity: "MARKET_MICROSTRUCTURE",
+  Compliance: "COMPLIANCE_REGULATION",
+  Fundamental: "MARKET_ANALYSIS",
+  Sentiment: "MARKET_ANALYSIS",
+  Quantitative: "MARKET_ANALYSIS",
+  Credit: "VALUATION_PRICING",
+  Corporate: "VALUATION_PRICING",
+  "Data Quality": "COMPLIANCE_REGULATION",
+  "ML/AI": "MARKET_ANALYSIS",
+  Crypto: "MARKET_ANALYSIS",
+} as const;
 
 /**
  * Helper per ottenere categoria Tradelia da categoria vecchia
+ * @param oldCategory - Categoria del vecchio sistema
+ * @returns Categoria Tradelia corrispondente, default "foundations"
  */
-export function getTradeliaCategory(
-  oldCategory: string
-): keyof typeof TRADELIA_GLOSSARY_CATEGORIES {
-  return CATEGORY_MIGRATION_MAP[oldCategory] || "foundations";
+export function getTradeliaCategory(oldCategory: string): TradeliaGlossaryCategory {
+  const mappedCategory = CATEGORY_MIGRATION_MAP[oldCategory];
+  return mappedCategory || "FOUNDATIONS";
 }
 
 /**
  * Helper per determinare learning level da categoria e complessità
+ * @param category - Categoria Tradelia
+ * @param complexity - Livello di complessità opzionale
+ * @returns Learning level determinato
  */
 export function determineLearningLevel(
-  category: keyof typeof TRADELIA_GLOSSARY_CATEGORIES,
+  category: TradeliaGlossaryCategory,
   complexity?: string
 ): GlossaryLearningLevel {
   const categoryData = TRADELIA_GLOSSARY_CATEGORIES[category];
@@ -333,9 +354,12 @@ export function determineLearningLevel(
 
 /**
  * Helper per determinare user types da categoria e contesto
+ * @param category - Categoria Tradelia
+ * @param applicationContext - Contesto applicativo opzionale
+ * @returns Array di user types appropriati
  */
 export function determineUserTypes(
-  category: keyof typeof TRADELIA_GLOSSARY_CATEGORIES,
+  category: TradeliaGlossaryCategory,
   applicationContext?: GlossaryApplicationContext
 ): GlossaryUserType[] {
   const categoryData = TRADELIA_GLOSSARY_CATEGORIES[category];
@@ -358,20 +382,59 @@ export function determineUserTypes(
 
 /**
  * Helper per generare slug da titolo
+ * @param title - Titolo del termine
+ * @returns Slug URL-friendly
  */
 export function generateSlug(title: string): string {
   return title
     .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // Rimuove accenti
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
 
 /**
+ * Ottiene tutte le categorie Tradelia ordinate
+ * @returns Array di categorie ordinate per `order`
+ */
+export function getTradeliaCategories(): TradeliaGlossaryCategoryData[] {
+  return Object.values(TRADELIA_GLOSSARY_CATEGORIES).sort((a, b) => a.order - b.order);
+}
+
+/**
+ * Ottiene una categoria Tradelia per chiave
+ * @param categoryKey - Chiave della categoria
+ * @returns Dati della categoria o undefined
+ */
+export function getTradeliaCategoryData(
+  categoryKey: TradeliaGlossaryCategory
+): TradeliaGlossaryCategoryData | undefined {
+  return TRADELIA_GLOSSARY_CATEGORIES[categoryKey];
+}
+
+/**
+ * Verifica se una categoria esiste
+ * @param categoryKey - Chiave della categoria da verificare
+ * @returns true se la categoria esiste
+ */
+export function isValidTradeliaCategory(
+  categoryKey: string
+): categoryKey is TradeliaGlossaryCategory {
+  return categoryKey in TRADELIA_GLOSSARY_CATEGORIES;
+}
+
+/**
  * Template per nuovo termine Tradelia
+ * @param title - Titolo del termine
+ * @param category - Categoria Tradelia
+ * @param academicDefinition - Definizione accademica
+ * @param tradeliaExplanation - Spiegazione Tradelia AI
+ * @returns Termine glossario Tradelia completo
  */
 export function createTradeliaGlossaryTerm(
   title: string,
-  category: keyof typeof TRADELIA_GLOSSARY_CATEGORIES,
+  category: TradeliaGlossaryCategory,
   academicDefinition: { what: string; source: string },
   tradeliaExplanation: { whatDoes: string; howToUse: string }
 ): TradeliaGlossaryTerm {
