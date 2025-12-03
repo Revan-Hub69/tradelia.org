@@ -87,7 +87,8 @@ export function GlossaryContent() {
     // Match Tradelia: se categoria selezionata è Tradelia, controlla anche displayName
     if (category in TRADELIA_GLOSSARY_CATEGORIES) {
       const tradeliaCat = TRADELIA_GLOSSARY_CATEGORIES[category as TradeliaGlossaryCategory];
-      if (term.category === tradeliaCat.displayName) return true;
+      const termCategoryString = (term.category as string | undefined) ?? undefined;
+      if (termCategoryString && termCategoryString === tradeliaCat.displayName) return true;
       if (term.category === category) return true;
     }
     
