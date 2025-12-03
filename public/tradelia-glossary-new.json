@@ -3640,5 +3640,290 @@
     "applicationContexts": ["investing", "portfolio-construction"],
     "userTypes": ["professional"],
     "version": 1
+  },
+  "148": {
+    "id": "148",
+    "title": "Calendar Rebalancing",
+    "slug": "calendar-rebalancing",
+    "academicDefinition": {
+      "what": "Il Calendar Rebalancing (ribilanciamento calendarizzato) è una strategia di rebalancing che riporta l'allocazione del portfolio ai target originali a intervalli di tempo predeterminati (es. mensile, trimestrale, semestrale, annuale), indipendentemente dalle deviazioni dall'allocazione target. Il Calendar Rebalancing è semplice da implementare e prevedibile, ma può essere inefficiente se il portfolio non si è allontanato significativamente dal target (costi di transazione senza benefici) o se interviene troppo tardi quando il portfolio si è allontanato molto (rischio aumentato).",
+      "source": "Daryanani, G. (2008). Opportunistic Rebalancing: A New Paradigm for Wealth Managers. Journal of Financial Planning, 21(1), 48-61. | Plaxco, L.M., & Arnott, R.D. (2002). Rebalancing a Global Policy Benchmark. Journal of Portfolio Management, 28(2), 9-22.",
+      "academicContext": "Il Calendar Rebalancing è la strategia più comune ma non necessariamente la più efficiente. Studi mostrano che rebalancing basato su soglie (threshold) può essere più efficiente."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "Il Calendar Rebalancing è ribilanciare il portfolio a intervalli fissi (es. ogni trimestre), indipendentemente da quanto si è allontanato dal target. Esempio: Portfolio target 60% azioni, 40% obbligazioni. Ogni 3 mesi, ribilanci sempre, anche se l'allocazione è ancora 60/40. È semplice e prevedibile, ma può essere inefficiente: se l'allocazione è ancora corretta, paghi costi di transazione inutili. Se l'allocazione si è allontanata molto, interviene troppo tardi.",
+      "howToUse": "Usa Calendar Rebalancing se vuoi semplicità e prevedibilità. Scegli intervallo (trimestrale è comune). Ogni intervallo, ribilancia sempre, anche se l'allocazione è ancora corretta. Non cambiare intervallo basandoti su movimenti di mercato: mantieni disciplina. Calendar Rebalancing è buono per portfolio semplici, ma considera Threshold Rebalancing per maggiore efficienza. Se i costi di transazione sono alti, usa intervalli più lunghi (semestrale o annuale).",
+      "practicalExample": "Esempio: Portfolio target 60% azioni, 40% obbligazioni. Calendar Rebalancing trimestrale: ogni 3 mesi, ribilanci sempre. Gennaio: 60/40 (corretto), ribilanci comunque (costi inutili). Aprile: 65/35 (deviazione), ribilanci (buono). Luglio: 58/42 (piccola deviazione), ribilanci comunque (costi inutili). Calendar Rebalancing è semplice ma può essere inefficiente rispetto a Threshold Rebalancing.",
+      "commonMistakes": "Errore comune: cambiare intervallo basandoti su movimenti di mercato. 'Le azioni stanno salendo, ribilancio subito' non è Calendar Rebalancing, è discrezionale. Altro errore: intervalli troppo frequenti (settimanale) che generano costi eccessivi. Evita anche intervalli troppo lunghi (annuale) che permettono al portfolio di allontanarsi troppo dal target."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "rebalancing",
+    "tags": ["investing", "portfolio-construction", "simple"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Rebalancing", "Asset Allocation"],
+    "relatedTerms": ["Rebalancing", "Threshold Rebalancing", "Asset Allocation"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "149": {
+    "id": "149",
+    "title": "Threshold Rebalancing",
+    "slug": "threshold-rebalancing",
+    "academicDefinition": {
+      "what": "Il Threshold Rebalancing (ribilanciamento a soglia) è una strategia di rebalancing che riporta l'allocazione del portfolio ai target originali solo quando un asset o asset class devia di una percentuale predeterminata (soglia) dal target. Esempio: se l'allocazione target è 60% azioni e la soglia è 5%, il rebalancing avviene quando le azioni scendono sotto 55% o salgono sopra 65%. Il Threshold Rebalancing è più efficiente del Calendar Rebalancing perché interviene solo quando necessario, riducendo costi di transazione, ma richiede monitoraggio continuo.",
+      "source": "Daryanani, G. (2008). Opportunistic Rebalancing: A New Paradigm for Wealth Managers. Journal of Financial Planning, 21(1), 48-61. | Buetow, G.W., Sellers, R., Trotter, D., & Hunt, E. (2002). The Benefits of Rebalancing. Journal of Portfolio Management, 28(2), 23-32.",
+      "academicContext": "Il Threshold Rebalancing è generalmente più efficiente del Calendar Rebalancing perché riduce costi di transazione intervenendo solo quando necessario, mantenendo comunque il controllo del rischio."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "Il Threshold Rebalancing è ribilanciare il portfolio solo quando un asset devia di una percentuale specifica dal target. Esempio: Target 60% azioni, soglia 5%. Ribilanci solo se azioni scendono sotto 55% o salgono sopra 65%. Se sono 58% o 62%, non ribilanci. È più efficiente del Calendar Rebalancing perché interviene solo quando necessario, riducendo costi. Ma richiede monitoraggio continuo: devi controllare se le soglie sono state superate.",
+      "howToUse": "Usa Threshold Rebalancing per maggiore efficienza rispetto a Calendar Rebalancing. Definisci soglie ragionevoli: 5% è comune per asset class principali, 2-3% per asset più volatili. Monitora continuamente se le soglie sono state superate. Quando una soglia è superata, ribilanci subito per tornare al target. Non cambiare soglie basandoti su movimenti di mercato: mantieni disciplina. Threshold Rebalancing è migliore di Calendar Rebalancing se puoi monitorare continuamente.",
+      "practicalExample": "Esempio: Portfolio target 60% azioni, 40% obbligazioni. Soglia 5%. Se azioni salgono a 66% (sopra 65%), ribilanci subito vendendo azioni e comprando obbligazioni per tornare a 60/40. Se azioni sono 58% o 62%, non ribilanci (dentro soglia). Threshold Rebalancing interviene solo quando necessario, riducendo costi rispetto a Calendar Rebalancing che ribilancia sempre a intervalli fissi.",
+      "commonMistakes": "Errore comune: soglie troppo strette (1-2%) che portano a rebalancing troppo frequenti e costi elevati. Altro errore: soglie troppo larghe (10%+) che permettono al portfolio di allontanarsi troppo dal target. Evita anche di cambiare soglie basandoti su movimenti di mercato: mantieni disciplina. Non ignorare soglie superate: se una soglia è superata, ribilanci subito."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "rebalancing",
+    "tags": ["investing", "portfolio-construction", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Rebalancing", "Asset Allocation"],
+    "relatedTerms": ["Rebalancing", "Calendar Rebalancing", "Asset Allocation"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "150": {
+    "id": "150",
+    "title": "Minimum Variance Portfolio",
+    "slug": "minimum-variance-portfolio",
+    "academicDefinition": {
+      "what": "Il Minimum Variance Portfolio (MVP) è il portfolio che minimizza la varianza (rischio) dei rendimenti per un dato insieme di asset, senza considerare i rendimenti attesi. Il MVP si trova sulla frontiera efficiente di Markowitz ed è il portfolio con il rischio più basso possibile. Il MVP tipicamente sovrappesa asset a bassa volatilità e bassa correlazione, e può essere molto diverso da un portfolio a pesi uguali o market-cap weighted. Il MVP è utile per investitori con alta avversione al rischio, ma può avere rendimenti attesi inferiori rispetto a portfolio più rischiosi.",
+      "source": "Markowitz, H. (1952). Portfolio Selection. Journal of Finance, 7(1), 77-91. | Clarke, R., de Silva, H., & Thorley, S. (2006). Minimum-Variance Portfolios in the U.S. Equity Market. Journal of Portfolio Management, 33(1), 10-24.",
+      "academicContext": "Il Minimum Variance Portfolio è un punto di riferimento importante nella teoria del portfolio, rappresentando il portfolio con il rischio minimo possibile per un dato insieme di asset."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "Il Minimum Variance Portfolio è il portfolio con il rischio più basso possibile per un dato insieme di asset. Non considera i rendimenti attesi, solo il rischio: minimizza la volatilità. Tipicamente sovrappesa asset a bassa volatilità e bassa correlazione. Esempio: Con 3 asset, il MVP ti dice quanto investire in ciascuno per minimizzare il rischio. È utile se hai alta avversione al rischio, ma può avere rendimenti attesi inferiori rispetto a portfolio più rischiosi.",
+      "howToUse": "Usa Minimum Variance Portfolio se hai alta avversione al rischio e vuoi minimizzare la volatilità. Il MVP tipicamente sovrappesa asset a bassa volatilità e bassa correlazione. Non aspettarti rendimenti alti: minimizzi il rischio, non massimizzi il rendimento. Il MVP può essere molto diverso da un portfolio a pesi uguali o market-cap weighted. Considera se il rischio minimo vale rendimenti potenzialmente inferiori. Il MVP è utile per investitori conservatori.",
+      "practicalExample": "Esempio: 3 asset: Azioni USA (volatilità 15%), Obbligazioni (5%), Materie prime (20%). Correlazioni: Azioni-Obbligazioni 0.3, Azioni-Materie 0.5, Obbligazioni-Materie 0.2. MVP: 20% Azioni, 70% Obbligazioni, 10% Materie prime. Il MVP sovrappesa obbligazioni (bassa volatilità) e minimizza il rischio totale. Rendimento atteso inferiore rispetto a portfolio più rischiosi, ma rischio minimo.",
+      "commonMistakes": "Errore comune: aspettarsi rendimenti alti dal MVP. Minimizzi il rischio, non massimizzi il rendimento: rendimenti attesi possono essere inferiori. Altro errore: usare MVP senza considerare se il rischio minimo vale rendimenti potenzialmente inferiori. Evita anche di pensare che MVP sia sempre migliore: dipende dai tuoi obiettivi. Se vuoi rendimenti più alti, accetta più rischio."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "optimization",
+    "tags": ["investing", "portfolio-construction", "quantitative", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Portfolio", "Risk", "Mean-Variance Optimization"],
+    "relatedTerms": [
+      "Portfolio",
+      "Risk",
+      "Mean-Variance Optimization",
+      "Maximum Diversification Portfolio"
+    ],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "151": {
+    "id": "151",
+    "title": "Maximum Diversification Portfolio",
+    "slug": "maximum-diversification-portfolio",
+    "academicDefinition": {
+      "what": "Il Maximum Diversification Portfolio (MDP) è un portfolio che massimizza la diversificazione effettiva, misurata come il rapporto tra la volatilità media ponderata degli asset individuali e la volatilità del portfolio. Il MDP sovrappesa asset con bassa correlazione e alta volatilità individuale, perché questi asset contribuiscono maggiormente alla diversificazione. Il MDP è diverso dal Minimum Variance Portfolio (che minimizza il rischio) e dal portfolio a pesi uguali (equal weight), e può offrire un migliore rapporto rischio-rendimento rispetto a questi approcci alternativi.",
+      "source": "Choueifaty, Y., & Coignard, Y. (2008). Toward Maximum Diversification. Journal of Portfolio Management, 35(1), 40-51. | Choueifaty, Y., Froidure, T., & Reynier, J. (2013). Properties of the Most Diversified Portfolio. Journal of Investment Strategies, 2(2), 49-70.",
+      "academicContext": "Il Maximum Diversification Portfolio è un approccio relativamente recente che massimizza la diversificazione effettiva, offrendo potenzialmente un migliore rapporto rischio-rendimento rispetto a portfolio tradizionali."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "Il Maximum Diversification Portfolio massimizza la diversificazione effettiva, non solo il numero di asset. Sovrappesa asset con bassa correlazione e alta volatilità individuale, perché questi contribuiscono maggiormente alla diversificazione. Esempio: Asset A (volatilità 20%, correlazione bassa) pesa di più di Asset B (volatilità 10%, correlazione alta) nel MDP. Il MDP può offrire un migliore rapporto rischio-rendimento rispetto a portfolio tradizionali (equal weight, market-cap weighted).",
+      "howToUse": "Usa Maximum Diversification Portfolio se vuoi massimizzare la diversificazione effettiva e migliorare il rapporto rischio-rendimento. Il MDP sovrappesa asset con bassa correlazione e alta volatilità individuale. Non è uguale a equal weight o market-cap weighted: è ottimizzato per diversificazione. Il MDP può offrire rendimenti simili o superiori con rischio inferiore rispetto a portfolio tradizionali. Richiede stime di correlazioni e volatilità: usa dati storici o stime forward.",
+      "practicalExample": "Esempio: 3 asset: Azioni USA (volatilità 15%, correlazione media), Obbligazioni (5%, correlazione bassa), Materie prime (25%, correlazione molto bassa). MDP: 30% Azioni, 20% Obbligazioni, 50% Materie prime. Il MDP sovrappesa materie prime (alta volatilità, bassa correlazione) perché contribuiscono maggiormente alla diversificazione. Portfolio risultante: alta diversificazione, buon rapporto rischio-rendimento.",
+      "commonMistakes": "Errore comune: confondere MDP con equal weight. 'Massimizza diversificazione' non significa 'pesi uguali'. Altro errore: usare MDP senza considerare che sovrappesa asset volatili. Se non sopporti alta volatilità, MDP potrebbe non essere adatto. Evita anche di usare MDP con stime sbagliate di correlazioni: il MDP è sensibile alle correlazioni."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "optimization",
+    "tags": ["investing", "portfolio-construction", "quantitative", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Portfolio", "Diversificazione", "Mean-Variance Optimization"],
+    "relatedTerms": [
+      "Portfolio",
+      "Diversificazione",
+      "Minimum Variance Portfolio",
+      "Mean-Variance Optimization"
+    ],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "152": {
+    "id": "152",
+    "title": "Active Share",
+    "slug": "active-share",
+    "academicDefinition": {
+      "what": "L'Active Share misura la percentuale del portfolio che differisce dal benchmark. L'Active Share è calcolato come la metà della somma dei valori assoluti delle differenze tra i pesi del portfolio e i pesi del benchmark per ogni asset. L'Active Share varia da 0% (portfolio identico al benchmark) a 100% (portfolio completamente diverso dal benchmark). Un Active Share alto indica un portfolio attivo che differisce significativamente dal benchmark, mentre un Active Share basso indica un portfolio passivo o quasi-passivo. L'Active Share è correlato con il potenziale di alpha: portfolio con Active Share alto hanno maggiore potenziale di outperformance (o underperformance) rispetto al benchmark.",
+      "source": "Cremers, K.J.M., & Petajisto, A. (2009). How Active Is Your Fund Manager? A New Measure That Predicts Performance. Review of Financial Studies, 22(9), 3329-3365. | Petajisto, A. (2013). Active Share and Mutual Fund Performance. Financial Analysts Journal, 69(4), 73-93.",
+      "academicContext": "L'Active Share è una metrica importante per valutare l'attività di un portfolio manager e il potenziale di alpha. Studi mostrano che portfolio con Active Share alto tendono a performare meglio (o peggio) rispetto al benchmark."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "L'Active Share misura quanto il tuo portfolio differisce dal benchmark. Active Share 0% = portfolio identico al benchmark (passivo). Active Share 100% = portfolio completamente diverso (molto attivo). Esempio: Benchmark: 60% azioni USA, 40% obbligazioni. Portfolio: 70% azioni USA, 30% obbligazioni. Active Share = 10% (differenza di 10% su azioni + differenza di 10% su obbligazioni, diviso 2). Active Share alto = portfolio attivo con potenziale di alpha (o underperformance).",
+      "howToUse": "Usa Active Share per valutare quanto il tuo portfolio è attivo rispetto al benchmark. Active Share alto (60%+) = portfolio molto attivo, potenziale di alpha alto (o underperformance). Active Share basso (20%-) = portfolio quasi-passivo, simile al benchmark. Se paghi fees per gestione attiva ma Active Share è basso, stai pagando per gestione passiva. Active Share è correlato con potenziale di alpha: portfolio attivi possono outperforme (o underperformare) il benchmark.",
+      "practicalExample": "Esempio: Benchmark S&P 500. Portfolio A: Active Share 80% (molto diverso dal benchmark). Portfolio B: Active Share 15% (quasi identico al benchmark). Portfolio A ha potenziale di alpha alto (o underperformance): se il manager è bravo, può outperforme significativamente. Portfolio B è quasi-passivo: rendimenti simili al benchmark, ma paghi fees per gestione attiva. Se Active Share è basso, meglio ETF passivo a basso costo.",
+      "commonMistakes": "Errore comune: pagare fees per gestione attiva quando Active Share è basso. Se Active Share è 15%, stai pagando per gestione passiva: meglio ETF a basso costo. Altro errore: pensare che Active Share alto sia sempre meglio. Active Share alto = potenziale di alpha, ma anche rischio di underperformance. Evita anche di ignorare Active Share quando valuti fondi attivi: è una metrica importante."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "performance",
+    "tags": ["investing", "portfolio-construction", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Portfolio", "Benchmark"],
+    "relatedTerms": ["Portfolio", "Benchmark", "Alpha", "Tracking Error"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "153": {
+    "id": "153",
+    "title": "Portfolio Turnover",
+    "slug": "portfolio-turnover",
+    "academicDefinition": {
+      "what": "Il Portfolio Turnover (fatturato del portfolio) misura la frequenza con cui gli asset nel portfolio vengono comprati e venduti, calcolato come il minimo tra acquisti totali e vendite totali diviso per il valore medio del portfolio in un periodo (tipicamente annuale). Un Turnover del 100% significa che l'intero portfolio è stato sostituito una volta nell'anno. Turnover alto indica trading frequente e può portare a costi di transazione elevati, impatti fiscali negativi (realizzazione di plusvalenze), e potenzialmente performance inferiori. Turnover basso indica un approccio buy-and-hold con costi ridotti.",
+      "source": "Carhart, M.M. (1997). On Persistence in Mutual Fund Performance. Journal of Finance, 52(1), 57-82. | Wermers, R. (2000). Mutual Fund Performance: An Empirical Decomposition into Stock-Picking Talent, Style, Transaction Costs, and Expenses. Journal of Finance, 55(4), 1655-1703.",
+      "academicContext": "Il Portfolio Turnover è una metrica importante per valutare i costi e l'efficienza di un portfolio. Studi mostrano che Turnover alto è correlato con performance inferiori dopo costi."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "Il Portfolio Turnover misura quanto spesso compri e vendi asset nel portfolio. Turnover 100% = hai sostituito l'intero portfolio una volta nell'anno. Turnover 200% = hai sostituito il portfolio due volte. Turnover alto = trading frequente, costi elevati (commissioni, spread), impatti fiscali negativi (realizzi plusvalenze). Turnover basso = approccio buy-and-hold, costi ridotti. Esempio: Portfolio 100.000€, acquisti 50.000€, vendite 50.000€. Turnover = 50% (minimo tra acquisti e vendite diviso valore portfolio).",
+      "howToUse": "Monitora Portfolio Turnover per valutare costi e efficienza. Turnover alto (100%+) = trading frequente, costi elevati. Turnover basso (20%-) = approccio buy-and-hold, costi ridotti. Se Turnover è alto, valuta se i costi valgono i benefici. Turnover alto può portare a performance inferiori dopo costi: commissioni, spread, impatti fiscali. Considera approccio buy-and-hold per ridurre Turnover e costi. Turnover basso è generalmente migliore per investitori retail.",
+      "practicalExample": "Esempio: Portfolio 100.000€. Anno 1: acquisti 80.000€, vendite 80.000€. Turnover = 80%. Costi: commissioni 0.1% × 160.000€ = 160€, spread 0.05% × 160.000€ = 80€, impatti fiscali (plusvalenze realizzate). Totale costi: 240€+ impatti fiscali. Portfolio con Turnover 20%: costi 60€, nessun impatto fiscale. Turnover basso = costi ridotti, performance migliore dopo costi.",
+      "commonMistakes": "Errore comune: ignorare Turnover quando valuti performance. 'Rendimento 10%' non considera costi: se Turnover è alto, costi possono mangiare 2-3%. Altro errore: trading frequente senza considerare costi. Turnover alto = costi elevati: valuta se vale la pena. Evita anche di pensare che Turnover alto sia sempre sbagliato: dipende dalla strategia. Ma per investitori retail, Turnover basso è generalmente migliore."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "performance",
+    "tags": ["investing", "portfolio-construction", "simple"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Portfolio", "Trading"],
+    "relatedTerms": ["Portfolio", "Trading", "Tax Efficiency", "Costs"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "154": {
+    "id": "154",
+    "title": "Tax Efficiency",
+    "slug": "tax-efficiency",
+    "academicDefinition": {
+      "what": "La Tax Efficiency (efficienza fiscale) è la capacità di un portfolio di minimizzare l'impatto delle tasse sui rendimenti, attraverso strategie come tax-loss harvesting (vendita di asset in perdita per compensare plusvalenze), holding period optimization (mantenere asset per periodi che qualificano per tasse ridotte), asset location (posizionare asset tassati diversamente in account diversi), e minimizzazione di turnover (ridurre realizzazione di plusvalenze). La Tax Efficiency è particolarmente importante per investitori in regimi fiscali con tasse su plusvalenze e dividendi, dove può avere un impatto significativo sui rendimenti netti.",
+      "source": "Dickson, J.M., Shoven, J.B., & Sialm, C. (2000). Tax Externalities of Equity Mutual Funds. National Tax Journal, 53(3), 607-628. | Poterba, J.M. (2004). Taxation and Portfolio Structure: Issues and Implications. In Handbook of the Economics of Finance (pp. 1103-1162).",
+      "academicContext": "La Tax Efficiency è cruciale per investitori in regimi fiscali con tasse su plusvalenze. Studi mostrano che tasse possono ridurre rendimenti netti del 1-2% annuo, rendendo la Tax Efficiency importante per performance a lungo termine."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "La Tax Efficiency minimizza l'impatto delle tasse sui rendimenti del portfolio. Strategie: tax-loss harvesting (vendi asset in perdita per compensare plusvalenze), holding period optimization (mantieni asset per periodi che qualificano per tasse ridotte), asset location (posiziona asset tassati diversamente in account diversi), minimizzazione turnover (riduci realizzazione di plusvalenze). Esempio: Realizzi plusvalenza 1.000€, tassa 26% = 260€. Con tax-loss harvesting, vendi asset in perdita 1.000€: compensi plusvalenza, tassa 0€. Tax Efficiency può migliorare rendimenti netti del 1-2% annuo.",
+      "howToUse": "Usa Tax Efficiency per minimizzare tasse e migliorare rendimenti netti. Tax-loss harvesting: vendi asset in perdita per compensare plusvalenze. Holding period: mantieni asset per periodi che qualificano per tasse ridotte (es. long-term capital gains). Asset location: posiziona asset tassati diversamente in account diversi (es. obbligazioni in account tassati, azioni in account non tassati). Minimizza turnover: riduci realizzazione di plusvalenze. Tax Efficiency è particolarmente importante per investitori in regimi fiscali con tasse su plusvalenze.",
+      "practicalExample": "Esempio: Portfolio 100.000€. Anno 1: plusvalenza 5.000€, tassa 26% = 1.300€. Con tax-loss harvesting: vendi asset in perdita 5.000€, compensi plusvalenza, tassa 0€. Risparmio: 1.300€. Asset location: obbligazioni (tassate come reddito) in account pensionistico (non tassato), azioni (tassate come plusvalenze) in account normale. Tax Efficiency può migliorare rendimenti netti del 1-2% annuo nel lungo termine.",
+      "commonMistakes": "Errore comune: ignorare Tax Efficiency. 'Rendimento 10%' non considera tasse: rendimento netto può essere 7-8% dopo tasse. Altro errore: realizzare plusvalenze troppo spesso (turnover alto) senza considerare impatti fiscali. Evita anche di non usare tax-loss harvesting: è una strategia semplice ma efficace. Non posizionare asset in modo subottimale: usa asset location per minimizzare tasse."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "performance",
+    "tags": ["investing", "portfolio-construction", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Portfolio", "Taxes"],
+    "relatedTerms": ["Portfolio", "Portfolio Turnover", "Tax-Loss Harvesting"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "155": {
+    "id": "155",
+    "title": "Volatility-Based Rebalancing",
+    "slug": "volatility-based-rebalancing",
+    "academicDefinition": {
+      "what": "Il Volatility-Based Rebalancing (ribilanciamento basato su volatilità) è una strategia di rebalancing che aggiusta l'allocazione del portfolio in base alla volatilità osservata degli asset, invece che a intervalli di tempo fissi (Calendar Rebalancing) o a soglie di deviazione (Threshold Rebalancing). Quando la volatilità di un asset aumenta, il Volatility-Based Rebalancing riduce l'esposizione a quell'asset per mantenere il rischio del portfolio costante. Quando la volatilità diminuisce, aumenta l'esposizione. Il Volatility-Based Rebalancing è particolarmente utile per gestire il rischio dinamico e può migliorare il rapporto rischio-rendimento rispetto a strategie di rebalancing statiche.",
+      "source": "Maillard, S., Roncalli, T., & Teïletche, J. (2010). The Properties of Equally Weighted Risk Contribution Portfolios. Journal of Portfolio Management, 36(4), 60-70. | Lohre, H., Opfer, H., & Orszag, G. (2014). Diversification Return and Leveraged Portfolios. Journal of Portfolio Management, 40(4), 28-41.",
+      "academicContext": "Il Volatility-Based Rebalancing è una strategia avanzata che gestisce il rischio dinamico, aggiustando l'allocazione in base alla volatilità osservata invece che a regole statiche."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "Il Volatility-Based Rebalancing aggiusta l'allocazione del portfolio in base alla volatilità osservata degli asset, invece che a intervalli fissi o soglie. Quando la volatilità di un asset aumenta, riduci l'esposizione per mantenere il rischio costante. Quando la volatilità diminuisce, aumenti l'esposizione. Esempio: Target 60% azioni, 40% obbligazioni. Volatilità azioni aumenta da 15% a 20%: riduci azioni a 50%, aumenti obbligazioni a 50% per mantenere rischio costante. Volatility-Based Rebalancing gestisce rischio dinamico.",
+      "howToUse": "Usa Volatility-Based Rebalancing per gestire rischio dinamico e migliorare rapporto rischio-rendimento. Monitora volatilità degli asset (rolling window, es. 30 giorni). Quando volatilità aumenta, riduci esposizione per mantenere rischio costante. Quando volatilità diminuisce, aumenta esposizione. Volatility-Based Rebalancing è più complesso di Calendar o Threshold Rebalancing, ma può essere più efficace. Richiede calcolo continuo di volatilità: usa dati storici o modelli. Considera costi di transazione: non ribilanciare troppo spesso.",
+      "practicalExample": "Esempio: Portfolio target 60% azioni (volatilità 15%), 40% obbligazioni (volatilità 5%). Volatilità azioni aumenta a 20%: rischio portfolio aumenta. Volatility-Based Rebalancing: riduci azioni a 50%, aumenti obbligazioni a 50% per mantenere rischio costante. Volatilità azioni torna a 15%: aumenti azioni a 60%, riduci obbligazioni a 40%. Volatility-Based Rebalancing gestisce rischio dinamico, migliorando rapporto rischio-rendimento rispetto a rebalancing statiche.",
+      "commonMistakes": "Errore comune: ribilanciare troppo spesso quando volatilità fluttua. Volatilità fluttua naturalmente: non ribilanciare ad ogni piccola variazione. Altro errore: usare finestre di volatilità troppo corte (es. 5 giorni) che sono rumorose. Usa finestre ragionevoli (30-60 giorni). Evita anche di ignorare costi di transazione: Volatility-Based Rebalancing può generare turnover alto se non gestito correttamente."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "rebalancing",
+    "tags": ["investing", "portfolio-construction", "quantitative", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Rebalancing", "Volatility"],
+    "relatedTerms": ["Rebalancing", "Volatility", "Threshold Rebalancing"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "156": {
+    "id": "156",
+    "title": "Risk Budgeting",
+    "slug": "risk-budgeting",
+    "academicDefinition": {
+      "what": "Il Risk Budgeting (budget del rischio) è un approccio alla costruzione portfolio che alloca il rischio (tipicamente misurato come volatilità o Value at Risk) invece che il capitale tra diversi asset, strategie o fattori. Il Risk Budgeting parte da un budget di rischio totale (es. volatilità target 10%) e lo distribuisce tra componenti del portfolio in base alla loro importanza o contributo atteso. Il Risk Budgeting permette di controllare meglio il rischio totale del portfolio e può portare a allocazioni più equilibrate rispetto all'asset allocation tradizionale, specialmente quando asset hanno volatilità molto diverse.",
+      "source": "Litterman, R. (1996). Hot Spots and Hedges. Journal of Portfolio Management, 23(1), 52-75. | Chow, G., & Kritzman, M. (2001). Risk Budgets. Journal of Portfolio Management, 27(2), 56-60.",
+      "academicContext": "Il Risk Budgeting è un approccio avanzato alla costruzione portfolio che alloca il rischio invece che il capitale, permettendo un controllo migliore del rischio totale e allocazioni più equilibrate."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "Il Risk Budgeting alloca il rischio (volatilità, VaR) invece che il capitale tra asset. Parti da un budget di rischio totale (es. volatilità target 10%) e lo distribuisci tra componenti. Esempio: Budget rischio totale 10%. Asset A (volatilità 20%): alloca 5% del budget rischio = 25% capitale. Asset B (volatilità 5%): alloca 5% del budget rischio = 100% capitale. Risk Budgeting controlla meglio il rischio totale rispetto all'asset allocation tradizionale, specialmente quando asset hanno volatilità molto diverse.",
+      "howToUse": "Usa Risk Budgeting per controllare meglio il rischio totale del portfolio. Definisci budget di rischio totale (es. volatilità target 10%). Distribuisci budget tra componenti in base alla loro importanza o contributo atteso. Calcola allocazione capitale in base a volatilità degli asset: asset volatili = meno capitale, asset stabili = più capitale. Risk Budgeting può portare a allocazioni più equilibrate rispetto all'asset allocation tradizionale. Richiede stime di volatilità: usa dati storici o modelli.",
+      "practicalExample": "Esempio: Budget rischio totale: volatilità 10%. Asset A (volatilità 20%): alloca 5% del budget rischio = 25% capitale (5% / 20% = 25%). Asset B (volatilità 5%): alloca 5% del budget rischio = 100% capitale (5% / 5% = 100%). Totale: 125% (leverage) o riduci a 100% normalizzando. Risk Budgeting controlla rischio totale meglio dell'asset allocation tradizionale (50% A, 50% B = rischio 12.5%, non 10%).",
+      "commonMistakes": "Errore comune: confondere Risk Budgeting con asset allocation tradizionale. Risk Budgeting alloca rischio, non capitale. Altro errore: usare Risk Budgeting senza considerare leverage. Risk Budgeting può richiedere leverage se asset hanno volatilità molto diverse. Evita anche di usare Risk Budgeting con stime sbagliate di volatilità: è sensibile alle stime."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "optimization",
+    "tags": ["investing", "portfolio-construction", "quantitative", "complex"],
+    "learningLevel": "advanced",
+    "prerequisites": ["Portfolio", "Risk", "Volatility"],
+    "relatedTerms": ["Portfolio", "Risk", "Volatility", "Risk Parity"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["professional"],
+    "version": 1
+  },
+  "157": {
+    "id": "157",
+    "title": "60/40 Portfolio",
+    "slug": "60-40-portfolio",
+    "academicDefinition": {
+      "what": "Il 60/40 Portfolio è una strategia di asset allocation classica che alloca 60% del capitale in azioni (equity) e 40% in obbligazioni (fixed income). Il 60/40 Portfolio è stato lo standard per investitori con tolleranza al rischio media e orizzonte temporale medio-lungo per decenni, bilanciando crescita (azioni) e stabilità (obbligazioni). Il 60/40 Portfolio è semplice da implementare, ben diversificato tra asset class, e ha storicamente offerto un buon rapporto rischio-rendimento. Tuttavia, in periodi di bassi tassi di interesse, il 60/40 Portfolio può avere rendimenti inferiori e correlazioni più alte tra azioni e obbligazioni.",
+      "source": "Brinson, G.P., Hood, L.R., & Beebower, G.L. (1986). Determinants of Portfolio Performance. Financial Analysts Journal, 42(4), 39-44. | Asness, C.S., Ilmanen, A., & Maloney, T. (2017). Investing with Style. Journal of Investment Management, 15(1), 27-63.",
+      "academicContext": "Il 60/40 Portfolio è stato lo standard per investitori con tolleranza al rischio media per decenni, offrendo un buon bilanciamento tra crescita e stabilità. Tuttavia, in periodi di bassi tassi, può avere performance inferiori."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "Il 60/40 Portfolio alloca 60% in azioni (crescita) e 40% in obbligazioni (stabilità). È lo standard per investitori con tolleranza al rischio media e orizzonte medio-lungo. Bilanci: crescita delle azioni + stabilità delle obbligazioni. È semplice da implementare, ben diversificato, e ha storicamente offerto un buon rapporto rischio-rendimento. In periodi di bassi tassi di interesse, può avere rendimenti inferiori e correlazioni più alte tra azioni e obbligazioni.",
+      "howToUse": "Usa 60/40 Portfolio se hai tolleranza al rischio media e orizzonte medio-lungo. È semplice: 60% azioni (ETF indicizzati), 40% obbligazioni (ETF obbligazionari). Ribilanci periodicamente (trimestrale o quando devia del 5%) per mantenere 60/40. Il 60/40 Portfolio è buono per investitori che vogliono crescita ma anche stabilità. In periodi di bassi tassi, considera aggiungere asset alternativi (materie prime, REIT) per diversificazione. Il 60/40 Portfolio è un buon punto di partenza, ma non è universale: adatta alle tue esigenze.",
+      "practicalExample": "Esempio: Portfolio 100.000€. 60/40: 60.000€ azioni (ETF S&P 500), 40.000€ obbligazioni (ETF obbligazioni aggregate). Dopo 6 mesi: azioni 66.000€ (66%), obbligazioni 38.000€ (38%). Ribilanci: vendi 4.000€ azioni, compri 4.000€ obbligazioni. Nuovo: 62.000€ azioni (62%), 42.000€ obbligazioni (42%). Il 60/40 Portfolio bilancia crescita e stabilità, offrendo buon rapporto rischio-rendimento.",
+      "commonMistakes": "Errore comune: pensare che 60/40 sia sempre ottimale. 60/40 è un buon punto di partenza, ma non è universale: adatta alle tue esigenze. Altro errore: non ribilanciare mai, lasciando che l'allocazione si allontani troppo dal 60/40. Evita anche di cambiare 60/40 basandoti su movimenti di mercato a breve termine: è per il lungo termine."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "asset-allocation",
+    "tags": ["investing", "portfolio-construction", "simple"],
+    "learningLevel": "foundational",
+    "prerequisites": ["Asset Allocation", "Portfolio"],
+    "relatedTerms": ["Asset Allocation", "Portfolio", "Strategic Asset Allocation"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["beginner", "intermediate-trader", "professional"],
+    "version": 1
+  },
+  "158": {
+    "id": "158",
+    "title": "Dynamic Asset Allocation",
+    "slug": "dynamic-asset-allocation",
+    "academicDefinition": {
+      "what": "La Dynamic Asset Allocation (allocazione dinamica) è una strategia di asset allocation che aggiusta l'allocazione del portfolio in base a condizioni di mercato, indicatori economici, o modelli predittivi, invece che mantenere allocazioni fisse (Strategic Asset Allocation) o fare aggiustamenti discrezionali (Tactical Asset Allocation). La Dynamic Asset Allocation può utilizzare regole basate su volatilità, momentum, valore, o modelli macroeconomici per determinare quando e quanto aggiustare l'allocazione. La Dynamic Asset Allocation è più reattiva della Strategic Asset Allocation ma più sistematica della Tactical Asset Allocation, e può migliorare il rapporto rischio-rendimento in alcuni regimi di mercato.",
+      "source": "Ang, A. (2014). Asset Management: A Systematic Approach to Factor Investing. Oxford University Press. | Ilmanen, A. (2011). Expected Returns: An Investor's Guide to Harvesting Market Rewards. Wiley.",
+      "academicContext": "La Dynamic Asset Allocation è un approccio intermedio tra Strategic e Tactical Asset Allocation, utilizzando regole sistematiche per aggiustare l'allocazione in base a condizioni di mercato."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "La Dynamic Asset Allocation aggiusta l'allocazione del portfolio in base a condizioni di mercato usando regole sistematiche, invece che mantenere allocazioni fisse (Strategic) o fare aggiustamenti discrezionali (Tactical). Esempio: Regola basata su volatilità: se volatilità aumenta, riduci azioni, aumenti obbligazioni. Se volatilità diminuisce, aumenti azioni, riduci obbligazioni. Dynamic Asset Allocation è più reattiva della Strategic ma più sistematica della Tactical, e può migliorare rapporto rischio-rendimento in alcuni regimi di mercato.",
+      "howToUse": "Usa Dynamic Asset Allocation se vuoi aggiustare l'allocazione in base a condizioni di mercato in modo sistematico. Definisci regole basate su indicatori (volatilità, momentum, valore, macro). Esempio: Volatilità > 20% = riduci azioni a 40%, aumenta obbligazioni a 60%. Volatilità < 10% = aumenta azioni a 70%, riduci obbligazioni a 30%. Dynamic Asset Allocation è più complessa della Strategic ma più sistematica della Tactical. Richiede monitoraggio continuo e backtesting delle regole.",
+      "practicalExample": "Esempio: Strategic Asset Allocation: 60% azioni, 40% obbligazioni. Dynamic Asset Allocation: regola basata su volatilità. Volatilità < 15%: 70% azioni, 30% obbligazioni. Volatilità 15-25%: 60% azioni, 40% obbligazioni. Volatilità > 25%: 40% azioni, 60% obbligazioni. Dynamic Asset Allocation aggiusta allocazione in base a volatilità, migliorando rapporto rischio-rendimento in alcuni regimi di mercato.",
+      "commonMistakes": "Errore comune: cambiare regole troppo spesso basandoti su performance recente. 'Le regole non funzionano, le cambio' è sbagliato: backtesta prima. Altro errore: regole troppo complesse che sono difficili da implementare e mantenere. Mantieni regole semplici e testabili. Evita anche di usare Dynamic Asset Allocation senza backtesting: testa le regole su dati storici prima di implementarle."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "asset-allocation",
+    "tags": ["investing", "portfolio-construction", "quantitative", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Strategic Asset Allocation", "Tactical Asset Allocation"],
+    "relatedTerms": ["Strategic Asset Allocation", "Tactical Asset Allocation", "Asset Allocation"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
   }
 }
