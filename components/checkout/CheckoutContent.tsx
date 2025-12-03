@@ -333,6 +333,7 @@ function DataCollectionForm({
             </label>
             <input
               type="text"
+              autoFocus
               value={customerData.firstName || ''}
               onChange={(e) => setCustomerData({ ...customerData, firstName: e.target.value })}
               className={cn(
@@ -390,10 +391,42 @@ function DataCollectionForm({
             >
               <option value="">Seleziona...</option>
               <option value="IT">Italia</option>
-              <option value="US">Stati Uniti</option>
-              <option value="GB">Regno Unito</option>
-              <option value="DE">Germania</option>
+              <option value="AT">Austria</option>
+              <option value="BE">Belgio</option>
+              <option value="BG">Bulgaria</option>
+              <option value="HR">Croazia</option>
+              <option value="CY">Cipro</option>
+              <option value="CZ">Repubblica Ceca</option>
+              <option value="DK">Danimarca</option>
+              <option value="EE">Estonia</option>
+              <option value="FI">Finlandia</option>
               <option value="FR">Francia</option>
+              <option value="DE">Germania</option>
+              <option value="GR">Grecia</option>
+              <option value="IE">Irlanda</option>
+              <option value="LV">Lettonia</option>
+              <option value="LT">Lituania</option>
+              <option value="LU">Lussemburgo</option>
+              <option value="MT">Malta</option>
+              <option value="NL">Paesi Bassi</option>
+              <option value="PL">Polonia</option>
+              <option value="PT">Portogallo</option>
+              <option value="RO">Romania</option>
+              <option value="SK">Slovacchia</option>
+              <option value="SI">Slovenia</option>
+              <option value="ES">Spagna</option>
+              <option value="SE">Svezia</option>
+              <option value="GB">Regno Unito</option>
+              <option value="CH">Svizzera</option>
+              <option value="NO">Norvegia</option>
+              <option value="US">Stati Uniti</option>
+              <option value="CA">Canada</option>
+              <option value="AU">Australia</option>
+              <option value="NZ">Nuova Zelanda</option>
+              <option value="JP">Giappone</option>
+              <option value="SG">Singapore</option>
+              <option value="AE">Emirati Arabi Uniti</option>
+              <option value="OTHER">Altro</option>
             </select>
             {errors.country && <p className="text-xs text-red-400 mt-1">{errors.country}</p>}
           </div>
@@ -432,6 +465,7 @@ function DataCollectionForm({
             </label>
             <input
               type="text"
+              autoFocus
               value={customerData.companyName || ''}
               onChange={(e) => setCustomerData({ ...customerData, companyName: e.target.value })}
               className={cn(
@@ -472,10 +506,42 @@ function DataCollectionForm({
             >
               <option value="">Seleziona...</option>
               <option value="IT">Italia</option>
-              <option value="US">Stati Uniti</option>
-              <option value="GB">Regno Unito</option>
-              <option value="DE">Germania</option>
+              <option value="AT">Austria</option>
+              <option value="BE">Belgio</option>
+              <option value="BG">Bulgaria</option>
+              <option value="HR">Croazia</option>
+              <option value="CY">Cipro</option>
+              <option value="CZ">Repubblica Ceca</option>
+              <option value="DK">Danimarca</option>
+              <option value="EE">Estonia</option>
+              <option value="FI">Finlandia</option>
               <option value="FR">Francia</option>
+              <option value="DE">Germania</option>
+              <option value="GR">Grecia</option>
+              <option value="IE">Irlanda</option>
+              <option value="LV">Lettonia</option>
+              <option value="LT">Lituania</option>
+              <option value="LU">Lussemburgo</option>
+              <option value="MT">Malta</option>
+              <option value="NL">Paesi Bassi</option>
+              <option value="PL">Polonia</option>
+              <option value="PT">Portogallo</option>
+              <option value="RO">Romania</option>
+              <option value="SK">Slovacchia</option>
+              <option value="SI">Slovenia</option>
+              <option value="ES">Spagna</option>
+              <option value="SE">Svezia</option>
+              <option value="GB">Regno Unito</option>
+              <option value="CH">Svizzera</option>
+              <option value="NO">Norvegia</option>
+              <option value="US">Stati Uniti</option>
+              <option value="CA">Canada</option>
+              <option value="AU">Australia</option>
+              <option value="NZ">Nuova Zelanda</option>
+              <option value="JP">Giappone</option>
+              <option value="SG">Singapore</option>
+              <option value="AE">Emirati Arabi Uniti</option>
+              <option value="OTHER">Altro</option>
             </select>
             {errors.companyCountry && <p className="text-xs text-red-400 mt-1">{errors.companyCountry}</p>}
           </div>
