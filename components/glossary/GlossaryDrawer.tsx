@@ -1123,7 +1123,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
             >
               {/* Spiegazione Accademica - Academic Style */}
               <section className="space-y-5" aria-labelledby="academic-section-title">
-                <div className="flex items-center gap-4 mb-6 pb-5 border-b border-border-subtle">
+                <div className="flex items-center gap-4 mb-6 pb-5 border-b border-gray-200 dark:border-gray-800">
                   <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/50 dark:to-blue-800/50 border-2 border-blue-300 dark:border-blue-700 flex items-center justify-center flex-shrink-0 shadow-md">
                     <GraduationCap className="w-7 h-7 text-blue-700 dark:text-blue-300" aria-hidden="true" />
                   </div>
@@ -1176,7 +1176,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               {/* Spiegazione Tradelia AI - Cosa fa e Come si usa */}
               {(whatDoes || howToUse || term.technical || term.how) && (
                 <section className="space-y-5" aria-labelledby="tradelia-ai-section-title">
-                  <div className="flex items-center gap-4 mb-6 pb-5 border-b border-border-subtle">
+                  <div className="flex items-center gap-4 mb-6 pb-5 border-b border-gray-200 dark:border-gray-800">
                     <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900/50 dark:to-green-800/50 border-2 border-green-300 dark:border-green-700 flex items-center justify-center flex-shrink-0 shadow-md">
                       <Code className="w-7 h-7 text-green-700 dark:text-green-300" aria-hidden="true" />
                     </div>
@@ -1288,7 +1288,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               {/* Termini Correlati - Academic Style */}
               {relatedTermsData.length > 0 && (
                 <section className="space-y-3" aria-labelledby="related-terms-section-title">
-                  <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border-subtle">
+                  <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-800">
                     <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-900/50 flex items-center justify-center flex-shrink-0">
                       <Link2 className="w-5 h-5 text-indigo-600 dark:text-cyan-300" aria-hidden="true" />
                     </div>
@@ -1326,7 +1326,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
 
               {/* Fonti Accademiche - APA Style */}
               <section className="space-y-3" aria-labelledby="sources-section-title">
-                <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border-subtle">
+                <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-800">
                   <div className="w-10 h-10 rounded-lg bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-900/50 flex items-center justify-center flex-shrink-0">
                     <FileText className="w-5 h-5 text-orange-600 dark:text-orange-400" aria-hidden="true" />
                   </div>
