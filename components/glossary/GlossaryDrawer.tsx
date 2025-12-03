@@ -17,6 +17,8 @@ import {
   Printer,
   Download,
   Search,
+  Check,
+  ArrowRight,
 } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
@@ -24,6 +26,8 @@ import { getGlossaryTerm } from '@/lib/glossary/terms';
 import type { GlossaryTerm as GlossaryTermType } from '@/lib/glossary/terms';
 import { formatTextIntoParagraphs } from '@/lib/glossary/text-formatter';
 import type { AcademicSource } from '@/lib/glossary/tradelia-glossary-structure';
+import { useIsPro } from '@/lib/hooks/useUserRole';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 interface GlossaryTerm {
@@ -77,6 +81,9 @@ interface GlossaryDrawerProps {
  */
 export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryDrawerProps) {
   const { t } = useTranslations();
+  const isPro = useIsPro();
+  const router = useRouter();
+  const [showProModal, setShowProModal] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const contentScrollableRef = useRef<HTMLDivElement>(null);
