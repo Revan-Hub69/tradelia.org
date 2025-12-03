@@ -856,9 +856,30 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     <section class="print-sources">
       <h2 class="print-section-title">Riferimenti Bibliografici</h2>
       <div>
-        ${academicSource.split('|').map(source => 
-          `<div class="print-source-item">${source.trim()}</div>`
-        ).join('')}
+        ${Array.isArray(academicSource) 
+          ? academicSource.map(source => {
+              // Formato strutturato AcademicSource
+              let citation = `${source.author} (${source.year}). ${source.title}`;
+              if (source.journal) {
+                citation += `. ${source.journal}`;
+                if (source.volume) {
+                  citation += ` ${source.volume}`;
+                  if (source.issue) citation += `(${source.issue})`;
+                }
+                if (source.pages) citation += `, ${source.pages}`;
+                citation += '.';
+              }
+              if (source.publisher) citation += ` ${source.publisher}.`;
+              if (source.doi) citation += ` DOI: ${source.doi}`;
+              if (source.isbn) citation += ` ISBN: ${source.isbn}`;
+              return `<div class="print-source-item">${citation}</div>`;
+            }).join('')
+          : typeof academicSource === 'string' 
+            ? academicSource.split('|').map(source => 
+                `<div class="print-source-item">${source.trim()}</div>`
+              ).join('')
+            : ''
+        }
       </div>
     </section>
   </div>
@@ -1012,11 +1033,36 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   <section className="print-sources">
                     <h2 className="print-section-title">Riferimenti Bibliografici</h2>
                     <div>
-                      {academicSource.split('|').map((source, index) => (
-                        <div key={index} className="print-source-item">
-                          {source.trim()}
-                        </div>
-                      ))}
+                      {Array.isArray(academicSource) 
+                        ? academicSource.map((source, index) => {
+                            // Formato strutturato AcademicSource
+                            let citation = `${source.author} (${source.year}). ${source.title}`;
+                            if (source.journal) {
+                              citation += `. ${source.journal}`;
+                              if (source.volume) {
+                                citation += ` ${source.volume}`;
+                                if (source.issue) citation += `(${source.issue})`;
+                              }
+                              if (source.pages) citation += `, ${source.pages}`;
+                              citation += '.';
+                            }
+                            if (source.publisher) citation += ` ${source.publisher}.`;
+                            if (source.doi) citation += ` DOI: ${source.doi}`;
+                            if (source.isbn) citation += ` ISBN: ${source.isbn}`;
+                            return (
+                              <div key={index} className="print-source-item">
+                                {citation}
+                              </div>
+                            );
+                          })
+                        : typeof academicSource === 'string'
+                          ? academicSource.split('|').map((source, index) => (
+                              <div key={index} className="print-source-item">
+                                {source.trim()}
+                              </div>
+                            ))
+                          : null
+                      }
                     </div>
                   </section>
                 </div>
