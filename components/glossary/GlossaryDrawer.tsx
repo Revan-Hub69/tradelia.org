@@ -1031,8 +1031,8 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               aria-labelledby="glossary-drawer-title"
               aria-describedby="glossary-drawer-description"
             >
-            {/* Header - Academic Style - Contrasto ottimale */}
-            <div className="no-print border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
+            {/* Header - Academic Style - Design System */}
+            <div className="no-print border-b border-border-default bg-bg-surface">
               {/* Breadcrumb Navigation - Improved Spacing and Readability */}
               <div className="px-4 sm:px-6 pt-3 pb-2">
                 <nav 
@@ -1140,11 +1140,10 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     {formatTextIntoParagraphs(academicWhat).map((paragraph, idx) => (
                       <p 
                         key={idx}
-                        className="text-[16px] text-gray-900 dark:text-gray-100 leading-[1.6] font-normal"
+                        className="text-base text-text-primary leading-[1.8] font-normal"
                         style={{ 
-                          maxWidth: '65ch', // Ottimale per leggibilità (45-75 caratteri)
-                          textAlign: 'left', // Non giustificato per migliore leggibilità
-                          color: '#111827', // Grigio molto scuro (contrasto 19:1, più confortevole del nero puro)
+                          maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
+                          textAlign: 'left' // WCAG 2.2: allineamento sinistra raccomandato
                         }}
                       >
                         {paragraph}
@@ -1152,8 +1151,8 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     ))}
                   </div>
                   {term.academicDefinition?.academicContext && (
-                    <div className="mt-6 p-5 bg-gray-50 dark:bg-gray-900/50 border-l-3 border-gray-400 dark:border-gray-600 rounded-r-md">
-                      <p className="text-[15px] text-gray-700 dark:text-gray-300 italic leading-[1.6] font-normal max-w-[60ch]">
+                    <div className="mt-6 p-5 bg-bg-soft border-l border-border-accent rounded-r-md">
+                      <p className="text-sm text-text-secondary italic leading-[1.75] font-normal max-w-[60ch]">
                         {(() => {
                           const paragraphs = formatTextIntoParagraphs(term.academicDefinition?.academicContext || '');
                           return paragraphs.map((p, idx) => (
@@ -1176,7 +1175,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               {/* Spiegazione Tradelia AI - Cosa fa e Come si usa */}
               {(whatDoes || howToUse || term.technical || term.how) && (
                 <section className="space-y-5" aria-labelledby="tradelia-ai-section-title">
-                  <div className="flex items-center gap-4 mb-6 pb-5 border-b border-gray-200 dark:border-gray-800">
+                  <div className="flex items-center gap-4 mb-6 pb-5 border-b border-border-default">
                     <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900/50 dark:to-green-800/50 border-2 border-green-300 dark:border-green-700 flex items-center justify-center flex-shrink-0 shadow-md">
                       <Code className="w-7 h-7 text-green-700 dark:text-green-300" aria-hidden="true" />
                     </div>
@@ -1195,11 +1194,10 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                           {formatTextIntoParagraphs(whatDoes).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-[16px] text-gray-900 dark:text-gray-100 leading-[1.6] font-normal"
+                              className="text-base text-text-primary leading-[1.8] font-normal"
                               style={{ 
-                                maxWidth: '65ch',
-                                textAlign: 'left',
-                                color: '#111827' // Grigio molto scuro (contrasto ottimale, più confortevole)
+                                maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
+                                textAlign: 'left' // WCAG 2.2: allineamento sinistra
                               }}
                             >
                               {paragraph}
@@ -1215,11 +1213,10 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                           {formatTextIntoParagraphs(howToUse).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-[16px] text-gray-900 dark:text-gray-100 leading-[1.6] font-normal"
+                              className="text-base text-text-primary leading-[1.8] font-normal"
                               style={{ 
-                                maxWidth: '65ch',
-                                textAlign: 'left',
-                                color: '#111827' // Grigio molto scuro (contrasto ottimale, più confortevole)
+                                maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
+                                textAlign: 'left' // WCAG 2.2: allineamento sinistra
                               }}
                             >
                               {paragraph}
@@ -1229,20 +1226,19 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       </div>
                     )}
                     {practicalExample && (
-                      <div className="space-y-4 p-5 bg-blue-50/80 dark:bg-blue-950/30 border-l-3 border-blue-400 dark:border-blue-600 rounded-r-lg">
-                        <h4 className="text-lg font-bold text-blue-800 dark:text-blue-200 flex items-center gap-2.5 mb-3">
-                          <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                      <div className="space-y-4 p-5 bg-bg-soft border-l border-accent/30 rounded-r-md">
+                        <h4 className="text-lg font-bold text-text-primary flex items-center gap-2.5 mb-3">
+                          <Sparkles className="w-5 h-5 text-accent" />
                           Esempio Pratico
                         </h4>
                         <div className="max-w-3xl space-y-4">
                           {formatTextIntoParagraphs(practicalExample).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-[16px] text-gray-800 dark:text-blue-100 leading-[1.6] font-normal"
+                              className="text-base text-text-primary leading-[1.8] font-normal"
                               style={{ 
-                                maxWidth: '65ch',
-                                textAlign: 'left',
-                                color: '#1f2937' // Grigio scuro per leggibilità ottimale
+                                maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
+                                textAlign: 'left' // WCAG 2.2: allineamento sinistra
                               }}
                             >
                               {paragraph}
@@ -1252,20 +1248,19 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       </div>
                     )}
                     {commonMistakes && (
-                      <div className="space-y-4 p-5 bg-red-50/80 dark:bg-red-950/30 border-l-3 border-red-400 dark:border-red-600 rounded-r-lg">
-                        <h4 className="text-lg font-bold text-red-800 dark:text-red-200 flex items-center gap-2.5 mb-3">
-                          <FileText className="w-5 h-5 text-red-600 dark:text-red-400" />
+                      <div className="space-y-4 p-5 bg-bg-soft border-l border-error/30 rounded-r-md">
+                        <h4 className="text-lg font-bold text-text-primary flex items-center gap-2.5 mb-3">
+                          <FileText className="w-5 h-5 text-error" />
                           Errori Comuni da Evitare
                         </h4>
                         <div className="max-w-3xl space-y-4">
                           {formatTextIntoParagraphs(commonMistakes).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-[16px] text-gray-800 dark:text-red-100 leading-[1.6] font-normal"
+                              className="text-base text-text-primary leading-[1.8] font-normal"
                               style={{ 
-                                maxWidth: '65ch',
-                                textAlign: 'left',
-                                color: '#1f2937' // Grigio scuro per leggibilità ottimale
+                                maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
+                                textAlign: 'left' // WCAG 2.2: allineamento sinistra
                               }}
                             >
                               {paragraph}
