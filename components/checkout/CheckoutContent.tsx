@@ -318,14 +318,13 @@ function DataCollectionForm({
       </div>
 
       {customerType === 'retail' ? (
-    return (
-      <div className="bg-bg-surface border border-border-subtle rounded-2xl p-6 space-y-6">
-        <div className="flex items-center gap-3 mb-6">
-          <User className="w-5 h-5 text-accent" />
-          <h2 className="text-xl font-semibold text-text-primary">
-            {t('checkout.data.retail.title') || 'Dati Personali (Retail)'}
-          </h2>
-        </div>
+        <>
+          <div className="flex items-center gap-3 mb-4">
+            <User className="w-5 h-5 text-accent" />
+            <h2 className="text-xl font-semibold text-text-primary">
+              Dati Personali
+            </h2>
+          </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -398,7 +397,6 @@ function DataCollectionForm({
             </select>
             {errors.country && <p className="text-xs text-red-400 mt-1">{errors.country}</p>}
           </div>
-        </div>
 
         {customerData.country === 'IT' && (
           <div>
@@ -418,7 +416,7 @@ function DataCollectionForm({
             {errors.taxCode && <p className="text-xs text-red-400 mt-1">{errors.taxCode}</p>}
           </div>
         )}
-
+        </>
       ) : (
         <>
           <div className="flex items-center gap-3 mb-4">
