@@ -1139,7 +1139,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
             <div 
               ref={contentScrollableRef}
               tabIndex={-1}
-              className="no-print flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-5 space-y-5 sm:space-y-6 focus:outline-none bg-bg-surface" 
+              className="no-print flex-1 overflow-y-auto overflow-x-hidden p-5 sm:p-5 space-y-6 sm:space-y-6 focus:outline-none bg-bg-surface" 
               style={{ 
                 scrollbarWidth: 'thin'
               }}
@@ -1176,8 +1176,8 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     ))}
                   </div>
                   {term.academicDefinition?.academicContext && (
-                    <div className="mt-4 p-4 bg-bg-soft border-l border-border-accent rounded-r-md">
-                      <p className="text-xs sm:text-sm text-text-secondary italic leading-[1.7] font-normal max-w-[60ch]">
+                    <div className="mt-5 sm:mt-4 p-4 sm:p-4 bg-bg-soft border-l border-border-accent rounded-r-md">
+                      <p className="text-sm sm:text-sm text-text-secondary italic leading-[1.75] sm:leading-[1.7] font-normal max-w-full sm:max-w-[60ch]">
                         {(() => {
                           const paragraphs = formatTextIntoParagraphs(term.academicDefinition?.academicContext || '');
                           return paragraphs.map((p, idx) => (
@@ -1200,12 +1200,12 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               {/* Spiegazione Tradelia AI - Cosa fa e Come si usa */}
               {(whatDoes || howToUse || term.technical || term.how) && (
                 <section className="space-y-5" aria-labelledby="tradelia-ai-section-title">
-                  <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border-default">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-bg-soft border border-accent/30 flex items-center justify-center flex-shrink-0">
+                  <div className="flex items-center gap-3 sm:gap-3 mb-4 sm:mb-4 pb-3 sm:pb-3 border-b border-border-default">
+                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-bg-soft border border-accent/30 flex items-center justify-center flex-shrink-0">
                       <Code className="w-5 h-5 sm:w-6 sm:h-6 text-accent" aria-hidden="true" />
                     </div>
                     <div className="flex-1">
-                      <h3 id="tradelia-ai-section-title" className="text-lg sm:text-xl font-bold text-text-primary mb-0.5">
+                      <h3 id="tradelia-ai-section-title" className="text-base sm:text-xl font-bold text-text-primary mb-0.5">
                         {t('glossary.drawer.tradeliaAIExplanation') || 'Spiegazione Tradelia AI'}
                       </h3>
                       <p className="text-xs text-text-tertiary font-medium">Spiegazione semplice ma esaustiva</p>
@@ -1234,18 +1234,18 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       </div>
                     )}
                     {howToUse && (
-                      <div className="space-y-3">
-                        <h4 className="text-base sm:text-lg font-bold text-text-primary mb-3">Come si usa</h4>
-                        <div className="max-w-3xl space-y-3 sm:space-y-4">
+                      <div className="space-y-4 sm:space-y-3">
+                        <h4 className="text-base sm:text-lg font-bold text-text-primary mb-3 sm:mb-3">Come si usa</h4>
+                        <div className="max-w-full sm:max-w-3xl space-y-4 sm:space-y-4">
                           {formatTextIntoParagraphs(howToUse).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-sm sm:text-[15px] text-text-primary leading-[1.7] font-normal tracking-[0.01em]"
+                              className="text-[15px] sm:text-[15px] text-text-primary leading-[1.75] sm:leading-[1.7] font-normal tracking-[0.01em]"
                               style={{ 
-                                maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
+                                maxWidth: '100%', // Mobile: usa tutta la larghezza disponibile
                                 textAlign: 'left', // WCAG 2.2: allineamento sinistra
                                 wordSpacing: '0.05em', // WCAG 2.2: migliora leggibilità
-                                marginBottom: idx < formatTextIntoParagraphs(howToUse).length - 1 ? '0.875em' : '0' // Spacing compatto tra paragrafi
+                                marginBottom: idx < formatTextIntoParagraphs(howToUse).length - 1 ? '1em' : '0' // Spacing ottimale mobile
                               }}
                             >
                               {paragraph}
@@ -1255,21 +1255,21 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       </div>
                     )}
                     {practicalExample && (
-                      <div className="space-y-3 p-4 bg-bg-soft border-l border-accent/30 rounded-r-md">
-                        <h4 className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-2 mb-2.5">
+                      <div className="space-y-4 sm:space-y-3 p-4 sm:p-4 bg-bg-soft border-l border-accent/30 rounded-r-md">
+                        <h4 className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-2 mb-3 sm:mb-2.5">
                           <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
                           Esempio Pratico
                         </h4>
-                        <div className="max-w-3xl space-y-3 sm:space-y-4">
+                        <div className="max-w-full sm:max-w-3xl space-y-4 sm:space-y-4">
                           {formatTextIntoParagraphs(practicalExample).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-sm sm:text-[15px] text-text-primary leading-[1.7] font-normal tracking-[0.01em]"
+                              className="text-[15px] sm:text-[15px] text-text-primary leading-[1.75] sm:leading-[1.7] font-normal tracking-[0.01em]"
                               style={{ 
-                                maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
+                                maxWidth: '100%', // Mobile: usa tutta la larghezza disponibile
                                 textAlign: 'left', // WCAG 2.2: allineamento sinistra
                                 wordSpacing: '0.05em', // WCAG 2.2: migliora leggibilità
-                                marginBottom: idx < formatTextIntoParagraphs(practicalExample).length - 1 ? '0.875em' : '0' // Spacing compatto tra paragrafi
+                                marginBottom: idx < formatTextIntoParagraphs(practicalExample).length - 1 ? '1em' : '0' // Spacing ottimale mobile
                               }}
                             >
                               {paragraph}
@@ -1279,21 +1279,21 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       </div>
                     )}
                     {commonMistakes && (
-                      <div className="space-y-3 p-4 bg-bg-soft border-l border-error/30 rounded-r-md">
-                        <h4 className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-2 mb-2.5">
+                      <div className="space-y-4 sm:space-y-3 p-4 sm:p-4 bg-bg-soft border-l border-error/30 rounded-r-md">
+                        <h4 className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-2 mb-3 sm:mb-2.5">
                           <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-error" />
                           Errori Comuni da Evitare
                         </h4>
-                        <div className="max-w-3xl space-y-3 sm:space-y-4">
+                        <div className="max-w-full sm:max-w-3xl space-y-4 sm:space-y-4">
                           {formatTextIntoParagraphs(commonMistakes).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-sm sm:text-[15px] text-text-primary leading-[1.7] font-normal tracking-[0.01em]"
+                              className="text-[15px] sm:text-[15px] text-text-primary leading-[1.75] sm:leading-[1.7] font-normal tracking-[0.01em]"
                               style={{ 
-                                maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
+                                maxWidth: '100%', // Mobile: usa tutta la larghezza disponibile
                                 textAlign: 'left', // WCAG 2.2: allineamento sinistra
                                 wordSpacing: '0.05em', // WCAG 2.2: migliora leggibilità
-                                marginBottom: idx < formatTextIntoParagraphs(commonMistakes).length - 1 ? '0.875em' : '0' // Spacing compatto tra paragrafi
+                                marginBottom: idx < formatTextIntoParagraphs(commonMistakes).length - 1 ? '1em' : '0' // Spacing ottimale mobile
                               }}
                             >
                               {paragraph}
