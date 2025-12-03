@@ -33,6 +33,12 @@ export function Footer() {
       { key: 'courses', href: '/courses' },
       { key: 'dashboard', href: '/dashboard' },
     ],
+    support: [
+      { key: 'faq', href: '/faq' },
+      { key: 'support', href: '/support' },
+      { key: 'about', href: '/about' },
+      { key: 'contact', href: '/contact' },
+    ],
     legal: [
       { key: 'privacy', href: '/privacy' },
       { key: 'cookie', href: '/cookie' },
@@ -118,7 +124,7 @@ export function Footer() {
           variants={containerVariants}
         >
           {/* Main Footer Content - Best Practice: Responsive Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
             {/* Brand Column - Full width on mobile, spans 2 columns on desktop */}
             <motion.div
               variants={itemVariants}
@@ -161,10 +167,17 @@ export function Footer() {
             />
 
             <FooterSection
+              title={t('footer.support')}
+              links={footerLinks.support}
+              sectionKey="support"
+              delay={0.2}
+            />
+
+            <FooterSection
               title={t('footer.legal')}
               links={footerLinks.legal}
               sectionKey="legal"
-              delay={0.2}
+              delay={0.3}
             />
           </div>
 

@@ -66,13 +66,19 @@
     "description": "Ricerca finanziaria aperta: framework AI, dataset e note metodologiche condivise per la community. I servizi professionali sono opzionali e finanziano l'accesso gratuito.",
     "disclaimer": "Solo materiale educativo. Nessuna consulenza o sollecitazione di investimento; rispettiamo MiFID II e le best practice etiche.",
     "product": "Prodotto",
+    "support": "Supporto",
     "legal": "Legale",
-    "company": "Azienda",
     "productLinks": {
       "pricing": "Prezzi",
       "glossary": "Glossario",
       "courses": "Corsi",
       "dashboard": "Dashboard"
+    },
+    "supportLinks": {
+      "faq": "FAQ",
+      "support": "Supporto",
+      "about": "Chi Siamo",
+      "contact": "Contatti"
     },
     "legalLinks": {
       "privacy": "Privacy",
@@ -1362,5 +1368,186 @@
     "of": "di",
     "previous": "Pagina precedente",
     "next": "Pagina successiva"
+  },
+  "faq": {
+    "title": "Domande Frequenti",
+    "subtitle": "Trova risposte alle domande più comuni su Tradelia",
+    "questions": {
+      "whatIsTradelia": "Cos'è Tradelia?",
+      "howToStart": "Come posso iniziare?",
+      "whatIsPro": "Cos'è il piano Pro?",
+      "isFree": "Tradelia è davvero gratuito?",
+      "mifidCompliant": "Il materiale è conforme MiFID II?",
+      "businessPlans": "Ci sono piani per aziende?"
+    },
+    "answers": {
+      "whatIsTradelia": "Tradelia è un laboratorio indipendente che unisce framework AI proprietari e metodo accademico per la ricerca finanziaria. Offriamo accesso gratuito per tutti e servizi professionali on demand.",
+      "howToStart": "Puoi iniziare creando un account gratuito. Avrai accesso alla dashboard, ai report pubblici e ai corsi base. Per funzionalità avanzate, considera l'upgrade a Pro.",
+      "whatIsPro": "Il piano Pro include Portfolio Manager, Calcolatrice Finanziaria, Sistema Alert Avanzato, Download PDF Report, Richieste Analisi Personalizzate e supporto prioritario.",
+      "isFree": "Sì, l'accesso base è completamente gratuito e permanente. I servizi professionali sono opzionali e finanziano l'accesso gratuito per tutti.",
+      "mifidCompliant": "Sì, tutto il materiale è conforme alle normative MiFID II e agli standard accademici internazionali. Le informazioni sono a scopo educativo e non costituiscono consulenza finanziaria.",
+      "businessPlans": "Sì, offriamo piani Business con fatturazione B2B. Contattaci per maggiori informazioni sui piani aziendali."
+    },
+    "needMoreHelp": "Hai bisogno di più aiuto?",
+    "contactUs": "Non hai trovato la risposta che cercavi? Contattaci e ti aiuteremo.",
+    "contactButton": "Contattaci"
+  },
+  "support": {
+    "title": "Supporto",
+    "subtitle": "Siamo qui per aiutarti. Scegli il metodo di contatto più adatto alle tue esigenze.",
+    "options": {
+      "faq": {
+        "title": "FAQ",
+        "description": "Consulta le domande frequenti per risposte rapide."
+      },
+      "email": {
+        "title": "Email",
+        "description": "Scrivici a support@tradelia.org per assistenza diretta."
+      },
+      "contact": {
+        "title": "Contatti",
+        "description": "Compila il form di contatto per richieste specifiche."
+      },
+      "documentation": {
+        "title": "Documentazione",
+        "description": "Esplora la documentazione completa della piattaforma."
+      }
+    },
+    "responseTime": {
+      "title": "Tempi di Risposta",
+      "email": "Rispondiamo entro 24-48 ore",
+      "pro": "Risposta prioritaria entro 12-24 ore",
+      "urgent": "Per problemi urgenti, contattaci direttamente via email"
+    }
+  },
+  "about": {
+    "title": "Chi Siamo",
+    "description": "Tradelia è un laboratorio indipendente che unisce framework AI proprietari e metodo accademico per la ricerca finanziaria. Il nostro obiettivo è rendere la ricerca finanziaria accessibile, verificabile e conforme agli standard internazionali.",
+    "mission": {
+      "title": "La Nostra Missione",
+      "content": "Crediamo che la ricerca finanziaria debba essere aperta, verificabile e accessibile a tutti. I nostri framework AI sono documentati e replicabili, il materiale è conforme alle normative MiFID II e gli standard accademici internazionali. I servizi professionali sono opzionali e finanziano l'accesso gratuito per la community."
+    },
+    "values": {
+      "title": "I Nostri Valori",
+      "independence": {
+        "title": "Indipendenza",
+        "description": "Progetto indipendente senza conflitti di interesse."
+      },
+      "academic": {
+        "title": "Rigore Accademico",
+        "description": "Metodologia basata su standard accademici internazionali."
+      },
+      "compliance": {
+        "title": "Conformità",
+        "description": "Materiale conforme alle normative MiFID II."
+      },
+      "community": {
+        "title": "Community",
+        "description": "Accesso gratuito per tutti, servizi Pro opzionali."
+      }
+    },
+    "contact": {
+      "title": "Vuoi Saperne di Più?",
+      "description": "Contattaci per domande, collaborazioni o per saperne di più sui nostri servizi.",
+      "button": "Contattaci"
+    }
+  },
+  "contact": {
+    "title": "Contatti",
+    "subtitle": "Compila il form qui sotto o scrivici direttamente a support@tradelia.org",
+    "email": {
+      "title": "Email Diretta"
+    },
+    "response": {
+      "title": "Tempi di Risposta",
+      "content": "Rispondiamo entro 24-48 ore. Per utenti Pro, risposta prioritaria entro 12-24 ore."
+    },
+    "form": {
+      "name": "Nome",
+      "email": "Email",
+      "subject": "Oggetto",
+      "message": "Messaggio",
+      "send": "Invia Messaggio",
+      "sending": "Invio in corso...",
+      "success": "Messaggio inviato con successo! Ti risponderemo presto.",
+      "error": "Errore durante l'invio. Riprova o scrivici direttamente a support@tradelia.org"
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Ultimo aggiornamento: Gennaio 2024",
+    "sections": {
+      "introduction": {
+        "title": "Introduzione",
+        "content": "Tradelia rispetta la tua privacy e si impegna a proteggere i tuoi dati personali. Questa Privacy Policy spiega come raccogliamo, utilizziamo e proteggiamo le tue informazioni quando utilizzi la nostra piattaforma."
+      },
+      "dataCollection": {
+        "title": "Raccolta Dati",
+        "content": "Raccogliamo solo i dati necessari per fornire i nostri servizi: email per l'autenticazione, dati di utilizzo per migliorare la piattaforma, e informazioni di pagamento per i servizi Pro (processate tramite provider sicuri)."
+      },
+      "dataUsage": {
+        "title": "Utilizzo Dati",
+        "content": "I tuoi dati sono utilizzati esclusivamente per: fornire e migliorare i nostri servizi, comunicare con te, processare pagamenti, e rispettare obblighi legali. Non vendiamo né condividiamo i tuoi dati con terze parti per scopi di marketing."
+      },
+      "rights": {
+        "title": "I Tuoi Diritti",
+        "content": "Hai il diritto di accedere, correggere, eliminare o limitare l'elaborazione dei tuoi dati personali. Puoi anche opporti all'elaborazione o richiedere la portabilità dei dati. Contattaci a support@tradelia.org per esercitare questi diritti."
+      },
+      "contact": {
+        "title": "Contatti",
+        "content": "Per domande sulla Privacy Policy, contattaci a support@tradelia.org"
+      }
+    }
+  },
+  "cookie": {
+    "title": "Cookie Policy",
+    "lastUpdated": "Ultimo aggiornamento: Gennaio 2024",
+    "sections": {
+      "whatAre": {
+        "title": "Cosa Sono i Cookie",
+        "content": "I cookie sono piccoli file di testo salvati sul tuo dispositivo quando visiti un sito web. Utilizziamo cookie per migliorare la tua esperienza e fornire funzionalità essenziali."
+      },
+      "types": {
+        "title": "Tipi di Cookie Utilizzati",
+        "essential": {
+          "title": "Cookie Tecnici (Necessari)",
+          "content": "Cookie essenziali per il funzionamento del sito, inclusi autenticazione e sicurezza. Questi cookie non possono essere disabilitati."
+        },
+        "analytics": {
+          "title": "Cookie di Analisi",
+          "content": "Cookie utilizzati per analizzare l'utilizzo del sito e migliorare l'esperienza utente. Puoi disabilitare questi cookie nelle impostazioni del browser."
+        }
+      },
+      "management": {
+        "title": "Gestione Cookie",
+        "content": "Puoi gestire le preferenze dei cookie tramite le impostazioni del tuo browser. Nota che disabilitare alcuni cookie può limitare alcune funzionalità del sito."
+      }
+    }
+  },
+  "terms": {
+    "title": "Termini e Condizioni",
+    "lastUpdated": "Ultimo aggiornamento: Gennaio 2024",
+    "sections": {
+      "acceptance": {
+        "title": "Accettazione dei Termini",
+        "content": "Utilizzando Tradelia, accetti questi Termini e Condizioni. Se non accetti, non utilizzare la piattaforma."
+      },
+      "use": {
+        "title": "Utilizzo del Servizio",
+        "content": "Tradelia fornisce materiale educativo e strumenti di ricerca finanziaria. Il materiale è a scopo educativo e non costituisce consulenza finanziaria. Non siamo responsabili per decisioni di investimento basate sul materiale fornito."
+      },
+      "account": {
+        "title": "Account e Pagamenti",
+        "content": "Sei responsabile di mantenere la sicurezza del tuo account. I pagamenti per servizi Pro sono processati tramite provider sicuri. I rimborsi sono gestiti secondo la nostra politica di rimborso."
+      },
+      "disclaimer": {
+        "title": "Disclaimer",
+        "content": "Il materiale fornito è a scopo educativo e non costituisce consulenza finanziaria, sollecitazione di investimento o raccomandazione. Tutti gli investimenti comportano rischi. Consulta sempre un consulente finanziario qualificato prima di prendere decisioni di investimento."
+      },
+      "contact": {
+        "title": "Contatti",
+        "content": "Per domande sui Termini e Condizioni, contattaci a support@tradelia.org"
+      }
+    }
   }
 }
