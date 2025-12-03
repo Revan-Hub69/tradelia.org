@@ -8,7 +8,8 @@
     "loading": "Loading...",
     "error": "Error",
     "success": "Success",
-    "sending": "Sending..."
+    "sending": "Sending...",
+    "skipToContent": "Skip to main content"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -1062,7 +1063,8 @@
       "customerType": "Customer Type",
       "retail": {
         "label": "Individual (Retail)",
-        "description": "For personal use"
+        "description": "For personal use",
+        "title": "Personal Information (Retail)"
       },
       "business": {
         "label": "Company (Business)",

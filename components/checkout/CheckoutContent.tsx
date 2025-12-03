@@ -75,14 +75,17 @@ export function CheckoutContent() {
   const { t, locale } = useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const localePrefix = locale === 'en' ? '/en' : '';
   const [step, setStep] = useState<'data' | 'payment' | 'processing'>('data');
   const [checkoutData, setCheckoutData] = useState<CheckoutData | null>(null);
   const [customerData, setCustomerData] = useState<CustomerData>({ email: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const firstNameRef = useRef<HTMLInputElement>(null);
   const companyNameRef = useRef<HTMLInputElement>(null);
+  const paymentButtonRef = useRef<HTMLButtonElement>(null);
   
   // Determina il prefisso della lingua
   const localePrefix = locale === 'en' ? '/en' : '';
@@ -199,12 +202,17 @@ export function CheckoutContent() {
   const handleSubmitData = () => {
     if (validateData()) {
       setStep('payment');
+      // Focus management: focus sul primo elemento del payment step
+      setTimeout(() => {
+        paymentButtonRef.current?.focus();
+      }, 100);
     }
   };
 
   const handlePayment = async () => {
-    if (!checkoutData) return;
+    if (!checkoutData || isSubmitting) return;
 
+    setIsSubmitting(true);
     setLoading(true);
     setStep('processing');
 
@@ -262,7 +270,14 @@ export function CheckoutContent() {
 
   return (
     <div className="min-h-screen bg-bg-base py-12">
-      <div className="container mx-auto px-4 max-w-4xl">
+      {/* Skip to main content link for accessibility */}
+      <a
+        href="#checkout-main"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-accent focus:text-white focus:rounded-lg focus:outline-none focus:ring-2 focus:ring-accent/50"
+      >
+        {t('common.skipToContent') || 'Salta al contenuto principale'}
+      </a>
+      <div className="container mx-auto px-4 max-w-4xl" id="checkout-main">
         <div className="mb-8">
           <Link
             href={`${localePrefix}/pricing`}
@@ -340,6 +355,8 @@ export function CheckoutContent() {
                     customerData={customerData}
                     onPayment={handlePayment}
                     errors={errors}
+                    isSubmitting={isSubmitting}
+                    paymentButtonRef={paymentButtonRef}
                   />
                 </motion.div>
               )}
@@ -469,6 +486,7 @@ function DataCollectionForm({
                 ref={firstNameRef}
                 type="text"
                 autoFocus
+                autoComplete="given-name"
                 value={customerData.firstName || ''}
                 onChange={(e) => setCustomerData({ ...customerData, firstName: e.target.value })}
                 onBlur={() => handleBlur('firstName')}
@@ -491,6 +509,7 @@ function DataCollectionForm({
               <input
                 id="lastName"
                 type="text"
+                autoComplete="family-name"
                 value={customerData.lastName || ''}
                 onChange={(e) => setCustomerData({ ...customerData, lastName: e.target.value })}
                 onBlur={() => handleBlur('lastName')}
@@ -514,6 +533,7 @@ function DataCollectionForm({
             <input
               id="email"
               type="email"
+              autoComplete="email"
               value={customerData.email}
               onChange={(e) => setCustomerData({ ...customerData, email: e.target.value })}
               onBlur={() => handleBlur('email')}
@@ -567,6 +587,7 @@ function DataCollectionForm({
               <input
                 id="taxCode"
                 type="text"
+                autoComplete="off"
                 value={customerData.taxCode || ''}
                 onChange={(e) => setCustomerData({ ...customerData, taxCode: e.target.value.toUpperCase() })}
                 onBlur={() => handleBlur('taxCode')}
@@ -602,6 +623,7 @@ function DataCollectionForm({
               ref={companyNameRef}
               type="text"
               autoFocus
+              autoComplete="organization"
               value={customerData.companyName || ''}
               onChange={(e) => setCustomerData({ ...customerData, companyName: e.target.value })}
               onBlur={() => handleBlur('companyName')}
@@ -624,6 +646,7 @@ function DataCollectionForm({
             <input
               id="vatNumber"
               type="text"
+              autoComplete="off"
               value={customerData.vatNumber || ''}
               onChange={(e) => setCustomerData({ ...customerData, vatNumber: e.target.value.toUpperCase() })}
               onBlur={() => handleBlur('vatNumber')}
@@ -645,6 +668,7 @@ function DataCollectionForm({
             </label>
             <select
               id="companyCountry"
+              autoComplete="country"
               value={customerData.companyCountry || ''}
               onChange={(e) => setCustomerData({ ...customerData, companyCountry: e.target.value })}
               onBlur={() => handleBlur('companyCountry')}
@@ -672,6 +696,7 @@ function DataCollectionForm({
             <input
               id="contactEmail"
               type="email"
+              autoComplete="email"
               value={customerData.contactEmail || ''}
               onChange={(e) => setCustomerData({ ...customerData, contactEmail: e.target.value })}
               onBlur={() => handleBlur('contactEmail')}
@@ -717,11 +742,15 @@ function PaymentForm({
   customerData,
   onPayment,
   errors,
+  isSubmitting,
+  paymentButtonRef,
 }: {
   checkoutData: CheckoutData;
   customerData: CustomerData;
   onPayment: () => void;
   errors: Record<string, string>;
+  isSubmitting: boolean;
+  paymentButtonRef: React.RefObject<HTMLButtonElement>;
 }) {
   const { t } = useTranslations();
 
@@ -758,11 +787,23 @@ function PaymentForm({
       )}
 
       <button
+        ref={paymentButtonRef}
         onClick={onPayment}
-        className="w-full py-3 rounded-xl bg-accent hover:bg-accent-hover text-white font-semibold transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent/50"
+        disabled={isSubmitting}
+        className="w-full py-3 rounded-xl bg-accent hover:bg-accent-hover text-white font-semibold transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent/50 disabled:opacity-50 disabled:cursor-not-allowed"
+        aria-busy={isSubmitting}
       >
-        {t('checkout.payment.proceed') || 'Procedi al Pagamento'}
-        <ArrowRight className="w-4 h-4" />
+        {isSubmitting ? (
+          <>
+            <Loader2 className="w-4 h-4 animate-spin" />
+            {t('checkout.processing') || 'Elaborazione...'}
+          </>
+        ) : (
+          <>
+            {t('checkout.payment.proceed') || 'Procedi al Pagamento'}
+            <ArrowRight className="w-4 h-4" />
+          </>
+        )}
       </button>
     </div>
   );

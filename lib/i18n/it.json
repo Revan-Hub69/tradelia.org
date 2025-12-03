@@ -8,7 +8,8 @@
     "loading": "Caricamento...",
     "error": "Errore",
     "success": "Successo",
-    "sending": "Invio..."
+    "sending": "Invio...",
+    "skipToContent": "Salta al contenuto principale"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -1056,6 +1057,17 @@
     },
     "processing": "Elaborazione pagamento in corso...",
     "data": {
+      "customerType": "Tipo Cliente",
+      "retail": {
+        "label": "Privato (Retail)",
+        "description": "Per uso personale",
+        "title": "Dati Personali (Retail)"
+      },
+      "business": {
+        "label": "Azienda (Business)",
+        "description": "Per uso professionale",
+        "title": "Dati Aziendali"
+      },
       "individual": {
         "title": "Dati Personali",
         "firstName": "Nome",
