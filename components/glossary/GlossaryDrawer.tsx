@@ -206,13 +206,15 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       }
     };
 
-    // Focus sul contenuto scrollabile quando si apre
+    // Focus sul contenuto scrollabile quando si apre (Best Practice: Keyboard Navigation)
     const timer = setTimeout(() => {
       if (contentScrollableRef.current) {
         contentScrollableRef.current.focus();
         contentScrollableRef.current.scrollTop = 0;
+        // Scroll al top per garantire che l'utente veda l'inizio del contenuto
+        contentScrollableRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    }, 100);
+    }, 150);
 
     window.addEventListener('keydown', handleKeyDown);
     
@@ -1185,8 +1187,10 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
             {/* Content - Academic Layout - Leggibilità ottimale con gerarchia visiva */}
             <div 
               ref={contentScrollableRef}
-              tabIndex={-1}
-              className="no-print flex-1 overflow-y-auto overflow-x-hidden p-5 sm:p-6 focus:outline-none bg-bg-surface" 
+              tabIndex={0}
+              role="region"
+              aria-label="Contenuto glossario"
+              className="no-print flex-1 overflow-y-auto overflow-x-hidden p-5 sm:p-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 bg-bg-surface" 
               style={{ 
                 scrollbarWidth: 'thin'
               }}
@@ -1259,7 +1263,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       <h2 id="tradelia-ai-section-title" className="text-lg sm:text-2xl font-bold text-text-primary mb-1.5 sm:mb-2">
                         {t('glossary.drawer.tradeliaAIExplanation') || 'Spiegazione Tradelia AI'}
                       </h2>
-                      <p className="text-xs sm:text-sm text-text-tertiary font-medium">Spiegazione semplice ma esaustiva</p>
+                      <p className="text-xs sm:text-sm text-text-tertiary font-medium">Spiegazione educativa semplice ma completa</p>
                     </div>
                   </div>
                   {/* Sottosezioni - Gerarchia Livello 2 */}
@@ -1289,17 +1293,17 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     {howToUse && (
                       <div className="space-y-4 sm:space-y-4">
                         {/* Sottotitolo - Gerarchia Livello 2 */}
-                        <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4 sm:mb-4 pb-2 border-b border-border-default">Come si usa</h3>
+                        <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4 sm:mb-4 pb-2.5 border-b border-border-default">Come si usa</h3>
                         <div className="max-w-full sm:max-w-3xl space-y-4 sm:space-y-4">
                           {formatTextIntoParagraphs(howToUse).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-[15px] sm:text-[15px] text-text-primary leading-[1.75] sm:leading-[1.7] font-normal tracking-[0.01em]"
+                              className="text-[15px] sm:text-[15px] text-text-primary leading-[1.8] sm:leading-[1.75] font-normal tracking-[0.01em]"
                               style={{ 
                                 maxWidth: '100%', // Mobile: usa tutta la larghezza disponibile
                                 textAlign: 'left', // WCAG 2.2: allineamento sinistra
                                 wordSpacing: '0.05em', // WCAG 2.2: migliora leggibilità
-                                marginBottom: idx < formatTextIntoParagraphs(howToUse).length - 1 ? '1em' : '0' // Spacing ottimale mobile
+                                marginBottom: idx < formatTextIntoParagraphs(howToUse).length - 1 ? '1.25em' : '0' // Spacing ottimale
                               }}
                             >
                               {paragraph}
@@ -1319,12 +1323,12 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                           {formatTextIntoParagraphs(practicalExample).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-[15px] sm:text-[15px] text-text-primary leading-[1.75] sm:leading-[1.7] font-normal tracking-[0.01em]"
+                              className="text-[15px] sm:text-[15px] text-text-primary leading-[1.8] sm:leading-[1.75] font-normal tracking-[0.01em]"
                               style={{ 
                                 maxWidth: '100%', // Mobile: usa tutta la larghezza disponibile
                                 textAlign: 'left', // WCAG 2.2: allineamento sinistra
                                 wordSpacing: '0.05em', // WCAG 2.2: migliora leggibilità
-                                marginBottom: idx < formatTextIntoParagraphs(practicalExample).length - 1 ? '1em' : '0' // Spacing ottimale mobile
+                                marginBottom: idx < formatTextIntoParagraphs(practicalExample).length - 1 ? '1.25em' : '0' // Spacing ottimale
                               }}
                             >
                               {paragraph}
@@ -1344,12 +1348,12 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                           {formatTextIntoParagraphs(commonMistakes).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-[15px] sm:text-[15px] text-text-primary leading-[1.75] sm:leading-[1.7] font-normal tracking-[0.01em]"
+                              className="text-[15px] sm:text-[15px] text-text-primary leading-[1.8] sm:leading-[1.75] font-normal tracking-[0.01em]"
                               style={{ 
                                 maxWidth: '100%', // Mobile: usa tutta la larghezza disponibile
                                 textAlign: 'left', // WCAG 2.2: allineamento sinistra
                                 wordSpacing: '0.05em', // WCAG 2.2: migliora leggibilità
-                                marginBottom: idx < formatTextIntoParagraphs(commonMistakes).length - 1 ? '1em' : '0' // Spacing ottimale mobile
+                                marginBottom: idx < formatTextIntoParagraphs(commonMistakes).length - 1 ? '1.25em' : '0' // Spacing ottimale
                               }}
                             >
                               {paragraph}
@@ -1424,15 +1428,15 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     </div>
                   </div>
                   {/* Lista Riferimenti - Formato Accademico */}
-                  <div className="space-y-4 sm:space-y-5">
+                  <div className="space-y-5 sm:space-y-6">
                     {Array.isArray(academicSource) ? (
                       // Formato strutturato AcademicSource[]
                       academicSource.map((source, index) => (
-                        <div key={index} className="p-4 sm:p-5 bg-bg-soft border-l-2 border-accent/40 rounded-r-md">
-                          <div className="space-y-2">
-                            {/* Citazione principale */}
-                            <p className="text-sm sm:text-[15px] text-text-primary leading-[1.75] font-normal">
-                              {source.author} ({source.year}). <em>{source.title}</em>
+                        <div key={index} className="p-5 sm:p-6 bg-bg-soft border-l-2 border-accent/40 rounded-r-md shadow-sm">
+                          <div className="space-y-3">
+                            {/* Citazione principale - Formato Accademico */}
+                            <p className="text-sm sm:text-[15px] text-text-primary leading-[1.8] font-normal">
+                              <span className="font-semibold">{source.author}</span> ({source.year}). <em className="not-italic font-medium">{source.title}</em>
                               {source.journal && (
                                 <>.
                                   <span className="font-semibold"> {source.journal}</span>
@@ -1514,8 +1518,8 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     ) : (
                       // Formato stringa legacy (compatibilità)
                       typeof academicSource === 'string' && academicSource.split('|').map((source, index) => (
-                        <div key={index} className="p-4 sm:p-5 bg-bg-soft border-l-2 border-accent/40 rounded-r-md">
-                          <p className="text-sm sm:text-[15px] text-text-primary leading-[1.75] font-normal">
+                        <div key={index} className="p-5 sm:p-6 bg-bg-soft border-l-2 border-accent/40 rounded-r-md shadow-sm">
+                          <p className="text-sm sm:text-[15px] text-text-primary leading-[1.8] font-normal">
                             {source.trim()}
                           </p>
                         </div>
