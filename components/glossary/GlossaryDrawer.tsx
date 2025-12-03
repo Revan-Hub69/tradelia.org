@@ -575,8 +575,12 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
   const commonMistakes = term.tradeliaExplanation?.commonMistakes;
 
 
-  // Handle print - create new window with print content
+  // Handle print - check Pro status first
   const handlePrint = async () => {
+    if (!isPro) {
+      setShowProModal(true);
+      return;
+    }
     // Load white label customization if available
     let logoUrl = `${window.location.origin}/logos/tradelia-logo-variant-1-wordmark.svg`;
     let headerText = 'Glossario Finanziario Tradelia';
@@ -1148,11 +1152,16 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                 <div className="print-header-actions flex items-center gap-2 ml-4">
                   <button
                     onClick={handlePrint}
-                    className="w-9 h-9 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                    className="w-9 h-9 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent relative group"
                     aria-label="Stampa definizione"
-                    title="Stampa"
+                    title={isPro ? "Stampa" : "Stampa (Richiede Pro)"}
                   >
                     <Printer className="w-4 h-4" />
+                    {!isPro && (
+                      <span className="absolute -top-1 -right-1 text-[8px] font-bold text-accent leading-none" title="Funzionalità Pro">
+                        PRO
+                      </span>
+                    )}
                   </button>
                   <button
                     ref={closeButtonRef}
@@ -1545,6 +1554,99 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
         </>
       )}
     </AnimatePresence>
+
+      {/* Pro Upgrade Modal */}
+      <AnimatePresence>
+        {showProModal && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowProModal(false)}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[10000]"
+            />
+            
+            {/* Modal */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="fixed inset-0 z-[10001] flex items-center justify-center p-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="bg-bg-surface rounded-xl shadow-2xl border border-border-default max-w-md w-full p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
+                      <Sparkles className="w-6 h-6 text-accent" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-text-primary">
+                        Funzionalità Pro
+                      </h3>
+                      <p className="text-sm text-text-secondary">
+                        Stampa disponibile solo per utenti Pro
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowProModal(false)}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors"
+                    aria-label="Chiudi"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+                
+                <div className="mb-6">
+                  <p className="text-sm text-text-secondary mb-4">
+                    Passa a Pro per sbloccare la funzionalità di stampa e molte altre funzionalità avanzate:
+                  </p>
+                  <ul className="space-y-2 text-sm text-text-secondary">
+                    <li className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-accent flex-shrink-0" />
+                      <span>Stampa definizioni del glossario</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-accent flex-shrink-0" />
+                      <span>Download PDF Report</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-accent flex-shrink-0" />
+                      <span>Portfolio Manager avanzato</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-accent flex-shrink-0" />
+                      <span>Supporto prioritario</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => {
+                      setShowProModal(false);
+                      router.push('/pricing');
+                    }}
+                    className="flex-1 px-4 py-2.5 bg-accent text-white rounded-lg font-medium hover:bg-accent-hover transition-colors flex items-center justify-center gap-2"
+                  >
+                    <span>Passa a Pro</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setShowProModal(false)}
+                    className="px-4 py-2.5 text-text-secondary hover:text-text-primary transition-colors"
+                  >
+                    Annulla
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </React.Fragment>
   );
 }
