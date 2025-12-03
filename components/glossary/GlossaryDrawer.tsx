@@ -1058,8 +1058,8 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               {/* Title Section - Improved Spacing */}
               <div className="flex items-start justify-between px-4 sm:px-6 pb-4 sm:pb-6">
                 <div className="flex items-start gap-3 sm:gap-4 flex-1 min-w-0">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 flex items-center justify-center flex-shrink-0">
-                    <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-bg-soft border border-border-accent flex items-center justify-center flex-shrink-0">
+                    <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-accent" aria-hidden="true" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h2 id="glossary-drawer-title" className="text-lg sm:text-xl font-bold text-text-primary mb-1.5 break-words">
@@ -1102,7 +1102,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     {term.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-2.5 py-1 rounded-md text-xs font-medium bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900/50"
+                        className="px-2.5 py-1 rounded-md text-xs font-medium bg-bg-soft text-accent border border-border-accent"
                       >
                         {tag}
                       </span>
@@ -1176,8 +1176,8 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               {(whatDoes || howToUse || term.technical || term.how) && (
                 <section className="space-y-5" aria-labelledby="tradelia-ai-section-title">
                   <div className="flex items-center gap-4 mb-6 pb-5 border-b border-border-default">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900/50 dark:to-green-800/50 border-2 border-green-300 dark:border-green-700 flex items-center justify-center flex-shrink-0 shadow-md">
-                      <Code className="w-7 h-7 text-green-700 dark:text-green-300" aria-hidden="true" />
+                    <div className="w-14 h-14 rounded-xl bg-bg-soft border border-accent/30 flex items-center justify-center flex-shrink-0 shadow-md">
+                      <Code className="w-7 h-7 text-accent" aria-hidden="true" />
                     </div>
                     <div className="flex-1">
                       <h3 id="tradelia-ai-section-title" className="text-xl font-bold text-text-primary mb-1">
