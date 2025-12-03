@@ -456,10 +456,22 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       '    font-size: 11pt;',
       '    line-height: 1.75;',
       '    color: #1e293b;',
-      '    text-align: justify;',
+      '    text-align: left;',
       '    margin-top: 0.3cm;',
       '    margin-bottom: 0;',
       '    padding: 0;',
+      '  }',
+      '  .print-paragraph {',
+      '    margin-bottom: 0.5cm;',
+      '    margin-top: 0;',
+      '    padding: 0;',
+      '    text-align: left;',
+      '    max-width: 100%;',
+      '    word-spacing: 0.05em;',
+      '    letter-spacing: 0.01em;',
+      '  }',
+      '  .print-paragraph:last-child {',
+      '    margin-bottom: 0;',
       '  }',
       '  .print-sources {',
       '    margin-top: 1.2cm;',
@@ -714,9 +726,21 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       font-size: 11pt;
       line-height: 1.75;
       color: #1e293b;
-      text-align: justify;
+      text-align: left;
       margin-top: 0.3cm;
-      white-space: pre-line;
+      white-space: normal;
+    }
+    .print-paragraph {
+      margin-bottom: 0.5cm;
+      margin-top: 0;
+      padding: 0;
+      text-align: left;
+      max-width: 100%;
+      word-spacing: 0.05em;
+      letter-spacing: 0.01em;
+    }
+    .print-paragraph:last-child {
+      margin-bottom: 0;
     }
     .print-sources {
       margin-top: 1.2cm;
@@ -781,7 +805,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
 
     <section class="print-section">
       <h2 class="print-section-title">Definizione Accademica</h2>
-      <div class="print-section-content">${academicWhat}</div>
+      <div class="print-section-content">${formatTextIntoParagraphs(academicWhat || '').map(p => `<p class="print-paragraph">${p}</p>`).join('')}</div>
     </section>
 
     ${(whatDoes || howToUse || term.technical || term.how) ? `
@@ -790,25 +814,25 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
         ${whatDoes ? `
           <div style="margin-bottom: 0.8cm;">
             <h3 style="font-size: 13pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">Cosa fa</h3>
-            <div class="print-section-content">${whatDoes}</div>
+            <div class="print-section-content">${formatTextIntoParagraphs(whatDoes || '').map(p => `<p class="print-paragraph">${p}</p>`).join('')}</div>
           </div>
         ` : ''}
         ${howToUse ? `
           <div style="margin-bottom: 0.8cm;">
             <h3 style="font-size: 13pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">Come si usa</h3>
-            <div class="print-section-content">${howToUse}</div>
+            <div class="print-section-content">${formatTextIntoParagraphs(howToUse || '').map(p => `<p class="print-paragraph">${p}</p>`).join('')}</div>
           </div>
         ` : ''}
         ${practicalExample ? `
           <div style="margin-bottom: 0.8cm; padding: 0.5cm; background-color: #f9fafb; border-left: 3px solid #3b82f6; border-radius: 4px;">
             <h3 style="font-size: 12pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">Esempio Pratico</h3>
-            <div class="print-section-content" style="font-size: 10pt;">${practicalExample}</div>
+            <div class="print-section-content" style="font-size: 10pt;">${formatTextIntoParagraphs(practicalExample || '').map(p => `<p class="print-paragraph">${p}</p>`).join('')}</div>
           </div>
         ` : ''}
         ${commonMistakes ? `
           <div style="margin-bottom: 0.8cm; padding: 0.5cm; background-color: #fef2f2; border-left: 3px solid #ef4444; border-radius: 4px;">
             <h3 style="font-size: 12pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">Errori Comuni da Evitare</h3>
-            <div class="print-section-content" style="font-size: 10pt;">${commonMistakes}</div>
+            <div class="print-section-content" style="font-size: 10pt;">${formatTextIntoParagraphs(commonMistakes || '').map(p => `<p class="print-paragraph">${p}</p>`).join('')}</div>
           </div>
         ` : ''}
         ${!whatDoes && !howToUse && (term.technical || term.how) ? `
@@ -1135,14 +1159,16 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                 </div>
                 <div className="max-w-3xl">
                   {/* Paragrafi formattati per leggibilità ottimale - Estremo contrasto */}
-                  <div className="space-y-4">
+                  <div className="space-y-5">
                     {formatTextIntoParagraphs(academicWhat).map((paragraph, idx) => (
                       <p 
                         key={idx}
-                        className="text-base text-text-primary leading-[1.8] font-normal"
+                        className="text-[16px] text-text-primary leading-[1.75] font-normal tracking-[0.01em]"
                         style={{ 
                           maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
-                          textAlign: 'left' // WCAG 2.2: allineamento sinistra raccomandato
+                          textAlign: 'left', // WCAG 2.2: allineamento sinistra raccomandato
+                          wordSpacing: '0.05em', // WCAG 2.2: migliora leggibilità
+                          marginBottom: idx < formatTextIntoParagraphs(academicWhat).length - 1 ? '1.25em' : '0' // Spacing ottimale tra paragrafi (1.25em = 20px a 16px)
                         }}
                       >
                         {paragraph}
@@ -1189,16 +1215,16 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     {whatDoes && (
                       <div className="space-y-4">
                         <h4 className="text-lg font-bold text-text-primary mb-4">Cosa fa</h4>
-                        <div className="max-w-3xl space-y-4">
+                        <div className="max-w-3xl space-y-5">
                           {formatTextIntoParagraphs(whatDoes).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-base text-text-primary leading-[1.8] font-normal tracking-normal"
+                              className="text-[16px] text-text-primary leading-[1.75] font-normal tracking-[0.01em]"
                               style={{ 
                                 maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
                                 textAlign: 'left', // WCAG 2.2: allineamento sinistra
                                 wordSpacing: '0.05em', // WCAG 2.2: migliora leggibilità
-                                letterSpacing: '0.01em' // WCAG 2.2: leggibilità ottimale
+                                marginBottom: idx < formatTextIntoParagraphs(whatDoes).length - 1 ? '1.25em' : '0' // Spacing ottimale tra paragrafi
                               }}
                             >
                               {paragraph}
@@ -1210,16 +1236,16 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     {howToUse && (
                       <div className="space-y-4">
                         <h4 className="text-lg font-bold text-text-primary mb-4">Come si usa</h4>
-                        <div className="max-w-3xl space-y-4">
+                        <div className="max-w-3xl space-y-5">
                           {formatTextIntoParagraphs(howToUse).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-base text-text-primary leading-[1.8] font-normal tracking-normal"
+                              className="text-[16px] text-text-primary leading-[1.75] font-normal tracking-[0.01em]"
                               style={{ 
                                 maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
                                 textAlign: 'left', // WCAG 2.2: allineamento sinistra
                                 wordSpacing: '0.05em', // WCAG 2.2: migliora leggibilità
-                                letterSpacing: '0.01em' // WCAG 2.2: leggibilità ottimale
+                                marginBottom: idx < formatTextIntoParagraphs(howToUse).length - 1 ? '1.25em' : '0' // Spacing ottimale tra paragrafi
                               }}
                             >
                               {paragraph}
@@ -1234,16 +1260,16 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                           <Sparkles className="w-5 h-5 text-accent" />
                           Esempio Pratico
                         </h4>
-                        <div className="max-w-3xl space-y-4">
+                        <div className="max-w-3xl space-y-5">
                           {formatTextIntoParagraphs(practicalExample).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-base text-text-primary leading-[1.8] font-normal tracking-normal"
+                              className="text-[16px] text-text-primary leading-[1.75] font-normal tracking-[0.01em]"
                               style={{ 
                                 maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
                                 textAlign: 'left', // WCAG 2.2: allineamento sinistra
                                 wordSpacing: '0.05em', // WCAG 2.2: migliora leggibilità
-                                letterSpacing: '0.01em' // WCAG 2.2: leggibilità ottimale
+                                marginBottom: idx < formatTextIntoParagraphs(practicalExample).length - 1 ? '1.25em' : '0' // Spacing ottimale tra paragrafi
                               }}
                             >
                               {paragraph}
@@ -1258,16 +1284,16 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                           <FileText className="w-5 h-5 text-error" />
                           Errori Comuni da Evitare
                         </h4>
-                        <div className="max-w-3xl space-y-4">
+                        <div className="max-w-3xl space-y-5">
                           {formatTextIntoParagraphs(commonMistakes).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-base text-text-primary leading-[1.8] font-normal tracking-normal"
+                              className="text-[16px] text-text-primary leading-[1.75] font-normal tracking-[0.01em]"
                               style={{ 
                                 maxWidth: '65ch', // WCAG 2.2: 45-75 caratteri ottimale
                                 textAlign: 'left', // WCAG 2.2: allineamento sinistra
                                 wordSpacing: '0.05em', // WCAG 2.2: migliora leggibilità
-                                letterSpacing: '0.01em' // WCAG 2.2: leggibilità ottimale
+                                marginBottom: idx < formatTextIntoParagraphs(commonMistakes).length - 1 ? '1.25em' : '0' // Spacing ottimale tra paragrafi
                               }}
                             >
                               {paragraph}
