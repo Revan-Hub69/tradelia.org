@@ -1135,31 +1135,34 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                 </div>
               )}
             </div>
-            {/* Content - Academic Layout - Leggibilità ottimale */}
+            {/* Content - Academic Layout - Leggibilità ottimale con gerarchia visiva */}
             <div 
               ref={contentScrollableRef}
               tabIndex={-1}
-              className="no-print flex-1 overflow-y-auto overflow-x-hidden p-5 sm:p-5 space-y-6 sm:space-y-6 focus:outline-none bg-bg-surface" 
+              className="no-print flex-1 overflow-y-auto overflow-x-hidden p-5 sm:p-6 focus:outline-none bg-bg-surface" 
               style={{ 
                 scrollbarWidth: 'thin'
               }}
             >
               {/* Spiegazione Accademica - Academic Style */}
-              <section className="space-y-5" aria-labelledby="academic-section-title">
-                <div className="flex items-center gap-3 sm:gap-3 mb-4 sm:mb-4 pb-3 sm:pb-3 border-b border-border-default">
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-bg-soft border border-border-accent flex items-center justify-center flex-shrink-0">
-                    <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-accent" aria-hidden="true" />
+              {/* Sezione Principale - Definizione Accademica */}
+              <section className="mb-8 sm:mb-10" aria-labelledby="academic-section-title">
+                {/* Header Sezione - Gerarchia Livello 1 */}
+                <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-7 pb-4 sm:pb-5 border-b-2 border-border-strong">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-bg-soft border-2 border-accent/40 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <GraduationCap className="w-6 h-6 sm:w-7 sm:h-7 text-accent" aria-hidden="true" />
                   </div>
                   <div className="flex-1">
-                    <h3 id="academic-section-title" className="text-base sm:text-xl font-bold text-text-primary mb-0.5">
+                    <h2 id="academic-section-title" className="text-lg sm:text-2xl font-bold text-text-primary mb-1.5 sm:mb-2">
                       {t('glossary.drawer.academicExplanation') || 'Definizione Accademica'}
-                    </h3>
-                    <p className="text-xs text-text-tertiary font-medium">Academic Definition</p>
+                    </h2>
+                    <p className="text-xs sm:text-sm text-text-tertiary font-medium">Definizione precisa e verificata</p>
                   </div>
                 </div>
+                {/* Contenuto Sezione */}
                 <div className="max-w-full sm:max-w-3xl">
                   {/* Paragrafi formattati per leggibilità ottimale */}
-                  <div className="space-y-4 sm:space-y-4">
+                  <div className="space-y-5 sm:space-y-5">
                     {formatTextIntoParagraphs(academicWhat).map((paragraph, idx) => (
                       <p 
                         key={idx}
@@ -1176,7 +1179,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     ))}
                   </div>
                   {term.academicDefinition?.academicContext && (
-                    <div className="mt-5 sm:mt-4 p-4 sm:p-4 bg-bg-soft border-l border-border-accent rounded-r-md">
+                    <div className="mt-6 sm:mt-6 p-5 sm:p-5 bg-bg-soft border-l-2 border-accent/40 rounded-r-md">
                       <p className="text-sm sm:text-sm text-text-secondary italic leading-[1.75] sm:leading-[1.7] font-normal max-w-full sm:max-w-[60ch]">
                         {(() => {
                           const paragraphs = formatTextIntoParagraphs(term.academicDefinition?.academicContext || '');
@@ -1197,25 +1200,28 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                 </div>
               </section>
 
-              {/* Spiegazione Tradelia AI - Cosa fa e Come si usa */}
+              {/* Sezione Principale - Spiegazione Tradelia AI */}
               {(whatDoes || howToUse || term.technical || term.how) && (
-                <section className="space-y-5" aria-labelledby="tradelia-ai-section-title">
-                  <div className="flex items-center gap-3 sm:gap-3 mb-4 sm:mb-4 pb-3 sm:pb-3 border-b border-border-default">
-                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-bg-soft border border-accent/30 flex items-center justify-center flex-shrink-0">
-                      <Code className="w-5 h-5 sm:w-6 sm:h-6 text-accent" aria-hidden="true" />
+                <section className="mb-8 sm:mb-10" aria-labelledby="tradelia-ai-section-title">
+                  {/* Header Sezione - Gerarchia Livello 1 */}
+                  <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-7 pb-4 sm:pb-5 border-b-2 border-border-strong">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-bg-soft border-2 border-accent/40 flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <Code className="w-6 h-6 sm:w-7 sm:h-7 text-accent" aria-hidden="true" />
                     </div>
                     <div className="flex-1">
-                      <h3 id="tradelia-ai-section-title" className="text-base sm:text-xl font-bold text-text-primary mb-0.5">
+                      <h2 id="tradelia-ai-section-title" className="text-lg sm:text-2xl font-bold text-text-primary mb-1.5 sm:mb-2">
                         {t('glossary.drawer.tradeliaAIExplanation') || 'Spiegazione Tradelia AI'}
-                      </h3>
-                      <p className="text-xs text-text-tertiary font-medium">Spiegazione semplice ma esaustiva</p>
+                      </h2>
+                      <p className="text-xs sm:text-sm text-text-tertiary font-medium">Spiegazione semplice ma esaustiva</p>
                     </div>
                   </div>
-                  <div className="space-y-7">
+                  {/* Sottosezioni - Gerarchia Livello 2 */}
+                  <div className="space-y-8 sm:space-y-8">
                     {whatDoes && (
-                      <div className="space-y-3">
-                        <h4 className="text-base sm:text-lg font-bold text-text-primary mb-3">Cosa fa</h4>
-                        <div className="max-w-3xl space-y-3 sm:space-y-4">
+                      <div className="space-y-4 sm:space-y-4">
+                        {/* Sottotitolo - Gerarchia Livello 2 */}
+                        <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4 sm:mb-4 pb-2 border-b border-border-default">Cosa fa</h3>
+                        <div className="max-w-full sm:max-w-3xl space-y-4 sm:space-y-4">
                           {formatTextIntoParagraphs(whatDoes).map((paragraph, idx) => (
                             <p 
                               key={idx}
@@ -1234,8 +1240,9 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       </div>
                     )}
                     {howToUse && (
-                      <div className="space-y-4 sm:space-y-3">
-                        <h4 className="text-base sm:text-lg font-bold text-text-primary mb-3 sm:mb-3">Come si usa</h4>
+                      <div className="space-y-4 sm:space-y-4">
+                        {/* Sottotitolo - Gerarchia Livello 2 */}
+                        <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4 sm:mb-4 pb-2 border-b border-border-default">Come si usa</h3>
                         <div className="max-w-full sm:max-w-3xl space-y-4 sm:space-y-4">
                           {formatTextIntoParagraphs(howToUse).map((paragraph, idx) => (
                             <p 
@@ -1255,11 +1262,12 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       </div>
                     )}
                     {practicalExample && (
-                      <div className="space-y-4 sm:space-y-3 p-4 sm:p-4 bg-bg-soft border-l border-accent/30 rounded-r-md">
-                        <h4 className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-2 mb-3 sm:mb-2.5">
-                          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
+                      <div className="space-y-4 sm:space-y-4 p-5 sm:p-5 bg-bg-soft border-l-2 border-accent/40 rounded-r-md">
+                        {/* Sottotitolo Card - Gerarchia Livello 2 */}
+                        <h3 className="text-base sm:text-lg font-semibold text-text-primary flex items-center gap-2.5 mb-4 sm:mb-4">
+                          <Sparkles className="w-5 h-5 sm:w-5 sm:h-5 text-accent" />
                           Esempio Pratico
-                        </h4>
+                        </h3>
                         <div className="max-w-full sm:max-w-3xl space-y-4 sm:space-y-4">
                           {formatTextIntoParagraphs(practicalExample).map((paragraph, idx) => (
                             <p 
@@ -1279,11 +1287,12 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       </div>
                     )}
                     {commonMistakes && (
-                      <div className="space-y-4 sm:space-y-3 p-4 sm:p-4 bg-bg-soft border-l border-error/30 rounded-r-md">
-                        <h4 className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-2 mb-3 sm:mb-2.5">
-                          <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-error" />
+                      <div className="space-y-4 sm:space-y-4 p-5 sm:p-5 bg-bg-soft border-l-2 border-error/40 rounded-r-md">
+                        {/* Sottotitolo Card - Gerarchia Livello 2 */}
+                        <h3 className="text-base sm:text-lg font-semibold text-text-primary flex items-center gap-2.5 mb-4 sm:mb-4">
+                          <FileText className="w-5 h-5 sm:w-5 sm:h-5 text-error" />
                           Errori Comuni da Evitare
-                        </h4>
+                        </h3>
                         <div className="max-w-full sm:max-w-3xl space-y-4 sm:space-y-4">
                           {formatTextIntoParagraphs(commonMistakes).map((paragraph, idx) => (
                             <p 
