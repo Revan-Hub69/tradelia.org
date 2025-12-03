@@ -23,9 +23,7 @@ import { cn } from '@/lib/utils/cn';
 import { getGlossaryTerm } from '@/lib/glossary/terms';
 import type { GlossaryTerm as GlossaryTermType } from '@/lib/glossary/terms';
 import { formatTextIntoParagraphs } from '@/lib/glossary/text-formatter';
-import type { AcademicSource, TradeliaGlossaryCategory } from '@/lib/glossary/tradelia-glossary-structure';
-import { TRADELIA_GLOSSARY_CATEGORIES, getTradeliaCategoryData } from '@/lib/glossary/tradelia-glossary-structure';
-import { getCategoryDisplayName, type GlossaryCategory } from '@/lib/glossary/categories';
+import type { AcademicSource } from '@/lib/glossary/tradelia-glossary-structure';
 import Image from 'next/image';
 
 interface GlossaryTerm {
@@ -569,28 +567,6 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
   const practicalExample = term.tradeliaExplanation?.practicalExample;
   const commonMistakes = term.tradeliaExplanation?.commonMistakes;
 
-  // Normalizza categoria per display (Best Practice: mostra displayName invece di key)
-  const getCategoryDisplayNameLocal = (category: string | undefined): string | null => {
-    if (!category) return null;
-    
-    // Se è una chiave Tradelia, usa displayName
-    if (category in TRADELIA_GLOSSARY_CATEGORIES) {
-      return TRADELIA_GLOSSARY_CATEGORIES[category as TradeliaGlossaryCategory].displayName;
-    }
-    
-    // Se è già un displayName Tradelia, ritorna quello
-    const tradeliaCat = Object.values(TRADELIA_GLOSSARY_CATEGORIES).find(
-      c => c.displayName === category
-    );
-    if (tradeliaCat) {
-      return tradeliaCat.displayName;
-    }
-    
-    // Altrimenti usa funzione legacy
-    return getCategoryDisplayName(category as GlossaryCategory);
-  };
-
-  const categoryDisplayName = getCategoryDisplayNameLocal(term.category);
 
   // Handle print - create new window with print content
   const handlePrint = async () => {
@@ -823,7 +799,6 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     <h1 class="print-title">${term.title}</h1>
     
     <div class="print-meta">
-      ${categoryDisplayName ? `<div style="margin-bottom: 0.25cm;"><strong>Categoria:</strong> ${categoryDisplayName}</div>` : ''}
       ${term.tags && term.tags.length > 0 ? `
         <div class="print-tags">
           ${term.tags.map(tag => `<span class="print-tag">#${tag}</span>`).join('')}

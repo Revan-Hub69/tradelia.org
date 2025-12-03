@@ -6,8 +6,8 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import { loadGlossaryTerms, type GlossaryTerm } from '@/lib/glossary/terms';
-import { getGlossaryCategories, getGlossaryTags, getCategoryDisplayName, getTagDisplayName, type GlossaryCategory, type GlossaryTag } from '@/lib/glossary/categories';
-import { TRADELIA_GLOSSARY_CATEGORIES, TRADELIA_GLOSSARY_TAGS, type TradeliaGlossaryCategory, type TradeliaGlossaryTag } from '@/lib/glossary/tradelia-glossary-structure';
+import { getGlossaryTags, getTagDisplayName, type GlossaryTag } from '@/lib/glossary/categories';
+import { TRADELIA_GLOSSARY_TAGS, type TradeliaGlossaryTag } from '@/lib/glossary/tradelia-glossary-structure';
 import { getTermOfTheDay, formatTermDate } from '@/lib/glossary/term-of-the-day';
 import { GlossaryDrawer } from './GlossaryDrawer';
 
@@ -59,18 +59,6 @@ export function GlossaryContent() {
     });
   }, []);
 
-  // Get all categories (both old and Tradelia)
-  // Best Practice: mostra solo categorie che hanno effettivamente termini
-  const oldCategories = getGlossaryCategories();
-  const tradeliaCategories = Object.keys(TRADELIA_GLOSSARY_CATEGORIES) as TradeliaGlossaryCategory[];
-  
-  // Combina vecchie e Tradelia, ma filtra solo quelle con termini effettivi
-  const allCategories = [...oldCategories, ...tradeliaCategories].filter(cat => {
-    // Normalizza per matching
-    const normalized = normalizeCategory(cat);
-    return normalized && usedCategoriesSet.has(normalized);
-  });
-  
   const terms = Object.entries(glossaryData).map(([key, term]) => ({ key, ...term }));
 
   // Helper function per matching tag più robusto
@@ -82,40 +70,6 @@ export function GlossaryContent() {
       }
       return tagItem === tag;
     });
-  };
-
-  // Helper function per matching categoria più robusto
-  const normalizeCategory = (cat: GlossaryCategory | TradeliaGlossaryCategory | string | undefined): string | null => {
-    if (!cat) return null;
-    if (cat === 'all') return 'all';
-    
-    // Se è già una chiave Tradelia, ritorna quella
-    if (cat in TRADELIA_GLOSSARY_CATEGORIES) {
-      return cat as string;
-    }
-    
-    // Se è un displayName Tradelia, trova la chiave
-    const tradeliaCat = Object.values(TRADELIA_GLOSSARY_CATEGORIES).find(
-      c => c.displayName === cat
-    );
-    if (tradeliaCat) {
-      return tradeliaCat.key;
-    }
-    
-    // Altrimenti ritorna come stringa (categoria vecchia)
-    return cat as string;
-  };
-
-  // Helper function per matching categoria più robusto
-  const matchesCategory = (term: GlossaryTermWithKey, category: GlossaryCategory | TradeliaGlossaryCategory | 'all'): boolean => {
-    if (category === 'all') return true;
-    
-    const normalizedCategory = normalizeCategory(category);
-    const normalizedTermCategory = normalizeCategory(term.category);
-    
-    if (!normalizedCategory || !normalizedTermCategory) return false;
-    
-    return normalizedCategory === normalizedTermCategory;
   };
 
   // Helper function per ricerca più completa
@@ -193,10 +147,9 @@ export function GlossaryContent() {
   const filteredTerms = useMemo(() => {
     return terms.filter((term) => {
       return matchesSearch(term, searchTerm) &&
-             matchesCategory(term, selectedCategory) &&
              (selectedTags.length === 0 || selectedTags.some(tag => matchesTag(term, tag)));
     });
-  }, [searchTerm, selectedCategory, selectedTags, terms]);
+  }, [searchTerm, selectedTags, terms]);
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
@@ -276,7 +229,7 @@ export function GlossaryContent() {
   // Reset focus index when filters change
   useEffect(() => {
     setFocusedIndex(-1);
-  }, [searchTerm, selectedCategory, selectedTags]);
+  }, [searchTerm, selectedTags]);
 
   if (loading) {
     return (
@@ -395,9 +348,9 @@ export function GlossaryContent() {
                   {termOfTheDay.category && (
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-accent/20 border border-accent/30 rounded text-xs font-medium text-accent">
                       <Layers className="w-3 h-3" />
-                      {termOfTheDay.category in TRADELIA_GLOSSARY_CATEGORIES
-                        ? TRADELIA_GLOSSARY_CATEGORIES[termOfTheDay.category as TradeliaGlossaryCategory].displayName
-                        : getCategoryDisplayName(termOfTheDay.category as GlossaryCategory)}
+                      {termOfTheDay.tags && termOfTheDay.tags.length > 0 
+                        ? termOfTheDay.tags.slice(0, 2).map(tag => getTagDisplayName(tag as GlossaryTag)).join(', ')
+                        : 'Glossario'}
                     </span>
                   )}
                 </div>
@@ -559,11 +512,10 @@ export function GlossaryContent() {
               {filteredTerms.length} {filteredTerms.length === 1 ? 'termine disponibile' : 'termini disponibili'}
             </span>
           )}
-          {(searchTerm || selectedCategory !== 'all' || selectedTags.length > 0) && filteredTerms.length > 0 && (
+          {(searchTerm || selectedTags.length > 0) && filteredTerms.length > 0 && (
             <button
               onClick={() => {
                 setSearchTerm('');
-                setSelectedCategory('all');
                 setSelectedTags([]);
               }}
               className="text-xs text-accent hover:text-accent-hover underline"
@@ -584,11 +536,10 @@ export function GlossaryContent() {
               <p className="text-xs text-text-tertiary">
                 Prova a modificare i filtri o la ricerca per trovare altri termini
               </p>
-              {(searchTerm || selectedCategory !== 'all' || selectedTags.length > 0) && (
+              {(searchTerm || selectedTags.length > 0) && (
                 <button
                   onClick={() => {
                     setSearchTerm('');
-                    setSelectedCategory('all');
                     setSelectedTags([]);
                   }}
                   className="mt-3 px-4 py-2 text-sm font-medium text-accent hover:text-accent-hover underline"
