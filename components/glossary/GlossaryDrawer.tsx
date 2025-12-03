@@ -1111,12 +1111,15 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                 </div>
               )}
             </div>
-            {/* Content - Academic Layout */}
+            {/* Content - Academic Layout - Estremo contrasto per leggibilità */}
             <div 
               ref={contentScrollableRef}
               tabIndex={-1}
-              className="no-print flex-1 overflow-y-auto overflow-x-hidden p-6 space-y-8 focus:outline-none" 
-              style={{ scrollbarWidth: 'thin' }}
+              className="no-print flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 space-y-6 sm:space-y-8 focus:outline-none bg-white dark:bg-gray-900" 
+              style={{ 
+                scrollbarWidth: 'thin',
+                fontFamily: "'Helvetica', 'Arial', sans-serif" // Font ottimale per leggibilità
+              }}
             >
               {/* Spiegazione Accademica - Academic Style */}
               <section className="space-y-5" aria-labelledby="academic-section-title">
