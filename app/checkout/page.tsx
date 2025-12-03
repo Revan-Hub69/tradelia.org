@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function CheckoutPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Caricamento...</div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loading /></div>}>
       <CheckoutContent />
     </Suspense>
   );

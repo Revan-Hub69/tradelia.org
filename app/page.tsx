@@ -9,7 +9,7 @@ import { generateMetadata as genMetadata } from '@/lib/seo/metadata';
 // Rendering it via dynamic import with ssr: false avoids parsing the client
 // component during the server build phase on Render (fixes JSX parse error).
 const Methods = dynamic(() => import('@/components/home/Methods').then((m) => ({ default: m.Methods })), {
-  loading: () => <Loading className="min-h-[400px]" text="Caricamento contenuti..." />,
+  loading: () => <Loading className="min-h-[400px]" />,
   ssr: false,
 });
 

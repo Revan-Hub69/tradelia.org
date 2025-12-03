@@ -3,6 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { AlertTriangle, RefreshCw, Home, ArrowLeft } from 'lucide-react';
+import { useTranslations } from '@/lib/i18n/use-translations';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -28,12 +29,13 @@ function ErrorUI({
   resetError: () => void;
 }) {
   const router = useRouter();
+  const { t, locale } = useTranslations();
 
   const handleGoBack = () => {
     if (typeof window !== 'undefined' && window.history.length > 1) {
       router.back();
     } else {
-      router.push('/');
+      router.push(locale === 'en' ? '/en' : '/');
     }
   };
 
@@ -41,19 +43,21 @@ function ErrorUI({
     <div className="min-h-screen flex items-center justify-center bg-bg-base p-4">
       <div className="max-w-2xl w-full bg-bg-surface border border-border-default rounded-lg p-6 space-y-4 shadow-lg">
         <div className="flex items-center gap-3 text-red-400">
-          <AlertTriangle className="w-6 h-6" />
-          <h1 className="text-xl font-bold text-text-primary">Qualcosa è andato storto</h1>
+          <AlertTriangle className="w-6 h-6" aria-hidden="true" />
+          <h1 className="text-xl font-bold text-text-primary">
+            {t('error.title') || 'Something went wrong'}
+          </h1>
         </div>
         
         <p className="text-text-secondary">
-          Si è verificato un errore imprevisto. Puoi provare a:
+          {t('error.description') || 'An unexpected error occurred. You can try:'}
         </p>
 
         <ul className="list-disc list-inside text-text-secondary space-y-2 ml-4">
-          <li>Riprovare l&apos;operazione</li>
-          <li>Tornare alla pagina precedente</li>
-          <li>Ricaricare la pagina</li>
-          <li>Tornare alla home</li>
+          <li>{t('error.actions.retry') || 'Retry the operation'}</li>
+          <li>{t('error.actions.goBack') || 'Go back to the previous page'}</li>
+          <li>{t('error.actions.reload') || 'Reload the page'}</li>
+          <li>{t('error.actions.goHome') || 'Go to home'}</li>
         </ul>
 
         {process.env.NODE_ENV === 'development' && error && (
@@ -83,16 +87,18 @@ function ErrorUI({
           <button
             onClick={resetError}
             className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors font-medium"
+            aria-label={t('error.actions.retry') || 'Retry'}
           >
-            <RefreshCw className="w-4 h-4" />
-            Riprova
+            <RefreshCw className="w-4 h-4" aria-hidden="true" />
+            {t('error.actions.retry') || 'Retry'}
           </button>
           <button
             onClick={handleGoBack}
             className="flex items-center gap-2 px-4 py-2 bg-bg-soft hover:bg-bg-hover text-text-primary border border-border-default rounded-lg transition-colors"
+            aria-label={t('error.actions.goBack') || 'Go back'}
           >
-            <ArrowLeft className="w-4 h-4" />
-            Torna Indietro
+            <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+            {t('error.actions.goBack') || 'Go Back'}
           </button>
           <button
             onClick={() => {
@@ -101,15 +107,17 @@ function ErrorUI({
               }
             }}
             className="px-4 py-2 bg-bg-soft hover:bg-bg-hover text-text-primary border border-border-default rounded-lg transition-colors"
+            aria-label={t('error.actions.reload') || 'Reload page'}
           >
-            Ricarica Pagina
+            {t('error.actions.reload') || 'Reload Page'}
           </button>
           <button
-            onClick={() => router.push('/')}
+            onClick={() => router.push(locale === 'en' ? '/en' : '/')}
             className="flex items-center gap-2 px-4 py-2 bg-bg-soft hover:bg-bg-hover text-text-primary border border-border-default rounded-lg transition-colors"
+            aria-label={t('error.actions.goHome') || 'Go to home'}
           >
-            <Home className="w-4 h-4" />
-            Torna alla Home
+            <Home className="w-4 h-4" aria-hidden="true" />
+            {t('error.actions.goHome') || 'Go to Home'}
           </button>
         </div>
       </div>
