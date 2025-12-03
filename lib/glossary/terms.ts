@@ -254,16 +254,16 @@ function normalizeTradeliaTerm(key: string, term: TradeliaGlossaryTerm): Glossar
 function normalizeOldTerm(key: string, term: Record<string, unknown>): GlossaryTerm {
   return {
     id: key,
-    title: term.title,
-    what: term.what,
-    source: term.source,
-    whatDoes: term.whatDoes || term.technical,
-    howToUse: term.howToUse || term.how,
-    technical: term.technical,
-    how: term.how,
-    relatedTerms: term.relatedTerms,
-    category: term.category,
-    tags: term.tags,
+    title: term.title as string,
+    what: term.what as string,
+    source: term.source as string,
+    whatDoes: (term.whatDoes || term.technical) as string | undefined,
+    howToUse: (term.howToUse || term.how) as string | undefined,
+    technical: term.technical as string | undefined,
+    how: term.how as string | undefined,
+    relatedTerms: term.relatedTerms as string[] | undefined,
+    category: term.category as string | undefined,
+    tags: term.tags as string[] | undefined,
   };
 }
 
@@ -271,11 +271,15 @@ function normalizeOldTerm(key: string, term: Record<string, unknown>): GlossaryT
  * Verifica se un termine è nella nuova struttura Tradelia
  */
 function isTradeliaTerm(term: unknown): term is TradeliaGlossaryTerm {
+  if (typeof term !== "object" || term === null) {
+    return false;
+  }
+  const t = term as Record<string, unknown>;
   return (
-    term.academicDefinition !== undefined &&
-    term.tradeliaExplanation !== undefined &&
-    typeof term.academicDefinition === "object" &&
-    typeof term.tradeliaExplanation === "object"
+    t.academicDefinition !== undefined &&
+    t.tradeliaExplanation !== undefined &&
+    typeof t.academicDefinition === "object" &&
+    typeof t.tradeliaExplanation === "object"
   );
 }
 
