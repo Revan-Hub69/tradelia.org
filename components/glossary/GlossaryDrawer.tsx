@@ -1200,12 +1200,12 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               {/* Spiegazione Tradelia AI - Cosa fa e Come si usa */}
               {(whatDoes || howToUse || term.technical || term.how) && (
                 <section className="space-y-5" aria-labelledby="tradelia-ai-section-title">
-                  <div className="flex items-center gap-4 mb-6 pb-5 border-b border-border-default">
-                    <div className="w-14 h-14 rounded-xl bg-bg-soft border border-accent/30 flex items-center justify-center flex-shrink-0 shadow-md">
-                      <Code className="w-7 h-7 text-accent" aria-hidden="true" />
+                  <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border-default">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-bg-soft border border-accent/30 flex items-center justify-center flex-shrink-0">
+                      <Code className="w-5 h-5 sm:w-6 sm:h-6 text-accent" aria-hidden="true" />
                     </div>
                     <div className="flex-1">
-                      <h3 id="tradelia-ai-section-title" className="text-xl font-bold text-text-primary mb-1">
+                      <h3 id="tradelia-ai-section-title" className="text-lg sm:text-xl font-bold text-text-primary mb-0.5">
                         {t('glossary.drawer.tradeliaAIExplanation') || 'Spiegazione Tradelia AI'}
                       </h3>
                       <p className="text-xs text-text-tertiary font-medium">Spiegazione semplice ma esaustiva</p>
