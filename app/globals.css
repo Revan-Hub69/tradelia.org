@@ -170,51 +170,36 @@
     }
   }
 
-  /* Custom Scrollbar - Elegant & Academic - Enhanced visibility for Opera */
+  /* Custom Scrollbar - Enhanced Visibility - Unified across site */
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.08);
+  }
+
+  /* Webkit (Chrome, Safari, Edge) */
   ::-webkit-scrollbar {
-    width: 14px;
-    height: 14px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--bg-base);
-    border-left: 1px solid var(--border-default);
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--bg-surface);
-    border: 2px solid var(--bg-base);
-    border-radius: 7px;
-    transition: all 0.3s ease;
-    /* Enhanced visibility for Opera */
-    min-height: 40px;
-    box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--bg-elevated);
-    border-color: var(--border-accent);
-    box-shadow:
-      0 0 8px rgba(99, 102, 241, 0.4),
-      inset 0 0 2px rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.3);
   }
 
   ::-webkit-scrollbar-thumb:active {
-    background: var(--accent);
-    border-color: var(--accent);
-    box-shadow: 0 0 12px rgba(30, 64, 175, 0.5);
-  }
-
-  /* Firefox Scrollbar - Enhanced visibility */
-  html {
-    scrollbar-width: auto;
-    scrollbar-color: var(--bg-surface) var(--bg-base);
-  }
-
-  /* Opera-specific enhancements */
-  * {
-    scrollbar-width: auto;
-    scrollbar-color: var(--bg-surface) var(--bg-base);
+    background: rgba(255, 255, 255, 0.4);
   }
 
   /* Selection - Academic */
