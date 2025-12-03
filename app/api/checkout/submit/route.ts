@@ -132,7 +132,11 @@ export async function POST(request: NextRequest) {
       // Non blocchiamo se l'email fallisce
     }
 
-    // 6. Invia email all'utente
+    // 6. Invia email all'utente (BEST PRACTICE: email immediata dopo attivazione)
+    // L'email viene inviata subito perché:
+    // - Account è già attivo (miglior UX)
+    // - Utente deve sapere subito che ha 48h per pagare
+    // - Comunicazione tempestiva aumenta conversione
     try {
       await sendBrevoEmail({
         to: userEmail,
@@ -151,6 +155,11 @@ export async function POST(request: NextRequest) {
       console.error("Errore invio email utente:", emailError);
       // Non blocchiamo se l'email fallisce
     }
+
+    // TODO: Aggiungere promemoria automatici:
+    // - Email dopo 24h se pagamento ancora pending
+    // - Email 2h prima scadenza se pagamento ancora pending
+    // Questo può essere fatto con cron job o scheduled tasks
 
     return NextResponse.json({
       success: true,

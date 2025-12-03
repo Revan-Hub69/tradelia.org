@@ -221,12 +221,15 @@ export function generateUserActivationEmail(data: {
         </div>
         <div class="content">
           <p>Ciao,</p>
-          <p>Il tuo account <strong>${planNames[data.planId] || data.planId}</strong> è stato attivato con successo!</p>
+          <p>La tua richiesta è stata processata e il tuo account <strong>${planNames[data.planId] || data.planId}</strong> è stato attivato con successo!</p>
+          
+          <p><strong>🎉 Il tuo account è già attivo</strong> e puoi iniziare a usare tutte le funzionalità ${planNames[data.planId] || data.planId}.</p>
           
           <div class="highlight">
-            <strong>⏰ Tempo per Pagare:</strong><br>
-            Hai <strong>48 ore</strong> per completare il pagamento.<br>
-            Scadenza: <strong>${new Date(data.paymentDeadline).toLocaleString("it-IT")}</strong>
+            <strong>⏰ Importante - Tempo per Pagare:</strong><br>
+            Per mantenere l'accesso, hai <strong>48 ore</strong> per completare il pagamento.<br>
+            Scadenza: <strong>${new Date(data.paymentDeadline).toLocaleString("it-IT")}</strong><br>
+            <small>Dopo la scadenza, l'account verrà sospeso fino al completamento del pagamento.</small>
           </div>
 
           <p><strong>Dettagli Ordine:</strong></p>
