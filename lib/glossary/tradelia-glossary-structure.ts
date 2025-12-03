@@ -23,6 +23,38 @@ export type GlossaryApplicationContext =
 export type GlossaryUserType = "beginner" | "intermediate-trader" | "professional" | "academic";
 
 /**
+ * Tipo di fonte accademica
+ */
+export type AcademicSourceType =
+  | "peer-reviewed"
+  | "textbook"
+  | "primary-source"
+  | "secondary-source"
+  | "working-paper"
+  | "book-chapter";
+
+/**
+ * Fonte accademica strutturata (formato migliorato)
+ */
+export interface AcademicSource {
+  author: string; // Autore/i
+  year: number; // Anno pubblicazione
+  title: string; // Titolo (sentence case per articoli)
+  journal?: string; // Rivista (se articolo)
+  publisher?: string; // Editore (se libro)
+  volume?: number; // Volume rivista
+  issue?: number; // Numero rivista
+  pages?: string; // Pagine (es. "77-91")
+  doi?: string; // Digital Object Identifier
+  isbn?: string; // ISBN per libri
+  url?: string; // URL se risorsa online
+  accessedDate?: string; // Data accesso (ISO) se risorsa online
+  type: AcademicSourceType; // Tipo di fonte
+  primary?: boolean; // Se è fonte primaria
+  jel?: string; // JEL Classification (opzionale)
+}
+
+/**
  * Nuova struttura categoria Tradelia
  * Organizzate per percorso educativo e applicazione pratica
  */
@@ -259,7 +291,8 @@ export interface TradeliaGlossaryTerm {
   // Contenuto educativo
   academicDefinition: {
     what: string; // Definizione accademica precisa ed esaustiva
-    source: string; // Fonti accademiche verificate (separate da |)
+    source: string; // Fonti accademiche verificate (separate da |) - formato legacy
+    sources?: AcademicSource[]; // Fonti strutturate (formato migliorato, opzionale per backward compatibility)
     academicContext?: string; // Contesto accademico aggiuntivo
   };
 

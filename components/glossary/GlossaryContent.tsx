@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
-import { Search, BookOpen, X, GraduationCap, FileText, Keyboard, Layers, Tag, ChevronDown } from 'lucide-react';
+import { Search, BookOpen, X, GraduationCap, FileText, Keyboard, Layers, Tag, ChevronDown, Sparkles, Calendar } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import { loadGlossaryTerms, type GlossaryTerm } from '@/lib/glossary/terms';
 import { getGlossaryCategories, getGlossaryTags, getCategoryDisplayName, getTagDisplayName, type GlossaryCategory, type GlossaryTag } from '@/lib/glossary/categories';
 import { TRADELIA_GLOSSARY_CATEGORIES, TRADELIA_GLOSSARY_TAGS, type TradeliaGlossaryCategory, type TradeliaGlossaryTag } from '@/lib/glossary/tradelia-glossary-structure';
+import { getTermOfTheDay, formatTermDate } from '@/lib/glossary/term-of-the-day';
 import { GlossaryDrawer } from './GlossaryDrawer';
 
 interface GlossaryTermWithKey extends GlossaryTerm {
@@ -36,12 +37,26 @@ export function GlossaryContent() {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const termRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+  const [termOfTheDay, setTermOfTheDay] = useState<GlossaryTermWithKey | null>(null);
 
   // Load glossary data
   useEffect(() => {
     loadGlossaryTerms().then((data) => {
       setGlossaryData(data);
       setLoading(false);
+      
+      // Calcola termine del giorno
+      const tod = getTermOfTheDay(data);
+      if (tod) {
+        // Trova la chiave del termine
+        const termKey = Object.keys(data).find(key => {
+          const term = data[key];
+          return term.title === tod.title && term.what === tod.what;
+        });
+        if (termKey) {
+          setTermOfTheDay({ key: termKey, ...tod });
+        }
+      }
     });
   }, []);
 
@@ -62,24 +77,84 @@ export function GlossaryContent() {
   const allTags = [...oldTags, ...tradeliaTags];
   const terms = Object.entries(glossaryData).map(([key, term]) => ({ key, ...term }));
 
+  // Helper function per matching categoria più robusto
+  const matchesCategory = (term: GlossaryTermWithKey, category: GlossaryCategory | TradeliaGlossaryCategory | 'all'): boolean => {
+    if (category === 'all') return true;
+    
+    // Match diretto
+    if (term.category === category) return true;
+    
+    // Match Tradelia: se categoria selezionata è Tradelia, controlla anche displayName
+    if (category in TRADELIA_GLOSSARY_CATEGORIES) {
+      const tradeliaCat = TRADELIA_GLOSSARY_CATEGORIES[category as TradeliaGlossaryCategory];
+      if (term.category === tradeliaCat.displayName) return true;
+      if (term.category === category) return true;
+    }
+    
+    // Match inverso: se termine ha categoria Tradelia, controlla se corrisponde
+    if (term.category && typeof term.category === 'string') {
+      if (term.category in TRADELIA_GLOSSARY_CATEGORIES) {
+        return term.category === category;
+      }
+      // Controlla se displayName corrisponde
+      const tradeliaCat = Object.values(TRADELIA_GLOSSARY_CATEGORIES).find(
+        cat => cat.displayName === term.category
+      );
+      if (tradeliaCat && tradeliaCat.key === category) return true;
+    }
+    
+    return false;
+  };
+
+  // Helper function per matching tag più robusto
+  const matchesTag = (term: GlossaryTermWithKey, tag: string): boolean => {
+    if (!term.tags || term.tags.length === 0) return false;
+    return term.tags.some(tagItem => {
+      if (typeof tagItem === 'string') {
+        return tagItem === tag || tagItem.toLowerCase() === tag.toLowerCase();
+      }
+      return tagItem === tag;
+    });
+  };
+
+  // Helper function per ricerca più completa
+  const matchesSearch = (term: GlossaryTermWithKey, search: string): boolean => {
+    if (!search) return true;
+    const searchLower = search.toLowerCase();
+    
+    // Cerca nel titolo
+    if (term.title.toLowerCase().includes(searchLower)) return true;
+    
+    // Cerca nella definizione accademica
+    if (term.what.toLowerCase().includes(searchLower)) return true;
+    
+    // Cerca nella spiegazione Tradelia
+    if (term.whatDoes?.toLowerCase().includes(searchLower)) return true;
+    if (term.howToUse?.toLowerCase().includes(searchLower)) return true;
+    if (term.tradeliaExplanation?.whatDoes?.toLowerCase().includes(searchLower)) return true;
+    if (term.tradeliaExplanation?.howToUse?.toLowerCase().includes(searchLower)) return true;
+    
+    // Cerca in legacy fields
+    if (term.technical?.toLowerCase().includes(searchLower)) return true;
+    if (term.how?.toLowerCase().includes(searchLower)) return true;
+    
+    // Cerca nei tag
+    if (term.tags?.some(tag => 
+      typeof tag === 'string' && tag.toLowerCase().includes(searchLower)
+    )) return true;
+    
+    // Cerca nella categoria
+    if (term.category && typeof term.category === 'string' && 
+        term.category.toLowerCase().includes(searchLower)) return true;
+    
+    return false;
+  };
+
   const filteredTerms = useMemo(() => {
     return terms.filter((term) => {
-      const matchesSearch =
-        term.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        term.what.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        term.technical?.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      // Support both old categories and Tradelia categories
-      const matchesCategory = selectedCategory === 'all' || 
-        term.category === selectedCategory ||
-        (term.category && typeof term.category === 'string' && 
-         (term.category === selectedCategory || 
-          (selectedCategory in TRADELIA_GLOSSARY_CATEGORIES && term.category === selectedCategory)));
-      
-      const matchesTags = selectedTags.length === 0 || 
-        selectedTags.some(tag => term.tags?.includes(tag as any));
-
-      return matchesSearch && matchesCategory && matchesTags;
+      return matchesSearch(term, searchTerm) &&
+             matchesCategory(term, selectedCategory) &&
+             (selectedTags.length === 0 || selectedTags.some(tag => matchesTag(term, tag)));
     });
   }, [searchTerm, selectedCategory, selectedTags, terms]);
 
@@ -178,9 +253,19 @@ export function GlossaryContent() {
                 <h1 className="text-2xl lg:text-3xl font-bold text-text-primary tracking-tight">
                   {t('glossary.title') || 'Glossario Finanziario'}
                 </h1>
-                <p className="text-sm text-text-tertiary mt-1">
-                  {terms.length} termini • {categories.length} categorie
-                </p>
+                <div className="flex items-center gap-3 flex-wrap mt-1">
+                  <p className="text-sm text-text-tertiary">
+                    <span className="font-semibold text-text-primary">{terms.length}</span> termini
+                  </p>
+                  <span className="text-text-tertiary">•</span>
+                  <p className="text-sm text-text-tertiary">
+                    <span className="font-semibold text-text-primary">{allCategories.length}</span> categorie
+                  </p>
+                  <span className="text-text-tertiary">•</span>
+                  <p className="text-sm text-text-tertiary">
+                    <span className="font-semibold text-text-primary">{allTags.length}</span> argomenti
+                  </p>
+                </div>
               </div>
             </div>
             
@@ -229,6 +314,60 @@ export function GlossaryContent() {
           </AnimatePresence>
         </div>
 
+        {/* Termine del Giorno - Featured Section */}
+        {termOfTheDay && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 p-6 bg-gradient-to-br from-accent/10 via-accent/5 to-transparent border-2 border-accent/30 rounded-xl shadow-lg"
+          >
+            <div className="flex items-start justify-between gap-4 mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-accent/20 border border-accent/40 flex items-center justify-center">
+                  <Calendar className="w-5 h-5 text-accent" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-accent" />
+                    Termine del Giorno
+                  </h2>
+                  <p className="text-xs text-text-tertiary mt-0.5">
+                    {formatTermDate(new Date())}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-bg-surface rounded-lg p-4 border border-border-subtle">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-xl font-bold text-text-primary mb-2">
+                    {termOfTheDay.title}
+                  </h3>
+                  <p className="text-sm text-text-secondary line-clamp-2 leading-relaxed mb-3">
+                    {termOfTheDay.what}
+                  </p>
+                  {termOfTheDay.category && (
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-accent/20 border border-accent/30 rounded text-xs font-medium text-accent">
+                      <Layers className="w-3 h-3" />
+                      {termOfTheDay.category in TRADELIA_GLOSSARY_CATEGORIES
+                        ? TRADELIA_GLOSSARY_CATEGORIES[termOfTheDay.category as TradeliaGlossaryCategory].displayName
+                        : getCategoryDisplayName(termOfTheDay.category as GlossaryCategory)}
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={() => openTerm(termOfTheDay)}
+                  className="px-4 py-2 bg-accent text-white rounded-lg font-medium hover:bg-accent-hover transition-colors flex-shrink-0 flex items-center gap-2"
+                  aria-label={`Leggi la definizione completa di ${termOfTheDay.title}`}
+                >
+                  <span>Leggi tutto</span>
+                  <ChevronDown className="w-4 h-4 rotate-[-90deg]" />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         {/* Search Bar - Compact */}
         <div className="mb-4">
           <div className="relative">
@@ -262,11 +401,13 @@ export function GlossaryContent() {
               <span className="text-xs font-semibold text-text-primary">Filtri applicati:</span>
               {selectedCategory !== 'all' && (
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-accent text-white border border-accent shadow-sm">
-                  {getCategoryDisplayName(selectedCategory)}
+                  {selectedCategory in TRADELIA_GLOSSARY_CATEGORIES
+                    ? TRADELIA_GLOSSARY_CATEGORIES[selectedCategory as TradeliaGlossaryCategory].displayName
+                    : getCategoryDisplayName(selectedCategory as GlossaryCategory)}
                   <button
                     onClick={() => setSelectedCategory('all')}
                     className="hover:bg-white/20 rounded-full p-0.5 transition-colors"
-                    aria-label={`Rimuovi filtro categoria ${getCategoryDisplayName(selectedCategory)}`}
+                    aria-label={`Rimuovi filtro categoria`}
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -331,20 +472,12 @@ export function GlossaryContent() {
                   ? TRADELIA_GLOSSARY_CATEGORIES[category as TradeliaGlossaryCategory].displayName
                   : getCategoryDisplayName(category as GlossaryCategory);
                 
-                // Count terms in this category (considering search term but not category filter)
+                // Count terms in this category (considering search term and tag filters but not category filter)
                 const count = terms.filter(t => {
-                  const matchesSearch = !searchTerm || 
-                    t.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    t.what.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    t.technical?.toLowerCase().includes(searchTerm.toLowerCase());
-                  // Support both old categories and Tradelia categories
-                  return matchesSearch && (
-                    t.category === category ||
-                    (category in TRADELIA_GLOSSARY_CATEGORIES && 
-                     typeof t.category === 'string' && 
-                     (t.category === category || 
-                      TRADELIA_GLOSSARY_CATEGORIES[category as TradeliaGlossaryCategory].displayName === t.category))
-                  );
+                  const searchMatch = matchesSearch(t, searchTerm);
+                  const categoryMatch = matchesCategory(t, category);
+                  const tagMatch = selectedTags.length === 0 || selectedTags.some(tag => matchesTag(t, tag));
+                  return searchMatch && categoryMatch && tagMatch;
                 }).length;
                 
                 if (count === 0) return null; // Hide categories with no terms
@@ -393,22 +526,10 @@ export function GlossaryContent() {
                 {allTags.map((tag) => {
                   // Count terms with this tag (considering search and category filters but not tag filter)
                   const count = terms.filter(t => {
-                    const matchesSearch = !searchTerm || 
-                      t.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                      t.what.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                      t.technical?.toLowerCase().includes(searchTerm.toLowerCase());
-                    // Support both old categories and Tradelia categories
-                    const matchesCategory = selectedCategory === 'all' || 
-                      t.category === selectedCategory ||
-                      (selectedCategory in TRADELIA_GLOSSARY_CATEGORIES && 
-                       typeof t.category === 'string' && 
-                       (t.category === selectedCategory || 
-                        TRADELIA_GLOSSARY_CATEGORIES[selectedCategory as TradeliaGlossaryCategory].displayName === t.category));
-                    const hasTag = t.tags?.some(tagItem => 
-                      tagItem === tag || 
-                      (typeof tagItem === 'string' && tagItem.toLowerCase() === tag.toLowerCase())
-                    );
-                    return matchesSearch && matchesCategory && hasTag;
+                    const searchMatch = matchesSearch(t, searchTerm);
+                    const categoryMatch = matchesCategory(t, selectedCategory);
+                    const tagMatch = matchesTag(t, tag);
+                    return searchMatch && categoryMatch && tagMatch;
                   }).length;
                   if (count === 0) return null; // Nascondi tag senza risultati
                   // Get display name for tag (both old and Tradelia)
@@ -514,31 +635,68 @@ export function GlossaryContent() {
                 }}
                 onFocus={() => setFocusedIndex(index)}
                 className={cn(
-                  'w-full p-3 rounded-lg border text-left transition-all',
+                  'w-full p-4 rounded-xl border-2 text-left transition-all group',
                   'bg-bg-surface border-border-subtle',
-                  'hover:border-accent/50 hover:bg-bg-soft hover:shadow-sm',
+                  'hover:border-accent/60 hover:bg-bg-soft hover:shadow-md hover:shadow-accent/10',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base',
-                  focusedIndex === index && 'ring-2 ring-accent ring-offset-2 ring-offset-bg-base'
+                  focusedIndex === index && 'ring-2 ring-accent ring-offset-2 ring-offset-bg-base border-accent/60'
                 )}
                 aria-label={`Apri definizione di ${term.title}`}
               >
-                <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-base font-semibold text-text-primary">
+                    <div className="flex items-center gap-2.5 mb-2 flex-wrap">
+                      <h3 className="text-lg font-bold text-text-primary group-hover:text-accent transition-colors">
                         {term.title}
                       </h3>
                       {term.category && (
-                        <span className="px-2 py-0.5 bg-accent/20 border border-accent/30 rounded text-xs font-medium text-accent whitespace-nowrap flex-shrink-0">
-                          {term.category}
+                        <span className="px-2.5 py-1 bg-accent/15 border border-accent/30 rounded-md text-xs font-semibold text-accent whitespace-nowrap flex-shrink-0">
+                          {term.category in TRADELIA_GLOSSARY_CATEGORIES
+                            ? TRADELIA_GLOSSARY_CATEGORIES[term.category as TradeliaGlossaryCategory].displayName
+                            : typeof term.category === 'string' ? term.category : ''}
+                        </span>
+                      )}
+                      {term.learningLevel && (
+                        <span className={cn(
+                          'px-2 py-0.5 rounded text-xs font-medium',
+                          term.learningLevel === 'foundational' && 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300',
+                          term.learningLevel === 'intermediate' && 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300',
+                          term.learningLevel === 'advanced' && 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300',
+                          term.learningLevel === 'expert' && 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
+                        )}>
+                          {term.learningLevel === 'foundational' && 'Base'}
+                          {term.learningLevel === 'intermediate' && 'Intermedio'}
+                          {term.learningLevel === 'advanced' && 'Avanzato'}
+                          {term.learningLevel === 'expert' && 'Esperto'}
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-text-secondary line-clamp-2 leading-relaxed">
+                    <p className="text-sm text-text-secondary line-clamp-2 leading-relaxed mb-2">
                       {term.what}
                     </p>
+                    {term.tags && term.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mt-2">
+                        {term.tags.slice(0, 3).map((tag, idx) => (
+                          <span
+                            key={idx}
+                            className="px-2 py-0.5 bg-bg-soft border border-border-subtle rounded text-xs text-text-tertiary"
+                          >
+                            {typeof tag === 'string' 
+                              ? (oldTags.includes(tag as GlossaryTag) 
+                                  ? getTagDisplayName(tag as GlossaryTag)
+                                  : tag.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '))
+                              : tag}
+                          </span>
+                        ))}
+                        {term.tags.length > 3 && (
+                          <span className="px-2 py-0.5 text-xs text-text-tertiary">
+                            +{term.tags.length - 3}
+                          </span>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  <ChevronDown className="w-4 h-4 text-text-tertiary flex-shrink-0 mt-1" />
+                  <ChevronDown className="w-5 h-5 text-text-tertiary group-hover:text-accent flex-shrink-0 mt-1 transition-colors" />
                 </div>
               </motion.button>
             ))
