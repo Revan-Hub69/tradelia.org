@@ -91,13 +91,8 @@ export function PricingContent() {
 
   const handleSelectPlan = (planId: string, type: 'individual' | 'business') => {
     setSelectedPlan(planId);
-    // Mostra scelta retail/professionale prima di andare al checkout
-    const customerType = prompt('Scegli tipo cliente:\n1. Retail (Privato)\n2. Professionale (Azienda)');
-    if (customerType === '1' || customerType?.toLowerCase() === 'retail') {
-      window.location.href = `/checkout?plan=${planId}&customerType=retail&billing=${billingCycle}`;
-    } else if (customerType === '2' || customerType?.toLowerCase() === 'professionale') {
-      window.location.href = `/checkout?plan=${planId}&customerType=professionale&billing=${billingCycle}`;
-    }
+    // Naviga direttamente al checkout - l'utente sceglierà business/retail nel form
+    window.location.href = `/checkout?plan=${planId}&billing=${billingCycle}`;
   };
 
   return (
