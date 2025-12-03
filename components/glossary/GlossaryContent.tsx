@@ -94,12 +94,13 @@ export function GlossaryContent() {
     
     // Match inverso: se termine ha categoria Tradelia, controlla se corrisponde
     if (term.category && typeof term.category === 'string') {
-      if (term.category in TRADELIA_GLOSSARY_CATEGORIES) {
-        return term.category === category;
+      const termCategoryStr = term.category as string;
+      if (termCategoryStr in TRADELIA_GLOSSARY_CATEGORIES) {
+        return termCategoryStr === category;
       }
       // Controlla se displayName corrisponde
       const tradeliaCat = Object.values(TRADELIA_GLOSSARY_CATEGORIES).find(
-        cat => cat.displayName === term.category
+        cat => cat.displayName === termCategoryStr
       );
       if (tradeliaCat && tradeliaCat.key === category) return true;
     }
