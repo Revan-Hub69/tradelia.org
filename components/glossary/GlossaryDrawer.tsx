@@ -570,7 +570,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
   const commonMistakes = term.tradeliaExplanation?.commonMistakes;
 
   // Normalizza categoria per display (Best Practice: mostra displayName invece di key)
-  const getCategoryDisplayName = (category: string | undefined): string | null => {
+  const getCategoryDisplayNameLocal = (category: string | undefined): string | null => {
     if (!category) return null;
     
     // Se è una chiave Tradelia, usa displayName
@@ -590,7 +590,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     return getCategoryDisplayName(category as GlossaryCategory);
   };
 
-  const categoryDisplayName = getCategoryDisplayName(term.category);
+  const categoryDisplayName = getCategoryDisplayNameLocal(term.category);
 
   // Handle print - create new window with print content
   const handlePrint = async () => {
@@ -823,7 +823,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     <h1 class="print-title">${term.title}</h1>
     
     <div class="print-meta">
-      ${term.category ? `<div style="margin-bottom: 0.25cm;"><strong>Categoria:</strong> ${term.category}</div>` : ''}
+      ${categoryDisplayName ? `<div style="margin-bottom: 0.25cm;"><strong>Categoria:</strong> ${categoryDisplayName}</div>` : ''}
       ${term.tags && term.tags.length > 0 ? `
         <div class="print-tags">
           ${term.tags.map(tag => `<span class="print-tag">#${tag}</span>`).join('')}
@@ -975,9 +975,9 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   
                   {/* Print Meta */}
                   <div className="print-meta">
-                    {term.category && (
+                    {categoryDisplayName && (
                       <div style={{ marginBottom: '0.25cm', marginTop: '0' }}>
-                        <strong>Categoria:</strong> {term.category}
+                        <strong>Categoria:</strong> {categoryDisplayName}
                       </div>
                     )}
                     {term.tags && term.tags.length > 0 && (
@@ -1138,11 +1138,11 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   aria-label="Breadcrumb"
                 >
                   <span className="hover:text-text-secondary whitespace-nowrap flex-shrink-0">Glossario</span>
-                  {term.category && (
+                  {categoryDisplayName && (
                     <>
                       <ChevronRight className="w-3 h-3 flex-shrink-0 text-text-tertiary/60" aria-hidden="true" />
-                      <span className="text-text-secondary truncate max-w-[120px] sm:max-w-[200px]" title={term.category}>
-                        {term.category}
+                      <span className="text-text-secondary truncate max-w-[120px] sm:max-w-[200px]" title={categoryDisplayName}>
+                        {categoryDisplayName}
                       </span>
                     </>
                   )}
@@ -1164,10 +1164,10 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       {term.title}
                     </h2>
                     <p id="glossary-drawer-description" className="text-xs sm:text-sm text-text-secondary">
-                      {term.category && (
+                      {categoryDisplayName && (
                         <span className="inline-flex items-center gap-1.5">
                           <Layers className="w-3.5 h-3.5 text-text-tertiary flex-shrink-0" aria-hidden="true" />
-                          <span className="text-text-tertiary truncate">{term.category}</span>
+                          <span className="text-text-tertiary truncate">{categoryDisplayName}</span>
                         </span>
                       )}
                     </p>
