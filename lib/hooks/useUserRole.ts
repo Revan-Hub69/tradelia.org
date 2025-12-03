@@ -67,9 +67,18 @@ export function useUserRole(): UserRoleData {
       fetchUserRole();
     });
 
+    // Polling manuale per verificare cambiamenti ruolo (utile per pagamenti manuali)
+    // Poll ogni 60 secondi se l'utente è ancora sulla pagina
+    const pollInterval = setInterval(() => {
+      if (mounted && document.visibilityState === "visible") {
+        fetchUserRole();
+      }
+    }, 60000); // 60 secondi
+
     return () => {
       mounted = false;
       subscription.unsubscribe();
+      clearInterval(pollInterval);
     };
   }, []);
 
