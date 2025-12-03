@@ -4150,5 +4150,161 @@
     "applicationContexts": ["investing", "portfolio-construction"],
     "userTypes": ["intermediate-trader", "professional"],
     "version": 1
+  },
+  "164": {
+    "id": "164",
+    "title": "Efficient Frontier",
+    "slug": "efficient-frontier",
+    "academicDefinition": {
+      "what": "L'Efficient Frontier (frontiera efficiente) è l'insieme di portafogli che offrono il massimo rendimento atteso per un dato livello di rischio, o il minimo rischio per un dato livello di rendimento atteso. L'Efficient Frontier è derivata dalla Mean-Variance Optimization di Markowitz e rappresenta graficamente il trade-off ottimale tra rischio e rendimento. I portafogli sulla frontiera efficiente sono 'efficienti' perché non è possibile ottenere un rendimento più alto con lo stesso rischio, o un rischio più basso con lo stesso rendimento. I portafogli sotto la frontiera efficiente sono 'inefficienti' perché è possibile migliorare il rapporto rischio-rendimento.",
+      "source": "Markowitz, H. (1952). Portfolio Selection. Journal of Finance, 7(1), 77-91. | Markowitz, H. (1959). Portfolio Selection: Efficient Diversification of Investments. Wiley.",
+      "academicContext": "L'Efficient Frontier è il concetto fondamentale della Modern Portfolio Theory di Markowitz, che ha vinto il Premio Nobel per l'Economia nel 1990. Rappresenta il trade-off ottimale tra rischio e rendimento."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "L'Efficient Frontier è l'insieme di portfolio che offrono il miglior rapporto rischio-rendimento. Graficamente: asse X = rischio (volatilità), asse Y = rendimento. Efficient Frontier è la curva che mostra portfolio ottimali: massimo rendimento per un dato rischio, o minimo rischio per un dato rendimento. Portfolio sulla frontiera sono 'efficienti': non puoi ottenere rendimento più alto con stesso rischio, o rischio più basso con stesso rendimento. Portfolio sotto frontiera sono 'inefficienti': puoi migliorare rapporto rischio-rendimento.",
+      "howToUse": "Usa Efficient Frontier per identificare portfolio ottimali. Efficient Frontier mostra trade-off tra rischio e rendimento: più rischio = più rendimento atteso. Scegli portfolio sulla frontiera in base alla tua tolleranza al rischio: conservatore = basso rischio/basso rendimento, aggressivo = alto rischio/alto rendimento. Portfolio sotto frontiera sono subottimali: migliora rapporto rischio-rendimento. Efficient Frontier è il fondamento della costruzione portfolio ottimale.",
+      "practicalExample": "Esempio: Efficient Frontier mostra portfolio ottimali. Portfolio A: rischio 10%, rendimento 8% (sulla frontiera). Portfolio B: rischio 10%, rendimento 6% (sotto frontiera). Portfolio A è efficiente: stesso rischio, rendimento più alto. Portfolio B è inefficiente: puoi ottenere rendimento più alto (8%) con stesso rischio (10%). Efficient Frontier mostra che A è migliore di B.",
+      "commonMistakes": "Errore comune: ignorare Efficient Frontier. 'Portfolio 60% azioni, 40% obbligazioni' non dice se è efficiente. Altro errore: scegliere portfolio sotto frontiera. Portfolio sotto frontiera sono subottimali: migliora rapporto rischio-rendimento. Evita anche di pensare che Efficient Frontier sia statica: cambia con stime di rendimenti e volatilità."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "optimization",
+    "tags": ["investing", "portfolio-construction", "quantitative", "complex"],
+    "learningLevel": "advanced",
+    "prerequisites": ["Portfolio", "Risk", "Return", "Mean-Variance Optimization"],
+    "relatedTerms": [
+      "Portfolio",
+      "Risk",
+      "Return",
+      "Mean-Variance Optimization",
+      "Modern Portfolio Theory"
+    ],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["professional"],
+    "version": 1
+  },
+  "165": {
+    "id": "165",
+    "title": "Modern Portfolio Theory",
+    "slug": "modern-portfolio-theory",
+    "academicDefinition": {
+      "what": "La Modern Portfolio Theory (MPT) è una teoria finanziaria sviluppata da Harry Markowitz (1952) che descrive come investitori razionali possono costruire portafogli ottimali che massimizzano il rendimento atteso per un dato livello di rischio, o minimizzano il rischio per un dato livello di rendimento atteso. La MPT si basa su tre principi fondamentali: (1) diversificazione riduce il rischio senza necessariamente ridurre il rendimento, (2) il rischio di un portafoglio dipende non solo dal rischio individuale degli asset ma anche dalle loro correlazioni, (3) esiste una 'frontiera efficiente' di portafogli ottimali. La MPT ha rivoluzionato la gestione degli investimenti ed è la base teorica per la costruzione di portafogli moderni.",
+      "source": "Markowitz, H. (1952). Portfolio Selection. Journal of Finance, 7(1), 77-91. | Markowitz, H. (1959). Portfolio Selection: Efficient Diversification of Investments. Wiley.",
+      "academicContext": "La Modern Portfolio Theory è una delle teorie più influenti nella finanza, vincendo il Premio Nobel per l'Economia nel 1990. È la base teorica per la costruzione di portafogli moderni e la gestione degli investimenti."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "La Modern Portfolio Theory (MPT) è la teoria base della costruzione portfolio ottimale. Principi: (1) Diversificazione riduce rischio senza ridurre rendimento: non mettere tutte le uova nello stesso paniere. (2) Rischio portfolio dipende da rischio individuale E correlazioni: asset correlati = rischio più alto, asset non correlati = rischio più basso. (3) Esiste 'frontiera efficiente' di portfolio ottimali: massimo rendimento per dato rischio. MPT ha rivoluzionato gestione investimenti ed è base teorica per costruzione portfolio moderni.",
+      "howToUse": "Usa Modern Portfolio Theory per costruire portfolio ottimali. Diversifica: non mettere tutto in un asset, distribuisci tra asset diversi. Considera correlazioni: asset non correlati riducono rischio più di asset correlati. Cerca portfolio sulla frontiera efficiente: massimo rendimento per dato rischio. MPT è base teorica per Mean-Variance Optimization, Black-Litterman, e altri metodi di costruzione portfolio. Capisci MPT prima di usare metodi avanzati.",
+      "practicalExample": "Esempio: 2 asset: Azioni (rendimento 10%, rischio 15%), Obbligazioni (5%, 5%). Correlazione 0.3. Portfolio 100% azioni: rischio 15%. Portfolio 50% azioni, 50% obbligazioni: rischio 8% (non 10% perché correlazione bassa). Diversificazione riduce rischio senza ridurre troppo rendimento. MPT mostra che diversificazione è potente: riduce rischio attraverso correlazioni basse.",
+      "commonMistakes": "Errore comune: ignorare correlazioni. 'Ho 10 asset diversi' non dice se sono correlati. Asset correlati = diversificazione limitata. Altro errore: pensare che diversificazione elimini rischio. Diversificazione riduce rischio ma non lo elimina. Evita anche di usare MPT senza capire limiti: MPT assume distribuzioni normali e stime accurate, che possono non essere realistiche."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "optimization",
+    "tags": ["investing", "portfolio-construction", "quantitative", "complex"],
+    "learningLevel": "advanced",
+    "prerequisites": ["Portfolio", "Risk", "Return", "Diversificazione"],
+    "relatedTerms": ["Portfolio", "Risk", "Return", "Diversificazione", "Efficient Frontier"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["professional"],
+    "version": 1
+  },
+  "166": {
+    "id": "166",
+    "title": "Capital Market Line",
+    "slug": "capital-market-line",
+    "academicDefinition": {
+      "what": "La Capital Market Line (CML) è una linea retta nel grafico rischio-rendimento che rappresenta portafogli che combinano l'asset privo di rischio (risk-free asset) con il portafoglio di mercato (market portfolio) sulla frontiera efficiente. La CML mostra il trade-off tra rischio e rendimento per portafogli che includono l'asset privo di rischio, e tutti i portafogli sulla CML sono efficienti. La pendenza della CML è il Sharpe Ratio del portafoglio di mercato, e rappresenta il premio per il rischio per unità di rischio assunto. La CML è derivata dalla Modern Portfolio Theory e rappresenta la combinazione ottimale di asset rischiosi e asset privo di rischio.",
+      "source": "Sharpe, W.F. (1964). Capital Asset Prices: A Theory of Market Equilibrium Under Conditions of Risk. Journal of Finance, 19(3), 425-442. | Lintner, J. (1965). The Valuation of Risk Assets and the Selection of Risky Investments in Stock Portfolios and Capital Budgets. Review of Economics and Statistics, 47(1), 13-37.",
+      "academicContext": "La Capital Market Line è un concetto fondamentale del Capital Asset Pricing Model (CAPM) e rappresenta la combinazione ottimale di asset rischiosi e asset privo di rischio."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "La Capital Market Line (CML) è una linea retta che mostra portfolio che combinano asset privo di rischio (es. Treasury bills) con portafoglio di mercato (es. S&P 500). CML mostra trade-off rischio-rendimento per portfolio che includono asset privo di rischio. Pendenza CML = Sharpe Ratio del portafoglio di mercato = premio per rischio per unità di rischio. Portfolio sulla CML sono efficienti: combinazione ottimale di asset rischiosi e asset privo di rischio. CML è base teorica per CAPM.",
+      "howToUse": "Usa Capital Market Line per capire combinazione ottimale di asset rischiosi e asset privo di rischio. CML mostra che puoi combinare asset privo di rischio (basso rischio, basso rendimento) con portafoglio di mercato (alto rischio, alto rendimento) per creare portfolio efficienti. Pendenza CML = premio per rischio: più alta pendenza = migliore rapporto rischio-rendimento. Portfolio sulla CML sono efficienti: non puoi ottenere rendimento più alto con stesso rischio. CML è base teorica per CAPM e costruzione portfolio.",
+      "practicalExample": "Esempio: Asset privo di rischio: rendimento 2%, rischio 0%. Portafoglio di mercato: rendimento 10%, rischio 15%. CML mostra combinazioni: 50% risk-free, 50% market = rendimento 6%, rischio 7.5%. 0% risk-free, 100% market = rendimento 10%, rischio 15%. CML mostra trade-off: più risk-free = meno rischio/rendimento, più market = più rischio/rendimento. Portfolio sulla CML sono efficienti.",
+      "commonMistakes": "Errore comune: confondere CML con Efficient Frontier. CML include asset privo di rischio, Efficient Frontier no. Altro errore: pensare che CML sia sempre lineare. CML è lineare solo se assumi asset privo di rischio perfetto. Evita anche di ignorare che CML assume portafoglio di mercato ottimale: in pratica, portafoglio di mercato può non essere ottimale."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "optimization",
+    "tags": ["investing", "portfolio-construction", "quantitative", "complex"],
+    "learningLevel": "advanced",
+    "prerequisites": ["Efficient Frontier", "Modern Portfolio Theory", "Risk-Free Rate"],
+    "relatedTerms": ["Efficient Frontier", "Modern Portfolio Theory", "Risk-Free Rate", "CAPM"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["professional"],
+    "version": 1
+  },
+  "167": {
+    "id": "167",
+    "title": "Security Market Line",
+    "slug": "security-market-line",
+    "academicDefinition": {
+      "what": "La Security Market Line (SML) è una linea retta nel grafico rischio-rendimento che rappresenta la relazione tra il rischio sistematico (beta) di un asset e il suo rendimento atteso secondo il Capital Asset Pricing Model (CAPM). La SML mostra che il rendimento atteso di un asset è uguale al tasso privo di rischio più un premio per il rischio proporzionale al beta dell'asset: E(R) = Rf + β × (Rm - Rf). La SML è la base teorica per valutare se un asset è sottovalutato (sopra SML) o sopravvalutato (sotto SML) rispetto al suo rischio sistematico.",
+      "source": "Sharpe, W.F. (1964). Capital Asset Prices: A Theory of Market Equilibrium Under Conditions of Risk. Journal of Finance, 19(3), 425-442. | Lintner, J. (1965). The Valuation of Risk Assets and the Selection of Risky Investments in Stock Portfolios and Capital Budgets. Review of Economics and Statistics, 47(1), 13-37.",
+      "academicContext": "La Security Market Line è un concetto fondamentale del Capital Asset Pricing Model (CAPM) e rappresenta la relazione teorica tra rischio sistematico (beta) e rendimento atteso."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "La Security Market Line (SML) mostra relazione tra rischio sistematico (beta) e rendimento atteso secondo CAPM. Formula: Rendimento atteso = Risk-free + Beta × (Rendimento mercato - Risk-free). SML mostra che rendimento atteso aumenta con beta: più beta = più rendimento atteso. Asset sopra SML = sottovalutato (rendimento più alto del previsto per rischio). Asset sotto SML = sopravvalutato (rendimento più basso del previsto per rischio). SML è base teorica per valutare se asset è sottovalutato o sopravvalutato.",
+      "howToUse": "Usa Security Market Line per valutare se asset è sottovalutato o sopravvalutato. Calcola rendimento atteso secondo CAPM: E(R) = Rf + β × (Rm - Rf). Confronta con rendimento attuale: se rendimento attuale > rendimento atteso CAPM = asset sopra SML = sottovalutato. Se rendimento attuale < rendimento atteso CAPM = asset sotto SML = sopravvalutato. SML aiuta identificare opportunità: asset sopra SML possono essere buoni investimenti. SML è base teorica per stock picking e valutazione.",
+      "practicalExample": "Esempio: Risk-free 2%, Rendimento mercato 10%, Beta asset 1.2. Rendimento atteso CAPM = 2% + 1.2 × (10% - 2%) = 11.6%. Se rendimento attuale asset è 13%, asset è sopra SML (sottovalutato): rendimento più alto del previsto per rischio. Se rendimento attuale è 9%, asset è sotto SML (sopravvalutato): rendimento più basso del previsto per rischio. SML aiuta identificare opportunità.",
+      "commonMistakes": "Errore comune: confondere SML con CML. SML mostra relazione beta-rendimento, CML mostra combinazioni risk-free-market. Altro errore: usare SML senza considerare limiti CAPM. CAPM assume mercati efficienti e beta stabile, che possono non essere realistici. Evita anche di pensare che asset sopra SML siano sempre buoni: potrebbero avere rischio non sistematico alto."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "optimization",
+    "tags": ["investing", "portfolio-construction", "quantitative", "complex"],
+    "learningLevel": "advanced",
+    "prerequisites": ["CAPM", "Beta", "Risk-Free Rate"],
+    "relatedTerms": ["CAPM", "Beta", "Risk-Free Rate", "Capital Market Line"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["professional"],
+    "version": 1
+  },
+  "168": {
+    "id": "168",
+    "title": "Concentration Risk",
+    "slug": "concentration-risk",
+    "academicDefinition": {
+      "what": "Il Concentration Risk (rischio di concentrazione) è il rischio che deriva dall'avere una porzione significativa del portfolio concentrata in un singolo asset, settore, regione geografica, o fattore di rischio. Il Concentration Risk aumenta la volatilità del portfolio e riduce i benefici della diversificazione. Un portfolio con alta concentrazione è più vulnerabile a eventi specifici che colpiscono l'asset, settore, o regione concentrata. Il Concentration Risk può essere misurato attraverso metriche come l'Herfindahl-Hirschman Index (HHI), il peso del top asset o settore, o la deviazione dalla diversificazione ottimale.",
+      "source": "Markowitz, H. (1952). Portfolio Selection. Journal of Finance, 7(1), 77-91. | Lhabitant, F.S. (2004). Hedge Funds: Quantitative Insights. Wiley.",
+      "academicContext": "Il Concentration Risk è un rischio fondamentale nella costruzione portfolio. La diversificazione è il principale strumento per ridurre il Concentration Risk, come teorizzato da Markowitz nella Modern Portfolio Theory."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "Il Concentration Risk è il rischio di avere troppo del portfolio concentrato in un singolo asset, settore, o regione. Esempio: Portfolio 80% in un singolo stock = alta concentrazione = alto rischio. Se quel stock crolla, perdi molto. Concentration Risk aumenta volatilità e riduce benefici diversificazione. Portfolio con alta concentrazione è vulnerabile a eventi specifici. Misura Concentration Risk: peso top asset, peso top settore, HHI. Diversificazione riduce Concentration Risk.",
+      "howToUse": "Usa Concentration Risk per valutare vulnerabilità del portfolio. Misura concentrazione: peso top asset (max 10-15% è ragionevole), peso top settore (max 20-30%), HHI. Riduci concentrazione: diversifica tra asset, settori, regioni. Limiti ragionevoli: max 10% per asset, max 30% per settore, max 40% per regione. Concentration Risk alto = vulnerabilità a eventi specifici. Diversificazione è principale strumento per ridurre Concentration Risk.",
+      "practicalExample": "Esempio: Portfolio 100.000€. Stock A: 50.000€ (50%), Stock B: 30.000€ (30%), Stock C: 20.000€ (20%). Concentration Risk alto: 50% in Stock A. Se Stock A crolla 50%, perdi 25.000€ (25% del portfolio). Portfolio diversificato: 10 asset, 10% ciascuno. Se un asset crolla 50%, perdi 5.000€ (5% del portfolio). Diversificazione riduce Concentration Risk.",
+      "commonMistakes": "Errore comune: ignorare Concentration Risk. 'Ho 5 asset diversi' non dice se sono concentrati. Se 3 asset sono nello stesso settore, hai concentrazione settoriale. Altro errore: pensare che diversificazione elimini Concentration Risk. Diversificazione riduce ma non elimina: monitora concentrazione. Evita anche di concentrare troppo in asset che 'conosci bene': conoscenza non elimina rischio."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "asset-allocation",
+    "tags": ["investing", "portfolio-construction", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Portfolio", "Risk", "Diversificazione"],
+    "relatedTerms": ["Portfolio", "Risk", "Diversificazione", "Asset Allocation"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "169": {
+    "id": "169",
+    "title": "Liquidity Risk",
+    "slug": "liquidity-risk",
+    "academicDefinition": {
+      "what": "Il Liquidity Risk (rischio di liquidità) è il rischio che un asset non possa essere venduto rapidamente a un prezzo equo (vicino al valore di mercato) senza impatto significativo sul prezzo. Il Liquidity Risk può derivare da basso volume di trading, spread bid-ask ampi, o mercati illiquidi. Il Liquidity Risk è particolarmente importante per portfolio che potrebbero dover liquidare asset rapidamente (es. per rebalancing, ritiri, o opportunità di investimento). Il Liquidity Risk può essere misurato attraverso metriche come bid-ask spread, volume di trading, o tempo di esecuzione. Un portfolio con alta liquidità ha basso Liquidity Risk, mentre un portfolio con asset illiquidi ha alto Liquidity Risk.",
+      "source": "Acharya, V., & Pedersen, L.H. (2005). Asset Pricing with Liquidity Risk. Journal of Financial Economics, 77(2), 375-410. | Amihud, Y. (2002). Illiquidity and Stock Returns: Cross-Section and Time-Series Effects. Journal of Financial Markets, 5(1), 31-56.",
+      "academicContext": "Il Liquidity Risk è un rischio importante nella costruzione portfolio, specialmente per portfolio che richiedono liquidità o per investitori con orizzonti temporali brevi. Studi mostrano che asset illiquidi richiedono un premio per il rischio (liquidity premium)."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "Il Liquidity Risk è il rischio che un asset non possa essere venduto rapidamente a prezzo equo senza impatto significativo sul prezzo. Esempio: Asset illiquido (basso volume, spread ampio): se vendi, prezzo scende molto. Asset liquido (alto volume, spread stretto): puoi vendere rapidamente a prezzo equo. Liquidity Risk è importante se devi liquidare asset rapidamente (rebalancing, ritiri, opportunità). Portfolio con alta liquidità ha basso Liquidity Risk, portfolio con asset illiquidi ha alto Liquidity Risk.",
+      "howToUse": "Usa Liquidity Risk per valutare capacità di liquidare asset rapidamente. Misura liquidità: bid-ask spread (stretto = liquido), volume trading (alto = liquido), tempo esecuzione (veloce = liquido). Considera Liquidity Risk quando costruisci portfolio: se potresti dover liquidare rapidamente, evita asset illiquidi. Limiti ragionevoli: max 10-20% in asset illiquidi per portfolio che richiedono liquidità. Portfolio con alta liquidità ha basso Liquidity Risk ma può avere rendimenti inferiori (liquidity premium).",
+      "practicalExample": "Esempio: Portfolio: 80% azioni liquide (volume alto, spread stretto), 20% asset illiquidi (volume basso, spread ampio). Se devi liquidare 30% del portfolio rapidamente, puoi vendere azioni liquide a prezzo equo, ma asset illiquidi potrebbero avere impatto significativo sul prezzo. Liquidity Risk alto per asset illiquidi. Portfolio con alta liquidità ha basso Liquidity Risk ma può avere rendimenti inferiori (manca liquidity premium).",
+      "commonMistakes": "Errore comune: ignorare Liquidity Risk. 'Asset rende 15%' non dice se è liquido. Se devi liquidare rapidamente e asset è illiquido, potresti perdere molto. Altro errore: concentrare troppo in asset illiquidi. Asset illiquidi possono avere rendimenti più alti (liquidity premium) ma alto Liquidity Risk. Evita anche di pensare che liquidità sia sempre buona: asset illiquidi possono offrire liquidity premium."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "risk-management",
+    "tags": ["investing", "portfolio-construction", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Portfolio", "Risk", "Liquidity"],
+    "relatedTerms": ["Portfolio", "Risk", "Liquidity", "Bid-Ask Spread"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
   }
 }
