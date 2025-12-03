@@ -1271,7 +1271,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     {whatDoes && (
                       <div className="space-y-4 sm:space-y-4">
                         {/* Sottotitolo - Gerarchia Livello 2 */}
-                        <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4 sm:mb-4 pb-2 border-b border-border-default">Cosa fa</h3>
+                        <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4 sm:mb-4 pb-2.5 border-b border-border-default">Cosa fa</h3>
                         <div className="max-w-full sm:max-w-3xl space-y-4 sm:space-y-4">
                           {formatTextIntoParagraphs(whatDoes).map((paragraph, idx) => (
                             <p 
