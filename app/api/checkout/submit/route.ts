@@ -26,11 +26,13 @@ export async function POST(request: NextRequest) {
 
     // Validazione
     if (!planId || !customerType || !billingCycle || typeof price !== "number") {
+      console.error("Validazione fallita:", { planId, customerType, billingCycle, price });
       return NextResponse.json({ error: "Dati mancanti o non validi" }, { status: 400 });
     }
 
-    const userEmail = customerData.email || customerData.contactEmail;
+    const userEmail = customerData?.email || customerData?.contactEmail;
     if (!userEmail) {
+      console.error("Email mancante:", customerData);
       return NextResponse.json({ error: "Email richiesta" }, { status: 400 });
     }
 
@@ -59,6 +61,14 @@ export async function POST(request: NextRequest) {
 
     if (paymentError) {
       console.error("Errore creazione payment:", paymentError);
+      return NextResponse.json({ 
+        error: "Errore creazione richiesta",
+        details: process.env.NODE_ENV === 'development' ? paymentError.message : undefined
+      }, { status: 500 });
+    }
+
+    if (!payment || !payment.id) {
+      console.error("Payment non creato correttamente:", payment);
       return NextResponse.json({ error: "Errore creazione richiesta" }, { status: 500 });
     }
 

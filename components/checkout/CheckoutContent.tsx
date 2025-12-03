@@ -18,27 +18,18 @@ interface CheckoutData {
 }
 
 interface CustomerData {
-  // Retail (Privato)
+  // Retail (Privato) - Solo dati essenziali
   firstName?: string;
   lastName?: string;
   email: string;
-  phone?: string;
-  address?: string;
-  city?: string;
-  zipCode?: string;
   country?: string;
-  taxCode?: string; // Codice fiscale (obbligatorio per retail IT)
+  taxCode?: string; // Codice fiscale (solo se IT)
   
-  // Professionale (Azienda)
+  // Professionale (Azienda) - Solo dati essenziali
   companyName?: string;
   vatNumber?: string; // P.IVA (obbligatorio per professionale)
-  companyAddress?: string;
-  companyCity?: string;
-  companyZipCode?: string;
-  companyCountry?: string;
-  contactPerson?: string;
   contactEmail?: string;
-  contactPhone?: string;
+  companyCountry?: string;
   requireInvoice?: boolean;
 }
 
@@ -56,10 +47,9 @@ export function CheckoutContent() {
 
   useEffect(() => {
     const planId = searchParams.get('plan') as 'pro' | 'desk' | null;
-    const customerType = searchParams.get('customerType') as 'retail' | 'professionale' | null;
     const billingCycle = searchParams.get('billing') as 'monthly' | 'yearly';
 
-    if (!planId || !customerType || !billingCycle) {
+    if (!planId || !billingCycle) {
       router.push('/pricing');
       return;
     }
@@ -67,14 +57,15 @@ export function CheckoutContent() {
     // Calcola prezzo in base al piano
     const prices: Record<string, { monthly: number; yearly: number }> = {
       pro: { monthly: 29, yearly: 290 },
-      desk: { monthly: 99, yearly: 990 }, // Prezzi Desk da definire
+      desk: { monthly: 99, yearly: 990 },
     };
 
     const price = prices[planId]?.[billingCycle] ?? 0;
 
+    // customerType sarà selezionato nel form, non più da query params
     setCheckoutData({
       planId: planId as 'pro' | 'desk',
-      customerType: customerType as 'retail' | 'professionale',
+      customerType: 'retail', // Default, sarà cambiato dall'utente
       billingCycle,
       price,
       currency: 'EUR',
@@ -93,20 +84,24 @@ export function CheckoutContent() {
   const validateData = (): boolean => {
     const newErrors: Record<string, string> = {};
 
+    // Validazione customerType
+    if (!checkoutData?.customerType) {
+      newErrors.customerType = 'Seleziona tipo cliente';
+    }
+
     if (checkoutData?.customerType === 'retail') {
-      if (!customerData.firstName) newErrors.firstName = t('checkout.errors.firstName') || 'Nome richiesto';
-      if (!customerData.lastName) newErrors.lastName = t('checkout.errors.lastName') || 'Cognome richiesto';
-      if (!customerData.email) newErrors.email = t('checkout.errors.email') || 'Email richiesta';
-      if (!customerData.country) newErrors.country = t('checkout.errors.country') || 'Paese richiesto';
+      if (!customerData.firstName) newErrors.firstName = 'Nome richiesto';
+      if (!customerData.lastName) newErrors.lastName = 'Cognome richiesto';
+      if (!customerData.email) newErrors.email = 'Email richiesta';
+      if (!customerData.country) newErrors.country = 'Paese richiesto';
       if (customerData.country === 'IT' && !customerData.taxCode) {
-        newErrors.taxCode = t('checkout.errors.taxCode') || 'Codice fiscale richiesto per l\'Italia';
+        newErrors.taxCode = 'Codice fiscale richiesto per l\'Italia';
       }
-    } else {
-      if (!customerData.companyName) newErrors.companyName = t('checkout.errors.companyName') || 'Ragione sociale richiesta';
-      if (!customerData.vatNumber) newErrors.vatNumber = t('checkout.errors.vatNumber') || 'P.IVA richiesta';
-      if (!customerData.companyAddress) newErrors.companyAddress = t('checkout.errors.companyAddress') || 'Indirizzo aziendale richiesto';
-      if (!customerData.contactEmail) newErrors.contactEmail = t('checkout.errors.contactEmail') || 'Email contatto richiesta';
-      if (!customerData.companyCountry) newErrors.companyCountry = t('checkout.errors.companyCountry') || 'Paese richiesto';
+    } else if (checkoutData?.customerType === 'professionale') {
+      if (!customerData.companyName) newErrors.companyName = 'Ragione sociale richiesta';
+      if (!customerData.vatNumber) newErrors.vatNumber = 'P.IVA richiesta';
+      if (!customerData.contactEmail) newErrors.contactEmail = 'Email contatto richiesta';
+      if (!customerData.companyCountry) newErrors.companyCountry = 'Paese richiesto';
     }
 
     setErrors(newErrors);
@@ -222,6 +217,7 @@ export function CheckoutContent() {
                 customerType={checkoutData.customerType}
                 customerData={customerData}
                 setCustomerData={setCustomerData}
+                setCheckoutData={setCheckoutData}
                 errors={errors}
                 onSubmit={handleSubmitData}
               />
@@ -259,6 +255,7 @@ function DataCollectionForm({
   customerType,
   customerData,
   setCustomerData,
+  setCheckoutData,
   errors,
   onSubmit,
 }: {
@@ -266,12 +263,61 @@ function DataCollectionForm({
   customerType: 'retail' | 'professionale';
   customerData: CustomerData;
   setCustomerData: (data: CustomerData) => void;
+  setCheckoutData: (data: CheckoutData) => void;
   errors: Record<string, string>;
   onSubmit: () => void;
 }) {
   const { t } = useTranslations();
 
-  if (customerType === 'retail') {
+  return (
+    <div className="bg-bg-surface border border-border-subtle rounded-2xl p-6 space-y-6">
+      {/* Selezione Business/Retail */}
+      <div>
+        <label className="block text-sm font-medium text-text-primary mb-3">
+          Tipo Cliente *
+        </label>
+        <div className="grid grid-cols-2 gap-4">
+          <button
+            type="button"
+            onClick={() => {
+              setCheckoutData(prev => prev ? { ...prev, customerType: 'retail' } : null);
+              setCustomerData({ email: customerData.email || '' }); // Reset dati
+            }}
+            className={cn(
+              'p-4 rounded-xl border-2 transition-all',
+              customerType === 'retail'
+                ? 'border-accent bg-accent/10'
+                : 'border-border-subtle hover:border-border-default'
+            )}
+          >
+            <User className="w-6 h-6 mx-auto mb-2 text-accent" />
+            <div className="font-semibold text-text-primary">Privato (Retail)</div>
+            <div className="text-xs text-text-tertiary mt-1">Per uso personale</div>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setCheckoutData(prev => prev ? { ...prev, customerType: 'professionale' } : null);
+              setCustomerData({ email: customerData.email || '' }); // Reset dati
+            }}
+            className={cn(
+              'p-4 rounded-xl border-2 transition-all',
+              customerType === 'professionale'
+                ? 'border-accent bg-accent/10'
+                : 'border-border-subtle hover:border-border-default'
+            )}
+          >
+            <Building2 className="w-6 h-6 mx-auto mb-2 text-blue-400" />
+            <div className="font-semibold text-text-primary">Azienda (Business)</div>
+            <div className="text-xs text-text-tertiary mt-1">Per uso professionale</div>
+          </button>
+        </div>
+        {errors.customerType && (
+          <p className="text-xs text-red-400 mt-2">{errors.customerType}</p>
+        )}
+      </div>
+
+      {customerType === 'retail' ? (
     return (
       <div className="bg-bg-surface border border-border-subtle rounded-2xl p-6 space-y-6">
         <div className="flex items-center gap-3 mb-6">
@@ -332,57 +378,8 @@ function DataCollectionForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-2">
-            {t('checkout.data.individual.phone') || 'Telefono'}
-          </label>
-          <input
-            type="tel"
-            value={customerData.phone || ''}
-            onChange={(e) => setCustomerData({ ...customerData, phone: e.target.value })}
-            className="w-full px-4 py-2 rounded-lg bg-bg-soft border border-border-subtle focus:outline-none focus:border-accent"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-text-primary mb-2">
-            {t('checkout.data.individual.address') || 'Indirizzo'}
-          </label>
-          <input
-            type="text"
-            value={customerData.address || ''}
-            onChange={(e) => setCustomerData({ ...customerData, address: e.target.value })}
-            className="w-full px-4 py-2 rounded-lg bg-bg-soft border border-border-subtle focus:outline-none focus:border-accent"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
-              {t('checkout.data.individual.city') || 'Città'}
-            </label>
-            <input
-              type="text"
-              value={customerData.city || ''}
-              onChange={(e) => setCustomerData({ ...customerData, city: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg bg-bg-soft border border-border-subtle focus:outline-none focus:border-accent"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">
-              {t('checkout.data.individual.zipCode') || 'CAP'}
-            </label>
-            <input
-              type="text"
-              value={customerData.zipCode || ''}
-              onChange={(e) => setCustomerData({ ...customerData, zipCode: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg bg-bg-soft border border-border-subtle focus:outline-none focus:border-accent"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">
-              {t('checkout.data.individual.country') || 'Paese'} *
+              Paese *
             </label>
             <select
               value={customerData.country || ''}
@@ -392,7 +389,7 @@ function DataCollectionForm({
                 errors.country ? 'border-red-500' : 'border-border-subtle'
               )}
             >
-              <option value="">{t('checkout.data.selectCountry') || 'Seleziona...'}</option>
+              <option value="">Seleziona...</option>
               <option value="IT">Italia</option>
               <option value="US">Stati Uniti</option>
               <option value="GB">Regno Unito</option>
@@ -406,7 +403,7 @@ function DataCollectionForm({
         {customerData.country === 'IT' && (
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
-              {t('checkout.data.retail.taxCode') || 'Codice Fiscale'} *
+              Codice Fiscale *
             </label>
             <input
               type="text"
@@ -422,182 +419,106 @@ function DataCollectionForm({
           </div>
         )}
 
-        <button
-          onClick={onSubmit}
-          className="w-full py-3 rounded-xl bg-accent hover:bg-accent-hover text-white font-semibold transition-all duration-200"
-        >
-          {t('checkout.data.continue') || 'Continua al Pagamento'}
-        </button>
-      </div>
-    );
-  }
+      ) : (
+        <>
+          <div className="flex items-center gap-3 mb-4">
+            <Building2 className="w-5 h-5 text-blue-400" />
+            <h2 className="text-xl font-semibold text-text-primary">
+              Dati Aziendali
+            </h2>
+          </div>
 
-  // Professionale (Azienda) Form
-  return (
-    <div className="bg-bg-surface border border-border-subtle rounded-2xl p-6 space-y-6">
-      <div className="flex items-center gap-3 mb-6">
-        <Building2 className="w-5 h-5 text-blue-400" />
-        <h2 className="text-xl font-semibold text-text-primary">
-          {t('checkout.data.professionale.title') || 'Dati Aziendali (Professionale)'}
-        </h2>
-      </div>
+          <div>
+            <label className="block text-sm font-medium text-text-primary mb-2">
+              Ragione Sociale *
+            </label>
+            <input
+              type="text"
+              value={customerData.companyName || ''}
+              onChange={(e) => setCustomerData({ ...customerData, companyName: e.target.value })}
+              className={cn(
+                'w-full px-4 py-2 rounded-lg bg-bg-soft border focus:outline-none focus:border-accent',
+                errors.companyName ? 'border-red-500' : 'border-border-subtle'
+              )}
+            />
+            {errors.companyName && <p className="text-xs text-red-400 mt-1">{errors.companyName}</p>}
+          </div>
 
-      <div>
-        <label className="block text-sm font-medium text-text-primary mb-2">
-          {t('checkout.data.professionale.companyName') || 'Ragione Sociale'} *
-        </label>
-        <input
-          type="text"
-          value={customerData.companyName || ''}
-          onChange={(e) => setCustomerData({ ...customerData, companyName: e.target.value })}
-          className={cn(
-            'w-full px-4 py-2 rounded-lg bg-bg-soft border focus:outline-none focus:border-accent',
-            errors.companyName ? 'border-red-500' : 'border-border-subtle'
-          )}
-        />
-        {errors.companyName && <p className="text-xs text-red-400 mt-1">{errors.companyName}</p>}
-      </div>
+          <div>
+            <label className="block text-sm font-medium text-text-primary mb-2">
+              Partita IVA *
+            </label>
+            <input
+              type="text"
+              value={customerData.vatNumber || ''}
+              onChange={(e) => setCustomerData({ ...customerData, vatNumber: e.target.value })}
+              className={cn(
+                'w-full px-4 py-2 rounded-lg bg-bg-soft border focus:outline-none focus:border-accent',
+                errors.vatNumber ? 'border-red-500' : 'border-border-subtle'
+              )}
+            />
+            {errors.vatNumber && <p className="text-xs text-red-400 mt-1">{errors.vatNumber}</p>}
+          </div>
 
-      <div>
-        <label className="block text-sm font-medium text-text-primary mb-2">
-          {t('checkout.data.professionale.vatNumber') || 'Partita IVA'} *
-        </label>
-        <input
-          type="text"
-          value={customerData.vatNumber || ''}
-          onChange={(e) => setCustomerData({ ...customerData, vatNumber: e.target.value })}
-          className={cn(
-            'w-full px-4 py-2 rounded-lg bg-bg-soft border focus:outline-none focus:border-accent',
-            errors.vatNumber ? 'border-red-500' : 'border-border-subtle'
-          )}
-        />
-        {errors.vatNumber && <p className="text-xs text-red-400 mt-1">{errors.vatNumber}</p>}
-      </div>
+          <div>
+            <label className="block text-sm font-medium text-text-primary mb-2">
+              Paese *
+            </label>
+            <select
+              value={customerData.companyCountry || ''}
+              onChange={(e) => setCustomerData({ ...customerData, companyCountry: e.target.value })}
+              className={cn(
+                'w-full px-4 py-2 rounded-lg bg-bg-soft border focus:outline-none focus:border-accent',
+                errors.companyCountry ? 'border-red-500' : 'border-border-subtle'
+              )}
+            >
+              <option value="">Seleziona...</option>
+              <option value="IT">Italia</option>
+              <option value="US">Stati Uniti</option>
+              <option value="GB">Regno Unito</option>
+              <option value="DE">Germania</option>
+              <option value="FR">Francia</option>
+            </select>
+            {errors.companyCountry && <p className="text-xs text-red-400 mt-1">{errors.companyCountry}</p>}
+          </div>
 
-      <div>
-        <label className="block text-sm font-medium text-text-primary mb-2">
-          {t('checkout.data.professionale.companyAddress') || 'Indirizzo Aziendale'} *
-        </label>
-        <input
-          type="text"
-          value={customerData.companyAddress || ''}
-          onChange={(e) => setCustomerData({ ...customerData, companyAddress: e.target.value })}
-          className={cn(
-            'w-full px-4 py-2 rounded-lg bg-bg-soft border focus:outline-none focus:border-accent',
-            errors.companyAddress ? 'border-red-500' : 'border-border-subtle'
-          )}
-        />
-        {errors.companyAddress && <p className="text-xs text-red-400 mt-1">{errors.companyAddress}</p>}
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-text-primary mb-2">
-            {t('checkout.data.professionale.companyCity') || 'Città'}
-          </label>
-          <input
-            type="text"
-            value={customerData.companyCity || ''}
-            onChange={(e) => setCustomerData({ ...customerData, companyCity: e.target.value })}
-            className="w-full px-4 py-2 rounded-lg bg-bg-soft border border-border-subtle focus:outline-none focus:border-accent"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-text-primary mb-2">
-            {t('checkout.data.professionale.companyZipCode') || 'CAP'}
-          </label>
-          <input
-            type="text"
-            value={customerData.companyZipCode || ''}
-            onChange={(e) => setCustomerData({ ...customerData, companyZipCode: e.target.value })}
-            className="w-full px-4 py-2 rounded-lg bg-bg-soft border border-border-subtle focus:outline-none focus:border-accent"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-text-primary mb-2">
-            {t('checkout.data.professionale.companyCountry') || 'Paese'} *
-          </label>
-          <select
-            value={customerData.companyCountry || ''}
-            onChange={(e) => setCustomerData({ ...customerData, companyCountry: e.target.value })}
-            className={cn(
-              'w-full px-4 py-2 rounded-lg bg-bg-soft border focus:outline-none focus:border-accent',
-              errors.companyCountry ? 'border-red-500' : 'border-border-subtle'
-            )}
-          >
-            <option value="">{t('checkout.data.selectCountry') || 'Seleziona...'}</option>
-            <option value="IT">Italia</option>
-            <option value="US">Stati Uniti</option>
-            <option value="GB">Regno Unito</option>
-            <option value="DE">Germania</option>
-            <option value="FR">Francia</option>
-          </select>
-          {errors.companyCountry && <p className="text-xs text-red-400 mt-1">{errors.companyCountry}</p>}
+          <div>
+            <label className="block text-sm font-medium text-text-primary mb-2">
+              Email Contatto *
+            </label>
+            <input
+              type="email"
+              value={customerData.contactEmail || ''}
+              onChange={(e) => setCustomerData({ ...customerData, contactEmail: e.target.value })}
+              className={cn(
+                'w-full px-4 py-2 rounded-lg bg-bg-soft border focus:outline-none focus:border-accent',
+                errors.contactEmail ? 'border-red-500' : 'border-border-subtle'
+              )}
+            />
+            {errors.contactEmail && <p className="text-xs text-red-400 mt-1">{errors.contactEmail}</p>}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-text-primary mb-2">
-            {t('checkout.data.professionale.contactPerson') || 'Persona di Contatto'}
-          </label>
-          <input
-            type="text"
-            value={customerData.contactPerson || ''}
-            onChange={(e) => setCustomerData({ ...customerData, contactPerson: e.target.value })}
-            className="w-full px-4 py-2 rounded-lg bg-bg-soft border border-border-subtle focus:outline-none focus:border-accent"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-text-primary mb-2">
-            {t('checkout.data.professionale.contactEmail') || 'Email Contatto'} *
-          </label>
-          <input
-            type="email"
-            value={customerData.contactEmail || ''}
-            onChange={(e) => setCustomerData({ ...customerData, contactEmail: e.target.value })}
-            className={cn(
-              'w-full px-4 py-2 rounded-lg bg-bg-soft border focus:outline-none focus:border-accent',
-              errors.contactEmail ? 'border-red-500' : 'border-border-subtle'
-            )}
-          />
-          {errors.contactEmail && <p className="text-xs text-red-400 mt-1">{errors.contactEmail}</p>}
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-text-primary mb-2">
-          {t('checkout.data.professionale.contactPhone') || 'Telefono Contatto'}
-        </label>
-        <input
-          type="tel"
-          value={customerData.contactPhone || ''}
-          onChange={(e) => setCustomerData({ ...customerData, contactPhone: e.target.value })}
-          className="w-full px-4 py-2 rounded-lg bg-bg-soft border border-border-subtle focus:outline-none focus:border-accent"
-        />
-      </div>
-
-      <div className="flex items-center gap-3 p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
-        <input
-          type="checkbox"
-          id="requireInvoice"
-          checked={customerData.requireInvoice || false}
-          onChange={(e) => setCustomerData({ ...customerData, requireInvoice: e.target.checked })}
-          className="w-5 h-5 rounded border-border-subtle text-accent focus:ring-accent"
-        />
-        <label htmlFor="requireInvoice" className="flex-1 text-sm text-text-secondary cursor-pointer">
-          {t('checkout.data.professionale.requireInvoice') || 'Richiedi fattura B2B (verrà generata automaticamente dopo il pagamento)'}
-        </label>
-      </div>
+          <div className="flex items-center gap-3 p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
+            <input
+              type="checkbox"
+              id="requireInvoice"
+              checked={customerData.requireInvoice || false}
+              onChange={(e) => setCustomerData({ ...customerData, requireInvoice: e.target.checked })}
+              className="w-5 h-5 rounded border-border-subtle text-accent focus:ring-accent"
+            />
+            <label htmlFor="requireInvoice" className="flex-1 text-sm text-text-secondary cursor-pointer">
+              Richiedi fattura B2B (verrà generata automaticamente dopo il pagamento)
+            </label>
+          </div>
+        </>
+      )}
 
       <button
         onClick={onSubmit}
         className="w-full py-3 rounded-xl bg-accent hover:bg-accent-hover text-white font-semibold transition-all duration-200"
       >
-        {t('checkout.data.continue') || 'Continua al Pagamento'}
+        Continua al Pagamento
       </button>
     </div>
   );
