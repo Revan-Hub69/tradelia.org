@@ -77,35 +77,38 @@ export function GlossaryContent() {
   const allTags = [...oldTags, ...tradeliaTags];
   const terms = Object.entries(glossaryData).map(([key, term]) => ({ key, ...term }));
 
+  // Helper function per normalizzare categoria a stringa per confronti
+  const normalizeCategory = (cat: GlossaryCategory | TradeliaGlossaryCategory | string | undefined): string | null => {
+    if (!cat) return null;
+    if (cat === 'all') return 'all';
+    
+    // Se è già una chiave Tradelia, ritorna quella
+    if (cat in TRADELIA_GLOSSARY_CATEGORIES) {
+      return cat as string;
+    }
+    
+    // Se è un displayName Tradelia, trova la chiave
+    const tradeliaCat = Object.values(TRADELIA_GLOSSARY_CATEGORIES).find(
+      c => c.displayName === cat
+    );
+    if (tradeliaCat) {
+      return tradeliaCat.key;
+    }
+    
+    // Altrimenti ritorna come stringa (categoria vecchia)
+    return cat as string;
+  };
+
   // Helper function per matching categoria più robusto
   const matchesCategory = (term: GlossaryTermWithKey, category: GlossaryCategory | TradeliaGlossaryCategory | 'all'): boolean => {
     if (category === 'all') return true;
     
-    // Match diretto
-    if (term.category === category) return true;
+    const normalizedCategory = normalizeCategory(category);
+    const normalizedTermCategory = normalizeCategory(term.category);
     
-    // Match Tradelia: se categoria selezionata è Tradelia, controlla anche displayName
-    if (category in TRADELIA_GLOSSARY_CATEGORIES) {
-      const tradeliaCat = TRADELIA_GLOSSARY_CATEGORIES[category as TradeliaGlossaryCategory];
-      const termCategoryString = (term.category as string | undefined) ?? undefined;
-      if (termCategoryString && termCategoryString === tradeliaCat.displayName) return true;
-      if (term.category === category) return true;
-    }
+    if (!normalizedCategory || !normalizedTermCategory) return false;
     
-    // Match inverso: se termine ha categoria Tradelia, controlla se corrisponde
-    if (term.category && typeof term.category === 'string') {
-      const termCategoryStr = term.category as string;
-      if (termCategoryStr in TRADELIA_GLOSSARY_CATEGORIES) {
-        return termCategoryStr === category;
-      }
-      // Controlla se displayName corrisponde
-      const tradeliaCat = Object.values(TRADELIA_GLOSSARY_CATEGORIES).find(
-        cat => cat.displayName === termCategoryStr
-      );
-      if (tradeliaCat && tradeliaCat.key === category) return true;
-    }
-    
-    return false;
+    return normalizedCategory === normalizedTermCategory;
   };
 
   // Helper function per matching tag più robusto
