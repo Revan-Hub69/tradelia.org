@@ -22,6 +22,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { getGlossaryTerm } from '@/lib/glossary/terms';
 import type { GlossaryTerm as GlossaryTermType } from '@/lib/glossary/terms';
+import { formatTextIntoParagraphs } from '@/lib/glossary/text-formatter';
 import Image from 'next/image';
 
 interface GlossaryTerm {
@@ -1130,14 +1131,35 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     <p className="text-xs text-text-tertiary font-medium">Academic Definition</p>
                   </div>
                 </div>
-                <div className="prose prose-base dark:prose-invert max-w-none">
-                  <p className="text-[15px] text-text-primary leading-[1.75] font-normal mb-4">
-                    {academicWhat}
-                  </p>
+                <div className="max-w-3xl">
+                  {/* Paragrafi formattati per leggibilità ottimale */}
+                  <div className="space-y-4">
+                    {formatTextIntoParagraphs(academicWhat).map((paragraph, idx) => (
+                      <p 
+                        key={idx}
+                        className="text-[16px] text-text-primary leading-[1.7] font-normal"
+                        style={{ 
+                          maxWidth: '65ch', // Ottimale per leggibilità (45-75 caratteri)
+                          textAlign: 'left' // Non giustificato per migliore leggibilità
+                        }}
+                      >
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
                   {term.academicDefinition?.academicContext && (
-                    <div className="mt-5 p-4 bg-bg-soft border-l-3 border-accent/40 rounded-r-md">
-                      <p className="text-sm text-text-secondary italic leading-relaxed font-normal">
-                        {term.academicDefinition.academicContext}
+                    <div className="mt-6 p-5 bg-bg-soft border-l-4 border-accent/50 rounded-r-lg">
+                      <p className="text-[15px] text-text-secondary italic leading-[1.7] font-normal max-w-[60ch]">
+                        {formatTextIntoParagraphs(term.academicDefinition.academicContext).map((p, idx) => (
+                          <span key={idx}>
+                            {p}
+                            {idx < formatTextIntoParagraphs(term.academicDefinition.academicContext).length - 1 && (
+                              <>
+                                <br /><br />
+                              </>
+                            )}
+                          </span>
+                        ))}
                       </p>
                     </div>
                   )}
@@ -1160,48 +1182,84 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   </div>
                   <div className="space-y-7">
                     {whatDoes && (
-                      <div className="space-y-3">
-                        <h4 className="text-lg font-bold text-text-primary mb-3">Cosa fa</h4>
-                        <div className="prose prose-base dark:prose-invert max-w-none">
-                          <p className="text-[15px] text-text-primary leading-[1.75] whitespace-pre-line font-normal">
-                            {whatDoes}
-                          </p>
+                      <div className="space-y-4">
+                        <h4 className="text-lg font-bold text-text-primary mb-4">Cosa fa</h4>
+                        <div className="max-w-3xl space-y-4">
+                          {formatTextIntoParagraphs(whatDoes).map((paragraph, idx) => (
+                            <p 
+                              key={idx}
+                              className="text-[16px] text-text-primary leading-[1.7] font-normal"
+                              style={{ 
+                                maxWidth: '65ch',
+                                textAlign: 'left'
+                              }}
+                            >
+                              {paragraph}
+                            </p>
+                          ))}
                         </div>
                       </div>
                     )}
                     {howToUse && (
-                      <div className="space-y-3">
-                        <h4 className="text-lg font-bold text-text-primary mb-3">Come si usa</h4>
-                        <div className="prose prose-base dark:prose-invert max-w-none">
-                          <p className="text-[15px] text-text-primary leading-[1.75] whitespace-pre-line font-normal">
-                            {howToUse}
-                          </p>
+                      <div className="space-y-4">
+                        <h4 className="text-lg font-bold text-text-primary mb-4">Come si usa</h4>
+                        <div className="max-w-3xl space-y-4">
+                          {formatTextIntoParagraphs(howToUse).map((paragraph, idx) => (
+                            <p 
+                              key={idx}
+                              className="text-[16px] text-text-primary leading-[1.7] font-normal"
+                              style={{ 
+                                maxWidth: '65ch',
+                                textAlign: 'left'
+                              }}
+                            >
+                              {paragraph}
+                            </p>
+                          ))}
                         </div>
                       </div>
                     )}
                     {practicalExample && (
-                      <div className="space-y-3 p-6 bg-blue-50 dark:bg-blue-950/50 border-l-4 border-blue-500 dark:border-blue-400 rounded-r-xl shadow-md">
-                        <h4 className="text-lg font-bold text-blue-900 dark:text-blue-100 flex items-center gap-3 mb-3">
+                      <div className="space-y-4 p-6 bg-blue-50 dark:bg-blue-950/50 border-l-4 border-blue-500 dark:border-blue-400 rounded-r-xl shadow-md">
+                        <h4 className="text-lg font-bold text-blue-900 dark:text-blue-100 flex items-center gap-3 mb-4">
                           <Sparkles className="w-6 h-6 text-blue-700 dark:text-blue-300" />
                           Esempio Pratico
                         </h4>
-                        <div className="prose prose-base dark:prose-invert max-w-none">
-                          <p className="text-[15px] text-blue-900 dark:text-blue-50 leading-[1.75] whitespace-pre-line font-medium">
-                            {practicalExample}
-                          </p>
+                        <div className="max-w-3xl space-y-4">
+                          {formatTextIntoParagraphs(practicalExample).map((paragraph, idx) => (
+                            <p 
+                              key={idx}
+                              className="text-[16px] text-blue-900 dark:text-blue-50 leading-[1.7] font-medium"
+                              style={{ 
+                                maxWidth: '65ch',
+                                textAlign: 'left'
+                              }}
+                            >
+                              {paragraph}
+                            </p>
+                          ))}
                         </div>
                       </div>
                     )}
                     {commonMistakes && (
-                      <div className="space-y-3 p-6 bg-red-50 dark:bg-red-950/50 border-l-4 border-red-500 dark:border-red-400 rounded-r-xl shadow-md">
-                        <h4 className="text-lg font-bold text-red-900 dark:text-red-100 flex items-center gap-3 mb-3">
+                      <div className="space-y-4 p-6 bg-red-50 dark:bg-red-950/50 border-l-4 border-red-500 dark:border-red-400 rounded-r-xl shadow-md">
+                        <h4 className="text-lg font-bold text-red-900 dark:text-red-100 flex items-center gap-3 mb-4">
                           <FileText className="w-6 h-6 text-red-700 dark:text-red-300" />
                           Errori Comuni da Evitare
                         </h4>
-                        <div className="prose prose-base dark:prose-invert max-w-none">
-                          <p className="text-[15px] text-red-900 dark:text-red-50 leading-[1.75] whitespace-pre-line font-medium">
-                            {commonMistakes}
-                          </p>
+                        <div className="max-w-3xl space-y-4">
+                          {formatTextIntoParagraphs(commonMistakes).map((paragraph, idx) => (
+                            <p 
+                              key={idx}
+                              className="text-[16px] text-red-900 dark:text-red-50 leading-[1.7] font-medium"
+                              style={{ 
+                                maxWidth: '65ch',
+                                textAlign: 'left'
+                              }}
+                            >
+                              {paragraph}
+                            </p>
+                          ))}
                         </div>
                       </div>
                     )}
