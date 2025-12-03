@@ -762,11 +762,59 @@
     "noResults": "No terms found",
     "relatedTerms": "Related terms",
     "stats": "{count} terms available",
+    "loading": "Loading glossary...",
+    "termsCount": "terms",
+    "themesCount": "themes",
+    "instructions": "Instructions",
+    "keyboardNavigation": {
+      "title": "Keyboard Navigation",
+      "navigateTerms": "Navigate between terms",
+      "openTerm": "Open term in drawer",
+      "closeDrawer": "Close drawer",
+      "focusSearch": "Focus search",
+      "navigateElements": "Navigate between interactive elements",
+      "closeInstructions": "Close instructions",
+      "showInstructions": "Show keyboard instructions"
+    },
+    "termOfTheDay": {
+      "title": "Term of the Day",
+      "viewTerm": "View Term",
+      "educationalDescription": "Simple but comprehensive educational explanation"
+    },
+    "filters": {
+      "title": "Topics and Themes",
+      "selectedTags": "theme selected",
+      "selectedTagsPlural": "themes selected",
+      "termCount": "term",
+      "termCountPlural": "terms",
+      "removeAllTags": "Remove all themes",
+      "availableTerms": "term available",
+      "availableTermsPlural": "terms available",
+      "showAllTerms": "Show all terms",
+      "modifyFilters": "Try modifying filters or search to find other terms",
+      "showAllAvailable": "Show all {count} available terms"
+    },
     "drawer": {
       "subtitle": "Complete term definition",
       "academicExplanation": "Academic Explanation",
+      "technicalExplanation": "Tradelia AI Technical Explanation",
       "tradeliaExplanation": "Tradelia AI Explanation",
-      "sources": "Academic Sources"
+      "tradeliaAIExplanation": "Tradelia AI Explanation",
+      "relatedTerms": "Related Terms",
+      "sources": "Academic Sources",
+      "whatDoes": "What it does",
+      "howToUse": "How to use",
+      "practicalExample": "Practical Example",
+      "commonMistakes": "Common Mistakes",
+      "close": "Close drawer",
+      "print": "Print definition",
+      "content": "Glossary content",
+      "sourceTypes": {
+        "primarySource": "Primary source",
+        "secondarySource": "Secondary source",
+        "workingPaper": "Working paper",
+        "bookChapter": "Book chapter"
+      }
     }
   },
   "widgets": {

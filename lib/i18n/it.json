@@ -766,13 +766,59 @@
     "noResults": "Nessun termine trovato",
     "relatedTerms": "Termini correlati",
     "stats": "{count} termini disponibili",
+    "loading": "Caricamento glossario...",
+    "termsCount": "termini",
+    "themesCount": "temi",
+    "instructions": "Istruzioni",
+    "keyboardNavigation": {
+      "title": "Navigazione da tastiera",
+      "navigateTerms": "Naviga tra i termini",
+      "openTerm": "Apri termine nel drawer",
+      "closeDrawer": "Chiudi drawer",
+      "focusSearch": "Focus ricerca",
+      "navigateElements": "Naviga tra elementi interattivi",
+      "closeInstructions": "Chiudi istruzioni",
+      "showInstructions": "Mostra istruzioni tastiera"
+    },
+    "termOfTheDay": {
+      "title": "Termine del Giorno",
+      "viewTerm": "Visualizza Termine",
+      "educationalDescription": "Spiegazione educativa semplice ma completa"
+    },
+    "filters": {
+      "title": "Argomenti e Temi",
+      "selectedTags": "tema selezionato",
+      "selectedTagsPlural": "temi selezionati",
+      "termCount": "termine",
+      "termCountPlural": "termini",
+      "removeAllTags": "Rimuovi tutti i temi",
+      "availableTerms": "termine disponibile",
+      "availableTermsPlural": "termini disponibili",
+      "showAllTerms": "Mostra tutti i termini",
+      "modifyFilters": "Prova a modificare i filtri o la ricerca per trovare altri termini",
+      "showAllAvailable": "Mostra tutti i {count} termini disponibili"
+    },
     "drawer": {
       "subtitle": "Definizione completa del termine",
       "academicExplanation": "Definizione Accademica",
       "technicalExplanation": "Spiegazione Tecnica Tradelia AI",
       "tradeliaExplanation": "Spiegazione Tradelia AI",
+      "tradeliaAIExplanation": "Spiegazione Tradelia AI",
       "relatedTerms": "Termini Correlati",
-      "sources": "Riferimenti Bibliografici"
+      "sources": "Riferimenti Bibliografici",
+      "whatDoes": "Cosa fa",
+      "howToUse": "Come si usa",
+      "practicalExample": "Esempio Pratico",
+      "commonMistakes": "Errori Comuni",
+      "close": "Chiudi drawer",
+      "print": "Stampa definizione",
+      "content": "Contenuto glossario",
+      "sourceTypes": {
+        "primarySource": "Fonte primaria",
+        "secondarySource": "Fonte secondaria",
+        "workingPaper": "Working paper",
+        "bookChapter": "Capitolo libro"
+      }
     }
   },
   "widgets": {

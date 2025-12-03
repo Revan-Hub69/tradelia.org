@@ -818,34 +818,34 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     </div>
 
     <section class="print-section">
-      <h2 class="print-section-title">Definizione Accademica</h2>
+      <h2 class="print-section-title">${t('glossary.drawer.academicExplanation') || 'Definizione Accademica'}</h2>
       <div class="print-section-content">${formatTextIntoParagraphs(academicWhat || '').map(p => `<p class="print-paragraph">${p}</p>`).join('')}</div>
     </section>
 
     ${(whatDoes || howToUse || term.technical || term.how) ? `
       <section class="print-section">
-        <h2 class="print-section-title">Spiegazione Tradelia AI</h2>
+        <h2 class="print-section-title">${t('glossary.drawer.tradeliaAIExplanation') || 'Spiegazione Tradelia AI'}</h2>
         ${whatDoes ? `
           <div style="margin-bottom: 0.8cm;">
-            <h3 style="font-size: 13pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">Cosa fa</h3>
+            <h3 style="font-size: 13pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">${t('glossary.drawer.whatDoes') || 'Cosa fa'}</h3>
             <div class="print-section-content">${formatTextIntoParagraphs(whatDoes || '').map(p => `<p class="print-paragraph">${p}</p>`).join('')}</div>
           </div>
         ` : ''}
         ${howToUse ? `
           <div style="margin-bottom: 0.8cm;">
-            <h3 style="font-size: 13pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">Come si usa</h3>
+            <h3 style="font-size: 13pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">${t('glossary.drawer.howToUse') || 'Come si usa'}</h3>
             <div class="print-section-content">${formatTextIntoParagraphs(howToUse || '').map(p => `<p class="print-paragraph">${p}</p>`).join('')}</div>
           </div>
         ` : ''}
         ${practicalExample ? `
           <div style="margin-bottom: 0.8cm; padding: 0.5cm; background-color: #f9fafb; border-left: 3px solid #3b82f6; border-radius: 4px;">
-            <h3 style="font-size: 12pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">Esempio Pratico</h3>
+            <h3 style="font-size: 12pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">${t('glossary.drawer.practicalExample') || 'Esempio Pratico'}</h3>
             <div class="print-section-content" style="font-size: 10pt;">${formatTextIntoParagraphs(practicalExample || '').map(p => `<p class="print-paragraph">${p}</p>`).join('')}</div>
           </div>
         ` : ''}
         ${commonMistakes ? `
           <div style="margin-bottom: 0.8cm; padding: 0.5cm; background-color: #fef2f2; border-left: 3px solid #ef4444; border-radius: 4px;">
-            <h3 style="font-size: 12pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">Errori Comuni da Evitare</h3>
+            <h3 style="font-size: 12pt; font-weight: 600; color: #0f172a; margin-bottom: 0.3cm;">${t('glossary.drawer.commonMistakes') || 'Errori Comuni da Evitare'}</h3>
             <div class="print-section-content" style="font-size: 10pt;">${formatTextIntoParagraphs(commonMistakes || '').map(p => `<p class="print-paragraph">${p}</p>`).join('')}</div>
           </div>
         ` : ''}
@@ -857,7 +857,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
 
     ${relatedTermsData.length > 0 ? `
       <section class="print-section">
-        <h2 class="print-section-title">Termini Correlati</h2>
+        <h2 class="print-section-title">${t('glossary.drawer.relatedTerms') || 'Termini Correlati'}</h2>
         <div class="print-section-content">
           ${relatedTermsData.map((relatedTerm, index) => 
             `• ${relatedTerm.title}${relatedTerm.category ? ` (${relatedTerm.category})` : ''}`
@@ -867,7 +867,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
     ` : ''}
 
     <section class="print-sources">
-      <h2 class="print-section-title">Riferimenti Bibliografici</h2>
+      <h2 class="print-section-title">${t('glossary.drawer.sources') || 'Riferimenti Bibliografici'}</h2>
       <div>
         ${Array.isArray(academicSource) 
           ? academicSource.map(source => {
@@ -972,7 +972,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
 
                   {/* Definizione Accademica */}
                   <section className="print-section">
-                    <h2 className="print-section-title">Definizione Accademica</h2>
+                    <h2 className="print-section-title">{t('glossary.drawer.academicExplanation') || 'Definizione Accademica'}</h2>
                     <div className="print-section-content">
                       {academicWhat}
                     </div>
@@ -981,10 +981,10 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   {/* Spiegazione Tradelia AI */}
                   {(whatDoes || howToUse || term.technical || term.how) && (
                     <section className="print-section">
-                      <h2 className="print-section-title">Spiegazione Tradelia AI</h2>
+                      <h2 className="print-section-title">{t('glossary.drawer.tradeliaAIExplanation') || 'Spiegazione Tradelia AI'}</h2>
                       {whatDoes && (
                         <div style={{ marginBottom: '0.8cm' }}>
-                          <h3 style={{ fontSize: '13pt', fontWeight: 600, color: '#0f172a', marginBottom: '0.3cm' }}>Cosa fa</h3>
+                          <h3 style={{ fontSize: '13pt', fontWeight: 600, color: '#0f172a', marginBottom: '0.3cm' }}>{t('glossary.drawer.whatDoes') || 'Cosa fa'}</h3>
                           <div className="print-section-content" style={{ whiteSpace: 'pre-line' }}>
                             {whatDoes}
                           </div>
@@ -992,7 +992,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       )}
                       {howToUse && (
                         <div style={{ marginBottom: '0.8cm' }}>
-                          <h3 style={{ fontSize: '13pt', fontWeight: 600, color: '#0f172a', marginBottom: '0.3cm' }}>Come si usa</h3>
+                          <h3 style={{ fontSize: '13pt', fontWeight: 600, color: '#0f172a', marginBottom: '0.3cm' }}>{t('glossary.drawer.howToUse') || 'Come si usa'}</h3>
                           <div className="print-section-content" style={{ whiteSpace: 'pre-line' }}>
                             {howToUse}
                           </div>
@@ -1000,7 +1000,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       )}
                       {practicalExample && (
                         <div style={{ marginBottom: '0.8cm', padding: '0.5cm', backgroundColor: '#f9fafb', borderLeft: '3px solid #3b82f6', borderRadius: '4px' }}>
-                          <h3 style={{ fontSize: '12pt', fontWeight: 600, color: '#0f172a', marginBottom: '0.3cm' }}>Esempio Pratico</h3>
+                          <h3 style={{ fontSize: '12pt', fontWeight: 600, color: '#0f172a', marginBottom: '0.3cm' }}>{t('glossary.drawer.practicalExample') || 'Esempio Pratico'}</h3>
                           <div className="print-section-content" style={{ whiteSpace: 'pre-line', fontSize: '10pt' }}>
                             {practicalExample}
                           </div>
@@ -1008,7 +1008,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       )}
                       {commonMistakes && (
                         <div style={{ marginBottom: '0.8cm', padding: '0.5cm', backgroundColor: '#fef2f2', borderLeft: '3px solid #ef4444', borderRadius: '4px' }}>
-                          <h3 style={{ fontSize: '12pt', fontWeight: 600, color: '#0f172a', marginBottom: '0.3cm' }}>Errori Comuni da Evitare</h3>
+                          <h3 style={{ fontSize: '12pt', fontWeight: 600, color: '#0f172a', marginBottom: '0.3cm' }}>{t('glossary.drawer.commonMistakes') || 'Errori Comuni da Evitare'}</h3>
                           <div className="print-section-content" style={{ whiteSpace: 'pre-line', fontSize: '10pt' }}>
                             {commonMistakes}
                           </div>
@@ -1025,7 +1025,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   {/* Termini Correlati */}
                   {relatedTermsData.length > 0 && (
                     <section className="print-section">
-                      <h2 className="print-section-title">Termini Correlati</h2>
+                      <h2 className="print-section-title">{t('glossary.drawer.relatedTerms') || 'Termini Correlati'}</h2>
                       <div className="print-section-content">
                         {relatedTermsData.map((relatedTerm, index) => (
                           <div key={index} style={{ marginBottom: '0.25cm', marginTop: index === 0 ? '0' : '0.25cm' }}>
@@ -1039,7 +1039,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
 
                   {/* Fonti Accademiche */}
                   <section className="print-sources">
-                    <h2 className="print-section-title">Riferimenti Bibliografici</h2>
+                    <h2 className="print-section-title">{t('glossary.drawer.sources') || 'Riferimenti Bibliografici'}</h2>
                     <div>
                       {Array.isArray(academicSource) 
                         ? academicSource.map((source, index) => {
@@ -1153,7 +1153,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   <button
                     onClick={handlePrint}
                     className="w-9 h-9 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent relative group"
-                    aria-label="Stampa definizione"
+                    aria-label={t('glossary.drawer.print') || 'Stampa definizione'}
                     title={isPro ? "Stampa" : "Stampa (Richiede Pro)"}
                   >
                     <Printer className="w-4 h-4" />
@@ -1195,7 +1195,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               ref={contentScrollableRef}
               tabIndex={0}
               role="region"
-              aria-label="Contenuto glossario"
+              aria-label={t('glossary.drawer.content') || 'Contenuto glossario'}
               className="no-print flex-1 overflow-y-auto overflow-x-hidden p-5 sm:p-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 bg-bg-surface" 
               style={{ 
                 scrollbarWidth: 'thin'
@@ -1269,7 +1269,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       <h2 id="tradelia-ai-section-title" className="text-lg sm:text-2xl font-bold text-text-primary mb-1.5 sm:mb-2">
                         {t('glossary.drawer.tradeliaAIExplanation') || 'Spiegazione Tradelia AI'}
                       </h2>
-                      <p className="text-xs sm:text-sm text-text-tertiary font-medium">Spiegazione educativa semplice ma completa</p>
+                      <p className="text-xs sm:text-sm text-text-tertiary font-medium">{t('glossary.termOfTheDay.educationalDescription') || 'Spiegazione educativa semplice ma completa'}</p>
                     </div>
                   </div>
                   {/* Sottosezioni - Gerarchia Livello 2 */}
@@ -1277,7 +1277,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     {whatDoes && (
                       <div className="space-y-4 sm:space-y-4">
                         {/* Sottotitolo - Gerarchia Livello 2 */}
-                        <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4 sm:mb-4 pb-2.5 border-b border-border-default">Cosa fa</h3>
+                        <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4 sm:mb-4 pb-2.5 border-b border-border-default">{t('glossary.drawer.whatDoes') || 'Cosa fa'}</h3>
                         <div className="max-w-full sm:max-w-3xl space-y-4 sm:space-y-4">
                           {formatTextIntoParagraphs(whatDoes).map((paragraph, idx) => (
                             <p 
@@ -1299,7 +1299,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     {howToUse && (
                       <div className="space-y-4 sm:space-y-4">
                         {/* Sottotitolo - Gerarchia Livello 2 */}
-                        <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4 sm:mb-4 pb-2.5 border-b border-border-default">Come si usa</h3>
+                        <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4 sm:mb-4 pb-2.5 border-b border-border-default">{t('glossary.drawer.howToUse') || 'Come si usa'}</h3>
                         <div className="max-w-full sm:max-w-3xl space-y-4 sm:space-y-4">
                           {formatTextIntoParagraphs(howToUse).map((paragraph, idx) => (
                             <p 
@@ -1323,7 +1323,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                         {/* Sottotitolo Card - Gerarchia Livello 2 */}
                         <h3 className="text-base sm:text-lg font-semibold text-text-primary flex items-center gap-2.5 mb-4 sm:mb-4">
                           <Sparkles className="w-5 h-5 sm:w-5 sm:h-5 text-accent" />
-                          Esempio Pratico
+                          {t('glossary.drawer.practicalExample') || 'Esempio Pratico'}
                         </h3>
                         <div className="max-w-full sm:max-w-3xl space-y-4 sm:space-y-4">
                           {formatTextIntoParagraphs(practicalExample).map((paragraph, idx) => (
@@ -1348,7 +1348,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                         {/* Sottotitolo Card - Gerarchia Livello 2 */}
                         <h3 className="text-base sm:text-lg font-semibold text-text-primary flex items-center gap-2.5 mb-4 sm:mb-4">
                           <FileText className="w-5 h-5 sm:w-5 sm:h-5 text-error" />
-                          Errori Comuni da Evitare
+                          {t('glossary.drawer.commonMistakes') || 'Errori Comuni da Evitare'}
                         </h3>
                         <div className="max-w-full sm:max-w-3xl space-y-4 sm:space-y-4">
                           {formatTextIntoParagraphs(commonMistakes).map((paragraph, idx) => (
@@ -1464,10 +1464,10 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                                 <span className="px-2 py-1 bg-bg-surface rounded border border-border-default">
                                   {source.type === 'peer-reviewed' ? 'Peer-reviewed' : 
                                    source.type === 'textbook' ? 'Textbook' :
-                                   source.type === 'primary-source' ? 'Fonte primaria' :
-                                   source.type === 'secondary-source' ? 'Fonte secondaria' :
-                                   source.type === 'working-paper' ? 'Working paper' :
-                                   source.type === 'book-chapter' ? 'Capitolo libro' : source.type}
+                                   source.type === 'primary-source' ? (t('glossary.drawer.sourceTypes.primarySource') || 'Fonte primaria') :
+                                   source.type === 'secondary-source' ? (t('glossary.drawer.sourceTypes.secondarySource') || 'Fonte secondaria') :
+                                   source.type === 'working-paper' ? (t('glossary.drawer.sourceTypes.workingPaper') || 'Working paper') :
+                                   source.type === 'book-chapter' ? (t('glossary.drawer.sourceTypes.bookChapter') || 'Capitolo libro') : source.type}
                                 </span>
                               )}
                               {source.primary && (

@@ -12,6 +12,14 @@
  * - Vecchia: what, source, technical, how
  * - Nuova: academicDefinition, tradeliaExplanation
  *
+ * TODO: Internationalization
+ * - I termini attualmente sono solo in italiano nei file JSON
+ * - Per supportare l'inglese, creare file JSON separati:
+ *   - tradelia-glossary-new-en.json
+ *   - tradelia-glossary-300-en.json
+ *   - glossario-en.json
+ * - Oppure aggiungere traduzioni inline ai termini esistenti
+ *
  * Alternativa futura: Hybrid (JSON base + Supabase override)
  * - JSON come base sempre disponibile
  * - Supabase per override/custom solo se necessario
@@ -70,45 +78,62 @@ export interface GlossaryTerm {
   version?: number;
 }
 
-// Cache in-memory per performance
-let glossaryData: Record<string, GlossaryTerm> = {};
+// Cache in-memory per performance (per locale)
+const glossaryDataCache: Record<string, Record<string, GlossaryTerm>> = {};
 
 /**
  * Carica termini del glossario
  * Strategia: Import statico (Next.js) > Fetch (fallback) > Fallback hardcoded
+ * 
+ * TODO: Supporto multilingua
+ * - Attualmente carica solo file italiani
+ * - Per supportare inglese, rilevare locale e caricare file corrispondente:
+ *   - it: tradelia-glossary-new.json / glossario.json
+ *   - en: tradelia-glossary-new-en.json / glossario-en.json
  */
-export async function loadGlossaryTerms(): Promise<Record<string, GlossaryTerm>> {
+export async function loadGlossaryTerms(locale: 'it' | 'en' = 'it'): Promise<Record<string, GlossaryTerm>> {
   // Return cached data if available
-  if (Object.keys(glossaryData).length > 0) {
-    return glossaryData;
+  if (glossaryDataCache[locale] && Object.keys(glossaryDataCache[locale]).length > 0) {
+    return glossaryDataCache[locale];
   }
 
   // Try static import first (best for Next.js bundle optimization)
   if (typeof window === "undefined") {
     // Server-side: use dynamic import
     // Priority: nuova struttura Tradelia > vecchia struttura
+    // TODO: Quando disponibili, caricare file inglesi per locale === 'en'
+    const suffix = locale === 'en' ? '-en' : '';
     try {
-      const data = await import("../../public/tradelia-glossary-new.json");
-      glossaryData = parseGlossaryData(data.default || data);
-      return glossaryData;
+      const data = await import(`../../public/tradelia-glossary-new${suffix}.json`);
+      glossaryDataCache[locale] = parseGlossaryData(data.default || data);
+      return glossaryDataCache[locale];
     } catch {
       try {
-        const data = await import("./tradelia-glossary-300.json");
-        glossaryData = parseGlossaryData(data.default || data);
-        return glossaryData;
+        const data = await import(`./tradelia-glossary-300${suffix}.json`);
+        glossaryDataCache[locale] = parseGlossaryData(data.default || data);
+        return glossaryDataCache[locale];
       } catch {
         // Fallback to public folder
         try {
-          const data = await import("../../public/tradelia-glossary-300.json");
-          glossaryData = parseGlossaryData(data.default || data);
-          return glossaryData;
+          const data = await import(`../../public/tradelia-glossary-300${suffix}.json`);
+          glossaryDataCache[locale] = parseGlossaryData(data.default || data);
+          return glossaryDataCache[locale];
         } catch {
           try {
-            const data = await import("../../public/glossario.json");
-            glossaryData = parseGlossaryData(data.default || data);
-            return glossaryData;
+            const data = await import(`../../public/glossario${suffix}.json`);
+            glossaryDataCache[locale] = parseGlossaryData(data.default || data);
+            return glossaryDataCache[locale];
           } catch {
-            // Continue to fetch fallback
+            // Se file inglese non esiste, fallback a italiano
+            if (locale === 'en') {
+              try {
+                const data = await import("../../public/tradelia-glossary-new.json");
+                glossaryDataCache[locale] = parseGlossaryData(data.default || data);
+                return glossaryDataCache[locale];
+              } catch {
+                // Continue to fetch fallback
+              }
+            }
           }
         }
       }
@@ -118,18 +143,24 @@ export async function loadGlossaryTerms(): Promise<Record<string, GlossaryTerm>>
   // Client-side: try fetch from public folder (accessible via URL)
   try {
     // Priority: nuova struttura Tradelia > vecchia struttura
-    let response = await fetch("/tradelia-glossary-new.json");
+    // TODO: Quando disponibili, caricare file inglesi per locale === 'en'
+    const suffix = locale === 'en' ? '-en' : '';
+    let response = await fetch(`/tradelia-glossary-new${suffix}.json`);
     if (!response.ok) {
-      response = await fetch("/tradelia-glossary-300.json");
+      response = await fetch(`/tradelia-glossary-300${suffix}.json`);
     }
     if (!response.ok) {
-      response = await fetch("/glossario.json");
+      response = await fetch(`/glossario${suffix}.json`);
+    }
+    // Se file inglese non esiste, fallback a italiano
+    if (!response.ok && locale === 'en') {
+      response = await fetch("/tradelia-glossary-new.json");
     }
 
     if (response.ok) {
       const data = await response.json();
-      glossaryData = parseGlossaryData(data);
-      return glossaryData;
+      glossaryDataCache[locale] = parseGlossaryData(data);
+      return glossaryDataCache[locale];
     }
   } catch (error) {
     console.error("Error loading glossary terms:", error);
@@ -209,7 +240,7 @@ export async function loadGlossaryTerms(): Promise<Record<string, GlossaryTerm>>
     },
   };
 
-  glossaryData = fallbackTerms;
+  glossaryDataCache[locale] = fallbackTerms;
   return fallbackTerms;
 }
 

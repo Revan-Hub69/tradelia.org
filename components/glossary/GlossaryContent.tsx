@@ -26,7 +26,7 @@ interface GlossaryTermWithKey extends GlossaryTerm {
  * - WCAG 2.1 AA compliant
  */
 export function GlossaryContent() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [glossaryData, setGlossaryData] = useState<Record<string, GlossaryTerm>>({});
@@ -40,7 +40,7 @@ export function GlossaryContent() {
 
   // Load glossary data
   useEffect(() => {
-    loadGlossaryTerms().then((data) => {
+    loadGlossaryTerms(locale as 'it' | 'en').then((data) => {
       setGlossaryData(data);
       setLoading(false);
       
@@ -57,7 +57,7 @@ export function GlossaryContent() {
         }
       }
     });
-  }, []);
+  }, [locale]);
 
   const terms = Object.entries(glossaryData).map(([key, term]) => ({ key, ...term }));
 
@@ -220,7 +220,7 @@ export function GlossaryContent() {
       <div className="min-h-screen bg-bg-base flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-text-secondary">Caricamento glossario...</p>
+          <p className="text-text-secondary">{t('glossary.loading') || 'Caricamento glossario...'}</p>
         </div>
       </div>
     );
@@ -242,11 +242,11 @@ export function GlossaryContent() {
                 </h1>
                 <div className="flex items-center gap-3 flex-wrap mt-1">
                   <p className="text-sm text-text-tertiary">
-                    <span className="font-semibold text-text-primary">{terms.length}</span> termini
+                    <span className="font-semibold text-text-primary">{terms.length}</span> {t('glossary.termsCount') || 'termini'}
                   </p>
                   <span className="text-text-tertiary">•</span>
                   <p className="text-sm text-text-tertiary">
-                    <span className="font-semibold text-text-primary">{allTags.length}</span> temi
+                    <span className="font-semibold text-text-primary">{allTags.length}</span> {t('glossary.themesCount') || 'temi'}
                   </p>
                 </div>
               </div>
@@ -256,10 +256,10 @@ export function GlossaryContent() {
             <button
               onClick={() => setShowKeyboardHelp(!showKeyboardHelp)}
               className="flex items-center gap-2 px-3 py-2 rounded-lg bg-bg-soft border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-surface transition-colors text-sm"
-              aria-label="Mostra istruzioni tastiera"
+              aria-label={t('glossary.keyboardNavigation.showInstructions') || 'Mostra istruzioni tastiera'}
             >
               <Keyboard className="w-4 h-4" />
-              <span>Istruzioni</span>
+              <span>{t('glossary.instructions') || 'Istruzioni'}</span>
             </button>
           </div>
 
@@ -275,19 +275,19 @@ export function GlossaryContent() {
                 <div className="flex items-start gap-2 mb-2">
                   <Keyboard className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
                   <div className="flex-1">
-                    <h3 className="font-semibold text-text-primary mb-2">Navigazione da tastiera</h3>
+                    <h3 className="font-semibold text-text-primary mb-2">{t('glossary.keyboardNavigation.title') || 'Navigazione da tastiera'}</h3>
                     <ul className="space-y-1 text-text-secondary text-xs">
-                      <li><kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">↑</kbd> <kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">↓</kbd> Naviga tra i termini</li>
-                      <li><kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">Enter</kbd> Apri termine nel drawer</li>
-                      <li><kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">Esc</kbd> Chiudi drawer</li>
-                      <li><kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">Ctrl/Cmd</kbd> + <kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">K</kbd> Focus ricerca</li>
-                      <li><kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">Tab</kbd> Naviga tra elementi interattivi</li>
+                      <li><kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">↑</kbd> <kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">↓</kbd> {t('glossary.keyboardNavigation.navigateTerms') || 'Naviga tra i termini'}</li>
+                      <li><kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">Enter</kbd> {t('glossary.keyboardNavigation.openTerm') || 'Apri termine nel drawer'}</li>
+                      <li><kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">Esc</kbd> {t('glossary.keyboardNavigation.closeDrawer') || 'Chiudi drawer'}</li>
+                      <li><kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">Ctrl/Cmd</kbd> + <kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">K</kbd> {t('glossary.keyboardNavigation.focusSearch') || 'Focus ricerca'}</li>
+                      <li><kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">Tab</kbd> {t('glossary.keyboardNavigation.navigateElements') || 'Naviga tra elementi interattivi'}</li>
                     </ul>
                   </div>
                   <button
                     onClick={() => setShowKeyboardHelp(false)}
                     className="p-1 rounded hover:bg-bg-surface text-text-tertiary hover:text-text-primary transition-colors"
-                    aria-label="Chiudi istruzioni"
+                    aria-label={t('glossary.keyboardNavigation.closeInstructions') || 'Chiudi istruzioni'}
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -312,7 +312,7 @@ export function GlossaryContent() {
                 <div>
                   <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
                     <Sparkles className="w-5 h-5 text-accent" />
-                    Termine del Giorno
+                    {t('glossary.termOfTheDay.title') || 'Termine del Giorno'}
                   </h2>
                   <p className="text-xs text-text-tertiary mt-0.5">
                     {formatTermDate(new Date())}
@@ -339,9 +339,9 @@ export function GlossaryContent() {
                 <button
                   onClick={() => openTerm(termOfTheDay)}
                   className="px-4 py-2 bg-accent text-white rounded-lg font-medium hover:bg-accent-hover transition-colors flex-shrink-0 flex items-center gap-2"
-                  aria-label={`Leggi la definizione completa di ${termOfTheDay.title}`}
+                  aria-label={t('glossary.termOfTheDay.viewTerm') || `Visualizza ${termOfTheDay.title}`}
                 >
-                  <span>Leggi tutto</span>
+                  <span>{t('glossary.termOfTheDay.viewTerm') || 'Visualizza Termine'}</span>
                   <ChevronDown className="w-4 h-4 rotate-[-90deg]" />
                 </button>
               </div>
@@ -366,7 +366,7 @@ export function GlossaryContent() {
               <button
                 onClick={() => setSearchTerm('')}
                 className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-bg-soft text-text-tertiary hover:text-text-primary transition-colors"
-                aria-label="Cancella ricerca"
+                aria-label={t('common.clear') || 'Cancella ricerca'}
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -413,11 +413,11 @@ export function GlossaryContent() {
               <div className="flex items-center gap-2 mb-3">
                 <Tag className="w-4 h-4 text-accent" />
                 <label className="text-sm font-semibold text-text-primary">
-                  Argomenti e Temi
+                  {t('glossary.filters.title') || 'Argomenti e Temi'}
                 </label>
                 {selectedTags.length > 0 && (
                   <span className="text-xs text-accent font-semibold">
-                    • {selectedTags.length} {selectedTags.length === 1 ? 'tema selezionato' : 'temi selezionati'}
+                    • {selectedTags.length} {selectedTags.length === 1 ? (t('glossary.filters.selectedTags') || 'tema selezionato') : (t('glossary.filters.selectedTagsPlural') || 'temi selezionati')}
                   </span>
                 )}
               </div>
@@ -457,7 +457,7 @@ export function GlossaryContent() {
                           ? 'bg-accent text-white border-accent shadow-sm'
                           : 'bg-bg-surface text-text-secondary border-border-subtle hover:bg-bg-soft hover:border-accent/50'
                       )}
-                      title={`${tagDisplayName}: ${count} ${count === 1 ? 'termine' : 'termini'}`}
+                      title={`${tagDisplayName}: ${count} ${count === 1 ? (t('glossary.filters.termCount') || 'termine') : (t('glossary.filters.termCountPlural') || 'termini')}`}
                     >
                       <span>{tagDisplayName}</span>
                       <span className={cn(
@@ -477,7 +477,7 @@ export function GlossaryContent() {
                   onClick={() => setSelectedTags([])}
                   className="mt-2 text-xs text-text-tertiary hover:text-text-primary underline"
                 >
-                  Rimuovi tutti i temi
+                  {t('glossary.filters.removeAllTags') || 'Rimuovi tutti i temi'}
                 </button>
               )}
             </div>
@@ -487,10 +487,10 @@ export function GlossaryContent() {
         {/* Results Count - Clear Summary */}
         <div className="mb-3 flex items-center gap-2">
           {filteredTerms.length === 0 ? (
-            <span className="text-sm text-text-secondary font-medium">Nessun risultato trovato</span>
+            <span className="text-sm text-text-secondary font-medium">{t('glossary.noResults') || 'Nessun risultato trovato'}</span>
           ) : (
             <span className="text-sm text-text-primary font-semibold">
-              {filteredTerms.length} {filteredTerms.length === 1 ? 'termine disponibile' : 'termini disponibili'}
+              {filteredTerms.length} {filteredTerms.length === 1 ? (t('glossary.filters.availableTerms') || 'termine disponibile') : (t('glossary.filters.availableTermsPlural') || 'termini disponibili')}
             </span>
           )}
           {(searchTerm || selectedTags.length > 0) && filteredTerms.length > 0 && (
@@ -501,7 +501,7 @@ export function GlossaryContent() {
               }}
               className="text-xs text-accent hover:text-accent-hover underline"
             >
-              Mostra tutti i termini
+              {t('glossary.filters.showAllTerms') || 'Mostra tutti i termini'}
             </button>
           )}
         </div>
@@ -515,7 +515,7 @@ export function GlossaryContent() {
                 {t('glossary.noResults') || 'Nessun termine trovato'}
               </p>
               <p className="text-xs text-text-tertiary">
-                Prova a modificare i filtri o la ricerca per trovare altri termini
+                {t('glossary.filters.modifyFilters') || 'Prova a modificare i filtri o la ricerca per trovare altri termini'}
               </p>
               {(searchTerm || selectedTags.length > 0) && (
                 <button
@@ -525,7 +525,7 @@ export function GlossaryContent() {
                   }}
                   className="mt-3 px-4 py-2 text-sm font-medium text-accent hover:text-accent-hover underline"
                 >
-                  Mostra tutti i {terms.length} termini disponibili
+                  {t('glossary.filters.showAllAvailable', { count: terms.length }) || `Mostra tutti i ${terms.length} termini disponibili`}
                 </button>
               )}
             </div>
