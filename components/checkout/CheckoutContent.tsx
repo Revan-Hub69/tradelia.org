@@ -329,7 +329,7 @@ function DataCollectionForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
-              {t('checkout.data.individual.firstName') || 'Nome'} *
+              Nome *
             </label>
             <input
               type="text"
@@ -345,7 +345,7 @@ function DataCollectionForm({
 
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
-              {t('checkout.data.individual.lastName') || 'Cognome'} *
+              Cognome *
             </label>
             <input
               type="text"
@@ -362,7 +362,7 @@ function DataCollectionForm({
 
         <div>
           <label className="block text-sm font-medium text-text-primary mb-2">
-            {t('checkout.data.individual.email') || 'Email'} *
+            Email *
           </label>
           <input
             type="email"
@@ -494,8 +494,7 @@ function DataCollectionForm({
               )}
             />
             {errors.contactEmail && <p className="text-xs text-red-400 mt-1">{errors.contactEmail}</p>}
-        </div>
-      </div>
+          </div>
 
           <div className="flex items-center gap-3 p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
             <input
