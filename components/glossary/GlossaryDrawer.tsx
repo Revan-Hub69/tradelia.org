@@ -1024,15 +1024,15 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-full sm:w-full sm:max-w-lg bg-white dark:bg-gray-900 border-l-4 border-blue-900 dark:border-blue-700 shadow-2xl z-[9999] flex flex-col overflow-hidden"
+              className="fixed right-0 top-0 bottom-0 w-full sm:w-full sm:max-w-lg bg-white dark:bg-gray-950 border-l-2 border-gray-300 dark:border-gray-700 shadow-2xl z-[9999] flex flex-col overflow-hidden"
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"
               aria-labelledby="glossary-drawer-title"
               aria-describedby="glossary-drawer-description"
             >
-            {/* Header - Academic Style - Estremo contrasto */}
-            <div className="no-print border-b-2 border-blue-900 dark:border-blue-700 bg-gray-50 dark:bg-gray-800">
+            {/* Header - Academic Style - Contrasto ottimale */}
+            <div className="no-print border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
               {/* Breadcrumb Navigation - Improved Spacing and Readability */}
               <div className="px-4 sm:px-6 pt-3 pb-2">
                 <nav 
@@ -1111,14 +1111,14 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                 </div>
               )}
             </div>
-            {/* Content - Academic Layout - Estremo contrasto per leggibilità */}
+            {/* Content - Academic Layout - Leggibilità ottimale */}
             <div 
               ref={contentScrollableRef}
               tabIndex={-1}
-              className="no-print flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 space-y-6 sm:space-y-8 focus:outline-none bg-white dark:bg-gray-900" 
+              className="no-print flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 space-y-6 sm:space-y-8 focus:outline-none bg-white dark:bg-gray-950" 
               style={{ 
                 scrollbarWidth: 'thin',
-                fontFamily: "'Helvetica', 'Arial', sans-serif" // Font ottimale per leggibilità
+                fontFamily: "'Helvetica', 'Arial', 'Verdana', sans-serif" // Font ottimale per leggibilità schermo
               }}
             >
               {/* Spiegazione Accademica - Academic Style */}
@@ -1140,11 +1140,11 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     {formatTextIntoParagraphs(academicWhat).map((paragraph, idx) => (
                       <p 
                         key={idx}
-                        className="text-[16px] text-black dark:text-gray-100 leading-[1.7] font-normal"
+                        className="text-[16px] text-gray-900 dark:text-gray-100 leading-[1.6] font-normal"
                         style={{ 
                           maxWidth: '65ch', // Ottimale per leggibilità (45-75 caratteri)
                           textAlign: 'left', // Non giustificato per migliore leggibilità
-                          color: '#000000', // Nero puro per massimo contrasto (21:1)
+                          color: '#111827', // Grigio molto scuro (contrasto 19:1, più confortevole del nero puro)
                         }}
                       >
                         {paragraph}
@@ -1152,8 +1152,8 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     ))}
                   </div>
                   {term.academicDefinition?.academicContext && (
-                    <div className="mt-6 p-5 bg-gray-50 dark:bg-gray-800 border-l-4 border-blue-900 dark:border-blue-700 rounded-r-lg">
-                      <p className="text-[15px] text-gray-800 dark:text-gray-200 italic leading-[1.7] font-normal max-w-[60ch]">
+                    <div className="mt-6 p-5 bg-gray-50 dark:bg-gray-900/50 border-l-3 border-gray-400 dark:border-gray-600 rounded-r-md">
+                      <p className="text-[15px] text-gray-700 dark:text-gray-300 italic leading-[1.6] font-normal max-w-[60ch]">
                         {(() => {
                           const paragraphs = formatTextIntoParagraphs(term.academicDefinition?.academicContext || '');
                           return paragraphs.map((p, idx) => (
@@ -1195,11 +1195,11 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                           {formatTextIntoParagraphs(whatDoes).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-[16px] text-black dark:text-gray-100 leading-[1.7] font-normal"
+                              className="text-[16px] text-gray-900 dark:text-gray-100 leading-[1.6] font-normal"
                               style={{ 
                                 maxWidth: '65ch',
                                 textAlign: 'left',
-                                color: '#000000' // Nero puro per massimo contrasto
+                                color: '#111827' // Grigio molto scuro (contrasto ottimale, più confortevole)
                               }}
                             >
                               {paragraph}
@@ -1215,11 +1215,11 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                           {formatTextIntoParagraphs(howToUse).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-[16px] text-black dark:text-gray-100 leading-[1.7] font-normal"
+                              className="text-[16px] text-gray-900 dark:text-gray-100 leading-[1.6] font-normal"
                               style={{ 
                                 maxWidth: '65ch',
                                 textAlign: 'left',
-                                color: '#000000' // Nero puro per massimo contrasto
+                                color: '#111827' // Grigio molto scuro (contrasto ottimale, più confortevole)
                               }}
                             >
                               {paragraph}
@@ -1229,19 +1229,20 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       </div>
                     )}
                     {practicalExample && (
-                      <div className="space-y-4 p-6 bg-blue-50 dark:bg-blue-950/50 border-l-4 border-blue-500 dark:border-blue-400 rounded-r-xl shadow-md">
-                        <h4 className="text-lg font-bold text-blue-900 dark:text-blue-100 flex items-center gap-3 mb-4">
-                          <Sparkles className="w-6 h-6 text-blue-700 dark:text-blue-300" />
+                      <div className="space-y-4 p-5 bg-blue-50/80 dark:bg-blue-950/30 border-l-3 border-blue-400 dark:border-blue-600 rounded-r-lg">
+                        <h4 className="text-lg font-bold text-blue-800 dark:text-blue-200 flex items-center gap-2.5 mb-3">
+                          <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                           Esempio Pratico
                         </h4>
                         <div className="max-w-3xl space-y-4">
                           {formatTextIntoParagraphs(practicalExample).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-[16px] text-blue-900 dark:text-blue-50 leading-[1.7] font-medium"
+                              className="text-[16px] text-gray-800 dark:text-blue-100 leading-[1.6] font-normal"
                               style={{ 
                                 maxWidth: '65ch',
-                                textAlign: 'left'
+                                textAlign: 'left',
+                                color: '#1f2937' // Grigio scuro per leggibilità ottimale
                               }}
                             >
                               {paragraph}
@@ -1251,19 +1252,20 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       </div>
                     )}
                     {commonMistakes && (
-                      <div className="space-y-4 p-6 bg-red-50 dark:bg-red-950/50 border-l-4 border-red-500 dark:border-red-400 rounded-r-xl shadow-md">
-                        <h4 className="text-lg font-bold text-red-900 dark:text-red-100 flex items-center gap-3 mb-4">
-                          <FileText className="w-6 h-6 text-red-700 dark:text-red-300" />
+                      <div className="space-y-4 p-5 bg-red-50/80 dark:bg-red-950/30 border-l-3 border-red-400 dark:border-red-600 rounded-r-lg">
+                        <h4 className="text-lg font-bold text-red-800 dark:text-red-200 flex items-center gap-2.5 mb-3">
+                          <FileText className="w-5 h-5 text-red-600 dark:text-red-400" />
                           Errori Comuni da Evitare
                         </h4>
                         <div className="max-w-3xl space-y-4">
                           {formatTextIntoParagraphs(commonMistakes).map((paragraph, idx) => (
                             <p 
                               key={idx}
-                              className="text-[16px] text-red-900 dark:text-red-50 leading-[1.7] font-medium"
+                              className="text-[16px] text-gray-800 dark:text-red-100 leading-[1.6] font-normal"
                               style={{ 
                                 maxWidth: '65ch',
-                                textAlign: 'left'
+                                textAlign: 'left',
+                                color: '#1f2937' // Grigio scuro per leggibilità ottimale
                               }}
                             >
                               {paragraph}
