@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils/cn';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useIsPro } from '@/lib/hooks/useUserRole';
+import { prefetchOnHover } from '@/lib/utils/prefetch';
 
 interface Plan {
   id: string;
@@ -269,6 +270,11 @@ function PlanCard({
 
       <button
         onClick={onSelect}
+        onMouseEnter={() => {
+          if (!isCurrentPlan) {
+            prefetchOnHover('/checkout');
+          }
+        }}
         disabled={isCurrentPlan}
         className={cn(
           'w-full py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2',

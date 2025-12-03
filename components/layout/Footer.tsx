@@ -12,6 +12,7 @@ import {
 } from '@/lib/animations';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
+import { prefetchOnHover } from '@/lib/utils/prefetch';
 
 export function Footer() {
   const { t } = useTranslations();
@@ -97,6 +98,7 @@ export function Footer() {
                 <Link
                   href={link.href}
                   className="text-sm text-text-secondary hover:text-text-primary hover:translate-x-1 transition-all duration-200 block pl-2 group relative"
+                  onMouseEnter={() => prefetchOnHover(link.href)}
                 >
                   <span className="relative">
                     {t(`footer.${sectionKey}Links.${link.key}`)}

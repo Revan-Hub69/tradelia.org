@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { LayoutDashboard } from 'lucide-react';
 import { useReducedMotion } from '@/lib/animations';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { prefetchOnHover } from '@/lib/utils/prefetch';
 
 export function Header() {
   const { t } = useTranslations();
@@ -57,6 +58,7 @@ export function Header() {
             <Link 
               href="/dashboard"
               aria-label={t('header.dashboardAria')}
+              onMouseEnter={() => prefetchOnHover('/dashboard')}
             >
               <LayoutDashboard className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
               <span className="hidden sm:inline">{t('header.dashboard')}</span>

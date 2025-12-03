@@ -7,6 +7,7 @@ import { LayoutDashboard, Building2, BookOpen, GraduationCap, FileText, Users, M
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { prefetchOnHover } from '@/lib/utils/prefetch';
 
 const navKeys = [
   { key: 'dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -93,6 +94,7 @@ export function Navigation() {
               key={item.key}
               href={item.href}
               aria-current={active ? 'page' : undefined}
+              onMouseEnter={() => prefetchOnHover(item.href)}
               className={cn(
                 'px-4 py-2 text-sm font-semibold text-text-secondary rounded-lg transition-all duration-200 relative',
                 'hover:text-text-primary hover:bg-bg-surface/60 hover:shadow-sm hover:-translate-y-0.5',
@@ -150,6 +152,7 @@ export function Navigation() {
                   key={item.key}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
+                  onMouseEnter={() => prefetchOnHover(item.href)}
                   className={cn(
                     'px-4 py-2 text-sm font-semibold whitespace-nowrap rounded-lg transition-all duration-200',
                     'min-h-[44px] flex items-center justify-center gap-2',

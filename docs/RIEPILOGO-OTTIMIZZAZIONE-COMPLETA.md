@@ -63,6 +63,9 @@
 - ✅ **Lazy Loading**: Componenti ProUtilities con `lazy()` e `Suspense`
 - ✅ **Image Optimization**: Next.js Image component con `loading="lazy"`
 - ✅ **Font Optimization**: `display: swap`, preload critici
+- ✅ **Prefetch Intelligente**: Prefetch on hover per link critici (Header, Navigation, Footer, Hero, Pricing)
+- ✅ **Preload Risorse Critiche**: Logo SVG preload per LCP optimization
+- ✅ **Prefetch Route Critiche**: Prefetch automatico per `/pricing`, `/dashboard`, `/glossary`
 
 ### 5. Accessibility (WCAG 2.1 AA)
 - ✅ **Focus Management**: Focus trap in modali/drawer
@@ -129,6 +132,7 @@
 
 ### Nuovi File
 - `lib/seo/metadata.ts` - Funzione `generatePageMetadata()` aggiunta
+- `lib/utils/prefetch.ts` - Utility per prefetch intelligente (Best Practice 2024-2025)
 - `docs/BEST-PRACTICE-2024-2025.md` - Documentazione best practice
 - `docs/VERIFICA-FINALE-2024-2025.md` - Verifica completa
 - `docs/RIEPILOGO-OTTIMIZZAZIONE-COMPLETA.md` - Questo documento
@@ -137,6 +141,12 @@
 - `components/ErrorBoundary.tsx` - Traduzioni IT/EN
 - `components/ui/loading.tsx` - Traduzioni IT/EN
 - `components/ui/error.tsx` - Traduzioni IT/EN
+- `components/layout/Header.tsx` - Prefetch on hover per link dashboard
+- `components/layout/Navigation.tsx` - Prefetch on hover per tutti i link navigazione
+- `components/layout/Footer.tsx` - Prefetch on hover per tutti i link footer
+- `components/home/Hero.tsx` - Prefetch on hover per CTA dashboard
+- `components/pricing/PricingContent.tsx` - Prefetch on hover per checkout
+- `app/layout.tsx` - Preload logo SVG + prefetch route critiche
 - `app/pricing/page.tsx` - Metadata dinamico
 - `app/en/pricing/page.tsx` - Metadata dinamico
 - `app/checkout/page.tsx` - Metadata dinamico + Loading component
@@ -201,10 +211,12 @@
 - ✅ Traduzioni complete IT/EN
 - ✅ Metadata dinamici per tutte le pagine
 - ✅ Best practice pagina vs modale vs drawer
-- ✅ Performance optimization
+- ✅ Performance optimization (lazy loading, code splitting, prefetch, preload)
 - ✅ Accessibility completa
 - ✅ SEO ottimizzato per AI
 - ✅ Anteprima condivisione completa
 - ✅ Sicurezza enterprise-grade
+- ✅ **Prefetch intelligente** per navigazione istantanea
+- ✅ **Preload risorse critiche** per LCP optimization
 
 **Pronto per produzione premium! 🚀**

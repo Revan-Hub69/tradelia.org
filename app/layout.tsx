@@ -178,8 +178,18 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
         <link rel="shortcut icon" href="/favicon.svg" />
         
-        {/* Preload critical resources - only if used immediately */}
-        {/* Logo preload removed - will be loaded when needed to avoid unused preload warning */}
+        {/* Preload critical resources - Best Practice 2024-2025 */}
+        {/* Preload logo for LCP optimization (used in header) */}
+        <link
+          rel="preload"
+          href="/logos/tradelia-logo.svg"
+          as="image"
+          type="image/svg+xml"
+        />
+        {/* Prefetch critical routes for faster navigation */}
+        <link rel="prefetch" href="/pricing" as="document" />
+        <link rel="prefetch" href="/dashboard" as="document" />
+        <link rel="prefetch" href="/glossary" as="document" />
         
         {/* Structured Data - EducationalOrganization + AI Search Optimization */}
         <script

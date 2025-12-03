@@ -16,6 +16,7 @@ import {
 } from '@/lib/animations';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
+import { prefetchOnHover } from '@/lib/utils/prefetch';
 
 export function Hero() {
   const { t, locale } = useTranslations();
@@ -181,7 +182,10 @@ export function Hero() {
         >
           <motion.div variants={hoverVariants} whileHover="hover" whileTap="tap">
             <Button asChild variant="default" size="lg">
-              <Link href={buildLocalePath(locale, '/dashboard#education')}>
+              <Link 
+                href={buildLocalePath(locale, '/dashboard#education')}
+                onMouseEnter={() => prefetchOnHover(buildLocalePath(locale, '/dashboard'))}
+              >
                 <span>{t('hero.ctaPrimary')}</span>
                 <ArrowRight className="w-5 h-5" aria-hidden="true" />
               </Link>
@@ -189,7 +193,10 @@ export function Hero() {
           </motion.div>
           <motion.div variants={hoverVariants} whileHover="hover" whileTap="tap">
             <Button asChild variant="secondary" size="lg">
-              <Link href={buildLocalePath(locale, '/dashboard')}>
+              <Link 
+                href={buildLocalePath(locale, '/dashboard')}
+                onMouseEnter={() => prefetchOnHover(buildLocalePath(locale, '/dashboard'))}
+              >
                 <span>Dashboard</span>
                 <LayoutDashboard className="w-5 h-5" aria-hidden="true" />
               </Link>
