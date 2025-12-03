@@ -1016,6 +1016,19 @@
           "7": "Priority support"
         },
         "cta": "Choose Pro"
+      },
+      "desk": {
+        "name": "Desk",
+        "description": "For institutions and teams",
+        "features": {
+          "1": "Everything in Pro",
+          "2": "API Access",
+          "3": "B2B Invoicing",
+          "4": "24/7 Support",
+          "5": "Dedicated Account Manager",
+          "6": "Custom integrations"
+        },
+        "cta": "Choose Desk"
       }
     },
     "comparison": {

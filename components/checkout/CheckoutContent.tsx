@@ -776,6 +776,7 @@ function OrderSummary({ checkoutData }: { checkoutData: CheckoutData | null }) {
   const planNames: Record<string, string> = {
     pro: t('pricing.plans.pro.name') || 'Pro',
     desk: t('pricing.plans.desk.name') || 'Desk',
+    trial: t('pricing.plans.trial.name') || 'Trial',
   };
 
   return (

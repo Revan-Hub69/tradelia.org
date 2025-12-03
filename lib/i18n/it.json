@@ -1013,6 +1013,19 @@
           "7": "Supporto prioritario"
         },
         "cta": "Scegli Pro"
+      },
+      "desk": {
+        "name": "Desk",
+        "description": "Per istituzioni e team",
+        "features": {
+          "1": "Tutto del Pro",
+          "2": "API Access",
+          "3": "Fatturazione B2B",
+          "4": "Supporto 24/7",
+          "5": "Account Manager dedicato",
+          "6": "Custom integrations"
+        },
+        "cta": "Scegli Desk"
       }
     },
     "comparison": {

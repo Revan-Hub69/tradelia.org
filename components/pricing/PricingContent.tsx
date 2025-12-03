@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Check, Building2, User, ArrowRight, Sparkles } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
@@ -26,7 +26,6 @@ interface Plan {
 export function PricingContent() {
   const { t, locale } = useTranslations();
   const router = useRouter();
-  const pathname = usePathname();
   const isPro = useIsPro();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
