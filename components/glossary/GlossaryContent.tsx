@@ -720,7 +720,7 @@ export function GlossaryContent() {
                             className="px-2 py-0.5 bg-bg-soft border border-border-subtle rounded text-xs text-text-tertiary"
                           >
                             {typeof tag === 'string' 
-                              ? (oldTags.includes(tag as GlossaryTag) 
+                              ? (getGlossaryTags().includes(tag as GlossaryTag) 
                                   ? getTagDisplayName(tag as GlossaryTag)
                                   : tag.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '))
                               : tag}
