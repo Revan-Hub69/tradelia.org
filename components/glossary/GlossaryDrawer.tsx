@@ -1012,7 +1012,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={onClose}
-              className="backdrop fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998]"
+              className="backdrop fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998] sm:backdrop-blur-sm"
               aria-hidden="true"
             />
 
@@ -1023,7 +1023,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-full max-w-lg bg-bg-surface border-l border-border-subtle shadow-2xl z-[9999] flex flex-col overflow-hidden"
+              className="fixed right-0 top-0 bottom-0 w-full sm:w-full sm:max-w-lg bg-bg-surface border-l border-border-subtle shadow-2xl z-[9999] flex flex-col overflow-hidden"
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"

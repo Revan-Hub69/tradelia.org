@@ -66,6 +66,84 @@ export function GlossaryContent() {
   const allCategories = [...oldCategories, ...tradeliaCategories];
   
   const terms = Object.entries(glossaryData).map(([key, term]) => ({ key, ...term }));
+
+  // Helper function per matching tag più robusto
+  const matchesTag = (term: GlossaryTermWithKey, tag: string): boolean => {
+    if (!term.tags || term.tags.length === 0) return false;
+    return term.tags.some(tagItem => {
+      if (typeof tagItem === 'string') {
+        return tagItem === tag || tagItem.toLowerCase() === tag.toLowerCase();
+      }
+      return tagItem === tag;
+    });
+  };
+
+  // Helper function per matching categoria più robusto
+  const normalizeCategory = (cat: GlossaryCategory | TradeliaGlossaryCategory | string | undefined): string | null => {
+    if (!cat) return null;
+    if (cat === 'all') return 'all';
+    
+    // Se è già una chiave Tradelia, ritorna quella
+    if (cat in TRADELIA_GLOSSARY_CATEGORIES) {
+      return cat as string;
+    }
+    
+    // Se è un displayName Tradelia, trova la chiave
+    const tradeliaCat = Object.values(TRADELIA_GLOSSARY_CATEGORIES).find(
+      c => c.displayName === cat
+    );
+    if (tradeliaCat) {
+      return tradeliaCat.key;
+    }
+    
+    // Altrimenti ritorna come stringa (categoria vecchia)
+    return cat as string;
+  };
+
+  // Helper function per matching categoria più robusto
+  const matchesCategory = (term: GlossaryTermWithKey, category: GlossaryCategory | TradeliaGlossaryCategory | 'all'): boolean => {
+    if (category === 'all') return true;
+    
+    const normalizedCategory = normalizeCategory(category);
+    const normalizedTermCategory = normalizeCategory(term.category);
+    
+    if (!normalizedCategory || !normalizedTermCategory) return false;
+    
+    return normalizedCategory === normalizedTermCategory;
+  };
+
+  // Helper function per ricerca più completa
+  const matchesSearch = (term: GlossaryTermWithKey, search: string): boolean => {
+    if (!search) return true;
+    const searchLower = search.toLowerCase();
+    
+    // Cerca nel titolo
+    if (term.title.toLowerCase().includes(searchLower)) return true;
+    
+    // Cerca nella definizione accademica
+    if (term.what.toLowerCase().includes(searchLower)) return true;
+    
+    // Cerca nella spiegazione Tradelia
+    if (term.whatDoes?.toLowerCase().includes(searchLower)) return true;
+    if (term.howToUse?.toLowerCase().includes(searchLower)) return true;
+    if (term.tradeliaExplanation?.whatDoes?.toLowerCase().includes(searchLower)) return true;
+    if (term.tradeliaExplanation?.howToUse?.toLowerCase().includes(searchLower)) return true;
+    
+    // Cerca in legacy fields
+    if (term.technical?.toLowerCase().includes(searchLower)) return true;
+    if (term.how?.toLowerCase().includes(searchLower)) return true;
+    
+    // Cerca nei tag
+    if (term.tags?.some(tag => 
+      typeof tag === 'string' && tag.toLowerCase().includes(searchLower)
+    )) return true;
+    
+    // Cerca nella categoria
+    if (term.category && typeof term.category === 'string' && 
+        term.category.toLowerCase().includes(searchLower)) return true;
+    
+    return false;
+  };
   
   // Extract unique tags actually used in terms (best practice: show only what exists)
   const usedTagsSet = new Set<string>();
@@ -82,10 +160,16 @@ export function GlossaryContent() {
   });
   
   // Convert to array and sort by usage frequency (most used first)
+  // Usa le funzioni helper già definite sopra
   const allTags = Array.from(usedTagsSet).sort((a, b) => {
-    const countA = terms.filter(t => matchesTag(t, a)).length;
-    const countB = terms.filter(t => matchesTag(t, b)).length;
-    return countB - countA; // Descending order
+    try {
+      const countA = terms.filter(t => matchesTag(t, a)).length;
+      const countB = terms.filter(t => matchesTag(t, b)).length;
+      return countB - countA; // Descending order
+    } catch (error) {
+      // Fallback: alphabetical sort se c'è errore
+      return a.localeCompare(b);
+    }
   });
 
   // Helper function per normalizzare categoria a stringa per confronti
