@@ -263,7 +263,7 @@ function DataCollectionForm({
   customerType: 'retail' | 'professionale';
   customerData: CustomerData;
   setCustomerData: (data: CustomerData) => void;
-  setCheckoutData: (data: CheckoutData) => void;
+  setCheckoutData: React.Dispatch<React.SetStateAction<CheckoutData | null>>;
   errors: Record<string, string>;
   onSubmit: () => void;
 }) {
