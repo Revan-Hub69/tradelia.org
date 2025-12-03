@@ -11,6 +11,16 @@
     "sending": "Invio...",
     "skipToContent": "Salta al contenuto principale"
   },
+  "error": {
+    "title": "Qualcosa è andato storto",
+    "description": "Si è verificato un errore imprevisto. Puoi provare a:",
+    "actions": {
+      "retry": "Riprova",
+      "goBack": "Torna Indietro",
+      "reload": "Ricarica Pagina",
+      "goHome": "Torna alla Home"
+    }
+  },
   "nav": {
     "dashboard": "Dashboard",
     "brokers": "Brokers",

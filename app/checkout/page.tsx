@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { CheckoutContent } from '@/components/checkout/CheckoutContent';
+import { Loading } from '@/components/ui';
 
 export const metadata: Metadata = {
   title: 'Checkout · Tradelia',

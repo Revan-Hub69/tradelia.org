@@ -11,6 +11,16 @@
     "sending": "Sending...",
     "skipToContent": "Skip to main content"
   },
+  "error": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. You can try:",
+    "actions": {
+      "retry": "Retry",
+      "goBack": "Go Back",
+      "reload": "Reload Page",
+      "goHome": "Go to Home"
+    }
+  },
   "nav": {
     "dashboard": "Dashboard",
     "brokers": "Brokers",
