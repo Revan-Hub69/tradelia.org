@@ -4025,5 +4025,130 @@
     "applicationContexts": ["investing", "portfolio-construction"],
     "userTypes": ["beginner", "intermediate-trader", "professional"],
     "version": 1
+  },
+  "159": {
+    "id": "159",
+    "title": "Drift-Based Rebalancing",
+    "slug": "drift-based-rebalancing",
+    "academicDefinition": {
+      "what": "Il Drift-Based Rebalancing (ribilanciamento basato su drift) è una strategia di rebalancing che riporta l'allocazione del portfolio ai target originali quando la deviazione (drift) dall'allocazione target supera una soglia predeterminata, tipicamente misurata come differenza assoluta o percentuale tra peso attuale e peso target. Il Drift-Based Rebalancing è simile al Threshold Rebalancing ma si concentra specificamente sulla deviazione cumulativa (drift) che si accumula nel tempo a causa dei diversi rendimenti degli asset. Il Drift-Based Rebalancing può essere più efficiente del Calendar Rebalancing perché interviene solo quando necessario, ma richiede monitoraggio continuo.",
+      "source": "Daryanani, G. (2008). Opportunistic Rebalancing: A New Paradigm for Wealth Managers. Journal of Financial Planning, 21(1), 48-61. | Buetow, G.W., Sellers, R., Trotter, D., & Hunt, E. (2002). The Benefits of Rebalancing. Journal of Portfolio Management, 28(2), 23-32.",
+      "academicContext": "Il Drift-Based Rebalancing è una strategia efficiente che combina i benefici del Threshold Rebalancing con un focus specifico sulla deviazione cumulativa (drift) che si accumula nel tempo."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "Il Drift-Based Rebalancing ribilancia quando la deviazione (drift) dall'allocazione target supera una soglia. Drift = differenza tra peso attuale e peso target. Esempio: Target 60% azioni, soglia drift 5%. Se azioni salgono a 66% (drift 6%), ribilanci per tornare a 60%. Se azioni sono 62% (drift 2%), non ribilanci. Drift-Based Rebalancing è simile a Threshold Rebalancing ma si concentra sulla deviazione cumulativa che si accumula nel tempo. È più efficiente del Calendar Rebalancing perché interviene solo quando necessario.",
+      "howToUse": "Usa Drift-Based Rebalancing per ribilanciare solo quando necessario, riducendo costi. Definisci soglie drift ragionevoli: 5% per asset class principali, 2-3% per asset più volatili. Monitora drift continuamente: calcola differenza tra peso attuale e peso target per ogni asset. Quando drift supera soglia, ribilanci subito per tornare al target. Drift-Based Rebalancing è più efficiente del Calendar Rebalancing perché interviene solo quando necessario. Considera costi di transazione: non ribilanciare se drift è appena sopra soglia e costi sono alti.",
+      "practicalExample": "Esempio: Portfolio target 60% azioni, 40% obbligazioni. Soglia drift 5%. Dopo 3 mesi: azioni 66% (drift 6%), obbligazioni 34% (drift 6%). Drift supera soglia: ribilanci vendendo azioni e comprando obbligazioni per tornare a 60/40. Dopo altri 3 mesi: azioni 62% (drift 2%), obbligazioni 38% (drift 2%). Drift sotto soglia: non ribilanci. Drift-Based Rebalancing interviene solo quando necessario, riducendo costi rispetto a Calendar Rebalancing.",
+      "commonMistakes": "Errore comune: soglie drift troppo strette (1-2%) che portano a rebalancing troppo frequenti e costi elevati. Altro errore: soglie drift troppo larghe (10%+) che permettono al portfolio di allontanarsi troppo dal target. Evita anche di ignorare drift quando supera soglia: ribilanci subito. Non cambiare soglie basandoti su movimenti di mercato: mantieni disciplina."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "rebalancing",
+    "tags": ["investing", "portfolio-construction", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Rebalancing", "Threshold Rebalancing"],
+    "relatedTerms": ["Rebalancing", "Threshold Rebalancing", "Calendar Rebalancing"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "160": {
+    "id": "160",
+    "title": "Asset Location",
+    "slug": "asset-location",
+    "academicDefinition": {
+      "what": "L'Asset Location (posizionamento degli asset) è una strategia di ottimizzazione fiscale che posiziona asset tassati diversamente in account diversi (es. account tassati vs account non tassati come IRA, 401k) per minimizzare l'impatto delle tasse. L'Asset Location si basa sul principio che asset con tassazione diversa (es. obbligazioni tassate come reddito ordinario, azioni tassate come plusvalenze) dovrebbero essere posizionati in account che minimizzano la loro tassazione. L'Asset Location può migliorare i rendimenti netti del portfolio del 0.5-1.5% annuo nel lungo termine, specialmente per investitori con multiple account (tassati e non tassati).",
+      "source": "Dickson, J.M., Shoven, J.B., & Sialm, C. (2000). Tax Externalities of Equity Mutual Funds. National Tax Journal, 53(3), 607-628. | Poterba, J.M., Shoven, J.B., & Sialm, C. (2004). Asset Location for Retirement Savers. In Public Policy and Private Pensions (pp. 219-240).",
+      "academicContext": "L'Asset Location è una strategia importante di ottimizzazione fiscale che può migliorare significativamente i rendimenti netti del portfolio nel lungo termine, specialmente per investitori con multiple account."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "L'Asset Location posiziona asset tassati diversamente in account diversi per minimizzare tasse. Esempio: Obbligazioni (tassate come reddito ordinario, tassa alta) in account pensionistico (non tassato). Azioni (tassate come plusvalenze, tassa più bassa) in account normale. Asset Location può migliorare rendimenti netti del 0.5-1.5% annuo nel lungo termine. È diverso da Asset Allocation: Asset Allocation decide quanto investire in ciascun asset, Asset Location decide dove posizionarlo.",
+      "howToUse": "Usa Asset Location per minimizzare tasse se hai multiple account (tassati e non tassati). Posiziona asset tassati come reddito ordinario (obbligazioni, REIT) in account non tassati (IRA, 401k). Posiziona asset tassati come plusvalenze (azioni, ETF) in account tassati. Asset Location può migliorare rendimenti netti del 0.5-1.5% annuo. Considera anche liquidità: asset che potresti vendere presto in account tassati per flessibilità. Asset Location è particolarmente importante per investitori con multiple account.",
+      "practicalExample": "Esempio: 2 account: Account normale (tassato), IRA (non tassato). Portfolio totale: 60% azioni, 40% obbligazioni. Asset Location: Obbligazioni (tassate come reddito, tassa 37%) in IRA (non tassato). Azioni (tassate come plusvalenze, tassa 20%) in account normale. Asset Location minimizza tasse: obbligazioni non tassate, azioni tassate a tasso più basso. Migliora rendimenti netti del 0.5-1.5% annuo nel lungo termine.",
+      "commonMistakes": "Errore comune: ignorare Asset Location. 'Ho 60% azioni, 40% obbligazioni' non considera dove posizionarli. Altro errore: posizionare asset in modo subottimale. Obbligazioni in account tassato, azioni in account non tassato è subottimale. Evita anche di non considerare liquidità: asset che potresti vendere presto in account tassati per flessibilità."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "performance",
+    "tags": ["investing", "portfolio-construction", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Portfolio", "Tax Efficiency"],
+    "relatedTerms": ["Portfolio", "Tax Efficiency", "Asset Allocation"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "161": {
+    "id": "161",
+    "title": "Tax-Loss Harvesting",
+    "slug": "tax-loss-harvesting",
+    "academicDefinition": {
+      "what": "Il Tax-Loss Harvesting (raccolta di perdite fiscali) è una strategia di ottimizzazione fiscale che vende asset in perdita per realizzare perdite fiscali che possono essere usate per compensare plusvalenze realizzate, riducendo o eliminando le tasse su quelle plusvalenze. Il Tax-Loss Harvesting può anche essere usato per compensare fino a 3.000€ di reddito ordinario annuo (negli USA, limiti simili in altri paesi). Dopo aver venduto l'asset in perdita, l'investitore tipicamente compra un asset simile ma non identico (per evitare wash sale rules) per mantenere l'esposizione al mercato. Il Tax-Loss Harvesting può migliorare i rendimenti netti del portfolio del 0.5-1.5% annuo.",
+      "source": "Dickson, J.M., Shoven, J.B., & Sialm, C. (2000). Tax Externalities of Equity Mutual Funds. National Tax Journal, 53(3), 607-628. | Constantinides, G.M. (1983). Capital Market Equilibrium with Personal Tax. Econometrica, 51(3), 611-636.",
+      "academicContext": "Il Tax-Loss Harvesting è una strategia ben documentata di ottimizzazione fiscale che può migliorare significativamente i rendimenti netti del portfolio, specialmente in anni con volatilità elevata quando ci sono molte opportunità di realizzare perdite."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "Il Tax-Loss Harvesting vende asset in perdita per realizzare perdite fiscali che compensano plusvalenze, riducendo tasse. Esempio: Realizzi plusvalenza 5.000€, tassa 26% = 1.300€. Vendi asset in perdita 5.000€: compensi plusvalenza, tassa 0€. Risparmio: 1.300€. Dopo vendita, compri asset simile ma non identico per mantenere esposizione (evita wash sale). Tax-Loss Harvesting può migliorare rendimenti netti del 0.5-1.5% annuo. È particolarmente utile in anni volatili con molte opportunità di perdite.",
+      "howToUse": "Usa Tax-Loss Harvesting per ridurre tasse realizzando perdite che compensano plusvalenze. Identifica asset in perdita nel portfolio. Vendi asset in perdita per realizzare perdita fiscale. Usa perdita per compensare plusvalenze realizzate, riducendo tasse. Dopo vendita, compri asset simile ma non identico per mantenere esposizione (evita wash sale rules). Tax-Loss Harvesting è particolarmente utile in anni volatili. Monitora opportunità durante l'anno, non solo a fine anno.",
+      "practicalExample": "Esempio: Portfolio: Stock A (compra 10.000€, valore 7.000€, perdita 3.000€), Stock B (compra 5.000€, valore 8.000€, plusvalenza 3.000€). Realizzi plusvalenza Stock B: tassa 26% = 780€. Tax-Loss Harvesting: vendi Stock A (perdita 3.000€), compensi plusvalenza Stock B, tassa 0€. Risparmio: 780€. Dopo vendita, compri Stock C simile a Stock A per mantenere esposizione. Tax-Loss Harvesting riduce tasse migliorando rendimenti netti.",
+      "commonMistakes": "Errore comune: non usare Tax-Loss Harvesting. 'Ho perdite ma non le realizzo' è sbagliato: realizza perdite per compensare plusvalenze. Altro errore: comprare asset identico dopo vendita (wash sale). Compra asset simile ma non identico. Evita anche di aspettare fine anno: monitora opportunità durante l'anno. Non ignorare limiti: perdite possono compensare fino a 3.000€ di reddito ordinario annuo (negli USA)."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "performance",
+    "tags": ["investing", "portfolio-construction", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Portfolio", "Tax Efficiency"],
+    "relatedTerms": ["Portfolio", "Tax Efficiency", "Asset Location"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "162": {
+    "id": "162",
+    "title": "Performance Attribution",
+    "slug": "performance-attribution",
+    "academicDefinition": {
+      "what": "La Performance Attribution (attribuzione della performance) è un'analisi che scompone i rendimenti del portfolio nelle loro componenti per identificare le fonti di rendimento (es. asset allocation, selezione titoli, timing, effetti di valuta). La Performance Attribution aiuta a capire se i rendimenti superiori (o inferiori) rispetto al benchmark sono dovuti a decisioni di asset allocation, selezione di titoli specifici, timing di mercato, o altri fattori. La Performance Attribution è essenziale per valutare l'efficacia delle decisioni di investimento e identificare aree di miglioramento. Metodi comuni includono Brinson-Fachler, Brinson-Hood-Beebower, e attribuzione fattoriale.",
+      "source": "Brinson, G.P., Hood, L.R., & Beebower, G.L. (1986). Determinants of Portfolio Performance. Financial Analysts Journal, 42(4), 39-44. | Brinson, G.P., Singer, B.D., & Beebower, G.L. (1991). Determinants of Portfolio Performance II: An Update. Financial Analysts Journal, 47(3), 40-48.",
+      "academicContext": "La Performance Attribution è fondamentale per capire le fonti di rendimento del portfolio e valutare l'efficacia delle decisioni di investimento. Gli studi di Brinson e colleghi hanno mostrato che l'asset allocation è il principale determinante della performance."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "La Performance Attribution scompone rendimenti del portfolio nelle loro componenti per capire da dove vengono. Componenti: asset allocation (quanto investito in ciascun asset class), selezione titoli (quali titoli specifici), timing (quando comprato/venduto), effetti valuta. Esempio: Portfolio +12%, Benchmark +10%. Performance Attribution: +1.5% da asset allocation (sovraesposizione azioni), +0.5% da selezione titoli (stock picking). Performance Attribution aiuta capire se outperformance è dovuto a skill o fortuna.",
+      "howToUse": "Usa Performance Attribution per capire fonti di rendimento e valutare efficacia decisioni. Scomponi rendimenti in componenti: asset allocation, selezione titoli, timing, effetti valuta. Identifica componenti che contribuiscono positivamente o negativamente. Performance Attribution aiuta capire se outperformance è dovuto a skill (selezione titoli, timing) o asset allocation. Usa Performance Attribution per identificare aree di miglioramento. Performance Attribution è essenziale per portfolio manager attivi.",
+      "practicalExample": "Esempio: Portfolio +12%, Benchmark +10%. Performance Attribution: Asset allocation +1.5% (sovraesposizione azioni che hanno performato bene), Selezione titoli +0.5% (stock picking efficace), Timing -0.5% (timing subottimale), Effetti valuta +0.5% (valuta favorevole). Totale: +2% outperformance. Performance Attribution mostra che asset allocation e selezione titoli hanno contribuito positivamente, timing negativamente. Aiuta capire fonti di rendimento.",
+      "commonMistakes": "Errore comune: ignorare Performance Attribution. 'Portfolio +12%, benchmark +10%' non dice da dove viene outperformance. Altro errore: attribuire tutto a skill quando potrebbe essere fortuna. Performance Attribution aiuta distinguere skill da fortuna. Evita anche di usare Performance Attribution solo su periodi corti: richiede tempo per stabilizzarsi. Non ignorare componenti negative: identifica aree di miglioramento."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "performance",
+    "tags": ["investing", "portfolio-construction", "quantitative", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Portfolio", "Benchmark", "Alpha"],
+    "relatedTerms": ["Portfolio", "Benchmark", "Alpha", "Active Share"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "163": {
+    "id": "163",
+    "title": "Factor Exposure",
+    "slug": "factor-exposure",
+    "academicDefinition": {
+      "what": "La Factor Exposure (esposizione fattoriale) misura l'esposizione di un portfolio a fattori di rischio specifici (es. market, size, value, momentum, quality, low volatility) attraverso regressione o analisi fattoriale. La Factor Exposure quantifica quanto il portfolio è sensibile a ciascun fattore, tipicamente misurata come beta fattoriale o loading. La Factor Exposure è essenziale per capire il profilo di rischio del portfolio, identificare fonti di rendimento, e costruire portfolio con esposizioni fattoriali target. La Factor Exposure può essere controllata attraverso selezione di asset, pesi, o derivati.",
+      "source": "Fama, E.F., & French, K.R. (1993). Common Risk Factors in the Returns on Stocks and Bonds. Journal of Financial Economics, 33(1), 3-56. | Ang, A. (2014). Asset Management: A Systematic Approach to Factor Investing. Oxford University Press.",
+      "academicContext": "La Factor Exposure è fondamentale nella moderna teoria del portfolio basata su fattori di rischio. Capire l'esposizione fattoriale è essenziale per costruire portfolio con profili di rischio target."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "La Factor Exposure misura esposizione del portfolio a fattori di rischio specifici (market, size, value, momentum, quality). Esempio: Portfolio ha Factor Exposure value 0.8 = è esposto a fattore value (azioni sottovalutate). Factor Exposure 1.0 = esposizione media, >1.0 = sovraesposizione, <1.0 = sottopeso. Factor Exposure quantifica quanto portfolio è sensibile a ciascun fattore. È essenziale per capire profilo di rischio e costruire portfolio con esposizioni target.",
+      "howToUse": "Usa Factor Exposure per capire profilo di rischio del portfolio e costruire esposizioni target. Calcola Factor Exposure attraverso regressione o analisi fattoriale (es. Fama-French 3 o 5 fattori). Identifica esposizioni attuali: quali fattori dominano? Definisci esposizioni target: vuoi sovraesposizione value? Sottopeso momentum? Costruisci portfolio con esposizioni target attraverso selezione asset, pesi, o derivati. Factor Exposure è essenziale per factor-based investing e risk management.",
+      "practicalExample": "Esempio: Portfolio ha Factor Exposure: Market 1.0 (esposizione media), Size 0.5 (sottopeso small cap), Value 1.2 (sovraesposizione value), Momentum -0.3 (sottopeso momentum). Factor Exposure mostra che portfolio è tilt value, evitando small cap e momentum. Se vuoi aumentare esposizione small cap, aggiungi small cap stocks o ETF. Factor Exposure aiuta costruire portfolio con profilo di rischio target.",
+      "commonMistakes": "Errore comune: ignorare Factor Exposure. 'Portfolio 60% azioni, 40% obbligazioni' non dice esposizione fattoriale. Altro errore: non considerare che Factor Exposure può cambiare nel tempo. Monitora Factor Exposure periodicamente. Evita anche di usare Factor Exposure senza capire i fattori: capisci cosa misurano prima di usarli."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "optimization",
+    "tags": ["investing", "portfolio-construction", "quantitative", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Portfolio", "Factors", "Factor-Based Optimization"],
+    "relatedTerms": ["Portfolio", "Factors", "Factor-Based Optimization", "Fama-French"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
   }
 }
