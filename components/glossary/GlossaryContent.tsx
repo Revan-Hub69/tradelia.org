@@ -98,24 +98,8 @@ export function GlossaryContent() {
       typeof tag === 'string' && tag.toLowerCase().includes(searchLower)
     )) return true;
     
-    // Cerca nella categoria
-    if (term.category && typeof term.category === 'string' && 
-        term.category.toLowerCase().includes(searchLower)) return true;
-    
     return false;
   };
-  
-  // Extract unique categories actually used in terms (best practice: show only what exists)
-  const usedCategoriesSet = new Set<string>();
-  terms.forEach(term => {
-    if (term.category) {
-      // Normalizza categoria per matching corretto
-      const normalized = normalizeCategory(term.category);
-      if (normalized) {
-        usedCategoriesSet.add(normalized);
-      }
-    }
-  });
 
   // Extract unique tags actually used in terms (best practice: show only what exists)
   const usedTagsSet = new Set<string>();
@@ -345,12 +329,10 @@ export function GlossaryContent() {
                   <p className="text-sm text-text-secondary line-clamp-2 leading-relaxed mb-3">
                     {termOfTheDay.what}
                   </p>
-                  {termOfTheDay.category && (
+                  {termOfTheDay.tags && termOfTheDay.tags.length > 0 && (
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-accent/20 border border-accent/30 rounded text-xs font-medium text-accent">
-                      <Layers className="w-3 h-3" />
-                      {termOfTheDay.tags && termOfTheDay.tags.length > 0 
-                        ? termOfTheDay.tags.slice(0, 2).map(tag => getTagDisplayName(tag as GlossaryTag)).join(', ')
-                        : 'Glossario'}
+                      <Tag className="w-3 h-3" />
+                      {termOfTheDay.tags.slice(0, 2).map(tag => getTagDisplayName(tag as GlossaryTag)).join(', ')}
                     </span>
                   )}
                 </div>
@@ -441,12 +423,11 @@ export function GlossaryContent() {
               </div>
               <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin' }}>
                 {allTags.map((tag) => {
-                  // Count terms with this tag (considering search and category filters but not tag filter)
+                  // Count terms with this tag (considering search but not tag filter)
                   const count = terms.filter(t => {
                     const searchMatch = matchesSearch(t, searchTerm);
-                    const categoryMatch = matchesCategory(t, selectedCategory);
                     const tagMatch = matchesTag(t, tag);
-                    return searchMatch && categoryMatch && tagMatch;
+                    return searchMatch && tagMatch;
                   }).length;
                   if (count === 0) return null; // Nascondi tag senza risultati
                   
@@ -576,11 +557,9 @@ export function GlossaryContent() {
                       <h3 className="text-lg font-bold text-text-primary group-hover:text-accent transition-colors">
                         {term.title}
                       </h3>
-                      {term.category && (
+                      {term.tags && term.tags.length > 0 && (
                         <span className="px-2.5 py-1 bg-accent/15 border border-accent/30 rounded-md text-xs font-semibold text-accent whitespace-nowrap flex-shrink-0">
-                          {term.category in TRADELIA_GLOSSARY_CATEGORIES
-                            ? TRADELIA_GLOSSARY_CATEGORIES[term.category as TradeliaGlossaryCategory].displayName
-                            : typeof term.category === 'string' ? term.category : ''}
+                          {term.tags.slice(0, 2).map(tag => getTagDisplayName(tag as GlossaryTag)).join(', ')}
                         </span>
                       )}
                       {term.learningLevel && (
