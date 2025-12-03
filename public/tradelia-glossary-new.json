@@ -3515,5 +3515,130 @@
     "applicationContexts": ["investing", "risk-management"],
     "userTypes": ["intermediate-trader", "professional"],
     "version": 1
+  },
+  "143": {
+    "id": "143",
+    "title": "Strategic Asset Allocation",
+    "slug": "strategic-asset-allocation",
+    "academicDefinition": {
+      "what": "La Strategic Asset Allocation (SAA) è l'allocazione di lungo termine del portfolio basata su obiettivi di investimento, orizzonte temporale e tolleranza al rischio. La SAA definisce i pesi target per diverse asset class (azioni, obbligazioni, materie prime, liquidità) che rimangono relativamente stabili nel tempo, tipicamente rivisti annualmente o quando cambiano gli obiettivi. La SAA si basa sul principio che l'asset allocation è il principale determinante dei rendimenti del portfolio nel lungo termine, più della selezione dei singoli asset o del market timing. La SAA è tipicamente implementata attraverso investimenti passivi o indicizzati.",
+      "source": "Brinson, G.P., Hood, L.R., & Beebower, G.L. (1986). Determinants of Portfolio Performance. Financial Analysts Journal, 42(4), 39-44. | Ibbotson, R.G., & Kaplan, P.D. (2000). Does Asset Allocation Policy Explain 40, 90, or 100 Percent of Performance? Financial Analysts Journal, 56(1), 26-33.",
+      "academicContext": "La Strategic Asset Allocation è il fondamento della moderna teoria del portfolio. Studi dimostrano che l'asset allocation spiega la maggior parte della varianza dei rendimenti del portfolio nel lungo termine."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "La Strategic Asset Allocation è la 'ricetta base' del tuo portfolio: definisci quanto investire in azioni, obbligazioni, materie prime, liquidità per il lungo termine. Esempio: 60% azioni, 30% obbligazioni, 10% liquidità. Questa allocazione rimane stabile per anni, cambiando solo se cambiano i tuoi obiettivi o la tua situazione. È la base del portfolio: definisce il rischio e il rendimento atteso nel lungo termine.",
+      "howToUse": "Definisci la Strategic Asset Allocation in base a obiettivi, orizzonte temporale e tolleranza al rischio. Giovane con orizzonte lungo? Più azioni (70-80%). Vicino alla pensione? Più obbligazioni (60-70%). Mantieni questa allocazione stabile, ribilanciando periodicamente per mantenerla. Non cambiare la Strategic Asset Allocation basandoti su movimenti di mercato a breve termine: è per il lungo termine. Rivedi la Strategic Asset Allocation solo quando cambiano obiettivi o situazione personale.",
+      "practicalExample": "Esempio: Investitore 35 anni, orizzonte 30 anni, tolleranza al rischio media. Strategic Asset Allocation: 65% azioni (divise tra USA, Europa, Emerging), 25% obbligazioni, 10% materie prime. Questa allocazione rimane stabile per anni. Ogni trimestre, ribilancia per mantenerla: se le azioni salgono al 70%, vendi azioni e compri obbligazioni per tornare a 65/25. La Strategic Asset Allocation definisce il rischio e rendimento atteso nel lungo termine.",
+      "commonMistakes": "Errore comune: cambiare Strategic Asset Allocation basandosi su movimenti di mercato a breve termine. 'Le azioni stanno andando bene, aumento al 80%' è sbagliato: la Strategic Asset Allocation è per il lungo termine. Altro errore: non ribilanciare mai, lasciando che l'allocazione si allontani troppo dal target. Evita anche di avere Strategic Asset Allocation troppo aggressive o conservative rispetto ai tuoi obiettivi reali."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "asset-allocation",
+    "tags": ["investing", "portfolio-construction", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Asset Allocation", "Portfolio"],
+    "relatedTerms": ["Asset Allocation", "Tactical Asset Allocation", "Portfolio"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "144": {
+    "id": "144",
+    "title": "Tactical Asset Allocation",
+    "slug": "tactical-asset-allocation",
+    "academicDefinition": {
+      "what": "La Tactical Asset Allocation (TAA) è l'aggiustamento a breve-medio termine dell'allocazione del portfolio rispetto alla Strategic Asset Allocation, basato su valutazioni di mercato, condizioni economiche o opportunità di investimento. La TAA permette di sovrappesare o sottopesare temporaneamente alcune asset class quando si ritiene che siano sottovalutate o sopravvalutate rispetto ai loro fondamentali. La TAA è tipicamente implementata attraverso investimenti attivi e può includere deviazioni fino al 10-15% dalla Strategic Asset Allocation. La TAA richiede competenze di analisi di mercato e timing, ed è più rischiosa della Strategic Asset Allocation pura.",
+      "source": "Sharpe, W.F. (1992). Asset Allocation: Management Style and Performance Measurement. Journal of Portfolio Management, 18(2), 7-19. | Kritzman, M., & Page, S. (2003). The Hierarchy of Investment Choice. Journal of Portfolio Management, 29(4), 11-23.",
+      "academicContext": "La Tactical Asset Allocation è controversa: alcuni studi mostrano che può aggiungere valore, altri che i costi e la difficoltà di timing superano i benefici. Richiede competenze significative."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "La Tactical Asset Allocation è 'aggiustare' temporaneamente l'allocazione del portfolio quando vedi opportunità. Strategic Asset Allocation: 60% azioni, 40% obbligazioni. Tactical: se pensi che le azioni siano sottovalutate, aumenti temporaneamente al 70% azioni, 30% obbligazioni. Quando l'opportunità passa, torni alla Strategic Asset Allocation. È come 'scommettere' su opportunità a breve termine mantenendo la base strategica.",
+      "howToUse": "Usa Tactical Asset Allocation per sfruttare opportunità a breve termine, ma mantieni la Strategic Asset Allocation come base. Se vedi che le azioni sono sottovalutate (P/E basso, sentiment negativo), sovrappesa temporaneamente le azioni. Quando l'opportunità passa o raggiungi l'obiettivo, torna alla Strategic Asset Allocation. Non deviare troppo dalla Strategic Asset Allocation: deviazioni del 10-15% sono ragionevoli. Tactical Asset Allocation richiede competenze di analisi: se non le hai, meglio Strategic Asset Allocation pura.",
+      "practicalExample": "Esempio: Strategic Asset Allocation: 60% azioni, 40% obbligazioni. Vedi che le azioni sono sottovalutate (P/E 12 vs media 18, sentiment molto negativo). Tactical: aumenti temporaneamente a 70% azioni, 30% obbligazioni. Dopo 6 mesi, le azioni si sono riprese e torni a 60/40. Tactical Asset Allocation ti ha permesso di sfruttare l'opportunità mantenendo la base strategica. Se non avessi competenze per identificare opportunità, meglio Strategic Asset Allocation pura.",
+      "commonMistakes": "Errore comune: usare Tactical Asset Allocation come scusa per fare trading attivo senza competenze. 'Le azioni stanno salendo, aumento al 80%' non è Tactical Asset Allocation, è speculazione. Altro errore: deviare troppo dalla Strategic Asset Allocation (es. 90% azioni quando il target è 60%). Evita anche di cambiare Tactical Asset Allocation troppo spesso: non è trading giornaliero, è aggiustamento trimestrale o semestrale."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "asset-allocation",
+    "tags": ["investing", "portfolio-construction", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Strategic Asset Allocation", "Asset Allocation"],
+    "relatedTerms": ["Strategic Asset Allocation", "Asset Allocation", "Portfolio"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "145": {
+    "id": "145",
+    "title": "Core-Satellite Portfolio",
+    "slug": "core-satellite-portfolio",
+    "academicDefinition": {
+      "what": "Il Core-Satellite Portfolio è una strategia di costruzione portfolio che combina un 'core' passivo e diversificato (tipicamente 70-90% del portfolio) con 'satellites' attivi e specializzati (tipicamente 10-30% del portfolio). Il core fornisce esposizione di mercato a basso costo e diversificazione, mentre i satellites permettono di cercare alpha attraverso investimenti attivi, settori specifici o strategie alternative. Il Core-Satellite Portfolio bilancia i benefici della gestione passiva (bassi costi, diversificazione) con il potenziale di rendimenti superiori della gestione attiva (alpha, opportunità specifiche).",
+      "source": "Sharpe, W.F. (1991). The Arithmetic of Active Management. Financial Analysts Journal, 47(1), 7-9. | Waring, M.B., & Siegel, L.B. (2003). The Dimensions of Active Management. Journal of Portfolio Management, 29(3), 35-51.",
+      "academicContext": "Il Core-Satellite Portfolio è una strategia popolare che combina i benefici della gestione passiva con il potenziale della gestione attiva, bilanciando costi e opportunità di alpha."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "Il Core-Satellite Portfolio è come avere una 'base solida' (core) e 'scommesse mirate' (satellites). Core (70-90%): investimenti passivi, diversificati, a basso costo (ETF indicizzati). Satellites (10-30%): investimenti attivi, settori specifici, opportunità. Il core ti dà esposizione di mercato a basso costo, i satellites ti permettono di cercare rendimenti superiori. Bilanci: sicurezza del core + potenziale dei satellites.",
+      "howToUse": "Costruisci il core con investimenti passivi e diversificati (ETF indicizzati): 70-90% del portfolio. Aggiungi satellites con investimenti attivi o settori specifici: 10-30% del portfolio. Il core fornisce la base stabile, i satellites permettono di cercare alpha. Non invertire: non fare core attivo e satellites passivi. Mantieni il core stabile, gestisci i satellites più attivamente. Se i satellites non performano, puoi sempre tornare a core puro.",
+      "practicalExample": "Esempio: Portfolio 100.000€. Core (80%): 50.000€ ETF S&P 500, 20.000€ ETF obbligazioni, 10.000€ ETF materie prime. Satellites (20%): 10.000€ stock picking tech, 10.000€ crypto. Il core ti dà esposizione di mercato a basso costo, i satellites ti permettono di cercare rendimenti superiori. Se i satellites non performano, puoi sempre ridurli o eliminarli senza compromettere il core.",
+      "commonMistakes": "Errore comune: fare core troppo piccolo e satellites troppo grandi. 'Core 30%, satellites 70%' è sbagliato: il core deve essere la maggior parte. Altro errore: fare core attivo e satellites passivi: inverti la logica. Evita anche di cambiare il core troppo spesso: il core deve essere stabile, i satellites possono cambiare."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "asset-allocation",
+    "tags": ["investing", "portfolio-construction", "moderate"],
+    "learningLevel": "intermediate",
+    "prerequisites": ["Asset Allocation", "Portfolio"],
+    "relatedTerms": ["Asset Allocation", "Portfolio", "Diversificazione"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["intermediate-trader", "professional"],
+    "version": 1
+  },
+  "146": {
+    "id": "146",
+    "title": "Mean-Variance Optimization",
+    "slug": "mean-variance-optimization",
+    "academicDefinition": {
+      "what": "La Mean-Variance Optimization (MVO) è un metodo matematico sviluppato da Harry Markowitz (1952) per costruire portafogli ottimali che massimizzano il rendimento atteso per un dato livello di rischio, o minimizzano il rischio per un dato livello di rendimento atteso. La MVO utilizza la media dei rendimenti attesi, la varianza (rischio) e la covarianza tra asset per identificare la 'frontiera efficiente' - l'insieme di portafogli che offrono il miglior rapporto rischio-rendimento. La MVO richiede stime di rendimenti attesi, volatilità e correlazioni, che sono difficili da stimare accuratamente e possono portare a portafogli instabili.",
+      "source": "Markowitz, H. (1952). Portfolio Selection. Journal of Finance, 7(1), 77-91. | Markowitz, H. (1959). Portfolio Selection: Efficient Diversification of Investments. Wiley.",
+      "academicContext": "La Mean-Variance Optimization è il fondamento della moderna teoria del portfolio e ha vinto il Premio Nobel per l'Economia nel 1990. Tuttavia, è sensibile alle stime di input e può produrre portafogli instabili."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "La Mean-Variance Optimization è un metodo matematico per trovare il portfolio 'ottimale': massimo rendimento per un dato rischio, o minimo rischio per un dato rendimento. Usa media dei rendimenti, volatilità e correlazioni tra asset per trovare la 'frontiera efficiente' - i portfolio migliori. Esempio: con 3 asset, la MVO ti dice quanto investire in ciascuno per ottimizzare rischio-rendimento. È il metodo base della teoria del portfolio.",
+      "howToUse": "Usa Mean-Variance Optimization per costruire portfolio ottimali, ma sii consapevole dei limiti. Richiede stime di rendimenti attesi, volatilità e correlazioni: queste sono difficili da stimare accuratamente. Le stime sbagliate portano a portfolio instabili. Usa MVO come guida, non come verità assoluta. Considera metodi alternativi (Black-Litterman, Risk Parity) se MVO produce portfolio troppo concentrati o instabili. MVO è potente ma richiede competenze quantitative.",
+      "practicalExample": "Esempio: 3 asset: Azioni USA (rendimento atteso 10%, volatilità 15%), Obbligazioni (5%, 5%), Materie prime (8%, 20%). Correlazioni: Azioni-Obbligazioni 0.3, Azioni-Materie 0.5, Obbligazioni-Materie 0.2. MVO calcola: 50% Azioni, 30% Obbligazioni, 20% Materie prime per ottimizzare rischio-rendimento. Se cambi le stime (es. rendimento azioni 12% invece di 10%), il portfolio cambia: MVO è sensibile alle stime.",
+      "commonMistakes": "Errore comune: usare MVO con stime sbagliate. 'Rendimento atteso azioni 20%' è irrealistico: porta a portfolio troppo concentrati. Altro errore: ignorare che MVO è sensibile alle stime. Piccole variazioni nelle stime portano a portfolio molto diversi. Evita anche di usare MVO come verità assoluta: è un modello, non la realtà. Considera metodi alternativi se MVO produce portfolio instabili."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "optimization",
+    "tags": ["investing", "portfolio-construction", "quantitative", "complex"],
+    "learningLevel": "advanced",
+    "prerequisites": ["Portfolio", "Risk", "Return"],
+    "relatedTerms": ["Portfolio", "Risk", "Return", "Black-Litterman"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["professional"],
+    "version": 1
+  },
+  "147": {
+    "id": "147",
+    "title": "Black-Litterman Model",
+    "slug": "black-litterman-model",
+    "academicDefinition": {
+      "what": "Il Black-Litterman Model è un metodo di ottimizzazione portfolio sviluppato da Fischer Black e Robert Litterman (1992) che migliora la Mean-Variance Optimization incorporando viste di mercato (market views) e partendo dai pesi di equilibrio del mercato (market capitalization weights) invece che da stime dirette di rendimenti attesi. Il Black-Litterman Model combina i rendimenti impliciti di equilibrio (derivati dai pesi di mercato) con viste specifiche dell'investitore (es. 'le azioni tech outperformeranno del 2%') per produrre rendimenti attesi che portano a portafogli più stabili e realistici rispetto alla MVO pura.",
+      "source": "Black, F., & Litterman, R. (1992). Global Portfolio Optimization. Financial Analysts Journal, 48(5), 28-43. | He, G., & Litterman, R. (1999). The Intuition Behind Black-Litterman Model Portfolios. Goldman Sachs Investment Management.",
+      "academicContext": "Il Black-Litterman Model è ampiamente usato nella pratica professionale perché produce portafogli più stabili e realistici rispetto alla Mean-Variance Optimization pura, incorporando viste di mercato in modo strutturato."
+    },
+    "tradeliaExplanation": {
+      "whatDoes": "Il Black-Litterman Model migliora la Mean-Variance Optimization partendo dai pesi di equilibrio del mercato (quanto il mercato investe in ciascun asset) invece che da stime dirette. Poi aggiungi le tue 'viste' (es. 'le azioni tech outperformeranno del 2%') per produrre un portfolio più stabile e realistico. Esempio: Mercato investe 60% azioni, 40% obbligazioni. Tu pensi che le azioni tech outperformeranno: Black-Litterman combina questo per produrre un portfolio ottimizzato. È più stabile della MVO pura.",
+      "howToUse": "Usa Black-Litterman Model se hai viste specifiche su asset o settori e vuoi incorporarle in modo strutturato. Parti dai pesi di equilibrio del mercato (market cap weights). Aggiungi le tue viste (es. 'azioni tech +2%', 'obbligazioni -1%'). Black-Litterman combina questo per produrre rendimenti attesi e portfolio ottimizzato. È più stabile della MVO pura perché parte da equilibrio di mercato. Richiede competenze quantitative: se non le hai, meglio usare metodi più semplici.",
+      "practicalExample": "Esempio: Mercato: 60% azioni, 40% obbligazioni. Vista: 'Azioni tech outperformeranno del 2% nei prossimi 12 mesi'. Black-Litterman combina: partendo da 60/40, aggiunge la vista tech per produrre portfolio ottimizzato (es. 65% azioni di cui 15% tech, 35% obbligazioni). Il portfolio è più stabile della MVO pura perché parte da equilibrio di mercato. Se non hai viste specifiche, meglio usare pesi di mercato direttamente.",
+      "commonMistakes": "Errore comune: usare Black-Litterman senza viste specifiche. Se non hai viste, meglio usare pesi di mercato direttamente. Altro errore: viste troppo estreme ('azioni tech +20%') che portano a portfolio instabili. Evita anche di cambiare viste troppo spesso: Black-Litterman richiede viste ragionate e stabili. Non usare Black-Litterman se non hai competenze quantitative: è complesso."
+    },
+    "category": "PORTFOLIO_CONSTRUCTION",
+    "subcategory": "optimization",
+    "tags": ["investing", "portfolio-construction", "quantitative", "complex"],
+    "learningLevel": "advanced",
+    "prerequisites": ["Mean-Variance Optimization", "Portfolio"],
+    "relatedTerms": ["Mean-Variance Optimization", "Portfolio", "Asset Allocation"],
+    "applicationContexts": ["investing", "portfolio-construction"],
+    "userTypes": ["professional"],
+    "version": 1
   }
 }
