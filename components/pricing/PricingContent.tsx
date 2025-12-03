@@ -67,13 +67,37 @@ export function PricingContent() {
     },
   ];
 
-  // Business plans rimossi temporaneamente - Desk sarà aggiunto in futuro
-  const businessPlans: Plan[] = [];
+  // Business plans (Desk)
+  const businessPlans: Plan[] = [
+    {
+      id: 'desk',
+      name: t('pricing.plans.desk.name') || 'Desk',
+      description: t('pricing.plans.desk.description') || 'Per istituzioni e team',
+      price: 99,
+      priceYearly: 990,
+      currency: 'EUR',
+      features: [
+        t('pricing.plans.desk.features.1') || 'Tutto del Pro',
+        t('pricing.plans.desk.features.2') || 'API Access',
+        t('pricing.plans.desk.features.3') || 'Fatturazione B2B',
+        t('pricing.plans.desk.features.4') || 'Supporto 24/7',
+        t('pricing.plans.desk.features.5') || 'Account Manager dedicato',
+        t('pricing.plans.desk.features.6') || 'Custom integrations',
+      ],
+      cta: t('pricing.plans.desk.cta') || 'Scegli Desk',
+      type: 'business',
+    },
+  ];
 
   const handleSelectPlan = (planId: string, type: 'individual' | 'business') => {
     setSelectedPlan(planId);
-    // Naviga al checkout con i dati del piano
-    window.location.href = `/checkout?plan=${planId}&type=${type}&billing=${billingCycle}`;
+    // Mostra scelta retail/professionale prima di andare al checkout
+    const customerType = prompt('Scegli tipo cliente:\n1. Retail (Privato)\n2. Professionale (Azienda)');
+    if (customerType === '1' || customerType?.toLowerCase() === 'retail') {
+      window.location.href = `/checkout?plan=${planId}&customerType=retail&billing=${billingCycle}`;
+    } else if (customerType === '2' || customerType?.toLowerCase() === 'professionale') {
+      window.location.href = `/checkout?plan=${planId}&customerType=professionale&billing=${billingCycle}`;
+    }
   };
 
   return (

@@ -10,15 +10,15 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
 
 interface CheckoutData {
-  planId: string;
-  planType: 'individual' | 'business';
+  planId: 'pro' | 'desk';
+  customerType: 'retail' | 'professionale'; // Retail = privato, Professionale = azienda
   billingCycle: 'monthly' | 'yearly';
   price: number;
   currency: string;
 }
 
 interface CustomerData {
-  // Individual
+  // Retail (Privato)
   firstName?: string;
   lastName?: string;
   email: string;
@@ -27,11 +27,11 @@ interface CustomerData {
   city?: string;
   zipCode?: string;
   country?: string;
-  taxCode?: string; // Codice fiscale per IT
+  taxCode?: string; // Codice fiscale (obbligatorio per retail IT)
   
-  // Business
+  // Professionale (Azienda)
   companyName?: string;
-  vatNumber?: string; // P.IVA
+  vatNumber?: string; // P.IVA (obbligatorio per professionale)
   companyAddress?: string;
   companyCity?: string;
   companyZipCode?: string;
@@ -55,27 +55,26 @@ export function CheckoutContent() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const planId = searchParams.get('plan');
-    const planType = searchParams.get('type') as 'individual' | 'business';
+    const planId = searchParams.get('plan') as 'pro' | 'desk' | null;
+    const customerType = searchParams.get('customerType') as 'retail' | 'professionale' | null;
     const billingCycle = searchParams.get('billing') as 'monthly' | 'yearly';
 
-    if (!planId || !planType || !billingCycle) {
+    if (!planId || !customerType || !billingCycle) {
       router.push('/pricing');
       return;
     }
 
     // Calcola prezzo in base al piano
     const prices: Record<string, { monthly: number; yearly: number }> = {
-      trial: { monthly: 0, yearly: 0 },
       pro: { monthly: 29, yearly: 290 },
-      // Desk sarà aggiunto in futuro
+      desk: { monthly: 99, yearly: 990 }, // Prezzi Desk da definire
     };
 
     const price = prices[planId]?.[billingCycle] ?? 0;
 
     setCheckoutData({
-      planId,
-      planType,
+      planId: planId as 'pro' | 'desk',
+      customerType: customerType as 'retail' | 'professionale',
       billingCycle,
       price,
       currency: 'EUR',
@@ -94,7 +93,7 @@ export function CheckoutContent() {
   const validateData = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (checkoutData?.planType === 'individual') {
+    if (checkoutData?.customerType === 'retail') {
       if (!customerData.firstName) newErrors.firstName = t('checkout.errors.firstName') || 'Nome richiesto';
       if (!customerData.lastName) newErrors.lastName = t('checkout.errors.lastName') || 'Cognome richiesto';
       if (!customerData.email) newErrors.email = t('checkout.errors.email') || 'Email richiesta';
@@ -127,13 +126,13 @@ export function CheckoutContent() {
     setStep('processing');
 
     try {
-      // Crea payment record
-      const paymentResponse = await fetch('/api/checkout/create', {
+      // Invia email all'admin con i dati del form
+      const emailResponse = await fetch('/api/checkout/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           planId: checkoutData.planId,
-          planType: checkoutData.planType,
+          customerType: checkoutData.customerType,
           billingCycle: checkoutData.billingCycle,
           price: checkoutData.price,
           currency: checkoutData.currency,
@@ -141,15 +140,19 @@ export function CheckoutContent() {
         }),
       });
 
-      if (!paymentResponse.ok) {
-        const errorData = await paymentResponse.json();
-        throw new Error(errorData.error || 'Errore creazione pagamento');
+      if (!emailResponse.ok) {
+        const errorData = await emailResponse.json();
+        throw new Error(errorData.error || 'Errore invio richiesta');
       }
 
-      const { paymentId } = await paymentResponse.json();
+      const { success, requestId } = await emailResponse.json();
 
-      // Reindirizza a pagina istruzioni pagamento manuale
-      router.push(`/checkout/payment-instructions?payment=${paymentId}`);
+      if (!success) {
+        throw new Error('Errore invio richiesta');
+      }
+
+      // Reindirizza a pagina di conferma
+      router.push(`/checkout/submitted?request=${requestId}`);
     } catch (error) {
       console.error('Errore checkout:', error);
       setStep('payment');
@@ -215,7 +218,8 @@ export function CheckoutContent() {
           <div className="lg:col-span-2">
             {step === 'data' && (
               <DataCollectionForm
-                planType={checkoutData.planType}
+                planId={checkoutData.planId}
+                customerType={checkoutData.customerType}
                 customerData={customerData}
                 setCustomerData={setCustomerData}
                 errors={errors}
@@ -251,13 +255,15 @@ export function CheckoutContent() {
 }
 
 function DataCollectionForm({
-  planType,
+  planId,
+  customerType,
   customerData,
   setCustomerData,
   errors,
   onSubmit,
 }: {
-  planType: 'individual' | 'business';
+  planId: 'pro' | 'desk';
+  customerType: 'retail' | 'professionale';
   customerData: CustomerData;
   setCustomerData: (data: CustomerData) => void;
   errors: Record<string, string>;
@@ -265,13 +271,13 @@ function DataCollectionForm({
 }) {
   const { t } = useTranslations();
 
-  if (planType === 'individual') {
+  if (customerType === 'retail') {
     return (
       <div className="bg-bg-surface border border-border-subtle rounded-2xl p-6 space-y-6">
         <div className="flex items-center gap-3 mb-6">
           <User className="w-5 h-5 text-accent" />
           <h2 className="text-xl font-semibold text-text-primary">
-            {t('checkout.data.individual.title') || 'Dati Personali'}
+            {t('checkout.data.retail.title') || 'Dati Personali (Retail)'}
           </h2>
         </div>
 
@@ -400,7 +406,7 @@ function DataCollectionForm({
         {customerData.country === 'IT' && (
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
-              {t('checkout.data.individual.taxCode') || 'Codice Fiscale'} *
+              {t('checkout.data.retail.taxCode') || 'Codice Fiscale'} *
             </label>
             <input
               type="text"
@@ -426,19 +432,19 @@ function DataCollectionForm({
     );
   }
 
-  // Business Form
+  // Professionale (Azienda) Form
   return (
     <div className="bg-bg-surface border border-border-subtle rounded-2xl p-6 space-y-6">
       <div className="flex items-center gap-3 mb-6">
         <Building2 className="w-5 h-5 text-blue-400" />
         <h2 className="text-xl font-semibold text-text-primary">
-          {t('checkout.data.business.title') || 'Dati Aziendali'}
+          {t('checkout.data.professionale.title') || 'Dati Aziendali (Professionale)'}
         </h2>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-text-primary mb-2">
-          {t('checkout.data.business.companyName') || 'Ragione Sociale'} *
+          {t('checkout.data.professionale.companyName') || 'Ragione Sociale'} *
         </label>
         <input
           type="text"
@@ -454,7 +460,7 @@ function DataCollectionForm({
 
       <div>
         <label className="block text-sm font-medium text-text-primary mb-2">
-          {t('checkout.data.business.vatNumber') || 'Partita IVA'} *
+          {t('checkout.data.professionale.vatNumber') || 'Partita IVA'} *
         </label>
         <input
           type="text"
@@ -470,7 +476,7 @@ function DataCollectionForm({
 
       <div>
         <label className="block text-sm font-medium text-text-primary mb-2">
-          {t('checkout.data.business.companyAddress') || 'Indirizzo Aziendale'} *
+          {t('checkout.data.professionale.companyAddress') || 'Indirizzo Aziendale'} *
         </label>
         <input
           type="text"
@@ -487,7 +493,7 @@ function DataCollectionForm({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label className="block text-sm font-medium text-text-primary mb-2">
-            {t('checkout.data.business.companyCity') || 'Città'}
+            {t('checkout.data.professionale.companyCity') || 'Città'}
           </label>
           <input
             type="text"
@@ -499,7 +505,7 @@ function DataCollectionForm({
 
         <div>
           <label className="block text-sm font-medium text-text-primary mb-2">
-            {t('checkout.data.business.companyZipCode') || 'CAP'}
+            {t('checkout.data.professionale.companyZipCode') || 'CAP'}
           </label>
           <input
             type="text"
@@ -511,7 +517,7 @@ function DataCollectionForm({
 
         <div>
           <label className="block text-sm font-medium text-text-primary mb-2">
-            {t('checkout.data.business.companyCountry') || 'Paese'} *
+            {t('checkout.data.professionale.companyCountry') || 'Paese'} *
           </label>
           <select
             value={customerData.companyCountry || ''}
@@ -535,7 +541,7 @@ function DataCollectionForm({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-text-primary mb-2">
-            {t('checkout.data.business.contactPerson') || 'Persona di Contatto'}
+            {t('checkout.data.professionale.contactPerson') || 'Persona di Contatto'}
           </label>
           <input
             type="text"
@@ -547,7 +553,7 @@ function DataCollectionForm({
 
         <div>
           <label className="block text-sm font-medium text-text-primary mb-2">
-            {t('checkout.data.business.contactEmail') || 'Email Contatto'} *
+            {t('checkout.data.professionale.contactEmail') || 'Email Contatto'} *
           </label>
           <input
             type="email"
@@ -564,7 +570,7 @@ function DataCollectionForm({
 
       <div>
         <label className="block text-sm font-medium text-text-primary mb-2">
-          {t('checkout.data.business.contactPhone') || 'Telefono Contatto'}
+          {t('checkout.data.professionale.contactPhone') || 'Telefono Contatto'}
         </label>
         <input
           type="tel"
@@ -583,7 +589,7 @@ function DataCollectionForm({
           className="w-5 h-5 rounded border-border-subtle text-accent focus:ring-accent"
         />
         <label htmlFor="requireInvoice" className="flex-1 text-sm text-text-secondary cursor-pointer">
-          {t('checkout.data.business.requireInvoice') || 'Richiedi fattura B2B (verrà generata automaticamente dopo il pagamento)'}
+          {t('checkout.data.professionale.requireInvoice') || 'Richiedi fattura B2B (verrà generata automaticamente dopo il pagamento)'}
         </label>
       </div>
 
