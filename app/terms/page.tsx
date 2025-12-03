@@ -1,10 +1,9 @@
-import { Metadata } from 'next';
 import { TermsContent } from '@/components/legal/TermsContent';
+import { generatePageMetadata } from '@/lib/seo/metadata';
 
-export const metadata: Metadata = {
-  title: 'Termini e Condizioni · Tradelia',
-  description: 'Termini e condizioni di utilizzo della piattaforma Tradelia.',
-};
+export async function generateMetadata() {
+  return generatePageMetadata('terms', 'it');
+}
 
 export default function TermsPage() {
   return <TermsContent />;

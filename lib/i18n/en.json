@@ -473,7 +473,49 @@
   "seo": {
     "title": "Tradelia AI · Free Financial Education",
     "description": "Free financial education based on verifiable proprietary AI frameworks. Complete training paths, educational material compliant with international academic standards and MiFID II regulations.",
-    "keywords": "financial education, financial training, AI frameworks, MiFID II, market analysis, trading education"
+    "keywords": "financial education, financial training, AI frameworks, MiFID II, market analysis, trading education",
+    "pages": {
+      "pricing": {
+        "title": "Pricing · Tradelia",
+        "description": "Choose the perfect plan for your needs. Individual or Business, with B2B invoicing available."
+      },
+      "checkout": {
+        "title": "Checkout · Tradelia",
+        "description": "Complete your purchase and choose your payment method."
+      },
+      "glossary": {
+        "title": "Glossary · Tradelia",
+        "description": "Complete glossary of financial and technical terms used in Tradelia"
+      },
+      "faq": {
+        "title": "FAQ · Tradelia",
+        "description": "Frequently asked questions about Tradelia, our services and how to use the platform."
+      },
+      "support": {
+        "title": "Support · Tradelia",
+        "description": "Get support for Tradelia. Contact us for assistance, questions or reports."
+      },
+      "about": {
+        "title": "About Us · Tradelia",
+        "description": "Discover Tradelia: an independent lab combining proprietary AI frameworks and academic methodology for financial research."
+      },
+      "contact": {
+        "title": "Contact · Tradelia",
+        "description": "Contact the Tradelia team for support, questions or collaborations."
+      },
+      "privacy": {
+        "title": "Privacy Policy · Tradelia",
+        "description": "Tradelia privacy policy. Learn how we protect your personal data."
+      },
+      "cookie": {
+        "title": "Cookie Policy · Tradelia",
+        "description": "Tradelia cookie policy. Learn how we use cookies on our site."
+      },
+      "terms": {
+        "title": "Terms & Conditions · Tradelia",
+        "description": "Tradelia terms and conditions of use. Read the conditions for using the platform."
+      }
+    }
   },
   "auth": {
     "title": "Sign in to Tradelia",
@@ -1185,6 +1227,12 @@
       "downloadInvoice": "Download Invoice",
       "goToDashboard": "Go to Dashboard",
       "viewBilling": "View Billing"
+    },
+    "submitted": {
+      "title": "Request Sent!",
+      "description": "Your request has been successfully sent to our team. You will receive a response via email within 24-48 hours.",
+      "goToDashboard": "Go to Dashboard",
+      "backToPricing": "Back to Plans"
     },
     "instructions": {
       "title": "Complete Payment",

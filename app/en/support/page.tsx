@@ -1,10 +1,9 @@
-import { Metadata } from 'next';
 import { SupportContent } from '@/components/support/SupportContent';
+import { generatePageMetadata } from '@/lib/seo/metadata';
 
-export const metadata: Metadata = {
-  title: 'Support · Tradelia',
-  description: 'Get support for Tradelia. Contact us for assistance, questions, or reports.',
-};
+export async function generateMetadata() {
+  return generatePageMetadata('support', 'en');
+}
 
 export default function SupportPage() {
   return <SupportContent />;

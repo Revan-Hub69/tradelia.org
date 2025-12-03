@@ -1,10 +1,9 @@
-import { Metadata } from 'next';
 import { GlossaryContent } from '@/components/glossary/GlossaryContent';
+import { generatePageMetadata } from '@/lib/seo/metadata';
 
-export const metadata: Metadata = {
-  title: 'Glossary | Tradelia',
-  description: 'Complete glossary of financial and technical terms used in Tradelia',
-};
+export async function generateMetadata() {
+  return generatePageMetadata('glossary', 'en');
+}
 
 export default function GlossaryPageEN() {
   return <GlossaryContent />;

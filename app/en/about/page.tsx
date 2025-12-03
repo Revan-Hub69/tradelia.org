@@ -1,10 +1,9 @@
-import { Metadata } from 'next';
 import { AboutContent } from '@/components/about/AboutContent';
+import { generatePageMetadata } from '@/lib/seo/metadata';
 
-export const metadata: Metadata = {
-  title: 'About Us · Tradelia',
-  description: 'Discover Tradelia: an independent lab that combines proprietary AI frameworks and academic methodology for financial research.',
-};
+export async function generateMetadata() {
+  return generatePageMetadata('about', 'en');
+}
 
 export default function AboutPage() {
   return <AboutContent />;

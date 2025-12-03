@@ -1,10 +1,9 @@
-import { Metadata } from 'next';
 import { CookieContent } from '@/components/legal/CookieContent';
+import { generatePageMetadata } from '@/lib/seo/metadata';
 
-export const metadata: Metadata = {
-  title: 'Cookie Policy · Tradelia',
-  description: 'Informativa sui cookie utilizzati da Tradelia.',
-};
+export async function generateMetadata() {
+  return generatePageMetadata('cookie', 'it');
+}
 
 export default function CookiePage() {
   return <CookieContent />;

@@ -1,10 +1,9 @@
-import { Metadata } from 'next';
 import { ContactContent } from '@/components/contact/ContactContent';
+import { generatePageMetadata } from '@/lib/seo/metadata';
 
-export const metadata: Metadata = {
-  title: 'Contact · Tradelia',
-  description: 'Contact the Tradelia team for support, questions, or collaborations.',
-};
+export async function generateMetadata() {
+  return generatePageMetadata('contact', 'en');
+}
 
 export default function ContactPage() {
   return <ContactContent />;

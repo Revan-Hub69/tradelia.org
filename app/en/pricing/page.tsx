@@ -1,10 +1,9 @@
-import type { Metadata } from 'next';
 import { PricingContent } from '@/components/pricing/PricingContent';
+import { generatePageMetadata } from '@/lib/seo/metadata';
 
-export const metadata: Metadata = {
-  title: 'Pricing · Tradelia',
-  description: 'Choose the perfect plan for your needs. Individual or Business, with B2B invoicing available.',
-};
+export async function generateMetadata() {
+  return generatePageMetadata('pricing', 'en');
+}
 
 export default function PricingPageEN() {
   return <PricingContent />;

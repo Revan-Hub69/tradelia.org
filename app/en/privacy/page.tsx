@@ -1,10 +1,9 @@
-import { Metadata } from 'next';
 import { PrivacyContent } from '@/components/legal/PrivacyContent';
+import { generatePageMetadata } from '@/lib/seo/metadata';
 
-export const metadata: Metadata = {
-  title: 'Privacy Policy · Tradelia',
-  description: 'Tradelia Privacy Policy. Learn how we handle your personal data.',
-};
+export async function generateMetadata() {
+  return generatePageMetadata('privacy', 'en');
+}
 
 export default function PrivacyPage() {
   return <PrivacyContent />;

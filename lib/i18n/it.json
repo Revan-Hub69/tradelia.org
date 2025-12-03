@@ -477,7 +477,49 @@
   "seo": {
     "title": "Tradelia AI · Formazione Finanziaria Gratuita",
     "description": "Formazione finanziaria gratuita basata su framework AI proprietari verificabili. Percorsi formativi completi, materiale didattico conforme agli standard accademici internazionali e alle normative MiFID II.",
-    "keywords": "formazione finanziaria, educazione finanziaria, framework AI, MiFID II, analisi mercati, trading education"
+    "keywords": "formazione finanziaria, educazione finanziaria, framework AI, MiFID II, analisi mercati, trading education",
+    "pages": {
+      "pricing": {
+        "title": "Pricing · Tradelia",
+        "description": "Scegli il piano perfetto per le tue esigenze. Individuale o Business, con fatturazione B2B disponibile."
+      },
+      "checkout": {
+        "title": "Checkout · Tradelia",
+        "description": "Completa il tuo acquisto e scegli il metodo di pagamento."
+      },
+      "glossary": {
+        "title": "Glossario · Tradelia",
+        "description": "Glossario completo dei termini finanziari e tecnici utilizzati in Tradelia"
+      },
+      "faq": {
+        "title": "FAQ · Tradelia",
+        "description": "Domande frequenti su Tradelia, i nostri servizi e come utilizzare la piattaforma."
+      },
+      "support": {
+        "title": "Supporto · Tradelia",
+        "description": "Ottieni supporto per Tradelia. Contattaci per assistenza, domande o segnalazioni."
+      },
+      "about": {
+        "title": "Chi Siamo · Tradelia",
+        "description": "Scopri Tradelia: un laboratorio indipendente che unisce framework AI proprietari e metodo accademico per la ricerca finanziaria."
+      },
+      "contact": {
+        "title": "Contatti · Tradelia",
+        "description": "Contatta il team di Tradelia per supporto, domande o collaborazioni."
+      },
+      "privacy": {
+        "title": "Privacy Policy · Tradelia",
+        "description": "Informativa sulla privacy di Tradelia. Scopri come proteggiamo i tuoi dati personali."
+      },
+      "cookie": {
+        "title": "Cookie Policy · Tradelia",
+        "description": "Informativa sui cookie di Tradelia. Scopri come utilizziamo i cookie sul nostro sito."
+      },
+      "terms": {
+        "title": "Termini e Condizioni · Tradelia",
+        "description": "Termini e condizioni di utilizzo di Tradelia. Leggi le condizioni per l'uso della piattaforma."
+      }
+    }
   },
   "auth": {
     "title": "Accedi a Tradelia",
@@ -1193,6 +1235,12 @@
       "downloadInvoice": "Scarica Fattura",
       "goToDashboard": "Vai alla Dashboard",
       "viewBilling": "Vedi Fatture"
+    },
+    "submitted": {
+      "title": "Richiesta Inviata!",
+      "description": "La tua richiesta è stata inviata con successo al nostro team. Riceverai una risposta via email entro 24-48 ore.",
+      "goToDashboard": "Vai alla Dashboard",
+      "backToPricing": "Torna ai Piani"
     },
     "instructions": {
       "title": "Completa il Pagamento",
