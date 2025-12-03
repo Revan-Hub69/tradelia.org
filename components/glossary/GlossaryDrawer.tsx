@@ -30,6 +30,18 @@ interface GlossaryTerm {
   source: string; // Fonti accademiche
   whatDoes?: string; // Cosa fa - spiegazione Tradelia AI semplice ma esaustiva
   howToUse?: string; // Come si usa - spiegazione Tradelia AI semplice ma esaustiva
+  // Nuova struttura Tradelia (prioritaria se presente)
+  academicDefinition?: {
+    what: string;
+    source: string;
+    academicContext?: string;
+  };
+  tradeliaExplanation?: {
+    whatDoes: string;
+    howToUse: string;
+    practicalExample?: string;
+    commonMistakes?: string;
+  };
   // Legacy support
   technical?: string; // Deprecated: use whatDoes + howToUse
   how?: string; // Deprecated: use whatDoes + howToUse
