@@ -1362,30 +1362,122 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                 </section>
               )}
 
-              {/* Fonti Accademiche - APA Style */}
-              <section className="space-y-3" aria-labelledby="sources-section-title">
-                <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-800">
-                  <div className="w-10 h-10 rounded-lg bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-900/50 flex items-center justify-center flex-shrink-0">
-                    <FileText className="w-5 h-5 text-orange-600 dark:text-orange-400" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <h3 id="sources-section-title" className="text-base font-bold text-text-primary">
-                      {t('glossary.drawer.sources') || 'Riferimenti Bibliografici'}
-                    </h3>
-                    <p className="text-xs text-text-tertiary mt-0.5">Academic References (APA Style)</p>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  {term.source.split('|').map((source, index) => (
-                    <div key={index} className="flex items-start gap-3 p-3 rounded-lg bg-bg-soft border border-border-subtle hover:border-border-default transition-colors">
-                      <ExternalLink className="w-4 h-4 text-text-tertiary mt-0.5 flex-shrink-0" aria-hidden="true" />
-                      <p className="text-xs text-text-primary leading-relaxed font-mono">
-                        {source.trim()}
-                      </p>
+              {/* Sezione Riferimenti Bibliografici - Academic Style */}
+              {academicSource && (
+                <section className="mb-8 sm:mb-10" aria-labelledby="sources-section-title">
+                  {/* Header Sezione - Gerarchia Livello 1 */}
+                  <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-7 pb-4 sm:pb-5 border-b-2 border-border-strong">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-bg-soft border-2 border-accent/40 flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-accent" aria-hidden="true" />
                     </div>
-                  ))}
-                </div>
-              </section>
+                    <div className="flex-1">
+                      <h2 id="sources-section-title" className="text-lg sm:text-2xl font-bold text-text-primary mb-1.5 sm:mb-2">
+                        {t('glossary.drawer.sources') || 'Riferimenti Bibliografici'}
+                      </h2>
+                      <p className="text-xs sm:text-sm text-text-tertiary font-medium">Fonti accademiche verificate</p>
+                    </div>
+                  </div>
+                  {/* Lista Riferimenti - Formato Accademico */}
+                  <div className="space-y-4 sm:space-y-5">
+                    {Array.isArray(academicSource) ? (
+                      // Formato strutturato AcademicSource[]
+                      academicSource.map((source, index) => (
+                        <div key={index} className="p-4 sm:p-5 bg-bg-soft border-l-2 border-accent/40 rounded-r-md">
+                          <div className="space-y-2">
+                            {/* Citazione principale */}
+                            <p className="text-sm sm:text-[15px] text-text-primary leading-[1.75] font-normal">
+                              {source.author} ({source.year}). <em>{source.title}</em>
+                              {source.journal && (
+                                <>.
+                                  <span className="font-semibold"> {source.journal}</span>
+                                  {source.volume && (
+                                    <> <span className="font-normal">{source.volume}</span>
+                                      {source.issue && `(${source.issue})`}
+                                    </>
+                                  )}
+                                  {source.pages && `, ${source.pages}`}.
+                                </>
+                              )}
+                              {source.publisher && (
+                                <>. {source.publisher}.</>
+                              )}
+                            </p>
+                            {/* Metadata accademici */}
+                            <div className="flex flex-wrap gap-3 text-xs text-text-tertiary mt-2">
+                              {source.type && (
+                                <span className="px-2 py-1 bg-bg-surface rounded border border-border-default">
+                                  {source.type === 'peer-reviewed' ? 'Peer-reviewed' : 
+                                   source.type === 'textbook' ? 'Textbook' :
+                                   source.type === 'primary-source' ? 'Fonte primaria' :
+                                   source.type === 'secondary-source' ? 'Fonte secondaria' :
+                                   source.type === 'working-paper' ? 'Working paper' :
+                                   source.type === 'book-chapter' ? 'Capitolo libro' : source.type}
+                                </span>
+                              )}
+                              {source.primary && (
+                                <span className="px-2 py-1 bg-accent/20 text-accent rounded border border-accent/30">
+                                  Fonte primaria
+                                </span>
+                              )}
+                              {source.jel && (
+                                <span className="px-2 py-1 bg-bg-surface rounded border border-border-default">
+                                  JEL: {source.jel}
+                                </span>
+                              )}
+                            </div>
+                            {/* Link DOI/ISBN/URL */}
+                            <div className="flex flex-wrap gap-3 mt-3">
+                              {source.doi && (
+                                <a
+                                  href={`https://doi.org/${source.doi}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-xs sm:text-sm text-accent hover:text-accent-hover underline flex items-center gap-1.5"
+                                  aria-label={`DOI: ${source.doi}`}
+                                >
+                                  <ExternalLink className="w-3 h-3" />
+                                  DOI: {source.doi}
+                                </a>
+                              )}
+                              {source.isbn && (
+                                <span className="text-xs sm:text-sm text-text-tertiary">
+                                  ISBN: {source.isbn}
+                                </span>
+                              )}
+                              {source.url && !source.doi && (
+                                <a
+                                  href={source.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-xs sm:text-sm text-accent hover:text-accent-hover underline flex items-center gap-1.5"
+                                  aria-label="Link alla fonte"
+                                >
+                                  <ExternalLink className="w-3 h-3" />
+                                  Link
+                                </a>
+                              )}
+                              {source.accessedDate && (
+                                <span className="text-xs text-text-tertiary">
+                                  Accesso: {new Date(source.accessedDate).toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      // Formato stringa legacy (compatibilità)
+                      typeof academicSource === 'string' && academicSource.split('|').map((source, index) => (
+                        <div key={index} className="p-4 sm:p-5 bg-bg-soft border-l-2 border-accent/40 rounded-r-md">
+                          <p className="text-sm sm:text-[15px] text-text-primary leading-[1.75] font-normal">
+                            {source.trim()}
+                          </p>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </section>
+              )}
             </div>
 
             {/* Footer - Academic Style */}
