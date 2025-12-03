@@ -77,6 +77,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
   const { t } = useTranslations();
   const drawerRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const contentScrollableRef = useRef<HTMLDivElement>(null);
   const [relatedTermsData, setRelatedTermsData] = useState<GlossaryTermType[]>([]);
 
   // Blocca scroll quando drawer è aperto (Best Practice: Prevent body scroll)
@@ -147,9 +148,13 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
       }
     };
 
-    // Focus sul close button quando si apre
+    // Focus sul contenuto scrollabile quando si apre (non sui pulsanti)
     const timer = setTimeout(() => {
-      closeButtonRef.current?.focus();
+      if (contentScrollableRef.current) {
+        contentScrollableRef.current.focus();
+        // Scroll to top
+        contentScrollableRef.current.scrollTop = 0;
+      }
     }, 100);
 
     window.addEventListener('keydown', handleEscape);
@@ -1051,26 +1056,31 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               )}
             </div>
             {/* Content - Academic Layout */}
-            <div className="no-print flex-1 overflow-y-auto overflow-x-hidden p-6 space-y-8" style={{ scrollbarWidth: 'thin' }}>
+            <div 
+              ref={contentScrollableRef}
+              tabIndex={-1}
+              className="no-print flex-1 overflow-y-auto overflow-x-hidden p-6 space-y-8 focus:outline-none" 
+              style={{ scrollbarWidth: 'thin' }}
+            >
               {/* Spiegazione Accademica - Academic Style */}
-              <section className="space-y-3" aria-labelledby="academic-section-title">
-                <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border-subtle">
-                  <div className="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 flex items-center justify-center flex-shrink-0">
-                    <GraduationCap className="w-5 h-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+              <section className="space-y-4" aria-labelledby="academic-section-title">
+                <div className="flex items-center gap-3 mb-5 pb-4 border-b-2 border-border-default">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/50 dark:to-blue-800/50 border-2 border-blue-300 dark:border-blue-700 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <GraduationCap className="w-6 h-6 text-blue-700 dark:text-blue-300" aria-hidden="true" />
                   </div>
                   <div>
-                    <h3 id="academic-section-title" className="text-base font-bold text-text-primary">
+                    <h3 id="academic-section-title" className="text-lg font-bold text-text-primary">
                       {t('glossary.drawer.academicExplanation') || 'Definizione Accademica'}
                     </h3>
-                    <p className="text-xs text-text-tertiary mt-0.5">Academic Definition</p>
+                    <p className="text-xs text-text-tertiary mt-1">Academic Definition</p>
                   </div>
                 </div>
                 <div className="prose prose-sm dark:prose-invert max-w-none">
-                  <p className="text-sm text-text-primary leading-relaxed font-normal">
+                  <p className="text-base text-text-primary leading-relaxed font-normal">
                     {academicWhat}
                   </p>
                   {term.academicDefinition?.academicContext && (
-                    <p className="text-xs text-text-tertiary mt-3 italic leading-relaxed">
+                    <p className="text-sm text-text-secondary mt-4 italic leading-relaxed border-l-2 border-border-subtle pl-4">
                       {term.academicDefinition.academicContext}
                     </p>
                   )}
@@ -1079,60 +1089,60 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
 
               {/* Spiegazione Tradelia AI - Cosa fa e Come si usa */}
               {(whatDoes || howToUse || term.technical || term.how) && (
-                <section className="space-y-3" aria-labelledby="tradelia-ai-section-title">
-                  <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border-subtle">
-                    <div className="w-10 h-10 rounded-lg bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-900/50 flex items-center justify-center flex-shrink-0">
-                      <Code className="w-5 h-5 text-green-600 dark:text-green-400" aria-hidden="true" />
+                <section className="space-y-4" aria-labelledby="tradelia-ai-section-title">
+                  <div className="flex items-center gap-3 mb-5 pb-4 border-b-2 border-border-default">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900/50 dark:to-green-800/50 border-2 border-green-300 dark:border-green-700 flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <Code className="w-6 h-6 text-green-700 dark:text-green-300" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 id="tradelia-ai-section-title" className="text-base font-bold text-text-primary">
+                      <h3 id="tradelia-ai-section-title" className="text-lg font-bold text-text-primary">
                         {t('glossary.drawer.tradeliaAIExplanation') || 'Spiegazione Tradelia AI'}
                       </h3>
-                      <p className="text-xs text-text-tertiary mt-0.5">Spiegazione semplice ma esaustiva</p>
+                      <p className="text-xs text-text-tertiary mt-1">Spiegazione semplice ma esaustiva</p>
                     </div>
                   </div>
                   <div className="space-y-6">
                     {whatDoes && (
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-semibold text-text-primary">Cosa fa</h4>
+                      <div className="space-y-3">
+                        <h4 className="text-base font-bold text-text-primary">Cosa fa</h4>
                         <div className="prose prose-sm dark:prose-invert max-w-none">
-                          <p className="text-sm text-text-primary leading-relaxed whitespace-pre-line font-normal">
+                          <p className="text-base text-text-primary leading-relaxed whitespace-pre-line font-normal">
                             {whatDoes}
                           </p>
                         </div>
                       </div>
                     )}
                     {howToUse && (
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-semibold text-text-primary">Come si usa</h4>
+                      <div className="space-y-3">
+                        <h4 className="text-base font-bold text-text-primary">Come si usa</h4>
                         <div className="prose prose-sm dark:prose-invert max-w-none">
-                          <p className="text-sm text-text-primary leading-relaxed whitespace-pre-line font-normal">
+                          <p className="text-base text-text-primary leading-relaxed whitespace-pre-line font-normal">
                             {howToUse}
                           </p>
                         </div>
                       </div>
                     )}
                     {practicalExample && (
-                      <div className="space-y-2 p-4 bg-blue-50 dark:bg-blue-950/20 border-l-4 border-blue-500 dark:border-blue-400 rounded-r-lg">
-                        <h4 className="text-sm font-semibold text-text-primary flex items-center gap-2">
-                          <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      <div className="space-y-3 p-5 bg-blue-100 dark:bg-blue-900/40 border-l-4 border-blue-600 dark:border-blue-500 rounded-r-lg shadow-sm">
+                        <h4 className="text-base font-bold text-blue-900 dark:text-blue-100 flex items-center gap-2.5">
+                          <Sparkles className="w-5 h-5 text-blue-700 dark:text-blue-300" />
                           Esempio Pratico
                         </h4>
                         <div className="prose prose-sm dark:prose-invert max-w-none">
-                          <p className="text-sm text-text-primary leading-relaxed whitespace-pre-line font-normal">
+                          <p className="text-sm text-blue-900 dark:text-blue-50 leading-relaxed whitespace-pre-line font-medium">
                             {practicalExample}
                           </p>
                         </div>
                       </div>
                     )}
                     {commonMistakes && (
-                      <div className="space-y-2 p-4 bg-red-50 dark:bg-red-950/20 border-l-4 border-red-500 dark:border-red-400 rounded-r-lg">
-                        <h4 className="text-sm font-semibold text-text-primary flex items-center gap-2">
-                          <FileText className="w-4 h-4 text-red-600 dark:text-red-400" />
+                      <div className="space-y-3 p-5 bg-red-100 dark:bg-red-900/40 border-l-4 border-red-600 dark:border-red-500 rounded-r-lg shadow-sm">
+                        <h4 className="text-base font-bold text-red-900 dark:text-red-100 flex items-center gap-2.5">
+                          <FileText className="w-5 h-5 text-red-700 dark:text-red-300" />
                           Errori Comuni da Evitare
                         </h4>
                         <div className="prose prose-sm dark:prose-invert max-w-none">
-                          <p className="text-sm text-text-primary leading-relaxed whitespace-pre-line font-normal">
+                          <p className="text-sm text-red-900 dark:text-red-50 leading-relaxed whitespace-pre-line font-medium">
                             {commonMistakes}
                           </p>
                         </div>
