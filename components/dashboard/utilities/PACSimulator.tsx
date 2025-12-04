@@ -13,6 +13,7 @@ import { currencySymbols } from '@/lib/currency/config';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { HelpCircle } from 'lucide-react';
 import { MethodologyNotes } from './MethodologyNotes';
+import { PACReturnSuggestions } from './PACReturnSuggestions';
 
 /**
  * PAC Simulator (Piano di Accumulo Capitale)
@@ -233,19 +234,27 @@ export function PACSimulator() {
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>{t('proUtilities.pacSimulator.annualReturn') || 'Rendimento Annuo (%)'} *</span>
-              <Tooltip content="Il rendimento annuo atteso del tuo investimento. Storicamente, un portafoglio diversificato azionario ha reso circa 7-10% annuo nel lungo termine (con variazioni).">
+              <Tooltip content="Il rendimento annuo atteso del tuo investimento. Storicamente, un portafoglio diversificato azionario ha reso circa 7-10% annuo nel lungo termine (con variazioni). Vedi i suggerimenti MIFID compliant qui sotto per valori di riferimento basati su dati accademici.">
                 <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
-            <input
-              type="number"
-              value={annualReturn}
-              onChange={(e) => setAnnualReturn(e.target.value)}
-              placeholder="7"
-              className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
-              min="0"
-              max="100"
-              step="0.1"
+            <div className="relative mb-4">
+              <input
+                type="number"
+                value={annualReturn}
+                onChange={(e) => setAnnualReturn(e.target.value)}
+                placeholder="7"
+                className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+                min="0"
+                max="100"
+                step="0.1"
+              />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary text-sm">%</span>
+            </div>
+            {/* Suggerimenti MIFID Compliant */}
+            <PACReturnSuggestions
+              onSelect={(value) => setAnnualReturn(String(value))}
+              currentValue={parseFloat(annualReturn) || 0}
             />
           </div>
 

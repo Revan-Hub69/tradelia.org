@@ -108,6 +108,12 @@ export class ErrorBoundary extends Component<Props, State> {
     });
   };
 
+  handleReload = () => {
+    if (typeof window !== 'undefined') {
+      window.location.reload();
+    }
+  };
+
   render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
@@ -115,46 +121,55 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-bg-base">
-          <div className="max-w-md w-full space-y-6">
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-error/20 border-2 border-error/30 flex items-center justify-center mx-auto mb-4">
-                <AlertTriangle className="w-8 h-8 text-error" />
+        <>
+          {/* Popup Modal per Reload */}
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+            <div className="max-w-md w-full bg-bg-surface border-2 border-error/40 rounded-xl shadow-2xl p-6 space-y-4">
+              <div className="text-center">
+                <div className="w-16 h-16 rounded-full bg-error/20 border-2 border-error/30 flex items-center justify-center mx-auto mb-4">
+                  <AlertTriangle className="w-8 h-8 text-error" />
+                </div>
+                <h2 className="text-xl font-bold text-text-primary mb-2">
+                  Errore Imprevisto
+                </h2>
+                <p className="text-sm text-text-secondary mb-6">
+                  Si è verificato un errore. Vuoi ricaricare la pagina per risolvere il problema?
+                </p>
               </div>
-              <h1 className="text-2xl font-bold text-text-primary mb-2">
-                Qualcosa è andato storto
-              </h1>
-              <p className="text-text-secondary mb-6">
-                Si è verificato un errore imprevisto. Puoi provare a ricaricare la pagina o tornare alla home.
-              </p>
-            </div>
 
-            {process.env.NODE_ENV === 'development' && this.state.error && (
-              <Error
-                title="Dettagli Errore (Solo in sviluppo)"
-                message={this.state.error.message || 'Errore sconosciuto'}
-                variant="destructive"
-              />
-            )}
+              {process.env.NODE_ENV === 'development' && this.state.error && (
+                <div className="bg-bg-soft border border-border-subtle rounded-lg p-3 mb-4">
+                  <p className="text-xs font-mono text-error break-all">
+                    {this.state.error.message || 'Errore sconosciuto'}
+                  </p>
+                </div>
+              )}
 
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={this.handleReset}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-accent hover:bg-accent-hover text-white font-semibold transition-all duration-200"
-              >
-                <RefreshCw className="w-4 h-4" />
-                Riprova
-              </button>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={this.handleReload}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-accent hover:bg-accent-hover text-white font-semibold transition-all duration-200 shadow-lg"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  Ricarica Pagina
+                </button>
+                <button
+                  onClick={this.handleReset}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-bg-soft hover:bg-bg-elevated border border-border-subtle text-text-primary font-semibold transition-all duration-200"
+                >
+                  Riprova
+                </button>
+              </div>
               <Link
                 href="/dashboard"
-                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-bg-soft hover:bg-bg-elevated border border-border-subtle text-text-primary font-semibold transition-all duration-200"
+                className="block w-full text-center text-sm text-text-tertiary hover:text-text-primary transition-colors"
               >
-                <Home className="w-4 h-4" />
+                <Home className="w-4 h-4 inline mr-2" />
                 Torna alla Dashboard
               </Link>
             </div>
           </div>
-        </div>
+        </>
       );
     }
 

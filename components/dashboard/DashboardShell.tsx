@@ -238,41 +238,7 @@ export function DashboardShell() {
             <DashboardHero />
           </ErrorBoundary>
           
-          {/* Benefici utente - Mostra chiaramente cosa può fare e perché registrarsi/upgradare */}
-          <section 
-            aria-label="Benefici account" 
-            className={styles.dashboardSection}
-            id="user-benefits"
-          >
-            <ErrorBoundary>
-              <UserBenefits />
-            </ErrorBoundary>
-          </section>
-          
-          {/* Statistiche chiave - Best Practice: 4-6 metriche essenziali */}
-          <section 
-            aria-label="Panoramica accademica" 
-            className={styles.dashboardSection}
-            suppressHydrationWarning
-            id="overview"
-          >
-            <ErrorBoundary>
-              <OverviewStats />
-            </ErrorBoundary>
-          </section>
-
-          {/* Azioni rapide - Best Practice: azioni principali accessibili */}
-          <section 
-            aria-label="Azioni rapide" 
-            className={styles.dashboardSection}
-            id="quick-actions"
-          >
-            <ErrorBoundary>
-              <QuickActions />
-            </ErrorBoundary>
-          </section>
-
-          {/* Moduli unificati - Best Practice: organizzazione gerarchica */}
+          {/* Moduli unificati - Best Practice: organizzazione gerarchica - PRIMA PRIORITÀ */}
           <section 
             aria-label="Moduli e funzionalità" 
             className={styles.dashboardSection}
@@ -283,14 +249,15 @@ export function DashboardShell() {
             </ErrorBoundary>
           </section>
 
-          {/* Attività recenti - Best Practice: progressive disclosure (collassabile) */}
+          {/* Statistiche chiave - Best Practice: 4-6 metriche essenziali - SECONDARIA */}
           <section 
-            aria-label="Attività recenti" 
+            aria-label="Panoramica accademica" 
             className={styles.dashboardSection}
-            id="recent-activity"
+            suppressHydrationWarning
+            id="overview"
           >
             <ErrorBoundary>
-              <RecentActivity />
+              <OverviewStats />
             </ErrorBoundary>
           </section>
         </div>
