@@ -171,7 +171,7 @@ async function callGroqAI(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'llama-3.1-70b-versatile', // Fast and free model
+        model: 'llama-3.3-70b-versatile', // Latest production model: 280 t/s, best quality for financial content
         messages,
         temperature: 0.7,
         max_tokens: 800, // Increased for more complete Tradelia-style responses
@@ -246,7 +246,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       response,
-      model: process.env.GROQ_API_KEY ? 'groq-llama-3.1' : 'fallback',
+      model: process.env.GROQ_API_KEY ? 'groq-llama-3.3-70b' : 'fallback',
     });
   } catch (error) {
     console.error('Error in AI chat API:', error);
