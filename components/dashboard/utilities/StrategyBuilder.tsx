@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, memo } from 'react';
-import { TrendingUp, TrendingDown, BarChart3, AlertCircle, Info, BookOpen, Calculator, Target, Shield } from 'lucide-react';
+import { TrendingUp, TrendingDown, BarChart3, AlertCircle, Info, BookOpen, Calculator, Target, Shield, Save, Download, Settings, Filter, X } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { Tooltip } from '@/components/ui/Tooltip';
@@ -67,6 +67,22 @@ export function StrategyBuilder() {
   const [results, setResults] = useState<WalkForwardWindow[]>([]);
   const [selectedWindow, setSelectedWindow] = useState<number | null>(null);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  
+  // Personalization settings
+  const [showAdvancedMetrics, setShowAdvancedMetrics] = useState(true);
+  const [minRobustnessScore, setMinRobustnessScore] = useState(60);
+  const [minProfitFactor, setMinProfitFactor] = useState(1.2);
+  const [minWinRate, setMinWinRate] = useState(40);
+  const [maxDrawdownThreshold, setMaxDrawdownThreshold] = useState(20);
+  const [showFilters, setShowFilters] = useState(false);
+  const [savedConfigs, setSavedConfigs] = useState<Array<{
+    id: string;
+    name: string;
+    config: any;
+    timestamp: Date;
+  }>>([]);
+  const [showSaveConfig, setShowSaveConfig] = useState(false);
+  const [configName, setConfigName] = useState('');
 
   // Memoized calculations
   const totalCombinations = useMemo(() => {
@@ -252,9 +268,18 @@ export function StrategyBuilder() {
         }
       }
 
+      // Apply user filters
+      const filteredResults = optimizationResults.filter(r => {
+        if (r.robustnessScore < minRobustnessScore) return false;
+        if (r.profitFactor < minProfitFactor) return false;
+        if (r.winRate < minWinRate) return false;
+        if (r.maxDrawdown > maxDrawdownThreshold) return false;
+        return true;
+      });
+      
       // Find best parameter using multi-criteria optimization
       // Priority: Robustness > OOS Return > Sharpe Ratio > Profit Factor
-      const bestResult = optimizationResults
+      const bestResult = (filteredResults.length > 0 ? filteredResults : optimizationResults)
         .filter(r => r.isRobust)
         .sort((a, b) => {
           // Primary: Robustness score
@@ -494,8 +519,25 @@ export function StrategyBuilder() {
             <Calculator className="w-5 h-5 text-accent" aria-hidden="true" />
             {locale === 'it' ? 'Configurazione Parametri' : 'Parameter Configuration'}
           </h3>
-          <div className="text-xs text-text-tertiary">
-            {locale === 'it' ? 'Inserisci i valori desiderati' : 'Enter your desired values'}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowAdvancedMetrics(!showAdvancedMetrics)}
+              className={cn(
+                'px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                'border border-border-subtle',
+                showAdvancedMetrics
+                  ? 'bg-accent/20 text-accent border-accent/40'
+                  : 'bg-bg-soft text-text-tertiary hover:text-text-primary'
+              )}
+              aria-label={locale === 'it' ? 'Mostra metriche avanzate' : 'Show advanced metrics'}
+              aria-pressed={showAdvancedMetrics}
+            >
+              <Settings className="w-3 h-3 inline-block mr-1" />
+              {locale === 'it' ? 'Metriche' : 'Metrics'}
+            </button>
+            <div className="text-xs text-text-tertiary">
+              {locale === 'it' ? 'Inserisci i valori desiderati' : 'Enter your desired values'}
+            </div>
           </div>
         </div>
 
@@ -850,34 +892,252 @@ export function StrategyBuilder() {
           </div>
         )}
 
-        <button
-          onClick={runWalkForwardOptimization}
-          onKeyDown={(e) => handleKeyDown(e, runWalkForwardOptimization)}
-          disabled={isOptimizing || validationErrors.length > 0}
-          aria-label={locale === 'it' ? 'Esegui ottimizzazione Walk-Forward' : 'Run Walk-Forward Optimization'}
-          aria-busy={isOptimizing}
-          className={cn(
-            'w-full py-3 px-6 rounded-lg font-semibold transition-all',
-            'bg-gradient-to-r from-accent to-accent-hover text-white',
-            'hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]',
-            'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
-            'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100',
-            'flex items-center justify-center gap-2',
-            'touch-manipulation' // Mobile optimization
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            onClick={runWalkForwardOptimization}
+            onKeyDown={(e) => handleKeyDown(e, runWalkForwardOptimization)}
+            disabled={isOptimizing || validationErrors.length > 0}
+            aria-label={locale === 'it' ? 'Esegui ottimizzazione Walk-Forward' : 'Run Walk-Forward Optimization'}
+            aria-busy={isOptimizing}
+            className={cn(
+              'flex-1 py-3 px-6 rounded-lg font-semibold transition-all',
+              'bg-gradient-to-r from-accent to-accent-hover text-white',
+              'hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]',
+              'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
+              'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100',
+              'flex items-center justify-center gap-2',
+              'touch-manipulation' // Mobile optimization
+            )}
+          >
+            {isOptimizing ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <span>{locale === 'it' ? 'Ottimizzazione in corso...' : 'Optimizing...'}</span>
+              </>
+            ) : (
+              <>
+                <TrendingUp className="w-5 h-5" />
+                <span>{locale === 'it' ? 'Esegui Walk-Forward Optimization' : 'Run Walk-Forward Optimization'}</span>
+              </>
+            )}
+          </button>
+          
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className={cn(
+              'px-4 py-3 rounded-lg font-medium transition-all',
+              'border border-border-subtle bg-bg-soft text-text-primary',
+              'hover:bg-bg-surface hover:border-accent/40',
+              'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
+              'flex items-center justify-center gap-2'
+            )}
+            aria-label={locale === 'it' ? 'Mostra filtri avanzati' : 'Show advanced filters'}
+            aria-expanded={showFilters}
+          >
+            <Filter className="w-4 h-4" />
+            <span className="hidden sm:inline">{locale === 'it' ? 'Filtri' : 'Filters'}</span>
+          </button>
+          
+          {results.length > 0 && (
+            <button
+              onClick={() => setShowSaveConfig(true)}
+              className={cn(
+                'px-4 py-3 rounded-lg font-medium transition-all',
+                'border border-border-subtle bg-bg-soft text-text-primary',
+                'hover:bg-bg-surface hover:border-accent/40',
+                'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
+                'flex items-center justify-center gap-2'
+              )}
+              aria-label={locale === 'it' ? 'Salva configurazione' : 'Save configuration'}
+            >
+              <Save className="w-4 h-4" />
+              <span className="hidden sm:inline">{locale === 'it' ? 'Salva' : 'Save'}</span>
+            </button>
           )}
-        >
-          {isOptimizing ? (
-            <>
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              <span>{locale === 'it' ? 'Ottimizzazione in corso...' : 'Optimizing...'}</span>
-            </>
-          ) : (
-            <>
-              <TrendingUp className="w-5 h-5" />
-              <span>{locale === 'it' ? 'Esegui Walk-Forward Optimization' : 'Run Walk-Forward Optimization'}</span>
-            </>
-          )}
-        </button>
+        </div>
+        
+        {/* Advanced Filters Panel */}
+        {showFilters && (
+          <div className="bg-bg-soft border border-border-subtle rounded-lg p-4 space-y-4">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-sm font-semibold text-text-primary flex items-center gap-2">
+                <Filter className="w-4 h-4 text-accent" />
+                {locale === 'it' ? 'Filtri Avanzati' : 'Advanced Filters'}
+              </h4>
+              <button
+                onClick={() => setShowFilters(false)}
+                className="w-6 h-6 rounded flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-surface transition-colors"
+                aria-label={locale === 'it' ? 'Chiudi filtri' : 'Close filters'}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <label htmlFor="min-robustness" className="block text-xs font-medium text-text-secondary mb-1">
+                  {locale === 'it' ? 'Robustezza Min' : 'Min Robustness'}
+                </label>
+                <input
+                  id="min-robustness"
+                  type="number"
+                  value={minRobustnessScore}
+                  onChange={(e) => setMinRobustnessScore(parseInt(e.target.value) || 60)}
+                  min={0}
+                  max={100}
+                  step={5}
+                  className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="min-profit-factor" className="block text-xs font-medium text-text-secondary mb-1">
+                  {locale === 'it' ? 'Profit Factor Min' : 'Min Profit Factor'}
+                </label>
+                <input
+                  id="min-profit-factor"
+                  type="number"
+                  value={minProfitFactor}
+                  onChange={(e) => setMinProfitFactor(parseFloat(e.target.value) || 1.2)}
+                  min={0.5}
+                  max={5}
+                  step={0.1}
+                  className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="min-win-rate" className="block text-xs font-medium text-text-secondary mb-1">
+                  {locale === 'it' ? 'Win Rate Min (%)' : 'Min Win Rate (%)'}
+                </label>
+                <input
+                  id="min-win-rate"
+                  type="number"
+                  value={minWinRate}
+                  onChange={(e) => setMinWinRate(parseInt(e.target.value) || 40)}
+                  min={0}
+                  max={100}
+                  step={5}
+                  className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="max-drawdown" className="block text-xs font-medium text-text-secondary mb-1">
+                  {locale === 'it' ? 'Max Drawdown Max (%)' : 'Max Drawdown (%)'}
+                </label>
+                <input
+                  id="max-drawdown"
+                  type="number"
+                  value={maxDrawdownThreshold}
+                  onChange={(e) => setMaxDrawdownThreshold(parseInt(e.target.value) || 20)}
+                  min={5}
+                  max={50}
+                  step={5}
+                  className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                />
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2 text-xs text-text-tertiary">
+              <Info className="w-4 h-4" />
+              <span>
+                {locale === 'it'
+                  ? 'I filtri vengono applicati durante l\'ottimizzazione per mostrare solo i parametri che soddisfano i criteri.'
+                  : 'Filters are applied during optimization to show only parameters that meet the criteria.'}
+              </span>
+            </div>
+          </div>
+        )}
+        
+        {/* Save Configuration Modal */}
+        {showSaveConfig && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <div className="bg-bg-surface border border-border-subtle rounded-xl p-6 max-w-md w-full space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-text-primary">
+                  {locale === 'it' ? 'Salva Configurazione' : 'Save Configuration'}
+                </h3>
+                <button
+                  onClick={() => {
+                    setShowSaveConfig(false);
+                    setConfigName('');
+                  }}
+                  className="w-8 h-8 rounded flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors"
+                  aria-label={locale === 'it' ? 'Chiudi' : 'Close'}
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              
+              <div>
+                <label htmlFor="config-name" className="block text-sm font-medium text-text-primary mb-2">
+                  {locale === 'it' ? 'Nome Configurazione' : 'Configuration Name'}
+                </label>
+                <input
+                  id="config-name"
+                  type="text"
+                  value={configName}
+                  onChange={(e) => setConfigName(e.target.value)}
+                  placeholder={locale === 'it' ? 'Es: Strategia Trend Following' : 'E.g: Trend Following Strategy'}
+                  className="w-full px-4 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                />
+              </div>
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    if (configName.trim()) {
+                      const newConfig = {
+                        id: Date.now().toString(),
+                        name: configName.trim(),
+                        config: {
+                          keyValueMin,
+                          keyValueMax,
+                          keyValueStep,
+                          atrPeriodMin,
+                          atrPeriodMax,
+                          atrPeriodStep,
+                          inSampleMonths,
+                          outOfSampleMonths,
+                          startDate,
+                          endDate,
+                          minRobustnessScore,
+                          minProfitFactor,
+                          minWinRate,
+                          maxDrawdownThreshold,
+                        },
+                        timestamp: new Date(),
+                      };
+                      setSavedConfigs([...savedConfigs, newConfig]);
+                      setShowSaveConfig(false);
+                      setConfigName('');
+                    }
+                  }}
+                  disabled={!configName.trim()}
+                  className={cn(
+                    'flex-1 py-2 px-4 rounded-lg font-medium transition-all',
+                    'bg-accent text-white',
+                    'hover:bg-accent-hover',
+                    'disabled:opacity-50 disabled:cursor-not-allowed',
+                    'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2'
+                  )}
+                >
+                  {locale === 'it' ? 'Salva' : 'Save'}
+                </button>
+                <button
+                  onClick={() => {
+                    setShowSaveConfig(false);
+                    setConfigName('');
+                  }}
+                  className="px-4 py-2 rounded-lg font-medium border border-border-subtle bg-bg-soft text-text-primary hover:bg-bg-surface transition-colors"
+                >
+                  {locale === 'it' ? 'Annulla' : 'Cancel'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Results */}
@@ -1004,18 +1264,82 @@ export function StrategyBuilder() {
                   {locale === 'it' ? 'Robusti' : 'Robust'}
                 </div>
                 <div className="text-2xl font-bold text-green-400">
-                  {results.reduce((sum, w) => sum + w.results.filter(r => r.isRobust).length, 0)}
+                  {results.reduce((sum, w) => sum + w.results.filter(r => 
+                    r.isRobust && 
+                    r.robustnessScore >= minRobustnessScore &&
+                    r.profitFactor >= minProfitFactor &&
+                    r.winRate >= minWinRate &&
+                    r.maxDrawdown <= maxDrawdownThreshold
+                  ).length, 0)}
                 </div>
               </div>
               <div className="bg-bg-soft rounded-lg p-4">
                 <div className="text-xs text-text-tertiary mb-1">
-                  {locale === 'it' ? 'Overfitted' : 'Overfitted'}
+                  {locale === 'it' ? 'Filtrati' : 'Filtered'}
                 </div>
-                <div className="text-2xl font-bold text-red-400">
-                  {results.reduce((sum, w) => sum + w.results.filter(r => !r.isRobust).length, 0)}
+                <div className="text-2xl font-bold text-amber-400">
+                  {results.reduce((sum, w) => sum + w.results.filter(r => 
+                    !r.isRobust || 
+                    r.robustnessScore < minRobustnessScore ||
+                    r.profitFactor < minProfitFactor ||
+                    r.winRate < minWinRate ||
+                    r.maxDrawdown > maxDrawdownThreshold
+                  ).length, 0)}
                 </div>
               </div>
             </div>
+            
+            {/* Saved Configurations */}
+            {savedConfigs.length > 0 && (
+              <div className="mt-4 pt-4 border-t border-border-subtle">
+                <h4 className="text-sm font-semibold text-text-primary mb-3">
+                  {locale === 'it' ? 'Configurazioni Salvate' : 'Saved Configurations'}
+                </h4>
+                <div className="space-y-2">
+                  {savedConfigs.map((config) => (
+                    <button
+                      key={config.id}
+                      onClick={() => {
+                        setKeyValueMin(config.config.keyValueMin);
+                        setKeyValueMax(config.config.keyValueMax);
+                        setKeyValueStep(config.config.keyValueStep);
+                        setAtrPeriodMin(config.config.atrPeriodMin);
+                        setAtrPeriodMax(config.config.atrPeriodMax);
+                        setAtrPeriodStep(config.config.atrPeriodStep);
+                        setInSampleMonths(config.config.inSampleMonths);
+                        setOutOfSampleMonths(config.config.outOfSampleMonths);
+                        setStartDate(config.config.startDate);
+                        setEndDate(config.config.endDate);
+                        setMinRobustnessScore(config.config.minRobustnessScore);
+                        setMinProfitFactor(config.config.minProfitFactor);
+                        setMinWinRate(config.config.minWinRate);
+                        setMaxDrawdownThreshold(config.config.maxDrawdownThreshold);
+                      }}
+                      className="w-full text-left p-3 bg-bg-soft border border-border-subtle rounded-lg hover:border-accent/40 hover:bg-bg-surface transition-all"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-medium text-text-primary text-sm">{config.name}</div>
+                          <div className="text-xs text-text-tertiary mt-1">
+                            {config.timestamp.toLocaleDateString(locale)}
+                          </div>
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSavedConfigs(savedConfigs.filter(c => c.id !== config.id));
+                          }}
+                          className="w-6 h-6 rounded flex items-center justify-center text-text-tertiary hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                          aria-label={locale === 'it' ? 'Elimina configurazione' : 'Delete configuration'}
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Walk-Forward Windows */}
@@ -1142,12 +1466,13 @@ export function StrategyBuilder() {
                           </div>
                         </div>
                         
-                        {/* Trading Statistics */}
-                        <div>
-                          <h5 className="text-xs font-semibold text-text-secondary mb-2 uppercase">
-                            {locale === 'it' ? 'Statistiche Trading' : 'Trading Statistics'}
-                          </h5>
-                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        {/* Trading Statistics - Conditionally shown */}
+                        {showAdvancedMetrics && (
+                          <div>
+                            <h5 className="text-xs font-semibold text-text-secondary mb-2 uppercase">
+                              {locale === 'it' ? 'Statistiche Trading' : 'Trading Statistics'}
+                            </h5>
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             <div>
                               <div className="text-xs text-text-tertiary mb-1">
                                 {locale === 'it' ? 'Win Rate' : 'Win Rate'}
@@ -1221,6 +1546,7 @@ export function StrategyBuilder() {
                             </div>
                           </div>
                         </div>
+                        )}
                         
                         {/* Parameter Info */}
                         <div className="bg-bg-soft rounded-lg p-3">
