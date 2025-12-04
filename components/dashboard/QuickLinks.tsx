@@ -9,20 +9,10 @@ import { buildLocalePath } from '@/lib/i18n/paths';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
 import { motion } from 'framer-motion';
-import { TooltipGlossary } from '@/components/glossary/TooltipGlossary';
-import { getGlossaryTerm } from '@/lib/glossary/terms';
 
 export const QuickLinks = memo(function QuickLinks() {
   const { t, locale } = useTranslations();
   const isPro = useIsPro();
-  const [watchlistTerm, setWatchlistTerm] = useState<any>(null);
-
-  // Carica termine Watchlist per tooltip
-  useEffect(() => {
-    getGlossaryTerm('Watchlist').then(term => {
-      if (term) setWatchlistTerm(term);
-    });
-  }, []);
 
   const links = [
     {
@@ -34,16 +24,6 @@ export const QuickLinks = memo(function QuickLinks() {
       color: 'text-green-400',
       bgColor: 'bg-green-400/20',
       borderColor: 'border-green-400/30',
-    },
-    {
-      id: 'glossary',
-      href: '/glossary',
-      icon: BookOpen,
-      label: t('dashboard.quickLinks.glossary') || 'Glossario',
-      description: t('dashboard.quickLinks.glossaryDesc') || 'Termini finanziari e definizioni',
-      color: 'text-blue-400',
-      bgColor: 'bg-blue-400/20',
-      borderColor: 'border-blue-400/30',
     },
     {
       id: 'widgets',
@@ -121,13 +101,7 @@ export const QuickLinks = memo(function QuickLinks() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <h3 className="font-semibold text-text-primary">
-                      {link.id === 'watchlist' && watchlistTerm ? (
-                        <TooltipGlossary term={watchlistTerm} icon={false}>
-                          <span>{link.label}</span>
-                        </TooltipGlossary>
-                      ) : (
-                        link.label
-                      )}
+                      {link.label}
                     </h3>
                     {link.proOnly && (
                       <span className="px-1.5 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded text-xs text-amber-300 font-medium">

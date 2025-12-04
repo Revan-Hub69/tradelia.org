@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { loadGlossaryTerms } from '@/lib/glossary/terms';
 
 /**
  * AI Chat API
- * Provides AI-powered responses using glossary and context
+ * Uses Groq AI (free tier: 14,400 requests/day) for real AI responses
+ * Fallback to template responses if API key not configured
  * 
- * TODO: Integrate with real AI service (OpenAI, Anthropic, etc.)
- * For now, uses enhanced RAG pattern with glossary as knowledge base
+ * Get free API key: https://console.groq.com/
  */
 
 interface ChatMessage {
@@ -20,178 +19,110 @@ interface ChatRequest {
   conversationHistory?: ChatMessage[];
 }
 
-// Enhanced keyword-based retrieval
-function findRelevantTerms(query: string, glossaryData: Record<string, any>, locale: 'it' | 'en'): any[] {
-  const queryLower = query.toLowerCase();
-  const stopWords = locale === 'it' 
-    ? ['cosa', 'cos', 'è', 'come', 'funziona', 'spiegami', 'dimmi', 'che', 'chi', 'quando', 'dove', 'perché', 'il', 'la', 'lo', 'gli', 'le', 'un', 'una', 'uno', 'di', 'a', 'da', 'in', 'con', 'su', 'per', 'tra', 'fra']
-    : ['what', 'is', 'how', 'does', 'work', 'explain', 'tell', 'me', 'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'];
+// Groq AI Integration
+async function callGroqAI(
+  message: string,
+  conversationHistory: ChatMessage[] = [],
+  locale: 'it' | 'en'
+): Promise<string> {
+  const apiKey = process.env.GROQ_API_KEY;
   
-  const queryWords = queryLower
-    .split(/\s+/)
-    .filter(word => word.length > 2 && !stopWords.includes(word));
+  if (!apiKey) {
+    throw new Error('GROQ_API_KEY not configured');
+  }
 
-  const relevantTerms: Array<{ key: string; term: any; score: number }> = [];
+  const systemPrompt = locale === 'it'
+    ? `Sei l'assistente AI di Tradelia, una piattaforma finanziaria educativa. 
+Rispondi in modo chiaro, professionale e conforme alle normative MIFID II.
+Non fornire consulenza finanziaria, ma informazioni educative.
+Sei esperto in:
+- Termini finanziari e definizioni
+- Strumenti finanziari (calcolatori, simulatori)
+- Analisi di mercato e report
+- Trading e investimenti
+- Conformità MIFID II
 
-  for (const [key, term] of Object.entries(glossaryData)) {
-    let score = 0;
+Sii conciso, preciso e sempre aggiungi un disclaimer MIFID quando appropriato.`
+    : `You are Tradelia's AI assistant, an educational financial platform.
+Respond clearly, professionally, and in compliance with MIFID II regulations.
+Do not provide financial advice, but educational information.
+You are an expert in:
+- Financial terms and definitions
+- Financial tools (calculators, simulators)
+- Market analysis and reports
+- Trading and investments
+- MIFID II compliance
 
-    if (term.title?.toLowerCase() === queryLower) {
-      score += 20;
-    } else if (term.title?.toLowerCase().includes(queryLower)) {
-      score += 10;
-    }
+Be concise, precise, and always add a MIFID disclaimer when appropriate.`;
 
-    queryWords.forEach(word => {
-      if (term.title?.toLowerCase().includes(word)) {
-        score += 5;
-      }
+  const messages = [
+    { role: 'system', content: systemPrompt },
+    ...conversationHistory.slice(-5), // Last 5 messages for context
+    { role: 'user', content: message },
+  ];
+
+  try {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'llama-3.1-70b-versatile', // Fast and free model
+        messages,
+        temperature: 0.7,
+        max_tokens: 500,
+        stream: false,
+      }),
     });
 
-    const whatText = term.academicDefinition?.what || term.what;
-    if (whatText) {
-      if (whatText.toLowerCase().includes(queryLower)) {
-        score += 5;
-      }
-      queryWords.forEach(word => {
-        if (whatText.toLowerCase().includes(word)) {
-          score += 2;
-        }
-      });
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Groq API error: ${response.status} - ${error}`);
     }
 
-    const howText = term.tradeliaExplanation?.howToUse || term.how;
-    if (howText) {
-      if (howText.toLowerCase().includes(queryLower)) {
-        score += 3;
-      }
-      queryWords.forEach(word => {
-        if (howText.toLowerCase().includes(word)) {
-          score += 1;
-        }
-      });
-    }
-
-    if (term.tradeliaExplanation?.whatDoes) {
-      if (term.tradeliaExplanation.whatDoes.toLowerCase().includes(queryLower)) {
-        score += 4;
-      }
-      queryWords.forEach(word => {
-        if (term.tradeliaExplanation.whatDoes.toLowerCase().includes(word)) {
-          score += 2;
-        }
-      });
-    }
-
-    if (term.tags?.some((tag: string) => {
-      const tagLower = tag.toLowerCase();
-      return tagLower === queryLower || queryWords.some(word => tagLower.includes(word));
-    })) {
-      score += 3;
-    }
-
-    if (score > 0) {
-      relevantTerms.push({ key, term, score });
-    }
+    const data = await response.json();
+    return data.choices[0]?.message?.content || 'Mi dispiace, non ho ricevuto una risposta valida.';
+  } catch (error) {
+    console.error('Groq API error:', error);
+    throw error;
   }
-
-  return relevantTerms
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3)
-    .map(item => item.term);
 }
 
-function generateResponse(
-  query: string,
-  relevantTerms: any[],
-  locale: 'it' | 'en',
-  conversationHistory?: ChatMessage[]
-): string {
-  // Check if query is about utilities/tools
-  const utilitiesKeywords = locale === 'it'
-    ? ['calcolatore', 'simulatore', 'pac', 'hedging', 'position sizing', 'sharpe', 'volatilità', 'opzioni', 'kelly', 'portfolio', 'correlazione', 'drawdown', 'risk reward']
-    : ['calculator', 'simulator', 'pac', 'hedging', 'position sizing', 'sharpe', 'volatility', 'options', 'kelly', 'portfolio', 'correlation', 'drawdown', 'risk reward'];
-
-  const isUtilityQuery = utilitiesKeywords.some(keyword => query.toLowerCase().includes(keyword));
-
-  if (isUtilityQuery && relevantTerms.length === 0) {
+// Fallback template responses
+function getFallbackResponse(query: string, locale: 'it' | 'en'): string {
+  const queryLower = query.toLowerCase();
+  
+  // Financial terms
+  if (queryLower.includes('sharpe') || queryLower.includes('sharpe ratio')) {
     return locale === 'it'
-      ? 'Per informazioni sugli strumenti finanziari, visita la sezione Utilities nel dashboard. Posso anche rispondere a domande su termini finanziari specifici.'
-      : 'For information about financial tools, visit the Utilities section in the dashboard. I can also answer questions about specific financial terms.';
+      ? `**Sharpe Ratio**\n\nIl Sharpe Ratio misura il rendimento aggiustato per il rischio di un investimento. Si calcola come:\n\nSharpe Ratio = (Rendimento Portafoglio - Tasso Risk-Free) / Deviazione Standard\n\nUn valore superiore a 1 è considerato buono, superiore a 2 è eccellente, superiore a 3 è eccezionale.\n\n*Nota: Informazioni a scopo educativo. Non costituisce consulenza finanziaria.*`
+      : `**Sharpe Ratio**\n\nThe Sharpe Ratio measures the risk-adjusted return of an investment. It's calculated as:\n\nSharpe Ratio = (Portfolio Return - Risk-Free Rate) / Standard Deviation\n\nA value above 1 is considered good, above 2 is excellent, above 3 is exceptional.\n\n*Note: Information for educational purposes. Does not constitute financial advice.*`;
   }
-
-  if (relevantTerms.length === 0) {
+  
+  if (queryLower.includes('volatilità') || queryLower.includes('volatility')) {
     return locale === 'it'
-      ? 'Non ho trovato informazioni specifiche su questo argomento. Potresti riformulare la domanda o chiedere informazioni su:\n\n• Termini finanziari (es. Sharpe Ratio, Volatilità, Hedging)\n• Strumenti finanziari (es. Calcolatori, Simulatori)\n• Report e analisi\n• Funzionalità della piattaforma'
-      : 'I couldn\'t find specific information about this topic. Could you rephrase your question or ask about:\n\n• Financial terms (e.g. Sharpe Ratio, Volatility, Hedging)\n• Financial tools (e.g. Calculators, Simulators)\n• Reports and analysis\n• Platform features';
+      ? `**Volatilità**\n\nLa volatilità misura la variabilità dei prezzi di un asset nel tempo. Una volatilità alta indica maggiore rischio ma anche maggiore potenziale di rendimento.\n\nSi misura tipicamente come deviazione standard dei rendimenti annui.\n\n*Nota: Informazioni a scopo educativo. Non costituisce consulenza finanziaria.*`
+      : `**Volatility**\n\nVolatility measures the variability of an asset's prices over time. High volatility indicates greater risk but also greater return potential.\n\nIt's typically measured as the standard deviation of annual returns.\n\n*Note: Information for educational purposes. Does not constitute financial advice.*`;
   }
-
-  const term = relevantTerms[0];
-  let response = '';
-
-  if (locale === 'it') {
-    response = `**${term.title}**\n\n`;
-    
-    const definition = term.academicDefinition?.what || term.what;
-    if (definition) {
-      response += `${definition}\n\n`;
-    }
-    
-    const explanation = term.tradeliaExplanation?.whatDoes || term.tradeliaExplanation?.howToUse || term.how;
-    if (explanation) {
-      response += `**Come funziona:**\n${explanation}\n\n`;
-    }
-    
-    if (term.academicDefinition?.academicContext) {
-      response += `**Contesto:** ${term.academicDefinition.academicContext}\n\n`;
-    }
-    
-    const source = term.academicDefinition?.source || term.source;
-    if (source) {
-      response += `*Fonte: ${source}*`;
-    }
-
-    if (relevantTerms.length > 1) {
-      response += `\n\n**Termini correlati:** ${relevantTerms.slice(1).map(t => t.title).join(', ')}`;
-    }
-
-    response += `\n\n*Nota: Informazioni a scopo educativo. Non costituisce consulenza finanziaria.*`;
-  } else {
-    response = `**${term.title}**\n\n`;
-    
-    const definition = term.academicDefinition?.what || term.what;
-    if (definition) {
-      response += `${definition}\n\n`;
-    }
-    
-    const explanation = term.tradeliaExplanation?.whatDoes || term.tradeliaExplanation?.howToUse || term.how;
-    if (explanation) {
-      response += `**How it works:**\n${explanation}\n\n`;
-    }
-    
-    if (term.academicDefinition?.academicContext) {
-      response += `**Context:** ${term.academicDefinition.academicContext}\n\n`;
-    }
-    
-    const source = term.academicDefinition?.source || term.source;
-    if (source) {
-      response += `*Source: ${source}*`;
-    }
-
-    if (relevantTerms.length > 1) {
-      response += `\n\n**Related terms:** ${relevantTerms.slice(1).map(t => t.title).join(', ')}`;
-    }
-
-    response += `\n\n*Note: Information for educational purposes. Does not constitute financial advice.*`;
+  
+  if (queryLower.includes('pac') || queryLower.includes('piano accumulo')) {
+    return locale === 'it'
+      ? `**PAC (Piano di Accumulo Capitale)**\n\nIl PAC è una strategia di investimento che prevede versamenti periodici (mensili, trimestrali) per accumulare capitale nel tempo.\n\nVantaggi:\n- Diversificazione temporale\n- Riduzione del rischio di timing\n- Disciplina di investimento\n\nVisita la sezione Utilities per usare il simulatore PAC.\n\n*Nota: Informazioni a scopo educativo. Non costituisce consulenza finanziaria.*`
+      : `**PAC (Capital Accumulation Plan)**\n\nPAC is an investment strategy involving periodic contributions (monthly, quarterly) to accumulate capital over time.\n\nBenefits:\n- Time diversification\n- Reduced timing risk\n- Investment discipline\n\nVisit the Utilities section to use the PAC simulator.\n\n*Note: Information for educational purposes. Does not constitute financial advice.*`;
   }
-
-  return response;
+  
+  // Default response
+  return locale === 'it'
+    ? `Grazie per la tua domanda! Sono l'assistente AI di Tradelia.\n\nPosso aiutarti con:\n• Termini finanziari (Sharpe Ratio, Volatilità, Hedging, ecc.)\n• Strumenti finanziari (Calcolatori, Simulatori PAC)\n• Report e analisi\n• Funzionalità della piattaforma\n\nPer domande più specifiche, visita la sezione Utilities nel dashboard.\n\n*Nota: Le risposte sono a scopo educativo. Non costituiscono consulenza finanziaria.*`
+    : `Thanks for your question! I'm Tradelia's AI assistant.\n\nI can help with:\n• Financial terms (Sharpe Ratio, Volatility, Hedging, etc.)\n• Financial tools (Calculators, PAC Simulators)\n• Reports and analysis\n• Platform features\n\nFor more specific questions, visit the Utilities section in the dashboard.\n\n*Note: Answers are for educational purposes. They do not constitute financial advice.*`;
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body: ChatRequest = await request.json();
-    const { message, locale = 'it', conversationHistory } = body;
+    const { message, locale = 'it', conversationHistory = [] } = body;
 
     if (!message || typeof message !== 'string') {
       return NextResponse.json(
@@ -200,33 +131,33 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Load glossary data as knowledge base
-    const glossaryData = await loadGlossaryTerms(locale);
+    let response: string;
 
-    // Find relevant terms
-    const relevantTerms = findRelevantTerms(message, glossaryData, locale);
-
-    // Generate response
-    const response = generateResponse(message, relevantTerms, locale, conversationHistory);
-
-    // TODO: Integrate with real AI service here
-    // Example:
-    // const aiResponse = await callOpenAI({
-    //   message,
-    //   context: relevantTerms,
-    //   conversationHistory,
-    //   systemPrompt: 'You are Tradelia AI assistant...'
-    // });
+    // Try Groq AI first (if API key is configured)
+    try {
+      response = await callGroqAI(message, conversationHistory, locale);
+    } catch (error) {
+      console.warn('Groq AI not available, using fallback:', error);
+      // Fallback to template responses
+      response = getFallbackResponse(message, locale);
+    }
 
     return NextResponse.json({
       response,
-      relevantTerms: relevantTerms.map(t => t.title),
+      model: process.env.GROQ_API_KEY ? 'groq-llama-3.1' : 'fallback',
     });
   } catch (error) {
     console.error('Error in AI chat API:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    
+    // Return fallback even on error
+    const body = await request.json().catch(() => ({}));
+    const locale = (body as ChatRequest)?.locale || 'it';
+    const message = (body as ChatRequest)?.message || '';
+    
+    return NextResponse.json({
+      response: getFallbackResponse(message, locale),
+      model: 'fallback',
+      error: 'AI service unavailable',
+    });
   }
 }
