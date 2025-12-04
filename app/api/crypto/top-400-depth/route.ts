@@ -4,6 +4,12 @@ import { NextRequest, NextResponse } from 'next/server';
  * Top 400 Crypto Market Depth Feed API
  * Feed semplice profondità di mercato crypto con letture Groq AI
  * 
+ * IMPORTANTE: I dati order book depth e recent trades provengono da Binance
+ * - Order Book L400: mostra liquidità su Binance (non mercato globale)
+ * - Recent Trades: mostra chiusure su Binance (non mercato globale)
+ * - Binance è il più grande exchange crypto, quindi è un buon proxy/indicatore
+ * - Per mercato globale completo servirebbero dati aggregati da più exchange
+ * 
  * Best Practice: Solo letture semplici (prezzi, volumi, crescita/discesa), NO analisi complesse
  * Pro Feature: Analytics avanzate disponibili a pagamento
  */
@@ -62,6 +68,9 @@ const CACHE_TTL = 2 * 60 * 1000;
 /**
  * Get recent trades from Binance
  * Binance Free API: /api/v3/trades (last 500 trades)
+ * 
+ * NOTA: Questo mostra solo i trades su Binance, non il mercato globale.
+ * Binance è il più grande exchange crypto, quindi è un buon proxy/indicatore.
  */
 async function getBinanceRecentTrades(symbol: string, limit: number = 100): Promise<Array<{
   price: number;
@@ -145,6 +154,10 @@ async function getTop400CryptoWithData(): Promise<Array<{
 /**
  * Get order book depth from Binance (L400)
  * Binance Free API: /api/v3/depth (max 5000 levels)
+ * 
+ * NOTA: Questo mostra solo l'order book di Binance, non il mercato globale.
+ * Binance è il più grande exchange crypto, quindi è un buon proxy/indicatore.
+ * 
  * Returns order book data with L400 depth
  */
 async function getBinanceOrderBook(symbol: string, limit: number = 400): Promise<{
@@ -275,20 +288,26 @@ async function readMarketDepthWithGroq(
 DATI FORNITI:
 ${depthData}
 
-FOCUS: Order Book L400 (profondità 400 livelli) + Recent Trades (chiusure recenti)
-Questi dati mostrano cosa sta succedendo REALMENTE sul mercato:
-- Order Book L400: mostra liquidità reale e pressione bid/ask fino a 400 livelli
-- Recent Trades: mostra le chiusure reali (acquisti/vendite) degli ultimi trades
+IMPORTANTE - LIMITAZIONE DATI:
+- Order Book L400: dati da BINANCE (non mercato globale)
+- Recent Trades: trades su BINANCE (non mercato globale)
+- Binance è il più grande exchange crypto, quindi è un buon proxy/indicatore
+- Per mercato globale completo servirebbero dati aggregati da più exchange (Coinbase, Kraken, etc.)
+
+FOCUS: Order Book L400 (profondità 400 livelli su Binance) + Recent Trades (chiusure recenti su Binance)
+Questi dati mostrano cosa sta succedendo su BINANCE (proxy del mercato):
+- Order Book L400: mostra liquidità su Binance e pressione bid/ask fino a 400 livelli
+- Recent Trades: mostra le chiusure reali su Binance (acquisti/vendite) degli ultimi trades
 
 REGOLE SEMPLICI:
 1. LEGGI solo i numeri forniti. Descrivi cosa vedi nei dati reali.
 2. NO analisi complesse, NO pattern, NO interpretazioni avanzate.
 3. Focus su: profondità L400, spread, imbalance, chiusure recenti (buy/sell ratio).
 
-Fornisci letture SEMPLICI basate su DATI REALI:
-1. MARKET OVERVIEW (2-3 frasi): Descrizione stato mercato basata su L400 depth e recent trades (es: "X crypto in crescita, Y in discesa, order book mostra Z di liquidità, recent trades mostrano W acquisti vs V vendite")
-2. NOTABLE MOVEMENTS (lista 3-5 punti): Movimenti notevoli con dati L400 e recent trades (es: "BTC +15%, spread 0.01%, imbalance +12%, recent trades: 60 acquisti / 40 vendite")
-3. DEPTH HIGHLIGHTS (lista 3-5 punti): Crypto con profondità L400 interessante o recent trades significativi (es: "ETH depth L400 mostra 500M bid, recent trades: 70 acquisti / 30 vendite")
+Fornisci letture SEMPLICI basate su DATI REALI (BINANCE):
+1. MARKET OVERVIEW (2-3 frasi): Descrizione stato mercato su Binance basata su L400 depth e recent trades. MENTIONA che sono dati Binance (es: "Su Binance, X crypto in crescita, Y in discesa, order book mostra Z di liquidità, recent trades mostrano W acquisti vs V vendite")
+2. NOTABLE MOVEMENTS (lista 3-5 punti): Movimenti notevoli su Binance con dati L400 e recent trades (es: "BTC su Binance: +15%, spread 0.01%, imbalance +12%, recent trades: 60 acquisti / 40 vendite")
+3. DEPTH HIGHLIGHTS (lista 3-5 punti): Crypto con profondità L400 interessante su Binance o recent trades significativi (es: "ETH su Binance: depth L400 mostra 500M bid, recent trades: 70 acquisti / 30 vendite")
 
 ESEMPIO CORRETTO:
 - ✅ "65 crypto in crescita, 35 in discesa. Order book L400 mostra 2.5B bid vs 2.3B ask (imbalance +4%). Recent trades: 55% acquisti / 45% vendite"
@@ -299,9 +318,9 @@ ESEMPIO CORRETTO:
 
 Rispondi SOLO in formato JSON valido:
 {
-  "marketOverview": "Descrizione stato mercato basata su L400 depth e recent trades...",
-  "notableMovements": ["BTC +15%, spread 0.01%, imbalance +12%, recent trades: 60 buy / 40 sell", "ETH -5%, spread 0.02%, recent trades: 40 buy / 60 sell"],
-  "depthHighlights": ["ETH depth L400: 500M bid, recent trades: 70 buy / 30 sell", "SOL depth L400: 300M bid, spread 0.03%"]
+  "marketOverview": "Descrizione stato mercato su Binance basata su L400 depth e recent trades. MENTIONA che sono dati Binance...",
+  "notableMovements": ["BTC su Binance: +15%, spread 0.01%, imbalance +12%, recent trades: 60 buy / 40 sell", "ETH su Binance: -5%, spread 0.02%, recent trades: 40 buy / 60 sell"],
+  "depthHighlights": ["ETH su Binance: depth L400: 500M bid, recent trades: 70 buy / 30 sell", "SOL su Binance: depth L400: 300M bid, spread 0.03%"]
 }`;
 
   try {
