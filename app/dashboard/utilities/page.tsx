@@ -13,13 +13,14 @@ import { OptionsCalculator } from '@/components/dashboard/utilities/OptionsCalcu
 import { KellyCriterionCalculator } from '@/components/dashboard/utilities/KellyCriterionCalculator';
 import { PortfolioOptimizer } from '@/components/dashboard/utilities/PortfolioOptimizer';
 import { CorrelationCalculator } from '@/components/dashboard/utilities/CorrelationCalculator';
+import { VolatilityCalculator } from '@/components/dashboard/utilities/VolatilityCalculator';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
-import { Calculator, TrendingUp, BookOpen, Shield, Target, BarChart3, TrendingDown, Zap, PieChart, Link2 } from 'lucide-react';
+import { Calculator, TrendingUp, BookOpen, Shield, Target, BarChart3, TrendingDown, Zap, PieChart, Link2, Activity } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import styles from './utilities.module.css';
 
-type UtilityTab = 'calculator' | 'pac' | 'journal' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation';
+type UtilityTab = 'calculator' | 'pac' | 'journal' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility';
 
 export default function UtilitiesPage() {
   const { t } = useTranslations();
@@ -43,19 +44,9 @@ export default function UtilitiesPage() {
   ];
 
   // Strumenti Pro (solo per utenti Pro)
+  // Organizzati per categoria logica
   const proTabs: Array<{ id: UtilityTab; label: string; icon: typeof Calculator; category: 'pro' }> = [
-    {
-      id: 'journal',
-      label: 'Trading Journal',
-      icon: BookOpen,
-      category: 'pro',
-    },
-    {
-      id: 'hedging',
-      label: 'Hedging Calculator',
-      icon: Shield,
-      category: 'pro',
-    },
+    // Risk Management
     {
       id: 'position',
       label: 'Position Sizing',
@@ -69,9 +60,9 @@ export default function UtilitiesPage() {
       category: 'pro',
     },
     {
-      id: 'sharpe',
-      label: 'Sharpe Ratio',
-      icon: BarChart3,
+      id: 'hedging',
+      label: 'Hedging',
+      icon: Shield,
       category: 'pro',
     },
     {
@@ -81,8 +72,28 @@ export default function UtilitiesPage() {
       category: 'pro',
     },
     {
+      id: 'volatility',
+      label: 'Volatility',
+      icon: Activity,
+      category: 'pro',
+    },
+    // Performance
+    {
+      id: 'sharpe',
+      label: 'Sharpe Ratio',
+      icon: BarChart3,
+      category: 'pro',
+    },
+    {
+      id: 'journal',
+      label: 'Trading Journal',
+      icon: BookOpen,
+      category: 'pro',
+    },
+    // Advanced
+    {
       id: 'options',
-      label: 'Options Calculator',
+      label: 'Options',
       icon: Zap,
       category: 'pro',
     },
@@ -122,9 +133,9 @@ export default function UtilitiesPage() {
         {!isPro && (
           <div className="mt-4 bg-accent/10 border border-accent/20 rounded-lg p-3">
             <p className="text-xs sm:text-sm text-text-secondary">
-              <strong className="text-text-primary">Upgrade a Pro</strong> per accedere a 10 strumenti avanzati: 
-              Trading Journal, Hedging, Position Sizing, Risk/Reward, Sharpe Ratio, Drawdown, Options Calculator, 
-              Kelly Criterion, Portfolio Optimizer e Correlation Calculator.
+              <strong className="text-text-primary">Upgrade a Pro</strong> per accedere a 11 strumenti avanzati: 
+              Position Sizing, Risk/Reward, Hedging, Drawdown, Volatility, Sharpe Ratio, Trading Journal, 
+              Options Calculator, Kelly Criterion, Portfolio Optimizer e Correlation Calculator.
             </p>
           </div>
         )}
@@ -272,6 +283,16 @@ export default function UtilitiesPage() {
               className={styles.utilitiesPanel}
             >
               <CorrelationCalculator />
+            </div>
+
+            <div
+              id="volatility-panel"
+              role="tabpanel"
+              aria-labelledby="volatility-tab"
+              hidden={activeTab !== 'volatility'}
+              className={styles.utilitiesPanel}
+            >
+              <VolatilityCalculator />
             </div>
           </>
         )}
