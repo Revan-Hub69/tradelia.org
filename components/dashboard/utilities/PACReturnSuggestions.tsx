@@ -167,7 +167,7 @@ export function PACReturnSuggestions({ onSelect, currentValue }: PACReturnSugges
                       </p>
                     </div>
                   }
-                  placement="top"
+                  position="top"
                 >
                   <div className="flex items-center gap-1 text-[10px] text-amber-400 cursor-help">
                     <AlertCircle className="w-3 h-3" />
