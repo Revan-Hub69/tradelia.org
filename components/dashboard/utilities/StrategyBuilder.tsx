@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback, memo } from 'react';
 import { TrendingUp, TrendingDown, BarChart3, AlertCircle, Info, BookOpen, Calculator, Target, Shield } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { MethodologyNotes } from './MethodologyNotes';
+import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
 /**
  * Strategy Builder - MVP
@@ -57,8 +58,15 @@ export function StrategyBuilder() {
   const [selectedWindow, setSelectedWindow] = useState<number | null>(null);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
-  // Validate inputs
-  const validateInputs = (): boolean => {
+  // Memoized calculations
+  const totalCombinations = useMemo(() => {
+    const keyValueCount = Math.floor((keyValueMax - keyValueMin) / keyValueStep) + 1;
+    const atrPeriodCount = Math.floor((atrPeriodMax - atrPeriodMin) / atrPeriodStep) + 1;
+    return keyValueCount * atrPeriodCount;
+  }, [keyValueMin, keyValueMax, keyValueStep, atrPeriodMin, atrPeriodMax, atrPeriodStep]);
+
+  // Validate inputs - memoized
+  const validateInputs = useCallback((): boolean => {
     const errors: string[] = [];
     
     if (keyValueMin >= keyValueMax) {
@@ -103,10 +111,6 @@ export function StrategyBuilder() {
     }
     
     // Check if optimization would be too large
-    const keyValueCount = Math.floor((keyValueMax - keyValueMin) / keyValueStep) + 1;
-    const atrPeriodCount = Math.floor((atrPeriodMax - atrPeriodMin) / atrPeriodStep) + 1;
-    const totalCombinations = keyValueCount * atrPeriodCount;
-    
     if (totalCombinations > 1000) {
       errors.push(locale === 'it'
         ? `Troppi parametri da testare (${totalCombinations}). Riduci i range o aumenta lo step.`
@@ -115,10 +119,10 @@ export function StrategyBuilder() {
     
     setValidationErrors(errors);
     return errors.length === 0;
-  };
+  }, [keyValueMin, keyValueMax, keyValueStep, atrPeriodMin, atrPeriodMax, atrPeriodStep, inSampleMonths, outOfSampleMonths, startDate, endDate, totalCombinations, locale]);
 
-  // Simulate Walk-Forward Optimization
-  const runWalkForwardOptimization = async () => {
+  // Simulate Walk-Forward Optimization - memoized with useCallback
+  const runWalkForwardOptimization = useCallback(async () => {
     if (!validateInputs()) {
       return;
     }
@@ -126,8 +130,9 @@ export function StrategyBuilder() {
     setIsOptimizing(true);
     setResults([]);
     
-    // Simulate optimization delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      // Simulate optimization delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
     // Generate walk-forward windows
     const windows: WalkForwardWindow[] = [];
@@ -192,24 +197,82 @@ export function StrategyBuilder() {
       currentDate = new Date(outOfSampleEnd);
     }
 
-    setResults(windows);
-    setIsOptimizing(false);
-  };
+      setResults(windows);
+    } catch (error) {
+      console.error('Error in Walk-Forward Optimization:', error);
+      setValidationErrors([
+        locale === 'it'
+          ? 'Errore durante l\'ottimizzazione. Riprova più tardi.'
+          : 'Error during optimization. Please try again later.'
+      ]);
+    } finally {
+      setIsOptimizing(false);
+    }
+  }, [validateInputs, keyValueMin, keyValueMax, keyValueStep, atrPeriodMin, atrPeriodMax, atrPeriodStep, inSampleMonths, outOfSampleMonths, startDate, endDate, locale]);
 
-  const selectedWindowData = selectedWindow !== null ? results[selectedWindow] : null;
-  const overallBestParameter = results.length > 0
-    ? results.reduce((best, window) => 
-        window.results.some(r => r.parameter === best && r.isRobust)
-          ? best
-          : window.bestParameter,
-        results[0].bestParameter
-      )
-    : null;
+  // Memoized calculations
+  const selectedWindowData = useMemo(() => 
+    selectedWindow !== null ? results[selectedWindow] : null,
+    [selectedWindow, results]
+  );
+
+  const overallBestParameter = useMemo(() => 
+    results.length > 0
+      ? results.reduce((best, window) => 
+          window.results.some(r => r.parameter === best && r.isRobust)
+            ? best
+            : window.bestParameter,
+          results[0].bestParameter
+        )
+      : null,
+    [results]
+  );
+
+  // Keyboard navigation handler
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, action: () => void) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      action();
+    }
+  }, []);
 
   return (
-    <div className="space-y-6">
+    <ErrorBoundary>
+      <article 
+        className="space-y-6"
+        itemScope
+        itemType="https://schema.org/SoftwareApplication"
+      >
+        {/* Structured Data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'SoftwareApplication',
+              name: locale === 'it' ? 'Strategy Builder - Walk-Forward Optimization' : 'Strategy Builder - Walk-Forward Optimization',
+              applicationCategory: 'FinanceApplication',
+              operatingSystem: 'Web',
+              description: locale === 'it'
+                ? 'Strumento per ottimizzare strategie di trading usando Walk-Forward Optimization per evitare overfitting. Best practice accademiche per l\'ottimizzazione di parametri.'
+                : 'Tool to optimize trading strategies using Walk-Forward Optimization to avoid overfitting. Academic best practices for parameter optimization.',
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'EUR',
+              },
+              featureList: [
+                locale === 'it' ? 'Walk-Forward Optimization' : 'Walk-Forward Optimization',
+                locale === 'it' ? 'Ottimizzazione parametri multivariata' : 'Multi-variate parameter optimization',
+                locale === 'it' ? 'Metriche di performance (Sharpe, Calmar, MaxDD)' : 'Performance metrics (Sharpe, Calmar, MaxDD)',
+                locale === 'it' ? 'Rilevamento overfitting' : 'Overfitting detection',
+              ],
+            }),
+          }}
+        />
+        
       {/* Header */}
-      <div className="bg-bg-soft border border-border-subtle rounded-xl p-6">
+      <header className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6">
         <div className="flex items-start gap-4">
           <div className="w-12 h-12 rounded-lg bg-accent/20 flex items-center justify-center flex-shrink-0">
             <Target className="w-6 h-6 text-accent" />
@@ -249,11 +312,14 @@ export function StrategyBuilder() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </header>
 
       {/* Disclaimer Banner - Always Visible */}
-      <div className="bg-red-500/10 border-2 border-red-500/30 rounded-xl p-4">
+      <aside 
+        className="bg-red-500/10 border-2 border-red-500/30 rounded-xl p-4"
+        role="alert"
+        aria-live="assertive"
+      >
         <div className="flex items-start gap-3">
           <Shield className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
@@ -271,14 +337,21 @@ export function StrategyBuilder() {
                 : 'Before using any trading strategy, carefully evaluate your risk profile, time horizon, financial goals, and consult a qualified financial advisor. Trading involves significant risks of capital loss.'}
             </p>
           </div>
-        </div>
-      </div>
+        </aside>
 
       {/* Configuration */}
-      <div className="bg-bg-surface border border-border-subtle rounded-xl p-6 space-y-6">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-text-primary flex items-center gap-2">
-            <Calculator className="w-5 h-5 text-accent" />
+      <section 
+        className="bg-bg-surface border border-border-subtle rounded-xl p-4 sm:p-6 space-y-6"
+        aria-labelledby="config-heading"
+        itemScope
+        itemType="https://schema.org/HowTo"
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <h3 
+            id="config-heading"
+            className="text-lg font-semibold text-text-primary flex items-center gap-2"
+          >
+            <Calculator className="w-5 h-5 text-accent" aria-hidden="true" />
             {locale === 'it' ? 'Configurazione Parametri' : 'Parameter Configuration'}
           </h3>
           <div className="text-xs text-text-tertiary">
@@ -306,9 +379,15 @@ export function StrategyBuilder() {
         )}
 
         {/* Date Range */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-bg-soft rounded-lg border border-border-subtle">
+        <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-bg-soft rounded-lg border border-border-subtle">
+          <legend className="sr-only">
+            {locale === 'it' ? 'Periodo storico da analizzare' : 'Historical period to analyze'}
+          </legend>
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">
+            <label 
+              htmlFor="start-date"
+              className="block text-sm font-medium text-text-primary mb-2"
+            >
               {locale === 'it' ? 'Data Inizio' : 'Start Date'}
               <Tooltip
                 content={
@@ -325,19 +404,28 @@ export function StrategyBuilder() {
                 }
                 position="top"
               >
-                <Info className="w-4 h-4 inline-block ml-1 text-text-tertiary cursor-help" />
+                <Info className="w-4 h-4 inline-block ml-1 text-text-tertiary cursor-help" aria-label={locale === 'it' ? 'Informazioni' : 'Information'} />
               </Tooltip>
             </label>
             <input
+              id="start-date"
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
               max={endDate}
-              className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+              aria-describedby="start-date-desc"
+              aria-required="true"
+              className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
             />
+            <p id="start-date-desc" className="sr-only">
+              {locale === 'it' ? 'Data di inizio del periodo storico' : 'Start date of historical period'}
+            </p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">
+            <label 
+              htmlFor="end-date"
+              className="block text-sm font-medium text-text-primary mb-2"
+            >
               {locale === 'it' ? 'Data Fine' : 'End Date'}
               <Tooltip
                 content={
@@ -354,22 +442,28 @@ export function StrategyBuilder() {
                 }
                 position="top"
               >
-                <Info className="w-4 h-4 inline-block ml-1 text-text-tertiary cursor-help" />
+                <Info className="w-4 h-4 inline-block ml-1 text-text-tertiary cursor-help" aria-label={locale === 'it' ? 'Informazioni' : 'Information'} />
               </Tooltip>
             </label>
             <input
+              id="end-date"
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
               max={new Date().toISOString().split('T')[0]}
-              className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+              aria-describedby="end-date-desc"
+              aria-required="true"
+              className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
             />
+            <p id="end-date-desc" className="sr-only">
+              {locale === 'it' ? 'Data di fine del periodo storico' : 'End date of historical period'}
+            </p>
           </div>
-        </div>
+        </fieldset>
 
         {/* Key Value Range */}
-        <div className="p-4 bg-bg-soft rounded-lg border border-border-subtle">
-          <h4 className="text-sm font-semibold text-text-primary mb-4 flex items-center gap-2">
+        <fieldset className="p-4 bg-bg-soft rounded-lg border border-border-subtle">
+          <legend className="text-sm font-semibold text-text-primary mb-4 flex items-center gap-2">
             {locale === 'it' ? 'Key Value (Moltiplicatore)' : 'Key Value (Multiplier)'}
             <Tooltip
               content={
@@ -386,63 +480,69 @@ export function StrategyBuilder() {
               }
               position="top"
             >
-              <Info className="w-4 h-4 text-text-tertiary cursor-help" />
+              <Info className="w-4 h-4 text-text-tertiary cursor-help" aria-label={locale === 'it' ? 'Informazioni Key Value' : 'Key Value information'} />
             </Tooltip>
-          </h4>
-          <div className="grid grid-cols-3 gap-4">
+          </legend>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-text-secondary mb-1">
+              <label htmlFor="key-value-min" className="block text-xs font-medium text-text-secondary mb-1">
                 {locale === 'it' ? 'Min' : 'Min'}
               </label>
               <input
+                id="key-value-min"
                 type="number"
                 value={keyValueMin}
                 onChange={(e) => setKeyValueMin(parseFloat(e.target.value) || 1.0)}
                 min={0.1}
                 max={keyValueMax}
                 step={0.1}
-                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent"
+                aria-label={locale === 'it' ? 'Valore minimo Key Value' : 'Key Value minimum'}
+                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-text-secondary mb-1">
+              <label htmlFor="key-value-max" className="block text-xs font-medium text-text-secondary mb-1">
                 {locale === 'it' ? 'Max' : 'Max'}
               </label>
               <input
+                id="key-value-max"
                 type="number"
                 value={keyValueMax}
                 onChange={(e) => setKeyValueMax(parseFloat(e.target.value) || 5.0)}
                 min={keyValueMin}
                 max={20}
                 step={0.1}
-                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent"
+                aria-label={locale === 'it' ? 'Valore massimo Key Value' : 'Key Value maximum'}
+                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-text-secondary mb-1">
+              <label htmlFor="key-value-step" className="block text-xs font-medium text-text-secondary mb-1">
                 {locale === 'it' ? 'Step' : 'Step'}
               </label>
               <input
+                id="key-value-step"
                 type="number"
                 value={keyValueStep}
                 onChange={(e) => setKeyValueStep(parseFloat(e.target.value) || 0.5)}
                 min={0.1}
                 max={keyValueMax - keyValueMin}
                 step={0.1}
-                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent"
+                aria-label={locale === 'it' ? 'Incremento Key Value' : 'Key Value step'}
+                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
               />
             </div>
           </div>
-          <div className="mt-2 text-xs text-text-tertiary">
+          <div className="mt-2 text-xs text-text-tertiary" aria-live="polite">
             {locale === 'it'
               ? `Valori testati: ${Math.floor((keyValueMax - keyValueMin) / keyValueStep) + 1}`
               : `Values tested: ${Math.floor((keyValueMax - keyValueMin) / keyValueStep) + 1}`}
           </div>
-        </div>
+        </fieldset>
 
         {/* ATR Period Range */}
-        <div className="p-4 bg-bg-soft rounded-lg border border-border-subtle">
-          <h4 className="text-sm font-semibold text-text-primary mb-4 flex items-center gap-2">
+        <fieldset className="p-4 bg-bg-soft rounded-lg border border-border-subtle">
+          <legend className="text-sm font-semibold text-text-primary mb-4 flex items-center gap-2">
             {locale === 'it' ? 'ATR Period' : 'ATR Period'}
             <Tooltip
               content={
@@ -457,62 +557,71 @@ export function StrategyBuilder() {
               }
               position="top"
             >
-              <Info className="w-4 h-4 text-text-tertiary cursor-help" />
+              <Info className="w-4 h-4 text-text-tertiary cursor-help" aria-label={locale === 'it' ? 'Informazioni ATR Period' : 'ATR Period information'} />
             </Tooltip>
-          </h4>
-          <div className="grid grid-cols-3 gap-4">
+          </legend>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-text-secondary mb-1">
+              <label htmlFor="atr-period-min" className="block text-xs font-medium text-text-secondary mb-1">
                 {locale === 'it' ? 'Min' : 'Min'}
               </label>
               <input
+                id="atr-period-min"
                 type="number"
                 value={atrPeriodMin}
                 onChange={(e) => setAtrPeriodMin(parseInt(e.target.value) || 7)}
                 min={1}
                 max={atrPeriodMax}
                 step={1}
-                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent"
+                aria-label={locale === 'it' ? 'Periodo minimo ATR' : 'ATR period minimum'}
+                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-text-secondary mb-1">
+              <label htmlFor="atr-period-max" className="block text-xs font-medium text-text-secondary mb-1">
                 {locale === 'it' ? 'Max' : 'Max'}
               </label>
               <input
+                id="atr-period-max"
                 type="number"
                 value={atrPeriodMax}
                 onChange={(e) => setAtrPeriodMax(parseInt(e.target.value) || 30)}
                 min={atrPeriodMin}
                 max={200}
                 step={1}
-                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent"
+                aria-label={locale === 'it' ? 'Periodo massimo ATR' : 'ATR period maximum'}
+                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-text-secondary mb-1">
+              <label htmlFor="atr-period-step" className="block text-xs font-medium text-text-secondary mb-1">
                 {locale === 'it' ? 'Step' : 'Step'}
               </label>
               <input
+                id="atr-period-step"
                 type="number"
                 value={atrPeriodStep}
                 onChange={(e) => setAtrPeriodStep(parseInt(e.target.value) || 1)}
                 min={1}
                 max={atrPeriodMax - atrPeriodMin}
                 step={1}
-                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent"
+                aria-label={locale === 'it' ? 'Incremento ATR Period' : 'ATR period step'}
+                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
               />
             </div>
           </div>
-          <div className="mt-2 text-xs text-text-tertiary">
+          <div className="mt-2 text-xs text-text-tertiary" aria-live="polite">
             {locale === 'it'
               ? `Valori testati: ${Math.floor((atrPeriodMax - atrPeriodMin) / atrPeriodStep) + 1}`
               : `Values tested: ${Math.floor((atrPeriodMax - atrPeriodMin) / atrPeriodStep) + 1}`}
           </div>
-        </div>
+        </fieldset>
 
         {/* Walk-Forward Windows */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <legend className="sr-only">
+            {locale === 'it' ? 'Configurazione finestre temporali' : 'Time windows configuration'}
+          </legend>
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
               {locale === 'it' ? 'Periodo In-Sample (mesi)' : 'In-Sample Period (months)'}
@@ -573,40 +682,80 @@ export function StrategyBuilder() {
               min={1}
               max={12}
               step={1}
-              className="w-full px-4 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+              className="w-full px-4 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
+              aria-label={locale === 'it' ? 'Periodo In-Sample in mesi' : 'In-Sample period in months'}
             />
           </div>
-        </div>
+          <div>
+            <label 
+              htmlFor="out-of-sample-months"
+              className="block text-sm font-medium text-text-primary mb-2"
+            >
+              {locale === 'it' ? 'Periodo Out-of-Sample (mesi)' : 'Out-of-Sample Period (months)'}
+              <Tooltip
+                content={
+                  <div className="space-y-2">
+                    <p className="font-semibold text-xs">
+                      {locale === 'it' ? 'Finestra Out-of-Sample' : 'Out-of-Sample Window'}
+                    </p>
+                    <p className="text-xs">
+                      {locale === 'it'
+                        ? 'Il periodo per testare i parametri ottimizzati. Tipicamente 3-6 mesi. Se la performance OOS è molto inferiore a IS, è segno di overfitting. Minimo 1 mese, massimo 12 mesi.'
+                        : 'The period to test optimized parameters. Typically 3-6 months. If OOS performance is much lower than IS, it\'s a sign of overfitting. Minimum 1 month, maximum 12 months.'}
+                    </p>
+                  </div>
+                }
+                position="top"
+              >
+                <Info className="w-4 h-4 inline-block ml-1 text-text-tertiary cursor-help" aria-label={locale === 'it' ? 'Informazioni' : 'Information'} />
+              </Tooltip>
+            </label>
+            <input
+              id="out-of-sample-months"
+              type="number"
+              value={outOfSampleMonths}
+              onChange={(e) => setOutOfSampleMonths(parseInt(e.target.value) || 3)}
+              min={1}
+              max={12}
+              step={1}
+              className="w-full px-4 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
+              aria-label={locale === 'it' ? 'Periodo Out-of-Sample in mesi' : 'Out-of-Sample period in months'}
+            />
+          </div>
+        </fieldset>
 
         {/* Total Combinations Warning */}
-        {(() => {
-          const keyValueCount = Math.floor((keyValueMax - keyValueMin) / keyValueStep) + 1;
-          const atrPeriodCount = Math.floor((atrPeriodMax - atrPeriodMin) / atrPeriodStep) + 1;
-          const totalCombinations = keyValueCount * atrPeriodCount;
-          
-          return totalCombinations > 100 && (
-            <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">
-              <div className="flex items-start gap-2">
-                <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
-                <div className="text-xs text-text-secondary">
-                  {locale === 'it'
-                    ? `Attenzione: ${totalCombinations} combinazioni di parametri da testare. Questo potrebbe richiedere molto tempo. Considera di ridurre i range o aumentare lo step.`
-                    : `Warning: ${totalCombinations} parameter combinations to test. This might take a long time. Consider reducing ranges or increasing step.`}
-                </div>
+        {totalCombinations > 100 && (
+          <div 
+            className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3"
+            role="alert"
+            aria-live="polite"
+          >
+            <div className="flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <div className="text-xs text-text-secondary">
+                {locale === 'it'
+                  ? `Attenzione: ${totalCombinations} combinazioni di parametri da testare. Questo potrebbe richiedere molto tempo. Considera di ridurre i range o aumentare lo step.`
+                  : `Warning: ${totalCombinations} parameter combinations to test. This might take a long time. Consider reducing ranges or increasing step.`}
               </div>
             </div>
-          );
-        })()}
+          </div>
+        )}
 
         <button
           onClick={runWalkForwardOptimization}
-          disabled={isOptimizing}
+          onKeyDown={(e) => handleKeyDown(e, runWalkForwardOptimization)}
+          disabled={isOptimizing || validationErrors.length > 0}
+          aria-label={locale === 'it' ? 'Esegui ottimizzazione Walk-Forward' : 'Run Walk-Forward Optimization'}
+          aria-busy={isOptimizing}
           className={cn(
             'w-full py-3 px-6 rounded-lg font-semibold transition-all',
             'bg-gradient-to-r from-accent to-accent-hover text-white',
-            'hover:shadow-lg hover:scale-[1.02]',
-            'disabled:opacity-50 disabled:cursor-not-allowed',
-            'flex items-center justify-center gap-2'
+            'hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]',
+            'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
+            'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100',
+            'flex items-center justify-center gap-2',
+            'touch-manipulation' // Mobile optimization
           )}
         >
           {isOptimizing ? (
@@ -625,23 +774,34 @@ export function StrategyBuilder() {
 
       {/* Results */}
       {results.length > 0 && (
-        <div className="space-y-6">
+        <section 
+          className="space-y-6"
+          aria-labelledby="results-heading"
+        >
           {/* Summary */}
-          <div className="bg-bg-surface border border-border-subtle rounded-xl p-6">
-            <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
-              <BarChart3 className="w-5 h-5 text-accent" />
+          <div className="bg-bg-surface border border-border-subtle rounded-xl p-4 sm:p-6">
+            <h3 
+              id="results-heading"
+              className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2"
+            >
+              <BarChart3 className="w-5 h-5 text-accent" aria-hidden="true" />
               {locale === 'it' ? 'Risultati Ottimizzazione' : 'Optimization Results'}
             </h3>
             
             {overallBestParameter && (
-              <div className="bg-accent/10 border border-accent/30 rounded-lg p-4 mb-4">
+              <div 
+                className="bg-accent/10 border border-accent/30 rounded-lg p-4 mb-4"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+              >
                 <div className="flex items-center gap-2 mb-2">
-                  <Target className="w-5 h-5 text-accent" />
+                  <Target className="w-5 h-5 text-accent" aria-hidden="true" />
                   <span className="font-semibold text-text-primary">
                     {locale === 'it' ? 'Parametro Ottimale Consigliato' : 'Recommended Optimal Parameter'}
                   </span>
                 </div>
-                <p className="text-2xl font-bold text-accent mb-1">
+                <p className="text-2xl font-bold text-accent mb-1" aria-label={`Key Value: ${overallBestParameter.toFixed(1)}`}>
                   Key Value: {overallBestParameter.toFixed(1)}
                 </p>
                 <p className="text-xs text-text-secondary">
@@ -687,25 +847,37 @@ export function StrategyBuilder() {
           </div>
 
           {/* Walk-Forward Windows */}
-          <div className="bg-bg-surface border border-border-subtle rounded-xl p-6">
+          <div className="bg-bg-surface border border-border-subtle rounded-xl p-4 sm:p-6">
             <h3 className="text-lg font-semibold text-text-primary mb-4">
               {locale === 'it' ? 'Finestre Walk-Forward' : 'Walk-Forward Windows'}
             </h3>
             
-            <div className="space-y-3">
+            <div 
+              className="space-y-3"
+              role="list"
+              aria-label={locale === 'it' ? 'Lista finestre temporali' : 'Time windows list'}
+            >
               {results.map((window, index) => {
                 const bestResult = window.results.find(r => r.parameter === window.bestParameter) || window.results[0];
                 return (
-                  <button
+                  <div
                     key={index}
-                    onClick={() => setSelectedWindow(selectedWindow === index ? null : index)}
-                    className={cn(
-                      'w-full text-left p-4 rounded-lg border transition-all',
-                      selectedWindow === index
-                        ? 'border-accent bg-accent/10'
-                        : 'border-border-subtle bg-bg-soft hover:border-accent/40'
-                    )}
+                    role="listitem"
+                    className="w-full"
                   >
+                    <button
+                      onClick={() => setSelectedWindow(selectedWindow === index ? null : index)}
+                      onKeyDown={(e) => handleKeyDown(e, () => setSelectedWindow(selectedWindow === index ? null : index))}
+                      aria-expanded={selectedWindow === index}
+                      aria-controls={`window-details-${index}`}
+                      className={cn(
+                        'w-full text-left p-4 rounded-lg border transition-all',
+                        'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
+                        selectedWindow === index
+                          ? 'border-accent bg-accent/10'
+                          : 'border-border-subtle bg-bg-soft hover:border-accent/40'
+                      )}
+                    >
                     <div className="flex items-center justify-between mb-2">
                       <div>
                         <div className="font-semibold text-text-primary">
@@ -730,7 +902,12 @@ export function StrategyBuilder() {
                     </div>
                     
                     {selectedWindow === index && (
-                      <div className="mt-4 pt-4 border-t border-border-subtle grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div 
+                        id={`window-details-${index}`}
+                        className="mt-4 pt-4 border-t border-border-subtle grid grid-cols-2 md:grid-cols-4 gap-4"
+                        role="region"
+                        aria-label={locale === 'it' ? `Dettagli finestra ${index + 1}` : `Window ${index + 1} details`}
+                      >
                         <div>
                           <div className="text-xs text-text-tertiary mb-1">IS Return</div>
                           <div className="text-sm font-semibold text-text-primary">
@@ -762,16 +939,20 @@ export function StrategyBuilder() {
                         </div>
                       </div>
                     )}
-                  </button>
+                    </button>
+                  </div>
                 );
               })}
             </div>
           </div>
-        </div>
+        </section>
       )}
 
       {/* Educational Content */}
-      <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-6">
+      <aside 
+        className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 sm:p-6"
+        aria-label={locale === 'it' ? 'Contenuto educativo' : 'Educational content'}
+      >
         <div className="flex items-start gap-3">
           <BookOpen className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
@@ -801,8 +982,7 @@ export function StrategyBuilder() {
               </li>
             </ul>
           </div>
-        </div>
-      </div>
+        </aside>
 
       {/* Methodology Notes */}
       <MethodologyNotes
@@ -891,7 +1071,11 @@ export function StrategyBuilder() {
       </div>
 
       {/* Additional MIFID Disclaimer */}
-      <div className="bg-red-500/10 border-2 border-red-500/30 rounded-xl p-6">
+      <aside 
+        className="bg-red-500/10 border-2 border-red-500/30 rounded-xl p-4 sm:p-6"
+        role="complementary"
+        aria-label={locale === 'it' ? 'Disclaimer legale MIFID II' : 'MIFID II legal disclaimer'}
+      >
         <div className="flex items-start gap-3">
           <Shield className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
@@ -931,8 +1115,11 @@ export function StrategyBuilder() {
               </p>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+        </aside>
+      </article>
+    </ErrorBoundary>
   );
 }
+
+// Export memoized version for performance
+export default memo(StrategyBuilder);
