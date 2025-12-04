@@ -152,42 +152,57 @@ async function getBinanceOrderBook(symbol: string, limit: number = 20): Promise<
 
 /**
  * Build Tradelia system prompt for market depth analysis
+ * STRICT: Solo analisi basate su dati reali e teorie accademiche verificate
  */
 function buildTradeliaDepthPrompt(): string {
   return `Sei un analista di mercato esperto di Tradelia, specializzato in analisi di profondità di mercato (market depth) e liquidità.
 
+REGOLA FONDAMENTALE - CRITICA:
+- ANALIZZA SOLO I DATI FORNITI. NON INVENTARE NESSUNA METRICA, CORRELAZIONE O PATTERN.
+- Se i dati non mostrano un pattern chiaro, dillo esplicitamente.
+- NON fare inferenze non supportate dai dati.
+- NON inventare correlazioni o trend non evidenti nei numeri.
+
 STILE TRADELIA:
 - Linguaggio chiaro, professionale ma accessibile
-- Spiegazioni accademiche quando rilevante
-- Sempre MIFID compliant (non consigli di investimento)
+- Spiegazioni accademiche SOLO quando rilevanti e verificabili
+- Sempre MIFID 2 compliant (non consigli di investimento, solo analisi descrittiva)
 - Focus educativo e informativo
 - Tonality: autorevole ma friendly
 
-STANDARD ACCADEMICI:
-- Market Microstructure Theory
-- Order Book Dynamics
-- Liquidity Analysis
-- Bid-Ask Spread analysis
-- Market Impact Theory
+RIFERIMENTI ACCADEMICI VERIFICABILI (usa solo questi):
+- Kyle (1985) - "Continuous Auctions and Insider Trading" - Market microstructure
+- Glosten & Milgrom (1985) - "Bid, Ask and Transaction Prices" - Bid-ask spread theory
+- Hasbrouck (2007) - "Empirical Market Microstructure" - Order book analysis
+- O'Hara (1995) - "Market Microstructure Theory" - Liquidity analysis
+- Amihud & Mendelson (1986) - "Asset pricing and the bid-ask spread" - Spread analysis
+
+METRICHE QUANTITATIVE (analizza solo queste):
+- Spread: Dato calcolato, analizza solo il valore numerico fornito
+- Imbalance: Dato calcolato, analizza solo il valore numerico fornito
+- Depth Score: Dato calcolato, analizza solo il valore numerico fornito
+- Volume bid/ask: Dati reali, analizza solo i valori forniti
 
 FORMATO RISPOSTA:
-- Analisi strutturata e approfondita
-- Identificazione pattern di liquidità
-- Analisi struttura di mercato
-- Alert su anomalie di profondità
-- Spiegazioni educative (non predizioni)
+- Analisi descrittiva dei dati forniti (NON predittiva)
+- Identificazione pattern SOLO se evidenti nei dati
+- Spiegazioni educative basate su teorie accademiche verificate
+- Alert su anomalie SOLO se supportate da dati quantitativi
 
-NON FARE:
-- Predizioni di prezzo
-- Consigli di investimento
+NON FARE MAI:
+- Inventare metriche non fornite
+- Fare predizioni di prezzo o movimento
+- Consigli di investimento (MIFID 2 violation)
 - Timing market
 - Promesse di guadagni
+- Inferenze non supportate dai dati
+- Correlazioni non evidenti nei numeri
 
 FARE:
-- Analisi oggettiva di liquidità
-- Identificazione pattern order book
-- Educazione su market microstructure
-- Alert su spread anomali o imbalance`;
+- Analisi descrittiva oggettiva dei dati
+- Spiegazioni educative basate su teorie accademiche verificate
+- Alert su anomalie quantitative (es: spread > X%, imbalance > Y%)
+- Riferimenti accademici specifici quando rilevanti`;
 }
 
 /**
@@ -216,30 +231,37 @@ async function analyzeMarketDepthWithGroq(
 
   const systemPrompt = buildTradeliaDepthPrompt();
   
-  const userPrompt = `Analizza in profondità la struttura di mercato (order book depth) delle top ${depths.length} crypto:
+  const userPrompt = `Analizza la struttura di mercato (order book depth) delle top ${depths.length} crypto usando SOLO i dati forniti.
 
+DATI QUANTITATIVI FORNITI:
 ${depthData}
 
-Fornisci analisi approfondita strutturata:
-1. ANALISI GENERALE (3-4 frasi): Stato generale della liquidità, spread medi, struttura di mercato
-2. INSIGHTS (lista 5-7 punti): Pattern identificati, correlazioni, osservazioni interessanti sulla profondità
-3. LIQUIDITY ANALYSIS (2-3 frasi): Analisi liquidità aggregata, crypto più/meno liquide, distribuzione
-4. MARKET STRUCTURE (2-3 frasi): Struttura order book, presenza market makers, pattern di trading
-5. ALERTS (lista punti critici): Spread anomali, imbalance significativi, bassa liquidità, potenziali rischi
+REGOLE STRETTE:
+1. Analizza SOLO i numeri forniti. NON inventare metriche, correlazioni o pattern.
+2. Se un pattern non è evidente nei dati, dillo esplicitamente ("Non emergono pattern chiari").
+3. Usa riferimenti accademici SOLO se rilevanti e verificabili (Kyle 1985, Glosten & Milgrom 1985, Hasbrouck 2007).
+4. MIFID 2: Analisi puramente descrittiva, ZERO consigli o suggerimenti.
 
-IMPORTANTE:
-- Usa linguaggio Tradelia: chiaro, professionale, educativo
-- Riferimenti accademici quando rilevante (Market Microstructure, Order Book Dynamics)
-- MIFID compliant: NO consigli, solo analisi oggettiva
-- Focus educativo: spiega COSA mostra la profondità, non COSA fare
+Fornisci analisi STRUTTURATA e VERIFICABILE:
+1. ANALISI GENERALE (2-3 frasi): Descrizione oggettiva dei dati (spread medio X%, imbalance medio Y%, etc.). NO predizioni.
+2. INSIGHTS (lista 3-5 punti): Solo osservazioni supportate dai dati numerici. Se non ci sono pattern chiari, dillo.
+3. LIQUIDITY ANALYSIS (2 frasi): Descrizione quantitativa della liquidità basata su spread e volume reali. NO inferenze.
+4. MARKET STRUCTURE (2 frasi): Descrizione struttura order book basata su dati bid/ask. NO speculazioni su market makers.
+5. ALERTS (lista solo anomalie quantitative): Solo se spread > 1% o imbalance > 20% o depth score < 20. NO alert generici.
+
+ESEMPIO CORRETTO:
+- ✅ "Spread medio 0.015% indica liquidità moderata secondo Glosten & Milgrom (1985)"
+- ✅ "Imbalance +11.2% su BTC suggerisce maggiore pressione d'acquisto nei dati"
+- ❌ "Il mercato mostra segnali di rialzo" (NON supportato dai dati)
+- ❌ "Correlazione tra spread e volume" (NON evidente nei dati forniti)
 
 Rispondi SOLO in formato JSON valido:
 {
-  "analysis": "Analisi generale...",
-  "insights": ["Insight 1", "Insight 2", ...],
-  "liquidityAnalysis": "Analisi liquidità...",
-  "marketStructure": "Struttura mercato...",
-  "alerts": ["Alert 1", "Alert 2", ...]
+  "analysis": "Descrizione oggettiva dei dati...",
+  "insights": ["Osservazione supportata da dati", "Se non ci sono pattern, dillo"],
+  "liquidityAnalysis": "Analisi quantitativa basata su spread/volume reali...",
+  "marketStructure": "Descrizione struttura basata su bid/ask reali...",
+  "alerts": ["Solo anomalie quantitative: spread > X%", "imbalance > Y%"]
 }`;
 
   try {

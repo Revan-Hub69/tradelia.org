@@ -21,6 +21,10 @@ interface ChatRequest {
 }
 
 // Build complete Tradelia system prompt
+/**
+ * Build Tradelia system prompt - STRICT academic compliance
+ * Solo riferimenti accademici verificabili, NO invenzioni
+ */
 function buildTradeliaSystemPrompt(locale: 'it' | 'en'): string {
   const basePrompt = TRADELIA_AI_SYSTEM_PROMPT;
   
