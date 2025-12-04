@@ -81,11 +81,8 @@ export const QuickActions = memo(function QuickActions() {
       borderColor: 'border-blue-400/30',
       proOnly: true,
       onClick: () => {
-        // Apri ProUtilities e seleziona request-analysis
-        window.dispatchEvent(new CustomEvent('open-pro-utilities'));
-        setTimeout(() => {
-          window.dispatchEvent(new CustomEvent('select-utility', { detail: 'request-analysis' }));
-        }, 300);
+        // Reindirizza alla pagina utilities
+        window.location.href = '/dashboard/utilities';
       },
     },
     {

@@ -25,8 +25,8 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import styles from './dashboard.module.css';
 
 // Lazy load non-critical components
-const HelpSupport = lazy(() => 
-  import('./HelpSupport').then(module => ({ default: module.HelpSupport }))
+const AIChat = lazy(() => 
+  import('./AIChat').then(module => ({ default: module.AIChat }))
 );
 
 /**
@@ -263,7 +263,7 @@ export function DashboardShell() {
         </div>
         <ErrorBoundary>
           <Suspense fallback={null}>
-            <HelpSupport />
+            <AIChat />
           </Suspense>
         </ErrorBoundary>
       </main>

@@ -67,9 +67,8 @@ export const QuickLinks = memo(function QuickLinks() {
       proOnly: true,
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
-        // Trigger click sul pulsante floating ProUtilities
-        const event = new CustomEvent('open-pro-utilities');
-        window.dispatchEvent(event);
+        // Reindirizza alla pagina utilities
+        window.location.href = '/dashboard/utilities';
       },
     },
     {
