@@ -28,8 +28,8 @@ import {
  */
 
 interface OptimizationResult {
-  keyValue: number;
-  atrPeriod: number;
+  strategyId: StrategyType;
+  parameters: Record<string, number>; // Parametri specifici della strategia
   inSampleReturn: number;
   outOfSampleReturn: number;
   maxDrawdown: number;
@@ -52,7 +52,8 @@ interface WalkForwardWindow {
   inSampleEnd: Date;
   outOfSampleStart: Date;
   outOfSampleEnd: Date;
-  bestParameter: number;
+  bestStrategy: StrategyType;
+  bestParameters: Record<string, number>;
   results: OptimizationResult[];
 }
 
@@ -97,12 +98,23 @@ export function StrategyBuilder() {
   const [showSaveConfig, setShowSaveConfig] = useState(false);
   const [configName, setConfigName] = useState('');
 
-  // Memoized calculations
+  // Memoized calculations - count parameter combinations for selected strategies
   const totalCombinations = useMemo(() => {
-    const keyValueCount = Math.floor((keyValueMax - keyValueMin) / keyValueStep) + 1;
-    const atrPeriodCount = Math.floor((atrPeriodMax - atrPeriodMin) / atrPeriodStep) + 1;
-    return keyValueCount * atrPeriodCount;
-  }, [keyValueMin, keyValueMax, keyValueStep, atrPeriodMin, atrPeriodMax, atrPeriodStep]);
+    let total = 0;
+    selectedStrategies.forEach(strategyId => {
+      const strategy = getStrategyById(strategyId);
+      if (!strategy) return;
+      
+      let strategyCombinations = 1;
+      strategy.parameters.forEach(param => {
+        const range = param.max - param.min;
+        const count = Math.floor(range / param.step) + 1;
+        strategyCombinations *= count;
+      });
+      total += strategyCombinations;
+    });
+    return total || 1; // Fallback to 1 if no strategies selected
+  }, [selectedStrategies]);
 
   // Validate inputs - memoized
   const validateInputs = useCallback((): boolean => {
@@ -197,32 +209,156 @@ export function StrategyBuilder() {
 
       if (outOfSampleEnd > end) break;
 
-      // Simulate optimization results with realistic trading metrics
+      // Simulate optimization results for each selected strategy
       const optimizationResults: OptimizationResult[] = [];
       
-      for (let kv = keyValueMin; kv <= keyValueMax; kv += keyValueStep) {
-        for (let atr = atrPeriodMin; atr <= atrPeriodMax; atr += atrPeriodStep) {
-          // Realistic simulation based on parameter relationships
-          // Key Value: higher = fewer trades but better quality
-          // ATR Period: higher = smoother signals but slower reaction
+      // Iterate over selected strategies
+      for (const strategyId of selectedStrategies) {
+        const strategy = getStrategyById(strategyId);
+        if (!strategy) continue;
+        
+        const params = strategyParams[strategyId] || {};
+        
+        // Generate parameter combinations for this strategy
+        // For each parameter, create a range based on min/max/step
+        const paramRanges: Record<string, number[]> = {};
+        strategy.parameters.forEach(param => {
+          const values: number[] = [];
+          const currentValue = params[param.id] ?? param.default;
+          // Test around the current value: ±20% range
+          const range = param.max - param.min;
+          const testMin = Math.max(param.min, currentValue - range * 0.2);
+          const testMax = Math.min(param.max, currentValue + range * 0.2);
           
-          const baseReturn = 12 + (kv * 2) - (atr - 14) * 0.3;
-          const volatility = 8 + (kv * 1.5) + (atr - 14) * 0.2;
+          for (let val = testMin; val <= testMax; val += param.step) {
+            values.push(Math.round(val / param.step) * param.step); // Round to step
+          }
+          // Always include the current/default value
+          if (!values.includes(currentValue)) {
+            values.push(currentValue);
+          }
+          paramRanges[param.id] = values.sort((a, b) => a - b);
+        });
+        
+        // Generate all parameter combinations
+        const generateCombinations = (paramIds: string[], current: Record<string, number>): Record<string, number>[] => {
+          if (paramIds.length === 0) return [current];
+          
+          const [first, ...rest] = paramIds;
+          const combinations: Record<string, number>[] = [];
+          
+          for (const value of paramRanges[first] || []) {
+            combinations.push(...generateCombinations(rest, { ...current, [first]: value }));
+          }
+          
+          return combinations;
+        };
+        
+        const paramCombinations = generateCombinations(
+          strategy.parameters.map(p => p.id),
+          {}
+        );
+        
+        // Simulate performance for each parameter combination
+        for (const paramCombo of paramCombinations) {
+          // Strategy-specific simulation based on strategy type and parameters
+          let baseReturn = 10;
+          let baseVolatility = 8;
+          let baseTrades = 40;
+          let baseWinRate = 0.45;
+          
+          // Adjust based on strategy type
+          switch (strategyId) {
+            case 'moving-average-crossover':
+              const fastMA = paramCombo.fastMA || 10;
+              const slowMA = paramCombo.slowMA || 50;
+              const maRatio = slowMA / fastMA;
+              baseReturn = 8 + maRatio * 0.5;
+              baseVolatility = 6 + (slowMA - fastMA) * 0.1;
+              baseTrades = Math.floor(60 - (slowMA - fastMA) * 0.5);
+              baseWinRate = 0.40 + (maRatio > 3 ? 0.1 : 0);
+              break;
+              
+            case 'rsi-mean-reversion':
+              const rsiPeriod = paramCombo.rsiPeriod || 14;
+              const oversold = paramCombo.oversold || 30;
+              const overbought = paramCombo.overbought || 70;
+              baseReturn = 12 - (rsiPeriod - 14) * 0.2;
+              baseVolatility = 10 + (100 - overbought - oversold) * 0.1;
+              baseTrades = Math.floor(80 - (overbought - oversold) * 0.5);
+              baseWinRate = 0.50 + (oversold < 25 ? 0.05 : 0);
+              break;
+              
+            case 'macd-trend':
+              const fastEMA = paramCombo.fastEMA || 12;
+              const slowEMA = paramCombo.slowEMA || 26;
+              const signalPeriod = paramCombo.signalPeriod || 9;
+              baseReturn = 10 + (slowEMA - fastEMA) * 0.1;
+              baseVolatility = 7 + (signalPeriod - 9) * 0.2;
+              baseTrades = Math.floor(50 - (slowEMA - fastEMA) * 0.3);
+              baseWinRate = 0.45 + (signalPeriod < 8 ? 0.05 : 0);
+              break;
+              
+            case 'bollinger-bands':
+              const bbPeriod = paramCombo.bbPeriod || 20;
+              const bbStdDev = paramCombo.bbStdDev || 2.0;
+              baseReturn = 11 - (bbPeriod - 20) * 0.1;
+              baseVolatility = 9 + (bbStdDev - 2.0) * 1.5;
+              baseTrades = Math.floor(70 - (bbStdDev - 2.0) * 10);
+              baseWinRate = 0.48 + (bbStdDev > 2.2 ? 0.05 : 0);
+              break;
+              
+            case 'momentum':
+              const momPeriod = paramCombo.momentumPeriod || 12;
+              const momThreshold = paramCombo.momentumThreshold || 2.0;
+              baseReturn = 13 + (momPeriod - 12) * 0.15;
+              baseVolatility = 9 + (momThreshold - 2.0) * 0.5;
+              baseTrades = Math.floor(45 - (momThreshold - 2.0) * 5);
+              baseWinRate = 0.42 + (momPeriod > 15 ? 0.08 : 0);
+              break;
+              
+            case 'mean-reversion':
+              const meanPeriod = paramCombo.meanPeriod || 20;
+              const devMult = paramCombo.deviationMultiplier || 2.0;
+              baseReturn = 9 - (meanPeriod - 20) * 0.05;
+              baseVolatility = 8 + (devMult - 2.0) * 0.8;
+              baseTrades = Math.floor(90 - (devMult - 2.0) * 15);
+              baseWinRate = 0.52 + (devMult > 2.2 ? 0.05 : 0);
+              break;
+              
+            case 'atr-trailing-stop':
+              const atrPeriod = paramCombo.atrPeriod || 14;
+              const atrMult = paramCombo.atrMultiplier || 2.0;
+              baseReturn = 10 + (atrPeriod - 14) * 0.1;
+              baseVolatility = 6 + (atrMult - 2.0) * 0.5;
+              baseTrades = Math.floor(55 - (atrMult - 2.0) * 8);
+              baseWinRate = 0.46 + (atrMult > 2.5 ? 0.06 : 0);
+              break;
+          }
+          
+          // Adjust for timeframe
+          const timeframeMultiplier = {
+            '1m': 0.3, '5m': 0.5, '15m': 0.7, '30m': 0.8,
+            '1h': 1.0, '4h': 1.2, '1d': 1.5, '1w': 2.0, '1M': 2.5
+          }[selectedTimeframe] || 1.0;
+          
+          baseReturn *= timeframeMultiplier;
+          baseTrades = Math.floor(baseTrades * (timeframeMultiplier < 1 ? 1.5 : 1 / timeframeMultiplier));
           
           // In-Sample performance (optimistic, as it's optimized on this data)
-          const inSampleReturn = baseReturn + Math.random() * 8 - 2;
-          const inSampleVolatility = volatility * (0.8 + Math.random() * 0.4);
+          const inSampleReturn = baseReturn + Math.random() * 6 - 2;
+          const inSampleVolatility = baseVolatility * (0.8 + Math.random() * 0.4);
           const inSampleMaxDD = inSampleVolatility * (1.2 + Math.random() * 0.6);
           
           // Out-of-Sample performance (more realistic, typically 60-80% of IS)
           const oosMultiplier = 0.65 + Math.random() * 0.15; // 65-80% of IS
           const outOfSampleReturn = inSampleReturn * oosMultiplier;
-          const outOfSampleVolatility = inSampleVolatility * (1.1 + Math.random() * 0.2); // OOS usually more volatile
+          const outOfSampleVolatility = inSampleVolatility * (1.1 + Math.random() * 0.2);
           const outOfSampleMaxDD = inSampleMaxDD * (1.1 + Math.random() * 0.3);
           
-          // Trading statistics (realistic for trend-following systems)
-          const totalTrades = Math.floor(50 - (kv * 5) + (atr - 14) * 0.5);
-          const winRate = 0.45 + (kv * 0.02) - (atr - 14) * 0.001; // 45-55% typical for trend systems
+          // Trading statistics
+          const totalTrades = Math.max(10, Math.floor(baseTrades * (0.8 + Math.random() * 0.4)));
+          const winRate = Math.max(0.3, Math.min(0.7, baseWinRate + (Math.random() * 0.1 - 0.05)));
           const averageWin = inSampleReturn / (totalTrades * winRate) * 1.5;
           const averageLoss = Math.abs(inSampleReturn / (totalTrades * (1 - winRate))) * 0.8;
           const largestWin = averageWin * (2.5 + Math.random() * 1.5);
@@ -234,7 +370,7 @@ export function StrategyBuilder() {
           // Expectancy = (Win Rate * Avg Win) - (Loss Rate * Avg Loss)
           const expectancy = (winRate * averageWin) - ((1 - winRate) * Math.abs(averageLoss));
           
-          // Sharpe Ratio (annualized, assuming 252 trading days)
+          // Sharpe Ratio (annualized)
           const riskFreeRate = 0.02; // 2% annual
           const sharpeRatio = ((inSampleReturn / 100) - riskFreeRate) / (inSampleVolatility / 100);
           
@@ -247,10 +383,6 @@ export function StrategyBuilder() {
           const sharpeConsistency = oosSharpeRatio / sharpeRatio;
           
           // Robustness score: 0-100
-          // - OOS return >= 70% of IS: +40 points
-          // - Sharpe consistency >= 70%: +30 points
-          // - Profit factor > 1.5: +20 points
-          // - Win rate reasonable (40-60%): +10 points
           let robustnessScore = 0;
           if (oosReturnRatio >= 0.7) robustnessScore += 40;
           else if (oosReturnRatio >= 0.5) robustnessScore += 20;
@@ -263,17 +395,17 @@ export function StrategyBuilder() {
           
           if (winRate >= 0.4 && winRate <= 0.6) robustnessScore += 10;
           
-          const isRobust = robustnessScore >= 60; // Threshold for robustness
+          const isRobust = robustnessScore >= 60;
 
           optimizationResults.push({
-            keyValue: kv,
-            atrPeriod: atr,
+            strategyId,
+            parameters: paramCombo,
             inSampleReturn,
             outOfSampleReturn,
-            maxDrawdown: outOfSampleMaxDD, // Use OOS for conservative estimate
+            maxDrawdown: outOfSampleMaxDD,
             sharpeRatio,
             calmarRatio,
-            winRate: winRate * 100, // Convert to percentage
+            winRate: winRate * 100,
             profitFactor,
             totalTrades,
             averageWin,
@@ -322,7 +454,8 @@ export function StrategyBuilder() {
         inSampleEnd,
         outOfSampleStart,
         outOfSampleEnd,
-        bestParameter: bestResult.keyValue,
+        bestStrategy: bestResult.strategyId,
+        bestParameters: bestResult.parameters,
         results: optimizationResults,
       });
 
@@ -1482,10 +1615,14 @@ export function StrategyBuilder() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                   <div>
                     <div className="text-xs text-text-tertiary mb-1">
-                      {locale === 'it' ? 'Key Value' : 'Key Value'}
+                      {locale === 'it' ? 'Strategia' : 'Strategy'}
                     </div>
-                    <div className="text-2xl font-bold text-accent">
-                      {bestParameterStats.keyValue.toFixed(1)}
+                    <div className="text-lg font-bold text-accent">
+                      {getStrategyById(bestParameterStats.strategyId) 
+                        ? (locale === 'it' 
+                            ? getStrategyById(bestParameterStats.strategyId)!.name 
+                            : getStrategyById(bestParameterStats.strategyId)!.nameEn)
+                        : bestParameterStats.strategyId}
                     </div>
                   </div>
                   <div>
@@ -1871,8 +2008,24 @@ export function StrategyBuilder() {
                           <div className="text-xs text-text-tertiary mb-1">
                             {locale === 'it' ? 'Parametri Ottimizzati' : 'Optimized Parameters'}
                           </div>
-                          <div className="text-sm font-semibold text-text-primary">
-                            Key Value: {bestResult.keyValue.toFixed(1)} | ATR Period: {bestResult.atrPeriod}
+                          <div className="text-sm font-semibold text-text-primary mb-2">
+                            {getStrategyById(bestResult.strategyId) 
+                              ? (locale === 'it' 
+                                  ? getStrategyById(bestResult.strategyId)!.name 
+                                  : getStrategyById(bestResult.strategyId)!.nameEn)
+                              : bestResult.strategyId}
+                          </div>
+                          <div className="text-xs text-text-secondary space-y-1">
+                            {Object.entries(bestResult.parameters).map(([key, value]) => {
+                              const strategy = getStrategyById(bestResult.strategyId);
+                              const param = strategy?.parameters.find(p => p.id === key);
+                              return (
+                                <div key={key} className="flex justify-between">
+                                  <span>{param?.label || key}:</span>
+                                  <span className="font-medium">{typeof value === 'number' ? value.toFixed(param?.type === 'integer' ? 0 : 2) : value}</span>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       </div>
