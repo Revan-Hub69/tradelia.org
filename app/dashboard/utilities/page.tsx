@@ -1,24 +1,62 @@
 'use client';
 
-import { useState } from 'react';
-import { FinancialCalculator } from '@/components/dashboard/utilities/FinancialCalculator';
-import { PACSimulator } from '@/components/dashboard/utilities/PACSimulator';
-import { TradingJournal } from '@/components/dashboard/utilities/TradingJournal';
-import { HedgingCalculator } from '@/components/dashboard/utilities/HedgingCalculator';
-import { PositionSizingCalculator } from '@/components/dashboard/utilities/PositionSizingCalculator';
-import { RiskRewardCalculator } from '@/components/dashboard/utilities/RiskRewardCalculator';
-import { SharpeRatioCalculator } from '@/components/dashboard/utilities/SharpeRatioCalculator';
-import { DrawdownCalculator } from '@/components/dashboard/utilities/DrawdownCalculator';
-import { OptionsCalculator } from '@/components/dashboard/utilities/OptionsCalculator';
-import { KellyCriterionCalculator } from '@/components/dashboard/utilities/KellyCriterionCalculator';
-import { PortfolioOptimizer } from '@/components/dashboard/utilities/PortfolioOptimizer';
-import { CorrelationCalculator } from '@/components/dashboard/utilities/CorrelationCalculator';
-import { VolatilityCalculator } from '@/components/dashboard/utilities/VolatilityCalculator';
+import { useState, lazy, Suspense } from 'react';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
 import { Calculator, TrendingUp, BookOpen, Shield, Target, BarChart3, TrendingDown, Zap, PieChart, Link2, Activity } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
+import { Skeleton } from '@/components/ui/Skeleton';
 import styles from './utilities.module.css';
+
+// Lazy load components for better performance
+const FinancialCalculator = lazy(() => 
+  import('@/components/dashboard/utilities/FinancialCalculator').then(m => ({ default: m.FinancialCalculator }))
+);
+const PACSimulator = lazy(() => 
+  import('@/components/dashboard/utilities/PACSimulator').then(m => ({ default: m.PACSimulator }))
+);
+const TradingJournal = lazy(() => 
+  import('@/components/dashboard/utilities/TradingJournal').then(m => ({ default: m.TradingJournal }))
+);
+const HedgingCalculator = lazy(() => 
+  import('@/components/dashboard/utilities/HedgingCalculator').then(m => ({ default: m.HedgingCalculator }))
+);
+const PositionSizingCalculator = lazy(() => 
+  import('@/components/dashboard/utilities/PositionSizingCalculator').then(m => ({ default: m.PositionSizingCalculator }))
+);
+const RiskRewardCalculator = lazy(() => 
+  import('@/components/dashboard/utilities/RiskRewardCalculator').then(m => ({ default: m.RiskRewardCalculator }))
+);
+const SharpeRatioCalculator = lazy(() => 
+  import('@/components/dashboard/utilities/SharpeRatioCalculator').then(m => ({ default: m.SharpeRatioCalculator }))
+);
+const DrawdownCalculator = lazy(() => 
+  import('@/components/dashboard/utilities/DrawdownCalculator').then(m => ({ default: m.DrawdownCalculator }))
+);
+const OptionsCalculator = lazy(() => 
+  import('@/components/dashboard/utilities/OptionsCalculator').then(m => ({ default: m.OptionsCalculator }))
+);
+const KellyCriterionCalculator = lazy(() => 
+  import('@/components/dashboard/utilities/KellyCriterionCalculator').then(m => ({ default: m.KellyCriterionCalculator }))
+);
+const PortfolioOptimizer = lazy(() => 
+  import('@/components/dashboard/utilities/PortfolioOptimizer').then(m => ({ default: m.PortfolioOptimizer }))
+);
+const CorrelationCalculator = lazy(() => 
+  import('@/components/dashboard/utilities/CorrelationCalculator').then(m => ({ default: m.CorrelationCalculator }))
+);
+const VolatilityCalculator = lazy(() => 
+  import('@/components/dashboard/utilities/VolatilityCalculator').then(m => ({ default: m.VolatilityCalculator }))
+);
+
+// Loading fallback component
+const CalculatorSkeleton = () => (
+  <div className="space-y-6">
+    <Skeleton variant="rectangular" height={80} />
+    <Skeleton variant="rectangular" height={200} />
+    <Skeleton variant="rectangular" height={300} />
+  </div>
+);
 
 type UtilityTab = 'calculator' | 'pac' | 'journal' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility';
 
@@ -169,7 +207,9 @@ export default function UtilitiesPage() {
           hidden={activeTab !== 'calculator'}
           className={styles.utilitiesPanel}
         >
-          <FinancialCalculator />
+          <Suspense fallback={<CalculatorSkeleton />}>
+            <FinancialCalculator />
+          </Suspense>
         </div>
 
         <div
@@ -179,7 +219,9 @@ export default function UtilitiesPage() {
           hidden={activeTab !== 'pac'}
           className={styles.utilitiesPanel}
         >
-          <PACSimulator />
+          <Suspense fallback={<CalculatorSkeleton />}>
+            <PACSimulator />
+          </Suspense>
         </div>
 
         {/* Pro Tools */}
@@ -192,7 +234,9 @@ export default function UtilitiesPage() {
               hidden={activeTab !== 'journal'}
               className={styles.utilitiesPanel}
             >
-              <TradingJournal />
+              <Suspense fallback={<CalculatorSkeleton />}>
+                <TradingJournal />
+              </Suspense>
             </div>
 
             <div
@@ -202,7 +246,9 @@ export default function UtilitiesPage() {
               hidden={activeTab !== 'hedging'}
               className={styles.utilitiesPanel}
             >
-              <HedgingCalculator />
+              <Suspense fallback={<CalculatorSkeleton />}>
+                <HedgingCalculator />
+              </Suspense>
             </div>
 
             <div
@@ -212,7 +258,9 @@ export default function UtilitiesPage() {
               hidden={activeTab !== 'position'}
               className={styles.utilitiesPanel}
             >
-              <PositionSizingCalculator />
+              <Suspense fallback={<CalculatorSkeleton />}>
+                <PositionSizingCalculator />
+              </Suspense>
             </div>
 
             <div
@@ -222,7 +270,9 @@ export default function UtilitiesPage() {
               hidden={activeTab !== 'riskreward'}
               className={styles.utilitiesPanel}
             >
-              <RiskRewardCalculator />
+              <Suspense fallback={<CalculatorSkeleton />}>
+                <RiskRewardCalculator />
+              </Suspense>
             </div>
 
             <div
@@ -232,7 +282,9 @@ export default function UtilitiesPage() {
               hidden={activeTab !== 'sharpe'}
               className={styles.utilitiesPanel}
             >
-              <SharpeRatioCalculator />
+              <Suspense fallback={<CalculatorSkeleton />}>
+                <SharpeRatioCalculator />
+              </Suspense>
             </div>
 
             <div
@@ -242,7 +294,9 @@ export default function UtilitiesPage() {
               hidden={activeTab !== 'drawdown'}
               className={styles.utilitiesPanel}
             >
-              <DrawdownCalculator />
+              <Suspense fallback={<CalculatorSkeleton />}>
+                <DrawdownCalculator />
+              </Suspense>
             </div>
 
             <div
@@ -252,7 +306,9 @@ export default function UtilitiesPage() {
               hidden={activeTab !== 'options'}
               className={styles.utilitiesPanel}
             >
-              <OptionsCalculator />
+              <Suspense fallback={<CalculatorSkeleton />}>
+                <OptionsCalculator />
+              </Suspense>
             </div>
 
             <div
@@ -262,7 +318,9 @@ export default function UtilitiesPage() {
               hidden={activeTab !== 'kelly'}
               className={styles.utilitiesPanel}
             >
-              <KellyCriterionCalculator />
+              <Suspense fallback={<CalculatorSkeleton />}>
+                <KellyCriterionCalculator />
+              </Suspense>
             </div>
 
             <div
@@ -272,7 +330,9 @@ export default function UtilitiesPage() {
               hidden={activeTab !== 'portfolio'}
               className={styles.utilitiesPanel}
             >
-              <PortfolioOptimizer />
+              <Suspense fallback={<CalculatorSkeleton />}>
+                <PortfolioOptimizer />
+              </Suspense>
             </div>
 
             <div
@@ -282,7 +342,9 @@ export default function UtilitiesPage() {
               hidden={activeTab !== 'correlation'}
               className={styles.utilitiesPanel}
             >
-              <CorrelationCalculator />
+              <Suspense fallback={<CalculatorSkeleton />}>
+                <CorrelationCalculator />
+              </Suspense>
             </div>
 
             <div
@@ -292,7 +354,9 @@ export default function UtilitiesPage() {
               hidden={activeTab !== 'volatility'}
               className={styles.utilitiesPanel}
             >
-              <VolatilityCalculator />
+              <Suspense fallback={<CalculatorSkeleton />}>
+                <VolatilityCalculator />
+              </Suspense>
             </div>
           </>
         )}
