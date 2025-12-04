@@ -28,6 +28,17 @@ const DEFAULT_MODULES = {
       badge_count: 0,
     },
     {
+      id: 'utilities',
+      title: 'Utilities',
+      description: 'Strumenti finanziari professionali: calcolatori, simulatori e analisi avanzate',
+      href: '/dashboard/utilities',
+      icon: 'calculator',
+      priority: 'primary' as const,
+      is_active: true,
+      order_index: 3,
+      badge_count: 0,
+    },
+    {
       id: 'requests',
       title: 'Richieste',
       description: 'Gestisci le tue richieste di analisi',
@@ -35,7 +46,7 @@ const DEFAULT_MODULES = {
       icon: 'send',
       priority: 'primary' as const,
       is_active: true,
-      order_index: 3,
+      order_index: 4,
       badge_count: 0,
     },
     {
@@ -46,7 +57,7 @@ const DEFAULT_MODULES = {
       icon: 'vote',
       priority: 'primary' as const,
       is_active: true,
-      order_index: 4,
+      order_index: 5,
       badge_count: 0,
     },
     {
@@ -57,7 +68,7 @@ const DEFAULT_MODULES = {
       icon: 'settings',
       priority: 'primary' as const,
       is_active: true,
-      order_index: 5,
+      order_index: 6,
       badge_count: 0,
     },
     {
@@ -68,22 +79,11 @@ const DEFAULT_MODULES = {
       icon: 'star',
       priority: 'primary' as const,
       is_active: true,
-      order_index: 6,
+      order_index: 7,
       badge_count: 0,
     },
   ],
   secondary: [
-    {
-      id: 'utilities',
-      title: 'Utilities',
-      description: 'Calcolatori finanziari e PAC simulator per analisi e pianificazione',
-      href: '/dashboard/utilities',
-      icon: 'calculator',
-      priority: 'secondary' as const,
-      is_active: true,
-      order_index: 1,
-      badge_count: 0,
-    },
     {
       id: 'widgets',
       title: 'Widgets',

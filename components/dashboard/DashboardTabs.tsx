@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { BookOpen, BarChart3, Settings, GraduationCap, FileText, TrendingUp, Cog } from 'lucide-react';
+import { BookOpen, BarChart3, Settings, GraduationCap, FileText, TrendingUp, Cog, Calculator } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
 import { cn } from '@/lib/utils/cn';
@@ -10,7 +10,7 @@ import { prefetchOnHover } from '@/lib/utils/prefetch';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { CurrencySwitch } from '@/components/ui/CurrencySwitch';
 
-type TabId = 'overview' | 'education' | 'analysis' | 'settings';
+type TabId = 'overview' | 'education' | 'utilities' | 'analysis' | 'settings';
 
 interface Tab {
   id: TabId;
@@ -50,6 +50,13 @@ export function DashboardTabs() {
       description: t('dashboard.tabs.educationDesc') || 'Corsi e percorsi formativi',
     },
     {
+      id: 'utilities',
+      label: t('dashboard.tabs.utilities') || 'Utilities',
+      icon: Calculator,
+      href: buildLocalePath(locale, '/dashboard/utilities'),
+      description: t('dashboard.tabs.utilitiesDesc') || 'Strumenti finanziari e calcolatori',
+    },
+    {
       id: 'analysis',
       label: t('dashboard.tabs.analysis') || 'Analisi',
       icon: TrendingUp,
@@ -74,6 +81,8 @@ export function DashboardTabs() {
     
     if (normalizedPath.includes('/dashboard/education')) {
       setActiveTab('education');
+    } else if (normalizedPath.includes('/dashboard/utilities')) {
+      setActiveTab('utilities');
     } else if (normalizedPath.includes('/dashboard/analysis')) {
       setActiveTab('analysis');
     } else if (normalizedPath.includes('/dashboard/settings')) {

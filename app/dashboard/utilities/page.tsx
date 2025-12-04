@@ -6,6 +6,9 @@ import { Calculator, TrendingUp, BookOpen, Shield, Target, BarChart3, TrendingDo
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { ProBadge } from '@/components/ui/ProBadge';
+import { ComingSoon } from '@/components/ui/ComingSoon';
+import { cn } from '@/lib/utils/cn';
 import styles from './utilities.module.css';
 
 // Lazy load components for better performance
@@ -60,309 +63,377 @@ const CalculatorSkeleton = () => (
 
 type UtilityTab = 'calculator' | 'pac' | 'journal' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility';
 
+interface Utility {
+  id: UtilityTab;
+  label: string;
+  icon: typeof Calculator;
+  category: 'base' | 'pro';
+  group?: 'risk' | 'performance' | 'advanced';
+  description: string;
+  available: boolean;
+}
+
 export default function UtilitiesPage() {
   const { t } = useTranslations();
   const isPro = useIsPro();
-  const [activeTab, setActiveTab] = useState<UtilityTab>('calculator');
+  const [selectedUtility, setSelectedUtility] = useState<UtilityTab | null>(null);
 
-  // Strumenti base (disponibili a tutti)
-  const baseTabs: Array<{ id: UtilityTab; label: string; icon: typeof Calculator; category: 'base' }> = [
+  // Tutti gli strumenti (base + pro)
+  const allUtilities: Utility[] = [
+    // Base Tools
     {
       id: 'calculator',
       label: t('dashboard.utilities.calculator') || 'Calcolatore Finanziario',
       icon: Calculator,
       category: 'base',
+      description: 'Calcoli finanziari base: interesse composto, valore futuro, rendite',
+      available: true,
     },
     {
       id: 'pac',
       label: t('dashboard.utilities.pac') || 'Simulatore PAC',
       icon: TrendingUp,
       category: 'base',
+      description: 'Simula investimenti periodici con interesse composto',
+      available: true,
     },
-  ];
-
-  // Strumenti Pro (solo per utenti Pro)
-  // Organizzati per categoria logica
-  const proTabs: Array<{ id: UtilityTab; label: string; icon: typeof Calculator; category: 'pro' }> = [
-    // Risk Management
+    // Pro Tools - Risk Management
     {
       id: 'position',
       label: 'Position Sizing',
       icon: Target,
       category: 'pro',
+      group: 'risk',
+      description: 'Calcola la dimensione ottimale della posizione in base al rischio',
+      available: true,
     },
     {
       id: 'riskreward',
       label: 'Risk/Reward',
       icon: BarChart3,
       category: 'pro',
+      group: 'risk',
+      description: 'Valuta la qualità del trade in base al rapporto rischio/rendimento',
+      available: true,
     },
     {
       id: 'hedging',
       label: 'Hedging',
       icon: Shield,
       category: 'pro',
+      group: 'risk',
+      description: 'Calcola strategie di copertura per ridurre il rischio del portafoglio',
+      available: true,
     },
     {
       id: 'drawdown',
       label: 'Drawdown',
       icon: TrendingDown,
       category: 'pro',
+      group: 'risk',
+      description: 'Analizza il drawdown massimo e il tempo di recupero',
+      available: true,
     },
     {
       id: 'volatility',
       label: 'Volatility',
       icon: Activity,
       category: 'pro',
+      group: 'risk',
+      description: 'Calcola la volatilità annualizzata dai rendimenti periodici',
+      available: true,
     },
-    // Performance
+    // Pro Tools - Performance
     {
       id: 'sharpe',
       label: 'Sharpe Ratio',
       icon: BarChart3,
       category: 'pro',
+      group: 'performance',
+      description: 'Misura il rendimento aggiustato per il rischio',
+      available: true,
     },
     {
       id: 'journal',
       label: 'Trading Journal',
       icon: BookOpen,
       category: 'pro',
+      group: 'performance',
+      description: 'Registra e analizza le tue operazioni di trading',
+      available: true,
     },
-    // Advanced
+    // Pro Tools - Advanced
     {
       id: 'options',
       label: 'Options',
       icon: Zap,
       category: 'pro',
+      group: 'advanced',
+      description: 'Calcola prezzi teorici delle opzioni e Greeks (Black-Scholes)',
+      available: true,
     },
     {
       id: 'kelly',
       label: 'Kelly Criterion',
       icon: Target,
       category: 'pro',
+      group: 'advanced',
+      description: 'Determina la percentuale ottimale di capitale da allocare',
+      available: true,
     },
     {
       id: 'portfolio',
       label: 'Portfolio Optimizer',
       icon: PieChart,
       category: 'pro',
+      group: 'advanced',
+      description: 'Ottimizza l\'allocazione del portafoglio (Markowitz)',
+      available: true,
     },
     {
       id: 'correlation',
       label: 'Correlation',
       icon: Link2,
       category: 'pro',
+      group: 'advanced',
+      description: 'Calcola la correlazione tra due serie di rendimenti',
+      available: true,
     },
   ];
 
-  const tabs = [...baseTabs, ...(isPro ? proTabs : [])];
+  const handleUtilityClick = (utility: Utility) => {
+    if (utility.category === 'pro' && !isPro) {
+      // Non fare nulla, il badge Pro gestirà il click
+      return;
+    }
+    if (!utility.available) {
+      return;
+    }
+    setSelectedUtility(utility.id);
+  };
+
+  const selectedUtilityData = selectedUtility 
+    ? allUtilities.find(u => u.id === selectedUtility)
+    : null;
+
+  // Raggruppa per categoria
+  const baseUtilities = allUtilities.filter(u => u.category === 'base');
+  const riskUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'risk');
+  const performanceUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'performance');
+  const advancedUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'advanced');
 
   return (
     <div className="min-h-screen bg-bg-base">
       <DashboardTabs />
-      <div className={styles.utilitiesContainer}>
-        <header className={styles.utilitiesHeader}>
-        <h1 className={styles.utilitiesTitle}>
-          {t('dashboard.utilities.title') || 'Utilities'}
-        </h1>
-        <p className={styles.utilitiesSubtitle}>
-          {t('dashboard.utilities.subtitle') || 'Strumenti finanziari e calcolatori per analisi e trading'}
-        </p>
-        {!isPro && (
-          <div className="mt-4 bg-accent/10 border border-accent/20 rounded-lg p-3">
-            <p className="text-xs sm:text-sm text-text-secondary">
-              <strong className="text-text-primary">Upgrade a Pro</strong> per accedere a 11 strumenti avanzati: 
-              Position Sizing, Risk/Reward, Hedging, Drawdown, Volatility, Sharpe Ratio, Trading Journal, 
-              Options Calculator, Kelly Criterion, Portfolio Optimizer e Correlation Calculator.
-            </p>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <header className="mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-text-primary mb-2">
+            {t('dashboard.utilities.title') || 'Utilities'}
+          </h1>
+          <p className="text-text-secondary">
+            {t('dashboard.utilities.subtitle') || 'Strumenti finanziari professionali per analisi e trading'}
+          </p>
+        </header>
+
+        {selectedUtilityData ? (
+          // Vista dettaglio strumento
+          <div className="space-y-6">
+            <button
+              onClick={() => setSelectedUtility(null)}
+              className="flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors mb-4"
+            >
+              <span>←</span>
+              <span>Torna alla lista</span>
+            </button>
+            <div className="bg-bg-surface border border-border-subtle rounded-xl p-6">
+              <Suspense fallback={<CalculatorSkeleton />}>
+                {selectedUtility === 'calculator' && <FinancialCalculator />}
+                {selectedUtility === 'pac' && <PACSimulator />}
+                {selectedUtility === 'journal' && isPro && <TradingJournal />}
+                {selectedUtility === 'hedging' && isPro && <HedgingCalculator />}
+                {selectedUtility === 'position' && isPro && <PositionSizingCalculator />}
+                {selectedUtility === 'riskreward' && isPro && <RiskRewardCalculator />}
+                {selectedUtility === 'sharpe' && isPro && <SharpeRatioCalculator />}
+                {selectedUtility === 'drawdown' && isPro && <DrawdownCalculator />}
+                {selectedUtility === 'options' && isPro && <OptionsCalculator />}
+                {selectedUtility === 'kelly' && isPro && <KellyCriterionCalculator />}
+                {selectedUtility === 'portfolio' && isPro && <PortfolioOptimizer />}
+                {selectedUtility === 'correlation' && isPro && <CorrelationCalculator />}
+                {selectedUtility === 'volatility' && isPro && <VolatilityCalculator />}
+              </Suspense>
+            </div>
+          </div>
+        ) : (
+          // Vista griglia strumenti
+          <div className="space-y-8">
+            {/* Strumenti Base */}
+            <section>
+              <h2 className="text-xl font-semibold text-text-primary mb-4">Strumenti Base</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {baseUtilities.map((utility) => {
+                  const Icon = utility.icon;
+                  return (
+                    <button
+                      key={utility.id}
+                      onClick={() => handleUtilityClick(utility)}
+                      className={cn(
+                        'bg-bg-surface border border-border-subtle rounded-xl p-6 text-left',
+                        'hover:border-accent/40 hover:shadow-md transition-all',
+                        'flex flex-col gap-3'
+                      )}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="w-12 h-12 rounded-lg bg-accent/20 flex items-center justify-center">
+                          <Icon className="w-6 h-6 text-accent" />
+                        </div>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-text-primary mb-1">{utility.label}</h3>
+                        <p className="text-sm text-text-secondary">{utility.description}</p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            {/* Strumenti Pro - Risk Management */}
+            <section>
+              <h2 className="text-xl font-semibold text-text-primary mb-4">
+                Risk Management {!isPro && <span className="text-sm font-normal text-text-tertiary">(Pro)</span>}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {riskUtilities.map((utility) => {
+                  const Icon = utility.icon;
+                  const canAccess = isPro && utility.available;
+                  return (
+                    <button
+                      key={utility.id}
+                      onClick={() => handleUtilityClick(utility)}
+                      disabled={!canAccess}
+                      className={cn(
+                        'bg-bg-surface border rounded-xl p-6 text-left relative',
+                        'transition-all',
+                        canAccess
+                          ? 'border-border-subtle hover:border-accent/40 hover:shadow-md'
+                          : 'border-border-subtle/50 opacity-75 cursor-not-allowed',
+                        'flex flex-col gap-3'
+                      )}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className={cn(
+                          'w-12 h-12 rounded-lg flex items-center justify-center',
+                          canAccess ? 'bg-accent/20' : 'bg-bg-soft'
+                        )}>
+                          <Icon className={cn(
+                            'w-6 h-6',
+                            canAccess ? 'text-accent' : 'text-text-tertiary'
+                          )} />
+                        </div>
+                        <ProBadge size="sm" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-text-primary mb-1">{utility.label}</h3>
+                        <p className="text-sm text-text-secondary">{utility.description}</p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            {/* Strumenti Pro - Performance */}
+            <section>
+              <h2 className="text-xl font-semibold text-text-primary mb-4">
+                Performance {!isPro && <span className="text-sm font-normal text-text-tertiary">(Pro)</span>}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {performanceUtilities.map((utility) => {
+                  const Icon = utility.icon;
+                  const canAccess = isPro && utility.available;
+                  return (
+                    <button
+                      key={utility.id}
+                      onClick={() => handleUtilityClick(utility)}
+                      disabled={!canAccess}
+                      className={cn(
+                        'bg-bg-surface border rounded-xl p-6 text-left relative',
+                        'transition-all',
+                        canAccess
+                          ? 'border-border-subtle hover:border-accent/40 hover:shadow-md'
+                          : 'border-border-subtle/50 opacity-75 cursor-not-allowed',
+                        'flex flex-col gap-3'
+                      )}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className={cn(
+                          'w-12 h-12 rounded-lg flex items-center justify-center',
+                          canAccess ? 'bg-accent/20' : 'bg-bg-soft'
+                        )}>
+                          <Icon className={cn(
+                            'w-6 h-6',
+                            canAccess ? 'text-accent' : 'text-text-tertiary'
+                          )} />
+                        </div>
+                        <ProBadge size="sm" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-text-primary mb-1">{utility.label}</h3>
+                        <p className="text-sm text-text-secondary">{utility.description}</p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            {/* Strumenti Pro - Advanced */}
+            <section>
+              <h2 className="text-xl font-semibold text-text-primary mb-4">
+                Advanced {!isPro && <span className="text-sm font-normal text-text-tertiary">(Pro)</span>}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {advancedUtilities.map((utility) => {
+                  const Icon = utility.icon;
+                  const canAccess = isPro && utility.available;
+                  return (
+                    <button
+                      key={utility.id}
+                      onClick={() => handleUtilityClick(utility)}
+                      disabled={!canAccess}
+                      className={cn(
+                        'bg-bg-surface border rounded-xl p-6 text-left relative',
+                        'transition-all',
+                        canAccess
+                          ? 'border-border-subtle hover:border-accent/40 hover:shadow-md'
+                          : 'border-border-subtle/50 opacity-75 cursor-not-allowed',
+                        'flex flex-col gap-3'
+                      )}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className={cn(
+                          'w-12 h-12 rounded-lg flex items-center justify-center',
+                          canAccess ? 'bg-accent/20' : 'bg-bg-soft'
+                        )}>
+                          <Icon className={cn(
+                            'w-6 h-6',
+                            canAccess ? 'text-accent' : 'text-text-tertiary'
+                          )} />
+                        </div>
+                        <ProBadge size="sm" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-text-primary mb-1">{utility.label}</h3>
+                        <p className="text-sm text-text-secondary">{utility.description}</p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
           </div>
         )}
-      </header>
-
-      <nav className={styles.utilitiesTabs} role="tablist" aria-label="Utility sections">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          return (
-            <button
-              key={tab.id}
-              role="tab"
-              aria-selected={activeTab === tab.id}
-              aria-controls={`${tab.id}-panel`}
-              className={`${styles.utilitiesTab} ${activeTab === tab.id ? styles.active : ''}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              <Icon className={styles.tabIcon} aria-hidden="true" />
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
-      </nav>
-
-      <main className={styles.utilitiesContent}>
-        {/* Base Tools */}
-        <div
-          id="calculator-panel"
-          role="tabpanel"
-          aria-labelledby="calculator-tab"
-          hidden={activeTab !== 'calculator'}
-          className={styles.utilitiesPanel}
-        >
-          <Suspense fallback={<CalculatorSkeleton />}>
-            <FinancialCalculator />
-          </Suspense>
-        </div>
-
-        <div
-          id="pac-panel"
-          role="tabpanel"
-          aria-labelledby="pac-tab"
-          hidden={activeTab !== 'pac'}
-          className={styles.utilitiesPanel}
-        >
-          <Suspense fallback={<CalculatorSkeleton />}>
-            <PACSimulator />
-          </Suspense>
-        </div>
-
-        {/* Pro Tools */}
-        {isPro && (
-          <>
-            <div
-              id="journal-panel"
-              role="tabpanel"
-              aria-labelledby="journal-tab"
-              hidden={activeTab !== 'journal'}
-              className={styles.utilitiesPanel}
-            >
-              <Suspense fallback={<CalculatorSkeleton />}>
-                <TradingJournal />
-              </Suspense>
-            </div>
-
-            <div
-              id="hedging-panel"
-              role="tabpanel"
-              aria-labelledby="hedging-tab"
-              hidden={activeTab !== 'hedging'}
-              className={styles.utilitiesPanel}
-            >
-              <Suspense fallback={<CalculatorSkeleton />}>
-                <HedgingCalculator />
-              </Suspense>
-            </div>
-
-            <div
-              id="position-panel"
-              role="tabpanel"
-              aria-labelledby="position-tab"
-              hidden={activeTab !== 'position'}
-              className={styles.utilitiesPanel}
-            >
-              <Suspense fallback={<CalculatorSkeleton />}>
-                <PositionSizingCalculator />
-              </Suspense>
-            </div>
-
-            <div
-              id="riskreward-panel"
-              role="tabpanel"
-              aria-labelledby="riskreward-tab"
-              hidden={activeTab !== 'riskreward'}
-              className={styles.utilitiesPanel}
-            >
-              <Suspense fallback={<CalculatorSkeleton />}>
-                <RiskRewardCalculator />
-              </Suspense>
-            </div>
-
-            <div
-              id="sharpe-panel"
-              role="tabpanel"
-              aria-labelledby="sharpe-tab"
-              hidden={activeTab !== 'sharpe'}
-              className={styles.utilitiesPanel}
-            >
-              <Suspense fallback={<CalculatorSkeleton />}>
-                <SharpeRatioCalculator />
-              </Suspense>
-            </div>
-
-            <div
-              id="drawdown-panel"
-              role="tabpanel"
-              aria-labelledby="drawdown-tab"
-              hidden={activeTab !== 'drawdown'}
-              className={styles.utilitiesPanel}
-            >
-              <Suspense fallback={<CalculatorSkeleton />}>
-                <DrawdownCalculator />
-              </Suspense>
-            </div>
-
-            <div
-              id="options-panel"
-              role="tabpanel"
-              aria-labelledby="options-tab"
-              hidden={activeTab !== 'options'}
-              className={styles.utilitiesPanel}
-            >
-              <Suspense fallback={<CalculatorSkeleton />}>
-                <OptionsCalculator />
-              </Suspense>
-            </div>
-
-            <div
-              id="kelly-panel"
-              role="tabpanel"
-              aria-labelledby="kelly-tab"
-              hidden={activeTab !== 'kelly'}
-              className={styles.utilitiesPanel}
-            >
-              <Suspense fallback={<CalculatorSkeleton />}>
-                <KellyCriterionCalculator />
-              </Suspense>
-            </div>
-
-            <div
-              id="portfolio-panel"
-              role="tabpanel"
-              aria-labelledby="portfolio-tab"
-              hidden={activeTab !== 'portfolio'}
-              className={styles.utilitiesPanel}
-            >
-              <Suspense fallback={<CalculatorSkeleton />}>
-                <PortfolioOptimizer />
-              </Suspense>
-            </div>
-
-            <div
-              id="correlation-panel"
-              role="tabpanel"
-              aria-labelledby="correlation-tab"
-              hidden={activeTab !== 'correlation'}
-              className={styles.utilitiesPanel}
-            >
-              <Suspense fallback={<CalculatorSkeleton />}>
-                <CorrelationCalculator />
-              </Suspense>
-            </div>
-
-            <div
-              id="volatility-panel"
-              role="tabpanel"
-              aria-labelledby="volatility-tab"
-              hidden={activeTab !== 'volatility'}
-              className={styles.utilitiesPanel}
-            >
-              <Suspense fallback={<CalculatorSkeleton />}>
-                <VolatilityCalculator />
-              </Suspense>
-            </div>
-          </>
-        )}
-      </main>
       </div>
     </div>
   );
 }
-
