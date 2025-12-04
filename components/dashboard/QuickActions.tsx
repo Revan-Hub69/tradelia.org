@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, memo } from 'react';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { Plus, FileText, TrendingUp, BookOpen, PieChart } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
@@ -50,56 +50,17 @@ export const QuickActions = memo(function QuickActions() {
   const isPro = useIsPro();
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Azioni rapide alleggerite - solo le più importanti
   const actions: QuickAction[] = [
     {
-      id: 'start-course',
-      label: t('dashboard.quickActions.startCourse') || 'Inizia Corso',
-      description: t('dashboard.quickActions.startCourseDesc') || 'Inizia un nuovo percorso formativo',
-      icon: <BookOpen className="w-5 h-5" />,
-      color: 'text-cyan-300',
-      bgColor: 'bg-cyan-500/20',
-      borderColor: 'border-cyan-400/30',
-      href: '/dashboard/education',
-    },
-    {
-      id: 'view-reports',
-      label: t('dashboard.quickActions.viewReports') || 'Esplora Report',
-      description: t('dashboard.quickActions.viewReportsDesc') || 'Accedi ai report verificabili',
-      icon: <FileText className="w-5 h-5" />,
-      color: 'text-blue-400',
-      bgColor: 'bg-blue-400/20',
-      borderColor: 'border-blue-400/30',
-      href: '/dashboard/reports',
-    },
-    {
-      id: 'request-analysis',
-      label: t('dashboard.quickActions.requestAnalysis') || 'Richiedi Analisi',
-      description: t('dashboard.quickActions.requestAnalysisDesc') || 'Richiedi un analisi personalizzata (Pro)',
+      id: 'utilities',
+      label: t('dashboard.quickActions.utilities') || 'Utilities',
+      description: t('dashboard.quickActions.utilitiesDesc') || 'Strumenti finanziari professionali',
       icon: <TrendingUp className="w-5 h-5" />,
-      color: 'text-blue-400',
-      bgColor: 'bg-blue-400/20',
-      borderColor: 'border-blue-400/30',
-      proOnly: true,
-      onClick: () => {
-        // Reindirizza alla pagina utilities
-        window.location.href = '/dashboard/utilities';
-      },
-    },
-    {
-      id: 'add-position',
-      label: t('dashboard.quickActions.addPosition') || 'Aggiungi Posizione',
-      description: t('dashboard.quickActions.addPositionDesc') || 'Aggiungi una posizione al portafoglio (Pro)',
-      icon: <PieChart className="w-5 h-5" />,
-      color: 'text-green-400',
-      bgColor: 'bg-green-400/20',
-      borderColor: 'border-green-400/30',
-      proOnly: true,
-      onClick: () => {
-        window.dispatchEvent(new CustomEvent('open-pro-utilities'));
-        setTimeout(() => {
-          window.dispatchEvent(new CustomEvent('select-utility', { detail: 'portfolio' }));
-        }, 300);
-      },
+      color: 'text-accent',
+      bgColor: 'bg-accent/20',
+      borderColor: 'border-accent/30',
+      href: '/dashboard/utilities',
     },
   ];
 
@@ -108,33 +69,20 @@ export const QuickActions = memo(function QuickActions() {
     () => Array.isArray(actions) ? actions.filter(action => !action.proOnly || isPro) : [],
     [actions, isPro]
   );
+  // Mostra tutte le azioni (solo 1 ora)
   const visibleActions = useMemo(
-    () => isExpanded ? availableActions : availableActions.slice(0, 3),
-    [isExpanded, availableActions]
+    () => availableActions,
+    [availableActions]
   );
 
   return (
     <section className="mb-8" aria-label={t('dashboard.quickActions.title') || 'Azioni rapide'}>
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4">
         <h2 className="text-lg font-semibold text-text-primary">
           {t('dashboard.quickActions.title') || 'Azioni Rapide'}
         </h2>
-        {availableActions.length > 3 && (
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="text-sm text-accent hover:text-accent-hover transition-colors"
-            aria-label={isExpanded 
-              ? t('dashboard.quickActions.showLess') || 'Mostra meno azioni'
-              : t('dashboard.quickActions.showMore') || `Mostra altre ${availableActions.length - 3} azioni`}
-            aria-expanded={isExpanded}
-          >
-            {isExpanded
-              ? t('dashboard.quickActions.showLess') || 'Mostra meno'
-              : t('dashboard.quickActions.showMore') || `Mostra altre (${availableActions.length - 3})`}
-          </button>
-        )}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl">
         {visibleActions.map((action, index) => {
           const content = (
             <motion.div
@@ -160,11 +108,6 @@ export const QuickActions = memo(function QuickActions() {
                   <h3 className="font-semibold text-text-primary text-sm mb-1">{action.label}</h3>
                   <p className="text-xs text-text-secondary leading-relaxed">{action.description}</p>
                 </div>
-                <Plus className={cn(
-                  'w-4 h-4 flex-shrink-0 transition-transform',
-                  action.color,
-                  'group-hover:rotate-90'
-                )} />
               </div>
             </motion.div>
           );

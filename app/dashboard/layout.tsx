@@ -26,9 +26,6 @@ const DailyLoginCheck = dynamic(() => import('@/components/gamification/DailyLog
   ssr: false,
 });
 
-const ProUtilities = dynamic(() => import('@/components/dashboard/ProUtilities').then(mod => ({ default: mod.ProUtilities })), {
-  ssr: false,
-});
 
 const LayoutFallback = () => (
   <div className="min-h-screen bg-bg-base" suppressHydrationWarning>
@@ -62,9 +59,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </ErrorBoundary>
           <ErrorBoundary>
             <DailyLoginCheck />
-          </ErrorBoundary>
-          <ErrorBoundary>
-            <ProUtilities />
           </ErrorBoundary>
           <ErrorBoundary>
             <ModalProviders />
