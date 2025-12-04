@@ -80,22 +80,53 @@ export function PaperTrading() {
   const [orders, setOrders] = useState<PaperOrder[]>([]);
   
   // Load positions and orders from API
-  const { data: positionsData, loading: positionsLoading } = useApi<PaperPosition[]>(
+  const { data: positionsData, loading: positionsLoading, refetch: refetchPositions } = useApi<PaperPosition[]>(
     '/api/paper-trading/positions',
     { cacheTime: 5 * 1000 } // 5 seconds cache
   );
   
-  const { data: ordersData, loading: ordersLoading } = useApi<PaperOrder[]>(
+  const { data: ordersData, loading: ordersLoading, refetch: refetchOrders } = useApi<PaperOrder[]>(
     '/api/paper-trading/orders?status=pending',
     { cacheTime: 5 * 1000 }
   );
   
   useEffect(() => {
-    if (positionsData) setPositions(positionsData);
+    if (positionsData) {
+      setPositions(positionsData.map(p => ({
+        id: p.id,
+        symbol: p.symbol,
+        assetType: p.asset_type as 'stock' | 'crypto' | 'forex',
+        side: p.side as 'long' | 'short',
+        quantity: parseFloat(p.quantity.toString()),
+        entryPrice: parseFloat(p.entry_price.toString()),
+        currentPrice: parseFloat(p.current_price.toString()),
+        entryTime: p.entry_time,
+        strategy: p.strategy,
+        notes: p.notes,
+        unrealizedPnL: parseFloat(p.unrealized_pnl?.toString() || '0'),
+        unrealizedPnLPercent: parseFloat(p.unrealized_pnl_percent?.toString() || '0'),
+      })));
+    }
   }, [positionsData]);
   
   useEffect(() => {
-    if (ordersData) setOrders(ordersData);
+    if (ordersData) {
+      setOrders(ordersData.map(o => ({
+        id: o.id,
+        symbol: o.symbol,
+        assetType: o.asset_type as 'stock' | 'crypto' | 'forex',
+        orderType: o.order_type as 'market' | 'limit' | 'stop' | 'trailing_stop',
+        side: o.side as 'buy' | 'sell',
+        quantity: parseFloat(o.quantity.toString()),
+        limitPrice: o.limit_price ? parseFloat(o.limit_price.toString()) : undefined,
+        stopPrice: o.stop_price ? parseFloat(o.stop_price.toString()) : undefined,
+        trailingStopPercent: o.trailing_stop_percent ? parseFloat(o.trailing_stop_percent.toString()) : undefined,
+        status: o.status as 'pending' | 'filled' | 'cancelled' | 'expired',
+        executionPrice: o.execution_price ? parseFloat(o.execution_price.toString()) : undefined,
+        executionTime: o.execution_time,
+        createdAt: o.created_at,
+      })));
+    }
   }, [ordersData]);
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [selectedSymbol, setSelectedSymbol] = useState('');
@@ -243,7 +274,22 @@ export function PaperTrading() {
       
       if (positionResponse.ok) {
         const newPosition = await positionResponse.json();
-        setPositions(prev => [...prev, newPosition]);
+        const mappedPosition: PaperPosition = {
+          id: newPosition.id,
+          symbol: newPosition.symbol,
+          assetType: newPosition.asset_type,
+          side: newPosition.side,
+          quantity: parseFloat(newPosition.quantity.toString()),
+          entryPrice: parseFloat(newPosition.entry_price.toString()),
+          currentPrice: parseFloat(newPosition.current_price.toString()),
+          entryTime: newPosition.entry_time,
+          strategy: newPosition.strategy,
+          notes: newPosition.notes,
+          unrealizedPnL: parseFloat(newPosition.unrealized_pnl?.toString() || '0'),
+          unrealizedPnLPercent: parseFloat(newPosition.unrealized_pnl_percent?.toString() || '0'),
+        };
+        setPositions(prev => [...prev, mappedPosition]);
+        await refetchPositions();
         
         // Award XP and check achievements
         await handleUserAction('paper_trade_opened' as any, 5);
@@ -277,6 +323,7 @@ export function PaperTrading() {
           });
           
           setPositions(prev => prev.filter(p => p.id !== position.id));
+          await refetchPositions();
         }
       }
     }
@@ -289,6 +336,7 @@ export function PaperTrading() {
     });
     
     setOrders(prev => prev.map(o => o.id === order.id ? { ...o, status: 'filled' } : o));
+    await refetchOrders();
     
     toast.success(locale === 'it' ? 'Ordine eseguito' : 'Order executed');
   };
@@ -352,7 +400,23 @@ export function PaperTrading() {
       
       if (orderResponse.ok) {
         const createdOrder = await orderResponse.json();
-        setOrders(prev => [...prev, createdOrder]);
+        const mappedOrder: PaperOrder = {
+          id: createdOrder.id,
+          symbol: createdOrder.symbol,
+          assetType: createdOrder.asset_type,
+          orderType: createdOrder.order_type,
+          side: createdOrder.side,
+          quantity: parseFloat(createdOrder.quantity.toString()),
+          limitPrice: createdOrder.limit_price ? parseFloat(createdOrder.limit_price.toString()) : undefined,
+          stopPrice: createdOrder.stop_price ? parseFloat(createdOrder.stop_price.toString()) : undefined,
+          trailingStopPercent: createdOrder.trailing_stop_percent ? parseFloat(createdOrder.trailing_stop_percent.toString()) : undefined,
+          status: createdOrder.status,
+          executionPrice: createdOrder.execution_price ? parseFloat(createdOrder.execution_price.toString()) : undefined,
+          executionTime: createdOrder.execution_time,
+          createdAt: createdOrder.created_at,
+        };
+        setOrders(prev => [...prev, mappedOrder]);
+        await refetchOrders();
         toast.success(locale === 'it' ? 'Ordine piazzato' : 'Order placed');
       } else {
         toast.error(locale === 'it' ? 'Errore nel piazzare ordine' : 'Error placing order');
@@ -391,6 +455,7 @@ export function PaperTrading() {
       });
       
       setPositions(prev => prev.filter(p => p.id !== position.id));
+      await refetchPositions();
       toast.success(locale === 'it' ? 'Posizione chiusa' : 'Position closed');
     } else {
       toast.error(locale === 'it' ? 'Errore nella chiusura posizione' : 'Error closing position');
