@@ -26,7 +26,7 @@ export function ContextualHelp({
   'aria-label': ariaLabel,
 }: ContextualHelpProps) {
   return (
-    <Tooltip content={content} placement={placement}>
+    <Tooltip content={content} position={placement}>
       <button
         type="button"
         className={cn(
