@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Bot, User, Loader2, Sparkles, HelpCircle, BookOpen } from 'lucide-react';
+import { MessageSquare, X, Send, Bot, User, Loader2, Sparkles, HelpCircle, BookOpen, ArrowRight } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useBodyScrollLock } from '@/lib/hooks/useBodyScrollLock';
 import { ProBadge } from '@/components/ui/ProBadge';
+import Link from 'next/link';
 
 interface Message {
   id: string;
@@ -249,7 +250,7 @@ export function HelpAssistant() {
                 </button>
               </div>
 
-              {/* Tabs - AI Chat available for Pro users */}
+              {/* Tabs - AI Chat visibile a tutti per mostrare il valore */}
               <div className="flex border-b border-border-subtle bg-bg-soft">
                 <button
                   onClick={() => setActiveTab('faq')}
@@ -265,22 +266,25 @@ export function HelpAssistant() {
                     <span>{locale === 'it' ? 'FAQ' : 'FAQ'}</span>
                   </div>
                 </button>
-                {isPro && aiEnabled && (
-                  <button
-                    onClick={() => setActiveTab('ai')}
-                    className={cn(
-                      'flex-1 px-4 py-3 text-sm font-medium transition-colors',
-                      activeTab === 'ai'
-                        ? 'text-accent border-b-2 border-accent bg-bg-surface'
-                        : 'text-text-tertiary hover:text-text-primary'
+                <button
+                  onClick={() => setActiveTab('ai')}
+                  className={cn(
+                    'flex-1 px-4 py-3 text-sm font-medium transition-colors relative',
+                    activeTab === 'ai'
+                      ? 'text-accent border-b-2 border-accent bg-bg-surface'
+                      : 'text-text-tertiary hover:text-text-primary'
+                  )}
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <Sparkles className="w-4 h-4" />
+                    <span>{locale === 'it' ? 'AI Chat' : 'AI Chat'}</span>
+                    {!isPro && (
+                      <span className="ml-1 px-1.5 py-0.5 text-[10px] font-semibold bg-accent/20 text-accent rounded">
+                        Pro
+                      </span>
                     )}
-                  >
-                    <div className="flex items-center justify-center gap-2">
-                      <Sparkles className="w-4 h-4" />
-                      <span>{locale === 'it' ? 'AI Chat' : 'AI Chat'}</span>
-                    </div>
-                  </button>
-                )}
+                  </div>
+                </button>
               </div>
 
               {/* Content */}
@@ -339,7 +343,48 @@ export function HelpAssistant() {
                     )}
                   </div>
                 ) : (
-                  <div className="flex flex-col h-full">
+                  <div className="flex flex-col h-full relative">
+                    {/* Lock overlay per non-Pro */}
+                    {!isPro && (
+                      <div className="absolute inset-0 z-10 bg-bg-base/95 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center space-y-4">
+                        <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center">
+                          <Sparkles className="w-8 h-8 text-accent" />
+                        </div>
+                        <div className="space-y-2 max-w-sm">
+                          <h3 className="text-lg font-semibold text-text-primary">
+                            {locale === 'it' ? 'AI Chat Pro' : 'Pro AI Chat'}
+                          </h3>
+                          <p className="text-sm text-text-secondary">
+                            {locale === 'it' 
+                              ? 'Chiedi qualsiasi domanda finanziaria e ricevi risposte accurate basate sul nostro knowledge base Tradelia. L\'AI è personalizzata per fornire informazioni educative conformi MIFID II.'
+                              : 'Ask any financial question and get accurate answers based on our Tradelia knowledge base. The AI is customized to provide MIFID II compliant educational information.'}
+                          </p>
+                          <div className="flex items-center justify-center gap-2 text-xs text-text-tertiary mt-4">
+                            <Sparkles className="w-4 h-4 text-accent" />
+                            <span>
+                              {locale === 'it' 
+                                ? 'Risposte personalizzate, conformi MIFID II, basate su framework accademico'
+                                : 'Personalized answers, MIFID II compliant, based on academic framework'}
+                            </span>
+                          </div>
+                          <Link
+                            href="/pricing"
+                            className={cn(
+                              'mt-4 inline-flex items-center gap-2',
+                              'px-6 py-3 rounded-lg',
+                              'bg-gradient-to-r from-accent to-accent-hover',
+                              'text-white font-semibold text-sm',
+                              'hover:shadow-lg hover:scale-105',
+                              'transition-all duration-200'
+                            )}
+                          >
+                            <span>{locale === 'it' ? 'Passa a Pro' : 'Upgrade to Pro'}</span>
+                            <ArrowRight className="w-4 h-4" />
+                          </Link>
+                        </div>
+                      </div>
+                    )}
+                    
                     {/* Messages */}
                     <div className="flex-1 overflow-y-auto p-4 space-y-4">
                       <AnimatePresence>
@@ -411,14 +456,14 @@ export function HelpAssistant() {
                             className="w-full px-3 py-2 pr-10 bg-bg-soft border border-border-subtle rounded-xl text-sm text-text-primary placeholder-text-tertiary focus:outline-none focus:border-accent resize-none"
                             rows={1}
                             style={{ maxHeight: '120px' }}
-                            disabled={loading}
+                            disabled={loading || !isPro}
                           />
                           <button
                             onClick={handleSend}
-                            disabled={!input.trim() || loading}
+                            disabled={!input.trim() || loading || !isPro}
                             className={cn(
                               'absolute right-2 bottom-2 w-7 h-7 rounded-lg flex items-center justify-center transition-colors',
-                              input.trim() && !loading
+                              input.trim() && !loading && isPro
                                 ? 'bg-accent hover:bg-accent-hover text-white'
                                 : 'bg-bg-surface text-text-tertiary cursor-not-allowed'
                             )}
