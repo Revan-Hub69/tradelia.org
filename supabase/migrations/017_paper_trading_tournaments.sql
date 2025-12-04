@@ -494,6 +494,196 @@ INSERT INTO paper_trading_tournament_templates (
     5, 'sharpe_ratio', 0.5,
     20.0, 40.0,
     60, 'pro_access', 14, 10
+  ),
+  -- World Trading Championship Style
+  (
+    'World Trading Championship',
+    'Campionato Mondiale - Formato ispirato al World Cup Trading Championship',
+    'monthly',
+    100000, 2.0, 15.0,
+    25, 'composite', 1.2,
+    12.0, 50.0,
+    300, 'desk_access', 60, 10
+  ),
+  -- Top Trader Championship
+  (
+    'Top Trader Championship',
+    'Campionato Top Trader - Formato ispirato a competizioni internazionali',
+    'monthly',
+    50000, 1.5, 18.0,
+    15, 'sharpe_ratio', 0.8,
+    15.0, 45.0,
+    200, 'desk_access', 30, 10
+  ),
+  -- Futures Trading Championship Style
+  (
+    'Futures Trading Championship',
+    'Campionato Futures - Formato ispirato al Robbins World Cup',
+    'monthly',
+    100000, 2.0, 20.0,
+    20, 'total_return', 0.0,
+    20.0, 40.0,
+    250, 'desk_access', 45, 10
+  ),
+  -- US Investing Championship Style
+  (
+    'US Investing Championship',
+    'Campionato US Investing - Formato ispirato al US Investing Championship',
+    'monthly',
+    500000, 1.0, 10.0,
+    30, 'total_return', 0.0,
+    10.0, 50.0,
+    500, 'desk_access', 90, 5
+  ),
+  -- Daily Trading Challenge
+  (
+    'Daily Trading Challenge',
+    'Sfida Giornaliera - Trading intensivo 24h',
+    'daily',
+    10000, 2.5, 25.0,
+    5, 'total_return', 0.0,
+    25.0, 35.0,
+    30, 'pro_access', 3, 10
+  ),
+  -- Weekly Momentum Challenge
+  (
+    'Weekly Momentum Challenge',
+    'Sfida Momentum Settimanale - Focus su strategie momentum',
+    'weekly',
+    15000, 2.0, 22.0,
+    8, 'calmar_ratio', 0.6,
+    18.0, 42.0,
+    80, 'pro_access', 21, 8
+  ),
+  -- Monthly Consistency Challenge
+  (
+    'Monthly Consistency Challenge',
+    'Sfida Consistenza Mensile - Focus su win rate e drawdown',
+    'monthly',
+    25000, 1.5, 15.0,
+    12, 'composite', 0.7,
+    12.0, 48.0,
+    150, 'pro_access', 45, 10
+  ),
+  -- High Frequency Trading Challenge
+  (
+    'High Frequency Challenge',
+    'Sfida High Frequency - Minimo 20 trade, focus su frequenza',
+    'weekly',
+    20000, 2.0, 15.0,
+    20, 'sharpe_ratio', 0.6,
+    15.0, 40.0,
+    100, 'pro_access', 14, 10
+  ),
+  -- Swing Trading Championship
+  (
+    'Swing Trading Championship',
+    'Campionato Swing Trading - Focus su posizioni a medio termine',
+    'monthly',
+    30000, 1.0, 25.0,
+    8, 'calmar_ratio', 0.8,
+    20.0, 45.0,
+    120, 'pro_access', 30, 8
+  ),
+  -- Crypto Trading Championship
+  (
+    'Crypto Trading Championship',
+    'Campionato Crypto - Focus su criptovalute, volatilità alta',
+    'weekly',
+    20000, 3.0, 20.0,
+    10, 'sharpe_ratio', 0.5,
+    30.0, 35.0,
+    90, 'pro_access', 21, 10
+  ),
+  -- Forex Trading Championship
+  (
+    'Forex Trading Championship',
+    'Campionato Forex - Focus su coppie valutarie',
+    'weekly',
+    50000, 5.0, 15.0,
+    12, 'composite', 0.6,
+    15.0, 40.0,
+    110, 'pro_access', 14, 10
+  ),
+  -- Stock Picking Championship
+  (
+    'Stock Picking Championship',
+    'Campionato Stock Picking - Focus su selezione azioni',
+    'monthly',
+    100000, 1.0, 30.0,
+    15, 'total_return', 0.0,
+    25.0, 40.0,
+    180, 'desk_access', 30, 10
+  ),
+  -- Options Trading Championship
+  (
+    'Options Trading Championship',
+    'Campionato Options - Focus su strategie opzioni',
+    'monthly',
+    50000, 1.0, 20.0,
+    10, 'sharpe_ratio', 0.7,
+    20.0, 45.0,
+    200, 'desk_access', 21, 8
+  ),
+  -- Risk-Free Championship
+  (
+    'Risk-Free Championship',
+    'Campionato Risk-Free - Max drawdown limitato al 5%',
+    'monthly',
+    100000, 1.0, 10.0,
+    20, 'calmar_ratio', 1.0,
+    5.0, 50.0,
+    400, 'desk_access', 60, 5
+  ),
+  -- Speed Trading Challenge
+  (
+    'Speed Trading Challenge',
+    'Sfida Speed Trading - Minimo 50 trade in 7 giorni',
+    'weekly',
+    10000, 2.0, 10.0,
+    50, 'total_return', 0.0,
+    20.0, 30.0,
+    70, 'pro_access', 7, 15
+  ),
+  -- Beginner Bootcamp
+  (
+    'Beginner Bootcamp',
+    'Bootcamp Principianti - Torneo educativo con regole semplici',
+    'weekly',
+    3000, 1.0, 30.0,
+    1, 'total_return', 0.0,
+    30.0, 25.0,
+    5, 'xp_pool', 0, 20
+  ),
+  -- Intermediate Challenge
+  (
+    'Intermediate Challenge',
+    'Sfida Intermedia - Per trader con esperienza base',
+    'weekly',
+    7500, 1.5, 25.0,
+    3, 'sharpe_ratio', 0.3,
+    25.0, 35.0,
+    20, 'pro_access', 7, 15
+  ),
+  -- Advanced Masters
+  (
+    'Advanced Masters',
+    'Masters Avanzati - Per trader esperti',
+    'monthly',
+    75000, 1.5, 12.0,
+    25, 'composite', 1.0,
+    10.0, 50.0,
+    350, 'desk_access', 45, 5
+  ),
+  -- Grand Prix Trading
+  (
+    'Grand Prix Trading',
+    'Grand Prix Trading - Formato ispirato a competizioni automobilistiche',
+    'monthly',
+    200000, 1.0, 8.0,
+    40, 'composite', 1.5,
+    8.0, 55.0,
+    600, 'desk_access', 90, 3
   )
 ON CONFLICT (name) DO NOTHING;
 
