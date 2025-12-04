@@ -86,7 +86,11 @@ export function FinancialCalculator() {
     
     if (!PMT || !r || !t) return;
     
-    const FV = PMT * ((Math.pow(1 + r, t) - 1) / r);
+    // Formula rendita: FV = PMT * (((1 + r)^t - 1) / r)
+    // Con protezione da divisione per zero
+    const FV = r > 0 
+      ? PMT * ((Math.pow(1 + r, t) - 1) / r)
+      : PMT * t; // Se r = 0, FV = PMT * t
     setResult(FV);
   };
 

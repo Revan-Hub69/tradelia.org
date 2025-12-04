@@ -32,8 +32,10 @@ export function SharpeRatioCalculator() {
     // Calcolo media rendimenti
     const avgReturn = returnsList.reduce((sum, r) => sum + r, 0) / returnsList.length;
     
-    // Calcolo deviazione standard
-    const variance = returnsList.reduce((sum, r) => sum + Math.pow(r - avgReturn, 2), 0) / returnsList.length;
+    // Calcolo deviazione standard campionaria (usa n-1 per correzione di Bessel)
+    const variance = returnsList.length > 1
+      ? returnsList.reduce((sum, r) => sum + Math.pow(r - avgReturn, 2), 0) / (returnsList.length - 1)
+      : 0;
     const stdDev = Math.sqrt(variance);
     
     // Sharpe Ratio = (Return - RiskFreeRate) / StdDev

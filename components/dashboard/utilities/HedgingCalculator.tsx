@@ -39,11 +39,21 @@ export function HedgingCalculator() {
 
     // Calcolo hedging ottimale
     // Hedge Amount = Portfolio Value × Hedge Ratio
-    const hedgeAmount = portfolio * ratio;
+    const hedgeAmount = portfolio * (ratio / 100);
     
-    // Risk Reduction = 1 - (1 - correlation^2) × (1 - hedge_ratio^2)
-    const riskReduction = 1 - (1 - Math.pow(corr, 2)) * (1 - Math.pow(ratio, 2));
-    const riskReductionPercent = riskReduction * 100;
+    // Riduzione rischio usando formula varianza portafoglio hedged
+    // σ²_hedged = w²_p * σ²_p + w²_h * σ²_h + 2 * w_p * w_h * σ_p * σ_h * ρ
+    // Assumendo stessa volatilità per portafoglio e hedge (σ_p = σ_h = 1 per semplicità)
+    // e pesi normalizzati: w_p = 1 - ratio/100, w_h = ratio/100
+    const w_p = 1 - (ratio / 100);
+    const w_h = ratio / 100;
+    // Varianza portafoglio hedged (normalizzata)
+    const varianceHedged = Math.pow(w_p, 2) + Math.pow(w_h, 2) + 2 * w_p * w_h * corr;
+    // Varianza portafoglio originale (normalizzata a 1)
+    const varianceOriginal = 1;
+    // Riduzione rischio = (σ_original - σ_hedged) / σ_original
+    const riskReduction = 1 - Math.sqrt(varianceHedged);
+    const riskReductionPercent = Math.max(0, Math.min(100, riskReduction * 100));
     
     // Costo hedging annuale
     const annualCost = hedgeAmount * cost;

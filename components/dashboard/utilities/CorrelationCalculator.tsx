@@ -38,16 +38,20 @@ export function CorrelationCalculator() {
     const mean1 = returns1.reduce((sum, r) => sum + r, 0) / returns1.length;
     const mean2 = returns2.reduce((sum, r) => sum + r, 0) / returns2.length;
 
-    // Calcolo covarianza
+    // Calcolo covarianza campionaria (usa n-1 per correzione di Bessel)
     let covariance = 0;
     for (let i = 0; i < returns1.length; i++) {
       covariance += (returns1[i] - mean1) * (returns2[i] - mean2);
     }
-    covariance = covariance / returns1.length;
+    covariance = returns1.length > 1 ? covariance / (returns1.length - 1) : 0;
 
-    // Calcolo deviazioni standard
-    const variance1 = returns1.reduce((sum, r) => sum + Math.pow(r - mean1, 2), 0) / returns1.length;
-    const variance2 = returns2.reduce((sum, r) => sum + Math.pow(r - mean2, 2), 0) / returns2.length;
+    // Calcolo deviazioni standard campionarie (usa n-1 per correzione di Bessel)
+    const variance1 = returns1.length > 1 
+      ? returns1.reduce((sum, r) => sum + Math.pow(r - mean1, 2), 0) / (returns1.length - 1)
+      : 0;
+    const variance2 = returns2.length > 1
+      ? returns2.reduce((sum, r) => sum + Math.pow(r - mean2, 2), 0) / (returns2.length - 1)
+      : 0;
     const stdDev1 = Math.sqrt(variance1);
     const stdDev2 = Math.sqrt(variance2);
 

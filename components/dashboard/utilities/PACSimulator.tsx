@@ -42,9 +42,12 @@ export function PACSimulator() {
     const totalPeriods = periods * periodsPerYear;
     const periodReturn = returnRate / periodsPerYear;
 
-    // Calcolo interesse composto
+    // Calcolo interesse composto (rendita)
     // FV = PMT * (((1 + r)^n - 1) / r)
-    const futureValue = amount * (((Math.pow(1 + periodReturn, totalPeriods) - 1) / periodReturn));
+    // Con protezione da divisione per zero
+    const futureValue = periodReturn > 0
+      ? amount * (((Math.pow(1 + periodReturn, totalPeriods) - 1) / periodReturn))
+      : amount * totalPeriods; // Se r = 0, FV = PMT * n
     const totalInvested = amount * totalPeriods;
     const totalReturn = futureValue - totalInvested;
     const returnPercentage = (totalReturn / totalInvested) * 100;
@@ -53,7 +56,9 @@ export function PACSimulator() {
     const yearlyData = [];
     for (let year = 1; year <= periods; year++) {
       const yearPeriods = year * periodsPerYear;
-      const yearFV = amount * (((Math.pow(1 + periodReturn, yearPeriods) - 1) / periodReturn));
+      const yearFV = periodReturn > 0
+        ? amount * (((Math.pow(1 + periodReturn, yearPeriods) - 1) / periodReturn))
+        : amount * yearPeriods; // Se r = 0, FV = PMT * n
       const yearInvested = amount * yearPeriods;
       yearlyData.push({
         year,
@@ -102,7 +107,10 @@ export function PACSimulator() {
     const periodReturn = returnRate / periodsPerYear;
 
     // Formula inversa: PMT = FV * (r / ((1 + r)^n - 1))
-    const monthlyPayment = target * (periodReturn / (Math.pow(1 + periodReturn, totalPeriods) - 1));
+    // Con protezione da divisione per zero
+    const monthlyPayment = periodReturn > 0 && Math.pow(1 + periodReturn, totalPeriods) > 1
+      ? target * (periodReturn / (Math.pow(1 + periodReturn, totalPeriods) - 1))
+      : target / totalPeriods; // Se r = 0 o n = 0, PMT = FV / n
 
     return {
       monthly: monthlyPayment,

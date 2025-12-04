@@ -64,9 +64,9 @@ export function PortfolioOptimizer() {
     
     const portfolioVolatility = Math.sqrt(portfolioVariance) * 100;
     
-    // Sharpe Ratio
+    // Sharpe Ratio (senza moltiplicare per 100 - è già un rapporto)
     const sharpeRatio = portfolioVolatility > 0 
-      ? ((portfolioReturn - rf) / portfolioVolatility) * 100 
+      ? (portfolioReturn - rf) / portfolioVolatility
       : 0;
 
     // Diversificazione (quanto il portafoglio è diversificato)

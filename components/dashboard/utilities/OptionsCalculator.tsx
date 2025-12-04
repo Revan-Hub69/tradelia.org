@@ -92,13 +92,20 @@ export function OptionsCalculator() {
     const expNegD1Sq = Math.exp(-0.5 * d1 * d1);
     
     const delta = optionType === 'call' ? expNegQ * N_d1 : -expNegQ * N_neg_d1;
+    // Gamma = e^(-qT) * φ(d1) / (S * σ * √(2πT))
+    // dove φ(d1) = e^(-0.5*d1²) / √(2π)
+    // Quindi: Gamma = e^(-qT) * e^(-0.5*d1²) / (S * σ * √(2πT))
     const gamma = sqrt2PiT > 0 ? (expNegQ * expNegD1Sq) / (S * sigma * sqrt2PiT) : 0;
     const theta = sqrt2PiT > 0 
       ? (-(S * expNegQ * expNegD1Sq * sigma) / (2 * sqrt2PiT) 
         - r * K * expNegR * (optionType === 'call' ? N_d2 : N_neg_d2)
         + q * S * expNegQ * (optionType === 'call' ? N_d1 : N_neg_d1)) / 365
       : 0;
-    const vega = sqrt2PiT > 0 ? (S * expNegQ * expNegD1Sq * sqrtT) / (100 * sqrt2PiT) : 0;
+    // Vega = S * e^(-qT) * φ(d1) * √T / 100
+    // dove φ(d1) = e^(-0.5*d1²) / √(2π)
+    // Quindi: Vega = S * e^(-qT) * e^(-0.5*d1²) * √T / (100 * √(2π))
+    const sqrt2Pi = Math.sqrt(2 * Math.PI);
+    const vega = sqrt2Pi > 0 ? (S * expNegQ * expNegD1Sq * sqrtT) / (100 * sqrt2Pi) : 0;
     const rho = (K * T * expNegR * (optionType === 'call' ? N_d2 : -N_neg_d2)) / 100;
 
     // Moneyness
