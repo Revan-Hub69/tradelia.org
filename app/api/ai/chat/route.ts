@@ -4,11 +4,16 @@ import { TRADELIA_BRAND_VOICE_MATRIX } from '@/lib/ai/tradelia-brand-voice-matri
 
 /**
  * AI Chat API
- * Uses Groq AI (free tier: 14,400 requests/day) for real AI responses
+ * Uses Groq AI for real AI responses
  * Fully customized with Tradelia brand voice and communication style
  * Fallback to template responses if API key not configured
  * 
- * Get free API key: https://console.groq.com/
+ * Pricing:
+ * - llama-3.3-70b-versatile: $0.59/1M tokens input, $0.79/1M tokens output
+ * - Free tier: 14,400 requests/day (but tokens are still charged)
+ * - Alternative: llama-3.1-8b-instant ($0.05/$0.08 per 1M tokens) for lower cost
+ * 
+ * Get API key: https://console.groq.com/
  */
 
 interface ChatMessage {
