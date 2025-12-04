@@ -343,7 +343,11 @@ export default function UtilitiesPage() {
                             canAccess ? 'text-accent' : 'text-text-tertiary'
                           )} aria-hidden="true" />
                         </div>
-                        <div onClick={(e) => e.stopPropagation()}>
+                        <div 
+                          onClick={(e) => e.stopPropagation()}
+                          onMouseEnter={(e) => e.stopPropagation()}
+                          className="relative z-10"
+                        >
                           <ProBadge size="sm" />
                         </div>
                       </div>
@@ -400,7 +404,11 @@ export default function UtilitiesPage() {
                             canAccess ? 'text-accent' : 'text-text-tertiary'
                           )} aria-hidden="true" />
                         </div>
-                        <div onClick={(e) => e.stopPropagation()}>
+                        <div 
+                          onClick={(e) => e.stopPropagation()}
+                          onMouseEnter={(e) => e.stopPropagation()}
+                          className="relative z-10"
+                        >
                           <ProBadge size="sm" />
                         </div>
                       </div>
@@ -457,7 +465,11 @@ export default function UtilitiesPage() {
                             canAccess ? 'text-accent' : 'text-text-tertiary'
                           )} aria-hidden="true" />
                         </div>
-                        <div onClick={(e) => e.stopPropagation()}>
+                        <div 
+                          onClick={(e) => e.stopPropagation()}
+                          onMouseEnter={(e) => e.stopPropagation()}
+                          className="relative z-10"
+                        >
                           <ProBadge size="sm" />
                         </div>
                       </div>

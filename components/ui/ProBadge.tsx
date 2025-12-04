@@ -46,10 +46,15 @@ export function ProBadge({ onClick, className, size = 'md', showTooltip = true }
           'text-white shadow-md hover:shadow-lg',
           'transition-all duration-200 hover:scale-105',
           'border border-amber-300/50',
+          'relative z-10',
           sizeClasses[size],
           className
         )}
         aria-label="Funzionalità Pro - Clicca per maggiori informazioni"
+        onMouseEnter={(e) => {
+          // Previeni tooltip quando si passa sopra il badge
+          e.stopPropagation();
+        }}
       >
         <Crown className={cn(
           size === 'sm' ? 'w-2.5 h-2.5' : size === 'md' ? 'w-3 h-3' : 'w-3.5 h-3.5'
@@ -66,7 +71,7 @@ export function ProBadge({ onClick, className, size = 'md', showTooltip = true }
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowModal(false)}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200]"
             />
 
             {/* Modal */}
@@ -74,7 +79,7 @@ export function ProBadge({ onClick, className, size = 'md', showTooltip = true }
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              className="fixed inset-0 z-[200] flex items-center justify-center p-4"
               onClick={() => setShowModal(false)}
             >
               <div

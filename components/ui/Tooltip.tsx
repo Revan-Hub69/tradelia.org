@@ -103,7 +103,7 @@ export function Tooltip({
         <div
           ref={tooltipRef}
           className={cn(
-            'absolute z-50 px-3 py-2 text-xs font-medium text-white bg-bg-elevated border border-border-subtle rounded-lg shadow-lg pointer-events-none',
+            'fixed z-[100] px-3 py-2 text-xs font-medium text-white bg-bg-elevated border border-border-subtle rounded-lg shadow-lg pointer-events-none',
             'max-w-xs text-text-primary',
             className
           )}
