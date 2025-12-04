@@ -46,16 +46,23 @@ export const ModuleGrid = memo(function ModuleGrid({ priority }: ModuleGridProps
   const filteredModules = useMemo(() => {
     // Assicurati che modulesData sia sempre un array
     if (!modulesData || !Array.isArray(modulesData)) return [];
-    return priority 
-      ? modulesData.filter(m => m.priority === priority)
-      : modulesData;
+    
+    // Se priority è specificato, filtra per priorità
+    if (priority) {
+      return modulesData.filter(m => m.priority === priority);
+    }
+    
+    // Best Practice 2024-2025: Organizza moduli per priorità (primary prima, secondary dopo)
+    const primary = modulesData.filter(m => m.priority === 'primary');
+    const secondary = modulesData.filter(m => m.priority === 'secondary');
+    return [...primary, ...secondary];
   }, [modulesData, priority]);
 
   const title = priority === 'primary' 
     ? 'Moduli Principali' 
     : priority === 'secondary'
     ? 'Moduli Secondari'
-    : 'Moduli';
+    : 'Moduli e Funzionalità';
 
   if (loading) {
     return (
@@ -102,16 +109,20 @@ export const ModuleGrid = memo(function ModuleGrid({ priority }: ModuleGridProps
       <div className="flex items-center gap-2 mb-4">
         <h2 className={styles.categoryTitle}>{title}</h2>
         <ContextualHelp
-          content={priority === 'primary' 
-            ? 'I moduli principali contengono le funzionalità più utilizzate. Clicca su un modulo per accedere.'
-            : 'I moduli secondari contengono funzionalità aggiuntive e avanzate.'}
+          content={priority 
+            ? (priority === 'primary' 
+                ? 'I moduli principali contengono le funzionalità più utilizzate. Clicca su un modulo per accedere.'
+                : 'I moduli secondari contengono funzionalità aggiuntive e avanzate.')
+            : 'Accedi a tutte le funzionalità della dashboard. I moduli principali sono mostrati per primi.'}
           aria-label="Informazioni sui moduli"
         />
       </div>
       <div 
         className={styles.modulesGrid}
         role="list"
-        aria-label={priority === 'primary' ? 'Moduli principali della dashboard' : 'Moduli secondari della dashboard'}
+        aria-label={priority 
+          ? (priority === 'primary' ? 'Moduli principali della dashboard' : 'Moduli secondari della dashboard')
+          : 'Moduli e funzionalità della dashboard'}
       >
         {filteredModules.map((module) => (
           <ModuleCard key={module.id} module={module} />

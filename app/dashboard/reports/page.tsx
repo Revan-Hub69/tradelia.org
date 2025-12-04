@@ -11,6 +11,7 @@ import { ErrorState } from '@/components/dashboard/ErrorState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { DownloadPDFModal } from '@/components/dashboard/modals/DownloadPDFModal';
 import { ReportDetailModal } from '@/components/dashboard/modals/ReportDetailModal';
+import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
 import Link from 'next/link';
 import { buildLocalePath } from '@/lib/i18n/paths';
 
@@ -98,8 +99,10 @@ export default function ReportsPage() {
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-7xl mx-auto">
-      {/* Header */}
+    <div className="min-h-screen bg-bg-base">
+      <DashboardTabs />
+      <div className="p-6 max-w-7xl mx-auto">
+        {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
           <h1 className="text-3xl font-bold text-text-primary flex items-center gap-3">
@@ -261,6 +264,7 @@ export default function ReportsPage() {
         }}
         reportId={selectedReportId || undefined}
       />
+      </div>
     </div>
   );
 }

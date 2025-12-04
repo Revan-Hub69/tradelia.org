@@ -30,6 +30,7 @@ export const RecentActivity = memo(function RecentActivity() {
   const { t, locale } = useTranslations();
   const isClient = useIsClient();
   const [filter, setFilter] = useState<string>('all');
+  const [isExpanded, setIsExpanded] = useState(false); // Best Practice: Progressive disclosure
 
   interface ActivityData {
     id: string;
@@ -167,6 +168,9 @@ export const RecentActivity = memo(function RecentActivity() {
     );
   }
 
+  // Best Practice 2024-2025: Progressive disclosure - mostra solo prime 3 attività, espandibile
+  const visibleActivities = isExpanded ? activities : activities.slice(0, 3);
+
   return (
     <section className="mb-8" aria-label={t('dashboard.activity.title') || 'Attività recenti'}>
       <div className="flex items-center justify-between mb-4">
@@ -188,9 +192,9 @@ export const RecentActivity = memo(function RecentActivity() {
           </select>
         </div>
       </div>
-      {activities.length > 10 ? (
+      {visibleActivities.length > 10 ? (
         <VirtualizedList
-          items={activities}
+          items={visibleActivities}
           renderItem={(activity, index) => (
             <motion.div
               initial={{ opacity: 0, x: -10 }}
@@ -230,7 +234,7 @@ export const RecentActivity = memo(function RecentActivity() {
         />
       ) : (
         <div className="space-y-2">
-          {activities.map((activity, index) => (
+          {visibleActivities.map((activity, index) => (
             <motion.div
               key={activity.id}
               initial={{ opacity: 0, x: -10 }}
@@ -266,15 +270,22 @@ export const RecentActivity = memo(function RecentActivity() {
           ))}
         </div>
       )}
-      {activities.length >= 3 && (
+      {activities.length > 3 && (
         <div className="mt-4 text-center">
-          <Link
-            href="/dashboard"
-            className="text-sm text-accent hover:text-accent-hover inline-flex items-center gap-1"
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-sm text-accent hover:text-accent-hover inline-flex items-center gap-1 transition-colors"
+            aria-label={isExpanded 
+              ? t('dashboard.activity.showLess') || 'Mostra meno attività'
+              : t('dashboard.activity.showMore') || `Mostra altre ${activities.length - 3} attività`}
+            aria-expanded={isExpanded}
           >
-            {t('dashboard.activity.viewAll') || 'Vedi tutte le attività'}
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+            {isExpanded 
+              ? (t('dashboard.activity.showLess') || 'Mostra meno')
+              : (t('dashboard.activity.showMore') || `Mostra altre (${activities.length - 3})`)
+            }
+            <ArrowRight className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+          </button>
         </div>
       )}
     </section>

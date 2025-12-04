@@ -11,6 +11,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/button';
 import { RequestDetailModal } from '@/components/dashboard/modals/RequestDetailModal';
 import { toast } from '@/components/ui/Toast';
+import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import { it as itLocale, enUS as enLocale } from 'date-fns/locale';
@@ -163,8 +164,10 @@ export default function RequestsPage() {
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-7xl mx-auto">
-      {/* Header */}
+    <div className="min-h-screen bg-bg-base">
+      <DashboardTabs />
+      <div className="p-6 max-w-7xl mx-auto">
+        {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-text-primary mb-2 flex items-center gap-3">
@@ -300,6 +303,7 @@ export default function RequestsPage() {
         }}
         requestId={selectedRequestId || undefined}
       />
+      </div>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { FinancialCalculator } from '@/components/dashboard/utilities/FinancialCalculator';
 import { PACSimulator } from '@/components/dashboard/utilities/PACSimulator';
 import { ExpenseTracker } from '@/components/dashboard/utilities/ExpenseTracker';
+import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
 import { Calculator, TrendingUp, Receipt } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import styles from './utilities.module.css';
@@ -33,8 +34,10 @@ export default function UtilitiesPage() {
   ];
 
   return (
-    <div className={styles.utilitiesContainer}>
-      <header className={styles.utilitiesHeader}>
+    <div className="min-h-screen bg-bg-base">
+      <DashboardTabs />
+      <div className={styles.utilitiesContainer}>
+        <header className={styles.utilitiesHeader}>
         <h1 className={styles.utilitiesTitle}>
           {t('dashboard.utilities.title') || 'Utilities'}
         </h1>
@@ -93,6 +96,7 @@ export default function UtilitiesPage() {
           <ExpenseTracker />
         </div>
       </main>
+      </div>
     </div>
   );
 }

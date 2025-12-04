@@ -8,11 +8,8 @@ import { DashboardHero } from './DashboardHero';
 import { OverviewStats } from './OverviewStats';
 import { ModuleGrid } from './ModuleGrid';
 import { AccountBanner } from './AccountBanner';
-import { QuickLinks } from './QuickLinks';
-import { RecentActivity } from './RecentActivity';
 import { QuickActions } from './QuickActions';
-import { Favorites } from './Favorites';
-import { ProgressTracking } from './ProgressTracking';
+import { RecentActivity } from './RecentActivity';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { SkipLink } from '@/components/ui/SkipLink';
@@ -231,24 +228,8 @@ export function DashboardShell() {
           <ErrorBoundary>
             <DashboardHero />
           </ErrorBoundary>
-          <section 
-            aria-label="Risorse rapide" 
-            className={styles.dashboardSection}
-            id="quick-links"
-          >
-            <ErrorBoundary>
-              <QuickLinks />
-            </ErrorBoundary>
-          </section>
-          <section 
-            aria-label="Azioni rapide" 
-            className={styles.dashboardSection}
-            id="quick-actions"
-          >
-            <ErrorBoundary>
-              <QuickActions />
-            </ErrorBoundary>
-          </section>
+          
+          {/* Statistiche chiave - Best Practice: 4-6 metriche essenziali */}
           <section 
             aria-label="Panoramica accademica" 
             className={styles.dashboardSection}
@@ -259,6 +240,30 @@ export function DashboardShell() {
               <OverviewStats />
             </ErrorBoundary>
           </section>
+
+          {/* Azioni rapide - Best Practice: azioni principali accessibili */}
+          <section 
+            aria-label="Azioni rapide" 
+            className={styles.dashboardSection}
+            id="quick-actions"
+          >
+            <ErrorBoundary>
+              <QuickActions />
+            </ErrorBoundary>
+          </section>
+
+          {/* Moduli unificati - Best Practice: organizzazione gerarchica */}
+          <section 
+            aria-label="Moduli e funzionalità" 
+            className={styles.dashboardSection}
+            id="modules"
+          >
+            <ErrorBoundary>
+              <ModuleGrid />
+            </ErrorBoundary>
+          </section>
+
+          {/* Attività recenti - Best Practice: progressive disclosure (collassabile) */}
           <section 
             aria-label="Attività recenti" 
             className={styles.dashboardSection}
@@ -266,42 +271,6 @@ export function DashboardShell() {
           >
             <ErrorBoundary>
               <RecentActivity />
-            </ErrorBoundary>
-          </section>
-          <section 
-            aria-label="Preferiti" 
-            className={styles.dashboardSection}
-            id="favorites"
-          >
-            <ErrorBoundary>
-              <Favorites />
-            </ErrorBoundary>
-          </section>
-          <section 
-            aria-label="Progresso" 
-            className={styles.dashboardSection}
-            id="progress"
-          >
-            <ErrorBoundary>
-              <ProgressTracking />
-            </ErrorBoundary>
-          </section>
-          <section 
-            aria-label="Moduli principali" 
-            className={styles.dashboardSection}
-            id="primary-modules"
-          >
-            <ErrorBoundary>
-              <ModuleGrid priority="primary" />
-            </ErrorBoundary>
-          </section>
-          <section 
-            aria-label="Moduli secondari" 
-            className={styles.dashboardSection}
-            id="secondary-modules"
-          >
-            <ErrorBoundary>
-              <ModuleGrid priority="secondary" />
             </ErrorBoundary>
           </section>
         </div>
