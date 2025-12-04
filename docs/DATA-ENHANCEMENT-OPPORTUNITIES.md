@@ -3,6 +3,10 @@
 ## Overview
 Analisi di cosa possiamo fare meglio con i dati già disponibili, senza costi aggiuntivi.
 
+**IMPORTANTE**: Le analytics complesse (Performance Attribution, Strategy Comparison, Risk Decomposition, Trade Patterns) sono state rimosse dal free tier e sono ora **Pro Feature a pagamento**. 
+
+Il focus attuale è su **feed semplici** con letture Groq AI (prezzi, volumi, crescita/discesa) per crypto market depth.
+
 ## Dati Disponibili
 
 ### 1. Paper Trading Data
@@ -34,55 +38,45 @@ Analisi di cosa possiamo fare meglio con i dati già disponibili, senza costi ag
 
 ## Enhancement Opportunities (Zero Budget)
 
-### 1. Advanced Analytics Dashboard ⭐⭐⭐
-**Descrizione**: Dashboard analitica avanzata per paper trading
+### ⚠️ PRO FEATURE - Analytics Complesse
+Le seguenti analytics sono state rimosse dal free tier e sono disponibili come **Pro Feature a pagamento**:
+- ❌ Performance Attribution (analisi rendimento per strategia/asset/timeframe)
+- ❌ Strategy Performance Comparison (confronto multi-strategia)
+- ❌ Risk Decomposition (scomposizione rischio portafoglio)
+- ❌ Trade Pattern Analysis (pattern identificati nei trade)
 
-**Features**:
-- **Performance Attribution**: Analisi rendimento per strategia, asset, timeframe
-- **Correlation Analysis**: Correlazioni tra posizioni, asset, strategie
-- **Drawdown Analysis**: Analisi drawdown per periodo, strategia, asset
-- **Win/Loss Patterns**: Pattern identificati nei trade (giorno settimana, ora, etc.)
-- **Risk Metrics Advanced**: VaR, CVaR, Maximum Adverse Excursion (MAE)
-- **Benchmarking**: Confronto con benchmark (S&P 500, BTC, etc.)
-
-**Dati Usati**:
-- `paper_trading_history` (tutti i trade chiusi)
-- `paper_trading_positions` (posizioni aperte)
-- Price data (per calcoli avanzati)
-
-**Academic References**:
-- Sortino (1994) - Downside risk metrics
-- Kritzman & Li (2010) - Portfolio risk analytics
-- Prado (2018) - Advanced risk metrics
-
-**Status**: ✅ Pronto per implementazione
+**Motivazione**: Analytics troppo complesse per free tier. Disponibili come upgrade Pro.
 
 ---
 
-### 2. Strategy Performance Comparison ⭐⭐⭐
-**Descrizione**: Confronto performance tra strategie diverse
+### 1. Crypto Market Depth Feed (Simple) ⭐⭐⭐
+**Descrizione**: Feed semplice profondità di mercato crypto con letture Groq AI
 
 **Features**:
-- **Multi-Strategy Analysis**: Confronta performance di strategie diverse
-- **Strategy Ranking**: Ranking strategie per Sharpe, Return, Win Rate
-- **Strategy Correlation**: Correlazioni tra strategie
-- **Optimal Strategy Mix**: Suggerimenti mix ottimale (Markowitz)
-- **Strategy Attribution**: Contributo di ogni strategia al rendimento totale
+- **Simple Feed**: Prezzi, volumi, crescita/discesa, order book depth
+- **Groq AI Readings**: Letture semplici (NO analisi complesse)
+  - Market Overview (2-3 frasi descrittive)
+  - Notable Movements (solo numeri, no interpretazione)
+  - Volume Highlights (solo dati)
+- **Top 400 Crypto**: Monitoraggio top 400 crypto
+- **Order Book Depth**: Profondità order book da Binance (L400)
 
 **Dati Usati**:
-- `paper_trading_history.strategy` (strategia per trade)
-- Performance metrics per strategia
+- CoinGecko API (prezzi, volumi, cambi 24h)
+- Binance API (order book depth)
+- Groq AI (letture semplici)
 
 **Academic References**:
-- Markowitz (1952) - Portfolio optimization
-- Sharpe (1964) - Risk-adjusted returns
-- Fama & French (1992) - Factor models
+- Kyle (1985) - Market microstructure
+- Glosten & Milgrom (1985) - Bid-ask spread theory
 
-**Status**: ✅ Pronto per implementazione
+**Status**: ✅ Implementato (`/api/crypto/top-400-depth`)
+
+**Note**: Solo letture semplici, NO analisi complesse. Analytics avanzate sono Pro feature.
 
 ---
 
-### 3. Market Regime Detection ⭐⭐
+### 2. Market Regime Detection ⭐⭐
 **Descrizione**: Identificazione regime di mercato (trending, ranging, volatile)
 
 **Features**:
@@ -104,7 +98,7 @@ Analisi di cosa possiamo fare meglio con i dati già disponibili, senza costi ag
 
 ---
 
-### 4. Portfolio Heatmap & Visualization ⭐⭐
+### 3. Portfolio Heatmap & Visualization ⭐⭐
 **Descrizione**: Visualizzazioni avanzate portafoglio
 
 **Features**:
@@ -123,7 +117,7 @@ Analisi di cosa possiamo fare meglio con i dati già disponibili, senza costi ag
 
 ---
 
-### 5. Trade Journal Analytics ⭐⭐⭐
+### 4. Trade Journal Analytics ⭐⭐⭐
 **Descrizione**: Analisi avanzata journal trading
 
 **Features**:
@@ -145,7 +139,7 @@ Analisi di cosa possiamo fare meglio con i dati già disponibili, senza costi ag
 
 ---
 
-### 6. Comparative Analytics (Tournament vs Personal) ⭐⭐
+### 5. Comparative Analytics (Tournament vs Personal) ⭐⭐
 **Descrizione**: Confronto performance torneo vs paper trading personale
 
 **Features**:
@@ -162,31 +156,14 @@ Analisi di cosa possiamo fare meglio con i dati già disponibili, senza costi ag
 
 ---
 
-### 7. Risk Decomposition ⭐⭐⭐
+### 6. Risk Decomposition ⭐⭐⭐
 **Descrizione**: Scomposizione rischio portafoglio
 
-**Features**:
-- **Risk by Asset**: Contributo rischio per asset
-- **Risk by Strategy**: Contributo rischio per strategia
-- **Systematic vs Idiosyncratic**: Rischio sistematico vs specifico
-- **Factor Exposure**: Esposizione a fattori di rischio
-- **Stress Testing**: Test scenari (market crash, volatility spike)
-
-**Dati Usati**:
-- `paper_trading_positions` (esposizione corrente)
-- Price data (per calcoli rischio)
-- Correlations (per rischio sistematico)
-
-**Academic References**:
-- Litterman (1996) - Risk decomposition
-- Jorion (2007) - Value at Risk
-- Meucci (2009) - Risk and Asset Allocation
-
-**Status**: ✅ Pronto (calcoli locali)
+**Status**: ⚠️ **PRO FEATURE** - Analytics complessa, disponibile a pagamento
 
 ---
 
-### 8. Predictive Analytics (Descriptive Only) ⭐⭐
+### 7. Predictive Analytics (Descriptive Only) ⭐⭐
 **Descrizione**: Analisi predittiva descrittiva (NON predizioni)
 
 **Features**:
@@ -209,7 +186,7 @@ Analisi di cosa possiamo fare meglio con i dati già disponibili, senza costi ag
 
 ---
 
-### 9. Social Learning Analytics ⭐
+### 8. Social Learning Analytics ⭐
 **Descrizione**: Insights da dati aggregati (anonimi)
 
 **Features**:
@@ -228,7 +205,7 @@ Analisi di cosa possiamo fare meglio con i dati già disponibili, senza costi ag
 
 ---
 
-### 10. Real-Time Alerts & Notifications ⭐⭐
+### 9. Real-Time Alerts & Notifications ⭐⭐
 **Descrizione**: Alert intelligenti basati su dati reali
 
 **Features**:
@@ -248,21 +225,24 @@ Analisi di cosa possiamo fare meglio con i dati già disponibili, senza costi ag
 
 ## Priorità Implementazione
 
-### High Priority (Immediate Value)
-1. **Advanced Analytics Dashboard** ⭐⭐⭐
-2. **Strategy Performance Comparison** ⭐⭐⭐
-3. **Risk Decomposition** ⭐⭐⭐
-4. **Trade Journal Analytics** ⭐⭐⭐
+### ✅ Implementato (Free Tier)
+1. **Crypto Market Depth Feed** ⭐⭐⭐ - Feed semplice con letture Groq AI
 
-### Medium Priority (High Value)
-5. **Portfolio Heatmap & Visualization** ⭐⭐
-6. **Comparative Analytics** ⭐⭐
-7. **Real-Time Alerts** ⭐⭐
+### ⚠️ Pro Feature (A Pagamento)
+- **Advanced Analytics Dashboard** ⭐⭐⭐
+- **Strategy Performance Comparison** ⭐⭐⭐
+- **Risk Decomposition** ⭐⭐⭐
+- **Trade Pattern Analysis** ⭐⭐⭐
 
-### Low Priority (Nice to Have)
-8. **Market Regime Detection** ⭐⭐
-9. **Predictive Analytics (Descriptive)** ⭐⭐
-10. **Social Learning Analytics** ⭐
+### Medium Priority (High Value - Free Tier)
+2. **Portfolio Heatmap & Visualization** ⭐⭐
+3. **Comparative Analytics** ⭐⭐
+4. **Real-Time Alerts** ⭐⭐
+
+### Low Priority (Nice to Have - Free Tier)
+5. **Market Regime Detection** ⭐⭐
+6. **Predictive Analytics (Descriptive)** ⭐⭐
+7. **Social Learning Analytics** ⭐
 
 ---
 
@@ -278,12 +258,14 @@ Analisi di cosa possiamo fare meglio con i dati già disponibili, senza costi ag
 - Server-side per calcoli complessi
 - Caching per risultati costosi
 
-### APIs Needed
-- `GET /api/analytics/performance-attribution`
-- `GET /api/analytics/strategy-comparison`
-- `GET /api/analytics/risk-decomposition`
-- `GET /api/analytics/trade-patterns`
-- `GET /api/analytics/correlations`
+### APIs Implementate (Free Tier)
+- ✅ `GET /api/crypto/top-400-depth` - Feed semplice profondità mercato crypto con letture Groq AI
+
+### APIs Pro Feature (A Pagamento)
+- ⚠️ `GET /api/analytics/performance-attribution` - Pro feature
+- ⚠️ `GET /api/analytics/strategy-comparison` - Pro feature
+- ⚠️ `GET /api/analytics/risk-decomposition` - Pro feature
+- ⚠️ `GET /api/analytics/trade-patterns` - Pro feature
 
 ---
 
@@ -317,11 +299,21 @@ Tutte le features proposte:
 
 ## Conclusion
 
-Con i dati disponibili possiamo implementare:
-- ✅ **10+ features avanzate** di analytics
-- ✅ **Zero costi aggiuntivi**
+**Strategia Attuale**:
+- ✅ **Feed semplici** con letture Groq AI (free tier)
+- ⚠️ **Analytics complesse** come Pro feature a pagamento
+- ✅ **Zero costi aggiuntivi** per free tier
 - ✅ **Conformità accademica** completa
 - ✅ **MIFID 2 compliant**
 - ✅ **Valore educativo** elevato
 
-Pronto per implementazione! 🚀
+**Implementato**:
+- ✅ Crypto Market Depth Feed (`/api/crypto/top-400-depth`) - Feed semplice con letture Groq AI
+
+**Pro Feature** (Analytics complesse a pagamento):
+- ⚠️ Performance Attribution
+- ⚠️ Strategy Comparison
+- ⚠️ Risk Decomposition
+- ⚠️ Trade Pattern Analysis
+
+Pronto per implementazione features free tier! 🚀
