@@ -795,38 +795,6 @@ export function StrategyBuilder() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">
-              {locale === 'it' ? 'Periodo Out-of-Sample (mesi)' : 'Out-of-Sample Period (months)'}
-              <Tooltip
-                content={
-                  <div className="space-y-2">
-                    <p className="font-semibold text-xs">
-                      {locale === 'it' ? 'Finestra Out-of-Sample' : 'Out-of-Sample Window'}
-                    </p>
-                    <p className="text-xs">
-                      {locale === 'it'
-                        ? 'Il periodo per testare i parametri ottimizzati. Tipicamente 3-6 mesi. Se la performance OOS è molto inferiore a IS, è segno di overfitting. Minimo 1 mese, massimo 12 mesi.'
-                        : 'The period to test optimized parameters. Typically 3-6 months. If OOS performance is much lower than IS, it\'s a sign of overfitting. Minimum 1 month, maximum 12 months.'}
-                    </p>
-                  </div>
-                }
-                position="top"
-              >
-                <Info className="w-4 h-4 inline-block ml-1 text-text-tertiary cursor-help" />
-              </Tooltip>
-            </label>
-            <input
-              type="number"
-              value={outOfSampleMonths}
-              onChange={(e) => setOutOfSampleMonths(parseInt(e.target.value) || 3)}
-              min={1}
-              max={12}
-              step={1}
-              className="w-full px-4 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
-              aria-label={locale === 'it' ? 'Periodo In-Sample in mesi' : 'In-Sample period in months'}
-            />
-          </div>
-          <div>
             <label 
               htmlFor="out-of-sample-months"
               className="block text-sm font-medium text-text-primary mb-2"
