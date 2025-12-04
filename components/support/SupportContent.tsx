@@ -4,6 +4,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import Link from 'next/link';
 import { Mail, MessageCircle, BookOpen, HelpCircle } from 'lucide-react';
 import { ShareButtons } from '@/components/ui/ShareButtons';
+import { InternalLinks } from '@/components/seo/InternalLinks';
 
 export function SupportContent() {
   const { t } = useTranslations();
@@ -91,6 +92,9 @@ export function SupportContent() {
               description={t('support.subtitle')}
             />
           </div>
+          
+          {/* Internal Links per SEO */}
+          <InternalLinks />
         </div>
       </div>
     </div>

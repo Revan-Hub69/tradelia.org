@@ -11,6 +11,7 @@ import { TRADELIA_GLOSSARY_TAGS, type TradeliaGlossaryTag } from '@/lib/glossary
 import { getTermOfTheDay, formatTermDate } from '@/lib/glossary/term-of-the-day';
 import { GlossaryDrawer } from './GlossaryDrawer';
 import { ShareButtons } from '@/components/ui/ShareButtons';
+import { InternalLinks } from '@/components/seo/InternalLinks';
 
 interface GlossaryTermWithKey extends GlossaryTerm {
   key: string;
@@ -618,6 +619,9 @@ export function GlossaryContent() {
             description={t('glossary.subtitle')}
           />
         </div>
+
+        {/* Internal Links per SEO */}
+        <InternalLinks />
 
         {/* Footer - Compact */}
         <div className="mt-8 pt-6 border-t border-border-subtle text-center">

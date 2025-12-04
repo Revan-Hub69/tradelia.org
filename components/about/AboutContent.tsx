@@ -3,6 +3,7 @@
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { Target, Users, Award, Shield } from 'lucide-react';
 import { ShareButtons } from '@/components/ui/ShareButtons';
+import { InternalLinks } from '@/components/seo/InternalLinks';
 
 export function AboutContent() {
   const { t } = useTranslations();
@@ -91,6 +92,9 @@ export function AboutContent() {
               description={t('about.description')}
             />
           </div>
+          
+          {/* Internal Links per SEO */}
+          <InternalLinks />
         </div>
       </div>
     </div>

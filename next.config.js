@@ -40,6 +40,11 @@ const nextConfig = {
             key: "X-DNS-Prefetch-Control",
             value: "on",
           },
+          // SEO Headers
+          {
+            key: "X-Robots-Tag",
+            value: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+          },
           // Content Security Policy - Enhanced Security
           {
             key: "Content-Security-Policy",

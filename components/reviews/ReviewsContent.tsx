@@ -8,6 +8,7 @@ import { supabase } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
 import { ShareButtons } from '@/components/ui/ShareButtons';
+import { InternalLinks } from '@/components/seo/InternalLinks';
 import {
   useReducedMotion,
   createContainerVariants,
@@ -341,6 +342,9 @@ export function ReviewsContent() {
               description={t('reviews.subtitle')}
             />
           </motion.div>
+          
+          {/* Internal Links per SEO */}
+          <InternalLinks />
         </div>
       </div>
     </div>

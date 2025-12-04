@@ -5,6 +5,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { Mail, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ShareButtons } from '@/components/ui/ShareButtons';
+import { InternalLinks } from '@/components/seo/InternalLinks';
 
 export function ContactContent() {
   const { t } = useTranslations();
@@ -163,6 +164,9 @@ export function ContactContent() {
               description={t('contact.subtitle')}
             />
           </div>
+          
+          {/* Internal Links per SEO */}
+          <InternalLinks />
         </div>
       </div>
     </div>

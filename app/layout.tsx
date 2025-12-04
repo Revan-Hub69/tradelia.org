@@ -4,6 +4,7 @@ import './globals.css';
 import dynamic from 'next/dynamic';
 import { UnregisterServiceWorker } from './unregister-sw';
 import { generateStructuredData, generateMetadata as genMetadata } from '@/lib/seo/metadata';
+import { generateWebSiteSchema } from '@/lib/seo/structured-data';
 import { defaultLocale } from '@/lib/i18n/config';
 // Importa il suppressor degli errori di hydration PRIMA di tutto
 import '@/lib/utils/suppress-hydration-errors';
@@ -191,11 +192,14 @@ export default function RootLayout({
         <link rel="prefetch" href="/dashboard" as="document" />
         <link rel="prefetch" href="/glossary" as="document" />
         
-        {/* Structured Data - EducationalOrganization + AI Search Optimization */}
+        {/* Structured Data - Organization + WebSite + AI Search Optimization */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(generateStructuredData(defaultLocale)),
+            __html: JSON.stringify([
+              generateStructuredData(defaultLocale),
+              generateWebSiteSchema(defaultLocale),
+            ]),
           }}
         />
         {/* AI Search Meta Tags */}

@@ -3,6 +3,7 @@
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { ShareButtons } from '@/components/ui/ShareButtons';
+import { InternalLinks } from '@/components/seo/InternalLinks';
 
 export function FAQContent() {
   const { t } = useTranslations();
@@ -77,6 +78,9 @@ export function FAQContent() {
               description={t('faq.subtitle')}
             />
           </div>
+          
+          {/* Internal Links per SEO */}
+          <InternalLinks />
         </div>
       </div>
     </div>

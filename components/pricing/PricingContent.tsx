@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { prefetchOnHover } from '@/lib/utils/prefetch';
+import { InternalLinks } from '@/components/seo/InternalLinks';
 
 interface Plan {
   id: string;
@@ -202,6 +203,9 @@ export function PricingContent() {
             description={t('pricing.subtitle')}
           />
         </div>
+        
+        {/* Internal Links per SEO */}
+        <InternalLinks />
       </div>
     </div>
   );

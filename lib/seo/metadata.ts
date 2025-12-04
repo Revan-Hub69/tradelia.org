@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { generateOrganizationSchema, generateWebSiteSchema } from './structured-data';
 
 export async function generateMetadata(locale: Locale = "it"): Promise<Metadata> {
   const dict = await getDictionary(locale);
@@ -172,59 +173,10 @@ export async function generatePageMetadata(
   };
 }
 
-// Structured Data for AI Search
-export function generateStructuredData(locale: Locale = "it") {
-  const baseUrl = "https://tradelia.org";
+// Structured Data for AI Search - Import from structured-data.ts
+import { generateOrganizationSchema, generateWebSiteSchema } from './structured-data';
 
-  return {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "@id": `${baseUrl}#organization`,
-    name: "Tradelia AI",
-    url: baseUrl,
-    description:
-      locale === "it"
-        ? "Formazione finanziaria gratuita basata su framework AI proprietari verificabili"
-        : "Free financial education based on verifiable proprietary AI frameworks",
-    // Organization type - Educational platform
-    additionalType: "https://schema.org/EducationalPlatform",
-    // What the organization knows about / specializes in
-    knowsAbout: [
-      "Financial Markets",
-      "AI Frameworks",
-      "MiFID II Compliance",
-      "Risk Management",
-      "Market Analysis",
-      "Financial Education",
-    ],
-    // Educational offerings
-    hasOfferCatalog: {
-      "@type": "OfferCatalog",
-      name: locale === "it" ? "Percorsi Formativi" : "Training Paths",
-      itemListElement: [
-        {
-          "@type": "Offer",
-          itemOffered: {
-            "@type": "Course",
-            name: locale === "it" ? "Formazione Finanziaria" : "Financial Education",
-            description:
-              locale === "it"
-                ? "Percorsi formativi completi sui mercati finanziari"
-                : "Complete training paths on financial markets",
-            provider: {
-              "@type": "Organization",
-              name: "Tradelia AI",
-              url: baseUrl,
-            },
-          },
-        },
-      ],
-    },
-    // Website information
-    sameAs: [
-      // Add social media profiles if available
-      // "https://twitter.com/tradelia_ai",
-      // "https://linkedin.com/company/tradelia",
-    ],
-  };
+// Legacy function for backward compatibility
+export function generateStructuredData(locale: Locale = "it") {
+  return generateOrganizationSchema(locale);
 }
