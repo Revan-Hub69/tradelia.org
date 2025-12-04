@@ -87,7 +87,9 @@ export async function generatePageMetadata(
   const dict = await getDictionary(locale);
   const baseUrl = "https://tradelia.org";
   const localePath = locale === "it" ? "" : `/${locale}`;
-  const pageMetadata = dict.seo.pages?.[pageKey] || {
+  const pageMetadata = (dict.seo.pages && pageKey in dict.seo.pages 
+    ? (dict.seo.pages as any)[pageKey] 
+    : null) || {
     title: `${pageKey} · Tradelia`,
     description: dict.seo.description,
   };
