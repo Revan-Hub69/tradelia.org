@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { ChevronRight, Home } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
+import { type Locale } from '@/lib/i18n/config';
 import { cn } from '@/lib/utils/cn';
 
 interface BreadcrumbItem {
@@ -23,7 +24,8 @@ interface BreadcrumbProps {
  */
 export function Breadcrumb({ items, className }: BreadcrumbProps) {
   const pathname = usePathname();
-  const { t, locale } = useTranslations();
+  const { t, locale: localeValue } = useTranslations();
+  const locale = (localeValue as Locale) || 'it';
 
   // Se non ci sono items, genera automaticamente dal pathname
   const breadcrumbItems: BreadcrumbItem[] = items || generateBreadcrumbs(pathname, locale, t);
@@ -105,7 +107,7 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
  */
 function generateBreadcrumbs(
   pathname: string,
-  locale: string,
+  locale: Locale,
   t: (key: string, fallback?: string) => string
 ): BreadcrumbItem[] {
   const items: BreadcrumbItem[] = [];
