@@ -2,7 +2,7 @@
 
 import { useState, lazy, Suspense } from 'react';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
-import { Calculator, TrendingUp, BookOpen, Shield, Target, BarChart3, TrendingDown, Zap, PieChart, Link2, Activity } from 'lucide-react';
+import { Calculator, TrendingUp, BookOpen, Shield, Target, BarChart3, TrendingDown, Zap, PieChart, Link2, Activity, Eye, Bell, Layout } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -61,16 +61,18 @@ const CalculatorSkeleton = () => (
   </div>
 );
 
-type UtilityTab = 'calculator' | 'pac' | 'journal' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility';
+type UtilityTab = 'calculator' | 'pac' | 'journal' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility' | 'watchlist' | 'portfolio-manager' | 'alerts' | 'widgets';
 
 interface Utility {
   id: UtilityTab;
   label: string;
   icon: typeof Calculator;
-  category: 'base' | 'pro';
-  group?: 'risk' | 'performance' | 'advanced';
+  category: 'base' | 'pro' | 'coming-soon';
+  group?: 'risk' | 'performance' | 'advanced' | 'real-time';
   description: string;
   available: boolean;
+  comingSoon?: boolean;
+  reason?: string;
 }
 
 export default function UtilitiesPage() {
@@ -199,6 +201,51 @@ export default function UtilitiesPage() {
       description: 'Calcola la correlazione tra due serie di rendimenti',
       available: true,
     },
+    // Coming Soon - Real-time Tools
+    {
+      id: 'watchlist',
+      label: 'Watchlist',
+      icon: Eye,
+      category: 'coming-soon',
+      group: 'real-time',
+      description: 'Monitora i tuoi asset preferiti con alert personalizzati',
+      available: false,
+      comingSoon: true,
+      reason: 'Richiede integrazione con API real-time per prezzi di mercato',
+    },
+    {
+      id: 'portfolio-manager',
+      label: 'Portfolio Manager',
+      icon: PieChart,
+      category: 'coming-soon',
+      group: 'real-time',
+      description: 'Gestisci il tuo portafoglio con aggiornamenti real-time',
+      available: false,
+      comingSoon: true,
+      reason: 'Richiede integrazione con API real-time per prezzi di mercato',
+    },
+    {
+      id: 'alerts',
+      label: 'Sistema di Alert',
+      icon: Bell,
+      category: 'coming-soon',
+      group: 'real-time',
+      description: 'Notifiche personalizzate per i tuoi asset',
+      available: false,
+      comingSoon: true,
+      reason: 'Richiede integrazione con API real-time per prezzi di mercato',
+    },
+    {
+      id: 'widgets',
+      label: 'Widgets',
+      icon: Layout,
+      category: 'coming-soon',
+      group: 'real-time',
+      description: 'Widget personalizzabili per watchlist, portfolio e alert',
+      available: false,
+      comingSoon: true,
+      reason: 'Richiede integrazione con API real-time per prezzi di mercato',
+    },
   ];
 
   const handleUtilityClick = (utility: Utility) => {
@@ -222,6 +269,7 @@ export default function UtilitiesPage() {
   const riskUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'risk');
   const performanceUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'performance');
   const advancedUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'advanced');
+  const comingSoonUtilities = allUtilities.filter(u => u.category === 'coming-soon');
 
   return (
     <div className="min-h-screen bg-bg-base">
@@ -261,6 +309,10 @@ export default function UtilitiesPage() {
                 {selectedUtility === 'portfolio' && isPro && <PortfolioOptimizer />}
                 {selectedUtility === 'correlation' && isPro && <CorrelationCalculator />}
                 {selectedUtility === 'volatility' && isPro && <VolatilityCalculator />}
+                {selectedUtility === 'watchlist' && <ComingSoon title="Watchlist" description="Monitora i tuoi asset preferiti con alert personalizzati" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />}
+                {selectedUtility === 'portfolio-manager' && <ComingSoon title="Portfolio Manager" description="Gestisci il tuo portafoglio con aggiornamenti real-time" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />}
+                {selectedUtility === 'alerts' && <ComingSoon title="Sistema di Alert" description="Notifiche personalizzate per i tuoi asset" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />}
+                {selectedUtility === 'widgets' && <ComingSoon title="Widgets" description="Widget personalizzabili per watchlist, portfolio e alert" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />}
               </Suspense>
             </div>
           </div>
@@ -482,6 +534,46 @@ export default function UtilitiesPage() {
                 })}
               </div>
             </section>
+
+            {/* Coming Soon - Real-time Tools */}
+            {comingSoonUtilities.length > 0 && (
+              <section>
+                <h2 className="text-xl font-semibold text-text-primary mb-4">
+                  In Arrivo <span className="text-sm font-normal text-text-tertiary">(Richiedono API Real-time)</span>
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {comingSoonUtilities.map((utility) => {
+                    const Icon = utility.icon;
+                    return (
+                      <div
+                        key={utility.id}
+                        className={cn(
+                          'bg-bg-surface border border-border-subtle/50 rounded-xl p-6 text-left relative',
+                          'opacity-75',
+                          'flex flex-col gap-3'
+                        )}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="w-12 h-12 rounded-lg bg-bg-soft flex items-center justify-center">
+                            <Icon className="w-6 h-6 text-text-tertiary" aria-hidden="true" />
+                          </div>
+                          <div className="px-2 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-md text-[10px] text-amber-300 font-semibold">
+                            Coming Soon
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-text-primary mb-1">{utility.label}</h3>
+                          <p className="text-sm text-text-secondary">{utility.description}</p>
+                          {utility.reason && (
+                            <p className="text-xs text-text-tertiary mt-2 italic">{utility.reason}</p>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
           </div>
         )}
       </div>
