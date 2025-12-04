@@ -3,29 +3,82 @@
 import { useState } from 'react';
 import { FinancialCalculator } from '@/components/dashboard/utilities/FinancialCalculator';
 import { PACSimulator } from '@/components/dashboard/utilities/PACSimulator';
+import { TradingJournal } from '@/components/dashboard/utilities/TradingJournal';
+import { HedgingCalculator } from '@/components/dashboard/utilities/HedgingCalculator';
+import { PositionSizingCalculator } from '@/components/dashboard/utilities/PositionSizingCalculator';
+import { RiskRewardCalculator } from '@/components/dashboard/utilities/RiskRewardCalculator';
+import { SharpeRatioCalculator } from '@/components/dashboard/utilities/SharpeRatioCalculator';
+import { DrawdownCalculator } from '@/components/dashboard/utilities/DrawdownCalculator';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
-import { Calculator, TrendingUp } from 'lucide-react';
+import { Calculator, TrendingUp, BookOpen, Shield, Target, BarChart3, TrendingDown } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { useIsPro } from '@/lib/hooks/useUserRole';
 import styles from './utilities.module.css';
 
-type UtilityTab = 'calculator' | 'pac';
+type UtilityTab = 'calculator' | 'pac' | 'journal' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown';
 
 export default function UtilitiesPage() {
   const { t } = useTranslations();
+  const isPro = useIsPro();
   const [activeTab, setActiveTab] = useState<UtilityTab>('calculator');
 
-  const tabs: Array<{ id: UtilityTab; label: string; icon: typeof Calculator }> = [
+  // Strumenti base (disponibili a tutti)
+  const baseTabs: Array<{ id: UtilityTab; label: string; icon: typeof Calculator; category: 'base' }> = [
     {
       id: 'calculator',
       label: t('dashboard.utilities.calculator') || 'Calcolatore Finanziario',
       icon: Calculator,
+      category: 'base',
     },
     {
       id: 'pac',
       label: t('dashboard.utilities.pac') || 'Simulatore PAC',
       icon: TrendingUp,
+      category: 'base',
     },
   ];
+
+  // Strumenti Pro (solo per utenti Pro)
+  const proTabs: Array<{ id: UtilityTab; label: string; icon: typeof Calculator; category: 'pro' }> = [
+    {
+      id: 'journal',
+      label: 'Trading Journal',
+      icon: BookOpen,
+      category: 'pro',
+    },
+    {
+      id: 'hedging',
+      label: 'Hedging Calculator',
+      icon: Shield,
+      category: 'pro',
+    },
+    {
+      id: 'position',
+      label: 'Position Sizing',
+      icon: Target,
+      category: 'pro',
+    },
+    {
+      id: 'riskreward',
+      label: 'Risk/Reward',
+      icon: BarChart3,
+      category: 'pro',
+    },
+    {
+      id: 'sharpe',
+      label: 'Sharpe Ratio',
+      icon: BarChart3,
+      category: 'pro',
+    },
+    {
+      id: 'drawdown',
+      label: 'Drawdown',
+      icon: TrendingDown,
+      category: 'pro',
+    },
+  ];
+
+  const tabs = [...baseTabs, ...(isPro ? proTabs : [])];
 
   return (
     <div className="min-h-screen bg-bg-base">
@@ -36,8 +89,16 @@ export default function UtilitiesPage() {
           {t('dashboard.utilities.title') || 'Utilities'}
         </h1>
         <p className={styles.utilitiesSubtitle}>
-          {t('dashboard.utilities.subtitle') || 'Strumenti finanziari e calcolatori'}
+          {t('dashboard.utilities.subtitle') || 'Strumenti finanziari e calcolatori per analisi e trading'}
         </p>
+        {!isPro && (
+          <div className="mt-4 bg-accent/10 border border-accent/20 rounded-lg p-3">
+            <p className="text-xs sm:text-sm text-text-secondary">
+              <strong className="text-text-primary">Upgrade a Pro</strong> per accedere a strumenti avanzati: 
+              Trading Journal, Hedging Calculator, Position Sizing e Risk/Reward Calculator.
+            </p>
+          </div>
+        )}
       </header>
 
       <nav className={styles.utilitiesTabs} role="tablist" aria-label="Utility sections">
@@ -60,6 +121,7 @@ export default function UtilitiesPage() {
       </nav>
 
       <main className={styles.utilitiesContent}>
+        {/* Base Tools */}
         <div
           id="calculator-panel"
           role="tabpanel"
@@ -79,6 +141,71 @@ export default function UtilitiesPage() {
         >
           <PACSimulator />
         </div>
+
+        {/* Pro Tools */}
+        {isPro && (
+          <>
+            <div
+              id="journal-panel"
+              role="tabpanel"
+              aria-labelledby="journal-tab"
+              hidden={activeTab !== 'journal'}
+              className={styles.utilitiesPanel}
+            >
+              <TradingJournal />
+            </div>
+
+            <div
+              id="hedging-panel"
+              role="tabpanel"
+              aria-labelledby="hedging-tab"
+              hidden={activeTab !== 'hedging'}
+              className={styles.utilitiesPanel}
+            >
+              <HedgingCalculator />
+            </div>
+
+            <div
+              id="position-panel"
+              role="tabpanel"
+              aria-labelledby="position-tab"
+              hidden={activeTab !== 'position'}
+              className={styles.utilitiesPanel}
+            >
+              <PositionSizingCalculator />
+            </div>
+
+            <div
+              id="riskreward-panel"
+              role="tabpanel"
+              aria-labelledby="riskreward-tab"
+              hidden={activeTab !== 'riskreward'}
+              className={styles.utilitiesPanel}
+            >
+              <RiskRewardCalculator />
+            </div>
+
+            <div
+              id="sharpe-panel"
+              role="tabpanel"
+              aria-labelledby="sharpe-tab"
+              hidden={activeTab !== 'sharpe'}
+              className={styles.utilitiesPanel}
+            >
+              <SharpeRatioCalculator />
+            </div>
+
+            <div
+              id="drawdown-panel"
+              role="tabpanel"
+              aria-labelledby="drawdown-tab"
+              hidden={activeTab !== 'drawdown'}
+              className={styles.utilitiesPanel}
+            >
+              <DrawdownCalculator />
+            </div>
+          </>
+        )}
       </main>
       </div>
     </div>

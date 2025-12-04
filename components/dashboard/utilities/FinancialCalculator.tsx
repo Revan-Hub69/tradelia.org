@@ -438,9 +438,18 @@ export function FinancialCalculator() {
             {t('proUtilities.calculator.title') || 'Calcolatrice Finanziaria'}
           </h3>
           <p className="text-xs text-text-tertiary">
-            {t('proUtilities.calculator.subtitle') || 'Calcoli finanziari avanzati'}
+            {t('proUtilities.calculator.subtitle') || 'Calcoli finanziari avanzati con formule verificate'}
           </p>
         </div>
+      </div>
+
+      {/* Info Box */}
+      <div className="bg-accent/10 border border-accent/20 rounded-lg p-3 sm:p-4">
+        <p className="text-xs sm:text-sm text-text-secondary">
+          <strong className="text-text-primary">Come funziona:</strong> Questi calcoli utilizzano formule matematiche standard verificate. 
+          I risultati sono indicativi e non costituiscono consulenza finanziaria. 
+          Passa il mouse sui campi per maggiori informazioni.
+        </p>
       </div>
 
       {/* Tipo di calcolo */}

@@ -126,6 +126,14 @@ export function PACSimulator() {
       {/* Info Box */}
       <div className="bg-accent/10 border border-accent/20 rounded-lg p-3 sm:p-4">
         <p className="text-xs sm:text-sm text-text-secondary">
+          <strong className="text-text-primary">PAC (Piano di Accumulo Capitale):</strong> Strategia di investimento che prevede versamenti periodici costanti.
+          L'interesse composto fa crescere il capitale nel tempo. Passa il mouse sui campi per maggiori informazioni.
+        </p>
+      </div>
+
+      {/* Info Box */}
+      <div className="bg-accent/10 border border-accent/20 rounded-lg p-3 sm:p-4">
+        <p className="text-xs sm:text-sm text-text-secondary">
           <strong className="text-text-primary">PAC (Piano di Accumulo Capitale):</strong> Strategia di investimento che prevede versamenti periodici costanti. 
           L'interesse composto fa crescere il capitale nel tempo. Passa il mouse sui campi per maggiori informazioni.
         </p>
