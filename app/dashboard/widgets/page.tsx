@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { WidgetsContent } from '@/components/widgets/WidgetsContent';
+import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
 
 export const metadata: Metadata = {
   title: 'Widget | Tradelia',
@@ -7,6 +8,11 @@ export const metadata: Metadata = {
 };
 
 export default function WidgetsPage() {
-  return <WidgetsContent />;
+  return (
+    <div className="min-h-screen bg-bg-base">
+      <DashboardTabs />
+      <WidgetsContent />
+    </div>
+  );
 }
 

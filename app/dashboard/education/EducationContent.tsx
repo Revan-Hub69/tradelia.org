@@ -7,6 +7,7 @@ import { useApi } from '@/lib/hooks/useApi';
 import { LoadingState } from '@/components/dashboard/LoadingState';
 import { ErrorState } from '@/components/dashboard/ErrorState';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { ProgressTracking } from '@/components/dashboard/ProgressTracking';
 import Link from 'next/link';
 import { buildLocalePath } from '@/lib/i18n/paths';
 
@@ -111,6 +112,11 @@ export default function EducationContent() {
               <option value="not-started">{t('dashboard.education.filterNotStarted') || 'Non Iniziati'}</option>
             </select>
           </div>
+        </div>
+
+        {/* Progress Tracking - Best Practice: mostra progresso nella sezione formazione */}
+        <div className="mb-8">
+          <ProgressTracking />
         </div>
 
         {/* Courses List */}

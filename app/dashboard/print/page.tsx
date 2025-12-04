@@ -10,6 +10,7 @@ import { ErrorState } from '@/components/dashboard/ErrorState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/button';
 import { DownloadPDFModal } from '@/components/dashboard/modals/DownloadPDFModal';
+import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
 import { toast } from '@/components/ui/Toast';
 
 interface Report {
@@ -87,8 +88,10 @@ export default function PrintPage() {
   }
 
   return (
-    <div className="min-h-screen p-6 max-w-7xl mx-auto">
-      {/* Header */}
+    <div className="min-h-screen bg-bg-base">
+      <DashboardTabs />
+      <div className="p-6 max-w-7xl mx-auto">
+        {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-text-primary mb-2 flex items-center gap-3">
           <Printer className="w-8 h-8 text-accent" />
@@ -186,6 +189,7 @@ export default function PrintPage() {
           reportId={selectedReport}
         />
       )}
+      </div>
     </div>
   );
 }
