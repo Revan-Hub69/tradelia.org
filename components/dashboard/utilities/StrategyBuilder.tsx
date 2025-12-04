@@ -667,6 +667,28 @@ export function StrategyBuilder() {
           </div>
         </aside>
 
+      {/* Info Box - Chiarimento con Trading Journal */}
+      <div className="bg-accent/10 border border-accent/30 rounded-lg p-4">
+        <div className="flex items-start gap-3">
+          <Info className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+          <div className="text-sm text-text-secondary space-y-2">
+            <p className="font-semibold text-text-primary">
+              {locale === 'it' ? '📝 Differenza con Trading Journal' : '📝 Difference with Trading Journal'}
+            </p>
+            <p>
+              {locale === 'it'
+                ? 'Questo strumento testa strategie TEORICHE su dati simulati/storici. Il Trading Journal registra invece operazioni REALI che hai eseguito. Usa questo strumento PRIMA di tradare per ottimizzare la strategia, poi registra le operazioni reali nel Journal.'
+                : 'This tool tests THEORETICAL strategies on simulated/historical data. The Trading Journal records REAL trades you executed. Use this tool BEFORE trading to optimize your strategy, then record real trades in the Journal.'}
+            </p>
+            <p className="text-xs text-text-tertiary italic">
+              {locale === 'it'
+                ? '💡 Best Practice: Testa la strategia qui → Esegui operazioni reali → Registra nel Trading Journal → Confronta performance teorica vs reale'
+                : '💡 Best Practice: Test strategy here → Execute real trades → Record in Trading Journal → Compare theoretical vs real performance'}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Strategy Selection */}
       <section 
         className="bg-bg-surface border border-border-subtle rounded-xl p-4 sm:p-6 space-y-6"
