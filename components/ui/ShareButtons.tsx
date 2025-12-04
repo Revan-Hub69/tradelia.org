@@ -97,7 +97,7 @@ export function ShareButtons({
       )}
       
       {/* Native Share (mobile) */}
-      {typeof navigator !== 'undefined' && navigator.share && (
+      {typeof navigator !== 'undefined' && typeof navigator.share === 'function' && (
         <Button
           variant="outline"
           size="sm"
