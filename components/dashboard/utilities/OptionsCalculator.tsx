@@ -9,6 +9,8 @@ import { currencySymbols } from '@/lib/currency/config';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { HelpCircle } from 'lucide-react';
 import { MethodologyNotes } from './MethodologyNotes';
+import { VolatilitySuggestions } from './VolatilitySuggestions';
+import { RiskFreeRateSuggestions } from './RiskFreeRateSuggestions';
 
 /**
  * Options Calculator
@@ -248,19 +250,27 @@ export function OptionsCalculator() {
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Volatilità Implicita (%) *</span>
-              <Tooltip content="La volatilità attesa dell'asset, tipicamente 15-30% per azioni, 50-100% per crypto.">
+              <Tooltip content="La volatilità attesa dell'asset, tipicamente 15-30% per azioni, 50-100% per crypto. Vedi i suggerimenti MIFID compliant qui sotto.">
                 <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
-            <input
-              type="number"
-              value={volatility}
-              onChange={(e) => setVolatility(e.target.value)}
-              placeholder="20"
-              className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
-              min="0"
-              max="200"
-              step="0.1"
+            <div className="relative mb-4">
+              <input
+                type="number"
+                value={volatility}
+                onChange={(e) => setVolatility(e.target.value)}
+                placeholder="20"
+                className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+                min="0"
+                max="200"
+                step="0.1"
+              />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary text-sm">%</span>
+            </div>
+            {/* Suggerimenti MIFID Compliant */}
+            <VolatilitySuggestions
+              onSelect={(value) => setVolatility(String(value))}
+              currentValue={parseFloat(volatility) || 0}
             />
           </div>
         </div>
@@ -269,19 +279,27 @@ export function OptionsCalculator() {
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Tasso Risk-Free (%) *</span>
-              <Tooltip content="Il tasso di interesse risk-free (es. rendimento obbligazioni governative).">
+              <Tooltip content="Il tasso di interesse risk-free (es. rendimento obbligazioni governative). Vedi i suggerimenti MIFID compliant qui sotto.">
                 <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
-            <input
-              type="number"
-              value={riskFreeRate}
-              onChange={(e) => setRiskFreeRate(e.target.value)}
-              placeholder="2"
-              className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
-              min="0"
-              max="10"
-              step="0.1"
+            <div className="relative mb-4">
+              <input
+                type="number"
+                value={riskFreeRate}
+                onChange={(e) => setRiskFreeRate(e.target.value)}
+                placeholder="2"
+                className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+                min="0"
+                max="10"
+                step="0.1"
+              />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary text-sm">%</span>
+            </div>
+            {/* Suggerimenti MIFID Compliant */}
+            <RiskFreeRateSuggestions
+              onSelect={(value) => setRiskFreeRate(String(value))}
+              currentValue={parseFloat(riskFreeRate) || 0}
             />
           </div>
 

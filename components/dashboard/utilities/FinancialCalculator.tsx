@@ -13,6 +13,7 @@ import { currencySymbols } from '@/lib/currency/config';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { HelpCircle } from 'lucide-react';
 import { MethodologyNotes } from './MethodologyNotes';
+import { InterestRateSuggestions } from './InterestRateSuggestions';
 
 type CalculationType = 'compound' | 'present' | 'future' | 'annuity';
 
@@ -238,17 +239,25 @@ export function FinancialCalculator() {
             <div>
               <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
                 <span>{t('proUtilities.calculator.rate') || 'Tasso Annuo (%)'}</span>
-                <Tooltip content="Il tasso di interesse annuo espresso in percentuale. Esempio: 5% significa che ogni anno guadagni il 5% sul capitale investito.">
+                <Tooltip content="Il tasso di interesse annuo espresso in percentuale. Esempio: 5% significa che ogni anno guadagni il 5% sul capitale investito. Vedi i suggerimenti MIFID compliant qui sotto per valori di riferimento basati su dati accademici.">
                   <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
                 </Tooltip>
               </label>
-              <input
-                type="number"
-                step="0.01"
-                value={inputs.rate}
-                onChange={(e) => setInputs({ ...inputs, rate: e.target.value })}
-                className="w-full rounded-lg bg-bg-soft border border-border-subtle px-4 py-2 text-sm text-text-primary focus:outline-none focus:border-accent"
-                placeholder="5"
+              <div className="relative mb-4">
+                <input
+                  type="number"
+                  step="0.01"
+                  value={inputs.rate}
+                  onChange={(e) => setInputs({ ...inputs, rate: e.target.value })}
+                  className="w-full rounded-lg bg-bg-soft border border-border-subtle px-4 py-2 text-sm text-text-primary focus:outline-none focus:border-accent"
+                  placeholder="5"
+                />
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary text-sm">%</span>
+              </div>
+              {/* Suggerimenti MIFID Compliant */}
+              <InterestRateSuggestions
+                onSelect={(value) => setInputs({ ...inputs, rate: String(value) })}
+                currentValue={parseFloat(inputs.rate) || 0}
               />
             </div>
             <div>
@@ -291,17 +300,25 @@ export function FinancialCalculator() {
             <div>
               <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
                 <span>{t('proUtilities.calculator.rate') || 'Tasso Annuo (%)'}</span>
-                <Tooltip content="Il tasso di interesse annuo atteso. Usato per scontare il valore futuro al presente.">
+                <Tooltip content="Il tasso di interesse annuo atteso. Usato per scontare il valore futuro al presente. Vedi i suggerimenti MIFID compliant qui sotto.">
                   <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
                 </Tooltip>
               </label>
-              <input
-                type="number"
-                step="0.01"
-                value={inputs.rate}
-                onChange={(e) => setInputs({ ...inputs, rate: e.target.value })}
-                className="w-full rounded-lg bg-bg-soft border border-border-subtle px-4 py-2 text-sm text-text-primary focus:outline-none focus:border-accent"
-                placeholder="5"
+              <div className="relative mb-4">
+                <input
+                  type="number"
+                  step="0.01"
+                  value={inputs.rate}
+                  onChange={(e) => setInputs({ ...inputs, rate: e.target.value })}
+                  className="w-full rounded-lg bg-bg-soft border border-border-subtle px-4 py-2 text-sm text-text-primary focus:outline-none focus:border-accent"
+                  placeholder="5"
+                />
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary text-sm">%</span>
+              </div>
+              {/* Suggerimenti MIFID Compliant */}
+              <InterestRateSuggestions
+                onSelect={(value) => setInputs({ ...inputs, rate: String(value) })}
+                currentValue={parseFloat(inputs.rate) || 0}
               />
             </div>
             <div>
