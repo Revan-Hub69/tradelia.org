@@ -219,11 +219,11 @@ export default function UtilitiesPage() {
     },
     {
       id: 'strategy-builder',
-      label: 'Strategy Builder',
+      label: 'Strategy Simulator',
       icon: Settings,
       category: 'pro',
       group: 'advanced',
-      description: 'Costruisci e ottimizza strategie di trading con Walk-Forward Optimization per evitare overfitting',
+      description: 'Simula e esplora strategie di trading (dati simulati - educativo). Usa Paper Trading per test reali.',
       available: true,
     },
     // Coming Soon - Real-time Tools

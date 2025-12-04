@@ -578,12 +578,12 @@ export function StrategyBuilder() {
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'SoftwareApplication',
-              name: locale === 'it' ? 'Strategy Builder - Walk-Forward Optimization' : 'Strategy Builder - Walk-Forward Optimization',
+              name: locale === 'it' ? 'Strategy Simulator - Educational Tool' : 'Strategy Simulator - Educational Tool',
               applicationCategory: 'FinanceApplication',
               operatingSystem: 'Web',
               description: locale === 'it'
-                ? 'Strumento per ottimizzare strategie di trading usando Walk-Forward Optimization per evitare overfitting. Best practice accademiche per l\'ottimizzazione di parametri.'
-                : 'Tool to optimize trading strategies using Walk-Forward Optimization to avoid overfitting. Academic best practices for parameter optimization.',
+                ? 'Strumento educativo per simulare strategie di trading usando dati simulati. Best practice accademiche per comprendere come funzionano le strategie. Per test reali, usa Paper Trading.'
+                : 'Educational tool to simulate trading strategies using simulated data. Academic best practices to understand how strategies work. For real tests, use Paper Trading.',
               offers: {
                 '@type': 'Offer',
                 price: '0',
@@ -607,34 +607,41 @@ export function StrategyBuilder() {
           </div>
           <div className="flex-1">
             <h2 className="text-xl font-semibold text-text-primary mb-2">
-              {locale === 'it' ? 'Strategy Builder' : 'Strategy Builder'}
+              {locale === 'it' ? 'Strategy Simulator' : 'Strategy Simulator'}
             </h2>
             <p className="text-sm text-text-secondary mb-4">
               {locale === 'it'
-                ? 'Costruisci e ottimizza strategie di trading robuste usando Walk-Forward Optimization per evitare overfitting. Questo strumento ti guida attraverso le best practice accademiche per l\'ottimizzazione di parametri.'
-                : 'Build and optimize robust trading strategies using Walk-Forward Optimization to avoid overfitting. This tool guides you through academic best practices for parameter optimization.'}
+                ? 'Simula ed esplora strategie di trading usando dati simulati per scopi educativi. Questo strumento ti aiuta a capire come funzionano le strategie accademiche. Per testare con prezzi reali, usa Paper Trading.'
+                : 'Simulate and explore trading strategies using simulated data for educational purposes. This tool helps you understand how academic strategies work. To test with real prices, use Paper Trading.'}
             </p>
-            <div className="bg-gradient-to-r from-amber-500/20 to-blue-500/20 border border-amber-500/30 rounded-lg p-4">
+            {/* IMPORTANT: Simulated Data Warning */}
+            <div className="bg-red-500/10 border-2 border-red-500/30 rounded-lg p-4">
               <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
+                  <div className="flex items-center gap-2 mb-2">
                     <span className="text-sm font-semibold text-text-primary">
-                      {locale === 'it' ? '📊 Dati Real-Time' : '📊 Real-Time Data'}
-                    </span>
-                    <span className="px-2 py-0.5 bg-blue-500/20 border border-blue-500/40 rounded text-[10px] text-blue-300 font-semibold">
-                      {locale === 'it' ? 'Presto Disponibile' : 'Coming Soon'}
+                      {locale === 'it' ? '⚠️ Dati Simulati - Solo Educativo' : '⚠️ Simulated Data - Educational Only'}
                     </span>
                   </div>
-                  <p className="text-xs text-text-secondary leading-relaxed">
+                  <p className="text-xs text-text-secondary leading-relaxed mb-3">
                     {locale === 'it'
-                      ? 'Attualmente questo strumento utilizza dati simulati per dimostrazione. I dati storici real-time e l\'integrazione con API di mercato saranno disponibili nell\'upgrade previsto per Q2 2025. Questo ti permetterà di ottimizzare strategie su dati di mercato reali con precisione accademica.'
-                      : 'Currently this tool uses simulated data for demonstration. Real-time historical data and market API integration will be available in the upgrade scheduled for Q2 2025. This will allow you to optimize strategies on real market data with academic precision.'}
+                      ? 'Questo strumento usa dati SIMULATI per scopi educativi. I risultati NON riflettono performance reali di mercato. Per testare strategie con prezzi reali, usa Paper Trading.'
+                      : 'This tool uses SIMULATED data for educational purposes. Results do NOT reflect real market performance. To test strategies with real prices, use Paper Trading.'}
                   </p>
-                  <div className="mt-2 text-[10px] text-text-tertiary">
-                    {locale === 'it'
-                      ? 'Upgrade previsto: Q2 2025'
-                      : 'Upgrade scheduled: Q2 2025'}
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <a
+                      href="/dashboard/utilities?utility=paper-trading"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg text-sm font-medium transition-all"
+                    >
+                      <Target className="w-4 h-4" />
+                      {locale === 'it' ? 'Testa in Paper Trading' : 'Test in Paper Trading'}
+                    </a>
+                    <div className="text-xs text-text-tertiary flex items-center">
+                      {locale === 'it'
+                        ? 'Backtesting reale disponibile Q2 2025'
+                        : 'Real backtesting available Q2 2025'}
+                    </div>
                   </div>
                 </div>
               </div>
