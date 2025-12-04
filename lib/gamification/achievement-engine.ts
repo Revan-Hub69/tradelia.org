@@ -22,7 +22,7 @@ export interface AchievementCondition {
  */
 export async function checkAndUnlockAchievements(
   userId: string,
-  actionType: 'lesson_completed' | 'course_completed' | 'report_viewed' | 'daily_login'
+  actionType: 'lesson_completed' | 'course_completed' | 'report_viewed' | 'daily_login' | 'paper_trade_opened' | 'paper_trade_closed'
 ) {
   const supabase = await createClient();
   

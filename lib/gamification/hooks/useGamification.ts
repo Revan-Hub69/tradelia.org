@@ -22,7 +22,7 @@ export function useGamification() {
    * Award XP and check achievements after user action
    */
   const handleUserAction = useCallback(async (
-    actionType: 'lesson_completed' | 'course_completed' | 'report_viewed' | 'daily_login',
+    actionType: 'lesson_completed' | 'course_completed' | 'report_viewed' | 'daily_login' | 'paper_trade_opened' | 'paper_trade_closed',
     xpAmount?: number
   ) => {
     try {

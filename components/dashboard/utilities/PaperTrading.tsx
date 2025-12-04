@@ -78,6 +78,25 @@ export function PaperTrading() {
   const [initialCapital] = useState(10000); // €10,000 paper capital
   const [positions, setPositions] = useState<PaperPosition[]>([]);
   const [orders, setOrders] = useState<PaperOrder[]>([]);
+  
+  // Load positions and orders from API
+  const { data: positionsData, loading: positionsLoading } = useApi<PaperPosition[]>(
+    '/api/paper-trading/positions',
+    { cacheTime: 5 * 1000 } // 5 seconds cache
+  );
+  
+  const { data: ordersData, loading: ordersLoading } = useApi<PaperOrder[]>(
+    '/api/paper-trading/orders?status=pending',
+    { cacheTime: 5 * 1000 }
+  );
+  
+  useEffect(() => {
+    if (positionsData) setPositions(positionsData);
+  }, [positionsData]);
+  
+  useEffect(() => {
+    if (ordersData) setOrders(ordersData);
+  }, [ordersData]);
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [selectedSymbol, setSelectedSymbol] = useState('');
   const [selectedAssetType, setSelectedAssetType] = useState<'stock' | 'crypto' | 'forex'>('stock');
@@ -206,43 +225,69 @@ export function PaperTrading() {
       return;
     }
     
-    // Execute order
+    // Execute order via API
     if (order.side === 'buy') {
-      const newPosition: PaperPosition = {
-        id: `pos-${Date.now()}`,
-        symbol: order.symbol,
-        assetType: order.assetType,
-        side: 'long',
-        quantity: parseFloat(orderQuantity),
-        entryPrice: executionPrice,
-        currentPrice: executionPrice,
-        entryTime: new Date().toISOString(),
-        strategy: undefined,
-        notes: undefined,
-        unrealizedPnL: 0,
-        unrealizedPnLPercent: 0,
-      };
+      // Create position via API
+      const positionResponse = await fetch('/api/paper-trading/positions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          symbol: order.symbol,
+          assetType: order.assetType,
+          side: 'long',
+          quantity: parseFloat(orderQuantity),
+          entryPrice: executionPrice,
+          currentPrice: executionPrice,
+        }),
+      });
       
-      setPositions(prev => [...prev, newPosition]);
-      
-      // Award XP
-      await handleUserAction('paper_trade_opened' as any, 5);
+      if (positionResponse.ok) {
+        const newPosition = await positionResponse.json();
+        setPositions(prev => [...prev, newPosition]);
+        
+        // Award XP and check achievements
+        await handleUserAction('paper_trade_opened' as any, 5);
+        
+        // Check achievements
+        await fetch('/api/gamification/check-achievements', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ actionType: 'paper_trade_opened' }),
+        });
+      }
     } else {
-      // Close position
+      // Close position via API
       const position = positions.find(p => p.symbol === order.symbol && p.side === 'long');
       if (position) {
-        const pnl = (executionPrice - position.entryPrice) * position.quantity;
-        const pnlPercent = ((executionPrice - position.entryPrice) / position.entryPrice) * 100;
+        const closeResponse = await fetch(`/api/paper-trading/positions/${position.id}`, {
+          method: 'DELETE',
+        });
         
-        // Award XP based on P&L
-        await handleUserAction('paper_trade_closed' as any, pnl > 0 ? 10 : 5);
-        
-        // Remove position
-        setPositions(prev => prev.filter(p => p.id !== position.id));
+        if (closeResponse.ok) {
+          const pnl = (executionPrice - position.entryPrice) * position.quantity;
+          
+          // Award XP based on P&L
+          await handleUserAction('paper_trade_closed' as any, pnl > 0 ? 10 : 5);
+          
+          // Check achievements
+          await fetch('/api/gamification/check-achievements', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ actionType: 'paper_trade_closed' }),
+          });
+          
+          setPositions(prev => prev.filter(p => p.id !== position.id));
+        }
       }
     }
     
-    // Mark order as filled
+    // Mark order as filled via API
+    await fetch(`/api/paper-trading/orders/${order.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'filled', executionPrice }),
+    });
+    
     setOrders(prev => prev.map(o => o.id === order.id ? { ...o, status: 'filled' } : o));
     
     toast.success(locale === 'it' ? 'Ordine eseguito' : 'Order executed');
@@ -289,8 +334,29 @@ export function PaperTrading() {
     if (orderType === 'market') {
       await executeOrder(newOrder, executionPrice);
     } else {
-      setOrders(prev => [...prev, newOrder]);
-      toast.success(locale === 'it' ? 'Ordine piazzato' : 'Order placed');
+      // Create order via API
+      const orderResponse = await fetch('/api/paper-trading/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          symbol: selectedSymbol.toUpperCase(),
+          assetType: selectedAssetType,
+          orderType,
+          side: orderSide,
+          quantity: qty,
+          limitPrice: orderType === 'limit' ? parseFloat(limitPrice) : undefined,
+          stopPrice: orderType === 'stop' ? parseFloat(stopPrice) : undefined,
+          trailingStopPercent: orderType === 'trailing_stop' ? parseFloat(trailingStopPercent) : undefined,
+        }),
+      });
+      
+      if (orderResponse.ok) {
+        const createdOrder = await orderResponse.json();
+        setOrders(prev => [...prev, createdOrder]);
+        toast.success(locale === 'it' ? 'Ordine piazzato' : 'Order placed');
+      } else {
+        toast.error(locale === 'it' ? 'Errore nel piazzare ordine' : 'Error placing order');
+      }
     }
     
     // Reset form
@@ -308,11 +374,27 @@ export function PaperTrading() {
       ? (currentPrice - position.entryPrice) * position.quantity
       : (position.entryPrice - currentPrice) * position.quantity;
     
-    // Award XP
-    await handleUserAction('paper_trade_closed' as any, pnl > 0 ? 10 : 5);
+    // Close position via API
+    const response = await fetch(`/api/paper-trading/positions/${position.id}`, {
+      method: 'DELETE',
+    });
     
-    setPositions(prev => prev.filter(p => p.id !== position.id));
-    toast.success(locale === 'it' ? 'Posizione chiusa' : 'Position closed');
+    if (response.ok) {
+      // Award XP and check achievements
+      await handleUserAction('paper_trade_closed' as any, pnl > 0 ? 10 : 5);
+      
+      // Check achievements
+      await fetch('/api/gamification/check-achievements', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ actionType: 'paper_trade_closed' }),
+      });
+      
+      setPositions(prev => prev.filter(p => p.id !== position.id));
+      toast.success(locale === 'it' ? 'Posizione chiusa' : 'Position closed');
+    } else {
+      toast.error(locale === 'it' ? 'Errore nella chiusura posizione' : 'Error closing position');
+    }
   };
   
   // Calculate portfolio stats
