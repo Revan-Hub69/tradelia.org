@@ -20,11 +20,18 @@ interface MarketDepth {
   change24h: number; // Cambio 24h (valore assoluto)
   change24hPercent: number; // Cambio 24h (%)
   volume24h: number; // Volume 24h
-  bidTotal: number; // Volume totale bid (order book)
-  askTotal: number; // Volume totale ask (order book)
+  bidTotal: number; // Volume totale bid (order book L400)
+  askTotal: number; // Volume totale ask (order book L400)
   spread: number; // Spread percentuale
   imbalance: number; // Imbalance bid/ask (positive = più bid, negative = più ask)
   trend: 'up' | 'down' | 'neutral'; // Trend semplice
+  recentTrades: Array<{
+    price: number;
+    quantity: number;
+    time: number;
+    isBuyerMaker: boolean; // true = vendita, false = acquisto
+  }>; // Chiusure recenti (ultimi trades)
+  depthLevels: number; // Numero livelli order book analizzati
 }
 
 interface CryptoDepthResult {
@@ -37,10 +44,13 @@ interface CryptoDepthResult {
     topGainers: Array<{ symbol: string; name: string; change: number; volume: number }>;
     topLosers: Array<{ symbol: string; name: string; change: number; volume: number }>;
     highVolume: Array<{ symbol: string; name: string; volume: number }>; // Crypto con volume alto
+    totalBidVolume: number; // Volume totale bid L400
+    totalAskVolume: number; // Volume totale ask L400
+    globalImbalance: number; // Imbalance globale
     aiReadings: {
-      marketOverview: string; // Lettura semplice stato mercato (2-3 frasi)
-      notableMovements: string[]; // Movimenti notevoli (solo dati, no analisi)
-      volumeHighlights: string[]; // Highlight volumi (solo dati)
+      marketOverview: string; // Lettura semplice stato mercato basata su L400 + recent trades
+      notableMovements: string[]; // Movimenti notevoli con dati L400 e recent trades
+      depthHighlights: string[]; // Highlight profondità L400 e recent trades significativi
     };
   };
 }
@@ -48,6 +58,42 @@ interface CryptoDepthResult {
 // Cache for order books (2 minutes - order books change frequently)
 const depthCache = new Map<string, { data: MarketDepth; timestamp: number }>();
 const CACHE_TTL = 2 * 60 * 1000;
+
+/**
+ * Get recent trades from Binance
+ * Binance Free API: /api/v3/trades (last 500 trades)
+ */
+async function getBinanceRecentTrades(symbol: string, limit: number = 100): Promise<Array<{
+  price: number;
+  quantity: number;
+  time: number;
+  isBuyerMaker: boolean;
+}> | null> {
+  try {
+    const binanceSymbol = `${symbol}USDT`;
+    const response = await fetch(
+      `https://api.binance.com/api/v3/trades?symbol=${binanceSymbol}&limit=${limit}`,
+      {
+        headers: { 'Accept': 'application/json' },
+      }
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return data.map((trade: any) => ({
+      price: parseFloat(trade.price),
+      quantity: parseFloat(trade.qty),
+      time: trade.time,
+      isBuyerMaker: trade.isBuyerMaker,
+    }));
+  } catch (error) {
+    console.error(`Error fetching recent trades for ${symbol}:`, error);
+    return null;
+  }
+}
 
 /**
  * Get top 400 crypto from CoinGecko with price/volume data
@@ -97,17 +143,18 @@ async function getTop400CryptoWithData(): Promise<Array<{
 }
 
 /**
- * Get order book depth from Binance
- * Binance Free API: /api/v3/depth
- * Returns simplified order book data
+ * Get order book depth from Binance (L400)
+ * Binance Free API: /api/v3/depth (max 5000 levels)
+ * Returns order book data with L400 depth
  */
-async function getBinanceOrderBook(symbol: string, limit: number = 20): Promise<{
+async function getBinanceOrderBook(symbol: string, limit: number = 400): Promise<{
   bids: OrderBookLevel[];
   asks: OrderBookLevel[];
   bidTotal: number;
   askTotal: number;
   spread: number;
   imbalance: number;
+  depthLevels: number;
 } | null> {
   try {
     // Binance format: BTCUSDT, ETHUSDT, etc.
@@ -156,6 +203,7 @@ async function getBinanceOrderBook(symbol: string, limit: number = 20): Promise<
       askTotal,
       spread,
       imbalance,
+      depthLevels: bids.length + asks.length,
     };
   } catch (error) {
     console.error(`Error fetching order book for ${symbol}:`, error);
@@ -222,33 +270,38 @@ async function readMarketDepthWithGroq(
 
   const systemPrompt = buildTradeliaDepthPrompt();
   
-  const userPrompt = `Leggi semplicemente i dati di profondità di mercato (order book depth) delle top ${depths.length} crypto.
+  const userPrompt = `Leggi i dati di PROFONDITÀ DI MERCATO L400 e CHIUSURE RECENTI delle top ${depths.length} crypto.
 
 DATI FORNITI:
 ${depthData}
 
-REGOLE SEMPLICI:
-1. LEGGI solo i numeri forniti. Descrivi cosa vedi.
-2. NO analisi, NO pattern, NO interpretazioni.
-3. Solo lettura dati: prezzi, volumi, crescita/discesa.
+FOCUS: Order Book L400 (profondità 400 livelli) + Recent Trades (chiusure recenti)
+Questi dati mostrano cosa sta succedendo REALMENTE sul mercato:
+- Order Book L400: mostra liquidità reale e pressione bid/ask fino a 400 livelli
+- Recent Trades: mostra le chiusure reali (acquisti/vendite) degli ultimi trades
 
-Fornisci letture SEMPLICI:
-1. MARKET OVERVIEW (2-3 frasi): Descrizione semplice stato mercato (es: "X crypto in crescita, Y in discesa, volume totale Z")
-2. NOTABLE MOVEMENTS (lista 3-5 punti): Solo movimenti notevoli con numeri (es: "BTC +15%, volume 1.2B")
-3. VOLUME HIGHLIGHTS (lista 3-5 punti): Solo crypto con volume alto (es: "ETH volume 500M")
+REGOLE SEMPLICI:
+1. LEGGI solo i numeri forniti. Descrivi cosa vedi nei dati reali.
+2. NO analisi complesse, NO pattern, NO interpretazioni avanzate.
+3. Focus su: profondità L400, spread, imbalance, chiusure recenti (buy/sell ratio).
+
+Fornisci letture SEMPLICI basate su DATI REALI:
+1. MARKET OVERVIEW (2-3 frasi): Descrizione stato mercato basata su L400 depth e recent trades (es: "X crypto in crescita, Y in discesa, order book mostra Z di liquidità, recent trades mostrano W acquisti vs V vendite")
+2. NOTABLE MOVEMENTS (lista 3-5 punti): Movimenti notevoli con dati L400 e recent trades (es: "BTC +15%, spread 0.01%, imbalance +12%, recent trades: 60 acquisti / 40 vendite")
+3. DEPTH HIGHLIGHTS (lista 3-5 punti): Crypto con profondità L400 interessante o recent trades significativi (es: "ETH depth L400 mostra 500M bid, recent trades: 70 acquisti / 30 vendite")
 
 ESEMPIO CORRETTO:
-- ✅ "65 crypto in crescita, 35 in discesa. Volume totale 5.2B"
-- ✅ "BTC mostra +15% con volume 1.2B nelle ultime 24h"
-- ✅ "ETH, SOL, BNB mostrano volumi superiori a 500M"
-- ❌ "Il mercato mostra trend positivo" (troppo interpretativo)
-- ❌ "Pattern di accumulo su BTC" (NO pattern)
+- ✅ "65 crypto in crescita, 35 in discesa. Order book L400 mostra 2.5B bid vs 2.3B ask (imbalance +4%). Recent trades: 55% acquisti / 45% vendite"
+- ✅ "BTC mostra +15% con spread 0.01% (liquidità alta), imbalance +12% (più bid), recent trades: 60 acquisti / 40 vendite"
+- ✅ "ETH depth L400: 500M bid, spread 0.02%, recent trades mostrano 70 acquisti / 30 vendite (pressione acquisto)"
+- ❌ "Il mercato mostra trend positivo" (troppo generico, usa i dati L400)
+- ❌ "Pattern di accumulo" (NO pattern, solo dati reali)
 
 Rispondi SOLO in formato JSON valido:
 {
-  "marketOverview": "Descrizione semplice stato mercato...",
-  "notableMovements": ["BTC +15%, volume 1.2B", "ETH -5%, volume 800M"],
-  "volumeHighlights": ["ETH volume 500M", "SOL volume 300M"]
+  "marketOverview": "Descrizione stato mercato basata su L400 depth e recent trades...",
+  "notableMovements": ["BTC +15%, spread 0.01%, imbalance +12%, recent trades: 60 buy / 40 sell", "ETH -5%, spread 0.02%, recent trades: 40 buy / 60 sell"],
+  "depthHighlights": ["ETH depth L400: 500M bid, recent trades: 70 buy / 30 sell", "SOL depth L400: 300M bid, spread 0.03%"]
 }`;
 
   try {
@@ -322,7 +375,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '400', 10);
     const useCache = searchParams.get('cache') !== 'false';
-    const orderBookLimit = parseInt(searchParams.get('depth') || '20', 10); // Number of levels
+    const orderBookLimit = parseInt(searchParams.get('depth') || '400', 10); // L400 depth (default)
+    const recentTradesLimit = parseInt(searchParams.get('trades') || '100', 10); // Recent trades
 
     const now = Date.now();
 
@@ -353,7 +407,12 @@ export async function GET(request: NextRequest) {
           await new Promise(resolve => setTimeout(resolve, i * 50)); // 50ms delay
 
           try {
-            const orderBook = await getBinanceOrderBook(crypto.symbol, orderBookLimit);
+            // Fetch order book L400 and recent trades in parallel
+            const [orderBook, recentTrades] = await Promise.all([
+              getBinanceOrderBook(crypto.symbol, orderBookLimit),
+              getBinanceRecentTrades(crypto.symbol, recentTradesLimit),
+            ]);
+
             if (orderBook) {
               const depth: MarketDepth = {
                 symbol: crypto.symbol,
@@ -367,6 +426,8 @@ export async function GET(request: NextRequest) {
                 spread: orderBook.spread,
                 imbalance: orderBook.imbalance,
                 trend: crypto.change24hPercent > 0 ? 'up' : crypto.change24hPercent < 0 ? 'down' : 'neutral',
+                recentTrades: recentTrades || [],
+                depthLevels: orderBook.depthLevels,
               };
               
               depths.push(depth);
@@ -410,34 +471,75 @@ export async function GET(request: NextRequest) {
       .slice(0, 10)
       .map(d => ({ symbol: d.symbol, name: d.name, volume: d.volume24h || 0 }));
 
-    // Prepare simple data for AI reading
+    // Prepare data for AI reading - focus on L400 depth and recent trades
     const totalVolume = depths.reduce((sum, d) => sum + (d.volume24h || 0), 0);
     const totalBidVolume = depths.reduce((sum, d) => sum + d.bidTotal, 0);
     const totalAskVolume = depths.reduce((sum, d) => sum + d.askTotal, 0);
+    
+    // Analyze recent trades patterns
+    const topCryptoWithTrades = depths
+      .filter(d => d.recentTrades.length > 0)
+      .slice(0, 10);
+    
+    const recentTradesAnalysis = topCryptoWithTrades.map(crypto => {
+      const trades = crypto.recentTrades;
+      const buyTrades = trades.filter(t => !t.isBuyerMaker).length;
+      const sellTrades = trades.filter(t => t.isBuyerMaker).length;
+      const avgPrice = trades.reduce((sum, t) => sum + t.price, 0) / trades.length;
+      const totalTradeVolume = trades.reduce((sum, t) => sum + t.quantity, 0);
+      
+      return {
+        symbol: crypto.symbol,
+        name: crypto.name,
+        totalTrades: trades.length,
+        buyTrades,
+        sellTrades,
+        buySellRatio: buyTrades > 0 ? (sellTrades / buyTrades).toFixed(2) : 'N/A',
+        avgPrice,
+        totalTradeVolume,
+        spread: crypto.spread,
+        imbalance: crypto.imbalance,
+        depthLevels: crypto.depthLevels,
+      };
+    });
 
     const depthData = `
 SNAPSHOT PROFONDITÀ DI MERCATO LIVE - Top ${depths.length} Crypto
+FOCUS: Order Book L400 + Chiusure Recenti (Recent Trades)
 
-DATI SEMPLICI:
+DATI PROFONDITÀ DI MERCATO (L400):
 - Crypto analizzate: ${depths.length}
 - Gainers: ${gainers} (${((gainers / depths.length) * 100).toFixed(1)}%)
 - Losers: ${losers} (${((losers / depths.length) * 100).toFixed(1)}%)
 - Volume totale 24h: $${(totalVolume / 1e9).toFixed(2)}B
-- Volume totale Bid (order book): ${(totalBidVolume / 1e6).toFixed(2)}M
-- Volume totale Ask (order book): ${(totalAskVolume / 1e6).toFixed(2)}M
+- Volume totale Bid (L400 order book): ${(totalBidVolume / 1e6).toFixed(2)}M
+- Volume totale Ask (L400 order book): ${(totalAskVolume / 1e6).toFixed(2)}M
+- Imbalance globale: ${((totalBidVolume - totalAskVolume) / (totalBidVolume + totalAskVolume) * 100).toFixed(2)}%
 
-TOP 5 GAINERS:
-${topGainers.slice(0, 5).map((g, i) => `${i + 1}. ${g.symbol} (${g.name}): +${g.change.toFixed(2)}%, volume $${(g.volume / 1e6).toFixed(2)}M`).join('\n')}
+TOP 5 GAINERS (con profondità L400):
+${topGainers.slice(0, 5).map((g, i) => {
+  const crypto = depths.find(d => d.symbol === g.symbol);
+  return `${i + 1}. ${g.symbol} (${g.name}): +${g.change.toFixed(2)}%, volume $${(g.volume / 1e6).toFixed(2)}M, spread ${crypto?.spread.toFixed(4)}%, imbalance ${crypto?.imbalance.toFixed(2)}%, depth L${crypto?.depthLevels || 0}`;
+}).join('\n')}
 
-TOP 5 LOSERS:
-${topLosers.slice(0, 5).map((l, i) => `${i + 1}. ${l.symbol} (${l.name}): ${l.change.toFixed(2)}%, volume $${(l.volume / 1e6).toFixed(2)}M`).join('\n')}
+TOP 5 LOSERS (con profondità L400):
+${topLosers.slice(0, 5).map((l, i) => {
+  const crypto = depths.find(d => d.symbol === l.symbol);
+  return `${i + 1}. ${l.symbol} (${l.name}): ${l.change.toFixed(2)}%, volume $${(l.volume / 1e6).toFixed(2)}M, spread ${crypto?.spread.toFixed(4)}%, imbalance ${crypto?.imbalance.toFixed(2)}%, depth L${crypto?.depthLevels || 0}`;
+}).join('\n')}
 
-TOP 5 PER VOLUME:
-${highVolume.slice(0, 5).map((v, i) => `${i + 1}. ${v.symbol} (${v.name}): volume $${(v.volume / 1e6).toFixed(2)}M`).join('\n')}
+CHIUSURE RECENTI (Recent Trades Analysis):
+${recentTradesAnalysis.slice(0, 5).map((t, i) => 
+  `${i + 1}. ${t.symbol} (${t.name}): ${t.totalTrades} trades recenti, ${t.buyTrades} acquisti / ${t.sellTrades} vendite (ratio ${t.buySellRatio}), volume trades ${(t.totalTradeVolume / 1e6).toFixed(2)}M, spread ${t.spread.toFixed(4)}%, imbalance ${t.imbalance.toFixed(2)}%, depth L${t.depthLevels}`
+).join('\n')}
 `;
 
     // Simple readings with Groq AI
     const aiReadings = await readMarketDepthWithGroq(depthData, depths);
+
+    const globalImbalance = totalBidVolume + totalAskVolume > 0 
+      ? ((totalBidVolume - totalAskVolume) / (totalBidVolume + totalAskVolume)) * 100 
+      : 0;
 
     const result: CryptoDepthResult = {
       timestamp: new Date().toISOString(),
@@ -449,10 +551,13 @@ ${highVolume.slice(0, 5).map((v, i) => `${i + 1}. ${v.symbol} (${v.name}): volum
         topGainers,
         topLosers,
         highVolume,
+        totalBidVolume,
+        totalAskVolume,
+        globalImbalance,
         aiReadings: {
           marketOverview: aiReadings.marketOverview,
           notableMovements: aiReadings.notableMovements,
-          volumeHighlights: aiReadings.volumeHighlights,
+          depthHighlights: aiReadings.depthHighlights || aiReadings.volumeHighlights || [],
         },
       },
     };
