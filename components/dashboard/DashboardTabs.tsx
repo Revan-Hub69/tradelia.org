@@ -7,6 +7,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
 import { cn } from '@/lib/utils/cn';
 import { prefetchOnHover } from '@/lib/utils/prefetch';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
 
 type TabId = 'overview' | 'education' | 'analysis' | 'settings';
 
@@ -87,13 +88,19 @@ export function DashboardTabs() {
   };
 
   return (
-    <nav
-      role="tablist"
-      aria-label={t('dashboard.tabs.navigation') || 'Navigazione dashboard'}
-      className="sticky top-0 z-40 bg-bg-base border-b border-border-subtle mb-6"
-    >
+    <div className="sticky top-0 z-40 bg-bg-base border-b border-border-subtle mb-6">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
+        {/* Breadcrumb */}
+        <div className="py-3 border-b border-border-subtle">
+          <Breadcrumb />
+        </div>
+        
+        {/* Tabs */}
+        <nav
+          role="tablist"
+          aria-label={t('dashboard.tabs.navigation') || 'Navigazione dashboard'}
+        >
+          <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -129,8 +136,9 @@ export function DashboardTabs() {
               </button>
             );
           })}
-        </div>
+          </div>
+        </nav>
       </div>
-    </nav>
+    </div>
   );
 }

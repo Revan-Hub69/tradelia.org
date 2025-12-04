@@ -11,6 +11,7 @@ import { AccountBanner } from './AccountBanner';
 import { QuickActions } from './QuickActions';
 import { RecentActivity } from './RecentActivity';
 import { UserBenefits } from './UserBenefits';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { SkipLink } from '@/components/ui/SkipLink';
@@ -226,6 +227,13 @@ export function DashboardShell() {
           </ErrorBoundary>
         </div>
         <div id="modules-view" className="modules-view active" role="region" aria-label="Contenuti dashboard">
+          {/* Breadcrumb per navigazione */}
+          <div className="mb-6 pb-4 border-b border-border-subtle">
+            <ErrorBoundary>
+              <Breadcrumb />
+            </ErrorBoundary>
+          </div>
+          
           <ErrorBoundary>
             <DashboardHero />
           </ErrorBoundary>
