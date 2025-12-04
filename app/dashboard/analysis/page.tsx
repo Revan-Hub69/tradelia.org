@@ -1,41 +1,16 @@
-import dynamic from 'next/dynamic';
-import { NoSSR } from '@/components/common/NoSSR';
-import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
-import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
-import { generatePageMetadata } from '@/lib/seo/metadata';
+import { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
+import AnalysisDashboard from '@/components/dashboard/analysis/AnalysisDashboard';
 
-const AnalysisContent = dynamic(
-  () => import('@/components/dashboard/AnalysisContent').then(m => ({ default: m.AnalysisContent })),
-  {
-    ssr: false,
-  }
-);
-
-const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-bg-base" suppressHydrationWarning>
-    <div className="text-center">
-      <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-      <p className="text-text-secondary">Caricamento analisi...</p>
-    </div>
-  </div>
-);
-
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('Dashboard');
+  
   return {
-    title: 'Analisi · Dashboard · Tradelia',
-    description: 'Report, richieste analisi e strumenti di analisi finanziaria',
+    title: `${t('analysis')} | Tradelia`,
+    description: t('analysisDescription') || 'Market analysis dashboard with academic indicators, VIX, Fear & Greed Index, and term structure analysis',
   };
 }
 
 export default function AnalysisPage() {
-  return (
-    <ErrorBoundary>
-      <NoSSR fallback={<LoadingFallback />}>
-        <div suppressHydrationWarning>
-          <DashboardTabs />
-          <AnalysisContent />
-        </div>
-      </NoSSR>
-    </ErrorBoundary>
-  );
+  return <AnalysisDashboard />;
 }
