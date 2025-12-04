@@ -2,23 +2,23 @@ import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * AI Status API
- * AI is always enabled - uses intelligent RAG running on Vercel
- * 100% free, no external API calls, no costs
- * Runs entirely on Vercel serverless functions
+ * Together AI (primary, $25 free) + Groq (fallback) + Simple RAG (final fallback)
  */
 export async function GET(request: NextRequest) {
   try {
-    // AI is always available (intelligent RAG on Vercel)
+    const togetherEnabled = !!process.env.TOGETHER_API_KEY && process.env.TOGETHER_API_KEY.length > 0;
+    const groqEnabled = !!process.env.GROQ_API_KEY && process.env.GROQ_API_KEY.length > 0;
+    
     return NextResponse.json({
-      enabled: true,
-      model: 'tradelia-rag-intelligent',
-      free: true,
-      hosted: 'vercel',
-      description: 'Intelligent RAG system running on Vercel serverless functions. No external API calls, 100% free.',
+      enabled: togetherEnabled || groqEnabled,
+      primary: togetherEnabled ? 'together-ai' : groqEnabled ? 'groq' : 'fallback',
+      fallback: groqEnabled ? 'groq' : 'simple-rag',
+      finalFallback: 'simple-rag',
+      description: 'Together AI ($25 free) → Groq fallback → Simple RAG final fallback',
     });
   } catch (error) {
     return NextResponse.json(
-      { enabled: true, free: true, hosted: 'vercel', error: 'Error checking AI status' },
+      { enabled: false, error: 'Error checking AI status' },
       { status: 500 }
     );
   }

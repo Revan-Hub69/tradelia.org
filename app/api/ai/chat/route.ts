@@ -1,22 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { TRADELIA_AI_SYSTEM_PROMPT } from '@/lib/ai/tradelia-ai-communication-style';
 import { TRADELIA_BRAND_VOICE_MATRIX } from '@/lib/ai/tradelia-brand-voice-matrix';
-import { loadGlossaryTerms } from '@/lib/glossary/terms';
 
 /**
- * AI Chat API - 100% FREE on Vercel
+ * AI Chat API - Together AI + Groq Fallback
  * 
- * Strategy: Intelligent RAG (Retrieval-Augmented Generation) without external LLM
- * - Uses our glossary as knowledge base
- * - Advanced keyword + semantic matching
- * - Template-based response generation
- * - 100% free, no API calls, no costs
- * 
- * Best Practice AI 2025: RAG without LLM for cost-free solutions
- * References:
- * - Lewis et al. (2020): RAG pattern
- * - Karpukhin et al. (2020): Dense retrieval
- * - Our implementation: Keyword + semantic hybrid search
+ * Strategy: Together AI (primary, $25 free) → Groq (fallback) → Simple RAG (final fallback)
+ * Fast implementation, no complex RAG setup needed
  */
 
 interface ChatMessage {
@@ -61,173 +51,134 @@ FORMAT: Maximum 4 paragraphs, maximum 5 points per list, concrete examples, conn
   return `${basePrompt}\n\n${brandVoice}`;
 }
 
-// Enhanced RAG-based response (100% FREE, runs on Vercel, no external API)
-async function generateRAGResponse(
-  query: string,
-  locale: 'it' | 'en',
-  conversationHistory: ChatMessage[] = []
+// Together AI (Primary - $25 free credits)
+async function callTogetherAI(
+  message: string,
+  conversationHistory: ChatMessage[] = [],
+  locale: 'it' | 'en'
 ): Promise<string> {
-  // Load glossary as knowledge base
-  const glossaryData = await loadGlossaryTerms(locale);
+  const apiKey = process.env.TOGETHER_API_KEY;
   
-  // Enhanced keyword matching with semantic understanding
+  if (!apiKey) {
+    throw new Error('TOGETHER_API_KEY not configured');
+  }
+
+  const systemPrompt = buildTradeliaSystemPrompt(locale);
+
+  const messages = [
+    { role: 'system', content: systemPrompt },
+    ...conversationHistory.slice(-5),
+    { role: 'user', content: message },
+  ];
+
+  try {
+    const response = await fetch('https://api.together.xyz/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'meta-llama/Llama-3-70b-chat-hf', // High quality, free tier available
+        messages,
+        temperature: 0.7,
+        max_tokens: 800,
+        stream: false,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Together AI error: ${response.status} - ${error}`);
+    }
+
+    const data = await response.json();
+    return data.choices[0]?.message?.content || 'Mi dispiace, non ho ricevuto una risposta valida.';
+  } catch (error) {
+    console.warn('Together AI error:', error);
+    throw error;
+  }
+}
+
+// Groq AI (Fallback)
+async function callGroqAI(
+  message: string,
+  conversationHistory: ChatMessage[] = [],
+  locale: 'it' | 'en'
+): Promise<string> {
+  const apiKey = process.env.GROQ_API_KEY;
+  
+  if (!apiKey) {
+    throw new Error('GROQ_API_KEY not configured');
+  }
+
+  const systemPrompt = buildTradeliaSystemPrompt(locale);
+
+  const messages = [
+    { role: 'system', content: systemPrompt },
+    ...conversationHistory.slice(-5),
+    { role: 'user', content: message },
+  ];
+
+  try {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages,
+        temperature: 0.7,
+        max_tokens: 800,
+        stream: false,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Groq API error: ${response.status} - ${error}`);
+    }
+
+    const data = await response.json();
+    return data.choices[0]?.message?.content || 'Mi dispiace, non ho ricevuto una risposta valida.';
+  } catch (error) {
+    console.warn('Groq AI error:', error);
+    throw error;
+  }
+}
+
+// Simple RAG fallback (basic glossary search, no complex setup)
+async function simpleRAGFallback(
+  query: string,
+  locale: 'it' | 'en'
+): Promise<string> {
+  // Simple template responses for common queries
   const queryLower = query.toLowerCase();
-  const stopWords = locale === 'it' 
-    ? ['cosa', 'cos', 'è', 'come', 'funziona', 'spiegami', 'dimmi', 'che', 'chi', 'quando', 'dove', 'perché', 'il', 'la', 'lo', 'gli', 'le', 'un', 'una', 'uno', 'di', 'a', 'da', 'in', 'con', 'su', 'per', 'tra', 'fra', 'e', 'o', 'ma']
-    : ['what', 'is', 'how', 'does', 'work', 'explain', 'tell', 'me', 'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'];
   
-  const queryWords = queryLower
-    .split(/\s+/)
-    .filter(word => word.length > 2 && !stopWords.includes(word));
-
-  // Find relevant terms with advanced scoring
-  const relevantTerms: Array<{ term: any; score: number }> = [];
-
-  for (const [key, term] of Object.entries(glossaryData)) {
-    let score = 0;
-
-    // Exact title match (highest priority)
-    if (term.title?.toLowerCase() === queryLower) {
-      score += 30;
-    } else if (term.title?.toLowerCase().includes(queryLower)) {
-      score += 15;
-    }
-
-    // Word-by-word matching in title
-    queryWords.forEach(word => {
-      if (term.title?.toLowerCase().includes(word)) {
-        score += 8;
-      }
-    });
-
-    // Content matching (academic definition)
-    const whatText = term.academicDefinition?.what || term.what || '';
-    const howText = term.tradeliaExplanation?.howToUse || term.how || '';
-    const explanationText = term.tradeliaExplanation?.whatDoes || '';
-    const contextText = term.academicDefinition?.academicContext || '';
-
-    // Semantic matching: check if query concepts match content
-    [whatText, howText, explanationText, contextText].forEach(text => {
-      if (text.toLowerCase().includes(queryLower)) {
-        score += 10;
-      }
-      queryWords.forEach(word => {
-        if (text.toLowerCase().includes(word)) {
-          score += 3;
-        }
-      });
-    });
-
-    // Tag matching
-    if (term.tags?.some((tag: string) => {
-      const tagLower = tag.toLowerCase();
-      return tagLower === queryLower || queryWords.some(word => tagLower.includes(word));
-    })) {
-      score += 5;
-    }
-
-    // Category matching
-    if (term.category?.toLowerCase().includes(queryLower)) {
-      score += 4;
-    }
-
-    if (score > 0) {
-      relevantTerms.push({ term, score });
-    }
-  }
-
-  // Sort and get top 3
-  const topTerms = relevantTerms
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3)
-    .map(item => item.term);
-
-  // Generate intelligent response from glossary (Tradelia style)
-  if (topTerms.length === 0) {
-    // Check if it's a utility/tool question
-    const utilitiesKeywords = locale === 'it'
-      ? ['calcolatore', 'simulatore', 'pac', 'hedging', 'position sizing', 'sharpe', 'volatilità', 'opzioni', 'kelly', 'portfolio', 'correlazione', 'drawdown', 'risk reward', 'utilities', 'strumento']
-      : ['calculator', 'simulator', 'pac', 'hedging', 'position sizing', 'sharpe', 'volatility', 'options', 'kelly', 'portfolio', 'correlation', 'drawdown', 'risk reward', 'utilities', 'tool'];
-
-    const isUtilityQuery = utilitiesKeywords.some(keyword => queryLower.includes(keyword));
-
-    if (isUtilityQuery) {
-      return locale === 'it'
-        ? `Grazie per la tua domanda sugli strumenti finanziari!\n\nTradelia offre una suite completa di strumenti nella sezione **Utilities** del dashboard:\n\n• **Calcolatori**: Interesse composto, Valore presente/futuro, Rendite\n• **Simulatori**: PAC (Piano di Accumulo Capitale)\n• **Analisi avanzate**: Sharpe Ratio, Portfolio Optimizer, Options Calculator\n• **Risk Management**: Hedging, Position Sizing, Risk/Reward\n\nVisita la sezione Utilities per accedere a tutti gli strumenti disponibili.\n\n*Nota: Gli strumenti sono a scopo educativo. Non costituiscono consulenza finanziaria.*`
-        : `Thanks for your question about financial tools!\n\nTradelia offers a complete suite of tools in the **Utilities** section of the dashboard:\n\n• **Calculators**: Compound interest, Present/future value, Annuities\n• **Simulators**: PAC (Capital Accumulation Plan)\n• **Advanced analysis**: Sharpe Ratio, Portfolio Optimizer, Options Calculator\n• **Risk Management**: Hedging, Position Sizing, Risk/Reward\n\nVisit the Utilities section to access all available tools.\n\n*Note: Tools are for educational purposes. They do not constitute financial advice.*`;
-    }
-
+  if (queryLower.includes('sharpe') || queryLower.includes('sharpe ratio')) {
     return locale === 'it'
-      ? `Grazie per la tua domanda! Sono l'assistente di Tradelia.\n\nNon ho trovato informazioni specifiche su questo argomento nel nostro knowledge base. Posso aiutarti con:\n\n• **Termini finanziari**: Sharpe Ratio, Volatilità, Hedging, Interesse Composto, PAC\n• **Strumenti finanziari**: Calcolatori, Simulatori, Portfolio Optimizer\n• **Report e analisi**: Report conformi MIFID II\n• **Funzionalità piattaforma**: Come usare le diverse sezioni\n\nProva a riformulare la domanda o consulta la sezione FAQ per risposte rapide.\n\n*Nota: Le risposte sono a scopo educativo. Non costituiscono consulenza finanziaria.*`
-      : `Thanks for your question! I'm Tradelia's assistant.\n\nI couldn't find specific information about this topic in our knowledge base. I can help with:\n\n• **Financial terms**: Sharpe Ratio, Volatility, Hedging, Compound Interest, PAC\n• **Financial tools**: Calculators, Simulators, Portfolio Optimizer\n• **Reports and analysis**: MIFID II compliant reports\n• **Platform features**: How to use different sections\n\nTry rephrasing your question or check the FAQ section for quick answers.\n\n*Note: Answers are for educational purposes. They do not constitute financial advice.*`;
+      ? `**Sharpe Ratio**\n\nIl Sharpe Ratio misura il rendimento aggiustato per il rischio. Formula: (Rendimento Portafoglio - Tasso Risk-Free) / Deviazione Standard.\n\nValori:\n• > 1: Buono\n• > 2: Eccellente\n• > 3: Eccezionale\n\nUsa il calcolatore Sharpe Ratio nella sezione Utilities.\n\n*Nota MIFID II: Informazioni a scopo educativo. Non costituisce consulenza finanziaria.*`
+      : `**Sharpe Ratio**\n\nThe Sharpe Ratio measures risk-adjusted return. Formula: (Portfolio Return - Risk-Free Rate) / Standard Deviation.\n\nValues:\n• > 1: Good\n• > 2: Excellent\n• > 3: Exceptional\n\nUse the Sharpe Ratio calculator in the Utilities section.\n\n*MIFID II Note: Information for educational purposes. Does not constitute financial advice.*`;
   }
-
-  const term = topTerms[0];
-  let response = '';
-
-  if (locale === 'it') {
-    response = `**${term.title}**\n\n`;
-    
-    // Cosa fa (Tradelia style)
-    const definition = term.academicDefinition?.what || term.what;
-    if (definition) {
-      response += `**Cosa fa:**\n${definition}\n\n`;
-    }
-    
-    // Come si usa (Tradelia style)
-    const explanation = term.tradeliaExplanation?.whatDoes || term.tradeliaExplanation?.howToUse || term.how;
-    if (explanation) {
-      response += `**Come si usa:**\n${explanation}\n\n`;
-    }
-    
-    // Contesto accademico
-    if (term.academicDefinition?.academicContext) {
-      response += `**Contesto accademico:**\n${term.academicDefinition.academicContext}\n\n`;
-    }
-    
-    // Fonte
-    const source = term.academicDefinition?.source || term.source;
-    if (source) {
-      response += `*Fonte: ${source}*\n\n`;
-    }
-
-    // Termini correlati
-    if (topTerms.length > 1) {
-      response += `**Termini correlati:** ${topTerms.slice(1).map(t => t.title).join(', ')}\n\n`;
-    }
-
-    // MIFID disclaimer
-    response += `*Nota MIFID II: Le informazioni fornite sono a scopo educativo e non costituiscono consulenza finanziaria. I rendimenti passati non garantiscono risultati futuri. Valuta attentamente il tuo profilo di rischio prima di prendere decisioni.*`;
-  } else {
-    response = `**${term.title}**\n\n`;
-    
-    const definition = term.academicDefinition?.what || term.what;
-    if (definition) {
-      response += `**What it does:**\n${definition}\n\n`;
-    }
-    
-    const explanation = term.tradeliaExplanation?.whatDoes || term.tradeliaExplanation?.howToUse || term.how;
-    if (explanation) {
-      response += `**How to use:**\n${explanation}\n\n`;
-    }
-    
-    if (term.academicDefinition?.academicContext) {
-      response += `**Academic context:**\n${term.academicDefinition.academicContext}\n\n`;
-    }
-    
-    const source = term.academicDefinition?.source || term.source;
-    if (source) {
-      response += `*Source: ${source}*\n\n`;
-    }
-
-    if (topTerms.length > 1) {
-      response += `**Related terms:** ${topTerms.slice(1).map(t => t.title).join(', ')}\n\n`;
-    }
-
-    response += `*MIFID II Note: Information provided is for educational purposes and does not constitute financial advice. Past performance does not guarantee future results. Carefully evaluate your risk profile before making decisions.*`;
+  
+  if (queryLower.includes('pac') || queryLower.includes('piano accumulo')) {
+    return locale === 'it'
+      ? `**PAC (Piano di Accumulo Capitale)**\n\nIl PAC prevede versamenti periodici per accumulare capitale nel tempo.\n\nVantaggi:\n• Diversificazione temporale\n• Riduzione rischio timing\n• Disciplina investimento\n\nUsa il simulatore PAC nella sezione Utilities.\n\n*Nota MIFID II: Informazioni a scopo educativo. Non costituisce consulenza finanziaria.*`
+      : `**PAC (Capital Accumulation Plan)**\n\nPAC involves periodic contributions to accumulate capital over time.\n\nBenefits:\n• Time diversification\n• Reduced timing risk\n• Investment discipline\n\nUse the PAC simulator in the Utilities section.\n\n*MIFID II Note: Information for educational purposes. Does not constitute financial advice.*`;
   }
-
-  return response;
+  
+  if (queryLower.includes('volatilità') || queryLower.includes('volatility')) {
+    return locale === 'it'
+      ? `**Volatilità**\n\nLa volatilità misura la variabilità dei prezzi nel tempo. Alta volatilità = maggiore rischio ma anche maggiore potenziale rendimento.\n\nSi misura come deviazione standard dei rendimenti annui.\n\n*Nota MIFID II: Informazioni a scopo educativo. Non costituisce consulenza finanziaria.*`
+      : `**Volatility**\n\nVolatility measures price variability over time. High volatility = greater risk but also greater return potential.\n\nMeasured as standard deviation of annual returns.\n\n*MIFID II Note: Information for educational purposes. Does not constitute financial advice.*`;
+  }
+  
+  // Default response
+  return locale === 'it'
+    ? `Grazie per la tua domanda! Sono l'assistente AI di Tradelia.\n\nPosso aiutarti con:\n• Termini finanziari (Sharpe Ratio, Volatilità, Hedging, PAC)\n• Strumenti finanziari (Calcolatori, Simulatori)\n• Report e analisi\n• Funzionalità piattaforma\n\nConsulta la sezione FAQ per risposte rapide o prova a riformulare la domanda.\n\n*Nota: Le risposte sono a scopo educativo. Non costituiscono consulenza finanziaria.*`
+    : `Thanks for your question! I'm Tradelia's AI assistant.\n\nI can help with:\n• Financial terms (Sharpe Ratio, Volatility, Hedging, PAC)\n• Financial tools (Calculators, Simulators)\n• Reports and analysis\n• Platform features\n\nCheck the FAQ section for quick answers or try rephrasing your question.\n\n*Note: Answers are for educational purposes. They do not constitute financial advice.*`;
 }
 
 export async function POST(request: NextRequest) {
@@ -242,14 +193,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Use intelligent RAG (100% free, runs on Vercel, no external API)
-    const response = await generateRAGResponse(message, locale, conversationHistory);
+    let response: string;
+    let model = 'fallback';
+    let provider = 'none';
+
+    // 1. Try Together AI (primary - $25 free)
+    try {
+      response = await callTogetherAI(message, conversationHistory, locale);
+      model = 'llama-3-70b';
+      provider = 'together';
+    } catch (togetherError) {
+      console.warn('Together AI failed, trying Groq:', togetherError);
+      
+      // 2. Try Groq (fallback)
+      try {
+        response = await callGroqAI(message, conversationHistory, locale);
+        model = 'llama-3.3-70b';
+        provider = 'groq';
+      } catch (groqError) {
+        console.warn('Groq failed, using simple RAG fallback:', groqError);
+        
+        // 3. Simple RAG fallback (no complex setup)
+        response = await simpleRAGFallback(message, locale);
+        model = 'simple-rag';
+        provider = 'fallback';
+      }
+    }
 
     return NextResponse.json({
       response,
-      model: 'tradelia-rag-intelligent',
-      free: true,
-      hosted: 'vercel',
+      model,
+      provider,
     });
   } catch (error) {
     console.error('Error in AI chat API:', error);
@@ -259,14 +233,13 @@ export async function POST(request: NextRequest) {
     const locale = (body as ChatRequest)?.locale || 'it';
     
     const fallbackResponse = locale === 'it'
-      ? 'Mi dispiace, si è verificato un errore. Riprova più tardi o consulta la sezione FAQ per risposte rapide.'
-      : 'Sorry, an error occurred. Please try again later or check the FAQ section for quick answers.';
+      ? 'Mi dispiace, si è verificato un errore. Riprova più tardi o consulta la sezione FAQ.'
+      : 'Sorry, an error occurred. Please try again later or check the FAQ section.';
     
     return NextResponse.json({
       response: fallbackResponse,
       model: 'fallback',
-      free: true,
-      hosted: 'vercel',
+      provider: 'error',
       error: 'Service temporarily unavailable',
     });
   }

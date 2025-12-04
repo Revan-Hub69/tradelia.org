@@ -61,9 +61,16 @@ export function HelpAssistant() {
   }, [locale]);
 
   const checkAIEnabled = async () => {
-    // AI is always enabled (uses free Hugging Face API + RAG fallback)
-    // No API key needed - 100% free solution
-    setAiEnabled(true);
+    try {
+      // Check if AI service is available (Together AI or Groq)
+      const response = await fetch('/api/ai/status');
+      if (response.ok) {
+        const data = await response.json();
+        setAiEnabled(data.enabled || false);
+      }
+    } catch (error) {
+      setAiEnabled(false);
+    }
   };
 
   const loadFAQItems = async () => {
