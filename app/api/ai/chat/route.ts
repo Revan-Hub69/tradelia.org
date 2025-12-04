@@ -3,10 +3,10 @@ import { TRADELIA_AI_SYSTEM_PROMPT } from '@/lib/ai/tradelia-ai-communication-st
 import { TRADELIA_BRAND_VOICE_MATRIX } from '@/lib/ai/tradelia-brand-voice-matrix';
 
 /**
- * AI Chat API - Together AI + Groq Fallback
+ * AI Chat API - Groq (Primary) + Simple RAG Fallback
  * 
- * Strategy: Together AI (primary, $25 free) → Groq (fallback) → Simple RAG (final fallback)
- * Fast implementation, no complex RAG setup needed
+ * Strategy: Groq (primary, free tier) → Simple RAG (final fallback)
+ * Zero cost solution, fast implementation
  */
 
 interface ChatMessage {
@@ -51,56 +51,7 @@ FORMAT: Maximum 4 paragraphs, maximum 5 points per list, concrete examples, conn
   return `${basePrompt}\n\n${brandVoice}`;
 }
 
-// Together AI (Primary - $25 free credits)
-async function callTogetherAI(
-  message: string,
-  conversationHistory: ChatMessage[] = [],
-  locale: 'it' | 'en'
-): Promise<string> {
-  const apiKey = process.env.TOGETHER_API_KEY;
-  
-  if (!apiKey) {
-    throw new Error('TOGETHER_API_KEY not configured');
-  }
-
-  const systemPrompt = buildTradeliaSystemPrompt(locale);
-
-  const messages = [
-    { role: 'system', content: systemPrompt },
-    ...conversationHistory.slice(-5),
-    { role: 'user', content: message },
-  ];
-
-  try {
-    const response = await fetch('https://api.together.xyz/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'meta-llama/Llama-3-70b-chat-hf', // High quality, free tier available
-        messages,
-        temperature: 0.7,
-        max_tokens: 800,
-        stream: false,
-      }),
-    });
-
-    if (!response.ok) {
-      const error = await response.text();
-      throw new Error(`Together AI error: ${response.status} - ${error}`);
-    }
-
-    const data = await response.json();
-    return data.choices[0]?.message?.content || 'Mi dispiace, non ho ricevuto una risposta valida.';
-  } catch (error) {
-    console.warn('Together AI error:', error);
-    throw error;
-  }
-}
-
-// Groq AI (Fallback)
+// Groq AI (Primary - Free tier)
 async function callGroqAI(
   message: string,
   conversationHistory: ChatMessage[] = [],
@@ -197,27 +148,18 @@ export async function POST(request: NextRequest) {
     let model = 'fallback';
     let provider = 'none';
 
-    // 1. Try Together AI (primary - $25 free)
+    // 1. Try Groq (primary - free tier)
     try {
-      response = await callTogetherAI(message, conversationHistory, locale);
-      model = 'llama-3-70b';
-      provider = 'together';
-    } catch (togetherError) {
-      console.warn('Together AI failed, trying Groq:', togetherError);
+      response = await callGroqAI(message, conversationHistory, locale);
+      model = 'llama-3.3-70b';
+      provider = 'groq';
+    } catch (groqError) {
+      console.warn('Groq failed, using simple RAG fallback:', groqError);
       
-      // 2. Try Groq (fallback)
-      try {
-        response = await callGroqAI(message, conversationHistory, locale);
-        model = 'llama-3.3-70b';
-        provider = 'groq';
-      } catch (groqError) {
-        console.warn('Groq failed, using simple RAG fallback:', groqError);
-        
-        // 3. Simple RAG fallback (no complex setup)
-        response = await simpleRAGFallback(message, locale);
-        model = 'simple-rag';
-        provider = 'fallback';
-      }
+      // 2. Simple RAG fallback (no complex setup)
+      response = await simpleRAGFallback(message, locale);
+      model = 'simple-rag';
+      provider = 'fallback';
     }
 
     return NextResponse.json({
