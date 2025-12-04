@@ -2,20 +2,23 @@ import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * AI Status API
- * AI is always enabled - uses FREE Hugging Face API + RAG fallback
- * No API keys required - 100% free solution
+ * AI is always enabled - uses intelligent RAG running on Vercel
+ * 100% free, no external API calls, no costs
+ * Runs entirely on Vercel serverless functions
  */
 export async function GET(request: NextRequest) {
   try {
-    // AI is always available (free Hugging Face + RAG)
+    // AI is always available (intelligent RAG on Vercel)
     return NextResponse.json({
       enabled: true,
-      model: 'huggingface-llama2-7b (free) + RAG fallback',
+      model: 'tradelia-rag-intelligent',
       free: true,
+      hosted: 'vercel',
+      description: 'Intelligent RAG system running on Vercel serverless functions. No external API calls, 100% free.',
     });
   } catch (error) {
     return NextResponse.json(
-      { enabled: true, free: true, error: 'Error checking AI status' },
+      { enabled: true, free: true, hosted: 'vercel', error: 'Error checking AI status' },
       { status: 500 }
     );
   }
