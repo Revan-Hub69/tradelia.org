@@ -36,7 +36,13 @@ export function OptionsCalculator() {
     const r = (parseFloat(riskFreeRate) || 0) / 100;
     const q = (parseFloat(dividendYield) || 0) / 100;
 
-    if (S <= 0 || K <= 0 || T <= 0 || sigma <= 0) {
+    // Validazione input
+    if (S <= 0 || K <= 0 || T <= 0 || sigma <= 0 || isNaN(S) || isNaN(K) || isNaN(T) || isNaN(sigma)) {
+      return null;
+    }
+
+    // Evita divisione per zero
+    if (sigma * Math.sqrt(T) === 0) {
       return null;
     }
 
@@ -78,14 +84,22 @@ export function OptionsCalculator() {
       timeValue = optionPrice - intrinsicValue;
     }
 
-    // Greeks
-    const delta = optionType === 'call' ? Math.exp(-q * T) * N_d1 : -Math.exp(-q * T) * N_neg_d1;
-    const gamma = (Math.exp(-q * T) * Math.exp(-0.5 * d1 * d1)) / (S * sigma * Math.sqrt(2 * Math.PI * T));
-    const theta = (-(S * Math.exp(-q * T) * Math.exp(-0.5 * d1 * d1) * sigma) / (2 * Math.sqrt(2 * Math.PI * T)) 
-      - r * K * Math.exp(-r * T) * (optionType === 'call' ? N_d2 : N_neg_d2)
-      + q * S * Math.exp(-q * T) * (optionType === 'call' ? N_d1 : N_neg_d1)) / 365;
-    const vega = (S * Math.exp(-q * T) * Math.exp(-0.5 * d1 * d1) * Math.sqrt(T)) / (100 * Math.sqrt(2 * Math.PI));
-    const rho = (K * T * Math.exp(-r * T) * (optionType === 'call' ? N_d2 : -N_neg_d2)) / 100;
+    // Greeks (con protezione da divisione per zero)
+    const sqrtT = Math.sqrt(T);
+    const sqrt2PiT = Math.sqrt(2 * Math.PI * T);
+    const expNegQ = Math.exp(-q * T);
+    const expNegR = Math.exp(-r * T);
+    const expNegD1Sq = Math.exp(-0.5 * d1 * d1);
+    
+    const delta = optionType === 'call' ? expNegQ * N_d1 : -expNegQ * N_neg_d1;
+    const gamma = sqrt2PiT > 0 ? (expNegQ * expNegD1Sq) / (S * sigma * sqrt2PiT) : 0;
+    const theta = sqrt2PiT > 0 
+      ? (-(S * expNegQ * expNegD1Sq * sigma) / (2 * sqrt2PiT) 
+        - r * K * expNegR * (optionType === 'call' ? N_d2 : N_neg_d2)
+        + q * S * expNegQ * (optionType === 'call' ? N_d1 : N_neg_d1)) / 365
+      : 0;
+    const vega = sqrt2PiT > 0 ? (S * expNegQ * expNegD1Sq * sqrtT) / (100 * sqrt2PiT) : 0;
+    const rho = (K * T * expNegR * (optionType === 'call' ? N_d2 : -N_neg_d2)) / 100;
 
     // Moneyness
     let moneyness = 'ATM';

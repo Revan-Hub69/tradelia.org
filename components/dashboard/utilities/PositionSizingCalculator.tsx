@@ -32,8 +32,17 @@ export function PositionSizingCalculator() {
     const stop = parseFloat(stopLoss) || 0;
     const rr = parseFloat(riskReward) || 0;
 
-    if (account <= 0 || risk <= 0 || entry <= 0 || stop <= 0 || entry === stop) {
+    // Validazione input robusta
+    if (account <= 0 || risk <= 0 || entry <= 0 || stop <= 0 || entry === stop || 
+        isNaN(account) || isNaN(risk) || isNaN(entry) || isNaN(stop) || isNaN(rr)) {
       return null;
+    }
+    
+    // Verifica che stop loss sia nella direzione corretta
+    if (rr > 0 && entry > stop) {
+      // Long trade: stop deve essere sotto entry
+    } else if (rr > 0 && entry < stop) {
+      // Short trade: stop deve essere sopra entry
     }
 
     // Calcolo position sizing

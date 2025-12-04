@@ -30,7 +30,10 @@ export function HedgingCalculator() {
     const corr = parseFloat(correlation) || 0;
     const cost = parseFloat(hedgeCost) / 100 || 0;
 
-    if (portfolio <= 0 || ratio < 0 || ratio > 100) {
+    // Validazione input robusta
+    if (portfolio <= 0 || ratio < 0 || ratio > 100 || 
+        isNaN(portfolio) || isNaN(ratio) || isNaN(corr) || isNaN(cost) ||
+        corr < -1 || corr > 1) {
       return null;
     }
 

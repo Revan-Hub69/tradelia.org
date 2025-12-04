@@ -21,16 +21,18 @@ export function KellyCriterionCalculator() {
 
   const results = useMemo(() => {
     const p = parseFloat(winRate) / 100 || 0; // probabilità di vincita
-    const b = parseFloat(avgWin) || 0; // payoff ratio (guadagno/rischio)
+    const winMultiplier = parseFloat(avgWin) || 0; // guadagno medio (multiplo del rischio)
+    const lossMultiplier = parseFloat(avgLoss) || 0; // perdita media (multiplo del rischio)
     const q = 1 - p; // probabilità di perdita
     const account = parseFloat(accountSize) || 0;
 
-    if (p <= 0 || p >= 1 || b <= 0 || account <= 0) {
+    if (p <= 0 || p >= 1 || winMultiplier <= 0 || lossMultiplier <= 0 || account <= 0) {
       return null;
     }
 
     // Kelly Criterion: f* = (p * b - q) / b
-    // f* = percentuale ottimale del capitale da investire
+    // dove b = win/loss ratio (guadagno medio / perdita media)
+    const b = winMultiplier / lossMultiplier;
     const kellyPercent = ((p * b - q) / b) * 100;
     
     // Kelly Fraction (conservativo): usa metà del Kelly per ridurre rischio
@@ -56,8 +58,8 @@ export function KellyCriterionCalculator() {
       recommendationColor = 'text-yellow-400';
     }
 
-    // Expected Value
-    const expectedValue = (p * b - q) * 100; // %
+    // Expected Value (in percentuale del rischio)
+    const expectedValue = (p * winMultiplier - q * lossMultiplier) * 100; // %
 
     return {
       kellyPercent: Math.max(0, kellyPercent),
@@ -70,6 +72,7 @@ export function KellyCriterionCalculator() {
       recommendationColor,
       expectedValue,
       edge: p * b - q, // vantaggio matematico
+      winLossRatio: b, // rapporto win/loss
     };
   }, [winRate, avgWin, avgLoss, accountSize]);
 
@@ -224,6 +227,12 @@ export function KellyCriterionCalculator() {
                 <span className="text-sm text-text-secondary">Valutazione:</span>
                 <span className={`text-sm font-semibold ${results.recommendationColor}`}>
                   {results.recommendation}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-text-secondary">Win/Loss Ratio:</span>
+                <span className="text-sm font-semibold text-text-primary">
+                  {results.winLossRatio.toFixed(2)}:1
                 </span>
               </div>
               <div className="flex items-center justify-between">

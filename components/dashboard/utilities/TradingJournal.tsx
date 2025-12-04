@@ -81,6 +81,25 @@ export function TradingJournal() {
   };
 
   const handleSaveTrade = async () => {
+    // Validazione input
+    if (!newTrade.symbol || !newTrade.symbol.trim()) {
+      toast.error('Inserisci un simbolo valido');
+      return;
+    }
+    
+    const entryPrice = parseFloat(newTrade.entry_price);
+    const quantity = parseFloat(newTrade.quantity);
+    
+    if (isNaN(entryPrice) || entryPrice <= 0) {
+      toast.error('Inserisci un prezzo di entry valido');
+      return;
+    }
+    
+    if (isNaN(quantity) || quantity <= 0) {
+      toast.error('Inserisci una quantità valida');
+      return;
+    }
+
     try {
       const url = editingTrade ? `/api/trading-journal/${editingTrade.id}` : '/api/trading-journal';
       const method = editingTrade ? 'PATCH' : 'POST';
@@ -89,13 +108,13 @@ export function TradingJournal() {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          symbol: newTrade.symbol,
+          symbol: newTrade.symbol.trim().toUpperCase(),
           entry_date: newTrade.entry_date,
-          entry_price: parseFloat(newTrade.entry_price),
-          quantity: parseFloat(newTrade.quantity),
+          entry_price: entryPrice,
+          quantity: quantity,
           trade_type: newTrade.trade_type,
-          strategy: newTrade.strategy || null,
-          notes: newTrade.notes || null,
+          strategy: newTrade.strategy?.trim() || null,
+          notes: newTrade.notes?.trim() || null,
         }),
       });
 
