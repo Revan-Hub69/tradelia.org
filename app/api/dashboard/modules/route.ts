@@ -60,6 +60,17 @@ const DEFAULT_MODULES = {
       order_index: 5,
       badge_count: 0,
     },
+    {
+      id: 'favorites',
+      title: 'Preferiti',
+      description: 'I tuoi contenuti salvati per accesso rapido',
+      href: '/dashboard/favorites',
+      icon: 'star',
+      priority: 'primary' as const,
+      is_active: true,
+      order_index: 6,
+      badge_count: 0,
+    },
   ],
   secondary: [
     {
