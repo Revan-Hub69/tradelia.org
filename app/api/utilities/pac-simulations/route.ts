@@ -22,18 +22,20 @@ export async function GET(request: NextRequest) {
       .eq('user_id', user.id)
       .order('created_at', { ascending: false });
 
+    // Se la tabella non esiste o c'è un errore, restituisci array vuoto
     if (error) {
-      console.error('Error fetching PAC simulations:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      // Log solo se non è un errore di tabella mancante
+      if (!error.message.includes('relation') && !error.message.includes('does not exist')) {
+        console.error('Error fetching PAC simulations:', error);
+      }
+      return NextResponse.json([]);
     }
 
     return NextResponse.json(data || []);
   } catch (error) {
+    // In caso di errore, restituisci array vuoto invece di 500
     console.error('Error in GET /api/utilities/pac-simulations:', error);
-    return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
+    return NextResponse.json([]);
   }
 }
 
@@ -100,17 +102,24 @@ export async function POST(request: NextRequest) {
       .select()
       .single();
 
+    // Se la tabella non esiste, restituisci errore informativo
     if (error) {
-      console.error('Error saving PAC simulation:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      // Log solo se non è un errore di tabella mancante
+      if (!error.message.includes('relation') && !error.message.includes('does not exist')) {
+        console.error('Error saving PAC simulation:', error);
+      }
+      return NextResponse.json(
+        { error: 'Tabella non disponibile. Il salvataggio non è disponibile al momento.' },
+        { status: 503 }
+      );
     }
 
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
     console.error('Error in POST /api/utilities/pac-simulations:', error);
     return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
+      { error: 'Errore interno. Il salvataggio non è disponibile al momento.' },
+      { status: 503 }
     );
   }
 }
