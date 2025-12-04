@@ -24,7 +24,15 @@ VALUES
   ('paper-strategy-explorer', 'Strategy Explorer', 'Usa 3 strategie diverse', 'map', 'paper_strategies_used', 3, 35, 'paper-trading'),
   
   -- Engagement Achievements
-  ('paper-daily-trader', 'Daily Trader', 'Trade ogni giorno per 7 giorni', 'calendar', 'paper_daily_streak', 7, 40, 'paper-trading')
+  ('paper-daily-trader', 'Daily Trader', 'Trade ogni giorno per 7 giorni', 'calendar', 'paper_daily_streak', 7, 40, 'paper-trading'),
+  
+  -- Tournament Achievements
+  ('tournament-first', 'Primo Torneo', 'Partecipa al tuo primo torneo', 'trophy', 'tournaments_joined', 1, 20, 'tournaments'),
+  ('tournament-winner', 'Campione', 'Vinci un torneo', 'crown', 'tournaments_won', 1, 100, 'tournaments'),
+  ('tournament-top-10', 'Top 10', 'Finisci nei top 10 di un torneo', 'medal', 'tournaments_top10', 1, 50, 'tournaments'),
+  ('tournament-consistent', 'Consistente', 'Finisci nei top 10 in 3 tornei', 'target', 'tournaments_top10', 3, 75, 'tournaments'),
+  ('tournament-participant', 'Partecipante Attivo', 'Partecipa a 5 tornei', 'users', 'tournaments_joined', 5, 30, 'tournaments'),
+  ('tournament-sharpe-master', 'Sharpe Master', 'Vinci un torneo con Sharpe > 2.0', 'zap', 'tournament_sharpe_winner', 2.0, 150, 'tournaments')
 ON CONFLICT (id) DO NOTHING;
 
 -- Function to check paper trading achievements

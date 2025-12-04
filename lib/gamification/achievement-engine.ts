@@ -12,7 +12,7 @@ import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export interface AchievementCondition {
-  type: 'lessons_completed' | 'course_completed' | 'reports_viewed' | 'days_streak' | 'total_xp';
+  type: 'lessons_completed' | 'course_completed' | 'reports_viewed' | 'days_streak' | 'total_xp' | 'tournaments_joined' | 'tournaments_won' | 'tournaments_top10' | 'tournament_sharpe_winner';
   value: number;
 }
 
@@ -22,7 +22,7 @@ export interface AchievementCondition {
  */
 export async function checkAndUnlockAchievements(
   userId: string,
-  actionType: 'lesson_completed' | 'course_completed' | 'report_viewed' | 'daily_login' | 'paper_trade_opened' | 'paper_trade_closed'
+  actionType: 'lesson_completed' | 'course_completed' | 'report_viewed' | 'daily_login' | 'paper_trade_opened' | 'paper_trade_closed' | 'tournament_registered' | 'tournament_completed' | 'tournament_won'
 ) {
   const supabase = await createClient();
   
@@ -135,6 +135,42 @@ async function checkAchievementCondition(
     case 'total_xp':
       return (userStats?.total_xp || 0) >= conditionValue;
 
+    case 'tournaments_joined':
+      const { count: tournamentsCount } = await supabase
+        .from('paper_trading_tournament_participants')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId);
+      return (tournamentsCount || 0) >= conditionValue;
+
+    case 'tournaments_won':
+      const { count: winsCount } = await supabase
+        .from('paper_trading_tournament_participants')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .eq('final_rank', 1);
+      return (winsCount || 0) >= conditionValue;
+
+    case 'tournaments_top10':
+      const { count: top10Count } = await supabase
+        .from('paper_trading_tournament_participants')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .lte('final_rank', 10)
+        .not('final_rank', 'is', null);
+      return (top10Count || 0) >= conditionValue;
+
+    case 'tournament_sharpe_winner':
+      // Check if user won a tournament with Sharpe > conditionValue
+      const { data: tournamentWin } = await supabase
+        .from('paper_trading_tournament_participants')
+        .select('sharpe_ratio')
+        .eq('user_id', userId)
+        .eq('final_rank', 1)
+        .gte('sharpe_ratio', conditionValue)
+        .limit(1)
+        .single();
+      return !!tournamentWin;
+
     default:
       return false;
   }
@@ -166,7 +202,7 @@ async function getUserStats(userId: string) {
 export async function awardXP(
   userId: string,
   amount: number,
-  source: 'lesson_completed' | 'course_completed' | 'report_viewed' | 'achievement_unlocked' | 'daily_login'
+  source: 'lesson_completed' | 'course_completed' | 'report_viewed' | 'achievement_unlocked' | 'daily_login' | 'tournament_registered' | 'tournament_participation' | 'tournament_top10' | 'tournament_winner'
 ) {
   const supabase = await createClient();
   
