@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * Top 400 Crypto Market Depth API
- * Profondità di mercato (order book depth) per top 400 crypto
+ * Top 400 Crypto Market Depth Feed API
+ * Feed semplice profondità di mercato crypto con letture Groq AI
  * 
- * Best Practice: Binance order book API (FREE), Groq AI analysis
+ * Best Practice: Solo letture semplici (prezzi, volumi, crescita/discesa), NO analisi complesse
+ * Pro Feature: Analytics avanzate disponibili a pagamento
  */
 
 interface OrderBookLevel {
@@ -15,13 +16,15 @@ interface OrderBookLevel {
 interface MarketDepth {
   symbol: string;
   name: string;
-  bids: OrderBookLevel[]; // Ordini di acquisto (dal prezzo più alto)
-  asks: OrderBookLevel[]; // Ordini di vendita (dal prezzo più basso)
-  bidTotal: number; // Volume totale bid
-  askTotal: number; // Volume totale ask
+  price: number; // Prezzo corrente
+  change24h: number; // Cambio 24h (valore assoluto)
+  change24hPercent: number; // Cambio 24h (%)
+  volume24h: number; // Volume 24h
+  bidTotal: number; // Volume totale bid (order book)
+  askTotal: number; // Volume totale ask (order book)
   spread: number; // Spread percentuale
   imbalance: number; // Imbalance bid/ask (positive = più bid, negative = più ask)
-  depthScore: number; // Score profondità (0-100)
+  trend: 'up' | 'down' | 'neutral'; // Trend semplice
 }
 
 interface CryptoDepthResult {
@@ -29,16 +32,15 @@ interface CryptoDepthResult {
   depths: MarketDepth[];
   summary: {
     totalTracked: number;
-    avgSpread: number;
-    avgImbalance: number;
-    highDepth: Array<{ symbol: string; depthScore: number }>;
-    lowDepth: Array<{ symbol: string; depthScore: number }>;
-    aiAnalysis: {
-      analysis: string;
-      insights: string[];
-      liquidityAnalysis: string;
-      marketStructure: string;
-      alerts: string[];
+    gainers: number; // Crypto in crescita
+    losers: number; // Crypto in discesa
+    topGainers: Array<{ symbol: string; name: string; change: number; volume: number }>;
+    topLosers: Array<{ symbol: string; name: string; change: number; volume: number }>;
+    highVolume: Array<{ symbol: string; name: string; volume: number }>; // Crypto con volume alto
+    aiReadings: {
+      marketOverview: string; // Lettura semplice stato mercato (2-3 frasi)
+      notableMovements: string[]; // Movimenti notevoli (solo dati, no analisi)
+      volumeHighlights: string[]; // Highlight volumi (solo dati)
     };
   };
 }
@@ -85,8 +87,16 @@ async function getTop400CryptoSymbols(): Promise<Array<{ symbol: string; name: s
 /**
  * Get order book depth from Binance
  * Binance Free API: /api/v3/depth
+ * Returns simplified order book data
  */
-async function getBinanceOrderBook(symbol: string, limit: number = 20): Promise<MarketDepth | null> {
+async function getBinanceOrderBook(symbol: string, limit: number = 20): Promise<{
+  bids: OrderBookLevel[];
+  asks: OrderBookLevel[];
+  bidTotal: number;
+  askTotal: number;
+  spread: number;
+  imbalance: number;
+} | null> {
   try {
     // Binance format: BTCUSDT, ETHUSDT, etc.
     const binanceSymbol = `${symbol}USDT`;
@@ -127,22 +137,13 @@ async function getBinanceOrderBook(symbol: string, limit: number = 20): Promise<
     const totalVolume = bidTotal + askTotal;
     const imbalance = totalVolume > 0 ? ((bidTotal - askTotal) / totalVolume) * 100 : 0;
 
-    // Depth score: combination of volume and spread (0-100)
-    // Higher volume + lower spread = higher score
-    const volumeScore = Math.min((totalVolume / 1000) * 50, 50); // Max 50 points for volume
-    const spreadScore = Math.max(50 - (spread * 10), 0); // Max 50 points for tight spread
-    const depthScore = Math.min(volumeScore + spreadScore, 100);
-
     return {
-      symbol,
-      name: symbol, // Will be updated with CoinGecko name
       bids,
       asks,
       bidTotal,
       askTotal,
       spread,
       imbalance,
-      depthScore,
     };
   } catch (error) {
     console.error(`Error fetching order book for ${symbol}:`, error);
@@ -206,17 +207,16 @@ FARE:
 }
 
 /**
- * Analyze market depth with Groq AI
+ * Simple market depth readings with Groq AI
+ * Solo letture semplici, NO analisi complesse
  */
-async function analyzeMarketDepthWithGroq(
+async function readMarketDepthWithGroq(
   depthData: string,
   depths: MarketDepth[]
 ): Promise<{
-  analysis: string;
-  insights: string[];
-  liquidityAnalysis: string;
-  marketStructure: string;
-  alerts: string[];
+  marketOverview: string;
+  notableMovements: string[];
+  volumeHighlights: string[];
 }> {
   const groqApiKey = process.env.GROQ_API_KEY;
   if (!groqApiKey) {
@@ -309,27 +309,26 @@ Rispondi SOLO in formato JSON valido:
     }
 
     return {
-      analysis: analysis.analysis || '',
-      insights: analysis.insights || [],
-      liquidityAnalysis: analysis.liquidityAnalysis || '',
-      marketStructure: analysis.marketStructure || '',
-      alerts: analysis.alerts || [],
+      marketOverview: analysis.marketOverview || '',
+      notableMovements: analysis.notableMovements || [],
+      volumeHighlights: analysis.volumeHighlights || [],
     };
   } catch (error) {
     console.error('Error calling Groq AI:', error);
     return {
-      analysis: 'Errore nell\'analisi AI. Riprova più tardi.',
-      insights: [],
-      liquidityAnalysis: '',
-      marketStructure: '',
-      alerts: [],
+      marketOverview: 'Errore nella lettura AI. Riprova più tardi.',
+      notableMovements: [],
+      volumeHighlights: [],
     };
   }
 }
 
 /**
  * GET /api/crypto/top-400-depth
- * Get market depth (order book) for top 400 crypto with Groq AI analysis
+ * Get market depth feed (order book) for top 400 crypto with simple Groq AI readings
+ * 
+ * Simple feed: prezzi, volumi, crescita/discesa, order book depth
+ * NO analisi complesse (quelle sono Pro feature)
  */
 export async function GET(request: NextRequest) {
   try {
@@ -386,69 +385,74 @@ export async function GET(request: NextRequest) {
       await Promise.all(fetchPromises.slice(i, i + batchSize));
     }
 
-    // Sort by depth score (descending)
-    depths.sort((a, b) => b.depthScore - a.depthScore);
+    // Sort by volume (descending) - most liquid first
+    depths.sort((a, b) => (b.volume24h || 0) - (a.volume24h || 0));
 
     // Calculate summary
-    const avgSpread = depths.reduce((sum, d) => sum + d.spread, 0) / depths.length;
-    const avgImbalance = depths.reduce((sum, d) => sum + d.imbalance, 0) / depths.length;
-    const highDepth = depths.slice(0, 10).map(d => ({ symbol: d.symbol, depthScore: d.depthScore }));
-    const lowDepth = depths.slice(-10).reverse().map(d => ({ symbol: d.symbol, depthScore: d.depthScore }));
+    const gainers = depths.filter(d => d.change24hPercent > 0).length;
+    const losers = depths.filter(d => d.change24hPercent < 0).length;
+    
+    const topGainers = depths
+      .filter(d => d.change24hPercent > 0)
+      .sort((a, b) => b.change24hPercent - a.change24hPercent)
+      .slice(0, 10)
+      .map(d => ({ symbol: d.symbol, name: d.name, change: d.change24hPercent, volume: d.volume24h || 0 }));
+    
+    const topLosers = depths
+      .filter(d => d.change24hPercent < 0)
+      .sort((a, b) => a.change24hPercent - b.change24hPercent)
+      .slice(0, 10)
+      .map(d => ({ symbol: d.symbol, name: d.name, change: d.change24hPercent, volume: d.volume24h || 0 }));
+    
+    const highVolume = depths
+      .filter(d => (d.volume24h || 0) > 0)
+      .sort((a, b) => (b.volume24h || 0) - (a.volume24h || 0))
+      .slice(0, 10)
+      .map(d => ({ symbol: d.symbol, name: d.name, volume: d.volume24h || 0 }));
 
-    // Prepare depth data for AI
+    // Prepare simple data for AI reading
+    const totalVolume = depths.reduce((sum, d) => sum + (d.volume24h || 0), 0);
     const totalBidVolume = depths.reduce((sum, d) => sum + d.bidTotal, 0);
     const totalAskVolume = depths.reduce((sum, d) => sum + d.askTotal, 0);
-    const overallImbalance = ((totalBidVolume - totalAskVolume) / (totalBidVolume + totalAskVolume)) * 100;
 
     const depthData = `
 SNAPSHOT PROFONDITÀ DI MERCATO LIVE - Top ${depths.length} Crypto
 
-METRICHE AGGREGATE:
+DATI SEMPLICI:
 - Crypto analizzate: ${depths.length}
-- Spread medio: ${avgSpread.toFixed(4)}%
-- Imbalance medio: ${avgImbalance.toFixed(2)}%
-- Volume totale Bid: ${(totalBidVolume / 1e6).toFixed(2)}M
-- Volume totale Ask: ${(totalAskVolume / 1e6).toFixed(2)}M
-- Imbalance globale: ${overallImbalance >= 0 ? '+' : ''}${overallImbalance.toFixed(2)}%
+- Gainers: ${gainers} (${((gainers / depths.length) * 100).toFixed(1)}%)
+- Losers: ${losers} (${((losers / depths.length) * 100).toFixed(1)}%)
+- Volume totale 24h: $${(totalVolume / 1e9).toFixed(2)}B
+- Volume totale Bid (order book): ${(totalBidVolume / 1e6).toFixed(2)}M
+- Volume totale Ask (order book): ${(totalAskVolume / 1e6).toFixed(2)}M
 
-TOP 10 PER LIQUIDITÀ (Depth Score):
-${highDepth.map((d, i) => `${i + 1}. ${d.symbol}: Score ${d.depthScore.toFixed(1)}/100`).join('\n')}
+TOP 5 GAINERS:
+${topGainers.slice(0, 5).map((g, i) => `${i + 1}. ${g.symbol} (${g.name}): +${g.change.toFixed(2)}%, volume $${(g.volume / 1e6).toFixed(2)}M`).join('\n')}
 
-BOTTOM 10 PER LIQUIDITÀ:
-${lowDepth.map((d, i) => `${i + 1}. ${d.symbol}: Score ${d.depthScore.toFixed(1)}/100`).join('\n')}
+TOP 5 LOSERS:
+${topLosers.slice(0, 5).map((l, i) => `${i + 1}. ${l.symbol} (${l.name}): ${l.change.toFixed(2)}%, volume $${(l.volume / 1e6).toFixed(2)}M`).join('\n')}
 
-DISTRIBUZIONE SPREAD:
-- Spread molto stretto (<0.01%): ${depths.filter(d => d.spread < 0.01).length}
-- Spread stretto (0.01-0.1%): ${depths.filter(d => d.spread >= 0.01 && d.spread < 0.1).length}
-- Spread moderato (0.1-0.5%): ${depths.filter(d => d.spread >= 0.1 && d.spread < 0.5).length}
-- Spread ampio (>0.5%): ${depths.filter(d => d.spread >= 0.5).length}
-
-DISTRIBUZIONE IMBALANCE:
-- Forte domanda (imbalance >10%): ${depths.filter(d => d.imbalance > 10).length}
-- Domanda moderata (5-10%): ${depths.filter(d => d.imbalance > 5 && d.imbalance <= 10).length}
-- Bilanciato (-5% a +5%): ${depths.filter(d => d.imbalance >= -5 && d.imbalance <= 5).length}
-- Offerta moderata (-10% a -5%): ${depths.filter(d => d.imbalance >= -10 && d.imbalance < -5).length}
-- Forte offerta (imbalance <-10%): ${depths.filter(d => d.imbalance < -10).length}
+TOP 5 PER VOLUME:
+${highVolume.slice(0, 5).map((v, i) => `${i + 1}. ${v.symbol} (${v.name}): volume $${(v.volume / 1e6).toFixed(2)}M`).join('\n')}
 `;
 
-    // Analyze with Groq AI
-    const aiAnalysis = await analyzeMarketDepthWithGroq(depthData, depths);
+    // Simple readings with Groq AI
+    const aiReadings = await readMarketDepthWithGroq(depthData, depths);
 
     const result: CryptoDepthResult = {
       timestamp: new Date().toISOString(),
       depths,
       summary: {
         totalTracked: depths.length,
-        avgSpread,
-        avgImbalance,
-        highDepth,
-        lowDepth,
-        aiAnalysis: {
-          analysis: aiAnalysis.analysis,
-          insights: aiAnalysis.insights,
-          liquidityAnalysis: aiAnalysis.liquidityAnalysis,
-          marketStructure: aiAnalysis.marketStructure,
-          alerts: aiAnalysis.alerts,
+        gainers,
+        losers,
+        topGainers,
+        topLosers,
+        highVolume,
+        aiReadings: {
+          marketOverview: aiReadings.marketOverview,
+          notableMovements: aiReadings.notableMovements,
+          volumeHighlights: aiReadings.volumeHighlights,
         },
       },
     };
