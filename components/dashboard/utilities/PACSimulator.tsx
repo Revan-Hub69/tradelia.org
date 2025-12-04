@@ -10,6 +10,8 @@ import { motion } from 'framer-motion';
 import { useFormatCurrency } from '@/lib/utils/formatCurrency';
 import { useCurrency } from '@/lib/hooks/useCurrency';
 import { currencySymbols } from '@/lib/currency/config';
+import { Tooltip } from '@/components/ui/Tooltip';
+import { HelpCircle } from 'lucide-react';
 
 /**
  * PAC Simulator (Piano di Accumulo Capitale)
@@ -121,6 +123,14 @@ export function PACSimulator() {
         </p>
       </div>
 
+      {/* Info Box */}
+      <div className="bg-accent/10 border border-accent/20 rounded-lg p-3 sm:p-4">
+        <p className="text-xs sm:text-sm text-text-secondary">
+          <strong className="text-text-primary">PAC (Piano di Accumulo Capitale):</strong> Strategia di investimento che prevede versamenti periodici costanti. 
+          L'interesse composto fa crescere il capitale nel tempo. Passa il mouse sui campi per maggiori informazioni.
+        </p>
+      </div>
+
       {/* Simulazione PAC */}
       <div className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6">
         <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
@@ -130,8 +140,11 @@ export function PACSimulator() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
-              {t('proUtilities.pacSimulator.monthlyAmount') || 'Importo Periodico'} *
+            <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
+              <span>{t('proUtilities.pacSimulator.monthlyAmount') || 'Importo Periodico'} *</span>
+              <Tooltip content="L'importo che investi ad ogni versamento. Può essere mensile, trimestrale o annuale a seconda della frequenza scelta.">
+                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              </Tooltip>
             </label>
             <div className="relative">
               <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary" />
@@ -148,8 +161,11 @@ export function PACSimulator() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
-              {t('proUtilities.pacSimulator.frequency') || 'Frequenza'}
+            <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
+              <span>{t('proUtilities.pacSimulator.frequency') || 'Frequenza'}</span>
+              <Tooltip content="Quanto spesso effettui i versamenti: mensile (12 volte l'anno), trimestrale (4 volte) o annuale (1 volta).">
+                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              </Tooltip>
             </label>
             <select
               value={frequency}
@@ -163,8 +179,11 @@ export function PACSimulator() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
-              {t('proUtilities.pacSimulator.annualReturn') || 'Rendimento Annuo (%)'} *
+            <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
+              <span>{t('proUtilities.pacSimulator.annualReturn') || 'Rendimento Annuo (%)'} *</span>
+              <Tooltip content="Il rendimento annuo atteso del tuo investimento. Storicamente, un portafoglio diversificato azionario ha reso circa 7-10% annuo nel lungo termine (con variazioni).">
+                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              </Tooltip>
             </label>
             <input
               type="number"
@@ -179,8 +198,11 @@ export function PACSimulator() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
-              {t('proUtilities.pacSimulator.years') || 'Anni'} *
+            <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
+              <span>{t('proUtilities.pacSimulator.years') || 'Anni'} *</span>
+              <Tooltip content="Il periodo di investimento in anni. Più lungo è il periodo, maggiore sarà l'effetto dell'interesse composto e del tempo sul tuo capitale.">
+                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              </Tooltip>
             </label>
             <input
               type="number"
@@ -267,8 +289,11 @@ export function PACSimulator() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
-              {t('proUtilities.pacSimulator.targetAmount') || 'Obiettivo (€)'} *
+            <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
+              <span>{t('proUtilities.pacSimulator.targetAmount') || `Obiettivo (${currencySymbols[currency]})`} *</span>
+              <Tooltip content="L'importo totale che vuoi raggiungere. Il calcolatore ti dirà quanto devi investire periodicamente per raggiungere questo obiettivo.">
+                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              </Tooltip>
             </label>
             <div className="relative">
               <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary" />
@@ -285,8 +310,11 @@ export function PACSimulator() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
-              {t('proUtilities.pacSimulator.targetYears') || 'Anni'} *
+            <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
+              <span>{t('proUtilities.pacSimulator.targetYears') || 'Anni'} *</span>
+              <Tooltip content="In quanti anni vuoi raggiungere l'obiettivo. Più tempo hai, minore sarà l'importo periodico necessario.">
+                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              </Tooltip>
             </label>
             <input
               type="number"
@@ -300,8 +328,11 @@ export function PACSimulator() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
-              {t('proUtilities.pacSimulator.targetReturn') || 'Rendimento Annuo (%)'} *
+            <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
+              <span>{t('proUtilities.pacSimulator.targetReturn') || 'Rendimento Annuo (%)'} *</span>
+              <Tooltip content="Il rendimento annuo atteso. Usato per calcolare quanto devi investire per raggiungere l'obiettivo.">
+                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              </Tooltip>
             </label>
             <input
               type="number"

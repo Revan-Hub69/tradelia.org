@@ -12,24 +12,43 @@ export const currencySymbols: Record<Currency, string> = {
   USD: '$',
 };
 
-// Tasso di cambio EUR/USD (può essere aggiornato dinamicamente in futuro)
-// Default: 1 EUR = 1.10 USD (circa)
+// Tasso di cambio EUR/USD (default fallback)
+// Il tasso reale viene caricato da API
 export const DEFAULT_EXCHANGE_RATE = 1.10;
+
+// Funzione per ottenere il tasso di cambio (carica da API o usa cache)
+export async function getCurrentExchangeRate(): Promise<number> {
+  try {
+    const response = await fetch('/api/currency/exchange-rate', {
+      next: { revalidate: 3600 }, // Cache per 1 ora
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      return data.rate;
+    }
+  } catch (error) {
+    console.warn('Error fetching exchange rate:', error);
+  }
+  
+  return DEFAULT_EXCHANGE_RATE;
+}
 
 // Funzione per convertire importo
 export function convertCurrency(
   amount: number,
   from: Currency,
-  to: Currency
+  to: Currency,
+  exchangeRate: number = DEFAULT_EXCHANGE_RATE
 ): number {
   if (from === to) return amount;
   
   if (from === 'EUR' && to === 'USD') {
-    return amount * DEFAULT_EXCHANGE_RATE;
+    return amount * exchangeRate;
   }
   
   if (from === 'USD' && to === 'EUR') {
-    return amount / DEFAULT_EXCHANGE_RATE;
+    return amount / exchangeRate;
   }
   
   return amount;
