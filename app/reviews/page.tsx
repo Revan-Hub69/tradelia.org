@@ -33,14 +33,21 @@ export default async function ReviewsPage() {
       .limit(10);
 
     if (reviews && reviews.length > 0) {
-      reviewsData = reviews.map((r) => ({
-        author: r.user_name,
+      type ReviewRow = {
+        user_name: string | null;
+        rating: number;
+        comment: string | null;
+        created_at: string;
+      };
+      
+      reviewsData = reviews.map((r: ReviewRow) => ({
+        author: r.user_name || '',
         rating: r.rating,
-        reviewBody: r.comment,
+        reviewBody: r.comment || '',
         datePublished: r.created_at,
       }));
       
-      averageRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+      averageRating = reviews.reduce((sum: number, r: ReviewRow) => sum + r.rating, 0) / reviews.length;
       reviewCount = reviews.length;
     }
   } catch (error) {
