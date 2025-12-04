@@ -223,13 +223,30 @@ export function StrategyBuilder() {
                 ? 'Costruisci e ottimizza strategie di trading robuste usando Walk-Forward Optimization per evitare overfitting. Questo strumento ti guida attraverso le best practice accademiche per l\'ottimizzazione di parametri.'
                 : 'Build and optimize robust trading strategies using Walk-Forward Optimization to avoid overfitting. This tool guides you through academic best practices for parameter optimization.'}
             </p>
-            <div className="flex items-center gap-2 text-xs text-amber-400">
-              <AlertCircle className="w-4 h-4" />
-              <span>
-                {locale === 'it'
-                  ? 'MVP: Dati simulati per dimostrazione. Integrazione con dati storici reali in sviluppo.'
-                  : 'MVP: Simulated data for demonstration. Real historical data integration in development.'}
-              </span>
+            <div className="bg-gradient-to-r from-amber-500/20 to-blue-500/20 border border-amber-500/30 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-sm font-semibold text-text-primary">
+                      {locale === 'it' ? '📊 Dati Real-Time' : '📊 Real-Time Data'}
+                    </span>
+                    <span className="px-2 py-0.5 bg-blue-500/20 border border-blue-500/40 rounded text-[10px] text-blue-300 font-semibold">
+                      {locale === 'it' ? 'Presto Disponibile' : 'Coming Soon'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-text-secondary leading-relaxed">
+                    {locale === 'it'
+                      ? 'Attualmente questo strumento utilizza dati simulati per dimostrazione. I dati storici real-time e l\'integrazione con API di mercato saranno disponibili nell\'upgrade previsto per Q2 2025. Questo ti permetterà di ottimizzare strategie su dati di mercato reali con precisione accademica.'
+                      : 'Currently this tool uses simulated data for demonstration. Real-time historical data and market API integration will be available in the upgrade scheduled for Q2 2025. This will allow you to optimize strategies on real market data with academic precision.'}
+                  </p>
+                  <div className="mt-2 text-[10px] text-text-tertiary">
+                    {locale === 'it'
+                      ? 'Upgrade previsto: Q2 2025'
+                      : 'Upgrade scheduled: Q2 2025'}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
