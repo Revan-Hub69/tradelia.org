@@ -101,16 +101,73 @@ export async function POST(
     // Check if already registered
     const { data: existing } = await supabase
       .from('paper_trading_tournament_participants')
-      .select('id')
+      .select('id, entry_fee_paid')
       .eq('tournament_id', params.id)
       .eq('user_id', user.id)
       .single();
 
     if (existing) {
-      return NextResponse.json(
-        { error: 'Already registered' },
-        { status: 400 }
-      );
+      if (existing.entry_fee_paid) {
+        return NextResponse.json(
+          { error: 'Already registered and paid' },
+          { status: 400 }
+        );
+      } else {
+        // Already registered but not paid - allow payment
+        return NextResponse.json(
+          { error: 'Registration pending payment', needsPayment: true },
+          { status: 402 }
+        );
+      }
+    }
+
+    // Check entry fee
+    if (tournament.entry_fee_xp > 0) {
+      // Get user XP
+      const { data: stats } = await supabase
+        .from('user_stats')
+        .select('total_xp')
+        .eq('user_id', user.id)
+        .single();
+
+      const userXP = stats?.total_xp || 0;
+
+      if (userXP < tournament.entry_fee_xp) {
+        return NextResponse.json(
+          { 
+            error: 'Insufficient XP',
+            required: tournament.entry_fee_xp,
+            available: userXP
+          },
+          { status: 402 }
+        );
+      }
+
+      // Deduct XP
+      const { error: xpError } = await supabase
+        .from('user_stats')
+        .update({
+          total_xp: userXP - tournament.entry_fee_xp,
+        })
+        .eq('user_id', user.id);
+
+      if (xpError) {
+        console.error('Error deducting XP:', xpError);
+        return NextResponse.json(
+          { error: 'Error processing payment' },
+          { status: 500 }
+        );
+      }
+
+      // Log XP transaction
+      await supabase
+        .from('xp_transactions')
+        .insert({
+          user_id: user.id,
+          amount: -tournament.entry_fee_xp,
+          source: 'tournament_entry_fee',
+          created_at: new Date().toISOString(),
+        });
     }
 
     // Register participant
@@ -121,6 +178,9 @@ export async function POST(
         user_id: user.id,
         initial_capital: tournament.initial_capital,
         current_equity: tournament.initial_capital,
+        entry_fee_paid: tournament.entry_fee_xp > 0,
+        entry_fee_xp_amount: tournament.entry_fee_xp,
+        entry_fee_paid_at: tournament.entry_fee_xp > 0 ? new Date().toISOString() : null,
       })
       .select()
       .single();

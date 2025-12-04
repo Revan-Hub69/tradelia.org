@@ -5,6 +5,7 @@
 -- Tournament Types
 CREATE TYPE tournament_format AS ENUM ('daily', 'weekly', 'monthly', 'custom');
 CREATE TYPE tournament_status AS ENUM ('draft', 'open_registration', 'in_progress', 'completed', 'cancelled');
+CREATE TYPE tournament_prize_type AS ENUM ('pro_access', 'desk_access', 'xp_pool', 'achievement', 'custom');
 CREATE TYPE tournament_rule_type AS ENUM (
   'min_trades', 'max_drawdown', 'min_sharpe', 'min_win_rate', 
   'max_position_size', 'min_daily_trades', 'max_leverage', 'min_sharpe_consistency'
@@ -41,9 +42,19 @@ CREATE TABLE IF NOT EXISTS paper_trading_tournaments (
   require_pro BOOLEAN DEFAULT false,
   max_participants INTEGER,
   
+  -- Entry Fee (XP cost to participate)
+  entry_fee_xp INTEGER DEFAULT 0,
+  
   -- Prizes & Rewards
-  prize_pool_xp INTEGER DEFAULT 0,
-  prize_achievements TEXT[], -- Array of achievement IDs
+  prize_type tournament_prize_type NOT NULL DEFAULT 'xp_pool',
+  prize_pro_access_duration_days INTEGER, -- Days of Pro access (if prize_type = 'pro_access')
+  prize_desk_access_duration_days INTEGER, -- Days of Desk access (if prize_type = 'desk_access')
+  prize_pool_xp INTEGER DEFAULT 0, -- XP pool to distribute (if prize_type = 'xp_pool')
+  prize_achievements TEXT[], -- Array of achievement IDs (if prize_type = 'achievement')
+  prize_custom_description TEXT, -- Custom prize description (if prize_type = 'custom')
+  
+  -- Prize Distribution (top N winners get prizes)
+  prize_top_n INTEGER DEFAULT 10, -- Top N participants get prizes
   
   -- Metadata
   created_by UUID REFERENCES auth.users(id),
@@ -52,7 +63,9 @@ CREATE TABLE IF NOT EXISTS paper_trading_tournaments (
   
   CONSTRAINT valid_tournament_dates CHECK (registration_start < registration_end AND registration_end < start_date AND start_date < end_date),
   CONSTRAINT valid_capital CHECK (initial_capital > 0),
-  CONSTRAINT valid_leverage CHECK (max_leverage > 0 AND max_leverage <= 10)
+  CONSTRAINT valid_leverage CHECK (max_leverage > 0 AND max_leverage <= 10),
+  CONSTRAINT valid_entry_fee CHECK (entry_fee_xp >= 0),
+  CONSTRAINT valid_prize_top_n CHECK (prize_top_n > 0)
 );
 
 -- Tournament Rules (detailed rules per tournament)
@@ -74,6 +87,11 @@ CREATE TABLE IF NOT EXISTS paper_trading_tournament_participants (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tournament_id UUID NOT NULL REFERENCES paper_trading_tournaments(id) ON DELETE CASCADE,
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  
+  -- Entry fee payment
+  entry_fee_paid BOOLEAN DEFAULT false,
+  entry_fee_xp_amount INTEGER DEFAULT 0,
+  entry_fee_paid_at TIMESTAMPTZ,
   
   -- Tournament-specific portfolio
   initial_capital NUMERIC(18, 8) NOT NULL,
@@ -101,6 +119,12 @@ CREATE TABLE IF NOT EXISTS paper_trading_tournament_participants (
   current_rank INTEGER,
   final_rank INTEGER,
   score NUMERIC(18, 8) DEFAULT 0, -- Composite score based on scoring_method
+  
+  -- Prize
+  prize_awarded BOOLEAN DEFAULT false,
+  prize_type tournament_prize_type,
+  prize_details JSONB, -- Store prize details (duration, amount, etc.)
+  prize_awarded_at TIMESTAMPTZ,
   
   -- Timestamps
   registered_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -360,10 +384,271 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+-- Tournament Templates (predefined tournament types)
+CREATE TABLE IF NOT EXISTS paper_trading_tournament_templates (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(200) NOT NULL UNIQUE,
+  description TEXT,
+  format tournament_format NOT NULL,
+  
+  -- Default settings
+  default_initial_capital NUMERIC(18, 8) DEFAULT 10000,
+  default_max_leverage NUMERIC(5, 2) DEFAULT 2.0,
+  default_max_position_size_percent NUMERIC(5, 2) DEFAULT 20.0,
+  default_min_trades_required INTEGER DEFAULT 5,
+  default_scoring_method VARCHAR(50) DEFAULT 'sharpe_ratio',
+  default_min_sharpe_ratio NUMERIC(10, 4) DEFAULT 0.5,
+  default_max_drawdown_limit NUMERIC(5, 2) DEFAULT 20.0,
+  default_min_win_rate NUMERIC(5, 2) DEFAULT 40.0,
+  
+  -- Default entry fee
+  default_entry_fee_xp INTEGER DEFAULT 50,
+  
+  -- Default prize
+  default_prize_type tournament_prize_type DEFAULT 'pro_access',
+  default_prize_pro_access_days INTEGER DEFAULT 30,
+  default_prize_desk_access_days INTEGER DEFAULT 7,
+  default_prize_pool_xp INTEGER DEFAULT 500,
+  default_prize_top_n INTEGER DEFAULT 10,
+  
+  -- Metadata
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Insert predefined tournament templates
+INSERT INTO paper_trading_tournament_templates (
+  name, description, format,
+  default_initial_capital, default_max_leverage, default_max_position_size_percent,
+  default_min_trades_required, default_scoring_method, default_min_sharpe_ratio,
+  default_max_drawdown_limit, default_min_win_rate,
+  default_entry_fee_xp, default_prize_type, default_prize_pro_access_days, default_prize_top_n
+) VALUES
+  -- Daily Quick Tournament
+  (
+    'Daily Quick',
+    'Torneo giornaliero veloce - 24 ore di trading intensivo',
+    'daily',
+    5000, 2.0, 15.0,
+    3, 'total_return', 0.3,
+    15.0, 35.0,
+    25, 'pro_access', 7, 5
+  ),
+  -- Weekly Standard Tournament
+  (
+    'Weekly Standard',
+    'Torneo settimanale standard - 7 giorni con regole professionali',
+    'weekly',
+    10000, 2.0, 20.0,
+    5, 'sharpe_ratio', 0.5,
+    20.0, 40.0,
+    50, 'pro_access', 30, 10
+  ),
+  -- Monthly Professional Tournament
+  (
+    'Monthly Professional',
+    'Torneo mensile professionale - 30 giorni con metriche avanzate',
+    'monthly',
+    20000, 2.0, 20.0,
+    10, 'composite', 0.7,
+    15.0, 45.0,
+    100, 'desk_access', 14, 10
+  ),
+  -- Elite Tournament (High Stakes)
+  (
+    'Elite Championship',
+    'Campionato Elite - Torneo premium con accesso Desk per i vincitori',
+    'monthly',
+    50000, 1.5, 15.0,
+    20, 'composite', 1.0,
+    10.0, 50.0,
+    200, 'desk_access', 30, 5
+  ),
+  -- Beginner Friendly Tournament
+  (
+    'Beginner Friendly',
+    'Torneo per principianti - Regole semplici e premi XP',
+    'weekly',
+    5000, 1.0, 25.0,
+    2, 'total_return', 0.0,
+    25.0, 30.0,
+    10, 'xp_pool', 0, 10
+  ),
+  -- Risk Management Tournament
+  (
+    'Risk Management Master',
+    'Torneo focalizzato sulla gestione del rischio - Max drawdown limitato',
+    'weekly',
+    10000, 1.5, 15.0,
+    8, 'calmar_ratio', 0.6,
+    10.0, 40.0,
+    75, 'pro_access', 21, 8
+  ),
+  -- Sharpe Ratio Tournament
+  (
+    'Sharpe Ratio Challenge',
+    'Sfida Sharpe Ratio - Vince chi ha il miglior Sharpe Ratio',
+    'weekly',
+    10000, 2.0, 20.0,
+    5, 'sharpe_ratio', 0.5,
+    20.0, 40.0,
+    60, 'pro_access', 14, 10
+  )
+ON CONFLICT (name) DO NOTHING;
+
+-- RLS for templates
+ALTER TABLE paper_trading_tournament_templates ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can view active templates"
+  ON paper_trading_tournament_templates FOR SELECT
+  USING (is_active = true);
+
+CREATE POLICY "Admins can manage templates"
+  ON paper_trading_tournament_templates FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1 FROM user_profiles
+      WHERE user_profiles.user_id = auth.uid()
+      AND user_profiles.role = 'admin'
+    )
+  );
+
+-- Function to award tournament prizes
+CREATE OR REPLACE FUNCTION award_tournament_prizes(p_tournament_id UUID)
+RETURNS void AS $$
+DECLARE
+  v_tournament RECORD;
+  v_participant RECORD;
+  v_rank INTEGER;
+  v_prize_type tournament_prize_type;
+  v_pro_days INTEGER;
+  v_desk_days INTEGER;
+  v_xp_amount INTEGER;
+  v_user_profile RECORD;
+BEGIN
+  -- Get tournament details
+  SELECT * INTO v_tournament
+  FROM paper_trading_tournaments
+  WHERE id = p_tournament_id;
+
+  IF NOT FOUND OR v_tournament.status != 'completed' THEN
+    RETURN;
+  END IF;
+
+  v_prize_type := v_tournament.prize_type;
+  v_pro_days := v_tournament.prize_pro_access_duration_days;
+  v_desk_days := v_tournament.prize_desk_access_duration_days;
+  v_xp_amount := v_tournament.prize_pool_xp;
+
+  -- Award prizes to top N participants
+  FOR v_participant IN
+    SELECT *
+    FROM paper_trading_tournament_participants
+    WHERE tournament_id = p_tournament_id
+    AND is_active = true
+    AND is_disqualified = false
+    AND final_rank IS NOT NULL
+    AND final_rank <= v_tournament.prize_top_n
+    ORDER BY final_rank ASC
+  LOOP
+    -- Skip if already awarded
+    IF v_participant.prize_awarded THEN
+      CONTINUE;
+    END IF;
+
+    -- Award based on prize type
+    CASE v_prize_type
+      WHEN 'pro_access' THEN
+        -- Grant Pro access
+        UPDATE user_profiles
+        SET role = 'pro',
+            pro_expires_at = CASE
+              WHEN pro_expires_at IS NULL OR pro_expires_at < NOW() THEN
+                NOW() + (v_pro_days || ' days')::INTERVAL
+              ELSE
+                pro_expires_at + (v_pro_days || ' days')::INTERVAL
+            END
+        WHERE user_id = v_participant.user_id;
+
+      WHEN 'desk_access' THEN
+        -- Grant Desk access
+        UPDATE user_profiles
+        SET role = 'desk',
+            desk_expires_at = CASE
+              WHEN desk_expires_at IS NULL OR desk_expires_at < NOW() THEN
+                NOW() + (v_desk_days || ' days')::INTERVAL
+              ELSE
+                desk_expires_at + (v_desk_days || ' days')::INTERVAL
+            END
+        WHERE user_id = v_participant.user_id;
+
+      WHEN 'xp_pool' THEN
+        -- Award XP from pool (distributed proportionally)
+        DECLARE
+          v_xp_share INTEGER;
+        BEGIN
+          -- Calculate XP share based on rank (winner gets more)
+          v_xp_share := CASE v_participant.final_rank
+            WHEN 1 THEN (v_xp_amount * 0.4)::INTEGER
+            WHEN 2 THEN (v_xp_amount * 0.2)::INTEGER
+            WHEN 3 THEN (v_xp_amount * 0.15)::INTEGER
+            ELSE (v_xp_amount * 0.25 / GREATEST(v_tournament.prize_top_n - 3, 1))::INTEGER
+          END;
+
+          -- Award XP
+          UPDATE user_stats
+          SET total_xp = total_xp + v_xp_share
+          WHERE user_id = v_participant.user_id;
+        END;
+
+      WHEN 'achievement' THEN
+        -- Award achievements (handled separately via achievement system)
+        NULL;
+
+      ELSE
+        -- Custom prize (stored in prize_details)
+        NULL;
+    END CASE;
+
+    -- Mark prize as awarded
+    UPDATE paper_trading_tournament_participants
+    SET prize_awarded = true,
+        prize_type = v_prize_type,
+        prize_details = jsonb_build_object(
+          'pro_days', v_pro_days,
+          'desk_days', v_desk_days,
+          'xp_amount', CASE WHEN v_prize_type = 'xp_pool' THEN v_xp_amount ELSE NULL END
+        ),
+        prize_awarded_at = NOW()
+    WHERE id = v_participant.id;
+  END LOOP;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger to auto-award prizes when tournament completes
+CREATE OR REPLACE FUNCTION trigger_award_tournament_prizes()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.status = 'completed' AND OLD.status != 'completed' THEN
+    PERFORM award_tournament_prizes(NEW.id);
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tournament_completed_prize_award
+  AFTER UPDATE ON paper_trading_tournaments
+  FOR EACH ROW
+  WHEN (NEW.status = 'completed' AND OLD.status != 'completed')
+  EXECUTE FUNCTION trigger_award_tournament_prizes();
+
 -- Comments per documentazione accademica
-COMMENT ON TABLE paper_trading_tournaments IS 'Paper trading tournaments - Competitive trading competitions with professional rules and scoring.';
+COMMENT ON TABLE paper_trading_tournaments IS 'Paper trading tournaments - Competitive trading competitions with professional rules, scoring, and XP entry fees.';
+COMMENT ON TABLE paper_trading_tournament_templates IS 'Predefined tournament templates - Quick setup for common tournament types.';
 COMMENT ON TABLE paper_trading_tournament_rules IS 'Detailed tournament rules - Professional constraints and requirements per tournament.';
-COMMENT ON TABLE paper_trading_tournament_participants IS 'Tournament participants - Isolated portfolios and performance metrics per tournament.';
+COMMENT ON TABLE paper_trading_tournament_participants IS 'Tournament participants - Isolated portfolios, performance metrics, entry fee payment, and prize awards.';
 COMMENT ON TABLE paper_trading_tournament_leaderboard IS 'Tournament leaderboard snapshots - Historical ranking data for analysis.';
 COMMENT ON FUNCTION calculate_tournament_score IS 'Calculate tournament score based on professional metrics (Sharpe, Return, Calmar, Composite).';
 COMMENT ON FUNCTION update_tournament_rankings IS 'Update tournament rankings based on current scores and performance metrics.';
+COMMENT ON FUNCTION award_tournament_prizes IS 'Automatically award prizes (Pro/Desk access, XP, achievements) to top N tournament participants.';
