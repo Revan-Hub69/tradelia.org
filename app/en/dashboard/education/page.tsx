@@ -5,7 +5,7 @@ import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
 
 // EducationContent è già un componente client-side
 const EducationContent = dynamic(
-  () => import('../../dashboard/education/EducationContent').then(m => ({ default: m.default })),
+  () => import('../../../dashboard/education/EducationContent'),
   {
     ssr: false,
   }

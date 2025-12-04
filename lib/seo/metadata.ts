@@ -173,9 +173,6 @@ export async function generatePageMetadata(
   };
 }
 
-// Structured Data for AI Search - Import from structured-data.ts
-import { generateOrganizationSchema, generateWebSiteSchema } from './structured-data';
-
 // Legacy function for backward compatibility
 export function generateStructuredData(locale: Locale = "it") {
   return generateOrganizationSchema(locale);

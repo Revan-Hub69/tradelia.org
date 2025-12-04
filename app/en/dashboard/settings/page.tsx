@@ -5,7 +5,7 @@ import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
 
 // SettingsContent è già un componente client-side
 const SettingsContent = dynamic(
-  () => import('../../dashboard/settings/SettingsContent').then(m => ({ default: m.default })),
+  () => import('../../../dashboard/settings/SettingsContent'),
   {
     ssr: false,
   }

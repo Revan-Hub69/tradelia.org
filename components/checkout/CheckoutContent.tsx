@@ -75,6 +75,7 @@ export function CheckoutContent() {
   const { t, locale } = useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
+  // Determina il prefisso della lingua
   const localePrefix = locale === 'en' ? '/en' : '';
   const [step, setStep] = useState<'data' | 'payment' | 'processing'>('data');
   const [checkoutData, setCheckoutData] = useState<CheckoutData | null>(null);
@@ -86,9 +87,6 @@ export function CheckoutContent() {
   const firstNameRef = useRef<HTMLInputElement>(null);
   const companyNameRef = useRef<HTMLInputElement>(null);
   const paymentButtonRef = useRef<HTMLButtonElement>(null);
-  
-  // Determina il prefisso della lingua
-  const localePrefix = locale === 'en' ? '/en' : '';
 
   useEffect(() => {
     const planId = searchParams.get('plan') as 'pro' | 'desk' | null;
