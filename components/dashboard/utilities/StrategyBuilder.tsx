@@ -1,12 +1,20 @@
 'use client';
 
 import { useState, useMemo, useCallback, memo } from 'react';
-import { TrendingUp, TrendingDown, BarChart3, AlertCircle, Info, BookOpen, Calculator, Target, Shield, Save, Download, Settings, Filter, X } from 'lucide-react';
+import { TrendingUp, TrendingDown, BarChart3, AlertCircle, Info, BookOpen, Calculator, Target, Shield, Save, Download, Settings, Filter, X, CheckCircle2, Circle } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { MethodologyNotes } from './MethodologyNotes';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
+import { 
+  ACADEMIC_STRATEGIES, 
+  getStrategyById, 
+  getStrategiesByCategory,
+  type StrategyType,
+  type Timeframe,
+  type AcademicStrategy 
+} from '@/lib/strategies/academic-strategies';
 
 /**
  * Strategy Builder - MVP
@@ -51,6 +59,11 @@ interface WalkForwardWindow {
 export function StrategyBuilder() {
   const { t, locale } = useTranslations();
   
+  // Strategy selection
+  const [selectedStrategies, setSelectedStrategies] = useState<Set<StrategyType>>(new Set(['moving-average-crossover']));
+  const [selectedTimeframe, setSelectedTimeframe] = useState<Timeframe>('1d');
+  const [strategyParams, setStrategyParams] = useState<Record<StrategyType, Record<string, number>>>({});
+  
   // User inputs - full autonomy
   const [keyValueMin, setKeyValueMin] = useState(1.0);
   const [keyValueMax, setKeyValueMax] = useState(5.0);
@@ -94,6 +107,12 @@ export function StrategyBuilder() {
   // Validate inputs - memoized
   const validateInputs = useCallback((): boolean => {
     const errors: string[] = [];
+    
+    if (selectedStrategies.size === 0) {
+      errors.push(locale === 'it'
+        ? 'Seleziona almeno una strategia'
+        : 'Select at least one strategy');
+    }
     
     if (keyValueMin >= keyValueMax) {
       errors.push(locale === 'it' 
@@ -322,7 +341,7 @@ export function StrategyBuilder() {
     } finally {
       setIsOptimizing(false);
     }
-  }, [validateInputs, keyValueMin, keyValueMax, keyValueStep, atrPeriodMin, atrPeriodMax, atrPeriodStep, inSampleMonths, outOfSampleMonths, startDate, endDate, locale]);
+  }, [validateInputs, keyValueMin, keyValueMax, keyValueStep, atrPeriodMin, atrPeriodMax, atrPeriodStep, inSampleMonths, outOfSampleMonths, startDate, endDate, selectedStrategies, selectedTimeframe, strategyParams, locale]);
 
   // Memoized calculations
   const selectedWindowData = useMemo(() => 
@@ -504,6 +523,289 @@ export function StrategyBuilder() {
           </div>
         </aside>
 
+      {/* Strategy Selection */}
+      <section 
+        className="bg-bg-surface border border-border-subtle rounded-xl p-4 sm:p-6 space-y-6"
+        aria-labelledby="strategy-heading"
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <h3 
+            id="strategy-heading"
+            className="text-lg font-semibold text-text-primary flex items-center gap-2"
+          >
+            <Target className="w-5 h-5 text-accent" aria-hidden="true" />
+            {locale === 'it' ? 'Selezione Strategie' : 'Strategy Selection'}
+          </h3>
+          <div className="text-xs text-text-tertiary">
+            {locale === 'it' ? 'Seleziona una o più strategie accademiche' : 'Select one or more academic strategies'}
+          </div>
+        </div>
+        
+        {/* Strategy Categories */}
+        <div className="space-y-4">
+          {/* Basic Strategies */}
+          <div>
+            <h4 className="text-sm font-semibold text-text-secondary mb-3">
+              {locale === 'it' ? 'Strategie Base' : 'Basic Strategies'}
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {getStrategiesByCategory('basic').map((strategy) => (
+                <button
+                  key={strategy.id}
+                  onClick={() => {
+                    const newSet = new Set(selectedStrategies);
+                    if (newSet.has(strategy.id)) {
+                      newSet.delete(strategy.id);
+                    } else {
+                      newSet.add(strategy.id);
+                    }
+                    setSelectedStrategies(newSet);
+                    
+                    // Initialize default parameters if not set
+                    if (!strategyParams[strategy.id]) {
+                      const defaults: Record<string, number> = {};
+                      strategy.parameters.forEach(param => {
+                        defaults[param.id] = param.default;
+                      });
+                      setStrategyParams({
+                        ...strategyParams,
+                        [strategy.id]: defaults
+                      });
+                    }
+                  }}
+                  className={cn(
+                    'p-4 rounded-lg border transition-all text-left',
+                    'hover:border-accent/40 hover:bg-bg-soft',
+                    selectedStrategies.has(strategy.id)
+                      ? 'border-accent bg-accent/10'
+                      : 'border-border-subtle bg-bg-surface'
+                  )}
+                  aria-pressed={selectedStrategies.has(strategy.id)}
+                >
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        {selectedStrategies.has(strategy.id) ? (
+                          <CheckCircle2 className="w-4 h-4 text-accent flex-shrink-0" />
+                        ) : (
+                          <Circle className="w-4 h-4 text-text-tertiary flex-shrink-0" />
+                        )}
+                        <span className="font-semibold text-sm text-text-primary">
+                          {locale === 'it' ? strategy.name : strategy.nameEn}
+                        </span>
+                      </div>
+                      <p className="text-xs text-text-secondary leading-relaxed">
+                        {locale === 'it' ? strategy.description : strategy.descriptionEn}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-[10px] text-text-tertiary mt-2">
+                    <BookOpen className="w-3 h-3" />
+                    <span className="line-clamp-1">{strategy.academicSource.split('(')[0].trim()}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Advanced Strategies */}
+          <div>
+            <h4 className="text-sm font-semibold text-text-secondary mb-3">
+              {locale === 'it' ? 'Strategie Avanzate' : 'Advanced Strategies'}
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {getStrategiesByCategory('advanced').map((strategy) => (
+                <button
+                  key={strategy.id}
+                  onClick={() => {
+                    const newSet = new Set(selectedStrategies);
+                    if (newSet.has(strategy.id)) {
+                      newSet.delete(strategy.id);
+                    } else {
+                      newSet.add(strategy.id);
+                    }
+                    setSelectedStrategies(newSet);
+                    
+                    // Initialize default parameters if not set
+                    if (!strategyParams[strategy.id]) {
+                      const defaults: Record<string, number> = {};
+                      strategy.parameters.forEach(param => {
+                        defaults[param.id] = param.default;
+                      });
+                      setStrategyParams({
+                        ...strategyParams,
+                        [strategy.id]: defaults
+                      });
+                    }
+                  }}
+                  className={cn(
+                    'p-4 rounded-lg border transition-all text-left',
+                    'hover:border-accent/40 hover:bg-bg-soft',
+                    selectedStrategies.has(strategy.id)
+                      ? 'border-accent bg-accent/10'
+                      : 'border-border-subtle bg-bg-surface'
+                  )}
+                  aria-pressed={selectedStrategies.has(strategy.id)}
+                >
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        {selectedStrategies.has(strategy.id) ? (
+                          <CheckCircle2 className="w-4 h-4 text-accent flex-shrink-0" />
+                        ) : (
+                          <Circle className="w-4 h-4 text-text-tertiary flex-shrink-0" />
+                        )}
+                        <span className="font-semibold text-sm text-text-primary">
+                          {locale === 'it' ? strategy.name : strategy.nameEn}
+                        </span>
+                      </div>
+                      <p className="text-xs text-text-secondary leading-relaxed">
+                        {locale === 'it' ? strategy.description : strategy.descriptionEn}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-[10px] text-text-tertiary mt-2">
+                    <BookOpen className="w-3 h-3" />
+                    <span className="line-clamp-1">{strategy.academicSource.split('(')[0].trim()}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        {/* Timeframe Selection */}
+        <div>
+          <label htmlFor="timeframe" className="block text-sm font-medium text-text-primary mb-2">
+            {locale === 'it' ? 'Timeframe' : 'Timeframe'}
+          </label>
+          <select
+            id="timeframe"
+            value={selectedTimeframe}
+            onChange={(e) => setSelectedTimeframe(e.target.value as Timeframe)}
+            className="w-full px-4 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+          >
+            <option value="1m">1 minuto</option>
+            <option value="5m">5 minuti</option>
+            <option value="15m">15 minuti</option>
+            <option value="30m">30 minuti</option>
+            <option value="1h">1 ora</option>
+            <option value="4h">4 ore</option>
+            <option value="1d">1 giorno</option>
+            <option value="1w">1 settimana</option>
+            <option value="1M">1 mese</option>
+          </select>
+        </div>
+      </section>
+      
+      {/* Strategy Parameters */}
+      {Array.from(selectedStrategies).map((strategyId) => {
+        const strategy = getStrategyById(strategyId);
+        if (!strategy) return null;
+        
+        const params = strategyParams[strategy.id] || {};
+        
+        return (
+          <section
+            key={strategy.id}
+            className="bg-bg-surface border border-border-subtle rounded-xl p-4 sm:p-6 space-y-4"
+            aria-labelledby={`params-${strategy.id}`}
+          >
+            <h3 
+              id={`params-${strategy.id}`}
+              className="text-lg font-semibold text-text-primary flex items-center gap-2"
+            >
+              <Settings className="w-5 h-5 text-accent" aria-hidden="true" />
+              {locale === 'it' ? strategy.name : strategy.nameEn} - {locale === 'it' ? 'Parametri' : 'Parameters'}
+            </h3>
+            
+            <div className="bg-accent/5 border border-accent/20 rounded-lg p-3 mb-4">
+              <div className="flex items-start gap-2">
+                <Info className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
+                <div className="text-xs text-text-secondary leading-relaxed">
+                  <strong className="text-text-primary">{locale === 'it' ? 'Nota Accademica:' : 'Academic Note:'}</strong>{' '}
+                  {locale === 'it' ? strategy.academicNotes : strategy.academicNotesEn}
+                </div>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {strategy.parameters.map((param) => (
+                <div key={param.id}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <label 
+                      htmlFor={`${strategy.id}-${param.id}`}
+                      className="text-sm font-medium text-text-primary"
+                    >
+                      {param.label}
+                    </label>
+                    <Tooltip
+                      position="top"
+                      content={
+                        <div className="max-w-xs space-y-2 text-xs">
+                          <div className="font-semibold text-white mb-1">{param.label}</div>
+                          <div className="text-text-secondary">{param.academicTooltip.description}</div>
+                          {param.academicTooltip.recommendation && (
+                            <div className="pt-2 border-t border-white/20">
+                              <div className="font-semibold text-accent mb-1">
+                                {locale === 'it' ? 'Raccomandazione:' : 'Recommendation:'}
+                              </div>
+                              <div className="text-text-secondary">{param.academicTooltip.recommendation}</div>
+                            </div>
+                          )}
+                          {param.academicTooltip.academicContext && (
+                            <div className="pt-2 border-t border-white/20">
+                              <div className="font-semibold text-accent mb-1">
+                                {locale === 'it' ? 'Contesto Accademico:' : 'Academic Context:'}
+                              </div>
+                              <div className="text-text-secondary">{param.academicTooltip.academicContext}</div>
+                            </div>
+                          )}
+                          <div className="pt-2 border-t border-white/20">
+                            <div className="font-semibold text-accent mb-1">
+                              {locale === 'it' ? 'Fonte:' : 'Source:'}
+                            </div>
+                            <div className="text-text-secondary text-[10px] leading-relaxed">
+                              {param.academicTooltip.source}
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    >
+                      <Info className="w-4 h-4 text-accent cursor-help" />
+                    </Tooltip>
+                  </div>
+                  <input
+                    id={`${strategy.id}-${param.id}`}
+                    type={param.type === 'integer' ? 'number' : 'number'}
+                    value={params[param.id] ?? param.default}
+                    onChange={(e) => {
+                      const value = param.type === 'integer' 
+                        ? parseInt(e.target.value) || param.default
+                        : parseFloat(e.target.value) || param.default;
+                      setStrategyParams({
+                        ...strategyParams,
+                        [strategy.id]: {
+                          ...params,
+                          [param.id]: Math.max(param.min, Math.min(param.max, value))
+                        }
+                      });
+                    }}
+                    min={param.min}
+                    max={param.max}
+                    step={param.step}
+                    className="w-full px-3 py-2 bg-bg-soft border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                  />
+                  <div className="text-xs text-text-tertiary mt-1">
+                    Range: {param.min} - {param.max} (Step: {param.step})
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        );
+      })}
+      
       {/* Configuration */}
       <section 
         className="bg-bg-surface border border-border-subtle rounded-xl p-4 sm:p-6 space-y-6"
@@ -517,7 +819,7 @@ export function StrategyBuilder() {
             className="text-lg font-semibold text-text-primary flex items-center gap-2"
           >
             <Calculator className="w-5 h-5 text-accent" aria-hidden="true" />
-            {locale === 'it' ? 'Configurazione Parametri' : 'Parameter Configuration'}
+            {locale === 'it' ? 'Configurazione Walk-Forward' : 'Walk-Forward Configuration'}
           </h3>
           <div className="flex items-center gap-3">
             <button
@@ -536,7 +838,7 @@ export function StrategyBuilder() {
               {locale === 'it' ? 'Metriche' : 'Metrics'}
             </button>
             <div className="text-xs text-text-tertiary">
-              {locale === 'it' ? 'Inserisci i valori desiderati' : 'Enter your desired values'}
+              {locale === 'it' ? 'Configurazione ottimizzazione' : 'Optimization configuration'}
             </div>
           </div>
         </div>
@@ -893,34 +1195,38 @@ export function StrategyBuilder() {
         )}
 
         <div className="flex flex-col sm:flex-row gap-3">
-          <button
-            onClick={runWalkForwardOptimization}
-            onKeyDown={(e) => handleKeyDown(e, runWalkForwardOptimization)}
-            disabled={isOptimizing || validationErrors.length > 0}
-            aria-label={locale === 'it' ? 'Esegui ottimizzazione Walk-Forward' : 'Run Walk-Forward Optimization'}
-            aria-busy={isOptimizing}
-            className={cn(
-              'flex-1 py-3 px-6 rounded-lg font-semibold transition-all',
-              'bg-gradient-to-r from-accent to-accent-hover text-white',
-              'hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]',
-              'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
-              'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100',
-              'flex items-center justify-center gap-2',
-              'touch-manipulation' // Mobile optimization
-            )}
-          >
-            {isOptimizing ? (
-              <>
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>{locale === 'it' ? 'Ottimizzazione in corso...' : 'Optimizing...'}</span>
-              </>
-            ) : (
-              <>
-                <TrendingUp className="w-5 h-5" />
-                <span>{locale === 'it' ? 'Esegui Walk-Forward Optimization' : 'Run Walk-Forward Optimization'}</span>
-              </>
-            )}
-          </button>
+        <button
+          onClick={runWalkForwardOptimization}
+          onKeyDown={(e) => handleKeyDown(e, runWalkForwardOptimization)}
+          disabled={isOptimizing || validationErrors.length > 0 || selectedStrategies.size === 0}
+          aria-label={locale === 'it' ? 'Esegui ottimizzazione Walk-Forward' : 'Run Walk-Forward Optimization'}
+          aria-busy={isOptimizing}
+          className={cn(
+            'flex-1 py-3 px-6 rounded-lg font-semibold transition-all',
+            'bg-gradient-to-r from-accent to-accent-hover text-white',
+            'hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]',
+            'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
+            'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100',
+            'flex items-center justify-center gap-2',
+            'touch-manipulation' // Mobile optimization
+          )}
+        >
+          {isOptimizing ? (
+            <>
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <span>{locale === 'it' ? 'Ottimizzazione in corso...' : 'Optimizing...'}</span>
+            </>
+          ) : (
+            <>
+              <TrendingUp className="w-5 h-5" />
+              <span>
+                {selectedStrategies.size === 0
+                  ? (locale === 'it' ? 'Seleziona una strategia' : 'Select a strategy')
+                  : (locale === 'it' ? 'Esegui Walk-Forward Optimization' : 'Run Walk-Forward Optimization')}
+              </span>
+            </>
+          )}
+        </button>
           
           <button
             onClick={() => setShowFilters(!showFilters)}
@@ -1092,6 +1398,9 @@ export function StrategyBuilder() {
                         id: Date.now().toString(),
                         name: configName.trim(),
                         config: {
+                          selectedStrategies: Array.from(selectedStrategies),
+                          selectedTimeframe,
+                          strategyParams,
                           keyValueMin,
                           keyValueMax,
                           keyValueStep,
@@ -1300,6 +1609,15 @@ export function StrategyBuilder() {
                     <button
                       key={config.id}
                       onClick={() => {
+                        if (config.config.selectedStrategies) {
+                          setSelectedStrategies(new Set(config.config.selectedStrategies));
+                        }
+                        if (config.config.selectedTimeframe) {
+                          setSelectedTimeframe(config.config.selectedTimeframe);
+                        }
+                        if (config.config.strategyParams) {
+                          setStrategyParams(config.config.strategyParams);
+                        }
                         setKeyValueMin(config.config.keyValueMin);
                         setKeyValueMax(config.config.keyValueMax);
                         setKeyValueStep(config.config.keyValueStep);
