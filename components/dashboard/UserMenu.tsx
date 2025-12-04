@@ -152,7 +152,7 @@ export function UserMenu() {
       id: 'profile',
       label: t('dashboard.userMenu.profile') || 'Profilo',
       icon: User,
-      href: '/dashboard#profile',
+      href: '/dashboard',
     },
     {
       id: 'notifications',
@@ -165,7 +165,7 @@ export function UserMenu() {
       id: 'settings',
       label: t('dashboard.userMenu.settings') || 'Impostazioni',
       icon: Settings,
-      href: '/dashboard#settings',
+      href: '/dashboard/settings',
     },
   ];
 

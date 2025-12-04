@@ -126,17 +126,17 @@ export function DashboardShell() {
     },
     {
       keys: ['g', 'r'],
-      handler: () => router.push('/dashboard#reports'),
+      handler: () => router.push('/dashboard/analysis'),
       description: 'Vai ai report',
     },
     {
       keys: ['g', 'c'],
-      handler: () => router.push('/dashboard#education'),
+      handler: () => router.push('/dashboard/education'),
       description: 'Vai ai corsi',
     },
     {
       keys: ['g', 's'],
-      handler: () => router.push('/dashboard#settings'),
+      handler: () => router.push('/dashboard/settings'),
       description: 'Vai alle impostazioni',
     },
   ]);
@@ -167,13 +167,13 @@ export function DashboardShell() {
     },
     {
       id: 'reports',
-      target: '[href*="/dashboard/reports"], [href*="#reports"]',
+      target: '[href*="/dashboard/analysis"], [href*="/dashboard/reports"]',
       title: t('onboarding.step2Title') || 'Report Ufficiali',
       content: t('onboarding.step2Content') || 'Accedi ai report verificabili e alle analisi conformi MiFID II.',
       position: 'bottom' as const,
       action: () => {
         // Scroll to reports section if exists
-        const reportsSection = document.querySelector('[href*="/dashboard/reports"], [href*="#reports"]');
+        const reportsSection = document.querySelector('[href*="/dashboard/analysis"], [href*="/dashboard/reports"]');
         if (reportsSection) {
           reportsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
@@ -181,7 +181,7 @@ export function DashboardShell() {
     },
     {
       id: 'education',
-      target: '[href*="/dashboard/education"], [href*="#education"]',
+      target: '[href*="/dashboard/education"]',
       title: t('onboarding.step3Title') || 'Corsi Formativi',
       content: t('onboarding.step3Content') || 'Esplora i percorsi formativi basati su framework AI verificabili.',
       position: 'bottom' as const,
@@ -195,7 +195,7 @@ export function DashboardShell() {
     },
     {
       id: 'settings',
-      target: '[href*="/dashboard/settings"], [href*="#settings"]',
+      target: '[href*="/dashboard/settings"]',
       title: t('onboarding.step5Title') || 'Impostazioni',
       content: t('onboarding.step5Content') || 'Personalizza la tua esperienza: profilo, notifiche, preferenze e sicurezza.',
       position: 'bottom' as const,

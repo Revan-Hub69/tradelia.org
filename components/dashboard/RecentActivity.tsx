@@ -66,16 +66,16 @@ export const RecentActivity = memo(function RecentActivity() {
       switch (item.type) {
         case 'report_viewed':
           icon = <FileText className="w-4 h-4" />;
-          href = `/dashboard#reports`;
+          href = `/dashboard/analysis`;
           break;
         case 'course_started':
         case 'course_completed':
           icon = <BookOpen className="w-4 h-4" />;
-          href = `/dashboard#education`;
+          href = `/dashboard/education`;
           break;
         case 'analysis_requested':
           icon = <TrendingUp className="w-4 h-4" />;
-          href = `/dashboard#requests-history`;
+          href = `/dashboard/analysis`;
           break;
       }
 
@@ -269,7 +269,7 @@ export const RecentActivity = memo(function RecentActivity() {
       {activities.length >= 3 && (
         <div className="mt-4 text-center">
           <Link
-            href="/dashboard#activity"
+            href="/dashboard"
             className="text-sm text-accent hover:text-accent-hover inline-flex items-center gap-1"
           >
             {t('dashboard.activity.viewAll') || 'Vedi tutte le attività'}

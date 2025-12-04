@@ -87,7 +87,7 @@ export function GlobalSearch() {
           type: 'report',
           title: item.title,
           description: item.description || '',
-          href: `/dashboard#reports`,
+          href: `/dashboard/analysis`,
           icon: <FileText className="w-4 h-4" />,
         });
       });
@@ -99,7 +99,7 @@ export function GlobalSearch() {
           type: 'course',
           title: item.title,
           description: item.description || '',
-          href: item.slug ? `/courses/${item.slug}` : '/dashboard#education',
+          href: item.slug ? `/courses/${item.slug}` : '/dashboard/education',
           icon: <BookOpen className="w-4 h-4" />,
         });
       });

@@ -13,7 +13,7 @@ const navKeys = [
   { key: 'dashboard', href: '/dashboard', icon: LayoutDashboard },
   { key: 'brokers', href: '/brokers', icon: Building2 },
   { key: 'manifesto', href: '/about', icon: BookOpen },
-  { key: 'percorso', href: '/dashboard#education', icon: GraduationCap },
+  { key: 'percorso', href: '/dashboard/education', icon: GraduationCap },
   { key: 'serviziPro', href: '/services', icon: FileText },
   { key: 'documentazione', href: '/docs', icon: FileText },
   { key: 'community', href: '/community', icon: Users },

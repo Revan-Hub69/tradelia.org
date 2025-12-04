@@ -36,7 +36,7 @@ export function OverviewStats() {
       context: t('dashboard.overview.stats.totalReports.context'),
       action: {
         label: t('dashboard.overview.stats.totalReports.action'),
-        href: buildLocalePath(locale, '/dashboard#reports'),
+        href: buildLocalePath(locale, '/dashboard/analysis'),
       },
     },
     {
@@ -47,7 +47,7 @@ export function OverviewStats() {
       context: t('dashboard.overview.stats.activeCourses.context'),
       action: {
         label: t('dashboard.overview.stats.activeCourses.action'),
-        href: buildLocalePath(locale, '/dashboard#education'),
+        href: buildLocalePath(locale, '/dashboard/education'),
       },
     },
     {
@@ -58,7 +58,7 @@ export function OverviewStats() {
       context: t('dashboard.overview.stats.pendingRequests.context'),
       action: {
         label: t('dashboard.overview.stats.pendingRequests.action'),
-        href: buildLocalePath(locale, '/dashboard#requests-history'),
+        href: buildLocalePath(locale, '/dashboard/analysis'),
       },
     },
     {
@@ -69,7 +69,7 @@ export function OverviewStats() {
       context: t('dashboard.overview.stats.recentActivity.context'),
       action: {
         label: t('dashboard.overview.stats.recentActivity.action'),
-        href: buildLocalePath(locale, '/dashboard#activity'),
+        href: buildLocalePath(locale, '/dashboard'),
       },
     },
   ]);

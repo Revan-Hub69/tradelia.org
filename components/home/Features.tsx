@@ -125,7 +125,7 @@ export function Features() {
                 <motion.div variants={itemVariants} className="text-center space-y-6">
                   <motion.div variants={hoverVariants} whileHover="hover" whileTap="tap">
                     <Button asChild variant="default" size="lg">
-                      <Link href={buildLocalePath(locale, '/dashboard#education')}>
+                      <Link href={buildLocalePath(locale, '/dashboard/education')}>
                         <span>{t('home.features.cta')}</span>
                         <ArrowRight className="w-5 h-5" aria-hidden="true" />
                       </Link>

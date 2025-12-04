@@ -70,7 +70,7 @@ export function DashboardHero() {
         </p>
         <div className={styles.dashboardHeroActions}>
           <Button asChild size="lg">
-            <Link href={buildLocalePath(locale, '/dashboard#education')}>
+            <Link href={buildLocalePath(locale, '/dashboard/education')}>
               <span>{t('dashboard.hero.ctaPrimary')}</span>
               <ArrowRight className={styles.dashboardHeroActionIcon} aria-hidden="true" />
             </Link>

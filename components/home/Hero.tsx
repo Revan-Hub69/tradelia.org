@@ -184,8 +184,8 @@ export function Hero() {
           <motion.div variants={hoverVariants} whileHover="hover" whileTap="tap">
             <Button asChild variant="default" size="lg">
               <Link 
-                href={buildLocalePath(locale, '/dashboard#education')}
-                onMouseEnter={() => prefetchOnHover(buildLocalePath(locale, '/dashboard'))}
+                href={buildLocalePath(locale, '/dashboard/education')}
+                onMouseEnter={() => prefetchOnHover(buildLocalePath(locale, '/dashboard/education'))}
               >
                 <span>{t('hero.ctaPrimary')}</span>
                 <ArrowRight className="w-5 h-5" aria-hidden="true" />

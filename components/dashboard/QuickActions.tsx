@@ -91,7 +91,7 @@ export const QuickActions = memo(function QuickActions() {
       color: 'text-cyan-300',
       bgColor: 'bg-cyan-500/20',
       borderColor: 'border-cyan-400/30',
-      href: '/dashboard#education',
+      href: '/dashboard/education',
     },
   ];
 

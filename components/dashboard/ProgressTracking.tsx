@@ -65,7 +65,7 @@ export const ProgressTracking = memo(function ProgressTracking() {
         progress: Math.round(progress),
         totalLessons,
         completedLessons,
-        href: course.slug ? `/courses/${course.slug}` : '/dashboard#education',
+        href: course.slug ? `/courses/${course.slug}` : '/dashboard/education',
         badge: progress > 0 && progress < 100 ? 'In Corso' : undefined,
       };
     });
