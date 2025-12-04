@@ -3,7 +3,7 @@ services:
     name: tradelia-ai
     env: node
     buildCommand: npm install && NODE_OPTIONS="--max-old-space-size=4096" npm run build
-    startCommand: node .next/standalone/server.js
+    startCommand: npm run start:next
     envVars:
       - key: NODE_ENV
         value: production

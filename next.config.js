@@ -123,8 +123,8 @@ const nextConfig = {
   // Production source maps (optional, can disable for smaller bundles)
   productionBrowserSourceMaps: false,
 
-  // Output standalone per Render deployment
-  output: 'standalone',
+  // Output standalone per Render deployment - disabilitato per problemi con file statici
+  // output: 'standalone',
 
   // TypeScript e ESLint
   typescript: {
