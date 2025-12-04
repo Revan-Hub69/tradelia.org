@@ -143,68 +143,93 @@ export function ExpenseTracker() {
   };
 
   if (loading) {
-    return <div className="text-text-secondary">Caricamento spese...</div>;
+    return (
+      <div className="space-y-6">
+        <div>
+          <div className="h-8 bg-bg-soft rounded-lg animate-pulse mb-2 w-48" />
+          <div className="h-4 bg-bg-soft rounded animate-pulse w-64" />
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-bg-soft border border-border-subtle rounded-xl p-3 md:p-4">
+              <div className="h-4 bg-bg-surface rounded mb-2 animate-pulse" />
+              <div className="h-6 bg-bg-surface rounded animate-pulse" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-error">Errore caricamento spese</div>;
+    return (
+      <div className="bg-error/10 border border-error/30 rounded-xl p-6 text-center">
+        <p className="text-error mb-4">Errore caricamento spese</p>
+        <button
+          onClick={retry}
+          className="px-4 py-2 bg-error/20 hover:bg-error/30 border border-error/40 text-error rounded-lg text-sm font-medium transition-colors"
+        >
+          Riprova
+        </button>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-text-primary mb-2 flex items-center gap-2">
-          <Wallet className="w-6 h-6 text-accent" />
-          {t('proUtilities.expenseTracker.title') || 'Gestione Spese'}
+        <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-2 flex items-center gap-2">
+          <Wallet className="w-5 h-5 sm:w-6 sm:h-6 text-accent flex-shrink-0" />
+          <span>{t('proUtilities.expenseTracker.title') || 'Gestione Spese'}</span>
         </h2>
-        <p className="text-text-secondary text-sm">
+        <p className="text-text-secondary text-xs sm:text-sm">
           {t('proUtilities.expenseTracker.description') || 'Traccia le tue spese e analizza i tuoi consumi'}
         </p>
       </div>
 
-      {/* Statistiche */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-bg-soft border border-border-subtle rounded-xl p-4">
-          <div className="text-sm text-text-tertiary mb-1">Totale Mensile</div>
-          <div className="text-2xl font-bold text-text-primary">
+      {/* Statistiche - Mobile-first responsive */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        <div className="bg-bg-soft border border-border-subtle rounded-xl p-3 md:p-4">
+          <div className="text-xs md:text-sm text-text-tertiary mb-1">Totale Mensile</div>
+          <div className="text-lg md:text-2xl font-bold text-text-primary">
             €{stats.total.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
         </div>
-        <div className="bg-bg-soft border border-border-subtle rounded-xl p-4">
-          <div className="text-sm text-text-tertiary mb-1">Numero Spese</div>
-          <div className="text-2xl font-bold text-text-primary">{stats.count}</div>
+        <div className="bg-bg-soft border border-border-subtle rounded-xl p-3 md:p-4">
+          <div className="text-xs md:text-sm text-text-tertiary mb-1">Numero Spese</div>
+          <div className="text-lg md:text-2xl font-bold text-text-primary">{stats.count}</div>
         </div>
-        <div className="bg-bg-soft border border-border-subtle rounded-xl p-4">
-          <div className="text-sm text-text-tertiary mb-1">Media per Spesa</div>
-          <div className="text-2xl font-bold text-text-primary">
+        <div className="bg-bg-soft border border-border-subtle rounded-xl p-3 md:p-4">
+          <div className="text-xs md:text-sm text-text-tertiary mb-1">Media per Spesa</div>
+          <div className="text-lg md:text-2xl font-bold text-text-primary">
             €{stats.average.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
         </div>
-        <div className="bg-bg-soft border border-border-subtle rounded-xl p-4">
-          <div className="text-sm text-text-tertiary mb-1">Categoria Top</div>
-          <div className="text-2xl font-bold text-text-primary">
+        <div className="bg-bg-soft border border-border-subtle rounded-xl p-3 md:p-4 col-span-2 md:col-span-1">
+          <div className="text-xs md:text-sm text-text-tertiary mb-1">Categoria Top</div>
+          <div className="text-lg md:text-2xl font-bold text-text-primary">
             {stats.topCategory ? getCategoryInfo(stats.topCategory.category).label : '—'}
           </div>
         </div>
       </div>
 
-      {/* Filtri */}
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2">
-          <Calendar className="w-4 h-4 text-text-tertiary" />
+      {/* Filtri - Mobile responsive */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+        <div className="flex items-center gap-2 flex-1">
+          <Calendar className="w-4 h-4 text-text-tertiary flex-shrink-0" />
           <input
             type="month"
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
-            className="px-3 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+            className="flex-1 px-3 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent text-sm"
           />
         </div>
-        <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-text-tertiary" />
+        <div className="flex items-center gap-2 flex-1">
+          <Filter className="w-4 h-4 text-text-tertiary flex-shrink-0" />
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="px-3 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+            className="flex-1 px-3 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent text-sm"
           >
             <option value="all">Tutte le categorie</option>
             {categories.map((cat) => (
@@ -216,7 +241,7 @@ export function ExpenseTracker() {
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="ml-auto flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors text-sm font-medium"
         >
           <Plus className="w-4 h-4" />
           {t('proUtilities.expenseTracker.addExpense') || 'Aggiungi Spesa'}
@@ -225,13 +250,13 @@ export function ExpenseTracker() {
 
       {/* Advanced Charts (Pro only) */}
       {isPro && expenses.length > 0 && (
-        <div className="bg-bg-soft border border-border-subtle rounded-xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-text-primary flex items-center gap-2">
-              <BarChart3 className="w-5 h-5 text-accent" />
-              {t('proUtilities.expenseTracker.advancedCharts') || 'Analisi Avanzate'}
+        <div className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-4">
+            <h3 className="text-base sm:text-lg font-semibold text-text-primary flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-accent flex-shrink-0" />
+              <span>{t('proUtilities.expenseTracker.advancedCharts') || 'Analisi Avanzate'}</span>
             </h3>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
               <button
                 onClick={async () => {
                   try {
@@ -249,7 +274,7 @@ export function ExpenseTracker() {
                     toast.error(t('proUtilities.expenseTracker.exportError') || 'Errore durante l\'export');
                   }
                 }}
-                className="flex items-center gap-2 px-3 py-1.5 text-sm bg-bg-surface border border-border-subtle hover:border-accent/40 rounded-lg transition-colors"
+                className="flex items-center justify-center gap-2 px-3 py-1.5 text-xs sm:text-sm bg-bg-surface border border-border-subtle hover:border-accent/40 rounded-lg transition-colors flex-1 sm:flex-initial"
               >
                 <Download className="w-4 h-4" />
                 {t('proUtilities.expenseTracker.export') || 'Esporta CSV'}
@@ -262,10 +287,10 @@ export function ExpenseTracker() {
 
       {/* Simple Category Chart (Base) */}
       {Object.keys(stats.byCategory).length > 0 && (
-        <div className="bg-bg-soft border border-border-subtle rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
-            <PieChart className="w-5 h-5 text-accent" />
-            Spese per Categoria
+        <div className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
+            <PieChart className="w-4 h-4 sm:w-5 sm:h-5 text-accent flex-shrink-0" />
+            <span>Spese per Categoria</span>
           </h3>
           <div className="space-y-3">
             {Object.entries(stats.byCategory)
@@ -295,8 +320,8 @@ export function ExpenseTracker() {
       )}
 
       {/* Lista Spese */}
-      <div className="bg-bg-soft border border-border-subtle rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-text-primary mb-4">Spese</h3>
+      <div className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6">
+        <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4">Spese</h3>
         {filteredExpenses.length === 0 ? (
           <div className="text-center py-12 text-text-tertiary">
             <TrendingDown className="w-12 h-12 mx-auto mb-3 opacity-50" />
@@ -309,25 +334,25 @@ export function ExpenseTracker() {
               return (
                 <div
                   key={expense.id}
-                  className="flex items-center justify-between p-4 bg-bg-surface border border-border-subtle rounded-lg hover:border-accent/40 transition-colors"
+                  className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3 sm:p-4 bg-bg-surface border border-border-subtle rounded-lg hover:border-accent/40 transition-colors"
                 >
-                  <div className="flex items-center gap-4 flex-1">
-                    <div className={cn('w-10 h-10 rounded-lg flex items-center justify-center', categoryInfo.bgColor, categoryInfo.color)}>
+                  <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0 w-full sm:w-auto">
+                    <div className={cn('w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0', categoryInfo.bgColor, categoryInfo.color)}>
                       <Wallet className="w-5 h-5" />
                     </div>
-                    <div className="flex-1">
-                      <div className="font-medium text-text-primary">{expense.description || 'Spesa'}</div>
-                      <div className="text-sm text-text-secondary">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-text-primary text-sm sm:text-base truncate">{expense.description || 'Spesa'}</div>
+                      <div className="text-xs sm:text-sm text-text-secondary">
                         {categoryInfo.label} • {format(new Date(expense.date), 'dd MMM yyyy', { locale: locale === 'it' ? itLocale : undefined })}
                       </div>
                     </div>
-                    <div className="text-lg font-bold text-text-primary">
+                    <div className="text-base sm:text-lg font-bold text-text-primary flex-shrink-0">
                       €{expense.amount.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </div>
                   </div>
                   <button
                     onClick={() => handleDeleteExpense(expense.id)}
-                    className="ml-4 p-2 rounded-lg hover:bg-error/20 text-text-secondary hover:text-error transition-colors"
+                    className="self-end sm:self-auto p-2 rounded-lg hover:bg-error/20 text-text-secondary hover:text-error transition-colors flex-shrink-0"
                     aria-label="Elimina spesa"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -339,11 +364,30 @@ export function ExpenseTracker() {
         )}
       </div>
 
-      {/* Add Expense Modal */}
+      {/* Add Expense Modal - Mobile optimized */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-bg-surface border border-border-subtle rounded-xl max-w-md w-full p-6">
-            <h2 className="text-xl font-semibold text-text-primary mb-4">Aggiungi Spesa</h2>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 sm:p-6">
+          <div className="bg-bg-surface border border-border-subtle rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto p-4 sm:p-6">
+            <div className="flex items-center justify-between mb-4 sticky top-0 bg-bg-surface pb-2 border-b border-border-subtle">
+              <h2 className="text-lg sm:text-xl font-semibold text-text-primary">Aggiungi Spesa</h2>
+              <button
+                onClick={() => {
+                  setShowAddModal(false);
+                  setNewExpense({
+                    amount: '',
+                    category: 'food',
+                    description: '',
+                    date: format(new Date(), 'yyyy-MM-dd'),
+                  });
+                }}
+                className="p-1 rounded-lg hover:bg-bg-soft text-text-tertiary hover:text-text-primary transition-colors"
+                aria-label="Chiudi"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-text-secondary mb-2">Importo *</label>
@@ -392,7 +436,7 @@ export function ExpenseTracker() {
                 />
               </div>
             </div>
-            <div className="flex items-center justify-end gap-3 mt-6">
+            <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 mt-6 sticky bottom-0 bg-bg-surface pt-4 border-t border-border-subtle -mx-4 sm:-mx-6 px-4 sm:px-6">
               <button
                 onClick={() => {
                   setShowAddModal(false);
@@ -403,13 +447,13 @@ export function ExpenseTracker() {
                     date: format(new Date(), 'yyyy-MM-dd'),
                   });
                 }}
-                className="px-4 py-2 rounded-lg bg-bg-soft border border-border-subtle text-text-secondary hover:text-text-primary transition-colors"
+                className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-bg-soft border border-border-subtle text-text-secondary hover:text-text-primary transition-colors text-sm font-medium"
               >
                 Annulla
               </button>
               <button
                 onClick={handleAddExpense}
-                className="px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white transition-colors"
+                className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-accent hover:bg-accent-hover text-white transition-colors text-sm font-medium"
               >
                 Aggiungi
               </button>

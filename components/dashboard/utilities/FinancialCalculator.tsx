@@ -385,13 +385,13 @@ export function FinancialCalculator() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-xl bg-accent/20 border border-accent/30 flex items-center justify-center">
-          <Calculator className="w-6 h-6 text-accent" />
+      {/* Header - Mobile optimized */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/20 border border-accent/30 flex items-center justify-center flex-shrink-0">
+          <Calculator className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
         </div>
-        <div>
-          <h3 className="text-lg font-semibold text-text-primary">
+        <div className="min-w-0">
+          <h3 className="text-base sm:text-lg font-semibold text-text-primary">
             {t('proUtilities.calculator.title') || 'Calcolatrice Finanziaria'}
           </h3>
           <p className="text-xs text-text-tertiary">
@@ -435,30 +435,30 @@ export function FinancialCalculator() {
         })}
       </div>
 
-      {/* Input fields */}
-      <div className="bg-bg-soft border border-border-subtle rounded-xl p-6 space-y-4">
+      {/* Input fields - Mobile optimized */}
+      <div className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6 space-y-4">
         {getInputFields()}
         <button
           onClick={handleCalculate}
-          className="w-full rounded-lg bg-accent hover:bg-accent-hover text-white py-3 px-4 font-semibold flex items-center justify-center gap-2 transition-colors"
+          className="w-full rounded-lg bg-accent hover:bg-accent-hover text-white py-2.5 sm:py-3 px-4 font-semibold flex items-center justify-center gap-2 transition-colors text-sm sm:text-base"
         >
-          <ArrowRight className="w-5 h-5" />
+          <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
           {t('proUtilities.calculator.calculate') || 'Calcola'}
         </button>
       </div>
 
-      {/* Result */}
+      {/* Result - Mobile optimized */}
       {result !== null && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-accent/20 via-accent/10 to-transparent border border-accent/30 rounded-xl p-6 space-y-4"
+          className="bg-gradient-to-br from-accent/20 via-accent/10 to-transparent border border-accent/30 rounded-xl p-4 sm:p-6 space-y-4"
         >
           <div>
             <p className="text-xs text-text-tertiary mb-2">
               {t('proUtilities.calculator.result') || 'Risultato'}
             </p>
-            <p className="text-3xl font-bold text-text-primary">
+            <p className="text-2xl sm:text-3xl font-bold text-text-primary">
               €{result.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
           </div>
@@ -501,12 +501,12 @@ export function FinancialCalculator() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-bg-soft border border-border-subtle rounded-xl p-6 space-y-4"
+          className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6 space-y-4"
         >
           <div className="flex items-center justify-between">
-            <h4 className="text-lg font-semibold text-text-primary flex items-center gap-2">
-              <History className="w-5 h-5" />
-              {t('proUtilities.calculator.history') || 'Cronologia Calcoli'}
+            <h4 className="text-base sm:text-lg font-semibold text-text-primary flex items-center gap-2">
+              <History className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+              <span>{t('proUtilities.calculator.history') || 'Cronologia Calcoli'}</span>
             </h4>
             <button
               onClick={() => setShowHistory(false)}
@@ -530,23 +530,23 @@ export function FinancialCalculator() {
               {savedCalculations.map((calc) => (
                 <div
                   key={calc.id}
-                  className="bg-bg-surface border border-border-subtle rounded-lg p-4 hover:border-accent/40 transition-colors"
+                  className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4 hover:border-accent/40 transition-colors"
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex-1">
-                      <div className="text-sm font-medium text-text-primary mb-1">
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs sm:text-sm font-medium text-text-primary mb-1 break-words">
                         {calcTypes.find(t => t.id === calc.calculation_type)?.label || calc.calculation_type}
                       </div>
                       <div className="text-xs text-text-tertiary">
                         {new Date(calc.created_at).toLocaleString('it-IT')}
                       </div>
                       {calc.notes && (
-                        <div className="text-xs text-text-secondary mt-1 italic">
+                        <div className="text-xs text-text-secondary mt-1 italic break-words">
                           {calc.notes}
                         </div>
                       )}
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-shrink-0">
                       <button
                         onClick={() => handleLoadCalculation(calc)}
                         className="p-1.5 rounded-lg hover:bg-accent/20 text-accent transition-colors"
@@ -563,7 +563,7 @@ export function FinancialCalculator() {
                       </button>
                     </div>
                   </div>
-                  <div className="text-lg font-bold text-accent">
+                  <div className="text-base sm:text-lg font-bold text-accent">
                     €{calc.result.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
                 </div>

@@ -31,18 +31,20 @@ export async function GET(request: NextRequest) {
       .lte('date', endDate)
       .order('date', { ascending: false });
 
+    // Se la tabella non esiste o c'è un errore, restituisci array vuoto
     if (error) {
-      console.error('Error fetching expenses:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      // Log solo se non è un errore di tabella mancante
+      if (!error.message.includes('relation') && !error.message.includes('does not exist')) {
+        console.error('Error fetching expenses:', error);
+      }
+      return NextResponse.json([]);
     }
 
     return NextResponse.json(data || []);
   } catch (error) {
+    // In caso di errore, restituisci array vuoto invece di 500
     console.error('Error in GET /api/expenses:', error);
-    return NextResponse.json(
-      { error: 'Errore interno', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
+    return NextResponse.json([]);
   }
 }
 
