@@ -20,13 +20,23 @@ import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
  */
 
 interface OptimizationResult {
-  parameter: number;
+  keyValue: number;
+  atrPeriod: number;
   inSampleReturn: number;
   outOfSampleReturn: number;
   maxDrawdown: number;
   sharpeRatio: number;
   calmarRatio: number;
+  winRate: number;
+  profitFactor: number;
+  totalTrades: number;
+  averageWin: number;
+  averageLoss: number;
+  largestWin: number;
+  largestLoss: number;
+  expectancy: number;
   isRobust: boolean;
+  robustnessScore: number; // 0-100, quanto è robusto
 }
 
 interface WalkForwardWindow {
@@ -152,44 +162,123 @@ export function StrategyBuilder() {
 
       if (outOfSampleEnd > end) break;
 
-      // Simulate optimization results
+      // Simulate optimization results with realistic trading metrics
       const optimizationResults: OptimizationResult[] = [];
       
       for (let kv = keyValueMin; kv <= keyValueMax; kv += keyValueStep) {
         for (let atr = atrPeriodMin; atr <= atrPeriodMax; atr += atrPeriodStep) {
-          // Simulate performance (in real implementation, this would run actual backtest)
-          const inSampleReturn = 15 + Math.random() * 20 - (kv - 2.5) * 2;
-          const outOfSampleReturn = inSampleReturn * (0.7 + Math.random() * 0.3); // OOS typically lower
-          const maxDrawdown = 5 + Math.random() * 10 + (kv - 2.5) * 1.5;
-          const sharpeRatio = inSampleReturn / (maxDrawdown * 2);
-          const calmarRatio = inSampleReturn / maxDrawdown;
+          // Realistic simulation based on parameter relationships
+          // Key Value: higher = fewer trades but better quality
+          // ATR Period: higher = smoother signals but slower reaction
           
-          // Robust if OOS performance is within 70% of IS performance
-          const isRobust = outOfSampleReturn >= inSampleReturn * 0.7;
+          const baseReturn = 12 + (kv * 2) - (atr - 14) * 0.3;
+          const volatility = 8 + (kv * 1.5) + (atr - 14) * 0.2;
+          
+          // In-Sample performance (optimistic, as it's optimized on this data)
+          const inSampleReturn = baseReturn + Math.random() * 8 - 2;
+          const inSampleVolatility = volatility * (0.8 + Math.random() * 0.4);
+          const inSampleMaxDD = inSampleVolatility * (1.2 + Math.random() * 0.6);
+          
+          // Out-of-Sample performance (more realistic, typically 60-80% of IS)
+          const oosMultiplier = 0.65 + Math.random() * 0.15; // 65-80% of IS
+          const outOfSampleReturn = inSampleReturn * oosMultiplier;
+          const outOfSampleVolatility = inSampleVolatility * (1.1 + Math.random() * 0.2); // OOS usually more volatile
+          const outOfSampleMaxDD = inSampleMaxDD * (1.1 + Math.random() * 0.3);
+          
+          // Trading statistics (realistic for trend-following systems)
+          const totalTrades = Math.floor(50 - (kv * 5) + (atr - 14) * 0.5);
+          const winRate = 0.45 + (kv * 0.02) - (atr - 14) * 0.001; // 45-55% typical for trend systems
+          const averageWin = inSampleReturn / (totalTrades * winRate) * 1.5;
+          const averageLoss = Math.abs(inSampleReturn / (totalTrades * (1 - winRate))) * 0.8;
+          const largestWin = averageWin * (2.5 + Math.random() * 1.5);
+          const largestLoss = Math.abs(averageLoss * (1.5 + Math.random() * 1));
+          
+          // Profit Factor = (Win Rate * Avg Win) / (Loss Rate * Avg Loss)
+          const profitFactor = (winRate * averageWin) / ((1 - winRate) * Math.abs(averageLoss));
+          
+          // Expectancy = (Win Rate * Avg Win) - (Loss Rate * Avg Loss)
+          const expectancy = (winRate * averageWin) - ((1 - winRate) * Math.abs(averageLoss));
+          
+          // Sharpe Ratio (annualized, assuming 252 trading days)
+          const riskFreeRate = 0.02; // 2% annual
+          const sharpeRatio = ((inSampleReturn / 100) - riskFreeRate) / (inSampleVolatility / 100);
+          
+          // Calmar Ratio
+          const calmarRatio = (inSampleReturn / 100) / (inSampleMaxDD / 100);
+          
+          // Robustness calculation: multi-factor score
+          const oosReturnRatio = outOfSampleReturn / inSampleReturn;
+          const oosSharpeRatio = ((outOfSampleReturn / 100) - riskFreeRate) / (outOfSampleVolatility / 100);
+          const sharpeConsistency = oosSharpeRatio / sharpeRatio;
+          
+          // Robustness score: 0-100
+          // - OOS return >= 70% of IS: +40 points
+          // - Sharpe consistency >= 70%: +30 points
+          // - Profit factor > 1.5: +20 points
+          // - Win rate reasonable (40-60%): +10 points
+          let robustnessScore = 0;
+          if (oosReturnRatio >= 0.7) robustnessScore += 40;
+          else if (oosReturnRatio >= 0.5) robustnessScore += 20;
+          
+          if (sharpeConsistency >= 0.7) robustnessScore += 30;
+          else if (sharpeConsistency >= 0.5) robustnessScore += 15;
+          
+          if (profitFactor > 1.5) robustnessScore += 20;
+          else if (profitFactor > 1.2) robustnessScore += 10;
+          
+          if (winRate >= 0.4 && winRate <= 0.6) robustnessScore += 10;
+          
+          const isRobust = robustnessScore >= 60; // Threshold for robustness
 
           optimizationResults.push({
-            parameter: kv,
+            keyValue: kv,
+            atrPeriod: atr,
             inSampleReturn,
             outOfSampleReturn,
-            maxDrawdown,
+            maxDrawdown: outOfSampleMaxDD, // Use OOS for conservative estimate
             sharpeRatio,
             calmarRatio,
+            winRate: winRate * 100, // Convert to percentage
+            profitFactor,
+            totalTrades,
+            averageWin,
+            averageLoss,
+            largestWin,
+            largestLoss,
+            expectancy,
             isRobust,
+            robustnessScore,
           });
         }
       }
 
-      // Find best parameter (highest OOS return with good robustness)
+      // Find best parameter using multi-criteria optimization
+      // Priority: Robustness > OOS Return > Sharpe Ratio > Profit Factor
       const bestResult = optimizationResults
         .filter(r => r.isRobust)
-        .sort((a, b) => b.outOfSampleReturn - a.outOfSampleReturn)[0] || optimizationResults[0];
+        .sort((a, b) => {
+          // Primary: Robustness score
+          if (Math.abs(a.robustnessScore - b.robustnessScore) > 5) {
+            return b.robustnessScore - a.robustnessScore;
+          }
+          // Secondary: OOS Return
+          if (Math.abs(a.outOfSampleReturn - b.outOfSampleReturn) > 2) {
+            return b.outOfSampleReturn - a.outOfSampleReturn;
+          }
+          // Tertiary: Sharpe Ratio
+          if (Math.abs(a.sharpeRatio - b.sharpeRatio) > 0.2) {
+            return b.sharpeRatio - a.sharpeRatio;
+          }
+          // Quaternary: Profit Factor
+          return b.profitFactor - a.profitFactor;
+        })[0] || optimizationResults.sort((a, b) => b.robustnessScore - a.robustnessScore)[0];
 
       windows.push({
         inSampleStart,
         inSampleEnd,
         outOfSampleStart,
         outOfSampleEnd,
-        bestParameter: bestResult.parameter,
+        bestParameter: bestResult.keyValue,
         results: optimizationResults,
       });
 
@@ -216,17 +305,68 @@ export function StrategyBuilder() {
     [selectedWindow, results]
   );
 
-  const overallBestParameter = useMemo(() => 
-    results.length > 0
-      ? results.reduce((best, window) => 
-          window.results.some(r => r.parameter === best && r.isRobust)
-            ? best
-            : window.bestParameter,
-          results[0].bestParameter
-        )
-      : null,
-    [results]
-  );
+  // Calculate overall best parameter across all windows
+  const overallBestParameter = useMemo(() => {
+    if (results.length === 0) return null;
+    
+    // Count how many times each parameter was best and was robust
+    const parameterScores = new Map<number, { robustCount: number; totalScore: number; avgRobustness: number }>();
+    
+    results.forEach(window => {
+      window.results.forEach(result => {
+        if (!parameterScores.has(result.keyValue)) {
+          parameterScores.set(result.keyValue, { robustCount: 0, totalScore: 0, avgRobustness: 0 });
+        }
+        const score = parameterScores.get(result.keyValue)!;
+        if (result.isRobust) {
+          score.robustCount++;
+          score.totalScore += result.robustnessScore;
+        }
+      });
+    });
+    
+    // Calculate average robustness for each parameter
+    parameterScores.forEach((score, param) => {
+      const robustResults = results.flatMap(w => w.results.filter(r => r.keyValue === param && r.isRobust));
+      if (robustResults.length > 0) {
+        score.avgRobustness = robustResults.reduce((sum, r) => sum + r.robustnessScore, 0) / robustResults.length;
+      }
+    });
+    
+    // Find parameter with highest robustness score and most windows where it's robust
+    let bestParam = null;
+    let bestScore = -1;
+    
+    parameterScores.forEach((score, param) => {
+      const combinedScore = score.avgRobustness * 0.6 + (score.robustCount / results.length) * 40;
+      if (combinedScore > bestScore) {
+        bestScore = combinedScore;
+        bestParam = param;
+      }
+    });
+    
+    return bestParam;
+  }, [results]);
+  
+  // Get detailed stats for best parameter
+  const bestParameterStats = useMemo(() => {
+    if (!overallBestParameter || results.length === 0) return null;
+    
+    const allResults = results.flatMap(w => w.results.filter(r => r.keyValue === overallBestParameter && r.isRobust));
+    if (allResults.length === 0) return null;
+    
+    return {
+      keyValue: overallBestParameter,
+      windowsUsed: allResults.length,
+      avgReturn: allResults.reduce((sum, r) => sum + r.outOfSampleReturn, 0) / allResults.length,
+      avgSharpe: allResults.reduce((sum, r) => sum + r.sharpeRatio, 0) / allResults.length,
+      avgCalmar: allResults.reduce((sum, r) => sum + r.calmarRatio, 0) / allResults.length,
+      avgWinRate: allResults.reduce((sum, r) => sum + r.winRate, 0) / allResults.length,
+      avgProfitFactor: allResults.reduce((sum, r) => sum + r.profitFactor, 0) / allResults.length,
+      avgRobustness: allResults.reduce((sum, r) => sum + r.robustnessScore, 0) / allResults.length,
+      avgMaxDD: allResults.reduce((sum, r) => sum + r.maxDrawdown, 0) / allResults.length,
+    };
+  }, [overallBestParameter, results]);
 
   // Keyboard navigation handler
   const handleKeyDown = useCallback((e: React.KeyboardEvent, action: () => void) => {
@@ -788,26 +928,90 @@ export function StrategyBuilder() {
               {locale === 'it' ? 'Risultati Ottimizzazione' : 'Optimization Results'}
             </h3>
             
-            {overallBestParameter && (
+            {bestParameterStats && (
               <div 
-                className="bg-accent/10 border border-accent/30 rounded-lg p-4 mb-4"
+                className="bg-accent/10 border border-accent/30 rounded-lg p-4 sm:p-6 mb-4"
                 role="status"
                 aria-live="polite"
                 aria-atomic="true"
               >
-                <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center gap-2 mb-4">
                   <Target className="w-5 h-5 text-accent" aria-hidden="true" />
                   <span className="font-semibold text-text-primary">
                     {locale === 'it' ? 'Parametro Ottimale Consigliato' : 'Recommended Optimal Parameter'}
                   </span>
                 </div>
-                <p className="text-2xl font-bold text-accent mb-1" aria-label={`Key Value: ${overallBestParameter.toFixed(1)}`}>
-                  Key Value: {overallBestParameter.toFixed(1)}
-                </p>
-                <p className="text-xs text-text-secondary">
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                  <div>
+                    <div className="text-xs text-text-tertiary mb-1">
+                      {locale === 'it' ? 'Key Value' : 'Key Value'}
+                    </div>
+                    <div className="text-2xl font-bold text-accent">
+                      {bestParameterStats.keyValue.toFixed(1)}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-text-tertiary mb-1">
+                      {locale === 'it' ? 'Robustezza' : 'Robustness'}
+                    </div>
+                    <div className="text-xl font-bold text-green-400">
+                      {bestParameterStats.avgRobustness.toFixed(0)}/100
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-text-tertiary mb-1">
+                      {locale === 'it' ? 'Finestre Valide' : 'Valid Windows'}
+                    </div>
+                    <div className="text-xl font-bold text-text-primary">
+                      {bestParameterStats.windowsUsed}/{results.length}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-text-tertiary mb-1">
+                      {locale === 'it' ? 'OOS Return Avg' : 'OOS Return Avg'}
+                    </div>
+                    <div className="text-xl font-bold text-text-primary">
+                      {bestParameterStats.avgReturn.toFixed(2)}%
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-accent/20">
+                  <div>
+                    <div className="text-xs text-text-tertiary mb-1">Sharpe</div>
+                    <div className="text-sm font-semibold text-text-primary">
+                      {bestParameterStats.avgSharpe.toFixed(2)}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-text-tertiary mb-1">Calmar</div>
+                    <div className="text-sm font-semibold text-text-primary">
+                      {bestParameterStats.avgCalmar.toFixed(2)}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-text-tertiary mb-1">
+                      {locale === 'it' ? 'Win Rate' : 'Win Rate'}
+                    </div>
+                    <div className="text-sm font-semibold text-text-primary">
+                      {bestParameterStats.avgWinRate.toFixed(1)}%
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-text-tertiary mb-1">
+                      {locale === 'it' ? 'Profit Factor' : 'Profit Factor'}
+                    </div>
+                    <div className="text-sm font-semibold text-text-primary">
+                      {bestParameterStats.avgProfitFactor.toFixed(2)}
+                    </div>
+                  </div>
+                </div>
+                
+                <p className="text-xs text-text-secondary mt-4">
                   {locale === 'it'
-                    ? 'Basato sulla performance Out-of-Sample attraverso tutte le finestre temporali.'
-                    : 'Based on Out-of-Sample performance across all time windows.'}
+                    ? `Basato su analisi multi-criterio: robustezza (${bestParameterStats.avgRobustness.toFixed(0)}/100), performance OOS media (${bestParameterStats.avgReturn.toFixed(2)}%), e consistenza attraverso ${bestParameterStats.windowsUsed} finestre temporali.`
+                    : `Based on multi-criteria analysis: robustness (${bestParameterStats.avgRobustness.toFixed(0)}/100), average OOS performance (${bestParameterStats.avgReturn.toFixed(2)}%), and consistency across ${bestParameterStats.windowsUsed} time windows.`}
                 </p>
               </div>
             )}
@@ -889,13 +1093,19 @@ export function StrategyBuilder() {
                       </div>
                       <div className="text-right">
                         <div className="text-sm font-semibold text-accent">
-                          Key Value: {window.bestParameter.toFixed(1)}
+                          KV: {window.bestParameter.toFixed(1)}
                         </div>
-                        <div className="text-xs text-text-tertiary">
+                        <div className="text-xs text-text-tertiary flex items-center gap-1">
                           {bestResult.isRobust ? (
-                            <span className="text-green-400">✓ Robust</span>
+                            <>
+                              <span className="text-green-400">✓ Robust</span>
+                              <span className="text-text-secondary">({bestResult.robustnessScore}/100)</span>
+                            </>
                           ) : (
-                            <span className="text-red-400">⚠ Overfitted</span>
+                            <>
+                              <span className="text-red-400">⚠ Overfitted</span>
+                              <span className="text-text-secondary">({bestResult.robustnessScore}/100)</span>
+                            </>
                           )}
                         </div>
                       </div>
@@ -904,37 +1114,153 @@ export function StrategyBuilder() {
                     {selectedWindow === index && (
                       <div 
                         id={`window-details-${index}`}
-                        className="mt-4 pt-4 border-t border-border-subtle grid grid-cols-2 md:grid-cols-4 gap-4"
+                        className="mt-4 pt-4 border-t border-border-subtle space-y-4"
                         role="region"
                         aria-label={locale === 'it' ? `Dettagli finestra ${index + 1}` : `Window ${index + 1} details`}
                       >
+                        {/* Performance Metrics */}
                         <div>
-                          <div className="text-xs text-text-tertiary mb-1">IS Return</div>
-                          <div className="text-sm font-semibold text-text-primary">
-                            {bestResult.inSampleReturn.toFixed(2)}%
+                          <h5 className="text-xs font-semibold text-text-secondary mb-2 uppercase">
+                            {locale === 'it' ? 'Metriche di Performance' : 'Performance Metrics'}
+                          </h5>
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <div>
+                              <div className="text-xs text-text-tertiary mb-1">IS Return</div>
+                              <div className="text-sm font-semibold text-text-primary">
+                                {bestResult.inSampleReturn.toFixed(2)}%
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-text-tertiary mb-1">OOS Return</div>
+                              <div className={cn(
+                                'text-sm font-semibold',
+                                bestResult.outOfSampleReturn >= bestResult.inSampleReturn * 0.7
+                                  ? 'text-green-400'
+                                  : 'text-red-400'
+                              )}>
+                                {bestResult.outOfSampleReturn.toFixed(2)}%
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-text-tertiary mb-1">Max Drawdown</div>
+                              <div className="text-sm font-semibold text-text-primary">
+                                {bestResult.maxDrawdown.toFixed(2)}%
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-text-tertiary mb-1">Sharpe Ratio</div>
+                              <div className="text-sm font-semibold text-text-primary">
+                                {bestResult.sharpeRatio.toFixed(2)}
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-text-tertiary mb-1">Calmar Ratio</div>
+                              <div className="text-sm font-semibold text-text-primary">
+                                {bestResult.calmarRatio.toFixed(2)}
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-text-tertiary mb-1">
+                                {locale === 'it' ? 'Robustezza' : 'Robustness'}
+                              </div>
+                              <div className={cn(
+                                'text-sm font-semibold',
+                                bestResult.robustnessScore >= 70 ? 'text-green-400' :
+                                bestResult.robustnessScore >= 50 ? 'text-amber-400' : 'text-red-400'
+                              )}>
+                                {bestResult.robustnessScore}/100
+                              </div>
+                            </div>
                           </div>
                         </div>
+                        
+                        {/* Trading Statistics */}
                         <div>
-                          <div className="text-xs text-text-tertiary mb-1">OOS Return</div>
-                          <div className={cn(
-                            'text-sm font-semibold',
-                            bestResult.outOfSampleReturn >= bestResult.inSampleReturn * 0.7
-                              ? 'text-green-400'
-                              : 'text-red-400'
-                          )}>
-                            {bestResult.outOfSampleReturn.toFixed(2)}%
+                          <h5 className="text-xs font-semibold text-text-secondary mb-2 uppercase">
+                            {locale === 'it' ? 'Statistiche Trading' : 'Trading Statistics'}
+                          </h5>
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <div>
+                              <div className="text-xs text-text-tertiary mb-1">
+                                {locale === 'it' ? 'Win Rate' : 'Win Rate'}
+                              </div>
+                              <div className="text-sm font-semibold text-text-primary">
+                                {bestResult.winRate.toFixed(1)}%
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-text-tertiary mb-1">
+                                {locale === 'it' ? 'Profit Factor' : 'Profit Factor'}
+                              </div>
+                              <div className={cn(
+                                'text-sm font-semibold',
+                                bestResult.profitFactor > 1.5 ? 'text-green-400' :
+                                bestResult.profitFactor > 1.2 ? 'text-amber-400' : 'text-red-400'
+                              )}>
+                                {bestResult.profitFactor.toFixed(2)}
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-text-tertiary mb-1">
+                                {locale === 'it' ? 'Totale Trade' : 'Total Trades'}
+                              </div>
+                              <div className="text-sm font-semibold text-text-primary">
+                                {bestResult.totalTrades}
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-text-tertiary mb-1">
+                                {locale === 'it' ? 'Expectancy' : 'Expectancy'}
+                              </div>
+                              <div className={cn(
+                                'text-sm font-semibold',
+                                bestResult.expectancy > 0 ? 'text-green-400' : 'text-red-400'
+                              )}>
+                                {bestResult.expectancy.toFixed(2)}
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-text-tertiary mb-1">
+                                {locale === 'it' ? 'Avg Win' : 'Avg Win'}
+                              </div>
+                              <div className="text-sm font-semibold text-green-400">
+                                {bestResult.averageWin.toFixed(2)}
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-text-tertiary mb-1">
+                                {locale === 'it' ? 'Avg Loss' : 'Avg Loss'}
+                              </div>
+                              <div className="text-sm font-semibold text-red-400">
+                                {bestResult.averageLoss.toFixed(2)}
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-text-tertiary mb-1">
+                                {locale === 'it' ? 'Largest Win' : 'Largest Win'}
+                              </div>
+                              <div className="text-sm font-semibold text-green-400">
+                                {bestResult.largestWin.toFixed(2)}
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-text-tertiary mb-1">
+                                {locale === 'it' ? 'Largest Loss' : 'Largest Loss'}
+                              </div>
+                              <div className="text-sm font-semibold text-red-400">
+                                {bestResult.largestLoss.toFixed(2)}
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        <div>
-                          <div className="text-xs text-text-tertiary mb-1">Max Drawdown</div>
-                          <div className="text-sm font-semibold text-text-primary">
-                            {bestResult.maxDrawdown.toFixed(2)}%
+                        
+                        {/* Parameter Info */}
+                        <div className="bg-bg-soft rounded-lg p-3">
+                          <div className="text-xs text-text-tertiary mb-1">
+                            {locale === 'it' ? 'Parametri Ottimizzati' : 'Optimized Parameters'}
                           </div>
-                        </div>
-                        <div>
-                          <div className="text-xs text-text-tertiary mb-1">Calmar Ratio</div>
                           <div className="text-sm font-semibold text-text-primary">
-                            {bestResult.calmarRatio.toFixed(2)}
+                            Key Value: {bestResult.keyValue.toFixed(1)} | ATR Period: {bestResult.atrPeriod}
                           </div>
                         </div>
                       </div>
