@@ -203,7 +203,8 @@ export default function UtilitiesPage() {
 
   const handleUtilityClick = (utility: Utility) => {
     if (utility.category === 'pro' && !isPro) {
-      // Non fare nulla, il badge Pro gestirà il click
+      // Il badge Pro gestirà il click, ma possiamo anche prevenire la navigazione
+      // Il badge mostrerà il modal "Passa a Pro"
       return;
     }
     if (!utility.available) {
@@ -279,12 +280,14 @@ export default function UtilitiesPage() {
                       className={cn(
                         'bg-bg-surface border border-border-subtle rounded-xl p-6 text-left',
                         'hover:border-accent/40 hover:shadow-md transition-all',
-                        'flex flex-col gap-3'
+                        'flex flex-col gap-3',
+                        'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2'
                       )}
+                      aria-label={`${utility.label} - ${utility.description}`}
                     >
                       <div className="flex items-start justify-between">
                         <div className="w-12 h-12 rounded-lg bg-accent/20 flex items-center justify-center">
-                          <Icon className="w-6 h-6 text-accent" />
+                          <Icon className="w-6 h-6 text-accent" aria-hidden="true" />
                         </div>
                       </div>
                       <div>
@@ -352,18 +355,27 @@ export default function UtilitiesPage() {
                   const Icon = utility.icon;
                   const canAccess = isPro && utility.available;
                   return (
-                    <button
+                    <div
                       key={utility.id}
-                      onClick={() => handleUtilityClick(utility)}
-                      disabled={!canAccess}
                       className={cn(
                         'bg-bg-surface border rounded-xl p-6 text-left relative',
                         'transition-all',
                         canAccess
-                          ? 'border-border-subtle hover:border-accent/40 hover:shadow-md'
-                          : 'border-border-subtle/50 opacity-75 cursor-not-allowed',
+                          ? 'border-border-subtle hover:border-accent/40 hover:shadow-md cursor-pointer'
+                          : 'border-border-subtle/50 opacity-75',
                         'flex flex-col gap-3'
                       )}
+                      onClick={() => handleUtilityClick(utility)}
+                      role={canAccess ? 'button' : undefined}
+                      tabIndex={canAccess ? 0 : -1}
+                      onKeyDown={(e) => {
+                        if (canAccess && (e.key === 'Enter' || e.key === ' ')) {
+                          e.preventDefault();
+                          handleUtilityClick(utility);
+                        }
+                      }}
+                      aria-label={`${utility.label} - ${utility.description}`}
+                      aria-disabled={!canAccess}
                     >
                       <div className="flex items-start justify-between">
                         <div className={cn(
@@ -375,13 +387,15 @@ export default function UtilitiesPage() {
                             canAccess ? 'text-accent' : 'text-text-tertiary'
                           )} />
                         </div>
-                        <ProBadge size="sm" />
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <ProBadge size="sm" />
+                        </div>
                       </div>
                       <div>
                         <h3 className="font-semibold text-text-primary mb-1">{utility.label}</h3>
                         <p className="text-sm text-text-secondary">{utility.description}</p>
                       </div>
-                    </button>
+                    </div>
                   );
                 })}
               </div>
@@ -397,18 +411,27 @@ export default function UtilitiesPage() {
                   const Icon = utility.icon;
                   const canAccess = isPro && utility.available;
                   return (
-                    <button
+                    <div
                       key={utility.id}
-                      onClick={() => handleUtilityClick(utility)}
-                      disabled={!canAccess}
                       className={cn(
                         'bg-bg-surface border rounded-xl p-6 text-left relative',
                         'transition-all',
                         canAccess
-                          ? 'border-border-subtle hover:border-accent/40 hover:shadow-md'
-                          : 'border-border-subtle/50 opacity-75 cursor-not-allowed',
+                          ? 'border-border-subtle hover:border-accent/40 hover:shadow-md cursor-pointer'
+                          : 'border-border-subtle/50 opacity-75',
                         'flex flex-col gap-3'
                       )}
+                      onClick={() => handleUtilityClick(utility)}
+                      role={canAccess ? 'button' : undefined}
+                      tabIndex={canAccess ? 0 : -1}
+                      onKeyDown={(e) => {
+                        if (canAccess && (e.key === 'Enter' || e.key === ' ')) {
+                          e.preventDefault();
+                          handleUtilityClick(utility);
+                        }
+                      }}
+                      aria-label={`${utility.label} - ${utility.description}`}
+                      aria-disabled={!canAccess}
                     >
                       <div className="flex items-start justify-between">
                         <div className={cn(
@@ -420,13 +443,15 @@ export default function UtilitiesPage() {
                             canAccess ? 'text-accent' : 'text-text-tertiary'
                           )} />
                         </div>
-                        <ProBadge size="sm" />
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <ProBadge size="sm" />
+                        </div>
                       </div>
                       <div>
                         <h3 className="font-semibold text-text-primary mb-1">{utility.label}</h3>
                         <p className="text-sm text-text-secondary">{utility.description}</p>
                       </div>
-                    </button>
+                    </div>
                   );
                 })}
               </div>
