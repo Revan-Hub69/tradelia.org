@@ -8,10 +8,14 @@ import { TRADELIA_BRAND_VOICE_MATRIX } from '@/lib/ai/tradelia-brand-voice-matri
  * Fully customized with Tradelia brand voice and communication style
  * Fallback to template responses if API key not configured
  * 
- * Pricing:
- * - llama-3.3-70b-versatile: $0.59/1M tokens input, $0.79/1M tokens output
- * - Free tier: 14,400 requests/day (but tokens are still charged)
+ * Groq Free Tier (Developer Plan):
+ * - Rate Limits: 250K TPM (tokens per minuto), 1K RPM (requests per minuto)
+ * - NO free daily token allowance - tokens are charged per use
+ * - Pricing llama-3.3-70b-versatile: $0.59/1M tokens input, $0.79/1M tokens output
  * - Alternative: llama-3.1-8b-instant ($0.05/$0.08 per 1M tokens) for lower cost
+ * 
+ * Note: Groq does NOT offer free daily tokens, only rate limits on free tier
+ * Cost per response (~800 tokens): ~$0.0006 with llama-3.3-70b
  * 
  * Get API key: https://console.groq.com/
  */
