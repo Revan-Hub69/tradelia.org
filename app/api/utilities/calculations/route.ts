@@ -31,20 +31,18 @@ export async function GET(request: NextRequest) {
 
     const { data, error } = await query;
 
-    // Se la tabella non esiste o c'è un errore, restituisci array vuoto
     if (error) {
-      // Log solo se non è un errore di tabella mancante
-      if (!error.message.includes('relation') && !error.message.includes('does not exist')) {
-        console.error('Error fetching calculations:', error);
-      }
-      return NextResponse.json([]);
+      console.error('Error fetching calculations:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json(data || []);
   } catch (error) {
-    // In caso di errore, restituisci array vuoto invece di 500
     console.error('Error in GET /api/utilities/calculations:', error);
-    return NextResponse.json([]);
+    return NextResponse.json(
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
   }
 }
 
@@ -85,24 +83,17 @@ export async function POST(request: NextRequest) {
       .select()
       .single();
 
-    // Se la tabella non esiste, restituisci errore informativo
     if (error) {
-      // Log solo se non è un errore di tabella mancante
-      if (!error.message.includes('relation') && !error.message.includes('does not exist')) {
-        console.error('Error saving calculation:', error);
-      }
-      return NextResponse.json(
-        { error: 'Tabella non disponibile. Il salvataggio non è disponibile al momento.' },
-        { status: 503 }
-      );
+      console.error('Error saving calculation:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
     console.error('Error in POST /api/utilities/calculations:', error);
     return NextResponse.json(
-      { error: 'Errore interno. Il salvataggio non è disponibile al momento.' },
-      { status: 503 }
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
     );
   }
 }
