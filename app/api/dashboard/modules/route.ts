@@ -124,8 +124,20 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
     
-    // Modules are public (visible to all, including guests)
-    // Non richiediamo autenticazione per i moduli
+    // Verifica se l'utente è admin
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    
+    let isAdmin = false;
+    if (user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+      isAdmin = profile?.role === 'admin';
+    }
 
     const { searchParams } = new URL(request.url);
     const priority = searchParams.get('priority') as 'primary' | 'secondary' | null;
@@ -135,7 +147,23 @@ export async function GET(request: NextRequest) {
 
       // Se ci sono dati dal database, usali
       if (!error && data && data.length > 0) {
-        return NextResponse.json({ data });
+        // Aggiungi admin solo se l'utente è admin
+        let modules = data;
+        if (isAdmin && !modules.find(m => m.id === 'admin')) {
+          const adminModule = {
+            id: 'admin',
+            title: 'Admin',
+            description: 'Area amministrazione e gestione Supabase',
+            href: '/dashboard/admin',
+            icon: 'shield',
+            priority: 'secondary' as const,
+            is_active: true,
+            order_index: 0, // Prima di tutti
+            badge_count: 0,
+          };
+          modules = [adminModule, ...modules];
+        }
+        return NextResponse.json({ data: modules });
       }
 
       // Se non ci sono dati o c'è un errore (es. tabella non esiste), usa moduli di default
@@ -143,28 +171,66 @@ export async function GET(request: NextRequest) {
         console.warn('Error getting modules (table might not exist), using defaults:', error.message);
       }
 
+      // Prepara moduli di default
+      let primaryModules = [...DEFAULT_MODULES.primary];
+      let secondaryModules = [...DEFAULT_MODULES.secondary];
+      
+      // Aggiungi admin solo se l'utente è admin
+      if (isAdmin) {
+        secondaryModules.unshift({
+          id: 'admin',
+          title: 'Admin',
+          description: 'Area amministrazione e gestione Supabase',
+          href: '/dashboard/admin',
+          icon: 'shield',
+          priority: 'secondary' as const,
+          is_active: true,
+          order_index: 0,
+          badge_count: 0,
+        });
+      }
+
       // Restituisci moduli di default basati sulla priorità
       if (priority === 'primary') {
-        return NextResponse.json({ data: DEFAULT_MODULES.primary });
+        return NextResponse.json({ data: primaryModules });
       } else if (priority === 'secondary') {
-        return NextResponse.json({ data: DEFAULT_MODULES.secondary });
+        return NextResponse.json({ data: secondaryModules });
       } else {
         // Se non c'è priorità, restituisci tutti i moduli
         return NextResponse.json({ 
-          data: [...DEFAULT_MODULES.primary, ...DEFAULT_MODULES.secondary] 
+          data: [...primaryModules, ...secondaryModules] 
         });
       }
     } catch (dbError) {
       // Se c'è un errore del database (tabella mancante), usa moduli di default
       console.warn('Database error in modules GET (table might not exist), using defaults:', dbError);
       
+      // Prepara moduli di default
+      let primaryModules = [...DEFAULT_MODULES.primary];
+      let secondaryModules = [...DEFAULT_MODULES.secondary];
+      
+      // Aggiungi admin solo se l'utente è admin
+      if (isAdmin) {
+        secondaryModules.unshift({
+          id: 'admin',
+          title: 'Admin',
+          description: 'Area amministrazione e gestione Supabase',
+          href: '/dashboard/admin',
+          icon: 'shield',
+          priority: 'secondary' as const,
+          is_active: true,
+          order_index: 0,
+          badge_count: 0,
+        });
+      }
+      
       if (priority === 'primary') {
-        return NextResponse.json({ data: DEFAULT_MODULES.primary });
+        return NextResponse.json({ data: primaryModules });
       } else if (priority === 'secondary') {
-        return NextResponse.json({ data: DEFAULT_MODULES.secondary });
+        return NextResponse.json({ data: secondaryModules });
       } else {
         return NextResponse.json({ 
-          data: [...DEFAULT_MODULES.primary, ...DEFAULT_MODULES.secondary] 
+          data: [...primaryModules, ...secondaryModules] 
         });
       }
     }
@@ -172,13 +238,50 @@ export async function GET(request: NextRequest) {
     console.error('Error in modules API:', error);
     // In caso di errore, restituisci moduli di default
     const priority = new URL(request.url).searchParams.get('priority') as 'primary' | 'secondary' | null;
+    
+    // Verifica se l'utente è admin anche in caso di errore
+    let isAdmin = false;
+    try {
+      const supabase = await createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+        isAdmin = profile?.role === 'admin';
+      }
+    } catch {
+      // Ignora errori di verifica admin
+    }
+    
+    let primaryModules = [...DEFAULT_MODULES.primary];
+    let secondaryModules = [...DEFAULT_MODULES.secondary];
+    
+    if (isAdmin) {
+      secondaryModules.unshift({
+        id: 'admin',
+        title: 'Admin',
+        description: 'Area amministrazione e gestione Supabase',
+        href: '/dashboard/admin',
+        icon: 'shield',
+        priority: 'secondary' as const,
+        is_active: true,
+        order_index: 0,
+        badge_count: 0,
+      });
+    }
+    
     if (priority === 'primary') {
-      return NextResponse.json({ data: DEFAULT_MODULES.primary });
+      return NextResponse.json({ data: primaryModules });
     } else if (priority === 'secondary') {
-      return NextResponse.json({ data: DEFAULT_MODULES.secondary });
+      return NextResponse.json({ data: secondaryModules });
     } else {
       return NextResponse.json({ 
-        data: [...DEFAULT_MODULES.primary, ...DEFAULT_MODULES.secondary] 
+        data: [...primaryModules, ...secondaryModules] 
       });
     }
   }

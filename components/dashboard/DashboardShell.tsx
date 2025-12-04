@@ -10,6 +10,7 @@ import { ModuleGrid } from './ModuleGrid';
 import { AccountBanner } from './AccountBanner';
 import { QuickActions } from './QuickActions';
 import { RecentActivity } from './RecentActivity';
+import { UserBenefits } from './UserBenefits';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { SkipLink } from '@/components/ui/SkipLink';
@@ -228,6 +229,17 @@ export function DashboardShell() {
           <ErrorBoundary>
             <DashboardHero />
           </ErrorBoundary>
+          
+          {/* Benefici utente - Mostra chiaramente cosa può fare e perché registrarsi/upgradare */}
+          <section 
+            aria-label="Benefici account" 
+            className={styles.dashboardSection}
+            id="user-benefits"
+          >
+            <ErrorBoundary>
+              <UserBenefits />
+            </ErrorBoundary>
+          </section>
           
           {/* Statistiche chiave - Best Practice: 4-6 metriche essenziali */}
           <section 

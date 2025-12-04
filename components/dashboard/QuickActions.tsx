@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, memo } from 'react';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { Plus, FileText, TrendingUp, BookOpen, PieChart, Sparkles } from 'lucide-react';
+import { Plus, FileText, TrendingUp, BookOpen, PieChart } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
@@ -52,13 +52,34 @@ export const QuickActions = memo(function QuickActions() {
 
   const actions: QuickAction[] = [
     {
+      id: 'start-course',
+      label: t('dashboard.quickActions.startCourse') || 'Inizia Corso',
+      description: t('dashboard.quickActions.startCourseDesc') || 'Inizia un nuovo percorso formativo',
+      icon: <BookOpen className="w-5 h-5" />,
+      color: 'text-cyan-300',
+      bgColor: 'bg-cyan-500/20',
+      borderColor: 'border-cyan-400/30',
+      href: '/dashboard/education',
+    },
+    {
+      id: 'view-reports',
+      label: t('dashboard.quickActions.viewReports') || 'Esplora Report',
+      description: t('dashboard.quickActions.viewReportsDesc') || 'Accedi ai report verificabili',
+      icon: <FileText className="w-5 h-5" />,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-400/20',
+      borderColor: 'border-blue-400/30',
+      href: '/dashboard/reports',
+    },
+    {
       id: 'request-analysis',
       label: t('dashboard.quickActions.requestAnalysis') || 'Richiedi Analisi',
-      description: t('dashboard.quickActions.requestAnalysisDesc') || 'Richiedi un analisi personalizzata',
+      description: t('dashboard.quickActions.requestAnalysisDesc') || 'Richiedi un analisi personalizzata (Pro)',
       icon: <TrendingUp className="w-5 h-5" />,
       color: 'text-blue-400',
       bgColor: 'bg-blue-400/20',
       borderColor: 'border-blue-400/30',
+      proOnly: true,
       onClick: () => {
         // Apri ProUtilities e seleziona request-analysis
         window.dispatchEvent(new CustomEvent('open-pro-utilities'));
@@ -70,7 +91,7 @@ export const QuickActions = memo(function QuickActions() {
     {
       id: 'add-position',
       label: t('dashboard.quickActions.addPosition') || 'Aggiungi Posizione',
-      description: t('dashboard.quickActions.addPositionDesc') || 'Aggiungi una posizione al portafoglio',
+      description: t('dashboard.quickActions.addPositionDesc') || 'Aggiungi una posizione al portafoglio (Pro)',
       icon: <PieChart className="w-5 h-5" />,
       color: 'text-green-400',
       bgColor: 'bg-green-400/20',
@@ -82,16 +103,6 @@ export const QuickActions = memo(function QuickActions() {
           window.dispatchEvent(new CustomEvent('select-utility', { detail: 'portfolio' }));
         }, 300);
       },
-    },
-    {
-      id: 'start-course',
-      label: t('dashboard.quickActions.startCourse') || 'Inizia Corso',
-      description: t('dashboard.quickActions.startCourseDesc') || 'Inizia un nuovo percorso formativo',
-      icon: <BookOpen className="w-5 h-5" />,
-      color: 'text-cyan-300',
-      bgColor: 'bg-cyan-500/20',
-      borderColor: 'border-cyan-400/30',
-      href: '/dashboard/education',
     },
   ];
 
