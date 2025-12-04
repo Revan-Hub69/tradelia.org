@@ -8,6 +8,7 @@ import { useIsPro } from '@/lib/hooks/useUserRole';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ProBadge } from '@/components/ui/ProBadge';
 import { ComingSoon } from '@/components/ui/ComingSoon';
+import { ProLockOverlay } from '@/components/dashboard/utilities/ProLockOverlay';
 import { cn } from '@/lib/utils/cn';
 import styles from './utilities.module.css';
 
@@ -249,9 +250,10 @@ export default function UtilitiesPage() {
   ];
 
   const handleUtilityClick = (utility: Utility) => {
+    // Permetti a tutti di vedere gli strumenti Pro, ma bloccali se non Pro
     if (utility.category === 'pro' && !isPro) {
-      // Il badge Pro gestirà il click, ma possiamo anche prevenire la navigazione
-      // Il badge mostrerà il modal "Passa a Pro"
+      // Mostra lo strumento ma bloccato (per anteprima)
+      setSelectedUtility(utility.id);
       return;
     }
     if (!utility.available) {
@@ -298,17 +300,40 @@ export default function UtilitiesPage() {
               <Suspense fallback={<CalculatorSkeleton />}>
                 {selectedUtility === 'calculator' && <FinancialCalculator />}
                 {selectedUtility === 'pac' && <PACSimulator />}
-                {selectedUtility === 'journal' && isPro && <TradingJournal />}
-                {selectedUtility === 'hedging' && isPro && <HedgingCalculator />}
-                {selectedUtility === 'position' && isPro && <PositionSizingCalculator />}
-                {selectedUtility === 'riskreward' && isPro && <RiskRewardCalculator />}
-                {selectedUtility === 'sharpe' && isPro && <SharpeRatioCalculator />}
-                {selectedUtility === 'drawdown' && isPro && <DrawdownCalculator />}
-                {selectedUtility === 'options' && isPro && <OptionsCalculator />}
-                {selectedUtility === 'kelly' && isPro && <KellyCriterionCalculator />}
-                {selectedUtility === 'portfolio' && isPro && <PortfolioOptimizer />}
-                {selectedUtility === 'correlation' && isPro && <CorrelationCalculator />}
-                {selectedUtility === 'volatility' && isPro && <VolatilityCalculator />}
+                {/* Pro Tools - Mostrati a tutti ma bloccati se non Pro */}
+                {selectedUtility === 'journal' && (
+                  isPro ? <TradingJournal /> : <ProLockOverlay><TradingJournal /></ProLockOverlay>
+                )}
+                {selectedUtility === 'hedging' && (
+                  isPro ? <HedgingCalculator /> : <ProLockOverlay><HedgingCalculator /></ProLockOverlay>
+                )}
+                {selectedUtility === 'position' && (
+                  isPro ? <PositionSizingCalculator /> : <ProLockOverlay><PositionSizingCalculator /></ProLockOverlay>
+                )}
+                {selectedUtility === 'riskreward' && (
+                  isPro ? <RiskRewardCalculator /> : <ProLockOverlay><RiskRewardCalculator /></ProLockOverlay>
+                )}
+                {selectedUtility === 'sharpe' && (
+                  isPro ? <SharpeRatioCalculator /> : <ProLockOverlay><SharpeRatioCalculator /></ProLockOverlay>
+                )}
+                {selectedUtility === 'drawdown' && (
+                  isPro ? <DrawdownCalculator /> : <ProLockOverlay><DrawdownCalculator /></ProLockOverlay>
+                )}
+                {selectedUtility === 'options' && (
+                  isPro ? <OptionsCalculator /> : <ProLockOverlay><OptionsCalculator /></ProLockOverlay>
+                )}
+                {selectedUtility === 'kelly' && (
+                  isPro ? <KellyCriterionCalculator /> : <ProLockOverlay><KellyCriterionCalculator /></ProLockOverlay>
+                )}
+                {selectedUtility === 'portfolio' && (
+                  isPro ? <PortfolioOptimizer /> : <ProLockOverlay><PortfolioOptimizer /></ProLockOverlay>
+                )}
+                {selectedUtility === 'correlation' && (
+                  isPro ? <CorrelationCalculator /> : <ProLockOverlay><CorrelationCalculator /></ProLockOverlay>
+                )}
+                {selectedUtility === 'volatility' && (
+                  isPro ? <VolatilityCalculator /> : <ProLockOverlay><VolatilityCalculator /></ProLockOverlay>
+                )}
                 {selectedUtility === 'watchlist' && <ComingSoon title="Watchlist" description="Monitora i tuoi asset preferiti con alert personalizzati" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />}
                 {selectedUtility === 'portfolio-manager' && <ComingSoon title="Portfolio Manager" description="Gestisci il tuo portafoglio con aggiornamenti real-time" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />}
                 {selectedUtility === 'alerts' && <ComingSoon title="Sistema di Alert" description="Notifiche personalizzate per i tuoi asset" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />}

@@ -7,6 +7,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
 import dynamic from 'next/dynamic';
 import { useIsClient } from '@/lib/hooks/useIsClient';
+import { useAuthState } from '@/lib/hooks/useAuthState';
 
 // Lazy load non-critical header components
 const GlobalSearch = dynamic(() => import('./GlobalSearch').then(mod => ({ default: mod.GlobalSearch })), {
@@ -34,10 +35,12 @@ const CurrencySwitch = dynamic(() => import('@/components/ui/CurrencySwitch').th
  * - Accessible navigation
  * - Responsive design
  * - Client-side only rendering to prevent hydration issues
+ * - Login button prominently displayed when not authenticated
  */
 export function DashboardHeader() {
   const isClient = useIsClient();
-  const { locale } = useTranslations();
+  const { locale, t } = useTranslations();
+  const { isAuthenticated } = useAuthState();
   const dashboardHref = buildLocalePath(locale, '/dashboard');
 
   return (
@@ -72,14 +75,29 @@ export function DashboardHeader() {
         </div>
         {/* Seconda riga su mobile: Azioni - Ottimizzate per mobile */}
         <nav className={styles.dashboardActions} aria-label="Dashboard actions">
-          <div className={styles.dashboardActionsLeft}>
-            <CurrencySwitch size="sm" />
-            <UserStats />
-          </div>
-          <div className={styles.dashboardActionsRight}>
-            <GlobalSearch />
-            <UserMenu />
-          </div>
+          {!isAuthenticated ? (
+            // Quando non autenticato: mostra "Accedi" in prima linea
+            <div className={styles.dashboardActionsRight}>
+              <Link
+                href="/login"
+                className={styles.loginButton}
+              >
+                {t('dashboard.userMenu.login') || 'Accedi'}
+              </Link>
+            </div>
+          ) : (
+            // Quando autenticato: mostra tutte le azioni
+            <>
+              <div className={styles.dashboardActionsLeft}>
+                <CurrencySwitch size="sm" />
+                <UserStats />
+              </div>
+              <div className={styles.dashboardActionsRight}>
+                <GlobalSearch />
+                <UserMenu />
+              </div>
+            </>
+          )}
         </nav>
       </div>
     </header>

@@ -71,7 +71,7 @@ export function ProBadge({ onClick, className, size = 'md', showTooltip = true }
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowModal(false)}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200]"
+              className="fixed inset-0 bg-black/70 backdrop-blur-md z-[200]"
             />
 
             {/* Modal */}
@@ -83,7 +83,11 @@ export function ProBadge({ onClick, className, size = 'md', showTooltip = true }
               onClick={() => setShowModal(false)}
             >
               <div
-                className="bg-bg-surface border border-border-subtle rounded-xl shadow-2xl max-w-md w-full p-6"
+                className="bg-bg-surface border-2 border-border-subtle rounded-xl shadow-2xl max-w-md w-full p-6 backdrop-blur-xl"
+                style={{
+                  backgroundColor: 'rgba(10, 14, 26, 0.98)',
+                  backdropFilter: 'blur(20px)',
+                }}
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex items-start gap-4">

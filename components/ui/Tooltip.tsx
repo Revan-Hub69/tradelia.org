@@ -29,47 +29,54 @@ export function Tooltip({
       clearTimeout(timeoutRef.current);
     }
     timeoutRef.current = setTimeout(() => {
-      if (triggerRef.current && tooltipRef.current) {
-        const triggerRect = triggerRef.current.getBoundingClientRect();
-        const tooltipRect = tooltipRef.current.getBoundingClientRect();
-        
-        let top = 0;
-        let left = 0;
-
-        switch (position) {
-          case 'top':
-            top = triggerRect.top - tooltipRect.height - 8;
-            left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
-            break;
-          case 'bottom':
-            top = triggerRect.bottom + 8;
-            left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
-            break;
-          case 'left':
-            top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2);
-            left = triggerRect.left - tooltipRect.width - 8;
-            break;
-          case 'right':
-            top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2);
-            left = triggerRect.right + 8;
-            break;
-        }
-
-        // Adjust for viewport boundaries
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-
-        if (left < 8) left = 8;
-        if (left + tooltipRect.width > viewportWidth - 8) {
-          left = viewportWidth - tooltipRect.width - 8;
-        }
-        if (top < 8) top = 8;
-        if (top + tooltipRect.height > viewportHeight - 8) {
-          top = viewportHeight - tooltipRect.height - 8;
-        }
-
-        setTooltipPosition({ top, left });
+      if (triggerRef.current) {
+        // First render tooltip to get its dimensions
         setIsVisible(true);
+        
+        // Use requestAnimationFrame to ensure tooltip is rendered
+        requestAnimationFrame(() => {
+          if (triggerRef.current && tooltipRef.current) {
+            const triggerRect = triggerRef.current.getBoundingClientRect();
+            const tooltipRect = tooltipRef.current.getBoundingClientRect();
+            
+            let top = 0;
+            let left = 0;
+
+            switch (position) {
+              case 'top':
+                top = triggerRect.top - tooltipRect.height - 8;
+                left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
+                break;
+              case 'bottom':
+                top = triggerRect.bottom + 8;
+                left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
+                break;
+              case 'left':
+                top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2);
+                left = triggerRect.left - tooltipRect.width - 8;
+                break;
+              case 'right':
+                top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2);
+                left = triggerRect.right + 8;
+                break;
+            }
+
+            // Adjust for viewport boundaries
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+
+            if (left < 8) left = 8;
+            if (left + tooltipRect.width > viewportWidth - 8) {
+              left = viewportWidth - tooltipRect.width - 8;
+            }
+            if (top < 8) top = 8;
+            if (top + tooltipRect.height > viewportHeight - 8) {
+              top = viewportHeight - tooltipRect.height - 8;
+            }
+
+            setTooltipPosition({ top, left });
+          }
+        });
       }
     }, delay);
   };
@@ -103,13 +110,17 @@ export function Tooltip({
         <div
           ref={tooltipRef}
           className={cn(
-            'fixed z-[100] px-3 py-2 text-xs font-medium text-white bg-bg-elevated border border-border-subtle rounded-lg shadow-lg pointer-events-none',
+            'fixed z-[100] px-3 py-2 text-xs font-medium bg-bg-elevated border border-border-subtle rounded-lg shadow-2xl pointer-events-none',
             'max-w-xs text-text-primary',
+            'backdrop-blur-sm',
             className
           )}
           style={{
             top: `${tooltipPosition.top}px`,
             left: `${tooltipPosition.left}px`,
+            backgroundColor: 'rgba(20, 25, 40, 0.95)',
+            opacity: isVisible ? 1 : 0,
+            transition: 'opacity 0.15s ease',
           }}
           role="tooltip"
         >
@@ -122,6 +133,9 @@ export function Tooltip({
               position === 'left' && 'right-[-4px] top-1/2 -translate-y-1/2',
               position === 'right' && 'left-[-4px] top-1/2 -translate-y-1/2'
             )}
+            style={{
+              backgroundColor: 'rgba(20, 25, 40, 0.95)',
+            }}
           />
         </div>
       )}
