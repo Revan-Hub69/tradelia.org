@@ -291,7 +291,7 @@ export function TradingJournal() {
                   )}
                 </div>
                 <div className="flex items-center gap-3">
-                  {trade.is_closed && trade.profit_loss !== null && (
+                  {trade.is_closed && trade.profit_loss !== null && trade.profit_loss !== undefined && (
                     <div className={`text-base sm:text-lg font-bold ${trade.profit_loss >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                       {formatCurrency(trade.profit_loss)}
                       {trade.profit_loss_percent && (
