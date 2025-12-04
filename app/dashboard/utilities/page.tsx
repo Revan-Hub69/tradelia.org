@@ -9,13 +9,15 @@ import { PositionSizingCalculator } from '@/components/dashboard/utilities/Posit
 import { RiskRewardCalculator } from '@/components/dashboard/utilities/RiskRewardCalculator';
 import { SharpeRatioCalculator } from '@/components/dashboard/utilities/SharpeRatioCalculator';
 import { DrawdownCalculator } from '@/components/dashboard/utilities/DrawdownCalculator';
+import { OptionsCalculator } from '@/components/dashboard/utilities/OptionsCalculator';
+import { KellyCriterionCalculator } from '@/components/dashboard/utilities/KellyCriterionCalculator';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
-import { Calculator, TrendingUp, BookOpen, Shield, Target, BarChart3, TrendingDown } from 'lucide-react';
+import { Calculator, TrendingUp, BookOpen, Shield, Target, BarChart3, TrendingDown, Zap } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import styles from './utilities.module.css';
 
-type UtilityTab = 'calculator' | 'pac' | 'journal' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown';
+type UtilityTab = 'calculator' | 'pac' | 'journal' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly';
 
 export default function UtilitiesPage() {
   const { t } = useTranslations();
@@ -76,6 +78,18 @@ export default function UtilitiesPage() {
       icon: TrendingDown,
       category: 'pro',
     },
+    {
+      id: 'options',
+      label: 'Options Calculator',
+      icon: Zap,
+      category: 'pro',
+    },
+    {
+      id: 'kelly',
+      label: 'Kelly Criterion',
+      icon: Target,
+      category: 'pro',
+    },
   ];
 
   const tabs = [...baseTabs, ...(isPro ? proTabs : [])];
@@ -95,7 +109,7 @@ export default function UtilitiesPage() {
           <div className="mt-4 bg-accent/10 border border-accent/20 rounded-lg p-3">
             <p className="text-xs sm:text-sm text-text-secondary">
               <strong className="text-text-primary">Upgrade a Pro</strong> per accedere a strumenti avanzati: 
-              Trading Journal, Hedging Calculator, Position Sizing e Risk/Reward Calculator.
+              Trading Journal, Hedging, Position Sizing, Risk/Reward, Sharpe Ratio, Drawdown, Options Calculator e Kelly Criterion.
             </p>
           </div>
         )}
@@ -203,6 +217,26 @@ export default function UtilitiesPage() {
               className={styles.utilitiesPanel}
             >
               <DrawdownCalculator />
+            </div>
+
+            <div
+              id="options-panel"
+              role="tabpanel"
+              aria-labelledby="options-tab"
+              hidden={activeTab !== 'options'}
+              className={styles.utilitiesPanel}
+            >
+              <OptionsCalculator />
+            </div>
+
+            <div
+              id="kelly-panel"
+              role="tabpanel"
+              aria-labelledby="kelly-tab"
+              hidden={activeTab !== 'kelly'}
+              className={styles.utilitiesPanel}
+            >
+              <KellyCriterionCalculator />
             </div>
           </>
         )}

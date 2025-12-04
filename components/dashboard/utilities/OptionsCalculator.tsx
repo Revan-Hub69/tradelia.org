@@ -1,0 +1,357 @@
+'use client';
+
+import { useState, useMemo } from 'react';
+import { Zap, TrendingUp, TrendingDown } from 'lucide-react';
+import { useTranslations } from '@/lib/i18n/use-translations';
+import { useFormatCurrency } from '@/lib/utils/formatCurrency';
+import { useCurrency } from '@/lib/hooks/useCurrency';
+import { currencySymbols } from '@/lib/currency/config';
+import { Tooltip } from '@/components/ui/Tooltip';
+import { HelpCircle } from 'lucide-react';
+
+/**
+ * Options Calculator
+ * Calcola valore teorico e greche per opzioni Call e Put
+ * PRO ONLY - Strumento avanzato per trader di opzioni
+ */
+export function OptionsCalculator() {
+  const { t } = useTranslations();
+  const formatCurrency = useFormatCurrency();
+  const { currency } = useCurrency();
+  
+  const [optionType, setOptionType] = useState<'call' | 'put'>('call');
+  const [stockPrice, setStockPrice] = useState('100');
+  const [strikePrice, setStrikePrice] = useState('100');
+  const [timeToExpiry, setTimeToExpiry] = useState('30'); // giorni
+  const [volatility, setVolatility] = useState('20'); // %
+  const [riskFreeRate, setRiskFreeRate] = useState('2'); // %
+  const [dividendYield, setDividendYield] = useState('0'); // %
+
+  // Black-Scholes Model
+  const results = useMemo(() => {
+    const S = parseFloat(stockPrice) || 0;
+    const K = parseFloat(strikePrice) || 0;
+    const T = (parseFloat(timeToExpiry) || 0) / 365; // anni
+    const sigma = (parseFloat(volatility) || 0) / 100;
+    const r = (parseFloat(riskFreeRate) || 0) / 100;
+    const q = (parseFloat(dividendYield) || 0) / 100;
+
+    if (S <= 0 || K <= 0 || T <= 0 || sigma <= 0) {
+      return null;
+    }
+
+    // Black-Scholes calculations
+    const d1 = (Math.log(S / K) + (r - q + 0.5 * sigma * sigma) * T) / (sigma * Math.sqrt(T));
+    const d2 = d1 - sigma * Math.sqrt(T);
+
+    // Cumulative normal distribution approximation
+    const N = (x: number) => {
+      const a1 = 0.254829592;
+      const a2 = -0.284496736;
+      const a3 = 1.421413741;
+      const a4 = -1.453152027;
+      const a5 = 1.061405429;
+      const p = 0.3275911;
+      const sign = x < 0 ? -1 : 1;
+      x = Math.abs(x) / Math.sqrt(2.0);
+      const t = 1.0 / (1.0 + p * x);
+      const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+      return 0.5 * (1.0 + sign * y);
+    };
+
+    const N_d1 = N(d1);
+    const N_d2 = N(d2);
+    const N_neg_d1 = N(-d1);
+    const N_neg_d2 = N(-d2);
+
+    let optionPrice = 0;
+    let intrinsicValue = 0;
+    let timeValue = 0;
+
+    if (optionType === 'call') {
+      optionPrice = S * Math.exp(-q * T) * N_d1 - K * Math.exp(-r * T) * N_d2;
+      intrinsicValue = Math.max(S - K, 0);
+      timeValue = optionPrice - intrinsicValue;
+    } else {
+      optionPrice = K * Math.exp(-r * T) * N_neg_d2 - S * Math.exp(-q * T) * N_neg_d1;
+      intrinsicValue = Math.max(K - S, 0);
+      timeValue = optionPrice - intrinsicValue;
+    }
+
+    // Greeks
+    const delta = optionType === 'call' ? Math.exp(-q * T) * N_d1 : -Math.exp(-q * T) * N_neg_d1;
+    const gamma = (Math.exp(-q * T) * Math.exp(-0.5 * d1 * d1)) / (S * sigma * Math.sqrt(2 * Math.PI * T));
+    const theta = (-(S * Math.exp(-q * T) * Math.exp(-0.5 * d1 * d1) * sigma) / (2 * Math.sqrt(2 * Math.PI * T)) 
+      - r * K * Math.exp(-r * T) * (optionType === 'call' ? N_d2 : N_neg_d2)
+      + q * S * Math.exp(-q * T) * (optionType === 'call' ? N_d1 : N_neg_d1)) / 365;
+    const vega = (S * Math.exp(-q * T) * Math.exp(-0.5 * d1 * d1) * Math.sqrt(T)) / (100 * Math.sqrt(2 * Math.PI));
+    const rho = (K * T * Math.exp(-r * T) * (optionType === 'call' ? N_d2 : -N_neg_d2)) / 100;
+
+    // Moneyness
+    let moneyness = 'ATM';
+    if (optionType === 'call') {
+      if (S > K * 1.05) moneyness = 'ITM';
+      else if (S < K * 0.95) moneyness = 'OTM';
+    } else {
+      if (S < K * 0.95) moneyness = 'ITM';
+      else if (S > K * 1.05) moneyness = 'OTM';
+    }
+
+    return {
+      optionPrice: Math.max(optionPrice, 0),
+      intrinsicValue,
+      timeValue,
+      delta,
+      gamma,
+      theta,
+      vega,
+      rho,
+      moneyness,
+      d1,
+      d2,
+    };
+  }, [optionType, stockPrice, strikePrice, timeToExpiry, volatility, riskFreeRate, dividendYield]);
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-2 flex items-center gap-2">
+          <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-accent flex-shrink-0" />
+          <span>Options Calculator</span>
+        </h2>
+        <p className="text-text-secondary text-xs sm:text-sm">
+          Calcola valore teorico e greche per opzioni Call e Put usando il modello Black-Scholes
+        </p>
+      </div>
+
+      {/* Info Box */}
+      <div className="bg-accent/10 border border-accent/20 rounded-lg p-3 sm:p-4">
+        <p className="text-xs sm:text-sm text-text-secondary">
+          <strong className="text-text-primary">Black-Scholes Model:</strong> Modello matematico per valutare opzioni. 
+          Le greche misurano la sensibilità del prezzo dell'opzione ai cambiamenti dei parametri. 
+          Passa il mouse sui campi per maggiori informazioni.
+        </p>
+      </div>
+
+      {/* Option Type */}
+      <div className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6">
+        <label className="block text-sm font-medium text-text-secondary mb-3">Tipo Opzione *</label>
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            onClick={() => setOptionType('call')}
+            className={`p-4 rounded-lg border transition-all ${
+              optionType === 'call'
+                ? 'bg-accent/10 border-accent/40 text-accent'
+                : 'bg-bg-surface border-border-subtle text-text-secondary hover:border-accent/20'
+            }`}
+          >
+            <TrendingUp className="w-5 h-5 mx-auto mb-2" />
+            <div className="font-semibold">Call</div>
+            <div className="text-xs opacity-75">Diritto di acquisto</div>
+          </button>
+          <button
+            onClick={() => setOptionType('put')}
+            className={`p-4 rounded-lg border transition-all ${
+              optionType === 'put'
+                ? 'bg-accent/10 border-accent/40 text-accent'
+                : 'bg-bg-surface border-border-subtle text-text-secondary hover:border-accent/20'
+            }`}
+          >
+            <TrendingDown className="w-5 h-5 mx-auto mb-2" />
+            <div className="font-semibold">Put</div>
+            <div className="text-xs opacity-75">Diritto di vendita</div>
+          </button>
+        </div>
+      </div>
+
+      {/* Inputs */}
+      <div className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6 space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
+              <span>Prezzo Stock ({currencySymbols[currency]}) *</span>
+              <Tooltip content="Il prezzo corrente dell'asset sottostante.">
+                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              </Tooltip>
+            </label>
+            <input
+              type="number"
+              value={stockPrice}
+              onChange={(e) => setStockPrice(e.target.value)}
+              placeholder="100"
+              className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+              min="0"
+              step="0.01"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
+              <span>Strike Price ({currencySymbols[currency]}) *</span>
+              <Tooltip content="Il prezzo di esercizio dell'opzione.">
+                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              </Tooltip>
+            </label>
+            <input
+              type="number"
+              value={strikePrice}
+              onChange={(e) => setStrikePrice(e.target.value)}
+              placeholder="100"
+              className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+              min="0"
+              step="0.01"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
+              <span>Tempo a Scadenza (giorni) *</span>
+              <Tooltip content="Il numero di giorni rimanenti fino alla scadenza dell'opzione.">
+                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              </Tooltip>
+            </label>
+            <input
+              type="number"
+              value={timeToExpiry}
+              onChange={(e) => setTimeToExpiry(e.target.value)}
+              placeholder="30"
+              className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+              min="1"
+              step="1"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
+              <span>Volatilità Implicita (%) *</span>
+              <Tooltip content="La volatilità attesa dell'asset, tipicamente 15-30% per azioni, 50-100% per crypto.">
+                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              </Tooltip>
+            </label>
+            <input
+              type="number"
+              value={volatility}
+              onChange={(e) => setVolatility(e.target.value)}
+              placeholder="20"
+              className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+              min="0"
+              max="200"
+              step="0.1"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
+              <span>Tasso Risk-Free (%) *</span>
+              <Tooltip content="Il tasso di interesse risk-free (es. rendimento obbligazioni governative).">
+                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              </Tooltip>
+            </label>
+            <input
+              type="number"
+              value={riskFreeRate}
+              onChange={(e) => setRiskFreeRate(e.target.value)}
+              placeholder="2"
+              className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+              min="0"
+              max="10"
+              step="0.1"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
+              <span>Dividend Yield (%)</span>
+              <Tooltip content="Il rendimento da dividendi dell'asset (0% se non paga dividendi).">
+                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              </Tooltip>
+            </label>
+            <input
+              type="number"
+              value={dividendYield}
+              onChange={(e) => setDividendYield(e.target.value)}
+              placeholder="0"
+              className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+              min="0"
+              max="10"
+              step="0.1"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Results */}
+      {results && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
+              <div className="text-xs sm:text-sm text-text-tertiary mb-1">Prezzo Opzione</div>
+              <div className="text-lg sm:text-2xl font-bold text-accent">
+                {formatCurrency(results.optionPrice)}
+              </div>
+            </div>
+
+            <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
+              <div className="text-xs sm:text-sm text-text-tertiary mb-1">Valore Intrinseco</div>
+              <div className="text-lg sm:text-2xl font-bold text-text-primary">
+                {formatCurrency(results.intrinsicValue)}
+              </div>
+            </div>
+
+            <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
+              <div className="text-xs sm:text-sm text-text-tertiary mb-1">Valore Temporale</div>
+              <div className="text-lg sm:text-2xl font-bold text-green-400">
+                {formatCurrency(results.timeValue)}
+              </div>
+              <div className="text-xs text-text-tertiary mt-1">
+                {results.moneyness}
+              </div>
+            </div>
+          </div>
+
+          {/* Greeks */}
+          <div className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6">
+            <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4">Greeks (Sensibilità)</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
+              <div>
+                <div className="text-xs text-text-tertiary mb-1">Delta</div>
+                <div className="text-sm font-bold text-text-primary">{results.delta.toFixed(4)}</div>
+                <div className="text-xs text-text-tertiary mt-1">Sensibilità a prezzo</div>
+              </div>
+              <div>
+                <div className="text-xs text-text-tertiary mb-1">Gamma</div>
+                <div className="text-sm font-bold text-text-primary">{results.gamma.toFixed(4)}</div>
+                <div className="text-xs text-text-tertiary mt-1">Variazione Delta</div>
+              </div>
+              <div>
+                <div className="text-xs text-text-tertiary mb-1">Theta</div>
+                <div className="text-sm font-bold text-red-400">{results.theta.toFixed(4)}</div>
+                <div className="text-xs text-text-tertiary mt-1">Decadimento tempo</div>
+              </div>
+              <div>
+                <div className="text-xs text-text-tertiary mb-1">Vega</div>
+                <div className="text-sm font-bold text-text-primary">{results.vega.toFixed(4)}</div>
+                <div className="text-xs text-text-tertiary mt-1">Sensibilità volatilità</div>
+              </div>
+              <div>
+                <div className="text-xs text-text-tertiary mb-1">Rho</div>
+                <div className="text-sm font-bold text-text-primary">{results.rho.toFixed(4)}</div>
+                <div className="text-xs text-text-tertiary mt-1">Sensibilità tasso</div>
+              </div>
+            </div>
+            <div className="mt-4 pt-4 border-t border-border-subtle">
+              <p className="text-xs text-text-tertiary">
+                <strong>Nota:</strong> I valori sono calcolati usando il modello Black-Scholes. 
+                I prezzi reali possono differire per liquidità, spread bid-ask e altri fattori di mercato.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
