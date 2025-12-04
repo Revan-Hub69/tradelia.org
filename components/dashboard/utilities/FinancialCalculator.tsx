@@ -12,6 +12,7 @@ import { useCurrency } from '@/lib/hooks/useCurrency';
 import { currencySymbols } from '@/lib/currency/config';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { HelpCircle } from 'lucide-react';
+import { MethodologyNotes } from './MethodologyNotes';
 
 type CalculationType = 'compound' | 'present' | 'future' | 'annuity';
 
@@ -455,6 +456,45 @@ export function FinancialCalculator() {
           Passa il mouse sui campi per maggiori informazioni.
         </p>
       </div>
+
+      {/* Methodology Notes */}
+      <MethodologyNotes
+        toolName="Calcolatore Finanziario"
+        formulas={[
+          {
+            name: 'Interesse Composto',
+            formula: 'A = P × (1 + r)^t',
+            description: 'A = Valore futuro, P = Capitale iniziale, r = Tasso annuo, t = Anni'
+          },
+          {
+            name: 'Valore Attuale',
+            formula: 'PV = FV / (1 + r)^t',
+            description: 'PV = Valore attuale, FV = Valore futuro, r = Tasso annuo, t = Anni'
+          },
+          {
+            name: 'Valore Futuro',
+            formula: 'FV = PV × (1 + r)^t',
+            description: 'FV = Valore futuro, PV = Valore presente, r = Tasso annuo, t = Anni'
+          },
+          {
+            name: 'Rendita (Annuity)',
+            formula: 'FV = PMT × (((1 + r)^t - 1) / r)',
+            description: 'FV = Valore futuro, PMT = Pagamento periodico, r = Tasso annuo, t = Anni. Se r = 0: FV = PMT × t'
+          },
+        ]}
+        assumptions={[
+          'Tasso di interesse costante nel tempo',
+          'Capitalizzazione annuale (per interesse composto)',
+          'Pagamenti periodici costanti (per rendita)',
+          'Nessuna inflazione considerata',
+        ]}
+        references={[
+          'Brealey, R. A., Myers, S. C., & Allen, F. (2020). Principles of Corporate Finance. McGraw-Hill.',
+          'Ross, S. A., Westerfield, R. W., & Jaffe, J. (2020). Corporate Finance. McGraw-Hill.',
+        ]}
+        version="1.0.0"
+        lastUpdated="2025-01-27"
+      />
 
       {/* Tipo di calcolo */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

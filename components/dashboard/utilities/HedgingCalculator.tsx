@@ -8,6 +8,7 @@ import { useCurrency } from '@/lib/hooks/useCurrency';
 import { currencySymbols } from '@/lib/currency/config';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { HelpCircle } from 'lucide-react';
+import { MethodologyNotes } from './MethodologyNotes';
 
 /**
  * Hedging Calculator
@@ -228,6 +229,45 @@ export function HedgingCalculator() {
           </div>
         </div>
       )}
+
+      {/* Methodology Notes */}
+      <MethodologyNotes
+        toolName="Hedging Calculator"
+        formulas={[
+          {
+            name: 'Hedge Amount',
+            formula: 'Hedge = Portfolio Value × Hedge Ratio',
+            description: 'Valore dell\'hedge necessario per coprire il portafoglio'
+          },
+          {
+            name: 'Varianza Portafoglio Hedged',
+            formula: 'σ²h = w²p × σ²p + w²h × σ²h + 2 × wp × wh × σp × σh × ρ',
+            description: 'Varianza del portafoglio dopo hedging (wp = peso portafoglio, wh = peso hedge, ρ = correlazione)'
+          },
+          {
+            name: 'Riduzione Rischio',
+            formula: 'Risk Reduction = (σoriginal - σhedged) / σoriginal × 100%',
+            description: 'Percentuale di riduzione del rischio dopo hedging'
+          },
+          {
+            name: 'Costo Annuale Hedging',
+            formula: 'Annual Cost = Hedge Amount × Hedge Cost Rate',
+            description: 'Costo totale annuo per mantenere l\'hedge'
+          },
+        ]}
+        assumptions={[
+          'Correlazione costante tra portafoglio e hedge',
+          'Volatilità costante nel tempo',
+          'Nessun slippage o costo di transazione aggiuntivo',
+          'Hedge perfettamente correlato (correlazione nota)',
+        ]}
+        references={[
+          'Hull, J. C. (2022). Options, Futures, and Other Derivatives. Pearson.',
+          'Jorion, P. (2007). Value at Risk: The New Benchmark for Managing Financial Risk. McGraw-Hill.',
+        ]}
+        version="1.0.0"
+        lastUpdated="2025-01-27"
+      />
     </div>
   );
 }

@@ -8,6 +8,7 @@ import { useCurrency } from '@/lib/hooks/useCurrency';
 import { currencySymbols } from '@/lib/currency/config';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { HelpCircle } from 'lucide-react';
+import { MethodologyNotes } from './MethodologyNotes';
 
 /**
  * Position Sizing Calculator
@@ -259,6 +260,55 @@ export function PositionSizingCalculator() {
           </div>
         </div>
       )}
+
+      {/* Methodology Notes */}
+      <MethodologyNotes
+        toolName="Position Sizing Calculator"
+        formulas={[
+          {
+            name: 'Risk Amount',
+            formula: 'Risk = Account Size × Risk Percentage',
+            description: 'Importo massimo che siamo disposti a perdere per trade'
+          },
+          {
+            name: 'Price Risk per Unit',
+            formula: 'Price Risk = |Entry Price - Stop Loss|',
+            description: 'Differenza tra prezzo entry e stop loss'
+          },
+          {
+            name: 'Position Size',
+            formula: 'Size = Risk Amount / Price Risk',
+            description: 'Numero di unità da acquistare/vendere'
+          },
+          {
+            name: 'Position Value',
+            formula: 'Value = Position Size × Entry Price',
+            description: 'Valore totale della posizione'
+          },
+          {
+            name: 'Potential Loss',
+            formula: 'Loss = Position Size × Price Risk',
+            description: 'Perdita potenziale se lo stop loss viene raggiunto'
+          },
+          {
+            name: 'Potential Gain',
+            formula: 'Gain = Position Size × (Take Profit - Entry Price)',
+            description: 'Guadagno potenziale se il take profit viene raggiunto'
+          },
+        ]}
+        assumptions={[
+          'Stop loss viene rispettato (nessun slippage)',
+          'Entry price è quello effettivo di esecuzione',
+          'Risk percentage è costante per tutti i trade',
+          'Nessun costo di transazione considerato',
+        ]}
+        references={[
+          'Tharp, V. K. (2007). Trade Your Way to Financial Freedom. McGraw-Hill.',
+          'Van Tharp Institute. Position Sizing Strategies.',
+        ]}
+        version="1.0.0"
+        lastUpdated="2025-01-27"
+      />
     </div>
   );
 }

@@ -8,6 +8,7 @@ import { useCurrency } from '@/lib/hooks/useCurrency';
 import { currencySymbols } from '@/lib/currency/config';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { HelpCircle } from 'lucide-react';
+import { MethodologyNotes } from './MethodologyNotes';
 
 /**
  * Risk/Reward Calculator
@@ -235,6 +236,55 @@ export function RiskRewardCalculator() {
           </div>
         </div>
       )}
+
+      {/* Methodology Notes */}
+      <MethodologyNotes
+        toolName="Risk/Reward Calculator"
+        formulas={[
+          {
+            name: 'Risk',
+            formula: 'Risk = |Entry Price - Stop Loss|',
+            description: 'Distanza tra entry e stop loss'
+          },
+          {
+            name: 'Reward',
+            formula: 'Reward = |Take Profit - Entry Price|',
+            description: 'Distanza tra entry e take profit'
+          },
+          {
+            name: 'Risk/Reward Ratio',
+            formula: 'R:R = Reward / Risk',
+            description: 'Rapporto tra potenziale guadagno e rischio'
+          },
+          {
+            name: 'Risk Amount',
+            formula: 'Risk Amount = Risk × Position Size',
+            description: 'Importo monetario a rischio'
+          },
+          {
+            name: 'Reward Amount',
+            formula: 'Reward Amount = Reward × Position Size',
+            description: 'Importo monetario potenziale guadagno'
+          },
+          {
+            name: 'Minimum Win Rate',
+            formula: 'Min Win Rate = 1 / (1 + R:R) × 100%',
+            description: 'Win rate minimo necessario per essere profittevole'
+          },
+        ]}
+        assumptions={[
+          'Stop loss e take profit vengono rispettati',
+          'Nessun slippage considerato',
+          'Win rate è costante nel tempo',
+          'Risk/Reward ratio è rappresentativo del sistema',
+        ]}
+        references={[
+          'Tharp, V. K. (2007). Trade Your Way to Financial Freedom. McGraw-Hill.',
+          'Elder, A. (2002). Come Diventare un Trader. Il Sole 24 Ore.',
+        ]}
+        version="1.0.0"
+        lastUpdated="2025-01-27"
+      />
     </div>
   );
 }

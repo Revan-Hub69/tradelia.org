@@ -8,6 +8,7 @@ import { useCurrency } from '@/lib/hooks/useCurrency';
 import { currencySymbols } from '@/lib/currency/config';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { HelpCircle } from 'lucide-react';
+import { MethodologyNotes } from './MethodologyNotes';
 
 /**
  * Options Calculator
@@ -373,6 +374,72 @@ export function OptionsCalculator() {
           </div>
         </div>
       )}
+
+      {/* Methodology Notes */}
+      <MethodologyNotes
+        toolName="Options Calculator"
+        formulas={[
+          {
+            name: 'Black-Scholes d1',
+            formula: 'd1 = (ln(S/K) + (r - q + 0.5×σ²)×T) / (σ×√T)',
+            description: 'S = Stock price, K = Strike, r = Risk-free rate, q = Dividend yield, σ = Volatility, T = Time to expiry'
+          },
+          {
+            name: 'Black-Scholes d2',
+            formula: 'd2 = d1 - σ×√T',
+            description: 'd2 per calcolo probabilità esercizio'
+          },
+          {
+            name: 'Call Option',
+            formula: 'C = S×e^(-qT)×N(d1) - K×e^(-rT)×N(d2)',
+            description: 'C = Call price, N() = Cumulative normal distribution'
+          },
+          {
+            name: 'Put Option',
+            formula: 'P = K×e^(-rT)×N(-d2) - S×e^(-qT)×N(-d1)',
+            description: 'P = Put price'
+          },
+          {
+            name: 'Delta (Call)',
+            formula: 'Δ = e^(-qT)×N(d1)',
+            description: 'Sensibilità prezzo opzione a variazione prezzo stock'
+          },
+          {
+            name: 'Gamma',
+            formula: 'Γ = e^(-qT)×φ(d1) / (S×σ×√(2πT))',
+            description: 'Variazione Delta, dove φ(d1) = e^(-0.5×d1²) / √(2π)'
+          },
+          {
+            name: 'Theta',
+            formula: 'Θ = -(S×e^(-qT)×φ(d1)×σ) / (2×√(2πT)) - r×K×e^(-rT)×N(d2) + q×S×e^(-qT)×N(d1)',
+            description: 'Decadimento temporale (per giorno)'
+          },
+          {
+            name: 'Vega',
+            formula: 'ν = S×e^(-qT)×φ(d1)×√T / (100×√(2π))',
+            description: 'Sensibilità a variazione volatilità (per 1% cambio)'
+          },
+          {
+            name: 'Rho',
+            formula: 'ρ = K×T×e^(-rT)×N(d2) / 100',
+            description: 'Sensibilità a variazione tasso risk-free (per 1% cambio)'
+          },
+        ]}
+        assumptions={[
+          'Mercato efficiente e senza arbitraggio',
+          'Volatilità costante nel tempo',
+          'Tasso risk-free costante',
+          'Nessun dividendo o dividend yield costante',
+          'Distribuzione log-normale dei prezzi',
+          'Nessun costo di transazione',
+        ]}
+        references={[
+          'Black, F., & Scholes, M. (1973). The Pricing of Options and Corporate Liabilities. Journal of Political Economy, 81(3), 637-654.',
+          'Hull, J. C. (2022). Options, Futures, and Other Derivatives. Pearson.',
+        ]}
+        version="1.0.0"
+        lastUpdated="2025-01-27"
+      />
     </div>
   );
 }

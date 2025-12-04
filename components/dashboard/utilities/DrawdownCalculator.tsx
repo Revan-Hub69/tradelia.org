@@ -6,6 +6,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { useFormatCurrency } from '@/lib/utils/formatCurrency';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { HelpCircle } from 'lucide-react';
+import { MethodologyNotes } from './MethodologyNotes';
 
 /**
  * Drawdown Calculator
@@ -243,6 +244,45 @@ export function DrawdownCalculator() {
           </div>
         </div>
       )}
+
+      {/* Methodology Notes */}
+      <MethodologyNotes
+        toolName="Drawdown Calculator"
+        formulas={[
+          {
+            name: 'Drawdown Assoluto',
+            formula: 'DD = Peak - Trough',
+            description: 'Differenza tra picco massimo e minimo successivo'
+          },
+          {
+            name: 'Drawdown Percentuale',
+            formula: 'DD% = (Peak - Trough) / Peak × 100%',
+            description: 'Drawdown espresso in percentuale del picco'
+          },
+          {
+            name: 'Maximum Drawdown',
+            formula: 'MDD = max(DDᵢ)',
+            description: 'Il drawdown massimo registrato nel periodo'
+          },
+          {
+            name: 'Recovery Time',
+            formula: 'Recovery = Time(New Peak) - Time(Drawdown Start)',
+            description: 'Tempo necessario per recuperare il picco precedente'
+          },
+        ]}
+        assumptions={[
+          'Equity values sono registrati a intervalli regolari',
+          'Picchi e minimi sono identificati correttamente',
+          'Recovery time è misurato in numero di periodi',
+          'Drawdown è calcolato rispetto al picco precedente',
+        ]}
+        references={[
+          'Chekhlov, A., Uryasev, S., & Zabarankin, M. (2005). Drawdown Measure in Portfolio Optimization. International Journal of Theoretical and Applied Finance, 8(1), 13-58.',
+          'Magdon-Ismail, M., & Atiya, A. F. (2004). Maximum Drawdown. Risk, 17(10), 99-102.',
+        ]}
+        version="1.0.0"
+        lastUpdated="2025-01-27"
+      />
     </div>
   );
 }

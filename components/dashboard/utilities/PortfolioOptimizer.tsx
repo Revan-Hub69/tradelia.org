@@ -6,6 +6,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { useFormatCurrency } from '@/lib/utils/formatCurrency';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { HelpCircle } from 'lucide-react';
+import { MethodologyNotes } from './MethodologyNotes';
 
 /**
  * Portfolio Optimizer (Markowitz)
@@ -317,6 +318,51 @@ export function PortfolioOptimizer() {
           </div>
         </div>
       )}
+
+      {/* Methodology Notes */}
+      <MethodologyNotes
+        toolName="Portfolio Optimizer"
+        formulas={[
+          {
+            name: 'Rendimento Portafoglio',
+            formula: 'E(Rp) = Σᵢ wᵢ × E(Rᵢ)',
+            description: 'Rendimento atteso portafoglio = somma pesata rendimenti asset'
+          },
+          {
+            name: 'Varianza Portafoglio (Markowitz)',
+            formula: 'σ²p = Σᵢ Σⱼ wᵢ wⱼ σᵢ σⱼ ρᵢⱼ',
+            description: 'Varianza portafoglio dipende da pesi, volatilità e correlazioni tra asset'
+          },
+          {
+            name: 'Volatilità Portafoglio',
+            formula: 'σp = √σ²p',
+            description: 'Deviazione standard del rendimento portafoglio'
+          },
+          {
+            name: 'Sharpe Ratio',
+            formula: 'SR = (E(Rp) - rf) / σp',
+            description: 'Rendimento corretto per il rischio (rf = tasso risk-free)'
+          },
+          {
+            name: 'Herfindahl Index',
+            formula: 'H = Σᵢ (wᵢ / Σw)²',
+            description: 'Misura concentrazione portafoglio (0 = perfettamente diversificato, 1 = concentrato)'
+          },
+        ]}
+        assumptions={[
+          'Rendimenti e volatilità costanti nel tempo',
+          'Correlazioni tra asset stabili',
+          'Nessun costo di transazione',
+          'Distribuzione normale dei rendimenti',
+          'Investitore razionale che massimizza utilità',
+        ]}
+        references={[
+          'Markowitz, H. (1952). Portfolio Selection. The Journal of Finance, 7(1), 77-91.',
+          'Sharpe, W. F. (1966). Mutual Fund Performance. The Journal of Business, 39(1), 119-138.',
+        ]}
+        version="1.0.0"
+        lastUpdated="2025-01-27"
+      />
     </div>
   );
 }

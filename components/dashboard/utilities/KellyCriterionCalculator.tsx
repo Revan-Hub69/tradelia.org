@@ -5,6 +5,7 @@ import { Target, AlertTriangle, TrendingUp } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { HelpCircle } from 'lucide-react';
+import { MethodologyNotes } from './MethodologyNotes';
 
 /**
  * Kelly Criterion Calculator
@@ -269,6 +270,41 @@ export function KellyCriterionCalculator() {
           </p>
         </div>
       )}
+
+      {/* Methodology Notes */}
+      <MethodologyNotes
+        toolName="Kelly Criterion Calculator"
+        formulas={[
+          {
+            name: 'Kelly Criterion',
+            formula: 'f* = (p × b - q) / b',
+            description: 'f* = Percentuale ottimale capitale, p = Probabilità vincita, b = Win/Loss ratio, q = 1 - p'
+          },
+          {
+            name: 'Win/Loss Ratio',
+            formula: 'b = AvgWin / AvgLoss',
+            description: 'Rapporto tra guadagno medio e perdita media'
+          },
+          {
+            name: 'Expected Value',
+            formula: 'EV = p × WinMultiplier - q × LossMultiplier',
+            description: 'Valore atteso del sistema di trading'
+          },
+        ]}
+        assumptions={[
+          'Distribuzione di probabilità stabile nel tempo',
+          'Win rate e payoff ratio costanti',
+          'Capitalizzazione continua',
+          'Nessun limite di capitale',
+          'Kelly Full è teorico - in pratica usare Half o Quarter Kelly',
+        ]}
+        references={[
+          'Kelly, J. L. (1956). A New Interpretation of Information Rate. Bell System Technical Journal, 35(4), 917-926.',
+          'Thorp, E. O. (2006). The Kelly Criterion in Blackjack Sports Betting, and the Stock Market. In Handbook of Asset and Liability Management.',
+        ]}
+        version="1.0.0"
+        lastUpdated="2025-01-27"
+      />
     </div>
   );
 }

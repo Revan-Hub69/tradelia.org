@@ -12,6 +12,7 @@ import { useCurrency } from '@/lib/hooks/useCurrency';
 import { currencySymbols } from '@/lib/currency/config';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { HelpCircle } from 'lucide-react';
+import { MethodologyNotes } from './MethodologyNotes';
 
 /**
  * PAC Simulator (Piano di Accumulo Capitale)
@@ -138,6 +139,41 @@ export function PACSimulator() {
           L'interesse composto fa crescere il capitale nel tempo. Passa il mouse sui campi per maggiori informazioni.
         </p>
       </div>
+
+      {/* Methodology Notes */}
+      <MethodologyNotes
+        toolName="Simulatore PAC"
+        formulas={[
+          {
+            name: 'Valore Futuro Rendita',
+            formula: 'FV = PMT × (((1 + r)^n - 1) / r)',
+            description: 'FV = Valore futuro, PMT = Pagamento periodico, r = Tasso periodico, n = Numero periodi. Se r = 0: FV = PMT × n'
+          },
+          {
+            name: 'Pagamento Richiesto (Inversa)',
+            formula: 'PMT = FV × (r / ((1 + r)^n - 1))',
+            description: 'Calcola quanto investire periodicamente per raggiungere un obiettivo. Se r = 0: PMT = FV / n'
+          },
+          {
+            name: 'Tasso Periodico',
+            formula: 'r_periodico = r_annuo / periodi_per_anno',
+            description: 'Converte tasso annuo in tasso per periodo (mensile, trimestrale, annuale)'
+          },
+        ]}
+        assumptions={[
+          'Tasso di rendimento costante nel tempo',
+          'Pagamenti periodici costanti e puntuali',
+          'Capitalizzazione continua',
+          'Nessun costo di gestione o commissioni',
+          'Nessuna tassazione considerata',
+        ]}
+        references={[
+          'Bodie, Z., Kane, A., & Marcus, A. J. (2021). Investments. McGraw-Hill.',
+          'Brigham, E. F., & Houston, J. F. (2019). Fundamentals of Financial Management. Cengage.',
+        ]}
+        version="1.0.0"
+        lastUpdated="2025-01-27"
+      />
 
       {/* Info Box */}
       <div className="bg-accent/10 border border-accent/20 rounded-lg p-3 sm:p-4">

@@ -10,6 +10,7 @@ import { Tooltip } from '@/components/ui/Tooltip';
 import { HelpCircle } from 'lucide-react';
 import { TradingJournalCharts } from '@/components/charts/TradingJournalCharts';
 import { format } from 'date-fns';
+import { MethodologyNotes } from './MethodologyNotes';
 
 interface Trade {
   id: string;
@@ -442,6 +443,50 @@ export function TradingJournal() {
           </div>
         </div>
       )}
+
+      {/* Methodology Notes */}
+      <MethodologyNotes
+        toolName="Trading Journal"
+        formulas={[
+          {
+            name: 'Profit/Loss (Long)',
+            formula: 'P&L = (Exit Price - Entry Price) × Quantity',
+            description: 'Per posizioni long, profitto quando exit > entry'
+          },
+          {
+            name: 'Profit/Loss (Short)',
+            formula: 'P&L = (Entry Price - Exit Price) × Quantity',
+            description: 'Per posizioni short, profitto quando exit < entry'
+          },
+          {
+            name: 'Win Rate',
+            formula: 'Win Rate = (Winning Trades / Total Closed Trades) × 100%',
+            description: 'Percentuale di trade chiusi in profitto'
+          },
+          {
+            name: 'Average Win',
+            formula: 'Avg Win = Σ(Winning P&L) / Count(Winning Trades)',
+            description: 'Profitto medio per trade vincente'
+          },
+          {
+            name: 'Average Loss',
+            formula: 'Avg Loss = Σ(Losing P&L) / Count(Losing Trades)',
+            description: 'Perdita media per trade perdente'
+          },
+        ]}
+        assumptions={[
+          'Tutti i trade sono registrati accuratamente',
+          'Prezzi di entry/exit sono quelli effettivi di esecuzione',
+          'Commissioni e spread possono essere inclusi nel P&L',
+          'Metriche calcolate solo su trade chiusi',
+        ]}
+        references={[
+          'Covel, M. W. (2009). Trend Following: How Great Traders Make Millions in Up or Down Markets. FT Press.',
+          'Tharp, V. K. (2007). Trade Your Way to Financial Freedom. McGraw-Hill.',
+        ]}
+        version="1.0.0"
+        lastUpdated="2025-01-27"
+      />
     </div>
   );
 }

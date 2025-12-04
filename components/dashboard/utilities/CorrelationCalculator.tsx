@@ -5,6 +5,7 @@ import { Link2, TrendingUp, TrendingDown } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { HelpCircle } from 'lucide-react';
+import { MethodologyNotes } from './MethodologyNotes';
 
 /**
  * Correlation Calculator
@@ -265,6 +266,51 @@ export function CorrelationCalculator() {
           </div>
         </div>
       )}
+
+      {/* Methodology Notes */}
+      <MethodologyNotes
+        toolName="Correlation Calculator"
+        formulas={[
+          {
+            name: 'Media Campionaria',
+            formula: 'x̄ = (1/n) × Σᵢ xᵢ',
+            description: 'Media aritmetica dei rendimenti'
+          },
+          {
+            name: 'Covarianza Campionaria',
+            formula: 'Cov(X,Y) = (1/(n-1)) × Σᵢ (xᵢ - x̄)(yᵢ - ȳ)',
+            description: 'Misura come due variabili variano insieme (usa n-1 per correzione Bessel)'
+          },
+          {
+            name: 'Varianza Campionaria',
+            formula: 'Var(X) = (1/(n-1)) × Σᵢ (xᵢ - x̄)²',
+            description: 'Misura dispersione rendimenti (usa n-1 per correzione Bessel)'
+          },
+          {
+            name: 'Deviazione Standard',
+            formula: 'σ = √Var(X)',
+            description: 'Radice quadrata della varianza'
+          },
+          {
+            name: 'Correlazione di Pearson',
+            formula: 'ρ = Cov(X,Y) / (σX × σY)',
+            description: 'Misura correlazione lineare tra -1 e +1'
+          },
+        ]}
+        assumptions={[
+          'Relazione lineare tra variabili',
+          'Distribuzione normale o approssimativamente normale',
+          'Campione rappresentativo',
+          'Nessuna autocorrelazione temporale',
+          'Varianza costante (omoschedasticità)',
+        ]}
+        references={[
+          'Pearson, K. (1896). Mathematical Contributions to the Theory of Evolution. Philosophical Transactions of the Royal Society.',
+          'Rodgers, J. L., & Nicewander, W. A. (1988). Thirteen Ways to Look at the Correlation Coefficient. The American Statistician, 42(1), 59-66.',
+        ]}
+        version="1.0.0"
+        lastUpdated="2025-01-27"
+      />
     </div>
   );
 }

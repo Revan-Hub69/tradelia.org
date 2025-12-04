@@ -5,6 +5,7 @@ import { TrendingUp, BarChart3, AlertCircle } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { HelpCircle } from 'lucide-react';
+import { MethodologyNotes } from './MethodologyNotes';
 
 /**
  * Sharpe Ratio Calculator
@@ -202,6 +203,51 @@ export function SharpeRatioCalculator() {
           </div>
         </div>
       )}
+
+      {/* Methodology Notes */}
+      <MethodologyNotes
+        toolName="Sharpe Ratio Calculator"
+        formulas={[
+          {
+            name: 'Media Rendimenti',
+            formula: 'μ = (1/n) × Σᵢ Rᵢ',
+            description: 'Media aritmetica dei rendimenti periodici'
+          },
+          {
+            name: 'Varianza Campionaria',
+            formula: 'σ² = (1/(n-1)) × Σᵢ (Rᵢ - μ)²',
+            description: 'Varianza campionaria (usa n-1 per correzione Bessel)'
+          },
+          {
+            name: 'Deviazione Standard',
+            formula: 'σ = √σ²',
+            description: 'Volatilità dei rendimenti'
+          },
+          {
+            name: 'Sharpe Ratio',
+            formula: 'SR = (μ - rf) / σ',
+            description: 'Rendimento corretto per il rischio (rf = tasso risk-free)'
+          },
+          {
+            name: 'Sharpe Ratio Annualizzato',
+            formula: 'SR_annual = SR × √periods_per_year',
+            description: 'Sharpe Ratio annualizzato (assumendo rendimenti mensili: √12)'
+          },
+        ]}
+        assumptions={[
+          'Rendimenti normalmente distribuiti',
+          'Tasso risk-free costante',
+          'Rendimenti indipendenti e identicamente distribuiti (i.i.d.)',
+          'Nessun costo di transazione',
+          'Per annualizzazione: assumiamo rendimenti mensili (√12)',
+        ]}
+        references={[
+          'Sharpe, W. F. (1966). Mutual Fund Performance. The Journal of Business, 39(1), 119-138.',
+          'Sharpe, W. F. (1994). The Sharpe Ratio. The Journal of Portfolio Management, 21(1), 49-58.',
+        ]}
+        version="1.0.0"
+        lastUpdated="2025-01-27"
+      />
     </div>
   );
 }
