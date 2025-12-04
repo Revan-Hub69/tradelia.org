@@ -17,7 +17,18 @@ import {
 } from '@/lib/strategies/academic-strategies';
 
 /**
- * Strategy Builder - MVP
+ * Strategy Builder - Costruzione e Ottimizzazione Strategie Trading
+ * 
+ * ⚠️ IMPORTANTE: Questo è uno strumento SEPARATO dal Trading Journal
+ * 
+ * - Strategy Builder: Testa strategie TEORICHE su dati simulati/storici
+ * - Trading Journal: Registra operazioni REALI che hai eseguito
+ * 
+ * Workflow consigliato:
+ * 1. Usa Strategy Builder per testare strategie prima di tradare
+ * 2. Esegui operazioni reali basate sulla strategia ottimizzata
+ * 3. Registra operazioni reali nel Trading Journal
+ * 4. Confronta performance teorica (Strategy Builder) vs reale (Journal)
  * 
  * Best Practice: Walk-Forward Optimization per evitare overfitting
  * 
