@@ -39,48 +39,119 @@ interface WalkForwardWindow {
 
 export function StrategyBuilder() {
   const { t, locale } = useTranslations();
-  const [keyValue, setKeyValue] = useState(2.0);
-  const [atrPeriod, setAtrPeriod] = useState(14);
+  
+  // User inputs - full autonomy
+  const [keyValueMin, setKeyValueMin] = useState(1.0);
+  const [keyValueMax, setKeyValueMax] = useState(5.0);
+  const [keyValueStep, setKeyValueStep] = useState(0.5);
+  const [atrPeriodMin, setAtrPeriodMin] = useState(7);
+  const [atrPeriodMax, setAtrPeriodMax] = useState(30);
+  const [atrPeriodStep, setAtrPeriodStep] = useState(1);
   const [inSampleMonths, setInSampleMonths] = useState(12);
   const [outOfSampleMonths, setOutOfSampleMonths] = useState(3);
+  const [startDate, setStartDate] = useState('2020-01-01');
+  const [endDate, setEndDate] = useState('2024-12-31');
+  
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [results, setResults] = useState<WalkForwardWindow[]>([]);
   const [selectedWindow, setSelectedWindow] = useState<number | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
-  // Parameter ranges for optimization
-  const keyValueRange = { min: 1.0, max: 5.0, step: 0.5 };
-  const atrPeriodRange = { min: 7, max: 30, step: 1 };
+  // Validate inputs
+  const validateInputs = (): boolean => {
+    const errors: string[] = [];
+    
+    if (keyValueMin >= keyValueMax) {
+      errors.push(locale === 'it' 
+        ? 'Key Value Min deve essere minore di Max'
+        : 'Key Value Min must be less than Max');
+    }
+    if (keyValueStep <= 0 || keyValueStep > (keyValueMax - keyValueMin)) {
+      errors.push(locale === 'it'
+        ? 'Key Value Step deve essere positivo e minore della differenza Max-Min'
+        : 'Key Value Step must be positive and less than Max-Min difference');
+    }
+    if (atrPeriodMin >= atrPeriodMax) {
+      errors.push(locale === 'it'
+        ? 'ATR Period Min deve essere minore di Max'
+        : 'ATR Period Min must be less than Max');
+    }
+    if (atrPeriodStep <= 0 || atrPeriodStep > (atrPeriodMax - atrPeriodMin)) {
+      errors.push(locale === 'it'
+        ? 'ATR Period Step deve essere positivo e minore della differenza Max-Min'
+        : 'ATR Period Step must be positive and less than Max-Min difference');
+    }
+    if (inSampleMonths < 3 || inSampleMonths > 60) {
+      errors.push(locale === 'it'
+        ? 'Periodo In-Sample deve essere tra 3 e 60 mesi'
+        : 'In-Sample Period must be between 3 and 60 months');
+    }
+    if (outOfSampleMonths < 1 || outOfSampleMonths > 12) {
+      errors.push(locale === 'it'
+        ? 'Periodo Out-of-Sample deve essere tra 1 e 12 mesi'
+        : 'Out-of-Sample Period must be between 1 and 12 months');
+    }
+    if (new Date(startDate) >= new Date(endDate)) {
+      errors.push(locale === 'it'
+        ? 'Data inizio deve essere precedente alla data fine'
+        : 'Start date must be before end date');
+    }
+    if (new Date(endDate) > new Date()) {
+      errors.push(locale === 'it'
+        ? 'Data fine non può essere futura'
+        : 'End date cannot be in the future');
+    }
+    
+    // Check if optimization would be too large
+    const keyValueCount = Math.floor((keyValueMax - keyValueMin) / keyValueStep) + 1;
+    const atrPeriodCount = Math.floor((atrPeriodMax - atrPeriodMin) / atrPeriodStep) + 1;
+    const totalCombinations = keyValueCount * atrPeriodCount;
+    
+    if (totalCombinations > 1000) {
+      errors.push(locale === 'it'
+        ? `Troppi parametri da testare (${totalCombinations}). Riduci i range o aumenta lo step.`
+        : `Too many parameters to test (${totalCombinations}). Reduce ranges or increase step.`);
+    }
+    
+    setValidationErrors(errors);
+    return errors.length === 0;
+  };
 
   // Simulate Walk-Forward Optimization
   const runWalkForwardOptimization = async () => {
+    if (!validateInputs()) {
+      return;
+    }
+    
     setIsOptimizing(true);
+    setResults([]);
     
     // Simulate optimization delay
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     // Generate walk-forward windows
     const windows: WalkForwardWindow[] = [];
-    const startDate = new Date('2020-01-01');
-    const endDate = new Date('2024-12-31');
-    let currentDate = new Date(startDate);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    let currentDate = new Date(start);
 
-    while (currentDate < endDate) {
+    while (currentDate < end) {
       const inSampleStart = new Date(currentDate);
       const inSampleEnd = new Date(currentDate);
       inSampleEnd.setMonth(inSampleEnd.getMonth() + inSampleMonths);
       
       const outOfSampleStart = new Date(inSampleEnd);
-      outOfSampleEnd.setDate(outOfSampleEnd.getDate() + 1);
+      outOfSampleStart.setDate(outOfSampleStart.getDate() + 1);
       const outOfSampleEnd = new Date(outOfSampleStart);
       outOfSampleEnd.setMonth(outOfSampleEnd.getMonth() + outOfSampleMonths);
 
-      if (outOfSampleEnd > endDate) break;
+      if (outOfSampleEnd > end) break;
 
       // Simulate optimization results
       const optimizationResults: OptimizationResult[] = [];
       
-      for (let kv = keyValueRange.min; kv <= keyValueRange.max; kv += keyValueRange.step) {
-        for (let atr = atrPeriodRange.min; atr <= atrPeriodRange.max; atr += atrPeriodRange.step) {
+      for (let kv = keyValueMin; kv <= keyValueMax; kv += keyValueStep) {
+        for (let atr = atrPeriodMin; atr <= atrPeriodMax; atr += atrPeriodStep) {
           // Simulate performance (in real implementation, this would run actual backtest)
           const inSampleReturn = 15 + Math.random() * 20 - (kv - 2.5) * 2;
           const outOfSampleReturn = inSampleReturn * (0.7 + Math.random() * 0.3); // OOS typically lower
@@ -164,28 +235,74 @@ export function StrategyBuilder() {
         </div>
       </div>
 
+      {/* Disclaimer Banner - Always Visible */}
+      <div className="bg-red-500/10 border-2 border-red-500/30 rounded-xl p-4">
+        <div className="flex items-start gap-3">
+          <Shield className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <h4 className="font-semibold text-text-primary mb-2 text-sm">
+              {locale === 'it' ? '⚠️ AVVISO IMPORTANTE - MIFID II' : '⚠️ IMPORTANT NOTICE - MIFID II'}
+            </h4>
+            <p className="text-xs text-text-secondary leading-relaxed mb-2">
+              {locale === 'it'
+                ? 'Questo strumento è esclusivamente a scopo EDUCATIVO e DIMOSTRATIVO. I risultati sono basati su dati simulati e calcoli teorici. NON costituisce consulenza finanziaria, raccomandazione di investimento o suggerimento operativo. Le performance passate o simulate NON garantiscono risultati futuri.'
+                : 'This tool is EXCLUSIVELY for EDUCATIONAL and DEMONSTRATION purposes. Results are based on simulated data and theoretical calculations. It does NOT constitute financial advice, investment recommendation, or trading suggestion. Past or simulated performance does NOT guarantee future results.'}
+            </p>
+            <p className="text-xs text-text-secondary leading-relaxed">
+              {locale === 'it'
+                ? 'Prima di utilizzare qualsiasi strategia di trading, valuta attentamente il tuo profilo di rischio, orizzonte temporale, obiettivi finanziari e consulta un consulente finanziario qualificato. Il trading comporta rischi significativi di perdita del capitale.'
+                : 'Before using any trading strategy, carefully evaluate your risk profile, time horizon, financial goals, and consult a qualified financial advisor. Trading involves significant risks of capital loss.'}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Configuration */}
       <div className="bg-bg-surface border border-border-subtle rounded-xl p-6 space-y-6">
-        <h3 className="text-lg font-semibold text-text-primary flex items-center gap-2">
-          <Calculator className="w-5 h-5 text-accent" />
-          {locale === 'it' ? 'Configurazione Parametri' : 'Parameter Configuration'}
-        </h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-text-primary flex items-center gap-2">
+            <Calculator className="w-5 h-5 text-accent" />
+            {locale === 'it' ? 'Configurazione Parametri' : 'Parameter Configuration'}
+          </h3>
+          <div className="text-xs text-text-tertiary">
+            {locale === 'it' ? 'Inserisci i valori desiderati' : 'Enter your desired values'}
+          </div>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Key Value */}
+        {/* Validation Errors */}
+        {validationErrors.length > 0 && (
+          <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+            <div className="flex items-start gap-2">
+              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h4 className="font-semibold text-red-400 text-sm mb-2">
+                  {locale === 'it' ? 'Errori di Validazione' : 'Validation Errors'}
+                </h4>
+                <ul className="space-y-1">
+                  {validationErrors.map((error, idx) => (
+                    <li key={idx} className="text-xs text-text-secondary">• {error}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Date Range */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-bg-soft rounded-lg border border-border-subtle">
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
-              {locale === 'it' ? 'Key Value (Moltiplicatore)' : 'Key Value (Multiplier)'}
+              {locale === 'it' ? 'Data Inizio' : 'Start Date'}
               <Tooltip
                 content={
                   <div className="space-y-2">
                     <p className="font-semibold text-xs">
-                      {locale === 'it' ? 'Key Value' : 'Key Value'}
+                      {locale === 'it' ? 'Data Inizio Periodo' : 'Period Start Date'}
                     </p>
                     <p className="text-xs">
                       {locale === 'it'
-                        ? 'Il moltiplicatore utilizzato per calcolare i livelli di entrata/uscita. Valori più alti = segnali meno frequenti ma più selettivi.'
-                        : 'The multiplier used to calculate entry/exit levels. Higher values = less frequent but more selective signals.'}
+                        ? 'Data di inizio del periodo storico da analizzare. Deve essere precedente alla data fine.'
+                        : 'Start date of the historical period to analyze. Must be before end date.'}
                     </p>
                   </div>
                 }
@@ -195,32 +312,26 @@ export function StrategyBuilder() {
               </Tooltip>
             </label>
             <input
-              type="number"
-              value={keyValue}
-              onChange={(e) => setKeyValue(parseFloat(e.target.value) || 2.0)}
-              min={keyValueRange.min}
-              max={keyValueRange.max}
-              step={keyValueRange.step}
-              className="w-full px-4 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              max={endDate}
+              className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
             />
-            <div className="flex justify-between text-xs text-text-tertiary mt-1">
-              <span>{keyValueRange.min}</span>
-              <span>{keyValueRange.max}</span>
-            </div>
           </div>
-
-          {/* ATR Period */}
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
-              {locale === 'it' ? 'ATR Period' : 'ATR Period'}
+              {locale === 'it' ? 'Data Fine' : 'End Date'}
               <Tooltip
                 content={
                   <div className="space-y-2">
-                    <p className="font-semibold text-xs">ATR Period</p>
+                    <p className="font-semibold text-xs">
+                      {locale === 'it' ? 'Data Fine Periodo' : 'Period End Date'}
+                    </p>
                     <p className="text-xs">
                       {locale === 'it'
-                        ? 'Il periodo per calcolare l\'Average True Range. Valori più alti = volatilità più smooth ma meno reattiva.'
-                        : 'The period for calculating Average True Range. Higher values = smoother but less reactive volatility.'}
+                        ? 'Data di fine del periodo storico. Non può essere futura.'
+                        : 'End date of the historical period. Cannot be in the future.'}
                     </p>
                   </div>
                 }
@@ -230,21 +341,161 @@ export function StrategyBuilder() {
               </Tooltip>
             </label>
             <input
-              type="number"
-              value={atrPeriod}
-              onChange={(e) => setAtrPeriod(parseInt(e.target.value) || 14)}
-              min={atrPeriodRange.min}
-              max={atrPeriodRange.max}
-              step={atrPeriodRange.step}
-              className="w-full px-4 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              max={new Date().toISOString().split('T')[0]}
+              className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
             />
-            <div className="flex justify-between text-xs text-text-tertiary mt-1">
-              <span>{atrPeriodRange.min}</span>
-              <span>{atrPeriodRange.max}</span>
+          </div>
+        </div>
+
+        {/* Key Value Range */}
+        <div className="p-4 bg-bg-soft rounded-lg border border-border-subtle">
+          <h4 className="text-sm font-semibold text-text-primary mb-4 flex items-center gap-2">
+            {locale === 'it' ? 'Key Value (Moltiplicatore)' : 'Key Value (Multiplier)'}
+            <Tooltip
+              content={
+                <div className="space-y-2">
+                  <p className="font-semibold text-xs">
+                    {locale === 'it' ? 'Key Value' : 'Key Value'}
+                  </p>
+                  <p className="text-xs">
+                    {locale === 'it'
+                      ? 'Il moltiplicatore utilizzato per calcolare i livelli di entrata/uscita. Valori più alti = segnali meno frequenti ma più selettivi. Definisci il range Min-Max e lo step per l\'ottimizzazione.'
+                      : 'The multiplier used to calculate entry/exit levels. Higher values = less frequent but more selective signals. Define Min-Max range and step for optimization.'}
+                  </p>
+                </div>
+              }
+              position="top"
+            >
+              <Info className="w-4 h-4 text-text-tertiary cursor-help" />
+            </Tooltip>
+          </h4>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-text-secondary mb-1">
+                {locale === 'it' ? 'Min' : 'Min'}
+              </label>
+              <input
+                type="number"
+                value={keyValueMin}
+                onChange={(e) => setKeyValueMin(parseFloat(e.target.value) || 1.0)}
+                min={0.1}
+                max={keyValueMax}
+                step={0.1}
+                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-text-secondary mb-1">
+                {locale === 'it' ? 'Max' : 'Max'}
+              </label>
+              <input
+                type="number"
+                value={keyValueMax}
+                onChange={(e) => setKeyValueMax(parseFloat(e.target.value) || 5.0)}
+                min={keyValueMin}
+                max={20}
+                step={0.1}
+                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-text-secondary mb-1">
+                {locale === 'it' ? 'Step' : 'Step'}
+              </label>
+              <input
+                type="number"
+                value={keyValueStep}
+                onChange={(e) => setKeyValueStep(parseFloat(e.target.value) || 0.5)}
+                min={0.1}
+                max={keyValueMax - keyValueMin}
+                step={0.1}
+                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent"
+              />
             </div>
           </div>
+          <div className="mt-2 text-xs text-text-tertiary">
+            {locale === 'it'
+              ? `Valori testati: ${Math.floor((keyValueMax - keyValueMin) / keyValueStep) + 1}`
+              : `Values tested: ${Math.floor((keyValueMax - keyValueMin) / keyValueStep) + 1}`}
+          </div>
+        </div>
 
-          {/* In-Sample Period */}
+        {/* ATR Period Range */}
+        <div className="p-4 bg-bg-soft rounded-lg border border-border-subtle">
+          <h4 className="text-sm font-semibold text-text-primary mb-4 flex items-center gap-2">
+            {locale === 'it' ? 'ATR Period' : 'ATR Period'}
+            <Tooltip
+              content={
+                <div className="space-y-2">
+                  <p className="font-semibold text-xs">ATR Period</p>
+                  <p className="text-xs">
+                    {locale === 'it'
+                      ? 'Il periodo per calcolare l\'Average True Range. Valori più alti = volatilità più smooth ma meno reattiva. Definisci il range Min-Max e lo step per l\'ottimizzazione.'
+                      : 'The period for calculating Average True Range. Higher values = smoother but less reactive volatility. Define Min-Max range and step for optimization.'}
+                  </p>
+                </div>
+              }
+              position="top"
+            >
+              <Info className="w-4 h-4 text-text-tertiary cursor-help" />
+            </Tooltip>
+          </h4>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-text-secondary mb-1">
+                {locale === 'it' ? 'Min' : 'Min'}
+              </label>
+              <input
+                type="number"
+                value={atrPeriodMin}
+                onChange={(e) => setAtrPeriodMin(parseInt(e.target.value) || 7)}
+                min={1}
+                max={atrPeriodMax}
+                step={1}
+                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-text-secondary mb-1">
+                {locale === 'it' ? 'Max' : 'Max'}
+              </label>
+              <input
+                type="number"
+                value={atrPeriodMax}
+                onChange={(e) => setAtrPeriodMax(parseInt(e.target.value) || 30)}
+                min={atrPeriodMin}
+                max={200}
+                step={1}
+                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-text-secondary mb-1">
+                {locale === 'it' ? 'Step' : 'Step'}
+              </label>
+              <input
+                type="number"
+                value={atrPeriodStep}
+                onChange={(e) => setAtrPeriodStep(parseInt(e.target.value) || 1)}
+                min={1}
+                max={atrPeriodMax - atrPeriodMin}
+                step={1}
+                className="w-full px-3 py-2 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent"
+              />
+            </div>
+          </div>
+          <div className="mt-2 text-xs text-text-tertiary">
+            {locale === 'it'
+              ? `Valori testati: ${Math.floor((atrPeriodMax - atrPeriodMin) / atrPeriodStep) + 1}`
+              : `Values tested: ${Math.floor((atrPeriodMax - atrPeriodMin) / atrPeriodStep) + 1}`}
+          </div>
+        </div>
+
+        {/* Walk-Forward Windows */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
               {locale === 'it' ? 'Periodo In-Sample (mesi)' : 'In-Sample Period (months)'}
@@ -256,8 +507,8 @@ export function StrategyBuilder() {
                     </p>
                     <p className="text-xs">
                       {locale === 'it'
-                        ? 'Il periodo utilizzato per ottimizzare i parametri. Tipicamente 12-24 mesi per strategie giornaliere.'
-                        : 'The period used to optimize parameters. Typically 12-24 months for daily strategies.'}
+                        ? 'Il periodo utilizzato per ottimizzare i parametri. Tipicamente 12-24 mesi per strategie giornaliere. Minimo 3 mesi, massimo 60 mesi.'
+                        : 'The period used to optimize parameters. Typically 12-24 months for daily strategies. Minimum 3 months, maximum 60 months.'}
                     </p>
                   </div>
                 }
@@ -270,14 +521,13 @@ export function StrategyBuilder() {
               type="number"
               value={inSampleMonths}
               onChange={(e) => setInSampleMonths(parseInt(e.target.value) || 12)}
-              min={6}
-              max={36}
-              step={3}
+              min={3}
+              max={60}
+              step={1}
               className="w-full px-4 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
             />
           </div>
 
-          {/* Out-of-Sample Period */}
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
               {locale === 'it' ? 'Periodo Out-of-Sample (mesi)' : 'Out-of-Sample Period (months)'}
@@ -289,8 +539,8 @@ export function StrategyBuilder() {
                     </p>
                     <p className="text-xs">
                       {locale === 'it'
-                        ? 'Il periodo per testare i parametri ottimizzati. Tipicamente 3-6 mesi. Se la performance OOS è molto inferiore a IS, è segno di overfitting.'
-                        : 'The period to test optimized parameters. Typically 3-6 months. If OOS performance is much lower than IS, it\'s a sign of overfitting.'}
+                        ? 'Il periodo per testare i parametri ottimizzati. Tipicamente 3-6 mesi. Se la performance OOS è molto inferiore a IS, è segno di overfitting. Minimo 1 mese, massimo 12 mesi.'
+                        : 'The period to test optimized parameters. Typically 3-6 months. If OOS performance is much lower than IS, it\'s a sign of overfitting. Minimum 1 month, maximum 12 months.'}
                     </p>
                   </div>
                 }
@@ -310,6 +560,26 @@ export function StrategyBuilder() {
             />
           </div>
         </div>
+
+        {/* Total Combinations Warning */}
+        {(() => {
+          const keyValueCount = Math.floor((keyValueMax - keyValueMin) / keyValueStep) + 1;
+          const atrPeriodCount = Math.floor((atrPeriodMax - atrPeriodMin) / atrPeriodStep) + 1;
+          const totalCombinations = keyValueCount * atrPeriodCount;
+          
+          return totalCombinations > 100 && (
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">
+              <div className="flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
+                <div className="text-xs text-text-secondary">
+                  {locale === 'it'
+                    ? `Attenzione: ${totalCombinations} combinazioni di parametri da testare. Questo potrebbe richiedere molto tempo. Considera di ridurre i range o aumentare lo step.`
+                    : `Warning: ${totalCombinations} parameter combinations to test. This might take a long time. Consider reducing ranges or increasing step.`}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         <button
           onClick={runWalkForwardOptimization}
@@ -564,19 +834,85 @@ export function StrategyBuilder() {
         lastUpdated={new Date().toLocaleDateString(locale)}
       />
 
-      {/* MIFID Disclaimer */}
-      <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-6">
+      {/* Usage Guide */}
+      <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-6">
+        <div className="flex items-start gap-3">
+          <BookOpen className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <h4 className="font-semibold text-text-primary mb-3">
+              {locale === 'it' ? '📖 Come Usare Questo Strumento' : '📖 How to Use This Tool'}
+            </h4>
+            <ol className="space-y-2 text-sm text-text-secondary list-decimal list-inside">
+              <li>
+                {locale === 'it'
+                  ? 'Definisci il periodo storico: seleziona Data Inizio e Data Fine del periodo che vuoi analizzare.'
+                  : 'Define historical period: select Start Date and End Date of the period you want to analyze.'}
+              </li>
+              <li>
+                {locale === 'it'
+                  ? 'Configura i parametri: imposta Min, Max e Step per Key Value e ATR Period. Più valori = più tempo di calcolo.'
+                  : 'Configure parameters: set Min, Max and Step for Key Value and ATR Period. More values = longer calculation time.'}
+              </li>
+              <li>
+                {locale === 'it'
+                  ? 'Imposta le finestre temporali: definisci quanto tempo usare per ottimizzare (In-Sample) e quanto per testare (Out-of-Sample).'
+                  : 'Set time windows: define how much time to use for optimization (In-Sample) and how much for testing (Out-of-Sample).'}
+              </li>
+              <li>
+                {locale === 'it'
+                  ? 'Esegui l\'ottimizzazione: clicca "Esegui Walk-Forward Optimization" e attendi i risultati.'
+                  : 'Run optimization: click "Run Walk-Forward Optimization" and wait for results.'}
+              </li>
+              <li>
+                {locale === 'it'
+                  ? 'Analizza i risultati: esamina le finestre temporali. I parametri "Robusti" hanno performance OOS >= 70% di IS. Evita parametri "Overfitted".'
+                  : 'Analyze results: examine time windows. "Robust" parameters have OOS performance >= 70% of IS. Avoid "Overfitted" parameters.'}
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      {/* Additional MIFID Disclaimer */}
+      <div className="bg-red-500/10 border-2 border-red-500/30 rounded-xl p-6">
         <div className="flex items-start gap-3">
           <Shield className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <h4 className="font-semibold text-text-primary mb-2">
-              {locale === 'it' ? 'Avviso MIFID II' : 'MIFID II Notice'}
+            <h4 className="font-semibold text-text-primary mb-3 text-sm">
+              {locale === 'it' ? '⚠️ DISCLAIMER LEGALE - MIFID II' : '⚠️ LEGAL DISCLAIMER - MIFID II'}
             </h4>
-            <p className="text-sm text-text-secondary">
-              {locale === 'it'
-                ? 'Questo strumento è a scopo educativo e dimostrativo. I risultati sono basati su dati simulati e non costituiscono consulenza finanziaria. Le performance passate o simulate non garantiscono risultati futuri. Valuta attentamente il tuo profilo di rischio prima di utilizzare qualsiasi strategia di trading.'
-                : 'This tool is for educational and demonstration purposes. Results are based on simulated data and do not constitute financial advice. Past or simulated performance does not guarantee future results. Carefully evaluate your risk profile before using any trading strategy.'}
-            </p>
+            <div className="space-y-2 text-xs text-text-secondary leading-relaxed">
+              <p>
+                <strong>{locale === 'it' ? '1. Scopo Educativo:' : '1. Educational Purpose:'}</strong>{' '}
+                {locale === 'it'
+                  ? 'Questo strumento è esclusivamente per scopi educativi e di ricerca. NON fornisce consulenza finanziaria, raccomandazioni di investimento o suggerimenti operativi.'
+                  : 'This tool is exclusively for educational and research purposes. It does NOT provide financial advice, investment recommendations, or trading suggestions.'}
+              </p>
+              <p>
+                <strong>{locale === 'it' ? '2. Dati Simulati:' : '2. Simulated Data:'}</strong>{' '}
+                {locale === 'it'
+                  ? 'I risultati sono basati su calcoli teorici e dati simulati. NON riflettono performance reali di mercato. Le condizioni di mercato reali possono differire significativamente.'
+                  : 'Results are based on theoretical calculations and simulated data. They do NOT reflect real market performance. Real market conditions may differ significantly.'}
+              </p>
+              <p>
+                <strong>{locale === 'it' ? '3. Nessuna Garanzia:' : '3. No Guarantee:'}</strong>{' '}
+                {locale === 'it'
+                  ? 'Le performance passate o simulate NON garantiscono risultati futuri. Il trading comporta rischi significativi di perdita del capitale, incluso il rischio di perdere l\'intero investimento.'
+                  : 'Past or simulated performance does NOT guarantee future results. Trading involves significant risks of capital loss, including the risk of losing the entire investment.'}
+              </p>
+              <p>
+                <strong>{locale === 'it' ? '4. Consulenza Professionale:' : '4. Professional Advice:'}</strong>{' '}
+                {locale === 'it'
+                  ? 'Prima di prendere qualsiasi decisione di investimento, consulta un consulente finanziario qualificato e indipendente. Valuta attentamente il tuo profilo di rischio, orizzonte temporale, obiettivi finanziari e situazione personale.'
+                  : 'Before making any investment decision, consult a qualified and independent financial advisor. Carefully evaluate your risk profile, time horizon, financial goals, and personal situation.'}
+              </p>
+              <p>
+                <strong>{locale === 'it' ? '5. Conformità MIFID II:' : '5. MIFID II Compliance:'}</strong>{' '}
+                {locale === 'it'
+                  ? 'Questo strumento è conforme alle normative MIFID II per quanto riguarda la fornitura di informazioni educative. Non costituisce consulenza in materia di investimenti ai sensi della Direttiva MIFID II.'
+                  : 'This tool complies with MIFID II regulations regarding the provision of educational information. It does not constitute investment advice under MIFID II Directive.'}
+              </p>
+            </div>
           </div>
         </div>
       </div>
