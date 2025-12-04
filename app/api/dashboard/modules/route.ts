@@ -87,7 +87,7 @@ const DEFAULT_MODULES = {
     {
       id: 'widgets',
       title: 'Widgets',
-      description: 'Widget personalizzabili per watchlist, portfolio e alert',
+      description: 'Widget personalizzabili per watchlist, portfolio e alert (Coming Soon)',
       href: '/dashboard/widgets',
       icon: 'layout',
       priority: 'secondary' as const,
@@ -98,7 +98,7 @@ const DEFAULT_MODULES = {
     {
       id: 'watchlist',
       title: 'Watchlist',
-      description: 'Monitora i tuoi asset preferiti con alert personalizzati',
+      description: 'Monitora i tuoi asset preferiti con alert personalizzati (Coming Soon)',
       href: '/dashboard/watchlist',
       icon: 'eye',
       priority: 'secondary' as const,
