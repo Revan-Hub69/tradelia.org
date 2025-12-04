@@ -310,18 +310,28 @@ export default function UtilitiesPage() {
                   const Icon = utility.icon;
                   const canAccess = isPro && utility.available;
                   return (
-                    <button
+                    <div
                       key={utility.id}
-                      onClick={() => handleUtilityClick(utility)}
-                      disabled={!canAccess}
                       className={cn(
                         'bg-bg-surface border rounded-xl p-6 text-left relative',
                         'transition-all',
                         canAccess
-                          ? 'border-border-subtle hover:border-accent/40 hover:shadow-md'
-                          : 'border-border-subtle/50 opacity-75 cursor-not-allowed',
-                        'flex flex-col gap-3'
+                          ? 'border-border-subtle hover:border-accent/40 hover:shadow-md cursor-pointer'
+                          : 'border-border-subtle/50 opacity-75',
+                        'flex flex-col gap-3',
+                        'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2'
                       )}
+                      onClick={() => handleUtilityClick(utility)}
+                      role={canAccess ? 'button' : undefined}
+                      tabIndex={canAccess ? 0 : -1}
+                      onKeyDown={(e) => {
+                        if (canAccess && (e.key === 'Enter' || e.key === ' ')) {
+                          e.preventDefault();
+                          handleUtilityClick(utility);
+                        }
+                      }}
+                      aria-label={`${utility.label} - ${utility.description}`}
+                      aria-disabled={!canAccess}
                     >
                       <div className="flex items-start justify-between">
                         <div className={cn(
@@ -331,15 +341,17 @@ export default function UtilitiesPage() {
                           <Icon className={cn(
                             'w-6 h-6',
                             canAccess ? 'text-accent' : 'text-text-tertiary'
-                          )} />
+                          )} aria-hidden="true" />
                         </div>
-                        <ProBadge size="sm" />
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <ProBadge size="sm" />
+                        </div>
                       </div>
                       <div>
                         <h3 className="font-semibold text-text-primary mb-1">{utility.label}</h3>
                         <p className="text-sm text-text-secondary">{utility.description}</p>
                       </div>
-                    </button>
+                    </div>
                   );
                 })}
               </div>
@@ -363,7 +375,8 @@ export default function UtilitiesPage() {
                         canAccess
                           ? 'border-border-subtle hover:border-accent/40 hover:shadow-md cursor-pointer'
                           : 'border-border-subtle/50 opacity-75',
-                        'flex flex-col gap-3'
+                        'flex flex-col gap-3',
+                        'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2'
                       )}
                       onClick={() => handleUtilityClick(utility)}
                       role={canAccess ? 'button' : undefined}
@@ -385,7 +398,7 @@ export default function UtilitiesPage() {
                           <Icon className={cn(
                             'w-6 h-6',
                             canAccess ? 'text-accent' : 'text-text-tertiary'
-                          )} />
+                          )} aria-hidden="true" />
                         </div>
                         <div onClick={(e) => e.stopPropagation()}>
                           <ProBadge size="sm" />
@@ -419,7 +432,8 @@ export default function UtilitiesPage() {
                         canAccess
                           ? 'border-border-subtle hover:border-accent/40 hover:shadow-md cursor-pointer'
                           : 'border-border-subtle/50 opacity-75',
-                        'flex flex-col gap-3'
+                        'flex flex-col gap-3',
+                        'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2'
                       )}
                       onClick={() => handleUtilityClick(utility)}
                       role={canAccess ? 'button' : undefined}
@@ -441,7 +455,7 @@ export default function UtilitiesPage() {
                           <Icon className={cn(
                             'w-6 h-6',
                             canAccess ? 'text-accent' : 'text-text-tertiary'
-                          )} />
+                          )} aria-hidden="true" />
                         </div>
                         <div onClick={(e) => e.stopPropagation()}>
                           <ProBadge size="sm" />
