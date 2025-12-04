@@ -2,7 +2,7 @@
 
 import { useState, lazy, Suspense } from 'react';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
-import { Calculator, TrendingUp, BookOpen, Shield, Target, BarChart3, TrendingDown, Zap, PieChart, Link2, Activity, Eye, Bell, Layout } from 'lucide-react';
+import { Calculator, TrendingUp, BookOpen, Shield, Target, BarChart3, TrendingDown, Zap, PieChart, Link2, Activity, Eye, Bell, Layout, Settings } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -52,6 +52,9 @@ const CorrelationCalculator = lazy(() =>
 const VolatilityCalculator = lazy(() => 
   import('@/components/dashboard/utilities/VolatilityCalculator').then(m => ({ default: m.VolatilityCalculator }))
 );
+const StrategyBuilder = lazy(() => 
+  import('@/components/dashboard/utilities/StrategyBuilder').then(m => ({ default: m.StrategyBuilder }))
+);
 
 // Loading fallback component
 const CalculatorSkeleton = () => (
@@ -62,7 +65,7 @@ const CalculatorSkeleton = () => (
   </div>
 );
 
-type UtilityTab = 'calculator' | 'pac' | 'journal' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility' | 'watchlist' | 'portfolio-manager' | 'alerts' | 'widgets';
+type UtilityTab = 'calculator' | 'pac' | 'journal' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility' | 'strategy-builder' | 'watchlist' | 'portfolio-manager' | 'alerts' | 'widgets';
 
 interface Utility {
   id: UtilityTab;
@@ -202,6 +205,15 @@ export default function UtilitiesPage() {
       description: 'Calcola la correlazione tra due serie di rendimenti',
       available: true,
     },
+    {
+      id: 'strategy-builder',
+      label: 'Strategy Builder',
+      icon: Settings,
+      category: 'pro',
+      group: 'advanced',
+      description: 'Costruisci e ottimizza strategie di trading con Walk-Forward Optimization per evitare overfitting',
+      available: true,
+    },
     // Coming Soon - Real-time Tools
     {
       id: 'watchlist',
@@ -333,6 +345,9 @@ export default function UtilitiesPage() {
                 )}
                 {selectedUtility === 'volatility' && (
                   isPro ? <VolatilityCalculator /> : <ProLockOverlay><VolatilityCalculator /></ProLockOverlay>
+                )}
+                {selectedUtility === 'strategy-builder' && (
+                  isPro ? <StrategyBuilder /> : <ProLockOverlay><StrategyBuilder /></ProLockOverlay>
                 )}
                 {selectedUtility === 'watchlist' && <ComingSoon title="Watchlist" description="Monitora i tuoi asset preferiti con alert personalizzati" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />}
                 {selectedUtility === 'portfolio-manager' && <ComingSoon title="Portfolio Manager" description="Gestisci il tuo portafoglio con aggiornamenti real-time" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />}
