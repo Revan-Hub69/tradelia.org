@@ -12,20 +12,30 @@ export async function GET(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    // Ottieni proposte
+    // Ottieni proposte - gestisci errori gracefully
     const { data: proposals, error: proposalsError } = await supabase
       .from('asset_proposals')
       .select('id, asset_symbol, asset_name, description, status, created_at')
+      .eq('status', 'open')
       .order('created_at', { ascending: false });
 
+    // Se la tabella non esiste o c'è un errore, restituisci array vuoto
     if (proposalsError) {
-      console.error('Error fetching proposals:', proposalsError);
-      return NextResponse.json({ error: proposalsError.message }, { status: 500 });
+      // Log solo se non è un errore di tabella mancante
+      if (!proposalsError.message.includes('relation') && !proposalsError.message.includes('does not exist')) {
+        console.error('Error fetching proposals:', proposalsError);
+      }
+      return NextResponse.json([]);
+    }
+
+    // Se non ci sono proposte, restituisci array vuoto
+    if (!proposals || proposals.length === 0) {
+      return NextResponse.json([]);
     }
 
     // Ottieni voti per ogni proposta
     const proposalsWithVotes = await Promise.all(
-      (proposals || []).map(async (proposal) => {
+      proposals.map(async (proposal) => {
         const { data: votes } = await supabase
           .from('asset_votes')
           .select('vote')
@@ -58,11 +68,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(proposalsWithVotes);
   } catch (error) {
+    // In caso di errore, restituisci array vuoto invece di 500
     console.error('Error in GET /api/dashboard/voting:', error);
-    return NextResponse.json(
-      { error: 'Errore interno', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
+    return NextResponse.json([]);
   }
 }
 

@@ -12,15 +12,19 @@ export async function GET(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    // Ottieni corsi
+    // Ottieni corsi - gestisci errori gracefully
     const { data: courses, error: coursesError } = await supabase
       .from('courses')
       .select('id, slug, title, description, total_lessons, created_at')
       .order('created_at', { ascending: false });
 
+    // Se la tabella non esiste o c'è un errore, restituisci array vuoto
     if (coursesError) {
-      console.error('Error fetching courses:', coursesError);
-      return NextResponse.json({ error: coursesError.message }, { status: 500 });
+      // Log solo se non è un errore di tabella mancante
+      if (!coursesError.message.includes('relation') && !coursesError.message.includes('does not exist')) {
+        console.error('Error fetching courses:', coursesError);
+      }
+      return NextResponse.json([]);
     }
 
     // Se utente autenticato, ottieni progresso
@@ -46,11 +50,9 @@ export async function GET(request: NextRequest) {
     // Guest: solo corsi senza progresso
     return NextResponse.json(courses || []);
   } catch (error) {
+    // In caso di errore, restituisci array vuoto invece di 500
     console.error('Error in GET /api/dashboard/courses:', error);
-    return NextResponse.json(
-      { error: 'Errore interno', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
+    return NextResponse.json([]);
   }
 }
 

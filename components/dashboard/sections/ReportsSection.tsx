@@ -1,39 +1,29 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
 import Link from 'next/link';
-import { FileText, Download, ExternalLink } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { supabase } from '@/lib/supabase/client';
+import { FileText, ExternalLink } from 'lucide-react';
+import { useApi } from '@/lib/hooks/useApi';
+import { LoadingState } from '@/components/dashboard/LoadingState';
+import { ErrorState } from '@/components/dashboard/ErrorState';
 
 export function ReportsSection() {
   const { t, locale } = useTranslations();
-  const [reports, setReports] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadReports() {
-      try {
-        const { data, error } = await supabase
-          .from('reports')
-          .select('*')
-          .eq('public', true)
-          .order('created_at', { ascending: false })
-          .limit(6);
-
-        if (error) throw error;
-        setReports(data || []);
-      } catch (error) {
-        console.error('Error loading reports:', error);
-      } finally {
-        setLoading(false);
-      }
+  
+  const { data: reports, loading, error, retry } = useApi<any[]>(
+    '/api/dashboard/reports?status=active',
+    {
+      cacheTime: 2 * 60 * 1000, // 2 minutes
+      requireAuth: false, // Permetti accesso guest
+      onError: (err) => {
+        // Non mostrare errore - l'API restituisce array vuoto se non ci sono dati
+        console.error('Error loading reports:', err);
+      },
     }
+  );
 
-    loadReports();
-  }, []);
+  const reportsList = (reports || []).slice(0, 6); // Limita a 6 per la preview
 
   if (loading) {
     return (
@@ -41,11 +31,22 @@ export function ReportsSection() {
         <h2 className="text-xl font-semibold text-text-primary mb-4">
           {t('dashboard.modules.items.reports.title') || 'Report Ufficiali'}
         </h2>
-        <div className="space-y-3">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-16 bg-bg-soft rounded-lg animate-pulse" />
-          ))}
-        </div>
+        <LoadingState message={t('dashboard.modules.items.reports.loading') || 'Caricamento report...'} />
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="bg-bg-surface border border-border-subtle rounded-xl p-6">
+        <h2 className="text-xl font-semibold text-text-primary mb-4">
+          {t('dashboard.modules.items.reports.title') || 'Report Ufficiali'}
+        </h2>
+        <ErrorState
+          title={t('dashboard.modules.items.reports.errorTitle') || 'Errore'}
+          message={t('dashboard.modules.items.reports.errorMessage') || 'Impossibile caricare i report'}
+          onRetry={retry}
+        />
       </section>
     );
   }
@@ -57,24 +58,26 @@ export function ReportsSection() {
           <FileText className="w-5 h-5 text-accent" />
           {t('dashboard.modules.items.reports.title') || 'Report Ufficiali'}
         </h2>
-        <Link
-          href={buildLocalePath(locale, '/dashboard/reports')}
-          className="text-sm text-accent hover:text-accent-hover font-medium"
-        >
-          {t('common.viewAll') || 'Vedi tutti'} →
-        </Link>
+        {reportsList.length > 0 && (
+          <Link
+            href={buildLocalePath(locale, '/dashboard/reports')}
+            className="text-sm text-accent hover:text-accent-hover font-medium"
+          >
+            {t('common.viewAll') || 'Vedi tutti'} →
+          </Link>
+        )}
       </div>
 
-      {reports.length === 0 ? (
+      {reportsList.length === 0 ? (
         <p className="text-text-secondary text-sm">
           {t('dashboard.modules.items.reports.empty') || 'Nessun report disponibile'}
         </p>
       ) : (
         <div className="space-y-3">
-          {reports.map((report) => (
+          {reportsList.map((report) => (
             <Link
               key={report.id}
-              href={buildLocalePath(locale, `/dashboard/reports/${report.id}`)}
+              href={buildLocalePath(locale, `/reports/${report.slug || report.id}`)}
               className="block p-4 bg-bg-base border border-border-subtle rounded-lg hover:border-accent/40 hover:shadow-md transition-all group"
             >
               <div className="flex items-start justify-between gap-4">

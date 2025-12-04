@@ -12,8 +12,9 @@ export async function GET(request: NextRequest) {
       data: { session },
     } = await supabase.auth.getSession();
 
+    // Permetti accesso guest - restituisci array vuoto invece di 401
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json([]);
     }
 
     const { data, error } = await supabase
@@ -22,21 +23,20 @@ export async function GET(request: NextRequest) {
       .eq('user_id', session.user.id)
       .order('created_at', { ascending: false });
 
+    // Se la tabella non esiste o c'è un errore, restituisci array vuoto
     if (error) {
-      console.error('Error fetching analysis requests:', error);
-      return NextResponse.json(
-        { error: 'Error fetching analysis requests' },
-        { status: 500 }
-      );
+      // Log solo se non è un errore di tabella mancante
+      if (!error.message.includes('relation') && !error.message.includes('does not exist')) {
+        console.error('Error fetching analysis requests:', error);
+      }
+      return NextResponse.json([]);
     }
 
     return NextResponse.json(data || []);
   } catch (error) {
+    // In caso di errore, restituisci array vuoto invece di 500
     console.error('Error in analysis requests API:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json([]);
   }
 }
 

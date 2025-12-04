@@ -557,19 +557,33 @@
   transform: translateX(6px);
 }
 
+/* Mobile optimizations - Best Practice 2024-2025 */
 @media (max-width: 768px) {
   .dashboardHero {
-    padding: 2rem !important;
+    padding: 1.5rem !important;
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .dashboardHeroTitle {
+    font-size: 2rem !important;
+  }
+
+  .dashboardHeroDescription {
+    font-size: 0.95rem;
+    line-height: 1.6;
   }
 
   .dashboardHeroActions {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.75rem;
   }
 
   .dashboardHeroSupportText {
     justify-content: center;
+    font-size: 0.85rem;
+    padding: 0.6rem 1rem;
   }
 
   .dashboardHeroCard {
@@ -577,19 +591,75 @@
   }
 
   .dashboardMain {
-    padding: 1.5rem 1rem;
+    padding: 1rem 0.75rem !important;
   }
 
   .modulesGrid {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
+    gap: 1rem;
   }
 
   .moduleCategory {
-    padding: 1.5rem;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
   }
 
   .overviewStatsGrid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .overviewSection {
+    padding: 1.5rem !important;
+  }
+
+  .statCard {
+    padding: 1.25rem !important;
+  }
+
+  .statValue {
+    font-size: 2rem !important;
+  }
+
+  .sectionHeader {
+    margin-bottom: 1.5rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem !important;
+  }
+
+  .dashboardSection {
+    margin-bottom: 2rem;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .dashboardMain {
+    padding: 0.75rem 0.5rem !important;
+  }
+
+  .dashboardHero {
+    padding: 1.25rem !important;
+    border-radius: 16px !important;
+  }
+
+  .dashboardHeroTitle {
+    font-size: 1.75rem !important;
+  }
+
+  .moduleCategory {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .overviewSection {
+    padding: 1.25rem !important;
+    border-radius: 12px !important;
+  }
+
+  .statCard {
+    padding: 1rem !important;
   }
 }

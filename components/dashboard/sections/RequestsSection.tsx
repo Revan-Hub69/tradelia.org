@@ -1,44 +1,29 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
 import Link from 'next/link';
 import { TrendingUp, Clock, CheckCircle, XCircle } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
+import { useApi } from '@/lib/hooks/useApi';
+import { LoadingState } from '@/components/dashboard/LoadingState';
+import { ErrorState } from '@/components/dashboard/ErrorState';
 
 export function RequestsSection() {
   const { t, locale } = useTranslations();
-  const [requests, setRequests] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadRequests() {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
-          setLoading(false);
-          return;
-        }
-
-        const { data, error } = await supabase
-          .from('analysis_requests')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false })
-          .limit(5);
-
-        if (error) throw error;
-        setRequests(data || []);
-      } catch (error) {
-        console.error('Error loading requests:', error);
-      } finally {
-        setLoading(false);
-      }
+  
+  const { data: requests, loading, error, retry } = useApi<any[]>(
+    '/api/dashboard/analysis-requests',
+    {
+      cacheTime: 2 * 60 * 1000, // 2 minutes
+      requireAuth: false, // Permetti accesso guest (restituisce array vuoto)
+      onError: (err) => {
+        // Non mostrare errore - l'API restituisce array vuoto se non ci sono dati
+        console.error('Error loading requests:', err);
+      },
     }
+  );
 
-    loadRequests();
-  }, []);
+  const requestsList = (requests || []).slice(0, 5); // Limita a 5 per la preview
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -57,11 +42,22 @@ export function RequestsSection() {
         <h2 className="text-xl font-semibold text-text-primary mb-4">
           {t('dashboard.requests.title') || 'Richieste Analisi'}
         </h2>
-        <div className="space-y-3">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-16 bg-bg-soft rounded-lg animate-pulse" />
-          ))}
-        </div>
+        <LoadingState message={t('dashboard.requests.loading') || 'Caricamento richieste...'} />
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="bg-bg-surface border border-border-subtle rounded-xl p-6">
+        <h2 className="text-xl font-semibold text-text-primary mb-4">
+          {t('dashboard.requests.title') || 'Richieste Analisi'}
+        </h2>
+        <ErrorState
+          title={t('dashboard.requests.errorTitle') || 'Errore'}
+          message={t('dashboard.requests.errorMessage') || 'Impossibile caricare le richieste'}
+          onRetry={retry}
+        />
       </section>
     );
   }
@@ -73,15 +69,17 @@ export function RequestsSection() {
           <TrendingUp className="w-5 h-5 text-accent" />
           {t('dashboard.requests.title') || 'Richieste Analisi'}
         </h2>
-        <Link
-          href={buildLocalePath(locale, '/dashboard/requests')}
-          className="text-sm text-accent hover:text-accent-hover font-medium"
-        >
-          {t('common.viewAll') || 'Vedi tutte'} →
-        </Link>
+        {requestsList.length > 0 && (
+          <Link
+            href={buildLocalePath(locale, '/dashboard/requests')}
+            className="text-sm text-accent hover:text-accent-hover font-medium"
+          >
+            {t('common.viewAll') || 'Vedi tutte'} →
+          </Link>
+        )}
       </div>
 
-      {requests.length === 0 ? (
+      {requestsList.length === 0 ? (
         <div className="text-center py-8">
           <p className="text-text-secondary text-sm mb-4">
             {t('dashboard.requests.empty') || 'Nessuna richiesta trovata'}
@@ -96,7 +94,7 @@ export function RequestsSection() {
         </div>
       ) : (
         <div className="space-y-3">
-          {requests.map((request) => (
+          {requestsList.map((request) => (
             <Link
               key={request.id}
               href={buildLocalePath(locale, `/dashboard/requests/${request.id}`)}
@@ -107,7 +105,7 @@ export function RequestsSection() {
                   <div className="flex items-center gap-2 mb-1">
                     {getStatusIcon(request.status)}
                     <h3 className="font-semibold text-text-primary group-hover:text-accent transition-colors">
-                      {request.symbol || request.asset_name || 'Richiesta Analisi'}
+                      {request.asset_symbol || request.asset_name || 'Richiesta Analisi'}
                     </h3>
                   </div>
                   <p className="text-xs text-text-tertiary">
