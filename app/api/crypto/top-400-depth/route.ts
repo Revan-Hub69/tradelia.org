@@ -50,9 +50,17 @@ const depthCache = new Map<string, { data: MarketDepth; timestamp: number }>();
 const CACHE_TTL = 2 * 60 * 1000;
 
 /**
- * Get top 400 crypto from CoinGecko
+ * Get top 400 crypto from CoinGecko with price/volume data
  */
-async function getTop400CryptoSymbols(): Promise<Array<{ symbol: string; name: string; id: string }>> {
+async function getTop400CryptoWithData(): Promise<Array<{ 
+  symbol: string; 
+  name: string; 
+  id: string;
+  price: number;
+  change24h: number;
+  change24hPercent: number;
+  volume24h: number;
+}>> {
   try {
     const response = await fetch(
       'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=400&page=1&sparkline=false',
@@ -70,16 +78,20 @@ async function getTop400CryptoSymbols(): Promise<Array<{ symbol: string; name: s
       symbol: coin.symbol.toUpperCase(),
       name: coin.name,
       id: coin.id,
+      price: coin.current_price || 0,
+      change24h: coin.price_change_24h || 0,
+      change24hPercent: coin.price_change_percentage_24h || 0,
+      volume24h: coin.total_volume || 0,
     }));
   } catch (error) {
     console.error('Error fetching top 400 crypto:', error);
     // Fallback to major cryptos
     return [
-      { symbol: 'BTC', name: 'Bitcoin', id: 'bitcoin' },
-      { symbol: 'ETH', name: 'Ethereum', id: 'ethereum' },
-      { symbol: 'BNB', name: 'BNB', id: 'binancecoin' },
-      { symbol: 'SOL', name: 'Solana', id: 'solana' },
-      { symbol: 'XRP', name: 'XRP', id: 'ripple' },
+      { symbol: 'BTC', name: 'Bitcoin', id: 'bitcoin', price: 0, change24h: 0, change24hPercent: 0, volume24h: 0 },
+      { symbol: 'ETH', name: 'Ethereum', id: 'ethereum', price: 0, change24h: 0, change24hPercent: 0, volume24h: 0 },
+      { symbol: 'BNB', name: 'BNB', id: 'binancecoin', price: 0, change24h: 0, change24hPercent: 0, volume24h: 0 },
+      { symbol: 'SOL', name: 'Solana', id: 'solana', price: 0, change24h: 0, change24hPercent: 0, volume24h: 0 },
+      { symbol: 'XRP', name: 'XRP', id: 'ripple', price: 0, change24h: 0, change24hPercent: 0, volume24h: 0 },
     ];
   }
 }
@@ -152,58 +164,39 @@ async function getBinanceOrderBook(symbol: string, limit: number = 20): Promise<
 }
 
 /**
- * Build Tradelia system prompt for market depth analysis
- * STRICT: Solo analisi basate su dati reali e teorie accademiche verificate
+ * Build Tradelia system prompt for simple market depth readings
+ * SEMPLICE: Solo letture dati, NO analisi complesse
  */
 function buildTradeliaDepthPrompt(): string {
-  return `Sei un analista di mercato esperto di Tradelia, specializzato in analisi di profondità di mercato (market depth) e liquidità.
+  return `Sei un lettore di dati di mercato crypto per Tradelia.
 
-REGOLA FONDAMENTALE - CRITICA:
-- ANALIZZA SOLO I DATI FORNITI. NON INVENTARE NESSUNA METRICA, CORRELAZIONE O PATTERN.
-- Se i dati non mostrano un pattern chiaro, dillo esplicitamente.
-- NON fare inferenze non supportate dai dati.
-- NON inventare correlazioni o trend non evidenti nei numeri.
+REGOLA FONDAMENTALE:
+- LEGGI SOLO I DATI FORNITI. Descrivi cosa vedi, NON analizzare o interpretare.
+- NO invenzioni, NO pattern non evidenti, NO correlazioni.
+- Linguaggio semplice e diretto.
 
 STILE TRADELIA:
-- Linguaggio chiaro, professionale ma accessibile
-- Spiegazioni accademiche SOLO quando rilevanti e verificabili
-- Sempre MIFID 2 compliant (non consigli di investimento, solo analisi descrittiva)
-- Focus educativo e informativo
-- Tonality: autorevole ma friendly
-
-RIFERIMENTI ACCADEMICI VERIFICABILI (usa solo questi):
-- Kyle (1985) - "Continuous Auctions and Insider Trading" - Market microstructure
-- Glosten & Milgrom (1985) - "Bid, Ask and Transaction Prices" - Bid-ask spread theory
-- Hasbrouck (2007) - "Empirical Market Microstructure" - Order book analysis
-- O'Hara (1995) - "Market Microstructure Theory" - Liquidity analysis
-- Amihud & Mendelson (1986) - "Asset pricing and the bid-ask spread" - Spread analysis
-
-METRICHE QUANTITATIVE (analizza solo queste):
-- Spread: Dato calcolato, analizza solo il valore numerico fornito
-- Imbalance: Dato calcolato, analizza solo il valore numerico fornito
-- Depth Score: Dato calcolato, analizza solo il valore numerico fornito
-- Volume bid/ask: Dati reali, analizza solo i valori forniti
+- Chiaro, professionale ma accessibile
+- Sempre MIFID 2 compliant (solo lettura dati, zero consigli)
+- Focus informativo semplice
 
 FORMATO RISPOSTA:
-- Analisi descrittiva dei dati forniti (NON predittiva)
-- Identificazione pattern SOLO se evidenti nei dati
-- Spiegazioni educative basate su teorie accademiche verificate
-- Alert su anomalie SOLO se supportate da dati quantitativi
+- Market Overview: 2-3 frasi descrittive semplici (es: "X crypto in crescita, Y in discesa")
+- Notable Movements: Lista movimenti notevoli (solo numeri, no interpretazione)
+- Volume Highlights: Lista crypto con volume alto (solo dati)
 
-NON FARE MAI:
-- Inventare metriche non fornite
-- Fare predizioni di prezzo o movimento
-- Consigli di investimento (MIFID 2 violation)
-- Timing market
-- Promesse di guadagni
-- Inferenze non supportate dai dati
-- Correlazioni non evidenti nei numeri
+NON FARE:
+- Analisi complesse
+- Pattern recognition
+- Predizioni
+- Consigli
+- Interpretazioni avanzate
 
 FARE:
-- Analisi descrittiva oggettiva dei dati
-- Spiegazioni educative basate su teorie accademiche verificate
-- Alert su anomalie quantitative (es: spread > X%, imbalance > Y%)
-- Riferimenti accademici specifici quando rilevanti`;
+- Leggere e descrivere i dati forniti
+- Evidenziare movimenti significativi (solo numeri)
+- Evidenziare volumi alti (solo numeri)
+- Linguaggio semplice e diretto`;
 }
 
 /**
@@ -221,47 +214,41 @@ async function readMarketDepthWithGroq(
   const groqApiKey = process.env.GROQ_API_KEY;
   if (!groqApiKey) {
     return {
-      analysis: 'Analisi AI non disponibile. Configura GROQ_API_KEY.',
-      insights: [],
-      liquidityAnalysis: '',
-      marketStructure: '',
-      alerts: [],
+      marketOverview: 'Lettura AI non disponibile. Configura GROQ_API_KEY.',
+      notableMovements: [],
+      volumeHighlights: [],
     };
   }
 
   const systemPrompt = buildTradeliaDepthPrompt();
   
-  const userPrompt = `Analizza la struttura di mercato (order book depth) delle top ${depths.length} crypto usando SOLO i dati forniti.
+  const userPrompt = `Leggi semplicemente i dati di profondità di mercato (order book depth) delle top ${depths.length} crypto.
 
-DATI QUANTITATIVI FORNITI:
+DATI FORNITI:
 ${depthData}
 
-REGOLE STRETTE:
-1. Analizza SOLO i numeri forniti. NON inventare metriche, correlazioni o pattern.
-2. Se un pattern non è evidente nei dati, dillo esplicitamente ("Non emergono pattern chiari").
-3. Usa riferimenti accademici SOLO se rilevanti e verificabili (Kyle 1985, Glosten & Milgrom 1985, Hasbrouck 2007).
-4. MIFID 2: Analisi puramente descrittiva, ZERO consigli o suggerimenti.
+REGOLE SEMPLICI:
+1. LEGGI solo i numeri forniti. Descrivi cosa vedi.
+2. NO analisi, NO pattern, NO interpretazioni.
+3. Solo lettura dati: prezzi, volumi, crescita/discesa.
 
-Fornisci analisi STRUTTURATA e VERIFICABILE:
-1. ANALISI GENERALE (2-3 frasi): Descrizione oggettiva dei dati (spread medio X%, imbalance medio Y%, etc.). NO predizioni.
-2. INSIGHTS (lista 3-5 punti): Solo osservazioni supportate dai dati numerici. Se non ci sono pattern chiari, dillo.
-3. LIQUIDITY ANALYSIS (2 frasi): Descrizione quantitativa della liquidità basata su spread e volume reali. NO inferenze.
-4. MARKET STRUCTURE (2 frasi): Descrizione struttura order book basata su dati bid/ask. NO speculazioni su market makers.
-5. ALERTS (lista solo anomalie quantitative): Solo se spread > 1% o imbalance > 20% o depth score < 20. NO alert generici.
+Fornisci letture SEMPLICI:
+1. MARKET OVERVIEW (2-3 frasi): Descrizione semplice stato mercato (es: "X crypto in crescita, Y in discesa, volume totale Z")
+2. NOTABLE MOVEMENTS (lista 3-5 punti): Solo movimenti notevoli con numeri (es: "BTC +15%, volume 1.2B")
+3. VOLUME HIGHLIGHTS (lista 3-5 punti): Solo crypto con volume alto (es: "ETH volume 500M")
 
 ESEMPIO CORRETTO:
-- ✅ "Spread medio 0.015% indica liquidità moderata secondo Glosten & Milgrom (1985)"
-- ✅ "Imbalance +11.2% su BTC suggerisce maggiore pressione d'acquisto nei dati"
-- ❌ "Il mercato mostra segnali di rialzo" (NON supportato dai dati)
-- ❌ "Correlazione tra spread e volume" (NON evidente nei dati forniti)
+- ✅ "65 crypto in crescita, 35 in discesa. Volume totale 5.2B"
+- ✅ "BTC mostra +15% con volume 1.2B nelle ultime 24h"
+- ✅ "ETH, SOL, BNB mostrano volumi superiori a 500M"
+- ❌ "Il mercato mostra trend positivo" (troppo interpretativo)
+- ❌ "Pattern di accumulo su BTC" (NO pattern)
 
 Rispondi SOLO in formato JSON valido:
 {
-  "analysis": "Descrizione oggettiva dei dati...",
-  "insights": ["Osservazione supportata da dati", "Se non ci sono pattern, dillo"],
-  "liquidityAnalysis": "Analisi quantitativa basata su spread/volume reali...",
-  "marketStructure": "Descrizione struttura basata su bid/ask reali...",
-  "alerts": ["Solo anomalie quantitative: spread > X%", "imbalance > Y%"]
+  "marketOverview": "Descrizione semplice stato mercato...",
+  "notableMovements": ["BTC +15%, volume 1.2B", "ETH -5%, volume 800M"],
+  "volumeHighlights": ["ETH volume 500M", "SOL volume 300M"]
 }`;
 
   try {
@@ -339,8 +326,8 @@ export async function GET(request: NextRequest) {
 
     const now = Date.now();
 
-    // Get top 400 crypto symbols
-    const topCryptos = await getTop400CryptoSymbols();
+    // Get top 400 crypto with price/volume data
+    const topCryptos = await getTop400CryptoWithData();
     const cryptosToProcess = topCryptos.slice(0, Math.min(limit, 400));
 
     // Fetch order book depth (with caching and rate limiting)
@@ -366,9 +353,22 @@ export async function GET(request: NextRequest) {
           await new Promise(resolve => setTimeout(resolve, i * 50)); // 50ms delay
 
           try {
-            const depth = await getBinanceOrderBook(crypto.symbol, orderBookLimit);
-            if (depth) {
-              depth.name = crypto.name; // Update with CoinGecko name
+            const orderBook = await getBinanceOrderBook(crypto.symbol, orderBookLimit);
+            if (orderBook) {
+              const depth: MarketDepth = {
+                symbol: crypto.symbol,
+                name: crypto.name,
+                price: crypto.price,
+                change24h: crypto.change24h,
+                change24hPercent: crypto.change24hPercent,
+                volume24h: crypto.volume24h,
+                bidTotal: orderBook.bidTotal,
+                askTotal: orderBook.askTotal,
+                spread: orderBook.spread,
+                imbalance: orderBook.imbalance,
+                trend: crypto.change24hPercent > 0 ? 'up' : crypto.change24hPercent < 0 ? 'down' : 'neutral',
+              };
+              
               depths.push(depth);
               depthCache.set(cacheKey, { data: depth, timestamp: now });
             }
