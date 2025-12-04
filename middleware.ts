@@ -75,6 +75,12 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Prevent /it URLs - redirect to root
+  if (pathname.startsWith("/it")) {
+    const newPath = pathname.replace(/^\/it/, '') || '/';
+    return NextResponse.redirect(new URL(newPath, request.url));
+  }
+
   // Handle /dashboard routes - redirect to correct locale
   // NON fare redirect al login, permettere accesso guest
   if (pathname === "/dashboard") {

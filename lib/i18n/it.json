@@ -9,7 +9,8 @@
     "error": "Errore",
     "success": "Successo",
     "sending": "Invio...",
-    "skipToContent": "Salta al contenuto principale"
+    "skipToContent": "Salta al contenuto principale",
+    "viewAll": "Vedi tutti"
   },
   "error": {
     "title": "Qualcosa è andato storto",
@@ -106,6 +107,21 @@
     "copyright": "Tutti i diritti riservati"
   },
   "dashboard": {
+    "tabs": {
+      "navigation": "Navigazione dashboard",
+      "overview": "Panoramica",
+      "overviewDesc": "Vista generale e attività recenti",
+      "education": "Formazione",
+      "educationDesc": "Corsi e percorsi formativi",
+      "analysis": "Analisi",
+      "analysisDesc": "Report e richieste analisi",
+      "settings": "Impostazioni",
+      "settingsDesc": "Profilo e configurazione"
+    },
+    "analysis": {
+      "title": "Analisi",
+      "description": "Report, richieste analisi e strumenti di analisi finanziaria"
+    },
     "search": {
       "open": "Apri ricerca",
       "placeholder": "Cerca report, corsi, moduli...",

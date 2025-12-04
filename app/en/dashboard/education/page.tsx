@@ -3,11 +3,11 @@ import { NoSSR } from '@/components/common/NoSSR';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
 
-// Carica DashboardShell solo sul client - NO SSR, NO HYDRATION
-const DashboardShell = dynamic(
-  () => import('@/components/dashboard/DashboardShell').then(m => ({ default: m.DashboardShell })),
+// EducationContent è già un componente client-side
+const EducationContent = dynamic(
+  () => import('../../dashboard/education/EducationContent').then(m => ({ default: m.default })),
   {
-    ssr: false, // Disabilita completamente SSR
+    ssr: false,
   }
 );
 
@@ -15,20 +15,18 @@ const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-bg-base" suppressHydrationWarning>
     <div className="text-center">
       <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-      <p className="text-text-secondary">Loading dashboard...</p>
+      <p className="text-text-secondary">Loading education...</p>
     </div>
   </div>
 );
 
-export default function DashboardPageEN() {
-  // Usa NoSSR per prevenire COMPLETAMENTE l'hydration
-  // Wrappato in ErrorBoundary per catturare eventuali errori reali
+export default function EducationPageEN() {
   return (
     <ErrorBoundary>
       <NoSSR fallback={<LoadingFallback />}>
         <div suppressHydrationWarning>
           <DashboardTabs />
-          <DashboardShell />
+          <EducationContent />
         </div>
       </NoSSR>
     </ErrorBoundary>

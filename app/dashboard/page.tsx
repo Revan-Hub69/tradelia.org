@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import { NoSSR } from '@/components/common/NoSSR';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
+import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
 
 // Carica DashboardShell solo sul client - NO SSR, NO HYDRATION
 const DashboardShell = dynamic(
@@ -26,6 +27,7 @@ export default function DashboardPage() {
     <ErrorBoundary>
       <NoSSR fallback={<LoadingFallback />}>
         <div suppressHydrationWarning>
+          <DashboardTabs />
           <DashboardShell />
         </div>
       </NoSSR>

@@ -9,7 +9,8 @@
     "error": "Error",
     "success": "Success",
     "sending": "Sending...",
-    "skipToContent": "Skip to main content"
+    "skipToContent": "Skip to main content",
+    "viewAll": "View all"
   },
   "error": {
     "title": "Something went wrong",
@@ -106,6 +107,21 @@
     "copyright": "All rights reserved"
   },
   "dashboard": {
+    "tabs": {
+      "navigation": "Dashboard navigation",
+      "overview": "Overview",
+      "overviewDesc": "General view and recent activity",
+      "education": "Education",
+      "educationDesc": "Courses and training paths",
+      "analysis": "Analysis",
+      "analysisDesc": "Reports and analysis requests",
+      "settings": "Settings",
+      "settingsDesc": "Profile and configuration"
+    },
+    "analysis": {
+      "title": "Analysis",
+      "description": "Reports, analysis requests and financial analysis tools"
+    },
     "search": {
       "open": "Open search",
       "placeholder": "Search reports, courses, modules...",
