@@ -39,9 +39,9 @@
   width: 100%;
   margin: 0 auto;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
   position: relative;
   overflow-x: hidden;
   box-sizing: border-box;
@@ -49,6 +49,9 @@
 
 @media (min-width: 768px) {
   .dashboardHeaderContent {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     gap: 1.5rem;
   }
 }
@@ -137,11 +140,15 @@
   align-items: center;
   gap: 0.5rem;
   flex-shrink: 0;
+  width: 100%;
+  justify-content: flex-end;
 }
 
 @media (min-width: 768px) {
   .dashboardActions {
     gap: 0.75rem;
+    width: auto;
+    justify-content: flex-start;
   }
 }
 

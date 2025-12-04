@@ -48,6 +48,7 @@ export function DashboardHeader() {
       role="banner"
     >
       <div className={styles.dashboardHeaderContent}>
+        {/* Prima riga: Logo e Titolo */}
         <div className={styles.dashboardTitle}>
           <Link 
             href="/" 
@@ -69,6 +70,7 @@ export function DashboardHeader() {
           <span className={styles.dashboardTitleSeparator} aria-hidden="true">·</span>
           <span className={styles.dashboardTitleText}>Dashboard</span>
         </div>
+        {/* Seconda riga su mobile: Azioni */}
         <nav className={styles.dashboardActions} aria-label="Dashboard actions">
           <CurrencySwitch size="sm" />
           <UserStats />
