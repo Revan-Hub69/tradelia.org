@@ -3,11 +3,19 @@
 ## Overview
 API per ottenere profondità di mercato (order book depth) delle top 400 crypto con analisi Groq AI.
 
+**IMPORTANTE - LIMITAZIONE DATI**:
+- I dati order book depth provengono da **Binance** (non mercato globale)
+- I recent trades provengono da **Binance** (non mercato globale)
+- Binance è il più grande exchange crypto, quindi è un buon **proxy/indicatore** del mercato
+- Per una visione completa del mercato globale servirebbero dati aggregati da più exchange (Coinbase, Kraken, etc.)
+
 ## Endpoint
 
 ### GET /api/crypto/top-400-depth
 
-Ottiene order book depth per top 400 crypto da Binance e analizza con Groq AI.
+Ottiene order book depth L400 e recent trades per top 400 crypto da Binance e analizza con Groq AI.
+
+**NOTA**: I dati sono specifici di Binance (non mercato globale), ma Binance è il più grande exchange quindi è un buon proxy.
 
 **Query Parameters:**
 - `limit` (optional): Numero di crypto da analizzare (default: 400, max: 400)
