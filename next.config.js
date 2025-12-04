@@ -94,6 +94,7 @@ const nextConfig = {
   // Optimize for modern browsers - reduce polyfills
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
+    typedRoutes: false,
   },
 
   // Note: Next.js SWC automatically uses browserslist from .browserslistrc
@@ -128,19 +129,11 @@ const nextConfig = {
   // TypeScript e ESLint
   typescript: {
     ignoreBuildErrors: false,
-    // Ottimizza type checking per evitare timeout
     tsconfigPath: './tsconfig.json',
   },
 
   eslint: {
     ignoreDuringBuilds: true, // Temporaneo per fix config
-  },
-
-  // Ottimizzazioni per build più veloce
-  experimental: {
-    optimizePackageImports: ["lucide-react", "framer-motion"],
-    // Incrementa timeout per type checking
-    typedRoutes: false,
   },
 };
 
