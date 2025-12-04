@@ -527,7 +527,7 @@ export function GlossaryContent() {
                   }}
                   className="mt-3 px-4 py-2 text-sm font-medium text-accent hover:text-accent-hover underline"
                 >
-                  {t('glossary.filters.showAllAvailable', { count: terms.length }) || `Mostra tutti i ${terms.length} termini disponibili`}
+                  {t('glossary.filters.showAllAvailable') || `Mostra tutti i ${terms.length} termini disponibili`}
                 </button>
               )}
             </div>
