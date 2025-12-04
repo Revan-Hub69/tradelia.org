@@ -1,0 +1,185 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+/**
+ * Fear & Greed Index API
+ * 
+ * Crypto Market Sentiment Index
+ * Academic Reference: Behavioral Finance principles
+ * 
+ * Data Source: Alternative.me API (FREE)
+ * Updates: Every 5 minutes
+ */
+
+interface FearGreedResponse {
+  value: number; // 0-100
+  classification: string;
+  timestamp: string;
+  history: Array<{ date: string; value: number }>;
+  aiReading: string;
+}
+
+/**
+ * Get Fear & Greed Index from Alternative.me
+ */
+async function getFearGreedIndex(): Promise<{ value: number; classification: string } | null> {
+  try {
+    const response = await fetch('https://api.alternative.me/fng/', {
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Alternative.me API error');
+    }
+
+    const data = await response.json();
+    const current = data.data?.[0];
+
+    if (!current) {
+      return null;
+    }
+
+    const value = parseInt(current.value, 10);
+    const classification = current.value_classification;
+
+    return { value, classification };
+  } catch (error) {
+    console.error('Error fetching Fear & Greed Index:', error);
+    return null;
+  }
+}
+
+/**
+ * Get Fear & Greed History
+ */
+async function getFearGreedHistory(): Promise<Array<{ date: string; value: number }>> {
+  try {
+    const response = await fetch('https://api.alternative.me/fng/?limit=30', {
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const data = await response.json();
+    const history = data.data || [];
+
+    return history
+      .map((item: any) => ({
+        date: new Date(parseInt(item.timestamp, 10) * 1000).toISOString(),
+        value: parseInt(item.value, 10),
+      }))
+      .reverse(); // Oldest first
+  } catch (error) {
+    console.error('Error fetching Fear & Greed history:', error);
+    return [];
+  }
+}
+
+/**
+ * Get Groq AI reading for Fear & Greed
+ */
+async function getFearGreedAIReading(value: number, classification: string): Promise<string> {
+  const groqApiKey = process.env.GROQ_API_KEY;
+  if (!groqApiKey) {
+    return 'AI analysis not available. Configure GROQ_API_KEY.';
+  }
+
+  const systemPrompt = `Sei un analista di mercato esperto di Tradelia, specializzato nell'analisi del sentiment di mercato.
+
+REGOLA FONDAMENTALE:
+- LEGGI SOLO I DATI FORNITI. Descrivi cosa vedi, NON analizzare o interpretare complessamente.
+- NO invenzioni, NO pattern non evidenti, NO correlazioni.
+- Linguaggio semplice e diretto.
+
+STILE TRADELIA:
+- Chiaro, professionale ma accessibile
+- Sempre MIFID 2 compliant (solo lettura dati, zero consigli)
+- Focus informativo semplice
+
+RIFERIMENTI ACCADEMICI:
+- Behavioral Finance - Market Sentiment Analysis`;
+
+  const userPrompt = `Leggi i dati Fear & Greed Index forniti.
+
+DATI FORNITI:
+- Fear & Greed Value: ${value} (0-100)
+- Classification: ${classification}
+
+INTERPRETAZIONE:
+- 0-24: Extreme Fear
+- 25-44: Fear
+- 45-55: Neutral
+- 56-75: Greed
+- 76-100: Extreme Greed
+
+Fornisci una lettura SEMPLICE (2-3 frasi) dello stato attuale del sentiment basata sui dati forniti.
+NO predizioni, NO consigli, solo lettura descrittiva.`;
+
+  try {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${groqApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'llama-3.1-70b-versatile',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt },
+        ],
+        temperature: 0.3,
+        max_tokens: 200,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Groq API error');
+    }
+
+    const data = await response.json();
+    return data.choices[0]?.message?.content || 'Analyzing Fear & Greed data...';
+  } catch (error) {
+    console.error('Error calling Groq AI:', error);
+    return 'Error generating AI reading.';
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const [fearGreedData, history] = await Promise.all([
+      getFearGreedIndex(),
+      getFearGreedHistory(),
+    ]);
+
+    if (!fearGreedData) {
+      return NextResponse.json(
+        { error: 'Failed to fetch Fear & Greed Index' },
+        { status: 500 }
+      );
+    }
+
+    const aiReading = await getFearGreedAIReading(fearGreedData.value, fearGreedData.classification);
+
+    const response: FearGreedResponse = {
+      value: fearGreedData.value,
+      classification: fearGreedData.classification,
+      timestamp: new Date().toISOString(),
+      history: history.slice(-30), // Last 30 days
+      aiReading,
+    };
+
+    return NextResponse.json(response);
+  } catch (error) {
+    console.error('Error in GET /api/market-indicators/fear-greed:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
