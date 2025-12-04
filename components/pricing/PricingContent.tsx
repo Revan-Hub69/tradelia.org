@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { prefetchOnHover } from '@/lib/utils/prefetch';
 import { InternalLinks } from '@/components/seo/InternalLinks';
+import { ShareButtons } from '@/components/ui/ShareButtons';
 
 interface Plan {
   id: string;
