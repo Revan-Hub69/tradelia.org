@@ -80,7 +80,7 @@ export async function generateMetadata(locale: Locale = "it"): Promise<Metadata>
  * Best Practice 2024-2025: Dynamic metadata per locale per SEO ottimale
  */
 export async function generatePageMetadata(
-  pageKey: 'pricing' | 'checkout' | 'glossary' | 'faq' | 'support' | 'about' | 'contact' | 'privacy' | 'cookie' | 'terms',
+  pageKey: 'pricing' | 'checkout' | 'glossary' | 'faq' | 'support' | 'about' | 'contact' | 'privacy' | 'cookie' | 'terms' | 'reviews',
   locale: Locale = "it"
 ): Promise<Metadata> {
   const dict = await getDictionary(locale);
@@ -103,6 +103,7 @@ export async function generatePageMetadata(
     privacy: 'privacy',
     cookie: 'cookie',
     terms: 'terms',
+    reviews: 'reviews',
   };
   const pagePath = pagePathMap[pageKey];
 

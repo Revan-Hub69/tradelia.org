@@ -518,6 +518,10 @@
       "terms": {
         "title": "Termini e Condizioni · Tradelia",
         "description": "Termini e condizioni di utilizzo di Tradelia. Leggi le condizioni per l'uso della piattaforma."
+      },
+      "reviews": {
+        "title": "Recensioni · Tradelia",
+        "description": "Leggi le recensioni verificate dei nostri utenti e condividi la tua esperienza con Tradelia."
       }
     }
   },
@@ -1614,7 +1618,35 @@
     "verified": "Verificato",
     "previous": "Recensione precedente",
     "next": "Recensione successiva",
-    "goToReview": "Vai alla recensione"
+    "goToReview": "Vai alla recensione",
+    "viewAll": "Vedi tutte le recensioni",
+    "loading": "Caricamento recensioni...",
+    "noReviews": "Nessuna recensione disponibile",
+    "noReviewsForRating": "Nessuna recensione con questo voto",
+    "showAll": "Mostra tutte le recensioni",
+    "filterByRating": "Filtra per voto",
+    "all": "Tutte",
+    "averageRating": "Media voti",
+    "totalReviews": "Recensioni totali",
+    "writeReview": "Scrivi una Recensione",
+    "loginToReview": "Accedi per lasciare una recensione",
+    "writeReviewDesc": "Condividi la tua esperienza con Tradelia. La tua recensione sarà pubblicata dopo la verifica.",
+    "backToReviews": "Torna alle recensioni",
+    "rating": "Voto",
+    "comment": "La tua recensione",
+    "commentPlaceholder": "Condividi la tua esperienza con Tradelia...",
+    "characters": "caratteri",
+    "submit": "Invia Recensione",
+    "verificationNote": "La tua recensione sarà pubblicata dopo la verifica da parte del team.",
+    "submitSuccess": "Recensione inviata! Verrà pubblicata dopo la verifica.",
+    "rate": "Vota",
+    "star": "stella",
+    "stars": "stelle",
+    "errors": {
+      "commentTooShort": "Il commento deve essere di almeno 10 caratteri",
+      "notLoggedIn": "Devi essere loggato per lasciare una recensione",
+      "submitError": "Errore durante l'invio della recensione"
+    }
   },
   "share": {
     "title": "Condividi",

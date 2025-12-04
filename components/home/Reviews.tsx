@@ -2,15 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, Quote, ChevronLeft, ChevronRight, MessageSquare } from 'lucide-react';
+import Link from 'next/link';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { supabase } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils/cn';
+import { Button } from '@/components/ui/button';
 import {
   useReducedMotion,
   createContainerVariants,
   createItemVariants,
 } from '@/lib/animations';
+import { buildLocalePath } from '@/lib/i18n/paths';
 
 interface Review {
   id: string;
@@ -23,30 +26,19 @@ interface Review {
 }
 
 export function Reviews() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const prefersReducedMotion = useReducedMotion();
   const containerVariants = createContainerVariants(prefersReducedMotion);
   const itemVariants = createItemVariants(prefersReducedMotion);
   
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    async function checkAuthAndLoadReviews() {
+    async function loadReviews() {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        if (!user) {
-          setIsLoggedIn(false);
-          setIsLoading(false);
-          return;
-        }
-
-        setIsLoggedIn(true);
-
-        // Carica recensioni pubbliche verificate
+        // Carica recensioni pubbliche verificate - VISIBILI A TUTTI
         const { data, error } = await supabase
           .from('reviews')
           .select('*')
@@ -62,23 +54,14 @@ export function Reviews() {
           setReviews(data || []);
         }
       } catch (error) {
-        console.error('Error checking auth:', error);
-        setIsLoggedIn(false);
+        console.error('Error loading reviews:', error);
+        setReviews([]);
       } finally {
         setIsLoading(false);
       }
     }
 
-    checkAuthAndLoadReviews();
-
-    // Ascolta cambiamenti autenticazione
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
-      checkAuthAndLoadReviews();
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
+    loadReviews();
   }, []);
 
   // Auto-rotate reviews ogni 5 secondi
@@ -92,14 +75,16 @@ export function Reviews() {
     return () => clearInterval(interval);
   }, [reviews.length]);
 
-  // Non mostrare se non loggato o non ci sono recensioni
-  if (!isLoggedIn || isLoading || reviews.length === 0) {
+  // Non mostrare se non ci sono recensioni
+  if (isLoading || reviews.length === 0) {
     return null;
   }
 
   const currentReview = reviews[currentIndex];
   const nextReview = () => setCurrentIndex((prev) => (prev + 1) % reviews.length);
   const prevReview = () => setCurrentIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
+
+  const localePrefix = locale === 'en' ? '/en' : '';
 
   return (
     <section 
@@ -123,10 +108,21 @@ export function Reviews() {
           </motion.h2>
           <motion.p
             variants={itemVariants}
-            className="text-lg text-text-secondary max-w-2xl mx-auto"
+            className="text-lg text-text-secondary max-w-2xl mx-auto mb-6"
           >
             {t('reviews.subtitle') || 'Recensioni verificate da utenti reali'}
           </motion.p>
+          
+          {/* Link alla pagina completa recensioni */}
+          <motion.div variants={itemVariants}>
+            <Link
+              href={buildLocalePath(locale, '/reviews')}
+              className="inline-flex items-center gap-2 text-accent hover:text-accent-hover font-medium transition-colors"
+            >
+              <MessageSquare className="w-4 h-4" aria-hidden="true" />
+              <span>{t('reviews.viewAll') || 'Vedi tutte le recensioni'}</span>
+            </Link>
+          </motion.div>
         </motion.div>
 
         <motion.div
@@ -206,14 +202,14 @@ export function Reviews() {
               <div className="absolute top-1/2 -translate-y-1/2 left-4 right-4 flex justify-between pointer-events-none">
                 <button
                   onClick={prevReview}
-                  className="pointer-events-auto w-10 h-10 rounded-full bg-bg-elevated border border-border-subtle flex items-center justify-center hover:bg-bg-hover hover:border-accent/40 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent"
+                  className="pointer-events-auto w-10 h-10 rounded-full bg-bg-elevated border border-border-subtle flex items-center justify-center hover:bg-bg-hover hover:border-accent/40 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent min-w-[44px] min-h-[44px]"
                   aria-label={t('reviews.previous') || 'Recensione precedente'}
                 >
                   <ChevronLeft className="w-5 h-5 text-text-primary" aria-hidden="true" />
                 </button>
                 <button
                   onClick={nextReview}
-                  className="pointer-events-auto w-10 h-10 rounded-full bg-bg-elevated border border-border-subtle flex items-center justify-center hover:bg-bg-hover hover:border-accent/40 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent"
+                  className="pointer-events-auto w-10 h-10 rounded-full bg-bg-elevated border border-border-subtle flex items-center justify-center hover:bg-bg-hover hover:border-accent/40 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent min-w-[44px] min-h-[44px]"
                   aria-label={t('reviews.next') || 'Recensione successiva'}
                 >
                   <ChevronRight className="w-5 h-5 text-text-primary" aria-hidden="true" />
@@ -229,7 +225,7 @@ export function Reviews() {
                     key={index}
                     onClick={() => setCurrentIndex(index)}
                     className={cn(
-                      'w-2 h-2 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent',
+                      'w-2 h-2 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent min-w-[44px] min-h-[44px] flex items-center justify-center',
                       index === currentIndex
                         ? 'bg-accent w-8'
                         : 'bg-text-tertiary hover:bg-text-secondary'

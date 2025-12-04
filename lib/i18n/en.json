@@ -514,6 +514,10 @@
       "terms": {
         "title": "Terms & Conditions · Tradelia",
         "description": "Tradelia terms and conditions of use. Read the conditions for using the platform."
+      },
+      "reviews": {
+        "title": "Reviews · Tradelia",
+        "description": "Read verified reviews from our users and share your experience with Tradelia."
       }
     }
   },
@@ -1606,7 +1610,35 @@
     "verified": "Verified",
     "previous": "Previous review",
     "next": "Next review",
-    "goToReview": "Go to review"
+    "goToReview": "Go to review",
+    "viewAll": "View all reviews",
+    "loading": "Loading reviews...",
+    "noReviews": "No reviews available",
+    "noReviewsForRating": "No reviews with this rating",
+    "showAll": "Show all reviews",
+    "filterByRating": "Filter by rating",
+    "all": "All",
+    "averageRating": "Average rating",
+    "totalReviews": "Total reviews",
+    "writeReview": "Write a Review",
+    "loginToReview": "Sign in to leave a review",
+    "writeReviewDesc": "Share your experience with Tradelia. Your review will be published after verification.",
+    "backToReviews": "Back to reviews",
+    "rating": "Rating",
+    "comment": "Your review",
+    "commentPlaceholder": "Share your experience with Tradelia...",
+    "characters": "characters",
+    "submit": "Submit Review",
+    "verificationNote": "Your review will be published after verification by our team.",
+    "submitSuccess": "Review submitted! It will be published after verification.",
+    "rate": "Rate",
+    "star": "star",
+    "stars": "stars",
+    "errors": {
+      "commentTooShort": "Comment must be at least 10 characters",
+      "notLoggedIn": "You must be logged in to leave a review",
+      "submitError": "Error submitting review"
+    }
   },
   "share": {
     "title": "Share",
