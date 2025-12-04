@@ -76,7 +76,7 @@ const DEFAULT_MODULES = {
     {
       id: 'utilities',
       title: 'Utilities',
-      description: 'Calcolatori finanziari, PAC simulator e expense tracker',
+      description: 'Calcolatori finanziari e PAC simulator per analisi e pianificazione',
       href: '/dashboard/utilities',
       icon: 'calculator',
       priority: 'secondary' as const,

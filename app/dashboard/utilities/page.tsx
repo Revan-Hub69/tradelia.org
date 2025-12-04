@@ -3,13 +3,12 @@
 import { useState } from 'react';
 import { FinancialCalculator } from '@/components/dashboard/utilities/FinancialCalculator';
 import { PACSimulator } from '@/components/dashboard/utilities/PACSimulator';
-import { ExpenseTracker } from '@/components/dashboard/utilities/ExpenseTracker';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
-import { Calculator, TrendingUp, Receipt } from 'lucide-react';
+import { Calculator, TrendingUp } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import styles from './utilities.module.css';
 
-type UtilityTab = 'calculator' | 'pac' | 'expenses';
+type UtilityTab = 'calculator' | 'pac';
 
 export default function UtilitiesPage() {
   const { t } = useTranslations();
@@ -25,11 +24,6 @@ export default function UtilitiesPage() {
       id: 'pac',
       label: t('dashboard.utilities.pac') || 'Simulatore PAC',
       icon: TrendingUp,
-    },
-    {
-      id: 'expenses',
-      label: t('dashboard.utilities.expenses') || 'Tracker Spese',
-      icon: Receipt,
     },
   ];
 
@@ -84,16 +78,6 @@ export default function UtilitiesPage() {
           className={styles.utilitiesPanel}
         >
           <PACSimulator />
-        </div>
-
-        <div
-          id="expenses-panel"
-          role="tabpanel"
-          aria-labelledby="expenses-tab"
-          hidden={activeTab !== 'expenses'}
-          className={styles.utilitiesPanel}
-        >
-          <ExpenseTracker />
         </div>
       </main>
       </div>
