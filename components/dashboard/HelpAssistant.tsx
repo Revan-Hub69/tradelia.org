@@ -39,6 +39,7 @@ export function HelpAssistant() {
   const isPro = useIsPro();
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'ai' | 'faq'>('faq');
+  const [aiEnabled, setAiEnabled] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -49,10 +50,28 @@ export function HelpAssistant() {
 
   useBodyScrollLock(isOpen);
 
+  // Check if AI is enabled (API key configured)
+  useEffect(() => {
+    checkAIEnabled();
+  }, []);
+
   // Load FAQ items
   useEffect(() => {
     loadFAQItems();
   }, [locale]);
+
+  const checkAIEnabled = async () => {
+    try {
+      // Check if AI service is available
+      const response = await fetch('/api/ai/status');
+      if (response.ok) {
+        const data = await response.json();
+        setAiEnabled(data.enabled || false);
+      }
+    } catch (error) {
+      setAiEnabled(false);
+    }
+  };
 
   const loadFAQItems = async () => {
     try {
@@ -230,51 +249,43 @@ export function HelpAssistant() {
                 </button>
               </div>
 
-              {/* Tabs */}
-              <div className="flex border-b border-border-subtle bg-bg-soft">
-                <button
-                  onClick={() => setActiveTab('faq')}
-                  className={cn(
-                    'flex-1 px-4 py-3 text-sm font-medium transition-colors',
-                    activeTab === 'faq'
-                      ? 'text-accent border-b-2 border-accent bg-bg-surface'
-                      : 'text-text-tertiary hover:text-text-primary'
-                  )}
-                >
-                  <div className="flex items-center justify-center gap-2">
-                    <BookOpen className="w-4 h-4" />
-                    <span>{locale === 'it' ? 'FAQ' : 'FAQ'}</span>
-                  </div>
-                </button>
-                <button
-                  onClick={() => {
-                    if (!isPro) {
-                      // Show Pro upgrade prompt
-                      return;
-                    }
-                    setActiveTab('ai');
-                  }}
-                  className={cn(
-                    'flex-1 px-4 py-3 text-sm font-medium transition-colors relative',
-                    activeTab === 'ai'
-                      ? 'text-accent border-b-2 border-accent bg-bg-surface'
-                      : 'text-text-tertiary hover:text-text-primary',
-                    !isPro && 'opacity-60 cursor-not-allowed'
-                  )}
-                >
-                  <div className="flex items-center justify-center gap-2">
-                    <Sparkles className="w-4 h-4" />
-                    <span>{locale === 'it' ? 'AI Chat' : 'AI Chat'}</span>
-                    {!isPro && (
-                      <ProBadge size="xs" className="ml-1" />
+              {/* Tabs - Show AI tab only if enabled and user is Pro */}
+              {aiEnabled && isPro && (
+                <div className="flex border-b border-border-subtle bg-bg-soft">
+                  <button
+                    onClick={() => setActiveTab('faq')}
+                    className={cn(
+                      'flex-1 px-4 py-3 text-sm font-medium transition-colors',
+                      activeTab === 'faq'
+                        ? 'text-accent border-b-2 border-accent bg-bg-surface'
+                        : 'text-text-tertiary hover:text-text-primary'
                     )}
-                  </div>
-                </button>
-              </div>
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <BookOpen className="w-4 h-4" />
+                      <span>{locale === 'it' ? 'FAQ' : 'FAQ'}</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('ai')}
+                    className={cn(
+                      'flex-1 px-4 py-3 text-sm font-medium transition-colors',
+                      activeTab === 'ai'
+                        ? 'text-accent border-b-2 border-accent bg-bg-surface'
+                        : 'text-text-tertiary hover:text-text-primary'
+                    )}
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <Sparkles className="w-4 h-4" />
+                      <span>{locale === 'it' ? 'AI Chat' : 'AI Chat'}</span>
+                    </div>
+                  </button>
+                </div>
+              )}
 
               {/* Content */}
               <div className="flex-1 overflow-y-auto">
-                {activeTab === 'faq' ? (
+                {(activeTab === 'faq' || !aiEnabled || !isPro) ? (
                   <div className="p-4 space-y-4">
                     {/* FAQ Search */}
                     <div className="relative">
