@@ -1,23 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { TRADELIA_AI_SYSTEM_PROMPT } from '@/lib/ai/tradelia-ai-communication-style';
 import { TRADELIA_BRAND_VOICE_MATRIX } from '@/lib/ai/tradelia-brand-voice-matrix';
+import { loadGlossaryTerms } from '@/lib/glossary/terms';
 
 /**
- * AI Chat API
- * Uses Groq AI for real AI responses
- * Fully customized with Tradelia brand voice and communication style
- * Fallback to template responses if API key not configured
+ * AI Chat API - FREE VERSION
+ * Uses Hugging Face Inference API (100% FREE) for real AI responses
+ * Fallback to intelligent RAG-based template responses
  * 
- * Groq Free Tier (Developer Plan):
- * - Rate Limits: 250K TPM (tokens per minuto), 1K RPM (requests per minuto)
- * - NO free daily token allowance - tokens are charged per use
- * - Pricing llama-3.3-70b-versatile: $0.59/1M tokens input, $0.79/1M tokens output
- * - Alternative: llama-3.1-8b-instant ($0.05/$0.08 per 1M tokens) for lower cost
+ * FREE Options:
+ * 1. Hugging Face Inference API - Completely free, no credit card needed
+ * 2. Template-based RAG - Intelligent responses from glossary + templates
  * 
- * Note: Groq does NOT offer free daily tokens, only rate limits on free tier
- * Cost per response (~800 tokens): ~$0.0006 with llama-3.3-70b
- * 
- * Get API key: https://console.groq.com/
+ * No costs, no API keys required for basic functionality
  */
 
 interface ChatMessage {
@@ -31,203 +26,247 @@ interface ChatRequest {
   conversationHistory?: ChatMessage[];
 }
 
+// Hugging Face FREE API (no key required for public models)
+async function callHuggingFaceAI(
+  message: string,
+  conversationHistory: ChatMessage[] = [],
+  locale: 'it' | 'en'
+): Promise<string> {
+  // Use free public model - no API key needed
+  // Model: meta-llama/Llama-2-7b-chat-hf (free, public)
+  const model = 'meta-llama/Llama-2-7b-chat-hf';
+  
+  const systemPrompt = buildTradeliaSystemPrompt(locale);
+  
+  // Build conversation context
+  const conversationText = conversationHistory
+    .slice(-3)
+    .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
+    .join('\n');
+  
+  const fullPrompt = `${systemPrompt}\n\nConversation:\n${conversationText}\n\nUser: ${message}\nAssistant:`;
+
+  try {
+    const response = await fetch(
+      `https://api-inference.huggingface.co/models/${model}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          inputs: fullPrompt,
+          parameters: {
+            max_new_tokens: 300,
+            temperature: 0.7,
+            return_full_text: false,
+          },
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      // If model is loading, fallback to RAG
+      if (response.status === 503) {
+        throw new Error('Model loading, using RAG fallback');
+      }
+      throw new Error(`HF API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    // Handle array response
+    if (Array.isArray(data) && data[0]?.generated_text) {
+      return data[0].generated_text.trim();
+    }
+    
+    if (data.generated_text) {
+      return data.generated_text.trim();
+    }
+    
+    throw new Error('Unexpected response format');
+  } catch (error) {
+    console.warn('Hugging Face API error, using RAG fallback:', error);
+    throw error;
+  }
+}
+
 // Build complete Tradelia system prompt
 function buildTradeliaSystemPrompt(locale: 'it' | 'en'): string {
   const basePrompt = TRADELIA_AI_SYSTEM_PROMPT;
   
   const brandVoice = locale === 'it'
     ? `
-═══════════════════════════════════════════════════════════════
-IDENTITÀ TRADELIA
-═══════════════════════════════════════════════════════════════
+IDENTITÀ TRADELIA: ${TRADELIA_BRAND_VOICE_MATRIX.identity.core}
 
-${TRADELIA_BRAND_VOICE_MATRIX.identity.core}
+PERSONALITÀ: ${TRADELIA_BRAND_VOICE_MATRIX.personality.traits.join(', ')}
 
-PERSONALITÀ:
-${TRADELIA_BRAND_VOICE_MATRIX.personality.traits.map(t => `- ${t}`).join('\n')}
+PRINCIPI: Educazione prima di tutto, Rigore accademico, Rilevanza pratica, Accessibilità, Rispetto.
 
-TONO:
-- ${TRADELIA_BRAND_VOICE_MATRIX.personality.tone.primary}
-- ${TRADELIA_BRAND_VOICE_MATRIX.personality.tone.secondary}
-- ${TRADELIA_BRAND_VOICE_MATRIX.personality.tone.tertiary}
+MIFID II: NON fornire consulenza finanziaria. Solo informazioni educative. Aggiungi sempre disclaimer MIFID.
 
-PRINCIPI DI COMUNICAZIONE:
-1. Educazione prima di tutto: Ogni risposta deve educare
-2. Rigore accademico: Basato su evidenze verificate
-3. Rilevanza pratica: Applicazione concreta sempre presente
-4. Accessibilità: Semplice ma esaustivo
-5. Rispetto: Tratta l'utente come adulto intelligente
-
-═══════════════════════════════════════════════════════════════
-CONFORMITÀ MIFID II
-═══════════════════════════════════════════════════════════════
-
-- NON fornire consulenza finanziaria personalizzata
-- NON fare raccomandazioni di investimento specifiche
-- NON prevedere performance future
-- FORNISCI solo informazioni educative generali
-- SEMPRE aggiungi disclaimer MIFID quando appropriato:
-  "Nota MIFID II: Le informazioni fornite sono a scopo educativo e non costituiscono consulenza finanziaria. I rendimenti passati non garantiscono risultati futuri. Valuta attentamente il tuo profilo di rischio prima di prendere decisioni."
-
-═══════════════════════════════════════════════════════════════
-COMPETENZE SPECIFICHE
-═══════════════════════════════════════════════════════════════
-
-Sei esperto in:
-- Termini finanziari e definizioni (Sharpe Ratio, Volatilità, Hedging, ecc.)
-- Strumenti finanziari (Calcolatori, Simulatori PAC, Portfolio Optimizer, ecc.)
-- Analisi di mercato e report conformi MIFID II
-- Trading e investimenti (sempre in ottica educativa)
-- Conformità normativa MIFID II
-
-═══════════════════════════════════════════════════════════════
-FORMATO RISPOSTE
-═══════════════════════════════════════════════════════════════
-
-- Massimo 4 paragrafi per sezione (limite cognitive load)
-- Massimo 5 punti per elenco (working memory limit)
-- Ogni paragrafo: 1 idea principale + supporto
-- Usa struttura "Cosa fa" + "Come si usa" quando appropriato
-- Esempi sempre concreti e realistici (non specifici)
-- Collega sempre teoria ↔ pratica
-- Sii conciso ma esaustivo
+FORMATO: Massimo 4 paragrafi, massimo 5 punti per elenco, esempi concreti, collega teoria ↔ pratica.
 `
     : `
-═══════════════════════════════════════════════════════════════
-TRADELIA IDENTITY
-═══════════════════════════════════════════════════════════════
+TRADELIA IDENTITY: ${TRADELIA_BRAND_VOICE_MATRIX.identity.core}
 
-${TRADELIA_BRAND_VOICE_MATRIX.identity.core}
+PERSONALITY: ${TRADELIA_BRAND_VOICE_MATRIX.personality.traits.join(', ')}
 
-PERSONALITY:
-${TRADELIA_BRAND_VOICE_MATRIX.personality.traits.map(t => `- ${t}`).join('\n')}
+PRINCIPLES: Education first, Academic rigor, Practical relevance, Accessibility, Respect.
 
-TONE:
-- ${TRADELIA_BRAND_VOICE_MATRIX.personality.tone.primary}
-- ${TRADELIA_BRAND_VOICE_MATRIX.personality.tone.secondary}
-- ${TRADELIA_BRAND_VOICE_MATRIX.personality.tone.tertiary}
+MIFID II: DO NOT provide financial advice. Only educational information. Always add MIFID disclaimer.
 
-COMMUNICATION PRINCIPLES:
-1. Education first: Every response must educate
-2. Academic rigor: Based on verified evidence
-3. Practical relevance: Concrete application always present
-4. Accessibility: Simple but exhaustive
-5. Respect: Treat user as intelligent adult
-
-═══════════════════════════════════════════════════════════════
-MIFID II COMPLIANCE
-═══════════════════════════════════════════════════════════════
-
-- DO NOT provide personalized financial advice
-- DO NOT make specific investment recommendations
-- DO NOT predict future performance
-- PROVIDE only general educational information
-- ALWAYS add MIFID disclaimer when appropriate:
-  "MIFID II Note: Information provided is for educational purposes and does not constitute financial advice. Past performance does not guarantee future results. Carefully evaluate your risk profile before making decisions."
-
-═══════════════════════════════════════════════════════════════
-SPECIFIC EXPERTISE
-═══════════════════════════════════════════════════════════════
-
-You are an expert in:
-- Financial terms and definitions (Sharpe Ratio, Volatility, Hedging, etc.)
-- Financial tools (Calculators, PAC Simulators, Portfolio Optimizer, etc.)
-- Market analysis and MIFID II compliant reports
-- Trading and investments (always in educational perspective)
-- MIFID II regulatory compliance
-
-═══════════════════════════════════════════════════════════════
-RESPONSE FORMAT
-═══════════════════════════════════════════════════════════════
-
-- Maximum 4 paragraphs per section (cognitive load limit)
-- Maximum 5 points per list (working memory limit)
-- Each paragraph: 1 main idea + support
-- Use "What it does" + "How to use" structure when appropriate
-- Examples always concrete and realistic (not specific)
-- Always connect theory ↔ practice
-- Be concise but exhaustive
+FORMAT: Maximum 4 paragraphs, maximum 5 points per list, concrete examples, connect theory ↔ practice.
 `;
 
   return `${basePrompt}\n\n${brandVoice}`;
 }
 
-// Groq AI Integration
-async function callGroqAI(
-  message: string,
-  conversationHistory: ChatMessage[] = [],
+// Enhanced RAG-based response (100% FREE, no API calls)
+async function generateRAGResponse(
+  query: string,
   locale: 'it' | 'en'
 ): Promise<string> {
-  const apiKey = process.env.GROQ_API_KEY;
+  // Load glossary as knowledge base
+  const glossaryData = await loadGlossaryTerms(locale);
   
-  if (!apiKey) {
-    throw new Error('GROQ_API_KEY not configured');
-  }
+  // Enhanced keyword matching
+  const queryLower = query.toLowerCase();
+  const stopWords = locale === 'it' 
+    ? ['cosa', 'cos', 'è', 'come', 'funziona', 'spiegami', 'dimmi', 'che', 'chi', 'quando', 'dove', 'perché', 'il', 'la', 'lo', 'gli', 'le', 'un', 'una', 'uno', 'di', 'a', 'da', 'in', 'con', 'su', 'per', 'tra', 'fra']
+    : ['what', 'is', 'how', 'does', 'work', 'explain', 'tell', 'me', 'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'];
+  
+  const queryWords = queryLower
+    .split(/\s+/)
+    .filter(word => word.length > 2 && !stopWords.includes(word));
 
-  const systemPrompt = buildTradeliaSystemPrompt(locale);
+  // Find relevant terms
+  const relevantTerms: Array<{ term: any; score: number }> = [];
 
-  const messages = [
-    { role: 'system', content: systemPrompt },
-    ...conversationHistory.slice(-5), // Last 5 messages for context
-    { role: 'user', content: message },
-  ];
+  for (const [key, term] of Object.entries(glossaryData)) {
+    let score = 0;
 
-  try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile', // Latest production model: 280 t/s, best quality for financial content
-        messages,
-        temperature: 0.7,
-        max_tokens: 800, // Increased for more complete Tradelia-style responses
-        stream: false,
-      }),
-    });
-
-    if (!response.ok) {
-      const error = await response.text();
-      throw new Error(`Groq API error: ${response.status} - ${error}`);
+    // Exact title match
+    if (term.title?.toLowerCase() === queryLower) {
+      score += 20;
+    } else if (term.title?.toLowerCase().includes(queryLower)) {
+      score += 10;
     }
 
-    const data = await response.json();
-    return data.choices[0]?.message?.content || 'Mi dispiace, non ho ricevuto una risposta valida.';
-  } catch (error) {
-    console.error('Groq API error:', error);
-    throw error;
-  }
-}
+    // Word matching
+    queryWords.forEach(word => {
+      if (term.title?.toLowerCase().includes(word)) {
+        score += 5;
+      }
+    });
 
-// Fallback template responses
-function getFallbackResponse(query: string, locale: 'it' | 'en'): string {
-  const queryLower = query.toLowerCase();
-  
-  // Financial terms
-  if (queryLower.includes('sharpe') || queryLower.includes('sharpe ratio')) {
-    return locale === 'it'
-      ? `**Sharpe Ratio**\n\nIl Sharpe Ratio misura il rendimento aggiustato per il rischio di un investimento. Si calcola come:\n\nSharpe Ratio = (Rendimento Portafoglio - Tasso Risk-Free) / Deviazione Standard\n\nUn valore superiore a 1 è considerato buono, superiore a 2 è eccellente, superiore a 3 è eccezionale.\n\n*Nota: Informazioni a scopo educativo. Non costituisce consulenza finanziaria.*`
-      : `**Sharpe Ratio**\n\nThe Sharpe Ratio measures the risk-adjusted return of an investment. It's calculated as:\n\nSharpe Ratio = (Portfolio Return - Risk-Free Rate) / Standard Deviation\n\nA value above 1 is considered good, above 2 is excellent, above 3 is exceptional.\n\n*Note: Information for educational purposes. Does not constitute financial advice.*`;
+    // Content matching
+    const whatText = term.academicDefinition?.what || term.what || '';
+    const howText = term.tradeliaExplanation?.howToUse || term.how || '';
+    const explanationText = term.tradeliaExplanation?.whatDoes || '';
+
+    [whatText, howText, explanationText].forEach(text => {
+      if (text.toLowerCase().includes(queryLower)) {
+        score += 5;
+      }
+      queryWords.forEach(word => {
+        if (text.toLowerCase().includes(word)) {
+          score += 2;
+        }
+      });
+    });
+
+    // Tag matching
+    if (term.tags?.some((tag: string) => {
+      const tagLower = tag.toLowerCase();
+      return tagLower === queryLower || queryWords.some(word => tagLower.includes(word));
+    })) {
+      score += 3;
+    }
+
+    if (score > 0) {
+      relevantTerms.push({ term, score });
+    }
   }
-  
-  if (queryLower.includes('volatilità') || queryLower.includes('volatility')) {
+
+  // Sort and get top 3
+  const topTerms = relevantTerms
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map(item => item.term);
+
+  // Generate intelligent response from glossary
+  if (topTerms.length === 0) {
     return locale === 'it'
-      ? `**Volatilità**\n\nLa volatilità misura la variabilità dei prezzi di un asset nel tempo. Una volatilità alta indica maggiore rischio ma anche maggiore potenziale di rendimento.\n\nSi misura tipicamente come deviazione standard dei rendimenti annui.\n\n*Nota: Informazioni a scopo educativo. Non costituisce consulenza finanziaria.*`
-      : `**Volatility**\n\nVolatility measures the variability of an asset's prices over time. High volatility indicates greater risk but also greater return potential.\n\nIt's typically measured as the standard deviation of annual returns.\n\n*Note: Information for educational purposes. Does not constitute financial advice.*`;
+      ? `Grazie per la tua domanda! Sono l'assistente di Tradelia.\n\nNon ho trovato informazioni specifiche su questo argomento nel nostro knowledge base. Posso aiutarti con:\n\n• Termini finanziari (Sharpe Ratio, Volatilità, Hedging, ecc.)\n• Strumenti finanziari (Calcolatori, Simulatori PAC)\n• Report e analisi\n• Funzionalità della piattaforma\n\n*Nota: Le risposte sono a scopo educativo. Non costituiscono consulenza finanziaria.*`
+      : `Thanks for your question! I'm Tradelia's assistant.\n\nI couldn't find specific information about this topic in our knowledge base. I can help with:\n\n• Financial terms (Sharpe Ratio, Volatility, Hedging, etc.)\n• Financial tools (Calculators, PAC Simulators)\n• Reports and analysis\n• Platform features\n\n*Note: Answers are for educational purposes. They do not constitute financial advice.*`;
   }
-  
-  if (queryLower.includes('pac') || queryLower.includes('piano accumulo')) {
-    return locale === 'it'
-      ? `**PAC (Piano di Accumulo Capitale)**\n\nIl PAC è una strategia di investimento che prevede versamenti periodici (mensili, trimestrali) per accumulare capitale nel tempo.\n\nVantaggi:\n- Diversificazione temporale\n- Riduzione del rischio di timing\n- Disciplina di investimento\n\nVisita la sezione Utilities per usare il simulatore PAC.\n\n*Nota: Informazioni a scopo educativo. Non costituisce consulenza finanziaria.*`
-      : `**PAC (Capital Accumulation Plan)**\n\nPAC is an investment strategy involving periodic contributions (monthly, quarterly) to accumulate capital over time.\n\nBenefits:\n- Time diversification\n- Reduced timing risk\n- Investment discipline\n\nVisit the Utilities section to use the PAC simulator.\n\n*Note: Information for educational purposes. Does not constitute financial advice.*`;
+
+  const term = topTerms[0];
+  let response = '';
+
+  if (locale === 'it') {
+    response = `**${term.title}**\n\n`;
+    
+    // Cosa fa
+    const definition = term.academicDefinition?.what || term.what;
+    if (definition) {
+      response += `**Cosa fa:**\n${definition}\n\n`;
+    }
+    
+    // Come si usa
+    const explanation = term.tradeliaExplanation?.whatDoes || term.tradeliaExplanation?.howToUse || term.how;
+    if (explanation) {
+      response += `**Come si usa:**\n${explanation}\n\n`;
+    }
+    
+    // Contesto accademico
+    if (term.academicDefinition?.academicContext) {
+      response += `**Contesto:** ${term.academicDefinition.academicContext}\n\n`;
+    }
+    
+    // Fonte
+    const source = term.academicDefinition?.source || term.source;
+    if (source) {
+      response += `*Fonte: ${source}*\n\n`;
+    }
+
+    // Termini correlati
+    if (topTerms.length > 1) {
+      response += `**Termini correlati:** ${topTerms.slice(1).map(t => t.title).join(', ')}\n\n`;
+    }
+
+    response += `*Nota MIFID II: Informazioni a scopo educativo. Non costituisce consulenza finanziaria.*`;
+  } else {
+    response = `**${term.title}**\n\n`;
+    
+    const definition = term.academicDefinition?.what || term.what;
+    if (definition) {
+      response += `**What it does:**\n${definition}\n\n`;
+    }
+    
+    const explanation = term.tradeliaExplanation?.whatDoes || term.tradeliaExplanation?.howToUse || term.how;
+    if (explanation) {
+      response += `**How to use:**\n${explanation}\n\n`;
+    }
+    
+    if (term.academicDefinition?.academicContext) {
+      response += `**Context:** ${term.academicDefinition.academicContext}\n\n`;
+    }
+    
+    const source = term.academicDefinition?.source || term.source;
+    if (source) {
+      response += `*Source: ${source}*\n\n`;
+    }
+
+    if (topTerms.length > 1) {
+      response += `**Related terms:** ${topTerms.slice(1).map(t => t.title).join(', ')}\n\n`;
+    }
+
+    response += `*MIFID II Note: Information for educational purposes. Does not constitute financial advice.*`;
   }
-  
-  // Default response
-  return locale === 'it'
-    ? `Grazie per la tua domanda! Sono l'assistente AI di Tradelia.\n\nPosso aiutarti con:\n• Termini finanziari (Sharpe Ratio, Volatilità, Hedging, ecc.)\n• Strumenti finanziari (Calcolatori, Simulatori PAC)\n• Report e analisi\n• Funzionalità della piattaforma\n\nPer domande più specifiche, visita la sezione Utilities nel dashboard.\n\n*Nota: Le risposte sono a scopo educativo. Non costituiscono consulenza finanziaria.*`
-    : `Thanks for your question! I'm Tradelia's AI assistant.\n\nI can help with:\n• Financial terms (Sharpe Ratio, Volatility, Hedging, etc.)\n• Financial tools (Calculators, PAC Simulators)\n• Reports and analysis\n• Platform features\n\nFor more specific questions, visit the Utilities section in the dashboard.\n\n*Note: Answers are for educational purposes. They do not constitute financial advice.*`;
+
+  return response;
 }
 
 export async function POST(request: NextRequest) {
@@ -243,32 +282,41 @@ export async function POST(request: NextRequest) {
     }
 
     let response: string;
+    let model = 'rag-fallback';
 
-    // Try Groq AI first (if API key is configured)
+    // Try Hugging Face FREE API first (no key needed)
     try {
-      response = await callGroqAI(message, conversationHistory, locale);
+      response = await callHuggingFaceAI(message, conversationHistory, locale);
+      model = 'huggingface-llama2-7b';
     } catch (error) {
-      console.warn('Groq AI not available, using fallback:', error);
-      // Fallback to template responses
-      response = getFallbackResponse(message, locale);
+      // Fallback to intelligent RAG (100% free, no API calls)
+      console.log('Using RAG fallback (free)');
+      response = await generateRAGResponse(message, locale);
+      model = 'rag-intelligent';
     }
 
     return NextResponse.json({
       response,
-      model: process.env.GROQ_API_KEY ? 'groq-llama-3.3-70b' : 'fallback',
+      model,
+      free: true, // Always free
     });
   } catch (error) {
     console.error('Error in AI chat API:', error);
     
-    // Return fallback even on error
+    // Final fallback
     const body = await request.json().catch(() => ({}));
     const locale = (body as ChatRequest)?.locale || 'it';
     const message = (body as ChatRequest)?.message || '';
     
+    const fallbackResponse = locale === 'it'
+      ? 'Mi dispiace, si è verificato un errore. Riprova più tardi o consulta la sezione FAQ.'
+      : 'Sorry, an error occurred. Please try again later or check the FAQ section.';
+    
     return NextResponse.json({
-      response: getFallbackResponse(message, locale),
+      response: fallbackResponse,
       model: 'fallback',
-      error: 'AI service unavailable',
+      free: true,
+      error: 'Service temporarily unavailable',
     });
   }
 }

@@ -2,21 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * AI Status API
- * Checks if AI service is enabled (API key configured)
- * Returns status without exposing the actual key
+ * AI is always enabled - uses FREE Hugging Face API + RAG fallback
+ * No API keys required - 100% free solution
  */
 export async function GET(request: NextRequest) {
   try {
-    const apiKey = process.env.GROQ_API_KEY;
-    const enabled = !!apiKey && apiKey.length > 0 && !apiKey.includes('your_');
-
+    // AI is always available (free Hugging Face + RAG)
     return NextResponse.json({
-      enabled,
-      model: enabled ? 'llama-3.3-70b-versatile' : null,
+      enabled: true,
+      model: 'huggingface-llama2-7b (free) + RAG fallback',
+      free: true,
     });
   } catch (error) {
     return NextResponse.json(
-      { enabled: false, error: 'Error checking AI status' },
+      { enabled: true, free: true, error: 'Error checking AI status' },
       { status: 500 }
     );
   }

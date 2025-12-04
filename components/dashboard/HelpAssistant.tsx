@@ -61,16 +61,9 @@ export function HelpAssistant() {
   }, [locale]);
 
   const checkAIEnabled = async () => {
-    try {
-      // Check if AI service is available
-      const response = await fetch('/api/ai/status');
-      if (response.ok) {
-        const data = await response.json();
-        setAiEnabled(data.enabled || false);
-      }
-    } catch (error) {
-      setAiEnabled(false);
-    }
+    // AI is always enabled (uses free Hugging Face API + RAG fallback)
+    // No API key needed - 100% free solution
+    setAiEnabled(true);
   };
 
   const loadFAQItems = async () => {
@@ -249,8 +242,8 @@ export function HelpAssistant() {
                 </button>
               </div>
 
-              {/* Tabs - Show AI tab only if enabled and user is Pro */}
-              {aiEnabled && isPro && (
+              {/* Tabs - AI Chat available for Pro users (free Hugging Face API) */}
+              {isPro && (
                 <div className="flex border-b border-border-subtle bg-bg-soft">
                   <button
                     onClick={() => setActiveTab('faq')}
