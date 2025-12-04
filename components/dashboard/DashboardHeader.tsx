@@ -70,12 +70,16 @@ export function DashboardHeader() {
           <span className={styles.dashboardTitleSeparator} aria-hidden="true">·</span>
           <span className={styles.dashboardTitleText}>Dashboard</span>
         </div>
-        {/* Seconda riga su mobile: Azioni */}
+        {/* Seconda riga su mobile: Azioni - Ottimizzate per mobile */}
         <nav className={styles.dashboardActions} aria-label="Dashboard actions">
-          <CurrencySwitch size="sm" />
-          <UserStats />
-          <GlobalSearch />
-          <UserMenu />
+          <div className={styles.dashboardActionsLeft}>
+            <CurrencySwitch size="sm" />
+            <UserStats />
+          </div>
+          <div className={styles.dashboardActionsRight}>
+            <GlobalSearch />
+            <UserMenu />
+          </div>
         </nav>
       </div>
     </header>
