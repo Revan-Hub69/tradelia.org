@@ -7,6 +7,9 @@ import { useApi } from '@/lib/hooks/useApi';
 import { toast } from '@/components/ui/Toast';
 import { cn } from '@/lib/utils/cn';
 import { motion } from 'framer-motion';
+import { useFormatCurrency } from '@/lib/utils/formatCurrency';
+import { useCurrency } from '@/lib/hooks/useCurrency';
+import { currencySymbols } from '@/lib/currency/config';
 
 /**
  * PAC Simulator (Piano di Accumulo Capitale)
@@ -15,6 +18,8 @@ import { motion } from 'framer-motion';
  */
 export function PACSimulator() {
   const { t } = useTranslations();
+  const formatCurrency = useFormatCurrency();
+  const { currency } = useCurrency();
   const [monthlyAmount, setMonthlyAmount] = useState('500');
   const [annualReturn, setAnnualReturn] = useState('7');
   const [years, setYears] = useState('20');
@@ -197,7 +202,7 @@ export function PACSimulator() {
                   {t('proUtilities.pacSimulator.totalInvested') || 'Totale Investito'}
                 </div>
                 <div className="text-lg sm:text-2xl font-bold text-text-primary">
-                  €{results.totalInvested.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {formatCurrency(results.totalInvested)}
                 </div>
               </div>
               <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
@@ -205,7 +210,7 @@ export function PACSimulator() {
                   {t('proUtilities.pacSimulator.futureValue') || 'Valore Futuro'}
                 </div>
                 <div className="text-lg sm:text-2xl font-bold text-accent">
-                  €{results.futureValue.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {formatCurrency(results.futureValue)}
                 </div>
               </div>
               <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
@@ -213,7 +218,7 @@ export function PACSimulator() {
                   {t('proUtilities.pacSimulator.totalReturn') || 'Guadagno Totale'}
                 </div>
                 <div className="text-lg sm:text-2xl font-bold text-green-400">
-                  €{results.totalReturn.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {formatCurrency(results.totalReturn)}
                 </div>
                 <div className="text-xs text-text-tertiary mt-1">
                   ({results.returnPercentage.toFixed(1)}%)
@@ -240,7 +245,7 @@ export function PACSimulator() {
                         />
                       </div>
                       <div className="w-full sm:w-32 text-xs text-text-secondary text-left sm:text-right">
-                        €{data.value.toLocaleString('it-IT', { maximumFractionDigits: 0 })}
+                        {formatCurrency(data.value)}
                       </div>
                     </div>
                   ))}
@@ -319,7 +324,7 @@ export function PACSimulator() {
                   {t('proUtilities.pacSimulator.monthlyRequired') || 'Investimento Mensile'}
                 </div>
                 <div className="text-lg sm:text-xl font-bold text-accent">
-                  €{requiredInvestment.monthly.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {formatCurrency(requiredInvestment.monthly)}
                 </div>
               </div>
               <div>
@@ -327,7 +332,7 @@ export function PACSimulator() {
                   {t('proUtilities.pacSimulator.yearlyRequired') || 'Investimento Annuo'}
                 </div>
                 <div className="text-lg sm:text-xl font-bold text-text-primary">
-                  €{requiredInvestment.yearly.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {formatCurrency(requiredInvestment.yearly)}
                 </div>
               </div>
               <div>
@@ -335,7 +340,7 @@ export function PACSimulator() {
                   {t('proUtilities.pacSimulator.totalRequired') || 'Totale Investito'}
                 </div>
                 <div className="text-lg sm:text-xl font-bold text-text-primary">
-                  €{requiredInvestment.totalInvested.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {formatCurrency(requiredInvestment.totalInvested)}
                 </div>
               </div>
             </div>
@@ -452,7 +457,7 @@ export function PACSimulator() {
                   <div className="flex items-start justify-between gap-3 mb-2">
                     <div className="flex-1 min-w-0">
                       <div className="text-xs sm:text-sm font-medium text-text-primary mb-1 break-words">
-                        €{sim.monthly_amount.toLocaleString('it-IT')}/{t('proUtilities.pacSimulator.monthly') || 'mese'} × {sim.years} {t('proUtilities.pacSimulator.years') || 'anni'} @ {sim.annual_return}%
+                        {formatCurrency(sim.monthly_amount)}/{t('proUtilities.pacSimulator.monthly') || 'mese'} × {sim.years} {t('proUtilities.pacSimulator.years') || 'anni'} @ {sim.annual_return}%
                       </div>
                       <div className="text-xs text-text-tertiary">
                         {new Date(sim.created_at).toLocaleString('it-IT')}
@@ -487,19 +492,19 @@ export function PACSimulator() {
                     <div>
                       <div className="text-xs text-text-tertiary">Valore Futuro</div>
                       <div className="font-bold text-accent text-sm sm:text-base">
-                        €{sim.future_value.toLocaleString('it-IT', { maximumFractionDigits: 0 })}
+                        {formatCurrency(sim.future_value)}
                       </div>
                     </div>
                     <div>
                       <div className="text-xs text-text-tertiary">Investito</div>
                       <div className="font-bold text-text-primary text-sm sm:text-base">
-                        €{sim.total_invested.toLocaleString('it-IT', { maximumFractionDigits: 0 })}
+                        {formatCurrency(sim.total_invested)}
                       </div>
                     </div>
                     <div>
                       <div className="text-xs text-text-tertiary">Guadagno</div>
                       <div className="font-bold text-green-400 text-sm sm:text-base">
-                        €{sim.total_return.toLocaleString('it-IT', { maximumFractionDigits: 0 })}
+                        {formatCurrency(sim.total_return)}
                       </div>
                     </div>
                   </div>

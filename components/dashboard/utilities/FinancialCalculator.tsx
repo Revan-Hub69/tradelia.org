@@ -7,6 +7,9 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { useApi } from '@/lib/hooks/useApi';
 import { toast } from '@/components/ui/Toast';
 import { cn } from '@/lib/utils/cn';
+import { useFormatCurrency } from '@/lib/utils/formatCurrency';
+import { useCurrency } from '@/lib/hooks/useCurrency';
+import { currencySymbols } from '@/lib/currency/config';
 
 type CalculationType = 'compound' | 'present' | 'future' | 'annuity';
 
@@ -18,6 +21,8 @@ interface CalculationResult {
 
 export function FinancialCalculator() {
   const { t } = useTranslations();
+  const formatCurrency = useFormatCurrency();
+  const { currency } = useCurrency();
   const [calcType, setCalcType] = useState<CalculationType>('compound');
   const [inputs, setInputs] = useState({
     principal: '',
@@ -209,7 +214,7 @@ export function FinancialCalculator() {
           <>
             <div>
               <label className="text-xs text-text-tertiary mb-1 block">
-                {t('proUtilities.calculator.principal') || 'Capitale Iniziale (€)'}
+                {t('proUtilities.calculator.principal') || `Capitale Iniziale (${currencySymbols[currency]})`}
               </label>
               <input
                 type="number"
@@ -253,7 +258,7 @@ export function FinancialCalculator() {
           <>
             <div>
               <label className="text-xs text-text-tertiary mb-1 block">
-                {t('proUtilities.calculator.futureValue') || 'Valore Futuro (€)'}
+                {t('proUtilities.calculator.futureValue') || `Valore Futuro (${currencySymbols[currency]})`}
               </label>
               <input
                 type="number"
@@ -297,7 +302,7 @@ export function FinancialCalculator() {
           <>
             <div>
               <label className="text-xs text-text-tertiary mb-1 block">
-                {t('proUtilities.calculator.principal') || 'Valore Presente (€)'}
+                {t('proUtilities.calculator.principal') || `Valore Presente (${currencySymbols[currency]})`}
               </label>
               <input
                 type="number"
@@ -341,7 +346,7 @@ export function FinancialCalculator() {
           <>
             <div>
               <label className="text-xs text-text-tertiary mb-1 block">
-                {t('proUtilities.calculator.payment') || 'Pagamento Periodico (€)'}
+                {t('proUtilities.calculator.payment') || `Pagamento Periodico (${currencySymbols[currency]})`}
               </label>
               <input
                 type="number"
@@ -459,7 +464,7 @@ export function FinancialCalculator() {
               {t('proUtilities.calculator.result') || 'Risultato'}
             </p>
             <p className="text-2xl sm:text-3xl font-bold text-text-primary">
-              €{result.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              {formatCurrency(result)}
             </p>
           </div>
           
@@ -564,7 +569,7 @@ export function FinancialCalculator() {
                     </div>
                   </div>
                   <div className="text-base sm:text-lg font-bold text-accent">
-                    €{calc.result.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    {formatCurrency(calc.result)}
                   </div>
                 </div>
               ))}

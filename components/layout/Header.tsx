@@ -10,6 +10,7 @@ import { LayoutDashboard } from 'lucide-react';
 import { useReducedMotion } from '@/lib/animations';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { prefetchOnHover } from '@/lib/utils/prefetch';
+import { CurrencySwitch } from '@/components/ui/CurrencySwitch';
 
 export function Header() {
   const { t } = useTranslations();
@@ -67,6 +68,9 @@ export function Header() {
           
           {/* Notification Bell - solo se siamo nella dashboard */}
           <NotificationBell />
+          
+          {/* Currency Switch */}
+          <CurrencySwitch size="sm" />
           
           {/* Language Toggle */}
           <LanguageToggle />

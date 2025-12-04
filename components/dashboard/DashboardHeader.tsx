@@ -21,6 +21,10 @@ const UserStats = dynamic(() => import('@/components/gamification/UserStats').th
   ssr: false,
 });
 
+const CurrencySwitch = dynamic(() => import('@/components/ui/CurrencySwitch').then(mod => ({ default: mod.CurrencySwitch })), {
+  ssr: false,
+});
+
 /**
  * Dashboard Header Component
  * Clean, modern header with single logo and responsive design
@@ -66,6 +70,7 @@ export function DashboardHeader() {
           <span className={styles.dashboardTitleText}>Dashboard</span>
         </div>
         <nav className={styles.dashboardActions} aria-label="Dashboard actions">
+          <CurrencySwitch size="sm" />
           <UserStats />
           <GlobalSearch />
           <UserMenu />

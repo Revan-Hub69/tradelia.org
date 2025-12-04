@@ -32,6 +32,10 @@ const ToastContainer = dynamic(() => import('@/components/ui/Toast').then(m => (
   ssr: false,
 });
 
+const CurrencyProvider = dynamic(() => import('@/lib/hooks/useCurrency').then(m => ({ default: m.CurrencyProvider })), {
+  ssr: false,
+});
+
 const inter = Inter({ 
   subsets: ['latin'],
   display: 'swap',
@@ -213,24 +217,26 @@ export default function RootLayout({
       </head>
       <body className={inter.className} suppressHydrationWarning>
         <ErrorBoundary>
-          <div className="min-h-screen flex flex-col" suppressHydrationWarning>
-            <HtmlLang />
-            <UnregisterServiceWorker />
-            <div suppressHydrationWarning>
-              {/* Header solo per pagine non-dashboard - le pagine dashboard hanno il loro DashboardHeader */}
-              <ConditionalHeader />
+          <CurrencyProvider>
+            <div className="min-h-screen flex flex-col" suppressHydrationWarning>
+              <HtmlLang />
+              <UnregisterServiceWorker />
+              <div suppressHydrationWarning>
+                {/* Header solo per pagine non-dashboard - le pagine dashboard hanno il loro DashboardHeader */}
+                <ConditionalHeader />
+              </div>
+              {/* IMPORTANTE: Per route dashboard, children è già completamente client-side */}
+              {/* Non c'è bisogno di wrapper aggiuntivi - il layout dashboard gestisce tutto */}
+              <main id="main-content" className="flex-1" tabIndex={-1} suppressHydrationWarning>
+                {children}
+              </main>
+              <div suppressHydrationWarning>
+                <Footer />
+                <LegalConsent />
+                <ToastContainer />
+              </div>
             </div>
-            {/* IMPORTANTE: Per route dashboard, children è già completamente client-side */}
-            {/* Non c'è bisogno di wrapper aggiuntivi - il layout dashboard gestisce tutto */}
-            <main id="main-content" className="flex-1" tabIndex={-1} suppressHydrationWarning>
-              {children}
-            </main>
-            <div suppressHydrationWarning>
-              <Footer />
-              <LegalConsent />
-              <ToastContainer />
-            </div>
-          </div>
+          </CurrencyProvider>
         </ErrorBoundary>
       </body>
     </html>
