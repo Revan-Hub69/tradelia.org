@@ -55,6 +55,9 @@ const VolatilityCalculator = lazy(() =>
 const StrategyBuilder = lazy(() => 
   import('@/components/dashboard/utilities/StrategyBuilder').then(m => ({ default: m.StrategyBuilder }))
 );
+const PaperTrading = lazy(() => 
+  import('@/components/dashboard/utilities/PaperTrading').then(m => ({ default: m.PaperTrading }))
+);
 
 // Loading fallback component
 const CalculatorSkeleton = () => (
@@ -65,7 +68,7 @@ const CalculatorSkeleton = () => (
   </div>
 );
 
-type UtilityTab = 'calculator' | 'pac' | 'journal' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility' | 'strategy-builder' | 'watchlist' | 'portfolio-manager' | 'alerts' | 'widgets';
+type UtilityTab = 'calculator' | 'pac' | 'journal' | 'paper-trading' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility' | 'strategy-builder' | 'watchlist' | 'portfolio-manager' | 'alerts' | 'widgets';
 
 interface Utility {
   id: UtilityTab;
@@ -166,6 +169,15 @@ export default function UtilitiesPage() {
       category: 'pro',
       group: 'performance',
       description: 'Registra e analizza le tue operazioni di trading',
+      available: true,
+    },
+    {
+      id: 'paper-trading',
+      label: 'Paper Trading',
+      icon: Target,
+      category: 'pro',
+      group: 'performance',
+      description: 'Simula operazioni di trading in tempo reale con ordini avanzati e risk management',
       available: true,
     },
     // Pro Tools - Advanced
@@ -315,6 +327,9 @@ export default function UtilitiesPage() {
                 {/* Pro Tools - Mostrati a tutti ma bloccati se non Pro */}
                 {selectedUtility === 'journal' && (
                   isPro ? <TradingJournal /> : <ProLockOverlay><TradingJournal /></ProLockOverlay>
+                )}
+                {selectedUtility === 'paper-trading' && (
+                  isPro ? <PaperTrading /> : <ProLockOverlay><PaperTrading /></ProLockOverlay>
                 )}
                 {selectedUtility === 'hedging' && (
                   isPro ? <HedgingCalculator /> : <ProLockOverlay><HedgingCalculator /></ProLockOverlay>
