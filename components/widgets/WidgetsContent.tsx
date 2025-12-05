@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Layout, BarChart3, TrendingUp, PieChart, Calendar, Settings, Smartphone, Monitor, Download, ExternalLink } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
-import { useUserRole } from '@/lib/hooks/useUserRole';
+import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -115,7 +115,7 @@ const mobileWidgets: MobileWidget[] = [
 
 export function WidgetsContent() {
   const { t } = useTranslations();
-  const { isPro } = useUserRole();
+  const isPro = useIsPro();
   const [widgets, setWidgets] = useState<Widget[]>(availableWidgets);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isMobile, setIsMobile] = useState(false);

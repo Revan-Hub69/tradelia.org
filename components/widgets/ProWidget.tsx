@@ -8,7 +8,7 @@ import CryptoTopMovers from '@/components/dashboard/analysis/pro/CryptoTopMovers
 import FuturesAnalysis from '@/components/dashboard/analysis/pro/FuturesAnalysis';
 import OptionsAnalysis from '@/components/dashboard/analysis/pro/OptionsAnalysis';
 import ForexAnalysis from '@/components/dashboard/analysis/pro/ForexAnalysis';
-import { useUserRole } from '@/lib/hooks/useUserRole';
+import { useIsPro } from '@/lib/hooks/useUserRole';
 
 interface ProWidgetProps {
   widgetType: string;
@@ -42,7 +42,7 @@ const widgetLabels: Record<string, { icon: string; label: string }> = {
  * Wrapper per i componenti Pro analysis
  */
 export default function ProWidget({ widgetType, onRemove, onConfigure, isDragging }: ProWidgetProps) {
-  const { isPro } = useUserRole();
+  const isPro = useIsPro();
   const [isMinimized, setIsMinimized] = useState(false);
 
   const WidgetComponent = widgetComponents[widgetType];

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n/use-translations';
-import { useUserRole } from '@/lib/hooks/useUserRole';
+import { useIsPro } from '@/lib/hooks/useUserRole';
 import ProWidget from './ProWidget';
 import { Plus, GripVertical } from 'lucide-react';
 
@@ -21,7 +21,7 @@ interface Widget {
  */
 export default function WidgetsManager() {
   const { t } = useTranslations();
-  const { isPro } = useUserRole();
+  const isPro = useIsPro();
   const [widgets, setWidgets] = useState<Widget[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showAddWidget, setShowAddWidget] = useState(false);

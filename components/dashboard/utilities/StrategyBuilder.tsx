@@ -474,6 +474,7 @@ export function StrategyBuilder() {
     
     results.forEach(window => {
       window.results.forEach(result => {
+        if (result.keyValue === undefined) return;
         if (!parameterScores.has(result.keyValue)) {
           parameterScores.set(result.keyValue, { robustCount: 0, totalScore: 0, avgRobustness: 0 });
         }
@@ -516,7 +517,7 @@ export function StrategyBuilder() {
     if (allResults.length === 0) return null;
     
     return {
-      keyValue: overallBestParameter,
+      keyValue: overallBestParameter as number,
       strategyId: allResults[0]?.strategyId,
       windowsUsed: allResults.length,
       avgReturn: allResults.reduce((sum, r) => sum + r.outOfSampleReturn, 0) / allResults.length,
@@ -1541,7 +1542,7 @@ export function StrategyBuilder() {
                         ? (locale === 'it' 
                             ? getStrategyById(bestParameterStats.strategyId)!.name 
                             : getStrategyById(bestParameterStats.strategyId)!.nameEn)
-                        : bestParameterStats.keyValue?.toFixed(1) || 'N/A'}
+                        : bestParameterStats.keyValue.toFixed(1)}
                     </div>
                   </div>
                   <div>
