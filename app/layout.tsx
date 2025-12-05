@@ -20,6 +20,8 @@ const LegalConsent = dynamic(() => import('@/components/layout/LegalConsent').th
 
 const HtmlLang = dynamic(() => import('@/components/layout/HtmlLang').then(m => ({ default: m.HtmlLang })));
 
+const HreflangTags = dynamic(() => import('@/components/seo/HreflangTags').then(m => ({ default: m.HreflangTags })));
+
 const ToastContainer = dynamic(() => import('@/components/ui/Toast').then(m => ({ default: m.ToastContainer })));
 
 const CurrencyProvider = dynamic(() => import('@/lib/hooks/useCurrency').then(m => ({ default: m.CurrencyProvider })));
@@ -217,9 +219,8 @@ export default function RootLayout({
         <meta name="googlebot" content="index, follow" />
         <meta name="bingbot" content="index, follow" />
         <link rel="canonical" href="https://tradelia.org" />
-        <link rel="alternate" hrefLang="it" href="https://tradelia.org" />
-        <link rel="alternate" hrefLang="en" href="https://tradelia.org/en" />
-        <link rel="alternate" hrefLang="x-default" href="https://tradelia.org" />
+        {/* Hreflang tags are added dynamically by HreflangTags component */}
+        <HreflangTags />
       </head>
       <body className={inter.className} suppressHydrationWarning>
         <ErrorBoundary>
