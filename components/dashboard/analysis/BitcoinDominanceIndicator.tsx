@@ -3,6 +3,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { Doughnut } from 'react-chartjs-2';
+import { IndicatorHeader } from './IndicatorHeader';
+import { getBitcoinDominanceMethodology } from './IndicatorMethodologyNotes';
 import {
   Chart as ChartJS,
   ArcElement,
@@ -179,20 +181,23 @@ export default function BitcoinDominanceIndicator() {
 
   const dominanceLevel = getDominanceLevel!;
 
+  const methodology = useMemo(() => getBitcoinDominanceMethodology(locale), [locale]);
+
   return (
     <div className="bg-bg-surface rounded-lg border border-border-subtle p-6 h-full flex flex-col space-y-4">
-      {/* Header */}
+      {/* Header with Methodology Popup */}
+      <IndicatorHeader
+        title={locale === 'it' ? 'Bitcoin Dominance' : 'Bitcoin Dominance'}
+        methodology={methodology}
+      />
+      
+      {/* Value Display */}
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-text-primary">
-            {locale === 'it' ? 'Bitcoin Dominance' : 'Bitcoin Dominance'}
-          </h2>
-          <p className="text-sm text-text-secondary">
-            {locale === 'it'
-              ? 'Percentuale di Bitcoin sul totale market cap crypto'
-              : 'Bitcoin percentage of total crypto market cap'}
-          </p>
-        </div>
+        <p className="text-sm text-text-secondary">
+          {locale === 'it'
+            ? 'Percentuale di Bitcoin sul totale market cap crypto'
+            : 'Bitcoin percentage of total crypto market cap'}
+        </p>
         <div className={`text-2xl font-bold ${dominanceLevel.color}`}>
           {data.dominance.toFixed(2)}%
         </div>
@@ -243,73 +248,7 @@ export default function BitcoinDominanceIndicator() {
         <p className="text-xs text-text-secondary">{dominanceLevel.description}</p>
       </div>
 
-      {/* SEZIONE 1: Spiegazione Accademica */}
-      <div className="border-t border-border-subtle pt-4">
-        <p className="text-sm font-semibold mb-2 text-text-primary">
-          {locale === 'it' ? 'Riferimento Accademico' : 'Academic Reference'}
-        </p>
-        <div className="text-xs text-text-tertiary space-y-1">
-          <p>
-            <strong>{locale === 'it' ? 'Paper:' : 'Paper:'}</strong>{' '}
-            {locale === 'it'
-              ? 'Market Cap Analysis - Portfolio Theory'
-              : 'Market Cap Analysis - Portfolio Theory'}
-          </p>
-          <p>
-            <strong>{locale === 'it' ? 'Definizione:' : 'Definition:'}</strong>{' '}
-            {locale === 'it'
-              ? 'Bitcoin Dominance misura la percentuale di Bitcoin sul totale market cap del mercato crypto. Calcolato come (Bitcoin Market Cap / Total Crypto Market Cap) × 100.'
-              : 'Bitcoin Dominance measures Bitcoin percentage of total crypto market cap. Calculated as (Bitcoin Market Cap / Total Crypto Market Cap) × 100.'}
-          </p>
-          <p>
-            <strong>{locale === 'it' ? 'Metodologia:' : 'Methodology:'}</strong>{' '}
-            {locale === 'it'
-              ? 'Calcolato usando dati market cap da CoinGecko. Range 0-100%, dove valori alti indicano preferenza per Bitcoin, valori bassi indicano rotazione verso altcoin.'
-              : 'Calculated using market cap data from CoinGecko. Range 0-100%, where high values indicate Bitcoin preference, low values indicate rotation to altcoins.'}
-          </p>
-        </div>
-      </div>
-
-      {/* SEZIONE 2: Come Leggerlo Accademicamente */}
-      <div className="border-t border-border-subtle pt-4">
-        <p className="text-sm font-semibold mb-2 text-text-primary">
-          {locale === 'it' ? 'Interpretazione Accademica' : 'Academic Interpretation'}
-        </p>
-        <div className="text-xs text-text-tertiary space-y-1">
-          <p>
-            <strong>&gt;60% ({locale === 'it' ? 'Alta Dominance' : 'High Dominance'}):</strong>{' '}
-            {locale === 'it'
-              ? 'Bitcoin domina il mercato. Indica preferenza per asset più sicuro, possibile fase conservativa. Storicamente associato a fasi di accumulo Bitcoin.'
-              : 'Bitcoin dominates the market. Indicates preference for safer asset, possible conservative phase. Historically associated with Bitcoin accumulation phases.'}
-          </p>
-          <p>
-            <strong>50-60% ({locale === 'it' ? 'Dominance Moderata' : 'Moderate Dominance'}):</strong>{' '}
-            {locale === 'it'
-              ? 'Dominance bilanciata. Mercato in equilibrio tra Bitcoin e altcoin.'
-              : 'Balanced dominance. Market in equilibrium between Bitcoin and altcoins.'}
-          </p>
-          <p>
-            <strong>40-50% ({locale === 'it' ? 'Bassa Dominance' : 'Low Dominance'}):</strong>{' '}
-            {locale === 'it'
-              ? 'Altcoin stanno guadagnando terreno. Possibile "Altcoin season", maggiore appetito per rischio.'
-              : 'Altcoins gaining ground. Possible "Altcoin season", higher risk appetite.'}
-          </p>
-          <p>
-            <strong>&lt;40% ({locale === 'it' ? 'Dominance Molto Bassa' : 'Very Low Dominance'}):</strong>{' '}
-            {locale === 'it'
-              ? 'Altcoin dominano. Indica forte rotazione verso altcoin, possibile fase speculativa estrema.'
-              : 'Altcoins dominate. Indicates strong rotation to altcoins, possible extreme speculative phase.'}
-          </p>
-          <p className="mt-2 italic">
-            <strong>{locale === 'it' ? 'Limitazioni:' : 'Limitations:'}</strong>{' '}
-            {locale === 'it'
-              ? 'La dominance può essere influenzata da nuovi progetti con market cap elevato. Non predice timing preciso delle rotazioni. Richiede contesto di altri indicatori per interpretazione completa.'
-              : 'Dominance can be influenced by new projects with high market cap. Does not predict precise timing of rotations. Requires context from other indicators for complete interpretation.'}
-          </p>
-        </div>
-      </div>
-
-      {/* SEZIONE 3: Lettura AI */}
+      {/* AI Reading */}
       <div className="border-t border-border-subtle pt-4">
         <p className="text-sm font-semibold mb-2 text-text-primary">
           {locale === 'it' ? 'Lettura Mercato (Groq AI)' : 'Market Reading (Groq AI)'}
