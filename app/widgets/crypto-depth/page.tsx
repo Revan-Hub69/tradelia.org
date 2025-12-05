@@ -6,6 +6,7 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { useUserRole } from '@/lib/hooks/useUserRole';
 import { TrendingUp, TrendingDown, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
+import MIFIDDisclaimer from '@/components/widgets/MIFIDDisclaimer';
 
 interface AggregatedDepth {
   totalBid: number;
@@ -91,6 +92,9 @@ export default function CryptoDepthWidgetPage() {
 
   return (
     <div className="min-h-screen bg-bg-base p-4">
+      {/* MIFID Disclaimer */}
+      <MIFIDDisclaimer />
+      
       {/* Header */}
       <div className="mb-4 pb-4 border-b border-border-subtle">
         <div className="flex items-center justify-between mb-2">

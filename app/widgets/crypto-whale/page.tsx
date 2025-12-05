@@ -1,11 +1,13 @@
 'use client';
 
+import { Metadata } from 'next';
 import { useEffect, useState } from 'react';
 import { useApi } from '@/lib/hooks/useApi';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useUserRole } from '@/lib/hooks/useUserRole';
 import { TrendingUp, TrendingDown, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
+import MIFIDDisclaimer from '@/components/widgets/MIFIDDisclaimer';
 
 interface WhaleTransaction {
   hash: string;
@@ -99,14 +101,21 @@ export default function CryptoWhaleWidgetPage() {
 
   return (
     <div className="min-h-screen bg-bg-base p-4">
+      {/* MIFID Disclaimer */}
+      <MIFIDDisclaimer />
+      
       {/* Header */}
       <div className="mb-4 pb-4 border-b border-border-subtle">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="text-xl font-bold text-text-primary flex items-center gap-2">
+          <h1 className="text-xl font-bold text-text-primary flex items-center gap-2" id="widget-title">
             🐋 {t('widgets.cryptoWhale.title') || 'Crypto Whale'}
           </h1>
           {refreshing && (
-            <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+            <div 
+              className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin"
+              role="status"
+              aria-label={t('widgets.refreshing') || 'Aggiornamento in corso'}
+            />
           )}
         </div>
         {whaleData?.whaleRatio !== undefined && (
@@ -118,31 +127,32 @@ export default function CryptoWhaleWidgetPage() {
 
       {/* Recent Transactions */}
       {loading && !whaleData ? (
-        <div className="space-y-3">
+        <div className="space-y-3" role="status" aria-live="polite" aria-label={t('widgets.loading') || 'Caricamento dati'}>
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-bg-soft rounded-lg p-4 animate-pulse">
+            <div key={i} className="bg-bg-soft rounded-lg p-4 animate-pulse" aria-hidden="true">
               <div className="h-4 bg-bg-base rounded w-1/3 mb-2" />
               <div className="h-6 bg-bg-base rounded w-1/2" />
             </div>
           ))}
         </div>
       ) : !whaleData?.transactions || whaleData.transactions.length === 0 ? (
-        <div className="text-center py-8 text-text-tertiary">
+        <div className="text-center py-8 text-text-tertiary" role="status" aria-live="polite">
           <p>{t('widgets.cryptoWhale.empty') || 'Nessuna transazione whale recente'}</p>
         </div>
       ) : (
-        <div className="space-y-3 mb-6">
+        <div className="space-y-3 mb-6" role="list" aria-label={t('widgets.cryptoWhale.transactions') || 'Transazioni whale recenti'}>
           {whaleData.transactions.slice(0, 5).map((tx) => (
             <div
               key={tx.hash}
               className="bg-bg-soft border border-border-subtle rounded-lg p-4"
+              role="listitem"
             >
               <div className="flex items-start justify-between mb-2">
                 <div className="flex-1">
-                  <p className="font-semibold text-text-primary mb-1">
+                  <p className="font-semibold text-text-primary mb-1" aria-label={`${tx.symbol} verso ${tx.to.owner_type}`}>
                     {tx.symbol} → {tx.to.owner_type}
                   </p>
-                  <p className="text-xs text-text-tertiary">
+                  <p className="text-xs text-text-tertiary" aria-label={`Valore: ${tx.amount_usd.toLocaleString()} USD`}>
                     {new Intl.NumberFormat(locale === 'it' ? 'it-IT' : 'en-US', {
                       style: 'currency',
                       currency: 'USD',
@@ -152,12 +162,19 @@ export default function CryptoWhaleWidgetPage() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-text-tertiary">
+                  <time 
+                    dateTime={new Date(tx.timestamp * 1000).toISOString()}
+                    className="text-xs text-text-tertiary"
+                    aria-label={`Ora: ${new Date(tx.timestamp * 1000).toLocaleTimeString(locale === 'it' ? 'it-IT' : 'en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}`}
+                  >
                     {new Date(tx.timestamp * 1000).toLocaleTimeString(locale === 'it' ? 'it-IT' : 'en-US', {
                       hour: '2-digit',
                       minute: '2-digit',
                     })}
-                  </p>
+                  </time>
                 </div>
               </div>
             </div>

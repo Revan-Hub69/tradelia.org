@@ -1,7 +1,16 @@
 /**
- * Rate limiting semplice in-memory
- * Per produzione, considera Upstash Redis o simili
+ * Rate Limiting Utility
+ * 
+ * Best Practice 2025:
+ * - In-memory rate limiting (per deployment)
+ * - Configurable limits per endpoint
+ * - IP + User ID based
  */
+
+interface RateLimitConfig {
+  maxRequests: number;
+  windowMs: number;
+}
 
 interface RateLimitStore {
   [key: string]: {
@@ -10,75 +19,82 @@ interface RateLimitStore {
   };
 }
 
-const store: RateLimitStore = {};
+// In-memory store (per deployment instance)
+// In produzione, usare Redis per multi-instance
+const rateLimitStore: RateLimitStore = {};
 
 /**
- * Rate limiting semplice
- * @param identifier - Identificatore unico (IP, userId, etc.)
- * @param maxRequests - Numero massimo di richieste
- * @param windowMs - Finestra temporale in millisecondi
- * @returns true se permesso, false se rate limited
+ * Check rate limit for a key
+ * 
+ * @param key - Unique identifier (IP + User ID + Endpoint)
+ * @param config - Rate limit configuration
+ * @returns { allowed: boolean, remaining: number, resetAt: number }
  */
-export function rateLimit(
-  identifier: string,
-  maxRequests: number = 10,
-  windowMs: number = 60000 // 1 minuto default
+export function checkRateLimit(
+  key: string,
+  config: RateLimitConfig
 ): { allowed: boolean; remaining: number; resetAt: number } {
   const now = Date.now();
-  const key = identifier;
-
-  // Pulisci entry scadute
-  if (store[key] && store[key].resetAt < now) {
-    delete store[key];
+  const storeKey = key;
+  
+  // Clean expired entries (garbage collection)
+  if (Object.keys(rateLimitStore).length > 10000) {
+    Object.keys(rateLimitStore).forEach(k => {
+      if (rateLimitStore[k].resetAt < now) {
+        delete rateLimitStore[k];
+      }
+    });
   }
 
-  // Se non esiste entry, crea nuova
-  if (!store[key]) {
-    store[key] = {
+  const entry = rateLimitStore[storeKey];
+
+  // New entry or expired
+  if (!entry || entry.resetAt < now) {
+    rateLimitStore[storeKey] = {
       count: 1,
-      resetAt: now + windowMs,
+      resetAt: now + config.windowMs,
     };
     return {
       allowed: true,
-      remaining: maxRequests - 1,
-      resetAt: store[key].resetAt,
+      remaining: config.maxRequests - 1,
+      resetAt: now + config.windowMs,
     };
   }
 
-  // Incrementa contatore
-  store[key].count += 1;
-
-  // Verifica se supera il limite
-  if (store[key].count > maxRequests) {
+  // Check limit
+  if (entry.count >= config.maxRequests) {
     return {
       allowed: false,
       remaining: 0,
-      resetAt: store[key].resetAt,
+      resetAt: entry.resetAt,
     };
   }
 
+  // Increment count
+  entry.count++;
   return {
     allowed: true,
-    remaining: maxRequests - store[key].count,
-    resetAt: store[key].resetAt,
+    remaining: config.maxRequests - entry.count,
+    resetAt: entry.resetAt,
   };
 }
 
 /**
- * Ottieni IP address dalla request
+ * Get rate limit key from request
  */
-export function getClientIP(request: Request): string {
-  // Prova vari header (proxy, load balancer, etc.)
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) {
-    return forwarded.split(",")[0].trim();
-  }
-
-  const realIP = request.headers.get("x-real-ip");
-  if (realIP) {
-    return realIP;
-  }
-
-  // Fallback
-  return "unknown";
+export function getRateLimitKey(
+  identifier: string,
+  endpoint: string
+): string {
+  return `${identifier}:${endpoint}`;
 }
+
+/**
+ * Rate limit configurations per endpoint
+ */
+export const RATE_LIMITS = {
+  'widgets': { maxRequests: 100, windowMs: 60 * 1000 }, // 100 req/min
+  'crypto-whale': { maxRequests: 10, windowMs: 60 * 1000 }, // 10 req/min
+  'crypto-depth': { maxRequests: 20, windowMs: 60 * 1000 }, // 20 req/min
+  'crypto-movers': { maxRequests: 20, windowMs: 60 * 1000 }, // 20 req/min
+} as const;
