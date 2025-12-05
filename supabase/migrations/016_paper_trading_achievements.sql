@@ -88,6 +88,7 @@ RETURNS TABLE(achievement_id TEXT) AS $$
 DECLARE
   v_stats RECORD;
   v_achievements TEXT[];
+  v_achievement_code TEXT;
 BEGIN
   -- Get user stats
   SELECT * INTO v_stats
@@ -99,38 +100,38 @@ BEGIN
   END IF;
 
   -- Check each achievement condition
-  FOR achievement_id IN
+  FOR v_achievement_code IN
     SELECT code FROM achievements
     WHERE category = 'paper-trading'
     AND condition_type IS NOT NULL
   LOOP
     -- Check condition based on type
     CASE 
-      WHEN achievement_id = 'paper-first-step' AND v_stats.total_trades >= 1 THEN
-        achievements := array_append(achievements, achievement_id);
-      WHEN achievement_id = 'paper-first-close' AND (v_stats.winning_trades + v_stats.losing_trades) >= 1 THEN
-        achievements := array_append(achievements, achievement_id);
-      WHEN achievement_id = 'paper-active-trader' AND v_stats.total_trades >= 10 THEN
-        achievements := array_append(achievements, achievement_id);
-      WHEN achievement_id = 'paper-win-streak' AND v_stats.current_win_streak >= 3 THEN
-        achievements := array_append(achievements, achievement_id);
-      WHEN achievement_id = 'paper-win-rate-master' AND 
+      WHEN v_achievement_code = 'paper-first-step' AND v_stats.total_trades >= 1 THEN
+        v_achievements := array_append(v_achievements, v_achievement_code);
+      WHEN v_achievement_code = 'paper-first-close' AND (v_stats.winning_trades + v_stats.losing_trades) >= 1 THEN
+        v_achievements := array_append(v_achievements, v_achievement_code);
+      WHEN v_achievement_code = 'paper-active-trader' AND v_stats.total_trades >= 10 THEN
+        v_achievements := array_append(v_achievements, v_achievement_code);
+      WHEN v_achievement_code = 'paper-win-streak' AND v_stats.current_win_streak >= 3 THEN
+        v_achievements := array_append(v_achievements, v_achievement_code);
+      WHEN v_achievement_code = 'paper-win-rate-master' AND 
            v_stats.total_trades >= 10 AND 
            (v_stats.winning_trades::NUMERIC / NULLIF(v_stats.total_trades, 0) * 100) >= 60 THEN
-        achievements := array_append(achievements, achievement_id);
-      WHEN achievement_id = 'paper-risk-manager' AND 
+        v_achievements := array_append(v_achievements, v_achievement_code);
+      WHEN v_achievement_code = 'paper-risk-manager' AND 
            v_stats.total_trades >= 20 AND 
            v_stats.max_drawdown < 10 THEN
-        achievements := array_append(achievements, achievement_id);
-      WHEN achievement_id = 'paper-profit-maker' AND v_stats.total_pnl >= 1000 THEN
-        achievements := array_append(achievements, achievement_id);
-      WHEN achievement_id = 'paper-consistency-king' AND 
+        v_achievements := array_append(v_achievements, v_achievement_code);
+      WHEN v_achievement_code = 'paper-profit-maker' AND v_stats.total_pnl >= 1000 THEN
+        v_achievements := array_append(v_achievements, v_achievement_code);
+      WHEN v_achievement_code = 'paper-consistency-king' AND 
            v_stats.total_trades >= 30 AND 
            v_stats.sharpe_ratio >= 1.5 THEN
-        achievements := array_append(achievements, achievement_id);
+        v_achievements := array_append(v_achievements, v_achievement_code);
     END CASE;
   END LOOP;
 
-  RETURN QUERY SELECT unnest(achievements);
+  RETURN QUERY SELECT unnest(v_achievements);
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
