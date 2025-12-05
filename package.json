@@ -23,6 +23,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
+    "fix:error-boundary": "node scripts/fix-error-boundary.mjs",
     "prepare": "husky install || true"
   },
   "dependencies": {
