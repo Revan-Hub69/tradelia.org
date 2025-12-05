@@ -114,23 +114,41 @@ export function detectLocaleFromRequest(request: Request): Locale {
 
 /**
  * Get locale from request (checks multiple sources)
- * Priority: 1. Query param, 2. Header, 3. Path, 4. Default
+ * Priority: 1. Query param, 2. Path, 3. Header, 4. Default (ITALIANO)
+ * 
+ * IMPORTANTE: Default è sempre ITALIANO se non c'è preferenza esplicita
+ * L'utente italiano vede sempre italiano a meno che non scelga esplicitamente inglese
  */
 export function getLocaleFromRequest(request: Request): Locale {
   const url = new URL(request.url);
   
-  // 1. Check query parameter
+  // 1. Check query parameter (esplicito dall'utente)
   const localeParam = url.searchParams.get('locale') as Locale | null;
   if (localeParam === 'it' || localeParam === 'en') {
     return localeParam;
   }
   
-  // 2. Check Accept-Language header
-  const detectedLocale = detectLocaleFromRequest(request);
-  if (detectedLocale) {
-    return detectedLocale;
+  // 2. Check URL path (se è /en allora è esplicito)
+  if (url.pathname.startsWith('/en')) {
+    return 'en';
   }
   
-  // 3. Default
+  // 3. Check Accept-Language header (solo se esplicito)
+  // NOTA: Non usiamo header come default perché potrebbe essere sbagliato
+  // Solo se l'utente ha esplicitamente scelto inglese nel browser
+  const acceptLanguage = request.headers.get('accept-language');
+  if (acceptLanguage) {
+    const languages = acceptLanguage
+      .split(',')
+      .map(lang => lang.split(';')[0].trim().toLowerCase());
+    
+    // Solo se inglese è la PRIMA preferenza (q=1.0 o senza q)
+    const firstLang = languages[0];
+    if (firstLang && firstLang.startsWith('en') && !firstLang.startsWith('it')) {
+      return 'en';
+    }
+  }
+  
+  // 4. DEFAULT: Sempre italiano se non c'è preferenza esplicita
   return 'it';
 }
