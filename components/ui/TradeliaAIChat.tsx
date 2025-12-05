@@ -11,7 +11,7 @@ import { ProBadge } from '@/components/ui/ProBadge';
 import { formatAIMessage, renderFormattedMessage } from '@/lib/utils/formatAIMessage';
 import { useBodyScrollLock } from '@/lib/hooks/useBodyScrollLock';
 import { sanitizeString } from '@/lib/utils/inputValidation';
-import { getItem, setItem, removeItem, isAvailable } from '@/lib/storage/indexedDB';
+import { getItem, setItem, removeItem, isStorageAvailable } from '@/lib/storage/storage';
 
 interface Message {
   id: string;
@@ -170,9 +170,9 @@ export function TradeliaAIChat() {
     },
   ];
 
-  // Load messages from IndexedDB on mount - Best Practice: Persistence with IndexedDB
+  // Load messages from storage on mount - Best Practice: Persistence with unified storage
   useEffect(() => {
-    if (typeof window === 'undefined' || !isAvailable()) return;
+    if (typeof window === 'undefined' || !isStorageAvailable()) return;
     
     const loadMessages = async () => {
       try {
@@ -193,7 +193,7 @@ export function TradeliaAIChat() {
           setIsOpen(true);
         }
       } catch (error) {
-        console.warn('Failed to load chat from IndexedDB:', error);
+        console.warn('Failed to load chat from storage:', error);
         // Clear corrupted data
         try {
           await removeItem(STORAGE_KEY);
@@ -206,9 +206,9 @@ export function TradeliaAIChat() {
     loadMessages();
   }, []);
 
-  // Save messages to IndexedDB - Best Practice: Persistence with IndexedDB
+  // Save messages to storage - Best Practice: Persistence with unified storage
   useEffect(() => {
-    if (typeof window === 'undefined' || !isAvailable() || messages.length === 0) return;
+    if (typeof window === 'undefined' || !isStorageAvailable() || messages.length === 0) return;
     
     const saveMessages = async () => {
       try {
@@ -216,7 +216,7 @@ export function TradeliaAIChat() {
         const messagesToStore = messages.slice(-MAX_STORED_MESSAGES);
         await setItem(STORAGE_KEY, messagesToStore);
       } catch (error) {
-        console.warn('Failed to save chat to IndexedDB:', error);
+        console.warn('Failed to save chat to storage:', error);
         // Try storing only last 20 messages if quota exceeded
         try {
           const reducedMessages = messages.slice(-20);
@@ -526,12 +526,12 @@ export function TradeliaAIChat() {
                       setMessages([]);
                       setMessage('');
                       setError(null);
-                      // Clear IndexedDB - Best Practice: Privacy
-                      if (isAvailable()) {
+                      // Clear storage - Best Practice: Privacy
+                      if (isStorageAvailable()) {
                         try {
                           await removeItem(STORAGE_KEY);
                         } catch (error) {
-                          console.warn('Failed to clear IndexedDB:', error);
+                          console.warn('Failed to clear storage:', error);
                         }
                       }
                     }}
