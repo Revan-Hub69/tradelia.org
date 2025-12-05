@@ -40,18 +40,18 @@ export default function FearGreedIndicator() {
   const [selectedMarket, setSelectedMarket] = useState<'crypto' | 'stock'>('crypto');
 
   useEffect(() => {
+    // Se selezionato stock market, non fare fetch (non ancora disponibile)
+    if (selectedMarket === 'stock') {
+      setError(null);
+      setData(null);
+      setIsLoading(false);
+      return;
+    }
+
     const fetchFearGreed = async () => {
       try {
         const response = await fetch(`/api/market-indicators/fear-greed?market=${selectedMarket}`);
         if (!response.ok) {
-          if (response.status === 503) {
-            // Stock market not yet available
-            const errorData = await response.json();
-            setError(errorData.error || 'Stock market Fear & Greed Index not yet available');
-            setData(null);
-            setIsLoading(false);
-            return;
-          }
           throw new Error('Failed to fetch Fear & Greed');
         }
         
@@ -199,16 +199,26 @@ export default function FearGreedIndicator() {
         </>
       ) : selectedMarket === 'stock' ? (
         <div className="h-48 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-text-secondary mb-2">
+          <div className="text-center p-6">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-bg-soft flex items-center justify-center">
+              <svg className="w-8 h-8 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <p className="text-text-primary font-semibold mb-2">
               {locale === 'it' 
-                ? 'Indice Fear & Greed per mercato azionario in arrivo' 
-                : 'Stock Market Fear & Greed Index coming soon'}
+                ? 'Prossimamente disponibile' 
+                : 'Coming soon'}
             </p>
-            <p className="text-xs text-text-tertiary">
+            <p className="text-sm text-text-secondary mb-2">
+              {locale === 'it' 
+                ? 'Indice Fear & Greed per mercato azionario (CNN S&P 500)' 
+                : 'Stock Market Fear & Greed Index (CNN S&P 500)'}
+            </p>
+            <p className="text-xs text-text-tertiary max-w-sm">
               {locale === 'it'
-                ? 'Stiamo lavorando all\'integrazione con CNN Fear & Greed Index per S&P 500'
-                : 'We are working on integrating CNN Fear & Greed Index for S&P 500'}
+                ? 'Stiamo lavorando all\'integrazione. CNN non fornisce un\'API pubblica, quindi stiamo valutando soluzioni affidabili.'
+                : 'We are working on the integration. CNN does not provide a public API, so we are evaluating reliable solutions.'}
             </p>
           </div>
         </div>

@@ -29,99 +29,25 @@ interface FearGreedResponse {
 /**
  * Get CNN Fear & Greed Index for Stock Market (S&P 500)
  *
- * CNN Fear & Greed Index è disponibile su: https://www.cnn.com/markets/fear-and-greed
- *
- * Nota: CNN non ha un'API pubblica ufficiale, ma possiamo usare:
- * 1. Scraping leggero della pagina (non ideale per produzione)
- * 2. Servizio terzo se disponibile (es. Fear & Greed API)
- * 3. Proxy/CORS workaround
- *
- * Per ora implementiamo un tentativo di fetch diretto con fallback.
+ * NOTA IMPORTANTE: CNN non fornisce un'API pubblica per il Fear & Greed Index.
+ * 
+ * Opzioni valide per implementazione futura:
+ * 1. Servizio terzo dedicato (se disponibile e affidabile)
+ * 2. Proxy server-side con scraping controllato (richiede infrastruttura dedicata)
+ * 3. Integrazione con provider di dati finanziari (Bloomberg, Reuters, etc.)
+ * 
+ * Per ora, questa funzione restituisce null perché:
+ * - Scraping diretto non è affidabile (CORS, rate limiting, ToS)
+ * - Non vogliamo codice fragile in produzione
+ * - Meglio implementare quando avremo una soluzione solida
  */
 async function getStockMarketFearGreedIndex(): Promise<{
   value: number;
   classification: string;
 } | null> {
-  try {
-    // Tentativo 1: Usare un servizio terzo se disponibile
-    // Alcuni servizi forniscono il CNN Fear & Greed Index via API
-    // Esempio: https://api.fear-and-greed-index.com/ (se esiste)
-
-    // Tentativo 2: Scraping leggero (solo per sviluppo/test)
-    // In produzione, meglio usare un servizio dedicato o scraping server-side con rate limiting
-
-    // Per ora, proviamo a fetchare direttamente la pagina CNN
-    // Nota: Questo potrebbe fallire per CORS, quindi in produzione serve un proxy
-    const response = await fetch("https://www.cnn.com/markets/fear-and-greed", {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (compatible; Tradelia/1.0)",
-      },
-    });
-
-    if (!response.ok) {
-      // Se il fetch diretto fallisce, proviamo un servizio alternativo
-      // TODO: Implementare integrazione con servizio terzo dedicato
-      console.warn("CNN Fear & Greed Index: Direct fetch not available, using fallback");
-      return null;
-    }
-
-    const html = await response.text();
-
-    // Estraiamo il valore dal JSON embedded nella pagina
-    // CNN tipicamente include i dati in uno script tag con JSON
-    const jsonMatch = html.match(
-      /<script[^>]*>[\s\S]*?fearAndGreed[\s\S]*?({[\s\S]*?})[\s\S]*?<\/script>/i
-    );
-
-    if (jsonMatch) {
-      try {
-        const data = JSON.parse(jsonMatch[1]);
-        const value = parseInt(data.value || data.fearAndGreed?.value || "0", 10);
-        const classification =
-          data.classification || data.fearAndGreed?.classification || "Neutral";
-
-        if (value >= 0 && value <= 100) {
-          return { value, classification };
-        }
-      } catch (parseError) {
-        console.error("Error parsing CNN Fear & Greed data:", parseError);
-      }
-    }
-
-    // Fallback: proviamo a estrarre da altri pattern comuni nella pagina
-    const valueMatch = html.match(/fear.*greed.*?(\d{1,3})/i);
-    if (valueMatch) {
-      const value = parseInt(valueMatch[1], 10);
-      if (value >= 0 && value <= 100) {
-        const classification = getClassificationFromValue(value);
-        return { value, classification };
-      }
-    }
-
-    return null;
-  } catch (error) {
-    console.error("Error fetching Stock Market Fear & Greed Index:", error);
-    return null;
-  }
-}
-
-/**
- * Helper: Converti valore numerico in classificazione
- */
-function getClassificationFromValue(value: number): string {
-  if (value < 25) {
-    return "Extreme Fear";
-  }
-  if (value < 45) {
-    return "Fear";
-  }
-  if (value < 55) {
-    return "Neutral";
-  }
-  if (value < 75) {
-    return "Greed";
-  }
-  return "Extreme Greed";
+  // TODO: Implementare quando avremo un'API affidabile o servizio terzo dedicato
+  // Per ora, restituiamo null per evitare codice fragile
+  return null;
 }
 
 /**
@@ -191,6 +117,9 @@ async function getCryptoFearGreedHistory(): Promise<Array<{ date: string; value:
 
 /**
  * Get Groq AI reading for Stock Market Fear & Greed
+ * 
+ * NOTA: Questa funzione non è attualmente utilizzata perché getStockMarketFearGreedIndex
+ * restituisce null. Manteniamo il codice per uso futuro quando avremo i dati.
  */
 async function getStockMarketFearGreedAIReading(
   value: number,
@@ -373,35 +302,15 @@ export async function GET(request: NextRequest) {
 
     if (market === "stock") {
       // Stock Market Fear & Greed Index (CNN)
-      const stockData = await getStockMarketFearGreedIndex();
-
-      if (!stockData) {
-        return NextResponse.json(
-          {
-            error:
-              "Stock Market Fear & Greed Index temporarily unavailable. CNN integration may require proxy or third-party service.",
-            market: "stock",
-          },
-          { status: 503 }
-        );
-      }
-
-      // AI reading per stock market
-      const aiReading = await getStockMarketFearGreedAIReading(
-        stockData.value,
-        stockData.classification
+      // NOTA: Non ancora implementato - richiede API affidabile o servizio terzo
+      return NextResponse.json(
+        {
+          error:
+            "Stock Market Fear & Greed Index (CNN) not yet available. Implementation requires a reliable API or third-party service. Coming soon.",
+          market: "stock",
+        },
+        { status: 503 }
       );
-
-      const response: FearGreedResponse = {
-        value: stockData.value,
-        classification: stockData.classification,
-        timestamp: new Date().toISOString(),
-        history: [], // TODO: Implementare history per stock market (richiede storage o API dedicata)
-        aiReading,
-        market: "stock",
-      };
-
-      return NextResponse.json(response);
     } else {
       // Crypto Fear & Greed Index (default)
       const [fearGreedData, history] = await Promise.all([
