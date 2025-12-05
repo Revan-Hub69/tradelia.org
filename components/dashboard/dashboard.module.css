@@ -1,6 +1,7 @@
 .dashboardMain {
   padding: 2rem 1.5rem !important;
-  padding-top: calc(2rem + 80px) !important; /* Account for fixed header */
+  /* Account for fixed header: mobile ~70px, desktop ~90px - use max for safety */
+  padding-top: calc(2rem + 90px) !important;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;

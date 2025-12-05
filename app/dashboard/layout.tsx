@@ -63,7 +63,15 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <ErrorBoundary>
             <ModalProviders />
           </ErrorBoundary>
-          <div suppressHydrationWarning style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
+          <div 
+            suppressHydrationWarning 
+            style={{ 
+              width: '100%', 
+              maxWidth: '100%', 
+              overflowX: 'hidden',
+              paddingTop: '90px' // Account for fixed header height
+            }}
+          >
             {children}
           </div>
         </div>
