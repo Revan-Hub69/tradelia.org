@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useMemo, useCallback, memo, type ReactNode } from 'react';
+import { useState, useMemo, useCallback, memo } from 'react';
 import { TrendingUp, TrendingDown, BarChart3, AlertCircle, Info, BookOpen, Calculator, Target, Shield, Save, Download, Settings, Filter, X, CheckCircle2, Circle } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { MethodologyNotes } from './MethodologyNotes';
-import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
+import { ErrorBoundaryWrapper } from '@/components/errors/ErrorBoundaryWrapper';
 import { 
   ACADEMIC_STRATEGIES, 
   getStrategyById, 
@@ -15,11 +15,6 @@ import {
   type Timeframe,
   type AcademicStrategy 
 } from '@/lib/strategies/academic-strategies';
-
-// Wrapper funzionale per ErrorBoundary (class component) per compatibilità Next.js
-const ErrorBoundaryWrapper = ({ children }: { children: ReactNode }) => {
-  return <ErrorBoundary>{children}</ErrorBoundary>;
-};
 
 /**
  * Strategy Builder - Costruzione e Ottimizzazione Strategie Trading
