@@ -90,6 +90,48 @@ export function getRateLimitKey(
 }
 
 /**
+ * Get client IP from request
+ * Supports various proxy headers (X-Forwarded-For, X-Real-IP, etc.)
+ */
+export function getClientIP(request: Request): string {
+  // Try various headers (for proxies/load balancers)
+  const forwardedFor = request.headers.get('x-forwarded-for');
+  if (forwardedFor) {
+    // X-Forwarded-For can contain multiple IPs, take the first one
+    return forwardedFor.split(',')[0].trim();
+  }
+
+  const realIP = request.headers.get('x-real-ip');
+  if (realIP) {
+    return realIP.trim();
+  }
+
+  const cfConnectingIP = request.headers.get('cf-connecting-ip'); // Cloudflare
+  if (cfConnectingIP) {
+    return cfConnectingIP.trim();
+  }
+
+  // Fallback: try to get from request URL or use a default
+  // In Edge Runtime, we might not have direct access to socket
+  return 'unknown';
+}
+
+/**
+ * Rate limit wrapper with simplified signature
+ * @param key - Unique identifier for rate limiting
+ * @param maxRequests - Maximum number of requests
+ * @param windowMs - Time window in milliseconds
+ * @returns { allowed: boolean, remaining: number, resetAt: number }
+ */
+export function rateLimit(
+  key: string,
+  maxRequests: number,
+  windowMs: number
+): { allowed: boolean; remaining: number; resetAt: number } {
+  return checkRateLimit(key, { maxRequests, windowMs });
+}
+
+/**
  * Rate limit configurations per endpoint
  */
 export const RATE_LIMITS = {

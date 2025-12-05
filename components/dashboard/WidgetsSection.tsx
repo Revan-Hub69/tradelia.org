@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useUserRole } from '@/lib/hooks/useUserRole';
+import { useIsPro } from '@/lib/hooks/useUserRole';
 import ProWidget from '@/components/widgets/ProWidget';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
@@ -20,7 +20,7 @@ interface Widget {
  * Mostra widget installati nella dashboard principale
  */
 export default function WidgetsSection() {
-  const { isPro } = useUserRole();
+  const isPro = useIsPro();
   const [widgets, setWidgets] = useState<Widget[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

@@ -46,7 +46,7 @@ export function StrategyBuilder() {
   // Strategy selection
   const [selectedStrategies, setSelectedStrategies] = useState<Set<StrategyType>>(new Set(['moving-average-crossover']));
   const [selectedTimeframe, setSelectedTimeframe] = useState<Timeframe>('1d');
-  const [strategyParams, setStrategyParams] = useState<Record<StrategyType, Record<string, number>>>({});
+  const [strategyParams, setStrategyParams] = useState<Record<StrategyType, Record<string, number>>>({} as Record<StrategyType, Record<string, number>>);
   
   // User inputs - full autonomy
   const [keyValueMin, setKeyValueMin] = useState(1.0);

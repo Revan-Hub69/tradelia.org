@@ -11,6 +11,7 @@ import { AccountBanner } from './AccountBanner';
 import { QuickActions } from './QuickActions';
 import { RecentActivity } from './RecentActivity';
 import { UserBenefits } from './UserBenefits';
+import WidgetsSection from './WidgetsSection';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 import { Skeleton } from '@/components/ui/Skeleton';

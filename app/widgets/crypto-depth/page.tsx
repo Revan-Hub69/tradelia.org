@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useApi } from '@/lib/hooks/useApi';
 import { useTranslations } from '@/lib/i18n/use-translations';
-import { useUserRole } from '@/lib/hooks/useUserRole';
+import { useIsPro } from '@/lib/hooks/useUserRole';
 import { TrendingUp, TrendingDown, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import MIFIDDisclaimer from '@/components/widgets/MIFIDDisclaimer';
@@ -25,7 +25,7 @@ interface AggregatedDepth {
  */
 export default function CryptoDepthWidgetPage() {
   const { t, locale } = useTranslations();
-  const { isPro } = useUserRole();
+  const isPro = useIsPro();
   const [refreshing, setRefreshing] = useState(false);
   const [widgetId, setWidgetId] = useState<string | null>(null);
   

@@ -70,11 +70,11 @@ export async function POST(
 
       try {
         // Fetch new price
-        const price = await getCurrentPrice(symbol, assetType as 'stock' | 'crypto' | 'forex');
+        const priceResult = await getCurrentPrice(symbol, assetType as 'stock' | 'crypto' | 'forex');
         
-        if (price > 0) {
-          priceUpdates[cacheKey] = price;
-          priceCache.set(cacheKey, { price, timestamp: now });
+        if (priceResult.price !== null && priceResult.price > 0) {
+          priceUpdates[cacheKey] = priceResult.price;
+          priceCache.set(cacheKey, { price: priceResult.price, timestamp: now });
         }
 
         // Rate limiting: small delay between requests

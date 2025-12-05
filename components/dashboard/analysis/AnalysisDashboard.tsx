@@ -6,7 +6,7 @@ import VIXIndicator from './VIXIndicator';
 import FearGreedIndicator from './FearGreedIndicator';
 import TermStructureIndicator from './TermStructureIndicator';
 import ProAnalysisModal from './ProAnalysisModal';
-import { useUserRole } from '@/lib/hooks/useUserRole';
+import { useUserRole, useIsPro } from '@/lib/hooks/useUserRole';
 
 /**
  * Analysis Dashboard - Main Market Indicators
@@ -22,7 +22,8 @@ import { useUserRole } from '@/lib/hooks/useUserRole';
  */
 export default function AnalysisDashboard() {
   const { t } = useTranslations();
-  const { isPro, isLoading } = useUserRole();
+  const { isLoading } = useUserRole();
+  const isPro = useIsPro();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
 

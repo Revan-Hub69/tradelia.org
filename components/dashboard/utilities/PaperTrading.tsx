@@ -51,7 +51,9 @@ interface PaperOrder {
   limitPrice?: number;
   stopPrice?: number;
   trailingStopPercent?: number;
-  status: 'pending' | 'filled' | 'cancelled';
+  status: 'pending' | 'filled' | 'cancelled' | 'expired';
+  executionPrice?: number;
+  executionTime?: string;
   createdAt: string;
 }
 
@@ -95,16 +97,16 @@ export function PaperTrading() {
       setPositions(positionsData.map(p => ({
         id: p.id,
         symbol: p.symbol,
-        assetType: p.asset_type as 'stock' | 'crypto' | 'forex',
+        assetType: (p as any).asset_type as 'stock' | 'crypto' | 'forex',
         side: p.side as 'long' | 'short',
         quantity: parseFloat(p.quantity.toString()),
-        entryPrice: parseFloat(p.entry_price.toString()),
-        currentPrice: parseFloat(p.current_price.toString()),
-        entryTime: p.entry_time,
+        entryPrice: parseFloat((p as any).entry_price.toString()),
+        currentPrice: parseFloat((p as any).current_price.toString()),
+        entryTime: (p as any).entry_time,
         strategy: p.strategy,
         notes: p.notes,
-        unrealizedPnL: parseFloat(p.unrealized_pnl?.toString() || '0'),
-        unrealizedPnLPercent: parseFloat(p.unrealized_pnl_percent?.toString() || '0'),
+        unrealizedPnL: parseFloat((p as any).unrealized_pnl?.toString() || '0'),
+        unrealizedPnLPercent: parseFloat((p as any).unrealized_pnl_percent?.toString() || '0'),
       })));
     }
   }, [positionsData]);
@@ -114,17 +116,17 @@ export function PaperTrading() {
       setOrders(ordersData.map(o => ({
         id: o.id,
         symbol: o.symbol,
-        assetType: o.asset_type as 'stock' | 'crypto' | 'forex',
-        orderType: o.order_type as 'market' | 'limit' | 'stop' | 'trailing_stop',
+        assetType: (o as any).asset_type as 'stock' | 'crypto' | 'forex',
+        orderType: (o as any).order_type as 'market' | 'limit' | 'stop' | 'trailing_stop',
         side: o.side as 'buy' | 'sell',
         quantity: parseFloat(o.quantity.toString()),
-        limitPrice: o.limit_price ? parseFloat(o.limit_price.toString()) : undefined,
-        stopPrice: o.stop_price ? parseFloat(o.stop_price.toString()) : undefined,
-        trailingStopPercent: o.trailing_stop_percent ? parseFloat(o.trailing_stop_percent.toString()) : undefined,
+        limitPrice: (o as any).limit_price ? parseFloat((o as any).limit_price.toString()) : undefined,
+        stopPrice: (o as any).stop_price ? parseFloat((o as any).stop_price.toString()) : undefined,
+        trailingStopPercent: (o as any).trailing_stop_percent ? parseFloat((o as any).trailing_stop_percent.toString()) : undefined,
         status: o.status as 'pending' | 'filled' | 'cancelled' | 'expired',
-        executionPrice: o.execution_price ? parseFloat(o.execution_price.toString()) : undefined,
-        executionTime: o.execution_time,
-        createdAt: o.created_at,
+        executionPrice: (o as any).execution_price ? parseFloat((o as any).execution_price.toString()) : undefined,
+        executionTime: (o as any).execution_time,
+        createdAt: (o as any).created_at,
       })));
     }
   }, [ordersData]);
@@ -277,12 +279,12 @@ export function PaperTrading() {
         const mappedPosition: PaperPosition = {
           id: newPosition.id,
           symbol: newPosition.symbol,
-          assetType: newPosition.asset_type,
+          assetType: (newPosition as any).asset_type,
           side: newPosition.side,
           quantity: parseFloat(newPosition.quantity.toString()),
-          entryPrice: parseFloat(newPosition.entry_price.toString()),
-          currentPrice: parseFloat(newPosition.current_price.toString()),
-          entryTime: newPosition.entry_time,
+          entryPrice: parseFloat((newPosition as any).entry_price.toString()),
+          currentPrice: parseFloat((newPosition as any).current_price.toString()),
+          entryTime: (newPosition as any).entry_time,
           strategy: newPosition.strategy,
           notes: newPosition.notes,
           unrealizedPnL: parseFloat(newPosition.unrealized_pnl?.toString() || '0'),
@@ -403,7 +405,7 @@ export function PaperTrading() {
         const mappedOrder: PaperOrder = {
           id: createdOrder.id,
           symbol: createdOrder.symbol,
-          assetType: createdOrder.asset_type,
+          assetType: (createdOrder as any).asset_type,
           orderType: createdOrder.order_type,
           side: createdOrder.side,
           quantity: parseFloat(createdOrder.quantity.toString()),

@@ -44,7 +44,15 @@ interface CryptoMonitorResult {
  * Get top 400 crypto from CoinGecko API (FREE)
  * CoinGecko Free Tier: 50 calls/minute, no API key required
  */
-async function getTop400CryptoSymbols(): Promise<Array<{ symbol: string; name: string; id: string }>> {
+async function getTop400CryptoSymbols(): Promise<Array<{ 
+  symbol: string; 
+  name: string; 
+  id: string;
+  marketCap?: number;
+  price?: number;
+  change24h?: number;
+  change24hPercent?: number;
+}>> {
   try {
     // CoinGecko free API - get top 400 by market cap
     const response = await fetch(

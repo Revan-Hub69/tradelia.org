@@ -270,14 +270,14 @@ async function readMarketDepthWithGroq(
 ): Promise<{
   marketOverview: string;
   notableMovements: string[];
-  volumeHighlights: string[];
+  depthHighlights: string[];
 }> {
   const groqApiKey = process.env.GROQ_API_KEY;
   if (!groqApiKey) {
     return {
       marketOverview: 'Lettura AI non disponibile. Configura GROQ_API_KEY.',
       notableMovements: [],
-      volumeHighlights: [],
+      depthHighlights: [],
     };
   }
 
@@ -370,14 +370,14 @@ Rispondi SOLO in formato JSON valido:
     return {
       marketOverview: analysis.marketOverview || '',
       notableMovements: analysis.notableMovements || [],
-      volumeHighlights: analysis.volumeHighlights || [],
+      depthHighlights: analysis.depthHighlights || analysis.volumeHighlights || [],
     };
   } catch (error) {
     console.error('Error calling Groq AI:', error);
     return {
       marketOverview: 'Errore nella lettura AI. Riprova più tardi.',
       notableMovements: [],
-      volumeHighlights: [],
+      depthHighlights: [],
     };
   }
 }
@@ -576,7 +576,7 @@ ${recentTradesAnalysis.slice(0, 5).map((t, i) =>
         aiReadings: {
           marketOverview: aiReadings.marketOverview,
           notableMovements: aiReadings.notableMovements,
-          depthHighlights: aiReadings.depthHighlights || aiReadings.volumeHighlights || [],
+          depthHighlights: aiReadings.depthHighlights,
         },
       },
     };
