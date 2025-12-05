@@ -30,7 +30,7 @@ export default defineConfig({
     },
     
     // Glob patterns
-    include: ['tests/**/*.{test,spec}.{js,ts}'],
+    include: ['__tests__/**/*.{test,spec}.{js,ts}', 'tests/**/*.{test,spec}.{js,ts}'],
     exclude: ['node_modules/', 'dist/', 'build/'],
     
     // Setup files

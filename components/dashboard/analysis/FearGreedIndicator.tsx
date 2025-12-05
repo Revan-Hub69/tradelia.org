@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { Doughnut } from 'react-chartjs-2';
+import { IndicatorHeader } from './IndicatorHeader';
+import { getFearGreedMethodology } from './IndicatorMethodologyNotes';
 import {
   Chart as ChartJS,
   ArcElement,
@@ -129,53 +131,61 @@ export default function FearGreedIndicator() {
     },
   };
 
+  const methodology = useMemo(() => getFearGreedMethodology(locale), [locale]);
+
   return (
     <div className="bg-bg-surface rounded-lg border border-border-subtle p-6 h-full flex flex-col space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-text-primary">
-            {locale === 'it' ? 'Indice Fear & Greed' : 'Fear & Greed Index'}
-          </h2>
-          {/* Market Selector */}
-          <div className="flex items-center gap-2 mt-2">
-            <button
-              onClick={() => setSelectedMarket('crypto')}
-              className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
-                selectedMarket === 'crypto'
-                  ? 'bg-accent text-white'
-                  : 'bg-bg-soft text-text-secondary hover:bg-bg-surface'
-              }`}
-            >
-              {locale === 'it' ? 'Crypto' : 'Crypto'}
-            </button>
-            <button
-              onClick={() => setSelectedMarket('stock')}
-              className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
-                selectedMarket === 'stock'
-                  ? 'bg-accent text-white'
-                  : 'bg-bg-soft text-text-secondary hover:bg-bg-surface'
-              }`}
-            >
-              {locale === 'it' ? 'Azionario (S&P 500)' : 'Stock (S&P 500)'}
-            </button>
-          </div>
-          <p className="text-sm text-text-secondary mt-2">
-            {selectedMarket === 'crypto'
-              ? (locale === 'it' 
-                  ? 'Sentiment Mercato Crypto (Bitcoin & Criptovalute) - Fonte: Alternative.me' 
-                  : 'Crypto Market Sentiment (Bitcoin & Cryptocurrencies) - Source: Alternative.me')
-              : (locale === 'it'
-                  ? 'Sentiment Mercato Azionario (S&P 500) - Fonte: CNN'
-                  : 'Stock Market Sentiment (S&P 500) - Source: CNN')}
-          </p>
-        </div>
-        {data && (
-          <div className="text-2xl font-bold" style={{ color: getColor(data.value) }}>
-            {data.value}
-          </div>
-        )}
+      {/* Header with Methodology Popup */}
+      <IndicatorHeader
+        title={locale === 'it' ? 'Indice Fear & Greed' : 'Fear & Greed Index'}
+        methodology={methodology}
+      />
+      
+      {/* Market Selector */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => setSelectedMarket('crypto')}
+          className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
+            selectedMarket === 'crypto'
+              ? 'bg-accent text-white'
+              : 'bg-bg-soft text-text-secondary hover:bg-bg-surface'
+          }`}
+          aria-label={locale === 'it' ? 'Seleziona mercato crypto' : 'Select crypto market'}
+          aria-pressed={selectedMarket === 'crypto'}
+        >
+          {locale === 'it' ? 'Crypto' : 'Crypto'}
+        </button>
+        <button
+          onClick={() => setSelectedMarket('stock')}
+          className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
+            selectedMarket === 'stock'
+              ? 'bg-accent text-white'
+              : 'bg-bg-soft text-text-secondary hover:bg-bg-surface'
+          }`}
+          aria-label={locale === 'it' ? 'Seleziona mercato azionario' : 'Select stock market'}
+          aria-pressed={selectedMarket === 'stock'}
+        >
+          {locale === 'it' ? 'Azionario (S&P 500)' : 'Stock (S&P 500)'}
+        </button>
       </div>
+      
+      {/* Description */}
+      <p className="text-sm text-text-secondary">
+        {selectedMarket === 'crypto'
+          ? (locale === 'it' 
+              ? 'Sentiment Mercato Crypto (Bitcoin & Criptovalute) - Fonte: Alternative.me' 
+              : 'Crypto Market Sentiment (Bitcoin & Cryptocurrencies) - Source: Alternative.me')
+          : (locale === 'it'
+              ? 'Sentiment Mercato Azionario (S&P 500) - Fonte: CNN'
+              : 'Stock Market Sentiment (S&P 500) - Source: CNN')}
+      </p>
+      
+      {/* Value Display */}
+      {data && (
+        <div className="text-2xl font-bold" style={{ color: getColor(data.value) }}>
+          {data.value}
+        </div>
+      )}
 
       {data ? (
         <>
@@ -226,92 +236,20 @@ export default function FearGreedIndicator() {
 
       {data && (
         <>
-      {/* SEZIONE 1: Spiegazione Accademica */}
-      <div className="border-t border-border-subtle pt-4">
-        <p className="text-sm font-semibold mb-2 text-text-primary">
-          {locale === 'it' ? 'Riferimento Accademico' : 'Academic Reference'}
-        </p>
-        <div className="text-xs text-text-tertiary space-y-1">
-          <p>
-            <strong>{locale === 'it' ? 'Paper:' : 'Paper:'}</strong>{' '}
-            {locale === 'it' 
-              ? 'Behavioral Finance - Analisi Sentiment di Mercato'
-              : 'Behavioral Finance - Market Sentiment Analysis'}
-          </p>
-          <p>
-            <strong>{locale === 'it' ? 'Definizione:' : 'Definition:'}</strong>{' '}
-            {locale === 'it'
-              ? 'Indice sintetico che misura il sentiment di mercato combinando 7 fattori: volatilità, volume, social media, surveys, dominance, Google Trends, e momentum.'
-              : 'Synthetic index measuring market sentiment by combining 7 factors: volatility, volume, social media, surveys, dominance, Google Trends, and momentum.'}
-          </p>
-          <p>
-            <strong>{locale === 'it' ? 'Metodologia:' : 'Methodology:'}</strong>{' '}
-            {locale === 'it'
-              ? 'Calcolato da Alternative.me combinando dati on-chain, social media, e metriche di mercato. Range 0-100.'
-              : 'Calculated by Alternative.me combining on-chain data, social media, and market metrics. Range 0-100.'}
-          </p>
-        </div>
-      </div>
-
-      {/* SEZIONE 2: Come Leggerlo Accademicamente */}
-      <div className="border-t border-border-subtle pt-4">
-        <p className="text-sm font-semibold mb-2 text-text-primary">
-          {locale === 'it' ? 'Interpretazione Accademica' : 'Academic Interpretation'}
-        </p>
-        <div className="text-xs text-text-tertiary space-y-1">
-          <p>
-            <strong>0-24 ({locale === 'it' ? 'Extreme Fear' : 'Extreme Fear'}):</strong>{' '}
-            {locale === 'it'
-              ? 'Sentiment estremamente negativo. Storicamente, zone di acquisto potenziali, ma richiede conferma da altri indicatori.'
-              : 'Extremely negative sentiment. Historically potential buying zones, but requires confirmation from other indicators.'}
-          </p>
-          <p>
-            <strong>25-44 ({locale === 'it' ? 'Fear' : 'Fear'}):</strong>{' '}
-            {locale === 'it'
-              ? 'Sentiment negativo. Mercato in fase di paura, possibile overselling.'
-              : 'Negative sentiment. Market in fear phase, possible overselling.'}
-          </p>
-          <p>
-            <strong>45-55 ({locale === 'it' ? 'Neutral' : 'Neutral'}):</strong>{' '}
-            {locale === 'it'
-              ? 'Sentiment bilanciato. Nessun segnale estremo, mercato in equilibrio.'
-              : 'Balanced sentiment. No extreme signals, market in equilibrium.'}
-          </p>
-          <p>
-            <strong>56-75 ({locale === 'it' ? 'Greed' : 'Greed'}):</strong>{' '}
-            {locale === 'it'
-              ? 'Sentiment positivo. Mercato in fase di avidità, possibile overbuying.'
-              : 'Positive sentiment. Market in greed phase, possible overbuying.'}
-          </p>
-          <p>
-            <strong>76-100 ({locale === 'it' ? 'Extreme Greed' : 'Extreme Greed'}):</strong>{' '}
-            {locale === 'it'
-              ? 'Sentiment estremamente positivo. Storicamente, zone di vendita potenziali. Attenzione a possibili correzioni.'
-              : 'Extremely positive sentiment. Historically potential selling zones. Caution for possible corrections.'}
-          </p>
-          <p className="mt-2 italic">
-            <strong>{locale === 'it' ? 'Limitazioni:' : 'Limitations:'}</strong>{' '}
-            {locale === 'it'
-              ? 'L\'indicatore è retrospettivo e può essere influenzato da eventi esogeni. Non predice timing preciso dei movimenti di mercato.'
-              : 'The indicator is retrospective and can be influenced by exogenous events. Does not predict precise timing of market movements.'}
-          </p>
-        </div>
-      </div>
-
-      {/* SEZIONE 3: Lettura AI */}
-      <div className="border-t border-border-subtle pt-4">
-        <p className="text-sm font-semibold mb-2 text-text-primary">
-          {locale === 'it' ? 'Lettura Mercato (Groq AI)' : 'Market Reading (Groq AI)'}
-        </p>
-        <p className="text-sm text-text-secondary leading-relaxed">
-          {data.aiReading || (locale === 'it' ? 'Analisi del sentiment in corso...' : 'Analyzing market sentiment...')}
-        </p>
-        <p className="text-xs text-text-tertiary mt-2">
-          {locale === 'it'
-            ? 'Analisi descrittiva basata sui dati attuali. Non costituisce consulenza finanziaria.'
-            : 'Descriptive analysis based on current data. Does not constitute financial advice.'}
-        </p>
-      </div>
+          {/* AI Reading */}
+          <div className="border-t border-border-subtle pt-4">
+            <p className="text-sm font-semibold mb-2 text-text-primary">
+              {locale === 'it' ? 'Lettura Mercato (Groq AI)' : 'Market Reading (Groq AI)'}
+            </p>
+            <p className="text-sm text-text-secondary leading-relaxed">
+              {data.aiReading || (locale === 'it' ? 'Analisi del sentiment in corso...' : 'Analyzing market sentiment...')}
+            </p>
+            <p className="text-xs text-text-tertiary mt-2">
+              {locale === 'it'
+                ? 'Analisi descrittiva basata sui dati attuali. Non costituisce consulenza finanziaria.'
+                : 'Descriptive analysis based on current data. Does not constitute financial advice.'}
+            </p>
+          </div>
 
           {/* Update Time */}
           <div className="text-xs text-text-tertiary text-center">

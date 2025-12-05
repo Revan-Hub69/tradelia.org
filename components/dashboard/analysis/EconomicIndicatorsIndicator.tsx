@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
+import { IndicatorHeader } from './IndicatorHeader';
+import { getEconomicIndicatorsMethodology } from './IndicatorMethodologyNotes';
 
 interface EconomicIndicator {
   id: string;
@@ -221,98 +223,29 @@ export default function EconomicIndicatorsIndicator() {
     );
   }
 
+  const methodology = useMemo(() => getEconomicIndicatorsMethodology(locale), [locale]);
+
   return (
     <div className="bg-bg-surface rounded-lg border border-border-subtle p-6 h-full flex flex-col space-y-4 overflow-y-auto">
-      {/* Header */}
-      <div>
-        <h2 className="text-xl font-bold text-text-primary">
-          {locale === 'it' ? 'Indicatori Economici' : 'Economic Indicators'}
-        </h2>
-        <p className="text-sm text-text-secondary">
-          {locale === 'it'
-            ? 'Dati ufficiali Federal Reserve (FRED) - GDP, Inflazione, Disoccupazione, Tasso Fed'
-            : 'Official Federal Reserve Data (FRED) - GDP, Inflation, Unemployment, Fed Rate'}
-        </p>
-      </div>
+      {/* Header with Methodology Popup */}
+      <IndicatorHeader
+        title={locale === 'it' ? 'Indicatori Economici' : 'Economic Indicators'}
+        methodology={methodology}
+      />
+      
+      {/* Description */}
+      <p className="text-sm text-text-secondary">
+        {locale === 'it'
+          ? 'Dati ufficiali Federal Reserve (FRED) - GDP, Inflazione, Disoccupazione, Tasso Fed'
+          : 'Official Federal Reserve Data (FRED) - GDP, Inflation, Unemployment, Fed Rate'}
+      </p>
 
       {/* Indicators Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {indicatorCards}
       </div>
 
-      {/* SEZIONE 1: Spiegazione Accademica */}
-      <div className="border-t border-border-subtle pt-4">
-        <p className="text-sm font-semibold mb-2 text-text-primary">
-          {locale === 'it' ? 'Riferimenti Accademici' : 'Academic References'}
-        </p>
-        <div className="text-xs text-text-tertiary space-y-1">
-          <p>
-            <strong>GDP:</strong> National Bureau of Economic Research (NBER) -{' '}
-            {locale === 'it'
-              ? 'Misura crescita economica reale (quarterly, annualized)'
-              : 'Measures real economic growth (quarterly, annualized)'}
-          </p>
-          <p>
-            <strong>CPI:</strong> Bureau of Labor Statistics (BLS) -{' '}
-            {locale === 'it'
-              ? 'Indice prezzi al consumo, misura inflazione'
-              : 'Consumer Price Index, measures inflation'}
-          </p>
-          <p>
-            <strong>Unemployment:</strong> Bureau of Labor Statistics (BLS) -{' '}
-            {locale === 'it'
-              ? 'Tasso di disoccupazione, misura salute mercato del lavoro'
-              : 'Unemployment rate, measures labor market health'}
-          </p>
-          <p>
-            <strong>Fed Funds Rate:</strong> Federal Reserve -{' '}
-            {locale === 'it'
-              ? 'Tasso di interesse centrale, strumento politica monetaria'
-              : 'Central interest rate, monetary policy tool'}
-          </p>
-        </div>
-      </div>
-
-      {/* SEZIONE 2: Come Leggerli Accademicamente */}
-      <div className="border-t border-border-subtle pt-4">
-        <p className="text-sm font-semibold mb-2 text-text-primary">
-          {locale === 'it' ? 'Interpretazione Accademica' : 'Academic Interpretation'}
-        </p>
-        <div className="text-xs text-text-tertiary space-y-1">
-          <p>
-            <strong>GDP positivo:</strong>{' '}
-            {locale === 'it'
-              ? 'Crescita economica. Negativo: Recessione. Target: crescita sostenibile 2-3% annuo.'
-              : 'Economic growth. Negative: Recession. Target: sustainable 2-3% annual growth.'}
-          </p>
-          <p>
-            <strong>CPI in aumento:</strong>{' '}
-            {locale === 'it'
-              ? 'Inflazione. Target Fed: ~2% annuo. Troppo alta: erode potere d\'acquisto. Troppo bassa: rischio deflazione.'
-              : 'Inflation. Fed target: ~2% annual. Too high: erodes purchasing power. Too low: deflation risk.'}
-          </p>
-          <p>
-            <strong>Unemployment basso:</strong>{' '}
-            {locale === 'it'
-              ? 'Mercato del lavoro forte. Alto: debolezza economica. Target: ~4-5% (full employment).'
-              : 'Strong labor market. High: economic weakness. Target: ~4-5% (full employment).'}
-          </p>
-          <p>
-            <strong>Fed Funds Rate:</strong>{' '}
-            {locale === 'it'
-              ? 'Tasso di interesse centrale. Influenza costi di finanziamento, inflazione, crescita. Aumenti: rallentano economia. Diminuzioni: stimolano economia.'
-              : 'Central interest rate. Influences financing costs, inflation, growth. Increases: slow economy. Decreases: stimulate economy.'}
-          </p>
-          <p className="mt-2 italic">
-            <strong>{locale === 'it' ? 'Limitazioni:' : 'Limitations:'}</strong>{' '}
-            {locale === 'it'
-              ? 'Gli indicatori sono retrospettivi. Richiedono tempo per riflettere cambiamenti economici. Interpretazione richiede contesto di altri indicatori e condizioni macroeconomiche.'
-              : 'Indicators are retrospective. Take time to reflect economic changes. Interpretation requires context from other indicators and macroeconomic conditions.'}
-          </p>
-        </div>
-      </div>
-
-      {/* SEZIONE 3: Lettura AI */}
+      {/* AI Reading */}
       <div className="border-t border-border-subtle pt-4">
         <p className="text-sm font-semibold mb-2 text-text-primary">
           {locale === 'it' ? 'Lettura Mercato (Groq AI)' : 'Market Reading (Groq AI)'}

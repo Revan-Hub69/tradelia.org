@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false, // Disabilita strict mode per evitare doppio rendering che causa hydration mismatch
+  reactStrictMode: true, // Best Practice: Abilita strict mode per rilevare problemi e migliorare performance
 
   // Security Headers - Enterprise Grade
   async headers() {
