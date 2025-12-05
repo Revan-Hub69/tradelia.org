@@ -8,6 +8,10 @@ import FearGreedIndicator from './FearGreedIndicator';
 import BitcoinDominanceIndicator from './BitcoinDominanceIndicator';
 import EconomicIndicatorsIndicator from './EconomicIndicatorsIndicator';
 import BondYieldsIndicator from './BondYieldsIndicator';
+import StockIndexesIndicator from './StockIndexesIndicator';
+import CommoditiesIndicator from './CommoditiesIndicator';
+import CryptoMarketCapIndicator from './CryptoMarketCapIndicator';
+import ForexIndicator from './ForexIndicator';
 import ProAnalysisModal from './ProAnalysisModal';
 import { useUserRole, useIsPro } from '@/lib/hooks/useUserRole';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
@@ -35,9 +39,13 @@ export default function AnalysisDashboard() {
 
   const indicators = [
     { id: 'bitcoin-dominance', component: BitcoinDominanceIndicator },
+    { id: 'crypto-market-cap', component: CryptoMarketCapIndicator },
     { id: 'fear-greed', component: FearGreedIndicator },
     { id: 'economic', component: EconomicIndicatorsIndicator },
     { id: 'bond-yields', component: BondYieldsIndicator },
+    { id: 'stock-indexes', component: StockIndexesIndicator },
+    { id: 'commodities', component: CommoditiesIndicator },
+    { id: 'forex', component: ForexIndicator },
     { id: 'vix', component: VIXIndicator },
   ];
 
