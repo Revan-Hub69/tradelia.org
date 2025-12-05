@@ -280,6 +280,8 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error in modules API:', error);
     // In caso di errore, restituisci moduli di default
+    // Detect locale anche in caso di errore
+    const locale = getLocaleFromRequest(request);
     const priority = new URL(request.url).searchParams.get('priority') as 'primary' | 'secondary' | null;
     
     // Verifica se l'utente è admin anche in caso di errore
