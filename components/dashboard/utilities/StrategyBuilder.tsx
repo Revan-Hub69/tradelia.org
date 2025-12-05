@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback, memo } from 'react';
+import React, { useState, useMemo, useCallback, memo } from 'react';
 import { TrendingUp, TrendingDown, BarChart3, AlertCircle, Info, BookOpen, Calculator, Target, Shield, Save, Download, Settings, Filter, X, CheckCircle2, Circle } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
@@ -564,12 +564,13 @@ export function StrategyBuilder() {
     }
   }, []);
 
-  return (
-    <StrategyBuilderContent
-      className="space-y-6"
-      itemScope
-      itemType="https://schema.org/SoftwareApplication"
-    >
+  return React.createElement(
+    StrategyBuilderContent,
+    {
+      className: 'space-y-6',
+      itemScope: true,
+      itemType: 'https://schema.org/SoftwareApplication'
+    },
         {/* Structured Data for SEO */}
         <script
           type="application/ld+json"
@@ -2246,7 +2247,6 @@ export function StrategyBuilder() {
             </div>
           </div>
         </aside>
-    </StrategyBuilderContent>
   );
 }
 
