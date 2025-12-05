@@ -8,6 +8,7 @@ import { useIsPro } from '@/lib/hooks/useUserRole';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ProBadge } from '@/components/ui/ProBadge';
 import { ComingSoon } from '@/components/ui/ComingSoon';
+import { FeatureComingSoon } from '@/components/ui/FeatureComingSoon';
 import { ProLockOverlay } from '@/components/dashboard/utilities/ProLockOverlay';
 import { cn } from '@/lib/utils/cn';
 import styles from './utilities.module.css';
@@ -364,10 +365,62 @@ export default function UtilitiesPage() {
                 {selectedUtility === 'strategy-builder' && (
                   isPro ? <StrategyBuilder /> : <ProLockOverlay><StrategyBuilder /></ProLockOverlay>
                 )}
-                {selectedUtility === 'watchlist' && <ComingSoon title="Watchlist" description="Monitora i tuoi asset preferiti con alert personalizzati" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />}
-                {selectedUtility === 'portfolio-manager' && <ComingSoon title="Portfolio Manager" description="Gestisci il tuo portafoglio con aggiornamenti real-time" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />}
-                {selectedUtility === 'alerts' && <ComingSoon title="Sistema di Alert" description="Notifiche personalizzate per i tuoi asset" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />}
-                {selectedUtility === 'widgets' && <ComingSoon title="Widgets" description="Widget personalizzabili per watchlist, portfolio e alert" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />}
+                {selectedUtility === 'watchlist' && (
+                  <div className="relative">
+                    <div className="opacity-50 pointer-events-none">
+                      <ComingSoon title="Watchlist" description="Monitora i tuoi asset preferiti con alert personalizzati" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />
+                    </div>
+                    <FeatureComingSoon
+                      featureName="Watchlist"
+                      description="Monitora i tuoi asset preferiti con alert personalizzati"
+                      reason="Richiede integrazione con API real-time per prezzi di mercato"
+                      estimatedDate="Q2 2025"
+                      variant="overlay"
+                    />
+                  </div>
+                )}
+                {selectedUtility === 'portfolio-manager' && (
+                  <div className="relative">
+                    <div className="opacity-50 pointer-events-none">
+                      <ComingSoon title="Portfolio Manager" description="Gestisci il tuo portafoglio con aggiornamenti real-time" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />
+                    </div>
+                    <FeatureComingSoon
+                      featureName="Portfolio Manager"
+                      description="Gestisci il tuo portafoglio con aggiornamenti real-time"
+                      reason="Richiede integrazione con API real-time per prezzi di mercato"
+                      estimatedDate="Q2 2025"
+                      variant="overlay"
+                    />
+                  </div>
+                )}
+                {selectedUtility === 'alerts' && (
+                  <div className="relative">
+                    <div className="opacity-50 pointer-events-none">
+                      <ComingSoon title="Sistema di Alert" description="Notifiche personalizzate per i tuoi asset" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />
+                    </div>
+                    <FeatureComingSoon
+                      featureName="Sistema di Alert"
+                      description="Notifiche personalizzate per i tuoi asset"
+                      reason="Richiede integrazione con API real-time per prezzi di mercato"
+                      estimatedDate="Q2 2025"
+                      variant="overlay"
+                    />
+                  </div>
+                )}
+                {selectedUtility === 'widgets' && (
+                  <div className="relative">
+                    <div className="opacity-50 pointer-events-none">
+                      <ComingSoon title="Widgets" description="Widget personalizzabili per watchlist, portfolio e alert" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />
+                    </div>
+                    <FeatureComingSoon
+                      featureName="Widgets"
+                      description="Widget personalizzabili per watchlist, portfolio e alert"
+                      reason="Richiede integrazione con API real-time per prezzi di mercato"
+                      estimatedDate="Q2 2025"
+                      variant="overlay"
+                    />
+                  </div>
+                )}
               </Suspense>
             </div>
           </div>
@@ -604,9 +657,11 @@ export default function UtilitiesPage() {
                         key={utility.id}
                         className={cn(
                           'bg-bg-surface border border-border-subtle/50 rounded-xl p-6 text-left relative',
-                          'opacity-75',
-                          'flex flex-col gap-3'
+                          'opacity-50',
+                          'flex flex-col gap-3',
+                          'cursor-not-allowed'
                         )}
+                        onClick={() => handleUtilityClick(utility)}
                       >
                         <div className="flex items-start justify-between">
                           <div className="w-12 h-12 rounded-lg bg-bg-soft flex items-center justify-center">
@@ -623,6 +678,13 @@ export default function UtilitiesPage() {
                             <p className="text-xs text-text-tertiary mt-2 italic">{utility.reason}</p>
                           )}
                         </div>
+                        <FeatureComingSoon
+                          featureName={utility.label}
+                          description={utility.description}
+                          reason={utility.reason}
+                          estimatedDate="Q2 2025"
+                          variant="overlay"
+                        />
                       </div>
                     );
                   })}
