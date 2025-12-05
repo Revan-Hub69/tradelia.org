@@ -261,6 +261,17 @@ export function DashboardShell() {
               <OverviewStats />
             </ErrorBoundary>
           </section>
+
+          {/* Widgets Section (Pro only) */}
+          <section 
+            aria-label="Widget personalizzati" 
+            className={styles.dashboardSection}
+            id="widgets"
+          >
+            <ErrorBoundary>
+              <WidgetsSection />
+            </ErrorBoundary>
+          </section>
         </div>
         <ErrorBoundary>
           <Suspense fallback={null}>
