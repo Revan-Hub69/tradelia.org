@@ -18,6 +18,7 @@ interface FearGreedData {
   timestamp: string;
   history: Array<{ date: string; value: number }>;
   aiReading: string;
+  market?: 'crypto' | 'stock'; // Tipo di mercato
 }
 
 /**
@@ -36,12 +37,23 @@ export default function FearGreedIndicator() {
   const [data, setData] = useState<FearGreedData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedMarket, setSelectedMarket] = useState<'crypto' | 'stock'>('crypto');
 
   useEffect(() => {
     const fetchFearGreed = async () => {
       try {
-        const response = await fetch('/api/market-indicators/fear-greed');
-        if (!response.ok) throw new Error('Failed to fetch Fear & Greed');
+        const response = await fetch(`/api/market-indicators/fear-greed?market=${selectedMarket}`);
+        if (!response.ok) {
+          if (response.status === 503) {
+            // Stock market not yet available
+            const errorData = await response.json();
+            setError(errorData.error || 'Stock market Fear & Greed Index not yet available');
+            setData(null);
+            setIsLoading(false);
+            return;
+          }
+          throw new Error('Failed to fetch Fear & Greed');
+        }
         
         const fearGreedData = await response.json();
         setData(fearGreedData);
@@ -57,7 +69,7 @@ export default function FearGreedIndicator() {
     // Update every 5 minutes
     const interval = setInterval(fetchFearGreed, 300000);
     return () => clearInterval(interval);
-  }, []);
+  }, [selectedMarket]);
 
   if (isLoading) {
     return (
@@ -125,54 +137,110 @@ export default function FearGreedIndicator() {
           <h2 className="text-xl font-bold text-text-primary">
             {locale === 'it' ? 'Indice Fear & Greed' : 'Fear & Greed Index'}
           </h2>
-          <p className="text-sm text-text-secondary">
-            {locale === 'it' 
-              ? 'Sentiment Mercato Crypto (Bitcoin & Criptovalute) - Fonte: Alternative.me' 
-              : 'Crypto Market Sentiment (Bitcoin & Cryptocurrencies) - Source: Alternative.me'}
+          {/* Market Selector */}
+          <div className="flex items-center gap-2 mt-2">
+            <button
+              onClick={() => setSelectedMarket('crypto')}
+              className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
+                selectedMarket === 'crypto'
+                  ? 'bg-accent text-white'
+                  : 'bg-bg-soft text-text-secondary hover:bg-bg-surface'
+              }`}
+            >
+              {locale === 'it' ? 'Crypto' : 'Crypto'}
+            </button>
+            <button
+              onClick={() => setSelectedMarket('stock')}
+              className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
+                selectedMarket === 'stock'
+                  ? 'bg-accent text-white'
+                  : 'bg-bg-soft text-text-secondary hover:bg-bg-surface'
+              }`}
+            >
+              {locale === 'it' ? 'Azionario (S&P 500)' : 'Stock (S&P 500)'}
+            </button>
+          </div>
+          <p className="text-sm text-text-secondary mt-2">
+            {selectedMarket === 'crypto'
+              ? (locale === 'it' 
+                  ? 'Sentiment Mercato Crypto (Bitcoin & Criptovalute) - Fonte: Alternative.me' 
+                  : 'Crypto Market Sentiment (Bitcoin & Cryptocurrencies) - Source: Alternative.me')
+              : (locale === 'it'
+                  ? 'Sentiment Mercato Azionario (S&P 500) - Fonte: CNN'
+                  : 'Stock Market Sentiment (S&P 500) - Source: CNN')}
           </p>
         </div>
-        <div className="text-2xl font-bold" style={{ color: getColor(data.value) }}>
-          {data.value}
-        </div>
-      </div>
-
-      {/* Doughnut Chart */}
-      <div className="h-48 flex items-center justify-center relative">
-        <Doughnut data={chartData} options={chartOptions} />
-        <div className="absolute text-center">
-          <div className="text-3xl font-bold" style={{ color: getColor(data.value) }}>
+        {data && (
+          <div className="text-2xl font-bold" style={{ color: getColor(data.value) }}>
             {data.value}
           </div>
-          <div className="text-sm text-muted-foreground">{data.classification}</div>
+        )}
+      </div>
+
+      {data ? (
+        <>
+          {/* Doughnut Chart */}
+          <div className="h-48 flex items-center justify-center relative">
+            <Doughnut data={chartData} options={chartOptions} />
+            <div className="absolute text-center">
+              <div className="text-3xl font-bold" style={{ color: getColor(data.value) }}>
+                {data.value}
+              </div>
+              <div className="text-sm text-text-tertiary">{data.classification}</div>
+            </div>
+          </div>
+
+          {/* Classification */}
+          <div className="text-center">
+            <p className={`text-lg font-semibold`} style={{ color: getColor(data.value) }}>
+              {data.classification}
+            </p>
+          </div>
+        </>
+      ) : selectedMarket === 'stock' ? (
+        <div className="h-48 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-text-secondary mb-2">
+              {locale === 'it' 
+                ? 'Indice Fear & Greed per mercato azionario in arrivo' 
+                : 'Stock Market Fear & Greed Index coming soon'}
+            </p>
+            <p className="text-xs text-text-tertiary">
+              {locale === 'it'
+                ? 'Stiamo lavorando all\'integrazione con CNN Fear & Greed Index per S&P 500'
+                : 'We are working on integrating CNN Fear & Greed Index for S&P 500'}
+            </p>
+          </div>
         </div>
-      </div>
+      ) : null}
 
-      {/* Classification */}
-      <div className="text-center">
-        <p className={`text-lg font-semibold`} style={{ color: getColor(data.value) }}>
-          {data.classification}
-        </p>
-      </div>
+      {data && (
+        <>
+          {/* Groq AI Reading */}
+          <div className="border-t border-border-subtle pt-4">
+            <p className="text-sm font-semibold mb-2 text-text-primary">
+              {locale === 'it' ? 'Lettura Mercato (Groq AI)' : 'Market Reading (Groq AI)'}
+            </p>
+            <p className="text-sm text-text-secondary leading-relaxed">
+              {data.aiReading || (locale === 'it' ? 'Analisi del sentiment in corso...' : 'Analyzing market sentiment...')}
+            </p>
+            <p className="text-xs text-text-tertiary mt-2">
+              {selectedMarket === 'crypto'
+                ? (locale === 'it' 
+                    ? 'Riferimento: Behavioral Finance - Analisi Sentiment Mercato Crypto (Alternative.me)'
+                    : 'Reference: Behavioral Finance - Crypto Market Sentiment Analysis (Alternative.me)')
+                : (locale === 'it'
+                    ? 'Riferimento: Behavioral Finance - Analisi Sentiment Mercato Azionario (CNN)'
+                    : 'Reference: Behavioral Finance - Stock Market Sentiment Analysis (CNN)')}
+            </p>
+          </div>
 
-      {/* Groq AI Reading */}
-      <div className="border-t border-border-subtle pt-4">
-        <p className="text-sm font-semibold mb-2 text-text-primary">
-          {locale === 'it' ? 'Lettura Mercato (Groq AI)' : 'Market Reading (Groq AI)'}
-        </p>
-        <p className="text-sm text-text-secondary leading-relaxed">
-          {data.aiReading || (locale === 'it' ? 'Analisi del sentiment in corso...' : 'Analyzing market sentiment...')}
-        </p>
-        <p className="text-xs text-text-tertiary mt-2">
-          {locale === 'it' 
-            ? 'Riferimento: Behavioral Finance - Analisi Sentiment Mercato Crypto (Alternative.me). Nota: Esiste anche un Fear & Greed Index per il mercato azionario (CNN per S&P 500).'
-            : 'Reference: Behavioral Finance - Crypto Market Sentiment Analysis (Alternative.me). Note: A Fear & Greed Index also exists for stock market (CNN for S&P 500).'}
-        </p>
-      </div>
-
-      {/* Update Time */}
-      <div className="text-xs text-text-tertiary text-center">
-        {locale === 'it' ? 'Aggiornato' : 'Updated'}: {new Date(data.timestamp).toLocaleTimeString(locale === 'it' ? 'it-IT' : 'en-US')}
-      </div>
+          {/* Update Time */}
+          <div className="text-xs text-text-tertiary text-center">
+            {locale === 'it' ? 'Aggiornato' : 'Updated'}: {new Date(data.timestamp).toLocaleTimeString(locale === 'it' ? 'it-IT' : 'en-US')}
+          </div>
+        </>
+      )}
     </div>
   );
 }

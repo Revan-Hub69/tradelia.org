@@ -103,66 +103,6 @@ export default function AnalysisDashboard() {
               );
             })}
           </div>
-        </div>
-        
-        {/* Pro Analysis Section - Spostato in basso */}
-        {isPro && (
-          <div className="mt-8">
-            <div className="bg-bg-soft border border-border-subtle rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-accent" />
-                  {locale === 'it' ? 'Analisi Avanzate Pro' : 'Pro Advanced Analysis'}
-                </h2>
-                <button
-                  onClick={() => setIsProModalOpen(true)}
-                  className={cn(
-                    'px-4 py-2 rounded-lg font-medium transition-all',
-                    'bg-accent text-white hover:bg-accent-hover',
-                    'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2'
-                  )}
-                >
-                  {locale === 'it' ? 'Apri Analisi Pro' : 'Open Pro Analysis'}
-                </button>
-              </div>
-              <p className="text-sm text-text-secondary">
-                {locale === 'it' 
-                  ? 'Accedi ad analisi avanzate con AI, backtesting e strumenti professionali.'
-                  : 'Access advanced analysis with AI, backtesting and professional tools.'}
-              </p>
-            </div>
-          </div>
-        )}
-        
-        {/* Non-Pro: Upgrade Prompt */}
-        {!isPro && !isLoading && (
-          <div className="mt-8">
-            <div className="bg-gradient-to-r from-accent/20 to-accent-hover/20 border border-accent/40 rounded-xl p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-text-primary mb-2">
-                    {locale === 'it' ? 'Sblocca Analisi Avanzate' : 'Unlock Advanced Analysis'}
-                  </h3>
-                  <p className="text-sm text-text-secondary mb-4">
-                    {locale === 'it' 
-                      ? 'Ottieni accesso ad analisi AI avanzate, backtesting e strumenti professionali con un account Pro.'
-                      : 'Get access to advanced AI analysis, backtesting and professional tools with a Pro account.'}
-                  </p>
-                </div>
-                <button
-                  onClick={() => setIsProModalOpen(true)}
-                  className={cn(
-                    'px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap',
-                    'bg-accent text-white hover:bg-accent-hover',
-                    'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2'
-                  )}
-                >
-                  {locale === 'it' ? 'Scopri Pro' : 'Discover Pro'}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
           {/* Mobile: Slide Layout */}
           <div className="md:hidden relative">
@@ -231,6 +171,65 @@ export default function AnalysisDashboard() {
             </div>
           </div>
         </div>
+        
+        {/* Pro Analysis Section - Spostato in basso */}
+        {isPro && (
+          <div className="mt-8">
+            <div className="bg-bg-soft border border-border-subtle rounded-xl p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-accent" />
+                  {locale === 'it' ? 'Analisi Avanzate Pro' : 'Pro Advanced Analysis'}
+                </h2>
+                <button
+                  onClick={() => setIsProModalOpen(true)}
+                  className={cn(
+                    'px-4 py-2 rounded-lg font-medium transition-all',
+                    'bg-accent text-white hover:bg-accent-hover',
+                    'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2'
+                  )}
+                >
+                  {locale === 'it' ? 'Apri Analisi Pro' : 'Open Pro Analysis'}
+                </button>
+              </div>
+              <p className="text-sm text-text-secondary">
+                {locale === 'it' 
+                  ? 'Accedi ad analisi avanzate con AI, backtesting e strumenti professionali.'
+                  : 'Access advanced analysis with AI, backtesting and professional tools.'}
+              </p>
+            </div>
+          </div>
+        )}
+        
+        {/* Non-Pro: Upgrade Prompt */}
+        {!isPro && !isLoading && (
+          <div className="mt-8">
+            <div className="bg-gradient-to-r from-accent/20 to-accent-hover/20 border border-accent/40 rounded-xl p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-text-primary mb-2">
+                    {locale === 'it' ? 'Sblocca Analisi Avanzate' : 'Unlock Advanced Analysis'}
+                  </h3>
+                  <p className="text-sm text-text-secondary mb-4">
+                    {locale === 'it' 
+                      ? 'Ottieni accesso ad analisi AI avanzate, backtesting e strumenti professionali con un account Pro.'
+                      : 'Get access to advanced AI analysis, backtesting and professional tools with a Pro account.'}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setIsProModalOpen(true)}
+                  className={cn(
+                    'px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap',
+                    'bg-accent text-white hover:bg-accent-hover',
+                    'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2'
+                  )}
+                >
+                  {locale === 'it' ? 'Scopri Pro' : 'Discover Pro'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Pro Analysis Modal */}
