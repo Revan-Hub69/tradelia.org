@@ -64,6 +64,30 @@ interface MobileWidget {
 
 const mobileWidgets: MobileWidget[] = [
   {
+    id: 'crypto-whale',
+    name: 'Crypto Whale Widget',
+    description: 'Analisi transazioni whale e flussi exchange in tempo reale',
+    url: '/widgets/crypto-whale',
+    icon: <BarChart3 className="w-5 h-5" />,
+    platforms: ['android', 'ios', 'desktop'],
+  },
+  {
+    id: 'crypto-depth',
+    name: 'Crypto Depth Widget',
+    description: 'Profondità di mercato aggregata multi-exchange',
+    url: '/widgets/crypto-depth',
+    icon: <BarChart3 className="w-5 h-5" />,
+    platforms: ['android', 'ios', 'desktop'],
+  },
+  {
+    id: 'crypto-movers',
+    name: 'Crypto Top Movers Widget',
+    description: 'Top gainers, losers e high volume crypto',
+    url: '/widgets/crypto-movers',
+    icon: <TrendingUp className="w-5 h-5" />,
+    platforms: ['android', 'ios', 'desktop'],
+  },
+  {
     id: 'portfolio',
     name: 'Portfolio Widget',
     description: 'Visualizza il tuo portafoglio direttamente sulla home screen',
@@ -225,71 +249,96 @@ export function WidgetsContent() {
             {t('widgets.mobileWidgetsDesc') || 'Aggiungi questi widget alla home screen del tuo telefono o apri come finestra standalone su desktop'}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            {mobileWidgets.map((widget, index) => (
-              <motion.div
-                key={widget.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-bg-surface border border-border-subtle rounded-xl p-6 hover:border-accent/40 transition-all"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-accent/20 text-accent flex items-center justify-center">
-                      {widget.icon}
+            {mobileWidgets.map((widget, index) => {
+              const isComingSoon = ['portfolio', 'watchlist', 'alerts'].includes(widget.id);
+              
+              return (
+                <motion.div
+                  key={widget.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`bg-bg-surface border rounded-xl p-6 transition-all ${
+                    isComingSoon 
+                      ? 'border-border-subtle opacity-60' 
+                      : 'border-border-subtle hover:border-accent/40'
+                  }`}
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                        isComingSoon 
+                          ? 'bg-bg-soft text-text-tertiary' 
+                          : 'bg-accent/20 text-accent'
+                      }`}>
+                        {widget.icon}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-text-primary">{widget.name}</h3>
+                        <p className="text-xs text-text-tertiary">
+                          {widget.platforms.map(p => {
+                            if (p === 'android') return 'Android';
+                            if (p === 'ios') return 'iOS';
+                            if (p === 'desktop') return 'Desktop';
+                            return p;
+                          }).join(', ')}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-text-primary">{widget.name}</h3>
+                    {isComingSoon && (
+                      <span className="px-2 py-1 bg-bg-soft border border-border-subtle rounded text-xs text-text-tertiary font-medium">
+                        Coming Soon
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-text-secondary mb-4">{widget.description}</p>
+                  {isComingSoon ? (
+                    <div className="text-center py-2">
                       <p className="text-xs text-text-tertiary">
-                        {widget.platforms.map(p => {
-                          if (p === 'android') return 'Android';
-                          if (p === 'ios') return 'iOS';
-                          if (p === 'desktop') return 'Desktop';
-                          return p;
-                        }).join(', ')}
+                        {t('widgets.comingSoon') || 'Disponibile a breve'}
                       </p>
                     </div>
-                  </div>
-                </div>
-                <p className="text-sm text-text-secondary mb-4">{widget.description}</p>
-                <div className="flex flex-col gap-2">
-                  {isMobile && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        window.open(widget.url, '_blank');
-                        installWidgetInstructions(isMobile ? (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad') ? 'ios' : 'android') : 'desktop');
-                      }}
-                      className="w-full flex items-center justify-center gap-2"
-                    >
-                      <Smartphone className="w-4 h-4" />
-                      {t('widgets.openForInstall') || 'Apri per Installare'}
-                    </Button>
+                  ) : (
+                    <div className="flex flex-col gap-2">
+                      {isMobile && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            window.open(widget.url, '_blank');
+                            installWidgetInstructions(isMobile ? (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad') ? 'ios' : 'android') : 'desktop');
+                          }}
+                          className="w-full flex items-center justify-center gap-2"
+                        >
+                          <Smartphone className="w-4 h-4" />
+                          {t('widgets.openForInstall') || 'Apri per Installare'}
+                        </Button>
+                      )}
+                      {isDesktop && (
+                        <Button
+                          variant="default"
+                          size="sm"
+                          onClick={() => openWidgetStandalone(widget.url, widget.id)}
+                          className="w-full flex items-center justify-center gap-2"
+                        >
+                          <Monitor className="w-4 h-4" />
+                          {t('widgets.openStandalone') || 'Apri in Finestra Standalone'}
+                        </Button>
+                      )}
+                      <a
+                        href={widget.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        {t('widgets.openInNewTab') || 'Apri in Nuova Scheda'}
+                      </a>
+                    </div>
                   )}
-                  {isDesktop && (
-                    <Button
-                      variant="default"
-                      size="sm"
-                      onClick={() => openWidgetStandalone(widget.url, widget.id)}
-                      className="w-full flex items-center justify-center gap-2"
-                    >
-                      <Monitor className="w-4 h-4" />
-                      {t('widgets.openStandalone') || 'Apri in Finestra Standalone'}
-                    </Button>
-                  )}
-                  <a
-                    href={widget.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    {t('widgets.openInNewTab') || 'Apri in Nuova Scheda'}
-                  </a>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
 
