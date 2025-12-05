@@ -137,6 +137,9 @@ export function TradeliaAIChat() {
   // Constants - Best Practice: Centralized configuration
   const MAX_MESSAGE_LENGTH = 2000;
   const MAX_CONVERSATION_HISTORY = 10;
+  const STORAGE_KEY = 'tradelia-ai-chat-messages';
+  const STORAGE_STATE_KEY = 'tradelia-ai-chat-state';
+  const MAX_STORED_MESSAGES = 50; // Limit stored messages for privacy/performance
 
   // Quick Actions - Input predisposti
   const quickActions: QuickAction[] = [
@@ -165,6 +168,76 @@ export function TradeliaAIChat() {
         : 'I need support',
     },
   ];
+
+  // Load messages from localStorage on mount - Best Practice: Persistence
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const parsedMessages = JSON.parse(stored);
+        // Convert timestamp strings back to Date objects
+        const messagesWithDates = parsedMessages.map((msg: Omit<Message, 'timestamp'> & { timestamp: string }) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp),
+        }));
+        // Limit to MAX_STORED_MESSAGES
+        setMessages(messagesWithDates.slice(-MAX_STORED_MESSAGES));
+      }
+      
+      // Restore chat state (open/closed) from sessionStorage
+      const storedState = sessionStorage.getItem(STORAGE_STATE_KEY);
+      if (storedState === 'open') {
+        setIsOpen(true);
+      }
+    } catch (error) {
+      console.warn('Failed to load chat from storage:', error);
+      // Clear corrupted data
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, []);
+
+  // Save messages to localStorage - Best Practice: Persistence
+  useEffect(() => {
+    if (typeof window === 'undefined' || messages.length === 0) return;
+    
+    try {
+      // Limit stored messages for privacy/performance
+      const messagesToStore = messages.slice(-MAX_STORED_MESSAGES);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(messagesToStore));
+    } catch (error) {
+      // Handle quota exceeded or other storage errors
+      if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+        console.warn('Storage quota exceeded, clearing old messages');
+        try {
+          // Try storing only last 20 messages
+          const reducedMessages = messages.slice(-20);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(reducedMessages));
+        } catch (e) {
+          console.warn('Failed to save reduced messages, clearing storage');
+          localStorage.removeItem(STORAGE_KEY);
+        }
+      } else {
+        console.warn('Failed to save chat to storage:', error);
+      }
+    }
+  }, [messages]);
+
+  // Save chat state to sessionStorage - Best Practice: Session persistence
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    try {
+      if (isOpen) {
+        sessionStorage.setItem(STORAGE_STATE_KEY, 'open');
+      } else {
+        sessionStorage.removeItem(STORAGE_STATE_KEY);
+      }
+    } catch (error) {
+      console.warn('Failed to save chat state:', error);
+    }
+  }, [isOpen]);
 
   // Scroll to bottom quando arrivano nuovi messaggi
   useEffect(() => {
@@ -424,6 +497,7 @@ export function TradeliaAIChat() {
                     onClick={() => {
                       setMessages([]);
                       setMessage('');
+                      setError(null);
                     }}
                     className="p-2 rounded-lg hover:bg-bg-soft transition-colors group"
                     aria-label={locale === 'it' ? 'Torna alla chat principale' : 'Back to main chat'}
@@ -440,6 +514,13 @@ export function TradeliaAIChat() {
                     onClick={() => {
                       setMessages([]);
                       setMessage('');
+                      setError(null);
+                      // Clear localStorage - Best Practice: Privacy
+                      try {
+                        localStorage.removeItem(STORAGE_KEY);
+                      } catch (error) {
+                        console.warn('Failed to clear storage:', error);
+                      }
                     }}
                     className="p-2 rounded-lg hover:bg-bg-soft transition-colors group"
                     aria-label={locale === 'it' ? 'Nuova conversazione' : 'New conversation'}
