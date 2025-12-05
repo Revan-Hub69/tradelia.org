@@ -6,6 +6,9 @@ import { BarChart3, TrendingUp, AlertCircle } from 'lucide-react';
 import VIXIndicator from './VIXIndicator';
 import FearGreedIndicator from './FearGreedIndicator';
 import TermStructureIndicator from './TermStructureIndicator';
+import BitcoinDominanceIndicator from './BitcoinDominanceIndicator';
+import EconomicIndicatorsIndicator from './EconomicIndicatorsIndicator';
+import BondYieldsIndicator from './BondYieldsIndicator';
 import ProAnalysisModal from './ProAnalysisModal';
 import { useUserRole, useIsPro } from '@/lib/hooks/useUserRole';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
@@ -32,8 +35,11 @@ export default function AnalysisDashboard() {
   const [isProModalOpen, setIsProModalOpen] = useState(false);
 
   const indicators = [
-    { id: 'vix', component: VIXIndicator },
+    { id: 'bitcoin-dominance', component: BitcoinDominanceIndicator },
     { id: 'fear-greed', component: FearGreedIndicator },
+    { id: 'economic', component: EconomicIndicatorsIndicator },
+    { id: 'bond-yields', component: BondYieldsIndicator },
+    { id: 'vix', component: VIXIndicator },
     { id: 'term-structure', component: TermStructureIndicator },
   ];
 
