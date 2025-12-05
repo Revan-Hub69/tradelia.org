@@ -152,10 +152,22 @@ NO predizioni, NO consigli, solo lettura descrittiva.`;
     }
 
     const data = await response.json();
-    return data.choices[0]?.message?.content || "Analyzing Fear & Greed data...";
-  } catch (error) {
+    const content = data.choices?.[0]?.message?.content;
+    if (!content) {
+      console.error("Groq API returned empty content:", data);
+      return "Error generating AI reading.";
+    }
+    return content;
+  } catch (error: any) {
     console.error("Error calling Groq AI:", error);
-    return "Error generating AI reading.";
+    // Se è un errore di autenticazione o rate limit, restituisci un messaggio più specifico
+    if (error?.message?.includes("401") || error?.message?.includes("Unauthorized")) {
+      return "AI analysis unavailable: Invalid API key.";
+    }
+    if (error?.message?.includes("429") || error?.message?.includes("rate limit")) {
+      return "AI analysis temporarily unavailable: Rate limit exceeded.";
+    }
+    return "Error generating AI reading. Please try again later.";
   }
 }
 

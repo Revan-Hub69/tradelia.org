@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 /**
  * Term Structure Indicator API
- * 
+ *
  * Futures Term Structure Analysis
  * Academic Reference: Fama & French (1987) - "Commodity Futures Prices"
- * 
+ *
  * Data Source: Yahoo Finance (FREE)
  * Updates: Every 2 minutes
  */
@@ -18,7 +18,7 @@ interface TermStructureResponse {
     basis: number; // Basis vs spot
   }>;
   spotPrice: number;
-  structure: 'contango' | 'backwardation' | 'neutral';
+  structure: "contango" | "backwardation" | "neutral";
   timestamp: string;
   aiReading: string;
 }
@@ -26,14 +26,16 @@ interface TermStructureResponse {
 /**
  * Get futures contracts for a symbol (e.g., ES for S&P 500)
  */
-async function getFuturesContracts(symbol: string): Promise<Array<{ symbol: string; expiration: string; price: number }>> {
+async function getFuturesContracts(
+  symbol: string
+): Promise<Array<{ symbol: string; expiration: string; price: number }>> {
   try {
     // For now, use mock data - Yahoo Finance doesn't have easy futures API
     // In production, would use CME Group API or similar
     const contracts = [
-      { symbol: 'ES=F', expiration: '2024-03', price: 5200 },
-      { symbol: 'ES=F', expiration: '2024-06', price: 5210 },
-      { symbol: 'ES=F', expiration: '2024-09', price: 5220 },
+      { symbol: "ES=F", expiration: "2024-03", price: 5200 },
+      { symbol: "ES=F", expiration: "2024-06", price: 5210 },
+      { symbol: "ES=F", expiration: "2024-09", price: 5220 },
     ];
 
     // Try to get real data from Yahoo Finance
@@ -41,7 +43,7 @@ async function getFuturesContracts(symbol: string): Promise<Array<{ symbol: stri
       `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`,
       {
         headers: {
-          'User-Agent': 'Mozilla/5.0',
+          "User-Agent": "Mozilla/5.0",
         },
       }
     );
@@ -71,13 +73,13 @@ async function getFuturesContracts(symbol: string): Promise<Array<{ symbol: stri
 async function getSpotPrice(symbol: string): Promise<number | null> {
   try {
     // For S&P 500, use ^GSPC
-    const spotSymbol = symbol === 'ES' ? '^GSPC' : symbol;
-    
+    const spotSymbol = symbol === "ES" ? "^GSPC" : symbol;
+
     const response = await fetch(
       `https://query1.finance.yahoo.com/v8/finance/chart/${spotSymbol}?interval=1d&range=1d`,
       {
         headers: {
-          'User-Agent': 'Mozilla/5.0',
+          "User-Agent": "Mozilla/5.0",
         },
       }
     );
@@ -88,14 +90,14 @@ async function getSpotPrice(symbol: string): Promise<number | null> {
 
     const data = await response.json();
     const result = data.chart?.result?.[0];
-    
+
     if (!result) {
       return null;
     }
 
     const quotes = result.indicators?.quote?.[0];
     const currentPrice = quotes.close[quotes.close.length - 1];
-    
+
     return currentPrice || null;
   } catch (error) {
     console.error(`Error fetching spot price for ${symbol}:`, error);
@@ -112,7 +114,7 @@ async function getTermStructureAIReading(
 ): Promise<string> {
   const groqApiKey = process.env.GROQ_API_KEY;
   if (!groqApiKey) {
-    return 'AI analysis not available. Configure GROQ_API_KEY.';
+    return "AI analysis not available. Configure GROQ_API_KEY.";
   }
 
   const systemPrompt = `Sei un analista di mercato esperto di Tradelia, specializzato nell'analisi della term structure dei futures.
@@ -134,7 +136,7 @@ RIFERIMENTI ACCADEMICI:
 
 DATI FORNITI:
 - Structure: ${structure}
-- Contracts: ${contracts.map(c => `${c.symbol}: ${c.basis >= 0 ? '+' : ''}${c.basis.toFixed(2)}%`).join(', ')}
+- Contracts: ${contracts.map((c) => `${c.symbol}: ${c.basis >= 0 ? "+" : ""}${c.basis.toFixed(2)}%`).join(", ")}
 
 INTERPRETAZIONE:
 - Contango: Futures > Spot (normal market)
@@ -145,17 +147,17 @@ Fornisci una lettura SEMPLICE (2-3 frasi) della term structure basata sui dati f
 NO predizioni, NO consigli, solo lettura descrittiva.`;
 
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${groqApiKey}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${groqApiKey}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: 'llama-3.1-70b-versatile',
+        model: "llama-3.1-70b-versatile",
         messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt },
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
         ],
         temperature: 0.3,
         max_tokens: 200,
@@ -163,28 +165,37 @@ NO predizioni, NO consigli, solo lettura descrittiva.`;
     });
 
     if (!response.ok) {
-      throw new Error('Groq API error');
+      throw new Error("Groq API error");
     }
 
     const data = await response.json();
-    return data.choices[0]?.message?.content || 'Analyzing term structure...';
-  } catch (error) {
-    console.error('Error calling Groq AI:', error);
-    return 'Error generating AI reading.';
+    const content = data.choices?.[0]?.message?.content;
+    if (!content) {
+      console.error("Groq API returned empty content:", data);
+      return "Error generating AI reading.";
+    }
+    return content;
+  } catch (error: any) {
+    console.error("Error calling Groq AI:", error);
+    // Se è un errore di autenticazione o rate limit, restituisci un messaggio più specifico
+    if (error?.message?.includes("401") || error?.message?.includes("Unauthorized")) {
+      return "AI analysis unavailable: Invalid API key.";
+    }
+    if (error?.message?.includes("429") || error?.message?.includes("rate limit")) {
+      return "AI analysis temporarily unavailable: Rate limit exceeded.";
+    }
+    return "Error generating AI reading. Please try again later.";
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // Analyze S&P 500 futures (ES)
-    const spotPrice = await getSpotPrice('ES');
-    const contracts = await getFuturesContracts('ES');
+    const spotPrice = await getSpotPrice("ES");
+    const contracts = await getFuturesContracts("ES");
 
     if (!spotPrice || contracts.length === 0) {
-      return NextResponse.json(
-        { error: 'Failed to fetch term structure data' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Failed to fetch term structure data" }, { status: 500 });
     }
 
     // Calculate basis for each contract
@@ -196,12 +207,13 @@ export async function GET(request: NextRequest) {
     }));
 
     // Determine structure
-    const avgBasis = contractsWithBasis.reduce((sum, c) => sum + c.basis, 0) / contractsWithBasis.length;
-    let structure: 'contango' | 'backwardation' | 'neutral' = 'neutral';
+    const avgBasis =
+      contractsWithBasis.reduce((sum, c) => sum + c.basis, 0) / contractsWithBasis.length;
+    let structure: "contango" | "backwardation" | "neutral" = "neutral";
     if (avgBasis > 0.5) {
-      structure = 'contango';
+      structure = "contango";
     } else if (avgBasis < -0.5) {
-      structure = 'backwardation';
+      structure = "backwardation";
     }
 
     const aiReading = await getTermStructureAIReading(structure, contractsWithBasis);
@@ -216,10 +228,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Error in GET /api/market-indicators/term-structure:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error("Error in GET /api/market-indicators/term-structure:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

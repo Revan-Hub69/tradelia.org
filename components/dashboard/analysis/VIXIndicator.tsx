@@ -44,7 +44,7 @@ interface VIXData {
  * Updates: Every 1 minute (real-time)
  */
 export default function VIXIndicator() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const [data, setData] = useState<VIXData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -73,16 +73,20 @@ export default function VIXIndicator() {
 
   if (isLoading) {
     return (
-      <div className="bg-card rounded-lg border p-6 h-full flex items-center justify-center">
-        <div className="text-muted-foreground">Loading VIX...</div>
+      <div className="bg-bg-surface rounded-lg border border-border-subtle p-6 h-full flex items-center justify-center">
+        <div className="text-text-tertiary">
+          {locale === 'it' ? 'Caricamento VIX...' : 'Loading VIX...'}
+        </div>
       </div>
     );
   }
 
   if (error || !data) {
     return (
-      <div className="bg-card rounded-lg border p-6 h-full flex items-center justify-center">
-        <div className="text-destructive">Error loading VIX data</div>
+      <div className="bg-bg-surface rounded-lg border border-border-subtle p-6 h-full flex items-center justify-center">
+        <div className="text-red-400">
+          {locale === 'it' ? 'Errore nel caricamento dei dati VIX' : 'Error loading VIX data'}
+        </div>
       </div>
     );
   }
@@ -137,21 +141,41 @@ export default function VIXIndicator() {
   };
 
   const getVIXLevel = (value: number): { label: string; color: string } => {
-    if (value < 12) return { label: 'Low Volatility', color: 'text-green-600' };
-    if (value < 20) return { label: 'Normal Volatility', color: 'text-blue-600' };
-    if (value < 30) return { label: 'Elevated Volatility', color: 'text-orange-600' };
-    return { label: 'High Volatility (Fear)', color: 'text-red-600' };
+    if (value < 12) {
+      return { 
+        label: locale === 'it' ? 'Bassa Volatilità' : 'Low Volatility', 
+        color: 'text-green-600' 
+      };
+    }
+    if (value < 20) {
+      return { 
+        label: locale === 'it' ? 'Volatilità Normale' : 'Normal Volatility', 
+        color: 'text-blue-600' 
+      };
+    }
+    if (value < 30) {
+      return { 
+        label: locale === 'it' ? 'Volatilità Elevata' : 'Elevated Volatility', 
+        color: 'text-orange-600' 
+      };
+    }
+    return { 
+      label: locale === 'it' ? 'Alta Volatilità (Paura)' : 'High Volatility (Fear)', 
+      color: 'text-red-600' 
+    };
   };
 
   const vixLevel = getVIXLevel(data.value);
 
   return (
-    <div className="bg-card rounded-lg border p-6 h-full flex flex-col space-y-4">
+    <div className="bg-bg-surface rounded-lg border border-border-subtle p-6 h-full flex flex-col space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold">VIX</h2>
-          <p className="text-sm text-muted-foreground">CBOE Volatility Index</p>
+          <h2 className="text-xl font-bold text-text-primary">VIX</h2>
+          <p className="text-sm text-text-secondary">
+            {locale === 'it' ? 'CBOE Volatility Index (Indice di Volatilità)' : 'CBOE Volatility Index'}
+          </p>
         </div>
         <div className={`text-2xl font-bold ${vixLevel.color}`}>
           {data.value.toFixed(2)}
@@ -166,13 +190,17 @@ export default function VIXIndicator() {
       {/* Stats */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <p className="text-sm text-muted-foreground">Change</p>
+          <p className="text-sm text-text-secondary">
+            {locale === 'it' ? 'Variazione' : 'Change'}
+          </p>
           <p className={`text-lg font-semibold ${data.change >= 0 ? 'text-red-600' : 'text-green-600'}`}>
             {data.change >= 0 ? '+' : ''}{data.change.toFixed(2)} ({data.changePercent >= 0 ? '+' : ''}{data.changePercent.toFixed(2)}%)
           </p>
         </div>
         <div>
-          <p className="text-sm text-muted-foreground">Level</p>
+          <p className="text-sm text-text-secondary">
+            {locale === 'it' ? 'Livello' : 'Level'}
+          </p>
           <p className={`text-lg font-semibold ${vixLevel.color}`}>
             {vixLevel.label}
           </p>
@@ -180,19 +208,23 @@ export default function VIXIndicator() {
       </div>
 
       {/* Groq AI Reading */}
-      <div className="border-t pt-4">
-        <p className="text-sm font-semibold mb-2">Market Reading (Groq AI)</p>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {data.aiReading || 'Analyzing market volatility...'}
+      <div className="border-t border-border-subtle pt-4">
+        <p className="text-sm font-semibold mb-2 text-text-primary">
+          {locale === 'it' ? 'Lettura Mercato (Groq AI)' : 'Market Reading (Groq AI)'}
         </p>
-        <p className="text-xs text-muted-foreground mt-2">
-          Reference: Whaley (1993) - "Derivatives on Market Volatility"
+        <p className="text-sm text-text-secondary leading-relaxed">
+          {data.aiReading || (locale === 'it' ? 'Analisi della volatilità in corso...' : 'Analyzing market volatility...')}
+        </p>
+        <p className="text-xs text-text-tertiary mt-2">
+          {locale === 'it' 
+            ? 'Riferimento: Whaley (1993) - "Derivatives on Market Volatility"'
+            : 'Reference: Whaley (1993) - "Derivatives on Market Volatility"'}
         </p>
       </div>
 
       {/* Update Time */}
-      <div className="text-xs text-muted-foreground text-center">
-        Updated: {new Date(data.timestamp).toLocaleTimeString('it-IT')}
+      <div className="text-xs text-text-tertiary text-center">
+        {locale === 'it' ? 'Aggiornato' : 'Updated'}: {new Date(data.timestamp).toLocaleTimeString(locale === 'it' ? 'it-IT' : 'en-US')}
       </div>
     </div>
   );

@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 /**
  * VIX Indicator API
- * 
+ *
  * CBOE Volatility Index - "Fear Index"
  * Academic Reference: Whaley (1993) - "Derivatives on Market Volatility"
- * 
+ *
  * Data Source: Yahoo Finance (FREE)
  * Updates: Every 1 minute
  */
@@ -22,25 +22,29 @@ interface VIXResponse {
 /**
  * Get VIX data from Yahoo Finance
  */
-async function getVIXFromYahoo(): Promise<{ value: number; change: number; changePercent: number } | null> {
+async function getVIXFromYahoo(): Promise<{
+  value: number;
+  change: number;
+  changePercent: number;
+} | null> {
   try {
     // Yahoo Finance symbol for VIX
     const response = await fetch(
-      'https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?interval=1d&range=30d',
+      "https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?interval=1d&range=30d",
       {
         headers: {
-          'User-Agent': 'Mozilla/5.0',
+          "User-Agent": "Mozilla/5.0",
         },
       }
     );
 
     if (!response.ok) {
-      throw new Error('Yahoo Finance API error');
+      throw new Error("Yahoo Finance API error");
     }
 
     const data = await response.json();
     const result = data.chart?.result?.[0];
-    
+
     if (!result) {
       return null;
     }
@@ -48,10 +52,10 @@ async function getVIXFromYahoo(): Promise<{ value: number; change: number; chang
     const quotes = result.indicators?.quote?.[0];
     const timestamps = result.timestamp;
     const currentIndex = timestamps.length - 1;
-    
+
     const currentValue = quotes.close[currentIndex];
     const previousValue = quotes.close[currentIndex - 1] || currentValue;
-    
+
     const change = currentValue - previousValue;
     const changePercent = previousValue > 0 ? (change / previousValue) * 100 : 0;
 
@@ -61,7 +65,7 @@ async function getVIXFromYahoo(): Promise<{ value: number; change: number; chang
       changePercent,
     };
   } catch (error) {
-    console.error('Error fetching VIX from Yahoo Finance:', error);
+    console.error("Error fetching VIX from Yahoo Finance:", error);
     return null;
   }
 }
@@ -72,10 +76,10 @@ async function getVIXFromYahoo(): Promise<{ value: number; change: number; chang
 async function getVIXHistory(): Promise<Array<{ date: string; value: number }>> {
   try {
     const response = await fetch(
-      'https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?interval=1d&range=30d',
+      "https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?interval=1d&range=30d",
       {
         headers: {
-          'User-Agent': 'Mozilla/5.0',
+          "User-Agent": "Mozilla/5.0",
         },
       }
     );
@@ -86,7 +90,7 @@ async function getVIXHistory(): Promise<Array<{ date: string; value: number }>> 
 
     const data = await response.json();
     const result = data.chart?.result?.[0];
-    
+
     if (!result) {
       return [];
     }
@@ -99,9 +103,11 @@ async function getVIXHistory(): Promise<Array<{ date: string; value: number }>> 
         date: new Date(timestamp * 1000).toISOString(),
         value: quotes.close[index],
       }))
-      .filter((item: { date: string; value: number }) => item.value != null);
+      .filter(
+        (item: { date: string; value: number }) => item.value !== null && item.value !== undefined
+      );
   } catch (error) {
-    console.error('Error fetching VIX history:', error);
+    console.error("Error fetching VIX history:", error);
     return [];
   }
 }
@@ -109,10 +115,14 @@ async function getVIXHistory(): Promise<Array<{ date: string; value: number }>> 
 /**
  * Get Groq AI reading for VIX
  */
-async function getVIXAIReading(vixValue: number, change: number, changePercent: number): Promise<string> {
+async function getVIXAIReading(
+  vixValue: number,
+  change: number,
+  changePercent: number
+): Promise<string> {
   const groqApiKey = process.env.GROQ_API_KEY;
   if (!groqApiKey) {
-    return 'AI analysis not available. Configure GROQ_API_KEY.';
+    return "AI analysis not available. Configure GROQ_API_KEY.";
   }
 
   const systemPrompt = `Sei un analista di mercato esperto di Tradelia, specializzato nell'analisi della volatilità.
@@ -134,7 +144,7 @@ RIFERIMENTI ACCADEMICI:
 
 DATI FORNITI:
 - VIX Value: ${vixValue.toFixed(2)}
-- Change: ${change >= 0 ? '+' : ''}${change.toFixed(2)} (${changePercent >= 0 ? '+' : ''}${changePercent.toFixed(2)}%)
+- Change: ${change >= 0 ? "+" : ""}${change.toFixed(2)} (${changePercent >= 0 ? "+" : ""}${changePercent.toFixed(2)}%)
 
 INTERPRETAZIONE VIX:
 - < 12: Low Volatility
@@ -146,17 +156,17 @@ Fornisci una lettura SEMPLICE (2-3 frasi) dello stato attuale del VIX basata sui
 NO predizioni, NO consigli, solo lettura descrittiva.`;
 
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${groqApiKey}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${groqApiKey}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: 'llama-3.1-70b-versatile',
+        model: "llama-3.1-70b-versatile",
         messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt },
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
         ],
         temperature: 0.3,
         max_tokens: 200,
@@ -164,29 +174,35 @@ NO predizioni, NO consigli, solo lettura descrittiva.`;
     });
 
     if (!response.ok) {
-      throw new Error('Groq API error');
+      throw new Error("Groq API error");
     }
 
     const data = await response.json();
-    return data.choices[0]?.message?.content || 'Analyzing VIX data...';
-  } catch (error) {
-    console.error('Error calling Groq AI:', error);
-    return 'Error generating AI reading.';
+    const content = data.choices?.[0]?.message?.content;
+    if (!content) {
+      console.error("Groq API returned empty content:", data);
+      return "Error generating AI reading.";
+    }
+    return content;
+  } catch (error: any) {
+    console.error("Error calling Groq AI:", error);
+    // Se è un errore di autenticazione o rate limit, restituisci un messaggio più specifico
+    if (error?.message?.includes("401") || error?.message?.includes("Unauthorized")) {
+      return "AI analysis unavailable: Invalid API key.";
+    }
+    if (error?.message?.includes("429") || error?.message?.includes("rate limit")) {
+      return "AI analysis temporarily unavailable: Rate limit exceeded.";
+    }
+    return "Error generating AI reading. Please try again later.";
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
-    const [vixData, history] = await Promise.all([
-      getVIXFromYahoo(),
-      getVIXHistory(),
-    ]);
+    const [vixData, history] = await Promise.all([getVIXFromYahoo(), getVIXHistory()]);
 
     if (!vixData) {
-      return NextResponse.json(
-        { error: 'Failed to fetch VIX data' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Failed to fetch VIX data" }, { status: 500 });
     }
 
     const aiReading = await getVIXAIReading(vixData.value, vixData.change, vixData.changePercent);
@@ -202,10 +218,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Error in GET /api/market-indicators/vix:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error("Error in GET /api/market-indicators/vix:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
