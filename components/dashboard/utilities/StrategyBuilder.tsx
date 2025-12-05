@@ -564,7 +564,7 @@ export function StrategyBuilder() {
   }, []);
 
   return (
-    <article 
+    <div 
       className="space-y-6"
       itemScope
       itemType="https://schema.org/SoftwareApplication"
@@ -2245,7 +2245,7 @@ export function StrategyBuilder() {
             </div>
           </div>
         </aside>
-    </article>
+    </div>
   );
 }
 
