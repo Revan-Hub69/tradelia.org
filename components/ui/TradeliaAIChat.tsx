@@ -162,7 +162,7 @@ export function TradeliaAIChat() {
   const MAX_STORED_MESSAGES = 50; // Limit stored messages for privacy/performance
 
   // Quick Actions - Input predisposti
-  const quickActions: QuickAction[] = [
+  const quickActions: QuickAction[] = useMemo(() => [
     {
       id: 'glossary',
       label: currentLocale === 'it' ? 'Aprire Glossario' : 'Open Glossary',
