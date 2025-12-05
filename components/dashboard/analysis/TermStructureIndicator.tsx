@@ -44,7 +44,7 @@ interface TermStructureData {
  * Updates: Every 2 minutes (real-time)
  */
 export default function TermStructureIndicator() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const [data, setData] = useState<TermStructureData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -153,22 +153,36 @@ export default function TermStructureIndicator() {
   };
 
   return (
-    <div className="bg-card rounded-lg border p-6 h-full flex flex-col space-y-4">
+    <div className="bg-bg-surface rounded-lg border border-border-subtle p-6 h-full flex flex-col space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold">Term Structure</h2>
-          <p className="text-sm text-muted-foreground">Futures vs Spot</p>
+          <h2 className="text-xl font-bold text-text-primary">
+            {locale === 'it' ? 'Struttura a Termine' : 'Term Structure'}
+          </h2>
+          <p className="text-sm text-text-secondary">
+            {locale === 'it' 
+              ? 'Analisi differenza tra Futures e Spot Price. Mostra se il mercato è in Contango (futures > spot) o Backwardation (futures < spot).'
+              : 'Analysis of difference between Futures and Spot Price. Shows if market is in Contango (futures > spot) or Backwardation (futures < spot).'}
+          </p>
         </div>
         <div className={`text-lg font-bold ${getStructureColor(data.structure)}`}>
-          {getStructureLabel(data.structure)}
+          {locale === 'it' 
+            ? (data.structure === 'contango' 
+                ? 'Contango (Futures > Spot)' 
+                : data.structure === 'backwardation'
+                ? 'Backwardation (Futures < Spot)'
+                : 'Neutrale')
+            : getStructureLabel(data.structure)}
         </div>
       </div>
 
       {/* Spot Price */}
       <div className="text-center">
-        <p className="text-sm text-muted-foreground">Spot Price</p>
-        <p className="text-2xl font-bold">${data.spotPrice.toFixed(2)}</p>
+        <p className="text-sm text-text-secondary">
+          {locale === 'it' ? 'Prezzo Spot' : 'Spot Price'}
+        </p>
+        <p className="text-2xl font-bold text-text-primary">${data.spotPrice.toFixed(2)}</p>
       </div>
 
       {/* Chart */}
@@ -179,31 +193,45 @@ export default function TermStructureIndicator() {
       {/* Structure Info */}
       <div className="grid grid-cols-2 gap-4 text-sm">
         <div>
-          <p className="text-muted-foreground">Structure</p>
-          <p className={`font-semibold ${getStructureColor(data.structure)}`}>
-            {data.structure.charAt(0).toUpperCase() + data.structure.slice(1)}
+          <p className="text-text-secondary">
+            {locale === 'it' ? 'Struttura' : 'Structure'}
+          </p>
+          <p className={`font-semibold text-text-primary ${getStructureColor(data.structure)}`}>
+            {locale === 'it' 
+              ? (data.structure === 'contango' 
+                  ? 'Contango' 
+                  : data.structure === 'backwardation'
+                  ? 'Backwardation'
+                  : 'Neutrale')
+              : data.structure.charAt(0).toUpperCase() + data.structure.slice(1)}
           </p>
         </div>
         <div>
-          <p className="text-muted-foreground">Contracts</p>
-          <p className="font-semibold">{data.contracts.length}</p>
+          <p className="text-text-secondary">
+            {locale === 'it' ? 'Contratti' : 'Contracts'}
+          </p>
+          <p className="font-semibold text-text-primary">{data.contracts.length}</p>
         </div>
       </div>
 
       {/* Groq AI Reading */}
-      <div className="border-t pt-4">
-        <p className="text-sm font-semibold mb-2">Market Reading (Groq AI)</p>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {data.aiReading || 'Analyzing term structure...'}
+      <div className="border-t border-border-subtle pt-4">
+        <p className="text-sm font-semibold mb-2 text-text-primary">
+          {locale === 'it' ? 'Lettura Mercato (Groq AI)' : 'Market Reading (Groq AI)'}
         </p>
-        <p className="text-xs text-muted-foreground mt-2">
-          Reference: Fama & French (1987) - "Commodity Futures Prices"
+        <p className="text-sm text-text-secondary leading-relaxed">
+          {data.aiReading || (locale === 'it' ? 'Analisi struttura a termine in corso...' : 'Analyzing term structure...')}
+        </p>
+        <p className="text-xs text-text-tertiary mt-2">
+          {locale === 'it' 
+            ? 'Riferimento: Fama & French (1987) - "Commodity Futures Prices"'
+            : 'Reference: Fama & French (1987) - "Commodity Futures Prices"'}
         </p>
       </div>
 
       {/* Update Time */}
-      <div className="text-xs text-muted-foreground text-center">
-        Updated: {new Date(data.timestamp).toLocaleTimeString('it-IT')}
+      <div className="text-xs text-text-tertiary text-center">
+        {locale === 'it' ? 'Aggiornato' : 'Updated'}: {new Date(data.timestamp).toLocaleTimeString(locale === 'it' ? 'it-IT' : 'en-US')}
       </div>
     </div>
   );

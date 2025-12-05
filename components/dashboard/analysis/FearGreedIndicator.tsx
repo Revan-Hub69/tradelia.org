@@ -29,7 +29,7 @@ interface FearGreedData {
  * Updates: Every 5 minutes (real-time)
  */
 export default function FearGreedIndicator() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const [data, setData] = useState<FearGreedData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -58,16 +58,22 @@ export default function FearGreedIndicator() {
 
   if (isLoading) {
     return (
-      <div className="bg-card rounded-lg border p-6 h-full flex items-center justify-center">
-        <div className="text-muted-foreground">Loading Fear & Greed...</div>
+      <div className="bg-bg-surface rounded-lg border border-border-subtle p-6 h-full flex items-center justify-center">
+        <div className="text-text-tertiary">
+          {locale === 'it' ? 'Caricamento Fear & Greed...' : 'Loading Fear & Greed...'}
+        </div>
       </div>
     );
   }
 
   if (error || !data) {
     return (
-      <div className="bg-card rounded-lg border p-6 h-full flex items-center justify-center">
-        <div className="text-destructive">Error loading Fear & Greed data</div>
+      <div className="bg-bg-surface rounded-lg border border-border-subtle p-6 h-full flex items-center justify-center">
+        <div className="text-red-400">
+          {locale === 'it' 
+            ? 'Errore nel caricamento dei dati Fear & Greed' 
+            : 'Error loading Fear & Greed data'}
+        </div>
       </div>
     );
   }
@@ -109,12 +115,18 @@ export default function FearGreedIndicator() {
   };
 
   return (
-    <div className="bg-card rounded-lg border p-6 h-full flex flex-col space-y-4">
+    <div className="bg-bg-surface rounded-lg border border-border-subtle p-6 h-full flex flex-col space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold">Fear & Greed Index</h2>
-          <p className="text-sm text-muted-foreground">Crypto Market Sentiment</p>
+          <h2 className="text-xl font-bold text-text-primary">
+            {locale === 'it' ? 'Indice Fear & Greed' : 'Fear & Greed Index'}
+          </h2>
+          <p className="text-sm text-text-secondary">
+            {locale === 'it' 
+              ? 'Sentiment Mercato Crypto (solo criptovalute)' 
+              : 'Crypto Market Sentiment (cryptocurrencies only)'}
+          </p>
         </div>
         <div className="text-2xl font-bold" style={{ color: getColor(data.value) }}>
           {data.value}
@@ -140,19 +152,23 @@ export default function FearGreedIndicator() {
       </div>
 
       {/* Groq AI Reading */}
-      <div className="border-t pt-4">
-        <p className="text-sm font-semibold mb-2">Market Reading (Groq AI)</p>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {data.aiReading || 'Analyzing market sentiment...'}
+      <div className="border-t border-border-subtle pt-4">
+        <p className="text-sm font-semibold mb-2 text-text-primary">
+          {locale === 'it' ? 'Lettura Mercato (Groq AI)' : 'Market Reading (Groq AI)'}
         </p>
-        <p className="text-xs text-muted-foreground mt-2">
-          Reference: Behavioral Finance - Market Sentiment Analysis
+        <p className="text-sm text-text-secondary leading-relaxed">
+          {data.aiReading || (locale === 'it' ? 'Analisi del sentiment in corso...' : 'Analyzing market sentiment...')}
+        </p>
+        <p className="text-xs text-text-tertiary mt-2">
+          {locale === 'it' 
+            ? 'Riferimento: Behavioral Finance - Analisi Sentiment Mercato Crypto'
+            : 'Reference: Behavioral Finance - Crypto Market Sentiment Analysis'}
         </p>
       </div>
 
       {/* Update Time */}
-      <div className="text-xs text-muted-foreground text-center">
-        Updated: {new Date(data.timestamp).toLocaleTimeString('it-IT')}
+      <div className="text-xs text-text-tertiary text-center">
+        {locale === 'it' ? 'Aggiornato' : 'Updated'}: {new Date(data.timestamp).toLocaleTimeString(locale === 'it' ? 'it-IT' : 'en-US')}
       </div>
     </div>
   );
