@@ -7,6 +7,7 @@ import { useUserRole } from '@/lib/hooks/useUserRole';
 import { TrendingUp, TrendingDown, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import MIFIDDisclaimer from '@/components/widgets/MIFIDDisclaimer';
+import { trackWidgetLoadTime, trackWidgetError } from '@/lib/monitoring/widget-performance';
 
 interface AggregatedDepth {
   totalBid: number;
@@ -30,8 +31,23 @@ export default function CryptoDepthWidgetPage() {
     '/api/crypto/aggregated-depth',
     {
       cacheTime: 5 * 60 * 1000, // 5 minutes
+      onSuccess: () => {
+        const loadTime = performance.now();
+        trackWidgetLoadTime('crypto-depth', loadTime);
+      },
+      onError: (error) => {
+        trackWidgetError('crypto-depth', error);
+      },
     }
   );
+
+  useEffect(() => {
+    const startTime = performance.now();
+    return () => {
+      const loadTime = performance.now() - startTime;
+      trackWidgetLoadTime('crypto-depth', loadTime);
+    };
+  }, []);
 
   // Auto-refresh ogni 5 minuti
   useEffect(() => {

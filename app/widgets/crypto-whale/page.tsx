@@ -8,6 +8,7 @@ import { useUserRole } from '@/lib/hooks/useUserRole';
 import { TrendingUp, TrendingDown, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import MIFIDDisclaimer from '@/components/widgets/MIFIDDisclaimer';
+import { trackWidgetLoadTime, trackApiResponseTime, trackWidgetError } from '@/lib/monitoring/widget-performance';
 
 interface WhaleTransaction {
   hash: string;
@@ -39,8 +40,25 @@ export default function CryptoWhaleWidgetPage() {
     '/api/crypto/whale-analysis',
     {
       cacheTime: 10 * 60 * 1000, // 10 minutes
+      onSuccess: () => {
+        // Track successful load
+        const loadTime = performance.now();
+        trackWidgetLoadTime('crypto-whale', loadTime);
+      },
+      onError: (error) => {
+        trackWidgetError('crypto-whale', error);
+      },
     }
   );
+
+  // Track initial load time
+  useEffect(() => {
+    const startTime = performance.now();
+    return () => {
+      const loadTime = performance.now() - startTime;
+      trackWidgetLoadTime('crypto-whale', loadTime);
+    };
+  }, []);
 
   // Auto-refresh ogni 10 minuti
   useEffect(() => {
@@ -103,6 +121,9 @@ export default function CryptoWhaleWidgetPage() {
     <div className="min-h-screen bg-bg-base p-4">
       {/* MIFID Disclaimer */}
       <MIFIDDisclaimer />
+      
+      {/* Widget Notifications (if widget is installed) */}
+      {/* TODO: Add widget ID lookup and render WidgetNotifications */}
       
       {/* Header */}
       <div className="mb-4 pb-4 border-b border-border-subtle">

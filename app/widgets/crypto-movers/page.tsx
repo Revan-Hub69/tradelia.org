@@ -7,6 +7,7 @@ import { useUserRole } from '@/lib/hooks/useUserRole';
 import { TrendingUp, TrendingDown, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import MIFIDDisclaimer from '@/components/widgets/MIFIDDisclaimer';
+import { trackWidgetLoadTime, trackWidgetError } from '@/lib/monitoring/widget-performance';
 
 interface TopMover {
   id: string;
@@ -39,8 +40,23 @@ export default function CryptoMoversWidgetPage() {
     '/api/crypto/top-movers',
     {
       cacheTime: 5 * 60 * 1000, // 5 minutes
+      onSuccess: () => {
+        const loadTime = performance.now();
+        trackWidgetLoadTime('crypto-movers', loadTime);
+      },
+      onError: (error) => {
+        trackWidgetError('crypto-movers', error);
+      },
     }
   );
+
+  useEffect(() => {
+    const startTime = performance.now();
+    return () => {
+      const loadTime = performance.now() - startTime;
+      trackWidgetLoadTime('crypto-movers', loadTime);
+    };
+  }, []);
 
   // Auto-refresh ogni 5 minuti
   useEffect(() => {

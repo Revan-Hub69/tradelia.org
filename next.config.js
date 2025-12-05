@@ -63,6 +63,38 @@ const nextConfig = {
               "upgrade-insecure-requests",
             ].join("; "),
           },
+        ],
+      },
+      // Widget-specific CSP (more permissive for standalone widgets)
+      {
+        source: "/widgets/:path*",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' https://fonts.gstatic.com data:",
+              "img-src 'self' data: https: blob:",
+              "connect-src 'self' https://*.supabase.co https://*.supabase.in wss://*.supabase.co https://api.binance.com https://api.coingecko.com https://api.whale-alert.io",
+              "frame-ancestors 'self'", // Allow embedding in own domain for PWA
+              "base-uri 'self'",
+              "form-action 'self'",
+              "frame-src 'none'",
+              "object-src 'none'",
+              "upgrade-insecure-requests",
+            ].join("; "),
+          },
+          {
+            key: "X-Frame-Options",
+            value: "SAMEORIGIN", // Allow same-origin embedding for PWA
+          },
+        ],
+      },
+      {
+        source: "/:path*",
+        headers: [
           // Cross-Origin-Opener-Policy for security
           {
             key: "Cross-Origin-Opener-Policy",
