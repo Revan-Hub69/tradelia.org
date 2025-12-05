@@ -370,6 +370,21 @@ BEGIN
 END;
 $$;
 
+-- ============================================================================
+-- FIX: update_reviews_updated_at
+-- ============================================================================
+CREATE OR REPLACE FUNCTION update_reviews_updated_at()
+RETURNS TRIGGER 
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$;
+
 -- Comments
 COMMENT ON FUNCTION update_updated_at_column IS 'Automatically updates updated_at timestamp. Fixed with SET search_path for security.';
 COMMENT ON FUNCTION update_paper_trading_stats IS 'Updates paper trading statistics. Fixed with SET search_path for security.';
@@ -379,3 +394,4 @@ COMMENT ON FUNCTION update_tournament_rankings IS 'Update tournament rankings ba
 COMMENT ON FUNCTION award_tournament_prizes IS 'Automatically award prizes to tournament winners. Fixed with SET search_path for security.';
 COMMENT ON FUNCTION trigger_award_tournament_prizes IS 'Trigger function to award prizes when tournament completes. Fixed with SET search_path for security.';
 COMMENT ON FUNCTION cleanup_expired_widget_notifications IS 'Cleans up expired widget notifications. Fixed with SET search_path for security.';
+COMMENT ON FUNCTION update_reviews_updated_at IS 'Automatically updates updated_at timestamp for reviews table. Fixed with SET search_path for security.';
