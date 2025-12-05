@@ -42,7 +42,15 @@ export default function OptionsAnalysis({ isPro }: OptionsAnalysisProps) {
 
   return (
     <div className="text-center py-12">
-      <p className="text-muted-foreground">Options Analysis - Coming Soon</p>
+      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6 max-w-md mx-auto">
+        <p className="text-yellow-800 dark:text-yellow-200 font-semibold mb-2">🚧 Coming Soon</p>
+        <p className="text-sm text-yellow-700 dark:text-yellow-300">
+          Options Analysis sarà disponibile a breve. Put/Call ratio, options flow, volatility analysis con Groq AI readings.
+        </p>
+        <p className="text-xs text-yellow-600 dark:text-yellow-400 mt-2">
+          Estimated: Q1 2025
+        </p>
+      </div>
     </div>
   );
 }
