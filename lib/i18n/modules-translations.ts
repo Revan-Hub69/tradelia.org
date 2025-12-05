@@ -122,8 +122,9 @@ export function getModuleTranslation(
 
 /**
  * Translate a module object
+ * Best Practice: Handles null/undefined descriptions from database
  */
-export function translateModule<T extends { id: string; title?: string; description?: string }>(
+export function translateModule<T extends { id: string; title?: string | null; description?: string | null }>(
   module: T,
   locale: Locale
 ): T {
@@ -142,8 +143,9 @@ export function translateModule<T extends { id: string; title?: string; descript
 
 /**
  * Translate array of modules
+ * Best Practice: Handles null/undefined descriptions from database
  */
-export function translateModules<T extends { id: string; title?: string; description?: string }>(
+export function translateModules<T extends { id: string; title?: string | null; description?: string | null }>(
   modules: T[],
   locale: Locale
 ): T[] {
