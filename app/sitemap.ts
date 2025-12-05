@@ -281,6 +281,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         },
       },
     },
+    // Dashboard pages
+    {
+      url: `${baseUrl}/dashboard/analysis`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly' as const,
+      priority: 0.9,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/dashboard/analysis`,
+          en: `${baseUrl}/en/dashboard/analysis`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/en/dashboard/analysis`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly' as const,
+      priority: 0.9,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/dashboard/analysis`,
+          en: `${baseUrl}/en/dashboard/analysis`,
+        },
+      },
+    },
   ];
 
   return staticPages;
