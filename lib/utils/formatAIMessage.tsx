@@ -8,10 +8,11 @@ import * as React from 'react';
 
 export interface FormattedMessage {
   parts: Array<{
-    type: 'text' | 'mifid' | 'heading' | 'list' | 'bold';
+    type: 'text' | 'mifid' | 'heading' | 'list' | 'bold' | 'section' | 'source';
     content: string;
     level?: number; // Per heading (h1, h2, etc.)
     items?: string[]; // Per liste
+    sectionType?: 'definition' | 'explanation' | 'examples' | 'mistakes' | 'further';
   }>;
 }
 
@@ -83,15 +84,59 @@ export function formatAIMessage(message: string): FormattedMessage {
 
 /**
  * Formatta markdown base (heading, bold, liste, paragrafi)
+ * Riconosce anche schema Tradelia 5 punti
  */
 function formatMarkdown(text: string): FormattedMessage {
   const parts: FormattedMessage['parts'] = [];
+  
+  // Pattern per riconoscere schema Tradelia 5 punti
+  const tradeliaSectionPatterns = {
+    definition: /^(\d+\.\s*)?(DEFINIZIONE|DEFINITION|DEFINIZIONE ACCADEMICA|ACADEMIC DEFINITION)[:\s]*/i,
+    explanation: /^(\d+\.\s*)?(SPIEGAZIONE|EXPLANATION|COME FUNZIONA|HOW IT WORKS)[:\s]*/i,
+    examples: /^(\d+\.\s*)?(ESEMPI|EXAMPLES|ESEMPI PRATICI|PRACTICAL EXAMPLES)[:\s]*/i,
+    mistakes: /^(\d+\.\s*)?(ERRORI|MISTAKES|ERRORI COMUNI|COMMON MISTAKES)[:\s]*/i,
+    further: /^(\d+\.\s*)?(APPROFONDIMENTI|FURTHER|LEARN MORE|PER SAPERNE DI PIÙ)[:\s]*/i,
+  };
+
+  // Pattern per fonti accademiche (es: "Fonte:", "Source:", "Riferimento:")
+  const sourcePattern = /^(Fonte|Source|Riferimento|Reference|Bibliografia|Bibliography)[:\s]+(.+)$/i;
   
   // Split per paragrafi (doppio newline o newline seguito da spazio)
   const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim());
   
   paragraphs.forEach((paragraph) => {
     const trimmed = paragraph.trim();
+    
+    // Check for source
+    const sourceMatch = trimmed.match(sourcePattern);
+    if (sourceMatch) {
+      parts.push({
+        type: 'source',
+        content: sourceMatch[2] || sourceMatch[1],
+      });
+      return;
+    }
+    
+    // Check for Tradelia sections
+    let sectionType: 'definition' | 'explanation' | 'examples' | 'mistakes' | 'further' | undefined;
+    let sectionContent = trimmed;
+    
+    for (const [type, pattern] of Object.entries(tradeliaSectionPatterns)) {
+      if (pattern.test(trimmed)) {
+        sectionType = type as any;
+        sectionContent = trimmed.replace(pattern, '').trim();
+        break;
+      }
+    }
+    
+    if (sectionType) {
+      parts.push({
+        type: 'section',
+        content: sectionContent,
+        sectionType,
+      });
+      return;
+    }
     
     // Heading (## o ###)
     if (trimmed.startsWith('##')) {
@@ -245,10 +290,93 @@ export function renderFormattedMessage(parts: FormattedMessage['parts'], locale:
           </p>
         );
       
+      case 'section':
+        const sectionLabels = {
+          definition: locale === 'it' ? '📚 Definizione' : '📚 Definition',
+          explanation: locale === 'it' ? '💡 Spiegazione' : '💡 Explanation',
+          examples: locale === 'it' ? '📝 Esempi' : '📝 Examples',
+          mistakes: locale === 'it' ? '⚠️ Errori Comuni' : '⚠️ Common Mistakes',
+          further: locale === 'it' ? '🔍 Approfondimenti' : '🔍 Further Learning',
+        };
+        
+        // Processa il contenuto della sezione per estrarre liste, bold, etc.
+        const sectionContent = part.content;
+        const hasBold = sectionContent.includes('**');
+        const hasList = sectionContent.match(/^[•\-\*]\s/m);
+        
+        return (
+          <div
+            key={`section-${index}`}
+            className="mt-6 mb-4 pb-4 border-b border-border-subtle last:border-b-0"
+          >
+            <h4 className="text-sm font-semibold text-accent mb-2.5">
+              {sectionLabels[part.sectionType || 'definition']}
+            </h4>
+            <div className="text-sm text-text-primary leading-relaxed space-y-2">
+              {hasList ? (
+                <ul className="mt-2 mb-2 space-y-1.5 list-none">
+                  {sectionContent
+                    .split(/\n/)
+                    .filter(line => line.trim().match(/^[•\-\*]\s/))
+                    .map((line, itemIndex) => {
+                      const item = line.replace(/^[•\-\*]\s+/, '').trim();
+                      return (
+                        <li key={itemIndex} className="flex items-start gap-2">
+                          <span className="text-accent mt-1.5 flex-shrink-0">•</span>
+                          <span>{item}</span>
+                        </li>
+                      );
+                    })}
+                </ul>
+              ) : hasBold ? (
+                (() => {
+                  const boldRegex = /\*\*(.*?)\*\*/g;
+                  const elements: (string | React.ReactElement)[] = [];
+                  let lastIdx = 0;
+                  let match;
+                  
+                  while ((match = boldRegex.exec(sectionContent)) !== null) {
+                    if (match.index > lastIdx) {
+                      elements.push(sectionContent.substring(lastIdx, match.index));
+                    }
+                    elements.push(
+                      <strong key={`bold-${match.index}`} className="font-semibold">
+                        {match[1]}
+                      </strong>
+                    );
+                    lastIdx = match.index + match[0].length;
+                  }
+                  if (lastIdx < sectionContent.length) {
+                    elements.push(sectionContent.substring(lastIdx));
+                  }
+                  return <p>{elements.length > 0 ? elements : sectionContent}</p>;
+                })()
+              ) : (
+                <p>{sectionContent}</p>
+              )}
+            </div>
+          </div>
+        );
+      
+      case 'source':
+        return (
+          <div
+            key={`source-${index}`}
+            className="mt-4 pt-3 border-t border-border-subtle"
+          >
+            <p className="text-[10px] text-text-tertiary leading-tight font-medium uppercase tracking-wide mb-1">
+              {locale === 'it' ? 'Fonte' : 'Source'}
+            </p>
+            <p className="text-[11px] text-text-secondary leading-relaxed italic">
+              {part.content}
+            </p>
+          </div>
+        );
+      
       case 'text':
       default:
         return (
-          <p key={`text-${index}`} className="text-sm text-text-primary leading-relaxed mb-3">
+          <p key={`text-${index}`} className="text-sm text-text-primary leading-relaxed mb-4">
             {part.content}
           </p>
         );

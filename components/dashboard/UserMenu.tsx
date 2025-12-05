@@ -199,7 +199,7 @@ export function UserMenu() {
     .slice(0, 2) || user.email?.[0].toUpperCase() || 'U';
 
   return (
-    <div ref={menuRef} className="relative">
+    <div ref={menuRef} className="relative z-[100]">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 rounded-lg bg-bg-soft border border-border-subtle hover:border-accent/40 transition-all duration-200 group"

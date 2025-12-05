@@ -77,7 +77,7 @@ const MessageBubble = memo(({ msg, locale }: { msg: Message; locale: 'it' | 'en'
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
       className={cn(
-        'flex',
+        'flex mb-4',
         isUser ? 'justify-end' : 'justify-start'
       )}
     >
@@ -91,11 +91,11 @@ const MessageBubble = memo(({ msg, locale }: { msg: Message; locale: 'it' | 'en'
       >
         {isUser ? (
           msg.content
-        ) : formatted ? (
-          <div className="space-y-1">
-            {renderFormattedMessage(formatted.parts, locale)}
-          </div>
-        ) : (
+                        ) : formatted ? (
+                          <div className="space-y-4">
+                            {renderFormattedMessage(formatted.parts, locale)}
+                          </div>
+                        ) : (
           <p className="text-sm text-text-primary leading-relaxed whitespace-pre-wrap break-words">
             {msg.content}
           </p>
