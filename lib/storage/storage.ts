@@ -16,18 +16,30 @@ const INDEXEDDB_KEYS = [
   'tradelia_favorites',
   'tradelia-watchlist',
   'tradelia-portfolio',
+  'tradelia-trading-journal',
 ];
 
-// Keys that should use localStorage (small data, preferences)
+// Keys that should use localStorage (small data, preferences, UI state)
 const LOCALSTORAGE_KEYS = [
   'analytics_consent',
   'oslo_locale',
   'tradelia-currency',
+  'tradelia_exchange_rate', // Cache API
   'gamification-daily-check',
   'account-banner-dismissed',
   'pwa-install-dismissed',
   'welcome-tour-completed',
-  'legal-consent',
+  'tradelia-legal-consent',
+];
+
+// Keys that need Supabase sync (user data that should be on server)
+const SUPABASE_SYNC_KEYS = [
+  'tradelia_favorites', // OBBLIGATORIO - dati utente
+  'tradelia-legal-consent', // OBBLIGATORIO - audit trail legale
+  'oslo_locale', // OPZIONALE - user preferences
+  'tradelia-currency', // OPZIONALE - user preferences
+  'tradelia-ai-chat-messages', // OPZIONALE - backup per utenti loggati
+  'gamification-daily-check', // OPZIONALE - per gamification stats
 ];
 
 /**
@@ -82,8 +94,9 @@ export async function getItem<T = any>(key: string): Promise<T | null> {
 
 /**
  * Set item in appropriate storage
+ * Automatically syncs to Supabase if needed
  */
-export async function setItem<T = any>(key: string, value: T): Promise<void> {
+export async function setItem<T = any>(key: string, value: T, options?: { skipSync?: boolean }): Promise<void> {
   if (typeof window === 'undefined') {
     return;
   }
@@ -93,23 +106,41 @@ export async function setItem<T = any>(key: string, value: T): Promise<void> {
   if (useIndexedDB && isIndexedDBAvailable()) {
     try {
       await setIndexedDBItem(key, value);
-      return;
     } catch (error) {
       console.warn(`IndexedDB setItem failed for ${key}, falling back to localStorage:`, error);
       // Fallback to localStorage
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) {
+        if (e instanceof DOMException && e.name === 'QuotaExceededError') {
+          console.warn(`localStorage quota exceeded for ${key}`);
+          throw new Error('Storage quota exceeded');
+        }
+        throw e;
+      }
+    }
+  } else {
+    // Use localStorage (either by choice or as fallback)
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+        console.warn(`localStorage quota exceeded for ${key}`);
+        throw new Error('Storage quota exceeded');
+      }
+      console.warn(`localStorage setItem failed for ${key}:`, error);
+      throw error;
     }
   }
 
-  // Use localStorage (either by choice or as fallback)
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch (error) {
-    if (error instanceof DOMException && error.name === 'QuotaExceededError') {
-      console.warn(`localStorage quota exceeded for ${key}`);
-      throw new Error('Storage quota exceeded');
-    }
-    console.warn(`localStorage setItem failed for ${key}:`, error);
-    throw error;
+  // Auto-sync to Supabase if needed (async, non-blocking)
+  if (!options?.skipSync) {
+    // Import dynamically to avoid circular dependencies
+    import('./sync').then(({ autoSync }) => {
+      autoSync(key, value).catch(err => {
+        console.warn(`Background sync failed for ${key}:`, err);
+      });
+    });
   }
 }
 
