@@ -39,7 +39,7 @@ export function Reviews() {
     async function loadReviews() {
       try {
         // Carica recensioni pubbliche verificate - VISIBILI A TUTTI
-        // Nota: 'public' è una parola riservata in PostgreSQL, usiamo le virgolette
+        // Nota: 'public' è una parola riservata in PostgreSQL, ma funziona con Supabase
         const { data, error } = await supabase
           .from('reviews')
           .select('*')
@@ -49,13 +49,19 @@ export function Reviews() {
           .limit(10);
 
         if (error) {
-          // Se la tabella non esiste o c'è un errore 404, semplicemente non mostrare le reviews
-          // Silenzia completamente gli errori 404/PGRST116 per evitare spam in console
-          if (error.code === 'PGRST116' || error.code === 'PGRST301' || error.message?.includes('404') || error.message?.includes('relation') || error.message?.includes('does not exist')) {
-            // Non loggare - tabella semplicemente non disponibile
+          // Gestisci errori in modo informativo
+          if (error.code === 'PGRST116' || error.code === 'PGRST301' || 
+              error.message?.includes('404') || 
+              error.message?.includes('relation') || 
+              error.message?.includes('does not exist')) {
+            // Tabella non esiste - migration non eseguita
+            console.warn(
+              'Reviews table not found. Please run migration 012_reviews_table.sql in Supabase.',
+              error
+            );
             setReviews([]);
           } else {
-            // Logga solo errori reali (non 404)
+            // Altri errori (RLS, permessi, etc.)
             console.error('Error loading reviews:', error);
             setReviews([]);
           }
@@ -63,12 +69,8 @@ export function Reviews() {
           setReviews(data || []);
         }
       } catch (error: any) {
-        // Gestisci errori di rete o altri errori - silenzia 404
-        if (error?.message?.includes('404') || error?.message?.includes('relation') || error?.message?.includes('does not exist') || error?.code === 'PGRST116' || error?.code === 'PGRST301') {
-          // Non loggare - tabella semplicemente non disponibile
-        } else {
-          console.error('Error loading reviews:', error);
-        }
+        // Gestisci errori di rete o altri errori
+        console.error('Unexpected error loading reviews:', error);
         setReviews([]);
       } finally {
         setIsLoading(false);

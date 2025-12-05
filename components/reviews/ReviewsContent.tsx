@@ -54,13 +54,26 @@ export function ReviewsContent() {
           .order('created_at', { ascending: false });
 
         if (error) {
-          console.error('Error loading reviews:', error);
+          // Gestisci errori in modo informativo
+          if (error.code === 'PGRST116' || error.code === 'PGRST301' || 
+              error.message?.includes('404') || 
+              error.message?.includes('relation') || 
+              error.message?.includes('does not exist')) {
+            // Tabella non esiste - migration non eseguita
+            console.warn(
+              'Reviews table not found. Please run migration 012_reviews_table.sql in Supabase.',
+              error
+            );
+          } else {
+            // Altri errori (RLS, permessi, etc.)
+            console.error('Error loading reviews:', error);
+          }
           setReviews([]);
         } else {
           setReviews(data || []);
         }
       } catch (error) {
-        console.error('Error loading reviews:', error);
+        console.error('Unexpected error loading reviews:', error);
         setReviews([]);
       } finally {
         setIsLoading(false);
