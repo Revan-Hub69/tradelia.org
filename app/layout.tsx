@@ -24,9 +24,7 @@ const ToastContainer = dynamic(() => import('@/components/ui/Toast').then(m => (
 
 const CurrencyProvider = dynamic(() => import('@/lib/hooks/useCurrency').then(m => ({ default: m.CurrencyProvider })));
 
-const AIChatFloating = dynamic(() => import('@/components/ui/AIChatFloating').then(m => ({ default: m.AIChatFloating })), {
-  ssr: false,
-});
+const AIChatFloating = dynamic(() => import('@/components/ui/AIChatFloating').then(m => ({ default: m.AIChatFloating })));
 
 const inter = Inter({ 
   subsets: ['latin'],
