@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Loader2, BookOpen, HelpCircle, Sparkles, ArrowRight } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, BookOpen, HelpCircle, Sparkles, ArrowRight, RotateCcw } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
@@ -205,18 +205,35 @@ export function TradeliaAIChat() {
                   </p>
                 </div>
               </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-lg hover:bg-bg-soft transition-colors"
-                aria-label={locale === 'it' ? 'Chiudi chat' : 'Close chat'}
-              >
-                <X className="w-4 h-4 text-text-secondary" />
-              </button>
+              <div className="flex items-center gap-2">
+                {/* Reset conversation button - Best Practice: Always allow users to start fresh */}
+                {messages.length > 0 && (
+                  <button
+                    onClick={() => {
+                      setMessages([]);
+                      setMessage('');
+                    }}
+                    className="p-1.5 rounded-lg hover:bg-bg-soft transition-colors"
+                    aria-label={locale === 'it' ? 'Nuova conversazione' : 'New conversation'}
+                    title={locale === 'it' ? 'Torna alla selezione' : 'Back to selection'}
+                  >
+                    <RotateCcw className="w-4 h-4 text-text-secondary" />
+                  </button>
+                )}
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-1.5 rounded-lg hover:bg-bg-soft transition-colors"
+                  aria-label={locale === 'it' ? 'Chiudi chat' : 'Close chat'}
+                >
+                  <X className="w-4 h-4 text-text-secondary" />
+                </button>
+              </div>
             </div>
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.length === 0 ? (
+                // Welcome screen with quick actions - Best Practice: Clear entry point
                 <div className="space-y-4">
                   {/* Welcome Message */}
                   <div className="text-center py-4">
@@ -353,10 +370,13 @@ export function TradeliaAIChat() {
                     'flex-1 px-3 py-2 rounded-lg',
                     'bg-bg-soft border border-border-subtle',
                     'text-text-primary placeholder:text-text-tertiary',
-                    'focus:outline-none focus:ring-2 focus:ring-accent',
-                    'text-sm leading-relaxed'
+                    'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-surface',
+                    'text-sm leading-relaxed',
+                    'disabled:opacity-50 disabled:cursor-not-allowed'
                   )}
                   disabled={isLoading}
+                  aria-label={locale === 'it' ? 'Campo di input messaggio' : 'Message input field'}
+                  aria-describedby={isLoading ? 'loading-indicator' : undefined}
                 />
                 <button
                   onClick={() => handleSend()}

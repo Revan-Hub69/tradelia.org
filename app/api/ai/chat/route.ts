@@ -38,13 +38,22 @@ function buildTradeliaSystemPrompt(
       ? locale === "it"
         ? `
 FORMATO OBBLIGATORIO - Schema Tradelia a 5 punti:
-1. DEFINIZIONE ACCADEMICA: Definizione precisa e verificabile (1-2 frasi)
+1. DEFINIZIONE ACCADEMICA: Definizione precisa e verificabile basata su fonti accademiche ufficiali (1-2 frasi)
+   - OBBLIGATORIO: Usa solo definizioni da fonti accademiche verificate (libri di testo, paper accademici, istituzioni ufficiali)
+   - NO definizioni inventate o semplificate oltre misura
+   - Cita implicitamente la fonte quando possibile (es: "secondo la teoria finanziaria moderna...")
 2. SPIEGAZIONE: Come funziona, perché è importante (2-3 frasi)
+   - Basata su principi accademici verificabili
+   - Collega a teorie finanziarie consolidate
 3. ESEMPI PRATICI: Esempi concreti e rilevanti (1-2 esempi)
+   - Esempi realistici ma non specifici (no nomi di asset reali)
+   - Illustrano il concetto accademico
 4. ERRORI COMUNI: Errori da evitare (1-2 errori comuni)
+   - Basati su evidenze accademiche o best practice consolidate
 5. APPROFONDIMENTI: "Per saperne di più, consulta la sezione Formazione o il Glossario di Tradelia" (sempre presente)
 
 IMPORTANTE:
+- DEFINIZIONI SEMPRE ACCADEMICHE: Ogni definizione deve essere basata su fonti accademiche ufficiali
 - Evita "bla bla bla" inutili, sii conciso ma completo
 - Massimo 4 paragrafi totali
 - Massimo 5 punti per elenco
@@ -53,13 +62,22 @@ IMPORTANTE:
 `
         : `
 MANDATORY FORMAT - Tradelia 5-point schema:
-1. ACADEMIC DEFINITION: Precise and verifiable definition (1-2 sentences)
+1. ACADEMIC DEFINITION: Precise and verifiable definition based on official academic sources (1-2 sentences)
+   - MANDATORY: Use only definitions from verified academic sources (textbooks, academic papers, official institutions)
+   - NO invented or overly simplified definitions
+   - Implicitly cite the source when possible (e.g., "according to modern financial theory...")
 2. EXPLANATION: How it works, why it matters (2-3 sentences)
+   - Based on verifiable academic principles
+   - Connect to established financial theories
 3. PRACTICAL EXAMPLES: Concrete and relevant examples (1-2 examples)
+   - Realistic but non-specific examples (no real asset names)
+   - Illustrate the academic concept
 4. COMMON MISTAKES: Errors to avoid (1-2 common mistakes)
+   - Based on academic evidence or established best practices
 5. FURTHER LEARNING: "To learn more, check Tradelia's Education section or Glossary" (always present)
 
 IMPORTANT:
+- ALWAYS ACADEMIC DEFINITIONS: Every definition must be based on official academic sources
 - Avoid unnecessary "bla bla bla", be concise but complete
 - Maximum 4 paragraphs total
 - Maximum 5 points per list
