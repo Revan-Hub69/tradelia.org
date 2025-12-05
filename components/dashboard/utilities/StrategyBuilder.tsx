@@ -2251,3 +2251,4 @@ export function StrategyBuilder() {
 
 // Export memoized version for performance
 export default memo(StrategyBuilder);
+export { StrategyBuilder };
