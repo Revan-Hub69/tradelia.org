@@ -210,6 +210,20 @@ const MAX_CONTEXT_LENGTH = 500;
 
 export async function POST(request: NextRequest) {
   try {
+    // Parse body early to get locale for rate limit message
+    const body: ChatRequest = await request.json();
+    const {
+      message,
+      locale = "it",
+      conversationHistory = [],
+      context,
+      format = "tradelia-5-points",
+    } = body;
+
+    // Get API messages for locale
+    const { getApiMessages } = await import('@/lib/i18n/api-messages');
+    const messages = getApiMessages(locale);
+
     // Rate limiting - Best Practice: Prevent abuse
     const ip = getClientIP(request);
     const rateLimitKey = getRateLimitKey(`ai-chat:${ip}`, 'ai-chat');
@@ -218,9 +232,8 @@ export async function POST(request: NextRequest) {
     if (!rateLimit.allowed) {
       return NextResponse.json(
         { 
-          error: 'Rate limit exceeded', 
+          error: messages.errors.rateLimitExceeded, 
           resetAt: rateLimit.resetAt,
-          message: 'Troppe richieste. Riprova tra qualche istante.'
         },
         { 
           status: 429,
@@ -234,34 +247,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body: ChatRequest = await request.json();
-    const {
-      message,
-      locale = "it",
-      conversationHistory = [],
-      context,
-      format = "tradelia-5-points",
-    } = body;
-
     // Input validation - Best Practice: Validate and sanitize
     if (!message || typeof message !== "string") {
-      return NextResponse.json({ error: "Message is required" }, { status: 400 });
+      return NextResponse.json({ error: messages.errors.messageRequired }, { status: 400 });
     }
 
     // Sanitize and validate message length
     const sanitizedMessage = sanitizeString(message);
     if (sanitizedMessage.length === 0) {
-      return NextResponse.json({ error: "Message cannot be empty" }, { status: 400 });
+      return NextResponse.json({ error: messages.errors.messageRequired }, { status: 400 });
     }
     if (sanitizedMessage.length > MAX_MESSAGE_LENGTH) {
       return NextResponse.json({ 
-        error: `Message too long. Max ${MAX_MESSAGE_LENGTH} characters.` 
+        error: messages.errors.messageTooLong(MAX_MESSAGE_LENGTH)
       }, { status: 400 });
     }
 
     // Validate locale
     if (locale !== "it" && locale !== "en") {
-      return NextResponse.json({ error: "Invalid locale" }, { status: 400 });
+      return NextResponse.json({ error: messages.errors.invalidLocale }, { status: 400 });
     }
 
     // Limit conversation history - Best Practice: Prevent token waste

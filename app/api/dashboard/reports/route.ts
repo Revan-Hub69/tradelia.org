@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { getLocaleFromRequest } from '@/lib/i18n/api-messages';
+import { localizeContentArray } from '@/lib/i18n/dynamic-content';
 
 /**
  * GET /api/dashboard/reports
  * Lista tutti i report disponibili per l'utente
+ * Best Practice: Supports multilingual content and locale detection
  */
 export async function GET(request: NextRequest) {
   try {
+    // Detect locale from request
+    const locale = getLocaleFromRequest(request);
+    
     const supabase = await createClient();
     const {
       data: { user },
@@ -33,15 +39,19 @@ export async function GET(request: NextRequest) {
       }
 
       if (!report) {
-        return NextResponse.json({ error: 'Report not found' }, { status: 404 });
+        const { getApiMessages } = await import('@/lib/i18n/api-messages');
+        const messages = getApiMessages(locale);
+        return NextResponse.json({ error: messages.errors.notFound }, { status: 404 });
       }
 
-      return NextResponse.json(report);
+      // Localize report content
+      const localizedReport = localizeContentArray([report], locale)[0];
+      return NextResponse.json(localizedReport);
     }
 
     let query = supabase
       .from('reports')
-      .select('id, slug, title, description, report_type, status, created_at, updated_at')
+      .select('id, slug, title, title_it, title_en, description, description_it, description_en, report_type, status, created_at, updated_at')
       .order('created_at', { ascending: false });
 
     // Se non autenticato, mostra solo report attivi
@@ -65,7 +75,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json([]);
     }
 
-    return NextResponse.json(data || []);
+    // Localize reports content
+    const localizedReports = localizeContentArray(data || [], locale);
+    return NextResponse.json(localizedReports);
   } catch (error) {
     // In caso di errore, restituisci array vuoto invece di 500
     console.error('Error in GET /api/dashboard/reports:', error);

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getModules } from '@/lib/supabase/server-services';
+import { getLocaleFromRequest } from '@/lib/i18n/api-messages';
+import { translateModules } from '@/lib/i18n/modules-translations';
 
 // Moduli di default da mostrare quando il database non ha dati
 const DEFAULT_MODULES = {
@@ -122,6 +124,9 @@ const DEFAULT_MODULES = {
 
 export async function GET(request: NextRequest) {
   try {
+    // Detect locale from request
+    const locale = getLocaleFromRequest(request);
+    
     const supabase = await createClient();
     
     // Verifica se l'utente è admin
@@ -150,10 +155,22 @@ export async function GET(request: NextRequest) {
         // Aggiungi admin solo se l'utente è admin
         let modules = data;
         if (isAdmin && !modules.find(m => m.id === 'admin')) {
+          const adminTranslation = translateModules([{
+            id: 'admin',
+            title: '',
+            description: '',
+            href: '/dashboard/admin',
+            icon: 'shield',
+            priority: 'secondary' as const,
+            is_active: true,
+            order_index: 0,
+            badge_count: 0,
+          }], locale)[0];
+          
           const adminModule = {
             id: 'admin',
-            title: 'Admin',
-            description: 'Area amministrazione e gestione Supabase',
+            title: adminTranslation.title,
+            description: adminTranslation.description,
             href: '/dashboard/admin',
             icon: 'shield',
             priority: 'secondary' as const,
@@ -163,7 +180,9 @@ export async function GET(request: NextRequest) {
           };
           modules = [adminModule, ...modules];
         }
-        return NextResponse.json({ data: modules });
+        // Translate modules
+        const translatedModules = translateModules(modules, locale);
+        return NextResponse.json({ data: translatedModules });
       }
 
       // Se non ci sono dati o c'è un errore (es. tabella non esiste), usa moduli di default
@@ -171,16 +190,28 @@ export async function GET(request: NextRequest) {
         console.warn('Error getting modules (table might not exist), using defaults:', error.message);
       }
 
-      // Prepara moduli di default
-      let primaryModules = [...DEFAULT_MODULES.primary];
-      let secondaryModules = [...DEFAULT_MODULES.secondary];
+      // Prepara moduli di default e traduci
+      let primaryModules = translateModules([...DEFAULT_MODULES.primary], locale);
+      let secondaryModules = translateModules([...DEFAULT_MODULES.secondary], locale);
       
       // Aggiungi admin solo se l'utente è admin
       if (isAdmin) {
+        const adminTranslation = translateModules([{
+          id: 'admin',
+          title: '',
+          description: '',
+          href: '/dashboard/admin',
+          icon: 'shield',
+          priority: 'secondary' as const,
+          is_active: true,
+          order_index: 0,
+          badge_count: 0,
+        }], locale)[0];
+        
         secondaryModules.unshift({
           id: 'admin',
-          title: 'Admin',
-          description: 'Area amministrazione e gestione Supabase',
+          title: adminTranslation.title,
+          description: adminTranslation.description,
           href: '/dashboard/admin',
           icon: 'shield',
           priority: 'secondary' as const,
@@ -205,16 +236,28 @@ export async function GET(request: NextRequest) {
       // Se c'è un errore del database (tabella mancante), usa moduli di default
       console.warn('Database error in modules GET (table might not exist), using defaults:', dbError);
       
-      // Prepara moduli di default
-      let primaryModules = [...DEFAULT_MODULES.primary];
-      let secondaryModules = [...DEFAULT_MODULES.secondary];
+      // Prepara moduli di default e traduci
+      let primaryModules = translateModules([...DEFAULT_MODULES.primary], locale);
+      let secondaryModules = translateModules([...DEFAULT_MODULES.secondary], locale);
       
       // Aggiungi admin solo se l'utente è admin
       if (isAdmin) {
+        const adminTranslation = translateModules([{
+          id: 'admin',
+          title: '',
+          description: '',
+          href: '/dashboard/admin',
+          icon: 'shield',
+          priority: 'secondary' as const,
+          is_active: true,
+          order_index: 0,
+          badge_count: 0,
+        }], locale)[0];
+        
         secondaryModules.unshift({
           id: 'admin',
-          title: 'Admin',
-          description: 'Area amministrazione e gestione Supabase',
+          title: adminTranslation.title,
+          description: adminTranslation.description,
           href: '/dashboard/admin',
           icon: 'shield',
           priority: 'secondary' as const,
@@ -258,14 +301,27 @@ export async function GET(request: NextRequest) {
       // Ignora errori di verifica admin
     }
     
-    let primaryModules = [...DEFAULT_MODULES.primary];
-    let secondaryModules = [...DEFAULT_MODULES.secondary];
+    // Translate default modules
+    let primaryModules = translateModules([...DEFAULT_MODULES.primary], locale);
+    let secondaryModules = translateModules([...DEFAULT_MODULES.secondary], locale);
     
     if (isAdmin) {
+      const adminTranslation = translateModules([{
+        id: 'admin',
+        title: '',
+        description: '',
+        href: '/dashboard/admin',
+        icon: 'shield',
+        priority: 'secondary' as const,
+        is_active: true,
+        order_index: 0,
+        badge_count: 0,
+      }], locale)[0];
+      
       secondaryModules.unshift({
         id: 'admin',
-        title: 'Admin',
-        description: 'Area amministrazione e gestione Supabase',
+        title: adminTranslation.title,
+        description: adminTranslation.description,
         href: '/dashboard/admin',
         icon: 'shield',
         priority: 'secondary' as const,

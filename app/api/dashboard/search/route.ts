@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { searchDashboardContent } from '@/lib/supabase/server-services';
+import { getLocaleFromRequest, getApiMessages } from '@/lib/i18n/api-messages';
+import { localizeContentArray } from '@/lib/i18n/dynamic-content';
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,8 +12,12 @@ export async function GET(request: NextRequest) {
       error: authError,
     } = await supabase.auth.getUser();
 
+    // Detect locale from request
+    const locale = getLocaleFromRequest(request);
+    const messages = getApiMessages(locale);
+
     if (authError || !user) {
-      return NextResponse.json({ error: 'Non autorizzato' }, { status: 401 });
+      return NextResponse.json({ error: messages.errors.unauthorized }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -23,11 +29,20 @@ export async function GET(request: NextRequest) {
 
     const results = await searchDashboardContent(user.id, query.trim());
 
-    return NextResponse.json({ data: results });
+    // Localize dynamic content if multilingual fields exist
+    const localizedResults = {
+      reports: localizeContentArray(results.reports || [], locale),
+      courses: localizeContentArray(results.courses || [], locale),
+      modules: localizeContentArray(results.modules || [], locale),
+    };
+
+    return NextResponse.json({ data: localizedResults });
   } catch (error) {
     console.error('Error in search API:', error);
+    const locale = getLocaleFromRequest(request);
+    const messages = getApiMessages(locale);
     return NextResponse.json(
-      { error: 'Errore interno del server' },
+      { error: messages.errors.serverError },
       { status: 500 }
     );
   }
