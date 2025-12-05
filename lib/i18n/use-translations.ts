@@ -11,6 +11,8 @@ const dictionaries = {
   en: { ...enDict, home: homeIt.en },
 };
 
+const LOCALE_STORAGE_KEY = 'tradelia_locale';
+
 export function useTranslations() {
   // IMPORTANTE: Inizializza sempre con defaultLocale e mounted=false
   // Questo garantisce che server e client abbiano lo stesso stato iniziale
@@ -19,8 +21,18 @@ export function useTranslations() {
     if (typeof window === "undefined") {
       return defaultLocale;
     }
-    // Sul client, usa defaultLocale inizialmente
-    return defaultLocale;
+    // Sul client, prova a leggere da localStorage o pathname
+    try {
+      const savedLocale = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null;
+      if (savedLocale === 'it' || savedLocale === 'en') {
+        return savedLocale;
+      }
+    } catch (e) {
+      // localStorage non disponibile
+    }
+    // Fallback: rileva dal pathname
+    const pathLocale = window.location.pathname.startsWith("/en") ? "en" : "it";
+    return pathLocale;
   });
   const [mounted, setMounted] = useState(false);
 
@@ -38,10 +50,32 @@ export function useTranslations() {
       setTimeout(() => {
         setMounted(true);
 
-        // Detect locale from window.location only on client
+        // Detect locale from window.location or localStorage
         // Usa requestAnimationFrame per assicurarsi che il DOM sia pronto
         requestAnimationFrame(() => {
-          const detectedLocale = window.location.pathname.startsWith("/en") ? "en" : "it";
+          let detectedLocale: Locale = defaultLocale;
+          
+          // Prima prova localStorage
+          try {
+            const savedLocale = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null;
+            if (savedLocale === 'it' || savedLocale === 'en') {
+              detectedLocale = savedLocale;
+            }
+          } catch (e) {
+            // localStorage non disponibile
+          }
+          
+          // Se non c'è in localStorage, rileva dal pathname
+          if (detectedLocale === defaultLocale) {
+            detectedLocale = window.location.pathname.startsWith("/en") ? "en" : "it";
+            // Salva la preferenza
+            try {
+              localStorage.setItem(LOCALE_STORAGE_KEY, detectedLocale);
+            } catch (e) {
+              // localStorage non disponibile
+            }
+          }
+          
           // Solo aggiorna se diverso per evitare re-render inutili
           if (detectedLocale !== locale) {
             setLocale(detectedLocale);
@@ -53,7 +87,7 @@ export function useTranslations() {
     return () => clearTimeout(timeoutId);
   }, []);
 
-  // Update locale on navigation
+  // Update locale on navigation and save to localStorage
   useEffect(() => {
     if (!mounted) {
       return;
@@ -61,14 +95,45 @@ export function useTranslations() {
 
     const handleLocationChange = () => {
       if (typeof window !== "undefined") {
-        const detectedLocale = window.location.pathname.startsWith("/en") ? "en" : "it";
+        let detectedLocale: Locale = defaultLocale;
+        
+        // Prima prova localStorage
+        try {
+          const savedLocale = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null;
+          if (savedLocale === 'it' || savedLocale === 'en') {
+            detectedLocale = savedLocale;
+          }
+        } catch (e) {
+          // localStorage non disponibile
+        }
+        
+        // Se non c'è in localStorage, rileva dal pathname
+        if (detectedLocale === defaultLocale) {
+          detectedLocale = window.location.pathname.startsWith("/en") ? "en" : "it";
+        }
+        
         setLocale(detectedLocale);
       }
     };
 
+    // Salva locale quando cambia
+    try {
+      localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+    } catch (e) {
+      // localStorage non disponibile
+    }
+
     window.addEventListener("popstate", handleLocationChange);
-    return () => window.removeEventListener("popstate", handleLocationChange);
-  }, [mounted]);
+    // Ascolta anche i cambi di pathname (Next.js router)
+    const interval = setInterval(() => {
+      handleLocationChange();
+    }, 100);
+
+    return () => {
+      window.removeEventListener("popstate", handleLocationChange);
+      clearInterval(interval);
+    };
+  }, [mounted, locale]);
 
   return useMemo(() => {
     // IMPORTANTE: Usa sempre defaultLocale durante SSR e fino al mount

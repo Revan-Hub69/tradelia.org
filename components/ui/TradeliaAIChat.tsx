@@ -129,10 +129,24 @@ export function TradeliaAIChat() {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [currentLocale, setCurrentLocale] = useState<'it' | 'en'>(locale);
   
-  // Force re-render when locale changes - Best Practice: React to locale changes
-  // Note: We don't clear messages, just ensure they re-render with new locale
-  const localeKey = locale; // Use locale as key to force re-render of MessageBubble
+  // React to locale changes - Best Practice: Update when locale changes
+  useEffect(() => {
+    setCurrentLocale(locale);
+  }, [locale]);
+  
+  // Listen for locale change events
+  useEffect(() => {
+    const handleLocaleChange = (event: CustomEvent) => {
+      if (event.detail?.locale) {
+        setCurrentLocale(event.detail.locale);
+      }
+    };
+    
+    window.addEventListener('localechange', handleLocaleChange as EventListener);
+    return () => window.removeEventListener('localechange', handleLocaleChange as EventListener);
+  }, []);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -151,29 +165,29 @@ export function TradeliaAIChat() {
   const quickActions: QuickAction[] = [
     {
       id: 'glossary',
-      label: locale === 'it' ? 'Aprire Glossario' : 'Open Glossary',
+      label: currentLocale === 'it' ? 'Aprire Glossario' : 'Open Glossary',
       icon: BookOpen,
-      action: locale === 'it' 
+      action: currentLocale === 'it' 
         ? 'Apri il glossario finanziario'
         : 'Open the financial glossary',
     },
     {
       id: 'about',
-      label: locale === 'it' ? 'Sapere di più su Tradelia' : 'Learn more about Tradelia',
+      label: currentLocale === 'it' ? 'Sapere di più su Tradelia' : 'Learn more about Tradelia',
       icon: Sparkles,
-      action: locale === 'it'
+      action: currentLocale === 'it'
         ? 'Dimmi di più su Tradelia e le sue funzionalità'
         : 'Tell me more about Tradelia and its features',
     },
     {
       id: 'assistance',
-      label: locale === 'it' ? 'Assistenza' : 'Support',
+      label: currentLocale === 'it' ? 'Assistenza' : 'Support',
       icon: HelpCircle,
-      action: locale === 'it'
+      action: currentLocale === 'it'
         ? 'Ho bisogno di assistenza'
         : 'I need support',
     },
-  ];
+  ], [currentLocale]);
 
   // Load messages from storage on mount - Best Practice: Persistence with unified storage
   useEffect(() => {
@@ -327,14 +341,14 @@ export function TradeliaAIChat() {
     // Validation - Best Practice: Input validation
     if (!messageToSend || isLoading) return;
     if (messageToSend.length === 0) {
-      setError(locale === 'it' ? 'Il messaggio non può essere vuoto' : 'Message cannot be empty');
+      setError(currentLocale === 'it' ? 'Il messaggio non può essere vuoto' : 'Message cannot be empty');
       return;
     }
 
     // Sanitize input - Best Practice: Security
     const sanitizedMessage = sanitizeString(messageToSend);
     if (sanitizedMessage.length === 0) {
-      setError(locale === 'it' ? 'Messaggio non valido' : 'Invalid message');
+      setError(currentLocale === 'it' ? 'Messaggio non valido' : 'Invalid message');
       return;
     }
 
@@ -361,7 +375,7 @@ export function TradeliaAIChat() {
           body: JSON.stringify({
             message: sanitizedMessage,
             context: window.location.pathname,
-            locale,
+            locale: currentLocale,
             format: 'tradelia-5-points',
             conversationHistory: conversationHistory.slice(-5), // Last 5 messages
           }),
@@ -372,7 +386,7 @@ export function TradeliaAIChat() {
           const resetAt = data.resetAt || Date.now() + 60000;
           const waitTime = Math.ceil((resetAt - Date.now()) / 1000);
           setError(
-            locale === 'it'
+            currentLocale === 'it'
               ? `Troppe richieste. Riprova tra ${waitTime} secondi.`
               : `Too many requests. Try again in ${waitTime} seconds.`
           );
@@ -402,13 +416,13 @@ export function TradeliaAIChat() {
           setMessages(prev => [...prev, {
             id: (Date.now() + 1).toString(),
             role: 'assistant',
-            content: locale === 'it'
+            content: currentLocale === 'it'
               ? 'Errore nel recupero della risposta. Riprova più tardi.'
               : 'Error retrieving response. Please try again later.',
             timestamp: new Date(),
           }]);
           setError(
-            locale === 'it'
+            currentLocale === 'it'
               ? 'Impossibile connettersi al servizio. Verifica la connessione.'
               : 'Unable to connect to service. Check your connection.'
           );
@@ -420,7 +434,7 @@ export function TradeliaAIChat() {
     }
 
     setIsLoading(false);
-  }, [message, isLoading, locale, conversationHistory]);
+  }, [message, isLoading, currentLocale, conversationHistory]);
 
   return (
     <>
@@ -439,7 +453,7 @@ export function TradeliaAIChat() {
             'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-base',
             'border border-white/10'
           )}
-          aria-label={locale === 'it' ? 'Apri chat AI Tradelia' : 'Open Tradelia AI chat'}
+          aria-label={currentLocale === 'it' ? 'Apri chat AI Tradelia' : 'Open Tradelia AI chat'}
           whileHover={{ scale: 1.08, rotate: 5 }}
           whileTap={{ scale: 0.92 }}
           initial={{ scale: 0, opacity: 0 }}
@@ -499,10 +513,10 @@ export function TradeliaAIChat() {
                 </div>
                 <div>
                   <h3 id="chat-title" className="text-base font-bold text-text-primary leading-tight">
-                    {locale === 'it' ? 'Tradelia AI' : 'Tradelia AI'}
+                    {currentLocale === 'it' ? 'Tradelia AI' : 'Tradelia AI'}
                   </h3>
                   <p id="chat-description" className="text-xs text-text-tertiary leading-tight mt-0.5">
-                    {locale === 'it' ? 'Assistente intelligente' : 'Intelligent assistant'}
+                    {currentLocale === 'it' ? 'Assistente intelligente' : 'Intelligent assistant'}
                   </p>
                 </div>
               </div>
@@ -516,8 +530,8 @@ export function TradeliaAIChat() {
                       setError(null);
                     }}
                     className="p-2 rounded-lg hover:bg-bg-soft transition-colors group"
-                    aria-label={locale === 'it' ? 'Torna alla chat principale' : 'Back to main chat'}
-                    title={locale === 'it' ? 'Torna alla chat principale' : 'Back to main chat'}
+                    aria-label={currentLocale === 'it' ? 'Torna alla chat principale' : 'Back to main chat'}
+                    title={currentLocale === 'it' ? 'Torna alla chat principale' : 'Back to main chat'}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -541,8 +555,8 @@ export function TradeliaAIChat() {
                       }
                     }}
                     className="p-2 rounded-lg hover:bg-bg-soft transition-colors group"
-                    aria-label={locale === 'it' ? 'Nuova conversazione' : 'New conversation'}
-                    title={locale === 'it' ? 'Nuova conversazione' : 'New conversation'}
+                    aria-label={currentLocale === 'it' ? 'Nuova conversazione' : 'New conversation'}
+                    title={currentLocale === 'it' ? 'Nuova conversazione' : 'New conversation'}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -552,7 +566,7 @@ export function TradeliaAIChat() {
                 <motion.button
                   onClick={() => setIsOpen(false)}
                   className="p-2 rounded-lg hover:bg-bg-soft transition-colors group"
-                  aria-label={locale === 'it' ? 'Chiudi chat' : 'Close chat'}
+                  aria-label={currentLocale === 'it' ? 'Chiudi chat' : 'Close chat'}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -569,21 +583,21 @@ export function TradeliaAIChat() {
                   {/* Welcome Message */}
                   <div className="text-center py-4">
                     <p className="text-sm text-text-primary leading-relaxed mb-4">
-                      {locale === 'it'
+                      {currentLocale === 'it'
                         ? 'Ciao! Sono Tradelia AI. Posso aiutarti a:'
                         : 'Hello! I\'m Tradelia AI. I can help you with:'}
                     </p>
                     <ul className="text-xs text-text-secondary space-y-2 text-left leading-relaxed">
-                      <li>• {locale === 'it' ? 'Spiegare termini finanziari' : 'Explain financial terms'}</li>
-                      <li>• {locale === 'it' ? 'Guidarti sugli strumenti' : 'Guide you on tools'}</li>
-                      <li>• {locale === 'it' ? 'Rispondere a domande' : 'Answer questions'}</li>
+                      <li>• {currentLocale === 'it' ? 'Spiegare termini finanziari' : 'Explain financial terms'}</li>
+                      <li>• {currentLocale === 'it' ? 'Guidarti sugli strumenti' : 'Guide you on tools'}</li>
+                      <li>• {currentLocale === 'it' ? 'Rispondere a domande' : 'Answer questions'}</li>
                     </ul>
                   </div>
 
                   {/* Quick Actions - Enhanced Design */}
                   <div className="space-y-2.5">
                     <p className="text-xs text-text-tertiary font-semibold leading-relaxed uppercase tracking-wide">
-                      {locale === 'it' ? 'Azioni rapide:' : 'Quick actions:'}
+                      {currentLocale === 'it' ? 'Azioni rapide:' : 'Quick actions:'}
                     </p>
                     {quickActions.map((action) => {
                       const Icon = action.icon;
@@ -604,7 +618,7 @@ export function TradeliaAIChat() {
                   {!isPro && (
                     <div className="mt-4 p-3 bg-accent/10 border border-accent/30 rounded-lg">
                       <p className="text-xs text-text-secondary leading-relaxed mb-2">
-                        {locale === 'it'
+                        {currentLocale === 'it'
                           ? 'Diventa Pro per accedere a Tradelia AI avanzato con risposte dettagliate e analisi approfondite.'
                           : 'Become Pro to access advanced Tradelia AI with detailed answers and in-depth analysis.'}
                       </p>
@@ -612,7 +626,7 @@ export function TradeliaAIChat() {
                         href="/pricing"
                         className="text-xs text-accent hover:text-accent-hover font-medium inline-flex items-center gap-1 leading-relaxed"
                       >
-                        {locale === 'it' ? 'Scopri Pro' : 'Discover Pro'}
+                        {currentLocale === 'it' ? 'Scopri Pro' : 'Discover Pro'}
                         <ArrowRight className="w-3 h-3" />
                       </Link>
                     </div>
@@ -620,7 +634,7 @@ export function TradeliaAIChat() {
                 </div>
               ) : (
                 messages.map((msg) => (
-                  <MessageBubble key={`${msg.id}-${localeKey}`} msg={msg} locale={locale} />
+                  <MessageBubble key={`${msg.id}-${currentLocale}`} msg={msg} locale={currentLocale} />
                 ))
               )}
               {isLoading && (
@@ -632,7 +646,7 @@ export function TradeliaAIChat() {
                   <div className="bg-bg-soft rounded-2xl px-4 py-3 border border-border-subtle shadow-sm flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin text-accent" />
                     <span className="text-xs text-text-tertiary">
-                      {locale === 'it' ? 'Sto pensando...' : 'Thinking...'}
+                      {currentLocale === 'it' ? 'Sto pensando...' : 'Thinking...'}
                     </span>
                   </div>
                 </motion.div>
@@ -659,7 +673,7 @@ export function TradeliaAIChat() {
                         handleSend();
                       }
                     }}
-                    placeholder={locale === 'it' ? 'Scrivi un messaggio...' : 'Type a message...'}
+                    placeholder={currentLocale === 'it' ? 'Scrivi un messaggio...' : 'Type a message...'}
                     className={cn(
                       'w-full px-4 py-3 pr-12 rounded-xl',
                       'bg-bg-soft border border-border-subtle',
@@ -674,7 +688,7 @@ export function TradeliaAIChat() {
                     style={{ maxHeight: '120px', minHeight: '44px' }}
                     disabled={isLoading}
                     maxLength={MAX_MESSAGE_LENGTH}
-                    aria-label={locale === 'it' ? 'Campo di input messaggio' : 'Message input field'}
+                    aria-label={currentLocale === 'it' ? 'Campo di input messaggio' : 'Message input field'}
                     aria-describedby={isLoading ? 'loading-indicator' : undefined}
                     aria-invalid={error ? 'true' : 'false'}
                     aria-errormessage={error ? 'error-message' : undefined}
@@ -690,7 +704,7 @@ export function TradeliaAIChat() {
                       'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
                       message.trim() && !isLoading ? 'shadow-lg' : ''
                     )}
-                    aria-label={locale === 'it' ? 'Invia messaggio' : 'Send message'}
+                    aria-label={currentLocale === 'it' ? 'Invia messaggio' : 'Send message'}
                     whileHover={message.trim() && !isLoading ? { scale: 1.05 } : {}}
                     whileTap={message.trim() && !isLoading ? { scale: 0.95 } : {}}
                   >
@@ -711,7 +725,7 @@ export function TradeliaAIChat() {
               {/* Character count */}
               <div className="flex items-center justify-between mt-2">
                 <p className="text-[10px] text-text-tertiary text-center flex-1">
-                  {locale === 'it'
+                  {currentLocale === 'it'
                     ? 'AI powered by Tradelia. Le risposte sono a scopo informativo.'
                     : 'AI powered by Tradelia. Answers are for informational purposes.'}
                 </p>

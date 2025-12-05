@@ -7,14 +7,16 @@
  * - Performance optimized (backdrop-filter with fallback)
  */
 .dashboardHeaderMinimal {
-  background: rgba(10, 14, 26, 0.9);
+  background: rgba(10, 14, 26, 0.95);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding: 0.75rem 1rem;
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 1000;
+  left: 0;
+  right: 0;
+  z-index: 9999;
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
@@ -22,6 +24,8 @@
   transition:
     background 0.2s ease,
     border-color 0.2s ease;
+  /* Ensure header is always on top */
+  isolation: isolate;
   /* Fallback for browsers that don't support backdrop-filter */
   @supports not (backdrop-filter: blur(16px)) {
     background: rgba(10, 14, 26, 0.98);
