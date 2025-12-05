@@ -12,29 +12,17 @@ import '@/lib/utils/suppress-hydration-errors';
 import '@/lib/utils/global-error-handler';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
-const ConditionalHeader = dynamic(() => import('@/components/layout/ConditionalHeader').then(m => ({ default: m.ConditionalHeader })), {
-  ssr: false,
-});
+const ConditionalHeader = dynamic(() => import('@/components/layout/ConditionalHeader').then(m => ({ default: m.ConditionalHeader })));
 
-const Footer = dynamic(() => import('@/components/layout/Footer').then(m => ({ default: m.Footer })), {
-  ssr: false,
-});
+const Footer = dynamic(() => import('@/components/layout/Footer').then(m => ({ default: m.Footer })));
 
-const LegalConsent = dynamic(() => import('@/components/layout/LegalConsent').then(m => ({ default: m.LegalConsent })), {
-  ssr: false,
-});
+const LegalConsent = dynamic(() => import('@/components/layout/LegalConsent').then(m => ({ default: m.LegalConsent })));
 
-const HtmlLang = dynamic(() => import('@/components/layout/HtmlLang').then(m => ({ default: m.HtmlLang })), {
-  ssr: false,
-});
+const HtmlLang = dynamic(() => import('@/components/layout/HtmlLang').then(m => ({ default: m.HtmlLang })));
 
-const ToastContainer = dynamic(() => import('@/components/ui/Toast').then(m => ({ default: m.ToastContainer })), {
-  ssr: false,
-});
+const ToastContainer = dynamic(() => import('@/components/ui/Toast').then(m => ({ default: m.ToastContainer })));
 
-const CurrencyProvider = dynamic(() => import('@/lib/hooks/useCurrency').then(m => ({ default: m.CurrencyProvider })), {
-  ssr: false,
-});
+const CurrencyProvider = dynamic(() => import('@/lib/hooks/useCurrency').then(m => ({ default: m.CurrencyProvider })));
 
 const inter = Inter({ 
   subsets: ['latin'],

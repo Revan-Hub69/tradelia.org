@@ -1,3 +1,5 @@
+'use client';
+
 import dynamic from 'next/dynamic';
 import { NoSSR } from '@/components/common/NoSSR';
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';

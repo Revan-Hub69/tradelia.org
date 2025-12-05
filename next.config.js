@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false, // Disabilita strict mode per evitare doppio rendering che causa hydration mismatch
-  swcMinify: true,
 
   // Security Headers - Enterprise Grade
   async headers() {
@@ -126,17 +125,13 @@ const nextConfig = {
   // Optimize for modern browsers - reduce polyfills
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
-    typedRoutes: false,
   },
+
+  // Typed routes configuration (moved from experimental in Next.js 15)
+  typedRoutes: false,
 
   // Note: Next.js SWC automatically uses browserslist from .browserslistrc
   // Polyfills are added by dependencies, not by Next.js itself
-
-  // Configure SWC to target modern browsers and reduce polyfills
-  swcMinify: true,
-
-  // Optimize CSS loading
-  optimizeFonts: true,
 
   // Reduce JavaScript bundle size
   webpack: (config, { isServer }) => {

@@ -13,13 +13,11 @@ import { defaultLocale } from '@/lib/i18n/config';
 // component during the server build phase on Render (fixes JSX parse error).
 const Methods = dynamic(() => import('@/components/home/Methods').then((m) => ({ default: m.Methods })), {
   loading: () => <Loading className="min-h-[400px]" />,
-  ssr: false,
 });
 
 // Reviews component - visibile a tutti, login solo per commentare
 const Reviews = dynamic(() => import('@/components/home/Reviews').then((m) => ({ default: m.Reviews })), {
   loading: () => null, // Non mostrare loading, componente si auto-nasconde se non ci sono recensioni
-  ssr: false,
 });
 
 export const metadata = genMetadata('it');

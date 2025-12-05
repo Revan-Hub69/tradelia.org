@@ -1499,7 +1499,7 @@ export function StrategyBuilder() {
             </div>
           </div>
         )}
-      </div>
+      </section>
 
       {/* Results */}
       {results.length > 0 && (
@@ -1993,6 +1993,7 @@ export function StrategyBuilder() {
               </li>
             </ul>
           </div>
+        </div>
         </aside>
 
       {/* Methodology Notes */}
@@ -2126,6 +2127,7 @@ export function StrategyBuilder() {
               </p>
             </div>
           </div>
+        </div>
         </aside>
     </div>
   );
@@ -2133,4 +2135,3 @@ export function StrategyBuilder() {
 
 // Export memoized version for performance
 export default memo(StrategyBuilder);
-export { StrategyBuilder };

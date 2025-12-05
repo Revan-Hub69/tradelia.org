@@ -7,7 +7,6 @@ import { generateMetadata as genMetadata } from '@/lib/seo/metadata';
 
 const Methods = dynamic(() => import('@/components/home/Methods').then((m) => ({ default: m.Methods })), {
   loading: () => <Loading className="min-h-[400px]" />,
-  ssr: false,
 });
 
 export const metadata = genMetadata('en');
