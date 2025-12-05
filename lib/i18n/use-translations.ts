@@ -14,14 +14,13 @@ const dictionaries = {
 const LOCALE_STORAGE_KEY = 'tradelia_locale';
 
 export function useTranslations() {
-  // IMPORTANTE: Inizializza sempre con defaultLocale e mounted=false
-  // Questo garantisce che server e client abbiano lo stesso stato iniziale
-  const [locale, setLocale] = useState<Locale>(() => {
-    // Durante SSR, sempre defaultLocale
+  // Funzione helper per rilevare il locale
+  const detectLocale = (): Locale => {
     if (typeof window === "undefined") {
       return defaultLocale;
     }
-    // Sul client, prova a leggere da localStorage o pathname
+    
+    // PRIMA: Leggi sempre da localStorage (priorità massima)
     try {
       const savedLocale = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null;
       if (savedLocale === 'it' || savedLocale === 'en') {
@@ -30,115 +29,77 @@ export function useTranslations() {
     } catch (e) {
       // localStorage non disponibile
     }
-    // Fallback: rileva dal pathname
+    
+    // FALLBACK: Rileva dal pathname solo se localStorage è vuoto
     const pathLocale = window.location.pathname.startsWith("/en") ? "en" : "it";
     return pathLocale;
-  });
+  };
+
+  // Inizializza con il locale rilevato
+  const [locale, setLocale] = useState<Locale>(detectLocale);
   const [mounted, setMounted] = useState(false);
 
+  // Monta il componente e rileva il locale
   useEffect(() => {
-    // IMPORTANTE: Aggiorna mounted SOLO dopo che il componente è montato sul client
-    // Questo garantisce che il rendering iniziale sia identico tra server e client
     if (typeof window === "undefined") {
       return;
     }
 
-    // Usa un doppio setTimeout per assicurarsi che l'hydration sia completamente completata
-    // prima di aggiornare lo stato - questo previene hydration mismatch
-    const timeoutId = setTimeout(() => {
-      // Secondo setTimeout per essere sicuri che React abbia completato l'hydration
-      setTimeout(() => {
-        setMounted(true);
-
-        // Detect locale from window.location or localStorage
-        // Usa requestAnimationFrame per assicurarsi che il DOM sia pronto
-        requestAnimationFrame(() => {
-          let detectedLocale: Locale = defaultLocale;
-          
-          // Prima prova localStorage
-          try {
-            const savedLocale = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null;
-            if (savedLocale === 'it' || savedLocale === 'en') {
-              detectedLocale = savedLocale;
-            }
-          } catch (e) {
-            // localStorage non disponibile
-          }
-          
-          // Se non c'è in localStorage, rileva dal pathname
-          if (detectedLocale === defaultLocale) {
-            detectedLocale = window.location.pathname.startsWith("/en") ? "en" : "it";
-            // Salva la preferenza
-            try {
-              localStorage.setItem(LOCALE_STORAGE_KEY, detectedLocale);
-            } catch (e) {
-              // localStorage non disponibile
-            }
-          }
-          
-          // Solo aggiorna se diverso per evitare re-render inutili
-          if (detectedLocale !== locale) {
-            setLocale(detectedLocale);
-          }
-        });
-      }, 100); // Delay più lungo per assicurarsi che l'hydration sia completa
-    }, 0);
-
-    return () => clearTimeout(timeoutId);
+    setMounted(true);
+    
+    // Rileva e imposta il locale immediatamente
+    const detectedLocale = detectLocale();
+    if (detectedLocale !== locale) {
+      setLocale(detectedLocale);
+    }
   }, []);
 
-  // Update locale on navigation and save to localStorage
+  // Salva locale in localStorage quando cambia
   useEffect(() => {
-    if (!mounted) {
+    if (!mounted || typeof window === "undefined") {
       return;
     }
 
-    const handleLocationChange = () => {
-      if (typeof window !== "undefined") {
-        let detectedLocale: Locale = defaultLocale;
-        
-        // Prima prova localStorage
-        try {
-          const savedLocale = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null;
-          if (savedLocale === 'it' || savedLocale === 'en') {
-            detectedLocale = savedLocale;
-          }
-        } catch (e) {
-          // localStorage non disponibile
-        }
-        
-        // Se non c'è in localStorage, rileva dal pathname
-        if (detectedLocale === defaultLocale) {
-          detectedLocale = window.location.pathname.startsWith("/en") ? "en" : "it";
-        }
-        
-        setLocale(detectedLocale);
-      }
-    };
-
-    // Salva locale quando cambia
     try {
       localStorage.setItem(LOCALE_STORAGE_KEY, locale);
     } catch (e) {
       // localStorage non disponibile
     }
+  }, [locale, mounted]);
 
+  // Ascolta cambiamenti di navigazione e aggiorna locale se necessario
+  useEffect(() => {
+    if (!mounted || typeof window === "undefined") {
+      return;
+    }
+
+    const handleLocationChange = () => {
+      const detectedLocale = detectLocale();
+      if (detectedLocale !== locale) {
+        setLocale(detectedLocale);
+      }
+    };
+
+    // Ascolta evento localechange (dispatched da LanguageSwitch)
+    const handleLocaleChange = (event: CustomEvent) => {
+      if (event.detail?.locale && (event.detail.locale === 'it' || event.detail.locale === 'en')) {
+        setLocale(event.detail.locale);
+      }
+    };
+
+    // Ascolta popstate (back/forward)
     window.addEventListener("popstate", handleLocationChange);
-    // Ascolta anche i cambi di pathname (Next.js router)
-    const interval = setInterval(() => {
-      handleLocationChange();
-    }, 100);
-
+    window.addEventListener("localechange", handleLocaleChange as EventListener);
+    
     return () => {
       window.removeEventListener("popstate", handleLocationChange);
-      clearInterval(interval);
+      window.removeEventListener("localechange", handleLocaleChange as EventListener);
     };
   }, [mounted, locale]);
 
   return useMemo(() => {
-    // IMPORTANTE: Usa sempre defaultLocale durante SSR e fino al mount
-    // Questo garantisce che server e client renderizzino lo stesso contenuto iniziale
-    const currentLocale = mounted ? locale : defaultLocale;
+    // Usa il locale rilevato (già inizializzato correttamente)
+    const currentLocale = locale;
     const dict = dictionaries[currentLocale] || dictionaries[defaultLocale];
     const getValue = (key: string, fallback?: string): unknown => {
       // Best Practice: Validate key format to prevent showing invalid keys

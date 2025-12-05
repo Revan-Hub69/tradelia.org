@@ -60,28 +60,26 @@ export function LanguageSwitch({ size = 'md', variant = 'dropdown' }: LanguageSw
       return;
     }
 
-    // Salva la preferenza in localStorage
+    setIsOpen(false);
+
+    // PRIMA: Salva immediatamente in localStorage (priorità massima)
     try {
       localStorage.setItem('tradelia_locale', newLocale);
     } catch (e) {
       // localStorage non disponibile
     }
 
-    // Get current path without locale prefix
-    const pathWithoutLocale = pathname.replace(/^\/(it|en)/, '') || '/';
-    
-    // Build new path with new locale
-    const newPath = buildLocalePath(newLocale, pathWithoutLocale);
-    
-    setIsOpen(false);
-    
-    // Use router.push and then trigger a custom event for components to react
-    router.push(newPath);
-    
-    // Dispatch custom event for components that need to react to locale changes
+    // SECONDO: Dispatch custom event IMMEDIATAMENTE per aggiornare i componenti
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('localechange', { detail: { locale: newLocale } }));
     }
+
+    // TERZO: Naviga al nuovo path
+    const pathWithoutLocale = pathname.replace(/^\/(it|en)/, '') || '/';
+    const newPath = buildLocalePath(newLocale, pathWithoutLocale);
+    
+    // Usa router.replace invece di push per evitare di aggiungere alla history
+    router.replace(newPath);
   };
 
   const sizeClasses = {
