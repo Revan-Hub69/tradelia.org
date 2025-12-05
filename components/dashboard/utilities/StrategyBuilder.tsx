@@ -564,13 +564,8 @@ export function StrategyBuilder() {
     }
   }, []);
 
-  return React.createElement(
-    StrategyBuilderContent,
-    {
-      className: 'space-y-6',
-      itemScope: true,
-      itemType: 'https://schema.org/SoftwareApplication'
-    },
+  const content = (
+    <>
         {/* Structured Data for SEO */}
         <script
           type="application/ld+json"
@@ -2247,6 +2242,17 @@ export function StrategyBuilder() {
             </div>
           </div>
         </aside>
+    </>
+  );
+
+  return React.createElement(
+    StrategyBuilderContent,
+    {
+      className: 'space-y-6',
+      itemScope: true,
+      itemType: 'https://schema.org/SoftwareApplication'
+    },
+    content
   );
 }
 
