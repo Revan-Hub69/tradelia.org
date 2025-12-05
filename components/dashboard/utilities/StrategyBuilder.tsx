@@ -6,7 +6,6 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { MethodologyNotes } from './MethodologyNotes';
-import { StrategyBuilderContent } from './StrategyBuilderContent';
 import { 
   ACADEMIC_STRATEGIES, 
   getStrategyById, 
@@ -564,8 +563,12 @@ export function StrategyBuilder() {
     }
   }, []);
 
-  const content = (
-    <>
+  return (
+    <div 
+      className="space-y-6"
+      itemScope
+      itemType="https://schema.org/SoftwareApplication"
+    >
         {/* Structured Data for SEO */}
         <script
           type="application/ld+json"
@@ -2242,17 +2245,7 @@ export function StrategyBuilder() {
             </div>
           </div>
         </aside>
-    </>
-  );
-
-  return React.createElement(
-    StrategyBuilderContent,
-    {
-      className: 'space-y-6',
-      itemScope: true,
-      itemType: 'https://schema.org/SoftwareApplication'
-    },
-    content
+    </div>
   );
 }
 
