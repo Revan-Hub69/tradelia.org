@@ -69,6 +69,7 @@ QuickActionButton.displayName = 'QuickActionButton';
 // Memoized Message Component - Best Practice: Performance optimization
 const MessageBubble = memo(({ msg, locale }: { msg: Message; locale: 'it' | 'en' }) => {
   const isUser = msg.role === 'user';
+  // Always format assistant messages - Best Practice: Consistent formatting
   const formatted = !isUser ? formatAIMessage(msg.content) : null;
   
   return (
@@ -128,6 +129,10 @@ export function TradeliaAIChat() {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [error, setError] = useState<string | null>(null);
+  
+  // Force re-render when locale changes - Best Practice: React to locale changes
+  // Note: We don't clear messages, just ensure they re-render with new locale
+  const localeKey = locale; // Use locale as key to force re-render of MessageBubble
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -615,7 +620,7 @@ export function TradeliaAIChat() {
                 </div>
               ) : (
                 messages.map((msg) => (
-                  <MessageBubble key={msg.id} msg={msg} locale={locale} />
+                  <MessageBubble key={`${msg.id}-${localeKey}`} msg={msg} locale={locale} />
                 ))
               )}
               {isLoading && (

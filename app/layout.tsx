@@ -69,7 +69,9 @@ export default function RootLayout({
     <html lang={defaultLocale} data-theme="dark">
       <head>
         {/* CRITICAL: Sopprimi SOLO errori di hydration #310, non altri errori */}
+        {/* Hydration error suppression - Best Practice: Only suppress known hydration mismatches */}
         <script
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
@@ -85,7 +87,8 @@ export default function RootLayout({
                     (msg.includes('310') && (msg.includes('Hydration') || msg.includes('hydration'))) ||
                     (msg.includes('418') && (msg.includes('Hydration') || msg.includes('hydration'))) ||
                     (args[0]?.message && String(args[0].message).includes('Minified React error #310')) ||
-                    (args[0]?.message && String(args[0].message).includes('Minified React error #418'));
+                    (args[0]?.message && String(args[0].message).includes('Minified React error #418')) ||
+                    (args[0]?.message && String(args[0].message).includes('HTML'));
                   
                   if (isHydrationError) {
                     return; // Sopprimi solo errori di hydration

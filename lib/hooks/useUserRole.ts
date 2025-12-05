@@ -38,9 +38,17 @@ export function useUserRole(): UserRoleData {
           .eq("user_id", user.id)
           .maybeSingle();
 
-        if (error && error.code !== "PGRST116") {
+        if (error) {
           // PGRST116 = no rows returned, which is fine
-          console.error("Error fetching user role:", error);
+          // 500 = server error, table might not exist or RLS issue
+          if (error.code === "PGRST116") {
+            // No role found, use default
+          } else if (error.code === "PGRST301" || error.message?.includes("relation") || error.message?.includes("does not exist")) {
+            // Table doesn't exist, use default
+            console.warn("user_roles table not available, using default role");
+          } else {
+            console.error("Error fetching user role:", error);
+          }
         }
 
         if (mounted) {

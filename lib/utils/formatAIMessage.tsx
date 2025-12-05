@@ -40,8 +40,11 @@ export function formatAIMessage(message: string): FormattedMessage {
   }
   
   // Se non ci sono match MIFID, formatta normalmente
+  // Best Practice: Always format, even if no MIFID found
   if (mifidMatches.length === 0) {
-    return formatMarkdown(message);
+    const formatted = formatMarkdown(message);
+    // Ensure we always return parts, even if empty
+    return formatted.parts.length > 0 ? formatted : { parts: [{ type: 'text', content: message }] };
   }
   
   // Processa il messaggio separando testo normale da MIFID
@@ -89,6 +92,11 @@ export function formatAIMessage(message: string): FormattedMessage {
 function formatMarkdown(text: string): FormattedMessage {
   const parts: FormattedMessage['parts'] = [];
   
+  // Best Practice: Always ensure we have content to format
+  if (!text || typeof text !== 'string' || text.trim().length === 0) {
+    return { parts: [{ type: 'text', content: text || '' }] };
+  }
+  
   // Pattern per riconoscere schema Tradelia 5 punti
   const tradeliaSectionPatterns = {
     definition: /^(\d+\.\s*)?(DEFINIZIONE|DEFINITION|DEFINIZIONE ACCADEMICA|ACADEMIC DEFINITION)[:\s]*/i,
@@ -102,7 +110,8 @@ function formatMarkdown(text: string): FormattedMessage {
   const sourcePattern = /^(Fonte|Source|Riferimento|Reference|Bibliografia|Bibliography)[:\s]+(.+)$/i;
   
   // Split per paragrafi (doppio newline o newline seguito da spazio)
-  const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim());
+  // Best Practice: Handle both single and double newlines
+  const paragraphs = text.split(/\n\s*\n|\n(?=\S)/).filter(p => p.trim());
   
   paragraphs.forEach((paragraph) => {
     const trimmed = paragraph.trim();

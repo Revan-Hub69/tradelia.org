@@ -26,6 +26,10 @@ const CurrencySwitch = dynamic(() => import('@/components/ui/CurrencySwitch').th
   ssr: false,
 });
 
+const LanguageSwitch = dynamic(() => import('@/components/ui/LanguageSwitch').then(mod => ({ default: mod.LanguageSwitch })), {
+  ssr: false,
+});
+
 /**
  * Dashboard Header Component
  * Clean, modern header with single logo and responsive design
@@ -89,6 +93,7 @@ export function DashboardHeader() {
             // Quando autenticato: mostra tutte le azioni
             <>
               <div className={styles.dashboardActionsLeft}>
+                <LanguageSwitch size="sm" />
                 <CurrencySwitch size="sm" />
                 <UserStats />
               </div>
