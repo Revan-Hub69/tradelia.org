@@ -565,10 +565,10 @@ export function StrategyBuilder() {
 
   return (
     <article 
-        className="space-y-6"
-        itemScope
-        itemType="https://schema.org/SoftwareApplication"
-      >
+      className="space-y-6"
+      itemScope
+      itemType="https://schema.org/SoftwareApplication"
+    >
         {/* Structured Data for SEO */}
         <script
           type="application/ld+json"
@@ -2245,7 +2245,7 @@ export function StrategyBuilder() {
             </div>
           </div>
         </aside>
-      </article>
+    </article>
   );
 }
 
