@@ -8,6 +8,7 @@ import { useUserRole } from '@/lib/hooks/useUserRole';
 import { TrendingUp, TrendingDown, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import MIFIDDisclaimer from '@/components/widgets/MIFIDDisclaimer';
+import WidgetNotifications from '@/components/widgets/WidgetNotifications';
 import { trackWidgetLoadTime, trackApiResponseTime, trackWidgetError } from '@/lib/monitoring/widget-performance';
 
 interface WhaleTransaction {
@@ -35,6 +36,27 @@ export default function CryptoWhaleWidgetPage() {
   const { t, locale } = useTranslations();
   const { isPro } = useUserRole();
   const [refreshing, setRefreshing] = useState(false);
+  const [widgetId, setWidgetId] = useState<string | null>(null);
+  
+  // Get widget ID if installed
+  useEffect(() => {
+    const fetchWidgetId = async () => {
+      try {
+        const response = await fetch('/api/widgets/me');
+        if (!response.ok) return;
+        const data = await response.json();
+        const whaleWidget = data.widgets?.find((w: any) => w.widget_type === 'crypto-whale');
+        if (whaleWidget) {
+          setWidgetId(whaleWidget.id);
+        }
+      } catch (error) {
+        console.error('Error fetching widget ID:', error);
+      }
+    };
+    if (isPro) {
+      fetchWidgetId();
+    }
+  }, [isPro]);
   
   const { data: whaleData, loading, refetch } = useApi<WhaleData>(
     '/api/crypto/whale-analysis',
@@ -122,22 +144,25 @@ export default function CryptoWhaleWidgetPage() {
       {/* MIFID Disclaimer */}
       <MIFIDDisclaimer />
       
-      {/* Widget Notifications (if widget is installed) */}
-      {/* TODO: Add widget ID lookup and render WidgetNotifications */}
-      
       {/* Header */}
       <div className="mb-4 pb-4 border-b border-border-subtle">
         <div className="flex items-center justify-between mb-2">
           <h1 className="text-xl font-bold text-text-primary flex items-center gap-2" id="widget-title">
             🐋 {t('widgets.cryptoWhale.title') || 'Crypto Whale'}
           </h1>
-          {refreshing && (
-            <div 
-              className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin"
-              role="status"
-              aria-label={t('widgets.refreshing') || 'Aggiornamento in corso'}
-            />
-          )}
+          <div className="flex items-center gap-2">
+            {/* Widget Notifications (if widget is installed) */}
+            {widgetId && (
+              <WidgetNotifications widgetId={widgetId} widgetType="crypto-whale" />
+            )}
+            {refreshing && (
+              <div 
+                className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin"
+                role="status"
+                aria-label={t('widgets.refreshing') || 'Aggiornamento in corso'}
+              />
+            )}
+          </div>
         </div>
         {whaleData?.whaleRatio !== undefined && (
           <div className="text-sm text-text-secondary">
@@ -162,18 +187,20 @@ export default function CryptoWhaleWidgetPage() {
         </div>
       ) : (
         <div className="space-y-3 mb-6" role="list" aria-label={t('widgets.cryptoWhale.transactions') || 'Transazioni whale recenti'}>
-          {whaleData.transactions.slice(0, 5).map((tx) => (
+          {whaleData.transactions.slice(0, 5).map((tx, index) => (
             <div
               key={tx.hash}
               className="bg-bg-soft border border-border-subtle rounded-lg p-4"
               role="listitem"
+              tabIndex={0}
+              aria-label={`Transazione ${index + 1}: ${tx.symbol} verso ${tx.to.owner_type}, valore ${tx.amount_usd.toLocaleString()} USD`}
             >
               <div className="flex items-start justify-between mb-2">
                 <div className="flex-1">
-                  <p className="font-semibold text-text-primary mb-1" aria-label={`${tx.symbol} verso ${tx.to.owner_type}`}>
+                  <p className="font-semibold text-text-primary mb-1">
                     {tx.symbol} → {tx.to.owner_type}
                   </p>
-                  <p className="text-xs text-text-tertiary" aria-label={`Valore: ${tx.amount_usd.toLocaleString()} USD`}>
+                  <p className="text-xs text-text-tertiary">
                     {new Intl.NumberFormat(locale === 'it' ? 'it-IT' : 'en-US', {
                       style: 'currency',
                       currency: 'USD',
@@ -186,10 +213,6 @@ export default function CryptoWhaleWidgetPage() {
                   <time 
                     dateTime={new Date(tx.timestamp * 1000).toISOString()}
                     className="text-xs text-text-tertiary"
-                    aria-label={`Ora: ${new Date(tx.timestamp * 1000).toLocaleTimeString(locale === 'it' ? 'it-IT' : 'en-US', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}`}
                   >
                     {new Date(tx.timestamp * 1000).toLocaleTimeString(locale === 'it' ? 'it-IT' : 'en-US', {
                       hour: '2-digit',

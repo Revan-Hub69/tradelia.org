@@ -107,6 +107,20 @@ export default function WidgetNotifications({ widgetId, widgetType }: WidgetNoti
     }
   };
 
+  // Keyboard navigation support
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen]);
+
   return (
     <div className="relative">
       {/* Notification Bell */}

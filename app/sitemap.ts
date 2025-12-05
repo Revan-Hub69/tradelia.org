@@ -306,6 +306,79 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         },
       },
     },
+    // Widget pages
+    {
+      url: `${baseUrl}/widgets/crypto-whale`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly' as const,
+      priority: 0.7,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/widgets/crypto-whale`,
+          en: `${baseUrl}/en/widgets/crypto-whale`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/widgets/crypto-depth`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly' as const,
+      priority: 0.7,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/widgets/crypto-depth`,
+          en: `${baseUrl}/en/widgets/crypto-depth`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/widgets/crypto-movers`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly' as const,
+      priority: 0.7,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/widgets/crypto-movers`,
+          en: `${baseUrl}/en/widgets/crypto-movers`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/en/widgets/crypto-whale`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly' as const,
+      priority: 0.7,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/widgets/crypto-whale`,
+          en: `${baseUrl}/en/widgets/crypto-whale`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/en/widgets/crypto-depth`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly' as const,
+      priority: 0.7,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/widgets/crypto-depth`,
+          en: `${baseUrl}/en/widgets/crypto-depth`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/en/widgets/crypto-movers`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly' as const,
+      priority: 0.7,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/widgets/crypto-movers`,
+          en: `${baseUrl}/en/widgets/crypto-movers`,
+        },
+      },
+    },
   ];
 
   return staticPages;

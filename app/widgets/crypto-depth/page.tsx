@@ -7,6 +7,7 @@ import { useUserRole } from '@/lib/hooks/useUserRole';
 import { TrendingUp, TrendingDown, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import MIFIDDisclaimer from '@/components/widgets/MIFIDDisclaimer';
+import WidgetNotifications from '@/components/widgets/WidgetNotifications';
 import { trackWidgetLoadTime, trackWidgetError } from '@/lib/monitoring/widget-performance';
 
 interface AggregatedDepth {
@@ -26,6 +27,26 @@ export default function CryptoDepthWidgetPage() {
   const { t, locale } = useTranslations();
   const { isPro } = useUserRole();
   const [refreshing, setRefreshing] = useState(false);
+  const [widgetId, setWidgetId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const fetchWidgetId = async () => {
+      try {
+        const response = await fetch('/api/widgets/me');
+        if (!response.ok) return;
+        const data = await response.json();
+        const depthWidget = data.widgets?.find((w: any) => w.widget_type === 'crypto-depth');
+        if (depthWidget) {
+          setWidgetId(depthWidget.id);
+        }
+      } catch (error) {
+        console.error('Error fetching widget ID:', error);
+      }
+    };
+    if (isPro) {
+      fetchWidgetId();
+    }
+  }, [isPro]);
   
   const { data: depthData, loading, refetch } = useApi<AggregatedDepth>(
     '/api/crypto/aggregated-depth',
@@ -117,9 +138,14 @@ export default function CryptoDepthWidgetPage() {
           <h1 className="text-xl font-bold text-text-primary flex items-center gap-2">
             📊 {t('widgets.cryptoDepth.title') || 'Depth Aggregated'}
           </h1>
-          {refreshing && (
-            <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-          )}
+          <div className="flex items-center gap-2">
+            {widgetId && (
+              <WidgetNotifications widgetId={widgetId} widgetType="crypto-depth" />
+            )}
+            {refreshing && (
+              <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+            )}
+          </div>
         </div>
         {depthData && (
           <div className="flex items-center gap-4 text-sm">
@@ -163,19 +189,19 @@ export default function CryptoDepthWidgetPage() {
       ) : (
         <>
           {/* Total Bid/Ask */}
-          <div className="mb-6 grid grid-cols-2 gap-4">
-            <div className="bg-bg-soft border border-border-subtle rounded-lg p-4">
+          <div className="mb-6 grid grid-cols-2 gap-4" role="region" aria-label={t('widgets.cryptoDepth.metricsLabel') || 'Metriche profondità mercato'}>
+            <div className="bg-bg-soft border border-border-subtle rounded-lg p-4" role="group" aria-label="Total Bid">
               <p className="text-xs text-text-tertiary mb-1">Total Bid</p>
-              <p className="text-lg font-semibold text-green-400">
+              <p className="text-lg font-semibold text-green-400" aria-label={`Total Bid: ${depthData.totalBid.toLocaleString()}`}>
                 {new Intl.NumberFormat(locale === 'it' ? 'it-IT' : 'en-US', {
                   minimumFractionDigits: 0,
                   maximumFractionDigits: 0,
                 }).format(depthData.totalBid)}
               </p>
             </div>
-            <div className="bg-bg-soft border border-border-subtle rounded-lg p-4">
+            <div className="bg-bg-soft border border-border-subtle rounded-lg p-4" role="group" aria-label="Total Ask">
               <p className="text-xs text-text-tertiary mb-1">Total Ask</p>
-              <p className="text-lg font-semibold text-red-400">
+              <p className="text-lg font-semibold text-red-400" aria-label={`Total Ask: ${depthData.totalAsk.toLocaleString()}`}>
                 {new Intl.NumberFormat(locale === 'it' ? 'it-IT' : 'en-US', {
                   minimumFractionDigits: 0,
                   maximumFractionDigits: 0,

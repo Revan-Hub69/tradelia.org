@@ -7,6 +7,7 @@ import { useUserRole } from '@/lib/hooks/useUserRole';
 import { TrendingUp, TrendingDown, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import MIFIDDisclaimer from '@/components/widgets/MIFIDDisclaimer';
+import WidgetNotifications from '@/components/widgets/WidgetNotifications';
 import { trackWidgetLoadTime, trackWidgetError } from '@/lib/monitoring/widget-performance';
 
 interface TopMover {
@@ -35,6 +36,26 @@ export default function CryptoMoversWidgetPage() {
   const { isPro } = useUserRole();
   const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState<'gainers' | 'losers' | 'volume'>('gainers');
+  const [widgetId, setWidgetId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const fetchWidgetId = async () => {
+      try {
+        const response = await fetch('/api/widgets/me');
+        if (!response.ok) return;
+        const data = await response.json();
+        const moversWidget = data.widgets?.find((w: any) => w.widget_type === 'crypto-movers');
+        if (moversWidget) {
+          setWidgetId(moversWidget.id);
+        }
+      } catch (error) {
+        console.error('Error fetching widget ID:', error);
+      }
+    };
+    if (isPro) {
+      fetchWidgetId();
+    }
+  }, [isPro]);
   
   const { data: moversData, loading, refetch } = useApi<TopMoversData>(
     '/api/crypto/top-movers',
@@ -132,15 +153,23 @@ export default function CryptoMoversWidgetPage() {
           <h1 className="text-xl font-bold text-text-primary flex items-center gap-2">
             📈 {t('widgets.cryptoMovers.title') || 'Top Movers'}
           </h1>
-          {refreshing && (
-            <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-          )}
+          <div className="flex items-center gap-2">
+            {widgetId && (
+              <WidgetNotifications widgetId={widgetId} widgetType="crypto-movers" />
+            )}
+            {refreshing && (
+              <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+            )}
+          </div>
         </div>
         
         {/* Tabs */}
-        <div className="flex gap-2 mt-3">
+        <div className="flex gap-2 mt-3" role="tablist" aria-label={t('widgets.cryptoMovers.tabsLabel') || 'Categorie top movers'}>
           <button
             onClick={() => setActiveTab('gainers')}
+            role="tab"
+            aria-selected={activeTab === 'gainers'}
+            aria-controls="movers-content"
             className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
               activeTab === 'gainers'
                 ? 'bg-accent text-white'
@@ -151,6 +180,9 @@ export default function CryptoMoversWidgetPage() {
           </button>
           <button
             onClick={() => setActiveTab('losers')}
+            role="tab"
+            aria-selected={activeTab === 'losers'}
+            aria-controls="movers-content"
             className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
               activeTab === 'losers'
                 ? 'bg-accent text-white'
@@ -161,6 +193,9 @@ export default function CryptoMoversWidgetPage() {
           </button>
           <button
             onClick={() => setActiveTab('volume')}
+            role="tab"
+            aria-selected={activeTab === 'volume'}
+            aria-controls="movers-content"
             className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
               activeTab === 'volume'
                 ? 'bg-accent text-white'
@@ -188,11 +223,12 @@ export default function CryptoMoversWidgetPage() {
         </div>
       ) : (
         <>
-          <div className="space-y-3 mb-6">
+          <div className="space-y-3 mb-6" role="region" id="movers-content" aria-live="polite" aria-label={t('widgets.cryptoMovers.contentLabel') || 'Lista top movers'}>
             {currentData.slice(0, 10).map((mover) => (
               <div
                 key={mover.id}
                 className="bg-bg-soft border border-border-subtle rounded-lg p-4"
+                role="listitem"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
