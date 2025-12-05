@@ -6,7 +6,6 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { MethodologyNotes } from './MethodologyNotes';
-import { ErrorBoundaryWrapper } from '@/components/errors/ErrorBoundaryWrapper';
 import { 
   ACADEMIC_STRATEGIES, 
   getStrategyById, 
@@ -565,8 +564,7 @@ export function StrategyBuilder() {
   }, []);
 
   return (
-    <ErrorBoundaryWrapper>
-      <article 
+    <article 
         className="space-y-6"
         itemScope
         itemType="https://schema.org/SoftwareApplication"
@@ -2248,7 +2246,6 @@ export function StrategyBuilder() {
           </div>
         </aside>
       </article>
-    </ErrorBoundaryWrapper>
   );
 }
 
