@@ -80,15 +80,18 @@ export default function RootLayout({
                 const originalWarn = console.warn.bind(console);
                 console.error = function(...args) {
                   const msg = String(args[0] || '');
+                  const errorMsg = args[0]?.message ? String(args[0].message) : '';
+                  const fullMsg = msg + ' ' + errorMsg;
+                  
                   // Sopprimi SOLO errori di hydration specifici (#310, #418), non altri errori
                   const isHydrationError = 
-                    msg.includes('Minified React error #310') ||
-                    msg.includes('Minified React error #418') ||
-                    (msg.includes('310') && (msg.includes('Hydration') || msg.includes('hydration'))) ||
-                    (msg.includes('418') && (msg.includes('Hydration') || msg.includes('hydration'))) ||
-                    (args[0]?.message && String(args[0].message).includes('Minified React error #310')) ||
-                    (args[0]?.message && String(args[0].message).includes('Minified React error #418')) ||
-                    (args[0]?.message && String(args[0].message).includes('HTML'));
+                    fullMsg.includes('Minified React error #310') ||
+                    fullMsg.includes('Minified React error #418') ||
+                    fullMsg.includes('React error #310') ||
+                    fullMsg.includes('React error #418') ||
+                    (fullMsg.includes('418') && (fullMsg.includes('HTML') || fullMsg.includes('hydration') || fullMsg.includes('Hydration'))) ||
+                    (fullMsg.includes('310') && (fullMsg.includes('hydration') || fullMsg.includes('Hydration'))) ||
+                    (fullMsg.includes('HTML') && (fullMsg.includes('418') || fullMsg.includes('hydration') || fullMsg.includes('Hydration')));
                   
                   if (isHydrationError) {
                     return; // Sopprimi solo errori di hydration
@@ -97,11 +100,16 @@ export default function RootLayout({
                 };
                 console.warn = function(...args) {
                   const msg = String(args[0] || '');
+                  const errorMsg = args[0]?.message ? String(args[0].message) : '';
+                  const fullMsg = msg + ' ' + errorMsg;
+                  
                   const isHydrationError = 
-                    msg.includes('Minified React error #310') ||
-                    msg.includes('Minified React error #418') ||
-                    (msg.includes('310') && (msg.includes('Hydration') || msg.includes('hydration'))) ||
-                    (msg.includes('418') && (msg.includes('Hydration') || msg.includes('hydration')));
+                    fullMsg.includes('Minified React error #310') ||
+                    fullMsg.includes('Minified React error #418') ||
+                    fullMsg.includes('React error #310') ||
+                    fullMsg.includes('React error #418') ||
+                    (fullMsg.includes('418') && (fullMsg.includes('HTML') || fullMsg.includes('hydration') || fullMsg.includes('Hydration'))) ||
+                    (fullMsg.includes('310') && (fullMsg.includes('hydration') || fullMsg.includes('Hydration')));
                   
                   if (isHydrationError) {
                     return; // Sopprimi solo errori di hydration

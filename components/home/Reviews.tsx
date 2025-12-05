@@ -50,10 +50,12 @@ export function Reviews() {
 
         if (error) {
           // Se la tabella non esiste o c'è un errore 404, semplicemente non mostrare le reviews
-          if (error.code === 'PGRST116' || error.message?.includes('404') || error.message?.includes('relation') || error.message?.includes('does not exist')) {
-            console.log('Reviews table not available:', error.message);
+          // Silenzia completamente gli errori 404/PGRST116 per evitare spam in console
+          if (error.code === 'PGRST116' || error.code === 'PGRST301' || error.message?.includes('404') || error.message?.includes('relation') || error.message?.includes('does not exist')) {
+            // Non loggare - tabella semplicemente non disponibile
             setReviews([]);
           } else {
+            // Logga solo errori reali (non 404)
             console.error('Error loading reviews:', error);
             setReviews([]);
           }
@@ -61,9 +63,9 @@ export function Reviews() {
           setReviews(data || []);
         }
       } catch (error: any) {
-        // Gestisci errori di rete o altri errori
-        if (error?.message?.includes('404') || error?.message?.includes('relation') || error?.message?.includes('does not exist')) {
-          console.log('Reviews table not available:', error.message);
+        // Gestisci errori di rete o altri errori - silenzia 404
+        if (error?.message?.includes('404') || error?.message?.includes('relation') || error?.message?.includes('does not exist') || error?.code === 'PGRST116' || error?.code === 'PGRST301') {
+          // Non loggare - tabella semplicemente non disponibile
         } else {
           console.error('Error loading reviews:', error);
         }

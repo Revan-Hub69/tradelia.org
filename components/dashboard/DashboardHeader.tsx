@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './DashboardHeader.module.css';
@@ -44,8 +45,55 @@ const LanguageSwitch = dynamic(() => import('@/components/ui/LanguageSwitch').th
 export function DashboardHeader() {
   const isClient = useIsClient();
   const { locale, t } = useTranslations();
-  const { isAuthenticated } = useAuthState();
+  const { isAuthenticated, isLoading } = useAuthState();
   const dashboardHref = buildLocalePath(locale, '/dashboard');
+  const [mounted, setMounted] = useState(false);
+
+  // Ensure component is fully mounted before rendering auth-dependent content
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Prevent hydration mismatch by not rendering auth-dependent content until client-side
+  if (!isClient || !mounted) {
+    return (
+      <header 
+        className={styles.dashboardHeaderMinimal} 
+        suppressHydrationWarning 
+        style={{ width: '100%', maxWidth: '100%' }}
+        role="banner"
+      >
+        <div className={styles.dashboardHeaderContent}>
+          <div className={styles.dashboardTitle}>
+            <Link 
+              href="/" 
+              className={styles.dashboardBrand}
+              aria-label="Tradelia AI - Home"
+            >
+              {isClient && (
+                <Image
+                  src="/logos/tradelia-logo.svg"
+                  alt="Tradelia AI"
+                  width={140}
+                  height={35}
+                  className={styles.dashboardBrandLogo}
+                  priority
+                  unoptimized={false}
+                />
+              )}
+            </Link>
+            <span className={styles.dashboardTitleSeparator} aria-hidden="true">·</span>
+            <span className={styles.dashboardTitleText}>Dashboard</span>
+          </div>
+          <nav className={styles.dashboardActions} aria-label="Dashboard actions" suppressHydrationWarning>
+            <div className={styles.dashboardActionsRight}>
+              <div className="w-20 h-8 bg-bg-soft rounded animate-pulse" />
+            </div>
+          </nav>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header 
@@ -78,8 +126,13 @@ export function DashboardHeader() {
           <span className={styles.dashboardTitleText}>Dashboard</span>
         </div>
         {/* Seconda riga su mobile: Azioni - Ottimizzate per mobile */}
-        <nav className={styles.dashboardActions} aria-label="Dashboard actions">
-          {!isAuthenticated ? (
+        <nav className={styles.dashboardActions} aria-label="Dashboard actions" suppressHydrationWarning>
+          {isLoading ? (
+            // Loading state - mostra solo logo durante il check auth
+            <div className={styles.dashboardActionsRight}>
+              <div className="w-20 h-8 bg-bg-soft rounded animate-pulse" />
+            </div>
+          ) : !isAuthenticated ? (
             // Quando non autenticato: mostra "Accedi" in prima linea
             <div className={styles.dashboardActionsRight}>
               <Link
