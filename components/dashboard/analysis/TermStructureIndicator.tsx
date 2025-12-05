@@ -249,7 +249,65 @@ export default function TermStructureIndicator() {
         </div>
       </div>
 
-      {/* Groq AI Reading */}
+      {/* SEZIONE 1: Spiegazione Accademica */}
+      <div className="border-t border-border-subtle pt-4">
+        <p className="text-sm font-semibold mb-2 text-text-primary">
+          {locale === 'it' ? 'Riferimento Accademico' : 'Academic Reference'}
+        </p>
+        <div className="text-xs text-text-tertiary space-y-1">
+          <p>
+            <strong>{locale === 'it' ? 'Paper:' : 'Paper:'}</strong>{' '}
+            Fama & French (1987) - "{locale === 'it' ? 'Commodity Futures Prices' : 'Commodity Futures Prices'}"
+          </p>
+          <p>
+            <strong>{locale === 'it' ? 'Definizione:' : 'Definition:'}</strong>{' '}
+            {locale === 'it'
+              ? 'Analisi della differenza tra prezzi futures e spot price. La term structure riflette le aspettative di mercato e i costi di carry.'
+              : 'Analysis of the difference between futures prices and spot price. Term structure reflects market expectations and carry costs.'}
+          </p>
+          <p>
+            <strong>{locale === 'it' ? 'Metodologia:' : 'Methodology:'}</strong>{' '}
+            {locale === 'it'
+              ? 'Calcolato come differenza percentuale (basis) tra futures e spot. Contango quando futures > spot, Backwardation quando futures < spot.'
+              : 'Calculated as percentage difference (basis) between futures and spot. Contango when futures > spot, Backwardation when futures < spot.'}
+          </p>
+        </div>
+      </div>
+
+      {/* SEZIONE 2: Come Leggerlo Accademicamente */}
+      <div className="border-t border-border-subtle pt-4">
+        <p className="text-sm font-semibold mb-2 text-text-primary">
+          {locale === 'it' ? 'Interpretazione Accademica' : 'Academic Interpretation'}
+        </p>
+        <div className="text-xs text-text-tertiary space-y-1">
+          <p>
+            <strong>{locale === 'it' ? 'Contango (Futures &gt; Spot):' : 'Contango (Futures > Spot):'}</strong>{' '}
+            {locale === 'it'
+              ? 'Mercato normale. Futures più alti riflettono costi di carry (storage, financing). Tipico in mercati stabili con scorte adeguate.'
+              : 'Normal market. Higher futures reflect carry costs (storage, financing). Typical in stable markets with adequate supplies.'}
+          </p>
+          <p>
+            <strong>{locale === 'it' ? 'Backwardation (Futures &lt; Spot):' : 'Backwardation (Futures < Spot):'}</strong>{' '}
+            {locale === 'it'
+              ? 'Mercato invertito. Indica scarsità immediata o aspettative di calo dei prezzi. Può segnalare stress di mercato o domanda immediata elevata.'
+              : 'Inverted market. Indicates immediate scarcity or expectations of price decline. May signal market stress or high immediate demand.'}
+          </p>
+          <p>
+            <strong>{locale === 'it' ? 'Neutrale:' : 'Neutral:'}</strong>{' '}
+            {locale === 'it'
+              ? 'Futures ≈ Spot. Mercato in equilibrio, nessun segnale estremo.'
+              : 'Futures ≈ Spot. Market in equilibrium, no extreme signals.'}
+          </p>
+          <p className="mt-2 italic">
+            <strong>{locale === 'it' ? 'Limitazioni:' : 'Limitations:'}</strong>{' '}
+            {locale === 'it'
+              ? 'La term structure può essere influenzata da fattori tecnici (rollover, liquidity) oltre alle aspettative fondamentali. Richiede contesto per interpretazione corretta.'
+              : 'Term structure can be influenced by technical factors (rollover, liquidity) beyond fundamental expectations. Requires context for correct interpretation.'}
+          </p>
+        </div>
+      </div>
+
+      {/* SEZIONE 3: Lettura AI */}
       <div className="border-t border-border-subtle pt-4">
         <p className="text-sm font-semibold mb-2 text-text-primary">
           {locale === 'it' ? 'Lettura Mercato (Groq AI)' : 'Market Reading (Groq AI)'}
@@ -258,9 +316,9 @@ export default function TermStructureIndicator() {
           {data.aiReading || (locale === 'it' ? 'Analisi struttura a termine in corso...' : 'Analyzing term structure...')}
         </p>
         <p className="text-xs text-text-tertiary mt-2">
-          {locale === 'it' 
-            ? 'Riferimento: Fama & French (1987) - "Commodity Futures Prices"'
-            : 'Reference: Fama & French (1987) - "Commodity Futures Prices"'}
+          {locale === 'it'
+            ? 'Analisi descrittiva basata sui dati attuali. Non costituisce consulenza finanziaria.'
+            : 'Descriptive analysis based on current data. Does not constitute financial advice.'}
         </p>
       </div>
 

@@ -113,12 +113,18 @@ DATI FORNITI:
 - Structure: ${structure}
 - Contracts: ${contracts.map((c) => `${c.symbol}: ${c.basis >= 0 ? "+" : ""}${c.basis.toFixed(2)}%`).join(", ")}
 
-INTERPRETAZIONE:
-- Contango: Futures > Spot (normal market)
-- Backwardation: Futures < Spot (inverted market)
-- Neutral: Futures ≈ Spot
+RIFERIMENTO ACCADEMICO:
+- Fama & French (1987) - "Commodity Futures Prices"
+- Analisi della differenza tra prezzi futures e spot price
+- La term structure riflette le aspettative di mercato e i costi di carry
+
+INTERPRETAZIONE ACCADEMICA:
+- Contango (Futures > Spot): Mercato normale. Futures più alti riflettono costi di carry (storage, financing). Tipico in mercati stabili con scorte adeguate.
+- Backwardation (Futures < Spot): Mercato invertito. Indica scarsità immediata o aspettative di calo dei prezzi. Può segnalare stress di mercato o domanda immediata elevata.
+- Neutral (Futures ≈ Spot): Mercato in equilibrio, nessun segnale estremo.
 
 Fornisci una lettura SEMPLICE (2-3 frasi) della term structure basata sui dati forniti.
+MENTIONA la struttura attuale (${structure}) e la sua interpretazione accademica.
 NO predizioni, NO consigli, solo lettura descrittiva.`;
 
   try {

@@ -226,24 +226,92 @@ export default function FearGreedIndicator() {
 
       {data && (
         <>
-          {/* Groq AI Reading */}
-          <div className="border-t border-border-subtle pt-4">
-            <p className="text-sm font-semibold mb-2 text-text-primary">
-              {locale === 'it' ? 'Lettura Mercato (Groq AI)' : 'Market Reading (Groq AI)'}
-            </p>
-            <p className="text-sm text-text-secondary leading-relaxed">
-              {data.aiReading || (locale === 'it' ? 'Analisi del sentiment in corso...' : 'Analyzing market sentiment...')}
-            </p>
-            <p className="text-xs text-text-tertiary mt-2">
-              {selectedMarket === 'crypto'
-                ? (locale === 'it' 
-                    ? 'Riferimento: Behavioral Finance - Analisi Sentiment Mercato Crypto (Alternative.me)'
-                    : 'Reference: Behavioral Finance - Crypto Market Sentiment Analysis (Alternative.me)')
-                : (locale === 'it'
-                    ? 'Riferimento: Behavioral Finance - Analisi Sentiment Mercato Azionario (CNN)'
-                    : 'Reference: Behavioral Finance - Stock Market Sentiment Analysis (CNN)')}
-            </p>
-          </div>
+      {/* SEZIONE 1: Spiegazione Accademica */}
+      <div className="border-t border-border-subtle pt-4">
+        <p className="text-sm font-semibold mb-2 text-text-primary">
+          {locale === 'it' ? 'Riferimento Accademico' : 'Academic Reference'}
+        </p>
+        <div className="text-xs text-text-tertiary space-y-1">
+          <p>
+            <strong>{locale === 'it' ? 'Paper:' : 'Paper:'}</strong>{' '}
+            {locale === 'it' 
+              ? 'Behavioral Finance - Analisi Sentiment di Mercato'
+              : 'Behavioral Finance - Market Sentiment Analysis'}
+          </p>
+          <p>
+            <strong>{locale === 'it' ? 'Definizione:' : 'Definition:'}</strong>{' '}
+            {locale === 'it'
+              ? 'Indice sintetico che misura il sentiment di mercato combinando 7 fattori: volatilità, volume, social media, surveys, dominance, Google Trends, e momentum.'
+              : 'Synthetic index measuring market sentiment by combining 7 factors: volatility, volume, social media, surveys, dominance, Google Trends, and momentum.'}
+          </p>
+          <p>
+            <strong>{locale === 'it' ? 'Metodologia:' : 'Methodology:'}</strong>{' '}
+            {locale === 'it'
+              ? 'Calcolato da Alternative.me combinando dati on-chain, social media, e metriche di mercato. Range 0-100.'
+              : 'Calculated by Alternative.me combining on-chain data, social media, and market metrics. Range 0-100.'}
+          </p>
+        </div>
+      </div>
+
+      {/* SEZIONE 2: Come Leggerlo Accademicamente */}
+      <div className="border-t border-border-subtle pt-4">
+        <p className="text-sm font-semibold mb-2 text-text-primary">
+          {locale === 'it' ? 'Interpretazione Accademica' : 'Academic Interpretation'}
+        </p>
+        <div className="text-xs text-text-tertiary space-y-1">
+          <p>
+            <strong>0-24 ({locale === 'it' ? 'Extreme Fear' : 'Extreme Fear'}):</strong>{' '}
+            {locale === 'it'
+              ? 'Sentiment estremamente negativo. Storicamente, zone di acquisto potenziali, ma richiede conferma da altri indicatori.'
+              : 'Extremely negative sentiment. Historically potential buying zones, but requires confirmation from other indicators.'}
+          </p>
+          <p>
+            <strong>25-44 ({locale === 'it' ? 'Fear' : 'Fear'}):</strong>{' '}
+            {locale === 'it'
+              ? 'Sentiment negativo. Mercato in fase di paura, possibile overselling.'
+              : 'Negative sentiment. Market in fear phase, possible overselling.'}
+          </p>
+          <p>
+            <strong>45-55 ({locale === 'it' ? 'Neutral' : 'Neutral'}):</strong>{' '}
+            {locale === 'it'
+              ? 'Sentiment bilanciato. Nessun segnale estremo, mercato in equilibrio.'
+              : 'Balanced sentiment. No extreme signals, market in equilibrium.'}
+          </p>
+          <p>
+            <strong>56-75 ({locale === 'it' ? 'Greed' : 'Greed'}):</strong>{' '}
+            {locale === 'it'
+              ? 'Sentiment positivo. Mercato in fase di avidità, possibile overbuying.'
+              : 'Positive sentiment. Market in greed phase, possible overbuying.'}
+          </p>
+          <p>
+            <strong>76-100 ({locale === 'it' ? 'Extreme Greed' : 'Extreme Greed'}):</strong>{' '}
+            {locale === 'it'
+              ? 'Sentiment estremamente positivo. Storicamente, zone di vendita potenziali. Attenzione a possibili correzioni.'
+              : 'Extremely positive sentiment. Historically potential selling zones. Caution for possible corrections.'}
+          </p>
+          <p className="mt-2 italic">
+            <strong>{locale === 'it' ? 'Limitazioni:' : 'Limitations:'}</strong>{' '}
+            {locale === 'it'
+              ? 'L\'indicatore è retrospettivo e può essere influenzato da eventi esogeni. Non predice timing preciso dei movimenti di mercato.'
+              : 'The indicator is retrospective and can be influenced by exogenous events. Does not predict precise timing of market movements.'}
+          </p>
+        </div>
+      </div>
+
+      {/* SEZIONE 3: Lettura AI */}
+      <div className="border-t border-border-subtle pt-4">
+        <p className="text-sm font-semibold mb-2 text-text-primary">
+          {locale === 'it' ? 'Lettura Mercato (Groq AI)' : 'Market Reading (Groq AI)'}
+        </p>
+        <p className="text-sm text-text-secondary leading-relaxed">
+          {data.aiReading || (locale === 'it' ? 'Analisi del sentiment in corso...' : 'Analyzing market sentiment...')}
+        </p>
+        <p className="text-xs text-text-tertiary mt-2">
+          {locale === 'it'
+            ? 'Analisi descrittiva basata sui dati attuali. Non costituisce consulenza finanziaria.'
+            : 'Descriptive analysis based on current data. Does not constitute financial advice.'}
+        </p>
+      </div>
 
           {/* Update Time */}
           <div className="text-xs text-text-tertiary text-center">

@@ -179,13 +179,19 @@ DATI FORNITI:
 - VIX Value: ${vixValue.toFixed(2)}
 - Change: ${change >= 0 ? "+" : ""}${change.toFixed(2)} (${changePercent >= 0 ? "+" : ""}${changePercent.toFixed(2)}%)
 
-INTERPRETAZIONE VIX:
-- < 12: Low Volatility
-- 12-20: Normal Volatility
-- 20-30: Elevated Volatility
-- > 30: High Volatility (Fear)
+RIFERIMENTO ACCADEMICO:
+- Whaley (1993) - "Derivatives on Market Volatility"
+- Indice di volatilità implicita calcolato dalle opzioni S&P 500
+- Misura le aspettative di volatilità del mercato per i prossimi 30 giorni
+
+INTERPRETAZIONE ACCADEMICA:
+- < 12 (Low Volatility): Mercato calmo, bassa paura. Storicamente associato a trend rialzisti, ma può precedere correzioni.
+- 12-20 (Normal Volatility): Range normale. Mercato in equilibrio, volatilità fisiologica.
+- 20-30 (Elevated Volatility): Volatilità elevata, aumento della paura. Possibile instabilità, attenzione a movimenti ampi.
+- > 30 (High Volatility/Fear): Volatilità molto alta, paura estrema. Storicamente zone di acquisto potenziali, ma richiede gestione del rischio.
 
 Fornisci una lettura SEMPLICE (2-3 frasi) dello stato attuale del VIX basata sui dati forniti.
+MENTIONA il valore attuale (${vixValue.toFixed(2)}) e la sua interpretazione accademica.
 NO predizioni, NO consigli, solo lettura descrittiva.`;
 
   try {

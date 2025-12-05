@@ -239,18 +239,22 @@ DATI FORNITI:
 - Classification: ${classification}
 - Mercato: Crypto (Bitcoin & Criptovalute)
 
+RIFERIMENTO ACCADEMICO:
+- Behavioral Finance - Analisi Sentiment di Mercato
+- Indice sintetico che combina 7 fattori: volatilità, volume, social media, surveys, dominance, Google Trends, momentum
+
+INTERPRETAZIONE ACCADEMICA:
+- 0-24 (Extreme Fear): Sentiment estremamente negativo. Storicamente zone di acquisto potenziali, ma richiede conferma.
+- 25-44 (Fear): Sentiment negativo. Mercato in fase di paura, possibile overselling.
+- 45-55 (Neutral): Sentiment bilanciato. Nessun segnale estremo, mercato in equilibrio.
+- 56-75 (Greed): Sentiment positivo. Mercato in fase di avidità, possibile overbuying.
+- 76-100 (Extreme Greed): Sentiment estremamente positivo. Storicamente zone di vendita potenziali. Attenzione a possibili correzioni.
+
 IMPORTANTE: Questo è l'indice Fear & Greed specifico per il mercato crypto (Alternative.me).
 Non è l'indice per il mercato azionario (quello è il CNN Fear & Greed Index per S&P 500).
 
-INTERPRETAZIONE:
-- 0-24: Extreme Fear
-- 25-44: Fear
-- 45-55: Neutral
-- 56-75: Greed
-- 76-100: Extreme Greed
-
 Fornisci una lettura SEMPLICE (2-3 frasi) dello stato attuale del sentiment del mercato crypto basata sui dati forniti.
-MENTIONA che si tratta del mercato crypto.
+MENTIONA il valore attuale (${value}) e la sua interpretazione accademica (${classification}).
 NO predizioni, NO consigli, solo lettura descrittiva.`;
 
   try {
