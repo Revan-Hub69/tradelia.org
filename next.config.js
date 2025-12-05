@@ -145,6 +145,19 @@ const nextConfig = {
       config.resolve.alias = {
         ...config.resolve.alias,
       };
+
+      // Optimize for large files - increase parser limits
+      config.module = {
+        ...config.module,
+        parser: {
+          ...config.module?.parser,
+          javascript: {
+            ...config.module?.parser?.javascript,
+            // Increase limits for large files
+            dynamicImportMode: "lazy",
+          },
+        },
+      };
     }
     return config;
   },
@@ -161,7 +174,7 @@ const nextConfig = {
   // TypeScript e ESLint
   typescript: {
     ignoreBuildErrors: false,
-    tsconfigPath: './tsconfig.json',
+    tsconfigPath: "./tsconfig.json",
   },
 
   eslint: {
