@@ -1727,7 +1727,8 @@ export function StrategyBuilder() {
               aria-label={locale === 'it' ? 'Lista finestre temporali' : 'Time windows list'}
             >
               {results.map((window, index) => {
-                const bestResult = window.results.find(r => r.parameter === window.bestParameter) || window.results[0];
+                // Find best result - it's the first one in the sorted array (best by robustness)
+                const bestResult = window.results[0];
                 return (
                   <div
                     key={index}
@@ -1758,7 +1759,7 @@ export function StrategyBuilder() {
                       </div>
                       <div className="text-right">
                         <div className="text-sm font-semibold text-accent">
-                          KV: {window.bestParameter.toFixed(1)}
+                          {bestResult.strategyId}
                         </div>
                         <div className="text-xs text-text-tertiary flex items-center gap-1">
                           {bestResult.isRobust ? (
