@@ -139,4 +139,5 @@ export const RATE_LIMITS = {
   'crypto-whale': { maxRequests: 10, windowMs: 60 * 1000 }, // 10 req/min
   'crypto-depth': { maxRequests: 20, windowMs: 60 * 1000 }, // 20 req/min
   'crypto-movers': { maxRequests: 20, windowMs: 60 * 1000 }, // 20 req/min
+  'ai-chat': { maxRequests: 30, windowMs: 60 * 1000 }, // 30 req/min
 } as const;

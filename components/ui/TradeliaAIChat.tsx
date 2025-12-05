@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback, memo } from 'react';
 import { MessageCircle, X, Send, Loader2, BookOpen, HelpCircle, Sparkles, ArrowRight, RotateCcw, ArrowLeft, Home } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
@@ -9,6 +9,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { ProBadge } from '@/components/ui/ProBadge';
 import { formatAIMessage, renderFormattedMessage } from '@/lib/utils/formatAIMessage';
+import { useBodyScrollLock } from '@/lib/hooks/useBodyScrollLock';
+import { sanitizeString } from '@/lib/utils/inputValidation';
 
 interface Message {
   id: string;
@@ -25,16 +27,97 @@ interface QuickAction {
   proOnly?: boolean;
 }
 
+// Memoized Quick Action Button - Best Practice: Performance optimization
+const QuickActionButton = memo(({ 
+  action, 
+  Icon, 
+  isPro, 
+  onAction 
+}: { 
+  action: QuickAction; 
+  Icon: typeof BookOpen; 
+  isPro: boolean; 
+  onAction: (action: QuickAction) => void;
+}) => {
+  if (action.proOnly && !isPro) return null;
+  
+  return (
+    <motion.button
+      onClick={() => onAction(action)}
+      className={cn(
+        'w-full flex items-center gap-3 p-3.5 rounded-xl',
+        'bg-bg-soft border border-border-subtle',
+        'hover:bg-bg-elevated hover:border-accent/50 hover:shadow-md',
+        'transition-all text-left group',
+        'text-sm text-text-primary leading-relaxed'
+      )}
+      whileHover={{ scale: 1.01, y: -1 }}
+      whileTap={{ scale: 0.99 }}
+    >
+      <div className="w-9 h-9 rounded-lg bg-accent/10 group-hover:bg-accent/20 flex items-center justify-center transition-colors">
+        <Icon className="w-4 h-4 text-accent flex-shrink-0" />
+      </div>
+      <span className="flex-1 font-medium">{action.label}</span>
+      {action.proOnly && <ProBadge size="sm" />}
+      <ArrowRight className="w-4 h-4 text-text-tertiary group-hover:text-accent transition-colors opacity-0 group-hover:opacity-100" />
+    </motion.button>
+  );
+});
+QuickActionButton.displayName = 'QuickActionButton';
+
+// Memoized Message Component - Best Practice: Performance optimization
+const MessageBubble = memo(({ msg, locale }: { msg: Message; locale: 'it' | 'en' }) => {
+  const isUser = msg.role === 'user';
+  const formatted = !isUser ? formatAIMessage(msg.content) : null;
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
+      className={cn(
+        'flex',
+        isUser ? 'justify-end' : 'justify-start'
+      )}
+    >
+      <div
+        className={cn(
+          'max-w-[85%] rounded-2xl px-4 py-3 shadow-sm',
+          isUser
+            ? 'bg-gradient-to-br from-accent to-accent-hover text-white text-sm leading-relaxed whitespace-pre-wrap break-words'
+            : 'bg-bg-soft text-text-primary border border-border-subtle'
+        )}
+      >
+        {isUser ? (
+          msg.content
+        ) : formatted ? (
+          <div className="space-y-1">
+            {renderFormattedMessage(formatted.parts, locale)}
+          </div>
+        ) : (
+          <p className="text-sm text-text-primary leading-relaxed whitespace-pre-wrap break-words">
+            {msg.content}
+          </p>
+        )}
+      </div>
+    </motion.div>
+  );
+});
+MessageBubble.displayName = 'MessageBubble';
+
 /**
  * Tradelia AI Chat - Chat di assistenza migliorata
  * 
- * Best Practice:
+ * Best Practice 2025:
  * - Schema Tradelia a 5 punti per risposte (definizione, spiegazione, esempi, errori comuni, approfondimenti)
  * - Input predisposti per ridurre cognitive load
  * - Design ottimizzato (testi spaziati, line-height)
  * - Autofocus su risposta
  * - Micro animazioni
  * - Rimanda a formazione per approfondimenti
+ * - Rate limiting, input validation, security
+ * - Performance: memoization, lazy loading
+ * - Accessibility: keyboard navigation, focus trap, ARIA
  */
 export function TradeliaAIChat() {
   const { locale } = useTranslations();
@@ -43,8 +126,17 @@ export function TradeliaAIChat() {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  // Body scroll lock - Best Practice: Prevent background scroll
+  useBodyScrollLock(isOpen);
+
+  // Constants - Best Practice: Centralized configuration
+  const MAX_MESSAGE_LENGTH = 2000;
+  const MAX_CONVERSATION_HISTORY = 10;
 
   // Quick Actions - Input predisposti
   const quickActions: QuickAction[] = [
@@ -81,12 +173,43 @@ export function TradeliaAIChat() {
     }
   }, [messages, isLoading]);
 
-  // Autofocus su input quando si apre
+  // Autofocus su input quando si apre - Best Practice: Better UX
   useEffect(() => {
     if (isOpen && inputRef.current) {
       setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [isOpen]);
+
+  // Keyboard navigation - Best Practice: Accessibility
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Escape to close
+      if (e.key === 'Escape' && !isLoading) {
+        setIsOpen(false);
+      }
+      // Focus trap - Tab navigation
+      if (e.key === 'Tab' && chatContainerRef.current) {
+        const focusableElements = chatContainerRef.current.querySelectorAll(
+          'button, [href], input, textarea, select, [tabindex]:not([tabindex="-1"])'
+        );
+        const firstElement = focusableElements[0] as HTMLElement;
+        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement?.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement?.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, isLoading]);
 
   const handleQuickAction = (action: QuickAction) => {
     if (action.proOnly && !isPro) {
@@ -99,14 +222,38 @@ export function TradeliaAIChat() {
     }, 100);
   };
 
-  const handleSend = async (customMessage?: string) => {
-    const messageToSend = customMessage || message.trim();
-    if (!messageToSend || isLoading) return;
+  // Memoized conversation history - Best Practice: Performance
+  const conversationHistory = useMemo(() => {
+    return messages
+      .slice(-MAX_CONVERSATION_HISTORY)
+      .map(m => ({
+        role: m.role,
+        content: m.content,
+      }));
+  }, [messages]);
 
+  const handleSend = useCallback(async (customMessage?: string) => {
+    const messageToSend = (customMessage || message.trim()).slice(0, MAX_MESSAGE_LENGTH);
+    
+    // Validation - Best Practice: Input validation
+    if (!messageToSend || isLoading) return;
+    if (messageToSend.length === 0) {
+      setError(locale === 'it' ? 'Il messaggio non può essere vuoto' : 'Message cannot be empty');
+      return;
+    }
+
+    // Sanitize input - Best Practice: Security
+    const sanitizedMessage = sanitizeString(messageToSend);
+    if (sanitizedMessage.length === 0) {
+      setError(locale === 'it' ? 'Messaggio non valido' : 'Invalid message');
+      return;
+    }
+
+    setError(null);
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: messageToSend,
+      content: sanitizedMessage,
       timestamp: new Date(),
     };
 
@@ -114,43 +261,77 @@ export function TradeliaAIChat() {
     setMessage('');
     setIsLoading(true);
 
-    try {
-      const response = await fetch('/api/ai/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: messageToSend,
-          context: window.location.pathname,
-          locale,
-          format: 'tradelia-5-points', // Schema Tradelia a 5 punti
-        }),
-      });
+    let retryCount = 0;
+    const maxRetries = 2;
 
-      if (!response.ok) throw new Error('Failed to get AI response');
+    while (retryCount <= maxRetries) {
+      try {
+        const response = await fetch('/api/ai/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: sanitizedMessage,
+            context: window.location.pathname,
+            locale,
+            format: 'tradelia-5-points',
+            conversationHistory: conversationHistory.slice(-5), // Last 5 messages
+          }),
+        });
 
-      const data = await response.json();
-      
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: data.response || data.message,
-        timestamp: new Date(),
-      };
+        if (response.status === 429) {
+          const data = await response.json();
+          const resetAt = data.resetAt || Date.now() + 60000;
+          const waitTime = Math.ceil((resetAt - Date.now()) / 1000);
+          setError(
+            locale === 'it'
+              ? `Troppe richieste. Riprova tra ${waitTime} secondi.`
+              : `Too many requests. Try again in ${waitTime} seconds.`
+          );
+          setIsLoading(false);
+          return;
+        }
 
-      setMessages(prev => [...prev, assistantMessage]);
-    } catch (error) {
-      setMessages(prev => [...prev, {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: locale === 'it'
-          ? 'Errore nel recupero della risposta. Riprova più tardi.'
-          : 'Error retrieving response. Please try again later.',
-        timestamp: new Date(),
-      }]);
-    } finally {
-      setIsLoading(false);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: data.response || data.message || '',
+          timestamp: new Date(),
+        };
+
+        setMessages(prev => [...prev, assistantMessage]);
+        setError(null);
+        break; // Success, exit retry loop
+      } catch (error) {
+        retryCount++;
+        if (retryCount > maxRetries) {
+          setMessages(prev => [...prev, {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: locale === 'it'
+              ? 'Errore nel recupero della risposta. Riprova più tardi.'
+              : 'Error retrieving response. Please try again later.',
+            timestamp: new Date(),
+          }]);
+          setError(
+            locale === 'it'
+              ? 'Impossibile connettersi al servizio. Verifica la connessione.'
+              : 'Unable to connect to service. Check your connection.'
+          );
+        } else {
+          // Wait before retry (exponential backoff)
+          await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+        }
+      }
     }
-  };
+
+    setIsLoading(false);
+  }, [message, isLoading, locale, conversationHistory]);
 
   return (
     <>
@@ -215,6 +396,11 @@ export function TradeliaAIChat() {
               'max-h-screen'
             )}
             onClick={(e) => e.stopPropagation()}
+            ref={chatContainerRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="chat-title"
+            aria-describedby="chat-description"
           >
             {/* Header - Modern 2025 Design */}
             <div className="flex items-center justify-between p-5 border-b border-border-subtle bg-gradient-to-r from-bg-surface via-bg-soft/30 to-bg-surface">
@@ -223,10 +409,10 @@ export function TradeliaAIChat() {
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-text-primary leading-tight">
+                  <h3 id="chat-title" className="text-base font-bold text-text-primary leading-tight">
                     {locale === 'it' ? 'Tradelia AI' : 'Tradelia AI'}
                   </h3>
-                  <p className="text-xs text-text-tertiary leading-tight mt-0.5">
+                  <p id="chat-description" className="text-xs text-text-tertiary leading-tight mt-0.5">
                     {locale === 'it' ? 'Assistente intelligente' : 'Intelligent assistant'}
                   </p>
                 </div>
@@ -304,26 +490,13 @@ export function TradeliaAIChat() {
                       const Icon = action.icon;
                       if (action.proOnly && !isPro) return null;
                       return (
-                        <motion.button
+                        <QuickActionButton
                           key={action.id}
-                          onClick={() => handleQuickAction(action)}
-                          className={cn(
-                            'w-full flex items-center gap-3 p-3.5 rounded-xl',
-                            'bg-bg-soft border border-border-subtle',
-                            'hover:bg-bg-elevated hover:border-accent/50 hover:shadow-md',
-                            'transition-all text-left group',
-                            'text-sm text-text-primary leading-relaxed'
-                          )}
-                          whileHover={{ scale: 1.01, y: -1 }}
-                          whileTap={{ scale: 0.99 }}
-                        >
-                          <div className="w-9 h-9 rounded-lg bg-accent/10 group-hover:bg-accent/20 flex items-center justify-center transition-colors">
-                            <Icon className="w-4 h-4 text-accent flex-shrink-0" />
-                          </div>
-                          <span className="flex-1 font-medium">{action.label}</span>
-                          {action.proOnly && <ProBadge size="sm" />}
-                          <ArrowRight className="w-4 h-4 text-text-tertiary group-hover:text-accent transition-colors opacity-0 group-hover:opacity-100" />
-                        </motion.button>
+                          action={action}
+                          Icon={Icon}
+                          isPro={isPro}
+                          onAction={handleQuickAction}
+                        />
                       );
                     })}
                   </div>
@@ -347,44 +520,9 @@ export function TradeliaAIChat() {
                   )}
                 </div>
               ) : (
-                messages.map((msg) => {
-                  const isUser = msg.role === 'user';
-                  const formatted = !isUser ? formatAIMessage(msg.content) : null;
-                  
-                  return (
-                    <motion.div
-                      key={msg.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className={cn(
-                        'flex',
-                        isUser ? 'justify-end' : 'justify-start'
-                      )}
-                    >
-                      <div
-                        className={cn(
-                          'max-w-[85%] rounded-2xl px-4 py-3 shadow-sm',
-                          isUser
-                            ? 'bg-gradient-to-br from-accent to-accent-hover text-white text-sm leading-relaxed whitespace-pre-wrap break-words'
-                            : 'bg-bg-soft text-text-primary border border-border-subtle'
-                        )}
-                      >
-                        {isUser ? (
-                          msg.content
-                        ) : formatted ? (
-                          <div className="space-y-1">
-                            {renderFormattedMessage(formatted.parts, locale)}
-                          </div>
-                        ) : (
-                          <p className="text-sm text-text-primary leading-relaxed whitespace-pre-wrap break-words">
-                            {msg.content}
-                          </p>
-                        )}
-                      </div>
-                    </motion.div>
-                  );
-                })
+                messages.map((msg) => (
+                  <MessageBubble key={msg.id} msg={msg} locale={locale} />
+                ))
               )}
               {isLoading && (
                 <motion.div
@@ -430,13 +568,17 @@ export function TradeliaAIChat() {
                       'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-surface',
                       'text-sm leading-relaxed resize-none',
                       'disabled:opacity-50 disabled:cursor-not-allowed',
-                      'transition-all duration-200'
+                      'transition-all duration-200',
+                      error ? 'border-red-500/50' : ''
                     )}
                     rows={1}
                     style={{ maxHeight: '120px', minHeight: '44px' }}
                     disabled={isLoading}
+                    maxLength={MAX_MESSAGE_LENGTH}
                     aria-label={locale === 'it' ? 'Campo di input messaggio' : 'Message input field'}
                     aria-describedby={isLoading ? 'loading-indicator' : undefined}
+                    aria-invalid={error ? 'true' : 'false'}
+                    aria-errormessage={error ? 'error-message' : undefined}
                   />
                   <motion.button
                     onClick={() => handleSend()}
@@ -461,11 +603,28 @@ export function TradeliaAIChat() {
                   </motion.button>
                 </div>
               </div>
-              <p className="text-[10px] text-text-tertiary mt-3 text-center">
-                {locale === 'it'
-                  ? 'AI powered by Tradelia. Le risposte sono a scopo informativo.'
-                  : 'AI powered by Tradelia. Answers are for informational purposes.'}
-              </p>
+              {/* Error message */}
+              {error && (
+                <div id="error-message" className="mt-2 p-2 bg-red-500/10 border border-red-500/30 rounded-lg">
+                  <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
+                </div>
+              )}
+              {/* Character count */}
+              <div className="flex items-center justify-between mt-2">
+                <p className="text-[10px] text-text-tertiary text-center flex-1">
+                  {locale === 'it'
+                    ? 'AI powered by Tradelia. Le risposte sono a scopo informativo.'
+                    : 'AI powered by Tradelia. Answers are for informational purposes.'}
+                </p>
+                <span className={cn(
+                  'text-[10px] ml-2',
+                  message.length > MAX_MESSAGE_LENGTH * 0.9
+                    ? 'text-amber-600 dark:text-amber-400'
+                    : 'text-text-tertiary'
+                )}>
+                  {message.length}/{MAX_MESSAGE_LENGTH}
+                </span>
+              </div>
             </div>
           </motion.div>
         )}

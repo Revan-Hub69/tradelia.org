@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { TRADELIA_AI_SYSTEM_PROMPT } from "@/lib/ai/tradelia-ai-communication-style";
 import { TRADELIA_BRAND_VOICE_MATRIX } from "@/lib/ai/tradelia-brand-voice-matrix";
+import { checkRateLimit, getRateLimitKey, getClientIP, RATE_LIMITS } from "@/lib/rate-limit";
+import { sanitizeString } from "@/lib/utils/inputValidation";
 
 /**
  * AI Chat API - Groq (Primary) + Simple RAG Fallback
@@ -198,8 +200,40 @@ async function simpleRAGFallback(query: string, locale: "it" | "en"): Promise<st
     : `Thanks for your question! I'm Tradelia's AI assistant.\n\nI can help with:\n• Financial terms (Sharpe Ratio, Volatility, Hedging, PAC)\n• Financial tools (Calculators, Simulators)\n• Reports and analysis\n• Platform features\n\nCheck the FAQ section for quick answers or try rephrasing your question.\n\n*Note: Answers are for educational purposes. They do not constitute financial advice.*`;
 }
 
+// Rate limit configuration for AI chat
+const AI_CHAT_RATE_LIMIT = { maxRequests: 30, windowMs: 60 * 1000 }; // 30 req/min
+
+// Max conversation history length
+const MAX_CONVERSATION_HISTORY = 10;
+const MAX_MESSAGE_LENGTH = 2000;
+const MAX_CONTEXT_LENGTH = 500;
+
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting - Best Practice: Prevent abuse
+    const ip = getClientIP(request);
+    const rateLimitKey = getRateLimitKey(`ai-chat:${ip}`, 'ai-chat');
+    const rateLimit = checkRateLimit(rateLimitKey, AI_CHAT_RATE_LIMIT);
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { 
+          error: 'Rate limit exceeded', 
+          resetAt: rateLimit.resetAt,
+          message: 'Troppe richieste. Riprova tra qualche istante.'
+        },
+        { 
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': String(AI_CHAT_RATE_LIMIT.maxRequests),
+            'X-RateLimit-Remaining': String(rateLimit.remaining),
+            'X-RateLimit-Reset': String(rateLimit.resetAt),
+            'Retry-After': String(Math.ceil((rateLimit.resetAt - Date.now()) / 1000)),
+          }
+        }
+      );
+    }
+
     const body: ChatRequest = await request.json();
     const {
       message,
@@ -209,9 +243,32 @@ export async function POST(request: NextRequest) {
       format = "tradelia-5-points",
     } = body;
 
+    // Input validation - Best Practice: Validate and sanitize
     if (!message || typeof message !== "string") {
       return NextResponse.json({ error: "Message is required" }, { status: 400 });
     }
+
+    // Sanitize and validate message length
+    const sanitizedMessage = sanitizeString(message);
+    if (sanitizedMessage.length === 0) {
+      return NextResponse.json({ error: "Message cannot be empty" }, { status: 400 });
+    }
+    if (sanitizedMessage.length > MAX_MESSAGE_LENGTH) {
+      return NextResponse.json({ 
+        error: `Message too long. Max ${MAX_MESSAGE_LENGTH} characters.` 
+      }, { status: 400 });
+    }
+
+    // Validate locale
+    if (locale !== "it" && locale !== "en") {
+      return NextResponse.json({ error: "Invalid locale" }, { status: 400 });
+    }
+
+    // Limit conversation history - Best Practice: Prevent token waste
+    const limitedHistory = conversationHistory.slice(-MAX_CONVERSATION_HISTORY);
+
+    // Sanitize context
+    const sanitizedContext = context ? sanitizeString(context).slice(0, MAX_CONTEXT_LENGTH) : undefined;
 
     let response: string;
     let model = "fallback";
@@ -219,22 +276,31 @@ export async function POST(request: NextRequest) {
 
     // 1. Try Groq (primary - free tier)
     try {
-      response = await callGroqAI(message, conversationHistory, locale, context, format);
+      response = await callGroqAI(sanitizedMessage, limitedHistory, locale, sanitizedContext, format);
       model = "llama-3.3-70b";
       provider = "groq";
     } catch (groqError) {
       console.warn("Groq failed, using simple RAG fallback:", groqError);
 
       // 2. Simple RAG fallback (no complex setup)
-      response = await simpleRAGFallback(message, locale);
+      response = await simpleRAGFallback(sanitizedMessage, locale);
       model = "simple-rag";
       provider = "fallback";
     }
 
+    // Sanitize response - Best Practice: Prevent XSS
+    const sanitizedResponse = sanitizeString(response);
+
     return NextResponse.json({
-      response,
+      response: sanitizedResponse,
       model,
       provider,
+    }, {
+      headers: {
+        'X-RateLimit-Limit': String(AI_CHAT_RATE_LIMIT.maxRequests),
+        'X-RateLimit-Remaining': String(rateLimit.remaining),
+        'X-RateLimit-Reset': String(rateLimit.resetAt),
+      }
     });
   } catch (error) {
     console.error("Error in AI chat API:", error);
