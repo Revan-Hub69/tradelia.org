@@ -1,12 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 /**
  * Fear & Greed Index API
- * 
- * Crypto Market Sentiment Index
+ *
+ * Crypto Market Sentiment Index (Bitcoin & Cryptocurrencies)
+ *
+ * Nota: Questo è l'indice Fear & Greed specifico per crypto (Alternative.me).
+ * Esiste anche un Fear & Greed Index per il mercato azionario (CNN per S&P 500).
+ *
  * Academic Reference: Behavioral Finance principles
- * 
- * Data Source: Alternative.me API (FREE)
+ *
+ * Data Source: Alternative.me API (FREE) - https://alternative.me/crypto/fear-and-greed-index/
  * Updates: Every 5 minutes
  */
 
@@ -23,14 +27,14 @@ interface FearGreedResponse {
  */
 async function getFearGreedIndex(): Promise<{ value: number; classification: string } | null> {
   try {
-    const response = await fetch('https://api.alternative.me/fng/', {
+    const response = await fetch("https://api.alternative.me/fng/", {
       headers: {
-        'Accept': 'application/json',
+        Accept: "application/json",
       },
     });
 
     if (!response.ok) {
-      throw new Error('Alternative.me API error');
+      throw new Error("Alternative.me API error");
     }
 
     const data = await response.json();
@@ -45,7 +49,7 @@ async function getFearGreedIndex(): Promise<{ value: number; classification: str
 
     return { value, classification };
   } catch (error) {
-    console.error('Error fetching Fear & Greed Index:', error);
+    console.error("Error fetching Fear & Greed Index:", error);
     return null;
   }
 }
@@ -55,9 +59,9 @@ async function getFearGreedIndex(): Promise<{ value: number; classification: str
  */
 async function getFearGreedHistory(): Promise<Array<{ date: string; value: number }>> {
   try {
-    const response = await fetch('https://api.alternative.me/fng/?limit=30', {
+    const response = await fetch("https://api.alternative.me/fng/?limit=30", {
       headers: {
-        'Accept': 'application/json',
+        Accept: "application/json",
       },
     });
 
@@ -69,13 +73,13 @@ async function getFearGreedHistory(): Promise<Array<{ date: string; value: numbe
     const history = data.data || [];
 
     return history
-      .map((item: any) => ({
+      .map((item: { timestamp: string; value: string }) => ({
         date: new Date(parseInt(item.timestamp, 10) * 1000).toISOString(),
         value: parseInt(item.value, 10),
       }))
       .reverse(); // Oldest first
   } catch (error) {
-    console.error('Error fetching Fear & Greed history:', error);
+    console.error("Error fetching Fear & Greed history:", error);
     return [];
   }
 }
@@ -86,7 +90,7 @@ async function getFearGreedHistory(): Promise<Array<{ date: string; value: numbe
 async function getFearGreedAIReading(value: number, classification: string): Promise<string> {
   const groqApiKey = process.env.GROQ_API_KEY;
   if (!groqApiKey) {
-    return 'AI analysis not available. Configure GROQ_API_KEY.';
+    return "AI analysis not available. Configure GROQ_API_KEY.";
   }
 
   const systemPrompt = `Sei un analista di mercato esperto di Tradelia, specializzato nell'analisi del sentiment di mercato.
@@ -104,11 +108,15 @@ STILE TRADELIA:
 RIFERIMENTI ACCADEMICI:
 - Behavioral Finance - Market Sentiment Analysis`;
 
-  const userPrompt = `Leggi i dati Fear & Greed Index forniti.
+  const userPrompt = `Leggi i dati Fear & Greed Index per il mercato crypto forniti.
 
 DATI FORNITI:
 - Fear & Greed Value: ${value} (0-100)
 - Classification: ${classification}
+- Mercato: Crypto (Bitcoin & Criptovalute)
+
+IMPORTANTE: Questo è l'indice Fear & Greed specifico per il mercato crypto (Alternative.me).
+Non è l'indice per il mercato azionario (quello è il CNN Fear & Greed Index per S&P 500).
 
 INTERPRETAZIONE:
 - 0-24: Extreme Fear
@@ -117,21 +125,22 @@ INTERPRETAZIONE:
 - 56-75: Greed
 - 76-100: Extreme Greed
 
-Fornisci una lettura SEMPLICE (2-3 frasi) dello stato attuale del sentiment basata sui dati forniti.
+Fornisci una lettura SEMPLICE (2-3 frasi) dello stato attuale del sentiment del mercato crypto basata sui dati forniti.
+MENTIONA che si tratta del mercato crypto.
 NO predizioni, NO consigli, solo lettura descrittiva.`;
 
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${groqApiKey}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${groqApiKey}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: 'llama-3.1-70b-versatile',
+        model: "llama-3.1-70b-versatile",
         messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt },
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
         ],
         temperature: 0.3,
         max_tokens: 200,
@@ -139,18 +148,18 @@ NO predizioni, NO consigli, solo lettura descrittiva.`;
     });
 
     if (!response.ok) {
-      throw new Error('Groq API error');
+      throw new Error("Groq API error");
     }
 
     const data = await response.json();
-    return data.choices[0]?.message?.content || 'Analyzing Fear & Greed data...';
+    return data.choices[0]?.message?.content || "Analyzing Fear & Greed data...";
   } catch (error) {
-    console.error('Error calling Groq AI:', error);
-    return 'Error generating AI reading.';
+    console.error("Error calling Groq AI:", error);
+    return "Error generating AI reading.";
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const [fearGreedData, history] = await Promise.all([
       getFearGreedIndex(),
@@ -158,13 +167,13 @@ export async function GET(request: NextRequest) {
     ]);
 
     if (!fearGreedData) {
-      return NextResponse.json(
-        { error: 'Failed to fetch Fear & Greed Index' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Failed to fetch Fear & Greed Index" }, { status: 500 });
     }
 
-    const aiReading = await getFearGreedAIReading(fearGreedData.value, fearGreedData.classification);
+    const aiReading = await getFearGreedAIReading(
+      fearGreedData.value,
+      fearGreedData.classification
+    );
 
     const response: FearGreedResponse = {
       value: fearGreedData.value,
@@ -176,10 +185,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Error in GET /api/market-indicators/fear-greed:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error("Error in GET /api/market-indicators/fear-greed:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

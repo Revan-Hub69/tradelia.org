@@ -23,7 +23,10 @@ interface FearGreedData {
 /**
  * Fear & Greed Index Indicator
  * 
- * Crypto Market Sentiment Index
+ * Crypto Market Sentiment Index (Bitcoin & Crypto)
+ * Nota: Questo indicatore è specifico per il mercato crypto (Alternative.me API).
+ * Esiste anche un Fear & Greed Index per il mercato azionario (CNN per S&P 500).
+ * 
  * Academic Reference: Behavioral Finance principles
  * 
  * Updates: Every 5 minutes (real-time)
@@ -124,8 +127,8 @@ export default function FearGreedIndicator() {
           </h2>
           <p className="text-sm text-text-secondary">
             {locale === 'it' 
-              ? 'Sentiment Mercato Crypto (solo criptovalute)' 
-              : 'Crypto Market Sentiment (cryptocurrencies only)'}
+              ? 'Sentiment Mercato Crypto (Bitcoin & Criptovalute) - Fonte: Alternative.me' 
+              : 'Crypto Market Sentiment (Bitcoin & Cryptocurrencies) - Source: Alternative.me'}
           </p>
         </div>
         <div className="text-2xl font-bold" style={{ color: getColor(data.value) }}>
@@ -161,8 +164,8 @@ export default function FearGreedIndicator() {
         </p>
         <p className="text-xs text-text-tertiary mt-2">
           {locale === 'it' 
-            ? 'Riferimento: Behavioral Finance - Analisi Sentiment Mercato Crypto'
-            : 'Reference: Behavioral Finance - Crypto Market Sentiment Analysis'}
+            ? 'Riferimento: Behavioral Finance - Analisi Sentiment Mercato Crypto (Alternative.me). Nota: Esiste anche un Fear & Greed Index per il mercato azionario (CNN per S&P 500).'
+            : 'Reference: Behavioral Finance - Crypto Market Sentiment Analysis (Alternative.me). Note: A Fear & Greed Index also exists for stock market (CNN for S&P 500).'}
         </p>
       </div>
 
