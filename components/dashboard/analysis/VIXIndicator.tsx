@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/i18n/use-translations';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -44,7 +44,7 @@ interface VIXData {
  * Updates: Every 1 minute (real-time)
  */
 export default function VIXIndicator() {
-  const t = useTranslations('Dashboard');
+  const { t } = useTranslations();
   const [data, setData] = useState<VIXData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

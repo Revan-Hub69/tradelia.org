@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/i18n/use-translations';
 
 interface TopMoversData {
   gainers: Array<{
@@ -45,7 +45,7 @@ interface CryptoTopMoversProps {
  * Updates: Every 1 minute (real-time)
  */
 export default function CryptoTopMovers({ isPro }: CryptoTopMoversProps) {
-  const t = useTranslations('Dashboard');
+  const { t } = useTranslations();
   const [data, setData] = useState<TopMoversData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

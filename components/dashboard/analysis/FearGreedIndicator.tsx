@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/i18n/use-translations';
 import { Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -29,7 +29,7 @@ interface FearGreedData {
  * Updates: Every 5 minutes (real-time)
  */
 export default function FearGreedIndicator() {
-  const t = useTranslations('Dashboard');
+  const { t } = useTranslations();
   const [data, setData] = useState<FearGreedData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

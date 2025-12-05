@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/i18n/use-translations';
 import CryptoWhaleAnalysis from './pro/CryptoWhaleAnalysis';
 import CryptoDepthAggregated from './pro/CryptoDepthAggregated';
 import CryptoTopMovers from './pro/CryptoTopMovers';
@@ -29,7 +29,7 @@ interface ProAnalysisModalProps {
  * All data: real-time, free APIs, academic compliance
  */
 export default function ProAnalysisModal({ isOpen, onClose, userRole }: ProAnalysisModalProps) {
-  const t = useTranslations('Dashboard');
+  const { t } = useTranslations();
   const [activeTab, setActiveTab] = useState<'crypto-whale' | 'crypto-depth' | 'crypto-movers' | 'futures' | 'options' | 'forex'>('crypto-whale');
   const isPro = userRole === 'pro' || userRole === 'desk';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/i18n/use-translations';
 
 interface WhaleData {
   transactions: Array<{
@@ -38,7 +38,7 @@ interface CryptoWhaleAnalysisProps {
  * Updates: Every 30 seconds (real-time)
  */
 export default function CryptoWhaleAnalysis({ isPro }: CryptoWhaleAnalysisProps) {
-  const t = useTranslations('Dashboard');
+  const { t } = useTranslations();
   const [data, setData] = useState<WhaleData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

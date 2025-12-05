@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/i18n/use-translations';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -44,7 +44,7 @@ interface TermStructureData {
  * Updates: Every 2 minutes (real-time)
  */
 export default function TermStructureIndicator() {
-  const t = useTranslations('Dashboard');
+  const { t } = useTranslations();
   const [data, setData] = useState<TermStructureData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

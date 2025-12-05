@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/i18n/use-translations';
 import VIXIndicator from './VIXIndicator';
 import FearGreedIndicator from './FearGreedIndicator';
 import TermStructureIndicator from './TermStructureIndicator';
 import ProAnalysisModal from './ProAnalysisModal';
-import { useUser } from '@/lib/hooks/useUser';
+import { useUserRole } from '@/lib/hooks/useUserRole';
 
 /**
  * Analysis Dashboard - Main Market Indicators
@@ -21,8 +21,8 @@ import { useUser } from '@/lib/hooks/useUser';
  * Best Practice: Academic rigor, MIFID compliance, mobile-first
  */
 export default function AnalysisDashboard() {
-  const t = useTranslations('Dashboard');
-  const { user, isLoading } = useUser();
+  const { t } = useTranslations();
+  const { isPro, isLoading } = useUserRole();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
 
@@ -54,19 +54,19 @@ export default function AnalysisDashboard() {
           </div>
           
           {/* Pro Button */}
-          {user?.role === 'pro' || user?.role === 'desk' ? (
+          {isPro ? (
             <button
               onClick={() => setIsProModalOpen(true)}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
             >
-              {t('proAnalysis') || 'Pro Analysis'}
+              {t('dashboard.analysis.proAnalysis') || 'Pro Analysis'}
             </button>
           ) : (
             <button
               onClick={() => setIsProModalOpen(true)}
               className="px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary/10 transition-colors"
             >
-              {t('unlockPro') || 'Unlock Pro Analysis'}
+              {t('dashboard.analysis.unlockPro') || 'Unlock Pro Analysis'}
             </button>
           )}
         </div>
@@ -144,7 +144,7 @@ export default function AnalysisDashboard() {
       <ProAnalysisModal
         isOpen={isProModalOpen}
         onClose={() => setIsProModalOpen(false)}
-        userRole={user?.role}
+        userRole={isPro ? 'pro' : 'base'}
       />
     </div>
   );
