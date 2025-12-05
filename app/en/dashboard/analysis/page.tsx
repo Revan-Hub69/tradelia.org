@@ -1,40 +1,56 @@
-import dynamic from 'next/dynamic';
-import { NoSSR } from '@/components/common/NoSSR';
-import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
-import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
+import { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
+import AnalysisDashboard from '@/components/dashboard/analysis/AnalysisDashboard';
+import { StructuredData } from '@/components/seo/StructuredData';
+import { generateWebSiteSchema } from '@/lib/seo/structured-data';
 
-const AnalysisContent = dynamic(
-  () => import('@/components/dashboard/AnalysisContent').then(m => ({ default: m.AnalysisContent })),
-  {
-    ssr: false,
-  }
-);
-
-const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-bg-base" suppressHydrationWarning>
-    <div className="text-center">
-      <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-      <p className="text-text-secondary">Loading analysis...</p>
-    </div>
-  </div>
-);
-
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('Dashboard');
+  
+  const title = `${t('analysis')} | Tradelia`;
+  const description = t('analysisDescription') || 'Market analysis dashboard with academic indicators, VIX, Fear & Greed Index, and term structure analysis';
+  const url = 'https://tradelia.org/en/dashboard/analysis';
+  const image = 'https://tradelia.org/og-analysis.png'; // TODO: Create OG image
+  
   return {
-    title: 'Analysis · Dashboard · Tradelia',
-    description: 'Reports, analysis requests and financial analysis tools',
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: 'Tradelia',
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: 'Tradelia Analysis Dashboard',
+        },
+      ],
+      locale: 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [image],
+      site: '@tradelia',
+    },
+    alternates: {
+      canonical: url,
+    },
   };
 }
 
-export default function AnalysisPageEN() {
+export default function AnalysisPage() {
+  const structuredData = generateWebSiteSchema('en');
+  
   return (
-    <ErrorBoundary>
-      <NoSSR fallback={<LoadingFallback />}>
-        <div suppressHydrationWarning>
-          <DashboardTabs />
-          <AnalysisContent />
-        </div>
-      </NoSSR>
-    </ErrorBoundary>
+    <>
+      <StructuredData data={structuredData} id="analysis-structured-data" />
+      <AnalysisDashboard />
+    </>
   );
 }
