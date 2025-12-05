@@ -22,7 +22,6 @@ import { useKeyboardShortcuts } from '@/lib/hooks/useKeyboardShortcuts';
 import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
 import { WelcomeTour } from '@/components/onboarding/WelcomeTour';
 import { useTranslations } from '@/lib/i18n/use-translations';
-import WidgetsSection from './WidgetsSection';
 import styles from './dashboard.module.css';
 
 // Lazy load non-critical components
