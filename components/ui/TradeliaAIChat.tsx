@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { ProBadge } from '@/components/ui/ProBadge';
+import { formatAIMessage, renderFormattedMessage } from '@/lib/utils/formatAIMessage';
 
 interface Message {
   id: string;
@@ -280,30 +281,44 @@ export function TradeliaAIChat() {
                   )}
                 </div>
               ) : (
-                messages.map((msg) => (
-                  <motion.div
-                    key={msg.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className={cn(
-                      'flex',
-                      msg.role === 'user' ? 'justify-end' : 'justify-start'
-                    )}
-                  >
-                    <div
+                messages.map((msg) => {
+                  const isUser = msg.role === 'user';
+                  const formatted = !isUser ? formatAIMessage(msg.content) : null;
+                  
+                  return (
+                    <motion.div
+                      key={msg.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2 }}
                       className={cn(
-                        'max-w-[85%] rounded-lg px-4 py-3 text-sm leading-relaxed',
-                        'whitespace-pre-wrap break-words',
-                        msg.role === 'user'
-                          ? 'bg-accent text-white'
-                          : 'bg-bg-soft text-text-primary border border-border-subtle'
+                        'flex',
+                        isUser ? 'justify-end' : 'justify-start'
                       )}
                     >
-                      {msg.content}
-                    </div>
-                  </motion.div>
-                ))
+                      <div
+                        className={cn(
+                          'max-w-[85%] rounded-lg px-4 py-3',
+                          isUser
+                            ? 'bg-accent text-white text-sm leading-relaxed whitespace-pre-wrap break-words'
+                            : 'bg-bg-soft text-text-primary border border-border-subtle'
+                        )}
+                      >
+                        {isUser ? (
+                          msg.content
+                        ) : formatted ? (
+                          <div className="space-y-1">
+                            {renderFormattedMessage(formatted.parts, locale)}
+                          </div>
+                        ) : (
+                          <p className="text-sm text-text-primary leading-relaxed whitespace-pre-wrap break-words">
+                            {msg.content}
+                          </p>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })
               )}
               {isLoading && (
                 <motion.div

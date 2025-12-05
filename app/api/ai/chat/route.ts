@@ -77,7 +77,7 @@ PERSONALITÀ: ${TRADELIA_BRAND_VOICE_MATRIX.personality.traits.join(", ")}
 
 PRINCIPI: Educazione prima di tutto, Rigore accademico, Rilevanza pratica, Accessibilità, Rispetto.
 
-MIFID II: NON fornire consulenza finanziaria. Solo informazioni educative. Aggiungi sempre disclaimer MIFID.
+MIFID II: NON fornire consulenza finanziaria. Solo informazioni educative. Aggiungi SEMPRE un disclaimer MIFID II alla fine di ogni risposta, formattato come: "*Nota MIFID II: Informazioni a scopo educativo. Non costituisce consulenza finanziaria.*"
 
 ${formatInstructions}
 `
@@ -88,7 +88,7 @@ PERSONALITY: ${TRADELIA_BRAND_VOICE_MATRIX.personality.traits.join(", ")}
 
 PRINCIPLES: Education first, Academic rigor, Practical relevance, Accessibility, Respect.
 
-MIFID II: DO NOT provide financial advice. Only educational information. Always add MIFID disclaimer.
+MIFID II: DO NOT provide financial advice. Only educational information. Always add a MIFID II disclaimer at the end of every response, formatted as: "*MIFID II Note: Information for educational purposes. Does not constitute financial advice.*"
 
 ${formatInstructions}
 `;
