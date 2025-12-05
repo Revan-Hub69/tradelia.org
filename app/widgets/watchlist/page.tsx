@@ -1,39 +1,47 @@
 'use client';
 
 import { useTranslations } from '@/lib/i18n/use-translations';
-import { Clock, ExternalLink } from 'lucide-react';
+import { FeatureComingSoon } from '@/components/ui/FeatureComingSoon';
+import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
 /**
  * Watchlist Widget - Coming Soon
  * API non ancora disponibili
+ * 
+ * Best Practice: Usa FeatureComingSoon per design accademico coerente
  */
 export default function WatchlistWidgetPage() {
-  const { t } = useTranslations();
+  const { locale } = useTranslations();
 
   return (
     <div className="min-h-screen bg-bg-base p-4 flex items-center justify-center">
-      <div className="text-center max-w-md">
-        <Clock className="w-16 h-16 mx-auto mb-4 text-accent opacity-50" />
-        <h1 className="text-2xl font-bold text-text-primary mb-2">
-          {t('widgets.watchlist.title') || 'Watchlist Widget'}
-        </h1>
-        <p className="text-text-secondary mb-6">
-          {t('widgets.watchlist.comingSoon') || 'Questo widget sarà disponibile a breve. Stiamo lavorando all\'integrazione delle API necessarie.'}
-        </p>
-        <div className="flex flex-col gap-3">
+      <div className="w-full max-w-2xl">
+        <FeatureComingSoon
+          featureName={locale === 'it' ? 'Watchlist Widget' : 'Watchlist Widget'}
+          description={locale === 'it' 
+            ? 'Monitora i tuoi asset preferiti con alert personalizzati'
+            : 'Monitor your favorite assets with personalized alerts'}
+          reason={locale === 'it'
+            ? 'Richiede integrazione con API real-time per prezzi di mercato'
+            : 'Requires integration with real-time APIs for market prices'}
+          estimatedDate="Q2 2025"
+          variant="card"
+        />
+        <div className="flex flex-col gap-3 mt-6 items-center">
           <Link
             href="/dashboard/widgets"
-            className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors inline-flex items-center justify-center gap-2"
+            className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors inline-flex items-center justify-center gap-2 text-sm leading-relaxed"
+            aria-label={locale === 'it' ? 'Vedi tutti i widget disponibili' : 'View all available widgets'}
           >
             <ExternalLink className="w-4 h-4" />
-            {t('widgets.viewAll') || 'Vedi tutti i widget disponibili'}
+            {locale === 'it' ? 'Vedi tutti i widget disponibili' : 'View all available widgets'}
           </Link>
           <Link
             href="/dashboard"
-            className="text-sm text-text-tertiary hover:text-text-primary transition-colors"
+            className="text-sm text-text-tertiary hover:text-text-primary transition-colors leading-relaxed"
           >
-            {t('widgets.backToDashboard') || 'Torna alla Dashboard'}
+            {locale === 'it' ? 'Torna alla Dashboard' : 'Back to Dashboard'}
           </Link>
         </div>
       </div>
