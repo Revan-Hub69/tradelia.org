@@ -27,11 +27,11 @@ export function HreflangTags() {
   
   return (
     <>
-      <link rel="alternate" hreflang="it" href={itUrl} />
-      <link rel="alternate" hreflang="en" href={enUrl} />
-      <link rel="alternate" hreflang="x-default" href={itUrl} />
+      <link rel="alternate" hrefLang="it" href={itUrl} />
+      <link rel="alternate" hrefLang="en" href={enUrl} />
+      <link rel="alternate" hrefLang="x-default" href={itUrl} />
       {/* Self-referential hreflang for current page */}
-      <link rel="alternate" hreflang={locale} href={currentUrl} />
+      <link rel="alternate" hrefLang={locale} href={currentUrl} />
     </>
   );
 }
