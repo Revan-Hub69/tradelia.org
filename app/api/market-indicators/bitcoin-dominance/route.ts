@@ -188,8 +188,16 @@ export async function GET(_request: NextRequest) {
 
     if (!dominanceData) {
       return NextResponse.json(
-        { error: "Failed to fetch Bitcoin Dominance data" },
-        { status: 500 }
+        {
+          error: "Failed to fetch Bitcoin Dominance data",
+          dominance: 0,
+          bitcoinMarketCap: 0,
+          totalMarketCap: 0,
+          timestamp: new Date().toISOString(),
+          history: [],
+          aiReading: "Bitcoin Dominance data temporarily unavailable. Please try again later.",
+        },
+        { status: 503 }
       );
     }
 

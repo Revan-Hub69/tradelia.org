@@ -273,11 +273,7 @@ export function DashboardShell() {
             </ErrorBoundary>
           </section>
         </div>
-        <ErrorBoundary>
-          <Suspense fallback={null}>
-            <HelpAssistant />
-          </Suspense>
-        </ErrorBoundary>
+        {/* Chat AI unificata - Disponibile tramite layout principale */}
       </main>
       {unlockedAchievement && (
         <AchievementNotification

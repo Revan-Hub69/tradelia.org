@@ -24,7 +24,7 @@ const ToastContainer = dynamic(() => import('@/components/ui/Toast').then(m => (
 
 const CurrencyProvider = dynamic(() => import('@/lib/hooks/useCurrency').then(m => ({ default: m.CurrencyProvider })));
 
-const AIChatFloating = dynamic(() => import('@/components/ui/AIChatFloating').then(m => ({ default: m.AIChatFloating })));
+const TradeliaAIChat = dynamic(() => import('@/components/ui/TradeliaAIChat').then(m => ({ default: m.TradeliaAIChat })));
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -78,25 +78,30 @@ export default function RootLayout({
                 const originalWarn = console.warn.bind(console);
                 console.error = function(...args) {
                   const msg = String(args[0] || '');
-                  // Sopprimi SOLO errori #310 specifici, non altri errori
-                  const isHydration310 = 
+                  // Sopprimi SOLO errori di hydration specifici (#310, #418), non altri errori
+                  const isHydrationError = 
                     msg.includes('Minified React error #310') ||
+                    msg.includes('Minified React error #418') ||
                     (msg.includes('310') && (msg.includes('Hydration') || msg.includes('hydration'))) ||
-                    (args[0]?.message && String(args[0].message).includes('Minified React error #310'));
+                    (msg.includes('418') && (msg.includes('Hydration') || msg.includes('hydration'))) ||
+                    (args[0]?.message && String(args[0].message).includes('Minified React error #310')) ||
+                    (args[0]?.message && String(args[0].message).includes('Minified React error #418'));
                   
-                  if (isHydration310) {
-                    return; // Sopprimi solo #310
+                  if (isHydrationError) {
+                    return; // Sopprimi solo errori di hydration
                   }
                   originalError.apply(console, args);
                 };
                 console.warn = function(...args) {
                   const msg = String(args[0] || '');
-                  const isHydration310 = 
+                  const isHydrationError = 
                     msg.includes('Minified React error #310') ||
-                    (msg.includes('310') && (msg.includes('Hydration') || msg.includes('hydration')));
+                    msg.includes('Minified React error #418') ||
+                    (msg.includes('310') && (msg.includes('Hydration') || msg.includes('hydration'))) ||
+                    (msg.includes('418') && (msg.includes('Hydration') || msg.includes('hydration')));
                   
-                  if (isHydration310) {
-                    return; // Sopprimi solo #310
+                  if (isHydrationError) {
+                    return; // Sopprimi solo errori di hydration
                   }
                   originalWarn.apply(console, args);
                 };
@@ -224,7 +229,7 @@ export default function RootLayout({
                 <Footer />
                 <LegalConsent />
                 <ToastContainer />
-                <AIChatFloating />
+                <TradeliaAIChat />
               </div>
             </div>
           </CurrencyProvider>

@@ -97,6 +97,7 @@ export function AccountBanner() {
                 ? 'bg-gradient-to-br from-accent/20 via-accent/10 to-accent/5 border-accent/30 shadow-accent/10'
                 : 'bg-gradient-to-br from-amber-500/20 via-amber-500/10 to-amber-500/5 border-amber-500/30 shadow-amber-500/10'
             }
+            ${dismissed ? 'hidden' : ''}
           `}
           role="alert"
         >
