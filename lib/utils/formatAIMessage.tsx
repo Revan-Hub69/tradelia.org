@@ -154,17 +154,36 @@ export function renderFormattedMessage(parts: FormattedMessage['parts'], locale:
         return (
           <div
             key={`mifid-${index}`}
-            className="mt-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-200/90 text-xs leading-relaxed"
+            className="mt-4 p-4 rounded-xl bg-gradient-to-br from-amber-50/90 to-orange-50/90 dark:from-amber-950/40 dark:to-orange-950/40 border-2 border-amber-400/50 dark:border-amber-500/50 shadow-md relative overflow-hidden"
           >
-            <strong className="text-amber-300 font-semibold">
-              {locale === 'it' ? 'Nota MIFID II:' : 'MIFID II Note:'}
-            </strong>{' '}
-            <span className="text-amber-200/90">
-              {part.content
-                .replace(/^([Nn]ota\s+)?MIFID\s*II?[:\s]*/i, '')
-                .replace(/\*+/g, '')
-                .trim()}
-            </span>
+            {/* Decorative background pattern */}
+            <div className="absolute inset-0 opacity-5">
+              <div className="absolute inset-0" style={{
+                backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, currentColor 10px, currentColor 11px)',
+              }} />
+            </div>
+            
+            {/* MIFID Badge */}
+            <div className="flex items-center gap-2 mb-2 relative z-10">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-500/20 dark:bg-amber-600/30 border border-amber-500/40 dark:border-amber-500/50">
+                <svg className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <strong className="text-xs font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wide">
+                  MIFID II
+                </strong>
+              </div>
+            </div>
+            
+            {/* Content */}
+            <div className="relative z-10">
+              <p className="text-sm text-amber-900 dark:text-amber-100 leading-relaxed font-medium">
+                {part.content
+                  .replace(/^([Nn]ota\s+)?MIFID\s*II?[:\s]*/i, '')
+                  .replace(/\*+/g, '')
+                  .trim()}
+              </p>
+            </div>
           </div>
         );
       

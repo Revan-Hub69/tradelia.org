@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Loader2, BookOpen, HelpCircle, Sparkles, ArrowRight, RotateCcw } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, BookOpen, HelpCircle, Sparkles, ArrowRight, RotateCcw, ArrowLeft, Home } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
@@ -44,7 +44,7 @@ export function TradeliaAIChat() {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // Quick Actions - Input predisposti
   const quickActions: QuickAction[] = [
@@ -154,84 +154,130 @@ export function TradeliaAIChat() {
 
   return (
     <>
-      {/* Floating Button */}
+      {/* Floating Button - Modern 2025 Design */}
       {!isOpen && (
         <motion.button
           onClick={() => setIsOpen(true)}
           className={cn(
             'fixed bottom-6 right-6 z-50',
-            'w-14 h-14 rounded-full bg-accent hover:bg-accent-hover',
+            'w-14 h-14 sm:w-16 sm:h-16 rounded-full',
+            'bg-gradient-to-br from-accent to-accent-hover',
+            'hover:from-accent-hover hover:to-accent',
             'flex items-center justify-center',
-            'shadow-lg hover:shadow-xl transition-all',
+            'shadow-xl hover:shadow-2xl transition-all',
             'text-white',
-            'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-base'
+            'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-base',
+            'border border-white/10'
           )}
           aria-label={locale === 'it' ? 'Apri chat AI Tradelia' : 'Open Tradelia AI chat'}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.08, rotate: 5 }}
+          whileTap={{ scale: 0.92 }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: 'spring', damping: 20 }}
         >
-          <MessageCircle className="w-6 h-6" />
+          <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7" />
         </motion.button>
       )}
 
-      {/* Chat Window */}
+      {/* Backdrop */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsOpen(false)}
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Chat Window - Modern Drawer Design 2025 */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ 
+              type: 'spring', 
+              damping: 30, 
+              stiffness: 300,
+              mass: 0.8
+            }}
             className={cn(
-              'fixed bottom-6 right-6 z-50',
-              'w-96 h-[600px] max-h-[80vh]',
-              'bg-bg-surface border border-border-subtle rounded-xl',
+              'fixed right-0 top-0 bottom-0 z-50',
+              'w-full sm:w-[420px] lg:w-[480px] xl:w-[520px]',
+              'bg-bg-surface border-l border-border-subtle',
               'shadow-2xl flex flex-col',
-              'backdrop-blur-sm'
+              'backdrop-blur-xl',
+              'max-h-screen'
             )}
+            onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-border-subtle">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-accent" />
+            {/* Header - Modern 2025 Design */}
+            <div className="flex items-center justify-between p-5 border-b border-border-subtle bg-gradient-to-r from-bg-surface via-bg-soft/30 to-bg-surface">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center shadow-lg">
+                  <Sparkles className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-text-primary leading-relaxed">
+                  <h3 className="text-base font-bold text-text-primary leading-tight">
                     {locale === 'it' ? 'Tradelia AI' : 'Tradelia AI'}
                   </h3>
-                  <p className="text-xs text-text-tertiary leading-relaxed">
+                  <p className="text-xs text-text-tertiary leading-tight mt-0.5">
                     {locale === 'it' ? 'Assistente intelligente' : 'Intelligent assistant'}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                {/* Reset conversation button - Best Practice: Always allow users to start fresh */}
+              <div className="flex items-center gap-1.5">
+                {/* Back to main chat button - Best Practice 2025: Clear navigation */}
                 {messages.length > 0 && (
-                  <button
+                  <motion.button
                     onClick={() => {
                       setMessages([]);
                       setMessage('');
                     }}
-                    className="p-1.5 rounded-lg hover:bg-bg-soft transition-colors"
-                    aria-label={locale === 'it' ? 'Nuova conversazione' : 'New conversation'}
-                    title={locale === 'it' ? 'Torna alla selezione' : 'Back to selection'}
+                    className="p-2 rounded-lg hover:bg-bg-soft transition-colors group"
+                    aria-label={locale === 'it' ? 'Torna alla chat principale' : 'Back to main chat'}
+                    title={locale === 'it' ? 'Torna alla chat principale' : 'Back to main chat'}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <RotateCcw className="w-4 h-4 text-text-secondary" />
-                  </button>
+                    <ArrowLeft className="w-4 h-4 text-text-secondary group-hover:text-text-primary transition-colors" />
+                  </motion.button>
                 )}
-                <button
+                {/* New conversation button */}
+                {messages.length > 0 && (
+                  <motion.button
+                    onClick={() => {
+                      setMessages([]);
+                      setMessage('');
+                    }}
+                    className="p-2 rounded-lg hover:bg-bg-soft transition-colors group"
+                    aria-label={locale === 'it' ? 'Nuova conversazione' : 'New conversation'}
+                    title={locale === 'it' ? 'Nuova conversazione' : 'New conversation'}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <RotateCcw className="w-4 h-4 text-text-secondary group-hover:text-text-primary transition-colors" />
+                  </motion.button>
+                )}
+                <motion.button
                   onClick={() => setIsOpen(false)}
-                  className="p-1.5 rounded-lg hover:bg-bg-soft transition-colors"
+                  className="p-2 rounded-lg hover:bg-bg-soft transition-colors group"
                   aria-label={locale === 'it' ? 'Chiudi chat' : 'Close chat'}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <X className="w-4 h-4 text-text-secondary" />
-                </button>
+                  <X className="w-4 h-4 text-text-secondary group-hover:text-text-primary transition-colors" />
+                </motion.button>
               </div>
             </div>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {/* Messages - Enhanced scrolling and spacing */}
+            <div className="flex-1 overflow-y-auto p-5 space-y-5 scrollbar-thin scrollbar-thumb-border-subtle scrollbar-track-transparent">
               {messages.length === 0 ? (
                 // Welcome screen with quick actions - Best Practice: Clear entry point
                 <div className="space-y-4">
@@ -249,9 +295,9 @@ export function TradeliaAIChat() {
                     </ul>
                   </div>
 
-                  {/* Quick Actions */}
-                  <div className="space-y-2">
-                    <p className="text-xs text-text-tertiary font-medium leading-relaxed">
+                  {/* Quick Actions - Enhanced Design */}
+                  <div className="space-y-2.5">
+                    <p className="text-xs text-text-tertiary font-semibold leading-relaxed uppercase tracking-wide">
                       {locale === 'it' ? 'Azioni rapide:' : 'Quick actions:'}
                     </p>
                     {quickActions.map((action) => {
@@ -262,18 +308,21 @@ export function TradeliaAIChat() {
                           key={action.id}
                           onClick={() => handleQuickAction(action)}
                           className={cn(
-                            'w-full flex items-center gap-2 p-3 rounded-lg',
+                            'w-full flex items-center gap-3 p-3.5 rounded-xl',
                             'bg-bg-soft border border-border-subtle',
-                            'hover:bg-bg-elevated hover:border-accent/40',
-                            'transition-all text-left',
+                            'hover:bg-bg-elevated hover:border-accent/50 hover:shadow-md',
+                            'transition-all text-left group',
                             'text-sm text-text-primary leading-relaxed'
                           )}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
+                          whileHover={{ scale: 1.01, y: -1 }}
+                          whileTap={{ scale: 0.99 }}
                         >
-                          <Icon className="w-4 h-4 text-accent flex-shrink-0" />
-                          <span className="flex-1">{action.label}</span>
+                          <div className="w-9 h-9 rounded-lg bg-accent/10 group-hover:bg-accent/20 flex items-center justify-center transition-colors">
+                            <Icon className="w-4 h-4 text-accent flex-shrink-0" />
+                          </div>
+                          <span className="flex-1 font-medium">{action.label}</span>
                           {action.proOnly && <ProBadge size="sm" />}
+                          <ArrowRight className="w-4 h-4 text-text-tertiary group-hover:text-accent transition-colors opacity-0 group-hover:opacity-100" />
                         </motion.button>
                       );
                     })}
@@ -315,9 +364,9 @@ export function TradeliaAIChat() {
                     >
                       <div
                         className={cn(
-                          'max-w-[85%] rounded-lg px-4 py-3',
+                          'max-w-[85%] rounded-2xl px-4 py-3 shadow-sm',
                           isUser
-                            ? 'bg-accent text-white text-sm leading-relaxed whitespace-pre-wrap break-words'
+                            ? 'bg-gradient-to-br from-accent to-accent-hover text-white text-sm leading-relaxed whitespace-pre-wrap break-words'
                             : 'bg-bg-soft text-text-primary border border-border-subtle'
                         )}
                       >
@@ -339,60 +388,84 @@ export function TradeliaAIChat() {
               )}
               {isLoading && (
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
                   className="flex justify-start"
                 >
-                  <div className="bg-bg-soft rounded-lg px-4 py-3 border border-border-subtle">
+                  <div className="bg-bg-soft rounded-2xl px-4 py-3 border border-border-subtle shadow-sm flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin text-accent" />
+                    <span className="text-xs text-text-tertiary">
+                      {locale === 'it' ? 'Sto pensando...' : 'Thinking...'}
+                    </span>
                   </div>
                 </motion.div>
               )}
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input */}
-            <div className="p-4 border-t border-border-subtle">
-              <div className="flex gap-2">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSend();
-                    }
-                  }}
-                  placeholder={locale === 'it' ? 'Scrivi un messaggio...' : 'Type a message...'}
-                  className={cn(
-                    'flex-1 px-3 py-2 rounded-lg',
-                    'bg-bg-soft border border-border-subtle',
-                    'text-text-primary placeholder:text-text-tertiary',
-                    'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-surface',
-                    'text-sm leading-relaxed',
-                    'disabled:opacity-50 disabled:cursor-not-allowed'
-                  )}
-                  disabled={isLoading}
-                  aria-label={locale === 'it' ? 'Campo di input messaggio' : 'Message input field'}
-                  aria-describedby={isLoading ? 'loading-indicator' : undefined}
-                />
-                <button
-                  onClick={() => handleSend()}
-                  disabled={!message.trim() || isLoading}
-                  className={cn(
-                    'px-4 py-2 rounded-lg',
-                    'bg-accent hover:bg-accent-hover text-white',
-                    'disabled:opacity-50 disabled:cursor-not-allowed',
-                    'transition-colors',
-                    'focus:outline-none focus:ring-2 focus:ring-accent'
-                  )}
-                  aria-label={locale === 'it' ? 'Invia messaggio' : 'Send message'}
-                >
-                  <Send className="w-4 h-4" />
-                </button>
+            {/* Input - Modern 2025 Design */}
+            <div className="p-5 border-t border-border-subtle bg-bg-surface">
+              <div className="flex gap-3 items-end">
+                <div className="flex-1 relative">
+                  <textarea
+                    ref={inputRef as React.RefObject<HTMLTextAreaElement>}
+                    value={message}
+                    onChange={(e) => {
+                      setMessage(e.target.value);
+                      // Auto-resize
+                      e.target.style.height = 'auto';
+                      e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`;
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSend();
+                      }
+                    }}
+                    placeholder={locale === 'it' ? 'Scrivi un messaggio...' : 'Type a message...'}
+                    className={cn(
+                      'w-full px-4 py-3 pr-12 rounded-xl',
+                      'bg-bg-soft border border-border-subtle',
+                      'text-text-primary placeholder:text-text-tertiary',
+                      'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-surface',
+                      'text-sm leading-relaxed resize-none',
+                      'disabled:opacity-50 disabled:cursor-not-allowed',
+                      'transition-all duration-200'
+                    )}
+                    rows={1}
+                    style={{ maxHeight: '120px', minHeight: '44px' }}
+                    disabled={isLoading}
+                    aria-label={locale === 'it' ? 'Campo di input messaggio' : 'Message input field'}
+                    aria-describedby={isLoading ? 'loading-indicator' : undefined}
+                  />
+                  <motion.button
+                    onClick={() => handleSend()}
+                    disabled={!message.trim() || isLoading}
+                    className={cn(
+                      'absolute right-2 bottom-2 w-9 h-9 rounded-lg flex items-center justify-center',
+                      'bg-accent hover:bg-accent-hover text-white',
+                      'disabled:opacity-40 disabled:cursor-not-allowed',
+                      'transition-all duration-200',
+                      'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
+                      message.trim() && !isLoading ? 'shadow-lg' : ''
+                    )}
+                    aria-label={locale === 'it' ? 'Invia messaggio' : 'Send message'}
+                    whileHover={message.trim() && !isLoading ? { scale: 1.05 } : {}}
+                    whileTap={message.trim() && !isLoading ? { scale: 0.95 } : {}}
+                  >
+                    {isLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Send className="w-4 h-4" />
+                    )}
+                  </motion.button>
+                </div>
               </div>
+              <p className="text-[10px] text-text-tertiary mt-3 text-center">
+                {locale === 'it'
+                  ? 'AI powered by Tradelia. Le risposte sono a scopo informativo.'
+                  : 'AI powered by Tradelia. Answers are for informational purposes.'}
+              </p>
             </div>
           </motion.div>
         )}
