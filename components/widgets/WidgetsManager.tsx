@@ -5,6 +5,14 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import ProWidget from './ProWidget';
 import { Plus, GripVertical } from 'lucide-react';
+import {
+  CryptoWhaleIcon,
+  DepthAggregatedIcon,
+  TopMoversIcon,
+  FuturesIcon,
+  OptionsIcon,
+  ForexIcon,
+} from '@/components/icons/ProAnalysisIcons';
 
 interface Widget {
   id: string;
@@ -115,13 +123,22 @@ export default function WidgetsManager() {
     );
   }
 
+  const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+    'crypto-whale': CryptoWhaleIcon,
+    'crypto-depth': DepthAggregatedIcon,
+    'crypto-movers': TopMoversIcon,
+    'futures': FuturesIcon,
+    'options': OptionsIcon,
+    'forex': ForexIcon,
+  };
+
   const availableWidgets = [
-    { type: 'crypto-whale', icon: '🐋', label: 'Crypto Whale', available: true },
-    { type: 'crypto-depth', icon: '📊', label: 'Depth Aggregated', available: true },
-    { type: 'crypto-movers', icon: '📈', label: 'Top Movers', available: true },
-    { type: 'futures', icon: '⚡', label: 'Futures', available: false },
-    { type: 'options', icon: '🎯', label: 'Options', available: false },
-    { type: 'forex', icon: '💱', label: 'Forex', available: false },
+    { type: 'crypto-whale', label: 'Crypto Whale', available: true },
+    { type: 'crypto-depth', label: 'Depth Aggregated', available: true },
+    { type: 'crypto-movers', label: 'Top Movers', available: true },
+    { type: 'futures', label: 'Futures', available: false },
+    { type: 'options', label: 'Options', available: false },
+    { type: 'forex', label: 'Forex', available: false },
   ];
 
   const installedTypes = new Set(widgets.map(w => w.widget_type));
@@ -162,7 +179,10 @@ export default function WidgetsManager() {
                 }`}
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-2xl">{widget.icon}</span>
+                  {iconMap[widget.type] && (() => {
+                    const IconComponent = iconMap[widget.type];
+                    return <IconComponent className="w-6 h-6 text-accent" />;
+                  })()}
                   <span className="font-semibold">{widget.label}</span>
                 </div>
                 {!widget.available && (

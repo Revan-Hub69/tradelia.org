@@ -552,8 +552,9 @@ export function PaperTrading() {
             <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
+                <BarChart3 className="w-4 h-4 text-blue-400" />
                 <span className="text-sm font-semibold text-text-primary">
-                  {locale === 'it' ? '📊 Dati Real-Time' : '📊 Real-Time Data'}
+                  {locale === 'it' ? 'Dati Real-Time' : 'Real-Time Data'}
                 </span>
                 <span className="px-2 py-0.5 bg-blue-500/20 border border-blue-500/40 rounded text-[10px] text-blue-300 font-semibold">
                   {locale === 'it' ? 'Presto Disponibile' : 'Coming Soon'}

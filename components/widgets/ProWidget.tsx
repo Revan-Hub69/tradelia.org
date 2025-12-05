@@ -9,6 +9,14 @@ import FuturesAnalysis from '@/components/dashboard/analysis/pro/FuturesAnalysis
 import OptionsAnalysis from '@/components/dashboard/analysis/pro/OptionsAnalysis';
 import ForexAnalysis from '@/components/dashboard/analysis/pro/ForexAnalysis';
 import { useIsPro } from '@/lib/hooks/useUserRole';
+import {
+  CryptoWhaleIcon,
+  DepthAggregatedIcon,
+  TopMoversIcon,
+  FuturesIcon,
+  OptionsIcon,
+  ForexIcon,
+} from '@/components/icons/ProAnalysisIcons';
 
 interface ProWidgetProps {
   widgetType: string;
@@ -26,13 +34,22 @@ const widgetComponents: Record<string, React.ComponentType<{ isPro: boolean }>> 
   'forex': ForexAnalysis,
 };
 
-const widgetLabels: Record<string, { icon: string; label: string }> = {
-  'crypto-whale': { icon: '🐋', label: 'Crypto Whale' },
-  'crypto-depth': { icon: '📊', label: 'Depth Aggregated' },
-  'crypto-movers': { icon: '📈', label: 'Top Movers' },
-  'futures': { icon: '⚡', label: 'Futures' },
-  'options': { icon: '🎯', label: 'Options' },
-  'forex': { icon: '💱', label: 'Forex' },
+const widgetIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  'crypto-whale': CryptoWhaleIcon,
+  'crypto-depth': DepthAggregatedIcon,
+  'crypto-movers': TopMoversIcon,
+  'futures': FuturesIcon,
+  'options': OptionsIcon,
+  'forex': ForexIcon,
+};
+
+const widgetLabels: Record<string, { label: string }> = {
+  'crypto-whale': { label: 'Crypto Whale' },
+  'crypto-depth': { label: 'Depth Aggregated' },
+  'crypto-movers': { label: 'Top Movers' },
+  'futures': { label: 'Futures' },
+  'options': { label: 'Options' },
+  'forex': { label: 'Forex' },
 };
 
 /**
@@ -61,7 +78,10 @@ export default function ProWidget({ widgetType, onRemove, onConfigure, isDraggin
       {/* Widget Header */}
       <div className="flex items-center justify-between mb-4 pb-3 border-b">
         <div className="flex items-center gap-2">
-          <span className="text-xl">{widgetInfo.icon}</span>
+          {widgetIconMap[widgetType] && (() => {
+            const IconComponent = widgetIconMap[widgetType];
+            return <IconComponent className="w-5 h-5 text-accent" />;
+          })()}
           <h3 className="font-semibold">{widgetInfo.label}</h3>
         </div>
         <div className="flex items-center gap-2">

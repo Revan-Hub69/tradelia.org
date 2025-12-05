@@ -7,6 +7,14 @@ import { X, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { ProUnlockOverlay } from '@/components/ui/ProUnlockOverlay';
 import { MethodologyPopup } from '@/components/ui/MethodologyPopup';
+import {
+  CryptoWhaleIcon,
+  DepthAggregatedIcon,
+  TopMoversIcon,
+  FuturesIcon,
+  OptionsIcon,
+  ForexIcon,
+} from '@/components/icons/ProAnalysisIcons';
 import CryptoWhaleAnalysis from './pro/CryptoWhaleAnalysis';
 import CryptoDepthAggregated from './pro/CryptoDepthAggregated';
 import CryptoTopMovers from './pro/CryptoTopMovers';
@@ -18,7 +26,7 @@ interface ProAnalysisTab {
   id: string;
   name: string;
   description: string;
-  icon: string;
+  icon: React.ComponentType<{ className?: string }>;
   component: React.ComponentType<{ isPro: boolean }>;
   methodologyNotes: {
     title: string;
@@ -49,7 +57,7 @@ export default function ProAnalysisTabs() {
         locale === 'it'
           ? 'Analisi movimenti whale su top 400 crypto con AI reading'
           : 'Whale movement analysis on top 400 crypto with AI reading',
-      icon: '🐋',
+      icon: CryptoWhaleIcon,
       component: CryptoWhaleAnalysis,
       methodologyNotes: {
         title: locale === 'it' ? 'Crypto Whale Analysis' : 'Crypto Whale Analysis',
@@ -78,7 +86,7 @@ export default function ProAnalysisTabs() {
         locale === 'it'
           ? 'Order book depth aggregato multi-exchange con AI reading'
           : 'Multi-exchange aggregated order book depth with AI reading',
-      icon: '📊',
+      icon: DepthAggregatedIcon,
       component: CryptoDepthAggregated,
       methodologyNotes: {
         title: locale === 'it' ? 'Depth Aggregated Analysis' : 'Depth Aggregated Analysis',
@@ -107,7 +115,7 @@ export default function ProAnalysisTabs() {
         locale === 'it'
           ? 'Top winners/losers e volumi con analisi AI'
           : 'Top winners/losers and volumes with AI analysis',
-      icon: '📈',
+      icon: TopMoversIcon,
       component: CryptoTopMovers,
       methodologyNotes: {
         title: locale === 'it' ? 'Top Movers Analysis' : 'Top Movers Analysis',
@@ -136,7 +144,7 @@ export default function ProAnalysisTabs() {
         locale === 'it'
           ? 'Analisi futures real-time con term structure e AI reading'
           : 'Real-time futures analysis with term structure and AI reading',
-      icon: '⚡',
+      icon: FuturesIcon,
       component: FuturesAnalysis,
       methodologyNotes: {
         title: locale === 'it' ? 'Futures Analysis' : 'Futures Analysis',
@@ -165,7 +173,7 @@ export default function ProAnalysisTabs() {
         locale === 'it'
           ? 'Analisi opzioni con Greeks, IV, e AI reading'
           : 'Options analysis with Greeks, IV, and AI reading',
-      icon: '🎯',
+      icon: OptionsIcon,
       component: OptionsAnalysis,
       methodologyNotes: {
         title: locale === 'it' ? 'Options Analysis' : 'Options Analysis',
@@ -194,7 +202,7 @@ export default function ProAnalysisTabs() {
         locale === 'it'
           ? 'Analisi forex avanzata con correlazioni e AI reading'
           : 'Advanced forex analysis with correlations and AI reading',
-      icon: '💱',
+      icon: ForexIcon,
       component: ForexAnalysis,
       methodologyNotes: {
         title: locale === 'it' ? 'Forex Analysis' : 'Forex Analysis',
@@ -274,7 +282,7 @@ export default function ProAnalysisTabs() {
                     : 'border-transparent text-text-secondary hover:text-text-primary hover:bg-bg-soft'
                 )}
               >
-                <span className="mr-2">{tab.icon}</span>
+                {tab.icon && <tab.icon className="w-5 h-5 mr-2" />}
                 {tab.name}
               </button>
             ))}
