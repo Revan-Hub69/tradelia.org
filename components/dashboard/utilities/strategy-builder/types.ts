@@ -7,6 +7,7 @@ import type { StrategyType } from "@/lib/strategies/academic-strategies";
 export interface OptimizationResult {
   strategyId: StrategyType;
   parameters: Record<string, number>;
+  keyValue?: number; // Optional - used for parameter optimization
   inSampleReturn: number;
   outOfSampleReturn: number;
   maxDrawdown: number;
@@ -60,7 +61,8 @@ export interface SavedConfig {
 }
 
 export interface BestParameterStats {
-  strategyId: StrategyType;
+  keyValue: number;
+  strategyId?: StrategyType;
   windowsUsed: number;
   avgReturn: number;
   avgSharpe: number;

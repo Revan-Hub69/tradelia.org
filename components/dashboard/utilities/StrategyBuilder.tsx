@@ -517,6 +517,7 @@ export function StrategyBuilder() {
     
     return {
       keyValue: overallBestParameter,
+      strategyId: allResults[0]?.strategyId,
       windowsUsed: allResults.length,
       avgReturn: allResults.reduce((sum, r) => sum + r.outOfSampleReturn, 0) / allResults.length,
       avgSharpe: allResults.reduce((sum, r) => sum + r.sharpeRatio, 0) / allResults.length,
@@ -1536,11 +1537,11 @@ export function StrategyBuilder() {
                       {locale === 'it' ? 'Strategia' : 'Strategy'}
                     </div>
                     <div className="text-lg font-bold text-accent">
-                      {getStrategyById(bestParameterStats.strategyId) 
+                      {bestParameterStats.strategyId && getStrategyById(bestParameterStats.strategyId) 
                         ? (locale === 'it' 
                             ? getStrategyById(bestParameterStats.strategyId)!.name 
                             : getStrategyById(bestParameterStats.strategyId)!.nameEn)
-                        : bestParameterStats.strategyId}
+                        : bestParameterStats.keyValue?.toFixed(1) || 'N/A'}
                     </div>
                   </div>
                   <div>
