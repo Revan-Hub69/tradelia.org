@@ -21,6 +21,19 @@ interface VIXResponse {
 
 /**
  * Get VIX data from Yahoo Finance
+ * 
+ * NOTA: Yahoo Finance non è un'API ufficiale, ma è ampiamente usata e generalmente affidabile.
+ * CBOE (creatore del VIX) ha un'API ufficiale ma richiede subscription.
+ * 
+ * Per ora manteniamo Yahoo Finance perché:
+ * - È ampiamente usato in progetti open source
+ * - Funziona in modo relativamente stabile
+ * - Non richiede autenticazione
+ * 
+ * Se dovesse diventare instabile, considerare:
+ * - CBOE DataShop API (subscription)
+ * - Alpha Vantage (free tier limitato)
+ * - Altri provider di dati finanziari
  */
 async function getVIXFromYahoo(): Promise<{
   value: number;
@@ -28,33 +41,45 @@ async function getVIXFromYahoo(): Promise<{
   changePercent: number;
 } | null> {
   try {
-    // Yahoo Finance symbol for VIX
+    // Yahoo Finance symbol for VIX (^VIX)
     const response = await fetch(
       "https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?interval=1d&range=30d",
       {
         headers: {
-          "User-Agent": "Mozilla/5.0",
+          "User-Agent": "Mozilla/5.0 (compatible; Tradelia/1.0)",
         },
       }
     );
 
     if (!response.ok) {
-      throw new Error("Yahoo Finance API error");
+      console.warn("Yahoo Finance VIX API returned non-OK status:", response.status);
+      return null;
     }
 
     const data = await response.json();
     const result = data.chart?.result?.[0];
 
     if (!result) {
+      console.warn("Yahoo Finance VIX API: No result data");
       return null;
     }
 
     const quotes = result.indicators?.quote?.[0];
     const timestamps = result.timestamp;
-    const currentIndex = timestamps.length - 1;
+    
+    if (!quotes || !timestamps || timestamps.length === 0) {
+      console.warn("Yahoo Finance VIX API: Missing quotes or timestamps");
+      return null;
+    }
 
+    const currentIndex = timestamps.length - 1;
     const currentValue = quotes.close[currentIndex];
     const previousValue = quotes.close[currentIndex - 1] || currentValue;
+
+    if (currentValue === null || currentValue === undefined) {
+      console.warn("Yahoo Finance VIX API: Missing current value");
+      return null;
+    }
 
     const change = currentValue - previousValue;
     const changePercent = previousValue > 0 ? (change / previousValue) * 100 : 0;
@@ -72,6 +97,9 @@ async function getVIXFromYahoo(): Promise<{
 
 /**
  * Get VIX history from Yahoo Finance
+ * 
+ * NOTA: Stessa considerazione di getVIXFromYahoo() - Yahoo Finance non è ufficiale
+ * ma è ampiamente usato e generalmente affidabile.
  */
 async function getVIXHistory(): Promise<Array<{ date: string; value: number }>> {
   try {
@@ -79,12 +107,13 @@ async function getVIXHistory(): Promise<Array<{ date: string; value: number }>> 
       "https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?interval=1d&range=30d",
       {
         headers: {
-          "User-Agent": "Mozilla/5.0",
+          "User-Agent": "Mozilla/5.0 (compatible; Tradelia/1.0)",
         },
       }
     );
 
     if (!response.ok) {
+      console.warn("Yahoo Finance VIX History API returned non-OK status:", response.status);
       return [];
     }
 
@@ -97,6 +126,10 @@ async function getVIXHistory(): Promise<Array<{ date: string; value: number }>> 
 
     const quotes = result.indicators?.quote?.[0];
     const timestamps = result.timestamp;
+
+    if (!quotes || !timestamps) {
+      return [];
+    }
 
     return timestamps
       .map((timestamp: number, index: number) => ({

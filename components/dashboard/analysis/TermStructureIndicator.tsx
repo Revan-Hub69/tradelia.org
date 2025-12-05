@@ -53,7 +53,17 @@ export default function TermStructureIndicator() {
     const fetchTermStructure = async () => {
       try {
         const response = await fetch('/api/market-indicators/term-structure');
-        if (!response.ok) throw new Error('Failed to fetch Term Structure');
+        if (!response.ok) {
+          if (response.status === 503) {
+            // Not yet available
+            const errorData = await response.json();
+            setError(errorData.error || 'Term Structure not yet available');
+            setData(null);
+            setIsLoading(false);
+            return;
+          }
+          throw new Error('Failed to fetch Term Structure');
+        }
         
         const termData = await response.json();
         setData(termData);
@@ -80,9 +90,34 @@ export default function TermStructureIndicator() {
   }
 
   if (error || !data) {
+    const isNotAvailable = error?.includes('not yet available') || error?.includes('Coming soon');
+    
     return (
-      <div className="bg-card rounded-lg border p-6 h-full flex items-center justify-center">
-        <div className="text-destructive">Error loading Term Structure data</div>
+      <div className="bg-bg-surface rounded-lg border border-border-subtle p-6 h-full flex items-center justify-center">
+        {isNotAvailable ? (
+          <div className="text-center p-6">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-bg-soft flex items-center justify-center">
+              <svg className="w-8 h-8 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <p className="text-text-primary font-semibold mb-2">
+              {locale === 'it' ? 'Prossimamente disponibile' : 'Coming soon'}
+            </p>
+            <p className="text-sm text-text-secondary mb-2">
+              {locale === 'it' ? 'Term Structure (Futures vs Spot)' : 'Term Structure (Futures vs Spot)'}
+            </p>
+            <p className="text-xs text-text-tertiary max-w-sm">
+              {locale === 'it'
+                ? 'Stiamo lavorando all\'integrazione. Richiede un\'API affidabile per i futures (CME Group, Bloomberg, etc.).'
+                : 'We are working on the integration. Requires a reliable futures API (CME Group, Bloomberg, etc.).'}
+            </p>
+          </div>
+        ) : (
+          <div className="text-red-400">
+            {locale === 'it' ? 'Errore nel caricamento dei dati Term Structure' : 'Error loading Term Structure data'}
+          </div>
+        )}
       </div>
     );
   }
