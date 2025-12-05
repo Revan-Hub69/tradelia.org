@@ -5,7 +5,6 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { BarChart3, TrendingUp, AlertCircle } from 'lucide-react';
 import VIXIndicator from './VIXIndicator';
 import FearGreedIndicator from './FearGreedIndicator';
-import TermStructureIndicator from './TermStructureIndicator';
 import BitcoinDominanceIndicator from './BitcoinDominanceIndicator';
 import EconomicIndicatorsIndicator from './EconomicIndicatorsIndicator';
 import BondYieldsIndicator from './BondYieldsIndicator';
@@ -40,7 +39,6 @@ export default function AnalysisDashboard() {
     { id: 'economic', component: EconomicIndicatorsIndicator },
     { id: 'bond-yields', component: BondYieldsIndicator },
     { id: 'vix', component: VIXIndicator },
-    { id: 'term-structure', component: TermStructureIndicator },
   ];
 
   // Mobile slide navigation
