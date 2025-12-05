@@ -111,6 +111,7 @@ CREATE OR REPLACE FUNCTION cleanup_expired_widget_notifications()
 RETURNS void
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public, pg_temp
 AS $$
 BEGIN
   DELETE FROM widget_notifications

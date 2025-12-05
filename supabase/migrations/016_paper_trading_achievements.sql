@@ -84,7 +84,11 @@ ON CONFLICT (code) DO NOTHING;
 
 -- Function to check paper trading achievements
 CREATE OR REPLACE FUNCTION check_paper_trading_achievements(p_user_id UUID, p_action_type TEXT)
-RETURNS TABLE(achievement_id TEXT) AS $$
+RETURNS TABLE(achievement_id TEXT) 
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
 DECLARE
   v_stats RECORD;
   v_achievements TEXT[];

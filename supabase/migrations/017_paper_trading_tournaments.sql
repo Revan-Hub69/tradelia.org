@@ -305,7 +305,11 @@ CREATE TRIGGER update_tournament_positions_updated_at
 CREATE OR REPLACE FUNCTION calculate_tournament_score(
   p_tournament_id UUID,
   p_participant_id UUID
-) RETURNS NUMERIC AS $$
+) RETURNS NUMERIC 
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
 DECLARE
   v_scoring_method VARCHAR(50);
   v_total_return NUMERIC;
@@ -354,11 +358,15 @@ BEGIN
 
   RETURN v_score;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 -- Function to update tournament rankings
 CREATE OR REPLACE FUNCTION update_tournament_rankings(p_tournament_id UUID)
-RETURNS void AS $$
+RETURNS void 
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
 BEGIN
   -- Update scores
   UPDATE paper_trading_tournament_participants
@@ -380,9 +388,9 @@ BEGIN
   UPDATE paper_trading_tournament_participants p
   SET current_rank = r.new_rank
   FROM ranked r
-  WHERE p.id = r.id;
+    WHERE p.id = r.id;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 -- Tournament Templates (predefined tournament types)
 CREATE TABLE IF NOT EXISTS paper_trading_tournament_templates (
@@ -706,7 +714,11 @@ CREATE POLICY "Admins can manage templates"
 
 -- Function to award tournament prizes
 CREATE OR REPLACE FUNCTION award_tournament_prizes(p_tournament_id UUID)
-RETURNS void AS $$
+RETURNS void 
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
 DECLARE
   v_tournament RECORD;
   v_participant RECORD;
@@ -835,11 +847,14 @@ BEGIN
     WHERE id = v_participant.id;
   END LOOP;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 -- Trigger to auto-award prizes when tournament completes
 CREATE OR REPLACE FUNCTION trigger_award_tournament_prizes()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER 
+LANGUAGE plpgsql
+SET search_path = public, pg_temp
+AS $$
 BEGIN
   IF NEW.status = 'completed' AND OLD.status != 'completed' THEN
     PERFORM award_tournament_prizes(NEW.id);
