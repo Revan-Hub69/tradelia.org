@@ -217,7 +217,7 @@ export function GlobalSearch() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[10000]"
               onClick={() => {
                 setIsOpen(false);
                 setQuery('');
@@ -234,7 +234,7 @@ export function GlobalSearch() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="fixed top-4 left-4 right-4 md:top-20 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-2xl z-50"
+              className="fixed top-4 left-4 right-4 md:top-20 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-2xl z-[10001]"
               role="dialog"
               aria-modal="true"
               aria-label={t('dashboard.search.title') || 'Ricerca globale'}

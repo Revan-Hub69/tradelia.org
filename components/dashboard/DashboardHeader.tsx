@@ -51,7 +51,7 @@ export function DashboardHeader() {
     <header 
       className={styles.dashboardHeaderMinimal} 
       suppressHydrationWarning 
-      style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}
+      style={{ width: '100%', maxWidth: '100%' }}
       role="banner"
     >
       <div className={styles.dashboardHeaderContent}>

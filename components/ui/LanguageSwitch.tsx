@@ -24,6 +24,21 @@ export function LanguageSwitch({ size = 'md', variant = 'dropdown' }: LanguageSw
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [dropdownPosition, setDropdownPosition] = useState<{ top: number; right: number } | null>(null);
+
+  // Calcola posizione per dropdown fixed
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + 8,
+        right: window.innerWidth - rect.right,
+      });
+    } else {
+      setDropdownPosition(null);
+    }
+  }, [isOpen]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -59,12 +74,6 @@ export function LanguageSwitch({ size = 'md', variant = 'dropdown' }: LanguageSw
     const newPath = buildLocalePath(newLocale, pathWithoutLocale);
     
     setIsOpen(false);
-    
-    // Get current path without locale prefix
-    const pathWithoutLocale = pathname.replace(/^\/(it|en)/, '') || '/';
-    
-    // Build new path with new locale
-    const newPath = buildLocalePath(newLocale, pathWithoutLocale);
     
     // Use router.push and then trigger a custom event for components to react
     router.push(newPath);
@@ -113,8 +122,9 @@ export function LanguageSwitch({ size = 'md', variant = 'dropdown' }: LanguageSw
   }
 
   return (
-    <div ref={dropdownRef} className="relative">
+    <div ref={dropdownRef} className="relative z-[10000]">
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           'flex items-center justify-center gap-1.5 rounded-lg',
@@ -147,7 +157,11 @@ export function LanguageSwitch({ size = 'md', variant = 'dropdown' }: LanguageSw
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="absolute right-0 top-full mt-2 w-48 bg-bg-surface border border-border-subtle rounded-xl shadow-2xl overflow-hidden z-50"
+              className="fixed w-48 bg-bg-surface border border-border-subtle rounded-xl shadow-2xl overflow-hidden z-[10000]"
+              style={dropdownPosition ? {
+                top: `${dropdownPosition.top}px`,
+                right: `${dropdownPosition.right}px`,
+              } : undefined}
               role="menu"
               aria-orientation="vertical"
             >

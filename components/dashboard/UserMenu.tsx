@@ -28,10 +28,25 @@ export function UserMenu() {
   const [user, setUser] = useState<{ email?: string; name?: string } | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
   const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [menuPosition, setMenuPosition] = useState<{ top: number; right: number } | null>(null);
   const isPro = useIsPro();
 
   // Blocca scroll quando menu è aperto
   useBodyScrollLock(isOpen);
+
+  // Calcola posizione per dropdown fixed
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setMenuPosition({
+        top: rect.bottom + 8,
+        right: window.innerWidth - rect.right,
+      });
+    } else {
+      setMenuPosition(null);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -199,8 +214,9 @@ export function UserMenu() {
     .slice(0, 2) || user.email?.[0].toUpperCase() || 'U';
 
   return (
-    <div ref={menuRef} className="relative z-[100]">
+    <div ref={menuRef} className="relative z-[10000]">
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 rounded-lg bg-bg-soft border border-border-subtle hover:border-accent/40 transition-all duration-200 group"
         aria-label={t('dashboard.userMenu.open') || 'Menu utente'}
@@ -228,7 +244,11 @@ export function UserMenu() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute right-0 top-full mt-2 w-64 max-w-[calc(100vw-2rem)] bg-bg-surface border border-border-subtle rounded-xl shadow-2xl overflow-hidden z-[100]"
+            className="fixed w-64 max-w-[calc(100vw-2rem)] bg-bg-surface border border-border-subtle rounded-xl shadow-2xl overflow-hidden z-[10000]"
+            style={menuPosition ? {
+              top: `${menuPosition.top}px`,
+              right: `${menuPosition.right}px`,
+            } : undefined}
             role="menu"
             aria-orientation="vertical"
           >
