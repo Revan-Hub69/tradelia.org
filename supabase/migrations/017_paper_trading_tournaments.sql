@@ -220,9 +220,9 @@ CREATE POLICY "Admins can manage tournaments"
   ON paper_trading_tournaments FOR ALL
   USING (
     EXISTS (
-      SELECT 1 FROM user_profiles
-      WHERE user_profiles.user_id = auth.uid()
-      AND user_profiles.role = 'admin'
+      SELECT 1 FROM user_roles
+      WHERE user_roles.user_id = auth.uid()
+      AND user_roles.role = 'admin'
     )
   );
 
@@ -698,9 +698,9 @@ CREATE POLICY "Admins can manage templates"
   ON paper_trading_tournament_templates FOR ALL
   USING (
     EXISTS (
-      SELECT 1 FROM user_profiles
-      WHERE user_profiles.user_id = auth.uid()
-      AND user_profiles.role = 'admin'
+      SELECT 1 FROM user_roles
+      WHERE user_roles.user_id = auth.uid()
+      AND user_roles.role = 'admin'
     )
   );
 
@@ -750,28 +750,49 @@ BEGIN
     -- Award based on prize type
     CASE v_prize_type
       WHEN 'pro_access' THEN
-        -- Grant Pro access
-        UPDATE user_profiles
-        SET role = 'pro',
-            pro_expires_at = CASE
-              WHEN pro_expires_at IS NULL OR pro_expires_at < NOW() THEN
-                NOW() + (v_pro_days || ' days')::INTERVAL
-              ELSE
-                pro_expires_at + (v_pro_days || ' days')::INTERVAL
-            END
-        WHERE user_id = v_participant.user_id;
+        -- Grant Pro access via user_roles (UNIQUE constraint on user_id)
+        INSERT INTO user_roles (user_id, role, valid_until)
+        VALUES (
+          v_participant.user_id,
+          'pro',
+          NOW() + (v_pro_days || ' days')::INTERVAL
+        )
+        ON CONFLICT (user_id) DO UPDATE
+        SET 
+          role = CASE
+            -- If user has desk/admin, keep higher role, just extend valid_until
+            WHEN user_roles.role IN ('desk', 'admin') THEN user_roles.role
+            ELSE 'pro'
+          END,
+          valid_until = CASE
+            WHEN user_roles.valid_until IS NULL OR user_roles.valid_until < NOW() THEN
+              NOW() + (v_pro_days || ' days')::INTERVAL
+            ELSE
+              user_roles.valid_until + (v_pro_days || ' days')::INTERVAL
+          END;
 
       WHEN 'desk_access' THEN
-        -- Grant Desk access
-        UPDATE user_profiles
-        SET role = 'desk',
-            desk_expires_at = CASE
-              WHEN desk_expires_at IS NULL OR desk_expires_at < NOW() THEN
-                NOW() + (v_desk_days || ' days')::INTERVAL
-              ELSE
-                desk_expires_at + (v_desk_days || ' days')::INTERVAL
-            END
-        WHERE user_id = v_participant.user_id;
+        -- Grant Desk access via user_roles (UNIQUE constraint on user_id)
+        -- Desk is higher than Pro, so always upgrade to Desk
+        INSERT INTO user_roles (user_id, role, valid_until)
+        VALUES (
+          v_participant.user_id,
+          'desk',
+          NOW() + (v_desk_days || ' days')::INTERVAL
+        )
+        ON CONFLICT (user_id) DO UPDATE
+        SET 
+          role = CASE
+            -- If user has admin, keep admin role, just extend valid_until
+            WHEN user_roles.role = 'admin' THEN 'admin'
+            ELSE 'desk'
+          END,
+          valid_until = CASE
+            WHEN user_roles.valid_until IS NULL OR user_roles.valid_until < NOW() THEN
+              NOW() + (v_desk_days || ' days')::INTERVAL
+            ELSE
+              user_roles.valid_until + (v_desk_days || ' days')::INTERVAL
+          END;
 
       WHEN 'xp_pool' THEN
         -- Award XP from pool (distributed proportionally)
