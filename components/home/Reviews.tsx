@@ -39,6 +39,7 @@ export function Reviews() {
     async function loadReviews() {
       try {
         // Carica recensioni pubbliche verificate - VISIBILI A TUTTI
+        // Nota: 'public' è una parola riservata in PostgreSQL, usiamo le virgolette
         const { data, error } = await supabase
           .from('reviews')
           .select('*')
@@ -48,13 +49,24 @@ export function Reviews() {
           .limit(10);
 
         if (error) {
-          console.error('Error loading reviews:', error);
-          setReviews([]);
+          // Se la tabella non esiste o c'è un errore 404, semplicemente non mostrare le reviews
+          if (error.code === 'PGRST116' || error.message?.includes('404') || error.message?.includes('relation') || error.message?.includes('does not exist')) {
+            console.log('Reviews table not available:', error.message);
+            setReviews([]);
+          } else {
+            console.error('Error loading reviews:', error);
+            setReviews([]);
+          }
         } else {
           setReviews(data || []);
         }
-      } catch (error) {
-        console.error('Error loading reviews:', error);
+      } catch (error: any) {
+        // Gestisci errori di rete o altri errori
+        if (error?.message?.includes('404') || error?.message?.includes('relation') || error?.message?.includes('does not exist')) {
+          console.log('Reviews table not available:', error.message);
+        } else {
+          console.error('Error loading reviews:', error);
+        }
         setReviews([]);
       } finally {
         setIsLoading(false);
@@ -77,6 +89,11 @@ export function Reviews() {
 
   // Non mostrare se non ci sono recensioni
   if (isLoading || reviews.length === 0) {
+    return null;
+  }
+
+  // Safety check: assicurati che currentReview esista
+  if (!reviews[currentIndex]) {
     return null;
   }
 
@@ -168,7 +185,7 @@ export function Reviews() {
 
               {/* Comment */}
               <blockquote className="text-lg md:text-xl text-text-primary mb-8 leading-relaxed italic">
-                "{currentReview.comment}"
+                {currentReview.comment ? `"${currentReview.comment}"` : ''}
               </blockquote>
 
               {/* User Info */}
