@@ -15,7 +15,7 @@ import ForexIndicator from './ForexIndicator';
 import ProAnalysisTabs from './ProAnalysisTabs';
 import { useUserRole } from '@/lib/hooks/useUserRole';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
-import { Breadcrumb } from '@/components/ui/Breadcrumb';
+// Breadcrumb rimosso - già presente in DashboardTabs per evitare duplicati
 import { cn } from '@/lib/utils/cn';
 
 /**
@@ -61,8 +61,7 @@ export default function AnalysisDashboard() {
       <DashboardTabs />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-7xl">
-        {/* Breadcrumb */}
-        <Breadcrumb />
+        {/* Breadcrumb è già in DashboardTabs - non duplicare */}
         
         {/* Header */}
         <div className="mb-8">

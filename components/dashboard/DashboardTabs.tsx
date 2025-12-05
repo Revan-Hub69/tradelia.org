@@ -8,7 +8,6 @@ import { buildLocalePath } from '@/lib/i18n/paths';
 import { cn } from '@/lib/utils/cn';
 import { prefetchOnHover } from '@/lib/utils/prefetch';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
-import { CurrencySwitch } from '@/components/ui/CurrencySwitch';
 
 type TabId = 'overview' | 'education' | 'utilities' | 'analysis' | 'settings';
 
@@ -100,10 +99,9 @@ export function DashboardTabs() {
   return (
     <div className="sticky top-0 z-40 bg-bg-base border-b border-border-subtle mb-6">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb e Currency Switch */}
-        <div className="py-3 border-b border-border-subtle flex items-center justify-between gap-4">
+        {/* Breadcrumb - Currency Switch è già in DashboardHeader */}
+        <div className="py-3 border-b border-border-subtle">
           <Breadcrumb />
-          <CurrencySwitch size="sm" />
         </div>
         
         {/* Tabs */}

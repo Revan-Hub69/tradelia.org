@@ -12,7 +12,7 @@ import { QuickActions } from './QuickActions';
 import { RecentActivity } from './RecentActivity';
 import { UserBenefits } from './UserBenefits';
 import WidgetsSection from './WidgetsSection';
-import { Breadcrumb } from '@/components/ui/Breadcrumb';
+// Breadcrumb rimosso - già presente in DashboardTabs per evitare duplicati
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { SkipLink } from '@/components/ui/SkipLink';
@@ -228,12 +228,7 @@ export function DashboardShell() {
           </ErrorBoundary>
         </div>
         <div id="modules-view" className="modules-view active" role="region" aria-label="Contenuti dashboard">
-          {/* Breadcrumb per navigazione */}
-          <div className="mb-6 pb-4 border-b border-border-subtle">
-            <ErrorBoundary>
-              <Breadcrumb />
-            </ErrorBoundary>
-          </div>
+          {/* Breadcrumb è già in DashboardTabs - non duplicare */}
           
           <ErrorBoundary>
             <DashboardHero />
