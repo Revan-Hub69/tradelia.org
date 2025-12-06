@@ -9,6 +9,10 @@ const PRO_ONLY_MODULES = ['voting', 'requests'];
 // NOTA: widgets e watchlist rimossi - richiedono API real-time non disponibili
 
 // Moduli di default da mostrare quando il database non ha dati
+// Best Practice UX 2024-2025:
+// - Primary: Max 5-7 moduli (attività principali/frequenti)
+// - Secondary: Strumenti, configurazione, amministrazione
+// - Organizzazione per frequenza d'uso, non importanza teorica
 const DEFAULT_MODULES = {
   primary: [
     {
@@ -41,7 +45,7 @@ const DEFAULT_MODULES = {
       icon: 'calculator',
       priority: 'primary' as const,
       is_active: true,
-      order_index: 4,
+      order_index: 3,
       badge_count: 0,
     },
     {
@@ -52,7 +56,7 @@ const DEFAULT_MODULES = {
       icon: 'send',
       priority: 'primary' as const,
       is_active: true,
-      order_index: 5,
+      order_index: 4,
       badge_count: 0,
     },
     {
@@ -63,39 +67,17 @@ const DEFAULT_MODULES = {
       icon: 'vote',
       priority: 'primary' as const,
       is_active: true,
-      order_index: 6,
+      order_index: 5,
       badge_count: 0,
     },
-    {
-      id: 'settings',
-      title: 'Impostazioni',
-      description: 'Gestisci profilo, notifiche e preferenze',
-      href: '/dashboard/settings',
-      icon: 'settings',
-      priority: 'primary' as const,
-      is_active: true,
-      order_index: 7,
-      badge_count: 0,
-    },
+  ],
+  secondary: [
     {
       id: 'favorites',
       title: 'Preferiti',
       description: 'I tuoi contenuti salvati per accesso rapido',
       href: '/dashboard/favorites',
       icon: 'star',
-      priority: 'primary' as const,
-      is_active: true,
-      order_index: 8,
-      badge_count: 0,
-    },
-  ],
-  secondary: [
-    {
-      id: 'utilities',
-      title: 'Utilities',
-      description: 'Calcolatori finanziari, PAC simulator e expense tracker',
-      href: '/dashboard/utilities',
-      icon: 'calculator',
       priority: 'secondary' as const,
       is_active: true,
       order_index: 1,
@@ -113,11 +95,11 @@ const DEFAULT_MODULES = {
       badge_count: 0,
     },
     {
-      id: 'billing',
-      title: 'Billing',
-      description: 'Gestisci crediti, pagamenti e fatture',
-      href: '/dashboard/billing',
-      icon: 'credit-card',
+      id: 'settings',
+      title: 'Impostazioni',
+      description: 'Gestisci profilo, notifiche, preferenze e billing',
+      href: '/dashboard/settings',
+      icon: 'settings',
       priority: 'secondary' as const,
       is_active: true,
       order_index: 3,
