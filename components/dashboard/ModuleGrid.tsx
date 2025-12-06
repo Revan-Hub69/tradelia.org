@@ -7,6 +7,9 @@ import { useApi } from '@/lib/hooks/useApi';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { toast } from '@/components/ui/Toast';
 import { ContextualHelp } from './ContextualHelp';
+import { FavoriteButton } from '@/components/ui/FavoriteButton';
+import { useAuthState } from '@/lib/hooks/useAuthState';
+import { cn } from '@/lib/utils/cn';
 
 interface Module {
   id: string;
@@ -133,44 +136,61 @@ export const ModuleGrid = memo(function ModuleGrid({ priority }: ModuleGridProps
 });
 
 function ModuleCard({ module }: { module: Module }) {
+  const { isAuthenticated } = useAuthState();
+  
   return (
-    <Link 
-      href={module.href} 
-      className={styles.moduleCard}
-      role="listitem"
-      aria-label={`Accedi a ${module.title}: ${module.description || ''}`}
-    >
-      <div className={styles.moduleCardHeader}>
-        <div className={styles.moduleIcon} aria-hidden="true">
-          <ModuleIcon name={module.icon || 'dashboard'} />
-        </div>
-        <div className={styles.moduleInfo}>
-          <h3 className={styles.moduleTitle}>{module.title}</h3>
-          {module.description && (
-            <p className={styles.moduleDescription}>{module.description}</p>
+    <div className={cn(styles.moduleCard, 'group relative')}>
+      <Link 
+        href={module.href} 
+        className="block"
+        role="listitem"
+        aria-label={`Accedi a ${module.title}: ${module.description || ''}`}
+      >
+        <div className={styles.moduleCardHeader}>
+          <div className={styles.moduleIcon} aria-hidden="true">
+            <ModuleIcon name={module.icon || 'dashboard'} />
+          </div>
+          <div className={styles.moduleInfo}>
+            <h3 className={styles.moduleTitle}>{module.title}</h3>
+            {module.description && (
+              <p className={styles.moduleDescription}>{module.description}</p>
+            )}
+          </div>
+          {module.badge_count > 0 && (
+            <span className={styles.moduleBadge} aria-label={`${module.badge_count} nuove notifiche`}>
+              {module.badge_count}
+            </span>
           )}
+          <div className={styles.moduleArrow} aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              width="16"
+              height="16"
+            >
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </div>
         </div>
-        {module.badge_count > 0 && (
-          <span className={styles.moduleBadge} aria-label={`${module.badge_count} nuove notifiche`}>
-            {module.badge_count}
-          </span>
-        )}
-        <div className={styles.moduleArrow} aria-hidden="true">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            width="16"
-            height="16"
-          >
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
+      </Link>
+      {/* Pulsante preferiti - visibile solo per utenti autenticati */}
+      {isAuthenticated && (
+        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+          <FavoriteButton
+            id={module.id}
+            type="module"
+            title={module.title}
+            description={module.description || ''}
+            href={module.href}
+            className="shadow-lg"
+          />
         </div>
-      </div>
-    </Link>
+      )}
+    </div>
   );
 }
 

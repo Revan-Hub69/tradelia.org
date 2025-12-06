@@ -469,7 +469,7 @@
   flex-direction: column;
   gap: 1rem;
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* Cambiato da hidden a visible per permettere al pulsante preferiti di essere visibile */
   transition: all 0.3s ease;
 }
 
