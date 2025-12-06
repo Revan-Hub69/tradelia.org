@@ -4,6 +4,9 @@ import { getModules } from '@/lib/supabase/server-services';
 import { getLocaleFromRequest } from '@/lib/i18n/api-messages';
 import { translateModules } from '@/lib/i18n/modules-translations';
 
+// Moduli Pro-only (richiedono account Pro)
+const PRO_ONLY_MODULES = ['voting', 'requests', 'widgets', 'watchlist'];
+
 // Moduli di default da mostrare quando il database non ha dati
 const DEFAULT_MODULES = {
   primary: [
@@ -129,19 +132,54 @@ export async function GET(request: NextRequest) {
     
     const supabase = await createClient();
     
-    // Verifica se l'utente è admin
+    // Verifica ruolo utente (guest/user/pro/desk/admin)
     const {
       data: { user },
     } = await supabase.auth.getUser();
     
+    let userRole: 'guest' | 'trial' | 'pro' | 'desk' | 'admin' = 'guest';
     let isAdmin = false;
+    let isPro = false;
+    
     if (user) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single();
-      isAdmin = profile?.role === 'admin';
+      // Verifica ruolo da user_roles
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('role, valid_until')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      
+      if (roleData) {
+        const role = roleData.role as 'trial' | 'pro' | 'desk' | 'admin';
+        const validUntil = roleData.valid_until ? new Date(roleData.valid_until) : null;
+        
+        // Verifica se il ruolo è ancora valido
+        if (!validUntil || validUntil > new Date()) {
+          userRole = role;
+          isPro = role === 'pro' || role === 'desk' || role === 'admin';
+          isAdmin = role === 'admin';
+        } else {
+          // Ruolo scaduto, default a trial
+          userRole = 'trial';
+        }
+      } else {
+        // Nessun ruolo trovato, default a trial (utente registrato)
+        userRole = 'trial';
+      }
+      
+      // Verifica anche da profiles per admin (fallback)
+      if (!isAdmin) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+        if (profile?.role === 'admin') {
+          isAdmin = true;
+          userRole = 'admin';
+          isPro = true;
+        }
+      }
     }
 
     const { searchParams } = new URL(request.url);
@@ -152,8 +190,17 @@ export async function GET(request: NextRequest) {
 
       // Se ci sono dati dal database, usali
       if (!error && data && data.length > 0) {
+        // Filtra moduli in base al ruolo utente
+        let modules = data.filter(module => {
+          // Moduli Pro-only: mostra solo se isPro
+          if (PRO_ONLY_MODULES.includes(module.id)) {
+            return isPro;
+          }
+          // Altri moduli: visibili a tutti
+          return true;
+        });
+        
         // Aggiungi admin solo se l'utente è admin
-        let modules = data;
         if (isAdmin && !modules.find(m => m.id === 'admin')) {
           const adminTranslation = translateModules([{
             id: 'admin',
@@ -190,9 +237,24 @@ export async function GET(request: NextRequest) {
         console.warn('Error getting modules (table might not exist), using defaults:', error.message);
       }
 
-      // Prepara moduli di default e traduci
-      let primaryModules = translateModules([...DEFAULT_MODULES.primary], locale);
-      let secondaryModules = translateModules([...DEFAULT_MODULES.secondary], locale);
+      // Prepara moduli di default e filtra per ruolo
+      let primaryModules = DEFAULT_MODULES.primary.filter(module => {
+        if (PRO_ONLY_MODULES.includes(module.id)) {
+          return isPro;
+        }
+        return true;
+      });
+      
+      let secondaryModules = DEFAULT_MODULES.secondary.filter(module => {
+        if (PRO_ONLY_MODULES.includes(module.id)) {
+          return isPro;
+        }
+        return true;
+      });
+      
+      // Traduci moduli
+      primaryModules = translateModules(primaryModules, locale);
+      secondaryModules = translateModules(secondaryModules, locale);
       
       // Aggiungi admin solo se l'utente è admin
       if (isAdmin) {
@@ -236,9 +298,24 @@ export async function GET(request: NextRequest) {
       // Se c'è un errore del database (tabella mancante), usa moduli di default
       console.warn('Database error in modules GET (table might not exist), using defaults:', dbError);
       
-      // Prepara moduli di default e traduci
-      let primaryModules = translateModules([...DEFAULT_MODULES.primary], locale);
-      let secondaryModules = translateModules([...DEFAULT_MODULES.secondary], locale);
+      // Prepara moduli di default e filtra per ruolo
+      let primaryModules = DEFAULT_MODULES.primary.filter(module => {
+        if (PRO_ONLY_MODULES.includes(module.id)) {
+          return isPro;
+        }
+        return true;
+      });
+      
+      let secondaryModules = DEFAULT_MODULES.secondary.filter(module => {
+        if (PRO_ONLY_MODULES.includes(module.id)) {
+          return isPro;
+        }
+        return true;
+      });
+      
+      // Traduci moduli
+      primaryModules = translateModules(primaryModules, locale);
+      secondaryModules = translateModules(secondaryModules, locale);
       
       // Aggiungi admin solo se l'utente è admin
       if (isAdmin) {
@@ -279,33 +356,68 @@ export async function GET(request: NextRequest) {
     }
   } catch (error) {
     console.error('Error in modules API:', error);
-    // In caso di errore, restituisci moduli di default
-    // Detect locale anche in caso di errore
+    // In caso di errore, restituisci moduli di default con filtri per ruolo
     const locale = getLocaleFromRequest(request);
     const priority = new URL(request.url).searchParams.get('priority') as 'primary' | 'secondary' | null;
     
-    // Verifica se l'utente è admin anche in caso di errore
+    // Verifica ruolo utente anche in caso di errore
     let isAdmin = false;
+    let isPro = false;
     try {
       const supabase = await createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .single();
-        isAdmin = profile?.role === 'admin';
+        const { data: roleData } = await supabase
+          .from('user_roles')
+          .select('role, valid_until')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        
+        if (roleData) {
+          const role = roleData.role as 'trial' | 'pro' | 'desk' | 'admin';
+          const validUntil = roleData.valid_until ? new Date(roleData.valid_until) : null;
+          if (!validUntil || validUntil > new Date()) {
+            isPro = role === 'pro' || role === 'desk' || role === 'admin';
+            isAdmin = role === 'admin';
+          }
+        }
+        
+        // Fallback per admin da profiles
+        if (!isAdmin) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single();
+          if (profile?.role === 'admin') {
+            isAdmin = true;
+            isPro = true;
+          }
+        }
       }
     } catch {
-      // Ignora errori di verifica admin
+      // Ignora errori di verifica ruolo
     }
     
-    // Translate default modules
-    let primaryModules = translateModules([...DEFAULT_MODULES.primary], locale);
-    let secondaryModules = translateModules([...DEFAULT_MODULES.secondary], locale);
+    // Filtra e traduce moduli di default
+    let primaryModules = DEFAULT_MODULES.primary.filter(module => {
+      if (PRO_ONLY_MODULES.includes(module.id)) {
+        return isPro;
+      }
+      return true;
+    });
+    
+    let secondaryModules = DEFAULT_MODULES.secondary.filter(module => {
+      if (PRO_ONLY_MODULES.includes(module.id)) {
+        return isPro;
+      }
+      return true;
+    });
+    
+    primaryModules = translateModules(primaryModules, locale);
+    secondaryModules = translateModules(secondaryModules, locale);
     
     if (isAdmin) {
       const adminTranslation = translateModules([{
