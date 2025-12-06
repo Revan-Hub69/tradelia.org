@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useTranslations } from '@/lib/i18n/use-translations';
-import { buildLocalePath } from '@/lib/i18n/paths';
+// buildLocalePath removed - system always uses Italian
 import { TooltipGlossary } from '@/components/glossary/TooltipGlossary';
 import { useState, useEffect } from 'react';
 import { getGlossaryTerm } from '@/lib/glossary/terms';
@@ -70,7 +70,7 @@ export function DashboardHero() {
         </p>
         <div className={styles.dashboardHeroActions}>
           <Button asChild size="lg">
-            <Link href={buildLocalePath(locale, '/dashboard/education')}>
+            <Link href="/dashboard/education">
               <span>{t('dashboard.hero.ctaPrimary')}</span>
               <ArrowRight className={styles.dashboardHeroActionIcon} aria-hidden="true" />
             </Link>

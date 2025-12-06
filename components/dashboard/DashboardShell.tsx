@@ -20,6 +20,10 @@ import { useKeyboardShortcuts } from '@/lib/hooks/useKeyboardShortcuts';
 import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
 import { WelcomeTour } from '@/components/onboarding/WelcomeTour';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { useDashboardPreferences } from '@/lib/hooks/useDashboardPreferences';
+import { Eye, EyeOff, LayoutGrid, LayoutList } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils/cn';
 import styles from './dashboard.module.css';
 
 // Lazy load non-critical components
@@ -37,6 +41,7 @@ const HelpAssistant = lazy(() =>
  */
 export function DashboardShell() {
   const { t } = useTranslations();
+  const { preferences, isLoaded, toggleHero, toggleCompactView } = useDashboardPreferences();
   const [liveMessage, setLiveMessage] = useState('');
   const [unlockedAchievement, setUnlockedAchievement] = useState<any>(null);
   const [hasError, setHasError] = useState(false);
@@ -229,10 +234,59 @@ export function DashboardShell() {
             </ErrorBoundary>
           </div>
           
+          {/* Personalization Controls - Best Practice UX: User control improves engagement */}
+          {isLoaded && (
+            <div className="flex items-center justify-end gap-2 mb-4 px-4 sm:px-6 lg:px-8">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleHero}
+                className="text-text-secondary hover:text-text-primary"
+                aria-label={preferences.hideHero ? 'Mostra Hero' : 'Nascondi Hero'}
+                title={preferences.hideHero ? 'Mostra Hero' : 'Nascondi Hero'}
+              >
+                {preferences.hideHero ? (
+                  <>
+                    <Eye className="w-4 h-4 mr-2" />
+                    <span className="hidden sm:inline">Mostra Hero</span>
+                  </>
+                ) : (
+                  <>
+                    <EyeOff className="w-4 h-4 mr-2" />
+                    <span className="hidden sm:inline">Nascondi Hero</span>
+                  </>
+                )}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleCompactView}
+                className="text-text-secondary hover:text-text-primary"
+                aria-label={preferences.compactView ? 'Vista Espansa' : 'Vista Compatta'}
+                title={preferences.compactView ? 'Vista Espansa' : 'Vista Compatta'}
+              >
+                {preferences.compactView ? (
+                  <>
+                    <LayoutGrid className="w-4 h-4 mr-2" />
+                    <span className="hidden sm:inline">Vista Espansa</span>
+                  </>
+                ) : (
+                  <>
+                    <LayoutList className="w-4 h-4 mr-2" />
+                    <span className="hidden sm:inline">Vista Compatta</span>
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
+          
           {/* Hero Section - Best Practice UX: Prima impressione, welcome, CTA principale */}
-          <ErrorBoundary>
-            <DashboardHero />
-          </ErrorBoundary>
+          {/* Personalizzabile: può essere nascosta dall'utente per focus sui contenuti */}
+          {isLoaded && !preferences.hideHero && (
+            <ErrorBoundary>
+              <DashboardHero />
+            </ErrorBoundary>
+          )}
           
           {/* Moduli unificati - Best Practice: organizzazione gerarchica - PRIMA PRIORITÀ */}
           {/* Mostra tutte le funzionalità principali in modo chiaro e accessibile */}
