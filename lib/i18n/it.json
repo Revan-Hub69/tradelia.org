@@ -122,6 +122,10 @@
       "title": "Analisi",
       "description": "Report, richieste analisi e strumenti di analisi finanziaria"
     },
+    "utilities": {
+      "title": "Utilities",
+      "subtitle": "Strumenti finanziari professionali per analisi e trading"
+    },
     "search": {
       "open": "Apri ricerca",
       "placeholder": "Cerca report, corsi, moduli...",

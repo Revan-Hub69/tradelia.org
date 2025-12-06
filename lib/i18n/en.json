@@ -122,6 +122,10 @@
       "title": "Analysis",
       "description": "Reports, analysis requests and financial analysis tools"
     },
+    "utilities": {
+      "title": "Utilities",
+      "subtitle": "Professional financial tools for analysis and trading"
+    },
     "search": {
       "open": "Open search",
       "placeholder": "Search reports, courses, modules...",
