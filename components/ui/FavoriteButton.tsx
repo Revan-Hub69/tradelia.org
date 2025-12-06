@@ -56,8 +56,8 @@ export function FavoriteButton({ id, type, title, description, href, className }
         }
       } else {
         const success = await addFavorite({ 
-          id, 
-          type, 
+          item_id: id, 
+          item_type: type, 
           title, 
           description, 
           href,
