@@ -188,14 +188,7 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/favicon.svg" />
         
         {/* Preload critical resources - Best Practice 2024-2025 */}
-        {/* Preload font for LCP optimization */}
-        <link
-          rel="preload"
-          href="/_next/static/media/inter-latin-400-normal.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
+        {/* Font preload handled automatically by Next.js when preload: true */}
         {/* Preload logo for LCP optimization (used in header) */}
         <link
           rel="preload"
