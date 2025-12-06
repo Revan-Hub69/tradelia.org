@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useIsPro } from '@/lib/hooks/useUserRole';
+import { useTranslations } from '@/lib/i18n/use-translations';
+import { buildLocalePath } from '@/lib/i18n/paths';
 import ProWidget from '@/components/widgets/ProWidget';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
@@ -20,6 +22,7 @@ interface Widget {
  * Mostra widget installati nella dashboard principale
  */
 export default function WidgetsSection() {
+  const { t, locale } = useTranslations();
   const isPro = useIsPro();
   const [widgets, setWidgets] = useState<Widget[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -52,15 +55,18 @@ export default function WidgetsSection() {
   }
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-4" aria-label={t('dashboard.widgets.title') || 'Widget personalizzati'}>
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">My Widgets</h2>
+        <h2 className="text-lg font-semibold text-text-primary">
+          {t('dashboard.widgets.title') || 'I Miei Widget'}
+        </h2>
         <Link
-          href="/dashboard/widgets"
-          className="text-sm text-primary hover:underline flex items-center gap-1"
+          href={buildLocalePath(locale, '/dashboard/widgets')}
+          className="text-sm text-accent hover:text-accent-hover hover:underline flex items-center gap-1 transition-colors"
+          aria-label={t('dashboard.widgets.manage') || 'Gestisci widget'}
         >
-          <Plus className="w-4 h-4" />
-          Manage
+          <Plus className="w-4 h-4" aria-hidden="true" />
+          {t('dashboard.widgets.manage') || 'Gestisci'}
         </Link>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

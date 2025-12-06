@@ -8,9 +8,6 @@ import { DashboardHero } from './DashboardHero';
 import { OverviewStats } from './OverviewStats';
 import { ModuleGrid } from './ModuleGrid';
 import { AccountBanner } from './AccountBanner';
-import { QuickActions } from './QuickActions';
-import { RecentActivity } from './RecentActivity';
-import { UserBenefits } from './UserBenefits';
 import WidgetsSection from './WidgetsSection';
 // Breadcrumb rimosso - già presente in DashboardTabs per evitare duplicati
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';

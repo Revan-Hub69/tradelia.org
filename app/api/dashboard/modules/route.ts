@@ -8,10 +8,10 @@ import { translateModules } from '@/lib/i18n/modules-translations';
 const DEFAULT_MODULES = {
   primary: [
     {
-      id: 'reports',
-      title: 'Report',
+      id: 'analysis',
+      title: 'Analisi',
       description: 'Report ufficiali verificabili e analisi conformi MiFID II',
-      href: '/dashboard/reports',
+      href: '/dashboard/analysis',
       icon: 'file-text',
       priority: 'primary' as const,
       is_active: true,
