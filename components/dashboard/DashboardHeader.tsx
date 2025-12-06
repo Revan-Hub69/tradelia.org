@@ -9,7 +9,6 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import dynamic from 'next/dynamic';
 import { useAuthState } from '@/lib/hooks/useAuthState';
 import { Star } from 'lucide-react';
-import Link from 'next/link';
 
 // Lazy load non-critical header components
 const GlobalSearch = dynamic(() => import('./GlobalSearch').then(mod => ({ default: mod.GlobalSearch })), {
