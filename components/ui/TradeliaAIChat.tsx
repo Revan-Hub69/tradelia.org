@@ -66,7 +66,7 @@ const QuickActionButton = memo(({
 });
 QuickActionButton.displayName = 'QuickActionButton';
 
-// Memoized Message Component - Best Practice: Performance optimization
+// Memoized Message Component - Best Practice: Performance optimization + Better Design 2025
 const MessageBubble = memo(({ msg, locale }: { msg: Message; locale: 'it' | 'en' }) => {
   const isUser = msg.role === 'user';
   // Always format assistant messages - Best Practice: Consistent formatting
@@ -76,19 +76,27 @@ const MessageBubble = memo(({ msg, locale }: { msg: Message; locale: 'it' | 'en'
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
       className={cn(
-        'flex mb-4',
+        'flex mb-6 last:mb-0',
         isUser ? 'justify-end' : 'justify-start'
       )}
     >
       <div
         className={cn(
-          'max-w-[85%] rounded-2xl px-4 py-3 shadow-sm',
+          'max-w-[85%] sm:max-w-[80%] rounded-2xl px-4 py-3.5 shadow-sm',
+          'transition-all duration-200',
           isUser
-            ? 'bg-gradient-to-br from-accent to-accent-hover text-white text-sm leading-relaxed whitespace-pre-wrap break-words'
-            : 'bg-bg-soft text-text-primary border border-border-subtle'
+            ? 'bg-gradient-to-br from-accent to-accent-hover text-white text-sm leading-relaxed whitespace-pre-wrap break-words shadow-md'
+            : 'bg-bg-soft text-text-primary border border-border-subtle hover:border-border-default',
+          // Better visual separation
+          !isUser && 'bg-gradient-to-br from-bg-soft to-bg-surface'
         )}
+        role={isUser ? 'log' : 'log'}
+        aria-label={isUser 
+          ? (locale === 'it' ? 'Messaggio utente' : 'User message')
+          : (locale === 'it' ? 'Messaggio assistente' : 'Assistant message')
+        }
       >
         {isUser ? (
           msg.content
@@ -130,6 +138,7 @@ export function TradeliaAIChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [currentLocale, setCurrentLocale] = useState<'it' | 'en'>(locale);
+  const [streamingMessage, setStreamingMessage] = useState<string>(''); // For typing effect
   
   // React to locale changes - Best Practice: Update when locale changes
   useEffect(() => {
@@ -150,6 +159,8 @@ export function TradeliaAIChat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const shouldAutoScrollRef = useRef(true); // Track if we should auto-scroll
 
   // Body scroll lock - Best Practice: Prevent background scroll
   useBodyScrollLock(isOpen);
@@ -269,19 +280,69 @@ export function TradeliaAIChat() {
     }
   }, [isOpen]);
 
-  // Scroll to bottom quando arrivano nuovi messaggi
+  // Intelligent scroll - Only scroll if user is already at bottom (Best Practice: Don't interrupt reading)
+  const checkIfAtBottom = useCallback(() => {
+    if (!messagesContainerRef.current) return false;
+    const container = messagesContainerRef.current;
+    const threshold = 100; // pixels from bottom
+    return container.scrollHeight - container.scrollTop - container.clientHeight < threshold;
+  }, []);
+
+  // Scroll to bottom intelligently - only if user is already at bottom
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (!messagesContainerRef.current || !messagesEndRef.current) return;
+    
+    // Check if user is at bottom before new message
+    const wasAtBottom = checkIfAtBottom();
+    
+    // If user was at bottom OR this is the first message, auto-scroll
+    if (shouldAutoScrollRef.current || wasAtBottom || messages.length <= 1) {
+      requestAnimationFrame(() => {
+        if (messagesEndRef.current) {
+          messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+          shouldAutoScrollRef.current = true; // Reset flag after scroll
+        }
+      });
     }
-  }, [messages, isLoading]);
+  }, [messages, isLoading, checkIfAtBottom]);
+
+  // Track scroll position to detect if user manually scrolled up
+  useEffect(() => {
+    if (!messagesContainerRef.current || !isOpen) return;
+
+    const container = messagesContainerRef.current;
+    const handleScroll = () => {
+      const isAtBottom = checkIfAtBottom();
+      shouldAutoScrollRef.current = isAtBottom;
+    };
+
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [isOpen, checkIfAtBottom]);
 
   // Autofocus su input quando si apre - Best Practice: Better UX
   useEffect(() => {
     if (isOpen && inputRef.current) {
-      setTimeout(() => inputRef.current?.focus(), 100);
+      // Use requestAnimationFrame for better timing
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 150);
+      });
     }
   }, [isOpen]);
+
+  // Refocus input after sending message - Best Practice: Better UX flow
+  useEffect(() => {
+    if (!isLoading && inputRef.current && document.activeElement !== inputRef.current) {
+      // Only refocus if chat is open and not loading
+      if (isOpen) {
+        requestAnimationFrame(() => {
+          inputRef.current?.focus();
+        });
+      }
+    }
+  }, [isLoading, isOpen]);
 
   // Keyboard navigation - Best Practice: Accessibility
   useEffect(() => {
@@ -368,6 +429,8 @@ export function TradeliaAIChat() {
     setMessages(prev => [...prev, userMessage]);
     setMessage('');
     setIsLoading(true);
+    setStreamingMessage(''); // Clear any previous streaming
+    shouldAutoScrollRef.current = true; // Enable auto-scroll for user message
 
     let retryCount = 0;
     const maxRetries = 2;
@@ -404,15 +467,72 @@ export function TradeliaAIChat() {
         }
 
         const data = await response.json();
+        const responseText = data.response || data.message || '';
         
-        const assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: data.response || data.message || '',
-          timestamp: new Date(),
-        };
-
-        setMessages(prev => [...prev, assistantMessage]);
+        // Typing effect for AI responses - Best Practice: Better UX, feels more natural
+        if (responseText && responseText.length > 0) {
+          setStreamingMessage('');
+          shouldAutoScrollRef.current = true; // Enable auto-scroll for new message
+          
+          // Simulate typing effect with adaptive speed (faster for long messages)
+          let currentIndex = 0;
+          const baseTypingSpeed = 20; // milliseconds per character
+          const adaptiveSpeed = responseText.length > 500 ? 10 : baseTypingSpeed; // Faster for long messages
+          
+          const typeMessage = () => {
+            if (currentIndex < responseText.length) {
+              const nextChunk = responseText.slice(0, currentIndex + 1);
+              setStreamingMessage(nextChunk);
+              
+              // Auto-scroll during typing if user is at bottom
+              if (shouldAutoScrollRef.current && messagesEndRef.current) {
+                requestAnimationFrame(() => {
+                  messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+                });
+              }
+              
+              currentIndex++;
+              setTimeout(typeMessage, adaptiveSpeed);
+            } else {
+              // Message complete, add to messages
+              const assistantMessage: Message = {
+                id: (Date.now() + 1).toString(),
+                role: 'assistant',
+                content: responseText,
+                timestamp: new Date(),
+              };
+              setMessages(prev => [...prev, assistantMessage]);
+              setStreamingMessage('');
+              // Final scroll to ensure message is visible
+              requestAnimationFrame(() => {
+                if (messagesEndRef.current) {
+                  messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+                }
+              });
+            }
+          };
+          
+          // Start typing effect after a small delay for better UX
+          setTimeout(() => typeMessage(), 100);
+        } else {
+          // No typing effect if empty response
+          const assistantMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: responseText || (currentLocale === 'it' 
+              ? 'Mi dispiace, non ho ricevuto una risposta valida.'
+              : 'Sorry, I didn\'t receive a valid response.'),
+            timestamp: new Date(),
+          };
+          setMessages(prev => [...prev, assistantMessage]);
+          shouldAutoScrollRef.current = true;
+          requestAnimationFrame(() => {
+            if (messagesEndRef.current) {
+              messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+          });
+        }
+        
         setError(null);
         break; // Success, exit retry loop
       } catch (error) {
@@ -582,7 +702,8 @@ export function TradeliaAIChat() {
 
             {/* Messages - Enhanced scrolling and spacing */}
             <div 
-              className="flex-1 overflow-y-auto p-5 space-y-5 scrollbar-thin scrollbar-thumb-border-subtle scrollbar-track-transparent"
+              ref={messagesContainerRef}
+              className="flex-1 overflow-y-auto p-5 space-y-6 scrollbar-thin scrollbar-thumb-border-subtle scrollbar-track-transparent"
               role="log"
               aria-live="polite"
               aria-atomic="false"
@@ -644,11 +765,25 @@ export function TradeliaAIChat() {
                   )}
                 </div>
               ) : (
-                messages.map((msg) => (
-                  <MessageBubble key={`${msg.id}-${currentLocale}`} msg={msg} locale={currentLocale} />
-                ))
+                <>
+                  {messages.map((msg) => (
+                    <MessageBubble key={`${msg.id}-${currentLocale}`} msg={msg} locale={currentLocale} />
+                  ))}
+                  {/* Streaming message with typing effect */}
+                  {streamingMessage && (
+                    <div className="flex justify-start mb-6">
+                      <div className="max-w-[85%] sm:max-w-[80%] rounded-2xl px-4 py-3.5 shadow-sm bg-bg-soft text-text-primary border border-border-subtle relative">
+                        <div className="space-y-4">
+                          {renderFormattedMessage(formatAIMessage(streamingMessage).parts, currentLocale)}
+                        </div>
+                        {/* Typing indicator */}
+                        <span className="inline-block w-2 h-2 ml-1 bg-accent rounded-full animate-pulse" aria-hidden="true" />
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
-              {isLoading && (
+              {isLoading && !streamingMessage && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
