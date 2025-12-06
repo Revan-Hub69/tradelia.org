@@ -1,13 +1,11 @@
 import { Suspense } from 'react';
 import { CheckoutSubmitted } from '@/components/checkout/CheckoutSubmitted';
 import { Loading } from '@/components/ui';
-import { getDictionary } from '@/lib/i18n/dictionaries';
 
 export async function generateMetadata() {
-  const dict = await getDictionary('en');
   return {
-    title: dict.checkout.submitted?.title || 'Request Sent · Tradelia',
-    description: dict.checkout.submitted?.description || 'Your request has been sent successfully.',
+    title: 'Request Sent · Tradelia',
+    description: 'Your request has been sent successfully.',
   };
 }
 

@@ -1,14 +1,11 @@
 import { Metadata } from 'next';
-import { getDictionary } from '@/lib/i18n/dictionaries';
 import AnalysisDashboard from '@/components/dashboard/analysis/AnalysisDashboard';
 import { StructuredData } from '@/components/seo/StructuredData';
 import { generateWebSiteSchema } from '@/lib/seo/structured-data';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const dict = await getDictionary('en');
-  
-  const title = `${dict.dashboard.analysis.title} | Tradelia`;
-  const description = dict.dashboard.analysis.description || 'Market analysis dashboard with academic indicators, VIX, Fear & Greed Index, and term structure analysis';
+  const title = 'Dashboard Analisi | Tradelia';
+  const description = 'Market analysis dashboard with academic indicators, VIX, Fear & Greed Index, and term structure analysis';
   const url = 'https://tradelia.org/en/dashboard/analysis';
   const image = 'https://tradelia.org/og-analysis.png'; // TODO: Create OG image
   
