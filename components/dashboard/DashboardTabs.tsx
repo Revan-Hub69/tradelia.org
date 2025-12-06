@@ -135,7 +135,7 @@ export function DashboardTabs() {
                   'hover:text-accent hover:border-accent/40',
                   'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-base',
                   isActive
-                    ? 'text-accent border-accent'
+                    ? 'text-blue-400 border-blue-400' // Migliorato contrasto: blue-400 invece di accent (blue-800)
                     : 'text-text-secondary'
                 )}
                 title={tab.description}
@@ -144,7 +144,7 @@ export function DashboardTabs() {
                 <span className="whitespace-nowrap">{tab.label}</span>
                 {isActive && (
                   <span
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-400"
                     aria-hidden="true"
                   />
                 )}

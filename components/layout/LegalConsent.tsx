@@ -181,11 +181,11 @@ export function LegalConsent() {
                     <div className="flex-1 min-w-0">
                       <p className="text-xs md:text-sm text-text-secondary leading-relaxed">
                         {t('legal.readMore')}{' '}
-                        <Link href="/privacy" className="text-accent hover:text-accent-hover underline font-medium" style={{ color: '#3B82F6' }}>
+                        <Link href="/privacy" className="text-blue-400 hover:text-blue-300 underline font-medium">
                           {t('legal.privacy')}
                         </Link>
                         {' '}{t('legal.and')}{' '}
-                        <Link href="/terms" className="text-accent hover:text-accent-hover underline font-medium" style={{ color: '#3B82F6' }}>
+                        <Link href="/terms" className="text-blue-400 hover:text-blue-300 underline font-medium">
                           {t('legal.terms')}
                         </Link>
                         .
