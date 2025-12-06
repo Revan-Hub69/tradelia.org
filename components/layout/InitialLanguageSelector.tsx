@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils/cn';
 const LANGUAGE_SELECTED_KEY = 'tradelia_language_selected';
 
 export function InitialLanguageSelector() {
-  const { locale, setLocale } = useTranslations();
+  const { locale } = useTranslations();
   const router = useRouter();
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
@@ -24,26 +24,31 @@ export function InitialLanguageSelector() {
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted || typeof window === 'undefined') return;
     
-    // Verifica se l'utente ha già selezionato una lingua
-    const languageSelected = localStorage.getItem(LANGUAGE_SELECTED_KEY);
-    const savedLocale = localStorage.getItem('tradelia_locale');
-    
-    // Se non c'è una preferenza salvata, mostra il selettore
-    if (!languageSelected && !savedLocale) {
-      // Mostra dopo un breve delay per permettere al layout di caricare
-      const timer = setTimeout(() => setIsOpen(true), 300);
-      return () => clearTimeout(timer);
-    } else {
-      // Se c'è già una preferenza, non mostrare il selettore
+    try {
+      // Verifica se l'utente ha già selezionato una lingua
+      const languageSelected = localStorage.getItem(LANGUAGE_SELECTED_KEY);
+      const savedLocale = localStorage.getItem('tradelia_locale');
+      
+      // Se non c'è una preferenza salvata, mostra il selettore
+      if (!languageSelected && !savedLocale) {
+        // Mostra dopo un breve delay per permettere al layout di caricare
+        const timer = setTimeout(() => setIsOpen(true), 300);
+        return () => clearTimeout(timer);
+      } else {
+        // Se c'è già una preferenza, non mostrare il selettore
+        setIsOpen(false);
+      }
+    } catch (e) {
+      // localStorage non disponibile, non mostrare il selettore
       setIsOpen(false);
     }
   }, [mounted]);
 
   // Lock body scroll when selector is open
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || typeof window === 'undefined') return;
     
     const originalOverflow = document.body.style.overflow;
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -74,7 +79,7 @@ export function InitialLanguageSelector() {
     }
 
     // TERZO: Naviga al nuovo path
-    const currentPath = pathname || window.location.pathname;
+    const currentPath = pathname || (typeof window !== 'undefined' ? window.location.pathname : '/');
     const pathWithoutLocale = currentPath.replace(/^\/(it|en)/, '') || '/';
     const newPath = buildLocalePath(selectedLocale, pathWithoutLocale);
     
@@ -87,12 +92,12 @@ export function InitialLanguageSelector() {
     }, 100);
   };
 
-  if (!mounted || !isOpen) return null;
-
   const languages = [
     { code: 'it' as const, label: 'Italiano', flag: '🇮🇹', description: 'Scegli italiano' },
     { code: 'en' as const, label: 'English', flag: '🇬🇧', description: 'Choose English' },
   ];
+
+  if (!mounted || !isOpen) return null;
 
   return (
     <AnimatePresence>
@@ -159,9 +164,7 @@ export function InitialLanguageSelector() {
                         'w-full p-4 rounded-xl border-2 transition-all duration-200',
                         'flex items-center justify-center gap-3',
                         'hover:scale-[1.02] hover:shadow-lg',
-                        locale === lang.code
-                          ? 'bg-accent/20 border-accent text-accent font-semibold'
-                          : 'bg-bg-soft border-border-subtle text-text-primary hover:border-accent/40 hover:bg-bg-surface'
+                        'bg-bg-soft border-border-subtle text-text-primary hover:border-accent/40 hover:bg-bg-surface'
                       )}
                       aria-label={lang.description}
                     >

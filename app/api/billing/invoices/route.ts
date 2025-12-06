@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createApiClient } from '@/lib/supabase/api-client';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import type { InvoiceRow } from '@/lib/supabase/types/billing';
 
 export async function GET(request: NextRequest) {
   try {
@@ -41,7 +42,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Mappa i dati per compatibilità con il componente
-    const mappedData = (data || []).map((invoice: any) => ({
+    const mappedData = (data || []).map((invoice: InvoiceRow) => ({
       id: invoice.id,
       user_id: invoice.user_id,
       payment_id: invoice.payment_id,
@@ -55,47 +56,56 @@ export async function GET(request: NextRequest) {
     }));
 
     return NextResponse.json({ data: mappedData });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Unexpected error in billing/invoices GET:', error);
-    return NextResponse.json({ error: error.message || 'Errore interno del server' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Errore interno del server';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = createApiClient(request);
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
+  try {
+    const supabase = createApiClient(request);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
-  if (authError || !user) {
-    return NextResponse.json({ error: 'Non autorizzato' }, { status: 401 });
+    if (authError || !user) {
+      console.error('Auth error in billing/invoices POST:', authError);
+      return NextResponse.json({ error: 'Non autorizzato' }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { payment_id, amount, currency, status, due_date, metadata } = body;
+
+    if (!payment_id || typeof payment_id !== 'string' || typeof amount !== 'number' || !currency || typeof currency !== 'string') {
+      return NextResponse.json({ error: 'Dati non validi' }, { status: 400 });
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from('invoices')
+      .insert({
+        user_id: user.id,
+        payment_id,
+        amount,
+        currency,
+        status: (status as string) ?? 'draft',
+        due_date: due_date ?? null,
+        metadata: metadata ?? {},
+      })
+      .select('*')
+      .single();
+
+    if (error) {
+      console.error('Error inserting invoice:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ data });
+  } catch (error) {
+    console.error('Unexpected error in billing/invoices POST:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Errore interno del server';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
-
-  const body = await request.json();
-  const { payment_id, amount, currency, status, due_date, metadata } = body;
-
-  if (!payment_id || typeof amount !== 'number' || !currency) {
-    return NextResponse.json({ error: 'Dati non validi' }, { status: 400 });
-  }
-
-  const { data, error } = await supabaseAdmin
-    .from('invoices')
-    .insert({
-      user_id: user.id,
-      payment_id,
-      amount,
-      currency,
-      status: status ?? 'draft',
-      due_date: due_date ?? null,
-      metadata: metadata ?? {},
-    })
-    .select('*')
-    .single();
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  return NextResponse.json({ data });
 }

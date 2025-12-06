@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createApiClient } from '@/lib/supabase/api-client';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import type { CreditsLogRow } from '@/lib/supabase/types/billing';
 
 export async function GET(request: NextRequest) {
   try {
@@ -42,7 +43,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Mappa i dati per compatibilità con il componente (description -> reason)
-    const mappedData = (data || []).map((entry: any) => ({
+    const mappedData = (data || []).map((entry: CreditsLogRow) => ({
       id: entry.id,
       user_id: entry.user_id,
       amount: entry.amount,
@@ -57,48 +58,57 @@ export async function GET(request: NextRequest) {
     }));
 
     return NextResponse.json({ data: mappedData });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Unexpected error in billing/credits GET:', error);
-    return NextResponse.json({ error: error.message || 'Errore interno del server' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Errore interno del server';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = createApiClient(request);
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
+  try {
+    const supabase = createApiClient(request);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
-  if (authError || !user) {
-    return NextResponse.json({ error: 'Non autorizzato' }, { status: 401 });
+    if (authError || !user) {
+      console.error('Auth error in billing/credits POST:', authError);
+      return NextResponse.json({ error: 'Non autorizzato' }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { amount, reason, metadata } = body;
+
+    if (typeof amount !== 'number' || !reason || typeof reason !== 'string') {
+      return NextResponse.json({ error: 'Dati non validi' }, { status: 400 });
+    }
+
+    // Mappa reason a description e transaction_type per compatibilità con schema
+    const { data, error } = await supabaseAdmin
+      .from('credits_log')
+      .insert({
+        user_id: user.id,
+        amount,
+        description: reason,
+        transaction_type: (metadata?.transaction_type as string) || 'usage',
+        balance_after: 0, // TODO: Calcola balance_after dal saldo corrente
+        related_payment_id: metadata?.payment_id as string | null || null,
+        related_report_id: metadata?.report_id as string | null || null,
+      })
+      .select('*')
+      .single();
+
+    if (error) {
+      console.error('Error inserting credits_log:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ data });
+  } catch (error) {
+    console.error('Unexpected error in billing/credits POST:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Errore interno del server';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
-
-  const body = await request.json();
-  const { amount, reason, metadata } = body;
-
-  if (typeof amount !== 'number' || !reason) {
-    return NextResponse.json({ error: 'Dati non validi' }, { status: 400 });
-  }
-
-  // Mappa reason a description e transaction_type per compatibilità con schema
-  const { data, error } = await supabaseAdmin
-    .from('credits_log')
-    .insert({
-      user_id: user.id,
-      amount,
-      description: reason,
-      transaction_type: metadata?.transaction_type || 'usage',
-      balance_after: 0, // TODO: Calcola balance_after dal saldo corrente
-      related_payment_id: metadata?.payment_id || null,
-      related_report_id: metadata?.report_id || null,
-    })
-    .select('*')
-    .single();
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  return NextResponse.json({ data });
 }
