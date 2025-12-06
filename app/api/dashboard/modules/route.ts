@@ -99,10 +99,19 @@ const DEFAULT_MODULES = {
       order_index: 8,
       badge_count: 0,
     },
+    {
+      id: 'widgets',
+      title: 'Widget',
+      description: 'Widget crypto installabili: whale, depth, movers e altro',
+      href: '/dashboard/widgets',
+      icon: 'layout',
+      priority: 'primary' as const,
+      is_active: true,
+      order_index: 9,
+      badge_count: 0,
+    },
   ],
   secondary: [
-    // Rimossi widgets e watchlist - richiedono API real-time non disponibili
-    // Verranno aggiunti quando le API saranno disponibili
     {
       id: 'billing',
       title: 'Billing',
