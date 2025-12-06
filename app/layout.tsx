@@ -16,6 +16,8 @@ const ConditionalHeader = dynamic(() => import('@/components/layout/ConditionalH
 
 const Footer = dynamic(() => import('@/components/layout/Footer').then(m => ({ default: m.Footer })));
 
+const InitialLanguageSelector = dynamic(() => import('@/components/layout/InitialLanguageSelector').then(m => ({ default: m.InitialLanguageSelector })));
+
 const LegalConsent = dynamic(() => import('@/components/layout/LegalConsent').then(m => ({ default: m.LegalConsent })));
 
 const HtmlLang = dynamic(() => import('@/components/layout/HtmlLang').then(m => ({ default: m.HtmlLang })));
@@ -239,6 +241,7 @@ export default function RootLayout({
               </main>
               <div suppressHydrationWarning>
                 <Footer />
+                <InitialLanguageSelector />
                 <LegalConsent />
                 <ToastContainer />
                 <TradeliaAIChat />

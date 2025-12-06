@@ -27,11 +27,21 @@ export function LegalConsent() {
     // Only check localStorage after mount to avoid hydration issues
     if (!mounted) return;
     
+    // CRITICAL: Aspetta che l'utente abbia selezionato la lingua prima di mostrare il popup privacy
+    // Verifica se la lingua è stata selezionata
+    const languageSelected = localStorage.getItem('tradelia_language_selected');
+    const savedLocale = localStorage.getItem('tradelia_locale');
+    
+    // Se non c'è una preferenza lingua, non mostrare ancora il popup privacy
+    if (!languageSelected && !savedLocale) {
+      return;
+    }
+    
     // Check if user has already consented
     const consent = localStorage.getItem(CONSENT_KEY);
     if (!consent) {
-      // Show after a short delay for better UX
-      const timer = setTimeout(() => setIsOpen(true), 1500);
+      // Show after a short delay for better UX (dopo che la lingua è stata selezionata)
+      const timer = setTimeout(() => setIsOpen(true), 500);
       return () => clearTimeout(timer);
     } else {
       setHasConsented(true);
