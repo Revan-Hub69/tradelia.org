@@ -292,6 +292,15 @@
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
   position: relative !important;
   overflow: hidden !important;
+  /* Best Practice: Focus visible per accessibilità (WCAG 2.4.7) */
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.statCard:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-color: var(--accent);
 }
 
 .statCard:hover {
@@ -471,6 +480,15 @@
   position: relative;
   overflow: visible; /* Cambiato da hidden a visible per permettere al pulsante preferiti di essere visibile */
   transition: all 0.3s ease;
+  /* Best Practice: Focus visible per accessibilità (WCAG 2.4.7) */
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.moduleCard:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-color: var(--accent);
 }
 
 .moduleCard::after {
@@ -488,6 +506,13 @@
   box-shadow:
     0 10px 35px rgba(15, 23, 42, 0.45),
     inset 0 0 0 1px rgba(74, 144, 226, 0.15);
+}
+
+/* Best Practice: Riduce movimento per prefers-reduced-motion (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  .moduleCard:hover {
+    transform: none;
+  }
 }
 
 .moduleCard:hover::after {

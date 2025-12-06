@@ -262,9 +262,10 @@ export function DashboardShell() {
                 variant="ghost"
                 size="sm"
                 onClick={toggleHero}
-                className="text-text-secondary hover:text-text-primary"
+                className="text-text-secondary hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                 aria-label={preferences.hideHero ? 'Mostra Hero' : 'Nascondi Hero'}
                 title={preferences.hideHero ? 'Mostra Hero' : 'Nascondi Hero'}
+                aria-pressed={preferences.hideHero}
               >
                 {preferences.hideHero ? (
                   <>
@@ -282,9 +283,10 @@ export function DashboardShell() {
                 variant="ghost"
                 size="sm"
                 onClick={toggleCompactView}
-                className="text-text-secondary hover:text-text-primary"
+                className="text-text-secondary hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                 aria-label={preferences.compactView ? 'Vista Espansa' : 'Vista Compatta'}
                 title={preferences.compactView ? 'Vista Espansa' : 'Vista Compatta'}
+                aria-pressed={preferences.compactView}
               >
                 {preferences.compactView ? (
                   <>
@@ -314,7 +316,9 @@ export function DashboardShell() {
             aria-label="Preferiti" 
             className={styles.dashboardSection}
             id="favorites"
+            aria-labelledby="favorites-heading"
           >
+            <h2 id="favorites-heading" className="sr-only">Preferiti</h2>
             <ErrorBoundary>
               <Favorites />
             </ErrorBoundary>
@@ -326,7 +330,9 @@ export function DashboardShell() {
             aria-label="Moduli e funzionalità" 
             className={styles.dashboardSection}
             id="modules"
+            aria-labelledby="modules-heading"
           >
+            <h2 id="modules-heading" className="sr-only">Moduli e funzionalità</h2>
             <ErrorBoundary>
               <ModuleGrid />
             </ErrorBoundary>
@@ -339,7 +345,9 @@ export function DashboardShell() {
             className={styles.dashboardSection}
             suppressHydrationWarning
             id="overview"
+            aria-labelledby="overview-heading"
           >
+            <h2 id="overview-heading" className="sr-only">Panoramica accademica</h2>
             <ErrorBoundary>
               <OverviewStats />
             </ErrorBoundary>

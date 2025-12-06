@@ -143,14 +143,21 @@ function ModuleCard({ module, isFirst }: { module: Module; isFirst?: boolean }) 
   const { isAuthenticated } = useAuthState();
   
   return (
-    <div className={cn(styles.moduleCard, 'group relative')}>
+    <article className={cn(styles.moduleCard, 'group relative')} role="article">
       <Link 
         href={module.href} 
-        className="block"
+        className="block focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 focus-visible:rounded-lg"
         role="listitem"
         aria-label={`Accedi a ${module.title}: ${module.description || ''}`}
         prefetch={true}
         tabIndex={isFirst ? 0 : undefined}
+        onKeyDown={(e) => {
+          // Best Practice: Enter e Space attivano il link (WCAG 2.1.1)
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            window.location.href = module.href;
+          }
+        }}
         onMouseEnter={() => {
           // Prefetch intelligente al hover (Best Practice: Performance)
           if (typeof window !== 'undefined') {

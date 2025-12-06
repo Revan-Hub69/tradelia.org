@@ -35,13 +35,13 @@ export function DashboardHero() {
   }, [isClient]);
 
   return (
-    <section className={styles.dashboardHero} aria-labelledby="dashboard-hero-title">
+    <section className={styles.dashboardHero} aria-labelledby="dashboard-hero-title" role="region">
       <div className={styles.dashboardHeroContent}>
-        <Badge variant="default" className={styles.dashboardHeroBadge}>
+        <Badge variant="default" className={styles.dashboardHeroBadge} role="status" aria-label="Badge">
           <Sparkles className={styles.dashboardHeroBadgeIcon} aria-hidden="true" />
           <span>{t('dashboard.hero.badge')}</span>
         </Badge>
-        <p className={styles.dashboardHeroSubtitle}>
+        <p className={styles.dashboardHeroSubtitle} role="text">
           {frameworkTerm ? (
             <TooltipGlossary term={frameworkTerm} icon={true}>
               <span className="text-accent hover:text-accent-hover underline decoration-dotted">

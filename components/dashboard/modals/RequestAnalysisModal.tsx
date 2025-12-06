@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,6 +34,20 @@ export function RequestAnalysisModal({
     priority: 'normal' as 'low' | 'normal' | 'high',
     notes: '',
   });
+
+  // Best Practice: Escape key chiude modale (WCAG 2.1.1 - Keyboard)
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !loading) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen, loading, onClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

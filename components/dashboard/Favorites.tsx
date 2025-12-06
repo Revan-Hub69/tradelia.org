@@ -168,9 +168,16 @@ export const Favorites = memo(function Favorites() {
             >
               <Link
                 href={favorite.href}
-                className="block p-4 bg-bg-soft border border-border-subtle rounded-xl hover:border-accent/40 transition-all duration-200 group relative"
+                className="block p-4 bg-bg-soft border border-border-subtle rounded-xl hover:border-accent/40 transition-all duration-200 group relative focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
                 aria-label={`${favorite.title} - ${favorite.description}`}
                 prefetch={true}
+                onKeyDown={(e) => {
+                  // Best Practice: Enter e Space attivano il link (WCAG 2.1.1)
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    window.location.href = favorite.href;
+                  }
+                }}
                 onMouseEnter={() => {
                   // Prefetch intelligente al hover (Best Practice: Performance)
                   if (typeof window !== 'undefined') {
