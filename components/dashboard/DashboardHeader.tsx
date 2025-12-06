@@ -8,6 +8,8 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 // buildLocalePath removed - system always uses Italian
 import dynamic from 'next/dynamic';
 import { useAuthState } from '@/lib/hooks/useAuthState';
+import { Star } from 'lucide-react';
+import Link from 'next/link';
 
 // Lazy load non-critical header components
 const GlobalSearch = dynamic(() => import('./GlobalSearch').then(mod => ({ default: mod.GlobalSearch })), {
@@ -135,6 +137,23 @@ function DashboardHeaderComponent() {
                 <UserStats />
               </div>
               <div className={styles.dashboardActionsRight}>
+                <Link
+                  href="/dashboard/favorites"
+                  className="flex items-center justify-center w-10 h-10 rounded-lg bg-bg-soft hover:bg-bg-elevated border border-border-subtle hover:border-accent/40 text-text-secondary hover:text-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent min-w-[44px] min-h-[44px]"
+                  aria-label={t('dashboard.favorites.title') || 'Preferiti'}
+                  title={t('dashboard.favorites.title') || 'Preferiti'}
+                  onMouseEnter={() => {
+                    // Prefetch favorites page on hover
+                    if (typeof window !== 'undefined') {
+                      const link = document.createElement('link');
+                      link.rel = 'prefetch';
+                      link.href = '/dashboard/favorites';
+                      document.head.appendChild(link);
+                    }
+                  }}
+                >
+                  <Star className="w-5 h-5" aria-hidden="true" />
+                </Link>
                 <GlobalSearch />
                 <UserMenu />
               </div>
