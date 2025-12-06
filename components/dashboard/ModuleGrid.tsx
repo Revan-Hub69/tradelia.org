@@ -131,7 +131,7 @@ export const ModuleGrid = memo(function ModuleGrid({ priority }: ModuleGridProps
           <ModuleCard 
             key={module.id} 
             module={module}
-            tabIndex={index === 0 ? 0 : -1}
+            isFirst={index === 0}
           />
         ))}
       </div>
@@ -139,7 +139,7 @@ export const ModuleGrid = memo(function ModuleGrid({ priority }: ModuleGridProps
   );
 });
 
-function ModuleCard({ module, tabIndex }: { module: Module; tabIndex?: number }) {
+function ModuleCard({ module, isFirst }: { module: Module; isFirst?: boolean }) {
   const { isAuthenticated } = useAuthState();
   
   return (
@@ -149,6 +149,17 @@ function ModuleCard({ module, tabIndex }: { module: Module; tabIndex?: number })
         className="block"
         role="listitem"
         aria-label={`Accedi a ${module.title}: ${module.description || ''}`}
+        prefetch={true}
+        tabIndex={isFirst ? 0 : undefined}
+        onMouseEnter={() => {
+          // Prefetch intelligente al hover (Best Practice: Performance)
+          if (typeof window !== 'undefined') {
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = module.href;
+            document.head.appendChild(link);
+          }
+        }}
       >
         <div className={styles.moduleCardHeader}>
           <div className={styles.moduleIcon} aria-hidden="true">
