@@ -28,7 +28,7 @@ export function PaymentInstructions() {
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const paymentId = searchParams.get('payment');
-  const localePrefix = locale === 'en' ? '/en' : '';
+  const localePrefix = '';
 
   // Xolo Go payment link (da configurare)
   const XOLO_PAYMENT_LINK = process.env.NEXT_PUBLIC_XOLO_PAYMENT_LINK || 'https://pay.xolo.io';

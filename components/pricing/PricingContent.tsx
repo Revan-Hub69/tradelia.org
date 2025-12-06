@@ -33,8 +33,8 @@ export function PricingContent() {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   
-  // Determina il prefisso della lingua
-  const localePrefix = locale === 'en' ? '/en' : '';
+  // System simplified: Italian only
+  const localePrefix = '';
 
   const individualPlans: Plan[] = [
     {

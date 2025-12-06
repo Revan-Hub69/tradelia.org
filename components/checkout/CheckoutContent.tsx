@@ -75,8 +75,8 @@ export function CheckoutContent() {
   const { t, locale } = useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
-  // Determina il prefisso della lingua
-  const localePrefix = locale === 'en' ? '/en' : '';
+  // System simplified: Italian only
+  const localePrefix = '';
   const [step, setStep] = useState<'data' | 'payment' | 'processing'>('data');
   const [checkoutData, setCheckoutData] = useState<CheckoutData | null>(null);
   const [customerData, setCustomerData] = useState<CustomerData>({ email: '' });

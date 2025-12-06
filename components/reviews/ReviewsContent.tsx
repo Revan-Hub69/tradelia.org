@@ -14,7 +14,7 @@ import {
   createContainerVariants,
   createItemVariants,
 } from '@/lib/animations';
-import { buildLocalePath } from '@/lib/i18n/paths';
+// buildLocalePath removed - system always uses Italian
 import Link from 'next/link';
 
 interface Review {
@@ -108,7 +108,7 @@ export function ReviewsContent() {
     })),
   };
 
-  const localePrefix = locale === 'en' ? '/en' : '';
+  const localePrefix = '';
 
   return (
     <div className="min-h-screen bg-bg-base">
@@ -328,7 +328,7 @@ export function ReviewsContent() {
           >
             {isLoggedIn ? (
               <Button asChild size="lg" variant="default">
-                <Link href={buildLocalePath(locale, '/reviews/new')}>
+                <Link href="/reviews/new">
                   <Plus className="w-4 h-4 mr-2" aria-hidden="true" />
                   {t('reviews.writeReview') || 'Scrivi una Recensione'}
                 </Link>
@@ -339,7 +339,7 @@ export function ReviewsContent() {
                   {t('reviews.loginToReview') || 'Accedi per lasciare una recensione'}
                 </p>
                 <Button asChild>
-                  <Link href={`${buildLocalePath(locale, '/login')}?redirect=${buildLocalePath(locale, '/reviews/new')}`}>
+                  <Link href="/login?redirect=/reviews/new">
                     {t('auth.mode.login') || 'Accedi'}
                   </Link>
                 </Button>

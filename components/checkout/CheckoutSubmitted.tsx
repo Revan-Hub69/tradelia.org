@@ -12,7 +12,7 @@ export function CheckoutSubmitted() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const requestId = searchParams.get('request');
-  const localePrefix = locale === 'en' ? '/en' : '';
+  const localePrefix = '';
 
   useEffect(() => {
     if (!requestId) {

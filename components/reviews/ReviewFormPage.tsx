@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { supabase } from '@/lib/supabase/client';
 import { ReviewForm } from './ReviewForm';
-import { buildLocalePath } from '@/lib/i18n/paths';
+// buildLocalePath removed - system always uses Italian
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -24,14 +24,14 @@ export function ReviewFormPage() {
 
       if (!user) {
         // Redirect to login if not logged in
-        router.push(buildLocalePath(locale, '/login?redirect=/reviews/new'));
+        router.push('/login?redirect=/reviews/new');
       }
     }
 
     checkAuth();
-  }, [router, locale]);
+  }, [router]);
 
-  const localePrefix = locale === 'en' ? '/en' : '';
+  const localePrefix = '';
 
   if (isLoading) {
     return (
@@ -53,7 +53,7 @@ export function ReviewFormPage() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20">
         <div className="max-w-2xl mx-auto">
           <Link
-            href={buildLocalePath(locale, '/reviews')}
+            href="/reviews"
             className="inline-flex items-center gap-2 text-text-secondary hover:text-text-primary mb-8 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" aria-hidden="true" />
@@ -70,7 +70,7 @@ export function ReviewFormPage() {
           <ReviewForm
             onSuccess={() => {
               setTimeout(() => {
-                router.push(buildLocalePath(locale, '/reviews'));
+                router.push('/reviews');
               }, 2000);
             }}
           />

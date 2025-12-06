@@ -35,7 +35,7 @@ function ErrorUI({
     if (typeof window !== 'undefined' && window.history.length > 1) {
       router.back();
     } else {
-      router.push(locale === 'en' ? '/en' : '/');
+      router.push('/');
     }
   };
 
@@ -112,7 +112,7 @@ function ErrorUI({
             {t('error.actions.reload') || 'Reload Page'}
           </button>
           <button
-            onClick={() => router.push(locale === 'en' ? '/en' : '/')}
+            onClick={() => router.push('/')}
             className="flex items-center gap-2 px-4 py-2 bg-bg-soft hover:bg-bg-hover text-text-primary border border-border-default rounded-lg transition-colors"
             aria-label={t('error.actions.goHome') || 'Go to home'}
           >

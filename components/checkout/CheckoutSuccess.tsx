@@ -18,7 +18,7 @@ export function CheckoutSuccess() {
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'completed' | 'unknown'>('unknown');
   const { role, isLoading: roleLoading, validUntil } = useUserRole();
   const paymentId = searchParams.get('payment');
-  const localePrefix = locale === 'en' ? '/en' : '';
+  const localePrefix = '';
 
   const fetchPayment = async () => {
     if (!paymentId) return;
