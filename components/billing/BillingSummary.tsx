@@ -6,10 +6,19 @@ import { formatCurrency } from '@/lib/utils/format';
 import { useState } from 'react';
 
 async function fetcher(url: string) {
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    credentials: 'include', // CRITICAL: Include cookies for authentication
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  
   if (!response.ok) {
-    throw new Error('Errore durante il caricamento');
+    const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+    const errorMessage = errorData.error || `HTTP ${response.status}: ${response.statusText}`;
+    throw new Error(errorMessage);
   }
+  
   return response.json();
 }
 
@@ -67,8 +76,19 @@ export function BillingSummary() {
         )}
 
         {hasError && (
-          <div className="py-10 text-center text-red-400">
-            Errore durante il caricamento dei dati. Riprova più tardi.
+          <div className="py-10 text-center">
+            <div className="inline-block p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
+              <p className="text-red-400 font-semibold mb-2">Errore durante il caricamento</p>
+              <p className="text-sm text-text-secondary">
+                {creditsError?.message || paymentsError?.message || invoicesError?.message || 'Errore sconosciuto'}
+              </p>
+              <button
+                onClick={() => window.location.reload()}
+                className="mt-4 px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg text-sm font-medium transition-colors"
+              >
+                Ricarica pagina
+              </button>
+            </div>
           </div>
         )}
 
