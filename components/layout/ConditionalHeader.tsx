@@ -37,16 +37,13 @@ export function ConditionalHeader() {
     setIsClient(true);
   }, []);
   
-  // Non renderizzare nulla durante SSR o prima che il client sia pronto
-  if (!isClient) {
-    return null;
-  }
-  
   // Non renderizzare header per pagine dashboard (hanno il loro DashboardHeader)
+  // Ma renderizza sempre un fallback durante SSR/hydration per evitare scomparsa
   if (isDashboard) {
     return null;
   }
   
+  // Renderizza sempre header, anche durante SSR (Header gestisce internamente isClient)
   return <Header />;
 }
 
