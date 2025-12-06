@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { X, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslations } from '@/lib/i18n/use-translations';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -10,6 +11,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export function InstallPrompt() {
+  const { t, locale } = useTranslations();
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showBanner, setShowBanner] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
@@ -146,27 +148,29 @@ export function InstallPrompt() {
               
               <div className="flex-1 min-w-0">
                 <h3 className="text-base font-semibold text-text-primary mb-1.5">
-                  Installa Tradelia
+                  {locale === 'it' ? 'Installa Tradelia' : 'Install Tradelia'}
                 </h3>
                 <p className="text-sm text-text-secondary mb-4 leading-relaxed">
-                  Installa l'app per accedere rapidamente e ricevere notifiche anche quando il browser è chiuso.
+                  {locale === 'it' 
+                    ? 'Installa l\'app per accedere rapidamente e ricevere notifiche anche quando il browser è chiuso.'
+                    : 'Install the app for quick access and receive notifications even when the browser is closed.'}
                 </p>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={handleInstallClick}
                     disabled={!deferredPrompt}
                     className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-accent hover:bg-accent-hover text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
-                    aria-label="Installa app"
+                    aria-label={locale === 'it' ? 'Installa app' : 'Install app'}
                   >
                     <Download className="w-4 h-4" aria-hidden="true" />
-                    Installa
+                    {locale === 'it' ? 'Installa' : 'Install'}
                   </button>
                   <button
                     onClick={handleDismiss}
                     className="px-4 py-2.5 text-text-tertiary hover:text-text-secondary text-sm font-medium transition-colors min-h-[44px]"
-                    aria-label="Chiudi"
+                    aria-label={locale === 'it' ? 'Chiudi' : 'Close'}
                   >
-                    Più tardi
+                    {locale === 'it' ? 'Più tardi' : 'Later'}
                   </button>
                 </div>
               </div>

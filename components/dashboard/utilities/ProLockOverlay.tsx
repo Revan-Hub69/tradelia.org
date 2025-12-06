@@ -36,9 +36,9 @@ export function ProLockOverlay({ children, showPreview = true }: ProLockOverlayP
         {children}
       </div>
 
-      {/* Lock Overlay */}
+      {/* Lock Overlay - CRITICAL: High z-index to appear above all content */}
       <div className={cn(
-        'absolute inset-0 z-10',
+        'absolute inset-0 z-[9999]',
         'bg-bg-base/95 backdrop-blur-sm',
         'flex flex-col items-center justify-center',
         'p-8 rounded-xl border border-accent/30',

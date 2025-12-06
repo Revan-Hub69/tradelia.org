@@ -176,10 +176,12 @@ export default function UtilitiesPage() {
       id: 'paper-trading',
       label: 'Paper Trading',
       icon: Target,
-      category: 'pro',
+      category: 'coming-soon',
       group: 'performance',
       description: 'Simula operazioni di trading in tempo reale con ordini avanzati e risk management',
-      available: true,
+      available: false,
+      comingSoon: true,
+      reason: 'Richiede integrazione con API real-time per prezzi di mercato e ordini',
     },
     // Pro Tools - Advanced
     {
@@ -331,7 +333,23 @@ export default function UtilitiesPage() {
                   isPro ? <TradingJournal /> : <ProLockOverlay><TradingJournal /></ProLockOverlay>
                 )}
                 {selectedUtility === 'paper-trading' && (
-                  isPro ? <PaperTrading /> : <ProLockOverlay><PaperTrading /></ProLockOverlay>
+                  <div className="relative">
+                    <div className="opacity-50 pointer-events-none">
+                      <ComingSoon 
+                        title="Paper Trading" 
+                        description="Simula operazioni di trading in tempo reale con ordini avanzati e risk management" 
+                        reason="Richiede integrazione con API real-time per prezzi di mercato e ordini" 
+                        estimatedDate="Q2 2025" 
+                      />
+                    </div>
+                    <FeatureComingSoon
+                      featureName="Paper Trading"
+                      description="Simula operazioni di trading in tempo reale con ordini avanzati e risk management"
+                      reason="Richiede integrazione con API real-time per prezzi di mercato e ordini"
+                      estimatedDate="Q2 2025"
+                      variant="overlay"
+                    />
+                  </div>
                 )}
                 {selectedUtility === 'hedging' && (
                   isPro ? <HedgingCalculator /> : <ProLockOverlay><HedgingCalculator /></ProLockOverlay>
