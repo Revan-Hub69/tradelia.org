@@ -72,6 +72,7 @@
   min-width: 0;
   overflow: hidden;
   width: 100%;
+  flex-shrink: 1; /* Permette shrinking su mobile */
 }
 
 @media (min-width: 640px) {
@@ -194,6 +195,8 @@
   flex-shrink: 0;
   position: relative;
   z-index: 10000;
+  min-width: 0; /* Permette shrinking su mobile */
+  overflow: visible; /* Permette dropdowns */
 }
 
 @media (min-width: 480px) {
@@ -215,6 +218,8 @@
   flex-shrink: 0;
   position: relative;
   z-index: 10000;
+  min-width: 0; /* Permette shrinking su mobile */
+  overflow: visible; /* Permette dropdowns */
 }
 
 @media (min-width: 480px) {

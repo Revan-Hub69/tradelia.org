@@ -9,8 +9,7 @@ import { ProfileForm } from '@/components/settings/ProfileForm';
 import { PasswordForm } from '@/components/settings/PasswordForm';
 import { PreferencesForm } from '@/components/settings/PreferencesForm';
 import { useIsDesk } from '@/lib/hooks/useUserRole';
-import Link from 'next/link';
-// buildLocalePath removed - system always uses Italian
+import { BillingSummary } from '@/components/billing/BillingSummary';
 
 /**
  * Settings Content - Tab Impostazioni
