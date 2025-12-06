@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect, useState, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { defaultLocale, type Locale } from "./config";
 import itDict from "./it.json";
@@ -18,7 +18,9 @@ export function useTranslations() {
   const pathname = usePathname();
   
   // Funzione helper per rilevare il locale
-  const detectLocale = (): Locale => {
+  // CRITICAL: localStorage ha SEMPRE priorità massima - preferenza utente
+  // Usa useCallback per memoizzare la funzione
+  const detectLocale = useCallback((): Locale => {
     if (typeof window === "undefined") {
       return defaultLocale;
     }
@@ -36,7 +38,7 @@ export function useTranslations() {
     // SECONDO: Rileva dal pathname (URL esplicito)
     const pathLocale = pathname.startsWith("/en") ? "en" : "it";
     return pathLocale;
-  };
+  }, [pathname]);
 
   // CRITICAL: Inizializza sempre con defaultLocale sul server per evitare hydration mismatch
   // Il locale verrà aggiornato sul client dopo il mount
@@ -60,9 +62,13 @@ export function useTranslations() {
     
     // Rileva e imposta il locale immediatamente dopo il mount
     const detectedLocale = detectLocale();
-    if (detectedLocale !== locale) {
-      setLocale(detectedLocale);
-    }
+    setLocale((currentLocale) => {
+      // Solo aggiorna se è diverso per evitare re-render inutili
+      if (detectedLocale !== currentLocale) {
+        return detectedLocale;
+      }
+      return currentLocale;
+    });
     
     // CRITICAL: Salva sempre la lingua rilevata in localStorage per persistenza
     // Questo assicura che la preferenza venga mantenuta quando si naviga tra pagine
@@ -75,7 +81,7 @@ export function useTranslations() {
     } catch (e) {
       // localStorage non disponibile
     }
-  }, []);
+  }, [detectLocale]);
 
   // Salva locale in localStorage quando cambia
   useEffect(() => {
@@ -96,32 +102,17 @@ export function useTranslations() {
       return;
     }
     
-    // CRITICAL: localStorage ha SEMPRE priorità massima - preferenza utente
-    // Solo se non c'è localStorage, usa il pathname come fallback
-    let detectedLocale: Locale = defaultLocale;
-    
-    if (typeof window !== "undefined") {
-      try {
-        const savedLocale = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null;
-        if (savedLocale === 'it' || savedLocale === 'en') {
-          // localStorage ha priorità - usa sempre la preferenza salvata
-          detectedLocale = savedLocale;
-        } else {
-          // Fallback: rileva dal pathname solo se non c'è preferenza salvata
-          detectedLocale = pathname.startsWith("/en") ? "en" : "it";
-          // Salva la lingua rilevata dal pathname per persistenza futura
-          localStorage.setItem(LOCALE_STORAGE_KEY, detectedLocale);
-        }
-      } catch (e) {
-        // localStorage non disponibile, usa pathname
-        detectedLocale = pathname.startsWith("/en") ? "en" : "it";
+    // CRITICAL: Usa detectLocale() che ha già la logica corretta (localStorage > pathname)
+    // Solo aggiorna se è diverso per evitare re-render inutili
+    setLocale((currentLocale) => {
+      const detectedLocale = detectLocale();
+      if (detectedLocale !== currentLocale) {
+        // Se il locale rilevato è diverso, aggiorna
+        return detectedLocale;
       }
-    }
-    
-    if (detectedLocale !== locale) {
-      setLocale(detectedLocale);
-    }
-  }, [pathname, mounted]); // Reagisce ai cambiamenti di pathname (rimosso locale dalla dipendenza per evitare loop)
+      return currentLocale;
+    });
+  }, [pathname, mounted, detectLocale]); // Reagisce ai cambiamenti di pathname
 
   // Ascolta cambiamenti di navigazione e aggiorna locale se necessario
   useEffect(() => {
@@ -129,29 +120,31 @@ export function useTranslations() {
       return;
     }
 
-    const handleLocationChange = () => {
-      const detectedLocale = detectLocale();
-      if (detectedLocale !== locale) {
-        setLocale(detectedLocale);
-      }
-    };
-
-    // Ascolta evento localechange (dispatched da LanguageSwitch)
+    // Ascolta evento localechange (dispatched da LanguageSwitch e InitialLanguageSelector)
     const handleLocaleChange = (event: CustomEvent) => {
       if (event.detail?.locale && (event.detail.locale === 'it' || event.detail.locale === 'en')) {
         setLocale(event.detail.locale);
       }
     };
 
-    // Ascolta popstate (back/forward)
-    window.addEventListener("popstate", handleLocationChange);
+    // Ascolta popstate (back/forward) - rileva locale dal pathname
+    const handlePopState = () => {
+      // Usa detectLocale che ha la logica corretta (localStorage > pathname)
+      const detectedLocale = detectLocale();
+      setLocale((currentLocale) => {
+        // Solo aggiorna se è diverso per evitare re-render inutili
+        return detectedLocale !== currentLocale ? detectedLocale : currentLocale;
+      });
+    };
+
+    window.addEventListener("popstate", handlePopState);
     window.addEventListener("localechange", handleLocaleChange as EventListener);
     
     return () => {
-      window.removeEventListener("popstate", handleLocationChange);
+      window.removeEventListener("popstate", handlePopState);
       window.removeEventListener("localechange", handleLocaleChange as EventListener);
     };
-  }, [mounted, locale]);
+  }, [mounted, detectLocale]); // Aggiunto detectLocale per evitare closure stale
 
   return useMemo(() => {
     // Usa il locale rilevato (già inizializzato correttamente)
