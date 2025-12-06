@@ -143,7 +143,7 @@ export function LegalConsent() {
                       <h2 id="legal-consent-title" className="text-xl md:text-2xl font-bold text-text-primary">
                         {t('legal.title')}
                       </h2>
-                      <p className="text-sm text-text-muted">
+                      <p className="text-sm text-text-secondary">
                         {t('legal.subtitle')}
                       </p>
                     </div>

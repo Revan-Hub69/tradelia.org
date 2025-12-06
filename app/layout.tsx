@@ -26,12 +26,12 @@ const TradeliaAIChat = dynamic(() => import('@/components/ui/TradeliaAIChat').th
 
 const inter = Inter({ 
   subsets: ['latin'],
-  display: 'swap',
-  preload: false, // Disabled to avoid preload warnings when font isn't used immediately
+  display: 'swap', // Best Practice: swap prevents invisible text during font load
+  preload: true, // Enable preload for LCP optimization - font is used immediately
   variable: '--font-inter',
   fallback: ['system-ui', '-apple-system', 'sans-serif'],
   adjustFontFallback: true,
-  // Optimize font loading for LCP
+  // Optimize font loading for LCP - only load weights used above the fold
   weight: ['400', '500', '600', '700'],
 });
 
@@ -188,6 +188,14 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/favicon.svg" />
         
         {/* Preload critical resources - Best Practice 2024-2025 */}
+        {/* Preload font for LCP optimization */}
+        <link
+          rel="preload"
+          href="/_next/static/media/inter-latin-400-normal.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
         {/* Preload logo for LCP optimization (used in header) */}
         <link
           rel="preload"

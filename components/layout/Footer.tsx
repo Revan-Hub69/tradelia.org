@@ -190,20 +190,20 @@ export function Footer() {
             transition={{ delay: 0.4 }}
             className="pt-8 border-t border-border-subtle"
           >
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-muted">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-secondary">
               <div className="flex items-center gap-3">
-                <Badge variant="outline" className="text-xs font-medium hover:border-accent hover:text-accent transition-all duration-200">
+                <Badge variant="outline" className="text-xs font-medium hover:border-accent hover:text-accent transition-[border-color,color] duration-200">
                   v2.0.1
                 </Badge>
                 <span className="opacity-50">·</span>
                 {mounted && (
-                  <span className="text-text-tertiary">{new Date().toISOString().split('T')[0]}</span>
+                  <span className="text-text-secondary opacity-90">{new Date().toISOString().split('T')[0]}</span>
                 )}
               </div>
               <nav className="flex items-center gap-4" aria-label="Legal links">
                 <Link
                   href="/privacy"
-                  className="hover:text-text-primary hover:scale-105 transition-all duration-200 inline-block"
+                  className="text-text-secondary hover:text-text-primary hover:scale-105 transition-[color,transform] duration-200 inline-block"
                   onMouseEnter={() => prefetchOnHover('/privacy')}
                 >
                   {t('footer.legalLinks.privacy')}
@@ -211,7 +211,7 @@ export function Footer() {
                 <span className="opacity-50">·</span>
                 <Link
                   href="/terms"
-                  className="hover:text-text-primary hover:scale-105 transition-all duration-200 inline-block"
+                  className="text-text-secondary hover:text-text-primary hover:scale-105 transition-[color,transform] duration-200 inline-block"
                   onMouseEnter={() => prefetchOnHover('/terms')}
                 >
                   {t('footer.legalLinks.terms')}
@@ -219,7 +219,7 @@ export function Footer() {
                 <span className="opacity-50">·</span>
                 <Link
                   href="/cookie"
-                  className="hover:text-text-primary hover:scale-105 transition-all duration-200 inline-block"
+                  className="text-text-secondary hover:text-text-primary hover:scale-105 transition-[color,transform] duration-200 inline-block"
                   onMouseEnter={() => prefetchOnHover('/cookie')}
                 >
                   {t('footer.legalLinks.cookie')}
