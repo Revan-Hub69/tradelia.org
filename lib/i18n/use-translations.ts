@@ -63,6 +63,18 @@ export function useTranslations() {
     if (detectedLocale !== locale) {
       setLocale(detectedLocale);
     }
+    
+    // CRITICAL: Salva sempre la lingua rilevata in localStorage per persistenza
+    // Questo assicura che la preferenza venga mantenuta quando si naviga tra pagine
+    try {
+      const currentSavedLocale = localStorage.getItem(LOCALE_STORAGE_KEY);
+      if (!currentSavedLocale || (currentSavedLocale !== 'it' && currentSavedLocale !== 'en')) {
+        // Se non c'è una preferenza salvata, salva quella rilevata
+        localStorage.setItem(LOCALE_STORAGE_KEY, detectedLocale);
+      }
+    } catch (e) {
+      // localStorage non disponibile
+    }
   }, []);
 
   // Salva locale in localStorage quando cambia
@@ -84,17 +96,21 @@ export function useTranslations() {
       return;
     }
     
-    // Rileva locale: localStorage ha priorità, poi pathname
+    // CRITICAL: localStorage ha SEMPRE priorità massima - preferenza utente
+    // Solo se non c'è localStorage, usa il pathname come fallback
     let detectedLocale: Locale = defaultLocale;
     
     if (typeof window !== "undefined") {
       try {
         const savedLocale = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null;
         if (savedLocale === 'it' || savedLocale === 'en') {
+          // localStorage ha priorità - usa sempre la preferenza salvata
           detectedLocale = savedLocale;
         } else {
-          // Fallback: rileva dal pathname
+          // Fallback: rileva dal pathname solo se non c'è preferenza salvata
           detectedLocale = pathname.startsWith("/en") ? "en" : "it";
+          // Salva la lingua rilevata dal pathname per persistenza futura
+          localStorage.setItem(LOCALE_STORAGE_KEY, detectedLocale);
         }
       } catch (e) {
         // localStorage non disponibile, usa pathname
@@ -105,7 +121,7 @@ export function useTranslations() {
     if (detectedLocale !== locale) {
       setLocale(detectedLocale);
     }
-  }, [pathname, mounted, locale]); // Reagisce ai cambiamenti di pathname
+  }, [pathname, mounted]); // Reagisce ai cambiamenti di pathname (rimosso locale dalla dipendenza per evitare loop)
 
   // Ascolta cambiamenti di navigazione e aggiorna locale se necessario
   useEffect(() => {
