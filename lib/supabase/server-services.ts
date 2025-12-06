@@ -20,12 +20,14 @@ export interface Module {
 
 export interface Favorite {
   id: string;
-  item_id: string;
-  item_type: "report" | "course" | "module";
+  item_id?: string | null; // UUID (retrocompatibilità)
+  item_id_string?: string | null; // Stringa per qualsiasi contenuto
+  item_type: string; // Qualsiasi tipo, non più limitato
   title: string;
   description: string | null;
   href: string;
   icon: string | null;
+  metadata?: Record<string, any> | null;
   added_at: string;
 }
 
@@ -448,26 +450,49 @@ export async function getUserFavorites(userId: string) {
     return { data: [], error };
   }
 
-  return { data: (data || []) as Favorite[], error: null };
+  // Normalizza i dati: usa item_id_string se disponibile, altrimenti item_id
+  const normalized = (data || []).map((f: any) => ({
+    ...f,
+    item_id: f.item_id_string || f.item_id,
+  }));
+
+  return { data: normalized as Favorite[], error: null };
 }
 
 /**
  * Add favorite
  */
-export async function addFavorite(userId: string, favorite: Omit<Favorite, "id" | "added_at">) {
+export async function addFavorite(
+  userId: string,
+  favorite: Omit<Favorite, "id" | "added_at">
+) {
   const supabase = await createClient();
+
+  // Determina se item_id è UUID o stringa
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    favorite.item_id || ""
+  );
+
+  const insertData: any = {
+    user_id: userId,
+    item_type: favorite.item_type,
+    title: favorite.title,
+    description: favorite.description,
+    href: favorite.href,
+    icon: favorite.icon,
+    metadata: favorite.metadata || {},
+  };
+
+  // Usa item_id_string per stringhe, item_id per UUID
+  if (isUUID) {
+    insertData.item_id = favorite.item_id;
+  } else {
+    insertData.item_id_string = favorite.item_id;
+  }
 
   const { data, error } = await supabase
     .from("favorites")
-    .insert({
-      user_id: userId,
-      item_id: favorite.item_id,
-      item_type: favorite.item_type,
-      title: favorite.title,
-      description: favorite.description,
-      href: favorite.href,
-      icon: favorite.icon,
-    })
+    .insert(insertData)
     .select()
     .single();
 
@@ -476,7 +501,13 @@ export async function addFavorite(userId: string, favorite: Omit<Favorite, "id" 
     return { data: null, error };
   }
 
-  return { data: data as Favorite, error: null };
+  // Normalizza la risposta
+  const normalized = {
+    ...data,
+    item_id: data.item_id_string || data.item_id,
+  };
+
+  return { data: normalized as Favorite, error: null };
 }
 
 /**
@@ -507,17 +538,29 @@ export async function removeFavorite(userId: string, favoriteId: string) {
 export async function isFavorite(
   userId: string,
   itemId: string,
-  itemType: "report" | "course" | "module"
+  itemType: string
 ) {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  // Determina se item_id è UUID o stringa
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    itemId
+  );
+
+  let query = supabase
     .from("favorites")
     .select("id")
     .eq("user_id", userId)
-    .eq("item_id", itemId)
-    .eq("item_type", itemType)
-    .single();
+    .eq("item_type", itemType);
+
+  // Cerca in item_id o item_id_string a seconda del tipo
+  if (isUUID) {
+    query = query.eq("item_id", itemId);
+  } else {
+    query = query.eq("item_id_string", itemId);
+  }
+
+  const { data, error } = await query.single();
 
   if (error && error.code !== "PGRST116") {
     // PGRST116 = no rows returned
