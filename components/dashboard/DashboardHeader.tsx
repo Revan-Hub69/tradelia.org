@@ -60,6 +60,24 @@ function DashboardHeaderComponent() {
     setIsMounted(true);
   }, []);
 
+  // Force re-render when route changes (fixes header not updating on navigation)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleRouteChange = () => {
+        // Force a re-render by updating state
+        setIsMounted(false);
+        setTimeout(() => setIsMounted(true), 0);
+      };
+      
+      // Listen to route changes
+      window.addEventListener('popstate', handleRouteChange);
+      
+      return () => {
+        window.removeEventListener('popstate', handleRouteChange);
+      };
+    }
+  }, []);
+
   // Force re-render when authentication state changes (fixes header not updating)
   useEffect(() => {
     // This ensures header updates when auth state changes

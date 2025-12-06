@@ -1,9 +1,10 @@
 'use client';
 
 import useSWR from 'swr';
-import { CreditLog, Invoice, Payment } from './types';
+import { Invoice, Payment } from './types';
 import { formatCurrency } from '@/lib/utils/format';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useIsClient } from '@/lib/hooks/useIsClient';
 
 async function fetcher(url: string) {
   const response = await fetch(url, {
@@ -43,11 +44,22 @@ export function BillingSummary() {
   const isLoading = creditsLoading || paymentsLoading || invoicesLoading;
   const hasError = creditsError || paymentsError || invoicesError;
 
+  // Non renderizzare fino a quando non siamo sul client (previene hydration mismatch)
+  if (!isClient) {
+    return (
+      <section className="bg-bg-surface/80 border border-border-subtle/80 rounded-3xl p-6 shadow-lg shadow-black/20">
+        <div className="py-12 text-center text-text-tertiary">
+          Caricamento...
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section className="bg-bg-surface/80 border border-border-subtle/80 rounded-3xl p-6 shadow-lg shadow-black/20">
+    <section className="bg-bg-surface/80 border border-border-subtle/80 rounded-3xl p-6 shadow-lg shadow-black/20" suppressHydrationWarning>
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div>
-          <p className="text-xs uppercase tracking-[0.4em] text-text-tertiary">Billing & Credits</p>
+          <p className="text-xs uppercase tracking-[0.4em] text-text-tertiary">Billing</p>
           <h3 className="text-2xl font-semibold text-text-primary mt-2">Storico transazioni</h3>
           <p className="text-sm text-text-secondary max-w-2xl mt-1">
             Controlla i movimenti finanziari e le fatture emesse. Tutti i dati sono sincronizzati con lo schema Supabase (`payments`, `invoices`) e rispettano le policy RLS per la consultazione sicura.

@@ -11,10 +11,49 @@ import { useReducedMotion } from '@/lib/animations';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { prefetchOnHover } from '@/lib/utils/prefetch';
 import { CurrencySwitch } from '@/components/ui/CurrencySwitch';
+import { useIsClient } from '@/lib/hooks/useIsClient';
 
 export function Header() {
   const { t } = useTranslations();
   const prefersReducedMotion = useReducedMotion();
+  const isClient = useIsClient();
+
+  // Non renderizzare animazioni fino a quando non siamo sul client (previene hydration mismatch)
+  if (!isClient) {
+    return (
+      <header
+        className="sticky top-0 z-50 w-full border-b border-border-subtle glass supports-[backdrop-filter]:bg-bg-glass"
+        suppressHydrationWarning
+      >
+        <div className="container flex h-16 items-center justify-between px-8">
+          <Link
+            href="/"
+            className="flex items-center gap-3"
+            aria-label="Tradelia AI - Home"
+          >
+            <Image
+              src="/logos/tradelia-logo.svg"
+              alt="Tradelia AI"
+              width={200}
+              height={50}
+              className="h-10 w-auto"
+              priority
+            />
+          </Link>
+          <div className="flex items-center gap-4">
+            <Button asChild variant="secondary" size="sm">
+              <Link href="/dashboard">
+                <LayoutDashboard className="w-4 h-4" />
+                <span className="hidden sm:inline">{t('header.dashboard')}</span>
+              </Link>
+            </Button>
+            <NotificationBell />
+            <CurrencySwitch size="sm" />
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <motion.header
