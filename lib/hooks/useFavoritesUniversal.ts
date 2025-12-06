@@ -5,8 +5,6 @@ import { useAuthState } from './useAuthState';
 import { authenticatedFetch } from '@/lib/api/fetch-client';
 import { toast } from '@/components/ui/Toast';
 
-const STORAGE_KEY = 'tradelia_favorites';
-
 export interface Favorite {
   id: string;
   item_id: string; // Può essere UUID o stringa
@@ -21,8 +19,8 @@ export interface Favorite {
 
 /**
  * Hook universale per i preferiti
- * - Usa localStorage per utenti non autenticati
- * - Usa Supabase per utenti autenticati
+ * - Solo Supabase per utenti autenticati (NO localStorage per sicurezza)
+ * - Array vuoto per utenti non autenticati
  * - Supporta qualsiasi tipo di contenuto
  */
 export function useFavoritesUniversal() {
@@ -30,43 +28,29 @@ export function useFavoritesUniversal() {
   const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Carica preferiti (localStorage o API)
+  // Carica preferiti solo da Supabase (NO localStorage)
   useEffect(() => {
     const loadFavorites = async () => {
       setLoading(true);
       try {
         if (isAuthenticated) {
-          // Carica da Supabase
+          // Carica solo da Supabase
           const response = await authenticatedFetch('/api/dashboard/favorites');
           if (response.ok) {
             const { data } = await response.json();
             setFavorites(data || []);
-            
-            // Sincronizza anche con localStorage come backup
-            if (data && data.length > 0) {
-              localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-            }
           } else {
-            // Fallback a localStorage se API fallisce
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-              setFavorites(JSON.parse(stored));
-            }
+            // Se API fallisce, restituisci array vuoto (NO localStorage)
+            setFavorites([]);
           }
         } else {
-          // Carica da localStorage per guest
-          const stored = localStorage.getItem(STORAGE_KEY);
-          if (stored) {
-            setFavorites(JSON.parse(stored));
-          }
+          // Guest: array vuoto (NO localStorage per sicurezza)
+          setFavorites([]);
         }
       } catch (error) {
         console.error('Error loading favorites:', error);
-        // Fallback a localStorage
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-          setFavorites(JSON.parse(stored));
-        }
+        // In caso di errore, restituisci array vuoto (NO localStorage)
+        setFavorites([]);
       } finally {
         setLoading(false);
       }
@@ -96,11 +80,7 @@ export function useFavoritesUniversal() {
         return [...prev, newFavorite];
       });
 
-      // Salva in localStorage immediatamente
-      const updatedFavorites = [...favorites, newFavorite];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedFavorites));
-
-      // Se autenticato, salva anche su Supabase
+      // Se autenticato, salva su Supabase (NO localStorage)
       if (isAuthenticated) {
         try {
           const response = await authenticatedFetch('/api/dashboard/favorites', {
@@ -130,19 +110,29 @@ export function useFavoritesUniversal() {
             toast.success('Aggiunto ai preferiti');
             return true;
           } else {
-            // Se fallisce, mantieni in localStorage
-            toast.success('Aggiunto ai preferiti (solo locale)');
-            return true;
+            // Se fallisce, rimuovi dall'UI (NO localStorage)
+            setFavorites((prev) =>
+              prev.filter((f) => f.id !== newFavorite.id)
+            );
+            toast.error('Errore nel salvataggio del preferito');
+            return false;
           }
         } catch (error) {
-          // Se fallisce, mantieni in localStorage
+          // Se fallisce, rimuovi dall'UI (NO localStorage)
           console.error('Error saving to Supabase:', error);
-          toast.success('Aggiunto ai preferiti (solo locale)');
-          return true;
+          setFavorites((prev) =>
+            prev.filter((f) => f.id !== newFavorite.id)
+          );
+          toast.error('Errore nel salvataggio del preferito');
+          return false;
         }
       } else {
-        toast.success('Aggiunto ai preferiti');
-        return true;
+        // Guest: non può salvare preferiti (NO localStorage)
+        setFavorites((prev) =>
+          prev.filter((f) => f.id !== newFavorite.id)
+        );
+        toast.error('Accedi per salvare i preferiti');
+        return false;
       }
     } catch (error) {
       console.error('Error adding favorite:', error);
@@ -173,14 +163,8 @@ export function useFavoritesUniversal() {
         )
       );
 
-      // Salva in localStorage immediatamente
-      const updatedFavorites = favorites.filter(
-        (f) => !(f.item_id === itemId && f.item_type === itemType)
-      );
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedFavorites));
-
-      // Se autenticato, rimuovi anche da Supabase
-      if (isAuthenticated && favoriteToRemove.id && !favoriteToRemove.id.startsWith('local_')) {
+      // Se autenticato, rimuovi da Supabase (NO localStorage)
+      if (isAuthenticated && favoriteToRemove.id) {
         try {
           const response = await authenticatedFetch(
             `/api/dashboard/favorites?id=${encodeURIComponent(favoriteToRemove.id)}`,
@@ -193,18 +177,23 @@ export function useFavoritesUniversal() {
             toast.success('Rimosso dai preferiti');
             return true;
           } else {
-            // Se fallisce, mantieni rimozione locale
-            toast.success('Rimosso dai preferiti (solo locale)');
-            return true;
+            // Se fallisce, ripristina in UI (NO localStorage)
+            setFavorites((prev) => [...prev, favoriteToRemove]);
+            toast.error('Errore nella rimozione del preferito');
+            return false;
           }
         } catch (error) {
           console.error('Error removing from Supabase:', error);
-          toast.success('Rimosso dai preferiti (solo locale)');
-          return true;
+          // Se fallisce, ripristina in UI (NO localStorage)
+          setFavorites((prev) => [...prev, favoriteToRemove]);
+          toast.error('Errore nella rimozione del preferito');
+          return false;
         }
       } else {
-        toast.success('Rimosso dai preferiti');
-        return true;
+        // Guest: non può rimuovere preferiti (NO localStorage)
+        setFavorites((prev) => [...prev, favoriteToRemove]);
+        toast.error('Accedi per gestire i preferiti');
+        return false;
       }
     } catch (error) {
       console.error('Error removing favorite:', error);

@@ -18,7 +18,7 @@ import { AchievementNotification } from '@/components/gamification/AchievementNo
 import { KeyboardShortcuts } from './KeyboardShortcuts';
 import { useKeyboardShortcuts } from '@/lib/hooks/useKeyboardShortcuts';
 import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
-import { WelcomeTour } from '@/components/onboarding/WelcomeTour';
+// WelcomeTour rimosso - causava problemi di posizionamento e bloccava l'interfaccia
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useDashboardPreferences } from '@/lib/hooks/useDashboardPreferences';
 import { Eye, EyeOff, LayoutGrid, LayoutList } from 'lucide-react';
@@ -209,14 +209,7 @@ export function DashboardShell() {
       <SkipLink href="#modules-view" />
       <ARIALiveRegion message={liveMessage} />
       
-      {/* Welcome Tour */}
-      <WelcomeTour
-        steps={tourSteps}
-        storageKey="tradelia-welcome-tour-completed"
-        onComplete={() => {
-          setLiveMessage(t('onboarding.welcome') || 'Tour completato!');
-        }}
-      />
+      {/* Welcome Tour rimosso - causava problemi di posizionamento e bloccava l'interfaccia */}
 
       <main 
         className={styles.dashboardMain} 
