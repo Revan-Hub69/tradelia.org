@@ -40,19 +40,18 @@ export function useUserRole(): UserRoleData {
 
         if (error) {
           // PGRST116 = no rows returned, which is fine
-          // 500 = server error, table might not exist or RLS issue
-          // PGRST301 = relation does not exist
+          // PGRST301 = relation does not exist or permission denied (RLS)
           // PGRST301 = permission denied (RLS)
           if (error.code === "PGRST116") {
             // No role found, use default - this is expected for new users
           } else if (
-            error.code === "PGRST301" || 
             error.code === "PGRST301" ||
             error.message?.includes("relation") || 
             error.message?.includes("does not exist") ||
             error.message?.includes("permission denied") ||
             error.message?.includes("new row violates row-level security") ||
-            error.status === 500
+            error.message?.includes("500") ||
+            error.message?.includes("Internal Server Error")
           ) {
             // Table doesn't exist, RLS issue, or server error - use default role silently
             // Don't log as error to avoid console noise - this is expected in some cases
