@@ -1,34 +1,37 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './DashboardHeader.module.css';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
 import dynamic from 'next/dynamic';
-import { useIsClient } from '@/lib/hooks/useIsClient';
 import { useAuthState } from '@/lib/hooks/useAuthState';
 
 // Lazy load non-critical header components
 const GlobalSearch = dynamic(() => import('./GlobalSearch').then(mod => ({ default: mod.GlobalSearch })), {
   ssr: false,
+  loading: () => <div className="w-8 h-8 bg-bg-soft rounded animate-pulse" />,
 });
 
 const UserMenu = dynamic(() => import('./UserMenu').then(mod => ({ default: mod.UserMenu })), {
   ssr: false,
+  loading: () => <div className="w-8 h-8 bg-bg-soft rounded-full animate-pulse" />,
 });
 
 const UserStats = dynamic(() => import('@/components/gamification/UserStats').then(mod => ({ default: mod.UserStats })), {
   ssr: false,
+  loading: () => <div className="w-16 h-6 bg-bg-soft rounded animate-pulse" />,
 });
 
 const CurrencySwitch = dynamic(() => import('@/components/ui/CurrencySwitch').then(mod => ({ default: mod.CurrencySwitch })), {
   ssr: false,
+  loading: () => <div className="w-16 h-8 bg-bg-soft rounded animate-pulse" />,
 });
 
 const LanguageSwitch = dynamic(() => import('@/components/ui/LanguageSwitch').then(mod => ({ default: mod.LanguageSwitch })), {
   ssr: false,
+  loading: () => <div className="w-8 h-8 bg-bg-soft rounded animate-pulse" />,
 });
 
 /**
@@ -39,61 +42,13 @@ const LanguageSwitch = dynamic(() => import('@/components/ui/LanguageSwitch').th
  * - Proper semantic HTML
  * - Accessible navigation
  * - Responsive design
- * - Client-side only rendering to prevent hydration issues
+ * - Always visible, even during loading
  * - Login button prominently displayed when not authenticated
  */
 export function DashboardHeader() {
-  const isClient = useIsClient();
   const { locale, t } = useTranslations();
   const { isAuthenticated, isLoading } = useAuthState();
   const dashboardHref = buildLocalePath(locale, '/dashboard');
-  const [mounted, setMounted] = useState(false);
-
-  // Ensure component is fully mounted before rendering auth-dependent content
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Prevent hydration mismatch by not rendering auth-dependent content until client-side
-  if (!isClient || !mounted) {
-    return (
-      <header 
-        className={styles.dashboardHeaderMinimal} 
-        suppressHydrationWarning 
-        style={{ width: '100%', maxWidth: '100%' }}
-        role="banner"
-      >
-        <div className={styles.dashboardHeaderContent}>
-          <div className={styles.dashboardTitle}>
-            <Link 
-              href="/" 
-              className={styles.dashboardBrand}
-              aria-label="Tradelia AI - Home"
-            >
-              {isClient && (
-                <Image
-                  src="/logos/tradelia-logo.svg"
-                  alt="Tradelia AI"
-                  width={140}
-                  height={35}
-                  className={styles.dashboardBrandLogo}
-                  priority
-                  unoptimized={false}
-                />
-              )}
-            </Link>
-            <span className={styles.dashboardTitleSeparator} aria-hidden="true">·</span>
-            <span className={styles.dashboardTitleText}>Dashboard</span>
-          </div>
-          <nav className={styles.dashboardActions} aria-label="Dashboard actions" suppressHydrationWarning>
-            <div className={styles.dashboardActionsRight}>
-              <div className="w-20 h-8 bg-bg-soft rounded animate-pulse" />
-            </div>
-          </nav>
-        </div>
-      </header>
-    );
-  }
 
   return (
     <header 
@@ -103,45 +58,57 @@ export function DashboardHeader() {
       role="banner"
     >
       <div className={styles.dashboardHeaderContent}>
-        {/* Prima riga: Logo e Titolo */}
+        {/* Logo e Titolo - Sempre visibile */}
         <div className={styles.dashboardTitle}>
           <Link 
             href="/" 
             className={styles.dashboardBrand}
             aria-label="Tradelia AI - Home"
           >
-            {isClient && (
-              <Image
-                src="/logos/tradelia-logo.svg"
-                alt="Tradelia AI"
-                width={140}
-                height={35}
-                className={styles.dashboardBrandLogo}
-                priority
-                unoptimized={false}
-              />
-            )}
+            <Image
+              src="/logos/tradelia-logo.svg"
+              alt="Tradelia AI"
+              width={140}
+              height={35}
+              className={styles.dashboardBrandLogo}
+              priority
+              unoptimized={false}
+            />
           </Link>
           <span className={styles.dashboardTitleSeparator} aria-hidden="true">·</span>
           <span className={styles.dashboardTitleText}>Dashboard</span>
         </div>
-        {/* Seconda riga su mobile: Azioni - Ottimizzate per mobile */}
+        
+        {/* Azioni - Sempre visibili, con loading states */}
         <nav className={styles.dashboardActions} aria-label="Dashboard actions" suppressHydrationWarning>
           {isLoading ? (
-            // Loading state - mostra solo logo durante il check auth
-            <div className={styles.dashboardActionsRight}>
-              <div className="w-20 h-8 bg-bg-soft rounded animate-pulse" />
-            </div>
+            // Loading state - mostra skeleton per tutti i componenti
+            <>
+              <div className={styles.dashboardActionsLeft}>
+                <div className="w-8 h-8 bg-bg-soft rounded animate-pulse" />
+                <div className="w-16 h-8 bg-bg-soft rounded animate-pulse" />
+                <div className="w-16 h-6 bg-bg-soft rounded animate-pulse" />
+              </div>
+              <div className={styles.dashboardActionsRight}>
+                <div className="w-8 h-8 bg-bg-soft rounded animate-pulse" />
+                <div className="w-8 h-8 bg-bg-soft rounded-full animate-pulse" />
+              </div>
+            </>
           ) : !isAuthenticated ? (
-            // Quando non autenticato: mostra "Accedi" in prima linea
-            <div className={styles.dashboardActionsRight}>
-              <Link
-                href="/login"
-                className={styles.loginButton}
-              >
-                {t('dashboard.userMenu.login') || 'Accedi'}
-              </Link>
-            </div>
+            // Quando non autenticato: mostra "Accedi" e LanguageSwitch
+            <>
+              <div className={styles.dashboardActionsLeft}>
+                <LanguageSwitch size="sm" />
+              </div>
+              <div className={styles.dashboardActionsRight}>
+                <Link
+                  href={buildLocalePath(locale, '/login')}
+                  className={styles.loginButton}
+                >
+                  {t('dashboard.userMenu.login') || 'Accedi'}
+                </Link>
+              </div>
+            </>
           ) : (
             // Quando autenticato: mostra tutte le azioni
             <>
