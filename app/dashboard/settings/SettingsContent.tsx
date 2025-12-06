@@ -10,7 +10,7 @@ import { PasswordForm } from '@/components/settings/PasswordForm';
 import { PreferencesForm } from '@/components/settings/PreferencesForm';
 import { useIsDesk } from '@/lib/hooks/useUserRole';
 import Link from 'next/link';
-import { buildLocalePath } from '@/lib/i18n/paths';
+// buildLocalePath removed - system always uses Italian
 
 /**
  * Settings Content - Tab Impostazioni
@@ -137,12 +137,10 @@ export default function SettingsContent() {
               <h2 className="text-xl font-semibold text-text-primary mb-4">
                 {t('settings.billing.title') || 'Fatturazione'}
               </h2>
-              <Link
-                href={buildLocalePath(locale, '/dashboard/billing')}
-                className="text-accent hover:text-accent-hover underline"
-              >
-                {t('settings.billing.goToBilling') || 'Vai alla pagina fatturazione →'}
-              </Link>
+              <p className="text-text-secondary mb-6">
+                {t('settings.billing.description') || 'Monitora pagamenti e fatture. Il sistema crediti è stato rimosso.'}
+              </p>
+              <BillingSummary />
             </div>
           )}
 

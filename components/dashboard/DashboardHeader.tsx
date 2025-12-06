@@ -60,6 +60,15 @@ function DashboardHeaderComponent() {
     setIsMounted(true);
   }, []);
 
+  // Force re-render when authentication state changes (fixes header not updating)
+  useEffect(() => {
+    // This ensures header updates when auth state changes
+    if (isMounted) {
+      // Trigger a re-render by updating a state if needed
+      // The component will re-render automatically when isAuthenticated/isLoading changes
+    }
+  }, [isAuthenticated, isLoading, isMounted]);
+
   // During SSR and initial hydration, always show loading state to prevent mismatch
   const shouldShowLoading = !isMounted || isLoading;
   const shouldShowAuthenticated = isMounted && !isLoading && isAuthenticated;

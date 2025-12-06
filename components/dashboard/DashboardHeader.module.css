@@ -165,12 +165,16 @@
   justify-content: space-between;
   position: relative;
   z-index: 10000;
+  flex-wrap: wrap; /* Permette wrapping su mobile */
+  overflow-x: auto; /* Scroll orizzontale se necessario */
+  -webkit-overflow-scrolling: touch; /* Smooth scroll su iOS */
 }
 
 @media (min-width: 480px) {
   .dashboardActions {
     gap: 0.625rem;
     justify-content: flex-end;
+    flex-wrap: nowrap; /* No wrap su tablet+ */
   }
 }
 
@@ -179,6 +183,7 @@
     gap: 0.75rem;
     width: auto;
     justify-content: flex-start;
+    overflow-x: visible; /* No scroll su desktop */
   }
 }
 

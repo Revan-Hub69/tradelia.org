@@ -23,12 +23,12 @@ async function fetcher(url: string) {
 }
 
 export function BillingSummary() {
-  const [view, setView] = useState<'credits' | 'payments' | 'invoices'>('credits');
+  const [view, setView] = useState<'payments' | 'invoices'>('payments');
 
-  const { data: creditsData, isLoading: creditsLoading, error: creditsError } = useSWR<{ data: CreditLog[] }>(
-    view === 'credits' ? '/api/billing/credits' : null,
-    fetcher
-  );
+  // Sistema crediti rimosso - non più disponibile
+  const creditsData = null;
+  const creditsLoading = false;
+  const creditsError = null;
 
   const { data: paymentsData, isLoading: paymentsLoading, error: paymentsError } = useSWR<{ data: Payment[] }>(
     view === 'payments' ? '/api/billing/payments' : null,
@@ -50,11 +50,11 @@ export function BillingSummary() {
           <p className="text-xs uppercase tracking-[0.4em] text-text-tertiary">Billing & Credits</p>
           <h3 className="text-2xl font-semibold text-text-primary mt-2">Storico transazioni</h3>
           <p className="text-sm text-text-secondary max-w-2xl mt-1">
-            Controlla il saldo crediti, i movimenti finanziari e le fatture emesse. Tutti i dati sono sincronizzati con lo schema Supabase (`payments`, `invoices`, `credits_log`) e rispettano le policy RLS per la consultazione sicura.
+            Controlla i movimenti finanziari e le fatture emesse. Tutti i dati sono sincronizzati con lo schema Supabase (`payments`, `invoices`) e rispettano le policy RLS per la consultazione sicura.
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {(['credits', 'payments', 'invoices'] as const).map((option) => (
+          {(['payments', 'invoices'] as const).map((option) => (
             <button
               key={option}
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
@@ -62,7 +62,7 @@ export function BillingSummary() {
               }`}
               onClick={() => setView(option)}
             >
-              {option === 'credits' ? 'Crediti' : option === 'payments' ? 'Pagamenti' : 'Fatture'}
+              {option === 'payments' ? 'Pagamenti' : 'Fatture'}
             </button>
           ))}
         </div>
@@ -94,27 +94,6 @@ export function BillingSummary() {
 
         {!isLoading && !hasError && (
           <div className="space-y-4">
-            {view === 'credits' && creditsData?.data?.length === 0 && (
-              <p className="text-sm text-text-secondary">Nessun movimento di crediti registrato.</p>
-            )}
-            {view === 'credits' &&
-              creditsData?.data?.map((entry) => (
-                <div key={entry.id} className="border border-border-subtle rounded-2xl p-4 flex justify-between items-center bg-bg-base/70">
-                  <div>
-                    <p className="text-text-primary font-semibold">{entry.reason}</p>
-                    <p className="text-xs text-text-tertiary">{new Date(entry.created_at).toLocaleDateString()}</p>
-                  </div>
-                  <p
-                    className={`font-semibold ${
-                      entry.amount >= 0 ? 'text-green-400' : 'text-red-400'
-                    }`}
-                  >
-                    {entry.amount > 0 ? '+' : ''}
-                    {entry.amount}
-                  </p>
-                </div>
-              ))}
-
             {view === 'payments' && paymentsData?.data?.length === 0 && (
               <p className="text-sm text-text-secondary">Nessun pagamento registrato.</p>
             )}
