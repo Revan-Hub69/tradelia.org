@@ -172,15 +172,14 @@ export function OverviewStats() {
           <p className={styles.sectionDescription}>{t('dashboard.overview.description')}</p>
         </div>
       </div>
-      <div 
+      <ul 
         className={styles.overviewStatsGrid}
-        role="list"
         aria-label={t('dashboard.overview.ariaLabel') || 'Statistiche dashboard'}
       >
         {stats.map((stat, index) => (
           <StatCard key={stat.id} stat={stat} isFirst={index === 0} />
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
@@ -216,9 +215,8 @@ const StatCard = memo(function StatCard({ stat, isFirst }: StatCardProps) {
       : styles.statTrendNeutral;
 
   return (
-    <div 
+    <li 
       className={styles.statCard}
-      role="listitem"
       aria-label={`${stat.label}: ${stat.value}, ${stat.context}`}
     >
       <div className={styles.statHeader}>
@@ -256,6 +254,6 @@ const StatCard = memo(function StatCard({ stat, isFirst }: StatCardProps) {
           </svg>
         </Link>
       )}
-    </div>
+    </li>
   );
 });

@@ -158,7 +158,7 @@ export function RequestAnalysisModal({
             autoComplete="off"
             spellCheck="false"
           />
-          <p id="symbol-hint" className="text-xs text-text-tertiary mt-1" role="note">
+          <p id="symbol-hint" className="text-xs text-text-secondary mt-1 opacity-90" role="note">
             {t('dashboard.requests.symbolHint') || 'Es: AAPL, MSFT, BTC'}
           </p>
         </div>
@@ -214,7 +214,7 @@ export function RequestAnalysisModal({
             aria-describedby="notes-counter"
             // Norman - Feedback: Character counter provides immediate feedback
           />
-          <p id="notes-counter" className="text-xs text-text-tertiary mt-1" role="status" aria-live="polite">
+          <p id="notes-counter" className="text-xs text-text-secondary mt-1 opacity-90" role="status" aria-live="polite">
             {formData.notes.length}/500
             <span className="sr-only"> caratteri rimanenti</span>
           </p>

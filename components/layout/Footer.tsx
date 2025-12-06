@@ -115,7 +115,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative border-t border-border-subtle bg-bg-surface" role="contentinfo" suppressHydrationWarning>
+    <footer className="relative border-t border-border-subtle bg-bg-surface min-h-[400px]" role="contentinfo" suppressHydrationWarning style={{ minHeight: '400px' }}>
       {/* Top gradient line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-primary opacity-20" />
 
@@ -150,13 +150,13 @@ export function Footer() {
                   <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-accent to-accent-hover transition-all duration-300 group-hover:w-full" />
                 </div>
               </Link>
-              <p className="text-sm text-text-muted leading-relaxed">
+              <p className="text-sm text-text-secondary leading-relaxed">
                 &copy; {mounted ? year : 2024} Tradelia · {t('footer.copyright')}
               </p>
               <p className="text-sm text-text-secondary leading-relaxed max-w-sm transition-colors duration-200">
                 {t('footer.description')}
               </p>
-              <p className="text-xs text-text-muted leading-relaxed max-w-sm mt-2 opacity-90">
+              <p className="text-xs text-text-secondary leading-relaxed max-w-sm mt-2 opacity-95">
                 {t('footer.disclaimer')}
               </p>
             </motion.div>

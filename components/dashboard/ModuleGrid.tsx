@@ -120,9 +120,8 @@ export const ModuleGrid = memo(function ModuleGrid({ priority }: ModuleGridProps
           aria-label="Informazioni sui moduli"
         />
       </div>
-      <div 
+      <ul 
         className={styles.modulesGrid}
-        role="list"
         aria-label={priority 
           ? (priority === 'primary' ? 'Moduli principali della dashboard' : 'Moduli secondari della dashboard')
           : 'Moduli e funzionalità della dashboard'}
@@ -134,7 +133,7 @@ export const ModuleGrid = memo(function ModuleGrid({ priority }: ModuleGridProps
             isFirst={index === 0}
           />
         ))}
-      </div>
+      </ul>
     </div>
   );
 });
@@ -143,11 +142,10 @@ function ModuleCard({ module, isFirst }: { module: Module; isFirst?: boolean }) 
   const { isAuthenticated } = useAuthState();
   
   return (
-    <article className={cn(styles.moduleCard, 'group relative')} role="article">
+    <li className={cn(styles.moduleCard, 'group relative')}>
       <Link 
         href={module.href} 
         className="block focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 focus-visible:rounded-lg"
-        role="listitem"
         aria-label={`Accedi a ${module.title}: ${module.description || ''}`}
         prefetch={true}
         tabIndex={isFirst ? 0 : undefined}
@@ -212,7 +210,7 @@ function ModuleCard({ module, isFirst }: { module: Module; isFirst?: boolean }) 
           />
         </div>
       )}
-    </article>
+    </li>
   );
 }
 

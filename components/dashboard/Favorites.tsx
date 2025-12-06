@@ -127,18 +127,18 @@ export const Favorites = memo(function Favorites() {
 
   if (favoritesList.length === 0) {
     return (
-      <section className="mb-8" aria-label={t('dashboard.favorites.title') || 'Preferiti'}>
+      <section className="mb-8 min-h-[200px]" aria-label={t('dashboard.favorites.title') || 'Preferiti'}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-text-primary">
             {t('dashboard.favorites.title') || 'Preferiti'}
           </h2>
         </div>
-        <div className="bg-bg-soft border border-border-subtle rounded-xl p-12 text-center">
-          <Heart className="w-12 h-12 mx-auto mb-3 text-text-tertiary opacity-50" />
-          <p className="text-sm text-text-tertiary mb-2">
+        <div className="bg-bg-soft border border-border-subtle rounded-xl p-12 text-center min-h-[200px] flex flex-col items-center justify-center">
+          <Heart className="w-12 h-12 mx-auto mb-3 text-text-secondary opacity-60" />
+          <p className="text-sm text-text-secondary mb-2">
             {t('dashboard.favorites.empty') || 'Nessun contenuto salvato nei preferiti'}
           </p>
-          <p className="text-xs text-text-tertiary">
+          <p className="text-xs text-text-secondary opacity-90">
             {t('dashboard.favorites.emptyDesc') || 'Clicca sulla stella per salvare i contenuti che usi più spesso'}
           </p>
         </div>
@@ -152,7 +152,7 @@ export const Favorites = memo(function Favorites() {
         <h2 className="text-lg font-semibold text-text-primary">
           {t('dashboard.favorites.title') || 'Preferiti'}
         </h2>
-        <span className="text-xs text-text-tertiary">
+        <span className="text-xs text-text-secondary">
           {favoritesList.length} {t('dashboard.favorites.count') || 'preferiti'}
         </span>
       </div>
@@ -209,7 +209,7 @@ export const Favorites = memo(function Favorites() {
                       <Star className="w-3 h-3 text-amber-400 fill-amber-400 flex-shrink-0" />
                     </div>
                     <p className="text-xs text-text-secondary line-clamp-2 mb-2">{favorite.description}</p>
-                    <span className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded text-xs text-text-tertiary capitalize">
+                    <span className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded text-xs text-text-secondary capitalize">
                       {getTypeLabel(favorite.type)}
                     </span>
                   </div>

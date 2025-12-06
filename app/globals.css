@@ -219,10 +219,16 @@
   }
 
   /* Custom Scrollbar - Enhanced Visibility - Unified across site */
-  /* Firefox */
+  /* Firefox - scrollbar-color supportato da Firefox 64+ */
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.08);
+  }
+  
+  /* Fallback per browser che supportano scrollbar-color */
+  @supports (scrollbar-color: rgba(255, 255, 255, 0.2)) {
+    * {
+      scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.08);
+    }
   }
 
   /* Webkit (Chrome, Safari, Edge) */
