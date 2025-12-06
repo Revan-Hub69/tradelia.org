@@ -212,7 +212,7 @@ function ModuleCard({ module, isFirst }: { module: Module; isFirst?: boolean }) 
           />
         </div>
       )}
-    </div>
+    </article>
   );
 }
 
