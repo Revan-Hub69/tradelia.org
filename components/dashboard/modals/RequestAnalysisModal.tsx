@@ -66,7 +66,9 @@ export function RequestAnalysisModal({
       return;
     }
 
+    // Best Practice: Sanitizzazione input per sicurezza (XSS prevention)
     const symbol = formData.asset_symbol.trim().toUpperCase().slice(0, 10);
+    // Validazione rigorosa: solo lettere maiuscole, max 10 caratteri
     if (!/^[A-Z]{1,10}$/.test(symbol)) {
       toast.error(t('dashboard.requests.errors.invalidSymbol') || 'Simbolo non valido. Usa solo lettere maiuscole (max 10 caratteri).');
       const symbolInput = document.getElementById('asset_symbol');
@@ -77,6 +79,10 @@ export function RequestAnalysisModal({
       return;
     }
 
+    // Best Practice: Sanitizzazione note per sicurezza
+    const sanitizedNotes = formData.notes.trim().slice(0, 500).replace(/[<>]/g, ''); // Rimuove caratteri potenzialmente pericolosi
+    const sanitizedAssetName = formData.asset_name.trim().slice(0, 100).replace(/[<>]/g, '');
+
     setLoading(true);
     try {
       const response = await fetch('/api/dashboard/analysis-requests', {
@@ -86,9 +92,9 @@ export function RequestAnalysisModal({
         },
         body: JSON.stringify({
           asset_symbol: symbol,
-          asset_name: formData.asset_name.trim() || symbol,
+          asset_name: sanitizedAssetName || symbol,
           priority: formData.priority,
-          notes: formData.notes.trim() || null,
+          notes: sanitizedNotes || null,
         }),
       });
 

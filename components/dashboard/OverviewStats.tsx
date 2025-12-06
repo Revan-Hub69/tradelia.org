@@ -14,6 +14,7 @@ import { toast } from '@/components/ui/Toast';
 import { ContextualHelp } from './ContextualHelp';
 import { LoadingState } from './LoadingState';
 import { ErrorState } from './ErrorState';
+import { cn } from '@/lib/utils/cn';
 
 /**
  * OverviewStats Component - Premium Academic Design
@@ -174,10 +175,10 @@ export function OverviewStats() {
       <div 
         className={styles.overviewStatsGrid}
         role="list"
-        aria-label={t('dashboard.overview.ariaLabel')}
+        aria-label={t('dashboard.overview.ariaLabel') || 'Statistiche dashboard'}
       >
-        {stats.map((stat) => (
-          <StatCard key={stat.id} stat={stat} />
+        {stats.map((stat, index) => (
+          <StatCard key={stat.id} stat={stat} isFirst={index === 0} />
         ))}
       </div>
     </div>
@@ -198,9 +199,10 @@ interface StatCardProps {
       href: string;
     };
   };
+  isFirst?: boolean;
 }
 
-const StatCard = memo(function StatCard({ stat }: StatCardProps) {
+const StatCard = memo(function StatCard({ stat, isFirst }: StatCardProps) {
   const TrendIcon = 
     stat.trend === 'up' ? ArrowUpRight :
     stat.trend === 'down' ? ArrowDownRight :
@@ -233,8 +235,10 @@ const StatCard = memo(function StatCard({ stat }: StatCardProps) {
       {stat.action && (
         <Link 
           href={stat.action.href}
-          className={styles.statAction}
+          className={cn(styles.statAction, 'focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2')}
           aria-label={stat.action.label}
+          tabIndex={isFirst ? 0 : undefined}
+          prefetch={true}
         >
           {stat.action.label}
           <svg

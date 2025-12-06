@@ -68,9 +68,19 @@ export function DashboardHero() {
             </>
           )}
         </p>
-        <div className={styles.dashboardHeroActions}>
-          <Button asChild size="lg">
-            <Link href="/dashboard/education">
+        <div className={styles.dashboardHeroActions} role="group" aria-label="Azioni principali">
+          <Button asChild size="lg" className="focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2">
+            <Link 
+              href="/dashboard/education"
+              prefetch={true}
+              onKeyDown={(e) => {
+                // Best Practice: Enter e Space attivano il link (WCAG 2.1.1)
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  window.location.href = '/dashboard/education';
+                }
+              }}
+            >
               <span>{t('dashboard.hero.ctaPrimary')}</span>
               <ArrowRight className={styles.dashboardHeroActionIcon} aria-hidden="true" />
             </Link>

@@ -165,9 +165,16 @@ function DashboardHeaderComponent() {
               <div className={styles.dashboardActionsRight}>
                 <Link
                   href="/dashboard/favorites"
-                  className="flex items-center justify-center w-10 h-10 rounded-lg bg-bg-soft hover:bg-bg-elevated border border-border-subtle hover:border-accent/40 text-text-secondary hover:text-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent min-w-[44px] min-h-[44px]"
+                  className="flex items-center justify-center w-10 h-10 rounded-lg bg-bg-soft hover:bg-bg-elevated border border-border-subtle hover:border-accent/40 text-text-secondary hover:text-accent transition-all duration-200 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-accent min-w-[44px] min-h-[44px]"
                   aria-label={t('dashboard.favorites.title') || 'Preferiti'}
                   title={t('dashboard.favorites.title') || 'Preferiti'}
+                  onKeyDown={(e) => {
+                    // Best Practice: Enter e Space attivano il link (WCAG 2.1.1)
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      window.location.href = '/dashboard/favorites';
+                    }
+                  }}
                   onMouseEnter={() => {
                     // Prefetch favorites page on hover
                     if (typeof window !== 'undefined') {
