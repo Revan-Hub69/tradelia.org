@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './DashboardHeader.module.css';
@@ -37,18 +38,19 @@ const LanguageSwitch = dynamic(() => import('@/components/ui/LanguageSwitch').th
 /**
  * Dashboard Header Component
  * Clean, modern header with single logo and responsive design
- * Best practices:
+ * Best practices 2025:
  * - Single logo (no fallback text to avoid duplication)
- * - Proper semantic HTML
- * - Accessible navigation
- * - Responsive design
+ * - Proper semantic HTML (header, nav, aria-labels)
+ * - Accessible navigation (keyboard, screen readers)
+ * - Responsive design (mobile-first)
  * - Always visible, even during loading
  * - Login button prominently displayed when not authenticated
+ * - Performance optimized (React.memo, dynamic imports)
+ * - Internationalized (translated text)
  */
-export function DashboardHeader() {
+function DashboardHeaderComponent() {
   const { locale, t } = useTranslations();
   const { isAuthenticated, isLoading } = useAuthState();
-  const dashboardHref = buildLocalePath(locale, '/dashboard');
 
   return (
     <header 
@@ -76,22 +78,22 @@ export function DashboardHeader() {
             />
           </Link>
           <span className={styles.dashboardTitleSeparator} aria-hidden="true">·</span>
-          <span className={styles.dashboardTitleText}>Dashboard</span>
+          <span className={styles.dashboardTitleText}>{t('header.dashboard') || 'Dashboard'}</span>
         </div>
         
         {/* Azioni - Sempre visibili, con loading states */}
         <nav className={styles.dashboardActions} aria-label="Dashboard actions" suppressHydrationWarning>
           {isLoading ? (
-            // Loading state - mostra skeleton per tutti i componenti
+            // Loading state - mostra skeleton per tutti i componenti (accessibile)
             <>
-              <div className={styles.dashboardActionsLeft}>
-                <div className="w-8 h-8 bg-bg-soft rounded animate-pulse" />
-                <div className="w-16 h-8 bg-bg-soft rounded animate-pulse" />
-                <div className="w-16 h-6 bg-bg-soft rounded animate-pulse" />
+              <div className={styles.dashboardActionsLeft} aria-label={t('common.loading') || 'Loading'}>
+                <div className="w-8 h-8 bg-bg-soft rounded animate-pulse" aria-hidden="true" />
+                <div className="w-16 h-8 bg-bg-soft rounded animate-pulse" aria-hidden="true" />
+                <div className="w-16 h-6 bg-bg-soft rounded animate-pulse" aria-hidden="true" />
               </div>
-              <div className={styles.dashboardActionsRight}>
-                <div className="w-8 h-8 bg-bg-soft rounded animate-pulse" />
-                <div className="w-8 h-8 bg-bg-soft rounded-full animate-pulse" />
+              <div className={styles.dashboardActionsRight} aria-label={t('common.loading') || 'Loading'}>
+                <div className="w-8 h-8 bg-bg-soft rounded animate-pulse" aria-hidden="true" />
+                <div className="w-8 h-8 bg-bg-soft rounded-full animate-pulse" aria-hidden="true" />
               </div>
             </>
           ) : !isAuthenticated ? (
@@ -104,6 +106,7 @@ export function DashboardHeader() {
                 <Link
                   href={buildLocalePath(locale, '/login')}
                   className={styles.loginButton}
+                  aria-label={t('dashboard.userMenu.login') || 'Accedi'}
                 >
                   {t('dashboard.userMenu.login') || 'Accedi'}
                 </Link>
@@ -128,3 +131,7 @@ export function DashboardHeader() {
     </header>
   );
 }
+
+// Memoize component to prevent unnecessary re-renders (Performance Best Practice 2025)
+export const DashboardHeader = memo(DashboardHeaderComponent);
+DashboardHeader.displayName = 'DashboardHeader';
