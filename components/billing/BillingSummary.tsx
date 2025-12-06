@@ -24,25 +24,32 @@ async function fetcher(url: string) {
 }
 
 export function BillingSummary() {
+  const isClient = useIsClient();
   const [view, setView] = useState<'payments' | 'invoices'>('payments');
 
-  // Sistema crediti rimosso - non più disponibile
-  const creditsData = null;
-  const creditsLoading = false;
-  const creditsError = null;
-
+  // Solo carica dati sul client per evitare hydration mismatch
   const { data: paymentsData, isLoading: paymentsLoading, error: paymentsError } = useSWR<{ data: Payment[] }>(
-    view === 'payments' ? '/api/billing/payments' : null,
-    fetcher
+    isClient && view === 'payments' ? '/api/billing/payments' : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      shouldRetryOnError: false, // Non ritentare su 401/500
+    }
   );
 
   const { data: invoicesData, isLoading: invoicesLoading, error: invoicesError } = useSWR<{ data: Invoice[] }>(
-    view === 'invoices' ? '/api/billing/invoices' : null,
-    fetcher
+    isClient && view === 'invoices' ? '/api/billing/invoices' : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      shouldRetryOnError: false, // Non ritentare su 401/500
+    }
   );
 
-  const isLoading = creditsLoading || paymentsLoading || invoicesLoading;
-  const hasError = creditsError || paymentsError || invoicesError;
+  const isLoading = paymentsLoading || invoicesLoading;
+  const hasError = paymentsError || invoicesError;
 
   // Non renderizzare fino a quando non siamo sul client (previene hydration mismatch)
   if (!isClient) {
@@ -92,7 +99,7 @@ export function BillingSummary() {
             <div className="inline-block p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
               <p className="text-red-400 font-semibold mb-2">Errore durante il caricamento</p>
               <p className="text-sm text-text-secondary">
-                {creditsError?.message || paymentsError?.message || invoicesError?.message || 'Errore sconosciuto'}
+                {paymentsError?.message || invoicesError?.message || 'Errore sconosciuto'}
               </p>
               <button
                 onClick={() => window.location.reload()}
