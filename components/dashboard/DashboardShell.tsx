@@ -19,7 +19,6 @@ import { AchievementNotification } from '@/components/gamification/AchievementNo
 import { KeyboardShortcuts } from './KeyboardShortcuts';
 import { useKeyboardShortcuts } from '@/lib/hooks/useKeyboardShortcuts';
 import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
-import { useEffect } from 'react';
 // WelcomeTour rimosso - causava problemi di posizionamento e bloccava l'interfaccia
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useDashboardPreferences } from '@/lib/hooks/useDashboardPreferences';
