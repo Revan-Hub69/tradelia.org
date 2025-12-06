@@ -87,10 +87,11 @@ function DashboardHeaderComponent() {
     }
   }, [isAuthenticated, isLoading, isMounted]);
 
-  // During SSR and initial hydration, always show loading state to prevent mismatch
-  const shouldShowLoading = !isMounted || isLoading;
-  const shouldShowAuthenticated = isMounted && !isLoading && isAuthenticated;
-  const shouldShowUnauthenticated = isMounted && !isLoading && !isAuthenticated;
+  // Sempre mostra l'header, anche durante loading o stati intermedi
+  // Fallback: se nessuna condizione è vera, mostra loading state
+  const showLoading = !isMounted || isLoading;
+  const showAuthenticated = isMounted && !isLoading && isAuthenticated === true;
+  const showUnauthenticated = isMounted && !isLoading && isAuthenticated === false;
 
   return (
     <header 
@@ -125,7 +126,7 @@ function DashboardHeaderComponent() {
         
         {/* Azioni - Sempre visibili, con loading states */}
         <nav className={styles.dashboardActions} aria-label="Dashboard actions" suppressHydrationWarning>
-          {shouldShowLoading ? (
+          {showLoading ? (
             // Loading state - mostra skeleton per tutti i componenti (accessibile)
             <>
               <div className={styles.dashboardActionsLeft} aria-label={t('common.loading') || 'Loading'}>
@@ -138,7 +139,7 @@ function DashboardHeaderComponent() {
                 <div className="w-8 h-8 bg-bg-soft rounded-full animate-pulse" aria-hidden="true" />
               </div>
             </>
-          ) : shouldShowUnauthenticated ? (
+          ) : showUnauthenticated ? (
             // Quando non autenticato: mostra "Accedi"
             <>
               <div className={styles.dashboardActionsLeft}>
@@ -154,7 +155,7 @@ function DashboardHeaderComponent() {
                 </Link>
               </div>
             </>
-          ) : shouldShowAuthenticated ? (
+          ) : showAuthenticated ? (
             // Quando autenticato: mostra tutte le azioni
             <>
               <div className={styles.dashboardActionsLeft}>
@@ -215,7 +216,20 @@ function DashboardHeaderComponent() {
                 <UserMenu />
               </div>
             </>
-          ) : null}
+          ) : (
+            // Fallback: mostra loading state se nessuna condizione è vera (non dovrebbe mai accadere, ma sicurezza)
+            <>
+              <div className={styles.dashboardActionsLeft} aria-label={t('common.loading') || 'Loading'}>
+                <div className="w-8 h-8 bg-bg-soft rounded animate-pulse" aria-hidden="true" />
+                <div className="w-16 h-8 bg-bg-soft rounded animate-pulse" aria-hidden="true" />
+                <div className="w-16 h-6 bg-bg-soft rounded animate-pulse" aria-hidden="true" />
+              </div>
+              <div className={styles.dashboardActionsRight} aria-label={t('common.loading') || 'Loading'}>
+                <div className="w-8 h-8 bg-bg-soft rounded animate-pulse" aria-hidden="true" />
+                <div className="w-8 h-8 bg-bg-soft rounded-full animate-pulse" aria-hidden="true" />
+              </div>
+            </>
+          )}
         </nav>
       </div>
     </header>
