@@ -195,8 +195,8 @@ export function TradeliaAIChat() {
       label: currentLocale === 'it' ? 'Assistenza' : 'Support',
       icon: HelpCircle,
       action: currentLocale === 'it'
-        ? 'Ho bisogno di assistenza'
-        : 'I need support',
+        ? 'Ho bisogno di aiuto con la piattaforma Tradelia'
+        : 'I need help with the Tradelia platform',
     },
   ], [currentLocale]);
 
