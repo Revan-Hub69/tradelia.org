@@ -8,7 +8,7 @@ import { DashboardHero } from './DashboardHero';
 import { OverviewStats } from './OverviewStats';
 import { ModuleGrid } from './ModuleGrid';
 import { AccountBanner } from './AccountBanner';
-import WidgetsSection from './WidgetsSection';
+// WidgetsSection rimossa - richiede API real-time non disponibili
 // Breadcrumb rimosso - già presente in DashboardTabs per evitare duplicati
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -254,16 +254,8 @@ export function DashboardShell() {
             </ErrorBoundary>
           </section>
 
-          {/* Widgets Section (Pro only) */}
-          <section 
-            aria-label="Widget personalizzati" 
-            className={styles.dashboardSection}
-            id="widgets"
-          >
-            <ErrorBoundary>
-              <WidgetsSection />
-            </ErrorBoundary>
-          </section>
+          {/* Widgets Section rimossa - richiede API real-time non disponibili */}
+          {/* Verrà riattivata quando le API saranno disponibili */}
         </div>
         {/* Chat AI unificata - Disponibile tramite layout principale */}
       </main>

@@ -5,7 +5,8 @@ import { getLocaleFromRequest } from '@/lib/i18n/api-messages';
 import { translateModules } from '@/lib/i18n/modules-translations';
 
 // Moduli Pro-only (richiedono account Pro)
-const PRO_ONLY_MODULES = ['voting', 'requests', 'widgets', 'watchlist'];
+const PRO_ONLY_MODULES = ['voting', 'requests'];
+// NOTA: widgets e watchlist rimossi - richiedono API real-time non disponibili
 
 // Moduli di default da mostrare quando il database non ha dati
 const DEFAULT_MODULES = {
@@ -89,28 +90,8 @@ const DEFAULT_MODULES = {
     },
   ],
   secondary: [
-    {
-      id: 'widgets',
-      title: 'Widgets',
-      description: 'Widget personalizzabili per watchlist, portfolio e alert (Coming Soon)',
-      href: '/dashboard/widgets',
-      icon: 'layout',
-      priority: 'secondary' as const,
-      is_active: true,
-      order_index: 2,
-      badge_count: 0,
-    },
-    {
-      id: 'watchlist',
-      title: 'Watchlist',
-      description: 'Monitora i tuoi asset preferiti con alert personalizzati (Coming Soon)',
-      href: '/dashboard/watchlist',
-      icon: 'eye',
-      priority: 'secondary' as const,
-      is_active: true,
-      order_index: 3,
-      badge_count: 0,
-    },
+    // Rimossi widgets e watchlist - richiedono API real-time non disponibili
+    // Verranno aggiunti quando le API saranno disponibili
     {
       id: 'billing',
       title: 'Billing',

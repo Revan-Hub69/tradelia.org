@@ -292,11 +292,12 @@ export default function UtilitiesPage() {
     : null;
 
   // Raggruppa per categoria
+  // Best Practice: Mostra solo strumenti completi e funzionanti
   const baseUtilities = allUtilities.filter(u => u.category === 'base');
   const riskUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'risk');
   const performanceUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'performance');
   const advancedUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'advanced');
-  const comingSoonUtilities = allUtilities.filter(u => u.category === 'coming-soon');
+  // Rimossi coming-soon utilities - non mostrare strumenti non completabili
 
   return (
     <div className="min-h-screen bg-bg-base">
@@ -643,54 +644,9 @@ export default function UtilitiesPage() {
               </div>
             </section>
 
-            {/* Coming Soon - Real-time Tools */}
-            {comingSoonUtilities.length > 0 && (
-              <section>
-                <h2 className="text-xl font-semibold text-text-primary mb-4">
-                  In Arrivo <span className="text-sm font-normal text-text-tertiary">(Richiedono API Real-time)</span>
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {comingSoonUtilities.map((utility) => {
-                    const Icon = utility.icon;
-                    return (
-                      <div
-                        key={utility.id}
-                        className={cn(
-                          'bg-bg-surface border border-border-subtle/50 rounded-xl p-6 text-left relative',
-                          'opacity-50',
-                          'flex flex-col gap-3',
-                          'cursor-not-allowed'
-                        )}
-                        onClick={() => handleUtilityClick(utility)}
-                      >
-                        <div className="flex items-start justify-between">
-                          <div className="w-12 h-12 rounded-lg bg-bg-soft flex items-center justify-center">
-                            <Icon className="w-6 h-6 text-text-tertiary" aria-hidden="true" />
-                          </div>
-                          <div className="px-2 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-md text-[10px] text-amber-300 font-semibold">
-                            Coming Soon
-                          </div>
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-text-primary mb-1">{utility.label}</h3>
-                          <p className="text-sm text-text-secondary">{utility.description}</p>
-                          {utility.reason && (
-                            <p className="text-xs text-text-tertiary mt-2 italic">{utility.reason}</p>
-                          )}
-                        </div>
-                        <FeatureComingSoon
-                          featureName={utility.label}
-                          description={utility.description}
-                          reason={utility.reason}
-                          estimatedDate="Q2 2025"
-                          variant="overlay"
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-              </section>
-            )}
+            {/* Coming Soon - Real-time Tools - RIMOSSO: Non mostrare strumenti non completabili */}
+            {/* Questi strumenti richiedono API real-time non disponibili e non possono essere completati */}
+            {/* Verranno aggiunti quando le API saranno disponibili */}
           </div>
         )}
       </div>
