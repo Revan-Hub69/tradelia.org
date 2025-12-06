@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useRef, useEffect, useMemo, useCallback, memo } from 'react';
+import { useRouter } from 'next/navigation';
 import { MessageCircle, X, Send, Loader2, BookOpen, HelpCircle, Sparkles, ArrowRight, RotateCcw, ArrowLeft, Home } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { buildLocalePath } from '@/lib/i18n/paths';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -131,6 +133,7 @@ MessageBubble.displayName = 'MessageBubble';
  */
 export function TradeliaAIChat() {
   const { locale } = useTranslations();
+  const router = useRouter();
   const isPro = useIsPro();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
@@ -379,12 +382,21 @@ export function TradeliaAIChat() {
     if (action.proOnly && !isPro) {
       return; // Non fare nulla se è Pro-only e l'utente non è Pro
     }
+    
+    // Best Practice: Glossario linka direttamente alla pagina, non alla chat
+    if (action.id === 'glossary') {
+      const glossaryPath = buildLocalePath(currentLocale, '/glossary');
+      router.push(glossaryPath);
+      setIsOpen(false); // Chiudi chat quando navighi
+      return;
+    }
+    
     setMessage(action.action);
     // Trigger send dopo un breve delay per permettere al messaggio di essere settato
     setTimeout(() => {
       handleSend(action.action);
     }, 100);
-  }, [isPro, handleSend]);
+  }, [isPro, handleSend, currentLocale, router]);
 
   // Memoized conversation history - Best Practice: Performance
   const conversationHistory = useMemo(() => {

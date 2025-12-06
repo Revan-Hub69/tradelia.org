@@ -34,6 +34,17 @@ const DEFAULT_MODULES = {
       badge_count: 0,
     },
     {
+      id: 'glossary',
+      title: 'Glossario',
+      description: 'Definizioni accademiche di termini finanziari con spiegazioni Tradelia AI',
+      href: '/glossary',
+      icon: 'book',
+      priority: 'primary' as const,
+      is_active: true,
+      order_index: 3,
+      badge_count: 0,
+    },
+    {
       id: 'utilities',
       title: 'Utilities',
       description: 'Strumenti finanziari professionali: calcolatori, simulatori e analisi avanzate',
@@ -41,7 +52,7 @@ const DEFAULT_MODULES = {
       icon: 'calculator',
       priority: 'primary' as const,
       is_active: true,
-      order_index: 3,
+      order_index: 4,
       badge_count: 0,
     },
     {
@@ -52,7 +63,7 @@ const DEFAULT_MODULES = {
       icon: 'send',
       priority: 'primary' as const,
       is_active: true,
-      order_index: 4,
+      order_index: 5,
       badge_count: 0,
     },
     {
@@ -63,7 +74,7 @@ const DEFAULT_MODULES = {
       icon: 'vote',
       priority: 'primary' as const,
       is_active: true,
-      order_index: 5,
+      order_index: 6,
       badge_count: 0,
     },
     {
@@ -74,7 +85,7 @@ const DEFAULT_MODULES = {
       icon: 'settings',
       priority: 'primary' as const,
       is_active: true,
-      order_index: 6,
+      order_index: 7,
       badge_count: 0,
     },
     {
@@ -85,7 +96,7 @@ const DEFAULT_MODULES = {
       icon: 'star',
       priority: 'primary' as const,
       is_active: true,
-      order_index: 7,
+      order_index: 8,
       badge_count: 0,
     },
   ],
