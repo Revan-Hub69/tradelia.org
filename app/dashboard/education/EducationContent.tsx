@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { BookOpen, Search, Filter, Play, CheckCircle2 } from 'lucide-react';
+import { BookOpen, Search, Filter, Play, CheckCircle2, Book } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useApi } from '@/lib/hooks/useApi';
 import { LoadingState } from '@/components/dashboard/LoadingState';
@@ -78,13 +78,24 @@ export default function EducationContent() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-text-primary mb-2 flex items-center gap-3">
-            <BookOpen className="w-8 h-8 text-accent" />
-            {t('dashboard.education.title') || 'Formazione'}
-          </h1>
-          <p className="text-text-secondary text-lg">
-            {t('dashboard.education.description') || 'Esplora i corsi disponibili e continua il tuo percorso formativo'}
-          </p>
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <h1 className="text-3xl font-bold text-text-primary mb-2 flex items-center gap-3">
+                <BookOpen className="w-8 h-8 text-accent" />
+                {t('dashboard.education.title') || 'Formazione'}
+              </h1>
+              <p className="text-text-secondary text-lg">
+                {t('dashboard.education.description') || 'Esplora i corsi disponibili e continua il tuo percorso formativo'}
+              </p>
+            </div>
+            <Link
+              href="/glossary"
+              className="flex items-center gap-2 px-4 py-2 bg-bg-surface border border-border-subtle hover:border-accent/60 rounded-lg text-text-primary hover:text-accent transition-colors"
+            >
+              <Book className="w-5 h-5" />
+              <span className="font-medium">Glossario</span>
+            </Link>
+          </div>
         </div>
 
         {/* Filters */}

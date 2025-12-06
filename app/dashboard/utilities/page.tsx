@@ -2,13 +2,11 @@
 
 import { useState, lazy, Suspense } from 'react';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
-import { Calculator, TrendingUp, BookOpen, Shield, Target, BarChart3, TrendingDown, Zap, PieChart, Link2, Activity, Eye, Bell, Layout, Settings, Clock } from 'lucide-react';
+import { Calculator, TrendingUp, BookOpen, Shield, Target, BarChart3, TrendingDown, Zap, PieChart, Link2, Activity, Settings } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsPro } from '@/lib/hooks/useUserRole';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ProBadge } from '@/components/ui/ProBadge';
-import { ComingSoon } from '@/components/ui/ComingSoon';
-import { FeatureComingSoon } from '@/components/ui/FeatureComingSoon';
 import { ProLockOverlay } from '@/components/dashboard/utilities/ProLockOverlay';
 import { cn } from '@/lib/utils/cn';
 import styles from './utilities.module.css';
@@ -69,7 +67,7 @@ const CalculatorSkeleton = () => (
   </div>
 );
 
-type UtilityTab = 'calculator' | 'pac' | 'journal' | 'paper-trading' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility' | 'strategy-builder' | 'watchlist' | 'portfolio-manager' | 'alerts' | 'widgets';
+type UtilityTab = 'calculator' | 'pac' | 'journal' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility' | 'strategy-builder';
 
 interface Utility {
   id: UtilityTab;
@@ -172,17 +170,6 @@ export default function UtilitiesPage() {
       description: 'Registra e analizza le tue operazioni di trading',
       available: true,
     },
-    {
-      id: 'paper-trading',
-      label: 'Paper Trading',
-      icon: Target,
-      category: 'coming-soon',
-      group: 'performance',
-      description: 'Simula operazioni di trading in tempo reale con ordini avanzati e risk management',
-      available: false,
-      comingSoon: true,
-      reason: 'Richiede integrazione con API real-time per prezzi di mercato e ordini',
-    },
     // Pro Tools - Advanced
     {
       id: 'options',
@@ -229,51 +216,6 @@ export default function UtilitiesPage() {
       description: 'Simula e esplora strategie di trading (dati simulati - educativo). Usa Paper Trading per test reali.',
       available: true,
     },
-    // Coming Soon - Real-time Tools
-    {
-      id: 'watchlist',
-      label: 'Watchlist',
-      icon: Eye,
-      category: 'coming-soon',
-      group: 'real-time',
-      description: 'Monitora i tuoi asset preferiti con alert personalizzati',
-      available: false,
-      comingSoon: true,
-      reason: 'Richiede integrazione con API real-time per prezzi di mercato',
-    },
-    {
-      id: 'portfolio-manager',
-      label: 'Portfolio Manager',
-      icon: PieChart,
-      category: 'coming-soon',
-      group: 'real-time',
-      description: 'Gestisci il tuo portafoglio con aggiornamenti real-time',
-      available: false,
-      comingSoon: true,
-      reason: 'Richiede integrazione con API real-time per prezzi di mercato',
-    },
-    {
-      id: 'alerts',
-      label: 'Sistema di Alert',
-      icon: Bell,
-      category: 'coming-soon',
-      group: 'real-time',
-      description: 'Notifiche personalizzate per i tuoi asset',
-      available: false,
-      comingSoon: true,
-      reason: 'Richiede integrazione con API real-time per prezzi di mercato',
-    },
-    {
-      id: 'widgets',
-      label: 'Widgets',
-      icon: Layout,
-      category: 'coming-soon',
-      group: 'real-time',
-      description: 'Widget personalizzabili per watchlist, portfolio e alert',
-      available: false,
-      comingSoon: true,
-      reason: 'Richiede integrazione con API real-time per prezzi di mercato',
-    },
   ];
 
   const handleUtilityClick = (utility: Utility) => {
@@ -299,8 +241,6 @@ export default function UtilitiesPage() {
   const riskUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'risk' && u.available);
   const performanceUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'performance' && u.available);
   const advancedUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'advanced' && u.available);
-  // Coming Soon utilities - sezione separata con design distintivo
-  const comingSoonUtilities = allUtilities.filter(u => u.category === 'coming-soon' || u.comingSoon);
 
   return (
     <div className="min-h-screen bg-bg-base">
@@ -332,25 +272,6 @@ export default function UtilitiesPage() {
                 {/* Pro Tools - Mostrati a tutti ma bloccati se non Pro */}
                 {selectedUtility === 'journal' && (
                   isPro ? <TradingJournal /> : <ProLockOverlay><TradingJournal /></ProLockOverlay>
-                )}
-                {selectedUtility === 'paper-trading' && (
-                  <div className="relative">
-                    <div className="opacity-50 pointer-events-none">
-                      <ComingSoon 
-                        title="Paper Trading" 
-                        description="Simula operazioni di trading in tempo reale con ordini avanzati e risk management" 
-                        reason="Richiede integrazione con API real-time per prezzi di mercato e ordini" 
-                        estimatedDate="Q2 2025" 
-                      />
-                    </div>
-                    <FeatureComingSoon
-                      featureName="Paper Trading"
-                      description="Simula operazioni di trading in tempo reale con ordini avanzati e risk management"
-                      reason="Richiede integrazione con API real-time per prezzi di mercato e ordini"
-                      estimatedDate="Q2 2025"
-                      variant="overlay"
-                    />
-                  </div>
                 )}
                 {selectedUtility === 'hedging' && (
                   isPro ? <HedgingCalculator /> : <ProLockOverlay><HedgingCalculator /></ProLockOverlay>
@@ -384,62 +305,6 @@ export default function UtilitiesPage() {
                 )}
                 {selectedUtility === 'strategy-builder' && (
                   isPro ? <StrategyBuilder /> : <ProLockOverlay><StrategyBuilder /></ProLockOverlay>
-                )}
-                {selectedUtility === 'watchlist' && (
-                  <div className="relative">
-                    <div className="opacity-50 pointer-events-none">
-                      <ComingSoon title="Watchlist" description="Monitora i tuoi asset preferiti con alert personalizzati" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />
-                    </div>
-                    <FeatureComingSoon
-                      featureName="Watchlist"
-                      description="Monitora i tuoi asset preferiti con alert personalizzati"
-                      reason="Richiede integrazione con API real-time per prezzi di mercato"
-                      estimatedDate="Q2 2025"
-                      variant="overlay"
-                    />
-                  </div>
-                )}
-                {selectedUtility === 'portfolio-manager' && (
-                  <div className="relative">
-                    <div className="opacity-50 pointer-events-none">
-                      <ComingSoon title="Portfolio Manager" description="Gestisci il tuo portafoglio con aggiornamenti real-time" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />
-                    </div>
-                    <FeatureComingSoon
-                      featureName="Portfolio Manager"
-                      description="Gestisci il tuo portafoglio con aggiornamenti real-time"
-                      reason="Richiede integrazione con API real-time per prezzi di mercato"
-                      estimatedDate="Q2 2025"
-                      variant="overlay"
-                    />
-                  </div>
-                )}
-                {selectedUtility === 'alerts' && (
-                  <div className="relative">
-                    <div className="opacity-50 pointer-events-none">
-                      <ComingSoon title="Sistema di Alert" description="Notifiche personalizzate per i tuoi asset" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />
-                    </div>
-                    <FeatureComingSoon
-                      featureName="Sistema di Alert"
-                      description="Notifiche personalizzate per i tuoi asset"
-                      reason="Richiede integrazione con API real-time per prezzi di mercato"
-                      estimatedDate="Q2 2025"
-                      variant="overlay"
-                    />
-                  </div>
-                )}
-                {selectedUtility === 'widgets' && (
-                  <div className="relative">
-                    <div className="opacity-50 pointer-events-none">
-                      <ComingSoon title="Widgets" description="Widget personalizzabili per watchlist, portfolio e alert" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />
-                    </div>
-                    <FeatureComingSoon
-                      featureName="Widgets"
-                      description="Widget personalizzabili per watchlist, portfolio e alert"
-                      reason="Richiede integrazione con API real-time per prezzi di mercato"
-                      estimatedDate="Q2 2025"
-                      variant="overlay"
-                    />
-                  </div>
                 )}
               </Suspense>
             </div>
@@ -686,71 +551,6 @@ export default function UtilitiesPage() {
                 })}
               </div>
             </section>
-
-            {/* Coming Soon - Sezione separata con design distintivo */}
-            {comingSoonUtilities.length > 0 && (
-              <section className="mt-12">
-                <div className="mb-6">
-                  <h2 className="text-xl font-semibold text-text-primary mb-2 flex items-center gap-2">
-                    <Clock className="w-5 h-5 text-amber-400" />
-                    In Arrivo
-                  </h2>
-                  <p className="text-sm text-text-secondary">
-                    Questi strumenti richiedono integrazione con API real-time e saranno disponibili a breve
-                  </p>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {comingSoonUtilities.map((utility) => {
-                    const Icon = utility.icon;
-                    return (
-                      <div
-                        key={utility.id}
-                        className={cn(
-                          'bg-gradient-to-br from-amber-500/5 via-amber-500/3 to-transparent',
-                          'border border-amber-500/20 rounded-xl p-6',
-                          'flex flex-col gap-3',
-                          'relative overflow-hidden',
-                          'cursor-not-allowed'
-                        )}
-                        role="presentation"
-                        aria-label={`${utility.label} - In arrivo`}
-                      >
-                        {/* Background pattern */}
-                        <div className="absolute inset-0 opacity-5">
-                          <div className="absolute inset-0" style={{
-                            backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(251, 191, 36, 0.1) 10px, rgba(251, 191, 36, 0.1) 20px)`
-                          }} />
-                        </div>
-                        
-                        <div className="relative z-10 flex items-start justify-between">
-                          <div className="w-12 h-12 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center">
-                            <Icon className="w-6 h-6 text-amber-400" aria-hidden="true" />
-                          </div>
-                          <div className="px-2 py-1 rounded-md bg-amber-500/20 border border-amber-500/30">
-                            <Clock className="w-4 h-4 text-amber-400" />
-                          </div>
-                        </div>
-                        
-                        <div className="relative z-10">
-                          <h3 className="font-semibold text-text-primary mb-1 flex items-center gap-2">
-                            {utility.label}
-                            <span className="text-xs font-normal text-amber-400">Coming Soon</span>
-                          </h3>
-                          <p className="text-sm text-text-secondary mb-3">{utility.description}</p>
-                          {utility.reason && (
-                            <div className="p-3 bg-amber-500/10 rounded-lg border border-amber-500/20">
-                              <p className="text-xs text-text-tertiary leading-relaxed">
-                                {utility.reason}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </section>
-            )}
           </div>
         )}
       </div>
