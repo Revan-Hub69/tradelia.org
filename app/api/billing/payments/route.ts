@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createApiClient } from '@/lib/supabase/api-client';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export async function GET(request: NextRequest) {
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
 
   // Per lista pagamenti, richiede autenticazione
   try {
-    const supabase = await createClient();
+    const supabase = createApiClient(request);
     const {
       data: { user },
       error: authError,
@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
+  const supabase = createApiClient(request);
   const {
     data: { user },
     error: authError,
