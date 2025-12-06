@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Settings, User, Bell, Shield, CreditCard, Globe, Building2 } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { NotificationSettings } from '@/components/notifications/NotificationSettings';
@@ -21,7 +22,20 @@ import { BillingSummary } from '@/components/billing/BillingSummary';
 export default function SettingsContent() {
   const { t, locale } = useTranslations();
   const isDesk = useIsDesk();
-  const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'security' | 'billing' | 'preferences' | 'business'>('profile');
+  const searchParams = useSearchParams();
+  const tabFromUrl = searchParams?.get('tab') as 'profile' | 'notifications' | 'security' | 'billing' | 'preferences' | 'business' | null;
+  const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'security' | 'billing' | 'preferences' | 'business'>(
+    tabFromUrl && ['profile', 'notifications', 'security', 'billing', 'preferences', 'business'].includes(tabFromUrl)
+      ? tabFromUrl
+      : 'profile'
+  );
+
+  // Aggiorna tab quando cambia il query parameter
+  useEffect(() => {
+    if (tabFromUrl && ['profile', 'notifications', 'security', 'billing', 'preferences', 'business'].includes(tabFromUrl)) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [tabFromUrl]);
 
   const tabs = [
     {
