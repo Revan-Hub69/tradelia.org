@@ -59,7 +59,16 @@
 }
 
 .modules-view.compact-view .dashboardSection {
-  padding: 1rem 0;
+  margin-bottom: 1.5rem;
+}
+
+.modules-view.compact-view .moduleCategory {
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.modules-view.compact-view .modulesGrid {
+  gap: 1rem;
 }
 
 .dashboardHeroContent {

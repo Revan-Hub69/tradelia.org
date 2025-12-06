@@ -173,7 +173,15 @@ export function DashboardShell() {
         aria-label="Dashboard principale"
         suppressHydrationWarning
       >
-        <div id="modules-view" className="modules-view active" role="region" aria-label="Contenuti dashboard">
+        <div 
+          id="modules-view" 
+          className={cn(
+            "modules-view active",
+            isLoaded && preferences.compactView && "compact-view"
+          )} 
+          role="region" 
+          aria-label="Contenuti dashboard"
+        >
           {/* Breadcrumb è già in DashboardTabs - non duplicare */}
           
           {/* Account Banner - Best Practice: Posizionato dopo Hero per non interferire con first impression */}
@@ -237,14 +245,22 @@ export function DashboardShell() {
             </ErrorBoundary>
           )}
           
-          {/* Moduli unificati - Best Practice: organizzazione gerarchica - PRIMA PRIORITÀ */}
+          {/* Preferiti - PRIMA PRIORITÀ: sempre visibili e accessibili */}
+          <section 
+            aria-label="Preferiti" 
+            className={styles.dashboardSection}
+            id="favorites"
+          >
+            <ErrorBoundary>
+              <Favorites />
+            </ErrorBoundary>
+          </section>
+
+          {/* Moduli unificati - Best Practice: organizzazione gerarchica */}
           {/* Mostra tutte le funzionalità principali in modo chiaro e accessibile */}
           <section 
             aria-label="Moduli e funzionalità" 
-            className={cn(
-              styles.dashboardSection,
-              isLoaded && preferences.compactView && 'compact-view'
-            )}
+            className={styles.dashboardSection}
             id="modules"
           >
             <ErrorBoundary>
