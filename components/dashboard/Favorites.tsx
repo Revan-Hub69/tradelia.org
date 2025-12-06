@@ -6,51 +6,16 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { useApi } from '@/lib/hooks/useApi';
-import { authenticatedFetch } from '@/lib/api/fetch-client';
+import { useFavoritesUniversal, type Favorite } from '@/lib/hooks/useFavoritesUniversal';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { toast } from '@/components/ui/Toast';
-
-interface Favorite {
-  id: string;
-  item_id: string;
-  item_type: 'report' | 'course' | 'module';
-  title: string;
-  description: string | null;
-  href: string;
-  icon: string | null;
-  added_at: string;
-}
 
 export const Favorites = memo(function Favorites() {
   const { t } = useTranslations();
-  const [loading, setLoading] = useState(true);
+  const { favorites, loading, removeFavorite } = useFavoritesUniversal();
 
-  const { data: favoritesData, loading: apiLoading, error, retry } = useApi<Favorite[]>(
-    '/api/dashboard/favorites',
-    {
-      cacheTime: 2 * 60 * 1000, // 2 minutes
-      requireAuth: false, // Permetti accesso guest
-      onError: (err) => {
-        // Non mostrare errore per 401 - è normale per guest
-        if (err instanceof Error && (err as any).status === 401) {
-          return;
-        }
-        toast.error('Errore nel caricamento dei preferiti', {
-          action: {
-            label: 'Riprova',
-            onClick: retry,
-          },
-        });
-      },
-    }
-  );
-
-  // Map Supabase data to component format
-  const favorites = useMemo(() => {
-    if (!favoritesData) return [];
-
-    return favoritesData.map((item) => {
+  // Map favorites data to component format
+  const favoritesList = useMemo(() => {
+    return favorites.map((item) => {
       let iconNode: React.ReactNode = <FileText className="w-4 h-4" />;
       
       if (item.icon) {
@@ -80,6 +45,8 @@ export const Favorites = memo(function Favorites() {
           case 'module':
             iconNode = <TrendingUp className="w-4 h-4" />;
             break;
+          default:
+            iconNode = <FileText className="w-4 h-4" />;
         }
       }
 
@@ -91,40 +58,16 @@ export const Favorites = memo(function Favorites() {
         href: item.href,
         icon: iconNode,
         addedAt: item.added_at,
+        item_id: item.item_id,
       };
     });
-  }, [favoritesData]);
+  }, [favorites]);
 
-  const removeFavorite = async (id: string) => {
-    try {
-      // Sanitize ID to prevent XSS
-      const sanitizedId = encodeURIComponent(id);
-      if (!sanitizedId || sanitizedId !== id) {
-        throw new Error('ID non valido');
-      }
-
-      const response = await authenticatedFetch(`/api/dashboard/favorites?id=${sanitizedId}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Errore rimozione preferito');
-      }
-
-      toast.success('Rimosso dai preferiti');
-      
-      // Retry to refresh list
-      retry();
-    } catch (error) {
-      // Error is already handled by authenticatedFetch for 401
-      if (error instanceof Error && (error as any).status !== 401) {
-        toast.error('Errore nella rimozione del preferito');
-      }
-    }
+  const handleRemoveFavorite = async (itemId: string, itemType: string) => {
+    await removeFavorite(itemId, itemType);
   };
 
-  const getTypeIcon = (type: Favorite['item_type']) => {
+  const getTypeIcon = (type: string) => {
     switch (type) {
       case 'report':
         return <FileText className="w-4 h-4" />;
@@ -132,10 +75,12 @@ export const Favorites = memo(function Favorites() {
         return <BookOpen className="w-4 h-4" />;
       case 'module':
         return <TrendingUp className="w-4 h-4" />;
+      default:
+        return <FileText className="w-4 h-4" />;
     }
   };
 
-  const getTypeLabel = (type: Favorite['item_type']) => {
+  const getTypeLabel = (type: string) => {
     switch (type) {
       case 'report':
         return t('dashboard.favorites.types.report') || 'Report';
@@ -143,10 +88,12 @@ export const Favorites = memo(function Favorites() {
         return t('dashboard.favorites.types.course') || 'Corso';
       case 'module':
         return t('dashboard.favorites.types.module') || 'Modulo';
+      default:
+        return type.charAt(0).toUpperCase() + type.slice(1);
     }
   };
 
-  if (apiLoading) {
+  if (loading) {
     return (
       <section className="mb-8" aria-label={t('dashboard.favorites.title') || 'Preferiti'}>
         <div className="flex items-center justify-between mb-4">
@@ -163,7 +110,7 @@ export const Favorites = memo(function Favorites() {
     );
   }
 
-  if (favorites.length === 0) {
+  if (favoritesList.length === 0) {
     return (
       <section className="mb-8" aria-label={t('dashboard.favorites.title') || 'Preferiti'}>
         <div className="flex items-center justify-between mb-4">
@@ -191,12 +138,12 @@ export const Favorites = memo(function Favorites() {
           {t('dashboard.favorites.title') || 'Preferiti'}
         </h2>
         <span className="text-xs text-text-tertiary">
-          {favorites.length} {t('dashboard.favorites.count') || 'preferiti'}
+          {favoritesList.length} {t('dashboard.favorites.count') || 'preferiti'}
         </span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <AnimatePresence>
-          {favorites.map((favorite, index) => (
+          {favoritesList.map((favorite, index) => (
             <motion.div
               key={favorite.id}
               initial={{ opacity: 0, scale: 0.95 }}
@@ -213,7 +160,7 @@ export const Favorites = memo(function Favorites() {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    removeFavorite(favorite.id);
+                    handleRemoveFavorite(favorite.item_id, favorite.type);
                   }}
                   className="absolute top-2 right-2 w-6 h-6 rounded flex items-center justify-center text-amber-400 hover:text-red-400 hover:bg-red-400/10 transition-colors opacity-0 group-hover:opacity-100"
                   aria-label={t('dashboard.favorites.remove') || 'Rimuovi dai preferiti'}
@@ -244,121 +191,6 @@ export const Favorites = memo(function Favorites() {
   );
 });
 
-// Hook per aggiungere/rimuovere preferiti da altri componenti
-export function useFavorites() {
-  const addFavorite = async (favorite: {
-    id: string;
-    type: 'report' | 'course' | 'module';
-    title: string;
-    description: string;
-    href: string;
-    icon?: string;
-  }): Promise<boolean> => {
-    try {
-      // Validate and sanitize input
-      if (!favorite.id || !favorite.type || !favorite.title || !favorite.href) {
-        throw new Error('Dati mancanti');
-      }
-
-      const response = await authenticatedFetch('/api/dashboard/favorites', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          item_id: favorite.id,
-          item_type: favorite.type,
-          title: favorite.title,
-          description: favorite.description,
-          href: favorite.href,
-          icon: favorite.icon || null,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Errore aggiunta preferito');
-      }
-
-      toast.success('Aggiunto ai preferiti');
-      return true;
-    } catch (error) {
-      // Error is already handled by authenticatedFetch for 401
-      if (error instanceof Error && (error as any).status !== 401) {
-        toast.error('Errore nell\'aggiunta del preferito');
-      }
-      return false;
-    }
-  };
-
-  const removeFavorite = async (itemId: string, itemType?: 'report' | 'course' | 'module'): Promise<boolean> => {
-    try {
-      // Sanitize input
-      const sanitizedItemId = encodeURIComponent(itemId);
-      if (!sanitizedItemId || sanitizedItemId !== itemId) {
-        throw new Error('ID non valido');
-      }
-
-      // Get all favorites to find the one with matching item_id
-      const listResponse = await authenticatedFetch('/api/dashboard/favorites');
-      if (!listResponse.ok) {
-        throw new Error('Errore nel caricamento preferiti');
-      }
-
-      const { data: favorites } = await listResponse.json();
-      const favorite = favorites.find((f: Favorite) => 
-        f.item_id === itemId && 
-        (!itemType || f.item_type === itemType)
-      );
-
-      if (!favorite) {
-        return false;
-      }
-
-      // Sanitize favorite ID
-      const sanitizedFavoriteId = encodeURIComponent(favorite.id);
-      const response = await authenticatedFetch(`/api/dashboard/favorites?id=${sanitizedFavoriteId}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Errore rimozione preferito');
-      }
-
-      toast.success('Rimosso dai preferiti');
-      return true;
-    } catch (error) {
-      // Error is already handled by authenticatedFetch for 401
-      if (error instanceof Error && (error as any).status !== 401) {
-        toast.error('Errore nella rimozione del preferito');
-      }
-      return false;
-    }
-  };
-
-  const isFavorite = async (
-    itemId: string,
-    itemType: 'report' | 'course' | 'module'
-  ): Promise<boolean> => {
-    try {
-      // Sanitize input
-      const sanitizedItemId = encodeURIComponent(itemId);
-      const sanitizedType = encodeURIComponent(itemType);
-      
-      const response = await authenticatedFetch(
-        `/api/dashboard/favorites?check=${sanitizedItemId}&type=${sanitizedType}`
-      );
-      
-      if (!response.ok) return false;
-      
-      const { isFavorite: result } = await response.json();
-      return result || false;
-    } catch {
-      return false;
-    }
-  };
-
-  return { addFavorite, removeFavorite, isFavorite };
-}
+// Re-export hook universale per compatibilità
+export { useFavoritesUniversal as useFavorites } from '@/lib/hooks/useFavoritesUniversal';
 
