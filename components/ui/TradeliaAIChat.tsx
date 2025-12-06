@@ -378,26 +378,6 @@ export function TradeliaAIChat() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, isLoading]);
 
-  const handleQuickAction = useCallback((action: QuickAction) => {
-    if (action.proOnly && !isPro) {
-      return; // Non fare nulla se è Pro-only e l'utente non è Pro
-    }
-    
-    // Best Practice: Glossario linka direttamente alla pagina, non alla chat
-    if (action.id === 'glossary') {
-      const glossaryPath = buildLocalePath(currentLocale, '/glossary');
-      router.push(glossaryPath);
-      setIsOpen(false); // Chiudi chat quando navighi
-      return;
-    }
-    
-    setMessage(action.action);
-    // Trigger send dopo un breve delay per permettere al messaggio di essere settato
-    setTimeout(() => {
-      handleSend(action.action);
-    }, 100);
-  }, [isPro, handleSend, currentLocale, router]);
-
   // Memoized conversation history - Best Practice: Performance
   const conversationHistory = useMemo(() => {
     return messages
@@ -572,6 +552,27 @@ export function TradeliaAIChat() {
 
     setIsLoading(false);
   }, [message, isLoading, currentLocale, conversationHistory]);
+
+  // Handle quick actions - Best Practice: Dopo handleSend per evitare errori di dichiarazione
+  const handleQuickAction = useCallback((action: QuickAction) => {
+    if (action.proOnly && !isPro) {
+      return; // Non fare nulla se è Pro-only e l'utente non è Pro
+    }
+    
+    // Best Practice: Glossario linka direttamente alla pagina, non alla chat
+    if (action.id === 'glossary') {
+      const glossaryPath = buildLocalePath(currentLocale, '/glossary');
+      router.push(glossaryPath);
+      setIsOpen(false); // Chiudi chat quando navighi
+      return;
+    }
+    
+    setMessage(action.action);
+    // Trigger send dopo un breve delay per permettere al messaggio di essere settato
+    setTimeout(() => {
+      handleSend(action.action);
+    }, 100);
+  }, [isPro, handleSend, currentLocale, router]);
 
   return (
     <>
