@@ -1,25 +1,14 @@
 import { type Locale } from './config';
 
 /**
- * Utility to keep locale-aware navigation consistent across the app.
- * Accepts an absolute path (starting with "/") and prefixes it with /en
- * when the active locale is English. Default locale (Italian) keeps the
- * canonical path without duplication.
+ * Simplified path builder - Always returns path without locale prefix
+ * 
+ * Maintained for API compatibility and future migration to external libraries
+ * 
+ * TODO: Replace with next-intl or similar library when ready
  */
-export function buildLocalePath(locale: Locale, path: string) {
-  if (!path.startsWith('/')) {
-    return path;
-  }
-
-  // Normalize existing /en prefixes to avoid double-prepending
-  const normalizedPath = path.replace(/^\/en(\/|$)/, '/');
-
-  if (locale === 'en') {
-    if (normalizedPath === '/') {
-      return '/en';
-    }
-    return `/en${normalizedPath}`;
-  }
-
-  return normalizedPath;
+export function buildLocalePath(locale: Locale, path: string): string {
+  // Always return path as-is (no /en prefix)
+  // Remove any existing /en prefix if present
+  return path.replace(/^\/en(\/|$)/, '/');
 }
