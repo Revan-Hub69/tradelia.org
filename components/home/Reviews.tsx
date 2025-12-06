@@ -13,7 +13,7 @@ import {
   createContainerVariants,
   createItemVariants,
 } from '@/lib/animations';
-import { buildLocalePath } from '@/lib/i18n/paths';
+// buildLocalePath removed - system always uses Italian
 
 interface Review {
   id: string;
@@ -105,8 +105,6 @@ export function Reviews() {
   const nextReview = () => setCurrentIndex((prev) => (prev + 1) % reviews.length);
   const prevReview = () => setCurrentIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
 
-  const localePrefix = locale === 'en' ? '/en' : '';
-
   return (
     <section 
       className="relative py-16 md:py-24 bg-gradient-to-b from-bg-base via-bg-soft to-bg-base"
@@ -137,7 +135,7 @@ export function Reviews() {
           {/* Link alla pagina completa recensioni */}
           <motion.div variants={itemVariants}>
             <Link
-              href={buildLocalePath(locale, '/reviews')}
+              href="/reviews"
               className="inline-flex items-center gap-2 text-accent hover:text-accent-hover font-medium transition-colors"
             >
               <MessageSquare className="w-4 h-4" aria-hidden="true" />
