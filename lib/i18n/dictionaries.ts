@@ -1,10 +1,13 @@
+/**
+ * Simplified dictionary loader - Always returns empty object
+ * 
+ * Maintained for API compatibility and future migration to external libraries
+ * Strategy: Strangler Fig Pattern - allows gradual removal without breaking changes
+ */
+
 import { Locale } from './config';
 
-const dictionaries = {
-  it: () => import('./it.json').then((module) => module.default),
-  en: () => import('./en.json').then((module) => module.default),
-};
-
 export const getDictionary = async (locale: Locale) => {
-  return dictionaries[locale]();
+  // Always return empty object (translations are now hardcoded)
+  return {};
 };
