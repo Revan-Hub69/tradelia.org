@@ -72,21 +72,27 @@ export function DashboardTabs() {
   ];
 
   // Determina tab attivo basato sul pathname
+  // Best Practice: Mapping preciso per ogni route dashboard
   useEffect(() => {
     if (!pathname) return;
     
     // Normalizza pathname (rimuovi /en se presente)
     const normalizedPath = pathname.replace(/^\/en/, '');
     
-    if (normalizedPath.includes('/dashboard/education')) {
+    // Mapping preciso: ogni route dashboard mappa a una tab specifica
+    if (normalizedPath === '/dashboard' || normalizedPath === '/it/dashboard' || normalizedPath === '/en/dashboard') {
+      setActiveTab('overview');
+    } else if (normalizedPath.includes('/dashboard/education')) {
       setActiveTab('education');
     } else if (normalizedPath.includes('/dashboard/utilities')) {
       setActiveTab('utilities');
-    } else if (normalizedPath.includes('/dashboard/analysis')) {
+    } else if (normalizedPath.includes('/dashboard/analysis') || normalizedPath.includes('/dashboard/reports')) {
       setActiveTab('analysis');
     } else if (normalizedPath.includes('/dashboard/settings')) {
       setActiveTab('settings');
-    } else if (normalizedPath.includes('/dashboard')) {
+    } else {
+      // Per altre route dashboard (requests, voting, favorites, billing, etc.)
+      // Mantieni tab overview come default
       setActiveTab('overview');
     }
   }, [pathname]);

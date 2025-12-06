@@ -58,7 +58,7 @@ export function OverviewStats() {
       context: t('dashboard.overview.stats.pendingRequests.context'),
       action: {
         label: t('dashboard.overview.stats.pendingRequests.action'),
-        href: buildLocalePath(locale, '/dashboard/analysis'),
+        href: buildLocalePath(locale, '/dashboard/requests'),
       },
     },
     {

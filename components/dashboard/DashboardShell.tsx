@@ -219,19 +219,23 @@ export function DashboardShell() {
         aria-label="Dashboard principale"
         suppressHydrationWarning
       >
-        <div id="account-banner-slot" role="region" aria-label="Stato account">
-          <ErrorBoundary>
-            <AccountBanner />
-          </ErrorBoundary>
-        </div>
         <div id="modules-view" className="modules-view active" role="region" aria-label="Contenuti dashboard">
           {/* Breadcrumb è già in DashboardTabs - non duplicare */}
           
+          {/* Account Banner - Best Practice: Posizionato dopo Hero per non interferire con first impression */}
+          <div id="account-banner-slot" role="region" aria-label="Stato account">
+            <ErrorBoundary>
+              <AccountBanner />
+            </ErrorBoundary>
+          </div>
+          
+          {/* Hero Section - Best Practice UX: Prima impressione, welcome, CTA principale */}
           <ErrorBoundary>
             <DashboardHero />
           </ErrorBoundary>
           
           {/* Moduli unificati - Best Practice: organizzazione gerarchica - PRIMA PRIORITÀ */}
+          {/* Mostra tutte le funzionalità principali in modo chiaro e accessibile */}
           <section 
             aria-label="Moduli e funzionalità" 
             className={styles.dashboardSection}
@@ -243,6 +247,7 @@ export function DashboardShell() {
           </section>
 
           {/* Statistiche chiave - Best Practice: 4-6 metriche essenziali - SECONDARIA */}
+          {/* Fornisce overview rapida delle attività principali */}
           <section 
             aria-label="Panoramica accademica" 
             className={styles.dashboardSection}
