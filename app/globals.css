@@ -286,8 +286,10 @@
 @layer components {
   /* Button Hover Effects - Professional and institutional */
   .btn-hover {
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Performance: Solo proprietà composite */
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translateZ(0); /* GPU acceleration */
+    will-change: transform;
   }
 
   .btn-hover:hover:not(:disabled) {
@@ -406,19 +408,24 @@
 
   /* Subtle hover effects - Professional and institutional */
   .hover-lift {
-    transition:
-      border-color 200ms ease,
-      box-shadow 200ms ease;
+    /* Performance: Solo proprietà composite, box-shadow statico */
+    transition: border-color 200ms ease,
+                transform 200ms ease;
+    transform: translateZ(0);
+    will-change: transform;
   }
 
   .hover-lift:hover {
     border-color: var(--border-accent);
+    /* Box-shadow statico, non animato (non composite) */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 
   /* Microinteraction - Subtle and professional */
   .micro-interaction {
     transition: opacity 200ms ease;
+    transform: translateZ(0); /* GPU acceleration per opacity */
+    will-change: opacity;
   }
 
   .micro-interaction:hover {

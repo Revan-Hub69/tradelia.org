@@ -294,9 +294,13 @@
   display: flex !important;
   flex-direction: column !important;
   gap: 0.75rem !important;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  /* Performance: Solo proprietà composite */
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.15s ease !important;
   position: relative !important;
   overflow: hidden !important;
+  transform: translateZ(0);
+  will-change: transform;
   /* Best Practice: Focus visible per accessibilità (WCAG 2.4.7) */
   outline: 2px solid transparent;
   outline-offset: 2px;
@@ -311,8 +315,9 @@
 .statCard:hover {
   background: var(--dash-surface);
   border-color: var(--dash-border-strong);
+  /* Box-shadow statico, non animato */
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  transform: translateY(-2px);
+  transform: translateY(-2px) translateZ(0);
   will-change: transform; /* Performance optimization */
 }
 
@@ -346,7 +351,11 @@
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  transition: all 0.15s;
+  /* Performance: Solo proprietà composite */
+  transition: transform 0.15s ease,
+              background-color 0.15s ease,
+              color 0.15s ease;
+  transform: translateZ(0);
 }
 
 .statTrendUp {
@@ -396,7 +405,12 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 999px;
   background: rgba(15, 23, 42, 0.6);
-  transition: all 0.2s ease;
+  /* Performance: Solo proprietà composite */
+  transition: transform 0.2s ease,
+              border-color 0.2s ease,
+              background-color 0.2s ease;
+  transform: translateZ(0);
+  will-change: transform;
   /* Best Practice: Focus visible per accessibilità (WCAG 2.4.7) */
   outline: 2px solid transparent;
   outline-offset: 2px;
@@ -414,7 +428,7 @@
   color: #f8fafc;
   border-color: rgba(59, 130, 246, 0.4);
   background: rgba(59, 130, 246, 0.15);
-  transform: translateY(-1px);
+  transform: translateY(-1px) translateZ(0);
   will-change: transform; /* Performance optimization */
 }
 
@@ -498,7 +512,13 @@
   gap: 1rem;
   position: relative;
   overflow: visible; /* Cambiato da hidden a visible per permettere al pulsante preferiti di essere visibile */
-  transition: all 0.3s ease;
+  /* Performance: Solo proprietà composite per animazioni fluide */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.3s ease,
+              border-color 0.3s ease;
+  /* GPU acceleration - forza layer compositing */
+  transform: translateZ(0);
+  will-change: transform;
   /* Best Practice: Focus visible per accessibilità (WCAG 2.4.7) */
   outline: 2px solid transparent;
   outline-offset: 2px;
@@ -516,12 +536,17 @@
   inset: 0;
   background: linear-gradient(135deg, rgba(74, 144, 226, 0.15), transparent 60%);
   opacity: 0;
+  /* Performance: opacity è composite, ma aggiungiamo GPU acceleration */
   transition: opacity 0.35s ease;
+  transform: translateZ(0);
+  will-change: opacity;
 }
 
 .moduleCard:hover {
   border-color: rgba(74, 144, 226, 0.35);
-  transform: translateY(-4px);
+  /* Performance: Usa transform invece di box-shadow per animazioni composite */
+  transform: translateY(-4px) translateZ(0);
+  /* Box-shadow solo statico, non animato (non composite) */
   box-shadow:
     0 10px 35px rgba(15, 23, 42, 0.45),
     inset 0 0 0 1px rgba(74, 144, 226, 0.15);
@@ -580,13 +605,18 @@
   box-shadow:
     0 10px 25px rgba(15, 23, 42, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  transition: all 0.3s ease;
+  /* Performance: Solo proprietà composite */
+  transition: transform 0.3s ease,
+              border-color 0.3s ease,
+              background-color 0.3s ease;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .moduleCard:hover .moduleIcon {
   background: rgba(74, 144, 226, 0.28);
   border-color: rgba(74, 144, 226, 0.45);
-  transform: translateY(-3px);
+  transform: translateY(-3px) translateZ(0);
 }
 
 .moduleIcon svg {
@@ -618,12 +648,16 @@
 .moduleArrow {
   flex-shrink: 0;
   color: rgba(226, 232, 240, 0.5);
-  transition: all 0.25s;
+  /* Performance: Solo proprietà composite */
+  transition: transform 0.25s ease,
+              color 0.25s ease;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .moduleCard:hover .moduleArrow {
   color: #93c5fd;
-  transform: translateX(6px);
+  transform: translateX(6px) translateZ(0);
 }
 
 /* Mobile optimizations - Best Practice 2024-2025 */
