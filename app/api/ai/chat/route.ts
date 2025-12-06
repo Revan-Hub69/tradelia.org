@@ -209,9 +209,20 @@ const MAX_MESSAGE_LENGTH = 2000;
 const MAX_CONTEXT_LENGTH = 500;
 
 export async function POST(request: NextRequest) {
+  let body: ChatRequest;
+  
   try {
     // Parse body early to get locale for rate limit message
-    const body: ChatRequest = await request.json();
+    body = await request.json();
+  } catch (parseError) {
+    console.error("Failed to parse request body:", parseError);
+    return NextResponse.json(
+      { error: "Invalid request body" },
+      { status: 400 }
+    );
+  }
+
+  try {
     const {
       message,
       locale = "it",
@@ -309,9 +320,8 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Error in AI chat API:", error);
 
-    // Final fallback
-    const body = await request.json().catch(() => ({}));
-    const locale = (body as ChatRequest)?.locale || "it";
+    // Final fallback - use already parsed body, don't parse again
+    const locale = body?.locale || "it";
 
     const fallbackResponse =
       locale === "it"
@@ -323,6 +333,6 @@ export async function POST(request: NextRequest) {
       model: "fallback",
       provider: "error",
       error: "Service temporarily unavailable",
-    });
+    }, { status: 500 });
   }
 }

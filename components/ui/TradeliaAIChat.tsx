@@ -314,7 +314,7 @@ export function TradeliaAIChat() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, isLoading]);
 
-  const handleQuickAction = (action: QuickAction) => {
+  const handleQuickAction = useCallback((action: QuickAction) => {
     if (action.proOnly && !isPro) {
       return; // Non fare nulla se è Pro-only e l'utente non è Pro
     }
@@ -323,7 +323,7 @@ export function TradeliaAIChat() {
     setTimeout(() => {
       handleSend(action.action);
     }, 100);
-  };
+  }, [isPro, handleSend]);
 
   // Memoized conversation history - Best Practice: Performance
   const conversationHistory = useMemo(() => {
@@ -334,6 +334,11 @@ export function TradeliaAIChat() {
         content: m.content,
       }));
   }, [messages]);
+
+  // Memoized error message handler - Best Practice: Performance
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
 
   const handleSend = useCallback(async (customMessage?: string) => {
     const messageToSend = (customMessage || message.trim()).slice(0, MAX_MESSAGE_LENGTH);
@@ -576,7 +581,13 @@ export function TradeliaAIChat() {
             </div>
 
             {/* Messages - Enhanced scrolling and spacing */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-5 scrollbar-thin scrollbar-thumb-border-subtle scrollbar-track-transparent">
+            <div 
+              className="flex-1 overflow-y-auto p-5 space-y-5 scrollbar-thin scrollbar-thumb-border-subtle scrollbar-track-transparent"
+              role="log"
+              aria-live="polite"
+              aria-atomic="false"
+              aria-label={currentLocale === 'it' ? 'Messaggi della chat' : 'Chat messages'}
+            >
               {messages.length === 0 ? (
                 // Welcome screen with quick actions - Best Practice: Clear entry point
                 <div className="space-y-4">
@@ -642,9 +653,12 @@ export function TradeliaAIChat() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="flex justify-start"
+                  role="status"
+                  aria-live="polite"
+                  aria-label={currentLocale === 'it' ? 'Caricamento risposta' : 'Loading response'}
                 >
                   <div className="bg-bg-soft rounded-2xl px-4 py-3 border border-border-subtle shadow-sm flex items-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin text-accent" />
+                    <Loader2 className="w-4 h-4 animate-spin text-accent" aria-hidden="true" />
                     <span className="text-xs text-text-tertiary">
                       {currentLocale === 'it' ? 'Sto pensando...' : 'Thinking...'}
                     </span>
@@ -718,7 +732,13 @@ export function TradeliaAIChat() {
               </div>
               {/* Error message */}
               {error && (
-                <div id="error-message" className="mt-2 p-2 bg-red-500/10 border border-red-500/30 rounded-lg">
+                <div 
+                  id="error-message" 
+                  className="mt-2 p-2 bg-red-500/10 border border-red-500/30 rounded-lg"
+                  role="alert"
+                  aria-live="assertive"
+                  aria-atomic="true"
+                >
                   <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
                 </div>
               )}
