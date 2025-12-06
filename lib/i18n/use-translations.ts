@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { defaultLocale, type Locale } from "./config";
 import itDict from "./it.json";
 import enDict from "./en.json";
@@ -14,13 +15,15 @@ const dictionaries = {
 const LOCALE_STORAGE_KEY = 'tradelia_locale';
 
 export function useTranslations() {
+  const pathname = usePathname();
+  
   // Funzione helper per rilevare il locale
   const detectLocale = (): Locale => {
     if (typeof window === "undefined") {
       return defaultLocale;
     }
     
-    // PRIMA: Leggi sempre da localStorage (priorità massima)
+    // PRIMA: Leggi sempre da localStorage (priorità massima - preferenza utente)
     try {
       const savedLocale = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null;
       if (savedLocale === 'it' || savedLocale === 'en') {
@@ -30,8 +33,8 @@ export function useTranslations() {
       // localStorage non disponibile
     }
     
-    // FALLBACK: Rileva dal pathname solo se localStorage è vuoto
-    const pathLocale = window.location.pathname.startsWith("/en") ? "en" : "it";
+    // SECONDO: Rileva dal pathname (URL esplicito)
+    const pathLocale = pathname.startsWith("/en") ? "en" : "it";
     return pathLocale;
   };
 
@@ -66,6 +69,35 @@ export function useTranslations() {
       // localStorage non disponibile
     }
   }, [locale, mounted]);
+
+  // Sincronizza locale quando cambia il pathname (navigazione Next.js)
+  useEffect(() => {
+    if (!mounted) {
+      return;
+    }
+    
+    // Rileva locale: localStorage ha priorità, poi pathname
+    let detectedLocale: Locale = defaultLocale;
+    
+    if (typeof window !== "undefined") {
+      try {
+        const savedLocale = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null;
+        if (savedLocale === 'it' || savedLocale === 'en') {
+          detectedLocale = savedLocale;
+        } else {
+          // Fallback: rileva dal pathname
+          detectedLocale = pathname.startsWith("/en") ? "en" : "it";
+        }
+      } catch (e) {
+        // localStorage non disponibile, usa pathname
+        detectedLocale = pathname.startsWith("/en") ? "en" : "it";
+      }
+    }
+    
+    if (detectedLocale !== locale) {
+      setLocale(detectedLocale);
+    }
+  }, [pathname, mounted, locale]); // Reagisce ai cambiamenti di pathname
 
   // Ascolta cambiamenti di navigazione e aggiorna locale se necessario
   useEffect(() => {
