@@ -30,10 +30,7 @@ const CurrencySwitch = dynamic(() => import('@/components/ui/CurrencySwitch').th
   loading: () => <div className="w-16 h-8 bg-bg-soft rounded animate-pulse" />,
 });
 
-const LanguageSwitch = dynamic(() => import('@/components/ui/LanguageSwitch').then(mod => ({ default: mod.LanguageSwitch })), {
-  ssr: false,
-  loading: () => <div className="w-8 h-8 bg-bg-soft rounded animate-pulse" />,
-});
+// LanguageSwitch removed - system always uses Italian
 
 /**
  * Dashboard Header Component
@@ -114,10 +111,10 @@ function DashboardHeaderComponent() {
               </div>
             </>
           ) : shouldShowUnauthenticated ? (
-            // Quando non autenticato: mostra "Accedi" e LanguageSwitch
+            // Quando non autenticato: mostra "Accedi"
             <>
               <div className={styles.dashboardActionsLeft}>
-                <LanguageSwitch size="sm" />
+                {/* LanguageSwitch removed - system always uses Italian */}
               </div>
               <div className={styles.dashboardActionsRight}>
                 <Link
@@ -133,7 +130,7 @@ function DashboardHeaderComponent() {
             // Quando autenticato: mostra tutte le azioni
             <>
               <div className={styles.dashboardActionsLeft}>
-                <LanguageSwitch size="sm" />
+                {/* LanguageSwitch removed - system always uses Italian */}
                 <CurrencySwitch size="sm" />
                 <UserStats />
               </div>

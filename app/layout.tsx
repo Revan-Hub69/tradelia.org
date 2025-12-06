@@ -16,13 +16,7 @@ const ConditionalHeader = dynamic(() => import('@/components/layout/ConditionalH
 
 const Footer = dynamic(() => import('@/components/layout/Footer').then(m => ({ default: m.Footer })));
 
-const InitialLanguageSelector = dynamic(() => import('@/components/layout/InitialLanguageSelector').then(m => ({ default: m.InitialLanguageSelector })));
-
 const LegalConsent = dynamic(() => import('@/components/layout/LegalConsent').then(m => ({ default: m.LegalConsent })));
-
-const HtmlLang = dynamic(() => import('@/components/layout/HtmlLang').then(m => ({ default: m.HtmlLang })));
-
-const HreflangTags = dynamic(() => import('@/components/seo/HreflangTags').then(m => ({ default: m.HreflangTags })));
 
 const ToastContainer = dynamic(() => import('@/components/ui/Toast').then(m => ({ default: m.ToastContainer })));
 
@@ -221,14 +215,11 @@ export default function RootLayout({
         <meta name="googlebot" content="index, follow" />
         <meta name="bingbot" content="index, follow" />
         <link rel="canonical" href="https://tradelia.org" />
-        {/* Hreflang tags are added dynamically by HreflangTags component */}
-        <HreflangTags />
       </head>
       <body className={inter.className} suppressHydrationWarning>
         <ErrorBoundary>
           <CurrencyProvider>
             <div className="min-h-screen flex flex-col" suppressHydrationWarning>
-              <HtmlLang />
               <UnregisterServiceWorker />
               <div suppressHydrationWarning>
                 {/* Header solo per pagine non-dashboard - le pagine dashboard hanno il loro DashboardHeader */}
@@ -241,7 +232,6 @@ export default function RootLayout({
               </main>
               <div suppressHydrationWarning>
                 <Footer />
-                <InitialLanguageSelector />
                 <LegalConsent />
                 <ToastContainer />
                 <TradeliaAIChat />
