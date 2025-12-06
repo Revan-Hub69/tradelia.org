@@ -202,23 +202,6 @@ export function WidgetsContent() {
   return (
     <div className="min-h-screen bg-bg-base p-6">
       <div className="max-w-7xl mx-auto">
-        {/* Coming Soon Banner - Best Practice: Chiara comunicazione */}
-        <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0">
-              <Layout className="w-4 h-4 text-amber-400" />
-            </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-text-primary mb-1">
-                {t('widgets.comingSoonTitle') || 'Widgets - In Arrivo'}
-              </h3>
-              <p className="text-sm text-text-secondary leading-relaxed">
-                {t('widgets.comingSoonMessage') || 'I widget personalizzabili sono in fase di sviluppo e richiedono l\'integrazione con API real-time per prezzi di mercato. Saranno disponibili a breve.'}
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
@@ -267,6 +250,7 @@ export function WidgetsContent() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             {mobileWidgets.map((widget, index) => {
+              // Solo portfolio, watchlist e alerts sono "coming soon", i widget crypto sono pronti
               const isComingSoon = ['portfolio', 'watchlist', 'alerts'].includes(widget.id);
               
               return (
