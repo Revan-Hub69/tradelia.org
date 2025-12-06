@@ -48,6 +48,20 @@
   gap: 3rem;
 }
 
+/* Compact view - Best Practice UX: Reduce visual clutter for power users */
+.modules-view.compact-view {
+  gap: 1.5rem;
+}
+
+.modules-view.compact-view .dashboardHero {
+  margin-bottom: 1.5rem;
+  padding: 1.5rem !important;
+}
+
+.modules-view.compact-view .dashboardSection {
+  padding: 1rem 0;
+}
+
 .dashboardHeroContent {
   position: relative;
   z-index: 2;

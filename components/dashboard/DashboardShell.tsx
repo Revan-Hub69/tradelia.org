@@ -292,7 +292,10 @@ export function DashboardShell() {
           {/* Mostra tutte le funzionalità principali in modo chiaro e accessibile */}
           <section 
             aria-label="Moduli e funzionalità" 
-            className={styles.dashboardSection}
+            className={cn(
+              styles.dashboardSection,
+              isLoaded && preferences.compactView && 'compact-view'
+            )}
             id="modules"
           >
             <ErrorBoundary>
