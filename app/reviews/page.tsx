@@ -3,7 +3,6 @@ import { ReviewsContent } from '@/components/reviews/ReviewsContent';
 import { generatePageMetadata } from '@/lib/seo/metadata';
 import { StructuredData } from '@/components/seo/StructuredData';
 import { generateReviewSchema, generateCollectionPageSchema } from '@/lib/seo/structured-data';
-import { getDictionary } from '@/lib/i18n/dictionaries';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export async function generateMetadata() {
@@ -11,7 +10,6 @@ export async function generateMetadata() {
 }
 
 export default async function ReviewsPage() {
-  const dict = await getDictionary('it');
   
   // Carica recensioni per structured data (solo pubbliche verificate)
   let reviewsData: Array<{
@@ -62,8 +60,8 @@ export default async function ReviewsPage() {
   }
   
   schemas.push(generateCollectionPageSchema(
-    dict.reviews.title || 'Cosa Dicono i Nostri Utenti',
-    dict.reviews.subtitle || 'Recensioni verificate da utenti reali',
+    'Cosa Dicono i Nostri Utenti',
+    'Recensioni verificate da utenti reali',
     reviewCount,
     'it'
   ));
@@ -73,7 +71,7 @@ export default async function ReviewsPage() {
       {schemas.map((schema, index) => (
         <StructuredData key={index} data={schema} id={`reviews-structured-data-${index}`} />
       ))}
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="text-center"><div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div><p className="text-text-secondary">{dict.common.loading || 'Caricamento...'}</p></div></div>}>
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="text-center"><div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div><p className="text-text-secondary">Caricamento...</p></div></div>}>
         <ReviewsContent />
       </Suspense>
     </>

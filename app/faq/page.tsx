@@ -3,40 +3,37 @@ import { FAQContent } from '@/components/support/FAQContent';
 import { generatePageMetadata } from '@/lib/seo/metadata';
 import { StructuredData } from '@/components/seo/StructuredData';
 import { generateFAQSchema } from '@/lib/seo/structured-data';
-import { getDictionary } from '@/lib/i18n/dictionaries';
 
 export async function generateMetadata() {
   return generatePageMetadata('faq', 'it');
 }
 
 export default async function FAQPage() {
-  const dict = await getDictionary('it');
-  
   // Genera FAQ structured data
   const faqs = [
     {
-      question: dict.faq.questions.whatIsTradelia || 'Cos\'è Tradelia?',
-      answer: dict.faq.answers.whatIsTradelia || 'Tradelia è un laboratorio indipendente...',
+      question: 'Cos\'è Tradelia?',
+      answer: 'Tradelia è un laboratorio indipendente...',
     },
     {
-      question: dict.faq.questions.howToStart || 'Come posso iniziare?',
-      answer: dict.faq.answers.howToStart || 'Puoi iniziare creando un account gratuito...',
+      question: 'Come posso iniziare?',
+      answer: 'Puoi iniziare creando un account gratuito...',
     },
     {
-      question: dict.faq.questions.whatIsPro || 'Cos\'è il piano Pro?',
-      answer: dict.faq.answers.whatIsPro || 'Il piano Pro include...',
+      question: 'Cos\'è il piano Pro?',
+      answer: 'Il piano Pro include...',
     },
     {
-      question: dict.faq.questions.isFree || 'Tradelia è davvero gratuito?',
-      answer: dict.faq.answers.isFree || 'Sì, l\'accesso base è completamente gratuito...',
+      question: 'Tradelia è davvero gratuito?',
+      answer: 'Sì, l\'accesso base è completamente gratuito...',
     },
     {
-      question: dict.faq.questions.mifidCompliant || 'Il materiale è conforme MiFID II?',
-      answer: dict.faq.answers.mifidCompliant || 'Sì, tutto il materiale è conforme...',
+      question: 'Il materiale è conforme MiFID II?',
+      answer: 'Sì, tutto il materiale è conforme...',
     },
     {
-      question: dict.faq.questions.businessPlans || 'Ci sono piani per aziende?',
-      answer: dict.faq.answers.businessPlans || 'Sì, offriamo piani Business...',
+      question: 'Ci sono piani per aziende?',
+      answer: 'Sì, offriamo piani Business...',
     },
   ];
 
