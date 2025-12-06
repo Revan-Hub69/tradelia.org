@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Star, FileText, BookOpen, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
-import { useFavorites } from '@/components/dashboard/Favorites';
+import { useFavoritesUniversal } from '@/lib/hooks/useFavoritesUniversal';
 
 interface FavoriteButtonProps {
   id: string;
@@ -15,16 +15,14 @@ interface FavoriteButtonProps {
 }
 
 export function FavoriteButton({ id, type, title, description, href, className }: FavoriteButtonProps) {
-  const { isFavorite, addFavorite, removeFavorite } = useFavorites();
+  const { isFavorite, addFavorite, removeFavorite } = useFavoritesUniversal();
   const [favorited, setFavorited] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const checkFavorite = async () => {
-      const result = await isFavorite(id, type);
-      setFavorited(result);
-    };
-    checkFavorite();
+    // isFavorite è sincrono, non async
+    const result = isFavorite(id, type);
+    setFavorited(result);
   }, [id, type, isFavorite]);
 
   const getTypeIcon = (): string => {
@@ -53,18 +51,24 @@ export function FavoriteButton({ id, type, title, description, href, className }
         const success = await removeFavorite(id, type);
         if (success) {
           setFavorited(false);
+        } else {
+          // Se fallisce, aggiorna comunque lo stato locale
+          setFavorited(isFavorite(id, type));
         }
       } else {
         const success = await addFavorite({ 
           item_id: id, 
           item_type: type, 
           title, 
-          description, 
+          description: description || null, 
           href,
-          icon: getTypeIcon(),
+          icon: getTypeIcon() || null,
         });
         if (success) {
           setFavorited(true);
+        } else {
+          // Se fallisce, aggiorna comunque lo stato locale
+          setFavorited(isFavorite(id, type));
         }
       }
     } finally {
