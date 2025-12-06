@@ -127,15 +127,19 @@ export const ModuleGrid = memo(function ModuleGrid({ priority }: ModuleGridProps
           ? (priority === 'primary' ? 'Moduli principali della dashboard' : 'Moduli secondari della dashboard')
           : 'Moduli e funzionalità della dashboard'}
       >
-        {filteredModules.map((module) => (
-          <ModuleCard key={module.id} module={module} />
+        {filteredModules.map((module, index) => (
+          <ModuleCard 
+            key={module.id} 
+            module={module}
+            tabIndex={index === 0 ? 0 : -1}
+          />
         ))}
       </div>
     </div>
   );
 });
 
-function ModuleCard({ module }: { module: Module }) {
+function ModuleCard({ module, tabIndex }: { module: Module; tabIndex?: number }) {
   const { isAuthenticated } = useAuthState();
   
   return (

@@ -19,6 +19,7 @@ import { AchievementNotification } from '@/components/gamification/AchievementNo
 import { KeyboardShortcuts } from './KeyboardShortcuts';
 import { useKeyboardShortcuts } from '@/lib/hooks/useKeyboardShortcuts';
 import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
+import { useEffect } from 'react';
 // WelcomeTour rimosso - causava problemi di posizionamento e bloccava l'interfaccia
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useDashboardPreferences } from '@/lib/hooks/useDashboardPreferences';
@@ -161,6 +162,66 @@ export function DashboardShell() {
 
   // Welcome Tour rimosso - causava problemi di posizionamento e bloccava l'interfaccia
 
+  // Prefetch intelligente dei link più usati (Best Practice: Performance)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    // Prefetch delle pagine più frequenti quando l'utente è idle
+    const prefetchLinks = [
+      '/dashboard/analysis',
+      '/dashboard/education',
+      '/dashboard/settings',
+      '/dashboard/favorites',
+    ];
+
+    const prefetchOnIdle = () => {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          prefetchLinks.forEach(href => {
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = href;
+            document.head.appendChild(link);
+          });
+        });
+      } else {
+        // Fallback per browser senza requestIdleCallback
+        setTimeout(() => {
+          prefetchLinks.forEach(href => {
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = href;
+            document.head.appendChild(link);
+          });
+        }, 2000);
+      }
+    };
+
+    prefetchOnIdle();
+  }, []);
+
+  // Focus management per accessibilità (Best Practice: WCAG 2.1)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // Focus sul main content quando la dashboard carica (solo se nessun altro elemento ha focus)
+    const mainElement = document.getElementById('main-content');
+    if (mainElement) {
+      // Non forzare il focus se l'utente sta già interagendo o se c'è un elemento focusabile attivo
+      const activeElement = document.activeElement;
+      const hasUserInteracted = activeElement && 
+        activeElement !== document.body && 
+        activeElement !== document.documentElement;
+      
+      if (!hasUserInteracted) {
+        // Usa requestAnimationFrame per evitare conflitti con React
+        requestAnimationFrame(() => {
+          mainElement.focus();
+        });
+      }
+    }
+  }, []);
+
   return (
     <ErrorBoundary>
       <SkipLink href="#modules-view" />
@@ -173,6 +234,8 @@ export function DashboardShell() {
         role="main" 
         aria-label="Dashboard principale"
         suppressHydrationWarning
+        tabIndex={-1}
+        id="main-content"
       >
         <div 
           id="modules-view" 

@@ -64,7 +64,22 @@ export const Favorites = memo(function Favorites() {
   }, [favorites]);
 
   const handleRemoveFavorite = async (itemId: string, itemType: string) => {
-    await removeFavorite(itemId, itemType);
+    try {
+      await removeFavorite(itemId, itemType);
+      // Annuncia la rimozione per screen readers (Best Practice: Accessibilità)
+      if (typeof window !== 'undefined') {
+        const announcement = document.createElement('div');
+        announcement.setAttribute('role', 'status');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.className = 'sr-only';
+        announcement.textContent = 'Preferito rimosso';
+        document.body.appendChild(announcement);
+        setTimeout(() => document.body.removeChild(announcement), 1000);
+      }
+    } catch (error) {
+      console.error('Error removing favorite:', error);
+    }
   };
 
   const getTypeIcon = (type: string) => {
@@ -155,6 +170,16 @@ export const Favorites = memo(function Favorites() {
                 href={favorite.href}
                 className="block p-4 bg-bg-soft border border-border-subtle rounded-xl hover:border-accent/40 transition-all duration-200 group relative"
                 aria-label={`${favorite.title} - ${favorite.description}`}
+                prefetch={true}
+                onMouseEnter={() => {
+                  // Prefetch intelligente al hover (Best Practice: Performance)
+                  if (typeof window !== 'undefined') {
+                    const link = document.createElement('link');
+                    link.rel = 'prefetch';
+                    link.href = favorite.href;
+                    document.head.appendChild(link);
+                  }
+                }}
               >
                 <button
                   onClick={(e) => {
