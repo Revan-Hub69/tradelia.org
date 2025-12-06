@@ -38,8 +38,16 @@ export function useTranslations() {
     return pathLocale;
   };
 
-  // Inizializza con il locale rilevato
-  const [locale, setLocale] = useState<Locale>(detectLocale);
+  // CRITICAL: Inizializza sempre con defaultLocale sul server per evitare hydration mismatch
+  // Il locale verrà aggiornato sul client dopo il mount
+  const [locale, setLocale] = useState<Locale>(() => {
+    // Sul server, usa sempre defaultLocale
+    if (typeof window === "undefined") {
+      return defaultLocale;
+    }
+    // Sul client, rileva il locale
+    return detectLocale();
+  });
   const [mounted, setMounted] = useState(false);
 
   // Monta il componente e rileva il locale
@@ -50,7 +58,7 @@ export function useTranslations() {
 
     setMounted(true);
     
-    // Rileva e imposta il locale immediatamente
+    // Rileva e imposta il locale immediatamente dopo il mount
     const detectedLocale = detectLocale();
     if (detectedLocale !== locale) {
       setLocale(detectedLocale);

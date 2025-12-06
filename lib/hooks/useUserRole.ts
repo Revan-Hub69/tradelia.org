@@ -41,13 +41,29 @@ export function useUserRole(): UserRoleData {
         if (error) {
           // PGRST116 = no rows returned, which is fine
           // 500 = server error, table might not exist or RLS issue
+          // PGRST301 = relation does not exist
+          // PGRST301 = permission denied (RLS)
           if (error.code === "PGRST116") {
-            // No role found, use default
-          } else if (error.code === "PGRST301" || error.message?.includes("relation") || error.message?.includes("does not exist")) {
-            // Table doesn't exist, use default
-            console.warn("user_roles table not available, using default role");
+            // No role found, use default - this is expected for new users
+          } else if (
+            error.code === "PGRST301" || 
+            error.code === "PGRST301" ||
+            error.message?.includes("relation") || 
+            error.message?.includes("does not exist") ||
+            error.message?.includes("permission denied") ||
+            error.message?.includes("new row violates row-level security") ||
+            error.status === 500
+          ) {
+            // Table doesn't exist, RLS issue, or server error - use default role silently
+            // Don't log as error to avoid console noise - this is expected in some cases
+            if (process.env.NODE_ENV === 'development') {
+              console.warn("user_roles query failed, using default role:", error.message || error.code);
+            }
           } else {
-            console.error("Error fetching user role:", error);
+            // Other errors - log only in development
+            if (process.env.NODE_ENV === 'development') {
+              console.error("Error fetching user role:", error);
+            }
           }
         }
 

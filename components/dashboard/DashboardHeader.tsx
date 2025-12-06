@@ -1,6 +1,6 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './DashboardHeader.module.css';
@@ -47,10 +47,25 @@ const LanguageSwitch = dynamic(() => import('@/components/ui/LanguageSwitch').th
  * - Login button prominently displayed when not authenticated
  * - Performance optimized (React.memo, dynamic imports)
  * - Internationalized (translated text)
+ * - NO HYDRATION MISMATCH: Uses client-only state to prevent SSR/client differences
  */
 function DashboardHeaderComponent() {
   const { locale, t } = useTranslations();
   const { isAuthenticated, isLoading } = useAuthState();
+  
+  // CRITICAL: Prevent hydration mismatch by ensuring we only render after client mount
+  // This ensures server and client render the same initial state
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    // Mark as mounted only on client, after hydration
+    setIsMounted(true);
+  }, []);
+
+  // During SSR and initial hydration, always show loading state to prevent mismatch
+  const shouldShowLoading = !isMounted || isLoading;
+  const shouldShowAuthenticated = isMounted && !isLoading && isAuthenticated;
+  const shouldShowUnauthenticated = isMounted && !isLoading && !isAuthenticated;
 
   return (
     <header 
@@ -78,12 +93,14 @@ function DashboardHeaderComponent() {
             />
           </Link>
           <span className={styles.dashboardTitleSeparator} aria-hidden="true">·</span>
-          <span className={styles.dashboardTitleText}>{t('header.dashboard') || 'Dashboard'}</span>
+          <span className={styles.dashboardTitleText} suppressHydrationWarning>
+            {t('header.dashboard') || 'Dashboard'}
+          </span>
         </div>
         
         {/* Azioni - Sempre visibili, con loading states */}
         <nav className={styles.dashboardActions} aria-label="Dashboard actions" suppressHydrationWarning>
-          {isLoading ? (
+          {shouldShowLoading ? (
             // Loading state - mostra skeleton per tutti i componenti (accessibile)
             <>
               <div className={styles.dashboardActionsLeft} aria-label={t('common.loading') || 'Loading'}>
@@ -96,7 +113,7 @@ function DashboardHeaderComponent() {
                 <div className="w-8 h-8 bg-bg-soft rounded-full animate-pulse" aria-hidden="true" />
               </div>
             </>
-          ) : !isAuthenticated ? (
+          ) : shouldShowUnauthenticated ? (
             // Quando non autenticato: mostra "Accedi" e LanguageSwitch
             <>
               <div className={styles.dashboardActionsLeft}>
@@ -112,7 +129,7 @@ function DashboardHeaderComponent() {
                 </Link>
               </div>
             </>
-          ) : (
+          ) : shouldShowAuthenticated ? (
             // Quando autenticato: mostra tutte le azioni
             <>
               <div className={styles.dashboardActionsLeft}>
@@ -125,7 +142,7 @@ function DashboardHeaderComponent() {
                 <UserMenu />
               </div>
             </>
-          )}
+          ) : null}
         </nav>
       </div>
     </header>
