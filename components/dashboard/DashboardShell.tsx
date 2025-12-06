@@ -8,6 +8,7 @@ import { DashboardHero } from './DashboardHero';
 import { OverviewStats } from './OverviewStats';
 import { ModuleGrid } from './ModuleGrid';
 import { AccountBanner } from './AccountBanner';
+import { Favorites } from './Favorites';
 // WidgetsSection rimossa - richiede API real-time non disponibili
 // Breadcrumb rimosso - già presente in DashboardTabs per evitare duplicati
 import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
