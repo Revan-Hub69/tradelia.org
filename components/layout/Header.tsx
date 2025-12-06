@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { LanguageToggle } from './LanguageToggle';
+// LanguageToggle removed - system always uses Italian
 import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { Button } from '@/components/ui/button';
 import { LayoutDashboard } from 'lucide-react';
@@ -71,9 +71,6 @@ export function Header() {
           
           {/* Currency Switch */}
           <CurrencySwitch size="sm" />
-          
-          {/* Language Toggle */}
-          <LanguageToggle />
         </div>
       </div>
     </motion.header>

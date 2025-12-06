@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from './DashboardHeader.module.css';
 import { useTranslations } from '@/lib/i18n/use-translations';
-import { buildLocalePath } from '@/lib/i18n/paths';
+// buildLocalePath removed - system always uses Italian
 import dynamic from 'next/dynamic';
 import { useAuthState } from '@/lib/hooks/useAuthState';
 
@@ -118,7 +118,7 @@ function DashboardHeaderComponent() {
               </div>
               <div className={styles.dashboardActionsRight}>
                 <Link
-                  href={buildLocalePath(locale, '/login')}
+                  href="/login"
                   className={styles.loginButton}
                   aria-label={t('dashboard.userMenu.login') || 'Accedi'}
                 >
