@@ -90,7 +90,7 @@ export function Footer() {
 
         {/* Mobile: Always visible - Simple list */}
         <div className="md:hidden">
-          <h3 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-4 pt-4 border-t border-border-subtle first:border-t-0 first:pt-0">
+          <h3 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-4 pt-4 border-t border-premium first:border-t-0 first:pt-0">
             {title}
           </h3>
           <ul className="space-y-3">
@@ -115,7 +115,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative border-t border-border-subtle bg-bg-surface" role="contentinfo" suppressHydrationWarning>
+    <footer className="relative border-t border-premium bg-bg-surface" role="contentinfo" suppressHydrationWarning>
       {/* Top gradient line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-primary opacity-20" />
 
@@ -188,7 +188,7 @@ export function Footer() {
           <motion.div
             variants={itemVariants}
             transition={{ delay: 0.4 }}
-            className="pt-8 border-t border-border-subtle"
+            className="pt-8 border-t border-premium"
           >
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-tertiary">
               <div className="flex items-center gap-3">

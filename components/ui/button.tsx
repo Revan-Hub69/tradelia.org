@@ -11,11 +11,11 @@ const buttonVariants = cva(
         default:
           'bg-accent text-white shadow-md hover:bg-accent-hover hover:shadow-lg border border-accent/40 hover:border-accent/60 transition-all duration-200 font-medium',
         secondary:
-          'bg-bg-surface text-text-primary border border-border-subtle hover:bg-bg-elevated hover:border-border-default transition-all duration-200 shadow-sm',
+          'bg-bg-surface text-text-primary border-premium shadow-premium hover:bg-bg-elevated hover:border-border-strong shadow-premium-hover interaction-smooth',
         ghost:
-          'bg-transparent text-text-secondary hover:text-text-primary hover:bg-bg-surface/40 transition-colors duration-200 border border-transparent',
+          'bg-transparent text-text-secondary hover:text-text-primary hover:bg-bg-surface/40 interaction-smooth border border-transparent',
         outline:
-          'border border-border-subtle bg-transparent text-text-primary hover:bg-bg-surface hover:border-border-default transition-all duration-200',
+          'border-premium shadow-premium bg-transparent text-text-primary hover:bg-bg-surface hover:border-border-strong shadow-premium-hover interaction-smooth',
       },
       size: {
         default: 'h-11 px-4 py-2 min-h-[44px]', // WCAG 2.5.5: minimum 44x44px touch target

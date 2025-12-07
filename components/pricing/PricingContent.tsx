@@ -191,7 +191,7 @@ export function PricingContent() {
           <h2 className="text-2xl font-semibold text-text-primary text-center mb-8">
             {t('pricing.comparison.title') || 'Confronta le Funzionalità'}
           </h2>
-          <div className="bg-bg-surface border border-border-subtle rounded-2xl p-8">
+          <div className="bg-bg-surface border-premium shadow-premium rounded-2xl p-6 md:p-8 card-mobile">
             <ComparisonTable />
           </div>
         </section>
@@ -237,7 +237,7 @@ function PlanCard({
         'relative p-8 rounded-2xl border-2 transition-all duration-200',
         plan.popular
           ? 'bg-gradient-to-br from-accent/10 via-accent/5 to-transparent border-accent shadow-lg'
-          : 'bg-bg-surface border-border-subtle hover:border-accent/40',
+          : 'bg-bg-surface border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth',
         isCurrentPlan && 'ring-2 ring-accent'
       )}
     >
@@ -294,7 +294,7 @@ function PlanCard({
           'w-full py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2',
           plan.popular
             ? 'bg-accent hover:bg-accent-hover text-white shadow-md hover:shadow-lg'
-            : 'bg-bg-soft hover:bg-bg-elevated text-text-primary border border-border-subtle hover:border-accent/40',
+            : 'bg-bg-soft hover:bg-bg-elevated text-text-primary border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth',
           isCurrentPlan && 'opacity-50 cursor-not-allowed'
         )}
       >
@@ -335,7 +335,7 @@ function ComparisonTable() {
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-border-subtle">
+          <tr className="border-b border-premium">
             <th className="text-left py-4 px-4 font-semibold text-text-primary">
               {t('pricing.comparison.feature') || 'Funzionalità'}
             </th>
@@ -346,7 +346,7 @@ function ComparisonTable() {
         </thead>
         <tbody>
           {features.map((feature, idx) => (
-            <tr key={idx} className="border-b border-border-subtle/50">
+            <tr key={idx} className="border-b border-premium/50">
               <td className="py-4 px-4 text-text-secondary">{feature.name}</td>
               <td className="py-4 px-4 text-center">
                 {feature.trial ? (

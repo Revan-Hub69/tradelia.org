@@ -262,7 +262,7 @@ export function WatchlistContent() {
           {watchlist.map((item) => (
             <div
               key={item.id}
-              className="bg-bg-soft border border-border-subtle rounded-xl p-6 hover:border-accent/40 transition-all"
+              className="bg-bg-soft border-premium shadow-premium rounded-xl p-4 md:p-6 hover:border-border-strong shadow-premium-hover interaction-smooth card-mobile"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
@@ -270,7 +270,7 @@ export function WatchlistContent() {
                     <h3 className="font-semibold text-text-primary text-lg">
                       {item.asset_name || item.asset_symbol}
                     </h3>
-                    <span className="px-2 py-1 bg-bg-surface border border-border-subtle rounded text-xs text-text-tertiary font-mono">
+                    <span className="px-2 py-1 bg-bg-surface border-premium rounded text-xs text-text-tertiary font-mono">
                       {item.asset_symbol}
                     </span>
                     {item.priority > 0 && (
@@ -309,7 +309,7 @@ export function WatchlistContent() {
 
               {/* Alerts List */}
               {item.watchlist_alerts && item.watchlist_alerts.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-border-subtle space-y-2">
+                <div className="mt-4 pt-4 border-t border-premium space-y-2">
                   <h4 className="text-sm font-semibold text-text-primary mb-2">Alert Attivi</h4>
                   {item.watchlist_alerts
                     .filter((a) => a.is_active && !a.is_triggered)
@@ -360,7 +360,7 @@ export function WatchlistContent() {
       {/* Add Asset Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-bg-surface border border-border-subtle rounded-xl max-w-md w-full p-6">
+          <div className="bg-bg-surface border-premium shadow-premium rounded-xl max-w-md w-full p-4 md:p-6 card-mobile">
             <h2 className="text-xl font-semibold text-text-primary mb-4">
               {t('watchlist.addAsset') || 'Aggiungi Asset'}
             </h2>
@@ -374,7 +374,7 @@ export function WatchlistContent() {
                   value={newAsset.symbol}
                   onChange={(e) => setNewAsset({ ...newAsset, symbol: e.target.value.toUpperCase() })}
                   placeholder="AAPL, BTC, EURUSD"
-                  className="w-full px-3 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+                  className="w-full px-3 py-2 bg-bg-soft border-premium shadow-premium rounded-lg text-text-primary focus:outline-none focus:border-border-strong focus:ring-2 focus:ring-accent interaction-smooth"
                   autoFocus
                 />
               </div>
@@ -387,7 +387,7 @@ export function WatchlistContent() {
                   value={newAsset.name}
                   onChange={(e) => setNewAsset({ ...newAsset, name: e.target.value })}
                   placeholder="Apple Inc."
-                  className="w-full px-3 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+                  className="w-full px-3 py-2 bg-bg-soft border-premium shadow-premium rounded-lg text-text-primary focus:outline-none focus:border-border-strong focus:ring-2 focus:ring-accent interaction-smooth"
                 />
               </div>
               <div>
@@ -397,7 +397,7 @@ export function WatchlistContent() {
                 <select
                   value={newAsset.type}
                   onChange={(e) => setNewAsset({ ...newAsset, type: e.target.value })}
-                  className="w-full px-3 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+                  className="w-full px-3 py-2 bg-bg-soft border-premium shadow-premium rounded-lg text-text-primary focus:outline-none focus:border-border-strong focus:ring-2 focus:ring-accent interaction-smooth"
                 >
                   <option value="stock">Stock</option>
                   <option value="crypto">Crypto</option>
@@ -414,7 +414,7 @@ export function WatchlistContent() {
                   value={newAsset.exchange}
                   onChange={(e) => setNewAsset({ ...newAsset, exchange: e.target.value })}
                   placeholder="NASDAQ, Binance, etc."
-                  className="w-full px-3 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+                  className="w-full px-3 py-2 bg-bg-soft border-premium shadow-premium rounded-lg text-text-primary focus:outline-none focus:border-border-strong focus:ring-2 focus:ring-accent interaction-smooth"
                 />
               </div>
             </div>
@@ -442,7 +442,7 @@ export function WatchlistContent() {
       {/* Add Alert Modal */}
       {showAlertModal && selectedWatchlist && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-bg-surface border border-border-subtle rounded-xl max-w-md w-full p-6">
+          <div className="bg-bg-surface border-premium shadow-premium rounded-xl max-w-md w-full p-4 md:p-6 card-mobile">
             <h2 className="text-xl font-semibold text-text-primary mb-4">
               {t('watchlist.addAlert') || 'Crea Alert'}
             </h2>
@@ -454,7 +454,7 @@ export function WatchlistContent() {
                 <select
                   value={newAlert.alert_type}
                   onChange={(e) => setNewAlert({ ...newAlert, alert_type: e.target.value })}
-                  className="w-full px-3 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+                  className="w-full px-3 py-2 bg-bg-soft border-premium shadow-premium rounded-lg text-text-primary focus:outline-none focus:border-border-strong focus:ring-2 focus:ring-accent interaction-smooth"
                 >
                   <option value="price_above">Prezzo sopra target</option>
                   <option value="price_below">Prezzo sotto target</option>
@@ -471,7 +471,7 @@ export function WatchlistContent() {
                   value={newAlert.target_value}
                   onChange={(e) => setNewAlert({ ...newAlert, target_value: e.target.value })}
                   placeholder="100.00"
-                  className="w-full px-3 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+                  className="w-full px-3 py-2 bg-bg-soft border-premium shadow-premium rounded-lg text-text-primary focus:outline-none focus:border-border-strong focus:ring-2 focus:ring-accent interaction-smooth"
                 />
               </div>
               <div>
@@ -481,7 +481,7 @@ export function WatchlistContent() {
                 <select
                   value={newAlert.comparison_operator}
                   onChange={(e) => setNewAlert({ ...newAlert, comparison_operator: e.target.value })}
-                  className="w-full px-3 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
+                  className="w-full px-3 py-2 bg-bg-soft border-premium shadow-premium rounded-lg text-text-primary focus:outline-none focus:border-border-strong focus:ring-2 focus:ring-accent interaction-smooth"
                 >
                   <option value=">=">≥ (Maggiore o uguale)</option>
                   <option value=">">&gt; (Maggiore)</option>

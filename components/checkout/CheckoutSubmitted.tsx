@@ -26,7 +26,7 @@ export function CheckoutSubmitted() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-bg-surface border border-border-subtle rounded-2xl p-12 text-center"
+          className="bg-bg-surface border-premium shadow-premium rounded-2xl p-8 md:p-12 text-center card-mobile"
         >
           <div className="w-20 h-20 rounded-full bg-blue-500/20 border-2 border-blue-500 flex items-center justify-center mx-auto mb-6">
             <Mail className="w-12 h-12 text-blue-400" />
@@ -73,7 +73,7 @@ export function CheckoutSubmitted() {
             </Link>
             <Link
               href={`${localePrefix}/pricing`}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-bg-soft hover:bg-bg-elevated border border-border-subtle text-text-primary font-semibold transition-all duration-200"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-bg-soft hover:bg-bg-elevated border-premium shadow-premium hover:border-border-strong shadow-premium-hover text-text-primary font-semibold interaction-smooth"
             >
               {t('checkout.submitted.backToPricing') || 'Torna ai Piani'}
             </Link>

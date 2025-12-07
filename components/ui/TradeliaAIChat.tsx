@@ -49,9 +49,9 @@ const QuickActionButton = memo(({
       onClick={() => onAction(action)}
       className={cn(
         'w-full flex items-center gap-3 p-3.5 rounded-xl',
-        'bg-bg-soft border border-border-subtle',
-        'hover:bg-bg-elevated hover:border-accent/50 hover:shadow-md',
-        'transition-all text-left group',
+        'bg-bg-soft border-premium shadow-premium',
+        'hover:bg-bg-elevated hover:border-border-strong shadow-premium-hover',
+        'interaction-smooth text-left group',
         'text-sm text-text-primary leading-relaxed'
       )}
       whileHover={{ scale: 1.01, y: -1 }}
@@ -90,7 +90,7 @@ const MessageBubble = memo(({ msg, locale }: { msg: Message; locale: 'it' | 'en'
           'transition-all duration-200',
           isUser
             ? 'bg-gradient-to-br from-accent to-accent-hover text-white text-sm leading-relaxed whitespace-pre-wrap break-words shadow-md'
-            : 'bg-bg-soft text-text-primary border border-border-subtle hover:border-border-default',
+            : 'bg-bg-soft text-text-primary border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth',
           // Better visual separation
           !isUser && 'bg-gradient-to-br from-bg-soft to-bg-surface'
         )}
@@ -631,7 +631,7 @@ export function TradeliaAIChat() {
             className={cn(
               'fixed right-0 top-0 bottom-0 z-50',
               'w-full sm:w-[420px] lg:w-[480px] xl:w-[520px]',
-              'bg-bg-surface border-l border-border-subtle',
+              'bg-bg-surface border-l border-premium',
               'shadow-2xl flex flex-col',
               'backdrop-blur-xl',
               'max-h-screen'
@@ -644,7 +644,7 @@ export function TradeliaAIChat() {
             aria-describedby="chat-description"
           >
             {/* Header - Modern 2025 Design */}
-            <div className="flex items-center justify-between p-5 border-b border-border-subtle bg-gradient-to-r from-bg-surface via-bg-soft/30 to-bg-surface">
+            <div className="flex items-center justify-between p-4 md:p-5 border-b border-premium bg-gradient-to-r from-bg-surface via-bg-soft/30 to-bg-surface card-mobile">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center shadow-lg">
                   <Sparkles className="w-5 h-5 text-white" />
@@ -785,7 +785,7 @@ export function TradeliaAIChat() {
                   {/* Streaming message with typing effect */}
                   {streamingMessage && (
                     <div className="flex justify-start mb-6">
-                      <div className="max-w-[85%] sm:max-w-[80%] rounded-2xl px-4 py-3.5 shadow-sm bg-bg-soft text-text-primary border border-border-subtle relative">
+                      <div className="max-w-[85%] sm:max-w-[80%] rounded-2xl px-4 py-3.5 shadow-premium bg-bg-soft text-text-primary border-premium relative">
                         <div className="space-y-4">
                           {renderFormattedMessage(formatAIMessage(streamingMessage).parts, currentLocale)}
                         </div>
@@ -805,7 +805,7 @@ export function TradeliaAIChat() {
                   aria-live="polite"
                   aria-label={currentLocale === 'it' ? 'Caricamento risposta' : 'Loading response'}
                 >
-                  <div className="bg-bg-soft rounded-2xl px-4 py-3 border border-border-subtle shadow-sm flex items-center gap-2">
+                  <div className="bg-bg-soft rounded-2xl px-4 py-3 border-premium shadow-premium flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin text-accent" aria-hidden="true" />
                     <span className="text-xs text-text-tertiary">
                       {currentLocale === 'it' ? 'Sto pensando...' : 'Thinking...'}
@@ -817,7 +817,7 @@ export function TradeliaAIChat() {
             </div>
 
             {/* Input - Modern 2025 Design */}
-            <div className="p-5 border-t border-border-subtle bg-bg-surface">
+            <div className="p-4 md:p-5 border-t border-premium bg-bg-surface card-mobile">
               <div className="flex gap-3 items-end">
                 <div className="flex-1 relative">
                   <textarea
@@ -838,7 +838,7 @@ export function TradeliaAIChat() {
                     placeholder={currentLocale === 'it' ? 'Scrivi un messaggio...' : 'Type a message...'}
                     className={cn(
                       'w-full px-4 py-3 pr-12 rounded-xl',
-                      'bg-bg-soft border border-border-subtle',
+                      'bg-bg-soft border-premium shadow-premium',
                       'text-text-primary placeholder:text-text-tertiary',
                       'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-surface',
                       'text-sm leading-relaxed resize-none',

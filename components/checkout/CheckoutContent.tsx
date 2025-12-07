@@ -296,7 +296,7 @@ export function CheckoutContent() {
           <div className={cn('flex items-center gap-2', step === 'data' && 'text-accent')}>
             <div className={cn(
               'w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all',
-              step === 'data' ? 'bg-accent border-accent text-white' : 'border-border-subtle text-text-tertiary'
+              step === 'data' ? 'bg-accent border-accent text-white shadow-premium' : 'border-premium text-text-tertiary'
             )}>
               {step !== 'data' ? <CheckCircle2 className="w-4 h-4" /> : '1'}
             </div>
@@ -306,7 +306,7 @@ export function CheckoutContent() {
           <div className={cn('flex items-center gap-2', step === 'payment' && 'text-accent')}>
             <div className={cn(
               'w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all',
-              step === 'payment' ? 'bg-accent border-accent text-white' : 'border-border-subtle text-text-tertiary'
+              step === 'payment' ? 'bg-accent border-accent text-white shadow-premium' : 'border-premium text-text-tertiary'
             )}>
               2
             </div>
@@ -365,7 +365,7 @@ export function CheckoutContent() {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <div className="bg-bg-surface border border-border-subtle rounded-2xl p-12 text-center">
+                  <div className="bg-bg-surface border-premium shadow-premium rounded-2xl p-8 md:p-12 text-center card-mobile">
                     <Loader2 className="w-12 h-12 animate-spin text-accent mx-auto mb-4" />
                     <p className="text-text-secondary">
                       {t('checkout.processing') || 'Elaborazione pagamento in corso...'}
@@ -433,7 +433,7 @@ function DataCollectionForm({
               'p-4 rounded-xl border-2 transition-all focus:outline-none focus:ring-2 focus:ring-accent/50',
               customerType === 'retail'
                 ? 'border-accent bg-accent/10'
-                : 'border-border-subtle hover:border-border-default'
+                : 'border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth'
             )}
             aria-pressed={customerType === 'retail'}
           >
@@ -451,7 +451,7 @@ function DataCollectionForm({
               'p-4 rounded-xl border-2 transition-all focus:outline-none focus:ring-2 focus:ring-accent/50',
               customerType === 'professionale'
                 ? 'border-accent bg-accent/10'
-                : 'border-border-subtle hover:border-border-default'
+                : 'border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth'
             )}
             aria-pressed={customerType === 'professionale'}
           >
@@ -490,7 +490,7 @@ function DataCollectionForm({
                 onBlur={() => handleBlur('firstName')}
                 className={cn(
                   'w-full px-4 py-2 rounded-lg bg-bg-soft border transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50',
-                  errors.firstName && touched.firstName ? 'border-red-500' : 'border-border-subtle focus:border-accent'
+                  errors.firstName && touched.firstName ? 'border-red-500' : 'border-premium shadow-premium focus:border-border-strong'
                 )}
                 aria-invalid={errors.firstName && touched.firstName ? 'true' : 'false'}
                 aria-describedby={errors.firstName && touched.firstName ? 'firstName-error' : undefined}
@@ -513,7 +513,7 @@ function DataCollectionForm({
                 onBlur={() => handleBlur('lastName')}
                 className={cn(
                   'w-full px-4 py-2 rounded-lg bg-bg-soft border transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50',
-                  errors.lastName && touched.lastName ? 'border-red-500' : 'border-border-subtle focus:border-accent'
+                  errors.lastName && touched.lastName ? 'border-red-500' : 'border-premium shadow-premium focus:border-border-strong'
                 )}
                 aria-invalid={errors.lastName && touched.lastName ? 'true' : 'false'}
                 aria-describedby={errors.lastName && touched.lastName ? 'lastName-error' : undefined}
@@ -537,7 +537,7 @@ function DataCollectionForm({
               onBlur={() => handleBlur('email')}
               className={cn(
                 'w-full px-4 py-2 rounded-lg bg-bg-soft border transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50',
-                errors.email && touched.email ? 'border-red-500' : 'border-border-subtle focus:border-accent'
+                errors.email && touched.email ? 'border-red-500' : 'border-premium shadow-premium focus:border-border-strong'
               )}
               aria-invalid={errors.email && touched.email ? 'true' : 'false'}
               aria-describedby={errors.email && touched.email ? 'email-error' : undefined}
@@ -558,7 +558,7 @@ function DataCollectionForm({
               onBlur={() => handleBlur('country')}
               className={cn(
                 'w-full px-4 py-2 rounded-lg bg-bg-soft border transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50',
-                errors.country && touched.country ? 'border-red-500' : 'border-border-subtle focus:border-accent'
+                errors.country && touched.country ? 'border-red-500' : 'border-premium shadow-premium focus:border-border-strong'
               )}
               aria-invalid={errors.country && touched.country ? 'true' : 'false'}
               aria-describedby={errors.country && touched.country ? 'country-error' : undefined}
@@ -592,7 +592,7 @@ function DataCollectionForm({
                 maxLength={16}
                 className={cn(
                   'w-full px-4 py-2 rounded-lg bg-bg-soft border transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50',
-                  errors.taxCode && touched.taxCode ? 'border-red-500' : 'border-border-subtle focus:border-accent'
+                  errors.taxCode && touched.taxCode ? 'border-red-500' : 'border-premium shadow-premium focus:border-border-strong'
                 )}
                 aria-invalid={errors.taxCode && touched.taxCode ? 'true' : 'false'}
                 aria-describedby={errors.taxCode && touched.taxCode ? 'taxCode-error' : undefined}
@@ -627,7 +627,7 @@ function DataCollectionForm({
               onBlur={() => handleBlur('companyName')}
               className={cn(
                 'w-full px-4 py-2 rounded-lg bg-bg-soft border transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50',
-                errors.companyName && touched.companyName ? 'border-red-500' : 'border-border-subtle focus:border-accent'
+                errors.companyName && touched.companyName ? 'border-red-500' : 'border-premium shadow-premium focus:border-border-strong'
               )}
               aria-invalid={errors.companyName && touched.companyName ? 'true' : 'false'}
               aria-describedby={errors.companyName && touched.companyName ? 'companyName-error' : undefined}
@@ -650,7 +650,7 @@ function DataCollectionForm({
               onBlur={() => handleBlur('vatNumber')}
               className={cn(
                 'w-full px-4 py-2 rounded-lg bg-bg-soft border transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50',
-                errors.vatNumber && touched.vatNumber ? 'border-red-500' : 'border-border-subtle focus:border-accent'
+                errors.vatNumber && touched.vatNumber ? 'border-red-500' : 'border-premium shadow-premium focus:border-border-strong'
               )}
               aria-invalid={errors.vatNumber && touched.vatNumber ? 'true' : 'false'}
               aria-describedby={errors.vatNumber && touched.vatNumber ? 'vatNumber-error' : undefined}
@@ -672,7 +672,7 @@ function DataCollectionForm({
               onBlur={() => handleBlur('companyCountry')}
               className={cn(
                 'w-full px-4 py-2 rounded-lg bg-bg-soft border transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50',
-                errors.companyCountry && touched.companyCountry ? 'border-red-500' : 'border-border-subtle focus:border-accent'
+                errors.companyCountry && touched.companyCountry ? 'border-red-500' : 'border-premium shadow-premium focus:border-border-strong'
               )}
               aria-invalid={errors.companyCountry && touched.companyCountry ? 'true' : 'false'}
               aria-describedby={errors.companyCountry && touched.companyCountry ? 'companyCountry-error' : undefined}
@@ -700,7 +700,7 @@ function DataCollectionForm({
               onBlur={() => handleBlur('contactEmail')}
               className={cn(
                 'w-full px-4 py-2 rounded-lg bg-bg-soft border transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50',
-                errors.contactEmail && touched.contactEmail ? 'border-red-500' : 'border-border-subtle focus:border-accent'
+                errors.contactEmail && touched.contactEmail ? 'border-red-500' : 'border-premium shadow-premium focus:border-border-strong'
               )}
               aria-invalid={errors.contactEmail && touched.contactEmail ? 'true' : 'false'}
               aria-describedby={errors.contactEmail && touched.contactEmail ? 'contactEmail-error' : undefined}

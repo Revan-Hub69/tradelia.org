@@ -91,7 +91,7 @@ export function ReviewForm({ onSuccess }: ReviewFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-bg-surface border border-border-subtle rounded-xl p-6 space-y-6">
+    <form onSubmit={handleSubmit} className="bg-bg-surface border-premium shadow-premium rounded-xl p-4 md:p-6 space-y-6 card-mobile">
       <div>
         <label className="block text-sm font-medium text-text-primary mb-3">
           {t('reviews.rating') || 'Voto'}
@@ -106,7 +106,7 @@ export function ReviewForm({ onSuccess }: ReviewFormProps) {
                 'w-12 h-12 rounded-lg flex items-center justify-center transition-all min-w-[44px] min-h-[44px]',
                 rating >= value
                   ? 'bg-accent text-white'
-                  : 'bg-bg-soft text-text-tertiary hover:bg-bg-elevated border border-border-subtle'
+                  : 'bg-bg-soft text-text-tertiary hover:bg-bg-elevated border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth'
               )}
               aria-label={`${t('reviews.rate') || 'Vota'} ${value} ${value === 1 ? t('reviews.star') || 'stella' : t('reviews.stars') || 'stelle'}`}
             >
@@ -134,7 +134,7 @@ export function ReviewForm({ onSuccess }: ReviewFormProps) {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           rows={6}
-          className="w-full px-4 py-2 bg-bg-base border border-border-subtle rounded-lg text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent resize-none"
+          className="w-full px-4 py-2 bg-bg-base border-premium shadow-premium rounded-lg text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent focus:border-border-strong interaction-smooth resize-none"
           placeholder={t('reviews.commentPlaceholder') || 'Condividi la tua esperienza con Tradelia...'}
         />
         <p className="text-xs text-text-tertiary mt-1">

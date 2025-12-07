@@ -47,7 +47,7 @@ export function ComingSoon({
         </div>
 
         {/* Info Box */}
-        <div className="bg-bg-soft border border-border-subtle rounded-xl p-6 space-y-4">
+        <div className="bg-bg-soft border-premium shadow-premium rounded-xl p-4 md:p-6 space-y-4 card-mobile">
           <div className="flex items-start gap-3">
             <Zap className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
             <div className="flex-1">
@@ -61,7 +61,7 @@ export function ComingSoon({
           </div>
 
           {estimatedDate && (
-            <div className="flex items-start gap-3 pt-3 border-t border-border-subtle">
+            <div className="flex items-start gap-3 pt-3 border-t border-premium">
               <AlertCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
               <div className="flex-1">
                 <p className="text-sm text-text-secondary">
@@ -72,7 +72,7 @@ export function ComingSoon({
           )}
 
           {/* Alternative */}
-          <div className="pt-3 border-t border-border-subtle">
+          <div className="pt-3 border-t border-premium">
             <p className="text-xs text-text-tertiary">
               <strong className="text-text-primary">Nel frattempo:</strong> Puoi utilizzare i nostri{' '}
               <strong className="text-accent">12 strumenti finanziari avanzati</strong> disponibili nella sezione Utilities.
@@ -82,7 +82,7 @@ export function ComingSoon({
         </div>
 
         {/* Features Preview */}
-        <div className="bg-bg-soft border border-border-subtle rounded-xl p-6">
+        <div className="bg-bg-soft border-premium shadow-premium rounded-xl p-4 md:p-6 card-mobile">
           <h3 className="text-sm font-semibold text-text-primary mb-3">
             Cosa troverai quando sarà disponibile:
           </h3>

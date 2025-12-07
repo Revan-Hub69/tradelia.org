@@ -167,7 +167,7 @@ export function FileUpload({
             ? 'border-accent bg-accent/10'
             : error
             ? 'border-red-400'
-            : 'border-border-subtle hover:border-accent/40',
+            : 'border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth',
           className
         )}
       >
@@ -209,7 +209,7 @@ export function FileUpload({
           {files.map((file, index) => (
             <div
               key={`${file.name}-${index}`}
-              className="flex items-center gap-3 p-3 bg-bg-soft border border-border-subtle rounded-lg"
+              className="flex items-center gap-3 p-3 bg-bg-soft border-premium shadow-premium rounded-lg card-mobile"
             >
               {preview && getFileIcon(file)}
               <div className="flex-1 min-w-0">

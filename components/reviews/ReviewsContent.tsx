@@ -194,7 +194,7 @@ export function ReviewsContent() {
                     'px-4 py-2 rounded-lg text-sm font-medium transition-all min-w-[44px] min-h-[44px]',
                     selectedRating === null
                       ? 'bg-accent text-white'
-                      : 'bg-bg-surface text-text-secondary hover:bg-bg-soft border border-border-subtle'
+                      : 'bg-bg-surface text-text-secondary hover:bg-bg-soft border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth'
                   )}
                 >
                   {t('reviews.all') || 'Tutte'}
@@ -211,7 +211,7 @@ export function ReviewsContent() {
                         'px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 min-w-[44px] min-h-[44px]',
                         selectedRating === rating
                           ? 'bg-accent text-white'
-                          : 'bg-bg-surface text-text-secondary hover:bg-bg-soft border border-border-subtle'
+                          : 'bg-bg-surface text-text-secondary hover:bg-bg-soft border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth'
                       )}
                     >
                       <div className="flex items-center gap-1">
@@ -241,7 +241,7 @@ export function ReviewsContent() {
               <p className="text-text-secondary">{t('reviews.loading') || 'Caricamento recensioni...'}</p>
             </div>
           ) : filteredReviews.length === 0 ? (
-            <div className="text-center py-12 bg-bg-surface rounded-xl border border-border-subtle">
+            <div className="text-center py-12 bg-bg-surface rounded-xl border-premium shadow-premium card-mobile">
               <MessageSquare className="w-12 h-12 mx-auto mb-3 text-text-tertiary opacity-50" />
               <p className="text-base font-semibold text-text-secondary mb-1">
                 {selectedRating
@@ -268,7 +268,7 @@ export function ReviewsContent() {
                 <motion.div
                   key={review.id}
                   variants={itemVariants}
-                  className="bg-bg-surface border border-border-subtle rounded-xl p-6 hover:border-accent/40 hover:shadow-lg transition-all"
+                  className="bg-bg-surface border-premium shadow-premium rounded-xl p-4 md:p-6 hover:border-border-strong shadow-premium-hover interaction-smooth card-mobile"
                 >
                   {/* Rating */}
                   <div className="flex items-center gap-1 mb-4">
@@ -301,7 +301,7 @@ export function ReviewsContent() {
                   </blockquote>
 
                   {/* User Info */}
-                  <div className="flex items-center gap-3 pt-4 border-t border-border-subtle">
+                  <div className="flex items-center gap-3 pt-4 border-t border-premium">
                     <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
                       <span className="text-accent font-bold text-sm">
                         {review.user_name.charAt(0).toUpperCase()}
@@ -334,7 +334,7 @@ export function ReviewsContent() {
                 </Link>
               </Button>
             ) : (
-              <div className="bg-bg-surface border border-border-subtle rounded-xl p-8">
+              <div className="bg-bg-surface border-premium shadow-premium rounded-xl p-6 md:p-8 card-mobile">
                 <p className="text-text-secondary mb-4">
                   {t('reviews.loginToReview') || 'Accedi per lasciare una recensione'}
                 </p>

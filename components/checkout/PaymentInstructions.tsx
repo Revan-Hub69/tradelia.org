@@ -103,7 +103,7 @@ export function PaymentInstructions() {
           </div>
 
           {/* Order Summary */}
-          <div className="bg-bg-surface border border-border-subtle rounded-2xl p-6">
+          <div className="bg-bg-surface border-premium shadow-premium rounded-2xl p-4 md:p-6 card-mobile">
             <h2 className="text-lg font-semibold text-text-primary mb-4">
               {t('checkout.instructions.orderSummary') || 'Riepilogo Ordine'}
             </h2>
@@ -121,7 +121,7 @@ export function PaymentInstructions() {
                     : t('checkout.summary.billing.yearly') || 'Fatturazione annuale'}
                 </span>
               </div>
-              <div className="pt-3 border-t border-border-subtle">
+              <div className="pt-3 border-t border-premium">
                 <div className="flex justify-between items-center">
                   <span className="font-semibold text-text-primary">
                     {t('checkout.summary.total') || 'Totale'}

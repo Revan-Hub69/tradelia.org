@@ -257,7 +257,7 @@ export function GlossaryContent() {
             {/* Keyboard Help Toggle */}
             <button
               onClick={() => setShowKeyboardHelp(!showKeyboardHelp)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-bg-soft border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-surface transition-colors text-sm"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-bg-soft border-premium shadow-premium text-text-secondary hover:text-text-primary hover:bg-bg-surface hover:border-border-strong shadow-premium-hover interaction-smooth text-sm"
               aria-label={t('glossary.keyboardNavigation.showInstructions') || 'Mostra istruzioni tastiera'}
             >
               <Keyboard className="w-4 h-4" />
@@ -272,14 +272,14 @@ export function GlossaryContent() {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="mb-4 p-4 bg-bg-soft border border-border-subtle rounded-lg text-sm"
+                className="mb-4 p-4 bg-bg-soft border-premium shadow-premium rounded-lg text-sm card-mobile"
               >
                 <div className="flex items-start gap-2 mb-2">
                   <Keyboard className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
                   <div className="flex-1">
                     <h3 className="font-semibold text-text-primary mb-2">{t('glossary.keyboardNavigation.title') || 'Navigazione da tastiera'}</h3>
                     <ul className="space-y-1 text-text-secondary text-xs">
-                      <li><kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">↑</kbd> <kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">↓</kbd> {t('glossary.keyboardNavigation.navigateTerms') || 'Naviga tra i termini'}</li>
+                      <li><kbd className="px-1.5 py-0.5 bg-bg-surface border-premium rounded">↑</kbd> <kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">↓</kbd> {t('glossary.keyboardNavigation.navigateTerms') || 'Naviga tra i termini'}</li>
                       <li><kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">Enter</kbd> {t('glossary.keyboardNavigation.openTerm') || 'Apri termine nel drawer'}</li>
                       <li><kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">Esc</kbd> {t('glossary.keyboardNavigation.closeDrawer') || 'Chiudi drawer'}</li>
                       <li><kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">Ctrl/Cmd</kbd> + <kbd className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded">K</kbd> {t('glossary.keyboardNavigation.focusSearch') || 'Focus ricerca'}</li>
@@ -322,7 +322,7 @@ export function GlossaryContent() {
                 </div>
               </div>
             </div>
-            <div className="bg-bg-surface rounded-lg p-4 border border-border-subtle">
+            <div className="bg-bg-surface rounded-lg p-4 border-premium shadow-premium card-mobile">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <h3 className="text-xl font-bold text-text-primary mb-2">
@@ -361,7 +361,7 @@ export function GlossaryContent() {
               placeholder={t('glossary.searchPlaceholder') || 'Cerca per nome, definizione o argomento...'}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-10 py-2.5 rounded-lg bg-bg-surface border border-border-subtle text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all text-sm"
+              className="w-full pl-10 pr-10 py-2.5 rounded-lg bg-bg-surface border-premium shadow-premium text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-border-strong focus:ring-2 focus:ring-accent/20 interaction-smooth text-sm"
               aria-label="Cerca nel glossario per nome, definizione o argomento"
             />
             {searchTerm && (
@@ -457,7 +457,7 @@ export function GlossaryContent() {
                         'px-3 py-1.5 rounded-lg text-xs font-medium transition-all border flex items-center gap-1.5',
                         selectedTags.includes(tag)
                           ? 'bg-accent text-white border-accent shadow-sm'
-                          : 'bg-bg-surface text-text-secondary border-border-subtle hover:bg-bg-soft hover:border-accent/50'
+                          : 'bg-bg-surface text-text-secondary border-premium shadow-premium hover:bg-bg-soft hover:border-border-strong shadow-premium-hover interaction-smooth'
                       )}
                       title={`${tagDisplayName}: ${count} ${count === 1 ? (t('glossary.filters.termCount') || 'termine') : (t('glossary.filters.termCountPlural') || 'termini')}`}
                     >

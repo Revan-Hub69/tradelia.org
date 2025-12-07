@@ -59,7 +59,7 @@ export function FeatureComingSoon({
             </p>
           )}
           {reason && (
-            <div className="mt-4 p-3 bg-bg-soft rounded-lg border border-border-subtle">
+            <div className="mt-4 p-3 bg-bg-soft rounded-lg border-premium shadow-premium">
               <div className="flex items-start gap-2">
                 <Info className="w-4 h-4 text-text-tertiary flex-shrink-0 mt-0.5" />
                 <p className="text-xs text-text-tertiary text-left">{reason}</p>
@@ -105,7 +105,7 @@ export function FeatureComingSoon({
   return (
     <div
       className={cn(
-        'bg-bg-surface border border-border-subtle rounded-xl p-6',
+        'bg-bg-surface border-premium shadow-premium rounded-xl p-4 md:p-6 card-mobile',
         'opacity-75',
         'relative',
         className

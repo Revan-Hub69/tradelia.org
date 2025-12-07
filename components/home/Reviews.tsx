@@ -151,7 +151,7 @@ export function Reviews() {
           viewport={{ once: true, margin: "-100px" }}
           className="relative max-w-4xl mx-auto"
         >
-          <div className="relative bg-bg-surface border border-border-subtle rounded-2xl p-8 md:p-12 shadow-lg">
+          <div className="relative bg-bg-surface border-premium shadow-premium rounded-2xl p-6 md:p-8 lg:p-12 card-mobile">
             {/* Quote Icon */}
             <div className="absolute top-6 left-6 opacity-10">
               <Quote className="w-16 h-16 text-accent" aria-hidden="true" />
@@ -221,14 +221,14 @@ export function Reviews() {
               <div className="absolute top-1/2 -translate-y-1/2 left-4 right-4 flex justify-between pointer-events-none">
                 <button
                   onClick={prevReview}
-                  className="pointer-events-auto w-10 h-10 rounded-full bg-bg-elevated border border-border-subtle flex items-center justify-center hover:bg-bg-hover hover:border-accent/40 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent min-w-[44px] min-h-[44px]"
+                  className="pointer-events-auto w-10 h-10 rounded-full bg-bg-elevated border-premium shadow-premium flex items-center justify-center hover:bg-bg-hover hover:border-border-strong shadow-premium-hover interaction-smooth focus:outline-none focus:ring-2 focus:ring-accent min-w-[44px] min-h-[44px]"
                   aria-label={t('reviews.previous') || 'Recensione precedente'}
                 >
                   <ChevronLeft className="w-5 h-5 text-text-primary" aria-hidden="true" />
                 </button>
                 <button
                   onClick={nextReview}
-                  className="pointer-events-auto w-10 h-10 rounded-full bg-bg-elevated border border-border-subtle flex items-center justify-center hover:bg-bg-hover hover:border-accent/40 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent min-w-[44px] min-h-[44px]"
+                  className="pointer-events-auto w-10 h-10 rounded-full bg-bg-elevated border-premium shadow-premium flex items-center justify-center hover:bg-bg-hover hover:border-border-strong shadow-premium-hover interaction-smooth focus:outline-none focus:ring-2 focus:ring-accent min-w-[44px] min-h-[44px]"
                   aria-label={t('reviews.next') || 'Recensione successiva'}
                 >
                   <ChevronRight className="w-5 h-5 text-text-primary" aria-hidden="true" />
