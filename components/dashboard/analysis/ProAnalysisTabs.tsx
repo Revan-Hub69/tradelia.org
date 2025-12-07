@@ -278,7 +278,7 @@ export default function ProAnalysisTabs() {
                   'px-6 py-4 font-medium transition-colors whitespace-nowrap',
                   'border-b-2',
                   activeTab === tab.id
-                    ? 'border-accent text-accent bg-accent/5'
+                    ? 'border-accent text-blue-400 bg-accent/5'
                     : 'border-transparent text-text-secondary hover:text-text-primary hover:bg-bg-soft'
                 )}
               >

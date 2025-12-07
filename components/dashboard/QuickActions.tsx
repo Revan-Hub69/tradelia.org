@@ -57,7 +57,7 @@ export const QuickActions = memo(function QuickActions() {
       label: t('dashboard.quickActions.utilities') || 'Utilities',
       description: t('dashboard.quickActions.utilitiesDesc') || 'Strumenti finanziari professionali',
       icon: <TrendingUp className="w-5 h-5" />,
-      color: 'text-accent',
+      color: 'text-blue-400',
       bgColor: 'bg-accent/20',
       borderColor: 'border-accent/30',
       href: '/dashboard/utilities',

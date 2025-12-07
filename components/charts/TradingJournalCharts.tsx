@@ -122,21 +122,21 @@ export function TradingJournalCharts({ trades }: TradingJournalChartsProps) {
       {/* Stats Summary */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-bg-soft border border-border-subtle rounded-lg p-4">
-          <p className="text-xs text-text-tertiary mb-1">Total Trades</p>
+          <p className="text-xs text-text-secondary mb-1">Total Trades</p>
           <p className="text-2xl font-bold text-text-primary">{totalTrades}</p>
         </div>
         <div className="bg-bg-soft border border-border-subtle rounded-lg p-4">
-          <p className="text-xs text-text-tertiary mb-1">Win Rate</p>
+          <p className="text-xs text-text-secondary mb-1">Win Rate</p>
           <p className="text-2xl font-bold text-text-primary">{winRate.toFixed(1)}%</p>
         </div>
         <div className="bg-bg-soft border border-border-subtle rounded-lg p-4">
-          <p className="text-xs text-text-tertiary mb-1">Total P&L</p>
+          <p className="text-xs text-text-secondary mb-1">Total P&L</p>
           <p className={`text-2xl font-bold ${totalPnL >= 0 ? 'text-green-400' : 'text-red-400'}`}>
             {totalPnL >= 0 ? '+' : ''}€{totalPnL.toFixed(2)}
           </p>
         </div>
         <div className="bg-bg-soft border border-border-subtle rounded-lg p-4">
-          <p className="text-xs text-text-tertiary mb-1">Avg P&L</p>
+          <p className="text-xs text-text-secondary mb-1">Avg P&L</p>
           <p className={`text-2xl font-bold ${totalPnL >= 0 ? 'text-green-400' : 'text-red-400'}`}>
             {totalTrades > 0 ? (totalPnL / totalTrades).toFixed(2) : '0.00'}
           </p>

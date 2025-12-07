@@ -69,7 +69,7 @@ export function PaymentInstructions() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-accent" />
+        <Loader2 className="w-8 h-8 animate-spin text-blue-400" />
       </div>
     );
   }
@@ -115,7 +115,7 @@ export function PaymentInstructions() {
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-text-tertiary">
+                <span className="text-text-secondary">
                   {paymentData.metadata.billingCycle === 'monthly' 
                     ? t('checkout.summary.billing.monthly') || 'Fatturazione mensile'
                     : t('checkout.summary.billing.yearly') || 'Fatturazione annuale'}
@@ -181,7 +181,7 @@ export function PaymentInstructions() {
                   </p>
                   <div className="space-y-2">
                     <div>
-                      <label className="text-xs text-text-tertiary mb-1 block">
+                      <label className="text-xs text-text-secondary mb-1 block">
                         {t('checkout.instructions.iban.label') || 'IBAN'}
                       </label>
                       <div className="flex items-center gap-2">
@@ -202,7 +202,7 @@ export function PaymentInstructions() {
                       </div>
                     </div>
                     <div>
-                      <label className="text-xs text-text-tertiary mb-1 block">
+                      <label className="text-xs text-text-secondary mb-1 block">
                         {t('checkout.instructions.iban.causale') || 'Causale (obbligatoria)'}
                       </label>
                       <div className="flex items-center gap-2">

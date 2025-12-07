@@ -203,7 +203,7 @@ export default function BondYieldsIndicator() {
   if (isLoading) {
     return (
       <div className="bg-bg-surface rounded-lg border border-border-subtle p-6 h-full flex items-center justify-center">
-        <div className="text-text-tertiary">
+        <div className="text-text-secondary">
           {locale === 'it' ? 'Caricamento Bond Yields...' : 'Loading Bond Yields...'}
         </div>
       </div>
@@ -219,7 +219,7 @@ export default function BondYieldsIndicator() {
           <div className="text-center p-6">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-bg-soft flex items-center justify-center">
               <svg
-                className="w-8 h-8 text-text-tertiary"
+                className="w-8 h-8 text-text-secondary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -238,7 +238,7 @@ export default function BondYieldsIndicator() {
             <p className="text-sm text-text-secondary mb-2">
               {locale === 'it' ? 'Bond Yields (FRED)' : 'Bond Yields (FRED)'}
             </p>
-            <p className="text-xs text-text-tertiary max-w-sm">
+            <p className="text-xs text-text-secondary max-w-sm">
               {locale === 'it'
                 ? 'Stiamo lavorando all\'integrazione. Richiede FRED_API_KEY (gratuita da https://fred.stlouisfed.org/docs/api/api_key.html).'
                 : 'We are working on the integration. Requires FRED_API_KEY (free from https://fred.stlouisfed.org/docs/api/api_key.html).'}
@@ -329,7 +329,7 @@ export default function BondYieldsIndicator() {
         <p className="text-sm font-semibold mb-2 text-text-primary">
           {locale === 'it' ? 'Riferimento Accademico' : 'Academic Reference'}
         </p>
-        <div className="text-xs text-text-tertiary space-y-1">
+        <div className="text-xs text-text-secondary space-y-1">
           <p>
             <strong>{locale === 'it' ? 'Paper:' : 'Paper:'}</strong>{' '}
             Estrella & Mishkin (1996) - "{locale === 'it' ? 'The Yield Curve as a Predictor of U.S. Recessions' : 'The Yield Curve as a Predictor of U.S. Recessions'}"
@@ -354,7 +354,7 @@ export default function BondYieldsIndicator() {
         <p className="text-sm font-semibold mb-2 text-text-primary">
           {locale === 'it' ? 'Interpretazione Accademica' : 'Academic Interpretation'}
         </p>
-        <div className="text-xs text-text-tertiary space-y-1">
+        <div className="text-xs text-text-secondary space-y-1">
           <p>
             <strong>
               {locale === 'it' ? 'Curva Normale (Spread &gt; 0.5%):' : 'Normal Curve (Spread > 0.5%):'}
@@ -399,7 +399,7 @@ export default function BondYieldsIndicator() {
               ? 'Analisi yield curve in corso...'
               : 'Analyzing yield curve...')}
         </p>
-        <p className="text-xs text-text-tertiary mt-2">
+        <p className="text-xs text-text-secondary mt-2">
           {locale === 'it'
             ? 'Analisi descrittiva basata sui dati attuali. Non costituisce consulenza finanziaria.'
             : 'Descriptive analysis based on current data. Does not constitute financial advice.'}
@@ -407,7 +407,7 @@ export default function BondYieldsIndicator() {
       </div>
 
       {/* Update Time */}
-      <div className="text-xs text-text-tertiary text-center">
+      <div className="text-xs text-text-secondary text-center">
         {locale === 'it' ? 'Aggiornato' : 'Updated'}:{' '}
         {new Date(data.timestamp).toLocaleTimeString(locale === 'it' ? 'it-IT' : 'en-US')}
       </div>

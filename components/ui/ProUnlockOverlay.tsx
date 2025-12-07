@@ -73,7 +73,7 @@ export function ProUnlockOverlay({
           {locale === 'it' ? 'Sblocca Pro' : 'Unlock Pro'}
         </button>
 
-        <p className="text-xs text-text-tertiary text-center mt-4">
+        <p className="text-xs text-text-secondary text-center mt-4">
           {locale === 'it'
             ? 'Accedi ad analisi avanzate, dati real-time e strumenti professionali'
             : 'Access advanced analysis, real-time data and professional tools'}

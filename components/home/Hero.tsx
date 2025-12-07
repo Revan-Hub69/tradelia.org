@@ -162,7 +162,7 @@ export function Hero() {
               >
                 <div className="flex items-center justify-center gap-3 mb-2">
                   <div className="w-10 h-10 rounded-full bg-accent-muted flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-accent" aria-hidden="true" />
+                    <Icon className="w-5 h-5 text-blue-400" aria-hidden="true" />
                   </div>
                 </div>
                 <div className="text-4xl md:text-5xl lg:text-6xl font-extrabold gradient-text leading-none tracking-tighter">

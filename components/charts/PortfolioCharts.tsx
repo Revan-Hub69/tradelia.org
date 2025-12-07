@@ -68,7 +68,7 @@ export function PortfolioCharts({ positions, performanceData }: PortfolioChartsP
         {allocationData.length > 0 ? (
           <PieChart data={allocationData} height={300} showLabel />
         ) : (
-          <div className="h-[300px] flex items-center justify-center text-text-tertiary">
+          <div className="h-[300px] flex items-center justify-center text-text-secondary">
             Nessun dato disponibile
           </div>
         )}

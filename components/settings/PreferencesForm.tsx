@@ -110,7 +110,7 @@ export function PreferencesForm() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="w-6 h-6 animate-spin text-accent" />
+        <Loader2 className="w-6 h-6 animate-spin text-blue-400" />
       </div>
     );
   }
@@ -131,7 +131,7 @@ export function PreferencesForm() {
           <option value="it">Italiano</option>
           <option value="en">English</option>
         </Select>
-        <p className="text-xs text-text-tertiary mt-1">
+        <p className="text-xs text-text-secondary mt-1">
           {t('dashboard.settings.preferences.languageHint') || 'Seleziona la lingua dell\'interfaccia'}
         </p>
       </div>
@@ -153,7 +153,7 @@ export function PreferencesForm() {
             </option>
           ))}
         </Select>
-        <p className="text-xs text-text-tertiary mt-1">
+        <p className="text-xs text-text-secondary mt-1">
           {t('dashboard.settings.preferences.timezoneHint') || 'Seleziona il tuo fuso orario per date e orari corretti'}
         </p>
       </div>
@@ -168,7 +168,7 @@ export function PreferencesForm() {
             <Label htmlFor="email_notifications" className="cursor-pointer">
               {t('dashboard.settings.preferences.emailNotifications') || 'Notifiche Email'}
             </Label>
-            <p className="text-xs text-text-tertiary mt-1">
+            <p className="text-xs text-text-secondary mt-1">
               {t('dashboard.settings.preferences.emailNotificationsHint') || 'Ricevi notifiche via email'}
             </p>
           </div>
@@ -178,7 +178,7 @@ export function PreferencesForm() {
             type="checkbox"
             checked={formData.email_notifications}
             onChange={(e) => setFormData({ ...formData, email_notifications: e.target.checked })}
-            className="w-5 h-5 rounded border-border-subtle bg-bg-surface text-accent focus:ring-accent"
+            className="w-5 h-5 rounded border-border-subtle bg-bg-surface text-blue-400 focus:ring-accent"
           />
         </div>
 
@@ -187,7 +187,7 @@ export function PreferencesForm() {
             <Label htmlFor="push_notifications" className="cursor-pointer">
               {t('dashboard.settings.preferences.pushNotifications') || 'Notifiche Push'}
             </Label>
-            <p className="text-xs text-text-tertiary mt-1">
+            <p className="text-xs text-text-secondary mt-1">
               {t('dashboard.settings.preferences.pushNotificationsHint') || 'Ricevi notifiche push sul dispositivo'}
             </p>
           </div>
@@ -197,7 +197,7 @@ export function PreferencesForm() {
             type="checkbox"
             checked={formData.push_notifications}
             onChange={(e) => setFormData({ ...formData, push_notifications: e.target.checked })}
-            className="w-5 h-5 rounded border-border-subtle bg-bg-surface text-accent focus:ring-accent"
+            className="w-5 h-5 rounded border-border-subtle bg-bg-surface text-blue-400 focus:ring-accent"
           />
         </div>
       </div>

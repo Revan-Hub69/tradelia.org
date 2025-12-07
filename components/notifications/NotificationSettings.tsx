@@ -179,7 +179,7 @@ export function NotificationSettings() {
           Gestisci come ricevere aggiornamenti e comunicazioni importanti
         </p>
         <div className="p-3 bg-accent/10 border border-accent/30 rounded-lg text-xs text-text-secondary">
-          <strong className="text-accent">Modalità Gratuita:</strong> Push e Email sono sempre disponibili (€0/mese). 
+          <strong className="text-blue-400">Modalità Gratuita:</strong> Push e Email sono sempre disponibili (€0/mese). 
           SMS/WhatsApp richiedono configurazione aggiuntiva e hanno costi per messaggio.
         </div>
       </div>

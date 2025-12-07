@@ -182,7 +182,7 @@ export function QuizSystem({ quizId, lessonId, courseSlug, onComplete }: QuizSys
         {quiz.description && (
           <p className="text-text-secondary text-sm">{quiz.description}</p>
         )}
-        <div className="flex items-center gap-4 mt-4 text-xs text-text-tertiary">
+        <div className="flex items-center gap-4 mt-4 text-xs text-text-secondary">
           <span>{quiz.question_count} {t('quiz.questions') || 'domande'}</span>
           <span>{t('quiz.passingScore') || 'Punteggio minimo'}: {quiz.passing_score}%</span>
           {quiz.max_attempts > 1 && (
@@ -205,7 +205,7 @@ export function QuizSystem({ quizId, lessonId, courseSlug, onComplete }: QuizSys
               className="bg-bg-surface border border-border-subtle rounded-lg p-4"
             >
               <div className="flex items-start gap-3 mb-4">
-                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center text-accent font-semibold text-sm">
+                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center text-blue-400 font-semibold text-sm">
                   {index + 1}
                 </span>
                 <div className="flex-1">

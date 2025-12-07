@@ -160,7 +160,7 @@ export default function BitcoinDominanceIndicator() {
   if (isLoading) {
     return (
       <div className="bg-bg-surface rounded-lg border border-border-subtle p-6 h-full flex items-center justify-center">
-        <div className="text-text-tertiary">
+        <div className="text-text-secondary">
           {locale === 'it' ? 'Caricamento Bitcoin Dominance...' : 'Loading Bitcoin Dominance...'}
         </div>
       </div>
@@ -211,7 +211,7 @@ export default function BitcoinDominanceIndicator() {
             <div className={`text-3xl font-bold ${dominanceLevel.color}`}>
               {data.dominance.toFixed(2)}%
             </div>
-            <div className="text-xs text-text-tertiary mt-1">
+            <div className="text-xs text-text-secondary mt-1">
               {locale === 'it' ? 'Bitcoin' : 'Bitcoin'}
             </div>
           </div>
@@ -259,7 +259,7 @@ export default function BitcoinDominanceIndicator() {
               ? 'Analisi Bitcoin Dominance in corso...'
               : 'Analyzing Bitcoin Dominance...')}
         </p>
-        <p className="text-xs text-text-tertiary mt-2">
+        <p className="text-xs text-text-secondary mt-2">
           {locale === 'it'
             ? 'Analisi descrittiva basata sui dati attuali. Non costituisce consulenza finanziaria.'
             : 'Descriptive analysis based on current data. Does not constitute financial advice.'}
@@ -267,7 +267,7 @@ export default function BitcoinDominanceIndicator() {
       </div>
 
       {/* Update Time */}
-      <div className="text-xs text-text-tertiary text-center">
+      <div className="text-xs text-text-secondary text-center">
         {locale === 'it' ? 'Aggiornato' : 'Updated'}:{' '}
         {new Date(data.timestamp).toLocaleTimeString(locale === 'it' ? 'it-IT' : 'en-US')}
       </div>

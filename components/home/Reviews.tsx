@@ -136,7 +136,7 @@ export function Reviews() {
           <motion.div variants={itemVariants}>
             <Link
               href="/reviews"
-              className="inline-flex items-center gap-2 text-accent hover:text-accent-hover font-medium transition-colors"
+              className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-medium transition-colors"
             >
               <MessageSquare className="w-4 h-4" aria-hidden="true" />
               <span>{t('reviews.viewAll') || 'Vedi tutte le recensioni'}</span>
@@ -154,7 +154,7 @@ export function Reviews() {
           <div className="relative bg-bg-surface border border-border-subtle rounded-2xl p-8 md:p-12 shadow-lg">
             {/* Quote Icon */}
             <div className="absolute top-6 left-6 opacity-10">
-              <Quote className="w-16 h-16 text-accent" aria-hidden="true" />
+              <Quote className="w-16 h-16 text-blue-400" aria-hidden="true" />
             </div>
 
             {/* Review Content */}
@@ -174,13 +174,13 @@ export function Reviews() {
                     className={cn(
                       'w-5 h-5 transition-colors',
                       i < currentReview.rating
-                        ? 'fill-accent text-accent'
-                        : 'fill-transparent text-text-tertiary'
+                        ? 'fill-blue-400 text-blue-400'
+                        : 'fill-transparent text-text-secondary'
                     )}
                     aria-hidden="true"
                   />
                 ))}
-                <span className="ml-2 text-sm text-text-tertiary">
+                <span className="ml-2 text-sm text-text-secondary">
                   {currentReview.rating}/5
                 </span>
               </div>
@@ -194,7 +194,7 @@ export function Reviews() {
               <div className="flex items-center justify-center gap-4">
                 <div className="flex flex-col items-center">
                   <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mb-2">
-                    <span className="text-accent font-bold text-lg">
+                    <span className="text-blue-400 font-bold text-lg">
                       {currentReview.user_name.charAt(0).toUpperCase()}
                     </span>
                   </div>
@@ -202,13 +202,13 @@ export function Reviews() {
                     <p className="font-semibold text-text-primary">
                       {currentReview.user_name}
                     </p>
-                    <p className="text-sm text-text-tertiary capitalize">
+                    <p className="text-sm text-text-secondary capitalize">
                       {currentReview.user_role}
                     </p>
                   </div>
                 </div>
                 {currentReview.verified && (
-                  <div className="flex items-center gap-1 text-accent text-sm">
+                  <div className="flex items-center gap-1 text-blue-400 text-sm">
                     <span className="w-2 h-2 rounded-full bg-accent" />
                     <span>{t('reviews.verified') || 'Verificato'}</span>
                   </div>

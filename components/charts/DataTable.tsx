@@ -109,12 +109,12 @@ export function DataTable<T extends Record<string, any>>({
   const getSortIcon = (column: DataTableColumn<T>) => {
     if (!column.sortable) return null;
     if (sortColumn !== column.key) {
-      return <ArrowUpDown className="w-3 h-3 text-text-tertiary" />;
+      return <ArrowUpDown className="w-3 h-3 text-text-secondary" />;
     }
     if (sortDirection === 'asc') {
-      return <ArrowUp className="w-3 h-3 text-accent" />;
+      return <ArrowUp className="w-3 h-3 text-blue-400" />;
     }
-    return <ArrowDown className="w-3 h-3 text-accent" />;
+    return <ArrowDown className="w-3 h-3 text-blue-400" />;
   };
 
   return (
@@ -122,7 +122,7 @@ export function DataTable<T extends Record<string, any>>({
       {/* Search */}
       {searchable && (
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" />
           <input
             type="text"
             value={searchQuery}
@@ -131,7 +131,7 @@ export function DataTable<T extends Record<string, any>>({
               setCurrentPage(1);
             }}
             placeholder={searchPlaceholder || t('table.search') || 'Cerca...'}
-            className="w-full pl-10 pr-4 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-accent"
+            className="w-full pl-10 pr-4 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-accent"
           />
         </div>
       )}
@@ -169,7 +169,7 @@ export function DataTable<T extends Record<string, any>>({
           <tbody>
             {paginatedData.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="px-4 py-12 text-center text-text-tertiary">
+                <td colSpan={columns.length} className="px-4 py-12 text-center text-text-secondary">
                   {emptyMessage || t('table.empty') || 'Nessun dato disponibile'}
                 </td>
               </tr>
@@ -196,7 +196,7 @@ export function DataTable<T extends Record<string, any>>({
       {/* Pagination */}
       {pagination && totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <div className="text-sm text-text-tertiary">
+          <div className="text-sm text-text-secondary">
             {t('table.showing') || 'Mostrando'} {(currentPage - 1) * pageSize + 1} - {Math.min(currentPage * pageSize, sortedData.length)} {t('table.of') || 'di'} {sortedData.length}
           </div>
           <div className="flex items-center gap-2">

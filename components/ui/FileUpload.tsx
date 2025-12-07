@@ -184,18 +184,18 @@ export function FileUpload({
           aria-required={required}
         />
         <div className="text-center">
-          <Upload className="w-8 h-8 text-text-tertiary mx-auto mb-2" />
+          <Upload className="w-8 h-8 text-text-secondary mx-auto mb-2" />
           <p className="text-sm text-text-primary mb-1">
             Trascina file qui o{' '}
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="text-accent hover:text-accent-hover underline"
+              className="text-blue-400 hover:text-blue-300 underline"
             >
               seleziona
             </button>
           </p>
-          <p className="text-xs text-text-tertiary">
+          <p className="text-xs text-text-secondary">
             {accept && `Tipi supportati: ${accept}`}
             {maxSize && ` • Massimo ${formatFileSize(maxSize)}`}
             {multiple && maxFiles > 1 && ` • Massimo ${maxFiles} file`}
@@ -214,7 +214,7 @@ export function FileUpload({
               {preview && getFileIcon(file)}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-text-primary truncate">{file.name}</p>
-                <p className="text-xs text-text-tertiary">{formatFileSize(file.size)}</p>
+                <p className="text-xs text-text-secondary">{formatFileSize(file.size)}</p>
                 {uploading && uploadProgress[file.name] !== undefined && (
                   <div className="mt-1 w-full h-1 bg-bg-surface rounded-full overflow-hidden">
                     <div
@@ -225,12 +225,12 @@ export function FileUpload({
                 )}
               </div>
               {uploading ? (
-                <Loader2 className="w-4 h-4 text-text-tertiary animate-spin" />
+                <Loader2 className="w-4 h-4 text-text-secondary animate-spin" />
               ) : (
                 <button
                   type="button"
                   onClick={() => handleRemove(file)}
-                  className="text-text-tertiary hover:text-red-400 transition-colors"
+                  className="text-text-secondary hover:text-red-400 transition-colors"
                   aria-label={`Rimuovi ${file.name}`}
                 >
                   <X className="w-4 h-4" />
@@ -252,7 +252,7 @@ export function FileUpload({
         </p>
       )}
       {helperText && !error && (
-        <p id={helperId} className="text-xs text-text-tertiary">
+        <p id={helperId} className="text-xs text-text-secondary">
           {helperText}
         </p>
       )}

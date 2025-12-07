@@ -132,7 +132,7 @@ export function DashboardTabs() {
                 className={cn(
                   'flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all relative',
                   'border-b-2 border-transparent',
-                  'hover:text-accent hover:border-accent/40',
+                  'hover:text-blue-400 hover:border-accent/40',
                   'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-base',
                   isActive
                     ? 'text-blue-400 border-blue-400' // Migliorato contrasto: blue-400 invece di accent (blue-800)

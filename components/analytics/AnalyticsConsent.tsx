@@ -63,7 +63,7 @@ export function AnalyticsConsent() {
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="flex-1">
               <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
+                <AlertCircle className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
                 <div>
                   <h3 className="font-semibold text-text-primary mb-1">
                     {t('analytics.consent.title') || 'Privacy e Analytics'}

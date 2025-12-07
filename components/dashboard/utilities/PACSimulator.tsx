@@ -125,7 +125,7 @@ export function PACSimulator() {
     <div className="space-y-6">
       <div>
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-2 flex items-center gap-2">
-          <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-accent flex-shrink-0" />
+          <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 flex-shrink-0" />
           <span>{t('proUtilities.pacSimulator.title') || 'Simulatore PAC'}</span>
         </h2>
         <p className="text-text-secondary text-xs sm:text-sm">
@@ -187,7 +187,7 @@ export function PACSimulator() {
       {/* Simulazione PAC */}
       <div className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6">
         <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
-          <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-accent flex-shrink-0" />
+          <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" />
           <span>{t('proUtilities.pacSimulator.simulation') || 'Simulazione PAC'}</span>
         </h3>
 
@@ -196,11 +196,11 @@ export function PACSimulator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>{t('proUtilities.pacSimulator.monthlyAmount') || 'Importo Periodico'} *</span>
               <Tooltip content="L'importo che investi ad ogni versamento. Può essere mensile, trimestrale o annuale a seconda della frequenza scelta.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <div className="relative">
-              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary" />
+              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" />
               <input
                 type="number"
                 value={monthlyAmount}
@@ -217,7 +217,7 @@ export function PACSimulator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>{t('proUtilities.pacSimulator.frequency') || 'Frequenza'}</span>
               <Tooltip content="Quanto spesso effettui i versamenti: mensile (12 volte l'anno), trimestrale (4 volte) o annuale (1 volta).">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <select
@@ -235,7 +235,7 @@ export function PACSimulator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>{t('proUtilities.pacSimulator.annualReturn') || 'Rendimento Annuo (%)'} *</span>
               <Tooltip content="Il rendimento annuo atteso del tuo investimento. Storicamente, un portafoglio diversificato azionario ha reso circa 7-10% annuo nel lungo termine (con variazioni). Vedi i suggerimenti MIFID compliant qui sotto per valori di riferimento basati su dati accademici.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <div className="relative mb-4">
@@ -249,7 +249,7 @@ export function PACSimulator() {
                 max="100"
                 step="0.1"
               />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary text-sm">%</span>
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary text-sm">%</span>
             </div>
             {/* Suggerimenti MIFID Compliant */}
             <PACReturnSuggestions
@@ -262,7 +262,7 @@ export function PACSimulator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>{t('proUtilities.pacSimulator.years') || 'Anni'} *</span>
               <Tooltip content="Il periodo di investimento in anni. Più lungo è il periodo, maggiore sarà l'effetto dell'interesse composto e del tempo sul tuo capitale.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <input
@@ -281,7 +281,7 @@ export function PACSimulator() {
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-                <div className="text-xs sm:text-sm text-text-tertiary mb-1">
+                <div className="text-xs sm:text-sm text-text-secondary mb-1">
                   {t('proUtilities.pacSimulator.totalInvested') || 'Totale Investito'}
                 </div>
                 <div className="text-lg sm:text-2xl font-bold text-text-primary">
@@ -289,21 +289,21 @@ export function PACSimulator() {
                 </div>
               </div>
               <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-                <div className="text-xs sm:text-sm text-text-tertiary mb-1">
+                <div className="text-xs sm:text-sm text-text-secondary mb-1">
                   {t('proUtilities.pacSimulator.futureValue') || 'Valore Futuro'}
                 </div>
-                <div className="text-lg sm:text-2xl font-bold text-accent">
+                <div className="text-lg sm:text-2xl font-bold text-blue-400">
                   {formatCurrency(results.futureValue)}
                 </div>
               </div>
               <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-                <div className="text-xs sm:text-sm text-text-tertiary mb-1">
+                <div className="text-xs sm:text-sm text-text-secondary mb-1">
                   {t('proUtilities.pacSimulator.totalReturn') || 'Guadagno Totale'}
                 </div>
                 <div className="text-lg sm:text-2xl font-bold text-green-400">
                   {formatCurrency(results.totalReturn)}
                 </div>
-                <div className="text-xs text-text-tertiary mt-1">
+                <div className="text-xs text-text-secondary mt-1">
                   ({results.returnPercentage.toFixed(1)}%)
                 </div>
               </div>
@@ -319,7 +319,7 @@ export function PACSimulator() {
                   .filter((_, i) => i % Math.max(1, Math.floor(results.yearlyData.length / 10)) === 0 || i === results.yearlyData.length - 1)
                   .map((data) => (
                     <div key={data.year} className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
-                      <div className="w-16 text-xs text-text-tertiary flex-shrink-0">Anno {data.year}</div>
+                      <div className="w-16 text-xs text-text-secondary flex-shrink-0">Anno {data.year}</div>
                       <div className="flex-1 w-full sm:w-auto bg-bg-soft rounded-full h-4 sm:h-6 relative overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
@@ -341,7 +341,7 @@ export function PACSimulator() {
       {/* Calcolatore Obiettivo Inverso */}
       <div className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6">
         <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-3 sm:mb-4 flex items-center gap-2">
-          <Target className="w-4 h-4 sm:w-5 sm:h-5 text-accent flex-shrink-0" />
+          <Target className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" />
           <span>{t('proUtilities.pacSimulator.goalCalculator') || 'Calcolatore Obiettivo'}</span>
         </h3>
         <p className="text-xs sm:text-sm text-text-secondary mb-4">
@@ -353,11 +353,11 @@ export function PACSimulator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>{t('proUtilities.pacSimulator.targetAmount') || `Obiettivo (${currencySymbols[currency]})`} *</span>
               <Tooltip content="L'importo totale che vuoi raggiungere. Il calcolatore ti dirà quanto devi investire periodicamente per raggiungere questo obiettivo.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <div className="relative">
-              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary" />
+              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" />
               <input
                 type="number"
                 value={targetAmount}
@@ -374,7 +374,7 @@ export function PACSimulator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>{t('proUtilities.pacSimulator.targetYears') || 'Anni'} *</span>
               <Tooltip content="In quanti anni vuoi raggiungere l'obiettivo. Più tempo hai, minore sarà l'importo periodico necessario.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <input
@@ -392,7 +392,7 @@ export function PACSimulator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>{t('proUtilities.pacSimulator.targetReturn') || 'Rendimento Annuo (%)'} *</span>
               <Tooltip content="Il rendimento annuo atteso. Usato per calcolare quanto devi investire per raggiungere l'obiettivo.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <input
@@ -412,15 +412,15 @@ export function PACSimulator() {
           <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               <div>
-                <div className="text-xs sm:text-sm text-text-tertiary mb-1">
+                <div className="text-xs sm:text-sm text-text-secondary mb-1">
                   {t('proUtilities.pacSimulator.monthlyRequired') || 'Investimento Mensile'}
                 </div>
-                <div className="text-lg sm:text-xl font-bold text-accent">
+                <div className="text-lg sm:text-xl font-bold text-blue-400">
                   {formatCurrency(requiredInvestment.monthly)}
                 </div>
               </div>
               <div>
-                <div className="text-xs sm:text-sm text-text-tertiary mb-1">
+                <div className="text-xs sm:text-sm text-text-secondary mb-1">
                   {t('proUtilities.pacSimulator.yearlyRequired') || 'Investimento Annuo'}
                 </div>
                 <div className="text-lg sm:text-xl font-bold text-text-primary">
@@ -428,7 +428,7 @@ export function PACSimulator() {
                 </div>
               </div>
               <div>
-                <div className="text-xs sm:text-sm text-text-tertiary mb-1">
+                <div className="text-xs sm:text-sm text-text-secondary mb-1">
                   {t('proUtilities.pacSimulator.totalRequired') || 'Totale Investito'}
                 </div>
                 <div className="text-lg sm:text-xl font-bold text-text-primary">
@@ -526,16 +526,16 @@ export function PACSimulator() {
               onClick={() => setShowHistory(false)}
               className="p-1 rounded-lg hover:bg-bg-surface transition-colors"
             >
-              <X className="w-4 h-4 text-text-tertiary" />
+              <X className="w-4 h-4 text-text-secondary" />
             </button>
           </div>
 
           {historyLoading ? (
-            <div className="text-center py-8 text-text-tertiary">
+            <div className="text-center py-8 text-text-secondary">
               {t('common.loading') || 'Caricamento...'}
             </div>
           ) : !savedSimulations || savedSimulations.length === 0 ? (
-            <div className="text-center py-8 text-text-tertiary">
+            <div className="text-center py-8 text-text-secondary">
               <History className="w-12 h-12 mx-auto mb-3 opacity-50" />
               <p>{t('proUtilities.pacSimulator.noHistory') || 'Nessuna simulazione salvata'}</p>
             </div>
@@ -551,7 +551,7 @@ export function PACSimulator() {
                       <div className="text-xs sm:text-sm font-medium text-text-primary mb-1 break-words">
                         {formatCurrency(sim.monthly_amount)}/{t('proUtilities.pacSimulator.monthly') || 'mese'} × {sim.years} {t('proUtilities.pacSimulator.years') || 'anni'} @ {sim.annual_return}%
                       </div>
-                      <div className="text-xs text-text-tertiary">
+                      <div className="text-xs text-text-secondary">
                         {new Date(sim.created_at).toLocaleString('it-IT')}
                       </div>
                       {sim.notes && (
@@ -582,19 +582,19 @@ export function PACSimulator() {
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2 text-xs sm:text-sm">
                     <div>
-                      <div className="text-xs text-text-tertiary">Valore Futuro</div>
-                      <div className="font-bold text-accent text-sm sm:text-base">
+                      <div className="text-xs text-text-secondary">Valore Futuro</div>
+                      <div className="font-bold text-blue-400 text-sm sm:text-base">
                         {formatCurrency(sim.future_value)}
                       </div>
                     </div>
                     <div>
-                      <div className="text-xs text-text-tertiary">Investito</div>
+                      <div className="text-xs text-text-secondary">Investito</div>
                       <div className="font-bold text-text-primary text-sm sm:text-base">
                         {formatCurrency(sim.total_invested)}
                       </div>
                     </div>
                     <div>
-                      <div className="text-xs text-text-tertiary">Guadagno</div>
+                      <div className="text-xs text-text-secondary">Guadagno</div>
                       <div className="font-bold text-green-400 text-sm sm:text-base">
                         {formatCurrency(sim.total_return)}
                       </div>

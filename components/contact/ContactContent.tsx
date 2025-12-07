@@ -54,7 +54,7 @@ export function ContactContent() {
               </h2>
               <a
                 href="mailto:support@tradelia.org"
-                className="flex items-center gap-3 text-accent hover:text-accent-hover transition-colors"
+                className="flex items-center gap-3 text-blue-400 hover:text-blue-300 transition-colors"
               >
                 <Mail className="w-5 h-5" />
                 <span>support@tradelia.org</span>

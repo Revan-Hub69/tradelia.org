@@ -29,7 +29,7 @@ export function UserBenefits() {
       <Card className="p-6 md:p-8 bg-gradient-to-br from-accent/10 via-accent/5 to-transparent border-accent/20">
         <div className="flex items-start gap-4 mb-6">
           <div className="w-12 h-12 rounded-xl bg-accent/20 border border-accent/30 flex items-center justify-center flex-shrink-0">
-            <Sparkles className="w-6 h-6 text-accent" />
+            <Sparkles className="w-6 h-6 text-blue-400" />
           </div>
           <div className="flex-1">
             <h2 className="text-xl font-semibold text-text-primary mb-2">

@@ -143,7 +143,7 @@ export function InitialLanguageSelector() {
               <div className="bg-bg-surface border border-border-strong rounded-2xl shadow-2xl p-8 md:p-10 text-center">
                 {/* Icon */}
                 <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-accent border border-border-accent flex items-center justify-center">
-                  <Globe className="w-8 h-8 text-accent" aria-hidden="true" />
+                  <Globe className="w-8 h-8 text-blue-400" aria-hidden="true" />
                 </div>
 
                 {/* Title */}
@@ -175,7 +175,7 @@ export function InitialLanguageSelector() {
                 </div>
 
                 {/* Info */}
-                <p className="text-xs text-text-tertiary mt-6">
+                <p className="text-xs text-text-secondary mt-6">
                   Puoi cambiare lingua in qualsiasi momento / You can change language anytime
                 </p>
               </div>

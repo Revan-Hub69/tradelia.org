@@ -11,7 +11,7 @@ export function StrategyBuilderHeader({ locale }: StrategyBuilderHeaderProps) {
     <header className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6">
       <div className="flex items-start gap-4">
         <div className="w-12 h-12 rounded-lg bg-accent/20 flex items-center justify-center flex-shrink-0">
-          <Target className="w-6 h-6 text-accent" />
+          <Target className="w-6 h-6 text-blue-400" />
         </div>
         <div className="flex-1">
           <h2 className="text-xl font-semibold text-text-primary mb-2">
@@ -45,7 +45,7 @@ export function StrategyBuilderHeader({ locale }: StrategyBuilderHeaderProps) {
                     <Target className="w-4 h-4" />
                     {locale === 'it' ? 'Testa in Paper Trading' : 'Test in Paper Trading'}
                   </a>
-                  <div className="text-xs text-text-tertiary flex items-center">
+                  <div className="text-xs text-text-secondary flex items-center">
                     {locale === 'it'
                       ? 'Backtesting reale disponibile Q2 2025'
                       : 'Real backtesting available Q2 2025'}

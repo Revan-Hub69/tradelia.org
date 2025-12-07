@@ -66,16 +66,16 @@ function ErrorUI({
               {error.name}: {error.message}
             </p>
             {error.stack && (
-              <pre className="text-xs text-text-tertiary overflow-auto max-h-64">
+              <pre className="text-xs text-text-secondary overflow-auto max-h-64">
                 {error.stack}
               </pre>
             )}
             {errorInfo && (
               <details className="mt-2">
-                <summary className="text-xs text-text-tertiary cursor-pointer">
+                <summary className="text-xs text-text-secondary cursor-pointer">
                   Component Stack
                 </summary>
-                <pre className="text-xs text-text-tertiary overflow-auto max-h-64 mt-2">
+                <pre className="text-xs text-text-secondary overflow-auto max-h-64 mt-2">
                   {errorInfo.componentStack}
                 </pre>
               </details>

@@ -45,7 +45,7 @@ export function MIFIDSuggestions({
   return (
     <div className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6 space-y-4">
       <div className="flex items-start gap-3">
-        <Info className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+        <Info className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
         <div className="flex-1">
           <h4 className="text-sm font-semibold text-text-primary mb-2">
             {title}
@@ -78,7 +78,7 @@ export function MIFIDSuggestions({
                   {suggestion.value}{unit}
                 </span>
                 {suggestion.category && (
-                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-bg-soft text-text-tertiary border border-border-subtle">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-bg-soft text-text-secondary border border-border-subtle">
                     {suggestion.category}
                   </span>
                 )}

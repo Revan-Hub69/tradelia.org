@@ -129,7 +129,7 @@ export function Values() {
                                   className="w-20 h-20 rounded-2xl bg-gradient-accent border border-border-accent flex items-center justify-center"
                                   aria-hidden="true"
                                 >
-                                  <Icon className="w-10 h-10 text-accent" aria-hidden="true" />
+                                  <Icon className="w-10 h-10 text-blue-400" aria-hidden="true" />
                                 </div>
                                 {/* Non-chromatic indicator - different shapes for each value */}
                                 <div

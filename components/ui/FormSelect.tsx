@@ -79,7 +79,7 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
             {error ? (
               <AlertCircle className="w-4 h-4 text-red-400" aria-hidden="true" />
             ) : (
-              <ChevronDown className="w-4 h-4 text-text-tertiary" aria-hidden="true" />
+              <ChevronDown className="w-4 h-4 text-text-secondary" aria-hidden="true" />
             )}
           </div>
         </div>
@@ -94,7 +94,7 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
           </p>
         )}
         {helperText && !error && (
-          <p id={helperId} className="text-xs text-text-tertiary">
+          <p id={helperId} className="text-xs text-text-secondary">
             {helperText}
           </p>
         )}

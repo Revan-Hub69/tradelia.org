@@ -241,7 +241,7 @@ export function Modal({
                 {showCloseButton && (
                   <button
                     onClick={onClose}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors flex-shrink-0"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-soft transition-colors flex-shrink-0"
                     aria-label="Chiudi"
                   >
                     <X className="w-5 h-5" />

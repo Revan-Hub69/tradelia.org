@@ -167,7 +167,7 @@ export function InstallPrompt() {
                   </button>
                   <button
                     onClick={handleDismiss}
-                    className="px-4 py-2.5 text-text-tertiary hover:text-text-secondary text-sm font-medium transition-colors min-h-[44px]"
+                    className="px-4 py-2.5 text-text-secondary hover:text-text-secondary text-sm font-medium transition-colors min-h-[44px]"
                     aria-label={locale === 'it' ? 'Chiudi' : 'Close'}
                   >
                     {locale === 'it' ? 'Più tardi' : 'Later'}
@@ -177,7 +177,7 @@ export function InstallPrompt() {
               
               <button
                 onClick={handleDismiss}
-                className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-all duration-200 min-h-[44px] min-w-[44px]"
+                className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-soft transition-all duration-200 min-h-[44px] min-w-[44px]"
                 aria-label="Chiudi banner"
               >
                 <X className="w-4 h-4" aria-hidden="true" />

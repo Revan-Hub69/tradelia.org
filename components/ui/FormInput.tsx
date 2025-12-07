@@ -39,7 +39,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
             id={inputId}
             className={cn(
               'w-full px-3 py-2 bg-bg-surface border rounded-lg text-text-primary',
-              'placeholder:text-text-tertiary',
+              'placeholder:text-text-secondary',
               'focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent',
               'disabled:opacity-50 disabled:cursor-not-allowed',
               'transition-colors',
@@ -70,7 +70,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
           </p>
         )}
         {helperText && !error && (
-          <p id={helperId} className="text-xs text-text-tertiary">
+          <p id={helperId} className="text-xs text-text-secondary">
             {helperText}
           </p>
         )}

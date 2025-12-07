@@ -181,7 +181,7 @@ export default function WidgetsManager() {
                 <div className="flex items-center gap-2 mb-2">
                   {iconMap[widget.type] && (() => {
                     const IconComponent = iconMap[widget.type];
-                    return <IconComponent className="w-6 h-6 text-accent" />;
+                    return <IconComponent className="w-6 h-6 text-blue-400" />;
                   })()}
                   <span className="font-semibold">{widget.label}</span>
                 </div>

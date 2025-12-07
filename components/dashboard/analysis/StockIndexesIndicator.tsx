@@ -92,7 +92,7 @@ export default function StockIndexesIndicator() {
               <h3 className="text-sm font-semibold text-text-primary mb-1">
                 {index.name}
               </h3>
-              <p className="text-xs text-text-tertiary">
+              <p className="text-xs text-text-secondary">
                 {index.symbol === 'SP500'
                   ? locale === 'it'
                     ? '500 aziende large-cap - Benchmark principale'
@@ -134,7 +134,7 @@ export default function StockIndexesIndicator() {
   if (isLoading) {
     return (
       <div className="bg-bg-surface rounded-lg border border-border-subtle p-6 h-full flex items-center justify-center">
-        <div className="text-text-tertiary">
+        <div className="text-text-secondary">
           {locale === 'it' ? 'Caricamento Stock Indexes...' : 'Loading Stock Indexes...'}
         </div>
       </div>
@@ -150,7 +150,7 @@ export default function StockIndexesIndicator() {
           <div className="text-center p-6">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-bg-soft flex items-center justify-center">
               <svg
-                className="w-8 h-8 text-text-tertiary"
+                className="w-8 h-8 text-text-secondary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -169,7 +169,7 @@ export default function StockIndexesIndicator() {
             <p className="text-sm text-text-secondary mb-2">
               {locale === 'it' ? 'Stock Market Indexes (Finnhub)' : 'Stock Market Indexes (Finnhub)'}
             </p>
-            <p className="text-xs text-text-tertiary max-w-sm">
+            <p className="text-xs text-text-secondary max-w-sm">
               {locale === 'it'
                 ? 'Stiamo lavorando all\'integrazione. Richiede FINNHUB_API_KEY (gratuita da https://finnhub.io/register).'
                 : 'We are working on the integration. Requires FINNHUB_API_KEY (free from https://finnhub.io/register).'}
@@ -210,7 +210,7 @@ export default function StockIndexesIndicator() {
         <p className="text-sm font-semibold mb-2 text-text-primary">
           {locale === 'it' ? 'Riferimento Accademico' : 'Academic Reference'}
         </p>
-        <div className="text-xs text-text-tertiary space-y-1">
+        <div className="text-xs text-text-secondary space-y-1">
           <p>
             <strong>{locale === 'it' ? 'Paper:' : 'Paper:'}</strong>{' '}
             {locale === 'it'
@@ -237,7 +237,7 @@ export default function StockIndexesIndicator() {
         <p className="text-sm font-semibold mb-2 text-text-primary">
           {locale === 'it' ? 'Interpretazione Accademica' : 'Academic Interpretation'}
         </p>
-        <div className="text-xs text-text-tertiary space-y-1">
+        <div className="text-xs text-text-secondary space-y-1">
           <p>
             <strong>S&P 500:</strong>{' '}
             {locale === 'it'
@@ -276,7 +276,7 @@ export default function StockIndexesIndicator() {
               ? 'Analisi indici azionari in corso...'
               : 'Analyzing stock indexes...')}
         </p>
-        <p className="text-xs text-text-tertiary mt-2">
+        <p className="text-xs text-text-secondary mt-2">
           {locale === 'it'
             ? 'Analisi descrittiva basata sui dati attuali. Non costituisce consulenza finanziaria.'
             : 'Descriptive analysis based on current data. Does not constitute financial advice.'}
@@ -284,7 +284,7 @@ export default function StockIndexesIndicator() {
       </div>
 
       {/* Update Time */}
-      <div className="text-xs text-text-tertiary text-center">
+      <div className="text-xs text-text-secondary text-center">
         {locale === 'it' ? 'Aggiornato' : 'Updated'}:{' '}
         {new Date(data.timestamp).toLocaleTimeString(locale === 'it' ? 'it-IT' : 'en-US')}
       </div>

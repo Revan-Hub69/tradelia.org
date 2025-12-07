@@ -56,7 +56,7 @@ export default function CryptoMarketCapIndicator() {
   if (isLoading) {
     return (
       <div className="bg-bg-surface rounded-lg border border-border-subtle p-6 h-full flex items-center justify-center">
-        <div className="text-text-tertiary">
+        <div className="text-text-secondary">
           {locale === 'it'
             ? 'Caricamento Crypto Market Cap...'
             : 'Loading Crypto Market Cap...'}
@@ -126,7 +126,7 @@ export default function CryptoMarketCapIndicator() {
         <p className="text-sm font-semibold mb-2 text-text-primary">
           {locale === 'it' ? 'Riferimento Accademico' : 'Academic Reference'}
         </p>
-        <div className="text-xs text-text-tertiary space-y-1">
+        <div className="text-xs text-text-secondary space-y-1">
           <p>
             <strong>{locale === 'it' ? 'Paper:' : 'Paper:'}</strong>{' '}
             {locale === 'it'
@@ -153,7 +153,7 @@ export default function CryptoMarketCapIndicator() {
         <p className="text-sm font-semibold mb-2 text-text-primary">
           {locale === 'it' ? 'Interpretazione Accademica' : 'Academic Interpretation'}
         </p>
-        <div className="text-xs text-text-tertiary space-y-1">
+        <div className="text-xs text-text-secondary space-y-1">
           <p>
             <strong>
               {locale === 'it' ? 'Market Cap Elevato (&gt;$2T):' : 'High Market Cap (>$2T):'}
@@ -198,7 +198,7 @@ export default function CryptoMarketCapIndicator() {
               ? 'Analisi crypto market cap in corso...'
               : 'Analyzing crypto market cap...')}
         </p>
-        <p className="text-xs text-text-tertiary mt-2">
+        <p className="text-xs text-text-secondary mt-2">
           {locale === 'it'
             ? 'Analisi descrittiva basata sui dati attuali. Non costituisce consulenza finanziaria.'
             : 'Descriptive analysis based on current data. Does not constitute financial advice.'}
@@ -206,7 +206,7 @@ export default function CryptoMarketCapIndicator() {
       </div>
 
       {/* Update Time */}
-      <div className="text-xs text-text-tertiary text-center">
+      <div className="text-xs text-text-secondary text-center">
         {locale === 'it' ? 'Aggiornato' : 'Updated'}:{' '}
         {new Date(data.timestamp).toLocaleTimeString(locale === 'it' ? 'it-IT' : 'en-US')}
       </div>

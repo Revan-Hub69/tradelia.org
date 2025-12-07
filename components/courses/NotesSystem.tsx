@@ -129,7 +129,7 @@ export function NotesSystem({ courseId, courseSlug, notes, onUpdate }: NotesSyst
   if (notes.length === 0) {
     return (
       <div className="bg-bg-soft border border-border-subtle rounded-xl p-6 text-center">
-        <FileText className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
+        <FileText className="w-12 h-12 text-text-secondary mx-auto mb-3" />
         <p className="text-text-secondary">
           {t('notes.empty') || 'Nessuna nota disponibile. Aggiungi note durante le lezioni!'}
         </p>
@@ -141,7 +141,7 @@ export function NotesSystem({ courseId, courseSlug, notes, onUpdate }: NotesSyst
     <div className="bg-bg-soft border border-border-subtle rounded-xl p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-text-primary flex items-center gap-2">
-          <FileText className="w-5 h-5 text-accent" />
+          <FileText className="w-5 h-5 text-blue-400" />
           {t('notes.title') || 'Le Mie Note'}
         </h3>
         <div className="flex items-center gap-2">
@@ -159,13 +159,13 @@ export function NotesSystem({ courseId, courseSlug, notes, onUpdate }: NotesSyst
 
       {/* Search */}
       <div className="mb-4 relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={t('notes.search') || 'Cerca nelle note...'}
-          className="w-full pl-10 pr-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-accent"
+          className="w-full pl-10 pr-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-accent"
         />
       </div>
 
@@ -235,10 +235,10 @@ export function NotesSystem({ courseId, courseSlug, notes, onUpdate }: NotesSyst
                 />
               ) : (
                 <div className="text-text-secondary whitespace-pre-wrap text-sm">
-                  {note.notes || <span className="text-text-tertiary italic">Nessuna nota</span>}
+                  {note.notes || <span className="text-text-secondary italic">Nessuna nota</span>}
                 </div>
               )}
-              <p className="text-xs text-text-tertiary mt-2">
+              <p className="text-xs text-text-secondary mt-2">
                 {t('notes.updated') || 'Aggiornato'}: {new Date(note.updated_at).toLocaleString('it-IT')}
               </p>
             </div>

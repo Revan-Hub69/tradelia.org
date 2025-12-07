@@ -47,9 +47,9 @@ export function ProgressiveDisclosure({
         </div>
         <div className="flex-shrink-0 ml-4">
           {isExpanded ? (
-            <ChevronUp className="w-5 h-5 text-text-tertiary" />
+            <ChevronUp className="w-5 h-5 text-text-secondary" />
           ) : (
-            <ChevronDown className="w-5 h-5 text-text-tertiary" />
+            <ChevronDown className="w-5 h-5 text-text-secondary" />
           )}
         </div>
       </button>

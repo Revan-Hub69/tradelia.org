@@ -172,8 +172,8 @@ export const ProgressTracking = memo(function ProgressTracking() {
           </h3>
           {courses.length === 0 ? (
             <div className="bg-bg-soft border border-border-subtle rounded-xl p-8 text-center">
-              <BookOpen className="w-12 h-12 mx-auto mb-3 text-text-tertiary opacity-50" />
-              <p className="text-sm text-text-tertiary">
+              <BookOpen className="w-12 h-12 mx-auto mb-3 text-text-secondary opacity-50" />
+              <p className="text-sm text-text-secondary">
                 {t('dashboard.progress.noCourses') || 'Nessun corso in corso'}
               </p>
             </div>
@@ -198,7 +198,7 @@ export const ProgressTracking = memo(function ProgressTracking() {
                             {course.title}
                           </h4>
                           {course.badge && (
-                            <span className="px-2 py-0.5 bg-accent/20 border border-accent/40 rounded text-xs text-accent font-medium">
+                            <span className="px-2 py-0.5 bg-accent/20 border border-accent/40 rounded text-xs text-blue-400 font-medium">
                               {course.badge}
                             </span>
                           )}
@@ -208,7 +208,7 @@ export const ProgressTracking = memo(function ProgressTracking() {
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-text-tertiary">
+                        <span className="text-text-secondary">
                           {Math.round(course.completedLessons)} / {course.totalLessons} {t('dashboard.progress.lessons') || 'lezioni'}
                         </span>
                         <span className="font-semibold text-text-primary">{course.progress}%</span>
@@ -237,8 +237,8 @@ export const ProgressTracking = memo(function ProgressTracking() {
           </h3>
           {achievements.length === 0 ? (
             <div className="bg-bg-soft border border-border-subtle rounded-xl p-8 text-center">
-              <Award className="w-12 h-12 mx-auto mb-3 text-text-tertiary opacity-50" />
-              <p className="text-sm text-text-tertiary">
+              <Award className="w-12 h-12 mx-auto mb-3 text-text-secondary opacity-50" />
+              <p className="text-sm text-text-secondary">
                 {t('dashboard.progress.noAchievements') || 'Nessun achievement sbloccato'}
               </p>
             </div>
@@ -261,13 +261,13 @@ export const ProgressTracking = memo(function ProgressTracking() {
                     'w-10 h-10 rounded-lg flex items-center justify-center mb-2',
                     achievement.unlocked
                       ? 'bg-amber-500/20 text-amber-400'
-                      : 'bg-bg-surface text-text-tertiary'
+                      : 'bg-bg-surface text-text-secondary'
                   )}>
                     {achievement.icon}
                   </div>
                   <h4 className={cn(
                     'font-semibold text-sm mb-1',
-                    achievement.unlocked ? 'text-text-primary' : 'text-text-tertiary'
+                    achievement.unlocked ? 'text-text-primary' : 'text-text-secondary'
                   )}>
                     {achievement.title}
                   </h4>
@@ -275,7 +275,7 @@ export const ProgressTracking = memo(function ProgressTracking() {
                     {achievement.description}
                   </p>
                   {achievement.unlocked && achievement.unlockedAt && (
-                    <p className="text-xs text-text-tertiary mt-2">
+                    <p className="text-xs text-text-secondary mt-2">
                       {t('dashboard.progress.unlocked') || 'Sbloccato'}
                     </p>
                   )}

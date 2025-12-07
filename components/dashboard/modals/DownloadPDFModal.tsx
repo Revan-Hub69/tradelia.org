@@ -196,7 +196,7 @@ export function DownloadPDFModal({
                 </option>
               ))}
             </Select>
-            <p id="report-hint" className="text-xs text-text-tertiary mt-1" role="note">
+            <p id="report-hint" className="text-xs text-text-secondary mt-1" role="note">
               {t('dashboard.reports.selectHint') || 'Scegli il report che vuoi scaricare'}
             </p>
           </div>
@@ -206,7 +206,7 @@ export function DownloadPDFModal({
         {selectedReportData && (
           <div className="bg-bg-soft border border-border-subtle rounded-lg p-4">
             <div className="flex items-start gap-3">
-              <FileText className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <FileText className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
               <div className="flex-1">
                 <h4 className="font-semibold text-text-primary mb-1">
                   {selectedReportData.title}
@@ -216,7 +216,7 @@ export function DownloadPDFModal({
                     {selectedReportData.description}
                   </p>
                 )}
-                <span className="inline-block mt-2 px-2 py-1 bg-accent/20 border border-accent/40 rounded text-xs text-accent font-medium">
+                <span className="inline-block mt-2 px-2 py-1 bg-accent/20 border border-accent/40 rounded text-xs text-blue-400 font-medium">
                   {selectedReportData.report_type}
                 </span>
               </div>
@@ -242,7 +242,7 @@ export function DownloadPDFModal({
             <option value="excel">Excel (XLSX)</option>
             <option value="csv">CSV</option>
           </Select>
-          <p id="format-hint" className="text-xs text-text-tertiary mt-1" role="note">
+          <p id="format-hint" className="text-xs text-text-secondary mt-1" role="note">
             {t('dashboard.reports.formatHint') || 'Scegli il formato del file da scaricare'}
           </p>
         </div>
@@ -265,7 +265,7 @@ export function DownloadPDFModal({
               <option value="standard">{t('dashboard.reports.qualityStandard') || 'Standard'}</option>
               <option value="high">{t('dashboard.reports.qualityHigh') || 'Alta'}</option>
             </Select>
-            <p id="quality-hint" className="text-xs text-text-tertiary mt-1" role="note">
+            <p id="quality-hint" className="text-xs text-text-secondary mt-1" role="note">
               {t('dashboard.reports.qualityHint') || 'Qualità standard per file più piccoli, alta per migliore qualità'}
             </p>
           </div>
@@ -279,7 +279,7 @@ export function DownloadPDFModal({
               id="include-charts"
               checked={includeCharts}
               onChange={(e) => setIncludeCharts(e.target.checked)}
-              className="w-4 h-4 rounded border-border-subtle text-accent focus:ring-2 focus:ring-accent"
+              className="w-4 h-4 rounded border-border-subtle text-blue-400 focus:ring-2 focus:ring-accent"
               aria-describedby="charts-hint"
             />
             <Label htmlFor="include-charts" className="cursor-pointer">
@@ -298,7 +298,7 @@ export function DownloadPDFModal({
               <span className="text-text-secondary">
                 {t('dashboard.reports.downloading') || 'Download in corso...'}
               </span>
-              <span className="text-text-tertiary">{downloadProgress}%</span>
+              <span className="text-text-secondary">{downloadProgress}%</span>
             </div>
             <div className="w-full bg-bg-soft rounded-full h-2 overflow-hidden">
               <div

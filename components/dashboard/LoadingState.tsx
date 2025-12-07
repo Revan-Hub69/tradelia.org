@@ -42,7 +42,7 @@ export function LoadingState({
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
       >
-        <Loader2 className={cn('text-accent', sizeClasses[size])} />
+        <Loader2 className={cn('text-blue-400', sizeClasses[size])} />
       </motion.div>
       {message && (
         <p className="mt-4 text-sm text-text-secondary">{message}</p>

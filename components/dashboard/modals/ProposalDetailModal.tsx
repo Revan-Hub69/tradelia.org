@@ -157,7 +157,7 @@ export function ProposalDetailModal({
                   <h2 className="text-2xl font-bold text-text-primary">
                     {proposal.asset_name || proposal.asset_symbol}
                   </h2>
-                  <span className="px-3 py-1 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-tertiary font-mono">
+                  <span className="px-3 py-1 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-secondary font-mono">
                     {proposal.asset_symbol}
                   </span>
                   <span className={`px-3 py-1 rounded-lg text-sm font-medium ${
@@ -175,7 +175,7 @@ export function ProposalDetailModal({
             </div>
 
             {/* Metadata */}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-text-tertiary">
+            <div className="flex flex-wrap items-center gap-4 text-sm text-text-secondary">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
                 <span>
@@ -207,7 +207,7 @@ export function ProposalDetailModal({
                 <TrendingUp className="w-5 h-5 text-green-400" />
                 <span className="text-2xl font-bold text-text-primary">{proposal.votes_up}</span>
               </div>
-              <p className="text-xs text-text-tertiary">
+              <p className="text-xs text-text-secondary">
                 {t('dashboard.voting.votesUp') || 'Favorevoli'}
               </p>
             </div>
@@ -216,16 +216,16 @@ export function ProposalDetailModal({
                 <TrendingDown className="w-5 h-5 text-red-400" />
                 <span className="text-2xl font-bold text-text-primary">{proposal.votes_down}</span>
               </div>
-              <p className="text-xs text-text-tertiary">
+              <p className="text-xs text-text-secondary">
                 {t('dashboard.voting.votesDown') || 'Contrari'}
               </p>
             </div>
             <div className="bg-bg-soft border border-border-subtle rounded-lg p-4 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <Users className="w-5 h-5 text-text-tertiary" />
+                <Users className="w-5 h-5 text-text-secondary" />
                 <span className="text-2xl font-bold text-text-primary">{totalVotes}</span>
               </div>
-              <p className="text-xs text-text-tertiary">
+              <p className="text-xs text-text-secondary">
                 {t('dashboard.voting.totalVotes') || 'Totale'}
               </p>
             </div>
@@ -297,7 +297,7 @@ export function ProposalDetailModal({
 
           {proposal.status !== 'open' && (
             <div className="text-center py-4">
-              <p className="text-sm text-text-tertiary">
+              <p className="text-sm text-text-secondary">
                 {proposal.status === 'closed'
                   ? t('dashboard.voting.votingClosed') || 'La votazione è chiusa'
                   : t('dashboard.voting.proposalApproved') || 'Proposta approvata'}

@@ -33,8 +33,8 @@ export function MethodologyPopup({ notes, trigger, className }: MethodologyPopup
     <button
       onClick={() => setIsOpen(true)}
       className={cn(
-        'inline-flex items-center gap-1 text-xs text-text-tertiary',
-        'hover:text-accent transition-colors',
+        'inline-flex items-center gap-1 text-xs text-text-secondary',
+        'hover:text-blue-400 transition-colors',
         'focus:outline-none focus:ring-2 focus:ring-accent rounded'
       )}
       aria-label={locale === 'it' ? 'Note metodologiche' : 'Methodology notes'}

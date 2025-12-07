@@ -87,7 +87,7 @@ export function VolatilityCalculator() {
     <div className="space-y-6">
       <div>
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-2 flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-accent flex-shrink-0" />
+          <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 flex-shrink-0" />
           <span>Volatility Calculator</span>
         </h2>
         <p className="text-text-secondary text-xs sm:text-sm">
@@ -110,7 +110,7 @@ export function VolatilityCalculator() {
           <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
             <span>Rendimenti Periodici (%)</span>
             <Tooltip content="Inserisci i rendimenti periodici separati da virgola o andata a capo. Esempio: 2, -1, 3, 0.5, -2, 1.5">
-              <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
             </Tooltip>
           </label>
           <textarea
@@ -120,7 +120,7 @@ export function VolatilityCalculator() {
             className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent resize-none"
             rows={4}
           />
-          <p className="text-xs text-text-tertiary mt-1">
+          <p className="text-xs text-text-secondary mt-1">
             Inserisci almeno 2 rendimenti per calcolare la volatilità
           </p>
         </div>
@@ -129,7 +129,7 @@ export function VolatilityCalculator() {
           <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
             <span>Periodo dei Rendimenti</span>
             <Tooltip content="Seleziona il periodo dei rendimenti per calcolare correttamente la volatilità annualizzata">
-              <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
             </Tooltip>
           </label>
           <select
@@ -150,11 +150,11 @@ export function VolatilityCalculator() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1 flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1 flex items-center gap-1.5">
                 <TrendingUp className="w-3.5 h-3.5" />
                 <span>Volatilità Annualizzata</span>
               </div>
-              <div className="text-lg sm:text-2xl font-bold text-accent">
+              <div className="text-lg sm:text-2xl font-bold text-blue-400">
                 {results.annualizedVolatility.toFixed(2)}%
               </div>
               <div className={`text-xs font-semibold mt-1 ${results.ratingColor}`}>
@@ -163,14 +163,14 @@ export function VolatilityCalculator() {
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1 flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1 flex items-center gap-1.5">
                 <BarChart3 className="w-3.5 h-3.5" />
                 <span>Volatilità Periodica</span>
               </div>
               <div className="text-lg sm:text-2xl font-bold text-text-primary">
                 {results.volatility.toFixed(4)}%
               </div>
-              <div className="text-xs text-text-tertiary mt-1">
+              <div className="text-xs text-text-secondary mt-1">
                 {results.count} osservazioni
               </div>
             </div>
@@ -178,7 +178,7 @@ export function VolatilityCalculator() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1">
                 Media Rendimenti
               </div>
               <div className="text-lg font-bold text-text-primary">
@@ -187,7 +187,7 @@ export function VolatilityCalculator() {
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1">
                 Varianza
               </div>
               <div className="text-lg font-bold text-text-primary">

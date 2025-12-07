@@ -116,7 +116,7 @@ export function AccountBanner() {
                 }
               `}>
                 {bannerState === 'not-logged-in' ? (
-                  <AlertCircle className={`w-6 h-6 ${bannerState === 'not-logged-in' ? 'text-accent' : 'text-amber-400'}`} aria-hidden="true" />
+                  <AlertCircle className={`w-6 h-6 ${bannerState === 'not-logged-in' ? 'text-blue-400' : 'text-amber-400'}`} aria-hidden="true" />
                 ) : (
                   <Mail className="w-6 h-6 text-amber-400" aria-hidden="true" />
                 )}
@@ -192,7 +192,7 @@ export function AccountBanner() {
               {/* Dismiss button */}
               <button
                 onClick={handleDismiss}
-                className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-all duration-200"
+                className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-soft transition-all duration-200"
                 aria-label={t('dashboard.banner.dismiss')}
               >
                 <X className="w-4 h-4" aria-hidden="true" />

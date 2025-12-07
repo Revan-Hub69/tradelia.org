@@ -114,7 +114,7 @@ export function KeyboardShortcuts() {
             >
               <div className="flex items-center justify-between p-6 border-b border-border-subtle">
                 <div className="flex items-center gap-3">
-                  <Keyboard className="w-6 h-6 text-accent" />
+                  <Keyboard className="w-6 h-6 text-blue-400" />
                   <h2 id="shortcuts-title" className="text-xl font-bold text-text-primary">
                     {t('dashboard.shortcuts.title') || 'Scorciatoie da Tastiera'}
                   </h2>
@@ -134,7 +134,7 @@ export function KeyboardShortcuts() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t('dashboard.shortcuts.search') || 'Cerca scorciatoia...'}
-                  className="w-full mb-6 px-4 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-accent"
+                  className="w-full mb-6 px-4 py-2 bg-bg-soft border border-border-subtle rounded-lg text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-accent"
                   aria-label={t('dashboard.shortcuts.search') || 'Cerca scorciatoia'}
                 />
 
@@ -160,7 +160,7 @@ export function KeyboardShortcuts() {
                                     {key}
                                   </kbd>
                                   {keyIndex < shortcut.keys.length - 1 && (
-                                    <span className="mx-1 text-text-tertiary">+</span>
+                                    <span className="mx-1 text-text-secondary">+</span>
                                   )}
                                 </span>
                               ))}

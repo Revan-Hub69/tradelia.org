@@ -260,13 +260,13 @@ export function AlertSystem() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-xl bg-accent/20 border border-accent/30 flex items-center justify-center">
-            <Bell className="w-6 h-6 text-accent" />
+            <Bell className="w-6 h-6 text-blue-400" />
           </div>
           <div>
             <h3 className="text-lg font-semibold text-text-primary">
               {t('proUtilities.alerts.title') || 'Sistema di Alert'}
             </h3>
-            <p className="text-xs text-text-tertiary">
+            <p className="text-xs text-text-secondary">
               {t('proUtilities.alerts.subtitle') || 'Notifiche personalizzate per i tuoi asset'}
             </p>
           </div>
@@ -292,7 +292,7 @@ export function AlertSystem() {
           className="bg-bg-soft border border-border-subtle rounded-xl p-4 space-y-4"
         >
           <div>
-            <label className="text-xs text-text-tertiary mb-1 block">
+            <label className="text-xs text-text-secondary mb-1 block">
               {t('proUtilities.alerts.name') || 'Nome Alert'}
             </label>
             <input
@@ -305,7 +305,7 @@ export function AlertSystem() {
           </div>
 
           <div>
-            <label className="text-xs text-text-tertiary mb-1 block">
+            <label className="text-xs text-text-secondary mb-1 block">
               {t('proUtilities.alerts.type') || 'Tipo'}
             </label>
             <select
@@ -321,7 +321,7 @@ export function AlertSystem() {
 
           {newAlert.type !== 'custom' && (
             <div>
-              <label className="text-xs text-text-tertiary mb-1 block">
+              <label className="text-xs text-text-secondary mb-1 block">
                 {t('proUtilities.alerts.symbol') || 'Simbolo'}
               </label>
               <input
@@ -336,7 +336,7 @@ export function AlertSystem() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-text-tertiary mb-1 block">
+              <label className="text-xs text-text-secondary mb-1 block">
                 {t('proUtilities.alerts.condition') || 'Condizione'}
               </label>
               <select
@@ -350,7 +350,7 @@ export function AlertSystem() {
               </select>
             </div>
             <div>
-              <label className="text-xs text-text-tertiary mb-1 block">
+              <label className="text-xs text-text-secondary mb-1 block">
                 {t('proUtilities.alerts.value') || 'Valore'}
               </label>
               <input
@@ -387,7 +387,7 @@ export function AlertSystem() {
       {/* Lista alert */}
       <div className="space-y-2">
         {alerts.length === 0 ? (
-          <div className="text-center py-12 text-text-tertiary">
+          <div className="text-center py-12 text-text-secondary">
             <Bell className="w-12 h-12 mx-auto mb-3 opacity-50" />
             <p className="text-sm">
               {t('proUtilities.alerts.empty') || 'Nessun alert configurato. Aggiungi il primo alert.'}
@@ -416,7 +416,7 @@ export function AlertSystem() {
                         {t('proUtilities.alerts.active') || 'Attivo'}
                       </span>
                     ) : (
-                      <span className="px-2 py-0.5 bg-bg-surface border border-border-subtle rounded text-xs text-text-tertiary">
+                      <span className="px-2 py-0.5 bg-bg-surface border border-border-subtle rounded text-xs text-text-secondary">
                         {t('proUtilities.alerts.inactive') || 'Inattivo'}
                       </span>
                     )}
@@ -424,12 +424,12 @@ export function AlertSystem() {
                   <div className="space-y-1 text-xs text-text-secondary">
                     {alert.symbol && (
                       <p>
-                        <span className="text-text-tertiary">{t('proUtilities.alerts.symbol') || 'Simbolo'}:</span>{' '}
+                        <span className="text-text-secondary">{t('proUtilities.alerts.symbol') || 'Simbolo'}:</span>{' '}
                         {alert.symbol}
                       </p>
                     )}
                     <p>
-                      <span className="text-text-tertiary">{t('proUtilities.alerts.condition') || 'Condizione'}:</span>{' '}
+                      <span className="text-text-secondary">{t('proUtilities.alerts.condition') || 'Condizione'}:</span>{' '}
                       {getConditionLabel(alert.condition)} €{alert.value.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
@@ -441,7 +441,7 @@ export function AlertSystem() {
                       'w-8 h-8 rounded-lg flex items-center justify-center transition-colors',
                       alert.active
                         ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
-                        : 'bg-bg-surface text-text-tertiary hover:text-text-secondary'
+                        : 'bg-bg-surface text-text-secondary hover:text-text-secondary'
                     )}
                     aria-label={alert.active ? t('proUtilities.alerts.deactivate') || 'Disattiva' : t('proUtilities.alerts.activate') || 'Attiva'}
                   >
@@ -453,7 +453,7 @@ export function AlertSystem() {
                   </button>
                   <button
                     onClick={() => handleDelete(alert.id)}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-red-400 hover:bg-red-400/10 transition-colors"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-red-400 hover:bg-red-400/10 transition-colors"
                     aria-label={t('proUtilities.alerts.delete') || 'Elimina'}
                   >
                     <Trash2 className="w-4 h-4" />

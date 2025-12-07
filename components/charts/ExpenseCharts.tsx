@@ -76,19 +76,19 @@ export function ExpenseCharts({ expenses }: ExpenseChartsProps) {
       {/* Stats Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-bg-soft border border-border-subtle rounded-lg p-4">
-          <p className="text-xs text-text-tertiary mb-1">Spese Totali</p>
+          <p className="text-xs text-text-secondary mb-1">Spese Totali</p>
           <p className="text-2xl font-bold text-text-primary">
             €{totalExpenses.toFixed(2)}
           </p>
         </div>
         <div className="bg-bg-soft border border-border-subtle rounded-lg p-4">
-          <p className="text-xs text-text-tertiary mb-1">Media Mensile</p>
+          <p className="text-xs text-text-secondary mb-1">Media Mensile</p>
           <p className="text-2xl font-bold text-text-primary">
             €{avgMonthly.toFixed(2)}
           </p>
         </div>
         <div className="bg-bg-soft border border-border-subtle rounded-lg p-4">
-          <p className="text-xs text-text-tertiary mb-1">Categorie</p>
+          <p className="text-xs text-text-secondary mb-1">Categorie</p>
           <p className="text-2xl font-bold text-text-primary">
             {categoryData.length}
           </p>

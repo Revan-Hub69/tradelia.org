@@ -56,7 +56,7 @@ export function SupportContent() {
                   href={option.href}
                   className="p-6 bg-bg-surface rounded-lg border border-border-subtle hover:border-accent hover:shadow-md transition-all group"
                 >
-                  <Icon className="w-8 h-8 text-accent mb-4 group-hover:scale-110 transition-transform" />
+                  <Icon className="w-8 h-8 text-blue-400 mb-4 group-hover:scale-110 transition-transform" />
                   <h3 className="text-xl font-semibold text-text-primary mb-2">
                     {option.title}
                   </h3>

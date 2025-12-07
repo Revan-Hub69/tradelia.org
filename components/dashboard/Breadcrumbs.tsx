@@ -50,7 +50,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
               {isFirst ? (
                 <Link
                   href={item.href || '#'}
-                  className="flex items-center gap-1 text-text-tertiary hover:text-text-primary transition-colors"
+                  className="flex items-center gap-1 text-text-secondary hover:text-text-primary transition-colors"
                   itemProp="item"
                 >
                   <Home className="w-4 h-4" />
@@ -67,7 +67,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
               ) : (
                 <Link
                   href={item.href || '#'}
-                  className="text-text-tertiary hover:text-text-primary transition-colors"
+                  className="text-text-secondary hover:text-text-primary transition-colors"
                   itemProp="item"
                 >
                   <span itemProp="name">{item.label}</span>
@@ -75,7 +75,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
               )}
               <meta itemProp="position" content={String(index + 1)} />
               {!isLast && (
-                <ChevronRight className="w-4 h-4 text-text-tertiary" aria-hidden="true" />
+                <ChevronRight className="w-4 h-4 text-text-secondary" aria-hidden="true" />
               )}
             </li>
           );

@@ -31,7 +31,7 @@ export function ContextualHelp({
         type="button"
         className={cn(
           'inline-flex items-center justify-center w-4 h-4 rounded-full',
-          'text-text-tertiary hover:text-text-secondary',
+          'text-text-secondary hover:text-text-secondary',
           'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
           className
         )}

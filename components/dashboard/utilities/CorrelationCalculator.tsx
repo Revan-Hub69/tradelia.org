@@ -98,7 +98,7 @@ export function CorrelationCalculator() {
     <div className="space-y-6">
       <div>
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-2 flex items-center gap-2">
-          <Link2 className="w-5 h-5 sm:w-6 sm:h-6 text-accent flex-shrink-0" />
+          <Link2 className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 flex-shrink-0" />
           <span>Correlation Calculator</span>
         </h2>
         <p className="text-text-secondary text-xs sm:text-sm">
@@ -122,7 +122,7 @@ export function CorrelationCalculator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Nome Asset 1</span>
               <Tooltip content="Nome identificativo del primo asset (es. AAPL, S&P 500).">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <input
@@ -138,7 +138,7 @@ export function CorrelationCalculator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Nome Asset 2</span>
               <Tooltip content="Nome identificativo del secondo asset.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <input
@@ -156,7 +156,7 @@ export function CorrelationCalculator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Rendimenti {asset1Name} (%)</span>
               <Tooltip content="Inserisci i rendimenti periodici separati da virgola o a capo. Devono essere dello stesso numero di periodi dell'asset 2.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <textarea
@@ -172,7 +172,7 @@ export function CorrelationCalculator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Rendimenti {asset2Name} (%)</span>
               <Tooltip content="Inserisci i rendimenti periodici separati da virgola o a capo. Devono essere dello stesso numero di periodi dell'asset 1.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <textarea
@@ -191,11 +191,11 @@ export function CorrelationCalculator() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1 flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1 flex items-center gap-1.5">
                 <Link2 className="w-3.5 h-3.5" />
                 <span>Correlazione</span>
               </div>
-              <div className="text-lg sm:text-2xl font-bold text-accent">
+              <div className="text-lg sm:text-2xl font-bold text-blue-400">
                 {results.correlation.toFixed(4)}
               </div>
               <div className={`text-xs font-semibold mt-1 ${results.interpretationColor}`}>
@@ -204,7 +204,7 @@ export function CorrelationCalculator() {
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1 flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1 flex items-center gap-1.5">
                 <TrendingUp className="w-3.5 h-3.5" />
                 <span>Covarianza</span>
               </div>
@@ -214,7 +214,7 @@ export function CorrelationCalculator() {
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1">Campioni</div>
+              <div className="text-xs sm:text-sm text-text-secondary mb-1">Campioni</div>
               <div className="text-lg sm:text-2xl font-bold text-text-primary">
                 {results.sampleSize}
               </div>
@@ -228,11 +228,11 @@ export function CorrelationCalculator() {
                 <div className="text-sm text-text-secondary mb-2">{asset1Name}</div>
                 <div className="space-y-1 text-xs">
                   <div className="flex justify-between">
-                    <span className="text-text-tertiary">Media:</span>
+                    <span className="text-text-secondary">Media:</span>
                     <span className="text-text-primary">{results.mean1.toFixed(2)}%</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-text-tertiary">Std Dev:</span>
+                    <span className="text-text-secondary">Std Dev:</span>
                     <span className="text-text-primary">{results.stdDev1.toFixed(2)}%</span>
                   </div>
                 </div>
@@ -241,21 +241,21 @@ export function CorrelationCalculator() {
                 <div className="text-sm text-text-secondary mb-2">{asset2Name}</div>
                 <div className="space-y-1 text-xs">
                   <div className="flex justify-between">
-                    <span className="text-text-tertiary">Media:</span>
+                    <span className="text-text-secondary">Media:</span>
                     <span className="text-text-primary">{results.mean2.toFixed(2)}%</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-text-tertiary">Std Dev:</span>
+                    <span className="text-text-secondary">Std Dev:</span>
                     <span className="text-text-primary">{results.stdDev2.toFixed(2)}%</span>
                   </div>
                 </div>
               </div>
             </div>
             <div className="mt-4 pt-4 border-t border-border-subtle">
-              <p className="text-xs text-text-tertiary">
+              <p className="text-xs text-text-secondary">
                 <strong>Formula:</strong> ρ = Cov(X,Y) / (σX × σY)
               </p>
-              <p className="text-xs text-text-tertiary mt-2">
+              <p className="text-xs text-text-secondary mt-2">
                 <strong>Interpretazione:</strong> 
                 {results.correlation > 0.5 && ' Alta correlazione positiva - asset si muovono insieme, poca diversificazione.'}
                 {results.correlation > 0 && results.correlation <= 0.5 && ' Correlazione positiva moderata - qualche diversificazione.'}

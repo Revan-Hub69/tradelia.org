@@ -83,7 +83,7 @@ export function FavoriteButton({ id, type, title, description, href, className }
         'w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200',
         favorited
           ? 'bg-amber-500/20 text-amber-400 hover:bg-amber-500/30'
-          : 'bg-bg-soft text-text-tertiary hover:text-amber-400 hover:bg-amber-500/10',
+          : 'bg-bg-soft text-text-secondary hover:text-amber-400 hover:bg-amber-500/10',
         className
       )}
       aria-label={favorited ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}

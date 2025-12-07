@@ -162,7 +162,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </div>
               <Link
                 href="/dashboard"
-                className="block w-full text-center text-sm text-text-tertiary hover:text-text-primary transition-colors"
+                className="block w-full text-center text-sm text-text-secondary hover:text-text-primary transition-colors"
               >
                 <Home className="w-4 h-4 inline mr-2" />
                 Torna alla Dashboard

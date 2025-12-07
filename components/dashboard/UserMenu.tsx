@@ -231,7 +231,7 @@ export function UserMenu() {
         </span>
         <ChevronDown
           className={cn(
-            'w-4 h-4 text-text-tertiary transition-transform',
+            'w-4 h-4 text-text-secondary transition-transform',
             isOpen && 'rotate-180'
           )}
         />
@@ -262,7 +262,7 @@ export function UserMenu() {
                   <p className="font-semibold text-text-primary text-sm truncate">
                     {user.name || 'Utente'}
                   </p>
-                  <p className="text-xs text-text-tertiary truncate">{user.email}</p>
+                  <p className="text-xs text-text-secondary truncate">{user.email}</p>
                   {isPro && (
                     <span className="inline-block mt-1 px-2 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded text-xs text-amber-300 font-medium">
                       Pro

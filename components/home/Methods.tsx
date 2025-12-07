@@ -122,14 +122,14 @@ export function Methods() {
                             key={fIdx}
                             className="flex items-center gap-3 text-sm text-text-secondary"
                           >
-                            <Check className="w-4 h-4 text-accent flex-shrink-0" aria-hidden="true" />
+                            <Check className="w-4 h-4 text-blue-400 flex-shrink-0" aria-hidden="true" />
                             <span className="font-light">{feature}</span>
                           </li>
                         ))}
                       </ul>
                       <Link
                         href={buildLocalePath(locale, '/dashboard/education')}
-                        className="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent-hover transition-colors duration-200"
+                        className="inline-flex items-center gap-2 text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors duration-200"
                       >
                         <span>{t('home.methods.cta')}</span>
                         <ArrowRight className="w-4 h-4" aria-hidden="true" />

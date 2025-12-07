@@ -504,7 +504,7 @@ export function PaperTrading() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-2 flex items-center gap-2">
-              <Target className="w-6 h-6 text-accent" />
+              <Target className="w-6 h-6 text-blue-400" />
               {locale === 'it' ? 'Paper Trading' : 'Paper Trading'}
             </h2>
             <p className="text-text-secondary text-sm">
@@ -565,7 +565,7 @@ export function PaperTrading() {
                   ? 'Attualmente i prezzi vengono aggiornati ogni 5 secondi. Streaming real-time con WebSocket e aggiornamenti < 1 secondo saranno disponibili nell\'upgrade previsto per Q2 2025. Questo ti permetterà di tradare con latenza minima e precisione istituzionale.'
                   : 'Currently prices update every 5 seconds. Real-time streaming with WebSocket and < 1 second updates will be available in the upgrade scheduled for Q2 2025. This will allow you to trade with minimal latency and institutional precision.'}
               </p>
-              <div className="mt-2 text-[10px] text-text-tertiary">
+              <div className="mt-2 text-[10px] text-text-secondary">
                 {locale === 'it'
                   ? 'Upgrade previsto: Q2 2025'
                   : 'Upgrade scheduled: Q2 2025'}
@@ -578,7 +578,7 @@ export function PaperTrading() {
       {/* Portfolio Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         <div className="bg-bg-soft border border-border-subtle rounded-xl p-3 sm:p-4">
-          <div className="text-xs text-text-tertiary mb-1">
+          <div className="text-xs text-text-secondary mb-1">
             {locale === 'it' ? 'Equity Totale' : 'Total Equity'}
           </div>
           <div className="text-lg sm:text-2xl font-bold text-text-primary">
@@ -586,7 +586,7 @@ export function PaperTrading() {
           </div>
         </div>
         <div className="bg-bg-soft border border-border-subtle rounded-xl p-3 sm:p-4">
-          <div className="text-xs text-text-tertiary mb-1">
+          <div className="text-xs text-text-secondary mb-1">
             {locale === 'it' ? 'P&L Totale' : 'Total P&L'}
           </div>
           <div className={cn(
@@ -600,7 +600,7 @@ export function PaperTrading() {
           </div>
         </div>
         <div className="bg-bg-soft border border-border-subtle rounded-xl p-3 sm:p-4">
-          <div className="text-xs text-text-tertiary mb-1">
+          <div className="text-xs text-text-secondary mb-1">
             {locale === 'it' ? 'Posizioni Aperte' : 'Open Positions'}
           </div>
           <div className="text-lg sm:text-2xl font-bold text-text-primary">
@@ -608,7 +608,7 @@ export function PaperTrading() {
           </div>
         </div>
         <div className="bg-bg-soft border border-border-subtle rounded-xl p-3 sm:p-4">
-          <div className="text-xs text-text-tertiary mb-1">
+          <div className="text-xs text-text-secondary mb-1">
             {locale === 'it' ? 'Leverage' : 'Leverage'}
           </div>
           <div className={cn(
@@ -623,7 +623,7 @@ export function PaperTrading() {
       {/* Risk Management Settings */}
       <div className="bg-bg-surface border border-border-subtle rounded-xl p-4 sm:p-6">
         <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
-          <Shield className="w-5 h-5 text-accent" />
+          <Shield className="w-5 h-5 text-blue-400" />
           {locale === 'it' ? 'Risk Management' : 'Risk Management'}
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -715,7 +715,7 @@ export function PaperTrading() {
                     )}>
                       {formatCurrency(position.unrealizedPnL)}
                     </div>
-                    <div className="text-xs text-text-tertiary">
+                    <div className="text-xs text-text-secondary">
                       {position.unrealizedPnLPercent >= 0 ? '+' : ''}{position.unrealizedPnLPercent.toFixed(2)}%
                     </div>
                   </div>
@@ -786,7 +786,7 @@ export function PaperTrading() {
               </h3>
               <button
                 onClick={() => setShowOrderModal(false)}
-                className="w-8 h-8 rounded flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors"
+                className="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-soft transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>

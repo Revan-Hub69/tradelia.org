@@ -586,10 +586,10 @@ export function StrategyBuilder() {
             id="strategy-heading"
             className="text-lg font-semibold text-text-primary flex items-center gap-2"
           >
-            <Target className="w-5 h-5 text-accent" aria-hidden="true" />
+            <Target className="w-5 h-5 text-blue-400" aria-hidden="true" />
             {locale === 'it' ? 'Selezione Strategie' : 'Strategy Selection'}
           </h3>
-          <div className="text-xs text-text-tertiary">
+          <div className="text-xs text-text-secondary">
             {locale === 'it' ? 'Seleziona una o più strategie accademiche' : 'Select one or more academic strategies'}
           </div>
         </div>
@@ -639,9 +639,9 @@ export function StrategyBuilder() {
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         {selectedStrategies.has(strategy.id) ? (
-                          <CheckCircle2 className="w-4 h-4 text-accent flex-shrink-0" />
+                          <CheckCircle2 className="w-4 h-4 text-blue-400 flex-shrink-0" />
                         ) : (
-                          <Circle className="w-4 h-4 text-text-tertiary flex-shrink-0" />
+                          <Circle className="w-4 h-4 text-text-secondary flex-shrink-0" />
                         )}
                         <span className="font-semibold text-sm text-text-primary">
                           {locale === 'it' ? strategy.name : strategy.nameEn}
@@ -652,7 +652,7 @@ export function StrategyBuilder() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 text-[10px] text-text-tertiary mt-2">
+                  <div className="flex items-center gap-2 text-[10px] text-text-secondary mt-2">
                     <BookOpen className="w-3 h-3" />
                     <span className="line-clamp-1">{strategy.academicSource.split('(')[0].trim()}</span>
                   </div>
@@ -704,9 +704,9 @@ export function StrategyBuilder() {
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         {selectedStrategies.has(strategy.id) ? (
-                          <CheckCircle2 className="w-4 h-4 text-accent flex-shrink-0" />
+                          <CheckCircle2 className="w-4 h-4 text-blue-400 flex-shrink-0" />
                         ) : (
-                          <Circle className="w-4 h-4 text-text-tertiary flex-shrink-0" />
+                          <Circle className="w-4 h-4 text-text-secondary flex-shrink-0" />
                         )}
                         <span className="font-semibold text-sm text-text-primary">
                           {locale === 'it' ? strategy.name : strategy.nameEn}
@@ -717,7 +717,7 @@ export function StrategyBuilder() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 text-[10px] text-text-tertiary mt-2">
+                  <div className="flex items-center gap-2 text-[10px] text-text-secondary mt-2">
                     <BookOpen className="w-3 h-3" />
                     <span className="line-clamp-1">{strategy.academicSource.split('(')[0].trim()}</span>
                   </div>
@@ -768,13 +768,13 @@ export function StrategyBuilder() {
               id={`params-${strategy.id}`}
               className="text-lg font-semibold text-text-primary flex items-center gap-2"
             >
-              <Settings className="w-5 h-5 text-accent" aria-hidden="true" />
+              <Settings className="w-5 h-5 text-blue-400" aria-hidden="true" />
               {locale === 'it' ? strategy.name : strategy.nameEn} - {locale === 'it' ? 'Parametri' : 'Parameters'}
             </h3>
             
             <div className="bg-accent/5 border border-accent/20 rounded-lg p-3 mb-4">
               <div className="flex items-start gap-2">
-                <Info className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
+                <Info className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
                 <div className="text-xs text-text-secondary leading-relaxed">
                   <strong className="text-text-primary">{locale === 'it' ? 'Nota Accademica:' : 'Academic Note:'}</strong>{' '}
                   {locale === 'it' ? strategy.academicNotes : strategy.academicNotesEn}
@@ -800,7 +800,7 @@ export function StrategyBuilder() {
                           <div className="text-text-secondary">{param.academicTooltip.description}</div>
                           {param.academicTooltip.recommendation && (
                             <div className="pt-2 border-t border-white/20">
-                              <div className="font-semibold text-accent mb-1">
+                              <div className="font-semibold text-blue-400 mb-1">
                                 {locale === 'it' ? 'Raccomandazione:' : 'Recommendation:'}
                               </div>
                               <div className="text-text-secondary">{param.academicTooltip.recommendation}</div>
@@ -808,14 +808,14 @@ export function StrategyBuilder() {
                           )}
                           {param.academicTooltip.academicContext && (
                             <div className="pt-2 border-t border-white/20">
-                              <div className="font-semibold text-accent mb-1">
+                              <div className="font-semibold text-blue-400 mb-1">
                                 {locale === 'it' ? 'Contesto Accademico:' : 'Academic Context:'}
                               </div>
                               <div className="text-text-secondary">{param.academicTooltip.academicContext}</div>
                             </div>
                           )}
                           <div className="pt-2 border-t border-white/20">
-                            <div className="font-semibold text-accent mb-1">
+                            <div className="font-semibold text-blue-400 mb-1">
                               {locale === 'it' ? 'Fonte:' : 'Source:'}
                             </div>
                             <div className="text-text-secondary text-[10px] leading-relaxed">
@@ -825,7 +825,7 @@ export function StrategyBuilder() {
                         </div>
                       }
                     >
-                      <Info className="w-4 h-4 text-accent cursor-help" />
+                      <Info className="w-4 h-4 text-blue-400 cursor-help" />
                     </Tooltip>
                   </div>
                   <input
@@ -849,7 +849,7 @@ export function StrategyBuilder() {
                     step={param.step}
                     className="w-full px-3 py-2 bg-bg-soft border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
                   />
-                  <div className="text-xs text-text-tertiary mt-1">
+                  <div className="text-xs text-text-secondary mt-1">
                     Range: {param.min} - {param.max} (Step: {param.step})
                   </div>
                 </div>
@@ -871,7 +871,7 @@ export function StrategyBuilder() {
             id="config-heading"
             className="text-lg font-semibold text-text-primary flex items-center gap-2"
           >
-            <Calculator className="w-5 h-5 text-accent" aria-hidden="true" />
+            <Calculator className="w-5 h-5 text-blue-400" aria-hidden="true" />
             {locale === 'it' ? 'Configurazione Walk-Forward' : 'Walk-Forward Configuration'}
           </h3>
           <div className="flex items-center gap-3">
@@ -881,8 +881,8 @@ export function StrategyBuilder() {
                 'px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
                 'border border-border-subtle',
                 showAdvancedMetrics
-                  ? 'bg-accent/20 text-accent border-accent/40'
-                  : 'bg-bg-soft text-text-tertiary hover:text-text-primary'
+                  ? 'bg-accent/20 text-blue-400 border-accent/40'
+                  : 'bg-bg-soft text-text-secondary hover:text-text-primary'
               )}
               aria-label={locale === 'it' ? 'Mostra metriche avanzate' : 'Show advanced metrics'}
               aria-pressed={showAdvancedMetrics}
@@ -890,7 +890,7 @@ export function StrategyBuilder() {
               <Settings className="w-3 h-3 inline-block mr-1" />
               {locale === 'it' ? 'Metriche' : 'Metrics'}
             </button>
-            <div className="text-xs text-text-tertiary">
+            <div className="text-xs text-text-secondary">
               {locale === 'it' ? 'Configurazione ottimizzazione' : 'Optimization configuration'}
             </div>
           </div>
@@ -941,7 +941,7 @@ export function StrategyBuilder() {
                 }
                 position="top"
               >
-                <Info className="w-4 h-4 inline-block ml-1 text-text-tertiary cursor-help" aria-label={locale === 'it' ? 'Informazioni' : 'Information'} />
+                <Info className="w-4 h-4 inline-block ml-1 text-text-secondary cursor-help" aria-label={locale === 'it' ? 'Informazioni' : 'Information'} />
               </Tooltip>
             </label>
             <input
@@ -979,7 +979,7 @@ export function StrategyBuilder() {
                 }
                 position="top"
               >
-                <Info className="w-4 h-4 inline-block ml-1 text-text-tertiary cursor-help" aria-label={locale === 'it' ? 'Informazioni' : 'Information'} />
+                <Info className="w-4 h-4 inline-block ml-1 text-text-secondary cursor-help" aria-label={locale === 'it' ? 'Informazioni' : 'Information'} />
               </Tooltip>
             </label>
             <input
@@ -1017,7 +1017,7 @@ export function StrategyBuilder() {
               }
               position="top"
             >
-              <Info className="w-4 h-4 text-text-tertiary cursor-help" aria-label={locale === 'it' ? 'Informazioni Key Value' : 'Key Value information'} />
+              <Info className="w-4 h-4 text-text-secondary cursor-help" aria-label={locale === 'it' ? 'Informazioni Key Value' : 'Key Value information'} />
             </Tooltip>
           </legend>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -1070,7 +1070,7 @@ export function StrategyBuilder() {
               />
             </div>
           </div>
-          <div className="mt-2 text-xs text-text-tertiary" aria-live="polite">
+          <div className="mt-2 text-xs text-text-secondary" aria-live="polite">
             {locale === 'it'
               ? `Valori testati: ${Math.floor((keyValueMax - keyValueMin) / keyValueStep) + 1}`
               : `Values tested: ${Math.floor((keyValueMax - keyValueMin) / keyValueStep) + 1}`}
@@ -1094,7 +1094,7 @@ export function StrategyBuilder() {
               }
               position="top"
             >
-              <Info className="w-4 h-4 text-text-tertiary cursor-help" aria-label={locale === 'it' ? 'Informazioni ATR Period' : 'ATR Period information'} />
+              <Info className="w-4 h-4 text-text-secondary cursor-help" aria-label={locale === 'it' ? 'Informazioni ATR Period' : 'ATR Period information'} />
             </Tooltip>
           </legend>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -1147,7 +1147,7 @@ export function StrategyBuilder() {
               />
             </div>
           </div>
-          <div className="mt-2 text-xs text-text-tertiary" aria-live="polite">
+          <div className="mt-2 text-xs text-text-secondary" aria-live="polite">
             {locale === 'it'
               ? `Valori testati: ${Math.floor((atrPeriodMax - atrPeriodMin) / atrPeriodStep) + 1}`
               : `Values tested: ${Math.floor((atrPeriodMax - atrPeriodMin) / atrPeriodStep) + 1}`}
@@ -1177,7 +1177,7 @@ export function StrategyBuilder() {
                 }
                 position="top"
               >
-                <Info className="w-4 h-4 inline-block ml-1 text-text-tertiary cursor-help" />
+                <Info className="w-4 h-4 inline-block ml-1 text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <input
@@ -1212,7 +1212,7 @@ export function StrategyBuilder() {
                 }
                 position="top"
               >
-                <Info className="w-4 h-4 inline-block ml-1 text-text-tertiary cursor-help" aria-label={locale === 'it' ? 'Informazioni' : 'Information'} />
+                <Info className="w-4 h-4 inline-block ml-1 text-text-secondary cursor-help" aria-label={locale === 'it' ? 'Informazioni' : 'Information'} />
               </Tooltip>
             </label>
             <input
@@ -1320,12 +1320,12 @@ export function StrategyBuilder() {
           <div className="bg-bg-soft border border-border-subtle rounded-lg p-4 space-y-4">
             <div className="flex items-center justify-between mb-2">
               <h4 className="text-sm font-semibold text-text-primary flex items-center gap-2">
-                <Filter className="w-4 h-4 text-accent" />
+                <Filter className="w-4 h-4 text-blue-400" />
                 {locale === 'it' ? 'Filtri Avanzati' : 'Advanced Filters'}
               </h4>
               <button
                 onClick={() => setShowFilters(false)}
-                className="w-6 h-6 rounded flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-surface transition-colors"
+                className="w-6 h-6 rounded flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-surface transition-colors"
                 aria-label={locale === 'it' ? 'Chiudi filtri' : 'Close filters'}
               >
                 <X className="w-4 h-4" />
@@ -1398,7 +1398,7 @@ export function StrategyBuilder() {
               </div>
             </div>
             
-            <div className="flex items-center gap-2 text-xs text-text-tertiary">
+            <div className="flex items-center gap-2 text-xs text-text-secondary">
               <Info className="w-4 h-4" />
               <span>
                 {locale === 'it'
@@ -1422,7 +1422,7 @@ export function StrategyBuilder() {
                     setShowSaveConfig(false);
                     setConfigName('');
                   }}
-                  className="w-8 h-8 rounded flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors"
+                  className="w-8 h-8 rounded flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-soft transition-colors"
                   aria-label={locale === 'it' ? 'Chiudi' : 'Close'}
                 >
                   <X className="w-4 h-4" />
@@ -1514,7 +1514,7 @@ export function StrategyBuilder() {
               id="results-heading"
               className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2"
             >
-              <BarChart3 className="w-5 h-5 text-accent" aria-hidden="true" />
+              <BarChart3 className="w-5 h-5 text-blue-400" aria-hidden="true" />
               {locale === 'it' ? 'Risultati Ottimizzazione' : 'Optimization Results'}
             </h3>
             
@@ -1526,7 +1526,7 @@ export function StrategyBuilder() {
                 aria-atomic="true"
               >
                 <div className="flex items-center gap-2 mb-4">
-                  <Target className="w-5 h-5 text-accent" aria-hidden="true" />
+                  <Target className="w-5 h-5 text-blue-400" aria-hidden="true" />
                   <span className="font-semibold text-text-primary">
                     {locale === 'it' ? 'Parametro Ottimale Consigliato' : 'Recommended Optimal Parameter'}
                   </span>
@@ -1534,10 +1534,10 @@ export function StrategyBuilder() {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                   <div>
-                    <div className="text-xs text-text-tertiary mb-1">
+                    <div className="text-xs text-text-secondary mb-1">
                       {locale === 'it' ? 'Strategia' : 'Strategy'}
                     </div>
-                    <div className="text-lg font-bold text-accent">
+                    <div className="text-lg font-bold text-blue-400">
                       {bestParameterStats.strategyId && getStrategyById(bestParameterStats.strategyId) 
                         ? (locale === 'it' 
                             ? getStrategyById(bestParameterStats.strategyId)!.name 
@@ -1546,7 +1546,7 @@ export function StrategyBuilder() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-text-tertiary mb-1">
+                    <div className="text-xs text-text-secondary mb-1">
                       {locale === 'it' ? 'Robustezza' : 'Robustness'}
                     </div>
                     <div className="text-xl font-bold text-green-400">
@@ -1554,7 +1554,7 @@ export function StrategyBuilder() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-text-tertiary mb-1">
+                    <div className="text-xs text-text-secondary mb-1">
                       {locale === 'it' ? 'Finestre Valide' : 'Valid Windows'}
                     </div>
                     <div className="text-xl font-bold text-text-primary">
@@ -1562,7 +1562,7 @@ export function StrategyBuilder() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-text-tertiary mb-1">
+                    <div className="text-xs text-text-secondary mb-1">
                       {locale === 'it' ? 'OOS Return Avg' : 'OOS Return Avg'}
                     </div>
                     <div className="text-xl font-bold text-text-primary">
@@ -1573,19 +1573,19 @@ export function StrategyBuilder() {
                 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-accent/20">
                   <div>
-                    <div className="text-xs text-text-tertiary mb-1">Sharpe</div>
+                    <div className="text-xs text-text-secondary mb-1">Sharpe</div>
                     <div className="text-sm font-semibold text-text-primary">
                       {bestParameterStats.avgSharpe.toFixed(2)}
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-text-tertiary mb-1">Calmar</div>
+                    <div className="text-xs text-text-secondary mb-1">Calmar</div>
                     <div className="text-sm font-semibold text-text-primary">
                       {bestParameterStats.avgCalmar.toFixed(2)}
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-text-tertiary mb-1">
+                    <div className="text-xs text-text-secondary mb-1">
                       {locale === 'it' ? 'Win Rate' : 'Win Rate'}
                     </div>
                     <div className="text-sm font-semibold text-text-primary">
@@ -1593,7 +1593,7 @@ export function StrategyBuilder() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-text-tertiary mb-1">
+                    <div className="text-xs text-text-secondary mb-1">
                       {locale === 'it' ? 'Profit Factor' : 'Profit Factor'}
                     </div>
                     <div className="text-sm font-semibold text-text-primary">
@@ -1612,13 +1612,13 @@ export function StrategyBuilder() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="bg-bg-soft rounded-lg p-4">
-                <div className="text-xs text-text-tertiary mb-1">
+                <div className="text-xs text-text-secondary mb-1">
                   {locale === 'it' ? 'Finestre Analizzate' : 'Windows Analyzed'}
                 </div>
                 <div className="text-2xl font-bold text-text-primary">{results.length}</div>
               </div>
               <div className="bg-bg-soft rounded-lg p-4">
-                <div className="text-xs text-text-tertiary mb-1">
+                <div className="text-xs text-text-secondary mb-1">
                   {locale === 'it' ? 'Parametri Testati' : 'Parameters Tested'}
                 </div>
                 <div className="text-2xl font-bold text-text-primary">
@@ -1626,7 +1626,7 @@ export function StrategyBuilder() {
                 </div>
               </div>
               <div className="bg-bg-soft rounded-lg p-4">
-                <div className="text-xs text-text-tertiary mb-1">
+                <div className="text-xs text-text-secondary mb-1">
                   {locale === 'it' ? 'Robusti' : 'Robust'}
                 </div>
                 <div className="text-2xl font-bold text-green-400">
@@ -1640,7 +1640,7 @@ export function StrategyBuilder() {
                 </div>
               </div>
               <div className="bg-bg-soft rounded-lg p-4">
-                <div className="text-xs text-text-tertiary mb-1">
+                <div className="text-xs text-text-secondary mb-1">
                   {locale === 'it' ? 'Filtrati' : 'Filtered'}
                 </div>
                 <div className="text-2xl font-bold text-amber-400">
@@ -1695,7 +1695,7 @@ export function StrategyBuilder() {
                       <div className="flex items-center justify-between">
                         <div>
                           <div className="font-medium text-text-primary text-sm">{config.name}</div>
-                          <div className="text-xs text-text-tertiary mt-1">
+                          <div className="text-xs text-text-secondary mt-1">
                             {config.timestamp.toLocaleDateString(locale)}
                           </div>
                         </div>
@@ -1704,7 +1704,7 @@ export function StrategyBuilder() {
                             e.stopPropagation();
                             setSavedConfigs(savedConfigs.filter(c => c.id !== config.id));
                           }}
-                          className="w-6 h-6 rounded flex items-center justify-center text-text-tertiary hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                          className="w-6 h-6 rounded flex items-center justify-center text-text-secondary hover:text-red-400 hover:bg-red-500/10 transition-colors"
                           aria-label={locale === 'it' ? 'Elimina configurazione' : 'Delete configuration'}
                         >
                           <X className="w-4 h-4" />
@@ -1755,15 +1755,15 @@ export function StrategyBuilder() {
                         <div className="font-semibold text-text-primary">
                           {locale === 'it' ? 'Finestra' : 'Window'} {index + 1}
                         </div>
-                        <div className="text-xs text-text-tertiary">
+                        <div className="text-xs text-text-secondary">
                           {window.inSampleStart.toLocaleDateString(locale)} - {window.outOfSampleEnd.toLocaleDateString(locale)}
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm font-semibold text-accent">
+                        <div className="text-sm font-semibold text-blue-400">
                           {bestResult.strategyId}
                         </div>
-                        <div className="text-xs text-text-tertiary flex items-center gap-1">
+                        <div className="text-xs text-text-secondary flex items-center gap-1">
                           {bestResult.isRobust ? (
                             <>
                               <span className="text-green-400">✓ Robust</span>
@@ -1793,13 +1793,13 @@ export function StrategyBuilder() {
                           </h5>
                           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             <div>
-                              <div className="text-xs text-text-tertiary mb-1">IS Return</div>
+                              <div className="text-xs text-text-secondary mb-1">IS Return</div>
                               <div className="text-sm font-semibold text-text-primary">
                                 {bestResult.inSampleReturn.toFixed(2)}%
                               </div>
                             </div>
                             <div>
-                              <div className="text-xs text-text-tertiary mb-1">OOS Return</div>
+                              <div className="text-xs text-text-secondary mb-1">OOS Return</div>
                               <div className={cn(
                                 'text-sm font-semibold',
                                 bestResult.outOfSampleReturn >= bestResult.inSampleReturn * 0.7
@@ -1810,25 +1810,25 @@ export function StrategyBuilder() {
                               </div>
                             </div>
                             <div>
-                              <div className="text-xs text-text-tertiary mb-1">Max Drawdown</div>
+                              <div className="text-xs text-text-secondary mb-1">Max Drawdown</div>
                               <div className="text-sm font-semibold text-text-primary">
                                 {bestResult.maxDrawdown.toFixed(2)}%
                               </div>
                             </div>
                             <div>
-                              <div className="text-xs text-text-tertiary mb-1">Sharpe Ratio</div>
+                              <div className="text-xs text-text-secondary mb-1">Sharpe Ratio</div>
                               <div className="text-sm font-semibold text-text-primary">
                                 {bestResult.sharpeRatio.toFixed(2)}
                               </div>
                             </div>
                             <div>
-                              <div className="text-xs text-text-tertiary mb-1">Calmar Ratio</div>
+                              <div className="text-xs text-text-secondary mb-1">Calmar Ratio</div>
                               <div className="text-sm font-semibold text-text-primary">
                                 {bestResult.calmarRatio.toFixed(2)}
                               </div>
                             </div>
                             <div>
-                              <div className="text-xs text-text-tertiary mb-1">
+                              <div className="text-xs text-text-secondary mb-1">
                                 {locale === 'it' ? 'Robustezza' : 'Robustness'}
                               </div>
                               <div className={cn(
@@ -1850,7 +1850,7 @@ export function StrategyBuilder() {
                             </h5>
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             <div>
-                              <div className="text-xs text-text-tertiary mb-1">
+                              <div className="text-xs text-text-secondary mb-1">
                                 {locale === 'it' ? 'Win Rate' : 'Win Rate'}
                               </div>
                               <div className="text-sm font-semibold text-text-primary">
@@ -1858,7 +1858,7 @@ export function StrategyBuilder() {
                               </div>
                             </div>
                             <div>
-                              <div className="text-xs text-text-tertiary mb-1">
+                              <div className="text-xs text-text-secondary mb-1">
                                 {locale === 'it' ? 'Profit Factor' : 'Profit Factor'}
                               </div>
                               <div className={cn(
@@ -1870,7 +1870,7 @@ export function StrategyBuilder() {
                               </div>
                             </div>
                             <div>
-                              <div className="text-xs text-text-tertiary mb-1">
+                              <div className="text-xs text-text-secondary mb-1">
                                 {locale === 'it' ? 'Totale Trade' : 'Total Trades'}
                               </div>
                               <div className="text-sm font-semibold text-text-primary">
@@ -1878,7 +1878,7 @@ export function StrategyBuilder() {
                               </div>
                             </div>
                             <div>
-                              <div className="text-xs text-text-tertiary mb-1">
+                              <div className="text-xs text-text-secondary mb-1">
                                 {locale === 'it' ? 'Expectancy' : 'Expectancy'}
                               </div>
                               <div className={cn(
@@ -1889,7 +1889,7 @@ export function StrategyBuilder() {
                               </div>
                             </div>
                             <div>
-                              <div className="text-xs text-text-tertiary mb-1">
+                              <div className="text-xs text-text-secondary mb-1">
                                 {locale === 'it' ? 'Avg Win' : 'Avg Win'}
                               </div>
                               <div className="text-sm font-semibold text-green-400">
@@ -1897,7 +1897,7 @@ export function StrategyBuilder() {
                               </div>
                             </div>
                             <div>
-                              <div className="text-xs text-text-tertiary mb-1">
+                              <div className="text-xs text-text-secondary mb-1">
                                 {locale === 'it' ? 'Avg Loss' : 'Avg Loss'}
                               </div>
                               <div className="text-sm font-semibold text-red-400">
@@ -1905,7 +1905,7 @@ export function StrategyBuilder() {
                               </div>
                             </div>
                             <div>
-                              <div className="text-xs text-text-tertiary mb-1">
+                              <div className="text-xs text-text-secondary mb-1">
                                 {locale === 'it' ? 'Largest Win' : 'Largest Win'}
                               </div>
                               <div className="text-sm font-semibold text-green-400">
@@ -1913,7 +1913,7 @@ export function StrategyBuilder() {
                               </div>
                             </div>
                             <div>
-                              <div className="text-xs text-text-tertiary mb-1">
+                              <div className="text-xs text-text-secondary mb-1">
                                 {locale === 'it' ? 'Largest Loss' : 'Largest Loss'}
                               </div>
                               <div className="text-sm font-semibold text-red-400">
@@ -1926,7 +1926,7 @@ export function StrategyBuilder() {
                         
                         {/* Parameter Info */}
                         <div className="bg-bg-soft rounded-lg p-3">
-                          <div className="text-xs text-text-tertiary mb-1">
+                          <div className="text-xs text-text-secondary mb-1">
                             {locale === 'it' ? 'Parametri Ottimizzati' : 'Optimized Parameters'}
                           </div>
                           <div className="text-sm font-semibold text-text-primary mb-2">

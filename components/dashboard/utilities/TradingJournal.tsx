@@ -203,7 +203,7 @@ export function TradingJournal() {
     <div className="space-y-6">
       <div>
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-2 flex items-center gap-2">
-          <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-accent flex-shrink-0" />
+          <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 flex-shrink-0" />
           <span>Trading Journal</span>
         </h2>
         <p className="text-text-secondary text-xs sm:text-sm">
@@ -222,21 +222,21 @@ export function TradingJournal() {
       {/* Statistiche */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         <div className="bg-bg-soft border border-border-subtle rounded-xl p-3 sm:p-4">
-          <div className="text-xs sm:text-sm text-text-tertiary mb-1">Totale Trades</div>
+          <div className="text-xs sm:text-sm text-text-secondary mb-1">Totale Trades</div>
           <div className="text-lg sm:text-2xl font-bold text-text-primary">{stats.totalTrades}</div>
         </div>
         <div className="bg-bg-soft border border-border-subtle rounded-xl p-3 sm:p-4">
-          <div className="text-xs sm:text-sm text-text-tertiary mb-1">Win Rate</div>
-          <div className="text-lg sm:text-2xl font-bold text-accent">{stats.winRate.toFixed(1)}%</div>
+          <div className="text-xs sm:text-sm text-text-secondary mb-1">Win Rate</div>
+          <div className="text-lg sm:text-2xl font-bold text-blue-400">{stats.winRate.toFixed(1)}%</div>
         </div>
         <div className="bg-bg-soft border border-border-subtle rounded-xl p-3 sm:p-4">
-          <div className="text-xs sm:text-sm text-text-tertiary mb-1">P&L Totale</div>
+          <div className="text-xs sm:text-sm text-text-secondary mb-1">P&L Totale</div>
           <div className={`text-lg sm:text-2xl font-bold ${stats.totalPnL >= 0 ? 'text-green-400' : 'text-red-400'}`}>
             {formatCurrency(stats.totalPnL)}
           </div>
         </div>
         <div className="bg-bg-soft border border-border-subtle rounded-xl p-3 sm:p-4">
-          <div className="text-xs sm:text-sm text-text-tertiary mb-1">Trades Aperti</div>
+          <div className="text-xs sm:text-sm text-text-secondary mb-1">Trades Aperti</div>
           <div className="text-lg sm:text-2xl font-bold text-text-primary">{stats.openTrades}</div>
         </div>
       </div>
@@ -257,7 +257,7 @@ export function TradingJournal() {
       <div className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6">
         <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4">Trades</h3>
         {trades.length === 0 ? (
-          <div className="text-center py-12 text-text-tertiary">
+          <div className="text-center py-12 text-text-secondary">
             <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
             <p>Nessun trade registrato</p>
           </div>
@@ -287,7 +287,7 @@ export function TradingJournal() {
                     )}
                   </div>
                   {trade.strategy && (
-                    <div className="text-xs text-text-tertiary mt-1">Strategia: {trade.strategy}</div>
+                    <div className="text-xs text-text-secondary mt-1">Strategia: {trade.strategy}</div>
                   )}
                 </div>
                 <div className="flex items-center gap-3">
@@ -302,7 +302,7 @@ export function TradingJournal() {
                   {!trade.is_closed && (
                     <button
                       onClick={() => handleCloseTrade(trade)}
-                      className="px-3 py-1.5 text-xs bg-accent/20 hover:bg-accent/30 text-accent rounded-lg transition-colors"
+                      className="px-3 py-1.5 text-xs bg-accent/20 hover:bg-accent/30 text-blue-400 rounded-lg transition-colors"
                     >
                       Chiudi Trade
                     </button>
@@ -334,7 +334,7 @@ export function TradingJournal() {
                   setShowAddModal(false);
                   setEditingTrade(null);
                 }}
-                className="p-1 rounded-lg hover:bg-bg-soft text-text-tertiary hover:text-text-primary transition-colors"
+                className="p-1 rounded-lg hover:bg-bg-soft text-text-secondary hover:text-text-primary transition-colors"
                 aria-label="Chiudi"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -347,7 +347,7 @@ export function TradingJournal() {
                 <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
                   <span>Simbolo *</span>
                   <Tooltip content="Il simbolo dell'asset che stai tradando (es. AAPL, EURUSD, BTC).">
-                    <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                    <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
                   </Tooltip>
                 </label>
                 <input

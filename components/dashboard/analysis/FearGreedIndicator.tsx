@@ -76,7 +76,7 @@ export default function FearGreedIndicator() {
   if (isLoading) {
     return (
       <div className="bg-bg-surface rounded-lg border border-border-subtle p-6 h-full flex items-center justify-center">
-        <div className="text-text-tertiary">
+        <div className="text-text-secondary">
           {locale === 'it' ? 'Caricamento Fear & Greed...' : 'Loading Fear & Greed...'}
         </div>
       </div>
@@ -196,7 +196,7 @@ export default function FearGreedIndicator() {
               <div className="text-3xl font-bold" style={{ color: getColor(data.value) }}>
                 {data.value}
               </div>
-              <div className="text-sm text-text-tertiary">{data.classification}</div>
+              <div className="text-sm text-text-secondary">{data.classification}</div>
             </div>
           </div>
 
@@ -211,7 +211,7 @@ export default function FearGreedIndicator() {
         <div className="h-48 flex items-center justify-center">
           <div className="text-center p-6">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-bg-soft flex items-center justify-center">
-              <svg className="w-8 h-8 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-8 h-8 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
@@ -225,7 +225,7 @@ export default function FearGreedIndicator() {
                 ? 'Indice Fear & Greed per mercato azionario (CNN S&P 500)' 
                 : 'Stock Market Fear & Greed Index (CNN S&P 500)'}
             </p>
-            <p className="text-xs text-text-tertiary max-w-sm">
+            <p className="text-xs text-text-secondary max-w-sm">
               {locale === 'it'
                 ? 'Stiamo lavorando all\'integrazione. CNN non fornisce un\'API pubblica, quindi stiamo valutando soluzioni affidabili.'
                 : 'We are working on the integration. CNN does not provide a public API, so we are evaluating reliable solutions.'}
@@ -244,7 +244,7 @@ export default function FearGreedIndicator() {
             <p className="text-sm text-text-secondary leading-relaxed">
               {data.aiReading || (locale === 'it' ? 'Analisi del sentiment in corso...' : 'Analyzing market sentiment...')}
             </p>
-            <p className="text-xs text-text-tertiary mt-2">
+            <p className="text-xs text-text-secondary mt-2">
               {locale === 'it'
                 ? 'Analisi descrittiva basata sui dati attuali. Non costituisce consulenza finanziaria.'
                 : 'Descriptive analysis based on current data. Does not constitute financial advice.'}
@@ -252,7 +252,7 @@ export default function FearGreedIndicator() {
           </div>
 
           {/* Update Time */}
-          <div className="text-xs text-text-tertiary text-center">
+          <div className="text-xs text-text-secondary text-center">
             {locale === 'it' ? 'Aggiornato' : 'Updated'}: {new Date(data.timestamp).toLocaleTimeString(locale === 'it' ? 'it-IT' : 'en-US')}
           </div>
         </>

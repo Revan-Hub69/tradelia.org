@@ -58,11 +58,11 @@ const QuickActionButton = memo(({
       whileTap={{ scale: 0.99 }}
     >
       <div className="w-9 h-9 rounded-lg bg-accent/10 group-hover:bg-accent/20 flex items-center justify-center transition-colors">
-        <Icon className="w-4 h-4 text-accent flex-shrink-0" />
+        <Icon className="w-4 h-4 text-blue-400 flex-shrink-0" />
       </div>
       <span className="flex-1 font-medium">{action.label}</span>
       {action.proOnly && <ProBadge size="sm" />}
-      <ArrowRight className="w-4 h-4 text-text-tertiary group-hover:text-accent transition-colors opacity-0 group-hover:opacity-100" />
+      <ArrowRight className="w-4 h-4 text-text-secondary group-hover:text-blue-400 transition-colors opacity-0 group-hover:opacity-100" />
     </motion.button>
   );
 });
@@ -653,7 +653,7 @@ export function TradeliaAIChat() {
                   <h3 id="chat-title" className="text-base font-bold text-text-primary leading-tight">
                     {currentLocale === 'it' ? 'Tradelia AI' : 'Tradelia AI'}
                   </h3>
-                  <p id="chat-description" className="text-xs text-text-tertiary leading-tight mt-0.5">
+                  <p id="chat-description" className="text-xs text-text-secondary leading-tight mt-0.5">
                     {currentLocale === 'it' ? 'Assistente intelligente' : 'Intelligent assistant'}
                   </p>
                 </div>
@@ -741,7 +741,7 @@ export function TradeliaAIChat() {
 
                   {/* Quick Actions - Enhanced Design */}
                   <div className="space-y-2.5">
-                    <p className="text-xs text-text-tertiary font-semibold leading-relaxed uppercase tracking-wide">
+                    <p className="text-xs text-text-secondary font-semibold leading-relaxed uppercase tracking-wide">
                       {currentLocale === 'it' ? 'Azioni rapide:' : 'Quick actions:'}
                     </p>
                     {quickActions.map((action) => {
@@ -769,7 +769,7 @@ export function TradeliaAIChat() {
                       </p>
                       <Link
                         href="/pricing"
-                        className="text-xs text-accent hover:text-accent-hover font-medium inline-flex items-center gap-1 leading-relaxed"
+                        className="text-xs text-blue-400 hover:text-blue-300 font-medium inline-flex items-center gap-1 leading-relaxed"
                       >
                         {currentLocale === 'it' ? 'Scopri Pro' : 'Discover Pro'}
                         <ArrowRight className="w-3 h-3" />
@@ -806,8 +806,8 @@ export function TradeliaAIChat() {
                   aria-label={currentLocale === 'it' ? 'Caricamento risposta' : 'Loading response'}
                 >
                   <div className="bg-bg-soft rounded-2xl px-4 py-3 border border-border-subtle shadow-sm flex items-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin text-accent" aria-hidden="true" />
-                    <span className="text-xs text-text-tertiary">
+                    <Loader2 className="w-4 h-4 animate-spin text-blue-400" aria-hidden="true" />
+                    <span className="text-xs text-text-secondary">
                       {currentLocale === 'it' ? 'Sto pensando...' : 'Thinking...'}
                     </span>
                   </div>
@@ -839,7 +839,7 @@ export function TradeliaAIChat() {
                     className={cn(
                       'w-full px-4 py-3 pr-12 rounded-xl',
                       'bg-bg-soft border border-border-subtle',
-                      'text-text-primary placeholder:text-text-tertiary',
+                      'text-text-primary placeholder:text-text-secondary',
                       'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-surface',
                       'text-sm leading-relaxed resize-none',
                       'disabled:opacity-50 disabled:cursor-not-allowed',
@@ -892,7 +892,7 @@ export function TradeliaAIChat() {
               )}
               {/* Character count */}
               <div className="flex items-center justify-between mt-2">
-                <p className="text-[10px] text-text-tertiary text-center flex-1">
+                <p className="text-[10px] text-text-secondary text-center flex-1">
                   {currentLocale === 'it'
                     ? 'AI powered by Tradelia. Le risposte sono a scopo informativo.'
                     : 'AI powered by Tradelia. Answers are for informational purposes.'}
@@ -901,7 +901,7 @@ export function TradeliaAIChat() {
                   'text-[10px] ml-2',
                   message.length > MAX_MESSAGE_LENGTH * 0.9
                     ? 'text-amber-600 dark:text-amber-400'
-                    : 'text-text-tertiary'
+                    : 'text-text-secondary'
                 )}>
                   {message.length}/{MAX_MESSAGE_LENGTH}
                 </span>

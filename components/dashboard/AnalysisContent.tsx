@@ -47,7 +47,7 @@ export function AnalysisContent() {
             href={buildLocalePath(locale, '/dashboard/reports')}
             className="p-4 bg-bg-surface border border-border-subtle rounded-xl hover:border-accent/40 hover:shadow-lg transition-all group"
           >
-            <FileText className="w-6 h-6 text-accent mb-2 group-hover:scale-110 transition-transform" />
+            <FileText className="w-6 h-6 text-blue-400 mb-2 group-hover:scale-110 transition-transform" />
             <h3 className="font-semibold text-text-primary mb-1">
               {t('dashboard.modules.items.reports.title') || 'Report Ufficiali'}
             </h3>
@@ -60,7 +60,7 @@ export function AnalysisContent() {
             href={buildLocalePath(locale, '/dashboard/requests')}
             className="p-4 bg-bg-surface border border-border-subtle rounded-xl hover:border-accent/40 hover:shadow-lg transition-all group"
           >
-            <TrendingUp className="w-6 h-6 text-accent mb-2 group-hover:scale-110 transition-transform" />
+            <TrendingUp className="w-6 h-6 text-blue-400 mb-2 group-hover:scale-110 transition-transform" />
             <h3 className="font-semibold text-text-primary mb-1">
               {t('dashboard.requests.title') || 'Richieste Analisi'}
             </h3>
@@ -73,7 +73,7 @@ export function AnalysisContent() {
             href={buildLocalePath(locale, '/dashboard/voting')}
             className="p-4 bg-bg-surface border border-border-subtle rounded-xl hover:border-accent/40 hover:shadow-lg transition-all group"
           >
-            <BarChart3 className="w-6 h-6 text-accent mb-2 group-hover:scale-110 transition-transform" />
+            <BarChart3 className="w-6 h-6 text-blue-400 mb-2 group-hover:scale-110 transition-transform" />
             <h3 className="font-semibold text-text-primary mb-1">
               {t('dashboard.voting.title') || 'Votazione Asset'}
             </h3>

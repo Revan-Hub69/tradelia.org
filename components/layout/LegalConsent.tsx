@@ -137,7 +137,7 @@ export function LegalConsent() {
                 <div className="flex items-start justify-between mb-6">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-xl bg-gradient-accent border border-border-accent flex items-center justify-center">
-                      <Shield className="w-6 h-6 text-accent" aria-hidden="true" />
+                      <Shield className="w-6 h-6 text-blue-400" aria-hidden="true" />
                     </div>
                     <div>
                       <h2 id="legal-consent-title" className="text-xl md:text-2xl font-bold text-text-primary">
@@ -177,7 +177,7 @@ export function LegalConsent() {
                     {t('legal.mifidEnd')}
                   </p>
                   <div className="flex items-start gap-3 p-4 bg-bg-elevated rounded-lg border border-border">
-                    <FileText className="w-5 h-5 text-accent flex-shrink-0 mt-1" aria-hidden="true" />
+                    <FileText className="w-5 h-5 text-blue-400 flex-shrink-0 mt-1" aria-hidden="true" />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs md:text-sm text-text-secondary leading-relaxed">
                         {t('legal.readMore')}{' '}

@@ -169,7 +169,7 @@ export function RequestDetailModal({
                   <h2 className="text-2xl font-bold text-text-primary">
                     {request.asset_name || request.asset_symbol}
                   </h2>
-                  <span className="px-3 py-1 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-tertiary font-mono">
+                  <span className="px-3 py-1 bg-bg-surface border border-border-subtle rounded-lg text-sm text-text-secondary font-mono">
                     {request.asset_symbol}
                   </span>
                 </div>
@@ -183,7 +183,7 @@ export function RequestDetailModal({
             </div>
 
             {/* Metadata */}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-text-tertiary">
+            <div className="flex flex-wrap items-center gap-4 text-sm text-text-secondary">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
                 <span>
@@ -254,7 +254,7 @@ export function RequestDetailModal({
                   <p className="text-sm font-medium text-text-primary">
                     {t('dashboard.requests.timelineCreated') || 'Richiesta creata'}
                   </p>
-                  <p className="text-xs text-text-tertiary">
+                  <p className="text-xs text-text-secondary">
                     {new Date(request.created_at).toLocaleString(locale === 'it' ? 'it-IT' : 'en-US')}
                   </p>
                 </div>
@@ -266,7 +266,7 @@ export function RequestDetailModal({
                     <p className="text-sm font-medium text-text-primary">
                       {t('dashboard.requests.timelineProcessing') || 'Elaborazione iniziata'}
                     </p>
-                    <p className="text-xs text-text-tertiary">
+                    <p className="text-xs text-text-secondary">
                       {new Date(request.updated_at).toLocaleString(locale === 'it' ? 'it-IT' : 'en-US')}
                     </p>
                   </div>
@@ -279,7 +279,7 @@ export function RequestDetailModal({
                     <p className="text-sm font-medium text-text-primary">
                       {t('dashboard.requests.timelineCompleted') || 'Elaborazione completata'}
                     </p>
-                    <p className="text-xs text-text-tertiary">
+                    <p className="text-xs text-text-secondary">
                       {new Date(request.completed_at).toLocaleString(locale === 'it' ? 'it-IT' : 'en-US')}
                     </p>
                   </div>

@@ -48,7 +48,7 @@ export const UserStats = memo(function UserStats() {
     <div className="flex items-center gap-4">
       {/* Level */}
       <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-accent/20 border border-accent/30">
-        <Target className="w-4 h-4 text-accent" />
+        <Target className="w-4 h-4 text-blue-400" />
         <span className="text-sm font-semibold text-text-primary">
           Lv. {stats.current_level}
         </span>

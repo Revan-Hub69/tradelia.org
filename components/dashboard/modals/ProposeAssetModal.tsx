@@ -142,7 +142,7 @@ export function ProposeAssetModal({
             autoComplete="off"
             spellCheck="false"
           />
-          <p id="symbol-hint" className="text-xs text-text-tertiary mt-1" role="note">
+          <p id="symbol-hint" className="text-xs text-text-secondary mt-1" role="note">
             {t('dashboard.voting.symbolHint') || 'Es: AAPL, MSFT, BTC'}
           </p>
         </div>
@@ -183,7 +183,7 @@ export function ProposeAssetModal({
             maxLength={500}
             aria-describedby="description-counter"
           />
-          <p id="description-counter" className="text-xs text-text-tertiary mt-1" role="status" aria-live="polite">
+          <p id="description-counter" className="text-xs text-text-secondary mt-1" role="status" aria-live="polite">
             {formData.description.length}/500
             <span className="sr-only"> caratteri rimanenti</span>
           </p>

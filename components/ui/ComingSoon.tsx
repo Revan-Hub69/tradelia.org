@@ -30,7 +30,7 @@ export function ComingSoon({
         {/* Icon */}
         <div className="flex justify-center">
           <div className="w-20 h-20 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center">
-            <Clock className="w-10 h-10 text-accent" />
+            <Clock className="w-10 h-10 text-blue-400" />
           </div>
         </div>
 
@@ -49,7 +49,7 @@ export function ComingSoon({
         {/* Info Box */}
         <div className="bg-bg-soft border border-border-subtle rounded-xl p-6 space-y-4">
           <div className="flex items-start gap-3">
-            <Zap className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+            <Zap className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
               <h3 className="text-sm font-semibold text-text-primary mb-1">
                 In Arrivo
@@ -62,7 +62,7 @@ export function ComingSoon({
 
           {estimatedDate && (
             <div className="flex items-start gap-3 pt-3 border-t border-border-subtle">
-              <AlertCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
               <div className="flex-1">
                 <p className="text-sm text-text-secondary">
                   <strong className="text-text-primary">Stima disponibilità:</strong> {estimatedDate}
@@ -73,9 +73,9 @@ export function ComingSoon({
 
           {/* Alternative */}
           <div className="pt-3 border-t border-border-subtle">
-            <p className="text-xs text-text-tertiary">
+            <p className="text-xs text-text-secondary">
               <strong className="text-text-primary">Nel frattempo:</strong> Puoi utilizzare i nostri{' '}
-              <strong className="text-accent">12 strumenti finanziari avanzati</strong> disponibili nella sezione Utilities.
+              <strong className="text-blue-400">12 strumenti finanziari avanzati</strong> disponibili nella sezione Utilities.
               Tutti completamente gratuiti e funzionanti senza dipendenze esterne.
             </p>
           </div>
@@ -88,19 +88,19 @@ export function ComingSoon({
           </h3>
           <ul className="space-y-2">
             <li className="flex items-start gap-2 text-sm text-text-secondary">
-              <span className="text-accent mt-1">✓</span>
+              <span className="text-blue-400 mt-1">✓</span>
               <span>Monitoraggio real-time dei tuoi asset preferiti</span>
             </li>
             <li className="flex items-start gap-2 text-sm text-text-secondary">
-              <span className="text-accent mt-1">✓</span>
+              <span className="text-blue-400 mt-1">✓</span>
               <span>Alert personalizzati per target di prezzo</span>
             </li>
             <li className="flex items-start gap-2 text-sm text-text-secondary">
-              <span className="text-accent mt-1">✓</span>
+              <span className="text-blue-400 mt-1">✓</span>
               <span>Gestione portfolio con aggiornamenti automatici</span>
             </li>
             <li className="flex items-start gap-2 text-sm text-text-secondary">
-              <span className="text-accent mt-1">✓</span>
+              <span className="text-blue-400 mt-1">✓</span>
               <span>Analisi performance e statistiche avanzate</span>
             </li>
           </ul>

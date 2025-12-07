@@ -97,7 +97,7 @@ export default function AnalysisDashboard() {
         {/* Main Indicators Grid */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-accent" />
+            <TrendingUp className="w-5 h-5 text-blue-400" />
             {locale === 'it' ? 'Indicatori Principali' : 'Main Indicators'}
           </h2>
           

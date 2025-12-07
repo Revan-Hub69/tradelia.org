@@ -81,7 +81,7 @@ export function RiskRewardCalculator() {
     <div className="space-y-6">
       <div>
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-2 flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-accent flex-shrink-0" />
+          <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 flex-shrink-0" />
           <span>Risk/Reward Calculator</span>
         </h2>
         <p className="text-text-secondary text-xs sm:text-sm">
@@ -104,7 +104,7 @@ export function RiskRewardCalculator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Entry Price ({currencySymbols[currency]}) *</span>
               <Tooltip content="Il prezzo a cui entri nel trade.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <input
@@ -122,7 +122,7 @@ export function RiskRewardCalculator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Stop Loss ({currencySymbols[currency]}) *</span>
               <Tooltip content="Il prezzo a cui esci se il trade va male. Deve essere più lontano dall'entry rispetto al take profit.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <input
@@ -140,7 +140,7 @@ export function RiskRewardCalculator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Take Profit ({currencySymbols[currency]}) *</span>
               <Tooltip content="Il prezzo target dove prendi profitto. Idealmente almeno 2x la distanza dello stop loss.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <input
@@ -159,7 +159,7 @@ export function RiskRewardCalculator() {
           <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
             <span>Dimensione Posizione (unità) *</span>
             <Tooltip content="Il numero di unità (azioni, contratti, etc.) che stai tradando.">
-              <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
             </Tooltip>
           </label>
           <input
@@ -179,34 +179,34 @@ export function RiskRewardCalculator() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1 flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1 flex items-center gap-1.5">
                 <TrendingDown className="w-3.5 h-3.5" />
                 <span>Rischio</span>
               </div>
               <div className="text-lg sm:text-2xl font-bold text-red-400">
                 {formatCurrency(results.riskAmount)}
               </div>
-              <div className="text-xs text-text-tertiary mt-1">
+              <div className="text-xs text-text-secondary mt-1">
                 {results.risk.toFixed(2)} {currencySymbols[currency]} per unità
               </div>
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1 flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1 flex items-center gap-1.5">
                 <TrendingUp className="w-3.5 h-3.5" />
                 <span>Reward</span>
               </div>
               <div className="text-lg sm:text-2xl font-bold text-green-400">
                 {formatCurrency(results.rewardAmount)}
               </div>
-              <div className="text-xs text-text-tertiary mt-1">
+              <div className="text-xs text-text-secondary mt-1">
                 {results.reward.toFixed(2)} {currencySymbols[currency]} per unità
               </div>
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1">Risk/Reward</div>
-              <div className="text-lg sm:text-2xl font-bold text-accent">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1">Risk/Reward</div>
+              <div className="text-lg sm:text-2xl font-bold text-blue-400">
                 {results.riskRewardRatio.toFixed(2)}:1
               </div>
               <div className={`text-xs font-semibold mt-1 ${results.qualityColor}`}>
@@ -225,7 +225,7 @@ export function RiskRewardCalculator() {
                 </span>
               </div>
               <div className="mt-4 pt-4 border-t border-border-subtle">
-                <p className="text-xs text-text-tertiary">
+                <p className="text-xs text-text-secondary">
                   <strong>Interpretazione:</strong> Con un R:R di {results.riskRewardRatio.toFixed(2)}:1, 
                   devi vincere almeno il {results.minWinRate.toFixed(1)}% dei trade per essere profittevole nel lungo termine.
                   {results.riskRewardRatio >= 2 && ' ✓ Buon rapporto!'}

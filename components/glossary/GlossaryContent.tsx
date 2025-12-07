@@ -243,11 +243,11 @@ export function GlossaryContent() {
                   {t('glossary.title') || 'Glossario Finanziario'}
                 </h1>
                 <div className="flex items-center gap-3 flex-wrap mt-1">
-                  <p className="text-sm text-text-tertiary">
+                  <p className="text-sm text-text-secondary">
                     <span className="font-semibold text-text-primary">{terms.length}</span> {t('glossary.termsCount') || 'termini'}
                   </p>
-                  <span className="text-text-tertiary">•</span>
-                  <p className="text-sm text-text-tertiary">
+                  <span className="text-text-secondary">•</span>
+                  <p className="text-sm text-text-secondary">
                     <span className="font-semibold text-text-primary">{allTags.length}</span> {t('glossary.themesCount') || 'temi'}
                   </p>
                 </div>
@@ -275,7 +275,7 @@ export function GlossaryContent() {
                 className="mb-4 p-4 bg-bg-soft border border-border-subtle rounded-lg text-sm"
               >
                 <div className="flex items-start gap-2 mb-2">
-                  <Keyboard className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
+                  <Keyboard className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
                   <div className="flex-1">
                     <h3 className="font-semibold text-text-primary mb-2">{t('glossary.keyboardNavigation.title') || 'Navigazione da tastiera'}</h3>
                     <ul className="space-y-1 text-text-secondary text-xs">
@@ -288,7 +288,7 @@ export function GlossaryContent() {
                   </div>
                   <button
                     onClick={() => setShowKeyboardHelp(false)}
-                    className="p-1 rounded hover:bg-bg-surface text-text-tertiary hover:text-text-primary transition-colors"
+                    className="p-1 rounded hover:bg-bg-surface text-text-secondary hover:text-text-primary transition-colors"
                     aria-label={t('glossary.keyboardNavigation.closeInstructions') || 'Chiudi istruzioni'}
                   >
                     <X className="w-4 h-4" />
@@ -309,14 +309,14 @@ export function GlossaryContent() {
             <div className="flex items-start justify-between gap-4 mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-accent/20 border border-accent/40 flex items-center justify-center">
-                  <Calendar className="w-5 h-5 text-accent" />
+                  <Calendar className="w-5 h-5 text-blue-400" />
                 </div>
                 <div>
                   <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-accent" />
+                    <Sparkles className="w-5 h-5 text-blue-400" />
                     {t('glossary.termOfTheDay.title') || 'Termine del Giorno'}
                   </h2>
-                  <p className="text-xs text-text-tertiary mt-0.5">
+                  <p className="text-xs text-text-secondary mt-0.5">
                     {formatTermDate(new Date())}
                   </p>
                 </div>
@@ -332,7 +332,7 @@ export function GlossaryContent() {
                     {termOfTheDay.what}
                   </p>
                   {termOfTheDay.tags && termOfTheDay.tags.length > 0 && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-accent/20 border border-accent/30 rounded text-xs font-medium text-accent">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-accent/20 border border-accent/30 rounded text-xs font-medium text-blue-400">
                       <Tag className="w-3 h-3" />
                       {termOfTheDay.tags.slice(0, 2).map(tag => getTagDisplayName(tag as GlossaryTag)).join(', ')}
                     </span>
@@ -354,20 +354,20 @@ export function GlossaryContent() {
         {/* Search Bar - Compact */}
         <div className="mb-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" />
             <input
               ref={searchInputRef}
               type="text"
               placeholder={t('glossary.searchPlaceholder') || 'Cerca per nome, definizione o argomento...'}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-10 py-2.5 rounded-lg bg-bg-surface border border-border-subtle text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all text-sm"
+              className="w-full pl-10 pr-10 py-2.5 rounded-lg bg-bg-surface border border-border-subtle text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all text-sm"
               aria-label="Cerca nel glossario per nome, definizione o argomento"
             />
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-bg-soft text-text-tertiary hover:text-text-primary transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-bg-soft text-text-secondary hover:text-text-primary transition-colors"
                 aria-label={t('common.clear') || 'Cancella ricerca'}
               >
                 <X className="w-3.5 h-3.5" />
@@ -402,7 +402,7 @@ export function GlossaryContent() {
               })}
               <button
                 onClick={() => setSelectedTags([])}
-                className="ml-auto text-xs text-accent hover:text-accent-hover font-medium underline"
+                className="ml-auto text-xs text-blue-400 hover:text-blue-300 font-medium underline"
               >
                 Cancella filtri
               </button>
@@ -413,12 +413,12 @@ export function GlossaryContent() {
           {allTags.length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <Tag className="w-4 h-4 text-accent" />
+                <Tag className="w-4 h-4 text-blue-400" />
                 <label className="text-sm font-semibold text-text-primary">
                   {t('glossary.filters.title') || 'Argomenti e Temi'}
                 </label>
                 {selectedTags.length > 0 && (
-                  <span className="text-xs text-accent font-semibold">
+                  <span className="text-xs text-blue-400 font-semibold">
                     • {selectedTags.length} {selectedTags.length === 1 ? (t('glossary.filters.selectedTags') || 'tema selezionato') : (t('glossary.filters.selectedTagsPlural') || 'temi selezionati')}
                   </span>
                 )}
@@ -466,7 +466,7 @@ export function GlossaryContent() {
                         'text-xs px-1.5 py-0.5 rounded font-semibold',
                         selectedTags.includes(tag)
                           ? 'bg-white/20 text-white'
-                          : 'bg-bg-soft text-text-tertiary'
+                          : 'bg-bg-soft text-text-secondary'
                       )}>
                         {count}
                       </span>
@@ -477,7 +477,7 @@ export function GlossaryContent() {
               {selectedTags.length > 0 && (
                 <button
                   onClick={() => setSelectedTags([])}
-                  className="mt-2 text-xs text-text-tertiary hover:text-text-primary underline"
+                  className="mt-2 text-xs text-text-secondary hover:text-text-primary underline"
                 >
                   {t('glossary.filters.removeAllTags') || 'Rimuovi tutti i temi'}
                 </button>
@@ -501,7 +501,7 @@ export function GlossaryContent() {
                 setSearchTerm('');
                 setSelectedTags([]);
               }}
-              className="text-xs text-accent hover:text-accent-hover underline"
+              className="text-xs text-blue-400 hover:text-blue-300 underline"
             >
               {t('glossary.filters.showAllTerms') || 'Mostra tutti i termini'}
             </button>
@@ -512,11 +512,11 @@ export function GlossaryContent() {
         <div className="space-y-2">
           {filteredTerms.length === 0 ? (
             <div className="text-center py-12 bg-bg-soft rounded-xl border border-border-subtle">
-              <BookOpen className="w-12 h-12 mx-auto mb-3 text-text-tertiary opacity-50" />
+              <BookOpen className="w-12 h-12 mx-auto mb-3 text-text-secondary opacity-50" />
               <p className="text-base font-semibold text-text-secondary mb-1">
                 {t('glossary.noResults') || 'Nessun termine trovato'}
               </p>
-              <p className="text-xs text-text-tertiary">
+              <p className="text-xs text-text-secondary">
                 {t('glossary.filters.modifyFilters') || 'Prova a modificare i filtri o la ricerca per trovare altri termini'}
               </p>
               {(searchTerm || selectedTags.length > 0) && (
@@ -525,7 +525,7 @@ export function GlossaryContent() {
                     setSearchTerm('');
                     setSelectedTags([]);
                   }}
-                  className="mt-3 px-4 py-2 text-sm font-medium text-accent hover:text-accent-hover underline"
+                  className="mt-3 px-4 py-2 text-sm font-medium text-blue-400 hover:text-blue-300 underline"
                 >
                   {t('glossary.filters.showAllAvailable') || `Mostra tutti i ${terms.length} termini disponibili`}
                 </button>
@@ -556,11 +556,11 @@ export function GlossaryContent() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2.5 mb-2 flex-wrap">
-                      <h3 className="text-lg font-bold text-text-primary group-hover:text-accent transition-colors">
+                      <h3 className="text-lg font-bold text-text-primary group-hover:text-blue-400 transition-colors">
                         {term.title}
                       </h3>
                       {term.tags && term.tags.length > 0 && (
-                        <span className="px-2.5 py-1 bg-accent/15 border border-accent/30 rounded-md text-xs font-semibold text-accent whitespace-nowrap flex-shrink-0">
+                        <span className="px-2.5 py-1 bg-accent/15 border border-accent/30 rounded-md text-xs font-semibold text-blue-400 whitespace-nowrap flex-shrink-0">
                           {term.tags.slice(0, 2).map(tag => getTagDisplayName(tag as GlossaryTag)).join(', ')}
                         </span>
                       )}
@@ -587,7 +587,7 @@ export function GlossaryContent() {
                         {term.tags.slice(0, 3).map((tag, idx) => (
                           <span
                             key={idx}
-                            className="px-2 py-0.5 bg-bg-soft border border-border-subtle rounded text-xs text-text-tertiary"
+                            className="px-2 py-0.5 bg-bg-soft border border-border-subtle rounded text-xs text-text-secondary"
                           >
                             {typeof tag === 'string' 
                               ? (getGlossaryTags().includes(tag as GlossaryTag) 
@@ -597,14 +597,14 @@ export function GlossaryContent() {
                           </span>
                         ))}
                         {term.tags.length > 3 && (
-                          <span className="px-2 py-0.5 text-xs text-text-tertiary">
+                          <span className="px-2 py-0.5 text-xs text-text-secondary">
                             +{term.tags.length - 3}
                           </span>
                         )}
                       </div>
                     )}
                   </div>
-                  <ChevronDown className="w-5 h-5 text-text-tertiary group-hover:text-accent flex-shrink-0 mt-1 transition-colors" />
+                  <ChevronDown className="w-5 h-5 text-text-secondary group-hover:text-blue-400 flex-shrink-0 mt-1 transition-colors" />
                 </div>
               </motion.button>
             ))
@@ -625,7 +625,7 @@ export function GlossaryContent() {
 
         {/* Footer - Compact */}
         <div className="mt-8 pt-6 border-t border-border-subtle text-center">
-          <p className="text-xs text-text-tertiary">
+          <p className="text-xs text-text-secondary">
             Glossario Tradelia • {new Date().getFullYear()} • Fonti accademiche verificate
           </p>
         </div>

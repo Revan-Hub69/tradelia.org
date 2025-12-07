@@ -236,14 +236,14 @@ export function HelpAssistant() {
                     <h3 className="font-semibold text-text-primary text-sm">
                       {locale === 'it' ? 'Assistente' : 'Assistant'}
                     </h3>
-                    <p className="text-xs text-text-tertiary">
+                    <p className="text-xs text-text-secondary">
                       {locale === 'it' ? 'FAQ e AI Chat' : 'FAQ and AI Chat'}
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-soft transition-colors"
                   aria-label={locale === 'it' ? 'Chiudi' : 'Close'}
                 >
                   <X className="w-4 h-4" />
@@ -257,8 +257,8 @@ export function HelpAssistant() {
                   className={cn(
                     'flex-1 px-4 py-3 text-sm font-medium transition-colors',
                     activeTab === 'faq'
-                      ? 'text-accent border-b-2 border-accent bg-bg-surface'
-                      : 'text-text-tertiary hover:text-text-primary'
+                      ? 'text-blue-400 border-b-2 border-accent bg-bg-surface'
+                      : 'text-text-secondary hover:text-text-primary'
                   )}
                 >
                   <div className="flex items-center justify-center gap-2">
@@ -271,15 +271,15 @@ export function HelpAssistant() {
                   className={cn(
                     'flex-1 px-4 py-3 text-sm font-medium transition-colors relative',
                     activeTab === 'ai'
-                      ? 'text-accent border-b-2 border-accent bg-bg-surface'
-                      : 'text-text-tertiary hover:text-text-primary'
+                      ? 'text-blue-400 border-b-2 border-accent bg-bg-surface'
+                      : 'text-text-secondary hover:text-text-primary'
                   )}
                 >
                   <div className="flex items-center justify-center gap-2">
                     <Sparkles className="w-4 h-4" />
                     <span>{locale === 'it' ? 'AI Chat' : 'AI Chat'}</span>
                     {!isPro && (
-                      <span className="ml-1 px-1.5 py-0.5 text-[10px] font-semibold bg-accent/20 text-accent rounded">
+                      <span className="ml-1 px-1.5 py-0.5 text-[10px] font-semibold bg-accent/20 text-blue-400 rounded">
                         Pro
                       </span>
                     )}
@@ -300,12 +300,12 @@ export function HelpAssistant() {
                         placeholder={locale === 'it' ? 'Cerca nelle FAQ...' : 'Search FAQ...'}
                         className="w-full px-4 py-2 pr-10 bg-bg-soft border border-border-subtle rounded-lg text-sm text-text-primary placeholder-text-tertiary focus:outline-none focus:border-accent"
                       />
-                      <HelpCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary" />
+                      <HelpCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" />
                     </div>
 
                     {/* FAQ Items */}
                     {filteredFAQ.length === 0 ? (
-                      <div className="text-center py-8 text-text-tertiary text-sm">
+                      <div className="text-center py-8 text-text-secondary text-sm">
                         {locale === 'it' 
                           ? 'Nessuna FAQ trovata. Contattaci per assistenza.'
                           : 'No FAQ found. Contact us for support.'}
@@ -330,7 +330,7 @@ export function HelpAssistant() {
                                 {item.tags.map((tag, idx) => (
                                   <span
                                     key={idx}
-                                    className="px-2 py-0.5 bg-bg-surface border border-border-subtle rounded text-[10px] text-text-tertiary"
+                                    className="px-2 py-0.5 bg-bg-surface border border-border-subtle rounded text-[10px] text-text-secondary"
                                   >
                                     {tag}
                                   </span>
@@ -348,7 +348,7 @@ export function HelpAssistant() {
                     {!isPro && (
                       <div className="absolute inset-0 z-10 bg-bg-base/95 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center space-y-4">
                         <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center">
-                          <Sparkles className="w-8 h-8 text-accent" />
+                          <Sparkles className="w-8 h-8 text-blue-400" />
                         </div>
                         <div className="space-y-2 max-w-sm">
                           <h3 className="text-lg font-semibold text-text-primary">
@@ -359,8 +359,8 @@ export function HelpAssistant() {
                               ? 'Chiedi qualsiasi domanda finanziaria e ricevi risposte accurate basate sul nostro knowledge base Tradelia. L\'AI è personalizzata per fornire informazioni educative conformi MIFID II.'
                               : 'Ask any financial question and get accurate answers based on our Tradelia knowledge base. The AI is customized to provide MIFID II compliant educational information.'}
                           </p>
-                          <div className="flex items-center justify-center gap-2 text-xs text-text-tertiary mt-4">
-                            <Sparkles className="w-4 h-4 text-accent" />
+                          <div className="flex items-center justify-center gap-2 text-xs text-text-secondary mt-4">
+                            <Sparkles className="w-4 h-4 text-blue-400" />
                             <span>
                               {locale === 'it' 
                                 ? 'Risposte personalizzate, conformi MIFID II, basate su framework accademico'
@@ -431,7 +431,7 @@ export function HelpAssistant() {
                             <Bot className="w-4 h-4 text-white" />
                           </div>
                           <div className="bg-bg-soft border border-border-subtle rounded-xl px-3 py-2">
-                            <Loader2 className="w-4 h-4 text-accent animate-spin" />
+                            <Loader2 className="w-4 h-4 text-blue-400 animate-spin" />
                           </div>
                         </div>
                       )}
@@ -465,7 +465,7 @@ export function HelpAssistant() {
                               'absolute right-2 bottom-2 w-7 h-7 rounded-lg flex items-center justify-center transition-colors',
                               input.trim() && !loading && isPro
                                 ? 'bg-accent hover:bg-accent-hover text-white'
-                                : 'bg-bg-surface text-text-tertiary cursor-not-allowed'
+                                : 'bg-bg-surface text-text-secondary cursor-not-allowed'
                             )}
                             aria-label={locale === 'it' ? 'Invia' : 'Send'}
                           >
@@ -477,7 +477,7 @@ export function HelpAssistant() {
                           </button>
                         </div>
                       </div>
-                      <p className="text-[10px] text-text-tertiary mt-2 text-center">
+                      <p className="text-[10px] text-text-secondary mt-2 text-center">
                         {locale === 'it'
                           ? 'AI powered by Tradelia. Le risposte sono a scopo informativo.'
                           : 'AI powered by Tradelia. Answers are for informational purposes.'}

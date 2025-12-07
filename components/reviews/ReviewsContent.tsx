@@ -151,14 +151,14 @@ export function ReviewsContent() {
                         className={cn(
                           'w-4 h-4',
                           i < Math.round(parseFloat(stats.average))
-                            ? 'fill-accent text-accent'
-                            : 'fill-transparent text-text-tertiary'
+                            ? 'fill-blue-400 text-blue-400'
+                            : 'fill-transparent text-text-secondary'
                         )}
                         aria-hidden="true"
                       />
                     ))}
                   </div>
-                  <p className="text-sm text-text-tertiary mt-1">
+                  <p className="text-sm text-text-secondary mt-1">
                     {t('reviews.averageRating') || 'Media voti'}
                   </p>
                 </div>
@@ -167,7 +167,7 @@ export function ReviewsContent() {
                   <div className="text-3xl font-bold text-text-primary">
                     {stats.total}
                   </div>
-                  <p className="text-sm text-text-tertiary mt-1">
+                  <p className="text-sm text-text-secondary mt-1">
                     {t('reviews.totalReviews') || 'Recensioni totali'}
                   </p>
                 </div>
@@ -182,7 +182,7 @@ export function ReviewsContent() {
               className="mb-8 flex flex-wrap items-center gap-4 justify-center"
             >
               <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-text-tertiary" aria-hidden="true" />
+                <Filter className="w-4 h-4 text-text-secondary" aria-hidden="true" />
                 <span className="text-sm font-medium text-text-secondary">
                   {t('reviews.filterByRating') || 'Filtra per voto:'}
                 </span>
@@ -220,7 +220,7 @@ export function ReviewsContent() {
                             key={i}
                             className={cn(
                               'w-3 h-3',
-                              'fill-accent text-accent'
+                              'fill-accent text-blue-400'
                             )}
                             aria-hidden="true"
                           />
@@ -242,7 +242,7 @@ export function ReviewsContent() {
             </div>
           ) : filteredReviews.length === 0 ? (
             <div className="text-center py-12 bg-bg-surface rounded-xl border border-border-subtle">
-              <MessageSquare className="w-12 h-12 mx-auto mb-3 text-text-tertiary opacity-50" />
+              <MessageSquare className="w-12 h-12 mx-auto mb-3 text-text-secondary opacity-70" />
               <p className="text-base font-semibold text-text-secondary mb-1">
                 {selectedRating
                   ? t('reviews.noReviewsForRating') || 'Nessuna recensione con questo voto'
@@ -251,7 +251,7 @@ export function ReviewsContent() {
               {selectedRating && (
                 <button
                   onClick={() => setSelectedRating(null)}
-                  className="mt-3 text-sm text-accent hover:text-accent-hover underline"
+                  className="mt-3 text-sm text-blue-400 hover:text-blue-300 underline"
                 >
                   {t('reviews.showAll') || 'Mostra tutte le recensioni'}
                 </button>
@@ -278,17 +278,17 @@ export function ReviewsContent() {
                         className={cn(
                           'w-4 h-4 transition-colors',
                           i < review.rating
-                            ? 'fill-accent text-accent'
-                            : 'fill-transparent text-text-tertiary'
+                            ? 'fill-blue-400 text-blue-400'
+                            : 'fill-transparent text-text-secondary'
                         )}
                         aria-hidden="true"
                       />
                     ))}
-                    <span className="ml-2 text-sm text-text-tertiary">
+                    <span className="ml-2 text-sm text-text-secondary">
                       {review.rating}/5
                     </span>
                     {review.verified && (
-                      <span className="ml-auto flex items-center gap-1 text-xs text-accent">
+                      <span className="ml-auto flex items-center gap-1 text-xs text-blue-400">
                         <span className="w-1.5 h-1.5 rounded-full bg-accent" />
                         {t('reviews.verified') || 'Verificato'}
                       </span>
@@ -303,7 +303,7 @@ export function ReviewsContent() {
                   {/* User Info */}
                   <div className="flex items-center gap-3 pt-4 border-t border-border-subtle">
                     <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
-                      <span className="text-accent font-bold text-sm">
+                      <span className="text-blue-400 font-bold text-sm">
                         {review.user_name.charAt(0).toUpperCase()}
                       </span>
                     </div>
@@ -311,7 +311,7 @@ export function ReviewsContent() {
                       <p className="font-semibold text-text-primary text-sm truncate">
                         {review.user_name}
                       </p>
-                      <p className="text-xs text-text-tertiary capitalize">
+                      <p className="text-xs text-text-secondary capitalize">
                         {review.user_role}
                       </p>
                     </div>

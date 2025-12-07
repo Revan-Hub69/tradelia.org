@@ -62,7 +62,7 @@ export default function WidgetsSection() {
         </h2>
         <Link
           href={buildLocalePath(locale, '/dashboard/widgets')}
-          className="text-sm text-accent hover:text-accent-hover hover:underline flex items-center gap-1 transition-colors"
+          className="text-sm text-blue-400 hover:text-blue-300 hover:underline flex items-center gap-1 transition-colors"
           aria-label={t('dashboard.widgets.manage') || 'Gestisci widget'}
         >
           <Plus className="w-4 h-4" aria-hidden="true" />

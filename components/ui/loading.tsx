@@ -30,7 +30,7 @@ export function Loading({ className, size = 'md', text, ...props }: LoadingProps
       {...props}
     >
       <Loader2
-        className={cn('animate-spin text-accent', sizeClasses[size])}
+        className={cn('animate-spin text-blue-400', sizeClasses[size])}
         aria-hidden="true"
       />
       {text && (
@@ -52,7 +52,7 @@ export function LoadingSpinner({ className, size = 'md' }: { className?: string;
 
   return (
     <Loader2
-      className={cn('animate-spin text-accent', sizeClasses[size], className)}
+      className={cn('animate-spin text-blue-400', sizeClasses[size], className)}
       aria-hidden="true"
     />
   );

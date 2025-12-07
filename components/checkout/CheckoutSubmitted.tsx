@@ -59,7 +59,7 @@ export function CheckoutSubmitted() {
 
           {requestId && (
             <div className="mb-8 p-4 bg-bg-soft rounded-xl">
-              <p className="text-xs text-text-tertiary mb-1">Request ID</p>
+              <p className="text-xs text-text-secondary mb-1">Request ID</p>
               <code className="text-sm text-text-primary font-mono">{requestId}</code>
             </div>
           )}

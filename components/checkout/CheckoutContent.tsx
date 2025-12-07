@@ -261,7 +261,7 @@ export function CheckoutContent() {
   if (!checkoutData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-accent" />
+        <Loader2 className="w-8 h-8 animate-spin text-blue-400" />
       </div>
     );
   }
@@ -279,7 +279,7 @@ export function CheckoutContent() {
         <div className="mb-8">
           <Link
             href={`${localePrefix}/pricing`}
-            className="inline-flex items-center gap-2 text-text-tertiary hover:text-text-primary transition-colors mb-4"
+            className="inline-flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
             {t('checkout.backToPricing') || 'Torna ai piani'}
@@ -293,20 +293,20 @@ export function CheckoutContent() {
         </div>
 
         <div className="flex items-center gap-4 mb-8">
-          <div className={cn('flex items-center gap-2', step === 'data' && 'text-accent')}>
+          <div className={cn('flex items-center gap-2', step === 'data' && 'text-blue-400')}>
             <div className={cn(
               'w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all',
-              step === 'data' ? 'bg-accent border-accent text-white' : 'border-border-subtle text-text-tertiary'
+              step === 'data' ? 'bg-blue-400 border-blue-400 text-white' : 'border-border-subtle text-text-secondary'
             )}>
               {step !== 'data' ? <CheckCircle2 className="w-4 h-4" /> : '1'}
             </div>
             <span className="text-sm font-medium">{t('checkout.steps.data') || 'Dati'}</span>
           </div>
           <div className="flex-1 h-px bg-border-subtle" />
-          <div className={cn('flex items-center gap-2', step === 'payment' && 'text-accent')}>
+          <div className={cn('flex items-center gap-2', step === 'payment' && 'text-blue-400')}>
             <div className={cn(
               'w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all',
-              step === 'payment' ? 'bg-accent border-accent text-white' : 'border-border-subtle text-text-tertiary'
+              step === 'payment' ? 'bg-blue-400 border-blue-400 text-white' : 'border-border-subtle text-text-secondary'
             )}>
               2
             </div>
@@ -366,7 +366,7 @@ export function CheckoutContent() {
                   transition={{ duration: 0.2 }}
                 >
                   <div className="bg-bg-surface border border-border-subtle rounded-2xl p-12 text-center">
-                    <Loader2 className="w-12 h-12 animate-spin text-accent mx-auto mb-4" />
+                    <Loader2 className="w-12 h-12 animate-spin text-blue-400 mx-auto mb-4" />
                     <p className="text-text-secondary">
                       {t('checkout.processing') || 'Elaborazione pagamento in corso...'}
                     </p>
@@ -437,9 +437,9 @@ function DataCollectionForm({
             )}
             aria-pressed={customerType === 'retail'}
           >
-            <User className="w-6 h-6 mx-auto mb-2 text-accent" />
+            <User className="w-6 h-6 mx-auto mb-2 text-blue-400" />
             <div className="font-semibold text-text-primary">{t('checkout.data.retail.label') || 'Privato (Retail)'}</div>
-            <div className="text-xs text-text-tertiary mt-1">{t('checkout.data.retail.description') || 'Per uso personale'}</div>
+            <div className="text-xs text-text-secondary mt-1">{t('checkout.data.retail.description') || 'Per uso personale'}</div>
           </button>
           <button
             type="button"
@@ -457,7 +457,7 @@ function DataCollectionForm({
           >
             <Building2 className="w-6 h-6 mx-auto mb-2 text-blue-400" />
             <div className="font-semibold text-text-primary">{t('checkout.data.business.label') || 'Azienda (Business)'}</div>
-            <div className="text-xs text-text-tertiary mt-1">{t('checkout.data.business.description') || 'Per uso professionale'}</div>
+            <div className="text-xs text-text-secondary mt-1">{t('checkout.data.business.description') || 'Per uso professionale'}</div>
           </button>
         </div>
         {errors.customerType && (
@@ -468,7 +468,7 @@ function DataCollectionForm({
       {customerType === 'retail' ? (
         <>
           <div className="flex items-center gap-3 mb-4">
-            <User className="w-5 h-5 text-accent" />
+            <User className="w-5 h-5 text-blue-400" />
             <h2 className="text-xl font-semibold text-text-primary">
               {t('checkout.data.individual.title') || 'Dati Personali'}
             </h2>
@@ -716,7 +716,7 @@ function DataCollectionForm({
               id="requireInvoice"
               checked={customerData.requireInvoice || false}
               onChange={(e) => setCustomerData({ ...customerData, requireInvoice: e.target.checked })}
-              className="w-5 h-5 rounded border-border-subtle text-accent focus:ring-accent focus:ring-2"
+              className="w-5 h-5 rounded border-border-subtle text-blue-400 focus:ring-accent focus:ring-2"
             />
             <label htmlFor="requireInvoice" className="flex-1 text-sm text-text-secondary cursor-pointer">
               {t('checkout.data.business.requireInvoice') || 'Richiedi fattura B2B (verrà generata automaticamente dopo il pagamento)'}
@@ -755,7 +755,7 @@ function PaymentForm({
   return (
     <div className="bg-bg-surface border border-border-subtle rounded-2xl p-6 space-y-6">
       <div className="flex items-center gap-3 mb-6">
-        <CreditCard className="w-5 h-5 text-accent" />
+        <CreditCard className="w-5 h-5 text-blue-400" />
         <h2 className="text-xl font-semibold text-text-primary">
           {t('checkout.payment.title') || 'Metodo di Pagamento'}
         </h2>
@@ -773,7 +773,7 @@ function PaymentForm({
             </p>
           </div>
         </div>
-        <p className="text-sm text-text-tertiary">
+        <p className="text-sm text-text-secondary">
           {t('checkout.payment.xolo.info') || 'Il pagamento verrà processato in modo sicuro tramite Xolo Go. Riceverai una conferma via email.'}
         </p>
       </div>
@@ -831,7 +831,7 @@ function OrderSummary({ checkoutData }: { checkoutData: CheckoutData | null }) {
           </span>
         </div>
         <div className="flex justify-between items-center text-sm">
-          <span className="text-text-tertiary">
+          <span className="text-text-secondary">
             {checkoutData.billingCycle === 'monthly' 
               ? t('checkout.summary.billing.monthly') || 'Fatturazione mensile'
               : t('checkout.summary.billing.yearly') || 'Fatturazione annuale'}
@@ -846,7 +846,7 @@ function OrderSummary({ checkoutData }: { checkoutData: CheckoutData | null }) {
               €{checkoutData.price}
             </span>
           </div>
-          <p className="text-xs text-text-tertiary mt-2">
+          <p className="text-xs text-text-secondary mt-2">
             {t('checkout.summary.vat') || 'IVA inclusa dove applicabile'}
           </p>
         </div>

@@ -55,13 +55,13 @@ export function VotingSection() {
     <section className="bg-bg-surface border border-border-subtle rounded-xl p-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 text-accent" />
+          <BarChart3 className="w-5 h-5 text-blue-400" />
           {t('dashboard.voting.title') || 'Votazione Asset'}
         </h2>
         {proposalsList.length > 0 && (
           <Link
             href={buildLocalePath(locale, '/dashboard/voting')}
-            className="text-sm text-accent hover:text-accent-hover font-medium"
+            className="text-sm text-blue-400 hover:text-blue-300 font-medium"
           >
             {t('common.viewAll') || 'Vedi tutte'} →
           </Link>
@@ -91,7 +91,7 @@ export function VotingSection() {
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-text-primary mb-1 group-hover:text-accent transition-colors">
+                  <h3 className="font-semibold text-text-primary mb-1 group-hover:text-blue-400 transition-colors">
                     {proposal.asset_symbol || proposal.symbol} - {proposal.asset_name}
                   </h3>
                   {proposal.description && (
@@ -99,7 +99,7 @@ export function VotingSection() {
                       {proposal.description}
                     </p>
                   )}
-                  <div className="flex items-center gap-4 text-xs text-text-tertiary">
+                  <div className="flex items-center gap-4 text-xs text-text-secondary">
                     <span className="flex items-center gap-1">
                       <ThumbsUp className="w-3 h-3" />
                       {proposal.votes_up || 0}

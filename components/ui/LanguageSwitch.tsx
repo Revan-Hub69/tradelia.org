@@ -171,7 +171,7 @@ export function LanguageSwitch({ size = 'md', variant = 'dropdown' }: LanguageSw
                     'w-full flex items-center gap-3 px-4 py-3 text-sm transition-colors',
                     'hover:bg-bg-soft',
                     lang.code === locale
-                      ? 'bg-accent/10 text-accent font-semibold'
+                      ? 'bg-accent/10 text-blue-400 font-semibold'
                       : 'text-text-secondary hover:text-text-primary'
                   )}
                   role="menuitem"

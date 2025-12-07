@@ -55,13 +55,13 @@ export function ReportsSection() {
     <section className="bg-bg-surface border border-border-subtle rounded-xl p-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
-          <FileText className="w-5 h-5 text-accent" />
+          <FileText className="w-5 h-5 text-blue-400" />
           {t('dashboard.modules.items.reports.title') || 'Report Ufficiali'}
         </h2>
         {reportsList.length > 0 && (
           <Link
             href={buildLocalePath(locale, '/dashboard/reports')}
-            className="text-sm text-accent hover:text-accent-hover font-medium"
+            className="text-sm text-blue-400 hover:text-blue-300 font-medium"
           >
             {t('common.viewAll') || 'Vedi tutti'} →
           </Link>
@@ -82,7 +82,7 @@ export function ReportsSection() {
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-text-primary mb-1 group-hover:text-accent transition-colors">
+                  <h3 className="font-semibold text-text-primary mb-1 group-hover:text-blue-400 transition-colors">
                     {report.title}
                   </h3>
                   {report.description && (
@@ -91,7 +91,7 @@ export function ReportsSection() {
                     </p>
                   )}
                 </div>
-                <ExternalLink className="w-4 h-4 text-text-tertiary group-hover:text-accent transition-colors flex-shrink-0 mt-1" />
+                <ExternalLink className="w-4 h-4 text-text-secondary group-hover:text-blue-400 transition-colors flex-shrink-0 mt-1" />
               </div>
             </Link>
           ))}

@@ -166,7 +166,7 @@ export default function WidgetNotifications({ widgetId, widgetType }: WidgetNoti
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllAsRead}
-                    className="text-xs text-accent hover:text-accent-hover"
+                    className="text-xs text-blue-400 hover:text-blue-300"
                     aria-label={t('widgets.notifications.markAllRead') || 'Segna tutte come lette'}
                   >
                     <Check className="w-4 h-4" />
@@ -174,14 +174,14 @@ export default function WidgetNotifications({ widgetId, widgetType }: WidgetNoti
                 )}
                 <Link
                   href={`/dashboard/widgets/settings?widget=${widgetType}`}
-                  className="text-xs text-text-tertiary hover:text-text-primary"
+                  className="text-xs text-text-secondary hover:text-text-primary"
                   aria-label={t('widgets.notifications.settings') || 'Impostazioni notifiche'}
                 >
                   <Settings className="w-4 h-4" />
                 </Link>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-text-tertiary hover:text-text-primary"
+                  className="text-text-secondary hover:text-text-primary"
                   aria-label={t('widgets.notifications.close') || 'Chiudi'}
                 >
                   <X className="w-4 h-4" />
@@ -192,11 +192,11 @@ export default function WidgetNotifications({ widgetId, widgetType }: WidgetNoti
             {/* Notifications List */}
             <div className="overflow-y-auto max-h-80" role="list">
               {isLoading ? (
-                <div className="p-4 text-center text-text-tertiary">
+                <div className="p-4 text-center text-text-secondary">
                   {t('widgets.notifications.loading') || 'Caricamento...'}
                 </div>
               ) : notifications.length === 0 ? (
-                <div className="p-4 text-center text-text-tertiary">
+                <div className="p-4 text-center text-text-secondary">
                   {t('widgets.notifications.empty') || 'Nessuna notifica'}
                 </div>
               ) : (
@@ -218,7 +218,7 @@ export default function WidgetNotifications({ widgetId, widgetType }: WidgetNoti
                         </p>
                         <time
                           dateTime={notification.created_at}
-                          className="text-xs text-text-tertiary"
+                          className="text-xs text-text-secondary"
                         >
                           {new Date(notification.created_at).toLocaleString('it-IT', {
                             day: 'numeric',
@@ -234,7 +234,7 @@ export default function WidgetNotifications({ widgetId, widgetType }: WidgetNoti
                           className="p-1 rounded hover:bg-bg-soft transition-colors"
                           aria-label={t('widgets.notifications.markRead') || 'Segna come letta'}
                         >
-                          <Check className="w-4 h-4 text-text-tertiary" />
+                          <Check className="w-4 h-4 text-text-secondary" />
                         </button>
                       )}
                     </div>
@@ -248,7 +248,7 @@ export default function WidgetNotifications({ widgetId, widgetType }: WidgetNoti
               <div className="p-2 border-t border-border-subtle text-center">
                 <Link
                   href={`/dashboard/widgets/notifications?widget=${widgetType}`}
-                  className="text-xs text-accent hover:text-accent-hover"
+                  className="text-xs text-blue-400 hover:text-blue-300"
                 >
                   {t('widgets.notifications.viewAll') || 'Vedi tutte →'}
                 </Link>

@@ -115,7 +115,7 @@ export const QuickLinks = memo(function QuickLinks() {
                 </div>
                 <ArrowRight className={cn(
                   'w-4 h-4 flex-shrink-0 transition-transform',
-                  isDisabled ? 'text-text-tertiary' : 'text-text-secondary group-hover:translate-x-1'
+                  isDisabled ? 'text-text-secondary' : 'text-text-secondary group-hover:translate-x-1'
                 )} />
               </div>
             </motion.div>

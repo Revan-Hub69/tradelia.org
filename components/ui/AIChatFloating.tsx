@@ -92,13 +92,13 @@ export function AIChatFloating() {
           <div className="flex items-center justify-between p-4 border-b border-border-subtle">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
-                <MessageCircle className="w-4 h-4 text-accent" />
+                <MessageCircle className="w-4 h-4 text-blue-400" />
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-text-primary">
                   {locale === 'it' ? 'Tradelia AI' : 'Tradelia AI'}
                 </h3>
-                <p className="text-xs text-text-tertiary">
+                <p className="text-xs text-text-secondary">
                   {locale === 'it' ? 'Assistente intelligente' : 'Intelligent assistant'}
                 </p>
               </div>
@@ -115,7 +115,7 @@ export function AIChatFloating() {
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {messages.length === 0 ? (
-              <div className="text-center text-text-tertiary text-sm py-8">
+              <div className="text-center text-text-secondary text-sm py-8">
                 {locale === 'it'
                   ? 'Ciao! Come posso aiutarti oggi?'
                   : 'Hello! How can I help you today?'}
@@ -145,7 +145,7 @@ export function AIChatFloating() {
             {isLoading && (
               <div className="flex justify-start">
                 <div className="bg-bg-soft rounded-lg px-3 py-2">
-                  <Loader2 className="w-4 h-4 animate-spin text-text-tertiary" />
+                  <Loader2 className="w-4 h-4 animate-spin text-text-secondary" />
                 </div>
               </div>
             )}
@@ -168,7 +168,7 @@ export function AIChatFloating() {
                 className={cn(
                   'flex-1 px-3 py-2 rounded-lg',
                   'bg-bg-soft border border-border-subtle',
-                  'text-text-primary placeholder:text-text-tertiary',
+                  'text-text-primary placeholder:text-text-secondary',
                   'focus:outline-none focus:ring-2 focus:ring-accent',
                   'text-sm leading-relaxed'
                 )}

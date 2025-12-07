@@ -106,7 +106,7 @@ export function LanguageToggle() {
         </span>
         <ChevronDown 
           className={cn(
-            'w-3 h-3 transition-transform duration-200 text-text-tertiary',
+            'w-3 h-3 transition-transform duration-200 text-text-secondary',
             isOpen && 'rotate-180'
           )} 
           aria-hidden="true" 
@@ -141,11 +141,11 @@ export function LanguageToggle() {
                 aria-current={currentLocale === locale ? 'true' : undefined}
               >
                 <div className="flex items-center gap-3">
-                  <Globe className="w-4 h-4 text-text-tertiary group-hover:text-accent transition-colors duration-200" aria-hidden="true" />
+                  <Globe className="w-4 h-4 text-text-secondary group-hover:text-blue-400 transition-colors duration-200" aria-hidden="true" />
                   <span>{localeNames[locale]}</span>
                 </div>
                 {currentLocale === locale && (
-                  <Check className="w-4 h-4 text-accent" aria-hidden="true" />
+                  <Check className="w-4 h-4 text-blue-400" aria-hidden="true" />
                 )}
               </button>
             ))}

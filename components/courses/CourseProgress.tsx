@@ -94,7 +94,7 @@ export function CourseProgress({ data }: CourseProgressProps) {
             <span className="text-sm">{t('courses.progress.completion') || 'Completamento'}</span>
           </div>
           <p className="text-2xl font-bold text-text-primary">{data.progress}%</p>
-          <p className="text-xs text-text-tertiary mt-1">
+          <p className="text-xs text-text-secondary mt-1">
             {data.completed_lessons} / {data.total_lessons} {t('courses.progress.lessons') || 'lezioni'}
           </p>
         </div>
@@ -107,7 +107,7 @@ export function CourseProgress({ data }: CourseProgressProps) {
           <p className="text-2xl font-bold text-text-primary">
             {Math.floor(stats.totalTime / 60)}h {stats.totalTime % 60}m
           </p>
-          <p className="text-xs text-text-tertiary mt-1">
+          <p className="text-xs text-text-secondary mt-1">
             {t('courses.progress.avgPerLesson') || 'Media'}: {stats.avgTimePerLesson} {t('courses.progress.minutes') || 'min'}
           </p>
         </div>
@@ -122,7 +122,7 @@ export function CourseProgress({ data }: CourseProgressProps) {
               ? Math.round(data.completed_lessons / stats.daysSinceStart * 7)
               : 0}
           </p>
-          <p className="text-xs text-text-tertiary mt-1">
+          <p className="text-xs text-text-secondary mt-1">
             {t('courses.progress.lessonsPerWeek') || 'lezioni/settimana'}
           </p>
         </div>
@@ -138,7 +138,7 @@ export function CourseProgress({ data }: CourseProgressProps) {
               : '—'}
           </p>
           {data.completed_at && (
-            <p className="text-xs text-text-tertiary mt-1">
+            <p className="text-xs text-text-secondary mt-1">
               {t('courses.progress.completed') || 'Completato'}: {new Date(data.completed_at).toLocaleDateString('it-IT')}
             </p>
           )}
@@ -148,7 +148,7 @@ export function CourseProgress({ data }: CourseProgressProps) {
       {/* Progress Chart */}
       <div className="bg-bg-soft border border-border-subtle rounded-xl p-6">
         <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 text-accent" />
+          <BarChart3 className="w-5 h-5 text-blue-400" />
           {t('courses.progress.progressChart') || 'Grafico Progresso'}
         </h3>
         <div className="space-y-3">
@@ -158,7 +158,7 @@ export function CourseProgress({ data }: CourseProgressProps) {
             
             return (
               <div key={lesson.id} className="flex items-center gap-4">
-                <div className="flex-shrink-0 w-12 text-xs text-text-tertiary text-right">
+                <div className="flex-shrink-0 w-12 text-xs text-text-secondary text-right">
                   {index + 1}
                 </div>
                 <div className="flex-1">
@@ -182,7 +182,7 @@ export function CourseProgress({ data }: CourseProgressProps) {
                   </div>
                 </div>
                 {isCompleted && lesson.completed_at && (
-                  <div className="flex-shrink-0 text-xs text-text-tertiary">
+                  <div className="flex-shrink-0 text-xs text-text-secondary">
                     {new Date(lesson.completed_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })}
                   </div>
                 )}
@@ -196,7 +196,7 @@ export function CourseProgress({ data }: CourseProgressProps) {
       {timelineData.length > 0 && (
         <div className="bg-bg-soft border border-border-subtle rounded-xl p-6">
           <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-accent" />
+            <Calendar className="w-5 h-5 text-blue-400" />
             {t('courses.progress.timeline') || 'Timeline Completamento'}
           </h3>
           <div className="space-y-4">
@@ -205,7 +205,7 @@ export function CourseProgress({ data }: CourseProgressProps) {
                 <div className="flex-shrink-0 w-2 h-2 rounded-full bg-accent mt-2" />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-text-primary">{item.lesson}</p>
-                  <p className="text-xs text-text-tertiary mt-1">
+                  <p className="text-xs text-text-secondary mt-1">
                     {item.date.toLocaleDateString('it-IT', { 
                       day: 'numeric', 
                       month: 'long', 

@@ -221,10 +221,10 @@ export function FinancialCalculator() {
         return (
           <>
             <div>
-              <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
+              <label className="text-xs text-text-secondary mb-1 block flex items-center gap-1.5">
                 <span>{t('proUtilities.calculator.principal') || `Capitale Iniziale (${currencySymbols[currency]})`}</span>
                 <Tooltip content="L'importo iniziale che investi. Questo è il capitale di partenza su cui verrà calcolato l'interesse composto.">
-                  <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
+                  <HelpCircle className="w-3 h-3 text-text-secondary hover:text-text-secondary cursor-help" />
                 </Tooltip>
               </label>
               <input
@@ -237,10 +237,10 @@ export function FinancialCalculator() {
               />
             </div>
             <div>
-              <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
+              <label className="text-xs text-text-secondary mb-1 block flex items-center gap-1.5">
                 <span>{t('proUtilities.calculator.rate') || 'Tasso Annuo (%)'}</span>
                 <Tooltip content="Il tasso di interesse annuo espresso in percentuale. Esempio: 5% significa che ogni anno guadagni il 5% sul capitale investito. Vedi i suggerimenti MIFID compliant qui sotto per valori di riferimento basati su dati accademici.">
-                  <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
+                  <HelpCircle className="w-3 h-3 text-text-secondary hover:text-text-secondary cursor-help" />
                 </Tooltip>
               </label>
               <div className="relative mb-4">
@@ -252,7 +252,7 @@ export function FinancialCalculator() {
                   className="w-full rounded-lg bg-bg-soft border border-border-subtle px-4 py-2 text-sm text-text-primary focus:outline-none focus:border-accent"
                   placeholder="5"
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary text-sm">%</span>
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary text-sm">%</span>
               </div>
               {/* Suggerimenti MIFID Compliant */}
               <InterestRateSuggestions
@@ -261,10 +261,10 @@ export function FinancialCalculator() {
               />
             </div>
             <div>
-              <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
+              <label className="text-xs text-text-secondary mb-1 block flex items-center gap-1.5">
                 <span>{t('proUtilities.calculator.time') || 'Anni'}</span>
                 <Tooltip content="Il numero di anni per cui l'investimento crescerà. Più lungo è il periodo, maggiore sarà l'effetto dell'interesse composto.">
-                  <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
+                  <HelpCircle className="w-3 h-3 text-text-secondary hover:text-text-secondary cursor-help" />
                 </Tooltip>
               </label>
               <input
@@ -282,10 +282,10 @@ export function FinancialCalculator() {
         return (
           <>
             <div>
-              <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
+              <label className="text-xs text-text-secondary mb-1 block flex items-center gap-1.5">
                 <span>{t('proUtilities.calculator.futureValue') || `Valore Futuro (${currencySymbols[currency]})`}</span>
                 <Tooltip content="L'importo che vuoi ottenere in futuro. Il calcolatore ti dirà quanto devi investire oggi per raggiungere questo obiettivo.">
-                  <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
+                  <HelpCircle className="w-3 h-3 text-text-secondary hover:text-text-secondary cursor-help" />
                 </Tooltip>
               </label>
               <input
@@ -298,10 +298,10 @@ export function FinancialCalculator() {
               />
             </div>
             <div>
-              <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
+              <label className="text-xs text-text-secondary mb-1 block flex items-center gap-1.5">
                 <span>{t('proUtilities.calculator.rate') || 'Tasso Annuo (%)'}</span>
                 <Tooltip content="Il tasso di interesse annuo atteso. Usato per scontare il valore futuro al presente. Vedi i suggerimenti MIFID compliant qui sotto.">
-                  <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
+                  <HelpCircle className="w-3 h-3 text-text-secondary hover:text-text-secondary cursor-help" />
                 </Tooltip>
               </label>
               <div className="relative mb-4">
@@ -313,7 +313,7 @@ export function FinancialCalculator() {
                   className="w-full rounded-lg bg-bg-soft border border-border-subtle px-4 py-2 text-sm text-text-primary focus:outline-none focus:border-accent"
                   placeholder="5"
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary text-sm">%</span>
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary text-sm">%</span>
               </div>
               {/* Suggerimenti MIFID Compliant */}
               <InterestRateSuggestions
@@ -322,10 +322,10 @@ export function FinancialCalculator() {
               />
             </div>
             <div>
-              <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
+              <label className="text-xs text-text-secondary mb-1 block flex items-center gap-1.5">
                 <span>{t('proUtilities.calculator.time') || 'Anni'}</span>
                 <Tooltip content="Il numero di anni fino a quando riceverai il valore futuro.">
-                  <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
+                  <HelpCircle className="w-3 h-3 text-text-secondary hover:text-text-secondary cursor-help" />
                 </Tooltip>
               </label>
               <input
@@ -343,10 +343,10 @@ export function FinancialCalculator() {
         return (
           <>
             <div>
-              <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
+              <label className="text-xs text-text-secondary mb-1 block flex items-center gap-1.5">
                 <span>{t('proUtilities.calculator.principal') || `Valore Presente (${currencySymbols[currency]})`}</span>
                 <Tooltip content="L'importo che investi oggi. Il calcolatore ti mostrerà quanto varrà questo investimento in futuro.">
-                  <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
+                  <HelpCircle className="w-3 h-3 text-text-secondary hover:text-text-secondary cursor-help" />
                 </Tooltip>
               </label>
               <input
@@ -359,10 +359,10 @@ export function FinancialCalculator() {
               />
             </div>
             <div>
-              <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
+              <label className="text-xs text-text-secondary mb-1 block flex items-center gap-1.5">
                 <span>{t('proUtilities.calculator.rate') || 'Tasso Annuo (%)'}</span>
                 <Tooltip content="Il tasso di crescita annuo atteso del tuo investimento.">
-                  <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
+                  <HelpCircle className="w-3 h-3 text-text-secondary hover:text-text-secondary cursor-help" />
                 </Tooltip>
               </label>
               <input
@@ -375,10 +375,10 @@ export function FinancialCalculator() {
               />
             </div>
             <div>
-              <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
+              <label className="text-xs text-text-secondary mb-1 block flex items-center gap-1.5">
                 <span>{t('proUtilities.calculator.time') || 'Anni'}</span>
                 <Tooltip content="Il periodo di investimento in anni.">
-                  <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
+                  <HelpCircle className="w-3 h-3 text-text-secondary hover:text-text-secondary cursor-help" />
                 </Tooltip>
               </label>
               <input
@@ -396,10 +396,10 @@ export function FinancialCalculator() {
         return (
           <>
             <div>
-              <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
+              <label className="text-xs text-text-secondary mb-1 block flex items-center gap-1.5">
                 <span>{t('proUtilities.calculator.payment') || `Pagamento Periodico (${currencySymbols[currency]})`}</span>
                 <Tooltip content="L'importo che investi periodicamente (mensile, trimestrale o annuale). Questo è l'importo fisso che versi ogni periodo.">
-                  <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
+                  <HelpCircle className="w-3 h-3 text-text-secondary hover:text-text-secondary cursor-help" />
                 </Tooltip>
               </label>
               <input
@@ -412,10 +412,10 @@ export function FinancialCalculator() {
               />
             </div>
             <div>
-              <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
+              <label className="text-xs text-text-secondary mb-1 block flex items-center gap-1.5">
                 <span>{t('proUtilities.calculator.rate') || 'Tasso Annuo (%)'}</span>
                 <Tooltip content="Il tasso di interesse annuo. Usato per calcolare quanto crescerà ogni pagamento periodico.">
-                  <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
+                  <HelpCircle className="w-3 h-3 text-text-secondary hover:text-text-secondary cursor-help" />
                 </Tooltip>
               </label>
               <input
@@ -428,10 +428,10 @@ export function FinancialCalculator() {
               />
             </div>
             <div>
-              <label className="text-xs text-text-tertiary mb-1 block flex items-center gap-1.5">
+              <label className="text-xs text-text-secondary mb-1 block flex items-center gap-1.5">
                 <span>{t('proUtilities.calculator.time') || 'Anni'}</span>
                 <Tooltip content="Il numero di anni per cui effettuerai i pagamenti periodici.">
-                  <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
+                  <HelpCircle className="w-3 h-3 text-text-secondary hover:text-text-secondary cursor-help" />
                 </Tooltip>
               </label>
               <input
@@ -453,13 +453,13 @@ export function FinancialCalculator() {
       {/* Header - Mobile optimized */}
       <div className="flex items-center gap-2 sm:gap-3">
         <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-accent/20 border border-accent/30 flex items-center justify-center flex-shrink-0">
-          <Calculator className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
+          <Calculator className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
         </div>
         <div className="min-w-0">
           <h3 className="text-base sm:text-lg font-semibold text-text-primary">
             {t('proUtilities.calculator.title') || 'Calcolatrice Finanziaria'}
           </h3>
-          <p className="text-xs text-text-tertiary">
+          <p className="text-xs text-text-secondary">
             {t('proUtilities.calculator.subtitle') || 'Calcoli finanziari avanzati con formule verificate'}
           </p>
         </div>
@@ -534,7 +534,7 @@ export function FinancialCalculator() {
             >
               <Icon className={cn(
                 'w-5 h-5 mb-2',
-                calcType === type.id ? 'text-accent' : 'text-text-tertiary'
+                calcType === type.id ? 'text-blue-400' : 'text-text-secondary'
               )} />
               <h4 className={cn(
                 'text-sm font-semibold mb-1',
@@ -542,10 +542,10 @@ export function FinancialCalculator() {
               )}>
                 {type.label}
               </h4>
-              <p className="text-xs text-text-tertiary">{type.description}</p>
+              <p className="text-xs text-text-secondary">{type.description}</p>
               {calcType === type.id && (
                 <div className="mt-2 pt-2 border-t border-border-subtle">
-                  <p className="text-xs text-text-tertiary italic">
+                  <p className="text-xs text-text-secondary italic">
                     {type.id === 'compound' && 'Formula: A = P(1 + r)^t'}
                     {type.id === 'present' && 'Formula: PV = FV / (1 + r)^t'}
                     {type.id === 'future' && 'Formula: FV = PV(1 + r)^t'}
@@ -578,7 +578,7 @@ export function FinancialCalculator() {
           className="bg-gradient-to-br from-accent/20 via-accent/10 to-transparent border border-accent/30 rounded-xl p-4 sm:p-6 space-y-4"
         >
           <div>
-            <p className="text-xs text-text-tertiary mb-2">
+            <p className="text-xs text-text-secondary mb-2">
               {t('proUtilities.calculator.result') || 'Risultato'}
             </p>
             <p className="text-2xl sm:text-3xl font-bold text-text-primary">
@@ -588,7 +588,7 @@ export function FinancialCalculator() {
           
           {/* Save Section */}
           <div className="space-y-2 pt-4 border-t border-accent/20">
-            <label className="text-xs text-text-tertiary block">
+            <label className="text-xs text-text-secondary block">
               {t('proUtilities.calculator.notes') || 'Note (opzionale)'}
             </label>
             <textarea
@@ -635,16 +635,16 @@ export function FinancialCalculator() {
               onClick={() => setShowHistory(false)}
               className="p-1 rounded-lg hover:bg-bg-surface transition-colors"
             >
-              <X className="w-4 h-4 text-text-tertiary" />
+              <X className="w-4 h-4 text-text-secondary" />
             </button>
           </div>
 
           {historyLoading ? (
-            <div className="text-center py-8 text-text-tertiary">
+            <div className="text-center py-8 text-text-secondary">
               {t('common.loading') || 'Caricamento...'}
             </div>
           ) : !savedCalculations || savedCalculations.length === 0 ? (
-            <div className="text-center py-8 text-text-tertiary">
+            <div className="text-center py-8 text-text-secondary">
               <History className="w-12 h-12 mx-auto mb-3 opacity-50" />
               <p>{t('proUtilities.calculator.noHistory') || 'Nessun calcolo salvato'}</p>
             </div>
@@ -660,7 +660,7 @@ export function FinancialCalculator() {
                       <div className="text-xs sm:text-sm font-medium text-text-primary mb-1 break-words">
                         {calcTypes.find(t => t.id === calc.calculation_type)?.label || calc.calculation_type}
                       </div>
-                      <div className="text-xs text-text-tertiary">
+                      <div className="text-xs text-text-secondary">
                         {new Date(calc.created_at).toLocaleString('it-IT')}
                       </div>
                       {calc.notes && (
@@ -672,7 +672,7 @@ export function FinancialCalculator() {
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <button
                         onClick={() => handleLoadCalculation(calc)}
-                        className="p-1.5 rounded-lg hover:bg-accent/20 text-accent transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-accent/20 text-blue-400 transition-colors"
                         title={t('proUtilities.calculator.load') || 'Carica'}
                       >
                         <ArrowRight className="w-4 h-4" />
@@ -686,7 +686,7 @@ export function FinancialCalculator() {
                       </button>
                     </div>
                   </div>
-                  <div className="text-base sm:text-lg font-bold text-accent">
+                  <div className="text-base sm:text-lg font-bold text-blue-400">
                     {formatCurrency(calc.result)}
                   </div>
                 </div>

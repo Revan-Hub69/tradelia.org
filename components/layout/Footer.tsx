@@ -192,7 +192,7 @@ export function Footer() {
           >
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-secondary">
               <div className="flex items-center gap-3">
-                <Badge variant="outline" className="text-xs font-medium hover:border-accent hover:text-accent transition-[border-color,color] duration-200">
+                <Badge variant="outline" className="text-xs font-medium hover:border-accent hover:text-blue-400 transition-[border-color,color] duration-200">
                   v2.0.1
                 </Badge>
                 <span className="opacity-50">·</span>

@@ -72,7 +72,7 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
                   {isHome ? (
                     <Link
                       href={item.href || '/'}
-                      className="flex items-center gap-1.5 text-text-tertiary hover:text-text-primary transition-colors"
+                      className="flex items-center gap-1.5 text-text-secondary hover:text-text-primary transition-colors"
                       itemProp="item"
                     >
                       <Home className="w-4 h-4" aria-hidden="true" />
@@ -81,14 +81,14 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
                   ) : (
                     <Link
                       href={item.href || '#'}
-                      className="text-text-tertiary hover:text-text-primary transition-colors"
+                      className="text-text-secondary hover:text-text-primary transition-colors"
                       itemProp="item"
                     >
                       <span itemProp="name">{item.label}</span>
                     </Link>
                   )}
                   <ChevronRight
-                    className="w-4 h-4 text-text-tertiary flex-shrink-0"
+                    className="w-4 h-4 text-text-secondary flex-shrink-0"
                     aria-hidden="true"
                   />
                 </>

@@ -158,13 +158,13 @@ export function ReportDetailModal({
                   <p className="text-text-secondary">{report.description}</p>
                 )}
               </div>
-              <span className="px-3 py-1 bg-accent/20 border border-accent/40 rounded-lg text-sm text-accent font-medium">
+              <span className="px-3 py-1 bg-accent/20 border border-accent/40 rounded-lg text-sm text-blue-400 font-medium">
                 {report.report_type}
               </span>
             </div>
 
             {/* Metadata */}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-text-tertiary">
+            <div className="flex flex-wrap items-center gap-4 text-sm text-text-secondary">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
                 <span>
@@ -210,7 +210,7 @@ export function ReportDetailModal({
                 )}
               </div>
             ) : (
-              <div className="text-center py-8 text-text-tertiary">
+              <div className="text-center py-8 text-text-secondary">
                 {t('dashboard.reports.noContent') || 'Nessun contenuto disponibile'}
               </div>
             )}

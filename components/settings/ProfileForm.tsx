@@ -83,7 +83,7 @@ export function ProfileForm() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="w-6 h-6 animate-spin text-accent" />
+        <Loader2 className="w-6 h-6 animate-spin text-blue-400" />
       </div>
     );
   }
@@ -104,7 +104,7 @@ export function ProfileForm() {
           className="mt-1"
           maxLength={100}
         />
-        <p className="text-xs text-text-tertiary mt-1">
+        <p className="text-xs text-text-secondary mt-1">
           {t('dashboard.settings.profile.displayNameHint') || 'Questo nome sarà visibile ad altri utenti'}
         </p>
       </div>
@@ -121,7 +121,7 @@ export function ProfileForm() {
           disabled
           className="mt-1 bg-bg-surface opacity-60 cursor-not-allowed"
         />
-        <p className="text-xs text-text-tertiary mt-1">
+        <p className="text-xs text-text-secondary mt-1">
           {t('dashboard.settings.profile.emailHint') || 'L\'email non può essere modificata qui. Contatta il supporto per cambiarla.'}
         </p>
       </div>
@@ -140,7 +140,7 @@ export function ProfileForm() {
           rows={4}
           maxLength={500}
         />
-        <p className="text-xs text-text-tertiary mt-1">
+        <p className="text-xs text-text-secondary mt-1">
           {(formData.bio?.length || 0)}/500 {t('dashboard.settings.profile.characters') || 'caratteri'}
         </p>
       </div>

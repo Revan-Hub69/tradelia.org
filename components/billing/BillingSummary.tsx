@@ -55,7 +55,7 @@ export function BillingSummary() {
   if (!isClient) {
     return (
       <section className="bg-bg-surface/80 border border-border-subtle/80 rounded-3xl p-6 shadow-lg shadow-black/20">
-        <div className="py-12 text-center text-text-tertiary">
+        <div className="py-12 text-center text-text-secondary">
           Caricamento...
         </div>
       </section>
@@ -66,7 +66,7 @@ export function BillingSummary() {
     <section className="bg-bg-surface/80 border border-border-subtle/80 rounded-3xl p-6 shadow-lg shadow-black/20" suppressHydrationWarning>
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div>
-          <p className="text-xs uppercase tracking-[0.4em] text-text-tertiary">Billing</p>
+          <p className="text-xs uppercase tracking-[0.4em] text-text-secondary">Billing</p>
           <h3 className="text-2xl font-semibold text-text-primary mt-2">Storico transazioni</h3>
           <p className="text-sm text-text-secondary max-w-2xl mt-1">
             Controlla i movimenti finanziari e le fatture emesse. Tutti i dati sono sincronizzati con lo schema Supabase (`payments`, `invoices`) e rispettano le policy RLS per la consultazione sicura.
@@ -89,7 +89,7 @@ export function BillingSummary() {
 
       <div className="mt-4">
         {isLoading && (
-          <div className="py-12 text-center text-text-tertiary">
+          <div className="py-12 text-center text-text-secondary">
             Caricamento in corso...
           </div>
         )}
@@ -123,7 +123,7 @@ export function BillingSummary() {
                     <p className="text-text-primary font-semibold">
                       {formatCurrency(payment.amount, payment.currency)} · {payment.provider}
                     </p>
-                    <p className="text-xs text-text-tertiary">
+                    <p className="text-xs text-text-secondary">
                       {new Date(payment.created_at).toLocaleString()} · {payment.status}
                     </p>
                   </div>
@@ -143,7 +143,7 @@ export function BillingSummary() {
                     <p className="text-text-primary font-semibold">
                       {invoice.invoice_number || 'Invoice'} · {formatCurrency(invoice.amount, invoice.currency)}
                     </p>
-                    <p className="text-xs text-text-tertiary">
+                    <p className="text-xs text-text-secondary">
                       Emessa il {invoice.issued_at ? new Date(invoice.issued_at).toLocaleDateString() : 'N/D'} · Stato: {invoice.status}
                     </p>
                   </div>

@@ -75,7 +75,7 @@ export function HedgingCalculator() {
     <div className="space-y-6">
       <div>
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-2 flex items-center gap-2">
-          <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-accent flex-shrink-0" />
+          <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 flex-shrink-0" />
           <span>Hedging Calculator</span>
         </h2>
         <p className="text-text-secondary text-xs sm:text-sm">
@@ -97,7 +97,7 @@ export function HedgingCalculator() {
           <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
             <span>Valore Portafoglio ({currencySymbols[currency]}) *</span>
             <Tooltip content="Il valore totale del portafoglio che vuoi coprire. Questo è l'esposizione totale al rischio.">
-              <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
             </Tooltip>
           </label>
           <input
@@ -115,7 +115,7 @@ export function HedgingCalculator() {
           <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
             <span>Hedge Ratio (%) *</span>
             <Tooltip content="La percentuale del portafoglio da coprire. 50% significa coprire metà dell'esposizione. Range consigliato: 30-70%.">
-              <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
             </Tooltip>
           </label>
           <input
@@ -134,7 +134,7 @@ export function HedgingCalculator() {
           <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
             <span>Correlazione (-1 a 1) *</span>
             <Tooltip content="La correlazione tra portafoglio e strumento di copertura. -1 = perfetta correlazione negativa (ideale), 0 = nessuna correlazione, +1 = perfetta correlazione positiva (non utile per hedging).">
-              <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
             </Tooltip>
           </label>
           <input
@@ -153,7 +153,7 @@ export function HedgingCalculator() {
           <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
             <span>Costo Hedging Annuo (%) *</span>
             <Tooltip content="Il costo annuale dell'hedging (es. costi di opzioni, futures, swap). Tipicamente 0.5-2% annuo.">
-              <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
             </Tooltip>
           </label>
           <input
@@ -174,17 +174,17 @@ export function HedgingCalculator() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1 flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1 flex items-center gap-1.5">
                 <Shield className="w-3.5 h-3.5" />
                 <span>Importo Hedging</span>
               </div>
-              <div className="text-lg sm:text-2xl font-bold text-accent">
+              <div className="text-lg sm:text-2xl font-bold text-blue-400">
                 {formatCurrency(results.hedgeAmount)}
               </div>
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1 flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1 flex items-center gap-1.5">
                 <TrendingDown className="w-3.5 h-3.5" />
                 <span>Riduzione Rischio</span>
               </div>
@@ -194,7 +194,7 @@ export function HedgingCalculator() {
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1 flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1 flex items-center gap-1.5">
                 <AlertTriangle className="w-3.5 h-3.5" />
                 <span>Costo Annuo</span>
               </div>
@@ -220,7 +220,7 @@ export function HedgingCalculator() {
                 </span>
               </div>
               <div className="mt-4 pt-4 border-t border-border-subtle">
-                <p className="text-xs text-text-tertiary">
+                <p className="text-xs text-text-secondary">
                   <strong>Nota:</strong> L'hedging riduce il rischio ma limita anche i guadagni potenziali. 
                   Valuta sempre il trade-off tra protezione e costo.
                 </p>

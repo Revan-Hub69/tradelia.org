@@ -44,7 +44,7 @@ export function DashboardHero() {
         <p className={styles.dashboardHeroSubtitle} role="text">
           {frameworkTerm ? (
             <TooltipGlossary term={frameworkTerm} icon={true}>
-              <span className="text-accent hover:text-accent-hover underline decoration-dotted">
+              <span className="text-blue-400 hover:text-blue-300 underline decoration-dotted">
                 {t('dashboard.hero.subtitle')}
               </span>
             </TooltipGlossary>
@@ -61,7 +61,7 @@ export function DashboardHero() {
             <>
               {' '}
               <TooltipGlossary term={mifidTerm} icon={true}>
-                <span className="text-accent hover:text-accent-hover underline decoration-dotted">
+                <span className="text-blue-400 hover:text-blue-300 underline decoration-dotted">
                   {t('dashboard.hero.mifidLink') || 'conforme MiFID II'}
                 </span>
               </TooltipGlossary>
@@ -127,7 +127,7 @@ export function DashboardHero() {
                 <>
                   {' '}
                   <TooltipGlossary term={mifidTerm} icon={true}>
-                    <span className="text-accent hover:text-accent-hover underline decoration-dotted">
+                    <span className="text-blue-400 hover:text-blue-300 underline decoration-dotted">
                       MiFID II
                     </span>
                   </TooltipGlossary>

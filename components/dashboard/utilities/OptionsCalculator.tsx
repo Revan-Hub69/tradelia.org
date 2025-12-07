@@ -140,7 +140,7 @@ export function OptionsCalculator() {
     <div className="space-y-6">
       <div>
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-2 flex items-center gap-2">
-          <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-accent flex-shrink-0" />
+          <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 flex-shrink-0" />
           <span>Options Calculator</span>
         </h2>
         <p className="text-text-secondary text-xs sm:text-sm">
@@ -165,7 +165,7 @@ export function OptionsCalculator() {
             onClick={() => setOptionType('call')}
             className={`p-4 rounded-lg border transition-all ${
               optionType === 'call'
-                ? 'bg-accent/10 border-accent/40 text-accent'
+                ? 'bg-accent/10 border-accent/40 text-blue-400'
                 : 'bg-bg-surface border-border-subtle text-text-secondary hover:border-accent/20'
             }`}
           >
@@ -177,7 +177,7 @@ export function OptionsCalculator() {
             onClick={() => setOptionType('put')}
             className={`p-4 rounded-lg border transition-all ${
               optionType === 'put'
-                ? 'bg-accent/10 border-accent/40 text-accent'
+                ? 'bg-accent/10 border-accent/40 text-blue-400'
                 : 'bg-bg-surface border-border-subtle text-text-secondary hover:border-accent/20'
             }`}
           >
@@ -195,7 +195,7 @@ export function OptionsCalculator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Prezzo Stock ({currencySymbols[currency]}) *</span>
               <Tooltip content="Il prezzo corrente dell'asset sottostante.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <input
@@ -213,7 +213,7 @@ export function OptionsCalculator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Strike Price ({currencySymbols[currency]}) *</span>
               <Tooltip content="Il prezzo di esercizio dell'opzione.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <input
@@ -233,7 +233,7 @@ export function OptionsCalculator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Tempo a Scadenza (giorni) *</span>
               <Tooltip content="Il numero di giorni rimanenti fino alla scadenza dell'opzione.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <input
@@ -251,7 +251,7 @@ export function OptionsCalculator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Volatilità Implicita (%) *</span>
               <Tooltip content="La volatilità attesa dell'asset, tipicamente 15-30% per azioni, 50-100% per crypto. Vedi i suggerimenti MIFID compliant qui sotto.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <div className="relative mb-4">
@@ -265,7 +265,7 @@ export function OptionsCalculator() {
                 max="200"
                 step="0.1"
               />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary text-sm">%</span>
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary text-sm">%</span>
             </div>
             {/* Suggerimenti MIFID Compliant */}
             <VolatilitySuggestions
@@ -280,7 +280,7 @@ export function OptionsCalculator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Tasso Risk-Free (%) *</span>
               <Tooltip content="Il tasso di interesse risk-free (es. rendimento obbligazioni governative). Vedi i suggerimenti MIFID compliant qui sotto.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <div className="relative mb-4">
@@ -294,7 +294,7 @@ export function OptionsCalculator() {
                 max="10"
                 step="0.1"
               />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary text-sm">%</span>
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary text-sm">%</span>
             </div>
             {/* Suggerimenti MIFID Compliant */}
             <RiskFreeRateSuggestions
@@ -307,7 +307,7 @@ export function OptionsCalculator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Dividend Yield (%)</span>
               <Tooltip content="Il rendimento da dividendi dell'asset (0% se non paga dividendi).">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <input
@@ -329,25 +329,25 @@ export function OptionsCalculator() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1">Prezzo Opzione</div>
-              <div className="text-lg sm:text-2xl font-bold text-accent">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1">Prezzo Opzione</div>
+              <div className="text-lg sm:text-2xl font-bold text-blue-400">
                 {formatCurrency(results.optionPrice)}
               </div>
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1">Valore Intrinseco</div>
+              <div className="text-xs sm:text-sm text-text-secondary mb-1">Valore Intrinseco</div>
               <div className="text-lg sm:text-2xl font-bold text-text-primary">
                 {formatCurrency(results.intrinsicValue)}
               </div>
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1">Valore Temporale</div>
+              <div className="text-xs sm:text-sm text-text-secondary mb-1">Valore Temporale</div>
               <div className="text-lg sm:text-2xl font-bold text-green-400">
                 {formatCurrency(results.timeValue)}
               </div>
-              <div className="text-xs text-text-tertiary mt-1">
+              <div className="text-xs text-text-secondary mt-1">
                 {results.moneyness}
               </div>
             </div>
@@ -358,33 +358,33 @@ export function OptionsCalculator() {
             <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-4">Greeks (Sensibilità)</h3>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
               <div>
-                <div className="text-xs text-text-tertiary mb-1">Delta</div>
+                <div className="text-xs text-text-secondary mb-1">Delta</div>
                 <div className="text-sm font-bold text-text-primary">{results.delta.toFixed(4)}</div>
-                <div className="text-xs text-text-tertiary mt-1">Sensibilità a prezzo</div>
+                <div className="text-xs text-text-secondary mt-1">Sensibilità a prezzo</div>
               </div>
               <div>
-                <div className="text-xs text-text-tertiary mb-1">Gamma</div>
+                <div className="text-xs text-text-secondary mb-1">Gamma</div>
                 <div className="text-sm font-bold text-text-primary">{results.gamma.toFixed(4)}</div>
-                <div className="text-xs text-text-tertiary mt-1">Variazione Delta</div>
+                <div className="text-xs text-text-secondary mt-1">Variazione Delta</div>
               </div>
               <div>
-                <div className="text-xs text-text-tertiary mb-1">Theta</div>
+                <div className="text-xs text-text-secondary mb-1">Theta</div>
                 <div className="text-sm font-bold text-red-400">{results.theta.toFixed(4)}</div>
-                <div className="text-xs text-text-tertiary mt-1">Decadimento tempo</div>
+                <div className="text-xs text-text-secondary mt-1">Decadimento tempo</div>
               </div>
               <div>
-                <div className="text-xs text-text-tertiary mb-1">Vega</div>
+                <div className="text-xs text-text-secondary mb-1">Vega</div>
                 <div className="text-sm font-bold text-text-primary">{results.vega.toFixed(4)}</div>
-                <div className="text-xs text-text-tertiary mt-1">Sensibilità volatilità</div>
+                <div className="text-xs text-text-secondary mt-1">Sensibilità volatilità</div>
               </div>
               <div>
-                <div className="text-xs text-text-tertiary mb-1">Rho</div>
+                <div className="text-xs text-text-secondary mb-1">Rho</div>
                 <div className="text-sm font-bold text-text-primary">{results.rho.toFixed(4)}</div>
-                <div className="text-xs text-text-tertiary mt-1">Sensibilità tasso</div>
+                <div className="text-xs text-text-secondary mt-1">Sensibilità tasso</div>
               </div>
             </div>
             <div className="mt-4 pt-4 border-t border-border-subtle">
-              <p className="text-xs text-text-tertiary">
+              <p className="text-xs text-text-secondary">
                 <strong>Nota:</strong> I valori sono calcolati usando il modello Black-Scholes. 
                 I prezzi reali possono differire per liquidità, spread bid-ask e altri fattori di mercato.
               </p>

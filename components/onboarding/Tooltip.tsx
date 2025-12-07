@@ -128,7 +128,7 @@ export function Tooltip({
     >
       {children}
       {icon && (
-        <Info className="w-4 h-4 text-text-tertiary ml-1" />
+        <Info className="w-4 h-4 text-text-secondary ml-1" />
       )}
 
       <AnimatePresence>

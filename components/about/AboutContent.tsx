@@ -60,7 +60,7 @@ export function AboutContent() {
                 const Icon = value.icon;
                 return (
                   <div key={index} className="p-6 bg-bg-surface rounded-lg border border-border-subtle">
-                    <Icon className="w-8 h-8 text-accent mb-4" />
+                    <Icon className="w-8 h-8 text-blue-400 mb-4" />
                     <h3 className="text-xl font-semibold text-text-primary mb-2">
                       {value.title}
                     </h3>

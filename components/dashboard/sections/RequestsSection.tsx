@@ -66,13 +66,13 @@ export function RequestsSection() {
     <section className="bg-bg-surface border border-border-subtle rounded-xl p-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
-          <TrendingUp className="w-5 h-5 text-accent" />
+          <TrendingUp className="w-5 h-5 text-blue-400" />
           {t('dashboard.requests.title') || 'Richieste Analisi'}
         </h2>
         {requestsList.length > 0 && (
           <Link
             href={buildLocalePath(locale, '/dashboard/requests')}
-            className="text-sm text-accent hover:text-accent-hover font-medium"
+            className="text-sm text-blue-400 hover:text-blue-300 font-medium"
           >
             {t('common.viewAll') || 'Vedi tutte'} →
           </Link>
@@ -104,11 +104,11 @@ export function RequestsSection() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     {getStatusIcon(request.status)}
-                    <h3 className="font-semibold text-text-primary group-hover:text-accent transition-colors">
+                    <h3 className="font-semibold text-text-primary group-hover:text-blue-400 transition-colors">
                       {request.asset_symbol || request.asset_name || 'Richiesta Analisi'}
                     </h3>
                   </div>
-                  <p className="text-xs text-text-tertiary">
+                  <p className="text-xs text-text-secondary">
                     {t('dashboard.requests.created') || 'Creata'}: {new Date(request.created_at).toLocaleDateString()}
                   </p>
                 </div>

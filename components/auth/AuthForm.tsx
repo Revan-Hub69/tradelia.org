@@ -467,7 +467,7 @@ export function AuthForm() {
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 rounded-xl bg-gradient-accent border border-border-accent flex items-center justify-center">
-              <Lock className="w-6 h-6 text-accent" aria-hidden="true" />
+              <Lock className="w-6 h-6 text-blue-400" aria-hidden="true" />
             </div>
             <h1 className="text-2xl font-bold text-text-primary tracking-tight">
               {t('auth.title')}
@@ -551,7 +551,7 @@ export function AuthForm() {
               >
                 <label
                   htmlFor="name"
-                  className="text-xs font-semibold uppercase tracking-wider text-text-tertiary flex items-center gap-2"
+                  className="text-xs font-semibold uppercase tracking-wider text-text-secondary flex items-center gap-2"
                 >
                   <User className="w-3.5 h-3.5" aria-hidden="true" />
                   {t('auth.form.name.label')}
@@ -578,7 +578,7 @@ export function AuthForm() {
           <div className="flex flex-col gap-2">
             <label
               htmlFor="email"
-              className="text-xs font-semibold uppercase tracking-wider text-text-tertiary flex items-center gap-2"
+              className="text-xs font-semibold uppercase tracking-wider text-text-secondary flex items-center gap-2"
             >
               <Mail className="w-3.5 h-3.5" aria-hidden="true" />
               {t('auth.form.email.label')}
@@ -612,7 +612,7 @@ export function AuthForm() {
               >
                 <label
                   htmlFor="otp"
-                  className="text-xs font-semibold uppercase tracking-wider text-text-tertiary flex items-center gap-2"
+                  className="text-xs font-semibold uppercase tracking-wider text-text-secondary flex items-center gap-2"
                 >
                   <Mail className="w-3.5 h-3.5" aria-hidden="true" />
                   {t('auth.form.otp.label')}
@@ -656,7 +656,7 @@ export function AuthForm() {
                       setInfo(t('auth.form.otp.resendSuccess'));
                     }
                   }}
-                  className="text-xs text-accent hover:text-accent-hover underline underline-offset-4 transition-colors text-center"
+                  className="text-xs text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors text-center"
                   disabled={isPending}
                 >
                   {t('auth.form.otp.resend')}
@@ -670,7 +670,7 @@ export function AuthForm() {
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="password"
-                className="text-xs font-semibold uppercase tracking-wider text-text-tertiary flex items-center gap-2"
+                className="text-xs font-semibold uppercase tracking-wider text-text-secondary flex items-center gap-2"
               >
                 <Lock className="w-3.5 h-3.5" aria-hidden="true" />
                 {t('auth.form.password.label')}
@@ -699,7 +699,7 @@ export function AuthForm() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary transition-colors p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center"
                 aria-label={showPassword ? t('auth.form.password.hide') : t('auth.form.password.show')}
                 tabIndex={0}
               >
@@ -741,7 +741,7 @@ export function AuthForm() {
 
                   {/* Strength label */}
                   <div className="flex items-center gap-2 text-xs">
-                    <span className="text-text-tertiary">{t('auth.form.passwordStrength.label')}:</span>
+                    <span className="text-text-secondary">{t('auth.form.passwordStrength.label')}:</span>
                     <span
                       className={cn(
                         'font-semibold',
@@ -754,7 +754,7 @@ export function AuthForm() {
                       {strengthLabels[passwordStrength.strength]}
                     </span>
                     {isCheckingBreach && (
-                      <span className="text-text-tertiary text-xs">({t('auth.form.passwordStrength.checking')})</span>
+                      <span className="text-text-secondary text-xs">({t('auth.form.passwordStrength.checking')})</span>
                     )}
                   </div>
 
@@ -767,7 +767,7 @@ export function AuthForm() {
                     >
                       {passwordStrength.feedback.map((item, idx) => (
                         <li key={idx} className="flex items-center gap-2">
-                          <XCircle className="w-3 h-3 text-text-tertiary flex-shrink-0" aria-hidden="true" />
+                          <XCircle className="w-3 h-3 text-text-secondary flex-shrink-0" aria-hidden="true" />
                           {t('auth.form.passwordStrength.needs')} {item}
                         </li>
                       ))}
@@ -834,7 +834,7 @@ export function AuthForm() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 role="alert"
-                className="flex items-start gap-2 text-sm text-accent bg-accent/10 border border-accent/30 rounded-xl px-4 py-3"
+                className="flex items-start gap-2 text-sm text-blue-400 bg-accent/10 border border-accent/30 rounded-xl px-4 py-3"
               >
                 <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" aria-hidden="true" />
                 <span>{info}</span>
@@ -895,12 +895,12 @@ export function AuthForm() {
         </form>
 
         {/* Footer links */}
-        <div className="mt-6 space-y-3 text-xs text-text-tertiary">
+        <div className="mt-6 space-y-3 text-xs text-text-secondary">
           {mode === 'login' && (
             <div className="text-center">
               <a
                 href="/forgot-password"
-                className="text-accent hover:text-accent-hover underline underline-offset-4 transition-colors"
+                className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors"
               >
                 {t('auth.form.forgotPassword')}
               </a>
@@ -910,14 +910,14 @@ export function AuthForm() {
             {t('auth.form.footer.text')}{' '}
             <a
               href="/privacy"
-              className="text-accent hover:text-accent-hover underline underline-offset-4 transition-colors"
+              className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors"
             >
               {t('auth.form.footer.privacy')}
             </a>{' '}
             {t('auth.form.footer.and')}{' '}
             <a
               href="/terms"
-              className="text-accent hover:text-accent-hover underline underline-offset-4 transition-colors"
+              className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors"
             >
               {t('auth.form.footer.terms')}
             </a>

@@ -53,7 +53,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
         )}
         <div className="relative">
           <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-            <Calendar className="w-4 h-4 text-text-tertiary" aria-hidden="true" />
+            <Calendar className="w-4 h-4 text-text-secondary" aria-hidden="true" />
           </div>
           <input
             ref={ref}
@@ -92,7 +92,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
           </p>
         )}
         {helperText && !error && (
-          <p id={helperId} className="text-xs text-text-tertiary">
+          <p id={helperId} className="text-xs text-text-secondary">
             {helperText}
           </p>
         )}

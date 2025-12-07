@@ -213,7 +213,7 @@ export function WatchlistContent() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-text-primary mb-2 flex items-center gap-3">
-            <TrendingUp className="w-8 h-8 text-accent" />
+            <TrendingUp className="w-8 h-8 text-blue-400" />
             {t('watchlist.title') || 'Watchlist'}
           </h1>
           <p className="text-text-secondary">
@@ -227,7 +227,7 @@ export function WatchlistContent() {
             'flex items-center gap-2 px-4 py-2 rounded-lg transition-colors',
             canAddMore
               ? 'bg-accent hover:bg-accent-hover text-white'
-              : 'bg-bg-soft text-text-tertiary cursor-not-allowed'
+              : 'bg-bg-soft text-text-secondary cursor-not-allowed'
           )}
         >
           <Plus className="w-4 h-4" />
@@ -270,11 +270,11 @@ export function WatchlistContent() {
                     <h3 className="font-semibold text-text-primary text-lg">
                       {item.asset_name || item.asset_symbol}
                     </h3>
-                    <span className="px-2 py-1 bg-bg-surface border border-border-subtle rounded text-xs text-text-tertiary font-mono">
+                    <span className="px-2 py-1 bg-bg-surface border border-border-subtle rounded text-xs text-text-secondary font-mono">
                       {item.asset_symbol}
                     </span>
                     {item.priority > 0 && (
-                      <span className="px-2 py-1 bg-accent/20 border border-accent/40 rounded text-xs text-accent font-medium">
+                      <span className="px-2 py-1 bg-accent/20 border border-accent/40 rounded text-xs text-blue-400 font-medium">
                         {item.priority === 1 ? 'Alta' : 'Massima'}
                       </span>
                     )}
@@ -292,7 +292,7 @@ export function WatchlistContent() {
                       setSelectedWatchlist(item.id);
                       setShowAlertModal(true);
                     }}
-                    className="p-2 rounded-lg hover:bg-bg-surface text-text-secondary hover:text-accent transition-colors"
+                    className="p-2 rounded-lg hover:bg-bg-surface text-text-secondary hover:text-blue-400 transition-colors"
                     aria-label="Aggiungi alert"
                   >
                     <Bell className="w-4 h-4" />
@@ -330,13 +330,13 @@ export function WatchlistContent() {
                             </p>
                             <div className="flex items-center gap-2 mt-1">
                               {alert.notify_via_push && (
-                                <span className="text-xs text-text-tertiary">Push</span>
+                                <span className="text-xs text-text-secondary">Push</span>
                               )}
                               {alert.notify_via_email && (
-                                <span className="text-xs text-text-tertiary">Email</span>
+                                <span className="text-xs text-text-secondary">Email</span>
                               )}
                               {alert.notify_via_sms && (
-                                <span className="text-xs text-text-tertiary">SMS</span>
+                                <span className="text-xs text-text-secondary">SMS</span>
                               )}
                             </div>
                           </div>

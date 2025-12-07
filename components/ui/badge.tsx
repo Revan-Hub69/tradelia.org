@@ -8,7 +8,7 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-gradient-accent border border-border-accent text-accent shadow-md hover:shadow-lg transition-shadow duration-200',
+          'bg-gradient-accent border border-border-accent text-blue-400 shadow-md hover:shadow-lg transition-shadow duration-200',
         accent:
           'bg-gradient-primary text-white border-transparent shadow-md hover:shadow-lg transition-shadow duration-200',
         outline:

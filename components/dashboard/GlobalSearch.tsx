@@ -203,7 +203,7 @@ export function GlobalSearch() {
       >
         <Search className="w-4 h-4" />
         <span className="hidden md:inline">{t('dashboard.search.placeholder') || 'Cerca...'}</span>
-        <kbd className="hidden md:inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-bg-surface border border-border-subtle text-xs font-mono text-text-tertiary">
+        <kbd className="hidden md:inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-bg-surface border border-border-subtle text-xs font-mono text-text-secondary">
           <Command className="w-3 h-3" />
           <span>K</span>
         </kbd>
@@ -242,21 +242,21 @@ export function GlobalSearch() {
               <div className="bg-bg-surface border border-border-subtle rounded-2xl shadow-2xl overflow-hidden">
                 {/* Search Input */}
                 <div className="flex items-center gap-3 p-4 border-b border-border-subtle">
-                  <Search className="w-5 h-5 text-text-tertiary flex-shrink-0" />
+                  <Search className="w-5 h-5 text-text-secondary flex-shrink-0" />
                   <input
                     ref={inputRef}
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder={t('dashboard.search.placeholder') || 'Cerca report, corsi, moduli...'}
-                    className="flex-1 bg-transparent border-none outline-none text-text-primary placeholder:text-text-tertiary text-base"
+                    className="flex-1 bg-transparent border-none outline-none text-text-primary placeholder:text-text-secondary text-base"
                     autoComplete="off"
                     aria-label={t('dashboard.search.inputLabel') || 'Campo di ricerca'}
                   />
                   {query && (
                     <button
                       onClick={() => setQuery('')}
-                      className="w-6 h-6 rounded flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors"
+                      className="w-6 h-6 rounded flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-soft transition-colors"
                       aria-label={t('dashboard.search.clear') || 'Pulisci ricerca'}
                     >
                       <X className="w-4 h-4" />
@@ -267,7 +267,7 @@ export function GlobalSearch() {
                 {/* Results */}
                 <div className="max-h-96 overflow-y-auto">
                   {query.trim() && results.length === 0 ? (
-                    <div className="p-8 text-center text-text-tertiary">
+                    <div className="p-8 text-center text-text-secondary">
                       <Search className="w-12 h-12 mx-auto mb-3 opacity-50" />
                       <p className="text-sm">
                         {t('dashboard.search.noResults') || 'Nessun risultato trovato'}
@@ -290,24 +290,24 @@ export function GlobalSearch() {
                           )}
                           aria-label={`${result.title}: ${result.description}`}
                         >
-                          <div className="w-8 h-8 rounded-lg bg-accent/20 text-accent flex items-center justify-center flex-shrink-0">
+                          <div className="w-8 h-8 rounded-lg bg-accent/20 text-blue-400 flex items-center justify-center flex-shrink-0">
                             {result.icon}
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
                               <h4 className="font-semibold text-text-primary text-sm">{result.title}</h4>
-                              <span className="px-1.5 py-0.5 bg-bg-soft border border-border-subtle rounded text-xs text-text-tertiary capitalize">
+                              <span className="px-1.5 py-0.5 bg-bg-soft border border-border-subtle rounded text-xs text-text-secondary capitalize">
                                 {result.type}
                               </span>
                             </div>
                             <p className="text-xs text-text-secondary line-clamp-1">{result.description}</p>
                           </div>
-                          <ArrowRight className="w-4 h-4 text-text-tertiary flex-shrink-0" />
+                          <ArrowRight className="w-4 h-4 text-text-secondary flex-shrink-0" />
                         </button>
                       ))}
                     </div>
                   ) : (
-                    <div className="p-8 text-center text-text-tertiary">
+                    <div className="p-8 text-center text-text-secondary">
                       <Search className="w-12 h-12 mx-auto mb-3 opacity-50" />
                       <p className="text-sm mb-2">
                         {t('dashboard.search.startTyping') || 'Inizia a digitare per cercare...'}

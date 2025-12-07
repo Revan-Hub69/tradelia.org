@@ -224,7 +224,7 @@ export function ProUtilities() {
                   {selectedUtility && (
                     <button
                       onClick={() => setSelectedUtility(null)}
-                      className="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors"
+                      className="w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-soft transition-colors"
                       aria-label={t('proUtilities.back') || 'Indietro'}
                     >
                       <ArrowLeft className="w-5 h-5" />
@@ -237,7 +237,7 @@ export function ProUtilities() {
                     <h2 className="text-lg font-semibold text-text-primary">
                       {currentUtility ? currentUtility.label : (t('proUtilities.title') || 'Utilities Pro')}
                     </h2>
-                    <p className="text-xs text-text-tertiary">
+                    <p className="text-xs text-text-secondary">
                       {currentUtility ? currentUtility.description : (t('proUtilities.subtitle') || 'Strumenti avanzati per utenti Pro')}
                     </p>
                   </div>
@@ -247,7 +247,7 @@ export function ProUtilities() {
                     setIsOpen(false);
                     setSelectedUtility(null);
                   }}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-soft transition-colors"
                   aria-label={t('proUtilities.close') || 'Chiudi'}
                 >
                   <X className="w-5 h-5" />
@@ -332,8 +332,8 @@ export function ProUtilities() {
                           <div className={cn(
                             'w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors',
                             utility.comingSoon
-                              ? 'bg-bg-surface text-text-tertiary'
-                              : 'bg-accent/20 text-accent group-hover:bg-accent/30'
+                              ? 'bg-bg-surface text-text-secondary'
+                              : 'bg-accent/20 text-blue-400 group-hover:bg-accent/30'
                           )}>
                             {utility.icon}
                           </div>
@@ -346,7 +346,7 @@ export function ProUtilities() {
                             </p>
                           </div>
                           {!utility.comingSoon && (
-                            <div className="flex-shrink-0 text-text-tertiary group-hover:text-accent transition-colors">
+                            <div className="flex-shrink-0 text-text-secondary group-hover:text-blue-400 transition-colors">
                               <TrendingUp className="w-4 h-4" />
                             </div>
                           )}
@@ -360,8 +360,8 @@ export function ProUtilities() {
               {/* Footer */}
               {!selectedUtility && (
                 <div className="p-6 border-t border-border-subtle bg-bg-soft/50">
-                  <div className="flex items-center gap-2 text-xs text-text-tertiary">
-                    <Sparkles className="w-4 h-4 text-accent" />
+                  <div className="flex items-center gap-2 text-xs text-text-secondary">
+                    <Sparkles className="w-4 h-4 text-blue-400" />
                     <span>
                       {t('proUtilities.footer') || 'Funzionalità esclusive per utenti Pro'}
                     </span>

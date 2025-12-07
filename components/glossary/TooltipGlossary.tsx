@@ -57,7 +57,7 @@ export function TooltipGlossary({
             onClick={() => setIsDrawerOpen(true)}
             className={cn(
               'inline-flex items-center justify-center',
-              'text-text-tertiary hover:text-accent transition-colors',
+              'text-text-secondary hover:text-blue-400 transition-colors',
               'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent focus-visible:ring-offset-1 rounded',
               'opacity-60 hover:opacity-100',
               'ml-0.5 align-text-bottom'

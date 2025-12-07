@@ -152,7 +152,7 @@ export function BusinessLogoSettings() {
               <p className="text-sm text-text-secondary">
                 {t('settings.businessLogo.currentLogo') || 'Logo attuale'}
               </p>
-              <p className="text-xs text-text-tertiary mt-1">
+              <p className="text-xs text-text-secondary mt-1">
                 {t('settings.businessLogo.logoHint') || 'Il logo verrà utilizzato nei report PDF'}
               </p>
             </div>
@@ -216,7 +216,7 @@ export function BusinessLogoSettings() {
               </Button>
             )}
           </div>
-          <p className="text-xs text-text-tertiary mt-2">
+          <p className="text-xs text-text-secondary mt-2">
             {t('settings.businessLogo.fileHint') || 'Formati supportati: PNG, JPEG, SVG. Dimensione massima: 2MB'}
           </p>
         </div>

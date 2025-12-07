@@ -95,7 +95,7 @@ export function MaterialsDownload({ courseId, courseSlug, materials }: Materials
   if (materials.length === 0) {
     return (
       <div className="bg-bg-soft border border-border-subtle rounded-xl p-6 text-center">
-        <FileText className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
+        <FileText className="w-12 h-12 text-text-secondary mx-auto mb-3" />
         <p className="text-text-secondary">
           {t('materials.empty') || 'Nessun materiale disponibile per questo corso'}
         </p>
@@ -106,7 +106,7 @@ export function MaterialsDownload({ courseId, courseSlug, materials }: Materials
   return (
     <div className="bg-bg-soft border border-border-subtle rounded-xl p-6">
       <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
-        <Download className="w-5 h-5 text-accent" />
+        <Download className="w-5 h-5 text-blue-400" />
         {t('materials.title') || 'Materiali Scaricabili'}
       </h3>
       <div className="space-y-3">
@@ -116,12 +116,12 @@ export function MaterialsDownload({ courseId, courseSlug, materials }: Materials
             className="flex items-center justify-between p-4 bg-bg-surface border border-border-subtle rounded-lg hover:border-accent/40 transition-all"
           >
             <div className="flex items-center gap-3 flex-1 min-w-0">
-              <div className="flex-shrink-0 text-accent">
+              <div className="flex-shrink-0 text-blue-400">
                 {getIcon(material.type)}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-text-primary truncate">{material.title}</p>
-                <div className="flex items-center gap-3 mt-1 text-xs text-text-tertiary">
+                <div className="flex items-center gap-3 mt-1 text-xs text-text-secondary">
                   <span className="px-2 py-0.5 bg-bg-soft rounded uppercase">
                     {material.type}
                   </span>

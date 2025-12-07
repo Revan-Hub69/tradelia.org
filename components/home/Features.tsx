@@ -100,7 +100,7 @@ export function Features() {
                             <CardHeader>
                               <div className="flex items-center gap-3 mb-4">
                                 <div className="w-16 h-16 rounded-xl bg-gradient-accent border border-border-accent flex items-center justify-center transition-colors duration-300 group-hover:bg-gradient-primary">
-                                  <Icon className="w-8 h-8 text-accent" aria-hidden="true" />
+                                  <Icon className="w-8 h-8 text-blue-400" aria-hidden="true" />
                                 </div>
                                 {/* Non-chromatic indicator for colorblind accessibility */}
                                 <div className="w-2 h-2 rounded-full bg-accent border border-accent" aria-hidden="true" />

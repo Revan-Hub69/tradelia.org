@@ -166,7 +166,7 @@ function DashboardHeaderComponent() {
               <div className={styles.dashboardActionsRight}>
                 <Link
                   href="/dashboard/favorites"
-                  className="flex items-center justify-center w-10 h-10 rounded-lg bg-bg-soft hover:bg-bg-elevated border border-border-subtle hover:border-accent/40 text-text-secondary hover:text-accent transition-all duration-200 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-accent min-w-[44px] min-h-[44px]"
+                  className="flex items-center justify-center w-10 h-10 rounded-lg bg-bg-soft hover:bg-bg-elevated border border-border-subtle hover:border-accent/40 text-text-secondary hover:text-blue-400 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-accent min-w-[44px] min-h-[44px]"
                   aria-label={t('dashboard.favorites.title') || 'Preferiti'}
                   title={t('dashboard.favorites.title') || 'Preferiti'}
                   onKeyDown={(e) => {
@@ -190,7 +190,7 @@ function DashboardHeaderComponent() {
                 </Link>
                 <Link
                   href="/dashboard/widgets"
-                  className="flex items-center justify-center w-10 h-10 rounded-lg bg-bg-soft hover:bg-bg-elevated border border-border-subtle hover:border-accent/40 text-text-secondary hover:text-accent transition-all duration-200 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-accent min-w-[44px] min-h-[44px]"
+                  className="flex items-center justify-center w-10 h-10 rounded-lg bg-bg-soft hover:bg-bg-elevated border border-border-subtle hover:border-accent/40 text-text-secondary hover:text-blue-400 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-accent min-w-[44px] min-h-[44px]"
                   aria-label="Widget"
                   title="Widget"
                   onKeyDown={(e) => {

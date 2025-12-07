@@ -45,7 +45,7 @@ export function ProLockOverlay({ children, showPreview = true }: ProLockOverlayP
         'text-center space-y-4'
       )}>
         <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center">
-          <Lock className="w-8 h-8 text-accent" />
+          <Lock className="w-8 h-8 text-blue-400" />
         </div>
         
         <div className="space-y-2">
@@ -59,8 +59,8 @@ export function ProLockOverlay({ children, showPreview = true }: ProLockOverlayP
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-text-tertiary">
-          <Sparkles className="w-4 h-4 text-accent" />
+        <div className="flex items-center gap-2 text-xs text-text-secondary">
+          <Sparkles className="w-4 h-4 text-blue-400" />
           <span>
             {locale === 'it' 
               ? 'Strumenti professionali per trader e investitori avanzati'

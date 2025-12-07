@@ -192,7 +192,7 @@ export function RichTextEditor({
             '[&_strong]:font-bold',
             '[&_em]:italic',
             '[&_u]:underline',
-            '[&_a]:text-accent [&_a]:underline',
+            '[&_a]:text-blue-400 [&_a]:underline',
             isOverLimit && 'ring-2 ring-red-400',
             className
           )}
@@ -205,7 +205,7 @@ export function RichTextEditor({
 
         {/* Character Count */}
         {maxLength && (
-          <div className="px-3 py-2 bg-bg-soft border-t border-border-subtle text-xs text-text-tertiary flex justify-between">
+          <div className="px-3 py-2 bg-bg-soft border-t border-border-subtle text-xs text-text-secondary flex justify-between">
             <span>{characterCount} / {maxLength} caratteri</span>
             {isOverLimit && (
               <span className="text-red-400">Limite superato</span>
@@ -225,7 +225,7 @@ export function RichTextEditor({
         </p>
       )}
       {helperText && !error && (
-        <p id={helperId} className="text-xs text-text-tertiary">
+        <p id={helperId} className="text-xs text-text-secondary">
           {helperText}
         </p>
       )}

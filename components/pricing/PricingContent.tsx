@@ -117,7 +117,7 @@ export function PricingContent() {
 
           {/* Billing Cycle Toggle */}
           <div className="flex items-center justify-center gap-4 mb-8">
-            <span className={cn('text-sm font-medium', billingCycle === 'monthly' ? 'text-text-primary' : 'text-text-tertiary')}>
+            <span className={cn('text-sm font-medium', billingCycle === 'monthly' ? 'text-text-primary' : 'text-text-secondary')}>
               {t('pricing.billing.monthly') || 'Mensile'}
             </span>
             <button
@@ -134,7 +134,7 @@ export function PricingContent() {
                 transition={{ type: 'spring', stiffness: 500, damping: 30 }}
               />
             </button>
-            <span className={cn('text-sm font-medium', billingCycle === 'yearly' ? 'text-text-primary' : 'text-text-tertiary')}>
+            <span className={cn('text-sm font-medium', billingCycle === 'yearly' ? 'text-text-primary' : 'text-text-secondary')}>
               {t('pricing.billing.yearly') || 'Annuale'}
               <span className="ml-2 px-2 py-0.5 bg-green-500/20 text-green-400 text-xs rounded-full">
                 {t('pricing.billing.save') || '-17%'}
@@ -146,7 +146,7 @@ export function PricingContent() {
         {/* Individual Plans */}
         <section className="mb-16">
           <div className="flex items-center gap-3 mb-8">
-            <User className="w-6 h-6 text-accent" />
+            <User className="w-6 h-6 text-blue-400" />
             <h2 className="text-2xl font-semibold text-text-primary">
               {t('pricing.sections.individual') || 'Piani Individuali'}
             </h2>
@@ -262,12 +262,12 @@ function PlanCard({
           <span className="text-4xl font-bold text-text-primary">
             €{billingCycle === 'yearly' && plan.priceYearly ? plan.priceYearly : plan.price}
           </span>
-          <span className="text-text-tertiary">
+          <span className="text-text-secondary">
             /{billingCycle === 'monthly' ? t('pricing.perMonth') || 'mese' : t('pricing.perYear') || 'anno'}
           </span>
         </div>
         {billingCycle === 'yearly' && plan.priceYearly && (
-          <p className="text-sm text-text-tertiary mt-1">
+          <p className="text-sm text-text-secondary mt-1">
             {t('pricing.equivalent') || 'Equivalente a'} €{Math.round(plan.priceYearly / 12)}/{t('pricing.perMonth') || 'mese'}
           </p>
         )}
@@ -276,7 +276,7 @@ function PlanCard({
       <ul className="space-y-3 mb-8">
         {plan.features.map((feature, idx) => (
           <li key={idx} className="flex items-start gap-3">
-            <Check className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+            <Check className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
             <span className="text-sm text-text-secondary">{feature}</span>
           </li>
         ))}
@@ -350,23 +350,23 @@ function ComparisonTable() {
               <td className="py-4 px-4 text-text-secondary">{feature.name}</td>
               <td className="py-4 px-4 text-center">
                 {feature.trial ? (
-                  <Check className="w-5 h-5 text-accent mx-auto" />
+                  <Check className="w-5 h-5 text-blue-400 mx-auto" />
                 ) : (
-                  <span className="text-text-tertiary">—</span>
+                  <span className="text-text-secondary">—</span>
                 )}
               </td>
               <td className="py-4 px-4 text-center">
                 {feature.pro ? (
-                  <Check className="w-5 h-5 text-accent mx-auto" />
+                  <Check className="w-5 h-5 text-blue-400 mx-auto" />
                 ) : (
-                  <span className="text-text-tertiary">—</span>
+                  <span className="text-text-secondary">—</span>
                 )}
               </td>
               <td className="py-4 px-4 text-center">
                 {feature.business ? (
-                  <Check className="w-5 h-5 text-accent mx-auto" />
+                  <Check className="w-5 h-5 text-blue-400 mx-auto" />
                 ) : (
-                  <span className="text-text-tertiary">—</span>
+                  <span className="text-text-secondary">—</span>
                 )}
               </td>
             </tr>

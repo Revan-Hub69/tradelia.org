@@ -27,7 +27,7 @@ export function IndicatorHeader({ title, methodology, className = '' }: Indicato
         notes={methodology}
         trigger={
           <button
-            className="inline-flex items-center gap-1 text-xs text-text-tertiary hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent rounded p-1"
+            className="inline-flex items-center gap-1 text-xs text-text-secondary hover:text-blue-400 transition-colors focus:outline-none focus:ring-2 focus:ring-accent rounded p-1"
             aria-label={locale === 'it' ? 'Note metodologiche' : 'Methodology notes'}
           >
             <Info className="w-3.5 h-3.5" />

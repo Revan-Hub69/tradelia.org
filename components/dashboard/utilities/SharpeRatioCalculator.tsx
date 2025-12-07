@@ -78,7 +78,7 @@ export function SharpeRatioCalculator() {
     <div className="space-y-6">
       <div>
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-2 flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-accent flex-shrink-0" />
+          <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 flex-shrink-0" />
           <span>Sharpe Ratio Calculator</span>
         </h2>
         <p className="text-text-secondary text-xs sm:text-sm">
@@ -100,7 +100,7 @@ export function SharpeRatioCalculator() {
           <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
             <span>Rendimenti Periodici (%) *</span>
             <Tooltip content="Inserisci i rendimenti periodici separati da virgola o a capo. Esempio: 5, -2, 3, 1, 4 (rendimenti mensili o settimanali).">
-              <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
             </Tooltip>
           </label>
           <textarea
@@ -110,7 +110,7 @@ export function SharpeRatioCalculator() {
             className="w-full px-4 py-2 bg-bg-surface border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent resize-none"
             rows={4}
           />
-          <p className="text-xs text-text-tertiary mt-1">
+          <p className="text-xs text-text-secondary mt-1">
             Inserisci almeno 2 rendimenti separati da virgola o a capo
           </p>
         </div>
@@ -119,7 +119,7 @@ export function SharpeRatioCalculator() {
           <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
             <span>Tasso Risk-Free Annuo (%) *</span>
             <Tooltip content="Il tasso di rendimento risk-free (es. rendimento obbligazioni governative). Tipicamente 1-3% annuo. Vedi i suggerimenti MIFID compliant qui sotto.">
-              <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
             </Tooltip>
           </label>
           <div className="relative mb-4">
@@ -133,7 +133,7 @@ export function SharpeRatioCalculator() {
               max="10"
               step="0.1"
             />
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary text-sm">%</span>
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary text-sm">%</span>
           </div>
           {/* Suggerimenti MIFID Compliant */}
           <RiskFreeRateSuggestions
@@ -148,7 +148,7 @@ export function SharpeRatioCalculator() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1 flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1 flex items-center gap-1.5">
                 <TrendingUp className="w-3.5 h-3.5" />
                 <span>Rendimento Medio</span>
               </div>
@@ -158,7 +158,7 @@ export function SharpeRatioCalculator() {
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1 flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1 flex items-center gap-1.5">
                 <AlertCircle className="w-3.5 h-3.5" />
                 <span>Volatilità (Std Dev)</span>
               </div>
@@ -168,8 +168,8 @@ export function SharpeRatioCalculator() {
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1">Sharpe Ratio (Ann.)</div>
-              <div className="text-lg sm:text-2xl font-bold text-accent">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1">Sharpe Ratio (Ann.)</div>
+              <div className="text-lg sm:text-2xl font-bold text-blue-400">
                 {results.sharpeAnnualized.toFixed(2)}
               </div>
               <div className={`text-xs font-semibold mt-1 ${results.ratingColor}`}>
@@ -200,10 +200,10 @@ export function SharpeRatioCalculator() {
                 </span>
               </div>
               <div className="mt-4 pt-4 border-t border-border-subtle">
-                <p className="text-xs text-text-tertiary">
+                <p className="text-xs text-text-secondary">
                   <strong>Formula:</strong> Sharpe Ratio = (Rendimento Medio - Risk-Free Rate) / Volatilità
                 </p>
-                <p className="text-xs text-text-tertiary mt-2">
+                <p className="text-xs text-text-secondary mt-2">
                   <strong>Interpretazione:</strong> Un Sharpe Ratio &gt;1 indica un buon rendimento corretto per il rischio. 
                   Valori &gt;2 sono considerati eccellenti. {results.sharpeAnnualized >= 1 && '✓ Buon risultato!'}
                 </p>

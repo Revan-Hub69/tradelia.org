@@ -1115,11 +1115,11 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               {/* Breadcrumb Navigation - Improved Spacing and Readability */}
               <div className="px-4 sm:px-6 pt-3 pb-2">
                 <nav 
-                  className="flex items-center gap-1.5 sm:gap-2 text-xs text-text-tertiary overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" 
+                  className="flex items-center gap-1.5 sm:gap-2 text-xs text-text-secondary overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" 
                   aria-label="Breadcrumb"
                 >
                   <span className="hover:text-text-secondary whitespace-nowrap flex-shrink-0">Glossario</span>
-                  <ChevronRight className="w-3 h-3 flex-shrink-0 text-text-tertiary/60" aria-hidden="true" />
+                  <ChevronRight className="w-3 h-3 flex-shrink-0 text-text-secondary/60" aria-hidden="true" />
                   <span className="text-text-primary font-medium truncate max-w-[180px] sm:max-w-[300px] md:max-w-none" title={term.title}>
                     {term.title}
                   </span>
@@ -1130,7 +1130,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
               <div className="flex items-start justify-between px-4 sm:px-6 pb-4 sm:pb-6">
                 <div className="flex items-start gap-3 sm:gap-4 flex-1 min-w-0">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-bg-soft border border-border-accent flex items-center justify-center flex-shrink-0">
-                    <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-accent" aria-hidden="true" />
+                    <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" aria-hidden="true" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h2 id="glossary-drawer-title" className="text-lg sm:text-xl font-bold text-text-primary mb-1.5 break-words">
@@ -1139,8 +1139,8 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     {term.tags && term.tags.length > 0 && (
                       <p id="glossary-drawer-description" className="text-xs sm:text-sm text-text-secondary">
                         <span className="inline-flex items-center gap-1.5 flex-wrap">
-                          <Tag className="w-3.5 h-3.5 text-text-tertiary flex-shrink-0" aria-hidden="true" />
-                          <span className="text-text-tertiary">
+                          <Tag className="w-3.5 h-3.5 text-text-secondary flex-shrink-0" aria-hidden="true" />
+                          <span className="text-text-secondary">
                             {term.tags.slice(0, 3).join(', ')}
                             {term.tags.length > 3 && ` +${term.tags.length - 3}`}
                           </span>
@@ -1152,13 +1152,13 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                 <div className="print-header-actions flex items-center gap-2 ml-4">
                   <button
                     onClick={handlePrint}
-                    className="w-9 h-9 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent relative group"
+                    className="w-9 h-9 rounded-lg flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-soft transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent relative group"
                     aria-label={t('glossary.drawer.print') || 'Stampa definizione'}
                     title={isPro ? "Stampa" : "Stampa (Richiede Pro)"}
                   >
                     <Printer className="w-4 h-4" />
                     {!isPro && (
-                      <span className="absolute -top-1 -right-1 text-[8px] font-bold text-accent leading-none" title="Funzionalità Pro">
+                      <span className="absolute -top-1 -right-1 text-[8px] font-bold text-blue-400 leading-none" title="Funzionalità Pro">
                         PRO
                       </span>
                     )}
@@ -1166,7 +1166,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   <button
                     ref={closeButtonRef}
                     onClick={onClose}
-                    className="w-9 h-9 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                    className="w-9 h-9 rounded-lg flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-soft transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                     aria-label={t('common.close') || 'Chiudi drawer'}
                   >
                     <X className="w-5 h-5" />
@@ -1181,7 +1181,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                     {term.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-2.5 py-1 rounded-md text-xs font-medium bg-bg-soft text-accent border border-border-accent"
+                        className="px-2.5 py-1 rounded-md text-xs font-medium bg-bg-soft text-blue-400 border border-border-accent"
                       >
                         {tag}
                       </span>
@@ -1207,13 +1207,13 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                 {/* Header Sezione - Gerarchia Livello 1 */}
                 <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-7 pb-4 sm:pb-5 border-b-2 border-border-strong">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-bg-soft border-2 border-accent/40 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <GraduationCap className="w-6 h-6 sm:w-7 sm:h-7 text-accent" aria-hidden="true" />
+                    <GraduationCap className="w-6 h-6 sm:w-7 sm:h-7 text-blue-400" aria-hidden="true" />
                   </div>
                   <div className="flex-1">
                     <h2 id="academic-section-title" className="text-lg sm:text-2xl font-bold text-text-primary mb-1.5 sm:mb-2">
                       {t('glossary.drawer.academicExplanation') || 'Definizione Accademica'}
                     </h2>
-                    <p className="text-xs sm:text-sm text-text-tertiary font-medium">Definizione accademica precisa e verificata</p>
+                    <p className="text-xs sm:text-sm text-text-secondary font-medium">Definizione accademica precisa e verificata</p>
                   </div>
                 </div>
                 {/* Contenuto Sezione */}
@@ -1263,13 +1263,13 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   {/* Header Sezione - Gerarchia Livello 1 */}
                   <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-7 pb-4 sm:pb-5 border-b-2 border-border-strong">
                     <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-bg-soft border-2 border-accent/40 flex items-center justify-center flex-shrink-0 shadow-sm">
-                      <Code className="w-6 h-6 sm:w-7 sm:h-7 text-accent" aria-hidden="true" />
+                      <Code className="w-6 h-6 sm:w-7 sm:h-7 text-blue-400" aria-hidden="true" />
                     </div>
                     <div className="flex-1">
                       <h2 id="tradelia-ai-section-title" className="text-lg sm:text-2xl font-bold text-text-primary mb-1.5 sm:mb-2">
                         {t('glossary.drawer.tradeliaAIExplanation') || 'Spiegazione Tradelia AI'}
                       </h2>
-                      <p className="text-xs sm:text-sm text-text-tertiary font-medium">{t('glossary.termOfTheDay.educationalDescription') || 'Spiegazione educativa semplice ma completa'}</p>
+                      <p className="text-xs sm:text-sm text-text-secondary font-medium">{t('glossary.termOfTheDay.educationalDescription') || 'Spiegazione educativa semplice ma completa'}</p>
                     </div>
                   </div>
                   {/* Sottosezioni - Gerarchia Livello 2 */}
@@ -1322,7 +1322,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       <div className="space-y-4 sm:space-y-4 p-5 sm:p-5 bg-bg-soft border-l-2 border-accent/40 rounded-r-md">
                         {/* Sottotitolo Card - Gerarchia Livello 2 */}
                         <h3 className="text-base sm:text-lg font-semibold text-text-primary flex items-center gap-2.5 mb-4 sm:mb-4">
-                          <Sparkles className="w-5 h-5 sm:w-5 sm:h-5 text-accent" />
+                          <Sparkles className="w-5 h-5 sm:w-5 sm:h-5 text-blue-400" />
                           {t('glossary.drawer.practicalExample') || 'Esempio Pratico'}
                         </h3>
                         <div className="max-w-full sm:max-w-3xl space-y-4 sm:space-y-4">
@@ -1390,7 +1390,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       <h3 id="related-terms-section-title" className="text-base font-bold text-text-primary">
                         {t('glossary.drawer.relatedTerms') || 'Termini Correlati'}
                       </h3>
-                      <p className="text-xs text-text-tertiary mt-0.5">Related Terms & Concepts</p>
+                      <p className="text-xs text-text-secondary mt-0.5">Related Terms & Concepts</p>
                     </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -1410,7 +1410,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                       >
                         <span className="block truncate">{relatedTerm.title}</span>
                         {relatedTerm.category && (
-                          <span className="block text-xs text-text-tertiary mt-1 truncate">{relatedTerm.category}</span>
+                          <span className="block text-xs text-text-secondary mt-1 truncate">{relatedTerm.category}</span>
                         )}
                       </button>
                     ))}
@@ -1424,13 +1424,13 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   {/* Header Sezione - Gerarchia Livello 1 */}
                   <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-7 pb-4 sm:pb-5 border-b-2 border-border-strong">
                     <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-bg-soft border-2 border-accent/40 flex items-center justify-center flex-shrink-0 shadow-sm">
-                      <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-accent" aria-hidden="true" />
+                      <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-blue-400" aria-hidden="true" />
                     </div>
                     <div className="flex-1">
                       <h2 id="sources-section-title" className="text-lg sm:text-2xl font-bold text-text-primary mb-1.5 sm:mb-2">
                         {t('glossary.drawer.sources') || 'Riferimenti Bibliografici'}
                       </h2>
-                      <p className="text-xs sm:text-sm text-text-tertiary font-medium">Fonti accademiche verificate e citate</p>
+                      <p className="text-xs sm:text-sm text-text-secondary font-medium">Fonti accademiche verificate e citate</p>
                     </div>
                   </div>
                   {/* Lista Riferimenti - Formato Accademico */}
@@ -1459,7 +1459,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                               )}
                             </p>
                             {/* Metadata accademici */}
-                            <div className="flex flex-wrap gap-3 text-xs text-text-tertiary mt-2">
+                            <div className="flex flex-wrap gap-3 text-xs text-text-secondary mt-2">
                               {source.type && (
                                 <span className="px-2 py-1 bg-bg-surface rounded border border-border-default">
                                   {source.type === 'peer-reviewed' ? 'Peer-reviewed' : 
@@ -1471,7 +1471,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                                 </span>
                               )}
                               {source.primary && (
-                                <span className="px-2 py-1 bg-accent/20 text-accent rounded border border-accent/30">
+                                <span className="px-2 py-1 bg-accent/20 text-blue-400 rounded border border-accent/30">
                                   Fonte primaria
                                 </span>
                               )}
@@ -1488,7 +1488,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                                   href={`https://doi.org/${source.doi}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-xs sm:text-sm text-accent hover:text-accent-hover underline flex items-center gap-1.5"
+                                  className="text-xs sm:text-sm text-blue-400 hover:text-blue-300 underline flex items-center gap-1.5"
                                   aria-label={`DOI: ${source.doi}`}
                                 >
                                   <ExternalLink className="w-3 h-3" />
@@ -1496,7 +1496,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                                 </a>
                               )}
                               {source.isbn && (
-                                <span className="text-xs sm:text-sm text-text-tertiary">
+                                <span className="text-xs sm:text-sm text-text-secondary">
                                   ISBN: {source.isbn}
                                 </span>
                               )}
@@ -1505,7 +1505,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                                   href={source.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-xs sm:text-sm text-accent hover:text-accent-hover underline flex items-center gap-1.5"
+                                  className="text-xs sm:text-sm text-blue-400 hover:text-blue-300 underline flex items-center gap-1.5"
                                   aria-label="Link alla fonte"
                                 >
                                   <ExternalLink className="w-3 h-3" />
@@ -1513,7 +1513,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                                 </a>
                               )}
                               {source.accessedDate && (
-                                <span className="text-xs text-text-tertiary">
+                                <span className="text-xs text-text-secondary">
                                   Accesso: {new Date(source.accessedDate).toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' })}
                                 </span>
                               )}
@@ -1539,7 +1539,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
             {/* Footer - Academic Style */}
             <div className="no-print p-6 border-t border-border-subtle bg-bg-surface">
               <div className="flex items-center justify-between gap-3">
-                <p className="text-xs text-text-tertiary">
+                <p className="text-xs text-text-secondary">
                   Glossario Tradelia • {new Date().getFullYear()}
                 </p>
                 <button
@@ -1580,7 +1580,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
-                      <Sparkles className="w-6 h-6 text-accent" />
+                      <Sparkles className="w-6 h-6 text-blue-400" />
                     </div>
                     <div>
                       <h3 className="text-lg font-bold text-text-primary">
@@ -1593,7 +1593,7 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   </div>
                   <button
                     onClick={() => setShowProModal(false)}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-soft transition-colors"
                     aria-label="Chiudi"
                   >
                     <X className="w-4 h-4" />
@@ -1606,19 +1606,19 @@ export function GlossaryDrawer({ isOpen, onClose, term, onTermClick }: GlossaryD
                   </p>
                   <ul className="space-y-2 text-sm text-text-secondary">
                     <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-accent flex-shrink-0" />
+                      <Check className="w-4 h-4 text-blue-400 flex-shrink-0" />
                       <span>Stampa definizioni del glossario</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-accent flex-shrink-0" />
+                      <Check className="w-4 h-4 text-blue-400 flex-shrink-0" />
                       <span>Download PDF Report</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-accent flex-shrink-0" />
+                      <Check className="w-4 h-4 text-blue-400 flex-shrink-0" />
                       <span>Portfolio Manager avanzato</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-accent flex-shrink-0" />
+                      <Check className="w-4 h-4 text-blue-400 flex-shrink-0" />
                       <span>Supporto prioritario</span>
                     </li>
                   </ul>

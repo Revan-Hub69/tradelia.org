@@ -98,7 +98,7 @@ export function PACReturnSuggestions({ onSelect, currentValue }: PACReturnSugges
   return (
     <div className="bg-bg-soft border border-border-subtle rounded-xl p-4 sm:p-6 space-y-4">
       <div className="flex items-start gap-3">
-        <Info className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+        <Info className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
         <div className="flex-1">
           <h4 className="text-sm font-semibold text-text-primary mb-2">
             Suggerimenti Rendimento (MIFID Compliant)
@@ -133,7 +133,7 @@ export function PACReturnSuggestions({ onSelect, currentValue }: PACReturnSugges
                 <div className="flex items-center gap-2">
                   <Icon className={cn(
                     'w-4 h-4',
-                    isSelected ? 'text-accent' : 'text-text-tertiary'
+                    isSelected ? 'text-blue-400' : 'text-text-secondary'
                   )} />
                   <span className="text-sm font-semibold text-text-primary">
                     {suggestion.value}%

@@ -80,7 +80,7 @@ export default function ProWidget({ widgetType, onRemove, onConfigure, isDraggin
         <div className="flex items-center gap-2">
           {widgetIconMap[widgetType] && (() => {
             const IconComponent = widgetIconMap[widgetType];
-            return <IconComponent className="w-5 h-5 text-accent" />;
+            return <IconComponent className="w-5 h-5 text-blue-400" />;
           })()}
           <h3 className="font-semibold">{widgetInfo.label}</h3>
         </div>

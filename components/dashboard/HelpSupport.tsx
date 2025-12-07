@@ -78,14 +78,14 @@ export function HelpSupport() {
                       <h3 className="font-semibold text-text-primary">
                         {t('dashboard.help.title') || 'Aiuto & Supporto'}
                       </h3>
-                      <p className="text-xs text-text-tertiary">
+                      <p className="text-xs text-text-secondary">
                         {t('dashboard.help.subtitle') || 'Trova risposte e risorse'}
                       </p>
                     </div>
                   </div>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-soft transition-colors"
                     aria-label={t('dashboard.help.close') || 'Chiudi'}
                   >
                     <X className="w-4 h-4" />
@@ -114,14 +114,14 @@ export function HelpSupport() {
                           <h4 className="font-semibold text-text-primary text-sm mb-1">{item.title}</h4>
                           <p className="text-xs text-text-secondary">{item.description}</p>
                         </div>
-                        <ExternalLink className="w-4 h-4 text-text-tertiary group-hover:text-blue-400 transition-colors flex-shrink-0" />
+                        <ExternalLink className="w-4 h-4 text-text-secondary group-hover:text-blue-400 transition-colors flex-shrink-0" />
                       </Link>
                     </motion.div>
                   ))}
                 </div>
 
                 <div className="p-4 border-t border-border-subtle bg-bg-soft/50">
-                  <p className="text-xs text-text-tertiary text-center">
+                  <p className="text-xs text-text-secondary text-center">
                     {t('dashboard.help.footer') || 'Hai bisogno di più aiuto? Contattaci'}
                   </p>
                 </div>

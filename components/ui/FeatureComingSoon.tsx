@@ -54,15 +54,15 @@ export function FeatureComingSoon({
                 : 'This feature will be available soon')}
           </p>
           {estimatedDate && (
-            <p className="text-xs text-text-tertiary mb-2">
+            <p className="text-xs text-text-secondary mb-2">
               {locale === 'it' ? 'Data stimata' : 'Estimated date'}: {estimatedDate}
             </p>
           )}
           {reason && (
             <div className="mt-4 p-3 bg-bg-soft rounded-lg border border-border-subtle">
               <div className="flex items-start gap-2">
-                <Info className="w-4 h-4 text-text-tertiary flex-shrink-0 mt-0.5" />
-                <p className="text-xs text-text-tertiary text-left">{reason}</p>
+                <Info className="w-4 h-4 text-text-secondary flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-text-secondary text-left">{reason}</p>
               </div>
             </div>
           )}
@@ -92,7 +92,7 @@ export function FeatureComingSoon({
                 : 'Coming soon')}
           </p>
           {estimatedDate && (
-            <p className="text-xs text-text-tertiary mt-2">
+            <p className="text-xs text-text-secondary mt-2">
               {locale === 'it' ? 'Data stimata' : 'Estimated date'}: {estimatedDate}
             </p>
           )}
@@ -126,7 +126,7 @@ export function FeatureComingSoon({
               : 'Coming soon')}
         </p>
         {estimatedDate && (
-          <p className="text-xs text-text-tertiary">
+          <p className="text-xs text-text-secondary">
             {locale === 'it' ? 'Data stimata' : 'Estimated date'}: {estimatedDate}
           </p>
         )}

@@ -165,7 +165,7 @@ export function WidgetsContent() {
         {/* Widget Installabili (Mobile & Desktop) */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
-            <Smartphone className="w-5 h-5 text-accent" />
+            <Smartphone className="w-5 h-5 text-blue-400" />
             <h2 className="text-xl font-semibold text-text-primary">
               {t('widgets.mobileWidgets') || 'Widget Installabili (Mobile & Desktop)'}
             </h2>
@@ -194,14 +194,14 @@ export function WidgetsContent() {
                     <div className="flex items-center gap-3">
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                         isComingSoon 
-                          ? 'bg-bg-soft text-text-tertiary' 
-                          : 'bg-accent/20 text-accent'
+                          ? 'bg-bg-soft text-text-secondary' 
+                          : 'bg-blue-400/20 text-blue-400'
                       }`}>
                         {widget.icon}
                       </div>
                       <div>
                         <h3 className="font-semibold text-text-primary">{widget.name}</h3>
-                        <p className="text-xs text-text-tertiary">
+                        <p className="text-xs text-text-secondary">
                           {widget.platforms.map(p => {
                             if (p === 'android') return 'Android';
                             if (p === 'ios') return 'iOS';
@@ -212,7 +212,7 @@ export function WidgetsContent() {
                       </div>
                     </div>
                     {isComingSoon && (
-                      <span className="px-2 py-1 bg-bg-soft border border-border-subtle rounded text-xs text-text-tertiary font-medium">
+                      <span className="px-2 py-1 bg-bg-soft border border-border-subtle rounded text-xs text-text-secondary font-medium">
                         Coming Soon
                       </span>
                     )}
@@ -220,7 +220,7 @@ export function WidgetsContent() {
                   <p className="text-sm text-text-secondary mb-4">{widget.description}</p>
                   {isComingSoon ? (
                     <div className="text-center py-2">
-                      <p className="text-xs text-text-tertiary">
+                      <p className="text-xs text-text-secondary">
                         {t('widgets.comingSoon') || 'Disponibile a breve'}
                       </p>
                     </div>

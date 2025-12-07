@@ -200,7 +200,7 @@ export function GlossaryChat() {
                 </div>
                 <div className={cn(
                   'text-xs mt-2',
-                  message.role === 'user' ? 'text-white/70' : 'text-text-tertiary'
+                  message.role === 'user' ? 'text-white/70' : 'text-text-secondary'
                 )}>
                   {message.timestamp.toLocaleTimeString(locale === 'it' ? 'it-IT' : 'en-US', {
                     hour: '2-digit',
@@ -223,7 +223,7 @@ export function GlossaryChat() {
               <Bot className="w-4 h-4 text-white" />
             </div>
             <div className="bg-bg-surface border border-border-subtle rounded-xl px-4 py-3">
-              <Loader2 className="w-5 h-5 text-accent animate-spin" />
+              <Loader2 className="w-5 h-5 text-blue-400 animate-spin" />
             </div>
           </div>
         )}
@@ -234,7 +234,7 @@ export function GlossaryChat() {
       {/* Suggested Questions */}
       {messages.length === 1 && (
         <div className="px-4 sm:px-6 pb-4">
-          <p className="text-xs text-text-tertiary mb-2">
+          <p className="text-xs text-text-secondary mb-2">
             {locale === 'it' ? 'Domande suggerite:' : 'Suggested questions:'}
           </p>
           <div className="flex flex-wrap gap-2">
@@ -279,7 +279,7 @@ export function GlossaryChat() {
                 'absolute right-2 bottom-2 w-8 h-8 rounded-lg flex items-center justify-center transition-colors',
                 input.trim() && !loading
                   ? 'bg-accent hover:bg-accent-hover text-white'
-                  : 'bg-bg-surface text-text-tertiary cursor-not-allowed'
+                  : 'bg-bg-surface text-text-secondary cursor-not-allowed'
               )}
               aria-label={locale === 'it' ? 'Invia messaggio' : 'Send message'}
             >
@@ -291,7 +291,7 @@ export function GlossaryChat() {
             </button>
           </div>
         </div>
-        <p className="text-xs text-text-tertiary mt-2 text-center">
+        <p className="text-xs text-text-secondary mt-2 text-center">
           {locale === 'it' 
             ? 'L\'AI utilizza il glossario Tradelia come knowledge base. Le risposte sono a scopo informativo.'
             : 'AI uses Tradelia glossary as knowledge base. Answers are for informational purposes.'}

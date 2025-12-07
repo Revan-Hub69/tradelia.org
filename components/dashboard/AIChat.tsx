@@ -175,14 +175,14 @@ export function AIChat() {
                     <h3 className="font-semibold text-text-primary text-sm">
                       {locale === 'it' ? 'Assistente AI' : 'AI Assistant'}
                     </h3>
-                    <p className="text-xs text-text-tertiary">
+                    <p className="text-xs text-text-secondary">
                       {locale === 'it' ? 'Chiedi qualsiasi cosa' : 'Ask anything'}
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-bg-soft transition-colors"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-soft transition-colors"
                   aria-label={locale === 'it' ? 'Chiudi' : 'Close'}
                 >
                   <X className="w-4 h-4" />
@@ -235,7 +235,7 @@ export function AIChat() {
                       <Bot className="w-4 h-4 text-white" />
                     </div>
                     <div className="bg-bg-soft border border-border-subtle rounded-xl px-3 py-2">
-                      <Loader2 className="w-4 h-4 text-accent animate-spin" />
+                      <Loader2 className="w-4 h-4 text-blue-400 animate-spin" />
                     </div>
                   </div>
                 )}
@@ -243,7 +243,7 @@ export function AIChat() {
                 {/* Suggested Questions */}
                 {messages.length === 1 && (
                   <div className="space-y-2">
-                    <p className="text-xs text-text-tertiary">
+                    <p className="text-xs text-text-secondary">
                       {locale === 'it' ? 'Domande suggerite:' : 'Suggested questions:'}
                     </p>
                     {suggestedQuestions.map((question, index) => (
@@ -290,7 +290,7 @@ export function AIChat() {
                         'absolute right-2 bottom-2 w-7 h-7 rounded-lg flex items-center justify-center transition-colors',
                         input.trim() && !loading
                           ? 'bg-accent hover:bg-accent-hover text-white'
-                          : 'bg-bg-surface text-text-tertiary cursor-not-allowed'
+                          : 'bg-bg-surface text-text-secondary cursor-not-allowed'
                       )}
                       aria-label={locale === 'it' ? 'Invia' : 'Send'}
                     >
@@ -302,7 +302,7 @@ export function AIChat() {
                     </button>
                   </div>
                 </div>
-                <p className="text-[10px] text-text-tertiary mt-2 text-center">
+                <p className="text-[10px] text-text-secondary mt-2 text-center">
                   {locale === 'it'
                     ? 'AI powered by Tradelia. Le risposte sono a scopo informativo.'
                     : 'AI powered by Tradelia. Answers are for informational purposes.'}

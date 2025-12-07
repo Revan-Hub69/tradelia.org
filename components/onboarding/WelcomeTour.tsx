@@ -210,13 +210,13 @@ export function WelcomeTour({
               <h3 className="text-lg font-semibold text-text-primary mb-1">
                 {step.title}
               </h3>
-              <div className="text-xs text-text-tertiary">
+              <div className="text-xs text-text-secondary">
                 {currentStep + 1} / {steps.length}
               </div>
             </div>
             <button
               onClick={handleSkip}
-              className="text-text-tertiary hover:text-text-primary transition-colors"
+              className="text-text-secondary hover:text-text-primary transition-colors"
               aria-label={t('onboarding.skip') || 'Salta tour'}
             >
               <X className="w-5 h-5" />

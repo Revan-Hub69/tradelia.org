@@ -106,7 +106,7 @@ export function ReviewForm({ onSuccess }: ReviewFormProps) {
                 'w-12 h-12 rounded-lg flex items-center justify-center transition-all min-w-[44px] min-h-[44px]',
                 rating >= value
                   ? 'bg-accent text-white'
-                  : 'bg-bg-soft text-text-tertiary hover:bg-bg-elevated border border-border-subtle'
+                  : 'bg-bg-soft text-text-secondary hover:bg-bg-elevated border border-border-subtle'
               )}
               aria-label={`${t('reviews.rate') || 'Vota'} ${value} ${value === 1 ? t('reviews.star') || 'stella' : t('reviews.stars') || 'stelle'}`}
             >
@@ -134,10 +134,10 @@ export function ReviewForm({ onSuccess }: ReviewFormProps) {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           rows={6}
-          className="w-full px-4 py-2 bg-bg-base border border-border-subtle rounded-lg text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent resize-none"
+          className="w-full px-4 py-2 bg-bg-base border border-border-subtle rounded-lg text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent resize-none"
           placeholder={t('reviews.commentPlaceholder') || 'Condividi la tua esperienza con Tradelia...'}
         />
-        <p className="text-xs text-text-tertiary mt-1">
+        <p className="text-xs text-text-secondary mt-1">
           {comment.length}/1000 {t('reviews.characters') || 'caratteri'} (min. 10)
         </p>
       </div>
@@ -163,7 +163,7 @@ export function ReviewForm({ onSuccess }: ReviewFormProps) {
         )}
       </Button>
 
-      <p className="text-xs text-text-tertiary text-center">
+      <p className="text-xs text-text-secondary text-center">
         {t('reviews.verificationNote') || 'La tua recensione sarà pubblicata dopo la verifica da parte del team.'}
       </p>
     </form>

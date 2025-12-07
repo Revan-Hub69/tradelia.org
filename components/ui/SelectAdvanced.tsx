@@ -190,21 +190,21 @@ export function SelectAdvanced({
                     }) : [];
                   })()}
                   {value.length > 2 && (
-                    <span className="text-text-tertiary text-xs">+{value.length - 2}</span>
+                    <span className="text-text-secondary text-xs">+{value.length - 2}</span>
                   )}
                 </span>
               ) : (
-                <span className="text-text-tertiary">{placeholder}</span>
+                <span className="text-text-secondary">{placeholder}</span>
               )
             ) : (
               (() => {
                 const label = getSelectedLabels();
-                return typeof label === 'string' ? label : <span className="text-text-tertiary">{placeholder}</span>;
+                return typeof label === 'string' ? label : <span className="text-text-secondary">{placeholder}</span>;
               })()
             )}
           </span>
           <ChevronDown
-            className={cn('w-4 h-4 text-text-tertiary transition-transform', isOpen && 'rotate-180')}
+            className={cn('w-4 h-4 text-text-secondary transition-transform', isOpen && 'rotate-180')}
             aria-hidden="true"
           />
         </button>
@@ -217,7 +217,7 @@ export function SelectAdvanced({
             {searchable && (
               <div className="p-2 border-b border-border-subtle">
                 <div className="relative">
-                  <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary" />
+                  <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" />
                   <input
                     ref={inputRef}
                     type="text"
@@ -231,14 +231,14 @@ export function SelectAdvanced({
             )}
             <div className="overflow-y-auto max-h-48">
               {filteredOptions.length === 0 ? (
-                <div className="px-3 py-2 text-sm text-text-tertiary text-center">
+                <div className="px-3 py-2 text-sm text-text-secondary text-center">
                   Nessun risultato
                 </div>
               ) : (
                 Object.entries(groupedOptions).map(([group, groupOptions]) => (
                   <div key={group}>
                     {group !== 'Other' && (
-                      <div className="px-3 py-1.5 text-xs font-semibold text-text-tertiary bg-bg-surface">
+                      <div className="px-3 py-1.5 text-xs font-semibold text-text-secondary bg-bg-surface">
                         {group}
                       </div>
                     )}
@@ -260,7 +260,7 @@ export function SelectAdvanced({
                       >
                         <span>{option.label}</span>
                         {isSelected(option.value) && (
-                          <Check className="w-4 h-4 text-accent" aria-hidden="true" />
+                          <Check className="w-4 h-4 text-blue-400" aria-hidden="true" />
                         )}
                       </button>
                     ))}
@@ -282,7 +282,7 @@ export function SelectAdvanced({
         </p>
       )}
       {helperText && !error && (
-        <p id={helperId} className="text-xs text-text-tertiary">
+        <p id={helperId} className="text-xs text-text-secondary">
           {helperText}
         </p>
       )}

@@ -81,7 +81,7 @@ export function KellyCriterionCalculator() {
     <div className="space-y-6">
       <div>
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-2 flex items-center gap-2">
-          <Target className="w-5 h-5 sm:w-6 sm:h-6 text-accent flex-shrink-0" />
+          <Target className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 flex-shrink-0" />
           <span>Kelly Criterion Calculator</span>
         </h2>
         <p className="text-text-secondary text-xs sm:text-sm">
@@ -105,7 +105,7 @@ export function KellyCriterionCalculator() {
           <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
             <span>Win Rate (%) *</span>
             <Tooltip content="La percentuale di trade vincenti. Esempio: 60% significa che vinci 6 trade su 10.">
-              <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
             </Tooltip>
           </label>
           <input
@@ -125,7 +125,7 @@ export function KellyCriterionCalculator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Media Win (multiplo rischio) *</span>
               <Tooltip content="Quanto guadagni in media quando vinci, espresso come multiplo del rischio. Esempio: 2 significa che guadagni il doppio di quanto rischi.">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <input
@@ -143,7 +143,7 @@ export function KellyCriterionCalculator() {
             <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
               <span>Media Loss (multiplo rischio) *</span>
               <Tooltip content="Quanto perdi in media quando perdi, espresso come multiplo del rischio. Tipicamente 1 (perdi quanto rischi).">
-                <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+                <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
               </Tooltip>
             </label>
             <input
@@ -162,7 +162,7 @@ export function KellyCriterionCalculator() {
           <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
             <span>Capitale Account</span>
             <Tooltip content="Il capitale totale disponibile (opzionale, usato per calcoli in valuta).">
-              <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
             </Tooltip>
           </label>
           <input
@@ -182,40 +182,40 @@ export function KellyCriterionCalculator() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1 flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1 flex items-center gap-1.5">
                 <Target className="w-3.5 h-3.5" />
                 <span>Kelly Full</span>
               </div>
-              <div className="text-lg sm:text-2xl font-bold text-accent">
+              <div className="text-lg sm:text-2xl font-bold text-blue-400">
                 {results.kellyPercent.toFixed(2)}%
               </div>
-              <div className="text-xs text-text-tertiary mt-1">
+              <div className="text-xs text-text-secondary mt-1">
                 {results.kellyAmount.toLocaleString('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })}
               </div>
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1 flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1 flex items-center gap-1.5">
                 <TrendingUp className="w-3.5 h-3.5" />
                 <span>Half Kelly (Consigliato)</span>
               </div>
               <div className="text-lg sm:text-2xl font-bold text-green-400">
                 {results.halfKelly.toFixed(2)}%
               </div>
-              <div className="text-xs text-text-tertiary mt-1">
+              <div className="text-xs text-text-secondary mt-1">
                 {results.halfKellyAmount.toLocaleString('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })}
               </div>
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1 flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1 flex items-center gap-1.5">
                 <AlertTriangle className="w-3.5 h-3.5" />
                 <span>Quarter Kelly (Conservativo)</span>
               </div>
               <div className="text-lg sm:text-2xl font-bold text-text-primary">
                 {results.quarterKelly.toFixed(2)}%
               </div>
-              <div className="text-xs text-text-tertiary mt-1">
+              <div className="text-xs text-text-secondary mt-1">
                 {results.quarterKellyAmount.toLocaleString('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })}
               </div>
             </div>
@@ -249,10 +249,10 @@ export function KellyCriterionCalculator() {
                 </span>
               </div>
               <div className="mt-4 pt-4 border-t border-border-subtle">
-                <p className="text-xs text-text-tertiary">
+                <p className="text-xs text-text-secondary">
                   <strong>Formula:</strong> Kelly% = (WinRate × AvgWin - LossRate) / AvgWin
                 </p>
-                <p className="text-xs text-text-tertiary mt-2">
+                <p className="text-xs text-text-secondary mt-2">
                   <strong>Raccomandazione:</strong> Il Kelly Full massimizza la crescita ma è molto rischioso. 
                   Usa Half Kelly o Quarter Kelly per un approccio più conservativo e sostenibile nel lungo termine.
                 </p>

@@ -123,7 +123,7 @@ export function PortfolioOptimizer() {
     <div className="space-y-6">
       <div>
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-2 flex items-center gap-2">
-          <PieChart className="w-5 h-5 sm:w-6 sm:h-6 text-accent flex-shrink-0" />
+          <PieChart className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 flex-shrink-0" />
           <span>Portfolio Optimizer</span>
         </h2>
         <p className="text-text-secondary text-xs sm:text-sm">
@@ -156,10 +156,10 @@ export function PortfolioOptimizer() {
           {assets.map((asset, index) => (
             <div key={index} className="grid grid-cols-1 sm:grid-cols-5 gap-3 p-3 bg-bg-surface rounded-lg border border-border-subtle">
               <div>
-                <label className="block text-xs text-text-tertiary mb-1 flex items-center gap-1.5">
+                <label className="block text-xs text-text-secondary mb-1 flex items-center gap-1.5">
                   <span>Simbolo</span>
                   <Tooltip content="Il simbolo dell'asset (es. AAPL, MSFT).">
-                    <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
+                    <HelpCircle className="w-3 h-3 text-text-secondary hover:text-text-secondary cursor-help" />
                   </Tooltip>
                 </label>
                 <input
@@ -172,10 +172,10 @@ export function PortfolioOptimizer() {
                 />
               </div>
               <div>
-                <label className="block text-xs text-text-tertiary mb-1 flex items-center gap-1.5">
+                <label className="block text-xs text-text-secondary mb-1 flex items-center gap-1.5">
                   <span>Peso (%)</span>
                   <Tooltip content="La percentuale del portafoglio allocata a questo asset.">
-                    <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
+                    <HelpCircle className="w-3 h-3 text-text-secondary hover:text-text-secondary cursor-help" />
                   </Tooltip>
                 </label>
                 <input
@@ -190,10 +190,10 @@ export function PortfolioOptimizer() {
                 />
               </div>
               <div>
-                <label className="block text-xs text-text-tertiary mb-1 flex items-center gap-1.5">
+                <label className="block text-xs text-text-secondary mb-1 flex items-center gap-1.5">
                   <span>Rendimento (%)</span>
                   <Tooltip content="Il rendimento atteso annuo dell'asset.">
-                    <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
+                    <HelpCircle className="w-3 h-3 text-text-secondary hover:text-text-secondary cursor-help" />
                   </Tooltip>
                 </label>
                 <input
@@ -206,10 +206,10 @@ export function PortfolioOptimizer() {
                 />
               </div>
               <div>
-                <label className="block text-xs text-text-tertiary mb-1 flex items-center gap-1.5">
+                <label className="block text-xs text-text-secondary mb-1 flex items-center gap-1.5">
                   <span>Volatilità (%)</span>
                   <Tooltip content="La volatilità (deviazione standard) annua dell'asset.">
-                    <HelpCircle className="w-3 h-3 text-text-tertiary hover:text-text-secondary cursor-help" />
+                    <HelpCircle className="w-3 h-3 text-text-secondary hover:text-text-secondary cursor-help" />
                   </Tooltip>
                 </label>
                 <input
@@ -239,7 +239,7 @@ export function PortfolioOptimizer() {
           <label className="block text-sm font-medium text-text-secondary mb-2 flex items-center gap-1.5">
             <span>Tasso Risk-Free (%)</span>
             <Tooltip content="Il tasso di interesse risk-free per calcolare lo Sharpe Ratio. Vedi i suggerimenti MIFID compliant qui sotto.">
-              <HelpCircle className="w-3.5 h-3.5 text-text-tertiary hover:text-text-secondary cursor-help" />
+              <HelpCircle className="w-3.5 h-3.5 text-text-secondary hover:text-text-secondary cursor-help" />
             </Tooltip>
           </label>
           <div className="relative mb-4">
@@ -253,7 +253,7 @@ export function PortfolioOptimizer() {
               max="10"
               step="0.1"
             />
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-tertiary text-sm">%</span>
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary text-sm">%</span>
           </div>
           {/* Suggerimenti MIFID Compliant */}
           <RiskFreeRateSuggestions
@@ -268,17 +268,17 @@ export function PortfolioOptimizer() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1 flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1 flex items-center gap-1.5">
                 <TrendingUp className="w-3.5 h-3.5" />
                 <span>Rendimento Atteso</span>
               </div>
-              <div className="text-lg sm:text-2xl font-bold text-accent">
+              <div className="text-lg sm:text-2xl font-bold text-blue-400">
                 {results.portfolioReturn.toFixed(2)}%
               </div>
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1 flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1 flex items-center gap-1.5">
                 <AlertTriangle className="w-3.5 h-3.5" />
                 <span>Volatilità</span>
               </div>
@@ -288,8 +288,8 @@ export function PortfolioOptimizer() {
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1">Sharpe Ratio</div>
-              <div className="text-lg sm:text-2xl font-bold text-accent">
+              <div className="text-xs sm:text-sm text-text-secondary mb-1">Sharpe Ratio</div>
+              <div className="text-lg sm:text-2xl font-bold text-blue-400">
                 {results.sharpeRatio.toFixed(2)}
               </div>
               <div className={`text-xs font-semibold mt-1 ${results.ratingColor}`}>
@@ -298,7 +298,7 @@ export function PortfolioOptimizer() {
             </div>
 
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-3 sm:p-4">
-              <div className="text-xs sm:text-sm text-text-tertiary mb-1">Diversificazione</div>
+              <div className="text-xs sm:text-sm text-text-secondary mb-1">Diversificazione</div>
               <div className="text-lg sm:text-2xl font-bold text-green-400">
                 {results.diversification.toFixed(1)}%
               </div>
@@ -315,10 +315,10 @@ export function PortfolioOptimizer() {
                 </span>
               </div>
               <div className="mt-4 pt-4 border-t border-border-subtle">
-                <p className="text-xs text-text-tertiary">
+                <p className="text-xs text-text-secondary">
                   <strong>Formula Markowitz:</strong> σ²p = Σᵢ Σⱼ wᵢ wⱼ σᵢ σⱼ ρᵢⱼ
                 </p>
-                <p className="text-xs text-text-tertiary mt-2">
+                <p className="text-xs text-text-secondary mt-2">
                   <strong>Ottimizzazione:</strong> Un portafoglio ben diversificato (correlazioni basse) riduce il rischio 
                   senza sacrificare il rendimento. Obiettivo: massimizzare Sharpe Ratio.
                 </p>
