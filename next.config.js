@@ -135,9 +135,7 @@ const nextConfig = {
     // Note: optimizeCss richiede critters package, rimosso per evitare errori build
   },
 
-  // SWC minification - better tree shaking and dead code elimination
-  swcMinify: true,
-
+  // Note: SWC minification è abilitato di default in Next.js 15, non serve specificarlo
   // Typed routes configuration (moved from experimental in Next.js 15)
   typedRoutes: false,
 
