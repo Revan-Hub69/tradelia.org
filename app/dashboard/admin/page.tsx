@@ -187,7 +187,11 @@ export default function AdminPage() {
       }
 
       const data = await res.json();
-      alert(`Utenti admin creati/aggiornati:\n${data.results.map((r: any) => `- ${r.email}: ${r.status} - ${r.message}`).join('\n')}`);
+      const resultsMessage = data.results.map((r: any) => 
+        `- ${r.email}: ${r.status}\n  ${r.message}${r.user_id ? `\n  User ID: ${r.user_id}` : ''}`
+      ).join('\n\n');
+      
+      alert(`Utenti admin creati/aggiornati:\n\n${resultsMessage}\n\nPassword impostata: ${adminPassword}\n\nIMPORTANTE: Usa questa password per fare login!`);
       setAdminPassword('');
       loadAdminEmails();
       loadUsers();
@@ -195,6 +199,30 @@ export default function AdminPage() {
       setError(err instanceof Error ? err.message : 'Errore sconosciuto');
     } finally {
       setCreatingAdmins(false);
+    }
+  };
+
+  const handleCheckUser = async (email: string) => {
+    try {
+      const res = await fetch('/api/admin/check-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Errore nella verifica utente');
+      }
+
+      const data = await res.json();
+      if (data.exists) {
+        alert(`Utente trovato:\n\nEmail: ${data.email}\nUser ID: ${data.user_id}\nEmail confermata: ${data.email_confirmed ? 'Sì' : 'No'}\nRuolo: ${data.role}\nPuò fare login: ${data.can_login ? 'Sì' : 'No'}\nCreato: ${new Date(data.created_at).toLocaleString('it-IT')}`);
+      } else {
+        alert(`Utente non trovato per email: ${email}`);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Errore sconosciuto');
     }
   };
 
@@ -287,6 +315,13 @@ export default function AdminPage() {
                             Ruolo non assegnato
                           </span>
                         )}
+                        <button
+                          onClick={() => handleCheckUser(ae.email)}
+                          className="px-2 py-1 bg-bg-soft hover:bg-bg-elevated border border-border-subtle rounded text-xs text-text-secondary hover:text-text-primary transition-colors"
+                          title="Verifica dettagli utente"
+                        >
+                          Verifica
+                        </button>
                       </div>
                     </div>
                   ))}

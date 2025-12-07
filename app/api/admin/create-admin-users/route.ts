@@ -85,6 +85,10 @@ export async function POST(request: NextRequest) {
             user_metadata: {
               full_name: email.split('@')[0],
             },
+            // Forza la conferma email anche se non è verificata
+            app_metadata: {
+              email_verified: true,
+            },
           });
 
           if (createError) {
