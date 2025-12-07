@@ -4,10 +4,10 @@ import { StructuredData } from '@/components/seo/StructuredData';
 import { generateWebSiteSchema } from '@/lib/seo/structured-data';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const title = 'Dashboard Analisi | Tradelia';
-  const description = 'Market analysis dashboard with academic indicators, VIX, Fear & Greed Index, and term structure analysis';
-  const url = 'https://tradelia.org/dashboard/analysis';
-  const image = 'https://tradelia.org/og-analysis.png'; // TODO: Create OG image
+  const title = 'Market Data & Indicators | Tradelia';
+  const description = 'Market data dashboard with academic indicators, VIX, Fear & Greed Index, and term structure analysis';
+  const url = 'https://tradelia.org/dashboard/market-data';
+  const image = 'https://tradelia.org/og-market-data.png'; // TODO: Create OG image
   
   return {
     title,
@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: image,
           width: 1200,
           height: 630,
-          alt: 'Tradelia Analysis Dashboard',
+          alt: 'Tradelia Market Data Dashboard',
         },
       ],
       locale: 'it_IT',
@@ -46,7 +46,7 @@ export default function AnalysisPage() {
   
   return (
     <>
-      <StructuredData data={structuredData} id="analysis-structured-data" />
+      <StructuredData data={structuredData} id="market-data-structured-data" />
       <AnalysisDashboard />
     </>
   );

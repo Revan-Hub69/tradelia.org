@@ -87,7 +87,7 @@ export function GlobalSearch() {
           type: 'report',
           title: item.title,
           description: item.description || '',
-          href: `/dashboard/analysis`,
+          href: `/dashboard/market-data`,
           icon: <FileText className="w-4 h-4" />,
         });
       });

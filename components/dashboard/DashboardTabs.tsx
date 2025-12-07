@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils/cn';
 import { prefetchOnHover } from '@/lib/utils/prefetch';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 
-type TabId = 'overview' | 'utilities' | 'analysis' | 'settings';
+type TabId = 'overview' | 'utilities' | 'market-data' | 'settings';
 
 interface Tab {
   id: TabId;
@@ -49,11 +49,11 @@ export function DashboardTabs() {
       description: t('dashboard.tabs.utilitiesDesc') || 'Strumenti finanziari e calcolatori',
     },
     {
-      id: 'analysis',
-      label: t('dashboard.tabs.analysis') || 'Analisi',
+      id: 'market-data',
+      label: t('dashboard.tabs.marketData') || 'Market Data',
       icon: TrendingUp,
-      href: buildLocalePath(locale, '/dashboard/analysis'),
-      description: t('dashboard.tabs.analysisDesc') || 'Report e richieste analisi',
+      href: buildLocalePath(locale, '/dashboard/market-data'),
+      description: t('dashboard.tabs.marketDataDesc') || 'Indicatori di mercato e dati real-time',
     },
     {
       id: 'settings',
@@ -77,8 +77,10 @@ export function DashboardTabs() {
       setActiveTab('overview');
     } else if (normalizedPath.includes('/dashboard/utilities')) {
       setActiveTab('utilities');
-    } else if (normalizedPath.includes('/dashboard/analysis') || normalizedPath.includes('/dashboard/reports')) {
-      setActiveTab('analysis');
+    } else if (normalizedPath.includes('/dashboard/market-data')) {
+      setActiveTab('market-data');
+    } else if (normalizedPath.includes('/dashboard/reports')) {
+      setActiveTab('market-data'); // Reports (con Requests come sub-tab) è parte di market-data
     } else if (normalizedPath.includes('/dashboard/settings')) {
       setActiveTab('settings');
     } else {

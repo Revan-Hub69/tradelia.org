@@ -70,8 +70,8 @@ export function DashboardHero() {
         </p>
         <div className={styles.dashboardHeroActions}>
           <Button asChild size="lg">
-            <Link href="/dashboard/analysis">
-              <span>{t('dashboard.hero.ctaPrimary') || 'Vai alle Analisi'}</span>
+            <Link href="/dashboard/market-data">
+              <span>{t('dashboard.hero.ctaPrimary') || 'Vai ai Market Data'}</span>
               <ArrowRight className={styles.dashboardHeroActionIcon} aria-hidden="true" />
             </Link>
           </Button>

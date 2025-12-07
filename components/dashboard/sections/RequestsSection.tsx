@@ -71,7 +71,7 @@ export function RequestsSection() {
         </h2>
         {requestsList.length > 0 && (
           <Link
-            href={buildLocalePath(locale, '/dashboard/requests')}
+            href={buildLocalePath(locale, '/dashboard/reports?tab=requests')}
             className="text-sm text-accent hover:text-accent-hover font-medium"
           >
             {t('common.viewAll') || 'Vedi tutte'} →
@@ -85,7 +85,7 @@ export function RequestsSection() {
             {t('dashboard.requests.empty') || 'Nessuna richiesta trovata'}
           </p>
           <Link
-            href={buildLocalePath(locale, '/dashboard/requests')}
+            href={buildLocalePath(locale, '/dashboard/reports?tab=requests')}
             className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors text-sm font-medium"
           >
             <TrendingUp className="w-4 h-4" />
@@ -97,7 +97,7 @@ export function RequestsSection() {
           {requestsList.map((request) => (
             <Link
               key={request.id}
-              href={buildLocalePath(locale, `/dashboard/requests/${request.id}`)}
+              href={buildLocalePath(locale, `/dashboard/reports?tab=requests&requestId=${request.id}`)}
               className="block p-4 bg-bg-base border border-border-subtle rounded-lg hover:border-accent/40 hover:shadow-md transition-all group"
             >
               <div className="flex items-start justify-between gap-4">

@@ -67,11 +67,11 @@ export const RecentActivity = memo(function RecentActivity() {
       switch (item.type) {
         case 'report_viewed':
           icon = <FileText className="w-4 h-4" />;
-          href = `/dashboard/analysis`;
+          href = `/dashboard/market-data`;
           break;
         case 'analysis_requested':
           icon = <TrendingUp className="w-4 h-4" />;
-          href = `/dashboard/analysis`;
+          href = `/dashboard/market-data`;
           break;
       }
 
