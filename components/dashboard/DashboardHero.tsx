@@ -10,15 +10,15 @@ import { useTranslations } from '@/lib/i18n/use-translations';
 // buildLocalePath removed - system always uses Italian
 import { TooltipGlossary } from '@/components/glossary/TooltipGlossary';
 import { useState, useEffect } from 'react';
-import { getGlossaryTerm } from '@/lib/glossary/terms';
+import { getGlossaryTerm, type GlossaryTerm } from '@/lib/glossary/terms';
 import { useIsClient } from '@/lib/hooks/useIsClient';
 
 export function DashboardHero() {
   const { t, tArray, locale } = useTranslations();
   const isClient = useIsClient();
   const chips = tArray('dashboard.hero.chips', []);
-  const [mifidTerm, setMifidTerm] = useState<{ id: string; term: string; definition: string } | null>(null);
-  const [frameworkTerm, setFrameworkTerm] = useState<{ id: string; term: string; definition: string } | null>(null);
+  const [mifidTerm, setMifidTerm] = useState<GlossaryTerm | null>(null);
+  const [frameworkTerm, setFrameworkTerm] = useState<GlossaryTerm | null>(null);
 
   // Carica termini per tooltip SOLO sul client per evitare hydration mismatch
   useEffect(() => {
