@@ -43,7 +43,7 @@ export function DashboardShell() {
   const { t } = useTranslations();
   const { preferences, isLoaded, toggleHero, toggleCompactView } = useDashboardPreferences();
   const [liveMessage, setLiveMessage] = useState('');
-  const [unlockedAchievement, setUnlockedAchievement] = useState<{ id: string; name: string; description?: string } | null>(null);
+  const [unlockedAchievement, setUnlockedAchievement] = useState<{ id: string; title: string; description: string; icon_type?: string } | null>(null);
   const [hasError, setHasError] = useState(false);
   const router = useSafeRouter();
 
