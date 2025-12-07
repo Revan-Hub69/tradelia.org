@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       try {
         // Verifica se utente esiste già
         const { data: { users } } = await supabaseAdmin.auth.admin.listUsers();
-        const existingUser = users?.find((u) => u.email === email);
+        const existingUser = users?.find((u: { email?: string }) => u.email === email);
 
         if (existingUser) {
           // Utente esiste, aggiorna password
@@ -149,7 +149,7 @@ export async function GET() {
     // Verifica quali email hanno utenti creati
     const { data: { users } } = await supabaseAdmin.auth.admin.listUsers();
     const emailStatusPromises = adminEmails?.map(async (ae: { email: string; created_at: string }) => {
-      const user = users?.find((u) => u.email === ae.email);
+      const user = users?.find((u: { email?: string; id?: string }) => u.email === ae.email);
       let roleData = null;
       
       if (user?.id) {
