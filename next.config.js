@@ -125,8 +125,8 @@ const nextConfig = {
   // Optimize for modern browsers - reduce polyfills
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
-    // Optimize CSS loading - improve LCP
-    optimizeCss: true,
+    // Note: optimizeCss requires 'critters' package - removed to avoid build errors
+    // CSS optimization is handled via inline critical CSS in layout.tsx
   },
 
   // Typed routes configuration (moved from experimental in Next.js 15)

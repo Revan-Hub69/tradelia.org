@@ -11,7 +11,6 @@ import '@/lib/utils/suppress-hydration-errors';
 // Importa global error handler
 import '@/lib/utils/global-error-handler';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { DeferCSS } from '@/components/optimization/DeferCSS';
 
 const ConditionalHeader = dynamic(() => import('@/components/layout/ConditionalHeader').then(m => ({ default: m.ConditionalHeader })));
 
@@ -132,7 +131,7 @@ export default function RootLayout({
           
           Strategy:
           1. Critical CSS (above-the-fold) is inlined here (~5-8KB)
-          2. Non-critical CSS is loaded asynchronously via DeferCSS component
+          2. Non-critical CSS is automatically code-split by Next.js
           3. This reduces initial render time by 300-500ms
           
           What's included:
@@ -209,18 +208,17 @@ export default function RootLayout({
         }} />
         
         {/* 
-          DEFER NON-CRITICAL CSS - Performance Optimization
-          =================================================
-          This script enables asynchronous loading of non-critical CSS.
-          The DeferCSS component handles the actual deferring on client-side.
+          CSS OPTIMIZATION - Performance
+          ===============================
+          Critical CSS is inlined above to prevent render blocking.
+          Non-critical CSS is automatically handled by Next.js code splitting.
           
           Benefits:
-          - Non-blocking initial render
+          - Non-blocking initial render (critical CSS inline)
           - Faster FCP (First Contentful Paint)
           - Improved LCP scores
           
-          Note: Next.js automatically handles CSS code splitting,
-          but this provides additional control for critical path optimization.
+          Note: Next.js automatically handles CSS code splitting and optimization.
         */}
         
         {/* PWA Manifest */}
@@ -268,7 +266,6 @@ export default function RootLayout({
         <link rel="canonical" href="https://tradelia.org" />
       </head>
       <body className={inter.className} suppressHydrationWarning>
-        <DeferCSS />
         <ErrorBoundary>
           <CurrencyProvider>
             <div className="min-h-screen flex flex-col" suppressHydrationWarning>
