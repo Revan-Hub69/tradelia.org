@@ -150,13 +150,13 @@ export function Footer() {
                   <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-accent to-accent-hover transition-all duration-300 group-hover:w-full" />
                 </div>
               </Link>
-              <p className="text-sm text-text-muted leading-relaxed">
+              <p className="text-sm text-text-tertiary leading-relaxed">
                 &copy; {mounted ? year : 2024} Tradelia · {t('footer.copyright')}
               </p>
               <p className="text-sm text-text-secondary leading-relaxed max-w-sm transition-colors duration-200">
                 {t('footer.description')}
               </p>
-              <p className="text-xs text-text-muted leading-relaxed max-w-sm mt-2 opacity-90">
+              <p className="text-xs text-text-tertiary leading-relaxed max-w-sm mt-2">
                 {t('footer.disclaimer')}
               </p>
             </motion.div>
@@ -190,7 +190,7 @@ export function Footer() {
             transition={{ delay: 0.4 }}
             className="pt-8 border-t border-border-subtle"
           >
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-muted">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-tertiary">
               <div className="flex items-center gap-3">
                 <Badge variant="outline" className="text-xs font-medium hover:border-accent hover:text-accent transition-all duration-200">
                   v2.0.1

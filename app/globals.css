@@ -171,7 +171,8 @@
   }
 
   /* Custom Scrollbar - Enhanced Visibility - Unified across site */
-  /* Firefox */
+  /* Firefox - scrollbar-color is intentionally used for Firefox support */
+  /* Note: Lighthouse may warn about this, but it's required for Firefox scrollbar styling */
   * {
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.08);

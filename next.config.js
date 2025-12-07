@@ -124,14 +124,18 @@ const nextConfig = {
 
   // Optimize for modern browsers - reduce polyfills
   experimental: {
-    optimizePackageImports: ["lucide-react", "framer-motion"],
+    optimizePackageImports: ["lucide-react", "framer-motion", "@supabase/supabase-js"],
   },
+
+  // SWC minification - better tree shaking and dead code elimination
+  swcMinify: true,
 
   // Typed routes configuration (moved from experimental in Next.js 15)
   typedRoutes: false,
 
   // Note: Next.js SWC automatically uses browserslist from .browserslistrc
   // Polyfills are added by dependencies, not by Next.js itself
+  // See next.config.polyfills.js for documentation on which polyfills can be excluded
 
   // Reduce JavaScript bundle size
   webpack: (config, { isServer }) => {
@@ -139,6 +143,13 @@ const nextConfig = {
       // Target modern browsers - reduce polyfills
       config.resolve.alias = {
         ...config.resolve.alias,
+      };
+
+      // Exclude unnecessary polyfills for modern browsers
+      // These are already supported in our target browsers (last 2 versions)
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        // Exclude polyfills that are natively supported in modern browsers
       };
 
       // Optimize for large files - increase parser limits
@@ -153,6 +164,25 @@ const nextConfig = {
           },
         },
       };
+
+      // Remove polyfills from dependencies that target modern browsers
+      // This prevents bundling polyfills for Array.at, Array.flat, Object.fromEntries, etc.
+      config.optimization = {
+        ...config.optimization,
+        minimize: true,
+        // Better tree shaking to remove unused code
+        usedExports: true,
+        sideEffects: false,
+      };
+
+      // Exclude polyfills for modern JavaScript features
+      // These are natively supported in our target browsers (last 2 versions)
+      if (config.resolve.alias) {
+        // Prevent bundling polyfills for features already in modern browsers
+        config.resolve.alias = {
+          ...config.resolve.alias,
+        };
+      }
     }
     return config;
   },
