@@ -36,7 +36,7 @@ export function OverviewStats() {
       context: t('dashboard.overview.stats.totalReports.context'),
       action: {
         label: t('dashboard.overview.stats.totalReports.action'),
-        href: buildLocalePath(locale, '/dashboard/analysis'),
+        href: buildLocalePath(locale, '/dashboard/market-data'),
       },
     },
     {
@@ -47,7 +47,7 @@ export function OverviewStats() {
       context: t('dashboard.overview.stats.pendingRequests.context'),
       action: {
         label: t('dashboard.overview.stats.pendingRequests.action'),
-        href: buildLocalePath(locale, '/dashboard/requests'),
+        href: buildLocalePath(locale, '/dashboard/reports?tab=requests'),
       },
     },
     {

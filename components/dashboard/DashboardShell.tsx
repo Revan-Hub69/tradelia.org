@@ -6,6 +6,7 @@ import '@/lib/utils/suppress-hydration-errors';
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { DashboardHero } from './DashboardHero';
 import { OverviewStats } from './OverviewStats';
+import { MarketDashboardWidget } from './MarketDashboardWidget';
 import { ModuleGrid } from './ModuleGrid';
 import { AccountBanner } from './AccountBanner';
 // WidgetsSection rimossa - richiede API real-time non disponibili
@@ -134,14 +135,14 @@ export function DashboardShell() {
       description: 'Vai alla dashboard',
     },
     {
-      keys: ['g', 'r'],
-      handler: () => router.push('/dashboard/analysis'),
-      description: 'Vai ai report',
+      keys: ['g', 'm'],
+      handler: () => router.push('/dashboard/market-data'),
+      description: 'Vai ai market data',
     },
     {
-      keys: ['g', 'c'],
-      handler: () => router.push('/dashboard/education'),
-      description: 'Vai ai corsi',
+      keys: ['g', 'r'],
+      handler: () => router.push('/dashboard/reports'),
+      description: 'Vai ai report',
     },
     {
       keys: ['g', 's'],
@@ -255,6 +256,19 @@ export function DashboardShell() {
             </ErrorBoundary>
           </section>
 
+          {/* Cruscotto Operativo - Best Practice: Widget di mercato in tempo reale - PRIORITÀ ALTA */}
+          {/* Fornisce vista operativa immediata degli indicatori di mercato principali */}
+          <section 
+            aria-label="Cruscotto operativo mercati" 
+            className={styles.dashboardSection}
+            suppressHydrationWarning
+            id="market-dashboard"
+          >
+            <ErrorBoundary>
+              <MarketDashboardWidget />
+            </ErrorBoundary>
+          </section>
+
           {/* Statistiche chiave - Best Practice: 4-6 metriche essenziali - SECONDARIA */}
           {/* Fornisce overview rapida delle attività principali */}
           <section 
@@ -267,9 +281,6 @@ export function DashboardShell() {
               <OverviewStats />
             </ErrorBoundary>
           </section>
-
-          {/* Widgets Section rimossa - richiede API real-time non disponibili */}
-          {/* Verrà riattivata quando le API saranno disponibili */}
         </div>
         {/* Chat AI unificata - Disponibile tramite layout principale */}
       </main>
