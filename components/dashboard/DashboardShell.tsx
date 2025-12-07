@@ -108,10 +108,15 @@ export function DashboardShell() {
     window.addEventListener('unhandledrejection', handleUnhandledRejection);
     
     // Controlla se siamo stati redirectati al login (solo sul client)
+    // Defer non-critical redirect check to improve initial render
     if (typeof window !== 'undefined' && typeof document !== 'undefined') {
       if (window.location.pathname === '/login' && document.referrer.includes('/dashboard')) {
-        // Usa setTimeout per evitare problemi durante l'hydration
-        setTimeout(handleLocationChange, 0);
+        // Defer redirect check after hydration to avoid blocking initial render
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(handleLocationChange, { timeout: 100 });
+        } else {
+          setTimeout(handleLocationChange, 0);
+        }
       }
     }
 

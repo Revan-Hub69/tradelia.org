@@ -27,9 +27,18 @@ export const QuickActions = memo(function QuickActions() {
   const [loading, setLoading] = useState(true);
 
   // Simulate loading for future API integration
+  // Defer non-critical loading state to improve initial render
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 300);
-    return () => clearTimeout(timer);
+    // Use requestIdleCallback if available for better performance
+    const deferLoad = () => {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => setLoading(false), { timeout: 500 });
+      } else {
+        setTimeout(() => setLoading(false), 300);
+      }
+    };
+    
+    deferLoad();
   }, []);
 
   if (loading) {
