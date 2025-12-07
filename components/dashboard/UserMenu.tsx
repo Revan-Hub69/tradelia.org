@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { User, Settings, LogOut, Bell, ChevronDown, Mail, FileText, BookOpen, Star, Activity, BarChart3, Wallet, Building2, Wrench, Vote, Layers } from 'lucide-react';
+import { User, Settings, LogOut, Bell, ChevronDown, Shield } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { supabase } from '@/lib/supabase/client';
 import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
@@ -30,6 +30,7 @@ export function UserMenu() {
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [menuPosition, setMenuPosition] = useState<{ top: number; right: number } | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const isPro = useIsPro();
 
   // Blocca scroll quando menu è aperto
@@ -58,6 +59,20 @@ export function UserMenu() {
             email: session.user.email || undefined,
             name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0],
           });
+          
+          // Verifica se è admin
+          if (session.user.email) {
+            try {
+              const { data: roleData } = await supabase
+                .from('user_roles')
+                .select('role')
+                .eq('user_id', session.user.id)
+                .single();
+              setIsAdmin(roleData?.role === 'admin');
+            } catch {
+              setIsAdmin(false);
+            }
+          }
           return;
         }
         
@@ -68,14 +83,30 @@ export function UserMenu() {
             email: user.email || undefined,
             name: user.user_metadata?.full_name || user.email?.split('@')[0],
           });
+          
+          // Verifica se è admin
+          if (user.email) {
+            try {
+              const { data: roleData } = await supabase
+                .from('user_roles')
+                .select('role')
+                .eq('user_id', user.id)
+                .single();
+              setIsAdmin(roleData?.role === 'admin');
+            } catch {
+              setIsAdmin(false);
+            }
+          }
         } else {
           // Se non c'è utente, imposta null
           setUser(null);
+          setIsAdmin(false);
         }
       } catch (error) {
         // In caso di errore, imposta null e logga
         console.error('Error fetching user in UserMenu:', error);
         setUser(null);
+        setIsAdmin(false);
       }
     };
 
@@ -165,7 +196,7 @@ export function UserMenu() {
   const menuItems: MenuItem[] = [
     {
       id: 'profile',
-      label: t('dashboard.userMenu.profile') || 'Dashboard',
+      label: t('dashboard.userMenu.profile') || 'Profilo',
       icon: User,
       href: '/dashboard',
     },
@@ -177,72 +208,22 @@ export function UserMenu() {
       badge: unreadCount > 0 ? unreadCount : undefined,
     },
     {
-      id: 'reports',
-      label: t('dashboard.userMenu.reports') || 'Report',
-      icon: FileText,
-      href: '/dashboard/reports',
-    },
-    {
-      id: 'watchlist',
-      label: t('dashboard.userMenu.watchlist') || 'Watchlist',
-      icon: Star,
-      href: '/dashboard/watchlist',
-    },
-    {
-      id: 'education',
-      label: t('dashboard.userMenu.education') || 'Formazione',
-      icon: BookOpen,
-      href: '/dashboard/education',
-    },
-    {
-      id: 'activity',
-      label: t('dashboard.userMenu.activity') || 'Attività',
-      icon: Activity,
-      href: '/dashboard/activity',
-    },
-    {
-      id: 'analysis',
-      label: t('dashboard.userMenu.analysis') || 'Analisi',
-      icon: BarChart3,
-      href: '/dashboard/analysis',
-    },
-    {
-      id: 'voting',
-      label: t('dashboard.userMenu.voting') || 'Votazioni',
-      icon: Vote,
-      href: '/dashboard/voting',
-    },
-    {
-      id: 'utilities',
-      label: t('dashboard.userMenu.utilities') || 'Utilità',
-      icon: Wrench,
-      href: '/dashboard/utilities',
-    },
-    {
-      id: 'widgets',
-      label: t('dashboard.userMenu.widgets') || 'Widget',
-      icon: Layers,
-      href: '/dashboard/widgets',
-    },
-    {
-      id: 'billing',
-      label: t('dashboard.userMenu.billing') || 'Fatturazione',
-      icon: Wallet,
-      href: '/dashboard/billing',
-    },
-    {
-      id: 'brokers',
-      label: t('dashboard.userMenu.brokers') || 'Broker',
-      icon: Building2,
-      href: '/dashboard/brokers',
-    },
-    {
       id: 'settings',
       label: t('dashboard.userMenu.settings') || 'Impostazioni',
       icon: Settings,
       href: '/dashboard/settings',
     },
   ];
+
+  // Aggiungi admin panel se l'utente è admin
+  if (isAdmin) {
+    menuItems.push({
+      id: 'admin',
+      label: 'Admin Panel',
+      icon: Shield,
+      href: '/dashboard/admin',
+    });
+  }
 
   menuItems.push({
     id: 'logout',
