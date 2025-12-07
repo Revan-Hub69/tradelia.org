@@ -5,12 +5,22 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { isAdmin } from '@/lib/middleware/admin-auth';
 
 // GET - Dettagli utente
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  // Verifica autenticazione admin
+  const adminCheck = await isAdmin();
+  if (!adminCheck.isAdmin) {
+    return NextResponse.json(
+      { error: 'Unauthorized - Admin access required' },
+      { status: 401 }
+    );
+  }
+
   try {
     const userId = params.id;
 
@@ -72,6 +82,15 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  // Verifica autenticazione admin
+  const adminCheck = await isAdmin();
+  if (!adminCheck.isAdmin) {
+    return NextResponse.json(
+      { error: 'Unauthorized - Admin access required' },
+      { status: 401 }
+    );
+  }
+
   try {
     const userId = params.id;
     const body = await request.json();
@@ -149,6 +168,15 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  // Verifica autenticazione admin
+  const adminCheck = await isAdmin();
+  if (!adminCheck.isAdmin) {
+    return NextResponse.json(
+      { error: 'Unauthorized - Admin access required' },
+      { status: 401 }
+    );
+  }
+
   try {
     const userId = params.id;
 

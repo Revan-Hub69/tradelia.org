@@ -11,9 +11,19 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { isAdmin } from '@/lib/middleware/admin-auth';
 
 // GET - Lista tutti gli utenti
 export async function GET(request: NextRequest) {
+  // Verifica autenticazione admin
+  const adminCheck = await isAdmin();
+  if (!adminCheck.isAdmin) {
+    return NextResponse.json(
+      { error: 'Unauthorized - Admin access required' },
+      { status: 401 }
+    );
+  }
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const page = parseInt(searchParams.get('page') || '1');
@@ -90,6 +100,15 @@ export async function GET(request: NextRequest) {
 
 // POST - Crea nuovo utente
 export async function POST(request: NextRequest) {
+  // Verifica autenticazione admin
+  const adminCheck = await isAdmin();
+  if (!adminCheck.isAdmin) {
+    return NextResponse.json(
+      { error: 'Unauthorized - Admin access required' },
+      { status: 401 }
+    );
+  }
+
   try {
     const body = await request.json();
     const { email, password, name, role, metadata } = body;
