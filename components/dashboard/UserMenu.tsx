@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { User, Settings, LogOut, Bell, ChevronDown, Mail } from 'lucide-react';
+import { User, Settings, LogOut, Bell, ChevronDown, Mail, FileText, BookOpen, Star, Activity, BarChart3, Wallet, Building2, Wrench, Vote, Layers } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { supabase } from '@/lib/supabase/client';
 import { useSafeRouter } from '@/lib/hooks/useSafeRouter';
@@ -165,7 +165,7 @@ export function UserMenu() {
   const menuItems: MenuItem[] = [
     {
       id: 'profile',
-      label: t('dashboard.userMenu.profile') || 'Profilo',
+      label: t('dashboard.userMenu.profile') || 'Dashboard',
       icon: User,
       href: '/dashboard',
     },
@@ -177,14 +177,72 @@ export function UserMenu() {
       badge: unreadCount > 0 ? unreadCount : undefined,
     },
     {
+      id: 'reports',
+      label: t('dashboard.userMenu.reports') || 'Report',
+      icon: FileText,
+      href: '/dashboard/reports',
+    },
+    {
+      id: 'watchlist',
+      label: t('dashboard.userMenu.watchlist') || 'Watchlist',
+      icon: Star,
+      href: '/dashboard/watchlist',
+    },
+    {
+      id: 'education',
+      label: t('dashboard.userMenu.education') || 'Formazione',
+      icon: BookOpen,
+      href: '/dashboard/education',
+    },
+    {
+      id: 'activity',
+      label: t('dashboard.userMenu.activity') || 'Attività',
+      icon: Activity,
+      href: '/dashboard/activity',
+    },
+    {
+      id: 'analysis',
+      label: t('dashboard.userMenu.analysis') || 'Analisi',
+      icon: BarChart3,
+      href: '/dashboard/analysis',
+    },
+    {
+      id: 'voting',
+      label: t('dashboard.userMenu.voting') || 'Votazioni',
+      icon: Vote,
+      href: '/dashboard/voting',
+    },
+    {
+      id: 'utilities',
+      label: t('dashboard.userMenu.utilities') || 'Utilità',
+      icon: Wrench,
+      href: '/dashboard/utilities',
+    },
+    {
+      id: 'widgets',
+      label: t('dashboard.userMenu.widgets') || 'Widget',
+      icon: Layers,
+      href: '/dashboard/widgets',
+    },
+    {
+      id: 'billing',
+      label: t('dashboard.userMenu.billing') || 'Fatturazione',
+      icon: Wallet,
+      href: '/dashboard/billing',
+    },
+    {
+      id: 'brokers',
+      label: t('dashboard.userMenu.brokers') || 'Broker',
+      icon: Building2,
+      href: '/dashboard/brokers',
+    },
+    {
       id: 'settings',
       label: t('dashboard.userMenu.settings') || 'Impostazioni',
       icon: Settings,
       href: '/dashboard/settings',
     },
   ];
-
-  // Admin area rimossa - non più disponibile
 
   menuItems.push({
     id: 'logout',
@@ -273,7 +331,7 @@ export function UserMenu() {
             </div>
 
             {/* Menu Items */}
-            <div className="p-2">
+            <div className="p-2 max-h-[70vh] overflow-y-auto">
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const content = (
