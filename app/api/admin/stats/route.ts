@@ -18,7 +18,7 @@ export async function GET() {
       .from('user_roles')
       .select('role');
 
-    const usersByRole = rolesData?.reduce((acc: Record<string, number>, r) => {
+    const usersByRole = rolesData?.reduce((acc: Record<string, number>, r: { role: string }) => {
       acc[r.role] = (acc[r.role] || 0) + 1;
       return acc;
     }, {} as Record<string, number>) || {};
