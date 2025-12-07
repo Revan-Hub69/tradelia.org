@@ -132,8 +132,7 @@ const nextConfig = {
       "react-chartjs-2",
       "recharts",
     ],
-    // Ottimizzazione bundle: code splitting più aggressivo
-    optimizeCss: true,
+    // Note: optimizeCss richiede critters package, rimosso per evitare errori build
   },
 
   // SWC minification - better tree shaking and dead code elimination
