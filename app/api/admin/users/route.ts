@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Ottieni ruoli da user_roles
-    const userIds = filteredUsers.map((u) => u.id);
+    const userIds = filteredUsers.map((u: { id: string }) => u.id);
     const { data: rolesData } = await supabaseAdmin
       .from('user_roles')
       .select('user_id, role, valid_until')
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
 
     // Filtra per ruolo se specificato
     const finalUsers = role
-      ? usersWithRoles.filter((u) => u.role === role)
+      ? usersWithRoles.filter((u: { role: string }) => u.role === role)
       : usersWithRoles;
 
     return NextResponse.json({
