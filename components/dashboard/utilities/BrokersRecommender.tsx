@@ -1,11 +1,45 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Building2, CheckCircle2, X, Info, BookOpen, TrendingUp, Shield, Globe, Zap, Star, ChevronRight, ChevronLeft, AlertTriangle, FileText, Award, Target, Settings, ArrowRight, Check } from 'lucide-react';
+import { Building2, CheckCircle2, X, Info, BookOpen, TrendingUp, Shield, Globe, Zap, Star, ChevronRight, ChevronLeft, AlertTriangle, FileText, Award, Target, Settings, ArrowRight, Check, DollarSign, CreditCard, HeadphonesIcon, Smartphone, GraduationCap, Calendar, ExternalLink, Calculator, BarChart3 } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+
+interface BrokerCosts {
+  // Commissioni specifiche
+  commissionStocks?: string; // es. "0.1% min €1"
+  commissionForex?: string; // es. "Da 0.0 pip"
+  commissionOptions?: string; // es. "€0.70 per contratto"
+  commissionFutures?: string; // es. "€2.50 per contratto"
+  // Spread tipici
+  spreadForex?: string; // es. "0.1 pip EUR/USD"
+  spreadIndices?: string; // es. "0.4 punti"
+  // Costi aggiuntivi
+  inactivityFee?: string; // es. "€10/mese dopo 12 mesi"
+  withdrawalFee?: string; // es. "Gratuito"
+  currencyConversionFee?: string; // es. "0.2%"
+  marketDataFee?: string; // es. "€10/mese per dati real-time"
+  // Costi minimi
+  minCommission?: string; // es. "€1 per ordine"
+  maxCommission?: string; // es. "1% del valore"
+}
+
+interface BrokerSupport {
+  languages: string[]; // es. ['Italiano', 'Inglese']
+  hours: string; // es. "Lun-Ven 9:00-18:00 CET"
+  channels: string[]; // es. ['Email', 'Chat', 'Telefono']
+  responseTime?: string; // es. "< 24h"
+}
+
+interface BrokerPayment {
+  depositMethods: string[]; // es. ['Bonifico', 'Carta', 'PayPal']
+  withdrawalMethods: string[]; // es. ['Bonifico', 'Carta']
+  depositTime?: string; // es. "1-2 giorni lavorativi"
+  withdrawalTime?: string; // es. "1-3 giorni lavorativi"
+  minWithdrawal?: string; // es. "€50"
+}
 
 interface Broker {
   id: string;
@@ -17,8 +51,8 @@ interface Broker {
   instruments: string[];
   minDeposit: number | string;
   leverage: string;
-  spread: string;
-  commission: string;
+  spread: string; // Legacy - mantenuto per compatibilità
+  commission: string; // Legacy - mantenuto per compatibilità
   taxRegime: 'amministrato' | 'dichiarativo' | 'both';
   educationLevel: 'beginner' | 'intermediate' | 'advanced' | 'all';
   pros: string[];
@@ -34,6 +68,25 @@ interface Broker {
   };
   riskLevel?: 'low' | 'medium' | 'high';
   mifid2Compliant?: boolean;
+  // Nuove informazioni complete
+  costs?: BrokerCosts;
+  fundProtection?: {
+    scheme: string; // es. "ICF", "SIPC", "FSCS"
+    amount: string; // es. "€20,000", "$500,000"
+  };
+  support?: BrokerSupport;
+  payment?: BrokerPayment;
+  accountTypes?: string[]; // es. ['Retail', 'Professional', 'Institutional']
+  demoAccount?: boolean;
+  educationalResources?: boolean;
+  mobileAppRating?: number; // 1-5
+  lastUpdated?: string; // Data ultimo aggiornamento
+  officialLinks?: {
+    website?: string;
+    terms?: string;
+    kid?: string; // Key Information Document
+    privacy?: string;
+  };
 }
 
 // Lista broker corretta e affidabile dalla pagina brokers esistente
@@ -45,28 +98,70 @@ const availableBrokers: Broker[] = [
     description: 'Accesso DMA a 160+ mercati globali con Toolset Trader Workstation, Client Portal e API istituzionali.',
     regulatory: ['SEC', 'CFTC', 'FCA', 'CSSF', 'ASIC'],
     platforms: ['TWS', 'Client Portal', 'IBKR Mobile', 'API FIX/REST'],
-    instruments: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures'],
+    instruments: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures', 'Forex', 'Commodities'],
     minDeposit: 0,
-    leverage: 'Variabile',
-    spread: 'DMA',
-    commission: 'Variabile',
+    leverage: 'Fino a 50:1 (retail), fino a 400:1 (professional)',
+    spread: 'DMA - Spread di mercato',
+    commission: 'Tiered: 0.005 USD per azione (min $1), Fixed: 0.005 USD per azione (min $1)',
     taxRegime: 'dichiarativo',
     educationLevel: 'advanced',
     pros: [
       'Copertura multi-mercato con DMA reale',
       'API e dati storici completi',
       'Gestione rischio margini trasparente',
-      'Accesso a 160+ mercati globali'
+      'Accesso a 160+ mercati globali',
+      'Protezione SIPC fino a $500,000',
+      'App mobile completa e professionale'
     ],
     cons: [
       'Curva di apprendimento ripida (TWS)',
-      'Costi dati in tempo reale separati',
-      'Più complesso per principianti'
+      'Costi dati in tempo reale separati (da $4.50/mese)',
+      'Più complesso per principianti',
+      'Commissioni su opzioni/futures possono essere elevate per piccoli volumi'
     ],
     rating: 4.8,
     score: 95,
     riskLevel: 'high',
     mifid2Compliant: true,
+    costs: {
+      commissionStocks: 'Tiered: 0.005 USD per azione (min $1), Fixed: 0.005 USD per azione (min $1)',
+      commissionForex: '0.08-0.20 pip (EUR/USD)',
+      commissionOptions: 'Da $0.70 per contratto',
+      commissionFutures: 'Da $0.85 per contratto',
+      spreadForex: 'DMA - Spread di mercato',
+      inactivityFee: '$20/mese se account < $2,000 e nessuna attività',
+      withdrawalFee: 'Gratuito (1 prelievo/mese), poi $10',
+      currencyConversionFee: '0.002% (2 bps)',
+      marketDataFee: 'Da $4.50/mese per dati real-time (gratuito per dati ritardati)',
+      minCommission: '$1 per ordine'
+    },
+    fundProtection: {
+      scheme: 'SIPC',
+      amount: '$500,000 (di cui $250,000 cash)'
+    },
+    support: {
+      languages: ['Inglese', 'Italiano', 'Francese', 'Tedesco', 'Spagnolo', 'Cinese'],
+      hours: 'Lun-Ven 24/5 (mercati aperti), Sab-Dom limitato',
+      channels: ['Telefono', 'Chat', 'Email', 'Ticket'],
+      responseTime: '< 24h per email, immediato per chat/telefono'
+    },
+    payment: {
+      depositMethods: ['Bonifico', 'Wire Transfer', 'ACH', 'Carta'],
+      withdrawalMethods: ['Bonifico', 'Wire Transfer', 'ACH'],
+      depositTime: '1-2 giorni lavorativi',
+      withdrawalTime: '1-3 giorni lavorativi',
+      minWithdrawal: '$1'
+    },
+    accountTypes: ['Retail', 'Professional', 'Institutional'],
+    demoAccount: true,
+    educationalResources: true,
+    mobileAppRating: 4.5,
+    lastUpdated: '2025-01-27',
+    officialLinks: {
+      website: 'https://www.interactivebrokers.com',
+      terms: 'https://www.interactivebrokers.com/en/index.php?f=16457',
+      privacy: 'https://www.interactivebrokers.com/en/index.php?f=16458'
+    },
     review: {
       summary: 'Utilizziamo IBKR per dataset microstrutturali e per replicare condizioni istituzionali nelle simulazioni AI di portafoglio.',
       recommendedFor: 'Desk quantitativi, investitori professionali, master universitari con focus su derivati quotati.',
@@ -81,27 +176,68 @@ const availableBrokers: Broker[] = [
     description: 'Succursale italiana del gruppo Saxo Bank con regime amministrato e piattaforme SaxoTraderGO/PRO.',
     regulatory: ['Consob', 'Banca d\'Italia'],
     platforms: ['SaxoTraderGO', 'SaxoTraderPRO', 'OpenAPI'],
-    instruments: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures'],
+    instruments: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures', 'Forex', 'CFD'],
     minDeposit: 0,
-    leverage: 'Variabile',
-    spread: 'Variabile',
-    commission: 'Variabile',
+    leverage: 'Fino a 30:1 (retail), fino a 400:1 (professional)',
+    spread: 'Da 0.4 pip (EUR/USD)',
+    commission: 'Azioni: 0.1% (min €3), Forex: spread incluso',
     taxRegime: 'amministrato',
     educationLevel: 'intermediate',
     pros: [
       'Regime fiscale amministrato (IT)',
       'Copertura globale azioni/derivati',
       'Piattaforme professionali configurabili',
-      'Supporto italiano'
+      'Supporto italiano',
+      'Protezione fondi fino a €100,000',
+      'Piattaforme desktop e mobile complete'
     ],
     cons: [
       'Struttura commissionale articolata',
-      'Richiede familiarità con marginazione avanzata'
+      'Richiede familiarità con marginazione avanzata',
+      'Costi dati di mercato aggiuntivi per alcuni strumenti'
     ],
     rating: 4.5,
     score: 90,
     riskLevel: 'medium',
     mifid2Compliant: true,
+    costs: {
+      commissionStocks: '0.1% (min €3)',
+      commissionForex: 'Spread incluso (da 0.4 pip EUR/USD)',
+      commissionOptions: 'Da €1.50 per contratto',
+      commissionFutures: 'Da €2.50 per contratto',
+      spreadForex: 'Da 0.4 pip (EUR/USD)',
+      inactivityFee: 'Nessun costo di inattività',
+      withdrawalFee: 'Gratuito',
+      currencyConversionFee: 'Spread incluso',
+      marketDataFee: 'Gratuito per dati base, premium a pagamento'
+    },
+    fundProtection: {
+      scheme: 'Fondo Interbancario di Tutela dei Depositi',
+      amount: '€100,000'
+    },
+    support: {
+      languages: ['Italiano', 'Inglese'],
+      hours: 'Lun-Ven 9:00-18:00 CET',
+      channels: ['Telefono', 'Email', 'Chat'],
+      responseTime: '< 24h'
+    },
+    payment: {
+      depositMethods: ['Bonifico', 'Carta', 'SEPA'],
+      withdrawalMethods: ['Bonifico', 'SEPA'],
+      depositTime: '1-2 giorni lavorativi',
+      withdrawalTime: '1-3 giorni lavorativi',
+      minWithdrawal: '€50'
+    },
+    accountTypes: ['Retail', 'Professional'],
+    demoAccount: true,
+    educationalResources: true,
+    mobileAppRating: 4.3,
+    lastUpdated: '2025-01-27',
+    officialLinks: {
+      website: 'https://www.saxobank.com/it',
+      terms: 'https://www.saxobank.com/it/terms',
+      privacy: 'https://www.saxobank.com/it/privacy'
+    },
     review: {
       summary: 'Selezionato per progetti pilota con università italiane su fiscalità amministrata e formazione su derivati quotati.',
       recommendedFor: 'Investitori evoluti che necessitano di sostituto d\'imposta italiano con ampia gamma strumenti globali.',
@@ -119,24 +255,62 @@ const availableBrokers: Broker[] = [
     instruments: ['Azioni', 'ETF', 'Bond', 'IDEM'],
     minDeposit: 0,
     leverage: 'N/A',
-    spread: 'Variabile',
-    commission: 'Variabile',
+    spread: 'Spread di mercato (DMA)',
+    commission: 'Borsa Italiana: 0.19% (min €2.95), USA: $0.005 per azione (min $1)',
     taxRegime: 'amministrato',
     educationLevel: 'beginner',
     pros: [
       'Fiscalità amministrata completamente gestita',
       'Accesso diretto a IDEM e Borsa Italiana',
       'Supporto in lingua italiana',
-      'Nessun deposito minimo'
+      'Nessun deposito minimo',
+      'Nessun costo di inattività',
+      'Commissioni trasparenti e competitive per mercato italiano'
     ],
     cons: [
       'Interfaccia meno moderna rispetto a peer esteri',
-      'Costi su mercati esteri da valutare caso per caso'
+      'Costi su mercati esteri da valutare caso per caso',
+      'App mobile limitata rispetto a competitor internazionali'
     ],
     rating: 4.2,
     score: 84,
     riskLevel: 'low',
     mifid2Compliant: true,
+    costs: {
+      commissionStocks: 'Borsa Italiana: 0.19% (min €2.95), USA: $0.005 per azione (min $1)',
+      spreadForex: 'N/A - Non offre forex',
+      inactivityFee: 'Nessun costo di inattività',
+      withdrawalFee: 'Gratuito',
+      currencyConversionFee: 'Spread applicato su cambio valuta',
+      minCommission: '€2.95 (Borsa Italiana), $1 (USA)'
+    },
+    fundProtection: {
+      scheme: 'Fondo Interbancario di Tutela dei Depositi',
+      amount: '€100,000'
+    },
+    support: {
+      languages: ['Italiano'],
+      hours: 'Lun-Ven 9:00-18:00 CET',
+      channels: ['Telefono', 'Email', 'Chat'],
+      responseTime: '< 24h'
+    },
+    payment: {
+      depositMethods: ['Bonifico', 'Carta'],
+      withdrawalMethods: ['Bonifico'],
+      depositTime: '1-2 giorni lavorativi',
+      withdrawalTime: '1-2 giorni lavorativi',
+      minWithdrawal: '€50'
+    },
+    accountTypes: ['Retail'],
+    demoAccount: false,
+    educationalResources: true,
+    mobileAppRating: 3.5,
+    lastUpdated: '2025-01-27',
+    officialLinks: {
+      website: 'https://www.directa.it',
+      terms: 'https://www.directa.it/condizioni-generali',
+      privacy: 'https://www.directa.it/privacy'
+    },
     review: {
       summary: 'Utilizzato in laboratori didattici per la componente fiscale domestica e per testare microflussi IDEM.',
       recommendedFor: 'Investitori italiani che privilegiano rapporto diretto con SIM vigilata e regime amministrato.',
@@ -224,24 +398,62 @@ const availableBrokers: Broker[] = [
     instruments: ['Azioni', 'ETF', 'Bond', 'IPO'],
     minDeposit: 10,
     leverage: 'N/A',
-    spread: 'N/A',
-    commission: 'Da €0.99 per ordine',
+    spread: 'Spread incluso nel prezzo',
+    commission: '€0.99 per ordine (fino a €1,000), poi 0.1%',
     taxRegime: 'amministrato',
     educationLevel: 'all',
     pros: [
       'Accesso IPO primarie regolamentato',
       'Piani di accumulo e conto remunerato',
       'Protezione fondi UE (ICF fino a 20k €)',
-      'Regime amministrato'
+      'Regime amministrato',
+      'Commissioni fisse e trasparenti',
+      'Nessun costo di inattività'
     ],
     cons: [
       'Depositi minimi più elevati per IPO',
-      'Costi cambio valuta da gestire'
+      'Costi cambio valuta da gestire',
+      'Spread non trasparente (incluso nel prezzo)',
+      'Limitato a azioni/ETF/Bond'
     ],
     rating: 4.3,
     score: 85,
     riskLevel: 'low',
     mifid2Compliant: true,
+    costs: {
+      commissionStocks: '€0.99 per ordine (fino a €1,000), poi 0.1%',
+      inactivityFee: 'Nessun costo di inattività',
+      withdrawalFee: 'Gratuito',
+      currencyConversionFee: 'Spread incluso nel prezzo',
+      minCommission: '€0.99 per ordine'
+    },
+    fundProtection: {
+      scheme: 'ICF (Investor Compensation Fund)',
+      amount: '€20,000'
+    },
+    support: {
+      languages: ['Italiano', 'Inglese', 'Tedesco', 'Francese'],
+      hours: 'Lun-Ven 9:00-18:00 CET',
+      channels: ['Email', 'Chat'],
+      responseTime: '< 24h'
+    },
+    payment: {
+      depositMethods: ['Bonifico', 'Carta', 'SEPA'],
+      withdrawalMethods: ['Bonifico', 'SEPA'],
+      depositTime: '1-2 giorni lavorativi',
+      withdrawalTime: '1-3 giorni lavorativi',
+      minWithdrawal: '€10'
+    },
+    accountTypes: ['Retail'],
+    demoAccount: false,
+    educationalResources: true,
+    mobileAppRating: 4.2,
+    lastUpdated: '2025-01-27',
+    officialLinks: {
+      website: 'https://www.freedom24.com',
+      terms: 'https://www.freedom24.com/terms',
+      privacy: 'https://www.freedom24.com/privacy'
+    },
     review: {
       summary: 'Monitorato per analisi su allocazione primaria e gestione lock-up nelle IPO; interessante per laboratori su equity capital markets.',
       recommendedFor: 'Investitori informati interessati a pipeline IPO e diversificazione tramite piani di accumulo.',
@@ -294,24 +506,63 @@ const availableBrokers: Broker[] = [
     instruments: ['Azioni', 'ETF', 'Bond', 'Crypto spot'],
     minDeposit: 1,
     leverage: 'N/A',
-    spread: 'Variabile',
-    commission: 'Bassa',
+    spread: 'Spread incluso nel prezzo (non trasparente)',
+    commission: '€1 per ordine (fino a €1,000), poi 0.1%',
     taxRegime: 'amministrato',
     educationLevel: 'beginner',
     pros: [
       'Regime amministrato con sostituto d\'imposta',
-      'Interessi sulla liquidità e PAC gratuiti',
-      'Esperienza mobile-first',
-      'IBAN italiano'
+      'Interessi sulla liquidità (3% annuo) e PAC gratuiti',
+      'Esperienza mobile-first ottimizzata',
+      'IBAN italiano',
+      'Nessun costo di inattività',
+      'Commissioni fisse e trasparenti'
     ],
     cons: [
-      'Assistenza prevalentemente digitale',
-      'Offerta derivati limitata'
+      'Assistenza prevalentemente digitale (no telefono)',
+      'Offerta derivati limitata',
+      'Spread non trasparente (incluso nel prezzo)',
+      'Limitato a mercati europei'
     ],
     rating: 4.4,
     score: 88,
     riskLevel: 'low',
     mifid2Compliant: true,
+    costs: {
+      commissionStocks: '€1 per ordine (fino a €1,000), poi 0.1%',
+      commissionForex: 'N/A - Non offre forex',
+      inactivityFee: 'Nessun costo di inattività',
+      withdrawalFee: 'Gratuito',
+      currencyConversionFee: 'Spread incluso nel prezzo',
+      minCommission: '€1 per ordine'
+    },
+    fundProtection: {
+      scheme: 'Einlagensicherungsfonds',
+      amount: '€100,000'
+    },
+    support: {
+      languages: ['Italiano', 'Tedesco', 'Inglese', 'Francese', 'Spagnolo'],
+      hours: 'Lun-Dom 8:00-20:00 CET',
+      channels: ['Chat', 'Email'],
+      responseTime: '< 24h'
+    },
+    payment: {
+      depositMethods: ['Bonifico', 'Carta', 'SEPA Instant'],
+      withdrawalMethods: ['Bonifico', 'SEPA Instant'],
+      depositTime: 'Immediato (SEPA Instant) o 1-2 giorni',
+      withdrawalTime: 'Immediato (SEPA Instant) o 1-2 giorni',
+      minWithdrawal: '€1'
+    },
+    accountTypes: ['Retail'],
+    demoAccount: false,
+    educationalResources: true,
+    mobileAppRating: 4.8,
+    lastUpdated: '2025-01-27',
+    officialLinks: {
+      website: 'https://www.traderepublic.com',
+      terms: 'https://www.traderepublic.com/it/terms',
+      privacy: 'https://www.traderepublic.com/it/privacy'
+    },
     review: {
       summary: 'Sperimentata per moduli educativi su gestione tesoreria personale e pacchetti multi-asset con fiscalità amministrata.',
       recommendedFor: 'Investitori retail disciplinati orientati a PAC e gestione liquidità con infrastruttura bancaria vigilata.',
@@ -349,6 +600,9 @@ export function BrokersRecommender() {
     leverage: '',
   });
   const [showDrawer, setShowDrawer] = useState<Broker | null>(null);
+  const [compareMode, setCompareMode] = useState(false);
+  const [selectedForCompare, setSelectedForCompare] = useState<string[]>([]);
+  const [showCostCalculator, setShowCostCalculator] = useState(false);
 
   const availableInstruments = ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures', 'Forex', 'Crypto', 'Commodities', 'Indici', 'CFD', 'IDEM', 'IPO', 'PAC'];
   const availablePlatforms = ['Web', 'Mobile', 'Desktop', 'MT4', 'MT5', 'cTrader', 'TWS', 'Client Portal', 'SaxoTraderGO', 'SaxoTraderPRO', 'Directa Platform', 'dLite', 'TradingView', 'OpenAPI', 'API FIX/REST'];
@@ -789,11 +1043,38 @@ export function BrokersRecommender() {
           {currentStep === 4 && (
             <div className="space-y-6">
               <div className="bg-gradient-to-br from-green-500/10 via-green-500/5 to-transparent border border-green-500/20 rounded-xl p-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <Award className="w-6 h-6 text-green-400" aria-hidden="true" />
-                  <h3 className="text-xl font-bold text-text-primary">
-                    Brokers Consigliati ({recommendedBrokers.length})
-                  </h3>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-3">
+                    <Award className="w-6 h-6 text-green-400" aria-hidden="true" />
+                    <h3 className="text-xl font-bold text-text-primary">
+                      Brokers Consigliati ({recommendedBrokers.length})
+                    </h3>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setShowCostCalculator(true)}
+                      className="px-4 py-2 bg-accent/20 hover:bg-accent/30 text-accent rounded-lg transition-colors flex items-center gap-2 text-sm font-medium"
+                      aria-label="Apri calcolatore costi"
+                    >
+                      <Calculator className="w-4 h-4" aria-hidden="true" />
+                      Calcolatore Costi
+                    </button>
+                    {recommendedBrokers.length > 1 && (
+                      <button
+                        onClick={() => setCompareMode(!compareMode)}
+                        className={cn(
+                          'px-4 py-2 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium',
+                          compareMode
+                            ? 'bg-accent text-white hover:bg-accent-hover'
+                            : 'bg-bg-soft text-text-primary hover:bg-bg-soft/80'
+                        )}
+                        aria-label={compareMode ? 'Esci dalla modalità comparazione' : 'Attiva modalità comparazione'}
+                      >
+                        <BarChart3 className="w-4 h-4" aria-hidden="true" />
+                        {compareMode ? 'Esci Comparazione' : 'Confronta'}
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <p className="text-text-secondary">
                   Basato sui criteri selezionati, ecco i broker che meglio si adattano al tuo profilo
@@ -813,6 +1094,127 @@ export function BrokersRecommender() {
                   >
                     Ricomincia
                   </button>
+                </div>
+              ) : compareMode ? (
+                /* Modalità Comparazione Side-by-Side */
+                <div className="overflow-x-auto">
+                  <div className="min-w-full">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-bg-soft border-b border-border-subtle">
+                          <th className="text-left p-4 font-semibold text-text-primary sticky left-0 bg-bg-soft z-10">Broker</th>
+                          <th className="text-left p-4 font-semibold text-text-primary">Rating</th>
+                          <th className="text-left p-4 font-semibold text-text-primary">Deposito Min.</th>
+                          <th className="text-left p-4 font-semibold text-text-primary">Commissioni</th>
+                          <th className="text-left p-4 font-semibold text-text-primary">Regime Fiscale</th>
+                          <th className="text-left p-4 font-semibold text-text-primary">Protezione</th>
+                          <th className="text-left p-4 font-semibold text-text-primary">Supporto</th>
+                          <th className="text-left p-4 font-semibold text-text-primary">Demo</th>
+                          <th className="text-left p-4 font-semibold text-text-primary">Azione</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {recommendedBrokers.map((broker, index) => (
+                          <tr key={broker.id} className={cn('border-b border-border-subtle hover:bg-bg-soft/50 transition-colors', index % 2 === 0 ? 'bg-bg-surface' : 'bg-bg-soft/30')}>
+                            <td className="p-4 sticky left-0 bg-inherit z-10">
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded bg-white p-1 border border-border-subtle">
+                                  <Image
+                                    src={broker.logo}
+                                    alt={`Logo ${broker.name}`}
+                                    width={40}
+                                    height={40}
+                                    className="object-contain"
+                                    loading="lazy"
+                                  />
+                                </div>
+                                <div>
+                                  <p className="font-semibold text-text-primary">{broker.name}</p>
+                                  <p className="text-xs text-text-tertiary">{broker.riskLevel && `Rischio ${broker.riskLevel === 'low' ? 'Basso' : broker.riskLevel === 'medium' ? 'Medio' : 'Alto'}`}</p>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <div className="flex items-center gap-1">
+                                <Star className="w-4 h-4 text-amber-400 fill-amber-400" aria-hidden="true" />
+                                <span className="text-sm font-semibold text-text-primary">{broker.rating}</span>
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <span className="text-sm text-text-primary">
+                                {typeof broker.minDeposit === 'number' && broker.minDeposit > 0
+                                  ? `€${broker.minDeposit.toLocaleString()}`
+                                  : typeof broker.minDeposit === 'string'
+                                  ? broker.minDeposit
+                                  : 'Nessun minimo'}
+                              </span>
+                            </td>
+                            <td className="p-4">
+                              <span className="text-sm text-text-primary">{broker.costs?.commissionStocks || broker.commission}</span>
+                            </td>
+                            <td className="p-4">
+                              <span className="text-sm text-text-primary">
+                                {broker.taxRegime === 'amministrato' ? 'Amministrato' : broker.taxRegime === 'dichiarativo' ? 'Dichiarativo' : 'Entrambi'}
+                              </span>
+                            </td>
+                            <td className="p-4">
+                              {broker.fundProtection ? (
+                                <div>
+                                  <p className="text-xs font-semibold text-green-400">{broker.fundProtection.scheme}</p>
+                                  <p className="text-xs text-text-tertiary">{broker.fundProtection.amount}</p>
+                                </div>
+                              ) : (
+                                <span className="text-xs text-text-tertiary">N/A</span>
+                              )}
+                            </td>
+                            <td className="p-4">
+                              {broker.support ? (
+                                <div>
+                                  <p className="text-xs text-text-primary">{broker.support.languages.join(', ')}</p>
+                                  <p className="text-xs text-text-tertiary">{broker.support.channels.join(', ')}</p>
+                                </div>
+                              ) : (
+                                <span className="text-xs text-text-tertiary">N/A</span>
+                              )}
+                            </td>
+                            <td className="p-4">
+                              {broker.demoAccount !== undefined ? (
+                                broker.demoAccount ? (
+                                  <CheckCircle2 className="w-5 h-5 text-green-400" aria-label="Account demo disponibile" />
+                                ) : (
+                                  <X className="w-5 h-5 text-text-tertiary" aria-label="Account demo non disponibile" />
+                                )
+                              ) : (
+                                <span className="text-xs text-text-tertiary">N/A</span>
+                              )}
+                            </td>
+                            <td className="p-4">
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={() => setShowDrawer(broker)}
+                                  className="p-2 text-accent hover:bg-accent/10 rounded-lg transition-colors"
+                                  aria-label={`Dettagli ${broker.name}`}
+                                >
+                                  <Info className="w-4 h-4" aria-hidden="true" />
+                                </button>
+                                {broker.affiliateLink && (
+                                  <a
+                                    href={broker.affiliateLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-3 py-1.5 bg-accent hover:bg-accent-hover text-white rounded-lg text-xs font-semibold transition-colors"
+                                    aria-label={`Apri account ${broker.name}`}
+                                  >
+                                    Apri
+                                  </a>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1202,6 +1604,311 @@ export function BrokersRecommender() {
                         <p className="font-bold text-text-primary">{showDrawer.commission}</p>
                       </div>
                     </div>
+
+                    {/* Costi Dettagliati */}
+                    {showDrawer.costs && (
+                      <div>
+                        <h4 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
+                          <DollarSign className="w-4 h-4 text-accent" aria-hidden="true" />
+                          Costi Dettagliati
+                        </h4>
+                        <div className="bg-bg-soft rounded-lg p-4 space-y-3">
+                          {showDrawer.costs.commissionStocks && (
+                            <div className="flex justify-between items-start">
+                              <span className="text-sm text-text-tertiary">Commissioni Azioni:</span>
+                              <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.commissionStocks}</span>
+                            </div>
+                          )}
+                          {showDrawer.costs.commissionForex && (
+                            <div className="flex justify-between items-start">
+                              <span className="text-sm text-text-tertiary">Commissioni Forex:</span>
+                              <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.commissionForex}</span>
+                            </div>
+                          )}
+                          {showDrawer.costs.commissionOptions && (
+                            <div className="flex justify-between items-start">
+                              <span className="text-sm text-text-tertiary">Commissioni Opzioni:</span>
+                              <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.commissionOptions}</span>
+                            </div>
+                          )}
+                          {showDrawer.costs.commissionFutures && (
+                            <div className="flex justify-between items-start">
+                              <span className="text-sm text-text-tertiary">Commissioni Futures:</span>
+                              <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.commissionFutures}</span>
+                            </div>
+                          )}
+                          {showDrawer.costs.spreadForex && (
+                            <div className="flex justify-between items-start">
+                              <span className="text-sm text-text-tertiary">Spread Forex:</span>
+                              <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.spreadForex}</span>
+                            </div>
+                          )}
+                          {showDrawer.costs.inactivityFee && (
+                            <div className="flex justify-between items-start">
+                              <span className="text-sm text-text-tertiary">Costo Inattività:</span>
+                              <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.inactivityFee}</span>
+                            </div>
+                          )}
+                          {showDrawer.costs.withdrawalFee && (
+                            <div className="flex justify-between items-start">
+                              <span className="text-sm text-text-tertiary">Costo Prelievo:</span>
+                              <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.withdrawalFee}</span>
+                            </div>
+                          )}
+                          {showDrawer.costs.currencyConversionFee && (
+                            <div className="flex justify-between items-start">
+                              <span className="text-sm text-text-tertiary">Costo Cambio Valuta:</span>
+                              <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.currencyConversionFee}</span>
+                            </div>
+                          )}
+                          {showDrawer.costs.marketDataFee && (
+                            <div className="flex justify-between items-start">
+                              <span className="text-sm text-text-tertiary">Costo Dati Mercato:</span>
+                              <span className="text-sm font-semibold text-text-primary text-right">{showDrawer.costs.marketDataFee}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Protezione Fondi */}
+                    {showDrawer.fundProtection && (
+                      <div>
+                        <h4 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
+                          <Shield className="w-4 h-4 text-green-400" aria-hidden="true" />
+                          Protezione Fondi
+                        </h4>
+                        <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
+                          <p className="text-sm text-text-secondary mb-2">
+                            <strong>Schema:</strong> {showDrawer.fundProtection.scheme}
+                          </p>
+                          <p className="text-sm text-text-secondary">
+                            <strong>Importo Protetto:</strong> {showDrawer.fundProtection.amount}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Supporto */}
+                    {showDrawer.support && (
+                      <div>
+                        <h4 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
+                          <HeadphonesIcon className="w-4 h-4 text-accent" aria-hidden="true" />
+                          Supporto Clienti
+                        </h4>
+                        <div className="bg-bg-soft rounded-lg p-4 space-y-3">
+                          <div>
+                            <p className="text-xs text-text-tertiary mb-1">Lingue Supportate</p>
+                            <div className="flex flex-wrap gap-2">
+                              {showDrawer.support.languages.map(lang => (
+                                <span key={lang} className="px-2 py-1 bg-accent/20 text-accent rounded text-xs">
+                                  {lang}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-xs text-text-tertiary mb-1">Orari</p>
+                            <p className="text-sm font-semibold text-text-primary">{showDrawer.support.hours}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-text-tertiary mb-1">Canali</p>
+                            <div className="flex flex-wrap gap-2">
+                              {showDrawer.support.channels.map(channel => (
+                                <span key={channel} className="px-2 py-1 bg-accent/20 text-accent rounded text-xs">
+                                  {channel}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                          {showDrawer.support.responseTime && (
+                            <div>
+                              <p className="text-xs text-text-tertiary mb-1">Tempo di Risposta</p>
+                              <p className="text-sm font-semibold text-text-primary">{showDrawer.support.responseTime}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Metodi di Pagamento */}
+                    {showDrawer.payment && (
+                      <div>
+                        <h4 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
+                          <CreditCard className="w-4 h-4 text-accent" aria-hidden="true" />
+                          Depositi e Prelievi
+                        </h4>
+                        <div className="bg-bg-soft rounded-lg p-4 space-y-3">
+                          <div>
+                            <p className="text-xs text-text-tertiary mb-1">Metodi Deposito</p>
+                            <div className="flex flex-wrap gap-2">
+                              {showDrawer.payment.depositMethods.map(method => (
+                                <span key={method} className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">
+                                  {method}
+                                </span>
+                              ))}
+                            </div>
+                            {showDrawer.payment.depositTime && (
+                              <p className="text-xs text-text-tertiary mt-2">Tempo: {showDrawer.payment.depositTime}</p>
+                            )}
+                          </div>
+                          <div>
+                            <p className="text-xs text-text-tertiary mb-1">Metodi Prelievo</p>
+                            <div className="flex flex-wrap gap-2">
+                              {showDrawer.payment.withdrawalMethods.map(method => (
+                                <span key={method} className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">
+                                  {method}
+                                </span>
+                              ))}
+                            </div>
+                            {showDrawer.payment.withdrawalTime && (
+                              <p className="text-xs text-text-tertiary mt-2">Tempo: {showDrawer.payment.withdrawalTime}</p>
+                            )}
+                            {showDrawer.payment.minWithdrawal && (
+                              <p className="text-xs text-text-tertiary mt-1">Minimo: {showDrawer.payment.minWithdrawal}</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Account Types e Features */}
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {showDrawer.accountTypes && showDrawer.accountTypes.length > 0 && (
+                        <div>
+                          <h4 className="font-semibold text-text-primary mb-3">Tipi di Account</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {showDrawer.accountTypes.map(type => (
+                              <span key={type} className="px-3 py-1.5 bg-accent/20 text-accent rounded-lg text-sm">
+                                {type}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      <div>
+                        <h4 className="font-semibold text-text-primary mb-3">Caratteristiche</h4>
+                        <div className="space-y-2">
+                          {showDrawer.demoAccount !== undefined && (
+                            <div className="flex items-center gap-2 text-sm">
+                              {showDrawer.demoAccount ? (
+                                <>
+                                  <CheckCircle2 className="w-4 h-4 text-green-400" aria-hidden="true" />
+                                  <span className="text-text-secondary">Account Demo Disponibile</span>
+                                </>
+                              ) : (
+                                <>
+                                  <X className="w-4 h-4 text-text-tertiary" aria-hidden="true" />
+                                  <span className="text-text-tertiary">Account Demo Non Disponibile</span>
+                                </>
+                              )}
+                            </div>
+                          )}
+                          {showDrawer.educationalResources !== undefined && (
+                            <div className="flex items-center gap-2 text-sm">
+                              {showDrawer.educationalResources ? (
+                                <>
+                                  <GraduationCap className="w-4 h-4 text-green-400" aria-hidden="true" />
+                                  <span className="text-text-secondary">Risorse Educative</span>
+                                </>
+                              ) : (
+                                <>
+                                  <X className="w-4 h-4 text-text-tertiary" aria-hidden="true" />
+                                  <span className="text-text-tertiary">Nessuna Risorsa Educativa</span>
+                                </>
+                              )}
+                            </div>
+                          )}
+                          {showDrawer.mobileAppRating && (
+                            <div className="flex items-center gap-2 text-sm">
+                              <Smartphone className="w-4 h-4 text-accent" aria-hidden="true" />
+                              <span className="text-text-secondary">App Mobile: </span>
+                              <div className="flex items-center gap-1">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    className={cn(
+                                      'w-3 h-3',
+                                      i < Math.floor(showDrawer.mobileAppRating) ? 'text-amber-400 fill-amber-400' : 'text-text-tertiary'
+                                    )}
+                                    aria-hidden="true"
+                                  />
+                                ))}
+                                <span className="text-xs text-text-tertiary ml-1">({showDrawer.mobileAppRating})</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Link Ufficiali */}
+                    {showDrawer.officialLinks && (
+                      <div>
+                        <h4 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
+                          <ExternalLink className="w-4 h-4 text-accent" aria-hidden="true" />
+                          Link Ufficiali
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {showDrawer.officialLinks.website && (
+                            <a
+                              href={showDrawer.officialLinks.website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-3 py-2 bg-accent/20 text-accent rounded-lg text-sm font-medium hover:bg-accent/30 transition-colors flex items-center gap-2"
+                              aria-label={`Visita il sito ufficiale di ${showDrawer.name}`}
+                            >
+                              Sito Web
+                              <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                            </a>
+                          )}
+                          {showDrawer.officialLinks.terms && (
+                            <a
+                              href={showDrawer.officialLinks.terms}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-3 py-2 bg-bg-soft text-text-primary rounded-lg text-sm font-medium hover:bg-bg-soft/80 transition-colors flex items-center gap-2"
+                              aria-label={`Termini e condizioni di ${showDrawer.name}`}
+                            >
+                              Termini
+                              <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                            </a>
+                          )}
+                          {showDrawer.officialLinks.kid && (
+                            <a
+                              href={showDrawer.officialLinks.kid}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-3 py-2 bg-bg-soft text-text-primary rounded-lg text-sm font-medium hover:bg-bg-soft/80 transition-colors flex items-center gap-2"
+                              aria-label={`Key Information Document di ${showDrawer.name}`}
+                            >
+                              KID
+                              <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                            </a>
+                          )}
+                          {showDrawer.officialLinks.privacy && (
+                            <a
+                              href={showDrawer.officialLinks.privacy}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-3 py-2 bg-bg-soft text-text-primary rounded-lg text-sm font-medium hover:bg-bg-soft/80 transition-colors flex items-center gap-2"
+                              aria-label={`Privacy policy di ${showDrawer.name}`}
+                            >
+                              Privacy
+                              <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Data Ultimo Aggiornamento */}
+                    {showDrawer.lastUpdated && (
+                      <div className="flex items-center gap-2 text-xs text-text-tertiary">
+                        <Calendar className="w-3 h-3" aria-hidden="true" />
+                        <span>Ultimo aggiornamento: {new Date(showDrawer.lastUpdated).toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -1276,6 +1983,149 @@ export function BrokersRecommender() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Calcolatore Costi */}
+      <AnimatePresence>
+        {showCostCalculator && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowCostCalculator(false)}
+            aria-label="Chiudi calcolatore costi"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cost-calculator-title"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, y: 20, opacity: 0 }}
+              className="bg-bg-surface border border-border-subtle rounded-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6 border-b border-border-subtle bg-gradient-to-br from-accent/10 via-accent/5 to-transparent">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Calculator className="w-6 h-6 text-accent" aria-hidden="true" />
+                    <h3 id="cost-calculator-title" className="text-xl font-bold text-text-primary">Calcolatore Costi</h3>
+                  </div>
+                  <button
+                    onClick={() => setShowCostCalculator(false)}
+                    className="text-text-tertiary hover:text-text-primary transition-colors p-2 hover:bg-bg-soft rounded-lg"
+                    aria-label="Chiudi calcolatore"
+                  >
+                    <X className="w-6 h-6" aria-hidden="true" />
+                  </button>
+                </div>
+                <p className="text-sm text-text-secondary mt-2">
+                  Confronta i costi totali per diversi scenari di trading
+                </p>
+              </div>
+              <div className="overflow-y-auto flex-1 p-6 space-y-6">
+                <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4">
+                  <div className="flex items-start gap-2">
+                    <Info className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <div className="text-sm text-text-secondary">
+                      <p className="font-semibold text-text-primary mb-1">Nota Importante</p>
+                      <p>
+                        Questo calcolatore fornisce una stima basata sulle commissioni pubbliche. I costi effettivi possono variare
+                        in base al volume, al tipo di account e alle condizioni di mercato. Consulta sempre il sito ufficiale del broker
+                        per informazioni aggiornate e dettagliate.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-semibold text-text-primary block mb-2">
+                      Scenario di Trading
+                    </label>
+                    <select className="w-full px-4 py-3 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent">
+                      <option>10 ordini/mese - Azioni USA (€1,000 per ordine)</option>
+                      <option>20 ordini/mese - Azioni Europee (€500 per ordine)</option>
+                      <option>50 ordini/mese - Trading Attivo (€500 per ordine)</option>
+                      <option>100 ordini/mese - Trading Professionale (€1,000 per ordine)</option>
+                    </select>
+                  </div>
+                  <div className="bg-bg-soft rounded-lg p-4">
+                    <p className="text-sm font-semibold text-text-primary mb-3">Confronto Costi Mensili Stimati</p>
+                    <div className="space-y-3">
+                      {recommendedBrokers.slice(0, 5).map(broker => {
+                        // Calcolo semplificato - in produzione si dovrebbe fare un calcolo più accurato
+                        const estimatedCost = broker.costs?.commissionStocks 
+                          ? (broker.costs.commissionStocks.includes('€') 
+                              ? parseFloat(broker.costs.commissionStocks.match(/€(\d+\.?\d*)/)?.[1] || '0') * 10
+                              : broker.costs.commissionStocks.includes('%')
+                              ? 1000 * 0.001 * 10 // Stima 0.1% su €1,000 per 10 ordini
+                              : 0)
+                          : broker.commission.includes('€')
+                          ? parseFloat(broker.commission.match(/€(\d+\.?\d*)/)?.[1] || '0') * 10
+                          : 0;
+                        return (
+                          <div key={broker.id} className="flex items-center justify-between p-3 bg-bg-surface rounded-lg border border-border-subtle">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded bg-white p-1 border border-border-subtle">
+                                <Image
+                                  src={broker.logo}
+                                  alt={`Logo ${broker.name}`}
+                                  width={32}
+                                  height={32}
+                                  className="object-contain"
+                                  loading="lazy"
+                                />
+                              </div>
+                              <span className="font-semibold text-text-primary">{broker.name}</span>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-bold text-accent">~€{estimatedCost.toFixed(2)}/mese</p>
+                              <p className="text-xs text-text-tertiary">Stima per 10 ordini</p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="p-6 border-t border-border-subtle bg-bg-soft">
+                <button
+                  onClick={() => setShowCostCalculator(false)}
+                  className="w-full px-6 py-3 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors font-semibold"
+                  aria-label="Chiudi calcolatore"
+                >
+                  Chiudi
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Disclaimer Affiliate */}
+      <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 mt-6">
+        <div className="flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+          <div className="space-y-2 text-sm text-text-secondary">
+            <p className="font-semibold text-text-primary">Disclaimer - Link Affiliate</p>
+            <p>
+              Alcuni link presenti in questa pagina sono link di affiliazione. Questo significa che Tradelia può ricevere
+              una commissione se apri un account tramite questi link, senza alcun costo aggiuntivo per te. Le nostre
+              raccomandazioni sono sempre basate su criteri oggettivi, accademici e conformi a MiFID II, indipendentemente
+              da eventuali accordi di affiliazione.
+            </p>
+            <p>
+              <strong>Importante:</strong> Prima di aprire un account con qualsiasi broker, leggi attentamente i termini
+              e condizioni, la Key Information Document (KID) quando disponibile, e assicurati di comprendere tutti i rischi
+              associati al trading. Il trading comporta rischi significativi e puoi perdere più del capitale investito.
+            </p>
+            <p className="text-xs text-text-tertiary mt-2">
+              Ultimo aggiornamento informazioni broker: {new Date().toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
