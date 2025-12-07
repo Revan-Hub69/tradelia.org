@@ -96,62 +96,37 @@ function DashboardHeaderComponent() {
           </span>
         </div>
         
-        {/* Azioni - Sempre visibili, con loading states */}
+        {/* Azioni - Mobile: solo essenziali, Desktop: tutto */}
         <nav className={styles.dashboardActions} aria-label="Dashboard actions" suppressHydrationWarning>
           {shouldShowLoading ? (
-            // Loading state - mostra skeleton per tutti i componenti (accessibile)
-            <>
-              <div className={styles.dashboardActionsLeft} aria-label={t('common.loading') || 'Loading'}>
-                <div className="w-8 h-8 bg-bg-soft rounded animate-pulse" aria-hidden="true" />
-                <div className="w-16 h-8 bg-bg-soft rounded animate-pulse" aria-hidden="true" />
-                <div className="w-16 h-6 bg-bg-soft rounded animate-pulse" aria-hidden="true" />
-              </div>
-              <div className={styles.dashboardActionsRight} aria-label={t('common.loading') || 'Loading'}>
-                <div className="w-8 h-8 bg-bg-soft rounded animate-pulse" aria-hidden="true" />
-                <div className="w-8 h-8 bg-bg-soft rounded-full animate-pulse" aria-hidden="true" />
-              </div>
-            </>
+            <div className={styles.dashboardActionsRight} aria-label={t('common.loading') || 'Loading'}>
+              <div className="w-8 h-8 bg-bg-soft rounded-full animate-pulse" aria-hidden="true" />
+            </div>
           ) : shouldShowUnauthenticated ? (
-            // Quando non autenticato: mostra "Accedi"
-            <>
-              <div className={styles.dashboardActionsLeft}>
-                {/* LanguageSwitch removed - system always uses Italian */}
-              </div>
-              <div className={styles.dashboardActionsRight}>
-                <Link
-                  href="/login"
-                  className={styles.loginButton}
-                  aria-label={t('dashboard.userMenu.login') || 'Accedi'}
-                >
-                  {t('dashboard.userMenu.login') || 'Accedi'}
-                </Link>
-              </div>
-            </>
+            <div className={styles.dashboardActionsRight}>
+              <Link
+                href="/login"
+                className={styles.loginButton}
+                aria-label={t('dashboard.userMenu.login') || 'Accedi'}
+              >
+                <span className="hidden sm:inline">{t('dashboard.userMenu.login') || 'Accedi'}</span>
+                <span className="sm:hidden">Accedi</span>
+              </Link>
+            </div>
           ) : shouldShowAuthenticated ? (
-            // Quando autenticato: mostra tutte le azioni
             <>
               <div className={styles.dashboardActionsLeft}>
-                {/* LanguageSwitch removed - system always uses Italian */}
                 <CurrencySwitch size="sm" />
                 <UserStats />
               </div>
               <div className={styles.dashboardActionsRight}>
                 <Link
                   href="/dashboard/favorites"
-                  className="flex items-center justify-center w-10 h-10 rounded-lg bg-bg-soft hover:bg-bg-elevated border border-border-subtle hover:border-accent/40 text-text-secondary hover:text-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent min-w-[44px] min-h-[44px]"
+                  className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-bg-soft hover:bg-bg-elevated border border-border-subtle hover:border-accent/40 text-text-secondary hover:text-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px]"
                   aria-label={t('dashboard.favorites.title') || 'Preferiti'}
                   title={t('dashboard.favorites.title') || 'Preferiti'}
-                  onMouseEnter={() => {
-                    // Prefetch favorites page on hover
-                    if (typeof window !== 'undefined') {
-                      const link = document.createElement('link');
-                      link.rel = 'prefetch';
-                      link.href = '/dashboard/favorites';
-                      document.head.appendChild(link);
-                    }
-                  }}
                 >
-                  <Star className="w-5 h-5" aria-hidden="true" />
+                  <Star className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
                 </Link>
                 <GlobalSearch />
                 <UserMenu />

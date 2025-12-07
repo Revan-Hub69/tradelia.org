@@ -28,10 +28,10 @@ export function Header() {
       }
       suppressHydrationWarning
     >
-      <div className="container flex h-16 items-center justify-between px-8">
+      <div className="container flex h-14 sm:h-16 items-center justify-between px-4 sm:px-8">
         <Link
           href="/"
-          className="flex items-center gap-3 group transition-all duration-300 hover:-translate-y-0.5"
+          className="flex items-center gap-2 sm:gap-3 group transition-all duration-300 hover:-translate-y-0.5"
           aria-label="Tradelia AI - Home"
         >
           <div className="relative">
@@ -40,7 +40,7 @@ export function Header() {
               alt="Tradelia AI"
               width={200}
               height={50}
-              className="h-10 w-auto brightness-95 drop-shadow-[0_0_10px_rgba(59,130,246,0.15)] transition-all duration-300 group-hover:brightness-100 group-hover:drop-shadow-[0_0_15px_rgba(59,130,246,0.25)] group-hover:scale-105"
+              className="h-8 sm:h-10 w-auto brightness-95 drop-shadow-[0_0_10px_rgba(59,130,246,0.15)] transition-all duration-300 group-hover:brightness-100 group-hover:drop-shadow-[0_0_15px_rgba(59,130,246,0.25)] group-hover:scale-105"
               priority
               loading="eager"
             />
@@ -48,13 +48,13 @@ export function Header() {
           </div>
         </Link>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           {/* Dashboard Button */}
           <Button 
             asChild 
             variant="secondary" 
             size="sm" 
-            className="group"
+            className="group h-9 sm:h-10 px-2 sm:px-3"
           >
             <Link 
               href="/dashboard"
