@@ -7,6 +7,7 @@ export default function AdminResetPasswordPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [verifying, setVerifying] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
 
   const handleReset = async (e: React.FormEvent) => {
@@ -54,6 +55,43 @@ export default function AdminResetPasswordPage() {
     }
   };
 
+  const handleVerifyEmail = async () => {
+    if (!email) {
+      setResult({ success: false, message: 'Inserisci prima l\'email' });
+      return;
+    }
+
+    setVerifying(true);
+    setResult(null);
+
+    try {
+      const res = await fetch('/api/admin/verify-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setResult({ success: false, message: data.error || 'Errore nella verifica email' });
+        return;
+      }
+
+      setResult({ 
+        success: true, 
+        message: `✅ Email verificata con successo!\n\nEmail: ${data.email}\nOra puoi fare login senza problemi.` 
+      });
+    } catch (error) {
+      setResult({ 
+        success: false, 
+        message: error instanceof Error ? error.message : 'Errore sconosciuto' 
+      });
+    } finally {
+      setVerifying(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-bg-base flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-bg-surface border border-border-subtle rounded-xl p-6 shadow-lg">
@@ -97,20 +135,35 @@ export default function AdminResetPasswordPage() {
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={loading || !email || !password || password.length < 8}
-            className="w-full px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-          >
-            {loading ? (
-              <>
+          <div className="flex gap-2">
+            <button
+              type="submit"
+              disabled={loading || !email || !password || password.length < 8}
+              className="flex-1 px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Elaborazione...
+                </>
+              ) : (
+                'Crea/Resetta Password'
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={handleVerifyEmail}
+              disabled={verifying || !email}
+              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              title="Forza verifica email (se già hai account)"
+            >
+              {verifying ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Elaborazione...
-              </>
-            ) : (
-              'Crea/Resetta Password'
-            )}
-          </button>
+              ) : (
+                '✓ Verifica Email'
+              )}
+            </button>
+          </div>
         </form>
 
         {result && (
