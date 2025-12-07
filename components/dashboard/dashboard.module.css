@@ -62,6 +62,19 @@
   padding: 1rem 0;
 }
 
+/* Compact view per OverviewStats */
+.modules-view.compact-view .overviewSection {
+  padding: 1.5rem !important;
+}
+
+.modules-view.compact-view .overviewStatsGrid {
+  gap: 1rem;
+}
+
+.modules-view.compact-view .statCard {
+  padding: 1rem !important;
+}
+
 .dashboardHeroContent {
   position: relative;
   z-index: 2;

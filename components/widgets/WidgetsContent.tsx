@@ -111,6 +111,30 @@ const mobileWidgets: MobileWidget[] = [
     icon: <BarChart3 className="w-5 h-5" />,
     platforms: ['android', 'ios', 'desktop'],
   },
+  {
+    id: 'futures',
+    name: 'Futures Widget',
+    description: 'Monitora futures e contratti derivati in tempo reale',
+    url: '/widgets/futures',
+    icon: <BarChart3 className="w-5 h-5" />,
+    platforms: ['android', 'ios', 'desktop'],
+  },
+  {
+    id: 'options',
+    name: 'Options Widget',
+    description: 'Analizza opzioni e Greeks in tempo reale',
+    url: '/widgets/options',
+    icon: <TrendingUp className="w-5 h-5" />,
+    platforms: ['android', 'ios', 'desktop'],
+  },
+  {
+    id: 'forex',
+    name: 'Forex Widget',
+    description: 'Monitora coppie forex e tassi di cambio',
+    url: '/widgets/forex',
+    icon: <TrendingUp className="w-5 h-5" />,
+    platforms: ['android', 'ios', 'desktop'],
+  },
 ];
 
 export function WidgetsContent() {
@@ -202,23 +226,6 @@ export function WidgetsContent() {
   return (
     <div className="min-h-screen bg-bg-base p-6">
       <div className="max-w-7xl mx-auto">
-        {/* Coming Soon Banner - Best Practice: Chiara comunicazione */}
-        <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0">
-              <Layout className="w-4 h-4 text-amber-400" />
-            </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-text-primary mb-1">
-                {t('widgets.comingSoonTitle') || 'Widgets - In Arrivo'}
-              </h3>
-              <p className="text-sm text-text-secondary leading-relaxed">
-                {t('widgets.comingSoonMessage') || 'I widget personalizzabili sono in fase di sviluppo e richiedono l\'integrazione con API real-time per prezzi di mercato. Saranno disponibili a breve.'}
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
@@ -266,33 +273,32 @@ export function WidgetsContent() {
             {t('widgets.mobileWidgetsDesc') || 'Aggiungi questi widget alla home screen del tuo telefono o apri come finestra standalone su desktop'}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            {mobileWidgets.map((widget, index) => {
-              const isComingSoon = ['portfolio', 'watchlist', 'alerts'].includes(widget.id);
-              
+            {mobileWidgets
+              .filter(widget => {
+                // Mostra solo widget installabili (crypto-whale, crypto-depth, crypto-movers, futures, options, forex)
+                // Rimuovi portfolio, watchlist, alerts (coming soon)
+                const installableWidgets = ['crypto-whale', 'crypto-depth', 'crypto-movers', 'futures', 'options', 'forex'];
+                return installableWidgets.includes(widget.id);
+              })
+              .map((widget, index) => {
               return (
                 <motion.div
                   key={widget.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className={`bg-bg-surface border rounded-xl p-6 transition-all ${
-                    isComingSoon 
-                      ? 'border-border-subtle opacity-60' 
-                      : 'border-border-subtle hover:border-accent/40'
-                  }`}
+                  className="bg-bg-surface border border-border-subtle hover:border-accent/40 rounded-xl p-6 transition-all"
+                  aria-label={`${widget.name} - ${widget.description}. Disponibile su ${widget.platforms.join(', ')}`}
+                  role="article"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                        isComingSoon 
-                          ? 'bg-bg-soft text-text-tertiary' 
-                          : 'bg-accent/20 text-accent'
-                      }`}>
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-accent/20 text-accent">
                         {widget.icon}
                       </div>
                       <div>
-                        <h3 className="font-semibold text-text-primary">{widget.name}</h3>
-                        <p className="text-xs text-text-tertiary">
+                        <h3 className="font-semibold text-text-primary" aria-label={`Nome widget: ${widget.name}`}>{widget.name}</h3>
+                        <p className="text-xs text-text-tertiary" aria-label={`Piattaforme supportate: ${widget.platforms.join(', ')}`}>
                           {widget.platforms.map(p => {
                             if (p === 'android') return 'Android';
                             if (p === 'ios') return 'iOS';
@@ -302,20 +308,9 @@ export function WidgetsContent() {
                         </p>
                       </div>
                     </div>
-                    {isComingSoon && (
-                      <span className="px-2 py-1 bg-bg-soft border border-border-subtle rounded text-xs text-text-tertiary font-medium">
-                        Coming Soon
-                      </span>
-                    )}
                   </div>
-                  <p className="text-sm text-text-secondary mb-4">{widget.description}</p>
-                  {isComingSoon ? (
-                    <div className="text-center py-2">
-                      <p className="text-xs text-text-tertiary">
-                        {t('widgets.comingSoon') || 'Disponibile a breve'}
-                      </p>
-                    </div>
-                  ) : (
+                  <p className="text-sm text-text-secondary mb-4" aria-label={`Descrizione: ${widget.description}`}>{widget.description}</p>
+                  {
                     <div className="flex flex-col gap-2">
                       {isMobile && (
                         <Button
@@ -326,8 +321,9 @@ export function WidgetsContent() {
                             installWidgetInstructions(isMobile ? (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad') ? 'ios' : 'android') : 'desktop');
                           }}
                           className="w-full flex items-center justify-center gap-2"
+                          aria-label={`Apri ${widget.name} per installazione su dispositivo mobile`}
                         >
-                          <Smartphone className="w-4 h-4" />
+                          <Smartphone className="w-4 h-4" aria-hidden="true" />
                           {t('widgets.openForInstall') || 'Apri per Installare'}
                         </Button>
                       )}
@@ -337,8 +333,9 @@ export function WidgetsContent() {
                           size="sm"
                           onClick={() => openWidgetStandalone(widget.url, widget.id)}
                           className="w-full flex items-center justify-center gap-2"
+                          aria-label={`Apri ${widget.name} in finestra standalone`}
                         >
-                          <Monitor className="w-4 h-4" />
+                          <Monitor className="w-4 h-4" aria-hidden="true" />
                           {t('widgets.openStandalone') || 'Apri in Finestra Standalone'}
                         </Button>
                       )}
@@ -347,8 +344,9 @@ export function WidgetsContent() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
+                        aria-label={`Apri ${widget.name} in nuova scheda`}
                       >
-                        <ExternalLink className="w-4 h-4" />
+                        <ExternalLink className="w-4 h-4" aria-hidden="true" />
                         {t('widgets.openInNewTab') || 'Apri in Nuova Scheda'}
                       </a>
                     </div>

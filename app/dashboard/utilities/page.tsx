@@ -59,6 +59,9 @@ const StrategyBuilder = lazy(() =>
 const PaperTrading = lazy(() => 
   import('@/components/dashboard/utilities/PaperTrading').then(m => ({ default: m.PaperTrading }))
 );
+const BrokersRecommender = lazy(() => 
+  import('@/components/dashboard/utilities/BrokersRecommender').then(m => ({ default: m.BrokersRecommender }))
+);
 
 // Loading fallback component
 const CalculatorSkeleton = () => (
@@ -69,7 +72,7 @@ const CalculatorSkeleton = () => (
   </div>
 );
 
-type UtilityTab = 'calculator' | 'pac' | 'journal' | 'paper-trading' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility' | 'strategy-builder' | 'watchlist' | 'portfolio-manager' | 'alerts' | 'widgets';
+type UtilityTab = 'calculator' | 'pac' | 'journal' | 'paper-trading' | 'hedging' | 'position' | 'riskreward' | 'sharpe' | 'drawdown' | 'options' | 'kelly' | 'portfolio' | 'correlation' | 'volatility' | 'strategy-builder' | 'watchlist' | 'portfolio-manager' | 'alerts' | 'widgets' | 'brokers';
 
 interface Utility {
   id: UtilityTab;
@@ -264,15 +267,12 @@ export default function UtilitiesPage() {
       reason: 'Richiede integrazione con API real-time per prezzi di mercato',
     },
     {
-      id: 'widgets',
-      label: 'Widgets',
-      icon: Layout,
-      category: 'coming-soon',
-      group: 'real-time',
-      description: 'Widget personalizzabili per watchlist, portfolio e alert',
-      available: false,
-      comingSoon: true,
-      reason: 'Richiede integrazione con API real-time per prezzi di mercato',
+      id: 'brokers',
+      label: 'Brokers Consigliati',
+      icon: Target,
+      category: 'base',
+      description: 'Trova il broker ideale per le tue esigenze con form intelligente',
+      available: true,
     },
   ];
 
@@ -295,12 +295,14 @@ export default function UtilitiesPage() {
 
   // Raggruppa per categoria
   // Best Practice: Separare strumenti disponibili da quelli in arrivo
-  const baseUtilities = allUtilities.filter(u => u.category === 'base' && u.available);
+  const baseUtilities = allUtilities.filter(u => u.category === 'base' && u.available && u.id !== 'brokers');
+  const brokersUtility = allUtilities.find(u => u.id === 'brokers' && u.available);
   const riskUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'risk' && u.available);
   const performanceUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'performance' && u.available);
   const advancedUtilities = allUtilities.filter(u => u.category === 'pro' && u.group === 'advanced' && u.available);
   // Coming Soon utilities - sezione separata con design distintivo
-  const comingSoonUtilities = allUtilities.filter(u => u.category === 'coming-soon' || u.comingSoon);
+  // Rimossi widgets - ora disponibili nella sezione dedicata
+  const comingSoonUtilities = allUtilities.filter(u => (u.category === 'coming-soon' || u.comingSoon) && u.id !== 'widgets');
 
   return (
     <div className="min-h-screen bg-bg-base">
@@ -385,6 +387,9 @@ export default function UtilitiesPage() {
                 {selectedUtility === 'strategy-builder' && (
                   isPro ? <StrategyBuilder /> : <ProLockOverlay><StrategyBuilder /></ProLockOverlay>
                 )}
+                {selectedUtility === 'brokers' && (
+                  <BrokersRecommender />
+                )}
                 {selectedUtility === 'watchlist' && (
                   <div className="relative">
                     <div className="opacity-50 pointer-events-none">
@@ -427,26 +432,36 @@ export default function UtilitiesPage() {
                     />
                   </div>
                 )}
-                {selectedUtility === 'widgets' && (
-                  <div className="relative">
-                    <div className="opacity-50 pointer-events-none">
-                      <ComingSoon title="Widgets" description="Widget personalizzabili per watchlist, portfolio e alert" reason="Richiede integrazione con API real-time per prezzi di mercato" estimatedDate="Q2 2025" />
-                    </div>
-                    <FeatureComingSoon
-                      featureName="Widgets"
-                      description="Widget personalizzabili per watchlist, portfolio e alert"
-                      reason="Richiede integrazione con API real-time per prezzi di mercato"
-                      estimatedDate="Q2 2025"
-                      variant="overlay"
-                    />
-                  </div>
-                )}
               </Suspense>
             </div>
           </div>
         ) : (
           // Vista griglia strumenti
           <div className="space-y-8">
+            {/* Brokers Consigliati - Sezione speciale */}
+            {brokersUtility && (
+              <section className="mb-8">
+                <div className="bg-gradient-to-br from-accent/10 via-accent/5 to-transparent border border-accent/20 rounded-xl p-6">
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-lg bg-accent/20 flex items-center justify-center flex-shrink-0">
+                      <Target className="w-6 h-6 text-accent" aria-hidden="true" />
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-xl font-semibold text-text-primary mb-2">{brokersUtility.label}</h2>
+                      <p className="text-text-secondary">{brokersUtility.description}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleUtilityClick(brokersUtility)}
+                    className="w-full sm:w-auto px-6 py-3 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors font-medium"
+                    aria-label={`Apri ${brokersUtility.label}`}
+                  >
+                    Trova il Broker Ideale
+                  </button>
+                </div>
+              </section>
+            )}
+
             {/* Strumenti Base */}
             <section>
               <h2 className="text-xl font-semibold text-text-primary mb-4">Strumenti Base</h2>
@@ -463,7 +478,8 @@ export default function UtilitiesPage() {
                         'flex flex-col gap-3 group',
                         'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-base'
                       )}
-                      aria-label={`${utility.label} - ${utility.description}`}
+                      aria-label={`Apri ${utility.label}. ${utility.description}`}
+                      aria-describedby={`utility-${utility.id}-desc`}
                     >
                       <div className="flex items-start justify-between">
                         <div className="w-12 h-12 rounded-lg bg-accent/20 group-hover:bg-accent/30 flex items-center justify-center transition-colors">
@@ -472,7 +488,7 @@ export default function UtilitiesPage() {
                       </div>
                       <div>
                         <h3 className="font-semibold text-text-primary mb-1">{utility.label}</h3>
-                        <p className="text-sm text-text-secondary">{utility.description}</p>
+                        <p id={`utility-${utility.id}-desc`} className="text-sm text-text-secondary">{utility.description}</p>
                       </div>
                     </button>
                   );

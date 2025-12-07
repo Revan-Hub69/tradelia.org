@@ -27,7 +27,7 @@ export function PreferencesForm() {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState<PreferencesData>({
-    language: locale || 'it',
+    language: locale || 'it', // Mantenuto per compatibilità ma non più modificabile
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     email_notifications: true,
     push_notifications: true,
@@ -61,7 +61,7 @@ export function PreferencesForm() {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          language: formData.language,
+          // language rimosso - gestito tramite URL
           timezone: formData.timezone,
           email_notifications: formData.email_notifications,
           push_notifications: formData.push_notifications,
@@ -76,15 +76,7 @@ export function PreferencesForm() {
       toast.success(t('dashboard.settings.preferences.success') || 'Preferenze aggiornate con successo');
       retry();
 
-      // Aggiorna locale se cambiato (reindirizza alla nuova lingua)
-      if (formData.language !== locale) {
-        // Reindirizza alla nuova lingua dopo un breve delay
-        setTimeout(() => {
-          const currentPath = window.location.pathname;
-          const newPath = buildLocalePath(formData.language as 'it' | 'en', currentPath.replace(/^\/(it|en)/, '') || '/dashboard/settings');
-          router.push(newPath);
-        }, 1000);
-      }
+      // Lingua gestita tramite URL, non più tramite settings
     } catch (error) {
       console.error('Error updating preferences:', error);
       toast.error(
@@ -117,25 +109,6 @@ export function PreferencesForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
-      <div>
-        <Label htmlFor="language">
-          {t('dashboard.settings.preferences.language') || 'Lingua'}
-        </Label>
-        <Select
-          id="language"
-          name="language"
-          value={formData.language}
-          onChange={(e) => setFormData({ ...formData, language: e.target.value })}
-          className="mt-1"
-        >
-          <option value="it">Italiano</option>
-          <option value="en">English</option>
-        </Select>
-        <p className="text-xs text-text-tertiary mt-1">
-          {t('dashboard.settings.preferences.languageHint') || 'Seleziona la lingua dell\'interfaccia'}
-        </p>
-      </div>
-
       <div>
         <Label htmlFor="timezone">
           {t('dashboard.settings.preferences.timezone') || 'Fuso Orario'}
