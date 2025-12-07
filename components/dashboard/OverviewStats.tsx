@@ -40,17 +40,6 @@ export function OverviewStats() {
       },
     },
     {
-      id: 'active-courses',
-      value: '0',
-      label: t('dashboard.overview.stats.activeCourses.label'),
-      trend: 'neutral' as const,
-      context: t('dashboard.overview.stats.activeCourses.context'),
-      action: {
-        label: t('dashboard.overview.stats.activeCourses.action'),
-        href: buildLocalePath(locale, '/dashboard/education'),
-      },
-    },
-    {
       id: 'pending-requests',
       value: '0',
       label: t('dashboard.overview.stats.pendingRequests.label'),
@@ -76,7 +65,6 @@ export function OverviewStats() {
 
   const { data: statsData, loading, error, retry } = useApi<{
     totalReports: number;
-    activeCourses: number;
     pendingRequests: number;
     recentActivity: { created_at: string } | null;
   }>('/api/dashboard/stats', {
@@ -101,9 +89,6 @@ export function OverviewStats() {
       setStats(prev => prev.map(stat => {
         if (stat.id === 'total-reports') {
           return { ...stat, value: String(statsData.totalReports || 0) };
-        }
-        if (stat.id === 'active-courses') {
-          return { ...stat, value: String(statsData.activeCourses || 0) };
         }
         if (stat.id === 'pending-requests') {
           return { ...stat, value: String(statsData.pendingRequests || 0) };

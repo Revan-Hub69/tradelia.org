@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { BookOpen, BarChart3, Settings, GraduationCap, FileText, TrendingUp, Cog, Calculator } from 'lucide-react';
+import { BarChart3, Settings, TrendingUp, Cog, Calculator } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { buildLocalePath } from '@/lib/i18n/paths';
 import { cn } from '@/lib/utils/cn';
 import { prefetchOnHover } from '@/lib/utils/prefetch';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 
-type TabId = 'overview' | 'education' | 'utilities' | 'analysis' | 'settings';
+type TabId = 'overview' | 'utilities' | 'analysis' | 'settings';
 
 interface Tab {
   id: TabId;
@@ -23,7 +23,7 @@ interface Tab {
  * Dashboard Tabs Navigation
  * Best Practice 2024-2025: Web App Design con tabs per organizzare contenuti
  * - Overview: Panoramica generale
- * - Education: Formazione e corsi
+ * - Utilities: Strumenti finanziari
  * - Analysis: Report e analisi
  * - Settings: Impostazioni e configurazione
  */
@@ -40,13 +40,6 @@ export function DashboardTabs() {
       icon: BarChart3,
       href: buildLocalePath(locale, '/dashboard'),
       description: t('dashboard.tabs.overviewDesc') || 'Vista generale e attività recenti',
-    },
-    {
-      id: 'education',
-      label: t('dashboard.tabs.education') || 'Formazione',
-      icon: GraduationCap,
-      href: buildLocalePath(locale, '/dashboard/education'),
-      description: t('dashboard.tabs.educationDesc') || 'Corsi e percorsi formativi',
     },
     {
       id: 'utilities',
@@ -82,8 +75,6 @@ export function DashboardTabs() {
     // Mapping preciso: ogni route dashboard mappa a una tab specifica
     if (normalizedPath === '/dashboard' || normalizedPath === '/it/dashboard' || normalizedPath === '/en/dashboard') {
       setActiveTab('overview');
-    } else if (normalizedPath.includes('/dashboard/education')) {
-      setActiveTab('education');
     } else if (normalizedPath.includes('/dashboard/utilities')) {
       setActiveTab('utilities');
     } else if (normalizedPath.includes('/dashboard/analysis') || normalizedPath.includes('/dashboard/reports')) {
