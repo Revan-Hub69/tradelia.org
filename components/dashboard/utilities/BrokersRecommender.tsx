@@ -2800,7 +2800,7 @@ export function BrokersRecommender() {
                     if (!broker) return null;
                     const { aiScore, explanations, totalScore } = getAIMatchingExplanation(broker);
                     return (
-                    <div key={broker.id} className="bg-bg-soft border-premium rounded-xl p-6 space-y-4">
+                      <div key={broker.id} className="bg-bg-soft border-premium rounded-xl p-6 space-y-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 rounded-lg bg-white p-2 border border-border-subtle">
@@ -2832,8 +2832,9 @@ export function BrokersRecommender() {
                         ))}
                       </div>
                     </div>
-                  );
-                })}
+                    );
+                  }).filter(Boolean)
+                )}
               </div>
               <div className="p-6 border-t border-border-subtle bg-bg-soft">
                 <button
