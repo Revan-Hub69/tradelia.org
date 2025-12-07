@@ -52,8 +52,8 @@ export async function GET(request: NextRequest) {
       .in('user_id', userIds);
 
     // Combina dati
-    const usersWithRoles = filteredUsers.map((user) => {
-      const userRole = rolesData?.find((r) => r.user_id === user.id);
+    const usersWithRoles = filteredUsers.map((user: { id: string; email?: string; user_metadata?: { full_name?: string; avatar_url?: string }; created_at: string; last_sign_in_at?: string; email_confirmed_at?: string }) => {
+      const userRole = rolesData?.find((r: { user_id: string; role: string }) => r.user_id === user.id);
       return {
         id: user.id,
         email: user.email,
