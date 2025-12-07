@@ -845,6 +845,82 @@ const availableBrokers: Broker[] = [
       researchSignal: 'Citato in studi su behavioral finance e social trading platforms.'
     }
   },
+  // IG Markets - CFD (secondo CFD consentito)
+  {
+    id: 'ig',
+    name: 'IG Markets',
+    logo: '/logos/tradelia-logo.svg',
+    description: 'Broker CFD regolamentato FCA/ASIC con piattaforme professionali e accesso a 17,000+ mercati.',
+    regulatory: ['FCA', 'ASIC', 'FMA', 'FSCA'],
+    platforms: ['IG Platform', 'MT4', 'ProRealTime', 'L2 Dealer', 'Web', 'Mobile'],
+    instruments: ['Forex', 'CFD', 'Indici', 'Commodities', 'Crypto', 'Azioni', 'ETF'],
+    minDeposit: 0,
+    leverage: 'Fino a 30:1 (retail), fino a 200:1 (professional)',
+    spread: 'Da 0.6 pip (EUR/USD)',
+    commission: 'Spread incluso, commissioni su azioni CFD',
+    taxRegime: 'dichiarativo',
+    educationLevel: 'intermediate',
+    pros: [
+      'Accesso a 17,000+ mercati globali',
+      'Piattaforme professionali avanzate',
+      'Regolamentazione FCA/ASIC',
+      'Esecuzione veloce e trasparente',
+      'Protezione fondi fino a £85,000 (FSCS)',
+      'Supporto 24/5 e materiale formativo'
+    ],
+    cons: [
+      'Solo CFD (no strumenti reali)',
+      'Costi swap su posizioni overnight',
+      'Spread più alti rispetto a broker ECN',
+      'Limitato a derivati'
+    ],
+    rating: 4.7,
+    score: 91,
+    riskLevel: 'high',
+    mifid2Compliant: true,
+    costs: {
+      commissionForex: 'Spread incluso (da 0.6 pip EUR/USD)',
+      spreadForex: 'Da 0.6 pip (EUR/USD)',
+      commissionStocks: 'Spread incluso su CFD azioni',
+      inactivityFee: 'Nessun costo di inattività',
+      withdrawalFee: 'Gratuito',
+      currencyConversionFee: 'Spread incluso',
+      minCommission: 'Nessuna commissione (spread incluso)'
+    },
+    fundProtection: {
+      scheme: 'FSCS',
+      amount: '£85,000'
+    },
+    support: {
+      languages: ['Inglese', 'Italiano', 'Tedesco', 'Francese', 'Spagnolo', 'Portoghese'],
+      hours: 'Lun-Ven 24/5',
+      channels: ['Chat', 'Email', 'Telefono'],
+      responseTime: '< 1h per chat, < 24h per email'
+    },
+    payment: {
+      depositMethods: ['Carta', 'Bank Transfer', 'PayPal', 'Skrill'],
+      withdrawalMethods: ['Carta', 'Bank Transfer', 'PayPal', 'Skrill'],
+      depositTime: 'Immediato (carta), 1-2 giorni (bonifico)',
+      withdrawalTime: '1-2 giorni lavorativi',
+      minWithdrawal: '€50'
+    },
+    accountTypes: ['Retail', 'Professional'],
+    demoAccount: true,
+    educationalResources: true,
+    mobileAppRating: 4.6,
+    lastUpdated: '2025-01-27',
+    officialLinks: {
+      website: 'https://www.ig.com',
+      terms: 'https://www.ig.com/terms',
+      privacy: 'https://www.ig.com/privacy'
+    },
+    review: {
+      summary: 'Broker CFD professionale con accesso esteso a mercati globali. Adatto per trader esperti che operano principalmente su CFD.',
+      recommendedFor: 'Trader esperti che necessitano di accesso a mercati globali con piattaforme professionali e regolamentazione FCA.',
+      aiSupport: 'API disponibili per integrazione con piattaforme di trading algoritmico e accesso a dati di mercato.',
+      researchSignal: 'Citato in studi accademici su liquidità e trasparenza nei mercati CFD regolamentati FCA.'
+    }
+  },
 ];
 
 interface FormData {
