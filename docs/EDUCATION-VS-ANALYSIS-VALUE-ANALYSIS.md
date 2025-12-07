@@ -250,18 +250,18 @@
 
 ## 6. Raccomandazione Finale
 
-### 6.1 Strategia Consigliata: **Analisi-First con Formazione Minima**
+### 6.1 Strategia Consigliata: **Analisi-First, Zero Formazione**
 
 **Investimento:**
-- **80% risorse → Analisi** (core product, revenue driver)
+- **85% risorse → Analisi** (core product, revenue driver)
 - **15% risorse → Marketing/SEO** (acquisition efficiente)
-- **5% risorse → Formazione base** (solo se necessario per SEO/brand)
+- **0% risorse → Formazione** (eliminata completamente)
 
-**Formazione Minima:**
-- 2-3 corsi base (gratuiti)
-- Focus: "Come usare gli strumenti Tradelia"
-- Scopo: Onboarding, non revenue
-- Costo: €2k-5k totale (vs €20k+ per formazione completa)
+**Perché Zero Formazione:**
+- Corsi base = qualità bassa = danno al brand
+- Meglio non fare formazione che farla male
+- Focus 100% su analisi = messaggio più chiaro
+- Onboarding: tutorial in-app, non corsi completi
 
 **Acquisition Alternativa:**
 - Free trial analisi (già implementato)
@@ -292,7 +292,7 @@
 
 **"Lo sforzo per fare formazione vale la pena?"**
 
-**NO** - Non vale la pena investire pesantemente in formazione perché:
+**NO - Eliminare completamente** perché:
 
 1. **ROI Negativo:**
    - Costi: €20k+ iniziale + €3k/mese
@@ -315,9 +315,9 @@
 ### 7.2 Strategia Finale
 
 **Investimento:**
-- **80% → Analisi** (core product)
+- **85% → Analisi** (core product, revenue driver)
 - **15% → Marketing/SEO** (acquisition)
-- **5% → Formazione base** (solo onboarding, non revenue)
+- **0% → Formazione** (eliminata - meglio non farla che farla male)
 
 **Risultato Atteso:**
 - Posizionamento chiaro e forte
@@ -330,10 +330,11 @@
 
 ## 8. Prossimi Passi
 
-1. **Ridurre Investimenti Formazione:**
-   - Mantenere solo 2-3 corsi base (onboarding)
-   - Eliminare produzione nuovi corsi
-   - Focus su miglioramento analisi
+1. **Eliminare Completamente Formazione:**
+   - Rimuovere sezione educazione dalla dashboard (o mantenerla vuota)
+   - Eliminare produzione corsi
+   - Focus 100% su miglioramento analisi
+   - Onboarding: tutorial in-app, tooltips, guide contestuali (non corsi)
 
 2. **Riposizionamento Marketing:**
    - Messaggio: "Analisi professionale" (non "educazione")
