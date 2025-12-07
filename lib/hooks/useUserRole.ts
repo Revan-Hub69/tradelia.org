@@ -25,58 +25,50 @@ export function useUserRole(): UserRoleData {
       try {
         const {
           data: { user },
+          error: authError,
         } = await supabase.auth.getUser();
 
-        if (!user || !mounted) {
-          setRoleData({ role: null, validUntil: null, isLoading: false });
+        if (authError || !user || !mounted) {
+          if (mounted) {
+            setRoleData({ role: null, validUntil: null, isLoading: false });
+          }
           return;
         }
 
-        const { data, error } = await supabase
-          .from("user_roles")
-          .select("role, valid_until")
-          .eq("user_id", user.id)
-          .maybeSingle();
+        try {
+          const { data, error } = await supabase
+            .from("user_roles")
+            .select("role, valid_until")
+            .eq("user_id", user.id)
+            .maybeSingle();
 
-        if (error) {
-          // PGRST116 = no rows returned, which is fine
-          // PGRST301 = relation does not exist or permission denied (RLS)
-          // PGRST301 = permission denied (RLS)
-          if (error.code === "PGRST116") {
-            // No role found, use default - this is expected for new users
-          } else if (
-            error.code === "PGRST301" ||
-            error.message?.includes("relation") || 
-            error.message?.includes("does not exist") ||
-            error.message?.includes("permission denied") ||
-            error.message?.includes("new row violates row-level security") ||
-            error.message?.includes("500") ||
-            error.message?.includes("Internal Server Error")
-          ) {
-            // Table doesn't exist, RLS issue, or server error - use default role silently
-            // Don't log as error to avoid console noise - this is expected in some cases
-            if (process.env.NODE_ENV === 'development') {
-              console.warn("user_roles query failed, using default role:", error.message || error.code);
-            }
-          } else {
-            // Other errors - log only in development
-            if (process.env.NODE_ENV === 'development') {
-              console.error("Error fetching user role:", error);
-            }
+          if (error) {
+            // PGRST116 = no rows returned, which is fine
+            // Any other error (RLS, 500, etc.) - use default role silently
+            // Don't throw or log - just use default role
+          }
+
+          if (mounted) {
+            setRoleData({
+              role: (data?.role as UserRole) || "trial",
+              validUntil: data?.valid_until || null,
+              isLoading: false,
+            });
+          }
+        } catch (dbError) {
+          // Database error (500, RLS, etc.) - use default role
+          if (mounted) {
+            setRoleData({
+              role: "trial",
+              validUntil: null,
+              isLoading: false,
+            });
           }
         }
-
-        if (mounted) {
-          setRoleData({
-            role: (data?.role as UserRole) || "trial",
-            validUntil: data?.valid_until || null,
-            isLoading: false,
-          });
-        }
       } catch (error) {
-        console.error("Error in useUserRole:", error);
+        // Auth error or other - use default
         if (mounted) {
-          setRoleData({ role: null, validUntil: null, isLoading: false });
+          setRoleData({ role: "trial", validUntil: null, isLoading: false });
         }
       }
     }
