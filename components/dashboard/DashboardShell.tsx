@@ -7,6 +7,8 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { DashboardHero } from './DashboardHero';
 import { OverviewStats } from './OverviewStats';
 import { MarketDashboardWidget } from './MarketDashboardWidget';
+import { MultiAssetCharts } from './MultiAssetCharts';
+import { L400SupportResistance } from './L400SupportResistance';
 import { ModuleGrid } from './ModuleGrid';
 import { AccountBanner } from './AccountBanner';
 // WidgetsSection rimossa - richiede API real-time non disponibili
@@ -266,6 +268,32 @@ export function DashboardShell() {
           >
             <ErrorBoundary>
               <MarketDashboardWidget />
+            </ErrorBoundary>
+          </section>
+
+          {/* Multi-Asset Charts - Best Practice: Correlazioni cross-asset - PRIORITÀ ALTA */}
+          {/* Mostra correlazioni tra Crypto, Stocks, Forex, Commodities */}
+          <section 
+            aria-label="Multi-asset charts with correlations" 
+            className={styles.dashboardSection}
+            suppressHydrationWarning
+            id="multi-asset-charts"
+          >
+            <ErrorBoundary>
+              <MultiAssetCharts />
+            </ErrorBoundary>
+          </section>
+
+          {/* L400 Support/Resistance - KILLER FEATURE - PRIORITÀ ALTA */}
+          {/* Supporti e resistenze reali basati su order book L400 */}
+          <section 
+            aria-label="L400 Support and Resistance" 
+            className={styles.dashboardSection}
+            suppressHydrationWarning
+            id="l400-support-resistance"
+          >
+            <ErrorBoundary>
+              <L400SupportResistance />
             </ErrorBoundary>
           </section>
 
