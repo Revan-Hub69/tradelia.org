@@ -1357,9 +1357,9 @@ export function BrokersRecommender() {
                   <label className="text-sm font-semibold text-text-primary block mb-3">
                     Regime Fiscale Preferito
                   </label>
-                  <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 mb-4">
+                  <div className="info-box info-box-accent">
                     <div className="flex items-start gap-2">
-                      <BookOpen className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                      <BookOpen className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" aria-hidden="true" />
                       <div className="space-y-2 text-sm text-text-secondary">
                         <p className="font-semibold text-text-primary">Spiegazione Accademica - Regime Fiscale</p>
                         <p>
@@ -1521,7 +1521,7 @@ export function BrokersRecommender() {
                   <div className="flex flex-wrap items-center gap-2">
                     <button
                       onClick={handleCostCalculatorToggle}
-                      className="px-4 py-2 bg-accent/20 hover:bg-accent/30 text-accent rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
+                      className="btn-action btn-action-primary"
                       aria-label="Confronto costi pubblici"
                     >
                       <Calculator className="w-4 h-4" aria-hidden="true" />
@@ -1529,7 +1529,7 @@ export function BrokersRecommender() {
                     </button>
                     <button
                       onClick={() => setShowAIMatching(true)}
-                      className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
+                      className="btn-action btn-action-secondary"
                       aria-label="Analisi AI Matching"
                     >
                       <Brain className="w-4 h-4" aria-hidden="true" />
@@ -1537,7 +1537,7 @@ export function BrokersRecommender() {
                     </button>
                     <button
                       onClick={() => setShowRegulatoryCheck(true)}
-                      className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
+                      className="btn-action btn-action-info"
                       aria-label="Verifica Conformità Regolatoria"
                     >
                       <Shield className="w-4 h-4" aria-hidden="true" />
@@ -1545,7 +1545,7 @@ export function BrokersRecommender() {
                     </button>
                     <button
                       onClick={() => setShowRiskAssessment(true)}
-                      className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
+                      className="btn-action btn-action-danger"
                       aria-label="Valutazione Rischio"
                     >
                       <Gauge className="w-4 h-4" aria-hidden="true" />
@@ -1568,7 +1568,7 @@ export function BrokersRecommender() {
                         </button>
                         <button
                           onClick={() => setShowComparisonMatrix(true)}
-                          className="px-4 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
+                          className="btn-action btn-action-indigo"
                           aria-label="Matrice Confronto"
                         >
                           <Layers className="w-4 h-4" aria-hidden="true" />
@@ -1579,7 +1579,7 @@ export function BrokersRecommender() {
                     <div className="flex items-center gap-2 ml-auto">
                       <button
                         onClick={handleExportReport}
-                        className="px-4 py-2 bg-bg-soft hover:bg-bg-soft/80 text-text-primary rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
+                        className="btn-action"
                         aria-label="Esporta report"
                       >
                         <Download className="w-4 h-4" aria-hidden="true" />
@@ -1587,7 +1587,7 @@ export function BrokersRecommender() {
                       </button>
                       <button
                         onClick={handleShareReport}
-                        className="px-4 py-2 bg-bg-soft hover:bg-bg-soft/80 text-text-primary rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
+                        className="btn-action"
                         aria-label="Condividi report"
                       >
                         <Share2 className="w-4 h-4" aria-hidden="true" />
@@ -2085,42 +2085,42 @@ export function BrokersRecommender() {
                           </span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <FileText className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <FileText className="w-4 h-4 text-cyan-300 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <span>
                             <strong>Regolamento ESMA 2018/1636:</strong> Limitazioni leverage per clienti retail (30:1 major forex, 5:1 crypto)
                           </span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <FileText className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <FileText className="w-4 h-4 text-cyan-300 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <span>
                             <strong>Direttiva 97/9/CE:</strong> Sistemi di compensazione investitori (ICF, FSCS, SIPC)
                           </span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <FileText className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <FileText className="w-4 h-4 text-cyan-300 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <span>
                             <strong>CONSOB:</strong> Regolamentazione italiana mercati finanziari e protezione risparmiatori
                           </span>
                         </li>
                       </ul>
                     </div>
-                    <div className="bg-bg-surface/50 rounded-lg p-4 border border-blue-500/10">
-                      <p className="text-xs font-semibold text-blue-400 mb-2 uppercase tracking-wide">Framework Teorici</p>
+                    <div className="bg-bg-surface/50 rounded-lg p-4 border border-cyan-500/20">
+                      <p className="text-xs font-semibold text-cyan-300 mb-2 uppercase tracking-wide">Framework Teorici</p>
                       <ul className="space-y-2 text-sm text-text-secondary">
                         <li className="flex items-start gap-2">
-                          <GraduationCap className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <GraduationCap className="w-4 h-4 text-cyan-300 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <span>
                             <strong>Markowitz (1952):</strong> Modern Portfolio Theory - Diversificazione riduce rischio non sistematico
                           </span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <GraduationCap className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <GraduationCap className="w-4 h-4 text-cyan-300 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <span>
                             <strong>MiFID II Art. 25:</strong> Adeguatezza e appropriatezza strumenti finanziari rispetto al profilo cliente
                           </span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <GraduationCap className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <GraduationCap className="w-4 h-4 text-cyan-300 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <span>
                             <strong>ESMA Guidelines 2024:</strong> AI Explainability in Financial Services - Trasparenza algoritmi
                           </span>
@@ -2128,8 +2128,8 @@ export function BrokersRecommender() {
                       </ul>
                     </div>
                     {showDrawer.review?.researchSignal && (
-                      <div className="bg-bg-surface/50 rounded-lg p-4 border border-blue-500/10">
-                        <p className="text-xs font-semibold text-blue-400 mb-2 uppercase tracking-wide">Riferimenti Specifici Broker</p>
+                      <div className="bg-bg-surface/50 rounded-lg p-4 border border-cyan-500/20">
+                        <p className="text-xs font-semibold text-cyan-300 mb-2 uppercase tracking-wide">Riferimenti Specifici Broker</p>
                         <p className="text-sm text-text-secondary">{showDrawer.review.researchSignal}</p>
                       </div>
                     )}
@@ -2304,7 +2304,7 @@ export function BrokersRecommender() {
                             <p className="text-xs text-text-tertiary mb-1">Lingue Supportate</p>
                             <div className="flex flex-wrap gap-2">
                               {showDrawer.support.languages.map(lang => (
-                                <span key={lang} className="px-2 py-1 bg-accent/20 text-accent rounded text-xs">
+                                <span key={lang} className="badge-accent">
                                   {lang}
                                 </span>
                               ))}
@@ -2318,7 +2318,7 @@ export function BrokersRecommender() {
                             <p className="text-xs text-text-tertiary mb-1">Canali</p>
                             <div className="flex flex-wrap gap-2">
                               {showDrawer.support.channels.map(channel => (
-                                <span key={channel} className="px-2 py-1 bg-accent/20 text-accent rounded text-xs">
+                                <span key={channel} className="badge-accent">
                                   {channel}
                                 </span>
                               ))}
@@ -2346,7 +2346,7 @@ export function BrokersRecommender() {
                             <p className="text-xs text-text-tertiary mb-1">Metodi Deposito</p>
                             <div className="flex flex-wrap gap-2">
                               {showDrawer.payment.depositMethods.map(method => (
-                                <span key={method} className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">
+                                <span key={method} className="badge-success">
                                   {method}
                                 </span>
                               ))}
@@ -2359,7 +2359,7 @@ export function BrokersRecommender() {
                             <p className="text-xs text-text-tertiary mb-1">Metodi Prelievo</p>
                             <div className="flex flex-wrap gap-2">
                               {showDrawer.payment.withdrawalMethods.map(method => (
-                                <span key={method} className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">
+                                <span key={method} className="badge-info">
                                   {method}
                                 </span>
                               ))}
@@ -2870,10 +2870,10 @@ export function BrokersRecommender() {
               className="bg-bg-surface border-premium shadow-premium rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="p-6 border-b border-border-subtle bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent">
+              <div className="p-6 border-b border-border-subtle gradient-cyan">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Shield className="w-6 h-6 text-blue-400" aria-hidden="true" />
+                    <Shield className="w-6 h-6 text-cyan-300" aria-hidden="true" />
                     <h3 id="regulatory-check-title" className="text-xl font-bold text-text-primary">Verifica Conformità Regolatoria</h3>
                   </div>
                   <button
@@ -2943,9 +2943,9 @@ export function BrokersRecommender() {
                 )}
               </div>
               <div className="p-6 border-t border-border-subtle bg-bg-soft">
-                <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 mb-4">
+                <div className="info-box info-box-accent">
                   <div className="flex items-start gap-2">
-                    <Info className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <Info className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" aria-hidden="true" />
                     <div className="text-sm text-text-secondary">
                       <p className="font-semibold text-text-primary mb-1">Riferimenti Normativi</p>
                       <ul className="list-disc list-inside space-y-1 text-xs">
@@ -2959,7 +2959,7 @@ export function BrokersRecommender() {
                 </div>
                 <button
                   onClick={() => setShowRegulatoryCheck(false)}
-                  className="w-full px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors font-semibold"
+                  className="w-full px-6 py-3 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors font-semibold"
                 >
                   Chiudi
                 </button>
