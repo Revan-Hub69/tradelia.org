@@ -33,17 +33,20 @@ export async function GET() {
       return acc;
     }, {} as Record<string, number>) || {};
 
-    // Conta reports (solo report pubblici/generati, NON richieste personali)
+    // Conta reports (include anche richieste di analisi che diventano pubbliche per Pro)
     const { count: totalReports } = await supabaseAdmin
       .from('reports')
       .select('*', { count: 'exact', head: true })
       .catch(() => ({ count: 0 }));
 
-    // Conta richieste di analisi (a personam - separate dai report)
+    // Conta richieste di analisi (diventano pubbliche per Pro, quindi vanno nei totali)
     const { count: totalAnalysisRequests } = await supabaseAdmin
       .from('analysis_requests')
       .select('*', { count: 'exact', head: true })
       .catch(() => ({ count: 0 }));
+
+    // Report totali = reports + analysis_requests (entrambi pubblici per Pro)
+    const totalPublicReports = (totalReports || 0) + (totalAnalysisRequests || 0);
 
     // Conta watchlist
     const { count: totalWatchlist } = await supabaseAdmin
@@ -69,8 +72,9 @@ export async function GET() {
         total: totalUsers || 0,
         byRole: usersByRole,
       },
-      reports: totalReports || 0, // Solo report pubblici/generati
-      analysisRequests: totalAnalysisRequests || 0, // Richieste personali (a personam)
+      reports: totalPublicReports, // Report pubblici + richieste analisi (entrambi pubblici per Pro)
+      reportsGenerated: totalReports || 0, // Solo report generati direttamente
+      analysisRequests: totalAnalysisRequests || 0, // Richieste analisi (diventano pubbliche)
       watchlist: totalWatchlist || 0,
       notifications: totalNotifications || 0,
       completedCourses: completedCourses || 0,

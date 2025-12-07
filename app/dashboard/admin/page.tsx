@@ -49,8 +49,9 @@ interface Stats {
     total: number;
     byRole: Record<string, number>;
   };
-  reports: number; // Solo report pubblici/generati
-  analysisRequests: number; // Richieste personali (a personam)
+  reports: number; // Report totali (pubblici + richieste analisi - entrambi pubblici per Pro)
+  reportsGenerated?: number; // Solo report generati direttamente
+  analysisRequests?: number; // Richieste analisi (diventano pubbliche per Pro)
   watchlist: number;
   notifications: number;
   completedCourses: number;
@@ -395,14 +396,23 @@ export default function AdminPage() {
               </div>
             </div>
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-6">
-              <h3 className="text-sm text-text-secondary mb-2">Report Pubblici</h3>
+              <h3 className="text-sm text-text-secondary mb-2">Report Totali</h3>
               <p className="text-3xl font-bold text-text-primary">{stats.reports}</p>
-              <p className="text-xs text-text-tertiary mt-1">Report generati (non a personam)</p>
-            </div>
-            <div className="bg-bg-surface border border-border-subtle rounded-lg p-6">
-              <h3 className="text-sm text-text-secondary mb-2">Richieste Analisi</h3>
-              <p className="text-3xl font-bold text-text-primary">{stats.analysisRequests || 0}</p>
-              <p className="text-xs text-text-tertiary mt-1">Richieste personali (a personam)</p>
+              <p className="text-xs text-text-tertiary mt-1">
+                Report pubblici per Pro (generati + richieste analisi)
+              </p>
+              {stats.reportsGenerated !== undefined && stats.analysisRequests !== undefined && (
+                <div className="mt-3 pt-3 border-t border-border-subtle space-y-1 text-xs">
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">Generati:</span>
+                    <span className="text-text-primary">{stats.reportsGenerated}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-text-secondary">Da richieste:</span>
+                    <span className="text-text-primary">{stats.analysisRequests}</span>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-6">
               <h3 className="text-sm text-text-secondary mb-2">Watchlist</h3>
@@ -677,10 +687,9 @@ export default function AdminPage() {
               <div className="flex items-start gap-2">
                 <FileSearch className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="text-sm font-semibold text-blue-400 mb-1">Richieste di Analisi (a personam)</h3>
+                  <h3 className="text-sm font-semibold text-blue-400 mb-1">Richieste di Analisi</h3>
                   <p className="text-xs text-text-secondary">
-                    Queste sono richieste personali degli utenti, separate dai report pubblici. 
-                    Non vengono conteggiate nei report totali.
+                    Le richieste di analisi diventano pubbliche per gli utenti Pro e vengono conteggiate nei report totali.
                   </p>
                 </div>
               </div>
