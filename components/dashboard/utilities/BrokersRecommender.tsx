@@ -879,7 +879,7 @@ export function BrokersRecommender() {
     .map(item => item.broker);
   }, [formData]);
 
-  // AI-Powered Smart Matching: Analisi avanzata con spiegazioni accademiche
+  // Analisi Matching Avanzata: Scoring basato su criteri oggettivi e normativi
   const getAIMatchingExplanation = useCallback((broker: Broker) => {
     if (!broker) {
       return { aiScore: 0, explanations: [], totalScore: 0 };
@@ -1136,31 +1136,42 @@ export function BrokersRecommender() {
 
     if (broker.taxRegime === 'amministrato' || broker.taxRegime === 'both') {
       // Regime Amministrato: broker gestisce tasse, semplificazione
-      const annualGains = validPortfolioValue * 0.1; // Assumiamo 10% rendimento annuo
-      const taxAmministrato = Math.max(0, annualGains * 0.26); // 26% su plusvalenze, minimo 0
-      const adminFee = 0; // Nessun costo aggiuntivo per gestione fiscale
+      // NOTA: I calcoli sono indicativi e basati su ipotesi standard (10% rendimento annuo, 26% aliquota)
+      // I rendimenti reali variano significativamente e dipendono da molti fattori
+      const assumedAnnualReturn = 0.1; // 10% - ipotesi standard per calcolo indicativo
+      const taxRate = 0.26; // 26% aliquota fiscale su plusvalenze (D.Lgs. 239/1996)
+      const annualGains = validPortfolioValue * assumedAnnualReturn;
+      const taxAmministrato = Math.max(0, annualGains * taxRate);
       scenarios.push({
         regime: 'Amministrato',
-        annualCost: taxAmministrato + adminFee,
+        annualCost: taxAmministrato,
         taxSavings: 0,
-        explanation: `Regime amministrato: il broker trattiene automaticamente il 26% sulle plusvalenze. ` +
+        explanation: `Regime amministrato: il broker trattiene automaticamente il 26% sulle plusvalenze (D.Lgs. 239/1996). ` +
           `Nessun onere dichiarativo, ideale per investitori che preferiscono semplificazione. ` +
-          `Costo annuo stimato: €${taxAmministrato.toFixed(2)} (26% su plusvalenze).`
+          `Costo fiscale annuo stimato: €${taxAmministrato.toFixed(2)} (calcolo basato su ipotesi di rendimento annuo del 10%). ` +
+          `⚠️ I rendimenti reali variano significativamente e questo è solo un calcolo indicativo.`
       });
     }
 
     if (broker.taxRegime === 'dichiarativo' || broker.taxRegime === 'both') {
       // Regime Dichiarativo: gestione autonoma, possibilità di ottimizzazione
-      const annualGains = validPortfolioValue * 0.1;
-      const taxDichiarativo = Math.max(0, annualGains * 0.26);
-      const optimizationSavings = Math.max(0, annualGains * 0.05); // Possibilità di ridurre del 5% con ottimizzazioni
+      // NOTA: Le ottimizzazioni fiscali dipendono da molti fattori individuali
+      const assumedAnnualReturn = 0.1;
+      const taxRate = 0.26;
+      const annualGains = validPortfolioValue * assumedAnnualReturn;
+      const taxDichiarativo = Math.max(0, annualGains * taxRate);
+      // Ottimizzazioni possibili: compensazione minusvalenze, detrazioni, scadenze differite
+      // Stima conservativa: 5-10% di potenziale risparmio in scenari ottimali
+      const potentialOptimizationPercent = 0.05; // 5% - stima conservativa
+      const optimizationSavings = Math.max(0, annualGains * potentialOptimizationPercent);
       scenarios.push({
         regime: 'Dichiarativo',
         annualCost: Math.max(0, taxDichiarativo - optimizationSavings),
         taxSavings: optimizationSavings,
         explanation: `Regime dichiarativo: gestione autonoma delle tasse con possibilità di ottimizzazione fiscale ` +
-          `(compensazione minusvalenze, detrazioni, ecc.). Richiede competenze contabili. ` +
-          `Potenziale risparmio annuo: €${optimizationSavings.toFixed(2)}.`
+          `(compensazione minusvalenze, detrazioni, scadenze differite, ecc.). Richiede competenze contabili. ` +
+          `Potenziale risparmio annuo stimato: €${optimizationSavings.toFixed(2)} (calcolo indicativo basato su ipotesi di rendimento 10%). ` +
+          `⚠️ Le ottimizzazioni fiscali reali dipendono da molti fattori individuali e richiedono consulenza professionale.`
       });
     }
 
@@ -1839,7 +1850,7 @@ export function BrokersRecommender() {
                       aria-label="Analisi AI Matching"
                     >
                       <Brain className="w-4 h-4" aria-hidden="true" />
-                      AI Matching
+                      Analisi Matching
                     </button>
                     <button
                       onClick={() => setShowRegulatoryCheck(true)}
@@ -2942,11 +2953,12 @@ export function BrokersRecommender() {
                   <div className="flex items-start gap-2">
                     <Info className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
                     <div className="text-sm text-text-secondary">
-                      <p className="font-semibold text-text-primary mb-1">Calcolatore Avanzato con Scenari Multipli</p>
+                      <p className="font-semibold text-text-primary mb-1">Calcolatore Costi con Scenari Multipli</p>
                       <p>
-                        Questo calcolatore utilizza algoritmi di machine learning per stimare i costi totali basandosi su
-                        commissioni pubbliche, spread, costi di inattività e conversioni valutarie. I costi effettivi possono variare
-                        in base al volume, al tipo di account e alle condizioni di mercato.
+                        Questo calcolatore stima i costi totali basandosi su commissioni pubbliche, spread tipici, costi di inattività
+                        e conversioni valutarie dichiarate dai broker. <strong>I costi effettivi possono variare significativamente</strong>
+                        in base al volume, al tipo di account, alle condizioni di mercato e alle negoziazioni individuali.
+                        Consulta sempre il sito ufficiale del broker per informazioni aggiornate e dettagliate.
                       </p>
                     </div>
                   </div>
@@ -3039,36 +3051,75 @@ export function BrokersRecommender() {
                           const totalVolume = costScenario.monthlyOrders * costScenario.avgOrderValue;
                         
                         try {
+                          // NOTA: I calcoli sono indicativi e basati su parsing di stringhe pubbliche
+                          // I costi reali possono variare significativamente in base a:
+                          // - Volume effettivo (commissioni tiered)
+                          // - Tipo di account (retail vs professional)
+                          // - Condizioni di mercato (spread variabili)
+                          // - Negoziazioni individuali
+                          
                           if (costScenario.instrumentType === 'stocks' && broker.costs?.commissionStocks) {
                             const commStr = broker.costs.commissionStocks;
                             if (commStr.includes('€')) {
+                              // Commissione fissa per ordine
                               const fixed = parseFloat(commStr.match(/€(\d+\.?\d*)/)?.[1] || '0');
                               if (!isNaN(fixed) && fixed >= 0) {
                                 estimatedCost = fixed * costScenario.monthlyOrders;
                               }
                             } else if (commStr.includes('%')) {
+                              // Commissione percentuale sul valore
                               const percent = parseFloat(commStr.match(/(\d+\.?\d*)%/)?.[1] || '0') / 100;
                               if (!isNaN(percent) && percent >= 0 && percent <= 1) {
                                 estimatedCost = totalVolume * percent;
                               }
                             }
+                            // Se c'è un minimo (es. "0.1% min €1"), usa il maggiore tra percentuale e minimo
+                            if (commStr.includes('min')) {
+                              const minComm = parseFloat(commStr.match(/min\s*€(\d+\.?\d*)/)?.[1] || '0');
+                              if (!isNaN(minComm) && minComm > 0) {
+                                estimatedCost = Math.max(estimatedCost, minComm * costScenario.monthlyOrders);
+                              }
+                            }
                           } else if (costScenario.instrumentType === 'forex' && broker.costs?.spreadForex) {
-                            // Stima spread per forex (semplificata)
+                            // Stima spread per forex: 1 pip = 0.0001 per major pairs
+                            // Costo spread = (spread in pip / 10000) * valore nominale per lotto standard (€100,000)
                             const spreadPips = parseFloat(broker.costs.spreadForex.match(/(\d+\.?\d*)\s*pip/)?.[1] || '0.1');
                             if (!isNaN(spreadPips) && spreadPips >= 0) {
-                              estimatedCost = (spreadPips / 10000) * totalVolume * costScenario.monthlyOrders;
+                              // Assumendo che avgOrderValue rappresenti il valore nominale del trade
+                              const spreadCostPerOrder = (spreadPips / 10000) * costScenario.avgOrderValue;
+                              estimatedCost = spreadCostPerOrder * costScenario.monthlyOrders;
+                            }
+                          } else if (costScenario.instrumentType === 'options' && broker.costs?.commissionOptions) {
+                            // Commissione per contratto opzioni
+                            const commPerContract = parseFloat(broker.costs.commissionOptions.match(/€(\d+\.?\d*)/)?.[1] || '0');
+                            if (!isNaN(commPerContract) && commPerContract >= 0) {
+                              // Assumendo 1 contratto per ordine (semplificazione)
+                              estimatedCost = commPerContract * costScenario.monthlyOrders;
+                            }
+                          } else if (costScenario.instrumentType === 'futures' && broker.costs?.commissionFutures) {
+                            // Commissione per contratto futures
+                            const commPerContract = parseFloat(broker.costs.commissionFutures.match(/€(\d+\.?\d*)/)?.[1] || '0');
+                            if (!isNaN(commPerContract) && commPerContract >= 0) {
+                              estimatedCost = commPerContract * costScenario.monthlyOrders;
                             }
                           }
                           
-                          // Aggiungi costi aggiuntivi per frequenza alta
-                          if (costScenario.tradingFrequency === 'high' || costScenario.tradingFrequency === 'professional') {
-                            // Nessun costo inattività se trading attivo
-                          } else {
+                          // Aggiungi costi aggiuntivi per frequenza bassa (inattività)
+                          if (costScenario.tradingFrequency === 'low' || costScenario.tradingFrequency === 'moderate') {
                             if (broker.costs?.inactivityFee && broker.costs.inactivityFee.includes('€')) {
                               const inactivityFee = parseFloat(broker.costs.inactivityFee.match(/€(\d+\.?\d*)/)?.[1] || '0');
                               if (!isNaN(inactivityFee) && inactivityFee >= 0) {
                                 estimatedCost += inactivityFee;
                               }
+                            }
+                          }
+                          
+                          // Aggiungi costi di conversione valutaria se applicabili
+                          if (broker.costs?.currencyConversionFee) {
+                            const convFeePercent = parseFloat(broker.costs.currencyConversionFee.match(/(\d+\.?\d*)%/)?.[1] || '0') / 100;
+                            if (!isNaN(convFeePercent) && convFeePercent > 0) {
+                              // Stima: 20% dei trade richiedono conversione
+                              estimatedCost += totalVolume * 0.2 * convFeePercent;
                             }
                           }
                         } catch (error) {
@@ -3186,18 +3237,18 @@ export function BrokersRecommender() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Brain className="w-6 h-6 text-purple-400" aria-hidden="true" />
-                    <h3 id="ai-matching-title" className="text-xl font-bold text-text-primary">AI-Powered Smart Matching</h3>
+                    <h3 id="ai-matching-title" className="text-xl font-bold text-text-primary">Analisi Matching Avanzata</h3>
                   </div>
                   <button
                     onClick={() => setShowAIMatching(false)}
                     className="text-text-tertiary hover:text-text-primary transition-colors p-2 hover:bg-bg-soft rounded-lg"
-                    aria-label="Chiudi AI Matching"
+                    aria-label="Chiudi analisi matching"
                   >
                     <X className="w-6 h-6" aria-hidden="true" />
                   </button>
                 </div>
                 <p className="text-sm text-text-secondary mt-2">
-                  Analisi intelligente basata su algoritmi di machine learning e framework accademici
+                  Analisi basata su criteri oggettivi e framework normativi (MiFID II, ESMA, CONSOB)
                 </p>
               </div>
               <div className="overflow-y-auto flex-1 p-6 space-y-6">
@@ -3587,10 +3638,21 @@ export function BrokersRecommender() {
                   <div className="flex items-start gap-2">
                     <Info className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
                     <div className="text-sm text-text-secondary">
-                      <p className="font-semibold text-text-primary mb-1">Nota Importante</p>
+                      <p className="font-semibold text-text-primary mb-1">⚠️ Nota Importante - Calcoli Indicativi</p>
+                      <p className="mb-2">
+                        <strong>I calcoli presentati sono puramente indicativi e basati su ipotesi standard:</strong>
+                      </p>
+                      <ul className="list-disc list-inside space-y-1 ml-2 mb-2">
+                        <li>Rendimento annuo ipotizzato: 10% (i rendimenti reali variano significativamente)</li>
+                        <li>Aliquota fiscale: 26% su plusvalenze (D.Lgs. 239/1996)</li>
+                        <li>Ottimizzazioni fiscali: stima conservativa del 5% (scenari ottimali possono variare)</li>
+                      </ul>
                       <p>
-                        I calcoli sono stimati e basati su ipotesi standard. I costi fiscali effettivi dipendono da molti fattori
-                        (volume trading, plusvalenze/minusvalenze, detrazioni, ecc.). Consulta sempre un consulente fiscale qualificato.
+                        <strong>I costi fiscali effettivi dipendono da molti fattori individuali:</strong> volume trading reale,
+                        plusvalenze/minusvalenze effettive, detrazioni applicabili, scadenze fiscali, compensazioni, ecc.
+                      </p>
+                      <p className="mt-2 font-semibold">
+                        ⚠️ Consulta sempre un consulente fiscale qualificato per calcoli precisi basati sulla tua situazione specifica.
                       </p>
                     </div>
                   </div>
