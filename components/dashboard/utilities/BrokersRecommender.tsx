@@ -2149,7 +2149,7 @@ export function BrokersRecommender() {
                                     key={i}
                                     className={cn(
                                       'w-3 h-3',
-                                      i < Math.floor(showDrawer.mobileAppRating) ? 'text-amber-400 fill-amber-400' : 'text-text-tertiary'
+                                      i < Math.floor(showDrawer.mobileAppRating ?? 0) ? 'text-amber-400 fill-amber-400' : 'text-text-tertiary'
                                     )}
                                     aria-hidden="true"
                                   />
