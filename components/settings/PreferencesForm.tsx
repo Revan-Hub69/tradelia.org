@@ -1,18 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Globe, Save, Loader2 } from 'lucide-react';
+import { Save, Loader2 } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useApi } from '@/lib/hooks/useApi';
 import { toast } from '@/components/ui/Toast';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
-import { buildLocalePath } from '@/lib/i18n/paths';
 
 interface PreferencesData {
-  language: string;
   timezone: string;
   email_notifications: boolean;
   push_notifications: boolean;
@@ -23,11 +20,9 @@ interface PreferencesData {
  * Form per modificare preferenze utente
  */
 export function PreferencesForm() {
-  const { t, locale } = useTranslations();
-  const router = useRouter();
+  const { t } = useTranslations();
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState<PreferencesData>({
-    language: locale || 'it', // Mantenuto per compatibilità ma non più modificabile
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     email_notifications: true,
     push_notifications: true,
@@ -44,13 +39,12 @@ export function PreferencesForm() {
   useEffect(() => {
     if (preferences) {
       setFormData({
-        language: preferences.language || locale || 'it',
         timezone: preferences.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
         email_notifications: preferences.email_notifications !== false,
         push_notifications: preferences.push_notifications !== false,
       });
     }
-  }, [preferences, locale]);
+  }, [preferences]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,7 +55,6 @@ export function PreferencesForm() {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          // language rimosso - gestito tramite URL
           timezone: formData.timezone,
           email_notifications: formData.email_notifications,
           push_notifications: formData.push_notifications,
@@ -75,8 +68,6 @@ export function PreferencesForm() {
 
       toast.success(t('dashboard.settings.preferences.success') || 'Preferenze aggiornate con successo');
       retry();
-
-      // Lingua gestita tramite URL, non più tramite settings
     } catch (error) {
       console.error('Error updating preferences:', error);
       toast.error(

@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     // Recupera profilo utente - gestisci errori gracefully
     const { data: profile, error } = await supabase
       .from('profiles')
-      .select('display_name, bio, language, timezone, email_notifications, push_notifications')
+      .select('display_name, bio, timezone, email_notifications, push_notifications')
       .eq('id', user.id)
       .single();
 
@@ -60,7 +60,6 @@ export async function PATCH(request: NextRequest) {
     const {
       display_name,
       bio,
-      language,
       timezone,
       email_notifications,
       push_notifications,
@@ -70,7 +69,6 @@ export async function PATCH(request: NextRequest) {
     const updateData: any = {};
     if (display_name !== undefined) updateData.display_name = display_name?.trim() || null;
     if (bio !== undefined) updateData.bio = bio?.trim() || null;
-    if (language !== undefined) updateData.language = language;
     if (timezone !== undefined) updateData.timezone = timezone;
     if (email_notifications !== undefined) updateData.email_notifications = email_notifications;
     if (push_notifications !== undefined) updateData.push_notifications = push_notifications;
