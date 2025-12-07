@@ -36,6 +36,8 @@ export function useUserRole(): UserRoleData {
         }
 
         try {
+          // Use single() instead of maybeSingle() to get better error handling
+          // If no record exists, we'll catch the error and use default role
           const { data, error } = await supabase
             .from("user_roles")
             .select("role, valid_until")
@@ -43,11 +45,35 @@ export function useUserRole(): UserRoleData {
             .maybeSingle();
 
           if (error) {
-            // PGRST116 = no rows returned, which is fine
-            // Any other error (RLS, 500, etc.) - use default role silently
-            // Don't throw or log - just use default role
+            // PGRST116 = no rows returned, which is expected for new users
+            if (error.code === "PGRST116") {
+              // No role found - use default
+              if (mounted) {
+                setRoleData({
+                  role: "trial",
+                  validUntil: null,
+                  isLoading: false,
+                });
+              }
+              return;
+            }
+            
+            // For other errors (500, RLS, etc.), log in development and use default
+            if (process.env.NODE_ENV === 'development') {
+              console.warn("Error fetching user role:", error.code, error.message);
+            }
+            
+            if (mounted) {
+              setRoleData({
+                role: "trial",
+                validUntil: null,
+                isLoading: false,
+              });
+            }
+            return;
           }
 
+          // Success - use data or default
           if (mounted) {
             setRoleData({
               role: (data?.role as UserRole) || "trial",
@@ -56,7 +82,11 @@ export function useUserRole(): UserRoleData {
             });
           }
         } catch (dbError) {
-          // Database error (500, RLS, etc.) - use default role
+          // Database error (500, network, etc.) - use default role
+          if (process.env.NODE_ENV === 'development') {
+            console.warn("Database error in useUserRole:", dbError);
+          }
+          
           if (mounted) {
             setRoleData({
               role: "trial",
