@@ -23,6 +23,7 @@ import { useDashboardPreferences } from '@/lib/hooks/useDashboardPreferences';
 import { Eye, EyeOff, LayoutGrid, LayoutList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
+import { logError, logRedirect } from '@/lib/monitoring/error-logger';
 import styles from './dashboard.module.css';
 
 // Lazy load non-critical components
@@ -42,7 +43,7 @@ export function DashboardShell() {
   const { t } = useTranslations();
   const { preferences, isLoaded, toggleHero, toggleCompactView } = useDashboardPreferences();
   const [liveMessage, setLiveMessage] = useState('');
-  const [unlockedAchievement, setUnlockedAchievement] = useState<any>(null);
+  const [unlockedAchievement, setUnlockedAchievement] = useState<{ id: string; name: string; description?: string } | null>(null);
   const [hasError, setHasError] = useState(false);
   const router = useSafeRouter();
 
@@ -53,8 +54,6 @@ export function DashboardShell() {
     if (typeof window === 'undefined') {
       return;
     }
-
-    const { logError, logRedirect } = require('@/lib/monitoring/error-logger');
 
     const handleError = (event: ErrorEvent) => {
       logError('Global JavaScript error', event.error, {
@@ -91,7 +90,11 @@ export function DashboardShell() {
       if (currentPath === '/login' && document.referrer.includes('/dashboard')) {
         const shouldRedirect = logRedirect(document.referrer, currentPath, 'Automatic redirect to login');
         if (!shouldRedirect) {
-          console.warn('[DashboardShell] Redirect loop detected, preventing redirect to login');
+          logError('Redirect loop detected', undefined, {
+            component: 'DashboardShell',
+            path: currentPath,
+            metadata: { referrer: document.referrer },
+          });
           // Torna alla dashboard invece del login
           window.history.replaceState({}, '', '/dashboard');
           if (router && typeof router.refresh === 'function') {

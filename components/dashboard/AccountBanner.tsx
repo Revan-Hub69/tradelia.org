@@ -37,7 +37,10 @@ export function AccountBanner() {
         setBannerState('email-not-verified');
       }
     } catch (err) {
-      console.error('Error checking user status:', err);
+      // Log error but don't expose to user
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error checking user status:', err);
+      }
       setBannerState('not-logged-in');
     }
   }, []);
@@ -60,9 +63,14 @@ export function AccountBanner() {
   // Controlla se è stato dismissato in precedenza (deve essere prima di qualsiasi return)
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const wasDismissed = localStorage.getItem('account-banner-dismissed') === 'true';
-      if (wasDismissed) {
-        setDismissed(true);
+      try {
+        const wasDismissed = localStorage.getItem('account-banner-dismissed') === 'true';
+        if (wasDismissed) {
+          setDismissed(true);
+        }
+      } catch (error) {
+        // localStorage potrebbe non essere disponibile (es. modalità privata)
+        // Ignora silenziosamente
       }
     }
   }, []);
@@ -71,7 +79,12 @@ export function AccountBanner() {
     setDismissed(true);
     // Salva in localStorage per non mostrare di nuovo in questa sessione
     if (typeof window !== 'undefined') {
-      localStorage.setItem('account-banner-dismissed', 'true');
+      try {
+        localStorage.setItem('account-banner-dismissed', 'true');
+      } catch (error) {
+        // localStorage potrebbe non essere disponibile (es. modalità privata)
+        // Ignora silenziosamente
+      }
     }
   };
 
@@ -174,7 +187,10 @@ export function AccountBanner() {
                               email: userEmail,
                             });
                             if (error) {
-                              console.error('Error resending verification:', error);
+                              // Log error but don't expose to user
+                              if (process.env.NODE_ENV === 'development') {
+                                console.error('Error resending verification:', error);
+                              }
                             } else {
                               const { toast } = await import('@/components/ui/Toast');
                               toast.success(t('dashboard.banner.emailNotVerified.resendSuccess'));

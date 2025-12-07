@@ -17,8 +17,8 @@ export function DashboardHero() {
   const { t, tArray, locale } = useTranslations();
   const isClient = useIsClient();
   const chips = tArray('dashboard.hero.chips', []);
-  const [mifidTerm, setMifidTerm] = useState<any>(null);
-  const [frameworkTerm, setFrameworkTerm] = useState<any>(null);
+  const [mifidTerm, setMifidTerm] = useState<{ id: string; term: string; definition: string } | null>(null);
+  const [frameworkTerm, setFrameworkTerm] = useState<{ id: string; term: string; definition: string } | null>(null);
 
   // Carica termini per tooltip SOLO sul client per evitare hydration mismatch
   useEffect(() => {
