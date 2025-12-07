@@ -9,6 +9,8 @@ import { OverviewStats } from './OverviewStats';
 import { MarketDashboardWidget } from './MarketDashboardWidget';
 import { MultiAssetCharts } from './MultiAssetCharts';
 import { L400SupportResistance } from './L400SupportResistance';
+import { NewsFeed } from './NewsFeed';
+import { EconomicCalendar } from './EconomicCalendar';
 import { ModuleGrid } from './ModuleGrid';
 import { AccountBanner } from './AccountBanner';
 // WidgetsSection rimossa - richiede API real-time non disponibili
@@ -294,6 +296,30 @@ export function DashboardShell() {
           >
             <ErrorBoundary>
               <L400SupportResistance />
+            </ErrorBoundary>
+          </section>
+
+          {/* News Feed - Aggregated News from Multiple Sources */}
+          <section 
+            aria-label="Market News Feed" 
+            className={styles.dashboardSection}
+            suppressHydrationWarning
+            id="news-feed"
+          >
+            <ErrorBoundary>
+              <NewsFeed />
+            </ErrorBoundary>
+          </section>
+
+          {/* Economic Calendar - Upcoming Economic Events */}
+          <section 
+            aria-label="Economic Calendar" 
+            className={styles.dashboardSection}
+            suppressHydrationWarning
+            id="economic-calendar"
+          >
+            <ErrorBoundary>
+              <EconomicCalendar />
             </ErrorBoundary>
           </section>
 

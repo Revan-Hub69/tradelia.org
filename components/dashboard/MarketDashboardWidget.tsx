@@ -149,26 +149,30 @@ export function MarketDashboardWidget() {
           setIndicators(prev => prev.map(ind => ind.id === 'whale-ratio' ? { ...ind, loading: false } : ind));
         }
 
-        // Fetch Exchange Flow (PRO)
+        // Fetch Exchange Flow (PRO) - Now using Glassnode real data
         try {
-          const whaleResponse = await fetch('/api/crypto/whale-analysis');
-          if (whaleResponse.ok) {
-            const whaleData = await whaleResponse.json();
-            const netFlow = whaleData.exchangeFlows?.netFlow || 0;
-            const value = netFlow !== 0 
-              ? `${netFlow > 0 ? '+' : ''}$${(Math.abs(netFlow) / 1e6).toFixed(1)}M`
-              : '—';
-            setIndicators(prev => prev.map(ind => 
-              ind.id === 'exchange-flow' 
-                ? {
-                    ...ind,
-                    value,
-                    status: netFlow > 0 ? 'positive' : netFlow < 0 ? 'negative' : 'neutral',
-                    loading: false,
-                  }
-                : ind
-            ));
-          } else if (whaleResponse.status === 403) {
+          const exchangeFlowResponse = await fetch('/api/crypto/exchange-flows?asset=BTC');
+          if (exchangeFlowResponse.ok) {
+            const flowData = await exchangeFlowResponse.json();
+            if (flowData.success && flowData.data) {
+              const netFlow = flowData.data.netFlow || 0;
+              const value = netFlow !== 0 
+                ? `${netFlow > 0 ? '+' : ''}$${(Math.abs(netFlow) / 1e6).toFixed(1)}M`
+                : '—';
+              setIndicators(prev => prev.map(ind => 
+                ind.id === 'exchange-flow' 
+                  ? {
+                      ...ind,
+                      value,
+                      status: netFlow > 0 ? 'positive' : netFlow < 0 ? 'negative' : 'neutral',
+                      loading: false,
+                    }
+                  : ind
+              ));
+            } else {
+              setIndicators(prev => prev.map(ind => ind.id === 'exchange-flow' ? { ...ind, value: 'PRO', loading: false } : ind));
+            }
+          } else if (exchangeFlowResponse.status === 403) {
             setIndicators(prev => prev.map(ind => ind.id === 'exchange-flow' ? { ...ind, value: 'PRO', loading: false } : ind));
           }
         } catch (e) {
