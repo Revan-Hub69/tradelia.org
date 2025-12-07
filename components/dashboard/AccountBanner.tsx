@@ -149,7 +149,7 @@ export function AccountBanner() {
                     <div className="flex items-center gap-3 flex-wrap">
                       <Link
                         href="/login"
-                        className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-bg-soft hover:bg-bg-surface border border-border-subtle text-text-primary font-medium text-sm transition-all duration-200 hover:border-accent/40 hover:shadow-md"
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-bg-soft hover:bg-bg-surface border-premium shadow-premium text-text-primary font-medium text-sm interaction-smooth hover:border-border-strong shadow-premium-hover"
                       >
                         {t('dashboard.banner.notLoggedIn.login')}
                       </Link>
@@ -197,7 +197,7 @@ export function AccountBanner() {
                             }
                           }
                         }}
-                        className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-bg-soft hover:bg-bg-surface border border-border-subtle text-text-secondary hover:text-text-primary font-medium text-sm transition-all duration-200 hover:border-border-default"
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-bg-soft hover:bg-bg-surface border-premium shadow-premium text-text-secondary hover:text-text-primary font-medium text-sm interaction-smooth hover:border-border-strong shadow-premium-hover"
                       >
                         {t('dashboard.banner.emailNotVerified.resend')}
                       </button>

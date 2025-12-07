@@ -155,7 +155,7 @@ export const Favorites = memo(function Favorites() {
             {t('dashboard.favorites.title') || 'Preferiti'}
           </h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 spacing-mobile">
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-24 bg-bg-soft rounded-xl animate-pulse" />
           ))}
@@ -172,7 +172,7 @@ export const Favorites = memo(function Favorites() {
             {t('dashboard.favorites.title') || 'Preferiti'}
           </h2>
         </div>
-        <div className="bg-bg-soft border border-border-subtle rounded-xl p-12 text-center">
+        <div className="bg-bg-soft border-premium shadow-premium rounded-xl p-8 md:p-12 text-center card-mobile">
           <Heart className="w-12 h-12 mx-auto mb-3 text-text-tertiary opacity-50" />
           <p className="text-sm text-text-tertiary mb-2">
             {t('dashboard.favorites.empty') || 'Nessun contenuto salvato nei preferiti'}
@@ -214,7 +214,7 @@ export const Favorites = memo(function Favorites() {
               >
                 <Link
                   href={favorite.href}
-                  className="block p-4 bg-bg-soft border border-border-subtle rounded-xl hover:border-accent/40 transition-all duration-200 group relative h-full"
+                  className="block p-4 bg-bg-soft border-premium shadow-premium rounded-xl hover:border-border-strong shadow-premium-hover interaction-smooth group relative h-full card-mobile"
                   aria-label={`${favorite.title} - ${favorite.description}`}
                 >
                   <button
@@ -238,7 +238,7 @@ export const Favorites = memo(function Favorites() {
                         <Star className="w-3 h-3 text-amber-300 fill-amber-300 flex-shrink-0" />
                       </div>
                       <p className="text-xs text-text-secondary line-clamp-2 mb-2">{favorite.description}</p>
-                      <span className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded text-xs text-text-tertiary capitalize">
+                      <span className="px-1.5 py-0.5 bg-bg-surface border-premium rounded text-xs text-text-tertiary capitalize">
                         {getTypeLabel(favorite.type)}
                       </span>
                     </div>
@@ -249,7 +249,7 @@ export const Favorites = memo(function Favorites() {
           />
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 spacing-mobile">
           <AnimatePresence>
             {favorites.map((favorite, index) => (
             <motion.div

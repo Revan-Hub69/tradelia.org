@@ -158,7 +158,7 @@ export const RecentActivity = memo(function RecentActivity() {
             {t('dashboard.activity.title') || 'Attività Recenti'}
           </h2>
         </div>
-        <div className="bg-bg-soft border border-border-subtle rounded-xl p-12 text-center">
+        <div className="bg-bg-soft border-premium shadow-premium rounded-xl p-8 md:p-12 text-center card-mobile">
           <Clock className="w-12 h-12 mx-auto mb-3 text-text-tertiary opacity-50" />
           <p className="text-sm text-text-tertiary">
             {t('dashboard.activity.empty') || 'Nessuna attività recente'}
@@ -182,7 +182,7 @@ export const RecentActivity = memo(function RecentActivity() {
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="text-xs bg-bg-soft border border-border-subtle rounded-lg px-2 py-1 text-text-secondary focus:outline-none focus:border-accent"
+            className="text-xs bg-bg-soft border-premium rounded-lg px-2 py-1 text-text-secondary focus:outline-none focus:border-border-strong focus:ring-2 focus:ring-accent"
             aria-label={t('dashboard.activity.filterLabel') || 'Filtra attività per tipo'}
           >
             <option value="all">{t('dashboard.activity.filterAll') || 'Tutte'}</option>
@@ -203,7 +203,7 @@ export const RecentActivity = memo(function RecentActivity() {
             >
               <Link
                 href={activity.href}
-                className="block p-4 bg-bg-soft border border-border-subtle rounded-xl hover:border-accent/40 transition-all duration-200 group"
+                className="block p-4 bg-bg-soft border-premium shadow-premium rounded-xl hover:border-border-strong shadow-premium-hover interaction-smooth group card-mobile"
                 aria-label={`${activity.title} - ${activity.description}`}
               >
                 <div className="flex items-start gap-3">
@@ -213,7 +213,7 @@ export const RecentActivity = memo(function RecentActivity() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold text-text-primary text-sm">{activity.title}</h3>
-                      <span className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded text-xs text-text-tertiary">
+                      <span className="px-1.5 py-0.5 bg-bg-surface border-premium rounded text-xs text-text-tertiary">
                         {getActivityTypeLabel(activity.type)}
                       </span>
                     </div>
@@ -243,7 +243,7 @@ export const RecentActivity = memo(function RecentActivity() {
             >
               <Link
                 href={activity.href}
-                className="block p-4 bg-bg-soft border border-border-subtle rounded-xl hover:border-accent/40 transition-all duration-200 group"
+                className="block p-4 bg-bg-soft border-premium shadow-premium rounded-xl hover:border-border-strong shadow-premium-hover interaction-smooth group card-mobile"
                 aria-label={`${activity.title} - ${activity.description}`}
               >
                 <div className="flex items-start gap-3">
@@ -253,7 +253,7 @@ export const RecentActivity = memo(function RecentActivity() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold text-text-primary text-sm">{activity.title}</h3>
-                      <span className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded text-xs text-text-tertiary">
+                      <span className="px-1.5 py-0.5 bg-bg-surface border-premium rounded text-xs text-text-tertiary">
                         {getActivityTypeLabel(activity.type)}
                       </span>
                     </div>

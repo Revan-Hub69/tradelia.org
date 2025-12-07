@@ -224,8 +224,8 @@ export function WidgetsContent() {
   };
 
   return (
-    <div className="min-h-screen bg-bg-base p-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-bg-base p-4 md:p-6 container-mobile">
+      <div className="max-w-7xl mx-auto w-full">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
@@ -252,8 +252,8 @@ export function WidgetsContent() {
               className={cn(
                 'px-4 py-2 rounded-lg text-sm font-medium transition-colors capitalize',
                 selectedCategory === category
-                  ? 'bg-accent text-white'
-                  : 'bg-bg-soft text-text-secondary hover:bg-bg-surface border border-border-subtle'
+                  ? 'bg-accent text-white shadow-premium'
+                  : 'bg-bg-soft text-text-secondary hover:bg-bg-surface border-premium shadow-premium hover:border-border-strong interaction-smooth underline-selection'
               )}
             >
               {category === 'all' ? (t('widgets.all') || 'Tutti') : category}
@@ -272,7 +272,7 @@ export function WidgetsContent() {
           <p className="text-sm text-text-secondary mb-4">
             {t('widgets.mobileWidgetsDesc') || 'Aggiungi questi widget alla home screen del tuo telefono o apri come finestra standalone su desktop'}
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6 spacing-mobile">
             {mobileWidgets
               .filter(widget => {
                 // Mostra solo widget installabili (crypto-whale, crypto-depth, crypto-movers, futures, options, forex)
@@ -287,7 +287,7 @@ export function WidgetsContent() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-bg-surface border border-border-subtle hover:border-accent/40 rounded-xl p-6 transition-all"
+                  className="bg-bg-surface border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth rounded-xl p-4 md:p-6 card-mobile"
                   aria-label={`${widget.name} - ${widget.description}. Disponibile su ${widget.platforms.join(', ')}`}
                   role="article"
                 >
@@ -369,7 +369,7 @@ export function WidgetsContent() {
         </div>
 
         {/* Widgets Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 spacing-mobile">
           {filteredWidgets.map((widget, index) => (
             <motion.div
               key={widget.id}
@@ -377,10 +377,10 @@ export function WidgetsContent() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               className={cn(
-                'bg-bg-surface border rounded-xl p-6 transition-all',
+                'bg-bg-surface border-premium shadow-premium rounded-xl p-4 md:p-6 interaction-smooth card-mobile',
                 widget.enabled
-                  ? 'border-accent/40 shadow-md'
-                  : 'border-border-subtle hover:border-accent/20'
+                  ? 'border-border-strong shadow-premium-hover'
+                  : 'hover:border-border-strong shadow-premium-hover'
               )}
             >
               <div className="flex items-start justify-between mb-4">

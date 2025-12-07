@@ -307,7 +307,7 @@ export default function UtilitiesPage() {
   return (
     <div className="min-h-screen bg-bg-base">
       <DashboardTabs />
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 container-mobile max-w-7xl">
         <header className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-text-primary mb-2">
             {t('dashboard.utilities.title') || 'Utilities'}
@@ -327,7 +327,7 @@ export default function UtilitiesPage() {
               <span>←</span>
               <span>Torna alla lista</span>
             </button>
-            <div className="bg-bg-surface border border-border-subtle rounded-xl p-6">
+            <div className="bg-bg-surface border-premium shadow-premium rounded-xl p-4 md:p-6 card-mobile">
               <Suspense fallback={<CalculatorSkeleton />}>
                 {selectedUtility === 'calculator' && <FinancialCalculator />}
                 {selectedUtility === 'pac' && <PACSimulator />}
@@ -465,7 +465,7 @@ export default function UtilitiesPage() {
             {/* Strumenti Base */}
             <section>
               <h2 className="text-xl font-semibold text-text-primary mb-4">Strumenti Base</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 spacing-mobile">
                 {baseUtilities.map((utility) => {
                   const Icon = utility.icon;
                   return (
@@ -473,9 +473,9 @@ export default function UtilitiesPage() {
                       key={utility.id}
                       onClick={() => handleUtilityClick(utility)}
                       className={cn(
-                        'bg-bg-surface border border-border-subtle rounded-xl p-6 text-left',
-                        'hover:border-accent/60 hover:shadow-lg hover:scale-[1.02] transition-all duration-200',
-                        'flex flex-col gap-3 group',
+                        'bg-bg-surface border-premium shadow-premium rounded-xl p-4 md:p-6 text-left',
+                        'hover:border-border-strong shadow-premium-hover interaction-smooth',
+                        'flex flex-col gap-3 group card-mobile',
                         'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-base'
                       )}
                       aria-label={`Apri ${utility.label}. ${utility.description}`}
@@ -501,7 +501,7 @@ export default function UtilitiesPage() {
               <h2 className="text-xl font-semibold text-text-primary mb-4">
                 Risk Management {!isPro && <span className="text-sm font-normal text-text-tertiary">(Pro)</span>}
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 spacing-mobile">
                 {riskUtilities.map((utility) => {
                   const Icon = utility.icon;
                   const canAccess = isPro && utility.available;
@@ -512,7 +512,7 @@ export default function UtilitiesPage() {
                         'bg-bg-surface border rounded-xl p-6 text-left relative group',
                         'transition-all duration-200',
                         canAccess
-                          ? 'border-border-subtle hover:border-accent/60 hover:shadow-lg hover:scale-[1.02] cursor-pointer'
+                          ? 'border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth cursor-pointer'
                           : 'border-border-subtle/40 opacity-60 cursor-not-allowed',
                         'flex flex-col gap-3',
                         'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-base'
@@ -570,7 +570,7 @@ export default function UtilitiesPage() {
               <h2 className="text-xl font-semibold text-text-primary mb-4">
                 Performance {!isPro && <span className="text-sm font-normal text-text-tertiary">(Pro)</span>}
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 spacing-mobile">
                 {performanceUtilities.map((utility) => {
                   const Icon = utility.icon;
                   const canAccess = isPro && utility.available;
@@ -581,7 +581,7 @@ export default function UtilitiesPage() {
                         'bg-bg-surface border rounded-xl p-6 text-left relative group',
                         'transition-all duration-200',
                         canAccess
-                          ? 'border-border-subtle hover:border-accent/60 hover:shadow-lg hover:scale-[1.02] cursor-pointer'
+                          ? 'border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth cursor-pointer'
                           : 'border-border-subtle/40 opacity-60 cursor-not-allowed',
                         'flex flex-col gap-3',
                         'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-base'
@@ -639,7 +639,7 @@ export default function UtilitiesPage() {
               <h2 className="text-xl font-semibold text-text-primary mb-4">
                 Advanced {!isPro && <span className="text-sm font-normal text-text-tertiary">(Pro)</span>}
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 spacing-mobile">
                 {advancedUtilities.map((utility) => {
                   const Icon = utility.icon;
                   const canAccess = isPro && utility.available;
@@ -650,7 +650,7 @@ export default function UtilitiesPage() {
                         'bg-bg-surface border rounded-xl p-6 text-left relative group',
                         'transition-all duration-200',
                         canAccess
-                          ? 'border-border-subtle hover:border-accent/60 hover:shadow-lg hover:scale-[1.02] cursor-pointer'
+                          ? 'border-premium shadow-premium hover:border-border-strong shadow-premium-hover interaction-smooth cursor-pointer'
                           : 'border-border-subtle/40 opacity-60 cursor-not-allowed',
                         'flex flex-col gap-3',
                         'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-base'
@@ -715,7 +715,7 @@ export default function UtilitiesPage() {
                     Questi strumenti richiedono integrazione con API real-time e saranno disponibili a breve
                   </p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 spacing-mobile">
                   {comingSoonUtilities.map((utility) => {
                     const Icon = utility.icon;
                     return (

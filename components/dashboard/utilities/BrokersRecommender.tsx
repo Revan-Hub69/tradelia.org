@@ -924,7 +924,7 @@ export function BrokersRecommender() {
                     <Icon className="w-6 h-6" aria-hidden="true" />
                   )}
                 </div>
-                <p className={cn('text-xs mt-2 font-medium', isActive ? 'text-accent' : isCompleted ? 'text-green-400' : 'text-text-tertiary')}>
+                <p className={cn('text-xs mt-2 font-medium underline-selection', isActive ? 'active text-text-primary' : isCompleted ? 'text-green-400' : 'text-text-tertiary')}>
                   {step.title}
                 </p>
               </div>
@@ -946,7 +946,7 @@ export function BrokersRecommender() {
           transition={{ duration: 0.3 }}
         >
           {currentStep === 1 && (
-            <div className="bg-bg-surface border border-border-subtle rounded-xl p-8 space-y-6">
+            <div className="bg-bg-surface border-premium shadow-premium rounded-xl p-6 md:p-8 space-y-6 container-mobile">
               <div>
                 <h3 className="text-xl font-bold text-text-primary mb-2 flex items-center gap-2">
                   <Target className="w-5 h-5 text-accent" aria-hidden="true" />
@@ -981,16 +981,16 @@ export function BrokersRecommender() {
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 spacing-mobile">
                     {(['amministrato', 'dichiarativo', 'both'] as const).map(regime => (
                       <button
                         key={regime}
                         onClick={() => handleTaxRegimeSelect(regime)}
                         className={cn(
-                          'p-4 rounded-lg border-2 transition-all text-left',
+                          'p-4 rounded-lg border-premium shadow-premium interaction-smooth text-left underline-selection',
                           formData.taxRegime === regime
-                            ? 'bg-accent/20 border-accent text-accent'
-                            : 'bg-bg-soft border-border-subtle text-text-secondary hover:border-accent/40'
+                            ? 'bg-bg-soft border-border-strong text-text-primary selected shadow-premium-hover'
+                            : 'bg-bg-soft border-border-subtle text-text-secondary hover:border-border-strong'
                         )}
                         aria-label={`Seleziona regime ${regime}`}
                         aria-pressed={formData.taxRegime === regime}
@@ -1030,16 +1030,16 @@ export function BrokersRecommender() {
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 spacing-mobile">
                     {(['beginner', 'intermediate', 'advanced'] as const).map(level => (
                       <button
                         key={level}
                         onClick={() => handleExperienceSelect(level)}
                         className={cn(
-                          'p-4 rounded-lg border-2 transition-all text-left',
+                          'p-4 rounded-lg border-premium shadow-premium interaction-smooth text-left underline-selection',
                           formData.experience === level
-                            ? 'bg-accent/20 border-accent text-accent'
-                            : 'bg-bg-soft border-border-subtle text-text-secondary hover:border-accent/40'
+                            ? 'bg-bg-soft border-border-strong text-text-primary selected shadow-premium-hover'
+                            : 'bg-bg-soft border-border-subtle text-text-secondary hover:border-border-strong'
                         )}
                         aria-label={`Seleziona livello ${level}`}
                         aria-pressed={formData.experience === level}
@@ -1061,7 +1061,7 @@ export function BrokersRecommender() {
           )}
 
           {currentStep === 2 && (
-            <div className="bg-bg-surface border border-border-subtle rounded-xl p-8 space-y-6">
+            <div className="bg-bg-surface border-premium shadow-premium rounded-xl p-6 md:p-8 space-y-6 container-mobile">
               <div>
                 <h3 className="text-xl font-bold text-text-primary mb-2 flex items-center gap-2">
                   <TrendingUp className="w-5 h-5 text-accent" aria-hidden="true" />
@@ -1089,7 +1089,7 @@ export function BrokersRecommender() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3 spacing-mobile">
                 {availableInstruments.map(instrument => {
                   const isSelected = formData.instruments.includes(instrument);
                   return (
@@ -1097,10 +1097,10 @@ export function BrokersRecommender() {
                       key={instrument}
                       onClick={() => handleInstrumentToggle(instrument)}
                       className={cn(
-                        'p-3 rounded-lg border-2 transition-all text-sm font-medium relative',
+                        'p-3 rounded-lg border-premium shadow-premium interaction-smooth text-sm font-medium relative underline-selection',
                         isSelected
-                          ? 'bg-accent/20 border-accent text-accent'
-                          : 'bg-bg-soft border-border-subtle text-text-secondary hover:border-accent/40'
+                          ? 'bg-bg-soft border-border-strong text-text-primary selected shadow-premium-hover'
+                          : 'bg-bg-soft border-border-subtle text-text-secondary hover:border-border-strong'
                       )}
                       aria-label={`${isSelected ? 'Deseleziona' : 'Seleziona'} ${instrument}`}
                       aria-pressed={isSelected}
@@ -1125,7 +1125,7 @@ export function BrokersRecommender() {
           )}
 
           {currentStep === 3 && (
-            <div className="bg-bg-surface border border-border-subtle rounded-xl p-8 space-y-6">
+            <div className="bg-bg-surface border-premium shadow-premium rounded-xl p-6 md:p-8 space-y-6 container-mobile">
               <div>
                 <h3 className="text-xl font-bold text-text-primary mb-2 flex items-center gap-2">
                   <Settings className="w-5 h-5 text-accent" aria-hidden="true" />
@@ -1149,10 +1149,10 @@ export function BrokersRecommender() {
                         key={platform}
                         onClick={() => handlePlatformToggle(platform)}
                         className={cn(
-                          'px-3 py-1.5 rounded-lg border transition-all text-sm',
+                          'px-3 py-1.5 rounded-lg border-premium shadow-premium interaction-smooth text-sm underline-selection',
                           isSelected
-                            ? 'bg-accent/20 text-accent border-accent'
-                            : 'bg-bg-soft text-text-secondary border-border-subtle hover:border-accent/40'
+                            ? 'bg-bg-soft border-border-strong text-text-primary selected shadow-premium-hover'
+                            : 'bg-bg-soft text-text-secondary border-border-subtle hover:border-border-strong'
                         )}
                         aria-label={`${isSelected ? 'Deseleziona' : 'Seleziona'} ${platform}`}
                         aria-pressed={isSelected}
@@ -1207,10 +1207,10 @@ export function BrokersRecommender() {
                       key={lev}
                       onClick={() => handleLeverageSelect(lev)}
                       className={cn(
-                        'p-4 rounded-lg border-2 transition-all text-left',
+                        'p-4 rounded-lg border-premium shadow-premium interaction-smooth text-left underline-selection',
                         formData.leverage === lev
-                          ? 'bg-accent/20 border-accent text-accent'
-                          : 'bg-bg-soft border-border-subtle text-text-secondary hover:border-accent/40'
+                          ? 'bg-bg-soft border-border-strong text-text-primary selected shadow-premium-hover'
+                          : 'bg-bg-soft border-border-subtle text-text-secondary hover:border-border-strong'
                       )}
                       aria-label={`Seleziona leverage ${lev}`}
                       aria-pressed={formData.leverage === lev}
@@ -1231,7 +1231,7 @@ export function BrokersRecommender() {
           )}
 
           {currentStep === 4 && (
-            <div className="bg-bg-surface border border-border-subtle rounded-xl p-8 space-y-6">
+            <div className="bg-bg-surface border-premium shadow-premium rounded-xl p-6 md:p-8 space-y-6 container-mobile">
               <div>
                 <h3 className="text-xl font-bold text-text-primary mb-2 flex items-center gap-2">
                   <DollarSign className="w-5 h-5 text-accent" aria-hidden="true" />
@@ -1290,10 +1290,10 @@ export function BrokersRecommender() {
                           }));
                         }}
                         className={cn(
-                          'px-3 py-1.5 rounded-lg border transition-all text-sm',
+                          'px-3 py-1.5 rounded-lg border-premium shadow-premium interaction-smooth text-sm underline-selection',
                           isSelected
-                            ? 'bg-accent/20 text-accent border-accent'
-                            : 'bg-bg-soft text-text-secondary border-border-subtle hover:border-accent/40'
+                            ? 'bg-bg-soft border-border-strong text-text-primary selected shadow-premium-hover'
+                            : 'bg-bg-soft text-text-secondary border-border-subtle hover:border-border-strong'
                         )}
                         aria-label={`${isSelected ? 'Deseleziona' : 'Seleziona'} lingua ${lang}`}
                         aria-pressed={isSelected}
@@ -1325,10 +1325,10 @@ export function BrokersRecommender() {
                           }));
                         }}
                         className={cn(
-                          'px-3 py-1.5 rounded-lg border transition-all text-sm flex items-center gap-2',
+                          'px-3 py-1.5 rounded-lg border-premium shadow-premium interaction-smooth text-sm flex items-center gap-2 underline-selection',
                           isSelected
-                            ? 'bg-accent/20 text-accent border-accent'
-                            : 'bg-bg-soft text-text-secondary border-border-subtle hover:border-accent/40'
+                            ? 'bg-bg-soft border-border-strong text-text-primary selected shadow-premium-hover'
+                            : 'bg-bg-soft text-text-secondary border-border-subtle hover:border-border-strong'
                         )}
                         aria-label={`${isSelected ? 'Deseleziona' : 'Seleziona'} canale ${channel}`}
                         aria-pressed={isSelected}
@@ -1544,7 +1544,7 @@ export function BrokersRecommender() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="bg-bg-surface border border-border-subtle rounded-xl overflow-hidden hover:border-accent/40 transition-all group"
+                      className="bg-bg-surface border-premium shadow-premium rounded-xl overflow-hidden hover:border-border-strong shadow-premium-hover interaction-smooth group card-mobile"
                       role="article"
                       aria-label={`Broker ${broker.name}, rating ${broker.rating}, score ${broker.score || 'N/A'}`}
                     >

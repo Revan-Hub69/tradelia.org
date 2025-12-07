@@ -103,8 +103,8 @@ export function DashboardTabs() {
   };
 
   return (
-    <div className="sticky top-0 z-40 bg-bg-base border-b border-border-subtle mb-6">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="sticky top-0 z-40 bg-bg-base border-b border-premium shadow-premium mb-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl container-mobile">
         {/* Breadcrumb - Currency Switch è già in DashboardHeader */}
         <div className="py-3 border-b border-border-subtle">
           <Breadcrumb />
@@ -130,24 +130,18 @@ export function DashboardTabs() {
                 onClick={() => handleTabClick(tab)}
                 onMouseEnter={() => prefetchOnHover(tab.href)}
                 className={cn(
-                  'flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all relative',
+                  'flex items-center gap-2 px-4 py-3 text-sm font-medium interaction-smooth relative underline-selection',
                   'border-b-2 border-transparent',
-                  'hover:text-accent hover:border-accent/40',
+                  'hover:text-text-primary hover:border-border-strong',
                   'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-base',
                   isActive
-                    ? 'text-accent border-accent'
+                    ? 'text-text-primary border-transparent active'
                     : 'text-text-secondary'
                 )}
                 title={tab.description}
               >
                 <Icon className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
                 <span className="whitespace-nowrap">{tab.label}</span>
-                {isActive && (
-                  <span
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent"
-                    aria-hidden="true"
-                  />
-                )}
               </button>
             );
           })}

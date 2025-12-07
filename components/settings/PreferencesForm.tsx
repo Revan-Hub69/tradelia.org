@@ -122,7 +122,7 @@ export function PreferencesForm() {
         </p>
       </div>
 
-      <div className="space-y-4 pt-4 border-t border-border-subtle">
+      <div className="space-y-4 pt-4 border-t border-premium">
         <h3 className="text-sm font-semibold text-text-primary">
           {t('dashboard.settings.preferences.notifications') || 'Notifiche'}
         </h3>
@@ -142,7 +142,7 @@ export function PreferencesForm() {
             type="checkbox"
             checked={formData.email_notifications}
             onChange={(e) => setFormData({ ...formData, email_notifications: e.target.checked })}
-            className="w-5 h-5 rounded border-border-subtle bg-bg-surface text-accent focus:ring-accent"
+            className="w-5 h-5 rounded border-premium bg-bg-surface text-accent focus:ring-accent focus:border-border-strong"
           />
         </div>
 
@@ -161,12 +161,12 @@ export function PreferencesForm() {
             type="checkbox"
             checked={formData.push_notifications}
             onChange={(e) => setFormData({ ...formData, push_notifications: e.target.checked })}
-            className="w-5 h-5 rounded border-border-subtle bg-bg-surface text-accent focus:ring-accent"
+            className="w-5 h-5 rounded border-premium bg-bg-surface text-accent focus:ring-accent focus:border-border-strong"
           />
         </div>
       </div>
 
-      <div className="flex items-center justify-end gap-3 pt-4 border-t border-border-subtle">
+      <div className="flex items-center justify-end gap-3 pt-4 border-t border-premium">
         <Button
           type="submit"
           disabled={saving}

@@ -383,6 +383,169 @@
   .micro-interaction:hover {
     opacity: 1;
   }
+
+  /* Premium Underline Selection - Instead of color change */
+  .underline-selection {
+    position: relative;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .underline-selection::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 1px;
+  }
+
+  .underline-selection.active::after,
+  .underline-selection.selected::after,
+  .underline-selection[aria-pressed="true"]::after {
+    width: 25%;
+  }
+
+  /* Enhanced shadows - Premium depth */
+  .shadow-premium {
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.3),
+      0 4px 6px rgba(0, 0, 0, 0.2),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  .shadow-premium-hover {
+    transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .shadow-premium-hover:hover {
+    box-shadow:
+      0 4px 6px rgba(0, 0, 0, 0.3),
+      0 10px 15px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  /* Refined borders - Premium feel */
+  .border-premium {
+    border: 1px solid var(--border-default);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .border-premium:hover {
+    border-color: var(--border-strong);
+  }
+
+  .border-premium:focus-within,
+  .border-premium:focus-visible {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  /* Mobile optimizations - Premium responsive design */
+  @media (max-width: 768px) {
+    .container-mobile {
+      max-width: 100%;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .card-mobile {
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-width: 1px;
+    }
+
+    .text-mobile {
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    .spacing-mobile {
+      gap: 0.75rem;
+    }
+
+    /* Mobile shadows - più leggere */
+    .shadow-premium {
+      box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.03);
+    }
+
+    .shadow-premium-hover:hover {
+      box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+
+    /* Mobile borders - più sottili */
+    .border-premium {
+      border-width: 1px;
+    }
+
+    /* Mobile containers - max width ottimizzato */
+    .max-w-7xl {
+      max-width: 100%;
+    }
+  }
+
+  /* Tablet optimizations */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .container-mobile {
+      max-width: 100%;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    .max-w-7xl {
+      max-width: 100%;
+    }
+  }
+
+  /* Enhanced microinteractions */
+  .interaction-smooth {
+    transition:
+      transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .interaction-smooth:hover {
+    transform: translateY(-1px);
+  }
+
+  .interaction-smooth:active {
+    transform: translateY(0);
+    transition-duration: 0.1s;
+  }
+
+  /* Global border and shadow replacements - Apply to common patterns */
+  .card-standard {
+    @apply border-premium shadow-premium;
+  }
+
+  .card-standard:hover {
+    @apply shadow-premium-hover border-border-strong;
+  }
+
+  /* Button selection style - underline instead of color change */
+  .btn-selection {
+    @apply underline-selection;
+  }
+
+  .btn-selection.active,
+  .btn-selection.selected,
+  .btn-selection[aria-pressed="true"] {
+    @apply text-text-primary;
+  }
+
+  .btn-selection:not(.active):not(.selected):not([aria-pressed="true"]) {
+    @apply text-text-secondary;
+  }
 }
 
 @keyframes patternShift {

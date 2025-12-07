@@ -238,7 +238,7 @@ export default function ProAnalysisTabs() {
         onClick={() => setIsExpanded(!isExpanded)}
         className={cn(
           'w-full flex items-center justify-between p-4 rounded-lg',
-          'bg-bg-soft border border-border-subtle',
+          'bg-bg-soft border-premium shadow-premium',
           'hover:bg-bg-surface transition-colors',
           'focus:outline-none focus:ring-2 focus:ring-accent'
         )}
@@ -267,19 +267,19 @@ export default function ProAnalysisTabs() {
 
       {/* Tabs Content - Expandable */}
       {isExpanded && (
-        <div className="mt-4 bg-bg-surface border border-border-subtle rounded-xl overflow-hidden">
+        <div className="mt-4 bg-bg-surface border-premium shadow-premium rounded-xl overflow-hidden card-mobile">
           {/* Tabs Navigation */}
-          <div className="flex border-b border-border-subtle overflow-x-auto">
+          <div className="flex border-b border-premium overflow-x-auto">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(activeTab === tab.id ? null : tab.id)}
                 className={cn(
-                  'px-6 py-4 font-medium transition-colors whitespace-nowrap',
-                  'border-b-2',
+                  'px-6 py-4 font-medium interaction-smooth whitespace-nowrap underline-selection',
+                  'border-b-2 border-transparent',
                   activeTab === tab.id
-                    ? 'border-accent text-accent bg-accent/5'
-                    : 'border-transparent text-text-secondary hover:text-text-primary hover:bg-bg-soft'
+                    ? 'text-text-primary bg-bg-soft active'
+                    : 'text-text-secondary hover:text-text-primary hover:bg-bg-soft'
                 )}
               >
                 {tab.icon && <tab.icon className="w-5 h-5 mr-2" />}
