@@ -881,6 +881,10 @@ export function BrokersRecommender() {
 
   // AI-Powered Smart Matching: Analisi avanzata con spiegazioni accademiche
   const getAIMatchingExplanation = useCallback((broker: Broker) => {
+    if (!broker) {
+      return { aiScore: 0, explanations: [], totalScore: 0 };
+    }
+
     const explanations: string[] = [];
     let aiScore = 0;
 
@@ -981,6 +985,10 @@ export function BrokersRecommender() {
 
   // Regulatory Compliance Checker
   const getRegulatoryCompliance = useCallback((broker: Broker) => {
+    if (!broker) {
+      return [];
+    }
+
     const checks: Array<{ regulation: string; status: 'compliant' | 'partial' | 'non-compliant'; details: string }> = [];
 
     // MiFID II Compliance
@@ -1034,18 +1042,22 @@ export function BrokersRecommender() {
 
   // Risk Assessment Calculator
   const getRiskAssessment = useCallback((broker: Broker) => {
+    if (!broker) {
+      return { riskScore: 0, factors: [], overallRisk: 'medium' as const };
+    }
+
     let riskScore = 0;
     const factors: Array<{ factor: string; impact: 'low' | 'medium' | 'high'; explanation: string }> = [];
 
     // Leverage Risk
-    if (broker.leverage.includes('400:1') || broker.leverage.includes('500:1')) {
+    if (broker.leverage && (broker.leverage.includes('400:1') || broker.leverage.includes('500:1'))) {
       riskScore += 30;
       factors.push({
         factor: 'Leverage Elevato',
         impact: 'high',
         explanation: 'Leverage superiore a 100:1 aumenta significativamente il rischio di perdite. Secondo ESMA, il leverage massimo per retail è limitato a 30:1 per major forex.'
       });
-    } else if (broker.leverage.includes('30:1') || broker.leverage.includes('50:1')) {
+    } else if (broker.leverage && (broker.leverage.includes('30:1') || broker.leverage.includes('50:1'))) {
       riskScore += 10;
       factors.push({
         factor: 'Leverage Moderato',
@@ -1073,7 +1085,14 @@ export function BrokersRecommender() {
     }
 
     // Fund Protection
-    if (!broker.fundProtection || parseFloat(broker.fundProtection.amount.replace(/[^\d.]/g, '')) < 20000) {
+    if (!broker.fundProtection || (() => {
+      try {
+        const amount = parseFloat(broker.fundProtection.amount.replace(/[^\d.]/g, ''));
+        return isNaN(amount) || amount < 20000;
+      } catch {
+        return true; // Se errore nel parsing, considera non protetto
+      }
+    })()) {
       riskScore += 15;
       factors.push({
         factor: 'Protezione Fondi Limitata',
@@ -1107,12 +1126,18 @@ export function BrokersRecommender() {
 
   // Tax Optimization Calculator
   const getTaxOptimization = useCallback((broker: Broker, portfolioValue: number = 100000) => {
+    if (!broker) {
+      return [];
+    }
+
+    // Validazione input
+    const validPortfolioValue = Math.max(0, Math.min(portfolioValue, 10000000)); // Max €10M per sicurezza
     const scenarios: Array<{ regime: string; annualCost: number; taxSavings: number; explanation: string }> = [];
 
     if (broker.taxRegime === 'amministrato' || broker.taxRegime === 'both') {
       // Regime Amministrato: broker gestisce tasse, semplificazione
-      const annualGains = portfolioValue * 0.1; // Assumiamo 10% rendimento annuo
-      const taxAmministrato = annualGains * 0.26; // 26% su plusvalenze
+      const annualGains = validPortfolioValue * 0.1; // Assumiamo 10% rendimento annuo
+      const taxAmministrato = Math.max(0, annualGains * 0.26); // 26% su plusvalenze, minimo 0
       const adminFee = 0; // Nessun costo aggiuntivo per gestione fiscale
       scenarios.push({
         regime: 'Amministrato',
@@ -1126,12 +1151,12 @@ export function BrokersRecommender() {
 
     if (broker.taxRegime === 'dichiarativo' || broker.taxRegime === 'both') {
       // Regime Dichiarativo: gestione autonoma, possibilità di ottimizzazione
-      const annualGains = portfolioValue * 0.1;
-      const taxDichiarativo = annualGains * 0.26;
-      const optimizationSavings = annualGains * 0.05; // Possibilità di ridurre del 5% con ottimizzazioni
+      const annualGains = validPortfolioValue * 0.1;
+      const taxDichiarativo = Math.max(0, annualGains * 0.26);
+      const optimizationSavings = Math.max(0, annualGains * 0.05); // Possibilità di ridurre del 5% con ottimizzazioni
       scenarios.push({
         regime: 'Dichiarativo',
-        annualCost: taxDichiarativo - optimizationSavings,
+        annualCost: Math.max(0, taxDichiarativo - optimizationSavings),
         taxSavings: optimizationSavings,
         explanation: `Regime dichiarativo: gestione autonoma delle tasse con possibilità di ottimizzazione fiscale ` +
           `(compensazione minusvalenze, detrazioni, ecc.). Richiede competenze contabili. ` +
@@ -1142,49 +1167,65 @@ export function BrokersRecommender() {
     return scenarios;
   }, []);
 
-  // Export/Share Functionality
+  // Export/Share Functionality with error handling
   const handleExportReport = useCallback(() => {
-    const reportData = {
-      date: new Date().toISOString(),
-      userProfile: formData,
-      brokers: recommendedBrokers.slice(0, 5).map(broker => ({
-        name: broker.name,
-        score: broker.score || broker.rating * 20,
-        regulatory: broker.regulatory,
-        instruments: broker.instruments,
-        platforms: broker.platforms,
-        costs: broker.costs,
-        riskLevel: broker.riskLevel,
-        mifid2Compliant: broker.mifid2Compliant,
-      })),
-    };
+    try {
+      if (!recommendedBrokers || recommendedBrokers.length === 0) {
+        throw new Error('Nessun broker disponibile per l\'esportazione');
+      }
 
-    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `tradelia-broker-comparison-${new Date().toISOString().split('T')[0]}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+      const reportData = {
+        date: new Date().toISOString(),
+        userProfile: formData,
+        brokers: recommendedBrokers.slice(0, 5).map(broker => ({
+          name: broker.name || 'N/A',
+          score: broker.score || broker.rating * 20 || 0,
+          regulatory: broker.regulatory || [],
+          instruments: broker.instruments || [],
+          platforms: broker.platforms || [],
+          costs: broker.costs || null,
+          riskLevel: broker.riskLevel || 'medium',
+          mifid2Compliant: broker.mifid2Compliant || false,
+        })),
+      };
+
+      const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `tradelia-broker-comparison-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Errore durante l\'esportazione del report:', error);
+      alert('Si è verificato un errore durante l\'esportazione. Riprova più tardi.');
+    }
   }, [formData, recommendedBrokers]);
 
   const handleShareReport = useCallback(async () => {
-    if (navigator.share) {
-      try {
+    try {
+      if (navigator.share) {
         await navigator.share({
           title: 'Confronto Broker Tradelia',
           text: `Ho analizzato ${recommendedBrokers.length} broker su Tradelia. Scopri quale fa per te!`,
           url: window.location.href,
         });
-      } catch (err) {
-        console.log('Error sharing:', err);
+      } else if (navigator.clipboard && navigator.clipboard.writeText) {
+        // Fallback: copia link
+        await navigator.clipboard.writeText(window.location.href);
+        alert('Link copiato negli appunti!');
+      } else {
+        // Fallback finale: mostra link
+        prompt('Copia questo link:', window.location.href);
       }
-    } else {
-      // Fallback: copia link
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link copiato negli appunti!');
+    } catch (err) {
+      // User cancelled share or error occurred
+      if ((err as Error).name !== 'AbortError') {
+        console.error('Errore durante la condivisione:', err);
+        // Fallback silenzioso - non mostrare errore se l'utente ha annullato
+      }
     }
   }, [recommendedBrokers.length]);
 
@@ -1254,7 +1295,11 @@ export function BrokersRecommender() {
   }, []);
 
   const handleMinDepositChange = useCallback((value: string) => {
-    setFormData(prev => ({ ...prev, minDeposit: value ? Number(value) : '' }));
+    // Validazione input: solo numeri positivi, max €1M
+    const numValue = value === '' ? '' : Number(value);
+    if (numValue === '' || (typeof numValue === 'number' && numValue >= 0 && numValue <= 1000000)) {
+      setFormData(prev => ({ ...prev, minDeposit: numValue }));
+    }
   }, []);
 
   const handleShowDrawer = useCallback((broker: Broker | null) => {
@@ -1665,7 +1710,14 @@ export function BrokersRecommender() {
                 <input
                   type="number"
                   value={formData.monthlyVolume}
-                  onChange={(e) => setFormData(prev => ({ ...prev, monthlyVolume: e.target.value ? Number(e.target.value) : '' }))}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    const numValue = value === '' ? '' : Number(value);
+                    // Validazione: solo numeri positivi, max €10M
+                    if (value === '' || (typeof numValue === 'number' && !isNaN(numValue) && numValue >= 0 && numValue <= 10000000)) {
+                      setFormData(prev => ({ ...prev, monthlyVolume: numValue }));
+                    }
+                  }}
                   placeholder="Es: 5000"
                   className="w-full px-4 py-3 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
                   aria-label="Inserisci volume di trading mensile stimato in euro"
@@ -2910,7 +2962,12 @@ export function BrokersRecommender() {
                         min="1"
                         max="1000"
                         value={costScenario.monthlyOrders}
-                        onChange={(e) => setCostScenario(prev => ({ ...prev, monthlyOrders: parseInt(e.target.value) || 1 }))}
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value);
+                          if (!isNaN(value) && value >= 1 && value <= 10000) {
+                            setCostScenario(prev => ({ ...prev, monthlyOrders: value }));
+                          }
+                        }}
                         className="w-full px-4 py-3 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
                       />
                     </div>
@@ -2923,7 +2980,12 @@ export function BrokersRecommender() {
                         min="100"
                         step="100"
                         value={costScenario.avgOrderValue}
-                        onChange={(e) => setCostScenario(prev => ({ ...prev, avgOrderValue: parseInt(e.target.value) || 1000 }))}
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value);
+                          if (!isNaN(value) && value >= 100 && value <= 1000000) {
+                            setCostScenario(prev => ({ ...prev, avgOrderValue: value }));
+                          }
+                        }}
                         className="w-full px-4 py-3 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
                       />
                     </div>
@@ -2965,36 +3027,57 @@ export function BrokersRecommender() {
                       Confronto Costi Mensili Stimati ({costScenario.monthlyOrders} ordini × €{costScenario.avgOrderValue.toLocaleString()})
                     </p>
                     <div className="space-y-3">
-                      {recommendedBrokers.slice(0, 5).map(broker => {
-                        // Calcolo avanzato basato su scenario
-                        let estimatedCost = 0;
-                        const totalVolume = costScenario.monthlyOrders * costScenario.avgOrderValue;
+                      {(!recommendedBrokers || recommendedBrokers.length === 0) ? (
+                        <div className="text-center py-4 text-text-secondary">
+                          Nessun broker disponibile per il calcolo costi
+                        </div>
+                      ) : (
+                        recommendedBrokers.slice(0, 5).map(broker => {
+                          if (!broker) return null;
+                          // Calcolo avanzato basato su scenario
+                          let estimatedCost = 0;
+                          const totalVolume = costScenario.monthlyOrders * costScenario.avgOrderValue;
                         
-                        if (costScenario.instrumentType === 'stocks' && broker.costs?.commissionStocks) {
-                          const commStr = broker.costs.commissionStocks;
-                          if (commStr.includes('€')) {
-                            const fixed = parseFloat(commStr.match(/€(\d+\.?\d*)/)?.[1] || '0');
-                            estimatedCost = fixed * costScenario.monthlyOrders;
-                          } else if (commStr.includes('%')) {
-                            const percent = parseFloat(commStr.match(/(\d+\.?\d*)%/)?.[1] || '0') / 100;
-                            estimatedCost = totalVolume * percent;
+                        try {
+                          if (costScenario.instrumentType === 'stocks' && broker.costs?.commissionStocks) {
+                            const commStr = broker.costs.commissionStocks;
+                            if (commStr.includes('€')) {
+                              const fixed = parseFloat(commStr.match(/€(\d+\.?\d*)/)?.[1] || '0');
+                              if (!isNaN(fixed) && fixed >= 0) {
+                                estimatedCost = fixed * costScenario.monthlyOrders;
+                              }
+                            } else if (commStr.includes('%')) {
+                              const percent = parseFloat(commStr.match(/(\d+\.?\d*)%/)?.[1] || '0') / 100;
+                              if (!isNaN(percent) && percent >= 0 && percent <= 1) {
+                                estimatedCost = totalVolume * percent;
+                              }
+                            }
+                          } else if (costScenario.instrumentType === 'forex' && broker.costs?.spreadForex) {
+                            // Stima spread per forex (semplificata)
+                            const spreadPips = parseFloat(broker.costs.spreadForex.match(/(\d+\.?\d*)\s*pip/)?.[1] || '0.1');
+                            if (!isNaN(spreadPips) && spreadPips >= 0) {
+                              estimatedCost = (spreadPips / 10000) * totalVolume * costScenario.monthlyOrders;
+                            }
                           }
-                        } else if (costScenario.instrumentType === 'forex' && broker.costs?.spreadForex) {
-                          // Stima spread per forex (semplificata)
-                          const spreadPips = parseFloat(broker.costs.spreadForex.match(/(\d+\.?\d*)\s*pip/)?.[1] || '0.1');
-                          estimatedCost = (spreadPips / 10000) * totalVolume * costScenario.monthlyOrders;
+                          
+                          // Aggiungi costi aggiuntivi per frequenza alta
+                          if (costScenario.tradingFrequency === 'high' || costScenario.tradingFrequency === 'professional') {
+                            // Nessun costo inattività se trading attivo
+                          } else {
+                            if (broker.costs?.inactivityFee && broker.costs.inactivityFee.includes('€')) {
+                              const inactivityFee = parseFloat(broker.costs.inactivityFee.match(/€(\d+\.?\d*)/)?.[1] || '0');
+                              if (!isNaN(inactivityFee) && inactivityFee >= 0) {
+                                estimatedCost += inactivityFee;
+                              }
+                            }
+                          }
+                        } catch (error) {
+                          console.error('Errore nel calcolo costi per', broker.name, error);
+                          estimatedCost = 0; // Fallback sicuro
                         }
                         
-                        // Aggiungi costi aggiuntivi per frequenza alta
-                        if (costScenario.tradingFrequency === 'high' || costScenario.tradingFrequency === 'professional') {
-                          if (broker.costs?.inactivityFee) {
-                            estimatedCost += 0; // Nessun costo inattività se trading attivo
-                          }
-                        } else {
-                          if (broker.costs?.inactivityFee && broker.costs.inactivityFee.includes('€')) {
-                            estimatedCost += parseFloat(broker.costs.inactivityFee.match(/€(\d+\.?\d*)/)?.[1] || '0');
-                          }
-                        }
+                        // Assicura che estimatedCost sia sempre un numero valido
+                        estimatedCost = Math.max(0, isNaN(estimatedCost) ? 0 : estimatedCost);
 
                         const costPerOrder = estimatedCost / costScenario.monthlyOrders;
                         const costPercentage = (estimatedCost / totalVolume) * 100;
@@ -3025,7 +3108,8 @@ export function BrokersRecommender() {
                             </div>
                           </div>
                         );
-                      })}
+                        }).filter(Boolean)
+                      )}
                     </div>
                     <div className="mt-4 pt-4 border-t border-border-subtle">
                       <div className="flex items-center justify-between text-sm">
@@ -3035,15 +3119,28 @@ export function BrokersRecommender() {
                       <div className="flex items-center justify-between text-sm mt-2">
                         <span className="text-text-secondary">Costo medio stimato:</span>
                         <span className="font-semibold text-accent">
-                          €{(
-                            recommendedBrokers.slice(0, 5).reduce((sum, broker) => {
-                              // Calcolo semplificato per media
-                              const cost = broker.costs?.commissionStocks?.includes('€')
-                                ? parseFloat(broker.costs.commissionStocks.match(/€(\d+\.?\d*)/)?.[1] || '0') * costScenario.monthlyOrders
-                                : 0;
-                              return sum + cost;
-                            }, 0) / Math.min(5, recommendedBrokers.length)
-                          ).toFixed(2)}
+                          €{(() => {
+                            try {
+                              const total = recommendedBrokers.slice(0, 5).reduce((sum, broker) => {
+                                try {
+                                  const cost = broker.costs?.commissionStocks?.includes('€')
+                                    ? (() => {
+                                        const match = broker.costs.commissionStocks.match(/€(\d+\.?\d*)/);
+                                        const value = match ? parseFloat(match[1]) : 0;
+                                        return isNaN(value) ? 0 : value * costScenario.monthlyOrders;
+                                      })()
+                                    : 0;
+                                  return sum + (isNaN(cost) ? 0 : cost);
+                                } catch {
+                                  return sum;
+                                }
+                              }, 0);
+                              const avg = total / Math.min(5, Math.max(1, recommendedBrokers.length));
+                              return isNaN(avg) ? '0.00' : Math.max(0, avg).toFixed(2);
+                            } catch {
+                              return '0.00';
+                            }
+                          })()}
                         </span>
                       </div>
                     </div>
@@ -3104,9 +3201,15 @@ export function BrokersRecommender() {
                 </p>
               </div>
               <div className="overflow-y-auto flex-1 p-6 space-y-6">
-                {recommendedBrokers.slice(0, 5).map(broker => {
-                  const { aiScore, explanations, totalScore } = getAIMatchingExplanation(broker);
-                  return (
+                {(!recommendedBrokers || recommendedBrokers.length === 0) ? (
+                  <div className="text-center py-8">
+                    <p className="text-text-secondary">Nessun broker disponibile per l'analisi AI</p>
+                  </div>
+                ) : (
+                  recommendedBrokers.slice(0, 5).map(broker => {
+                    if (!broker) return null;
+                    const { aiScore, explanations, totalScore } = getAIMatchingExplanation(broker);
+                    return (
                     <div key={broker.id} className="bg-bg-soft border-premium rounded-xl p-6 space-y-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -3195,9 +3298,15 @@ export function BrokersRecommender() {
                 </p>
               </div>
               <div className="overflow-y-auto flex-1 p-6 space-y-6">
-                {recommendedBrokers.slice(0, 5).map(broker => {
-                  const compliance = getRegulatoryCompliance(broker);
-                  return (
+                {(!recommendedBrokers || recommendedBrokers.length === 0) ? (
+                  <div className="text-center py-8">
+                    <p className="text-text-secondary">Nessun broker disponibile per la verifica conformità</p>
+                  </div>
+                ) : (
+                  recommendedBrokers.slice(0, 5).map(broker => {
+                    if (!broker) return null;
+                    const compliance = getRegulatoryCompliance(broker);
+                    return (
                     <div key={broker.id} className="bg-bg-soft border-premium rounded-xl p-6 space-y-4">
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 rounded-lg bg-white p-2 border border-border-subtle">
@@ -3239,7 +3348,8 @@ export function BrokersRecommender() {
                       </div>
                     </div>
                   );
-                })}
+                  }).filter(Boolean)
+                )}
               </div>
               <div className="p-6 border-t border-border-subtle bg-bg-soft">
                 <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 mb-4">
@@ -3308,9 +3418,15 @@ export function BrokersRecommender() {
                 </p>
               </div>
               <div className="overflow-y-auto flex-1 p-6 space-y-6">
-                {recommendedBrokers.slice(0, 5).map(broker => {
-                  const risk = getRiskAssessment(broker);
-                  return (
+                {(!recommendedBrokers || recommendedBrokers.length === 0) ? (
+                  <div className="text-center py-8">
+                    <p className="text-text-secondary">Nessun broker disponibile per la valutazione rischio</p>
+                  </div>
+                ) : (
+                  recommendedBrokers.slice(0, 5).map(broker => {
+                    if (!broker) return null;
+                    const risk = getRiskAssessment(broker);
+                    return (
                     <div key={broker.id} className="bg-bg-soft border-premium rounded-xl p-6 space-y-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -3364,7 +3480,8 @@ export function BrokersRecommender() {
                       </div>
                     </div>
                   );
-                })}
+                  }).filter(Boolean)
+                )}
               </div>
               <div className="p-6 border-t border-border-subtle bg-bg-soft">
                 <button
@@ -3419,10 +3536,16 @@ export function BrokersRecommender() {
                 </p>
               </div>
               <div className="overflow-y-auto flex-1 p-6 space-y-6">
-                {recommendedBrokers.slice(0, 5).map(broker => {
-                  const taxScenarios = getTaxOptimization(broker);
-                  if (taxScenarios.length === 0) return null;
-                  return (
+                {(!recommendedBrokers || recommendedBrokers.length === 0) ? (
+                  <div className="text-center py-8">
+                    <p className="text-text-secondary">Nessun broker disponibile per l'ottimizzazione fiscale</p>
+                  </div>
+                ) : (
+                  recommendedBrokers.slice(0, 5).map(broker => {
+                    if (!broker) return null;
+                    const taxScenarios = getTaxOptimization(broker);
+                    if (taxScenarios.length === 0) return null;
+                    return (
                     <div key={broker.id} className="bg-bg-soft border-premium rounded-xl p-6 space-y-4">
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 rounded-lg bg-white p-2 border border-border-subtle">
@@ -3456,7 +3579,8 @@ export function BrokersRecommender() {
                       </div>
                     </div>
                   );
-                })}
+                  }).filter(Boolean)
+                )}
               </div>
               <div className="p-6 border-t border-border-subtle bg-bg-soft">
                 <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 mb-4">
@@ -3528,7 +3652,13 @@ export function BrokersRecommender() {
                     <thead>
                       <tr className="border-b border-border-subtle">
                         <th className="text-left p-3 font-semibold text-text-primary sticky left-0 bg-bg-surface z-10">Criterio</th>
-                        {recommendedBrokers.slice(0, 5).map(broker => (
+                        {(!recommendedBrokers || recommendedBrokers.length === 0) ? (
+                          <th className="text-center p-3 font-semibold text-text-primary min-w-[200px]">
+                            Nessun broker disponibile
+                          </th>
+                        ) : (
+                          recommendedBrokers.slice(0, 5).map(broker => (
+                            broker ? (
                           <th key={broker.id} className="text-center p-3 font-semibold text-text-primary min-w-[200px]">
                             <div className="flex flex-col items-center gap-2">
                               <div className="w-10 h-10 rounded bg-white p-1 border border-border-subtle">
@@ -3544,29 +3674,43 @@ export function BrokersRecommender() {
                               <span className="text-xs">{broker.name}</span>
                             </div>
                           </th>
-                        ))}
+                            ) : null
+                          )).filter(Boolean)
+                        )}
                       </tr>
                     </thead>
                     <tbody>
                       <tr className="border-b border-border-subtle">
                         <td className="p-3 font-medium text-text-primary sticky left-0 bg-bg-surface z-10">Score Tradelia AI</td>
-                        {recommendedBrokers.slice(0, 5).map(broker => (
-                          <td key={broker.id} className="text-center p-3">
-                            <span className="font-bold text-accent">{broker.score || broker.rating * 20}</span>
-                          </td>
-                        ))}
+                        {(!recommendedBrokers || recommendedBrokers.length === 0) ? (
+                          <td className="text-center p-3 text-text-secondary">-</td>
+                        ) : (
+                          recommendedBrokers.slice(0, 5).map(broker => (
+                            broker ? (
+                              <td key={broker.id} className="text-center p-3">
+                                <span className="font-bold text-accent">{broker.score || broker.rating * 20 || 0}</span>
+                              </td>
+                            ) : null
+                          )).filter(Boolean)
+                        )}
                       </tr>
                       <tr className="border-b border-border-subtle">
                         <td className="p-3 font-medium text-text-primary sticky left-0 bg-bg-surface z-10">Conformità MiFID II</td>
-                        {recommendedBrokers.slice(0, 5).map(broker => (
-                          <td key={broker.id} className="text-center p-3">
-                            {broker.mifid2Compliant ? (
-                              <CheckCircle2 className="w-5 h-5 text-green-400 mx-auto" aria-hidden="true" />
-                            ) : (
-                              <X className="w-5 h-5 text-red-400 mx-auto" aria-hidden="true" />
-                            )}
-                          </td>
-                        ))}
+                        {(!recommendedBrokers || recommendedBrokers.length === 0) ? (
+                          <td className="text-center p-3">-</td>
+                        ) : (
+                          recommendedBrokers.slice(0, 5).map(broker => (
+                            broker ? (
+                              <td key={broker.id} className="text-center p-3">
+                                {broker.mifid2Compliant ? (
+                                  <CheckCircle2 className="w-5 h-5 text-green-400 mx-auto" aria-hidden="true" />
+                                ) : (
+                                  <X className="w-5 h-5 text-red-400 mx-auto" aria-hidden="true" />
+                                )}
+                              </td>
+                            ) : null
+                          )).filter(Boolean)
+                        )}
                       </tr>
                       <tr className="border-b border-border-subtle">
                         <td className="p-3 font-medium text-text-primary sticky left-0 bg-bg-surface z-10">Regime Fiscale</td>
