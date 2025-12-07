@@ -1,22 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { BarChart3, TrendingUp, AlertCircle } from 'lucide-react';
-import VIXIndicator from './VIXIndicator';
-import FearGreedIndicator from './FearGreedIndicator';
-import BitcoinDominanceIndicator from './BitcoinDominanceIndicator';
-import EconomicIndicatorsIndicator from './EconomicIndicatorsIndicator';
-import BondYieldsIndicator from './BondYieldsIndicator';
-import StockIndexesIndicator from './StockIndexesIndicator';
-import CommoditiesIndicator from './CommoditiesIndicator';
-import CryptoMarketCapIndicator from './CryptoMarketCapIndicator';
-import ForexIndicator from './ForexIndicator';
-import ProAnalysisTabs from './ProAnalysisTabs';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { useUserRole } from '@/lib/hooks/useUserRole';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
 // Breadcrumb rimosso - già presente in DashboardTabs per evitare duplicati
 import { cn } from '@/lib/utils/cn';
+
+// Lazy load indicatori pesanti (con chart.js) per migliorare performance
+const VIXIndicator = lazy(() => import('./VIXIndicator').then(m => ({ default: m.default })));
+const FearGreedIndicator = lazy(() => import('./FearGreedIndicator').then(m => ({ default: m.default })));
+const BitcoinDominanceIndicator = lazy(() => import('./BitcoinDominanceIndicator').then(m => ({ default: m.default })));
+const EconomicIndicatorsIndicator = lazy(() => import('./EconomicIndicatorsIndicator').then(m => ({ default: m.default })));
+const BondYieldsIndicator = lazy(() => import('./BondYieldsIndicator').then(m => ({ default: m.default })));
+const StockIndexesIndicator = lazy(() => import('./StockIndexesIndicator').then(m => ({ default: m.default })));
+const CommoditiesIndicator = lazy(() => import('./CommoditiesIndicator').then(m => ({ default: m.default })));
+const CryptoMarketCapIndicator = lazy(() => import('./CryptoMarketCapIndicator').then(m => ({ default: m.default })));
+const ForexIndicator = lazy(() => import('./ForexIndicator').then(m => ({ default: m.default })));
+const ProAnalysisTabs = lazy(() => import('./ProAnalysisTabs').then(m => ({ default: m.default })));
 
 /**
  * Analysis Dashboard - Main Market Indicators
@@ -84,7 +87,7 @@ export default function AnalysisDashboard() {
           {/* Info Banner */}
           <div className="mt-4 bg-amber-500/10 border border-amber-500/30 rounded-lg p-4">
             <div className="flex items-start gap-2">
-              <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-amber-300 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-text-secondary">
                 {locale === 'it' 
                   ? 'Questi indicatori sono strumenti educativi basati su framework accademici. Non costituiscono consulenza finanziaria.'
@@ -107,7 +110,9 @@ export default function AnalysisDashboard() {
               const IndicatorComponent = indicator.component;
               return (
                 <div key={indicator.id} className="h-full">
-                  <IndicatorComponent />
+                  <Suspense fallback={<Skeleton className="h-96 w-full" />}>
+                    <IndicatorComponent />
+                  </Suspense>
                 </div>
               );
             })}
@@ -124,7 +129,9 @@ export default function AnalysisDashboard() {
                   const IndicatorComponent = indicator.component;
                   return (
                     <div key={indicator.id} className="min-w-full">
-                      <IndicatorComponent />
+                      <Suspense fallback={<Skeleton className="h-96 w-full" />}>
+                        <IndicatorComponent />
+                      </Suspense>
                     </div>
                   );
                 })}
@@ -182,7 +189,9 @@ export default function AnalysisDashboard() {
         </div>
         
         {/* Pro Analysis Tabs - Standard Tradelia AI */}
-        <ProAnalysisTabs />
+        <Suspense fallback={<Skeleton className="h-64 w-full" />}>
+          <ProAnalysisTabs />
+        </Suspense>
       </div>
     </div>
   );

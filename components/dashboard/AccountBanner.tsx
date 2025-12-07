@@ -130,9 +130,9 @@ export function AccountBanner() {
                 }
               `}>
                 {bannerState === 'not-logged-in' ? (
-                  <AlertCircle className={`w-6 h-6 ${bannerState === 'not-logged-in' ? 'text-accent' : 'text-amber-400'}`} aria-hidden="true" />
+                  <AlertCircle className={`w-6 h-6 ${bannerState === 'not-logged-in' ? 'text-accent' : 'text-amber-300'}`} aria-hidden="true" />
                 ) : (
-                  <Mail className="w-6 h-6 text-amber-400" aria-hidden="true" />
+                  <Mail className="w-6 h-6 text-amber-300" aria-hidden="true" />
                 )}
               </div>
               
@@ -175,7 +175,7 @@ export function AccountBanner() {
                     <div className="flex items-center gap-3 flex-wrap">
                       <Link
                         href="/login?mode=verify-email"
-                        className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 font-medium text-sm transition-all duration-200 hover:shadow-md"
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-200 font-medium text-sm transition-all duration-200 hover:shadow-md"
                       >
                         {t('dashboard.banner.emailNotVerified.verify')}
                       </Link>
