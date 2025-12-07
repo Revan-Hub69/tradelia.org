@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback, memo } from 'react';
 import { Building2, CheckCircle2, X, Info, BookOpen, TrendingUp, Shield, Globe, Zap, Star, ChevronRight, ChevronLeft, AlertTriangle, FileText, Award, Target, Settings, ArrowRight, Check, DollarSign, CreditCard, HeadphonesIcon, Smartphone, GraduationCap, Calendar, ExternalLink, Calculator, BarChart3 } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { cn } from '@/lib/utils/cn';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 
 interface BrokerCosts {
   // Commissioni specifiche
@@ -325,27 +326,69 @@ const availableBrokers: Broker[] = [
     description: 'Intermediario multi-mercato con accesso DMA e copertura obbligazionaria estesa, utilizzato per ricerca su fixed income.',
     regulatory: ['MFSA', 'CySEC', 'FCA'],
     platforms: ['Piattaforma proprietaria Web/Desktop', 'API FIX'],
-    instruments: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures'],
+    instruments: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures', 'Forex', 'CFD'],
     minDeposit: 10000,
-    leverage: 'Variabile',
-    spread: 'DMA',
-    commission: 'Variabile',
+    leverage: 'Fino a 30:1 (retail), fino a 500:1 (professional)',
+    spread: 'DMA - Spread di mercato',
+    commission: 'Azioni: 0.1% (min €1), Bond: 0.05% (min €5)',
     taxRegime: 'both',
     educationLevel: 'advanced',
     pros: [
       'Copertura obbligazionaria molto ampia',
       'DMA su 50+ mercati quotati',
       'Supporto multi-valuta e tool risk',
-      'Accesso globale'
+      'Accesso globale',
+      'Protezione fondi fino a €20,000 (ICF)',
+      'API FIX per integrazione istituzionale'
     ],
     cons: [
-      'Deposito minimo elevato',
-      'Crypto solo via CFD'
+      'Deposito minimo elevato (€10,000)',
+      'Crypto solo via CFD',
+      'Piattaforma meno intuitiva per principianti',
+      'Costi dati di mercato aggiuntivi'
     ],
     rating: 4.4,
     score: 88,
     riskLevel: 'high',
     mifid2Compliant: true,
+    costs: {
+      commissionStocks: '0.1% (min €1)',
+      commissionForex: 'Spread incluso (da 0.3 pip)',
+      commissionOptions: 'Da €1.50 per contratto',
+      commissionFutures: 'Da €2.00 per contratto',
+      spreadForex: 'Da 0.3 pip (EUR/USD)',
+      inactivityFee: 'Nessun costo di inattività',
+      withdrawalFee: 'Gratuito (1/mese), poi €25',
+      currencyConversionFee: 'Spread incluso',
+      marketDataFee: 'Gratuito per dati base, premium a pagamento'
+    },
+    fundProtection: {
+      scheme: 'ICF (Investor Compensation Fund)',
+      amount: '€20,000'
+    },
+    support: {
+      languages: ['Inglese', 'Russo', 'Cinese', 'Arabo'],
+      hours: 'Lun-Ven 24/5 (mercati aperti)',
+      channels: ['Telefono', 'Email', 'Chat'],
+      responseTime: '< 24h per email, immediato per chat/telefono'
+    },
+    payment: {
+      depositMethods: ['Bonifico', 'Wire Transfer', 'Criptovalute'],
+      withdrawalMethods: ['Bonifico', 'Wire Transfer', 'Criptovalute'],
+      depositTime: '1-2 giorni lavorativi',
+      withdrawalTime: '1-3 giorni lavorativi',
+      minWithdrawal: '€100'
+    },
+    accountTypes: ['Retail', 'Professional', 'Institutional'],
+    demoAccount: true,
+    educationalResources: true,
+    mobileAppRating: 3.8,
+    lastUpdated: '2025-01-27',
+    officialLinks: {
+      website: 'https://exante.eu',
+      terms: 'https://exante.eu/terms',
+      privacy: 'https://exante.eu/privacy'
+    },
     review: {
       summary: 'Nel framework Tradelia AI viene impiegato per dataset obbligazionari e analisi cross-market su tassi benchmark.',
       recommendedFor: 'Investitori professionali e desk obbligazionari che necessitano di book profondi.',
@@ -360,27 +403,70 @@ const availableBrokers: Broker[] = [
     description: 'Introducing broker europeo su infrastruttura IBKR con supporto dedicato UE e materiale formativo certificato.',
     regulatory: ['CySEC', 'FCA'],
     platforms: ['Trader Workstation', 'Client Portal', 'App'],
-    instruments: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures'],
+    instruments: ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures', 'Forex'],
     minDeposit: 0,
-    leverage: 'Variabile',
-    spread: 'Variabile',
-    commission: 'Variabile',
+    leverage: 'Fino a 50:1 (retail), fino a 400:1 (professional)',
+    spread: 'DMA - Spread di mercato (stesso di IBKR)',
+    commission: 'Tiered: 0.005 USD per azione (min $1), Fixed: 0.005 USD per azione (min $1)',
     taxRegime: 'dichiarativo',
     educationLevel: 'intermediate',
     pros: [
       'Accesso TWS con supporto UE',
       'Nessun deposito minimo',
       'Documentazione educativa strutturata',
-      'Supporto italiano'
+      'Supporto italiano',
+      'Stessa infrastruttura IBKR a costi competitivi',
+      'Protezione fondi ICF fino a €20,000'
     ],
     cons: [
       'Dipendenza infrastrutturale da IBKR',
-      'Commissioni su opzioni da monitorare'
+      'Commissioni su opzioni da monitorare',
+      'Costi dati di mercato separati (come IBKR)',
+      'Supporto limitato rispetto a IBKR diretto'
     ],
     rating: 4.3,
     score: 86,
     riskLevel: 'medium',
     mifid2Compliant: true,
+    costs: {
+      commissionStocks: 'Tiered: 0.005 USD per azione (min $1), Fixed: 0.005 USD per azione (min $1)',
+      commissionForex: '0.08-0.20 pip (EUR/USD)',
+      commissionOptions: 'Da $0.70 per contratto',
+      commissionFutures: 'Da $0.85 per contratto',
+      spreadForex: 'DMA - Spread di mercato',
+      inactivityFee: 'Nessun costo di inattività',
+      withdrawalFee: 'Gratuito (1/mese), poi €10',
+      currencyConversionFee: '0.002% (2 bps)',
+      marketDataFee: 'Da $4.50/mese per dati real-time (come IBKR)',
+      minCommission: '$1 per ordine'
+    },
+    fundProtection: {
+      scheme: 'ICF (Investor Compensation Fund)',
+      amount: '€20,000'
+    },
+    support: {
+      languages: ['Italiano', 'Inglese', 'Francese', 'Tedesco', 'Spagnolo'],
+      hours: 'Lun-Ven 9:00-18:00 CET',
+      channels: ['Telefono', 'Email', 'Chat'],
+      responseTime: '< 24h'
+    },
+    payment: {
+      depositMethods: ['Bonifico', 'SEPA', 'Carta'],
+      withdrawalMethods: ['Bonifico', 'SEPA'],
+      depositTime: '1-2 giorni lavorativi',
+      withdrawalTime: '1-3 giorni lavorativi',
+      minWithdrawal: '€50'
+    },
+    accountTypes: ['Retail', 'Professional'],
+    demoAccount: true,
+    educationalResources: true,
+    mobileAppRating: 4.0,
+    lastUpdated: '2025-01-27',
+    officialLinks: {
+      website: 'https://www.mexem.com',
+      terms: 'https://www.mexem.com/terms',
+      privacy: 'https://www.mexem.com/privacy'
+    },
     review: {
       summary: 'Adottato per percorsi educativi avanzati in lingua italiana con accesso TWS e supporto compliance europeo.',
       recommendedFor: 'Trader avanzati e studenti MSc che necessitano di supporto localizzato mantenendo infrastruttura IBKR.',
@@ -467,28 +553,67 @@ const availableBrokers: Broker[] = [
     logo: '/logos/tradelia-logo.svg',
     description: 'Piattaforma europea focalizzata su ETF, PAC automatizzati e servizi di risparmio regolamentati.',
     regulatory: ['BaFin', 'CONSOB passporting'],
-    platforms: ['Web', 'App'],
-    instruments: ['ETF', 'Azioni', 'PAC'],
+    platforms: ['Web', 'App iOS/Android'],
+    instruments: ['ETF', 'Azioni', 'PAC', 'Bond'],
     minDeposit: 1,
     leverage: 'N/A',
-    spread: 'N/A',
-    commission: 'Bassa',
+    spread: 'Spread incluso nel prezzo',
+    commission: '€0.99 per ordine (fino a €250,000), poi 0.1%',
     taxRegime: 'dichiarativo',
     educationLevel: 'beginner',
     pros: [
       'Costi contenuti e trasparenti',
       'Ampia scelta ETF/PAC automatizzati',
       'Interfaccia intuitiva',
-      'Regolamentato BaFin'
+      'Regolamentato BaFin',
+      'Protezione fondi fino a €100,000',
+      'Nessun costo di inattività',
+      'PAC gratuiti'
     ],
     cons: [
       'Copertura mercati concentrata su Europa',
-      'Limitate funzioni avanzate per derivati'
+      'Limitate funzioni avanzate per derivati',
+      'Spread non trasparente (incluso nel prezzo)',
+      'Limitato a investimenti passivi'
     ],
     rating: 4.2,
     score: 83,
     riskLevel: 'low',
     mifid2Compliant: true,
+    costs: {
+      commissionStocks: '€0.99 per ordine (fino a €250,000), poi 0.1%',
+      inactivityFee: 'Nessun costo di inattività',
+      withdrawalFee: 'Gratuito',
+      currencyConversionFee: 'Spread incluso nel prezzo',
+      minCommission: '€0.99 per ordine'
+    },
+    fundProtection: {
+      scheme: 'Einlagensicherungsfonds',
+      amount: '€100,000'
+    },
+    support: {
+      languages: ['Tedesco', 'Inglese', 'Italiano', 'Francese', 'Spagnolo'],
+      hours: 'Lun-Ven 9:00-18:00 CET',
+      channels: ['Email', 'Chat', 'Telefono'],
+      responseTime: '< 24h'
+    },
+    payment: {
+      depositMethods: ['Bonifico', 'SEPA', 'Carta'],
+      withdrawalMethods: ['Bonifico', 'SEPA'],
+      depositTime: '1-2 giorni lavorativi',
+      withdrawalTime: '1-2 giorni lavorativi',
+      minWithdrawal: '€1'
+    },
+    accountTypes: ['Retail'],
+    demoAccount: false,
+    educationalResources: true,
+    mobileAppRating: 4.4,
+    lastUpdated: '2025-01-27',
+    officialLinks: {
+      website: 'https://www.scalable.capital',
+      terms: 'https://www.scalable.capital/terms',
+      privacy: 'https://www.scalable.capital/privacy'
+    },
     review: {
       summary: 'Analizzata per casi studio su automazione PAC e ottimizzazione costi, utile nei percorsi educativi su accumulo disciplinato.',
       recommendedFor: 'Investitori retail consapevoli che necessitano di costi bassi e automazione su ETF europei.',
@@ -645,26 +770,26 @@ export function BrokersRecommender() {
     }).sort((a, b) => (b.score || b.rating * 20) - (a.score || a.rating * 20));
   }, [formData]);
 
-  const canProceed = () => {
+  const canProceed = useMemo(() => {
     if (currentStep === 1) return formData.taxRegime && formData.experience;
     if (currentStep === 2) return formData.instruments.length > 0;
     if (currentStep === 3) return true;
     return false;
-  };
+  }, [currentStep, formData.taxRegime, formData.experience, formData.instruments.length]);
 
-  const nextStep = () => {
-    if (canProceed() && currentStep < 4) {
-      setCurrentStep(currentStep + 1);
+  const nextStep = useCallback(() => {
+    if (canProceed && currentStep < 4) {
+      setCurrentStep(prev => prev + 1);
     }
-  };
+  }, [canProceed, currentStep]);
 
-  const prevStep = () => {
+  const prevStep = useCallback(() => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
+      setCurrentStep(prev => prev - 1);
     }
-  };
+  }, [currentStep]);
 
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     setFormData({
       taxRegime: '',
       experience: '',
@@ -674,7 +799,53 @@ export function BrokersRecommender() {
       leverage: '',
     });
     setCurrentStep(1);
-  };
+  }, []);
+
+  const handleInstrumentToggle = useCallback((instrument: string) => {
+    setFormData(prev => ({
+      ...prev,
+      instruments: prev.instruments.includes(instrument)
+        ? prev.instruments.filter(i => i !== instrument)
+        : [...prev.instruments, instrument],
+    }));
+  }, []);
+
+  const handlePlatformToggle = useCallback((platform: string) => {
+    setFormData(prev => ({
+      ...prev,
+      platforms: prev.platforms.includes(platform)
+        ? prev.platforms.filter(p => p !== platform)
+        : [...prev.platforms, platform],
+    }));
+  }, []);
+
+  const handleTaxRegimeSelect = useCallback((regime: 'amministrato' | 'dichiarativo' | 'both') => {
+    setFormData(prev => ({ ...prev, taxRegime: regime }));
+  }, []);
+
+  const handleExperienceSelect = useCallback((level: 'beginner' | 'intermediate' | 'advanced') => {
+    setFormData(prev => ({ ...prev, experience: level }));
+  }, []);
+
+  const handleLeverageSelect = useCallback((lev: 'low' | 'medium' | 'high') => {
+    setFormData(prev => ({ ...prev, leverage: lev }));
+  }, []);
+
+  const handleMinDepositChange = useCallback((value: string) => {
+    setFormData(prev => ({ ...prev, minDeposit: value ? Number(value) : '' }));
+  }, []);
+
+  const handleShowDrawer = useCallback((broker: Broker | null) => {
+    setShowDrawer(broker);
+  }, []);
+
+  const handleCompareToggle = useCallback(() => {
+    setCompareMode(prev => !prev);
+  }, []);
+
+  const handleCostCalculatorToggle = useCallback(() => {
+    setShowCostCalculator(prev => !prev);
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -781,7 +952,7 @@ export function BrokersRecommender() {
                     {(['amministrato', 'dichiarativo', 'both'] as const).map(regime => (
                       <button
                         key={regime}
-                        onClick={() => setFormData(prev => ({ ...prev, taxRegime: regime }))}
+                        onClick={() => handleTaxRegimeSelect(regime)}
                         className={cn(
                           'p-4 rounded-lg border-2 transition-all text-left',
                           formData.taxRegime === regime
@@ -830,7 +1001,7 @@ export function BrokersRecommender() {
                     {(['beginner', 'intermediate', 'advanced'] as const).map(level => (
                       <button
                         key={level}
-                        onClick={() => setFormData(prev => ({ ...prev, experience: level }))}
+                        onClick={() => handleExperienceSelect(level)}
                         className={cn(
                           'p-4 rounded-lg border-2 transition-all text-left',
                           formData.experience === level
@@ -891,14 +1062,7 @@ export function BrokersRecommender() {
                   return (
                     <button
                       key={instrument}
-                      onClick={() => {
-                        setFormData(prev => ({
-                          ...prev,
-                          instruments: prev.instruments.includes(instrument)
-                            ? prev.instruments.filter(i => i !== instrument)
-                            : [...prev.instruments, instrument],
-                        }));
-                      }}
+                      onClick={() => handleInstrumentToggle(instrument)}
                       className={cn(
                         'p-3 rounded-lg border-2 transition-all text-sm font-medium relative',
                         isSelected
@@ -950,14 +1114,7 @@ export function BrokersRecommender() {
                     return (
                       <button
                         key={platform}
-                        onClick={() => {
-                          setFormData(prev => ({
-                            ...prev,
-                            platforms: prev.platforms.includes(platform)
-                              ? prev.platforms.filter(p => p !== platform)
-                              : [...prev.platforms, platform],
-                          }));
-                        }}
+                        onClick={() => handlePlatformToggle(platform)}
                         className={cn(
                           'px-3 py-1.5 rounded-lg border transition-all text-sm',
                           isSelected
@@ -982,7 +1139,7 @@ export function BrokersRecommender() {
                 <input
                   type="number"
                   value={formData.minDeposit}
-                  onChange={(e) => setFormData(prev => ({ ...prev, minDeposit: e.target.value ? Number(e.target.value) : '' }))}
+                  onChange={(e) => handleMinDepositChange(e.target.value)}
                   placeholder="Es: 1000"
                   className="w-full px-4 py-3 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
                   aria-label="Inserisci deposito minimo massimo desiderato in euro"
@@ -1015,7 +1172,7 @@ export function BrokersRecommender() {
                   {(['low', 'medium', 'high'] as const).map(lev => (
                     <button
                       key={lev}
-                      onClick={() => setFormData(prev => ({ ...prev, leverage: lev }))}
+                      onClick={() => handleLeverageSelect(lev)}
                       className={cn(
                         'p-4 rounded-lg border-2 transition-all text-left',
                         formData.leverage === lev
@@ -1052,7 +1209,7 @@ export function BrokersRecommender() {
                   </div>
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => setShowCostCalculator(true)}
+                      onClick={handleCostCalculatorToggle}
                       className="px-4 py-2 bg-accent/20 hover:bg-accent/30 text-accent rounded-lg transition-colors flex items-center gap-2 text-sm font-medium"
                       aria-label="Apri calcolatore costi"
                     >
@@ -1061,7 +1218,7 @@ export function BrokersRecommender() {
                     </button>
                     {recommendedBrokers.length > 1 && (
                       <button
-                        onClick={() => setCompareMode(!compareMode)}
+                        onClick={handleCompareToggle}
                         className={cn(
                           'px-4 py-2 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium',
                           compareMode
@@ -1191,7 +1348,7 @@ export function BrokersRecommender() {
                             <td className="p-4">
                               <div className="flex items-center gap-2">
                                 <button
-                                  onClick={() => setShowDrawer(broker)}
+                                  onClick={() => handleShowDrawer(broker)}
                                   className="p-2 text-accent hover:bg-accent/10 rounded-lg transition-colors"
                                   aria-label={`Dettagli ${broker.name}`}
                                 >
@@ -1273,7 +1430,7 @@ export function BrokersRecommender() {
                             </div>
                           </div>
                           <button
-                            onClick={() => setShowDrawer(broker)}
+                            onClick={() => handleShowDrawer(broker)}
                             className="text-accent hover:text-accent-hover transition-colors p-2 hover:bg-accent/10 rounded-lg"
                             aria-label={`Dettagli completi ${broker.name}`}
                           >
@@ -1392,10 +1549,10 @@ export function BrokersRecommender() {
           </button>
           <button
             onClick={nextStep}
-            disabled={!canProceed()}
+            disabled={!canProceed}
             className={cn(
               'px-6 py-3 rounded-lg transition-all flex items-center gap-2 font-semibold',
-              canProceed()
+              canProceed
                 ? 'bg-accent hover:bg-accent-hover text-white'
                 : 'bg-bg-soft text-text-tertiary cursor-not-allowed'
             )}
@@ -1497,7 +1654,7 @@ export function BrokersRecommender() {
                     </div>
                   </div>
                   <button
-                    onClick={() => setShowDrawer(null)}
+                    onClick={() => handleShowDrawer(null)}
                     className="text-text-tertiary hover:text-text-primary transition-colors p-2 hover:bg-bg-soft rounded-lg"
                     aria-label="Chiudi dettagli"
                   >
@@ -1992,7 +2149,7 @@ export function BrokersRecommender() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={() => setShowCostCalculator(false)}
+            onClick={handleCostCalculatorToggle}
             aria-label="Chiudi calcolatore costi"
             role="dialog"
             aria-modal="true"
@@ -2012,7 +2169,7 @@ export function BrokersRecommender() {
                     <h3 id="cost-calculator-title" className="text-xl font-bold text-text-primary">Calcolatore Costi</h3>
                   </div>
                   <button
-                    onClick={() => setShowCostCalculator(false)}
+                    onClick={handleCostCalculatorToggle}
                     className="text-text-tertiary hover:text-text-primary transition-colors p-2 hover:bg-bg-soft rounded-lg"
                     aria-label="Chiudi calcolatore"
                   >
@@ -2090,13 +2247,13 @@ export function BrokersRecommender() {
                 </div>
               </div>
               <div className="p-6 border-t border-border-subtle bg-bg-soft">
-                <button
-                  onClick={() => setShowCostCalculator(false)}
-                  className="w-full px-6 py-3 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors font-semibold"
-                  aria-label="Chiudi calcolatore"
-                >
-                  Chiudi
-                </button>
+                  <button
+                    onClick={handleCostCalculatorToggle}
+                    className="w-full px-6 py-3 bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors font-semibold"
+                    aria-label="Chiudi calcolatore"
+                  >
+                    Chiudi
+                  </button>
               </div>
             </motion.div>
           </motion.div>
