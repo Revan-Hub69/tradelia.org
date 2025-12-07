@@ -1383,7 +1383,7 @@ export function BrokersRecommender() {
                         className={cn(
                           'p-4 rounded-lg border-premium shadow-premium interaction-smooth text-left underline-selection',
                           formData.taxRegime === regime
-                            ? 'bg-bg-soft border-border-strong text-text-primary selected shadow-premium-hover'
+                            ? 'bg-bg-soft border-border-strong text-text-primary active shadow-premium-hover'
                             : 'bg-bg-soft border-border-subtle text-text-secondary hover:border-border-strong'
                         )}
                         aria-label={`Seleziona regime ${regime}`}
@@ -1432,7 +1432,7 @@ export function BrokersRecommender() {
                         className={cn(
                           'p-4 rounded-lg border-premium shadow-premium interaction-smooth text-left underline-selection',
                           formData.experience === level
-                            ? 'bg-bg-soft border-border-strong text-text-primary selected shadow-premium-hover'
+                            ? 'bg-bg-soft border-border-strong text-text-primary active shadow-premium-hover'
                             : 'bg-bg-soft border-border-subtle text-text-secondary hover:border-border-strong'
                         )}
                         aria-label={`Seleziona livello ${level}`}
@@ -1465,9 +1465,9 @@ export function BrokersRecommender() {
                         key={instrument}
                         onClick={() => handleInstrumentToggle(instrument)}
                         className={cn(
-                          'p-3 rounded-lg border-premium shadow-premium interaction-smooth text-sm',
+                          'p-3 rounded-lg border-premium shadow-premium interaction-smooth text-sm underline-selection',
                           isSelected
-                            ? 'bg-accent/20 border-accent text-accent font-semibold shadow-premium-hover'
+                            ? 'bg-bg-soft border-border-strong text-text-primary active font-semibold shadow-premium-hover'
                             : 'bg-bg-soft border-border-subtle text-text-secondary hover:border-border-strong'
                         )}
                         aria-pressed={isSelected}
@@ -1492,9 +1492,9 @@ export function BrokersRecommender() {
                         key={platform}
                         onClick={() => handlePlatformToggle(platform)}
                         className={cn(
-                          'p-3 rounded-lg border-premium shadow-premium interaction-smooth text-sm',
+                          'p-3 rounded-lg border-premium shadow-premium interaction-smooth text-sm underline-selection',
                           isSelected
-                            ? 'bg-accent/20 border-accent text-accent font-semibold shadow-premium-hover'
+                            ? 'bg-bg-soft border-border-strong text-text-primary active font-semibold shadow-premium-hover'
                             : 'bg-bg-soft border-border-subtle text-text-secondary hover:border-border-strong'
                         )}
                         aria-pressed={isSelected}
@@ -1794,7 +1794,7 @@ export function BrokersRecommender() {
                                   <span className="text-xs text-text-tertiary ml-1">({broker.rating})</span>
                                 </div>
                                 {broker.score && (
-                                  <span className="px-2 py-1 bg-accent/20 text-accent rounded text-xs font-semibold">
+                                  <span className="badge-accent">
                                     Score: {broker.score}/100
                                   </span>
                                 )}
@@ -1861,7 +1861,7 @@ export function BrokersRecommender() {
                           <p className="text-xs text-text-tertiary mb-2">Strumenti Disponibili</p>
                           <div className="flex flex-wrap gap-2">
                             {broker.instruments.slice(0, 4).map(inst => (
-                              <span key={inst} className="px-2 py-1 bg-accent/10 text-accent rounded text-xs">
+                              <span key={inst} className="badge-accent">
                                 {inst}
                               </span>
                             ))}
@@ -2008,7 +2008,7 @@ export function BrokersRecommender() {
                           <span className="text-sm text-text-tertiary ml-1">({showDrawer.rating})</span>
                         </div>
                         {showDrawer.score && (
-                          <span className="px-3 py-1 bg-accent/20 text-accent rounded-lg text-sm font-semibold">
+                          <span className="badge-accent">
                             Score Tradelia AI: {showDrawer.score}/100
                           </span>
                         )}
@@ -2069,17 +2069,17 @@ export function BrokersRecommender() {
                 )}
 
                 {/* Academic Research & Regulatory References */}
-                <div className="bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent border border-blue-500/20 rounded-xl p-6">
+                <div className="gradient-cyan border border-cyan-500/20 rounded-xl p-6">
                   <div className="flex items-center gap-2 mb-4">
-                    <BookOpen className="w-5 h-5 text-blue-400" aria-hidden="true" />
+                    <BookOpen className="w-5 h-5 text-cyan-300" aria-hidden="true" />
                     <h4 className="font-bold text-lg text-text-primary">Riferimenti Accademici e Regolatori</h4>
                   </div>
                   <div className="space-y-3">
-                    <div className="bg-bg-surface/50 rounded-lg p-4 border border-blue-500/10">
-                      <p className="text-xs font-semibold text-blue-400 mb-2 uppercase tracking-wide">Normative di Riferimento</p>
+                    <div className="bg-bg-surface/50 rounded-lg p-4 border border-cyan-500/20">
+                      <p className="text-xs font-semibold text-cyan-300 mb-2 uppercase tracking-wide">Normative di Riferimento</p>
                       <ul className="space-y-2 text-sm text-text-secondary">
                         <li className="flex items-start gap-2">
-                          <FileText className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <FileText className="w-4 h-4 text-cyan-300 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <span>
                             <strong>Direttiva MiFID II (2014/65/UE):</strong> Mercati degli Strumenti Finanziari - Protezione investitori, trasparenza costi, adeguatezza
                           </span>
@@ -2160,7 +2160,7 @@ export function BrokersRecommender() {
                       </h4>
                       <div className="flex flex-wrap gap-2">
                         {showDrawer.instruments.map(inst => (
-                          <span key={inst} className="px-3 py-1.5 bg-accent/20 text-accent rounded-lg text-sm">
+                          <span key={inst} className="badge-accent">
                             {inst}
                           </span>
                         ))}
@@ -2176,7 +2176,7 @@ export function BrokersRecommender() {
                       </h4>
                       <div className="flex flex-wrap gap-2">
                         {showDrawer.platforms.map(plat => (
-                          <span key={plat} className="px-3 py-1.5 bg-accent/20 text-accent rounded-lg text-sm">
+                          <span key={plat} className="badge-accent">
                             {plat}
                           </span>
                         ))}
@@ -2382,7 +2382,7 @@ export function BrokersRecommender() {
                           <h4 className="font-semibold text-text-primary mb-3">Tipi di Account</h4>
                           <div className="flex flex-wrap gap-2">
                             {showDrawer.accountTypes.map(type => (
-                              <span key={type} className="px-3 py-1.5 bg-accent/20 text-accent rounded-lg text-sm">
+                              <span key={type} className="badge-accent">
                                 {type}
                               </span>
                             ))}
@@ -2458,7 +2458,7 @@ export function BrokersRecommender() {
                               href={showDrawer.officialLinks.website}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="px-3 py-2 bg-accent/20 text-accent rounded-lg text-sm font-medium hover:bg-accent/30 transition-colors flex items-center gap-2"
+                              className="btn-action btn-action-primary"
                               aria-label={`Visita il sito ufficiale di ${showDrawer.name}`}
                             >
                               Sito Web
