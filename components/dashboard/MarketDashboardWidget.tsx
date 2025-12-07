@@ -16,6 +16,8 @@ interface MarketIndicator {
   changePercent?: number;
   status: 'positive' | 'negative' | 'neutral';
   loading?: boolean;
+  isPro?: boolean; // Se richiede Pro
+  badge?: string; // Badge opzionale (es. "PRO")
 }
 
 /**
@@ -30,6 +32,10 @@ export function MarketDashboardWidget() {
     { id: 'fear-greed', name: 'Fear & Greed', value: '—', status: 'neutral', loading: true },
     { id: 'bitcoin-dominance', name: 'BTC Dominance', value: '—', status: 'neutral', loading: true },
     { id: 'crypto-market-cap', name: 'Crypto Market Cap', value: '—', status: 'neutral', loading: true },
+    { id: 'whale-ratio', name: 'Whale Ratio', value: '—', status: 'neutral', loading: true, isPro: true },
+    { id: 'exchange-flow', name: 'Exchange Flow', value: '—', status: 'neutral', loading: true, isPro: true },
+    { id: 'l400-imbalance', name: 'L400 Imbalance', value: '—', status: 'neutral', loading: true, isPro: true },
+    { id: 'top-mover', name: 'Top Mover', value: '—', status: 'neutral', loading: true, isPro: true },
   ]);
 
   useEffect(() => {
@@ -119,6 +125,106 @@ export function MarketDashboardWidget() {
         } catch (e) {
           setIndicators(prev => prev.map(ind => ind.id === 'crypto-market-cap' ? { ...ind, loading: false } : ind));
         }
+
+        // Fetch Whale Ratio (PRO)
+        try {
+          const whaleResponse = await fetch('/api/crypto/whale-analysis');
+          if (whaleResponse.ok) {
+            const whaleData = await whaleResponse.json();
+            setIndicators(prev => prev.map(ind => 
+              ind.id === 'whale-ratio' 
+                ? {
+                    ...ind,
+                    value: whaleData.whaleRatio ? `${whaleData.whaleRatio.toFixed(2)}` : '—',
+                    status: whaleData.whaleRatio && whaleData.whaleRatio > 1 ? 'negative' : 'positive',
+                    loading: false,
+                  }
+                : ind
+            ));
+          } else if (whaleResponse.status === 403) {
+            // Pro required
+            setIndicators(prev => prev.map(ind => ind.id === 'whale-ratio' ? { ...ind, value: 'PRO', loading: false } : ind));
+          }
+        } catch (e) {
+          setIndicators(prev => prev.map(ind => ind.id === 'whale-ratio' ? { ...ind, loading: false } : ind));
+        }
+
+        // Fetch Exchange Flow (PRO)
+        try {
+          const whaleResponse = await fetch('/api/crypto/whale-analysis');
+          if (whaleResponse.ok) {
+            const whaleData = await whaleResponse.json();
+            const netFlow = whaleData.exchangeFlows?.netFlow || 0;
+            const value = netFlow !== 0 
+              ? `${netFlow > 0 ? '+' : ''}$${(Math.abs(netFlow) / 1e6).toFixed(1)}M`
+              : '—';
+            setIndicators(prev => prev.map(ind => 
+              ind.id === 'exchange-flow' 
+                ? {
+                    ...ind,
+                    value,
+                    status: netFlow > 0 ? 'positive' : netFlow < 0 ? 'negative' : 'neutral',
+                    loading: false,
+                  }
+                : ind
+            ));
+          } else if (whaleResponse.status === 403) {
+            setIndicators(prev => prev.map(ind => ind.id === 'exchange-flow' ? { ...ind, value: 'PRO', loading: false } : ind));
+          }
+        } catch (e) {
+          setIndicators(prev => prev.map(ind => ind.id === 'exchange-flow' ? { ...ind, loading: false } : ind));
+        }
+
+        // Fetch L400 Imbalance (PRO)
+        try {
+          const l400Response = await fetch('/api/crypto/top-400-depth');
+          if (l400Response.ok) {
+            const l400Data = await l400Response.json();
+            const imbalance = l400Data.summary?.globalImbalance || 0;
+            const value = imbalance !== 0 
+              ? `${imbalance > 0 ? '+' : ''}${imbalance.toFixed(1)}%`
+              : '0%';
+            setIndicators(prev => prev.map(ind => 
+              ind.id === 'l400-imbalance' 
+                ? {
+                    ...ind,
+                    value,
+                    status: imbalance > 5 ? 'positive' : imbalance < -5 ? 'negative' : 'neutral',
+                    loading: false,
+                  }
+                : ind
+            ));
+          } else if (l400Response.status === 403) {
+            setIndicators(prev => prev.map(ind => ind.id === 'l400-imbalance' ? { ...ind, value: 'PRO', loading: false } : ind));
+          }
+        } catch (e) {
+          setIndicators(prev => prev.map(ind => ind.id === 'l400-imbalance' ? { ...ind, loading: false } : ind));
+        }
+
+        // Fetch Top Mover (PRO)
+        try {
+          const moversResponse = await fetch('/api/crypto/top-movers');
+          if (moversResponse.ok) {
+            const moversData = await moversResponse.json();
+            const topGainer = moversData.gainers?.[0];
+            if (topGainer) {
+              setIndicators(prev => prev.map(ind => 
+                ind.id === 'top-mover' 
+                  ? {
+                      ...ind,
+                      value: `${topGainer.symbol} +${topGainer.changePercent.toFixed(1)}%`,
+                      status: 'positive',
+                      loading: false,
+                    }
+                  : ind
+              ));
+            }
+          } else if (moversResponse.status === 403) {
+            setIndicators(prev => prev.map(ind => ind.id === 'top-mover' ? { ...ind, value: 'PRO', loading: false } : ind));
+          }
+        } catch (e) {
+          setIndicators(prev => prev.map(ind => ind.id === 'top-mover' ? { ...ind, loading: false } : ind));
+        }
       } catch (error) {
         console.error('Error fetching market indicators:', error);
       }
@@ -155,7 +261,7 @@ export function MarketDashboardWidget() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
         {indicators.map((indicator) => (
           <div
             key={indicator.id}
@@ -166,9 +272,16 @@ export function MarketDashboardWidget() {
             )}
           >
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-text-tertiary font-medium uppercase">
-                {indicator.name}
-              </span>
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-text-tertiary font-medium uppercase">
+                  {indicator.name}
+                </span>
+                {indicator.isPro && indicator.value === 'PRO' && (
+                  <span className="text-[10px] px-1 py-0.5 bg-accent/20 text-accent rounded font-semibold">
+                    PRO
+                  </span>
+                )}
+              </div>
               {indicator.changePercent !== undefined && (
                 <div className={cn(
                   'flex items-center gap-1 text-xs font-medium',
