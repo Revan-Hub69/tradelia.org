@@ -3,14 +3,14 @@
 import { useState } from 'react';
 import { Settings, User, Bell, Shield, CreditCard, Globe, Building2 } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n/use-translations';
+import { cn } from '@/lib/utils/cn';
 import { NotificationSettings } from '@/components/notifications/NotificationSettings';
 import { BusinessLogoSettings } from '@/components/settings/BusinessLogoSettings';
 import { ProfileForm } from '@/components/settings/ProfileForm';
 import { PasswordForm } from '@/components/settings/PasswordForm';
 import { PreferencesForm } from '@/components/settings/PreferencesForm';
 import { useIsDesk } from '@/lib/hooks/useUserRole';
-import Link from 'next/link';
-import { buildLocalePath } from '@/lib/i18n/paths';
+import { BillingSummary } from '@/components/billing/BillingSummary';
 
 /**
  * Settings Content - Tab Impostazioni
@@ -81,13 +81,12 @@ export default function SettingsContent() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`
-                    flex items-center gap-2 px-4 py-3 border-b-2 transition-colors
-                    ${activeTab === tab.id
-                      ? 'border-accent text-accent'
-                      : 'border-transparent text-text-secondary hover:text-text-primary'
-                    }
-                  `}
+                    className={cn(
+                      'flex items-center gap-2 px-4 py-3 border-b-2 transition-colors underline-selection',
+                      activeTab === tab.id
+                        ? 'border-accent text-text-primary active'
+                        : 'border-transparent text-text-secondary hover:text-text-primary'
+                    )}
                 >
                   <Icon className="w-4 h-4" />
                   <span className="whitespace-nowrap">{tab.label}</span>
@@ -137,12 +136,10 @@ export default function SettingsContent() {
               <h2 className="text-xl font-semibold text-text-primary mb-4">
                 {t('settings.billing.title') || 'Fatturazione'}
               </h2>
-              <Link
-                href={buildLocalePath(locale, '/dashboard/billing')}
-                className="text-accent hover:text-accent-hover underline"
-              >
-                {t('settings.billing.goToBilling') || 'Vai alla pagina fatturazione →'}
-              </Link>
+              <p className="text-text-secondary mb-6">
+                {t('settings.billing.description') || 'Monitora i pagamenti e le fatture emesse'}
+              </p>
+              <BillingSummary />
             </div>
           )}
 

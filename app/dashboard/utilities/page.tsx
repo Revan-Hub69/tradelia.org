@@ -433,19 +433,19 @@ export default function UtilitiesPage() {
               >
                 <div className="flex items-start gap-4 mb-4">
                   <div className="w-12 h-12 rounded-lg bg-accent/20 group-hover:bg-accent/30 flex items-center justify-center flex-shrink-0 transition-colors">
-                    <Target className="w-6 h-6 text-accent" aria-hidden="true" />
+                    <Target className="w-6 h-6 text-text-primary" aria-hidden="true" />
                   </div>
                   <div className="flex-1">
                     <h2 className="text-xl font-semibold text-text-primary mb-2 flex items-center gap-2">
                       Brokers Disponibili
-                      <ChevronRight className="w-5 h-5 text-accent opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true" />
+                      <ChevronRight className="w-5 h-5 text-text-primary opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true" />
                     </h2>
                     <p className="text-text-secondary">Strumento informativo per confrontare broker regolamentati. Trova il broker ideale attraverso un percorso guidato basato su criteri accademici e conformità MiFID II</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-accent font-medium underline-selection">
+                <div className="flex items-center gap-2 text-sm text-text-primary font-medium underline-selection">
                   <span>Esplora i Broker</span>
-                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-text-primary" aria-hidden="true" />
                 </div>
               </Link>
             </section>
