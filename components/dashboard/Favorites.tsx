@@ -10,6 +10,7 @@ import { useApi } from '@/lib/hooks/useApi';
 import { authenticatedFetch } from '@/lib/api/fetch-client';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { toast } from '@/components/ui/Toast';
+import { VirtualizedList } from './VirtualizedList';
 
 interface Favorite {
   id: string;
@@ -194,9 +195,63 @@ export const Favorites = memo(function Favorites() {
           {favorites.length} {t('dashboard.favorites.count') || 'preferiti'}
         </span>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <AnimatePresence>
-          {favorites.map((favorite, index) => (
+      {/* Virtual scrolling per liste lunghe (>20 items) - Performance optimization */}
+      {favorites.length > 20 ? (
+        <div className="h-[600px]">
+          <VirtualizedList
+            items={favorites}
+            itemHeight={120}
+            overscan={3}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-[120px]"
+            aria-label={t('dashboard.favorites.title') || 'Preferiti'}
+            renderItem={(favorite, index) => (
+              <motion.div
+                key={favorite.id}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <Link
+                  href={favorite.href}
+                  className="block p-4 bg-bg-soft border border-border-subtle rounded-xl hover:border-accent/40 transition-all duration-200 group relative h-full"
+                  aria-label={`${favorite.title} - ${favorite.description}`}
+                >
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      removeFavorite(favorite.id);
+                    }}
+                    className="absolute top-2 right-2 w-6 h-6 rounded flex items-center justify-center text-amber-300 hover:text-red-400 hover:bg-red-400/10 transition-colors opacity-0 group-hover:opacity-100"
+                    aria-label={t('dashboard.favorites.remove') || 'Rimuovi dai preferiti'}
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center flex-shrink-0">
+                      {getTypeIcon(favorite.type)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-semibold text-text-primary text-sm truncate">{favorite.title}</h3>
+                        <Star className="w-3 h-3 text-amber-300 fill-amber-300 flex-shrink-0" />
+                      </div>
+                      <p className="text-xs text-text-secondary line-clamp-2 mb-2">{favorite.description}</p>
+                      <span className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded text-xs text-text-tertiary capitalize">
+                        {getTypeLabel(favorite.type)}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            )}
+          />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <AnimatePresence>
+            {favorites.map((favorite, index) => (
             <motion.div
               key={favorite.id}
               initial={{ opacity: 0, scale: 0.95 }}
@@ -215,19 +270,19 @@ export const Favorites = memo(function Favorites() {
                     e.stopPropagation();
                     removeFavorite(favorite.id);
                   }}
-                  className="absolute top-2 right-2 w-6 h-6 rounded flex items-center justify-center text-amber-400 hover:text-red-400 hover:bg-red-400/10 transition-colors opacity-0 group-hover:opacity-100"
+                    className="absolute top-2 right-2 w-6 h-6 rounded flex items-center justify-center text-amber-300 hover:text-red-400 hover:bg-red-400/10 transition-colors opacity-0 group-hover:opacity-100"
                   aria-label={t('dashboard.favorites.remove') || 'Rimuovi dai preferiti'}
                 >
                   <X className="w-4 h-4" />
                 </button>
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center flex-shrink-0">
                     {getTypeIcon(favorite.type)}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold text-text-primary text-sm truncate">{favorite.title}</h3>
-                      <Star className="w-3 h-3 text-amber-400 fill-amber-400 flex-shrink-0" />
+                      <Star className="w-3 h-3 text-amber-300 fill-amber-300 flex-shrink-0" />
                     </div>
                     <p className="text-xs text-text-secondary line-clamp-2 mb-2">{favorite.description}</p>
                     <span className="px-1.5 py-0.5 bg-bg-surface border border-border-subtle rounded text-xs text-text-tertiary capitalize">
@@ -240,6 +295,7 @@ export const Favorites = memo(function Favorites() {
           ))}
         </AnimatePresence>
       </div>
+      )}
     </section>
   );
 });

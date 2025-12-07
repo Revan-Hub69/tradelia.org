@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { X, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { useTranslations } from '@/lib/i18n/use-translations';
 
 interface BeforeInstallPromptEvent extends Event {
@@ -134,10 +135,13 @@ export function InstallPrompt() {
             <div className="relative flex items-start gap-4">
               {/* Icon */}
               <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-accent/20 border border-accent/30 flex items-center justify-center overflow-hidden p-1.5">
-                <img 
+                <Image 
                   src="/logos/tradelia-icon.svg" 
                   alt="Tradelia" 
+                  width={48}
+                  height={48}
                   className="w-full h-full object-contain"
+                  loading="lazy"
                   onError={(e) => {
                     // Fallback a favicon se SVG non disponibile
                     const target = e.target as HTMLImageElement;

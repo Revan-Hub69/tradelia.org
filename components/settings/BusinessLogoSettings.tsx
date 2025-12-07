@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { Image as ImageIcon, Upload, X, Check } from 'lucide-react';
+import Image from 'next/image';
 import { useTranslations } from '@/lib/i18n/use-translations';
 import { useIsDesk } from '@/lib/hooks/useUserRole';
 import { useApi } from '@/lib/hooks/useApi';
@@ -142,10 +143,13 @@ export function BusinessLogoSettings() {
         <div className="border border-border-subtle rounded-lg p-4 bg-bg-soft">
           <div className="flex items-center gap-4">
             <div className="w-32 h-16 border border-border-subtle rounded bg-white p-2 flex items-center justify-center">
-              <img
+              <Image
                 src={currentLogo}
                 alt="Logo aziendale"
+                width={128}
+                height={64}
                 className="max-w-full max-h-full object-contain"
+                loading="lazy"
               />
             </div>
             <div className="flex-1">

@@ -170,6 +170,8 @@ export default function RootLayout({
         {/* Critical CSS is already inlined above to prevent render blocking */}
         
         {/* Structured Data - Organization + WebSite + AI Search Optimization */}
+        {/* Note: Structured data è importante per SEO ma non critico per rendering iniziale */}
+        {/* Viene caricato inline per garantire che sia disponibile per crawler */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
