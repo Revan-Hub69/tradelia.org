@@ -738,14 +738,7 @@ export function BrokersRecommender() {
   const [showAIMatching, setShowAIMatching] = useState(false);
   const [showRegulatoryCheck, setShowRegulatoryCheck] = useState(false);
   const [showRiskAssessment, setShowRiskAssessment] = useState(false);
-  const [showTaxOptimizer, setShowTaxOptimizer] = useState(false);
   const [showComparisonMatrix, setShowComparisonMatrix] = useState(false);
-  const [costScenario, setCostScenario] = useState({
-    monthlyOrders: 20,
-    avgOrderValue: 1000,
-    instrumentType: 'stocks' as 'stocks' | 'forex' | 'options' | 'futures',
-    tradingFrequency: 'moderate' as 'low' | 'moderate' | 'high' | 'professional',
-  });
 
   const availableInstruments = ['Azioni', 'ETF', 'Bond', 'Opzioni', 'Futures', 'Forex', 'Crypto', 'Commodities', 'Indici', 'CFD', 'IDEM', 'IPO', 'PAC'];
   const availablePlatforms = ['Web', 'Mobile', 'Desktop', 'MT4', 'MT5', 'cTrader', 'TWS', 'Client Portal', 'SaxoTraderGO', 'SaxoTraderPRO', 'Directa Platform', 'dLite', 'TradingView', 'OpenAPI', 'API FIX/REST'];
@@ -1124,59 +1117,6 @@ export function BrokersRecommender() {
     return { riskScore, factors, overallRisk };
   }, []);
 
-  // Tax Optimization Calculator
-  const getTaxOptimization = useCallback((broker: Broker, portfolioValue: number = 100000) => {
-    if (!broker) {
-      return [];
-    }
-
-    // Validazione input
-    const validPortfolioValue = Math.max(0, Math.min(portfolioValue, 10000000)); // Max €10M per sicurezza
-    const scenarios: Array<{ regime: string; annualCost: number; taxSavings: number; explanation: string }> = [];
-
-    if (broker.taxRegime === 'amministrato' || broker.taxRegime === 'both') {
-      // Regime Amministrato: broker gestisce tasse, semplificazione
-      // NOTA: I calcoli sono indicativi e basati su ipotesi standard (10% rendimento annuo, 26% aliquota)
-      // I rendimenti reali variano significativamente e dipendono da molti fattori
-      const assumedAnnualReturn = 0.1; // 10% - ipotesi standard per calcolo indicativo
-      const taxRate = 0.26; // 26% aliquota fiscale su plusvalenze (D.Lgs. 239/1996)
-      const annualGains = validPortfolioValue * assumedAnnualReturn;
-      const taxAmministrato = Math.max(0, annualGains * taxRate);
-      scenarios.push({
-        regime: 'Amministrato',
-        annualCost: taxAmministrato,
-        taxSavings: 0,
-        explanation: `Regime amministrato: il broker trattiene automaticamente il 26% sulle plusvalenze (D.Lgs. 239/1996). ` +
-          `Nessun onere dichiarativo, ideale per investitori che preferiscono semplificazione. ` +
-          `Costo fiscale annuo stimato: €${taxAmministrato.toFixed(2)} (calcolo basato su ipotesi di rendimento annuo del 10%). ` +
-          `⚠️ I rendimenti reali variano significativamente e questo è solo un calcolo indicativo.`
-      });
-    }
-
-    if (broker.taxRegime === 'dichiarativo' || broker.taxRegime === 'both') {
-      // Regime Dichiarativo: gestione autonoma, possibilità di ottimizzazione
-      // NOTA: Le ottimizzazioni fiscali dipendono da molti fattori individuali
-      const assumedAnnualReturn = 0.1;
-      const taxRate = 0.26;
-      const annualGains = validPortfolioValue * assumedAnnualReturn;
-      const taxDichiarativo = Math.max(0, annualGains * taxRate);
-      // Ottimizzazioni possibili: compensazione minusvalenze, detrazioni, scadenze differite
-      // Stima conservativa: 5-10% di potenziale risparmio in scenari ottimali
-      const potentialOptimizationPercent = 0.05; // 5% - stima conservativa
-      const optimizationSavings = Math.max(0, annualGains * potentialOptimizationPercent);
-      scenarios.push({
-        regime: 'Dichiarativo',
-        annualCost: Math.max(0, taxDichiarativo - optimizationSavings),
-        taxSavings: optimizationSavings,
-        explanation: `Regime dichiarativo: gestione autonoma delle tasse con possibilità di ottimizzazione fiscale ` +
-          `(compensazione minusvalenze, detrazioni, scadenze differite, ecc.). Richiede competenze contabili. ` +
-          `Potenziale risparmio annuo stimato: €${optimizationSavings.toFixed(2)} (calcolo indicativo basato su ipotesi di rendimento 10%). ` +
-          `⚠️ Le ottimizzazioni fiscali reali dipendono da molti fattori individuali e richiedono consulenza professionale.`
-      });
-    }
-
-    return scenarios;
-  }, []);
 
   // Export/Share Functionality with error handling
   const handleExportReport = useCallback(() => {
@@ -1839,10 +1779,10 @@ export function BrokersRecommender() {
                     <button
                       onClick={handleCostCalculatorToggle}
                       className="px-4 py-2 bg-accent/20 hover:bg-accent/30 text-accent rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
-                      aria-label="Apri calcolatore costi"
+                      aria-label="Confronto costi pubblici"
                     >
                       <Calculator className="w-4 h-4" aria-hidden="true" />
-                      Calcolatore Costi
+                      Confronto Costi
                     </button>
                     <button
                       onClick={() => setShowAIMatching(true)}
@@ -1867,14 +1807,6 @@ export function BrokersRecommender() {
                     >
                       <Gauge className="w-4 h-4" aria-hidden="true" />
                       Rischio
-                    </button>
-                    <button
-                      onClick={() => setShowTaxOptimizer(true)}
-                      className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium interaction-smooth"
-                      aria-label="Ottimizzazione Fiscale"
-                    >
-                      <Scale className="w-4 h-4" aria-hidden="true" />
-                      Fiscale
                     </button>
                     {recommendedBrokers.length > 1 && (
                       <>
@@ -2934,18 +2866,18 @@ export function BrokersRecommender() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Calculator className="w-6 h-6 text-accent" aria-hidden="true" />
-                    <h3 id="cost-calculator-title" className="text-xl font-bold text-text-primary">Calcolatore Costi</h3>
+                    <h3 id="cost-calculator-title" className="text-xl font-bold text-text-primary">Confronto Costi Pubblici</h3>
                   </div>
                   <button
                     onClick={handleCostCalculatorToggle}
                     className="text-text-tertiary hover:text-text-primary transition-colors p-2 hover:bg-bg-soft rounded-lg"
-                    aria-label="Chiudi calcolatore"
+                    aria-label="Chiudi confronto costi"
                   >
                     <X className="w-6 h-6" aria-hidden="true" />
                   </button>
                 </div>
                 <p className="text-sm text-text-secondary mt-2">
-                  Confronta i costi totali per diversi scenari di trading
+                  Confronto delle commissioni e costi dichiarati pubblicamente dai broker
                 </p>
               </div>
               <div className="overflow-y-auto flex-1 p-6 space-y-6">
@@ -2953,249 +2885,110 @@ export function BrokersRecommender() {
                   <div className="flex items-start gap-2">
                     <Info className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
                     <div className="text-sm text-text-secondary">
-                      <p className="font-semibold text-text-primary mb-1">Calcolatore Costi con Scenari Multipli</p>
+                      <p className="font-semibold text-text-primary mb-1">Confronto Costi Pubblici - Informazioni Dichiarate</p>
                       <p>
-                        Questo calcolatore stima i costi totali basandosi su commissioni pubbliche, spread tipici, costi di inattività
-                        e conversioni valutarie dichiarate dai broker. <strong>I costi effettivi possono variare significativamente</strong>
-                        in base al volume, al tipo di account, alle condizioni di mercato e alle negoziazioni individuali.
-                        Consulta sempre il sito ufficiale del broker per informazioni aggiornate e dettagliate.
+                        Questo strumento mostra le <strong>commissioni e costi dichiarati pubblicamente</strong> dai broker.
+                        I dati sono basati sulle informazioni disponibili sui siti ufficiali e possono variare in base a:
+                        volume di trading, tipo di account, condizioni di mercato e negoziazioni individuali.
+                      </p>
+                      <p className="mt-2">
+                        <strong>⚠️ Importante:</strong> I costi effettivi possono differire significativamente. 
+                        Consulta sempre il sito ufficiale del broker e le condizioni contrattuali per informazioni aggiornate e precise.
                       </p>
                     </div>
                   </div>
                 </div>
-                <div className="space-y-4">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-semibold text-text-primary block mb-2">
-                        Ordini Mensili
-                      </label>
-                      <input
-                        type="number"
-                        min="1"
-                        max="1000"
-                        value={costScenario.monthlyOrders}
-                        onChange={(e) => {
-                          const value = parseInt(e.target.value);
-                          if (!isNaN(value) && value >= 1 && value <= 10000) {
-                            setCostScenario(prev => ({ ...prev, monthlyOrders: value }));
-                          }
-                        }}
-                        className="w-full px-4 py-3 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
-                      />
+                <div className="space-y-6">
+                  {(!recommendedBrokers || recommendedBrokers.length === 0) ? (
+                    <div className="text-center py-8 text-text-secondary">
+                      Nessun broker disponibile per il confronto costi
                     </div>
-                    <div>
-                      <label className="text-sm font-semibold text-text-primary block mb-2">
-                        Valore Medio Ordine (€)
-                      </label>
-                      <input
-                        type="number"
-                        min="100"
-                        step="100"
-                        value={costScenario.avgOrderValue}
-                        onChange={(e) => {
-                          const value = parseInt(e.target.value);
-                          if (!isNaN(value) && value >= 100 && value <= 1000000) {
-                            setCostScenario(prev => ({ ...prev, avgOrderValue: value }));
-                          }
-                        }}
-                        className="w-full px-4 py-3 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-semibold text-text-primary block mb-2">
-                        Tipo Strumento
-                      </label>
-                      <select
-                        value={costScenario.instrumentType}
-                        onChange={(e) => setCostScenario(prev => ({ ...prev, instrumentType: e.target.value as any }))}
-                        className="w-full px-4 py-3 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
-                      >
-                        <option value="stocks">Azioni</option>
-                        <option value="forex">Forex</option>
-                        <option value="options">Opzioni</option>
-                        <option value="futures">Futures</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="text-sm font-semibold text-text-primary block mb-2">
-                        Frequenza Trading
-                      </label>
-                      <select
-                        value={costScenario.tradingFrequency}
-                        onChange={(e) => setCostScenario(prev => ({ ...prev, tradingFrequency: e.target.value as any }))}
-                        className="w-full px-4 py-3 bg-bg-soft border border-border-subtle rounded-lg text-text-primary focus:outline-none focus:border-accent"
-                      >
-                        <option value="low">Bassa (1-10 ordini/mese)</option>
-                        <option value="moderate">Moderata (10-50 ordini/mese)</option>
-                        <option value="high">Alta (50-200 ordini/mese)</option>
-                        <option value="professional">Professionale (200+ ordini/mese)</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="bg-bg-soft rounded-lg p-4">
-                    <p className="text-sm font-semibold text-text-primary mb-3">
-                      Confronto Costi Mensili Stimati ({costScenario.monthlyOrders} ordini × €{costScenario.avgOrderValue.toLocaleString()})
-                    </p>
-                    <div className="space-y-3">
-                      {(!recommendedBrokers || recommendedBrokers.length === 0) ? (
-                        <div className="text-center py-4 text-text-secondary">
-                          Nessun broker disponibile per il calcolo costi
-                        </div>
-                      ) : (
-                        recommendedBrokers.slice(0, 5).map(broker => {
-                          if (!broker) return null;
-                          // Calcolo avanzato basato su scenario
-                          let estimatedCost = 0;
-                          const totalVolume = costScenario.monthlyOrders * costScenario.avgOrderValue;
-                        
-                        try {
-                          // NOTA: I calcoli sono indicativi e basati su parsing di stringhe pubbliche
-                          // I costi reali possono variare significativamente in base a:
-                          // - Volume effettivo (commissioni tiered)
-                          // - Tipo di account (retail vs professional)
-                          // - Condizioni di mercato (spread variabili)
-                          // - Negoziazioni individuali
-                          
-                          if (costScenario.instrumentType === 'stocks' && broker.costs?.commissionStocks) {
-                            const commStr = broker.costs.commissionStocks;
-                            if (commStr.includes('€')) {
-                              // Commissione fissa per ordine
-                              const fixed = parseFloat(commStr.match(/€(\d+\.?\d*)/)?.[1] || '0');
-                              if (!isNaN(fixed) && fixed >= 0) {
-                                estimatedCost = fixed * costScenario.monthlyOrders;
-                              }
-                            } else if (commStr.includes('%')) {
-                              // Commissione percentuale sul valore
-                              const percent = parseFloat(commStr.match(/(\d+\.?\d*)%/)?.[1] || '0') / 100;
-                              if (!isNaN(percent) && percent >= 0 && percent <= 1) {
-                                estimatedCost = totalVolume * percent;
-                              }
-                            }
-                            // Se c'è un minimo (es. "0.1% min €1"), usa il maggiore tra percentuale e minimo
-                            if (commStr.includes('min')) {
-                              const minComm = parseFloat(commStr.match(/min\s*€(\d+\.?\d*)/)?.[1] || '0');
-                              if (!isNaN(minComm) && minComm > 0) {
-                                estimatedCost = Math.max(estimatedCost, minComm * costScenario.monthlyOrders);
-                              }
-                            }
-                          } else if (costScenario.instrumentType === 'forex' && broker.costs?.spreadForex) {
-                            // Stima spread per forex: 1 pip = 0.0001 per major pairs
-                            // Costo spread = (spread in pip / 10000) * valore nominale per lotto standard (€100,000)
-                            const spreadPips = parseFloat(broker.costs.spreadForex.match(/(\d+\.?\d*)\s*pip/)?.[1] || '0.1');
-                            if (!isNaN(spreadPips) && spreadPips >= 0) {
-                              // Assumendo che avgOrderValue rappresenti il valore nominale del trade
-                              const spreadCostPerOrder = (spreadPips / 10000) * costScenario.avgOrderValue;
-                              estimatedCost = spreadCostPerOrder * costScenario.monthlyOrders;
-                            }
-                          } else if (costScenario.instrumentType === 'options' && broker.costs?.commissionOptions) {
-                            // Commissione per contratto opzioni
-                            const commPerContract = parseFloat(broker.costs.commissionOptions.match(/€(\d+\.?\d*)/)?.[1] || '0');
-                            if (!isNaN(commPerContract) && commPerContract >= 0) {
-                              // Assumendo 1 contratto per ordine (semplificazione)
-                              estimatedCost = commPerContract * costScenario.monthlyOrders;
-                            }
-                          } else if (costScenario.instrumentType === 'futures' && broker.costs?.commissionFutures) {
-                            // Commissione per contratto futures
-                            const commPerContract = parseFloat(broker.costs.commissionFutures.match(/€(\d+\.?\d*)/)?.[1] || '0');
-                            if (!isNaN(commPerContract) && commPerContract >= 0) {
-                              estimatedCost = commPerContract * costScenario.monthlyOrders;
-                            }
-                          }
-                          
-                          // Aggiungi costi aggiuntivi per frequenza bassa (inattività)
-                          if (costScenario.tradingFrequency === 'low' || costScenario.tradingFrequency === 'moderate') {
-                            if (broker.costs?.inactivityFee && broker.costs.inactivityFee.includes('€')) {
-                              const inactivityFee = parseFloat(broker.costs.inactivityFee.match(/€(\d+\.?\d*)/)?.[1] || '0');
-                              if (!isNaN(inactivityFee) && inactivityFee >= 0) {
-                                estimatedCost += inactivityFee;
-                              }
-                            }
-                          }
-                          
-                          // Aggiungi costi di conversione valutaria se applicabili
-                          if (broker.costs?.currencyConversionFee) {
-                            const convFeePercent = parseFloat(broker.costs.currencyConversionFee.match(/(\d+\.?\d*)%/)?.[1] || '0') / 100;
-                            if (!isNaN(convFeePercent) && convFeePercent > 0) {
-                              // Stima: 20% dei trade richiedono conversione
-                              estimatedCost += totalVolume * 0.2 * convFeePercent;
-                            }
-                          }
-                        } catch (error) {
-                          console.error('Errore nel calcolo costi per', broker.name, error);
-                          estimatedCost = 0; // Fallback sicuro
-                        }
-                        
-                        // Assicura che estimatedCost sia sempre un numero valido
-                        estimatedCost = Math.max(0, isNaN(estimatedCost) ? 0 : estimatedCost);
-
-                        const costPerOrder = estimatedCost / costScenario.monthlyOrders;
-                        const costPercentage = (estimatedCost / totalVolume) * 100;
-
-                        return (
-                          <div key={broker.id} className="flex items-center justify-between p-4 bg-bg-surface rounded-lg border-premium shadow-premium-hover">
-                            <div className="flex items-center gap-3 flex-1">
-                              <div className="w-10 h-10 rounded-lg bg-white p-1 border border-border-subtle">
-                                <Image
-                                  src={broker.logo}
-                                  alt={`Logo ${broker.name}`}
-                                  width={40}
-                                  height={40}
-                                  className="object-contain"
-                                  loading="lazy"
-                                />
-                              </div>
-                              <div className="flex-1">
-                                <span className="font-semibold text-text-primary block">{broker.name}</span>
-                                <span className="text-xs text-text-tertiary">
-                                  €{costPerOrder.toFixed(2)} per ordine • {costPercentage.toFixed(2)}% del volume
-                                </span>
-                              </div>
+                  ) : (
+                    recommendedBrokers.slice(0, 5).map(broker => {
+                      if (!broker) return null;
+                      return (
+                        <div key={broker.id} className="bg-bg-soft border-premium rounded-xl p-6 space-y-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-lg bg-white p-2 border border-border-subtle">
+                              <Image
+                                src={broker.logo}
+                                alt={`Logo ${broker.name}`}
+                                width={40}
+                                height={40}
+                                className="object-contain"
+                                loading="lazy"
+                              />
                             </div>
-                            <div className="text-right">
-                              <p className="font-bold text-accent text-lg">€{estimatedCost.toFixed(2)}</p>
-                              <p className="text-xs text-text-tertiary">Costo mensile stimato</p>
+                            <div>
+                              <h4 className="font-bold text-lg text-text-primary">{broker.name}</h4>
+                              <p className="text-sm text-text-secondary">{broker.description}</p>
                             </div>
                           </div>
-                        );
-                        }).filter(Boolean)
-                      )}
-                    </div>
-                    <div className="mt-4 pt-4 border-t border-border-subtle">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-text-secondary">Volume totale mensile:</span>
-                        <span className="font-semibold text-text-primary">€{(costScenario.monthlyOrders * costScenario.avgOrderValue).toLocaleString()}</span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm mt-2">
-                        <span className="text-text-secondary">Costo medio stimato:</span>
-                        <span className="font-semibold text-accent">
-                          €{(() => {
-                            try {
-                              const total = recommendedBrokers.slice(0, 5).reduce((sum, broker) => {
-                                try {
-                                  const cost = broker.costs?.commissionStocks?.includes('€')
-                                    ? (() => {
-                                        const match = broker.costs.commissionStocks.match(/€(\d+\.?\d*)/);
-                                        const value = match ? parseFloat(match[1]) : 0;
-                                        return isNaN(value) ? 0 : value * costScenario.monthlyOrders;
-                                      })()
-                                    : 0;
-                                  return sum + (isNaN(cost) ? 0 : cost);
-                                } catch {
-                                  return sum;
-                                }
-                              }, 0);
-                              const avg = total / Math.min(5, Math.max(1, recommendedBrokers.length));
-                              return isNaN(avg) ? '0.00' : Math.max(0, avg).toFixed(2);
-                            } catch {
-                              return '0.00';
-                            }
-                          })()}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+                          
+                          {broker.costs && (
+                            <div className="grid md:grid-cols-2 gap-4">
+                              {broker.costs.commissionStocks && (
+                                <div className="bg-bg-surface rounded-lg p-4 border border-border-subtle">
+                                  <p className="text-xs font-semibold text-text-tertiary mb-1 uppercase">Commissioni Azioni</p>
+                                  <p className="text-sm font-semibold text-text-primary">{broker.costs.commissionStocks}</p>
+                                </div>
+                              )}
+                              {broker.costs.commissionForex && (
+                                <div className="bg-bg-surface rounded-lg p-4 border border-border-subtle">
+                                  <p className="text-xs font-semibold text-text-tertiary mb-1 uppercase">Commissioni Forex</p>
+                                  <p className="text-sm font-semibold text-text-primary">{broker.costs.commissionForex}</p>
+                                </div>
+                              )}
+                              {broker.costs.spreadForex && (
+                                <div className="bg-bg-surface rounded-lg p-4 border border-border-subtle">
+                                  <p className="text-xs font-semibold text-text-tertiary mb-1 uppercase">Spread Forex Tipico</p>
+                                  <p className="text-sm font-semibold text-text-primary">{broker.costs.spreadForex}</p>
+                                </div>
+                              )}
+                              {broker.costs.inactivityFee && (
+                                <div className="bg-bg-surface rounded-lg p-4 border border-border-subtle">
+                                  <p className="text-xs font-semibold text-text-tertiary mb-1 uppercase">Commissione Inattività</p>
+                                  <p className="text-sm font-semibold text-text-primary">{broker.costs.inactivityFee}</p>
+                                </div>
+                              )}
+                              {broker.costs.withdrawalFee && (
+                                <div className="bg-bg-surface rounded-lg p-4 border border-border-subtle">
+                                  <p className="text-xs font-semibold text-text-tertiary mb-1 uppercase">Commissione Prelievo</p>
+                                  <p className="text-sm font-semibold text-text-primary">{broker.costs.withdrawalFee}</p>
+                                </div>
+                              )}
+                              {broker.costs.currencyConversionFee && (
+                                <div className="bg-bg-surface rounded-lg p-4 border border-border-subtle">
+                                  <p className="text-xs font-semibold text-text-tertiary mb-1 uppercase">Conversione Valutaria</p>
+                                  <p className="text-sm font-semibold text-text-primary">{broker.costs.currencyConversionFee}</p>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                          
+                          {!broker.costs && (
+                            <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4">
+                              <p className="text-sm text-text-secondary">
+                                Informazioni sui costi non disponibili. Consulta il sito ufficiale del broker per dettagli aggiornati.
+                              </p>
+                            </div>
+                          )}
+                          
+                          {broker.officialLinks?.website && (
+                            <a
+                              href={broker.officialLinks.website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 text-sm text-accent hover:text-accent-hover font-medium"
+                            >
+                              Consulta costi aggiornati sul sito ufficiale
+                              <ExternalLink className="w-4 h-4" aria-hidden="true" />
+                            </a>
+                          )}
+                        </div>
+                      );
+                    }).filter(Boolean)
+                  )}
                 </div>
               </div>
               <div className="p-6 border-t border-border-subtle bg-bg-soft">
