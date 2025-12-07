@@ -6,6 +6,21 @@
 
 ---
 
+## Riepilogo Rimozioni Completate
+
+### ✅ Rimosso Completamente
+- **Tab "Formazione"** da DashboardTabs
+- **Modulo "education"** da DEFAULT_MODULES
+- **ProgressTracking** componente (solo corsi)
+- **Statistica "active-courses"** da OverviewStats
+- **Riferimenti course** da RecentActivity
+- **Riferimenti course** da DashboardHero
+- **Riferimenti course** da HelpAssistant
+- **activeCourses** da API stats
+- **getUserCourseProgress** da API progress (ora solo achievements)
+
+---
+
 ## Sezioni Dashboard Attuali
 
 ### ✅ DA TENERE (Core Analisi)
