@@ -310,47 +310,45 @@ export function WidgetsContent() {
                     </div>
                   </div>
                   <p className="text-sm text-text-secondary mb-4" aria-label={`Descrizione: ${widget.description}`}>{widget.description}</p>
-                  {
-                    <div className="flex flex-col gap-2">
-                      {isMobile && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            window.open(widget.url, '_blank');
-                            installWidgetInstructions(isMobile ? (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad') ? 'ios' : 'android') : 'desktop');
-                          }}
-                          className="w-full flex items-center justify-center gap-2"
-                          aria-label={`Apri ${widget.name} per installazione su dispositivo mobile`}
-                        >
-                          <Smartphone className="w-4 h-4" aria-hidden="true" />
-                          {t('widgets.openForInstall') || 'Apri per Installare'}
-                        </Button>
-                      )}
-                      {isDesktop && (
-                        <Button
-                          variant="default"
-                          size="sm"
-                          onClick={() => openWidgetStandalone(widget.url, widget.id)}
-                          className="w-full flex items-center justify-center gap-2"
-                          aria-label={`Apri ${widget.name} in finestra standalone`}
-                        >
-                          <Monitor className="w-4 h-4" aria-hidden="true" />
-                          {t('widgets.openStandalone') || 'Apri in Finestra Standalone'}
-                        </Button>
-                      )}
-                      <a
-                        href={widget.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
-                        aria-label={`Apri ${widget.name} in nuova scheda`}
+                  <div className="flex flex-col gap-2">
+                    {isMobile && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          window.open(widget.url, '_blank');
+                          installWidgetInstructions(isMobile ? (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad') ? 'ios' : 'android') : 'desktop');
+                        }}
+                        className="w-full flex items-center justify-center gap-2"
+                        aria-label={`Apri ${widget.name} per installazione su dispositivo mobile`}
                       >
-                        <ExternalLink className="w-4 h-4" aria-hidden="true" />
-                        {t('widgets.openInNewTab') || 'Apri in Nuova Scheda'}
-                      </a>
-                    </div>
-                  )}
+                        <Smartphone className="w-4 h-4" aria-hidden="true" />
+                        {t('widgets.openForInstall') || 'Apri per Installare'}
+                      </Button>
+                    )}
+                    {isDesktop && (
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={() => openWidgetStandalone(widget.url, widget.id)}
+                        className="w-full flex items-center justify-center gap-2"
+                        aria-label={`Apri ${widget.name} in finestra standalone`}
+                      >
+                        <Monitor className="w-4 h-4" aria-hidden="true" />
+                        {t('widgets.openStandalone') || 'Apri in Finestra Standalone'}
+                      </Button>
+                    )}
+                    <a
+                      href={widget.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
+                      aria-label={`Apri ${widget.name} in nuova scheda`}
+                    >
+                      <ExternalLink className="w-4 h-4" aria-hidden="true" />
+                      {t('widgets.openInNewTab') || 'Apri in Nuova Scheda'}
+                    </a>
+                  </div>
                 </motion.div>
               );
             })}
