@@ -125,6 +125,8 @@ const nextConfig = {
   // Optimize for modern browsers - reduce polyfills
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
+    // Optimize CSS loading - improve LCP
+    optimizeCss: true,
   },
 
   // Typed routes configuration (moved from experimental in Next.js 15)
@@ -133,8 +135,8 @@ const nextConfig = {
   // Note: Next.js SWC automatically uses browserslist from .browserslistrc
   // Polyfills are added by dependencies, not by Next.js itself
 
-  // Reduce JavaScript bundle size
-  webpack: (config, { isServer }) => {
+  // Reduce JavaScript bundle size and optimize CSS
+  webpack: (config, { isServer, dev }) => {
     if (!isServer) {
       // Target modern browsers - reduce polyfills
       config.resolve.alias = {
@@ -153,6 +155,14 @@ const nextConfig = {
           },
         },
       };
+
+      // CSS optimization - minimize CSS in production
+      if (!dev) {
+        config.optimization = {
+          ...config.optimization,
+          minimize: true,
+        };
+      }
     }
     return config;
   },
